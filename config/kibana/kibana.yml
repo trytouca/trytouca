@@ -1,0 +1,3 @@
+server.name: kibana
+server.host: "0"
+elasticsearch.hosts: ["http://weasel_elastic:9200"]

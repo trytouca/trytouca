@@ -1,0 +1,21 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "../styles/bootstrap.scss";
+
+.wsl-landing {
+  @include bootstrap.weasel-container();
+  min-height: calc(100vh - #{bootstrap.$weasel-header-height});
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & > div {
+    display: flex;
+    width: 50%;
+    justify-content: center;
+    app-forms-signup {
+      width: 100%;
+    }
+  }
+}

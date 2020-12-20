@@ -1,0 +1,13 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "../../styles/bootstrap.scss";
+
+.notification {
+  position: fixed;
+  top: calc(#{bootstrap.$weasel-header-height} + 1rem);
+  right: 1em;
+  z-index: 100;
+  font-size: 80%;
+}

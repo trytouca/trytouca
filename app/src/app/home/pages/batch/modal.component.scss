@@ -1,0 +1,18 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "../../../styles/bootstrap.scss";
+
+.wsl-custom-modal {
+  form {
+    textarea.form-control {
+      font-size: 0.9rem;
+    }
+  }
+  p {
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+    padding: 0.5rem;
+  }
+}

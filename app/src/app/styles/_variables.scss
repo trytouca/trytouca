@@ -1,0 +1,31 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+$weasel-breakpoint-xs: 0;
+$weasel-breakpoint-sm: 576px;
+$weasel-breakpoint-md: 768px;
+$weasel-breakpoint-lg: 992px;
+$weasel-breakpoint-xl: 1200px;
+
+$weasel-container-max-width: 1200px;
+$weasel-header-height: 60px;
+$weasel-footer-inside-height: 60px;
+$weasel-footer-outside-min-height: 60px;
+$weasel-header-outside-min-height: 60px;
+$weasel-header-inside-min-height: 60px;
+$weasel-page-head-min-height: 105px;
+
+$weasel-color-palette-map: (
+  "template-strong-primary": #0A4B5B,
+  "template-strong-secondary": #00818a,
+  "template-contrast-secondary": lightsteelblue,
+  "template-contrast-primary": white,
+  "background-lightgray": #f9f9f9,
+  "background-lightfocus": #deebff,
+  "border-gray": #dee2e6,
+  "text-danger": #cc3c3c,
+  "text-success": #28a745,
+  "text-muted": #6c757d,
+  "text-link": #007bff
+);

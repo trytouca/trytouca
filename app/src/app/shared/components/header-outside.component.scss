@@ -1,0 +1,68 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "../../styles/bootstrap.scss";
+
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500&display=swap');
+
+header {
+  height: bootstrap.$weasel-header-outside-min-height;
+  line-height: bootstrap.$weasel-header-outside-min-height;
+  padding: 0 2rem;
+  .wsl-container {
+    @include bootstrap.weasel-container();
+    display: flex;
+  }
+  a {
+    color: bootstrap.weasel-color("template-strong-secondary");
+    text-decoration: none;
+  }
+  .wsl-logo {
+    a {
+      display: flex;
+    }
+    img {
+      height: bootstrap.$weasel-header-outside-min-height - 30px;
+      margin: 15px 5px;
+    }
+    h1 {
+      font-family: 'M PLUS Rounded 1c', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      line-height: bootstrap.$weasel-header-outside-min-height;
+      margin-bottom: 0;
+    }
+    & + div {
+      flex-grow: 1;
+    }
+  }
+  ul {
+    list-style: none;
+    margin-bottom: 0;
+    padding-left: 0;
+    li {
+      display: inline;
+      padding: 0.25rem;
+      &:last-child {
+        padding-right: 0;
+      }
+      a {
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+        font-size: 0.875rem;
+        padding: 0.35rem 0.5rem;
+        &:active, &:hover {
+          color: bootstrap.weasel-color("template-strong-primary");
+        }
+        &.active {
+          background-color: bootstrap.weasel-color("template-strong-secondary");
+          color: bootstrap.weasel-color("template-contrast-primary");
+        }
+        &.highlight {
+          border-color: bootstrap.weasel-color("template-strong-secondary");
+        }
+      }
+    }
+  }
+}

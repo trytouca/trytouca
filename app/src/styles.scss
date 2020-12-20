@@ -1,0 +1,139 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "app/styles/bootstrap";
+
+.wsl-auth {
+  @include bootstrap.weasel-auth-main();
+}
+
+.wsl-auth-form {
+  @include bootstrap.weasel-auth-form();
+}
+
+.wsl-banner-nohead {
+  @include bootstrap.weasel-banner-page(0vh);
+  @include bootstrap.weasel-banner-page-elements();
+}
+
+.wsl-banner-with-head {
+  @include bootstrap.weasel-banner-page(bootstrap.$weasel-page-head-min-height);
+  @include bootstrap.weasel-banner-page-elements();
+}
+
+.wsl-btn-danger {
+  @include bootstrap.weasel-button-danger();
+}
+
+.wsl-btn-dark {
+  @include bootstrap.weasel-button-dark();
+}
+
+.wsl-btn-light {
+  @include bootstrap.weasel-button-light();
+}
+
+.wsl-btn-link {
+  @include bootstrap.weasel-button-link();
+}
+
+.wsl-form {
+  @include bootstrap.weasel-form-main();
+}
+
+.wsl-list {
+  @include bootstrap.weasel-list-main();
+}
+
+.wsl-list-item {
+  @include bootstrap.weasel-item-main();
+}
+
+.wsl-list-filter {
+  @include bootstrap.weasel-filter-main();
+}
+
+.wsl-list-filter-reset {
+  @include bootstrap.weasel-filter-reset();
+}
+
+.wsl-list-filter-empty {
+  @include bootstrap.weasel-filter-empty();
+}
+
+.wsl-modal {
+  @include bootstrap.weasel-modal-main();
+}
+
+.wsl-modal-confirm {
+  @include bootstrap.weasel-modal-confirm();
+}
+
+.wsl-page-head {
+  @include bootstrap.weasel-page-head();
+}
+
+.wsl-page-tab {
+  @include bootstrap.weasel-page-tab();
+}
+
+.wsl-page-overview {
+  @include bootstrap.weasel-page-overview();
+}
+
+.wsl-settings {
+  @include bootstrap.weasel-settings-main();
+}
+
+.wsl-spinner {
+  @include bootstrap.weasel-banner-spinner();
+}
+
+.wsl-text-danger {
+  color: bootstrap.weasel-color("text-danger");
+}
+
+.wsl-text-success {
+  color: bootstrap.weasel-color("text-success");
+}
+
+.wsl-dropdown .dropdown-menu {
+  font-size: small;
+  .dropdown-header {
+    padding: 0 0.5rem;
+  }
+  .wsl-dropdown-item {
+    cursor: pointer;
+  }
+  .dropdown-divider {
+    margin: 0;
+  }
+}
+
+.wsl-error-bar {
+  .alert {
+    margin-bottom: 0;
+    text-align: center;
+  }
+}
+
+.wsl-screen-only {
+  display: inherit;
+}
+
+.wsl-print-only {
+  display: none;
+}
+
+@media print {
+
+  .wsl-screen-only {
+    display: none;
+  }
+
+  .wsl-print-only {
+    display: inherit;
+  }
+
+}

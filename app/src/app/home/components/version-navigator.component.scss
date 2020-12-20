@@ -1,0 +1,25 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "../../styles/bootstrap.scss";
+
+.wsl-version-navigator {
+  @include bootstrap.weasel-container();
+  font-size: small;
+  padding-bottom: 1rem;
+}
+
+.wsl-version-navigator:hover .wsl-clipboard-icon {
+  visibility: visible;
+}
+
+.wsl-clipboard-icon {
+  color: bootstrap.weasel-color("text-link");
+  opacity: 0.25;
+  visibility: hidden;
+}
+
+.wsl-clipboard-icon:hover {
+  opacity: 1;
+}

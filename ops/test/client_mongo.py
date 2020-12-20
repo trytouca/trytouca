@@ -1,0 +1,82 @@
+#
+# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+#
+
+#!/usr/bin/env python
+
+import bson
+import pymongo
+from loguru import logger
+from utilities import User
+
+WEASEL_MONGO_URL="mongodb://localhost:27017/"
+
+class WeaselMongoClient:
+    def __init__(self):
+        self.client = pymongo.MongoClient(WEASEL_MONGO_URL).get_database('weasel')
+
+    def count_docs(self) -> dict:
+        counter = {}
+        for name in self.client.list_collection_names():
+            col = self.client.get_collection(name)
+            counter[name] = col.count_documents({})
+        return counter
+
+    def is_empty(self):
+        """
+        check if database has any document in its collections
+        """
+        return sum(self.count_docs().values()) == 0
+
+    def clear_collections(self, collections=None) -> None:
+        """
+        remove all documents from database collections
+        """
+        for col_name in self.client.list_collection_names():
+            if isinstance(collections, list) and col_name not in collections:
+                continue
+            if col_name == 'users':
+                self.client.get_collection(col_name).delete_many(
+                    { 'platformRole': { '$ne': 'super' } })
+                continue
+            self.client.get_collection(col_name).delete_many({})
+            self.client.drop_collection(col_name)
+            logger.debug("removed collection {}", col_name)
+
+    def list_results(self):
+        col_messages = self.client.get_collection('messages')
+        query = col_messages.find(
+            { 'processedAt': { '$exists': True }, 'elasticId': { '$exists': True } },
+            { '_id': 1, 'batchId': 1, 'elasticId': 1 })
+        for result in query:
+            yield {
+                'batch_id': str(result.get('batchId')),
+                'message_id': str(result.get('_id')),
+                'elastic_id': str(result.get('elasticId')) }
+
+    def remove_result(self, message_id):
+        col_messages = self.client.get_collection('messages')
+        col_messages.delete_one({ '_id': bson.ObjectId(message_id) })
+        logger.debug("removed message {} from mongo", message_id)
+        col_comparisons = self.client.get_collection('comparisons')
+        col_comparisons.delete_many({
+            'processedAt': { '$exists': True },
+            'elastic_id': { '$exists': True },
+            '$or': [
+                { 'srcMessageId': bson.ObjectId(message_id) },
+                { 'dstMessageId': bson.ObjectId(message_id) }
+            ]
+        })
+        logger.debug("removed comparisons for message {} from mongo", message_id)
+
+    def get_user_activation_key(self, user: User) -> str:
+        result = self.client.get_collection('users').find_one(
+            { 'username': user.username, 'activationKey': { '$exists': True } },
+            { '_id': 0, 'activationKey': 1 })
+        return result.get('activationKey')
+
+    def get_account_reset_key(self, user: User) -> str:
+        result = self.client.get_collection("users").find_one(
+            { "username": user.username },
+            { '_id': 0, 'resetKey': 1 })
+        return result.get('resetKey')

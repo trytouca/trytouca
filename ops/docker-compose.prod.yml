@@ -1,0 +1,69 @@
+version: '3'
+services:
+
+  weasel_backend:
+    image: docker.pkg.github.com/getweasel/weasel/backend:1.2
+    environment:
+      - ENV_FILE=prod
+      - AUTH_JWT_SECRET=<SECRET>
+      - AUTH_COOKIE_SECRET=<SECRET>
+      - MAIL_TRANSPORT_HOST=<SECRET>
+      - MAIL_TRANSPORT_USER=<SECRET>
+      - MAIL_TRANSPORT_PASS=<SECRET>
+      - MAIL_TRANSPORT_PORT=587
+      - WEBAPP_ROOT=<UNKNOWN>
+    volumes:
+      - ./local/data/weasel:/opt/local/data/weasel
+      - ./local/logs/backend:/opt/local/logs/backend
+    depends_on:
+      - weasel_elastic
+      - weasel_mongo
+      - weasel_redis
+    restart: always
+
+  weasel_comparator:
+    image: docker.pkg.github.com/getweasel/weasel/comparator:1.2
+    volumes:
+      - ./local/data/weasel:/opt/local/data/weasel:ro
+      - ./local/logs/comparator:/opt/local/logs/comparator
+    depends_on:
+      - weasel_backend
+    restart: always
+
+  weasel_webapp:
+    image: docker.pkg.github.com/getweasel/weasel/webapp:1.2
+    ports:
+      - 80:80
+    depends_on:
+      - weasel_backend
+    restart: always
+
+  weasel_redis:
+    image: redis:6-alpine
+    volumes:
+      - ./local/data/redis:/data
+    # ports:
+    #  - 6379:6379
+    restart: always
+
+  weasel_mongo:
+    image: mongo:4-bionic
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME:weaselmaster
+      - MONGO_INITDB_ROOT_PASSWORD:weaselsecret
+    volumes:
+      - ./local/data/mongo:/data/db
+      - ./devops/mongo/entrypoint/:/docker-entrypoint-initdb.d/
+    # ports:
+    #   - 27017:27017
+    restart: always
+
+  weasel_elastic:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.8.0
+    environment:
+      - discovery.type=single-node
+    volumes:
+      - ./local/data/elastic:/usr/share/elasticsearch/data
+    # ports:
+    #   - 9200:9200
+    restart: always

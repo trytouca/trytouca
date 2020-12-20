@@ -1,0 +1,35 @@
+#
+# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+#
+
+cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
+
+project(weasel_cmp VERSION 1.2.1 LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
+
+if (NOT DEFINED CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+if(APPLE)
+    set(CMAKE_INSTALL_RPATH "@executable_path/../lib")
+else()
+    set(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+endif()
+set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
+
+macro(weasel_find_package package_name)
+    find_package(${package_name} QUIET)
+    if (NOT ${package_name}_FOUND)
+        message (FATAL_ERROR "required dependency on ${package_name} is missing")
+    endif()
+endmacro()
+
+add_subdirectory(src)

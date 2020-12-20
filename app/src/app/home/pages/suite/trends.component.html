@@ -1,0 +1,16 @@
+<section class="wsl-page-tab">
+  <h2>Runtime Trend</h2>
+  <p>
+    This chart plots the overall execution time of versions as they are
+    submitted. It helps understand how performance of your workflow is
+    changing over time. It also helps identify code changes with unintended
+    impact to the performance of your workflow. Remember that a gradual
+    increase or decrease of runtime may be expected: software evolves
+    over time.
+  </p>
+  <div class="wsl-trend-chart">
+    <app-suite-chart-runtime
+      [perfs]="fields.perfs">
+    </app-suite-chart-runtime>
+  </div>
+</section>

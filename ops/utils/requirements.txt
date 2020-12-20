@@ -1,0 +1,6 @@
+[App]
+
+; directory in which logs produced by Zipit should be stored
+log-directory = D:\Meerkat\Lab\Logs
+
+weasel-utils = D:\vitaldev\ots\weasel-classic\clients\cpp\local\dist\bin\weasel_cli.exe

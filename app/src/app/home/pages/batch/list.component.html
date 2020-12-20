@@ -1,0 +1,100 @@
+<section id="wsl-batch-elements">
+
+  <app-home-list-filter
+    [manager]="filterManager"
+    [params]="filterParams()"
+    [stats]="filterStats()"
+    (updateList)="updateList($event)">
+  </app-home-list-filter>
+
+  <div class="wsl-list" *ngIf="countShownRows(ItemType.Common)">
+    <div class="wsl-list-head">
+      <h2>Common Testcases</h2>
+      <p>
+        Testcases that are both in version {{ params.srcBatchSlug }}
+        {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
+        and in version {{ params.dstBatchSlug }}
+        {{ suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : '' }}
+      </p>
+      <p *ngIf="countShownRows(ItemType.Common) !== countRows(ItemType.Common)">
+        You are viewing <b>{{ countShownRows(ItemType.Common) | i18nPlural: { '=1': 'one', 'other': '#' } }}</b>
+        of {{ countRows(ItemType.Common) }} common cases.
+      </p>
+    </div>
+    <ul class="wsl-list-body">
+      <li *ngFor="let item of getShownRows(ItemType.Common); let i = index;"
+        class="wsl-list-item-outer"
+        (click)="selectedRow = i"
+        [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
+        <app-batch-item-element
+          [item]="item"
+          [params]="params">
+        </app-batch-item-element>
+      </li>
+    </ul>
+  </div>
+
+  <div class="wsl-list" *ngIf="countShownRows(ItemType.Fresh)">
+    <div class="wsl-list-head">
+      <h2>New Testcases</h2>
+      <p>
+        Testcases that are submitted in version {{ params.srcBatchSlug }}
+        {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
+        but were not included in version {{ params.dstBatchSlug }}
+        {{ suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : '' }}
+      </p>
+      <p *ngIf="countShownRows(ItemType.Fresh) !== countRows(ItemType.Fresh)">
+        You are viewing <b>{{ countShownRows(ItemType.Fresh) | i18nPlural: { '=1': 'one', 'other': '#' } }}</b>
+        of {{ countRows(ItemType.Fresh) }} new cases.
+      </p>
+    </div>
+    <ul class="wsl-list-body">
+      <li *ngFor="let item of getShownRows(ItemType.Fresh); let i = index;"
+        class="wsl-list-item-outer"
+        (click)="selectedRow = i + countShownRows(ItemType.Common)"
+        [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Common)}">
+        <app-batch-item-element
+          [item]="item"
+          [params]="params">
+        </app-batch-item-element>
+      </li>
+    </ul>
+  </div>
+
+  <div class="wsl-list" *ngIf="countShownRows(ItemType.Missing)">
+    <div class="wsl-list-head">
+      <h2>Missing Testcases</h2>
+      <p>
+        Testcases that were included in version {{ params.dstBatchSlug }}
+        {{ suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : '' }}
+        but are not submitted in version {{ params.srcBatchSlug }}
+        {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
+      </p>
+      <p *ngIf="countShownRows(ItemType.Missing) !== countRows(ItemType.Missing)">
+        You are viewing <b>{{ countShownRows(ItemType.Missing) | i18nPlural: { '=1': 'one', 'other': '#' } }}</b>
+        of {{ countRows(ItemType.Missing) }} missing cases.
+      </p>
+    </div>
+    <ul class="wsl-list-body">
+      <li *ngFor="let item of getShownRows(ItemType.Missing); let i = index;"
+        class="wsl-list-item-outer"
+        (click)="selectedRow = i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)"
+        [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)}">
+        <app-batch-item-element
+          [item]="item"
+          [params]="params">
+        </app-batch-item-element>
+      </li>
+    </ul>
+  </div>
+
+  <app-home-list-pager
+    [params]="pagerParams()"
+    [stats]="filterStats()"
+    (updateList)="updateList($event)">
+  </app-home-list-pager>
+
+  <app-home-feedback-link
+    [page]="'app-batch-list-elements'">
+  </app-home-feedback-link>
+</section>

@@ -1,0 +1,23 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use '../../../styles.scss';
+
+@mixin section-outline {
+  border: 1px solid #{styles.$weasel-border-color-gray};
+  border-radius: 0.25rem;
+}
+
+@mixin section {
+  @include section-outline;
+  background-color: #{styles.$weasel-background-color-gray};
+  box-shadow: 1px 1px 0px 1px #{styles.$weasel-background-color-gray};
+  margin: 1rem 0.5rem;
+  min-height: 20vh;
+  padding: 1rem;
+  h3 {
+    color: #{styles.$weasel-text-color-gray};
+    font-size: 1.1rem;
+  }
+}

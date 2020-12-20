@@ -1,0 +1,25 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "sass:map";
+@use "./variables";
+
+/**
+ * intended to be used for all colors and background colors
+ */
+@function weasel-color($name) {
+  $color: map.get(variables.$weasel-color-palette-map, $name);
+  @if not $color {
+    @error "invalid color palette name: #{$name}";
+  }
+  @return $color;
+}
+
+/**
+ *
+ */
+@mixin weasel-container($max-width: variables.$weasel-container-max-width) {
+  margin: 0px auto;
+  max-width: $max-width !important;
+}

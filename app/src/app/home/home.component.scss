@@ -1,0 +1,13 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "../styles/bootstrap.scss";
+
+.wsl-page-home {
+  border-top: 1px solid bootstrap.weasel-color("border-gray");
+}
+
+.wsl-home-body {
+  min-height: calc(100vh - #{bootstrap.$weasel-header-inside-min-height} - #{bootstrap.$weasel-footer-inside-height});
+}

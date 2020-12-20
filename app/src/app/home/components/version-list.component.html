@@ -1,0 +1,39 @@
+<div ngbDropdown
+  class="wsl-version-list"
+  *ngIf="countVersions() !== 0">
+  <div ngbDropdownToggle
+    id="version-dropdown-{{ side }}"
+    aria-haspopup="true" aria-expanded="false">
+    {{ currentVersion }}
+  </div>
+  <div ngbDropdownMenu
+    [ngClass]="{ 'dropdown-menu-right': side === 'base'}">
+    <span class="dropdown-header">Choose a {{ side }} version</span>
+    <div class="dropdown-divider"></div>
+    <div>
+      <form class="form-inline input-group" id="wsl-version-search-{{ side }}">
+        <input class="form-control form-control-sm" type="search"
+          placeholder="Find a version..." autocomplete="off"
+          maxlength="16"
+          name="versionFilter" id="versionFilter-{{ side }}"
+          (keyup)="onKeyupVersionFilter($event)">
+      </form>
+    </div>
+    <div class="dropdown-divider"></div>
+    <div ngbDropdownItem
+      *ngFor="let version of relevantVersions"
+      [ngClass]="{ 'active': currentVersion === version.slug }"
+      (click)="updateVersion(version.slug)">
+      {{ version.slug }}
+      <ng-container *ngFor="let tag of version.tags">
+        <span class="small"> ({{ tag }})</span>
+      </ng-container>
+    </div>
+    <span *ngIf="countVersionsNotShown()">
+      <div class="dropdown-divider"></div>
+      <div class="dropdown-header">
+        <span>{{ countVersionsNotShown() }} versions not shown.</span>
+      </div>
+    </span>
+  </div>
+</div>

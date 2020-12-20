@@ -1,0 +1,88 @@
+<app-header-outside></app-header-outside>
+<div class="wsl-auth">
+  <h2>Reset Your Password</h2>
+  <div class="wsl-auth-form">
+
+    <ngb-alert *ngIf="alert" [type]="alert[0]" [dismissible]="false">
+      <small>{{ alert[1] }}</small>
+    </ngb-alert>
+
+    <form *ngIf="!shouldShowResetForm" [formGroup]="requestForm" novalidate
+      (ngSubmit)="onRequestSubmission(requestForm.value)">
+      <div class="form-group">
+        <label for="wsl-mail">Email</label>
+        <input type="email" class="form-control" id="wsl-mail" tabindex="1"
+          autocomplete="email"
+          aria-describedby="wsl-email-help"
+          required formControlName="email" name="email"
+          data-lpignore="true">
+        <small id="wsl-email-help" class="text-danger"
+          [hidden]="shouldHideAriaDescriptionForEmail()">
+          Please provide a valid email address.
+        </small>
+      </div>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button type="submit" class="wsl-btn-dark" tabindex="2">
+            Reset
+          </button>
+        </div>
+        <div class="wsl-form-links">
+          <button type="button" routerLink="/signin" class="wsl-btn-link" tabindex="3">
+            Remember Your Password?
+          </button>
+          <button type="button" routerLink="/signup" class="wsl-btn-link" tabindex="4">
+            New to Weasel?
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <form *ngIf="shouldShowResetForm" [formGroup]="resetForm" novalidate
+          (ngSubmit)="onResetSubmission(resetForm.value)">
+      <div class="form-group">
+        <label for="wsl-uname">Username</label>
+        <input type="text" class="form-control" id="wsl-uname" tabindex="1"
+          autocomplete="username"
+          aria-describedby="wsl-uname-help"
+          formControlName="uname" name="uname">
+      </div>
+      <div class="form-group">
+        <label for="wsl-upass1">New Password</label>
+        <input type="password" class="form-control" id="wsl-upass1" tabindex="2"
+          autocomplete="new-password"
+          aria-describedby="wsl-upass1-help"
+          required formControlName="upass1" name="upass1">
+        <small id="wsl-upass1-help" class="text-danger"
+          [hidden]="shouldHideAriaDescriptionForUpass1()">
+          Your password must be at least eight characters.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="wsl-upass2">Confirm New Password</label>
+        <input type="password" class="form-control" id="wsl-upass2" tabindex="3"
+          autocomplete="new-password"
+          aria-describedby="wsl-upass2-help"
+          required formControlName="upass2" name="upass2">
+        <small id="wsl-upass2-help" class="text-danger"
+          [hidden]="shouldHideAriaDescriptionForUpass2()">
+          Your password must match the password you entered above.
+        </small>
+      </div>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button type="submit" class="wsl-btn-dark" tabindex="4">
+            Reset
+          </button>
+        </div>
+        <div class="wsl-form-links">
+          <button type="button" routerLink="/signin" class="wsl-btn-link" tabindex="5">
+            Remember Your Password?
+          </button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+<app-footer-inside></app-footer-inside>

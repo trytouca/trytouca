@@ -1,0 +1,15 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "../../styles/bootstrap.scss";
+
+.wsl-feedback-link {
+  @include bootstrap.weasel-container();
+  text-align: right;
+  padding: 1rem;
+  font-size: small;
+  a {
+    color: bootstrap.weasel-color("text-muted") !important;
+  }
+}

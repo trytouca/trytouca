@@ -1,0 +1,29 @@
+<div class="wsl-list-item">
+  <div class="wsl-item-heading">
+    <div class="wsl-item-status">
+      <fa-icon [icon]="icon.type"></fa-icon>
+    </div>
+    <div class="wsl-item-title">
+      <h4>{{ data.fullname }}<span *ngIf="isSelf"> (You)</span></h4>
+    </div>
+  </div>
+  <div class="d-flex">
+    <div class="wsl-item-topics">
+      <div class="wsl-item-topic">
+        {{ data.username }}
+      </div>
+      <div class="wsl-item-topic">
+        {{ data.role }}
+      </div>
+    </div>
+    <div class="wsl-item-ctrl-box wsl-screen-only"
+      *ngIf="isTeamAdmin && !isSelf && data.role !== ETeamRole.Owner">
+      <div class="wsl-item-ctrl" title="Edit User Information" (click)="edit()">
+        <fa-icon icon="user-edit"></fa-icon>
+      </div>
+      <div class="wsl-item-ctrl" title="Remove User from Team" (click)="remove()">
+        <fa-icon icon="user-minus"></fa-icon>
+      </div>
+    </div>
+  </div>
+</div>

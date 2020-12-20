@@ -1,0 +1,35 @@
+<header>
+  <div class="wsl-container">
+    <div class="wsl-logo">
+      <a [routerLink]="'/'">
+        <h1>Weasel</h1>
+      </a>
+    </div>
+    <div></div>
+    <nav *ngIf="isLoggedIn()">
+      <ol>
+        <li>
+          <a routerLink="/docs" routerLinkActive="active">
+            Docs
+          </a>
+        </li>
+        <li ngbDropdown>
+          <a ngbDropdownToggle id="wsl-user-dropdown" aria-expanded="false">
+            <fa-icon class="fa-lg" icon="user"></fa-icon>
+          </a>
+          <div ngbDropdownMenu
+            class="dropdown-menu dropdown-menu-right"
+            aria-labelledby="wsl-user-dropdown">
+            <span [hidden]="!currentUser" class="dropdown-header">
+              Signed in as <b>{{ currentUser?.username }}</b>
+            </span>
+            <div class="dropdown-divider"></div>
+            <a ngbDropdownItem (click)="logout()">
+              Sign out
+            </a>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+</header>

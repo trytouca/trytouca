@@ -1,0 +1,20 @@
+<div *ngIf="isApiConnectionDown">
+  <app-header-outside></app-header-outside>
+  <app-server-down></app-server-down>
+  <app-footer-outside></app-footer-outside>
+</div>
+<div *ngIf="!isApiConnectionDown">
+  <app-header-inside></app-header-inside>
+  <div class="wsl-page-home">
+    <div class="wsl-error-bar">
+      <ngb-alert *ngFor="let alert of alerts" [type]="alert.type" [dismissible]="false">
+        <small>{{ alert.message }}</small>
+      </ngb-alert>
+    </div>
+    <div class="wsl-home-body">
+      <router-outlet>
+      </router-outlet>
+    </div>
+  </div>
+  <app-footer-inside></app-footer-inside>
+</div>

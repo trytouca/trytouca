@@ -1,0 +1,19 @@
+<div class="wsl-list-item">
+  <div class="wsl-item-heading">
+    <div class="wsl-item-status" *ngIf="icon">
+      <fa-icon [icon]="icon.type" [spin]="icon.spin" [ngStyle]="{color: icon.color}"></fa-icon>
+    </div>
+    <div class="wsl-item-title">
+      <a [routerLink]="data?.link" [queryParams]="data?.query">
+        <h4>{{ data?.name }}</h4>
+      </a>
+    </div>
+  </div>
+  <div class="wsl-item-topics">
+    <div class="wsl-item-topic" *ngFor="let topic of topics">
+      <span [attr.title]="topic.title || null">
+        {{ topic.text }}
+      </span>
+    </div>
+  </div>
+</div>

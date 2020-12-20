@@ -1,0 +1,25 @@
+<div class="wsl-modal-confirm">
+  <div class="wsl-modal-header">
+    <h4>{{ elements.title }}</h4>
+  </div>
+  <div class="wsl-modal-body">
+    <ngb-alert *ngIf="alert" [type]="alert[0]" [dismissible]="false">
+      <small [innerHtml]="alert[1]"></small>
+    </ngb-alert>
+    <p [innerHtml]="elements.message"></p>
+    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(form.value)">
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button type="submit" class="wsl-btn-dark" tabindex="2">
+            {{ elements.button }}
+          </button>
+        </div>
+        <div class="wsl-form-links">
+          <button type="button" (click)="closeModal()" class="wsl-btn-light" tabindex="3">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

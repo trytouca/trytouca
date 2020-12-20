@@ -1,0 +1,21 @@
+<footer>
+<div class="wsl-container">
+  <div class="footer-tail">
+    <p>
+      &copy; {{ today | date: 'yyyy' }} Pejman Ghorbanzade
+    </p>
+    <ul>
+      <li *ngIf="links.github">
+        <a href="https://github.com/{{ links.github }}" target="_blank">
+          <fa-icon [icon]="['fab', 'github']" size="2x"></fa-icon>
+        </a>
+      </li>
+      <li *ngIf="links.twitter">
+        <a href="https://twitter.com/{{ links.twitter }}" target="_blank">
+          <fa-icon [icon]="['fab', 'twitter']" size="2x"></fa-icon>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>
+</footer>

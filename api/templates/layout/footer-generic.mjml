@@ -1,0 +1,9 @@
+<mj-wrapper full-width="full-width" padding="0">
+  <mj-section>
+    <mj-column width="100%">
+      <mj-text align="center">
+        &copy; Pejman Ghorbanzade. All Rights Reserved.
+      </mj-text>
+    </mj-column>
+  </mj-section>
+</mj-wrapper>

@@ -1,0 +1,44 @@
+<app-header-outside></app-header-outside>
+<div class="wsl-auth">
+  <h2>Tell us what you think</h2>
+  <div class="wsl-auth-form">
+
+    <ngb-alert *ngIf="alert" [type]="alert[0]" [dismissible]="false">
+      <small>{{ alert[1] }}</small>
+    </ngb-alert>
+
+    <form [formGroup]="feedbackForm" novalidate
+          (ngSubmit)="onSubmit(feedbackForm.value)">
+      <div class="form-group">
+        <label for="wsl-body">Your Feedback</label>
+        <textarea class="form-control" id="wsl-body" rows="5" tabindex="1"
+                  aria-describedby="wsl-body-help"
+                  required formControlName="body" name="body"></textarea>
+        <small id="wsl-body-help" class="text-danger"
+            [hidden]="shouldHideAriaDescription('body')">
+          Please provide more information in your message.
+        </small>
+        <small class="text-muted"
+              [hidden]="(submitted || !feedbackForm.controls.body.pristine) && !feedbackForm.controls.body.valid">
+          This field supports markdown format.
+        </small>
+      </div>
+      <div class="form-group">
+        <label for="wsl-name">Your Name</label>
+        <input type="text" class="form-control" id="wsl-name" tabindex="2"
+            formControlName="name" name="name"
+            placeholder="optional"
+            minlength="1" maxlength="64">
+      </div>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button type="submit" class="wsl-btn-dark" tabindex="3">
+            Submit
+          </button>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+<app-footer-inside></app-footer-inside>

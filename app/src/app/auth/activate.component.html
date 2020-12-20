@@ -1,0 +1,10 @@
+<app-header-outside></app-header-outside>
+<div class="wsl-banner-nohead">
+  <div class="wsl-spinner" [hidden]="alert">
+    <span><fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></span>
+  </div>
+  <ngb-alert *ngIf="alert" [type]="alert[0]" [dismissible]="false">
+    <small>{{ alert[1] }}</small>
+  </ngb-alert>
+</div>
+<app-footer-outside></app-footer-outside>

@@ -1,0 +1,12 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use '../../../styles/bootstrap.scss';
+
+.wsl-item-status {
+  fa-icon {
+    color: bootstrap.weasel-color("template-strong-secondary");
+    font-size: 1.25em;
+  }
+}

@@ -1,0 +1,64 @@
+Username,Action,Team,Suite,Batch,Argument
+aanderson,account-create,,,,"Alice Anderson"
+bbrown,account-create,,,,"Bob Brown"
+cclark,account-create,,,,"Charlie Clark"
+ddavis,account-create,,,,"David Davis"
+eevans,account-create,,,,"Eve Evans"
+ffisher,account-create,,,,"Frank Fisher"
+ggreen,account-create,,,,"Grace Green"
+hharris,account-create,,,,"Heidi Harris"
+iingram,account-create,,,,"Ivan Ingram"
+jjohnson,account-create,,,,"Judy Johnson"
+aanderson,account-activate,,,,
+bbrown,account-activate,,,,
+cclark,account-activate,,,,
+ddavis,account-activate,,,,
+eevans,account-activate,,,,
+ffisher,account-activate,,,,
+ggreen,account-activate,,,,
+hharris,account-activate,,,,
+iingram,account-activate,,,,
+iingram,account-reset,,,,
+aanderson,team-create,hogwarts,,,"Old Hogwarts"
+aanderson,team-update,hogwarts,,,hogwarts,"Hogwarts"
+aanderson,team-invite-add,hogwarts,,,bbrown,cclark,ddavis,eevans,ffisher,ggreen,hharris,iingram
+aanderson,team-invite-rescind,hogwarts,,,iingram
+bbrown,team-invite-accept,hogwarts,,,
+cclark,team-invite-accept,hogwarts,,,
+ddavis,team-invite-accept,hogwarts,,,
+eevans,team-invite-accept,hogwarts,,,
+ggreen,team-invite-decline,hogwarts,,,
+hharris,team-invite-accept,hogwarts,,,
+hharris,team-leave,hogwarts,,,
+iingram,team-join-add,hogwarts,,,
+jjohnson,team-join-add,hogwarts,,,
+jjohnson,team-join-rescind,hogwarts,,,
+jjohnson,team-join-add,hogwarts,,,
+aanderson,team-member-update,hogwarts,,bbrown,admin
+aanderson,suite-create,hogwarts,profile-db,,"Old Profile Database"
+aanderson,suite-update,hogwarts,profile-db,,profile-db,"Profile Database"
+bbrown,team-join-accept,hogwarts,,,iingram
+bbrown,team-join-decline,hogwarts,,,jjohnson
+jjohnson,team-join-add,hogwarts,,,
+bbrown,suite-subscribe,hogwarts,profile-db,,
+cclark,suite-subscribe,hogwarts,profile-db,,
+ddavis,suite-subscribe,hogwarts,profile-db,,
+ddavis,suite-unsubscribe,hogwarts,profile-db,,
+cclark,suite-create,hogwarts,empty-suite,,"Empty Suite"
+bbrown,suite-remove,hogwarts,empty-suite,,
+aanderson,client-submit,hogwarts,profile-db,v1.0,
+bbrown,client-submit,hogwarts,profile-db,v2.0,
+bbrown,comment-create,hogwarts,profile-db,v2.0,"This version fixes a *typo* in the username of student **Hermione Granger**. I changed their username to `hgranger`."
+aanderson,comment-create,hogwarts,profile-db,v2.0,"Thanks for your explanation, Bob! Do we know why test case **hpotter** has differences?"
+bbrown,comment-create,hogwarts,profile-db,v2.0,"I don't know. Charlie may know more. I remember he made some changes to the code yesterday."
+cclark,comment-create,hogwarts,profile-db,v2.0,"Yes! We had a meeting yesterday and decided that our software should consider students with height `>=6.0ft` as *tall*."
+aanderson,comment-create,hogwarts,profile-db,v2.0,"Great. Now that we know the reason behind the differences, I propose that we promote `v2.0` as the new baseline."
+bbrown,batch-seal,hogwarts,profile-db,v2.0,
+bbrown,batch-promote,hogwarts,profile-db,v2.0,"These differences are expected. I fixed a typo in the testcase name `hgranger` and Charlie updated the `is_tall` criteria in function `custom_function_1`."
+cclark,client-submit,hogwarts,profile-db,v3.0,
+aanderson,client-submit,hogwarts,profile-db,v4.0,
+cclark,client-submit,hogwarts,profile-db,v5.0,
+cclark,batch-seal,hogwarts,profile-db,v1.0,
+cclark,batch-seal,hogwarts,profile-db,v3.0,
+cclark,batch-seal,hogwarts,profile-db,v4.0,
+cclark,batch-seal,hogwarts,profile-db,v5.0,

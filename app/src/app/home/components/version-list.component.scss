@@ -1,0 +1,25 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+.wsl-version-list {
+  .dropdown-toggle {
+    font-weight: bold;
+  }
+  .dropdown-toggle::after {
+    margin-left: 0px;
+  }
+  .dropdown-menu {
+    padding: 0.5rem 0;
+    .dropdown-header {
+      padding: 0 0.5rem;
+    }
+    .dropdown-item {
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    input {
+      margin: 0 0.5rem;
+    }
+  }
+}

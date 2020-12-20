@@ -1,0 +1,25 @@
+<div [hidden]="!hasData() || hasItems()">
+  <app-teams-first>
+  </app-teams-first>
+</div>
+<div [hidden]="!hasData() || !hasItems()">
+  <div class="wsl-page-head">
+    <div class="wsl-page-head-content">
+      <nav aria-label="breadcrumb">
+        <ol>
+          <li class="active" aria-current="page">
+            Your Teams
+          </li>
+        </ol>
+      </nav>
+      <div></div>
+      <button type="button" (click)="openCreateModal()" class="wsl-btn-dark">
+        New Team
+      </button>
+    </div>
+  </div>
+  <div [hidden]="currentTab !== TabType.Teams">
+    <app-teams-tab-teams>
+    </app-teams-tab-teams>
+  </div>
+</div>

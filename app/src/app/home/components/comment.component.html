@@ -1,0 +1,30 @@
+<article class="wsl-comment">
+  <div class="wsl-comment-header">
+    <p><b>{{ meta.commentAuthor }}</b></p>
+    <small title="{{ meta.commentTime | date:'medium' }}">
+      {{ meta.commentTime | amTimeAgo }}
+    </small>
+    <small title="{{ meta.commentEditTime | date:'medium' }}"
+      *ngIf="meta.commentEditTime">
+      (edited {{ meta.commentEditTime | amTimeAgo }})
+    </small>
+  </div>
+  <blockquote>
+    <markdown [data]="meta.commentBody">
+    </markdown>
+  </blockquote>
+  <div class="wsl-comment-footer">
+    <a role="button" *ngIf="meta.showButtonReply"
+      (click)="performAction(ActionType.Reply)">
+      Reply
+    </a>
+    <a role="button" *ngIf="meta.showButtonUpdate"
+      (click)="performAction(ActionType.Update)">
+      Edit
+    </a>
+    <a role="button" *ngIf="meta.showButtonRemove"
+      (click)="performAction(ActionType.Remove)">
+      Delete
+    </a>
+  </div>
+</article>

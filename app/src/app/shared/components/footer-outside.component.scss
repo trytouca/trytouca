@@ -1,0 +1,57 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "../../styles/bootstrap.scss";
+
+$footer-tail-min-height: 80px;
+
+footer {
+  background-color: bootstrap.weasel-color("template-strong-primary");
+  min-height: bootstrap.$weasel-footer-outside-min-height;
+  .wsl-container {
+    @include bootstrap.weasel-container();
+    color: bootstrap.weasel-color("template-contrast-primary");
+  }
+  .row {
+    min-height: calc(#{bootstrap.$weasel-footer-outside-min-height} - #{$footer-tail-min-height});
+    padding: 2rem 3rem;
+    margin: 0;
+  }
+  h6 {
+    font-size: 1rem;
+  }
+  a {
+    color: bootstrap.weasel-color("template-contrast-secondary");
+    text-decoration: none;
+    &:hover {
+      color: bootstrap.weasel-color("template-contrast-primary");
+    }
+  }
+  ul {
+    list-style: none;
+    font-size: small;
+    padding-left: 0;
+  }
+  .footer-tail {
+    display: flex;
+    font-size: small;
+    height: $footer-tail-min-height;
+    line-height: $footer-tail-min-height;
+    padding: 0 3rem;
+    justify-content: space-between;
+    p {
+      margin-bottom: 0;
+    }
+    ul {
+      margin-bottom: 0;
+      li {
+        display: inline;
+        margin-right: 1rem;
+        &:last-child {
+          margin-right: 0rem;
+        }
+      }
+    }
+  }
+}

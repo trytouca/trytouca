@@ -1,0 +1,26 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use "utilities.scss";
+@use "variables.scss";
+@use "form.scss";
+
+@mixin main {
+  @include utilities.weasel-container();
+  min-height: calc(100vh - #{variables.$weasel-header-height} - #{variables.$weasel-footer-inside-height});
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin form {
+  width: 100%;
+  margin: 0 auto;
+  max-width: calc(0.35 * #{variables.$weasel-container-max-width});
+  padding: 2rem;
+  form {
+    @include form.main();
+  }
+}

@@ -1,0 +1,49 @@
+<div class="wsl-page-overview">
+  <div>
+
+    <div [hidden]="!resultsRing">
+      <small>{{ resultsRing?.header }}</small>
+      <svg width="80" height="80">
+        <circle
+          fill="transparent" r="32" cx="40" cy="40" stroke-width="4"
+          [attr.stroke]="resultsRing?.backColor"/>
+        <circle
+          fill="transparent" r="32" cx="40" cy="40" stroke-width="4"
+          [attr.stroke]="resultsRing?.frontColor"/>
+        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+          [attr.fill]="resultsRing?.frontColor">
+          {{ resultsRing?.title }}
+        </text>
+      </svg>
+      <ng-container *ngFor="let footer of resultsRing?.footer">
+        <small>{{ footer }}</small>
+      </ng-container>
+    </div>
+
+    <div>
+      <p *ngFor="let statement of statements">
+        <span [innerHTML]="statement"></span>
+      </p>
+    </div>
+
+    <div [hidden]="!metricsRing">
+      <small>{{ metricsRing?.header }}</small>
+      <svg width="80" height="80">
+        <circle
+          fill="transparent" r="32" cx="40" cy="40" stroke-width="4"
+          [attr.stroke]="metricsRing?.backColor"/>
+        <circle
+          fill="transparent" r="32" cx="40" cy="40" stroke-width="4"
+          [attr.stroke]="metricsRing?.frontColor"/>
+        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+          [attr.fill]="metricsRing?.frontColor">
+          {{ metricsRing?.title }}
+        </text>
+      </svg>
+      <ng-container *ngFor="let footer of metricsRing?.footer">
+        <small>{{ footer }}</small>
+      </ng-container>
+    </div>
+
+  </div>
+</div>

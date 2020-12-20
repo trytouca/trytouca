@@ -1,0 +1,63 @@
+<div class="wsl-pager"
+  [hidden]="isFirstPage() && isLastPage() && pageLengths.length === 1">
+  <div></div>
+  <div class="wsl-pager-buttons">
+    <div class="wsl-pager-button"
+      [style.visibility]="isFirstPage() ? 'hidden' : 'visible'"
+      (click)="previousPage()">
+      Previous Page
+    </div>
+    <div class="wsl-pager-button wsl-pagen-dropdown"
+      [style.visibility]="isFirstPage() && isLastPage() ? 'hidden' : 'visible'">Page
+      <div ngbDropdown class="d-inline-block">
+        <div ngbDropdownToggle id="pagen-dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          {{ pageNumber }}
+        </div>
+        <div ngbDropdownMenu>
+          <div>
+            <form class="form-inline input-group" id="wsl-pagen-form">
+              <input class="form-control form-control-sm" type="number"
+                placeholder="Go to page..." autocomplete="off"
+                min="1" max="{{ lastPageNumber }}"
+                name="pageNumber" id="pageNumber"
+                (keyup)="onKeyupPageNumber($event)">
+            </form>
+          </div>
+          <div class="dropdown-divider"></div>
+          <div ngbDropdownItem *ngFor="let number of pageNumbers"
+            (click)="pageNumber=number.slug">
+            {{ number.slug }}
+            <ng-container *ngFor="let tag of number.tags">
+              <span class="small"> ({{ tag }})</span>
+            </ng-container>
+          </div>
+        </div>
+      </div> of {{ lastPageNumber }}
+    </div>
+    <div class="wsl-pager-button"
+      [style.visibility]="isLastPage() ? 'hidden' : 'visible'"
+      (click)="nextPage()">
+      Next Page
+    </div>
+  </div>
+  <div class="wsl-pagel-dropdown">
+    <ng-container *ngIf="pageLengths.length">
+      You are viewing
+      <div ngbDropdown class="d-inline-block" *ngIf="1 < pageLengths.length">
+        <div ngbDropdownToggle id="pagel-dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          {{ pageLength }}
+        </div>
+        <div ngbDropdownMenu>
+          <div ngbDropdownItem *ngFor="let length of pageLengths"
+            (click)="pageLength=length">
+            {{ length }}
+          </div>
+        </div>
+      </div>
+      <span *ngIf="pageLengths.length < 2">{{ pageLength }}</span>
+      keys per page.
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,86 @@
+<app-notification></app-notification>
+<ng-container *ngIf="notFound()">
+  <app-home-notfound
+    [args]="notFound()">
+  </app-home-notfound>
+</ng-container>
+<div *ngIf="!notFound()" [hidden]="!suite">
+  <div class="wsl-page-head">
+    <div class="wsl-page-head-content">
+      <nav aria-label="breadcrumb">
+        <ol>
+          <li>
+            <a routerLink="..">{{ suite?.teamName }}</a>
+          </li>
+          <li class="wsl-dropdown active" aria-current="page" ngbDropdown>
+            <span ngbDropdownToggle id="wsl-suites-dropdown" aria-expanded="false">
+              {{ suite?.suiteName }}
+            </span>
+            <div ngbDropdownMenu
+              class="dropdown-menu dropdown-menu-right"
+              aria-labelledby="wsl-suites-dropdown">
+              <div ngbDropdownItem
+                *ngFor="let suiteItem of suites"
+                class="wsl-dropdown-item"
+                [ngClass]="{ 'active': suite?.suiteSlug === suiteItem.suiteSlug }"
+                (click)="switchPage(suiteItem.suiteSlug)">
+                {{ suiteItem.suiteName }}
+              </div>
+            </div>
+          </li>
+        </ol>
+      </nav>
+    </div>
+    <div class="wsl-page-nav">
+      <nav>
+        <ul>
+          <ng-container *ngFor="let tab of tabs">
+            <li *ngIf="tab.shown"
+              [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }"
+              (click)="switchTab(tab.type)">
+              <span class="wsl-nav-icon"><fa-icon [icon]="tab.icon"></fa-icon></span>
+              <span class="wsl-nav-text">{{ tab.name }}</span>
+              <span class="wsl-nav-counter" [hidden]="!tab.counter">{{ tab.counter }}</span>
+            </li>
+          </ng-container>
+        </ul>
+      </nav>
+      <div></div>
+      <nav>
+        <ul>
+          <li (click)="toggleSubscription()">
+            <span class="wsl-nav-icon">
+              <fa-icon icon="bell"></fa-icon>
+            </span>
+            <span class="wsl-nav-text"
+              [title]="fields.subscribe?.title"
+              [hidden]="!fields.subscribe?.name">
+              {{ fields.subscribe?.name }}
+            </span>
+            <span class="wsl-nav-counter"
+              title="{{ fields.subscribe?.count }} users have subscribed to this suite."
+              [hidden]="fields.subscribe?.count === 0">
+              {{ fields.subscribe?.count }}
+            </span>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <div [hidden]="currentTab !== TabType.Versions || !hasData() || hasItems()">
+    <app-suite-first-batch>
+    </app-suite-first-batch>
+  </div>
+  <div [hidden]="currentTab !== TabType.Versions || !hasData() || !hasItems()">
+    <app-suite-tab-batches>
+    </app-suite-tab-batches>
+  </div>
+  <div [hidden]="currentTab !== TabType.Trends">
+    <app-suite-tab-trends>
+    </app-suite-tab-trends>
+  </div>
+  <div [hidden]="currentTab !== TabType.Settings">
+    <app-suite-tab-settings>
+    </app-suite-tab-settings>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<section class="wsl-page-tab" id="wsl-teams-tab-teams">
+  <div>
+    <div *ngIf="counters.active">
+      <app-home-list-filter
+        [manager]="filterManager"
+        [params]="filterParams()"
+        [stats]="filterStats()"
+        (updateList)="updateList($event)">
+      </app-home-list-filter>
+      <div class="wsl-list" *ngIf="counters.active">
+        <div class="wsl-list-head">
+          <p *ngIf="counters.active !== countRows(ItemType.Active)">
+            You are viewing <b>{{ counters.active | i18nPlural: { '=1': 'one', 'other': '#' } }}</b>
+            of {{ countRows(ItemType.Active) }} teams.
+          </p>
+        </div>
+        <ul class="wsl-list-body">
+          <li *ngFor="let item of getShownRows(ItemType.Active); let i = index;"
+            class="wsl-list-item-outer"
+            (click)="selectedRow = i;"
+            [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
+            <app-teams-item-team
+              [item]="item">
+            </app-teams-item-team>
+          </li>
+        </ul>
+      </div>
+      <app-home-list-pager
+        *ngIf="counters.active"
+        [params]="pagerParams()"
+        [stats]="filterStats()"
+        (updateList)="updateList($event)">
+      </app-home-list-pager>
+      <app-home-feedback-link
+        *ngIf="counters.invited + counters.joining === 0"
+        [page]="'app-teams-tab-teams'">
+      </app-home-feedback-link>
+    </div>
+    <div class="wsl-requests-list" *ngIf="counters.invited">
+      <h2>Your Invitations</h2>
+      <ul class="wsl-list-body">
+        <li *ngFor="let item of getShownRows(ItemType.Invited)">
+          <p>
+            You have been invited to join team <b>{{ item.data.name }}</b>.
+          </p>
+          <div>
+            <button class="wsl-btn-dark" (click)="accept(item)">
+              Accept
+            </button>
+            <button class="wsl-btn-light" (click)="confirmDecline(item)">
+              Decline
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="wsl-requests-list" *ngIf="counters.joining">
+      <hr *ngIf="counters.invited">
+      <h2>Your Requests</h2>
+      <ul class="wsl-list-body">
+        <li *ngFor="let item of getShownRows(ItemType.Joining)">
+          <p>
+            Your request to join team <b>{{ item.data.name }}</b> is pending
+            approval by their administrators.
+          </p>
+          <div>
+            <button class="wsl-btn-light" (click)="confirmRescind(item)">
+              Cancel Request
+            </button>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <hr *ngIf="!counters.active">
+  </div>
+  <div *ngIf="!counters.active">
+    <img src="./assets/undraw/undraw_elements_cipa.svg" />
+  </div>
+</section>

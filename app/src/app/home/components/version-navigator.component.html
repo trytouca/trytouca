@@ -1,0 +1,28 @@
+<div class="wsl-version-navigator">
+  Comparing results of
+  <em *ngIf="params.srcBatchSlug === suite?.latest?.batchSlug">latest</em>
+  version 
+  <div class="d-inline-block">
+    <app-home-version-list
+      [suite]="suite"
+      [params]="params"
+      [side]="'head'">
+    </app-home-version-list>
+  </div>
+  against
+  <em *ngIf="params.dstBatchSlug === baseline.to">baseline</em>
+  <em *ngIf="params.dstBatchSlug === baseline.from && params.dstBatchSlug !== baseline.to">former baseline</em>
+  version
+  <div class="d-inline-block">
+    <app-home-version-list
+      [suite]="suite"
+      [params]="params"
+      [side]="'base'">
+    </app-home-version-list>
+  </div>
+  .
+  <fa-icon [icon]="faLink" class="wsl-clipboard-icon"
+    title="Copy a link to this page to share with your team members"
+    ngxClipboard [cbContent]="link" (cbOnSuccess)="onCopy($event)">
+  </fa-icon>
+</div>

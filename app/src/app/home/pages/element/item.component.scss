@@ -1,0 +1,76 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use '../../../styles/bootstrap.scss';
+
+@mixin wsl-item-topic-type {
+  padding: 0.3em 0.7em;
+  border-radius: 3px;
+}
+
+.wsl-item-topic-type-complex {
+  background-color: bootstrap.weasel-color("background-lightfocus");
+  color: bootstrap.weasel-color("text-link");
+  cursor: pointer;
+  @include wsl-item-topic-type;
+}
+
+.wsl-item-topic-type-simple {
+  background-color: bootstrap.weasel-color("background-lightgray");
+  color: bootstrap.weasel-color("text-muted");
+  @include wsl-item-topic-type;
+}
+
+.wsl-complex {
+  margin-top: 1.5rem;
+  .wsl-complex-block {
+    .wsl-complex-block-head {
+      display: flex;
+      padding: 0 1rem;
+      justify-content: space-between;
+      color: bootstrap.weasel-color("text-muted");
+      .wsl-complex-block-desc {
+        text-align: center;
+        span {
+          font-size: 80%;
+        }
+      }
+      .wsl-complex-block-icons {
+        .wsl-complex-block-icon {
+          color: bootstrap.weasel-color("text-link");
+          opacity: 0.25;
+          visibility: hidden;
+        }
+        .wsl-complex-block-icon:hover {
+          opacity: 1;
+        }
+      }
+    }
+    pre {
+      background-color: bootstrap.weasel-color("background-lightgray");
+      font-size: 80%;
+      padding: 1rem;
+    }
+  }
+  .wsl-complex-block:hover .wsl-complex-block-icon {
+      visibility: visible !important;
+  }
+}
+
+@media (min-width: #{bootstrap.$weasel-breakpoint-md}) {
+  .wsl-complex.wsl-complex-single {
+    .wsl-complex-block {
+      width: 75%;
+      margin: 0 auto;
+    }
+  }
+  .wsl-complex.wsl-complex-double {
+    display: flex;
+    .wsl-complex-block {
+      width: calc(50% - 1rem);
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+    }
+  }
+}

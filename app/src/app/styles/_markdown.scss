@@ -1,0 +1,44 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@use 'utilities.scss';
+
+@mixin main {
+  markdown ::ng-deep {
+    h1 {
+      font-size: 1.5rem;
+    }
+    h2 {
+      font-size: 1.25rem;
+    }
+    h3 {
+      font-size: 1rem;
+    }
+    p {
+      margin-bottom: 0.5rem;
+      text-align: justify;
+    }
+    pre {
+      font-size: small;
+    }
+    table {
+      font-size: small;
+      margin: 0 0 1rem;
+      border: 1px solid #eee;
+      tr:nth-child(even) {
+        background-color: utilities.weasel-color("background-lightgray");
+      }
+      th {
+        border-bottom: 1px solid #ddd;
+        padding: 0.25rem;
+      }
+      td {
+        padding: 0.25rem;
+        &:not(:last-child) {
+          padding-right: 1rem;
+        }
+      }
+    }
+  }
+}

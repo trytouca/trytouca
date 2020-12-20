@@ -1,0 +1,9 @@
+<mj-wrapper full-width="full-width" padding="0">
+  <mj-section>
+    <mj-column width="100%">
+    <mj-text align="center" font-family="Nunito" font-size="24px" font-weight="700">
+      WEASEL
+    </mj-text>
+    </mj-column>
+  </mj-section>
+</mj-wrapper>

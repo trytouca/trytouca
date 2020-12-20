@@ -1,0 +1,35 @@
+<header>
+  <div class="wsl-container">
+    <div class="wsl-logo">
+      <a [routerLink]="'/'">
+        <img src="./assets/logo/logo-bg-secondary.svg" alt="logo" />
+        <h1>Weasel</h1>
+      </a>
+    </div>
+    <div></div>
+    <nav>
+      <ul>
+        <li>
+          <a [routerLink]="'/docs'" routerLinkActive="active">
+            Docs
+          </a>
+        </li>
+        <li [hidden]="!isLoggedIn()">
+          <a [routerLink]="homeLink()" routerLinkActive="active" class="highlight">
+            Home
+          </a>
+        </li>
+        <li [hidden]="isLoggedIn()">
+          <a [routerLink]="'/signin'" routerLinkActive="active">
+            Sign in
+          </a>
+        </li>
+        <li [hidden]="isLoggedIn()">
+          <a [routerLink]="'/signup'" routerLinkActive="active" class="highlight">
+            Sign up
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>

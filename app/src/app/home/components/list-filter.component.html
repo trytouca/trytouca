@@ -1,0 +1,71 @@
+<div class="wsl-list-filter">
+
+  <form class="wsl-filter-component">
+    <input class="form-control" type="search"
+      placeholder="{{ filterQueryPlaceholder }}&hellip;" autocomplete="off"
+      name="rowFilter" id="rowFilter"
+      (keyup)="onKeyupRowFilter($event)"
+      [value]="filterQueryValue">
+  </form>
+
+  <div ngbDropdown class="wsl-filter-component btn-group">
+    <button ngbDropdownToggle type="button"
+      id="dropdown-button-filter" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false"
+      class="wsl-btn-light">
+      Filter: <b>{{ filterName }}</b>
+    </button>
+    <ul ngbDropdownMenu aria-labelledby="dropdown-button-filter">
+      <li ngbDropdownItem *ngFor="let filter of filters"
+        (click)="filterName=filter.key">
+        {{ filter.name }}
+      </li>
+    </ul>
+  </div>
+
+  <div ngbDropdown class="wsl-filter-component btn-group">
+    <button ngbDropdownToggle type="button"
+      id="dropdown-button-sort" data-toggle="dropdown"
+      aria-haspopup="true" aria-expanded="false"
+      [disabled]="isSearchActive()"
+      class="wsl-btn-light">
+      Sort: <b>{{ sorterName }}</b>
+    </button>
+    <ul ngbDropdownMenu aria-labelledby="dropdown-button-sort">
+      <li ngbDropdownItem *ngFor="let sorter of sorters"
+        (click)="sorterName=sorter.key">
+        {{ sorter.name }}
+      </li>
+    </ul>
+  </div>
+
+  <button class="wsl-filter-component"
+    (click)="sortOrderToggle()"
+    [disabled]="isSearchActive()"
+    class="wsl-btn-light">
+    <fa-icon [icon]="sortOrderIcon"></fa-icon>
+  </button>
+
+</div>
+
+<ng-container *ngIf="stats.totalUnpaginatedRows !== stats.totalRows">
+  <div class="wsl-list-filter-reset" *ngIf="stats.totalUnpaginatedRows !== 0">
+    <p>
+      <b>{{ stats.totalUnpaginatedRows }}</b> of <b>{{ stats.totalRows }}</b>
+      rows match this filter.
+    </p>
+    <button (click)="clearFilters()" class="wsl-btn-light">
+      <span>Clear Filters</span>
+    </button>
+  </div>
+  <div class="wsl-list-filter-empty" *ngIf="stats.totalUnpaginatedRows === 0">
+    <div>
+      <p>
+        {{ stats.totalRows | i18nPlural: { '=1': 'The row in this list does not match', 'other': 'None of the # rows in this list matches' } }} the specified filter.
+      </p>
+      <button (click)="clearFilters()" class="wsl-btn-dark">
+        <span>Clear Filters</span>
+      </button>
+    </div>
+    </div>
+</ng-container>

@@ -1,0 +1,23 @@
+<div class="wsl-batches-item-promotion">
+  <div>
+    <div>
+      <p>
+        <b *ngIf="item.bySelf">
+          <span class="wsl-screen-only" [title]="item.by.fullname">You</span>
+          <span class="wsl-print-only">{{ item.by.fullname }}</span>
+        </b>
+        <b *ngIf="!item.bySelf">{{ item.by.fullname }}</b>
+        promoted baseline of this suite to version <b>{{ item.to }}</b>.
+      </p>
+    </div>
+    <div class="wsl-item-topics">
+      <div class="wsl-item-topic">
+        {{ item.at | amTimeAgo }}
+      </div>
+    </div>
+  </div>
+  <blockquote *ngIf="item.for">
+    <markdown [data]="item.for">
+    </markdown>
+  </blockquote>
+</div>
