@@ -1,3 +1,3 @@
 .. _tutorials:
 
-.. mdinclude:: ../../docs/Tutorials_Cpp.md
+.. mdinclude:: ../../docs/Tutorials.md

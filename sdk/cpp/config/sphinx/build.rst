@@ -1,3 +1,3 @@
 .. _build:
 
-.. mdinclude:: ../../docs/Build_Cpp.md
+.. mdinclude:: ../../docs/Build.md
