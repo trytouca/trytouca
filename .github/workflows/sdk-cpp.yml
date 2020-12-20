@@ -1,0 +1,48 @@
+#
+# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+#
+
+name: weasel-cpp-main
+
+on:
+  push:
+    branches:
+    - main
+    - development
+
+jobs:
+  test-native:
+    name: unittest-native
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        cxx: [g++-9, clang++-9]
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v1
+    - name: cache conan
+      uses: actions/cache@v2
+      env:
+        cache-name: cache-conan-packages
+      with:
+        path: ~/.conan
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{ hashFiles('**/conanfile.py') }}
+        restore-keys: |
+          ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-
+          ${{ runner.os }}-build-${{ env.cache-name }}-
+          ${{ runner.os }}-build-
+          ${{ runner.os }}-
+    - name: install conan
+      run: |
+       pip install conan --no-cache-dir --upgrade
+       conan profile new default --detect --force
+       conan profile update settings.compiler.libcxx=libstdc++11 default
+    - run: ./build.sh --with-tests --with-utils --with-examples --with-framework
+    - run: ./build.sh --test
+  test-docker:
+    name: unittest-docker
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build -t weasel/client-cpp -f config/docker/Dockerfile .
+      - run: docker run weasel/client-cpp /bin/sh -c 'cd ./local/build && ctest ../.. -C Release'
