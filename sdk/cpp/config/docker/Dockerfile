@@ -1,5 +1,7 @@
 FROM ubuntu:bionic AS builder
 
+LABEL maintainer="pejman@ghorbanzade.com"
+
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     apt-transport-https ca-certificates gnupg software-properties-common wget \
@@ -14,15 +16,14 @@ RUN apt-get update \
   && conan --version \
   && groupadd -r weasel && useradd -u 8002 -m --no-log-init -r -g weasel weasel
 
-COPY clients/cpp /opt/clients/cpp
-COPY docs /opt/docs
-COPY config/flatbuffers /opt/config/flatbuffers
+COPY . /opt
 
 RUN chown -v -R weasel:weasel /opt
+
 WORKDIR /opt
+
 USER weasel
 
 RUN conan profile new default --detect \
   && conan profile update settings.compiler.libcxx=libstdc++11 default \
-  && cd /opt/clients/cpp \
   && ./build.sh --with-tests --with-utils --with-examples --with-framework
