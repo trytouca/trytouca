@@ -1,0 +1,114 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+namespace weasel.fbs;
+
+union Type {
+    Bool,
+    Int,
+    UInt,
+    Float,
+    Double,
+    String,
+    Object,
+    Array
+}
+
+table TypeWrapper {
+    value:Type;
+}
+
+table Bool {
+    value:bool;
+}
+
+table Int {
+    value:long;
+}
+
+table UInt {
+    value:ulong;
+}
+
+table Float {
+    value:float;
+}
+
+table Double {
+    value:double;
+}
+
+table String {
+    value:string;
+}
+
+table ObjectMember {
+    name:string;
+    value:TypeWrapper;
+}
+
+table Object {
+    key:string;
+    values:[ObjectMember];
+}
+
+table Array {
+    values:[TypeWrapper];
+}
+
+table Result {
+    key:string;
+    value:TypeWrapper;
+}
+
+table Assertion {
+    key:string;
+    value:TypeWrapper;
+}
+
+table Metric {
+    key:string;
+    value:TypeWrapper;
+}
+
+table Results {
+    entries:[Result];
+}
+
+table Assertions {
+    entries:[Assertion];
+}
+
+table Metrics {
+    entries:[Metric];
+}
+
+table Metadata {
+    testsuite:string;
+    version:string;
+    /// deprecated since v1.2.0
+    hostname:string (deprecated);
+    testcase:string;
+    builtAt:string;
+
+    /// since v1.2.0
+    teamslug:string;
+}
+
+table Message {
+    metadata:Metadata;
+    results:Results;
+    assertions:Assertions;
+    metrics:Metrics;
+}
+
+table MessageBuffer {
+    buf:[ubyte] (nested_flatbuffer: "Message");
+}
+
+table Messages {
+    messages:[MessageBuffer];
+}
+
+root_type Messages;

@@ -1,0 +1,51 @@
+{
+  "$schema":"http://json-schema.org/draft-04/schema#",
+  "id":"https://getweasel.com/schemas/weasel/clients/cpp/config-file.schema.json",
+  "definitions":{
+    "weasel":{
+      "properties":{
+        "api-key":{
+          "type":"string"
+        },
+        "api-url":{
+          "type":"string"
+        },
+        "testcase-declaration-mode":{
+          "type":"string"
+        },
+        "post-testcases":{
+          "maximum": 10,
+          "minimum": 1,
+          "multipleOf": 1.0,
+          "type":"integer"
+        },
+        "post-maxretries":{
+          "maximum": 100,
+          "minimum": 0,
+          "multipleOf": 1.0,
+          "type":"integer"
+        },
+        "team":{
+          "type":"string"
+        },
+        "suite":{
+          "type":"string"
+        },
+        "version":{
+          "type":"string"
+        }
+      },
+      "type":"object"
+    }
+  },
+  "additionalProperties": true,
+  "properties":{
+    "weasel":{
+      "$ref":"#/definitions/weasel"
+    }
+  },
+  "required":[
+    "weasel"
+  ],
+  "type":"object"
+}
