@@ -41,8 +41,8 @@ jobs:
     - run: ./build.sh --test
   test-docker:
     name: unittest-docker
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: docker build -t weasel/client-cpp -f config/docker/Dockerfile .
+      - run: docker build -t weasel/client-cpp -f config/Dockerfile --target builder_main .
       - run: docker run weasel/client-cpp /bin/sh -c 'cd ./local/build && ctest ../.. -C Release'
