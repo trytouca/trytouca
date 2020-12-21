@@ -3,11 +3,11 @@
 
 ## Basic Function API
 
-This example intends to introduce basic function API of Weasel Client Library
-for C++. It does not provide a comprehensive set of available functions, nor
-does it reflect the best practices of building a regression testing tool.
-Please consult with Weasel documentation when developing a regression test
-tool for real-world production code.
+This example intends to introduce some of the core function API of the Weasel
+Client Library for C++. It does not provide a comprehensive set of available
+functions, nor does it reflect the best practices of building a regression
+testing tool. Please consult with Weasel documentation when developing a
+regression test tool for real-world production code.
 
 ```cpp
 /**

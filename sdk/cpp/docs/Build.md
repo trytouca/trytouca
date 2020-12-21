@@ -27,8 +27,8 @@ these tools on your platform.
 
 ## Obtaining the Source Code
 
-Copy the source code of the client library by cloning the Weasel repository
-to a directory of your choice.
+Copy the source code of the client library by cloning its repository to a
+directory of your choice.
 We refer to this directory as `<project_directory>` in subsequent sections
 of this document.
 
@@ -52,6 +52,13 @@ We provide build scripts `build.sh` and `build.bat` for Unix and Windows
 platforms, respectively. The build scripts build "Client Library for C++"
 by default. You can pass the appropriate argument shown in the table above
 to build other components as needed.
+
+As an example, the command below builds all the components except the unit
+tests.
+
+```bash
+./build.sh --with-framework --with-utils --with-examples
+```
 
 If, for any reason, you do not want to build the components using our helper
 scripts, follow the subsequent sections to learn what our scripts do.
@@ -84,7 +91,7 @@ conan profile update settings.compiler.libcxx=libstdc++11 default
 Now we can install the dependencies:
 
 ```bash
-conan install -o with_tests=True \
+conan install -o with_tests=True -o with_framework=True \
   --install-folder "<project_directory>/local/build" \
   "<project_directory>/conanfile.py" --build=missing
 ```
@@ -92,6 +99,11 @@ conan install -o with_tests=True \
 Note the use of option `with_tests` in the command above that includes
 installation of the dependency `catch2` which is required only for building
 the unit tests.
+We are also adding option `with_framework` in the command above to pull the
+dependencies `cxxopts` which is used by the framework and the command line
+utility tool.
+This way, running `conan install` will remain a one-time operation even if
+we changed our mind about what components to build.
 
 ## Configuring the Build System
 
@@ -129,7 +141,7 @@ cmake -B"<project_directory>/local/build" -H"<project_directory>" \
   -DWEASEL_BUILD_TESTS=OFF -DWEASEL_BUILD_FRAMEWORK=ON
 ```
 
-## Running the Building System
+## Running the Build System
 
 Finally, we can proceed with building the source code via CMake which uses
 the native build tool of your platform.
