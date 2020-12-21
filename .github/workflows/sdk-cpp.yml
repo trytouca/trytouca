@@ -41,7 +41,7 @@ jobs:
     - run: ./build.sh --test
     - name: upload conan
       run: |
-        conan remote add weasel-conan https://api.bintray.com/conan/getweasel/weasel-cpp
+        conan remote add --force weasel-conan https://api.bintray.com/conan/getweasel/weasel-cpp
         conan user -p ${{ secrets.BINTRAY_API_KEY }} -r weasel-conan ${{ secrets.BINTRAY_USERNAME }}
         conan upload "weasel/1.2.1" --confirm --parallel -r weasel-conan --all
   test-docker:
