@@ -16,9 +16,7 @@ RUN apt-get update \
   && conan --version \
   && groupadd -r weasel && useradd -u 8002 -m --no-log-init -r -g weasel weasel
 
-COPY clients/cpp /opt/clients/cpp
 COPY comparator /opt/comparator
-COPY config/flatbuffers /opt/config/flatbuffers
 
 RUN chown -v -R weasel:weasel /opt
 WORKDIR /opt
@@ -26,7 +24,7 @@ USER weasel
 
 RUN conan profile new default --detect \
   && conan profile update settings.compiler.libcxx=libstdc++11 default \
-  && cd /opt/clients/cpp && ./build.sh \
+  && conan remote add --force weasel-conan https://api.bintray.com/conan/getweasel/weasel-cpp \
   && cd /opt/comparator && ./build.sh
 
 # ---- production ----
