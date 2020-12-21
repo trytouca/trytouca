@@ -34,11 +34,16 @@ jobs:
           ${{ runner.os }}-
     - name: install conan
       run: |
-       pip install conan --no-cache-dir --upgrade
-       conan profile new default --detect --force
-       conan profile update settings.compiler.libcxx=libstdc++11 default
+        pip install conan --no-cache-dir --upgrade
+        conan profile new default --detect --force
+        conan profile update settings.compiler.libcxx=libstdc++11 default
     - run: ./build.sh --with-tests --with-utils --with-examples --with-framework
     - run: ./build.sh --test
+    - name: upload conan
+      run: |
+        conan remote add weasel-conan https://api.bintray.com/conan/getweasel/weasel-cpp
+        conan user -p ${{ secrets.BINTRAY_API_KEY }} -r weasel-conan ${{ secrets.BINTRAY_USERNAME }}
+        conan upload "weasel/1.2.1" --confirm --parallel -r weasel-conan --all
   test-docker:
     name: unittest-docker
     runs-on: ubuntu-20.04
