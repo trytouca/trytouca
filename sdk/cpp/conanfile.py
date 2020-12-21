@@ -42,7 +42,7 @@ class WeaselConan(ConanFile):
         self.requires.add("rapidjson/1.1.0")
         if not self.options.shared:
             self.requires.add("libcurl/7.74.0")
-        if self.options.with_examples or self.options.with_utils:
+        if self.options.with_examples or self.options.with_framework or self.options.with_utils:
             self.requires.add("cxxopts/2.2.1")
 
     def build_requirements(self):
@@ -82,7 +82,7 @@ class WeaselConan(ConanFile):
         ]
         if not self.options.shared:
             client_requirements.append("libcurl::libcurl")
-        if self.options.with_examples or self.options.with_utils:
+        if self.options.with_examples or self.options.with_framework or self.options.with_utils:
             client_requirements.append("cxxopts::cxxopts")
         self.cpp_info.name = "weasel"
         self.cpp_info.components["client"].names["cmake_find_package"] = "client"

@@ -212,7 +212,8 @@ build_build () {
     # we specify option `with_tests` to force conan to pull dependencies for
     # all targets.
     if [ ! -f "${dir_build}/conaninfo.txt" ]; then
-        conan install -o with_tests=True --install-folder "${dir_build}" \
+        conan install -o with_tests=True -o with_framework=True \
+            --install-folder "${dir_build}" \
             "${dir_source}/conanfile.py" --build=missing
     fi
 
