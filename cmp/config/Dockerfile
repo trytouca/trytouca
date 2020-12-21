@@ -1,13 +1,13 @@
 # ---- builder ----
 
-FROM ubuntu:bionic AS builder
+FROM ubuntu:focal AS builder
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     apt-transport-https ca-certificates gnupg software-properties-common wget \
   && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
     | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
-  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' \
+  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main' \
   && apt-get install -y --no-install-recommends \
     cmake g++ gcc make python3-pip python3-setuptools \
   && rm -rf /var/lib/apt/lists/* \
@@ -29,7 +29,7 @@ RUN conan profile new default --detect \
 
 # ---- production ----
 
-FROM ubuntu:bionic
+FROM ubuntu:focal
 
 LABEL maintainer="pejman@ghorbanzade.com"
 
