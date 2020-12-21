@@ -26,7 +26,7 @@ Usage:
 
 Example:
 
-  ${BASH_SOURCE[0]} -r "docker.pkg.github.com" -u "ghorbanzade" -p "abcdefgh"
+  ${BASH_SOURCE[0]} -r "ghcr.io" -u "ghorbanzade" -p "abcdefgh"
 
 EOF
 }

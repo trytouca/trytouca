@@ -2,7 +2,7 @@ version: '3'
 services:
 
   weasel_backend:
-    image: docker.pkg.github.com/getweasel/weasel/backend:1.2
+    image: ghcr.io/getweasel/weasel-backend:latest
     environment:
       - ENV_FILE=prod
       - AUTH_JWT_SECRET=<SECRET>
@@ -22,7 +22,7 @@ services:
     restart: always
 
   weasel_comparator:
-    image: docker.pkg.github.com/getweasel/weasel/comparator:1.2
+    image: ghcr.io/getweasel/weasel-comparator:latest
     volumes:
       - ./local/data/weasel:/opt/local/data/weasel:ro
       - ./local/logs/comparator:/opt/local/logs/comparator
@@ -31,7 +31,7 @@ services:
     restart: always
 
   weasel_webapp:
-    image: docker.pkg.github.com/getweasel/weasel/webapp:1.2
+    image: ghcr.io/getweasel/weasel-webapp:latest
     ports:
       - 80:80
     depends_on:
