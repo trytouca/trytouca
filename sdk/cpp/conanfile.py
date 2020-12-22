@@ -38,7 +38,7 @@ class WeaselConan(ConanFile):
     def requirements(self):
         self.requires.add("boost/1.71.0")
         self.requires.add("flatbuffers/1.12.0")
-        self.requires.add("fmt/7.1.3")
+        self.requires.add("fmt/7.1.2")
         self.requires.add("rapidjson/1.1.0")
         if not self.options.shared:
             self.requires.add("libcurl/7.74.0")

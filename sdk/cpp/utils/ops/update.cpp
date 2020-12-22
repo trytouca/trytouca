@@ -24,11 +24,13 @@ boost::program_options::options_description UpdateOperation::description() const
 {
     namespace po = boost::program_options;
     po::options_description desc{ "Options --mode=update" };
+    // clang-format off
     desc.add_options()
-    ("src", po::value<std::string>(), "path to a directory with one or more weasel result files")
-    ("out", po::value<std::string>(), "path to a directory in which updated weasel result file(s) will be stored")
-    ("teamslug", po::value<std::string>(), "new team slug")
-    ("testsuite", po::value<std::string>(), "new suite slug");
+        ("src", po::value<std::string>(), "path to a directory with one or more weasel result files")
+        ("out", po::value<std::string>(), "path to a directory in which updated weasel result file(s) will be stored")
+        ("teamslug", po::value<std::string>(), "new team slug")
+        ("testsuite", po::value<std::string>(), "new suite slug");
+    // clang-format on
     return desc;
 }
 

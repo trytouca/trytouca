@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 
-project(Weasel VERSION 1.2.1 LANGUAGES CXX)
+project(weasel VERSION 1.2.1 LANGUAGES CXX)
 
 include(CTest)
 
@@ -69,7 +69,6 @@ if (WEASEL_BUILD_COVERAGE_REPORT)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
-
 macro(weasel_find_package package_name)
     find_package(${package_name} QUIET)
     if (NOT ${package_name}_FOUND)
