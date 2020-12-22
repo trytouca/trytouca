@@ -10,10 +10,10 @@
 #include "rapidjson/writer.h"
 #include "spdlog/spdlog.h"
 #include "weasel/devkit/comparison.hpp"
-#include "weasel/devkit/utils.hpp"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/resultfile.hpp"
 #include "weasel/devkit/testcase.hpp"
+#include "weasel/devkit/utils.hpp"
 #include <iostream>
 #include <memory>
 #include <thread>
@@ -81,6 +81,29 @@ boost::program_options::options_description ConfigOptions::description() const
 /**
  *
  */
+cxxopts::Options ConfigOptions::config_file_options() const
+{
+    cxxopts::Options opts_file("configuration file parameters");
+
+    // clang-format off
+    opts_file.add_options()
+        ("api-url", "url to weasel platform api", cxxopts::value<std::string>())
+        ("log-dir", "relative path to log directory", cxxopts::value<std::string>())
+        ("log-level", "level of detail to use for logging", cxxopts::value<std::string>()->default_value("info"))
+        ("max-failures", "number of allowable consecutive failures", cxxopts::value<std::string>()->default_value("10"))
+        ("project-dir", "full path to project root directory", cxxopts::value<std::string>())
+        ("sleep-interval", "minimum time (s) before re-polling database for unprocessed comparison jobs", cxxopts::value<std::string>()->default_value("10"))
+        ("startup-attempt-interval", "minimum time (ms) to wait before attempting to rerun startup stage", cxxopts::value<std::string>()->default_value("12000"))
+        ("startup-max-attempts", "maximum number of attempts to run startup stage", cxxopts::value<std::string>()->default_value("10"))
+        ("storage-dir", "relative path to weasel data store", cxxopts::value<std::string>());
+    // clang-format on
+
+    return opts_file;
+}
+
+/**
+ *
+ */
 Service::Service(const ConfigOptions& opts)
     : _opts(opts.data)
 {
@@ -94,9 +117,7 @@ Service::Service(const ConfigOptions& opts)
 bool Service::validate() const
 {
     // check no required option is missing
-    const auto& missingKeys = _opts.findMissingKeys({
-        co::api_url, co::project_dir, co::storage_dir
-    });
+    const auto& missingKeys = _opts.findMissingKeys({ co::api_url, co::project_dir, co::storage_dir });
     if (!missingKeys.empty())
     {
         fmt::print(stderr, "cannot continue when required keys are missing\n");

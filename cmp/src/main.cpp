@@ -4,15 +4,15 @@
 
 #include "boost/filesystem/path.hpp"
 #include "boost/program_options.hpp"
-#include "service.hpp"
 #include "cxxopts.hpp"
+#include "fmt/color.h"
+#include "fmt/format.h"
+#include "service.hpp"
+#include "spdlog/spdlog.h"
 #include "weasel/devkit/extra/logger.hpp"
 #include "weasel/devkit/options.hpp"
 #include <fstream>
 #include <iostream>
-#include "fmt/color.h"
-#include "fmt/format.h"
-#include "spdlog/spdlog.h"
 
 /**
  *
@@ -48,8 +48,7 @@ int find_application_options(int argc, char* argv[], ConfigOptions& options)
 
     if (!result.count("config-file"))
     {
-        fmt::print(stderr, fmt::fg(fmt::terminal_color::red),
-            "Please provide the path to a valid configuration file\n");
+        fmt::print(stderr, fmt::fg(fmt::terminal_color::red), "Please provide the path to a valid configuration file\n");
         fmt::print(stderr, "{}\n", opts_cmd.help());
         return EXIT_FAILURE;
     }

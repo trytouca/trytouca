@@ -6,6 +6,7 @@
 
 #include "boost/filesystem.hpp"
 #include "boost/program_options.hpp"
+#include "cxxopts.hpp"
 #include "weasel/devkit/comparison.hpp"
 #include "weasel/devkit/options.hpp"
 
@@ -45,6 +46,11 @@ public:
      *
      */
     boost::program_options::options_description description() const;
+
+    /**
+     *
+     */
+    cxxopts::Options config_file_options() const;
 
     weasel::Options<Value> data;
 };
