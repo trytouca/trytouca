@@ -4,6 +4,7 @@
 
 include(GNUInstallDirs)
 
+weasel_find_package("cxxopts")
 weasel_find_package("weasel")
 
 add_executable(
@@ -17,6 +18,7 @@ target_link_libraries(
         weasel_cmp
     PRIVATE
         weasel::client
+        cxxopts::cxxopts
 )
 
 target_compile_definitions(

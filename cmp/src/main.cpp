@@ -5,6 +5,7 @@
 #include "boost/filesystem/path.hpp"
 #include "boost/program_options.hpp"
 #include "service.hpp"
+#include "cxxopts.hpp"
 #include "weasel/devkit/extra/logger.hpp"
 #include "weasel/devkit/options.hpp"
 #include <fstream>
@@ -24,40 +25,42 @@
  */
 int find_application_options(int argc, char* argv[], ConfigOptions& options)
 {
-    namespace po = boost::program_options;
+    cxxopts::Options opts_cmd(argv[0], "Command Line Options");
     // clang-format off
-    po::options_description opts_cmd{ "Command Line Options" };
     opts_cmd.add_options()
-        ("help,h", "displays this help message")
-        ("config-file,c", pov()->required(), "path to configuration file");
+        ("h,help", "displays this help message")
+        ("c,config-file", "path to configuration file", cxxopts::value<std::string>());
     // clang-format on
 
-    // parse configuration parameters provided via command line
-    po::variables_map vm;
-    try
+    const auto result = opts_cmd.parse(argc, argv);
+
+    // if user asks for help, print help message and exit
+
+    if (result.count("help"))
     {
-        po::store(po::parse_command_line(argc, argv, opts_cmd), vm);
-        po::notify(vm);
-    }
-    catch (const std::exception& ex)
-    {
-        std::cerr << ex.what() << '\n'
-                  << opts_cmd << std::endl;
-        return -1;
+        std::cout << opts_cmd.help() << std::endl;
+        return EXIT_SUCCESS;
     }
 
-    // if user gives --help argument, print help message and exit
-    if (vm.count("help"))
+    // if user does not provide a config-file, print help message and exit
+
+    if (!result.count("config-file"))
     {
-        std::cout << opts_cmd << std::endl;
+        std::cerr << "please provide a configuration file" << std::endl;
+        std::cout << opts_cmd.help() << std::endl;
         return 1;
     }
 
-    // parse configuration parameters provided via config file
-    po::options_description opts_file = options.description();
+    // parse configuration parameters provided via the config file
+
+    namespace po = boost::program_options;
+    po::variables_map vm;
+    const auto opts_file = options.description();
+
     try
     {
-        std::ifstream ifs { vm["config-file"].as<std::string>().c_str() };
+        const auto& config_file = result["config-file"].as<std::string>();
+        std::ifstream ifs(config_file.c_str());
         if (ifs)
         {
             po::store(po::parse_config_file(ifs, opts_file, true), vm);
@@ -65,8 +68,7 @@ int find_application_options(int argc, char* argv[], ConfigOptions& options)
     }
     catch (const po::error& ex)
     {
-        std::cerr << ex.what() << '\n'
-                  << opts_file << std::endl;
+        std::cerr << ex.what() << '\n' << opts_file << std::endl;
         return -1;
     }
 
@@ -86,9 +88,6 @@ int find_application_options(int argc, char* argv[], ConfigOptions& options)
 
 /**
  *
- *
- * @param argc
- * @param argv
  */
 int main(int argc, char* argv[])
 {

@@ -19,6 +19,7 @@ class WeaselConan(ConanFile):
 
     def requirements(self):
         self.requires.add("weasel/1.2.1")
+        self.requires.add("cxxopts/2.2.1")
 
     def source(self):
         self.run("git clone https://github.com/getweasel/weasel.git")
