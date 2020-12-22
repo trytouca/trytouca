@@ -15,7 +15,7 @@ cxxopts::Options config_options_cmd()
 {
     cxxopts::Options opts_cmd("command-line arguments");
     // clang-format off
-    opts_cmd.add_options()
+    opts_cmd.add_options("cmd")
         ("h,help", "displays this help message")
         ("c,config-file", "path to the configuration file", cxxopts::value<std::string>());
     // clang-format on
@@ -29,7 +29,7 @@ cxxopts::Options config_options_file()
 {
     cxxopts::Options opts_file("configuration file parameters");
     // clang-format off
-    opts_file.add_options()
+    opts_file.add_options("file")
         ("api-url", "url to weasel platform api", cxxopts::value<std::string>())
         ("log-dir", "relative path to log directory", cxxopts::value<std::string>())
         ("log-level", "level of detail to use for logging", cxxopts::value<std::string>()->default_value("info"))
@@ -48,6 +48,8 @@ cxxopts::Options config_options_file()
  */
 bool Options::parse(int argc, char* argv[])
 {
+    // parse command line arguments
+
     auto copts_cmd = config_options_cmd();
     const auto result_cmd = copts_cmd.parse(argc, argv);
 
@@ -56,6 +58,7 @@ bool Options::parse(int argc, char* argv[])
     if (result_cmd.count("help"))
     {
         fmt::print(stdout, "{}\n", copts_cmd.help());
+        has_argument_help = true;
         return true;
     }
 
@@ -99,7 +102,10 @@ bool Options::parse(int argc, char* argv[])
         return false;
     }
 
-    // parse all json elements as configuration parameters
+    // extract json elements as configuration parameters
+
+    std::vector<char*> copts_args;
+    copts_args.emplace_back(argv[0]);
 
     for (const auto& rjMember : document.GetObject())
     {
@@ -112,8 +118,31 @@ bool Options::parse(int argc, char* argv[])
             continue;
         }
         const auto& value = rjMember.value.GetString();
-        data[key] = value;
+        using namespace std::string_literals;
+        copts_args.push_back(strdup(("--"s + key).c_str()));
+        copts_args.push_back(strdup(value));
     }
+
+    // interpret config file parameters
+
+    auto copts_file = config_options_file();
+    int copts_file_argc = copts_args.size();
+    auto copts_file_argv = copts_args.data();
+    const auto result_file = copts_file.parse(copts_file_argc, copts_file_argv);
+
+    // populate options map
+
+    for (auto opt: copts_file.group_help("file").options)
+    {
+        if (!result_file.count(opt.l))
+        {
+            continue;
+        }
+        _options.emplace(opt.l, result_file[opt.l].as<std::string>());
+    }
+
+    // @todo: validate entries in the options map
+    // @todo: interpret application options using the options map
 
     return true;
 }

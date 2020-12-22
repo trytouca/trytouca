@@ -11,6 +11,8 @@
 struct Options
 {
     bool parse(int argc, char* argv[]);
+    bool has_argument_help = false;
 
-    std::unordered_map<std::string, std::string> data;
+private:
+    std::unordered_map<std::string, std::string> _options;
 };
