@@ -54,7 +54,7 @@ class Merge(Operation):
     def run(self) -> bool:
         inDir = self.__options.get('src')
         outDir = self.__options.get('out')
-        utilsApp = 'D:\\vitaldev\\ots\\weasel-classic\\clients\\cpp\\local\\dist\\bin\\weasel_cli.exe'
+        utilsApp = 'fullpath/to/weasel_cli'
 
         if not os.path.exists(inDir):
             logger.error(f'directory {inDir} does not exist')

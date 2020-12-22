@@ -60,7 +60,7 @@ class Post(Operation):
         srcDir = self.__options.get('src')
         apiKey = self.__options.get('api_key')
         apiUrl = self.__options.get('api_url')
-        utilsApp = "D:\\vitaldev\\ots\\weasel-classic\\clients\\cpp\\local\\dist\\bin\\weasel_cli.exe"
+        utilsApp = "fullpath/to/weasel_cli"
 
         if not os.path.exists(srcDir):
             logger.error(f'directory {srcDir} does not exist')

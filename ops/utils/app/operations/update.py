@@ -52,7 +52,7 @@ class Update(Operation):
 
     def parse(self, args):
         parsed, _ = self.parser().parse_known_args(args)
-        for key in ['src', 'api_key', 'api_url']:
+        for key in ['src', 'out', 'teamslug', 'testsuite']:
             if key not in vars(parsed).keys() or vars(parsed).get(key) is None:
                 raise ArgumentTypeError(f'missing key: {key}')
         self.__options = { **self.__options, **vars(parsed) }
@@ -62,7 +62,7 @@ class Update(Operation):
         outDir = self.__options.get('out')
         teamslug = self.__options.get('teamslug')
         testsuite = self.__options.get('testsuite')
-        utilsApp = "D:\\vitaldev\\ots\\weasel-classic\\clients\\cpp\\local\\dist\\bin\\weasel_cli.exe"
+        utilsApp = "fullpath/to/weasel_cli"
 
         if not os.path.exists(srcDir):
             logger.error(f'directory {srcDir} does not exist')
@@ -87,7 +87,7 @@ class Update(Operation):
         for batchName in batchNames:
             batchDir = os.path.join(srcDir, batchName)
             logger.info(f'updateing {batchDir}')
-            if not utils_update(batchDir, outDir, teamslug, testsuite, utilsApp):
+            if not utils_update(batchDir, os.path.join(outDir, batchName), teamslug, testsuite, utilsApp):
                 logger.error(f'failed to update {batchDir}')
                 return False
         logger.info('updateed all result directories')
