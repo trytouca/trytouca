@@ -10,8 +10,9 @@
 #include "weasel/devkit/options.hpp"
 #include <fstream>
 #include <iostream>
-
-#define pov boost::program_options::value<std::string>
+#include "fmt/color.h"
+#include "fmt/format.h"
+#include "spdlog/spdlog.h"
 
 /**
  *
@@ -25,11 +26,12 @@
  */
 int find_application_options(int argc, char* argv[], ConfigOptions& options)
 {
-    cxxopts::Options opts_cmd(argv[0], "Command Line Options");
+    cxxopts::Options opts_cmd(argv[0], "command-line arguments");
+
     // clang-format off
     opts_cmd.add_options()
         ("h,help", "displays this help message")
-        ("c,config-file", "path to configuration file", cxxopts::value<std::string>());
+        ("c,config-file", "path to the configuration file", cxxopts::value<std::string>());
     // clang-format on
 
     const auto result = opts_cmd.parse(argc, argv);
@@ -38,7 +40,7 @@ int find_application_options(int argc, char* argv[], ConfigOptions& options)
 
     if (result.count("help"))
     {
-        std::cout << opts_cmd.help() << std::endl;
+        fmt::print(stdout, "{}\n", opts_cmd.help());
         return EXIT_SUCCESS;
     }
 
@@ -46,9 +48,10 @@ int find_application_options(int argc, char* argv[], ConfigOptions& options)
 
     if (!result.count("config-file"))
     {
-        std::cerr << "please provide a configuration file" << std::endl;
-        std::cout << opts_cmd.help() << std::endl;
-        return 1;
+        fmt::print(stderr, fmt::fg(fmt::terminal_color::red),
+            "Please provide the path to a valid configuration file\n");
+        fmt::print(stderr, "{}\n", opts_cmd.help());
+        return EXIT_FAILURE;
     }
 
     // parse configuration parameters provided via the config file
@@ -68,7 +71,8 @@ int find_application_options(int argc, char* argv[], ConfigOptions& options)
     }
     catch (const po::error& ex)
     {
-        std::cerr << ex.what() << '\n' << opts_file << std::endl;
+        fmt::print(stderr, fmt::fg(fmt::terminal_color::red), "{}\n", ex.what());
+        std::cerr << opts_file << std::endl;
         return -1;
     }
 
@@ -118,7 +122,6 @@ int main(int argc, char* argv[])
         auto& logger = weasel::internal::Logger::instance();
         logger.add_file_handler(logDir.string(), level);
         logger.set_console_handler(level);
-        WEASEL_LOG_INFO("Hello from Weasel Comparator");
     }
 
     // initialize the comparator in service mode
@@ -127,16 +130,16 @@ int main(int argc, char* argv[])
     // validate configuration options
     if (!service.validate())
     {
-        std::cerr << "failed to validate provided options" << '\n'
-                  << options.description() << std::endl;
+        fmt::print(stderr, "failed to validate provided options\n");
+        std::cerr << options.description() << std::endl;
         return EXIT_FAILURE;
     }
 
     // initialize comparator in service mode
     if (!service.init())
     {
-        std::cerr << "failed to initialize operation" << '\n'
-                  << options.description() << std::endl;
+        fmt::print(stderr, "failed to initialize operation\n");
+        std::cerr << options.description() << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -146,11 +149,10 @@ int main(int argc, char* argv[])
     // returns unless an interrupt signal hints that it has to stop.
     if (service.run())
     {
-        std::cerr << "successfully performed the required operation"
-                  << std::endl;
+        fmt::print(stdout, "successfully performed the required operation\n");
         return EXIT_SUCCESS;
     }
 
-    std::cerr << "failed to run requested operation" << std::endl;
+    fmt::print(stderr, "failed to run requested operation\n");
     return EXIT_FAILURE;
 }

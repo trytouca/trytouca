@@ -5,6 +5,8 @@
 include(GNUInstallDirs)
 
 weasel_find_package("cxxopts")
+weasel_find_package("fmt")
+weasel_find_package("spdlog")
 weasel_find_package("weasel")
 
 add_executable(
@@ -17,8 +19,10 @@ add_executable(
 target_link_libraries(
         weasel_cmp
     PRIVATE
-        weasel::client
         cxxopts::cxxopts
+        fmt::fmt
+        spdlog::spdlog
+        weasel::client
 )
 
 target_compile_definitions(
