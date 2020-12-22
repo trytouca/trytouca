@@ -12,6 +12,7 @@ weasel_find_package("weasel")
 add_executable(
     weasel_cmp
     main.cpp
+    options.cpp
     service.hpp
     service.cpp
 )
@@ -23,6 +24,12 @@ target_link_libraries(
         fmt::fmt
         spdlog::spdlog
         weasel::client
+)
+
+target_include_directories(
+        weasel_cmp
+    PRIVATE
+        ${WEASEL_COMPARATOR_ROOT_DIR}/include
 )
 
 target_compile_definitions(

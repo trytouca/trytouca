@@ -47,11 +47,6 @@ public:
      */
     boost::program_options::options_description description() const;
 
-    /**
-     *
-     */
-    cxxopts::Options config_file_options() const;
-
     weasel::Options<Value> data;
 };
 
