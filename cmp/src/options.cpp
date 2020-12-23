@@ -8,14 +8,42 @@
 #include "rapidjson/document.h"
 #include "weasel/devkit/utils.hpp"
 
+namespace weasel {
+    /**
+     *
+     */
+    void print_impl(const fmt::terminal_color& style, fmt::string_view format, fmt::format_args args)
+    {
+        fmt::vprint(stderr, fmt::fg(style), format, args);
+    }
+
+    /**
+     *
+     */
+    template <typename Format, typename... Args>
+    void print_error(const Format& format, Args&&... args)
+    {
+        print_impl(fmt::terminal_color::red, format, fmt::make_args_checked<Args...>(format, args...));
+    }
+
+    /**
+     *
+     */
+    template <typename Format, typename... Args>
+    void print_warning(const Format& format, Args&&... args)
+    {
+        print_impl(fmt::terminal_color::yellow, format, fmt::make_args_checked<Args...>(format, args...));
+    }
+}
+
 /**
  *
  */
 cxxopts::Options config_options_cmd()
 {
-    cxxopts::Options opts_cmd("command-line arguments");
+    cxxopts::Options opts_cmd("", "");
     // clang-format off
-    opts_cmd.add_options("cmd")
+    opts_cmd.add_options("command-line")
         ("h,help", "displays this help message")
         ("c,config-file", "path to the configuration file", cxxopts::value<std::string>());
     // clang-format on
@@ -27,18 +55,18 @@ cxxopts::Options config_options_cmd()
  */
 cxxopts::Options config_options_file()
 {
-    cxxopts::Options opts_file("configuration file parameters");
+    cxxopts::Options opts_file("", "");
     // clang-format off
-    opts_file.add_options("file")
+    opts_file.add_options("configuration-file")
         ("api-url", "url to weasel platform api", cxxopts::value<std::string>())
         ("log-dir", "relative path to log directory", cxxopts::value<std::string>())
         ("log-level", "level of detail to use for logging", cxxopts::value<std::string>()->default_value("info"))
-        ("max-failures", "number of allowable consecutive failures", cxxopts::value<std::string>()->default_value("10"))
+        ("max-failures", "number of allowable consecutive failures", cxxopts::value<unsigned>()->default_value("10"))
         ("project-dir", "full path to project root directory", cxxopts::value<std::string>())
-        ("sleep-interval", "minimum time (s) before polling new jobs", cxxopts::value<std::string>()->default_value("10"))
-        ("startup-attempt-interval", "minimum time (ms) before re-running startup stage", cxxopts::value<std::string>()->default_value("12000"))
-        ("startup-max-attempts", "maximum number of attempts to run startup stage", cxxopts::value<std::string>()->default_value("10"))
-        ("storage-dir", "relative path to weasel data store", cxxopts::value<std::string>());
+        ("polling-interval", "minimum time (ms) before polling new jobs", cxxopts::value<unsigned>()->default_value("10000"))
+        ("startup-interval", "minimum time (ms) before re-running startup stage", cxxopts::value<unsigned>()->default_value("12000"))
+        ("startup-timeout", "total time (ms) before aborting startup stage", cxxopts::value<unsigned>()->default_value("120000"))
+        ("storage-dir", "relative path to weasel data store", cxxopts::value<std::string>()->default_value("local/data/weasel"));
     // clang-format on
     return opts_file;
 }
@@ -47,6 +75,22 @@ cxxopts::Options config_options_file()
  *
  */
 bool Options::parse(int argc, char* argv[])
+{
+    try
+    {
+        return parse_impl(argc, argv);
+    }
+    catch (const std::exception& ex)
+    {
+        weasel::print_error("failed to parse application options: {}\n", ex.what());
+    }
+    return false;
+}
+
+/**
+ *
+ */
+bool Options::parse_impl(int argc, char* argv[])
 {
     // parse command line arguments
 
@@ -58,7 +102,7 @@ bool Options::parse(int argc, char* argv[])
     if (result_cmd.count("help"))
     {
         fmt::print(stdout, "{}\n", copts_cmd.help());
-        has_argument_help = true;
+        arguments.help = true;
         return true;
     }
 
@@ -66,7 +110,7 @@ bool Options::parse(int argc, char* argv[])
 
     if (!result_cmd.count("config-file"))
     {
-        fmt::print(stderr, fmt::fg(fmt::terminal_color::red), "please provide a valid configuration file\n");
+        weasel::print_error("please provide a valid configuration file\n");
         fmt::print(stderr, "{}\n", copts_cmd.help());
         return false;
     }
@@ -77,7 +121,7 @@ bool Options::parse(int argc, char* argv[])
 
     if (!weasel::filesystem::is_regular_file(config_file_path))
     {
-        fmt::print(stderr, fmt::fg(fmt::terminal_color::red), "configuration file not found: {}\n", config_file_path);
+        weasel::print_error("configuration file not found: {}\n", config_file_path);
         return false;
     }
 
@@ -90,7 +134,7 @@ bool Options::parse(int argc, char* argv[])
     rapidjson::Document document;
     if (document.Parse<0>(config_file_content.c_str()).HasParseError())
     {
-        fmt::print(stderr, fmt::fg(fmt::terminal_color::red), "failed to parse configuration file\n");
+        weasel::print_error("failed to parse configuration file\n");
         return false;
     }
 
@@ -98,7 +142,7 @@ bool Options::parse(int argc, char* argv[])
 
     if (!document.IsObject())
     {
-        fmt::print(stderr, fmt::fg(fmt::terminal_color::yellow), "expected configuration file to be a json object\n");
+        weasel::print_error("expected configuration file to be a json object\n");
         return false;
     }
 
@@ -112,9 +156,8 @@ bool Options::parse(int argc, char* argv[])
         const auto& key = rjMember.name.GetString();
         if (!rjMember.value.IsString())
         {
-            fmt::print(stderr, fmt::fg(fmt::terminal_color::yellow), "ignoring option \"{}\" in configuration file.\n"
-                                                                     "expected value type to be string.\n",
-                       key);
+            weasel::print_warning("ignoring option \"{}\" in configuration file.\n", key);
+            weasel::print_warning("expected value type to be string.\n");
             continue;
         }
         const auto& value = rjMember.value.GetString();
@@ -130,19 +173,73 @@ bool Options::parse(int argc, char* argv[])
     auto copts_file_argv = copts_args.data();
     const auto result_file = copts_file.parse(copts_file_argc, copts_file_argv);
 
-    // populate options map
+    // validate and set option `api-url`
 
-    for (auto opt: copts_file.group_help("file").options)
+    if (!result_file.count("api-url"))
     {
-        if (!result_file.count(opt.l))
-        {
-            continue;
-        }
-        _options.emplace(opt.l, result_file[opt.l].as<std::string>());
+        weasel::print_error("expected configuration parameter: `api-url`\n");
+        fmt::print("{}\n", copts_file.help());
+        return false;
     }
 
-    // @todo: validate entries in the options map
-    // @todo: interpret application options using the options map
+    arguments.api_url = result_file["api-url"].as<std::string>();
+
+    // validate option `project-dir`
+
+    if (!result_file.count("project-dir"))
+    {
+        weasel::print_error("expected configuration parameter: `project-dir`\n");
+        fmt::print("{}\n", copts_file.help());
+        return false;
+    }
+
+    if (!std::filesystem::is_directory(result_file["project-dir"].as<std::string>()))
+    {
+        weasel::print_error("option `project-dir` points to nonexistent directory");
+        return false;
+    }
+
+    arguments.project_dir = result_file["project-dir"].as<std::string>();
+
+    // validate and set option `log-level`
+
+    {
+        const std::unordered_set<std::string> levels = { "debug", "info", "warning" };
+        const auto level = result_file["log-level"].as<std::string>();
+        if (!levels.count(level))
+        {
+            weasel::print_error("invalid value for option `log-level`");
+            fmt::print("{}\n", copts_file.help());
+            return false;
+        }
+        arguments.log_level = level;
+    }
+
+    // set option `log-dir` if it is provided
+
+    if (result_file.count("log-dir"))
+    {
+        arguments.log_dir = arguments.project_dir / result_file["log-dir"].as<std::string>();
+    }
+
+    // set option `storage-dir`
+
+    {
+        const auto& storage_dir = result_file["storage-dir"].as<std::string>();
+        if (!std::filesystem::is_directory(arguments.project_dir / storage_dir))
+        {
+            weasel::print_error("option `storage-dir` points to nonexistent directory");
+            return false;
+        }
+        arguments.storage_dir = arguments.project_dir / storage_dir;
+    }
+
+    // set other options with default numeric values
+
+    arguments.max_failures = result_file["max-failures"].as<unsigned>();
+    arguments.polling_interval = result_file["polling-interval"].as<unsigned>();
+    arguments.startup_interval = result_file["startup-interval"].as<unsigned>();
+    arguments.startup_timeout = result_file["startup-timeout"].as<unsigned>();
 
     return true;
 }
