@@ -7,7 +7,6 @@
 #include <filesystem>
 #include <optional>
 #include <string>
-#include <unordered_map>
 
 /**
  *
@@ -21,7 +20,7 @@ struct Options
         std::optional<bool> help;
         std::string api_url;
         std::string log_level;
-        std::optional<std::string> log_dir;
+        std::optional<std::filesystem::path> log_dir;
         std::filesystem::path project_dir;
         std::filesystem::path storage_dir;
         unsigned max_failures;

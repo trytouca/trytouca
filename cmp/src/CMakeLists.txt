@@ -11,6 +11,7 @@ weasel_find_package("weasel")
 
 add_executable(
     weasel_cmp
+    logger.cpp
     main.cpp
     options.cpp
     service.hpp

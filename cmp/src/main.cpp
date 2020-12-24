@@ -3,9 +3,8 @@
  */
 
 #include "comparator/options.hpp"
-#include "fmt/format.h"
+#include "fmt/printf.h"
 #include "service.hpp"
-#include "weasel/devkit/extra/logger.hpp"
 
 /**
  *
@@ -28,21 +27,8 @@ int main(int argc, char* argv[])
         return EXIT_SUCCESS;
     }
 
-    // initialize logger
-
-    if (options.arguments.log_dir.has_value())
-    {
-        using weasel::internal::Logger;
-        const auto level = Logger::level_values.at(options.arguments.log_level);
-        auto& logger = weasel::internal::Logger::instance();
-        logger.add_file_handler(options.arguments.log_dir.value(), level);
-        logger.set_console_handler(level);
-    }
-
-    // initialize the comparator in service mode
     Service service { options };
 
-    // initialize comparator in service mode
     if (!service.init())
     {
         fmt::print(stderr, "failed to initialize operation\n");

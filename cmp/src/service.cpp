@@ -3,6 +3,7 @@
  */
 
 #include "service.hpp"
+#include "comparator/logger.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "spdlog/spdlog.h"
@@ -23,6 +24,17 @@ Service::Service(const Options& opts)
  */
 bool Service::init()
 {
+
+    // setup logging
+
+    setup_console_logger(_opts.arguments.log_level);
+    if (_opts.arguments.log_dir.has_value())
+    {
+        setup_file_logger(_opts.arguments.log_dir.value().string());
+    }
+
+    // run startup stage
+
     if (!runStartupStage())
     {
         spdlog::error("failed during start-up stage");

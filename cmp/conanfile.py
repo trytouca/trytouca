@@ -27,6 +27,7 @@ class WeaselConan(ConanFile):
         self.run("git clone https://github.com/getweasel/weasel.git")
 
     def configure(self):
+        self.options["spdlog"].header_only = True
         self.options["weasel"].shared = True
         self.options["weasel"].with_tests = False
         self.options["weasel"].with_utils = False
