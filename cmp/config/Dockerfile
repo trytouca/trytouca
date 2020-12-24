@@ -34,6 +34,6 @@ FROM ubuntu:focal
 LABEL maintainer="pejman@ghorbanzade.com"
 
 COPY --from=builder /opt/comparator/local/dist /usr/local
-COPY --from=builder /opt/comparator/config/config.prod.ini /usr/local/etc/comparator.ini
+COPY --from=builder /opt/comparator/config/config.prod.json /usr/local/etc/comparator.json
 
-CMD [ "/usr/local/bin/weasel_cmp", "--config-file=/usr/local/etc/comparator.ini" ]
+CMD [ "/usr/local/bin/weasel_cmp", "--config-file=/usr/local/etc/comparator.json" ]

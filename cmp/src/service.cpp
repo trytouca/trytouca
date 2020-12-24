@@ -3,115 +3,19 @@
  */
 
 #include "service.hpp"
-#include "boost/filesystem.hpp"
-#include "flatbuffers/flatbuffers.h"
-#include "rapidjson/schema.h"
-#include "rapidjson/stringbuffer.h"
+#include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "spdlog/spdlog.h"
 #include "weasel/devkit/comparison.hpp"
-#include "weasel/devkit/platform.hpp"
-#include "weasel/devkit/resultfile.hpp"
-#include "weasel/devkit/testcase.hpp"
 #include "weasel/devkit/utils.hpp"
-#include <iostream>
-#include <memory>
 #include <thread>
 
-#define pov boost::program_options::value<std::string>
-using co = ConfigOptions::Value;
-
 /**
  *
  */
-ConfigOptions::ConfigOptions()
-    : data({ { Value::api_url, "api-url" },
-             { Value::log_dir, "log-dir" },
-             { Value::log_level, "log-level" },
-             { Value::max_failures, "max-failures" },
-             { Value::project_dir, "project-dir" },
-             { Value::sleep_interval, "sleep-interval" },
-             { Value::startup_attempt_interval, "startup-attempt-interval" },
-             { Value::startup_max_attempts, "startup-max-attempts" },
-             { Value::storage_dir, "storage-dir" } })
+Service::Service(const Options& opts)
+    : _opts(opts)
 {
-}
-
-/**
- *
- */
-boost::program_options::options_description ConfigOptions::description() const
-{
-    boost::program_options::options_description opts_file {
-        "Configuration File Options"
-    };
-    // clang-format off
-    opts_file.add_options()
-        ("api-url", pov(), "URL to Weasel Platform API")
-        ("log-dir",
-            pov(),
-            "path, relative to project directory, to the directory "
-            "to write log files into")
-        ("log-level", pov()->default_value("info"),
-            "level of details to use for logging")
-        ("max-failures",
-            pov()->default_value("10"),
-            "number of allowable consecutive failures before we conclude "
-            "that comparator has encountered a fatal issue")
-        ("project-dir", pov(), "full path to project root directory")
-        ("sleep-interval",
-            pov()->default_value("10"),
-            "minimum time (s) before re-polling database for unprocessed "
-            "comparison jobs")
-        ("startup-attempt-interval",
-            pov()->default_value("12000"),
-            "minimum time (ms) to wait before attempting to rerun "
-            "startup stage")
-        ("startup-max-attempts",
-            pov()->default_value("10"),
-            "maximum number of attempts to run startup stage")
-        ("storage-dir",
-            pov(),
-            "path, relative to project directory, to the directory to "
-            "store result files into");
-    // clang-format on
-    return opts_file;
-}
-
-/**
- *
- */
-Service::Service(const ConfigOptions& opts)
-    : _opts(opts.data)
-{
-}
-
-/**
- * this function is called from a context in which logger may not
- * have been initialized yet. it is safe to write errors in standard
- * error instead.
- */
-bool Service::validate() const
-{
-    // check no required option is missing
-    const auto& missingKeys = _opts.findMissingKeys({ co::api_url, co::project_dir, co::storage_dir });
-    if (!missingKeys.empty())
-    {
-        fmt::print(stderr, "cannot continue when required keys are missing\n");
-        fmt::print(stderr, "missing required option(s):\n");
-        for (const auto& key : missingKeys)
-        {
-            if (!_opts.hasNameForKey(key))
-            {
-                fmt::print(stderr, " - unknown ({})\n", static_cast<int>(key));
-                continue;
-            }
-            fmt::print(stderr, " - {}\n", _opts.toName(key));
-        }
-        return false;
-    }
-
-    return true;
 }
 
 /**
@@ -133,19 +37,19 @@ bool Service::init()
  */
 bool Service::runStartupStage() const
 {
-    const auto& maxAttempts = _opts.get<unsigned int>(co::startup_max_attempts);
-    const auto& interval = std::chrono::milliseconds(_opts.get<unsigned int>(co::startup_attempt_interval));
+    const auto max_attempts = _opts.arguments.startup_timeout / _opts.arguments.startup_interval;
+    const auto& interval = std::chrono::milliseconds(_opts.arguments.startup_interval);
     spdlog::info("running start-up stage");
-    weasel::ApiUrl apiUrl(_opts.get(co::api_url));
+    weasel::ApiUrl apiUrl(_opts.arguments.api_url);
     weasel::ApiConnector apiConnector(apiUrl);
-    for (auto i = 1u; i <= maxAttempts; ++i)
+    for (auto i = 1u; i <= max_attempts; ++i)
     {
         if (apiConnector.handshake())
         {
             spdlog::info("start-up phase completed");
             return true;
         }
-        spdlog::warn("running start-up stage: attempt ({}/{})", i, maxAttempts);
+        spdlog::warn("running start-up stage: attempt ({}/{})", i, max_attempts);
         std::this_thread::sleep_for(interval);
     }
     return false;
@@ -157,14 +61,13 @@ bool Service::runStartupStage() const
 bool Service::run() const
 {
     namespace chr = std::chrono;
-    weasel::ApiUrl apiUrl(_opts.get(co::api_url));
+    weasel::ApiUrl apiUrl(_opts.arguments.api_url);
     weasel::ApiConnector apiConnector(apiUrl);
 
     spdlog::info("hello from weasel comparator");
     spdlog::info("starting to run comparator in service mode");
 
-    const auto& interval = chr::duration_cast<chr::milliseconds>(
-        chr::seconds(_opts.get<unsigned int>(co::sleep_interval)));
+    const auto& interval = chr::milliseconds(_opts.arguments.polling_interval);
 
     while (true)
     {
@@ -203,7 +106,7 @@ bool Service::runTask(const std::vector<weasel::ComparisonJob>& jobs) const
 
     const auto maxFailures = std::min(
         static_cast<unsigned>(jobs.size()),
-        _opts.get<unsigned>(co::max_failures));
+        _opts.arguments.max_failures);
 
     // process comparison jobs one by one
 
@@ -293,14 +196,11 @@ std::shared_ptr<weasel::Testcase> Service::loadResultFile(
     const std::string& batchId,
     const std::string messageId) const
 {
-    boost::filesystem::path fullpath(_opts.get(co::project_dir));
-    fullpath /= _opts.get(co::storage_dir);
-    fullpath /= batchId;
-    fullpath /= messageId;
+    const auto& fullpath = _opts.arguments.storage_dir / batchId / messageId;
 
     // check that the result file exists
 
-    if (!boost::filesystem::is_regular_file(fullpath))
+    if (!std::filesystem::is_regular_file(fullpath))
     {
         spdlog::error("{}: result file is missing", fullpath.string());
         return nullptr;
@@ -348,7 +248,7 @@ bool Service::processMessage(
 
     // submit output to Weasel Platform
 
-    weasel::ApiUrl apiUrl(_opts.get(co::api_url));
+    weasel::ApiUrl apiUrl(_opts.arguments.api_url);
     weasel::ApiConnector apiConnector(apiUrl);
 
     if (!apiConnector.processMessage(messageId, output))
@@ -394,7 +294,7 @@ bool Service::processComparisonJob(
 
     // submit output to Weasel Platform
 
-    weasel::ApiUrl apiUrl(_opts.get(co::api_url));
+    weasel::ApiUrl apiUrl(_opts.arguments.api_url);
     weasel::ApiConnector apiConnector(apiUrl);
 
     if (!apiConnector.processComparison(jobId, output))

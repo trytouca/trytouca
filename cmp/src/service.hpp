@@ -4,51 +4,13 @@
 
 #pragma once
 
-#include "boost/filesystem.hpp"
-#include "boost/program_options.hpp"
-#include "cxxopts.hpp"
-#include "weasel/devkit/comparison.hpp"
-#include "weasel/devkit/options.hpp"
+#include "comparator/options.hpp"
+#include "weasel/devkit/platform.hpp"
+#include "weasel/devkit/testcase.hpp"
 
 namespace weasel {
     struct ComparisonJob;
 }
-
-/**
- *
- */
-class ConfigOptions
-{
-public:
-    /**
-     *
-     */
-    enum class Value : unsigned char
-    {
-        api_url,
-        log_dir,
-        log_level,
-        max_failures,
-        max_retry_db_connect,
-        project_dir,
-        sleep_interval,
-        startup_max_attempts,
-        startup_attempt_interval,
-        storage_dir
-    };
-
-    /**
-     *
-     */
-    ConfigOptions();
-
-    /**
-     *
-     */
-    boost::program_options::options_description description() const;
-
-    weasel::Options<Value> data;
-};
 
 /**
  *
@@ -77,12 +39,7 @@ public:
     /**
      *
      */
-    explicit Service(const ConfigOptions& opts);
-
-    /**
-     *
-     */
-    bool validate() const;
+    explicit Service(const Options& opts);
 
     /**
      *
@@ -133,5 +90,5 @@ private:
         const std::string& jobId) const;
 
     mutable Statistics _stats;
-    weasel::Options<ConfigOptions::Value> _opts;
+    Options _opts;
 };
