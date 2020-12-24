@@ -128,7 +128,7 @@ namespace weasel {
      *
      * @code
      *     weasel::configure({
-     *         { "api-url": "https://getweasel.com/api/@/hogwarts/quidditch-vr" },
+     *         { "api-url": "https://getweasel.com/api/@/some-team/some-suite" },
      *         { "version": "4.2.0" }
      *     });
      * @endcode
@@ -145,8 +145,8 @@ namespace weasel {
      *     weasel::configure({
      *         { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b" },
      *         { "api-url": "https://getweasel.com/api" },
-     *         { "team": "hogwarts" },
-     *         { "suite": "quidditch-vr" },
+     *         { "team": "some-team" },
+     *         { "suite": "some-suite" },
      *         { "version": "4.2.0" }
      *     });
      * @endcode
@@ -160,8 +160,8 @@ namespace weasel {
      *
      * @code
      *     weasel::configure({
-     *         { "team": "hogwarts" },
-     *         { "suite": "quidditch-vr" },
+     *         { "team": "some-team" },
+     *         { "suite": "some-suite" },
      *         { "version": "4.2.0" }
      *     });
      * @endcode

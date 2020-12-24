@@ -7,13 +7,13 @@
 #include "boost/filesystem/fstream.hpp"
 #include "boost/iostreams/stream.hpp"
 #include "boost/iostreams/tee.hpp"
-#include "boost/program_options.hpp"
+#include "cxxopts.hpp"
 #include "rapidjson/document.h"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/utils.hpp"
 #include "weasel/framework/detail/utils.hpp"
 #include "weasel/weasel.hpp"
-#include <fmt/core.h>
+#include "fmt/core.h"
 #include <iostream>
 #include <thread>
 
@@ -76,60 +76,60 @@ namespace weasel { namespace framework {
     /**
      *
      */
-    boost::program_options::options_description cli_options()
+    cxxopts::Options cli_options()
     {
-        namespace po = boost::program_options;
+
+        cxxopts::Options options("weasel-framework", "Command Line Options");
 
         // clang-format off
-        po::options_description opts{ "Command Line Options" };
-        opts.add_options()
-            ("help,h", "displays this help message")
-            ("version,v", "version of this executable")
-            ("revision,r",
-                po::value<std::string>()->required(),
-                "version to associate with testresults")
-            ("config-file,c",
-                po::value<std::string>(),
-                "path to configuration file")
-            ("output-dir,o",
-                po::value<std::string>()->default_value("./results"),
-                "path to output directory")
+        options.add_options("main")
+            ("h,help", "displays this help message")
+            ("v,version", "version of this executable")
+            ("r,revision",
+                "version to associate with testresults",
+                cxxopts::value<std::string>())
+            ("c,config-file",
+                "path to configuration file",
+                cxxopts::value<std::string>())
+            ("o,output-dir",
+                "path to output directory",
+                cxxopts::value<std::string>()->default_value("./results"))
             ("api-key",
-                po::value<std::string>(),
-                "weasel platform api key")
+                "weasel platform api key",
+                cxxopts::value<std::string>())
             ("api-url",
-                po::value<std::string>(),
-                "weasel platform api url")
+                "weasel platform api url",
+                cxxopts::value<std::string>())
             ("suite",
-                po::value<std::string>(),
-                "slug of suite to which testresults belong")
+                "slug of suite to which testresults belong",
+                cxxopts::value<std::string>())
             ("team",
-                po::value<std::string>(),
-                "slug of team to which testresults belong")
+                "slug of team to which testresults belong",
+                cxxopts::value<std::string>())
             ("testcase",
-                po::value<std::string>(),
-                "single testcase to feed to the workflow")
+                "single testcase to feed to the workflow",
+                cxxopts::value<std::string>())
             ("skip-logs",
-                po::value<std::string>()->implicit_value("true"),
-                "do not generate log files")
+                "do not generate log files",
+                cxxopts::value<std::string>()->implicit_value("true"))
             ("skip-post",
-                po::value<std::string>()->implicit_value("true"),
-                "do not submit results to weasel platform")
+                "do not submit results to weasel platform",
+                cxxopts::value<std::string>()->implicit_value("true"))
             ("save-as-json",
-                po::value<std::string>()->implicit_value("false"),
-                "save a copy of test results on local disk in json format")
+                "save a copy of test results on local disk in json format",
+                cxxopts::value<std::string>()->implicit_value("true"))
             ("save-as-binary",
-                po::value<std::string>()->default_value("true"),
-                "save a copy of test results on local disk in binary format")
+                "save a copy of test results on local disk in binary format",
+                cxxopts::value<std::string>()->default_value("true"))
             ("log-level",
-                po::value<std::string>()->default_value("info"),
-                "level of detail with which events are logged")
+                "level of detail with which events are logged",
+                cxxopts::value<std::string>()->default_value("info"))
             ("overwrite",
-                po::value<std::string>()->implicit_value("true"),
-                "overwrite result directory for testcase if it already exists");
+                "overwrite result directory for testcase if it already exists",
+                cxxopts::value<std::string>()->implicit_value("true"));
         // clang-format on
 
-        return opts;
+        return options;
     }
 
     /**
@@ -139,35 +139,33 @@ namespace weasel { namespace framework {
      */
     bool parse_cli_options(int argc, char* argv[], Options& options)
     {
-        namespace po = boost::program_options;
-
-        const auto& opts = cli_options();
-
-        po::variables_map vm;
+        auto opts = cli_options();
+        opts.allow_unrecognised_options();
         try
         {
-            po::store(po::command_line_parser(argc, argv).options(opts).allow_unregistered().run(), vm);
+            const auto& result = opts.parse(argc, argv);
+            for (const auto& key : { "log-level", "output-dir", "save-as-binary" })
+            {
+                options[key] = result[key].as<std::string>();
+            }
+            for (const auto& opt : opts.group_help("main").options)
+            {
+                if (!result.count(opt.l))
+                {
+                    continue;
+                }
+                if (opt.l == "help" || opt.l == "version")
+                {
+                    options[opt.l] = "true";
+                    continue;
+                }
+                options[opt.l] = result[opt.l].as<std::string>();
+            }
         }
-        catch (const po::error& ex)
+        catch (const cxxopts::OptionParseException& ex)
         {
             std::cerr << "failed to parse command line arguments: " << ex.what() << std::endl;
             return false;
-        }
-
-        // consume all provided command line options
-
-        for (const auto& value : vm)
-        {
-            try
-            {
-                auto v = value.second.as<std::string>();
-                options[value.first] = v;
-            }
-            catch (const std::exception& ex)
-            {
-                std::cerr << "failed to parse value of option: " << ex.what() << std::endl;
-                return false;
-            }
         }
 
         return true;
@@ -583,7 +581,7 @@ namespace weasel { namespace framework {
 
         if (!parse_options(argc, argv, options))
         {
-            std::cerr << cli_options() << std::endl;
+            std::cerr << cli_options().help() << std::endl;
             return EXIT_FAILURE;
         }
 
@@ -591,12 +589,11 @@ namespace weasel { namespace framework {
 
         if (options.count("help"))
         {
-            std::cout << cli_options() << std::endl;
+            std::cout << cli_options().help() << std::endl;
             const auto& desc = workflow.describe_options();
             if (!desc.empty())
             {
-                std::cout << "Workflow Options:\n"
-                          << desc << std::endl;
+                std::cout << "Workflow Options:\n" << desc << std::endl;
             }
             return EXIT_SUCCESS;
         }

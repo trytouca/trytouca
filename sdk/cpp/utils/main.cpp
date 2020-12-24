@@ -7,9 +7,6 @@
 
 /**
  *
- *
- * @param argc
- * @param argv
  */
 int main(int argc, char* argv[])
 {

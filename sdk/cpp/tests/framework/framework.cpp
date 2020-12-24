@@ -60,7 +60,7 @@ TEST_CASE("framework-dummy-workflow")
     {
         caller.call_with({ "--help" });
         CHECK(caller.exit_code() == EXIT_SUCCESS);
-        CHECK_THAT(caller.cout(), Catch::Contains("Command Line Options:"));
+        CHECK_THAT(caller.cout(), Catch::Contains("Command Line Options"));
         CHECK_THAT(caller.cout(), Catch::Contains("Workflow specific help message"));
         CHECK(caller.cerr().empty());
     }
@@ -131,7 +131,7 @@ TEST_CASE("framework-dummy-workflow")
         CHECK(caller.exit_code() == EXIT_FAILURE);
         CHECK(caller.cout().empty());
         CHECK_THAT(caller.cerr(), Catch::Contains("expected configuration file to be a json object"));
-        CHECK_THAT(caller.cerr(), Catch::Contains("Command Line Options:"));
+        CHECK_THAT(caller.cerr(), Catch::Contains("Command Line Options"));
     }
 
     SECTION("valid-config-file")
