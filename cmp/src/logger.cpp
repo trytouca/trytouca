@@ -30,7 +30,7 @@ void update_logger(spdlog::sink_ptr sink)
 /**
  *
  */
-void setup_console_logger(const std::string& log_level)
+void weasel::setup_console_logger(const std::string& log_level)
 {
     spdlog::init_thread_pool(8192, 1);
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
@@ -42,11 +42,20 @@ void setup_console_logger(const std::string& log_level)
 /**
  *
  */
-void setup_file_logger(const std::string& log_dir)
+void weasel::setup_file_logger(const std::string& log_dir)
 {
     const auto& log_file = std::filesystem::path(log_dir) / "weasel_cmp.log";
     auto file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(log_file, 1024 * 1024 * 10, 100);
     file_sink->set_pattern("[%Y-%m-%dT%H:%M:%SZ] [%t] [%l] %v");
     file_sink->set_level(spdlog::level::debug);
     update_logger(file_sink);
+}
+
+/**
+ *
+ */
+void weasel::vlog(const weasel::log_level level, fmt::string_view format, fmt::format_args args)
+{
+    const auto slevel = static_cast<spdlog::level::level_enum>(level);
+    spdlog::log(slevel, fmt::vformat(format, args));
 }

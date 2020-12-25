@@ -6,7 +6,6 @@
 #include "comparator/logger.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
-#include "spdlog/spdlog.h"
 #include "weasel/devkit/comparison.hpp"
 #include "weasel/devkit/utils.hpp"
 #include <thread>
@@ -27,17 +26,17 @@ bool Service::init()
 
     // setup logging
 
-    setup_console_logger(_opts.arguments.log_level);
+    weasel::setup_console_logger(_opts.arguments.log_level);
     if (_opts.arguments.log_dir.has_value())
     {
-        setup_file_logger(_opts.arguments.log_dir.value().string());
+        weasel::setup_file_logger(_opts.arguments.log_dir.value().string());
     }
 
     // run startup stage
 
     if (!runStartupStage())
     {
-        spdlog::error("failed during start-up stage");
+        WEASEL_LOG_ERROR("failed during start-up stage");
         return false;
     }
 
@@ -51,17 +50,17 @@ bool Service::runStartupStage() const
 {
     const auto max_attempts = _opts.arguments.startup_timeout / _opts.arguments.startup_interval;
     const auto& interval = std::chrono::milliseconds(_opts.arguments.startup_interval);
-    spdlog::info("running start-up stage");
+    WEASEL_LOG_INFO("running start-up stage");
     weasel::ApiUrl apiUrl(_opts.arguments.api_url);
     weasel::ApiConnector apiConnector(apiUrl);
     for (auto i = 1u; i <= max_attempts; ++i)
     {
         if (apiConnector.handshake())
         {
-            spdlog::info("start-up phase completed");
+            WEASEL_LOG_INFO("start-up phase completed");
             return true;
         }
-        spdlog::warn("running start-up stage: attempt ({}/{})", i, max_attempts);
+        WEASEL_LOG_WARN("running start-up stage: attempt ({}/{})", i, max_attempts);
         std::this_thread::sleep_for(interval);
     }
     return false;
@@ -76,8 +75,8 @@ bool Service::run() const
     weasel::ApiUrl apiUrl(_opts.arguments.api_url);
     weasel::ApiConnector apiConnector(apiUrl);
 
-    spdlog::info("hello from weasel comparator");
-    spdlog::info("starting to run comparator in service mode");
+    WEASEL_LOG_INFO("hello from weasel comparator");
+    WEASEL_LOG_INFO("starting to run comparator in service mode");
 
     const auto& interval = chr::milliseconds(_opts.arguments.polling_interval);
 
@@ -86,7 +85,7 @@ bool Service::run() const
         const auto& jobs = apiConnector.getComparisonList();
         if (!jobs.empty() && !runTask(jobs))
         {
-            spdlog::warn("failed to perform periodic operation");
+            WEASEL_LOG_WARN("failed to perform periodic operation");
             break;
         }
         if (jobs.empty())
@@ -111,7 +110,7 @@ bool Service::runTask(const std::vector<weasel::ComparisonJob>& jobs) const
 {
     namespace chr = std::chrono;
     const auto& tic = chr::system_clock::now();
-    spdlog::info("processing {} comparison jobs", jobs.size());
+    WEASEL_LOG_INFO("processing {} comparison jobs", jobs.size());
 
     // find maximum number of consecutive failures of the comparator
     // that should trigger graceful termination of the process.
@@ -127,12 +126,12 @@ bool Service::runTask(const std::vector<weasel::ComparisonJob>& jobs) const
     {
         if (maxFailures < failureCount)
         {
-            spdlog::error("exceeded maximum consecutive failures");
+            WEASEL_LOG_ERROR("exceeded maximum consecutive failures");
             return false;
         }
         if (!processJobAttempt(job))
         {
-            spdlog::error("{}: failed to process comparison job", job.id);
+            WEASEL_LOG_ERROR("{}: failed to process comparison job", job.id);
             ++failureCount;
             continue;
         }
@@ -141,8 +140,8 @@ bool Service::runTask(const std::vector<weasel::ComparisonJob>& jobs) const
 
     const auto& toc = chr::system_clock::now();
     const auto& dur = chr::duration_cast<chr::milliseconds>(toc - tic);
-    spdlog::info("processed {} comparison jobs: ({} ms)", jobs.size(), dur.count());
-    spdlog::info("average processing time: {:.2f} ms per job", _stats.avg);
+    WEASEL_LOG_INFO("processed {} comparison jobs: ({} ms)", jobs.size(), dur.count());
+    WEASEL_LOG_INFO("average processing time: {:.2f} ms per job", _stats.avg);
     return true;
 }
 
@@ -153,14 +152,14 @@ bool Service::processJobAttempt(const weasel::ComparisonJob& job) const
 {
     namespace chr = std::chrono;
     const auto& tic = chr::system_clock::now();
-    spdlog::debug("{}: processing comparison job", job.id);
+    WEASEL_LOG_DEBUG("{}: processing comparison job", job.id);
 
     const auto dst = loadResultFile(job.dstBatch, job.dstMessage);
     const auto src = loadResultFile(job.srcBatch, job.srcMessage);
 
     if (!src || !dst)
     {
-        spdlog::warn("{}: comparison job is orphaned", job.id);
+        WEASEL_LOG_WARN("{}: comparison job is orphaned", job.id);
         return false;
     }
 
@@ -171,7 +170,7 @@ bool Service::processJobAttempt(const weasel::ComparisonJob& job) const
 
     if (!job.dstProcessed && !processMessage(dst, job.dstMessage))
     {
-        spdlog::error("{}: failed to process message", dstName);
+        WEASEL_LOG_ERROR("{}: failed to process message", dstName);
         return false;
     }
 
@@ -180,7 +179,7 @@ bool Service::processJobAttempt(const weasel::ComparisonJob& job) const
     if (job.dstMessage != job.srcMessage && !job.srcProcessed
         && !processMessage(src, job.srcMessage))
     {
-        spdlog::error("{}: failed to process message", srcName);
+        WEASEL_LOG_ERROR("{}: failed to process message", srcName);
         return false;
     }
 
@@ -188,7 +187,7 @@ bool Service::processJobAttempt(const weasel::ComparisonJob& job) const
 
     if (!processComparisonJob(dst, src, job.id))
     {
-        spdlog::error("{}: failed to compare with {}", dstName, srcName);
+        WEASEL_LOG_ERROR("{}: failed to compare with {}", dstName, srcName);
         return false;
     }
 
@@ -196,7 +195,7 @@ bool Service::processJobAttempt(const weasel::ComparisonJob& job) const
 
     const auto& toc = chr::system_clock::now();
     const auto& dur = chr::duration_cast<chr::milliseconds>(toc - tic);
-    spdlog::info("{}: compared with {} ({} ms)", dstName, srcName, dur.count());
+    WEASEL_LOG_INFO("{}: compared with {} ({} ms)", dstName, srcName, dur.count());
     _stats.update(dur.count());
     return true;
 }
@@ -214,7 +213,7 @@ std::shared_ptr<weasel::Testcase> Service::loadResultFile(
 
     if (!std::filesystem::is_regular_file(fullpath))
     {
-        spdlog::error("{}: result file is missing", fullpath.string());
+        WEASEL_LOG_ERROR("{}: result file is missing", fullpath.string());
         return nullptr;
     }
 
@@ -229,7 +228,7 @@ std::shared_ptr<weasel::Testcase> Service::loadResultFile(
     }
     catch (const std::exception& ex)
     {
-        spdlog::error("{}: failed to parse result: {}", fullpath.string(), ex.what());
+        WEASEL_LOG_ERROR("{}: failed to parse result: {}", fullpath.string(), ex.what());
         return nullptr;
     }
 }
@@ -242,7 +241,7 @@ bool Service::processMessage(
     const std::string& messageId) const
 {
     const auto& desc = result->metadata().describe();
-    spdlog::debug("{}: processing message", desc);
+    WEASEL_LOG_DEBUG("{}: processing message", desc);
 
     // create json output to be posted to backend
 
@@ -265,11 +264,11 @@ bool Service::processMessage(
 
     if (!apiConnector.processMessage(messageId, output))
     {
-        spdlog::warn("{}: failed to submit message", desc);
+        WEASEL_LOG_WARN("{}: failed to submit message", desc);
         return false;
     }
 
-    spdlog::debug("{}: processed message", desc);
+    WEASEL_LOG_DEBUG("{}: processed message", desc);
     return true;
 }
 
@@ -284,7 +283,7 @@ bool Service::processComparisonJob(
     const auto& dstName = dst->metadata().describe();
     const auto& srcName = src->metadata().describe();
     const auto& tuple = weasel::format("{}_{}", dstName, srcName);
-    spdlog::debug("{}: processing comparison job", tuple);
+    WEASEL_LOG_DEBUG("{}: processing comparison job", tuple);
 
     // perform comparison
 
@@ -311,10 +310,10 @@ bool Service::processComparisonJob(
 
     if (!apiConnector.processComparison(jobId, output))
     {
-        spdlog::warn("{}: failed to submit comparison job", tuple);
+        WEASEL_LOG_WARN("{}: failed to submit comparison job", tuple);
         return false;
     }
 
-    spdlog::debug("{}: processed comparison job", tuple);
+    WEASEL_LOG_DEBUG("{}: processed comparison job", tuple);
     return true;
 }
