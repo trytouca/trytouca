@@ -8,12 +8,12 @@
 #include "boost/iostreams/stream.hpp"
 #include "boost/iostreams/tee.hpp"
 #include "cxxopts.hpp"
+#include "fmt/core.h"
 #include "rapidjson/document.h"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/utils.hpp"
 #include "weasel/framework/detail/utils.hpp"
 #include "weasel/weasel.hpp"
-#include "fmt/core.h"
 #include <iostream>
 #include <thread>
 
@@ -84,7 +84,7 @@ namespace weasel { namespace framework {
         // clang-format off
         options.add_options("main")
             ("h,help", "displays this help message")
-            ("v,version", "version of this executable")
+            ("v,version", "prints version of this executable")
             ("r,revision",
                 "version to associate with testresults",
                 cxxopts::value<std::string>())

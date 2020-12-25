@@ -4,141 +4,192 @@
 
 #pragma once
 
-#include "boost/program_options.hpp"
-#include "boost/program_options/options_description.hpp"
-#include <weasel/devkit/options.hpp>
+#include <memory>
+#include <string>
+#include <unordered_map>
 
 /**
  *
  */
-class Operation
+struct Operation
 {
-public:
     /**
      *
      */
-    enum class Mode
+    enum class Command
     {
-        Compare,
-        Merge,
-        Post,
-        Unknown,
-        Update,
-        View
+        compare,
+        merge,
+        post,
+        unknown,
+        update,
+        view
     };
+
+    /**
+     *
+     */
+    static Command find_mode(const std::string& name);
+
+    /**
+     *
+     */
+    static std::shared_ptr<Operation> make(const Command& mode);
+
+    /**
+     *
+     */
+    virtual bool parse(int argc, char* argv[]) final;
+
+    /**
+     *
+     */
+    virtual bool run() const final;
+
+private:
+    /**
+     *
+     */
+    virtual bool parse_impl(int argc, char* argv[]) = 0;
+
+    /**
+     *
+     */
+    virtual bool run_impl() const = 0;
+};
+
+/**
+ *
+ */
+struct Options
+{
+    /**
+     *
+     */
     bool parse(int argc, char* argv[]);
-    bool validate() const;
-    bool execute() const;
-    virtual boost::program_options::options_description description() const = 0;
-    virtual bool run() const = 0;
-    static std::shared_ptr<Operation> detect(int argc, char* argv[]);
-
-protected:
-    Operation();
-    virtual ~Operation() = default;
-    virtual bool validate_options() const;
-    virtual void parse_options(const boost::program_options::variables_map vm);
 
     /**
-     * Helper function for use by derived classes that wish to implement
-     * validate_options.
+     *
      */
-    bool validate_required_keys(
-        const std::initializer_list<std::string>& keys) const;
+    struct
+    {
+        bool show_help = false;
+        bool show_version = false;
+        std::string log_dir;
+        std::string log_level = "warning";
+        Operation::Command mode = Operation::Command::unknown;
+    } arguments;
+
+private:
+    /**
+     *
+     */
+    bool parse_impl(int argc, char* argv[]);
+};
+
+/**
+ *
+ */
+struct ViewOperation : public Operation
+{
+protected:
+    /**
+     *
+     */
+    bool parse_impl(int argc, char* argv[]) override;
 
     /**
-     * Helper function for use by derived classes that wish to implement
-     * parse_options.
+     *
      */
-    void parse_basic_options(
-        const boost::program_options::variables_map& vm,
-        const std::vector<std::string>& keys);
+    bool run_impl() const override;
 
-    weasel::Options<std::string> _opts;
+private:
+    std::string _src;
 };
 
 /**
  *
  */
-class HelpOperation : public Operation
+struct CompareOperation : public Operation
 {
-public:
-    HelpOperation();
-    boost::program_options::options_description description() const override;
-    bool run() const override;
-};
-
-/**
- *
- */
-class CompareOperation : public Operation
-{
-public:
-    CompareOperation();
-    boost::program_options::options_description description() const override;
-    bool run() const override;
-    bool validate_options() const override;
-
 protected:
-    void parse_options(const boost::program_options::variables_map vm) override;
+    /**
+     *
+     */
+    bool parse_impl(int argc, char* argv[]) override;
+
+    /**
+     *
+     */
+    bool run_impl() const override;
+
+private:
+    std::string _src;
+    std::string _dst;
 };
 
 /**
  *
  */
-class MergeOperation : public Operation
+struct MergeOperation : public Operation
 {
-public:
-    MergeOperation();
-    boost::program_options::options_description description() const override;
-    bool run() const override;
-    bool validate_options() const override;
-
 protected:
-    void parse_options(const boost::program_options::variables_map vm) override;
+    /**
+     *
+     */
+    bool parse_impl(int argc, char* argv[]) override;
+
+    /**
+     *
+     */
+    bool run_impl() const override;
+
+private:
+    std::string _src;
+    std::string _out;
 };
 
 /**
  *
  */
-class PostOperation : public Operation
+struct PostOperation : public Operation
 {
-public:
-    PostOperation();
-    boost::program_options::options_description description() const override;
-    bool run() const override;
-    bool validate_options() const override;
-
 protected:
-    void parse_options(const boost::program_options::variables_map vm) override;
+    /**
+     *
+     */
+    bool parse_impl(int argc, char* argv[]) override;
+
+    /**
+     *
+     */
+    bool run_impl() const override;
+
+private:
+    bool _fail_fast;
+    std::string _src;
+    std::string _api_key;
+    std::string _api_url;
 };
 
 /**
  *
  */
-class UpdateOperation : public Operation
+struct UpdateOperation : public Operation
 {
-public:
-    UpdateOperation();
-    boost::program_options::options_description description() const override;
-    bool run() const override;
-    bool validate_options() const override;
-
 protected:
-    void parse_options(const boost::program_options::variables_map vm) override;
-};
+    /**
+     *
+     */
+    bool parse_impl(int argc, char* argv[]) override;
 
-/**
- *
- */
-class ViewOperation : public Operation
-{
-public:
-    ViewOperation();
-    boost::program_options::options_description description() const override;
-    bool run() const override;
-    bool validate_options() const override;
+    /**
+     *
+     */
+    bool run_impl() const override;
 
-protected:
-    void parse_options(const boost::program_options::variables_map vm) override;
+private:
+    std::string _src;
+    std::string _out;
+    std::unordered_map<std::string, std::string> _fields;
 };

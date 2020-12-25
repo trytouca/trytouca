@@ -3,52 +3,41 @@
  */
 
 #include "utils/operations.hpp"
-#include "boost/filesystem.hpp"
-#include "weasel/devkit/extra/logger.hpp"
-#include <fmt/core.h>
-#include <iostream>
+#include "cxxopts.hpp"
+#include "weasel/devkit/utils.hpp"
 
 /**
  *
  */
-Operation::Mode detect_operational_mode(int argc, char* argv[])
+Operation::Command Operation::find_mode(const std::string& name)
 {
-    if (argc < 2)
-    {
-        return Operation::Mode::Unknown;
-    }
-    std::string arg(argv[1]);
-    if (arg.rfind("--mode=", 0) == 0)
-    {
-        arg.assign(arg.substr(7));
-    }
-    const std::map<std::string, Operation::Mode> modes {
-        { "compare", Operation::Mode::Compare },
-        { "merge", Operation::Mode::Merge },
-        { "post", Operation::Mode::Post },
-        { "update", Operation::Mode::Update },
-        { "view", Operation::Mode::View }
+    const std::unordered_map<std::string, Operation::Command> modes {
+        { "compare", Operation::Command::compare },
+        { "merge", Operation::Command::merge },
+        { "post", Operation::Command::post },
+        { "update", Operation::Command::update },
+        { "view", Operation::Command::view }
     };
-    return modes.count(arg) ? modes.at(arg) : Operation::Mode::Unknown;
+    return modes.count(name) ? modes.at(name) : Operation::Command::unknown;
 }
 
 /**
  *
  */
-std::shared_ptr<Operation> Operation::detect(int argc, char* argv[])
+std::shared_ptr<Operation> Operation::make(const Operation::Command& mode)
 {
-    const auto mode = detect_operational_mode(argc, argv);
     using func_t = std::function<std::shared_ptr<Operation>()>;
-    std::map<Mode, func_t> ops {
-        { Mode::Compare, &std::make_shared<CompareOperation> },
-        { Mode::Merge, &std::make_shared<MergeOperation> },
-        { Mode::Post, &std::make_shared<PostOperation> },
-        { Mode::Update, &std::make_shared<UpdateOperation> },
-        { Mode::View, &std::make_shared<ViewOperation> }
+    std::map<Operation::Command, func_t> ops {
+        { Operation::Command::compare, &std::make_shared<CompareOperation> },
+        { Operation::Command::merge, &std::make_shared<MergeOperation> },
+        { Operation::Command::post, &std::make_shared<PostOperation> },
+        { Operation::Command::update, &std::make_shared<UpdateOperation> },
+        { Operation::Command::view, &std::make_shared<ViewOperation> }
     };
     if (!ops.count(mode))
     {
-        return std::make_shared<HelpOperation>();
+        weasel::print_error("operation not implemented: {}\n", mode);
+        return nullptr;
     }
     return ops.at(mode)();
 }
@@ -56,195 +45,139 @@ std::shared_ptr<Operation> Operation::detect(int argc, char* argv[])
 /**
  *
  */
-Operation::Operation()
-    : _opts({})
-{
-}
-
-/**
- *
- */
-bool Operation::validate_required_keys(
-    const std::initializer_list<std::string>& keys) const
-{
-    const auto& missingKeys = _opts.findMissingKeys(keys);
-    if (missingKeys.empty())
-    {
-        return true;
-    }
-    fmt::print(stderr, "required options are missing:\n");
-    for (const auto& key : missingKeys)
-    {
-        fmt::print(stderr, "  - {}\n", key);
-    }
-    return false;
-}
-
-/**
- *
- */
-bool Operation::validate_options() const
-{
-    return true;
-}
-
-/**
- *
- */
-bool Operation::validate() const
-{
-    if (!validate_required_keys({ "log-level" }))
-    {
-        return false;
-    }
-    return validate_options();
-}
-
-/**
- *
- */
-void Operation::parse_options(const boost::program_options::variables_map vm)
-{
-    std::ignore = vm;
-}
-
-/**
- *
- */
-void Operation::parse_basic_options(
-    const boost::program_options::variables_map& vm,
-    const std::vector<std::string>& keys)
-{
-    for (const auto& key : keys)
-    {
-        if (vm.count(key))
-        {
-            _opts.add(key, vm.at(key).as<std::string>());
-        }
-    }
-}
-
-/**
- *
- */
 bool Operation::parse(int argc, char* argv[])
 {
-    namespace po = boost::program_options;
-    po::variables_map vm;
-    auto desc = description();
-    desc.add(HelpOperation().description());
     try
     {
-        po::store(
-            po::command_line_parser(argc, argv)
-                .options(desc)
-                //.allow_unregistered()
-                .run(),
-            vm);
-        po::notify(vm);
-
-        // update application-level options
-        for (const auto& key : { "log-dir", "log-level", "log-to-console" })
-        {
-            if (vm.count(key))
-            {
-                _opts.add(key, vm.at(key).as<std::string>());
-            }
-        }
-
-        // parse operation-specific options
-        parse_options(vm);
-        return true;
+        return parse_impl(argc, argv);
     }
-    // if any of the required command line arguments are missing or
-    // user has given invalid options
     catch (const std::exception& ex)
     {
-        std::cerr << "invalid command line option(s): " << ex.what()
-                  << std::endl;
+        weasel::print_error("failed to parse operation options: {}\n", ex.what());
     }
     return false;
 }
 
-bool Operation::execute() const
+/**
+ *
+ */
+bool Operation::run() const
 {
-    namespace fs = boost::filesystem;
-    using weasel::internal::Logger;
-    if (!Logger::level_values.count(_opts.get("log-level")))
+    try
     {
-        std::cerr << "log-level value is invalid" << std::endl;
+        return run_impl();
+    }
+    catch (const std::exception& ex)
+    {
+        weasel::print_error("failed to run operation: {}\n", ex.what());
+    }
+    return false;
+}
+
+/**
+ *
+ */
+cxxopts::Options config_options_main()
+{
+    cxxopts::Options options("weasel_cli");
+    // clang-format off
+    options.add_options("main")
+        ("h,help", "displays this help message")
+        ("v,version", "prints version of this executable")
+        ("m,mode", "operational mode of this application", cxxopts::value<std::string>())
+        ("log-dir", "relative path to log directory", cxxopts::value<std::string>())
+        ("log-level", "level of detail to use for logging", cxxopts::value<std::string>()->default_value("warning"));
+    // clang-format on
+    options.parse_positional("mode");
+    options.allow_unrecognised_options();
+    return options;
+}
+
+/**
+ *
+ */
+bool Options::parse(int argc, char* argv[])
+{
+    try
+    {
+        return parse_impl(argc, argv);
+    }
+    catch (const std::exception& ex)
+    {
+        weasel::print_error("failed to parse application options: {}\n", ex.what());
+    }
+    return false;
+}
+
+/**
+ *
+ */
+bool Options::parse_impl(int argc, char* argv[])
+{
+    // parse command line arguments
+
+    auto options = config_options_main();
+    const auto& result = options.parse(argc, argv);
+
+    // if user asks for help, print help message and exit
+
+    if (result.count("help"))
+    {
+        fmt::print(stdout, "{}\n", options.show_positional_help().help());
+        arguments.show_help = true;
+        return true;
+    }
+
+    // if user asks for version, print application version and exit
+    // @todo add a version.hpp to weasel/devkit and use major/minor/patch below
+
+    if (result.count("version"))
+    {
+        fmt::print(stdout, "Weasel Utility Command Line Tool v{}.{}.{}\n", 1, 2, 1);
+        arguments.show_version = true;
+        return true;
+    }
+
+    // validate and set option `mode`
+
+    if (!result.count("mode"))
+    {
+        weasel::print_error("no command was specified\n");
+        fmt::print(stderr, "{}\n", options.show_positional_help().help());
         return false;
     }
-    auto& logger = weasel::internal::Logger::instance();
-    const auto level = Logger::level_values.at(_opts.get("log-level"));
-    if (_opts.has("log-dir"))
+
+    const auto mode_name = result["mode"].as<std::string>();
+    arguments.mode = Operation::find_mode(mode_name);
+
+    if (arguments.mode == Operation::Command::unknown)
     {
-        const auto& logDir = _opts.get("log-dir");
-        if (fs::exists(logDir) && !fs::is_directory(logDir))
+        weasel::print_error("provided command `{}` is invalid\n", mode_name);
+        fmt::print(stderr, "{}\n", options.show_positional_help().help());
+        return false;
+    }
+
+    // validate and set option `log-level`
+
+    {
+        // setup console logging with appropriate log level
+        const std::unordered_set<std::string> levels = { "debug", "info", "warning" };
+        const auto level = result["log-level"].as<std::string>();
+        if (!levels.count(level))
         {
-            std::cerr << "specified path for log directory leads to a file"
-                      << std::endl;
+            weasel::print_error("invalid value for option `log-level`");
+            fmt::print("{}\n", options.show_positional_help().help());
             return false;
         }
-        if (!fs::exists(logDir) && !fs::create_directories(logDir))
-        {
-            std::cerr << "failed to create log directory" << std::endl;
-            return false;
-        }
-
-        logger.add_file_handler(logDir, level);
-        WEASEL_LOG_INFO("Hello from Weasel Utils");
+        arguments.log_level = level;
     }
-    if (_opts.has("log-to-console")
-        && 0 == _opts.get("log-to-console").compare("true"))
+
+    // set option `log-dir` if it is provided
+
+    if (result.count("log-dir"))
     {
-        logger.set_console_handler(level);
+        arguments.log_dir = result["log-dir"].as<std::string>();
     }
-    return run();
-}
 
-/**
- *
- */
-HelpOperation::HelpOperation()
-    : Operation()
-{
-}
-
-/**
- *
- */
-boost::program_options::options_description HelpOperation::description() const
-{
-    namespace po = boost::program_options;
-    // clang-format off
-    po::options_description desc { "Options" };
-    desc.add_options()
-        ("help,h", "displays this help message")
-        ("version,v", "version of this application")
-        ("log-dir",
-             po::value<std::string>(),
-            "path to the directory to write log files into")
-        ("log-level",  po::value<std::string>()->default_value("info"),
-            "level of details to use for logging")
-        ("log-to-console", po::value<std::string>()->implicit_value("true"),
-            "prints log events to console")
-        ("mode", po::value<std::string>(),
-            "operational mode of this application [compare|merge|post|view]\n"
-            "[compare]: shows comparison results of two given weasel result files\n"
-            "[merge]: merges all result files in a given directory into one or multiple result files\n"
-            "[post]: submits a given result file to the weasel platform\n"
-            "[update]: updates one or more metadata fields of every message in every result file in a given directory"
-            "[view]: shows content of a given weasel result file in json format\n");
-    // clang-format on
-    return desc;
-}
-
-/**
- *
- */
-bool HelpOperation::run() const
-{
-    std::cout << description() << std::endl;
     return true;
 }

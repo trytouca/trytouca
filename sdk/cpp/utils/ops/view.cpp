@@ -2,77 +2,56 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "boost/filesystem.hpp"
+#include "cxxopts.hpp"
 #include "utils/operations.hpp"
 #include "weasel/devkit/resultfile.hpp"
-#include <iostream>
+#include "weasel/devkit/utils.hpp"
 
 /**
  *
  */
-ViewOperation::ViewOperation()
-    : Operation()
+bool ViewOperation::parse_impl(int argc, char* argv[])
 {
-}
-
-/**
- *
- */
-boost::program_options::options_description ViewOperation::description() const
-{
-    namespace po = boost::program_options;
+    cxxopts::Options options("weasel-cmp --mode=view");
     // clang-format off
-    po::options_description desc{ "Options --mode=view" };
-    desc.add_options()
-        ("src", po::value<std::string>(), "weasel result file to view in json format");
+    options.add_options("main")
+        ("src", "result file to view in json format", cxxopts::value<std::string>());
     // clang-format on
-    return desc;
-}
+    options.allow_unrecognised_options();
 
-/**
- *
- */
-void ViewOperation::parse_options(
-    const boost::program_options::variables_map vm)
-{
-    Operation::parse_basic_options(vm, { "src" });
-}
-
-/**
- *
- */
-bool ViewOperation::validate_options() const
-{
-    // check that all required keys exist
-
-    if (!validate_required_keys({ "src" }))
+    const auto& result = options.parse(argc, argv);
+    if (!result.count("src"))
     {
+        weasel::print_error("source file not provided\n");
+        fmt::print(stdout, "{}\n", options.help());
         return false;
     }
 
-    const auto file = _opts.get("src");
-    if (!boost::filesystem::is_regular_file(file))
+    _src = result["src"].as<std::string>();
+
+    if (!weasel::filesystem::is_regular_file(_src))
     {
-        std::cerr << "file does not exist: " << file << std::endl;
+        weasel::print_error("file `{}` does not exist\n", _src);
         return false;
     }
+
     return true;
 }
 
 /**
  *
  */
-bool ViewOperation::run() const
+bool ViewOperation::run_impl() const
 {
-    weasel::ResultFile file(_opts.get("src"));
+    weasel::ResultFile file(_src);
     try
     {
-        std::cout << file.readFileInJson() << std::endl;
+        fmt::print(stdout, "{}\n", file.readFileInJson());
         return true;
     }
     catch (const std::exception& ex)
     {
-        std::cerr << "unable to view file: " << ex.what() << std::endl;
+        weasel::print_error("failed to read file {}: {}\n", _src, ex.what());
     }
     return false;
 }

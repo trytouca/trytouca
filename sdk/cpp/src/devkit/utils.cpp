@@ -13,6 +13,14 @@ namespace weasel {
     /**
      *
      */
+    void print_impl(const fmt::terminal_color& style, fmt::string_view format, fmt::format_args args)
+    {
+        fmt::vprint(stderr, fmt::fg(style), format, args);
+    }
+
+    /**
+     *
+     */
     std::string toUtf8(const std::wstring& value)
     {
         std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> conv;

@@ -2,68 +2,50 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "boost/filesystem.hpp"
+#include "cxxopts.hpp"
 #include "utils/operations.hpp"
 #include "weasel/devkit/resultfile.hpp"
-#include <iostream>
+#include "weasel/devkit/utils.hpp"
+#include <unordered_map>
 
 /**
  *
  */
-CompareOperation::CompareOperation()
-    : Operation()
+bool CompareOperation::parse_impl(int argc, char* argv[])
 {
-}
-
-/**
- *
- */
-boost::program_options::options_description CompareOperation::description()
-    const
-{
-    namespace po = boost::program_options;
+    cxxopts::Options options("weasel-cmp --mode=compare");
     // clang-format off
-    po::options_description desc{ "Options --mode=compare" };
-    desc.add_options()
-        ("src", po::value<std::string>(), "file or directory to compare")
-        ("dst", po::value<std::string>(), "file or directory to compare against");
+    options.add_options("main")
+        ("src", "file or directory to compare", cxxopts::value<std::string>())
+        ("dst", "file or directory to compare against", cxxopts::value<std::string>());
     // clang-format on
-    return desc;
-}
+    options.allow_unrecognised_options();
 
-/**
- *
- */
-void CompareOperation::parse_options(
-    const boost::program_options::variables_map vm)
-{
-    Operation::parse_basic_options(vm, { "src", "dst" });
-}
+    const auto& result = options.parse(argc, argv);
 
-/**
- *
- */
-bool CompareOperation::validate_options() const
-{
-    // check that all required keys exist
+    const std::unordered_map<std::string, std::string> filetypes = {
+        { "src", "source" },
+        { "dst", "destination" }
+    };
 
-    if (!validate_required_keys({ "src", "dst" }))
+    for (const auto& kvp : filetypes)
     {
-        return false;
-    }
-
-    // check that both src and dst files exist
-
-    const auto src = _opts.get("src");
-    const auto dst = _opts.get("dst");
-    for (const auto& file : { src, dst })
-    {
-        if (!boost::filesystem::is_regular_file(file))
+        if (!result.count(kvp.first))
         {
-            std::cerr << "file does not exist: " << file << std::endl;
+            weasel::print_error("{} file not provided\n", kvp.second);
+            fmt::print(stdout, "{}\n", options.help());
+            return false;
+        }
+        const auto filepath = result[kvp.first].as<std::string>();
+        if (!weasel::filesystem::is_regular_file(filepath))
+        {
+            weasel::print_error("{} file `{}` does not exist\n", kvp.second, filepath);
             return false;
         }
     }
+
+    _src = result["src"].as<std::string>();
+    _dst = result["dst"].as<std::string>();
 
     return true;
 }
@@ -71,20 +53,19 @@ bool CompareOperation::validate_options() const
 /**
  *
  */
-bool CompareOperation::run() const
+bool CompareOperation::run_impl() const
 {
-    weasel::ResultFile src(_opts.get("src"));
-    weasel::ResultFile dst(_opts.get("dst"));
+    weasel::ResultFile src(_src);
+    weasel::ResultFile dst(_dst);
     try
     {
         const auto& res = src.compare(dst);
-        std::cout << res.json() << std::endl;
+        fmt::print(stdout, "{}\n", res.json());
         return true;
     }
     catch (const std::exception& ex)
     {
-        std::cerr << "unable to compare given files: " << ex.what()
-                  << std::endl;
+        weasel::print_error("failed to compare given files: {}", ex.what());
     }
     return false;
 }

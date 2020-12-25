@@ -2,94 +2,73 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "boost/filesystem.hpp"
+#include "cxxopts.hpp"
 #include "utils/misc/file.hpp"
 #include "utils/operations.hpp"
 #include "weasel/devkit/extra/logger.hpp"
 #include "weasel/devkit/platform.hpp"
-#include "weasel/devkit/resultfile.hpp"
-#include <iostream>
-#include <unordered_map>
 
 /**
- *
+ * we used to validate that the given directory has at least one
+ * weasel result file. However, since finding weasel result files
+ * is an expensive operation, we choose to defer this check to
+ * operation run-time.
  */
-PostOperation::PostOperation()
-    : Operation()
+bool PostOperation::parse_impl(int argc, char* argv[])
 {
-}
-
-/**
- *
- */
-boost::program_options::options_description PostOperation::description() const
-{
-    namespace po = boost::program_options;
+    cxxopts::Options options("weasel-cmp --mode=pos");
     // clang-format off
-    po::options_description desc{ "Options --mode=post" };
-    desc.add_options()
-        ("src", po::value<std::string>(),
-        "path to weasel result file to be submitted to the weasel platform. "
-        "if the specified path points to a directory, it will be searched "
-        "recursively for weasel result files to post to the platform")
-        ("api-key", po::value<std::string>(),
-        "API Key to authenticate to Weasel Platform.")
-        ("api-url", po::value<std::string>(),
-        "URL to Weasel Platform API. "
-        "Example: https://getweasel.com/api/@/hogwartz/quiddich-vr/1.0")
-        ("fail-fast", po::value<std::string>()->default_value("true"),
-        "abort operation as soon as we encounter error during submission of "
-        "a result file");
+    options.add_options("main")
+        ("src", "file or directory to be posted", cxxopts::value<std::string>())
+        ("api-key", "API Key to authenticate to Weasel Platform", cxxopts::value<std::string>())
+        ("api-url", "URL to Weasel Platform API", cxxopts::value<std::string>())
+        ("fail-fast", "abort as soon as we encounter an error ", cxxopts::value<bool>()->default_value("true"));
     // clang-format on
-    return desc;
-}
+    options.allow_unrecognised_options();
 
-/**
- *
- */
-void PostOperation::parse_options(
-    const boost::program_options::variables_map vm)
-{
-    Operation::parse_basic_options(
-        vm, { "src", "api-key", "api-url", "fail-fast" });
+    const auto& result = options.parse(argc, argv);
 
-    // if API key is not provided as a command line argument, check if it
-    // is specified as an environment variable.
-
-    if (!_opts.has("api-key"))
+    if (!result.count("src"))
     {
-        const auto apiKey = std::getenv("WEASEL_API_KEY");
-        if (apiKey != nullptr)
+        weasel::print_error("file or directory not provided\n");
+        fmt::print(stdout, "{}\n", options.help());
+        return false;
+    }
+
+    _src = result["src"].as<std::string>();
+
+    if (!weasel::filesystem::exists(_src))
+    {
+        weasel::print_error("file `{}` does not exist\n", _src);
+        return false;
+    }
+
+    if (!result.count("api-url"))
+    {
+        weasel::print_error("api-url not provided\n");
+        fmt::print(stdout, "{}\n", options.help());
+        return false;
+    }
+
+    _api_url = result["api-url"].as<std::string>();
+
+    if (!result.count("api-key"))
+    {
+        const auto env_value = std::getenv("WEASEL_API_KEY");
+        if (env_value == nullptr)
         {
-            _opts.add("api-key", std::string(apiKey));
+            weasel::print_error("api-key not provided as argument or env variable\n");
+            fmt::print(stdout, "{}\n", options.help());
+            return false;
         }
+        _api_key = std::string(env_value);
     }
-}
-
-/**
- *
- */
-bool PostOperation::validate_options() const
-{
-    // check that all required keys exist
-
-    if (!validate_required_keys({ "src", "api-key", "api-url", "fail-fast" }))
+    else
     {
-        return false;
+        _api_key = result["api-key"].as<std::string>();
     }
 
-    // check that the specifed path exists
-
-    if (!boost::filesystem::exists(_opts.get("src")))
-    {
-        std::cerr << "provided path to result file(s) is invalid" << std::endl;
-        return false;
-    }
-
-    // we used to validate that the given directory has at least one
-    // weasel result file. However, since finding weasel result files
-    // is an expensive operation, we choose to defer this check to
-    // operation run-time.
+    _fail_fast = result["fail-fast"].as<bool>();
 
     return true;
 }
@@ -97,14 +76,14 @@ bool PostOperation::validate_options() const
 /**
  *
  */
-bool PostOperation::run() const
+bool PostOperation::run_impl() const
 {
     WEASEL_LOG_INFO("starting execution of operation: post");
 
     // authenticate to Weasel Platform
 
-    weasel::ApiUrl apiUrl(_opts.get("api-url"));
-    const auto& apiToken = weasel::ApiConnector(apiUrl).authenticate(_opts.get("api-key"));
+    weasel::ApiUrl apiUrl(_api_url);
+    const auto& apiToken = weasel::ApiConnector(apiUrl).authenticate(_api_key);
     if (apiToken.empty())
     {
         std::cerr << "failed to authenticate to Weasel Platform" << std::endl;
@@ -117,7 +96,7 @@ bool PostOperation::run() const
     // identify weasel result files.
 
     std::vector<weasel::path> resultFiles;
-    findResultFiles(_opts.get("src"), std::back_inserter(resultFiles));
+    findResultFiles(_src, std::back_inserter(resultFiles));
 
     // we are done if there are no weasel result files in the given directory
 
@@ -170,7 +149,7 @@ bool PostOperation::run() const
         errors.emplace(src, errs);
         WEASEL_LOG_WARN("failed to submit {}: {}", src, errs.front());
 
-        if (0 == _opts.get("fail-fast").compare("true"))
+        if (_fail_fast)
         {
             WEASEL_LOG_INFO("aborting due to fail-fast policy");
             print(errors);
@@ -180,8 +159,7 @@ bool PostOperation::run() const
 
     if (errors.empty())
     {
-        WEASEL_LOG_INFO(
-            "successfully submitted all {} result files", resultFiles.size());
+        WEASEL_LOG_INFO("successfully submitted all {} result files", resultFiles.size());
         return true;
     }
 

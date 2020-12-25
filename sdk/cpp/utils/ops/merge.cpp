@@ -3,95 +3,72 @@
  */
 
 #include "boost/filesystem.hpp"
+#include "cxxopts.hpp"
 #include "utils/misc/file.hpp"
 #include "utils/operations.hpp"
 #include "weasel/devkit/extra/logger.hpp"
 #include "weasel/devkit/resultfile.hpp"
-#include <iostream>
+#include "weasel/devkit/utils.hpp"
 
 static const unsigned MAX_FILE_SIZE = 10u * 1024 * 1024; // 10 megabytes
 
 /**
- *
+ * we can validate that the given directory has at least one weasel
+ * result file. However, since finding weasel result files is an
+ * expensive operation, we choose to defer this check to operation
+ * run-time.
  */
-MergeOperation::MergeOperation()
-    : Operation()
+bool MergeOperation::parse_impl(int argc, char* argv[])
 {
-}
-
-/**
- *
- */
-boost::program_options::options_description MergeOperation::description() const
-{
-    namespace po = boost::program_options;
+    cxxopts::Options options("weasel-cmp --mode=merge");
     // clang-format off
-    po::options_description desc{ "Options --mode=merge" };
-    desc.add_options()
-    ("src", po::value<std::string>(),
-        "path to a directory with one or more weasel result files")
-    ("out", po::value<std::string>(),
-        "path to a directory in which merged weasel result file(s) will "
-        "be stored");
+    options.add_options("main")
+        ("src", "path to directory with one or more result files", cxxopts::value<std::string>())
+        ("out", "path to directory in which merged result files will be generated", cxxopts::value<std::string>());
     // clang-format on
-    return desc;
-}
+    options.allow_unrecognised_options();
 
-/**
- *
- */
-void MergeOperation::parse_options(
-    const boost::program_options::variables_map vm)
-{
-    Operation::parse_basic_options(vm, { "src", "out" });
-}
+    const auto& result = options.parse(argc, argv);
 
-/**
- *
- */
-bool MergeOperation::validate_options() const
-{
-    // check that all required keys exist
+    const std::unordered_map<std::string, std::string> filetypes = {
+        { "src", "source" },
+        { "out", "output" }
+    };
 
-    if (!validate_required_keys({ "src", "out" }))
+    for (const auto& kvp : filetypes)
     {
-        return false;
+        if (!result.count(kvp.first))
+        {
+            weasel::print_error("{} directory not provided\n", kvp.second);
+            fmt::print(stdout, "{}\n", options.help());
+            return false;
+        }
+        const auto filepath = result[kvp.first].as<std::string>();
+        if (!boost::filesystem::is_directory(filepath))
+        {
+            weasel::print_error("{} directory `{}` does not exist\n", kvp.second, filepath);
+            return false;
+        }
     }
 
-    if (!boost::filesystem::exists(_opts.get("src")))
-    {
-        std::cerr << "result directory does not exist" << std::endl;
-        return false;
-    }
-
-    if (boost::filesystem::exists(_opts.get("out")))
-    {
-        std::cerr << "specified output directory already exists" << std::endl;
-        return false;
-    }
-
-    // we can validate that the given directory has at least one weasel
-    // result file. However, since finding weasel result files is an
-    // expensive operation, we choose to defer this check to operation
-    // run-time.
+    _src = result["src"].as<std::string>();
+    _out = result["out"].as<std::string>();
 
     return true;
 }
 
 /**
- *
+ * we expect user to specify a directory as source. we recursively
+ * iterate over all the file system elements in that directory and
+ * identify weasel result files.
  */
-bool MergeOperation::run() const
+bool MergeOperation::run_impl() const
 {
     WEASEL_LOG_INFO("starting execution of operation: merge");
 
-    // we expect user to specify a directory as source. we recursively
-    // iterate over all the file system elements in that directory and
-    // identify weasel result files.
-
     namespace fs = boost::filesystem;
     std::vector<weasel::path> resultFiles;
-    const weasel::path srcDir = _opts.get("src");
+    const weasel::path srcDir = _src;
     WEASEL_LOG_DEBUG("finding weasel result files in {}", srcDir);
     findResultFiles(srcDir, std::back_inserter(resultFiles));
     WEASEL_LOG_INFO("found {} weasel result files", resultFiles.size());
@@ -125,7 +102,7 @@ bool MergeOperation::run() const
     }
     WEASEL_LOG_INFO("results will be merged into {} files", chunks.size());
 
-    const auto& root = fs::absolute(_opts.get("out"));
+    const auto& root = fs::absolute(_out);
     for (auto i = 0ul; i < chunks.size(); ++i)
     {
         const auto filestem = fs::path(srcDir).filename().string();

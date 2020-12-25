@@ -2,32 +2,65 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+#include "fmt/core.h"
 #include "utils/operations.hpp"
-#include <iostream>
+#include "weasel/devkit/utils.hpp"
 
 /**
  *
  */
 int main(int argc, char* argv[])
 {
-    // find appropriate operation based on provided command line arguments
-    const auto operation = Operation::detect(argc, argv);
+    Options options;
 
-    // parse command line arguments with respect to identified operation
-    // and further validate that values given for configuration parameters
-    // satisfy prerequisites of the operation
-    if (!operation->parse(argc, argv) || !operation->validate())
+    // parse application options
+
+    if (!options.parse(argc, argv))
     {
-        const auto& desc = operation->description();
-        std::cerr << '\n'
-                  << desc << std::endl;
         return EXIT_FAILURE;
     }
 
-    // run the operation
-    if (!operation->execute())
+    // we are done if user has asked for help
+
+    if (options.arguments.show_help || options.arguments.show_version)
     {
-        std::cerr << "failed to run operation" << std::endl;
+        return EXIT_SUCCESS;
+    }
+
+    // we are done if specified command is invalid
+
+    if (options.arguments.mode == Operation::Command::unknown)
+    {
+        return EXIT_FAILURE;
+    }
+
+    // setup basic console logging
+
+    if (!options.arguments.log_level.empty())
+    {
+        // ...
+    }
+
+    // create appropriate derived class
+
+    const auto& operation = Operation::make(options.arguments.mode);
+
+    if (!operation || !operation->parse(argc, argv))
+    {
+        return EXIT_FAILURE;
+    }
+
+    // setup file logging
+
+    if (!options.arguments.log_dir.empty())
+    {
+        // ...
+    }
+
+    // execute operation
+
+    if (operation->run())
+    {
         return EXIT_FAILURE;
     }
 

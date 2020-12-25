@@ -4,12 +4,16 @@
 
 include(GNUInstallDirs)
 
+weasel_find_package("cxxopts")
+
 add_executable(weasel_cli "")
 
 target_sources(
         weasel_cli
     PRIVATE
         main.cpp
+        misc/file.cpp
+        misc/file.hpp
         operations.cpp
         operations.hpp
         ops/compare.cpp
@@ -17,8 +21,6 @@ target_sources(
         ops/post.cpp
         ops/update.cpp
         ops/view.cpp
-        misc/file.cpp
-        misc/file.hpp
 )
 
 set_target_properties(
@@ -31,6 +33,7 @@ target_link_libraries(
         weasel_cli
     PRIVATE
         weasel_client
+        cxxopts::cxxopts
 )
 
 target_include_directories(

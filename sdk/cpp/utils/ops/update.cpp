@@ -3,94 +3,80 @@
  */
 
 #include "boost/filesystem.hpp"
+#include "cxxopts.hpp"
 #include "utils/misc/file.hpp"
 #include "utils/operations.hpp"
 #include "weasel/devkit/extra/logger.hpp"
 #include "weasel/devkit/resultfile.hpp"
-#include <iostream>
+#include "weasel/devkit/utils.hpp"
 
 /**
  *
  */
-UpdateOperation::UpdateOperation()
-    : Operation()
+bool UpdateOperation::parse_impl(int argc, char* argv[])
 {
-}
-
-/**
- *
- */
-boost::program_options::options_description UpdateOperation::description() const
-{
-    namespace po = boost::program_options;
-    po::options_description desc{ "Options --mode=update" };
+    cxxopts::Options options("weasel-cmp --mode=update");
     // clang-format off
-    desc.add_options()
-        ("src", po::value<std::string>(), "path to a directory with one or more weasel result files")
-        ("out", po::value<std::string>(), "path to a directory in which updated weasel result file(s) will be stored")
-        ("teamslug", po::value<std::string>(), "new team slug")
-        ("testsuite", po::value<std::string>(), "new suite slug");
+    options.add_options("main")
+        ("src", "path to directory with one or more result files", cxxopts::value<std::string>())
+        ("out", "path to directory to write updated result files", cxxopts::value<std::string>())
+        ("team", "value of metadata field `team`", cxxopts::value<std::string>())
+        ("suite", "value of metadata field `suite`", cxxopts::value<std::string>())
+        ("revision", "value of metadata field `revision`", cxxopts::value<std::string>());
     // clang-format on
-    return desc;
-}
+    options.allow_unrecognised_options();
 
-/**
- *
- */
-void UpdateOperation::parse_options(
-    const boost::program_options::variables_map vm)
-{
-    Operation::parse_basic_options(vm, { "src", "out", "teamslug", "testsuite" });
-}
+    const auto& result = options.parse(argc, argv);
 
-/**
- *
- */
-bool UpdateOperation::validate_options() const
-{
-    // check that all required keys exist
+    const std::unordered_map<std::string, std::string> filetypes = {
+        { "src", "source" },
+        { "out", "output" }
+    };
 
-    if (!validate_required_keys({ "src", "out" }))
+    for (const auto& kvp : filetypes)
     {
-        return false;
+        if (!result.count(kvp.first))
+        {
+            weasel::print_error("{} directory not provided\n", kvp.second);
+            fmt::print(stdout, "{}\n", options.help());
+            return false;
+        }
+        const auto filepath = result[kvp.first].as<std::string>();
+        if (!boost::filesystem::is_directory(filepath))
+        {
+            weasel::print_error("{} directory `{}` does not exist\n", kvp.second, filepath);
+            return false;
+        }
     }
 
-    if (!boost::filesystem::exists(_opts.get("src")))
-    {
-        std::cerr << "result directory does not exist" << std::endl;
-        return false;
-    }
+    _src = result["src"].as<std::string>();
+    _out = result["out"].as<std::string>();
 
-    if (boost::filesystem::exists(_opts.get("out")))
+    for (const auto& key : { "team", "suite", "revision" })
     {
-        std::cerr << "specified output directory already exists" << std::endl;
-        return false;
+        if (result.count(key))
+        {
+            const auto& value = result[key].as<std::string>();
+            _fields.emplace(key, value);
+        }
     }
-
-    // we can validate that the given directory has at least one weasel
-    // result file. However, since finding weasel result files is an
-    // expensive operation, we choose to defer this check to operation
-    // run-time.
 
     return true;
 }
 
 /**
- *
+ * we expect user to specify a directory as source. we recursively
+ * iterate over all the file system elements in that directory and
+ * identify weasel result files.
  */
-bool UpdateOperation::run() const
+bool UpdateOperation::run_impl() const
 {
     WEASEL_LOG_INFO("starting execution of operation: update");
 
-    // we expect user to specify a directory as source. we recursively
-    // iterate over all the file system elements in that directory and
-    // identify weasel result files.
-
     namespace fs = boost::filesystem;
     std::vector<weasel::path> resultFiles;
-    const weasel::path srcDir = _opts.get("src");
-    WEASEL_LOG_DEBUG("finding weasel result files in {}", srcDir);
-    findResultFiles(srcDir, std::back_inserter(resultFiles));
+    WEASEL_LOG_DEBUG("finding weasel result files in {}", _src);
+    findResultFiles(_src, std::back_inserter(resultFiles));
     WEASEL_LOG_INFO("found {} weasel result files", resultFiles.size());
     const auto& sortFunction = [](const fs::path& a, const fs::path& b) {
         return fs::file_size(a) < fs::file_size(b);
@@ -103,7 +89,7 @@ bool UpdateOperation::run() const
         return false;
     }
 
-    const auto& root = fs::absolute(_opts.get("out"));
+    const auto& root = fs::absolute(_out);
     for (const auto& srcFilePath : resultFiles)
     {
         const auto filename = fs::path(srcFilePath).filename();
@@ -115,13 +101,17 @@ bool UpdateOperation::run() const
         for (const auto& kvp : elementsMap)
         {
             auto meta = kvp.second->metadata();
-            if (_opts.has("teamslug"))
+            if (_fields.count("team"))
             {
-                meta.teamslug = _opts.get("teamslug");
+                meta.teamslug = _fields.at("team");
             }
-            if (_opts.has("testsuite"))
+            if (_fields.count("suite"))
             {
-                meta.testsuite = _opts.get("testsuite");
+                meta.testsuite = _fields.at("suite");
+            }
+            if (_fields.count("revision"))
+            {
+                meta.testsuite = _fields.at("revision");
             }
             kvp.second->setMetadata(meta);
             content.push_back(*kvp.second);
