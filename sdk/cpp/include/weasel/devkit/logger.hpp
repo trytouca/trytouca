@@ -6,6 +6,7 @@
 
 #include <string>
 #include "fmt/format.h"
+#include "weasel/lib_api.hpp"
 
 #define WEASEL_LOG_DEBUG(...) log(weasel::log_level::debug, __VA_ARGS__)
 #define WEASEL_LOG_INFO(...)  log(weasel::log_level::info, __VA_ARGS__)
@@ -17,12 +18,12 @@ namespace weasel {
     /**
      *
      */
-    void setup_console_logger(const std::string& log_level);
+    WEASEL_CLIENT_API void setup_console_logger(const std::string& log_level);
 
     /**
      *
      */
-    void setup_file_logger(const std::string& log_dir);
+    WEASEL_CLIENT_API void setup_file_logger(const std::string& log_dir);
 
     /**
      *
@@ -41,5 +42,5 @@ namespace weasel {
     /**
      *
      */
-    void vlog(const log_level level, fmt::string_view format, fmt::format_args args);
+    WEASEL_CLIENT_API void vlog(const log_level level, fmt::string_view format, fmt::format_args args);
 }

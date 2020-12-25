@@ -95,7 +95,7 @@ namespace weasel {
     /**
      *
      */
-    void WEASEL_CLIENT_API print_impl(const fmt::terminal_color& style, fmt::string_view format, fmt::format_args args);
+    WEASEL_CLIENT_API void print_impl(const fmt::terminal_color& style, fmt::string_view format, fmt::format_args args);
 
     /**
      *
@@ -118,7 +118,7 @@ namespace weasel {
     /**
      *
      */
-    std::string WEASEL_CLIENT_API narrow(const std::wstring& value);
+    WEASEL_CLIENT_API std::string narrow(const std::wstring& value);
 
     /**
      * Utility function to load content of a file with given path.
@@ -134,14 +134,14 @@ namespace weasel {
      *
      * @return content of the file with given path
      */
-    std::string WEASEL_CLIENT_API load_string_file(
+    WEASEL_CLIENT_API std::string load_string_file(
         const weasel::path& path,
         const std::ios_base::openmode mode = std::ios::in);
 
     /**
      *
      */
-    void WEASEL_CLIENT_API save_string_file(
+    WEASEL_CLIENT_API void save_string_file(
         const weasel::path& path,
         const std::string& content);
 
