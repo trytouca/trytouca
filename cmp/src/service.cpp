@@ -3,10 +3,10 @@
  */
 
 #include "service.hpp"
-#include "comparator/logger.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "weasel/devkit/comparison.hpp"
+#include "weasel/devkit/logger.hpp"
 #include "weasel/devkit/utils.hpp"
 #include <thread>
 

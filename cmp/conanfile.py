@@ -21,13 +21,11 @@ class WeaselConan(ConanFile):
         self.requires.add("weasel/1.2.1")
         self.requires.add("cxxopts/2.2.1")
         self.requires.add("fmt/7.1.2")
-        self.requires.add("spdlog/1.8.2")
 
     def source(self):
         self.run("git clone https://github.com/getweasel/weasel.git")
 
     def configure(self):
-        self.options["spdlog"].header_only = True
         self.options["weasel"].shared = True
         self.options["weasel"].with_tests = False
         self.options["weasel"].with_utils = False
