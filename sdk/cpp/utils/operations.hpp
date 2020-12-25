@@ -46,6 +46,9 @@ struct Operation
      */
     virtual bool run() const final;
 
+protected:
+    virtual ~Operation() = default;
+
 private:
     /**
      *
