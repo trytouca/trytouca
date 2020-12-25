@@ -49,7 +49,7 @@ namespace weasel {
      */
     void declare_testcase(const std::wstring& name)
     {
-        instance.testcase(weasel::toUtf8(name));
+        instance.testcase(weasel::narrow(name));
     }
 
     /**
@@ -65,7 +65,7 @@ namespace weasel {
      */
     void forget_testcase(const std::wstring& name)
     {
-        instance.forget_testcase(weasel::toUtf8(name));
+        instance.forget_testcase(weasel::narrow(name));
     }
 
     /**
@@ -90,7 +90,7 @@ namespace weasel {
             const std::wstring& key,
             const std::shared_ptr<types::IType>& value)
         {
-            instance.add_result(weasel::toUtf8(key), value);
+            instance.add_result(weasel::narrow(key), value);
         }
 
         /**
@@ -110,7 +110,7 @@ namespace weasel {
             const std::wstring& key,
             const std::shared_ptr<types::IType>& value)
         {
-            instance.add_assertion(weasel::toUtf8(key), value);
+            instance.add_assertion(weasel::narrow(key), value);
         }
 
         /**
@@ -130,7 +130,7 @@ namespace weasel {
             const std::wstring& key,
             const std::shared_ptr<types::IType>& value)
         {
-            instance.add_array_element(weasel::toUtf8(key), value);
+            instance.add_array_element(weasel::narrow(key), value);
         }
 
     } // namespace internal

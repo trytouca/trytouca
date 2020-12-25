@@ -21,7 +21,7 @@ namespace weasel {
     /**
      *
      */
-    std::string toUtf8(const std::wstring& value)
+    std::string narrow(const std::wstring& value)
     {
         std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> conv;
         return conv.to_bytes(value);

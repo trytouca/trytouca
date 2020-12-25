@@ -7,9 +7,9 @@
 
 TEST_CASE("string formatting")
 {
-    SECTION("toUtf8")
+    SECTION("narrow")
     {
-        CHECK(weasel::toUtf8(L"hello") == "hello");
+        CHECK(weasel::narrow(L"hello") == "hello");
     }
 
     SECTION("format")

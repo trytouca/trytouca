@@ -118,7 +118,7 @@ namespace weasel {
     /**
      *
      */
-    std::string WEASEL_CLIENT_API toUtf8(const std::wstring& value);
+    std::string WEASEL_CLIENT_API narrow(const std::wstring& value);
 
     /**
      * Utility function to load content of a file with given path.
