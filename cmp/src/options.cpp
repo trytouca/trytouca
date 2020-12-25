@@ -8,34 +8,6 @@
 #include "rapidjson/document.h"
 #include "weasel/devkit/utils.hpp"
 
-namespace weasel {
-    /**
-     *
-     */
-    void print_impl(const fmt::terminal_color& style, fmt::string_view format, fmt::format_args args)
-    {
-        fmt::vprint(stderr, fmt::fg(style), format, args);
-    }
-
-    /**
-     *
-     */
-    template <typename Format, typename... Args>
-    void print_error(const Format& format, Args&&... args)
-    {
-        print_impl(fmt::terminal_color::red, format, fmt::make_args_checked<Args...>(format, args...));
-    }
-
-    /**
-     *
-     */
-    template <typename Format, typename... Args>
-    void print_warning(const Format& format, Args&&... args)
-    {
-        print_impl(fmt::terminal_color::yellow, format, fmt::make_args_checked<Args...>(format, args...));
-    }
-}
-
 /**
  *
  */
