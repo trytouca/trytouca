@@ -4,6 +4,7 @@
 
 #include "cxxopts.hpp"
 #include "utils/operations.hpp"
+#include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/resultfile.hpp"
 #include "weasel/devkit/utils.hpp"
 

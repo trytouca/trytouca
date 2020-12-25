@@ -3,10 +3,10 @@
  */
 
 #include "example/casino/regression_test.hpp"
-#include "boost/filesystem.hpp"
 #include "boost/format.hpp"
 #include "boost/program_options.hpp"
 #include "example/casino/code_under_test.hpp"
+#include "weasel/devkit/filesystem.hpp"
 #include "weasel/weasel.hpp"
 #include <iostream>
 #include <thread>
@@ -132,10 +132,9 @@ bool Operation<kGenerate>::run() const
         print(num, std::cout);
         return true;
     }
-    namespace fs = boost::filesystem;
-    const auto output = fs::absolute(_opts.at("output"));
-    if (!fs::exists(output.parent_path())
-        && !fs::create_directories(output.parent_path()))
+    const auto output = boost::filesystem::absolute(_opts.at("output"));
+    if (!weasel::filesystem::exists(output.parent_path().string())
+        && !boost::filesystem::create_directories(output.parent_path()))
     {
         std::cerr << "failed to create directory: " << output.string()
                   << std::endl;
@@ -192,7 +191,7 @@ bool Operation<kExecute>::validate() const
         }
     }
     const auto& file = _opts.at("input");
-    if (!boost::filesystem::is_regular_file(file))
+    if (!weasel::filesystem::is_regular_file(file))
     {
         std::cerr << "specified input file is missing" << std::endl;
         return false;

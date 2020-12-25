@@ -3,9 +3,9 @@
  */
 
 #include "regression_test.hpp"
-#include "boost/filesystem.hpp"
 #include "code_under_test.hpp"
 #include "cxxopts.hpp"
+#include "weasel/devkit/filesystem.hpp"
 #include "weasel/framework/suites.hpp"
 #include "weasel/weasel.hpp"
 #include <iostream>
@@ -35,7 +35,7 @@ void MySuite::initialize()
 {
     for (const auto& it : boost::filesystem::directory_iterator(_dir))
     {
-        if (!boost::filesystem::is_regular_file(it.path()))
+        if (!weasel::filesystem::is_regular_file(it.path().string()))
         {
             continue;
         }
@@ -108,7 +108,7 @@ bool MyWorkflow::validate_options() const
     // check that directory pointed by option `datasets-dir` exists.
 
     const auto& datasetsDir = _options.at("datasets-dir");
-    if (!boost::filesystem::is_directory(datasetsDir))
+    if (!weasel::filesystem::is_directory(datasetsDir))
     {
         std::cerr << "datasets directory \"" << datasetsDir << "\" does not exist" << std::endl;
         return false;
@@ -120,7 +120,7 @@ bool MyWorkflow::validate_options() const
     if (_options.count("testsuite-file"))
     {
         const auto& file = _options.at("testsuite-file");
-        if (!boost::filesystem::is_regular_file(file))
+        if (!weasel::filesystem::is_regular_file(file))
         {
             std::cerr << "testsuite file \"" << file << "\" does not exist" << std::endl;
             return false;

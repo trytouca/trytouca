@@ -3,11 +3,10 @@
  */
 
 #include "code_under_test.hpp"
-#include <boost/filesystem.hpp>
-#include <rapidjson/document.h>
+#include "rapidjson/document.h"
+#include "weasel/devkit/filesystem.hpp"
+#include "weasel/weasel.hpp"
 #include <thread>
-#include <weasel/devkit/utils.hpp>
-#include <weasel/weasel.hpp>
 
 /**
  *

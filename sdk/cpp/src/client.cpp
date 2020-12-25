@@ -3,10 +3,10 @@
  */
 
 #include "weasel/detail/client.hpp"
-#include "boost/filesystem.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
+#include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/resultfile.hpp"
 #include "weasel/devkit/utils.hpp"

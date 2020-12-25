@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include "boost/filesystem.hpp"
-#include "weasel/devkit/utils.hpp"
+#include "weasel/devkit/filesystem.hpp"
 
 struct TmpFile
 {

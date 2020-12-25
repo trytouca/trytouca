@@ -2,10 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "boost/filesystem.hpp"
 #include "cxxopts.hpp"
 #include "utils/misc/file.hpp"
 #include "utils/operations.hpp"
+#include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/logger.hpp"
 #include "weasel/devkit/resultfile.hpp"
 #include "weasel/devkit/utils.hpp"
@@ -44,7 +44,7 @@ bool MergeOperation::parse_impl(int argc, char* argv[])
             return false;
         }
         const auto filepath = result[kvp.first].as<std::string>();
-        if (!boost::filesystem::is_directory(filepath))
+        if (!weasel::filesystem::is_directory(filepath))
         {
             weasel::print_error("{} directory `{}` does not exist\n", kvp.second, filepath);
             return false;
@@ -66,14 +66,13 @@ bool MergeOperation::run_impl() const
 {
     WEASEL_LOG_INFO("starting execution of operation: merge");
 
-    namespace fs = boost::filesystem;
     std::vector<weasel::path> resultFiles;
     const weasel::path srcDir = _src;
     WEASEL_LOG_DEBUG("finding weasel result files in {}", srcDir);
     findResultFiles(srcDir, std::back_inserter(resultFiles));
     WEASEL_LOG_INFO("found {} weasel result files", resultFiles.size());
-    const auto& sortFunction = [](const fs::path& a, const fs::path& b) {
-        return fs::file_size(a) < fs::file_size(b);
+    const auto& sortFunction = [](const boost::filesystem::path& a, const boost::filesystem::path& b) {
+        return boost::filesystem::file_size(a) < boost::filesystem::file_size(b);
     };
     std::sort(resultFiles.begin(), resultFiles.end(), sortFunction);
 
@@ -83,13 +82,13 @@ bool MergeOperation::run_impl() const
         return false;
     }
 
-    using chunk_t = std::vector<fs::path>;
+    using chunk_t = std::vector<boost::filesystem::path>;
     std::vector<chunk_t> chunks;
     for (auto i = 0u, j = 0u; i < resultFiles.size(); j = i)
     {
         for (auto chunkSize = 0ull; i < resultFiles.size(); ++i)
         {
-            const auto fileSize = fs::file_size(resultFiles.at(i));
+            const auto fileSize = boost::filesystem::file_size(resultFiles.at(i));
             if (MAX_FILE_SIZE < chunkSize + fileSize)
             {
                 ++i;
@@ -102,10 +101,10 @@ bool MergeOperation::run_impl() const
     }
     WEASEL_LOG_INFO("results will be merged into {} files", chunks.size());
 
-    const auto& root = fs::absolute(_out);
+    const auto& root = boost::filesystem::absolute(_out);
     for (auto i = 0ul; i < chunks.size(); ++i)
     {
-        const auto filestem = fs::path(srcDir).filename().string();
+        const auto filestem = boost::filesystem::path(srcDir).filename().string();
         const auto& filename = chunks.size() == 1ul
             ? weasel::format("{}.bin", filestem)
             : weasel::format("{}.part{}.bin", filestem, i + 1);

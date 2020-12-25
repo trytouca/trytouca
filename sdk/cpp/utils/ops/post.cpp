@@ -5,8 +5,10 @@
 #include "cxxopts.hpp"
 #include "utils/misc/file.hpp"
 #include "utils/operations.hpp"
+#include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/logger.hpp"
 #include "weasel/devkit/platform.hpp"
+#include "weasel/devkit/utils.hpp"
 
 /**
  * we used to validate that the given directory has at least one

@@ -31,7 +31,7 @@ namespace weasel {
      *
      */
     std::string load_string_file(
-        const weasel::path& path,
+        const std::string& path,
         const std::ios_base::openmode mode)
     {
         std::ifstream filestream(path, mode);
@@ -49,7 +49,7 @@ namespace weasel {
      *
      */
     void save_string_file(
-        const weasel::path& path,
+        const std::string& path,
         const std::string& content)
     {
         std::ofstream ofs(path);

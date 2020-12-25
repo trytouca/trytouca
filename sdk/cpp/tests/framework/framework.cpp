@@ -6,8 +6,9 @@
 #include "catch2/catch.hpp"
 #include "tests/client/devkit/tmpfile.hpp"
 #include "tests/framework/utils.hpp"
-#include "weasel/framework/detail/utils.hpp"
+#include "weasel/devkit/utils.hpp"
 #include "weasel/extra/version.hpp"
+#include "weasel/framework/detail/utils.hpp"
 
 TEST_CASE("suite")
 {

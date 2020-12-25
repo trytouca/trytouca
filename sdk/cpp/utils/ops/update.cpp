@@ -2,10 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "boost/filesystem.hpp"
 #include "cxxopts.hpp"
 #include "utils/misc/file.hpp"
 #include "utils/operations.hpp"
+#include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/logger.hpp"
 #include "weasel/devkit/resultfile.hpp"
 #include "weasel/devkit/utils.hpp"
@@ -42,7 +42,7 @@ bool UpdateOperation::parse_impl(int argc, char* argv[])
             return false;
         }
         const auto filepath = result[kvp.first].as<std::string>();
-        if (!boost::filesystem::is_directory(filepath))
+        if (!weasel::filesystem::is_directory(filepath))
         {
             weasel::print_error("{} directory `{}` does not exist\n", kvp.second, filepath);
             return false;
@@ -73,13 +73,12 @@ bool UpdateOperation::run_impl() const
 {
     WEASEL_LOG_INFO("starting execution of operation: update");
 
-    namespace fs = boost::filesystem;
     std::vector<weasel::path> resultFiles;
     WEASEL_LOG_DEBUG("finding weasel result files in {}", _src);
     findResultFiles(_src, std::back_inserter(resultFiles));
     WEASEL_LOG_INFO("found {} weasel result files", resultFiles.size());
-    const auto& sortFunction = [](const fs::path& a, const fs::path& b) {
-        return fs::file_size(a) < fs::file_size(b);
+    const auto& sortFunction = [](const boost::filesystem::path& a, const boost::filesystem::path& b) {
+        return boost::filesystem::file_size(a) < boost::filesystem::file_size(b);
     };
     std::sort(resultFiles.begin(), resultFiles.end(), sortFunction);
 
@@ -89,10 +88,10 @@ bool UpdateOperation::run_impl() const
         return false;
     }
 
-    const auto& root = fs::absolute(_out);
+    const auto& root = boost::filesystem::absolute(_out);
     for (const auto& srcFilePath : resultFiles)
     {
-        const auto filename = fs::path(srcFilePath).filename();
+        const auto filename = boost::filesystem::path(srcFilePath).filename();
         const auto dstFilePath = (root / filename).string();
 
         weasel::ResultFile srcFile(srcFilePath);

@@ -3,17 +3,17 @@
  */
 
 #include "weasel/framework.hpp"
-#include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
 #include "boost/iostreams/stream.hpp"
 #include "boost/iostreams/tee.hpp"
 #include "cxxopts.hpp"
 #include "fmt/printf.h"
 #include "rapidjson/document.h"
+#include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/utils.hpp"
-#include "weasel/framework/detail/utils.hpp"
 #include "weasel/extra/version.hpp"
+#include "weasel/framework/detail/utils.hpp"
 #include "weasel/weasel.hpp"
 #include <iostream>
 #include <thread>
@@ -574,7 +574,6 @@ namespace weasel { namespace framework {
      */
     int main_impl(int argc, char* argv[], Workflow& workflow)
     {
-        namespace fs = boost::filesystem;
         using lg = LogLevel;
         Options options;
 
@@ -627,11 +626,11 @@ namespace weasel { namespace framework {
 
         // establish output directory for this revision
 
-        fs::path outputDirRevision = options.at("output-dir");
+        boost::filesystem::path outputDirRevision = options.at("output-dir");
         outputDirRevision /= options.at("suite");
         outputDirRevision /= options.at("revision");
 
-        fs::create_directories(outputDirRevision);
+        boost::filesystem::create_directories(outputDirRevision);
 
         // unless explicitly instructed not to do so, register a separate
         // file logger to write our events to a file in the output directory.
@@ -701,7 +700,7 @@ namespace weasel { namespace framework {
         // information printed on console to a file `Console.log` in
         // output directory for this revision.
 
-        fs::ofstream ofs { outputDirRevision / "Console.log", std::ios::trunc };
+        boost::filesystem::ofstream ofs { outputDirRevision / "Console.log", std::ios::trunc };
         auto tee_device = boost::iostreams::tee(std::cout, ofs);
         boost::iostreams::stream<decltype(tee_device)> printer(tee_device);
 
@@ -815,9 +814,9 @@ namespace weasel { namespace framework {
 
             // remove result directory for this testcase if it already exists.
 
-            if (fs::exists(outputDirCase))
+            if (weasel::filesystem::exists(outputDirCase.string()))
             {
-                fs::remove_all(outputDirCase);
+                boost::filesystem::remove_all(outputDirCase);
                 logger.log(lg::Debug, "removed existing result directory for {}", testcase);
 
                 // since subsequent operations may expect to write into
@@ -828,7 +827,7 @@ namespace weasel { namespace framework {
 
             // create result directory for this testcase
 
-            fs::create_directories(outputDirCase);
+            boost::filesystem::create_directories(outputDirCase);
 
             // execute workflow for this testcase
 

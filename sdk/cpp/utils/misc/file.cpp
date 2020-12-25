@@ -3,10 +3,8 @@
  */
 
 #include "utils/misc/file.hpp"
-#include "boost/filesystem.hpp"
+#include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/resultfile.hpp"
-
-namespace fs = boost::filesystem;
 
 /**
  *
@@ -15,15 +13,15 @@ void findResultFiles(
     const weasel::path& inputPath,
     std::back_insert_iterator<std::vector<weasel::path>> resultFileIterator)
 {
-    if (fs::is_regular_file(inputPath))
+    if (weasel::filesystem::is_regular_file(inputPath))
     {
         resultFileIterator = inputPath;
         return;
     }
 
-    if (fs::is_directory(inputPath))
+    if (weasel::filesystem::is_directory(inputPath))
     {
-        for (const auto& it : fs::recursive_directory_iterator(inputPath))
+        for (const auto& it : boost::filesystem::recursive_directory_iterator(inputPath))
         {
             weasel::ResultFile srcFile(it.path().string());
             if (!srcFile.validate())

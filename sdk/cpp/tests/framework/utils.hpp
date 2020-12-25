@@ -127,7 +127,7 @@ public:
     std::vector<std::string> get_regular_files(const std::string& filename) const
     {
         auto filter = [](const boost::filesystem::directory_entry& path) {
-            return boost::filesystem::is_regular_file(path);
+            return weasel::filesystem::is_regular_file(path.path().string());
         };
         return get_elements(filename, filter);
     }
@@ -135,7 +135,7 @@ public:
     std::vector<std::string> get_directories(const std::string& filename) const
     {
         auto filter = [](const boost::filesystem::directory_entry& path) {
-            return boost::filesystem::is_directory(path);
+            return weasel::filesystem::is_directory(path.path().string());
         };
         return get_elements(filename, filter);
     }

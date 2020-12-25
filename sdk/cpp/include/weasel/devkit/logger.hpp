@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include <string>
 #include "fmt/format.h"
 #include "weasel/lib_api.hpp"
+#include <string>
 
 #define WEASEL_LOG_DEBUG(...) log(weasel::log_level::debug, __VA_ARGS__)
-#define WEASEL_LOG_INFO(...)  log(weasel::log_level::info, __VA_ARGS__)
-#define WEASEL_LOG_WARN(...)  log(weasel::log_level::warn, __VA_ARGS__)
+#define WEASEL_LOG_INFO(...) log(weasel::log_level::info, __VA_ARGS__)
+#define WEASEL_LOG_WARN(...) log(weasel::log_level::warn, __VA_ARGS__)
 #define WEASEL_LOG_ERROR(...) log(weasel::log_level::error, __VA_ARGS__)
 
 namespace weasel {
@@ -28,7 +28,13 @@ namespace weasel {
     /**
      *
      */
-    enum log_level { debug = 1, info, warn, error };
+    enum log_level
+    {
+        debug = 1,
+        info,
+        warn,
+        error
+    };
 
     /**
      *
