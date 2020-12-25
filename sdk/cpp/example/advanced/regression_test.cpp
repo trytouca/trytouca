@@ -3,13 +3,13 @@
  */
 
 #include "regression_test.hpp"
+#include "boost/filesystem.hpp"
 #include "code_under_test.hpp"
-#include <boost/filesystem.hpp>
-#include <boost/program_options.hpp>
+#include "cxxopts.hpp"
+#include "weasel/framework/suites.hpp"
+#include "weasel/weasel.hpp"
 #include <iostream>
 #include <thread>
-#include <weasel/framework/suites.hpp>
-#include <weasel/weasel.hpp>
 
 /**
  *
@@ -46,18 +46,16 @@ void MySuite::initialize()
 /**
  *
  */
-boost::program_options::options_description program_options()
+cxxopts::Options application_options()
 {
-    namespace po = boost::program_options;
-    po::options_description opts { "" };
+    cxxopts::Options options { "" };
     // clang-format off
-    opts.add_options()
-        ("datasets-dir", po::value<std::string>(), "path to datasets directory")
-        ("testsuite-file", po::value<std::string>(), "path to testsuite file")
-        ("testsuite-remote", po::value<std::string>()->implicit_value("true"),
-            "reuse testcases of baseline\n");
+    options.add_options()
+        ("datasets-dir", "path to datasets directory", cxxopts::value<std::string>())
+        ("testsuite-file", "path to testsuite file", cxxopts::value<std::string>())
+        ("testsuite-remote", "reuse testcases of baseline\n", cxxopts::value<std::string>()->implicit_value("true"));
     // clang-format on
-    return opts;
+    return options;
 }
 
 /**
@@ -73,9 +71,7 @@ MyWorkflow::MyWorkflow()
  */
 std::string MyWorkflow::describe_options() const
 {
-    std::ostringstream oss;
-    oss << program_options();
-    return oss.str();
+    return application_options().help();
 }
 
 /**
@@ -83,13 +79,15 @@ std::string MyWorkflow::describe_options() const
  */
 bool MyWorkflow::parse_options(int argc, char* argv[])
 {
-    namespace po = boost::program_options;
-    const auto& opts = program_options();
-    po::variables_map vm;
-    po::store(po::command_line_parser(argc, argv).options(opts).allow_unregistered().run(), vm);
-    for (const auto& value : vm)
+    auto options = application_options();
+    options.allow_unrecognised_options();
+    const auto& result = options.parse(argc, argv);
+    for (const auto& key : { "datasets-dir", "testsuite-file", "testsuite-remote" })
     {
-        _options[value.first] = value.second.as<std::string>();
+        if (result.count(key))
+        {
+            _options[key] = result[key].as<std::string>();
+        }
     }
     return true;
 }

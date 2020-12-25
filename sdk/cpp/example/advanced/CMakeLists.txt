@@ -4,6 +4,8 @@
 
 include(GNUInstallDirs)
 
+weasel_find_package("cxxopts")
+
 add_executable(weasel_example_advanced "")
 
 target_sources(
@@ -19,6 +21,7 @@ target_link_libraries(
         weasel_example_advanced
     PRIVATE
         weasel_framework
+        cxxopts::cxxopts
 )
 
 target_include_directories(
