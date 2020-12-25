@@ -11,6 +11,7 @@ weasel_find_package("Flatbuffers")
 weasel_find_package("flatc")
 weasel_find_package("CURL")
 weasel_find_package("RapidJSON")
+weasel_find_package("spdlog")
 
 function(WeaselFlatbuffersGenerateCpp SCHEMA_FILES GENERATED_DIR GENERATED_CXX)
     get_filename_component(_flatc_dir ${flatc_BUILD_MODULES_PATHS} DIRECTORY)
@@ -63,6 +64,7 @@ target_link_libraries(
         weasel_client
     PRIVATE
         CURL::CURL
+        spdlog::spdlog
     PUBLIC
         Boost::Boost
         flatbuffers::flatbuffers

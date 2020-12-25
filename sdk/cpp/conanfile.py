@@ -40,6 +40,7 @@ class WeaselConan(ConanFile):
         self.requires.add("flatbuffers/1.12.0")
         self.requires.add("fmt/7.1.2")
         self.requires.add("rapidjson/1.1.0")
+        self.requires.add("spdlog/1.8.2")
         if not self.options.shared:
             self.requires.add("libcurl/7.74.0")
         if self.options.with_examples or self.options.with_framework or self.options.with_utils:
@@ -51,6 +52,9 @@ class WeaselConan(ConanFile):
             self.build_requires("libcurl/7.74.0")
         if self.options.with_tests:
             self.build_requires("catch2/2.13.3")
+
+    def configure(self):
+        self.options["spdlog"].header_only = True
 
     def _configure_cmake(self):
         cmake = CMake(self)

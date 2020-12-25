@@ -6,7 +6,7 @@
 #include "cxxopts.hpp"
 #include "utils/misc/file.hpp"
 #include "utils/operations.hpp"
-#include "weasel/devkit/extra/logger.hpp"
+#include "weasel/devkit/logger.hpp"
 #include "weasel/devkit/resultfile.hpp"
 #include "weasel/devkit/utils.hpp"
 
