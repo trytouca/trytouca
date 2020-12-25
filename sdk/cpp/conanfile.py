@@ -83,6 +83,7 @@ class WeaselConan(ConanFile):
             "fmt::fmt",
             "flatbuffers::flatbuffers",
             "rapidjson::rapidjson",
+            "spdlog::spdlog"
         ]
         if not self.options.shared:
             client_requirements.append("libcurl::libcurl")
