@@ -7,6 +7,7 @@
 #include "tests/client/devkit/tmpfile.hpp"
 #include "tests/framework/utils.hpp"
 #include "weasel/framework/detail/utils.hpp"
+#include "weasel/extra/version.hpp"
 
 TEST_CASE("suite")
 {
@@ -68,8 +69,9 @@ TEST_CASE("framework-dummy-workflow")
     SECTION("version")
     {
         caller.call_with({ "--version" });
+        const auto expected = weasel::format("{}.{}.{}\n", WEASEL_VERSION_MAJOR, WEASEL_VERSION_MINOR, WEASEL_VERSION_PATCH);
         CHECK(caller.exit_code() == EXIT_SUCCESS);
-        CHECK(caller.cout() == "1.2.1\n");
+        CHECK(caller.cout() == expected);
         CHECK(caller.cerr().empty());
     }
 

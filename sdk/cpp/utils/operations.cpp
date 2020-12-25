@@ -5,6 +5,7 @@
 #include "utils/operations.hpp"
 #include "cxxopts.hpp"
 #include "weasel/devkit/utils.hpp"
+#include "weasel/extra/version.hpp"
 
 /**
  *
@@ -133,7 +134,7 @@ bool Options::parse_impl(int argc, char* argv[])
 
     if (result.count("version"))
     {
-        fmt::print(stdout, "Weasel Utility Command Line Tool v{}.{}.{}\n", 1, 2, 1);
+        fmt::print(stdout, "Weasel Utility Command Line Tool v{}.{}.{}\n", WEASEL_VERSION_MAJOR, WEASEL_VERSION_MINOR, WEASEL_VERSION_PATCH);
         arguments.show_version = true;
         return true;
     }

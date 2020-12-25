@@ -13,6 +13,7 @@
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/utils.hpp"
 #include "weasel/framework/detail/utils.hpp"
+#include "weasel/extra/version.hpp"
 #include "weasel/weasel.hpp"
 #include <iostream>
 #include <thread>
@@ -603,7 +604,7 @@ namespace weasel { namespace framework {
 
         if (options.count("version"))
         {
-            fmt::print(std::cout, "{}\n", "1.2.1");
+            fmt::print(std::cout, "{}.{}.{}\n", WEASEL_VERSION_MAJOR, WEASEL_VERSION_MINOR, WEASEL_VERSION_PATCH);
             return EXIT_SUCCESS;
         }
 
