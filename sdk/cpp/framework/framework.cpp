@@ -8,7 +8,7 @@
 #include "boost/iostreams/stream.hpp"
 #include "boost/iostreams/tee.hpp"
 #include "cxxopts.hpp"
-#include "fmt/core.h"
+#include "fmt/printf.h"
 #include "rapidjson/document.h"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/utils.hpp"
@@ -164,7 +164,7 @@ namespace weasel { namespace framework {
         }
         catch (const cxxopts::OptionParseException& ex)
         {
-            std::cerr << "failed to parse command line arguments: " << ex.what() << std::endl;
+            weasel::print_error("failed to parse command line arguments: {}\n", ex.what());
             return false;
         }
 
@@ -202,7 +202,7 @@ namespace weasel { namespace framework {
 
         if (!weasel::filesystem::is_regular_file(configFile))
         {
-            std::cerr << "configuration file not found: " << configFile << std::endl;
+            fmt::print(std::cerr, "configuration file not found: {}\n", configFile);
             return false;
         }
 
@@ -215,7 +215,7 @@ namespace weasel { namespace framework {
         rapidjson::Document document;
         if (document.Parse<0>(content.c_str()).HasParseError())
         {
-            std::cerr << "failed to parse configuration file" << std::endl;
+            fmt::print(std::cerr, "failed to parse configuration file\n");
             return false;
         }
 
@@ -223,7 +223,7 @@ namespace weasel { namespace framework {
 
         if (!document.IsObject())
         {
-            std::cerr << "expected configuration file to be a json object" << std::endl;
+            fmt::print(std::cerr, "expected configuration file to be a json object\n");
             return false;
         }
 
@@ -235,7 +235,7 @@ namespace weasel { namespace framework {
             }
             if (!document[topLevelKey].IsObject())
             {
-                std::cerr << fmt::format("field {} in configuration file has unexpected type", topLevelKey) << std::endl;
+                fmt::print(std::cerr, "field {} in configuration file has unexpected type\n", topLevelKey);
                 return false;
             }
             for (const auto& rjMember : document[topLevelKey].GetObject())
@@ -243,7 +243,8 @@ namespace weasel { namespace framework {
                 const auto& key = rjMember.name.GetString();
                 if (!rjMember.value.IsString())
                 {
-                    std::cerr << "Ignoring option \"" << topLevelKey << "\":\"" << key << "\" in configuration file. Expected value type to be string." << std::endl;
+                    fmt::print(std::cerr, "ignoring option \"{}\":\"{}\" in configuration file.\n", topLevelKey, key);
+                    fmt::print(std::cerr, "Expected value type to be string.\n");
                     continue;
                 }
                 const auto& value = rjMember.value.GetString();
@@ -307,12 +308,12 @@ namespace weasel { namespace framework {
         {
             return true;
         }
-        std::cerr << "expected configuration options:\n";
+        fmt::print(std::cerr, "expected configuration options:\n");
         for (const auto& key : keys)
         {
             if (!options.count(key))
             {
-                std::cerr << " - " << key << std::endl;
+                fmt::print(std::cerr, " - {}\n", key);
             }
         }
         return false;
@@ -339,7 +340,7 @@ namespace weasel { namespace framework {
             }
             if (apiUrl.slugs.at(segment) != options.at(option))
             {
-                std::cerr << fmt::format("values of options \"api-url\" and \"{}\" are not consistent.", option) << std::endl;
+                fmt::print(std::cerr, "values of options \"api-url\" and \"{}\" are not consistent.\n", option);
                 return false;
             }
         }
@@ -384,7 +385,7 @@ namespace weasel { namespace framework {
             const auto isValid = std::find(levels.begin(), levels.end(), level) != levels.end();
             if (!isValid)
             {
-                std::cerr << "value of option \"--log-level\" must be one of \"debug\", \"info\" or \"warning\"." << std::endl;
+                fmt::print(std::cerr, "value of option \"--log-level\" must be one of \"debug\", \"info\" or \"warning\".\n");
                 return false;
             }
         }
@@ -447,7 +448,7 @@ namespace weasel { namespace framework {
     public:
         void log(const LogLevel level, const std::string& msg) override
         {
-            std::cout << fmt::format("{0:<8}{1:}", stringify(level), msg) << std::endl;
+            fmt::print(std::cout, "{0:<8}{1:}\n", stringify(level), msg);
         }
     };
 
@@ -581,7 +582,7 @@ namespace weasel { namespace framework {
 
         if (!parse_options(argc, argv, options))
         {
-            std::cerr << cli_options().help() << std::endl;
+            fmt::print(std::cerr, "{}\n", cli_options().help());
             return EXIT_FAILURE;
         }
 
@@ -589,11 +590,11 @@ namespace weasel { namespace framework {
 
         if (options.count("help"))
         {
-            std::cout << cli_options().help() << std::endl;
+            fmt::print(std::cout, "{}\n", cli_options().help());
             const auto& desc = workflow.describe_options();
             if (!desc.empty())
             {
-                std::cout << "Workflow Options:\n" << desc << std::endl;
+                fmt::print(std::cout, "Workflow Options:\n{}\n", desc);
             }
             return EXIT_SUCCESS;
         }
@@ -602,7 +603,7 @@ namespace weasel { namespace framework {
 
         if (options.count("version"))
         {
-            std::cout << "1.2.1" << std::endl;
+            fmt::print(std::cout, "{}\n", "1.2.1");
             return EXIT_SUCCESS;
         }
 
@@ -610,7 +611,7 @@ namespace weasel { namespace framework {
 
         if (!validate_options(options))
         {
-            std::cerr << "failed to validate configuration options." << std::endl;
+            fmt::print(std::cerr, "failed to validate configuration options.\n");
             return EXIT_FAILURE;
         }
 
@@ -651,8 +652,7 @@ namespace weasel { namespace framework {
         if (!workflow.parse_options(argc, argv))
         {
             logger.log(lg::Error, "failed to parse workflow-specific options");
-            std::cout << "Workflow Options:\n"
-                      << workflow.describe_options() << std::endl;
+            fmt::print(std::cout, "Workflow Options:\n{}\n", workflow.describe_options());
             return EXIT_FAILURE;
         }
 
@@ -938,12 +938,12 @@ namespace weasel { namespace framework {
         }
         catch (const std::exception& ex)
         {
-            std::cerr << "aborting application: " << ex.what() << std::endl;
+            weasel::print_error("aborting application: {}\n", ex.what());
             return EXIT_FAILURE;
         }
         catch (...)
         {
-            std::cerr << "aborting application due to unknown error" << std::endl;
+            weasel::print_error("aborting application due to unknown error\n");
             return EXIT_FAILURE;
         }
     }
