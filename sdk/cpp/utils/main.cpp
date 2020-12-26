@@ -4,6 +4,7 @@
 
 #include "fmt/core.h"
 #include "utils/operations.hpp"
+#include "weasel/devkit/logger.hpp"
 #include "weasel/devkit/utils.hpp"
 
 /**
@@ -38,7 +39,7 @@ int main(int argc, char* argv[])
 
     if (!options.arguments.log_level.empty())
     {
-        // ...
+        weasel::setup_console_logger(options.arguments.log_level);
     }
 
     // create appropriate derived class
@@ -54,12 +55,12 @@ int main(int argc, char* argv[])
 
     if (!options.arguments.log_dir.empty())
     {
-        // ...
+        weasel::setup_file_logger(options.arguments.log_dir);
     }
 
     // execute operation
 
-    if (operation->run())
+    if (!operation->run())
     {
         return EXIT_FAILURE;
     }
