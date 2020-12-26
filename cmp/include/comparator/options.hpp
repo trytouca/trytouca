@@ -20,9 +20,9 @@ struct Options
         std::optional<bool> help;
         std::string api_url;
         std::string log_level;
-        std::optional<boost::filesystem::path> log_dir;
-        boost::filesystem::path project_dir;
-        boost::filesystem::path storage_dir;
+        std::optional<weasel::filesystem::path> log_dir;
+        weasel::filesystem::path project_dir;
+        weasel::filesystem::path storage_dir;
         unsigned max_failures;
         unsigned polling_interval;
         unsigned startup_interval;
