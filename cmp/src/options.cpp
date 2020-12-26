@@ -4,7 +4,6 @@
 
 #include "options.hpp"
 #include "cxxopts.hpp"
-#include "fmt/color.h"
 #include "rapidjson/document.h"
 #include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/utils.hpp"

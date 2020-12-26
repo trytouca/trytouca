@@ -2,13 +2,99 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "service.hpp"
+#include "worker.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "weasel/devkit/comparison.hpp"
 #include "weasel/devkit/logger.hpp"
+#include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/utils.hpp"
 #include <thread>
+
+/**
+ *
+ */
+void collector(const Options& options, Resources& resources)
+{
+    namespace chr = std::chrono;
+    weasel::ApiUrl apiUrl(options.api_url);
+    weasel::ApiConnector apiConnector(apiUrl);
+    const auto& interval = chr::milliseconds(options.polling_interval);
+
+    while (true)
+    {
+        WEASEL_LOG_DEBUG("polling for new comparison jobs");
+        const auto& tic = chr::system_clock::now();
+        const auto& jobs = apiConnector.getComparisonList();
+
+        // if there is no job, we have nothing to do but wait
+
+        if (jobs.empty())
+        {
+            std::this_thread::sleep_for(interval);
+            continue;
+        }
+
+        // update statistics
+
+        WEASEL_LOG_INFO("received {} comparison jobs", jobs.size());
+        const auto& toc = chr::system_clock::now();
+        const auto& dur = chr::duration_cast<chr::milliseconds>(toc - tic);
+        resources.stats.update_collector_stats(dur.count(), jobs.size());
+
+        // push jobs into queue for async processing
+
+        for (const auto& job : jobs)
+        {
+            auto job_ptr = std::make_unique<weasel::ComparisonJob>(job);
+            resources.job_queue.push_item(std::move(job_ptr));
+        }
+        std::this_thread::sleep_for(interval);
+    }
+}
+
+/**
+ * @todo introduce a new option `status_report_interval` and use it instead
+ * of `polling_interval`.
+ */
+void reporter(const Options& options, Resources& resources)
+{
+    namespace chr = std::chrono;
+    const auto& interval = chr::milliseconds(options.polling_interval);
+    while (true)
+    {
+        std::this_thread::sleep_for(interval);
+        const auto& report = resources.stats.report();
+        WEASEL_LOG_INFO("{}", report);
+    }
+}
+
+/**
+ *
+ */
+void processor(const Options& options, Resources& resources)
+{
+    namespace chr = std::chrono;
+    const auto& interval = chr::milliseconds(options.polling_interval);
+    while (true)
+    {
+        const auto job = resources.job_queue.pop_item();
+        const auto& tic = chr::system_clock::now();
+
+        Service service(options);
+        if (!service.process(*job))
+        {
+            WEASEL_LOG_WARN("failed to process job {}", job->id);
+            continue;
+        }
+
+        // log that comparison job was processed
+
+        const auto& toc = chr::system_clock::now();
+        const auto& dur = chr::duration_cast<chr::milliseconds>(toc - tic);
+        resources.stats.update_processor_stats(dur.count());
+    }
+}
 
 /**
  *
@@ -21,89 +107,8 @@ Service::Service(const Options& opts)
 /**
  *
  */
-bool Service::run() const
+bool Service::process(const weasel::ComparisonJob& job) const
 {
-    namespace chr = std::chrono;
-    weasel::ApiUrl apiUrl(_opts.api_url);
-    weasel::ApiConnector apiConnector(apiUrl);
-
-    WEASEL_LOG_INFO("hello from weasel comparator");
-    WEASEL_LOG_INFO("starting to run comparator in service mode");
-
-    const auto& interval = chr::milliseconds(_opts.polling_interval);
-
-    while (true)
-    {
-        const auto& jobs = apiConnector.getComparisonList();
-        if (!jobs.empty() && !runTask(jobs))
-        {
-            WEASEL_LOG_WARN("failed to perform periodic operation");
-            break;
-        }
-        if (jobs.empty())
-        {
-            std::this_thread::sleep_for(interval);
-        }
-    }
-
-    return false;
-}
-
-/**
- * since the comparator is running as a service, we allow it to
- * fail to process one or multiple comparison jobs in hope that
- * it can re-process those jobs in a subsequent execution cycle.
- * at the same time, if the comparator fails to process multiple
- * consecutive jobs, it may be indicative of a serious problem,
- * in which case we gracefully abort the execution of this process
- * in order to prevent potential corruption of multiple jobs.
- */
-bool Service::runTask(const std::vector<weasel::ComparisonJob>& jobs) const
-{
-    namespace chr = std::chrono;
-    const auto& tic = chr::system_clock::now();
-    WEASEL_LOG_INFO("processing {} comparison jobs", jobs.size());
-
-    // find maximum number of consecutive failures of the comparator
-    // that should trigger graceful termination of the process.
-
-    const auto maxFailures = std::min(
-        static_cast<unsigned>(jobs.size()),
-        _opts.max_failures);
-
-    // process comparison jobs one by one
-
-    auto failureCount = 0u;
-    for (const auto& job : jobs)
-    {
-        if (maxFailures < failureCount)
-        {
-            WEASEL_LOG_ERROR("exceeded maximum consecutive failures");
-            return false;
-        }
-        if (!processJobAttempt(job))
-        {
-            WEASEL_LOG_ERROR("{}: failed to process comparison job", job.id);
-            ++failureCount;
-            continue;
-        }
-        failureCount = 0;
-    }
-
-    const auto& toc = chr::system_clock::now();
-    const auto& dur = chr::duration_cast<chr::milliseconds>(toc - tic);
-    WEASEL_LOG_INFO("processed {} comparison jobs: ({} ms)", jobs.size(), dur.count());
-    WEASEL_LOG_INFO("average processing time: {:.2f} ms per job", _stats.avg);
-    return true;
-}
-
-/**
- *
- */
-bool Service::processJobAttempt(const weasel::ComparisonJob& job) const
-{
-    namespace chr = std::chrono;
-    const auto& tic = chr::system_clock::now();
     WEASEL_LOG_DEBUG("{}: processing comparison job", job.id);
 
     const auto dst = loadResultFile(job.dstBatch, job.dstMessage);
@@ -143,12 +148,7 @@ bool Service::processJobAttempt(const weasel::ComparisonJob& job) const
         return false;
     }
 
-    // log that comparison job was processed
-
-    const auto& toc = chr::system_clock::now();
-    const auto& dur = chr::duration_cast<chr::milliseconds>(toc - tic);
-    WEASEL_LOG_INFO("{}: compared with {} ({} ms)", dstName, srcName, dur.count());
-    _stats.update(dur.count());
+    WEASEL_LOG_INFO("{}: compared with {}", dstName, srcName);
     return true;
 }
 

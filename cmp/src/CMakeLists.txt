@@ -13,10 +13,13 @@ add_executable(
     main.cpp
     options.cpp
     options.hpp
-    service.cpp
-    service.hpp
+    queue.hpp
     startup.cpp
     startup.hpp
+    stats.cpp
+    stats.hpp
+    worker.cpp
+    worker.hpp
 )
 
 target_link_libraries(

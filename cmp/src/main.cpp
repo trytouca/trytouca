@@ -3,10 +3,10 @@
  */
 
 #include "options.hpp"
-#include "fmt/printf.h"
-#include "service.hpp"
 #include "startup.hpp"
 #include "weasel/devkit/logger.hpp"
+#include "worker.hpp"
+#include <thread>
 
 /**
  *
@@ -41,14 +41,31 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    Service service { options };
+    //
 
-    if (service.run())
+    Resources resources;
+    std::vector<std::thread> workers;
+
+    //
+
+    workers.push_back(std::thread(collector, options, std::ref(resources)));
+
+    //
+
+    for (unsigned i = 0u; i < 1; i++)
     {
-        fmt::print(stdout, "successfully performed the required operation\n");
-        return EXIT_SUCCESS;
+        workers.push_back(std::thread(processor, options, std::ref(resources)));
     }
 
-    fmt::print(stderr, "failed to run requested operation\n");
-    return EXIT_FAILURE;
+    //
+
+    workers.push_back(std::thread(reporter, options, std::ref(resources)));
+
+    //
+
+    std::for_each(workers.begin(), workers.end(), [](auto& t) { t.join(); });
+
+    //
+
+    return EXIT_SUCCESS;
 }

@@ -5,30 +5,27 @@
 #pragma once
 
 #include "options.hpp"
-#include "weasel/devkit/platform.hpp"
-#include "weasel/devkit/testcase.hpp"
+#include "stats.hpp"
 
 namespace weasel {
     struct ComparisonJob;
+    struct Testcase;
 }
 
 /**
  *
  */
-struct Statistics
-{
-    unsigned long count = 0ul;
-    double avg = 0.0;
+void collector(const Options& options, Resources& resources);
 
-    /**
-     *
-     */
-    void update(long long duration)
-    {
-        avg = (avg * count + duration) / (count + 1);
-        count++;
-    }
-};
+/**
+ *
+ */
+void reporter(const Options& options, Resources& resources);
+
+/**
+ *
+ */
+void processor(const Options& options, Resources& resources);
 
 /**
  *
@@ -44,20 +41,9 @@ public:
     /**
      *
      */
-    bool run() const;
+    bool process(const weasel::ComparisonJob& task) const;
 
 private:
-
-    /**
-     *
-     */
-    bool runTask(const std::vector<weasel::ComparisonJob>& jobs) const;
-
-    /**
-     *
-     */
-    bool processJobAttempt(const weasel::ComparisonJob& task) const;
-
     /**
      *
      */
@@ -80,6 +66,5 @@ private:
         const std::shared_ptr<weasel::Testcase>& src,
         const std::string& jobId) const;
 
-    mutable Statistics _stats;
     Options _opts;
 };
