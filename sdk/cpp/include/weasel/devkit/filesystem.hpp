@@ -42,7 +42,8 @@ namespace weasel { namespace filesystem {
      */
     inline bool is_directory(const std::string& path)
     {
-        return boost::filesystem::is_directory(path);
+        struct stat sb;
+        return stat(path.c_str(), &sb) == 0 && S_ISDIR(sb.st_mode);
     }
 
     /**
@@ -59,17 +60,5 @@ namespace weasel { namespace filesystem {
         return file.good();
     }
 
-    /**
-     * @brief deletes the file or empty directory identified by given path.
-     *
-     * @param path filesystem path to file or directory to be removed.
-     * @return true if the file was deleted, false if it did not exist
-     *         or it could not be removed.
-     */
-    inline bool remove(const std::string& path)
-    {
-        return std::remove(path.c_str()) == 0;
-    }
-
-} } // namespace weasel::filesystem
+}} // namespace weasel::filesystem
 #endif
