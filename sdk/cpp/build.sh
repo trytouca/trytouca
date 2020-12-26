@@ -382,6 +382,12 @@ for arg in "$@"; do
             BUILD_MODES["test"]=1
             ;;
 
+        "-a" | "--all")
+            BUILD_OPTIONS["with-utils"]=1
+            BUILD_OPTIONS["with-framework"]=1
+            BUILD_OPTIONS["with-examples"]=1
+            BUILD_OPTIONS["with-tests"]=1
+            ;;
         "--with-tests")
             BUILD_OPTIONS["with-tests"]=1
             ;;
