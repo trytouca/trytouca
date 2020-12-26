@@ -222,15 +222,6 @@ build_build () {
     cmake --build "${dir_build}" --parallel
     cmake --install "${dir_build}" --prefix "${dir_install}"
     log_info "built specified cpp component(s)"
-
-    if [[ ${buildtype} == "Release" ]]; then
-        local dir_export_pkg="${dir_build}/conan-export-pkg"
-        mkdir -p "${dir_export_pkg}"
-        conan export-pkg -if "${dir_build}" \
-          -bf "${dir_export_pkg}" \
-          -f "${dir_source}"
-        log_info "created conan package"
-    fi
 }
 
 build_coverage () {
@@ -281,6 +272,18 @@ build_lint () {
     log_info "ran clang-format on cpp client source code"
 }
 
+build_package () {
+    local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
+    local dir_build="${dir_source}/local/build"
+    local dir_export_pkg="${dir_build}/conan-export-pkg"
+
+    mkdir -p "${dir_export_pkg}"
+    conan export-pkg -if "${dir_build}" \
+        -bf "${dir_export_pkg}" \
+        -f "${dir_source}"
+    log_info "created conan package"
+}
+
 build_clear () {
     if [ $# -ne 1 ]; then return 1; fi
     local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
@@ -327,6 +330,7 @@ declare -A BUILD_MODES=(
     ["clear"]=0
     ["coverage"]=0
     ["lint"]=0
+    ["package"]=0
     ["test"]=0
 )
 declare -A BUILD_OPTIONS=(
@@ -368,6 +372,10 @@ for arg in "$@"; do
         "--lint")
             BUILD_MODES["build"]=0
             BUILD_MODES["lint"]=1
+            ;;
+        "--package")
+            BUILD_MODES["build"]=0
+            BUILD_MODES["package"]=1
             ;;
         "--test")
             BUILD_MODES["build"]=0

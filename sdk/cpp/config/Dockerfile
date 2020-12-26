@@ -54,9 +54,8 @@ LABEL org.opencontainers.image.description="Weasel Client Library for C++"
 LABEL org.opencontainers.image.url="https://getweasel.com/"
 LABEL org.opencontainers.image.documentation="https://getweasel.com/docs/clients/cpp/index.html"
 LABEL org.opencontainers.image.vendor="Pejman Ghrobanzade"
-LABEL org.opencontainers.image.authors="hello@getweasel.io"
+LABEL org.opencontainers.image.authors="hello@getweasel.com"
 LABEL org.opencontainers.image.licenses="https://github.com/getweasel/weasel-cpp/blob/master/LICENSE"
 
 COPY --from=builder_main    /opt/local/dist                   /opt/dist
 COPY --from=builder_docs    /opt/local/docs/html              /opt/docs
-COPY --from=builder_main    /home/weasel/.conan/data/weasel   /opt/conan/data/weasel

@@ -39,6 +39,7 @@ jobs:
         conan profile update settings.compiler.libcxx=libstdc++11 default
     - run: ./build.sh --with-tests --with-utils --with-examples --with-framework
     - run: ./build.sh --test
+    - run: ./build.sh --package
     - name: upload conan
       run: |
         conan remote add --force weasel-conan https://api.bintray.com/conan/getweasel/weasel-cpp
