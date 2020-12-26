@@ -10,5 +10,6 @@ export const environment = {
   dataRefreshInterval: 10000,
   production: true,
   profileGithub: 'getweasel',
+  profileSlack: 'getweasel',
   profileTwitter: 'getweasel'
 };

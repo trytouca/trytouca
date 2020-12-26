@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faGithub, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faGithub, faSlack, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'app-footer-outside',
@@ -16,7 +16,8 @@ export class FooterOutsideComponent {
   today: number = Date.now();
   links = {
     github: environment.profileGithub,
-    twitter: environment.profileTwitter
+    twitter: environment.profileTwitter,
+    slack: environment.profileTwitter
   };
 
   /**
@@ -25,7 +26,7 @@ export class FooterOutsideComponent {
   constructor(
     private faIconLibrary: FaIconLibrary
   ) {
-    faIconLibrary.addIcons(faGithub, faTwitter);
+    faIconLibrary.addIcons(faGithub, faSlack, faTwitter);
   }
 
 }
