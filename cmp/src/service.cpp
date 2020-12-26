@@ -21,64 +21,16 @@ Service::Service(const Options& opts)
 /**
  *
  */
-bool Service::init()
-{
-
-    // setup logging
-
-    weasel::setup_console_logger(_opts.arguments.log_level);
-    if (_opts.arguments.log_dir.has_value())
-    {
-        weasel::setup_file_logger(_opts.arguments.log_dir.value().string());
-    }
-
-    // run startup stage
-
-    if (!runStartupStage())
-    {
-        WEASEL_LOG_ERROR("failed during start-up stage");
-        return false;
-    }
-
-    return true;
-}
-
-/**
- *
- */
-bool Service::runStartupStage() const
-{
-    const auto max_attempts = _opts.arguments.startup_timeout / _opts.arguments.startup_interval;
-    const auto& interval = std::chrono::milliseconds(_opts.arguments.startup_interval);
-    WEASEL_LOG_INFO("running start-up stage");
-    weasel::ApiUrl apiUrl(_opts.arguments.api_url);
-    weasel::ApiConnector apiConnector(apiUrl);
-    for (auto i = 1u; i <= max_attempts; ++i)
-    {
-        if (apiConnector.handshake())
-        {
-            WEASEL_LOG_INFO("start-up phase completed");
-            return true;
-        }
-        WEASEL_LOG_WARN("running start-up stage: attempt ({}/{})", i, max_attempts);
-        std::this_thread::sleep_for(interval);
-    }
-    return false;
-}
-
-/**
- *
- */
 bool Service::run() const
 {
     namespace chr = std::chrono;
-    weasel::ApiUrl apiUrl(_opts.arguments.api_url);
+    weasel::ApiUrl apiUrl(_opts.api_url);
     weasel::ApiConnector apiConnector(apiUrl);
 
     WEASEL_LOG_INFO("hello from weasel comparator");
     WEASEL_LOG_INFO("starting to run comparator in service mode");
 
-    const auto& interval = chr::milliseconds(_opts.arguments.polling_interval);
+    const auto& interval = chr::milliseconds(_opts.polling_interval);
 
     while (true)
     {
@@ -117,7 +69,7 @@ bool Service::runTask(const std::vector<weasel::ComparisonJob>& jobs) const
 
     const auto maxFailures = std::min(
         static_cast<unsigned>(jobs.size()),
-        _opts.arguments.max_failures);
+        _opts.max_failures);
 
     // process comparison jobs one by one
 
@@ -207,11 +159,11 @@ std::shared_ptr<weasel::Testcase> Service::loadResultFile(
     const std::string& batchId,
     const std::string messageId) const
 {
-    const auto& fullpath = _opts.arguments.storage_dir / batchId / messageId;
+    const auto& fullpath = _opts.storage_dir / batchId / messageId;
 
     // check that the result file exists
 
-    if (!weasel::filesystem::is_regular_file(fullpath))
+    if (!std::filesystem::is_regular_file(fullpath))
     {
         WEASEL_LOG_ERROR("{}: result file is missing", fullpath.string());
         return nullptr;
@@ -259,7 +211,7 @@ bool Service::processMessage(
 
     // submit output to Weasel Platform
 
-    weasel::ApiUrl apiUrl(_opts.arguments.api_url);
+    weasel::ApiUrl apiUrl(_opts.api_url);
     weasel::ApiConnector apiConnector(apiUrl);
 
     if (!apiConnector.processMessage(messageId, output))
@@ -305,7 +257,7 @@ bool Service::processComparisonJob(
 
     // submit output to Weasel Platform
 
-    weasel::ApiUrl apiUrl(_opts.arguments.api_url);
+    weasel::ApiUrl apiUrl(_opts.api_url);
     weasel::ApiConnector apiConnector(apiUrl);
 
     if (!apiConnector.processComparison(jobId, output))

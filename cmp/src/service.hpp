@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "comparator/options.hpp"
+#include "options.hpp"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/testcase.hpp"
 
@@ -44,18 +44,9 @@ public:
     /**
      *
      */
-    bool init();
-
-    /**
-     *
-     */
     bool run() const;
 
 private:
-    /**
-     *
-     */
-    bool runStartupStage() const;
 
     /**
      *

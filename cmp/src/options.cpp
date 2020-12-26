@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "comparator/options.hpp"
+#include "options.hpp"
 #include "cxxopts.hpp"
 #include "fmt/color.h"
 #include "rapidjson/document.h"
@@ -47,23 +47,7 @@ cxxopts::Options config_options_file()
 /**
  *
  */
-bool Options::parse(int argc, char* argv[])
-{
-    try
-    {
-        return parse_impl(argc, argv);
-    }
-    catch (const std::exception& ex)
-    {
-        weasel::print_error("failed to parse application options: {}\n", ex.what());
-    }
-    return false;
-}
-
-/**
- *
- */
-bool Options::parse_impl(int argc, char* argv[])
+bool parse_arguments_impl(int argc, char* argv[], Options& options)
 {
     // parse command line arguments
 
@@ -75,7 +59,7 @@ bool Options::parse_impl(int argc, char* argv[])
     if (result_cmd.count("help"))
     {
         fmt::print(stdout, "{}\n", copts_cmd.help());
-        arguments.help = true;
+        options.help = true;
         return true;
     }
 
@@ -155,7 +139,7 @@ bool Options::parse_impl(int argc, char* argv[])
         return false;
     }
 
-    arguments.api_url = result_file["api-url"].as<std::string>();
+    options.api_url = result_file["api-url"].as<std::string>();
 
     // validate option `project-dir`
 
@@ -172,7 +156,7 @@ bool Options::parse_impl(int argc, char* argv[])
         return false;
     }
 
-    arguments.project_dir = result_file["project-dir"].as<std::string>();
+    options.project_dir = result_file["project-dir"].as<std::string>();
 
     // validate and set option `log-level`
 
@@ -185,34 +169,50 @@ bool Options::parse_impl(int argc, char* argv[])
             fmt::print("{}\n", copts_file.help());
             return false;
         }
-        arguments.log_level = level;
+        options.log_level = level;
     }
 
     // set option `log-dir` if it is provided
 
     if (result_file.count("log-dir"))
     {
-        arguments.log_dir = arguments.project_dir / result_file["log-dir"].as<std::string>();
+        options.log_dir = options.project_dir / result_file["log-dir"].as<std::string>();
     }
 
     // set option `storage-dir`
 
     {
         const auto& storage_dir = result_file["storage-dir"].as<std::string>();
-        if (!weasel::filesystem::is_directory(arguments.project_dir / storage_dir))
+        if (!weasel::filesystem::is_directory(options.project_dir / storage_dir))
         {
             weasel::print_error("option `storage-dir` points to nonexistent directory");
             return false;
         }
-        arguments.storage_dir = arguments.project_dir / storage_dir;
+        options.storage_dir = options.project_dir / storage_dir;
     }
 
     // set other options with default numeric values
 
-    arguments.max_failures = result_file["max-failures"].as<unsigned>();
-    arguments.polling_interval = result_file["polling-interval"].as<unsigned>();
-    arguments.startup_interval = result_file["startup-interval"].as<unsigned>();
-    arguments.startup_timeout = result_file["startup-timeout"].as<unsigned>();
+    options.max_failures = result_file["max-failures"].as<unsigned>();
+    options.polling_interval = result_file["polling-interval"].as<unsigned>();
+    options.startup_interval = result_file["startup-interval"].as<unsigned>();
+    options.startup_timeout = result_file["startup-timeout"].as<unsigned>();
 
     return true;
+}
+
+/**
+ *
+ */
+bool parse_arguments(int argc, char* argv[], Options& options)
+{
+    try
+    {
+        return parse_arguments_impl(argc, argv, options);
+    }
+    catch (const std::exception& ex)
+    {
+        weasel::print_error("failed to parse application options: {}\n", ex.what());
+    }
+    return false;
 }

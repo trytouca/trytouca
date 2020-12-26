@@ -12,8 +12,11 @@ add_executable(
     weasel_cmp
     main.cpp
     options.cpp
-    service.hpp
+    options.hpp
     service.cpp
+    service.hpp
+    startup.cpp
+    startup.hpp
 )
 
 target_link_libraries(
