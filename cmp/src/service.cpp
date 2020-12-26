@@ -211,7 +211,7 @@ std::shared_ptr<weasel::Testcase> Service::loadResultFile(
 
     // check that the result file exists
 
-    if (!std::filesystem::is_regular_file(fullpath))
+    if (!weasel::filesystem::is_regular_file(fullpath))
     {
         WEASEL_LOG_ERROR("{}: result file is missing", fullpath.string());
         return nullptr;

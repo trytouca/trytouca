@@ -6,7 +6,7 @@
 #include "cxxopts.hpp"
 #include "fmt/color.h"
 #include "rapidjson/document.h"
-#include "weasel/devkit/utils.hpp"
+#include "weasel/devkit/filesystem.hpp"
 
 /**
  *
@@ -165,7 +165,7 @@ bool Options::parse_impl(int argc, char* argv[])
         return false;
     }
 
-    if (!std::filesystem::is_directory(result_file["project-dir"].as<std::string>()))
+    if (!weasel::filesystem::is_directory(result_file["project-dir"].as<std::string>()))
     {
         weasel::print_error("option `project-dir` points to nonexistent directory");
         return false;
@@ -198,7 +198,7 @@ bool Options::parse_impl(int argc, char* argv[])
 
     {
         const auto& storage_dir = result_file["storage-dir"].as<std::string>();
-        if (!std::filesystem::is_directory(arguments.project_dir / storage_dir))
+        if (!weasel::filesystem::is_directory(arguments.project_dir / storage_dir))
         {
             weasel::print_error("option `storage-dir` points to nonexistent directory");
             return false;
