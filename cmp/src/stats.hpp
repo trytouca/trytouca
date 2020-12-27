@@ -5,7 +5,7 @@
 #pragma once
 
 #include "queue.hpp"
-#include "weasel/devkit/platform.hpp"
+#include "platform.hpp"
 #include <string>
 
 /**
@@ -34,6 +34,6 @@ private:
  */
 struct Resources
 {
-    weasel::Queue<weasel::ComparisonJob> job_queue;
+    weasel::Queue<Job> job_queue;
     Statistics stats;
 };

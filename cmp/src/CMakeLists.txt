@@ -13,6 +13,8 @@ add_executable(
     main.cpp
     options.cpp
     options.hpp
+    platform.cpp
+    platform.hpp
     queue.hpp
     startup.cpp
     startup.hpp
