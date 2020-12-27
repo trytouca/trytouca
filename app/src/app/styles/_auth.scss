@@ -13,6 +13,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  h2 {
+    margin-bottom: 3rem;
+  }
 }
 
 @mixin form {
@@ -20,6 +23,7 @@
   margin: 0 auto;
   max-width: calc(0.35 * #{variables.$weasel-container-max-width});
   padding: 2rem;
+  box-shadow: 0 4px 6px 0 hsla(0, 0%, 0%, 0.2);
   form {
     @include form.main();
   }

@@ -6,16 +6,19 @@
 
 .wsl-landing {
   @include bootstrap.weasel-container();
-  min-height: calc(100vh - #{bootstrap.$weasel-header-height});
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  & > div {
-    display: flex;
-    width: 50%;
-    justify-content: center;
-    app-forms-signup {
-      width: 100%;
+  section {
+    min-height: calc(100vh - #{bootstrap.$weasel-header-height});
+    display: grid;
+    place-content: center;
+  }
+  .wsl-landing-first {
+    .wsl-landing-headline {
+      margin-bottom: 3rem;
+      padding: 1rem;
+      text-align: center;
+      p {
+        margin-bottom: 0;
+      }
     }
   }
 }
