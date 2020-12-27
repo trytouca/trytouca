@@ -23,6 +23,7 @@ struct Options
     unsigned polling_interval;
     unsigned startup_interval;
     unsigned startup_timeout;
+    unsigned status_report_interval;
 };
 
 /**

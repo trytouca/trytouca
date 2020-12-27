@@ -49,18 +49,16 @@ void collector(const Options& options, Resources& resources)
             auto job_ptr = std::make_unique<weasel::ComparisonJob>(job);
             resources.job_queue.push_item(std::move(job_ptr));
         }
-        std::this_thread::sleep_for(interval);
     }
 }
 
 /**
- * @todo introduce a new option `status_report_interval` and use it instead
- * of `polling_interval`.
+ *
  */
 void reporter(const Options& options, Resources& resources)
 {
     namespace chr = std::chrono;
-    const auto& interval = chr::milliseconds(options.polling_interval);
+    const auto& interval = chr::milliseconds(options.status_report_interval);
     while (true)
     {
         std::this_thread::sleep_for(interval);
@@ -75,7 +73,6 @@ void reporter(const Options& options, Resources& resources)
 void processor(const Options& options, Resources& resources)
 {
     namespace chr = std::chrono;
-    const auto& interval = chr::milliseconds(options.polling_interval);
     while (true)
     {
         const auto job = resources.job_queue.pop_item();

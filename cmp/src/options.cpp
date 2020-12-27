@@ -38,6 +38,7 @@ cxxopts::Options config_options_file()
         ("polling-interval", "minimum time (ms) before polling new jobs", cxxopts::value<unsigned>()->default_value("10000"))
         ("startup-interval", "minimum time (ms) before re-running startup stage", cxxopts::value<unsigned>()->default_value("12000"))
         ("startup-timeout", "total time (ms) before aborting startup stage", cxxopts::value<unsigned>()->default_value("120000"))
+        ("status-report-interval", "total time (ms) between statistics reporting", cxxopts::value<unsigned>()->default_value("60000"))
         ("storage-dir", "relative path to weasel data store", cxxopts::value<std::string>()->default_value("local/data/weasel"));
     // clang-format on
     return opts_file;
@@ -196,6 +197,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     options.polling_interval = result_file["polling-interval"].as<unsigned>();
     options.startup_interval = result_file["startup-interval"].as<unsigned>();
     options.startup_timeout = result_file["startup-timeout"].as<unsigned>();
+    options.status_report_interval = result_file["status-report-interval"].as<unsigned>();
 
     return true;
 }

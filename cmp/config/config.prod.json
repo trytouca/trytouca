@@ -1,11 +1,5 @@
 {
   "api-url": "http://weasel_backend:8081",
   "log-dir": "local/logs/comparator",
-  "log-level": "info",
-  "max-failures": "10",
-  "project-dir": "/opt",
-  "polling-interval": "10000",
-  "startup-interval": "12000",
-  "startup-timeout": "120000",
-  "storage-dir": "local/data/weasel"
+  "project-dir": "/opt"
 }

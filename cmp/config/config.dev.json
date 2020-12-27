@@ -2,10 +2,6 @@
   "api-url": "http://localhost:8081",
   "log-dir": "local/logs/comparator",
   "log-level": "debug",
-  "max-failures": "10",
   "project-dir": "/Users/pejman/Projects/weasel",
-  "polling-interval": "10000",
-  "startup-interval": "6000",
-  "startup-timeout": "120000",
-  "storage-dir": "local/data/weasel"
+  "startup-interval": "6000"
 }
