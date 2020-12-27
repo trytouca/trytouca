@@ -52,7 +52,7 @@ int main(int argc, char* argv[])
 
     //
 
-    for (unsigned i = 0u; i < 1; i++)
+    for (unsigned i = 0u; i < options.processor_threads; i++)
     {
         workers.push_back(std::thread(processor, options, std::ref(resources)));
     }

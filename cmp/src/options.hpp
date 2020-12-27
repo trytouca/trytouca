@@ -21,6 +21,7 @@ struct Options
     std::filesystem::path storage_dir;
     unsigned max_failures;
     unsigned polling_interval;
+    unsigned processor_threads;
     unsigned startup_interval;
     unsigned startup_timeout;
     unsigned status_report_interval;

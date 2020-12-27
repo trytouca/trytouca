@@ -51,7 +51,7 @@ namespace weasel {
             lock.unlock();
             if (wasEmpty)
             {
-                _cv.notify_one();
+                _cv.notify_all();
             }
         }
 

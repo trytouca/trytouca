@@ -36,7 +36,7 @@ export async function messageListImpl() {
         ]
       }
     },
-    { $limit: 10 },
+    { $limit: 100 },
     { $project: { _id: 0, messageId: '$_id', batchId: 1 } }
   ])
   await MessageModel.updateMany(
@@ -67,7 +67,7 @@ export async function comparisonListImpl() {
         ]
       }
     },
-    { $limit: 10 },
+    { $limit: 100 },
     {
       $lookup: {
         from: 'messages',

@@ -35,6 +35,7 @@ cxxopts::Options config_options_file()
         ("log-level", "level of detail to use for logging", cxxopts::value<std::string>()->default_value("info"))
         ("max-failures", "number of allowable consecutive failures", cxxopts::value<unsigned>()->default_value("10"))
         ("project-dir", "full path to project root directory", cxxopts::value<std::string>())
+        ("processor-threads", "number of processor threads", cxxopts::value<unsigned>()->default_value("4"))
         ("polling-interval", "minimum time (ms) before polling new jobs", cxxopts::value<unsigned>()->default_value("10000"))
         ("startup-interval", "minimum time (ms) before re-running startup stage", cxxopts::value<unsigned>()->default_value("12000"))
         ("startup-timeout", "total time (ms) before aborting startup stage", cxxopts::value<unsigned>()->default_value("120000"))
@@ -195,6 +196,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     options.max_failures = result_file["max-failures"].as<unsigned>();
     options.polling_interval = result_file["polling-interval"].as<unsigned>();
+    options.processor_threads = result_file["processor-threads"].as<unsigned>();
     options.startup_interval = result_file["startup-interval"].as<unsigned>();
     options.startup_timeout = result_file["startup-timeout"].as<unsigned>();
     options.status_report_interval = result_file["status-report-interval"].as<unsigned>();
