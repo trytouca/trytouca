@@ -14,27 +14,6 @@ namespace weasel {
     /**
      *
      */
-    ComparisonJob::ComparisonJob(
-        const std::string& id,
-        const std::string& dstBatch,
-        const std::string& dstMessage,
-        const bool dstProcessed,
-        const std::string& srcBatch,
-        const std::string& srcMessage,
-        const bool srcProcessed)
-        : id(id)
-        , dstBatch(dstBatch)
-        , dstMessage(dstMessage)
-        , dstProcessed(dstProcessed)
-        , srcBatch(srcBatch)
-        , srcMessage(srcMessage)
-        , srcProcessed(srcProcessed)
-    {
-    }
-
-    /**
-     *
-     */
     ApiUrl::ApiUrl(const std::string& apiUrl)
     {
         root = apiUrl.substr(0, apiUrl.find_last_of('@'));
@@ -246,71 +225,20 @@ namespace weasel {
     /**
      *
      */
-    std::vector<ComparisonJob> ApiConnector::getComparisonList() const
+    std::string ApiConnector::getJson(const std::string& route) const
     {
         HttpClient httpClient(_apiUrl.root);
-        rapidjson::Document doc;
-
-        const auto response = httpClient.getJson("/cmp");
-
-        if (response.code == -1)
-        {
-            // Weasel Platform appears to be down
-            return {};
-        }
-
-        if (response.code != 200)
-        {
-            // response from Weasel Platform is unexpected
-            return {};
-        }
-
-        if (doc.Parse<0>(response.body.c_str()).HasParseError())
-        {
-            // response from Weasel Platform is ill-formed
-            return {};
-        }
-
-        std::vector<ComparisonJob> tasks;
-        const auto& items = doc.GetArray();
-        for (auto it = items.Begin(); it != items.end(); ++it)
-        {
-            const auto& item = *it;
-            tasks.emplace_back(
-                item["_id"].GetString(),
-                item["dstBatch"].GetString(),
-                item["dstMessage"].GetString(),
-                item["dstProcessed"].GetBool(),
-                item["srcBatch"].GetString(),
-                item["srcMessage"].GetString(),
-                item["srcProcessed"].GetBool());
-        }
-        return tasks;
+        const auto response = httpClient.getJson(route);
+        return response.body;
     }
 
     /**
      *
      */
-    bool ApiConnector::processMessage(
-        const std::string& messageId,
-        const std::string& messageResult) const
+    bool ApiConnector::patchJson(const std::string& route, const std::string& body) const
     {
         HttpClient httpClient(_apiUrl.root);
-        const auto url = weasel::format("/cmp/message/{}", messageId);
-        const auto response = httpClient.patchJson(url, messageResult);
-        return response.code == 204;
-    }
-
-    /**
-     *
-     */
-    bool ApiConnector::processComparison(
-        const std::string& comparisonId,
-        const std::string& comparisonResult) const
-    {
-        HttpClient httpClient(_apiUrl.root);
-        const auto url = weasel::format("/cmp/job/{}", comparisonId);
-        const auto response = httpClient.patchJson(url, comparisonResult);
+        const auto response = httpClient.patchJson(route, body);
         return response.code == 204;
     }
 

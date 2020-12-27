@@ -14,32 +14,6 @@ namespace weasel {
     /**
      *
      */
-    struct WEASEL_CLIENT_API ComparisonJob
-    {
-        std::string id;
-        std::string dstBatch;
-        std::string dstMessage;
-        bool dstProcessed;
-        std::string srcBatch;
-        std::string srcMessage;
-        bool srcProcessed;
-
-        /**
-         *
-         */
-        ComparisonJob(
-            const std::string& id,
-            const std::string& dstBatch,
-            const std::string& dstMessage,
-            const bool dstProcessed,
-            const std::string& srcBatch,
-            const std::string& srcMessage,
-            const bool srcProcessed);
-    };
-
-    /**
-     *
-     */
     struct WEASEL_CLIENT_API ApiUrl
     {
         /**
@@ -121,21 +95,12 @@ namespace weasel {
         /**
          *
          */
-        std::vector<ComparisonJob> getComparisonList() const;
+        std::string getJson(const std::string& route) const;
 
         /**
          *
          */
-        bool processMessage(
-            const std::string& messageId,
-            const std::string& messageResult) const;
-
-        /**
-         *
-         */
-        bool processComparison(
-            const std::string& comparisonId,
-            const std::string& comparisonResult) const;
+        bool patchJson(const std::string& route, const std::string& body) const;
 
     private:
         const ApiUrl _apiUrl;
