@@ -3,57 +3,120 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-
+import mongoose from 'mongoose'
 import { ComparisonModel } from '../../schemas/comparison'
+import { MessageModel } from '../../schemas/message';
+
+type ObjectId = mongoose.Types.ObjectId
+type ComparisonJob = {
+  jobId: ObjectId
+  dstBatchId: ObjectId
+  dstMessageId: ObjectId
+  srcBatchId: ObjectId
+  srcMessageId: ObjectId
+}
+type MessageJob = {
+  messageId: ObjectId,
+  batchId: ObjectId
+}
+
+/**
+ *
+ */
+export async function messageListImpl() {
+  const reservedAt = new Date()
+  reservedAt.setSeconds(reservedAt.getSeconds() - 60);
+  const result: MessageJob[] = await MessageModel.aggregate([
+    { $match: { elasticId: { $exists: false } } },
+    {
+      $match: {
+        $or: [
+          { reservedAt: { $exists: false } },
+          { reservedAt: { $lt: reservedAt } }
+        ]
+      }
+    },
+    { $limit: 10 },
+    { $project: { _id: 0, messageId: '$_id', batchId: 1 } }
+  ])
+  await MessageModel.updateMany(
+    { _id: { $in: result.map(v => v.messageId) } },
+    { $set: { reservedAt: new Date() } }
+  )
+  return result
+}
 
 /**
  *
  */
 export async function comparisonListImpl() {
-  const result = await ComparisonModel.aggregate([
+  const reservedAt = new Date()
+  reservedAt.setSeconds(reservedAt.getSeconds() - 60);
+  const result: ComparisonJob[] = await ComparisonModel.aggregate([
     {
       $match: {
-        processedAt: { $exists: false }, elasticId: { $exists: false }
-      }
-    },
-    { $limit: 100 },
-    {
-      $lookup: {
-        from: 'messages',
-        localField: 'dstMessageId',
-        foreignField: '_id',
-        as: 'dstMessageDoc',
+        processedAt: { $exists: false },
+        elasticId: { $exists: false }
       }
     },
     {
+      $match: {
+        $or: [
+          { reservedAt: { $exists: false } },
+          { reservedAt: { $lt: reservedAt } }
+        ]
+      }
+    },
+    { $limit: 10 },
+    {
       $lookup: {
         from: 'messages',
-        localField: 'srcMessageId',
-        foreignField: '_id',
-        as: 'srcMessageDoc',
+        let: { dstId: '$dstMessageId', srcId: '$srcMessageId' },
+        pipeline: [
+          {
+            $match: {
+              $expr: {
+                $or: [
+                  { $eq: [ '$_id', '$$dstId' ] },
+                  { $eq: [ '$_id', '$$srcId' ] }
+                ]
+              }
+            }
+          },
+          {
+            $project: {
+              _id: 0,
+              processedAt: {
+                $cond: [
+                  { $ifNull: ['$elasticId', false ] },
+                  true,
+                  false
+                ]
+              }
+            }
+          },
+        ],
+        as: 'messages'
       }
     },
     {
       $project: {
+        jobId: '$_id',
         dstBatchId: 1,
         dstMessageId: 1,
-        dstProcessed: { $arrayElemAt: [ '$dstMessageDoc.elasticId', 0 ] },
         srcBatchId: 1,
         srcMessageId: 1,
-        srcProcessed: { $arrayElemAt: [ '$srcMessageDoc.elasticId', 0 ] }
+        isComparable: { $allElementsTrue: '$messages.processedAt' }
       }
-    }
+    },
+    { $match: { isComparable: true } },
+    { $project: { isComparable: 0 } }
   ])
-
-  return result.map(v => ({
-    _id: v._id,
-    dstBatch: v.dstBatchId,
-    dstMessage: v.dstMessageId,
-    dstProcessed: Boolean(v.dstProcessed),
-    srcBatch: v.srcBatchId,
-    srcMessage: v.srcMessageId,
-    srcProcessed: Boolean(v.srcProcessed)
-  }))
+  await ComparisonModel.updateMany(
+    { _id: { $in: result.map(v => v.jobId) } },
+    { $set: { reservedAt: new Date() } }
+  )
+  return result
 }
 
 /**
@@ -62,6 +125,7 @@ export async function comparisonListImpl() {
 export async function comparisonList(
   req: Request, res: Response, next: NextFunction
 ) {
-  const jobs = await comparisonListImpl()
-  return res.status(200).json(jobs)
+  const messages = await messageListImpl()
+  const comparisons = await comparisonListImpl()
+  return res.status(200).json({ messages, comparisons })
 }
