@@ -34,7 +34,7 @@ std::vector<weasel::path> discover(const weasel::path& path)
         }
         output.push_back(it.path().string());
     }
-    return {};
+    return output;
 }
 
 /**
