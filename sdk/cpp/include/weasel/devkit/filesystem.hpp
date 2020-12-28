@@ -60,5 +60,14 @@ namespace weasel { namespace filesystem {
         return file.good();
     }
 
+    /**
+     *
+     */
+    inline long file_size(const std::string& path)
+    {
+        struct stat sb;
+        return stat(path.c_str(), &sb) == 0 ? sb.st_size : -1;
+    }
+
 }} // namespace weasel::filesystem
 #endif

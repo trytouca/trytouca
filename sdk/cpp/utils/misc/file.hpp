@@ -7,11 +7,7 @@
 
 /**
  * @brief Finds all valid weasel result files within the specified path.
- * @param inputPath path provided by user that may be pointing to a file
- *                  or a directory.
- * @param resultFileIterator iterator to the list of filepaths to be
- *                           populated.
+ * @param path path to a file or directory that may be or may have result files.
+ * @return list of valid weasel result files
  */
-void findResultFiles(
-    const weasel::path& inputPath,
-    std::back_insert_iterator<std::vector<weasel::path>> resultFileIterator);
+std::vector<weasel::path> findResultFiles(const weasel::path& path);

@@ -72,16 +72,7 @@ bool UpdateOperation::parse_impl(int argc, char* argv[])
 bool UpdateOperation::run_impl() const
 {
     WEASEL_LOG_INFO("starting execution of operation: update");
-
-    std::vector<weasel::path> resultFiles;
-    WEASEL_LOG_DEBUG("finding weasel result files in {}", _src);
-    findResultFiles(_src, std::back_inserter(resultFiles));
-    WEASEL_LOG_INFO("found {} weasel result files", resultFiles.size());
-    const auto& sortFunction = [](const boost::filesystem::path& a, const boost::filesystem::path& b) {
-        return boost::filesystem::file_size(a) < boost::filesystem::file_size(b);
-    };
-    std::sort(resultFiles.begin(), resultFiles.end(), sortFunction);
-
+    const auto resultFiles = findResultFiles(_src);
     if (resultFiles.empty())
     {
         WEASEL_LOG_ERROR("specified directory has no weasel result file");

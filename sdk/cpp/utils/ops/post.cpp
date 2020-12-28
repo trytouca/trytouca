@@ -97,8 +97,7 @@ bool PostOperation::run_impl() const
     // iterate over all the file system elements in that directory and
     // identify weasel result files.
 
-    std::vector<weasel::path> resultFiles;
-    findResultFiles(_src, std::back_inserter(resultFiles));
+    const auto resultFiles = findResultFiles(_src);
 
     // we are done if there are no weasel result files in the given directory
 

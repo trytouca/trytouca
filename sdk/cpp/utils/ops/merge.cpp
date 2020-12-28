@@ -66,15 +66,7 @@ bool MergeOperation::run_impl() const
 {
     WEASEL_LOG_INFO("starting execution of operation: merge");
 
-    std::vector<weasel::path> resultFiles;
-    const weasel::path srcDir = _src;
-    WEASEL_LOG_DEBUG("finding weasel result files in {}", srcDir);
-    findResultFiles(srcDir, std::back_inserter(resultFiles));
-    WEASEL_LOG_INFO("found {} weasel result files", resultFiles.size());
-    const auto& sortFunction = [](const boost::filesystem::path& a, const boost::filesystem::path& b) {
-        return boost::filesystem::file_size(a) < boost::filesystem::file_size(b);
-    };
-    std::sort(resultFiles.begin(), resultFiles.end(), sortFunction);
+    const auto resultFiles = findResultFiles(_src);
 
     if (resultFiles.empty())
     {
@@ -82,13 +74,13 @@ bool MergeOperation::run_impl() const
         return false;
     }
 
-    using chunk_t = std::vector<boost::filesystem::path>;
+    using chunk_t = std::vector<weasel::path>;
     std::vector<chunk_t> chunks;
     for (auto i = 0u, j = 0u; i < resultFiles.size(); j = i)
     {
         for (auto chunkSize = 0ull; i < resultFiles.size(); ++i)
         {
-            const auto fileSize = boost::filesystem::file_size(resultFiles.at(i));
+            const auto fileSize = weasel::filesystem::file_size(resultFiles.at(i));
             if (MAX_FILE_SIZE < chunkSize + fileSize)
             {
                 ++i;
@@ -104,7 +96,7 @@ bool MergeOperation::run_impl() const
     const auto& root = boost::filesystem::absolute(_out);
     for (auto i = 0ul; i < chunks.size(); ++i)
     {
-        const auto filestem = boost::filesystem::path(srcDir).filename().string();
+        const auto filestem = boost::filesystem::path(_src).filename().string();
         const auto& filename = chunks.size() == 1ul
             ? weasel::format("{}.bin", filestem)
             : weasel::format("{}.part{}.bin", filestem, i + 1);
@@ -116,7 +108,7 @@ bool MergeOperation::run_impl() const
         weasel::ResultFile rf(filepath);
         for (const auto& file : chunks.at(i))
         {
-            rf.merge(weasel::ResultFile(file.string()));
+            rf.merge(weasel::ResultFile(file));
         }
         rf.save();
     }
