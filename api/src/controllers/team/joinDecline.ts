@@ -62,6 +62,7 @@ export async function teamJoinDecline(
   // remove invalidated cached responses.
 
   await rclient.removeCached(`route_teamMemberList_${team.slug}`)
+  await rclient.removeCached(`route_teamList_${account.username}`)
 
   // send email to user.
 

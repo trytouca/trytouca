@@ -6,10 +6,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ITeam, TeamModel } from '../../schemas/team'
 import { IUser, UserModel } from '../../schemas/user'
 import logger from '../../utils/logger'
-import * as mailer from '../../utils/mailer'
 import { rclient } from '../../utils/redis'
-import { ETeamRole } from '../../commontypes'
-import { findTeamUsersByRole } from '../team/common'
 
 /**
  *

@@ -3,16 +3,12 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-
 import { SuiteModel } from '../../schemas/suite'
 import { ITeam } from '../../schemas/team'
 import { IUser } from '../../schemas/user'
 import { config } from '../../utils/config'
 import logger from '../../utils/logger'
-import * as mailer from '../../utils/mailer'
 import { rclient } from '../../utils/redis'
-import { ETeamRole } from '../../commontypes'
-import { findTeamUsersByRole } from '../team/common'
 
 /**
  * Register a new suite.

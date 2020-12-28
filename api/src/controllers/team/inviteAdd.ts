@@ -3,9 +3,8 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
+import { ITeam, TeamModel } from '../../schemas/team'
 import { IUser, UserModel } from '../../schemas/user'
-import { ITeam } from '../../schemas/team'
-import { TeamModel } from '../../schemas/team'
 import { config } from '../../utils/config'
 import logger from '../../utils/logger'
 import * as mailer from '../../utils/mailer'
@@ -93,11 +92,18 @@ export async function teamInviteAdd(
 
   await rclient.removeCached(`route_teamMemberList_${team.slug}`)
 
-  // send invitation email to user
+  // if user was registered, refresh their team list
 
   const isRegistered = await UserModel.findOne(
     { email: askedEmail },
     { fullname: 1, username: 1 })
+
+  if (isRegistered) {
+    await rclient.removeCached(`route_teamList_${isRegistered.username}`)
+  }
+
+  // send invitation email to user
+
   const templateName = isRegistered ? 'team-invite-existing' : 'team-invite-new'
   const subject = `Join team "${team.name}" on Weasel`
   const recipient: IUser = {

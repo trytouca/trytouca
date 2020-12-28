@@ -3,8 +3,8 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-
-import { TeamModel } from '../../schemas/team';
+import { TeamModel } from '../../schemas/team'
+import { UserModel } from '../../schemas/user'
 import logger from '../../utils/logger'
 import { rclient } from '../../utils/redis'
 
@@ -62,6 +62,16 @@ export async function teamInviteRescind(
   // remove list of team members from cache.
 
   await rclient.removeCached(`route_teamMemberList_${team.slug}`)
+
+  // if user was registered, refresh their team list
+
+  const isRegistered = await UserModel.findOne(
+    { email: askedEmail },
+    { username: 1 })
+
+  if (isRegistered) {
+    await rclient.removeCached(`route_teamList_${isRegistered.username}`)
+  }
 
   return res.status(204).send()
 }

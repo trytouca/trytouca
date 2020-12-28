@@ -3,9 +3,8 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
+import { ITeam, TeamModel } from '../../schemas/team'
 import { IUser } from '../../schemas/user'
-import { TeamModel } from '../../schemas/team'
-import { ITeam } from '../../schemas/team'
 import logger from '../../utils/logger'
 import { rclient } from '../../utils/redis'
 
