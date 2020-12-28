@@ -24,7 +24,12 @@ const filterInput: FilterInput<TeamsPageTeam> = {
     {
       key: 'name',
       name: 'Name',
-      func: (a, b) => -b.data.name.localeCompare(a.data.name)
+      func: (a, b) => {
+        if (a.type !== b.type) {
+          return b.type < a.type ? 1 : -1;
+        }
+        return -b.data.name.localeCompare(a.data.name);
+      }
     }
   ],
   searchBy: ['name', 'slug'],
