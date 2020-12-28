@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import { of, Subject, Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ETeamRole } from 'src/app/core/models/commontypes';
 import type { SuiteListResponse, SuiteLookupResponse, TeamInvitee,
   TeamListResponse, TeamLookupResponse, TeamMember, TeamMemberListResponse } from 'src/app/core/models/commontypes';
 import { ELocalStorageKey } from 'src/app/core/models/frontendtypes';
@@ -33,6 +34,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   team$ = this._teamSubject.asObservable();
 
   private _teams: TeamListResponse;
+  private _teamsCache: TeamListResponse;
   private _teamsSubject = new Subject<TeamListResponse>();
   teams$ = this._teamsSubject.asObservable();
 
@@ -61,11 +63,13 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._teams)) {
+        if (isEqual(doc, this._teamsCache)) {
           return doc;
         }
-        this._teams = doc;
+        const activeRoles = [ ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner ];
+        this._teams = doc.filter(v => activeRoles.includes(v.role));
         this._teamsSubject.next(this._teams);
+        this._teamsCache = doc;
         return doc;
       }
     ));
