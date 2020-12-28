@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "example/casino/regression_test.hpp"
 #include "boost/format.hpp"
-#include "boost/program_options.hpp"
+#include "boost/lexical_cast.hpp"
+#include "cxxopts.hpp"
 #include "example/casino/code_under_test.hpp"
 #include "weasel/devkit/filesystem.hpp"
 #include "weasel/weasel.hpp"
@@ -206,8 +206,8 @@ bool Operation<kTest>::run() const
     // The minimum set of required options is shown below.
     try
     {
-        weasel::configure({ { "api-key", _opts.at("key") },
-                            { "api-url", _opts.at("url") },
+        weasel::configure({ { "api-key", _opts.at("api-key") },
+                            { "api-url", _opts.at("api-url") },
                             { "version", _opts.at("version") } });
     }
     // we recommend that you check the return value of configuration
@@ -272,7 +272,7 @@ bool Operation<kTest>::validate() const
         return false;
     }
     // check for missing config parameters needed for regression testing
-    for (const auto& key : { "delay", "url", "version" })
+    for (const auto& key : { "delay", "api-key", "api-url", "version" })
     {
         if (!_opts.count(key))
         {
@@ -291,55 +291,38 @@ bool Operation<kTest>::validate() const
     return true;
 }
 
-boost::program_options::options_description get_options_description(
-    const EMode mode)
+cxxopts::Options get_options_description(const EMode mode)
 {
-    namespace po = boost::program_options;
     // clang-format off
-    po::options_description opts_basic{ "Options" };
+    cxxopts::Options opts_basic("Options");
     opts_basic.add_options()
-        ("help,h", "displays this help message")
-        ("mode", po::value<std::string>(),
-            "operational mode of this application [new|run|test]\n\n"
-            "[new]: generates random testcases to be given as input to"
-            " the application\n\n"
-            "[run]: runs application for a given set of testcases\n\n"
-            "[test]: performs regression testing the application\n");
+        ("h,help", "displays this help message")
+        ("mode", "operational mode of this application [new|run|test]", cxxopts::value<std::string>());
 
-    po::options_description opts_new{ "Options --mode=new" };
+    cxxopts::Options opts_new("Options --mode=new");
     opts_new.add_options()
-        ("count", po::value<std::string>()->default_value("1"),
-            "generates one or more testcases")
-        ("output", po::value<std::string>(),
-            "path to file to write generated testcases into");
+        ("count", "generates one or more testcases", cxxopts::value<std::string>()->default_value("1"))
+        ("output", "path to file to write generated testcases into", cxxopts::value<std::string>());
 
-    po::options_description opts_run{ "Options --mode=run" };
+    cxxopts::Options opts_run("Options --mode=run");
     opts_run.add_options()
-        ("input", po::value<std::string>(),
-            "path to file to read testcases from")
-        ("policy", po::value<std::string>()->default_value("default"),
-            "code under test implementation variant");
+        ("input", "path to file to read testcases from", cxxopts::value<std::string>())
+        ("policy", "code under test implementation variant", cxxopts::value<std::string>()->default_value("default"));
 
-    po::options_description opts_test{ "Options --mode=test" };
+    cxxopts::Options opts_test("Options --mode=test");
     opts_test.add_options()
-        ("input", po::value<std::string>(),
-            "path to file to read testcases from")
-        ("output", po::value<std::string>(),
-            "path to file to write testresults into")
-        ("policy", po::value<std::string>()->default_value("default"),
-            "code under test implementation variant")
-        ("delay", po::value<std::string>()->default_value("0"),
-            "time to wait in milliseconds before submitting result "
-            "for each testcase")
-        ("url", po::value<std::string>(),
-            "root url of Weasel backend")
-        ("version", po::value<std::string>(),
-            "testsuite version");
+        ("input", "path to file to read testcases from", cxxopts::value<std::string>())
+        ("output", "path to file to write testresults into", cxxopts::value<std::string>())
+        ("policy", "code under test implementation variant", cxxopts::value<std::string>()->default_value("default"))
+        ("delay", "time to wait in milliseconds before submitting result for each testcase", cxxopts::value<std::string>()->default_value("0"))
+        ("api-key", "Weasel API key", cxxopts::value<std::string>())
+        ("api-url", "root url of Weasel platform", cxxopts::value<std::string>())
+        ("version", "testsuite version", cxxopts::value<std::string>());
     // clang-format on
 
     // if operational mode is known, attempt to parse command line arguments
     // specific to that operational mode
-    std::map<EMode, const po::options_description&> descs {
+    std::map<EMode, const cxxopts::Options&> descs {
         { kGenerate, opts_new },
         { kExecute, opts_run },
         { kTest, opts_test },
@@ -373,69 +356,42 @@ EMode detect_operational_mode(const Options& opts)
  */
 int read_command_line_options(int argc, char* argv[], Options& options)
 {
-    namespace po = boost::program_options;
-    po::variables_map vm;
-    // extract options from command line arguments based on a given schema
-    const auto& update_options = [&argc, &argv](
-                                     const po::options_description& desc,
-                                     po::variables_map& vm) {
-        po::positional_options_description pos;
-        pos.add("mode", 1);
-        try
-        {
-            po::store(
-                po::command_line_parser(argc, argv)
-                    .options(desc)
-                    .positional(pos)
-                    .allow_unregistered()
-                    .run(),
-                vm);
-            po::notify(vm);
-            return true;
-        }
-        catch (const std::exception& ex)
-        {
-            std::cerr << "invalid command line option(s): " << ex.what() << '\n'
-                      << desc << std::endl;
-        }
-        return false;
-    };
     // perform initial pass on provided command line arguments
     // and detect the operational mode
-    if (!update_options(get_options_description(kInvalid), vm))
+
+    auto opts_basic = get_options_description(kInvalid);
+    opts_basic.allow_unrecognised_options();
+    const auto& results_basic = opts_basic.parse(argc, argv);
+
+    if (results_basic.count("mode"))
     {
-        return -1;
-    }
-    if (vm.count("mode"))
-    {
-        options["mode"] = vm.at("mode").as<std::string>();
+        options["mode"] = results_basic["mode"].as<std::string>();
     }
     const auto& mode = detect_operational_mode(options);
-    const auto& desc = get_options_description(mode);
-    if (kInvalid != mode && !update_options(desc, vm))
-    {
-        return -1;
-    }
+    auto opts_mode = get_options_description(mode);
+    opts_mode.allow_unrecognised_options();
+    const auto& results_mode = opts_mode.parse(argc, argv);
+
     // if user gives --help argument, print appropriate help message and exit
-    if (vm.count("help"))
+    if (results_mode.count("help"))
     {
-        std::cout << desc << std::endl;
+        std::cout << opts_mode.help() << std::endl;
         return 1;
     }
-    // update options object with set of all recognizable keys
+    // // update options object with set of all recognizable keys
     const auto& keys = { "mode", "count", "config", "delay", "input",
-                         "output", "policy", "url", "version" };
+                         "output", "policy", "api-key", "api-url", "version" };
     for (const auto& key : keys)
     {
-        if (vm.count(key))
+        if (results_mode.count(key))
         {
-            options[key] = vm.at(key).as<std::string>();
+            options[key] = results_mode[key].as<std::string>();
         }
     }
     // if operational mode is invalid, print help message and exit
     if (kInvalid == mode)
     {
-        std::cout << desc << std::endl;
+        std::cout << opts_mode.help() << std::endl;
         return -1;
     }
     return 0;
@@ -469,7 +425,7 @@ int main(int argc, char* argv[])
     if (!ops.count(mode))
     {
         std::cerr << "operation is not implemented" << std::endl;
-        std::cerr << get_options_description(kInvalid) << std::endl;
+        std::cerr << get_options_description(kInvalid).help() << std::endl;
         return EXIT_FAILURE;
     }
     const auto& operation = ops.at(mode);
@@ -477,7 +433,7 @@ int main(int argc, char* argv[])
     if (!operation->validate())
     {
         std::cerr << "option validation failed" << std::endl;
-        std::cerr << get_options_description(mode) << std::endl;
+        std::cerr << get_options_description(mode).help() << std::endl;
         return EXIT_FAILURE;
     }
     // perform the operation

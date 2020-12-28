@@ -4,19 +4,21 @@
 
 add_executable(weasel_example_casino "")
 
+weasel_find_package("cxxopts")
+
 target_sources(
         weasel_example_casino
     PRIVATE
         code_under_test.cpp
         code_under_test.hpp
         regression_test.cpp
-        regression_test.hpp
 )
 
 target_link_libraries(
         weasel_example_casino
     PRIVATE
         weasel_framework
+        cxxopts::cxxopts
 )
 
 target_include_directories(
