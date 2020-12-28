@@ -28,8 +28,9 @@ export class LandingComponent {
       if (!this.authService.isLoggedIn()) {
         localStorage.setItem(ELocalStorageKey.Callback, dst.p);
         this.router.navigate(['/signin'], { queryParams: { n: dst.q } });
+      } else {
+        this.router.navigateByUrl(dst.p);
       }
-      this.router.navigate([dst]);
     }
   }
 
