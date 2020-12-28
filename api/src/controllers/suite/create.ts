@@ -52,17 +52,6 @@ export async function suiteCreate(
   })
   logger.info('%s: created suite %s', user.username, tuple)
 
-  // send email to admins and owner of this team
-
-  const users = await findTeamUsersByRole(team, [ ETeamRole.Owner, ETeamRole.Admin ])
-  const subject = 'New Suite Created'
-  mailer.mailUsers(users, subject, 'suite-create-admin', {
-    subject,
-    suiteName: newSuite.name,
-    teamName: team.name,
-    username: user.username,
-  })
-
   // remove information about the list of known suites from cache.
   // we intentionally wait for this operation to avoid race conditions
 
