@@ -75,7 +75,15 @@ const messageSchema = new mongoose.Schema(
   }
 )
 
+/**
+ *
+ */
 messageSchema.index({ batchId: 1, elementId: 1 })
+
+/**
+ *
+ */
+messageSchema.index({ elasticId: 1 })
 
 /**
  *
