@@ -22,6 +22,8 @@ class Playbook:
             instance = cls()
             for row in reader:
                 row = list(filter(None, row))
+                if row[0].startswith('#'):
+                    continue
                 user = User.from_fullname(row[0])
                 method_name = "_".join(row[1].split('-'))
                 method = getattr(instance, method_name, None)
