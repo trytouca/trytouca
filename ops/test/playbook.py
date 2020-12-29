@@ -2,8 +2,6 @@
 # Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
 #
 
-#!/usr/bin/env python
-
 import csv
 from dataclasses import dataclass
 from functools import partial

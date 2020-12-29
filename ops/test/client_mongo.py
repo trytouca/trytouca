@@ -2,8 +2,6 @@
 # Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
 #
 
-#!/usr/bin/env python
-
 import bson
 import pymongo
 from loguru import logger

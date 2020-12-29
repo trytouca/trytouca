@@ -83,8 +83,9 @@ for EXT in "${!PREFIX_MAP[@]}"; do
         # remove trailing whitespaces
         sed -i '' -e's/[[:space:]]*$//' "$FILE"
         # check license block
-        LINE=$(head -n 3 "$FILE")
-        if [ "$CONTENT" != "$LINE" ]; then
+        HEAD_LINES=$(echo "$CONTENT" | wc -l)
+        HEAD=$(head -n "$HEAD_LINES" "$FILE")
+        if [ "$CONTENT" != "$HEAD" ]; then
             log_warning "license missing: ${FILE}"
             # printf "%s\n\n%s\n" "${CONTENT}" "$(cat "${FILE}")" > tmp.txt && mv tmp.txt "${FILE}"
         fi

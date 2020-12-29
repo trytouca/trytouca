@@ -1,5 +1,8 @@
+#
+# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+#
+
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import argparse
 import importlib

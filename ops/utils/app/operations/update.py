@@ -1,5 +1,6 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#
+# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+#
 
 from argparse import ArgumentParser, ArgumentTypeError
 from collections import ChainMap
