@@ -6,6 +6,7 @@
 #include "weasel/detail/coptions.hpp"
 
 using namespace weasel;
+using Catch::Matchers::Contains;
 
 TEST_CASE("coptions")
 {
@@ -16,6 +17,8 @@ TEST_CASE("coptions")
     {
         REQUIRE_NOTHROW(coptions.parse(input));
         CHECK(coptions.parse(input) == false);
+        REQUIRE(coptions.parse_error.empty() == false);
+        CHECK_THAT(coptions.parse_error, Contains("team"));
     }
     SECTION("api-key")
     {

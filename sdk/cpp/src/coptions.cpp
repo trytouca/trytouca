@@ -8,9 +8,15 @@
 
 using func_t = std::function<void(const std::string&)>;
 
+/**
+ *
+ */
 template <typename T>
 func_t parse_member(T& member);
 
+/**
+ *
+ */
 template <>
 func_t parse_member(std::string& member) {
     return [&member](const std::string& value) {
@@ -18,6 +24,9 @@ func_t parse_member(std::string& member) {
     };
 }
 
+/**
+ *
+ */
 template <>
 func_t parse_member(bool& member) {
     return [&member](const std::string& value) {
@@ -25,6 +34,9 @@ func_t parse_member(bool& member) {
     };
 }
 
+/**
+ *
+ */
 template <>
 func_t parse_member(unsigned long& member)
 {
@@ -37,16 +49,13 @@ func_t parse_member(unsigned long& member)
     };
 }
 
-bool verror(fmt::string_view format, fmt::format_args args)
+/**
+ *
+ */
+bool weasel::COptions::verror(fmt::string_view format, fmt::format_args args)
 {
-    fmt::vprint(stderr, format, args);
+    parse_error = fmt::vformat(format, args);
     return false;
-}
-
-template <typename Format, typename... Args>
-bool error(const Format& format, Args&&... args)
-{
-    return verror(format, fmt::make_args_checked<Args...>(format, args...));
 }
 
 /**
@@ -56,23 +65,23 @@ bool weasel::COptions::parse(const std::unordered_map<std::string, std::string>&
 {
     // initialize provided configuration parameters and reject unsupported ones
 
-    std::unordered_map<std::string, std::function<void(const std::string&)>> keys;
-    keys.emplace("team", parse_member(team));
-    keys.emplace("suite", parse_member(suite));
-    keys.emplace("version", parse_member(revision));
-    keys.emplace("api-key", parse_member(api_key));
-    keys.emplace("api-url", parse_member(api_url));
-    keys.emplace("handshake", parse_member(handshake));
-    keys.emplace("opts-testcases", parse_member(post_max_cases));
-    keys.emplace("opts-maxretries", parse_member(post_max_retries));
+    std::unordered_map<std::string, std::function<void(const std::string&)>> parsers;
+    parsers.emplace("team", parse_member(team));
+    parsers.emplace("suite", parse_member(suite));
+    parsers.emplace("version", parse_member(revision));
+    parsers.emplace("api-key", parse_member(api_key));
+    parsers.emplace("api-url", parse_member(api_url));
+    parsers.emplace("handshake", parse_member(handshake));
+    parsers.emplace("opts-testcases", parse_member(post_max_cases));
+    parsers.emplace("opts-maxretries", parse_member(post_max_retries));
 
     for (const auto& kvp: opts)
     {
-        if (!keys.count(kvp.first))
+        if (!parsers.count(kvp.first))
         {
             return error("unknown parameter \"{}\"", kvp.first);
         }
-        keys.at(kvp.first)(kvp.second);
+        parsers.at(kvp.first)(kvp.second);
     }
 
     // populate API key if it is set as environmnet variable.
@@ -101,7 +110,7 @@ bool weasel::COptions::parse(const std::unordered_map<std::string, std::string>&
     if (!api_url.empty())
     {
         const ApiUrl apiUrl(api_url);
-        _api_root = apiUrl.root;
+        api_root = apiUrl.root;
         for (const auto& param: { "team", "suite", "revision" })
         {
             if (!apiUrl.slugs.count(param) || apiUrl.slugs.at(param).empty())
@@ -148,9 +157,9 @@ bool weasel::COptions::parse(const std::unordered_map<std::string, std::string>&
     // perform authentication to Weasel Platform using the provided
     // API key and obtain API token for posting results.
 
-    weasel::ApiConnector apiConnector({ _api_root, team, suite, revision });
-    _api_token = apiConnector.authenticate(api_key);
-    if (_api_token.empty())
+    weasel::ApiConnector apiConnector({ api_root, team, suite, revision });
+    api_token = apiConnector.authenticate(api_key);
+    if (api_token.empty())
     {
         return error("failed to authenticate to the weasel platform");
     }
