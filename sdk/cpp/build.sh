@@ -11,6 +11,7 @@ usage: $(basename "$0") [ -h | --long-options]
   --with-utils              include client-side utility application in build
   --with-examples           include sample regression test tool in build
   --with-framework          include sample regression test framework in build
+  --all                     include all components
 
   --docs                    build client library documentation
   --lint                    lint client library source code
