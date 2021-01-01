@@ -34,28 +34,6 @@ namespace weasel {
     private:
         std::string _api_token;
         std::string _api_root;
-
-        bool validate() const
-        {
-            for (const auto& member: { team, suite, revision })
-            {
-                if (member.empty())
-                {
-                    return false;
-                }
-            }
-            if (handshake)
-            {
-                for (const auto& member: { api_key, api_url })
-                {
-                    if (member.empty())
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
     };
 
 } // namespace weasel
