@@ -49,6 +49,14 @@ func_t parse_member(unsigned long& member)
     };
 }
 
+template <>
+func_t parse_member(weasel::ConcurrencyMode& member)
+{
+    return [&member](const std::string& value) {
+        member = value == "per-thread" ? weasel::ConcurrencyMode::PerThread : weasel::ConcurrencyMode::AllThreads;
+    };
+}
+
 /**
  *
  */
@@ -63,6 +71,8 @@ bool weasel::COptions::verror(fmt::string_view format, fmt::format_args args)
  */
 bool weasel::COptions::parse(const std::unordered_map<std::string, std::string>& opts)
 {
+    parse_error.clear();
+
     // initialize provided configuration parameters and reject unsupported ones
 
     std::unordered_map<std::string, std::function<void(const std::string&)>> parsers;
@@ -72,8 +82,9 @@ bool weasel::COptions::parse(const std::unordered_map<std::string, std::string>&
     parsers.emplace("api-key", parse_member(api_key));
     parsers.emplace("api-url", parse_member(api_url));
     parsers.emplace("handshake", parse_member(handshake));
-    parsers.emplace("opts-testcases", parse_member(post_max_cases));
-    parsers.emplace("opts-maxretries", parse_member(post_max_retries));
+    parsers.emplace("post-testcases", parse_member(post_max_cases));
+    parsers.emplace("post-maxretries", parse_member(post_max_retries));
+    parsers.emplace("testcase-declaration-mode", parse_member(case_declaration));
 
     for (const auto& kvp: opts)
     {
@@ -99,7 +110,7 @@ bool weasel::COptions::parse(const std::unordered_map<std::string, std::string>&
     const std::unordered_map<std::string, std::string&> params = {
         { "team", team },
         { "suite", suite },
-        { "revision", revision },
+        { "version", revision },
         { "api-key", api_key },
         { "api-url", api_url }
     };
@@ -111,7 +122,7 @@ bool weasel::COptions::parse(const std::unordered_map<std::string, std::string>&
     {
         const ApiUrl apiUrl(api_url);
         api_root = apiUrl.root;
-        for (const auto& param: { "team", "suite", "revision" })
+        for (const auto& param: { "team", "suite", "version" })
         {
             if (!apiUrl.slugs.count(param) || apiUrl.slugs.at(param).empty())
             {
@@ -128,7 +139,7 @@ bool weasel::COptions::parse(const std::unordered_map<std::string, std::string>&
     // check that the set of available configuration parameters includes
     // the bare minimum required parameters.
 
-    for (const auto& param: { "team", "suite", "revision" })
+    for (const auto& param: { "team", "suite", "version" })
     {
         if (params.at(param).empty())
         {

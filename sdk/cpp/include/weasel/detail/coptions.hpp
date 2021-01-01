@@ -16,7 +16,7 @@ namespace weasel {
     enum class ConcurrencyMode : unsigned char
     {
         PerThread,
-        AllThreads,
+        AllThreads
     };
 
     /**
