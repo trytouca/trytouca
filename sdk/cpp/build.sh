@@ -181,10 +181,10 @@ build_build () {
         cmake_generator="Ninja"
     fi
 
-    local cmake_config_ccache_args=()
+    local cmake_config_optional_args=()
     if is_command_installed "ccache"; then
         log_debug "using ccache"
-        cmake_config_ccache_args+=(
+        cmake_config_optional_args+=(
             -DCMAKE_C_COMPILER_LAUNCHER=ccache
             -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         )
@@ -195,7 +195,7 @@ build_build () {
         -H"${dir_source}"
         -G"${cmake_generator}"
         -DCMAKE_BUILD_TYPE="${buildtype}"
-        "${cmake_config_ccache_args[@]}"
+        "${cmake_config_optional_args[@]}"
     )
     if [ "${options["with-coverage"]}" ]; then
         cmake_config_general_args+=("-DCMAKE_DEBUG_POSTFIX=_debug")

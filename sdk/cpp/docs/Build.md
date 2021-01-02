@@ -12,7 +12,7 @@ can be built as shared or static libraries.
 
 We test our library against the following compilers.
 
-| Compiler     | Min Version | Min Version |
+| Compiler     | Min Version | Max Version |
 | ------------ | ----------- | ----------- |
 | x86-64 gcc   | 7.1         | 10.2        |
 | x86-64 clang | 7.0.0       | 11.0.0      |
