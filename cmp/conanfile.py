@@ -9,7 +9,7 @@ class WeaselConan(ConanFile):
     name = "weasel_comparator"
     homepage = "https://getweasel.com"
     description = "weasel platform component for comparing submitted test results"
-    topics = ( "regression-testing", "test-framework", "test-automation", "approval-testing" )
+    topics = ( "regression-testing", "snapshot-testing", "test-framework", "test-automation" )
     url = "https://getweasel.com/docs"
     license = "Private"
     version ="1.2.1"
