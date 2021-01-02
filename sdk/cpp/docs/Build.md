@@ -1,8 +1,12 @@
 # Build Instructions
 
-This document provides instructions for building client-side tools, libraries,
-and frameworks including Weasel Client Library for C++, Weasel Test Framework
-for C++, and Weasel Utility Command Line Tool.
+This document provides instructions for building Weasel client-side components
+from source code. These components include the Weasel Client Library for C++,
+Weasel Test Framework for C++, and Weasel Utility Command Line Tool.
+
+**Note**: To use Weasel as a dependency in your project, you do not need to
+follow these instructions. Follow our *Integration* document to learn how to
+pull Weasel as a third-party dependency.
 
 ## Supported Toolchains
 
@@ -60,6 +64,12 @@ tests.
 ./build.sh --with-framework --with-utils --with-examples
 ```
 
+You can build all the components using the `--all` argument:
+
+```bash
+./build.sh --all
+```
+
 If, for any reason, you do not want to build the components using our helper
 scripts, follow the subsequent sections to learn what our scripts do.
 
@@ -77,6 +87,7 @@ Weasel Client Library for C++ has the following dependencies:
 | fmt         | 7.1.3   |
 | libcurl     | 7.74.0  |
 | rapidjson   | 1.1.0   |
+| spdlog      | 1.8.2   |
 
 Since building these dependencies from source is time-consuming and
 inconvenient, we leverage [Conan] dependency manager to download their

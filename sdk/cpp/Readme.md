@@ -3,25 +3,25 @@
 ![Build](https://github.com/getweasel/weasel-cpp/workflows/weasel-cpp-main/badge.svg)
 [![License](https://img.shields.io/github/license/getweasel/weasel-cpp)](https://github.com/getweasel/weasel-cpp/blob/master/LICENSE)
 
+## Introduction
+
+Weasel is a continuous regression testing solution. It provides open-source
+client libraries that enable capturing test results for a given version of
+the workflow under test. The captured results can then be submitted to a
+remote Weasel Platform where they are stored, interpreted, visualized, and
+automatically compared to a *baseline* version of the workflow under test.
+If differences are found, Weasel notifies project maintainers and helps them
+collaborate with each other to understand the differences and take appropriate
+action such as creating a bug report or promoting the baseline version.
+
+You can learn more about Weasel at [getweasel.com][getweasel-com].
+
 ## Resources
 
-Weasel is a continuous regression testing solution that helps engineering
-teams understand the impact of their daily code changes.
-
-Weasel enables engineers to establish a baseline for any software execution
-workflow that describes the approved behavior and performance of that workflow.
-When engineers make subsequent changes to the components involved in that
-workflow, Weasel identifies and reports any potential change of behavior
-or performance and helps engineers determine if such change matches their
-expectations. Weasel allows engineers to keep track of the requirements
-of each software component and helps them perform major refactors without
-violating those requirements.
-
-## Resources
-
-* [Build Instructions](docs/Build.md)
 * [Using the Client Library](docs/Quickstart.md)
 * [Using the Test Framework](docs/Tutorials.md)
+* [Integration Guide](docs/Integration.md)
+* [Build Instructions](docs/Build.md)
 * [Weasel Platform][getweasel-com] (external)
 * [Weasel Documentation][getweasel-docs] (external)
 * [Community] (external)

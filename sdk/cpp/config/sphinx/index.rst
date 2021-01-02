@@ -5,6 +5,7 @@ Weasel C++ Client Documentation
    :maxdepth: 2
 
    Getting Started <quickstart>
+   Integration <integration>
    Tutorials <tutorials>
    Examples <examples>
    Reference API <api>
