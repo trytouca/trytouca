@@ -47,9 +47,9 @@ target_sources(
         weasel_client
     PRIVATE
         client.cpp
-        coptions.cpp
         weasel.cpp
         devkit/comparison.cpp
+        devkit/coptions.cpp
         devkit/httpclient.cpp
         devkit/logger.cpp
         devkit/object.cpp

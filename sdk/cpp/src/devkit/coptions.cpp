@@ -2,10 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/detail/coptions.hpp"
+#include "weasel/devkit/coptions.hpp"
 #include "weasel/devkit/platform.hpp"
+#include "rapidjson/document.h"
 #include <climits>
+#include <sstream>
 
+using OptionsMap = std::unordered_map<std::string, std::string>;
 using func_t = std::function<void(const std::string&)>;
 
 /**
@@ -69,7 +72,7 @@ bool weasel::COptions::verror(fmt::string_view format, fmt::format_args args)
 /**
  *
  */
-bool weasel::COptions::parse(const std::unordered_map<std::string, std::string>& opts)
+bool weasel::COptions::parse(const OptionsMap& opts)
 {
     parse_error.clear();
 
@@ -176,4 +179,74 @@ bool weasel::COptions::parse(const std::unordered_map<std::string, std::string>&
     }
 
     return true;
+}
+
+/**
+ *
+ */
+bool weasel::COptions::parse_file(const weasel::path& path)
+{
+
+    // check that specified path leads to an existing regular file on disk
+
+    if (!weasel::filesystem::is_regular_file(path))
+    {
+        throw std::invalid_argument("configuration file is missing");
+        // return error("configuration file is missing");
+    }
+
+    // load content of configuration file into memory
+
+    std::ifstream ifs(path);
+    std::stringstream ss;
+    ss << ifs.rdbuf();
+
+    // attempt to parse content of configuration file
+
+    rapidjson::Document rjDoc;
+    rjDoc.Parse(ss.str());
+
+    // check that configuration file has a top-level weasel section
+
+    if (rjDoc.HasParseError() || !rjDoc.IsObject()
+        || !rjDoc.HasMember("weasel") || !rjDoc["weasel"].IsObject())
+    {
+        throw std::invalid_argument("configuration file is not valid");
+        // return error("configuration file is not valid");
+    }
+
+    // populate an OptionsMap with the value of configuration parameters
+    // specified in the JSON file.
+
+    OptionsMap opts;
+
+    // parse configuration parameters whose value may be specified as string
+
+    const auto& strKeys = {
+        "api-key", "api-url", "team",
+        "suite", "version", "handshake",
+        "post-testcases", "post-maxretries", "testcase-declaration-mode"
+    };
+
+    const auto& rjObj = rjDoc["weasel"];
+    for (const auto& key : strKeys)
+    {
+        if (rjObj.HasMember(key) && rjObj[key].IsString())
+        {
+            opts.emplace(key, rjObj[key].GetString());
+        }
+    }
+
+    // parse configuration parameters whose value may be specified as integer
+
+    const auto& intKeys = { "post-maxretries", "post-testcases" };
+    for (const auto& key : intKeys)
+    {
+        if (rjObj.HasMember(key) && rjObj[key].IsUint())
+        {
+            opts.emplace(key, std::to_string(rjObj[key].GetUint()));
+        }
+    }
+
+    return parse(opts);
 }

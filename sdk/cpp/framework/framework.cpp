@@ -737,6 +737,10 @@ namespace weasel { namespace framework {
             copyOption("api-key", "api-key");
             copyOption("api-url", "api-url");
         }
+        else
+        {
+            clientOptions.emplace("handshake", "false");
+        }
 
         try
         {

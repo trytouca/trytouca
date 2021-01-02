@@ -17,7 +17,7 @@ namespace weasel {
      */
     void configure(const ClientImpl::OptionsMap& opts)
     {
-        return instance.configure(opts);
+        instance.configure(opts);
     }
 
     /**
@@ -25,7 +25,7 @@ namespace weasel {
      */
     void configure(const weasel::path& path)
     {
-        return instance.configureByFile(path);
+        instance.configure_by_file(path);
     }
 
     /**

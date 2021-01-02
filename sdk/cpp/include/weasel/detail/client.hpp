@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "weasel/devkit/options.hpp"
+#include "weasel/devkit/coptions.hpp"
 #include "weasel/devkit/testcase.hpp"
 #include "weasel/extra/logger.hpp"
 #include <thread>
@@ -12,39 +12,6 @@
 namespace weasel {
 
     using path = std::string;
-
-    /**
-     *
-     */
-    enum class TestcaseDeclarationMode : unsigned char
-    {
-        PerThread,
-        AllThreads,
-    };
-
-    /**
-     *
-     */
-    enum class ConfigOption : unsigned char
-    {
-        api_key, /**< API Key to authenticate to Weasel Platform */
-        api_url, /**< URL to Weasel Platform API */
-        version, /**< version of code under test */
-        suite, /**< Suite to which results should be submitted */
-        team, /**< Team to which this suite belongs */
-        post_max_cases, /**< maximum number of testcases whose results
-                               may be posted in a single http request */
-        post_max_retries, /**< maximum number of attempts to re-submit
-                               failed http requests */
-        case_declaration, /**< whether testcase declaration should be
-                               isolated to each thread */
-        handshake, /**< whether client should perform handshake
-                               with platform during configuration */
-        api_token, /**< API Token issued upon authentication.
-                               Internal. Purposely not documented. */
-        api_root, /**< API URL in short format.
-                               Internal. Purposely not documented. */
-    };
 
     /**
      * @enum weasel::DataFormat
@@ -67,22 +34,12 @@ namespace weasel {
         /**
          *
          */
-        explicit ClientImpl();
+        bool configure(const OptionsMap& opts);
 
         /**
          *
          */
-        const Options<ConfigOption>& options() const;
-
-        /**
-         *
-         */
-        void configure(const OptionsMap& opts);
-
-        /**
-         *
-         */
-        void configureByFile(const weasel::path& path);
+        bool configure_by_file(const weasel::path& path);
 
         /**
          *
@@ -155,15 +112,6 @@ namespace weasel {
         bool post() const;
 
     private:
-        /**
-         *
-         */
-        OptionsMap parseOptionsMap(const std::string& json) const;
-
-        /**
-         *
-         */
-        void validate(const std::initializer_list<ConfigOption>& keys) const;
 
         /**
          *
@@ -206,11 +154,12 @@ namespace weasel {
             const weasel::logger::Level severity,
             const std::string& msg) const;
 
+        COptions _opts;
+        bool _configured;
         ElementsMap _testcases;
         std::unordered_map<std::thread::id, std::string> _threadMap;
         std::string _mostRecentTestcase;
         std::vector<std::shared_ptr<weasel::logger>> _loggers;
-        Options<ConfigOption> _opts;
     };
 
 } // namespace weasel

@@ -5,6 +5,7 @@
 #pragma once
 
 #include "weasel/lib_api.hpp"
+#include "weasel/devkit/filesystem.hpp"
 #include "fmt/core.h"
 #include <unordered_map>
 
@@ -44,6 +45,11 @@ namespace weasel {
          *
          */
         bool parse(const std::unordered_map<std::string, std::string>& opts);
+
+        /**
+         *
+         */
+        bool parse_file(const weasel::path& path);
 
     private:
         /**

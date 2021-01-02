@@ -17,203 +17,27 @@ namespace weasel {
     /**
      *
      */
-    using co = weasel::ConfigOption;
-
-    /**
-     *
-     */
-    ClientImpl::ClientImpl()
-        : _opts({ { co::api_key, "api-key" },
-                  { co::api_url, "api-url" },
-                  { co::case_declaration, "testcase-declaration-mode" },
-                  { co::handshake, "handshake" },
-                  { co::post_max_cases, "post-testcases" },
-                  { co::post_max_retries, "post-maxretries" },
-                  { co::team, "team" },
-                  { co::suite, "suite" },
-                  { co::version, "version" } })
+    bool ClientImpl::configure(const ClientImpl::OptionsMap& opts)
     {
-    }
-
-    /**
-     * Enables convenient unit testing of `ClientImpl::configure` function.
-     */
-    const weasel::Options<co>& ClientImpl::options() const
-    {
-        return _opts;
+        _configured = _opts.parse(opts);
+        if (!_configured)
+        {
+            throw std::invalid_argument(_opts.parse_error);
+        }
+        return _configured;
     }
 
     /**
      *
      */
-    void ClientImpl::configure(const ClientImpl::OptionsMap& opts)
+    bool ClientImpl::configure_by_file(const weasel::path& path)
     {
-        // for better user experience, we allow users to provide configuration
-        // parameters as a map of strings. For clarity, readability and to
-        // reduce chance of errors, we store configuration parameters as
-        // values of a known enum class.
-
-        // pre-populate config params with default values
-
-        _opts.add(co::case_declaration, "all-threads");
-        _opts.add(co::post_max_retries, "2");
-        _opts.add(co::post_max_cases, "10");
-        _opts.add(co::handshake, "true");
-
-        // set config params provided by the user
-
-        for (const auto& opt : opts)
+        _configured = _opts.parse_file(path);
+        if (!_configured)
         {
-            if (!_opts.hasName(opt.first))
-            {
-                throw std::invalid_argument(
-                    weasel::format("unknown parameter {}", opt.first));
-            }
-            _opts.add(_opts.toKey(opt.first), opt.second);
+            throw std::invalid_argument(_opts.parse_error);
         }
-
-        // some configuration parameters are expected to be numeric
-
-        for (const auto& opt : { co::post_max_cases, co::post_max_retries })
-        {
-            try
-            {
-                _opts.get<unsigned short>(opt);
-            }
-            catch (const boost::bad_lexical_cast& ex)
-            {
-                std::ignore = ex;
-                throw std::invalid_argument(weasel::format(
-                    "parameter {} must be a number", _opts.toName(opt)));
-            }
-        }
-
-        // Populate API key if it is set as environmnet variable.
-        // The implementation below ensures that `api-key` as
-        // configuration parameter takes precedence over environment
-        // variable.
-
-        if (!_opts.has(co::api_key) || _opts.get(co::api_key).empty())
-        {
-            const auto apiKey = std::getenv("WEASEL_API_KEY");
-            if (apiKey != nullptr)
-            {
-                _opts.add(co::api_key, apiKey);
-            }
-        }
-
-        // if `api-url` is given in long format, parse `team` and `suite`
-        // from its path.
-
-        if (_opts.has(co::api_url))
-        {
-            const ApiUrl apiUrl(_opts.get(co::api_url));
-            _opts.add(co::api_root, apiUrl.root);
-            for (const auto& opt : { co::team, co::suite, co::version })
-            {
-                const auto name = _opts.toName(opt);
-                if (!apiUrl.slugs.count(name) || apiUrl.slugs.at(name).empty())
-                {
-                    continue;
-                }
-                if (_opts.has(opt) && _opts.get(opt) != apiUrl.slugs.at(name))
-                {
-                    throw std::invalid_argument(weasel::format(
-                        "{0} specified in apiUrl has conflict with "
-                        "{0} parameter",
-                        name));
-                }
-                _opts.add(opt, apiUrl.slugs.at(name));
-            }
-        }
-
-        // check that the set of available configuration parameters
-        // includes parameters required by the application.
-
-        validate({ co::version, co::suite, co::team });
-
-        // if `api_key` and `api_url` are not provided, assume user does
-        // not intend to submit results in which case we are done.
-
-        if (_opts.get(co::handshake) == "false"
-            || (!_opts.has(co::api_key) && !_opts.has(co::api_url)))
-        {
-            return;
-        }
-
-        // otherwise, check that all necessary config params are provided.
-
-        validate({ co::api_key, co::api_url });
-
-        // Perform authentication to Weasel Platform using the provided
-        // API key and obtain API token for posting results.
-
-        ApiConnector apiConnector({ _opts.get(co::api_root),
-                                    _opts.get(co::team),
-                                    _opts.get(co::suite),
-                                    _opts.get(co::version) });
-        const auto& token = apiConnector.authenticate(_opts.get(co::api_key));
-        if (token.empty())
-        {
-            throw std::runtime_error(
-                "failed to authenticate to Weasel Platform");
-        }
-        _opts.add(co::api_token, token);
-    }
-
-    /**
-     *
-     */
-    void ClientImpl::configureByFile(const weasel::path& path)
-    {
-        if (!weasel::filesystem::is_regular_file(path))
-        {
-            throw std::invalid_argument("configuration file is missing");
-        }
-        std::ifstream ifs(path);
-        std::stringstream ss;
-        ss << ifs.rdbuf();
-        const auto& opts = parseOptionsMap(ss.str());
-        return configure(opts);
-    }
-
-    /**
-     *
-     */
-    ClientImpl::OptionsMap ClientImpl::parseOptionsMap(
-        const std::string& json) const
-    {
-        OptionsMap opts;
-        const auto& strKeys = {
-            "api-key", "api-url", "team",
-            "suite", "version", "handshake",
-            "post-testcases", "post-maxretries", "testcase-declaration-mode"
-        };
-
-        rapidjson::Document rjDoc;
-        rjDoc.Parse(json);
-        if (rjDoc.HasParseError() || !rjDoc.IsObject()
-            || !rjDoc.HasMember("weasel") || !rjDoc["weasel"].IsObject())
-        {
-            throw std::invalid_argument("configuration file is not valid");
-        }
-        const auto& rjObj = rjDoc["weasel"];
-        for (const auto& key : strKeys)
-        {
-            if (rjObj.HasMember(key) && rjObj[key].IsString())
-            {
-                opts.emplace(key, rjObj[key].GetString());
-            }
-        }
-        const auto& intKeys = { "post-maxretries", "post-testcases" };
-        for (const auto& key : intKeys)
-        {
-            if (rjObj.HasMember(key) && rjObj[key].IsUint())
-            {
-                opts.emplace(key, std::to_string(rjObj[key].GetUint()));
-            }
-        }
-        return opts;
+        return _configured;
     }
 
     /**
@@ -229,17 +53,13 @@ namespace weasel {
      */
     std::shared_ptr<weasel::Testcase> ClientImpl::testcase(const std::string& name)
     {
-        if (_opts.empty())
+        if (!_configured)
         {
             return nullptr;
         }
         if (!_testcases.count(name))
         {
-            const auto& tc = std::shared_ptr<Testcase>(new Testcase(
-                _opts.get(ConfigOption::team),
-                _opts.get(ConfigOption::suite),
-                _opts.get(ConfigOption::version),
-                name));
+            const auto& tc = std::make_shared<Testcase>(_opts.team, _opts.suite, _opts.revision, name);
             _testcases.emplace(name, tc);
         }
         _threadMap[std::this_thread::get_id()] = name;
@@ -365,10 +185,7 @@ namespace weasel {
         const auto parentPath = boost::filesystem::absolute(boost::filesystem::path(path).parent_path());
         if (!weasel::filesystem::exists(parentPath.string()) && !boost::filesystem::create_directories(parentPath))
         {
-            throw std::invalid_argument(weasel::format(
-                "failed to save content to disk: failed to create directory: "
-                "{}",
-                parentPath.string()));
+            throw std::invalid_argument(weasel::format("failed to save content to disk: failed to create directory: {}", parentPath.string()));
         }
 
         switch (format)
@@ -389,7 +206,13 @@ namespace weasel {
      */
     bool ClientImpl::post() const
     {
-        validate({ co::api_key, co::api_url });
+        // we will not post data if client is not configured to do so.
+
+        if (_opts.api_key.empty() || _opts.api_url.empty())
+        {
+            throw std::runtime_error("weasel client is not configured to post testresults");
+        }
+
         auto ret = true;
         // we should only post testcases that we have not posted yet
         // or those that have changed since we last posted them.
@@ -404,12 +227,9 @@ namespace weasel {
         // group multiple testcases together according to `_postMaxTestcases`
         // configuration parameter and post each group separately in
         // flatbuffers format.
-        const auto maxCases = _opts.get<unsigned short>(co::post_max_cases);
         for (auto it = testcases.begin(); it != testcases.end();)
         {
-            const auto& tail = it
-                + std::min(static_cast<ptrdiff_t>(maxCases),
-                           std::distance(it, testcases.end()));
+            const auto& tail = it + std::min(static_cast<ptrdiff_t>(_opts.post_max_cases), std::distance(it, testcases.end()));
             std::vector<std::string> batch(it, tail);
             // attempt to post results for this group of testcases.
             // currently we only support posting data in flatbuffers format.
@@ -436,12 +256,12 @@ namespace weasel {
      */
     bool ClientImpl::hasLastTestcase() const
     {
-        // If client is not configured, report that no testcase has been declared.
-        // This behavior renders calls to other logging functions as no-op which
-        // is helpful in production environments where `configure` is expected to
-        // never be called.
+        // if client is not configured, report that no testcase has been
+        // declared. this behavior renders calls to other data capturing
+        // functions as no-op which is helpful in production environments
+        // where `configure` is expected to never be called.
 
-        if (_opts.empty())
+        if (!_configured)
         {
             return false;
         }
@@ -449,7 +269,7 @@ namespace weasel {
         // If client is configured, check whether testcase declaration is set as
         // "shared" in which case report the most recently declared testcase.
 
-        if (_opts.get(co::case_declaration) == "all-threads")
+        if (_opts.case_declaration == weasel::ConcurrencyMode::AllThreads)
         {
             return !_mostRecentTestcase.empty();
         }
@@ -477,7 +297,7 @@ namespace weasel {
         // "shared" in which case report the name of the most recently declared
         // testcase.
 
-        if (_opts.get(co::case_declaration) == "all-threads")
+        if (_opts.case_declaration == weasel::ConcurrencyMode::AllThreads)
         {
             return _mostRecentTestcase;
         }
@@ -519,13 +339,9 @@ namespace weasel {
         }
         const auto& buffer = Testcase::serialize(tcs);
         std::string content((const char*)buffer.data(), buffer.size());
-        ApiUrl apiUrl { _opts.get(co::api_root),
-                        _opts.get(co::team),
-                        _opts.get(co::suite),
-                        _opts.get(co::version) };
-        ApiConnector apiConnector(apiUrl, _opts.get(co::api_token));
-        const auto errors = apiConnector.submitResults(
-            content, _opts.get<unsigned short>(co::post_max_retries));
+        ApiUrl apiUrl { _opts.api_root, _opts.team, _opts.suite, _opts.revision };
+        ApiConnector apiConnector(apiUrl, _opts.api_token);
+        const auto errors = apiConnector.submitResults(content, _opts.post_max_retries);
         for (const auto& err : errors)
         {
             notify_loggers(logger::Level::Warning, err);
@@ -586,21 +402,6 @@ namespace weasel {
         for (const auto& logger : _loggers)
         {
             logger->log(severity, msg);
-        }
-    }
-
-    /**
-     *
-     */
-    void ClientImpl::validate(
-        const std::initializer_list<ConfigOption>& keys) const
-    {
-        const auto& missingKeys = _opts.findMissingKeys(keys);
-        if (!missingKeys.empty())
-        {
-            throw std::invalid_argument(weasel::format(
-                "required configuration parameter {} is missing",
-                _opts.toName(missingKeys.front())));
         }
     }
 
