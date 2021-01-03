@@ -4,10 +4,14 @@
 
 name: weasel-cpp-tutorial
 
+
 on:
   push:
-    paths:
-      - '!basic/**'
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-tutorial:
