@@ -19,7 +19,9 @@ jobs:
   build-tutorial:
     name: build-tutorial
     runs-on: ubuntu-20.04
-    cxx: g++-9
+    strategy:
+      matrix:
+        cxx: [g++-9]
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-python@v1
@@ -29,7 +31,7 @@ jobs:
           cache-name: cache-conan-packages
         with:
           path: ~/.conan
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{ hashFiles('**/conanfile.py') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{ hashFiles('**/build.sh') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -40,6 +42,7 @@ jobs:
           pip install conan --no-cache-dir --upgrade
           conan profile new default --detect --force
           conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan remote add --force weasel-conan https://api.bintray.com/conan/getweasel/weasel-cpp
       - run: ./build.sh
       - name: run regression test
         env:
