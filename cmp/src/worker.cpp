@@ -51,11 +51,15 @@ void reporter(const Options& options, Resources& resources)
 {
     namespace chr = std::chrono;
     const auto& interval = chr::milliseconds(options.status_report_interval);
+    std::string previous = "";
     while (true)
     {
         std::this_thread::sleep_for(interval);
         const auto& report = resources.stats.report();
-        WEASEL_LOG_INFO("{}", report);
+        if (report.compare(previous)) {
+            WEASEL_LOG_INFO("{}", report);
+            previous = report;
+        }
     }
 }
 
