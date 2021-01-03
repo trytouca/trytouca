@@ -132,7 +132,7 @@ export class FilterManager<T> {
     if (event.search && event.search !== this.input.defaults.search) {
       const fuse = new Fuse(output, opts);
       const result = fuse.search(event.search);
-      output = result.map(v => v.item);
+      output = result.map(v => v.item) as T[];
     }
     if (event.sorter) {
       output.sort(this.getSorter(event.sorter).func);

@@ -111,7 +111,7 @@ export class VersionListComponent implements OnChanges {
     if (this._versionQuery.length !== 0) {
       const fuse = new Fuse(this.suite.batches, this._searchOptions);
       const result = fuse.search(this._versionQuery);
-      versions = result.map(v => v.item);
+      versions = result.map(v => v.item) as string[];
     } else {
       versions = this.suite.batches;
     }
