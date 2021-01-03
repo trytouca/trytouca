@@ -164,8 +164,8 @@ export class BatchCommentsComponent implements OnDestroy {
     this.fields.buttonCancelShow = false;
     this.fields.buttonPreviewShow = true;
     this.fields.buttonSubmitText = 'Submit';
-    this.fields.editorSubtitle = 'Share results of your investigations with your colleagues.',
-    this.fields.editorTitle = 'Write a New Comment',
+    this.fields.editorSubtitle = 'Share results of your investigations with your colleagues.';
+    this.fields.editorTitle = 'Write a New Comment';
     this.form.reset();
     this.form.get('body').reset();
     this.form.get('body').enable();

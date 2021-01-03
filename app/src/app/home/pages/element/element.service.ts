@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import { of, Observable, Subject, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import type { ElementLookupResponse, SuiteLookupResponse, BatchLookupResponse, ElementComparisonResponse } from 'src/app/core/models/commontypes';
+import type { ElementLookupResponse, ElementComparisonResponse,
+  SuiteLookupResponse, BatchLookupResponse } from 'src/app/core/models/commontypes';
 import type { FrontendElementCompareParams } from 'src/app/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from 'src/app/core/services';
 import { errorLogger } from 'src/app/shared/utils/errorLogger';

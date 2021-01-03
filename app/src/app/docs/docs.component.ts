@@ -51,7 +51,7 @@ export class DocsComponent implements OnDestroy {
     faIconLibrary.addIcons(faAngleDoubleLeft, faAngleDoubleRight, faBook, faExternalLinkAlt);
     this._subQueryParamMap = this.route.queryParamMap.subscribe(map => {
       const pages = [ ...this.internalPages, ...this.hiddenPages ];
-      const valid = pages.map(v => v.link)
+      const valid = pages.map(v => v.link);
       const link = map.has('page') && valid.includes(map.get('page')) ? map.get('page') : 'quickstart';
       const index = pages.findIndex(v => v.link === link);
       this.currentPage = pages[index];
@@ -69,7 +69,7 @@ export class DocsComponent implements OnDestroy {
       relativeTo: this.route,
       queryParams: { page: link },
       queryParamsHandling: 'merge'
-    })
+    });
   }
 
   launchExternalPage(name: string): void {

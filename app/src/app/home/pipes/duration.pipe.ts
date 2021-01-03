@@ -5,7 +5,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { humanizer, Unit } from 'humanize-duration';
 
-const _humanizer = humanizer({
+const cls = humanizer({
   language: 'shortEn',
   languages: {
     shortEn: {
@@ -24,7 +24,7 @@ export function formatDuration(duration: number, largest = 1, units = ['s', 'ms'
     spacer: '',
     units: units as Unit[]
   };
-  return _humanizer(Math.abs(duration), opts);
+  return cls(Math.abs(duration), opts);
 }
 
 @Pipe({

@@ -292,10 +292,10 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
    *
    */
   private accept(applicant: TeamApplicant): void {
-    const url = [ 'team', this._team.slug, 'join', applicant.username ].join('/')
+    const url = [ 'team', this._team.slug, 'join', applicant.username ].join('/');
     this.apiService.post(url).subscribe(
       () => {
-        const msg = `${applicant.fullname} is now a member of your team.`
+        const msg = `${applicant.fullname} is now a member of your team.`;
         this.teamPageService.refreshMembers();
         this.notificationService.notify(NotificationType.Success, msg);
       },
@@ -309,10 +309,10 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
    *
    */
   private decline(applicant: TeamApplicant): void {
-    const url = [ 'team', this._team.slug, 'join', applicant.username ].join('/')
+    const url = [ 'team', this._team.slug, 'join', applicant.username ].join('/');
     this.apiService.delete(url).subscribe(
       () => {
-        const msg = `You declined ${applicant.fullname}'s request to join your team.`
+        const msg = `You declined ${applicant.fullname}'s request to join your team.`;
         this.teamPageService.refreshMembers();
         this.notificationService.notify(NotificationType.Success, msg);
       },

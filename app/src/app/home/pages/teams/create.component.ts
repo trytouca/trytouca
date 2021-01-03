@@ -31,7 +31,7 @@ type Content = {
   buttonText: string,
   slugDesc: string,
   onSubmit: (IFormContent) => void
-}
+};
 
 @Component({
   selector: 'app-teams-create',
@@ -94,7 +94,7 @@ export class TeamsCreateTeamComponent extends ModalComponent {
    */
   toggleMode() {
     const newMode = this.content.mode === Mode.Create ? Mode.Join : Mode.Create;
-    const nameValidators = [ Validators.minLength(3), Validators.maxLength(32) ]
+    const nameValidators = [ Validators.minLength(3), Validators.maxLength(32) ];
     if (newMode === Mode.Create) {
       nameValidators.push(Validators.required);
     }
