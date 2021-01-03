@@ -56,7 +56,8 @@ void reporter(const Options& options, Resources& resources)
     {
         std::this_thread::sleep_for(interval);
         const auto& report = resources.stats.report();
-        if (report.compare(previous)) {
+        if (report.compare(previous))
+        {
             WEASEL_LOG_INFO("{}", report);
             previous = report;
         }

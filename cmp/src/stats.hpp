@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "queue.hpp"
 #include "platform.hpp"
+#include "queue.hpp"
 #include <string>
 
 /**

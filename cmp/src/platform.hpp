@@ -38,6 +38,7 @@ struct MessageJob : public Job
      *
      */
     std::string desc() const override;
+
 private:
     std::string _batchId;
     std::string _messageId;
@@ -63,8 +64,12 @@ struct ComparisonJob : public Job
         const std::string& dstMessageId,
         const std::string& srcBatchId,
         const std::string& srcMessageId)
-        : Job(), _jobId(jobId), _dstBatchId(dstBatchId), _dstMessageId(dstMessageId),
-        _srcBatchId(srcBatchId), _srcMessageId(srcMessageId)
+        : Job()
+        , _jobId(jobId)
+        , _dstBatchId(dstBatchId)
+        , _dstMessageId(dstMessageId)
+        , _srcBatchId(srcBatchId)
+        , _srcMessageId(srcMessageId)
     {
     }
 

@@ -43,7 +43,9 @@ std::shared_ptr<weasel::Testcase> loadResultFile(const std::filesystem::path& pa
  *
  */
 MessageJob::MessageJob(const std::string& batchId, const std::string& messageId)
-    : Job(), _batchId(batchId), _messageId(messageId)
+    : Job()
+    , _batchId(batchId)
+    , _messageId(messageId)
 {
 }
 
@@ -198,8 +200,7 @@ std::vector<std::unique_ptr<Job>> retrieveJobs(const std::string& api_url)
     {
         jobs.push_back(std::make_unique<MessageJob>(
             item["batchId"].GetString(),
-            item["messageId"].GetString()
-        ));
+            item["messageId"].GetString()));
     }
 
     for (const auto& item : doc["comparisons"].GetArray())
@@ -209,8 +210,7 @@ std::vector<std::unique_ptr<Job>> retrieveJobs(const std::string& api_url)
             item["dstBatchId"].GetString(),
             item["dstMessageId"].GetString(),
             item["srcBatchId"].GetString(),
-            item["srcMessageId"].GetString()
-        ));
+            item["srcMessageId"].GetString()));
     }
 
     return jobs;
