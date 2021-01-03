@@ -32,10 +32,10 @@ dir_build="${dir_source}/local/build"
 
 # directory where build artifacts of interest are installed
 # note: at this time, no cmake target has an install recipe
-dir_install="${dir_build}/dist"
+dir_install="${dir_source}/local/dist"
 
 # uncomment the line below to force rebuild from scratch
-rm -rf "${dir_build}"
+# rm -rf "${dir_build}"
 
 # create build directory if it does not exist
 mkdir -p "${dir_build}"

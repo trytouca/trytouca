@@ -6,10 +6,10 @@
     "save-as-json": "true"
   },
   "weasel": {
-    "api-key": "<YOUR API KEY>",
-    "api-url": "<YOUR API URL>"
+    "post-testcases": "20",
+    "post-maxretries": "5"
   },
   "workflow": {
-    "datasets-dir": "./example/advanced/datasets"
+    "datasets-dir": "./advanced/datasets"
   }
 }
