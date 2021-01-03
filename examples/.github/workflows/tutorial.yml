@@ -1,0 +1,37 @@
+#
+# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+#
+
+name: Test Comparator
+
+on:
+  push:
+    paths:
+      - '!basic/**'
+
+jobs:
+  build-tutorial:
+    name: build-tutorial
+    runs-on: ubuntu-20.04
+    cxx: g++-9
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-python@v1
+      - name: cache conan
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-conan-packages
+        with:
+          path: ~/.conan
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{ hashFiles('**/conanfile.py') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: install conan
+        run: |
+          pip install conan --no-cache-dir --upgrade
+          conan profile new default --detect --force
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+      - run: ./build.sh
