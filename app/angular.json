@@ -27,7 +27,11 @@
               "src/assets",
               "src/favicon.ico",
               "src/manifest.webmanifest",
-              { "glob": "*.md", "input": "./docs/", "output": "./assets/docs" }
+              {
+                "glob": "*.md",
+                "input": "./docs/",
+                "output": "./assets/docs"
+              }
             ],
             "styles": [
               "src/styles.scss",
@@ -110,14 +114,11 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
             ]
           }
         }
