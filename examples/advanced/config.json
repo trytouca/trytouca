@@ -1,7 +1,7 @@
 {
   "framework": {
     "log-level": "info",
-    "output-dir": "./local/example-advanced-output",
+    "output-dir": "./local/results",
     "save-as-binary": "true",
     "save-as-json": "true"
   },

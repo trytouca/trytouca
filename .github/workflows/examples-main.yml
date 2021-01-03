@@ -9,9 +9,11 @@ on:
   push:
     branches:
       - main
+      - development
   pull_request:
     branches:
       - main
+      - test
 
 jobs:
   build-tutorial:
@@ -39,3 +41,9 @@ jobs:
           conan profile new default --detect --force
           conan profile update settings.compiler.libcxx=libstdc++11 default
       - run: ./build.sh
+      - name: run regression test
+        env:
+          WEASEL_API_KEY: ${{ secrets.WEASEL_API_KEY }}
+        run: |
+          mkdir -p ./local/results
+          ./local/dist/bin/weasel_example_advanced -c ./advanced/config.json -r $(git describe --abbrev=4) --api-url https://getweasel.com/api/@/tutorial/advanced
