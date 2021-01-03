@@ -29,7 +29,6 @@ class WeaselConan(ConanFile):
         self.options["weasel"].shared = True
         self.options["weasel"].with_tests = False
         self.options["weasel"].with_utils = False
-        self.options["weasel"].with_examples = False
         self.options["weasel"].with_framework = False
 
     def _configure_cmake(self):
