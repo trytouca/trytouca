@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "frontend": {
+    "weasel-webapp": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -125,5 +125,5 @@
       }
     }
   },
-  "defaultProject": "frontend"
+  "defaultProject": "weasel-webapp"
 }
