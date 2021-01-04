@@ -1,7 +1,7 @@
 # Weasel Client Library for C++
 
 ![Build](https://github.com/getweasel/weasel-cpp/workflows/weasel-cpp-main/badge.svg)
-[![License](https://img.shields.io/github/license/getweasel/weasel-cpp)](https://github.com/getweasel/weasel-cpp/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/getweasel/weasel-cpp)](https://github.com/getweasel/weasel-cpp/blob/main/LICENSE)
 
 ## Introduction
 

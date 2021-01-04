@@ -1,13 +1,13 @@
 # ---- conan package ----
 
-FROM ubuntu:bionic AS builder_main
+FROM ubuntu:focal AS client_cpp_build
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     apt-transport-https ca-certificates gnupg software-properties-common wget \
   && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
     | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
-  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main' \
+  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main' \
   && apt-get install -y --no-install-recommends \
     cmake g++ gcc make python3-pip python3-setuptools \
   && rm -rf /var/lib/apt/lists/* \
@@ -28,22 +28,18 @@ RUN conan profile new default --detect \
   && conan profile update settings.compiler.libcxx=libstdc++11 default \
   && ./build.sh --with-tests --with-utils --with-examples --with-framework
 
-# ---- documentation ----
+# ---- client-cpp documentation ----
 
-FROM alpine:3.8 AS builder_docs
+FROM alpine:3.12 AS client_cpp_docs
 
-RUN apk add --update --no-cache \
-  bash doxygen python3 python3-dev \
+RUN apk add --update --no-cache bash doxygen cmd:pip3 \
   && pip3 install --no-cache-dir --upgrade pip \
-  && pip3 install --upgrade --no-cache-dir \
-    breathe m2r2 sphinx==3.2.1 sphinx-rtd-theme \
+  && pip3 install --upgrade --no-cache-dir breathe m2r2 sphinx sphinx-rtd-theme \
   && rm -rf /var/lib/apt/lists/*
 
 COPY . /opt
 
-WORKDIR /opt
-
-RUN bash build.sh --docs
+RUN cd /opt && bash build.sh --docs
 
 # ---- production ----
 
@@ -57,5 +53,5 @@ LABEL org.opencontainers.image.vendor="Pejman Ghrobanzade"
 LABEL org.opencontainers.image.authors="hello@getweasel.com"
 LABEL org.opencontainers.image.licenses="https://github.com/getweasel/weasel-cpp/blob/master/LICENSE"
 
-COPY --from=builder_main    /opt/local/dist                   /opt/dist
-COPY --from=builder_docs    /opt/local/docs/html              /opt/docs
+COPY --from=client_cpp_build  /opt/local/dist      /opt/dist
+COPY --from=client_cpp_docs   /opt/local/docs/html /opt/docs

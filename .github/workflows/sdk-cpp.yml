@@ -50,5 +50,5 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: docker build -t weasel/client-cpp -f config/Dockerfile --target builder_main .
+      - run: docker build -t weasel/client-cpp -f config/Dockerfile --target client_cpp_build .
       - run: docker run weasel/client-cpp /bin/sh -c 'cd ./local/build && ctest ../.. -C Release'
