@@ -9,46 +9,18 @@
         "*.ts"
       ],
       "parserOptions": {
-        "project": [
-          "tsconfig.json"
-        ],
+        "project": "./tsconfig.json",
         "createDefaultProgram": true
       },
       "extends": [
-        "plugin:@angular-eslint/ng-cli-compat",
-        "plugin:@angular-eslint/ng-cli-compat--formatting-add-on",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
       ],
       "rules": {
-        "@angular-eslint/component-selector": [
-          "error",
-          {
-            "type": "element",
-            "prefix": "app",
-            "style": "kebab-case"
-          }
-        ],
-        "@angular-eslint/directive-selector": [
-          "error",
-          {
-            "type": "attribute",
-            "prefix": "app",
-            "style": "camelCase"
-          }
-        ],
-        "no-underscore-dangle": [
-          "error",
-          {
-            "allowAfterThis": true
-          }
-        ],
-        "arrow-body-style": "off",
-        "no-shadow": "off",
-        "prefer-arrow/prefer-arrow-functions": "off",
-        "@typescript-eslint/ban-types": "off",
-        "@typescript-eslint/member-ordering": "off",
-        "@typescript-eslint/naming-convention": "off",
-        "@typescript-eslint/member-delimiter-style": "off"
+        "@typescript-eslint/explicit-module-boundary-types": "off"
       }
     },
     {
