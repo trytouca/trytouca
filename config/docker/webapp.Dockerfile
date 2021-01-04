@@ -3,7 +3,7 @@
 # reciprocate any change to this build stage to frontend_dev_builder
 # in test.frontend.Dockerfile.
 
-FROM node:13-alpine as frontend_builder
+FROM node:15-alpine as frontend_builder
 
 RUN apk add --no-cache bash
 
@@ -16,7 +16,7 @@ RUN yarn --cwd /opt/frontend install --frozen-lockfile \
 
 # ---- api documentation ----
 
-FROM node:13-alpine as doc_api_builder
+FROM node:15-alpine as doc_api_builder
 
 RUN yarn global add redoc-cli swagger-inline
 
@@ -43,7 +43,7 @@ RUN /opt/flatc --ts --no-fb-import -o /opt/weasel_generated.ts /opt/weasel.fbs
 
 # ---- platform documentation ----
 
-FROM node:13-alpine as doc_platform_builder
+FROM node:15-alpine as doc_platform_builder
 
 RUN apk add --no-cache g++ make python
 
@@ -57,30 +57,25 @@ RUN yarn --cwd /opt/backend install \
 
 # ---- client-cpp documentation ----
 
-FROM alpine:3.8 as doc_client_cpp_builder
+FROM alpine:3.12 as doc_client_cpp_builder
 
-RUN apk add --update --no-cache \
-  bash doxygen python3 python3-dev \
+RUN apk add --update --no-cache bash doxygen cmd:pip3 \
   && pip3 install --no-cache-dir --upgrade pip \
-  && pip3 install --upgrade --no-cache-dir \
-    breathe m2r2 sphinx==3.2.1 sphinx-rtd-theme \
+  && pip3 install --upgrade --no-cache-dir breathe m2r2 sphinx sphinx-rtd-theme \
   && rm -rf /var/lib/apt/lists/*
 
 COPY clients/cpp /opt/clients/cpp
-COPY docs /opt/docs
 COPY config/flatbuffers /opt/config/flatbuffers
 
 RUN cd /opt/clients/cpp && bash build.sh --docs
 
 # ---- slides documentation ----
 
-FROM ubuntu:bionic as doc_talks_builder
+FROM ubuntu:focal as doc_talks_builder
 
 RUN apt-get -qq update \
-  && apt-get -qq install -y --no-install-recommends \
-    texlive-latex-base \
-    texlive-latex-extra \
-    texlive-latex-recommended \
+  && DEBIAN_FRONTEND=noninteractive apt-get -qq install -y --no-install-recommends \
+    texlive-latex-base texlive-latex-extra texlive-latex-recommended \
   && rm -rf /var/lib/apt/lists/*
 
 COPY docs /opt/docs
@@ -106,7 +101,7 @@ RUN mkdir -p /opt/docs/local/talks \
 
 # ---- production ----
 
-FROM nginx:1.15-alpine
+FROM nginx:1.18-alpine
 LABEL maintainer="pejman@ghorbanzade.com"
 
 COPY --from=frontend_builder        /opt/frontend/dist                /www/data

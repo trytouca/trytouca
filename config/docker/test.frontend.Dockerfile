@@ -1,6 +1,6 @@
 # ---- frontend (development version) ----
 
-FROM node:13-alpine as frontend_builder
+FROM node:15-alpine as frontend_builder
 
 RUN apk add --no-cache bash
 

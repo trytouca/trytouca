@@ -8,7 +8,7 @@ RUN /opt/flatc --ts --no-fb-import -o /opt /opt/weasel.fbs
 
 # ---- builder ----
 
-FROM node:13-alpine AS builder
+FROM node:15-alpine AS builder
 
 COPY backend /home
 
@@ -23,7 +23,7 @@ RUN apk add --no-cache g++ make python yarn \
 
 # ---- production ----
 
-FROM node:13-alpine
+FROM node:15-alpine
 
 LABEL maintainer="pejman@ghorbanzade.com"
 EXPOSE 8081

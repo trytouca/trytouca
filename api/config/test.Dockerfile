@@ -8,7 +8,7 @@ RUN /opt/flatc --ts --no-fb-import -o /opt /opt/weasel.fbs
 
 # ---- builder ----
 
-FROM node:13-alpine AS backend_builder
+FROM node:15-alpine AS backend_builder
 
 COPY backend /home
 
