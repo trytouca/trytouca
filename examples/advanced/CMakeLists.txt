@@ -25,18 +25,6 @@ target_link_libraries(
         weasel::framework
 )
 
-# target_include_directories(
-#         weasel_example_advanced
-#     PRIVATE
-#         ${WEASEL_CLIENT_ROOT_DIR}
-# )
-
-# target_compile_definitions(
-#         weasel_example_advanced
-#     PRIVATE
-#         RAPIDJSON_HAS_STDSTRING
-# )
-
 source_group(
     TREE ${CMAKE_CURRENT_LIST_DIR}
     FILES $<TARGET_PROPERTY:weasel_example_advanced,SOURCES>
