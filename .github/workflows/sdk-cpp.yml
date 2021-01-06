@@ -9,6 +9,7 @@ on:
     branches:
     - main
     - development
+    - 'feature/**'
 
 jobs:
   test-native:
@@ -39,8 +40,11 @@ jobs:
         conan profile update settings.compiler.libcxx=libstdc++11 default
     - run: ./build.sh --with-tests --with-utils --with-examples --with-framework
     - run: ./build.sh --test
-    - run: ./build.sh --package
+    - name: create conan package
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: ./build.sh --package
     - name: upload conan
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
         conan remote add --force weasel-conan https://api.bintray.com/conan/getweasel/weasel-cpp
         conan user -p ${{ secrets.BINTRAY_API_KEY }} -r weasel-conan ${{ secrets.BINTRAY_USERNAME }}
