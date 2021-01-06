@@ -1,8 +1,8 @@
 <h2><label for="wsl-body">{{ fields.editorTitle }}</label></h2>
 <p>{{ fields.editorSubtitle }}</p>
-<ngb-alert *ngIf="alert" [type]="alert[0]" [dismissible]="false">
+<div *ngIf="alert" class="alert" [ngClass]="alert[0]" role="alert">
   <small [innerHtml]="alert[1]"></small>
-</ngb-alert>
+</div>
 <div class="wsl-comment-post">
   <form class="wsl-form" [formGroup]="form" novalidate
     (ngSubmit)="onSubmit(form.value)">

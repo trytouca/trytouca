@@ -3,9 +3,9 @@
     <h4>Promote Version {{ batch.batchSlug }}</h4>
   </div>
   <div class="wsl-modal-body">
-    <ngb-alert *ngIf="alert" [type]="alert[0]" [dismissible]="false">
+    <div *ngIf="alert" class="alert" [ngClass]="alert[0]" role="alert">
       <small [innerHtml]="alert[1]"></small>
-    </ngb-alert>
+    </div>
     <p>You are about to promote version <strong>{{ batch.batchSlug }}</strong>
       to baseline of testsuite <strong>{{ batch.suiteName }}</strong>. This
       action makes testresults of any future version of this testsuite to be

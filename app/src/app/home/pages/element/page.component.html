@@ -6,9 +6,9 @@
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!element || !batch">
   <div class="wsl-error-bar" *ngIf="customAlert">
-    <ngb-alert [type]="customAlert.type" [dismissible]="false">
+    <div class="alert" [ngClass]="customAlert.type" role="alert">
       <small [innerHTML]="customAlert.message"></small>
-    </ngb-alert>
+    </div>
   </div>
   <div class="wsl-page-head">
     <div class="wsl-page-head-content">

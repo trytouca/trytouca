@@ -1,4 +1,3 @@
-<ngb-alert class="notification" [dismissible]="false"
-  [type]="alertType" [hidden]="!showNotification">
+<div [hidden]="!showNotification" class="alert notification" [ngClass]="alertType" role="alert">
   {{ message }}
-</ngb-alert>
+</div>

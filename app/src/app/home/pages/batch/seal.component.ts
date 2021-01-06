@@ -10,8 +10,8 @@ import { BatchLookupResponse } from 'src/app/core/models/commontypes';
 import { ModalComponent } from 'src/app/home/components';
 
 enum Alerts {
-  Success = 'success',
-  Danger = 'danger'
+  Success = 'alert-success',
+  Danger = 'alert-danger'
 }
 
 @Component({
