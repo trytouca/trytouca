@@ -97,7 +97,7 @@ cxxopts::Options config_options_main()
 /**
  *
  */
-bool Options::parse(int argc, char* argv[])
+bool CliOptions::parse(int argc, char* argv[])
 {
     try
     {
@@ -113,7 +113,7 @@ bool Options::parse(int argc, char* argv[])
 /**
  *
  */
-bool Options::parse_impl(int argc, char* argv[])
+bool CliOptions::parse_impl(int argc, char* argv[])
 {
     // parse command line arguments
 
@@ -125,7 +125,7 @@ bool Options::parse_impl(int argc, char* argv[])
     if (result.count("help"))
     {
         fmt::print(stdout, "{}\n", options.show_positional_help().help());
-        arguments.show_help = true;
+        show_help = true;
         return true;
     }
 
@@ -135,7 +135,7 @@ bool Options::parse_impl(int argc, char* argv[])
     if (result.count("version"))
     {
         fmt::print(stdout, "Weasel Utility Command Line Tool v{}.{}.{}\n", WEASEL_VERSION_MAJOR, WEASEL_VERSION_MINOR, WEASEL_VERSION_PATCH);
-        arguments.show_version = true;
+        show_version = true;
         return true;
     }
 
@@ -149,9 +149,9 @@ bool Options::parse_impl(int argc, char* argv[])
     }
 
     const auto mode_name = result["mode"].as<std::string>();
-    arguments.mode = Operation::find_mode(mode_name);
+    mode = Operation::find_mode(mode_name);
 
-    if (arguments.mode == Operation::Command::unknown)
+    if (mode == Operation::Command::unknown)
     {
         weasel::print_error("provided command `{}` is invalid\n", mode_name);
         fmt::print(stderr, "{}\n", options.show_positional_help().help());
@@ -170,14 +170,14 @@ bool Options::parse_impl(int argc, char* argv[])
             fmt::print("{}\n", options.show_positional_help().help());
             return false;
         }
-        arguments.log_level = level;
+        log_level = level;
     }
 
     // set option `log-dir` if it is provided
 
     if (result.count("log-dir"))
     {
-        arguments.log_dir = result["log-dir"].as<std::string>();
+        log_dir = result["log-dir"].as<std::string>();
     }
 
     return true;

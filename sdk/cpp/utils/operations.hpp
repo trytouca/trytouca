@@ -64,24 +64,18 @@ private:
 /**
  *
  */
-struct Options
+struct CliOptions
 {
-    /**
-     *
-     */
-    bool parse(int argc, char* argv[]);
+    bool show_help = false;
+    bool show_version = false;
+    std::string log_dir;
+    std::string log_level = "warning";
+    Operation::Command mode = Operation::Command::unknown;
 
     /**
      *
      */
-    struct
-    {
-        bool show_help = false;
-        bool show_version = false;
-        std::string log_dir;
-        std::string log_level = "warning";
-        Operation::Command mode = Operation::Command::unknown;
-    } arguments;
+    bool parse(int argc, char* argv[]);
 
 private:
     /**

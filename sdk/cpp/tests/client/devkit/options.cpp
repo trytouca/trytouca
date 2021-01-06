@@ -2,15 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/coptions.hpp"
+#include "weasel/devkit/options.hpp"
 #include "catch2/catch.hpp"
 #include "tmpfile.hpp"
 
-using namespace weasel;
-
 TEST_CASE("configure")
 {
-    weasel::COptions opts;
+    weasel::ClientOptions opts;
     std::unordered_map<std::string, std::string> input;
 
     SECTION("empty")
@@ -113,7 +111,7 @@ TEST_CASE("configure")
 
 TEST_CASE("configure-by-file")
 {
-    weasel::COptions opts;
+    weasel::ClientOptions opts;
     TmpFile file;
 
     SECTION("missing-file")

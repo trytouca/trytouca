@@ -716,12 +716,12 @@ namespace weasel { namespace framework {
 
         // initialize weasel client
 
-        Options clientOptions;
-        const auto copyOption = [&options, &clientOptions](
+        Options opts;
+        const auto copyOption = [&options, &opts](
                                     const std::string& src, const std::string& dst) {
             if (options.count(src))
             {
-                clientOptions.emplace(dst, options.at(src));
+                opts.emplace(dst, options.at(src));
             }
         };
         copyOption("team", "team");
@@ -739,12 +739,12 @@ namespace weasel { namespace framework {
         }
         else
         {
-            clientOptions.emplace("handshake", "false");
+            opts.emplace("handshake", "false");
         }
 
         try
         {
-            weasel::configure(clientOptions);
+            weasel::configure(opts);
             logger.log(lg::Info, "configured weasel client");
         }
         catch (const std::exception& ex)

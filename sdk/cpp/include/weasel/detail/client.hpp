@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "weasel/devkit/coptions.hpp"
+#include "weasel/devkit/options.hpp"
 #include "weasel/devkit/testcase.hpp"
 #include "weasel/extra/logger.hpp"
 #include <thread>
@@ -112,7 +112,6 @@ namespace weasel {
         bool post() const;
 
     private:
-
         /**
          *
          */
@@ -154,7 +153,7 @@ namespace weasel {
             const weasel::logger::Level severity,
             const std::string& msg) const;
 
-        COptions _opts;
+        ClientOptions _opts;
         bool _configured;
         ElementsMap _testcases;
         std::unordered_map<std::thread::id, std::string> _threadMap;

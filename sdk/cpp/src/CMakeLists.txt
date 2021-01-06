@@ -49,7 +49,7 @@ target_sources(
         client.cpp
         weasel.cpp
         devkit/comparison.cpp
-        devkit/coptions.cpp
+        devkit/options.cpp
         devkit/httpclient.cpp
         devkit/logger.cpp
         devkit/object.cpp

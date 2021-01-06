@@ -12,39 +12,39 @@
  */
 int main(int argc, char* argv[])
 {
-    Options options;
+    CliOptions opts;
 
     // parse application options
 
-    if (!options.parse(argc, argv))
+    if (!opts.parse(argc, argv))
     {
         return EXIT_FAILURE;
     }
 
     // we are done if user has asked for help
 
-    if (options.arguments.show_help || options.arguments.show_version)
+    if (opts.show_help || opts.show_version)
     {
         return EXIT_SUCCESS;
     }
 
     // we are done if specified command is invalid
 
-    if (options.arguments.mode == Operation::Command::unknown)
+    if (opts.mode == Operation::Command::unknown)
     {
         return EXIT_FAILURE;
     }
 
     // setup basic console logging
 
-    if (!options.arguments.log_level.empty())
+    if (!opts.log_level.empty())
     {
-        weasel::setup_console_logger(options.arguments.log_level);
+        weasel::setup_console_logger(opts.log_level);
     }
 
     // create appropriate derived class
 
-    const auto& operation = Operation::make(options.arguments.mode);
+    const auto& operation = Operation::make(opts.mode);
 
     if (!operation || !operation->parse(argc, argv))
     {
@@ -53,9 +53,9 @@ int main(int argc, char* argv[])
 
     // setup file logging
 
-    if (!options.arguments.log_dir.empty())
+    if (!opts.log_dir.empty())
     {
-        weasel::setup_file_logger(options.arguments.log_dir);
+        weasel::setup_file_logger(opts.log_dir);
     }
 
     // execute operation

@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/coptions.hpp"
+#include "weasel/devkit/options.hpp"
 #include "rapidjson/document.h"
 #include "weasel/devkit/platform.hpp"
 #include <climits>
@@ -65,7 +65,7 @@ func_t parse_member(weasel::ConcurrencyMode& member)
 /**
  *
  */
-bool weasel::COptions::verror(fmt::string_view format, fmt::format_args args)
+bool weasel::ClientOptions::verror(fmt::string_view format, fmt::format_args args)
 {
     parse_error = fmt::vformat(format, args);
     return false;
@@ -74,7 +74,7 @@ bool weasel::COptions::verror(fmt::string_view format, fmt::format_args args)
 /**
  *
  */
-bool weasel::COptions::parse(const OptionsMap& opts)
+bool weasel::ClientOptions::parse(const OptionsMap& opts)
 {
     parse_error.clear();
 
@@ -186,7 +186,7 @@ bool weasel::COptions::parse(const OptionsMap& opts)
 /**
  *
  */
-bool weasel::COptions::parse_file(const weasel::path& path)
+bool weasel::ClientOptions::parse_file(const weasel::path& path)
 {
 
     // check that specified path leads to an existing regular file on disk

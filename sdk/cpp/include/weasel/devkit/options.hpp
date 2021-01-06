@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "weasel/lib_api.hpp"
-#include "weasel/devkit/filesystem.hpp"
 #include "fmt/core.h"
+#include "weasel/devkit/filesystem.hpp"
+#include "weasel/lib_api.hpp"
 #include <unordered_map>
 
 namespace weasel {
@@ -23,7 +23,7 @@ namespace weasel {
     /**
      *
      */
-    struct WEASEL_CLIENT_API COptions
+    struct WEASEL_CLIENT_API ClientOptions
     {
         std::string api_key; /**< API Key to authenticate to Weasel Platform */
         std::string api_url; /**< URL to Weasel Platform API */

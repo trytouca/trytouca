@@ -11,7 +11,7 @@ target_sources(
     PRIVATE
         client.cpp
         main.cpp
-        devkit/coptions.cpp
+        devkit/options.cpp
         devkit/platform.cpp
         devkit/resultfile.cpp
         devkit/testcase.cpp
