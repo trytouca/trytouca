@@ -11,8 +11,8 @@ import { ApiService, AuthService } from 'src/app/core/services';
 import { ELocalStorageKey } from 'src/app/core/models/frontendtypes';
 
 enum Alerts {
-  Success = 'success',
-  Danger = 'danger'
+  Success = 'alert-success',
+  Danger = 'alert-danger'
 }
 
 @Component({

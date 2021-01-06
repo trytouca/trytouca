@@ -23,11 +23,11 @@ export enum AlertKind {
 }
 
 export enum AlertType {
-  Feedback = 'success',
-  Info = 'info',
-  Reminder = 'primary',
-  Warning = 'warning',
-  Error = 'danger'
+  Feedback = 'alert-success',
+  Info = 'alert-info',
+  Reminder = 'alert-primary',
+  Warning = 'alert-warning',
+  Error = 'alert-danger'
 }
 
 export type Alert = {

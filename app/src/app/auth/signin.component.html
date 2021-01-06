@@ -3,9 +3,9 @@
   <h2>Welcome Back</h2>
   <div class="wsl-auth-form">
 
-    <ngb-alert *ngIf="alert" [type]="alert[0]" [dismissible]="false">
+    <div *ngIf="alert" class="alert" [ngClass]="alert[0]" role="alert">
       <small>{{ alert[1] }}</small>
-    </ngb-alert>
+    </div>
 
     <form [formGroup]="signinForm" novalidate
           (ngSubmit)="onSubmit(signinForm.value)">

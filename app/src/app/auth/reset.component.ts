@@ -25,9 +25,9 @@ interface IResetFormContent {
 }
 
 enum Alerts {
-  Success = 'success',
-  Danger = 'danger',
-  Warning = 'warning'
+  Success = 'alert-success',
+  Danger = 'alert-danger',
+  Warning = 'alert-warning'
 }
 
 @Component({

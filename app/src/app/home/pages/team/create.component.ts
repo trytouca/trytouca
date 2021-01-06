@@ -14,8 +14,8 @@ type IFormContent = {
 };
 
 enum Alerts {
-  Success = 'success',
-  Danger = 'danger'
+  Success = 'alert-success',
+  Danger = 'alert-danger'
 }
 
 @Component({
