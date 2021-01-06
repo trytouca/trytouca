@@ -4,11 +4,10 @@
     <div class="wsl-settings-section"
       *ngIf="team.role === ETeamRole.Owner">
       <h3 for="wsl-team-name">Team Name</h3>
-      <ngb-alert *ngIf="alert[EModalType.ChangeName] && !alert[EModalType.ChangeName].close"
-        [type]="alert[EModalType.ChangeName]?.type"
-        [dismissible]="false">
+      <div *ngIf="alert[EModalType.ChangeName] && !alert[EModalType.ChangeName].close"
+        class="alert" [ngClass]="alert[EModalType.ChangeName]?.type" role="alert">
         <small>{{ alert[EModalType.ChangeName]?.msg }}</small>
-      </ngb-alert>
+      </div>
       <p>
         Short user-friendly name used on the platform and all generated reports.
       </p>
@@ -31,11 +30,10 @@
     <div class="wsl-settings-section"
       *ngIf="team.role === ETeamRole.Owner">
       <h3 for="wsl-team-slug">Team Slug</h3>
-      <ngb-alert *ngIf="alert[EModalType.ChangeSlug] && !alert[EModalType.ChangeSlug].close"
-        [type]="alert[EModalType.ChangeSlug]?.type"
-        [dismissible]="false">
+      <div *ngIf="alert[EModalType.ChangeSlug] && !alert[EModalType.ChangeSlug].close"
+        class="alert" [ngClass]="alert[EModalType.ChangeSlug]?.type" role="alert">
         <small>{{ alert[EModalType.ChangeSlug]?.msg }}</small>
-      </ngb-alert>
+      </div>
       <p>
         Unique URL-friendly identifier for this team. Changing the slug
         invalidates previous links to the test results for this team.
@@ -60,11 +58,10 @@
     <div class="wsl-settings-section"
       *ngIf="team.role !== ETeamRole.Owner">
       <h3 class="wsl-text-danger">Danger Zone</h3>
-      <ngb-alert *ngIf="alert[EModalType.LeaveTeam]"
-        [type]="alert[EModalType.LeaveTeam]?.type"
-        [dismissible]="false">
+      <div *ngIf="alert[EModalType.LeaveTeam]"
+        class="alert" [ngClass]="alert[EModalType.LeaveTeam]?.type" role="alert">
         <small>{{ alert[EModalType.LeaveTeam]?.msg }}</small>
-      </ngb-alert>
+      </div>
       <p>
         You are a member of team <b>{{ team.name }}</b>.
         You can leave this team at any time.
@@ -79,11 +76,10 @@
     <div class="wsl-settings-section"
       *ngIf="team.role === ETeamRole.Owner">
       <h3 class="wsl-text-danger">Danger Zone</h3>
-      <ngb-alert *ngIf="alert[EModalType.DeleteTeam]"
-        [type]="alert[EModalType.DeleteTeam]?.type"
-        [dismissible]="false">
+      <div *ngIf="alert[EModalType.DeleteTeam]"
+        class="alert" [ngClass]="alert[EModalType.DeleteTeam]?.type" role="alert">
         <small>{{ alert[EModalType.DeleteTeam]?.msg }}</small>
-      </ngb-alert>
+      </div>
       <p>
         You own team <b>{{ team.name }}</b>. You may delete
         this team and all its content, if you so choose.

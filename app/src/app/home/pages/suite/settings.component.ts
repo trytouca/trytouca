@@ -23,8 +23,8 @@ interface IFormContent {
 }
 
 enum AlertType {
-  Success = 'success',
-  Danger = 'danger'
+  Success = 'alert-success',
+  Danger = 'alert-danger'
 }
 
 type Alert = { type: AlertType, msg: string, close?: boolean };
