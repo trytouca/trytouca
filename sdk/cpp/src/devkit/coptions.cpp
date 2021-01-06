@@ -3,8 +3,8 @@
  */
 
 #include "weasel/devkit/coptions.hpp"
-#include "weasel/devkit/platform.hpp"
 #include "rapidjson/document.h"
+#include "weasel/devkit/platform.hpp"
 #include <climits>
 #include <sstream>
 
@@ -21,7 +21,8 @@ func_t parse_member(T& member);
  *
  */
 template <>
-func_t parse_member(std::string& member) {
+func_t parse_member(std::string& member)
+{
     return [&member](const std::string& value) {
         member = value;
     };
@@ -31,7 +32,8 @@ func_t parse_member(std::string& member) {
  *
  */
 template <>
-func_t parse_member(bool& member) {
+func_t parse_member(bool& member)
+{
     return [&member](const std::string& value) {
         member = value != "false";
     };
@@ -87,9 +89,9 @@ bool weasel::COptions::parse(const OptionsMap& opts)
     parsers.emplace("handshake", parse_member(handshake));
     parsers.emplace("post-testcases", parse_member(post_max_cases));
     parsers.emplace("post-maxretries", parse_member(post_max_retries));
-    parsers.emplace("testcase-declaration-mode", parse_member(case_declaration));
+    parsers.emplace("concurrency-mode", parse_member(case_declaration));
 
-    for (const auto& kvp: opts)
+    for (const auto& kvp : opts)
     {
         if (!parsers.count(kvp.first))
         {
@@ -125,7 +127,7 @@ bool weasel::COptions::parse(const OptionsMap& opts)
     {
         const ApiUrl apiUrl(api_url);
         api_root = apiUrl.root;
-        for (const auto& param: { "team", "suite", "version" })
+        for (const auto& param : { "team", "suite", "version" })
         {
             if (!apiUrl.slugs.count(param) || apiUrl.slugs.at(param).empty())
             {
@@ -142,7 +144,7 @@ bool weasel::COptions::parse(const OptionsMap& opts)
     // check that the set of available configuration parameters includes
     // the bare minimum required parameters.
 
-    for (const auto& param: { "team", "suite", "version" })
+    for (const auto& param : { "team", "suite", "version" })
     {
         if (params.at(param).empty())
         {
@@ -160,7 +162,7 @@ bool weasel::COptions::parse(const OptionsMap& opts)
 
     // otherwise, check that all necessary config params are provided.
 
-    for (const auto& param: { "api-key", "api-url" })
+    for (const auto& param : { "api-key", "api-url" })
     {
         if (params.at(param).empty())
         {
@@ -225,7 +227,7 @@ bool weasel::COptions::parse_file(const weasel::path& path)
     const auto& strKeys = {
         "api-key", "api-url", "team",
         "suite", "version", "handshake",
-        "post-testcases", "post-maxretries", "testcase-declaration-mode"
+        "post-testcases", "post-maxretries", "concurrency-mode"
     };
 
     const auto& rjObj = rjDoc["weasel"];

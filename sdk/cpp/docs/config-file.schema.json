@@ -1,51 +1,51 @@
 {
-  "$schema":"http://json-schema.org/draft-04/schema#",
-  "id":"https://getweasel.com/schemas/weasel/clients/cpp/config-file.schema.json",
-  "definitions":{
-    "weasel":{
-      "properties":{
-        "api-key":{
-          "type":"string"
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://getweasel.com/schemas/weasel/clients/cpp/config-file.schema.json",
+  "definitions": {
+    "weasel": {
+      "properties": {
+        "api-key": {
+          "type": "string"
         },
-        "api-url":{
-          "type":"string"
+        "api-url": {
+          "type": "string"
         },
-        "testcase-declaration-mode":{
-          "type":"string"
+        "concurrency-mode": {
+          "type": "string"
         },
-        "post-testcases":{
+        "post-testcases": {
           "maximum": 10,
           "minimum": 1,
           "multipleOf": 1.0,
-          "type":"integer"
+          "type": "integer"
         },
-        "post-maxretries":{
+        "post-maxretries": {
           "maximum": 100,
           "minimum": 0,
           "multipleOf": 1.0,
-          "type":"integer"
+          "type": "integer"
         },
-        "team":{
-          "type":"string"
+        "team": {
+          "type": "string"
         },
-        "suite":{
-          "type":"string"
+        "suite": {
+          "type": "string"
         },
-        "version":{
-          "type":"string"
+        "version": {
+          "type": "string"
         }
       },
-      "type":"object"
+      "type": "object"
     }
   },
   "additionalProperties": true,
-  "properties":{
-    "weasel":{
-      "$ref":"#/definitions/weasel"
+  "properties": {
+    "weasel": {
+      "$ref": "#/definitions/weasel"
     }
   },
-  "required":[
+  "required": [
     "weasel"
   ],
-  "type":"object"
+  "type": "object"
 }

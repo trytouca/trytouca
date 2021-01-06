@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+#include "weasel/devkit/coptions.hpp"
 #include "catch2/catch.hpp"
 #include "tmpfile.hpp"
-#include "weasel/devkit/coptions.hpp"
 
 using namespace weasel;
 
@@ -101,7 +101,7 @@ TEST_CASE("configure")
         CHECK(opts.case_declaration == weasel::ConcurrencyMode::AllThreads);
         CHECK(opts.post_max_cases == 10);
         CHECK(opts.post_max_retries == 2);
-        input.emplace("testcase-declaration-mode", "per-thread");
+        input.emplace("concurrency-mode", "per-thread");
         input.emplace("post-testcases", "3");
         input.emplace("post-maxretries", "20");
         CHECK(opts.parse(input) == true);

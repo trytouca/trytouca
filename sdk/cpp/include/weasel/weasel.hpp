@@ -111,7 +111,7 @@ namespace weasel {
      *        request fails when `weasel::post` is called.
      *        Defaults to 2.
      *
-     * @li @b testcase-declaration-mode
+     * @li @b concurrency-mode
      *        Can be one of `all-threads` and `per-thread`.
      *        Defaults to `all-threads`.
      *        Indicates whether testcase declaration is per thread or
@@ -213,7 +213,7 @@ namespace weasel {
      * @brief Declares name of the testcase to which all subsequent results
      *        will be submitted until a new testcase is declared.
      *
-     * @details if configuration parameter `testcase-declaration-mode` is
+     * @details if configuration parameter `concurrency-mode` is
      *          set to `all-threads`, when a thread calls `declare_testcase`
      *          all other threads also have their most recent testcase
      *          changed to the newly declared one. Otherwise, each thread
@@ -237,7 +237,7 @@ namespace weasel {
      *
      * @details Removes from memory, all information that is logged for the
      *          previously-declared testcase, for all threads, regardless
-     *          of the `testcase-declaration-mode` configuration parameter.
+     *          of the `concurrency-mode` configuration parameter.
      *          This function does not remove testcase results from the
      *          platform, in case they are already submitted.
      *          It clears all information about that testcase from the client
