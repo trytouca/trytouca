@@ -170,7 +170,7 @@ namespace weasel {
             const std::string& msg) const;
 
         ClientOptions _opts;
-        bool _configured;
+        bool _configured = false;
         ElementsMap _testcases;
         std::string _mostRecentTestcase;
         std::unordered_map<std::thread::id, std::string> _threadMap;
