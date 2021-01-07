@@ -32,11 +32,6 @@ jobs:
         with:
           path: ~/.conan
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{ hashFiles('**/build.sh') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: install conan
         run: |
           pip install conan --no-cache-dir --upgrade
