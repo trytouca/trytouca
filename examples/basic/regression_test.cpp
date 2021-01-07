@@ -13,6 +13,12 @@ int main()
           { "api-url", "<YOUR API URL>" },
           { "version", "1.0" } });
 
+    if (!weasel::is_configured())
+    {
+        std::cerr << weasel::configuration_error() << std::endl;
+        return EXIT_FAILURE;
+    }
+
     for (const auto& username : { "rweasley", "hpotter", "hgranger" })
     {
         weasel::declare_testcase(username);
