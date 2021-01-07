@@ -64,7 +64,8 @@ TEST_CASE("using a configured client")
         { "handshake", "false" }
     };
     REQUIRE_NOTHROW(client.configure(options_map));
-    REQUIRE(client.configure(options_map) == true);
+    REQUIRE(client.is_configured() == true);
+    CHECK(client.configuration_error().empty() == true);
 
     /**
      *

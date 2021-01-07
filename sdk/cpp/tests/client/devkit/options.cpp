@@ -116,15 +116,17 @@ TEST_CASE("configure-by-file")
 
     SECTION("missing-file")
     {
-        CHECK_THROWS_AS(opts.parse_file(file.path), std::invalid_argument);
-        CHECK_THROWS_WITH(opts.parse_file(file.path), "configuration file is missing");
+        REQUIRE_NOTHROW(opts.parse_file(file.path));
+        REQUIRE(opts.parse_file(file.path) == false);
+        REQUIRE(opts.parse_error == "configuration file is missing");
     }
 
     SECTION("invalid-file")
     {
         file.write("");
-        CHECK_THROWS_AS(opts.parse_file(file.path), std::invalid_argument);
-        CHECK_THROWS_WITH(opts.parse_file(file.path), "configuration file is not valid");
+        REQUIRE_NOTHROW(opts.parse_file(file.path));
+        REQUIRE(opts.parse_file(file.path) == false);
+        REQUIRE(opts.parse_error == "configuration file is not valid");
     }
 
     SECTION("valid-file")

@@ -34,12 +34,28 @@ namespace weasel {
         /**
          *
          */
-        bool configure(const OptionsMap& opts);
+        void configure(const ClientImpl::OptionsMap& opts);
 
         /**
          *
          */
-        bool configure_by_file(const weasel::path& path);
+        void configure_by_file(const weasel::path& path);
+
+        /**
+         *
+         */
+        inline bool is_configured() const
+        {
+            return _configured;
+        }
+
+        /**
+         *
+         */
+        inline std::string configuration_error() const
+        {
+            return _opts.parse_error;
+        }
 
         /**
          *
@@ -156,8 +172,8 @@ namespace weasel {
         ClientOptions _opts;
         bool _configured;
         ElementsMap _testcases;
-        std::unordered_map<std::thread::id, std::string> _threadMap;
         std::string _mostRecentTestcase;
+        std::unordered_map<std::thread::id, std::string> _threadMap;
         std::vector<std::shared_ptr<weasel::logger>> _loggers;
     };
 

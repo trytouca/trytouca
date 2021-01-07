@@ -31,6 +31,22 @@ namespace weasel {
     /**
      *
      */
+    bool is_configured()
+    {
+        return instance.is_configured();
+    }
+
+    /**
+     *
+     */
+    std::string configuration_error()
+    {
+        return instance.configuration_error();
+    }
+
+    /**
+     *
+     */
     void add_logger(const std::shared_ptr<logger> logger)
     {
         instance.add_logger(logger);

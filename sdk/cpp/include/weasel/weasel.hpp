@@ -165,6 +165,8 @@ namespace weasel {
      *         { "version": "4.2.0" }
      *     });
      * @endcode
+     *
+     * @param opts a string-based map of configuration parameters
      */
     WEASEL_CLIENT_API void configure(
         const std::unordered_map<std::string, std::string>& opts);
@@ -190,6 +192,43 @@ namespace weasel {
      * @since v1.1
      */
     WEASEL_CLIENT_API void configure(const weasel::path& path);
+
+    /**
+     * @brief Checks if the client is configured to perform basic operations.
+     * 
+     * @details Client is considered configured if it can capture test results
+     *          and store them locally on the filesystem. The following
+     *          configuration parameters shall be provided, directly or
+     *          indirectly, together in a single call, or separately in a
+     *          sequence of calls, in order for the client to be considered as
+     *          configured.
+     *
+     *          @li team
+     *          @li suite
+     *          @li version
+     *
+     *          The configuration parameters above may be provided indirectly,
+     *          in part or in full, as components of the configuration
+     *          parameter `api-url`.
+     *
+     * @warning In addition to the configuration parameters above, the
+     *          parameters `api-url` and `api-key` shall be provided for the
+     *          client to be able to submit captured test results to the weasel
+     *          platform.
+     *
+     * @return true if weasel client is properly configured
+     * 
+     * @see configure for a list of permissible configuration parameters
+     */
+    WEASEL_CLIENT_API bool is_configured();
+
+    /**
+     * @brief Provides the most recent error, if any, encountered during
+     *        client configuration.
+     *
+     * @return short description of the most recent configuration error
+     */
+    WEASEL_CLIENT_API std::string configuration_error();
 
     /**
      * @brief registers a custom logger that is notified when an event

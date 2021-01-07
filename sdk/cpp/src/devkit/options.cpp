@@ -193,8 +193,7 @@ bool weasel::ClientOptions::parse_file(const weasel::path& path)
 
     if (!weasel::filesystem::is_regular_file(path))
     {
-        throw std::invalid_argument("configuration file is missing");
-        // return error("configuration file is missing");
+        return error("configuration file is missing");
     }
 
     // load content of configuration file into memory
@@ -213,8 +212,7 @@ bool weasel::ClientOptions::parse_file(const weasel::path& path)
     if (rjDoc.HasParseError() || !rjDoc.IsObject()
         || !rjDoc.HasMember("weasel") || !rjDoc["weasel"].IsObject())
     {
-        throw std::invalid_argument("configuration file is not valid");
-        // return error("configuration file is not valid");
+        return error("configuration file is not valid");
     }
 
     // populate an OptionsMap with the value of configuration parameters

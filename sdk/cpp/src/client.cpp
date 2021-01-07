@@ -17,27 +17,17 @@ namespace weasel {
     /**
      *
      */
-    bool ClientImpl::configure(const ClientImpl::OptionsMap& opts)
+    void ClientImpl::configure(const ClientImpl::OptionsMap& opts)
     {
         _configured = _opts.parse(opts);
-        if (!_configured)
-        {
-            throw std::invalid_argument(_opts.parse_error);
-        }
-        return _configured;
     }
 
     /**
      *
      */
-    bool ClientImpl::configure_by_file(const weasel::path& path)
+    void ClientImpl::configure_by_file(const weasel::path& path)
     {
         _configured = _opts.parse_file(path);
-        if (!_configured)
-        {
-            throw std::invalid_argument(_opts.parse_error);
-        }
-        return _configured;
     }
 
     /**
