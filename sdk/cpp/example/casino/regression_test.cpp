@@ -202,21 +202,14 @@ bool Operation<kExecute>::validate() const
 template <>
 bool Operation<kTest>::run() const
 {
-    // Before weasel client is ever used, it needs to be configured.
-    // The minimum set of required options is shown below.
-    try
+    weasel::configure({ { "api-key", _opts.at("api-key") },
+                        { "api-url", _opts.at("api-url") },
+                        { "version", _opts.at("version") } });
+
+    if (!weasel::is_configured())
     {
-        weasel::configure({ { "api-key", _opts.at("api-key") },
-                            { "api-url", _opts.at("api-url") },
-                            { "version", _opts.at("version") } });
-    }
-    // we recommend that you check the return value of configuration
-    // function call to ensure that the client is properly configured.
-    catch (const std::exception& ex)
-    {
-        std::cerr << "failed to configure weasel client"
-                  << "\n  - " << ex.what() << std::endl;
-        return false;
+        std::cerr << weasel::configuration_error() << std::endl;
+        return EXIT_FAILURE;
     }
 
     auto delay = 0u;

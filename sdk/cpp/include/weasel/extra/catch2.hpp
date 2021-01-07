@@ -32,16 +32,14 @@ int main(int argc, char* argv[])
         return returnCode;
     }
 
-    try
+    weasel::configure({ { "api-key", weasel_configure[0] },
+                        { "api-url", weasel_configure[1] },
+                        { "version", weasel_configure[2] } });
+
+    if (!weasel::is_configured())
     {
-        weasel::configure({ { "api-key", weasel_configure[0] },
-                            { "api-url", weasel_configure[1] },
-                            { "version", weasel_configure[2] } });
-    }
-    catch (const std::exception& ex)
-    {
-        std::cerr << "failed to configure weasel client:\n "
-                  << ex.what() << std::endl;
+        std::cerr << "failed to configure weasel client:\n - "
+            << weasel::configuration_error() << std::endl;
         return EXIT_FAILURE;
     }
 

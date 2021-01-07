@@ -742,16 +742,19 @@ namespace weasel { namespace framework {
             opts.emplace("handshake", "false");
         }
 
-        try
+        // configure the client library
+
+        weasel::configure(opts);
+
+        // check that the client is properly configured
+
+        if (!weasel::is_configured())
         {
-            weasel::configure(opts);
-            logger.log(lg::Info, "configured weasel client");
-        }
-        catch (const std::exception& ex)
-        {
-            logger.log(lg::Error, "failed to configure weasel client: {}", ex.what());
+            logger.log(lg::Error, "failed to configure weasel client: {}",
+                weasel::configuration_error());
             return EXIT_FAILURE;
         }
+        logger.log(lg::Info, "configured weasel client");
 
         // obtain appropriate suite based on provided configuration options.
 

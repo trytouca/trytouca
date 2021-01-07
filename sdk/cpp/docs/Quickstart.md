@@ -120,7 +120,7 @@ Consult with our Reference API documentation for a complete list of valid
 configuration parameters and an explanation of their effects.
 
 **Note**: We suggest that you assume configuring the Weasel client is a
-time-consuming procedure that may take up to a few seconds.
+time-consuming procedure that may take up to a tens of milliseconds.
 
 ### Declaring Test Cases
 

@@ -13,6 +13,12 @@ int main()
           { "api-url", "<YOUR API URL>" },
           { "version", "1.0" } });
 
+    if (!weasel::is_configured())
+    {
+        std::cerr << weasel::configuration_error() << std::endl;
+        return EXIT_FAILURE;
+    }
+
     for (const auto& username : { "rweasley", "hpotter", "hgranger" })
     {
         weasel::declare_testcase(username);
@@ -40,7 +46,7 @@ int main()
 
     if (!weasel::post())
     {
-        std::cerr << "failed to post results to weasel server" << std::endl;
+        std::cerr << "failed to post results to the weasel platform" << std::endl;
         return EXIT_FAILURE;
     }
 
