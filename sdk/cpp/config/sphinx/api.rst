@@ -24,6 +24,12 @@ Configuring the Library
 .. doxygenfunction:: weasel::configure(const weasel::path &path)
    :project: weasel
 
+.. doxygenfunction:: weasel::is_configured
+   :project: weasel
+
+.. doxygenfunction:: weasel::configuration_error
+   :project: weasel
+
 .. doxygenfunction:: weasel::add_logger
    :project: weasel
 
