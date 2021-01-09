@@ -24,7 +24,6 @@ export class DocsComponent implements OnDestroy {
     { link: 'quickstart', name: 'Getting Started', docs: ['Quickstart_Cpp.md'] },
     { link: 'tips', name: 'Best Practices', docs: ['BestPractices.md'] },
     { link: 'features', name: 'New Features', docs: ['ReleaseNotes.md'] },
-    { link: 'roadmap', name: 'Roadmap', docs: ['Roadmap.md'] },
     { link: 'faq', name: 'FAQ', docs: ['Faq.md'] }
   ];
 
@@ -35,7 +34,8 @@ export class DocsComponent implements OnDestroy {
 
   readonly externalPages: { name: string, path: string }[] = [
     { name: 'C++ Client API', path: '/docs/clients/cpp/index.html' },
-    { name: 'Platform API', path: '/docs/backend/index.html' }
+    { name: 'Platform API', path: '/docs/backend/index.html' },
+    { name: 'Product Roadmap', path: 'https://bit.ly/3q4EOcI' }
   ];
 
   private _subQueryParamMap: Subscription;
