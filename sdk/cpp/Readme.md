@@ -175,7 +175,7 @@ External Links:
 [YouTube]: https://www.youtube.com/channel/UCwa-rweWShIJo_DYhp2rVew
 [Newsletter]: https://www.getrevue.co/profile/weasel
 [Twitter]: https://twitter.com/getweasel
-[Roadmap]: https://github.com/orgs/getweasel/projects/1
+[Roadmap]: https://bit.ly/3q4EOcI
 [weasel-cpp]: https://github.com/getweasel/weasel-cpp
 [weasel-cpp-api]: https://getweasel.com/docs/clients/cpp/api.html
 [weasel-examples]: https://github.com/getweasel/examples
