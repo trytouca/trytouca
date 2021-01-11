@@ -188,8 +188,10 @@ build_lint () {
     if [ $# -ne 0 ]; then return 1; fi
     check_prerequisite_commands "clang-format"
     local dir_source="${WEASEL_COMPARATOR_ROOT_DIR}"
-    find "${dir_source}" \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
-        -exec clang-format -i {} +
+    for dir in "src" "docs"; do
+        find "${dir_source}/${dir}" \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
+            -exec clang-format -i {} +
+    done
     log_info "ran clang-format on comparator source code"
 }
 

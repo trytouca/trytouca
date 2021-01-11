@@ -28,8 +28,7 @@ namespace weasel {
      * @tparam Type of items to be inserted and later fetched from the queue.
      */
     template <typename Task>
-    class Queue
-    {
+    class Queue {
         std::mutex _mutex;
         std::condition_variable _cv;
         std::queue<std::unique_ptr<Task>> _queue;
@@ -49,8 +48,7 @@ namespace weasel {
             const auto wasEmpty = _queue.empty();
             _queue.push(std::move(item));
             lock.unlock();
-            if (wasEmpty)
-            {
+            if (wasEmpty) {
                 _cv.notify_all();
             }
         }
@@ -65,8 +63,7 @@ namespace weasel {
         std::unique_ptr<Task> pop_item()
         {
             std::unique_lock<std::mutex> lock(_mutex);
-            while (_queue.empty())
-            {
+            while (_queue.empty()) {
                 _cv.wait(lock);
             }
             auto item = std::move(_queue.front());

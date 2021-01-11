@@ -11,8 +11,7 @@
 /**
  *
  */
-struct Options
-{
+struct Options {
     std::optional<bool> help;
     std::string api_url;
     std::string log_level;

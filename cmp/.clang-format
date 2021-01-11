@@ -2,15 +2,5 @@
 Language: Cpp
 BasedOnStyle: WebKit
 NamespaceIndentation: All
-AlignAfterOpenBracket: AlwaysBreak
-BraceWrapping:
-  AfterClass:      true
-  AfterControlStatement: true
-  AfterEnum:       true
-  AfterFunction:   true
-  AfterStruct:     true
-  BeforeCatch:     true
-  BeforeElse:      true
-BreakBeforeBraces: Custom
 CompactNamespaces: true
 ...

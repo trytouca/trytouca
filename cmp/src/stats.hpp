@@ -11,8 +11,7 @@
 /**
  *
  */
-struct Statistics
-{
+struct Statistics {
     unsigned long job_count_collect = 0ul;
     unsigned long job_count_process = 0ul;
     double avg_size_collect = 0.0;
@@ -32,8 +31,7 @@ private:
 /**
  *
  */
-struct Resources
-{
+struct Resources {
     weasel::Queue<Job> job_queue;
     Statistics stats;
 };

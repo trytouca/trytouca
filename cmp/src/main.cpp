@@ -17,15 +17,13 @@ int main(int argc, char* argv[])
 
     // parse application options
 
-    if (!parse_arguments(argc, argv, options))
-    {
+    if (!parse_arguments(argc, argv, options)) {
         return EXIT_FAILURE;
     }
 
     // we are done if user has asked for help
 
-    if (options.help.has_value())
-    {
+    if (options.help.has_value()) {
         return EXIT_SUCCESS;
     }
 
@@ -35,8 +33,7 @@ int main(int argc, char* argv[])
 
     // setup communication with backend
 
-    if (!run_startup_stage(options))
-    {
+    if (!run_startup_stage(options)) {
         WEASEL_LOG_ERROR("failed during start-up stage");
         return EXIT_FAILURE;
     }
@@ -52,8 +49,7 @@ int main(int argc, char* argv[])
 
     //
 
-    for (unsigned i = 0u; i < options.processor_threads; i++)
-    {
+    for (unsigned i = 0u; i < options.processor_threads; i++) {
         workers.push_back(std::thread(processor, options, std::ref(resources)));
     }
 

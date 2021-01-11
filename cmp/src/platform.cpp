@@ -17,8 +17,7 @@ std::shared_ptr<weasel::Testcase> loadResultFile(const std::filesystem::path& pa
 {
     // check that the result file exists
 
-    if (!std::filesystem::is_regular_file(path))
-    {
+    if (!std::filesystem::is_regular_file(path)) {
         WEASEL_LOG_ERROR("{}: result file is missing", path.string());
         return nullptr;
     }
@@ -28,12 +27,9 @@ std::shared_ptr<weasel::Testcase> loadResultFile(const std::filesystem::path& pa
 
     const auto binaryContent = weasel::load_string_file(path.string());
     std::vector<uint8_t> buffer(binaryContent.begin(), binaryContent.end());
-    try
-    {
+    try {
         return std::make_shared<weasel::Testcase>(buffer);
-    }
-    catch (const std::exception& ex)
-    {
+    } catch (const std::exception& ex) {
         WEASEL_LOG_WARN("{}: failed to parse result: {}", path.string(), ex.what());
         return nullptr;
     }
@@ -63,8 +59,7 @@ std::string MessageJob::desc() const
 bool MessageJob::process(const Options& options) const
 {
     const auto result = loadResultFile(options.storage_dir / _batchId / _messageId);
-    if (!result)
-    {
+    if (!result) {
         WEASEL_LOG_WARN("{}: failed to process message", desc());
         return false;
     }
@@ -93,8 +88,7 @@ bool MessageJob::process(const Options& options) const
 
     // @todo check that response code is 204
 
-    if (!apiConnector.patchJson(url, output))
-    {
+    if (!apiConnector.patchJson(url, output)) {
         WEASEL_LOG_WARN("{}: failed to submit message", name);
         return false;
     }
@@ -118,8 +112,7 @@ bool ComparisonJob::process(const Options& options) const
     const auto dst = loadResultFile(options.storage_dir / _dstBatchId / _dstMessageId);
     const auto src = loadResultFile(options.storage_dir / _srcBatchId / _srcMessageId);
 
-    if (!src || !dst)
-    {
+    if (!src || !dst) {
         WEASEL_LOG_WARN("{}: comparison job is orphaned", desc());
         return false;
     }
@@ -155,8 +148,7 @@ bool ComparisonJob::process(const Options& options) const
 
     // @todo check that response code is 204
 
-    if (!apiConnector.patchJson(url, output))
-    {
+    if (!apiConnector.patchJson(url, output)) {
         WEASEL_LOG_WARN("{}: failed to submit comparison result", tuple);
         return false;
     }
@@ -176,35 +168,30 @@ std::vector<std::unique_ptr<Job>> retrieveJobs(const std::string& api_url)
 
     const auto body = apiConnector.getJson("/cmp");
 
-    if (doc.Parse<0>(body.c_str()).HasParseError())
-    {
+    if (doc.Parse<0>(body.c_str()).HasParseError()) {
         WEASEL_LOG_ERROR("backend response for list of jobs is ill-formed");
         return {};
     }
 
-    if (!doc.HasMember("messages") || !doc["messages"].IsArray())
-    {
+    if (!doc.HasMember("messages") || !doc["messages"].IsArray()) {
         WEASEL_LOG_ERROR("backend response has no field `messages`");
         return {};
     }
 
-    if (!doc.HasMember("comparisons") || !doc["comparisons"].IsArray())
-    {
+    if (!doc.HasMember("comparisons") || !doc["comparisons"].IsArray()) {
         WEASEL_LOG_ERROR("backend response has no field `comparisons`");
         return {};
     }
 
     std::vector<std::unique_ptr<Job>> jobs;
 
-    for (const auto& item : doc["messages"].GetArray())
-    {
+    for (const auto& item : doc["messages"].GetArray()) {
         jobs.push_back(std::make_unique<MessageJob>(
             item["batchId"].GetString(),
             item["messageId"].GetString()));
     }
 
-    for (const auto& item : doc["comparisons"].GetArray())
-    {
+    for (const auto& item : doc["comparisons"].GetArray()) {
         jobs.push_back(std::make_unique<ComparisonJob>(
             item["jobId"].GetString(),
             item["dstBatchId"].GetString(),

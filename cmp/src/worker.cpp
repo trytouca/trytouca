@@ -14,16 +14,14 @@ void collector(const Options& options, Resources& resources)
     namespace chr = std::chrono;
     const auto& interval = chr::milliseconds(options.polling_interval);
 
-    while (true)
-    {
+    while (true) {
         WEASEL_LOG_DEBUG("polling for new comparison jobs");
         const auto& tic = chr::system_clock::now();
         auto jobs = retrieveJobs(options.api_url);
 
         // if there is no job, we have nothing to do but wait
 
-        if (jobs.empty())
-        {
+        if (jobs.empty()) {
             std::this_thread::sleep_for(interval);
             continue;
         }
@@ -37,8 +35,7 @@ void collector(const Options& options, Resources& resources)
 
         // push jobs into queue for async processing
 
-        for (auto& job : jobs)
-        {
+        for (auto& job : jobs) {
             resources.job_queue.push_item(std::move(job));
         }
     }
@@ -52,12 +49,10 @@ void reporter(const Options& options, Resources& resources)
     namespace chr = std::chrono;
     const auto& interval = chr::milliseconds(options.status_report_interval);
     std::string previous = "";
-    while (true)
-    {
+    while (true) {
         std::this_thread::sleep_for(interval);
         const auto& report = resources.stats.report();
-        if (report.compare(previous))
-        {
+        if (report.compare(previous)) {
             WEASEL_LOG_INFO("{}", report);
             previous = report;
         }
@@ -70,15 +65,13 @@ void reporter(const Options& options, Resources& resources)
 void processor(const Options& options, Resources& resources)
 {
     namespace chr = std::chrono;
-    while (true)
-    {
+    while (true) {
         const auto job = resources.job_queue.pop_item();
         const auto desc = job->desc();
         WEASEL_LOG_DEBUG("{}: processing", desc);
         const auto& tic = chr::system_clock::now();
 
-        if (!job->process(options))
-        {
+        if (!job->process(options)) {
             WEASEL_LOG_ERROR("{}: failed to process job", desc);
             continue;
         }

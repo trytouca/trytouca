@@ -57,8 +57,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     // if user asks for help, print help message and exit
 
-    if (result_cmd.count("help"))
-    {
+    if (result_cmd.count("help")) {
         fmt::print(stdout, "{}\n", copts_cmd.help());
         options.help = true;
         return true;
@@ -66,8 +65,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     // if user does not provide a config-file, print help message and exit
 
-    if (!result_cmd.count("config-file"))
-    {
+    if (!result_cmd.count("config-file")) {
         weasel::print_error("please provide a valid configuration file\n");
         fmt::print(stderr, "{}\n", copts_cmd.help());
         return false;
@@ -77,8 +75,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     // configuration file must exist if it is specified
 
-    if (!weasel::filesystem::is_regular_file(config_file_path))
-    {
+    if (!weasel::filesystem::is_regular_file(config_file_path)) {
         weasel::print_error("configuration file not found: {}\n", config_file_path);
         return false;
     }
@@ -90,16 +87,14 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     // attempt to parse config-file
 
     rapidjson::Document document;
-    if (document.Parse<0>(config_file_content.c_str()).HasParseError())
-    {
+    if (document.Parse<0>(config_file_content.c_str()).HasParseError()) {
         weasel::print_error("failed to parse configuration file\n");
         return false;
     }
 
     // we expect content to be a json object
 
-    if (!document.IsObject())
-    {
+    if (!document.IsObject()) {
         weasel::print_error("expected configuration file to be a json object\n");
         return false;
     }
@@ -109,11 +104,9 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     std::vector<char*> copts_args;
     copts_args.emplace_back(argv[0]);
 
-    for (const auto& rjMember : document.GetObject())
-    {
+    for (const auto& rjMember : document.GetObject()) {
         const auto& key = rjMember.name.GetString();
-        if (!rjMember.value.IsString())
-        {
+        if (!rjMember.value.IsString()) {
             weasel::print_warning("ignoring option \"{}\" in configuration file.\n", key);
             weasel::print_warning("expected value type to be string.\n");
             continue;
@@ -133,8 +126,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     // validate and set option `api-url`
 
-    if (!result_file.count("api-url"))
-    {
+    if (!result_file.count("api-url")) {
         weasel::print_error("expected configuration parameter: `api-url`\n");
         fmt::print("{}\n", copts_file.help());
         return false;
@@ -144,15 +136,13 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     // validate option `project-dir`
 
-    if (!result_file.count("project-dir"))
-    {
+    if (!result_file.count("project-dir")) {
         weasel::print_error("expected configuration parameter: `project-dir`\n");
         fmt::print("{}\n", copts_file.help());
         return false;
     }
 
-    if (!weasel::filesystem::is_directory(result_file["project-dir"].as<std::string>()))
-    {
+    if (!weasel::filesystem::is_directory(result_file["project-dir"].as<std::string>())) {
         weasel::print_error("option `project-dir` points to nonexistent directory");
         return false;
     }
@@ -164,8 +154,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     {
         const std::unordered_set<std::string> levels = { "debug", "info", "warning" };
         const auto level = result_file["log-level"].as<std::string>();
-        if (!levels.count(level))
-        {
+        if (!levels.count(level)) {
             weasel::print_error("invalid value for option `log-level`");
             fmt::print("{}\n", copts_file.help());
             return false;
@@ -175,8 +164,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     // set option `log-dir` if it is provided
 
-    if (result_file.count("log-dir"))
-    {
+    if (result_file.count("log-dir")) {
         options.log_dir = options.project_dir / result_file["log-dir"].as<std::string>();
     }
 
@@ -184,8 +172,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     {
         const auto& storage_dir = result_file["storage-dir"].as<std::string>();
-        if (!weasel::filesystem::is_directory(options.project_dir / storage_dir))
-        {
+        if (!weasel::filesystem::is_directory(options.project_dir / storage_dir)) {
             weasel::print_error("option `storage-dir` points to nonexistent directory");
             return false;
         }
@@ -209,12 +196,9 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
  */
 bool parse_arguments(int argc, char* argv[], Options& options)
 {
-    try
-    {
+    try {
         return parse_arguments_impl(argc, argv, options);
-    }
-    catch (const std::exception& ex)
-    {
+    } catch (const std::exception& ex) {
         weasel::print_error("failed to parse application options: {}\n", ex.what());
     }
     return false;

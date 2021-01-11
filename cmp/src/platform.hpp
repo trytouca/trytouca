@@ -12,8 +12,7 @@
 /**
  *
  */
-struct Job
-{
+struct Job {
     virtual bool process(const Options& options) const = 0;
     virtual std::string desc() const = 0;
     virtual ~Job() = default;
@@ -22,8 +21,7 @@ struct Job
 /**
  *
  */
-struct MessageJob : public Job
-{
+struct MessageJob : public Job {
     /**
      *
      */
@@ -47,8 +45,7 @@ private:
 /**
  *
  */
-struct ComparisonJob : public Job
-{
+struct ComparisonJob : public Job {
     std::string _jobId;
     std::string _dstBatchId;
     std::string _dstMessageId;
