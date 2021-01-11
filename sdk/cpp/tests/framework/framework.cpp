@@ -90,7 +90,7 @@ TEST_CASE("framework-dummy-workflow")
     SECTION("skip-post")
     {
         caller.call_with({ "-r", "1.0", "-o", tmpFile.path, "--skip-post",
-                           "--team", "some-team", "--suite", "some-suite" });
+            "--team", "some-team", "--suite", "some-suite" });
         CHECK(caller.exit_code() == EXIT_FAILURE);
         CHECK_THAT(caller.cout(), Catch::Contains("Weasel Regression Test Framework"));
         CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
@@ -102,8 +102,8 @@ TEST_CASE("framework-dummy-workflow")
     SECTION("single-testcase")
     {
         caller.call_with({ "-r", "1.0", "-o", tmpFile.path, "--skip-post",
-                           "--team", "some-team", "--suite", "some-suite",
-                           "--testcase", "some-case", "--save-as-binary", "false" });
+            "--team", "some-team", "--suite", "some-suite",
+            "--testcase", "some-case", "--save-as-binary", "false" });
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK_THAT(caller.cout(), Catch::Contains("1 of 1"));
         CHECK_THAT(caller.cout(), Catch::Contains("some-case"));
@@ -115,8 +115,8 @@ TEST_CASE("framework-dummy-workflow")
     SECTION("api-url")
     {
         caller.call_with({ "-r", "1.0", "-o", tmpFile.path, "--skip-post",
-                           "--api-url", "http://localhost/api/@/some-team/some-suite",
-                           "--testcase", "some-case", "--save-as-binary", "false" });
+            "--api-url", "http://localhost/api/@/some-team/some-suite",
+            "--testcase", "some-case", "--save-as-binary", "false" });
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK_THAT(caller.cout(), Catch::Contains("1 of 1"));
         CHECK_THAT(caller.cout(), Catch::Contains("some-case"));
@@ -130,7 +130,7 @@ TEST_CASE("framework-dummy-workflow")
         TmpFile configFile;
         configFile.write(R"("Hello")");
         caller.call_with({ "-r", "1.0", "-o", tmpFile.path, "--skip-post",
-                           "--config-file", configFile.path });
+            "--config-file", configFile.path });
         CHECK(caller.exit_code() == EXIT_FAILURE);
         CHECK(caller.cout().empty());
         CHECK_THAT(caller.cerr(), Catch::Contains("expected configuration file to be a json object"));
@@ -142,8 +142,8 @@ TEST_CASE("framework-dummy-workflow")
         TmpFile configFile;
         configFile.write(R"({ "framework": { "save-as-binary": "false", "save-as-json": "false", "skip-logs": "true", "log-level": "error", "overwrite": "false" }, "weasel": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://getweasel.com/api/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
         caller.call_with({ "-r", "1.0", "-o", tmpFile.path, "--skip-post",
-                           "--config-file", configFile.path,
-                           "--testcase", "some-case" });
+            "--config-file", configFile.path,
+            "--testcase", "some-case" });
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
         CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
@@ -165,8 +165,8 @@ TEST_CASE("framework-simple-workflow-valid-use")
     configFile.write(R"({ "weasel": { "api-url": "https://getweasel.com/api/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
 
     caller.call_with({ "-r", "1.0", "-o", outputDir.path, "--skip-post",
-                       "--config-file", configFile.path,
-                       "--save-as-json", "true" });
+        "--config-file", configFile.path,
+        "--save-as-json", "true" });
 
     SECTION("first-run")
     {
@@ -184,8 +184,8 @@ TEST_CASE("framework-simple-workflow-valid-use")
     SECTION("second-run-without-overwrite")
     {
         caller.call_with({ "-r", "1.0", "-o", outputDir.path, "--skip-post",
-                           "--config-file", configFile.path,
-                           "--save-as-json", "true" });
+            "--config-file", configFile.path,
+            "--save-as-json", "true" });
 
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
@@ -202,8 +202,8 @@ TEST_CASE("framework-simple-workflow-valid-use")
     SECTION("second-run-with-overwrite")
     {
         caller.call_with({ "-r", "1.0", "-o", outputDir.path, "--skip-post",
-                           "--config-file", configFile.path,
-                           "--save-as-json", "true", "--overwrite" });
+            "--config-file", configFile.path,
+            "--save-as-json", "true", "--overwrite" });
 
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));

@@ -35,17 +35,14 @@ bool MergeOperation::parse_impl(int argc, char* argv[])
         { "out", "output" }
     };
 
-    for (const auto& kvp : filetypes)
-    {
-        if (!result.count(kvp.first))
-        {
+    for (const auto& kvp : filetypes) {
+        if (!result.count(kvp.first)) {
             weasel::print_error("{} directory not provided\n", kvp.second);
             fmt::print(stdout, "{}\n", options.help());
             return false;
         }
         const auto filepath = result[kvp.first].as<std::string>();
-        if (!weasel::filesystem::is_directory(filepath))
-        {
+        if (!weasel::filesystem::is_directory(filepath)) {
             weasel::print_error("{} directory `{}` does not exist\n", kvp.second, filepath);
             return false;
         }
@@ -68,21 +65,17 @@ bool MergeOperation::run_impl() const
 
     const auto resultFiles = findResultFiles(_src);
 
-    if (resultFiles.empty())
-    {
+    if (resultFiles.empty()) {
         WEASEL_LOG_ERROR("specified directory has no weasel result file");
         return false;
     }
 
     using chunk_t = std::vector<weasel::path>;
     std::vector<chunk_t> chunks;
-    for (auto i = 0u, j = 0u; i < resultFiles.size(); j = i)
-    {
-        for (auto chunkSize = 0ull; i < resultFiles.size(); ++i)
-        {
+    for (auto i = 0u, j = 0u; i < resultFiles.size(); j = i) {
+        for (auto chunkSize = 0ull; i < resultFiles.size(); ++i) {
             const auto fileSize = weasel::filesystem::file_size(resultFiles.at(i));
-            if (MAX_FILE_SIZE < chunkSize + fileSize)
-            {
+            if (MAX_FILE_SIZE < chunkSize + fileSize) {
                 ++i;
                 break;
             }
@@ -94,8 +87,7 @@ bool MergeOperation::run_impl() const
     WEASEL_LOG_INFO("results will be merged into {} files", chunks.size());
 
     const auto& root = boost::filesystem::absolute(_out);
-    for (auto i = 0ul; i < chunks.size(); ++i)
-    {
+    for (auto i = 0ul; i < chunks.size(); ++i) {
         const auto filestem = boost::filesystem::path(_src).filename().string();
         const auto& filename = chunks.size() == 1ul
             ? weasel::format("{}.bin", filestem)
@@ -106,8 +98,7 @@ bool MergeOperation::run_impl() const
             chunks.at(i).size(),
             filepath);
         weasel::ResultFile rf(filepath);
-        for (const auto& file : chunks.at(i))
-        {
+        for (const auto& file : chunks.at(i)) {
             rf.merge(weasel::ResultFile(file));
         }
         rf.save();

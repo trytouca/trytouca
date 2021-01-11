@@ -33,8 +33,7 @@ namespace weasel { namespace types {
         rapidjson::Document::AllocatorType& allocator) const
     {
         rapidjson::Value rjMembers(rapidjson::kObjectType);
-        for (const auto& member : _values)
-        {
+        for (const auto& member : _values) {
             rapidjson::Value rjKey { member.first, allocator };
             rjMembers.AddMember(
                 rjKey, member.second->json(allocator), allocator);
@@ -54,8 +53,7 @@ namespace weasel { namespace types {
     {
         std::vector<flatbuffers::Offset<fbs::ObjectMember>>
             fbsObjectMembers_vector;
-        for (const auto& value : _values)
-        {
+        for (const auto& value : _values) {
             const auto& fbsMemberKey = builder.CreateString(value.first);
             const auto& fbsMemberValue = value.second->serialize(builder);
             fbs::ObjectMemberBuilder fbsObjectMember_builder(builder);
@@ -82,12 +80,10 @@ namespace weasel { namespace types {
     void Object::deserialize(const fbs::Object* fbsObj)
     {
         _name = fbsObj->key()->data();
-        for (const auto& value : *fbsObj->values())
-        {
+        for (const auto& value : *fbsObj->values()) {
             const auto& name = value->name()->data();
             const auto& obj = types::deserializeValue(value->value());
-            if (!obj)
-            {
+            if (!obj) {
                 throw std::runtime_error("Could not deserialize the object");
             }
             _values.emplace(name, obj);
@@ -107,8 +103,7 @@ namespace weasel { namespace types {
         // the two result keys are considered completely different
         // if they are different in types.
 
-        if (type() != itype->type())
-        {
+        if (type() != itype->type()) {
             result.dstType = itype->type();
             result.dstValue = itype->string();
             result.desc.insert("result types are different");
@@ -121,21 +116,17 @@ namespace weasel { namespace types {
 
         auto scoreEarned = 0.0;
         auto scoreTotal = 0u;
-        for (const auto& srcMember : srcMembers)
-        {
+        for (const auto& srcMember : srcMembers) {
             ++scoreTotal;
             // compare common members
-            if (dstMembers.count(srcMember.first))
-            {
+            if (dstMembers.count(srcMember.first)) {
                 const auto& dstKey = dstMembers.at(srcMember.first);
                 const auto& tmp = srcMember.second->compare(dstKey);
                 scoreEarned += tmp.score;
-                if (compare::MatchType::Perfect == tmp.match)
-                {
+                if (compare::MatchType::Perfect == tmp.match) {
                     continue;
                 }
-                for (const auto& desc : tmp.desc)
-                {
+                for (const auto& desc : tmp.desc) {
                     const auto& msg = srcMember.first + ": " + desc;
                     result.desc.insert(msg);
                 }
@@ -147,10 +138,8 @@ namespace weasel { namespace types {
         }
 
         // report dst members that are missing from src
-        for (const auto& dstMember : dstMembers)
-        {
-            if (!srcMembers.count(dstMember.first))
-            {
+        for (const auto& dstMember : dstMembers) {
+            if (!srcMembers.count(dstMember.first)) {
                 const auto& msg = dstMember.first + ": new";
                 result.desc.insert(msg);
                 ++scoreTotal;
@@ -158,8 +147,7 @@ namespace weasel { namespace types {
         }
 
         // report comparison as perfect match if all children match
-        if (scoreEarned == scoreTotal)
-        {
+        if (scoreEarned == scoreTotal) {
             result.match = compare::MatchType::Perfect;
             result.score = 1.0;
             return result;
@@ -178,17 +166,14 @@ namespace weasel { namespace types {
     KeyMap Object::flatten() const
     {
         KeyMap members;
-        for (const auto& value : _values)
-        {
+        for (const auto& value : _values) {
             const auto& name = value.first;
             const auto& nestedMembers = value.second->flatten();
-            if (nestedMembers.empty())
-            {
+            if (nestedMembers.empty()) {
                 members.emplace(name, value.second);
                 continue;
             }
-            for (const auto& nestedMember : nestedMembers)
-            {
+            for (const auto& nestedMember : nestedMembers) {
                 const auto& key = name + '.' + nestedMember.first;
                 members.emplace(key, nestedMember.second);
             }

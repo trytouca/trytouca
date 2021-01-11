@@ -57,20 +57,18 @@ namespace weasel {
             : "vital";
 
         _metadata = { teamSlug,
-                      message->metadata()->testsuite()->data(),
-                      message->metadata()->version()->data(),
-                      message->metadata()->testcase()->data(),
-                      message->metadata()->builtAt()->data() };
+            message->metadata()->testsuite()->data(),
+            message->metadata()->version()->data(),
+            message->metadata()->testcase()->data(),
+            message->metadata()->builtAt()->data() };
 
         // parse results
 
         const auto& results = message->results()->entries();
-        for (const auto& result : *results)
-        {
+        for (const auto& result : *results) {
             const auto& key = result->key()->data();
             const auto& value = types::deserializeValue(result->value());
-            if (!value)
-            {
+            if (!value) {
                 throw std::runtime_error("failed to parse results map entry");
             }
             _resultsMap.emplace(key, value);
@@ -79,12 +77,10 @@ namespace weasel {
         // parse assertions
 
         const auto& assertions = message->assertions()->entries();
-        for (const auto& assertion : *assertions)
-        {
+        for (const auto& assertion : *assertions) {
             const auto& key = assertion->key()->data();
             const auto& value = types::deserializeValue(assertion->value());
-            if (!value)
-            {
+            if (!value) {
                 throw std::runtime_error(
                     "failed to parse assertions map entry");
             }
@@ -94,13 +90,11 @@ namespace weasel {
         // parse metrics
 
         const auto& metrics = message->metrics()->entries();
-        for (const auto& metric : *metrics)
-        {
+        for (const auto& metric : *metrics) {
             const auto& key = metric->key()->data();
             const auto& ivalue = types::deserializeValue(metric->value());
             const auto& value = std::dynamic_pointer_cast<types::Number<int64_t>>(ivalue);
-            if (!value)
-            {
+            if (!value) {
                 throw std::runtime_error("failed to parse metrics map entry");
             }
             add_metric(key, value->value());
@@ -173,10 +167,8 @@ namespace weasel {
      */
     void Testcase::toc(const std::string& key)
     {
-        if (!_tics.count(key))
-        {
-            throw std::invalid_argument(
-                "timer was never started for given key");
+        if (!_tics.count(key)) {
+            throw std::invalid_argument("timer was never started for given key");
         }
         _tocs[key] = std::chrono::system_clock::now();
         _posted = false;
@@ -212,16 +204,14 @@ namespace weasel {
         const std::shared_ptr<types::IType>& element)
     {
         using weasel::types::Array;
-        if (!_resultsMap.count(key))
-        {
+        if (!_resultsMap.count(key)) {
             const auto value = std::make_shared<Array>();
             value->add(element);
             _resultsMap.emplace(key, value);
             return;
         }
         const auto ivalue = _resultsMap.at(key);
-        if (ivalue->type() != weasel::types::ValueType::Array)
-        {
+        if (ivalue->type() != weasel::types::ValueType::Array) {
             throw std::invalid_argument("specified key is associated with a "
                                         "result of a different type");
         }
@@ -237,21 +227,18 @@ namespace weasel {
     void Testcase::add_hit_count(const std::string& key)
     {
         using number_t = weasel::types::Number<uint64_t>;
-        if (!_resultsMap.count(key))
-        {
+        if (!_resultsMap.count(key)) {
             const auto value = std::make_shared<number_t>(1u);
             _resultsMap.emplace(key, value);
             return;
         }
         const auto ivalue = _resultsMap.at(key);
-        if (ivalue->type() != weasel::types::ValueType::Number)
-        {
+        if (ivalue->type() != weasel::types::ValueType::Number) {
             throw std::invalid_argument("specified key is associated with a "
                                         "result of a different type");
         }
         const auto value = std::dynamic_pointer_cast<number_t>(ivalue);
-        if (!value)
-        {
+        if (!value) {
             throw std::invalid_argument("specified key is associated with a "
                                         "result of a different type");
         }
@@ -277,10 +264,8 @@ namespace weasel {
     KeyMap Testcase::metrics() const
     {
         KeyMap metrics;
-        for (const auto& tic : _tics)
-        {
-            if (!_tocs.count(tic.first))
-            {
+        for (const auto& tic : _tics) {
+            if (!_tocs.count(tic.first)) {
                 continue;
             }
             const auto& key = tic.first;
@@ -298,11 +283,9 @@ namespace weasel {
     rapidjson::Value Testcase::json(
         rapidjson::Document::AllocatorType& allocator) const
     {
-        const auto& func = [](const KeyMap& entries,
-                              rapidjson::Document::AllocatorType& allocator) {
+        const auto& func = [](const KeyMap& entries, rapidjson::Document::AllocatorType& allocator) {
             rapidjson::Value rjEntries(rapidjson::kArrayType);
-            for (const auto& entry : entries)
-            {
+            for (const auto& entry : entries) {
                 rapidjson::Value rjEntry(rapidjson::kObjectType);
                 rjEntry.AddMember("key", entry.first, allocator);
                 rjEntry.AddMember("value", entry.second->string(), allocator);
@@ -344,8 +327,7 @@ namespace weasel {
         // serialize results map
 
         std::vector<flatbuffers::Offset<fbs::Result>> fbsResultEntries_vector;
-        for (const auto& result : _resultsMap)
-        {
+        for (const auto& result : _resultsMap) {
             const auto& fbsKey = builder.CreateString(result.first);
             const auto& fbsValue = result.second->serialize(builder);
             fbs::ResultBuilder fbsResult_builder(builder);
@@ -364,8 +346,7 @@ namespace weasel {
 
         std::vector<flatbuffers::Offset<fbs::Assertion>>
             fbsAssertionEntries_vector;
-        for (const auto& assertion : _assertionsMap)
-        {
+        for (const auto& assertion : _assertionsMap) {
             const auto& fbsKey = builder.CreateString(assertion.first);
             const auto& fbsValue = assertion.second->serialize(builder);
             fbs::AssertionBuilder fbsAssertion_builder(builder);
@@ -383,8 +364,7 @@ namespace weasel {
         // serialize metrics
 
         std::vector<flatbuffers::Offset<fbs::Metric>> fbsMetricEntries_vector;
-        for (const auto& metric : metrics())
-        {
+        for (const auto& metric : metrics()) {
             const auto& fbsKey = builder.CreateString(metric.first);
             const auto& fbsValue = metric.second->serialize(builder);
             fbs::MetricBuilder fbsMetric_builder(builder);
@@ -430,10 +410,8 @@ namespace weasel {
     {
         Testcase::Overview overview;
         overview.keysCount = static_cast<std::int32_t>(_resultsMap.size());
-        for (const auto& tic : _tics)
-        {
-            if (!_tocs.count(tic.first))
-            {
+        for (const auto& tic : _tics) {
+            if (!_tocs.count(tic.first)) {
                 continue;
             }
             const auto& key = tic.first;
@@ -467,8 +445,7 @@ namespace weasel {
 
         std::vector<flatbuffers::Offset<fbs::MessageBuffer>>
             fbsMessageBuffer_vector;
-        for (const auto& tc : testcases)
-        {
+        for (const auto& tc : testcases) {
             const auto& buffer = tc.flatbuffers();
             const auto& bufferVec = fbb.CreateVector(buffer);
             const auto& fbsMessageBuffer = fbs::CreateMessageBuffer(fbb, bufferVec);

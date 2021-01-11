@@ -12,18 +12,15 @@
 
 namespace weasel { namespace casino {
 
-    class Card
-    {
+    class Card {
     public:
-        enum class Suite : unsigned char
-        {
+        enum class Suite : unsigned char {
             Clubs,
             Diamonds,
             Hearts,
             Spades
         };
-        enum class Rank : unsigned char
-        {
+        enum class Rank : unsigned char {
             Two,
             Three,
             Four,
@@ -57,22 +54,19 @@ namespace weasel { namespace casino {
         Card::Suite _suite;
     };
 
-    struct Hand
-    {
+    struct Hand {
         std::vector<Card> _cards;
         Card draw(const Card& card);
         friend std::ostream& operator<<(std::ostream& os, const Hand& hand);
     };
 
-    class Policy
-    {
+    class Policy {
     protected:
         std::string _name;
         Hand _hand;
 
     public:
-        enum class Type
-        {
+        enum class Type {
             Default,
             Simple
         };
@@ -84,22 +78,19 @@ namespace weasel { namespace casino {
             const Hand& hand);
     };
 
-    class DefaultPolicy : public Policy
-    {
+    class DefaultPolicy : public Policy {
     public:
         explicit DefaultPolicy(const Hand& hand);
         Card bid(const std::vector<Card>& bids) override;
     };
 
-    class SimplePolicy : public Policy
-    {
+    class SimplePolicy : public Policy {
     public:
         explicit SimplePolicy(const Hand& hand);
         Card bid(const std::vector<Card>& bids) override;
     };
 
-    class Player
-    {
+    class Player {
         Hand _hand;
         std::vector<Card> _tricks;
         std::shared_ptr<Policy> _policy;
@@ -114,8 +105,7 @@ namespace weasel { namespace casino {
         friend std::ostream& operator<<(std::ostream& os, const Player& player);
     };
 
-    struct RoundResult
-    {
+    struct RoundResult {
         std::unordered_map<std::string, Card> _bids;
         std::string _winner;
         friend std::ostream& operator<<(
@@ -123,8 +113,7 @@ namespace weasel { namespace casino {
             const RoundResult& res);
     };
 
-    class Table
-    {
+    class Table {
         std::string _name;
         std::vector<Card> _pot;
         unsigned int _button = 0u;
@@ -143,8 +132,7 @@ namespace weasel { namespace casino {
         friend std::ostream& operator<<(std::ostream& os, const Table& table);
     };
 
-    class NameGenerator
-    {
+    class NameGenerator {
         static const std::vector<std::string> names;
         static const std::vector<std::string> adjectives;
         std::string random(const std::vector<std::string> list) const;

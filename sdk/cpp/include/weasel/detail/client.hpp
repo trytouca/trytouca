@@ -17,8 +17,7 @@ namespace weasel {
      * @enum weasel::DataFormat
      * @brief describes supported formats for storing testresults to disk
      */
-    enum class DataFormat : unsigned char
-    {
+    enum class DataFormat : unsigned char {
         FBS, /**< flatbuffers */
         JSON /**< json */
     };
@@ -26,8 +25,7 @@ namespace weasel {
     /**
      * We are exposing this class for convenient unit-testing.
      */
-    class WEASEL_CLIENT_API ClientImpl
-    {
+    class WEASEL_CLIENT_API ClientImpl {
     public:
         using OptionsMap = std::unordered_map<std::string, std::string>;
 

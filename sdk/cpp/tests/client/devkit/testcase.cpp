@@ -89,8 +89,7 @@ TEST_CASE("Testcase")
     {
         SECTION("expected-use")
         {
-            for (auto i = 0; i < 3; ++i)
-            {
+            for (auto i = 0; i < 3; ++i) {
                 const auto value = std::make_shared<weasel::types::Number<uint64_t>>(i);
                 testcase.add_array_element("some-key", value);
             }

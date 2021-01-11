@@ -47,8 +47,7 @@ func_t parse_member(unsigned long& member)
 {
     return [&member](const std::string& value) {
         const auto out = std::strtoul(value.c_str(), nullptr, 10);
-        if (out != 0 && out != ULONG_MAX)
-        {
+        if (out != 0 && out != ULONG_MAX) {
             member = out;
         }
     };
@@ -91,10 +90,8 @@ bool weasel::ClientOptions::parse(const OptionsMap& opts)
     parsers.emplace("post-maxretries", parse_member(post_max_retries));
     parsers.emplace("concurrency-mode", parse_member(case_declaration));
 
-    for (const auto& kvp : opts)
-    {
-        if (!parsers.count(kvp.first))
-        {
+    for (const auto& kvp : opts) {
+        if (!parsers.count(kvp.first)) {
             return error("unknown parameter \"{}\"", kvp.first);
         }
         parsers.at(kvp.first)(kvp.second);
@@ -105,8 +102,7 @@ bool weasel::ClientOptions::parse(const OptionsMap& opts)
     // takes precedence over the specified configuration parameter.
 
     const auto env_value = std::getenv("WEASEL_API_KEY");
-    if (env_value != nullptr)
-    {
+    if (env_value != nullptr) {
         api_key = env_value;
     }
 
@@ -123,18 +119,14 @@ bool weasel::ClientOptions::parse(const OptionsMap& opts)
     // if `api-url` is given in long format, parse `team` and `suite`
     // from its path.
 
-    if (!api_url.empty())
-    {
+    if (!api_url.empty()) {
         const ApiUrl apiUrl(api_url);
         api_root = apiUrl.root;
-        for (const auto& param : { "team", "suite", "version" })
-        {
-            if (!apiUrl.slugs.count(param) || apiUrl.slugs.at(param).empty())
-            {
+        for (const auto& param : { "team", "suite", "version" }) {
+            if (!apiUrl.slugs.count(param) || apiUrl.slugs.at(param).empty()) {
                 continue;
             }
-            if (!params.at(param).empty() && params.at(param) != apiUrl.slugs.at(param))
-            {
+            if (!params.at(param).empty() && params.at(param) != apiUrl.slugs.at(param)) {
                 return error("{0} specified in apiUrl has conflict with {0} configuration parameter", param);
             }
             params.at(param) = apiUrl.slugs.at(param);
@@ -144,10 +136,8 @@ bool weasel::ClientOptions::parse(const OptionsMap& opts)
     // check that the set of available configuration parameters includes
     // the bare minimum required parameters.
 
-    for (const auto& param : { "team", "suite", "version" })
-    {
-        if (params.at(param).empty())
-        {
+    for (const auto& param : { "team", "suite", "version" }) {
+        if (params.at(param).empty()) {
             return error("required configuration parameter \"{}\" is missing", param);
         }
     }
@@ -155,17 +145,14 @@ bool weasel::ClientOptions::parse(const OptionsMap& opts)
     // if `api_key` and `api_url` are not provided, assume user does
     // not intend to submit results in which case we are done.
 
-    if (!handshake)
-    {
+    if (!handshake) {
         return true;
     }
 
     // otherwise, check that all necessary config params are provided.
 
-    for (const auto& param : { "api-key", "api-url" })
-    {
-        if (params.at(param).empty())
-        {
+    for (const auto& param : { "api-key", "api-url" }) {
+        if (params.at(param).empty()) {
             return error("required configuration parameter \"{}\" is missing", param);
         }
     }
@@ -175,8 +162,7 @@ bool weasel::ClientOptions::parse(const OptionsMap& opts)
 
     weasel::ApiConnector apiConnector({ api_root, team, suite, revision });
     api_token = apiConnector.authenticate(api_key);
-    if (api_token.empty())
-    {
+    if (api_token.empty()) {
         return error("failed to authenticate to the weasel platform");
     }
 
@@ -191,8 +177,7 @@ bool weasel::ClientOptions::parse_file(const weasel::path& path)
 
     // check that specified path leads to an existing regular file on disk
 
-    if (!weasel::filesystem::is_regular_file(path))
-    {
+    if (!weasel::filesystem::is_regular_file(path)) {
         return error("configuration file is missing");
     }
 
@@ -210,8 +195,7 @@ bool weasel::ClientOptions::parse_file(const weasel::path& path)
     // check that configuration file has a top-level weasel section
 
     if (rjDoc.HasParseError() || !rjDoc.IsObject()
-        || !rjDoc.HasMember("weasel") || !rjDoc["weasel"].IsObject())
-    {
+        || !rjDoc.HasMember("weasel") || !rjDoc["weasel"].IsObject()) {
         return error("configuration file is not valid");
     }
 
@@ -229,10 +213,8 @@ bool weasel::ClientOptions::parse_file(const weasel::path& path)
     };
 
     const auto& rjObj = rjDoc["weasel"];
-    for (const auto& key : strKeys)
-    {
-        if (rjObj.HasMember(key) && rjObj[key].IsString())
-        {
+    for (const auto& key : strKeys) {
+        if (rjObj.HasMember(key) && rjObj[key].IsString()) {
             opts.emplace(key, rjObj[key].GetString());
         }
     }
@@ -240,10 +222,8 @@ bool weasel::ClientOptions::parse_file(const weasel::path& path)
     // parse configuration parameters whose value may be specified as integer
 
     const auto& intKeys = { "post-maxretries", "post-testcases" };
-    for (const auto& key : intKeys)
-    {
-        if (rjObj.HasMember(key) && rjObj[key].IsUint())
-        {
+    for (const auto& key : intKeys) {
+        if (rjObj.HasMember(key) && rjObj[key].IsUint()) {
             opts.emplace(key, std::to_string(rjObj[key].GetUint()));
         }
     }

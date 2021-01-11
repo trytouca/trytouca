@@ -30,8 +30,7 @@ bool PostOperation::parse_impl(int argc, char* argv[])
 
     const auto& result = options.parse(argc, argv);
 
-    if (!result.count("src"))
-    {
+    if (!result.count("src")) {
         weasel::print_error("file or directory not provided\n");
         fmt::print(stdout, "{}\n", options.help());
         return false;
@@ -39,14 +38,12 @@ bool PostOperation::parse_impl(int argc, char* argv[])
 
     _src = result["src"].as<std::string>();
 
-    if (!weasel::filesystem::exists(_src))
-    {
+    if (!weasel::filesystem::exists(_src)) {
         weasel::print_error("file `{}` does not exist\n", _src);
         return false;
     }
 
-    if (!result.count("api-url"))
-    {
+    if (!result.count("api-url")) {
         weasel::print_error("api-url not provided\n");
         fmt::print(stdout, "{}\n", options.help());
         return false;
@@ -54,19 +51,15 @@ bool PostOperation::parse_impl(int argc, char* argv[])
 
     _api_url = result["api-url"].as<std::string>();
 
-    if (!result.count("api-key"))
-    {
+    if (!result.count("api-key")) {
         const auto env_value = std::getenv("WEASEL_API_KEY");
-        if (env_value == nullptr)
-        {
+        if (env_value == nullptr) {
             weasel::print_error("api-key not provided as argument or env variable\n");
             fmt::print(stdout, "{}\n", options.help());
             return false;
         }
         _api_key = std::string(env_value);
-    }
-    else
-    {
+    } else {
         _api_key = result["api-key"].as<std::string>();
     }
 
@@ -86,8 +79,7 @@ bool PostOperation::run_impl() const
 
     weasel::ApiUrl apiUrl(_api_url);
     const auto& apiToken = weasel::ApiConnector(apiUrl).authenticate(_api_key);
-    if (apiToken.empty())
-    {
+    if (apiToken.empty()) {
         std::cerr << "failed to authenticate to Weasel Platform" << std::endl;
         return false;
     }
@@ -101,8 +93,7 @@ bool PostOperation::run_impl() const
 
     // we are done if there are no weasel result files in the given directory
 
-    if (resultFiles.empty())
-    {
+    if (resultFiles.empty()) {
         const auto msg = "failed to find any valid result file";
         std::cerr << msg << std::endl;
         WEASEL_LOG_ERROR(msg);
@@ -113,11 +104,9 @@ bool PostOperation::run_impl() const
 
     using err_t = std::unordered_map<std::string, std::vector<std::string>>;
     const auto print = [](const err_t& errors) {
-        for (const auto& src : errors)
-        {
+        for (const auto& src : errors) {
             std::cerr << src.first << ":" << '\n';
-            for (const auto& err : src.second)
-            {
+            for (const auto& err : src.second) {
                 std::cerr << " - " << err << std::endl;
             }
         }
@@ -129,20 +118,15 @@ bool PostOperation::run_impl() const
 
     err_t errors;
     weasel::ApiConnector apiConnector(apiUrl, apiToken);
-    for (const auto& src : resultFiles)
-    {
+    for (const auto& src : resultFiles) {
         std::vector<std::string> errs;
-        try
-        {
+        try {
             const auto& content = weasel::load_string_file(src, std::ios::binary);
             errs = apiConnector.submitResults(content, 5u);
-        }
-        catch (const std::exception& ex)
-        {
+        } catch (const std::exception& ex) {
             errs.emplace_back(weasel::format("exception: {}", ex.what()));
         }
-        if (errs.empty())
-        {
+        if (errs.empty()) {
             WEASEL_LOG_INFO("submitted {}", src);
             continue;
         }
@@ -150,16 +134,14 @@ bool PostOperation::run_impl() const
         errors.emplace(src, errs);
         WEASEL_LOG_WARN("failed to submit {}: {}", src, errs.front());
 
-        if (_fail_fast)
-        {
+        if (_fail_fast) {
             WEASEL_LOG_INFO("aborting due to fail-fast policy");
             print(errors);
             return false;
         }
     }
 
-    if (errors.empty())
-    {
+    if (errors.empty()) {
         WEASEL_LOG_INFO("successfully submitted all {} result files", resultFiles.size());
         return true;
     }

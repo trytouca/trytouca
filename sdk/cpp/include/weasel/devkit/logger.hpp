@@ -28,8 +28,7 @@ namespace weasel {
     /**
      *
      */
-    enum log_level
-    {
+    enum log_level {
         debug = 1,
         info,
         warn,

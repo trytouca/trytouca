@@ -73,8 +73,7 @@ namespace weasel {
         curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, callbackFunction);
         curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &response.body);
 
-        switch (method)
-        {
+        switch (method) {
         case Method::Get:
             curl_easy_setopt(_curl, CURLOPT_HTTPGET, 1);
             break;
@@ -92,8 +91,7 @@ namespace weasel {
         }
 
         _curlCode = curl_easy_perform(_curl);
-        if (_curlCode == CURLE_OK)
-        {
+        if (_curlCode == CURLE_OK) {
             curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &response.code);
         }
 
@@ -161,8 +159,7 @@ namespace weasel {
         curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &response.body);
 
         _curlCode = curl_easy_perform(_curl);
-        if (_curlCode == CURLE_OK)
-        {
+        if (_curlCode == CURLE_OK) {
             curl_easy_getinfo(_curl, CURLINFO_RESPONSE_CODE, &response.code);
         }
 

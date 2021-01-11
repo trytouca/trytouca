@@ -30,8 +30,7 @@ namespace weasel {
         /**
          *
          */
-        enum class WEASEL_CLIENT_API ValueType : unsigned char
-        {
+        enum class WEASEL_CLIENT_API ValueType : unsigned char {
             Bool,
             Number,
             String,
@@ -43,8 +42,7 @@ namespace weasel {
         /**
          *
          */
-        class WEASEL_CLIENT_API IType
-        {
+        class WEASEL_CLIENT_API IType {
         public:
             /**
              *
@@ -109,8 +107,7 @@ namespace weasel {
         /**
          *
          */
-        class WEASEL_CLIENT_API Bool : public IType
-        {
+        class WEASEL_CLIENT_API Bool : public IType {
         public:
             /**
              *
@@ -148,8 +145,7 @@ namespace weasel {
          *
          */
         template <class T>
-        class WEASEL_CLIENT_API Number : public IType
-        {
+        class WEASEL_CLIENT_API Number : public IType {
         public:
             /**
              *
@@ -191,8 +187,7 @@ namespace weasel {
         /**
          *
          */
-        class WEASEL_CLIENT_API String : public IType
-        {
+        class WEASEL_CLIENT_API String : public IType {
         public:
             /**
              *
@@ -229,8 +224,7 @@ namespace weasel {
         /**
          *
          */
-        class WEASEL_CLIENT_API Array : public IType
-        {
+        class WEASEL_CLIENT_API Array : public IType {
         public:
             /**
              *

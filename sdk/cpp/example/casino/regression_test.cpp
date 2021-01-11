@@ -20,8 +20,7 @@ std::vector<weasel::casino::Table> parse_file(
     const boost::filesystem::path& path)
 {
     std::ifstream ifile(path.string());
-    if (!ifile.is_open())
-    {
+    if (!ifile.is_open()) {
         throw std::invalid_argument(
             "failed to open input file: " + path.string());
     }
@@ -29,12 +28,10 @@ std::vector<weasel::casino::Table> parse_file(
     std::string line;
     std::string text;
     std::vector<weasel::casino::Table> tables;
-    while (std::getline(ifile, line))
-    {
+    while (std::getline(ifile, line)) {
         ++num;
         text += line + '\n';
-        if (num % 6)
-        {
+        if (num % 6) {
             continue;
         }
         weasel::casino::Table table;
@@ -56,13 +53,11 @@ bool simulate_table(weasel::casino::Table& table, const Options& opts)
     const std::map<std::string, policy_t>& policies = {
         { "default", policy_t::Default }, { "simple", policy_t::Simple }
     };
-    try
-    {
+    try {
         table.setPolicy(policies.at(opts.at("policy")));
         weasel::declare_testcase(table.name());
         weasel::add_assertion("original_state", table);
-        for (auto i = 0u; i < 13; i++)
-        {
+        for (auto i = 0u; i < 13; i++) {
             std::cout << "Round: " << i + 1 << std::endl;
             const auto result = table.playRound();
             boost::format fmt { "round_%02d" };
@@ -70,33 +65,28 @@ bool simulate_table(weasel::casino::Table& table, const Options& opts)
             weasel::add_result(fmt.str(), result);
         }
         weasel::add_result("final_state", table);
-    }
-    catch (const std::exception& ex)
-    {
+    } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         return false;
     }
     return true;
 }
 
-enum EMode : unsigned char
-{
+enum EMode : unsigned char {
     kGenerate,
     kExecute,
     kTest,
     kInvalid
 };
 
-struct OperationBase
-{
+struct OperationBase {
     virtual bool run() const = 0;
     virtual bool validate() const = 0;
     virtual ~OperationBase() = default;
 };
 
 template <EMode E>
-class Operation : public OperationBase
-{
+class Operation : public OperationBase {
 public:
     Operation(const Options& opts)
         : _opts(opts)
@@ -115,27 +105,23 @@ bool Operation<kGenerate>::run() const
 {
     const auto& print = [](const unsigned int num, std::ostream& out) {
         std::set<weasel::casino::Table> tables;
-        while (tables.size() < num)
-        {
+        while (tables.size() < num) {
             weasel::casino::Table table;
             table.generate();
             tables.insert(table);
         }
-        for (const auto& table : tables)
-        {
+        for (const auto& table : tables) {
             out << table << std::endl;
         }
     };
     const auto num = boost::lexical_cast<unsigned int>(_opts.at("count"));
-    if (!_opts.count("output"))
-    {
+    if (!_opts.count("output")) {
         print(num, std::cout);
         return true;
     }
     const auto output = boost::filesystem::absolute(_opts.at("output"));
     if (!weasel::filesystem::exists(output.parent_path().string())
-        && !boost::filesystem::create_directories(output.parent_path()))
-    {
+        && !boost::filesystem::create_directories(output.parent_path())) {
         std::cerr << "failed to create directory: " << output.string()
                   << std::endl;
         return false;
@@ -149,13 +135,11 @@ bool Operation<kGenerate>::run() const
 template <>
 bool Operation<kGenerate>::validate() const
 {
-    if (!_opts.count("count"))
-    {
+    if (!_opts.count("count")) {
         return false;
     }
     const auto& num = boost::lexical_cast<unsigned int>(_opts.at("count"));
-    if (100 < num)
-    {
+    if (100 < num) {
         std::cerr << "maximum number of testcases to generate is 100"
                   << std::endl;
         return false;
@@ -166,10 +150,8 @@ bool Operation<kGenerate>::validate() const
 template <>
 bool Operation<kExecute>::run() const
 {
-    for (auto& table : parse_file(_opts.at("input")))
-    {
-        if (!simulate_table(table, _opts))
-        {
+    for (auto& table : parse_file(_opts.at("input"))) {
+        if (!simulate_table(table, _opts)) {
             std::cerr << "failed to simulate table " << table.name()
                       << std::endl;
             return false;
@@ -182,17 +164,14 @@ template <>
 bool Operation<kExecute>::validate() const
 {
     // check for missing config options
-    for (const auto& key : { "input", "policy" })
-    {
-        if (!_opts.count(key))
-        {
+    for (const auto& key : { "input", "policy" }) {
+        if (!_opts.count(key)) {
             std::cerr << "missing required option: " << key << std::endl;
             return false;
         }
     }
     const auto& file = _opts.at("input");
-    if (!weasel::filesystem::is_regular_file(file))
-    {
+    if (!weasel::filesystem::is_regular_file(file)) {
         std::cerr << "specified input file is missing" << std::endl;
         return false;
     }
@@ -203,36 +182,30 @@ template <>
 bool Operation<kTest>::run() const
 {
     weasel::configure({ { "api-key", _opts.at("api-key") },
-                        { "api-url", _opts.at("api-url") },
-                        { "version", _opts.at("version") } });
+        { "api-url", _opts.at("api-url") },
+        { "version", _opts.at("version") } });
 
-    if (!weasel::is_configured())
-    {
+    if (!weasel::is_configured()) {
         std::cerr << weasel::configuration_error() << std::endl;
         return EXIT_FAILURE;
     }
 
     auto delay = 0u;
-    if (_opts.count("delay"))
-    {
+    if (_opts.count("delay")) {
         boost::conversion::try_lexical_convert<unsigned>(
             _opts.at("delay"), delay);
     }
 
-    for (auto& table : parse_file(_opts.at("input")))
-    {
-        if (!simulate_table(table, _opts))
-        {
+    for (auto& table : parse_file(_opts.at("input"))) {
+        if (!simulate_table(table, _opts)) {
             std::cerr << "failed to simulate table " << table.name()
                       << std::endl;
             return false;
         }
         // if user has specified an explicit delay, submit each testcase
         // individually and wait after simulating each table.
-        if (0u != delay)
-        {
-            if (!weasel::post())
-            {
+        if (0u != delay) {
+            if (!weasel::post()) {
                 std::cerr << "failed to submit testresults to weasel platform"
                           << std::endl;
             }
@@ -241,15 +214,13 @@ bool Operation<kTest>::run() const
     }
     // if user has not specified an explicit delay, submit all testcases
     // together in one post operation.
-    if (0u == delay && !weasel::post())
-    {
+    if (0u == delay && !weasel::post()) {
         std::cerr << "failed to submit testresults to weasel platform"
                   << std::endl;
     }
 
     // we can also store testresults to disk if we like to.
-    if (_opts.count("output"))
-    {
+    if (_opts.count("output")) {
         weasel::save_json(_opts.at("output"));
     }
     return true;
@@ -260,15 +231,12 @@ bool Operation<kTest>::validate() const
 {
     // validate config parameters needed to run simulation
     Operation<kExecute> op(_opts);
-    if (!op.validate())
-    {
+    if (!op.validate()) {
         return false;
     }
     // check for missing config parameters needed for regression testing
-    for (const auto& key : { "delay", "api-key", "api-url", "version" })
-    {
-        if (!_opts.count(key))
-        {
+    for (const auto& key : { "delay", "api-key", "api-url", "version" }) {
+        if (!_opts.count(key)) {
             std::cerr << "missing required option: " << key << std::endl;
             return false;
         }
@@ -276,8 +244,7 @@ bool Operation<kTest>::validate() const
     // also check that provided delay is an unsigned integer
     unsigned delay = 0;
     if (!boost::conversion::try_lexical_convert<unsigned>(
-            _opts.at("delay"), delay))
-    {
+            _opts.at("delay"), delay)) {
         std::wcerr << "delay must be an unsigned integer" << std::endl;
         return false;
     }
@@ -326,14 +293,13 @@ cxxopts::Options get_options_description(const EMode mode)
 
 EMode detect_operational_mode(const Options& opts)
 {
-    if (!opts.count("mode"))
-    {
+    if (!opts.count("mode")) {
         return kInvalid;
     }
     const auto& mode = opts.at("mode");
     std::map<std::string, EMode> modes { { "new", kGenerate },
-                                         { "run", kExecute },
-                                         { "test", kTest } };
+        { "run", kExecute },
+        { "test", kTest } };
     return modes.count(mode) ? modes.at(mode) : kInvalid;
 }
 
@@ -356,8 +322,7 @@ int read_command_line_options(int argc, char* argv[], Options& options)
     opts_basic.allow_unrecognised_options();
     const auto& results_basic = opts_basic.parse(argc, argv);
 
-    if (results_basic.count("mode"))
-    {
+    if (results_basic.count("mode")) {
         options["mode"] = results_basic["mode"].as<std::string>();
     }
     const auto& mode = detect_operational_mode(options);
@@ -366,24 +331,20 @@ int read_command_line_options(int argc, char* argv[], Options& options)
     const auto& results_mode = opts_mode.parse(argc, argv);
 
     // if user gives --help argument, print appropriate help message and exit
-    if (results_mode.count("help"))
-    {
+    if (results_mode.count("help")) {
         std::cout << opts_mode.help() << std::endl;
         return 1;
     }
     // // update options object with set of all recognizable keys
     const auto& keys = { "mode", "count", "config", "delay", "input",
-                         "output", "policy", "api-key", "api-url", "version" };
-    for (const auto& key : keys)
-    {
-        if (results_mode.count(key))
-        {
+        "output", "policy", "api-key", "api-url", "version" };
+    for (const auto& key : keys) {
+        if (results_mode.count(key)) {
             options[key] = results_mode[key].as<std::string>();
         }
     }
     // if operational mode is invalid, print help message and exit
-    if (kInvalid == mode)
-    {
+    if (kInvalid == mode) {
         std::cout << opts_mode.help() << std::endl;
         return -1;
     }
@@ -405,8 +366,7 @@ int main(int argc, char* argv[])
     // --help or --version or has provided invalid options in which case
     // non-zero value is returned as a signal to end program execution.
     const auto ret = read_command_line_options(argc, argv, options);
-    if (ret)
-    {
+    if (ret) {
         return ret;
     }
     const auto& mode = detect_operational_mode(options);
@@ -415,23 +375,20 @@ int main(int argc, char* argv[])
         { kExecute, std::make_shared<Operation<kExecute>>(options) },
         { kTest, std::make_shared<Operation<kTest>>(options) }
     };
-    if (!ops.count(mode))
-    {
+    if (!ops.count(mode)) {
         std::cerr << "operation is not implemented" << std::endl;
         std::cerr << get_options_description(kInvalid).help() << std::endl;
         return EXIT_FAILURE;
     }
     const auto& operation = ops.at(mode);
     // check that configuration parameters are valid for given operation
-    if (!operation->validate())
-    {
+    if (!operation->validate()) {
         std::cerr << "option validation failed" << std::endl;
         std::cerr << get_options_description(mode).help() << std::endl;
         return EXIT_FAILURE;
     }
     // perform the operation
-    if (!operation->run())
-    {
+    if (!operation->run()) {
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

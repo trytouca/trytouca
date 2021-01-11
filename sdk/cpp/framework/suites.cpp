@@ -28,8 +28,7 @@ namespace weasel { namespace framework {
 
         const std::vector<std::string> keys = { "api-key", "api-url", "team", "suite", "revision" };
         const auto predicate = [this](const std::string& k) { return _options.count(k); };
-        if (!std::all_of(keys.begin(), keys.end(), predicate))
-        {
+        if (!std::all_of(keys.begin(), keys.end(), predicate)) {
             return;
         }
 
@@ -38,8 +37,7 @@ namespace weasel { namespace framework {
         const auto apiRoot = ApiUrl(_options.at("api-url")).root;
         ApiUrl apiUrl(apiRoot, _options.at("team"), _options.at("suite"), _options.at("revision"));
         const auto& apiToken = ApiConnector(apiUrl).authenticate(_options.at("api-key"));
-        if (apiToken.empty())
-        {
+        if (apiToken.empty()) {
             return;
         }
 
@@ -47,8 +45,7 @@ namespace weasel { namespace framework {
 
         ApiConnector apiConnector(apiUrl, apiToken);
         const auto& elements = apiConnector.getElements();
-        for (const auto& element : elements)
-        {
+        for (const auto& element : elements) {
             push(element);
         }
     }
@@ -69,17 +66,14 @@ namespace weasel { namespace framework {
     {
         std::string line;
         std::ifstream ifs(_path);
-        while (std::getline(ifs, line))
-        {
+        while (std::getline(ifs, line)) {
             // skip empty lines
-            if (line.empty())
-            {
+            if (line.empty()) {
                 continue;
             }
             // skip comment lines: by default, we define comment lines as
             // lines that start with two pound characters
-            if (line.compare(0, 2, "##") == 0)
-            {
+            if (line.compare(0, 2, "##") == 0) {
                 continue;
             }
             push(line);

@@ -29,17 +29,14 @@ bool CompareOperation::parse_impl(int argc, char* argv[])
         { "dst", "destination" }
     };
 
-    for (const auto& kvp : filetypes)
-    {
-        if (!result.count(kvp.first))
-        {
+    for (const auto& kvp : filetypes) {
+        if (!result.count(kvp.first)) {
             weasel::print_error("{} file not provided\n", kvp.second);
             fmt::print(stdout, "{}\n", options.help());
             return false;
         }
         const auto filepath = result[kvp.first].as<std::string>();
-        if (!weasel::filesystem::is_regular_file(filepath))
-        {
+        if (!weasel::filesystem::is_regular_file(filepath)) {
             weasel::print_error("{} file `{}` does not exist\n", kvp.second, filepath);
             return false;
         }
@@ -58,14 +55,11 @@ bool CompareOperation::run_impl() const
 {
     weasel::ResultFile src(_src);
     weasel::ResultFile dst(_dst);
-    try
-    {
+    try {
         const auto& res = src.compare(dst);
         fmt::print(stdout, "{}\n", res.json());
         return true;
-    }
-    catch (const std::exception& ex)
-    {
+    } catch (const std::exception& ex) {
         weasel::print_error("failed to compare given files: {}", ex.what());
     }
     return false;

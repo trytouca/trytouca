@@ -34,14 +34,12 @@ namespace weasel {
     bool ResultFile::validate() const
     {
         // if file is already loaded, we have already validated its content
-        if (!_testcases.empty())
-        {
+        if (!_testcases.empty()) {
             return true;
         }
 
         // file must exist in order to be valid
-        if (!weasel::filesystem::is_regular_file(_path))
-        {
+        if (!weasel::filesystem::is_regular_file(_path)) {
             return false;
         }
         const auto& content = load_string_file(_path, std::ios::in | std::ios::binary);
@@ -65,24 +63,21 @@ namespace weasel {
     ElementsMap ResultFile::parse() const
     {
         // if file is already loaded, return the already parsed testcases
-        if (!_testcases.empty())
-        {
+        if (!_testcases.empty()) {
             return _testcases;
         }
 
         const auto& content = load_string_file(_path, std::ios::in | std::ios::binary);
 
         // verify that given content represents valid flatbuffers data
-        if (!validate(content))
-        {
+        if (!validate(content)) {
             throw std::runtime_error("result file invalid: " + path());
         }
 
         ElementsMap testcases;
         // parse content of given file
         const auto& messages = weasel::fbs::GetMessages(content.c_str());
-        for (const auto& message : *messages->messages())
-        {
+        for (const auto& message : *messages->messages()) {
             const auto& buffer = message->buf();
             const auto& ptr = buffer->data();
             std::vector<uint8_t> data(ptr, ptr + buffer->size());
@@ -114,8 +109,7 @@ namespace weasel {
     void ResultFile::save()
     {
         std::vector<Testcase> tcs;
-        for (const auto& testcase : _testcases)
-        {
+        for (const auto& testcase : _testcases) {
             tcs.emplace_back(*testcase.second);
         }
         return save(tcs);
@@ -129,20 +123,16 @@ namespace weasel {
         // create parent directory if it does not exist
         boost::filesystem::path dstFile { _path };
         const auto parentPath = boost::filesystem::absolute(dstFile.parent_path());
-        if (!weasel::filesystem::exists(parentPath.string()) && !boost::filesystem::create_directories(parentPath))
-        {
+        if (!weasel::filesystem::exists(parentPath.string()) && !boost::filesystem::create_directories(parentPath)) {
             throw std::invalid_argument("failed to create parent path");
         }
         // write content of testcases to the filesystem
         const auto buffer = Testcase::serialize(testcases);
-        try
-        {
+        try {
             std::ofstream out(_path, std::ios::binary);
             out.write((const char*)buffer.data(), buffer.size());
             out.close();
-        }
-        catch (const std::exception& ex)
-        {
+        } catch (const std::exception& ex) {
             const auto& msg = "failed to save content to disk: {}";
             throw std::invalid_argument(fmt::format(msg, ex.what()));
         }
@@ -161,8 +151,7 @@ namespace weasel {
         rapidjson::Document doc(rapidjson::kArrayType);
         rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-        for (const auto& item : testcases)
-        {
+        for (const auto& item : testcases) {
             auto val = item.second->json(allocator);
             doc.PushBack(val, allocator);
         }
@@ -193,22 +182,18 @@ namespace weasel {
         const auto srcCases = _testcases.empty() ? parse() : _testcases;
         const auto dstCases = other.parse();
         ComparisonResult cmp;
-        for (const auto& tc : srcCases)
-        {
+        for (const auto& tc : srcCases) {
             const auto& key = tc.first;
-            if (dstCases.count(key))
-            {
+            if (dstCases.count(key)) {
                 const auto value = tc.second->compare(dstCases.at(key));
                 cmp.common.emplace(key, value);
                 continue;
             }
             cmp.fresh.emplace(tc);
         }
-        for (const auto& tc : dstCases)
-        {
+        for (const auto& tc : dstCases) {
             const auto& key = tc.first;
-            if (!srcCases.count(key))
-            {
+            if (!srcCases.count(key)) {
                 cmp.missing.emplace(tc);
             }
         }
@@ -222,7 +207,7 @@ namespace weasel {
     {
         const auto& fromMetadata =
             [](const Testcase::Metadata& meta,
-               rapidjson::Document::AllocatorType& allocator) {
+                rapidjson::Document::AllocatorType& allocator) {
                 rapidjson::Value value(rapidjson::kObjectType);
                 value.AddMember("teamslug", meta.teamslug, allocator);
                 value.AddMember("testsuite", meta.testsuite, allocator);
@@ -237,24 +222,21 @@ namespace weasel {
 
         // add new testcases to json object
         rapidjson::Value rjFresh(rapidjson::kArrayType);
-        for (const auto& item : fresh)
-        {
+        for (const auto& item : fresh) {
             auto val = fromMetadata(item.second->metadata(), allocator);
             rjFresh.PushBack(val, allocator);
         }
 
         // add missing testcases to json object
         rapidjson::Value rjMissing(rapidjson::kArrayType);
-        for (const auto& item : missing)
-        {
+        for (const auto& item : missing) {
             auto val = fromMetadata(item.second->metadata(), allocator);
             rjMissing.PushBack(val, allocator);
         }
 
         // add common testcases to json object
         rapidjson::Value rjCommon(rapidjson::kArrayType);
-        for (const auto& item : common)
-        {
+        for (const auto& item : common) {
             rjCommon.PushBack(item.second.json(allocator), allocator);
         }
 

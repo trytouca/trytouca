@@ -14,8 +14,7 @@ namespace weasel {
     /**
      *
      */
-    enum class ConcurrencyMode : unsigned char
-    {
+    enum class ConcurrencyMode : unsigned char {
         PerThread,
         AllThreads
     };
@@ -23,8 +22,7 @@ namespace weasel {
     /**
      *
      */
-    struct WEASEL_CLIENT_API ClientOptions
-    {
+    struct WEASEL_CLIENT_API ClientOptions {
         std::string api_key; /**< API Key to authenticate to Weasel Platform */
         std::string api_url; /**< URL to Weasel Platform API */
         std::string team; /**< version of code under test */

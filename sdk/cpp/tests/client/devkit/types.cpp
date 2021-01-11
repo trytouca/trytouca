@@ -10,8 +10,7 @@
 
 namespace creature {
 
-    class Head
-    {
+    class Head {
         friend struct weasel::convert::Conversion<creature::Head>;
 
     public:
@@ -27,8 +26,7 @@ namespace creature {
 } // namespace creature
 
 template <>
-struct weasel::convert::Conversion<creature::Head>
-{
+struct weasel::convert::Conversion<creature::Head> {
     std::shared_ptr<types::IType> operator()(const creature::Head& value)
     {
         auto out = std::make_shared<types::Object>("head");
@@ -390,8 +388,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const std::vector<bool>& vec) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (const auto& v : vec)
-                {
+                for (const auto& v : vec) {
                     ret->add(std::make_shared<types::Bool>(v));
                 }
                 return ret;
@@ -418,8 +415,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const std::vector<int>& vec) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (const auto& v : vec)
-                {
+                for (const auto& v : vec) {
                     ret->add(std::make_shared<types::Number<int64_t>>(v));
                 }
                 return ret;
@@ -444,8 +440,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const std::vector<float>& vec) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (const auto& v : vec)
-                {
+                for (const auto& v : vec) {
                     ret->add(std::make_shared<types::Number<float>>(v));
                 }
                 return ret;
@@ -470,8 +465,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const std::vector<std::string>& vec) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (const auto& v : vec)
-                {
+                for (const auto& v : vec) {
                     ret->add(std::make_shared<types::String>(v));
                 }
                 return ret;
@@ -496,8 +490,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const std::vector<bool>& vec) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (const auto& v : vec)
-                {
+                for (const auto& v : vec) {
                     ret->add(std::make_shared<types::Bool>(v));
                 }
                 return ret;
@@ -524,8 +517,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const std::vector<int>& vec) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (const auto& v : vec)
-                {
+                for (const auto& v : vec) {
                     ret->add(std::make_shared<types::Number<int>>(v));
                 }
                 return ret;
@@ -551,8 +543,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const size_t length) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (auto i = 0u; i < length; i++)
-                {
+                for (auto i = 0u; i < length; i++) {
                     ret->add(std::make_shared<types::Number<int>>(1));
                 }
                 return ret;
@@ -590,8 +581,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const std::vector<bool>& vec) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (const auto& v : vec)
-                {
+                for (const auto& v : vec) {
                     ret->add(std::make_shared<types::Bool>(v));
                 }
                 return ret;
@@ -709,8 +699,7 @@ TEST_CASE("Simple Data Types")
             using type_t = std::vector<creature::Head>;
             const auto& make = [](const std::vector<int>& vec) {
                 type_t inputs;
-                for (const auto& v : vec)
-                {
+                for (const auto& v : vec) {
                     inputs.emplace_back(v);
                 }
                 return convert::Conversion<type_t>()(inputs);

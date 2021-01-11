@@ -15,8 +15,7 @@ namespace weasel {
      *
      * @see weasel::make_timer
      */
-    class WEASEL_CLIENT_API scoped_timer
-    {
+    class WEASEL_CLIENT_API scoped_timer {
     public:
         /**
          *

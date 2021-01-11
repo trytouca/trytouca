@@ -23,8 +23,7 @@ namespace weasel {
      *
      * @author Pejman Ghorbanzade
      */
-    class WEASEL_CLIENT_API ResultFile
-    {
+    class WEASEL_CLIENT_API ResultFile {
     public:
         /**
          * @brief represents value returned by function `Resultfile::compare`.
@@ -34,8 +33,7 @@ namespace weasel {
          * @param common comparison results of all testcases shared between
          *             the two `ResultFile` objects.
          */
-        struct WEASEL_CLIENT_API ComparisonResult
-        {
+        struct WEASEL_CLIENT_API ComparisonResult {
             ElementsMap fresh;
             ElementsMap missing;
             std::unordered_map<std::string, compare::TestcaseComparison> common;

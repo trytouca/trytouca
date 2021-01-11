@@ -16,29 +16,25 @@ int main(int argc, char* argv[])
 
     // parse application options
 
-    if (!opts.parse(argc, argv))
-    {
+    if (!opts.parse(argc, argv)) {
         return EXIT_FAILURE;
     }
 
     // we are done if user has asked for help
 
-    if (opts.show_help || opts.show_version)
-    {
+    if (opts.show_help || opts.show_version) {
         return EXIT_SUCCESS;
     }
 
     // we are done if specified command is invalid
 
-    if (opts.mode == Operation::Command::unknown)
-    {
+    if (opts.mode == Operation::Command::unknown) {
         return EXIT_FAILURE;
     }
 
     // setup basic console logging
 
-    if (!opts.log_level.empty())
-    {
+    if (!opts.log_level.empty()) {
         weasel::setup_console_logger(opts.log_level);
     }
 
@@ -46,22 +42,19 @@ int main(int argc, char* argv[])
 
     const auto& operation = Operation::make(opts.mode);
 
-    if (!operation || !operation->parse(argc, argv))
-    {
+    if (!operation || !operation->parse(argc, argv)) {
         return EXIT_FAILURE;
     }
 
     // setup file logging
 
-    if (!opts.log_dir.empty())
-    {
+    if (!opts.log_dir.empty()) {
         weasel::setup_file_logger(opts.log_dir);
     }
 
     // execute operation
 
-    if (!operation->run())
-    {
+    if (!operation->run()) {
         return EXIT_FAILURE;
     }
 

@@ -11,8 +11,7 @@
 /**
  * @brief Captures content printed to standard output and error streams.
  */
-struct WEASEL_FRAMEWORK_API OutputCapturer
-{
+struct WEASEL_FRAMEWORK_API OutputCapturer {
     OutputCapturer();
     ~OutputCapturer();
 

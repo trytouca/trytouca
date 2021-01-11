@@ -87,29 +87,25 @@ namespace weasel { namespace convert {
          * implementation of this concept.
          */
         template <typename Test, template <typename...> class Ref>
-        struct is_specialization : std::false_type
-        {
+        struct is_specialization : std::false_type {
         };
 
         template <template <typename...> class Ref, typename... Args>
-        struct is_specialization<Ref<Args...>, Ref> : std::true_type
-        {
+        struct is_specialization<Ref<Args...>, Ref> : std::true_type {
         };
 
         template <typename T>
         using is_weasel_boolean = std::is_same<T, bool>;
 
         template <typename T, typename Enable = void>
-        struct is_weasel_number : std::false_type
-        {
+        struct is_weasel_number : std::false_type {
         };
 
         template <typename T>
         struct is_weasel_number<
             T,
             typename std::enable_if<std::is_floating_point<T>::value>::type>
-            : std::true_type
-        {
+            : std::true_type {
         };
 
         template <typename T>
@@ -117,13 +113,11 @@ namespace weasel { namespace convert {
             T,
             typename std::enable_if<
                 std::is_integral<T>::value
-                && !is_weasel_boolean<T>::value>::type> : std::true_type
-        {
+                && !is_weasel_boolean<T>::value>::type> : std::true_type {
         };
 
         template <typename T, typename Enable = void>
-        struct is_weasel_string : std::false_type
-        {
+        struct is_weasel_string : std::false_type {
         };
 
         // template <typename C, typename T, typename A>
@@ -136,8 +130,7 @@ namespace weasel { namespace convert {
             T,
             typename std::enable_if<
                 std::is_convertible<T, std::string>::value>::type>
-            : std::true_type
-        {
+            : std::true_type {
         };
 
         template <typename T>
@@ -145,46 +138,38 @@ namespace weasel { namespace convert {
             T,
             typename std::enable_if<
                 std::is_convertible<T, std::wstring>::value>::type>
-            : std::true_type
-        {
+            : std::true_type {
         };
 
         template <typename T, typename Enable = void>
-        struct is_weasel_array : std::false_type
-        {
+        struct is_weasel_array : std::false_type {
         };
 
         template <typename T>
-        struct is_weasel_array<T&> : is_weasel_array<T>
-        {
+        struct is_weasel_array<T&> : is_weasel_array<T> {
         };
 
         template <typename... args>
-        struct is_weasel_array<std::vector<args...>> : std::true_type
-        {
+        struct is_weasel_array<std::vector<args...>> : std::true_type {
         };
 
         template <typename... args>
-        struct is_weasel_array<std::list<args...>> : std::true_type
-        {
+        struct is_weasel_array<std::list<args...>> : std::true_type {
         };
 
         template <typename... args>
-        struct is_weasel_array<std::set<args...>> : std::true_type
-        {
+        struct is_weasel_array<std::set<args...>> : std::true_type {
         };
 
         template <typename T, std::size_t N>
-        struct is_weasel_array<std::array<T, N>> : std::true_type
-        {
+        struct is_weasel_array<std::array<T, N>> : std::true_type {
         };
 
         template <typename T>
         struct is_weasel_array<
             T,
             typename std::enable_if<
-                is_specialization<T, std::map>::value>::type> : std::true_type
-        {
+                is_specialization<T, std::map>::value>::type> : std::true_type {
         };
 
         template <typename T>
@@ -192,8 +177,7 @@ namespace weasel { namespace convert {
             T,
             typename std::enable_if<
                 is_specialization<T, std::unordered_map>::value>::type>
-            : std::true_type
-        {
+            : std::true_type {
         };
 
         template <typename T>
@@ -318,8 +302,7 @@ namespace weasel { namespace convert {
      * @endcode
      */
     template <typename T, typename Enable = void>
-    struct Conversion
-    {
+    struct Conversion {
         /**
          * @brief describes logic for handling objects of custom types.
          * @details Implements how object of given type should be decomposed
@@ -350,8 +333,7 @@ namespace weasel { namespace convert {
     template <typename T>
     struct Conversion<
         T,
-        typename std::enable_if<conform::is_weasel_boolean<T>::value>::type>
-    {
+        typename std::enable_if<conform::is_weasel_boolean<T>::value>::type> {
         std::shared_ptr<types::IType> operator()(const T& value)
         {
             return std::make_shared<types::Bool>(value);
@@ -366,8 +348,7 @@ namespace weasel { namespace convert {
     template <typename T>
     struct Conversion<
         T,
-        typename std::enable_if<conform::is_weasel_number<T>::value>::type>
-    {
+        typename std::enable_if<conform::is_weasel_number<T>::value>::type> {
         std::shared_ptr<types::IType> operator()(const T& value)
         {
             return std::make_shared<types::Number<T>>(value);
@@ -382,8 +363,7 @@ namespace weasel { namespace convert {
     template <typename T>
     struct Conversion<
         T,
-        typename std::enable_if<conform::is_weasel_string<T>::value>::type>
-    {
+        typename std::enable_if<conform::is_weasel_string<T>::value>::type> {
         std::shared_ptr<types::IType> operator()(const T& value)
         {
             return std::make_shared<types::String>(
@@ -399,13 +379,11 @@ namespace weasel { namespace convert {
     template <typename T>
     struct Conversion<
         T,
-        typename std::enable_if<conform::is_weasel_array<T>::value>::type>
-    {
+        typename std::enable_if<conform::is_weasel_array<T>::value>::type> {
         std::shared_ptr<types::IType> operator()(const T& value)
         {
             auto out = std::make_shared<types::Array>();
-            for (const auto& v : value)
-            {
+            for (const auto& v : value) {
                 out->add(Conversion<typename T::value_type>()(v));
             }
             return out;

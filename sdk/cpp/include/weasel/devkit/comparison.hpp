@@ -15,8 +15,7 @@ namespace weasel { namespace compare {
      * @enum weasel::compare::MatchType
      * @brief describes overall result of comparing two testcases
      */
-    enum class MatchType : unsigned char
-    {
+    enum class MatchType : unsigned char {
         Perfect, /**< Indicates that compared objects were identical */
         None /**< Indicates that compared objects were different */
     };
@@ -24,8 +23,7 @@ namespace weasel { namespace compare {
     /**
      *
      */
-    struct WEASEL_CLIENT_API TypeComparison
-    {
+    struct WEASEL_CLIENT_API TypeComparison {
         std::string srcValue;
         std::string dstValue;
         types::ValueType srcType = types::ValueType::Unknown;
@@ -43,8 +41,7 @@ namespace weasel { namespace compare {
     /**
      *
      */
-    enum class Category
-    {
+    enum class Category {
         Common,
         Missing,
         Fresh
@@ -53,8 +50,7 @@ namespace weasel { namespace compare {
     /**
      *
      */
-    struct Cellar
-    {
+    struct Cellar {
         ComparisonMap common;
         KeyMap missing;
         KeyMap fresh;
@@ -89,14 +85,12 @@ namespace weasel { namespace compare {
     /**
      *
      */
-    class WEASEL_CLIENT_API TestcaseComparison
-    {
+    class WEASEL_CLIENT_API TestcaseComparison {
     public:
         /**
          *
          */
-        struct WEASEL_CLIENT_API Overview
-        {
+        struct WEASEL_CLIENT_API Overview {
             std::int32_t keysCountCommon;
             std::int32_t keysCountFresh;
             std::int32_t keysCountMissing;

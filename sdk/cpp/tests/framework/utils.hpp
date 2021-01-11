@@ -10,12 +10,10 @@
 #include "weasel/weasel.hpp"
 #include <iostream>
 
-struct DummySuite final : public weasel::framework::Suite
-{
+struct DummySuite final : public weasel::framework::Suite {
 };
 
-struct SimpleSuite final : public weasel::framework::Suite
-{
+struct SimpleSuite final : public weasel::framework::Suite {
     using Inputs = std::vector<weasel::framework::Testcase>;
     SimpleSuite(const Inputs& inputs)
         : Suite()
@@ -29,8 +27,7 @@ struct SimpleSuite final : public weasel::framework::Suite
     Inputs _inputs;
 };
 
-struct DummyWorkflow : public weasel::framework::Workflow
-{
+struct DummyWorkflow : public weasel::framework::Workflow {
     std::shared_ptr<weasel::framework::Suite> suite() const override
     {
         return std::make_shared<DummySuite>();
@@ -50,8 +47,7 @@ struct DummyWorkflow : public weasel::framework::Workflow
     }
 };
 
-struct SimpleWorkflow : public weasel::framework::Workflow
-{
+struct SimpleWorkflow : public weasel::framework::Workflow {
     SimpleWorkflow()
         : Workflow()
     {
@@ -63,17 +59,14 @@ struct SimpleWorkflow : public weasel::framework::Workflow
     }
     weasel::framework::Errors execute(const weasel::framework::Testcase& testcase) const override
     {
-        if (testcase == "8")
-        {
+        if (testcase == "8") {
             std::cout << "simple message in output stream" << std::endl;
             std::cerr << "simple message in error stream" << std::endl;
         }
-        if (testcase == "42")
-        {
+        if (testcase == "42") {
             return { "some-error" };
         }
-        if (testcase == "4")
-        {
+        if (testcase == "4") {
             weasel::add_result("some-number", 1024);
             weasel::add_result("some-string", "foo");
             weasel::add_array_element("some-array", "bar");
@@ -83,15 +76,13 @@ struct SimpleWorkflow : public weasel::framework::Workflow
 };
 
 template <class Workflow>
-class MainCaller
-{
+class MainCaller {
 public:
     void call_with(const std::vector<std::string>& args)
     {
         std::vector<char*> argv;
         argv.push_back((char*)"myapp");
-        for (const auto& arg : args)
-        {
+        for (const auto& arg : args) {
             argv.push_back((char*)arg.data());
         }
         argv.push_back(nullptr);
@@ -111,15 +102,13 @@ private:
     OutputCapturer capturer;
 };
 
-struct ResultChecker
-{
+struct ResultChecker {
 
 public:
     ResultChecker(const std::vector<weasel::path>& segments)
     {
         _path = segments.front();
-        for (auto i = 1ul; i < segments.size(); i++)
-        {
+        for (auto i = 1ul; i < segments.size(); i++) {
             _path /= segments[i];
         }
     }
@@ -146,10 +135,8 @@ private:
         const std::function<bool(boost::filesystem::directory_entry)> filter) const
     {
         std::vector<std::string> filenames;
-        for (const auto& entry : boost::filesystem::directory_iterator(_path / filename))
-        {
-            if (filter(entry))
-            {
+        for (const auto& entry : boost::filesystem::directory_iterator(_path / filename)) {
+            if (filter(entry)) {
                 filenames.emplace_back(entry.path().filename().string());
             }
         }

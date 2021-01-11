@@ -16,8 +16,7 @@ namespace weasel {
         /**
          *
          */
-        class WEASEL_CLIENT_API Object : public IType
-        {
+        class WEASEL_CLIENT_API Object : public IType {
         public:
             /**
              *
@@ -87,8 +86,7 @@ namespace weasel {
         struct Conversion<
             T,
             typename std::enable_if<
-                conform::is_specialization<T, std::pair>::value>::type>
-        {
+                conform::is_specialization<T, std::pair>::value>::type> {
             std::shared_ptr<types::IType> operator()(const T& value)
             {
                 auto out = std::make_shared<types::Object>("std::pair");
@@ -105,13 +103,11 @@ namespace weasel {
         struct Conversion<
             T,
             typename std::enable_if<
-                conform::is_specialization<T, std::shared_ptr>::value>::type>
-        {
+                conform::is_specialization<T, std::shared_ptr>::value>::type> {
             std::shared_ptr<types::IType> operator()(const T& value)
             {
                 auto out = std::make_shared<types::Object>("std::shared_ptr");
-                if (value)
-                {
+                if (value) {
                     out->add("v", *value);
                 }
                 return out;

@@ -268,8 +268,10 @@ build_lint () {
     if [ $# -ne 1 ]; then return 1; fi
     check_prerequisite_commands "clang-format"
     local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
-    find "${dir_source}" \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
-        -exec clang-format -i {} +
+    for dir in "utils" "framework" "src" "include" "tests" "example"; do
+        find "${dir_source}/${dir}" \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
+            -exec clang-format -i {} +
+    done
     log_info "ran clang-format on cpp client source code"
 }
 

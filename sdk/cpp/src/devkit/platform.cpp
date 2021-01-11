@@ -17,12 +17,10 @@ namespace weasel {
     ApiUrl::ApiUrl(const std::string& apiUrl)
     {
         root = apiUrl.substr(0, apiUrl.find_last_of('@'));
-        if (root.back() == '/')
-        {
+        if (root.back() == '/') {
             root.pop_back();
         }
-        if (std::string::npos == apiUrl.find_last_of('@'))
-        {
+        if (std::string::npos == apiUrl.find_last_of('@')) {
             slugs.emplace("team", "");
             slugs.emplace("suite", "");
             slugs.emplace("version", "");
@@ -31,15 +29,12 @@ namespace weasel {
         std::istringstream iss(apiUrl.substr(apiUrl.find_last_of('@') + 1));
         std::vector<std::string> items;
         std::string item;
-        while (std::getline(iss, item, '/'))
-        {
-            if (!item.empty())
-            {
+        while (std::getline(iss, item, '/')) {
+            if (!item.empty()) {
                 items.emplace_back(item);
             }
         }
-        while (items.size() < 3)
-        {
+        while (items.size() < 3) {
             items.emplace_back("");
         }
         slugs["team"] = items.at(0);
@@ -92,32 +87,27 @@ namespace weasel {
         // performing handshake with Weasel Platform
         const auto response = httpClient.getJson("/platform");
 
-        if (response.code == -1)
-        {
+        if (response.code == -1) {
             // Weasel Platform appears to be down
             return false;
         }
 
-        if (response.code != 200)
-        {
+        if (response.code != 200) {
             // response from Weasel Platform is unexpected
             return false;
         }
 
-        if (doc.Parse<0>(response.body.c_str()).HasParseError())
-        {
+        if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
             // failed to parse response from Weasel Platform
             return false;
         }
 
-        if (!doc.HasMember("ready") || !doc["ready"].IsBool())
-        {
+        if (!doc.HasMember("ready") || !doc["ready"].IsBool()) {
             // response from Weasel Platform is ill-formed
             return false;
         }
 
-        if (!doc["ready"].GetBool())
-        {
+        if (!doc["ready"].GetBool()) {
             // Weasel Platform is not ready
             return false;
         }
@@ -140,22 +130,19 @@ namespace weasel {
 
         // check status of response from Weasel Platform
 
-        if (response.code != 200)
-        {
+        if (response.code != 200) {
             throw std::runtime_error(weasel::format("platform authentication failed: {}", response.code));
         }
 
         // Parse response from Weasel Platform
 
-        if (doc.Parse<0>(response.body.c_str()).HasParseError())
-        {
+        if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
             throw std::runtime_error("failed to parse platform response");
         }
 
         // extract API Token issued by Weasel Platform
 
-        if (!doc.HasMember("token") || !doc["token"].IsString())
-        {
+        if (!doc.HasMember("token") || !doc["token"].IsString()) {
             throw std::runtime_error("platform response malformed");
         }
 
@@ -175,23 +162,20 @@ namespace weasel {
 
         // check status of response from Weasel Platform
 
-        if (response.code != 200)
-        {
+        if (response.code != 200) {
             throw std::runtime_error("received unexpected platform response");
         }
 
         // parse response from Weasel Platform
 
-        if (doc.Parse<0>(response.body.c_str()).HasParseError())
-        {
+        if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
             throw std::runtime_error("failed to parse platform response");
         }
 
         // extract list of element slugs in the response from Weasel Platform
 
         std::vector<std::string> elements;
-        for (const auto& rjElement : doc.GetArray())
-        {
+        for (const auto& rjElement : doc.GetArray()) {
             elements.emplace_back(rjElement["name"].GetString());
         }
         return elements;
@@ -205,12 +189,10 @@ namespace weasel {
         const unsigned int maxRetries) const
     {
         std::vector<std::string> errors;
-        for (auto i = 0ul; i < maxRetries; ++i)
-        {
+        for (auto i = 0ul; i < maxRetries; ++i) {
             HttpClient httpClient(_apiUrl.root);
             const auto response = httpClient.postBinary("/client/submit", content, _apiToken);
-            if (response.code == 204)
-            {
+            if (response.code == 204) {
                 return {};
             }
             errors.emplace_back(weasel::format(

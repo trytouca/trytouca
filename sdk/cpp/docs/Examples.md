@@ -30,8 +30,8 @@ bool is_tall(const float height)
 ```
 
 ```cpp
-#include <code_under_test.hpp>
-#include <weasel/weasel.hpp>
+#include "code_under_test.hpp"
+#include "weasel/weasel.hpp"
 
 /**
  * @file regression_test.cpp

@@ -7,6 +7,8 @@
 #include <fstream>
 #include <locale>
 #include <sstream>
+#include <iostream>
+#include "fmt/printf.h"
 
 namespace weasel {
 
@@ -15,7 +17,7 @@ namespace weasel {
      */
     void print_impl(const fmt::terminal_color& style, fmt::string_view format, fmt::format_args args)
     {
-        fmt::vprint(stderr, fmt::fg(style), format, args);
+        std::cerr << fmt::vformat(fmt::fg(style), format, args);
     }
 
     /**
@@ -35,8 +37,7 @@ namespace weasel {
         const std::ios_base::openmode mode)
     {
         std::ifstream filestream(path, mode);
-        if (!filestream)
-        {
+        if (!filestream) {
             throw std::invalid_argument("failed to read file");
         }
         std::ostringstream oss;

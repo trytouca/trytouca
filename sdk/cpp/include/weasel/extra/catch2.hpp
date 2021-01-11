@@ -27,19 +27,17 @@ int main(int argc, char* argv[])
     session.cli(cli);
 
     const auto returnCode = session.applyCommandLine(argc, argv);
-    if (returnCode != 0)
-    {
+    if (returnCode != 0) {
         return returnCode;
     }
 
     weasel::configure({ { "api-key", weasel_configure[0] },
-                        { "api-url", weasel_configure[1] },
-                        { "version", weasel_configure[2] } });
+        { "api-url", weasel_configure[1] },
+        { "version", weasel_configure[2] } });
 
-    if (!weasel::is_configured())
-    {
+    if (!weasel::is_configured()) {
         std::cerr << "failed to configure weasel client:\n - "
-            << weasel::configuration_error() << std::endl;
+                  << weasel::configuration_error() << std::endl;
         return EXIT_FAILURE;
     }
 

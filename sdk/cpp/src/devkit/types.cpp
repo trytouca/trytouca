@@ -179,8 +179,7 @@ namespace weasel { namespace types {
         rapidjson::Document doc;
         auto& allocator = doc.GetAllocator();
         const auto& value = json(allocator);
-        if (value.IsString())
-        {
+        if (value.IsString()) {
             return value.GetString();
         }
         rapidjson::StringBuffer strbuf;
@@ -197,8 +196,7 @@ namespace weasel { namespace types {
     {
         const auto& value = ptr->value();
         const auto& type = ptr->value_type();
-        switch (type)
-        {
+        switch (type) {
         case fbs::Type::Bool:
             return filescope::deserialize<fbs::Bool, Bool>(ptr);
         case fbs::Type::Int:
@@ -282,8 +280,7 @@ namespace weasel { namespace types {
         // the two result keys are considered completely different
         // if they are different in types.
 
-        if (type() != itype->type())
-        {
+        if (type() != itype->type()) {
             result.dstType = itype->type();
             result.dstValue = itype->string();
             result.desc.insert("result types are different");
@@ -293,8 +290,7 @@ namespace weasel { namespace types {
         // two Bool objects are equal if they have identical values.
 
         const auto dst = std::dynamic_pointer_cast<Bool>(itype);
-        if (_value == dst->_value)
-        {
+        if (_value == dst->_value) {
             result.match = compare::MatchType::Perfect;
             result.score = 1.0;
             return result;
@@ -371,8 +367,7 @@ namespace weasel { namespace types {
         // the two result keys are considered completely different
         // if they are different in types.
 
-        if (type() != itype->type())
-        {
+        if (type() != itype->type()) {
             result.dstType = itype->type();
             result.dstValue = itype->string();
             result.desc.insert("result types are different");
@@ -383,8 +378,7 @@ namespace weasel { namespace types {
         // in their original type.
 
         const auto dst = std::dynamic_pointer_cast<Number<T>>(itype);
-        if (_value == dst->_value)
-        {
+        if (_value == dst->_value) {
             result.match = compare::MatchType::Perfect;
             result.score = 1.0;
             return result;
@@ -400,8 +394,7 @@ namespace weasel { namespace types {
         const auto& difference = 0.0 == percent || threshold < percent
             ? std::to_string(std::fabs(diff))
             : std::to_string(percent * 100.0) + " percent";
-        if (0.0 < percent && percent < threshold)
-        {
+        if (0.0 < percent && percent < threshold) {
             result.score = 1.0 - percent;
         }
 
@@ -464,8 +457,7 @@ namespace weasel { namespace types {
         // the two result keys are considered completely different
         // if they are different in types.
 
-        if (type() != itype->type())
-        {
+        if (type() != itype->type()) {
             result.dstType = itype->type();
             result.dstValue = itype->string();
             result.desc.insert("result types are different");
@@ -475,8 +467,7 @@ namespace weasel { namespace types {
         // two String objects are equal if they have identical values
 
         const auto dst = std::dynamic_pointer_cast<String>(itype);
-        if (0 == _value.compare(dst->_value))
-        {
+        if (0 == _value.compare(dst->_value)) {
             result.match = compare::MatchType::Perfect;
             result.score = 1.0;
             return result;
@@ -502,8 +493,7 @@ namespace weasel { namespace types {
         rapidjson::Document::AllocatorType& allocator) const
     {
         rapidjson::Value rjValue(rapidjson::kArrayType);
-        for (const auto& v : _values)
-        {
+        for (const auto& v : _values) {
             rjValue.PushBack(v->json(allocator), allocator);
         }
         return rjValue;
@@ -516,8 +506,7 @@ namespace weasel { namespace types {
         flatbuffers::FlatBufferBuilder& builder) const
     {
         std::vector<flatbuffers::Offset<fbs::TypeWrapper>> fbsEntries_vector;
-        for (const auto& value : _values)
-        {
+        for (const auto& value : _values) {
             fbsEntries_vector.push_back(value->serialize(builder));
         }
         const auto& fbsEntries = builder.CreateVector(fbsEntries_vector);
@@ -543,8 +532,7 @@ namespace weasel { namespace types {
      */
     void Array::deserialize(const fbs::Array* obj)
     {
-        for (const auto& value : *obj->values())
-        {
+        for (const auto& value : *obj->values()) {
             _values.push_back(deserializeValue(value));
         }
     }
@@ -562,8 +550,7 @@ namespace weasel { namespace types {
         // the two result keys are considered completely different
         // if they are different in types.
 
-        if (type() != itype->type())
-        {
+        if (type() != itype->type()) {
             result.dstType = itype->type();
             result.dstValue = itype->string();
             result.desc.insert("result types are different");
@@ -576,8 +563,7 @@ namespace weasel { namespace types {
             const auto kvps = arr.flatten();
             std::vector<std::shared_ptr<IType>> items;
             items.reserve(kvps.size());
-            for (const auto& kvp : kvps)
-            {
+            for (const auto& kvp : kvps) {
                 items.emplace_back(kvp.second);
             }
             return items;
@@ -593,8 +579,7 @@ namespace weasel { namespace types {
         // identical. we choose to handle this special case to prevent
         // divide by zero.
 
-        if (0u == minmax.second)
-        {
+        if (0u == minmax.second) {
             result.match = compare::MatchType::Perfect;
             result.score = 1.0;
             return result;
@@ -608,15 +593,13 @@ namespace weasel { namespace types {
         const auto diffRange = minmax.second - minmax.first;
         const auto sizeRatio = diffRange / static_cast<double>(minmax.second);
         // describe the change of array size
-        if (0 != diffRange)
-        {
+        if (0 != diffRange) {
             const auto& change = srcMembers.size() < dstMembers.size() ? "shrunk" : "grown";
             result.desc.insert(fmt::format("array size {} by {} elements", change, diffRange));
         }
         // skip if array size has changed noticeably or if array in head
         // version is empty.
-        if (sizeThreshold < sizeRatio || srcMembers.empty())
-        {
+        if (sizeThreshold < sizeRatio || srcMembers.empty()) {
             // keep result.match as None and score as 0.0
             // and return the comparison result
             result.dstValue = itype->string();
@@ -627,12 +610,10 @@ namespace weasel { namespace types {
         auto scoreEarned = 0.0;
         std::unordered_map<unsigned, std::set<std::string>> differences;
 
-        for (auto i = 0u; i < minmax.first; i++)
-        {
+        for (auto i = 0u; i < minmax.first; i++) {
             const auto tmp = srcMembers.at(i)->compare(dstMembers.at(i));
             scoreEarned += tmp.score;
-            if (compare::MatchType::None == tmp.match)
-            {
+            if (compare::MatchType::None == tmp.match) {
                 differences.emplace(i, tmp.desc);
             }
         }
@@ -643,21 +624,16 @@ namespace weasel { namespace types {
         const auto diffRatioThreshold = 0.2;
         const auto diffSizeThreshold = 10u;
         const auto diffRatio = differences.size() / static_cast<double>(srcMembers.size());
-        if (diffRatio < diffRatioThreshold
-            || differences.size() < diffSizeThreshold)
-        {
-            for (const auto& diff : differences)
-            {
-                for (const auto& msg : diff.second)
-                {
+        if (diffRatio < diffRatioThreshold || differences.size() < diffSizeThreshold) {
+            for (const auto& diff : differences) {
+                for (const auto& msg : diff.second) {
                     result.desc.insert(fmt::format("[{}]:{}", diff.first, msg));
                 }
             }
             result.score = scoreEarned / minmax.second;
         }
 
-        if (1.0 == result.score)
-        {
+        if (1.0 == result.score) {
             result.match = compare::MatchType::Perfect;
             return result;
         }
@@ -672,18 +648,15 @@ namespace weasel { namespace types {
     KeyMap Array::flatten() const
     {
         KeyMap members;
-        for (unsigned i = 0; i < _values.size(); ++i)
-        {
+        for (unsigned i = 0; i < _values.size(); ++i) {
             const auto& value = _values.at(i);
             const auto& name = '[' + std::to_string(i) + ']';
             const auto& nestedMembers = value->flatten();
-            if (nestedMembers.empty())
-            {
+            if (nestedMembers.empty()) {
                 members.emplace(name, value);
                 continue;
             }
-            for (const auto& nestedMember : nestedMembers)
-            {
+            for (const auto& nestedMember : nestedMembers) {
                 const auto& key = name + nestedMember.first;
                 members.emplace(key, nestedMember.second);
             }

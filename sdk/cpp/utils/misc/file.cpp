@@ -11,25 +11,20 @@
  */
 std::vector<weasel::path> discover(const weasel::path& path)
 {
-    if (weasel::filesystem::is_regular_file(path))
-    {
+    if (weasel::filesystem::is_regular_file(path)) {
         weasel::ResultFile srcFile(path);
-        if (!srcFile.validate())
-        {
+        if (!srcFile.validate()) {
             return {};
         }
         return { path };
     }
-    if (!weasel::filesystem::is_directory(path))
-    {
+    if (!weasel::filesystem::is_directory(path)) {
         return {};
     }
     std::vector<weasel::path> output;
-    for (const auto& it : boost::filesystem::recursive_directory_iterator(path))
-    {
+    for (const auto& it : boost::filesystem::recursive_directory_iterator(path)) {
         weasel::ResultFile srcFile(it.path().string());
-        if (!srcFile.validate())
-        {
+        if (!srcFile.validate()) {
             continue;
         }
         output.push_back(it.path().string());

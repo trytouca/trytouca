@@ -21,8 +21,7 @@ bool ViewOperation::parse_impl(int argc, char* argv[])
     options.allow_unrecognised_options();
 
     const auto& result = options.parse(argc, argv);
-    if (!result.count("src"))
-    {
+    if (!result.count("src")) {
         weasel::print_error("source file not provided\n");
         fmt::print(stdout, "{}\n", options.help());
         return false;
@@ -30,8 +29,7 @@ bool ViewOperation::parse_impl(int argc, char* argv[])
 
     _src = result["src"].as<std::string>();
 
-    if (!weasel::filesystem::is_regular_file(_src))
-    {
+    if (!weasel::filesystem::is_regular_file(_src)) {
         weasel::print_error("file `{}` does not exist\n", _src);
         return false;
     }
@@ -45,13 +43,10 @@ bool ViewOperation::parse_impl(int argc, char* argv[])
 bool ViewOperation::run_impl() const
 {
     weasel::ResultFile file(_src);
-    try
-    {
+    try {
         fmt::print(stdout, "{}\n", file.readFileInJson());
         return true;
-    }
-    catch (const std::exception& ex)
-    {
+    } catch (const std::exception& ex) {
         weasel::print_error("failed to read file {}: {}\n", _src, ex.what());
     }
     return false;

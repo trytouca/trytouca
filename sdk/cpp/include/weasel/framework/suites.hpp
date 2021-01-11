@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <weasel/framework.hpp>
+#include "weasel/framework.hpp"
 
 namespace weasel { namespace framework {
 
@@ -18,8 +18,7 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    class WEASEL_FRAMEWORK_API RemoteSuite final : public Suite
-    {
+    class WEASEL_FRAMEWORK_API RemoteSuite final : public Suite {
     public:
         RemoteSuite(const Options& options);
 
@@ -38,8 +37,7 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    class WEASEL_FRAMEWORK_API FileSuite final : public Suite
-    {
+    class WEASEL_FRAMEWORK_API FileSuite final : public Suite {
     public:
         FileSuite(const std::string& path);
 

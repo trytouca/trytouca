@@ -15,8 +15,7 @@
 void update_logger(spdlog::sink_ptr sink)
 {
     auto main_logger = spdlog::get("weasel-cmp");
-    if (main_logger)
-    {
+    if (main_logger) {
         main_logger->sinks().push_back(sink);
         return;
     }

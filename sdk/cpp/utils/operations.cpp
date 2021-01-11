@@ -35,8 +35,7 @@ std::shared_ptr<Operation> Operation::make(const Operation::Command& mode)
         { Operation::Command::update, &std::make_shared<UpdateOperation> },
         { Operation::Command::view, &std::make_shared<ViewOperation> }
     };
-    if (!ops.count(mode))
-    {
+    if (!ops.count(mode)) {
         weasel::print_error("operation not implemented: {}\n", mode);
         return nullptr;
     }
@@ -48,12 +47,9 @@ std::shared_ptr<Operation> Operation::make(const Operation::Command& mode)
  */
 bool Operation::parse(int argc, char* argv[])
 {
-    try
-    {
+    try {
         return parse_impl(argc, argv);
-    }
-    catch (const std::exception& ex)
-    {
+    } catch (const std::exception& ex) {
         weasel::print_error("failed to parse operation options: {}\n", ex.what());
     }
     return false;
@@ -64,12 +60,9 @@ bool Operation::parse(int argc, char* argv[])
  */
 bool Operation::run() const
 {
-    try
-    {
+    try {
         return run_impl();
-    }
-    catch (const std::exception& ex)
-    {
+    } catch (const std::exception& ex) {
         weasel::print_error("failed to run operation: {}\n", ex.what());
     }
     return false;
@@ -99,12 +92,9 @@ cxxopts::Options config_options_main()
  */
 bool CliOptions::parse(int argc, char* argv[])
 {
-    try
-    {
+    try {
         return parse_impl(argc, argv);
-    }
-    catch (const std::exception& ex)
-    {
+    } catch (const std::exception& ex) {
         weasel::print_error("failed to parse application options: {}\n", ex.what());
     }
     return false;
@@ -122,8 +112,7 @@ bool CliOptions::parse_impl(int argc, char* argv[])
 
     // if user asks for help, print help message and exit
 
-    if (result.count("help"))
-    {
+    if (result.count("help")) {
         fmt::print(stdout, "{}\n", options.show_positional_help().help());
         show_help = true;
         return true;
@@ -132,8 +121,7 @@ bool CliOptions::parse_impl(int argc, char* argv[])
     // if user asks for version, print application version and exit
     // @todo add a version.hpp to weasel/devkit and use major/minor/patch below
 
-    if (result.count("version"))
-    {
+    if (result.count("version")) {
         fmt::print(stdout, "Weasel Utility Command Line Tool v{}.{}.{}\n", WEASEL_VERSION_MAJOR, WEASEL_VERSION_MINOR, WEASEL_VERSION_PATCH);
         show_version = true;
         return true;
@@ -141,8 +129,7 @@ bool CliOptions::parse_impl(int argc, char* argv[])
 
     // validate and set option `mode`
 
-    if (!result.count("mode"))
-    {
+    if (!result.count("mode")) {
         weasel::print_error("no command was specified\n");
         fmt::print(stderr, "{}\n", options.show_positional_help().help());
         return false;
@@ -151,8 +138,7 @@ bool CliOptions::parse_impl(int argc, char* argv[])
     const auto mode_name = result["mode"].as<std::string>();
     mode = Operation::find_mode(mode_name);
 
-    if (mode == Operation::Command::unknown)
-    {
+    if (mode == Operation::Command::unknown) {
         weasel::print_error("provided command `{}` is invalid\n", mode_name);
         fmt::print(stderr, "{}\n", options.show_positional_help().help());
         return false;
@@ -164,8 +150,7 @@ bool CliOptions::parse_impl(int argc, char* argv[])
         // setup console logging with appropriate log level
         const std::unordered_set<std::string> levels = { "debug", "info", "warning" };
         const auto level = result["log-level"].as<std::string>();
-        if (!levels.count(level))
-        {
+        if (!levels.count(level)) {
             weasel::print_error("invalid value for option `log-level`");
             fmt::print("{}\n", options.show_positional_help().help());
             return false;
@@ -175,8 +160,7 @@ bool CliOptions::parse_impl(int argc, char* argv[])
 
     // set option `log-dir` if it is provided
 
-    if (result.count("log-dir"))
-    {
+    if (result.count("log-dir")) {
         log_dir = result["log-dir"].as<std::string>();
     }
 

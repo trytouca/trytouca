@@ -47,8 +47,7 @@ TEST_CASE("parse api-url")
 
         CHECK(apiUrl.root == "https://example-101.com");
         REQUIRE(apiUrl.slugs.size() == 3);
-        for (const auto& key : { "team", "suite", "version" })
-        {
+        for (const auto& key : { "team", "suite", "version" }) {
             REQUIRE(apiUrl.slugs.count(key));
             CHECK(apiUrl.slugs.at(key).empty());
         }
@@ -60,8 +59,7 @@ TEST_CASE("parse api-url")
         CHECK(apiUrl.root == "http://localhost:8081");
 
         REQUIRE(apiUrl.slugs.size() == 3);
-        for (const auto& key : { "team", "suite", "version" })
-        {
+        for (const auto& key : { "team", "suite", "version" }) {
             REQUIRE(apiUrl.slugs.count(key));
             CHECK(apiUrl.slugs.at(key) == std::string(key) + "1");
         }

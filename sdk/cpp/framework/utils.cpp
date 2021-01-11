@@ -16,8 +16,7 @@ OutputCapturer::OutputCapturer()
  */
 OutputCapturer::~OutputCapturer()
 {
-    if (_capturing)
-    {
+    if (_capturing) {
         stop_capture();
     }
 }

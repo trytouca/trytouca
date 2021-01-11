@@ -39,16 +39,11 @@ namespace weasel { namespace framework {
         outputDirCase /= _options.at("suite");
         outputDirCase /= _options.at("revision");
         outputDirCase /= testcase;
-        if (_options.count("save-as-binary") && _options.at("save-as-binary") == "true")
-        {
+        if (_options.count("save-as-binary") && _options.at("save-as-binary") == "true") {
             outputDirCase /= "weasel.bin";
-        }
-        else if (_options.count("save-as-json") && _options.at("save-as-json") == "true")
-        {
+        } else if (_options.count("save-as-json") && _options.at("save-as-json") == "true") {
             outputDirCase /= "weasel.json";
-        }
-        else
-        {
+        } else {
             return false;
         }
         return weasel::filesystem::exists(outputDirCase.string());
@@ -67,8 +62,7 @@ namespace weasel { namespace framework {
      */
     void Suite::push(const Testcase& testcase)
     {
-        if (!_set.count(testcase))
-        {
+        if (!_set.count(testcase)) {
             _set.insert(testcase);
             _vec.push_back(testcase);
         }
@@ -142,29 +136,22 @@ namespace weasel { namespace framework {
     {
         auto opts = cli_options();
         opts.allow_unrecognised_options();
-        try
-        {
+        try {
             const auto& result = opts.parse(argc, argv);
-            for (const auto& key : { "log-level", "output-dir", "save-as-binary" })
-            {
+            for (const auto& key : { "log-level", "output-dir", "save-as-binary" }) {
                 options[key] = result[key].as<std::string>();
             }
-            for (const auto& opt : opts.group_help("main").options)
-            {
-                if (!result.count(opt.l))
-                {
+            for (const auto& opt : opts.group_help("main").options) {
+                if (!result.count(opt.l)) {
                     continue;
                 }
-                if (opt.l == "help" || opt.l == "version")
-                {
+                if (opt.l == "help" || opt.l == "version") {
                     options[opt.l] = "true";
                     continue;
                 }
                 options[opt.l] = result[opt.l].as<std::string>();
             }
-        }
-        catch (const cxxopts::OptionParseException& ex)
-        {
+        } catch (const cxxopts::OptionParseException& ex) {
             weasel::print_error("failed to parse command line arguments: {}\n", ex.what());
             return false;
         }
@@ -180,18 +167,15 @@ namespace weasel { namespace framework {
         // if user is asking for help description or framework version,
         // do not parse the configuration file even if it is specified.
 
-        if (options.count("help") || options.count("version"))
-        {
+        if (options.count("help") || options.count("version")) {
             return true;
         }
 
         // if configuration file is not specified yet a file config.json
         // exists in current directory, attempt to use that file.
 
-        if (!options.count("config-file"))
-        {
-            if (!weasel::filesystem::is_regular_file("./config.json"))
-            {
+        if (!options.count("config-file")) {
+            if (!weasel::filesystem::is_regular_file("./config.json")) {
                 return true;
             }
             options.emplace("config-file", "./config.json");
@@ -201,9 +185,8 @@ namespace weasel { namespace framework {
 
         // configuration file must exist if it is specified
 
-        if (!weasel::filesystem::is_regular_file(configFile))
-        {
-            fmt::print(std::cerr, "configuration file not found: {}\n", configFile);
+        if (!weasel::filesystem::is_regular_file(configFile)) {
+            weasel::print_error("configuration file not found: {}\n", configFile);
             return false;
         }
 
@@ -214,38 +197,31 @@ namespace weasel { namespace framework {
         // parse configuration file
 
         rapidjson::Document document;
-        if (document.Parse<0>(content.c_str()).HasParseError())
-        {
-            fmt::print(std::cerr, "failed to parse configuration file\n");
+        if (document.Parse<0>(content.c_str()).HasParseError()) {
+            weasel::print_error("failed to parse configuration file\n");
             return false;
         }
 
         // we expect content to be a json object
 
-        if (!document.IsObject())
-        {
-            fmt::print(std::cerr, "expected configuration file to be a json object\n");
+        if (!document.IsObject()) {
+            weasel::print_error("expected configuration file to be a json object\n");
             return false;
         }
 
-        for (const auto& topLevelKey : { "framework", "weasel", "workflow" })
-        {
-            if (!document.HasMember(topLevelKey))
-            {
+        for (const auto& topLevelKey : { "framework", "weasel", "workflow" }) {
+            if (!document.HasMember(topLevelKey)) {
                 continue;
             }
-            if (!document[topLevelKey].IsObject())
-            {
-                fmt::print(std::cerr, "field {} in configuration file has unexpected type\n", topLevelKey);
+            if (!document[topLevelKey].IsObject()) {
+                weasel::print_error("field {} in configuration file has unexpected type\n", topLevelKey);
                 return false;
             }
-            for (const auto& rjMember : document[topLevelKey].GetObject())
-            {
+            for (const auto& rjMember : document[topLevelKey].GetObject()) {
                 const auto& key = rjMember.name.GetString();
-                if (!rjMember.value.IsString())
-                {
-                    fmt::print(std::cerr, "ignoring option \"{}\":\"{}\" in configuration file.\n", topLevelKey, key);
-                    fmt::print(std::cerr, "Expected value type to be string.\n");
+                if (!rjMember.value.IsString()) {
+                    weasel::print_warning("Ignoring option \"{}\":\"{}\" in configuration file.\n");
+                    weasel::print_warning("Expected value to be of type string.\n", topLevelKey, key);
                     continue;
                 }
                 const auto& value = rjMember.value.GetString();
@@ -262,8 +238,7 @@ namespace weasel { namespace framework {
     bool parse_api_url(Options& options)
     {
         // it is okay if configuration option `--api-url` is not specified
-        if (!options.count("api-url"))
-        {
+        if (!options.count("api-url")) {
             return true;
         }
         weasel::ApiUrl apiUrl(options.at("api-url"));
@@ -272,12 +247,10 @@ namespace weasel { namespace framework {
             { "suite", "suite" },
             { "revision", "version" }
         };
-        for (const auto& kvp : mapping)
-        {
+        for (const auto& kvp : mapping) {
             const auto& option = kvp.first;
             const auto& segment = kvp.second;
-            if (!options.count(option) && apiUrl.slugs.count(segment) && !apiUrl.slugs.at(segment).empty())
-            {
+            if (!options.count(option) && apiUrl.slugs.count(segment) && !apiUrl.slugs.at(segment).empty()) {
                 options[option] = apiUrl.slugs.at(segment);
             }
         }
@@ -305,15 +278,12 @@ namespace weasel { namespace framework {
             return !options.count(key);
         };
         const auto hasMissing = std::any_of(keys.begin(), keys.end(), isMissing);
-        if (!hasMissing)
-        {
+        if (!hasMissing) {
             return true;
         }
         fmt::print(std::cerr, "expected configuration options:\n");
-        for (const auto& key : keys)
-        {
-            if (!options.count(key))
-            {
+        for (const auto& key : keys) {
+            if (!options.count(key)) {
                 fmt::print(std::cerr, " - {}\n", key);
             }
         }
@@ -331,16 +301,13 @@ namespace weasel { namespace framework {
             { "suite", "suite" },
             { "revision", "version" }
         };
-        for (const auto& kvp : mapping)
-        {
+        for (const auto& kvp : mapping) {
             const auto& option = kvp.first;
             const auto& segment = kvp.second;
-            if (!options.count(option) || !apiUrl.slugs.count(segment) || apiUrl.slugs.at(segment).empty())
-            {
+            if (!options.count(option) || !apiUrl.slugs.count(segment) || apiUrl.slugs.at(segment).empty()) {
                 continue;
             }
-            if (apiUrl.slugs.at(segment) != options.at(option))
-            {
+            if (apiUrl.slugs.at(segment) != options.at(option)) {
                 fmt::print(std::cerr, "values of options \"api-url\" and \"{}\" are not consistent.\n", option);
                 return false;
             }
@@ -355,38 +322,33 @@ namespace weasel { namespace framework {
     {
         // we always expect a value for options `--revision` and `output-dir`.
 
-        if (!expect_options(options, { "output-dir", "revision", "suite", "team" }))
-        {
+        if (!expect_options(options, { "output-dir", "revision", "suite", "team" })) {
             return false;
         }
 
         // unless command line option `--skip-post` is specified,
         // we expect a value for option `--api-url`.
 
-        if (!options.count("skip-post") && !expect_options(options, { "api-url" }))
-        {
+        if (!options.count("skip-post") && !expect_options(options, { "api-url" })) {
             return false;
         }
 
         // values of options `--api-url`, `--suite`, `--revision` and `team`
         // must be consistent.
 
-        if (options.count("api-url") && !validate_api_url(options))
-        {
+        if (options.count("api-url") && !validate_api_url(options)) {
             return false;
         }
 
         // unless option `--skip-logs` is specified, check that
         // value of `--log-level` is one of `debug`, `info` or `warning`.
 
-        if (!options.count("skip-logs"))
-        {
+        if (!options.count("skip-logs")) {
             const auto& level = options.at("log-level");
             const auto& levels = { "debug", "info", "warning" };
             const auto isValid = std::find(levels.begin(), levels.end(), level) != levels.end();
-            if (!isValid)
-            {
-                fmt::print(std::cerr, "value of option \"--log-level\" must be one of \"debug\", \"info\" or \"warning\".\n");
+            if (!isValid) {
+                weasel::print_error("value of option \"--log-level\" must be one of \"debug\", \"info\" or \"warning\".\n");
                 return false;
             }
         }
@@ -397,8 +359,7 @@ namespace weasel { namespace framework {
     /**
      *
      */
-    class LogFrontend
-    {
+    class LogFrontend {
     public:
         template <typename... Args>
         inline void log(const LogLevel level, const std::string& fmtstr, Args&&... args) const
@@ -414,10 +375,8 @@ namespace weasel { namespace framework {
     private:
         void publish(const LogLevel level, const std::string& msg) const
         {
-            for (const auto& kvp : _subscribers)
-            {
-                if (level < kvp.second)
-                {
+            for (const auto& kvp : _subscribers) {
+                if (level < kvp.second) {
                     continue;
                 }
                 kvp.first->log(level, msg);
@@ -444,8 +403,7 @@ namespace weasel { namespace framework {
     /**
      *
      */
-    class ConsoleLogger : public LogSubscriber
-    {
+    class ConsoleLogger : public LogSubscriber {
     public:
         void log(const LogLevel level, const std::string& msg) override
         {
@@ -456,8 +414,7 @@ namespace weasel { namespace framework {
     /**
      *
      */
-    class FileLogger : public LogSubscriber
-    {
+    class FileLogger : public LogSubscriber {
     public:
         FileLogger(const boost::filesystem::path& logDir)
             : LogSubscriber()
@@ -504,8 +461,7 @@ namespace weasel { namespace framework {
     /**
      *
      */
-    struct SingleCaseSuite final : public Suite
-    {
+    struct SingleCaseSuite final : public Suite {
         SingleCaseSuite(const Testcase& testcase)
         {
             push(testcase);
@@ -515,8 +471,7 @@ namespace weasel { namespace framework {
     /**
      *
      */
-    enum ExecutionOutcome : unsigned char
-    {
+    enum ExecutionOutcome : unsigned char {
         Pass,
         Fail,
         Skip
@@ -525,15 +480,13 @@ namespace weasel { namespace framework {
     /**
      *
      */
-    class Statistics
-    {
+    class Statistics {
         std::map<ExecutionOutcome, unsigned long> _v;
 
     public:
         void inc(ExecutionOutcome value)
         {
-            if (!_v.count(value))
-            {
+            if (!_v.count(value)) {
                 _v[value] = 0u;
             }
             _v[value] += 1u;
@@ -547,8 +500,7 @@ namespace weasel { namespace framework {
     /**
      *
      */
-    class Timer
-    {
+    class Timer {
         std::unordered_map<std::string, std::chrono::system_clock::time_point> _tics;
         std::unordered_map<std::string, std::chrono::system_clock::time_point> _tocs;
 
@@ -580,20 +532,17 @@ namespace weasel { namespace framework {
         // parse configuration options provided as command line arguments
         // or specified in the configuration file.
 
-        if (!parse_options(argc, argv, options))
-        {
+        if (!parse_options(argc, argv, options)) {
             fmt::print(std::cerr, "{}\n", cli_options().help());
             return EXIT_FAILURE;
         }
 
         // if user asks for help, print help message and exit
 
-        if (options.count("help"))
-        {
+        if (options.count("help")) {
             fmt::print(std::cout, "{}\n", cli_options().help());
             const auto& desc = workflow.describe_options();
-            if (!desc.empty())
-            {
+            if (!desc.empty()) {
                 fmt::print(std::cout, "Workflow Options:\n{}\n", desc);
             }
             return EXIT_SUCCESS;
@@ -601,17 +550,15 @@ namespace weasel { namespace framework {
 
         // if user asks for version, print version of this executable and exit
 
-        if (options.count("version"))
-        {
+        if (options.count("version")) {
             fmt::print(std::cout, "{}.{}.{}\n", WEASEL_VERSION_MAJOR, WEASEL_VERSION_MINOR, WEASEL_VERSION_PATCH);
             return EXIT_SUCCESS;
         }
 
         // validate all configuration options
 
-        if (!validate_options(options))
-        {
-            fmt::print(std::cerr, "failed to validate configuration options.\n");
+        if (!validate_options(options)) {
+            weasel::print_error("failed to validate configuration options.\n");
             return EXIT_FAILURE;
         }
 
@@ -635,8 +582,7 @@ namespace weasel { namespace framework {
         // unless explicitly instructed not to do so, register a separate
         // file logger to write our events to a file in the output directory.
 
-        if (!options.count("skip-logs"))
-        {
+        if (!options.count("skip-logs")) {
             const auto& fileLogger = std::make_shared<FileLogger>(outputDirRevision);
             const auto& level = find_log_level(options.at("log-level"));
             logger.add_subscriber(fileLogger, level);
@@ -649,8 +595,7 @@ namespace weasel { namespace framework {
 
         // parse extra workflow-specific options, if any
 
-        if (!workflow.parse_options(argc, argv))
-        {
+        if (!workflow.parse_options(argc, argv)) {
             logger.log(lg::Error, "failed to parse workflow-specific options");
             fmt::print(std::cout, "Workflow Options:\n{}\n", workflow.describe_options());
             return EXIT_FAILURE;
@@ -660,16 +605,14 @@ namespace weasel { namespace framework {
         // workflow if validation fails. It is risky and less meaningful to
         // perform this operation any sooner.
 
-        for (const auto& opt : options)
-        {
+        for (const auto& opt : options) {
             logger.log(lg::Debug, "{0:<16}: {1}", opt.first, opt.second);
         }
 
         // parse and validate extra workflow-specific options, using custom
         // logic provided by workflow author.
 
-        if (!workflow.validate_options())
-        {
+        if (!workflow.validate_options()) {
             logger.log(lg::Error, "failed to validate workflow-specific options");
             return EXIT_FAILURE;
         }
@@ -678,8 +621,7 @@ namespace weasel { namespace framework {
         // our events.
 
         const auto& workflowLogger = workflow.log_subscriber();
-        if (workflowLogger)
-        {
+        if (workflowLogger) {
             const auto& level = find_log_level(options.at("log-level"));
             logger.add_subscriber(workflowLogger, level);
             logger.log(lg::Debug, "registered workflow logger");
@@ -689,8 +631,7 @@ namespace weasel { namespace framework {
         // such as external loggers or run tasks that need to be done
         // prior to execution of testcases.
 
-        if (!workflow.initialize())
-        {
+        if (!workflow.initialize()) {
             logger.log(lg::Error, "failed to initialize workflow");
             return EXIT_FAILURE;
         }
@@ -719,8 +660,7 @@ namespace weasel { namespace framework {
         Options opts;
         const auto copyOption = [&options, &opts](
                                     const std::string& src, const std::string& dst) {
-            if (options.count(src))
-            {
+            if (options.count(src)) {
                 opts.emplace(dst, options.at(src));
             }
         };
@@ -732,13 +672,10 @@ namespace weasel { namespace framework {
         // without passing api-related options so that we can still store
         // testcases in memory and later save them in file.
 
-        if (!options.count("skip-post"))
-        {
+        if (!options.count("skip-post")) {
             copyOption("api-key", "api-key");
             copyOption("api-url", "api-url");
-        }
-        else
-        {
+        } else {
             opts.emplace("handshake", "false");
         }
 
@@ -748,8 +685,7 @@ namespace weasel { namespace framework {
 
         // check that the client is properly configured
 
-        if (!weasel::is_configured())
-        {
+        if (!weasel::is_configured()) {
             logger.log(lg::Error, "failed to configure weasel client: {}",
                 weasel::configuration_error());
             return EXIT_FAILURE;
@@ -764,29 +700,24 @@ namespace weasel { namespace framework {
 
         // if workflow does not provide a suite, we choose not to proceed
 
-        if (!suite)
-        {
+        if (!suite) {
             logger.log(lg::Error, "workflow does not provide a suite");
             return EXIT_FAILURE;
         }
 
         // initialize suite
 
-        try
-        {
+        try {
             suite->initialize();
             logger.log(lg::Debug, "initialized suite");
-        }
-        catch (const std::exception& ex)
-        {
+        } catch (const std::exception& ex) {
             logger.log(lg::Error, "failed to initialize workflow suite: {}", ex.what());
             return EXIT_FAILURE;
         }
 
         // validate suite
 
-        if (suite->size() == 0)
-        {
+        if (suite->size() == 0) {
             logger.log(lg::Error, "unable to proceed with empty list of testcases");
             return EXIT_FAILURE;
         }
@@ -798,16 +729,14 @@ namespace weasel { namespace framework {
         timer.tic("__workflow__");
         auto i = 0u;
 
-        for (const auto& testcase : *suite)
-        {
+        for (const auto& testcase : *suite) {
             ++i;
             auto outputDirCase = outputDirRevision / testcase;
 
             // unless option `overwrite` is specified, check if this
             // testcase should be skipped.
 
-            if ((!options.count("overwrite") || options.at("overwrite") != "true") && workflow.skip(testcase))
-            {
+            if ((!options.count("overwrite") || options.at("overwrite") != "true") && workflow.skip(testcase)) {
                 logger.log(lg::Info, "skipping already processed testcase: {}", testcase);
                 stats.inc(ExecutionOutcome::Skip);
                 printer << fmt::format(" ({:>3} of {:<3}) {:<32} (skip)", i, suite->size(), testcase)
@@ -821,8 +750,7 @@ namespace weasel { namespace framework {
 
             // remove result directory for this testcase if it already exists.
 
-            if (weasel::filesystem::exists(outputDirCase.string()))
-            {
+            if (weasel::filesystem::exists(outputDirCase.string())) {
                 boost::filesystem::remove_all(outputDirCase);
                 logger.log(lg::Debug, "removed existing result directory for {}", testcase);
 
@@ -843,16 +771,11 @@ namespace weasel { namespace framework {
             Errors errors;
             OutputCapturer capturer;
             capturer.start_capture();
-            try
-            {
+            try {
                 errors = workflow.execute(testcase);
-            }
-            catch (const std::exception& ex)
-            {
+            } catch (const std::exception& ex) {
                 errors = { ex.what() };
-            }
-            catch (...)
-            {
+            } catch (...) {
                 errors = { "unknown exception" };
             }
             capturer.stop_capture();
@@ -862,40 +785,35 @@ namespace weasel { namespace framework {
 
             // pipe stderr of code under test for this testcase into a file
 
-            if (!capturer.cerr().empty())
-            {
+            if (!capturer.cerr().empty()) {
                 const auto resultFile = outputDirCase / "stderr.txt";
                 weasel::save_string_file(resultFile.string(), capturer.cerr());
             }
 
             // pipe stdout of code under test for this testcase into a file
 
-            if (!capturer.cout().empty())
-            {
+            if (!capturer.cout().empty()) {
                 const auto resultFile = outputDirCase / "stdout.txt";
                 weasel::save_string_file(resultFile.string(), capturer.cout());
             }
 
             // save testresults in binary format if configured to do so
 
-            if (errors.empty() && options.count("save-as-binary") && options.at("save-as-binary") == "true")
-            {
+            if (errors.empty() && options.count("save-as-binary") && options.at("save-as-binary") == "true") {
                 const auto resultFile = outputDirCase / "weasel.bin";
                 weasel::save_binary(resultFile.string(), { testcase });
             }
 
             // save testresults in json format if configured to do so
 
-            if (errors.empty() && options.count("save-as-json") && options.at("save-as-json") == "true")
-            {
+            if (errors.empty() && options.count("save-as-json") && options.at("save-as-json") == "true") {
                 const auto resultFile = outputDirCase / "weasel.json";
                 weasel::save_json(resultFile.string(), { testcase });
             }
 
             // submit testresults to weasel platform
 
-            if (!options.count("skip-post") && !weasel::post())
-            {
+            if (!options.count("skip-post") && !weasel::post()) {
                 logger.log(lg::Error, "failed to submit results to weasel platform");
             }
 
@@ -903,12 +821,10 @@ namespace weasel { namespace framework {
 
             printer << fmt::format(" ({:>3} of {:<3}) {:<32} ({}, {} sec)", i, suite->size(), testcase, errors.empty() ? "pass" : "fail", timer.count(testcase))
                     << std::endl;
-            for (const auto& err : errors)
-            {
+            for (const auto& err : errors) {
                 printer << fmt::format("{:>13} {}\n", "-", err);
             }
-            if (!errors.empty())
-            {
+            if (!errors.empty()) {
                 printer << std::endl;
             }
 
@@ -921,8 +837,7 @@ namespace weasel { namespace framework {
         // write test execution statistics as footer to the user report
 
         timer.toc("__workflow__");
-        if (stats.count(ExecutionOutcome::Skip))
-        {
+        if (stats.count(ExecutionOutcome::Skip)) {
             printer << fmt::format("\nskipped {} of {} testcases", stats.count(ExecutionOutcome::Skip), suite->size());
         }
         printer << '\n'
@@ -939,17 +854,12 @@ namespace weasel { namespace framework {
      */
     int main(int argc, char* argv[], Workflow& workflow)
     {
-        try
-        {
+        try {
             return main_impl(argc, argv, workflow);
-        }
-        catch (const std::exception& ex)
-        {
+        } catch (const std::exception& ex) {
             weasel::print_error("aborting application: {}\n", ex.what());
             return EXIT_FAILURE;
-        }
-        catch (...)
-        {
+        } catch (...) {
             weasel::print_error("aborting application due to unknown error\n");
             return EXIT_FAILURE;
         }

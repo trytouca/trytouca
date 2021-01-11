@@ -2,10 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include <weasel/detail/client.hpp>
-#include <weasel/devkit/httpclient.hpp>
-#include <weasel/devkit/utils.hpp>
-#include <weasel/weasel.hpp>
+#include "weasel/weasel.hpp"
+#include "weasel/detail/client.hpp"
+#include "weasel/devkit/httpclient.hpp"
+#include "weasel/devkit/utils.hpp"
 
 namespace weasel {
 

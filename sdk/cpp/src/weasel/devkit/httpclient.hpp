@@ -9,17 +9,14 @@
 
 namespace weasel {
 
-    struct GlobalHttp
-    {
+    struct GlobalHttp {
         GlobalHttp();
         ~GlobalHttp();
     };
 
-    class HttpClient
-    {
+    class HttpClient {
     public:
-        struct Response
-        {
+        struct Response {
             long code = -1;
             std::string body;
         };
@@ -53,8 +50,7 @@ namespace weasel {
         CURL* _curl = nullptr;
         CURLcode _curlCode = CURLE_FAILED_INIT;
         struct curl_slist* _headers = nullptr;
-        enum class Method
-        {
+        enum class Method {
             Get,
             Patch,
             Post

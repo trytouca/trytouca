@@ -33,17 +33,14 @@ bool UpdateOperation::parse_impl(int argc, char* argv[])
         { "out", "output" }
     };
 
-    for (const auto& kvp : filetypes)
-    {
-        if (!result.count(kvp.first))
-        {
+    for (const auto& kvp : filetypes) {
+        if (!result.count(kvp.first)) {
             weasel::print_error("{} directory not provided\n", kvp.second);
             fmt::print(stdout, "{}\n", options.help());
             return false;
         }
         const auto filepath = result[kvp.first].as<std::string>();
-        if (!weasel::filesystem::is_directory(filepath))
-        {
+        if (!weasel::filesystem::is_directory(filepath)) {
             weasel::print_error("{} directory `{}` does not exist\n", kvp.second, filepath);
             return false;
         }
@@ -52,10 +49,8 @@ bool UpdateOperation::parse_impl(int argc, char* argv[])
     _src = result["src"].as<std::string>();
     _out = result["out"].as<std::string>();
 
-    for (const auto& key : { "team", "suite", "revision" })
-    {
-        if (result.count(key))
-        {
+    for (const auto& key : { "team", "suite", "revision" }) {
+        if (result.count(key)) {
             const auto& value = result[key].as<std::string>();
             _fields.emplace(key, value);
         }
@@ -73,34 +68,28 @@ bool UpdateOperation::run_impl() const
 {
     WEASEL_LOG_INFO("starting execution of operation: update");
     const auto resultFiles = findResultFiles(_src);
-    if (resultFiles.empty())
-    {
+    if (resultFiles.empty()) {
         WEASEL_LOG_ERROR("specified directory has no weasel result file");
         return false;
     }
 
     const auto& root = boost::filesystem::absolute(_out);
-    for (const auto& srcFilePath : resultFiles)
-    {
+    for (const auto& srcFilePath : resultFiles) {
         const auto filename = boost::filesystem::path(srcFilePath).filename();
         const auto dstFilePath = (root / filename).string();
 
         weasel::ResultFile srcFile(srcFilePath);
         std::vector<weasel::Testcase> content;
         const auto& elementsMap = srcFile.parse();
-        for (const auto& kvp : elementsMap)
-        {
+        for (const auto& kvp : elementsMap) {
             auto meta = kvp.second->metadata();
-            if (_fields.count("team"))
-            {
+            if (_fields.count("team")) {
                 meta.teamslug = _fields.at("team");
             }
-            if (_fields.count("suite"))
-            {
+            if (_fields.count("suite")) {
                 meta.testsuite = _fields.at("suite");
             }
-            if (_fields.count("revision"))
-            {
+            if (_fields.count("revision")) {
                 meta.testsuite = _fields.at("revision");
             }
             kvp.second->setMetadata(meta);

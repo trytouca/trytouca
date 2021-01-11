@@ -30,9 +30,9 @@ namespace { namespace filescope {
 namespace weasel { namespace casino {
 
     const std::vector<Card::Suite> Card::suites = { Suite::Clubs,
-                                                    Suite::Diamonds,
-                                                    Suite::Hearts,
-                                                    Suite::Spades };
+        Suite::Diamonds,
+        Suite::Hearts,
+        Suite::Spades };
 
     const std::vector<Card::Rank> Card::ranks = {
         Rank::Two, Rank::Three, Rank::Four, Rank::Five, Rank::Six,
@@ -89,8 +89,7 @@ namespace weasel { namespace casino {
     Card Hand::draw(const Card& card)
     {
         auto it = std::find(_cards.begin(), _cards.end(), card);
-        if (_cards.end() == it)
-        {
+        if (_cards.end() == it) {
             throw std::invalid_argument("card missing from player hand");
         }
         auto out = *it;
@@ -126,8 +125,7 @@ namespace weasel { namespace casino {
     {
         // if we are the first in round to bid,
         // bid our highest card to win the round
-        if (bids.empty())
-        {
+        if (bids.empty()) {
             return _hand.draw(_hand._cards.back());
         }
         // else, find highest bid and check if we have a higher card than that
@@ -136,8 +134,7 @@ namespace weasel { namespace casino {
         auto highBid = bidsCopy.back();
         LOG_DEBUG("highest bid so far: {}", highBid);
         auto it = _hand._cards.begin();
-        while (it != _hand._cards.end() && *it < highBid)
-        {
+        while (it != _hand._cards.end() && *it < highBid) {
             ++it;
         }
         // if we may not win this round, bid our lowest card
@@ -196,8 +193,7 @@ namespace weasel { namespace casino {
         std::uniform_int_distribution<> dis(0, 3);
 
         std::set<std::string> names;
-        while (names.size() < 4)
-        {
+        while (names.size() < 4) {
             names.emplace(gen.name());
         }
 
@@ -206,8 +202,7 @@ namespace weasel { namespace casino {
         std::shuffle(nums.begin(), nums.end(), urbg);
 
         std::array<std::vector<Card>, 4> hands;
-        for (size_t i = 0u; i < nums.size(); ++i)
-        {
+        for (size_t i = 0u; i < nums.size(); ++i) {
             auto suite = Card::suites.at(nums.at(i) / 13);
             auto rank = Card::ranks.at(nums.at(i) % 13);
             hands.at(i / 13).emplace_back(suite, rank);
@@ -216,8 +211,7 @@ namespace weasel { namespace casino {
         _pot.clear();
         _players.clear();
         _name.assign(gen.adj() + '-' + *std::next(names.begin(), dis(urbg)));
-        for (size_t i = 0u; i < hands.size(); ++i)
-        {
+        for (size_t i = 0u; i < hands.size(); ++i) {
             Hand hand { hands.at(i) };
             _players.emplace_back(*std::next(names.begin(), i), hand);
         }
@@ -234,8 +228,7 @@ namespace weasel { namespace casino {
     {
         RoundResult result;
         LOG_INFO("{}", *this);
-        for (auto i = 0u; i < _players.size(); ++i)
-        {
+        for (auto i = 0u; i < _players.size(); ++i) {
             const auto idx = (_button + i) % 4;
             const auto& card = _players.at(idx).bid(_pot);
             _pot.emplace_back(card);
@@ -279,8 +272,7 @@ namespace weasel { namespace casino {
 
     std::ostream& operator<<(std::ostream& os, const Hand& hand)
     {
-        for (const auto& card : hand._cards)
-        {
+        for (const auto& card : hand._cards) {
             os << card;
         }
         return os;
@@ -289,12 +281,10 @@ namespace weasel { namespace casino {
     std::ostream& operator<<(std::ostream& os, const Player& player)
     {
         os << player._name << ',' << player._hand;
-        if (!player._tricks.empty())
-        {
+        if (!player._tricks.empty()) {
             os << ',';
         }
-        for (const auto& card : player._tricks)
-        {
+        for (const auto& card : player._tricks) {
             os << card;
         }
         return os;
@@ -302,8 +292,7 @@ namespace weasel { namespace casino {
 
     std::ostream& operator<<(std::ostream& os, const RoundResult& result)
     {
-        for (const auto& kvp : result._bids)
-        {
+        for (const auto& kvp : result._bids) {
             os << (kvp.first.compare(result._winner) ? ' ' : '*');
             os << kvp.first << ": " << kvp.second.describe() << "\n";
         }
@@ -313,8 +302,7 @@ namespace weasel { namespace casino {
     std::ostream& operator<<(std::ostream& os, const Table& table)
     {
         os << table._name << '\n';
-        for (const auto& player : table._players)
-        {
+        for (const auto& player : table._players) {
             os << player << '\n';
         }
         return os;
@@ -324,8 +312,7 @@ namespace weasel { namespace casino {
     {
         const auto& parseCards = [](const std::string& message) {
             std::vector<Card> cards;
-            for (auto i = 0u; i < message.length(); i = i + 2)
-            {
+            for (auto i = 0u; i < message.length(); i = i + 2) {
                 auto code = message.substr(i, 2);
                 auto j = Card::suiteCodes.find(code.front());
                 auto k = Card::rankCodes.find(code.back());
@@ -335,13 +322,11 @@ namespace weasel { namespace casino {
         };
         std::string line;
         is >> table._name;
-        for (auto i = 0u; i < 4; ++i)
-        {
+        for (auto i = 0u; i < 4; ++i) {
             is >> line;
             std::vector<std::string> tokens(3u);
             boost::split(tokens, line, boost::is_any_of(","));
-            while (tokens.size() < 3)
-            {
+            while (tokens.size() < 3) {
                 tokens.emplace_back();
             }
             table._players.emplace_back(

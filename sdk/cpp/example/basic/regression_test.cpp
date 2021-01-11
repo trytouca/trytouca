@@ -10,17 +10,15 @@ int main()
 {
     weasel::configure(
         { { "api-key", "<YOUR API KEY>" },
-          { "api-url", "<YOUR API URL>" },
-          { "version", "1.0" } });
+            { "api-url", "<YOUR API URL>" },
+            { "version", "1.0" } });
 
-    if (!weasel::is_configured())
-    {
+    if (!weasel::is_configured()) {
         std::cerr << weasel::configuration_error() << std::endl;
         return EXIT_FAILURE;
     }
 
-    for (const auto& username : { "rweasley", "hpotter", "hgranger" })
-    {
+    for (const auto& username : { "rweasley", "hpotter", "hgranger" }) {
         weasel::declare_testcase(username);
 
         const auto& wizard = parse_profile(username);
@@ -44,8 +42,7 @@ int main()
     weasel::save_binary("weasel_tutorial.bin");
     weasel::save_json("weasel_tutorial.json");
 
-    if (!weasel::post())
-    {
+    if (!weasel::post()) {
         std::cerr << "failed to post results to the weasel platform" << std::endl;
         return EXIT_FAILURE;
     }

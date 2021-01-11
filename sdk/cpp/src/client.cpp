@@ -43,12 +43,10 @@ namespace weasel {
      */
     std::shared_ptr<weasel::Testcase> ClientImpl::testcase(const std::string& name)
     {
-        if (!_configured)
-        {
+        if (!_configured) {
             return nullptr;
         }
-        if (!_testcases.count(name))
-        {
+        if (!_testcases.count(name)) {
             const auto& tc = std::make_shared<Testcase>(_opts.team, _opts.suite, _opts.revision, name);
             _testcases.emplace(name, tc);
         }
@@ -59,8 +57,7 @@ namespace weasel {
 
     void ClientImpl::forget_testcase(const std::string& name)
     {
-        if (!_testcases.count(name))
-        {
+        if (!_testcases.count(name)) {
             const auto err = weasel::format("key `{}` does not exist", name);
             notify_loggers(logger::Level::Warning, err);
             throw std::invalid_argument(err);
@@ -76,8 +73,7 @@ namespace weasel {
         const std::string& key,
         const std::shared_ptr<types::IType>& value)
     {
-        if (hasLastTestcase())
-        {
+        if (hasLastTestcase()) {
             _testcases.at(getLastTestcase())->add_result(key, value);
         }
     }
@@ -89,8 +85,7 @@ namespace weasel {
         const std::string& key,
         const std::shared_ptr<types::IType>& value)
     {
-        if (hasLastTestcase())
-        {
+        if (hasLastTestcase()) {
             _testcases.at(getLastTestcase())->add_assertion(key, value);
         }
     }
@@ -102,8 +97,7 @@ namespace weasel {
         const std::string& key,
         const std::shared_ptr<types::IType>& value)
     {
-        if (hasLastTestcase())
-        {
+        if (hasLastTestcase()) {
             _testcases.at(getLastTestcase())->add_array_element(key, value);
         }
     }
@@ -113,8 +107,7 @@ namespace weasel {
      */
     void ClientImpl::add_hit_count(const std::string& key)
     {
-        if (hasLastTestcase())
-        {
+        if (hasLastTestcase()) {
             _testcases.at(getLastTestcase())->add_hit_count(key);
         }
     }
@@ -124,8 +117,7 @@ namespace weasel {
      */
     void ClientImpl::add_metric(const std::string& key, const unsigned duration)
     {
-        if (hasLastTestcase())
-        {
+        if (hasLastTestcase()) {
             _testcases.at(getLastTestcase())->add_metric(key, duration);
         }
     }
@@ -135,8 +127,7 @@ namespace weasel {
      */
     void ClientImpl::start_timer(const std::string& key)
     {
-        if (hasLastTestcase())
-        {
+        if (hasLastTestcase()) {
             _testcases.at(getLastTestcase())->tic(key);
         }
     }
@@ -146,8 +137,7 @@ namespace weasel {
      */
     void ClientImpl::stop_timer(const std::string& key)
     {
-        if (hasLastTestcase())
-        {
+        if (hasLastTestcase()) {
             _testcases.at(getLastTestcase())->toc(key);
         }
     }
@@ -161,25 +151,21 @@ namespace weasel {
         const DataFormat format,
         const bool overwrite) const
     {
-        if (weasel::filesystem::exists(path) && !overwrite)
-        {
+        if (weasel::filesystem::exists(path) && !overwrite) {
             throw std::invalid_argument("file already exists");
         }
 
         auto tcs = testcases;
-        if (tcs.empty())
-        {
+        if (tcs.empty()) {
             std::transform(_testcases.begin(), _testcases.end(), std::back_inserter(tcs), [](const ElementsMap::value_type& kvp) { return kvp.first; });
         }
 
         const auto parentPath = boost::filesystem::absolute(boost::filesystem::path(path).parent_path());
-        if (!weasel::filesystem::exists(parentPath.string()) && !boost::filesystem::create_directories(parentPath))
-        {
+        if (!weasel::filesystem::exists(parentPath.string()) && !boost::filesystem::create_directories(parentPath)) {
             throw std::invalid_argument(weasel::format("failed to save content to disk: failed to create directory: {}", parentPath.string()));
         }
 
-        switch (format)
-        {
+        switch (format) {
         case DataFormat::JSON:
             save_json(path, tcs);
             break;
@@ -198,8 +184,7 @@ namespace weasel {
     {
         // we will not post data if client is not configured to do so.
 
-        if (_opts.api_key.empty() || _opts.api_url.empty())
-        {
+        if (_opts.api_key.empty() || _opts.api_url.empty()) {
             throw std::runtime_error("weasel client is not configured to post testresults");
         }
 
@@ -207,34 +192,29 @@ namespace weasel {
         // we should only post testcases that we have not posted yet
         // or those that have changed since we last posted them.
         std::vector<std::string> testcases;
-        for (const auto& tc : _testcases)
-        {
-            if (!tc.second->_posted)
-            {
+        for (const auto& tc : _testcases) {
+            if (!tc.second->_posted) {
                 testcases.emplace_back(tc.first);
             }
         }
         // group multiple testcases together according to `_postMaxTestcases`
         // configuration parameter and post each group separately in
         // flatbuffers format.
-        for (auto it = testcases.begin(); it != testcases.end();)
-        {
+        for (auto it = testcases.begin(); it != testcases.end();) {
             const auto& tail = it + std::min(static_cast<ptrdiff_t>(_opts.post_max_cases), std::distance(it, testcases.end()));
             std::vector<std::string> batch(it, tail);
             // attempt to post results for this group of testcases.
             // currently we only support posting data in flatbuffers format.
             const auto isPosted = post_flatbuffers(batch);
             it = tail;
-            if (!isPosted)
-            {
+            if (!isPosted) {
                 notify_loggers(
                     logger::Level::Error,
                     "failed to post test results for a group of testcases");
                 ret = false;
                 continue;
             }
-            for (const auto& tc : batch)
-            {
+            for (const auto& tc : batch) {
                 _testcases.at(tc)->_posted = true;
             }
         }
@@ -251,16 +231,14 @@ namespace weasel {
         // functions as no-op which is helpful in production environments
         // where `configure` is expected to never be called.
 
-        if (!_configured)
-        {
+        if (!_configured) {
             return false;
         }
 
         // If client is configured, check whether testcase declaration is set as
         // "shared" in which case report the most recently declared testcase.
 
-        if (_opts.case_declaration == weasel::ConcurrencyMode::AllThreads)
-        {
+        if (_opts.case_declaration == weasel::ConcurrencyMode::AllThreads) {
             return !_mostRecentTestcase.empty();
         }
 
@@ -278,8 +256,7 @@ namespace weasel {
         // We do not expect this function to be called without calling
         // `hasLastTestcase` first.
 
-        if (!hasLastTestcase())
-        {
+        if (!hasLastTestcase()) {
             throw std::logic_error("testcase not declared");
         }
 
@@ -287,8 +264,7 @@ namespace weasel {
         // "shared" in which case report the name of the most recently declared
         // testcase.
 
-        if (_opts.case_declaration == weasel::ConcurrencyMode::AllThreads)
-        {
+        if (_opts.case_declaration == weasel::ConcurrencyMode::AllThreads) {
             return _mostRecentTestcase;
         }
 
@@ -307,8 +283,7 @@ namespace weasel {
     {
         std::vector<Testcase> tcs;
         tcs.reserve(names.size());
-        for (const auto& name : names)
-        {
+        for (const auto& name : names) {
             tcs.emplace_back(*_testcases.at(name));
         }
         ResultFile rfile(path);
@@ -323,8 +298,7 @@ namespace weasel {
     {
         std::vector<Testcase> tcs;
         tcs.reserve(names.size());
-        for (const auto& name : names)
-        {
+        for (const auto& name : names) {
             tcs.emplace_back(*_testcases.at(name));
         }
         const auto& buffer = Testcase::serialize(tcs);
@@ -332,8 +306,7 @@ namespace weasel {
         ApiUrl apiUrl { _opts.api_root, _opts.team, _opts.suite, _opts.revision };
         ApiConnector apiConnector(apiUrl, _opts.api_token);
         const auto errors = apiConnector.submitResults(content, _opts.post_max_retries);
-        for (const auto& err : errors)
-        {
+        for (const auto& err : errors) {
             notify_loggers(logger::Level::Warning, err);
         }
         return errors.empty();
@@ -348,8 +321,7 @@ namespace weasel {
         rapidjson::Document doc(rapidjson::kArrayType);
         rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
 
-        for (const auto& testcase : testcases)
-        {
+        for (const auto& testcase : testcases) {
             doc.PushBack(_testcases.at(testcase)->json(allocator), allocator);
         }
 
@@ -369,14 +341,11 @@ namespace weasel {
         const std::vector<std::string>& testcases) const
     {
         const auto& content = make_json(testcases);
-        try
-        {
+        try {
             std::ofstream ofs(path);
             ofs << content;
             ofs.close();
-        }
-        catch (const std::exception& ex)
-        {
+        } catch (const std::exception& ex) {
             throw std::invalid_argument(
                 weasel::format("failed to save content to disk: {}", ex.what()));
         }
@@ -389,8 +358,7 @@ namespace weasel {
         const logger::Level severity,
         const std::string& msg) const
     {
-        for (const auto& logger : _loggers)
-        {
+        for (const auto& logger : _loggers) {
             logger->log(severity, msg);
         }
     }

@@ -6,8 +6,7 @@
 
 #include "weasel/devkit/filesystem.hpp"
 
-struct TmpFile
-{
+struct TmpFile {
     TmpFile()
         : path((boost::filesystem::temp_directory_path() / boost::filesystem::unique_path()).string())
     {
@@ -22,8 +21,7 @@ struct TmpFile
 
     ~TmpFile()
     {
-        if (weasel::filesystem::exists(path))
-        {
+        if (weasel::filesystem::exists(path)) {
             boost::filesystem::remove_all(path);
         }
     }

@@ -11,13 +11,11 @@
 /**
  *
  */
-struct Operation
-{
+struct Operation {
     /**
      *
      */
-    enum class Command
-    {
+    enum class Command {
         compare,
         merge,
         post,
@@ -64,8 +62,7 @@ private:
 /**
  *
  */
-struct CliOptions
-{
+struct CliOptions {
     bool show_help = false;
     bool show_version = false;
     std::string log_dir;
@@ -87,8 +84,7 @@ private:
 /**
  *
  */
-struct ViewOperation : public Operation
-{
+struct ViewOperation : public Operation {
 protected:
     /**
      *
@@ -107,8 +103,7 @@ private:
 /**
  *
  */
-struct CompareOperation : public Operation
-{
+struct CompareOperation : public Operation {
 protected:
     /**
      *
@@ -128,8 +123,7 @@ private:
 /**
  *
  */
-struct MergeOperation : public Operation
-{
+struct MergeOperation : public Operation {
 protected:
     /**
      *
@@ -149,8 +143,7 @@ private:
 /**
  *
  */
-struct PostOperation : public Operation
-{
+struct PostOperation : public Operation {
 protected:
     /**
      *
@@ -172,8 +165,7 @@ private:
 /**
  *
  */
-struct UpdateOperation : public Operation
-{
+struct UpdateOperation : public Operation {
 protected:
     /**
      *

@@ -14,8 +14,7 @@ namespace weasel {
     /**
      *
      */
-    struct WEASEL_CLIENT_API ApiUrl
-    {
+    struct WEASEL_CLIENT_API ApiUrl {
         /**
          *
          */
@@ -37,8 +36,7 @@ namespace weasel {
     /**
      *
      */
-    class WEASEL_CLIENT_API ApiConnector
-    {
+    class WEASEL_CLIENT_API ApiConnector {
     public:
         /**
          *

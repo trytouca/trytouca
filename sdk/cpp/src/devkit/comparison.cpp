@@ -24,8 +24,7 @@ namespace weasel { namespace compare {
             { vt::Array, "array" },
             { vt::Object, "object" }
         };
-        if (store.count(type))
-        {
+        if (store.count(type)) {
             return store.at(type);
         }
         return "unknown";
@@ -56,18 +55,14 @@ namespace weasel { namespace compare {
         const Category category) const
     {
         rapidjson::Value rjElements(rapidjson::kArrayType);
-        for (const auto& kv : keyMap)
-        {
+        for (const auto& kv : keyMap) {
             const auto& type = stringify(kv.second->type());
             rapidjson::Value rjEntry(rapidjson::kObjectType);
             rjEntry.AddMember("name", kv.first, allocator);
-            if (category == Category::Fresh)
-            {
+            if (category == Category::Fresh) {
                 rjEntry.AddMember("srcType", type, allocator);
                 rjEntry.AddMember("srcValue", kv.second->string(), allocator);
-            }
-            else
-            {
+            } else {
                 rjEntry.AddMember("dstType", type, allocator);
                 rjEntry.AddMember("dstValue", kv.second->string(), allocator);
             }
@@ -85,8 +80,7 @@ namespace weasel { namespace compare {
     {
         namespace rj = rapidjson;
         rj::Value rjElements(rapidjson::kArrayType);
-        for (const auto& kv : elements)
-        {
+        for (const auto& kv : elements) {
             rj::Value rjDstType;
             rj::Value rjDstValue;
             rj::Value rjDesc(rj::kArrayType);
@@ -95,18 +89,14 @@ namespace weasel { namespace compare {
             rj::Value rjScore { kv.second.score };
             rj::Value rjSrcType { stringify(kv.second.srcType), allocator };
             rj::Value rjSrcValue { kv.second.srcValue, allocator };
-            if (types::ValueType::Unknown != kv.second.dstType)
-            {
+            if (types::ValueType::Unknown != kv.second.dstType) {
                 rjDstType.Set(stringify(kv.second.dstType), allocator);
             }
-            if (compare::MatchType::Perfect != kv.second.match)
-            {
+            if (compare::MatchType::Perfect != kv.second.match) {
                 rjDstValue.Set(kv.second.dstValue, allocator);
             }
-            if (!kv.second.desc.empty())
-            {
-                for (const auto& entry : kv.second.desc)
-                {
+            if (!kv.second.desc.empty()) {
+                for (const auto& entry : kv.second.desc) {
                     rj::Value rjEntry(rj::kStringType);
                     rjEntry.SetString(entry, allocator);
                     rjDesc.PushBack(rjEntry, allocator);
@@ -118,16 +108,13 @@ namespace weasel { namespace compare {
             rjElement.AddMember("score", rjScore, allocator);
             rjElement.AddMember("srcType", rjSrcType, allocator);
             rjElement.AddMember("srcValue", rjSrcValue, allocator);
-            if (types::ValueType::Unknown != kv.second.dstType)
-            {
+            if (types::ValueType::Unknown != kv.second.dstType) {
                 rjElement.AddMember("dstType", rjDstType, allocator);
             }
-            if (compare::MatchType::Perfect != kv.second.match)
-            {
+            if (compare::MatchType::Perfect != kv.second.match) {
                 rjElement.AddMember("dstValue", rjDstValue, allocator);
             }
-            if (!kv.second.desc.empty())
-            {
+            if (!kv.second.desc.empty()) {
                 rjElement.AddMember("desc", rjDesc, allocator);
             }
             rjElements.PushBack(rjElement, allocator);
@@ -176,7 +163,7 @@ namespace weasel { namespace compare {
     {
         const auto& fromMetadata =
             [](const Testcase::Metadata& meta,
-               rapidjson::Document::AllocatorType& allocator) {
+                rapidjson::Document::AllocatorType& allocator) {
                 rapidjson::Value value(rapidjson::kObjectType);
                 value.AddMember("teamslug", meta.teamslug, allocator);
                 value.AddMember("testsuite", meta.testsuite, allocator);
@@ -210,8 +197,7 @@ namespace weasel { namespace compare {
         // if the two cases have no keys in common, report a score of one
         // if dst has no keys at all and a score of zero if src is missing
         // some keys.
-        if (_results.common.empty())
-        {
+        if (_results.common.empty()) {
             return _results.missing.empty() ? 1.0 : 0.0;
         }
 
@@ -242,8 +228,7 @@ namespace weasel { namespace compare {
         const auto getTotalCommonDuration = [this](const Testcase& tc) {
             namespace chr = std::chrono;
             std::int32_t duration = 0u;
-            for (const auto& kvp : _metrics.common)
-            {
+            for (const auto& kvp : _metrics.common) {
                 const auto& diff = tc._tocs.at(kvp.first) - tc._tics.at(kvp.first);
                 duration += static_cast<std::int32_t>(
                     chr::duration_cast<chr::milliseconds>(diff).count());
@@ -279,22 +264,18 @@ namespace weasel { namespace compare {
         const KeyMap& dst,
         Cellar& result)
     {
-        for (const auto& kv : dst)
-        {
+        for (const auto& kv : dst) {
             const auto& key = kv.first;
-            if (src.count(key))
-            {
+            if (src.count(key)) {
                 const auto value = src.at(key)->compare(kv.second);
                 result.common.emplace(key, value);
                 continue;
             }
             result.missing.emplace(key, kv.second);
         }
-        for (const auto& kv : src)
-        {
+        for (const auto& kv : src) {
             const auto& key = kv.first;
-            if (!dst.count(key))
-            {
+            if (!dst.count(key)) {
                 result.fresh.emplace(key, kv.second);
             }
         }

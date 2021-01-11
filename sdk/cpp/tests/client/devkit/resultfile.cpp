@@ -27,8 +27,7 @@ void compare_cases(
         return std::string(v.begin(), v.end());
     };
     auto i = 0u;
-    for (const auto& kvp : parsedCases)
-    {
+    for (const auto& kvp : parsedCases) {
         const auto parsedCase = serialize(*kvp.second);
         const auto tmpCase = serialize(tmpCases.at(i));
         REQUIRE(parsedCase.compare(tmpCase) == 0);

@@ -13,11 +13,9 @@ namespace weasel {
      * @see weasel::add_logger
      * @since v1.1
      */
-    class WEASEL_CLIENT_API logger
-    {
+    class WEASEL_CLIENT_API logger {
     public:
-        enum class Level
-        {
+        enum class Level {
             Debug,
             Info,
             Warning,

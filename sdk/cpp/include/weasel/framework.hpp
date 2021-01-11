@@ -89,8 +89,7 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    enum LogLevel : unsigned char
-    {
+    enum LogLevel : unsigned char {
         Debug, /**< Captures order of framework function calls. */
         Info, /**< Captures outcome of the workflow execution for each framework::Testcase. */
         Warning, /**< Captures warnings about potentially incorrect behavior of the test application. */
@@ -109,8 +108,7 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    struct WEASEL_FRAMEWORK_API LogSubscriber
-    {
+    struct WEASEL_FRAMEWORK_API LogSubscriber {
         /**
          * @brief Function called by the Weasel Test Framework every time
          *        it publishes a log event.
@@ -142,8 +140,7 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    class WEASEL_FRAMEWORK_API Suite
-    {
+    class WEASEL_FRAMEWORK_API Suite {
     public:
         /**
          * @brief Populates the set of testcases stored in this object.
@@ -209,8 +206,7 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    class WEASEL_FRAMEWORK_API Workflow
-    {
+    class WEASEL_FRAMEWORK_API Workflow {
     public:
         /**
          * @brief Describes extra command line arguments supported by this
