@@ -5,10 +5,10 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import type { BatchLookupResponse, CommentItem, TeamLookupResponse } from 'src/app/core/models/commontypes';
-import { EPlatformRole, ETeamRole } from 'src/app/core/models/commontypes';
-import { FrontendCommentAction, FrontendCommentActionType, FrontendCommentItem } from 'src/app/core/models/frontendtypes';
-import { ApiService, NotificationService, NotificationType, UserService } from 'src/app/core/services';
+import type { BatchLookupResponse, CommentItem, TeamLookupResponse } from '@weasel/core/models/commontypes';
+import { EPlatformRole, ETeamRole } from '@weasel/core/models/commontypes';
+import { FrontendCommentAction, FrontendCommentActionType, FrontendCommentItem } from '@weasel/core/models/frontendtypes';
+import { ApiService, NotificationService, NotificationType, UserService } from '@weasel/core/services';
 import { BatchPageService } from './batch.service';
 
 type PageViewFields = {

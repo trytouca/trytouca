@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { timer } from 'rxjs';
-import { ApiService } from 'src/app/core/services';
+import { ApiService } from '@weasel/core/services';
 
 interface IAccountInfo {
   email: string;

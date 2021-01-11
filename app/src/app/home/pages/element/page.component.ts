@@ -9,10 +9,10 @@ import { Title } from '@angular/platform-browser';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSpinner, faStopwatch, faTasks } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import type { ElementLookupResponse, SuiteLookupResponse, BatchLookupResponse } from 'src/app/core/models/commontypes';
-import type { FrontendElementCompareParams, FrontendOverviewSection } from 'src/app/core/models/frontendtypes';
-import { Alert, AlertKind, AlertService, AlertType } from 'src/app/core/services';
-import { PageComponent, PageTab } from 'src/app/home/components/page.component';
+import type { ElementLookupResponse, SuiteLookupResponse, BatchLookupResponse } from '@weasel/core/models/commontypes';
+import type { FrontendElementCompareParams, FrontendOverviewSection } from '@weasel/core/models/frontendtypes';
+import { Alert, AlertKind, AlertService, AlertType } from '@weasel/core/services';
+import { PageComponent, PageTab } from '@weasel/home/components/page.component';
 import { ElementPageOverviewMetadata, ElementPageResult } from './element.model';
 import { ElementPageService, ElementPageTabType } from './element.service';
 

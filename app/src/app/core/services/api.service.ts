@@ -3,7 +3,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { getBackendUrl } from 'src/app/core/models/environment';
+import { getBackendUrl } from '@weasel/core/models/environment';
 
 import {
   HttpClient,

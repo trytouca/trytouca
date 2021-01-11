@@ -4,8 +4,8 @@
 
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import type { UserLookupResponse } from 'src/app/core/models/commontypes';
-import { errorLogger } from 'src/app/shared/utils/errorLogger';
+import type { UserLookupResponse } from '@weasel/core/models/commontypes';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { AlertService, AlertKind } from './alert.service';
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';

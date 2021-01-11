@@ -5,8 +5,8 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeamPageService } from './team.service';
-import { FilterInput } from 'src/app/home/models/filter.model';
-import { PageListComponent } from 'src/app/home/components/page-list.component';
+import { FilterInput } from '@weasel/home/models/filter.model';
+import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { TeamPageSuite, TeamPageSuiteType } from './team.model';
 
 const filterInput: FilterInput<TeamPageSuite> = {

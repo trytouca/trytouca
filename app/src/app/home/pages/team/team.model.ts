@@ -2,8 +2,8 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import type { SuiteLookupResponse, TeamApplicant, TeamInvitee, TeamMember } from 'src/app/core/models/commontypes';
-import { PageListItem } from 'src/app/home/models/page-list-item.model';
+import type { SuiteLookupResponse, TeamApplicant, TeamInvitee, TeamMember } from '@weasel/core/models/commontypes';
+import { PageListItem } from '@weasel/home/models/page-list-item.model';
 
 type DataType = TeamMember | TeamInvitee | TeamApplicant;
 

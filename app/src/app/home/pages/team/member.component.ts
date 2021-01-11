@@ -5,7 +5,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faUser, faUserEdit, faUserMinus, faUserNinja, faUserTie } from '@fortawesome/free-solid-svg-icons';
-import { TeamMember, ETeamRole } from 'src/app/core/models/commontypes';
+import { TeamMember, ETeamRole } from '@weasel/core/models/commontypes';
 
 type Icon = {
   type: string;

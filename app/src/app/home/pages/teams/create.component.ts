@@ -6,8 +6,8 @@ import { Component, HostListener } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiService } from 'src/app/core/services';
-import { ModalComponent } from 'src/app/home/components';
+import { ApiService } from '@weasel/core/services';
+import { ModalComponent } from '@weasel/home/components';
 
 interface IFormContent {
   name: string;

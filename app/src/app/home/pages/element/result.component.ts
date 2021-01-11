@@ -6,9 +6,9 @@ import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faCircle, faCheckCircle, faPlusCircle, faMinusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
-import type { FrontendElementCompareParams } from 'src/app/core/models/frontendtypes';
-import { NotificationService, NotificationType } from 'src/app/core/services';
-import { Result } from 'src/app/home/models/result.model';
+import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
+import { NotificationService, NotificationType } from '@weasel/core/services';
+import { Result } from '@weasel/home/models/result.model';
 import { ElementPageResult, ElementPageItemType } from './element.model';
 
 enum MatchType {

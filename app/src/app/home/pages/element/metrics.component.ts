@@ -5,10 +5,10 @@
 import { Component, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import type { SuiteLookupResponse } from 'src/app/core/models/commontypes';
-import type { FrontendElementCompareParams } from 'src/app/core/models/frontendtypes';
-import { PageListComponent } from 'src/app/home/components/page-list.component';
-import { FilterInput } from 'src/app/home/models/filter.model';
+import type { SuiteLookupResponse } from '@weasel/core/models/commontypes';
+import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
+import { PageListComponent } from '@weasel/home/components/page-list.component';
+import { FilterInput } from '@weasel/home/models/filter.model';
 import { ElementPageItemType, ElementPageMetric } from './element.model';
 import { ElementPageService, ElementPageTabType } from './element.service';
 

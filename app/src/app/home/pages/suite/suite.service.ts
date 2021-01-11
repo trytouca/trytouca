@@ -7,11 +7,11 @@ import { isEqual } from 'lodash-es';
 import { of, Subject, Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import type { BatchListResponse, SuiteLookupResponse, SuiteListResponse,
-  SuiteItem, TeamLookupResponse } from 'src/app/core/models/commontypes';
-import { FrontendBatchItem } from 'src/app/core/models/frontendtypes';
-import { AlertKind, AlertService, ApiService, UserService } from 'src/app/core/services';
-import { errorLogger } from 'src/app/shared/utils/errorLogger';
-import { IPageService } from 'src/app/home/models/pages.model';
+  SuiteItem, TeamLookupResponse } from '@weasel/core/models/commontypes';
+import { FrontendBatchItem } from '@weasel/core/models/frontendtypes';
+import { AlertKind, AlertService, ApiService, UserService } from '@weasel/core/services';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
+import { IPageService } from '@weasel/home/models/pages.model';
 import { SuitePageItem, SuitePageItemType } from './suite.model';
 
 export enum SuitePageTabType {

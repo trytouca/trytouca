@@ -8,11 +8,11 @@ import { Subscription } from 'rxjs';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TeamPageMemberType, TeamPageMember } from './team.model';
 import { TeamPageService } from './team.service';
-import { ConfirmComponent, ConfirmElements } from 'src/app/home/components/confirm.component';
-import { ETeamRole, EPlatformRole, TeamInvitee, TeamMember, TeamLookupResponse, TeamApplicant } from 'src/app/core/models/commontypes';
-import { ApiService, NotificationService, NotificationType, UserService } from 'src/app/core/services';
-import { PageListComponent } from 'src/app/home/components/page-list.component';
-import { FilterInput } from 'src/app/home/models/filter.model';
+import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
+import { ETeamRole, EPlatformRole, TeamInvitee, TeamMember, TeamLookupResponse, TeamApplicant } from '@weasel/core/models/commontypes';
+import { ApiService, NotificationService, NotificationType, UserService } from '@weasel/core/services';
+import { PageListComponent } from '@weasel/home/components/page-list.component';
+import { FilterInput } from '@weasel/home/models/filter.model';
 
 const filterInput: FilterInput<TeamPageMember> = {
   filters: [

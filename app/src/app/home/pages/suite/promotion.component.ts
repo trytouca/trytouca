@@ -3,7 +3,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import type { PromotionItem } from 'src/app/core/models/frontendtypes';
+import type { PromotionItem } from '@weasel/core/models/frontendtypes';
 
 @Component({
   selector: 'app-suite-item-promotion',

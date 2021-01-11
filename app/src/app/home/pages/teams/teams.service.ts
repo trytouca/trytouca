@@ -6,11 +6,11 @@ import { Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ETeamRole, TeamListResponse } from 'src/app/core/models/commontypes';
-import { ELocalStorageKey } from 'src/app/core/models/frontendtypes';
-import { AlertService, AlertKind, ApiService } from 'src/app/core/services';
-import { IPageService } from 'src/app/home/models/pages.model';
-import { errorLogger } from 'src/app/shared/utils/errorLogger';
+import { ETeamRole, TeamListResponse } from '@weasel/core/models/commontypes';
+import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
+import { AlertService, AlertKind, ApiService } from '@weasel/core/services';
+import { IPageService } from '@weasel/home/models/pages.model';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { TeamsPageItemType, TeamsPageTeam } from './teams.model';
 
 type FetchInput = { };

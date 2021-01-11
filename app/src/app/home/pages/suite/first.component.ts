@@ -6,8 +6,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { NotificationService, NotificationType, UserService } from 'src/app/core/services';
-import { getBackendUrl } from 'src/app/core/models/environment';
+import { NotificationService, NotificationType, UserService } from '@weasel/core/services';
+import { getBackendUrl } from '@weasel/core/models/environment';
 import { SuitePageService } from './suite.service';
 
 type Fields = Partial<{

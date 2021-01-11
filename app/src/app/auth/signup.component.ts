@@ -5,8 +5,8 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ELocalStorageKey } from 'src/app/core/models/frontendtypes';
-import { ApiService, AuthService, UserService } from 'src/app/core/services';
+import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
+import { ApiService, AuthService, UserService } from '@weasel/core/services';
 
 interface IFormContent {
   email: string;

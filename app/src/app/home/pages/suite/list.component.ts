@@ -4,8 +4,8 @@
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PageListComponent } from 'src/app/home/components/page-list.component';
-import { FilterInput } from 'src/app/home/models/filter.model';
+import { PageListComponent } from '@weasel/home/components/page-list.component';
+import { FilterInput } from '@weasel/home/models/filter.model';
 import { SuitePageService } from './suite.service';
 import { SuitePageItem, SuitePageItemType } from './suite.model';
 

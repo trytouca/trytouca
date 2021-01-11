@@ -7,11 +7,11 @@ import { isEqual } from 'lodash-es';
 import { of, Observable, Subject, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import type { ElementLookupResponse, ElementComparisonResponse,
-  SuiteLookupResponse, BatchLookupResponse } from 'src/app/core/models/commontypes';
-import type { FrontendElementCompareParams } from 'src/app/core/models/frontendtypes';
-import { AlertKind, AlertService, ApiService } from 'src/app/core/services';
-import { errorLogger } from 'src/app/shared/utils/errorLogger';
-import { IPageService } from 'src/app/home/models/pages.model';
+  SuiteLookupResponse, BatchLookupResponse } from '@weasel/core/models/commontypes';
+import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
+import { AlertKind, AlertService, ApiService } from '@weasel/core/services';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
+import { IPageService } from '@weasel/home/models/pages.model';
 import { ElementPageItemType, ElementPageMetric, ElementPageOverviewMetadata, ElementPageResult } from './element.model';
 
 export enum ElementPageTabType {

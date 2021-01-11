@@ -3,7 +3,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FrontendCommentAction, FrontendCommentActionType, FrontendCommentItem } from 'src/app/core/models/frontendtypes';
+import { FrontendCommentAction, FrontendCommentActionType, FrontendCommentItem } from '@weasel/core/models/frontendtypes';
 
 @Component({
   selector: 'app-home-comment',

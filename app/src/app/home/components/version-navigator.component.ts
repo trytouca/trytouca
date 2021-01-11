@@ -4,9 +4,9 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import type { SuiteLookupResponse, Promotion } from 'src/app/core/models/commontypes';
-import type { FrontendBatchCompareParams, FrontendElementCompareParams } from 'src/app/core/models/frontendtypes';
-import { NotificationService, NotificationType } from 'src/app/core/services';
+import type { SuiteLookupResponse, Promotion } from '@weasel/core/models/commontypes';
+import type { FrontendBatchCompareParams, FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
+import { NotificationService, NotificationType } from '@weasel/core/services';
 
 type ParamsType = FrontendBatchCompareParams | FrontendElementCompareParams;
 

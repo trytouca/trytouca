@@ -8,8 +8,8 @@ import Fuse from 'fuse.js';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, skip } from 'rxjs/operators';
 import { isEqual } from 'lodash-es';
-import type { FrontendElementCompareParams } from 'src/app/core/models/frontendtypes';
-import { SuiteLookupResponse } from 'src/app/core/models/commontypes';
+import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
+import { SuiteLookupResponse } from '@weasel/core/models/commontypes';
 
 type Version = {
   slug: string;

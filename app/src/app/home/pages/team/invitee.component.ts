@@ -5,7 +5,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { TeamInvitee } from 'src/app/core/models/commontypes';
+import { TeamInvitee } from '@weasel/core/models/commontypes';
 
 @Component({
   selector: 'app-team-item-invitee',

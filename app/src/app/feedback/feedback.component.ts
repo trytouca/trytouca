@@ -5,8 +5,8 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { ApiService } from 'src/app/core/services';
-import { errorLogger } from 'src/app/shared/utils/errorLogger';
+import { ApiService } from '@weasel/core/services';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
 
 interface IFormContent {
   body: string;

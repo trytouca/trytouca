@@ -7,10 +7,10 @@ import { I18nPluralPipe, PercentPipe } from '@angular/common';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faCircle, faCheckCircle, faSpinner, faStar, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TimeAgoPipe } from 'ngx-moment';
-import { Metric, MetricChangeType } from 'src/app/home/models/metric.model';
-import { Data, Icon, IconColor, IconType, Topic } from 'src/app/home/models/page-item.model';
-import { DurationPipe } from 'src/app/home/pipes';
-import { FrontendBatchItem } from 'src/app/core/models/frontendtypes';
+import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
+import { Data, Icon, IconColor, IconType, Topic } from '@weasel/home/models/page-item.model';
+import { DurationPipe } from '@weasel/home/pipes';
+import { FrontendBatchItem } from '@weasel/core/models/frontendtypes';
 
 type Meta = Partial<{
   countFresh: number;

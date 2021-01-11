@@ -2,8 +2,8 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import type { TeamItem } from 'src/app/core/models/commontypes';
-import { PageListItem } from 'src/app/home/models/page-list-item.model';
+import type { TeamItem } from '@weasel/core/models/commontypes';
+import { PageListItem } from '@weasel/home/models/page-list-item.model';
 
 /**
  *

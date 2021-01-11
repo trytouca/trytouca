@@ -8,11 +8,11 @@ import { of, Observable, Subject, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import type {
   BatchListResponse, BatchLookupResponse, BatchComparisonResponse,
-  CommentItem, CommentListResponse, SuiteLookupResponse, TeamLookupResponse } from 'src/app/core/models/commontypes';
-import type { FrontendBatchCompareParams } from 'src/app/core/models/frontendtypes';
-import { AlertService, AlertKind, ApiService } from 'src/app/core/services';
-import { errorLogger } from 'src/app/shared/utils/errorLogger';
-import { IPageService } from 'src/app/home/models/pages.model';
+  CommentItem, CommentListResponse, SuiteLookupResponse, TeamLookupResponse } from '@weasel/core/models/commontypes';
+import type { FrontendBatchCompareParams } from '@weasel/core/models/frontendtypes';
+import { AlertService, AlertKind, ApiService } from '@weasel/core/services';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
+import { IPageService } from '@weasel/home/models/pages.model';
 import { BatchPageItem, BatchPageItemType, BatchPageOverviewMetadata } from './batch.model';
 
 export enum BatchPageTabType {

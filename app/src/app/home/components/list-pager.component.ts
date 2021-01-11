@@ -5,7 +5,7 @@
 import { Component, EventEmitter, Output, Input, HostListener } from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { FilterParams, FilterStats } from 'src/app/home/models/filter.model';
+import { FilterParams, FilterStats } from '@weasel/home/models/filter.model';
 
 type PageNumber = {
   slug: number;

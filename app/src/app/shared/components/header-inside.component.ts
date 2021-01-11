@@ -7,9 +7,9 @@ import { Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faInbox, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import type { UserLookupResponse } from 'src/app/core/models/commontypes';
-import { EPlatformRole } from 'src/app/core/models/commontypes';
-import { AuthService, UserService } from 'src/app/core/services';
+import type { UserLookupResponse } from '@weasel/core/models/commontypes';
+import { EPlatformRole } from '@weasel/core/models/commontypes';
+import { AuthService, UserService } from '@weasel/core/services';
 
 @Component({
   selector: 'app-header-inside',

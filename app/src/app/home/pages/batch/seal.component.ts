@@ -5,9 +5,9 @@
 import { Component, HostListener } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ApiService } from 'src/app/core/services';
-import { BatchLookupResponse } from 'src/app/core/models/commontypes';
-import { ModalComponent } from 'src/app/home/components';
+import { ApiService } from '@weasel/core/services';
+import { BatchLookupResponse } from '@weasel/core/models/commontypes';
+import { ModalComponent } from '@weasel/home/components';
 
 enum Alerts {
   Success = 'alert-success',

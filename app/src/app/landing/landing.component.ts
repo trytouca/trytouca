@@ -4,8 +4,8 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ELocalStorageKey } from 'src/app/core/models/frontendtypes';
-import { AuthService } from 'src/app/core/services';
+import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
+import { AuthService } from '@weasel/core/services';
 
 @Component({
   selector: 'app-page-landing',

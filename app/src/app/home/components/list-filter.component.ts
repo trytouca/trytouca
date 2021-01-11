@@ -7,7 +7,7 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSortAmountDown, faSortAmountDownAlt } from '@fortawesome/free-solid-svg-icons';
-import { FilterManager, FilterParams, FilterStats } from 'src/app/home/models/filter.model';
+import { FilterManager, FilterParams, FilterStats } from '@weasel/home/models/filter.model';
 
 @Component({
   selector: 'app-home-list-filter',

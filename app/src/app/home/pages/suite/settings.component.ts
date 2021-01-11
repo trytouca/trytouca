@@ -9,11 +9,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
-import { ApiService } from 'src/app/core/services';
-import { ETeamRole } from 'src/app/core/models/commontypes';
-import type { SuiteLookupResponse, TeamLookupResponse } from 'src/app/core/models/commontypes';
+import { ApiService } from '@weasel/core/services';
+import { ETeamRole } from '@weasel/core/models/commontypes';
+import type { SuiteLookupResponse, TeamLookupResponse } from '@weasel/core/models/commontypes';
 import { SuitePageService, SuitePageTabType } from './suite.service';
-import { ConfirmComponent, ConfirmElements } from 'src/app/home/components/confirm.component';
+import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
 
 interface IFormContent {
   name: string;

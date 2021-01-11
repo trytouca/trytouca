@@ -5,7 +5,7 @@
 import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { catchError, finalize, map } from 'rxjs/operators';
-import { ELocalStorageKey } from 'src/app/core/models/frontendtypes';
+import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 import { ApiService } from './api.service';
 
 @Injectable({

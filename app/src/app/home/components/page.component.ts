@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
 import { timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IPageService } from 'src/app/home/models/pages.model';
+import { IPageService } from '@weasel/home/models/pages.model';
 
 export type PageTab<TabType> = {
   type: TabType

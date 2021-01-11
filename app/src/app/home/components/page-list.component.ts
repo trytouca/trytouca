@@ -6,7 +6,7 @@ import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
-import { FilterInput, FilterManager, FilterParams, FilterStats } from 'src/app/home/models/filter.model';
+import { FilterInput, FilterManager, FilterParams, FilterStats } from '@weasel/home/models/filter.model';
 
 type CollectionType = string;
 

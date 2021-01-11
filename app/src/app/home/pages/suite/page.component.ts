@@ -9,9 +9,9 @@ import { Title } from '@angular/platform-browser';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faBell, faChartLine, faCog, faComments, faRecycle, faRobot, faTasks } from '@fortawesome/free-solid-svg-icons';
 import { Subscription, timer } from 'rxjs';
-import type { SuiteItem, SuiteLookupResponse, TeamItem } from 'src/app/core/models/commontypes';
-import { AlertKind, AlertService, NotificationService, NotificationType } from 'src/app/core/services';
-import { PageTab, PageComponent } from 'src/app/home/components/page.component';
+import type { SuiteItem, SuiteLookupResponse, TeamItem } from '@weasel/core/models/commontypes';
+import { AlertKind, AlertService, NotificationService, NotificationType } from '@weasel/core/services';
+import { PageTab, PageComponent } from '@weasel/home/components/page.component';
 import { SuitePageItem } from './suite.model';
 import { SuitePageService, SuitePageTabType } from './suite.service';
 

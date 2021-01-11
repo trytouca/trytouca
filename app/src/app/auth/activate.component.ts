@@ -7,8 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { timer } from 'rxjs';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { ApiService, AuthService } from 'src/app/core/services';
-import { ELocalStorageKey } from 'src/app/core/models/frontendtypes';
+import { ApiService, AuthService } from '@weasel/core/services';
+import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 
 enum Alerts {
   Success = 'alert-success',

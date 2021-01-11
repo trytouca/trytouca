@@ -6,7 +6,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { CategoryScale, Chart,
   LinearScale, LineController, LineElement, PointElement,
   Tooltip, TooltipItem, Filler } from 'chart.js';
-import { DurationPipe } from 'src/app/home/pipes/duration.pipe';
+import { DurationPipe } from '@weasel/home/pipes/duration.pipe';
 
 Chart.register(LineController, LinearScale, LineElement, CategoryScale,
   PointElement, Tooltip, Filler);

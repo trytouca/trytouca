@@ -4,7 +4,7 @@
 
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
-import { NotificationService, NotificationType } from 'src/app/core/services';
+import { NotificationService, NotificationType } from '@weasel/core/services';
 
 @Component({
   selector: 'app-notification',

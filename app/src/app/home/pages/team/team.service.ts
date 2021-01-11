@@ -6,13 +6,13 @@ import { Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import { of, Subject, Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ETeamRole } from 'src/app/core/models/commontypes';
+import { ETeamRole } from '@weasel/core/models/commontypes';
 import type { SuiteListResponse, SuiteLookupResponse, TeamInvitee,
-  TeamListResponse, TeamLookupResponse, TeamMember, TeamMemberListResponse } from 'src/app/core/models/commontypes';
-import { ELocalStorageKey } from 'src/app/core/models/frontendtypes';
-import { AlertKind, AlertService, ApiService, UserService } from 'src/app/core/services';
-import { errorLogger } from 'src/app/shared/utils/errorLogger';
-import { IPageService } from 'src/app/home/models/pages.model';
+  TeamListResponse, TeamLookupResponse, TeamMember, TeamMemberListResponse } from '@weasel/core/models/commontypes';
+import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
+import { AlertKind, AlertService, ApiService, UserService } from '@weasel/core/services';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
+import { IPageService } from '@weasel/home/models/pages.model';
 import { TeamPageSuite, TeamPageMember, TeamPageMemberType, TeamPageSuiteType } from './team.model';
 
 export enum TeamPageTabType {

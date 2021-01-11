@@ -8,10 +8,10 @@ import { ActivatedRoute } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faCircle, faCheckCircle, faPlusCircle, faMinusCircle, faSpinner, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { TimeAgoPipe } from 'ngx-moment';
-import { FrontendBatchCompareParams } from 'src/app/core/models/frontendtypes';
-import { Metric, MetricChangeType } from 'src/app/home/models/metric.model';
-import { Data, Icon, IconColor, IconType, Topic} from 'src/app/home/models/page-item.model';
-import { DurationPipe } from 'src/app/home/pipes';
+import { FrontendBatchCompareParams } from '@weasel/core/models/frontendtypes';
+import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
+import { Data, Icon, IconColor, IconType, Topic} from '@weasel/home/models/page-item.model';
+import { DurationPipe } from '@weasel/home/pipes';
 import { BatchPageItem, BatchPageItemType, nextPageQueryParams } from './batch.model';
 
 type Metadata = Partial<{

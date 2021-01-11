@@ -9,8 +9,8 @@ import {
   faPlusCircle, faMinusCircle,
   faChevronCircleDown, faChevronCircleUp
 } from '@fortawesome/free-solid-svg-icons';
-import { Metric, MetricChangeType } from 'src/app/home/models/metric.model';
-import type { FrontendElementCompareParams } from 'src/app/core/models/frontendtypes';
+import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
+import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
 import { ElementPageMetric, ElementPageItemType } from './element.model';
 
 interface Icon {

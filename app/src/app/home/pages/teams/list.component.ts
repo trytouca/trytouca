@@ -6,10 +6,10 @@ import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TeamsPageService } from './teams.service';
-import { ApiService } from 'src/app/core/services';
-import { FilterInput } from 'src/app/home/models/filter.model';
-import { ConfirmComponent, ConfirmElements } from 'src/app/home/components/confirm.component';
-import { PageListComponent } from 'src/app/home/components/page-list.component';
+import { ApiService } from '@weasel/core/services';
+import { FilterInput } from '@weasel/home/models/filter.model';
+import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
+import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { TeamsPageTeam, TeamsPageItemType } from './teams.model';
 
 const filterInput: FilterInput<TeamsPageTeam> = {

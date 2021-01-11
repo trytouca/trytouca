@@ -7,7 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TeamsPageService } from './teams.service';
 import { TeamsCreateTeamComponent } from './create.component';
-import { PageComponent, PageTab } from 'src/app/home/components';
+import { PageComponent, PageTab } from '@weasel/home/components';
 import { TeamsPageTeam } from './teams.model';
 
 enum TabType {

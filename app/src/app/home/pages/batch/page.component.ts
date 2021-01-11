@@ -12,10 +12,10 @@ import { faComments, faSpinner, faTasks } from '@fortawesome/free-solid-svg-icon
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
-import type { BatchItem, BatchLookupResponse, SuiteLookupResponse } from 'src/app/core/models/commontypes';
-import type { FrontendBatchCompareParams, FrontendOverviewSection } from 'src/app/core/models/frontendtypes';
-import { AlertKind, AlertService } from 'src/app/core/services';
-import { PageComponent, PageTab } from 'src/app/home/components/page.component';
+import type { BatchItem, BatchLookupResponse, SuiteLookupResponse } from '@weasel/core/models/commontypes';
+import type { FrontendBatchCompareParams, FrontendOverviewSection } from '@weasel/core/models/frontendtypes';
+import { AlertKind, AlertService } from '@weasel/core/services';
+import { PageComponent, PageTab } from '@weasel/home/components/page.component';
 import { BatchPageItem, BatchPageOverviewMetadata } from './batch.model';
 import { BatchPageService, BatchPageTabType } from './batch.service';
 import { BatchPromoteComponent } from './promote.component';
