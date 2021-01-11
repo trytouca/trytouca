@@ -9,8 +9,7 @@
 /**
  *
  */
-class MyWorkflow : public weasel::framework::Workflow
-{
+class MyWorkflow : public weasel::framework::Workflow {
 public:
     MyWorkflow();
     std::string describe_options() const override;
@@ -23,8 +22,7 @@ public:
 /**
  *
  */
-class MySuite final : public weasel::framework::Suite
-{
+class MySuite final : public weasel::framework::Suite {
 public:
     MySuite(const std::string& datasetDir);
     void initialize() override;

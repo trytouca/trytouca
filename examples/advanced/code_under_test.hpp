@@ -10,8 +10,7 @@
 /**
  *
  */
-struct Date
-{
+struct Date {
     unsigned short _year;
     unsigned short _month;
     unsigned short _day;
@@ -20,8 +19,7 @@ struct Date
 /**
  *
  */
-struct Wizard
-{
+struct Wizard {
     Date dob;
     float height;
     double weight;
