@@ -8,8 +8,7 @@
 #include <weasel/weasel.hpp>
 
 template <>
-struct weasel::convert::Conversion<Date>
-{
+struct weasel::convert::Conversion<Date> {
     std::shared_ptr<types::IType> operator()(const Date& value)
     {
         auto out = std::make_shared<types::Object>("Date");

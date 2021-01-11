@@ -33,10 +33,8 @@ MySuite::MySuite(const std::string& datasetDir)
  */
 void MySuite::initialize()
 {
-    for (const auto& it : boost::filesystem::directory_iterator(_dir))
-    {
-        if (!weasel::filesystem::is_regular_file(it.path().string()))
-        {
+    for (const auto& it : boost::filesystem::directory_iterator(_dir)) {
+        if (!weasel::filesystem::is_regular_file(it.path().string())) {
             continue;
         }
         push(it.path().stem().string());
@@ -82,10 +80,8 @@ bool MyWorkflow::parse_options(int argc, char* argv[])
     auto options = application_options();
     options.allow_unrecognised_options();
     const auto& result = options.parse(argc, argv);
-    for (const auto& key : { "datasets-dir", "testsuite-file", "testsuite-remote" })
-    {
-        if (result.count(key))
-        {
+    for (const auto& key : { "datasets-dir", "testsuite-file", "testsuite-remote" }) {
+        if (result.count(key)) {
             _options[key] = result[key].as<std::string>();
         }
     }
@@ -99,8 +95,7 @@ bool MyWorkflow::validate_options() const
 {
     // check that option `datasets-dir` is provided.
 
-    if (!_options.count("datasets-dir"))
-    {
+    if (!_options.count("datasets-dir")) {
         std::cerr << "required configuration option \"datasets-dir\" is missing" << std::endl;
         return false;
     }
@@ -108,8 +103,7 @@ bool MyWorkflow::validate_options() const
     // check that directory pointed by option `datasets-dir` exists.
 
     const auto& datasetsDir = _options.at("datasets-dir");
-    if (!weasel::filesystem::is_directory(datasetsDir))
-    {
+    if (!weasel::filesystem::is_directory(datasetsDir)) {
         std::cerr << "datasets directory \"" << datasetsDir << "\" does not exist" << std::endl;
         return false;
     }
@@ -117,11 +111,9 @@ bool MyWorkflow::validate_options() const
     // if option `testsuite-file` is provided, check that it points to a valid
     // file.
 
-    if (_options.count("testsuite-file"))
-    {
+    if (_options.count("testsuite-file")) {
         const auto& file = _options.at("testsuite-file");
-        if (!weasel::filesystem::is_regular_file(file))
-        {
+        if (!weasel::filesystem::is_regular_file(file)) {
             std::cerr << "testsuite file \"" << file << "\" does not exist" << std::endl;
             return false;
         }
@@ -141,8 +133,7 @@ std::shared_ptr<weasel::framework::Suite> MyWorkflow::suite() const
     // testsuite file has one testcase per line, while skipping empty lines
     // and lines that start with `##`.
 
-    if (_options.count("testsuite-file"))
-    {
+    if (_options.count("testsuite-file")) {
         return std::make_shared<weasel::framework::FileSuite>(_options.at("testsuite-file"));
     }
 
@@ -151,8 +142,7 @@ std::shared_ptr<weasel::framework::Suite> MyWorkflow::suite() const
     // the suite baseline. For this purpose, we use the `RemoteSuite` helper
     // class that is provided by the Weasel test framework.
 
-    if (_options.count("testsuite-remote") && _options.at("testsuite-remote") == "true")
-    {
+    if (_options.count("testsuite-remote") && _options.at("testsuite-remote") == "true") {
         return std::make_shared<weasel::framework::RemoteSuite>(_options);
     }
 
@@ -195,8 +185,7 @@ weasel::framework::Errors MyWorkflow::execute(const weasel::framework::Testcase&
  *
  */
 template <>
-struct weasel::convert::Conversion<Date>
-{
+struct weasel::convert::Conversion<Date> {
     std::shared_ptr<types::IType> operator()(const Date& value)
     {
         auto out = std::make_shared<types::Object>("Date");
