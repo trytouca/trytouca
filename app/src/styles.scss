@@ -2,100 +2,100 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "app/styles/bootstrap";
+@use "app/styles/weaselcss";
 
 .wsl-auth {
-  @include bootstrap.weasel-auth-main();
+  @include weaselcss.weasel-auth-main();
 }
 
 .wsl-auth-form {
-  @include bootstrap.weasel-auth-form();
+  @include weaselcss.weasel-auth-form();
 }
 
 .wsl-banner-nohead {
-  @include bootstrap.weasel-banner-page(0vh);
-  @include bootstrap.weasel-banner-page-elements();
+  @include weaselcss.weasel-banner-page(0vh);
+  @include weaselcss.weasel-banner-page-elements();
 }
 
 .wsl-banner-with-head {
-  @include bootstrap.weasel-banner-page(bootstrap.$weasel-page-head-min-height);
-  @include bootstrap.weasel-banner-page-elements();
+  @include weaselcss.weasel-banner-page(weaselcss.$weasel-page-head-min-height);
+  @include weaselcss.weasel-banner-page-elements();
 }
 
 .wsl-btn-danger {
-  @include bootstrap.weasel-button-danger();
+  @include weaselcss.weasel-button-danger();
 }
 
 .wsl-btn-dark {
-  @include bootstrap.weasel-button-dark();
+  @include weaselcss.weasel-button-dark();
 }
 
 .wsl-btn-light {
-  @include bootstrap.weasel-button-light();
+  @include weaselcss.weasel-button-light();
 }
 
 .wsl-btn-link {
-  @include bootstrap.weasel-button-link();
+  @include weaselcss.weasel-button-link();
 }
 
 .wsl-form {
-  @include bootstrap.weasel-form-main();
+  @include weaselcss.weasel-form-main();
 }
 
 .wsl-list {
-  @include bootstrap.weasel-list-main();
+  @include weaselcss.weasel-list-main();
 }
 
 .wsl-list-item {
-  @include bootstrap.weasel-item-main();
+  @include weaselcss.weasel-item-main();
 }
 
 .wsl-list-filter {
-  @include bootstrap.weasel-filter-main();
+  @include weaselcss.weasel-filter-main();
 }
 
 .wsl-list-filter-reset {
-  @include bootstrap.weasel-filter-reset();
+  @include weaselcss.weasel-filter-reset();
 }
 
 .wsl-list-filter-empty {
-  @include bootstrap.weasel-filter-empty();
+  @include weaselcss.weasel-filter-empty();
 }
 
 .wsl-modal {
-  @include bootstrap.weasel-modal-main();
+  @include weaselcss.weasel-modal-main();
 }
 
 .wsl-modal-confirm {
-  @include bootstrap.weasel-modal-confirm();
+  @include weaselcss.weasel-modal-confirm();
 }
 
 .wsl-page-head {
-  @include bootstrap.weasel-page-head();
+  @include weaselcss.weasel-page-head();
 }
 
 .wsl-page-tab {
-  @include bootstrap.weasel-page-tab();
+  @include weaselcss.weasel-page-tab();
 }
 
 .wsl-page-overview {
-  @include bootstrap.weasel-page-overview();
+  @include weaselcss.weasel-page-overview();
 }
 
 .wsl-settings {
-  @include bootstrap.weasel-settings-main();
+  @include weaselcss.weasel-settings-main();
 }
 
 .wsl-spinner {
-  @include bootstrap.weasel-banner-spinner();
+  @include weaselcss.weasel-banner-spinner();
 }
 
 .wsl-text-danger {
-  color: bootstrap.weasel-color("text-danger");
+  color: weaselcss.weasel-color("text-danger");
 }
 
 .wsl-text-success {
-  color: bootstrap.weasel-color("text-success");
+  color: weaselcss.weasel-color("text-success");
 }
 
 .wsl-dropdown .dropdown-menu {

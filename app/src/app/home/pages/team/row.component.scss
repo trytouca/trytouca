@@ -2,11 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use '../../../styles/bootstrap.scss';
+@use '../../../styles/weaselcss.scss';
 
 .wsl-item-status {
   fa-icon {
-    color: bootstrap.weasel-color("template-strong-secondary");
+    color: weaselcss.weasel-color("template-strong-secondary");
     font-size: 1.25em;
   }
 }

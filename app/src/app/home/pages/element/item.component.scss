@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use '../../../styles/bootstrap.scss';
+@use '../../../styles/weaselcss.scss';
 
 @mixin wsl-item-topic-type {
   padding: 0.3em 0.7em;
@@ -10,15 +10,15 @@
 }
 
 .wsl-item-topic-type-complex {
-  background-color: bootstrap.weasel-color("background-lightfocus");
-  color: bootstrap.weasel-color("text-link");
+  background-color: weaselcss.weasel-color("background-lightfocus");
+  color: weaselcss.weasel-color("text-link");
   cursor: pointer;
   @include wsl-item-topic-type;
 }
 
 .wsl-item-topic-type-simple {
-  background-color: bootstrap.weasel-color("background-lightgray");
-  color: bootstrap.weasel-color("text-muted");
+  background-color: weaselcss.weasel-color("background-lightgray");
+  color: weaselcss.weasel-color("text-muted");
   @include wsl-item-topic-type;
 }
 
@@ -29,7 +29,7 @@
       display: flex;
       padding: 0 1rem;
       justify-content: space-between;
-      color: bootstrap.weasel-color("text-muted");
+      color: weaselcss.weasel-color("text-muted");
       .wsl-complex-block-desc {
         text-align: center;
         span {
@@ -38,7 +38,7 @@
       }
       .wsl-complex-block-icons {
         .wsl-complex-block-icon {
-          color: bootstrap.weasel-color("text-link");
+          color: weaselcss.weasel-color("text-link");
           opacity: 0.25;
           visibility: hidden;
         }
@@ -48,7 +48,7 @@
       }
     }
     pre {
-      background-color: bootstrap.weasel-color("background-lightgray");
+      background-color: weaselcss.weasel-color("background-lightgray");
       font-size: 80%;
       padding: 1rem;
     }
@@ -58,7 +58,7 @@
   }
 }
 
-@media (min-width: #{bootstrap.$weasel-breakpoint-md}) {
+@media (min-width: #{weaselcss.$weasel-breakpoint-md}) {
   .wsl-complex.wsl-complex-single {
     .wsl-complex-block {
       width: 75%;

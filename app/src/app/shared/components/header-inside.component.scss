@@ -2,19 +2,19 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "../../styles/bootstrap.scss";
+@use "../../styles/weaselcss.scss";
 
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500&display=swap');
 
 header {
-  height: bootstrap.$weasel-header-inside-min-height;
+  height: weaselcss.$weasel-header-inside-min-height;
   .wsl-container {
-    @include bootstrap.weasel-container();
+    @include weaselcss.weasel-container();
     display: flex;
     padding: 0 1rem;
   }
   a {
-    color: bootstrap.weasel-color("template-strong-secondary");
+    color: weaselcss.weasel-color("template-strong-secondary");
     text-decoration: none;
   }
   .wsl-logo {
@@ -22,7 +22,7 @@ header {
       font-family: 'M PLUS Rounded 1c', sans-serif;
       font-size: 1.5rem;
       font-weight: 500;
-      line-height: bootstrap.$weasel-header-inside-min-height;
+      line-height: weaselcss.$weasel-header-inside-min-height;
       margin-bottom: 0;
     }
     & + div {
@@ -35,7 +35,7 @@ header {
     padding-inline-start: 0;
     li {
       display: inline;
-      line-height: bootstrap.$weasel-header-inside-min-height;
+      line-height: weaselcss.$weasel-header-inside-min-height;
       padding: 0.25rem;
       &:last-child {
         padding-right: 0;
@@ -46,7 +46,7 @@ header {
         padding: 0.35rem 0.5rem;
       }
       &>a:active, &>a:hover {
-        color: bootstrap.weasel-color("template-strong-primary");
+        color: weaselcss.weasel-color("template-strong-primary");
       }
       #wsl-user-dropdown + div {
         line-height: normal;

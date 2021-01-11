@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "../../../styles/bootstrap.scss";
+@use "../../../styles/weaselcss.scss";
 
 .wsl-comment-frame {
   border: 1px solid #eee;
@@ -18,7 +18,7 @@
 
 .wsl-comment-empty {
   align-items: center;
-  background-color: bootstrap.weasel-color("background-lightgray");
+  background-color: weaselcss.weasel-color("background-lightgray");
   display: flex;
   font-size: 0.9rem;
   justify-content: center;

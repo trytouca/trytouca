@@ -2,12 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use '../../../styles/bootstrap.scss';
+@use '../../../styles/weaselcss.scss';
 
 .wsl-batches-item-promotion {
   padding: 0.5em 1.5rem;
   div:first-child {
-    @include bootstrap.weasel-item-topics();
+    @include weaselcss.weasel-item-topics();
     display: flex;
     font-size: small;
     justify-content: space-between;
@@ -19,8 +19,8 @@
     font-weight: 500;
   }
   blockquote {
-    border-left: 3px solid bootstrap.weasel-color("border-gray");
-    color: bootstrap.weasel-color("text-muted");
+    border-left: 3px solid weaselcss.weasel-color("border-gray");
+    color: weaselcss.weasel-color("text-muted");
     font-size: small;
     padding-left: 1rem;
     margin: 0.5rem;

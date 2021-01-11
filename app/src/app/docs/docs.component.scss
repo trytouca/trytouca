@@ -2,17 +2,17 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "../styles/bootstrap.scss";
+@use "../styles/weaselcss.scss";
 
 $breadcrumb-bar-height: 60px;
-$max-width-article: bootstrap.$weasel-container-max-width;
-$max-width-nav: bootstrap.$weasel-container-max-width;
+$max-width-article: weaselcss.$weasel-container-max-width;
+$max-width-nav: weaselcss.$weasel-container-max-width;
 
 .wsl-doc-head {
-  background-color: bootstrap.weasel-color("template-strong-secondary");
+  background-color: weaselcss.weasel-color("template-strong-secondary");
   padding: 0 2rem;
   nav {
-    @include bootstrap.weasel-container($max-width-nav);
+    @include weaselcss.weasel-container($max-width-nav);
     height: $breadcrumb-bar-height;
     line-height: $breadcrumb-bar-height;
     font-size: 1rem;
@@ -24,22 +24,22 @@ $max-width-nav: bootstrap.$weasel-container-max-width;
     padding: 0;
   }
   li:not(:last-child):after {
-    color: bootstrap.weasel-color("template-contrast-primary");
+    color: weaselcss.weasel-color("template-contrast-primary");
     content: "\2002/\2002";
   }
   a {
-    color: bootstrap.weasel-color("template-contrast-primary");
+    color: weaselcss.weasel-color("template-contrast-primary");
     text-decoration: none;
     &:hover {
-      color: bootstrap.weasel-color("template-contrast-secondary");
+      color: weaselcss.weasel-color("template-contrast-secondary");
     }
   }
 }
 
 .wsl-doc-body {
-  @include bootstrap.weasel-container($max-width-article);
-  @include bootstrap.weasel-markdown-main();
-  min-height: calc(100vh - #{bootstrap.$weasel-header-height} - #{$breadcrumb-bar-height} - #{bootstrap.$weasel-footer-outside-min-height});
+  @include weaselcss.weasel-container($max-width-article);
+  @include weaselcss.weasel-markdown-main();
+  min-height: calc(100vh - #{weaselcss.$weasel-header-height} - #{$breadcrumb-bar-height} - #{weaselcss.$weasel-footer-outside-min-height});
   aside {
     display: none;
     padding-top: 2rem;
@@ -52,13 +52,13 @@ $max-width-nav: bootstrap.$weasel-container-max-width;
         padding: 0.5rem;
         &.active {
           font-weight: 500;
-          color: bootstrap.weasel-color("template-strong-secondary");
+          color: weaselcss.weasel-color("template-strong-secondary");
         }
         &:not(:last-child) {
           border-bottom: 1px solid lightgray;
         }
         &:hover {
-          color: bootstrap.weasel-color("template-strong-secondary");
+          color: weaselcss.weasel-color("template-strong-secondary");
         }
         fa-icon {
           color: #aaa;
@@ -78,7 +78,7 @@ $max-width-nav: bootstrap.$weasel-container-max-width;
       margin: 3rem 0;
     }
   }
-  @media (min-width: #{bootstrap.$weasel-breakpoint-lg}) {
+  @media (min-width: #{weaselcss.$weasel-breakpoint-lg}) {
     display: grid;
     grid-template-columns: 1fr 4fr;
     aside {

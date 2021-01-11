@@ -2,12 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "../styles/bootstrap.scss";
+@use "../styles/weaselcss.scss";
 
 .wsl-landing {
-  @include bootstrap.weasel-container();
+  @include weaselcss.weasel-container();
   section {
-    min-height: calc(100vh - #{bootstrap.$weasel-header-height});
+    min-height: calc(100vh - #{weaselcss.$weasel-header-height});
     display: grid;
     place-content: center;
   }

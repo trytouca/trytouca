@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "../../styles/bootstrap.scss";
+@use "../../styles/weaselcss.scss";
 
 footer {
   div {
@@ -10,9 +10,9 @@ footer {
     justify-content: center !important;
     align-items: center;
     p {
-      color: bootstrap.weasel-color("template-strong-primary");
+      color: weaselcss.weasel-color("template-strong-primary");
       font-size: small;
-      line-height: bootstrap.$weasel-footer-inside-height;
+      line-height: weaselcss.$weasel-footer-inside-height;
       margin-bottom: 0;
     }
   }

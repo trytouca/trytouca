@@ -2,10 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "../../../styles/bootstrap.scss";
+@use "../../../styles/weaselcss.scss";
 
 .wsl-batches-first {
-  @include bootstrap.weasel-banner-page(bootstrap.$weasel-page-head-min-height);
+  @include weaselcss.weasel-banner-page(weaselcss.$weasel-page-head-min-height);
   .wsl-batches-first-head {
     display: grid;
     grid-template-columns: 4fr 3fr;
@@ -21,7 +21,7 @@
         grid-template-columns: 2fr 12fr 1fr;
         margin-bottom: 0.75rem;
         .wsl-input-group-prepend {
-          background-color: bootstrap.weasel-color("background-lightgray");
+          background-color: weaselcss.weasel-color("background-lightgray");
           border-color: #ccc;
           border-radius: 0.25rem 0 0 0.25rem;
           border-style: solid;
@@ -43,7 +43,7 @@
           padding: 0 0.5rem;
         }
         .wsl-input-group-append {
-          background-color: bootstrap.weasel-color("background-lightgray");
+          background-color: weaselcss.weasel-color("background-lightgray");
           border-color: #ccc;
           border-radius: 0 0.25rem 0.25rem 0;
           border-style: solid;
@@ -67,8 +67,8 @@
         grid-gap: 1rem;
       }
       .wsl-client-library {
-        background-color: bootstrap.weasel-color("background-lightgray");
-        border: 1px solid bootstrap.weasel-color("border-gray");
+        background-color: weaselcss.weasel-color("background-lightgray");
+        border: 1px solid weaselcss.weasel-color("border-gray");
         border-radius: 0.5rem;
         padding: 1rem;
         img {
@@ -82,7 +82,7 @@
   }
   .wsl-batches-first-right {
     display: none;
-    @media (min-width: #{bootstrap.$weasel-breakpoint-md}) {
+    @media (min-width: #{weaselcss.$weasel-breakpoint-md}) {
       align-items: center;
       display: flex;
       justify-content: center;

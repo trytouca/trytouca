@@ -2,10 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "../../styles/bootstrap.scss";
+@use "../../styles/weaselcss.scss";
 
 .wsl-version-navigator {
-  @include bootstrap.weasel-container();
+  @include weaselcss.weasel-container();
   font-size: small;
   padding-bottom: 1rem;
 }
@@ -15,7 +15,7 @@
 }
 
 .wsl-clipboard-icon {
-  color: bootstrap.weasel-color("text-link");
+  color: weaselcss.weasel-color("text-link");
   opacity: 0.25;
   visibility: hidden;
 }

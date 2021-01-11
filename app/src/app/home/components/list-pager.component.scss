@@ -2,10 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
- @use "../../styles/bootstrap.scss";
+ @use "../../styles/weaselcss.scss";
 
 .wsl-pager {
-  @include bootstrap.weasel-container();
+  @include weaselcss.weasel-container();
   padding: 0 1rem;
   & > div {
     padding: 0.5rem 0;
@@ -42,7 +42,7 @@
   }
 }
 
-@media (min-width: #{bootstrap.$weasel-breakpoint-md}) {
+@media (min-width: #{weaselcss.$weasel-breakpoint-md}) {
   .wsl-pager {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
