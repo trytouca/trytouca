@@ -25,6 +25,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.15.1",
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
+    "@ngneat/dialog": "^1.0.4",
     "chart.js": "^3.0.0-beta.7",
     "core-js": "^3.8.2",
     "flat": "^5.0.2",

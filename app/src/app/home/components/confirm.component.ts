@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { DialogRef } from '@ngneat/dialog';
 import { ModalComponent } from './modal.component';
 
 export type ConfirmElements = {
@@ -15,20 +15,22 @@ export type ConfirmElements = {
 
 @Component({
   selector: 'app-home-confirm',
-  templateUrl: './confirm.component.html'
+  templateUrl: './confirm.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmComponent extends ModalComponent {
 
-  public elements: ConfirmElements;
+  elements: ConfirmElements;
 
   /**
    *
    */
   constructor(
-    public activeModal: NgbActiveModal,
+    public dialogRef: DialogRef
   ) {
     super();
     super.form = new FormGroup({});
+    this.elements = dialogRef.data as ConfirmElements;
   }
 
   /**
@@ -41,7 +43,7 @@ export class ConfirmComponent extends ModalComponent {
     this.submitted = true;
     this.form.reset();
     this.submitted = false;
-    this.activeModal.close(true);
+    this.dialogRef.close(true);
   }
 
   /**
@@ -50,7 +52,7 @@ export class ConfirmComponent extends ModalComponent {
   public closeModal() {
     this.form.reset();
     this.submitted = false;
-    this.activeModal.close(false);
+    this.dialogRef.close(false);
   }
 
   /**

@@ -6,14 +6,14 @@ import { Component, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { DialogService, DialogRef } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
 import { ETeamRole } from '@weasel/core/models/commontypes';
 import type { SuiteLookupResponse, TeamLookupResponse } from '@weasel/core/models/commontypes';
+import { ConfirmComponent } from '@weasel/home/components/confirm.component';
 import { SuitePageService, SuitePageTabType } from './suite.service';
-import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
 
 interface IFormContent {
   name: string;
@@ -55,7 +55,8 @@ export class SuiteTabSettingsComponent implements OnDestroy {
   team: TeamLookupResponse;
   suite: SuiteLookupResponse;
 
-  private _confirmModalRef: NgbModalRef;
+  private _dialogRef: DialogRef;
+  private _dialogSub: Subscription;
   private _subTeam: Subscription;
   private _subSuite: Subscription;
 
@@ -67,10 +68,10 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    */
   constructor(
     private apiService: ApiService,
+    private dialogService: DialogService,
     private suitePageService: SuitePageService,
     private route: ActivatedRoute,
-    private router: Router,
-    private modalService: NgbModal
+    private router: Router
   ) {
     this._subTeam = this.suitePageService.team$.subscribe(team => {
       this.team = team;
@@ -129,6 +130,9 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    *
    */
   ngOnDestroy() {
+    if (this._dialogSub) {
+      this._dialogSub.unsubscribe();
+    }
     this._subTeam.unsubscribe();
     this._subSuite.unsubscribe();
   }
@@ -182,29 +186,25 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    *
    */
   async openConfirmModal(type: EModalType) {
-    this._confirmModalRef = this.modalService.open(ConfirmComponent);
-    if (type === EModalType.DeleteSuite) {
-      const elements: ConfirmElements = {
+    this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      data: {
         title: `Delete Suite ${this.suite.suiteName}`,
         message: `<p>
           You are about to delete suite <strong>${this.suite.suiteName}</strong>.
           This action permanently removes all data associated with this suite.
           Are you sure you want to delete this suite?</p>`,
         button: 'Delete'
-      };
-      this._confirmModalRef.componentInstance.elements = elements;
-    }
-    this._confirmModalRef.result
-      .then((state: boolean) => {
-        if (!state) {
-          return;
-        }
-        switch (type) {
-          case EModalType.DeleteSuite:
-            return this.deleteSuite();
-        }
-      })
-      .catch(_e => true);
+      }
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (!state) {
+        return;
+      }
+      switch (type) {
+        case EModalType.DeleteSuite:
+          return this.deleteSuite();
+      }
+    });
   }
 
   /**

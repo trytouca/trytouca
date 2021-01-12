@@ -2,8 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnDestroy } from '@angular/core';
+import { DialogService, DialogRef } from '@ngneat/dialog';
+import { Subscription } from 'rxjs';
 import { TeamsPageService } from './teams.service';
 import { TeamsCreateTeamComponent } from './create.component';
 
@@ -12,15 +13,27 @@ import { TeamsCreateTeamComponent } from './create.component';
   templateUrl: './first.component.html',
   styles: ['img { margin: 5vh auto; }']
 })
-export class TeamsFirstTeamComponent {
+export class TeamsFirstTeamComponent implements OnDestroy {
+
+  private _dialogRef: DialogRef;
+  private _dialogSub: Subscription;
 
   /**
    *
    */
   constructor(
-    private modalService: NgbModal,
+    private dialogService: DialogService,
     private teamsPageService: TeamsPageService
   ) {
+  }
+
+  /**
+   *
+   */
+  ngOnDestroy() {
+    if (this._dialogSub) {
+      this._dialogSub.unsubscribe();
+    }
   }
 
   /**
@@ -34,14 +47,12 @@ export class TeamsFirstTeamComponent {
    *
    */
   openCreateModal() {
-    const modalRef = this.modalService.open(TeamsCreateTeamComponent);
-    modalRef.result
-      .then((state: boolean) => {
-        if (state) {
-          this.fetchItems();
-        }
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(TeamsCreateTeamComponent);
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (state) {
+        this.fetchItems();
+      }
+    });
   }
 
 }

@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
 import { BatchLookupResponse } from '@weasel/core/models/commontypes';
 import { ModalComponent } from '@weasel/home/components';
@@ -21,7 +21,8 @@ enum Alerts {
 @Component({
   selector: 'app-elements-promote',
   templateUrl: './promote.component.html',
-  styleUrls: ['./modal.component.scss']
+  styleUrls: ['./modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BatchPromoteComponent extends ModalComponent {
 
@@ -31,8 +32,8 @@ export class BatchPromoteComponent extends ModalComponent {
    *
    */
   constructor(
-    public activeModal: NgbActiveModal,
-    private apiService: ApiService
+    private apiService: ApiService,
+    public dialogRef: DialogRef
   ) {
     super();
     super.form = new FormGroup({
@@ -59,7 +60,7 @@ export class BatchPromoteComponent extends ModalComponent {
       () => {
         this.form.reset();
         this.submitted = false;
-        this.activeModal.close(true);
+        this.dialogRef.close(true);
       },
       err => {
         const msg = this.apiService.extractError(err, [
@@ -76,7 +77,7 @@ export class BatchPromoteComponent extends ModalComponent {
   public closeModal() {
     this.form.reset();
     this.submitted = false;
-    this.activeModal.close(false);
+    this.dialogRef.close(false);
   }
 
   /**

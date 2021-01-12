@@ -4,13 +4,14 @@
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { TeamsPageService } from './teams.service';
+import { DialogService, DialogRef } from '@ngneat/dialog';
+import { Subscription } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
 import { FilterInput } from '@weasel/home/models/filter.model';
 import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
 import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { TeamsPageTeam, TeamsPageItemType } from './teams.model';
+import { TeamsPageService } from './teams.service';
 
 const filterInput: FilterInput<TeamsPageTeam> = {
   filters: [
@@ -61,15 +62,17 @@ export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> imp
 
   ItemType = TeamsPageItemType;
   counters: Record<TeamsPageItemType, number> = { active: 0, invited: 0, joining: 0 };
-  private _confirmModalRef: NgbModalRef;
+
+  private _dialogRef: DialogRef;
+  private _dialogSub: Subscription;
 
   /**
    *
    */
   constructor(
     private apiService: ApiService,
+    private dialogService: DialogService,
     private teamsPageService: TeamsPageService,
-    private modalService: NgbModal,
     route: ActivatedRoute,
     router: Router
   ) {
@@ -88,6 +91,9 @@ export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> imp
    *
    */
   ngOnDestroy() {
+    if (this._dialogSub) {
+      this._dialogSub.unsubscribe();
+    }
     super.ngOnDestroy();
   }
 
@@ -141,16 +147,15 @@ export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> imp
    *
    */
   private showConfirmation(elements: ConfirmElements, func: () => void) {
-    this._confirmModalRef = this.modalService.open(ConfirmComponent);
-    this._confirmModalRef.componentInstance.elements = elements;
-    this._confirmModalRef.result
-      .then((state: boolean) => {
-        if (!state) {
-          return;
-        }
-        func();
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      data: elements
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (!state) {
+        return;
+      }
+      func();
+    });
   }
 
   /**

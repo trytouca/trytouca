@@ -7,9 +7,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DialogModule } from '@ngneat/dialog';
 
 import {
   FooterInsideComponent,
@@ -29,7 +28,7 @@ import {
     FontAwesomeModule,
     FormsModule,
     HttpClientModule,
-    NgbModule,
+    DialogModule.forRoot(),
     ReactiveFormsModule,
     RouterModule
   ],
@@ -43,6 +42,7 @@ import {
   ],
   exports: [
     CommonModule,
+    DialogModule,
     FontAwesomeModule,
     FooterInsideComponent,
     FooterOutsideComponent,
@@ -50,7 +50,6 @@ import {
     HeaderInsideComponent,
     HeaderOutsideComponent,
     HttpClientModule,
-    NgbModule,
     ReactiveFormsModule,
     ServerDownComponent,
     SignupFormComponent

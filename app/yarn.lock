@@ -1390,6 +1390,13 @@
     merge-source-map "^1.1.0"
     schema-utils "^2.7.0"
 
+"@ngneat/dialog@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@ngneat/dialog/-/dialog-1.0.4.tgz#710ed3759e64d15068743f2cb04f212a2c91d08f"
+  integrity sha512-+Hc4qxfpAJlexerpE5Udw6XBaYd9HmN1GxHKQLlytrRIBw+r18wgtas1jFcMppB7/7D6vo2ooWBP/lq+/xsX4Q==
+  dependencies:
+    tslib "^1.10.0"
+
 "@ngtools/webpack@11.0.5":
   version "11.0.5"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-11.0.5.tgz#9d1abb9f9a5e72c014b5ed3e0c2cefe2a4175b30"

@@ -6,7 +6,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faCog, faPlus, faTasks, faUsers, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { DialogService, DialogRef } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 import type { TeamItem } from '@weasel/core/models/commontypes';
 import { AlertService, AlertKind } from '@weasel/core/services';
@@ -55,7 +55,8 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
   teams: TeamItem[];
   TabType = TeamPageTabType;
 
-  private _modalRef: NgbModalRef;
+  private _dialogRef: DialogRef;
+  private _dialogSub: Subscription;
 
   private _subTeams: Subscription;
   private _subTeam: Subscription;
@@ -66,7 +67,7 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
    */
   constructor(
     private alertService: AlertService,
-    private modalService: NgbModal,
+    private dialogService: DialogService,
     private router: Router,
     private teamPageService: TeamPageService,
     private faIconLibrary: FaIconLibrary,
@@ -101,6 +102,9 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
     this._subAlert.unsubscribe();
     this._subTeams.unsubscribe();
     this._subTeam.unsubscribe();
+    if (this._dialogSub) {
+      this._dialogSub.unsubscribe();
+    }
     super.ngOnDestroy();
   }
 
@@ -138,30 +142,32 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
    *
    */
   openCreateModal() {
-    this._modalRef = this.modalService.open(TeamCreateSuiteComponent);
-    this._modalRef.componentInstance.teamSlug = this.team.slug;
-    this._modalRef.result
-      .then((state: boolean) => {
-        if (state) {
-          this.fetchItems();
-        }
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(TeamCreateSuiteComponent, {
+      data: {
+        teamSlug: this.team.slug
+      }
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (state) {
+        this.fetchItems();
+      }
+    });
   }
 
   /**
    *
    */
   openInviteModal() {
-    this._modalRef = this.modalService.open(TeamInviteComponent);
-    this._modalRef.componentInstance.teamSlug = this.team.slug;
-    this._modalRef.result
-      .then((state: boolean) => {
-        if (state) {
-          this.teamPageService.refreshMembers();
-        }
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(TeamInviteComponent, {
+      data: {
+        teamSlug: this.team.slug
+      }
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (state) {
+        this.teamPageService.refreshMembers();
+      }
+    });
   }
 
 }

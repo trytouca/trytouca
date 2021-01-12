@@ -2,10 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
 import { ModalComponent } from '@weasel/home/components';
 
@@ -35,7 +35,8 @@ type Content = {
 
 @Component({
   selector: 'app-teams-create',
-  templateUrl: './create.component.html'
+  templateUrl: './create.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TeamsCreateTeamComponent extends ModalComponent {
 
@@ -64,8 +65,8 @@ export class TeamsCreateTeamComponent extends ModalComponent {
    *
    */
   constructor(
-    public activeModal: NgbActiveModal,
-    private apiService: ApiService
+    private apiService: ApiService,
+    public dialogRef: DialogRef
   ) {
     super();
     super.form = new FormGroup({
@@ -117,7 +118,7 @@ export class TeamsCreateTeamComponent extends ModalComponent {
       () => {
         this.form.reset();
         this.submitted = false;
-        this.activeModal.close(true);
+        this.dialogRef.close(true);
       },
       (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
@@ -141,7 +142,7 @@ export class TeamsCreateTeamComponent extends ModalComponent {
       () => {
         this.form.reset();
         this.submitted = false;
-        this.activeModal.close(true);
+        this.dialogRef.close(true);
       },
       (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [

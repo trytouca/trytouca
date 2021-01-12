@@ -9,7 +9,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faComments, faSpinner, faTasks } from '@fortawesome/free-solid-svg-icons';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { DialogService, DialogRef } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import type { BatchItem, BatchLookupResponse, SuiteLookupResponse } from '@weasel/core/models/commontypes';
@@ -77,8 +77,10 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
   private _subParamMap: Subscription;
   private _subQueryParamMap: Subscription;
 
-  private _modalRefPromote: NgbModalRef;
-  private _modalRefSeal: NgbModalRef;
+  private _dialogRefPromote: DialogRef;
+  private _dialogSubPromote: Subscription;
+  private _dialogRefSeal: DialogRef;
+  private _dialogSubSeal: Subscription;
 
   /**
    *
@@ -86,7 +88,7 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
   constructor(
     private alertService: AlertService,
     private batchPageService: BatchPageService,
-    private modalService: NgbModal,
+    private dialogService: DialogService,
     private router: Router,
     private titleService: Title,
     private faIconLibrary: FaIconLibrary,
@@ -165,6 +167,12 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
     this._subAlert.unsubscribe();
     this._subParamMap.unsubscribe();
     this._subQueryParamMap.unsubscribe();
+    if (this._dialogSubPromote) {
+      this._dialogSubPromote.unsubscribe();
+    }
+    if (this._dialogSubSeal) {
+      this._dialogSubSeal.unsubscribe();
+    }
     super.ngOnDestroy();
   }
 
@@ -195,8 +203,12 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
   onKeydown(event: KeyboardEvent) {
     // pressing key 'Escape' should hide seal or promote dialogs
     if ('Escape' === event.key) {
-      this._modalRefSeal.close();
-      this._modalRefPromote.close();
+      if (this._dialogRefPromote && !this._dialogSubPromote.closed) {
+        this._dialogRefPromote.close()
+      }
+      if (this._dialogRefSeal && !this._dialogSubSeal.closed) {
+        this._dialogRefSeal.close()
+      }
     }
     // pressing key 'Backspace' should return user to "Suite" page
     if ('Backspace' === event.key) {
@@ -262,35 +274,37 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
    *
    */
   private openSealModal() {
-    this._modalRefSeal = this.modalService.open(BatchSealComponent);
-    this._modalRefSeal.componentInstance.batch = this.batch;
-    this._modalRefSeal.result
-      .then((state: boolean) => {
-        if (state) {
-          this.batchPageService.removeCacheBatch();
-          this.fetchItems();
-        }
-      })
-      .catch(_e => true);
+    this._dialogRefSeal = this.dialogService.open(BatchSealComponent, {
+      data: {
+        batch: this.batch
+      }
+    });
+    this._dialogSubSeal = this._dialogRefSeal.afterClosed$.subscribe((state: boolean) => {
+      if (state) {
+        this.batchPageService.removeCacheBatch();
+        this.fetchItems();
+      }
+    });
   }
 
   /**
    *
    */
   private openPromoteModal() {
-    this._modalRefPromote = this.modalService.open(BatchPromoteComponent);
-    this._modalRefPromote.componentInstance.batch = this.batch;
-    this._modalRefPromote.result
-      .then((state: boolean) => {
-        if (state) {
-          this.batchPageService.removeCacheSuiteAndBatches();
-          this.router.navigate([], {
-            queryParams: { cv: this.batch.batchSlug },
-            queryParamsHandling: 'merge'
-          });
-        }
-      })
-      .catch(_e => true);
+    this._dialogRefPromote = this.dialogService.open(BatchPromoteComponent, {
+      data: {
+        batch: this.batch
+      }
+    });
+    this._dialogSubPromote = this._dialogRefPromote.afterClosed$.subscribe((state: boolean) => {
+      if (state) {
+        this.batchPageService.removeCacheBatch();
+        this.router.navigate([], {
+          queryParams: { cv: this.batch.batchSlug },
+          queryParamsHandling: 'merge'
+        });
+      }
+    });
   }
 
   /**

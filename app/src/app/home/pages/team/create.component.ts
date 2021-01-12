@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
 import { ModalComponent } from '@weasel/home/components';
 
@@ -19,18 +19,19 @@ enum Alerts {
 }
 
 @Component({
-  templateUrl: './create.component.html'
+  templateUrl: './create.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TeamCreateSuiteComponent extends ModalComponent {
 
-  public teamSlug: string;
+  elements: { teamSlug: string };
 
   /**
    *
    */
   constructor(
-    public activeModal: NgbActiveModal,
-    private apiService: ApiService
+    private apiService: ApiService,
+    public dialogRef: DialogRef
   ) {
     super();
     super.form = new FormGroup({
@@ -52,6 +53,7 @@ export class TeamCreateSuiteComponent extends ModalComponent {
         updateOn: 'blur'
       })
     });
+    this.elements = dialogRef.data as { teamSlug: string };
   }
 
   /**
@@ -63,12 +65,12 @@ export class TeamCreateSuiteComponent extends ModalComponent {
     }
     this.submitted = true;
     const body = { name: model.name, slug: model.slug.toLocaleLowerCase() };
-    const url = [ 'suite', this.teamSlug ].join('/');
+    const url = [ 'suite', this.elements.teamSlug ].join('/');
     this.apiService.post(url, body).subscribe(
       () => {
         this.form.reset();
         this.submitted = false;
-        this.activeModal.close(true);
+        this.dialogRef.close(true);
       },
       err => {
         const msg = this.apiService.extractError(err, [

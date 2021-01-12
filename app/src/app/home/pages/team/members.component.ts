@@ -4,15 +4,15 @@
 
 import { Component, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DialogService, DialogRef } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { TeamPageMemberType, TeamPageMember } from './team.model';
-import { TeamPageService } from './team.service';
 import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
 import { ETeamRole, EPlatformRole, TeamInvitee, TeamMember, TeamLookupResponse, TeamApplicant } from '@weasel/core/models/commontypes';
 import { ApiService, NotificationService, NotificationType, UserService } from '@weasel/core/services';
 import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { FilterInput } from '@weasel/home/models/filter.model';
+import { TeamPageMemberType, TeamPageMember } from './team.model';
+import { TeamPageService } from './team.service';
 
 const filterInput: FilterInput<TeamPageMember> = {
   filters: [
@@ -56,7 +56,9 @@ const filterInput: FilterInput<TeamPageMember> = {
 export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> implements OnDestroy {
 
   ItemType = TeamPageMemberType;
-  private _confirmModalRef: NgbModalRef;
+
+  private _dialogRef: DialogRef;
+  private _dialogSub: Subscription;
   private _team: TeamLookupResponse;
   private _subTeam: Subscription;
 
@@ -65,7 +67,7 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
    */
   constructor(
     private apiService: ApiService,
-    private modalService: NgbModal,
+    private dialogService: DialogService,
     private notificationService: NotificationService,
     private teamPageService: TeamPageService,
     private userService: UserService,
@@ -85,8 +87,11 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
    *
    */
   ngOnDestroy() {
-    super.ngOnDestroy();
+    if (this._dialogSub) {
+      this._dialogSub.unsubscribe();
+    }
     this._subTeam.unsubscribe();
+    super.ngOnDestroy();
   }
 
   /**
@@ -138,105 +143,95 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
    */
   confirmEdit(member: TeamMember): void {
     const newRoleName = member.role === ETeamRole.Member ? 'an Administrator' : 'a Member';
-    const elements: ConfirmElements = {
-      title: `Make ${member.fullname} ${newRoleName}`,
-      message: `<p>Are you sure you want to change <em>${member.fullname}</em>'s role to ${newRoleName}?</p>`,
-      button: 'Change Role'
-    };
-    this._confirmModalRef = this.modalService.open(ConfirmComponent);
-    this._confirmModalRef.componentInstance.elements = elements;
-    this._confirmModalRef.result
-      .then((state: boolean) => {
-        if (!state) {
-          return;
-        }
-        this.edit(member);
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      data: {
+        title: `Make ${member.fullname} ${newRoleName}`,
+        message: `<p>Are you sure you want to change <em>${member.fullname}</em>'s role to ${newRoleName}?</p>`,
+        button: 'Change Role'
+      }
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (!state) {
+        return;
+      }
+      this.edit(member);
+    });
   }
 
   /**
    *
    */
   confirmRemove(member: TeamMember): void {
-    const elements: ConfirmElements = {
-      title: 'Remove Member from Team',
-      message: `<p>Are you sure you want to remove <em>${member.fullname}</em> from your team?</p>`,
-      button: 'Remove'
-    };
-    this._confirmModalRef = this.modalService.open(ConfirmComponent);
-    this._confirmModalRef.componentInstance.elements = elements;
-    this._confirmModalRef.result
-      .then((state: boolean) => {
-        if (!state) {
-          return;
-        }
-        this.remove(member);
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      data: {
+        title: 'Remove Member from Team',
+        message: `<p>Are you sure you want to remove <em>${member.fullname}</em> from your team?</p>`,
+        button: 'Remove'
+      }
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (!state) {
+        return;
+      }
+      this.remove(member);
+    });
   }
 
   /**
    *
    */
   confirmRescind(invitee: TeamInvitee): void {
-    const elements: ConfirmElements = {
-      title: 'Rescind Invitation',
-      message: `<p>Are you sure you want to rescind <em>${invitee.fullname}</em>'s invitation?</p>`,
-      button: 'Rescind'
-    };
-    this._confirmModalRef = this.modalService.open(ConfirmComponent);
-    this._confirmModalRef.componentInstance.elements = elements;
-    this._confirmModalRef.result
-      .then((state: boolean) => {
-        if (!state) {
-          return;
-        }
-        this.rescind(invitee);
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      data: {
+        title: 'Rescind Invitation',
+        message: `<p>Are you sure you want to rescind <em>${invitee.fullname}</em>'s invitation?</p>`,
+        button: 'Rescind'
+      }
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (!state) {
+        return;
+      }
+      this.rescind(invitee);
+    });
   }
 
   /**
    *
    */
   confirmAccept(applicant: TeamApplicant): void {
-    const elements: ConfirmElements = {
-      title: 'Accept Join Request',
-      message: `<p>Are you sure you want to accept <em>${applicant.fullname}</em>'s request to join your team?</p>`,
-      button: 'Accept'
-    };
-    this._confirmModalRef = this.modalService.open(ConfirmComponent);
-    this._confirmModalRef.componentInstance.elements = elements;
-    this._confirmModalRef.result
-      .then((state: boolean) => {
-        if (!state) {
-          return;
-        }
-        this.accept(applicant);
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      data: {
+        title: 'Accept Join Request',
+        message: `<p>Are you sure you want to accept <em>${applicant.fullname}</em>'s request to join your team?</p>`,
+        button: 'Accept'
+      }
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (!state) {
+        return;
+      }
+      this.accept(applicant);
+    });
   }
 
   /**
    *
    */
   confirmDecline(applicant: TeamApplicant): void {
-    const elements: ConfirmElements = {
-      title: 'Decline Join Request',
-      message: `<p>Are you sure you want to decline <em>${applicant.fullname}</em>'s request to join your team?</p>`,
-      button: 'Decline'
-    };
-    this._confirmModalRef = this.modalService.open(ConfirmComponent);
-    this._confirmModalRef.componentInstance.elements = elements;
-    this._confirmModalRef.result
-      .then((state: boolean) => {
-        if (!state) {
-          return;
-        }
-        this.decline(applicant);
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      data: {
+        title: 'Decline Join Request',
+        message: `<p>Are you sure you want to decline <em>${applicant.fullname}</em>'s request to join your team?</p>`,
+        button: 'Decline'
+      }
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (!state) {
+        return;
+      }
+      this.decline(applicant);
+    });
   }
 
   /**

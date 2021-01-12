@@ -2,9 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DialogService, DialogRef } from '@ngneat/dialog';
+import { Subscription } from 'rxjs';
 import { TeamCreateSuiteComponent } from './create.component';
 import { TeamPageService, TeamPageTabType } from './team.service';
 
@@ -12,16 +13,28 @@ import { TeamPageService, TeamPageTabType } from './team.service';
   selector: 'app-team-first-suite',
   templateUrl: './first.component.html'
 })
-export class TeamFirstSuiteComponent {
+export class TeamFirstSuiteComponent implements OnDestroy {
+
+  private _dialogRef: DialogRef;
+  private _dialogSub: Subscription;
 
   /**
    *
    */
   constructor(
     private route: ActivatedRoute,
-    private modalService: NgbModal,
+    private dialogService: DialogService,
     private teamPageService: TeamPageService
   ) {
+  }
+
+  /**
+   *
+   */
+  ngOnDestroy() {
+    if (this._dialogSub) {
+      this._dialogSub.unsubscribe();
+    }
   }
 
   /**
@@ -38,17 +51,16 @@ export class TeamFirstSuiteComponent {
    */
   openCreateModal() {
     const paramMap = this.route.snapshot.paramMap;
-    const teamSlug = paramMap.get('team');
-
-    const modalRef = this.modalService.open(TeamCreateSuiteComponent);
-    modalRef.componentInstance.teamSlug = teamSlug;
-    modalRef.result
-      .then((state: boolean) => {
-        if (state) {
-          this.fetchItems();
-        }
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(TeamCreateSuiteComponent, {
+      data: {
+        teamSlug: paramMap.get('team')
+      }
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (state) {
+        this.fetchItems();
+      }
+    });
   }
 
 }

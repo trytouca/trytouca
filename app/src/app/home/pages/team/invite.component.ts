@@ -4,7 +4,7 @@
 
 import { Component, HostListener } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
 import { ModalComponent } from '@weasel/home/components';
 
@@ -23,14 +23,14 @@ enum Alerts {
 })
 export class TeamInviteComponent extends ModalComponent {
 
-  public teamSlug: string;
+  elements: { teamSlug: string };
 
   /**
    *
    */
   constructor(
-    public activeModal: NgbActiveModal,
-    private apiService: ApiService
+    private apiService: ApiService,
+    public dialogRef: DialogRef
   ) {
     super();
     super.form = new FormGroup({
@@ -50,6 +50,7 @@ export class TeamInviteComponent extends ModalComponent {
         updateOn: 'blur'
       })
     });
+    this.elements = dialogRef.data as { teamSlug: string };
   }
 
   /**
@@ -61,12 +62,12 @@ export class TeamInviteComponent extends ModalComponent {
     }
     this.submitted = true;
     const body = { email: model.email, fullname: model.name };
-    const url = [ 'team', this.teamSlug, 'invite' ].join('/');
+    const url = [ 'team', this.elements.teamSlug, 'invite' ].join('/');
     this.apiService.post(url, body).subscribe(
       () => {
         this.form.reset();
         this.submitted = false;
-        this.activeModal.close(true);
+        this.dialogRef.close(true);
       },
       err => {
         const msg = this.apiService.extractError(err, [

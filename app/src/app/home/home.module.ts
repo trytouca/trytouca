@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { ClipboardModule } from 'ngx-clipboard';
 import { MomentModule } from 'ngx-moment';
 import { MarkdownModule } from 'ngx-markdown';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HomeComponent } from './home.component';
 import { HomeRoutingModule } from './home-routing.module';
 import { SharedModule } from '../shared';
@@ -83,7 +82,6 @@ import {
 
 @NgModule({
   providers: [
-    NgbActiveModal
   ],
   imports: [
     ClipboardModule,

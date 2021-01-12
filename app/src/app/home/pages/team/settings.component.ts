@@ -6,14 +6,14 @@ import { Component, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { DialogService, DialogRef } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
 import { ETeamRole } from '@weasel/core/models/commontypes';
 import type { TeamLookupResponse } from '@weasel/core/models/commontypes';
-import { TeamPageTabType, TeamPageService } from './team.service';
 import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
+import { TeamPageTabType, TeamPageService } from './team.service';
 
 interface IFormContent {
   name: string;
@@ -49,7 +49,8 @@ export class TeamTabSettingsComponent implements OnDestroy {
 
   team: TeamLookupResponse;
 
-  private _confirmModalRef: NgbModalRef;
+  private _dialogRef: DialogRef;
+  private _dialogSub: Subscription;
   private _subTeam: Subscription;
 
   ETeamRole = ETeamRole;
@@ -60,10 +61,10 @@ export class TeamTabSettingsComponent implements OnDestroy {
    */
   constructor(
     private apiService: ApiService,
+    private dialogService: DialogService,
     private teamPageService: TeamPageService,
     private route: ActivatedRoute,
-    private router: Router,
-    private modalService: NgbModal
+    private router: Router
   ) {
     this._subTeam = this.teamPageService.team$.subscribe(team => {
       this.team = team;
@@ -97,6 +98,9 @@ export class TeamTabSettingsComponent implements OnDestroy {
    *
    */
   ngOnDestroy() {
+    if (this._dialogSub) {
+      this._dialogSub.unsubscribe();
+    }
     this._subTeam.unsubscribe();
   }
 
@@ -132,7 +136,6 @@ export class TeamTabSettingsComponent implements OnDestroy {
    *
    */
   async openConfirmModal(type: EModalType) {
-    this._confirmModalRef = this.modalService.open(ConfirmComponent);
     if (type === EModalType.DeleteTeam) {
       const elements: ConfirmElements = {
         title: `Delete Team ${this.team.name}`,
@@ -142,7 +145,9 @@ export class TeamTabSettingsComponent implements OnDestroy {
           Are you sure you want to delete this team?</p>`,
         button: 'Delete'
       };
-      this._confirmModalRef.componentInstance.elements = elements;
+      this._dialogRef = this.dialogService.open(ConfirmComponent, {
+        data: elements
+      });
     } else if (type === EModalType.LeaveTeam) {
       const elements: ConfirmElements = {
         title: `Leave Team ${this.team.name}`,
@@ -152,21 +157,21 @@ export class TeamTabSettingsComponent implements OnDestroy {
           in the future. Are you sure you want to leave this team?</p>`,
         button: 'Leave'
       };
-      this._confirmModalRef.componentInstance.elements = elements;
+      this._dialogRef = this.dialogService.open(ConfirmComponent, {
+        data: elements
+      });
     }
-    this._confirmModalRef.result
-      .then((state: boolean) => {
-        if (!state) {
-          return;
-        }
-        switch (type) {
-          case EModalType.DeleteTeam:
-            return this.deleteTeam();
-          case EModalType.LeaveTeam:
-            return this.leaveTeam();
-        }
-      })
-      .catch(_e => true);
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (!state) {
+        return;
+      }
+      switch (type) {
+        case EModalType.DeleteTeam:
+          return this.deleteTeam();
+        case EModalType.LeaveTeam:
+          return this.leaveTeam();
+      }
+    });
   }
 
   /**

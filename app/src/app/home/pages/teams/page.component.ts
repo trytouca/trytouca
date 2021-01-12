@@ -4,11 +4,12 @@
 
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { TeamsPageService } from './teams.service';
-import { TeamsCreateTeamComponent } from './create.component';
+import { DialogService, DialogRef } from '@ngneat/dialog';
+import { Subscription } from 'rxjs';
 import { PageComponent, PageTab } from '@weasel/home/components';
+import { TeamsCreateTeamComponent } from './create.component';
 import { TeamsPageTeam } from './teams.model';
+import { TeamsPageService } from './teams.service';
 
 enum TabType {
   Teams = 'teams'
@@ -33,14 +34,16 @@ type NotFound = Partial<{}>;
 })
 export class TeamsPageComponent extends PageComponent<TeamsPageTeam, TabType, NotFound> implements OnInit, OnDestroy {
 
-  private _modalRef: NgbModalRef;
   TabType = TabType;
+
+  private _dialogRef: DialogRef;
+  private _dialogSub: Subscription;
 
   /**
    *
    */
   constructor(
-    private modalService: NgbModal,
+    private dialogService: DialogService,
     private teamsPageService: TeamsPageService,
     route: ActivatedRoute
   ) {
@@ -58,6 +61,9 @@ export class TeamsPageComponent extends PageComponent<TeamsPageTeam, TabType, No
    *
    */
   ngOnDestroy() {
+    if (this._dialogSub) {
+      this._dialogSub.unsubscribe();
+    }
     super.ngOnDestroy();
   }
 
@@ -72,14 +78,12 @@ export class TeamsPageComponent extends PageComponent<TeamsPageTeam, TabType, No
    *
    */
   openCreateModal() {
-    this._modalRef = this.modalService.open(TeamsCreateTeamComponent);
-    this._modalRef.result
-      .then((state: boolean) => {
-        if (state) {
-          this.fetchItems();
-        }
-      })
-      .catch(_e => true);
+    this._dialogRef = this.dialogService.open(TeamsCreateTeamComponent);
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
+      if (state) {
+        this.fetchItems();
+      }
+    });
   }
 
   /**
@@ -89,8 +93,8 @@ export class TeamsPageComponent extends PageComponent<TeamsPageTeam, TabType, No
   onKeydown(event: KeyboardEvent) {
     // pressing key 'Escape' should hide "New Team" modal
     if ('Escape' === event.key) {
-      if (this.modalService.hasOpenModals()) {
-        this._modalRef.close();
+      if (this._dialogRef && !this._dialogSub.closed) {
+        this._dialogRef.close()
       }
     }
   }
