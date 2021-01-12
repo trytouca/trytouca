@@ -41,6 +41,7 @@
     "zone.js": "~0.11.3"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "11.0.0",
     "@angular-devkit/build-angular": "~0.1100.5",
     "@angular-eslint/builder": "1.0.0",
     "@angular-eslint/eslint-plugin": "1.0.0",
@@ -60,6 +61,11 @@
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsdoc": "31.0.3",
     "eslint-plugin-prefer-arrow": "1.2.2",
+    "postcss": "8.2.4",
+    "postcss-import": "^14.0.0",
+    "postcss-loader": "^4.1.0",
+    "postcss-scss": "^3.0.4",
+    "tailwindcss": "2.0.2",
     "ts-node": "^9.1.1",
     "typescript": "~4.0.3"
   },

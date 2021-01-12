@@ -3,6 +3,9 @@
  */
 
 @use "app/styles/weaselcss";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 .wsl-auth {
   @include weaselcss.weasel-auth-main();
