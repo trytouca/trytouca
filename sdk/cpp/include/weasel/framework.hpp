@@ -149,6 +149,11 @@ namespace weasel { namespace framework {
          *          create their own Suite. The implementation should use
          *          `Suite::push` to store testcases without the risk of
          *          duplication.
+         *          It is okay if this function throws an exception. Weasel
+         *          Test Framework is supposed to handle any thrown exception.
+         *
+         * @throws std::runtime_error if we failed to populate list of test
+         *         cases.
          */
         virtual void initialize() {};
 

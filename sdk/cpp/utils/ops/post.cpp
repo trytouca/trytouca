@@ -78,9 +78,17 @@ bool PostOperation::run_impl() const
     // authenticate to Weasel Platform
 
     weasel::ApiUrl apiUrl(_api_url);
-    const auto& apiToken = weasel::ApiConnector(apiUrl).authenticate(_api_key);
+    std::string apiToken;
+
+    try {
+        apiToken = weasel::ApiConnector(apiUrl).authenticate(_api_key);
+    } catch (const std::exception& ex) {
+        weasel::print_error("failed to authenticate to Weasel Platform: {}\n", ex.what());
+        return false;
+    }
+
     if (apiToken.empty()) {
-        std::cerr << "failed to authenticate to Weasel Platform" << std::endl;
+        weasel::print_error("failed to authenticate to Weasel Platform\n");
         return false;
     }
 

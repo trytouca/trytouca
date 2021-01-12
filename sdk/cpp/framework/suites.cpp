@@ -33,6 +33,10 @@ namespace weasel { namespace framework {
         }
 
         // authenticate to Weasel Platform and obtain an API Token.
+        // If authentication fails, an exception is thrown in which.
+        // We choose not to handle this exception here and propagate it
+        // to the Weasel Test Framework instead so it can be logged per
+        // user implementation.
 
         const auto apiRoot = ApiUrl(_options.at("api-url")).root;
         ApiUrl apiUrl(apiRoot, _options.at("team"), _options.at("suite"), _options.at("revision"));

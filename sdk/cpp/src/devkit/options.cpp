@@ -161,9 +161,14 @@ bool weasel::ClientOptions::parse(const OptionsMap& opts)
     // API key and obtain API token for posting results.
 
     weasel::ApiConnector apiConnector({ api_root, team, suite, revision });
-    api_token = apiConnector.authenticate(api_key);
+    try {
+        api_token = apiConnector.authenticate(api_key);
+    } catch (const std::exception& ex) {
+        return error("failed to authenticate to the weasel platform: {}", ex.what());
+    }
+
     if (api_token.empty()) {
-        return error("failed to authenticate to the weasel platform");
+        return error("failed to receive authentication token");
     }
 
     return true;
