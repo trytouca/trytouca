@@ -26,6 +26,8 @@
     "@fortawesome/free-regular-svg-icons": "^5.15.1",
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@ngneat/dialog": "^1.0.4",
+    "@tailwindcss/forms": "^0.2.1",
+    "@tailwindcss/typography": "^0.3.1",
     "chart.js": "^3.0.0-beta.7",
     "core-js": "^3.8.2",
     "flat": "^5.0.2",
