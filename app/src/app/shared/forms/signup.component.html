@@ -15,7 +15,7 @@
         aria-describedby="wsl-email-help"
         required formControlName="email" name="email"
         data-lpignore="true"
-        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lightBlue-300 focus:ring focus:ring-lightBlue-200 focus:ring-opacity-50">
+        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50">
       <small id="wsl-email-help" [hidden]="shouldHideAriaDescription('email')"
         class="text-red-600">
         Please provide a valid email address.
@@ -28,7 +28,7 @@
         aria-describedby="wsl-fname-help"
         required formControlName="fname" name="fname"
         data-lpignore="true"
-        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lightBlue-300 focus:ring focus:ring-lightBlue-200 focus:ring-opacity-50">
+        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50">
       <small id="wsl-fname-help"
         [hidden]="shouldHideAriaDescription('fname')"
         class="text-red-600">
@@ -41,7 +41,7 @@
         autocomplete="username"
         aria-describedby="wsl-uname-help"
         required formControlName="uname" name="uname"
-        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lightBlue-300 focus:ring focus:ring-lightBlue-200 focus:ring-opacity-50">
+        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50">
       <small id="wsl-uname-help"
         [hidden]="shouldHideAriaDescription('uname')"
         class="text-red-600">
@@ -54,7 +54,7 @@
         autocomplete="current-password"
         aria-describedby="wsl-upass-help"
         required formControlName="upass" name="upass"
-        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lightBlue-300 focus:ring focus:ring-lightBlue-200 focus:ring-opacity-50">
+        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50">
       <small id="wsl-upass-help" [hidden]="shouldHideAriaDescription('upass')"
         class="text-red-600">
         Your password must be at least eight characters.
@@ -63,13 +63,13 @@
     <div class="mb-4 flex">
       <div class="flex-grow">
         <button type="submit" tabindex="5"
-          class="py-2 px-4 bg-lightBlue-600 text-white font-semibold rounded-lg leading-6 shadow-md hover:bg-lightBlue-700 focus:outline-none">
+          class="py-2 px-4 bg-lblue-600 text-white font-semibold rounded-lg leading-6 shadow-md hover:bg-lblue-700 focus:outline-none">
           Sign up
         </button>
       </div>
       <div class="text-sm">
         <button type="button" routerLink="/signin" tabindex="6"
-          class="py-2 px-4 bg-lightBlue-100 text-lightBlue-700 font-semibold rounded-lg text-sm leading-6 shadow-sm hover:bg-lightBlue-200 focus:outline-none">
+          class="py-2 px-4 bg-lblue-100 text-lblue-700 font-semibold rounded-lg text-sm leading-6 shadow-sm hover:bg-lblue-200 focus:outline-none">
           Already Registered?
         </button>
       </div>

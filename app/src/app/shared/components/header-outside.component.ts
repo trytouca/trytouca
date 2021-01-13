@@ -8,8 +8,7 @@ import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 
 @Component({
   selector: 'app-header-outside',
-  templateUrl: './header-outside.component.html',
-  styleUrls: ['./header-outside.component.scss']
+  templateUrl: './header-outside.component.html'
 })
 export class HeaderOutsideComponent {
 

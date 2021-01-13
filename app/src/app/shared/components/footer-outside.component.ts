@@ -8,8 +8,7 @@ import { faGithub, faSlack, faTwitter } from '@fortawesome/free-brands-svg-icons
 
 @Component({
   selector: 'app-footer-outside',
-  templateUrl: './footer-outside.component.html',
-  styleUrls: ['./footer-outside.component.scss']
+  templateUrl: './footer-outside.component.html'
 })
 export class FooterOutsideComponent {
 

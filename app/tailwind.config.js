@@ -21,7 +21,7 @@ module.exports = (isProd) => ({
           secondary: '#00818A',
           teal: colors.teal,
           cyan: colors.cyan,
-          lightBlue: colors.lightBlue
+          lblue: colors.lightBlue
         },
         fontFamily: {
           sans: ['Inter var', ...defaultTheme.fontFamily.sans],

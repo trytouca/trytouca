@@ -6,7 +6,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-footer-inside',
-  styleUrls: ['./footer-inside.component.scss'],
   templateUrl: './footer-inside.component.html'
 })
 export class FooterInsideComponent {
