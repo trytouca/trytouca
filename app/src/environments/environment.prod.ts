@@ -8,8 +8,5 @@ export const environment = {
   apiUrl: '/api',
   appVersion: version,
   dataRefreshInterval: 10000,
-  production: true,
-  profileGithub: 'getweasel',
-  profileSlack: 'getweasel',
-  profileTwitter: 'getweasel'
+  production: true
 };

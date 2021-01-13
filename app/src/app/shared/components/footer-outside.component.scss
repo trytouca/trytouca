@@ -7,51 +7,10 @@
 $footer-tail-min-height: 80px;
 
 footer {
-  background-color: weaselcss.weasel-color("template-strong-primary");
   min-height: weaselcss.$weasel-footer-outside-min-height;
-  .wsl-container {
-    @include weaselcss.weasel-container();
-    color: weaselcss.weasel-color("template-contrast-primary");
-  }
-  .row {
-    min-height: calc(#{weaselcss.$weasel-footer-outside-min-height} - #{$footer-tail-min-height});
-    padding: 2rem 3rem;
-    margin: 0;
-  }
-  h6 {
-    font-size: 1rem;
-  }
-  a {
-    color: weaselcss.weasel-color("template-contrast-secondary");
-    text-decoration: none;
-    &:hover {
-      color: weaselcss.weasel-color("template-contrast-primary");
-    }
-  }
-  ul {
-    list-style: none;
-    font-size: small;
-    padding-left: 0;
-  }
-  .footer-tail {
-    display: flex;
-    font-size: small;
-    height: $footer-tail-min-height;
-    line-height: $footer-tail-min-height;
-    padding: 0 3rem;
-    justify-content: space-between;
-    p {
-      margin-bottom: 0;
-    }
-    ul {
-      margin-bottom: 0;
-      li {
-        display: inline;
-        margin-right: 1rem;
-        &:last-child {
-          margin-right: 0rem;
-        }
-      }
-    }
-  }
+}
+
+.custom-footer-tail {
+  height: $footer-tail-min-height;
+  line-height: $footer-tail-min-height;
 }
