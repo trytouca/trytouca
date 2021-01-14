@@ -1,59 +1,61 @@
 <app-header-outside></app-header-outside>
-<div id="wsl-page-docs">
-  <div class="wsl-doc-head">
-    <nav aria-label="breadcrumb">
-      <ol>
-        <li>
-          <a routerLink="/docs">
-            <fa-icon icon="book"></fa-icon>
-          </a>
-        </li>
-        <li aria-current="page">
-          <a routerLink="/docs">
-            {{ currentPage.name }}
-          </a>
-        </li>
-      </ol>
+<div class="h-16 flex items-center justify-between bg-lblue-600">
+  <nav class="px-4 mx-auto container" aria-label="breadcrumb">
+    <ol class="flex text-white">
+      <li>
+        <a routerLink="/docs" class="hover:text-gray-200">
+          <fa-icon icon="book"></fa-icon>
+        </a>
+      </li>
+      <li aria-current="page">
+        {{ currentPage.name }}
+      </li>
+    </ol>
+  </nav>
+</div>
+<div class="min-h-screen py-4 mx-auto container lg:grid lg:grid-cols-5">
+  <aside class="px-4 hidden lg:block lg:col-span-1">
+    <ul class="py-4 divide-y divide-gray-200">
+      <li *ngFor="let page of internalPages"
+        (click)="switchToPage(page.link)"
+        [class.active]="page.link == currentPage.link"
+        class="py-2 px-4 cursor-pointer hover:text-lblue-600">
+        {{ page.name }}
+      </li>
+    </ul>
+    <ul class="py-4 divide-y divide-gray-200">
+      <li *ngFor="let page of externalPages"
+        (click)="launchExternalPage(page.name)"
+        class="py-2 px-4 cursor-pointer hover:text-lblue-600">
+        {{ page.name }}
+        <sup><fa-icon icon="external-link-alt" class="text-xs text-gray-400"></fa-icon></sup>
+      </li>
+    </ul>
+  </aside>
+  <main class="mx-auto lg:col-span-3 lg:border-l-2 lg:border-r-2 lg:border-gray-100">
+    <article *ngFor="let document of currentPage.docs"
+      class="py-4 px-2 prose-sm xl:px-8 md:w-full md:max-w-none md:prose">
+      <markdown [src]="'./assets/docs/' + document">
+      </markdown>
+    </article>
+    <nav class="m-12 flex justify-between">
+      <div>
+        <button *ngIf="previousPage" (click)="switchToPage(previousPage.link)"
+          class="wsl-btn-light">
+          <span><fa-icon icon="angle-double-left"></fa-icon></span>
+          {{ previousPage.name }}
+        </button>
+      </div>
+      <div>
+        <button *ngIf="nextPage" (click)="switchToPage(nextPage.link)"
+          class="wsl-btn-light">
+          {{ nextPage.name }}
+          <span><fa-icon icon="angle-double-right"></fa-icon></span>
+        </button>
+      </div>
     </nav>
-  </div>
-  <div class="wsl-doc-body">
-    <aside>
-      <ul>
-        <li *ngFor="let page of internalPages"
-          (click)="switchToPage(page.link)"
-          [class.active]="page.link == currentPage.link">
-          {{ page.name }}
-        </li>
-      </ul>
-      <ul>
-        <li *ngFor="let page of externalPages" (click)="launchExternalPage(page.name)">
-          {{ page.name }}
-          <sup><fa-icon icon="external-link-alt"></fa-icon></sup>
-        </li>
-      </ul>
-    </aside>
-    <main>
-      <article *ngFor="let document of currentPage.docs">
-        <markdown [src]="'./assets/docs/' + document">
-        </markdown>
-      </article>
-      <nav>
-        <div>
-          <button class="btn btn-light" *ngIf="previousPage"
-            (click)="switchToPage(previousPage.link)">
-            <span><fa-icon icon="angle-double-left"></fa-icon></span>
-            {{ previousPage.name }}
-          </button>
-        </div>
-        <div>
-          <button class="btn btn-light" *ngIf="nextPage"
-            (click)="switchToPage(nextPage.link)">
-            {{ nextPage.name }}
-            <span><fa-icon icon="angle-double-right"></fa-icon></span>
-          </button>
-        </div>
-      </nav>
-    </main>
+  </main>
+  <div class="hidden lg:block lg:col-span-1">
   </div>
 </div>
 <app-footer-outside></app-footer-outside>

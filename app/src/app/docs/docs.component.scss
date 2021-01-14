@@ -2,93 +2,16 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "../styles/weaselcss.scss";
-
-$breadcrumb-bar-height: 60px;
-$max-width-article: weaselcss.$weasel-container-max-width;
-$max-width-nav: weaselcss.$weasel-container-max-width;
-
-.wsl-doc-head {
-  background-color: weaselcss.weasel-color("template-strong-secondary");
-  padding: 0 2rem;
-  nav {
-    @include weaselcss.weasel-container($max-width-nav);
-    height: $breadcrumb-bar-height;
-    line-height: $breadcrumb-bar-height;
-    font-size: 1rem;
-  }
-  ol {
-    display: flex;
-    list-style: none;
-    margin-bottom: 0;
-    padding: 0;
-  }
+ol {
   li:not(:last-child):after {
-    color: weaselcss.weasel-color("template-contrast-primary");
     content: "\2002/\2002";
   }
-  a {
-    color: weaselcss.weasel-color("template-contrast-primary");
-    text-decoration: none;
-    &:hover {
-      color: weaselcss.weasel-color("template-contrast-secondary");
-    }
-  }
 }
-
-.wsl-doc-body {
-  @include weaselcss.weasel-container($max-width-article);
-  @include weaselcss.weasel-markdown-main();
-  min-height: calc(100vh - #{weaselcss.$weasel-header-height} - #{$breadcrumb-bar-height} - #{weaselcss.$weasel-footer-outside-min-height});
-  aside {
-    display: none;
-    padding-top: 2rem;
-    ul {
-      list-style: none;
-      padding: 1rem 0;
-      margin: 0;
-      li {
-        cursor: pointer;
-        padding: 0.5rem;
-        &.active {
-          font-weight: 500;
-          color: weaselcss.weasel-color("template-strong-secondary");
-        }
-        &:not(:last-child) {
-          border-bottom: 1px solid lightgray;
-        }
-        &:hover {
-          color: weaselcss.weasel-color("template-strong-secondary");
-        }
-        fa-icon {
-          color: #aaa;
-          font-size: x-small;
-        }
-      }
+aside {
+  li {
+    &.active {
+      color: #2684c7;
+      font-weight: 500;
     }
-  }
-  main {
-    padding: 2rem 1rem 0;
-    article {
-      padding: 1rem;
-    }
-    nav {
-      display: flex;
-      justify-content: space-between;
-      margin: 3rem 0;
-    }
-  }
-  @media (min-width: #{weaselcss.$weasel-breakpoint-lg}) {
-    display: grid;
-    grid-template-columns: 1fr 4fr;
-    aside {
-      display: block;
-    }
-  }
-}
-
-markdown ::ng-deep {
-  code .token.operator {
-    background-color: transparent;
   }
 }
