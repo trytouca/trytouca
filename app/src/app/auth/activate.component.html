@@ -3,8 +3,8 @@
   <div class="wsl-spinner" [hidden]="alert">
     <span><fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></span>
   </div>
-  <div *ngIf="alert" [ngClass]="alert[0]" class="alert">
-    <small>{{ alert[1] }}</small>
+  <div *ngIf="alert" class="wsl-alert" [ngClass]="alert[0]">
+    <small class="font-normal text-sm">{{ alert[1] }}</small>
   </div>
 </div>
 <app-footer-outside></app-footer-outside>

@@ -1,45 +1,50 @@
 <app-header-outside></app-header-outside>
-<div class="wsl-auth">
-  <h2>Welcome Back</h2>
-  <div class="wsl-auth-form">
-
-    <div *ngIf="alert" class="alert" [ngClass]="alert[0]" role="alert">
-      <small>{{ alert[1] }}</small>
+<div class="min-h-screen mx-auto container grid grid-cols-1 place-content-center">
+  <div class="mx-auto">
+    <h2 class="text-3xl mb-6 font-semibold">Welcome Back</h2>
+  </div>
+  <div class="mx-auto md:w-full md:max-w-screen-md">
+    <div class="w-2/3 mx-auto px-4 py-5 bg-white rounded-md shadow-md">
+      <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
+        <small class="font-normal text-sm">{{ alert[1] }}</small>
+      </div>
+      <form [formGroup]="signinForm" (ngSubmit)="onSubmit(signinForm.value)"
+        novalidate class="space-y-4">
+        <div>
+          <label for="wsl-uname" class="wsl-input-label">Username</label>
+          <input type="text" id="wsl-uname" tabindex="1"
+            autocomplete="username"
+            aria-describedby="wsl-uname-help"
+            required formControlName="uname" name="uname"
+            class="wsl-input-field">
+        </div>
+        <div>
+          <label for="wsl-upass" class="wsl-input-label">Password</label>
+          <input type="password" id="wsl-upass" tabindex="2"
+            autocomplete="current-password"
+            aria-describedby="wsl-upass-help"
+            required formControlName="upass" name="upass"
+            class="wsl-input-field">
+        </div>
+        <div class="mb-4 flex">
+          <div class="flex-grow">
+            <button type="submit" tabindex="3" class="wsl-btn-dark">
+              Sign in
+            </button>
+          </div>
+          <div class="text-sm space-x-4">
+            <button type="button" routerLink="/reset" tabindex="5"
+              class="wsl-btn-light">
+              Forgot Your Password?
+            </button>
+            <button type="button" routerLink="/signup" tabindex="4"
+              class="wsl-btn-light">
+              New to Weasel?
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
-
-    <form [formGroup]="signinForm" novalidate
-          (ngSubmit)="onSubmit(signinForm.value)">
-      <div class="form-group">
-        <label for="wsl-uname">Username</label>
-        <input type="text" class="form-control" id="wsl-uname" tabindex="1"
-                autocomplete="username"
-                aria-describedby="wsl-uname-help"
-                required formControlName="uname" name="uname">
-      </div>
-      <div class="form-group">
-        <label for="wsl-upass">Password</label>
-        <input type="password" class="form-control" id="wsl-upass" tabindex="2"
-                autocomplete="current-password"
-                aria-describedby="wsl-upass-help"
-                required formControlName="upass" name="upass">
-      </div>
-      <div class="wsl-form-footer">
-        <div class="wsl-form-submit">
-          <button type="submit" class="wsl-btn-dark" tabindex="3">
-            Sign in
-          </button>
-        </div>
-        <div class="wsl-form-links">
-          <button type="button" routerLink="/reset" class="wsl-btn-link" tabindex="5">
-            Forgot Your Password?
-          </button>
-          <button type="button" routerLink="/signup" class="wsl-btn-link" tabindex="4">
-            New to Weasel?
-          </button>
-        </div>
-      </div>
-    </form>
-
   </div>
 </div>
 <app-footer-inside></app-footer-inside>

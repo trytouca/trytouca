@@ -1,79 +1,72 @@
-<div class="w-2/3 mx-auto px-4 py-5 rounded-md shadow-md">
-
-  <div *ngIf="alert" role="alert"
-    class="py-3 px-5 mb-4 bg-red-100 border-red-200 rounded-md text-red-800 shadow-sm">
+<div class="w-2/3 mx-auto px-4 py-5 bg-white rounded-md shadow-md">
+  <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
     <small class="font-normal text-sm">{{ alert[1] }}</small>
   </div>
-
-  <form [formGroup]="signupForm" novalidate
-    (ngSubmit)="onSubmit(signupForm.value)"
-    class="space-y-4">
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit(signupForm.value)"
+    novalidate class="space-y-4">
     <div>
-      <label for="wsl-mail" class="block text-sm font-medium text-gray-700">Email</label>
+      <label for="wsl-mail" class="wsl-input-label">Email</label>
       <input type="email" id="wsl-mail" tabindex="1"
         autocomplete="email"
         aria-describedby="wsl-email-help"
         required formControlName="email" name="email"
         data-lpignore="true"
-        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50">
+        class="wsl-input-field">
       <small id="wsl-email-help" [hidden]="shouldHideAriaDescription('email')"
-        class="text-red-600">
+        class="wsl-text-danger">
         Please provide a valid email address.
       </small>
     </div>
     <div>
-      <label for="wsl-fname" class="block text-sm font-medium text-gray-700">Full Name</label>
+      <label for="wsl-fname" class="wsl-input-label">Full Name</label>
       <input type="text" id="wsl-fname" tabindex="2"
         autocomplete="name"
         aria-describedby="wsl-fname-help"
         required formControlName="fname" name="fname"
         data-lpignore="true"
-        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50">
-      <small id="wsl-fname-help"
-        [hidden]="shouldHideAriaDescription('fname')"
-        class="text-red-600">
+        class="wsl-input-field">
+      <small id="wsl-fname-help" [hidden]="shouldHideAriaDescription('fname')"
+        class="wsl-text-danger">
         Please provide your full name.
       </small>
     </div>
     <div>
-      <label for="wsl-uname" class="block text-sm font-medium text-gray-700">Username</label>
+      <label for="wsl-uname" class="wsl-input-label">Username</label>
       <input type="text" id="wsl-uname" tabindex="3"
         autocomplete="username"
         aria-describedby="wsl-uname-help"
         required formControlName="uname" name="uname"
-        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50">
-      <small id="wsl-uname-help"
-        [hidden]="shouldHideAriaDescription('uname')"
-        class="text-red-600">
+        class="wsl-input-field">
+      <small id="wsl-uname-help" [hidden]="shouldHideAriaDescription('uname')"
+        class="wsl-text-danger">
         Your username must be at least three characters, may only contain alphanumeric characters and may not start with a number.
       </small>
     </div>
     <div>
-      <label for="wsl-upass" class="block text-sm font-medium text-gray-700">Password</label>
+      <label for="wsl-upass" class="wsl-input-label">Password</label>
       <input type="password" id="wsl-upass" tabindex="4"
         autocomplete="current-password"
         aria-describedby="wsl-upass-help"
         required formControlName="upass" name="upass"
-        class="mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50">
+        class="wsl-input-field">
       <small id="wsl-upass-help" [hidden]="shouldHideAriaDescription('upass')"
-        class="text-red-600">
+        class="wsl-text-danger">
         Your password must be at least eight characters.
       </small>
     </div>
     <div class="mb-4 flex">
       <div class="flex-grow">
         <button type="submit" tabindex="5"
-          class="py-2 px-4 bg-lblue-600 text-white font-semibold rounded-lg leading-6 shadow-md hover:bg-lblue-700 focus:outline-none">
+          class="wsl-btn-dark">
           Sign up
         </button>
       </div>
-      <div class="text-sm">
+      <div class="text-sm space-x-4">
         <button type="button" routerLink="/signin" tabindex="6"
-          class="py-2 px-4 bg-lblue-100 text-lblue-700 font-semibold rounded-lg text-sm leading-6 shadow-sm hover:bg-lblue-200 focus:outline-none">
+          class="wsl-btn-light">
           Already Registered?
         </button>
       </div>
     </div>
   </form>
-
 </div>

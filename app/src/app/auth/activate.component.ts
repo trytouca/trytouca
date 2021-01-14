@@ -11,8 +11,8 @@ import { ApiService, AuthService } from '@weasel/core/services';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 
 enum Alerts {
-  Success = 'alert-success',
-  Danger = 'alert-danger'
+  Success = 'wsl-alert-success',
+  Danger = 'wsl-alert-danger'
 }
 
 @Component({

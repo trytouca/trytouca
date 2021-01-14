@@ -14,9 +14,9 @@ interface IFormContent {
 }
 
 enum Alerts {
-  Info = 'alert-info',
-  Success = 'alert-success',
-  Danger = 'alert-danger'
+  Info = 'wsl-alert-info',
+  Success = 'wsl-alert-success',
+  Danger = 'wsl-alert-danger'
 }
 
 @Component({

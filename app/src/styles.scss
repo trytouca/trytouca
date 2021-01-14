@@ -2,10 +2,42 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "app/styles/weaselcss";
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
+@layer components {
+  .wsl-alert {
+    @apply py-3 px-5 mb-4 rounded-md shadow-sm;
+  }
+  .wsl-alert-danger {
+    @apply bg-red-100 border-red-200 text-red-800;
+  }
+  .wsl-alert-info {
+    @apply bg-blue-100 border-blue-200 text-blue-800;
+  }
+  .wsl-alert-success {
+    @apply bg-green-100 border-green-200 text-green-800;
+  }
+  .wsl-alert-warning {
+    @apply bg-yellow-100 border-yellow-200 text-yellow-800;
+  }
+  .wsl-btn-light {
+    @apply py-2 px-4 bg-lblue-100 text-lblue-700 font-semibold rounded-lg text-sm leading-6 shadow-sm hover:bg-lblue-200 focus:outline-none;
+  }
+  .wsl-btn-dark {
+    @apply py-2 px-4 bg-lblue-600 text-white font-semibold rounded-lg leading-6 shadow-md hover:bg-lblue-700 focus:outline-none;
+  }
+  .wsl-input-field {
+    @apply mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50;
+  }
+  .wsl-input-label {
+    @apply block text-sm font-medium text-gray-700;
+  }
+  .wsl-text-danger {
+    @apply text-red-600;
+  }
+}
 
 .wsl-auth {
   @include weaselcss.weasel-auth-main();

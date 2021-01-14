@@ -13,14 +13,10 @@ module.exports = (isProd) => ({
         './src/**/*.{html,ts}',
       ]
     },
-    darkMode: false, // or 'media' or 'class'
+    darkMode: false,
     theme: {
       extend: {
         colors: {
-          primary: '#0A4B5B',
-          secondary: '#00818A',
-          teal: colors.teal,
-          cyan: colors.cyan,
           lblue: colors.lightBlue
         },
         fontFamily: {

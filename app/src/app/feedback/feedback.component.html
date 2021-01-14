@@ -1,44 +1,47 @@
 <app-header-outside></app-header-outside>
-<div class="wsl-auth">
-  <h2>Tell us what you think</h2>
-  <div class="wsl-auth-form">
-
-    <div *ngIf="alert" class="alert" [ngClass]="alert[0]" role="alert">
-      <small>{{ alert[1] }}</small>
-    </div>
-
-    <form [formGroup]="feedbackForm" novalidate
-          (ngSubmit)="onSubmit(feedbackForm.value)">
-      <div class="form-group">
-        <label for="wsl-body">Your Feedback</label>
-        <textarea class="form-control" id="wsl-body" rows="5" tabindex="1"
-                  aria-describedby="wsl-body-help"
-                  required formControlName="body" name="body"></textarea>
-        <small id="wsl-body-help" class="text-danger"
-            [hidden]="shouldHideAriaDescription('body')">
-          Please provide more information in your message.
-        </small>
-        <small class="text-muted"
-              [hidden]="(submitted || !feedbackForm.controls.body.pristine) && !feedbackForm.controls.body.valid">
-          This field supports markdown format.
-        </small>
+<div class="min-h-screen mx-auto container grid grid-cols-1 place-content-center">
+  <div class="mx-auto">
+    <h2 class="text-3xl mb-6 font-semibold">Tell us what you think</h2>
+  </div>
+  <div class="mx-auto md:w-full md:max-w-screen-md">
+    <div class="w-2/3 mx-auto px-4 py-5 bg-white rounded-md shadow-md">
+      <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
+        <small class="font-normal text-sm">{{ alert[1] }}</small>
       </div>
-      <div class="form-group">
-        <label for="wsl-name">Your Name</label>
-        <input type="text" class="form-control" id="wsl-name" tabindex="2"
+      <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit(feedbackForm.value)"
+        novalidate class="space-y-4">
+        <div>
+          <label for="wsl-body" class="wsl-input-label">Your Feedback</label>
+          <textarea id="wsl-body" rows="5" tabindex="1"
+            aria-describedby="wsl-body-help"
+            required formControlName="body" name="body"
+            class="wsl-input-field"></textarea>
+          <small id="wsl-body-help" [hidden]="shouldHideAriaDescription('body')"
+            class="wsl-text-danger">
+            Please provide more information in your message.
+          </small>
+          <small [hidden]="(submitted || !feedbackForm.controls.body.pristine) && !feedbackForm.controls.body.valid"
+            class="text-gray-500">
+            This field supports markdown format.
+          </small>
+        </div>
+        <div>
+          <label for="wsl-name" class="wsl-input-label">Your Name</label>
+          <input type="text" id="wsl-name" tabindex="2"
             formControlName="name" name="name"
             placeholder="optional"
-            minlength="1" maxlength="64">
-      </div>
-      <div class="wsl-form-footer">
-        <div class="wsl-form-submit">
-          <button type="submit" class="wsl-btn-dark" tabindex="3">
-            Submit
-          </button>
+            minlength="1" maxlength="64"
+            class="wsl-input-field">
         </div>
-      </div>
-    </form>
-
+        <div class="mb-4 flex">
+          <div class="flex-grow">
+            <button type="submit" tabindex="3" class="wsl-btn-dark">
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 <app-footer-inside></app-footer-inside>

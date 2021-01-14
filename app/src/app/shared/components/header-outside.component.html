@@ -9,15 +9,15 @@
       <div class="flex-grow"></div>
       <nav class="flex space-x-4">
         <a [routerLink]="'/docs'" routerLinkActive="active"
-          class="py-2 px-4 bg-transparent text-md text-lblue-600 font-semibold rounded-lg leading-6 hover:text-lblue-800 hover:bg-lblue-100 focus:outline-none transition duration-500 ease-in-out">
+          class="py-2 px-4 bg-transparent text-md text-lblue-600 font-semibold rounded-lg leading-6 hover:text-lblue-800 hover:bg-lblue-100 focus:outline-none">
           Docs
         </a>
         <a [hidden]="!isLoggedIn()" [routerLink]="homeLink()" routerLinkActive="active"
-          class="py-2 px-4 bg-lblue-600 text-white font-semibold rounded-lg leading-6 shadow-md hover:bg-lblue-700 focus:outline-none transition duration-500 ease-in-out">
+          class="wsl-btn-dark">
           Home
         </a>
         <a [hidden]="isLoggedIn()" [routerLink]="'/signup'" routerLinkActive="active"
-          class="py-2 px-4 bg-lblue-600 text-white font-semibold rounded-lg leading-6 shadow-md hover:bg-lblue-700 focus:outline-none transition duration-500 ease-in-out">
+          class="wsl-btn-dark">
           Get Started
         </a>
       </nav>
