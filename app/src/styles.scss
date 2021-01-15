@@ -39,6 +39,14 @@
   }
 }
 
+.wsl-min-h-screen-1 {
+  min-height: calc(100vh - 4rem);
+}
+
+.wsl-min-h-screen-2 {
+  min-height: calc(100vh - 8rem);
+}
+
 .wsl-auth {
   @include weaselcss.weasel-auth-main();
 }
