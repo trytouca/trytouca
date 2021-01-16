@@ -15,8 +15,8 @@ interface IFormContent {
 }
 
 enum Alerts {
-  Success = 'alert-success',
-  Danger = 'alert-danger'
+  Success = 'wsl-alert-success',
+  Danger = 'wsl-alert-danger'
 }
 
 enum Mode {
@@ -47,7 +47,7 @@ export class TeamsCreateTeamComponent extends ModalComponent {
         title: 'Create a New Team',
         linkText: 'Join an Existing Team',
         buttonText: 'Create',
-        slugDesc: 'Unique url-friendly identifier e.g. "earth". Used in the links to your test suites and test results.',
+        slugDesc: 'Unique url-friendly identifier. Used in the links to your test suites and test results.',
         onSubmit: (model) => this.onCreate(model)
       },
       {

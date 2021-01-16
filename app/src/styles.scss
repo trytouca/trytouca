@@ -10,6 +10,9 @@
   .wsl-alert {
     @apply py-3 px-5 mb-4 rounded-md shadow-sm;
   }
+  .wsl-alert-text {
+    @apply font-normal text-sm;
+  }
   .wsl-alert-danger {
     @apply bg-red-100 border-red-200 text-red-800;
   }
@@ -22,11 +25,26 @@
   .wsl-alert-warning {
     @apply bg-yellow-100 border-yellow-200 text-yellow-800;
   }
+  .wsl-btn-lblue {
+    @apply py-2 px-4 bg-transparent text-lblue-700 font-semibold rounded-lg text-sm leading-6 hover:text-lblue-800 hover:bg-lblue-100 focus:outline-none;
+  }
   .wsl-btn-light {
     @apply py-2 px-4 bg-lblue-100 text-lblue-700 font-semibold rounded-lg text-sm leading-6 shadow-sm hover:bg-lblue-200 focus:outline-none;
   }
   .wsl-btn-dark {
-    @apply py-2 px-4 bg-lblue-600 text-white font-semibold rounded-lg leading-6 shadow-md hover:bg-lblue-700 focus:outline-none;
+    @apply py-2 px-4 bg-lblue-600 text-white font-semibold rounded-lg text-sm leading-6 shadow-md hover:bg-lblue-700 focus:outline-none;
+  }
+  .wsl-form {
+    @apply space-y-4;
+  }
+  .wsl-form-footer {
+    @apply mt-4 flex;
+  }
+  .wsl-form-submit {
+    @apply flex-grow;
+  }
+  .wsl-form-links {
+    @apply space-x-4;
   }
   .wsl-input-field {
     @apply mt-1 block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50;
@@ -34,9 +52,21 @@
   .wsl-input-label {
     @apply block text-sm font-medium text-gray-700;
   }
+  .wsl-modal-header {
+    @apply p-3 bg-gray-100 border-b;
+  }
+  .wsl-modal-title {
+    @apply font-medium;
+  }
+  .wsl-modal-body {
+    @apply p-4;
+  }
   .wsl-text-danger {
     @apply text-red-600;
   }
+  .wsl-text-muted {
+    @apply text-gray-500;
+}
 }
 
 .wsl-min-h-screen-1 {
@@ -46,6 +76,13 @@
 .wsl-min-h-screen-2 {
   min-height: calc(100vh - 8rem);
 }
+
+ngneat-dialog {
+  .ngneat-dialog-content {
+    border-radius: 0.5rem;
+  }
+}
+
 
 .wsl-auth {
   @include weaselcss.weasel-auth-main();
