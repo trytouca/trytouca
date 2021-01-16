@@ -6,39 +6,28 @@
   <div class="mx-auto md:w-full md:max-w-screen-md">
     <div class="w-2/3 mx-auto px-4 py-5 bg-white rounded-md shadow-md">
       <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
-        <small class="font-normal text-sm">{{ alert[1] }}</small>
+        <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
       </div>
-      <form [formGroup]="signinForm" (ngSubmit)="onSubmit(signinForm.value)"
-        novalidate class="space-y-4">
+      <form [formGroup]="signinForm" (ngSubmit)="onSubmit(signinForm.value)" novalidate class="wsl-form">
         <div>
           <label for="wsl-uname" class="wsl-input-label">Username</label>
-          <input type="text" id="wsl-uname" tabindex="1"
-            autocomplete="username"
-            aria-describedby="wsl-uname-help"
-            required formControlName="uname" name="uname"
-            class="wsl-input-field">
+          <input type="text" id="wsl-uname" tabindex="1" autocomplete="username" aria-describedby="wsl-uname-help" required formControlName="uname" name="uname" class="wsl-input-field">
         </div>
         <div>
           <label for="wsl-upass" class="wsl-input-label">Password</label>
-          <input type="password" id="wsl-upass" tabindex="2"
-            autocomplete="current-password"
-            aria-describedby="wsl-upass-help"
-            required formControlName="upass" name="upass"
-            class="wsl-input-field">
+          <input type="password" id="wsl-upass" tabindex="2" autocomplete="current-password" aria-describedby="wsl-upass-help" required formControlName="upass" name="upass" class="wsl-input-field">
         </div>
-        <div class="mb-4 flex">
-          <div class="flex-grow">
+        <div class="wsl-form-footer">
+          <div class="wsl-form-submit">
             <button type="submit" tabindex="3" class="wsl-btn-dark">
               Sign in
             </button>
           </div>
-          <div class="text-sm space-x-4">
-            <button type="button" routerLink="/reset" tabindex="5"
-              class="wsl-btn-light">
+          <div class="wsl-form-links">
+            <button type="button" routerLink="/reset" tabindex="5" class="wsl-btn-light">
               Forgot Your Password?
             </button>
-            <button type="button" routerLink="/signup" tabindex="4"
-              class="wsl-btn-light">
+            <button type="button" routerLink="/signup" tabindex="4" class="wsl-btn-light">
               New to Weasel?
             </button>
           </div>

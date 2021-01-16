@@ -6,91 +6,59 @@
   <div class="mx-auto md:w-full md:max-w-screen-md">
     <div class="w-2/3 mx-auto px-4 py-5 bg-white rounded-md shadow-md">
       <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
-        <small class="font-normal text-sm">{{ alert[1] }}</small>
+        <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
       </div>
-      <form *ngIf="!shouldShowResetForm"
-        [formGroup]="requestForm" (ngSubmit)="onRequestSubmission(requestForm.value)"
-        novalidate class="space-y-4">
+      <form *ngIf="!shouldShowResetForm" [formGroup]="requestForm" (ngSubmit)="onRequestSubmission(requestForm.value)" novalidate class="wsl-form">
         <div>
           <label for="wsl-mail" class="wsl-input-label">Email</label>
-          <input type="email" id="wsl-mail" tabindex="1"
-            autocomplete="email"
-            aria-describedby="wsl-email-help"
-            required formControlName="email" name="email"
-            data-lpignore="true"
-            class="wsl-input-field">
-          <small id="wsl-email-help"
-            [hidden]="shouldHideAriaDescriptionForEmail()"
-            class="wsl-text-danger">
+          <input type="email" id="wsl-mail" tabindex="1" autocomplete="email" aria-describedby="wsl-email-help" required formControlName="email" name="email" data-lpignore="true" class="wsl-input-field">
+          <small id="wsl-email-help" [hidden]="shouldHideAriaDescriptionForEmail()" class="wsl-text-danger">
             Please provide a valid email address.
           </small>
         </div>
-        <div class="mb-4 flex">
-          <div class="flex-grow">
-            <button type="submit" tabindex="2"
-              class="wsl-btn-dark">
+        <div class="wsl-form-footer">
+          <div class="wsl-form-submit">
+            <button type="submit" tabindex="2" class="wsl-btn-dark">
               Reset
             </button>
           </div>
-          <div class="text-sm space-x-4">
-            <button type="button" routerLink="/signin" tabindex="3"
-              class="wsl-btn-light">
+          <div class="wsl-form-links">
+            <button type="button" routerLink="/signin" tabindex="3" class="wsl-btn-light">
               Remember Your Password?
             </button>
-            <button type="button" routerLink="/signup" tabindex="4"
-              class="wsl-btn-light">
+            <button type="button" routerLink="/signup" tabindex="4" class="wsl-btn-light">
               New to Weasel?
             </button>
           </div>
         </div>
       </form>
-      <form *ngIf="shouldShowResetForm"
-        [formGroup]="resetForm" (ngSubmit)="onResetSubmission(resetForm.value)"
-        novalidate class="space-y-4">
+      <form *ngIf="shouldShowResetForm" [formGroup]="resetForm" (ngSubmit)="onResetSubmission(resetForm.value)" novalidate class="wsl-form">
         <div>
           <label for="wsl-uname" class="wsl-input-label">Username</label>
-          <input type="text" id="wsl-uname" tabindex="1"
-            autocomplete="username"
-            aria-describedby="wsl-uname-help"
-            formControlName="uname" name="uname"
-            class="wsl-input-field">
+          <input type="text" id="wsl-uname" tabindex="1" autocomplete="username" aria-describedby="wsl-uname-help" formControlName="uname" name="uname" class="wsl-input-field">
         </div>
         <div>
           <label for="wsl-upass1" class="wsl-input-label">New Password</label>
-          <input type="password" id="wsl-upass1" tabindex="2"
-            autocomplete="new-password"
-            aria-describedby="wsl-upass1-help"
-            required formControlName="upass1" name="upass1"
-            class="wsl-input-field">
-          <small id="wsl-upass1-help"
-            [hidden]="shouldHideAriaDescriptionForUpass1()"
-            class="wsl-text-danger">
+          <input type="password" id="wsl-upass1" tabindex="2" autocomplete="new-password" aria-describedby="wsl-upass1-help" required formControlName="upass1" name="upass1" class="wsl-input-field">
+          <small id="wsl-upass1-help" [hidden]="shouldHideAriaDescriptionForUpass1()" class="wsl-text-danger">
             Your password must be at least eight characters.
           </small>
         </div>
         <div>
           <label for="wsl-upass2" class="wsl-input-label">Confirm New Password</label>
-          <input type="password" id="wsl-upass2" tabindex="3"
-            autocomplete="new-password"
-            aria-describedby="wsl-upass2-help"
-            required formControlName="upass2" name="upass2"
-            class="wsl-input-field">
-          <small id="wsl-upass2-help"
-            [hidden]="shouldHideAriaDescriptionForUpass2()"
-            class="wsl-text-danger">
+          <input type="password" id="wsl-upass2" tabindex="3" autocomplete="new-password" aria-describedby="wsl-upass2-help" required formControlName="upass2" name="upass2" class="wsl-input-field">
+          <small id="wsl-upass2-help" [hidden]="shouldHideAriaDescriptionForUpass2()" class="wsl-text-danger">
             Your password must match the password you entered above.
           </small>
         </div>
-        <div class="mb-4 flex">
-          <div class="flex-grow">
-            <button type="submit" tabindex="4"
-              class="wsl-btn-dark">
+        <div class="wsl-form-footer">
+          <div class="wsl-form-submit">
+            <button type="submit" tabindex="4" class="wsl-btn-dark">
               Reset
             </button>
           </div>
-          <div class="text-sm space-x-4">
-            <button type="button" routerLink="/signin" tabindex="5"
-              class="wsl-btn-light">
+          <div class="wsl-form-links">
+            <button type="button" routerLink="/signin" tabindex="5" class="wsl-btn-light">
               Remember Your Password?
             </button>
           </div>
