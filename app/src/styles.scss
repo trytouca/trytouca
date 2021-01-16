@@ -93,6 +93,9 @@
     p {
       @apply p-4 text-left md:text-justify font-light;
     }
+    a {
+      @apply text-lblue-700;
+    }
     button {
       @apply wsl-btn-light;
     }
