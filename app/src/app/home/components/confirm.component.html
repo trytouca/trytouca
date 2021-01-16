@@ -1,25 +1,23 @@
-<div class="wsl-modal-confirm">
-  <div class="wsl-modal-header">
-    <h4>{{ elements.title }}</h4>
+<div class="wsl-modal-header">
+  <h4 class="wsl-modal-title">{{ elements.title }}</h4>
+</div>
+<div class="wsl-modal-body">
+  <div *ngIf="alert" role="alert" [ngClass]="alert[0]">
+    <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
   </div>
-  <div class="wsl-modal-body">
-    <div *ngIf="alert" class="alert" [ngClass]="alert[0]" role="alert">
-      <small [innerHtml]="alert[1]"></small>
-    </div>
+  <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(form.value)" class="wsl-form">
     <p [innerHtml]="elements.message"></p>
-    <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(form.value)">
-      <div class="wsl-form-footer">
-        <div class="wsl-form-submit">
-          <button type="submit" class="wsl-btn-dark" tabindex="2">
-            {{ elements.button }}
-          </button>
-        </div>
-        <div class="wsl-form-links">
-          <button type="button" (click)="closeModal()" class="wsl-btn-light" tabindex="3">
-            Cancel
-          </button>
-        </div>
+    <div class="wsl-form-footer">
+      <div class="wsl-form-submit">
+        <button type="submit" tabindex="2" class="wsl-btn-dark">
+          {{ elements.button }}
+        </button>
       </div>
-    </form>
-  </div>
+      <div class="wsl-form-links">
+        <button type="button" (click)="closeModal()" tabindex="3" class="wsl-btn-light">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </form>
 </div>

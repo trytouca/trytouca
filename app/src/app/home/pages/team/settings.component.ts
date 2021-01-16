@@ -21,8 +21,8 @@ interface IFormContent {
 }
 
 enum AlertType {
-  Success = 'alert-success',
-  Danger = 'alert-danger'
+  Success = 'wsl-alert-success',
+  Danger = 'wsl-alert-danger'
 }
 
 type Alert = { type: AlertType, msg: string, close?: boolean };
@@ -107,7 +107,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
   /**
    *
    */
-  async onSubmit(type: EModalType, model: IFormContent) {
+  onSubmit(type: EModalType, model: IFormContent) {
     switch (type) {
       case EModalType.ChangeName:
         if (!this.formName.valid) {
@@ -135,7 +135,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
   /**
    *
    */
-  async openConfirmModal(type: EModalType) {
+  openConfirmModal(type: EModalType) {
     if (type === EModalType.DeleteTeam) {
       const elements: ConfirmElements = {
         title: `Delete Team ${this.team.name}`,
@@ -146,7 +146,10 @@ export class TeamTabSettingsComponent implements OnDestroy {
         button: 'Delete'
       };
       this._dialogRef = this.dialogService.open(ConfirmComponent, {
-        data: elements
+        closeButton: false,
+        data: elements,
+        minHeight: '10vh',
+        windowClass: 'wsl-modal'
       });
     } else if (type === EModalType.LeaveTeam) {
       const elements: ConfirmElements = {
@@ -158,7 +161,10 @@ export class TeamTabSettingsComponent implements OnDestroy {
         button: 'Leave'
       };
       this._dialogRef = this.dialogService.open(ConfirmComponent, {
-        data: elements
+        closeButton: false,
+        data: elements,
+        minHeight: '10vh',
+        windowClass: 'wsl-modal'
       });
     }
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {

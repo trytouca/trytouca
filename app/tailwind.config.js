@@ -2,7 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-const defaultTheme = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
 
 module.exports = (isProd) => ({
@@ -18,11 +17,8 @@ module.exports = (isProd) => ({
       extend: {
         colors: {
           lblue: colors.lightBlue
-        },
-        fontFamily: {
-          sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-        },
-      },
+        }
+      }
     },
     variants: {
       extend: {},

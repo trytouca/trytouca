@@ -6,8 +6,8 @@ import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 enum Alerts {
-  Success = 'alert-success',
-  Danger = 'alert-danger'
+  Success = 'wsl-alert-success',
+  Danger = 'wsl-alert-danger'
 }
 
 @Component({
