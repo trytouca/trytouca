@@ -61,6 +61,18 @@
   .wsl-modal-body {
     @apply p-4;
   }
+  .wsl-page-auth {
+    @apply wsl-min-h-screen-1 mx-auto container grid grid-cols-1 place-content-center;
+  }
+  .wsl-page-auth-title {
+    @apply mx-auto mb-6 text-3xl font-semibold;
+  }
+  .wsl-page-auth-body {
+    @apply w-full md:max-w-screen-md mx-auto px-4;
+  }
+  .wsl-page-auth-form {
+    @apply w-full md:w-2/3 mx-auto p-4 rounded-md shadow-lg;
+  }
   .wsl-text-danger {
     @apply text-red-600;
   }

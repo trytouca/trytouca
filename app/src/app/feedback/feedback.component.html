@@ -1,10 +1,8 @@
 <app-header-outside></app-header-outside>
-<div class="wsl-min-h-screen-1 mx-auto container grid grid-cols-1 place-content-center">
-  <div class="mx-auto">
-    <h2 class="text-3xl mb-6 font-semibold">Tell us what you think</h2>
-  </div>
-  <div class="mx-auto md:w-full md:max-w-screen-md">
-    <div class="w-2/3 mx-auto px-4 py-5 bg-white rounded-md shadow-md">
+<div class="wsl-page-auth">
+  <h2 class="wsl-page-auth-title">Tell us what you think</h2>
+  <div class="wsl-page-auth-body">
+    <div class="wsl-page-auth-form">
       <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
         <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
       </div>
