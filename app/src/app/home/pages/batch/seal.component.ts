@@ -10,8 +10,8 @@ import { BatchLookupResponse } from '@weasel/core/models/commontypes';
 import { ModalComponent } from '@weasel/home/components';
 
 enum Alerts {
-  Success = 'alert-success',
-  Danger = 'alert-danger'
+  Success = 'wsl-alert-success',
+  Danger = 'wsl-alert-danger'
 }
 
 @Component({
@@ -38,7 +38,7 @@ export class BatchSealComponent extends ModalComponent {
   /**
    *
    */
-  async onSubmit(model: {}) {
+  onSubmit(model: {}) {
     if (!this.form.valid) {
       return;
     }

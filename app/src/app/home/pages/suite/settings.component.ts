@@ -23,8 +23,8 @@ interface IFormContent {
 }
 
 enum AlertType {
-  Success = 'alert-success',
-  Danger = 'alert-danger'
+  Success = 'wsl-alert-success',
+  Danger = 'wsl-alert-danger'
 }
 
 type Alert = { type: AlertType, msg: string, close?: boolean };
@@ -140,7 +140,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
   /**
    *
    */
-  async onSubmit(type: EModalType, model: IFormContent) {
+  onSubmit(type: EModalType, model: IFormContent) {
     switch (type) {
       case EModalType.ChangeName:
         if (!this.formName.valid) {

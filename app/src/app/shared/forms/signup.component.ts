@@ -74,7 +74,7 @@ export class SignupFormComponent {
         this.signupForm.controls[field].valid;
   }
 
-  async onSubmit(model: IFormContent) {
+  onSubmit(model: IFormContent) {
     if (!this.signupForm.valid) {
       return;
     }

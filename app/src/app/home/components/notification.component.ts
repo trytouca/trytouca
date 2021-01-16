@@ -18,10 +18,10 @@ export class NotificationComponent implements OnDestroy {
   showNotification = false;
   timer: Subscription;
   private alerts = new Map<number, string>([
-    [ NotificationType.Info, 'alert-info' ],
-    [ NotificationType.Success, 'alert-success' ],
-    [ NotificationType.Warning, 'alert-warning' ],
-    [ NotificationType.Error, 'alert-danger' ],
+    [ NotificationType.Info, 'wsl-alert-info' ],
+    [ NotificationType.Success, 'wsl-alert-success' ],
+    [ NotificationType.Warning, 'wsl-alert-warning' ],
+    [ NotificationType.Error, 'wsl-alert-danger' ],
   ]);
 
   private _subNotification: Subscription;

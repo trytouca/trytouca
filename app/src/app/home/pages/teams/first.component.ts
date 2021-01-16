@@ -47,7 +47,10 @@ export class TeamsFirstTeamComponent implements OnDestroy {
    *
    */
   openCreateModal() {
-    this._dialogRef = this.dialogService.open(TeamsCreateTeamComponent);
+    this._dialogRef = this.dialogService.open(TeamsCreateTeamComponent, {
+      closeButton: false,
+      minHeight: '10vh'
+    });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (state) {
         this.fetchItems();

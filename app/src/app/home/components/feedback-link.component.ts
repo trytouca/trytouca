@@ -26,8 +26,6 @@ export class FeedbackLinkComponent implements OnInit {
     'Do you have a minute to give us some feedback about this page?'
   ];
 
-  constructor() { }
-
   ngOnInit() {
     if (Math.random() < 0.05) {
       const index = Math.floor(+new Date() / 8.64e7) % this._messages.length;

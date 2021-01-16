@@ -80,8 +80,7 @@ export class TeamsPageComponent extends PageComponent<TeamsPageTeam, TabType, No
   openCreateModal() {
     this._dialogRef = this.dialogService.open(TeamsCreateTeamComponent, { 
       closeButton: false,
-      minHeight: '10vh',
-      windowClass: 'wsl-modal'
+      minHeight: '10vh'
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (state) {

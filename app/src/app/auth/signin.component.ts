@@ -81,7 +81,7 @@ export class SigninComponent implements OnInit {
   /**
    *
    */
-  async onSubmit(model: IFormContent) {
+  onSubmit(model: IFormContent) {
     if (this.signinForm.pristine) {
       return;
     }

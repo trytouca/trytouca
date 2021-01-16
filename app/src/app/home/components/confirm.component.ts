@@ -36,7 +36,7 @@ export class ConfirmComponent extends ModalComponent {
   /**
    *
    */
-  async onSubmit(model: {}) {
+  onSubmit(model: {}) {
     if (!this.form.valid) {
       return;
     }

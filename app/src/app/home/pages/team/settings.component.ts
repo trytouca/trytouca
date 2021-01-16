@@ -148,8 +148,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
       this._dialogRef = this.dialogService.open(ConfirmComponent, {
         closeButton: false,
         data: elements,
-        minHeight: '10vh',
-        windowClass: 'wsl-modal'
+        minHeight: '10vh'
       });
     } else if (type === EModalType.LeaveTeam) {
       const elements: ConfirmElements = {
@@ -163,8 +162,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
       this._dialogRef = this.dialogService.open(ConfirmComponent, {
         closeButton: false,
         data: elements,
-        minHeight: '10vh',
-        windowClass: 'wsl-modal'
+        minHeight: '10vh'
       });
     }
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {

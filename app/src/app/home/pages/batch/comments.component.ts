@@ -26,8 +26,8 @@ type IFormContent = {
 };
 
 enum Alerts {
-  Success = 'alert-success',
-  Danger = 'alert-danger'
+  Success = 'wsl-alert-success',
+  Danger = 'wsl-alert-danger'
 }
 
 @Component({
@@ -125,7 +125,7 @@ export class BatchCommentsComponent implements OnDestroy {
   /**
    *
    */
-  async onSubmit(model: IFormContent) {
+  onSubmit(model: IFormContent) {
     if (this._commentAction.actionType !== FrontendCommentActionType.Remove && !this.form.valid) {
       return;
     }
