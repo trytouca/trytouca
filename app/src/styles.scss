@@ -79,6 +79,24 @@
   .wsl-text-muted {
     @apply text-gray-500;
 }
+  .wsl-page-banner {
+    @apply wsl-page-auth md:max-w-screen-sm text-center;
+    h2 {
+      @apply text-3xl font-medium;
+}
+    h3 {
+      @apply text-xl wsl-text-muted;
+    }
+    img {
+      @apply px-8 py-4;
+    }
+    p {
+      @apply p-4 text-left md:text-justify font-light;
+    }
+    button {
+      @apply wsl-btn-light;
+    }
+  }
 }
 
 .wsl-min-h-screen-1 {

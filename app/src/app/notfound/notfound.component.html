@@ -1,19 +1,19 @@
 <app-header-outside></app-header-outside>
-<div class="wsl-min-h-screen-1 container mx-auto grid grid-cols-1 place-content-center">
-  <div class="w-full md:max-w-screen-sm mx-auto flex flex-col items-center justify-center space-y-4">
-    <div class="text-center">
-      <h2 class="text-3xl font-medium">Page Not Found</h2>
-      <h3 class="text-xl wsl-text-muted">Houston, we have a problem!</h3>
-    </div>
-    <img src="./assets/undraw/undraw_not_found_60pq.svg" class="px-8 py-4" />
-    <p class="p-4 md:text-justify font-light">
-      The page or document you requested is not accessible.
-      This might be due that no such page or document exists or you
-      have insufficient privileges to access it.
-      If you think you are encountering this page by error, please
-      <a href="/feedback">contact</a> your administrator.
-    </p>
-    <button type="button" routerLink="/" class="wsl-btn-light">
+<div class="wsl-page-banner">
+  <div>
+    <h2>Page Not Found</h2>
+    <h3>Houston, we have a problem!</h3>
+  </div>
+  <img src="./assets/undraw/undraw_not_found_60pq.svg" />
+  <p>
+    The page or document you requested is not accessible.
+    This might be due that no such page or document exists or you
+    have insufficient privileges to access it.
+    If you think you are encountering this page by error, please
+    <a href="/feedback">contact</a> your administrator.
+  </p>
+  <div>
+    <button type="button" routerLink="/">
       Back to Home
     </button>
   </div>

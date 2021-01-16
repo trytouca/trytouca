@@ -1,14 +1,17 @@
-<div class="wsl-banner-nohead">
-  <h2>{{ data.title }}</h2>
-  <hr>
+<div class="wsl-page-banner">
+  <div>
+    <h2>{{ data.title }}</h2>
+    <h3>Did you make a typo?</h3>
+  </div>
   <img [src]="data.image" />
-  <hr>
   <p>
     <span [innerHtml]="data.message"></span>
     If you think you are encountering this page by error,
     please <a href="/feedback">contact</a> your administrator.
   </p>
-  <button type="button" class="wsl-btn-dark" routerLink="..">
-    {{ data.button }}
-  </button>
+  <div>
+    <button type="button" routerLink="..">
+      {{ data.button }}
+    </button>
+  </div>
 </div>
