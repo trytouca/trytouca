@@ -11,6 +11,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DialogModule } from '@ngneat/dialog';
 
 import {
+  AlertComponent,
   FooterInsideComponent,
   FooterOutsideComponent,
   HeaderInsideComponent,
@@ -33,12 +34,13 @@ import {
     RouterModule
   ],
   declarations: [
+    AlertComponent,
     FooterInsideComponent,
     FooterOutsideComponent,
     HeaderInsideComponent,
     HeaderOutsideComponent,
     ServerDownComponent,
-    SignupFormComponent,
+    SignupFormComponent
   ],
   exports: [
     CommonModule,
