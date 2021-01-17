@@ -148,7 +148,9 @@ export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> imp
    */
   private showConfirmation(elements: ConfirmElements, func: () => void) {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
-      data: elements
+      closeButton: false,
+      data: elements,
+      minHeight: '10vh'
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (!state) {
