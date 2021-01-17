@@ -17,6 +17,11 @@ module.exports = (isProd) => ({
       extend: {
         colors: {
           lblue: colors.lightBlue
+        },
+        container: {
+          screens: {
+            lg: '1200px'
+          }
         }
       }
     },

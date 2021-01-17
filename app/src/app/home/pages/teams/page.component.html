@@ -4,18 +4,19 @@
 </div>
 <div [hidden]="!hasData() || !hasItems()">
   <div class="wsl-page-head">
-    <div class="wsl-page-head-content">
+    <div>
       <nav aria-label="breadcrumb">
         <ol>
-          <li class="active" aria-current="page">
+          <li aria-current="page">
             Your Teams
           </li>
         </ol>
       </nav>
-      <div></div>
-      <button type="button" (click)="openCreateModal()" class="wsl-btn-dark">
-        New Team
-      </button>
+      <div>
+        <button type="button" (click)="openCreateModal()">
+          New Team
+        </button>
+      </div>
     </div>
   </div>
   <div [hidden]="currentTab !== TabType.Teams">
