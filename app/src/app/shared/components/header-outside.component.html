@@ -6,9 +6,9 @@
       </a>
     </div>
     <nav>
-      <a routerLink="/docs" routerLinkActive="active" class="wsl-btn-lblue">Docs</a>
-      <a [hidden]="!isLoggedIn()" [routerLink]="homeLink()" routerLinkActive="active" class="wsl-btn-dark">Home</a>
-      <a [hidden]="isLoggedIn()" [routerLink]="'/signup'" routerLinkActive="active" class="wsl-btn-dark">Get Started</a>
+      <a routerLink="/docs" routerLinkActive="active" class="wsl-btn-lg wsl-btn-transparent">Docs</a>
+      <a [hidden]="!isLoggedIn()" [routerLink]="homeLink()" routerLinkActive="active" class="wsl-btn-lg wsl-btn-dark">Home</a>
+      <a [hidden]="isLoggedIn()" [routerLink]="'/signup'" routerLinkActive="active" class="wsl-btn-lg wsl-btn-dark">Get Started</a>
     </nav>
   </div>
 </header>

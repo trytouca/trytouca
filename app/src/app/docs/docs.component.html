@@ -41,14 +41,14 @@
     <nav class="m-12 flex justify-between">
       <div>
         <button *ngIf="previousPage" (click)="switchToPage(previousPage.link)"
-          class="wsl-btn-light">
+          class="wsl-btn-lg wsl-btn-light">
           <span><fa-icon icon="angle-double-left"></fa-icon></span>
           {{ previousPage.name }}
         </button>
       </div>
       <div>
         <button *ngIf="nextPage" (click)="switchToPage(nextPage.link)"
-          class="wsl-btn-light">
+          class="wsl-btn-lg wsl-btn-light">
           {{ nextPage.name }}
           <span><fa-icon icon="angle-double-right"></fa-icon></span>
         </button>
