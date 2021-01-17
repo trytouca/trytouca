@@ -41,7 +41,7 @@
     @apply bg-lblue-100 text-lblue-700 shadow-sm hover:bg-lblue-200;
   }
   .wsl-btn-muted {
-    @apply h-full bg-gray-50 text-xs border;
+    @apply bg-gray-50 border hover:bg-gray-100;
     b {
       @apply font-medium;
     }

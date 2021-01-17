@@ -9,12 +9,15 @@
   img {
     @apply md:max-w-screen-sm mx-auto px-8 py-4;
   }
+  .wsl-feedback-link {
+    @apply h-16 flex flex-col justify-center;
+  }
   .wsl-requests-list {
     h2 {
-      @apply text-lg font-medium;
+      @apply py-2 text-base font-medium;
     }
     li {
-      @apply py-1 flex justify-between items-center;
+      @apply p-4 flex justify-between items-center;
       p {
         @apply text-sm;
       }
