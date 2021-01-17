@@ -1,26 +1,14 @@
 <header>
-  <div class="mx-auto container">
-    <div class="h-16 flex items-center">
-      <div class="flex">
-        <a [routerLink]="'/'">
-          <h1 class="text-2xl text-lblue-600 font-medium">Weasel</h1>
-        </a>
-      </div>
-      <div class="flex-grow"></div>
-      <nav class="flex space-x-4">
-        <a [routerLink]="'/docs'" routerLinkActive="active"
-          class="py-2 px-4 bg-transparent text-md text-lblue-600 font-semibold rounded-lg leading-6 hover:text-lblue-800 hover:bg-lblue-100 focus:outline-none">
-          Docs
-        </a>
-        <a [hidden]="!isLoggedIn()" [routerLink]="homeLink()" routerLinkActive="active"
-          class="wsl-btn-dark">
-          Home
-        </a>
-        <a [hidden]="isLoggedIn()" [routerLink]="'/signup'" routerLinkActive="active"
-          class="wsl-btn-dark">
-          Get Started
-        </a>
-      </nav>
+  <div>
+    <div class="wsl-logo">
+      <a [routerLink]="'/'">
+        <h1>Weasel</h1>
+      </a>
     </div>
+    <nav>
+      <a routerLink="/docs" routerLinkActive="active" class="wsl-btn-lblue">Docs</a>
+      <a [hidden]="!isLoggedIn()" [routerLink]="homeLink()" routerLinkActive="active" class="wsl-btn-dark">Home</a>
+      <a [hidden]="isLoggedIn()" [routerLink]="'/signup'" routerLinkActive="active" class="wsl-btn-dark">Get Started</a>
+    </nav>
   </div>
 </header>

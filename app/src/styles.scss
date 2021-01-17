@@ -39,7 +39,10 @@
     b {
       @apply font-medium;
     }
-  }  
+  }
+  .wsl-sm-btn-dark {
+    @apply py-1 px-2 bg-lblue-600 text-white font-medium rounded text-sm leading-6 shadow-md hover:bg-lblue-700 focus:outline-none duration-150 ease-in-out;
+  }
   .wsl-form {
     @apply space-y-4;
   }
@@ -84,12 +87,12 @@
   }
   .wsl-text-muted {
     @apply text-gray-500;
-}
+  }
   .wsl-page-banner {
     @apply wsl-page-auth md:max-w-screen-sm text-center;
     h2 {
       @apply text-3xl font-medium;
-}
+    }
     h3 {
       @apply text-xl wsl-text-muted;
     }
@@ -112,13 +115,25 @@
       @apply pt-4 px-4 pb-2 mx-auto container flex items-center text-lg font-medium;
       nav {
         @apply flex-grow;
-}
+      }
       nav + div {
         @apply space-x-2;
-        button {
-          @apply py-1 px-2 bg-lblue-600 text-white font-medium rounded text-sm leading-6 shadow-md hover:bg-lblue-700 focus:outline-none duration-150 ease-in-out;
-        }
       }
+    }
+  }
+  header {
+    @apply mx-auto container;
+    & > div {
+      @apply h-16 px-4 flex items-stretch justify-between;
+    }
+    h1 {
+      @apply text-2xl text-lblue-600 font-light tracking-tight;
+    }
+    nav {
+      @apply flex items-center space-x-4;
+    }
+    .wsl-logo {
+      @apply flex items-center;
     }
   }
 }
