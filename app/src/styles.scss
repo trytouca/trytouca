@@ -40,6 +40,12 @@
   .wsl-btn-light {
     @apply bg-lblue-100 text-lblue-700 shadow-sm hover:bg-lblue-200;
   }
+  .wsl-btn-muted {
+    @apply h-full bg-gray-50 text-xs border;
+    b {
+      @apply font-medium;
+    }
+  }
   .wsl-btn-transparent {
     @apply bg-transparent text-lblue-700 hover:text-lblue-800 hover:bg-lblue-100;
   }
@@ -147,6 +153,10 @@
 
 .wsl-min-h-screen-2 {
   min-height: calc(100vh - 8rem);
+}
+
+.wsl-min-h-screen-3 {
+  min-height: calc(100vh - 12rem);
 }
 
 ngneat-dialog {

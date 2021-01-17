@@ -9,7 +9,7 @@ import { TeamsPageTeam } from './teams.model';
 @Component({
   selector: 'app-teams-item-team',
   templateUrl: './item.component.html',
-  styles: ['.wsl-item-heading { margin-bottom: unset; }']
+  styleUrls: ['../../styles/item.component.scss']
 })
 export class TeamsItemTeamComponent {
 

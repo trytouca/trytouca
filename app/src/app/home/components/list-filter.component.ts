@@ -11,8 +11,7 @@ import { FilterManager, FilterParams, FilterStats } from '@weasel/home/models/fi
 
 @Component({
   selector: 'app-home-list-filter',
-  templateUrl: './list-filter.component.html',
-  styleUrls: ['./list-filter.component.scss']
+  templateUrl: './list-filter.component.html'
 })
 export class ListFilterComponent {
 

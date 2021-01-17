@@ -4,7 +4,7 @@
 
 @layer utilities {
   section {
-    @apply p-4 mx-auto container flex flex-col justify-start;
+    @apply px-4 mx-auto container;
   }
   img {
     @apply md:max-w-screen-sm mx-auto px-8 py-4;
@@ -21,6 +21,22 @@
       & > div {
         @apply space-x-2;
       }
+    }
+  }
+  .wsl-list {
+  }
+  .wsl-list-body {
+    @apply divide-y border-t border-b;
+    li {
+      @apply hover:bg-gray-50;
+    }
+    li.wsl-list-item-focused {
+      @apply bg-lblue-50;
+    }
+  }
+  .wsl-list-head {
+    p {
+      @apply pb-2 text-gray-100;
     }
   }
 }

@@ -56,7 +56,7 @@ const filterInput: FilterInput<TeamsPageTeam> = {
 @Component({
   selector: 'app-teams-tab-teams',
   templateUrl: './list.component.html',
-  styleUrls: [ './list.component.scss' ]
+  styleUrls: [ '../../styles/list.component.scss' ]
 })
 export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> implements OnDestroy {
 

@@ -1,0 +1,27 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@layer utilities {
+  .wsl-list-item {
+    @apply py-4 sm:px-2 md:px-6;
+  }
+  .wsl-item-heading {
+    @apply flex;
+  }
+  .wsl-item-status {
+    @apply leading-8 mr-2;
+  }
+  .wsl-item-title {
+    a {
+      @apply text-blue-500;
+    }
+    h4 {
+      @apply leading-8 text-base font-medium;
+    }
+  }
+  .wsl-item-topics {
+  }
+  .wsl-item-topic {
+  }
+}

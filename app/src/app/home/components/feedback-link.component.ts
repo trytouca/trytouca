@@ -7,13 +7,10 @@ import { Component, Input, OnInit } from '@angular/core';
 @Component({
   selector: 'app-home-feedback-link',
   template: `
-    <div class="wsl-feedback-link" *ngIf="message">
-      <a [routerLink]="['/feedback']" [queryParams]="queryParams">
-        {{ message }}
-      </a>
-    </div>
-  `,
-  styleUrls: ['./feedback-link.component.scss']
+    <p *ngIf="message" class="wsl-text-muted text-sm text-right">
+      <a [routerLink]="['/feedback']" [queryParams]="queryParams">{{ message }}</a>
+    </p>
+  `
 })
 export class FeedbackLinkComponent implements OnInit {
 
