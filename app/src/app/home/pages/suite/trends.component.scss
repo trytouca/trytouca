@@ -2,7 +2,17 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-.wsl-trend-chart {
-  margin: 0 auto;
-  padding: 0 2rem;
+@layer utilities {
+  section {
+    @apply px-4 mx-auto container;
+    h2 {
+      @apply pt-4 pb-1 text-xl font-medium;
+    }
+    p {
+      @apply text-sm;
+    }
+  }
+  .wsl-trend-chart {
+    @apply py-8;
+  }
 }

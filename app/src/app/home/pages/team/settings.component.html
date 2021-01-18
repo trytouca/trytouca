@@ -15,7 +15,7 @@
           Update
         </button>
       </form>
-      <small [hidden]="formName.controls.name.pristine || formName.controls.name.valid">
+      <small [hidden]="formName.controls.name.pristine || formName.controls.name.valid" class="wsl-text-muted">
         Should contain 3 to 32 characters.
       </small>
     </div>
@@ -34,9 +34,8 @@
           Update
         </button>
       </form>
-      <small [hidden]="formSlug.controls.slug.pristine || formSlug.controls.slug.valid">
-        Should contain 3 to 16 alphanumeric characters
-        and may not start with a number.
+      <small [hidden]="formSlug.controls.slug.pristine || formSlug.controls.slug.valid" class="wsl-text-muted">
+        Should contain 3 to 16 alphanumeric characters and may not start with a number.
       </small>
     </div>
     <div *ngIf="team.role !== ETeamRole.Owner" class="wsl-settings-section">
