@@ -30,6 +30,7 @@ type NotFound = Partial<{}>;
 @Component({
   selector: 'app-teams-page',
   templateUrl: './page.component.html',
+  styleUrls: ['../../styles/page.component.scss'],
   providers: [ TeamsPageService, { provide: 'PAGE_TABS', useValue: pageTabs } ]
 })
 export class TeamsPageComponent extends PageComponent<TeamsPageTeam, TabType, NotFound> implements OnInit, OnDestroy {

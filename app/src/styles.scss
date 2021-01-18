@@ -133,18 +133,6 @@
       @apply wsl-btn-lg wsl-btn-light;
     }
   }
-  .wsl-page-head {
-    @apply border-b bg-gray-50;
-    & > div {
-      @apply pt-4 px-4 pb-2 mx-auto container flex items-center text-lg font-medium;
-      nav {
-        @apply flex-grow;
-      }
-      nav + div {
-        @apply space-x-2;
-      }
-    }
-  }
 }
 
 .wsl-min-h-screen-1 {

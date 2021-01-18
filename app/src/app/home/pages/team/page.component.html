@@ -1,7 +1,6 @@
 <app-notification></app-notification>
 <ng-container *ngIf="notFound()">
-  <app-home-notfound
-    [args]="notFound()">
+  <app-home-notfound [args]="notFound()">
   </app-home-notfound>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!team">
@@ -30,25 +29,22 @@
           </li>
         </ol>
       </nav>
-      <div></div>
-      <button type="button" (click)="openCreateModal()" class="wsl-btn-dark"
-        *ngIf="currentTab === TabType.Suites && hasData() && hasItems()">
+      <div>
+        <button type="button" (click)="openCreateModal()" *ngIf="currentTab === TabType.Suites && hasData() && hasItems()" class="wsl-btn-sm wsl-btn-dark">
         <fa-icon icon="plus"></fa-icon>
         New Suite
       </button>
-      <button type="button" (click)="openInviteModal()" class="wsl-btn-dark"
-        *ngIf="currentTab === TabType.Members">
+        <button type="button" (click)="openInviteModal()" *ngIf="currentTab === TabType.Members" class="wsl-btn-sm wsl-btn-dark">
         <fa-icon icon="user-plus"></fa-icon>
         Invite Member
       </button>
+    </div>
     </div>
     <div class="wsl-page-nav">
       <nav>
         <ul>
           <ng-container *ngFor="let tab of tabs">
-            <li *ngIf="tab.shown"
-              [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }"
-              (click)="switchTab(tab.type)">
+            <li *ngIf="tab.shown" (click)="switchTab(tab.type)" [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }">
               <span class="wsl-nav-icon"><fa-icon [icon]="tab.icon"></fa-icon></span>
               <span class="wsl-nav-text">{{ tab.name }}</span>
               <span class="wsl-nav-counter" [hidden]="!tab.counter">{{ tab.counter }}</span>

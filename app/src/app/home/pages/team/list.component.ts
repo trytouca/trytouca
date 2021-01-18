@@ -109,7 +109,8 @@ const filterInput: FilterInput<TeamPageSuite> = {
 
 @Component({
   selector: 'app-team-tab-suites',
-  templateUrl: './list.component.html'
+  templateUrl: './list.component.html',
+  styleUrls: ['../../styles/list.component.scss']
 })
 export class TeamTabSuitesComponent extends PageListComponent<TeamPageSuite> implements OnDestroy {
 
