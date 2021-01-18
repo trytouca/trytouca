@@ -3,7 +3,7 @@
     <div *ngIf="icon" class="wsl-item-status">
       <fa-icon [icon]="icon.type" [spin]="icon.spin" [ngStyle]="{color: icon.color}"></fa-icon>
     </div>
-    <div clas="wsl-item-title">
+    <div class="wsl-item-title">
       <a [routerLink]="data.link" [queryParams]="data.query">
         <h4>{{ data.name }}</h4>
       </a>

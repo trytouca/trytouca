@@ -144,9 +144,9 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
    */
   openCreateModal() {
     this._dialogRef = this.dialogService.open(TeamCreateSuiteComponent, {
-      data: {
-        teamSlug: this.team.slug
-      }
+      closeButton: false,
+      data: { teamSlug: this.team.slug },
+      minHeight: '10vh'
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (state) {
@@ -160,9 +160,9 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
    */
   openInviteModal() {
     this._dialogRef = this.dialogService.open(TeamInviteComponent, {
-      data: {
-        teamSlug: this.team.slug
-      }
+      closeButton: false,
+      data: { teamSlug: this.team.slug },
+      minHeight: '10vh'
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (state) {

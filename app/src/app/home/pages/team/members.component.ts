@@ -51,7 +51,8 @@ const filterInput: FilterInput<TeamPageMember> = {
 
 @Component({
   selector: 'app-team-tab-members',
-  templateUrl: './members.component.html'
+  templateUrl: './members.component.html',
+  styleUrls: ['../../styles/list.component.scss']
 })
 export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> implements OnDestroy {
 

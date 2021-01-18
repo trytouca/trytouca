@@ -1,44 +1,31 @@
-<div class="wsl-modal">
-  <div class="wsl-modal-header">
-    <h4>Invite A New Member</h4>
+<div class="wsl-modal-header">
+  <h4 class="wsl-modal-title">Invite A New Member</h4>
+</div>
+<div class="wsl-modal-body">
+  <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
+    <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
   </div>
-  <div class="wsl-modal-body">
-    <div *ngIf="alert" class="alert" [ngClass]="alert[0]" role="alert">
-      <small [innerHtml]="alert[1]"></small>
+  <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate class="wsl-form">
+    <div>
+      <label for="wsl-name" class="wsl-input-label">Full Name</label>
+      <input type="text" id="wsl-name" tabindex="1" required autocomplete="off" aria-describedby="wsl-name-help" formControlName="name" name="name" class="wsl-input-field">
+      <small id="wsl-slug-help" [hidden]="shouldHideAriaDescription('name')" class="wsl-text-muted">
+        Should contain 3 to 32 alphanumeric characters.
+      </small>
     </div>
-    <form class="wsl-form" [formGroup]="form" novalidate
-      (ngSubmit)="onSubmit(form.value)">
-      <div class="form-group">
-        <label for="wsl-name">Full Name</label>
-        <input type="text"
-          class="form-control" id="wsl-name" tabindex="1"
-          required autocomplete="off"
-          aria-describedby="wsl-name-help"
-          formControlName="name" name="name">
-        <small id="wsl-slug-help" class="text-danger"
-          [hidden]="shouldHideAriaDescription('name')">
-          Should contain 3 to 32 alphanumeric characters.
-        </small>
+    <div>
+      <label for="wsl-email" class="wsl-input-label">Email Address</label>
+      <input type="email" id="wsl-email" tabindex="2" required autocomplete="off" aria-describedby="wsl-email-help" formControlName="email" name="email" class="wsl-input-field">
+      <small id="wsl-email-help" [hidden]="shouldHideAriaDescription('email')" class="wsl-text-muted">
+        Should be a valid email address.
+      </small>
+    </div>
+    <div class="wsl-form-footer">
+      <div class="wsl-form-submit">
+        <button type="submit" tabindex="3" class="wsl-btn-lg wsl-btn-dark">
+          Invite
+        </button>
       </div>
-      <div class="form-group">
-        <label for="wsl-email">Email Address</label>
-        <input type="email"
-          class="form-control" id="wsl-email" tabindex="2"
-          required autocomplete="off"
-          aria-describedby="wsl-email-help"
-          formControlName="email" name="email">
-        <small id="wsl-email-help" class="text-danger"
-          [hidden]="shouldHideAriaDescription('email')">
-          Should be a valid email address.
-        </small>
-      </div>
-      <div class="wsl-form-footer">
-        <div class="wsl-form-submit">
-          <button type="submit" class="wsl-btn-dark" tabindex="3">
-            Invite
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>

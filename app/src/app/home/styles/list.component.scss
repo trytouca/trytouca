@@ -26,8 +26,6 @@
       }
     }
   }
-  .wsl-list {
-  }
   .wsl-list-body {
     @apply divide-y border-t border-b;
     li {
@@ -38,8 +36,11 @@
     }
   }
   .wsl-list-head {
+    h2 {
+      @apply pt-4 pb-1 text-xl font-medium;
+    }
     p {
-      @apply pb-2 text-gray-100;
+      @apply pb-2 text-gray-500 text-xs;
     }
   }
 }
