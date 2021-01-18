@@ -1,0 +1,30 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@layer utilities {
+  section {
+    @apply px-4 mx-auto container;
+    h2 {
+      @apply pt-4 pb-1 text-xl font-medium;
+    }
+  }
+  .wsl-settings {
+    @apply grid gap-4 lg:grid-cols-2;
+    .wsl-settings-section {
+      @apply p-4 bg-gray-50;
+      h3 {
+        @apply mb-2 pb-2 text-lg font-medium border-b;
+      }
+      b {
+        @apply font-medium;
+      }
+      p {
+        @apply mb-4 text-sm;
+      }
+    }
+    .wsl-settings-image {
+      @apply p-4;
+    }
+  }
+}

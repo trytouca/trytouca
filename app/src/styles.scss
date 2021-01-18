@@ -37,6 +37,9 @@
   .wsl-btn-dark {
     @apply bg-lblue-600 text-white font-medium shadow-md hover:bg-lblue-700 duration-150 ease-in-out;
   }
+  .wsl-btn-danger {
+    @apply bg-red-600 text-white font-medium shadow-md hover:bg-red-700 duration-150 ease-in-out;
+  }
   .wsl-btn-light {
     @apply bg-lblue-100 text-lblue-700 shadow-sm hover:bg-lblue-200;
   }
