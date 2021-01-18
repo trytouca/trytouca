@@ -9,16 +9,16 @@
       @apply pt-4 px-4 pb-2 mx-auto container flex items-center text-lg font-medium;
       nav {
         @apply flex-grow;
+        ol {
+          @apply flex space-x-4;
+        }
       }
       nav + div {
         @apply space-x-2;
       }
     }
     .wsl-page-nav {
-      @apply mx-auto container flex;
-      nav {
-        @apply flex-grow;
-      }
+      @apply mx-auto container flex justify-between;
       ul {
         @apply flex;
       }

@@ -59,7 +59,8 @@ const filterInput: FilterInput<SuitePageItem> = {
 
 @Component({
   selector: 'app-suite-tab-batches',
-  templateUrl: './list.component.html'
+  templateUrl: './list.component.html',
+  styleUrls:['../../styles/list.component.scss']
 })
 export class SuiteListBatchesComponent extends PageListComponent<SuitePageItem> implements OnDestroy {
 

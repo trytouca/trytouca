@@ -57,6 +57,7 @@ type Fields = Partial<{
 @Component({
   selector: 'app-suite-page',
   templateUrl: './page.component.html',
+  styleUrls: ['../../styles/page.component.scss'],
   providers: [ SuitePageService, { provide: 'PAGE_TABS', useValue: pageTabs } ]
 })
 export class SuitePageComponent extends PageComponent<SuitePageItem, SuitePageTabType, NotFound> implements OnInit, OnDestroy {

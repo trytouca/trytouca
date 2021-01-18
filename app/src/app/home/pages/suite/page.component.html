@@ -1,7 +1,6 @@
 <app-notification></app-notification>
 <ng-container *ngIf="notFound()">
-  <app-home-notfound
-    [args]="notFound()">
+  <app-home-notfound [args]="notFound()">
   </app-home-notfound>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!suite">
@@ -35,33 +34,20 @@
       <nav>
         <ul>
           <ng-container *ngFor="let tab of tabs">
-            <li *ngIf="tab.shown"
-              [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }"
-              (click)="switchTab(tab.type)">
+            <li *ngIf="tab.shown" (click)="switchTab(tab.type)">
               <span class="wsl-nav-icon"><fa-icon [icon]="tab.icon"></fa-icon></span>
               <span class="wsl-nav-text">{{ tab.name }}</span>
-              <span class="wsl-nav-counter" [hidden]="!tab.counter">{{ tab.counter }}</span>
+              <span *ngIf="tab.counter" class="wsl-nav-counter">{{ tab.counter }}</span>
             </li>
           </ng-container>
         </ul>
       </nav>
-      <div></div>
       <nav>
         <ul>
           <li (click)="toggleSubscription()">
-            <span class="wsl-nav-icon">
-              <fa-icon icon="bell"></fa-icon>
-            </span>
-            <span class="wsl-nav-text"
-              [title]="fields.subscribe?.title"
-              [hidden]="!fields.subscribe?.name">
-              {{ fields.subscribe?.name }}
-            </span>
-            <span class="wsl-nav-counter"
-              title="{{ fields.subscribe?.count }} users have subscribed to this suite."
-              [hidden]="fields.subscribe?.count === 0">
-              {{ fields.subscribe?.count }}
-            </span>
+            <span class="wsl-nav-icon"><fa-icon icon="bell"></fa-icon></span>
+            <span [title]="fields.subscribe?.title" [hidden]="!fields.subscribe?.name" class="wsl-nav-text">{{ fields.subscribe?.name }}</span>
+            <span title="{{ fields.subscribe?.count }} users have subscribed to this suite." [hidden]="fields.subscribe?.count === 0" class="wsl-nav-counter">{{ fields.subscribe?.count }}</span>
           </li>
         </ul>
       </nav>

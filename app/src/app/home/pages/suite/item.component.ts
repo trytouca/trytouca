@@ -27,6 +27,7 @@ type Meta = Partial<{
 @Component({
   selector: 'app-suite-item-batch',
   templateUrl: './item.component.html',
+  styleUrls: ['../../styles/item.component.scss'],
   providers: [
     DurationPipe,
     I18nPluralPipe,

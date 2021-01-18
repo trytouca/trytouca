@@ -5,8 +5,7 @@
     <div *ngIf="countShownRows(ItemType.Suite)" class="wsl-list">
       <div class="wsl-list-head">
         <p *ngIf="countShownRows(ItemType.Suite) !== countRows(ItemType.Suite)">
-          You are viewing <b>{{ countShownRows(ItemType.Suite) | i18nPlural: { '=1': 'one', 'other': '#' } }}</b>
-          of {{ countRows(ItemType.Suite) }} suites.
+          You are viewing <b>{{ countShownRows(ItemType.Suite) | i18nPlural: { '=1': 'one', 'other': '#' } }}</b> of {{ countRows(ItemType.Suite) }} suites.
         </p>
       </div>
       <ul class="wsl-list-body">
