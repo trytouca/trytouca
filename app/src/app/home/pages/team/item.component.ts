@@ -28,6 +28,7 @@ type Meta = Partial<{
 @Component({
   selector: 'app-team-item-suite',
   templateUrl: './item.component.html',
+  styleUrls: ['../../styles/item.component.scss'],
   providers: [
     DurationPipe,
     I18nPluralPipe,

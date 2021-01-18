@@ -4,7 +4,7 @@
 
 @layer utilities {
   .wsl-list-item {
-    @apply py-4 sm:px-2 md:px-6;
+    @apply py-4 sm:px-2 md:px-6 md:flex md:justify-between;
   }
   .wsl-item-heading {
     @apply flex;
@@ -21,7 +21,9 @@
     }
   }
   .wsl-item-topics {
+    @apply flex flex-row text-sm space-x-2 md:leading-8;
   }
   .wsl-item-topic {
+    @apply text-gray-500 select-none;
   }
 }
