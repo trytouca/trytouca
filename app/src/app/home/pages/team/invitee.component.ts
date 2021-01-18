@@ -10,7 +10,7 @@ import { TeamInvitee } from '@weasel/core/models/commontypes';
 @Component({
   selector: 'app-team-item-invitee',
   templateUrl: './invitee.component.html',
-  styleUrls: ['./row.component.scss']
+  styleUrls: ['../../styles/item.component.scss']
 })
 export class TeamItemInviteeComponent {
 

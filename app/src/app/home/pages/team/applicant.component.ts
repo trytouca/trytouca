@@ -10,7 +10,7 @@ import { TeamApplicant } from '@weasel/core/models/commontypes';
 @Component({
   selector: 'app-team-item-applicant',
   templateUrl: './applicant.component.html',
-  styleUrls: ['./row.component.scss']
+  styleUrls: ['../../styles/item.component.scss']
 })
 export class TeamItemApplicantComponent {
 

@@ -7,23 +7,38 @@
     @apply py-4 sm:px-2 md:px-6 md:flex md:justify-between;
   }
   .wsl-item-heading {
-    @apply flex;
+    @apply flex space-x-4;
   }
   .wsl-item-status {
-    @apply leading-8 mr-2;
+    @apply leading-8;
   }
   .wsl-item-title {
     a {
       @apply text-blue-500;
     }
     h4 {
-      @apply leading-8 text-base font-medium;
+      @apply text-base font-medium leading-8;
     }
   }
+  .wsl-item-subtitle {
+    @apply text-xs text-gray-500 leading-8;
+  }
   .wsl-item-topics {
-    @apply flex flex-row text-sm space-x-2 md:leading-8;
+    @apply flex flex-row text-xs space-x-4 md:leading-8;
   }
   .wsl-item-topic {
     @apply text-gray-500 select-none;
+  }
+  .wsl-item-ctrl-box {
+    @apply flex flex-row-reverse text-sm leading-8;
+    .wsl-item-ctrl {
+      @apply px-2 cursor-pointer;
+      fa-icon {
+        @apply text-blue-100 text-lg;
+      }
+      &:hover fa-icon {
+        @apply text-blue-400;
+      }
+    }
   }
 }

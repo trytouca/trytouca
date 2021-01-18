@@ -16,7 +16,7 @@ type Topic = string;
 @Component({
   selector: 'app-team-item-member',
   templateUrl: './member.component.html',
-  styleUrls: ['./row.component.scss']
+  styleUrls: ['../../styles/item.component.scss']
 })
 export class TeamItemMemberComponent {
 

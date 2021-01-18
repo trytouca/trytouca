@@ -1,7 +1,7 @@
 <div class="wsl-list-item">
   <div class="wsl-item-heading">
     <div class="wsl-item-status">
-      <fa-icon icon="user"></fa-icon>
+      <fa-icon icon="user" class="text-lblue-600"></fa-icon>
     </div>
     <div class="wsl-item-title">
       <h4>{{ item.fullname }}</h4>
@@ -10,14 +10,12 @@
       {{ item.email }}
     </div>
   </div>
-  <div class="d-flex">
-    <div class="wsl-item-topics">
-      <div class="wsl-item-topic">
-        {{ item.invitedAt | amTimeAgo }}
-      </div>
+  <div class="wsl-item-topics">
+    <div class="wsl-item-topic">
+      {{ item.invitedAt | amTimeAgo }}
     </div>
-    <div class="wsl-item-ctrl-box wsl-screen-only" *ngIf="isTeamAdmin">
-      <div class="wsl-item-ctrl" title="Rescind Invitation to Team" (click)="rescind()">
+    <div *ngIf="isTeamAdmin" class="wsl-item-ctrl-box">
+      <div title="Rescind Invitation to Team" (click)="rescind()" class="wsl-item-ctrl">
         <fa-icon icon="user-minus"></fa-icon>
       </div>
     </div>
