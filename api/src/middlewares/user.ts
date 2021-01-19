@@ -113,7 +113,13 @@ export async function isAuthenticated(
     token: req.signedCookies.authToken
   })
   if (!user) {
-    return res.clearCookie('authToken').status(401).json({
+    res.clearCookie('authToken', {
+      httpOnly: true,
+      path: '/',
+      secure: false,
+      signed: true
+    })
+    return res.status(401).json({
       errors: [ 'auth failed' ]
     })
   }
