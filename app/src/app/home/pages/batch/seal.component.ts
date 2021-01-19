@@ -15,14 +15,12 @@ enum Alerts {
 }
 
 @Component({
-  selector: 'app-elements-seal',
   templateUrl: './seal.component.html',
-  styleUrls: ['./modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BatchSealComponent extends ModalComponent {
 
-  public batch: BatchLookupResponse;
+  elements: { batch: BatchLookupResponse };
 
   /**
    *
@@ -33,6 +31,7 @@ export class BatchSealComponent extends ModalComponent {
   ) {
     super();
     super.form = new FormGroup({});
+    this.elements = dialogRef.data as { batch: BatchLookupResponse };
   }
 
   /**
@@ -43,7 +42,12 @@ export class BatchSealComponent extends ModalComponent {
       return;
     }
     this.submitted = true;
-    const url = [ 'batch', this.batch.teamSlug, this.batch.suiteSlug, this.batch.batchSlug, 'seal' ].join('/');
+    const url = [ 'batch',
+      this.elements.batch.teamSlug,
+      this.elements.batch.suiteSlug,
+      this.elements.batch.batchSlug,
+      'seal'
+    ].join('/');
     this.apiService.post(url).subscribe(
       () => {
         this.form.reset();
@@ -73,7 +77,7 @@ export class BatchSealComponent extends ModalComponent {
    */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
-    super.keydownGuard(['j', 'k', 's', 'Enter', 'Escape', 'Backspace'], event);
+    super.keydownGuard(['j', 'k', 'Enter', 'Escape', 'Backspace'], event);
   }
 
 }
