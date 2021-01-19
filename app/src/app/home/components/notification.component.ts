@@ -8,8 +8,11 @@ import { NotificationService, NotificationType } from '@weasel/core/services';
 
 @Component({
   selector: 'app-notification',
-  templateUrl: './notification.component.html',
-  styleUrls: ['./notification.component.scss']
+  template: `
+    <div [hidden]="!showNotification" role="alert" class="wsl-alert fixed top-20 right-4 text-sm" [ngClass]="alertType">
+      {{ message }}
+    </div>
+  `
 })
 export class NotificationComponent implements OnDestroy {
 

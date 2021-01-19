@@ -13,7 +13,6 @@ import { AuthService, UserService } from '@weasel/core/services';
 
 @Component({
   selector: 'app-header-inside',
-  styleUrls: ['./header-inside.component.scss'],
   templateUrl: './header-inside.component.html'
 })
 export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
