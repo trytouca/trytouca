@@ -10,8 +10,7 @@ import { AlertService, AuthService, UserService, Alert, AlertKind } from '@wease
 
 @Component({
   selector: 'app-page-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  templateUrl: './home.component.html'
 })
 export class HomeComponent {
 
