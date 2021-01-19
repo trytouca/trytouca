@@ -2,93 +2,51 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@use "../../../styles/weaselcss.scss";
-
-.wsl-batches-first {
-  @include weaselcss.weasel-banner-page(weaselcss.$weasel-page-head-min-height);
-  .wsl-batches-first-head {
-    display: grid;
-    grid-template-columns: 4fr 3fr;
-  }
-  .wsl-batches-first-left {
-    padding: 2rem;
-    & > div {
-      margin-bottom: 1rem;
+@layer utilities {
+  .wsl-batches-first {
+    @apply mx-auto container flex items-center;
+    .wsl-batches-first-head {
+      @apply md:grid md:grid-cols-7;
     }
-    .wsl-batches-first-form {
-      .wsl-input-group {
-        display: grid;
-        grid-template-columns: 2fr 12fr 1fr;
-        margin-bottom: 0.75rem;
-        .wsl-input-group-prepend {
-          background-color: weaselcss.weasel-color("background-lightgray");
-          border-color: #ccc;
-          border-radius: 0.25rem 0 0 0.25rem;
-          border-style: solid;
-          border-width: 1px 0 1px 1px;
-          font-size: small;
-          font-weight: 500;
-          padding: 0.5rem;
-          text-align: center;
-          white-space: nowrap;
+    .wsl-batches-first-left {
+      @apply p-8 md:col-span-4;
+      & > div {
+        @apply mb-4;
+      }
+      .wsl-batches-first-form {
+        .wsl-input-group {
+          @apply mb-3 flex w-full;
+          .wsl-input-group-prepend {
+            @apply p-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l text-xs font-medium whitespace-nowrap;
+          }
+          .wsl-input-group-text {
+            @apply px-2 flex flex-grow items-center bg-white border border-gray-300 text-pink-500 text-xs font-mono overflow-x-auto;
+          }
+          .wsl-input-group-append {
+            @apply p-2 flex justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r text-xs font-medium cursor-pointer hover:bg-gray-200;
+          }
         }
-        .wsl-input-group-text {
-          align-items: center;
-          border-color: #ccc;
-          border-style: solid;
-          border-width: 1px;
-          color: deeppink;
-          display: flex;
-          font-family: monospace;
-          padding: 0 0.5rem;
+      }
+      .wsl-client-libraries {
+        & > div {
+          @apply grid gap-4;
+          grid-template-columns: repeat(4, minmax(auto, 100px));
         }
-        .wsl-input-group-append {
-          background-color: weaselcss.weasel-color("background-lightgray");
-          border-color: #ccc;
-          border-radius: 0 0.25rem 0.25rem 0;
-          border-style: solid;
-          border-width: 1px 1px 1px 0;
-          cursor: pointer;
-          display: flex;
-          font-size: small;
-          font-weight: 500;
-          justify-content: center;
-          padding: 0.5rem;
+        .wsl-client-library {
+          @apply p-4 bg-gray-50 border border-gray-200 rounded-md;
+          img {
+            @apply w-full;
+          }
           &:hover {
-            background-color: #eee;
+            @apply bg-gray-100;
           }
         }
       }
     }
-    .wsl-client-libraries {
-      & > a {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(auto, 100px));
-        grid-gap: 1rem;
-      }
-      .wsl-client-library {
-        background-color: weaselcss.weasel-color("background-lightgray");
-        border: 1px solid weaselcss.weasel-color("border-gray");
-        border-radius: 0.5rem;
-        padding: 1rem;
-        img {
-          width: 100%;
-        }
-        &:hover {
-          background-color: #eee;
-        }
-      }
-    }
-  }
-  .wsl-batches-first-right {
-    display: none;
-    @media (min-width: #{weaselcss.$weasel-breakpoint-md}) {
-      align-items: center;
-      display: flex;
-      justify-content: center;
+    .wsl-batches-first-right {
+      @apply hidden md:col-span-3 md:flex md:items-center md:justify-center;
       img {
-        width: 75%;
-        margin: 0 auto;
+        @apply md:w-3/4 md:mx-auto
       }
     }
   }

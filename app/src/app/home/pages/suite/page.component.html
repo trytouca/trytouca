@@ -34,7 +34,7 @@
       <nav>
         <ul>
           <ng-container *ngFor="let tab of tabs">
-            <li *ngIf="tab.shown" (click)="switchTab(tab.type)">
+            <li *ngIf="tab.shown" (click)="switchTab(tab.type)" [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }">
               <span class="wsl-nav-icon"><fa-icon [icon]="tab.icon"></fa-icon></span>
               <span class="wsl-nav-text">{{ tab.name }}</span>
               <span *ngIf="tab.counter" class="wsl-nav-counter">{{ tab.counter }}</span>

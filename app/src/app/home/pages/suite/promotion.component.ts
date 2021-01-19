@@ -7,8 +7,7 @@ import type { PromotionItem } from '@weasel/core/models/frontendtypes';
 
 @Component({
   selector: 'app-suite-item-promotion',
-  templateUrl: './promotion.component.html',
-  styleUrls: ['./promotion.component.scss']
+  templateUrl: './promotion.component.html'
 })
 export class SuiteItemPromotionComponent {
 

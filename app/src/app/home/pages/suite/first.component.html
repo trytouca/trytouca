@@ -1,10 +1,10 @@
-<div class="wsl-batches-first">
+<div class="wsl-batches-first wsl-min-h-screen-3">
   <div class="wsl-batches-first-head">
     <div class="wsl-batches-first-left">
-      <div class="wsl-batches-first-form" *ngIf="fields">
-        <h2>Submit Your First Version</h2>
+      <div *ngIf="fields" class="wsl-batches-first-form">
+        <h2 class="mb-2 text-3xl font-medium">Submit Your First Version</h2>
         <div>
-          <p>
+          <p class="mb-4">
             We are all set! Use the following values when configuring Weasel
             in your regression test application to submit testresults to this
             suite.
@@ -32,18 +32,20 @@
         </div>
       </div>
       <div class="wsl-client-libraries">
-        <h4>Client Libraries</h4>
-        <p>
+        <h4 class="mb-2 text-2xl font-medium">Client Libraries</h4>
+        <p class="mb-4">
           Weasel offers open-source client libraries for the following
           languages. Click on your desired language for instructions to
           obtain the appropriate library, integrate it with your application
           and use it to submit results to the platform.
         </p>
-        <a href="/docs/clients/cpp/index.html" target="_blank">
-          <div class="wsl-client-library">
-            <img src="./assets/exticons/client-cpp.svg" />
-          </div>
-        </a>
+        <div>
+          <a href="/docs/clients/cpp/index.html" target="_blank">
+            <div class="wsl-client-library">
+              <img src="./assets/exticons/client-cpp.svg" />
+            </div>
+          </a>
+        </div>
       </div>
     </div>
     <div class="wsl-batches-first-right">
