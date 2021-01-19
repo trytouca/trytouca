@@ -1,7 +1,6 @@
 <app-notification></app-notification>
 <ng-container *ngIf="notFound()">
-  <app-home-notfound
-    [args]="notFound()">
+  <app-home-notfound [args]="notFound()">
   </app-home-notfound>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!batch">
@@ -9,22 +8,19 @@
     <div class="wsl-page-head-content">
       <nav aria-label="breadcrumb">
         <ol>
-          <li>
-            <a routerLink="../..">{{ batch?.teamName }}</a>
-          </li>
-          <li>
-            <a routerLink="..">{{ batch?.suiteName }}</a>
-          </li>
-          <li class="wsl-dropdown active" aria-current="page" ngbDropdown>
+          <li><a routerLink="../..">{{ batch?.teamName }}</a></li>
+          <li><a routerLink="..">{{ batch?.suiteName }}</a></li>
+          <li class="active" aria-current="page">
             <span>{{ batch?.batchSlug }}</span>
           </li>
         </ol>
       </nav>
-      <div></div>
-      <button *ngFor="let button of buttons" class="wsl-btn-dark"
-        type="button" (click)="button.click()" [title]="button.title">
-        {{ button.text }}
-      </button>
+      <div>
+        <button *ngFor="let button of buttons" class="wsl-btn-sm wsl-btn-dark"
+          type="button" (click)="button.click()" [title]="button.title">
+          {{ button.text }}
+        </button>
+      </div>
     </div>
     <div class="wsl-page-nav">
       <nav>
@@ -42,7 +38,7 @@
       </nav>
     </div>
   </div>
-  <div class="wsl-page-tab" [hidden]="currentTab !== TabType.Elements">
+  <div [hidden]="currentTab !== TabType.Elements">
     <ng-container *ngIf="suite && params">
       <app-home-version-navigator
         [suite]="suite"
@@ -62,7 +58,7 @@
       </app-batch-list-elements>
     </div>
   </div>
-  <div class="wsl-page-tab" [hidden]="currentTab !== TabType.Comments">
+  <div [hidden]="currentTab !== TabType.Comments">
     <app-batch-tab-comments>
     </app-batch-tab-comments>
   </div>
