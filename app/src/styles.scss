@@ -67,21 +67,6 @@
 }
 
 @layer utilities {
-  header {
-    @apply mx-auto container;
-    & > div {
-      @apply h-16 px-4 flex items-stretch justify-between;
-    }
-    h1 {
-      @apply text-2xl text-lblue-600 font-light tracking-tight;
-    }
-    nav {
-      @apply flex items-center space-x-4;
-    }
-    .wsl-logo {
-      @apply flex items-center;
-    }
-  }
   .wsl-form {
     @apply space-y-4;
   }

@@ -1,16 +1,14 @@
 <footer class="bg-lblue-800">
-  <div class="mx-auto container">
-    <div class="h-24 px-12 flex items-center justify-between">
-      <p class="text-white text-sm">
-        &copy; {{ today | date: 'yyyy' }} Pejman Ghorbanzade
-      </p>
-      <ul class="flex space-x-4">
-        <li *ngFor="let item of social" title="{{ item.title }}">
-          <a href="{{ item.link }}" target="_blank">
-            <fa-icon [icon]="item.icon" size="2x" class="text-gray-300 hover:text-white"></fa-icon>
-          </a>
-        </li>
-      </ul>
-    </div>
+  <div class="h-24 px-12 mx-auto container flex items-center justify-between">
+    <p class="text-white text-sm">
+      &copy; {{ today | date: 'yyyy' }} Pejman Ghorbanzade
+    </p>
+    <ul class="flex space-x-4">
+      <li *ngFor="let item of social" title="{{ item.title }}">
+        <a href="{{ item.link }}" target="_blank">
+          <fa-icon class="text-gray-300 hover:text-white" [icon]="item.icon" size="2x"></fa-icon>
+        </a>
+      </li>
+    </ul>
   </div>
 </footer>

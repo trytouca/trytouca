@@ -1,14 +1,12 @@
-<header>
-  <div>
-    <div class="wsl-logo">
-      <a [routerLink]="'/'">
-        <h1>Weasel</h1>
-      </a>
-    </div>
-    <nav>
-      <a routerLink="/docs" routerLinkActive="active" class="wsl-btn-lg wsl-btn-transparent">Docs</a>
-      <a [hidden]="!isLoggedIn()" [routerLink]="homeLink()" routerLinkActive="active" class="wsl-btn-lg wsl-btn-dark">Home</a>
-      <a [hidden]="isLoggedIn()" [routerLink]="'/signup'" routerLinkActive="active" class="wsl-btn-lg wsl-btn-dark">Get Started</a>
-    </nav>
+<header class="h-16 mx-auto container flex">
+  <div class="flex flex-grow items-center">
+    <a [routerLink]="'/'">
+      <h1 class="text-2xl text-lblue-600 font-light tracking-tight">Weasel</h1>
+    </a>
   </div>
+  <nav class="flex items-center space-x-4">
+    <a class="wsl-btn-lg wsl-btn-transparent" routerLinkActive="active" routerLink="/docs">Docs</a>
+    <a class="wsl-btn-lg wsl-btn-dark" routerLinkActive="active" routerLink="/signup" [hidden]="isLoggedIn()">Get Started</a>
+    <a class="wsl-btn-lg wsl-btn-dark" routerLinkActive="active" [routerLink]="homeLink()" [hidden]="!isLoggedIn()">Home</a>
+  </nav>
 </header>
