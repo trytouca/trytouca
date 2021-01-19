@@ -1,46 +1,39 @@
-<div class="wsl-modal wsl-custom-modal">
-  <div class="wsl-modal-header">
-    <h4>Promote Version {{ batch.batchSlug }}</h4>
+<div class="wsl-modal-header">
+  <h4 class="wsl-modal-title">Promote Version {{ elements.batch.batchSlug }}</h4>
+</div>
+<div class="wsl-modal-body">
+  <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
+    <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
   </div>
-  <div class="wsl-modal-body">
-    <div *ngIf="alert" class="alert" [ngClass]="alert[0]" role="alert">
-      <small [innerHtml]="alert[1]"></small>
+  <p class="mb-2 text-sm">
+    You are about to promote version <strong>{{ elements.batch.batchSlug }}</strong>
+    to baseline of suite <strong>{{ elements.batch.suiteName }}</strong>. This
+    action makes test results of any future version of this Suite to be
+    compared with test results of version {{ elements.batch.batchSlug }}.
+  </p>
+  <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate>
+    <div>
+      <label class="wsl-input-label" for="wsl-reason">Promotion Reason (Optional)</label>
+      <textarea class="wsl-input-field" id="wsl-reason" rows="5" tabindex="1" aria-describedby="wsl-body-help" formControlName="reason" name="reason" placeholder="Leave a note for your colleagues to explain why you are promoting this version.">
+      </textarea>
+      <small class="wsl-text-danger" id="wsl-reason-help" [hidden]="shouldHideAriaDescription('reason')">
+        Please provide more information in your message.
+      </small>
+      <small class="wsl-text-muted" [hidden]="!form.controls.reason.pristine && !form.controls.reason.valid">
+        This field supports markdown format.
+      </small>
     </div>
-    <p>You are about to promote version <strong>{{ batch.batchSlug }}</strong>
-      to baseline of testsuite <strong>{{ batch.suiteName }}</strong>. This
-      action makes testresults of any future version of this testsuite to be
-      compared with testresults of version {{ batch.batchSlug }}.
-    </p>
-    <form class="wsl-form" [formGroup]="form" novalidate
-      (ngSubmit)="onSubmit(form.value)">
-      <div class="form-group">
-        <label for="wsl-reason">Promotion Reason (Optional)</label>
-        <textarea class="form-control" id="wsl-reason" rows="5" tabindex="1"
-          aria-describedby="wsl-body-help"
-          formControlName="reason" name="reason"
-          placeholder="Leave a note for your colleagues to explain why you are promoting this version.">
-        </textarea>
-        <small id="wsl-reason-help" class="text-danger"
-            [hidden]="shouldHideAriaDescription('reason')">
-          Please provide more information in your message.
-        </small>
-        <small class="text-muted"
-              [hidden]="!form.controls.reason.pristine && !form.controls.reason.valid">
-          This field supports markdown format.
-        </small>
+    <div class="wsl-form-footer">
+      <div class="wsl-form-submit">
+        <button type="submit" tabindex="2" class="wsl-btn-lg wsl-btn-dark">
+          Promote
+        </button>
       </div>
-      <div class="wsl-form-footer">
-        <div class="wsl-form-submit">
-          <button type="submit" class="wsl-btn-dark" tabindex="2">
-            Promote
-          </button>
-        </div>
-        <div class="wsl-form-links">
-          <button type="button" (click)="closeModal()" class="wsl-btn-link" tabindex="3">
-            Cancel
-          </button>
-        </div>
+      <div class="wsl-form-links">
+        <button type="button" (click)="closeModal()" tabindex="3" class="wsl-btn-lg wsl-btn-light">
+          Cancel
+        </button>
       </div>
-    </form>
-  </div>
+    </div>
+  </form>
 </div>

@@ -276,9 +276,9 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
    */
   private openSealModal() {
     this._dialogRefSeal = this.dialogService.open(BatchSealComponent, {
-      data: {
-        batch: this.batch
-      }
+      closeButton: false,
+      data: { batch: this.batch },
+      minHeight: '10vh'
     });
     this._dialogSubSeal = this._dialogRefSeal.afterClosed$.subscribe((state: boolean) => {
       if (state) {
@@ -293,9 +293,9 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
    */
   private openPromoteModal() {
     this._dialogRefPromote = this.dialogService.open(BatchPromoteComponent, {
-      data: {
-        batch: this.batch
-      }
+      closeButton: false,
+      data: { batch: this.batch },
+      minHeight: '10vh'
     });
     this._dialogSubPromote = this._dialogRefPromote.afterClosed$.subscribe((state: boolean) => {
       if (state) {

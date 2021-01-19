@@ -19,14 +19,12 @@ enum Alerts {
 }
 
 @Component({
-  selector: 'app-elements-promote',
   templateUrl: './promote.component.html',
-  styleUrls: ['./modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BatchPromoteComponent extends ModalComponent {
 
-  public batch: BatchLookupResponse;
+  elements: { batch: BatchLookupResponse };
 
   /**
    *
@@ -44,6 +42,7 @@ export class BatchPromoteComponent extends ModalComponent {
         updateOn: 'blur'
       })
     });
+    this.elements = dialogRef.data as { batch: BatchLookupResponse };
   }
 
   /**
@@ -55,7 +54,12 @@ export class BatchPromoteComponent extends ModalComponent {
     }
     this.submitted = true;
     const body = { reason: model.reason || '' };
-    const url = [ 'batch', this.batch.teamSlug, this.batch.suiteSlug, this.batch.batchSlug, 'promote' ].join('/');
+    const url = [ 'batch',
+      this.elements.batch.teamSlug,
+      this.elements.batch.suiteSlug,
+      this.elements.batch.batchSlug,
+      'promote'
+    ].join('/');
     this.apiService.post(url, body).subscribe(
       () => {
         this.form.reset();
@@ -85,7 +89,7 @@ export class BatchPromoteComponent extends ModalComponent {
    */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
-    super.keydownGuard(['j', 'k', 'p', 'Enter', 'Escape', 'Backspace'], event);
+    super.keydownGuard(['j', 'k', 'Enter', 'Escape', 'Backspace'], event);
   }
 
 }
