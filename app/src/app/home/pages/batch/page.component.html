@@ -40,17 +40,14 @@
   </div>
   <div [hidden]="currentTab !== TabType.Elements">
     <ng-container *ngIf="suite && params">
-      <app-home-version-navigator
-        [suite]="suite"
-        [params]="params">
+      <app-home-version-navigator [suite]="suite" [params]="params">
       </app-home-version-navigator>
     </ng-container>
     <div class="wsl-spinner" [hidden]="hasData() && hasItems()">
       <span><fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></span>
     </div>
     <div *ngIf="overview" [hidden]="!hasData() || !hasItems()">
-      <app-home-page-overview
-        [inputs]="overview">
+      <app-home-page-overview [inputs]="overview">
       </app-home-page-overview>
     </div>
     <div [hidden]="!hasData() || !hasItems()">

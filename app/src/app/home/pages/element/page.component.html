@@ -1,12 +1,11 @@
 <app-notification></app-notification>
 <ng-container *ngIf="notFound()">
-  <app-home-notfound
-    [args]="notFound()">
+  <app-home-notfound [args]="notFound()">
   </app-home-notfound>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!element || !batch">
-  <div class="wsl-error-bar" *ngIf="customAlert">
-    <div class="alert" [ngClass]="customAlert.type" role="alert">
+  <div *ngIf="customAlert">
+    <div role="alert" class="wsl-alert" [ngClass]="customAlert.type">
       <small [innerHTML]="customAlert.message"></small>
     </div>
   </div>
@@ -14,19 +13,15 @@
     <div class="wsl-page-head-content">
       <nav aria-label="breadcrumb">
         <ol>
-          <li>
-            <a routerLink="../../..">{{ element?.teamName }}</a>
-          </li>
-          <li>
-            <a routerLink="../..">{{ element?.suiteName }}</a>
-          </li>
+          <li><a routerLink="../../..">{{ element?.teamName }}</a></li>
+          <li><a routerLink="../..">{{ element?.suiteName }}</a></li>
           <li>
             <a routerLink=".." [queryParams]="findPreviousPageQueryParams()">
               {{ batch?.batchSlug }}
             </a>
           </li>
           <li class="active" aria-current="page">
-            <span>{{ element?.elementName }}</span>
+            {{ element?.elementName }}
           </li>
         </ol>
       </nav>
@@ -47,19 +42,16 @@
       </nav>
     </div>
   </div>
-  <div class="wsl-page-tab">
+  <div>
     <ng-container *ngIf="suite && params">
-      <app-home-version-navigator
-        [suite]="suite"
-        [params]="params">
+      <app-home-version-navigator [suite]="suite" [params]="params">
       </app-home-version-navigator>
     </ng-container>
     <div class="wsl-spinner" [hidden]="hasData() && hasItems()">
       <span><fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></span>
     </div>
     <div *ngIf="overview" [hidden]="!hasData() || !hasItems()">
-      <app-home-page-overview
-        [inputs]="overview">
+      <app-home-page-overview [inputs]="overview">
       </app-home-page-overview>
     </div>
     <div [hidden]="currentTab !== TabType.Results || !hasData() || !hasItems()">
