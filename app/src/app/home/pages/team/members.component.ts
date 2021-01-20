@@ -145,11 +145,13 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
   confirmEdit(member: TeamMember): void {
     const newRoleName = member.role === ETeamRole.Member ? 'an Administrator' : 'a Member';
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      closeButton: false,
       data: {
         title: `Make ${member.fullname} ${newRoleName}`,
         message: `<p>Are you sure you want to change <em>${member.fullname}</em>'s role to ${newRoleName}?</p>`,
         button: 'Change Role'
-      }
+      },
+      minHeight: '10vh'
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (!state) {
@@ -164,11 +166,13 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
    */
   confirmRemove(member: TeamMember): void {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      closeButton: false,
       data: {
         title: 'Remove Member from Team',
         message: `<p>Are you sure you want to remove <em>${member.fullname}</em> from your team?</p>`,
         button: 'Remove'
-      }
+      },
+      minHeight: '10vh'
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (!state) {
@@ -183,11 +187,13 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
    */
   confirmRescind(invitee: TeamInvitee): void {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      closeButton: false,
       data: {
         title: 'Rescind Invitation',
         message: `<p>Are you sure you want to rescind <em>${invitee.fullname}</em>'s invitation?</p>`,
         button: 'Rescind'
-      }
+      },
+      minHeight: '10vh'
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (!state) {
@@ -202,11 +208,13 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
    */
   confirmAccept(applicant: TeamApplicant): void {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      closeButton: false,
       data: {
         title: 'Accept Join Request',
         message: `<p>Are you sure you want to accept <em>${applicant.fullname}</em>'s request to join your team?</p>`,
         button: 'Accept'
-      }
+      },
+      minHeight: '10vh'
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (!state) {
@@ -221,11 +229,13 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
    */
   confirmDecline(applicant: TeamApplicant): void {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      closeButton: false,
       data: {
         title: 'Decline Join Request',
         message: `<p>Are you sure you want to decline <em>${applicant.fullname}</em>'s request to join your team?</p>`,
         button: 'Decline'
-      }
+      },
+      minHeight: '10vh'
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (!state) {

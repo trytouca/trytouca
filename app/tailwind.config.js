@@ -22,6 +22,9 @@ module.exports = (isProd) => ({
           screens: {
             lg: '1200px'
           }
+        },
+        screens: {
+          'print': {'raw': 'print'}
         }
       }
     },

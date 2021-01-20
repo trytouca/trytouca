@@ -29,7 +29,7 @@
           </li>
         </ol>
       </nav>
-      <div>
+      <div class="print:hidden">
         <button type="button" (click)="openCreateModal()" *ngIf="currentTab === TabType.Suites && hasData() && hasItems()" class="wsl-btn-sm wsl-btn-dark">
         <fa-icon icon="plus"></fa-icon>
         New Suite

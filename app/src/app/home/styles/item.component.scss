@@ -30,7 +30,7 @@
     @apply text-gray-500 select-none;
   }
   .wsl-item-ctrl-box {
-    @apply flex flex-row-reverse text-sm leading-8;
+    @apply flex flex-row-reverse text-sm leading-8 print:hidden;
     .wsl-item-ctrl {
       @apply px-2 cursor-pointer;
       fa-icon {

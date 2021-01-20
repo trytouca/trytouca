@@ -5,7 +5,7 @@
   <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
     <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
   </div>
-  <form [formGroup]="form" novalidate (ngSubmit)="onSubmit(form.value)" class="wsl-form">
+  <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate>
     <p [innerHtml]="elements.message"></p>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
