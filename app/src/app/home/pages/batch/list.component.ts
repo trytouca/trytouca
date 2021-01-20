@@ -160,7 +160,8 @@ const filterInput: FilterInput<BatchPageItem> = {
 
 @Component({
   selector: 'app-batch-list-elements',
-  templateUrl: './list.component.html'
+  templateUrl: './list.component.html',
+  styleUrls: ['../../styles/list.component.scss']
 })
 export class BatchListElementsComponent extends PageListComponent<BatchPageItem> implements OnDestroy {
 

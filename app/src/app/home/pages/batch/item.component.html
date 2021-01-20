@@ -1,6 +1,6 @@
 <div class="wsl-list-item">
   <div class="wsl-item-heading">
-    <div class="wsl-item-status" *ngIf="icon">
+    <div *ngIf="icon" class="wsl-item-status">
       <fa-icon [icon]="icon.type" [spin]="icon.spin" [ngStyle]="{color: icon.color}"></fa-icon>
     </div>
     <div class="wsl-item-title">
@@ -10,7 +10,7 @@
     </div>
   </div>
   <div class="wsl-item-topics">
-    <div class="wsl-item-topic" *ngFor="let topic of topics">
+    <div *ngFor="let topic of topics" class="wsl-item-topic">
       <span [attr.title]="topic.title || null">
         {{ topic.text }}
       </span>

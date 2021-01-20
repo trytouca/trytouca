@@ -10,7 +10,10 @@
       nav {
         @apply flex-grow;
         ol {
-          @apply flex space-x-4;
+          @apply flex;
+          li:not(:last-child):after {
+            content: "\2002/\2002";
+          }
         }
       }
       nav + div {

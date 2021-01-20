@@ -29,6 +29,7 @@ type Metadata = Partial<{
 @Component({
   selector: 'app-batch-item-element',
   templateUrl: './item.component.html',
+  styleUrls: ['../../styles/item.component.scss'],
   providers: [
     DatePipe,
     DurationPipe,
