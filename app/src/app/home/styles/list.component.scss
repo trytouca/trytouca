@@ -14,7 +14,7 @@
   }
   .wsl-requests-list {
     h2 {
-      @apply py-2 text-base font-medium;
+      @apply pb-1 text-xl font-medium;
     }
     li {
       @apply p-4 flex justify-between items-center;
@@ -37,7 +37,7 @@
   }
   .wsl-list-head {
     h2 {
-      @apply pt-4 pb-1 text-xl font-medium;
+      @apply pb-1 text-xl font-medium;
     }
     p {
       @apply pb-2 text-gray-500 text-xs;

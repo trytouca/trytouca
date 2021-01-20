@@ -64,6 +64,9 @@
   .wsl-text-muted {
     @apply text-gray-500;
   }
+  .wsl-text-success {
+    @apply text-green-600;
+  }
 }
 
 @layer utilities {

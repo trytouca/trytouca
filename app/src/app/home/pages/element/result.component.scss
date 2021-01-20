@@ -1,0 +1,51 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+@layer utilities {
+  .wsl-item-topic-type-simple {
+    @apply px-3 py-1 bg-gray-100 text-gray-500 rounded-sm;
+  }
+  .wsl-item-topic-type-complex {
+    @apply px-3 py-1 bg-blue-100 text-blue-500 rounded-sm cursor-pointer;
+  }
+  .wsl-complex {
+    @apply mt-6;
+    .wsl-complex-block {
+      .wsl-complex-block-head {
+        @apply flex px-4 justify-between text-gray-500;
+        .wsl-complex-block-desc {
+          @apply text-center;
+          span {
+            @apply text-sm;
+          }
+        }
+        .wsl-complex-block-icons {
+          .wsl-complex-block-icon {
+            @apply text-blue-500 opacity-25 hover:opacity-100;
+          }
+        }
+      }
+      pre {
+        @apply p-4 bg-gray-50 text-xs;
+      }
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .wsl-complex.wsl-complex-single {
+    .wsl-complex-block {
+      width: 75%;
+      margin: 0 auto;
+    }
+  }
+  .wsl-complex.wsl-complex-double {
+    display: flex;
+    .wsl-complex-block {
+      width: calc(50% - 1rem);
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+    }
+  }
+}

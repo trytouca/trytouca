@@ -1,5 +1,4 @@
 <div class="wsl-list-item">
-
   <div class="wsl-item-heading">
     <div class="wsl-item-status">
       <fa-icon [icon]="meta.icon.type" [ngStyle]="{color: meta.icon.color}"></fa-icon>
@@ -10,7 +9,6 @@
       </span>
     </div>
   </div>
-
   <div class="wsl-item-topics">
     <div class="wsl-item-topic" *ngIf="meta.changeType === MetricChangeType.Fresh">
       {{ metric.duration() | duration }} in version {{ params.srcBatchSlug }}
@@ -26,12 +24,11 @@
     </div>
     <div class="wsl-item-topic" *ngIf="meta.changeType === MetricChangeType.Faster">
       {{ metric.absoluteDifference() | duration }}
-      ({{ metric.changeDescription() }} <b class="text-success">faster</b> than in version {{ params.dstBatchSlug }})
+      ({{ metric.changeDescription() }} <b class="wsl-text-success">faster</b> than in version {{ params.dstBatchSlug }})
     </div>
     <div class="wsl-item-topic" *ngIf="meta.changeType === MetricChangeType.Slower">
       {{ metric.absoluteDifference() | duration }}
-      ({{ metric.changeDescription() }} <b class="text-danger">slower</b> than in version {{ params.dstBatchSlug }})
+      ({{ metric.changeDescription() }} <b class="wsl-text-danger">slower</b> than in version {{ params.dstBatchSlug }})
     </div>
   </div>
-
 </div>

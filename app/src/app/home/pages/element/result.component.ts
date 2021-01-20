@@ -46,7 +46,7 @@ interface IMetadata {
 @Component({
   selector: 'app-element-item-result',
   templateUrl: './result.component.html',
-  styleUrls: [ './item.component.scss' ]
+  styleUrls: ['./result.component.scss','../../styles/item.component.scss']
 })
 export class ElementItemResultComponent {
 
