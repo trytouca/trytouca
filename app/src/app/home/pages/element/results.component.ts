@@ -64,7 +64,8 @@ const filterInput: FilterInput<ElementPageResult> = {
 
 @Component({
   selector: 'app-element-tab-results',
-  templateUrl: './results.component.html'
+  templateUrl: './results.component.html',
+  styleUrls: ['../../styles/list.component.scss']
 })
 export class ElementListResultsComponent extends PageListComponent<ElementPageResult> implements OnDestroy {
 

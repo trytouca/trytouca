@@ -14,6 +14,9 @@
           li:not(:last-child):after {
             content: "\2002/\2002";
           }
+          a {
+            @apply text-blue-500;
+          }
         }
       }
       nav + div {

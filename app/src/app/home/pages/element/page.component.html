@@ -30,9 +30,7 @@
       <nav>
         <ul>
           <ng-container *ngFor="let tab of tabs">
-            <li *ngIf="tab.shown"
-              [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }"
-              (click)="switchTab(tab.type)">
+            <li *ngIf="tab.shown" (click)="switchTab(tab.type)" [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }">
               <span class="wsl-nav-icon"><fa-icon [icon]="tab.icon"></fa-icon></span>
               <span class="wsl-nav-text">{{ tab.name }}</span>
               <span class="wsl-nav-counter" [hidden]="!tab.counter">{{ tab.counter }}</span>
@@ -47,7 +45,7 @@
       <app-home-version-navigator [suite]="suite" [params]="params">
       </app-home-version-navigator>
     </ng-container>
-    <div class="wsl-spinner" [hidden]="hasData() && hasItems()">
+    <div [hidden]="hasData() && hasItems()" class="wsl-spinner">
       <span><fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></span>
     </div>
     <div *ngIf="overview" [hidden]="!hasData() || !hasItems()">
