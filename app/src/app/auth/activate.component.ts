@@ -9,11 +9,7 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ApiService, AuthService } from '@weasel/core/services';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
-
-enum Alerts {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
-}
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
 @Component({
   selector: 'app-activate',
@@ -21,7 +17,7 @@ enum Alerts {
 })
 export class ActivateComponent implements OnInit {
 
-  alert: [Alerts, string];
+  alert: Alert;
 
   /**
    *
@@ -59,7 +55,7 @@ export class ActivateComponent implements OnInit {
           [ 400, 'invalid activation key', 'This activation key is invalid.' ],
           [ 404, 'activation key not found', 'This activation key has expired.' ]
         ]);
-        this.alert = [ Alerts.Danger, error ];
+        this.alert = { type: AlertType.Danger, text: error };
         localStorage.removeItem(ELocalStorageKey.Callback);
         timer(5000).subscribe(() => this.router.navigate(['/~']));
       });

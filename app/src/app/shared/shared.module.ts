@@ -43,6 +43,7 @@ import {
     SignupFormComponent
   ],
   exports: [
+    AlertComponent,
     CommonModule,
     DialogModule,
     FontAwesomeModule,

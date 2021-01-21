@@ -9,7 +9,7 @@ export enum AlertType {
   Danger = 'wsl-alert-danger'
 }
 
-interface Alert {
+export interface Alert {
   text: string;
   type: AlertType;
 }
