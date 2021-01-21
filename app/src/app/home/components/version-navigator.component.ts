@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import type { SuiteLookupResponse, Promotion } from '@weasel/core/models/commontypes';
 import type { FrontendBatchCompareParams, FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
@@ -12,8 +12,7 @@ type ParamsType = FrontendBatchCompareParams | FrontendElementCompareParams;
 
 @Component({
   selector: 'app-home-version-navigator',
-  templateUrl: './version-navigator.component.html',
-  styleUrls: ['./version-navigator.component.scss']
+  templateUrl: './version-navigator.component.html'
 })
 export class VersionNavigatorComponent {
 

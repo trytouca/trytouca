@@ -7,7 +7,7 @@
     @apply pb-1 text-xl font-medium;
   }
   .wsl-comment-frame {
-    @apply m-4 p-2 border;
+    @apply max-w-lg m-4 p-2 border;
     min-height: 100px;
   }
   .wsl-comment-empty {

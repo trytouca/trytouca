@@ -1,27 +1,17 @@
-<div class="wsl-version-navigator">
+<div class="p-4 mx-auto container text-sm pb-4 group">
   Comparing results of
   <em *ngIf="params.srcBatchSlug === suite?.latest?.batchSlug">latest</em>
   version 
-  <div class="d-inline-block">
-    <app-home-version-list
-      [suite]="suite"
-      [params]="params"
-      [side]="'head'">
-    </app-home-version-list>
-  </div>
+  <app-home-version-list class="inline-block" [suite]="suite" [params]="params" [side]="'head'">
+  </app-home-version-list>
   against
   <em *ngIf="params.dstBatchSlug === baseline.to">baseline</em>
   <em *ngIf="params.dstBatchSlug === baseline.from && params.dstBatchSlug !== baseline.to">former baseline</em>
   version
-  <div class="d-inline-block">
-    <app-home-version-list
-      [suite]="suite"
-      [params]="params"
-      [side]="'base'">
-    </app-home-version-list>
-  </div>
+  <app-home-version-list class="inline-block" [suite]="suite" [params]="params" [side]="'base'">
+  </app-home-version-list>
   .
-  <fa-icon [icon]="faLink" class="wsl-clipboard-icon"
+  <fa-icon [icon]="faLink" class="invisible opacity-25 group-hover:visible hover:opacity-100 text-blue-500"
     title="Copy a link to this page to share with your team members"
     ngxClipboard [cbContent]="link" (cbOnSuccess)="onCopy($event)">
   </fa-icon>
