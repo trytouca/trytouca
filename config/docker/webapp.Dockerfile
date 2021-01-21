@@ -12,7 +12,7 @@ COPY docs /opt/docs
 
 RUN yarn --cwd /opt/frontend install --frozen-lockfile \
   && yarn --cwd /opt/frontend cache clean \
-  && yarn --cwd /opt/frontend build --prod
+  && yarn --cwd /opt/frontend build --prod --aot
 
 # ---- api documentation ----
 
