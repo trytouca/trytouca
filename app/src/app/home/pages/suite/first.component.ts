@@ -6,8 +6,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { NotificationService, NotificationType, UserService } from '@weasel/core/services';
+import { NotificationService, UserService } from '@weasel/core/services';
 import { getBackendUrl } from '@weasel/core/models/environment';
+import { AlertType } from '@weasel/shared/components/alert.component';
 import { SuitePageService } from './suite.service';
 
 type Fields = Partial<{
@@ -60,7 +61,7 @@ export class SuiteFirstBatchComponent implements OnDestroy {
    *
    */
   onCopy(event: string, name: string) {
-    this.notificationService.notify(NotificationType.Success, `Copied ${name} to clipboard.`);
+    this.notificationService.notify(AlertType.Success, `Copied ${name} to clipboard.`);
   }
 
 }

@@ -35,7 +35,7 @@ export class AlertComponent {
       [ AlertType.Success, [ 'bg-green-100', 'border-green-200', 'text-green-800' ] ],
       [ AlertType.Warning, [ 'bg-yellow-100', 'border-yellow-200', 'text-yellow-800' ] ],
     ]);
-    const base = ['py-3', 'px-5', 'mb-4', 'rounded-md', 'shadow-sm'];
+    const base = ['py-3', 'px-5', 'rounded-md', 'shadow-sm'];
     return base.concat(entries.get(this.alert.type));
   }
 }

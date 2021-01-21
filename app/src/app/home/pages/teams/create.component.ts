@@ -8,15 +8,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
 import { ModalComponent } from '@weasel/home/components';
+import { AlertType } from '@weasel/shared/components/alert.component';
 
 interface IFormContent {
   name: string;
   slug: string;
-}
-
-enum Alerts {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
 }
 
 enum Mode {
@@ -125,7 +121,7 @@ export class TeamsCreateTeamComponent extends ModalComponent {
           [ 400, 'request invalid', 'Your request was rejected by the server.' ],
           [ 409, 'team already registered', 'There is already a team with this slug.' ]
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       });
   }
 
@@ -151,7 +147,7 @@ export class TeamsCreateTeamComponent extends ModalComponent {
           [ 409, 'user already a member', 'You are already a member of this team.' ],
           [ 409, 'user has pending join request', 'Your previous request to join this team is pending review by their administrators.']
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       });
   }
 

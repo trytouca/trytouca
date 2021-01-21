@@ -8,7 +8,8 @@ import { Subscription } from 'rxjs';
 import type { BatchLookupResponse, CommentItem, TeamLookupResponse } from '@weasel/core/models/commontypes';
 import { EPlatformRole, ETeamRole } from '@weasel/core/models/commontypes';
 import { FrontendCommentAction, FrontendCommentActionType, FrontendCommentItem } from '@weasel/core/models/frontendtypes';
-import { ApiService, NotificationService, NotificationType, UserService } from '@weasel/core/services';
+import { ApiService, NotificationService, UserService } from '@weasel/core/services';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 import { BatchPageService } from './batch.service';
 
 type PageViewFields = {
@@ -25,11 +26,6 @@ type IFormContent = {
   body: string;
 };
 
-enum Alerts {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
-}
-
 @Component({
   selector: 'app-batch-tab-comments',
   templateUrl: './comments.component.html',
@@ -37,7 +33,7 @@ enum Alerts {
 })
 export class BatchCommentsComponent implements OnDestroy {
 
-  alert?: [Alerts, string];
+  alert: Alert;
   comments: FrontendCommentItem[] = [];
   form: FormGroup;
   fields: PageViewFields = {
@@ -247,7 +243,7 @@ export class BatchCommentsComponent implements OnDestroy {
         const msg = this.apiService.extractError(err, [
           [ 400, 'request invalid', 'Your request was rejected by the server.' ],
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }
@@ -267,7 +263,7 @@ export class BatchCommentsComponent implements OnDestroy {
         this.batchPageService.refetchBatch();
       },
       err => {
-        this.notificationService.notify(NotificationType.Error,
+        this.notificationService.notify(AlertType.Danger,
           'Something went wrong. Please try this operation again later.');
       });
   }
@@ -291,7 +287,7 @@ export class BatchCommentsComponent implements OnDestroy {
           [ 400, 'request invalid', 'Your request was rejected by the server.' ],
           [ 400, 'replying to replies not allowed', 'We do not support nested replies. Please reply to the top-level comment instead.' ]
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }
@@ -314,7 +310,7 @@ export class BatchCommentsComponent implements OnDestroy {
         const msg = this.apiService.extractError(err, [
           [ 400, 'request invalid', 'Your request was rejected by the server.' ],
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }

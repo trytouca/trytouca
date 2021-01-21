@@ -10,7 +10,8 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faBell, faChartLine, faCog, faComments, faRecycle, faRobot, faTasks } from '@fortawesome/free-solid-svg-icons';
 import { Subscription, timer } from 'rxjs';
 import type { SuiteItem, SuiteLookupResponse, TeamItem } from '@weasel/core/models/commontypes';
-import { AlertKind, AlertService, NotificationService, NotificationType } from '@weasel/core/services';
+import { AlertKind, AlertService, NotificationService } from '@weasel/core/services';
+import { AlertType } from '@weasel/shared/components/alert.component';
 import { PageTab, PageComponent } from '@weasel/home/components/page.component';
 import { SuitePageItem } from './suite.model';
 import { SuitePageService, SuitePageTabType } from './suite.service';
@@ -195,17 +196,17 @@ export class SuitePageComponent extends PageComponent<SuitePageItem, SuitePageTa
       this.suite.isSubscribed = action === 'subscribe';
       this.suite.subscriberCount += action === 'subscribe' ? 1 : -1;
       this.updateFields();
-      this.notificationService.notify(NotificationType.Success, successMessage);
+      this.notificationService.notify(AlertType.Success, successMessage);
     },
     (error: HttpErrorResponse) => {
       if (error.status === 401) {
-        this.notificationService.notify(NotificationType.Error,
+        this.notificationService.notify(AlertType.Danger,
           'Your user session has expired. Please login again.'
         );
         timer(2000).subscribe(() => this.router.navigate(['/']));
         return;
       }
-      this.notificationService.notify(NotificationType.Error,
+      this.notificationService.notify(AlertType.Danger,
         'We are sorry, something went wrong. ' +
         'Please try this operation at a later time.'
       );

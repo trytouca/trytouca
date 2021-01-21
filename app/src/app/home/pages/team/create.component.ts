@@ -7,16 +7,12 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
 import { ModalComponent } from '@weasel/home/components';
+import { AlertType } from '@weasel/shared/components/alert.component';
 
 type IFormContent = {
   name: string;
   slug: string;
 };
-
-enum Alerts {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
-}
 
 @Component({
   templateUrl: './create.component.html',
@@ -77,7 +73,7 @@ export class TeamCreateSuiteComponent extends ModalComponent {
           [ 400, 'request invalid', 'Your request was rejected by the server.' ],
           [ 400, 'suite already registered', 'This suite is already registered.' ],
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }

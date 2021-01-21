@@ -4,18 +4,14 @@
 
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-
-enum Alerts {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
-}
+import { Alert } from '@weasel/shared/components/alert.component';
 
 @Component({
   template: ''
 })
 export class ModalComponent {
 
-  public alert?: [Alerts, string];
+  public alert: Alert;
   protected submitted: boolean;
   public form: FormGroup;
 

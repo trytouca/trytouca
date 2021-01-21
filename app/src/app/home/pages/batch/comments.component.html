@@ -1,8 +1,6 @@
 <h2><label for="wsl-body">{{ fields.editorTitle }}</label></h2>
 <p class="text-sm">{{ fields.editorSubtitle }}</p>
-<div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
-  <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
-</div>
+<app-alert [alert]="alert"></app-alert>
 <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate class="wsl-form max-w-lg m-4 p-4 border" [ngClass]="{'bg-gray-50': !fields.previewShow}">
   <div [hidden]="!fields.previewShow">
     <blockquote class="m-2 px-4 border-l-2 border-gray-200">

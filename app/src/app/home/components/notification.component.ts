@@ -4,36 +4,27 @@
 
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
-import { NotificationService, NotificationType } from '@weasel/core/services';
+import { NotificationService } from '@weasel/core/services';
+import { Alert } from '@weasel/shared/components/alert.component';
 
 @Component({
   selector: 'app-notification',
   template: `
-    <div [hidden]="!showNotification" role="alert" class="wsl-alert fixed top-20 right-4 text-sm" [ngClass]="alertType">
-      {{ message }}
-    </div>
+    <app-alert *ngIf="showNotification" [alert]="alert" class="fixed top-20 right-4 text-sm"></app-alert>
   `
 })
 export class NotificationComponent implements OnDestroy {
 
-  message: string;
-  alertType: string;
+  alert: Alert
   showNotification = false;
   timer: Subscription;
-  private alerts = new Map<number, string>([
-    [ NotificationType.Info, 'wsl-alert-info' ],
-    [ NotificationType.Success, 'wsl-alert-success' ],
-    [ NotificationType.Warning, 'wsl-alert-warning' ],
-    [ NotificationType.Error, 'wsl-alert-danger' ],
-  ]);
 
   private _subNotification: Subscription;
 
   constructor(private notificationService: NotificationService) {
     this._subNotification = this.notificationService.notification$.subscribe(([type, message]) => {
-      this.message = message;
+      this.alert = { type: type, text: message };
       this.showNotification = true;
-      this.alertType = this.alerts.get(type);
       if (this.timer) {
         this.timer.unsubscribe();
       }

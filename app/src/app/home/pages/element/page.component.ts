@@ -11,8 +11,9 @@ import { faSpinner, faStopwatch, faTasks } from '@fortawesome/free-solid-svg-ico
 import { Subscription } from 'rxjs';
 import type { ElementLookupResponse, SuiteLookupResponse, BatchLookupResponse } from '@weasel/core/models/commontypes';
 import type { FrontendElementCompareParams, FrontendOverviewSection } from '@weasel/core/models/frontendtypes';
-import { Alert, AlertKind, AlertService, AlertType } from '@weasel/core/services';
+import { AlertKind, AlertService } from '@weasel/core/services';
 import { PageComponent, PageTab } from '@weasel/home/components/page.component';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 import { ElementPageOverviewMetadata, ElementPageResult } from './element.model';
 import { ElementPageService, ElementPageTabType } from './element.service';
 
@@ -48,7 +49,7 @@ type NotFound = Partial<{
 })
 export class ElementPageComponent extends PageComponent<ElementPageResult, ElementPageTabType, NotFound> implements OnInit, OnDestroy {
 
-  customAlert: Omit<Alert, 'kind'>;
+  alert: Alert;
   suite: SuiteLookupResponse;
   batch: BatchLookupResponse;
   element: ElementLookupResponse;
@@ -188,17 +189,17 @@ export class ElementPageComponent extends PageComponent<ElementPageResult, Eleme
   private setCustomAlerts() {
     const queryMap = this.route.snapshot.queryParamMap;
     if (queryMap.has('bv')) {
-      this.customAlert = {
+      this.alert = {
         type: AlertType.Info,
-        message: `Element <b>${this.params.srcElementSlug}</b> is missing
+        text: `Element <b>${this.params.srcElementSlug}</b> is missing
           from version <b>${queryMap.get('bv')}</b>. You are viewing
           results for version <b>${this.params.dstBatchSlug || this.params.srcBatchSlug}</b>.`
       };
     }
     if (queryMap.has('bcv')) {
-      this.customAlert = {
+      this.alert = {
         type: AlertType.Info,
-        message: `Element <b>${this.params.srcElementSlug}</b> is missing
+        text: `Element <b>${this.params.srcElementSlug}</b> is missing
           from version <b>${queryMap.get('bcv')}</b>. You are viewing
           results for version <b>${this.params.srcBatchSlug}</b>.`
       };

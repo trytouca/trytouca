@@ -6,9 +6,10 @@ import { Component, OnDestroy, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService, DialogRef } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
-import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
+import { ConfirmComponent } from '@weasel/home/components/confirm.component';
 import { ETeamRole, EPlatformRole, TeamInvitee, TeamMember, TeamLookupResponse, TeamApplicant } from '@weasel/core/models/commontypes';
-import { ApiService, NotificationService, NotificationType, UserService } from '@weasel/core/services';
+import { ApiService, NotificationService, UserService } from '@weasel/core/services';
+import { AlertType } from '@weasel/shared/components/alert.component';
 import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { FilterInput } from '@weasel/home/models/filter.model';
 import { TeamPageMemberType, TeamPageMember } from './team.model';
@@ -254,10 +255,10 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
     this.apiService.patch(url, { role: newRoleType }).subscribe(
       () => {
         this.teamPageService.refreshMembers();
-        this.notificationService.notify(NotificationType.Success, `Changed ${member.fullname}'s role.`);
+        this.notificationService.notify(AlertType.Success, `Changed ${member.fullname}'s role.`);
       },
       err => {
-        this.notificationService.notify(NotificationType.Error,
+        this.notificationService.notify(AlertType.Danger,
           `Something went wrong. We could not change ${member.fullname}'s role.`);
       });
   }
@@ -270,10 +271,10 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
     this.apiService.delete(url).subscribe(
       () => {
         this.teamPageService.removeMember(member);
-        this.notificationService.notify(NotificationType.Success, `Removed ${member.fullname} from this team.`);
+        this.notificationService.notify(AlertType.Success, `Removed ${member.fullname} from this team.`);
       },
       err => {
-        this.notificationService.notify(NotificationType.Error,
+        this.notificationService.notify(AlertType.Danger,
           `Something went wrong. We could not remove ${member.fullname}.`);
       });
   }
@@ -286,10 +287,10 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
     this.apiService.post(url, { email: invitee.email }).subscribe(
       () => {
         this.teamPageService.removeInvitee(invitee);
-        this.notificationService.notify(NotificationType.Success, 'Rescinded team invitation.');
+        this.notificationService.notify(AlertType.Success, 'Rescinded team invitation.');
       },
       err => {
-        this.notificationService.notify(NotificationType.Error,
+        this.notificationService.notify(AlertType.Danger,
           'Something went wrong. We could not rescind team invitation.');
       });
   }
@@ -303,10 +304,10 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
       () => {
         const msg = `${applicant.fullname} is now a member of your team.`;
         this.teamPageService.refreshMembers();
-        this.notificationService.notify(NotificationType.Success, msg);
+        this.notificationService.notify(AlertType.Success, msg);
       },
       err => {
-        this.notificationService.notify(NotificationType.Error,
+        this.notificationService.notify(AlertType.Danger,
           'Something went wrong. We could not accept this request.');
       });
   }
@@ -320,10 +321,10 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
       () => {
         const msg = `You declined ${applicant.fullname}'s request to join your team.`;
         this.teamPageService.refreshMembers();
-        this.notificationService.notify(NotificationType.Success, msg);
+        this.notificationService.notify(AlertType.Success, msg);
       },
       err => {
-        this.notificationService.notify(NotificationType.Error,
+        this.notificationService.notify(AlertType.Danger,
           'Something went wrong. We could not decline this request.');
       });
   }

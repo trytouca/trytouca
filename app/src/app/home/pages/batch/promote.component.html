@@ -2,9 +2,7 @@
   <h4 class="wsl-modal-title">Promote Version {{ elements.batch.batchSlug }}</h4>
 </div>
 <div class="wsl-modal-body">
-  <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
-    <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
-  </div>
+  <app-alert [alert]="alert"></app-alert>
   <p class="mb-2 text-sm">
     You are about to promote version <strong>{{ elements.batch.batchSlug }}</strong>
     to baseline of suite <strong>{{ elements.batch.suiteName }}</strong>. This

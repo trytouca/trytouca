@@ -8,11 +8,7 @@ import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
 import { BatchLookupResponse } from '@weasel/core/models/commontypes';
 import { ModalComponent } from '@weasel/home/components';
-
-enum Alerts {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
-}
+import { AlertType } from '@weasel/shared/components/alert.component';
 
 @Component({
   templateUrl: './seal.component.html',
@@ -58,7 +54,7 @@ export class BatchSealComponent extends ModalComponent {
         const msg = this.apiService.extractError(err, [
           [ 400, 'request invalid', 'Your request was rejected by the server.' ],
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }

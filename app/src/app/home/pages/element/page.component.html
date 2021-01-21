@@ -4,11 +4,7 @@
   </app-home-notfound>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!element || !batch">
-  <div *ngIf="customAlert">
-    <div role="alert" class="wsl-alert" [ngClass]="customAlert.type">
-      <small [innerHTML]="customAlert.message"></small>
-    </div>
-  </div>
+  <app-alert [alert]="alert"></app-alert>
   <div class="wsl-page-head">
     <div class="wsl-page-head-content">
       <nav aria-label="breadcrumb">

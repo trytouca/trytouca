@@ -13,19 +13,13 @@ import { ApiService } from '@weasel/core/services';
 import { ETeamRole } from '@weasel/core/models/commontypes';
 import type { TeamLookupResponse } from '@weasel/core/models/commontypes';
 import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 import { TeamPageTabType, TeamPageService } from './team.service';
 
 interface IFormContent {
   name: string;
   slug: string;
 }
-
-enum AlertType {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
-}
-
-type Alert = { type: AlertType, msg: string, close?: boolean };
 
 enum EModalType {
   ChangeName = 'changeTeamName',
@@ -87,7 +81,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(16),
-          Validators.pattern('[a-zA-Z][a-zA-Z0-9\-]+')
+          Validators.pattern('[a-zA-Z][a-zA-Z0-9-]+')
         ],
         updateOn: 'blur'
       })
@@ -207,14 +201,14 @@ export class TeamTabSettingsComponent implements OnDestroy {
     this.apiService.patch(url, { name }).subscribe(
       () => {
         this.alert.changeTeamName = {
-          type: AlertType.Success, msg: 'Team name was updated.'
+          type: AlertType.Success, text: 'Team name was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeTeamName.close = true);
+        timer(5000).subscribe(() => this.alert.changeTeamName = undefined);
         this.teamPageService.updateTeamSlug(TeamPageTabType.Settings, this.team.slug);
       },
       (err: HttpErrorResponse) => {
         this.alert.changeTeamName = {
-          type: AlertType.Danger, msg: this.extractError(err)
+          type: AlertType.Danger, text: this.extractError(err)
         };
       });
   }
@@ -227,15 +221,15 @@ export class TeamTabSettingsComponent implements OnDestroy {
     this.apiService.patch(url, { slug }).subscribe(
       () => {
         this.alert.changeTeamSlug = {
-          type: AlertType.Success, msg: 'Team slug was updated.'
+          type: AlertType.Success, text: 'Team slug was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeTeamSlug.close = true);
+        timer(5000).subscribe(() => this.alert.changeTeamSlug = undefined);
         this.teamPageService.updateTeamSlug(TeamPageTabType.Settings, slug);
         this.router.navigate([ '~', slug ]);
       },
       (err: HttpErrorResponse) => {
         this.alert.changeTeamSlug = {
-          type: AlertType.Danger, msg: this.extractError(err)
+          type: AlertType.Danger, text: this.extractError(err)
         };
       });
   }
@@ -251,7 +245,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
       },
       (err: HttpErrorResponse) => {
         this.alert.deleteTeam = {
-          type: AlertType.Danger, msg: this.extractError(err)
+          type: AlertType.Danger, text: this.extractError(err)
         };
       });
   }
@@ -267,7 +261,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
       },
       (err: HttpErrorResponse) => {
         this.alert.leaveTeam = {
-          type: AlertType.Danger, msg: this.extractError(err)
+          type: AlertType.Danger, text: this.extractError(err)
         };
       });
   }

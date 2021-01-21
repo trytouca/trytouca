@@ -2,9 +2,7 @@
   <h4 class="wsl-modal-title">Invite A New Member</h4>
 </div>
 <div class="wsl-modal-body">
-  <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
-    <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
-  </div>
+  <app-alert [alert]="alert"></app-alert>
   <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate class="wsl-form">
     <div>
       <label for="wsl-name" class="wsl-input-label">Full Name</label>

@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { timer } from 'rxjs';
 import type { UserLookupResponse } from '@weasel/core/models/commontypes';
-import { AlertService, AuthService, UserService, Alert, AlertKind } from '@weasel/core/services';
+import { AlertService, AuthService, UserService, AlertKind, ServiceAlert } from '@weasel/core/services';
 
 @Component({
   selector: 'app-page-home',
@@ -15,7 +15,7 @@ import { AlertService, AuthService, UserService, Alert, AlertKind } from '@wease
 export class HomeComponent {
 
   // application-wide alerts that should be shown on top of every page.
-  alerts: Alert[] = [];
+  alerts: ServiceAlert[] = [];
   isApiConnectionDown = false;
   public currentUser: UserLookupResponse;
 
@@ -38,7 +38,7 @@ export class HomeComponent {
         });
       }
       this.isApiConnectionDown = v.some(k => k.kind === AlertKind.ApiConnectionDown);
-      this.alerts = v.filter(k => k.message);
+      this.alerts = v.filter(k => k.text);
     });
     this.userService.currentUser$.subscribe(user => {
       this.currentUser = user;

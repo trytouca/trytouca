@@ -4,25 +4,16 @@
 
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-
-/**
- *
- */
-export enum NotificationType {
-  Info = 1,
-  Success,
-  Warning,
-  Error
-}
+import { AlertType } from '@weasel/shared/components/alert.component';
 
 @Injectable()
 export class NotificationService {
 
-  private _subject = new Subject<[NotificationType, string]>();
+  private _subject = new Subject<[AlertType, string]>();
 
   notification$ = this._subject.asObservable();
 
-  public notify(type: NotificationType, message: string): void {
+  public notify(type: AlertType, message: string): void {
     this._subject.next([type, message]);
   }
 }

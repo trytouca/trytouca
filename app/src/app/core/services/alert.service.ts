@@ -4,6 +4,7 @@
 
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
 export enum AlertKind {
   ApiConnectionDown = 1,
@@ -22,18 +23,8 @@ export enum AlertKind {
   // DstSuiteEmpty
 }
 
-export enum AlertType {
-  Feedback = 'wsl-alert-success',
-  Info = 'wsl-alert-info',
-  Reminder = 'wsl-alert-info',
-  Warning = 'wsl-alert-warning',
-  Error = 'wsl-alert-danger'
-}
-
-export type Alert = {
+export type ServiceAlert = Alert & {
   kind: AlertKind;
-  type: AlertType;
-  message?: string;
 };
 
 @Injectable({
@@ -42,34 +33,31 @@ export type Alert = {
 export class AlertService {
 
   private _alerts = new Set<AlertKind>();
-  private _alertsSubject = new Subject<Alert[]>();
+  private _alertsSubject = new Subject<ServiceAlert[]>();
   alerts$ = this._alertsSubject.asObservable();
 
-  private _alertList: Alert[] = [
-    {
-      kind: AlertKind.ApiConnectionDown,
-      type: AlertType.Error
-    },
+  private _alertList: ServiceAlert[] = [
+    { kind: AlertKind.ApiConnectionDown, type: AlertType.Danger, text: '' },
     {
       kind: AlertKind.ApiConnectionLost,
       type: AlertType.Warning,
-      message: 'Some of our services are not available at this time. '
+      text: 'Some of our services are not available at this time. '
         + 'Please allow some time for these services to be restored.'
     },
     {
       kind: AlertKind.InvalidAuthToken,
-      type: AlertType.Error,
-      message: 'Your session has expired. Please login once again.'
+      type: AlertType.Danger,
+      text: 'Your session has expired. Please login once again.'
     },
     {
       kind: AlertKind.UserNotVerified,
-      type: AlertType.Reminder,
-      message: 'Please check your mailbox to complete your account activation.'
+      type: AlertType.Info,
+      text: 'Please check your mailbox to complete your account activation.'
     },
-    { kind: AlertKind.TeamNotFound, type: AlertType.Error },
-    { kind: AlertKind.SuiteNotFound, type: AlertType.Error },
-    { kind: AlertKind.BatchNotFound, type: AlertType.Error },
-    { kind: AlertKind.ElementNotFound, type: AlertType.Error },
+    { kind: AlertKind.TeamNotFound, type: AlertType.Danger, text: '' },
+    { kind: AlertKind.SuiteNotFound, type: AlertType.Danger, text: '' },
+    { kind: AlertKind.BatchNotFound, type: AlertType.Danger, text: '' },
+    { kind: AlertKind.ElementNotFound, type: AlertType.Danger, text: '' },
   ];
 
   /**
@@ -77,7 +65,7 @@ export class AlertService {
    */
   private publish(): void {
     const alerts = Array.from(this._alerts).map(v => {
-      return this._alertList.find(k => k.kind === v) || { kind: v, type: AlertType.Info };
+      return this._alertList.find(k => k.kind === v) || { kind: v, type: AlertType.Info, text: '' };
     });
     this._alertsSubject.next(alerts);
   }

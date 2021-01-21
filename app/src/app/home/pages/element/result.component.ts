@@ -7,8 +7,9 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faCircle, faCheckCircle, faPlusCircle, faMinusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
-import { NotificationService, NotificationType } from '@weasel/core/services';
+import { NotificationService } from '@weasel/core/services';
 import { Result } from '@weasel/home/models/result.model';
+import { AlertType } from '@weasel/shared/components/alert.component';
 import { ElementPageResult, ElementPageItemType } from './element.model';
 
 enum MatchType {
@@ -166,7 +167,7 @@ export class ElementItemResultComponent {
   }
 
   public onCopy(event: string) {
-    this.notificationService.notify(NotificationType.Success, 'Copied value to clipboard.');
+    this.notificationService.notify(AlertType.Success, 'Copied value to clipboard.');
   }
 
 }

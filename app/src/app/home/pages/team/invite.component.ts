@@ -7,16 +7,12 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
 import { ModalComponent } from '@weasel/home/components';
+import { AlertType } from '@weasel/shared/components/alert.component';
 
 type IFormContent = {
   name: string;
   email: string;
 };
-
-enum Alerts {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
-}
 
 @Component({
   templateUrl: './invite.component.html'
@@ -73,7 +69,7 @@ export class TeamInviteComponent extends ModalComponent {
         const msg = this.apiService.extractError(err, [
           [ 400, 'request invalid', 'Your request was rejected by the server.' ]
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }

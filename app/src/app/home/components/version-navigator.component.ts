@@ -6,7 +6,8 @@ import { Component, Input } from '@angular/core';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import type { SuiteLookupResponse, Promotion } from '@weasel/core/models/commontypes';
 import type { FrontendBatchCompareParams, FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
-import { NotificationService, NotificationType } from '@weasel/core/services';
+import { NotificationService } from '@weasel/core/services';
+import { AlertType } from '@weasel/shared/components/alert.component';
 
 type ParamsType = FrontendBatchCompareParams | FrontendElementCompareParams;
 
@@ -60,7 +61,7 @@ export class VersionNavigatorComponent {
    *
    */
   public onCopy(event: string) {
-    this.notificationService.notify(NotificationType.Success, 'Copied value to clipboard.');
+    this.notificationService.notify(AlertType.Success, 'Copied value to clipboard.');
   }
 
 }

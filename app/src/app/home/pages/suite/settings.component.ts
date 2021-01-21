@@ -14,6 +14,7 @@ import { ETeamRole } from '@weasel/core/models/commontypes';
 import type { SuiteLookupResponse, TeamLookupResponse } from '@weasel/core/models/commontypes';
 import { ConfirmComponent } from '@weasel/home/components/confirm.component';
 import { SuitePageService, SuitePageTabType } from './suite.service';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
 interface IFormContent {
   name: string;
@@ -21,13 +22,6 @@ interface IFormContent {
   retainFor: number;
   sealAfter: number;
 }
-
-enum AlertType {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
-}
-
-type Alert = { type: AlertType, msg: string, close?: boolean };
 
 enum EModalType {
   ChangeName = 'changeSuiteName',
@@ -99,7 +93,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(16),
-          Validators.pattern('[a-zA-Z][a-zA-Z0-9\-]+')
+          Validators.pattern('[a-zA-Z][a-zA-Z0-9-]+')
         ],
         updateOn: 'blur'
       })
@@ -185,8 +179,9 @@ export class SuiteTabSettingsComponent implements OnDestroy {
   /**
    *
    */
-  async openConfirmModal(type: EModalType) {
+  openConfirmModal(type: EModalType) {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      closeButton: false,
       data: {
         title: `Delete Suite ${this.suite.suiteName}`,
         message: `<p>
@@ -194,7 +189,8 @@ export class SuiteTabSettingsComponent implements OnDestroy {
           This action permanently removes all data associated with this suite.
           Are you sure you want to delete this suite?</p>`,
         button: 'Delete'
-      }
+      },
+      minHeight: '10vh'
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
       if (!state) {
@@ -236,14 +232,14 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     this.apiService.patch(url, { name }).subscribe(
       () => {
         this.alert.changeSuiteName = {
-          type: AlertType.Success, msg: 'Suite name was updated.'
+          type: AlertType.Success, text: 'Suite name was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeSuiteName.close = true);
+        timer(5000).subscribe(() => this.alert.changeSuiteName = undefined);
         this.suitePageService.updateSuiteSlug(SuitePageTabType.Settings, this.suite.suiteSlug);
       },
       (err: HttpErrorResponse) => {
         this.alert.changeSuiteName = {
-          type: AlertType.Danger, msg: this.extractError(err)
+          type: AlertType.Danger, text: this.extractError(err)
         };
       });
   }
@@ -256,15 +252,15 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     this.apiService.patch(url, { slug }).subscribe(
       () => {
         this.alert.changeSuiteSlug = {
-          type: AlertType.Success, msg: 'Suite slug was updated.'
+          type: AlertType.Success, text: 'Suite slug was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeSuiteSlug.close = true);
+        timer(5000).subscribe(() => this.alert.changeSuiteSlug = undefined);
         this.suitePageService.updateSuiteSlug(SuitePageTabType.Settings, slug);
         this.router.navigate([ '~', this.suite.teamSlug, slug ]);
       },
       (err: HttpErrorResponse) => {
         this.alert.changeSuiteSlug = {
-          type: AlertType.Danger, msg: this.extractError(err)
+          type: AlertType.Danger, text: this.extractError(err)
         };
       });
   }
@@ -277,14 +273,14 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     this.apiService.patch(url, { retainFor }).subscribe(
       () => {
         this.alert.changeSuiteRetainFor = {
-          type: AlertType.Success, msg: 'Data retention duration was updated.'
+          type: AlertType.Success, text: 'Data retention duration was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeSuiteRetainFor.close = true);
+        timer(5000).subscribe(() => this.alert.changeSuiteRetainFor = undefined);
         this.suitePageService.updateSuiteSlug(SuitePageTabType.Settings, this.suite.suiteSlug);
       },
       (err: HttpErrorResponse) => {
         this.alert.changeSuiteRetainFor = {
-          type: AlertType.Danger, msg: this.extractError(err)
+          type: AlertType.Danger, text: this.extractError(err)
         };
       });
   }
@@ -297,14 +293,14 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     this.apiService.patch(url, { sealAfter }).subscribe(
       () => {
         this.alert.changeSuiteSealAfter = {
-          type: AlertType.Success, msg: 'Auto seal duration was updated.'
+          type: AlertType.Success, text: 'Auto seal duration was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeSuiteSealAfter.close = true);
+        timer(5000).subscribe(() => this.alert.changeSuiteSealAfter = undefined);
         this.suitePageService.updateSuiteSlug(SuitePageTabType.Settings, this.suite.suiteSlug);
       },
       (err: HttpErrorResponse) => {
         this.alert.changeSuiteSealAfter = {
-          type: AlertType.Danger, msg: this.extractError(err)
+          type: AlertType.Danger, text: this.extractError(err)
         };
       });
   }
@@ -320,7 +316,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
       },
       (err: HttpErrorResponse) => {
         this.alert.deleteSuite = {
-          type: AlertType.Danger, msg: this.extractError(err)
+          type: AlertType.Danger, text: this.extractError(err)
         };
       });
   }

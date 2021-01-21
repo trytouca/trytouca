@@ -2,9 +2,7 @@
   <h4 class="wsl-modal-title">Create A New Suite</h4>
 </div>
 <div class="wsl-modal-body">
-  <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
-    <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
-  </div>
+  <app-alert [alert]="alert"></app-alert>
   <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate>
     <div>
       <label class="wsl-input-label" for="wsl-slug">Suite Slug</label>
