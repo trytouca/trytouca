@@ -7,16 +7,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 import { ApiService, AuthService, UserService } from '@weasel/core/services';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
 interface IFormContent {
   uname: string;
   upass: string;
-}
-
-enum Alerts {
-  Info = 'wsl-alert-info',
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
 }
 
 @Component({
@@ -42,7 +37,7 @@ export class SigninComponent implements OnInit {
       updateOn: 'change'
     })
   });
-  alert?: [Alerts, string];
+  alert: Alert;
   submitted: boolean;
   prev: IFormContent;
 
@@ -63,10 +58,10 @@ export class SigninComponent implements OnInit {
   ngOnInit() {
     const queryMap = this.route.snapshot.queryParamMap;
     if (queryMap.has('e') && queryMap.get('e') === '401') {
-      this.alert = [ Alerts.Info, 'It looks like you were signed out.' ];
+      this.alert = { type: AlertType.Info, text: 'It looks like you were signed out.' };
     }
     if (queryMap.has('n') && queryMap.get('n') === 'join') {
-      this.alert = [ Alerts.Info, 'Please sign in to respond to your team invitation.'];
+      this.alert = { type: AlertType.Info, text: 'Please sign in to respond to your team invitation.' };
     }
   }
 
@@ -86,7 +81,7 @@ export class SigninComponent implements OnInit {
       return;
     }
     if (!this.signinForm.valid) {
-      this.alert = [Alerts.Danger, 'Incorrect username or password.'];
+      this.alert = { type: AlertType.Danger, text: 'Incorrect username or password.' };
       return;
     }
     if (this.prev === model) {
@@ -113,7 +108,7 @@ export class SigninComponent implements OnInit {
           [ 423, 'account suspended', 'Your account is currently suspended.' ],
           [ 423, 'account locked', 'Your account is temporarily locked.' ]
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
         this.prev = model;
       }
     );

@@ -4,19 +4,14 @@
 
 import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-
 import { ApiService } from '@weasel/core/services';
 import { errorLogger } from '@weasel/shared/utils/errorLogger';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
 interface IFormContent {
   body: string;
   name: string;
   page: string;
-}
-
-enum Alerts {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
 }
 
 @Component({
@@ -45,7 +40,7 @@ export class FeedbackComponent {
       updateOn: 'blur'
     })
   });
-  alert?: [Alerts, string];
+  alert: Alert;
   submitted: boolean;
   prev: IFormContent;
 
@@ -67,7 +62,7 @@ export class FeedbackComponent {
    */
   onSubmit(model: IFormContent) {
     if (!this.feedbackForm.valid) {
-      this.alert = [Alerts.Danger, 'Your message is invalid.'];
+      this.alert = { type: AlertType.Danger, text: 'Your message is invalid.' };
       return;
     }
     if (this.prev === model) {
@@ -80,7 +75,7 @@ export class FeedbackComponent {
     model.page = 'dummy';
     this.apiService.post('/feedback', model).subscribe(
       () => {
-        this.alert = [Alerts.Success, 'Your message was delivered.'];
+        this.alert = { type: AlertType.Success, text: 'Your message was delivered.' };
         this.feedbackForm.reset();
         this.submitted = false;
         this.prev = null;
@@ -89,7 +84,7 @@ export class FeedbackComponent {
         const msg = this.apiService.extractError(err, [
           [ 400, 'request invalid', 'Your request was rejected by the server.' ]
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
         errorLogger.notify(err);
         this.prev = model;
       }

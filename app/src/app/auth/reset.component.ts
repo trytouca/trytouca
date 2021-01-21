@@ -7,6 +7,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { timer } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
 interface IAccountInfo {
   email: string;
@@ -24,12 +25,6 @@ interface IResetFormContent {
   upass2: string;
 }
 
-enum Alerts {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger',
-  Warning = 'wsl-alert-warning'
-}
-
 @Component({
   selector: 'app-reset',
   templateUrl: './reset.component.html'
@@ -38,7 +33,7 @@ export class ResetComponent {
 
   _resetKey: string;
   _accountInfo: IAccountInfo;
-  alert?: [Alerts, string];
+  alert: Alert;
   submitted: boolean;
   shouldShowResetForm = false;
 
@@ -108,7 +103,7 @@ export class ResetComponent {
               [ 400, 'reset key invalid', 'Your reset link is invalid.' ],
               [ 400, 'reset key expired', 'Your reset link is expired.' ],
             ]);
-            this.alert = [Alerts.Warning, msg];
+            this.alert = { type: AlertType.Warning, text: msg };
           }
         );
     }
@@ -149,7 +144,7 @@ export class ResetComponent {
   /**
    *
    */
-  async onRequestSubmission(model: IRequestFormContent) {
+  onRequestSubmission(model: IRequestFormContent) {
     if (!this.requestForm.valid) {
       return;
     }
@@ -158,7 +153,7 @@ export class ResetComponent {
       () => {
         this.requestForm.reset();
         this.submitted = false;
-        this.alert = [Alerts.Success, 'Please check your email for a link to reset your password.'];
+        this.alert = { type: AlertType.Success, text: 'Please check your email for a link to reset your password.' };
       },
       err => {
         const msg = this.apiService.extractError(err, [
@@ -167,7 +162,7 @@ export class ResetComponent {
           [ 423, 'account suspended', 'Your account is currently suspended.' ],
           [ 423, 'account locked', 'Your account is temporarily locked.' ]
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }
@@ -175,7 +170,7 @@ export class ResetComponent {
   /**
    *
    */
-  async onResetSubmission(model: IResetFormContent) {
+  onResetSubmission(model: IResetFormContent) {
     if (!this.resetForm.valid) {
       return;
     }
@@ -186,7 +181,7 @@ export class ResetComponent {
     };
     this.apiService.post(`/auth/reset/${this._resetKey}`, body).subscribe(
       () => {
-        this.alert = [Alerts.Success, 'Your password is reset.'];
+        this.alert = { type: AlertType.Success, text: 'Your password is reset.' };
         this.resetForm.reset();
         this.submitted = false;
         this.shouldShowResetForm = false;
@@ -197,7 +192,7 @@ export class ResetComponent {
           [ 400, 'request invalid', 'Your request was rejected by the server.' ],
           [ 400, 'reset key invalid', 'Your reset link was invalid or expired.' ]
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }

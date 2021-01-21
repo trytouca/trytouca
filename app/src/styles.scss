@@ -7,24 +7,6 @@
 @import "tailwindcss/utilities";
 
 @layer components {
-  .wsl-alert {
-    @apply py-3 px-5 mb-4 rounded-md shadow-sm;
-  }
-  .wsl-alert-text {
-    @apply font-normal text-sm;
-  }
-  .wsl-alert-danger {
-    @apply bg-red-100 border-red-200 text-red-800;
-  }
-  .wsl-alert-info {
-    @apply bg-lblue-100 border-lblue-200 text-lblue-800;
-  }
-  .wsl-alert-success {
-    @apply bg-green-100 border-green-200 text-green-800;
-  }
-  .wsl-alert-warning {
-    @apply bg-yellow-100 border-yellow-200 text-yellow-800;
-  }
   .wsl-btn {
     @apply text-sm leading-6 focus:outline-none;
   }

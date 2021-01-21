@@ -7,17 +7,13 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 import { ApiService, AuthService, UserService } from '@weasel/core/services';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
 interface IFormContent {
   email: string;
   fname: string;
   uname: string;
   upass: string;
-}
-
-enum Alerts {
-  Success = 'wsl-alert-success',
-  Danger = 'wsl-alert-danger'
 }
 
 @Component({
@@ -59,7 +55,7 @@ export class SignupFormComponent {
       updateOn: 'change'
     })
   });
-  alert?: [Alerts, string];
+  alert: Alert;
   submitted: boolean;
 
   constructor(
@@ -87,7 +83,7 @@ export class SignupFormComponent {
     };
     this.apiService.post('/auth/signup', body).subscribe(
       () => {
-        this.alert = [Alerts.Success, 'Your account was created.'];
+        this.alert = { type: AlertType.Success, text: 'Your account was created.' };
         this.signupForm.reset();
         this.submitted = false;
         this.authService.login(model.uname, model.upass).subscribe(
@@ -108,7 +104,7 @@ export class SignupFormComponent {
           [ 400, 'user already registered', 'There is already an account associated with this username.' ],
           [ 400, 'email already registered', 'There is already an account associated with this email address.' ],
         ]);
-        this.alert = [Alerts.Danger, msg];
+        this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }

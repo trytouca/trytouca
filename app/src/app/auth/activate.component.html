@@ -3,6 +3,6 @@
   <div *ngIf="!alert" class="wsl-spinner">
     <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
   </div>
-  <app-alert *ngIf="alert" [alert]="alert"></app-alert>
+  <app-alert [alert]="alert"></app-alert>
 </div>
 <app-footer-outside></app-footer-outside>
