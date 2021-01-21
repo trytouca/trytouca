@@ -48,14 +48,10 @@
   This version has no comments yet.
 </article>
 <div class="wsl-comment-frame" *ngFor="let item of comments">
-  <app-home-comment
-    [meta]="item"
-    (commentAction)="commentAction($event)">
+  <app-home-comment [meta]="item" (commentAction)="commentAction($event)">
   </app-home-comment>
   <div class="wsl-comment-reply" *ngFor="let reply of item.replies">
-    <app-home-comment
-      [meta]="reply"
-      (commentAction)="commentAction($event)">
+    <app-home-comment [meta]="reply" (commentAction)="commentAction($event)">
     </app-home-comment>
   </div>
 </div>

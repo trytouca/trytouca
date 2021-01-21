@@ -1,30 +1,24 @@
-<article class="wsl-comment">
-  <div class="wsl-comment-header">
-    <p><b>{{ meta.commentAuthor }}</b></p>
-    <small title="{{ meta.commentTime | date:'medium' }}">
-      {{ meta.commentTime | amTimeAgo }}
-    </small>
-    <small title="{{ meta.commentEditTime | date:'medium' }}"
-      *ngIf="meta.commentEditTime">
-      (edited {{ meta.commentEditTime | amTimeAgo }})
-    </small>
+<article class="py-2">
+  <div class="flex space-x-4">
+    <div class="text-lblue-600">
+      <b>{{ meta.commentAuthor }}</b>
+    </div>
+    <div class="wsl-text-muted space-x-4">
+      <small title="{{ meta.commentTime | date:'medium' }}">
+        {{ meta.commentTime | amTimeAgo }}
+      </small>
+      <small *ngIf="meta.commentEditTime" title="{{ meta.commentEditTime | date:'medium' }}">
+        (edited {{ meta.commentEditTime | amTimeAgo }})
+      </small>
+    </div>
   </div>
-  <blockquote>
-    <markdown [data]="meta.commentBody">
+  <blockquote class="m-2 px-4 border-l-2 border-gray-200">
+    <markdown [data]="meta.commentBody" class="prose prose-sm">
     </markdown>
   </blockquote>
-  <div class="wsl-comment-footer">
-    <a role="button" *ngIf="meta.showButtonReply"
-      (click)="performAction(ActionType.Reply)">
-      Reply
-    </a>
-    <a role="button" *ngIf="meta.showButtonUpdate"
-      (click)="performAction(ActionType.Update)">
-      Edit
-    </a>
-    <a role="button" *ngIf="meta.showButtonRemove"
-      (click)="performAction(ActionType.Remove)">
-      Delete
-    </a>
+  <div class="space-x-4">
+    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonReply" (click)="performAction(ActionType.Reply)">Reply</a>
+    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonUpdate" (click)="performAction(ActionType.Update)">Edit</a>
+    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonRemove" (click)="performAction(ActionType.Remove)">Delete</a>
   </div>
 </article>

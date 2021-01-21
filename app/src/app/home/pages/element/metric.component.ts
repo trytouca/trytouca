@@ -26,7 +26,8 @@ interface IMetadata {
 
 @Component({
   selector: 'app-element-item-metric',
-  templateUrl: './metric.component.html'
+  templateUrl: './metric.component.html',
+  styleUrls: ['../../styles/item.component.scss']
 })
 export class ElementItemMetricComponent {
 
