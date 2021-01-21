@@ -25,7 +25,7 @@ export enum AlertKind {
 export enum AlertType {
   Feedback = 'wsl-alert-success',
   Info = 'wsl-alert-info',
-  Reminder = 'wsl-alert-primary',
+  Reminder = 'wsl-alert-info',
   Warning = 'wsl-alert-warning',
   Error = 'wsl-alert-danger'
 }

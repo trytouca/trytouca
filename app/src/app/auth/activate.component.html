@@ -1,10 +1,10 @@
 <app-header-outside></app-header-outside>
-<div class="wsl-banner-nohead">
-  <div class="wsl-spinner" [hidden]="alert">
-    <span><fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon></span>
+<div class="wsl-min-h-screen-1 grid place-content-center">
+  <div *ngIf="!alert" class="wsl-spinner">
+    <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
   </div>
-  <div *ngIf="alert" class="wsl-alert" [ngClass]="alert[0]">
-    <small class="font-normal text-sm">{{ alert[1] }}</small>
+  <div *ngIf="alert" role="alert" class="wsl-alert" [ngClass]="alert[0]">
+    <small [innerHtml]="alert[1]" class="wsl-alert-text"></small>
   </div>
 </div>
 <app-footer-outside></app-footer-outside>
