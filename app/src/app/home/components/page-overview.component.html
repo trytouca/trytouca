@@ -1,9 +1,8 @@
-<div class="wsl-page-overview">
-  <div>
-
-    <div [hidden]="!resultsRing">
+<div class="p-4 mx-auto container wsl-page-overview">
+  <div class="py-2 grid bg-gray-50 border divide-x" style="grid-template-columns:  1fr auto 1fr;">
+    <div class="px-4 text-center" [hidden]="!resultsRing">
       <small>{{ resultsRing?.header }}</small>
-      <svg width="80" height="80">
+      <svg class="mx-auto" width="80" height="80">
         <circle
           fill="transparent" r="32" cx="40" cy="40" stroke-width="4"
           [attr.stroke]="resultsRing?.backColor"/>
@@ -15,20 +14,18 @@
           {{ resultsRing?.title }}
         </text>
       </svg>
-      <ng-container *ngFor="let footer of resultsRing?.footer">
+      <div *ngFor="let footer of resultsRing?.footer">
         <small>{{ footer }}</small>
-      </ng-container>
+      </div>
     </div>
-
-    <div>
-      <p *ngFor="let statement of statements">
+    <div class="p-4 flex flex-col justify-center">
+      <p class="text-sm mb-2" *ngFor="let statement of statements">
         <span [innerHTML]="statement"></span>
       </p>
     </div>
-
-    <div [hidden]="!metricsRing">
+    <div class="px-4 text-center" [hidden]="!metricsRing">
       <small>{{ metricsRing?.header }}</small>
-      <svg width="80" height="80">
+      <svg class="mx-auto" width="80" height="80">
         <circle
           fill="transparent" r="32" cx="40" cy="40" stroke-width="4"
           [attr.stroke]="metricsRing?.backColor"/>
@@ -40,10 +37,9 @@
           {{ metricsRing?.title }}
         </text>
       </svg>
-      <ng-container *ngFor="let footer of metricsRing?.footer">
+      <div *ngFor="let footer of metricsRing?.footer">
         <small>{{ footer }}</small>
-      </ng-container>
+      </div>
     </div>
-
   </div>
 </div>
