@@ -15,13 +15,12 @@
             <span class="wsl-dropdown-toggle" id="wsl-teams-dropdown" aria-expanded="false">
               {{ team?.name }}&thinsp;<fa-icon icon="chevron-down" size="xs"></fa-icon>
             </span>
-            <div class="wsl-dropdown-menu hidden relative text-sm font-normal">
-              <ul class="absolute right-0 w-48 py-2 mt-2 bg-white border rounded-md shadow-xl" aria-labelledby="wsl-teams-dropdown">
-                <li *ngFor="let teamItem of teams" (click)="switchPage(teamItem.slug)" class="wsl-dropdown-item p-2 cursor-pointer select-none hover:bg-gray-100" [ngClass]="{'bg-lblue-100': team?.slug === teamItem.slug}">
-                  {{ teamItem.name }}
-                </li>
-              </ul>
-            </div>
+            <ul class="wsl-dropdown-menu hidden" aria-labelledby="wsl-teams-dropdown">
+              <li *ngFor="let teamItem of teams" (click)="switchPage(teamItem.slug)"
+                class="wsl-dropdown-item" [ngClass]="{'bg-lblue-100': team?.slug === teamItem.slug}">
+                {{ teamItem.name }}
+              </li>
+            </ul>
           </li>
         </ol>
       </nav>

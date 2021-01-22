@@ -49,6 +49,7 @@ export class DropdownDirective implements AfterViewInit {
     }
     this._menu = menuRef;
     this._toggle = toggleRef;
+    this.renderer.addClass(nativeElement, 'relative');
     this.renderer.listen(menuRef, 'click', () => {
       this.toggleMenu();
     });

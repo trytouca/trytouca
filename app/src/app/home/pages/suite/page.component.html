@@ -11,21 +11,16 @@
           <li>
             <a routerLink="..">{{ suite?.teamName }}</a>
           </li>
-          <li class="wsl-dropdown active" aria-current="page" ngbDropdown>
-            <span ngbDropdownToggle id="wsl-suites-dropdown" aria-expanded="false">
-              {{ suite?.suiteName }}
+          <li aria-current="page" wslDropdown>
+            <span class="wsl-dropdown-toggle" id="wsl-suites-dropdown" aria-expanded="false">
+              {{ suite?.suiteName }}&thinsp;<fa-icon icon="chevron-down" size="xs"></fa-icon>
             </span>
-            <div ngbDropdownMenu
-              class="dropdown-menu dropdown-menu-right"
-              aria-labelledby="wsl-suites-dropdown">
-              <div ngbDropdownItem
-                *ngFor="let suiteItem of suites"
-                class="wsl-dropdown-item"
-                [ngClass]="{ 'active': suite?.suiteSlug === suiteItem.suiteSlug }"
-                (click)="switchPage(suiteItem.suiteSlug)">
+            <ul class="wsl-dropdown-menu hidden" aria-labelledby="wsl-suites-dropdown">
+              <li *ngFor="let suiteItem of suites" (click)="switchPage(suiteItem.suiteSlug)"
+                class="wsl-dropdown-item" [ngClass]="{'bg-lblue-100': suite?.suiteSlug === suiteItem.suiteSlug}">
                 {{ suiteItem.suiteName }}
-              </div>
-            </div>
+              </li>
+            </ul>
           </li>
         </ol>
       </nav>

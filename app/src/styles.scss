@@ -112,6 +112,12 @@
       @apply text-2xl text-lblue-600;
     }
   }
+  .wsl-dropdown-menu {
+    @apply absolute right-0 w-48 py-2 mt-2 bg-white text-sm font-normal border rounded-md shadow-xl;
+  }
+  .wsl-dropdown-item {
+    @apply p-2 cursor-pointer select-none hover:bg-gray-100;
+  }
 }
 
 .wsl-min-h-screen-1 {
