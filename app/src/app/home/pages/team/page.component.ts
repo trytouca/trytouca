@@ -5,7 +5,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faCog, faPlus, faTasks, faUsers, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faCog, faPlus, faTasks, faUsers, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { DialogService, DialogRef } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 import type { TeamItem } from '@weasel/core/models/commontypes';
@@ -75,7 +75,7 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
     route: ActivatedRoute
   ) {
     super(teamPageService, pageTabs, route);
-    faIconLibrary.addIcons(faCog, faPlus, faTasks, faUserPlus, faUsers);
+    faIconLibrary.addIcons(faChevronDown, faCog, faPlus, faTasks, faUserPlus, faUsers);
     this._subAlert = this.alertService.alerts$.subscribe(v => {
       if (v.some(k => k.kind === AlertKind.TeamNotFound)) {
         this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');

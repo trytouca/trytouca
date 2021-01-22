@@ -11,7 +11,7 @@
         @apply flex-grow;
         ol {
           @apply flex;
-          li:not(:last-child):after {
+          & > li:not(:last-child):after {
             content: "\2002/\2002";
           }
           a {

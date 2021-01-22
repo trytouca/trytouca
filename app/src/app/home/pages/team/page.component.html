@@ -11,34 +11,30 @@
           <li>
             <a routerLink="..">Your Teams</a>
           </li>
-          <li class="wsl-dropdown active" aria-current="page" ngbDropdown>
-            <span ngbDropdownToggle id="wsl-teams-dropdown" aria-expanded="false">
-              {{ team?.name }}
+          <li aria-current="page" wslDropdown>
+            <span class="wsl-dropdown-toggle" id="wsl-teams-dropdown" aria-expanded="false">
+              {{ team?.name }}&thinsp;<fa-icon icon="chevron-down" size="xs"></fa-icon>
             </span>
-            <div ngbDropdownMenu
-              class="dropdown-menu dropdown-menu-right"
-              aria-labelledby="wsl-teams-dropdown">
-              <div ngbDropdownItem
-                *ngFor="let teamItem of teams"
-                class="wsl-dropdown-item"
-                [ngClass]="{ 'active': team?.slug === teamItem.slug }"
-                (click)="switchPage(teamItem.slug)">
-                {{ teamItem.name }}
-              </div>
+            <div class="wsl-dropdown-menu hidden relative text-sm font-normal">
+              <ul class="absolute right-0 w-48 py-2 mt-2 bg-white border rounded-md shadow-xl" aria-labelledby="wsl-teams-dropdown">
+                <li *ngFor="let teamItem of teams" (click)="switchPage(teamItem.slug)" class="wsl-dropdown-item p-2 cursor-pointer select-none hover:bg-gray-100" [ngClass]="{'bg-lblue-100': team?.slug === teamItem.slug}">
+                  {{ teamItem.name }}
+                </li>
+              </ul>
             </div>
           </li>
         </ol>
       </nav>
       <div class="print:hidden">
         <button type="button" (click)="openCreateModal()" *ngIf="currentTab === TabType.Suites && hasData() && hasItems()" class="wsl-btn-sm wsl-btn-dark">
-        <fa-icon icon="plus"></fa-icon>
-        New Suite
-      </button>
+          <fa-icon icon="plus"></fa-icon>
+          New Suite
+        </button>
         <button type="button" (click)="openInviteModal()" *ngIf="currentTab === TabType.Members" class="wsl-btn-sm wsl-btn-dark">
-        <fa-icon icon="user-plus"></fa-icon>
-        Invite Member
-      </button>
-    </div>
+          <fa-icon icon="user-plus"></fa-icon>
+          Invite Member
+        </button>
+      </div>
     </div>
     <div class="wsl-page-nav">
       <nav>
