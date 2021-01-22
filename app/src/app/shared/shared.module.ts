@@ -20,6 +20,10 @@ import {
 } from './components';
 
 import {
+  DropdownDirective
+} from './directives/dropdown.directive';
+
+import {
   SignupFormComponent
 } from './forms/signup.component';
 
@@ -35,6 +39,7 @@ import {
   ],
   declarations: [
     AlertComponent,
+    DropdownDirective,
     FooterInsideComponent,
     FooterOutsideComponent,
     HeaderInsideComponent,
@@ -46,6 +51,7 @@ import {
     AlertComponent,
     CommonModule,
     DialogModule,
+    DropdownDirective,
     FontAwesomeModule,
     FooterInsideComponent,
     FooterOutsideComponent,
