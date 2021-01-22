@@ -14,8 +14,7 @@ type PageNumber = {
 
 @Component({
   selector: 'app-home-list-pager',
-  templateUrl: './list-pager.component.html',
-  styleUrls: ['./list-pager.component.scss']
+  templateUrl: './list-pager.component.html'
 })
 export class ListPagerComponent {
 
