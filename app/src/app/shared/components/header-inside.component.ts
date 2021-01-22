@@ -5,7 +5,7 @@
 import { AfterContentInit, Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faInbox, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faInbox, faUser } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import type { UserLookupResponse } from '@weasel/core/models/commontypes';
 import { EPlatformRole } from '@weasel/core/models/commontypes';
@@ -30,7 +30,7 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
     private userService: UserService
   ) {
     this._subUser = this.userService.currentUser$.subscribe(user => this.currentUser = user);
-    faIconLibrary.addIcons(faInbox, faUser);
+    faIconLibrary.addIcons(faChevronDown, faInbox, faUser);
   }
 
   ngAfterContentInit() {
