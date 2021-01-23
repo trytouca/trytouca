@@ -86,7 +86,7 @@
     @apply w-full mx-auto p-8 rounded-md shadow-lg;
   }
   .wsl-page-tab {
-    @apply p-4 mx-auto container;
+    @apply p-4 mx-auto container space-y-4;
   }
   .wsl-page-banner {
     @apply wsl-page-auth md:max-w-screen-sm text-center;

@@ -1,5 +1,5 @@
 <section class="wsl-page-tab" id="wsl-teams-tab-teams">
-  <div *ngIf="counters.active">
+  <ng-container *ngIf="counters.active">
     <app-home-list-filter
       [manager]="filterManager"
       [params]="filterParams()"
@@ -32,7 +32,7 @@
       *ngIf="counters.invited + counters.joining === 0"
       [page]="'app-teams-tab-teams'">
     </app-home-feedback-link>
-  </div>
+  </ng-container>
   <div class="wsl-requests-list" *ngIf="counters.invited">
     <h2>Your Invitations</h2>
     <ul class="wsl-list-body">

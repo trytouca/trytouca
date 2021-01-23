@@ -1,50 +1,54 @@
 <section class="wsl-page-tab">
-  <h2 class="pb-1 text-xl font-medium"><label for="wsl-body">{{ fields.editorTitle }}</label></h2>
-  <p class="text-sm">{{ fields.editorSubtitle }}</p>
-  <app-alert [alert]="alert"></app-alert>
-  <form class="wsl-form py-4" [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate>
-    <div [hidden]="!fields.previewShow">
-      <blockquote class="p-2 border-l-2 border-gray-200">
-        <markdown class="prose prose-sm" [data]="form.controls.body.value">
-        </markdown>
-      </blockquote>
-    </div>
-    <div [hidden]="fields.previewShow">
-      <textarea class="wsl-input-field" id="wsl-body" rows="5" tabindex="1" aria-describedby="wsl-body-help" formControlName="body" name="body">
-      </textarea>
-      <small class="wsl-text-danger" id="wsl-body-help" [hidden]="form.controls.body.pristine || form.controls.body.valid">
-        Please provide more information in your comment.
-      </small>
-      <small class="wsl-text-muted" [hidden]="!form.controls.body.pristine && !form.controls.body.valid">
-        This field supports markdown format.
-      </small>
-    </div>
-    <div class="wsl-form-footer">
-      <div class="wsl-form-submit">
-        <button class="wsl-btn-sm wsl-btn-dark" type="submit" tabindex="2">
-          {{ fields.buttonSubmitText }}
-        </button>
+  <div>
+    <h2 class="pb-1 text-xl font-medium"><label for="wsl-body">{{ fields.editorTitle }}</label></h2>
+    <p class="text-sm">{{ fields.editorSubtitle }}</p>
+    <app-alert [alert]="alert"></app-alert>
+    <form class="wsl-form pt-4" [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate>
+      <div [hidden]="!fields.previewShow">
+        <blockquote class="p-2 border-l-2 border-gray-200">
+          <markdown class="prose prose-sm" [data]="form.controls.body.value">
+          </markdown>
+        </blockquote>
       </div>
-      <div class="wsl-form-links">
-        <button class="wsl-btn-sm wsl-btn-muted" type="button" (click)="togglePreview()" tabindex="3" [hidden]="!fields.buttonPreviewShow || !form.controls.body.valid || form.controls.body.pristine">
-          {{ fields.buttonPreviewText }}
-        </button>
-        <button class="wsl-btn-sm wsl-btn-muted" type="button" (click)="cancelForm()" tabindex="4" [hidden]="!fields.buttonCancelShow">
-          Cancel
-        </button>
+      <div [hidden]="fields.previewShow">
+        <textarea class="wsl-input-field" id="wsl-body" rows="5" tabindex="1" aria-describedby="wsl-body-help" formControlName="body" name="body">
+        </textarea>
+        <small class="wsl-text-danger" id="wsl-body-help" [hidden]="form.controls.body.pristine || form.controls.body.valid">
+          Please provide more information in your comment.
+        </small>
+        <small class="wsl-text-muted" [hidden]="!form.controls.body.pristine && !form.controls.body.valid">
+          This field supports markdown format.
+        </small>
       </div>
-    </div>
-  </form>
-  <h2 class="pb-1 text-xl font-medium">Comments</h2>
-  <article class="h-32 p-2 border flex items-center justify-center bg-gray-50 text-sm" *ngIf="comments.length === 0">
-    This version has no comments yet.
-  </article>
-  <div class="p-2 border" *ngFor="let item of comments">
-    <app-home-comment [meta]="item" (commentAction)="commentAction($event)">
-    </app-home-comment>
-    <div class="mx-12 border-t" *ngFor="let reply of item.replies">
-      <app-home-comment [meta]="reply" (commentAction)="commentAction($event)">
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button class="wsl-btn-sm wsl-btn-dark" type="submit" tabindex="2">
+            {{ fields.buttonSubmitText }}
+          </button>
+        </div>
+        <div class="wsl-form-links">
+          <button class="wsl-btn-sm wsl-btn-muted" type="button" (click)="togglePreview()" tabindex="3" [hidden]="!fields.buttonPreviewShow || !form.controls.body.valid || form.controls.body.pristine">
+            {{ fields.buttonPreviewText }}
+          </button>
+          <button class="wsl-btn-sm wsl-btn-muted" type="button" (click)="cancelForm()" tabindex="4" [hidden]="!fields.buttonCancelShow">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div>
+    <h2 class="pb-1 text-xl font-medium">Comments</h2>
+    <article class="h-32 p-2 border flex items-center justify-center bg-gray-50 text-sm" *ngIf="comments.length === 0">
+      This version has no comments yet.
+    </article>
+    <div class="p-2" *ngFor="let item of comments">
+      <app-home-comment [meta]="item" (commentAction)="commentAction($event)">
       </app-home-comment>
+      <div class="mx-12 border-t" *ngFor="let reply of item.replies">
+        <app-home-comment [meta]="reply" (commentAction)="commentAction($event)">
+        </app-home-comment>
+      </div>
     </div>
   </div>
 </section>
