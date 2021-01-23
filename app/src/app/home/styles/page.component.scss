@@ -26,7 +26,7 @@
     .wsl-page-nav {
       @apply mx-auto container flex justify-between;
       ul {
-        @apply flex;
+        @apply -mb-px flex;
       }
       li {
         @apply py-1 px-4 leading-10 text-sm border-b border-transparent cursor-pointer;
