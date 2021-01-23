@@ -1,61 +1,73 @@
-<section *ngIf="team">
+<section class="wsl-page-tab" *ngIf="team">
   <h2>Team Settings</h2>
   <div class="wsl-settings">
-    <div *ngIf="team.role === ETeamRole.Owner" class="wsl-settings-section">
+    <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
       <h3 for="wsl-team-name">Team Name</h3>
-      <app-alert *ngIf="alert[EModalType.ChangeName]" [alert]="alert[EModalType.ChangeName]"></app-alert>
+      <app-alert
+        *ngIf="alert[EModalType.ChangeName]"
+        [alert]="alert[EModalType.ChangeName]">
+      </app-alert>
       <p>
         Short user-friendly name used on the platform and all generated reports.
       </p>
-      <form [formGroup]="formName" (ngSubmit)="onSubmit(EModalType.ChangeName, formName.value)" novalidate class="space-x-2 flex">
-        <input type="text" id="wsl-team-name" tabindex="1" required autocomplete="off" aria-describedby="wsl-team-name-help" formControlName="name" name="name" class="wsl-input-field">
-        <button type="submit" tabindex="2" class="wsl-btn-sm wsl-btn-dark font-normal">
+      <form class="space-x-2 flex" [formGroup]="formName" (ngSubmit)="onSubmit(EModalType.ChangeName, formName.value)" novalidate>
+        <input class="wsl-input-field" type="text" id="wsl-team-name" tabindex="1" required autocomplete="off" aria-describedby="wsl-team-name-help" formControlName="name" name="name">
+        <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit" tabindex="2">
           Update
         </button>
       </form>
-      <small [hidden]="formName.controls.name.pristine || formName.controls.name.valid" class="wsl-text-muted">
+      <small class="wsl-text-muted" [hidden]="formName.controls.name.pristine || formName.controls.name.valid">
         Should contain 3 to 32 characters.
       </small>
     </div>
-    <div *ngIf="team.role === ETeamRole.Owner" class="wsl-settings-section">
+    <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
       <h3 for="wsl-team-slug">Team Slug</h3>
-      <app-alert *ngIf="alert[EModalType.ChangeSlug]" [alert]="alert[EModalType.ChangeSlug]"></app-alert>
+      <app-alert
+        *ngIf="alert[EModalType.ChangeSlug]"
+        [alert]="alert[EModalType.ChangeSlug]">
+      </app-alert>
       <p>
         Unique URL-friendly identifier for this team. Changing the slug
         invalidates previous links to the test results for this team.
       </p>
-      <form [formGroup]="formSlug" (ngSubmit)="onSubmit(EModalType.ChangeSlug, formSlug.value)" novalidate class="space-x-2 flex">
-        <input type="text" id="wsl-team-slug" tabindex="3" required autocomplete="off" aria-describedby="wsl-team-slug-help" formControlName="slug" name="slug" class="wsl-input-field">
-        <button type="submit" tabindex="4" class="wsl-btn-sm wsl-btn-dark font-normal">
+      <form class="space-x-2 flex" [formGroup]="formSlug" (ngSubmit)="onSubmit(EModalType.ChangeSlug, formSlug.value)" novalidate>
+        <input class="wsl-input-field" type="text" id="wsl-team-slug" tabindex="3" required autocomplete="off" aria-describedby="wsl-team-slug-help" formControlName="slug" name="slug">
+        <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit" tabindex="4">
           Update
         </button>
       </form>
-      <small [hidden]="formSlug.controls.slug.pristine || formSlug.controls.slug.valid" class="wsl-text-muted">
+      <small class="wsl-text-muted" [hidden]="formSlug.controls.slug.pristine || formSlug.controls.slug.valid">
         Should contain 3 to 16 alphanumeric characters and may not start with a number.
       </small>
     </div>
-    <div *ngIf="team.role !== ETeamRole.Owner" class="wsl-settings-section">
+    <div class="wsl-settings-section" *ngIf="team.role !== ETeamRole.Owner">
       <h3 class="wsl-text-danger">Danger Zone</h3>
-      <app-alert *ngIf="alert[EModalType.LeaveTeam]" [alert]="alert[EModalType.LeaveTeam]"></app-alert>
+      <app-alert
+        *ngIf="alert[EModalType.LeaveTeam]"
+        [alert]="alert[EModalType.LeaveTeam]">
+      </app-alert>
       <p>
         You are a member of team <b>{{ team.name }}</b>.
         You can leave this team at any time.
         Once you leave a team, you need a new invitation to join back
         in the future.
       </p>
-      <button type="button" (click)="openConfirmModal(EModalType.LeaveTeam)" tabindex="5" class="wsl-btn-sm wsl-btn-danger">
+      <button class="wsl-btn-sm wsl-btn-danger" type="button" (click)="openConfirmModal(EModalType.LeaveTeam)" tabindex="5">
         Leave Team
       </button>
     </div>
-    <div *ngIf="team.role === ETeamRole.Owner" class="wsl-settings-section">
+    <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
       <h3 class="wsl-text-danger">Danger Zone</h3>
-      <app-alert *ngIf="alert[EModalType.DeleteTeam]" [alert]="alert[EModalType.DeleteTeam]"></app-alert>
+      <app-alert
+        *ngIf="alert[EModalType.DeleteTeam]"
+        [alert]="alert[EModalType.DeleteTeam]">
+      </app-alert>
       <p>
         You own team <b>{{ team.name }}</b>. You may delete
         this team and all its content, if you so choose.
         This action permanently deletes all data associated with this team.
       </p>
-      <button type="button" (click)="openConfirmModal(EModalType.DeleteTeam)" tabindex="6" class="wsl-btn-sm wsl-btn-danger">
+      <button class="wsl-btn-sm wsl-btn-danger" type="button" (click)="openConfirmModal(EModalType.DeleteTeam)" tabindex="6">
         Delete Team
       </button>
     </div>

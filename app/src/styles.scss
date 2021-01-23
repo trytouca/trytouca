@@ -85,6 +85,9 @@
   .wsl-page-auth-form {
     @apply w-full mx-auto p-8 rounded-md shadow-lg;
   }
+  .wsl-page-tab {
+    @apply p-4 mx-auto container;
+  }
   .wsl-page-banner {
     @apply wsl-page-auth md:max-w-screen-sm text-center;
     h2 {
@@ -113,7 +116,7 @@
     }
   }
   .wsl-dropdown-menu {
-    @apply absolute right-0 w-48 py-2 mt-2 bg-white text-sm font-normal border rounded-md shadow-xl;
+    @apply absolute z-10 right-0 w-48 py-2 mt-2 bg-white text-sm font-normal border rounded-md shadow-xl;
   }
   .wsl-dropdown-item {
     @apply p-2 cursor-pointer select-none hover:bg-gray-100;

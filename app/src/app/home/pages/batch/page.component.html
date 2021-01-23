@@ -52,8 +52,8 @@
       </app-batch-list-elements>
     </div>
   </div>
-  <section [hidden]="currentTab !== TabType.Comments" class="p-4 mx-auto container">
+  <div [hidden]="currentTab !== TabType.Comments">
     <app-batch-tab-comments>
     </app-batch-tab-comments>
-  </section>
+  </div>
 </div>

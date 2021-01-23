@@ -28,8 +28,7 @@ type IFormContent = {
 
 @Component({
   selector: 'app-batch-tab-comments',
-  templateUrl: './comments.component.html',
-  styleUrls: ['./comments.component.scss']
+  templateUrl: './comments.component.html'
 })
 export class BatchCommentsComponent implements OnDestroy {
 

@@ -1,5 +1,5 @@
 <div class="px-4 py-2 mx-auto container md:grid md:grid-cols-3 text-sm"
-  [hidden]="isFirstPage() && isLastPage() && pageLengths.length === 1">
+  *ngIf="isFirstPage() && isLastPage() && pageLengths.length === 1">
   <div></div>
   <div class="grid grid-cols-3 text-sm">
     <div

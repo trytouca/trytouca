@@ -1,7 +1,11 @@
-<section id="wsl-batch-elements">
-  <app-home-list-filter [manager]="filterManager" [params]="filterParams()" [stats]="filterStats()" (updateList)="updateList($event)">
+<section class="wsl-page-tab" id="wsl-batch-elements">
+  <app-home-list-filter
+    [manager]="filterManager"
+    [params]="filterParams()"
+    [stats]="filterStats()"
+    (updateList)="updateList($event)">
   </app-home-list-filter>
-  <div *ngIf="countShownRows(ItemType.Common)" class="wsl-list">
+  <div class="wsl-list" *ngIf="countShownRows(ItemType.Common)">
     <div class="wsl-list-head">
       <h2>Common Testcases</h2>
       <p>
@@ -16,13 +20,18 @@
       </p>
     </div>
     <ul class="wsl-list-body">
-      <li *ngFor="let item of getShownRows(ItemType.Common); let i = index;" (click)="selectedRow = i" class="wsl-list-item-outer" [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
-        <app-batch-item-element [item]="item" [params]="params">
+      <li class="wsl-list-item-outer"
+        *ngFor="let item of getShownRows(ItemType.Common); let i = index;"
+        (click)="selectedRow = i"
+        [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
+        <app-batch-item-element
+          [item]="item"
+          [params]="params">
         </app-batch-item-element>
       </li>
     </ul>
   </div>
-  <div *ngIf="countShownRows(ItemType.Fresh)" class="wsl-list">
+  <div class="wsl-list" *ngIf="countShownRows(ItemType.Fresh)">
     <div class="wsl-list-head">
       <h2>New Testcases</h2>
       <p>
@@ -37,13 +46,18 @@
       </p>
     </div>
     <ul class="wsl-list-body">
-      <li *ngFor="let item of getShownRows(ItemType.Fresh); let i = index;" (click)="selectedRow = i + countShownRows(ItemType.Common)" class="wsl-list-item-outer" [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Common)}">
-        <app-batch-item-element [item]="item" [params]="params">
+      <li class="wsl-list-item-outer"
+        *ngFor="let item of getShownRows(ItemType.Fresh); let i = index;"
+        (click)="selectedRow = i + countShownRows(ItemType.Common)"
+        [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Common)}">
+        <app-batch-item-element
+          [item]="item"
+          [params]="params">
         </app-batch-item-element>
       </li>
     </ul>
   </div>
-  <div *ngIf="countShownRows(ItemType.Missing)" class="wsl-list">
+  <div class="wsl-list" *ngIf="countShownRows(ItemType.Missing)">
     <div class="wsl-list-head">
       <h2>Missing Testcases</h2>
       <p>
@@ -58,16 +72,22 @@
       </p>
     </div>
     <ul class="wsl-list-body">
-      <li *ngFor="let item of getShownRows(ItemType.Missing); let i = index;" (click)="selectedRow = i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)" class="wsl-list-item-outer" [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)}">
-        <app-batch-item-element [item]="item" [params]="params">
+      <li class="wsl-list-item-outer"
+        *ngFor="let item of getShownRows(ItemType.Missing); let i = index;"
+        (click)="selectedRow = i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)"
+        [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)}">
+        <app-batch-item-element
+          [item]="item"
+          [params]="params">
         </app-batch-item-element>
       </li>
     </ul>
   </div>
-  <app-home-list-pager [params]="pagerParams()" [stats]="filterStats()" (updateList)="updateList($event)">
+  <app-home-list-pager
+    [params]="pagerParams()"
+    [stats]="filterStats()"
+    (updateList)="updateList($event)">
   </app-home-list-pager>
-  <div class="wsl-feedback-link">
-    <app-home-feedback-link [page]="'app-batch-list-elements'">
-    </app-home-feedback-link>
-  </div>
+  <app-home-feedback-link [page]="'app-batch-list-elements'">
+  </app-home-feedback-link>
 </section>

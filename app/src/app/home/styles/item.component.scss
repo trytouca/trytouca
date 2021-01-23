@@ -4,7 +4,7 @@
 
 @layer utilities {
   .wsl-list-item {
-    @apply py-4 sm:px-2 md:px-6 md:flex md:justify-between;
+    @apply py-4 px-2 md:px-6 md:flex md:justify-between;
   }
   .wsl-item-heading {
     @apply flex space-x-4;

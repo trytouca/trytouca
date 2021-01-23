@@ -1,49 +1,57 @@
-<section id="wsl-teams-tab-teams">
+<section class="wsl-page-tab" id="wsl-teams-tab-teams">
   <div *ngIf="counters.active">
-    <div [ngClass]="{'wsl-min-h-screen-3': counters.invited + counters.joining === 0}">
-      <app-home-list-filter [manager]="filterManager" [params]="filterParams()" [stats]="filterStats()" (updateList)="updateList($event)">
-      </app-home-list-filter>
-      <div *ngIf="counters.active" class="wsl-list">
-        <div class="wsl-list-head">
-          <p *ngIf="counters.active !== countRows(ItemType.Active)">
-            You are viewing <b>{{ counters.active | i18nPlural: { '=1': 'one', 'other': '#' } }}</b>
-            of {{ countRows(ItemType.Active) }} teams.
-          </p>
-        </div>
-        <ul class="wsl-list-body">
-          <li *ngFor="let item of getShownRows(ItemType.Active); let i = index;" (click)="selectedRow = i;" class="wsl-list-item-outer" [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
-            <app-teams-item-team [item]="item">
-            </app-teams-item-team>
-          </li>
-        </ul>
+    <app-home-list-filter
+      [manager]="filterManager"
+      [params]="filterParams()"
+      [stats]="filterStats()"
+      (updateList)="updateList($event)">
+    </app-home-list-filter>
+    <div class="wsl-list" *ngIf="counters.active">
+      <div class="wsl-list-head">
+        <p *ngIf="counters.active !== countRows(ItemType.Active)">
+          You are viewing <b>{{ counters.active | i18nPlural: { '=1': 'one', 'other': '#' } }}</b>
+          of {{ countRows(ItemType.Active) }} teams.
+        </p>
       </div>
-      <app-home-list-pager *ngIf="counters.active" [params]="pagerParams()" [stats]="filterStats()" (updateList)="updateList($event)">
-      </app-home-list-pager>
+      <ul class="wsl-list-body">
+        <li class="wsl-list-item-outer"
+          *ngFor="let item of getShownRows(ItemType.Active); let i = index;"
+          (click)="selectedRow = i;"
+          [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
+          <app-teams-item-team [item]="item">
+          </app-teams-item-team>
+        </li>
+      </ul>
     </div>
-    <div class="wsl-feedback-link">
-      <app-home-feedback-link *ngIf="counters.invited + counters.joining === 0" [page]="'app-teams-tab-teams'">
-      </app-home-feedback-link>
-    </div>
+    <app-home-list-pager
+      [params]="pagerParams()"
+      [stats]="filterStats()"
+      (updateList)="updateList($event)">
+    </app-home-list-pager>
+    <app-home-feedback-link
+      *ngIf="counters.invited + counters.joining === 0"
+      [page]="'app-teams-tab-teams'">
+    </app-home-feedback-link>
   </div>
-  <div *ngIf="counters.invited" class="wsl-requests-list">
+  <div class="wsl-requests-list" *ngIf="counters.invited">
     <h2>Your Invitations</h2>
     <ul class="wsl-list-body">
-      <li *ngFor="let item of getShownRows(ItemType.Invited)" class="wsl-list-item">
+      <li class="wsl-list-item" *ngFor="let item of getShownRows(ItemType.Invited)">
         <p>
           You have been invited to join team <b>{{ item.data.name }}</b>.
         </p>
         <div>
-          <button (click)="accept(item)" class="wsl-btn-sm wsl-btn-light">
+          <button class="wsl-btn-sm wsl-btn-light" (click)="accept(item)">
             Accept
           </button>
-          <button (click)="confirmDecline(item)" class="wsl-btn-sm wsl-btn-muted">
+          <button class="wsl-btn-sm wsl-btn-muted" (click)="confirmDecline(item)">
             Decline
           </button>
         </div>
       </li>
     </ul>
   </div>
-  <div *ngIf="counters.joining" class="wsl-requests-list">
+  <div class="wsl-requests-list" *ngIf="counters.joining">
     <h2>Your Requests</h2>
     <ul class="wsl-list-body">
       <li *ngFor="let item of getShownRows(ItemType.Joining)">
@@ -52,7 +60,7 @@
           approval by their administrators.
         </p>
         <div>
-          <button (click)="confirmRescind(item)" class="wsl-btn-sm wsl-btn-muted">
+          <button class="wsl-btn-sm wsl-btn-muted" (click)="confirmRescind(item)">
             Cancel Request
           </button>
         </div>

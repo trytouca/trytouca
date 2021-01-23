@@ -3,11 +3,11 @@
  */
 
 @layer utilities {
-  section {
-    @apply px-4 mx-auto container;
-    h2 {
-      @apply pb-1 text-xl font-medium;
-    }
+  app-alert {
+    @apply mb-4 block;
+  }
+  h2 {
+    @apply pb-1 text-xl font-medium;
   }
   .wsl-settings {
     @apply grid gap-4 lg:grid-cols-2;
