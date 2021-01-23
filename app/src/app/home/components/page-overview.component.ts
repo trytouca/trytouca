@@ -26,6 +26,13 @@ enum RingColor {
 @Component({
   selector: 'app-home-page-overview',
   templateUrl: './page-overview.component.html',
+  styles: [`
+    svg circle {
+      transition: stroke-dashoffset .35s;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+  `],
   providers: [ DurationPipe, PercentPipe ]
 })
 export class PageOverviewComponent {
