@@ -10,7 +10,6 @@
     @apply px-3 py-1 bg-blue-100 text-blue-500 rounded-sm cursor-pointer;
   }
   .wsl-complex {
-    @apply mt-6;
     .wsl-complex-block {
       .wsl-complex-block-head {
         @apply flex px-4 justify-between text-gray-500;
@@ -21,13 +20,17 @@
           }
         }
         .wsl-complex-block-icons {
+          visibility: hidden;
           .wsl-complex-block-icon {
-            @apply text-blue-500 opacity-25 hover:opacity-100;
+            @apply opacity-25 hover:opacity-100 text-blue-500
           }
         }
       }
       pre {
-        @apply p-4 bg-gray-50 text-xs;
+        @apply mb-4 p-4 bg-white text-xs;
+      }
+      &:hover .wsl-complex-block-icons {
+        visibility: visible !important;
       }
     }
   }
