@@ -10,30 +10,36 @@ import { Alert } from '@weasel/shared/components/alert.component';
 @Component({
   selector: 'app-notification',
   template: `
-    <app-alert *ngIf="showNotification" [alert]="alert" class="fixed z-10 top-20 right-4 text-sm"></app-alert>
+    <app-alert
+      *ngIf="showNotification"
+      [alert]="alert"
+      class="fixed z-10 top-20 right-4 text-sm"
+    ></app-alert>
   `
 })
 export class NotificationComponent implements OnDestroy {
-
-  alert: Alert
+  alert: Alert;
   showNotification = false;
   timer: Subscription;
 
   private _subNotification: Subscription;
 
   constructor(private notificationService: NotificationService) {
-    this._subNotification = this.notificationService.notification$.subscribe(([type, message]) => {
-      this.alert = { type: type, text: message };
-      this.showNotification = true;
-      if (this.timer) {
-        this.timer.unsubscribe();
+    this._subNotification = this.notificationService.notification$.subscribe(
+      ([type, message]) => {
+        this.alert = { type: type, text: message };
+        this.showNotification = true;
+        if (this.timer) {
+          this.timer.unsubscribe();
+        }
+        this.timer = timer(2000).subscribe(
+          () => (this.showNotification = false)
+        );
       }
-      this.timer = timer(2000).subscribe(() => this.showNotification = false);
-    });
+    );
   }
 
   ngOnDestroy() {
     this._subNotification.unsubscribe();
   }
-
 }

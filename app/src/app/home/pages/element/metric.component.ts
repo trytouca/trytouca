@@ -5,9 +5,13 @@
 import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
-  faCircle, faCheckCircle, faTimesCircle,
-  faPlusCircle, faMinusCircle,
-  faChevronCircleDown, faChevronCircleUp
+  faCircle,
+  faCheckCircle,
+  faTimesCircle,
+  faPlusCircle,
+  faMinusCircle,
+  faChevronCircleDown,
+  faChevronCircleUp
 } from '@fortawesome/free-solid-svg-icons';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
 import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
@@ -30,13 +34,12 @@ interface IMetadata {
   styleUrls: ['../../styles/item.component.scss']
 })
 export class ElementItemMetricComponent {
-
   metric: Metric;
   category: ElementPageItemType;
   MetricChangeType = MetricChangeType;
 
   meta: IMetadata = {
-    initialized: false,
+    initialized: false
   } as IMetadata;
 
   @Input() params: FrontendElementCompareParams;
@@ -48,12 +51,16 @@ export class ElementItemMetricComponent {
     this.initMetadata();
   }
 
-  constructor(
-    private faIconLibrary: FaIconLibrary
-  ) {
+  constructor(private faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(
-      faCircle, faCheckCircle, faTimesCircle, faPlusCircle, faMinusCircle,
-      faChevronCircleDown, faChevronCircleUp);
+      faCircle,
+      faCheckCircle,
+      faTimesCircle,
+      faPlusCircle,
+      faMinusCircle,
+      faChevronCircleDown,
+      faChevronCircleUp
+    );
   }
 
   private initMetadata(): void {
@@ -82,5 +89,4 @@ export class ElementItemMetricComponent {
         return { color: 'lightgray', type: 'circle' };
     }
   }
-
 }

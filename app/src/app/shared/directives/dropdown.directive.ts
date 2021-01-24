@@ -2,13 +2,18 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { AfterViewInit, Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
+import {
+  AfterViewInit,
+  Directive,
+  ElementRef,
+  HostListener,
+  Renderer2
+} from '@angular/core';
 
 @Directive({
   selector: '[wslDropdown]'
 })
 export class DropdownDirective implements AfterViewInit {
-
   private _isOpen = false;
   private _menu: Element;
   private _toggle: Element;
@@ -16,10 +21,7 @@ export class DropdownDirective implements AfterViewInit {
   /**
    *
    */
-  constructor(
-    private element: ElementRef,
-    private renderer: Renderer2) {
-  }
+  constructor(private element: ElementRef, private renderer: Renderer2) {}
 
   /**
    *

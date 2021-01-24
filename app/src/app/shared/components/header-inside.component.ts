@@ -5,7 +5,11 @@
 import { AfterContentInit, Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faChevronDown, faInbox, faUser } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronDown,
+  faInbox,
+  faUser
+} from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import type { UserLookupResponse } from '@weasel/core/models/commontypes';
 import { EPlatformRole } from '@weasel/core/models/commontypes';
@@ -16,7 +20,6 @@ import { AuthService, UserService } from '@weasel/core/services';
   templateUrl: './header-inside.component.html'
 })
 export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
-
   currentUser: UserLookupResponse;
   private _subUser: Subscription;
 
@@ -29,7 +32,9 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
     private router: Router,
     private userService: UserService
   ) {
-    this._subUser = this.userService.currentUser$.subscribe(user => this.currentUser = user);
+    this._subUser = this.userService.currentUser$.subscribe(
+      (user) => (this.currentUser = user)
+    );
     faIconLibrary.addIcons(faChevronDown, faInbox, faUser);
   }
 
@@ -62,8 +67,8 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
    *
    */
   get isPlatformAdmin() {
-    return [ EPlatformRole.Owner, EPlatformRole.Admin ]
-      .includes(this.currentUser?.platformRole);
+    return [EPlatformRole.Owner, EPlatformRole.Admin].includes(
+      this.currentUser?.platformRole
+    );
   }
-
 }

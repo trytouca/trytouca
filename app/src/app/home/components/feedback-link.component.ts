@@ -9,14 +9,15 @@ import { Component, Input, OnInit } from '@angular/core';
   template: `
     <div class="h-12 flex flex-col justify-center" *ngIf="message">
       <p class="wsl-text-muted text-sm text-right">
-        <a [routerLink]="['/feedback']" [queryParams]="queryParams">{{ message }}</a>
+        <a [routerLink]="['/feedback']" [queryParams]="queryParams">
+          {{ message }}
+        </a>
       </p>
     </div>
   `
 })
 export class FeedbackLinkComponent implements OnInit {
-
-  queryParams: {page: string} = { page: null };
+  queryParams: { page: string } = { page: null };
   _message: string;
   _messages = [
     'What feature is missing from this page?',
@@ -40,5 +41,4 @@ export class FeedbackLinkComponent implements OnInit {
   public get message() {
     return this._message;
   }
-
 }

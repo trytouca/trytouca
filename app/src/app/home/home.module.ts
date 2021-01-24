@@ -26,9 +26,7 @@ import {
   VersionNavigatorComponent
 } from './components';
 
-import {
-  DurationPipe
-} from './pipes';
+import { DurationPipe } from './pipes';
 
 import {
   TeamsCreateTeamComponent,
@@ -81,8 +79,7 @@ import {
 } from './pages/element';
 
 @NgModule({
-  providers: [
-  ],
+  providers: [],
   imports: [
     ClipboardModule,
     CommonModule,
@@ -147,7 +144,7 @@ import {
     ElementItemResultComponent,
     ElementListMetricsComponent,
     ElementListResultsComponent,
-    ElementPageComponent,
+    ElementPageComponent
   ]
 })
-export class HomeModule { }
+export class HomeModule {}

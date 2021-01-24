@@ -8,7 +8,6 @@ import { Subject } from 'rxjs';
  *
  */
 export abstract class IPageService<T> {
-
   protected _items: T[];
   protected _itemsSubject = new Subject<T[]>();
   public items$ = this._itemsSubject.asObservable();
@@ -33,5 +32,4 @@ export abstract class IPageService<T> {
   public countItems() {
     return this._items.length || 0;
   }
-
 }

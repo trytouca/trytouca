@@ -2,7 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener
+} from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
@@ -21,12 +25,12 @@ enum Mode {
 }
 
 type Content = {
-  mode: Mode,
-  title: string,
-  linkText: string,
-  buttonText: string,
-  slugDesc: string,
-  onSubmit: (IFormContent) => void
+  mode: Mode;
+  title: string;
+  linkText: string;
+  buttonText: string;
+  slugDesc: string;
+  onSubmit: (IFormContent) => void;
 };
 
 @Component({
@@ -35,35 +39,32 @@ type Content = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TeamsCreateTeamComponent extends ModalComponent {
-
   Mode = Mode;
   contents: Content[] = [
-      {
-        mode: Mode.Create,
-        title: 'Create a New Team',
-        linkText: 'Join an Existing Team',
-        buttonText: 'Create',
-        slugDesc: 'Unique url-friendly identifier. Used in the links to your test suites and test results.',
-        onSubmit: (model) => this.onCreate(model)
-      },
-      {
-        mode: Mode.Join,
-        title: 'Join an Existing Team',
-        linkText: 'Create a New Team',
-        buttonText: 'Join',
-        slugDesc: 'URL-friendly identifier of the team you wish to join.',
-        onSubmit: (model) => this.onJoin(model)
-      }
+    {
+      mode: Mode.Create,
+      title: 'Create a New Team',
+      linkText: 'Join an Existing Team',
+      buttonText: 'Create',
+      slugDesc:
+        'Unique url-friendly identifier. Used in the links to your test suites and test results.',
+      onSubmit: (model) => this.onCreate(model)
+    },
+    {
+      mode: Mode.Join,
+      title: 'Join an Existing Team',
+      linkText: 'Create a New Team',
+      buttonText: 'Join',
+      slugDesc: 'URL-friendly identifier of the team you wish to join.',
+      onSubmit: (model) => this.onJoin(model)
+    }
   ];
-  content: Content = this.contents.find(v => v.mode === Mode.Create);
+  content: Content = this.contents.find((v) => v.mode === Mode.Create);
 
   /**
    *
    */
-  constructor(
-    private apiService: ApiService,
-    public dialogRef: DialogRef
-  ) {
+  constructor(private apiService: ApiService, public dialogRef: DialogRef) {
     super();
     super.form = new FormGroup({
       name: new FormControl('', {
@@ -91,13 +92,13 @@ export class TeamsCreateTeamComponent extends ModalComponent {
    */
   toggleMode() {
     const newMode = this.content.mode === Mode.Create ? Mode.Join : Mode.Create;
-    const nameValidators = [ Validators.minLength(3), Validators.maxLength(32) ];
+    const nameValidators = [Validators.minLength(3), Validators.maxLength(32)];
     if (newMode === Mode.Create) {
       nameValidators.push(Validators.required);
     }
     this.form.get('name').setValidators(nameValidators);
     this.form.get('name').updateValueAndValidity();
-    this.content = this.contents.find(v => v.mode === newMode);
+    this.content = this.contents.find((v) => v.mode === newMode);
   }
 
   /**
@@ -118,11 +119,16 @@ export class TeamsCreateTeamComponent extends ModalComponent {
       },
       (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
-          [ 400, 'request invalid', 'Your request was rejected by the server.' ],
-          [ 409, 'team already registered', 'There is already a team with this slug.' ]
+          [400, 'request invalid', 'Your request was rejected by the server.'],
+          [
+            409,
+            'team already registered',
+            'There is already a team with this slug.'
+          ]
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
-      });
+      }
+    );
   }
 
   /**
@@ -142,13 +148,26 @@ export class TeamsCreateTeamComponent extends ModalComponent {
       },
       (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
-          [ 400, 'request invalid', 'Your request was rejected by the server.' ],
-          [ 404, 'team not found', 'There is no team matching the specified slug.' ],
-          [ 409, 'user already a member', 'You are already a member of this team.' ],
-          [ 409, 'user has pending join request', 'Your previous request to join this team is pending review by their administrators.']
+          [400, 'request invalid', 'Your request was rejected by the server.'],
+          [
+            404,
+            'team not found',
+            'There is no team matching the specified slug.'
+          ],
+          [
+            409,
+            'user already a member',
+            'You are already a member of this team.'
+          ],
+          [
+            409,
+            'user has pending join request',
+            'Your previous request to join this team is pending review by their administrators.'
+          ]
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
-      });
+      }
+    );
   }
 
   /**
@@ -158,5 +177,4 @@ export class TeamsCreateTeamComponent extends ModalComponent {
   onKeydown(event: KeyboardEvent) {
     super.keydownGuard(['j', 'k', 'Enter', 'Escape'], event);
   }
-
 }

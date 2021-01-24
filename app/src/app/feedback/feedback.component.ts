@@ -19,7 +19,6 @@ interface IFormContent {
   templateUrl: './feedback.component.html'
 })
 export class FeedbackComponent {
-
   /**
    *
    */
@@ -33,10 +32,7 @@ export class FeedbackComponent {
       updateOn: 'blur'
     }),
     name: new FormControl('', {
-      validators: [
-        Validators.minLength(1),
-        Validators.maxLength(64)
-      ],
+      validators: [Validators.minLength(1), Validators.maxLength(64)],
       updateOn: 'blur'
     })
   });
@@ -47,14 +43,16 @@ export class FeedbackComponent {
   /**
    *
    */
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {}
 
   /**
    *
    */
   shouldHideAriaDescription(field: string): boolean {
-    return (!this.submitted && this.feedbackForm.controls[field].pristine) ||
-        this.feedbackForm.controls[field].valid;
+    return (
+      (!this.submitted && this.feedbackForm.controls[field].pristine) ||
+      this.feedbackForm.controls[field].valid
+    );
   }
 
   /**
@@ -75,14 +73,17 @@ export class FeedbackComponent {
     model.page = 'dummy';
     this.apiService.post('/feedback', model).subscribe(
       () => {
-        this.alert = { type: AlertType.Success, text: 'Your message was delivered.' };
+        this.alert = {
+          type: AlertType.Success,
+          text: 'Your message was delivered.'
+        };
         this.feedbackForm.reset();
         this.submitted = false;
         this.prev = null;
       },
-      err => {
+      (err) => {
         const msg = this.apiService.extractError(err, [
-          [ 400, 'request invalid', 'Your request was rejected by the server.' ]
+          [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
         errorLogger.notify(err);
@@ -90,5 +91,4 @@ export class FeedbackComponent {
       }
     );
   }
-
 }

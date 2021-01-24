@@ -3,7 +3,12 @@
  */
 
 import { ParamMap } from '@angular/router';
-import type { BatchCompareOverview, BatchComparisonItemCommon, BatchComparisonItemSolo, Userinfo } from '@weasel/core/models/commontypes';
+import type {
+  BatchCompareOverview,
+  BatchComparisonItemCommon,
+  BatchComparisonItemSolo,
+  Userinfo
+} from '@weasel/core/models/commontypes';
 import { FrontendBatchCompareParams } from '@weasel/core/models/frontendtypes';
 
 type DataType = BatchComparisonItemCommon | BatchComparisonItemSolo;
@@ -45,8 +50,11 @@ export function nextPageQueryParams(
   type: BatchPageItemType
 ): BatchNextPageQueryParams {
   const qmap = queryParamMap;
-  const tryGet = (key) => qmap.has(key) ? qmap.get(key) : undefined;
-  const queries = { cv: tryGet('cv'), v: tryGet('v') } as BatchNextPageQueryParams;
+  const tryGet = (key) => (qmap.has(key) ? qmap.get(key) : undefined);
+  const queries = {
+    cv: tryGet('cv'),
+    v: tryGet('v')
+  } as BatchNextPageQueryParams;
   switch (type) {
     case BatchPageItemType.Fresh:
       queries.cv = params.srcBatchSlug;
@@ -64,7 +72,6 @@ export function nextPageQueryParams(
  *
  */
 export class BatchPageItem {
-
   private _solo: BatchComparisonItemSolo;
   private _common: BatchComparisonItemCommon;
   private _type: BatchPageItemType;
@@ -80,7 +87,10 @@ export class BatchPageItem {
       this._common = data as BatchComparisonItemCommon;
       this.elementName = this._common.src.elementName;
       this.builtAt = new Date(this._common.src.builtAt);
-    } else if (type === BatchPageItemType.Fresh || type === BatchPageItemType.Missing) {
+    } else if (
+      type === BatchPageItemType.Fresh ||
+      type === BatchPageItemType.Missing
+    ) {
       this._solo = data as BatchComparisonItemSolo;
       this.elementName = this._solo.elementName;
       this.builtAt = new Date(this._solo.builtAt);
@@ -114,5 +124,4 @@ export class BatchPageItem {
   public isPendingComparison(): boolean {
     return this._type === BatchPageItemType.Common && !this._common.meta;
   }
-
 }

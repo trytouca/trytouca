@@ -22,7 +22,7 @@ const pageTabs: PageTab<TabType>[] = [
     link: 'teams',
     icon: 'users',
     shown: true
-  },
+  }
 ];
 
 type NotFound = Partial<{}>;
@@ -31,10 +31,11 @@ type NotFound = Partial<{}>;
   selector: 'app-teams-page',
   templateUrl: './page.component.html',
   styleUrls: ['../../styles/page.component.scss'],
-  providers: [ TeamsPageService, { provide: 'PAGE_TABS', useValue: pageTabs } ]
+  providers: [TeamsPageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
 })
-export class TeamsPageComponent extends PageComponent<TeamsPageTeam, TabType, NotFound> implements OnInit, OnDestroy {
-
+export class TeamsPageComponent
+  extends PageComponent<TeamsPageTeam, TabType, NotFound>
+  implements OnInit, OnDestroy {
   TabType = TabType;
 
   private _dialogRef: DialogRef;
@@ -79,15 +80,17 @@ export class TeamsPageComponent extends PageComponent<TeamsPageTeam, TabType, No
    *
    */
   openCreateModal() {
-    this._dialogRef = this.dialogService.open(TeamsCreateTeamComponent, { 
+    this._dialogRef = this.dialogService.open(TeamsCreateTeamComponent, {
       closeButton: false,
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (state) {
-        this.fetchItems();
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (state) {
+          this.fetchItems();
+        }
       }
-    });
+    );
   }
 
   /**
@@ -98,9 +101,8 @@ export class TeamsPageComponent extends PageComponent<TeamsPageTeam, TabType, No
     // pressing key 'Escape' should hide "New Team" modal
     if ('Escape' === event.key) {
       if (this._dialogRef && !this._dialogSub.closed) {
-        this._dialogRef.close()
+        this._dialogRef.close();
       }
     }
   }
-
 }

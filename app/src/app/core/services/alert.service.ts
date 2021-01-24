@@ -15,7 +15,7 @@ export enum AlertKind {
   TeamNotFound,
   SuiteNotFound,
   BatchNotFound,
-  ElementNotFound,
+  ElementNotFound
   // SuiteEmpty,
   // DstSuiteNotFound,
   // DstBatchNotFound,
@@ -31,7 +31,6 @@ export type ServiceAlert = Alert & {
   providedIn: 'root'
 })
 export class AlertService {
-
   private _alerts = new Set<AlertKind>();
   private _alertsSubject = new Subject<ServiceAlert[]>();
   alerts$ = this._alertsSubject.asObservable();
@@ -41,8 +40,9 @@ export class AlertService {
     {
       kind: AlertKind.ApiConnectionLost,
       type: AlertType.Warning,
-      text: 'Some of our services are not available at this time. '
-        + 'Please allow some time for these services to be restored.'
+      text:
+        'Some of our services are not available at this time. ' +
+        'Please allow some time for these services to be restored.'
     },
     {
       kind: AlertKind.InvalidAuthToken,
@@ -57,15 +57,21 @@ export class AlertService {
     { kind: AlertKind.TeamNotFound, type: AlertType.Danger, text: '' },
     { kind: AlertKind.SuiteNotFound, type: AlertType.Danger, text: '' },
     { kind: AlertKind.BatchNotFound, type: AlertType.Danger, text: '' },
-    { kind: AlertKind.ElementNotFound, type: AlertType.Danger, text: '' },
+    { kind: AlertKind.ElementNotFound, type: AlertType.Danger, text: '' }
   ];
 
   /**
    *
    */
   private publish(): void {
-    const alerts = Array.from(this._alerts).map(v => {
-      return this._alertList.find(k => k.kind === v) || { kind: v, type: AlertType.Info, text: '' };
+    const alerts = Array.from(this._alerts).map((v) => {
+      return (
+        this._alertList.find((k) => k.kind === v) || {
+          kind: v,
+          type: AlertType.Info,
+          text: ''
+        }
+      );
     });
     this._alertsSubject.next(alerts);
   }
@@ -89,5 +95,4 @@ export class AlertService {
     }
     this.publish();
   }
-
 }

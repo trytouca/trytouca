@@ -16,7 +16,6 @@ import { Alert, AlertType } from '@weasel/shared/components/alert.component';
   templateUrl: 'activate.component.html'
 })
 export class ActivateComponent implements OnInit {
-
   alert: Alert;
 
   /**
@@ -50,15 +49,15 @@ export class ActivateComponent implements OnInit {
         localStorage.removeItem(ELocalStorageKey.Callback);
         this.router.navigate(['/~']);
       },
-      err => {
+      (err) => {
         const error = this.apiService.extractError(err, [
-          [ 400, 'invalid activation key', 'This activation key is invalid.' ],
-          [ 404, 'activation key not found', 'This activation key has expired.' ]
+          [400, 'invalid activation key', 'This activation key is invalid.'],
+          [404, 'activation key not found', 'This activation key has expired.']
         ]);
         this.alert = { type: AlertType.Danger, text: error };
         localStorage.removeItem(ELocalStorageKey.Callback);
         timer(5000).subscribe(() => this.router.navigate(['/~']));
-      });
+      }
+    );
   }
-
 }

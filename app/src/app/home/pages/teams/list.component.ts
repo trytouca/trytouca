@@ -8,7 +8,10 @@ import { DialogService, DialogRef } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
 import { FilterInput } from '@weasel/home/models/filter.model';
-import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
+import {
+  ConfirmComponent,
+  ConfirmElements
+} from '@weasel/home/components/confirm.component';
 import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { TeamsPageTeam, TeamsPageItemType } from './teams.model';
 import { TeamsPageService } from './teams.service';
@@ -18,7 +21,7 @@ const filterInput: FilterInput<TeamsPageTeam> = {
     {
       key: 'none',
       name: 'None',
-      func: (a) => true,
+      func: (a) => true
     }
   ],
   sorters: [
@@ -56,12 +59,17 @@ const filterInput: FilterInput<TeamsPageTeam> = {
 @Component({
   selector: 'app-teams-tab-teams',
   templateUrl: './list.component.html',
-  styleUrls: [ '../../styles/list.component.scss' ]
+  styleUrls: ['../../styles/list.component.scss']
 })
-export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> implements OnDestroy {
-
+export class TeamsTabTeamsComponent
+  extends PageListComponent<TeamsPageTeam>
+  implements OnDestroy {
   ItemType = TeamsPageItemType;
-  counters: Record<TeamsPageItemType, number> = { active: 0, invited: 0, joining: 0 };
+  counters: Record<TeamsPageItemType, number> = {
+    active: 0,
+    invited: 0,
+    joining: 0
+  };
 
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
@@ -77,7 +85,7 @@ export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> imp
     router: Router
   ) {
     super(filterInput, Object.values(TeamsPageItemType), route, router);
-    this._subAllItems = this.teamsPageService.items$.subscribe(allItems => {
+    this._subAllItems = this.teamsPageService.items$.subscribe((allItems) => {
       this.initCollections(allItems);
       this.counters = {
         active: this.countShownRows(TeamsPageItemType.Active),
@@ -115,7 +123,9 @@ export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> imp
     }
     // pressing 'enter' when an item is selected should route to the next page
     if ('Enter' === event.key && row !== -1) {
-      this.router.navigate([ '~', this._items[row].data.slug ], { queryParams: {} });
+      this.router.navigate(['~', this._items[row].data.slug], {
+        queryParams: {}
+      });
     }
   }
 
@@ -152,19 +162,21 @@ export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> imp
       data: elements,
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (!state) {
-        return;
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (!state) {
+          return;
+        }
+        func();
       }
-      func();
-    });
+    );
   }
 
   /**
    *
    */
   accept(item: TeamsPageTeam) {
-    const url = [ 'team', item.data.slug, 'invite', 'accept' ].join('/');
+    const url = ['team', item.data.slug, 'invite', 'accept'].join('/');
     this.apiService.post(url).subscribe(() => {
       this.teamsPageService.refreshList();
     });
@@ -174,7 +186,7 @@ export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> imp
    *
    */
   private decline(item: TeamsPageTeam) {
-    const url = [ 'team', item.data.slug, 'invite', 'decline' ].join('/');
+    const url = ['team', item.data.slug, 'invite', 'decline'].join('/');
     this.apiService.post(url).subscribe(() => {
       this.teamsPageService.refreshList();
     });
@@ -184,10 +196,9 @@ export class TeamsTabTeamsComponent extends PageListComponent<TeamsPageTeam> imp
    *
    */
   private rescind(item: TeamsPageTeam) {
-    const url = [ 'team', item.data.slug, 'join' ].join('/');
+    const url = ['team', item.data.slug, 'join'].join('/');
     this.apiService.delete(url).subscribe(() => {
       this.teamsPageService.refreshList();
     });
   }
-
 }

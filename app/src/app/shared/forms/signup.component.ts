@@ -21,13 +21,9 @@ interface IFormContent {
   templateUrl: './signup.component.html'
 })
 export class SignupFormComponent {
-
   signupForm = new FormGroup({
     email: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.email
-      ],
+      validators: [Validators.required, Validators.email],
       updateOn: 'blur'
     }),
     fname: new FormControl('', {
@@ -63,11 +59,13 @@ export class SignupFormComponent {
     private authService: AuthService,
     private router: Router,
     private userService: UserService
-  ) { }
+  ) {}
 
   shouldHideAriaDescription(field: string): boolean {
-    return (!this.submitted && this.signupForm.controls[field].pristine) ||
-        this.signupForm.controls[field].valid;
+    return (
+      (!this.submitted && this.signupForm.controls[field].pristine) ||
+      this.signupForm.controls[field].valid
+    );
   }
 
   onSubmit(model: IFormContent) {
@@ -79,34 +77,42 @@ export class SignupFormComponent {
       email: model.email,
       fullname: model.fname,
       username: model.uname,
-      password: model.upass,
+      password: model.upass
     };
     this.apiService.post('/auth/signup', body).subscribe(
       () => {
-        this.alert = { type: AlertType.Success, text: 'Your account was created.' };
+        this.alert = {
+          type: AlertType.Success,
+          text: 'Your account was created.'
+        };
         this.signupForm.reset();
         this.submitted = false;
-        this.authService.login(model.uname, model.upass).subscribe(
-          () => {
-            this.userService.populate();
-            const callback = localStorage.getItem(ELocalStorageKey.Callback);
-            if (callback) {
-              this.router.navigateByUrl(callback);
-              return;
-            }
-            this.router.navigate(['/~']);
+        this.authService.login(model.uname, model.upass).subscribe(() => {
+          this.userService.populate();
+          const callback = localStorage.getItem(ELocalStorageKey.Callback);
+          if (callback) {
+            this.router.navigateByUrl(callback);
+            return;
           }
-        );
+          this.router.navigate(['/~']);
+        });
       },
-      err => {
+      (err) => {
         const msg = this.apiService.extractError(err, [
-          [ 400, 'request invalid', 'Your request was rejected by the server.' ],
-          [ 400, 'user already registered', 'There is already an account associated with this username.' ],
-          [ 400, 'email already registered', 'There is already an account associated with this email address.' ],
+          [400, 'request invalid', 'Your request was rejected by the server.'],
+          [
+            400,
+            'user already registered',
+            'There is already an account associated with this username.'
+          ],
+          [
+            400,
+            'email already registered',
+            'There is already an account associated with this email address.'
+          ]
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }
-
 }

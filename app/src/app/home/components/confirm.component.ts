@@ -2,15 +2,19 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { ModalComponent } from './modal.component';
 
 export type ConfirmElements = {
-  title: string
-  message: string
-  button: string
+  title: string;
+  message: string;
+  button: string;
 };
 
 @Component({
@@ -19,15 +23,12 @@ export type ConfirmElements = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConfirmComponent extends ModalComponent {
-
   elements: ConfirmElements;
 
   /**
    *
    */
-  constructor(
-    public dialogRef: DialogRef
-  ) {
+  constructor(public dialogRef: DialogRef) {
     super();
     super.form = new FormGroup({});
     this.elements = dialogRef.data as ConfirmElements;
@@ -62,5 +63,4 @@ export class ConfirmComponent extends ModalComponent {
   onKeydown(event: KeyboardEvent) {
     super.keydownGuard(['j', 'k', 'Enter', 'Escape', 'Backspace'], event);
   }
-
 }

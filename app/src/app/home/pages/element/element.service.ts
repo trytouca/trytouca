@@ -6,13 +6,22 @@ import { Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import { of, Observable, Subject, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import type { ElementLookupResponse, ElementComparisonResponse,
-  SuiteLookupResponse, BatchLookupResponse } from '@weasel/core/models/commontypes';
+import type {
+  ElementLookupResponse,
+  ElementComparisonResponse,
+  SuiteLookupResponse,
+  BatchLookupResponse
+} from '@weasel/core/models/commontypes';
 import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@weasel/core/services';
 import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { IPageService } from '@weasel/home/models/pages.model';
-import { ElementPageItemType, ElementPageMetric, ElementPageOverviewMetadata, ElementPageResult } from './element.model';
+import {
+  ElementPageItemType,
+  ElementPageMetric,
+  ElementPageOverviewMetadata,
+  ElementPageResult
+} from './element.model';
 
 export enum ElementPageTabType {
   Results = 'results',
@@ -23,7 +32,6 @@ type FetchInput = FrontendElementCompareParams;
 
 @Injectable()
 export class ElementPageService extends IPageService<ElementPageResult> {
-
   private _suite: SuiteLookupResponse;
   private _suiteSubject = new Subject<SuiteLookupResponse>();
   suite$ = this._suiteSubject.asObservable();
@@ -63,9 +71,9 @@ export class ElementPageService extends IPageService<ElementPageResult> {
    * Learn more about this suite.
    */
   private fetchSuite(args: FetchInput): Observable<SuiteLookupResponse> {
-    const url = [ 'suite', args.teamSlug, args.srcSuiteSlug ].join('/');
-    return this.apiService.get<SuiteLookupResponse>(url).pipe(map(
-      (doc: SuiteLookupResponse) => {
+    const url = ['suite', args.teamSlug, args.srcSuiteSlug].join('/');
+    return this.apiService.get<SuiteLookupResponse>(url).pipe(
+      map((doc: SuiteLookupResponse) => {
         if (!doc) {
           return;
         }
@@ -75,17 +83,22 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         this._suite = doc;
         this._suiteSubject.next(this._suite);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    * Learn more about this batch.
    */
   private fetchBatch(args: FetchInput): Observable<BatchLookupResponse> {
-    const url = [ 'batch', args.teamSlug, args.srcSuiteSlug, args.srcBatchSlug ].join('/');
-    return this.apiService.get<BatchLookupResponse>(url).pipe(map(
-      (doc: BatchLookupResponse) => {
+    const url = [
+      'batch',
+      args.teamSlug,
+      args.srcSuiteSlug,
+      args.srcBatchSlug
+    ].join('/');
+    return this.apiService.get<BatchLookupResponse>(url).pipe(
+      map((doc: BatchLookupResponse) => {
         if (!doc) {
           return;
         }
@@ -95,17 +108,22 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         this._batch = doc;
         this._batchSubject.next(this._batch);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    * Learn more about this element.
    */
   private fetchElement(args: FetchInput): Observable<ElementLookupResponse> {
-    const url = [ 'element', args.teamSlug, args.srcSuiteSlug, args.srcElementSlug ].join('/');
-    return this.apiService.get<ElementLookupResponse>(url).pipe(map(
-      (doc: ElementLookupResponse) => {
+    const url = [
+      'element',
+      args.teamSlug,
+      args.srcSuiteSlug,
+      args.srcElementSlug
+    ].join('/');
+    return this.apiService.get<ElementLookupResponse>(url).pipe(
+      map((doc: ElementLookupResponse) => {
         if (!doc) {
           return;
         }
@@ -115,19 +133,29 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         this._element = doc;
         this._elementSubject.next(this._element);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    * Learn more about this element.
    */
-  private fetchElementCompare(args: FetchInput): Observable<ElementComparisonResponse> {
-    const url = [ 'element', args.teamSlug, args.srcSuiteSlug, args.srcElementSlug,
-      'compare', args.srcBatchSlug, args.dstBatchSlug, args.dstElementSlug, args.dstSuiteSlug
+  private fetchElementCompare(
+    args: FetchInput
+  ): Observable<ElementComparisonResponse> {
+    const url = [
+      'element',
+      args.teamSlug,
+      args.srcSuiteSlug,
+      args.srcElementSlug,
+      'compare',
+      args.srcBatchSlug,
+      args.dstBatchSlug,
+      args.dstElementSlug,
+      args.dstSuiteSlug
     ].join('/');
-    return this.apiService.get<ElementComparisonResponse>(url).pipe(map(
-      (doc: ElementComparisonResponse) => {
+    return this.apiService.get<ElementComparisonResponse>(url).pipe(
+      map((doc: ElementComparisonResponse) => {
         if (!doc) {
           return;
         }
@@ -136,8 +164,8 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         }
         this._elementCompareCache = doc;
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
@@ -146,35 +174,60 @@ export class ElementPageService extends IPageService<ElementPageResult> {
   public fetchItems(args: FrontendElementCompareParams): void {
     this.fetchElementCompare(args).subscribe(
       (doc: ElementComparisonResponse) => {
-
         // if comparison result is not available, we have no choice but to wait
         if (!doc.cmp) {
           return;
         }
 
         const results = doc.cmp.results;
-        const commonResults = results.commonKeys.map(el => new ElementPageResult(el, ElementPageItemType.Common));
-        const freshResults = results.newKeys.map(el => new ElementPageResult(el, ElementPageItemType.Fresh));
-        const missingResults = results.missingKeys.map(el => new ElementPageResult(el, ElementPageItemType.Missing));
-        const items = [ ...commonResults, ...freshResults, ...missingResults ];
+        const commonResults = results.commonKeys.map(
+          (el) => new ElementPageResult(el, ElementPageItemType.Common)
+        );
+        const freshResults = results.newKeys.map(
+          (el) => new ElementPageResult(el, ElementPageItemType.Fresh)
+        );
+        const missingResults = results.missingKeys.map(
+          (el) => new ElementPageResult(el, ElementPageItemType.Missing)
+        );
+        const items = [...commonResults, ...freshResults, ...missingResults];
         this._items = items;
         this._itemsSubject.next(items);
 
         const metrics = doc.cmp.metrics;
-        const commonMetrics = metrics.commonKeys.map(el => new ElementPageMetric(el, ElementPageItemType.Common));
-        const freshMetrics = metrics.newKeys.map(el => new ElementPageMetric(el, ElementPageItemType.Fresh));
-        const missingMetrics = metrics.missingKeys.map(el => new ElementPageMetric(el, ElementPageItemType.Missing));
-        const itemsM = [ ...commonMetrics, ...freshMetrics, ...missingMetrics ];
+        const commonMetrics = metrics.commonKeys.map(
+          (el) => new ElementPageMetric(el, ElementPageItemType.Common)
+        );
+        const freshMetrics = metrics.newKeys.map(
+          (el) => new ElementPageMetric(el, ElementPageItemType.Fresh)
+        );
+        const missingMetrics = metrics.missingKeys.map(
+          (el) => new ElementPageMetric(el, ElementPageItemType.Missing)
+        );
+        const itemsM = [...commonMetrics, ...freshMetrics, ...missingMetrics];
         this._allMetricsSubject.next(itemsM);
 
         const countDst = commonResults.length + missingResults.length;
         const countPerfect = commonResults.reduce(
-          (acc, key) => key.data.score === 1.0 ? acc + 1 : acc, 0);
+          (acc, key) => (key.data.score === 1.0 ? acc + 1 : acc),
+          0
+        );
 
-        const durationCommonSrc = commonMetrics.reduce((acc, key) => acc + key.data.duration(), 0);
-        const durationCommonDst = commonMetrics.reduce((acc, key) => acc + key.data.duration(), 0);
-        const durationFresh = freshMetrics.reduce((acc, key) => acc + key.data.duration(), 0);
-        const durationMissing = missingMetrics.reduce((acc, key) => acc + key.data.duration(), 0);
+        const durationCommonSrc = commonMetrics.reduce(
+          (acc, key) => acc + key.data.duration(),
+          0
+        );
+        const durationCommonDst = commonMetrics.reduce(
+          (acc, key) => acc + key.data.duration(),
+          0
+        );
+        const durationFresh = freshMetrics.reduce(
+          (acc, key) => acc + key.data.duration(),
+          0
+        );
+        const durationMissing = missingMetrics.reduce(
+          (acc, key) => acc + key.data.duration(),
+          0
+        );
         const durationDst = durationCommonDst + durationMissing;
         const durationSrc = durationCommonSrc + durationFresh;
 
@@ -192,13 +245,17 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           metricsCountMissing: missingMetrics.length,
           metricsDurationHead: durationSrc,
           metricsDurationChange: Math.abs(durationSrc - durationDst),
-          metricsDurationSign: Math.sign(durationSrc - durationDst),
+          metricsDurationSign: Math.sign(durationSrc - durationDst)
         };
         this._overviewSubject.next(this._overview);
       },
-      err => {
+      (err) => {
         if (err.status === 0) {
-          this.alertService.set(!this._items ? AlertKind.ApiConnectionDown : AlertKind.ApiConnectionLost);
+          this.alertService.set(
+            !this._items
+              ? AlertKind.ApiConnectionDown
+              : AlertKind.ApiConnectionLost
+          );
         } else if (err.status === 401) {
           this.alertService.set(AlertKind.InvalidAuthToken);
         } else if (err.status === 404) {
@@ -206,14 +263,15 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         } else {
           errorLogger.notify(err);
         }
-      });
+      }
+    );
   }
 
   /**
    *
    */
   public updateRequestParams(params: FrontendElementCompareParams) {
-    const onetime: Observable<unknown>[] = [ of(0) ];
+    const onetime: Observable<unknown>[] = [of(0)];
 
     if (!this._suite) {
       onetime.push(this.fetchSuite(params));
@@ -239,7 +297,8 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         }
         if (!params.dstBatchSlug) {
           const baseline = this._suite.promotions.slice(-1)[0];
-          params.dstBatchSlug = baseline.to === this._batch.batchSlug ? baseline.from : baseline.to;
+          params.dstBatchSlug =
+            baseline.to === this._batch.batchSlug ? baseline.from : baseline.to;
         }
         if (!params.dstElementSlug) {
           params.dstElementSlug = params.srcElementSlug;
@@ -250,9 +309,13 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         }
         this.fetchItems(params);
       },
-      err => {
+      (err) => {
         if (err.status === 0) {
-          this.alertService.set(!this._items ? AlertKind.ApiConnectionDown : AlertKind.ApiConnectionLost);
+          this.alertService.set(
+            !this._items
+              ? AlertKind.ApiConnectionDown
+              : AlertKind.ApiConnectionLost
+          );
         } else if (err.status === 401) {
           this.alertService.set(AlertKind.InvalidAuthToken);
         } else if (err.status === 404) {
@@ -260,7 +323,8 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         } else {
           errorLogger.notify(err);
         }
-      });
+      }
+    );
   }
 
   /**
@@ -276,5 +340,4 @@ export class ElementPageService extends IPageService<ElementPageResult> {
     this._elementCompareCache = undefined;
     this._items = undefined;
   }
-
 }

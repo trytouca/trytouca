@@ -7,13 +7,23 @@ import { isEqual } from 'lodash-es';
 import { of, Observable, Subject, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import type {
-  BatchListResponse, BatchLookupResponse, BatchComparisonResponse,
-  CommentItem, CommentListResponse, SuiteLookupResponse, TeamLookupResponse } from '@weasel/core/models/commontypes';
+  BatchListResponse,
+  BatchLookupResponse,
+  BatchComparisonResponse,
+  CommentItem,
+  CommentListResponse,
+  SuiteLookupResponse,
+  TeamLookupResponse
+} from '@weasel/core/models/commontypes';
 import type { FrontendBatchCompareParams } from '@weasel/core/models/frontendtypes';
 import { AlertService, AlertKind, ApiService } from '@weasel/core/services';
 import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { IPageService } from '@weasel/home/models/pages.model';
-import { BatchPageItem, BatchPageItemType, BatchPageOverviewMetadata } from './batch.model';
+import {
+  BatchPageItem,
+  BatchPageItemType,
+  BatchPageOverviewMetadata
+} from './batch.model';
 
 export enum BatchPageTabType {
   Comments = 'comments',
@@ -22,7 +32,6 @@ export enum BatchPageTabType {
 
 @Injectable()
 export class BatchPageService extends IPageService<BatchPageItem> {
-
   private _team: TeamLookupResponse;
   private _teamSubject = new Subject<TeamLookupResponse>();
   team$ = this._teamSubject.asObservable();
@@ -66,10 +75,12 @@ export class BatchPageService extends IPageService<BatchPageItem> {
   /**
    * Learn more about this team.
    */
-  private fetchTeam(args: FrontendBatchCompareParams): Observable<TeamLookupResponse> {
-    const url = [ 'team', args.teamSlug ].join('/');
-    return this.apiService.get<TeamLookupResponse>(url).pipe(map(
-      (doc: TeamLookupResponse) => {
+  private fetchTeam(
+    args: FrontendBatchCompareParams
+  ): Observable<TeamLookupResponse> {
+    const url = ['team', args.teamSlug].join('/');
+    return this.apiService.get<TeamLookupResponse>(url).pipe(
+      map((doc: TeamLookupResponse) => {
         if (!doc) {
           return;
         }
@@ -79,17 +90,19 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         this._team = doc;
         this._teamSubject.next(this._team);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    * Learn more about this suite.
    */
-  private fetchSuite(args: FrontendBatchCompareParams): Observable<SuiteLookupResponse> {
-    const url = [ 'suite', args.teamSlug, args.srcSuiteSlug ].join('/');
-    return this.apiService.get<SuiteLookupResponse>(url).pipe(map(
-      (doc: SuiteLookupResponse) => {
+  private fetchSuite(
+    args: FrontendBatchCompareParams
+  ): Observable<SuiteLookupResponse> {
+    const url = ['suite', args.teamSlug, args.srcSuiteSlug].join('/');
+    return this.apiService.get<SuiteLookupResponse>(url).pipe(
+      map((doc: SuiteLookupResponse) => {
         if (!doc) {
           return;
         }
@@ -99,17 +112,19 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         this._suite = doc;
         this._suiteSubject.next(this._suite);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    * Find list of all batches in this suite.
    */
-  private fetchBatches(args: FrontendBatchCompareParams): Observable<BatchListResponse> {
-    const url = [ 'batch', args.teamSlug, args.srcSuiteSlug ].join('/');
-    return this.apiService.get<BatchListResponse>(url).pipe(map(
-      (doc: BatchListResponse) => {
+  private fetchBatches(
+    args: FrontendBatchCompareParams
+  ): Observable<BatchListResponse> {
+    const url = ['batch', args.teamSlug, args.srcSuiteSlug].join('/');
+    return this.apiService.get<BatchListResponse>(url).pipe(
+      map((doc: BatchListResponse) => {
         if (!doc) {
           return;
         }
@@ -119,17 +134,24 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         this._batches = doc;
         this._batchesSubject.next(this._batches);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    * Learn more about this batch.
    */
-  private fetchBatch(args: FrontendBatchCompareParams): Observable<BatchLookupResponse> {
-    const url = [ 'batch', args.teamSlug, args.srcSuiteSlug, args.srcBatchSlug ].join('/');
-    return this.apiService.get<BatchLookupResponse>(url).pipe(map(
-      (doc: BatchLookupResponse) => {
+  private fetchBatch(
+    args: FrontendBatchCompareParams
+  ): Observable<BatchLookupResponse> {
+    const url = [
+      'batch',
+      args.teamSlug,
+      args.srcSuiteSlug,
+      args.srcBatchSlug
+    ].join('/');
+    return this.apiService.get<BatchLookupResponse>(url).pipe(
+      map((doc: BatchLookupResponse) => {
         if (!doc) {
           return;
         }
@@ -139,19 +161,27 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         this._batch = doc;
         this._batchSubject.next(this._batch);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    * Compare this batch against another batch.
    */
-  private fetchBatchCompare(args: FrontendBatchCompareParams): Observable<BatchComparisonResponse> {
-    const url = [ 'batch', args.teamSlug, args.srcSuiteSlug, args.srcBatchSlug,
-      'compare', args.dstBatchSlug, args.dstSuiteSlug
+  private fetchBatchCompare(
+    args: FrontendBatchCompareParams
+  ): Observable<BatchComparisonResponse> {
+    const url = [
+      'batch',
+      args.teamSlug,
+      args.srcSuiteSlug,
+      args.srcBatchSlug,
+      'compare',
+      args.dstBatchSlug,
+      args.dstSuiteSlug
     ].join('/');
-    return this.apiService.get<BatchComparisonResponse>(url).pipe(map(
-      (doc: BatchComparisonResponse) => {
+    return this.apiService.get<BatchComparisonResponse>(url).pipe(
+      map((doc: BatchComparisonResponse) => {
         if (!doc) {
           return;
         }
@@ -160,17 +190,25 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         }
         this._batchCompareCache = doc;
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    *
    */
-  private fetchComments(args: FrontendBatchCompareParams): Observable<CommentListResponse> {
-    const url = [ 'comment', args.teamSlug, args.srcSuiteSlug, args.srcBatchSlug, 'c' ].join('/');
-    return this.apiService.get<CommentListResponse>(url).pipe(map(
-      (doc: CommentListResponse) => {
+  private fetchComments(
+    args: FrontendBatchCompareParams
+  ): Observable<CommentListResponse> {
+    const url = [
+      'comment',
+      args.teamSlug,
+      args.srcSuiteSlug,
+      args.srcBatchSlug,
+      'c'
+    ].join('/');
+    return this.apiService.get<CommentListResponse>(url).pipe(
+      map((doc: CommentListResponse) => {
         if (!doc) {
           return;
         }
@@ -179,8 +217,8 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         }
         this._comments = doc;
         this._commentsSubject.next(this._comments);
-      }
-    ));
+      })
+    );
   }
 
   /**
@@ -192,10 +230,16 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         if (!doc || !this._batch) {
           return;
         }
-        const common = doc.common.map(el => new BatchPageItem(el, BatchPageItemType.Common));
-        const fresh = doc.fresh.map(el => new BatchPageItem(el, BatchPageItemType.Fresh));
-        const missing = doc.missing.map(el => new BatchPageItem(el, BatchPageItemType.Missing));
-        const items = [ ...common, ...fresh, ...missing ];
+        const common = doc.common.map(
+          (el) => new BatchPageItem(el, BatchPageItemType.Common)
+        );
+        const fresh = doc.fresh.map(
+          (el) => new BatchPageItem(el, BatchPageItemType.Fresh)
+        );
+        const missing = doc.missing.map(
+          (el) => new BatchPageItem(el, BatchPageItemType.Missing)
+        );
+        const items = [...common, ...fresh, ...missing];
         this._items = items;
         this._itemsSubject.next(items);
 
@@ -207,9 +251,13 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         };
         this._overviewSubject.next(this._overview);
       },
-      err => {
+      (err) => {
         if (err.status === 0) {
-          this.alertService.set(!this._items ? AlertKind.ApiConnectionDown : AlertKind.ApiConnectionLost);
+          this.alertService.set(
+            !this._items
+              ? AlertKind.ApiConnectionDown
+              : AlertKind.ApiConnectionLost
+          );
         } else if (err.status === 401) {
           this.alertService.set(AlertKind.InvalidAuthToken);
         } else if (err.status === 404) {
@@ -217,14 +265,15 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         } else {
           errorLogger.notify(err);
         }
-      });
+      }
+    );
   }
 
   /**
    *
    */
   public updateRequestParams(params: FrontendBatchCompareParams) {
-    const onetime: Observable<unknown>[] = [ of(0) ];
+    const onetime: Observable<unknown>[] = [of(0)];
 
     if (!this._team) {
       onetime.push(this.fetchTeam(params));
@@ -265,9 +314,13 @@ export class BatchPageService extends IPageService<BatchPageItem> {
           this.fetchItems(params);
         }
       },
-      err => {
+      (err) => {
         if (err.status === 0) {
-          this.alertService.set(!this._items ? AlertKind.ApiConnectionDown : AlertKind.ApiConnectionLost);
+          this.alertService.set(
+            !this._items
+              ? AlertKind.ApiConnectionDown
+              : AlertKind.ApiConnectionLost
+          );
         } else if (err.status === 401) {
           this.alertService.set(AlertKind.InvalidAuthToken);
         } else if (err.status === 404) {
@@ -275,7 +328,8 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         } else {
           errorLogger.notify(err);
         }
-      });
+      }
+    );
   }
 
   /**
@@ -325,5 +379,4 @@ export class BatchPageService extends IPageService<BatchPageItem> {
     const args = { currentTab: BatchPageTabType.Comments, ...this._params };
     this.fetchComments(args).subscribe();
   }
-
 }

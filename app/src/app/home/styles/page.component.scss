@@ -12,7 +12,7 @@
         ol {
           @apply flex;
           & > li:not(:last-child):after {
-            content: "\2002/\2002";
+            content: '\2002/\2002';
           }
           a {
             @apply text-blue-500;
@@ -39,7 +39,9 @@
         .wsl-nav-counter {
           @apply inline-block bg-gray-200 rounded-full text-xs select-none;
         }
-        &:active, &:hover, &.wsl-page-tab-active {
+        &:active,
+        &:hover,
+        &.wsl-page-tab-active {
           @apply border-b border-gray-500;
         }
       }

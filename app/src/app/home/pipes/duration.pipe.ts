@@ -17,7 +17,11 @@ const cls = humanizer({
   }
 });
 
-export function formatDuration(duration: number, largest = 1, units = ['s', 'ms']): string {
+export function formatDuration(
+  duration: number,
+  largest = 1,
+  units = ['s', 'ms']
+): string {
   const opts = {
     largest,
     round: true,
@@ -31,9 +35,7 @@ export function formatDuration(duration: number, largest = 1, units = ['s', 'ms'
   name: 'duration'
 })
 export class DurationPipe implements PipeTransform {
-
   transform(duration: number, largest = 1, units = ['s', 'ms']): string {
     return formatDuration(duration, largest, units);
   }
-
 }

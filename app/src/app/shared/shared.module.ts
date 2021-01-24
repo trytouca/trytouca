@@ -19,13 +19,9 @@ import {
   ServerDownComponent
 } from './components';
 
-import {
-  DropdownDirective
-} from './directives/dropdown.directive';
+import { DropdownDirective } from './directives/dropdown.directive';
 
-import {
-  SignupFormComponent
-} from './forms/signup.component';
+import { SignupFormComponent } from './forms/signup.component';
 
 @NgModule({
   imports: [
@@ -64,5 +60,4 @@ import {
     SignupFormComponent
   ]
 })
-
 export class SharedModule {}

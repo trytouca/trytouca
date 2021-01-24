@@ -4,14 +4,17 @@
 
 import { Component } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faGithub, faSlack, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import {
+  faGithub,
+  faSlack,
+  faTwitter
+} from '@fortawesome/free-brands-svg-icons';
 
 @Component({
   selector: 'app-footer-outside',
   templateUrl: './footer-outside.component.html'
 })
 export class FooterOutsideComponent {
-
   today: number = Date.now();
   social = [
     {
@@ -34,10 +37,7 @@ export class FooterOutsideComponent {
   /**
    *
    */
-  constructor(
-    private faIconLibrary: FaIconLibrary
-  ) {
+  constructor(private faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(faGithub, faSlack, faTwitter);
   }
-
 }

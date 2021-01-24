@@ -14,12 +14,13 @@ const filterInput: FilterInput<TeamPageSuite> = {
     {
       key: 'none',
       name: 'None',
-      func: (a) => true,
+      func: () => true
     },
     {
       key: 'different',
       name: 'Different',
-      func: (a) => a.data.overview && a.data.overview.elementsScoreAggregate !== 1
+      func: (a) =>
+        a.data.overview && a.data.overview.elementsScoreAggregate !== 1
     },
     {
       key: 'faster',
@@ -49,18 +50,32 @@ const filterInput: FilterInput<TeamPageSuite> = {
       key: 'date',
       name: 'Date',
       func: (a, b) => {
-        if (!a.data.latest || !a.data.latest.submittedAt) { return 1; }
-        if (!b.data.latest || !b.data.latest.submittedAt) { return -1; }
-        return +new Date(b.data.latest.submittedAt) - +new Date(a.data.latest.submittedAt);
+        if (!a.data.latest || !a.data.latest.submittedAt) {
+          return 1;
+        }
+        if (!b.data.latest || !b.data.latest.submittedAt) {
+          return -1;
+        }
+        return (
+          +new Date(b.data.latest.submittedAt) -
+          +new Date(a.data.latest.submittedAt)
+        );
       }
     },
     {
       key: 'score',
       name: 'Match Rate',
       func: (a, b) => {
-        if (!a.data.overview) { return -1; }
-        if (!b.data.overview) { return 1; }
-        return b.data.overview.elementsScoreAggregate - a.data.overview.elementsScoreAggregate;
+        if (!a.data.overview) {
+          return -1;
+        }
+        if (!b.data.overview) {
+          return 1;
+        }
+        return (
+          b.data.overview.elementsScoreAggregate -
+          a.data.overview.elementsScoreAggregate
+        );
       }
     },
     {
@@ -72,20 +87,33 @@ const filterInput: FilterInput<TeamPageSuite> = {
       key: 'count',
       name: 'Number of Cases',
       func: (a, b) => {
-        if (!a.data.overview) { return 1; }
-        if (!b.data.overview) { return -1; }
-        return b.data.overview.elementsCountHead - a.data.overview.elementsCountHead;
+        if (!a.data.overview) {
+          return 1;
+        }
+        if (!b.data.overview) {
+          return -1;
+        }
+        return (
+          b.data.overview.elementsCountHead - a.data.overview.elementsCountHead
+        );
       }
     },
     {
       key: 'duration',
       name: 'Duration',
       func: (a, b) => {
-        if (!a.data.overview) { return 1; }
-        if (!b.data.overview) { return -1; }
-        return b.data.overview.metricsDurationHead - a.data.overview.metricsDurationHead;
+        if (!a.data.overview) {
+          return 1;
+        }
+        if (!b.data.overview) {
+          return -1;
+        }
+        return (
+          b.data.overview.metricsDurationHead -
+          a.data.overview.metricsDurationHead
+        );
       }
-    },
+    }
   ],
   searchBy: ['name', 'slug'],
   defaults: {
@@ -112,8 +140,9 @@ const filterInput: FilterInput<TeamPageSuite> = {
   templateUrl: './list.component.html',
   styleUrls: ['../../styles/list.component.scss']
 })
-export class TeamTabSuitesComponent extends PageListComponent<TeamPageSuite> implements OnDestroy {
-
+export class TeamTabSuitesComponent
+  extends PageListComponent<TeamPageSuite>
+  implements OnDestroy {
   ItemType = TeamPageSuiteType;
 
   /**
@@ -122,10 +151,10 @@ export class TeamTabSuitesComponent extends PageListComponent<TeamPageSuite> imp
   constructor(
     private teamPageService: TeamPageService,
     route: ActivatedRoute,
-    router: Router,
+    router: Router
   ) {
     super(filterInput, Object.values(TeamPageSuiteType), route, router);
-    this._subAllItems = this.teamPageService.items$.subscribe(allItems => {
+    this._subAllItems = this.teamPageService.items$.subscribe((allItems) => {
       this.initCollections(allItems);
     });
   }
@@ -155,10 +184,10 @@ export class TeamTabSuitesComponent extends PageListComponent<TeamPageSuite> imp
     }
     // pressing 'enter' when an item is selected should route to the next page
     if ('Enter' === event.key && row !== -1) {
-      this.router.navigate([
-        this._items[row].data.suiteSlug
-      ], { relativeTo: this.route, queryParams: {} });
+      this.router.navigate([this._items[row].data.suiteSlug], {
+        relativeTo: this.route,
+        queryParams: {}
+      });
     }
   }
-
 }

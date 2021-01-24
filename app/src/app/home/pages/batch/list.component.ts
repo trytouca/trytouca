@@ -10,7 +10,11 @@ import type { FrontendBatchCompareParams } from '@weasel/core/models/frontendtyp
 import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { FilterInput } from '@weasel/home/models/filter.model';
 import { BatchPageService } from './batch.service';
-import { BatchPageItem, BatchPageItemType, nextPageQueryParams } from './batch.model';
+import {
+  BatchPageItem,
+  BatchPageItemType,
+  nextPageQueryParams
+} from './batch.model';
 
 const filterInput: FilterInput<BatchPageItem> = {
   filters: [
@@ -27,7 +31,10 @@ const filterInput: FilterInput<BatchPageItem> = {
           return true;
         }
         const meta = a.asCommon().meta;
-        return meta && (meta.keysCountFresh || meta.keysCountMissing || meta.keysScore !== 1);
+        return (
+          meta &&
+          (meta.keysCountFresh || meta.keysCountMissing || meta.keysScore !== 1)
+        );
       }
     },
     {
@@ -102,7 +109,9 @@ const filterInput: FilterInput<BatchPageItem> = {
         const getKeysCount = (v: BatchPageItem) => {
           if (v.type === BatchPageItemType.Common) {
             const metaCommon = v.asCommon().meta;
-            return metaCommon ? metaCommon.keysCountCommon + metaCommon.keysCountFresh : 0;
+            return metaCommon
+              ? metaCommon.keysCountCommon + metaCommon.keysCountFresh
+              : 0;
           }
           const metaSolo = v.asSolo().meta;
           return metaSolo ? metaSolo.keysCount : 0;
@@ -163,8 +172,9 @@ const filterInput: FilterInput<BatchPageItem> = {
   templateUrl: './list.component.html',
   styleUrls: ['../../styles/list.component.scss']
 })
-export class BatchListElementsComponent extends PageListComponent<BatchPageItem> implements OnDestroy {
-
+export class BatchListElementsComponent
+  extends PageListComponent<BatchPageItem>
+  implements OnDestroy {
   suite: SuiteLookupResponse;
   params: FrontendBatchCompareParams;
   ItemType = BatchPageItemType;
@@ -181,13 +191,13 @@ export class BatchListElementsComponent extends PageListComponent<BatchPageItem>
     router: Router
   ) {
     super(filterInput, Object.values(BatchPageItemType), route, router);
-    this._subAllItems = this.batchPageService.items$.subscribe(allItems => {
+    this._subAllItems = this.batchPageService.items$.subscribe((allItems) => {
       this.initCollections(allItems);
     });
-    this._subSuite = this.batchPageService.suite$.subscribe(v => {
+    this._subSuite = this.batchPageService.suite$.subscribe((v) => {
       this.suite = v;
     });
-    this._subParams = this.batchPageService.params$.subscribe(v => {
+    this._subParams = this.batchPageService.params$.subscribe((v) => {
       this.params = v;
     });
   }
@@ -220,10 +230,15 @@ export class BatchListElementsComponent extends PageListComponent<BatchPageItem>
     if ('Enter' === event.key && row !== -1) {
       const item = this._items[row];
       const queryParamMap = this.route.snapshot.queryParamMap;
-      const queryParams = nextPageQueryParams(queryParamMap, this.params, item.type);
-      this.router.navigate([ item.elementName ],
-        { relativeTo: this.route, queryParams });
+      const queryParams = nextPageQueryParams(
+        queryParamMap,
+        this.params,
+        item.type
+      );
+      this.router.navigate([item.elementName], {
+        relativeTo: this.route,
+        queryParams
+      });
     }
   }
-
 }

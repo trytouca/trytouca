@@ -18,16 +18,12 @@ type IFormContent = {
   templateUrl: './invite.component.html'
 })
 export class TeamInviteComponent extends ModalComponent {
-
   elements: { teamSlug: string };
 
   /**
    *
    */
-  constructor(
-    private apiService: ApiService,
-    public dialogRef: DialogRef
-  ) {
+  constructor(private apiService: ApiService, public dialogRef: DialogRef) {
     super();
     super.form = new FormGroup({
       name: new FormControl('', {
@@ -39,10 +35,7 @@ export class TeamInviteComponent extends ModalComponent {
         updateOn: 'blur'
       }),
       email: new FormControl('', {
-        validators: [
-          Validators.required,
-          Validators.email
-        ],
+        validators: [Validators.required, Validators.email],
         updateOn: 'blur'
       })
     });
@@ -58,16 +51,16 @@ export class TeamInviteComponent extends ModalComponent {
     }
     this.submitted = true;
     const body = { email: model.email, fullname: model.name };
-    const url = [ 'team', this.elements.teamSlug, 'invite' ].join('/');
+    const url = ['team', this.elements.teamSlug, 'invite'].join('/');
     this.apiService.post(url, body).subscribe(
       () => {
         this.form.reset();
         this.submitted = false;
         this.dialogRef.close(true);
       },
-      err => {
+      (err) => {
         const msg = this.apiService.extractError(err, [
-          [ 400, 'request invalid', 'Your request was rejected by the server.' ]
+          [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
@@ -81,5 +74,4 @@ export class TeamInviteComponent extends ModalComponent {
   onKeydown(event: KeyboardEvent) {
     super.keydownGuard(['j', 'k', 'Enter', 'Backspace'], event);
   }
-
 }

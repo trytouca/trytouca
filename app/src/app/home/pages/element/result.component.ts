@@ -4,7 +4,13 @@
 
 import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faCircle, faCheckCircle, faPlusCircle, faMinusCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircle,
+  faCheckCircle,
+  faPlusCircle,
+  faMinusCircle,
+  faTimesCircle
+} from '@fortawesome/free-solid-svg-icons';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
 import { NotificationService } from '@weasel/core/services';
@@ -16,7 +22,7 @@ enum MatchType {
   Irrelevant = 1,
   Different,
   Imperfect,
-  Perfect,
+  Perfect
 }
 
 enum RowType {
@@ -47,10 +53,9 @@ interface IMetadata {
 @Component({
   selector: 'app-element-item-result',
   templateUrl: './result.component.html',
-  styleUrls: ['./result.component.scss','../../styles/item.component.scss']
+  styleUrls: ['./result.component.scss', '../../styles/item.component.scss']
 })
 export class ElementItemResultComponent {
-
   result: Result;
   category: ElementPageItemType;
   rowType = RowType;
@@ -75,7 +80,12 @@ export class ElementItemResultComponent {
     private faIconLibrary: FaIconLibrary
   ) {
     faIconLibrary.addIcons(
-      faCircle, faCheckCircle, faTimesCircle, faPlusCircle, faMinusCircle);
+      faCircle,
+      faCheckCircle,
+      faTimesCircle,
+      faPlusCircle,
+      faMinusCircle
+    );
   }
 
   private initMetadata(): void {
@@ -91,11 +101,17 @@ export class ElementItemResultComponent {
       case ElementPageItemType.Common:
         switch (matchType) {
           case MatchType.Perfect:
-            return isComplex ? RowType.Common_Perfect_Complex : RowType.Common_Perfect_Simple;
+            return isComplex
+              ? RowType.Common_Perfect_Complex
+              : RowType.Common_Perfect_Simple;
           case MatchType.Imperfect:
-            return isComplex ? RowType.Common_Imperfect_Complex : RowType.Common_Imperfect_Simple;
+            return isComplex
+              ? RowType.Common_Imperfect_Complex
+              : RowType.Common_Imperfect_Simple;
           case MatchType.Different:
-            return isComplex ? RowType.Common_Different_Complex : RowType.Common_Different_Simple;
+            return isComplex
+              ? RowType.Common_Different_Complex
+              : RowType.Common_Different_Simple;
         }
         return RowType.Unknown;
       case ElementPageItemType.Fresh:
@@ -167,7 +183,9 @@ export class ElementItemResultComponent {
   }
 
   public onCopy(event: string) {
-    this.notificationService.notify(AlertType.Success, 'Copied value to clipboard.');
+    this.notificationService.notify(
+      AlertType.Success,
+      'Copied value to clipboard.'
+    );
   }
-
 }

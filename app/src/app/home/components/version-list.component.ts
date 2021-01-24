@@ -2,7 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, HostListener, Input, OnChanges, SimpleChanges, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  EventEmitter,
+  Output
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Fuse from 'fuse.js';
 import { Subject } from 'rxjs';
@@ -22,7 +30,6 @@ type Version = {
   styleUrls: ['./version-list.component.scss']
 })
 export class VersionListComponent implements OnChanges {
-
   @Input() suite: SuiteLookupResponse;
   @Input() params: FrontendElementCompareParams;
   @Input() side: 'head' | 'base';
@@ -44,10 +51,7 @@ export class VersionListComponent implements OnChanges {
   /**
    *
    */
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-  ) {
+  constructor(private route: ActivatedRoute, private router: Router) {
     this._dstBatchChanged
       .pipe(distinctUntilChanged(), skip(1))
       .subscribe((version) => {
@@ -67,18 +71,28 @@ export class VersionListComponent implements OnChanges {
             relativeTo: this.route
           });
         } else {
-          this.router.navigate(['~', this.params.teamSlug, this.params.srcSuiteSlug, version, this.params.srcElementSlug], {
-            queryParamsHandling: 'merge'
-          });
+          this.router.navigate(
+            [
+              '~',
+              this.params.teamSlug,
+              this.params.srcSuiteSlug,
+              version,
+              this.params.srcElementSlug
+            ],
+            {
+              queryParamsHandling: 'merge'
+            }
+          );
         }
       });
     this._versionQueryChanged
       .pipe(
         map((event: any) => event.target.value),
-        map(res => res.length < 2 ? '' : res),
+        map((res) => (res.length < 2 ? '' : res)),
         debounceTime(500),
         distinctUntilChanged()
-      ).subscribe((text) => {
+      )
+      .subscribe((text) => {
         this._versionQuery = text;
         this.refreshVersionList();
       });
@@ -111,11 +125,11 @@ export class VersionListComponent implements OnChanges {
     if (this._versionQuery.length !== 0) {
       const fuse = new Fuse(this.suite.batches, this._searchOptions);
       const result = fuse.search(this._versionQuery);
-      versions = result.map(v => v.item) as string[];
+      versions = result.map((v) => v.item) as string[];
     } else {
       versions = this.suite.batches;
     }
-    const items = versions.slice(0, 10).map(v => ({ slug: v, tags: [] }));
+    const items = versions.slice(0, 10).map((v) => ({ slug: v, tags: [] }));
     const setTag = (name: string, func: (v: Version) => boolean) => {
       const item = items.find(func);
       if (item) {
@@ -123,9 +137,12 @@ export class VersionListComponent implements OnChanges {
       }
     };
     const baseline = this.suite.promotions.slice(-1)[0];
-    setTag('latest', v => v.slug === this.suite.latest.batchSlug);
-    setTag('baseline', v => v.slug === baseline.to);
-    setTag('former baseline', v => v.slug === baseline.from && v.slug !== baseline.to);
+    setTag('latest', (v) => v.slug === this.suite.latest.batchSlug);
+    setTag('baseline', (v) => v.slug === baseline.to);
+    setTag(
+      'former baseline',
+      (v) => v.slug === baseline.from && v.slug !== baseline.to
+    );
     this._relevantVersions = items;
   }
 
@@ -151,7 +168,9 @@ export class VersionListComponent implements OnChanges {
    *
    */
   get currentVersion(): string {
-    return this.side === 'head' ? this.params.srcBatchSlug : this.params.dstBatchSlug;
+    return this.side === 'head'
+      ? this.params.srcBatchSlug
+      : this.params.dstBatchSlug;
   }
 
   /**
@@ -186,5 +205,4 @@ export class VersionListComponent implements OnChanges {
       event.stopImmediatePropagation();
     }
   }
-
 }

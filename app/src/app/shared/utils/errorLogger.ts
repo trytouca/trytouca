@@ -12,7 +12,6 @@ import { environment } from 'src/environments/environment';
  * future versions.
  */
 class ErrorLogger {
-
   constructor() {}
 
   public notify(error: Error) {
@@ -21,7 +20,6 @@ class ErrorLogger {
     }
     console.error(error);
   }
-
 }
 
 export const errorLogger = new ErrorLogger();

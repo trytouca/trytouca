@@ -12,14 +12,13 @@ import { AuthService } from '@weasel/core/services';
   templateUrl: './landing.component.html'
 })
 export class LandingComponent {
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService
   ) {
-    const opts = new Map<string, {p: string, q: string}>([
-      ['join', {p: '/~?focus=join', q: 'join'}]
+    const opts = new Map<string, { p: string; q: string }>([
+      ['join', { p: '/~?focus=join', q: 'join' }]
     ]);
     const queryMap = this.route.snapshot.queryParamMap;
     if (queryMap.has('redirect') && opts.has(queryMap.get('redirect'))) {
@@ -32,5 +31,4 @@ export class LandingComponent {
       }
     }
   }
-
 }

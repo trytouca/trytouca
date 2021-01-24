@@ -8,12 +8,23 @@ import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faComments, faSpinner, faTasks } from '@fortawesome/free-solid-svg-icons';
+import {
+  faComments,
+  faSpinner,
+  faTasks
+} from '@fortawesome/free-solid-svg-icons';
 import { DialogService, DialogRef } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
-import type { BatchItem, BatchLookupResponse, SuiteLookupResponse } from '@weasel/core/models/commontypes';
-import type { FrontendBatchCompareParams, FrontendOverviewSection } from '@weasel/core/models/frontendtypes';
+import type {
+  BatchItem,
+  BatchLookupResponse,
+  SuiteLookupResponse
+} from '@weasel/core/models/commontypes';
+import type {
+  FrontendBatchCompareParams,
+  FrontendOverviewSection
+} from '@weasel/core/models/frontendtypes';
 import { AlertKind, AlertService } from '@weasel/core/services';
 import { PageComponent, PageTab } from '@weasel/home/components/page.component';
 import { BatchPageItem, BatchPageOverviewMetadata } from './batch.model';
@@ -39,9 +50,9 @@ const pageTabs: PageTab<BatchPageTabType>[] = [
 ];
 
 type NotFound = Partial<{
-  teamSlug: string
-  suiteSlug: string
-  batchSlug: string
+  teamSlug: string;
+  suiteSlug: string;
+  batchSlug: string;
 }>;
 
 type PageButton = {
@@ -54,10 +65,11 @@ type PageButton = {
   selector: 'app-batch-page',
   templateUrl: './page.component.html',
   styleUrls: ['../../styles/page.component.scss'],
-  providers: [ BatchPageService, { provide: 'PAGE_TABS', useValue: pageTabs } ]
+  providers: [BatchPageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
 })
-export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTabType, NotFound> implements OnInit, OnDestroy {
-
+export class BatchPageComponent
+  extends PageComponent<BatchPageItem, BatchPageTabType, NotFound>
+  implements OnInit, OnDestroy {
   suite: SuiteLookupResponse;
   batches: BatchItem[];
   batch: BatchLookupResponse;
@@ -98,50 +110,52 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
   ) {
     super(batchPageService, pageTabs, route);
     faIconLibrary.addIcons(faComments, faSpinner, faTasks);
-    this._subAlert = this.alertService.alerts$.subscribe(v => {
-      if (v.some(k => k.kind === AlertKind.TeamNotFound)) {
+    this._subAlert = this.alertService.alerts$.subscribe((v) => {
+      if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
         this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
       }
-      if (v.some(k => k.kind === AlertKind.SuiteNotFound)) {
+      if (v.some((k) => k.kind === AlertKind.SuiteNotFound)) {
         this._notFound.suiteSlug = this.route.snapshot.paramMap.get('suite');
       }
-      if (v.some(k => k.kind === AlertKind.BatchNotFound)) {
+      if (v.some((k) => k.kind === AlertKind.BatchNotFound)) {
         this._notFound.batchSlug = this.route.snapshot.paramMap.get('batch');
       }
     });
-    this._subSuite = this.batchPageService.suite$.subscribe(v => {
+    this._subSuite = this.batchPageService.suite$.subscribe((v) => {
       this.suite = v;
     });
-    this._subBatches = this.batchPageService.batches$.subscribe(v => {
+    this._subBatches = this.batchPageService.batches$.subscribe((v) => {
       this.batches = v.slice(0, 10);
     });
-    this._subBatch = this.batchPageService.batch$.subscribe(v => {
+    this._subBatch = this.batchPageService.batch$.subscribe((v) => {
       this.batch = v;
-      this.tabs.find(t => t.type === BatchPageTabType.Comments).counter = v.commentCount;
-      this.tabs.find(t => t.type === BatchPageTabType.Elements).counter = v.messageCount;
+      this.tabs.find((t) => t.type === BatchPageTabType.Comments).counter =
+        v.commentCount;
+      this.tabs.find((t) => t.type === BatchPageTabType.Elements).counter =
+        v.messageCount;
       this.updateTitle(v);
     });
-    this._subOverview = this.batchPageService.overview$.subscribe(v => {
+    this._subOverview = this.batchPageService.overview$.subscribe((v) => {
       this.overview = this.findOverviewInputs(v);
       const buttons = this.findPageButtons();
       if (!isEqual(buttons, this.buttons)) {
         this.buttons = buttons;
       }
     });
-    this._subParams = this.batchPageService.params$.subscribe(v => {
+    this._subParams = this.batchPageService.params$.subscribe((v) => {
       this.params = v;
     });
-    this._subParamMap = this.route.paramMap.subscribe(v => {
+    this._subParamMap = this.route.paramMap.subscribe((v) => {
       // by ensuring that params is set, we avoid calling this function during
       // initial page load.
       if (this.params) {
         this.batchPageService.updateBatchSlug(v.get('batch'));
       }
     });
-    this._subQueryParamMap = this.route.queryParamMap.subscribe(v => {
+    this._subQueryParamMap = this.route.queryParamMap.subscribe((v) => {
       if (this.params) {
         const params = this.params;
-        const getQuery = (key: string) => v.has(key) ? v.get(key) : null;
+        const getQuery = (key: string) => (v.has(key) ? v.get(key) : null);
         params.dstSuiteSlug = getQuery('cn');
         params.dstBatchSlug = getQuery('cv');
         this.batchPageService.updateRequestParams(params);
@@ -184,7 +198,8 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
     if (!this.params) {
       const paramMap = this.route.snapshot.paramMap;
       const queryMap = this.route.snapshot.queryParamMap;
-      const getQuery = (key: string) => queryMap.has(key) ? queryMap.get(key) : null;
+      const getQuery = (key: string) =>
+        queryMap.has(key) ? queryMap.get(key) : null;
       this.params = {
         currentTab: this.currentTab,
         teamSlug: paramMap.get('team'),
@@ -205,10 +220,10 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
     // pressing key 'Escape' should hide seal or promote dialogs
     if ('Escape' === event.key) {
       if (this._dialogRefPromote && !this._dialogSubPromote.closed) {
-        this._dialogRefPromote.close()
+        this._dialogRefPromote.close();
       }
       if (this._dialogRefSeal && !this._dialogSubSeal.closed) {
-        this._dialogRefSeal.close()
+        this._dialogRefSeal.close();
       }
     }
     // pressing key 'Backspace' should return user to "Suite" page
@@ -221,7 +236,12 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
    *
    */
   private updateTitle(batch: BatchLookupResponse) {
-    const title = [batch.batchSlug, batch.suiteName, batch.teamName, 'Weasel'].join(' - ');
+    const title = [
+      batch.batchSlug,
+      batch.suiteName,
+      batch.teamName,
+      'Weasel'
+    ].join(' - ');
     this.titleService.setTitle(title);
   }
 
@@ -234,8 +254,10 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
     }
     const buttons: PageButton[] = [];
 
-    if (this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug
-      && this.suite?.baseline?.batchSlug !== this.params?.dstBatchSlug) {
+    if (
+      this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug &&
+      this.suite?.baseline?.batchSlug !== this.params?.dstBatchSlug
+    ) {
       buttons.push({
         click: () => {
           this.router.navigate([], {
@@ -256,9 +278,11 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
       });
     }
 
-    if (this.batch?.isSealed
-      && this.suite?.baseline?.batchSlug === this.params?.dstBatchSlug
-      && this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug) {
+    if (
+      this.batch?.isSealed &&
+      this.suite?.baseline?.batchSlug === this.params?.dstBatchSlug &&
+      this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug
+    ) {
       const src = new Date(this.batch?.submittedAt);
       const dst = new Date(this.suite?.baseline?.submittedAt);
       buttons.push({
@@ -280,12 +304,14 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
       data: { batch: this.batch },
       minHeight: '10vh'
     });
-    this._dialogSubSeal = this._dialogRefSeal.afterClosed$.subscribe((state: boolean) => {
-      if (state) {
-        this.batchPageService.removeCacheBatch();
-        this.fetchItems();
+    this._dialogSubSeal = this._dialogRefSeal.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (state) {
+          this.batchPageService.removeCacheBatch();
+          this.fetchItems();
+        }
       }
-    });
+    );
   }
 
   /**
@@ -297,47 +323,73 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
       data: { batch: this.batch },
       minHeight: '10vh'
     });
-    this._dialogSubPromote = this._dialogRefPromote.afterClosed$.subscribe((state: boolean) => {
-      if (state) {
-        this.batchPageService.removeCacheBatch();
-        this.router.navigate([], {
-          queryParams: { cv: this.batch.batchSlug },
-          queryParamsHandling: 'merge'
-        });
+    this._dialogSubPromote = this._dialogRefPromote.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (state) {
+          this.batchPageService.removeCacheBatch();
+          this.router.navigate([], {
+            queryParams: { cv: this.batch.batchSlug },
+            queryParamsHandling: 'merge'
+          });
+        }
       }
-    });
+    );
   }
 
   /**
    *
    */
-  private findOverviewInputs(meta: BatchPageOverviewMetadata): FrontendOverviewSection {
+  private findOverviewInputs(
+    meta: BatchPageOverviewMetadata
+  ): FrontendOverviewSection {
     const statements: string[] = [];
 
-    const submittedBy = meta.batchSubmittedBy.map(v => `<b>${v.fullname}</b>`).join(' and ');
-    const submittedAtDate = formatDate(meta.batchSubmittedAt, 'fullDate', this.locale);
-    const submittedAtTime = formatDate(meta.batchSubmittedAt, 'shortTime', this.locale);
-    statements.push(`This version was submitted by ${submittedBy} on ${submittedAtDate} at ${submittedAtTime}.`);
+    const submittedBy = meta.batchSubmittedBy
+      .map((v) => `<b>${v.fullname}</b>`)
+      .join(' and ');
+    const submittedAtDate = formatDate(
+      meta.batchSubmittedAt,
+      'fullDate',
+      this.locale
+    );
+    const submittedAtTime = formatDate(
+      meta.batchSubmittedAt,
+      'shortTime',
+      this.locale
+    );
+    statements.push(
+      `This version was submitted by ${submittedBy} on ${submittedAtDate} at ${submittedAtTime}.`
+    );
 
     const elements: string[] = [];
-    const pluralify = (v: number, type: string) => v === 1 ? type : type + 's';
-    const stringify = (v: number, adj: string, type: string) => [ `<b>${v}</b>`, adj, pluralify(v, type) ].join(' ');
-    const enumerate = (arr: string[]) => arr.length === 1 ? arr[0] : [ arr.slice(0, -1).join(', '), arr.slice(-1) ].join(' and ');
+    const pluralify = (v: number, type: string) =>
+      v === 1 ? type : type + 's';
+    const stringify = (v: number, adj: string, type: string) =>
+      [`<b>${v}</b>`, adj, pluralify(v, type)].join(' ');
+    const enumerate = (arr: string[]) =>
+      arr.length === 1
+        ? arr[0]
+        : [arr.slice(0, -1).join(', '), arr.slice(-1)].join(' and ');
     if (meta.elementsCountFresh !== 0) {
       elements.push(stringify(meta.elementsCountFresh, 'new', 'testcase'));
     }
     if (meta.elementsCountMissing !== 0) {
-      elements.push(stringify(meta.elementsCountMissing, 'missing', 'testcase'));
+      elements.push(
+        stringify(meta.elementsCountMissing, 'missing', 'testcase')
+      );
     }
     if (elements.length !== 0) {
       statements.push(`This version has ${enumerate(elements)}.`);
     }
 
-    const commonDifferent = meta.elementsCountDifferent - meta.elementsCountMissing;
+    const commonDifferent =
+      meta.elementsCountDifferent - meta.elementsCountMissing;
     const commonHead = meta.elementsCountHead - meta.elementsCountFresh;
     if (commonDifferent !== 0) {
       const hasHave = meta.elementsCountDifferent === 1 ? 'has' : 'have';
-      statements.push(`<b>${commonDifferent}</b> of <b>${commonHead}</b> common testcases in this version ${hasHave} differences.`);
+      statements.push(
+        `<b>${commonDifferent}</b> of <b>${commonHead}</b> common testcases in this version ${hasHave} differences.`
+      );
     }
 
     return {
@@ -349,5 +401,4 @@ export class BatchPageComponent extends PageComponent<BatchPageItem, BatchPageTa
       statements
     };
   }
-
 }

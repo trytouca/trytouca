@@ -2,7 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  HostListener
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
@@ -15,16 +19,12 @@ import { AlertType } from '@weasel/shared/components/alert.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BatchSealComponent extends ModalComponent {
-
   elements: { batch: BatchLookupResponse };
 
   /**
    *
    */
-  constructor(
-    private apiService: ApiService,
-    public dialogRef: DialogRef
-  ) {
+  constructor(private apiService: ApiService, public dialogRef: DialogRef) {
     super();
     super.form = new FormGroup({});
     this.elements = dialogRef.data as { batch: BatchLookupResponse };
@@ -38,7 +38,8 @@ export class BatchSealComponent extends ModalComponent {
       return;
     }
     this.submitted = true;
-    const url = [ 'batch',
+    const url = [
+      'batch',
       this.elements.batch.teamSlug,
       this.elements.batch.suiteSlug,
       this.elements.batch.batchSlug,
@@ -50,9 +51,9 @@ export class BatchSealComponent extends ModalComponent {
         this.submitted = false;
         this.dialogRef.close(true);
       },
-      err => {
+      (err) => {
         const msg = this.apiService.extractError(err, [
-          [ 400, 'request invalid', 'Your request was rejected by the server.' ],
+          [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
@@ -75,5 +76,4 @@ export class BatchSealComponent extends ModalComponent {
   onKeydown(event: KeyboardEvent) {
     super.keydownGuard(['j', 'k', 'Enter', 'Escape', 'Backspace'], event);
   }
-
 }

@@ -6,7 +6,12 @@ import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
-import { FilterInput, FilterManager, FilterParams, FilterStats } from '@weasel/home/models/filter.model';
+import {
+  FilterInput,
+  FilterManager,
+  FilterParams,
+  FilterStats
+} from '@weasel/home/models/filter.model';
 
 type CollectionType = string;
 
@@ -14,7 +19,6 @@ type CollectionType = string;
   template: ''
 })
 export class PageListComponent<ItemType> implements OnDestroy {
-
   /* list of all items as obtained from backend */
   protected _allItems: ItemType[] = [];
 
@@ -91,7 +95,10 @@ export class PageListComponent<ItemType> implements OnDestroy {
     const queryMap = this.route.snapshot.queryParamMap;
     this._allItems = allItems;
     for (const type of this.collectionKeys) {
-      this._allItemsCounter.set(type, allItems.filter((v: any) => v.type === type).length);
+      this._allItemsCounter.set(
+        type,
+        allItems.filter((v: any) => v.type === type).length
+      );
     }
     this._params = this.filterManager.parseQueryMap(queryMap);
     this.updateCollections();
@@ -112,9 +119,15 @@ export class PageListComponent<ItemType> implements OnDestroy {
    *
    */
   private updateCollections() {
-    const items = this.filterManager.filterSortPage(this._allItems, this._params);
+    const items = this.filterManager.filterSortPage(
+      this._allItems,
+      this._params
+    );
     for (const type of this.collectionKeys) {
-      this._unpaginatedCounter.set(type, items.filter((v: any) => v.type === type).length);
+      this._unpaginatedCounter.set(
+        type,
+        items.filter((v: any) => v.type === type).length
+      );
     }
     this._items = this.filterManager.paginate(items, this._params);
     const isCacheValid = isEqual(this._itemsCache, this._items);
@@ -122,7 +135,10 @@ export class PageListComponent<ItemType> implements OnDestroy {
       return;
     }
     for (const type of this.collectionKeys) {
-      this._collections.set(type, this._items.filter((v: any) => v.type === type));
+      this._collections.set(
+        type,
+        this._items.filter((v: any) => v.type === type)
+      );
     }
     this._itemsCache = this._items;
   }
@@ -171,12 +187,12 @@ export class PageListComponent<ItemType> implements OnDestroy {
    */
   public filterStats(): FilterStats {
     const totalRows = this.collectionKeys
-      .map(v => this._allItemsCounter.get(v))
-      .filter(v => v)
+      .map((v) => this._allItemsCounter.get(v))
+      .filter((v) => v)
       .reduce((prev, v) => prev + v, 0);
     const totalUnpaginatedRows = this.collectionKeys
-      .map(v => this._unpaginatedCounter.get(v))
-      .filter(v => v)
+      .map((v) => this._unpaginatedCounter.get(v))
+      .filter((v) => v)
       .reduce((prev, v) => prev + v, 0);
     return { totalRows, totalUnpaginatedRows };
   }
@@ -213,5 +229,4 @@ export class PageListComponent<ItemType> implements OnDestroy {
     // smoothly scroll to the selected row
     rows[row].scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
-
 }

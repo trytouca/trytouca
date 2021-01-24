@@ -5,10 +5,22 @@
 import { Component, Input } from '@angular/core';
 import { I18nPluralPipe, PercentPipe } from '@angular/common';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faCircle, faCheckCircle, faSpinner, faStar, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircle,
+  faCheckCircle,
+  faSpinner,
+  faStar,
+  faTimesCircle
+} from '@fortawesome/free-solid-svg-icons';
 import { TimeAgoPipe } from 'ngx-moment';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
-import { Data, Icon, IconColor, IconType, Topic } from '@weasel/home/models/page-item.model';
+import {
+  Data,
+  Icon,
+  IconColor,
+  IconType,
+  Topic
+} from '@weasel/home/models/page-item.model';
 import { DurationPipe } from '@weasel/home/pipes';
 import { FrontendBatchItem } from '@weasel/core/models/frontendtypes';
 
@@ -28,15 +40,9 @@ type Meta = Partial<{
   selector: 'app-suite-item-batch',
   templateUrl: './item.component.html',
   styleUrls: ['../../styles/item.component.scss'],
-  providers: [
-    DurationPipe,
-    I18nPluralPipe,
-    PercentPipe,
-    TimeAgoPipe
-  ]
+  providers: [DurationPipe, I18nPluralPipe, PercentPipe, TimeAgoPipe]
 })
 export class SuiteItemBatchComponent {
-
   data: Data;
   icon: Icon;
   topics: Topic[];
@@ -61,7 +67,12 @@ export class SuiteItemBatchComponent {
     private faIconLibrary: FaIconLibrary
   ) {
     faIconLibrary.addIcons(
-      faCircle, faSpinner, faCheckCircle, faStar, faTimesCircle);
+      faCircle,
+      faSpinner,
+      faCheckCircle,
+      faStar,
+      faTimesCircle
+    );
   }
 
   /**
@@ -82,10 +93,14 @@ export class SuiteItemBatchComponent {
     this._meta.score = Math.floor(item.meta.elementsScoreAggregate * 100) / 100;
     this._meta.submittedAt = new Date(item.submittedAt);
 
-    this._meta.performance = this.initPerformance(new Metric('',
-      item.meta.metricsDurationHead,
-      item.meta.metricsDurationHead - item.meta.metricsDurationChange * item.meta.metricsDurationSign
-    ));
+    this._meta.performance = this.initPerformance(
+      new Metric(
+        '',
+        item.meta.metricsDurationHead,
+        item.meta.metricsDurationHead -
+          item.meta.metricsDurationChange * item.meta.metricsDurationSign
+      )
+    );
 
     this.icon = this.initIcon();
     this.topics = this.initTopics();
@@ -95,7 +110,6 @@ export class SuiteItemBatchComponent {
    *
    */
   private initIcon(): Icon {
-
     // if batch is not sealed
     if (!this._meta.isSealed || this._meta.countPending) {
       return {
@@ -172,8 +186,13 @@ export class SuiteItemBatchComponent {
     }
 
     const changeType = metric.changeType();
-    const durationStr = this.durationPipe.transform(duration, 1, ['m', 's', 'ms']);
-    if (changeType === MetricChangeType.Same ||
+    const durationStr = this.durationPipe.transform(duration, 1, [
+      'm',
+      's',
+      'ms'
+    ]);
+    if (
+      changeType === MetricChangeType.Same ||
       changeType === MetricChangeType.Fresh ||
       changeType === MetricChangeType.Missing
     ) {
@@ -201,18 +220,16 @@ export class SuiteItemBatchComponent {
 
     if (this._meta.countHead) {
       let tcs = this.i18pluralPipe.transform(this._meta.countHead, {
-        '=1': 'one case', other: '# cases'
+        '=1': 'one case',
+        other: '# cases'
       });
       if (this._meta.countPending) {
         tcs += ` (${this._meta.countPending} pending comparison)`;
-      }
-      else if (this._meta.countFresh && this._meta.countMissing) {
+      } else if (this._meta.countFresh && this._meta.countMissing) {
         tcs += ` (${this._meta.countFresh} new, ${this._meta.countMissing} missing)`;
-      }
-      else if (this._meta.countFresh && !this._meta.countMissing) {
+      } else if (this._meta.countFresh && !this._meta.countMissing) {
         tcs += ` (${this._meta.countMissing} new)`;
-      }
-      else if (!this._meta.countFresh && this._meta.countMissing) {
+      } else if (!this._meta.countFresh && this._meta.countMissing) {
         tcs += ` (${this._meta.countFresh} missing)`;
       }
       topics.push({ text: tcs });
@@ -223,5 +240,4 @@ export class SuiteItemBatchComponent {
 
     return topics;
   }
-
 }

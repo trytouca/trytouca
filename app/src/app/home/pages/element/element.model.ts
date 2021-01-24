@@ -2,7 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import type { CppTypeComparison, Userinfo } from '@weasel/core/models/commontypes';
+import type {
+  CppTypeComparison,
+  Userinfo
+} from '@weasel/core/models/commontypes';
 import { PageListItem } from '@weasel/home/models/page-list-item.model';
 import { Metric } from '@weasel/home/models/metric.model';
 import { Result } from '@weasel/home/models/result.model';
@@ -41,7 +44,10 @@ export enum ElementPageItemType {
 /**
  *
  */
-export class ElementPageResult extends PageListItem<Result, ElementPageItemType> {
+export class ElementPageResult extends PageListItem<
+  Result,
+  ElementPageItemType
+> {
   public constructor(data: Result, type: ElementPageItemType) {
     super(data, type);
   }
@@ -50,7 +56,10 @@ export class ElementPageResult extends PageListItem<Result, ElementPageItemType>
 /**
  *
  */
-export class ElementPageMetric extends PageListItem<Metric, ElementPageItemType> {
+export class ElementPageMetric extends PageListItem<
+  Metric,
+  ElementPageItemType
+> {
   public constructor(k: CppTypeComparison, type: ElementPageItemType) {
     if (k.score && k.score === 1) {
       k.dstValue = k.srcValue;

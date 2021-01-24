@@ -15,10 +15,7 @@
     "resolveJsonModule": true,
     "importHelpers": true,
     "target": "es2015",
-    "lib": [
-      "es2018",
-      "dom"
-    ]
+    "lib": ["es2018", "dom"]
   },
   "angularCompilerOptions": {
     "fullTemplateTypeCheck": true,

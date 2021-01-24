@@ -13,7 +13,6 @@ import { TeamApplicant } from '@weasel/core/models/commontypes';
   styleUrls: ['../../styles/item.component.scss']
 })
 export class TeamItemApplicantComponent {
-
   @Input() item: TeamApplicant;
   @Input() isTeamAdmin: boolean;
   @Output() confirmAccept = new EventEmitter<TeamApplicant>();
@@ -22,9 +21,7 @@ export class TeamItemApplicantComponent {
   /**
    *
    */
-  constructor(
-    private faIconLibrary: FaIconLibrary
-  ) {
+  constructor(private faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(faUser, faUserPlus);
   }
 
@@ -41,5 +38,4 @@ export class TeamItemApplicantComponent {
   decline(): void {
     this.confirmDecline.emit(this.item);
   }
-
 }

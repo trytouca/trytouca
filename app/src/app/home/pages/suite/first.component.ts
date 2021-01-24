@@ -12,8 +12,8 @@ import { AlertType } from '@weasel/shared/components/alert.component';
 import { SuitePageService } from './suite.service';
 
 type Fields = Partial<{
-  apiKey: string,
-  apiUrl: string
+  apiKey: string;
+  apiUrl: string;
 }>;
 
 @Component({
@@ -22,7 +22,6 @@ type Fields = Partial<{
   styleUrls: ['./first.component.scss']
 })
 export class SuiteFirstBatchComponent implements OnDestroy {
-
   fields: Fields = {};
 
   private _subSuite: Subscription;
@@ -40,11 +39,13 @@ export class SuiteFirstBatchComponent implements OnDestroy {
     if (userService?.currentUser?.apiKeys?.length !== 0) {
       this.fields.apiKey = userService?.currentUser?.apiKeys[0];
     }
-    this._subUser = userService.currentUser$.subscribe(v => {
+    this._subUser = userService.currentUser$.subscribe((v) => {
       this.fields.apiKey = v.apiKeys[0];
     });
-    this._subSuite = suitePageService.suite$.subscribe(v => {
-      this.fields.apiUrl = [ getBackendUrl(), '@', v.teamSlug, v.suiteSlug ].join('/');
+    this._subSuite = suitePageService.suite$.subscribe((v) => {
+      this.fields.apiUrl = [getBackendUrl(), '@', v.teamSlug, v.suiteSlug].join(
+        '/'
+      );
     });
     faIconLibrary.addIcons(faClipboard);
   }
@@ -61,7 +62,9 @@ export class SuiteFirstBatchComponent implements OnDestroy {
    *
    */
   onCopy(event: string, name: string) {
-    this.notificationService.notify(AlertType.Success, `Copied ${name} to clipboard.`);
+    this.notificationService.notify(
+      AlertType.Success,
+      `Copied ${name} to clipboard.`
+    );
   }
-
 }

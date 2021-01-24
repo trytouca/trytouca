@@ -4,20 +4,23 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AlertService, ApiService, AuthService, NotificationService, UserService } from './services';
+import {
+  AlertService,
+  ApiService,
+  AuthService,
+  NotificationService,
+  UserService
+} from './services';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   providers: [
     AlertService,
     ApiService,
     AuthService,
     NotificationService,
-    UserService,
+    UserService
   ]
 })
-
-export class CoreModule { }
+export class CoreModule {}

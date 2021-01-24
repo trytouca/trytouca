@@ -6,10 +6,20 @@ import { Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import { of, Subject, Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import type { BatchListResponse, SuiteLookupResponse, SuiteListResponse,
-  SuiteItem, TeamLookupResponse } from '@weasel/core/models/commontypes';
+import type {
+  BatchListResponse,
+  SuiteLookupResponse,
+  SuiteListResponse,
+  SuiteItem,
+  TeamLookupResponse
+} from '@weasel/core/models/commontypes';
 import { FrontendBatchItem } from '@weasel/core/models/frontendtypes';
-import { AlertKind, AlertService, ApiService, UserService } from '@weasel/core/services';
+import {
+  AlertKind,
+  AlertService,
+  ApiService,
+  UserService
+} from '@weasel/core/services';
 import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { IPageService } from '@weasel/home/models/pages.model';
 import { SuitePageItem, SuitePageItemType } from './suite.model';
@@ -28,7 +38,6 @@ type FetchInput = {
 
 @Injectable()
 export class SuitePageService extends IPageService<SuitePageItem> {
-
   private _team: TeamLookupResponse;
   private _teamSubject = new Subject<TeamLookupResponse>();
   team$ = this._teamSubject.asObservable();
@@ -60,9 +69,9 @@ export class SuitePageService extends IPageService<SuitePageItem> {
    * Learn more about this team.
    */
   private fetchTeam(args: FetchInput): Observable<TeamLookupResponse> {
-    const url = [ 'team', args.teamSlug ].join('/');
-    return this.apiService.get<TeamLookupResponse>(url).pipe(map(
-      (doc: TeamLookupResponse) => {
+    const url = ['team', args.teamSlug].join('/');
+    return this.apiService.get<TeamLookupResponse>(url).pipe(
+      map((doc: TeamLookupResponse) => {
         if (!doc) {
           return;
         }
@@ -72,17 +81,17 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         this._team = doc;
         this._teamSubject.next(this._team);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    * Find list of all suites in this team.
    */
   private fetchSuites(args: FetchInput): Observable<SuiteListResponse> {
-    const url = [ 'suite', args.teamSlug ].join('/');
-    return this.apiService.get<SuiteListResponse>(url).pipe(map(
-      (doc: SuiteListResponse) => {
+    const url = ['suite', args.teamSlug].join('/');
+    return this.apiService.get<SuiteListResponse>(url).pipe(
+      map((doc: SuiteListResponse) => {
         if (!doc) {
           return;
         }
@@ -92,17 +101,17 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         this._suites = doc;
         this._suitesSubject.next(this._suites);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    * Learn more about this suite.
    */
   private fetchSuite(args: FetchInput): Observable<SuiteLookupResponse> {
-    const url = [ 'suite', args.teamSlug, args.suiteSlug ].join('/');
-    return this.apiService.get<SuiteLookupResponse>(url).pipe(map(
-      (doc: SuiteLookupResponse) => {
+    const url = ['suite', args.teamSlug, args.suiteSlug].join('/');
+    return this.apiService.get<SuiteLookupResponse>(url).pipe(
+      map((doc: SuiteLookupResponse) => {
         if (!doc) {
           return;
         }
@@ -112,17 +121,17 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         this._suite = doc;
         this._suiteSubject.next(this._suite);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    * Find list of all batches in this suite.
    */
   private fetchBatches(args: FetchInput): Observable<BatchListResponse> {
-    const url = [ 'batch', args.teamSlug, args.suiteSlug ].join('/');
-    return this.apiService.get<BatchListResponse>(url).pipe(map(
-      (doc: BatchListResponse) => {
+    const url = ['batch', args.teamSlug, args.suiteSlug].join('/');
+    return this.apiService.get<BatchListResponse>(url).pipe(
+      map((doc: BatchListResponse) => {
         if (!doc) {
           return;
         }
@@ -132,15 +141,15 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         this._batches = doc;
         this._batchesSubject.next(this._batches);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    *
    */
   public fetchItems(args: FetchInput): void {
-    const onetime: Observable<unknown>[] = [ of(0) ];
+    const onetime: Observable<unknown>[] = [of(0)];
 
     if (!this._team) {
       onetime.push(this.fetchTeam(args));
@@ -163,28 +172,39 @@ export class SuitePageService extends IPageService<SuitePageItem> {
           AlertKind.TeamNotFound,
           AlertKind.SuiteNotFound
         );
-        const batches = this._batches.map(v => {
+        const batches = this._batches.map((v) => {
           const batch = v as FrontendBatchItem;
-          batch.isBaseline = batch.batchSlug === this._suite.baseline?.batchSlug;
+          batch.isBaseline =
+            batch.batchSlug === this._suite.baseline?.batchSlug;
           return new SuitePageItem(batch, SuitePageItemType.Batch);
         });
-        const promotions = this._suite.promotions.map(v => {
-          const bySelf = this.userService.currentUser.username === v.by.username;
-          return new SuitePageItem({ ...v, bySelf }, SuitePageItemType.Promotion);
+        const promotions = this._suite.promotions.map((v) => {
+          const bySelf =
+            this.userService.currentUser.username === v.by.username;
+          return new SuitePageItem(
+            { ...v, bySelf },
+            SuitePageItemType.Promotion
+          );
         });
         // since first batch of the suite is always the baseline, remove its
         // corresponding promotion entry because it has no value for the user.
         promotions.shift();
-        const items = [ ...batches, ...promotions ].sort(SuitePageItem.compareByDate);
+        const items = [...batches, ...promotions].sort(
+          SuitePageItem.compareByDate
+        );
         if (isEqual(this._items, items)) {
           return;
         }
         this._items = items;
         this._itemsSubject.next(this._items);
       },
-      err => {
+      (err) => {
         if (err.status === 0) {
-          this.alertService.set(!this._items ? AlertKind.ApiConnectionDown : AlertKind.ApiConnectionLost);
+          this.alertService.set(
+            !this._items
+              ? AlertKind.ApiConnectionDown
+              : AlertKind.ApiConnectionLost
+          );
         } else if (err.status === 401) {
           this.alertService.set(AlertKind.InvalidAuthToken);
         } else if (err.status === 404) {
@@ -192,7 +212,8 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         } else {
           errorLogger.notify(err);
         }
-      });
+      }
+    );
   }
 
   /**
@@ -203,7 +224,10 @@ export class SuitePageService extends IPageService<SuitePageItem> {
    *  - User switches to another suite
    *  - User updates slug of this suite
    */
-  public updateSuiteSlug(currentTab: SuitePageTabType, suiteSlug: string): void {
+  public updateSuiteSlug(
+    currentTab: SuitePageTabType,
+    suiteSlug: string
+  ): void {
     const teamSlug = this._suite.teamSlug;
     this._suites = null;
     this._suite = null;
@@ -211,13 +235,18 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     this.fetchItems({ currentTab, teamSlug, suiteSlug });
   }
 
-
   /**
    *
    */
-  public updateSubscription(action: 'subscribe' | 'unsubscribe'): Observable<void> {
-    const url = ['suite', this._suite.teamSlug, this._suite.suiteSlug, action].join('/');
+  public updateSubscription(
+    action: 'subscribe' | 'unsubscribe'
+  ): Observable<void> {
+    const url = [
+      'suite',
+      this._suite.teamSlug,
+      this._suite.suiteSlug,
+      action
+    ].join('/');
     return this.apiService.post(url);
   }
-
 }

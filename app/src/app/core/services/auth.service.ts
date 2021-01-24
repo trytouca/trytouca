@@ -12,20 +12,20 @@ import { ApiService } from './api.service';
   providedIn: 'root'
 })
 export class AuthService {
-
   /**
    *
    */
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {}
 
   /**
    *
    */
   public login(username: string, password: string) {
-    return this.apiService.post('auth/signin', { username, password })
-      .pipe(map(doc => {
+    return this.apiService.post('auth/signin', { username, password }).pipe(
+      map((doc) => {
         localStorage.setItem(ELocalStorageKey.TokenExpiresAt, doc.expiresAt);
-      }));
+      })
+    );
   }
 
   /**
@@ -33,7 +33,7 @@ export class AuthService {
    */
   public logout() {
     return this.apiService.post('auth/signout').pipe(
-      catchError(err => {
+      catchError((err) => {
         return of([]);
       }),
       finalize(() => {
@@ -51,5 +51,4 @@ export class AuthService {
     const expiresAt = localStorage.getItem(ELocalStorageKey.TokenExpiresAt);
     return expiresAt && new Date() < new Date(expiresAt);
   }
-
 }

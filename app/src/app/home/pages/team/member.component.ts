@@ -4,7 +4,13 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faUser, faUserEdit, faUserMinus, faUserNinja, faUserTie } from '@fortawesome/free-solid-svg-icons';
+import {
+  faUser,
+  faUserEdit,
+  faUserMinus,
+  faUserNinja,
+  faUserTie
+} from '@fortawesome/free-solid-svg-icons';
 import { TeamMember, ETeamRole } from '@weasel/core/models/commontypes';
 
 type Icon = {
@@ -19,7 +25,6 @@ type Topic = string;
   styleUrls: ['../../styles/item.component.scss']
 })
 export class TeamItemMemberComponent {
-
   data: TeamMember;
   icon: Icon;
   topics: Topic[];
@@ -38,10 +43,14 @@ export class TeamItemMemberComponent {
   /**
    *
    */
-  constructor(
-    private faIconLibrary: FaIconLibrary,
-  ) {
-    faIconLibrary.addIcons(faUser, faUserEdit, faUserNinja, faUserMinus, faUserTie);
+  constructor(private faIconLibrary: FaIconLibrary) {
+    faIconLibrary.addIcons(
+      faUser,
+      faUserEdit,
+      faUserNinja,
+      faUserMinus,
+      faUserTie
+    );
   }
 
   /**
@@ -71,5 +80,4 @@ export class TeamItemMemberComponent {
   public remove(): void {
     this.confirmRemove.emit(this.data);
   }
-
 }

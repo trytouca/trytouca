@@ -11,7 +11,10 @@ import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
 import { ETeamRole } from '@weasel/core/models/commontypes';
-import type { SuiteLookupResponse, TeamLookupResponse } from '@weasel/core/models/commontypes';
+import type {
+  SuiteLookupResponse,
+  TeamLookupResponse
+} from '@weasel/core/models/commontypes';
 import { ConfirmComponent } from '@weasel/home/components/confirm.component';
 import { SuitePageService, SuitePageTabType } from './suite.service';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
@@ -37,7 +40,6 @@ enum EModalType {
   styleUrls: ['../../styles/settings.component.scss']
 })
 export class SuiteTabSettingsComponent implements OnDestroy {
-
   alert: Partial<Record<EModalType, Alert>> = {};
 
   protected submitted: boolean;
@@ -67,14 +69,16 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this._subTeam = this.suitePageService.team$.subscribe(team => {
+    this._subTeam = this.suitePageService.team$.subscribe((team) => {
       this.team = team;
     });
-    this._subSuite = this.suitePageService.suite$.subscribe(suite => {
+    this._subSuite = this.suitePageService.suite$.subscribe((suite) => {
       this.suite = suite;
       this.formName.setValue({ name: suite.suiteName });
       this.formSlug.setValue({ slug: suite.suiteSlug });
-      this.formRetainFor.setValue({ retainFor: (suite.retainFor / 86400 / 30).toFixed(2) });
+      this.formRetainFor.setValue({
+        retainFor: (suite.retainFor / 86400 / 30).toFixed(2)
+      });
       this.formSealAfter.setValue({ sealAfter: suite.sealAfter / 60 });
     });
     this.formName = new FormGroup({
@@ -103,7 +107,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
         validators: [
           Validators.required,
           Validators.max(60),
-          Validators.min(0.1),
+          Validators.min(0.1)
         ],
         updateOn: 'blur'
       })
@@ -192,15 +196,17 @@ export class SuiteTabSettingsComponent implements OnDestroy {
       },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (!state) {
-        return;
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (!state) {
+          return;
+        }
+        switch (type) {
+          case EModalType.DeleteSuite:
+            return this.deleteSuite();
+        }
       }
-      switch (type) {
-        case EModalType.DeleteSuite:
-          return this.deleteSuite();
-      }
-    });
+    );
   }
 
   /**
@@ -216,11 +222,23 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    */
   private extractError(err: HttpErrorResponse) {
     return this.apiService.extractError(err, [
-      [ 400, 'request invalid', 'Your request was rejected by the server.' ],
-      [ 401, 'auth failed', 'Your authorization key has expired. Please sign in again.' ],
-      [ 403, 'insufficient privileges', 'You must be the owner of this team to perform this operation.' ],
-      [ 404, 'team not found', 'This team has been removed.' ],
-      [ 409, 'team already registered', 'There is already a team with this slug.' ]
+      [400, 'request invalid', 'Your request was rejected by the server.'],
+      [
+        401,
+        'auth failed',
+        'Your authorization key has expired. Please sign in again.'
+      ],
+      [
+        403,
+        'insufficient privileges',
+        'You must be the owner of this team to perform this operation.'
+      ],
+      [404, 'team not found', 'This team has been removed.'],
+      [
+        409,
+        'team already registered',
+        'There is already a team with this slug.'
+      ]
     ]);
   }
 
@@ -228,97 +246,123 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    *
    */
   private updateSuiteName(name: string): void {
-    const url = [ 'suite', this.suite.teamSlug, this.suite.suiteSlug ].join('/');
+    const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
     this.apiService.patch(url, { name }).subscribe(
       () => {
         this.alert.changeSuiteName = {
-          type: AlertType.Success, text: 'Suite name was updated.'
+          type: AlertType.Success,
+          text: 'Suite name was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeSuiteName = undefined);
-        this.suitePageService.updateSuiteSlug(SuitePageTabType.Settings, this.suite.suiteSlug);
+        timer(5000).subscribe(() => (this.alert.changeSuiteName = undefined));
+        this.suitePageService.updateSuiteSlug(
+          SuitePageTabType.Settings,
+          this.suite.suiteSlug
+        );
       },
       (err: HttpErrorResponse) => {
         this.alert.changeSuiteName = {
-          type: AlertType.Danger, text: this.extractError(err)
+          type: AlertType.Danger,
+          text: this.extractError(err)
         };
-      });
+      }
+    );
   }
 
   /**
    *
    */
   private updateSuiteSlug(slug: string): void {
-    const url = [ 'suite', this.suite.teamSlug, this.suite.suiteSlug ].join('/');
+    const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
     this.apiService.patch(url, { slug }).subscribe(
       () => {
         this.alert.changeSuiteSlug = {
-          type: AlertType.Success, text: 'Suite slug was updated.'
+          type: AlertType.Success,
+          text: 'Suite slug was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeSuiteSlug = undefined);
+        timer(5000).subscribe(() => (this.alert.changeSuiteSlug = undefined));
         this.suitePageService.updateSuiteSlug(SuitePageTabType.Settings, slug);
-        this.router.navigate([ '~', this.suite.teamSlug, slug ]);
+        this.router.navigate(['~', this.suite.teamSlug, slug]);
       },
       (err: HttpErrorResponse) => {
         this.alert.changeSuiteSlug = {
-          type: AlertType.Danger, text: this.extractError(err)
+          type: AlertType.Danger,
+          text: this.extractError(err)
         };
-      });
+      }
+    );
   }
 
   /**
    *
    */
   private updateSuiteRetainFor(retainFor: number): void {
-    const url = [ 'suite', this.suite.teamSlug, this.suite.suiteSlug ].join('/');
+    const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
     this.apiService.patch(url, { retainFor }).subscribe(
       () => {
         this.alert.changeSuiteRetainFor = {
-          type: AlertType.Success, text: 'Data retention duration was updated.'
+          type: AlertType.Success,
+          text: 'Data retention duration was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeSuiteRetainFor = undefined);
-        this.suitePageService.updateSuiteSlug(SuitePageTabType.Settings, this.suite.suiteSlug);
+        timer(5000).subscribe(
+          () => (this.alert.changeSuiteRetainFor = undefined)
+        );
+        this.suitePageService.updateSuiteSlug(
+          SuitePageTabType.Settings,
+          this.suite.suiteSlug
+        );
       },
       (err: HttpErrorResponse) => {
         this.alert.changeSuiteRetainFor = {
-          type: AlertType.Danger, text: this.extractError(err)
+          type: AlertType.Danger,
+          text: this.extractError(err)
         };
-      });
+      }
+    );
   }
 
   /**
    *
    */
   private updateSuiteSealAfter(sealAfter: number): void {
-    const url = [ 'suite', this.suite.teamSlug, this.suite.suiteSlug ].join('/');
+    const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
     this.apiService.patch(url, { sealAfter }).subscribe(
       () => {
         this.alert.changeSuiteSealAfter = {
-          type: AlertType.Success, text: 'Auto seal duration was updated.'
+          type: AlertType.Success,
+          text: 'Auto seal duration was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeSuiteSealAfter = undefined);
-        this.suitePageService.updateSuiteSlug(SuitePageTabType.Settings, this.suite.suiteSlug);
+        timer(5000).subscribe(
+          () => (this.alert.changeSuiteSealAfter = undefined)
+        );
+        this.suitePageService.updateSuiteSlug(
+          SuitePageTabType.Settings,
+          this.suite.suiteSlug
+        );
       },
       (err: HttpErrorResponse) => {
         this.alert.changeSuiteSealAfter = {
-          type: AlertType.Danger, text: this.extractError(err)
+          type: AlertType.Danger,
+          text: this.extractError(err)
         };
-      });
+      }
+    );
   }
 
   /**
    *
    */
   public deleteSuite() {
-    const url = [ 'suite', this.suite.teamSlug, this.suite.suiteSlug ].join('/');
+    const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
     this.apiService.delete(url).subscribe(
       () => {
-        this.router.navigate(['..'], {relativeTo: this.route });
+        this.router.navigate(['..'], { relativeTo: this.route });
       },
       (err: HttpErrorResponse) => {
         this.alert.deleteSuite = {
-          type: AlertType.Danger, text: this.extractError(err)
+          type: AlertType.Danger,
+          text: this.extractError(err)
         };
-      });
+      }
+    );
   }
-
 }

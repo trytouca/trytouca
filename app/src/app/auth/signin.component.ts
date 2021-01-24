@@ -19,7 +19,6 @@ interface IFormContent {
   templateUrl: './signin.component.html'
 })
 export class SigninComponent implements OnInit {
-
   signinForm = new FormGroup({
     uname: new FormControl('', {
       validators: [
@@ -30,10 +29,7 @@ export class SigninComponent implements OnInit {
       updateOn: 'blur'
     }),
     upass: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.minLength(8),
-      ],
+      validators: [Validators.required, Validators.minLength(8)],
       updateOn: 'change'
     })
   });
@@ -50,7 +46,7 @@ export class SigninComponent implements OnInit {
     private apiService: ApiService,
     private authService: AuthService,
     private userService: UserService
-  ) { }
+  ) {}
 
   /**
    *
@@ -58,10 +54,16 @@ export class SigninComponent implements OnInit {
   ngOnInit() {
     const queryMap = this.route.snapshot.queryParamMap;
     if (queryMap.has('e') && queryMap.get('e') === '401') {
-      this.alert = { type: AlertType.Info, text: 'It looks like you were signed out.' };
+      this.alert = {
+        type: AlertType.Info,
+        text: 'It looks like you were signed out.'
+      };
     }
     if (queryMap.has('n') && queryMap.get('n') === 'join') {
-      this.alert = { type: AlertType.Info, text: 'Please sign in to respond to your team invitation.' };
+      this.alert = {
+        type: AlertType.Info,
+        text: 'Please sign in to respond to your team invitation.'
+      };
     }
   }
 
@@ -69,8 +71,10 @@ export class SigninComponent implements OnInit {
    *
    */
   shouldHideAriaDescription(field: string): boolean {
-    return (!this.submitted && this.signinForm.controls[field].pristine) ||
-        this.signinForm.controls[field].valid;
+    return (
+      (!this.submitted && this.signinForm.controls[field].pristine) ||
+      this.signinForm.controls[field].valid
+    );
   }
 
   /**
@@ -81,7 +85,10 @@ export class SigninComponent implements OnInit {
       return;
     }
     if (!this.signinForm.valid) {
-      this.alert = { type: AlertType.Danger, text: 'Incorrect username or password.' };
+      this.alert = {
+        type: AlertType.Danger,
+        text: 'Incorrect username or password.'
+      };
       return;
     }
     if (this.prev === model) {
@@ -101,17 +108,16 @@ export class SigninComponent implements OnInit {
         }
         this.router.navigate(['/~']);
       },
-      err => {
+      (err) => {
         const msg = this.apiService.extractError(err, [
-          [ 400, 'request invalid', 'Your request was rejected by the server.' ],
-          [ 401, 'invalid login credentials', 'Incorrect username or password.' ],
-          [ 423, 'account suspended', 'Your account is currently suspended.' ],
-          [ 423, 'account locked', 'Your account is temporarily locked.' ]
+          [400, 'request invalid', 'Your request was rejected by the server.'],
+          [401, 'invalid login credentials', 'Incorrect username or password.'],
+          [423, 'account suspended', 'Your account is currently suspended.'],
+          [423, 'account locked', 'Your account is temporarily locked.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
         this.prev = model;
       }
     );
   }
-
 }

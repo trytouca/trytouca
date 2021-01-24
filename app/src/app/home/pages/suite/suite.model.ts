@@ -2,7 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import type { FrontendBatchItem, PromotionItem } from '@weasel/core/models/frontendtypes';
+import type {
+  FrontendBatchItem,
+  PromotionItem
+} from '@weasel/core/models/frontendtypes';
 import { PageListItem } from '@weasel/home/models/page-list-item.model';
 
 type DataType = FrontendBatchItem | PromotionItem;
@@ -19,7 +22,6 @@ export enum SuitePageItemType {
  *
  */
 export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
-
   /**
    * to be removed
    */
@@ -71,5 +73,4 @@ export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
         return this.asPromotion().to;
     }
   }
-
 }

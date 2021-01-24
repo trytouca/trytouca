@@ -24,38 +24,38 @@ export enum ELocalStorageKey {
  *
  */
 export type FrontendBatchItem = BatchItem & {
-  isBaseline: boolean
+  isBaseline: boolean;
 };
 
 /**
  *
  */
 export type FrontendBatchCompareParams = {
-  currentTab: string,
-  teamSlug: string,
-  srcSuiteSlug: string,
-  srcBatchSlug: string,
-  dstSuiteSlug: string,
-  dstBatchSlug: string
+  currentTab: string;
+  teamSlug: string;
+  srcSuiteSlug: string;
+  srcBatchSlug: string;
+  dstSuiteSlug: string;
+  dstBatchSlug: string;
 };
 
 /**
  *
  */
 export type FrontendElementCompareParams = FrontendBatchCompareParams & {
-  srcElementSlug: string,
-  dstElementSlug: string
+  srcElementSlug: string;
+  dstElementSlug: string;
 };
 
 /**
  *
  */
 export type FrontendOverviewSection = {
-  inProgress: boolean,
-  metricsDurationHead: number,
-  metricsDurationChange: number,
-  metricsDurationSign: number,
-  resultsScore: number,
+  inProgress: boolean;
+  metricsDurationHead: number;
+  metricsDurationChange: number;
+  metricsDurationSign: number;
+  resultsScore: number;
   statements: string[];
 };
 

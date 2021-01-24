@@ -8,7 +8,6 @@ import { AlertType } from '@weasel/shared/components/alert.component';
 
 @Injectable()
 export class NotificationService {
-
   private _subject = new Subject<[AlertType, string]>();
 
   notification$ = this._subject.asObservable();

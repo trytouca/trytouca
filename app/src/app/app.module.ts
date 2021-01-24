@@ -14,7 +14,12 @@ import { DocsModule } from './docs/docs.module';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
-import { ActivateComponent, ResetComponent, SigninComponent, SignupComponent } from './auth';
+import {
+  ActivateComponent,
+  ResetComponent,
+  SigninComponent,
+  SignupComponent
+} from './auth';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -26,7 +31,7 @@ import { SharedModule } from './shared/shared.module';
     NotfoundComponent,
     ResetComponent,
     SigninComponent,
-    SignupComponent,
+    SignupComponent
   ],
   imports: [
     AppRoutingModule,
@@ -34,10 +39,11 @@ import { SharedModule } from './shared/shared.module';
     CoreModule,
     DocsModule,
     SharedModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-
-export class AppModule { }
+export class AppModule {}

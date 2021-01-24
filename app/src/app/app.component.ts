@@ -12,9 +12,7 @@ import { UserService } from './core/services';
   selector: 'app-root',
   templateUrl: './app.component.html'
 })
-
 export class AppComponent implements OnInit {
-
   appNameLogo = 'Weasel';
   appNameBrief = 'Weasel';
   appNameVerbose = 'Weasel';
@@ -27,20 +25,25 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.router.events.pipe(
-      filter((event) => event instanceof NavigationEnd),
-      map(() => this.activatedRoute),
-      map((route) => {
-        while (route.firstChild) { route = route.firstChild; }
-        return route;
-      }),
-      filter((route) => route.outlet === 'primary'),
-      mergeMap((route) => route.data)
-    ).subscribe((event) => {
-      const name = 'title' in event ?
-        event.title + ' - ' + this.appNameBrief : this.appNameVerbose;
-      this.titleService.setTitle(name);
-    });
+    this.router.events
+      .pipe(
+        filter((event) => event instanceof NavigationEnd),
+        map(() => this.activatedRoute),
+        map((route) => {
+          while (route.firstChild) {
+            route = route.firstChild;
+          }
+          return route;
+        }),
+        filter((route) => route.outlet === 'primary'),
+        mergeMap((route) => route.data)
+      )
+      .subscribe((event) => {
+        const name =
+          'title' in event
+            ? event.title + ' - ' + this.appNameBrief
+            : this.appNameVerbose;
+        this.titleService.setTitle(name);
+      });
   }
-
 }

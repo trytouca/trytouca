@@ -7,8 +7,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService, DialogRef } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 import { ConfirmComponent } from '@weasel/home/components/confirm.component';
-import { ETeamRole, EPlatformRole, TeamInvitee, TeamMember, TeamLookupResponse, TeamApplicant } from '@weasel/core/models/commontypes';
-import { ApiService, NotificationService, UserService } from '@weasel/core/services';
+import {
+  ETeamRole,
+  EPlatformRole,
+  TeamInvitee,
+  TeamMember,
+  TeamLookupResponse,
+  TeamApplicant
+} from '@weasel/core/models/commontypes';
+import {
+  ApiService,
+  NotificationService,
+  UserService
+} from '@weasel/core/services';
 import { AlertType } from '@weasel/shared/components/alert.component';
 import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { FilterInput } from '@weasel/home/models/filter.model';
@@ -55,8 +66,9 @@ const filterInput: FilterInput<TeamPageMember> = {
   templateUrl: './members.component.html',
   styleUrls: ['../../styles/list.component.scss']
 })
-export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> implements OnDestroy {
-
+export class TeamTabMembersComponent
+  extends PageListComponent<TeamPageMember>
+  implements OnDestroy {
   ItemType = TeamPageMemberType;
 
   private _dialogRef: DialogRef;
@@ -74,13 +86,13 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
     private teamPageService: TeamPageService,
     private userService: UserService,
     route: ActivatedRoute,
-    router: Router,
+    router: Router
   ) {
     super(filterInput, Object.values(TeamPageMemberType), route, router);
-    this._subTeam = this.teamPageService.team$.subscribe(v => {
+    this._subTeam = this.teamPageService.team$.subscribe((v) => {
       this._team = v;
     });
-    this._subAllItems = this.teamPageService.members$.subscribe(allItems => {
+    this._subAllItems = this.teamPageService.members$.subscribe((allItems) => {
       this.initCollections(allItems);
     });
   }
@@ -119,13 +131,13 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
   isTeamAdmin() {
     if (this.userService.currentUser) {
       const role = this.userService.currentUser.platformRole;
-      if ([ EPlatformRole.Owner, EPlatformRole.Admin ].includes(role)) {
+      if ([EPlatformRole.Owner, EPlatformRole.Admin].includes(role)) {
         return true;
       }
     }
     if (this._team) {
       const role = this._team.role;
-      if ([ ETeamRole.Owner, ETeamRole.Admin ].includes(role)) {
+      if ([ETeamRole.Owner, ETeamRole.Admin].includes(role)) {
         return true;
       }
     }
@@ -144,7 +156,8 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
    *
    */
   confirmEdit(member: TeamMember): void {
-    const newRoleName = member.role === ETeamRole.Member ? 'an Administrator' : 'a Member';
+    const newRoleName =
+      member.role === ETeamRole.Member ? 'an Administrator' : 'a Member';
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
       closeButton: false,
       data: {
@@ -154,12 +167,14 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
       },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (!state) {
-        return;
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (!state) {
+          return;
+        }
+        this.edit(member);
       }
-      this.edit(member);
-    });
+    );
   }
 
   /**
@@ -175,12 +190,14 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
       },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (!state) {
-        return;
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (!state) {
+          return;
+        }
+        this.remove(member);
       }
-      this.remove(member);
-    });
+    );
   }
 
   /**
@@ -196,12 +213,14 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
       },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (!state) {
-        return;
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (!state) {
+          return;
+        }
+        this.rescind(invitee);
       }
-      this.rescind(invitee);
-    });
+    );
   }
 
   /**
@@ -217,12 +236,14 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
       },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (!state) {
-        return;
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (!state) {
+          return;
+        }
+        this.accept(applicant);
       }
-      this.accept(applicant);
-    });
+    );
   }
 
   /**
@@ -238,95 +259,121 @@ export class TeamTabMembersComponent extends PageListComponent<TeamPageMember> i
       },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (!state) {
-        return;
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (!state) {
+          return;
+        }
+        this.decline(applicant);
       }
-      this.decline(applicant);
-    });
+    );
   }
 
   /**
    *
    */
   private edit(member: TeamMember): void {
-    const newRoleType = member.role === ETeamRole.Member ? ETeamRole.Admin : ETeamRole.Member;
-    const url = [ 'team', this._team.slug, 'member', member.username ].join('/');
+    const newRoleType =
+      member.role === ETeamRole.Member ? ETeamRole.Admin : ETeamRole.Member;
+    const url = ['team', this._team.slug, 'member', member.username].join('/');
     this.apiService.patch(url, { role: newRoleType }).subscribe(
       () => {
         this.teamPageService.refreshMembers();
-        this.notificationService.notify(AlertType.Success, `Changed ${member.fullname}'s role.`);
+        this.notificationService.notify(
+          AlertType.Success,
+          `Changed ${member.fullname}'s role.`
+        );
       },
-      err => {
-        this.notificationService.notify(AlertType.Danger,
-          `Something went wrong. We could not change ${member.fullname}'s role.`);
-      });
+      () => {
+        this.notificationService.notify(
+          AlertType.Danger,
+          `Something went wrong. We could not change ${member.fullname}'s role.`
+        );
+      }
+    );
   }
 
   /**
    *
    */
   private remove(member: TeamMember): void {
-    const url = [ 'team', this._team.slug, 'member', member.username ].join('/');
+    const url = ['team', this._team.slug, 'member', member.username].join('/');
     this.apiService.delete(url).subscribe(
       () => {
         this.teamPageService.removeMember(member);
-        this.notificationService.notify(AlertType.Success, `Removed ${member.fullname} from this team.`);
+        this.notificationService.notify(
+          AlertType.Success,
+          `Removed ${member.fullname} from this team.`
+        );
       },
-      err => {
-        this.notificationService.notify(AlertType.Danger,
-          `Something went wrong. We could not remove ${member.fullname}.`);
-      });
+      () => {
+        this.notificationService.notify(
+          AlertType.Danger,
+          `Something went wrong. We could not remove ${member.fullname}.`
+        );
+      }
+    );
   }
 
   /**
    *
    */
   private rescind(invitee: TeamInvitee): void {
-    const url = [ 'team', this._team.slug, 'invite', 'rescind' ].join('/');
+    const url = ['team', this._team.slug, 'invite', 'rescind'].join('/');
     this.apiService.post(url, { email: invitee.email }).subscribe(
       () => {
         this.teamPageService.removeInvitee(invitee);
-        this.notificationService.notify(AlertType.Success, 'Rescinded team invitation.');
+        this.notificationService.notify(
+          AlertType.Success,
+          'Rescinded team invitation.'
+        );
       },
-      err => {
-        this.notificationService.notify(AlertType.Danger,
-          'Something went wrong. We could not rescind team invitation.');
-      });
+      () => {
+        this.notificationService.notify(
+          AlertType.Danger,
+          'Something went wrong. We could not rescind team invitation.'
+        );
+      }
+    );
   }
 
   /**
    *
    */
   private accept(applicant: TeamApplicant): void {
-    const url = [ 'team', this._team.slug, 'join', applicant.username ].join('/');
+    const url = ['team', this._team.slug, 'join', applicant.username].join('/');
     this.apiService.post(url).subscribe(
       () => {
         const msg = `${applicant.fullname} is now a member of your team.`;
         this.teamPageService.refreshMembers();
         this.notificationService.notify(AlertType.Success, msg);
       },
-      err => {
-        this.notificationService.notify(AlertType.Danger,
-          'Something went wrong. We could not accept this request.');
-      });
+      () => {
+        this.notificationService.notify(
+          AlertType.Danger,
+          'Something went wrong. We could not accept this request.'
+        );
+      }
+    );
   }
 
   /**
    *
    */
   private decline(applicant: TeamApplicant): void {
-    const url = [ 'team', this._team.slug, 'join', applicant.username ].join('/');
+    const url = ['team', this._team.slug, 'join', applicant.username].join('/');
     this.apiService.delete(url).subscribe(
       () => {
         const msg = `You declined ${applicant.fullname}'s request to join your team.`;
         this.teamPageService.refreshMembers();
         this.notificationService.notify(AlertType.Success, msg);
       },
-      err => {
-        this.notificationService.notify(AlertType.Danger,
-          'Something went wrong. We could not decline this request.');
-      });
+      () => {
+        this.notificationService.notify(
+          AlertType.Danger,
+          'Something went wrong. We could not decline this request.'
+        );
+      }
+    );
   }
-
 }

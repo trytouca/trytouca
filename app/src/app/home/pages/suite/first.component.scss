@@ -46,7 +46,7 @@
     .wsl-batches-first-right {
       @apply hidden md:col-span-3 md:flex md:items-center md:justify-center;
       img {
-        @apply md:w-3/4 md:mx-auto
+        @apply md:w-3/4 md:mx-auto;
       }
     }
   }

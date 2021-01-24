@@ -13,7 +13,6 @@ import { TeamInvitee } from '@weasel/core/models/commontypes';
   styleUrls: ['../../styles/item.component.scss']
 })
 export class TeamItemInviteeComponent {
-
   @Input() item: TeamInvitee;
   @Input() isTeamAdmin: boolean;
   @Output() confirmRescind = new EventEmitter<TeamInvitee>();
@@ -21,9 +20,7 @@ export class TeamItemInviteeComponent {
   /**
    *
    */
-  constructor(
-    private faIconLibrary: FaIconLibrary
-  ) {
+  constructor(private faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(faUser);
   }
 
@@ -33,5 +30,4 @@ export class TeamItemInviteeComponent {
   rescind(): void {
     this.confirmRescind.emit(this.item);
   }
-
 }

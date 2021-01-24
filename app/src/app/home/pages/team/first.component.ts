@@ -14,7 +14,6 @@ import { TeamPageService, TeamPageTabType } from './team.service';
   templateUrl: './first.component.html'
 })
 export class TeamFirstSuiteComponent implements OnDestroy {
-
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
 
@@ -25,8 +24,7 @@ export class TeamFirstSuiteComponent implements OnDestroy {
     private route: ActivatedRoute,
     private dialogService: DialogService,
     private teamPageService: TeamPageService
-  ) {
-  }
+  ) {}
 
   /**
    *
@@ -43,7 +41,10 @@ export class TeamFirstSuiteComponent implements OnDestroy {
   fetchItems(): void {
     const paramMap = this.route.snapshot.paramMap;
     const teamSlug = paramMap.get('team');
-    this.teamPageService.fetchItems({ currentTab: TeamPageTabType.Suites, teamSlug });
+    this.teamPageService.fetchItems({
+      currentTab: TeamPageTabType.Suites,
+      teamSlug
+    });
   }
 
   /**
@@ -56,11 +57,12 @@ export class TeamFirstSuiteComponent implements OnDestroy {
         teamSlug: paramMap.get('team')
       }
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (state) {
-        this.fetchItems();
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (state) {
+          this.fetchItems();
+        }
       }
-    });
+    );
   }
-
 }

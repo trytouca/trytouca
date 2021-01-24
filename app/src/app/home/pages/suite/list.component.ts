@@ -14,19 +14,21 @@ const filterInput: FilterInput<SuitePageItem> = {
     {
       key: 'none',
       name: 'None',
-      func: (a) => true,
+      func: (a) => true
     },
     {
       key: 'versions',
       name: 'Versions',
-      func: a => a.type === SuitePageItemType.Batch
+      func: (a) => a.type === SuitePageItemType.Batch
     },
     {
       key: 'different',
       name: 'Different',
-      func: a => {
-        return a.type === SuitePageItemType.Batch
-          && a.asBatch().meta.elementsScoreAggregate !== 1;
+      func: (a) => {
+        return (
+          a.type === SuitePageItemType.Batch &&
+          a.asBatch().meta.elementsScoreAggregate !== 1
+        );
       }
     }
   ],
@@ -60,10 +62,11 @@ const filterInput: FilterInput<SuitePageItem> = {
 @Component({
   selector: 'app-suite-tab-batches',
   templateUrl: './list.component.html',
-  styleUrls:['../../styles/list.component.scss']
+  styleUrls: ['../../styles/list.component.scss']
 })
-export class SuiteListBatchesComponent extends PageListComponent<SuitePageItem> implements OnDestroy {
-
+export class SuiteListBatchesComponent
+  extends PageListComponent<SuitePageItem>
+  implements OnDestroy {
   ItemType = SuitePageItemType;
 
   /**
@@ -75,7 +78,7 @@ export class SuiteListBatchesComponent extends PageListComponent<SuitePageItem> 
     router: Router
   ) {
     super(filterInput, Object.values(SuitePageItemType), route, router);
-    this._subAllItems = this.suitePageService.items$.subscribe(allItems => {
+    this._subAllItems = this.suitePageService.items$.subscribe((allItems) => {
       this.initCollections(allItems);
     });
   }
@@ -118,10 +121,11 @@ export class SuiteListBatchesComponent extends PageListComponent<SuitePageItem> 
       const item = this._items[row];
       if (item.type === SuitePageItemType.Batch) {
         const batch = item.asBatch();
-        this.router.navigate([ batch.batchSlug ],
-          { relativeTo: this.route, queryParams: {} });
+        this.router.navigate([batch.batchSlug], {
+          relativeTo: this.route,
+          queryParams: {}
+        });
       }
     }
   }
-
 }

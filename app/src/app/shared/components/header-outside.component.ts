@@ -11,14 +11,10 @@ import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
   templateUrl: './header-outside.component.html'
 })
 export class HeaderOutsideComponent {
-
   /**
    *
    */
-  constructor(
-    private authService: AuthService
-  ) {
-  }
+  constructor(private authService: AuthService) {}
 
   /**
    *
@@ -31,11 +27,12 @@ export class HeaderOutsideComponent {
    *
    */
   homeLink(): string {
-    const lastTeamVisited = localStorage.getItem(ELocalStorageKey.LastVisitedTeam);
+    const lastTeamVisited = localStorage.getItem(
+      ELocalStorageKey.LastVisitedTeam
+    );
     if (lastTeamVisited) {
-      return [ '/~', lastTeamVisited ].join('/');
+      return ['/~', lastTeamVisited].join('/');
     }
     return '/~';
   }
-
 }

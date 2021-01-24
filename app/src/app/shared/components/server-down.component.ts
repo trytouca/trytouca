@@ -8,5 +8,4 @@ import { Component } from '@angular/core';
   selector: 'app-server-down',
   templateUrl: './server-down.component.html'
 })
-export class ServerDownComponent {
-}
+export class ServerDownComponent {}

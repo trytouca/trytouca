@@ -2,19 +2,31 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, EventEmitter, HostListener, Output, Input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Output,
+  Input
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faSortAmountDown, faSortAmountDownAlt } from '@fortawesome/free-solid-svg-icons';
-import { FilterManager, FilterParams, FilterStats } from '@weasel/home/models/filter.model';
+import {
+  faSortAmountDown,
+  faSortAmountDownAlt
+} from '@fortawesome/free-solid-svg-icons';
+import {
+  FilterManager,
+  FilterParams,
+  FilterStats
+} from '@weasel/home/models/filter.model';
 
 @Component({
   selector: 'app-home-list-filter',
   templateUrl: './list-filter.component.html'
 })
 export class ListFilterComponent {
-
   private _filterSubject = new Subject<string>();
   private _searchSubject = new Subject<string>();
   private _sorterSubject = new Subject<string>();
@@ -28,9 +40,7 @@ export class ListFilterComponent {
   /**
    *
    */
-  constructor(
-    private faIconLibrary: FaIconLibrary,
-  ) {
+  constructor(private faIconLibrary: FaIconLibrary) {
     const updateFilter = () => {
       this.updateList.emit({
         filter: this.params.filter,
@@ -47,32 +57,27 @@ export class ListFilterComponent {
       });
     };
     this._searchSubject
-        .pipe(
-          map(res => res.length < 3 ? '' : res),
-          debounceTime(500),
-          distinctUntilChanged()
-        ).subscribe((text) => {
-          this.params.search = text;
-          updateFilter();
-        });
-    this._filterSubject
-        .pipe(distinctUntilChanged())
-        .subscribe((text) => {
-          this.params.filter = text;
-          updateFilter();
-        });
-    this._sorterSubject
-        .pipe(distinctUntilChanged())
-        .subscribe((text) => {
-          this.params.sorter = text;
-          updateSortParams();
-        });
-    this._orderSubject
-        .pipe(distinctUntilChanged())
-        .subscribe((text) => {
-          this.params.order = text;
-          updateSortParams();
-        });
+      .pipe(
+        map((res) => (res.length < 3 ? '' : res)),
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((text) => {
+        this.params.search = text;
+        updateFilter();
+      });
+    this._filterSubject.pipe(distinctUntilChanged()).subscribe((text) => {
+      this.params.filter = text;
+      updateFilter();
+    });
+    this._sorterSubject.pipe(distinctUntilChanged()).subscribe((text) => {
+      this.params.sorter = text;
+      updateSortParams();
+    });
+    this._orderSubject.pipe(distinctUntilChanged()).subscribe((text) => {
+      this.params.order = text;
+      updateSortParams();
+    });
     faIconLibrary.addIcons(faSortAmountDown, faSortAmountDownAlt);
   }
 
@@ -93,14 +98,14 @@ export class ListFilterComponent {
   /**
    *
    */
-  get filters(): { key: string, name: string }[] {
+  get filters(): { key: string; name: string }[] {
     return this.manager.filters;
   }
 
   /**
    *
    */
-  get sorters(): { key: string, name: string }[] {
+  get sorters(): { key: string; name: string }[] {
     return this.manager.sorters;
   }
 
@@ -122,9 +127,9 @@ export class ListFilterComponent {
    *
    */
   get filterName(): string {
-    return this.manager.filters
-      .find(v => v.key.localeCompare(this.params.filter) === 0)
-      .name;
+    return this.manager.filters.find(
+      (v) => v.key.localeCompare(this.params.filter) === 0
+    ).name;
   }
 
   /**
@@ -141,9 +146,9 @@ export class ListFilterComponent {
     if (this.isSearchActive()) {
       return 'Relevance';
     }
-    return this.manager.sorters
-      .find(v => v.key.localeCompare(this.params.sorter) === 0)
-      .name;
+    return this.manager.sorters.find(
+      (v) => v.key.localeCompare(this.params.sorter) === 0
+    ).name;
   }
 
   /**
@@ -164,7 +169,9 @@ export class ListFilterComponent {
    *
    */
   get sortOrderIcon(): string {
-    return this.params.order === 'asc' ? 'sort-amount-down-alt' : 'sort-amount-down';
+    return this.params.order === 'asc'
+      ? 'sort-amount-down-alt'
+      : 'sort-amount-down';
   }
 
   /**
@@ -188,5 +195,4 @@ export class ListFilterComponent {
       event.stopImmediatePropagation();
     }
   }
-
 }

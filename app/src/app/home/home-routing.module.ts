@@ -12,7 +12,6 @@ import { SuitePageComponent } from './pages/suite';
 import { BatchPageComponent } from './pages/batch';
 import { ElementPageComponent } from './pages/element';
 
-
 /**
  *
  */
@@ -27,11 +26,11 @@ const routes: Routes = [
       { path: ':team/:suite/:batch', component: BatchPageComponent },
       { path: ':team/:suite/:batch/:element', component: ElementPageComponent }
     ]
-  },
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class HomeRoutingModule { }
+export class HomeRoutingModule {}

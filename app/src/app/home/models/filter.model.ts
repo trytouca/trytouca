@@ -11,8 +11,8 @@ export type FilterFunction<T> = (a: T) => number | boolean;
 export type SorterFunction<T> = (a: T, b: T) => number;
 
 type InputItem = {
-  key: string,
-  name: string
+  key: string;
+  name: string;
 };
 
 interface FilterInputItem<T> extends InputItem {
@@ -23,46 +23,45 @@ interface SorterInputItem<T> extends InputItem {
 }
 
 type Params<T> = {
-  filter?: string,
-  search?: string,
-  sorter?: string,
-  order?: string,
-  pagen?: T,
-  pagel?: T
+  filter?: string;
+  search?: string;
+  sorter?: string;
+  order?: string;
+  pagen?: T;
+  pagel?: T;
 };
 
 export type FilterInput<T> = {
-  filters: FilterInputItem<T>[],
-  sorters: SorterInputItem<T>[],
-  searchBy: string[],
-  defaults: Required<Params<number>>,
-  queryKeys: Required<Params<string>>,
-  placeholder: string
+  filters: FilterInputItem<T>[];
+  sorters: SorterInputItem<T>[];
+  searchBy: string[];
+  defaults: Required<Params<number>>;
+  queryKeys: Required<Params<string>>;
+  placeholder: string;
 };
 
 export type FilterParams = Params<number>;
 
 export type FilterStats = {
-  totalUnpaginatedRows: number,
-  totalRows: number
+  totalUnpaginatedRows: number;
+  totalRows: number;
 };
 
 /**
  *
  */
 export class FilterManager<T> {
-
   /**
    *
    */
-  constructor(private readonly input: FilterInput<T>) {
-  }
+  constructor(private readonly input: FilterInput<T>) {}
 
   /**
    *
    */
   private getFilter(key: string): FilterInputItem<T> {
-    const findItem = (k: string) => this.input.filters.find(v => v.key.localeCompare(k) === 0);
+    const findItem = (k: string) =>
+      this.input.filters.find((v) => v.key.localeCompare(k) === 0);
     return findItem(key) || findItem(this.input.defaults.filter);
   }
 
@@ -70,7 +69,8 @@ export class FilterManager<T> {
    *
    */
   private getSorter(key: string): SorterInputItem<T> {
-    const findItem = (k: string) => this.input.sorters.find(v => v.key.localeCompare(k) === 0);
+    const findItem = (k: string) =>
+      this.input.sorters.find((v) => v.key.localeCompare(k) === 0);
     return findItem(key) || findItem(this.input.defaults.sorter);
   }
 
@@ -87,10 +87,14 @@ export class FilterManager<T> {
 
     const filter = this.getFilter(qFilter).key;
     const sorter = this.getSorter(qSorter).key;
-    const order = ['asc', 'dsc'].includes(qOrder) ? qOrder : this.input.defaults.order;
+    const order = ['asc', 'dsc'].includes(qOrder)
+      ? qOrder
+      : this.input.defaults.order;
     const search = qSearch || this.input.defaults.search;
-    const pagen = qPagen && !isNaN(+qPagen) ? +qPagen : this.input.defaults.pagen;
-    const pagel = qPagel && !isNaN(+qPagel) ? +qPagel : this.input.defaults.pagel;
+    const pagen =
+      qPagen && !isNaN(+qPagen) ? +qPagen : this.input.defaults.pagen;
+    const pagel =
+      qPagel && !isNaN(+qPagel) ? +qPagel : this.input.defaults.pagel;
 
     return { filter, search, sorter, order, pagen, pagel };
   }
@@ -101,15 +105,17 @@ export class FilterManager<T> {
   public buildQueryMap(event: FilterParams): Params<string> {
     const getKey = (key: string): string => this.input.queryKeys[key];
     const getValue = (key: string): any => {
-      return key in event && event[key] !== this.input.defaults[key] ? event[key] : null;
+      return key in event && event[key] !== this.input.defaults[key]
+        ? event[key]
+        : null;
     };
     return {
-      [ getKey('filter') ] : getValue('filter'),
-      [ getKey('search') ] : getValue('search'),
-      [ getKey('sorter') ] : getValue('sorter'),
-      [ getKey('order') ] : getValue('order'),
-      [ getKey('pagen') ] : getValue('pagen'),
-      [ getKey('pagel') ] : getValue('pagel'),
+      [getKey('filter')]: getValue('filter'),
+      [getKey('search')]: getValue('search'),
+      [getKey('sorter')]: getValue('sorter'),
+      [getKey('order')]: getValue('order'),
+      [getKey('pagen')]: getValue('pagen'),
+      [getKey('pagel')]: getValue('pagel')
     };
   }
 
@@ -132,7 +138,7 @@ export class FilterManager<T> {
     if (event.search && event.search !== this.input.defaults.search) {
       const fuse = new Fuse(output, opts);
       const result = fuse.search(event.search);
-      output = result.map(v => v.item) as T[];
+      output = result.map((v) => v.item) as T[];
     }
     if (event.sorter) {
       output.sort(this.getSorter(event.sorter).func);
@@ -158,15 +164,15 @@ export class FilterManager<T> {
   /**
    *
    */
-  get filters(): { key: string, name: string }[] {
-    return this.input.filters.map(v => ({ key: v.key, name: v.name }));
+  get filters(): { key: string; name: string }[] {
+    return this.input.filters.map((v) => ({ key: v.key, name: v.name }));
   }
 
   /**
    *
    */
-  get sorters(): { key: string, name: string }[] {
-    return this.input.sorters.map(v => ({ key: v.key, name: v.name }));
+  get sorters(): { key: string; name: string }[] {
+    return this.input.sorters.map((v) => ({ key: v.key, name: v.name }));
   }
 
   /**
@@ -182,5 +188,4 @@ export class FilterManager<T> {
   get placeholder(): string {
     return this.input.placeholder;
   }
-
 }

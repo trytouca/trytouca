@@ -5,10 +5,22 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import type { BatchLookupResponse, CommentItem, TeamLookupResponse } from '@weasel/core/models/commontypes';
+import type {
+  BatchLookupResponse,
+  CommentItem,
+  TeamLookupResponse
+} from '@weasel/core/models/commontypes';
 import { EPlatformRole, ETeamRole } from '@weasel/core/models/commontypes';
-import { FrontendCommentAction, FrontendCommentActionType, FrontendCommentItem } from '@weasel/core/models/frontendtypes';
-import { ApiService, NotificationService, UserService } from '@weasel/core/services';
+import {
+  FrontendCommentAction,
+  FrontendCommentActionType,
+  FrontendCommentItem
+} from '@weasel/core/models/frontendtypes';
+import {
+  ApiService,
+  NotificationService,
+  UserService
+} from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 import { BatchPageService } from './batch.service';
 
@@ -31,12 +43,12 @@ type IFormContent = {
   templateUrl: './comments.component.html'
 })
 export class BatchCommentsComponent implements OnDestroy {
-
   alert: Alert;
   comments: FrontendCommentItem[] = [];
   form: FormGroup;
   fields: PageViewFields = {
-    editorSubtitle: 'Share results of your investigations with your colleagues.',
+    editorSubtitle:
+      'Share results of your investigations with your colleagues.',
     editorTitle: 'Write a Comment',
     buttonCancelShow: false,
     buttonPreviewShow: true,
@@ -63,13 +75,13 @@ export class BatchCommentsComponent implements OnDestroy {
     private notificationService: NotificationService,
     private userService: UserService
   ) {
-    this._subTeam = this.batchPageService.team$.subscribe(v => {
+    this._subTeam = this.batchPageService.team$.subscribe((v) => {
       this._team = v;
     });
-    this._subBatch = this.batchPageService.batch$.subscribe(v => {
+    this._subBatch = this.batchPageService.batch$.subscribe((v) => {
       this._batch = v;
     });
-    this._subComments = this.batchPageService.comments$.subscribe(v => {
+    this._subComments = this.batchPageService.comments$.subscribe((v) => {
       this.comments = this.processComments(v);
     });
     this.form = new FormGroup({
@@ -100,28 +112,36 @@ export class BatchCommentsComponent implements OnDestroy {
     const myRolePlatform = this.userService.currentUser.platformRole;
     const myRoleTeam = this._team.role;
     const myUsername = this.userService.currentUser.username;
-    const isPlatformAdmin = [ EPlatformRole.Admin, EPlatformRole.Owner ].includes(myRolePlatform);
-    const isTeamAdmin = [ ETeamRole.Admin, ETeamRole.Owner ].includes(myRoleTeam);
+    const isPlatformAdmin = [EPlatformRole.Admin, EPlatformRole.Owner].includes(
+      myRolePlatform
+    );
+    const isTeamAdmin = [ETeamRole.Admin, ETeamRole.Owner].includes(myRoleTeam);
     const process = (v: CommentItem, isReply = false): FrontendCommentItem => ({
       commentAuthor: v.by.fullname,
       commentBody: v.text,
       commentId: v.id,
       commentTime: v.at,
       commentEditTime: v.editedAt ?? undefined,
-      replies: v.replies ? v.replies.map(k => process(k, true)) : [],
+      replies: v.replies ? v.replies.map((k) => process(k, true)) : [],
       showButtonReply: isReply === false,
       showButtonUpdate: myUsername === v.by.username,
-      showButtonRemove: (!v.replies || v.replies.length === 0)
-        && (myUsername === v.by.username || isTeamAdmin || isPlatformAdmin),
+      showButtonRemove:
+        (!v.replies || v.replies.length === 0) &&
+        (myUsername === v.by.username || isTeamAdmin || isPlatformAdmin)
     });
-    return comments.map(v => process(v)).sort((a, b) => +new Date(b.commentTime) - +new Date(a.commentTime));
+    return comments
+      .map((v) => process(v))
+      .sort((a, b) => +new Date(b.commentTime) - +new Date(a.commentTime));
   }
 
   /**
    *
    */
   onSubmit(model: IFormContent) {
-    if (this._commentAction.actionType !== FrontendCommentActionType.Remove && !this.form.valid) {
+    if (
+      this._commentAction.actionType !== FrontendCommentActionType.Remove &&
+      !this.form.valid
+    ) {
       return;
     }
     switch (this._commentAction.actionType) {
@@ -145,7 +165,9 @@ export class BatchCommentsComponent implements OnDestroy {
    */
   togglePreview() {
     this.fields.previewShow = !this.fields.previewShow;
-    this.fields.buttonPreviewText = this.fields.previewShow ? 'Edit' : 'Preview';
+    this.fields.buttonPreviewText = this.fields.previewShow
+      ? 'Edit'
+      : 'Preview';
   }
 
   /**
@@ -159,7 +181,8 @@ export class BatchCommentsComponent implements OnDestroy {
     this.fields.buttonCancelShow = false;
     this.fields.buttonPreviewShow = true;
     this.fields.buttonSubmitText = 'Submit';
-    this.fields.editorSubtitle = 'Share results of your investigations with your colleagues.';
+    this.fields.editorSubtitle =
+      'Share results of your investigations with your colleagues.';
     this.fields.editorTitle = 'Write a New Comment';
     this.form.reset();
     this.form.get('body').reset();
@@ -182,10 +205,12 @@ export class BatchCommentsComponent implements OnDestroy {
    *
    */
   public commentAction(event: FrontendCommentAction): void {
-    let comment = this.comments.find(v => v.commentId === event.commentId);
+    let comment = this.comments.find((v) => v.commentId === event.commentId);
     if (!comment) {
-      const parent = this.comments.find(v => v.replies.some(e => e.commentId === event.commentId));
-      comment = parent.replies.find(v => v.commentId === event.commentId);
+      const parent = this.comments.find((v) =>
+        v.replies.some((e) => e.commentId === event.commentId)
+      );
+      comment = parent.replies.find((v) => v.commentId === event.commentId);
     }
     this._commentAction = event;
     this.fields.buttonCancelShow = true;
@@ -229,8 +254,11 @@ export class BatchCommentsComponent implements OnDestroy {
    */
   private commentPost(model: IFormContent) {
     const url = [
-      'comment', this._batch.teamSlug, this._batch.suiteSlug,
-      this._batch.batchSlug, 'c'
+      'comment',
+      this._batch.teamSlug,
+      this._batch.suiteSlug,
+      this._batch.batchSlug,
+      'c'
     ].join('/');
     this.apiService.post(url, { body: model.body }).subscribe(
       () => {
@@ -238,9 +266,9 @@ export class BatchCommentsComponent implements OnDestroy {
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      err => {
+      (err) => {
         const msg = this.apiService.extractError(err, [
-          [ 400, 'request invalid', 'Your request was rejected by the server.' ],
+          [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
@@ -252,8 +280,12 @@ export class BatchCommentsComponent implements OnDestroy {
    */
   private commentRemove(commentId: string) {
     const url = [
-      'comment', this._batch.teamSlug, this._batch.suiteSlug,
-      this._batch.batchSlug, 'c', commentId
+      'comment',
+      this._batch.teamSlug,
+      this._batch.suiteSlug,
+      this._batch.batchSlug,
+      'c',
+      commentId
     ].join('/');
     this.apiService.delete(url).subscribe(
       () => {
@@ -261,10 +293,13 @@ export class BatchCommentsComponent implements OnDestroy {
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      err => {
-        this.notificationService.notify(AlertType.Danger,
-          'Something went wrong. Please try this operation again later.');
-      });
+      (err) => {
+        this.notificationService.notify(
+          AlertType.Danger,
+          'Something went wrong. Please try this operation again later.'
+        );
+      }
+    );
   }
 
   /**
@@ -272,8 +307,13 @@ export class BatchCommentsComponent implements OnDestroy {
    */
   private commentReply(model: IFormContent, commentId: string) {
     const url = [
-      'comment', this._batch.teamSlug, this._batch.suiteSlug,
-      this._batch.batchSlug, 'c', commentId, 'reply'
+      'comment',
+      this._batch.teamSlug,
+      this._batch.suiteSlug,
+      this._batch.batchSlug,
+      'c',
+      commentId,
+      'reply'
     ].join('/');
     this.apiService.post(url, { body: model.body }).subscribe(
       () => {
@@ -281,10 +321,14 @@ export class BatchCommentsComponent implements OnDestroy {
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      err => {
+      (err) => {
         const msg = this.apiService.extractError(err, [
-          [ 400, 'request invalid', 'Your request was rejected by the server.' ],
-          [ 400, 'replying to replies not allowed', 'We do not support nested replies. Please reply to the top-level comment instead.' ]
+          [400, 'request invalid', 'Your request was rejected by the server.'],
+          [
+            400,
+            'replying to replies not allowed',
+            'We do not support nested replies. Please reply to the top-level comment instead.'
+          ]
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
@@ -296,8 +340,12 @@ export class BatchCommentsComponent implements OnDestroy {
    */
   private commentUpdate(model: IFormContent, commentId: string) {
     const url = [
-      'comment', this._batch.teamSlug, this._batch.suiteSlug,
-      this._batch.batchSlug, 'c', commentId
+      'comment',
+      this._batch.teamSlug,
+      this._batch.suiteSlug,
+      this._batch.batchSlug,
+      'c',
+      commentId
     ].join('/');
     this.apiService.patch(url, { body: model.body }).subscribe(
       () => {
@@ -305,13 +353,12 @@ export class BatchCommentsComponent implements OnDestroy {
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      err => {
+      (err) => {
         const msg = this.apiService.extractError(err, [
-          [ 400, 'request invalid', 'Your request was rejected by the server.' ],
+          [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
     );
   }
-
 }

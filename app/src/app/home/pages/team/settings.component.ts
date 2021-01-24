@@ -12,7 +12,10 @@ import { Subscription, timer } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
 import { ETeamRole } from '@weasel/core/models/commontypes';
 import type { TeamLookupResponse } from '@weasel/core/models/commontypes';
-import { ConfirmComponent, ConfirmElements } from '@weasel/home/components/confirm.component';
+import {
+  ConfirmComponent,
+  ConfirmElements
+} from '@weasel/home/components/confirm.component';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 import { TeamPageTabType, TeamPageService } from './team.service';
 
@@ -34,7 +37,6 @@ enum EModalType {
   styleUrls: ['../../styles/settings.component.scss']
 })
 export class TeamTabSettingsComponent implements OnDestroy {
-
   alert: Partial<Record<EModalType, Alert>> = {};
 
   protected submitted: boolean;
@@ -60,7 +62,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this._subTeam = this.teamPageService.team$.subscribe(team => {
+    this._subTeam = this.teamPageService.team$.subscribe((team) => {
       this.team = team;
       this.formName.setValue({ name: team.name });
       this.formSlug.setValue({ slug: team.slug });
@@ -159,17 +161,19 @@ export class TeamTabSettingsComponent implements OnDestroy {
         minHeight: '10vh'
       });
     }
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (!state) {
-        return;
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (!state) {
+          return;
+        }
+        switch (type) {
+          case EModalType.DeleteTeam:
+            return this.deleteTeam();
+          case EModalType.LeaveTeam:
+            return this.leaveTeam();
+        }
       }
-      switch (type) {
-        case EModalType.DeleteTeam:
-          return this.deleteTeam();
-        case EModalType.LeaveTeam:
-          return this.leaveTeam();
-      }
-    });
+    );
   }
 
   /**
@@ -185,11 +189,23 @@ export class TeamTabSettingsComponent implements OnDestroy {
    */
   private extractError(err: HttpErrorResponse) {
     return this.apiService.extractError(err, [
-      [ 400, 'request invalid', 'Your request was rejected by the server.' ],
-      [ 401, 'auth failed', 'Your authorization key has expired. Please sign in again.' ],
-      [ 403, 'insufficient privileges', 'You must be the owner of this team to perform this operation.' ],
-      [ 404, 'team not found', 'This team has been removed.' ],
-      [ 409, 'team already registered', 'There is already a team with this slug.' ]
+      [400, 'request invalid', 'Your request was rejected by the server.'],
+      [
+        401,
+        'auth failed',
+        'Your authorization key has expired. Please sign in again.'
+      ],
+      [
+        403,
+        'insufficient privileges',
+        'You must be the owner of this team to perform this operation.'
+      ],
+      [404, 'team not found', 'This team has been removed.'],
+      [
+        409,
+        'team already registered',
+        'There is already a team with this slug.'
+      ]
     ]);
   }
 
@@ -197,73 +213,85 @@ export class TeamTabSettingsComponent implements OnDestroy {
    *
    */
   private updateTeamName(name: string) {
-    const url = [ 'team', this.team.slug ].join('/');
+    const url = ['team', this.team.slug].join('/');
     this.apiService.patch(url, { name }).subscribe(
       () => {
         this.alert.changeTeamName = {
-          type: AlertType.Success, text: 'Team name was updated.'
+          type: AlertType.Success,
+          text: 'Team name was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeTeamName = undefined);
-        this.teamPageService.updateTeamSlug(TeamPageTabType.Settings, this.team.slug);
+        timer(5000).subscribe(() => (this.alert.changeTeamName = undefined));
+        this.teamPageService.updateTeamSlug(
+          TeamPageTabType.Settings,
+          this.team.slug
+        );
       },
       (err: HttpErrorResponse) => {
         this.alert.changeTeamName = {
-          type: AlertType.Danger, text: this.extractError(err)
+          type: AlertType.Danger,
+          text: this.extractError(err)
         };
-      });
+      }
+    );
   }
 
   /**
    *
    */
   private updateTeamSlug(slug: string) {
-    const url = [ 'team', this.team.slug ].join('/');
+    const url = ['team', this.team.slug].join('/');
     this.apiService.patch(url, { slug }).subscribe(
       () => {
         this.alert.changeTeamSlug = {
-          type: AlertType.Success, text: 'Team slug was updated.'
+          type: AlertType.Success,
+          text: 'Team slug was updated.'
         };
-        timer(5000).subscribe(() => this.alert.changeTeamSlug = undefined);
+        timer(5000).subscribe(() => (this.alert.changeTeamSlug = undefined));
         this.teamPageService.updateTeamSlug(TeamPageTabType.Settings, slug);
-        this.router.navigate([ '~', slug ]);
+        this.router.navigate(['~', slug]);
       },
       (err: HttpErrorResponse) => {
         this.alert.changeTeamSlug = {
-          type: AlertType.Danger, text: this.extractError(err)
+          type: AlertType.Danger,
+          text: this.extractError(err)
         };
-      });
+      }
+    );
   }
 
   /**
    *
    */
   public deleteTeam() {
-    const url = [ 'team', this.team.slug ].join('/');
+    const url = ['team', this.team.slug].join('/');
     this.apiService.delete(url).subscribe(
       () => {
-        this.router.navigate(['..'], {relativeTo: this.route });
+        this.router.navigate(['..'], { relativeTo: this.route });
       },
       (err: HttpErrorResponse) => {
         this.alert.deleteTeam = {
-          type: AlertType.Danger, text: this.extractError(err)
+          type: AlertType.Danger,
+          text: this.extractError(err)
         };
-      });
+      }
+    );
   }
 
   /**
    *
    */
   public leaveTeam() {
-    const url = [ 'team', this.team.slug, 'leave' ].join('/');
+    const url = ['team', this.team.slug, 'leave'].join('/');
     this.apiService.post(url).subscribe(
       () => {
-        this.router.navigate(['..'], {relativeTo: this.route });
+        this.router.navigate(['..'], { relativeTo: this.route });
       },
       (err: HttpErrorResponse) => {
         this.alert.leaveTeam = {
-          type: AlertType.Danger, text: this.extractError(err)
+          type: AlertType.Danger,
+          text: this.extractError(err)
         };
-      });
+      }
+    );
   }
-
 }

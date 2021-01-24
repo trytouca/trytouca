@@ -6,13 +6,30 @@ import { DatePipe, I18nPluralPipe, PercentPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faCircle, faCheckCircle, faPlusCircle, faMinusCircle, faSpinner, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircle,
+  faCheckCircle,
+  faPlusCircle,
+  faMinusCircle,
+  faSpinner,
+  faTimesCircle
+} from '@fortawesome/free-solid-svg-icons';
 import { TimeAgoPipe } from 'ngx-moment';
 import { FrontendBatchCompareParams } from '@weasel/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
-import { Data, Icon, IconColor, IconType, Topic} from '@weasel/home/models/page-item.model';
+import {
+  Data,
+  Icon,
+  IconColor,
+  IconType,
+  Topic
+} from '@weasel/home/models/page-item.model';
 import { DurationPipe } from '@weasel/home/pipes';
-import { BatchPageItem, BatchPageItemType, nextPageQueryParams } from './batch.model';
+import {
+  BatchPageItem,
+  BatchPageItemType,
+  nextPageQueryParams
+} from './batch.model';
 
 type Metadata = Partial<{
   // Time since results for this testcase were submitted
@@ -30,23 +47,16 @@ type Metadata = Partial<{
   selector: 'app-batch-item-element',
   templateUrl: './item.component.html',
   styleUrls: ['../../styles/item.component.scss'],
-  providers: [
-    DatePipe,
-    DurationPipe,
-    I18nPluralPipe,
-    PercentPipe,
-    TimeAgoPipe
-  ]
+  providers: [DatePipe, DurationPipe, I18nPluralPipe, PercentPipe, TimeAgoPipe]
 })
 export class BatchItemElementComponent {
-
   data: Data;
   icon: Icon;
   topics: Topic[];
   private _meta: Metadata = {
     keysCount: 0,
     keysCountFresh: 0,
-    keysCountMissing: 0,
+    keysCountMissing: 0
   };
 
   private _item: BatchPageItem;
@@ -77,8 +87,13 @@ export class BatchItemElementComponent {
     private faIconLibrary: FaIconLibrary
   ) {
     faIconLibrary.addIcons(
-      faCircle, faCheckCircle, faMinusCircle,
-      faPlusCircle, faSpinner, faTimesCircle);
+      faCircle,
+      faCheckCircle,
+      faMinusCircle,
+      faPlusCircle,
+      faSpinner,
+      faTimesCircle
+    );
   }
 
   /**
@@ -105,13 +120,16 @@ export class BatchItemElementComponent {
       case BatchPageItemType.Common:
         const common = this._item.asCommon();
         if (common.meta) {
-          this._meta.keysCount = common.meta.keysCountCommon + common.meta.keysCountFresh;
+          this._meta.keysCount =
+            common.meta.keysCountCommon + common.meta.keysCountFresh;
           this._meta.keysCountFresh = common.meta.keysCountFresh;
           this._meta.keysCountMissing = common.meta.keysCountMissing;
           this._meta.keysScore = common.meta.keysScore;
-          metric = new Metric('',
+          metric = new Metric(
+            '',
             common.meta.metricsDurationCommonSrc,
-            common.meta.metricsDurationCommonDst);
+            common.meta.metricsDurationCommonDst
+          );
         }
         break;
     }
@@ -119,7 +137,9 @@ export class BatchItemElementComponent {
       this._meta.performance = this.initPerformance(metric);
     }
     this._meta.isCreatedRecently = this.isCreatedRecently();
-    this._meta.isPendingComparison = this._item.type === BatchPageItemType.Common && this._item.isPendingComparison();
+    this._meta.isPendingComparison =
+      this._item.type === BatchPageItemType.Common &&
+      this._item.isPendingComparison();
     this.data = this.initData();
     this.icon = this.initIcon();
     this.topics = this.initTopics();
@@ -133,7 +153,11 @@ export class BatchItemElementComponent {
       return {
         name: this._item.elementName,
         link: this._item.elementName,
-        query: nextPageQueryParams(this.route.snapshot.queryParamMap, this._params, this._item.type)
+        query: nextPageQueryParams(
+          this.route.snapshot.queryParamMap,
+          this._params,
+          this._item.type
+        )
       };
     }
   }
@@ -158,7 +182,6 @@ export class BatchItemElementComponent {
    * @returns name of the color of the testcase status
    */
   private initIcon(): Icon {
-
     // if testcase is fresh (did not exist in baseline)
     if (this._item.type === BatchPageItemType.Fresh) {
       return {
@@ -198,7 +221,7 @@ export class BatchItemElementComponent {
     }
 
     // if testcase has no keys
-    if (0 === (this._meta.keysCount + this._meta.keysCountMissing)) {
+    if (0 === this._meta.keysCount + this._meta.keysCountMissing) {
       return {
         color: IconColor.Orange,
         type: IconType.Circle,
@@ -266,8 +289,13 @@ export class BatchItemElementComponent {
     }
 
     const changeType = metric.changeType();
-    const durationStr = this.durationPipe.transform(duration, 1, ['m', 's', 'ms']);
-    if (changeType === MetricChangeType.Same ||
+    const durationStr = this.durationPipe.transform(duration, 1, [
+      'm',
+      's',
+      'ms'
+    ]);
+    if (
+      changeType === MetricChangeType.Same ||
       changeType === MetricChangeType.Fresh ||
       changeType === MetricChangeType.Missing
     ) {
@@ -299,7 +327,8 @@ export class BatchItemElementComponent {
 
     if (this._meta.keysCount) {
       let tcs = this.i18pluralPipe.transform(this._meta.keysCount, {
-        '=1': 'one key', other: '# keys'
+        '=1': 'one key',
+        other: '# keys'
       });
       if (this._meta.keysCountFresh && this._meta.keysCountMissing) {
         tcs += ` (${this._meta.keysCountFresh} new, ${this._meta.keysCountMissing} missing)`;
@@ -332,5 +361,4 @@ export class BatchItemElementComponent {
     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
     return days <= 7;
   }
-
 }

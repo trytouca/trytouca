@@ -14,7 +14,6 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class UserService {
-
   public currentUser: UserLookupResponse;
   private subject = new Subject<UserLookupResponse>();
   public currentUser$ = this.subject.asObservable();
@@ -26,7 +25,7 @@ export class UserService {
     private alertService: AlertService,
     private apiService: ApiService,
     private authService: AuthService
-  ) { }
+  ) {}
 
   /**
    *
@@ -40,7 +39,7 @@ export class UserService {
       return;
     }
     this.apiService.get<UserLookupResponse>('user').subscribe(
-      doc => {
+      (doc) => {
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
           AlertKind.ApiConnectionLost
@@ -48,9 +47,13 @@ export class UserService {
         this.currentUser = doc;
         this.subject.next(doc);
       },
-      err => {
+      (err) => {
         if (err.status === 0) {
-          this.alertService.set(!this.currentUser ? AlertKind.ApiConnectionDown : AlertKind.ApiConnectionLost);
+          this.alertService.set(
+            !this.currentUser
+              ? AlertKind.ApiConnectionDown
+              : AlertKind.ApiConnectionLost
+          );
         } else if (err.status === 401) {
           this.alertService.set(AlertKind.InvalidAuthToken);
         } else {
@@ -74,5 +77,4 @@ export class UserService {
     }
     this.currentUser = undefined;
   }
-
 }

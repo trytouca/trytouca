@@ -10,10 +10,8 @@ import type { PromotionItem } from '@weasel/core/models/frontendtypes';
   templateUrl: './promotion.component.html'
 })
 export class SuiteItemPromotionComponent {
-
   /**
    *
    */
   @Input() item: PromotionItem;
-
 }

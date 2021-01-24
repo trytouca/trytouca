@@ -5,10 +5,10 @@
 import { Component, Input } from '@angular/core';
 
 type NotFound = Partial<{
-  teamSlug: string
-  suiteSlug: string
-  batchSlug: string
-  elementSlug: string
+  teamSlug: string;
+  suiteSlug: string;
+  batchSlug: string;
+  elementSlug: string;
 }>;
 
 enum ENotFound {
@@ -19,11 +19,11 @@ enum ENotFound {
 }
 
 type PageElements = {
-  type: ENotFound
-  title: string
-  image: string
-  message: string
-  button: string
+  type: ENotFound;
+  title: string;
+  image: string;
+  message: string;
+  button: string;
 };
 
 @Component({
@@ -31,7 +31,6 @@ type PageElements = {
   templateUrl: './home-notfound.component.html'
 })
 export class HomeNotFoundComponent {
-
   data: PageElements;
 
   @Input()
@@ -73,5 +72,4 @@ export class HomeNotFoundComponent {
       };
     }
   }
-
 }

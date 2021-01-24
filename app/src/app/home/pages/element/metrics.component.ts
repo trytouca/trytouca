@@ -22,12 +22,14 @@ const filterInput: FilterInput<ElementPageMetric> = {
     {
       key: 'faster',
       name: 'Faster',
-      func: (a) => a.data.src !== 0 && a.data.dst !== 0 && a.data.src < a.data.dst
+      func: (a) =>
+        a.data.src !== 0 && a.data.dst !== 0 && a.data.src < a.data.dst
     },
     {
       key: 'slower',
       name: 'Slower',
-      func: (a) => a.data.src !== 0 && a.data.dst !== 0 && a.data.dst < a.data.src
+      func: (a) =>
+        a.data.src !== 0 && a.data.dst !== 0 && a.data.dst < a.data.src
     }
   ],
   sorters: [
@@ -72,8 +74,9 @@ const filterInput: FilterInput<ElementPageMetric> = {
   templateUrl: './metrics.component.html',
   styleUrls: ['../../styles/list.component.scss']
 })
-export class ElementListMetricsComponent extends PageListComponent<ElementPageMetric> implements OnDestroy {
-
+export class ElementListMetricsComponent
+  extends PageListComponent<ElementPageMetric>
+  implements OnDestroy {
   suite: SuiteLookupResponse;
   params: FrontendElementCompareParams;
   ItemType = ElementPageItemType;
@@ -91,13 +94,15 @@ export class ElementListMetricsComponent extends PageListComponent<ElementPageMe
     router: Router
   ) {
     super(filterInput, Object.values(ElementPageItemType), route, router);
-    this._subAllItems = this.elementPageService.allMetricKeys$.subscribe(allItems => {
-      this.initCollections(allItems);
-    });
-    this._subSuite = this.elementPageService.suite$.subscribe(v => {
+    this._subAllItems = this.elementPageService.allMetricKeys$.subscribe(
+      (allItems) => {
+        this.initCollections(allItems);
+      }
+    );
+    this._subSuite = this.elementPageService.suite$.subscribe((v) => {
       this.suite = v;
     });
-    this._subParams = this.elementPageService.params$.subscribe(v => {
+    this._subParams = this.elementPageService.params$.subscribe((v) => {
       this.params = v;
     });
   }
@@ -122,5 +127,4 @@ export class ElementListMetricsComponent extends PageListComponent<ElementPageMe
       return;
     }
   }
-
 }

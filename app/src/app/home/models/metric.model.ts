@@ -10,19 +10,18 @@ export enum MetricChangeType {
   Slower,
   Same,
   Faster,
-  Fresh,
+  Fresh
 }
 
 /**
  *
  */
 export class Metric {
-
   constructor(
     readonly name: string,
     readonly src: number | null,
-    readonly dst: number | null) {
-  }
+    readonly dst: number | null
+  ) {}
 
   /**
    *
@@ -49,7 +48,9 @@ export class Metric {
     if (isSmall(this.absoluteDifference())) {
       return MetricChangeType.Same;
     }
-    return this.src < this.dst ? MetricChangeType.Faster : MetricChangeType.Slower;
+    return this.src < this.dst
+      ? MetricChangeType.Faster
+      : MetricChangeType.Slower;
   }
 
   public changeDescription(): string {
@@ -73,6 +74,7 @@ export class Metric {
   }
 
   public score(): number {
+    const sign = this.src < this.dst ? -1 : +1;
     switch (this.changeType()) {
       case MetricChangeType.Missing:
         return -1;
@@ -82,9 +84,7 @@ export class Metric {
         if (this.dst === 0) {
           return 0;
         }
-        const sign = this.src < this.dst ? -1 : +1;
-        return this.absoluteDifference() * sign / this.dst;
+        return (this.absoluteDifference() * sign) / this.dst;
     }
   }
-
 }

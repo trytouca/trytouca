@@ -13,11 +13,10 @@ import { IPageService } from '@weasel/home/models/pages.model';
 import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { TeamsPageItemType, TeamsPageTeam } from './teams.model';
 
-type FetchInput = { };
+type FetchInput = {};
 
 @Injectable()
 export class TeamsPageService extends IPageService<TeamsPageTeam> {
-
   private _itemsCache: TeamListResponse;
 
   /**
@@ -41,38 +40,45 @@ export class TeamsPageService extends IPageService<TeamsPageTeam> {
    * the last visited page for continuity of their workflow.
    */
   private fetchTeams(args: FetchInput): Observable<TeamListResponse> {
-    const url = [ 'team' ].join('/');
-    return this.apiService.get<TeamListResponse>(url).pipe(map(
-      (doc: TeamListResponse) => {
+    const url = ['team'].join('/');
+    return this.apiService.get<TeamListResponse>(url).pipe(
+      map((doc: TeamListResponse) => {
         if (!doc) {
           return;
         }
         if (isEqual(doc, this._itemsCache)) {
           return doc;
         }
-        const activeRoles = [ ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner ];
-        const active = doc.filter(v => activeRoles.includes(v.role))
-          .map(v => new TeamsPageTeam(v, TeamsPageItemType.Active));
-        const joining = doc.filter(v => v.role === ETeamRole.Applicant)
-          .map(v => new TeamsPageTeam(v, TeamsPageItemType.Joining));
-        const invited = doc.filter(v => v.role === ETeamRole.Invited)
-          .map(v => new TeamsPageTeam(v, TeamsPageItemType.Invited));
+        const activeRoles = [
+          ETeamRole.Member,
+          ETeamRole.Admin,
+          ETeamRole.Owner
+        ];
+        const active = doc
+          .filter((v) => activeRoles.includes(v.role))
+          .map((v) => new TeamsPageTeam(v, TeamsPageItemType.Active));
+        const joining = doc
+          .filter((v) => v.role === ETeamRole.Applicant)
+          .map((v) => new TeamsPageTeam(v, TeamsPageItemType.Joining));
+        const invited = doc
+          .filter((v) => v.role === ETeamRole.Invited)
+          .map((v) => new TeamsPageTeam(v, TeamsPageItemType.Invited));
 
-        this._items = [ ...active, ...joining, ...invited ];
+        this._items = [...active, ...joining, ...invited];
         this._itemsSubject.next(this._items);
         this._itemsCache = doc;
 
         localStorage.removeItem(ELocalStorageKey.LastVisitedTeam);
         return doc;
-      }
-    ));
+      })
+    );
   }
 
   /**
    *
    */
   public fetchItems(args: FetchInput): void {
-    const observables = [ this.fetchTeams(args) ];
+    const observables = [this.fetchTeams(args)];
     forkJoin(observables).subscribe(
       () => {
         this.alertService.unset(
@@ -80,15 +86,20 @@ export class TeamsPageService extends IPageService<TeamsPageTeam> {
           AlertKind.ApiConnectionLost
         );
       },
-      err => {
+      (err) => {
         if (err.status === 0) {
-          this.alertService.set(!this._items ? AlertKind.ApiConnectionDown : AlertKind.ApiConnectionLost);
+          this.alertService.set(
+            !this._items
+              ? AlertKind.ApiConnectionDown
+              : AlertKind.ApiConnectionLost
+          );
         } else if (err.status === 401) {
           this.alertService.set(AlertKind.InvalidAuthToken);
         } else {
           errorLogger.notify(err);
         }
-      });
+      }
+    );
   }
 
   /**
@@ -98,5 +109,4 @@ export class TeamsPageService extends IPageService<TeamsPageTeam> {
     this._itemsCache = undefined;
     this.fetchItems({});
   }
-
 }

@@ -36,56 +36,40 @@ export class ApiService {
    *
    */
   get<T>(path: string, params: HttpParams = new HttpParams()): Observable<T> {
-
     const url = this.makeUrl(path);
     const opts = { params, withCredentials: true };
 
-    return this.http.get<T>(url, opts).pipe(
-      catchError(this.handleError)
-    );
-
+    return this.http.get<T>(url, opts).pipe(catchError(this.handleError));
   }
 
   /**
    *
    */
   patch(path: string, body: object): Observable<any> {
-
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
 
-    return this.http.patch(url, body, opts).pipe(
-      catchError(this.handleError)
-    );
-
+    return this.http.patch(url, body, opts).pipe(catchError(this.handleError));
   }
 
   /**
    *
    */
   post(path: string, body: object = {}): Observable<any> {
-
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
 
-    return this.http.post(url, body, opts).pipe(
-      catchError(this.handleError)
-    );
-
+    return this.http.post(url, body, opts).pipe(catchError(this.handleError));
   }
 
   /**
    *
    */
   delete(path: string): Observable<any> {
-
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
 
-    return this.http.delete(url, opts).pipe(
-      catchError(this.handleError)
-    );
-
+    return this.http.delete(url, opts).pipe(catchError(this.handleError));
   }
 
   /**
@@ -102,10 +86,13 @@ export class ApiService {
     httpError: HttpErrorResponse,
     errorList?: [number, string, string][]
   ): string {
-    const defaultMsg = 'Something went wrong. '
-      + 'Please try this operation again at a later time.';
-    if (!Array.isArray(httpError.error?.errors)
-      || httpError.error?.errors.length === 0) {
+    const defaultMsg =
+      'Something went wrong. ' +
+      'Please try this operation again at a later time.';
+    if (
+      !Array.isArray(httpError.error?.errors) ||
+      httpError.error?.errors.length === 0
+    ) {
       return defaultMsg;
     }
     const error = httpError.error.errors[0];
@@ -113,11 +100,10 @@ export class ApiService {
       return error;
     }
     const status = httpError.status;
-    const msg = errorList.find(el => status === el[0] && error === el[1]);
+    const msg = errorList.find((el) => status === el[0] && error === el[1]);
     if (!msg) {
       return defaultMsg;
     }
     return msg[2];
   }
-
 }

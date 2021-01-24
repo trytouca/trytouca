@@ -26,24 +26,26 @@ enum RingColor {
 @Component({
   selector: 'app-home-page-overview',
   templateUrl: './page-overview.component.html',
-  styles: [`
-    svg circle {
-      transition: stroke-dashoffset .35s;
-      transform: rotate(-90deg);
-      transform-origin: 50% 50%;
-    }
-  `],
-  providers: [ DurationPipe, PercentPipe ]
+  styles: [
+    `
+      svg circle {
+        transition: stroke-dashoffset 0.35s;
+        transform: rotate(-90deg);
+        transform-origin: 50% 50%;
+      }
+    `
+  ],
+  providers: [DurationPipe, PercentPipe]
 })
 export class PageOverviewComponent {
-
   metricsRing: Ring;
   resultsRing: Ring;
   statements: string[];
 
   constructor(
     private durationPipe: DurationPipe,
-    private percentPipe: PercentPipe) {}
+    private percentPipe: PercentPipe
+  ) {}
 
   @Input()
   set inputs(inputs: FrontendOverviewSection) {
@@ -78,9 +80,14 @@ export class PageOverviewComponent {
    */
   private findMetricsRing(inputs: FrontendOverviewSection): Ring {
     const Type = MetricChangeType;
-    const describeDuration = (v, k) => this.durationPipe.transform(v, k, ['h', 'm', 's', 'ms']);
-    const metric = new Metric('', inputs.metricsDurationHead,
-      inputs.metricsDurationHead - inputs.metricsDurationChange * inputs.metricsDurationSign);
+    const describeDuration = (v, k) =>
+      this.durationPipe.transform(v, k, ['h', 'm', 's', 'ms']);
+    const metric = new Metric(
+      '',
+      inputs.metricsDurationHead,
+      inputs.metricsDurationHead -
+        inputs.metricsDurationChange * inputs.metricsDurationSign
+    );
     const type = metric.changeType();
     const headDesc = describeDuration(metric.src, 2);
     const changeDesc = describeDuration(metric.absoluteDifference(), 1);
@@ -88,13 +95,21 @@ export class PageOverviewComponent {
 
     return {
       header: 'Duration' + (inputs.inProgress ? ' (so far)' : ''),
-      footer: type === Type.Same ? [ headDesc ]
-        : type === Type.Faster ? [ headDesc, `(${changeDesc} faster)` ]
-        : [ headDesc, `(${changeDesc} slower)` ],
-      title: type === Type.Same ? 'Same' : type === Type.Faster ? scoreDesc : '+' + scoreDesc,
+      footer:
+        type === Type.Same
+          ? [headDesc]
+          : type === Type.Faster
+          ? [headDesc, `(${changeDesc} faster)`]
+          : [headDesc, `(${changeDesc} slower)`],
+      title:
+        type === Type.Same
+          ? 'Same'
+          : type === Type.Faster
+          ? scoreDesc
+          : '+' + scoreDesc,
       backColor: RingColor.Gray,
       frontColor: type === Type.Slower ? RingColor.Red : RingColor.Green,
-      frontValue: 1,
+      frontValue: 1
     };
   }
 
@@ -109,5 +124,4 @@ export class PageOverviewComponent {
     circle.style.strokeDashoffset = `${circumference}`;
     circle.style.strokeDashoffset = `${offset}`;
   }
-
 }

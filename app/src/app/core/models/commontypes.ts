@@ -16,29 +16,29 @@ export enum EPlatformRole {
  *
  */
 export type Userinfo = {
-  fullname: string
-  username: string
+  fullname: string;
+  username: string;
 };
 
 /**
  *
  */
 export type UserLookupResponse = {
-  apiKeys: string[]
-  email: string
-  fullname: string
-  isVerified: boolean
-  platformRole: EPlatformRole
-  username: string
+  apiKeys: string[];
+  email: string;
+  fullname: string;
+  isVerified: boolean;
+  platformRole: EPlatformRole;
+  username: string;
 };
 
 /**
  *
  */
 export type NotificationItem = {
-  createdAt: Date
-  seenAt?: Date
-  text: string
+  createdAt: Date;
+  seenAt?: Date;
+  text: string;
 };
 
 /**
@@ -62,16 +62,16 @@ export enum ETeamRole {
  *
  */
 export type TeamItem = {
-  role: ETeamRole
-  name: string
-  slug: string
+  role: ETeamRole;
+  name: string;
+  slug: string;
 };
 
 /**
  *
  */
 export type TeamLookupResponse = TeamItem & {
-  userCount: number
+  userCount: number;
 };
 
 /**
@@ -83,95 +83,95 @@ export type TeamListResponse = TeamItem[];
  *
  */
 export type TeamMember = {
-  fullname: string
-  role: ETeamRole
-  username: string
+  fullname: string;
+  role: ETeamRole;
+  username: string;
 };
 
 /**
  *
  */
 export type TeamInvitee = {
-  email: string
-  fullname: string
-  invitedAt: Date
+  email: string;
+  fullname: string;
+  invitedAt: Date;
 };
 
 /**
  *
  */
 export type TeamApplicant = {
-  email: string
-  fullname: string
-  username: string
+  email: string;
+  fullname: string;
+  username: string;
 };
 
 /**
  *
  */
 export type TeamMemberListResponse = {
-  applicants: TeamApplicant[]
-  invitees: TeamInvitee[]
-  members: TeamMember[]
+  applicants: TeamApplicant[];
+  invitees: TeamInvitee[];
+  members: TeamMember[];
 };
 
 /**
  *
  */
 export type Promotion = {
-  at: Date
-  by: Userinfo
-  for: string
-  from: string
-  to: string
+  at: Date;
+  by: Userinfo;
+  for: string;
+  from: string;
+  to: string;
 };
 
 /**
  *
  */
 export type BatchCompareOverview = {
-  elementsCountDifferent: number
-  elementsCountFresh: number
-  elementsCountHead: number
-  elementsCountMissing: number
-  elementsCountPending: number
-  elementsScoreAbsolute: number
-  elementsScoreAggregate: number
-  metricsDurationChange: number
-  metricsDurationHead: number
-  metricsDurationSign: number
+  elementsCountDifferent: number;
+  elementsCountFresh: number;
+  elementsCountHead: number;
+  elementsCountMissing: number;
+  elementsCountPending: number;
+  elementsScoreAbsolute: number;
+  elementsScoreAggregate: number;
+  metricsDurationChange: number;
+  metricsDurationHead: number;
+  metricsDurationSign: number;
 };
 
 /**
  *
  */
 export type BatchItemRaw = {
-  batchSlug: string
-  comparedAgainst: string
-  expirable: boolean
-  isSealed: boolean
-  messageCount: number
-  submittedAt: Date
-  submittedBy: Userinfo[]
-  updatedAt: Date
+  batchSlug: string;
+  comparedAgainst: string;
+  expirable: boolean;
+  isSealed: boolean;
+  messageCount: number;
+  submittedAt: Date;
+  submittedBy: Userinfo[];
+  updatedAt: Date;
 };
 
 /**
  *
  */
 export type BatchItem = BatchItemRaw & {
-  meta: BatchCompareOverview
+  meta: BatchCompareOverview;
 };
 
 /**
  *
  */
 export type BatchLookupResponse = BatchItem & {
-  commentCount: number
-  suiteName: string
-  suiteSlug: string
-  teamName: string
-  teamSlug: string
+  commentCount: number;
+  suiteName: string;
+  suiteSlug: string;
+  teamName: string;
+  teamSlug: string;
 };
 
 /**
@@ -183,12 +183,12 @@ export type BatchListResponse = BatchItem[];
  *
  */
 export type CommentItem = {
-  at: Date
-  by: Userinfo
-  editedAt?: Date
-  id: string
-  replies: CommentItem[]
-  text: string
+  at: Date;
+  by: Userinfo;
+  editedAt?: Date;
+  id: string;
+  replies: CommentItem[];
+  text: string;
 };
 
 /**
@@ -200,26 +200,26 @@ export type CommentListResponse = CommentItem[];
  *
  */
 export type SuiteItem = {
-  baseline?: BatchItemRaw
-  batchCount: number
-  latest?: BatchItemRaw
-  overview?: BatchCompareOverview
-  suiteName: string
-  suiteSlug: string
+  baseline?: BatchItemRaw;
+  batchCount: number;
+  latest?: BatchItemRaw;
+  overview?: BatchCompareOverview;
+  suiteName: string;
+  suiteSlug: string;
 };
 
 /**
  *
  */
 export type SuiteLookupResponse = SuiteItem & {
-  batches: string[]
-  isSubscribed: boolean
-  promotions: Promotion[]
-  retainFor: number
-  sealAfter: number
-  subscriberCount: number
-  teamName: string
-  teamSlug: string
+  batches: string[];
+  isSubscribed: boolean;
+  promotions: Promotion[];
+  retainFor: number;
+  sealAfter: number;
+  subscriberCount: number;
+  teamName: string;
+  teamSlug: string;
 };
 
 /**
@@ -227,71 +227,70 @@ export type SuiteLookupResponse = SuiteItem & {
  */
 export type SuiteListResponse = SuiteItem[];
 
-
 /**
  *
  */
 export type CppTestcaseOverview = {
-  keysCount: number
-  metricsCount: number
-  metricsDuration: number
+  keysCount: number;
+  metricsCount: number;
+  metricsDuration: number;
 };
 
 /**
  *
  */
 export type CppTestcaseComparisonOverview = {
-  keysCountCommon: number
-  keysCountFresh: number
-  keysCountMissing: number
-  keysScore: number
-  metricsCountCommon: number
-  metricsCountFresh: number
-  metricsCountMissing: number
-  metricsDurationCommonDst: number
-  metricsDurationCommonSrc: number
+  keysCountCommon: number;
+  keysCountFresh: number;
+  keysCountMissing: number;
+  keysScore: number;
+  metricsCountCommon: number;
+  metricsCountFresh: number;
+  metricsCountMissing: number;
+  metricsDurationCommonDst: number;
+  metricsDurationCommonSrc: number;
 };
 
 /**
  *
  */
 export type BatchComparisonItem = {
-  builtAt: Date
-  elementName: string
+  builtAt: Date;
+  elementName: string;
 };
 
 /**
  *
  */
 export type BatchComparisonItemCommon = {
-  dst: BatchComparisonItem
-  meta?: CppTestcaseComparisonOverview
-  src: BatchComparisonItem
+  dst: BatchComparisonItem;
+  meta?: CppTestcaseComparisonOverview;
+  src: BatchComparisonItem;
 };
 
 /**
  *
  */
 export type BatchComparisonItemSolo = BatchComparisonItem & {
-  meta?: CppTestcaseOverview
+  meta?: CppTestcaseOverview;
 };
 
 /**
  *
  */
 export type BatchComparisonResponse = {
-  common: BatchComparisonItemCommon[]
-  fresh: BatchComparisonItemSolo[]
-  missing: BatchComparisonItemSolo[]
-  overview?: BatchCompareOverview
+  common: BatchComparisonItemCommon[];
+  fresh: BatchComparisonItemSolo[];
+  missing: BatchComparisonItemSolo[];
+  overview?: BatchCompareOverview;
 };
 
 /**
  *
  */
 type ElementListResponseItem = {
-  metricsDuration: number
-  name: string
+  metricsDuration: number;
+  name: string;
 };
 
 /**
@@ -304,76 +303,76 @@ export type ElementListResponse = ElementListResponseItem[];
  */
 export type ElementLookupResponse = {
   batches: {
-    slug: string
-    submittedAt: Date
-    updatedAt: Date
+    slug: string;
+    submittedAt: Date;
+    updatedAt: Date;
   }[];
-  elementName: string
-  elementSlug: string
-  suiteName: string
-  suiteSlug: string
-  teamName: string
-  teamSlug: string
+  elementName: string;
+  elementSlug: string;
+  suiteName: string;
+  suiteSlug: string;
+  teamName: string;
+  teamSlug: string;
 };
 
 /**
  *
  */
 export type ElementComparisonItem = BatchComparisonItem & {
-  submittedAt: Date
-  submittedBy: Userinfo
+  submittedAt: Date;
+  submittedBy: Userinfo;
 };
 
 /**
  *
  */
 export type CppTypeComparison = {
-  name: string
-  score?: number
-  srcType?: string
-  srcValue?: string
-  desc?: string[]
-  dstType?: string
-  dstValue?: string
+  name: string;
+  score?: number;
+  srcType?: string;
+  srcValue?: string;
+  desc?: string[];
+  dstType?: string;
+  dstValue?: string;
 };
 
 /**
  *
  */
 type CppCellar = {
-  commonKeys: CppTypeComparison[]
-  missingKeys: CppTypeComparison[]
-  newKeys: CppTypeComparison[]
+  commonKeys: CppTypeComparison[];
+  missingKeys: CppTypeComparison[];
+  newKeys: CppTypeComparison[];
 };
 
 /**
  *
  */
 type CppTestcaseMetadata = {
-  builtAt: Date
-  teamslug: string
-  testcase: string
-  testsuite: string
-  version: string
+  builtAt: Date;
+  teamslug: string;
+  testcase: string;
+  testsuite: string;
+  version: string;
 };
 
 /**
  *
  */
 type CppTestcaseComparison = {
-  assertions: CppCellar
-  dst: CppTestcaseMetadata
-  metrics: CppCellar
-  results: CppCellar
-  src: CppTestcaseMetadata
+  assertions: CppCellar;
+  dst: CppTestcaseMetadata;
+  metrics: CppCellar;
+  results: CppCellar;
+  src: CppTestcaseMetadata;
 };
 
 /**
  *
  */
 export type ElementComparisonResponse = {
-  cmp?: CppTestcaseComparison
-  dst: ElementComparisonItem
-  meta?: CppTestcaseComparisonOverview
-  src: ElementComparisonItem
+  cmp?: CppTestcaseComparison;
+  dst: ElementComparisonItem;
+  meta?: CppTestcaseComparisonOverview;
+  src: ElementComparisonItem;
 };

@@ -5,12 +5,23 @@
 import { Component, Input } from '@angular/core';
 import { I18nPluralPipe, PercentPipe } from '@angular/common';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faCircle, faSpinner, faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircle,
+  faSpinner,
+  faCheckCircle,
+  faTimesCircle
+} from '@fortawesome/free-solid-svg-icons';
 import { TimeAgoPipe } from 'ngx-moment';
 import { SuiteLookupResponse } from '@weasel/core/models/commontypes';
 import { DurationPipe } from '@weasel/home/pipes';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
-import { Data, Icon, IconColor, IconType, Topic} from '@weasel/home/models/page-item.model';
+import {
+  Data,
+  Icon,
+  IconColor,
+  IconType,
+  Topic
+} from '@weasel/home/models/page-item.model';
 
 type Meta = Partial<{
   base: string;
@@ -29,15 +40,9 @@ type Meta = Partial<{
   selector: 'app-team-item-suite',
   templateUrl: './item.component.html',
   styleUrls: ['../../styles/item.component.scss'],
-  providers: [
-    DurationPipe,
-    I18nPluralPipe,
-    PercentPipe,
-    TimeAgoPipe
-  ]
+  providers: [DurationPipe, I18nPluralPipe, PercentPipe, TimeAgoPipe]
 })
 export class TeamItemSuiteComponent {
-
   data: Data;
   icon: Icon;
   topics: Topic[];
@@ -61,8 +66,7 @@ export class TeamItemSuiteComponent {
     private timeAgoPipe: TimeAgoPipe,
     private faIconLibrary: FaIconLibrary
   ) {
-    faIconLibrary.addIcons(
-      faCircle, faSpinner, faCheckCircle, faTimesCircle);
+    faIconLibrary.addIcons(faCircle, faSpinner, faCheckCircle, faTimesCircle);
   }
 
   /**
@@ -76,15 +80,21 @@ export class TeamItemSuiteComponent {
     };
     this._meta.batchCount = item.batchCount;
     if (item.overview) {
-      this._meta.score = Math.floor(item.overview.elementsScoreAggregate * 100) / 100;
+      this._meta.score =
+        Math.floor(item.overview.elementsScoreAggregate * 100) / 100;
       this._meta.countFresh = item.overview.elementsCountFresh;
       this._meta.countHead = item.overview.elementsCountHead;
       this._meta.countMissing = item.overview.elementsCountMissing;
       this._meta.countPending = item.overview.elementsCountPending;
-      this._meta.performance = this.initPerformance(new Metric('',
-        item.overview.metricsDurationHead,
-        item.overview.metricsDurationHead - item.overview.metricsDurationChange * item.overview.metricsDurationSign
-      ));
+      this._meta.performance = this.initPerformance(
+        new Metric(
+          '',
+          item.overview.metricsDurationHead,
+          item.overview.metricsDurationHead -
+            item.overview.metricsDurationChange *
+              item.overview.metricsDurationSign
+        )
+      );
     }
     if (item.baseline) {
       this._meta.base = item.baseline.batchSlug;
@@ -101,7 +111,6 @@ export class TeamItemSuiteComponent {
    *
    */
   private initIcon(): Icon {
-
     // if suite has no batches
     if (!this._meta.base) {
       return {
@@ -187,8 +196,14 @@ export class TeamItemSuiteComponent {
     }
 
     const changeType = metric.changeType();
-    const durationStr = this.durationPipe.transform(duration, 2, ['h', 'm', 's', 'ms']);
-    if (changeType === MetricChangeType.Same ||
+    const durationStr = this.durationPipe.transform(duration, 2, [
+      'h',
+      'm',
+      's',
+      'ms'
+    ]);
+    if (
+      changeType === MetricChangeType.Same ||
       changeType === MetricChangeType.Fresh ||
       changeType === MetricChangeType.Missing
     ) {
@@ -226,7 +241,8 @@ export class TeamItemSuiteComponent {
     }
 
     const tcs = this.i18pluralPipe.transform(this._meta.batchCount, {
-      '=1': 'one version', other: '# versions'
+      '=1': 'one version',
+      other: '# versions'
     });
     topics.push({ text: tcs });
 
@@ -235,5 +251,4 @@ export class TeamItemSuiteComponent {
 
     return topics;
   }
-
 }

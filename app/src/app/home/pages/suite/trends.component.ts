@@ -12,9 +12,9 @@ import { SuitePageService } from './suite.service';
 
 type Fields = Partial<{
   perfs: {
-    slug: string,
-    duration: number
-  }[]
+    slug: string;
+    duration: number;
+  }[];
 }>;
 
 @Component({
@@ -23,7 +23,6 @@ type Fields = Partial<{
   styleUrls: ['./trends.component.scss']
 })
 export class SuiteTabTrendsComponent implements OnDestroy {
-
   fields: Fields = {
     perfs: []
   };
@@ -33,15 +32,16 @@ export class SuiteTabTrendsComponent implements OnDestroy {
   /**
    *
    */
-  constructor(
-    private suitePageService: SuitePageService
-  ) {
-    this._subItems = this.suitePageService.items$.subscribe(allItems => {
+  constructor(private suitePageService: SuitePageService) {
+    this._subItems = this.suitePageService.items$.subscribe((allItems) => {
       const perfs = allItems
-        .filter(v => v.type === SuitePageItemType.Batch)
-        .map(v => v.asBatch())
-        .filter(v => v.meta.metricsDurationHead)
-        .map(v => ({ slug: v.batchSlug, duration: v.meta.metricsDurationHead }));
+        .filter((v) => v.type === SuitePageItemType.Batch)
+        .map((v) => v.asBatch())
+        .filter((v) => v.meta.metricsDurationHead)
+        .map((v) => ({
+          slug: v.batchSlug,
+          duration: v.meta.metricsDurationHead
+        }));
       if (!isEqual(perfs, this.fields.perfs)) {
         this.fields.perfs = perfs;
       }
@@ -54,5 +54,4 @@ export class SuiteTabTrendsComponent implements OnDestroy {
   ngOnDestroy() {
     this._subItems.unsubscribe();
   }
-
 }

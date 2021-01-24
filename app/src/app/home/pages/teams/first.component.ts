@@ -14,7 +14,6 @@ import { TeamsCreateTeamComponent } from './create.component';
   styles: ['img { margin: 5vh auto; }']
 })
 export class TeamsFirstTeamComponent implements OnDestroy {
-
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
 
@@ -24,8 +23,7 @@ export class TeamsFirstTeamComponent implements OnDestroy {
   constructor(
     private dialogService: DialogService,
     private teamsPageService: TeamsPageService
-  ) {
-  }
+  ) {}
 
   /**
    *
@@ -51,11 +49,12 @@ export class TeamsFirstTeamComponent implements OnDestroy {
       closeButton: false,
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (state) {
-        this.fetchItems();
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (state) {
+          this.fetchItems();
+        }
       }
-    });
+    );
   }
-
 }

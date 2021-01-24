@@ -5,7 +5,14 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faChevronDown, faCog, faPlus, faTasks, faUsers, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronDown,
+  faCog,
+  faPlus,
+  faTasks,
+  faUsers,
+  faUserPlus
+} from '@fortawesome/free-solid-svg-icons';
 import { DialogService, DialogRef } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 import type { TeamItem } from '@weasel/core/models/commontypes';
@@ -37,21 +44,22 @@ const pageTabs: PageTab<TeamPageTabType>[] = [
     link: 'settings',
     icon: 'cog',
     shown: true
-  },
+  }
 ];
 
 type NotFound = Partial<{
-  teamSlug: string
+  teamSlug: string;
 }>;
 
 @Component({
   selector: 'app-team-page',
   templateUrl: './page.component.html',
   styleUrls: ['../../styles/page.component.scss'],
-  providers: [ TeamPageService, { provide: 'PAGE_TABS', useValue: pageTabs } ]
+  providers: [TeamPageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
 })
-export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabType, NotFound> implements OnInit, OnDestroy {
-
+export class TeamPageComponent
+  extends PageComponent<TeamPageSuite, TeamPageTabType, NotFound>
+  implements OnInit, OnDestroy {
   team: TeamItem;
   teams: TeamItem[];
   TabType = TeamPageTabType;
@@ -75,16 +83,23 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
     route: ActivatedRoute
   ) {
     super(teamPageService, pageTabs, route);
-    faIconLibrary.addIcons(faChevronDown, faCog, faPlus, faTasks, faUserPlus, faUsers);
-    this._subAlert = this.alertService.alerts$.subscribe(v => {
-      if (v.some(k => k.kind === AlertKind.TeamNotFound)) {
+    faIconLibrary.addIcons(
+      faChevronDown,
+      faCog,
+      faPlus,
+      faTasks,
+      faUserPlus,
+      faUsers
+    );
+    this._subAlert = this.alertService.alerts$.subscribe((v) => {
+      if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
         this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
       }
     });
-    this._subTeams = this.teamPageService.teams$.subscribe(v => {
+    this._subTeams = this.teamPageService.teams$.subscribe((v) => {
       this.teams = v;
     });
-    this._subTeam = this.teamPageService.team$.subscribe(v => {
+    this._subTeam = this.teamPageService.team$.subscribe((v) => {
       this.team = v;
     });
   }
@@ -125,7 +140,7 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
   onKeydown(event: KeyboardEvent) {
     // pressing key 'Backspace' should return user to "Teams" page
     if ('Backspace' === event.key) {
-      this.router.navigate(['..'], {relativeTo: this.route });
+      this.router.navigate(['..'], { relativeTo: this.route });
     }
   }
 
@@ -134,7 +149,7 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
    */
   public switchPage(teamSlug: string) {
     if (this.team.slug !== teamSlug) {
-      this.router.navigate([ '~', teamSlug ]);
+      this.router.navigate(['~', teamSlug]);
       this.teamPageService.updateTeamSlug(this.currentTab, teamSlug);
     }
   }
@@ -148,11 +163,13 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
       data: { teamSlug: this.team.slug },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (state) {
-        this.fetchItems();
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (state) {
+          this.fetchItems();
+        }
       }
-    });
+    );
   }
 
   /**
@@ -164,11 +181,12 @@ export class TeamPageComponent extends PageComponent<TeamPageSuite, TeamPageTabT
       data: { teamSlug: this.team.slug },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state: boolean) => {
-      if (state) {
-        this.teamPageService.refreshMembers();
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (state) {
+          this.teamPageService.refreshMembers();
+        }
       }
-    });
+    );
   }
-
 }

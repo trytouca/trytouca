@@ -10,19 +10,19 @@ import { environment } from 'src/environments/environment';
 import { IPageService } from '@weasel/home/models/pages.model';
 
 export type PageTab<TabType> = {
-  type: TabType
-  name: string
-  link: string
-  icon: string
-  shown: boolean
-  counter?: number
+  type: TabType;
+  name: string;
+  link: string;
+  icon: string;
+  shown: boolean;
+  counter?: number;
 };
 
 @Component({
   template: ''
 })
-export abstract class PageComponent<PageItemType, TabType, NotFound> implements OnInit, OnDestroy {
-
+export abstract class PageComponent<PageItemType, TabType, NotFound>
+  implements OnInit, OnDestroy {
   private _alive = true;
   private _interval = environment.dataRefreshInterval;
   protected _notFound: Partial<NotFound> = {};
@@ -37,8 +37,9 @@ export abstract class PageComponent<PageItemType, TabType, NotFound> implements 
     protected route: ActivatedRoute
   ) {
     const queryMap = this.route.snapshot.queryParamMap;
-    const getQuery = (key: string) => queryMap.has(key) ? queryMap.get(key) : null;
-    const tab = this.tabs.find(v => v.link === getQuery('t')) || this.tabs[0];
+    const getQuery = (key: string) =>
+      queryMap.has(key) ? queryMap.get(key) : null;
+    const tab = this.tabs.find((v) => v.link === getQuery('t')) || this.tabs[0];
     this.currentTab = tab.type;
   }
 
@@ -97,5 +98,4 @@ export abstract class PageComponent<PageItemType, TabType, NotFound> implements 
       this.fetchItems();
     }
   }
-
 }

@@ -2,7 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, OnDestroy, HostListener, ViewChildren, QueryList } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  HostListener,
+  ViewChildren,
+  QueryList
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import type { SuiteLookupResponse } from '@weasel/core/models/commontypes';
@@ -36,8 +42,12 @@ const filterInput: FilterInput<ElementPageResult> = {
       key: 'score',
       name: 'Match Rate',
       func: (a, b) => {
-        if (!a.data.score) { return 1; }
-        if (!b.data.score) { return -1; }
+        if (!a.data.score) {
+          return 1;
+        }
+        if (!b.data.score) {
+          return -1;
+        }
         return a.data.score - b.data.score;
       }
     }
@@ -67,8 +77,9 @@ const filterInput: FilterInput<ElementPageResult> = {
   templateUrl: './results.component.html',
   styleUrls: ['../../styles/list.component.scss']
 })
-export class ElementListResultsComponent extends PageListComponent<ElementPageResult> implements OnDestroy {
-
+export class ElementListResultsComponent
+  extends PageListComponent<ElementPageResult>
+  implements OnDestroy {
   suite: SuiteLookupResponse;
   params: FrontendElementCompareParams;
   ItemType = ElementPageItemType;
@@ -77,7 +88,8 @@ export class ElementListResultsComponent extends PageListComponent<ElementPageRe
   private _subSuite: Subscription;
   private _subParams: Subscription;
 
-  @ViewChildren(ElementItemResultComponent) resultRows: QueryList<ElementItemResultComponent>;
+  @ViewChildren(ElementItemResultComponent)
+  resultRows: QueryList<ElementItemResultComponent>;
 
   /**
    *
@@ -88,13 +100,13 @@ export class ElementListResultsComponent extends PageListComponent<ElementPageRe
     router: Router
   ) {
     super(filterInput, Object.values(ElementPageItemType), route, router);
-    this._subAllItems = this.elementPageService.items$.subscribe(allItems => {
+    this._subAllItems = this.elementPageService.items$.subscribe((allItems) => {
       this.initCollections(allItems);
     });
-    this._subSuite = this.elementPageService.suite$.subscribe(v => {
+    this._subSuite = this.elementPageService.suite$.subscribe((v) => {
       this.suite = v;
     });
-    this._subParams = this.elementPageService.params$.subscribe(v => {
+    this._subParams = this.elementPageService.params$.subscribe((v) => {
       this.params = v;
     });
   }
@@ -128,5 +140,4 @@ export class ElementListResultsComponent extends PageListComponent<ElementPageRe
       this.resultRows.toArray()[this.selectedRow].toggleComplexView();
     }
   }
-
 }

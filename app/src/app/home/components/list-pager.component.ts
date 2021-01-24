@@ -2,7 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, EventEmitter, Output, Input, HostListener } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Output,
+  Input,
+  HostListener
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { FilterParams, FilterStats } from '@weasel/home/models/filter.model';
@@ -17,7 +23,6 @@ type PageNumber = {
   templateUrl: './list-pager.component.html'
 })
 export class ListPagerComponent {
-
   private _pagelSubject = new Subject<number>();
   private _pagenSubject = new Subject<number>();
   private _pagenQueryChanged = new Subject<number>();
@@ -30,29 +35,27 @@ export class ListPagerComponent {
    *
    */
   constructor() {
-    const update = () => this.updateList.emit({
-      pagel: this.params.pagel,
-      pagen: this.params.pagen
+    const update = () =>
+      this.updateList.emit({
+        pagel: this.params.pagel,
+        pagen: this.params.pagen
+      });
+    this._pagelSubject.pipe(distinctUntilChanged()).subscribe((pagel) => {
+      this.params.pagel = pagel;
+      this.params.pagen = 1;
+      update();
     });
-    this._pagelSubject
-      .pipe(distinctUntilChanged())
-      .subscribe((pagel) => {
-        this.params.pagel = pagel;
-        this.params.pagen = 1;
-        update();
-      });
-    this._pagenSubject
-      .pipe(distinctUntilChanged())
-      .subscribe((pagen) => {
-        this.params.pagen = pagen;
-        update();
-      });
+    this._pagenSubject.pipe(distinctUntilChanged()).subscribe((pagen) => {
+      this.params.pagen = pagen;
+      update();
+    });
     this._pagenQueryChanged
       .pipe(
         distinctUntilChanged(),
         map((event: any) => event.target.value),
         debounceTime(500)
-      ).subscribe((pagen) => {
+      )
+      .subscribe((pagen) => {
         if (!pagen || pagen < 1 || this.lastPageNumber < pagen) {
           return;
         }
@@ -113,18 +116,29 @@ export class ListPagerComponent {
    *
    */
   get pageNumbers(): PageNumber[] {
-    const count = Math.min(5, Math.floor(this.stats.totalUnpaginatedRows / this.params.pagel));
+    const count = Math.min(
+      5,
+      Math.floor(this.stats.totalUnpaginatedRows / this.params.pagel)
+    );
     const cur = this.params.pagen;
     const last = this.lastPageNumber;
     if (!cur || !last) {
       return [];
     }
     let headLength = Math.min(cur - 1, Math.floor(count / 2));
-    const tailLength = Math.min(last - cur, Math.max(count - headLength, Math.floor(count / 2)));
+    const tailLength = Math.min(
+      last - cur,
+      Math.max(count - headLength, Math.floor(count / 2))
+    );
     headLength = count - tailLength;
-    const head = Array(headLength).fill(0).map((_, idx) => cur - idx - 1).reverse();
-    const tail = Array(tailLength).fill(0).map((_, idx) => cur + idx + 1);
-    const output = head.concat(tail).map(v => ({ slug: v, tags: [] }));
+    const head = Array(headLength)
+      .fill(0)
+      .map((_, idx) => cur - idx - 1)
+      .reverse();
+    const tail = Array(tailLength)
+      .fill(0)
+      .map((_, idx) => cur + idx + 1);
+    const output = head.concat(tail).map((v) => ({ slug: v, tags: [] }));
     if (cur !== 1) {
       output[0] = { slug: 1, tags: [] };
     }
@@ -159,8 +173,9 @@ export class ListPagerComponent {
    *
    */
   get pageLengths(): number[] {
-    return [ 10, 20, 50, 100, 200, 500 ]
-      .filter(v => v < this.stats.totalUnpaginatedRows && v !== this.pageLength);
+    return [10, 20, 50, 100, 200, 500].filter(
+      (v) => v < this.stats.totalUnpaginatedRows && v !== this.pageLength
+    );
   }
 
   /**
@@ -180,5 +195,4 @@ export class ListPagerComponent {
       event.stopImmediatePropagation();
     }
   }
-
 }

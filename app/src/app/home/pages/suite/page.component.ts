@@ -7,10 +7,26 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faBell, faChartLine, faCog, faComments, faRecycle, faRobot, faTasks } from '@fortawesome/free-solid-svg-icons';
+import {
+  faBell,
+  faChartLine,
+  faCog,
+  faComments,
+  faRecycle,
+  faRobot,
+  faTasks
+} from '@fortawesome/free-solid-svg-icons';
 import { Subscription, timer } from 'rxjs';
-import type { SuiteItem, SuiteLookupResponse, TeamItem } from '@weasel/core/models/commontypes';
-import { AlertKind, AlertService, NotificationService } from '@weasel/core/services';
+import type {
+  SuiteItem,
+  SuiteLookupResponse,
+  TeamItem
+} from '@weasel/core/models/commontypes';
+import {
+  AlertKind,
+  AlertService,
+  NotificationService
+} from '@weasel/core/services';
 import { AlertType } from '@weasel/shared/components/alert.component';
 import { PageTab, PageComponent } from '@weasel/home/components/page.component';
 import { SuitePageItem } from './suite.model';
@@ -37,32 +53,33 @@ const pageTabs: PageTab<SuitePageTabType>[] = [
     link: 'settings',
     icon: 'cog',
     shown: true
-  },
+  }
 ];
 
 type NotFound = Partial<{
-  teamSlug: string
-  suiteSlug: string
+  teamSlug: string;
+  suiteSlug: string;
 }>;
 
 type Fields = Partial<{
   subscribe: {
-    action: 'subscribe' | 'unsubscribe'
-    count: number
-    message: string
-    name: string
-    title: string
-  }
+    action: 'subscribe' | 'unsubscribe';
+    count: number;
+    message: string;
+    name: string;
+    title: string;
+  };
 }>;
 
 @Component({
   selector: 'app-suite-page',
   templateUrl: './page.component.html',
   styleUrls: ['../../styles/page.component.scss'],
-  providers: [ SuitePageService, { provide: 'PAGE_TABS', useValue: pageTabs } ]
+  providers: [SuitePageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
 })
-export class SuitePageComponent extends PageComponent<SuitePageItem, SuitePageTabType, NotFound> implements OnInit, OnDestroy {
-
+export class SuitePageComponent
+  extends PageComponent<SuitePageItem, SuitePageTabType, NotFound>
+  implements OnInit, OnDestroy {
   team: TeamItem;
   suite: SuiteLookupResponse;
   suites: SuiteItem[];
@@ -88,24 +105,33 @@ export class SuitePageComponent extends PageComponent<SuitePageItem, SuitePageTa
     route: ActivatedRoute
   ) {
     super(suitePageService, pageTabs, route);
-    faIconLibrary.addIcons(faBell, faChartLine, faCog, faComments, faRecycle, faRobot, faTasks);
-    this._subAlert = this.alertService.alerts$.subscribe(v => {
-      if (v.some(k => k.kind === AlertKind.TeamNotFound)) {
+    faIconLibrary.addIcons(
+      faBell,
+      faChartLine,
+      faCog,
+      faComments,
+      faRecycle,
+      faRobot,
+      faTasks
+    );
+    this._subAlert = this.alertService.alerts$.subscribe((v) => {
+      if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
         this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
       }
-      if (v.some(k => k.kind === AlertKind.SuiteNotFound)) {
+      if (v.some((k) => k.kind === AlertKind.SuiteNotFound)) {
         this._notFound.suiteSlug = this.route.snapshot.paramMap.get('suite');
       }
     });
-    this._subTeam = this.suitePageService.team$.subscribe(v => {
+    this._subTeam = this.suitePageService.team$.subscribe((v) => {
       this.team = v;
     });
-    this._subSuites = this.suitePageService.suites$.subscribe(v => {
+    this._subSuites = this.suitePageService.suites$.subscribe((v) => {
       this.suites = v;
     });
-    this._subSuite = this.suitePageService.suite$.subscribe(v => {
+    this._subSuite = this.suitePageService.suite$.subscribe((v) => {
       this.suite = v;
-      this.tabs.find(t => t.type === SuitePageTabType.Versions).counter = v.batchCount;
+      this.tabs.find((t) => t.type === SuitePageTabType.Versions).counter =
+        v.batchCount;
       this.updateFields();
       this.updateTitle(v);
     });
@@ -135,7 +161,11 @@ export class SuitePageComponent extends PageComponent<SuitePageItem, SuitePageTa
   fetchItems(): void {
     const teamSlug = this.route.snapshot.paramMap.get('team');
     const suiteSlug = this.route.snapshot.paramMap.get('suite');
-    this.suitePageService.fetchItems({ currentTab: this.currentTab, teamSlug, suiteSlug });
+    this.suitePageService.fetchItems({
+      currentTab: this.currentTab,
+      teamSlug,
+      suiteSlug
+    });
   }
 
   /**
@@ -145,7 +175,7 @@ export class SuitePageComponent extends PageComponent<SuitePageItem, SuitePageTa
   onKeydown(event: KeyboardEvent) {
     // pressing key 'Backspace' should return user to "Team" page
     if ('Backspace' === event.key) {
-      this.router.navigate(['..'], {relativeTo: this.route });
+      this.router.navigate(['..'], { relativeTo: this.route });
     }
   }
 
@@ -154,7 +184,7 @@ export class SuitePageComponent extends PageComponent<SuitePageItem, SuitePageTa
    */
   public switchPage(suiteSlug: string) {
     if (this.suite.suiteSlug !== suiteSlug) {
-      this.router.navigate([ '~', this.suite.teamSlug, suiteSlug ]);
+      this.router.navigate(['~', this.suite.teamSlug, suiteSlug]);
       this.suitePageService.updateSuiteSlug(this.currentTab, suiteSlug);
     }
   }
@@ -172,9 +202,7 @@ export class SuitePageComponent extends PageComponent<SuitePageItem, SuitePageTa
    */
   private updateFields() {
     this.fields.subscribe = {
-      action: this.suite.isSubscribed
-        ? 'unsubscribe'
-        : 'subscribe',
+      action: this.suite.isSubscribed ? 'unsubscribe' : 'subscribe',
       count: this.suite.subscriberCount,
       message: this.suite.isSubscribed
         ? 'You will no longer receive notifications for this testsuite.'
@@ -192,25 +220,28 @@ export class SuitePageComponent extends PageComponent<SuitePageItem, SuitePageTa
   public toggleSubscription(): void {
     const action = this.fields.subscribe.action;
     const successMessage = this.fields.subscribe.message;
-    this.suitePageService.updateSubscription(action).subscribe(() => {
-      this.suite.isSubscribed = action === 'subscribe';
-      this.suite.subscriberCount += action === 'subscribe' ? 1 : -1;
-      this.updateFields();
-      this.notificationService.notify(AlertType.Success, successMessage);
-    },
-    (error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        this.notificationService.notify(AlertType.Danger,
-          'Your user session has expired. Please login again.'
+    this.suitePageService.updateSubscription(action).subscribe(
+      () => {
+        this.suite.isSubscribed = action === 'subscribe';
+        this.suite.subscriberCount += action === 'subscribe' ? 1 : -1;
+        this.updateFields();
+        this.notificationService.notify(AlertType.Success, successMessage);
+      },
+      (error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          this.notificationService.notify(
+            AlertType.Danger,
+            'Your user session has expired. Please login again.'
+          );
+          timer(2000).subscribe(() => this.router.navigate(['/']));
+          return;
+        }
+        this.notificationService.notify(
+          AlertType.Danger,
+          'We are sorry, something went wrong. ' +
+            'Please try this operation at a later time.'
         );
-        timer(2000).subscribe(() => this.router.navigate(['/']));
-        return;
       }
-      this.notificationService.notify(AlertType.Danger,
-        'We are sorry, something went wrong. ' +
-        'Please try this operation at a later time.'
-      );
-    });
+    );
   }
-
 }

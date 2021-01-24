@@ -10,7 +10,6 @@ import { Alert } from '@weasel/shared/components/alert.component';
   template: ''
 })
 export class ModalComponent {
-
   public alert: Alert;
   protected submitted: boolean;
   public form: FormGroup;
@@ -19,8 +18,10 @@ export class ModalComponent {
    *
    */
   public shouldHideAriaDescription(field: string): boolean {
-    return (!this.submitted && this.form.controls[field].pristine) ||
-        this.form.controls[field].valid;
+    return (
+      (!this.submitted && this.form.controls[field].pristine) ||
+      this.form.controls[field].valid
+    );
   }
 
   /**
@@ -31,5 +32,4 @@ export class ModalComponent {
       event.stopImmediatePropagation();
     }
   }
-
 }

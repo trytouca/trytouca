@@ -2,7 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import type { SuiteLookupResponse, TeamApplicant, TeamInvitee, TeamMember } from '@weasel/core/models/commontypes';
+import type {
+  SuiteLookupResponse,
+  TeamApplicant,
+  TeamInvitee,
+  TeamMember
+} from '@weasel/core/models/commontypes';
 import { PageListItem } from '@weasel/home/models/page-list-item.model';
 
 type DataType = TeamMember | TeamInvitee | TeamApplicant;
@@ -20,7 +25,6 @@ export enum TeamPageMemberType {
  *
  */
 export class TeamPageMember extends PageListItem<DataType, TeamPageMemberType> {
-
   public constructor(data: DataType, type: TeamPageMemberType) {
     super(data, type);
   }
@@ -48,9 +52,11 @@ export enum TeamPageSuiteType {
 /**
  *
  */
-export class TeamPageSuite extends PageListItem<SuiteLookupResponse, TeamPageSuiteType> {
+export class TeamPageSuite extends PageListItem<
+  SuiteLookupResponse,
+  TeamPageSuiteType
+> {
   public constructor(data: SuiteLookupResponse, type: TeamPageSuiteType) {
     super(data, type);
   }
 }
-
