@@ -2,7 +2,7 @@
   <h4 class="wsl-modal-title">{{ content.title }}</h4>
 </div>
 <div class="wsl-modal-body">
-  <app-alert [alert]="alert"></app-alert>
+  <app-alert [alert]="alert" *ngIf="alert"></app-alert>
   <form [formGroup]="form" (ngSubmit)="content.onSubmit(form.value)" novalidate
     class="wsl-form">
     <div>

@@ -68,7 +68,7 @@
     @apply font-medium;
   }
   .wsl-modal-body {
-    @apply p-4;
+    @apply p-4 space-y-4;
   }
   .wsl-page-auth {
     @apply wsl-min-h-screen-1 mx-auto container grid grid-cols-1 place-content-center;
