@@ -2,8 +2,7 @@
   *ngIf="isFirstPage() && isLastPage() && pageLengths.length === 1">
   <div></div>
   <div class="grid grid-cols-3 text-sm">
-    <div
-      [style.visibility]="isFirstPage() ? 'hidden' : 'visible'"
+    <div [style.visibility]="isFirstPage() ? 'hidden' : 'visible'"
       (click)="previousPage()">
       Previous Page
     </div>
@@ -11,19 +10,21 @@
       [style.visibility]="isFirstPage() && isLastPage() ? 'hidden' : 'visible'">
       Page&nbsp;
       <div class="inline-block" wslDropdown>
-        <div class="wsl-dropdown-toggle" id="pagen-dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="font-medium">{{ pageNumber }}</span>&nbsp;<fa-icon icon="chevron-down" size="xs"></fa-icon>
+        <div class="wsl-dropdown-toggle" id="pagen-dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <span class="font-medium">{{ pageNumber }}</span>&nbsp;<fa-icon
+            icon="chevron-down" size="xs"></fa-icon>
         </div>
         <div class="wsl-dropdown-menu hidden">
           <form id="wsl-pagen-form">
             <input class="wsl-input-field" type="number"
-              placeholder="Go to page..." autocomplete="off"
-              min="1" max="{{ lastPageNumber }}"
-              name="pageNumber" id="pageNumber"
+              placeholder="Go to page..." autocomplete="off" min="1"
+              max="{{ lastPageNumber }}" name="pageNumber" id="pageNumber"
               (keyup)="onKeyupPageNumber($event)">
           </form>
           <hr class="my-2">
-          <div class="wsl-dropdown-item" *ngFor="let number of pageNumbers" (click)="pageNumber=number.slug">
+          <div class="wsl-dropdown-item" *ngFor="let number of pageNumbers"
+            (click)="pageNumber=number.slug">
             {{ number.slug }}
             <ng-container *ngFor="let tag of number.tags">
               <span>&thinsp;({{ tag }})</span>
@@ -33,7 +34,8 @@
       </div>
       &nbsp;of&nbsp;<span class="font-medium">{{ lastPageNumber }}</span>
     </div>
-    <div [style.visibility]="isLastPage() ? 'hidden' : 'visible'" (click)="nextPage()">
+    <div [style.visibility]="isLastPage() ? 'hidden' : 'visible'"
+      (click)="nextPage()">
       Next Page
     </div>
   </div>
@@ -41,11 +43,14 @@
     <ng-container *ngIf="pageLengths.length">
       You are viewing
       <div class="inline-block" *ngIf="1 < pageLengths.length" wslDropdown>
-        <div class="wsl-dropdown-toggle" id="pagel-dropdown" aria-haspopup="true" aria-expanded="false">
-          <span class="font-medium">{{ pageLength }}</span>&nbsp;<fa-icon icon="chevron-down" size="xs"></fa-icon>
+        <div class="wsl-dropdown-toggle" id="pagel-dropdown"
+          aria-haspopup="true" aria-expanded="false">
+          <span class="font-medium">{{ pageLength }}</span>&nbsp;<fa-icon
+            icon="chevron-down" size="xs"></fa-icon>
         </div>
         <div class="wsl-dropdown-menu hidden">
-          <div class="wsl-dropdown-item" *ngFor="let length of pageLengths" (click)="pageLength=length">
+          <div class="wsl-dropdown-item" *ngFor="let length of pageLengths"
+            (click)="pageLength=length">
             {{ length }}
           </div>
         </div>

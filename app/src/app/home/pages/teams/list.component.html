@@ -1,15 +1,13 @@
 <section class="wsl-page-tab" id="wsl-teams-tab-teams">
   <ng-container *ngIf="counters.active">
-    <app-home-list-filter
-      [manager]="filterManager"
-      [params]="filterParams()"
-      [stats]="filterStats()"
-      (updateList)="updateList($event)">
+    <app-home-list-filter [manager]="filterManager" [params]="filterParams()"
+      [stats]="filterStats()" (updateList)="updateList($event)">
     </app-home-list-filter>
     <div class="wsl-list" *ngIf="counters.active">
       <div class="wsl-list-head">
         <p *ngIf="counters.active !== countRows(ItemType.Active)">
-          You are viewing <b>{{ counters.active | i18nPlural: { '=1': 'one', 'other': '#' } }}</b>
+          You are viewing
+          <b>{{ counters.active | i18nPlural: { '=1': 'one', 'other': '#' } }}</b>
           of {{ countRows(ItemType.Active) }} teams.
         </p>
       </div>
@@ -23,20 +21,18 @@
         </li>
       </ul>
     </div>
-    <app-home-list-pager
-      [params]="pagerParams()"
-      [stats]="filterStats()"
+    <app-home-list-pager [params]="pagerParams()" [stats]="filterStats()"
       (updateList)="updateList($event)">
     </app-home-list-pager>
-    <app-home-feedback-link
-      *ngIf="counters.invited + counters.joining === 0"
+    <app-home-feedback-link *ngIf="counters.invited + counters.joining === 0"
       [page]="'app-teams-tab-teams'">
     </app-home-feedback-link>
   </ng-container>
   <div class="wsl-requests-list" *ngIf="counters.invited">
     <h2>Your Invitations</h2>
     <ul class="wsl-list-body">
-      <li class="wsl-list-item" *ngFor="let item of getShownRows(ItemType.Invited)">
+      <li class="wsl-list-item"
+        *ngFor="let item of getShownRows(ItemType.Invited)">
         <p>
           You have been invited to join team <b>{{ item.data.name }}</b>.
         </p>
@@ -44,7 +40,8 @@
           <button class="wsl-btn-sm wsl-btn-light" (click)="accept(item)">
             Accept
           </button>
-          <button class="wsl-btn-sm wsl-btn-muted" (click)="confirmDecline(item)">
+          <button class="wsl-btn-sm wsl-btn-muted"
+            (click)="confirmDecline(item)">
             Decline
           </button>
         </div>
@@ -60,7 +57,8 @@
           approval by their administrators.
         </p>
         <div>
-          <button class="wsl-btn-sm wsl-btn-muted" (click)="confirmRescind(item)">
+          <button class="wsl-btn-sm wsl-btn-muted"
+            (click)="confirmRescind(item)">
             Cancel Request
           </button>
         </div>

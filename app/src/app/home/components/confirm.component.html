@@ -3,7 +3,8 @@
 </div>
 <div class="wsl-modal-body">
   <app-alert [alert]="alert"></app-alert>
-  <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate>
+  <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)"
+    novalidate>
     <p [innerHtml]="elements.message"></p>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
@@ -12,7 +13,8 @@
         </button>
       </div>
       <div class="wsl-form-links">
-        <button type="button" (click)="closeModal()" tabindex="3" class="wsl-btn-lg wsl-btn-light">
+        <button type="button" (click)="closeModal()" tabindex="3"
+          class="wsl-btn-lg wsl-btn-light">
           Cancel
         </button>
       </div>

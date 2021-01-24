@@ -6,7 +6,8 @@
     <ul class="flex space-x-4">
       <li *ngFor="let item of social" title="{{ item.title }}">
         <a href="{{ item.link }}" target="_blank">
-          <fa-icon class="text-gray-300 hover:text-white" [icon]="item.icon" size="2x"></fa-icon>
+          <fa-icon class="text-gray-300 hover:text-white" [icon]="item.icon"
+            size="2x"></fa-icon>
         </a>
       </li>
     </ul>

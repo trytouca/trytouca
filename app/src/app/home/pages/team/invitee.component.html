@@ -15,7 +15,8 @@
       {{ item.invitedAt | amTimeAgo }}
     </div>
     <div *ngIf="isTeamAdmin" class="wsl-item-ctrl-box">
-      <div title="Rescind Invitation to Team" (click)="rescind()" class="wsl-item-ctrl">
+      <div title="Rescind Invitation to Team" (click)="rescind()"
+        class="wsl-item-ctrl">
         <fa-icon icon="user-minus"></fa-icon>
       </div>
     </div>

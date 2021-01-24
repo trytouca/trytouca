@@ -1,31 +1,45 @@
 <div class="wsl-page-auth-form">
   <app-alert [alert]="alert"></app-alert>
-  <form [formGroup]="signupForm" (ngSubmit)="onSubmit(signupForm.value)" novalidate class="wsl-form">
+  <form [formGroup]="signupForm" (ngSubmit)="onSubmit(signupForm.value)"
+    novalidate class="wsl-form">
     <div>
       <label for="wsl-mail" class="wsl-input-label">Email</label>
-      <input type="email" id="wsl-mail" tabindex="1" autocomplete="email" aria-describedby="wsl-email-help" required formControlName="email" name="email" data-lpignore="true" class="wsl-input-field">
-      <small id="wsl-email-help" [hidden]="shouldHideAriaDescription('email')" class="wsl-text-danger">
+      <input type="email" id="wsl-mail" tabindex="1" autocomplete="email"
+        aria-describedby="wsl-email-help" required formControlName="email"
+        name="email" data-lpignore="true" class="wsl-input-field">
+      <small id="wsl-email-help" [hidden]="shouldHideAriaDescription('email')"
+        class="wsl-text-danger">
         Please provide a valid email address.
       </small>
     </div>
     <div>
       <label for="wsl-fname" class="wsl-input-label">Full Name</label>
-      <input type="text" id="wsl-fname" tabindex="2" autocomplete="name" aria-describedby="wsl-fname-help" required formControlName="fname" name="fname" data-lpignore="true" class="wsl-input-field">
-      <small id="wsl-fname-help" [hidden]="shouldHideAriaDescription('fname')" class="wsl-text-danger">
+      <input type="text" id="wsl-fname" tabindex="2" autocomplete="name"
+        aria-describedby="wsl-fname-help" required formControlName="fname"
+        name="fname" data-lpignore="true" class="wsl-input-field">
+      <small id="wsl-fname-help" [hidden]="shouldHideAriaDescription('fname')"
+        class="wsl-text-danger">
         Please provide your full name.
       </small>
     </div>
     <div>
       <label for="wsl-uname" class="wsl-input-label">Username</label>
-      <input type="text" id="wsl-uname" tabindex="3" autocomplete="username" aria-describedby="wsl-uname-help" required formControlName="uname" name="uname" class="wsl-input-field">
-      <small id="wsl-uname-help" [hidden]="shouldHideAriaDescription('uname')" class="wsl-text-danger">
-        Your username must be at least three characters, may only contain alphanumeric characters and may not start with a number.
+      <input type="text" id="wsl-uname" tabindex="3" autocomplete="username"
+        aria-describedby="wsl-uname-help" required formControlName="uname"
+        name="uname" class="wsl-input-field">
+      <small id="wsl-uname-help" [hidden]="shouldHideAriaDescription('uname')"
+        class="wsl-text-danger">
+        Your username must be at least three characters, may only contain
+        alphanumeric characters and may not start with a number.
       </small>
     </div>
     <div>
       <label for="wsl-upass" class="wsl-input-label">Password</label>
-      <input type="password" id="wsl-upass" tabindex="4" autocomplete="current-password" aria-describedby="wsl-upass-help" required formControlName="upass" name="upass" class="wsl-input-field">
-      <small id="wsl-upass-help" [hidden]="shouldHideAriaDescription('upass')" class="wsl-text-danger">
+      <input type="password" id="wsl-upass" tabindex="4"
+        autocomplete="current-password" aria-describedby="wsl-upass-help"
+        required formControlName="upass" name="upass" class="wsl-input-field">
+      <small id="wsl-upass-help" [hidden]="shouldHideAriaDescription('upass')"
+        class="wsl-text-danger">
         Your password must be at least eight characters.
       </small>
     </div>
@@ -36,7 +50,8 @@
         </button>
       </div>
       <div class="wsl-form-links">
-        <button type="button" routerLink="/signin" tabindex="6" class="wsl-btn-lg wsl-btn-light">
+        <button type="button" routerLink="/signin" tabindex="6"
+          class="wsl-btn-lg wsl-btn-light">
           Already Registered?
         </button>
       </div>

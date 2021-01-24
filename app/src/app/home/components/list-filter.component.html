@@ -1,50 +1,64 @@
 <div class="flex items-stretch space-x-2">
   <form class="flex-grow">
-    <input type="search" placeholder="{{ filterQueryPlaceholder }}&hellip;" autocomplete="off" name="rowFilter" id="rowFilter" (keyup)="onKeyupRowFilter($event)" [value]="filterQueryValue" class="wsl-input-field">
+    <input type="search" placeholder="{{ filterQueryPlaceholder }}&hellip;"
+      autocomplete="off" name="rowFilter" id="rowFilter"
+      (keyup)="onKeyupRowFilter($event)" [value]="filterQueryValue"
+      class="wsl-input-field">
   </form>
   <div wslDropdown>
-    <button type="button" id="dropdown-button-filter"
-      aria-haspopup="true" aria-expanded="false"
+    <button type="button" id="dropdown-button-filter" aria-haspopup="true"
+      aria-expanded="false"
       class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle h-full">
-      Filter: <b>{{ filterName }}</b>&nbsp;<fa-icon icon="chevron-down" size="xs" class="opacity-50"></fa-icon>
+      Filter: <b>{{ filterName }}</b>&nbsp;<fa-icon icon="chevron-down"
+        size="xs" class="opacity-50"></fa-icon>
     </button>
-    <ul class="wsl-dropdown-menu hidden" aria-labelledby="dropdown-button-filter">
-      <li *ngFor="let filter of filters" (click)="filterName=filter.key" class="wsl-dropdown-item">
+    <ul class="wsl-dropdown-menu hidden"
+      aria-labelledby="dropdown-button-filter">
+      <li *ngFor="let filter of filters" (click)="filterName=filter.key"
+        class="wsl-dropdown-item">
         {{ filter.name }}
       </li>
     </ul>
   </div>
   <div wslDropdown>
-    <button type="button" id="dropdown-button-sort"
-      aria-haspopup="true" aria-expanded="false" [disabled]="isSearchActive()"
+    <button type="button" id="dropdown-button-sort" aria-haspopup="true"
+      aria-expanded="false" [disabled]="isSearchActive()"
       class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle h-full">
-      Sort: <b>{{ sorterName }}</b>&nbsp;<fa-icon icon="chevron-down" size="xs" class="opacity-50"></fa-icon>
+      Sort: <b>{{ sorterName }}</b>&nbsp;<fa-icon icon="chevron-down" size="xs"
+        class="opacity-50"></fa-icon>
     </button>
     <ul class="wsl-dropdown-menu hidden" aria-labelledby="dropdown-button-sort">
-      <li *ngFor="let sorter of sorters" (click)="sorterName=sorter.key" class="wsl-dropdown-item">
+      <li *ngFor="let sorter of sorters" (click)="sorterName=sorter.key"
+        class="wsl-dropdown-item">
         {{ sorter.name }}
       </li>
     </ul>
   </div>
   <div>
-    <button (click)="sortOrderToggle()" [disabled]="isSearchActive()" class="wsl-btn-sm wsl-btn-muted h-full">
+    <button (click)="sortOrderToggle()" [disabled]="isSearchActive()"
+      class="wsl-btn-sm wsl-btn-muted h-full">
       <fa-icon [icon]="sortOrderIcon"></fa-icon>
     </button>
   </div>
 </div>
 <ng-container *ngIf="stats.totalUnpaginatedRows !== stats.totalRows">
-  <div *ngIf="stats.totalUnpaginatedRows !== 0" class="flex justify-between items-center text-sm">
+  <div *ngIf="stats.totalUnpaginatedRows !== 0"
+    class="flex justify-between items-center text-sm">
     <p>
-      <b>{{ stats.totalUnpaginatedRows }}</b> of <b>{{ stats.totalRows }}</b> rows match this filter.
+      <b>{{ stats.totalUnpaginatedRows }}</b> of <b>{{ stats.totalRows }}</b>
+      rows match this filter.
     </p>
     <button (click)="clearFilters()" class="wsl-btn-sm wsl-btn-muted">
       <span>Clear Filters</span>
     </button>
   </div>
-  <div *ngIf="stats.totalUnpaginatedRows === 0" class="p-2 flex justify-center items-center bg-gray-100 border" style="min-height: 20vh;">
+  <div *ngIf="stats.totalUnpaginatedRows === 0"
+    class="p-2 flex justify-center items-center bg-gray-100 border"
+    style="min-height: 20vh;">
     <div class="flex flex-col space-y-4 text-center text-sm">
       <p>
-        {{ stats.totalRows | i18nPlural: { '=1': 'The row in this list does not match', 'other': 'None of the # rows in this list matches' } }} the specified filter.
+        {{ stats.totalRows | i18nPlural: { '=1': 'The row in this list does not match', 'other': 'None of the # rows in this list matches' } }}
+        the specified filter.
       </p>
       <div>
         <button (click)="clearFilters()" class="wsl-btn-sm wsl-btn-dark">

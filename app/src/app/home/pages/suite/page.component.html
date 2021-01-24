@@ -12,12 +12,17 @@
             <a routerLink="..">{{ suite?.teamName }}</a>
           </li>
           <li aria-current="page" wslDropdown>
-            <span class="wsl-dropdown-toggle" id="wsl-suites-dropdown" aria-haspopup="true" aria-expanded="false">
-              {{ suite?.suiteName }}&thinsp;<fa-icon icon="chevron-down" size="xs"></fa-icon>
+            <span class="wsl-dropdown-toggle" id="wsl-suites-dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              {{ suite?.suiteName }}&thinsp;<fa-icon icon="chevron-down"
+                size="xs"></fa-icon>
             </span>
-            <ul class="wsl-dropdown-menu hidden" aria-labelledby="wsl-suites-dropdown">
-              <li *ngFor="let suiteItem of suites" (click)="switchPage(suiteItem.suiteSlug)"
-                class="wsl-dropdown-item" [ngClass]="{'bg-lblue-100': suite?.suiteSlug === suiteItem.suiteSlug}">
+            <ul class="wsl-dropdown-menu hidden"
+              aria-labelledby="wsl-suites-dropdown">
+              <li *ngFor="let suiteItem of suites"
+                (click)="switchPage(suiteItem.suiteSlug)"
+                class="wsl-dropdown-item"
+                [ngClass]="{'bg-lblue-100': suite?.suiteSlug === suiteItem.suiteSlug}">
                 {{ suiteItem.suiteName }}
               </li>
             </ul>
@@ -29,10 +34,14 @@
       <nav>
         <ul>
           <ng-container *ngFor="let tab of tabs">
-            <li *ngIf="tab.shown" (click)="switchTab(tab.type)" [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }">
-              <span class="wsl-nav-icon"><fa-icon [icon]="tab.icon"></fa-icon></span>
+            <li *ngIf="tab.shown" (click)="switchTab(tab.type)"
+              [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }">
+              <span class="wsl-nav-icon">
+                <fa-icon [icon]="tab.icon"></fa-icon>
+              </span>
               <span class="wsl-nav-text">{{ tab.name }}</span>
-              <span class="wsl-nav-counter" *ngIf="tab.counter">{{ tab.counter }}</span>
+              <span class="wsl-nav-counter"
+                *ngIf="tab.counter">{{ tab.counter }}</span>
             </li>
           </ng-container>
         </ul>
@@ -40,9 +49,16 @@
       <nav>
         <ul>
           <li (click)="toggleSubscription()">
-            <span class="wsl-nav-icon"><fa-icon icon="bell"></fa-icon></span>
-            <span [title]="fields.subscribe?.title" [hidden]="!fields.subscribe?.name" class="wsl-nav-text">{{ fields.subscribe?.name }}</span>
-            <span title="{{ fields.subscribe?.count }} users have subscribed to this suite." [hidden]="fields.subscribe?.count === 0" class="wsl-nav-counter">{{ fields.subscribe?.count }}</span>
+            <span class="wsl-nav-icon">
+              <fa-icon icon="bell"></fa-icon>
+            </span>
+            <span [title]="fields.subscribe?.title"
+              [hidden]="!fields.subscribe?.name"
+              class="wsl-nav-text">{{ fields.subscribe?.name }}</span>
+            <span
+              title="{{ fields.subscribe?.count }} users have subscribed to this suite."
+              [hidden]="fields.subscribe?.count === 0"
+              class="wsl-nav-counter">{{ fields.subscribe?.count }}</span>
           </li>
         </ul>
       </nav>

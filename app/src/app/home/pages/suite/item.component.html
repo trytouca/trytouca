@@ -1,7 +1,8 @@
 <div class="wsl-list-item">
   <div class="wsl-item-heading">
     <div *ngIf="icon" class="wsl-item-status">
-      <fa-icon [icon]="icon.type" [spin]="icon.spin" [ngStyle]="{color: icon.color}"></fa-icon>
+      <fa-icon [icon]="icon.type" [spin]="icon.spin"
+        [ngStyle]="{color: icon.color}"></fa-icon>
     </div>
     <div class="wsl-item-title">
       <a [routerLink]="data.link" [queryParams]="data.query">

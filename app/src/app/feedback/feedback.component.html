@@ -4,20 +4,28 @@
   <div class="wsl-page-auth-body">
     <div class="wsl-page-auth-form">
       <app-alert [alert]="alert"></app-alert>
-      <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit(feedbackForm.value)" novalidate class="wsl-form">
+      <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit(feedbackForm.value)"
+        novalidate class="wsl-form">
         <div>
           <label for="wsl-body" class="wsl-input-label">Your Feedback</label>
-          <textarea id="wsl-body" rows="5" tabindex="1" aria-describedby="wsl-body-help" required formControlName="body" name="body" class="wsl-input-field"></textarea>
-          <small id="wsl-body-help" [hidden]="shouldHideAriaDescription('body')" class="wsl-text-danger">
+          <textarea id="wsl-body" rows="5" tabindex="1"
+            aria-describedby="wsl-body-help" required formControlName="body"
+            name="body" class="wsl-input-field"></textarea>
+          <small id="wsl-body-help" [hidden]="shouldHideAriaDescription('body')"
+            class="wsl-text-danger">
             Please provide more information in your message.
           </small>
-          <small [hidden]="(submitted || !feedbackForm.controls.body.pristine) && !feedbackForm.controls.body.valid" class="wsl-text-muted">
+          <small
+            [hidden]="(submitted || !feedbackForm.controls.body.pristine) && !feedbackForm.controls.body.valid"
+            class="wsl-text-muted">
             This field supports markdown format.
           </small>
         </div>
         <div>
           <label for="wsl-name" class="wsl-input-label">Your Name</label>
-          <input type="text" id="wsl-name" tabindex="2" formControlName="name" name="name" placeholder="optional" minlength="1" maxlength="64" class="wsl-input-field">
+          <input type="text" id="wsl-name" tabindex="2" formControlName="name"
+            name="name" placeholder="optional" minlength="1" maxlength="64"
+            class="wsl-input-field">
         </div>
         <div class="wsl-form-footer">
           <div class="wsl-form-submit">

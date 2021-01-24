@@ -13,8 +13,9 @@
         <div class="wsl-input-group">
           <div class="wsl-input-group-prepend">API Key</div>
           <div class="wsl-input-group-text">{{ fields.apiKey }}</div>
-          <div class="wsl-input-group-append"
-            ngxClipboard [cbContent]="fields.apiKey" (cbOnSuccess)="onCopy($event, 'API Key')">
+          <div class="wsl-input-group-append" ngxClipboard
+            [cbContent]="fields.apiKey"
+            (cbOnSuccess)="onCopy($event, 'API Key')">
             <span title="Copy API Key to clipboard">
               <fa-icon icon="clipboard"></fa-icon>
             </span>
@@ -23,8 +24,9 @@
         <div class="wsl-input-group">
           <div class="wsl-input-group-prepend">API URL</div>
           <div class="wsl-input-group-text">{{ fields.apiUrl }}</div>
-          <div class="wsl-input-group-append"
-            ngxClipboard [cbContent]="fields.apiUrl" (cbOnSuccess)="onCopy($event, 'API URL')">
+          <div class="wsl-input-group-append" ngxClipboard
+            [cbContent]="fields.apiUrl"
+            (cbOnSuccess)="onCopy($event, 'API URL')">
             <span title="Copy API URL to clipboard">
               <fa-icon icon="clipboard"></fa-icon>
             </span>

@@ -3,24 +3,35 @@
 </div>
 <div class="wsl-modal-body">
   <app-alert [alert]="alert"></app-alert>
-  <form [formGroup]="form" (ngSubmit)="content.onSubmit(form.value)" novalidate class="wsl-form">
+  <form [formGroup]="form" (ngSubmit)="content.onSubmit(form.value)" novalidate
+    class="wsl-form">
     <div>
       <label for="wsl-slug" class="wsl-input-label">Team Slug</label>
-      <input type="text" id="wsl-slug" tabindex="1" required autocomplete="off" aria-describedby="wsl-slug-help" formControlName="slug" name="slug" class="wsl-input-field">
-      <small [hidden]="!shouldHideAriaDescription('slug')" class="wsl-text-muted">
+      <input type="text" id="wsl-slug" tabindex="1" required autocomplete="off"
+        aria-describedby="wsl-slug-help" formControlName="slug" name="slug"
+        class="wsl-input-field">
+      <small [hidden]="!shouldHideAriaDescription('slug')"
+        class="wsl-text-muted">
         {{ content.slugDesc }}
       </small>
-      <small id="wsl-slug-help" [hidden]="shouldHideAriaDescription('slug')" class="wsl-text-danger">
-        Should contain 3 to 16 alphanumeric characters and may not start with a number.
+      <small id="wsl-slug-help" [hidden]="shouldHideAriaDescription('slug')"
+        class="wsl-text-danger">
+        Should contain 3 to 16 alphanumeric characters and may not start with a
+        number.
       </small>
     </div>
     <div *ngIf="content.mode === Mode.Create">
       <label for="wsl-name" class="wsl-input-label">Team Name</label>
-      <input type="text" id="wsl-name" tabindex="2" required autocomplete="off" aria-describedby="wsl-name-help" formControlName="name" name="name" class="wsl-input-field">
-      <small [hidden]="!shouldHideAriaDescription('name')" class="wsl-text-muted">
-        Short user-friendly name. Appears on the Platform and the documents it generates.
+      <input type="text" id="wsl-name" tabindex="2" required autocomplete="off"
+        aria-describedby="wsl-name-help" formControlName="name" name="name"
+        class="wsl-input-field">
+      <small [hidden]="!shouldHideAriaDescription('name')"
+        class="wsl-text-muted">
+        Short user-friendly name. Appears on the Platform and the documents it
+        generates.
       </small>
-      <small id="wsl-name-help" [hidden]="shouldHideAriaDescription('name')" class="wsl-text-danger">
+      <small id="wsl-name-help" [hidden]="shouldHideAriaDescription('name')"
+        class="wsl-text-danger">
         Should contain 3 to 32 characters.
       </small>
     </div>
@@ -31,7 +42,8 @@
         </button>
       </div>
       <div class="wsl-form-links">
-        <button type="button" (click)="toggleMode()" tabindex="4" class="wsl-btn-lg wsl-btn-light">
+        <button type="button" (click)="toggleMode()" tabindex="4"
+          class="wsl-btn-lg wsl-btn-light">
           {{ content.linkText }}
         </button>
       </div>

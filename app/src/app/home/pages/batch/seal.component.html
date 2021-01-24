@@ -4,11 +4,13 @@
 <div class="wsl-modal-body">
   <app-alert [alert]="alert"></app-alert>
   <p class="mb-2 text-sm">
-    You are about to seal version <strong>{{ elements.batch.batchSlug }}</strong>
+    You are about to seal version
+    <strong>{{ elements.batch.batchSlug }}</strong>
     of testsuite <strong>{{ elements.batch.suiteName }}</strong>. This action
     prohibits any further submission of testresults for this version.
   </p>
-  <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate>
+  <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)"
+    novalidate>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
         <button type="submit" tabindex="2" class="wsl-btn-lg wsl-btn-dark">
@@ -16,7 +18,8 @@
         </button>
       </div>
       <div class="wsl-form-links">
-        <button type="button" (click)="closeModal()" tabindex="3" class="wsl-btn-lg wsl-btn-light">
+        <button class="wsl-btn-lg wsl-btn-light" type="button"
+          (click)="closeModal()" tabindex="3">
           Cancel
         </button>
       </div>

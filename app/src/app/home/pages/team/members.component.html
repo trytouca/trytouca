@@ -3,7 +3,9 @@
     <div class="wsl-list-head">
       <h2>Team Members</h2>
       <p>
-        There are currently {{ countShownRows(ItemType.Member) | i18nPlural: { '=0': 'no members', '=1': 'one member', 'other': '# members' } }} in your team.
+        There are currently
+        {{ countShownRows(ItemType.Member) | i18nPlural: { '=0': 'no members', '=1': 'one member', 'other': '# members' } }}
+        in your team.
       </p>
     </div>
     <ul class="wsl-list-body">
@@ -11,10 +13,8 @@
         *ngFor="let item of getShownRows(ItemType.Member); let i = index;"
         (click)="selectedRow = i;"
         [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
-        <app-team-item-member
-          [item]="item.asMember()"
-          [isTeamAdmin]="isTeamAdmin()"
-          [isSelf]="isSelf(item.asMember())"
+        <app-team-item-member [item]="item.asMember()"
+          [isTeamAdmin]="isTeamAdmin()" [isSelf]="isSelf(item.asMember())"
           (confirmEdit)="confirmEdit($event)"
           (confirmRemove)="confirmRemove($event)">
         </app-team-item-member>
@@ -25,7 +25,9 @@
     <div class="wsl-list-head">
       <h2>Invited Members</h2>
       <p>
-        There are currently {{ countShownRows(ItemType.Invitee) | i18nPlural: { '=1': 'one user', 'other': '# users' } }} invited to your team.
+        There are currently
+        {{ countShownRows(ItemType.Invitee) | i18nPlural: { '=1': 'one user', 'other': '# users' } }}
+        invited to your team.
       </p>
     </div>
     <ul class="wsl-list-body">
@@ -33,8 +35,7 @@
         *ngFor="let item of getShownRows(ItemType.Invitee); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Member);"
         [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Member)}">
-        <app-team-item-invitee
-          [item]="item.asInvitee()"
+        <app-team-item-invitee [item]="item.asInvitee()"
           [isTeamAdmin]="isTeamAdmin()"
           (confirmRescind)="confirmRescind($event)">
         </app-team-item-invitee>
@@ -45,7 +46,9 @@
     <div class="wsl-list-head">
       <h2>Pending Members</h2>
       <p>
-        There are currently {{ countShownRows(ItemType.Applicant) | i18nPlural: { '=1': 'one user', 'other': '# users' } }} requesting to join your team.
+        There are currently
+        {{ countShownRows(ItemType.Applicant) | i18nPlural: { '=1': 'one user', 'other': '# users' } }}
+        requesting to join your team.
       </p>
     </div>
     <ul class="wsl-list-body">
@@ -53,10 +56,8 @@
         *ngFor="let item of getShownRows(ItemType.Applicant); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Member) + countShownRows(ItemType.Invitee);"
         [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Member) + countShownRows(ItemType.Invitee)}">
-        <app-team-item-applicant
-          [item]="item.asApplicant()"
-          [isTeamAdmin]="isTeamAdmin()"
-          (confirmAccept)="confirmAccept($event)"
+        <app-team-item-applicant [item]="item.asApplicant()"
+          [isTeamAdmin]="isTeamAdmin()" (confirmAccept)="confirmAccept($event)"
           (confirmDecline)="confirmDecline($event)">
         </app-team-item-applicant>
       </li>

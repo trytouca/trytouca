@@ -7,7 +7,8 @@
       <small title="{{ meta.commentTime | date:'medium' }}">
         {{ meta.commentTime | amTimeAgo }}
       </small>
-      <small *ngIf="meta.commentEditTime" title="{{ meta.commentEditTime | date:'medium' }}">
+      <small *ngIf="meta.commentEditTime"
+        title="{{ meta.commentEditTime | date:'medium' }}">
         (edited {{ meta.commentEditTime | amTimeAgo }})
       </small>
     </div>
@@ -17,8 +18,11 @@
     </markdown>
   </blockquote>
   <div class="space-x-4">
-    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonReply" (click)="performAction(ActionType.Reply)">Reply</a>
-    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonUpdate" (click)="performAction(ActionType.Update)">Edit</a>
-    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonRemove" (click)="performAction(ActionType.Remove)">Delete</a>
+    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonReply"
+      (click)="performAction(ActionType.Reply)">Reply</a>
+    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonUpdate"
+      (click)="performAction(ActionType.Update)">Edit</a>
+    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonRemove"
+      (click)="performAction(ActionType.Remove)">Delete</a>
   </div>
 </article>

@@ -1,19 +1,20 @@
 <div *ngIf="countVersions() !== 0" wslDropdown>
-  <div class="wsl-dropdown-toggle" id="version-dropdown-{{ side }}" aria-haspopup="true" aria-expanded="false">
-    <span class="font-semibold">{{ currentVersion }}</span>&nbsp;<fa-icon icon="chevron-down" size="xs"></fa-icon>
+  <div class="wsl-dropdown-toggle" id="version-dropdown-{{ side }}"
+    aria-haspopup="true" aria-expanded="false">
+    <span class="font-semibold">{{ currentVersion }}</span>&nbsp;<fa-icon
+      icon="chevron-down" size="xs"></fa-icon>
   </div>
   <div class="wsl-dropdown-menu hidden">
     <span class="wsl-text-muted px-2">Choose a {{ side }} version</span>
     <hr class="my-2">
     <form class="px-2" id="wsl-version-search-{{ side }}">
-      <input class="wsl-input-field"
-        type="search" id="versionFilter-{{ side }}" name="versionFilter"
-        placeholder="Find a version..." autocomplete="off" maxlength="16"
-        (keyup)="onKeyupVersionFilter($event)">
+      <input class="wsl-input-field" type="search" id="versionFilter-{{ side }}"
+        name="versionFilter" placeholder="Find a version..." autocomplete="off"
+        maxlength="16" (keyup)="onKeyupVersionFilter($event)">
     </form>
     <hr class="my-2">
-    <div *ngFor="let version of relevantVersions" (click)="updateVersion(version.slug)"
-      class="wsl-dropdown-item">
+    <div *ngFor="let version of relevantVersions"
+      (click)="updateVersion(version.slug)" class="wsl-dropdown-item">
       {{ version.slug }}
       <ng-container *ngFor="let tag of version.tags">
         <span> ({{ tag }})</span>

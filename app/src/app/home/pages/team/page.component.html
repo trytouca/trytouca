@@ -12,12 +12,16 @@
             <a routerLink="..">Your Teams</a>
           </li>
           <li aria-current="page" wslDropdown>
-            <span class="wsl-dropdown-toggle" id="wsl-teams-dropdown" aria-haspopup="true" aria-expanded="false">
-              {{ team?.name }}&thinsp;<fa-icon icon="chevron-down" size="xs"></fa-icon>
+            <span class="wsl-dropdown-toggle" id="wsl-teams-dropdown"
+              aria-haspopup="true" aria-expanded="false">
+              {{ team?.name }}&thinsp;<fa-icon icon="chevron-down" size="xs">
+              </fa-icon>
             </span>
-            <ul class="wsl-dropdown-menu hidden" aria-labelledby="wsl-teams-dropdown">
-              <li *ngFor="let teamItem of teams" (click)="switchPage(teamItem.slug)"
-                class="wsl-dropdown-item" [ngClass]="{'bg-lblue-100': team?.slug === teamItem.slug}">
+            <ul class="wsl-dropdown-menu hidden"
+              aria-labelledby="wsl-teams-dropdown">
+              <li *ngFor="let teamItem of teams"
+                (click)="switchPage(teamItem.slug)" class="wsl-dropdown-item"
+                [ngClass]="{'bg-lblue-100': team?.slug === teamItem.slug}">
                 {{ teamItem.name }}
               </li>
             </ul>
@@ -25,11 +29,15 @@
         </ol>
       </nav>
       <div class="print:hidden">
-        <button type="button" (click)="openCreateModal()" *ngIf="currentTab === TabType.Suites && hasData() && hasItems()" class="wsl-btn-sm wsl-btn-dark">
+        <button type="button" (click)="openCreateModal()"
+          *ngIf="currentTab === TabType.Suites && hasData() && hasItems()"
+          class="wsl-btn-sm wsl-btn-dark">
           <fa-icon icon="plus"></fa-icon>
           New Suite
         </button>
-        <button type="button" (click)="openInviteModal()" *ngIf="currentTab === TabType.Members" class="wsl-btn-sm wsl-btn-dark">
+        <button type="button" (click)="openInviteModal()"
+          *ngIf="currentTab === TabType.Members"
+          class="wsl-btn-sm wsl-btn-dark">
           <fa-icon icon="user-plus"></fa-icon>
           Invite Member
         </button>
@@ -39,10 +47,14 @@
       <nav>
         <ul>
           <ng-container *ngFor="let tab of tabs">
-            <li *ngIf="tab.shown" (click)="switchTab(tab.type)" [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }">
-              <span class="wsl-nav-icon"><fa-icon [icon]="tab.icon"></fa-icon></span>
+            <li *ngIf="tab.shown" (click)="switchTab(tab.type)"
+              [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }">
+              <span class="wsl-nav-icon">
+                <fa-icon [icon]="tab.icon"></fa-icon>
+              </span>
               <span class="wsl-nav-text">{{ tab.name }}</span>
-              <span class="wsl-nav-counter" *ngIf="tab.counter">{{ tab.counter }}</span>
+              <span class="wsl-nav-counter"
+                *ngIf="tab.counter">{{ tab.counter }}</span>
             </li>
           </ng-container>
         </ul>
