@@ -17,7 +17,8 @@ import { AuthService, UserService } from '@weasel/core/services';
 
 @Component({
   selector: 'app-header-inside',
-  templateUrl: './header-inside.component.html'
+  templateUrl: './header-inside.component.html',
+  styleUrls: ['./header.components.scss']
 })
 export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
   currentUser: UserLookupResponse;
