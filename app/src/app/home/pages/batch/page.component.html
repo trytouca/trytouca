@@ -46,8 +46,11 @@
       <app-home-version-navigator [suite]="suite" [params]="params">
       </app-home-version-navigator>
     </ng-container>
-    <div *ngIf="!hasData() || !hasItems()" class="wsl-spinner">
-      <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+    <div class="wsl-min-h-screen-4 grid place-content-center"
+      *ngIf="!hasData() || !hasItems()">
+      <div class="wsl-spinner">
+        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
+      </div>
     </div>
     <div *ngIf="overview" [hidden]="!hasData() || !hasItems()">
       <app-home-page-overview [inputs]="overview">

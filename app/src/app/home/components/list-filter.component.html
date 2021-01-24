@@ -43,7 +43,7 @@
 </div>
 <ng-container *ngIf="stats.totalUnpaginatedRows !== stats.totalRows">
   <div *ngIf="stats.totalUnpaginatedRows !== 0"
-    class="flex justify-between items-center text-sm">
+    class="mt-4 flex justify-between items-center text-sm">
     <p>
       <b>{{ stats.totalUnpaginatedRows }}</b> of <b>{{ stats.totalRows }}</b>
       rows match this filter.
@@ -53,7 +53,7 @@
     </button>
   </div>
   <div *ngIf="stats.totalUnpaginatedRows === 0"
-    class="p-2 flex justify-center items-center bg-gray-100 border"
+    class="mt-4 p-2 flex justify-center items-center bg-gray-100 border"
     style="min-height: 20vh;">
     <div class="flex flex-col space-y-4 text-center text-sm">
       <p>
