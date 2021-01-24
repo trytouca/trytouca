@@ -1,7 +1,7 @@
 <div class="wsl-page-auth-form">
-  <app-alert [alert]="alert"></app-alert>
   <form [formGroup]="signupForm" (ngSubmit)="onSubmit(signupForm.value)"
     novalidate class="wsl-form">
+    <app-alert [alert]="alert" *ngIf="alert"></app-alert>
     <div>
       <label for="wsl-mail" class="wsl-input-label">Email</label>
       <input type="email" id="wsl-mail" tabindex="1" autocomplete="email"
