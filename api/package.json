@@ -1,4 +1,13 @@
 {
+  "name": "weasel-backend",
+  "version": "1.2.1",
+  "description": "Continuous regression testing for critical software workflows.",
+  "private": true,
+  "license": "UNLICENSED",
+  "main": "dist/server.js",
+  "repository": "https://github.com/getweasel/weasel.git",
+  "bugs": "https://github.com/getweasel/weasel/issues",
+  "homepage": "https://getweasel.com",
   "author": {
     "name": "Pejman Ghorbanzade",
     "email": "pejman@ghorbanzade.com"
@@ -28,10 +37,6 @@
     "uuid": "^8.1.0",
     "winston": "^3.2.1"
   },
-  "name": "weasel-backend",
-  "version": "1.2.1",
-  "description": "Weasel Regression Testing Platform",
-  "main": "dist/server.js",
   "scripts": {
     "build": "yarn run build-mails && yarn run build-ts",
     "build-mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/",
@@ -42,8 +47,6 @@
     "lint": "eslint . --ext .ts",
     "watch": "nodemon --watch src --watch templates --watch test -e ts,mjml --exec \"yarn run lint && yarn run build && yarn run start\""
   },
-  "private": true,
-  "license": "UNLICENSED",
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
     "@types/body-parser": "^1.17.0",
