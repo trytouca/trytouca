@@ -1,27 +1,23 @@
 <app-header-outside></app-header-outside>
 <section class="wsl-min-h-screen-1 flex items-center bg-white">
   <div class="mx-auto container">
-    <div class="grid grid-cols-5">
-      <div class="col-span-3 p-4 space-y-4">
-        <h2 class="mb-2 text-4xl md:text-5xl text-black font-bold">
+    <div class="lg:grid lg:grid-cols-5">
+      <div class="lg:col-span-3 p-12 lg:p-4 space-y-4">
+        <h2 class="mb-2 text-4xl lg:text-5xl text-black font-bold">
           Continuous regression testing for critical software workflows.
         </h2>
-        <p class="text-xl">
+        <p class="text-xl text-gray-500">
           An end-to-end solution to create regression test tools, automate
           their execution, handle their test results, compare them against
           known baselines and report newly-found differences in behavior or
           performance.
         </p>
-        <p class="text-2xl">
-          Regression testing does not need to involve managing
-          hundreds of snapshot files.
-        </p>
         <button type="button" role="button" routerLink="/signup"
-          class="p-4 bg-lblue-600 text-md text-white font-normal rounded-lg">
+          class="wsl-btn-lg wsl-btn-dark">
           Get Started For Free
         </button>
       </div>
-      <div class="col-span-2 p-4">
+      <div class="hidden lg:col-span-2 lg:block p-4">
         <img src="./assets/undraw/undraw_blank_canvas_3rbb.svg" />
       </div>
     </div>
