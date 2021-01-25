@@ -7,8 +7,7 @@ import {
   HostListener,
   Input,
   OnChanges,
-  SimpleChanges,
-  ViewChild
+  SimpleChanges
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import Fuse from 'fuse.js';
@@ -17,7 +16,6 @@ import { debounceTime, distinctUntilChanged, map, skip } from 'rxjs/operators';
 import { isEqual } from 'lodash-es';
 import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
 import { SuiteLookupResponse } from '@weasel/core/models/commontypes';
-import { DropdownDirective } from '@weasel/shared/directives/dropdown.directive';
 
 type Version = {
   slug: string;
@@ -33,7 +31,6 @@ export class VersionListComponent implements OnChanges {
   @Input() suite: SuiteLookupResponse;
   @Input() params: FrontendElementCompareParams;
   @Input() side: 'head' | 'base';
-  @ViewChild(DropdownDirective) vc: DropdownDirective;
 
   private _dstBatchChanged = new Subject<string>();
   private _srcBatchChanged = new Subject<string>();
@@ -151,7 +148,6 @@ export class VersionListComponent implements OnChanges {
    *
    */
   updateVersion(version: string) {
-    this.vc.collapse();
     if (this.side === 'head') {
       this._srcBatchChanged.next(version);
     } else if (this.side === 'base') {

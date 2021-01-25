@@ -26,7 +26,7 @@ export class DropdownDirective implements AfterViewInit {
   /**
    *
    */
-  public collapse() {
+  private collapse() {
     this.renderer.addClass(this._menu, 'hidden');
     this.renderer.setAttribute(this._toggle, 'aria-expanded', 'false');
     this._isOpen = false;
@@ -38,6 +38,11 @@ export class DropdownDirective implements AfterViewInit {
   private expand() {
     this.renderer.removeClass(this._menu, 'hidden');
     this.renderer.setAttribute(this._toggle, 'aria-expanded', 'true');
+    this._menu.querySelectorAll('.wsl-dropdown-item').forEach((item) => {
+      this.renderer.listen(item, 'click', () => {
+        this.collapse();
+      });
+    });
     this._isOpen = true;
   }
 
@@ -60,18 +65,16 @@ export class DropdownDirective implements AfterViewInit {
     if (!nativeElement) {
       return;
     }
-    const menuRef = nativeElement.querySelector('.wsl-dropdown-menu');
-    if (!menuRef) {
+    this._menu = nativeElement.querySelector('.wsl-dropdown-menu');
+    if (!this._menu) {
       return;
     }
-    const toggleRef = nativeElement.querySelector('.wsl-dropdown-toggle');
-    if (!toggleRef) {
+    this._toggle = nativeElement.querySelector('.wsl-dropdown-toggle');
+    if (!this._toggle) {
       return;
     }
-    this._menu = menuRef;
-    this._toggle = toggleRef;
     this.renderer.addClass(nativeElement, 'relative');
-    this.renderer.listen(toggleRef, 'click', () => {
+    this.renderer.listen(this._toggle, 'click', () => {
       this.toggleMenu();
     });
   }
