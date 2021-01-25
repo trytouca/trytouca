@@ -31,6 +31,8 @@ import { BatchPageItem, BatchPageOverviewMetadata } from './batch.model';
 import { BatchPageService, BatchPageTabType } from './batch.service';
 import { BatchPromoteComponent } from './promote.component';
 import { BatchSealComponent } from './seal.component';
+import { ConfirmComponent } from '@weasel/home/components';
+import { AlertType } from '@weasel/shared/components/alert.component';
 
 const pageTabs: PageTab<BatchPageTabType>[] = [
   {
@@ -94,6 +96,8 @@ export class BatchPageComponent
   private _dialogSubPromote: Subscription;
   private _dialogRefSeal: DialogRef;
   private _dialogSubSeal: Subscription;
+  private _dialogRefRemove: DialogRef;
+  private _dialogSubRemove: Subscription;
 
   /**
    *
@@ -187,6 +191,9 @@ export class BatchPageComponent
     }
     if (this._dialogSubSeal) {
       this._dialogSubSeal.unsubscribe();
+    }
+    if (this._dialogSubRemove) {
+      this._dialogSubRemove.unsubscribe();
     }
     super.ngOnDestroy();
   }
@@ -292,6 +299,17 @@ export class BatchPageComponent
       });
     }
 
+    if (
+      this.batch?.isSealed &&
+      this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug
+    ) {
+      buttons.push({
+        click: () => this.removeVersion(),
+        text: 'Remove Version',
+        title: 'Remove all test results submitted for this version.'
+      });
+    }
+
     return buttons;
   }
 
@@ -331,6 +349,31 @@ export class BatchPageComponent
             queryParams: { cv: this.batch.batchSlug },
             queryParamsHandling: 'merge'
           });
+        }
+      }
+    );
+  }
+
+  private removeVersion() {
+    this._dialogRefRemove = this.dialogService.open(ConfirmComponent, {
+      closeButton: false,
+      data: {
+        title: `Remove Version ${this.batch?.batchSlug}`,
+        message:
+          '<p>Are you sure you want to remove this version? This action' +
+          ' permanently removes all submitted test results and comments' +
+          ' associated with this version.</p>',
+        button: 'Remove',
+        severity: AlertType.Danger,
+        confirmText: `${this.batch.suiteSlug}/${this.batch.batchSlug}`
+      },
+      minHeight: '10vh'
+    });
+    this._dialogSubRemove = this._dialogRefRemove.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (state) {
+          this.batchPageService.removeBatch();
+          this.router.navigate(['..'], { relativeTo: this.route });
         }
       }
     );

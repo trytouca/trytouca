@@ -5,10 +5,19 @@
   <app-alert [alert]="alert" *ngIf="alert"></app-alert>
   <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)"
     novalidate>
-    <p [innerHtml]="elements.message"></p>
+    <p class="text-sm" [innerHtml]="elements.message"></p>
+    <p class="text-sm" *ngIf="elements.confirmText">
+      Please enter <b>{{ elements.confirmText }}</b> in the form below to
+      confirm your intention.
+    </p>
+    <div *ngIf="elements.confirmText">
+      <input class="wsl-input-field" name="confirmText" type="text" tabindex="1"
+        autocomplete="off" formControlName="confirmText">
+    </div>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
-        <button type="submit" tabindex="2" class="wsl-btn-lg wsl-btn-dark">
+        <button class="wsl-btn-lg" type="submit" tabindex="2"
+          [ngClass]="lookupButtonClass()">
           {{ elements.button }}
         </button>
       </div>

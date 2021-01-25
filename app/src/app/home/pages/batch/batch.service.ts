@@ -351,6 +351,13 @@ export class BatchPageService extends IPageService<BatchPageItem> {
   /**
    *
    */
+  public removeBatch() {
+    console.log(`removing ${this._batch.batchSlug}`);
+  }
+
+  /**
+   *
+   */
   public removeCacheBatch() {
     this._batch = null;
   }
