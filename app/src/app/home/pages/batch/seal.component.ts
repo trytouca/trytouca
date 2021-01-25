@@ -2,11 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener
-} from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
@@ -15,8 +11,7 @@ import { ModalComponent } from '@weasel/home/components';
 import { AlertType } from '@weasel/shared/components/alert.component';
 
 @Component({
-  templateUrl: './seal.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './seal.component.html'
 })
 export class BatchSealComponent extends ModalComponent {
   elements: { batch: BatchLookupResponse };

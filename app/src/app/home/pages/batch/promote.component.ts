@@ -2,11 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener
-} from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
@@ -19,8 +15,7 @@ interface IFormContent {
 }
 
 @Component({
-  templateUrl: './promote.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './promote.component.html'
 })
 export class BatchPromoteComponent extends ModalComponent {
   elements: { batch: BatchLookupResponse };

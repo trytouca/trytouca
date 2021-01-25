@@ -2,11 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener
-} from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
@@ -35,8 +31,7 @@ type Content = {
 
 @Component({
   selector: 'app-teams-create',
-  templateUrl: './create.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './create.component.html'
 })
 export class TeamsCreateTeamComponent extends ModalComponent {
   Mode = Mode;

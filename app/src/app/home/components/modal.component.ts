@@ -11,7 +11,7 @@ import { Alert } from '@weasel/shared/components/alert.component';
 })
 export class ModalComponent {
   public alert: Alert;
-  protected submitted: boolean;
+  public submitted: boolean;
   public form: FormGroup;
 
   /**
