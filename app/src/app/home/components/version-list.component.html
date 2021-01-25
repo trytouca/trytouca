@@ -13,8 +13,8 @@
         maxlength="16" (keyup)="onKeyupVersionFilter($event)">
     </form>
     <hr class="my-2">
-    <div *ngFor="let version of relevantVersions"
-      (click)="updateVersion(version.slug)" class="wsl-dropdown-item">
+    <div class="wsl-dropdown-item" *ngFor="let version of relevantVersions"
+      (click)="updateVersion(version.slug)">
       {{ version.slug }}
       <ng-container *ngFor="let tag of version.tags">
         <span> ({{ tag }})</span>

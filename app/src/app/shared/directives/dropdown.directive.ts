@@ -26,7 +26,7 @@ export class DropdownDirective implements AfterViewInit {
   /**
    *
    */
-  private collapse() {
+  public collapse() {
     this.renderer.addClass(this._menu, 'hidden');
     this.renderer.setAttribute(this._toggle, 'aria-expanded', 'false');
     this._isOpen = false;
@@ -71,9 +71,6 @@ export class DropdownDirective implements AfterViewInit {
     this._menu = menuRef;
     this._toggle = toggleRef;
     this.renderer.addClass(nativeElement, 'relative');
-    this.renderer.listen(menuRef, 'click', () => {
-      this.toggleMenu();
-    });
     this.renderer.listen(toggleRef, 'click', () => {
       this.toggleMenu();
     });
