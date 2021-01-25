@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -11,7 +11,7 @@ import {
 } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { AlertType } from '@weasel/shared/components/alert.component';
-import { Observable } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { ModalComponent } from './modal.component';
 
 export type ConfirmElements = {
@@ -28,7 +28,7 @@ export type ConfirmElements = {
   templateUrl: './confirm.component.html'
 })
 export class ConfirmComponent extends ModalComponent {
-  elements: ConfirmElements;
+  @Input() elements: ConfirmElements;
 
   /**
    *
@@ -65,10 +65,10 @@ export class ConfirmComponent extends ModalComponent {
   /**
    *
    */
-  onSubmit(model: {}) {
+  onSubmit() {
     if (!this.form.valid) {
       const errors = this.form.controls.confirmText.errors;
-      super.alert = {
+      this.alert = {
         type: AlertType.Danger,
         text: 'error' in errors ? errors.error : ''
       };
@@ -80,10 +80,17 @@ export class ConfirmComponent extends ModalComponent {
       this.dialogRef.close(true);
       return;
     }
+    this.alert = {
+      type: AlertType.Info,
+      text: 'We are working on your request.'
+    };
     this.elements.confirmAction().subscribe(
-      () => this.dialogRef.close(true),
       () => {
-        super.alert = {
+        this.alert = { type: AlertType.Success, text: 'Done.' };
+        timer(1000).subscribe(() => this.dialogRef.close(true));
+      },
+      () => {
+        this.alert = {
           type: AlertType.Danger,
           text: 'You no longer have permissions to perform this operation.'
         };
