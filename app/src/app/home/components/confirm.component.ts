@@ -2,11 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener
-} from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -15,6 +11,7 @@ import {
 } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { AlertType } from '@weasel/shared/components/alert.component';
+import { Observable } from 'rxjs';
 import { ModalComponent } from './modal.component';
 
 export type ConfirmElements = {
@@ -22,13 +19,13 @@ export type ConfirmElements = {
   message: string;
   button: string;
   severity?: AlertType;
+  confirmAction?: () => Observable<void>;
   confirmText?: string;
 };
 
 @Component({
   selector: 'app-home-confirm',
-  templateUrl: './confirm.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './confirm.component.html'
 })
 export class ConfirmComponent extends ModalComponent {
   elements: ConfirmElements;
@@ -77,10 +74,21 @@ export class ConfirmComponent extends ModalComponent {
       };
       return;
     }
-    this.submitted = true;
     this.form.reset();
     this.submitted = false;
-    this.dialogRef.close(true);
+    if (!this.elements.confirmAction) {
+      this.dialogRef.close(true);
+      return;
+    }
+    this.elements.confirmAction().subscribe(
+      () => this.dialogRef.close(true),
+      () => {
+        super.alert = {
+          type: AlertType.Danger,
+          text: 'You no longer have permissions to perform this operation.'
+        };
+      }
+    );
   }
 
   /**

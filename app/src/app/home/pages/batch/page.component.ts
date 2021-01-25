@@ -365,14 +365,14 @@ export class BatchPageComponent
           ' associated with this version.</p>',
         button: 'Remove',
         severity: AlertType.Danger,
-        confirmText: `${this.batch.suiteSlug}/${this.batch.batchSlug}`
+        confirmText: `${this.batch.suiteSlug}/${this.batch.batchSlug}`,
+        confirmAction: () => this.batchPageService.removeBatch()
       },
       minHeight: '10vh'
     });
     this._dialogSubRemove = this._dialogRefRemove.afterClosed$.subscribe(
       (state: boolean) => {
         if (state) {
-          this.batchPageService.removeBatch();
           this.router.navigate(['..'], { relativeTo: this.route });
         }
       }
