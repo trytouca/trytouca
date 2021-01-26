@@ -196,12 +196,7 @@ export class TeamItemSuiteComponent {
     }
 
     const changeType = metric.changeType();
-    const durationStr = this.durationPipe.transform(duration, 2, [
-      'h',
-      'm',
-      's',
-      'ms'
-    ]);
+    const durationStr = this.durationPipe.transform(duration);
     if (
       changeType === MetricChangeType.Same ||
       changeType === MetricChangeType.Fresh ||

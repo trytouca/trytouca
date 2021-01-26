@@ -87,14 +87,7 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
             callbacks: {
               label: (item: TooltipItem) => {
                 const point = item.dataPoint as { x: number; y: number };
-                return (
-                  this.durationPipe?.transform(point.y, 2, [
-                    'h',
-                    'm',
-                    's',
-                    'ms'
-                  ]) || ''
-                );
+                return this.durationPipe?.transform(point.y) || '';
               }
             }
           }
@@ -112,7 +105,7 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
             },
             ticks: {
               callback: (value: number) => {
-                return this.durationPipe.transform(value, 1, ['m', 's', 'ms']);
+                return this.durationPipe.transform(value);
               },
               maxTicksLimit: 5
             }

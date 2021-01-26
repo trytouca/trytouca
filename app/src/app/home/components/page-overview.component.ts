@@ -80,8 +80,6 @@ export class PageOverviewComponent {
    */
   private findMetricsRing(inputs: FrontendOverviewSection): Ring {
     const Type = MetricChangeType;
-    const describeDuration = (v, k) =>
-      this.durationPipe.transform(v, k, ['h', 'm', 's', 'ms']);
     const metric = new Metric(
       '',
       inputs.metricsDurationHead,
@@ -89,8 +87,8 @@ export class PageOverviewComponent {
         inputs.metricsDurationChange * inputs.metricsDurationSign
     );
     const type = metric.changeType();
-    const headDesc = describeDuration(metric.src, 2);
-    const changeDesc = describeDuration(metric.absoluteDifference(), 1);
+    const headDesc = this.durationPipe.transform(metric.src);
+    const changeDesc = this.durationPipe.transform(metric.absoluteDifference());
     const scoreDesc = this.percentPipe.transform(metric.score(), '1.0-0');
 
     return {
