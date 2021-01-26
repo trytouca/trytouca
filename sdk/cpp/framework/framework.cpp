@@ -692,26 +692,31 @@ namespace weasel { namespace framework {
         }
         logger.log(lg::Info, "configured weasel client");
 
-        // obtain appropriate suite based on provided configuration options.
+        // initialize suite if workflow is providing one. In general, we expect
+        // the workflow to provide a suite instance unless user intends always
+        // to use `--testcase` configuration option (unlikely).
 
-        const auto& suite = options.count("testcase")
-            ? std::make_shared<SingleCaseSuite>(options.at("testcase"))
-            : workflow.suite();
+        auto suite = workflow.suite();
+        if (suite) {
+            try {
+                suite->initialize();
+                logger.log(lg::Debug, "initialized suite");
+            } catch (const std::exception& ex) {
+                logger.log(lg::Error, "failed to initialize workflow suite: {}", ex.what());
+                return EXIT_FAILURE;
+            }
+        }
+
+        // if test is run for single testcase, overwrite suite with our own.
+
+        if (options.count("testcase")) {
+            suite = std::make_shared<SingleCaseSuite>(options.at("testcase"));
+        }
 
         // if workflow does not provide a suite, we choose not to proceed
 
         if (!suite) {
             logger.log(lg::Error, "workflow does not provide a suite");
-            return EXIT_FAILURE;
-        }
-
-        // initialize suite
-
-        try {
-            suite->initialize();
-            logger.log(lg::Debug, "initialized suite");
-        } catch (const std::exception& ex) {
-            logger.log(lg::Error, "failed to initialize workflow suite: {}", ex.what());
             return EXIT_FAILURE;
         }
 
