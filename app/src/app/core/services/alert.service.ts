@@ -95,4 +95,12 @@ export class AlertService {
     }
     this.publish();
   }
+
+  /**
+   *
+   */
+  public reset() {
+    this._alerts.clear();
+    this.publish();
+  }
 }

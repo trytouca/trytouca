@@ -37,6 +37,7 @@ export class HomeComponent {
       if (v.some((k) => k.kind === AlertKind.InvalidAuthToken)) {
         timer(2000).subscribe(() => {
           this.authService.logout().subscribe(() => {
+            this.alertService.reset();
             this.userService.reset();
             this.router.navigate(['signin'], { queryParams: { e: '401' } });
           });
