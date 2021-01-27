@@ -87,10 +87,10 @@ export class PageOverviewComponent {
         inputs.metricsDurationChange * inputs.metricsDurationSign
     );
     const type = metric.changeType();
-    const headDesc = this.datetimePipe.transform(metric.src, 'duration2');
+    const headDesc = this.datetimePipe.transform(metric.src, 'duration');
     const changeDesc = this.datetimePipe.transform(
       metric.absoluteDifference(),
-      'duration2'
+      'duration'
     );
     const scoreDesc = this.percentPipe.transform(metric.score(), '1.0-0');
 

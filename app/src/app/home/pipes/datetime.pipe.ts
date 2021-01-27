@@ -36,7 +36,7 @@ export class DateTimePipe implements PipeTransform {
    * @param largest maximum number of units to use in description
    */
   private transformDuration(input: number, args: string[]): string {
-    const maxUnits = 2;
+    const maxUnits = args.length === 0 ? 2 : Number(args[0]);
     // return empty string if duration is 0.
     if (input === 0) {
       return '';
@@ -68,33 +68,35 @@ export class DateTimePipe implements PipeTransform {
     return parts.slice(0, maxUnits).join(' ');
   }
 
+  private transformInterval(input: number, args: string[]): string {
+    const duration: Duration = {};
+    duration[args[0]] = input;
+    return formatDuration(
+      intervalToDuration({
+        start: new Date(0),
+        end: add(new Date(0), duration)
+      })
+    );
+  }
+
   /**
    *
    */
   transform(
     input: string | number | Date,
-    type: 'format' | 'distance' | 'duration' | 'duration2',
+    type: 'format' | 'distance' | 'interval' | 'duration',
     ...args: string[]
   ): string {
     if (type === 'format') {
       return format(new Date(input), 'PPpp');
     }
     if (type === 'distance') {
-      return formatDistanceToNow(new Date(input), {
-        addSuffix: true
-      });
+      return formatDistanceToNow(new Date(input), { addSuffix: true });
+    }
+    if (type === 'interval') {
+      return this.transformInterval(input as number, args);
     }
     if (type === 'duration') {
-      const duration: Duration = {};
-      duration[args[0]] = input;
-      return formatDuration(
-        intervalToDuration({
-          start: new Date(0),
-          end: add(new Date(0), duration)
-        })
-      );
-    }
-    if (type === 'duration2') {
       return this.transformDuration(input as number, args);
     }
     return '';

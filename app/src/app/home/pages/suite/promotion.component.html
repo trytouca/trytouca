@@ -10,8 +10,8 @@
       <b class="font-medium">{{ item.to }}</b>.
     </p>
     <div class="text-xs wsl-text-muted"
-      title="{{ item.at | datetime: 'format' }}">
-      {{ item.at | datetime: 'distance' }}
+      title="{{ item.at | datetime:'format' }}">
+      {{ item.at | datetime:'distance' }}
     </div>
   </div>
   <blockquote *ngIf="item.for" class="px-4 m-2 border-l-4 text-sm">

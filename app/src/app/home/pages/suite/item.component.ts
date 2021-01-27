@@ -185,7 +185,7 @@ export class SuiteItemBatchComponent {
     }
 
     const changeType = metric.changeType();
-    const durationStr = this.datetimePipe.transform(duration, 'duration2');
+    const durationStr = this.datetimePipe.transform(duration, 'duration');
     if (
       changeType === MetricChangeType.Same ||
       changeType === MetricChangeType.Fresh ||
