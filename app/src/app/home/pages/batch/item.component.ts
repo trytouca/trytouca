@@ -24,7 +24,7 @@ import {
   IconType,
   Topic
 } from '@weasel/home/models/page-item.model';
-import { DurationPipe } from '@weasel/home/pipes';
+import { DateTimePipe } from '@weasel/home/pipes';
 import {
   BatchPageItem,
   BatchPageItemType,
@@ -47,7 +47,7 @@ type Metadata = Partial<{
   selector: 'app-batch-item-element',
   templateUrl: './item.component.html',
   styleUrls: ['../../styles/item.component.scss'],
-  providers: [DurationPipe, I18nPluralPipe, PercentPipe]
+  providers: [DateTimePipe, I18nPluralPipe, PercentPipe]
 })
 export class BatchItemElementComponent {
   data: Data;
@@ -80,7 +80,7 @@ export class BatchItemElementComponent {
   constructor(
     private route: ActivatedRoute,
     private i18pluralPipe: I18nPluralPipe,
-    private durationPipe: DurationPipe,
+    private datetimePipe: DateTimePipe,
     private percentPipe: PercentPipe,
     private faIconLibrary: FaIconLibrary
   ) {
@@ -287,7 +287,7 @@ export class BatchItemElementComponent {
     }
 
     const changeType = metric.changeType();
-    const durationStr = this.durationPipe.transform(duration);
+    const durationStr = this.datetimePipe.transform(duration, 'duration2');
     if (
       changeType === MetricChangeType.Same ||
       changeType === MetricChangeType.Fresh ||

@@ -4,7 +4,7 @@
 
 import { PercentPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { DurationPipe } from '@weasel/home/pipes/duration.pipe';
+import { DateTimePipe } from '@weasel/home/pipes';
 import { FrontendOverviewSection } from '@weasel/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
 
@@ -35,7 +35,7 @@ enum RingColor {
       }
     `
   ],
-  providers: [DurationPipe, PercentPipe]
+  providers: [DateTimePipe, PercentPipe]
 })
 export class PageOverviewComponent {
   metricsRing: Ring;
@@ -43,7 +43,7 @@ export class PageOverviewComponent {
   statements: string[];
 
   constructor(
-    private durationPipe: DurationPipe,
+    private datetimePipe: DateTimePipe,
     private percentPipe: PercentPipe
   ) {}
 
@@ -87,8 +87,11 @@ export class PageOverviewComponent {
         inputs.metricsDurationChange * inputs.metricsDurationSign
     );
     const type = metric.changeType();
-    const headDesc = this.durationPipe.transform(metric.src);
-    const changeDesc = this.durationPipe.transform(metric.absoluteDifference());
+    const headDesc = this.datetimePipe.transform(metric.src, 'duration2');
+    const changeDesc = this.datetimePipe.transform(
+      metric.absoluteDifference(),
+      'duration2'
+    );
     const scoreDesc = this.percentPipe.transform(metric.score(), '1.0-0');
 
     return {

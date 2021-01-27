@@ -14,7 +14,7 @@ import {
   TooltipItem,
   Filler
 } from 'chart.js';
-import { DurationPipe } from '@weasel/home/pipes/duration.pipe';
+import { DateTimePipe } from '@weasel/home/pipes';
 
 Chart.register(
   LineController,
@@ -29,12 +29,12 @@ Chart.register(
 @Component({
   selector: 'app-suite-chart-runtime',
   templateUrl: './chart.component.html',
-  providers: [DurationPipe]
+  providers: [DateTimePipe]
 })
 export class SuiteChartRuntimeComponent implements OnDestroy {
   private chart: Chart;
 
-  constructor(private durationPipe: DurationPipe) {}
+  constructor(private datetimePipe: DateTimePipe) {}
 
   ngOnDestroy() {
     if (this.chart) {
@@ -87,7 +87,7 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
             callbacks: {
               label: (item: TooltipItem) => {
                 const point = item.dataPoint as { x: number; y: number };
-                return this.durationPipe?.transform(point.y) || '';
+                return this.datetimePipe?.transform(point.y, 'duration2') || '';
               }
             }
           }
@@ -105,7 +105,7 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
             },
             ticks: {
               callback: (value: number) => {
-                return this.durationPipe.transform(value);
+                return this.datetimePipe.transform(value, 'duration2');
               },
               maxTicksLimit: 5
             }

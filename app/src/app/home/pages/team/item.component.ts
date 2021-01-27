@@ -13,7 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { format, formatDistanceToNow } from 'date-fns';
 import { SuiteLookupResponse } from '@weasel/core/models/commontypes';
-import { DurationPipe } from '@weasel/home/pipes';
+import { DateTimePipe } from '@weasel/home/pipes';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
 import {
   Data,
@@ -40,7 +40,7 @@ type Meta = Partial<{
   selector: 'app-team-item-suite',
   templateUrl: './item.component.html',
   styleUrls: ['../../styles/item.component.scss'],
-  providers: [DurationPipe, I18nPluralPipe, PercentPipe]
+  providers: [DateTimePipe, I18nPluralPipe, PercentPipe]
 })
 export class TeamItemSuiteComponent {
   data: Data;
@@ -60,7 +60,7 @@ export class TeamItemSuiteComponent {
    *
    */
   constructor(
-    private durationPipe: DurationPipe,
+    private datetimePipe: DateTimePipe,
     private i18pluralPipe: I18nPluralPipe,
     private percentPipe: PercentPipe,
     private faIconLibrary: FaIconLibrary
@@ -195,7 +195,7 @@ export class TeamItemSuiteComponent {
     }
 
     const changeType = metric.changeType();
-    const durationStr = this.durationPipe.transform(duration);
+    const durationStr = this.datetimePipe.transform(duration, 'duration2');
     if (
       changeType === MetricChangeType.Same ||
       changeType === MetricChangeType.Fresh ||

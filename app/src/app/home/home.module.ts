@@ -25,7 +25,7 @@ import {
   VersionNavigatorComponent
 } from './components';
 
-import { DateTimePipe, DurationPipe } from './pipes';
+import { DateTimePipe } from './pipes';
 
 import {
   TeamsCreateTeamComponent,
@@ -90,7 +90,6 @@ import {
     HomeComponent,
     // pipes
     DateTimePipe,
-    DurationPipe,
     // shared components
     CommentComponent,
     ConfirmComponent,

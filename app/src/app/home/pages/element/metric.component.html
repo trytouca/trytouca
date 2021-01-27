@@ -13,15 +13,17 @@
   <div class="wsl-item-topics">
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Fresh">
-      {{ metric.duration() | duration }} in version {{ params.srcBatchSlug }}
+      {{ metric.duration() | datetime:'duration2' }} in version
+      {{ params.srcBatchSlug }}
     </div>
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Missing">
-      {{ metric.duration() | duration }} in version {{ params.dstBatchSlug }}
+      {{ metric.duration() | datetime:'duration2' }} in version
+      {{ params.dstBatchSlug }}
     </div>
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Same">
-      {{ metric.duration() | duration }}
+      {{ metric.duration() | datetime:'duration2' }}
     </div>
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Same">
@@ -29,13 +31,13 @@
     </div>
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Faster">
-      {{ metric.absoluteDifference() | duration }}
+      {{ metric.absoluteDifference() | datetime:'duration2' }}
       ({{ metric.changeDescription() }} <b class="wsl-text-success">faster</b>
       than in version {{ params.dstBatchSlug }})
     </div>
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Slower">
-      {{ metric.absoluteDifference() | duration }}
+      {{ metric.absoluteDifference() | datetime:'duration2' }}
       ({{ metric.changeDescription() }} <b class="wsl-text-danger">slower</b>
       than in version {{ params.dstBatchSlug }})
     </div>
