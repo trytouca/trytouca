@@ -11,7 +11,7 @@ import {
   faCheckCircle,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { TimeAgoPipe } from 'ngx-moment';
+import { format, formatDistanceToNow } from 'date-fns';
 import { SuiteLookupResponse } from '@weasel/core/models/commontypes';
 import { DurationPipe } from '@weasel/home/pipes';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
@@ -40,7 +40,7 @@ type Meta = Partial<{
   selector: 'app-team-item-suite',
   templateUrl: './item.component.html',
   styleUrls: ['../../styles/item.component.scss'],
-  providers: [DurationPipe, I18nPluralPipe, PercentPipe, TimeAgoPipe]
+  providers: [DurationPipe, I18nPluralPipe, PercentPipe]
 })
 export class TeamItemSuiteComponent {
   data: Data;
@@ -63,7 +63,6 @@ export class TeamItemSuiteComponent {
     private durationPipe: DurationPipe,
     private i18pluralPipe: I18nPluralPipe,
     private percentPipe: PercentPipe,
-    private timeAgoPipe: TimeAgoPipe,
     private faIconLibrary: FaIconLibrary
   ) {
     faIconLibrary.addIcons(faCircle, faSpinner, faCheckCircle, faTimesCircle);
@@ -241,8 +240,12 @@ export class TeamItemSuiteComponent {
     });
     topics.push({ text: tcs });
 
-    const date = this.timeAgoPipe.transform(this._meta.submittedAt);
-    topics.push({ text: date, title: 'Submission Date' });
+    topics.push({
+      text: formatDistanceToNow(this._meta.submittedAt, {
+        addSuffix: true
+      }),
+      title: format(this._meta.submittedAt, 'PPpp')
+    });
 
     return topics;
   }

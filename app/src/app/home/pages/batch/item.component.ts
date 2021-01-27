@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { DatePipe, I18nPluralPipe, PercentPipe } from '@angular/common';
+import { I18nPluralPipe, PercentPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -14,7 +14,7 @@ import {
   faSpinner,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { TimeAgoPipe } from 'ngx-moment';
+import { format, formatDistanceToNow } from 'date-fns';
 import { FrontendBatchCompareParams } from '@weasel/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
 import {
@@ -47,7 +47,7 @@ type Metadata = Partial<{
   selector: 'app-batch-item-element',
   templateUrl: './item.component.html',
   styleUrls: ['../../styles/item.component.scss'],
-  providers: [DatePipe, DurationPipe, I18nPluralPipe, PercentPipe, TimeAgoPipe]
+  providers: [DurationPipe, I18nPluralPipe, PercentPipe]
 })
 export class BatchItemElementComponent {
   data: Data;
@@ -80,10 +80,8 @@ export class BatchItemElementComponent {
   constructor(
     private route: ActivatedRoute,
     private i18pluralPipe: I18nPluralPipe,
-    private datePipe: DatePipe,
     private durationPipe: DurationPipe,
     private percentPipe: PercentPipe,
-    private timeAgoPipe: TimeAgoPipe,
     private faIconLibrary: FaIconLibrary
   ) {
     faIconLibrary.addIcons(
@@ -339,9 +337,12 @@ export class BatchItemElementComponent {
     }
 
     if (this._meta.isCreatedRecently) {
-      const dateAgo = this.timeAgoPipe.transform(this._meta.builtAt);
-      const dateMedium = this.datePipe.transform(this._meta.builtAt, 'medium');
-      topics.push({ text: dateAgo, title: dateMedium });
+      topics.push({
+        text: formatDistanceToNow(this._meta.builtAt, {
+          addSuffix: true
+        }),
+        title: format(this._meta.builtAt, 'PPpp')
+      });
     }
 
     return topics;
