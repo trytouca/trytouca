@@ -6115,7 +6115,7 @@ modern-normalize@^1.0.0:
   resolved "https://registry.yarnpkg.com/modern-normalize/-/modern-normalize-1.0.0.tgz#539d84a1e141338b01b346f3e27396d0ed17601e"
   integrity sha512-1lM+BMLGuDfsdwf3rsgBSrxJwAZHFIrQ8YR61xIqdHo0uNKI9M52wNpHSrliZATJp51On6JD0AfRxd4YGSU0lw==
 
-moment@^2.10.2, moment@^2.29.1:
+moment@^2.10.2:
   version "2.29.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
   integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
@@ -6240,13 +6240,6 @@ ngx-markdown@11.0.1:
     katex "^0.12.0"
     marked "^1.2.0"
     prismjs "^1.22.0"
-    tslib "^2.0.0"
-
-ngx-moment@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-moment/-/ngx-moment-5.0.0.tgz#6500432a2fcda75fb236a632850e599db23c8177"
-  integrity sha512-LPpGPo4ccdh8RWnDbJdLTLGGGcwbRYMbn/j4PXM24754J7MZ0tgnBM+ncaVbwefUSSEMme8yMkNIxFiVxgOOvQ==
-  dependencies:
     tslib "^2.0.0"
 
 ngx-window-token@>=4.0.0:
