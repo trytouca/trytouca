@@ -5,7 +5,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ClipboardModule } from 'ngx-clipboard';
-import { MomentModule } from 'ngx-moment';
 import { MarkdownModule } from 'ngx-markdown';
 import { HomeComponent } from './home.component';
 import { HomeRoutingModule } from './home-routing.module';
@@ -26,7 +25,7 @@ import {
   VersionNavigatorComponent
 } from './components';
 
-import { DurationPipe } from './pipes';
+import { DateTimePipe, DurationPipe } from './pipes';
 
 import {
   TeamsCreateTeamComponent,
@@ -85,12 +84,12 @@ import {
     CommonModule,
     HomeRoutingModule,
     MarkdownModule.forRoot(),
-    MomentModule,
     SharedModule
   ],
   declarations: [
     HomeComponent,
     // pipes
+    DateTimePipe,
     DurationPipe,
     // shared components
     CommentComponent,

@@ -4,12 +4,12 @@
       <b>{{ meta.commentAuthor }}</b>
     </div>
     <div class="wsl-text-muted space-x-4">
-      <small title="{{ meta.commentTime | date:'medium' }}">
-        {{ meta.commentTime | amTimeAgo }}
+      <small title="{{ meta.commentTime | datetime: 'format' }}">
+        {{ meta.commentTime | datetime: 'distance' }}
       </small>
       <small *ngIf="meta.commentEditTime"
-        title="{{ meta.commentEditTime | date:'medium' }}">
-        (edited {{ meta.commentEditTime | amTimeAgo }})
+        title="{{ meta.commentEditTime | datetime: 'format' }}">
+        (edited {{ meta.commentEditTime | datetime: 'distance' }})
       </small>
     </div>
   </div>

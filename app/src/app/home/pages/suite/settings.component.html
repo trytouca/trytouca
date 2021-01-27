@@ -60,8 +60,8 @@
       </app-alert>
       <p>
         All testresults for this suite are retained for
-        <b>{{ suite.retainFor | amDuration:'seconds' }}</b>.
-        You may adjust this duration to up to {{ 43800 | amDuration:'hours' }}.
+        <b>{{ suite.retainFor | datetime:'duration':'seconds' }}</b>.
+        You may adjust this duration to up to <span>two years</span>.
         This change will not affect previously submitted results.
       </p>
       <small class="wsl-text-muted">
@@ -91,10 +91,11 @@
       </app-alert>
       <p>
         Newly submitted versions are set to be sealed after
-        <b>{{ suite.sealAfter | amDuration:'seconds' }}</b> from the time
+        <b>{{ suite.sealAfter | datetime:'duration':'seconds' }}</b> from the
+        time
         the last testcase was submitted. Sealing a version prevents further
-        submission of results to it.
-        You may adjust this duration to up to {{ 30 | amDuration:'minutes' }}.
+        submission of results to it. You may adjust this duration to up to
+        {{ 30 | datetime:'duration':'minutes' }}.
       </p>
       <small class="wsl-text-muted">
         Duration in minutes.

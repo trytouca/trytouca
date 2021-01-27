@@ -3,3 +3,4 @@
  */
 
 export { DurationPipe } from './duration.pipe';
+export { DateTimePipe } from './datetime.pipe';
