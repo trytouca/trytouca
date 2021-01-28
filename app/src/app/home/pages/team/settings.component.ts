@@ -6,7 +6,7 @@ import { Component, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DialogService, DialogRef } from '@ngneat/dialog';
+import { DialogService } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
@@ -45,8 +45,6 @@ export class TeamTabSettingsComponent implements OnDestroy {
 
   team: TeamLookupResponse;
 
-  private _dialogRef: DialogRef;
-  private _dialogSub: Subscription;
   private _subTeam: Subscription;
 
   ETeamRole = ETeamRole;
@@ -94,9 +92,6 @@ export class TeamTabSettingsComponent implements OnDestroy {
    *
    */
   ngOnDestroy() {
-    if (this._dialogSub) {
-      this._dialogSub.unsubscribe();
-    }
     this._subTeam.unsubscribe();
   }
 
@@ -132,48 +127,67 @@ export class TeamTabSettingsComponent implements OnDestroy {
    *
    */
   openConfirmModal(type: EModalType) {
-    if (type === EModalType.DeleteTeam) {
-      const elements: ConfirmElements = {
-        title: `Delete Team ${this.team.name}`,
-        message: `<p>
-          You are about to delete team <strong>${this.team.name}</strong>.
-          This action permanently removes all data associated with this team.
-          Are you sure you want to delete this team?</p>`,
-        button: 'Delete'
-      };
-      this._dialogRef = this.dialogService.open(ConfirmComponent, {
-        closeButton: false,
-        data: elements,
-        minHeight: '10vh'
-      });
-    } else if (type === EModalType.LeaveTeam) {
-      const elements: ConfirmElements = {
-        title: `Leave Team ${this.team.name}`,
-        message: `<p>
-          You are about to leave team <strong>${this.team.name}</strong>.
-          Once you leave a team, you need a new invitation to join back
-          in the future. Are you sure you want to leave this team?</p>`,
-        button: 'Leave'
-      };
-      this._dialogRef = this.dialogService.open(ConfirmComponent, {
-        closeButton: false,
-        data: elements,
-        minHeight: '10vh'
-      });
+    const elements = new Map<EModalType, ConfirmElements>([
+      [
+        EModalType.DeleteTeam,
+        {
+          title: `Delete Team ${this.team.name}`,
+          message: `<p>
+            You are about to delete team <strong>${this.team.name}</strong>.
+            This action permanently removes all data associated with this team.
+            Are you sure you want to delete this team?</p>`,
+          button: 'Delete',
+          severity: AlertType.Danger,
+          confirmText: `${this.team.slug}`,
+          confirmAction: () => {
+            const url = ['team', this.team.slug].join('/');
+            return this.apiService.delete(url);
+          },
+          onActionSuccess: () => {
+            this.router.navigate(['..'], { relativeTo: this.route });
+          },
+          onActionFailure: (err: HttpErrorResponse) => {
+            this.alert.deleteTeam = {
+              type: AlertType.Danger,
+              text: this.extractError(err)
+            };
+          }
+        }
+      ],
+      [
+        EModalType.LeaveTeam,
+        {
+          title: `Leave Team ${this.team.name}`,
+          message: `<p>
+            You are about to leave team <strong>${this.team.name}</strong>.
+            Once you leave a team, you need a new invitation to join back
+            in the future. Are you sure you want to leave this team?</p>`,
+          button: 'Leave',
+          severity: AlertType.Danger,
+          confirmAction: () => {
+            const url = ['team', this.team.slug, 'leave'].join('/');
+            return this.apiService.post(url);
+          },
+          onActionSuccess: () => {
+            this.router.navigate(['..'], { relativeTo: this.route });
+          },
+          onActionFailure: (err: HttpErrorResponse) => {
+            this.alert.leaveTeam = {
+              type: AlertType.Danger,
+              text: this.extractError(err)
+            };
+          }
+        }
+      ]
+    ]);
+    if (!elements.has(type)) {
+      return;
     }
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
-      (state: boolean) => {
-        if (!state) {
-          return;
-        }
-        switch (type) {
-          case EModalType.DeleteTeam:
-            return this.deleteTeam();
-          case EModalType.LeaveTeam:
-            return this.leaveTeam();
-        }
-      }
-    );
+    this.dialogService.open(ConfirmComponent, {
+      closeButton: false,
+      data: elements.get(type),
+      minHeight: '10vh'
+    });
   }
 
   /**
@@ -252,42 +266,6 @@ export class TeamTabSettingsComponent implements OnDestroy {
       },
       (err: HttpErrorResponse) => {
         this.alert.changeTeamSlug = {
-          type: AlertType.Danger,
-          text: this.extractError(err)
-        };
-      }
-    );
-  }
-
-  /**
-   *
-   */
-  public deleteTeam() {
-    const url = ['team', this.team.slug].join('/');
-    this.apiService.delete(url).subscribe(
-      () => {
-        this.router.navigate(['..'], { relativeTo: this.route });
-      },
-      (err: HttpErrorResponse) => {
-        this.alert.deleteTeam = {
-          type: AlertType.Danger,
-          text: this.extractError(err)
-        };
-      }
-    );
-  }
-
-  /**
-   *
-   */
-  public leaveTeam() {
-    const url = ['team', this.team.slug, 'leave'].join('/');
-    this.apiService.post(url).subscribe(
-      () => {
-        this.router.navigate(['..'], { relativeTo: this.route });
-      },
-      (err: HttpErrorResponse) => {
-        this.alert.leaveTeam = {
           type: AlertType.Danger,
           text: this.extractError(err)
         };

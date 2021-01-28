@@ -6,7 +6,7 @@ import { Component, OnDestroy, HostListener } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DialogService, DialogRef } from '@ngneat/dialog';
+import { DialogService } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
@@ -54,7 +54,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
   team: TeamLookupResponse;
   suite: SuiteLookupResponse;
 
-  private _dialogSub: Subscription;
   private _subTeam: Subscription;
   private _subSuite: Subscription;
 
@@ -205,6 +204,12 @@ export class SuiteTabSettingsComponent implements OnDestroy {
           },
           onActionSuccess: () => {
             this.router.navigate(['..'], { relativeTo: this.route });
+          },
+          onActionFailure: (err: HttpErrorResponse) => {
+            this.alert.deleteSuite = {
+              type: AlertType.Danger,
+              text: this.extractError(err)
+            };
           }
         }
       ]
@@ -212,10 +217,9 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     if (!elements.has(type)) {
       return;
     }
-    const data = elements.get(type);
     this.dialogService.open(ConfirmComponent, {
       closeButton: false,
-      data,
+      data: elements.get(type),
       minHeight: '10vh'
     });
   }

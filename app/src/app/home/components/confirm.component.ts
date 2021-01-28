@@ -22,6 +22,7 @@ export type ConfirmElements = {
   confirmAction?: () => Observable<void>;
   confirmText?: string;
   onActionSuccess?: () => void;
+  onActionFailure?: (err: unknown) => void;
 };
 
 @Component({
