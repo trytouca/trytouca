@@ -205,12 +205,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
           onActionSuccess: () => {
             this.router.navigate(['..'], { relativeTo: this.route });
           },
-          onActionFailure: (err: HttpErrorResponse) => {
-            this.alert.deleteSuite = {
-              type: AlertType.Danger,
-              text: this.extractError(err)
-            };
-          }
+          onActionFailure: (err: HttpErrorResponse) => this.extractError(err)
         }
       ]
     ]);

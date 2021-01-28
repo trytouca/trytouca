@@ -22,7 +22,7 @@ export type ConfirmElements = {
   confirmAction?: () => Observable<void>;
   confirmText?: string;
   onActionSuccess?: () => void;
-  onActionFailure?: (err: unknown) => void;
+  onActionFailure?: (err: unknown) => string;
 };
 
 @Component({
@@ -89,15 +89,21 @@ export class ConfirmComponent extends ModalComponent {
     this.elements.confirmAction().subscribe(
       () => {
         this.alert = { type: AlertType.Success, text: 'Done.' };
-        timer(1000).subscribe(() => this.dialogRef.close(true));
-        if (this.elements.onActionSuccess) {
-          this.elements.onActionSuccess();
-        }
+        timer(1000).subscribe(() => {
+          this.dialogRef.close(true);
+          if (this.elements.onActionSuccess) {
+            this.elements.onActionSuccess();
+          }
+        });
       },
-      () => {
+      (err) => {
+        const func = this.elements.onActionFailure;
+        const text = func
+          ? func(err)
+          : 'We could not perform this action, at this time.';
         this.alert = {
           type: AlertType.Danger,
-          text: 'You no longer have permissions to perform this operation.'
+          text
         };
       }
     );

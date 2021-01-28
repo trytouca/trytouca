@@ -146,12 +146,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
           onActionSuccess: () => {
             this.router.navigate(['..'], { relativeTo: this.route });
           },
-          onActionFailure: (err: HttpErrorResponse) => {
-            this.alert.deleteTeam = {
-              type: AlertType.Danger,
-              text: this.extractError(err)
-            };
-          }
+          onActionFailure: (err: HttpErrorResponse) => this.extractError(err)
         }
       ],
       [
@@ -171,12 +166,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
           onActionSuccess: () => {
             this.router.navigate(['..'], { relativeTo: this.route });
           },
-          onActionFailure: (err: HttpErrorResponse) => {
-            this.alert.leaveTeam = {
-              type: AlertType.Danger,
-              text: this.extractError(err)
-            };
-          }
+          onActionFailure: (err: HttpErrorResponse) => this.extractError(err)
         }
       ]
     ]);
