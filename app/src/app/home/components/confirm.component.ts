@@ -9,9 +9,9 @@ import {
   AbstractControl,
   ValidatorFn
 } from '@angular/forms';
+import { Observable, timer } from 'rxjs';
 import { DialogRef } from '@ngneat/dialog';
 import { AlertType } from '@weasel/shared/components/alert.component';
-import { Observable, timer } from 'rxjs';
 import { ModalComponent } from './modal.component';
 
 export type ConfirmElements = {
@@ -21,6 +21,7 @@ export type ConfirmElements = {
   severity?: AlertType;
   confirmAction?: () => Observable<void>;
   confirmText?: string;
+  onActionSuccess?: () => void;
 };
 
 @Component({
@@ -88,6 +89,9 @@ export class ConfirmComponent extends ModalComponent {
       () => {
         this.alert = { type: AlertType.Success, text: 'Done.' };
         timer(1000).subscribe(() => this.dialogRef.close(true));
+        if (this.elements.onActionSuccess) {
+          this.elements.onActionSuccess();
+        }
       },
       () => {
         this.alert = {

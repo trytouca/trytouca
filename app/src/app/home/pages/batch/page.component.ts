@@ -25,14 +25,14 @@ import type {
   FrontendBatchCompareParams,
   FrontendOverviewSection
 } from '@weasel/core/models/frontendtypes';
-import { AlertKind, AlertService } from '@weasel/core/services';
+import { AlertKind, AlertService, ApiService } from '@weasel/core/services';
+import { ConfirmComponent, ConfirmElements } from '@weasel/home/components';
 import { PageComponent, PageTab } from '@weasel/home/components/page.component';
+import { AlertType } from '@weasel/shared/components/alert.component';
 import { BatchPageItem, BatchPageOverviewMetadata } from './batch.model';
 import { BatchPageService, BatchPageTabType } from './batch.service';
 import { BatchPromoteComponent } from './promote.component';
 import { BatchSealComponent } from './seal.component';
-import { ConfirmComponent } from '@weasel/home/components';
-import { AlertType } from '@weasel/shared/components/alert.component';
 
 const pageTabs: PageTab<BatchPageTabType>[] = [
   {
@@ -96,13 +96,12 @@ export class BatchPageComponent
   private _dialogSubPromote: Subscription;
   private _dialogRefSeal: DialogRef;
   private _dialogSubSeal: Subscription;
-  private _dialogRefRemove: DialogRef;
-  private _dialogSubRemove: Subscription;
 
   /**
    *
    */
   constructor(
+    private apiService: ApiService,
     private alertService: AlertService,
     private batchPageService: BatchPageService,
     private dialogService: DialogService,
@@ -191,9 +190,6 @@ export class BatchPageComponent
     }
     if (this._dialogSubSeal) {
       this._dialogSubSeal.unsubscribe();
-    }
-    if (this._dialogSubRemove) {
-      this._dialogSubRemove.unsubscribe();
     }
     super.ngOnDestroy();
   }
@@ -355,28 +351,34 @@ export class BatchPageComponent
   }
 
   private removeVersion() {
-    this._dialogRefRemove = this.dialogService.open(ConfirmComponent, {
-      closeButton: false,
-      data: {
-        title: `Remove Version ${this.batch?.batchSlug}`,
-        message:
-          '<p>Are you sure you want to remove this version? This action' +
-          ' permanently removes all submitted test results and comments' +
-          ' associated with this version.</p>',
-        button: 'Remove',
-        severity: AlertType.Danger,
-        confirmText: `${this.batch.suiteSlug}/${this.batch.batchSlug}`,
-        confirmAction: () => this.batchPageService.removeBatch()
+    const data: ConfirmElements = {
+      title: `Remove Version ${this.batch.batchSlug}`,
+      message:
+        '<p>Are you sure you want to remove this version? This action' +
+        ' permanently removes all submitted test results and comments' +
+        ' associated with this version.</p>',
+      button: 'Remove',
+      severity: AlertType.Danger,
+      confirmText: `${this.batch.suiteSlug}/${this.batch.batchSlug}`,
+      confirmAction: () => {
+        const url = [
+          'batch',
+          this.batch.teamSlug,
+          this.batch.suiteSlug,
+          this.batch.batchSlug
+        ].join('/');
+        return this.apiService.delete(url);
       },
+      onActionSuccess: () => {
+        this.batchPageService.removeCacheBatch();
+        this.router.navigate(['..'], { relativeTo: this.route });
+      }
+    };
+    this.dialogService.open(ConfirmComponent, {
+      closeButton: false,
+      data,
       minHeight: '10vh'
     });
-    this._dialogSubRemove = this._dialogRefRemove.afterClosed$.subscribe(
-      (state: boolean) => {
-        if (state) {
-          this.router.navigate(['..'], { relativeTo: this.route });
-        }
-      }
-    );
   }
 
   /**

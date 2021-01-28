@@ -351,19 +351,6 @@ export class BatchPageService extends IPageService<BatchPageItem> {
   /**
    *
    */
-  public removeBatch(): Observable<void> {
-    const url = [
-      'batch',
-      this._batch.teamSlug,
-      this._batch.suiteSlug,
-      this._batch.batchSlug
-    ].join('/');
-    return this.apiService.delete(url).pipe(map(this.removeCacheBatch));
-  }
-
-  /**
-   *
-   */
   public removeCacheBatch() {
     this._batch = null;
   }

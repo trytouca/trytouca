@@ -15,7 +15,10 @@ import type {
   SuiteLookupResponse,
   TeamLookupResponse
 } from '@weasel/core/models/commontypes';
-import { ConfirmComponent } from '@weasel/home/components/confirm.component';
+import {
+  ConfirmComponent,
+  ConfirmElements
+} from '@weasel/home/components/confirm.component';
 import { SuitePageService, SuitePageTabType } from './suite.service';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
@@ -51,7 +54,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
   team: TeamLookupResponse;
   suite: SuiteLookupResponse;
 
-  private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
   private _subTeam: Subscription;
   private _subSuite: Subscription;
@@ -128,9 +130,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    *
    */
   ngOnDestroy() {
-    if (this._dialogSub) {
-      this._dialogSub.unsubscribe();
-    }
     this._subTeam.unsubscribe();
     this._subSuite.unsubscribe();
   }
@@ -184,29 +183,41 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    *
    */
   openConfirmModal(type: EModalType) {
-    this._dialogRef = this.dialogService.open(ConfirmComponent, {
+    const elements = new Map<EModalType, ConfirmElements>([
+      [
+        EModalType.DeleteSuite,
+        {
+          title: `Delete Suite ${this.suite.suiteName}`,
+          message:
+            `<p>You are about to delete suite <strong>${this.suite.suiteName}</strong>.` +
+            ' This action permanently removes all data associated with this suite.' +
+            ' Are you sure you want to delete this suite?</p>',
+          button: 'Delete',
+          severity: AlertType.Danger,
+          confirmText: `${this.suite.teamSlug}/${this.suite.suiteSlug}`,
+          confirmAction: () => {
+            const url = [
+              'suite',
+              this.suite.teamSlug,
+              this.suite.suiteSlug
+            ].join('/');
+            return this.apiService.delete(url);
+          },
+          onActionSuccess: () => {
+            this.router.navigate(['..'], { relativeTo: this.route });
+          }
+        }
+      ]
+    ]);
+    if (!elements.has(type)) {
+      return;
+    }
+    const data = elements.get(type);
+    this.dialogService.open(ConfirmComponent, {
       closeButton: false,
-      data: {
-        title: `Delete Suite ${this.suite.suiteName}`,
-        message: `<p>
-          You are about to delete suite <strong>${this.suite.suiteName}</strong>.
-          This action permanently removes all data associated with this suite.
-          Are you sure you want to delete this suite?</p>`,
-        button: 'Delete'
-      },
+      data,
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
-      (state: boolean) => {
-        if (!state) {
-          return;
-        }
-        switch (type) {
-          case EModalType.DeleteSuite:
-            return this.deleteSuite();
-        }
-      }
-    );
   }
 
   /**
@@ -341,24 +352,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
       },
       (err: HttpErrorResponse) => {
         this.alert.changeSuiteSealAfter = {
-          type: AlertType.Danger,
-          text: this.extractError(err)
-        };
-      }
-    );
-  }
-
-  /**
-   *
-   */
-  public deleteSuite() {
-    const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
-    this.apiService.delete(url).subscribe(
-      () => {
-        this.router.navigate(['..'], { relativeTo: this.route });
-      },
-      (err: HttpErrorResponse) => {
-        this.alert.deleteSuite = {
           type: AlertType.Danger,
           text: this.extractError(err)
         };
