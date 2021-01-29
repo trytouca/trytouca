@@ -12,11 +12,11 @@
       <form class="space-x-2 flex" [formGroup]="formName"
         (ngSubmit)="onSubmit(EModalType.ChangeName, formName.value)" novalidate>
         <input class="wsl-input-field" type="text" id="wsl-team-name"
-          tabindex="1" required autocomplete="off"
+          tabindex="11" required autocomplete="off"
           aria-describedby="wsl-team-name-help" formControlName="name"
           name="name">
         <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
-          tabindex="2">
+          tabindex="12">
           Update
         </button>
       </form>
@@ -37,11 +37,11 @@
       <form class="space-x-2 flex" [formGroup]="formSlug"
         (ngSubmit)="onSubmit(EModalType.ChangeSlug, formSlug.value)" novalidate>
         <input class="wsl-input-field" type="text" id="wsl-team-slug"
-          tabindex="3" required autocomplete="off"
+          tabindex="13" required autocomplete="off"
           aria-describedby="wsl-team-slug-help" formControlName="slug"
           name="slug">
         <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
-          tabindex="4">
+          tabindex="14">
           Update
         </button>
       </form>
@@ -63,7 +63,7 @@
         in the future.
       </p>
       <button class="wsl-btn-sm wsl-btn-danger" type="button"
-        (click)="openConfirmModal(EModalType.LeaveTeam)" tabindex="5">
+        (click)="openConfirmModal(EModalType.LeaveTeam)" tabindex="15">
         Leave Team
       </button>
     </div>
@@ -78,7 +78,7 @@
         This action permanently deletes all data associated with this team.
       </p>
       <button class="wsl-btn-sm wsl-btn-danger" type="button"
-        (click)="openConfirmModal(EModalType.DeleteTeam)" tabindex="6">
+        (click)="openConfirmModal(EModalType.DeleteTeam)" tabindex="16">
         Delete Team
       </button>
     </div>

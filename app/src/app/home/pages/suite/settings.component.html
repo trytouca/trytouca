@@ -14,11 +14,11 @@
       <form class="space-x-2 flex" [formGroup]="formName"
         (ngSubmit)="onSubmit(EModalType.ChangeName, formName.value)" novalidate>
         <input class="wsl-input-field" type="text" id="wsl-suite-name"
-          tabindex="1" required autocomplete="off"
+          tabindex="11" required autocomplete="off"
           aria-describedby="wsl-suite-name-help" formControlName="name"
           name="name">
         <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
-          tabindex="2">Update</button>
+          tabindex="12">Update</button>
       </form>
       <small class="wsl-text-muted" id="wsl-suite-name-help"
         [hidden]="formName.controls.name.pristine || formName.controls.name.valid">
@@ -37,11 +37,11 @@
       <form class="space-x-2 flex" [formGroup]="formSlug"
         (ngSubmit)="onSubmit(EModalType.ChangeSlug, formSlug.value)" novalidate>
         <input class="wsl-input-field" type="text" id="wsl-suite-slug"
-          tabindex="3" required autocomplete="off"
+          tabindex="13" required autocomplete="off"
           aria-describedby="wsl-suite-slug-help" formControlName="slug"
           name="slug">
         <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
-          tabindex="4">Update</button>
+          tabindex="14">Update</button>
       </form>
       <small class="wsl-text-muted" id="wsl-suite-slug-help"
         [hidden]="formSlug.controls.slug.pristine || formSlug.controls.slug.valid">
@@ -71,11 +71,11 @@
         (ngSubmit)="onSubmit(EModalType.ChangeRetainFor, formRetainFor.value)"
         novalidate>
         <input class="wsl-input-field" type="number" id="wsl-suite-retainFor"
-          tabindex="4" required autocomplete="off"
+          tabindex="15" required autocomplete="off"
           aria-describedby="wsl-suite-retainFor-help"
           formControlName="retainFor" name="retainFor">
         <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
-          tabindex="4">
+          tabindex="16">
           Update
         </button>
       </form>
@@ -104,11 +104,11 @@
         (ngSubmit)="onSubmit(EModalType.ChangeSealAfter, formSealAfter.value)"
         novalidate>
         <input class="wsl-input-field" type="number" id="wsl-suite-sealAfter"
-          tabindex="4" required autocomplete="off"
+          tabindex="17" required autocomplete="off"
           aria-describedby="wsl-suite-sealAfter-help"
           formControlName="sealAfter" name="sealAfter">
         <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
-          tabindex="6">
+          tabindex="18">
           Update
         </button>
       </form>
@@ -132,7 +132,7 @@
       </p>
       <button class="wsl-btn-sm wsl-btn-danger"
         (click)="openConfirmModal(EModalType.DeleteSuite)" type="button"
-        tabindex="5">
+        tabindex="19">
         Delete Suite
       </button>
     </div>
