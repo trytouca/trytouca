@@ -2,14 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  HostListener,
-  Input,
-  ViewChild
-} from '@angular/core';
+import { Component, HostListener, Input } from '@angular/core';
 import {
   FormGroup,
   FormControl,
@@ -36,9 +29,8 @@ export type ConfirmElements = {
   selector: 'app-home-confirm',
   templateUrl: './confirm.component.html'
 })
-export class ConfirmComponent extends ModalComponent implements AfterViewInit {
+export class ConfirmComponent extends ModalComponent {
   @Input() elements: ConfirmElements;
-  @ViewChild('confirmText') confirmText: ElementRef;
 
   /**
    *
@@ -52,16 +44,6 @@ export class ConfirmComponent extends ModalComponent implements AfterViewInit {
       })
     });
     this.elements = dialogRef.data as ConfirmElements;
-  }
-
-  /**
-   *
-   */
-  ngAfterViewInit() {
-    if (this.elements?.confirmText) {
-      const element = this.confirmText.nativeElement as HTMLElement;
-      element.focus();
-    }
   }
 
   /**

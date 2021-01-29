@@ -19,7 +19,7 @@ import {
   ServerDownComponent
 } from './components';
 
-import { DropdownDirective } from './directives/dropdown.directive';
+import { AutofocusDirective, DropdownDirective } from './directives';
 
 import { SignupFormComponent } from './forms/signup.component';
 
@@ -35,6 +35,7 @@ import { SignupFormComponent } from './forms/signup.component';
   ],
   declarations: [
     AlertComponent,
+    AutofocusDirective,
     DropdownDirective,
     FooterInsideComponent,
     FooterOutsideComponent,
@@ -45,6 +46,7 @@ import { SignupFormComponent } from './forms/signup.component';
   ],
   exports: [
     AlertComponent,
+    AutofocusDirective,
     CommonModule,
     DialogModule,
     DropdownDirective,
