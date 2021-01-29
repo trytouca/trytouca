@@ -9,10 +9,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
+  faCog,
   faComments,
   faSpinner,
   faTasks
 } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { DialogService, DialogRef } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
@@ -61,6 +63,7 @@ type PageButton = {
   click: () => void;
   title: string;
   text: string;
+  icons?: string[];
 };
 
 @Component({
@@ -75,7 +78,8 @@ export class BatchPageComponent
   suite: SuiteLookupResponse;
   batches: BatchItem[];
   batch: BatchLookupResponse;
-  buttons: PageButton[];
+  buttons: PageButton[] = [];
+  subButtons: PageButton[] = [];
   overview: FrontendOverviewSection;
   params: FrontendBatchCompareParams;
   TabType = BatchPageTabType;
@@ -112,7 +116,7 @@ export class BatchPageComponent
     @Inject(LOCALE_ID) private locale: string
   ) {
     super(batchPageService, pageTabs, route);
-    faIconLibrary.addIcons(faComments, faSpinner, faTasks);
+    faIconLibrary.addIcons(faCog, faComments, faSpinner, faTasks, faTrashAlt);
     this._subAlert = this.alertService.alerts$.subscribe((v) => {
       if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
         this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
@@ -141,8 +145,12 @@ export class BatchPageComponent
     this._subOverview = this.batchPageService.overview$.subscribe((v) => {
       this.overview = this.findOverviewInputs(v);
       const buttons = this.findPageButtons();
+      const subButtons = this.findPageSubButtons();
       if (!isEqual(buttons, this.buttons)) {
         this.buttons = buttons;
+      }
+      if (!isEqual(subButtons, this.subButtons)) {
+        this.subButtons = subButtons;
       }
     });
     this._subParams = this.batchPageService.params$.subscribe((v) => {
@@ -295,17 +303,29 @@ export class BatchPageComponent
       });
     }
 
+    return buttons;
+  }
+
+  /**
+   *
+   */
+  private findPageSubButtons(): PageButton[] {
+    if (this.currentTab !== this.TabType.Elements) {
+      return [];
+    }
+    const buttons: PageButton[] = [];
+
     if (
       this.batch?.isSealed &&
       this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug
     ) {
       buttons.push({
         click: () => this.removeVersion(),
+        icons: ['far', 'trash-alt'],
         text: 'Remove Version',
         title: 'Remove all test results submitted for this version.'
       });
     }
-
     return buttons;
   }
 

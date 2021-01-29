@@ -21,6 +21,22 @@
           class="wsl-btn-sm wsl-btn-dark">
           {{ button.text }}
         </button>
+        <div class="inline-block" *ngIf="subButtons.length !== 0" wslDropdown>
+          <button class="wsl-dropdown-toggle wsl-btn-sm wsl-btn-muted"
+            id="wsl-batch-settings" aria-haspopup="true" aria-expanded="false">
+            <fa-icon icon="cog" class="wsl-text-muted"></fa-icon>
+          </button>
+          <ul class="wsl-dropdown-menu hidden"
+            aria-labelledby="wsl-batch-settings">
+            <li *ngFor="let button of subButtons"
+              class="wsl-dropdown-item space-x-4" (click)="button.click()"
+              [title]="button.title">
+              <fa-icon class="wsl-text-muted" [icon]="button.icons">
+              </fa-icon>
+              <span class="text-sm">{{ button.text }}</span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div class="wsl-page-nav">
