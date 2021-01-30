@@ -30,12 +30,12 @@ export class UserMap {
 
   getGroup(key: string): Userinfo[] {
     return this.data
-      .filter(el => this.groups.get(key).find(v => v.equals(el._id)))
+      .filter((el) => this.groups.get(key).find((v) => v.equals(el._id)))
       .map(({ _id, ...el }) => el)
   }
 
   lookup(uid: Types.ObjectId): Userinfo {
-    const el = this.data.find(v => v._id.equals(uid))
+    const el = this.data.find((v) => v._id.equals(uid))
     return { fullname: el.fullname, username: el.username }
   }
 

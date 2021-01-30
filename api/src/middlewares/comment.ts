@@ -29,7 +29,9 @@ import logger from '../utils/logger'
  * - Error 404 if comment with id (`comment`) is not registered.
  */
 export async function hasComment(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const comment = await CommentModel.findById(req.params.comment)
 
@@ -37,7 +39,7 @@ export async function hasComment(
 
   if (!comment) {
     return next({
-      errors: [ 'comment not found' ],
+      errors: ['comment not found'],
       status: 404
     })
   }
@@ -46,10 +48,11 @@ export async function hasComment(
   // to comments on all pages.
 
   const batch = res.locals.batch as IBatchDocument
-  const isOwned = comment.type === ECommentType.Batch && comment.batchId.equals(batch._id);
+  const isOwned =
+    comment.type === ECommentType.Batch && comment.batchId.equals(batch._id)
   if (!isOwned) {
     return next({
-      errors: [ 'comment not found' ],
+      errors: ['comment not found'],
       status: 404
     })
   }

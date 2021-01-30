@@ -65,7 +65,8 @@ const router = e.Router()
  *      400:
  *        $ref: '#/components/responses/RequestInvalid'
  */
-router.post('/signup',
+router.post(
+  '/signup',
   bodyParser.json(),
   middleware.inputs([
     middleware.validationRules.get('email'),
@@ -94,7 +95,8 @@ router.post('/signup',
  *      401:
  *        $ref: '#/components/responses/Unauthorized'
  */
-router.post('/resend/verification',
+router.post(
+  '/resend/verification',
   middleware.isAuthenticated,
   promisable(authVerifyResend, 'resend verification email')
 )
@@ -121,7 +123,8 @@ router.post('/resend/verification',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/activate/:key',
+router.post(
+  '/activate/:key',
   promisable(authVerifyActivate, 'activate user account')
 )
 
@@ -176,7 +179,8 @@ router.post('/activate/:key',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/signin',
+router.post(
+  '/signin',
   bodyParser.json(),
   middleware.inputs([
     middleware.validationRules.get('username'),
@@ -208,7 +212,8 @@ router.post('/signin',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/signout',
+router.post(
+  '/signout',
   middleware.isAuthenticated,
   promisable(authSessionRemove, 'remove session')
 )
@@ -240,7 +245,8 @@ router.post('/signout',
  *      401:
  *        $ref: '#/components/responses/Unauthorized'
  */
-router.post('/extend',
+router.post(
+  '/extend',
   middleware.isAuthenticated,
   promisable(authSessionExtend, 'extend session')
 )
@@ -285,11 +291,10 @@ router.post('/extend',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/reset',
+router.post(
+  '/reset',
   bodyParser.json(),
-  middleware.inputs([
-    middleware.validationRules.get('email')
-  ]),
+  middleware.inputs([middleware.validationRules.get('email')]),
   promisable(authResetKeyCreate, 'create password reset key')
 )
 
@@ -329,10 +334,9 @@ router.post('/reset',
  *      400:
  *        $ref: '#/components/responses/RequestInvalid'
  */
-router.get('/reset/:key',
-  middleware.inputs([
-    middleware.validationRules.get('resetKey'),
-  ]),
+router.get(
+  '/reset/:key',
+  middleware.inputs([middleware.validationRules.get('resetKey')]),
   promisable(authResetKeyCheck, 'evaluate password reset key')
 )
 
@@ -361,7 +365,8 @@ router.get('/reset/:key',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/reset/:key',
+router.post(
+  '/reset/:key',
   bodyParser.json(),
   middleware.inputs([
     middleware.validationRules.get('resetKey'),

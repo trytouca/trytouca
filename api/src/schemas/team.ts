@@ -9,36 +9,44 @@ import mongoose from 'mongoose'
  */
 const teamSchema = new mongoose.Schema(
   {
-    admins: [{
-      ref: 'User',
-      required: true,
-      type: mongoose.Schema.Types.ObjectId
-    }],
-    applicants: [{
-      ref: 'User',
-      required: true,
-      type: mongoose.Schema.Types.ObjectId
-    }],
-    invitees: [{
-      _id: false,
-      email: {
+    admins: [
+      {
+        ref: 'User',
         required: true,
-        type: String
-      },
-      fullname: {
-        required: true,
-        type: String
-      },
-      invitedAt: {
-        type: Date,
-        default: Date.now
+        type: mongoose.Schema.Types.ObjectId
       }
-    }],
-    members: [{
-      ref: 'User',
-      required: true,
-      type: mongoose.Schema.Types.ObjectId
-    }],
+    ],
+    applicants: [
+      {
+        ref: 'User',
+        required: true,
+        type: mongoose.Schema.Types.ObjectId
+      }
+    ],
+    invitees: [
+      {
+        _id: false,
+        email: {
+          required: true,
+          type: String
+        },
+        fullname: {
+          required: true,
+          type: String
+        },
+        invitedAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ],
+    members: [
+      {
+        ref: 'User',
+        required: true,
+        type: mongoose.Schema.Types.ObjectId
+      }
+    ],
     name: {
       required: true,
       type: String
@@ -72,7 +80,7 @@ teamSchema.index({ slug: 1 }, { unique: true })
  */
 export interface ITeamDocument extends mongoose.Document {
   admins: mongoose.Types.ObjectId[]
-  invitees: { email: string, fullname: string, invitedAt: Date }[]
+  invitees: { email: string; fullname: string; invitedAt: Date }[]
   members: mongoose.Types.ObjectId[]
   name: string
   owner: mongoose.Types.ObjectId
@@ -88,13 +96,12 @@ export type ITeam = Pick<ITeamDocument, '_id' | 'name' | 'slug'>
 /**
  *
  */
-export interface ITeamModel extends mongoose.Model<ITeamDocument> {
-}
+export interface ITeamModel extends mongoose.Model<ITeamDocument> {}
 
 /**
  *
  */
-export const TeamModel: ITeamModel = mongoose.model<
-  ITeamDocument,
-  ITeamModel
->('Team', teamSchema)
+export const TeamModel: ITeamModel = mongoose.model<ITeamDocument, ITeamModel>(
+  'Team',
+  teamSchema
+)

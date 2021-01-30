@@ -14,7 +14,7 @@ type TokenPayload = {
 }
 
 type TokenInput = {
-  expiresAt: Date,
+  expiresAt: Date
   _id: string
 }
 
@@ -40,7 +40,6 @@ export function issue(session: TokenInput): string {
  *
  */
 export function extractPayload(token: string): TokenPayload {
-
   if (!token) {
     logger.silly('authentication cookie missing')
     return

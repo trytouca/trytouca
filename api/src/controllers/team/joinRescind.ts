@@ -12,21 +12,24 @@ import { rclient } from '../../utils/redis'
  *
  */
 export async function teamJoinRescind(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
-  const tuple = [ user.username, team.slug ]
+  const tuple = [user.username, team.slug]
   logger.debug('%s: rescinding request to join %s', ...tuple)
 
   // reject the request if user is a member of this team
 
   const isMember = await UserModel.countDocuments({
-    _id: user._id, teams: { $in: [ team._id ] }
+    _id: user._id,
+    teams: { $in: [team._id] }
   })
   if (isMember) {
     return next({
-      errors: [ 'user already a member' ],
+      errors: ['user already a member'],
       status: 409
     })
   }
@@ -34,11 +37,12 @@ export async function teamJoinRescind(
   // reject the request if user has no pending join request
 
   const hasPending = await TeamModel.countDocuments({
-    _id: team._id, applicants: { $in: user._id }
+    _id: team._id,
+    applicants: { $in: user._id }
   })
   if (!hasPending) {
     return next({
-      errors: [ 'user has no pending join request' ],
+      errors: ['user has no pending join request'],
       status: 409
     })
   }

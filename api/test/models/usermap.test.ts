@@ -10,7 +10,7 @@ import { Types } from 'mongoose'
 import { UserModel } from '../../src/schemas/user'
 import { UserMap } from '../../src/models/usermap'
 
-describe('model-usermap', function() {
+describe('model-usermap', function () {
   let mockObj = null
   const idA = new Types.ObjectId()
   const idB = new Types.ObjectId()
@@ -27,9 +27,9 @@ describe('model-usermap', function() {
   after(() => {
     mockObj.restore()
   })
-  const groupA = [ idA ]
-  const groupB = [ idB, idC ]
-  const groupC = [ idA, idB, idC ]
+  const groupA = [idA]
+  const groupB = [idB, idC]
+  const groupC = [idA, idB, idC]
   it('basic usage', async () => {
     const userMap = await new UserMap()
       .addGroup('group-A', groupA)
@@ -40,10 +40,15 @@ describe('model-usermap', function() {
       { fullname: 'User B', username: 'userB' },
       { fullname: 'User C', username: 'userC' }
     ])
-    expect(userMap.lookup(idA)).to.eql({ fullname: 'User A', username: 'userA' })
-    expect(userMap.allUsers()).to.eql(expectedOut.map(v => {
-      const { _id, ...rest } = v
-      return rest
-    }))
+    expect(userMap.lookup(idA)).to.eql({
+      fullname: 'User A',
+      username: 'userA'
+    })
+    expect(userMap.allUsers()).to.eql(
+      expectedOut.map((v) => {
+        const { _id, ...rest } = v
+        return rest
+      })
+    )
   })
 })

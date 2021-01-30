@@ -21,11 +21,13 @@ import logger from '../../utils/logger'
  *  - `isTeamOwner`
  */
 export async function ctrlTeamRemove(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const team = res.locals.team as ITeam
   const user = res.locals.user as IUser
-  const tuple = [ team.slug ].join('/')
+  const tuple = [team.slug].join('/')
   logger.info('%s: removing %s', user.username, tuple)
   const tic = process.hrtime()
 
@@ -36,9 +38,12 @@ export async function ctrlTeamRemove(
   // policy enforcement service.
 
   const suites = await SuiteModel.find({ team: team._id })
-  const suiteIds = suites.map(v => v._id)
-  const batches = await BatchModel.find({ suite: { $in: suiteIds } }, { _id: 1 })
-  const batchIds = batches.map(v => v._id)
+  const suiteIds = suites.map((v) => v._id)
+  const batches = await BatchModel.find(
+    { suite: { $in: suiteIds } },
+    { _id: 1 }
+  )
+  const batchIds = batches.map((v) => v._id)
 
   await MessageModel.updateMany(
     { batchId: { $in: batchIds } },
@@ -51,25 +56,22 @@ export async function ctrlTeamRemove(
     await suiteRemove(suite)
   }
 
-  if (await SuiteModel.countDocuments({ team: team._id }) !== 0) {
-
+  if ((await SuiteModel.countDocuments({ team: team._id })) !== 0) {
     logger.info('%s: %s: failed to remove some suites', user.username, tuple)
     return next({
-      errors: [ 'scheduled removal' ],
+      errors: ['scheduled removal'],
       status: 202
     })
-
   } else {
-
     await UserModel.updateMany(
       { teams: { $elemMatch: { $eq: team._id } } },
-      { $pull: { teams: team._id } })
+      { $pull: { teams: team._id } }
+    )
     await TeamModel.findByIdAndRemove(team._id)
     logger.info('%s: removed team', team.slug)
 
     rclient.removeCachedByPrefix(`route_teamLookup_${team.slug}_`)
     rclient.removeCachedByPrefix(`route_teamList_`)
-
   }
 
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)

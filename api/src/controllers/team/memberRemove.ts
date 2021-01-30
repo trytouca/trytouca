@@ -9,7 +9,7 @@ import { ITeam, TeamModel } from '../../schemas/team'
 import { IUser, UserModel } from '../../schemas/user'
 import logger from '../../utils/logger'
 import * as mailer from '../../utils/mailer'
-import { rclient } from '../../utils/redis';
+import { rclient } from '../../utils/redis'
 
 /**
  * @summary
@@ -27,12 +27,14 @@ import { rclient } from '../../utils/redis';
  *  - `hasMember` to yield `member`
  */
 export async function teamMemberRemove(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const member = res.locals.member as IUser
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
-  const tuple = [ user.username, member.username, team.slug ]
+  const tuple = [user.username, member.username, team.slug]
   logger.debug('%s: removing member %s from team %s', ...tuple)
 
   // corner case: no one allowed to remove themselves
@@ -40,33 +42,36 @@ export async function teamMemberRemove(
   if (member.username === user.username) {
     return next({
       status: 403,
-      errors: [ 'removing own membership forbidden' ]
+      errors: ['removing own membership forbidden']
     })
   }
 
   // find role of this user in this team
 
   const roleUser = await findTeamRoleOfUser(team, user)
-  logger.silly('%s: has role %s in team %s',
-    user.username, roleUser, team.slug)
+  logger.silly('%s: has role %s in team %s', user.username, roleUser, team.slug)
 
   // find role of member in this team
 
   const roleMember = await findTeamRoleOfUser(team, member)
-  logger.silly('%s: has role %s in team %s',
-    member.username, roleMember, team.slug)
+  logger.silly(
+    '%s: has role %s in team %s',
+    member.username,
+    roleMember,
+    team.slug
+  )
 
   // define a helper function to determine seniority of roles
 
-  const orders = [ ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner ]
-  const getOrder = (role: ETeamRole) => orders.findIndex(v => v === role)
+  const orders = [ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner]
+  const getOrder = (role: ETeamRole) => orders.findIndex((v) => v === role)
 
   // disallow admins to remove members with a role higher or equal their own
 
   if (getOrder(roleUser) <= getOrder(roleMember)) {
     return next({
       status: 403,
-      errors: [ 'removing senior members forbidden' ]
+      errors: ['removing senior members forbidden']
     })
   }
 

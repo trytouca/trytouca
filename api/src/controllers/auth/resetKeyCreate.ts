@@ -14,7 +14,9 @@ import * as mailer from '../../utils/mailer'
  *
  */
 export async function authResetKeyCreate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const askedEmail = req.body.email
   logger.debug('received request to create password reset key')
@@ -28,7 +30,7 @@ export async function authResetKeyCreate(
   if (!user) {
     logger.warn('%s: account not found', askedEmail)
     return next({
-      errors: [ 'account not found' ],
+      errors: ['account not found'],
       status: 404
     })
   }
@@ -38,7 +40,7 @@ export async function authResetKeyCreate(
   if (user.suspended) {
     logger.warn('%s: rejecting reset request of suspended user', user.username)
     return next({
-      errors: [ 'account suspended' ],
+      errors: ['account suspended'],
       status: 423
     })
   }
@@ -51,7 +53,7 @@ export async function authResetKeyCreate(
     if (new Date() < lockedUntil) {
       logger.warn('%s: rejecting reset request of locked user', user.username)
       return next({
-        errors: [ 'account locked' ],
+        errors: ['account locked'],
         status: 423
       })
     }

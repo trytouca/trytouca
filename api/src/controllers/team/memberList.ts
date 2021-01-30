@@ -4,7 +4,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import type { TeamMemberListResponse } from '../../commontypes';
+import type { TeamMemberListResponse } from '../../commontypes'
 import { ETeamRole } from '../../commontypes'
 import { ITeam, TeamModel } from '../../schemas/team'
 import { IUser } from '../../schemas/user'
@@ -16,11 +16,12 @@ import { rclient } from '../../utils/redis'
  *
  * @internal
  */
-async function teamMemberListImpl(team: ITeam): Promise<TeamMemberListResponse> {
-
-  type DbMember = { username: string, fullname: string }
-  type DbInvitee = { email: string, fullname: string, invitedAt: Date }
-  type DbApplicant = { email: string, fullname: string, username: string }
+async function teamMemberListImpl(
+  team: ITeam
+): Promise<TeamMemberListResponse> {
+  type DbMember = { username: string; fullname: string }
+  type DbInvitee = { email: string; fullname: string; invitedAt: Date }
+  type DbApplicant = { email: string; fullname: string; username: string }
   type DatabaseOutput = {
     owner: DbMember
     admins: DbMember[]
@@ -68,12 +69,12 @@ async function teamMemberListImpl(team: ITeam): Promise<TeamMemberListResponse> 
         _id: 0,
         ownerDoc: {
           fullname: 1,
-          username: 1,
+          username: 1
         },
         adminDocs: 1,
         memberDocs: 1,
         invitees: 1,
-        applicantDocs: 1,
+        applicantDocs: 1
       }
     },
     { $unwind: '$ownerDoc' },
@@ -86,16 +87,16 @@ async function teamMemberListImpl(team: ITeam): Promise<TeamMemberListResponse> 
     {
       $group: {
         _id: 'memberDocs',
-        ownerDoc: { '$first': '$ownerDoc' },
-        adminDocs: { '$first': '$adminDocs' },
+        ownerDoc: { $first: '$ownerDoc' },
+        adminDocs: { $first: '$adminDocs' },
         members: {
           $push: {
             fullname: '$memberDocs.fullname',
-            username: '$memberDocs.username',
+            username: '$memberDocs.username'
           }
         },
-        invitees: { '$first': '$invitees' },
-        applicantDocs: { '$first': '$applicantDocs' }
+        invitees: { $first: '$invitees' },
+        applicantDocs: { $first: '$applicantDocs' }
       }
     },
     {
@@ -107,16 +108,16 @@ async function teamMemberListImpl(team: ITeam): Promise<TeamMemberListResponse> 
     {
       $group: {
         _id: null,
-        owner: { '$first': '$ownerDoc' },
+        owner: { $first: '$ownerDoc' },
         admins: {
           $push: {
             fullname: '$adminDocs.fullname',
-            username: '$adminDocs.username',
+            username: '$adminDocs.username'
           }
         },
-        members: { '$first': '$members' },
-        invitees: { '$first': '$invitees' },
-        applicantDocs: { '$first': '$applicantDocs' }
+        members: { $first: '$members' },
+        invitees: { $first: '$invitees' },
+        applicantDocs: { $first: '$applicantDocs' }
       }
     },
     {
@@ -128,10 +129,10 @@ async function teamMemberListImpl(team: ITeam): Promise<TeamMemberListResponse> 
     {
       $group: {
         _id: null,
-        owner: { '$first': '$owner' },
-        admins: { '$first': '$admins' },
-        members: { '$first': '$members' },
-        invitees: { '$first': '$invitees' },
+        owner: { $first: '$owner' },
+        admins: { $first: '$admins' },
+        members: { $first: '$members' },
+        invitees: { $first: '$invitees' },
         applicants: {
           $push: {
             email: '$applicantDocs.email',
@@ -145,18 +146,19 @@ async function teamMemberListImpl(team: ITeam): Promise<TeamMemberListResponse> 
   ])
 
   const output: TeamMemberListResponse = {
-    applicants: result[0].applicants
-        .filter(v => Object.keys(v).length),
+    applicants: result[0].applicants.filter((v) => Object.keys(v).length),
     invitees: result[0].invitees,
     members: result[0].members
-        .filter(v => Object.keys(v).length)
-        .map(el => ({ ...el, role: ETeamRole.Member }))
-      .concat(result[0].admins
-        .filter(v => Object.keys(v).length)
-        .map(el => ({ ...el, role: ETeamRole.Admin })))
-      .concat([ { ...result[0].owner, role: ETeamRole.Owner } ])
+      .filter((v) => Object.keys(v).length)
+      .map((el) => ({ ...el, role: ETeamRole.Member }))
+      .concat(
+        result[0].admins
+          .filter((v) => Object.keys(v).length)
+          .map((el) => ({ ...el, role: ETeamRole.Admin }))
+      )
+      .concat([{ ...result[0].owner, role: ETeamRole.Owner }])
       .sort((a, b) => {
-        const orders = [ ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner ]
+        const orders = [ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner]
         return orders.indexOf(a.role) - orders.indexOf(b.role)
       })
   }
@@ -181,7 +183,9 @@ async function teamMemberListImpl(team: ITeam): Promise<TeamMemberListResponse> 
  * Performs one database query.
  */
 export async function teamMemberList(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam

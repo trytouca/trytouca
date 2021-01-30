@@ -55,7 +55,9 @@ export function extractCommentType(res: Response): ECommentType {
 /**
  *
  */
-async function getSuiteSubscribers(suiteId: ISuiteDocument['_id']): Promise<IUser[]> {
+async function getSuiteSubscribers(
+  suiteId: ISuiteDocument['_id']
+): Promise<IUser[]> {
   type SuiteInfo = { subscribers: IUser[] }
   const result: SuiteInfo[] = await SuiteModel.aggregate([
     { $match: { _id: suiteId } },
@@ -102,19 +104,21 @@ type MailInputs = {
  *
  */
 export async function notifySubscribers(
-  inputs: MailInputs, locals: CommentInputs
+  inputs: MailInputs,
+  locals: CommentInputs
 ): Promise<void> {
-
   const subscribers = await getSuiteSubscribers(locals.suite._id)
 
   // since there may be many subscribers, we prefer to send emails in chunks.
 
   const chunkSize = 5
   for (let i = 0; i < subscribers.length; i = i + chunkSize) {
-    const jobs = subscribers.slice(i, i + chunkSize).map(async subscriber => {
+    const jobs = subscribers.slice(i, i + chunkSize).map(async (subscriber) => {
       inputs.username = subscriber.fullname
-      inputs.commentBy = subscriber.username === locals.user.username
-        ? 'You' : locals.user.fullname || locals.user.username
+      inputs.commentBy =
+        subscriber.username === locals.user.username
+          ? 'You'
+          : locals.user.fullname || locals.user.username
       await mailUser(subscriber, inputs.subject, inputs.template, inputs)
     })
     await Promise.all(jobs)

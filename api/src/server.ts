@@ -10,7 +10,12 @@ import hidePoweredBy from 'hide-powered-by'
 import mongoose from 'mongoose'
 import nocache from 'nocache'
 
-import { analyticsService, autosealService, reportingService, retentionService } from './services'
+import {
+  analyticsService,
+  autosealService,
+  reportingService,
+  retentionService
+} from './services'
 import { setupSuperuser } from './startup'
 import router from './routes'
 import { config } from './utils/config'
@@ -30,7 +35,7 @@ app.use('/', router)
 
 app.use((req, res, next) => {
   logger.warn('invalid route %s', req.originalUrl)
-  return res.status(404).json({ errors: [ 'invalid route' ] })
+  return res.status(404).json({ errors: ['invalid route'] })
 })
 
 app.use((err, req, res, next) => {
@@ -49,12 +54,12 @@ async function shutdown(): Promise<void> {
 let server
 async function launch(application) {
   // make sure we can connect to database
-  if (!await makeConnectionMongo()) {
+  if (!(await makeConnectionMongo())) {
     process.exit(1)
   }
 
   // make sure we can connect to cache server
-  if (!await makeConnectionRedis()) {
+  if (!(await makeConnectionRedis())) {
     process.exit(1)
   }
 
@@ -88,18 +93,22 @@ async function launch(application) {
 
 process.once('SIGUSR2', () => {
   const kill = () => process.kill(process.pid, 'SIGUSR2')
-  shutdown().then(kill).catch((err) => {
-    logger.warn('backend failed to shutdown gracefully: %O', err)
-    kill()
-  })
+  shutdown()
+    .then(kill)
+    .catch((err) => {
+      logger.warn('backend failed to shutdown gracefully: %O', err)
+      kill()
+    })
 })
 
 process.on('SIGINT', () => {
   const kill = () => process.exit(0)
-  shutdown().then(kill).catch((err) => {
-    logger.warn('backend failed to shutdown gracefully: %O', err)
-    kill()
-  })
+  shutdown()
+    .then(kill)
+    .catch((err) => {
+      logger.warn('backend failed to shutdown gracefully: %O', err)
+      kill()
+    })
 })
 
 launch(app)

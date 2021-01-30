@@ -4,7 +4,10 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { BackendBatchComparisonItem, BackendBatchComparisonResponse } from '../../backendtypes'
+import {
+  BackendBatchComparisonItem,
+  BackendBatchComparisonResponse
+} from '../../backendtypes'
 import { IUser } from '../../schemas/user'
 import { ITeam } from '../../schemas/team'
 import { ISuiteDocument, SuiteModel } from '../../schemas/suite'
@@ -64,7 +67,9 @@ function cleanOutput(output: BackendBatchComparisonResponse): void {
  * - Database Queries: Unknown
  */
 export async function batchCompare(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
@@ -81,7 +86,8 @@ export async function batchCompare(
     srcBatch: batch.slug,
     srcSuite: suite.slug
   }
-  const cacheKey = `route_batchCompare_${team.slug}_` + Object.values(names).join('_')
+  const cacheKey =
+    `route_batchCompare_${team.slug}_` + Object.values(names).join('_')
 
   // return comparison result from cache in case it is available
 
@@ -104,10 +110,11 @@ export async function batchCompare(
   } else {
     params.dstSuite = await SuiteModel.findOne(
       { slug: names.dstSuite },
-      { _id: 1, slug: 1 })
+      { _id: 1, slug: 1 }
+    )
     if (!params.dstSuite) {
       return next({
-        errors: [ 'dst suite not found' ],
+        errors: ['dst suite not found'],
         status: 404
       })
     }
@@ -120,10 +127,11 @@ export async function batchCompare(
   } else {
     params.dstBatch = await BatchModel.findOne(
       { slug: names.dstBatch, suite: params.dstSuite._id },
-      { _id: 1, slug: 1, sealedAt: 1 })
+      { _id: 1, slug: 1, sealedAt: 1 }
+    )
     if (!params.dstBatch) {
       return next({
-        errors: [ 'dst batch not found' ],
+        errors: ['dst batch not found'],
         status: 404
       })
     }
@@ -132,17 +140,19 @@ export async function batchCompare(
   // compare the two batches
 
   try {
+    const headName = [params.srcSuite.slug, params.srcBatch.slug].join('/')
+    const baseName = [params.dstSuite.slug, params.dstBatch.slug].join('/')
 
-    const headName = [ params.srcSuite.slug, params.srcBatch.slug ].join('/')
-    const baseName = [ params.dstSuite.slug, params.dstBatch.slug ].join('/')
-
-    const output = await ComparisonFunctions.compareBatch(params.dstBatch._id, params.srcBatch._id)
+    const output = await ComparisonFunctions.compareBatch(
+      params.dstBatch._id,
+      params.srcBatch._id
+    )
     logger.info('compared %s with %s', headName, baseName)
 
     // check if all elements are processed. Since we rely on field `elasticId`,
     // this check must be done prior to cleanup of the output.
 
-    const isProcessed = output.common.every(v => v.elasticId)
+    const isProcessed = output.common.every((v) => v.elasticId)
 
     // remove backend-specific information that may have been needed during
     // processing but should not be exposed to the user.
@@ -154,16 +164,18 @@ export async function batchCompare(
     if (isProcessed) {
       const isSealed = (batch: IBatchDocument) => Boolean(batch.sealedAt)
       const isFixed = isSealed(params.dstBatch) && isSealed(params.srcBatch)
-      const duration = isFixed ? config.redis.durationLong : config.redis.durationShort
+      const duration = isFixed
+        ? config.redis.durationLong
+        : config.redis.durationShort
       rclient.cache(cacheKey, output, duration)
     }
 
-    const toc = process.hrtime(tic)
+    const toc = process
+      .hrtime(tic)
       .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
     logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
     return res.status(200).json(output)
-
   } catch (err) {
-    return next({ errors: [ err ], status: 503 })
+    return next({ errors: [err], status: 503 })
   }
 }

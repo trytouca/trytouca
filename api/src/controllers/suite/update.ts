@@ -23,14 +23,19 @@ import { rclient } from '../../utils/redis'
  * @todo send email to subscribed users if suiteSlug changes
  */
 export async function suiteUpdate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
-  const tuple = [ team.slug, suite.slug ].join('/')
+  const tuple = [team.slug, suite.slug].join('/')
   const proposed = req.body as {
-    slug: string, name: string, retainFor: number, sealAfter: number
+    slug: string
+    name: string
+    retainFor: number
+    sealAfter: number
   }
   logger.debug('%s: updating suite %s: %j', user.username, tuple, proposed)
 
@@ -51,8 +56,18 @@ export async function suiteUpdate(
   // was successful.
 
   if ('slug' in proposed && proposed.slug !== suite.slug) {
-    logger.warn('%s: suite is now known as %s/%s', tuple, team.slug, proposed.slug)
-    const redirectPath = [ config.express.root, 'suite', team.slug, proposed.slug ].join('/')
+    logger.warn(
+      '%s: suite is now known as %s/%s',
+      tuple,
+      team.slug,
+      proposed.slug
+    )
+    const redirectPath = [
+      config.express.root,
+      'suite',
+      team.slug,
+      proposed.slug
+    ].join('/')
     return res.status(201).location(redirectPath).send()
   }
 

@@ -6,7 +6,7 @@ import mongoose from 'mongoose'
 
 export enum EReportType {
   Seal = 'seal',
-  Promote = 'promote',
+  Promote = 'promote'
 }
 
 /**
@@ -32,7 +32,7 @@ const reportSchema = new mongoose.Schema(
       enum: Object.values(EReportType),
       required: true,
       type: String
-    },
+    }
   },
   {
     timestamps: true
@@ -57,8 +57,7 @@ export interface IReportDocument extends mongoose.Document {
 /**
  *
  */
-interface IReportModel extends mongoose.Model<IReportDocument> {
-}
+interface IReportModel extends mongoose.Model<IReportDocument> {}
 
 /**
  *

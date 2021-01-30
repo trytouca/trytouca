@@ -81,7 +81,7 @@ function findPath(environment = '') {
   return path.normalize(`${__dirname}/../../env/${name}`)
 }
 
-dotenv.config({ path: findPath()})
+dotenv.config({ path: findPath() })
 dotenv.config({ path: findPath(process.env.ENV_FILE) })
 
 const env = process.env
@@ -143,15 +143,17 @@ export const config: IConfig = {
     },
     // reporting service
     reporting: {
-      checkInterval: Number(env.SERVICE_REPORTING_CHECK_INTERVAL) || 5 * 60,
+      checkInterval: Number(env.SERVICE_REPORTING_CHECK_INTERVAL) || 5 * 60
     },
     // data retention service
     retention: {
       checkInterval: Number(env.SERVICE_RETENTION_CHECK_INTERVAL) || 30 * 60,
-      defaultDuration: Number(env.SERVICE_RETENTION_DEFAULT_DURATION) || 2 * 365 * 86400,
+      defaultDuration:
+        Number(env.SERVICE_RETENTION_DEFAULT_DURATION) || 2 * 365 * 86400,
       // comparison result lifetime
-      resultLifetime: Number(env.SERVICE_RETENTION_DEFAULT_RESULT_LIFETIME) || 30 * 86400,
-    },
+      resultLifetime:
+        Number(env.SERVICE_RETENTION_DEFAULT_RESULT_LIFETIME) || 30 * 86400
+    }
   },
   storage: {
     directory: path.normalize(`${__dirname}/../../` + env.DSP_DIR)
@@ -162,8 +164,7 @@ export const config: IConfig = {
 }
 
 class ConfigManager {
-  constructor(private data: IConfig) {
-  }
+  constructor(private data: IConfig) {}
   public getMongoUri(): string {
     const m = this.data.mongo
     return `mongodb://${m.user}:${m.pass}@${m.host}:${m.port}/${m.database}`
@@ -173,8 +174,10 @@ class ConfigManager {
     return `redis://${redis.host}:${redis.port}/${redis.database}`
   }
   public hasMailTransport(): boolean {
-    const keys = [ 'user', 'host', 'port' ]
-    return keys.every((key) => config.mail[key] && config.mail[key] !== "<SECRET>")
+    const keys = ['user', 'host', 'port']
+    return keys.every(
+      (key) => config.mail[key] && config.mail[key] !== '<SECRET>'
+    )
   }
 }
 

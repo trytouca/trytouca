@@ -13,7 +13,9 @@ import * as mailer from '../../utils/mailer'
  *
  */
 export async function authVerifyResend(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   logger.info('%s: resending verification email', user.username)

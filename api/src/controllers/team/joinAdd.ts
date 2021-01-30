@@ -16,21 +16,24 @@ import { findTeamUsersByRole } from '../team/common'
  *
  */
 export async function teamJoinAdd(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
-  const tuple = [ user.username, team.slug ]
+  const tuple = [user.username, team.slug]
   logger.debug('%s: requesting to join %s', ...tuple)
 
   // reject the request if user is a member of this team
 
   const isMember = await UserModel.countDocuments({
-    _id: user._id, teams: { $in: [ team._id ] }
+    _id: user._id,
+    teams: { $in: [team._id] }
   })
   if (isMember) {
     return next({
-      errors: [ 'user already a member' ],
+      errors: ['user already a member'],
       status: 409
     })
   }
@@ -38,11 +41,12 @@ export async function teamJoinAdd(
   // reject the request if user has a pending join request
 
   const hasPending = await TeamModel.countDocuments({
-    _id: team._id, applicants: { $in: user._id }
+    _id: team._id,
+    applicants: { $in: user._id }
   })
   if (hasPending) {
     return next({
-      errors: [ 'user has pending join request' ],
+      errors: ['user has pending join request'],
       status: 409
     })
   }
@@ -67,11 +71,14 @@ export async function teamJoinAdd(
   // send email to team admins.
 
   const subject = `${user.fullname} asks to join team ${team.name}`
-  const users = await findTeamUsersByRole(team, [ ETeamRole.Owner, ETeamRole.Admin ])
+  const users = await findTeamUsersByRole(team, [
+    ETeamRole.Owner,
+    ETeamRole.Admin
+  ])
   mailer.mailUsers(users, subject, 'team-join-add', {
     subject,
     teamName: team.name,
-    teamLink: [ config.webapp.root, '~', team.slug ].join('/') + '?t=members',
+    teamLink: [config.webapp.root, '~', team.slug].join('/') + '?t=members',
     userName: user?.fullname || user?.username
   })
 

@@ -16,10 +16,13 @@ import { rclient } from '../../utils/redis'
  *
  */
 async function batchPromote(
-  team: ITeam, suite: ISuiteDocument, batch: IBatchDocument,
-  user: IUser, reason: string
+  team: ITeam,
+  suite: ISuiteDocument,
+  batch: IBatchDocument,
+  user: IUser,
+  reason: string
 ): Promise<void> {
-  const tuple = [ team.slug, suite.slug, batch.slug ].join('/')
+  const tuple = [team.slug, suite.slug, batch.slug].join('/')
 
   // perform promotion of batch
 
@@ -53,17 +56,19 @@ async function batchPromote(
   //    the list of batches.
 
   const batches = await BatchModel.find({
-    suite: suite._id, submittedAt: { $gt: batch.submittedAt }
+    suite: suite._id,
+    submittedAt: { $gt: batch.submittedAt }
   })
 
   if (batches.length) {
     logger.info('%s: refreshing metadata of %d batches', tuple, batches.length)
 
-    batches.forEach(v => ComparisonFunctions.compareBatch(batch._id, v._id))
+    batches.forEach((v) => ComparisonFunctions.compareBatch(batch._id, v._id))
 
     await BatchModel.updateMany(
-      { _id: { $in: batches.map(raw => raw._id) } },
-      { $set: { superior: batch._id }, $unset: { meta: true } })
+      { _id: { $in: batches.map((raw) => raw._id) } },
+      { $set: { superior: batch._id }, $unset: { meta: true } }
+    )
   }
 
   // remove information about list of known suites from cache.
@@ -78,7 +83,7 @@ async function batchPromote(
     { $match: { suite: suite._id } },
     { $sort: { submittedAt: -1 } },
     { $limit: 1 },
-    { $project: { _id : 1 } }
+    { $project: { _id: 1 } }
   ])
 
   const srcBatchId = result[0]._id
@@ -117,14 +122,16 @@ async function batchPromote(
  * - Database Queries: 2
  */
 export async function ctrlBatchPromote(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
   const batch = res.locals.batch as IBatchDocument
   const reason: string = req.body.reason
-  const tuple = [ team.slug, suite.slug, batch.slug ].join('/')
+  const tuple = [team.slug, suite.slug, batch.slug].join('/')
   logger.info('%s: %s: promoting to baseline', user.username, tuple)
 
   // check if batch is already set as suite baseline
@@ -147,9 +154,10 @@ export async function ctrlBatchPromote(
       logger.silly('%s: updating promotion reason', tuple)
       await SuiteModel.updateOne(
         { _id: suite._id, promotions: { $elemMatch: { at: baselineInfo.at } } },
-        { 'promotions.$.for': reason })
+        { 'promotions.$.for': reason }
+      )
       logger.info('%s: %s: updated promotion reason', user.username, tuple)
-      return res.status(204).send();
+      return res.status(204).send()
     }
   }
 
@@ -158,7 +166,7 @@ export async function ctrlBatchPromote(
 
   if (!batch.sealedAt) {
     return next({
-      errors: [ 'batch is not sealed' ],
+      errors: ['batch is not sealed'],
       status: 400
     })
   }
@@ -168,7 +176,7 @@ export async function ctrlBatchPromote(
 
   if (batch.elements.length === 0) {
     return next({
-      errors: [ 'batch is empty' ],
+      errors: ['batch is empty'],
       status: 400
     })
   }

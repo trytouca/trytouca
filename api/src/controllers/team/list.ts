@@ -17,10 +17,7 @@ import { Types } from 'mongoose'
  *
  * @internal
  */
-async function teamList(
-  user: IUser
-): Promise<TeamListResponse> {
-
+async function teamList(user: IUser): Promise<TeamListResponse> {
   type DatabaseOutput = {
     slug: string
     name: string
@@ -61,20 +58,22 @@ async function teamList(
     if (v.owner.equals(user._id)) {
       return ETeamRole.Owner
     }
-    if (v.admins.some(v => v.equals(user._id))) {
+    if (v.admins.some((v) => v.equals(user._id))) {
       return ETeamRole.Admin
     }
-    if (v.members.some(v => v.equals(user._id))) {
+    if (v.members.some((v) => v.equals(user._id))) {
       return ETeamRole.Member
     }
     return ETeamRole.Invalid
   }
 
-  return result.map((v): TeamItem => ({
-    name: v.name,
-    role: getRole(v),
-    slug: v.slug
-  }))
+  return result.map(
+    (v): TeamItem => ({
+      name: v.name,
+      role: getRole(v),
+      slug: v.slug
+    })
+  )
 }
 
 /**
@@ -82,10 +81,7 @@ async function teamList(
  *
  * @internal
  */
-async function prospectiveTeamList(
-  user: IUser
-): Promise<TeamListResponse> {
-
+async function prospectiveTeamList(user: IUser): Promise<TeamListResponse> {
   type DatabaseOutput = {
     slug: string
     name: string
@@ -107,7 +103,7 @@ async function prospectiveTeamList(
         _id: 0,
         'teamDocs.slug': 1,
         'teamDocs.name': 1,
-        'teamDocs.applicants': 1,
+        'teamDocs.applicants': 1
       }
     },
     {
@@ -119,17 +115,19 @@ async function prospectiveTeamList(
   ])
 
   const getRole = (v: DatabaseOutput): ETeamRole => {
-    if (v.applicants.some(v => v.equals(user._id))) {
+    if (v.applicants.some((v) => v.equals(user._id))) {
       return ETeamRole.Applicant
     }
     return ETeamRole.Invalid
   }
 
-  return result.map((v): TeamItem => ({
-    name: v.name,
-    role: getRole(v),
-    slug: v.slug
-  }))
+  return result.map(
+    (v): TeamItem => ({
+      name: v.name,
+      role: getRole(v),
+      slug: v.slug
+    })
+  )
 }
 
 /**
@@ -145,7 +143,9 @@ async function prospectiveTeamList(
  * Database Queries: 1
  */
 export async function ctrlTeamList(
-  _req: Request, res: Response, _next: NextFunction
+  _req: Request,
+  res: Response,
+  _next: NextFunction
 ) {
   const user = res.locals.user as IUser
   logger.debug('%s: listing teams', user.username)
@@ -164,9 +164,15 @@ export async function ctrlTeamList(
 
   const active = await teamList(user)
   const prospective = await prospectiveTeamList(user)
-  const teams = await TeamModel.find({ invitees: { $elemMatch: { email: user.email } } })
-  const invited = teams.map((v: ITeamDocument) => ({name: v.name, slug: v.slug, role: ETeamRole.Invited}))
-  const output = [ ...active, ...prospective, ...invited ]
+  const teams = await TeamModel.find({
+    invitees: { $elemMatch: { email: user.email } }
+  })
+  const invited = teams.map((v: ITeamDocument) => ({
+    name: v.name,
+    slug: v.slug,
+    role: ETeamRole.Invited
+  }))
+  const output = [...active, ...prospective, ...invited]
 
   // cache list result
 
@@ -174,8 +180,7 @@ export async function ctrlTeamList(
 
   // log runtime performance before returning
 
-  const toc = process.hrtime(tic)
-    .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
   return res.status(200).json(output)
 }

@@ -8,7 +8,6 @@ import mongoose from 'mongoose'
  *
  */
 export class MessageInfo {
-
   public batchId: mongoose.Types.ObjectId
   public batchName: string
   public elasticId: string
@@ -23,7 +22,6 @@ export class MessageInfo {
   }
 
   public name(): string {
-    return [ this.suiteName, this.batchName, this.elementName ].join('/')
+    return [this.suiteName, this.batchName, this.elementName].join('/')
   }
-
 }

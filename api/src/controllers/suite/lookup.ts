@@ -18,9 +18,10 @@ import { rclient } from '../../utils/redis'
  * Provides information about a given suite.
  */
 async function suiteLookup(
-  user: IUser, team: ITeam, suite: ISuiteDocument
+  user: IUser,
+  team: ITeam,
+  suite: ISuiteDocument
 ): Promise<SuiteLookupResponse> {
-
   // find list of batches that belong to this suite, sorted in descending
   // order of their submission time. We use this list to populate some of
   // the fields in our response.
@@ -33,7 +34,7 @@ async function suiteLookup(
         from: 'users',
         localField: 'submittedBy',
         foreignField: '_id',
-        as: 'submittedByDoc',
+        as: 'submittedByDoc'
       }
     },
     { $unwind: '$submittedByDoc' },
@@ -43,7 +44,7 @@ async function suiteLookup(
         batchSlug: '$slug',
         commentCount: { $literal: 0 },
         expirable: 1,
-        isSealed: { $cond: [ { $ifNull: ['$sealedAt', false] }, true, false ] },
+        isSealed: { $cond: [{ $ifNull: ['$sealedAt', false] }, true, false] },
         messageCount: { $size: '$elements' },
         meta: 1,
         submittedAt: 1,
@@ -90,7 +91,7 @@ async function suiteLookup(
   // its batches.
 
   if (suite.promotions.length === 0) {
-    logger.info('%s/%s: has batches but has no baseline', team.slug, suite.slug);
+    logger.info('%s/%s: has batches but has no baseline', team.slug, suite.slug)
     return output
   }
 
@@ -100,31 +101,39 @@ async function suiteLookup(
   const baselineInfo = suite.promotions[suite.promotions.length - 1]
 
   const batchLatest = queryOutput[0]
-  const batchBaseline = queryOutput.find(v => v._id.equals(baselineInfo.to))
-  const overview = batchLatest.meta ?? await ComparisonFunctions
-    .compareBatchOverview(batchBaseline._id, batchLatest._id)
+  const batchBaseline = queryOutput.find((v) => v._id.equals(baselineInfo.to))
+  const overview =
+    batchLatest.meta ??
+    (await ComparisonFunctions.compareBatchOverview(
+      batchBaseline._id,
+      batchLatest._id
+    ))
 
-  const promoterIds = [... new Set(suite.promotions.map(raw => raw.by))]
+  const promoterIds = [...new Set(suite.promotions.map((raw) => raw.by))]
   const promoters = await UserModel.find(
     { _id: { $in: promoterIds } },
-    { _id: 1, username: 1, fullname: 1 })
+    { _id: 1, username: 1, fullname: 1 }
+  )
 
-  output.promotions = suite.promotions.map(raw => ({
+  output.promotions = suite.promotions.map((raw) => ({
     at: raw.at,
-    by: pick(promoters.find(v => v._id.equals(raw.by)), ['username', 'fullname']),
+    by: pick(
+      promoters.find((v) => v._id.equals(raw.by)),
+      ['username', 'fullname']
+    ),
     for: raw.for,
-    from: queryOutput.find(v => v._id.equals(raw.from)).batchSlug,
-    to: queryOutput.find(v => v._id.equals(raw.to)).batchSlug
+    from: queryOutput.find((v) => v._id.equals(raw.from)).batchSlug,
+    to: queryOutput.find((v) => v._id.equals(raw.to)).batchSlug
   }))
 
   output.promotions.forEach((v: any) => delete v.by._id)
-  queryOutput.forEach(v => delete v._id)
+  queryOutput.forEach((v) => delete v._id)
   delete batchLatest._id
   delete batchLatest.meta
   delete batchBaseline._id
   delete batchBaseline.meta
 
-  output.batches = queryOutput.map(v => v.batchSlug);
+  output.batches = queryOutput.map((v) => v.batchSlug)
   output.latest = batchLatest
   output.baseline = batchBaseline
   output.overview = overview
@@ -135,12 +144,14 @@ async function suiteLookup(
  *
  */
 export async function ctrlSuiteLookup(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
-  const tuple = [ team.slug, suite.slug ].join('_')
+  const tuple = [team.slug, suite.slug].join('_')
   logger.debug('%s: %s: looking up suite', user.username, tuple)
   const cacheKey = `route_suiteLookup_${tuple}`
   const tic = process.hrtime()
@@ -161,8 +172,7 @@ export async function ctrlSuiteLookup(
 
   rclient.cache(cacheKey, output)
 
-  const toc = process.hrtime(tic)
-    .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
   return res.status(200).json(output)
 }

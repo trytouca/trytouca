@@ -7,27 +7,25 @@ import mongoose from 'mongoose'
 /**
  *
  */
-const sessionSchema = new mongoose.Schema(
-  {
-    agent: {
-      required: true,
-      type: String
-    },
-    expiresAt: {
-      required: true,
-      type: Date
-    },
-    ipAddr: {
-      required: true,
-      type: Number
-    },
-    userId: {
-      ref: 'User',
-      required: true,
-      type: mongoose.Schema.Types.ObjectId
-    }
+const sessionSchema = new mongoose.Schema({
+  agent: {
+    required: true,
+    type: String
+  },
+  expiresAt: {
+    required: true,
+    type: Date
+  },
+  ipAddr: {
+    required: true,
+    type: Number
+  },
+  userId: {
+    ref: 'User',
+    required: true,
+    type: mongoose.Schema.Types.ObjectId
   }
-)
+})
 
 /**
  *
@@ -42,8 +40,7 @@ export interface ISessionDocument extends mongoose.Document {
 /**
  *
  */
-export interface ISessionModel extends mongoose.Model<ISessionDocument> {
-}
+export interface ISessionModel extends mongoose.Model<ISessionDocument> {}
 
 /**
  *

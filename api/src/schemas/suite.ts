@@ -21,33 +21,35 @@ const suiteSchema = new mongoose.Schema(
       required: true,
       type: String
     },
-    promotions: [{
-      _id: false,
-      at: {
-        required: false,
-        type: Date
-      },
-      by: {
-        ref: 'User',
-        required: false,
-        type: mongoose.Schema.Types.ObjectId
-      },
-      for: {
-        maxlength: 1500,
-        minlength: 0,
-        type: String
-      },
-      from: {
-        ref: 'Batch',
-        required: false,
-        type: mongoose.Schema.Types.ObjectId
-      },
-      to: {
-        ref: 'Batch',
-        required: false,
-        type: mongoose.Schema.Types.ObjectId
+    promotions: [
+      {
+        _id: false,
+        at: {
+          required: false,
+          type: Date
+        },
+        by: {
+          ref: 'User',
+          required: false,
+          type: mongoose.Schema.Types.ObjectId
+        },
+        for: {
+          maxlength: 1500,
+          minlength: 0,
+          type: String
+        },
+        from: {
+          ref: 'Batch',
+          required: false,
+          type: mongoose.Schema.Types.ObjectId
+        },
+        to: {
+          ref: 'Batch',
+          required: false,
+          type: mongoose.Schema.Types.ObjectId
+        }
       }
-    }],
+    ],
     retainFor: {
       max: 157680000, // 5 years
       min: 86400,
@@ -66,11 +68,13 @@ const suiteSchema = new mongoose.Schema(
       required: true,
       type: String
     },
-    subscribers: [{
-      ref: 'User',
-      required: false,
-      type: mongoose.Schema.Types.ObjectId
-    }],
+    subscribers: [
+      {
+        ref: 'User',
+        required: false,
+        type: mongoose.Schema.Types.ObjectId
+      }
+    ],
     team: {
       ref: 'Team',
       required: true,
@@ -104,8 +108,7 @@ export interface ISuiteDocument extends mongoose.Document {
 /**
  *
  */
-export interface ISuiteModel extends mongoose.Model<ISuiteDocument> {
-}
+export interface ISuiteModel extends mongoose.Model<ISuiteDocument> {}
 
 /**
  *

@@ -17,7 +17,9 @@ import * as mailer from '../../utils/mailer'
  *
  */
 export async function authSessionCreate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const askedPassword = req.body.password
   const askedUsername = req.body.username
@@ -32,7 +34,7 @@ export async function authSessionCreate(
   if (!user) {
     logger.debug('rejecting login due to invalid username')
     return next({
-      errors: [ 'invalid login credentials' ],
+      errors: ['invalid login credentials'],
       status: 401
     })
   }
@@ -42,7 +44,7 @@ export async function authSessionCreate(
   if (user.suspended) {
     logger.debug('%s: rejecting login of suspended user', user.username)
     return next({
-      errors: [ 'account suspended' ],
+      errors: ['account suspended'],
       status: 423
     })
   }
@@ -55,7 +57,7 @@ export async function authSessionCreate(
     if (new Date() < lockedUntil) {
       logger.debug('%s: rejecting login of locked user', user.username)
       return next({
-        errors: [ 'account locked' ],
+        errors: ['account locked'],
         status: 423
       })
     }
@@ -67,7 +69,6 @@ export async function authSessionCreate(
 
   const isPasswordValid = await bcrypt.compare(askedPassword, user.password)
   if (!isPasswordValid) {
-
     logger.debug('%s: failed login attempt for user account', askedUsername)
 
     // temporarily lock account if user exceeded maximum number of failed
@@ -75,20 +76,24 @@ export async function authSessionCreate(
 
     if (config.auth.maxLoginAttempts <= user.loginAttempts) {
       logger.info('%s: temporarily locking user account', askedUsername)
-      await UserModel.findByIdAndUpdate(user._id, { $set: {
-        lockedAt: new Date(),
-        loginAttempts: 0
-      }})
+      await UserModel.findByIdAndUpdate(user._id, {
+        $set: {
+          lockedAt: new Date(),
+          loginAttempts: 0
+        }
+      })
 
       // notify user that their account was temporarily locked
 
-      mailer.mailUser(user, 'Account Temporarily Locked',
-        'auth-signin-user-locked', { username: user.username })
-
+      mailer.mailUser(
+        user,
+        'Account Temporarily Locked',
+        'auth-signin-user-locked',
+        { username: user.username }
+      )
     }
 
     // otherwise increment number of failed login attempts
-
     else {
       await UserModel.findByIdAndUpdate(user._id, {
         $inc: { loginAttempts: 1 }
@@ -98,10 +103,9 @@ export async function authSessionCreate(
     // return 401 if password was wrong
 
     return next({
-      errors: [ 'invalid login credentials' ],
+      errors: ['invalid login credentials'],
       status: 401
     })
-
   }
 
   // at this point, we recognize user attempt as legitimate.

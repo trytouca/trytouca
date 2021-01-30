@@ -8,7 +8,7 @@ import { BatchModel } from '../schemas/batch'
 import { ComparisonModel } from '../schemas/comparison'
 import { SuiteModel } from '../schemas/suite'
 import { IUser } from '../schemas/user'
-import { EReportType, ReportModel, IReportDocument, } from '../schemas/report'
+import { EReportType, ReportModel, IReportDocument } from '../schemas/report'
 import { config } from '../utils/config'
 import logger from '../utils/logger'
 import { mailUser } from '../utils/mailer'
@@ -43,20 +43,21 @@ type ReportInputsCompare = {
   elementsCountHead: number
   elementsCountFresh: number
   elementsCountMissing: number
-  elementsDifferent: { elementName: string, elementScore: string }[]
+  elementsDifferent: { elementName: string; elementScore: string }[]
   elementsFresh: { elementName: string }[]
   elementsMissing: { elementName: string }[]
-  listType: "complete" | "partial"
+  listType: 'complete' | 'partial'
 }
 
 /**
  *
  */
-type ReportInputsPromote = ReportInputsCommon & Partial<ReportInputsCompare> & {
-  promotedBy: string
-  promotedTo: string
-  promotedFor: string
-}
+type ReportInputsPromote = ReportInputsCommon &
+  Partial<ReportInputsCompare> & {
+    promotedBy: string
+    promotedTo: string
+    promotedFor: string
+  }
 
 /**
  *
@@ -71,12 +72,12 @@ type BatchInfo = {
     _id: mongoose.Types.ObjectId
     name: string
     slug: string
-  },
+  }
   suite: {
     _id: mongoose.Types.ObjectId
     name: string
     slug: string
-  },
+  }
   batch: {
     _id: mongoose.Types.ObjectId
     slug: string
@@ -111,7 +112,7 @@ async function getSuiteInfo(suiteId: BatchInfo['suite']['_id']) {
     {
       $project: {
         _id: 0,
-        baseline: { $arrayElemAt: [ '$promotions', -1 ] },
+        baseline: { $arrayElemAt: ['$promotions', -1] },
         subscribers: {
           $map: {
             input: '$subscriberDocs',
@@ -197,12 +198,12 @@ async function getBatchInfo(batchId: IReportDocument['_id']) {
         suite: {
           _id: '$suiteDoc._id',
           name: '$suiteDoc.name',
-          slug: '$suiteDoc.slug',
+          slug: '$suiteDoc.slug'
         },
         batch: {
           _id: '$_id',
           slug: '$slug'
-        },
+        }
       }
     }
   ])
@@ -215,23 +216,25 @@ async function getBatchInfo(batchId: IReportDocument['_id']) {
 async function extractComparisonInputs(
   cmp: BackendBatchComparisonResponse
 ): Promise<ReportInputsCompare> {
-
   const common = cmp.common
-    .filter(e => e.meta.keysScore !== 1)
+    .filter((e) => e.meta.keysScore !== 1)
     .sort((a, b) => a.meta.keysScore - b.meta.keysScore)
-    .map(e => ({ elementName: e.src.elementName, elementScore: (e.meta.keysScore * 100).toFixed(2) }))
+    .map((e) => ({
+      elementName: e.src.elementName,
+      elementScore: (e.meta.keysScore * 100).toFixed(2)
+    }))
 
   const fresh = cmp.fresh
     .sort((a, b) => a.elementName.localeCompare(b.elementName))
-    .map(e => ({ elementName: e.elementName }))
+    .map((e) => ({ elementName: e.elementName }))
 
   const missing = cmp.missing
     .sort((a, b) => a.elementName.localeCompare(b.elementName))
-    .map(e => ({ elementName: e.elementName }))
+    .map((e) => ({ elementName: e.elementName }))
 
   return {
     hasComparison: true,
-    hasComparisonTable: (common.length + missing.length + fresh.length) !== 0,
+    hasComparisonTable: common.length + missing.length + fresh.length !== 0,
     hasDifferentCases: common.length !== 0,
     hasFreshCases: fresh.length !== 0,
     hasMissingCases: missing.length !== 0,
@@ -242,7 +245,10 @@ async function extractComparisonInputs(
     elementsDifferent: common.slice(0, 10),
     elementsMissing: missing.slice(0, 5),
     elementsFresh: fresh.slice(0, 5),
-    listType: (common.length < 10 && missing.length < 5 && fresh.length < 5) ? "complete" : "partial",
+    listType:
+      common.length < 10 && missing.length < 5 && fresh.length < 5
+        ? 'complete'
+        : 'partial'
   }
 }
 
@@ -250,9 +256,10 @@ async function extractComparisonInputs(
  *
  */
 async function reportPromotion(
-  dstInfo: BatchInfo, srcInfo: BatchInfo, compareInputs: ReportInputsCompare
+  dstInfo: BatchInfo,
+  srcInfo: BatchInfo,
+  compareInputs: ReportInputsCompare
 ): Promise<void> {
-
   // learn more about this suite including the list of subscribed users
 
   const suiteInfo = await getSuiteInfo(dstInfo.suite._id)
@@ -265,7 +272,7 @@ async function reportPromotion(
     dstBatchSlug: dstInfo.batch.slug,
     srcBatchSlug: srcInfo.batch.slug,
     subject,
-    headerColor: "#5e6ebf",
+    headerColor: '#5e6ebf',
     batchLink,
     teamName: srcInfo.team.name,
     suiteName: srcInfo.suite.slug,
@@ -285,22 +292,24 @@ async function reportPromotion(
 
   const chunkSize = 5
   for (let i = 0; i < suiteInfo.subscribers.length; i = i + chunkSize) {
-    const jobs = suiteInfo.subscribers.slice(i, i + chunkSize).map(async subscriber => {
-      inputs.username = subscriber.fullname,
-      await mailUser(subscriber, subject, 'batch-promoted', inputs)
-    })
+    const jobs = suiteInfo.subscribers
+      .slice(i, i + chunkSize)
+      .map(async (subscriber) => {
+        ;(inputs.username = subscriber.fullname),
+          await mailUser(subscriber, subject, 'batch-promoted', inputs)
+      })
     await Promise.all(jobs)
   }
-
 }
 
 /**
  *
  */
 async function reportSealed(
-  dstInfo: BatchInfo, srcInfo: BatchInfo, compareInputs: ReportInputsCompare
+  dstInfo: BatchInfo,
+  srcInfo: BatchInfo,
+  compareInputs: ReportInputsCompare
 ): Promise<void> {
-
   // learn more about this suite including the list of subscribed users
 
   const suiteInfo = await getSuiteInfo(srcInfo.suite._id)
@@ -309,14 +318,15 @@ async function reportSealed(
     ? `Differences Found in Version "${srcInfo.batch.slug}" of Suite "${srcInfo.suite.slug}"`
     : `New Version "${srcInfo.batch.slug}" For Suite "${srcInfo.suite.slug}"`
 
-  const batchLink = `${config.webapp.root}/~/${srcInfo.team.slug}/`
-     + `${srcInfo.suite.slug}/${srcInfo.batch.slug}?cv=${dstInfo.batch.slug}`
+  const batchLink =
+    `${config.webapp.root}/~/${srcInfo.team.slug}/` +
+    `${srcInfo.suite.slug}/${srcInfo.batch.slug}?cv=${dstInfo.batch.slug}`
 
   const inputs: ReportInputsSeal = {
     dstBatchSlug: dstInfo.batch.slug,
     srcBatchSlug: srcInfo.batch.slug,
     subject,
-    headerColor: compareInputs.hasComparisonTable ? "firebrick" : "forestgreen",
+    headerColor: compareInputs.hasComparisonTable ? 'firebrick' : 'forestgreen',
     batchLink,
     teamName: srcInfo.team.name,
     suiteName: srcInfo.suite.slug,
@@ -330,26 +340,39 @@ async function reportSealed(
 
   const chunkSize = 5
   for (let i = 0; i < suiteInfo.subscribers.length; i = i + chunkSize) {
-    const jobs = suiteInfo.subscribers.slice(i, i + chunkSize).map(async subscriber => {
-      inputs.username = subscriber.fullname,
-      await mailUser(subscriber, subject, 'batch-sealed', inputs)
-    })
+    const jobs = suiteInfo.subscribers
+      .slice(i, i + chunkSize)
+      .map(async (subscriber) => {
+        ;(inputs.username = subscriber.fullname),
+          await mailUser(subscriber, subject, 'batch-sealed', inputs)
+      })
     await Promise.all(jobs)
   }
-
 }
 
 /**
  *
  */
 async function processReportJob(job: IReportDocument) {
-
   const dstInfo = await getBatchInfo(job.dstBatchId)
   const srcInfo = await getBatchInfo(job.srcBatchId)
 
-  const dstTuple = [ dstInfo.team.slug, dstInfo.suite.slug, dstInfo.batch.slug ].join('/')
-  const srcTuple = [ srcInfo.team.slug, srcInfo.suite.slug, srcInfo.batch.slug ].join('/')
-  logger.info('reporting dst %s, src %s (%s)', dstTuple, srcTuple, job.reportType)
+  const dstTuple = [
+    dstInfo.team.slug,
+    dstInfo.suite.slug,
+    dstInfo.batch.slug
+  ].join('/')
+  const srcTuple = [
+    srcInfo.team.slug,
+    srcInfo.suite.slug,
+    srcInfo.batch.slug
+  ].join('/')
+  logger.info(
+    'reporting dst %s, src %s (%s)',
+    dstTuple,
+    srcTuple,
+    job.reportType
+  )
 
   // Check that comparison results are available for the two batches.
   // This operation serves two purposes: If the two batches were never
@@ -358,7 +381,10 @@ async function processReportJob(job: IReportDocument) {
   // comparison jobs are processed, we obtain the comparison output
   // for later extraction of information to be used in the report.
 
-  const cmp = await ComparisonFunctions.compareBatch(dstInfo.batch._id, srcInfo.batch._id)
+  const cmp = await ComparisonFunctions.compareBatch(
+    dstInfo.batch._id,
+    srcInfo.batch._id
+  )
 
   // postpone reporting if there is any pending comparison job
 
@@ -395,7 +421,6 @@ async function processReportJob(job: IReportDocument) {
   await ReportModel.findByIdAndUpdate(job._id, {
     $set: { reportedAt: new Date() }
   })
-
 }
 
 /**
@@ -407,8 +432,7 @@ async function processReportJob(job: IReportDocument) {
 export async function reportingService(): Promise<void> {
   logger.debug('reporting service: running')
 
-  await ReportModel
-    .find({ reportedAt: { $exists: false } })
+  await ReportModel.find({ reportedAt: { $exists: false } })
     .sort({ createdAt: 1 })
     .cursor()
     .eachAsync(processReportJob, { parallel: 5 })

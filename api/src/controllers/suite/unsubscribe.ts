@@ -15,12 +15,14 @@ import * as mailer from '../../utils/mailer'
  * unsubscribe user from a given suite
  */
 export async function suiteUnsubscribe(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const suite = res.locals.suite as ISuiteDocument
   const team = res.locals.team as ITeam
   const user = res.locals.user as IUser
-  const tuple = [ team.slug, suite.slug ].join('/')
+  const tuple = [team.slug, suite.slug].join('/')
   logger.debug('%s: unsubscribing from %s', user._id, tuple)
 
   // we are done if user was never subscribed yet
@@ -34,7 +36,8 @@ export async function suiteUnsubscribe(
 
   await SuiteModel.findByIdAndUpdate(
     { _id: suite._id },
-    { $pull: { subscribers: user._id }})
+    { $pull: { subscribers: user._id } }
+  )
   logger.info('%s: unsubscribed from %s', user._id, tuple)
 
   return res.status(204).send()

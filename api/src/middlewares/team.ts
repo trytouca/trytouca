@@ -24,9 +24,7 @@ import logger from '../utils/logger'
  * @returns
  * - Error 404 if team (`team`) is not registered or is suspended.
  */
-export async function hasTeam(
-  req: Request, res: Response, next: NextFunction
-) {
+export async function hasTeam(req: Request, res: Response, next: NextFunction) {
   const teamSlug = req.params.team
   const team = await TeamModel.findOne({ slug: teamSlug, suspended: false })
 
@@ -34,7 +32,7 @@ export async function hasTeam(
 
   if (!team) {
     return next({
-      errors: [ 'team not found' ],
+      errors: ['team not found'],
       status: 404
     })
   }
@@ -59,17 +57,20 @@ export async function hasTeam(
  *  - Error 403 if user `user` is not on invite list of team `team`.
  */
 export async function isTeamInvitee(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
 
   const isInvitee = await TeamModel.countDocuments({
-    _id: team._id, invitees: { $elemMatch: { email: user.email } }
+    _id: team._id,
+    invitees: { $elemMatch: { email: user.email } }
   })
   if (!isInvitee) {
     return next({
-      errors: [ 'insufficient privileges' ],
+      errors: ['insufficient privileges'],
       status: 403
     })
   }
@@ -93,22 +94,25 @@ export async function isTeamInvitee(
  *  - Error 403 if user `user` is not member of team `team`.
  */
 export async function isTeamMember(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
 
   const isMember = await TeamModel.countDocuments({
-    _id: team._id, $or: [
+    _id: team._id,
+    $or: [
       { members: { $in: user._id } },
       { admins: { $in: user._id } },
-      { owner: user._id },
+      { owner: user._id }
     ]
   })
 
   if (!isMember) {
     return next({
-      errors: [ 'insufficient privileges' ],
+      errors: ['insufficient privileges'],
       status: 403
     })
   }
@@ -132,20 +136,20 @@ export async function isTeamMember(
  *  - Error 403 if user `user` is not admin of team `team`.
  */
 export async function isTeamAdmin(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
 
   const isAdmin = await TeamModel.countDocuments({
-    _id: team._id, $or: [
-      { admins: { $in: user._id } },
-      { owner: user._id }
-    ]
+    _id: team._id,
+    $or: [{ admins: { $in: user._id } }, { owner: user._id }]
   })
   if (!isAdmin) {
     return next({
-      errors: [ 'insufficient privileges' ],
+      errors: ['insufficient privileges'],
       status: 403
     })
   }
@@ -169,17 +173,20 @@ export async function isTeamAdmin(
  *  - Error 403 if user `user` is not owner of team `team`.
  */
 export async function isTeamOwner(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
 
   const isOwner = await TeamModel.countDocuments({
-    _id: team._id, owner: user._id
+    _id: team._id,
+    owner: user._id
   })
   if (!isOwner) {
     return next({
-      errors: [ 'insufficient privileges' ],
+      errors: ['insufficient privileges'],
       status: 403
     })
   }
@@ -205,9 +212,11 @@ export async function isTeamOwner(
  * - Error 404 if member `member` is not a member of team `team`.
  */
 export async function hasMember(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
-  const team = res.locals.team as ITeam as ITeam
+  const team = (res.locals.team as ITeam) as ITeam
   const username = req.params.member
 
   // check that the user exists
@@ -215,7 +224,7 @@ export async function hasMember(
   const member = await UserModel.wslFindByUname(username)
   if (!member) {
     return next({
-      errors: [ 'member not found' ],
+      errors: ['member not found'],
       status: 404
     })
   }
@@ -223,7 +232,8 @@ export async function hasMember(
   // check that the user has a role in this team
 
   const isMember = await TeamModel.countDocuments({
-    _id: team._id, suspended: false,
+    _id: team._id,
+    suspended: false,
     $or: [
       { admins: { $in: member._id } },
       { members: { $in: member._id } },
@@ -232,7 +242,7 @@ export async function hasMember(
   })
   if (!isMember) {
     return next({
-      errors: [ 'member not found' ],
+      errors: ['member not found'],
       status: 404
     })
   }
@@ -241,4 +251,3 @@ export async function hasMember(
   res.locals.member = member
   return next()
 }
-

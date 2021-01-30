@@ -9,7 +9,7 @@ import { IUser, UserModel } from '../../schemas/user'
 import logger from '../../utils/logger'
 import * as mailer from '../../utils/mailer'
 import { ETeamRole } from '../../commontypes'
-import { rclient } from '../../utils/redis';
+import { rclient } from '../../utils/redis'
 
 /**
  * @summary
@@ -25,7 +25,9 @@ import { rclient } from '../../utils/redis';
  *  - `isTeamMember`
  */
 export async function teamLeave(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
@@ -39,7 +41,7 @@ export async function teamLeave(
   if (roleUser === ETeamRole.Owner) {
     return next({
       status: 403,
-      errors: [ 'owner cannot leave their team' ]
+      errors: ['owner cannot leave their team']
     })
   }
 
@@ -66,7 +68,10 @@ export async function teamLeave(
 
   // send email to admins and owner of this team
 
-  const users = await findTeamUsersByRole(team, [ ETeamRole.Owner, ETeamRole.Admin ])
+  const users = await findTeamUsersByRole(team, [
+    ETeamRole.Owner,
+    ETeamRole.Admin
+  ])
   const subject = 'A Member Left Your Team'
   mailer.mailUsers(users, subject, 'team-leave-admin', {
     userName: user.fullname,

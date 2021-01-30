@@ -15,14 +15,14 @@ import logger from '../utils/logger'
  */
 export async function suiteRemove(suite: ISuiteDocument): Promise<boolean> {
   const team = await TeamModel.findById(suite.team)
-  const tuple = [ team.slug, suite.slug, ].join('/')
+  const tuple = [team.slug, suite.slug].join('/')
   logger.debug('%s: considering removal', tuple)
 
   // in less common case, the user may have registered the suite
   // without submitting results to it which allows us to remove the
   // suite instantly.
 
-  if (0 === await BatchModel.countDocuments({ suite: suite._id })) {
+  if (0 === (await BatchModel.countDocuments({ suite: suite._id }))) {
     await CommentModel.deleteMany({ suiteId: suite._id })
     await SuiteModel.findByIdAndRemove(suite._id)
     logger.info('%s: removed', tuple)
@@ -43,9 +43,9 @@ export async function suiteRemove(suite: ISuiteDocument): Promise<boolean> {
 
   logger.debug('%s: removing %d batches', tuple, batches.length)
 
-  let removed = true;
+  let removed = true
   for (const batch of batches) {
-    removed = removed && await batchRemove(batch)
+    removed = removed && (await batchRemove(batch))
   }
 
   return removed

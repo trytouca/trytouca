@@ -53,7 +53,8 @@ const router = e.Router()
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.get('/:team/:suite',
+router.get(
+  '/:team/:suite',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -98,7 +99,8 @@ router.get('/:team/:suite',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.get('/:team/:suite/:batch',
+router.get(
+  '/:team/:suite/:batch',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -141,7 +143,8 @@ router.get('/:team/:suite/:batch',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.delete('/:team/:suite/:batch',
+router.delete(
+  '/:team/:suite/:batch',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamAdmin,
@@ -183,7 +186,8 @@ router.delete('/:team/:suite/:batch',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/:suite/:batch/seal',
+router.post(
+  '/:team/:suite/:batch/seal',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -249,16 +253,15 @@ router.post('/:team/:suite/:batch/seal',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/:suite/:batch/promote',
+router.post(
+  '/:team/:suite/:batch/promote',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
   middleware.hasSuite,
   middleware.hasBatch,
   bodyParser.json(),
-  middleware.inputs([
-    middleware.validationRules.get('reason')
-  ]),
+  middleware.inputs([middleware.validationRules.get('reason')]),
   promisable(ctrlBatchPromote, 'promote a batch')
 )
 
@@ -308,7 +311,8 @@ router.post('/:team/:suite/:batch/promote',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.get('/:team/:suite/:batch/compare/:dstBatch/:dstSuite',
+router.get(
+  '/:team/:suite/:batch/compare/:dstBatch/:dstSuite',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,

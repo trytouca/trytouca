@@ -83,8 +83,7 @@ export interface ICommentDocument extends mongoose.Document {
 /**
  *
  */
-export interface ICommentModel extends mongoose.Model<ICommentDocument> {
-}
+export interface ICommentModel extends mongoose.Model<ICommentDocument> {}
 
 /**
  *

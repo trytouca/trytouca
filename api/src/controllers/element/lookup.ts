@@ -18,9 +18,10 @@ import { rclient } from '../../utils/redis'
  * @internal
  */
 async function elementLookupImpl(
-  team: ITeam, suite: ISuiteDocument, element: IElementDocument
+  team: ITeam,
+  suite: ISuiteDocument,
+  element: IElementDocument
 ): Promise<ElementLookupResponse> {
-
   // find list of batches in which this element was submitted
 
   const result = await MessageModel.aggregate([
@@ -38,9 +39,9 @@ async function elementLookupImpl(
         _id: 'batchId',
         batches: {
           $push: {
-            slug: { $arrayElemAt: [ '$batchDoc.slug', 0 ] },
-            submittedAt: { $arrayElemAt: [ '$batchDoc.submittedAt', 0 ] },
-            updatedAt: { $arrayElemAt: [ '$batchDoc.updatedAt', 0 ] }
+            slug: { $arrayElemAt: ['$batchDoc.slug', 0] },
+            submittedAt: { $arrayElemAt: ['$batchDoc.submittedAt', 0] },
+            updatedAt: { $arrayElemAt: ['$batchDoc.updatedAt', 0] }
           }
         }
       }
@@ -78,13 +79,15 @@ async function elementLookupImpl(
  * Database Queries: 1
  */
 export async function elementLookup(
-  _req: Request, res: Response, _next: NextFunction
+  _req: Request,
+  res: Response,
+  _next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
   const element = res.locals.element as IElementDocument
-  const tuple = [ team.slug, suite.slug, element.name ]
+  const tuple = [team.slug, suite.slug, element.name]
   logger.silly('%s: %s: looking up element', user.username, tuple.join('/'))
   const cacheKey = 'route_elementLookup_' + tuple.join('_')
 

@@ -4,8 +4,15 @@
 
 import { floor } from 'lodash'
 import mongoose from 'mongoose'
-import type { BackendBatchComparisonItemCommon, BackendBatchComparisonItemSolo, BackendBatchComparisonResponse } from '../backendtypes'
-import type { BatchCompareOverview, CppTestcaseComparisonOverview } from '../commontypes'
+import type {
+  BackendBatchComparisonItemCommon,
+  BackendBatchComparisonItemSolo,
+  BackendBatchComparisonResponse
+} from '../backendtypes'
+import type {
+  BatchCompareOverview,
+  CppTestcaseComparisonOverview
+} from '../commontypes'
 import { ComparisonModel, IComparisonDocument } from '../schemas/comparison'
 import { IMessageDocument, MessageModel } from '../schemas/message'
 import logger from '../utils/logger'
@@ -21,11 +28,10 @@ async function findComparisonResult(
   srcBatchId: ObjectId,
   srcMessageId: ObjectId
 ): Promise<IComparisonDocument> {
-
   // define what makes a comparison job be considered as processed
 
   const isProcessed = (obj: IComparisonDocument) => obj.elasticId
-  let doc = await ComparisonModel.findOne({srcMessageId, dstMessageId})
+  let doc = await ComparisonModel.findOne({ srcMessageId, dstMessageId })
 
   // we are done if comparison job is already processed
 
@@ -37,7 +43,10 @@ async function findComparisonResult(
 
   if (!doc) {
     doc = new ComparisonModel({
-      dstBatchId, dstMessageId, srcBatchId, srcMessageId
+      dstBatchId,
+      dstMessageId,
+      srcBatchId,
+      srcMessageId
     })
     await doc.save()
     logger.silly('comparison result not available. created job.')
@@ -55,7 +64,6 @@ async function compareCommonElement(
   srcBatchId: ObjectId,
   item: BackendBatchComparisonItemCommon
 ): Promise<void> {
-
   // Find comparison result of the two messages associated with the
   // same element belonging to the two batches.
   //
@@ -66,7 +74,11 @@ async function compareCommonElement(
   // comparison job and wait for it to be processed.
 
   const doc = await findComparisonResult(
-    dstBatchId, item.dst.messageId, srcBatchId, item.src.messageId)
+    dstBatchId,
+    item.dst.messageId,
+    srcBatchId,
+    item.src.messageId
+  )
 
   // for better user experience, report the score rounded down to four
   // digits after decimal. we choose four digits on platform API to allow
@@ -79,7 +91,6 @@ async function compareCommonElement(
     item.meta = doc.meta
     item.meta.keysScore = floor(doc.meta.keysScore, 4)
   }
-
 }
 
 /**
@@ -89,7 +100,6 @@ async function categorize(
   dstMessages: IMessageDocument[],
   srcMessages: IMessageDocument[]
 ): Promise<BackendBatchComparisonResponse> {
-
   const dstMap = new Map()
   const srcMap = new Map()
   dstMessages.map((msg: any) => dstMap.set(msg.elementId.name, msg))
@@ -105,7 +115,7 @@ async function categorize(
       elasticId: msg.elasticId,
       elementName: msg.elementId.name,
       messageId: msg._id,
-      meta: includeMeta ? msg.meta : undefined,
+      meta: includeMeta ? msg.meta : undefined
     }
   }
 
@@ -136,19 +146,19 @@ function doFindBatchComparisonOverview(
   output: BackendBatchComparisonResponse,
   metaList: CppTestcaseComparisonOverview[]
 ): BatchCompareOverview {
-
   const elementsCompared = metaList
   const countDstCompared = output.missing.length + elementsCompared.length
 
-  const getPerfectCount = (acc, v) => v.keysScore === 1 ? acc + 1 : acc
+  const getPerfectCount = (acc, v) => (v.keysScore === 1 ? acc + 1 : acc)
   const countPerfect = elementsCompared.reduce(getPerfectCount, 0)
   const score1 = countPerfect
   const score2 = elementsCompared.reduce((acc, v) => acc + v.keysScore, 0)
-  const getScore = (score, count) => count === 0 ? 1 : floor(score / count, 4)
+  const getScore = (score, count) => (count === 0 ? 1 : floor(score / count, 4))
   const getDuration = (dates: Date[]): number => {
-    const diff = +new Date(Math.max.apply(null, dates)) -
+    const diff =
+      +new Date(Math.max.apply(null, dates)) -
       +new Date(Math.min.apply(null, dates))
-    return Math.round(diff * dates.length / (dates.length - 1))
+    return Math.round((diff * dates.length) / (dates.length - 1))
   }
   const srcDuration = getDuration([
     ...output.common.map((e) => e.src.builtAt),
@@ -177,19 +187,19 @@ function doFindBatchComparisonOverview(
  *
  */
 async function compareBatch(
-  dstBatchId: ObjectId, srcBatchId: ObjectId
+  dstBatchId: ObjectId,
+  srcBatchId: ObjectId
 ): Promise<BackendBatchComparisonResponse> {
-
   // find messages submitted for each batch
 
-  const getBatchMessages = async (batchId: ObjectId) => MessageModel
-    .find(
+  const getBatchMessages = async (batchId: ObjectId) =>
+    MessageModel.find(
       { batchId },
-      { builtAt: 1, elasticId: 1, elementId: 1, meta: 1 })
-    .populate({ path: 'elementId', select: 'name' })
+      { builtAt: 1, elasticId: 1, elementId: 1, meta: 1 }
+    ).populate({ path: 'elementId', select: 'name' })
 
-  const dstMessages = await getBatchMessages(dstBatchId) as IMessageDocument[]
-  const srcMessages = await getBatchMessages(srcBatchId) as IMessageDocument[]
+  const dstMessages = (await getBatchMessages(dstBatchId)) as IMessageDocument[]
+  const srcMessages = (await getBatchMessages(srcBatchId)) as IMessageDocument[]
 
   // categorize comparison results for elements
 
@@ -197,9 +207,9 @@ async function compareBatch(
 
   // concurrently compare common elements between head and base batches
 
-  await Promise.all(output.common.map(
-    (el) => compareCommonElement(dstBatchId, srcBatchId, el)
-  ))
+  await Promise.all(
+    output.common.map((el) => compareCommonElement(dstBatchId, srcBatchId, el))
+  )
 
   // add overview metadata to the comparison outputs
 
@@ -212,17 +222,19 @@ async function compareBatch(
  *
  */
 async function compareBatchOverview(
-  dstBatchId: ObjectId, srcBatchId: ObjectId
+  dstBatchId: ObjectId,
+  srcBatchId: ObjectId
 ): Promise<BatchCompareOverview> {
-
   // find messages submitted for each batch
 
-  const getBatchMessages = async (batchId: ObjectId) => MessageModel
-    .find({ batchId }, { builtAt: 1, elasticId: 1, elementId: 1, meta: 1 })
-    .populate({ path: 'elementId', select: 'name' })
+  const getBatchMessages = async (batchId: ObjectId) =>
+    MessageModel.find(
+      { batchId },
+      { builtAt: 1, elasticId: 1, elementId: 1, meta: 1 }
+    ).populate({ path: 'elementId', select: 'name' })
 
-  const dstMessages = await getBatchMessages(dstBatchId) as IMessageDocument[]
-  const srcMessages = await getBatchMessages(srcBatchId) as IMessageDocument[]
+  const dstMessages = (await getBatchMessages(dstBatchId)) as IMessageDocument[]
+  const srcMessages = (await getBatchMessages(srcBatchId)) as IMessageDocument[]
 
   // categorize comparison results for elements
 
@@ -236,7 +248,9 @@ async function compareBatchOverview(
   ])
 
   // @todo: combine this operation with aggregate operation above
-  const metaList = metaObjs.map((el) => el.meta) as CppTestcaseComparisonOverview[]
+  const metaList = metaObjs.map(
+    (el) => el.meta
+  ) as CppTestcaseComparisonOverview[]
 
   // add overview metadata to the comparison outputs
 

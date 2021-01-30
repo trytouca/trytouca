@@ -24,19 +24,23 @@ import { rclient } from '../../utils/redis'
  * - Database Queries: 2
  */
 export async function teamInviteRescind(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user
   const team = res.locals.team
   const askedEmail = req.body.email
-  const tuple = [ user.username, team.slug, askedEmail ]
+  const tuple = [user.username, team.slug, askedEmail]
   logger.debug('%s: rescinding invitation to team %s for %s', ...tuple)
 
   // check if user is already invited
 
-  type Invitee = { email: string, invitedAt: Date }
+  type Invitee = { email: string; invitedAt: Date }
   const result: Invitee[] = await TeamModel.aggregate([
-    { $match: { _id: team._id, invitees: { $elemMatch: { email: askedEmail } } } },
+    {
+      $match: { _id: team._id, invitees: { $elemMatch: { email: askedEmail } } }
+    },
     { $unwind: '$invitees' },
     { $project: { _id: 0, invitees: 1 } },
     { $replaceRoot: { newRoot: '$invitees' } }
@@ -47,7 +51,7 @@ export async function teamInviteRescind(
 
   if (!alreadyInvited) {
     return next({
-      errors: [ 'user not invited' ],
+      errors: ['user not invited'],
       status: 404
     })
   }
@@ -67,7 +71,8 @@ export async function teamInviteRescind(
 
   const isRegistered = await UserModel.findOne(
     { email: askedEmail },
-    { username: 1 })
+    { username: 1 }
+  )
 
   if (isRegistered) {
     await rclient.removeCached(`route_teamList_${isRegistered.username}`)

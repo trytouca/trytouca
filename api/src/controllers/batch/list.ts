@@ -18,7 +18,6 @@ import { rclient } from '../../utils/redis'
  *
  */
 async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
-
   const queryOutput: BatchItemQueryOutput[] = await BatchModel.aggregate([
     { $match: { suite: suite._id } },
     { $sort: { submittedAt: -1 } },
@@ -27,7 +26,7 @@ async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
         from: 'users',
         localField: 'submittedBy',
         foreignField: '_id',
-        as: 'submittedByDoc',
+        as: 'submittedByDoc'
       }
     },
     { $unwind: '$submittedByDoc' },
@@ -46,7 +45,7 @@ async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
         batchSlug: '$slug',
         comparedAgainst: '$superiorDoc.slug',
         expirable: 1,
-        isSealed: { $cond: [ { $ifNull: ['$sealedAt', false] }, true, false ] },
+        isSealed: { $cond: [{ $ifNull: ['$sealedAt', false] }, true, false] },
         messageCount: { $size: '$elements' },
         meta: 1,
         submittedAt: 1,
@@ -62,8 +61,10 @@ async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
 
   for (const item of queryOutput) {
     if (!item.meta) {
-      item.meta = await ComparisonFunctions
-        .compareBatchOverview(item.superior, item._id)
+      item.meta = await ComparisonFunctions.compareBatchOverview(
+        item.superior,
+        item._id
+      )
     }
     delete item._id
     delete item.superior
@@ -85,12 +86,14 @@ async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
  *  - `hasSuite` to yield `suite`
  */
 export async function ctrlBatchList(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
-  const tuple = [ team.slug, suite.slug ].join('_')
+  const tuple = [team.slug, suite.slug].join('_')
   logger.debug('%s: %s: listing suites', user.username, tuple)
   const cacheKey = `route_batchList_${tuple}_${user.username}`
   const tic = process.hrtime()
@@ -111,8 +114,7 @@ export async function ctrlBatchList(
 
   rclient.cache(cacheKey, output)
 
-  const toc = process.hrtime(tic)
-    .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
   return res.status(200).json(output)
 }

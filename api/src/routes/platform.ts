@@ -46,9 +46,7 @@ const router = e.Router()
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.get('/',
-  promisable(platformHealth, 'check platform health')
-)
+router.get('/', promisable(platformHealth, 'check platform health'))
 
 /**
  * Updates profile of an existing user on the platform.
@@ -90,16 +88,23 @@ router.get('/',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.patch('/account/:account',
+router.patch(
+  '/account/:account',
   middleware.isAuthenticated,
   middleware.isPlatformAdmin,
   middleware.hasAccount,
   bodyParser.json(),
   middleware.inputs([
-    ev.body('role')
-      .custom(v => Object.values(EPlatformRole)
-        .filter((e: EPlatformRole) => ![ EPlatformRole.Owner, EPlatformRole.Super ].includes(e))
-        .includes(v))
+    ev
+      .body('role')
+      .custom((v) =>
+        Object.values(EPlatformRole)
+          .filter(
+            (e: EPlatformRole) =>
+              ![EPlatformRole.Owner, EPlatformRole.Super].includes(e)
+          )
+          .includes(v)
+      )
       .withMessage('invalid')
   ]),
   promisable(platformAccountUpdate, 'update account profile on platform')

@@ -12,13 +12,17 @@ import logger from '../../utils/logger'
  *
  */
 export async function inboxList(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   logger.silly('%s: listing notifications', user.username)
 
-  const notifs = await NotificationModel
-    .find({ userId: user._id }, { _id: 0, createdAt: 1, seenAt: 1, text: 1 })
+  const notifs = await NotificationModel.find(
+    { userId: user._id },
+    { _id: 0, createdAt: 1, seenAt: 1, text: 1 }
+  )
     .sort({ createdAt: -1 })
     .limit(20)
 

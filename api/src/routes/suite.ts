@@ -50,7 +50,8 @@ const router = e.Router()
  *      404:
  *        $ref: '#/components/responses/TeamNotFound'
  */
-router.get('/:team',
+router.get(
+  '/:team',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -108,7 +109,8 @@ router.get('/:team',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team',
+router.post(
+  '/:team',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -153,7 +155,8 @@ router.post('/:team',
  *      404:
  *        $ref: '#/components/responses/TeamNotFound'
  */
-router.get('/:team/:suite',
+router.get(
+  '/:team/:suite',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -218,7 +221,8 @@ router.get('/:team/:suite',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.patch('/:team/:suite',
+router.patch(
+  '/:team/:suite',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -227,13 +231,19 @@ router.patch('/:team/:suite',
   middleware.inputs([
     middleware.validationRules.get('entity-name').optional(),
     middleware.validationRules.get('entity-slug').optional(),
-    ev.body('retainFor')
-      .isInt({ min: 86400, max: 157680000 }).withMessage('not a number')
-      .isDivisibleBy(60).withMessage('invalid')
+    ev
+      .body('retainFor')
+      .isInt({ min: 86400, max: 157680000 })
+      .withMessage('not a number')
+      .isDivisibleBy(60)
+      .withMessage('invalid')
       .optional(),
-    ev.body('sealAfter')
-      .isFloat({ min: 60, max: 86400 }).withMessage('not a number')
-      .isDivisibleBy(60).withMessage('invalid')
+    ev
+      .body('sealAfter')
+      .isFloat({ min: 60, max: 86400 })
+      .withMessage('not a number')
+      .isDivisibleBy(60)
+      .withMessage('invalid')
       .optional()
   ]),
   promisable(suiteUpdate, 'update suite')
@@ -268,7 +278,8 @@ router.patch('/:team/:suite',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.delete('/:team/:suite',
+router.delete(
+  '/:team/:suite',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamAdmin,
@@ -307,7 +318,8 @@ router.delete('/:team/:suite',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/:suite/subscribe',
+router.post(
+  '/:team/:suite/subscribe',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -346,7 +358,8 @@ router.post('/:team/:suite/subscribe',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/:suite/unsubscribe',
+router.post(
+  '/:team/:suite/unsubscribe',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,

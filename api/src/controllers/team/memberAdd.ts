@@ -28,22 +28,25 @@ import { rclient } from '../../utils/redis'
  * - Database Queries: 3
  */
 export async function teamMemberAdd(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const account = res.locals.account as IUser
-  const tuple = [ user.username, account.username, team.slug ]
+  const tuple = [user.username, account.username, team.slug]
   logger.debug('%s: adding %s to team %s', ...tuple)
 
   // reject the request if user is already a member of this team
 
   const isMember = await UserModel.countDocuments({
-    username: account.username, teams: { $in: [ team._id ] }
+    username: account.username,
+    teams: { $in: [team._id] }
   })
   if (isMember) {
     return next({
-      errors: [ 'user already a member' ],
+      errors: ['user already a member'],
       status: 409
     })
   }

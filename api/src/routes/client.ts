@@ -60,12 +60,16 @@ const router = e.Router()
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/signin',
+router.post(
+  '/signin',
   bodyParser.json(),
   middleware.inputs([
-    ev.body('key')
-      .exists().withMessage('required')
-      .isUUID().withMessage('invalid')
+    ev
+      .body('key')
+      .exists()
+      .withMessage('required')
+      .isUUID()
+      .withMessage('invalid')
   ]),
   promisable(clientSessionCreate, 'create client session')
 )
@@ -114,7 +118,8 @@ router.post('/signin',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/submit',
+router.post(
+  '/submit',
   middleware.isClientAuthenticated,
   bodyParser.raw({ limit: '50mb' }),
   promisable(clientSubmit, 'handle submitted result')

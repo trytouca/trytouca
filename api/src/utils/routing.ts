@@ -11,8 +11,11 @@ import { rclient } from '../utils/redis'
  *
  */
 async function cacheOperation(
-  req: Request, res: Response, next: NextFunction,
-  func: RequestHandler, cacheKey?: string
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  func: RequestHandler,
+  cacheKey?: string
 ) {
   if (!cacheKey) {
     cacheKey = func.name
@@ -44,8 +47,7 @@ async function cacheOperation(
 
   rclient.cache(rkey, output)
 
-  const toc = process.hrtime(tic)
-    .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.silly('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
   return res.status(200).json(output)
 }

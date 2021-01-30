@@ -13,16 +13,15 @@ import * as jwt from '../utils/jwt'
 import logger from '../utils/logger'
 
 type AuthInput = {
-  agent: string,
+  agent: string
   ipAddr: number
-  token: string,
+  token: string
 }
 
 /**
  *
  */
 async function isAuthenticatedImpl(input: AuthInput): Promise<IUser> {
-
   // request should have an http-only cookie with a signed JWT bearer token
   // and a payload format according to our expectations.
 
@@ -105,7 +104,9 @@ async function isAuthenticatedImpl(input: AuthInput): Promise<IUser> {
  * - Error 401 if user initiating the requst is not authenticated.
  */
 export async function isAuthenticated(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = await isAuthenticatedImpl({
     agent: req.headers['user-agent'],
@@ -120,7 +121,7 @@ export async function isAuthenticated(
       signed: true
     })
     return res.status(401).json({
-      errors: [ 'auth failed' ]
+      errors: ['auth failed']
     })
   }
 
@@ -133,7 +134,9 @@ export async function isAuthenticated(
  *
  */
 export async function isClientAuthenticated(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = await isAuthenticatedImpl({
     agent: req.headers['user-agent'],
@@ -142,7 +145,7 @@ export async function isClientAuthenticated(
   })
   if (!user) {
     return next({
-      errors: [ 'auth failed' ],
+      errors: ['auth failed'],
       status: 401
     })
   }
@@ -156,15 +159,17 @@ export async function isClientAuthenticated(
  *
  */
 export async function isPlatformAdmin(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
 
   // return 403 if user does not have admin role
 
-  if (![ EPlatformRole.Owner, EPlatformRole.Admin ].includes(user.platformRole)) {
+  if (![EPlatformRole.Owner, EPlatformRole.Admin].includes(user.platformRole)) {
     return next({
-      errors: [ 'insufficient privileges' ],
+      errors: ['insufficient privileges'],
       status: 403
     })
   }
@@ -190,7 +195,9 @@ export async function isPlatformAdmin(
  * - Error 404 if account (`account`) is not registered or is suspended.
  */
 export async function hasAccount(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const username = req.params.account
   const account = await UserModel.wslFindByUname(username)
@@ -199,7 +206,7 @@ export async function hasAccount(
 
   if (!account) {
     return next({
-      errors: [ 'user not found' ],
+      errors: ['user not found'],
       status: 404
     })
   }

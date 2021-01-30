@@ -15,7 +15,9 @@ import { rclient } from '../../utils/redis'
  *
  */
 export async function ctrlCommentRemove(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const team = res.locals.team as ITeam
   const user = res.locals.user as IUser
@@ -24,17 +26,17 @@ export async function ctrlCommentRemove(
   logger.debug('%s: %s: removing comment', user.username, tuple)
 
   const isCommentOwner = comment.by.equals(user._id)
-  const isPlatformAdmin = [ EPlatformRole.Owner, EPlatformRole.Admin ].includes(user.platformRole)
+  const isPlatformAdmin = [EPlatformRole.Owner, EPlatformRole.Admin].includes(
+    user.platformRole
+  )
   const isTeamAdmin = await TeamModel.countDocuments({
-    _id: team._id, $or: [
-      { admins: { $in: user._id } },
-      { owner: user._id }
-    ]
+    _id: team._id,
+    $or: [{ admins: { $in: user._id } }, { owner: user._id }]
   })
   const isAuthorized = isCommentOwner || isPlatformAdmin || isTeamAdmin
   if (!isAuthorized) {
     return next({
-      errors: [ 'insufficient privileges' ],
+      errors: ['insufficient privileges'],
       status: 403
     })
   }

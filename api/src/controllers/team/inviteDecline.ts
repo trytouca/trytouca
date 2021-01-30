@@ -21,7 +21,9 @@ import { rclient } from '../../utils/redis'
  * - Database Queries: 1
  */
 export async function teamInviteDecline(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam

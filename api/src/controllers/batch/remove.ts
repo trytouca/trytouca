@@ -30,13 +30,15 @@ import logger from '../../utils/logger'
  * - Database Queries: Unknown
  */
 export async function ctrlBatchRemove(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
   const batch = res.locals.batch as IBatchDocument
-  const tuple = [ team.slug, suite.slug, batch.slug ].join('/')
+  const tuple = [team.slug, suite.slug, batch.slug].join('/')
   logger.info('%s: %s: removing', user.username, tuple)
   const tic = process.hrtime()
 
@@ -44,7 +46,7 @@ export async function ctrlBatchRemove(
 
   if (!batch.sealedAt) {
     return next({
-      errors: [ 'batch not sealed' ],
+      errors: ['batch not sealed'],
       status: 400
     })
   }
@@ -55,7 +57,7 @@ export async function ctrlBatchRemove(
     const baselineInfo = suite.promotions[suite.promotions.length - 1]
     if (batch._id.equals(baselineInfo.to)) {
       return next({
-        errors: [ 'refusing to remove suite baseline' ],
+        errors: ['refusing to remove suite baseline'],
         status: 400
       })
     }
@@ -76,7 +78,8 @@ export async function ctrlBatchRemove(
 
   await MessageModel.updateMany(
     { batchId: batch._id },
-    { $set: { expiresAt: new Date() } })
+    { $set: { expiresAt: new Date() } }
+  )
 
   // attempt removal of this batch.
   // note that if there are pending comparison jobs for any message
@@ -85,7 +88,7 @@ export async function ctrlBatchRemove(
   // their associated messages along with the batch itself will be
   // removed in an indeterminate time.
 
-  if (!await batchRemove(batch)) {
+  if (!(await batchRemove(batch))) {
     logger.info('%s: %s: scheduled for removal', user.username, tuple)
   }
 

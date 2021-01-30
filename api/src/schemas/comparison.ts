@@ -141,8 +141,7 @@ export interface IComparisonDocument extends mongoose.Document {
 /**
  *
  */
-interface IComparisonModel extends mongoose.Model<IComparisonDocument> {
-}
+interface IComparisonModel extends mongoose.Model<IComparisonDocument> {}
 
 /**
  *

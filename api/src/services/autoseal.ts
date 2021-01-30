@@ -30,7 +30,7 @@ export async function autosealService(): Promise<void> {
       ])
 
       for (const batch of batches) {
-        const tuple = [ team.slug, suite.slug, batch.slug ].join('/')
+        const tuple = [team.slug, suite.slug, batch.slug].join('/')
         logger.info('auto-seal service: sealing %s', tuple)
         await batchSeal(team, suite, batch)
       }

@@ -51,7 +51,8 @@ const router = e.Router()
  *      401:
  *        $ref: '#/components/responses/Unauthorized'
  */
-router.get('/',
+router.get(
+  '/',
   middleware.isAuthenticated,
   promisable(ctrlTeamList, 'list teams')
 )
@@ -101,14 +102,19 @@ router.get('/',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/',
+router.post(
+  '/',
   middleware.isAuthenticated,
   bodyParser.json(),
   middleware.inputs([
-    middleware.validationRules.get('entity-name')
-      .exists().withMessage('required'),
-    middleware.validationRules.get('entity-slug')
-      .exists().withMessage('required')
+    middleware.validationRules
+      .get('entity-name')
+      .exists()
+      .withMessage('required'),
+    middleware.validationRules
+      .get('entity-slug')
+      .exists()
+      .withMessage('required')
   ]),
   promisable(teamCreate, 'create team')
 )
@@ -143,7 +149,8 @@ router.post('/',
  *      404:
  *        $ref: '#/components/responses/TeamNotFound'
  */
-router.get('/:team',
+router.get(
+  '/:team',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -203,7 +210,8 @@ router.get('/:team',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.patch('/:team',
+router.patch(
+  '/:team',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamOwner,
@@ -239,7 +247,8 @@ router.patch('/:team',
  *      404:
  *        $ref: '#/components/responses/TeamNotFound'
  */
-router.delete('/:team',
+router.delete(
+  '/:team',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamOwner,
@@ -301,7 +310,8 @@ router.delete('/:team',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/invite',
+router.post(
+  '/:team/invite',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamAdmin,
@@ -356,14 +366,13 @@ router.post('/:team/invite',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/invite/rescind',
+router.post(
+  '/:team/invite/rescind',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamAdmin,
   bodyParser.json(),
-  middleware.inputs([
-    middleware.validationRules.get('email')
-  ]),
+  middleware.inputs([middleware.validationRules.get('email')]),
   promisable(teamInviteRescind, 'rescind team invitation')
 )
 
@@ -393,7 +402,8 @@ router.post('/:team/invite/rescind',
  *      404:
  *        $ref: '#/components/responses/TeamNotFound'
  */
-router.post('/:team/invite/accept',
+router.post(
+  '/:team/invite/accept',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamInvitee,
@@ -426,7 +436,8 @@ router.post('/:team/invite/accept',
  *      404:
  *        $ref: '#/components/responses/TeamNotFound'
  */
-router.post('/:team/invite/decline',
+router.post(
+  '/:team/invite/decline',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamInvitee,
@@ -459,7 +470,8 @@ router.post('/:team/invite/decline',
  *      404:
  *        $ref: '#/components/responses/TeamNotFound'
  */
-router.post('/:team/leave',
+router.post(
+  '/:team/leave',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -497,7 +509,8 @@ router.post('/:team/leave',
  *      404:
  *        $ref: '#/components/responses/TeamNotFound'
  */
-router.get('/:team/member',
+router.get(
+  '/:team/member',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -541,7 +554,8 @@ router.get('/:team/member',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/member/:account',
+router.post(
+  '/:team/member/:account',
   middleware.isAuthenticated,
   middleware.isPlatformAdmin,
   middleware.hasTeam,
@@ -591,17 +605,23 @@ router.post('/:team/member/:account',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.patch('/:team/member/:member',
+router.patch(
+  '/:team/member/:member',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamAdmin,
   middleware.hasMember,
   bodyParser.json(),
   middleware.inputs([
-    ev.body('role')
-      .custom(v => Object.values(ETeamRole)
-        .filter((e: ETeamRole) => ![ ETeamRole.Owner, ETeamRole.Invalid ].includes(e))
-        .includes(v))
+    ev
+      .body('role')
+      .custom((v) =>
+        Object.values(ETeamRole)
+          .filter(
+            (e: ETeamRole) => ![ETeamRole.Owner, ETeamRole.Invalid].includes(e)
+          )
+          .includes(v)
+      )
       .withMessage('invalid')
   ]),
   promisable(teamMemberUpdate, 'update member role in team')
@@ -637,7 +657,8 @@ router.patch('/:team/member/:member',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.delete('/:team/member/:member',
+router.delete(
+  '/:team/member/:member',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamAdmin,
@@ -675,7 +696,8 @@ router.delete('/:team/member/:member',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/join',
+router.post(
+  '/:team/join',
   middleware.isAuthenticated,
   middleware.hasTeam,
   promisable(teamJoinAdd, 'request to join')
@@ -716,7 +738,8 @@ router.post('/:team/join',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.delete('/:team/join',
+router.delete(
+  '/:team/join',
   middleware.isAuthenticated,
   middleware.hasTeam,
   promisable(teamJoinRescind, 'rescind join request')
@@ -754,7 +777,8 @@ router.delete('/:team/join',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/join/:account',
+router.post(
+  '/:team/join/:account',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamAdmin,
@@ -794,7 +818,8 @@ router.post('/:team/join/:account',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.delete('/:team/join/:account',
+router.delete(
+  '/:team/join/:account',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamAdmin,

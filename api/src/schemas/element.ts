@@ -37,8 +37,7 @@ export interface IElementDocument extends mongoose.Document {
 /**
  *
  */
-export interface IElementModel extends mongoose.Model<IElementDocument> {
-}
+export interface IElementModel extends mongoose.Model<IElementDocument> {}
 
 /**
  *

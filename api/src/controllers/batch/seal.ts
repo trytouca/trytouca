@@ -29,13 +29,15 @@ import logger from '../../utils/logger'
  * Database Queries: 1
  */
 export async function ctrlBatchSeal(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
   const batch = res.locals.batch as IBatchDocument
-  const tuple = [ team.slug, suite.slug, batch.slug ].join('/')
+  const tuple = [team.slug, suite.slug, batch.slug].join('/')
   logger.debug('%s: %s: sealing', user.username, tuple)
 
   // we are done if batch is already sealed

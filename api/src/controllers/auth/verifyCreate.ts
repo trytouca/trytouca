@@ -30,7 +30,9 @@ async function getPlatformOwner() {
  *
  */
 export async function authVerifyCreate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const askedEmail = req.body.email
   const askedPassword = req.body.password
@@ -43,7 +45,7 @@ export async function authVerifyCreate(
 
   if (await UserModel.countDocuments({ username: askedUsername })) {
     return next({
-      errors: [ 'user already registered' ],
+      errors: ['user already registered'],
       status: 400
     })
   }
@@ -54,7 +56,7 @@ export async function authVerifyCreate(
 
   if (await UserModel.countDocuments({ email: askedEmail })) {
     return next({
-      errors: [ 'email already registered' ],
+      errors: ['email already registered'],
       status: 400
     })
   }
@@ -69,9 +71,9 @@ export async function authVerifyCreate(
   // we send this key in the welcome email to the user so we can verify
   // their email address.
 
-  const activationKey = [...Array(config.auth.activationKeyLength)].map(
-    () => Math.random().toString(36)[2]
-  ).join('')
+  const activationKey = [...Array(config.auth.activationKeyLength)]
+    .map(() => Math.random().toString(36)[2])
+    .join('')
 
   // the first user who creates an account should be the platform owner.
   // we make this check once per lifetime of this node process.

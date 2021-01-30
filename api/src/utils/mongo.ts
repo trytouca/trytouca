@@ -25,23 +25,23 @@ export async function makeConnectionMongo(): Promise<boolean> {
   const kTimeout = 5000
 
   for (let i = 1; i <= kMaxAttempts; i++) {
-      try {
-        await mongoose.connect(configMgr.getMongoUri(), {
-            autoIndex: false,
-            useCreateIndex: true,
-            useFindAndModify: false, // use findOneAndUpdate instead
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        })
-        mongoose.connection.on('disconnected', () => {
-            logger.debug('closed database connection')
-        })
-        logger.info('succesfully connected to database')
-        return true
-      } catch (err) {
-        logger.warn('failed to connect to database (%d/%d)', i, kMaxAttempts)
-        await delay(kTimeout)
-      }
+    try {
+      await mongoose.connect(configMgr.getMongoUri(), {
+        autoIndex: false,
+        useCreateIndex: true,
+        useFindAndModify: false, // use findOneAndUpdate instead
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+      })
+      mongoose.connection.on('disconnected', () => {
+        logger.debug('closed database connection')
+      })
+      logger.info('succesfully connected to database')
+      return true
+    } catch (err) {
+      logger.warn('failed to connect to database (%d/%d)', i, kMaxAttempts)
+      await delay(kTimeout)
+    }
   }
 
   // if we failed to connect after exhausting all of our attempts

@@ -29,20 +29,24 @@ import { rclient } from '../../utils/redis'
  * Performs five database queries.
  */
 export async function teamInviteAdd(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const askedEmail = req.body.email
   const askedFullname = req.body.fullname
-  const tuple = [ user.username, askedEmail, team.slug ]
+  const tuple = [user.username, askedEmail, team.slug]
   logger.debug('%s: inviting %s to team %s', ...tuple)
 
   // check if user is already invited
 
-  type Invitee = { email: string, invitedAt: Date }
+  type Invitee = { email: string; invitedAt: Date }
   const result: Invitee[] = await TeamModel.aggregate([
-    { $match: { _id: team._id, invitees: { $elemMatch: { email: askedEmail } } } },
+    {
+      $match: { _id: team._id, invitees: { $elemMatch: { email: askedEmail } } }
+    },
     { $unwind: '$invitees' },
     { $project: { _id: 0, invitees: 1 } },
     { $replaceRoot: { newRoot: '$invitees' } }
@@ -52,11 +56,11 @@ export async function teamInviteAdd(
   // reject the request if user was already invited less than 10 minutes ago.
 
   if (alreadyInvited) {
-    const invitedAt =  alreadyInvited.invitedAt
+    const invitedAt = alreadyInvited.invitedAt
     invitedAt.setMinutes(invitedAt.getMinutes() + 10)
     if (new Date() < invitedAt) {
       return next({
-        errors: [ 'user invited recently' ],
+        errors: ['user invited recently'],
         status: 429
       })
     }
@@ -65,11 +69,12 @@ export async function teamInviteAdd(
   // reject the request if user is already a member of this team
 
   const isMember = await UserModel.countDocuments({
-    email: askedEmail, teams: { $in: [ team._id ] }
+    email: askedEmail,
+    teams: { $in: [team._id] }
   })
   if (isMember) {
     return next({
-      errors: [ 'user already a member' ],
+      errors: ['user already a member'],
       status: 409
     })
   }
@@ -79,11 +84,26 @@ export async function teamInviteAdd(
   if (alreadyInvited) {
     await TeamModel.updateOne(
       { _id: team._id, invitees: { $elemMatch: { email: askedEmail } } },
-      { $set: { "invitees.$": { email: askedEmail, fullname: askedFullname, invitedAt: new Date() } } })
+      {
+        $set: {
+          'invitees.$': {
+            email: askedEmail,
+            fullname: askedFullname,
+            invitedAt: new Date()
+          }
+        }
+      }
+    )
     logger.info('%s: reinvited %s to team %s', ...tuple)
   } else {
     await TeamModel.findByIdAndUpdate(team._id, {
-      $push: { invitees: { email: askedEmail, fullname: askedFullname, invitedAt: new Date() } }
+      $push: {
+        invitees: {
+          email: askedEmail,
+          fullname: askedFullname,
+          invitedAt: new Date()
+        }
+      }
     })
     logger.info('%s: invited %s to team %s', ...tuple)
   }
@@ -96,7 +116,8 @@ export async function teamInviteAdd(
 
   const isRegistered = await UserModel.findOne(
     { email: askedEmail },
-    { fullname: 1, username: 1 })
+    { fullname: 1, username: 1 }
+  )
 
   if (isRegistered) {
     await rclient.removeCached(`route_teamList_${isRegistered.username}`)

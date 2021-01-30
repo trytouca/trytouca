@@ -32,7 +32,8 @@ const router = e.Router()
  *      401:
  *        $ref: '#/components/responses/Unauthorized'
  */
-router.get('/',
+router.get(
+  '/',
   middleware.isAuthenticated,
   promisable(userLookup, 'lookup user information')
 )

@@ -109,8 +109,7 @@ export interface IMessageDocument extends mongoose.Document {
 /**
  *
  */
-export interface IMessageModel extends mongoose.Model<IMessageDocument> {
-}
+export interface IMessageModel extends mongoose.Model<IMessageDocument> {}
 
 /**
  *

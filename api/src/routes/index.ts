@@ -124,22 +124,35 @@ router.use('/user', userRouter)
  *      400:
  *        $ref: '#/components/responses/RequestInvalid'
  */
-router.post('/feedback',
+router.post(
+  '/feedback',
   bodyParser.json(),
   middleware.inputs([
-    ev.body('body')
-      .exists().withMessage('required')
-      .isString().withMessage('must be a string')
-      .isLength({ max: 1024 }).withMessage('too long'),
-    ev.body('name')
+    ev
+      .body('body')
+      .exists()
+      .withMessage('required')
+      .isString()
+      .withMessage('must be a string')
+      .isLength({ max: 1024 })
+      .withMessage('too long'),
+    ev
+      .body('name')
       .optional()
-      .isString().withMessage('must be a string')
-      .isLength({ max: 64 }).withMessage('too long'),
-    ev.body('page')
-      .exists().withMessage('required')
-      .isString().withMessage('must be a string')
-      .isLength({ max: 16 }).withMessage('too long')
-      .isSlug().withMessage('invalid')
+      .isString()
+      .withMessage('must be a string')
+      .isLength({ max: 64 })
+      .withMessage('too long'),
+    ev
+      .body('page')
+      .exists()
+      .withMessage('required')
+      .isString()
+      .withMessage('must be a string')
+      .isLength({ max: 16 })
+      .withMessage('too long')
+      .isSlug()
+      .withMessage('invalid')
   ]),
   promisable(feedback, 'handle user feedback')
 )

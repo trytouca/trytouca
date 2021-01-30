@@ -13,7 +13,9 @@ import logger from '../../utils/logger'
  *
  */
 export async function authSessionExtend(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   // the easiest way to get session id is from JSON Web Token which
   // is, at this point, validated by previous middleware.
@@ -28,9 +30,11 @@ export async function authSessionExtend(
 
   // refresh expiration date of the session
 
-  const session = await SessionModel.findByIdAndUpdate(sessionId,
+  const session = await SessionModel.findByIdAndUpdate(
+    sessionId,
     { $set: { expiresAt } },
-    { new: true })
+    { new: true }
+  )
 
   // issue a new token for the same session but with new expiration date
 

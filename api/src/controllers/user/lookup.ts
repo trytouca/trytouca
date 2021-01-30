@@ -12,7 +12,9 @@ import logger from '../../utils/logger'
  *
  */
 export async function userLookup(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   logger.debug('%s: looking up user info', user.username)
@@ -24,7 +26,10 @@ export async function userLookup(
   // information.
 
   const info = await UserModel.findById(user._id, {
-    activatedAt: 1, apiKeys: 1, createdAt: 1, platformRole: 1
+    activatedAt: 1,
+    apiKeys: 1,
+    createdAt: 1,
+    platformRole: 1
   })
 
   const userInfo: UserLookupResponse = {

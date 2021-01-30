@@ -52,7 +52,8 @@ const router = e.Router()
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.get('/:team/:suite/:batch/c',
+router.get(
+  '/:team/:suite/:batch/c',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -106,16 +107,15 @@ router.get('/:team/:suite/:batch/c',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/:suite/:batch/c',
+router.post(
+  '/:team/:suite/:batch/c',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
   middleware.hasSuite,
   middleware.hasBatch,
   bodyParser.json(),
-  middleware.inputs([
-    middleware.validationRules.get('body')
-  ]),
+  middleware.inputs([middleware.validationRules.get('body')]),
   promisable(ctrlCommentCreate, 'create comment')
 )
 
@@ -166,7 +166,8 @@ router.post('/:team/:suite/:batch/c',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.patch('/:team/:suite/:batch/c/:comment',
+router.patch(
+  '/:team/:suite/:batch/c/:comment',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -174,9 +175,7 @@ router.patch('/:team/:suite/:batch/c/:comment',
   middleware.hasBatch,
   middleware.hasComment,
   bodyParser.json(),
-  middleware.inputs([
-    middleware.validationRules.get('body'),
-  ]),
+  middleware.inputs([middleware.validationRules.get('body')]),
   promisable(ctrlCommentUpdate, 'update comment')
 )
 
@@ -215,7 +214,8 @@ router.patch('/:team/:suite/:batch/c/:comment',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.delete('/:team/:suite/:batch/c/:comment',
+router.delete(
+  '/:team/:suite/:batch/c/:comment',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -258,7 +258,8 @@ router.delete('/:team/:suite/:batch/c/:comment',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post('/:team/:suite/:batch/c/:comment/reply',
+router.post(
+  '/:team/:suite/:batch/c/:comment/reply',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -266,9 +267,7 @@ router.post('/:team/:suite/:batch/c/:comment/reply',
   middleware.hasBatch,
   middleware.hasComment,
   bodyParser.json(),
-  middleware.inputs([
-    middleware.validationRules.get('body'),
-  ]),
+  middleware.inputs([middleware.validationRules.get('body')]),
   promisable(ctrlCommentReply, 'reply to comment')
 )
 

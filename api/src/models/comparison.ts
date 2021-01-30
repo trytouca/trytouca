@@ -12,9 +12,7 @@ import logger from '../utils/logger'
 export async function comparisonRemove(
   jobs: IComparisonDocument[]
 ): Promise<void> {
-
   try {
-
     // remove comparison results from elasticsearch
 
     const removal = jobs.map((job) => elastic.removeComparison(job.elasticId))
@@ -26,9 +24,7 @@ export async function comparisonRemove(
     const jobIds = jobs.map((elem) => elem._id)
     await ComparisonModel.deleteMany({ _id: { $in: jobIds } })
     logger.silly('removed %d processed comparison jobs', jobs.length)
-
   } catch (err) {
     logger.warn('failed to remove comparison jobs: %s', err)
   }
-
 }

@@ -29,11 +29,12 @@ const transporter = nodemailer.createTransport({
  *
  */
 async function mailUserImpl(
-  recipient: IUser, subject: string, filename: string, view?: any
+  recipient: IUser,
+  subject: string,
+  filename: string,
+  view?: any
 ) {
-
-  const filePath = path.join(
-    config.mail.templatesDirectory, filename + '.html')
+  const filePath = path.join(config.mail.templatesDirectory, filename + '.html')
   const fileContent = fs.readFileSync(filePath, 'utf8')
 
   const bodyHtml = mustache.render(fileContent, view)
@@ -70,7 +71,10 @@ async function mailUserImpl(
  *
  */
 export async function mailUser(
-  recipient: IUser, subject: string, filename: string, params?: Record<string, unknown>
+  recipient: IUser,
+  subject: string,
+  filename: string,
+  params?: Record<string, unknown>
 ) {
   if (!configMgr.hasMailTransport()) {
     const level = config.env === 'production' ? 'warn' : 'debug'
@@ -82,7 +86,12 @@ export async function mailUser(
     await mailUserImpl(recipient, subject, filename, params)
     logger.info('%s: %s: sent mail', filename, recipient.username)
   } catch (ex) {
-    logger.warn('%s: %s: failed to send mail: %j', filename, recipient.username, ex)
+    logger.warn(
+      '%s: %s: failed to send mail: %j',
+      filename,
+      recipient.username,
+      ex
+    )
     return
   }
 }
@@ -91,7 +100,10 @@ export async function mailUser(
  *
  */
 export async function mailUsers(
-  users: IUser[], subject: string, filename: string, params?: Record<string, string>
+  users: IUser[],
+  subject: string,
+  filename: string,
+  params?: Record<string, string>
 ): Promise<boolean> {
   const jobs = users.map((user) => mailUser(user, subject, filename, params))
   const results = await Promise.all(jobs)
@@ -102,7 +114,10 @@ export async function mailUsers(
  *
  */
 async function mailUsersByRole(
-  role: EPlatformRole, subject: string, filename: string, params?: Record<string, string>
+  role: EPlatformRole,
+  subject: string,
+  filename: string,
+  params?: Record<string, string>
 ): Promise<boolean> {
   const users = await UserModel.wslFindByRole(role)
   return await mailUsers(users, subject, filename, params)
@@ -112,7 +127,9 @@ async function mailUsersByRole(
  *
  */
 export async function mailAdmins(
-  subject: string, filename: string, params?: Record<string, string>
+  subject: string,
+  filename: string,
+  params?: Record<string, string>
 ) {
   return mailUsersByRole(EPlatformRole.Admin, subject, filename, params)
 }
@@ -121,7 +138,9 @@ export async function mailAdmins(
  *
  */
 export async function mailOwners(
-  subject: string, filename: string, params?: Record<string, string>
+  subject: string,
+  filename: string,
+  params?: Record<string, string>
 ) {
   return mailUsersByRole(EPlatformRole.Owner, subject, filename, params)
 }

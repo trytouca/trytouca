@@ -10,12 +10,16 @@ export { hasComment } from './comment'
 
 export {
   hasTeam,
-  isTeamInvitee, isTeamMember, isTeamAdmin, isTeamOwner,
-  hasMember,
+  isTeamInvitee,
+  isTeamMember,
+  isTeamAdmin,
+  isTeamOwner,
+  hasMember
 } from './team'
 
 export {
-  isAuthenticated, isClientAuthenticated,
+  isAuthenticated,
+  isClientAuthenticated,
   isPlatformAdmin,
   hasAccount
 } from './user'

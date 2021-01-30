@@ -22,17 +22,19 @@ import { rclient } from '../../utils/redis'
  * Performs up to three database queries.
  */
 export async function teamCreate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
-  const proposed = req.body as { slug: string, name: string }
+  const proposed = req.body as { slug: string; name: string }
   logger.debug('%s: creating team %s', user.username, proposed.slug)
 
   // return 400 if team slug is taken
 
   if (await TeamModel.countDocuments({ slug: proposed.slug })) {
     return next({
-      errors: [ 'team already registered' ],
+      errors: ['team already registered'],
       status: 409
     })
   }
@@ -42,7 +44,7 @@ export async function teamCreate(
   const newTeam = await TeamModel.create({
     name: proposed.name,
     owner: user._id,
-    slug: proposed.slug,
+    slug: proposed.slug
   })
   logger.info('%s: created team %s', user.username, proposed.slug)
 
@@ -59,7 +61,7 @@ export async function teamCreate(
     subject,
     teamName: newTeam.name,
     teamSlug: newTeam.slug,
-    username: user.username,
+    username: user.username
   })
 
   // remove information about the list of known teams from cache.
@@ -69,6 +71,6 @@ export async function teamCreate(
 
   // redirect to lookup route for this newly created team
 
-  const redirectPath = [ config.express.root, 'team', newTeam.slug ].join('/')
+  const redirectPath = [config.express.root, 'team', newTeam.slug].join('/')
   return res.status(201).redirect(redirectPath.replace(/\/+/g, '/'))
 }

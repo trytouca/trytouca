@@ -9,11 +9,13 @@ import mongoose from 'mongoose'
  */
 const batchSchema = new mongoose.Schema(
   {
-    elements: [{
-      ref: 'Element',
-      required: false,
-      type: mongoose.Schema.Types.ObjectId
-    }],
+    elements: [
+      {
+        ref: 'Element',
+        required: false,
+        type: mongoose.Schema.Types.ObjectId
+      }
+    ],
     expirable: {
       default: true,
       required: true,
@@ -46,11 +48,13 @@ const batchSchema = new mongoose.Schema(
       required: false,
       type: Date
     },
-    submittedBy: [{
-      ref: 'User',
-      required: false,
-      type: mongoose.Schema.Types.ObjectId
-    }],
+    submittedBy: [
+      {
+        ref: 'User',
+        required: false,
+        type: mongoose.Schema.Types.ObjectId
+      }
+    ],
     suite: {
       ref: 'Suite',
       required: true,
@@ -102,8 +106,7 @@ export interface IBatchDocument extends mongoose.Document {
 /**
  *
  */
-export interface IBatchModel extends mongoose.Model<IBatchDocument> {
-}
+export interface IBatchModel extends mongoose.Model<IBatchDocument> {}
 
 /**
  *

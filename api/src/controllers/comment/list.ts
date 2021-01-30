@@ -17,7 +17,8 @@ import { rclient } from '../../utils/redis'
 async function commentList(res: Response): Promise<CommentListResponse> {
   const type = extractCommentType(res)
   const matchQuery = {
-    elementId: type === ECommentType.Element ? res.locals.element._id : undefined,
+    elementId:
+      type === ECommentType.Element ? res.locals.element._id : undefined,
     batchId: type === ECommentType.Batch ? res.locals.batch._id : undefined,
     suiteId: type === ECommentType.Suite ? res.locals.suite._id : undefined
   }
@@ -30,7 +31,7 @@ async function commentList(res: Response): Promise<CommentListResponse> {
         from: 'users',
         localField: 'by',
         foreignField: '_id',
-        as: 'byDoc',
+        as: 'byDoc'
       }
     },
     {
@@ -69,11 +70,11 @@ async function commentList(res: Response): Promise<CommentListResponse> {
     replies: [],
     text: v.text
   })
-  const children = queryOutput.filter(v => v.parentId).map(transform)
-  const parents = queryOutput.filter(v => !v.parentId).map(transform)
-  const output = parents.map(v => {
-    const replies = children.filter(e => e.parentId.toHexString() === v.id)
-    replies.forEach(e => e.replies = undefined)
+  const children = queryOutput.filter((v) => v.parentId).map(transform)
+  const parents = queryOutput.filter((v) => !v.parentId).map(transform)
+  const output = parents.map((v) => {
+    const replies = children.filter((e) => e.parentId.toHexString() === v.id)
+    replies.forEach((e) => (e.replies = undefined))
     replies.sort((a, b) => +new Date(a.at) - +new Date(b.at))
     v.replies = replies
     return v
@@ -85,7 +86,9 @@ async function commentList(res: Response): Promise<CommentListResponse> {
  *
  */
 export async function ctrlCommentList(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const tuple = extractCommentTuple(res)
@@ -110,8 +113,7 @@ export async function ctrlCommentList(
 
   rclient.cache(cacheKey, output)
 
-  const toc = process.hrtime(tic)
-    .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
   return res.status(200).json(output)
 }

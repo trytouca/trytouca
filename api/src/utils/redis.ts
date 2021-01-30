@@ -11,7 +11,7 @@ export const client = new Redis({
   host: config.redis.host,
   lazyConnect: true,
   port: config.redis.port,
-  showFriendlyErrorStack: (config.env !== 'production')
+  showFriendlyErrorStack: config.env !== 'production'
 })
 
 /**
@@ -57,15 +57,15 @@ export async function makeConnectionRedis(): Promise<boolean> {
 
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   for (let i = 1; i <= kMaxAttempts; i++) {
-      if (client.status === 'ready') {
-        logger.info('succesfully connected to cache server')
-        // once connection is established, we would like to enable logging
-        // of future connection events.
-        configureConnectionEventHandling()
-        return true
-      }
-      logger.warn('failed to connect to cache server (%d/%d)', i, kMaxAttempts)
-      await delay(kTimeout)
+    if (client.status === 'ready') {
+      logger.info('succesfully connected to cache server')
+      // once connection is established, we would like to enable logging
+      // of future connection events.
+      configureConnectionEventHandling()
+      return true
+    }
+    logger.warn('failed to connect to cache server (%d/%d)', i, kMaxAttempts)
+    await delay(kTimeout)
   }
 
   // if we failed to connect after exhausting all of our attempts,
@@ -95,10 +95,13 @@ async function getCached<T>(cacheKey: string): Promise<T> {
  *
  */
 async function cache(
-  cacheKey: string, output: unknown, cacheDuration?: number
+  cacheKey: string,
+  output: unknown,
+  cacheDuration?: number
 ): Promise<boolean> {
   cacheDuration = cacheDuration || config.redis.durationShort
-  return client.set(cacheKey, JSON.stringify(output), 'EX', cacheDuration)
+  return client
+    .set(cacheKey, JSON.stringify(output), 'EX', cacheDuration)
     .then((value) => {
       if (value === 'OK') {
         logger.silly('%s: cached', cacheKey)
@@ -113,10 +116,9 @@ async function cache(
     })
 }
 
-async function removeCached(
-  cacheKey: string
-): Promise<boolean> {
-  return client.del(cacheKey)
+async function removeCached(cacheKey: string): Promise<boolean> {
+  return client
+    .del(cacheKey)
     .then((value) => {
       logger.debug('%s: removed cached result', cacheKey)
       return Boolean(value)
@@ -128,18 +130,19 @@ async function removeCached(
 }
 
 function removeCachedByPrefix(prefix: string): void {
-  client.scanStream({ match: `${prefix}*` })
+  client
+    .scanStream({ match: `${prefix}*` })
     .on('data', (keys: string[]) => {
       if (keys.length) {
-        const pipeline = client.pipeline();
-        keys.forEach(k => {
+        const pipeline = client.pipeline()
+        keys.forEach((k) => {
           pipeline.del(k)
           logger.info('%s: removed', k)
-        });
+        })
         pipeline.exec()
       }
     })
-    .on('end', () => true);
+    .on('end', () => true)
 }
 
 export const rclient = {

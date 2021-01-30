@@ -35,6 +35,6 @@ export async function notifyPlatformAdmins(fmtstr: string, ...args) {
   const message = utilFormat(fmtstr, ...args)
   const platformAdmins = await UserModel.wslFindByRole(EPlatformRole.Admin)
   const platformOwner = await UserModel.wslFindByRole(EPlatformRole.Owner)
-  const users = [ ...platformAdmins, ...platformOwner ]
+  const users = [...platformAdmins, ...platformOwner]
   return notifyUsers(users, message)
 }

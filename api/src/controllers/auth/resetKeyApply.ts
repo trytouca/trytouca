@@ -15,7 +15,9 @@ import * as mailer from '../../utils/mailer'
  *
  */
 export async function authResetKeyApply(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const resetKey = req.params.key
   const askedUsername = req.body.username
@@ -29,22 +31,25 @@ export async function authResetKeyApply(
   // their password to the one already on file. that is okay: they may
   // not remember what their current password is.
 
-  const user = await UserModel.findOneAndUpdate({
-    resetKey,
-    resetKeyExpiresAt: { $gt: new Date() },
-    suspended: false,
-    username: askedUsername
-  }, {
-    $set: { password: hash, resetAt: new Date() },
-    $unset: { resetKey: true, resetKeyExpiresAt: true }
-  })
+  const user = await UserModel.findOneAndUpdate(
+    {
+      resetKey,
+      resetKeyExpiresAt: { $gt: new Date() },
+      suspended: false,
+      username: askedUsername
+    },
+    {
+      $set: { password: hash, resetAt: new Date() },
+      $unset: { resetKey: true, resetKeyExpiresAt: true }
+    }
+  )
 
   // if above query does not return a user, it indicates that the
   // request was not valid.
 
   if (!user) {
     return next({
-      errors: [ 'reset key invalid' ],
+      errors: ['reset key invalid'],
       status: 404
     })
   }
@@ -52,8 +57,12 @@ export async function authResetKeyApply(
 
   // notify user that their account password was reset
 
-  mailer.mailUser(user, 'Password Reset Confirmation',
-    'auth-password-confirm', { username: user.username })
+  mailer.mailUser(
+    user,
+    'Password Reset Confirmation',
+    'auth-password-confirm',
+    { username: user.username }
+  )
 
   notifyPlatformAdmins('%s reset their password.', user.username)
 

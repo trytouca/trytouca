@@ -5,18 +5,23 @@
 import type { Types } from 'mongoose'
 
 import type {
-  BatchItem, BatchComparisonItem, BatchCompareOverview,
-  CppTestcaseComparisonOverview, CppTestcaseOverview,
-  SuiteItem, Userinfo } from './commontypes'
+  BatchItem,
+  BatchComparisonItem,
+  BatchCompareOverview,
+  CppTestcaseComparisonOverview,
+  CppTestcaseOverview,
+  SuiteItem,
+  Userinfo
+} from './commontypes'
 
 /**
  *
  */
 export type PromotionQueryOutput = {
-  at: Date,
-  by: Types.ObjectId,
-  for: string,
-  from: Types.ObjectId,
+  at: Date
+  by: Types.ObjectId
+  for: string
+  from: Types.ObjectId
   to: Types.ObjectId
 }
 
@@ -33,7 +38,7 @@ export type BatchItemQueryOutput = Exclude<BatchItem, 'submittedBy'> & {
  *
  */
 export type SuiteItemQueryOutput = Exclude<SuiteItem, 'baseline' | 'latest'> & {
-  baseline: BatchItemQueryOutput,
+  baseline: BatchItemQueryOutput
   latest: BatchItemQueryOutput
 }
 
@@ -92,6 +97,6 @@ export type CommentListQueryOutput = {
   at: Date
   by: Userinfo
   editedAt: Date
-  parentId: Types.ObjectId,
+  parentId: Types.ObjectId
   text: string
 }

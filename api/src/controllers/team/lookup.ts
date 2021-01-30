@@ -17,9 +17,9 @@ import { rclient } from '../../utils/redis'
  * @internal
  */
 async function teamLookup(
-  user: IUser, team: ITeam
+  user: IUser,
+  team: ITeam
 ): Promise<TeamLookupResponse> {
-
   type DatabaseOutput = TeamLookupResponse[]
 
   const result: DatabaseOutput = await TeamModel.aggregate([
@@ -32,10 +32,10 @@ async function teamLookup(
         userCount: {
           $let: {
             vars: {
-              membersCount: { $size: "$members" },
-              adminsCount: { $size: "$admins" },
+              membersCount: { $size: '$members' },
+              adminsCount: { $size: '$admins' }
             },
-            in: { $sum: [ "$$membersCount", "$$adminsCount", 1 ] }
+            in: { $sum: ['$$membersCount', '$$adminsCount', 1] }
           }
         }
       }
@@ -70,7 +70,9 @@ async function teamLookup(
  * Database Queries: 2
  */
 export async function ctrlTeamLookup(
-  _req: Request, res: Response, _next: NextFunction
+  _req: Request,
+  res: Response,
+  _next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
@@ -96,8 +98,7 @@ export async function ctrlTeamLookup(
 
   // log runtime performance before returning
 
-  const toc = process.hrtime(tic)
-    .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
   return res.status(200).json(output)
 }

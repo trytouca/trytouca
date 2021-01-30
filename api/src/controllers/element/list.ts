@@ -16,8 +16,10 @@ import { rclient } from '../../utils/redis'
  *
  * @internal
  */
-async function elementListImpl(team: ITeam, suite: ISuiteDocument): Promise<ElementListResponse> {
-
+async function elementListImpl(
+  team: ITeam,
+  suite: ISuiteDocument
+): Promise<ElementListResponse> {
   // find batch that is set as suite baseline
 
   const baselineInfo = suite.promotions[suite.promotions.length - 1]
@@ -64,12 +66,14 @@ async function elementListImpl(team: ITeam, suite: ISuiteDocument): Promise<Elem
  * Database Queries: 1
  */
 export async function elementList(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
-  const tuple = [ team.slug, suite.slug ].join('_')
+  const tuple = [team.slug, suite.slug].join('_')
   logger.debug('%s: %s: listing elements', user.username, tuple)
   const cacheKey = `route_elementList_${tuple}`
   const tic = process.hrtime()
@@ -90,8 +94,7 @@ export async function elementList(
 
   rclient.cache(cacheKey, output)
 
-  const toc = process.hrtime(tic)
-    .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
   return res.status(200).json(output)
 }

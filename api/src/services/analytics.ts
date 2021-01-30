@@ -13,14 +13,18 @@ import { rclient } from '../utils/redis'
  *
  */
 async function populateBatchMeta(
-  team: ITeamDocument, suite: ISuiteDocument, batch: IBatchDocument
+  team: ITeamDocument,
+  suite: ISuiteDocument,
+  batch: IBatchDocument
 ) {
   const serviceName = 'service analytics'
-  const tuple = [ team.slug, suite.slug, batch.slug ].join('/')
+  const tuple = [team.slug, suite.slug, batch.slug].join('/')
   logger.info('%s: %s: comparing to baseline', serviceName, tuple)
 
-  const overview = await ComparisonFunctions
-    .compareBatchOverview(batch.superior, batch._id)
+  const overview = await ComparisonFunctions.compareBatchOverview(
+    batch.superior,
+    batch._id
+  )
 
   if (overview.elementsCountPending) {
     logger.info('%s: %s: skipped: has pending elements', serviceName, tuple)
@@ -36,18 +40,17 @@ async function populateBatchMeta(
 /**
  *
  */
-async function processSuite(
-  team: ITeamDocument, suite: ISuiteDocument
-) {
-  await BatchModel
-    .find({
-      suite: suite._id,
-      sealedAt: { $exists: true },
-      meta: { $exists: false }
-    })
+async function processSuite(team: ITeamDocument, suite: ISuiteDocument) {
+  await BatchModel.find({
+    suite: suite._id,
+    sealedAt: { $exists: true },
+    meta: { $exists: false }
+  })
     .sort({ submittedAt: 1 })
     .cursor()
-    .eachAsync(batch => populateBatchMeta(team, suite, batch), { parallel: 1 })
+    .eachAsync((batch) => populateBatchMeta(team, suite, batch), {
+      parallel: 1
+    })
 }
 
 /**
@@ -58,10 +61,9 @@ export async function analyticsService(): Promise<void> {
 
   const teams = await TeamModel.find()
   for (const team of teams) {
-    await SuiteModel
-      .find({ team: team._id })
+    await SuiteModel.find({ team: team._id })
       .sort({ updatedAt: 1 })
       .cursor()
-      .eachAsync(v => processSuite(team, v), { parallel: 1 })
+      .eachAsync((v) => processSuite(team, v), { parallel: 1 })
   }
 }

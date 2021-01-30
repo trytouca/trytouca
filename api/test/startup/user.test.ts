@@ -10,7 +10,7 @@ import sinon from 'sinon'
 import { setupSuperuser } from '../../src/startup'
 import { IUser, UserModel } from '../../src/schemas/user'
 
-describe('setupSuperuser', function() {
+describe('setupSuperuser', function () {
   let mockObj = null
   const expectedUid = mongoose.Types.ObjectId('5e07929143bb5a0606dff3a8')
   const user = {

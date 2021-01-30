@@ -4,7 +4,12 @@
 
 import { NextFunction, Request, Response } from 'express'
 import { ECommentType } from '../../backendtypes'
-import { CommentInputs, extractCommentTuple, extractCommentType, notifySubscribers } from '../../models/comment'
+import {
+  CommentInputs,
+  extractCommentTuple,
+  extractCommentType,
+  notifySubscribers
+} from '../../models/comment'
 import { CommentModel } from '../../schemas/comment'
 import { IUser } from '../../schemas/user'
 import { config } from '../../utils/config'
@@ -15,7 +20,9 @@ import { rclient } from '../../utils/redis'
  *
  */
 export async function ctrlCommentCreate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const locals = res.locals as CommentInputs
   const text = req.body.body
@@ -47,7 +54,13 @@ export async function ctrlCommentCreate(
     return res.status(204).send()
   }
 
-  const batchLink = [ config.webapp.root, '~', locals.team.slug, locals.suite.slug, locals.batch.slug ].join('/')
+  const batchLink = [
+    config.webapp.root,
+    '~',
+    locals.team.slug,
+    locals.suite.slug,
+    locals.batch.slug
+  ].join('/')
   const commentLink = `${batchLink}?t=comments`
   const subject = `New Comment on Version ${locals.batch.slug} of Suite "${locals.suite.slug}"`
   const inputs = {

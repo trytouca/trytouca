@@ -12,7 +12,9 @@ import logger from '../../utils/logger'
  *
  */
 export async function authVerifyActivate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const activationKey = req.params.key
   logger.debug('received request to activate user')
@@ -21,23 +23,26 @@ export async function authVerifyActivate(
 
   if (activationKey.length !== config.auth.activationKeyLength) {
     return next({
-      errors: [ 'invalid activation key' ],
+      errors: ['invalid activation key'],
       status: 400
     })
   }
 
   // check if activation key is associated with any inactive user
 
-  const user = await UserModel.findOneAndUpdate({ activationKey }, {
-    $set: { activatedAt: new Date() },
-    $unset: { activationKey: true }
-  }) as IUser
+  const user = (await UserModel.findOneAndUpdate(
+    { activationKey },
+    {
+      $set: { activatedAt: new Date() },
+      $unset: { activationKey: true }
+    }
+  )) as IUser
 
   // return 404 if activation key is not found
 
   if (!user) {
     return next({
-      errors: [ 'activation key not found' ],
+      errors: ['activation key not found'],
       status: 404
     })
   }

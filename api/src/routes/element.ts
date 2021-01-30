@@ -47,7 +47,8 @@ const router = e.Router()
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.get('/:team/:suite',
+router.get(
+  '/:team/:suite',
   middleware.isClientAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -92,7 +93,8 @@ router.get('/:team/:suite',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.get('/:team/:suite/:element',
+router.get(
+  '/:team/:suite/:element',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
@@ -148,7 +150,8 @@ router.get('/:team/:suite/:element',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.get('/:team/:suite/:element/compare/:batch/:dstBatch/:dstElement/:dstSuite',
+router.get(
+  '/:team/:suite/:element/compare/:batch/:dstBatch/:dstElement/:dstSuite',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,

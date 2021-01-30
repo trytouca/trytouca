@@ -780,7 +780,7 @@ export type ElementLookupResponse = {
     slug: string
     submittedAt: Date
     updatedAt: Date
-  }[];
+  }[]
   elementName: string
   elementSlug: string
   suiteName: string

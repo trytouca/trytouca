@@ -36,10 +36,9 @@ export interface IMailDocument extends mongoose.Document {
   subject: string
 }
 
-export interface IMailModel extends mongoose.Model<IMailDocument> {
-}
+export interface IMailModel extends mongoose.Model<IMailDocument> {}
 
-export const MailModel: IMailModel = mongoose.model<
-  IMailDocument,
-  IMailModel
->('Mail', mailSchema)
+export const MailModel: IMailModel = mongoose.model<IMailDocument, IMailModel>(
+  'Mail',
+  mailSchema
+)

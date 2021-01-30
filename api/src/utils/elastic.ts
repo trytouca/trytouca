@@ -40,16 +40,19 @@ export async function fetchComparison(elasticId: string) {
  *
  */
 export function removeComparison(elasticId: string): Promise<boolean> {
-  return esClient.delete({
-    id: elasticId,
-    index: 'comparisons',
-    type: '_doc'
-  }).then((response) => {
-    return response.body.result.localeCompare('deleted') === 0
-  }).catch((err) => {
-    logger.warn('failed to remove comparison result: %s: %s', elasticId, err)
-    return false
-  })
+  return esClient
+    .delete({
+      id: elasticId,
+      index: 'comparisons',
+      type: '_doc'
+    })
+    .then((response) => {
+      return response.body.result.localeCompare('deleted') === 0
+    })
+    .catch((err) => {
+      logger.warn('failed to remove comparison result: %s: %s', elasticId, err)
+      return false
+    })
 }
 
 /**
@@ -62,23 +65,27 @@ export async function addResult(body: Record<string, unknown>) {
     body: body
   })
   return response.body.result?.localeCompare('created') === 0
-    ? response.body._id : null
+    ? response.body._id
+    : null
 }
 
 /**
  *
  */
 export function removeResult(elasticId: string): Promise<boolean> {
-  return esClient.delete({
-    id: elasticId,
-    index: 'results',
-    type: '_doc'
-  }).then((response) => {
-    return response.body.result.localeCompare('deleted') === 0
-  }).catch((err) => {
-    logger.warn('failed to remove message result: %s: %s', elasticId, err)
-    return false
-  })
+  return esClient
+    .delete({
+      id: elasticId,
+      index: 'results',
+      type: '_doc'
+    })
+    .then((response) => {
+      return response.body.result.localeCompare('deleted') === 0
+    })
+    .catch((err) => {
+      logger.warn('failed to remove message result: %s: %s', elasticId, err)
+      return false
+    })
 }
 
 /**

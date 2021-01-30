@@ -15,12 +15,14 @@ import logger from '../../utils/logger'
  * Remove a given suite and all data associated with it.
  */
 export async function ctrlSuiteRemove(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const suite = res.locals.suite as ISuiteDocument
   const team = res.locals.team as ITeam
   const user = res.locals.user as IUser
-  const tuple = [ team.slug, suite.slug ].join('/')
+  const tuple = [team.slug, suite.slug].join('/')
   logger.info('%s: removing %s', user.username, tuple)
   const tic = process.hrtime()
 
@@ -40,8 +42,9 @@ export async function ctrlSuiteRemove(
   const batches = await BatchModel.find({ suite: suite._id }, { _id: 1 })
 
   await MessageModel.updateMany(
-    { batchId: { $in: batches.map(v => v._id) } },
-    { $set: { expiresAt: new Date() } })
+    { batchId: { $in: batches.map((v) => v._id) } },
+    { $set: { expiresAt: new Date() } }
+  )
 
   // attempt removal of this suite.
   // note that if there are pending comparison jobs for any message
@@ -50,7 +53,7 @@ export async function ctrlSuiteRemove(
   // their associated messages along with the suite itself will be
   // removed in an indeterminate time.
 
-  if (!await suiteRemove(suite)) {
+  if (!(await suiteRemove(suite))) {
     logger.info('%s: %s: scheduled for removal', user.username, tuple)
   }
 

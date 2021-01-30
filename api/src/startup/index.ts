@@ -12,7 +12,6 @@ import logger from '../utils/logger'
  * on behalf of the platform.
  */
 export async function setupSuperuser() {
-
   // check if user is already registered in the database
 
   const user = await UserModel.wslGetSuperUser()
@@ -40,7 +39,6 @@ export async function setupSuperuser() {
  * promotions, submissions etc will be assigned to this special user account.
  */
 export async function setupAnonymousUser() {
-
   // check if user is already registered in the database
 
   const user = await UserModel.wslFindByUname('anonymous')

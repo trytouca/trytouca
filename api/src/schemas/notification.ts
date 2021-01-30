@@ -7,27 +7,25 @@ import mongoose from 'mongoose'
 /**
  *
  */
-const notificationSchema = new mongoose.Schema(
-  {
-    createdAt: {
-      required: true,
-      type: Date
-    },
-    seenAt: {
-      required: false,
-      type: Date
-    },
-    text: {
-      required: true,
-      type: String
-    },
-    userId: {
-      ref: 'User',
-      required: true,
-      type: mongoose.Schema.Types.ObjectId
-    }
+const notificationSchema = new mongoose.Schema({
+  createdAt: {
+    required: true,
+    type: Date
+  },
+  seenAt: {
+    required: false,
+    type: Date
+  },
+  text: {
+    required: true,
+    type: String
+  },
+  userId: {
+    ref: 'User',
+    required: true,
+    type: mongoose.Schema.Types.ObjectId
   }
-)
+})
 
 notificationSchema.index({ userId: 1, createdAt: -1 })
 
@@ -44,8 +42,8 @@ export interface INotificationDocument extends mongoose.Document {
 /**
  *
  */
-export interface INotificationModel extends mongoose.Model<INotificationDocument> {
-}
+export interface INotificationModel
+  extends mongoose.Model<INotificationDocument> {}
 
 /**
  *

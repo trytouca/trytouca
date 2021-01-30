@@ -59,9 +59,7 @@ const router = e.Router()
  *                  srcProcessed:
  *                    type: boolean
  */
-router.get('/',
-  promisable(comparisonList, 'list comparison jobs')
-)
+router.get('/', promisable(comparisonList, 'list comparison jobs'))
 
 /**
  * Submit results for a comparison job.
@@ -112,10 +110,9 @@ router.get('/',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.patch('/job/:job',
-  middleware.inputs([
-    ev.param('job').isMongoId().withMessage('job invalid')
-  ]),
+router.patch(
+  '/job/:job',
+  middleware.inputs([ev.param('job').isMongoId().withMessage('job invalid')]),
   bodyParser.json({ limit: '5mb' }),
   promisable(comparisonProcess, 'process comparison job')
 )
@@ -174,7 +171,8 @@ router.patch('/job/:job',
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.patch('/message/:message',
+router.patch(
+  '/message/:message',
   middleware.inputs([
     ev.param('message').isMongoId().withMessage('job invalid')
   ]),

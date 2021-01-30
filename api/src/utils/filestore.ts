@@ -15,7 +15,6 @@ import { config } from './config'
  *
  */
 class FileStore {
-
   /**
    *
    */
@@ -35,7 +34,11 @@ class FileStore {
    * @param messageId string representation of the document id of this message
    * @param content submitted message to be stored
    */
-  public async add(batchId: string, messageId: string, content: Buffer): Promise<void> {
+  public async add(
+    batchId: string,
+    messageId: string,
+    content: Buffer
+  ): Promise<void> {
     // filesystem directory hierarchy is defined by batchId and messageId of
     // the submitted testresult.
     const resultFilePath = path.join(this.rootDir, batchId, messageId)
@@ -81,7 +84,6 @@ class FileStore {
       logger.silly('removed result directory: %s', dir)
     }
   }
-
 }
 
 /**

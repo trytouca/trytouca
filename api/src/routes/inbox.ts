@@ -33,7 +33,8 @@ const router = e.Router()
  *      401:
  *        $ref: '#/components/responses/Unauthorized'
  */
-router.get('/',
+router.get(
+  '/',
   middleware.isAuthenticated,
   promisable(inboxList, 'list user notifications')
 )
@@ -55,7 +56,8 @@ router.get('/',
  *      401:
  *        $ref: '#/components/responses/Unauthorized'
  */
-router.post('/seen',
+router.post(
+  '/seen',
   middleware.isAuthenticated,
   promisable(inboxSeen, 'mark user notifications as seen')
 )

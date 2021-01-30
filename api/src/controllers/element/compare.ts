@@ -59,7 +59,9 @@ function cleanOutput(output: BackendBatchComparisonItemCommon): void {
  * - Database Queries: Unknown
  */
 export async function elementCompare(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
@@ -76,7 +78,8 @@ export async function elementCompare(
     srcElement: element.name,
     srcSuite: suite.slug
   }
-  const cacheKey = `route_elementCompare_${team.slug}_` + Object.values(names).join('_')
+  const cacheKey =
+    `route_elementCompare_${team.slug}_` + Object.values(names).join('_')
 
   // return comparison result from cache in case it is available
 
@@ -87,7 +90,9 @@ export async function elementCompare(
   }
 
   const params: ICompareParamsElement = {
-    srcSuite: suite, srcBatch: batch, srcElement: element
+    srcSuite: suite,
+    srcBatch: batch,
+    srcElement: element
   }
 
   // return 404 if base suite with specified name does not exist
@@ -97,10 +102,11 @@ export async function elementCompare(
   } else {
     params.dstSuite = await SuiteModel.findOne(
       { slug: names.dstSuite },
-      { _id: 1 })
+      { _id: 1 }
+    )
     if (!params.dstSuite) {
       return next({
-        errors: [ 'dst suite not found' ],
+        errors: ['dst suite not found'],
         status: 404
       })
     }
@@ -113,10 +119,11 @@ export async function elementCompare(
   } else {
     params.dstBatch = await BatchModel.findOne(
       { slug: names.dstBatch, suite: params.dstSuite._id },
-      { _id: 1 })
+      { _id: 1 }
+    )
     if (!params.dstBatch) {
       return next({
-        errors: [ 'dst batch not found' ],
+        errors: ['dst batch not found'],
         status: 404
       })
     }
@@ -124,16 +131,19 @@ export async function elementCompare(
 
   // return 404 if base element with specified name does not exist
 
-  if (names.dstElement === names.srcElement
-    && names.dstSuite === names.srcSuite) {
+  if (
+    names.dstElement === names.srcElement &&
+    names.dstSuite === names.srcSuite
+  ) {
     params.dstElement = params.srcElement
   } else {
     params.dstElement = await ElementModel.findOne(
       { name: names.dstElement, suiteId: params.dstSuite._id },
-      { _id: 1 })
+      { _id: 1 }
+    )
     if (!params.dstElement) {
       return next({
-        errors: [ 'dst element not found' ],
+        errors: ['dst element not found'],
         status: 404
       })
     }
@@ -148,39 +158,43 @@ export async function elementCompare(
     })
   }
 
-  if (!await doesBatchHaveElement(params.srcBatch.id, params.srcElement.id)) {
+  if (!(await doesBatchHaveElement(params.srcBatch.id, params.srcElement.id))) {
     return next({
-      errors: [ 'src element missing from batch' ],
+      errors: ['src element missing from batch'],
       status: 404
     })
   }
 
   // return 404 if base element does not belong to base batch
 
-  if (!await doesBatchHaveElement(params.dstBatch.id, params.dstElement.id)) {
+  if (!(await doesBatchHaveElement(params.dstBatch.id, params.dstElement.id))) {
     return next({
-      errors: [ 'dst element missing from batch' ],
+      errors: ['dst element missing from batch'],
       status: 404
     })
   }
 
   // compare the two messages
 
-  const headName = [ names.srcSuite, names.srcElement, names.srcBatch ].join('/')
-  const baseName = [ names.dstSuite, names.dstElement, names.dstBatch ].join('/')
+  const headName = [names.srcSuite, names.srcElement, names.srcBatch].join('/')
+  const baseName = [names.dstSuite, names.dstElement, names.dstBatch].join('/')
   logger.debug('%s: comparing %s with %s', user.username, headName, baseName)
 
   // find messages submitted for each element/batch pair
 
-  const getMessage = async (batchId, elementId) => MessageModel
-    .findOne(
+  const getMessage = async (batchId, elementId) =>
+    MessageModel.findOne(
       { batchId, elementId },
       {
-        builtAt: 1, elasticId: 1, elementId: 1,
-        submittedAt: 1, submittedBy: 1
-      })
-    .populate({ path: 'elementId', select: 'name' })
-    .populate({ path: 'submittedBy', select: '-_id fullname username' })
+        builtAt: 1,
+        elasticId: 1,
+        elementId: 1,
+        submittedAt: 1,
+        submittedBy: 1
+      }
+    )
+      .populate({ path: 'elementId', select: 'name' })
+      .populate({ path: 'submittedBy', select: '-_id fullname username' })
 
   const srcMessage = await getMessage(params.srcBatch.id, params.srcElement.id)
   const dstMessage = await getMessage(params.dstBatch.id, params.dstElement.id)
@@ -208,33 +222,41 @@ export async function elementCompare(
   // reprocessing this request in the near future.
 
   return ComparisonFunctions.compareCommonElement(
-    params.dstBatch._id, params.srcBatch._id, output
-  ).then(async () => {
+    params.dstBatch._id,
+    params.srcBatch._id,
+    output
+  )
+    .then(async () => {
+      const isProcessed = output.elasticId
+      if (isProcessed) {
+        output.cmp = await elastic.fetchComparison(output.elasticId)
+        logger.info(
+          '%s: compared %s with %s',
+          user.username,
+          headName,
+          baseName
+        )
+      }
 
-    const isProcessed = output.elasticId
-    if (isProcessed) {
-      output.cmp = await elastic.fetchComparison(output.elasticId)
-      logger.info('%s: compared %s with %s', user.username, headName, baseName)
-    }
+      // remove backend-specific information that may have been needed during
+      // processing but should not be exposed to the user.
 
-    // remove backend-specific information that may have been needed during
-    // processing but should not be exposed to the user.
+      cleanOutput(output)
 
-    cleanOutput(output)
+      // cache message comparison result if it is processed.
 
-    // cache message comparison result if it is processed.
+      if (isProcessed) {
+        const duration = config.redis.durationLong
+        rclient.cache(cacheKey, output, duration)
+      }
 
-    if (isProcessed) {
-      const duration = config.redis.durationLong
-      rclient.cache(cacheKey, output, duration)
-    }
-
-    const toc = process.hrtime(tic)
-      .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
-    logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
-    return res.status(200).json(output)
-
-  }).catch((err) => {
-    return next({ errors: [ err ], status: 503 })
-  })
+      const toc = process
+        .hrtime(tic)
+        .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+      logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
+      return res.status(200).json(output)
+    })
+    .catch((err) => {
+      return next({ errors: [err], status: 503 })
+    })
 }

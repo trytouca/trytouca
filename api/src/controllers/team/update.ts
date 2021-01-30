@@ -28,11 +28,13 @@ import { rclient } from '../../utils/redis'
  *  - `isTeamOwner`
  */
 export async function teamUpdate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
-  const proposed = req.body as { slug: string, name: string }
+  const proposed = req.body as { slug: string; name: string }
   logger.debug('%s: %s: updating team', user.username, team.slug)
 
   // attempt to update team metadata
@@ -47,7 +49,7 @@ export async function teamUpdate(
   if (proposed.slug) {
     if (await TeamModel.countDocuments({ slug: proposed.slug })) {
       return next({
-        errors: [ 'team already registered' ],
+        errors: ['team already registered'],
         status: 409
       })
     }
@@ -56,7 +58,12 @@ export async function teamUpdate(
   // update the database
 
   await TeamModel.findByIdAndUpdate(team._id, { $set: proposed })
-  logger.info('%s: %s: updated metadata of team: %j', user.username, team.slug, proposed)
+  logger.info(
+    '%s: %s: updated metadata of team: %j',
+    user.username,
+    team.slug,
+    proposed
+  )
 
   // remove information about this team and the list of known teams from cache.
   // we wait for these operations to avoid race conditions.
@@ -74,13 +81,16 @@ export async function teamUpdate(
 
   // email all members and admins of this team that the team slug has changed.
 
-  const members = await findTeamUsersByRole(team, [ ETeamRole.Member, ETeamRole.Admin ])
+  const members = await findTeamUsersByRole(team, [
+    ETeamRole.Member,
+    ETeamRole.Admin
+  ])
   const teamLink = `${config.webapp.root}/~/${proposed.slug}`
 
   members
     // exclude the user who initiated the request
-    .filter(member => !member._id.equals(user._id))
-    .map(member => {
+    .filter((member) => !member._id.equals(user._id))
+    .map((member) => {
       mailer.mailUser(member, 'Team ID Changed', 'team-slug-changed', {
         subject: 'Team ID Changed',
         username: member.fullname || member.username,
@@ -88,12 +98,12 @@ export async function teamUpdate(
         teamName: team.name,
         teamLink,
         oldSlug: team.slug,
-        newSlug: proposed.slug,
+        newSlug: proposed.slug
       })
     })
 
   // redirect to lookup route for this newly renamed team
 
-  const redirectPath = [ config.express.root, 'team', proposed.slug ].join('/')
+  const redirectPath = [config.express.root, 'team', proposed.slug].join('/')
   return res.status(201).location(redirectPath).send()
 }

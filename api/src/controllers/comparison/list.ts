@@ -5,7 +5,7 @@
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 import { ComparisonModel } from '../../schemas/comparison'
-import { MessageModel } from '../../schemas/message';
+import { MessageModel } from '../../schemas/message'
 
 type ObjectId = mongoose.Types.ObjectId
 type ComparisonJob = {
@@ -16,7 +16,7 @@ type ComparisonJob = {
   srcMessageId: ObjectId
 }
 type MessageJob = {
-  messageId: ObjectId,
+  messageId: ObjectId
   batchId: ObjectId
 }
 
@@ -25,7 +25,7 @@ type MessageJob = {
  */
 export async function messageListImpl() {
   const reservedAt = new Date()
-  reservedAt.setSeconds(reservedAt.getSeconds() - 60);
+  reservedAt.setSeconds(reservedAt.getSeconds() - 60)
   const result: MessageJob[] = await MessageModel.aggregate([
     { $match: { elasticId: { $exists: false } } },
     {
@@ -40,7 +40,7 @@ export async function messageListImpl() {
     { $project: { _id: 0, messageId: '$_id', batchId: 1 } }
   ])
   await MessageModel.updateMany(
-    { _id: { $in: result.map(v => v.messageId) } },
+    { _id: { $in: result.map((v) => v.messageId) } },
     { $set: { reservedAt: new Date() } }
   )
   return result
@@ -51,7 +51,7 @@ export async function messageListImpl() {
  */
 export async function comparisonListImpl() {
   const reservedAt = new Date()
-  reservedAt.setSeconds(reservedAt.getSeconds() - 60);
+  reservedAt.setSeconds(reservedAt.getSeconds() - 60)
   const result: ComparisonJob[] = await ComparisonModel.aggregate([
     {
       $match: {
@@ -77,8 +77,8 @@ export async function comparisonListImpl() {
             $match: {
               $expr: {
                 $or: [
-                  { $eq: [ '$_id', '$$dstId' ] },
-                  { $eq: [ '$_id', '$$srcId' ] }
+                  { $eq: ['$_id', '$$dstId'] },
+                  { $eq: ['$_id', '$$srcId'] }
                 ]
               }
             }
@@ -87,14 +87,10 @@ export async function comparisonListImpl() {
             $project: {
               _id: 0,
               processedAt: {
-                $cond: [
-                  { $ifNull: ['$elasticId', false ] },
-                  true,
-                  false
-                ]
+                $cond: [{ $ifNull: ['$elasticId', false] }, true, false]
               }
             }
-          },
+          }
         ],
         as: 'messages'
       }
@@ -113,7 +109,7 @@ export async function comparisonListImpl() {
     { $project: { isComparable: 0 } }
   ])
   await ComparisonModel.updateMany(
-    { _id: { $in: result.map(v => v.jobId) } },
+    { _id: { $in: result.map((v) => v.jobId) } },
     { $set: { reservedAt: new Date() } }
   )
   return result
@@ -123,7 +119,9 @@ export async function comparisonListImpl() {
  *
  */
 export async function comparisonList(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const messages = await messageListImpl()
   const comparisons = await comparisonListImpl()

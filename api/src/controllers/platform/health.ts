@@ -16,7 +16,9 @@ import { rclient } from '../../utils/redis'
  * @todo add size of elasticsearch and mongodb databases
  */
 export async function platformHealth(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const cacheKey = 'platform-health'
   logger.debug('received health check request')

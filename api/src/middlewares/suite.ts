@@ -25,11 +25,13 @@ import logger from '../utils/logger'
  * - Error 404 if suite (`suite`) does not exist in team `team`.
  */
 export async function hasSuite(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const team = res.locals.team as ITeam
   const suiteSlug = req.params.suite
-  const tuple = [ team.slug, suiteSlug ]
+  const tuple = [team.slug, suiteSlug]
 
   const suite = await SuiteModel.findOne({ slug: suiteSlug, team: team._id })
 
@@ -37,7 +39,7 @@ export async function hasSuite(
 
   if (!suite) {
     return next({
-      errors: [ 'suite not found' ],
+      errors: ['suite not found'],
       status: 404
     })
   }

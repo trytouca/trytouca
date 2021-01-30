@@ -4,7 +4,12 @@
 
 import { NextFunction, Request, Response } from 'express'
 import { ECommentType } from '../../backendtypes'
-import { CommentInputs, extractCommentTuple, extractCommentType, notifySubscribers } from '../../models/comment'
+import {
+  CommentInputs,
+  extractCommentTuple,
+  extractCommentType,
+  notifySubscribers
+} from '../../models/comment'
 import { CommentModel, ICommentDocument } from '../../schemas/comment'
 import { IUser } from '../../schemas/user'
 import { config } from '../../utils/config'
@@ -15,7 +20,9 @@ import { rclient } from '../../utils/redis'
  *
  */
 export async function ctrlCommentReply(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const comment = res.locals.comment as ICommentDocument
   const locals = res.locals as CommentInputs
@@ -27,7 +34,7 @@ export async function ctrlCommentReply(
 
   if (comment.parentId) {
     return next({
-      errors: [ 'replying to replies not allowed' ],
+      errors: ['replying to replies not allowed'],
       status: 400
     })
   }
@@ -56,7 +63,13 @@ export async function ctrlCommentReply(
     return res.status(204).send()
   }
 
-  const batchLink = [ config.webapp.root, '~', locals.team.slug, locals.suite.slug, locals.batch.slug ].join('/')
+  const batchLink = [
+    config.webapp.root,
+    '~',
+    locals.team.slug,
+    locals.suite.slug,
+    locals.batch.slug
+  ].join('/')
   const commentLink = `${batchLink}?t=comments`
   const subject = `New Comment on Version ${locals.batch.slug} of Suite "${locals.suite.slug}"`
   const inputs = {

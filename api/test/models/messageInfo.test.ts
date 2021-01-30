@@ -7,8 +7,8 @@ import { describe } from 'mocha'
 
 import { MessageInfo } from '../../src/models/messageInfo'
 
-describe('model-messageInfo', function() {
-  it('allow making message info using partial object', function(done) {
+describe('model-messageInfo', function () {
+  it('allow making message info using partial object', function (done) {
     const messageInfo = new MessageInfo({
       batchName: 'some_batchName',
       elasticId: 'some_elasticId',
@@ -19,7 +19,9 @@ describe('model-messageInfo', function() {
     expect(messageInfo.elasticId).to.equal('some_elasticId')
     expect(messageInfo.elementName).to.equal('some_elementName')
     expect(messageInfo.suiteName).to.equal('some_suiteName')
-    expect(messageInfo.name()).to.equal('some_suiteName/some_batchName/some_elementName')
+    expect(messageInfo.name()).to.equal(
+      'some_suiteName/some_batchName/some_elementName'
+    )
     done()
   })
 })

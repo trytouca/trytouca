@@ -8,7 +8,7 @@ import { findTeamRoleOfUser } from './common'
 import { ITeam, TeamModel } from '../../schemas/team'
 import { IUser } from '../../schemas/user'
 import logger from '../../utils/logger'
-import { rclient } from '../../utils/redis';
+import { rclient } from '../../utils/redis'
 
 /**
  * @summary
@@ -28,14 +28,21 @@ import { rclient } from '../../utils/redis';
  *  - `hasMember` to yield `member`
  */
 export async function teamMemberUpdate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const member = res.locals.member as IUser
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const roleNew = req.body.role as ETeamRole
-  logger.info('%s: %s: updating role of member %s to %s',
-    user.username, team.slug, member.username, roleNew)
+  logger.info(
+    '%s: %s: updating role of member %s to %s',
+    user.username,
+    team.slug,
+    member.username,
+    roleNew
+  )
 
   // corner case: no one allowed to be promoted to team owner (already covered)
   // corner case: no one allowed to promote or demote themselves
@@ -43,33 +50,36 @@ export async function teamMemberUpdate(
   if (member.username === user.username) {
     return next({
       status: 403,
-      errors: [ 'updating own role forbidden' ]
+      errors: ['updating own role forbidden']
     })
   }
 
   // find role of this user in this team
 
   const roleUser = await findTeamRoleOfUser(team, user)
-  logger.silly('%s: has role %s in team %s',
-    user.username, roleUser, team.slug)
+  logger.silly('%s: has role %s in team %s', user.username, roleUser, team.slug)
 
   // find role of member in this team
 
   const roleCurrent = await findTeamRoleOfUser(team, member)
-  logger.silly('%s: has role %s in team %s',
-    member.username, roleCurrent, team.slug)
+  logger.silly(
+    '%s: has role %s in team %s',
+    member.username,
+    roleCurrent,
+    team.slug
+  )
 
   // define a helper function to determine seniority of roles
 
-  const orders = [ ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner ]
-  const getOrder = (role: ETeamRole) => orders.findIndex(v => v === role)
+  const orders = [ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner]
+  const getOrder = (role: ETeamRole) => orders.findIndex((v) => v === role)
 
   // disallow admins to update members with a role higher than their own
 
   if (getOrder(roleUser) < getOrder(roleCurrent)) {
     return next({
       status: 403,
-      errors: [ 'updating senior members forbidden' ]
+      errors: ['updating senior members forbidden']
     })
   }
 
@@ -78,7 +88,7 @@ export async function teamMemberUpdate(
   if (getOrder(roleUser) < getOrder(roleNew)) {
     return next({
       status: 403,
-      errors: [ 'promotion not allowed' ]
+      errors: ['promotion not allowed']
     })
   }
 
@@ -92,21 +102,27 @@ export async function teamMemberUpdate(
   // update role of member in this team
 
   const groups = new Map<ETeamRole, string>([
-    [ ETeamRole.Admin, 'admins' ],
-    [ ETeamRole.Member, 'members' ]
+    [ETeamRole.Admin, 'admins'],
+    [ETeamRole.Member, 'members']
   ])
 
   await TeamModel.findByIdAndUpdate(team._id, {
-    $push: { [ groups.get(roleNew) ]: member._id },
-    $pull: { [ groups.get(roleCurrent) ]: member._id }
+    $push: { [groups.get(roleNew)]: member._id },
+    $pull: { [groups.get(roleCurrent)]: member._id }
   })
 
   // remove list of team members from cache.
 
   await rclient.removeCached(`route_teamMemberList_${team.slug}`)
 
-  logger.info('%s: %s: updated role of member %s from %s to %s',
-    user.username, team.slug, member.username, roleCurrent, roleNew)
+  logger.info(
+    '%s: %s: updated role of member %s from %s to %s',
+    user.username,
+    team.slug,
+    member.username,
+    roleCurrent,
+    roleNew
+  )
 
   return res.status(204).send()
 }

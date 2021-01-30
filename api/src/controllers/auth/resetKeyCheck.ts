@@ -11,7 +11,9 @@ import logger from '../../utils/logger'
  *
  */
 export async function authResetKeyCheck(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const resetKey = req.params.key
   logger.debug('received request to evaluate reset key')
@@ -21,7 +23,7 @@ export async function authResetKeyCheck(
   const user = await UserModel.findOne({ resetKey })
   if (!user) {
     return next({
-      errors: [ 'reset key invalid' ],
+      errors: ['reset key invalid'],
       status: 400
     })
   }
@@ -30,7 +32,7 @@ export async function authResetKeyCheck(
 
   if (user.resetKeyExpiresAt < new Date()) {
     return next({
-      errors: [ 'reset key expired' ],
+      errors: ['reset key expired'],
       status: 400
     })
   }

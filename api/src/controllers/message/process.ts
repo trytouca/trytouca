@@ -12,20 +12,22 @@ import { MessageModel, IMessageDocument } from '../../schemas/message'
  * @todo validate incoming json data against a json schema
  */
 export async function messageProcess(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const messageId = req.params.message
   const input = req.body as {
-    overview: IMessageDocument['meta'],
+    overview: IMessageDocument['meta']
     body: Record<string, unknown>
   }
 
   // we expect that message is registered
 
-  const message = await MessageModel.findById(messageId);
+  const message = await MessageModel.findById(messageId)
   if (!message) {
     return next({
-      errors: [ 'message not found' ],
+      errors: ['message not found'],
       status: 404
     })
   }
@@ -43,7 +45,7 @@ export async function messageProcess(
   const doc = await elastic.addResult(input.body)
   if (!doc) {
     return next({
-      errors: [ 'failed to handle message body' ],
+      errors: ['failed to handle message body'],
       status: 500
     })
   }

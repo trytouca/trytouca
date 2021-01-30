@@ -4,8 +4,10 @@
 
 import { NextFunction, Request, Response } from 'express'
 import {
-  body as vbody, param as vparam,
-  validationResult, ValidationChain
+  body as vbody,
+  param as vparam,
+  validationResult,
+  ValidationChain
 } from 'express-validator'
 
 import logger from '../utils/logger'
@@ -17,63 +19,84 @@ export const validationRules = new Map<string, ValidationChain>([
   [
     'body',
     vbody('body')
-      .exists().withMessage('body')
-      .isString().withMessage('must be a string')
-      .isLength({ max: 1500 }).withMessage('too long')
+      .exists()
+      .withMessage('body')
+      .isString()
+      .withMessage('must be a string')
+      .isLength({ max: 1500 })
+      .withMessage('too long')
   ],
   [
     'email',
     vbody('email')
-      .exists().withMessage('required')
-      .isEmail().withMessage('invalid')
+      .exists()
+      .withMessage('required')
+      .isEmail()
+      .withMessage('invalid')
   ],
   [
     'resetKey',
     vparam('key')
-      .exists().withMessage('required')
-      .isUUID().withMessage('invalid')
+      .exists()
+      .withMessage('required')
+      .isUUID()
+      .withMessage('invalid')
   ],
   [
     'password',
     vbody('password')
-      .exists().withMessage('required')
-      .isString().withMessage('must be a string')
-      .isLength({ min: 8 }).withMessage('too short')
+      .exists()
+      .withMessage('required')
+      .isString()
+      .withMessage('must be a string')
+      .isLength({ min: 8 })
+      .withMessage('too short')
   ],
   [
     'username',
     vbody('username')
-      .exists({ checkFalsy: true, checkNull: true }).withMessage('required')
-      .isString().withMessage('must be a string')
-      .isLength({ min: 3 }).withMessage('too short')
-      .isLength({ max: 32 }).withMessage('too long')
+      .exists({ checkFalsy: true, checkNull: true })
+      .withMessage('required')
+      .isString()
+      .withMessage('must be a string')
+      .isLength({ min: 3 })
+      .withMessage('too short')
+      .isLength({ max: 32 })
+      .withMessage('too long')
   ],
   [
     'fullname',
-    vbody('fullname')
-      .optional()
-      .isString().withMessage('must be a string')
+    vbody('fullname').optional().isString().withMessage('must be a string')
   ],
   [
     'reason',
     vbody('reason')
-      .exists().withMessage('required')
-      .isString().withMessage('must be a string')
-      .isLength({ max: 1500 }).withMessage('too long')
+      .exists()
+      .withMessage('required')
+      .isString()
+      .withMessage('must be a string')
+      .isLength({ max: 1500 })
+      .withMessage('too long')
   ],
   [
     'entity-slug',
     vbody('slug')
-      .isSlug().withMessage('invalid')
-      .isLength({ min: 3 }).withMessage('too short')
-      .isLength({ max: 32 }).withMessage('too long')
+      .isSlug()
+      .withMessage('invalid')
+      .isLength({ min: 3 })
+      .withMessage('too short')
+      .isLength({ max: 32 })
+      .withMessage('too long')
   ],
   [
     'entity-name',
     vbody('name')
-      .isString().withMessage('must be a string')
-      .isLength({ min: 1 }).withMessage('too short')
-      .isLength({ max: 32 }).withMessage('too long')
+      .isString()
+      .withMessage('must be a string')
+      .isLength({ min: 1 })
+      .withMessage('too short')
+      .isLength({ max: 32 })
+      .withMessage('too long')
   ]
 ])
 
@@ -81,19 +104,22 @@ export const validationRules = new Map<string, ValidationChain>([
  *
  */
 async function validateOperation(
-  req: Request, res: Response, next: NextFunction, rules: ValidationChain[]
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  rules: ValidationChain[]
 ) {
-  await Promise.all(rules.map(validation => validation.run(req)));
+  await Promise.all(rules.map((validation) => validation.run(req)))
 
   const errors = validationResult(req)
     .array({ onlyFirstError: true })
-    .map(e => {
+    .map((e) => {
       logger.info('%s: invalid request: %s %s', req.originalUrl, e.param, e.msg)
       return `${e.param} is invalid`
     })
 
   if (errors.length === 0) {
-    return next();
+    return next()
   }
 
   return res.status(400).json({ errors })

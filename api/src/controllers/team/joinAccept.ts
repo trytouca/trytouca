@@ -14,22 +14,25 @@ import { rclient } from '../../utils/redis'
  *
  */
 export async function teamJoinAccept(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const account = res.locals.account as IUser
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
-  const tuple = [ user.username, account.username, team.slug ]
+  const tuple = [user.username, account.username, team.slug]
   logger.debug('%s: joining team %s', user.username, team.slug)
 
   // reject request if user is already a member
 
   const isMember = await UserModel.countDocuments({
-    _id: account._id, teams: { $in: [ team._id ] }
+    _id: account._id,
+    teams: { $in: [team._id] }
   })
   if (isMember) {
     return next({
-      errors: [ 'user already a member' ],
+      errors: ['user already a member'],
       status: 409
     })
   }
@@ -37,11 +40,12 @@ export async function teamJoinAccept(
   // reject request if user has no pending join request
 
   const hasPending = await TeamModel.countDocuments({
-    _id: team._id, applicants: { $in: account._id }
+    _id: team._id,
+    applicants: { $in: account._id }
   })
   if (!hasPending) {
     return next({
-      errors: [ 'user has no pending join request' ],
+      errors: ['user has no pending join request'],
       status: 409
     })
   }
@@ -72,7 +76,7 @@ export async function teamJoinAccept(
     subject,
     adminName: user?.fullname || user?.username,
     teamName: team.name,
-    teamLink: [ config.webapp.root, '~', team.slug ].join('/'),
+    teamLink: [config.webapp.root, '~', team.slug].join('/'),
     userName: account?.fullname || account?.username
   })
 

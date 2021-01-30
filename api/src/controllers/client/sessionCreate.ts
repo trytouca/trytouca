@@ -15,7 +15,9 @@ import logger from '../../utils/logger'
  *
  */
 export async function clientSessionCreate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const apiKey = req.body.key as string
   const askedAgent = req.headers['user-agent']
@@ -28,7 +30,7 @@ export async function clientSessionCreate(
   if (!user) {
     logger.debug('%s: api key invalid', apiKey)
     return next({
-      errors: [ 'invalid api key' ],
+      errors: ['invalid api key'],
       status: 401
     })
   }
@@ -38,7 +40,7 @@ export async function clientSessionCreate(
   if (user.suspended) {
     logger.debug('%s: rejecting login of suspended user', user.username)
     return next({
-      errors: [ 'account suspended' ],
+      errors: ['account suspended'],
       status: 423
     })
   }
@@ -51,7 +53,7 @@ export async function clientSessionCreate(
     if (new Date() < lockedUntil) {
       logger.debug('%s: rejecting login of locked user', user.username)
       return next({
-        errors: [ 'account locked' ],
+        errors: ['account locked'],
         status: 423
       })
     }

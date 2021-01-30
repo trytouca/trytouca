@@ -11,13 +11,19 @@ import logger from '../../utils/logger'
  *
  */
 export async function platformAccountUpdate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const account = res.locals.account as IUser
   const user = res.locals.user as IUser
   const roleNew = req.body.role as EPlatformRole
-  logger.info('%s: updating role of account %s to %s',
-    user.username, account.username, roleNew)
+  logger.info(
+    '%s: updating role of account %s to %s',
+    user.username,
+    account.username,
+    roleNew
+  )
 
   // corner case: no one allowed to be promoted to platform owner (already covered)
   // corner case: no one allowed to promote or demote themselves
@@ -25,7 +31,7 @@ export async function platformAccountUpdate(
   if (account.username === user.username) {
     return next({
       status: 403,
-      errors: [ 'updating own role forbidden' ]
+      errors: ['updating own role forbidden']
     })
   }
 
@@ -36,15 +42,15 @@ export async function platformAccountUpdate(
 
   // define a helper function to determine seniority of roles
 
-  const orders = [ EPlatformRole.User, EPlatformRole.Admin, EPlatformRole.Owner ]
-  const getOrder = (role: EPlatformRole) => orders.findIndex(v => v === role)
+  const orders = [EPlatformRole.User, EPlatformRole.Admin, EPlatformRole.Owner]
+  const getOrder = (role: EPlatformRole) => orders.findIndex((v) => v === role)
 
   // disallow admins to update accounts with a role higher than their own
 
   if (getOrder(roleUser) < getOrder(roleCurrent)) {
     return next({
       status: 403,
-      errors: [ 'updating senior accounts forbidden' ]
+      errors: ['updating senior accounts forbidden']
     })
   }
 
@@ -53,7 +59,7 @@ export async function platformAccountUpdate(
   if (getOrder(roleUser) < getOrder(roleNew)) {
     return next({
       status: 403,
-      errors: [ 'promotion not allowed' ]
+      errors: ['promotion not allowed']
     })
   }
 
@@ -70,8 +76,12 @@ export async function platformAccountUpdate(
     platformRole: roleNew
   })
 
-  logger.info('%s: updated role of account %s to %s',
-    user.username, account.username, roleNew)
+  logger.info(
+    '%s: updated role of account %s to %s',
+    user.username,
+    account.username,
+    roleNew
+  )
 
   return res.status(204).send()
 }

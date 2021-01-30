@@ -20,19 +20,23 @@ import { rclient } from '../../utils/redis'
  *  - should start with an alphabetic character
  */
 export async function suiteCreate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const team = res.locals.team as ITeam
   const user = res.locals.user as IUser
-  const proposed = req.body as { slug: string, name: string }
-  const tuple = [ team.slug, proposed.slug ].join('/')
+  const proposed = req.body as { slug: string; name: string }
+  const tuple = [team.slug, proposed.slug].join('/')
   logger.debug('%s: creating suite %s', user.username, tuple)
 
   // return 409 if suite slug is taken
 
-  if (await SuiteModel.countDocuments({ slug: proposed.slug, team: team._id })) {
+  if (
+    await SuiteModel.countDocuments({ slug: proposed.slug, team: team._id })
+  ) {
     return next({
-      errors: [ 'suite already registered' ],
+      errors: ['suite already registered'],
       status: 409
     })
   }
@@ -43,7 +47,7 @@ export async function suiteCreate(
     createdBy: user._id,
     name: proposed.name,
     slug: proposed.slug,
-    subscribers: [ user._id ],
+    subscribers: [user._id],
     team: team._id
   })
   logger.info('%s: created suite %s', user.username, tuple)
@@ -56,7 +60,10 @@ export async function suiteCreate(
   // redirect to lookup route for this newly created suite
 
   const redirectPath = [
-    config.express.root, 'suite', team.slug, newSuite.slug
+    config.express.root,
+    'suite',
+    team.slug,
+    newSuite.slug
   ].join('/')
   return res.status(201).redirect(redirectPath.replace(/\/+/g, '/'))
 }

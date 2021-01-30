@@ -51,8 +51,8 @@ type TeamMap = Map<TeamSlug, SuiteMap>
 type SubmissionTree = TeamMap
 
 type JobError = string
-type JobPass<T> = { slug: string, doc: T }
-type JobFail = { slug: string, errors: JobError[] }
+type JobPass<T> = { slug: string; doc: T }
+type JobFail = { slug: string; errors: JobError[] }
 type Job<T> = JobPass<T> | JobFail
 
 const isJobFailed = <T>(job: Job<T>) => (job as JobFail).errors !== undefined
@@ -60,12 +60,12 @@ const isJobFailed = <T>(job: Job<T>) => (job as JobFail).errors !== undefined
 const extractJobErrors = <T>(jobs: Job<T>[]): JobError[] => {
   return jobs
     .filter(isJobFailed)
-    .map((job: JobFail) => job.errors.map(err => `${job.slug}: ${err}`))
+    .map((job: JobFail) => job.errors.map((err) => `${job.slug}: ${err}`))
     .reduce((acc, val) => acc.concat(val), [])
 }
 
 const makeError = (slug: string, error: string) => {
-  return { slug, errors: [ error ] }
+  return { slug, errors: [error] }
 }
 
 /**
@@ -75,7 +75,9 @@ const makeError = (slug: string, error: string) => {
  * @param content binary data in flatbuffers format
  * @returns list of submission items
  */
-async function parseSubmissionMessages(content: Uint8Array): Promise<SubmissionItem[]> {
+async function parseSubmissionMessages(
+  content: Uint8Array
+): Promise<SubmissionItem[]> {
   const buf = new flatbuffers.ByteBuffer(content)
   const msgs = fbs.Messages.getRootAsMessages(buf)
   const messages: SubmissionItem[] = []
@@ -102,14 +104,16 @@ async function parseSubmissionMessages(content: Uint8Array): Promise<SubmissionI
  * @throws if there are multiple messages with the same elementName that
  *         belong to the same batch.
  */
-async function buildSubmissionTree(messages: SubmissionItem[]): Promise<SubmissionTree> {
+async function buildSubmissionTree(
+  messages: SubmissionItem[]
+): Promise<SubmissionTree> {
   const tree = new Map<TeamSlug, SuiteMap>()
   for (const message of messages) {
     const team = message.teamName
     const suite = message.suiteName
     const batch = message.batchName
     const element = message.elementName
-    const tuple = [ team, suite, batch, element ].join('/')
+    const tuple = [team, suite, batch, element].join('/')
     if (!tree.has(team)) {
       tree.set(team, new Map<SuiteSlug, BatchMap>())
     }
@@ -137,7 +141,7 @@ function describeSubmissionTree(tree: SubmissionTree): void {
   tree.forEach((suiteMap, teamName) => {
     suiteMap.forEach((batchMap, suiteName) => {
       batchMap.forEach((elementMap, batchName) => {
-        const elementPath = [ teamName, suiteName, batchName ].join('/')
+        const elementPath = [teamName, suiteName, batchName].join('/')
         const elementCount = elementMap.size
 
         // it is common for regression test tools to submit results
@@ -169,11 +173,17 @@ async function processElement(
   elementSlug: ElementSlug,
   submission: SubmissionItem
 ): Promise<Job<IElementDocument>> {
-  const tuple = [ team.slug, suite.slug, batch.slug, elementSlug ].join('/')
+  const tuple = [team.slug, suite.slug, batch.slug, elementSlug].join('/')
   try {
-
     const element = await ensureElement(team, suite, batch, elementSlug)
-    const message = await ensureMessage(user, team, suite, batch, element, submission)
+    const message = await ensureMessage(
+      user,
+      team,
+      suite,
+      batch,
+      element,
+      submission
+    )
 
     // store submission in binary form on filesystem
 
@@ -193,11 +203,12 @@ async function processElement(
 
     logger.info('%s: processed element', tuple)
 
-    rclient.removeCached(`route_elementLookup_${team.slug}_${suite.slug}_${elementSlug}`)
+    rclient.removeCached(
+      `route_elementLookup_${team.slug}_${suite.slug}_${elementSlug}`
+    )
     rclient.removeCached(`route_elementList_${team.slug}_${suite.slug}`)
 
     return { slug: tuple, doc: element }
-
   } catch (err) {
     return makeError(elementSlug, err)
   }
@@ -213,9 +224,8 @@ async function processBatch(
   batchSlug: BatchSlug,
   elementMap: ElementMap
 ): Promise<Job<IBatchDocument>> {
-  const tuple = [ team.slug, suite.slug, batchSlug ].join('/')
+  const tuple = [team.slug, suite.slug, batchSlug].join('/')
   try {
-
     // batch may or may not be registered. create it if it is missing.
 
     const ensureResult = await ensureBatch(user, team, suite, batchSlug)
@@ -226,7 +236,7 @@ async function processBatch(
 
     // concurrently process submitted messages that belong to this batch
 
-    const jobs = Array.from(elementMap).map(([ elementSlug, submission ]) => {
+    const jobs = Array.from(elementMap).map(([elementSlug, submission]) => {
       return processElement(user, team, suite, batch, elementSlug, submission)
     })
 
@@ -241,18 +251,19 @@ async function processBatch(
     // registered for this batch.
 
     const elements = results
-      .filter(e => !isJobFailed(e))
+      .filter((e) => !isJobFailed(e))
       .map((e: JobPass<IElementDocument>) => e.doc)
 
     await updateBatchElements(batch, elements)
 
     logger.debug('%s: processed batch', tuple)
 
-    rclient.removeCached(`route_batchLookup_${team.slug}_${suite.slug}_${batchSlug}`)
+    rclient.removeCached(
+      `route_batchLookup_${team.slug}_${suite.slug}_${batchSlug}`
+    )
     rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
 
     return { slug: batchSlug, doc: batch }
-
   } catch (err) {
     return makeError(batchSlug, err)
   }
@@ -266,7 +277,6 @@ async function processTeam(
   teamSlug: TeamSlug,
   suiteMap: SuiteMap
 ): Promise<Job<ITeamDocument>> {
-
   // we expect that the team is already registered
 
   const team = await TeamModel.findOne({ slug: teamSlug, suspended: false })
@@ -276,12 +286,15 @@ async function processTeam(
 
   // we expect that the user is allowed to submit to this team
 
-  const isUserPlatformAdmin = [ EPlatformRole.Owner, EPlatformRole.Admin ]
-    .includes(user.platformRole)
+  const isUserPlatformAdmin = [
+    EPlatformRole.Owner,
+    EPlatformRole.Admin
+  ].includes(user.platformRole)
 
-  const isUserTeamMember = team.members.includes(user._id)
-    || team.admins.includes(user._id)
-    || team.owner.equals(user._id)
+  const isUserTeamMember =
+    team.members.includes(user._id) ||
+    team.admins.includes(user._id) ||
+    team.owner.equals(user._id)
 
   if (!isUserPlatformAdmin && !isUserTeamMember) {
     return makeError(teamSlug, 'user not a team member')
@@ -311,8 +324,10 @@ async function processTeam(
 /**
  *
  */
-async function processSubmissionTree(user: IUser, teamMap: TeamMap): Promise<JobError[]> {
-
+async function processSubmissionTree(
+  user: IUser,
+  teamMap: TeamMap
+): Promise<JobError[]> {
   const jobs = Array.from(teamMap).map(([teamSlug, suiteMap]) => {
     return processTeam(user, teamSlug, suiteMap)
   })
@@ -332,11 +347,13 @@ async function insertComparisonJob(
   const srcBatchId = msg.batchId
   const srcMessageId = msg.messageId
   const srcTuple = [
-    msg.teamName, msg.suiteName, msg.batchName, msg.elementName
+    msg.teamName,
+    msg.suiteName,
+    msg.batchName,
+    msg.elementName
   ].join('/')
 
   try {
-
     // find if a similar element was submitted to the baseline batch.
 
     const dst: any = await MessageModel.findOne(
@@ -349,17 +366,19 @@ async function insertComparisonJob(
         elementId: 1,
         expiresAt: 1
       }
-    ).populate({
-      path: 'batchId',
-      populate: {
-        path: 'suite',
-        select: 'slug'
-      },
-      select: 'slug suite'
-    }).populate({
-      path: 'elementId',
-      select: 'name'
-    })
+    )
+      .populate({
+        path: 'batchId',
+        populate: {
+          path: 'suite',
+          select: 'slug'
+        },
+        select: 'slug suite'
+      })
+      .populate({
+        path: 'elementId',
+        select: 'name'
+      })
 
     // It is possible that the element is not included in the baseline
     // batch in which case we compare the message with itself. This is
@@ -371,7 +390,7 @@ async function insertComparisonJob(
     let dstMessageId = srcMessageId
     let dstTuple = 'itself'
 
-    if (dst && (dst.batchId._id.toString() !== msg.batchId.toString())) {
+    if (dst && dst.batchId._id.toString() !== msg.batchId.toString()) {
       dstBatchId = dst.batchId
       dstMessageId = dst.id
       dstTuple = [
@@ -391,7 +410,6 @@ async function insertComparisonJob(
       srcMessageId
     })
     logger.debug('%s: scheduled comparison with %s', srcTuple, dstTuple)
-
   } catch (err) {
     logger.error('%s: failed to create comparison job: %O', srcTuple, err)
     return srcTuple
@@ -405,15 +423,16 @@ async function insertComparisonJobs(
   batchMap: BatchMap,
   baseline: mongoose.Types.ObjectId
 ): Promise<string[]> {
-
   // now that we have made sure suite has a baseline, we proceed with
   // concurrently creating comparison jobs for every submitted result
   // message.
 
   const jobs: Promise<string>[] = []
-  batchMap.forEach((elementMap) => elementMap.forEach((submission) => {
-    jobs.push(insertComparisonJob(submission, baseline))
-  }))
+  batchMap.forEach((elementMap) =>
+    elementMap.forEach((submission) => {
+      jobs.push(insertComparisonJob(submission, baseline))
+    })
+  )
 
   // wait for all comparison jobs to be created.
   // we are sure that all jobs are going to be resolved.
@@ -421,20 +440,21 @@ async function insertComparisonJobs(
   const results = await Promise.all(jobs)
   const failed = results.filter(Boolean)
 
-  failed.forEach(v => logger.warn('%s: failed to create comparison job', v))
+  failed.forEach((v) => logger.warn('%s: failed to create comparison job', v))
   return failed
-
 }
 
 /**
  * Check if a suite with given name is registered on the Platform.
  */
 async function processSuite(
-  user: IUser, team: ITeamDocument, suiteSlug: SuiteSlug, batchMap: BatchMap
+  user: IUser,
+  team: ITeamDocument,
+  suiteSlug: SuiteSlug,
+  batchMap: BatchMap
 ): Promise<Job<ISuiteDocument>> {
-  const tuple = [ team.slug, suiteSlug ].join('/')
+  const tuple = [team.slug, suiteSlug].join('/')
   try {
-
     // we expect that the suite is already registered
 
     const suite = await SuiteModel.findOne({ team: team._id, slug: suiteSlug })
@@ -472,7 +492,6 @@ async function processSuite(
     //       for this batch.
 
     if (suite.promotions.length === 0) {
-
       const batches = results.map((val: JobPass<IBatchDocument>) => val.doc)
       const earliestBatch = minBy(batches, (b) => b.submittedAt)
 
@@ -490,7 +509,6 @@ async function processSuite(
       suite.promotions.push(entry)
 
       logger.info('%s: established baseline at %s', tuple, earliestBatch.slug)
-
     }
 
     // find baseline information
@@ -512,7 +530,6 @@ async function processSuite(
     rclient.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
 
     return { slug: suiteSlug, doc: suite }
-
   } catch (err) {
     makeError(suiteSlug, err)
   }
@@ -527,7 +544,7 @@ async function ensureBatch(
   suite: ISuiteDocument,
   batchSlug: BatchSlug
 ): Promise<Job<IBatchDocument>> {
-  const tuple = [ team.slug, suite.slug, batchSlug ].join('/')
+  const tuple = [team.slug, suite.slug, batchSlug].join('/')
 
   // check if batch is already registered
 
@@ -540,7 +557,7 @@ async function ensureBatch(
 
   if (batch) {
     logger.silly('%s: batch is known', tuple)
-    if (!batch.submittedBy.some(submitter => submitter.equals(user._id))) {
+    if (!batch.submittedBy.some((submitter) => submitter.equals(user._id))) {
       await BatchModel.findByIdAndUpdate(batch._id, {
         $push: { submittedBy: user._id }
       })
@@ -560,8 +577,8 @@ async function ensureBatch(
   const newBatch = new BatchModel({
     slug: batchSlug,
     submittedAt: new Date(),
-    submittedBy: [ user._id ],
-    suite: suite.id,
+    submittedBy: [user._id],
+    suite: suite.id
   })
 
   newBatch.superior = suite.promotions.length
@@ -574,7 +591,6 @@ async function ensureBatch(
   return { slug: batchSlug, doc: newBatch }
 }
 
-
 /**
  *
  */
@@ -582,14 +598,15 @@ async function ensureElement(
   team: ITeamDocument,
   suite: ISuiteDocument,
   batch: IBatchDocument,
-  elementSlug: string,
+  elementSlug: string
 ) {
-  const tuple = [ team.slug, suite.slug, batch.slug, elementSlug ].join('/')
+  const tuple = [team.slug, suite.slug, batch.slug, elementSlug].join('/')
 
   // check if element is already registered
 
   const element = await ElementModel.findOne({
-    name: elementSlug, suiteId: suite._id
+    name: elementSlug,
+    suiteId: suite._id
   })
 
   // we are done if element is already registered
@@ -608,7 +625,6 @@ async function ensureElement(
   })
 }
 
-
 /**
  *
  */
@@ -620,12 +636,13 @@ async function ensureMessage(
   element: IElementDocument,
   submission: SubmissionItem
 ) {
-  const tuple = [ team.slug, suite.slug, batch.slug, element.name ].join('/')
+  const tuple = [team.slug, suite.slug, batch.slug, element.name].join('/')
 
   // check if message is already registered
 
   const message = await MessageModel.findOne({
-    batchId: batch._id, elementId: element._id
+    batchId: batch._id,
+    elementId: element._id
   })
 
   // adjust expiration date of the message
@@ -658,13 +675,12 @@ async function ensureMessage(
   // jobs both from Elastic and Mongo. For faster submission processing, we
   // choose not to wait for these removals to complete.
 
-  const query = [
-    { dstMessageId: message._id },
-    { srcMessageId: message._id }
-  ]
+  const query = [{ dstMessageId: message._id }, { srcMessageId: message._id }]
 
-  ComparisonModel
-    .find({ $or: query, elasticId: { $exists: true } }, { elasticId: 1 })
+  ComparisonModel.find(
+    { $or: query, elasticId: { $exists: true } },
+    { elasticId: 1 }
+  )
     .cursor()
     .eachAsync((job) => removeComparison(job.elasticId), { parallel: 10 })
 
@@ -676,32 +692,34 @@ async function ensureMessage(
 
   logger.debug('%s: overwrote message', tuple)
   return await MessageModel.findByIdAndUpdate(message._id, {
-    $set: { doc }, $unset: { elasticId: 1, meta: 1, processedAt: 1 }
+    $set: { doc },
+    $unset: { elasticId: 1, meta: 1, processedAt: 1 }
   })
 }
-
 
 /**
  *
  */
 async function updateBatchElements(
-  batch: IBatchDocument, elements: IElementDocument[]
+  batch: IBatchDocument,
+  elements: IElementDocument[]
 ): Promise<void> {
-
-  const existing = await BatchModel
-  .findById(batch.id, { elements: true })
-  .populate('elements')
+  const existing = await BatchModel.findById(batch.id, {
+    elements: true
+  }).populate('elements')
 
   const novel = elements
-    .map(el => el._id)
-    .filter(el1 => !existing.elements.some((el2) => el2.equals(el1)))
+    .map((el) => el._id)
+    .filter((el1) => !existing.elements.some((el2) => el2.equals(el1)))
 
   if (novel.length !== 0) {
-    await BatchModel.findByIdAndUpdate({ _id: batch._id }, {
-      $push: { elements: { $each: novel } }
-    })
+    await BatchModel.findByIdAndUpdate(
+      { _id: batch._id },
+      {
+        $push: { elements: { $each: novel } }
+      }
+    )
   }
-
 }
 
 /**
@@ -716,7 +734,9 @@ async function updateBatchElements(
  *  - Elements in each batch must have distinct names.
  */
 export async function clientSubmit(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const tic = process.hrtime()
@@ -725,7 +745,7 @@ export async function clientSubmit(
 
   if (req.get('Content-Type') !== 'application/octet-stream') {
     return next({
-      errors: [ 'expected binary data' ],
+      errors: ['expected binary data'],
       status: 501
     })
   }
@@ -755,12 +775,11 @@ export async function clientSubmit(
   const errors = await processSubmissionTree(user, tree)
   if (errors.length !== 0) {
     logger.warn('%s: failed to handle new submissions', user.username)
-    errors.map(e => logger.warn(e))
+    errors.map((e) => logger.warn(e))
     return res.status(400).json({ errors })
   }
 
-  const toc = process.hrtime(tic)
-    .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.info('%s: handled submissions in %d ms', user.username, toc.toFixed(0))
   return res.status(204).send()
 }

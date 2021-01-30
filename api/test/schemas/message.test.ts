@@ -8,10 +8,10 @@ import mongoose from 'mongoose'
 
 import { MessageModel } from '../../src/schemas/message'
 
-describe('model-message', function() {
-  it('reject making message doc with missing requierd keys', function(done) {
+describe('model-message', function () {
+  it('reject making message doc with missing requierd keys', function (done) {
     const messageModel = new MessageModel({})
-    messageModel.validate(function(err) {
+    messageModel.validate(function (err) {
       expect(err.name).to.equal('ValidationError')
       expect(err.errors.batchId.kind).to.equal('required')
       expect(err.errors.builtAt.kind).to.equal('required')
@@ -21,7 +21,7 @@ describe('model-message', function() {
       done()
     })
   })
-  it('allow making message doc if requierd keys exist', function(done) {
+  it('allow making message doc if requierd keys exist', function (done) {
     const messageModel = new MessageModel({
       batchId: mongoose.Types.ObjectId(),
       builtAt: new Date(),
@@ -29,7 +29,7 @@ describe('model-message', function() {
       expiresAt: new Date(),
       submittedAt: new Date()
     })
-    messageModel.validate(function(err) {
+    messageModel.validate(function (err) {
       expect(err).to.equal(null)
       done()
     })

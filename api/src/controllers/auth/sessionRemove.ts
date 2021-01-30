@@ -13,7 +13,9 @@ import logger from '../../utils/logger'
  *
  */
 export async function authSessionRemove(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const askedAgent = req.headers['user-agent']
@@ -43,7 +45,7 @@ export async function authSessionRemove(
   if (!session) {
     logger.error('%s: failed to close user session', user.username)
     return next({
-      errors: [ 'session not found' ],
+      errors: ['session not found'],
       status: 404
     })
   }

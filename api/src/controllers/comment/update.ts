@@ -13,7 +13,9 @@ import { rclient } from '../../utils/redis'
  *
  */
 export async function ctrlCommentUpdate(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const comment = res.locals.comment as ICommentDocument
@@ -22,13 +24,16 @@ export async function ctrlCommentUpdate(
 
   if (!comment.by.equals(user._id)) {
     return next({
-      errors: [ 'insufficient privileges' ],
+      errors: ['insufficient privileges'],
       status: 403
     })
   }
   logger.silly('%s: can edit comment %s', user.username, comment._id)
 
-  await CommentModel.findByIdAndUpdate(comment._id, { editedAt: new Date(), text: req.body.body })
+  await CommentModel.findByIdAndUpdate(comment._id, {
+    editedAt: new Date(),
+    text: req.body.body
+  })
 
   // remove information about list of comments from cache.
   // we wait for this operation to avoid race condition.

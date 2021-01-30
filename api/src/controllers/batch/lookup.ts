@@ -20,19 +20,22 @@ import { rclient } from '../../utils/redis'
  * Provides information about a given batch.
  */
 async function batchLookup(
-  team: ITeam, suite: ISuiteDocument, batch: IBatchDocument
+  team: ITeam,
+  suite: ISuiteDocument,
+  batch: IBatchDocument
 ): Promise<BatchLookupResponse> {
-
-  const superior  = await BatchModel.findOne(
+  const superior = await BatchModel.findOne(
     { _id: batch.superior },
-    { _id: 0, slug: 1 })
+    { _id: 0, slug: 1 }
+  )
 
   const userMap = await new UserMap()
     .addGroup('submittedBy', batch.submittedBy)
     .populate()
 
-  const overview = batch.meta ?? await ComparisonFunctions
-    .compareBatchOverview(batch.superior, batch._id)
+  const overview =
+    batch.meta ??
+    (await ComparisonFunctions.compareBatchOverview(batch.superior, batch._id))
 
   const commentCount = await CommentModel.countDocuments({
     type: ECommentType.Batch,
@@ -61,13 +64,15 @@ async function batchLookup(
  *
  */
 export async function ctrlBatchLookup(
-  req: Request, res: Response, next: NextFunction
+  req: Request,
+  res: Response,
+  next: NextFunction
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
   const batch = res.locals.batch as IBatchDocument
-  const tuple = [ team.slug, suite.slug, batch.slug ].join('_')
+  const tuple = [team.slug, suite.slug, batch.slug].join('_')
   logger.debug('%s: %s: looking up batch', user.username, tuple)
   const cacheKey = `route_batchLookup_${tuple}`
   const tic = process.hrtime()
@@ -88,8 +93,7 @@ export async function ctrlBatchLookup(
 
   rclient.cache(cacheKey, output)
 
-  const toc = process.hrtime(tic)
-    .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
   return res.status(200).json(output)
 }

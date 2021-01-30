@@ -16,17 +16,19 @@ import { IUser } from '../../schemas/user'
  * @param role roles of the users within this time to return
  * @returns list of users who are either members or admins of a given team.
  */
-export async function findTeamUsersByRole(team: ITeam, roles: ETeamRole[]): Promise<IUser[]> {
-
+export async function findTeamUsersByRole(
+  team: ITeam,
+  roles: ETeamRole[]
+): Promise<IUser[]> {
   const fields = []
   if (roles.includes(ETeamRole.Owner)) {
-    fields.push([ "$owner" ])
+    fields.push(['$owner'])
   }
   if (roles.includes(ETeamRole.Admin)) {
-    fields.push("$admins")
+    fields.push('$admins')
   }
   if (roles.includes(ETeamRole.Member)) {
-    fields.push("$members")
+    fields.push('$members')
   }
 
   const result: IUser[] = await TeamModel.aggregate([
@@ -37,7 +39,7 @@ export async function findTeamUsersByRole(team: ITeam, roles: ETeamRole[]): Prom
         from: 'users',
         localField: 'items',
         foreignField: '_id',
-        as: 'itemDocs',
+        as: 'itemDocs'
       }
     },
     {
@@ -66,7 +68,10 @@ export async function findTeamUsersByRole(team: ITeam, roles: ETeamRole[]): Prom
  * @return role of the user in a given team. `ETeamRole.Invalid` if user is
  * not a member of the team.
  */
-export async function findTeamRoleOfUser(team: ITeam, user: IUser): Promise<ETeamRole> {
+export async function findTeamRoleOfUser(
+  team: ITeam,
+  user: IUser
+): Promise<ETeamRole> {
   type DatabaseOutput = { role: ETeamRole }
   const result: DatabaseOutput[] = await TeamModel.aggregate([
     { $match: { _id: team._id } },
@@ -74,15 +79,15 @@ export async function findTeamRoleOfUser(team: ITeam, user: IUser): Promise<ETea
       $project: {
         role: {
           $cond: {
-            if: { $in: [ user._id, "$members" ] },
+            if: { $in: [user._id, '$members'] },
             then: 'member',
             else: {
               $cond: {
-                if: { $in: [ user._id, "$admins" ] },
+                if: { $in: [user._id, '$admins'] },
                 then: 'admin',
                 else: {
                   $cond: {
-                    if: { $eq: [ user._id, "$owner" ] },
+                    if: { $eq: [user._id, '$owner'] },
                     then: 'owner',
                     else: 'invalid'
                   }
@@ -90,7 +95,7 @@ export async function findTeamRoleOfUser(team: ITeam, user: IUser): Promise<ETea
               }
             }
           }
-        },
+        }
       }
     }
   ])
