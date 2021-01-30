@@ -20,7 +20,7 @@
     "start": "node .",
     "test": "cross-env NODE_ENV=test ENV_FILE=test nyc mocha --require ts-node/register --require source-map-support/register --full-trace --bail test/**/*.test.ts",
     "lint": "eslint . --ext .ts",
-    "watch": "nodemon --watch src --watch templates --watch test -e ts,mjml --exec \"yarn run lint && yarn run build && yarn run start\""
+    "watch": "nodemon --watch src --watch templates --watch test -e ts,mjml --exec \"yarn run build && yarn run start\""
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.6.1",
