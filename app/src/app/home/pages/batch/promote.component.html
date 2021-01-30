@@ -3,22 +3,23 @@
   </h4>
 </div>
 <div class="wsl-modal-body">
-  <app-alert [alert]="alert"></app-alert>
-  <p class="mb-2 text-sm">
-    You are about to promote version
-    <strong>{{ elements.batch.batchSlug }}</strong>
-    to baseline of suite <strong>{{ elements.batch.suiteName }}</strong>. This
-    action makes test results of any future version of this Suite to be
-    compared with test results of version {{ elements.batch.batchSlug }}.
-  </p>
+  <app-alert [alert]="alert" *ngIf="alert"></app-alert>
   <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)"
     novalidate>
+    <p class="text-sm">
+      You are about to promote version
+      <strong>{{ elements.batch.batchSlug }}</strong>
+      to baseline of suite <strong>{{ elements.batch.suiteName }}</strong>. This
+      action makes test results of any future version of this Suite to be
+      compared with test results of version {{ elements.batch.batchSlug }}.
+    </p>
     <div>
       <label class="wsl-input-label" for="wsl-reason">Promotion Reason
         (Optional)</label>
       <textarea class="wsl-input-field" id="wsl-reason" rows="5" tabindex="1"
         aria-describedby="wsl-body-help" formControlName="reason" name="reason"
-        placeholder="Leave a note for your colleagues to explain why you are promoting this version.">
+        placeholder="Let others know why you are promoting this version."
+        wslAutofocus>
       </textarea>
       <small class="wsl-text-danger" id="wsl-reason-help"
         [hidden]="shouldHideAriaDescription('reason')">

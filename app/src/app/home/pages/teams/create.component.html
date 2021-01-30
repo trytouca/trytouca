@@ -9,7 +9,7 @@
       <label class="wsl-input-label" for="wsl-slug">Team Slug</label>
       <input class="wsl-input-field" type="text" id="wsl-slug" tabindex="1"
         required autocomplete="off" aria-describedby="wsl-slug-help"
-        formControlName="slug" name="slug">
+        formControlName="slug" name="slug" wslAutofocus>
       <small class="wsl-text-muted"
         [hidden]="!shouldHideAriaDescription('slug')">
         {{ content.slugDesc }}

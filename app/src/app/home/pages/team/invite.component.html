@@ -9,7 +9,7 @@
       <label for="wsl-name" class="wsl-input-label">Full Name</label>
       <input type="text" id="wsl-name" tabindex="1" required autocomplete="off"
         aria-describedby="wsl-name-help" formControlName="name" name="name"
-        class="wsl-input-field">
+        class="wsl-input-field" wslAutofocus>
       <small id="wsl-slug-help" [hidden]="shouldHideAriaDescription('name')"
         class="wsl-text-muted">
         Should contain 3 to 32 alphanumeric characters.
