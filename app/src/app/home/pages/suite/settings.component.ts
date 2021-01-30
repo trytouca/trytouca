@@ -246,8 +246,8 @@ export class SuiteTabSettingsComponent implements OnDestroy {
       [404, 'team not found', 'This team has been removed.'],
       [
         409,
-        'team already registered',
-        'There is already a team with this slug.'
+        'suite already registered',
+        'This team already has a suite with this slug.'
       ]
     ]);
   }

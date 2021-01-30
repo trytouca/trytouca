@@ -66,7 +66,7 @@ export class TeamCreateSuiteComponent extends ModalComponent {
       (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
-          [400, 'suite already registered', 'This suite is already registered.']
+          [409, 'suite already registered', 'This suite is already registered.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }

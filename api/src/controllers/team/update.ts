@@ -9,7 +9,7 @@ import { findTeamUsersByRole } from './common'
 import { ETeamRole } from '../../commontypes'
 import { TeamModel } from '../../schemas/team'
 import { ITeam } from '../../schemas/team'
-import { IUser, UserModel } from '../../schemas/user'
+import { IUser } from '../../schemas/user'
 import logger from '../../utils/logger'
 import { config } from '../../utils/config'
 import * as mailer from '../../utils/mailer'
@@ -34,13 +34,14 @@ export async function teamUpdate(
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
+  const tuple = [team.slug].join('/')
   const proposed = req.body as { slug: string; name: string }
   logger.debug('%s: %s: updating team', user.username, team.slug)
 
-  // attempt to update team metadata
+  // we are done if team metadata is the same as before
 
   if (isEqual(proposed, { name: team.name, slug: team.slug })) {
-    logger.debug('%s: new metadata same as before', team.name)
+    logger.debug('%s: new metadata same as before', tuple)
     return res.status(204).json()
   }
 
@@ -55,29 +56,23 @@ export async function teamUpdate(
     }
   }
 
-  // update the database
+  // attempt to update team metadata
 
   await TeamModel.findByIdAndUpdate(team._id, { $set: proposed })
-  logger.info(
-    '%s: %s: updated metadata of team: %j',
-    user.username,
-    team.slug,
-    proposed
-  )
+  logger.info('%s: updated team %s: %j', user.username, tuple, proposed)
 
-  // remove information about this team and the list of known teams from cache.
-  // we wait for these operations to avoid race conditions.
+  // remove cached responses that are invalidated.
 
   await rclient.removeCached(`route_teamList_${user.username}`)
   await rclient.removeCached(`route_teamLookup_${team.slug}_${user.username}`)
 
   // we are done if team slug has not changed.
 
-  if (!proposed.slug || proposed.slug.localeCompare(team.slug) == 0) {
+  if (!('slug' in proposed) || proposed.slug === team.slug) {
     return res.status(204).json()
   }
 
-  logger.warn('%s: team is now known as %s', team.slug, proposed.slug)
+  logger.warn('%s: team is now known as %s', tuple, proposed.slug)
 
   // email all members and admins of this team that the team slug has changed.
 
