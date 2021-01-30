@@ -9,7 +9,6 @@ import { Subscription } from 'rxjs';
 import { ConfirmComponent } from '@weasel/home/components/confirm.component';
 import {
   ETeamRole,
-  EPlatformRole,
   TeamInvitee,
   TeamMember,
   TeamLookupResponse,
@@ -71,6 +70,7 @@ export class TeamTabMembersComponent
   implements OnDestroy {
   ItemType = TeamPageMemberType;
 
+  isTeamAdmin = false;
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
   private _team: TeamLookupResponse;
@@ -91,6 +91,7 @@ export class TeamTabMembersComponent
     super(filterInput, Object.values(TeamPageMemberType), route, router);
     this._subTeam = this.teamPageService.team$.subscribe((v) => {
       this._team = v;
+      this.isTeamAdmin = this.userService.isTeamAdmin(v.role);
     });
     this._subAllItems = this.teamPageService.members$.subscribe((allItems) => {
       this.initCollections(allItems);
@@ -123,25 +124,6 @@ export class TeamTabMembersComponent
     if ('Escape' === event.key && row !== -1) {
       this.selectedRow = -1;
     }
-  }
-
-  /**
-   *
-   */
-  isTeamAdmin() {
-    if (this.userService.currentUser) {
-      const role = this.userService.currentUser.platformRole;
-      if ([EPlatformRole.Owner, EPlatformRole.Admin].includes(role)) {
-        return true;
-      }
-    }
-    if (this._team) {
-      const role = this._team.role;
-      if ([ETeamRole.Owner, ETeamRole.Admin].includes(role)) {
-        return true;
-      }
-    }
-    return false;
   }
 
   /**

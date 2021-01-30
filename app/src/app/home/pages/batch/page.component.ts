@@ -27,7 +27,12 @@ import type {
   FrontendBatchCompareParams,
   FrontendOverviewSection
 } from '@weasel/core/models/frontendtypes';
-import { AlertKind, AlertService, ApiService } from '@weasel/core/services';
+import {
+  AlertKind,
+  AlertService,
+  ApiService,
+  UserService
+} from '@weasel/core/services';
 import { ConfirmComponent, ConfirmElements } from '@weasel/home/components';
 import { PageComponent, PageTab } from '@weasel/home/components/page.component';
 import { AlertType } from '@weasel/shared/components/alert.component';
@@ -83,7 +88,9 @@ export class BatchPageComponent
   overview: FrontendOverviewSection;
   params: FrontendBatchCompareParams;
   TabType = BatchPageTabType;
+  private _isTeamAdmin = false;
 
+  private _subTeam: Subscription;
   private _subSuite: Subscription;
   private _subBatches: Subscription;
   private _subBatch: Subscription;
@@ -108,6 +115,7 @@ export class BatchPageComponent
     private apiService: ApiService,
     private alertService: AlertService,
     private batchPageService: BatchPageService,
+    private userService: UserService,
     private dialogService: DialogService,
     private router: Router,
     private titleService: Title,
@@ -127,6 +135,9 @@ export class BatchPageComponent
       if (v.some((k) => k.kind === AlertKind.BatchNotFound)) {
         this._notFound.batchSlug = this.route.snapshot.paramMap.get('batch');
       }
+    });
+    this._subTeam = this.batchPageService.team$.subscribe((v) => {
+      this._isTeamAdmin = this.userService.isTeamAdmin(v.role);
     });
     this._subSuite = this.batchPageService.suite$.subscribe((v) => {
       this.suite = v;
@@ -185,6 +196,7 @@ export class BatchPageComponent
    *
    */
   ngOnDestroy() {
+    this._subTeam.unsubscribe();
     this._subSuite.unsubscribe();
     this._subBatches.unsubscribe();
     this._subBatch.unsubscribe();
@@ -316,6 +328,7 @@ export class BatchPageComponent
     const buttons: PageButton[] = [];
 
     if (
+      this._isTeamAdmin &&
       this.batch?.isSealed &&
       this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug
     ) {

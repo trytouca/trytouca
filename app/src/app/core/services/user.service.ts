@@ -4,7 +4,11 @@
 
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import type { UserLookupResponse } from '@weasel/core/models/commontypes';
+import {
+  EPlatformRole,
+  ETeamRole,
+  UserLookupResponse
+} from '@weasel/core/models/commontypes';
 import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { AlertService, AlertKind } from './alert.service';
 import { ApiService } from './api.service';
@@ -61,6 +65,22 @@ export class UserService {
         }
       }
     );
+  }
+
+  /**
+   *
+   */
+  isTeamAdmin(role: ETeamRole): boolean {
+    if (this.currentUser) {
+      const role = this.currentUser.platformRole;
+      if ([EPlatformRole.Owner, EPlatformRole.Admin].includes(role)) {
+        return true;
+      }
+    }
+    if ([ETeamRole.Owner, ETeamRole.Admin].includes(role)) {
+      return true;
+    }
+    return false;
   }
 
   /**
