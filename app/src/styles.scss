@@ -26,10 +26,7 @@
     @apply bg-lblue-100 text-lblue-700 shadow-sm hover:bg-lblue-200 focus:ring-2 focus:ring-opacity-50 focus:ring-lblue-400;
   }
   .wsl-btn-muted {
-    @apply bg-gray-50 border hover:bg-gray-100 focus:ring-1 focus:ring-opacity-50 focus:ring-gray-400;
-    b {
-      @apply font-medium;
-    }
+    @apply bg-gray-50 border hover:bg-gray-100 focus:ring-1 focus:ring-opacity-50 focus:ring-gray-400 disabled:text-gray-300;
   }
   .wsl-input-field {
     @apply block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50;

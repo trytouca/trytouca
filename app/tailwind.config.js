@@ -53,6 +53,8 @@ module.exports = (isProd) => ({
   },
   variants: {
     extend: {
+      backgroundColor: ['disabled'],
+      textColor: ['disabled'],
       visibility: ['group-hover', 'hover']
     }
   },

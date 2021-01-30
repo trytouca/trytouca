@@ -9,8 +9,8 @@
     <button type="button" id="dropdown-button-filter" aria-haspopup="true"
       aria-expanded="false"
       class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle h-full">
-      Filter: <b>{{ filterName }}</b>&nbsp;<fa-icon icon="chevron-down"
-        size="xs" class="opacity-50"></fa-icon>
+      Filter: <b class="font-medium">{{ filterName }}</b>&nbsp;<fa-icon
+        icon="chevron-down" size="xs" class="opacity-50"></fa-icon>
     </button>
     <ul class="wsl-dropdown-menu hidden"
       aria-labelledby="dropdown-button-filter">
@@ -24,8 +24,8 @@
     <button type="button" id="dropdown-button-sort" aria-haspopup="true"
       aria-expanded="false" [disabled]="isSearchActive()"
       class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle h-full">
-      Sort: <b>{{ sorterName }}</b>&nbsp;<fa-icon icon="chevron-down" size="xs"
-        class="opacity-50"></fa-icon>
+      Sort: <b class="font-medium">{{ sorterName }}</b>&nbsp;<fa-icon
+        icon="chevron-down" size="xs" class="opacity-50"></fa-icon>
     </button>
     <ul class="wsl-dropdown-menu hidden" aria-labelledby="dropdown-button-sort">
       <li *ngFor="let sorter of sorters" (click)="sorterName=sorter.key"
