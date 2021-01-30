@@ -4,13 +4,23 @@
   "description": "Continuous regression testing for critical software workflows.",
   "private": true,
   "license": "UNLICENSED",
-  "main": "dist/server.js",
   "repository": "https://github.com/getweasel/weasel.git",
   "bugs": "https://github.com/getweasel/weasel/issues",
   "homepage": "https://getweasel.com",
   "author": {
     "name": "Pejman Ghorbanzade",
     "email": "pejman@ghorbanzade.com"
+  },
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "yarn run build-mails && yarn run build-ts",
+    "build-mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/",
+    "build-ts": "tsc",
+    "doc": "typedoc --out ./local/docs/platform --excludeExternals --exclude '**/*_generated.ts'",
+    "start": "node .",
+    "test": "cross-env NODE_ENV=test ENV_FILE=test nyc mocha --require ts-node/register --require source-map-support/register --full-trace --bail test/**/*.test.ts",
+    "lint": "eslint . --ext .ts",
+    "watch": "nodemon --watch src --watch templates --watch test -e ts,mjml --exec \"yarn run lint && yarn run build && yarn run start\""
   },
   "dependencies": {
     "@elastic/elasticsearch": "^7.6.1",
@@ -36,16 +46,6 @@
     "nodemailer": "^6.4.6",
     "uuid": "^8.1.0",
     "winston": "^3.2.1"
-  },
-  "scripts": {
-    "build": "yarn run build-mails && yarn run build-ts",
-    "build-mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/",
-    "build-ts": "tsc",
-    "doc": "typedoc --out ./local/docs/platform --excludeExternals --exclude '**/*_generated.ts'",
-    "start": "node .",
-    "test": "cross-env NODE_ENV=test ENV_FILE=test nyc mocha --require ts-node/register --require source-map-support/register --full-trace --bail test/**/*.test.ts",
-    "lint": "eslint . --ext .ts",
-    "watch": "nodemon --watch src --watch templates --watch test -e ts,mjml --exec \"yarn run lint && yarn run build && yarn run start\""
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
