@@ -20,7 +20,7 @@
             @apply p-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l text-xs font-medium whitespace-nowrap;
           }
           .wsl-input-group-text {
-            @apply px-2 flex flex-grow items-center bg-white border border-gray-300 text-pink-500 text-xs font-mono overflow-x-auto;
+            @apply px-2 flex flex-grow items-center bg-white border border-gray-300 text-red-600 text-xs font-mono overflow-x-auto;
           }
           .wsl-input-group-append {
             @apply p-2 flex justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r text-xs font-medium cursor-pointer hover:bg-gray-200;

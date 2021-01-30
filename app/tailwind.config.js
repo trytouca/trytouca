@@ -12,17 +12,42 @@ module.exports = (isProd) => ({
   },
   darkMode: false,
   theme: {
+    gradientColorStops: false,
+    keyframes: false,
+    order: false,
+    roate: false,
+    scale: false,
+    skew: false,
+    transform: false,
+    transformOrigin: false,
+    translate: false,
+    colors: {
+      transparent: 'transparent',
+      current: 'currentColor',
+      black: colors.black,
+      white: colors.white,
+      gray: colors.coolGray,
+      red: colors.red,
+      yellow: colors.amber,
+      green: colors.emerald,
+      blue: colors.blue,
+      // indigo: colors.indigo,
+      // purple: colors.violet,
+      // pink: colors.pink,
+      lblue: colors.lightBlue
+    },
+    screens: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      print: { raw: 'print' }
+    },
     extend: {
-      colors: {
-        lblue: colors.lightBlue
-      },
       container: {
         screens: {
           lg: '1200px'
         }
-      },
-      screens: {
-        print: { raw: 'print' }
       }
     }
   },
