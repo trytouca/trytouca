@@ -33,7 +33,7 @@ MySuite::MySuite(const std::string& datasetDir)
  */
 void MySuite::initialize()
 {
-    for (const auto& it : boost::filesystem::directory_iterator(_dir)) {
+    for (const auto& it : weasel::filesystem::directory_iterator(_dir)) {
         if (!weasel::filesystem::is_regular_file(it.path().string())) {
             continue;
         }
@@ -157,7 +157,7 @@ std::shared_ptr<weasel::framework::Suite> MyWorkflow::suite() const
  */
 weasel::framework::Errors MyWorkflow::execute(const weasel::framework::Testcase& testcase) const
 {
-    boost::filesystem::path caseFile = _options.at("datasets-dir");
+    weasel::filesystem::path caseFile = _options.at("datasets-dir");
     caseFile /= testcase + ".json";
     const auto& wizard = parse_profile(caseFile.string());
 
