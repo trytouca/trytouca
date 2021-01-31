@@ -522,6 +522,28 @@ namespace weasel { namespace framework {
     /**
      *
      */
+    class Printer {
+        std::ofstream _fout;
+
+    public:
+        Printer(const weasel::filesystem::path& path)
+            : _fout(path.string(), std::ios::trunc)
+        {
+        }
+        template <typename... Args>
+        void print(const std::string& fmtstr, Args&&... args)
+        {
+            const auto content = fmt::format(fmtstr, std::forward<Args>(args)...);
+            fmt::fprintf(_fout, content);
+            fmt::fprintf(std::cout, content);
+            _fout.flush();
+            std::cout.flush();
+        }
+    };
+
+    /**
+     *
+     */
     int main_impl(int argc, char* argv[], Workflow& workflow)
     {
         using lg = LogLevel;
@@ -639,17 +661,15 @@ namespace weasel { namespace framework {
         // information printed on console to a file `Console.log` in
         // output directory for this revision.
 
-        std::ofstream printer((outputDirRevision / "Console.log").string(), std::ios::trunc);
+        Printer printer(outputDirRevision / "Console.log");
 
         // Provide feedback to user that regression test is starting.
         // We perform this operation prior to configuring weasel client,
         // which may take a noticeable time.
 
-        printer << '\n'
-                << "Weasel Regression Test Framework" << '\n'
-                << "Suite: " << options.at("suite") << '\n'
-                << "Revision: " << options.at("revision") << '\n'
-                << std::endl;
+        printer.print(
+            "\nWeasel Regression Test Framework\nSuite: {}\nRevision: {}\n\n",
+            options.at("suite"), options.at("revision"));
 
         // initialize weasel client
 
@@ -740,8 +760,8 @@ namespace weasel { namespace framework {
             if ((!options.count("overwrite") || options.at("overwrite") != "true") && workflow.skip(testcase)) {
                 logger.log(lg::Info, "skipping already processed testcase: {}", testcase);
                 stats.inc(ExecutionOutcome::Skip);
-                printer << fmt::format(" ({:>3} of {:<3}) {:<32} (skip)", i, suite->size(), testcase)
-                        << std::endl;
+                printer.print(
+                    " ({:>3} of {:<3}) {:<32} (skip)\n", i, suite->size(), testcase);
                 continue;
             }
 
@@ -820,13 +840,14 @@ namespace weasel { namespace framework {
 
             // report testcase statistics
 
-            printer << fmt::format(" ({:>3} of {:<3}) {:<32} ({}, {} sec)", i, suite->size(), testcase, errors.empty() ? "pass" : "fail", timer.count(testcase))
-                    << std::endl;
+            printer.print(" ({:>3} of {:<3}) {:<32} ({}, {} sec)\n",
+                i, suite->size(), testcase, errors.empty() ? "pass" : "fail",
+                timer.count(testcase));
             for (const auto& err : errors) {
-                printer << fmt::format("{:>13} {}\n", "-", err);
+                printer.print("{:>13} {}\n\n", "-", err);
             }
             if (!errors.empty()) {
-                printer << std::endl;
+                printer.print("\n");
             }
 
             // now that we are done with this testcase, remove all results
@@ -839,12 +860,14 @@ namespace weasel { namespace framework {
 
         timer.toc("__workflow__");
         if (stats.count(ExecutionOutcome::Skip)) {
-            printer << fmt::format("\nskipped {} of {} testcases", stats.count(ExecutionOutcome::Skip), suite->size());
+            printer.print(
+                "\nskipped {} of {} testcases\n",
+                stats.count(ExecutionOutcome::Skip), suite->size());
         }
-        printer << '\n'
-                << fmt::format("processed {} of {} testcases\n", stats.count(ExecutionOutcome::Pass), suite->size())
-                << fmt::format("test completed in {} seconds\n", timer.count("__workflow__"))
-                << std::endl;
+        printer.print(
+            "\nprocessed {} of {} testcases\ntest completed in {} seconds\n\n",
+            stats.count(ExecutionOutcome::Pass), suite->size(),
+            timer.count("__workflow__"));
 
         logger.log(lg::Info, "application completed execution");
         return EXIT_SUCCESS;
