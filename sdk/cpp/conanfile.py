@@ -39,6 +39,7 @@ class WeaselConan(ConanFile):
         self.requires.add("boost/1.71.0")
         self.requires.add("flatbuffers/1.12.0")
         self.requires.add("fmt/7.1.2")
+        self.requires.add("ghc-filesystem/1.4.0")
         self.requires.add("rapidjson/1.1.0")
         self.requires.add("spdlog/1.8.2")
         if not self.options.shared:
@@ -82,6 +83,7 @@ class WeaselConan(ConanFile):
             "boost::boost",
             "fmt::fmt",
             "flatbuffers::flatbuffers",
+            "ghcFilesystem::ghcFilesystem",
             "rapidjson::rapidjson",
             "spdlog::spdlog"
         ]

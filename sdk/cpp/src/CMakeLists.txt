@@ -9,6 +9,7 @@ weasel_find_package("Boost")
 weasel_find_package("fmt")
 weasel_find_package("Flatbuffers")
 weasel_find_package("flatc")
+weasel_find_package("ghcFilesystem")
 weasel_find_package("CURL")
 weasel_find_package("RapidJSON")
 weasel_find_package("spdlog")
@@ -68,6 +69,7 @@ target_link_libraries(
         spdlog::spdlog
     PUBLIC
         Boost::Boost
+        ghcFilesystem::ghcFilesystem
         flatbuffers::flatbuffers
         fmt::fmt
         RapidJSON::RapidJSON

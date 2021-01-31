@@ -20,7 +20,7 @@ Weasel is a continuous regression testing solution that helps engineering
 teams understand the impact of their daily code changes on the behavior or
 performance of their software workflows.
 
-Checkout the https://getweasel.com to learn more and get started.
+Checkout https://getweasel.com to learn more and get started.
 
 ## Features
 
@@ -40,7 +40,7 @@ Checkout the https://getweasel.com to learn more and get started.
   platform compares test results of any two verisons of your workflow
   in their original data type.
 
-* **Scale Without Worry**  
+* **Scale without Worry**  
   Managing result files for hundreds of test cases is not feasible at
   scale. Let the Weasel Platform manage your test results, compare them
   against previous versions, and report any found differences in an easy

@@ -3,12 +3,12 @@
  */
 
 #include "weasel/devkit/utils.hpp"
+#include "fmt/printf.h"
 #include <codecvt>
 #include <fstream>
+#include <iostream>
 #include <locale>
 #include <sstream>
-#include <iostream>
-#include "fmt/printf.h"
 
 namespace weasel {
 
