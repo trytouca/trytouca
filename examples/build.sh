@@ -41,7 +41,7 @@ rm -rf "${dir_build}"
 mkdir -p "${dir_build}"
 
 # if this is the first time we are building this project,
-# install the weasel/1.2.1 dependency using conan
+# install weasel client library as a dependency using conan
 if [ ! -f "${dir_build}/conanbuildinfo.txt" ]; then
     conan install -if "${dir_build}" -g cmake_find_package -b missing -o with_framework=True "weasel/1.2.1@_/_"
 fi
