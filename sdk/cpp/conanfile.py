@@ -81,7 +81,7 @@ class WeaselConan(ConanFile):
         client_requirements = [
             "fmt::fmt",
             "flatbuffers::flatbuffers",
-            "ghcFilesystem::ghcFilesystem",
+            "ghc-filesystem::ghc-filesystem",
             "rapidjson::rapidjson",
             "spdlog::spdlog"
         ]
