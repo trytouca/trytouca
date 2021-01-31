@@ -26,7 +26,7 @@ namespace weasel {
     /**
      *
      */
-    void ClientImpl::configure_by_file(const weasel::path& path)
+    void ClientImpl::configure_by_file(const weasel::filesystem::path& path)
     {
         _configured = _opts.parse_file(path);
     }
@@ -147,7 +147,7 @@ namespace weasel {
      *
      */
     void ClientImpl::save(
-        const weasel::path& path,
+        const weasel::filesystem::path& path,
         const std::vector<std::string>& testcases,
         const DataFormat format,
         const bool overwrite) const
@@ -279,7 +279,7 @@ namespace weasel {
      *
      */
     void ClientImpl::save_flatbuffers(
-        const weasel::path& path,
+        const weasel::filesystem::path& path,
         const std::vector<std::string>& names) const
     {
         std::vector<Testcase> tcs;
@@ -338,7 +338,7 @@ namespace weasel {
      *
      */
     void ClientImpl::save_json(
-        const weasel::path& path,
+        const weasel::filesystem::path& path,
         const std::vector<std::string>& testcases) const
     {
         const auto& content = make_json(testcases);

@@ -10,4 +10,4 @@
  * @param path path to a file or directory that may be or may have result files.
  * @return list of valid weasel result files
  */
-std::vector<weasel::path> findResultFiles(const weasel::path& path);
+std::vector<weasel::filesystem::path> findResultFiles(const weasel::filesystem::path& path);

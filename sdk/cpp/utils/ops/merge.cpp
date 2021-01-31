@@ -70,7 +70,7 @@ bool MergeOperation::run_impl() const
         return false;
     }
 
-    using chunk_t = std::vector<weasel::path>;
+    using chunk_t = std::vector<weasel::filesystem::path>;
     std::vector<chunk_t> chunks;
     for (auto i = 0u, j = 0u; i < resultFiles.size(); j = i) {
         for (auto chunkSize = 0ull; i < resultFiles.size(); ++i) {

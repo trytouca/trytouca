@@ -9,7 +9,7 @@
 /**
  *
  */
-std::vector<weasel::path> discover(const weasel::path& path)
+std::vector<weasel::filesystem::path> discover(const weasel::filesystem::path& path)
 {
     if (weasel::filesystem::is_regular_file(path)) {
         weasel::ResultFile srcFile(path);
@@ -21,13 +21,13 @@ std::vector<weasel::path> discover(const weasel::path& path)
     if (!weasel::filesystem::is_directory(path)) {
         return {};
     }
-    std::vector<weasel::path> output;
+    std::vector<weasel::filesystem::path> output;
     for (const auto& it : weasel::filesystem::recursive_directory_iterator(path)) {
-        weasel::ResultFile srcFile(it.path().string());
+        weasel::ResultFile srcFile(it.path());
         if (!srcFile.validate()) {
             continue;
         }
-        output.push_back(it.path().string());
+        output.push_back(it.path());
     }
     return output;
 }
@@ -35,13 +35,13 @@ std::vector<weasel::path> discover(const weasel::path& path)
 /**
  *
  */
-std::vector<weasel::path> findResultFiles(const weasel::path& path)
+std::vector<weasel::filesystem::path> findResultFiles(const weasel::filesystem::path& path)
 {
-    WEASEL_LOG_DEBUG("finding weasel result files in {}", path);
+    WEASEL_LOG_DEBUG("finding weasel result files in {}", path.string());
     auto output = discover(path);
     WEASEL_LOG_INFO("found {} weasel result files", output.size());
 
-    const auto& func = [](const weasel::path& a, const weasel::path& b) {
+    const auto& func = [](const weasel::filesystem::path& a, const weasel::filesystem::path& b) {
         return weasel::filesystem::file_size(a) < weasel::filesystem::file_size(b);
     };
     std::sort(output.begin(), output.end(), func);

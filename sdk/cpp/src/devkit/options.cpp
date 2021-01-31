@@ -178,7 +178,7 @@ bool weasel::ClientOptions::parse(const OptionsMap& opts)
 /**
  *
  */
-bool weasel::ClientOptions::parse_file(const weasel::path& path)
+bool weasel::ClientOptions::parse_file(const weasel::filesystem::path& path)
 {
 
     // check that specified path leads to an existing regular file on disk
@@ -189,7 +189,7 @@ bool weasel::ClientOptions::parse_file(const weasel::path& path)
 
     // load content of configuration file into memory
 
-    std::ifstream ifs(path);
+    std::ifstream ifs(path.string());
     std::stringstream ss;
     ss << ifs.rdbuf();
 

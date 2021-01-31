@@ -27,13 +27,12 @@ struct TmpFile {
         }
     }
 
-    const weasel::path path;
+    const weasel::filesystem::path path;
 
 private:
-    std::string make_temp_path() const
+    weasel::filesystem::path make_temp_path() const
     {
         const auto filename = weasel::format("weasel_{}", std::rand());
-        auto out = weasel::filesystem::temp_directory_path();
-        return (out / filename).string();
+        return weasel::filesystem::temp_directory_path() / filename;
     }
 };

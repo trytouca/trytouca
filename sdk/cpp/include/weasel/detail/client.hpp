@@ -37,7 +37,7 @@ namespace weasel {
         /**
          *
          */
-        void configure_by_file(const weasel::path& path);
+        void configure_by_file(const weasel::filesystem::path& path);
 
         /**
          *
@@ -115,7 +115,7 @@ namespace weasel {
          *
          */
         void save(
-            const weasel::path& path,
+            const weasel::filesystem::path& path,
             const std::vector<std::string>& testcases,
             const DataFormat format,
             const bool overwrite) const;
@@ -145,14 +145,14 @@ namespace weasel {
          *
          */
         void save_json(
-            const weasel::path& path,
+            const weasel::filesystem::path& path,
             const std::vector<std::string>& testcases) const;
 
         /**
          *
          */
         void save_flatbuffers(
-            const weasel::path& path,
+            const weasel::filesystem::path& path,
             const std::vector<std::string>& testcases) const;
 
         /**

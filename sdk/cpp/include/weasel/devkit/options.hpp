@@ -47,7 +47,7 @@ namespace weasel {
         /**
          *
          */
-        bool parse_file(const weasel::path& path);
+        bool parse_file(const weasel::filesystem::path& path);
 
     private:
         /**

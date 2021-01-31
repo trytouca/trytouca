@@ -6,7 +6,6 @@
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
-#include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/utils.hpp"
 #include "weasel/impl/weasel_generated.h"
 #include <fstream>
@@ -16,7 +15,7 @@ namespace weasel {
     /**
      *
      */
-    ResultFile::ResultFile(const weasel::path& path)
+    ResultFile::ResultFile(const weasel::filesystem::path& path)
         : _path(path)
     {
     }
@@ -24,7 +23,7 @@ namespace weasel {
     /**
      *
      */
-    std::string ResultFile::path() const
+    weasel::filesystem::path ResultFile::path() const
     {
         return _path;
     }
@@ -72,7 +71,7 @@ namespace weasel {
 
         // verify that given content represents valid flatbuffers data
         if (!validate(content)) {
-            throw std::runtime_error("result file invalid: " + path());
+            throw std::runtime_error("result file invalid: " + _path.string());
         }
 
         ElementsMap testcases;

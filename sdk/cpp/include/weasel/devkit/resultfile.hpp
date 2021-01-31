@@ -13,10 +13,9 @@
  */
 
 #include "weasel/devkit/comparison.hpp"
+#include "weasel/devkit/filesystem.hpp"
 
 namespace weasel {
-
-    using path = std::string;
 
     /**
      * @brief provides means for interacting with weasel result files.
@@ -56,7 +55,7 @@ namespace weasel {
          *       of that file. It does not guarantee that the file can
          *       be read from or written into.
          */
-        explicit ResultFile(const weasel::path& path);
+        explicit ResultFile(const weasel::filesystem::path& path);
 
         /**
          * string representation of the path to file on disk associated
@@ -64,7 +63,7 @@ namespace weasel {
          *
          * @return path to file on disk associated with this object.
          */
-        std::string path() const;
+        weasel::filesystem::path path() const;
 
         /**
          * Checks if content of the regular file on disk associated with
@@ -176,7 +175,7 @@ namespace weasel {
         bool validate(const std::string& content) const;
 
         ElementsMap _testcases;
-        std::string _path;
+        weasel::filesystem::path _path;
     };
 
 } // namespace weasel

@@ -23,7 +23,7 @@ namespace weasel {
     /**
      *
      */
-    void configure(const weasel::path& path)
+    void configure(const std::string& path)
     {
         instance.configure_by_file(path);
     }
@@ -195,7 +195,7 @@ namespace weasel {
      *
      */
     void save_binary(
-        const weasel::path& path,
+        const std::string& path,
         const std::vector<std::string>& testcases,
         const bool overwrite)
     {
@@ -206,7 +206,7 @@ namespace weasel {
      *
      */
     void save_json(
-        const weasel::path& path,
+        const std::string& path,
         const std::vector<std::string>& testcases,
         const bool overwrite)
     {

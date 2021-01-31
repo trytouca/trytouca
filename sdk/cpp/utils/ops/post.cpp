@@ -135,12 +135,12 @@ bool PostOperation::run_impl() const
             errs.emplace_back(weasel::format("exception: {}", ex.what()));
         }
         if (errs.empty()) {
-            WEASEL_LOG_INFO("submitted {}", src);
+            WEASEL_LOG_INFO("submitted {}", src.string());
             continue;
         }
 
         errors.emplace(src, errs);
-        WEASEL_LOG_WARN("failed to submit {}: {}", src, errs.front());
+        WEASEL_LOG_WARN("failed to submit {}: {}", src.string(), errs.front());
 
         if (_fail_fast) {
             WEASEL_LOG_INFO("aborting due to fail-fast policy");

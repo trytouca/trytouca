@@ -9,7 +9,6 @@
 #define GHC_USE_STD_FS
 #include <filesystem>
 namespace weasel {
-    using path = std::string;
     namespace filesystem = std::filesystem;
 }
 #endif
@@ -17,7 +16,6 @@ namespace weasel {
 #ifndef GHC_USE_STD_FS
 #include <ghc/fs_fwd.hpp>
 namespace weasel {
-    using path = std::string;
     namespace filesystem = ghc::filesystem;
 }
 #endif

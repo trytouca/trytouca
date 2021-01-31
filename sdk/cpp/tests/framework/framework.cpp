@@ -157,7 +157,7 @@ TEST_CASE("framework-dummy-workflow")
 
 TEST_CASE("framework-simple-workflow-valid-use")
 {
-    using fnames = std::vector<std::string>;
+    using fnames = std::vector<weasel::filesystem::path>;
 
     MainCaller<SimpleWorkflow> caller;
     TmpFile outputDir;

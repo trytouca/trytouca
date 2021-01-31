@@ -179,7 +179,7 @@ namespace weasel { namespace framework {
             options.emplace("config-file", "./config.json");
         }
 
-        const weasel::path& configFile = options.at("config-file");
+        const auto& configFile = options.at("config-file");
 
         // configuration file must exist if it is specified
 

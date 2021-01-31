@@ -104,7 +104,7 @@ private:
 struct ResultChecker {
 
 public:
-    ResultChecker(const std::vector<weasel::path>& segments)
+    ResultChecker(const std::vector<weasel::filesystem::path>& segments)
     {
         _path = segments.front();
         for (auto i = 1ul; i < segments.size(); i++) {
@@ -112,31 +112,31 @@ public:
         }
     }
 
-    std::vector<std::string> get_regular_files(const std::string& filename) const
+    std::vector<weasel::filesystem::path> get_regular_files(const std::string& filename) const
     {
-        auto filter = [](const weasel::filesystem::directory_entry& path) {
-            return weasel::filesystem::is_regular_file(path.path().string());
+        auto filter = [](const weasel::filesystem::path& path) {
+            return weasel::filesystem::is_regular_file(path);
         };
         return get_elements(filename, filter);
     }
 
-    std::vector<std::string> get_directories(const std::string& filename) const
+    std::vector<weasel::filesystem::path> get_directories(const std::string& filename) const
     {
-        auto filter = [](const weasel::filesystem::directory_entry& path) {
-            return weasel::filesystem::is_directory(path.path().string());
+        auto filter = [](const weasel::filesystem::path& path) {
+            return weasel::filesystem::is_directory(path);
         };
         return get_elements(filename, filter);
     }
 
 private:
-    std::vector<std::string> get_elements(
+    std::vector<weasel::filesystem::path> get_elements(
         const std::string& filename,
-        const std::function<bool(weasel::filesystem::directory_entry)> filter) const
+        const std::function<bool(weasel::filesystem::path)> filter) const
     {
-        std::vector<std::string> filenames;
+        std::vector<weasel::filesystem::path> filenames;
         for (const auto& entry : weasel::filesystem::directory_iterator(_path / filename)) {
-            if (filter(entry)) {
-                filenames.emplace_back(entry.path().filename().string());
+            if (filter(entry.path())) {
+                filenames.emplace_back(entry.path().filename());
             }
         }
         return filenames;
