@@ -56,8 +56,6 @@
  */
 namespace weasel {
 
-    using path = std::string;
-
     /**
      * @brief Configures the weasel client.
      *
@@ -185,13 +183,13 @@ namespace weasel {
      *
      * @include config-file.schema.json
      *
-     * @param path path to a configuration file in json format
+     * @param path path to a configuration file with json format
      *
      * @see configure for more information about individual configuration
      *                parameters
      * @since v1.1
      */
-    WEASEL_CLIENT_API void configure(const weasel::path& path);
+    WEASEL_CLIENT_API void configure(const std::string& path);
 
     /**
      * @brief Checks if the client is configured to perform basic operations.
@@ -575,7 +573,7 @@ namespace weasel {
      *                  in the specified `path`. Defaults to **true**.
      */
     WEASEL_CLIENT_API void save_binary(
-        const weasel::path& path,
+        const std::string& path,
         const std::vector<std::string>& testcases = {},
         const bool overwrite = true);
 
@@ -595,7 +593,7 @@ namespace weasel {
      *                  in the specified `path`. Defaults to **true**.
      */
     WEASEL_CLIENT_API void save_json(
-        const weasel::path& path,
+        const std::string& path,
         const std::vector<std::string>& testcases = {},
         const bool overwrite = true);
 

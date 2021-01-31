@@ -18,10 +18,7 @@ Configuring the Library
 .. doxygenfunction:: weasel::configure(const std::unordered_map<std::string, std::string> &opts)
    :project: weasel
 
-.. doxygentypedef:: weasel::path
-   :project: weasel
-
-.. doxygenfunction:: weasel::configure(const weasel::path &path)
+.. doxygenfunction:: weasel::configure(const std::string &path)
    :project: weasel
 
 .. doxygenfunction:: weasel::is_configured

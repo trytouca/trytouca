@@ -639,7 +639,7 @@ namespace weasel { namespace framework {
         // information printed on console to a file `Console.log` in
         // output directory for this revision.
 
-        std::ofstream printer ((outputDirRevision / "Console.log").string(), std::ios::trunc );
+        std::ofstream printer((outputDirRevision / "Console.log").string(), std::ios::trunc);
 
         // Provide feedback to user that regression test is starting.
         // We perform this operation prior to configuring weasel client,

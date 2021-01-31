@@ -7,7 +7,8 @@
 #include "weasel/devkit/filesystem.hpp"
 
 struct TmpFile {
-    TmpFile() : path((weasel::filesystem::temp_directory_path() / "weasel_temp").string())
+    TmpFile()
+        : path((weasel::filesystem::temp_directory_path() / "weasel_temp").string())
     {
     }
 

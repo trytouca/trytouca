@@ -19,5 +19,5 @@ namespace weasel {
 namespace weasel {
     using path = std::string;
     namespace filesystem = ghc::filesystem;
-} 
+}
 #endif

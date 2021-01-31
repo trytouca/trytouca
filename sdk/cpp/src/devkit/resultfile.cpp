@@ -2,7 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include <fstream>
 #include "weasel/devkit/resultfile.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
@@ -10,6 +9,7 @@
 #include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/utils.hpp"
 #include "weasel/impl/weasel_generated.h"
+#include <fstream>
 
 namespace weasel {
 
