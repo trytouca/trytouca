@@ -6,6 +6,7 @@
 #include "rapidjson/document.h"
 #include "weasel/devkit/filesystem.hpp"
 #include "weasel/weasel.hpp"
+#include <fstream>
 #include <thread>
 
 /**
@@ -19,7 +20,7 @@ Wizard parse_profile(const std::string& path)
         std::istreambuf_iterator<char>());
 
     Wizard wizard;
-    wizard.username = boost::filesystem::path(path).stem().string();
+    wizard.username = weasel::filesystem::path(path).stem().string();
 
     rapidjson::Document doc;
     if (doc.Parse<0>(content.c_str()).HasParseError()) {

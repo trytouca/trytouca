@@ -22,7 +22,7 @@ std::vector<weasel::path> discover(const weasel::path& path)
         return {};
     }
     std::vector<weasel::path> output;
-    for (const auto& it : boost::filesystem::recursive_directory_iterator(path)) {
+    for (const auto& it : weasel::filesystem::recursive_directory_iterator(path)) {
         weasel::ResultFile srcFile(it.path().string());
         if (!srcFile.validate()) {
             continue;

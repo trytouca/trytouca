@@ -2,6 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+#include <fstream>
 #include "weasel/devkit/resultfile.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
@@ -121,9 +122,9 @@ namespace weasel {
     void ResultFile::save(const std::vector<Testcase>& testcases)
     {
         // create parent directory if it does not exist
-        boost::filesystem::path dstFile { _path };
-        const auto parentPath = boost::filesystem::absolute(dstFile.parent_path());
-        if (!weasel::filesystem::exists(parentPath.string()) && !boost::filesystem::create_directories(parentPath)) {
+        weasel::filesystem::path dstFile { _path };
+        const auto parentPath = weasel::filesystem::absolute(dstFile.parent_path());
+        if (!weasel::filesystem::exists(parentPath.string()) && !weasel::filesystem::create_directories(parentPath)) {
             throw std::invalid_argument("failed to create parent path");
         }
         // write content of testcases to the filesystem

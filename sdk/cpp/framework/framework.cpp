@@ -3,9 +3,6 @@
  */
 
 #include "weasel/framework.hpp"
-#include "boost/filesystem/fstream.hpp"
-#include "boost/iostreams/stream.hpp"
-#include "boost/iostreams/tee.hpp"
 #include "cxxopts.hpp"
 #include "fmt/printf.h"
 #include "rapidjson/document.h"
@@ -15,6 +12,7 @@
 #include "weasel/extra/version.hpp"
 #include "weasel/framework/detail/utils.hpp"
 #include "weasel/weasel.hpp"
+#include <fstream>
 #include <iostream>
 #include <thread>
 
@@ -35,7 +33,7 @@ namespace weasel { namespace framework {
      */
     bool Workflow::skip(const Testcase& testcase) const
     {
-        boost::filesystem::path outputDirCase = _options.at("output-dir");
+        weasel::filesystem::path outputDirCase = _options.at("output-dir");
         outputDirCase /= _options.at("suite");
         outputDirCase /= _options.at("revision");
         outputDirCase /= testcase;
@@ -416,7 +414,7 @@ namespace weasel { namespace framework {
      */
     class FileLogger : public LogSubscriber {
     public:
-        FileLogger(const boost::filesystem::path& logDir)
+        FileLogger(const weasel::filesystem::path& logDir)
             : LogSubscriber()
         {
             const auto logFilePath = logDir / "weasel.log";
@@ -573,11 +571,11 @@ namespace weasel { namespace framework {
 
         // establish output directory for this revision
 
-        boost::filesystem::path outputDirRevision = options.at("output-dir");
+        weasel::filesystem::path outputDirRevision = options.at("output-dir");
         outputDirRevision /= options.at("suite");
         outputDirRevision /= options.at("revision");
 
-        boost::filesystem::create_directories(outputDirRevision);
+        weasel::filesystem::create_directories(outputDirRevision);
 
         // unless explicitly instructed not to do so, register a separate
         // file logger to write our events to a file in the output directory.
@@ -641,9 +639,7 @@ namespace weasel { namespace framework {
         // information printed on console to a file `Console.log` in
         // output directory for this revision.
 
-        boost::filesystem::ofstream ofs { outputDirRevision / "Console.log", std::ios::trunc };
-        auto tee_device = boost::iostreams::tee(std::cout, ofs);
-        boost::iostreams::stream<decltype(tee_device)> printer(tee_device);
+        std::ofstream printer ((outputDirRevision / "Console.log").string(), std::ios::trunc );
 
         // Provide feedback to user that regression test is starting.
         // We perform this operation prior to configuring weasel client,
@@ -756,7 +752,7 @@ namespace weasel { namespace framework {
             // remove result directory for this testcase if it already exists.
 
             if (weasel::filesystem::exists(outputDirCase.string())) {
-                boost::filesystem::remove_all(outputDirCase);
+                weasel::filesystem::remove_all(outputDirCase);
                 logger.log(lg::Debug, "removed existing result directory for {}", testcase);
 
                 // since subsequent operations may expect to write into
@@ -767,7 +763,7 @@ namespace weasel { namespace framework {
 
             // create result directory for this testcase
 
-            boost::filesystem::create_directories(outputDirCase);
+            weasel::filesystem::create_directories(outputDirCase);
 
             // execute workflow for this testcase
 

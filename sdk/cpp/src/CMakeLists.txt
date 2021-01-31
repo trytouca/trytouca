@@ -5,7 +5,6 @@
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
-weasel_find_package("Boost")
 weasel_find_package("fmt")
 weasel_find_package("Flatbuffers")
 weasel_find_package("flatc")
@@ -50,10 +49,11 @@ target_sources(
         client.cpp
         weasel.cpp
         devkit/comparison.cpp
-        devkit/options.cpp
+        devkit/filesystem.cpp
         devkit/httpclient.cpp
         devkit/logger.cpp
         devkit/object.cpp
+        devkit/options.cpp
         devkit/platform.cpp
         devkit/resultfile.cpp
         devkit/testcase.cpp
@@ -68,7 +68,6 @@ target_link_libraries(
         CURL::CURL
         spdlog::spdlog
     PUBLIC
-        Boost::Boost
         ghcFilesystem::ghcFilesystem
         flatbuffers::flatbuffers
         fmt::fmt

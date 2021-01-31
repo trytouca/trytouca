@@ -36,7 +36,6 @@ class WeaselConan(ConanFile):
     ]
 
     def requirements(self):
-        self.requires.add("boost/1.71.0")
         self.requires.add("flatbuffers/1.12.0")
         self.requires.add("fmt/7.1.2")
         self.requires.add("ghc-filesystem/1.4.0")
@@ -80,7 +79,6 @@ class WeaselConan(ConanFile):
 
     def package_info(self):
         client_requirements = [
-            "boost::boost",
             "fmt::fmt",
             "flatbuffers::flatbuffers",
             "ghcFilesystem::ghcFilesystem",

@@ -77,17 +77,17 @@ scripts, follow the subsequent sections to learn what our scripts do.
 
 Weasel Client Library for C++ has the following dependencies:
 
-| Dependency  | Version |
-|-------------|---------|
-| boost       | 1.71.0  |
-| catch2      | 2.13.3  |
-| cxxopts     | 2.2.1   |
-| flatbuffers | 1.12.0  |
-| flatc       | 1.12.0  |
-| fmt         | 7.1.3   |
-| libcurl     | 7.74.0  |
-| rapidjson   | 1.1.0   |
-| spdlog      | 1.8.2   |
+| Dependency     | Version |
+|----------------|---------|
+| catch2         | 2.13.3  |
+| cxxopts        | 2.2.1   |
+| flatbuffers    | 1.12.0  |
+| flatc          | 1.12.0  |
+| fmt            | 7.1.3   |
+| ghc-filesystem | 1.4.0   |
+| libcurl        | 7.74.0  |
+| rapidjson      | 1.1.0   |
+| spdlog         | 1.8.2   |
 
 Since building these dependencies from source is time-consuming and
 inconvenient, we leverage [Conan] dependency manager to download their

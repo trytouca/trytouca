@@ -6,6 +6,7 @@
 #include "rapidjson/document.h"
 #include "weasel/devkit/platform.hpp"
 #include <climits>
+#include <fstream>
 #include <sstream>
 
 using OptionsMap = std::unordered_map<std::string, std::string>;

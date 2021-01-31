@@ -2,6 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+#include <fstream>
 #include "weasel/detail/client.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
@@ -160,8 +161,8 @@ namespace weasel {
             std::transform(_testcases.begin(), _testcases.end(), std::back_inserter(tcs), [](const ElementsMap::value_type& kvp) { return kvp.first; });
         }
 
-        const auto parentPath = boost::filesystem::absolute(boost::filesystem::path(path).parent_path());
-        if (!weasel::filesystem::exists(parentPath.string()) && !boost::filesystem::create_directories(parentPath)) {
+        const auto parentPath = weasel::filesystem::absolute(weasel::filesystem::path(path).parent_path());
+        if (!weasel::filesystem::exists(parentPath.string()) && !weasel::filesystem::create_directories(parentPath)) {
             throw std::invalid_argument(weasel::format("failed to save content to disk: failed to create directory: {}", parentPath.string()));
         }
 

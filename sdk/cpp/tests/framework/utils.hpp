@@ -115,7 +115,7 @@ public:
 
     std::vector<std::string> get_regular_files(const std::string& filename) const
     {
-        auto filter = [](const boost::filesystem::directory_entry& path) {
+        auto filter = [](const weasel::filesystem::directory_entry& path) {
             return weasel::filesystem::is_regular_file(path.path().string());
         };
         return get_elements(filename, filter);
@@ -123,7 +123,7 @@ public:
 
     std::vector<std::string> get_directories(const std::string& filename) const
     {
-        auto filter = [](const boost::filesystem::directory_entry& path) {
+        auto filter = [](const weasel::filesystem::directory_entry& path) {
             return weasel::filesystem::is_directory(path.path().string());
         };
         return get_elements(filename, filter);
@@ -132,10 +132,10 @@ public:
 private:
     std::vector<std::string> get_elements(
         const std::string& filename,
-        const std::function<bool(boost::filesystem::directory_entry)> filter) const
+        const std::function<bool(weasel::filesystem::directory_entry)> filter) const
     {
         std::vector<std::string> filenames;
-        for (const auto& entry : boost::filesystem::directory_iterator(_path / filename)) {
+        for (const auto& entry : weasel::filesystem::directory_iterator(_path / filename)) {
             if (filter(entry)) {
                 filenames.emplace_back(entry.path().filename().string());
             }
@@ -143,5 +143,5 @@ private:
         return filenames;
     }
 
-    boost::filesystem::path _path;
+    weasel::filesystem::path _path;
 };

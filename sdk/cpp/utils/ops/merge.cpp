@@ -86,9 +86,9 @@ bool MergeOperation::run_impl() const
     }
     WEASEL_LOG_INFO("results will be merged into {} files", chunks.size());
 
-    const auto& root = boost::filesystem::absolute(_out);
+    const auto& root = weasel::filesystem::absolute(_out);
     for (auto i = 0ul; i < chunks.size(); ++i) {
-        const auto filestem = boost::filesystem::path(_src).filename().string();
+        const auto filestem = weasel::filesystem::path(_src).filename().string();
         const auto& filename = chunks.size() == 1ul
             ? weasel::format("{}.bin", filestem)
             : weasel::format("{}.part{}.bin", filestem, i + 1);

@@ -73,9 +73,9 @@ bool UpdateOperation::run_impl() const
         return false;
     }
 
-    const auto& root = boost::filesystem::absolute(_out);
+    const auto& root = weasel::filesystem::absolute(_out);
     for (const auto& srcFilePath : resultFiles) {
-        const auto filename = boost::filesystem::path(srcFilePath).filename();
+        const auto filename = weasel::filesystem::path(srcFilePath).filename();
         const auto dstFilePath = (root / filename).string();
 
         weasel::ResultFile srcFile(srcFilePath);

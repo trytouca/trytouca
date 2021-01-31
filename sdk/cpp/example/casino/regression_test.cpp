@@ -8,6 +8,7 @@
 #include "example/casino/code_under_test.hpp"
 #include "weasel/devkit/filesystem.hpp"
 #include "weasel/weasel.hpp"
+#include <fstream>
 #include <iostream>
 #include <thread>
 
@@ -17,7 +18,7 @@ using Options = std::map<std::string, std::string>;
  *
  */
 std::vector<weasel::casino::Table> parse_file(
-    const boost::filesystem::path& path)
+    const weasel::filesystem::path& path)
 {
     std::ifstream ifile(path.string());
     if (!ifile.is_open()) {
@@ -119,9 +120,9 @@ bool Operation<kGenerate>::run() const
         print(num, std::cout);
         return true;
     }
-    const auto output = boost::filesystem::absolute(_opts.at("output"));
+    const auto output = weasel::filesystem::absolute(_opts.at("output"));
     if (!weasel::filesystem::exists(output.parent_path().string())
-        && !boost::filesystem::create_directories(output.parent_path())) {
+        && !weasel::filesystem::create_directories(output.parent_path())) {
         std::cerr << "failed to create directory: " << output.string()
                   << std::endl;
         return false;

@@ -238,7 +238,7 @@ TEST_CASE("framework-simple-workflow-valid-use")
     {
         fnames caseFiles = ResultChecker(fnames({ outputDir.path, "some-suite", "1.0" })).get_regular_files("8");
         REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "stdout.txt", "stderr.txt", "weasel.json", "weasel.bin" })));
-        boost::filesystem::path caseDir = outputDir.path;
+        weasel::filesystem::path caseDir = outputDir.path;
         caseDir = caseDir / "some-suite" / "1.0" / "8";
         const auto& fileOut = weasel::load_string_file((caseDir / "stdout.txt").string());
         CHECK(fileOut == "simple message in output stream\n");
@@ -250,7 +250,7 @@ TEST_CASE("framework-simple-workflow-valid-use")
     {
         fnames caseFiles = ResultChecker(fnames({ outputDir.path, "some-suite", "1.0" })).get_regular_files("4");
         REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "weasel.json", "weasel.bin" })));
-        boost::filesystem::path caseDir = outputDir.path;
+        weasel::filesystem::path caseDir = outputDir.path;
         caseDir = caseDir / "some-suite" / "1.0" / "4";
         const auto& fileJson = weasel::load_string_file((caseDir / "weasel.json").string());
         CHECK_THAT(fileJson, Catch::Contains(R"("teamslug":"some-team","testsuite":"some-suite","version":"1.0","testcase":"4")"));
