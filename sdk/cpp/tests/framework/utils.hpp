@@ -114,18 +114,16 @@ public:
 
     std::vector<weasel::filesystem::path> get_regular_files(const std::string& filename) const
     {
-        auto filter = [](const weasel::filesystem::path& path) {
+        return get_elements(filename, [](const weasel::filesystem::path& path) {
             return weasel::filesystem::is_regular_file(path);
-        };
-        return get_elements(filename, filter);
+        });
     }
 
     std::vector<weasel::filesystem::path> get_directories(const std::string& filename) const
     {
-        auto filter = [](const weasel::filesystem::path& path) {
+        return get_elements(filename, [](const weasel::filesystem::path& path) {
             return weasel::filesystem::is_directory(path);
-        };
-        return get_elements(filename, filter);
+        });
     }
 
 private:
