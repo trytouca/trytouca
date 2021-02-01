@@ -93,7 +93,7 @@ if (WEASEL_BUILD_EXAMPLES)
     add_subdirectory(example/basic)
     if (WEASEL_BUILD_FRAMEWORK)
         add_subdirectory(example/advanced)
-        # add_subdirectory(example/casino)
+        add_subdirectory(example/casino)
     endif()
 endif()
 

@@ -3,10 +3,10 @@
  */
 
 #include "example/casino/code_under_test.hpp"
-#include "boost/algorithm/string.hpp"
 #include "fmt/ostream.h"
 #include <numeric>
 #include <random>
+#include <sstream>
 
 #define LOG_INFO(...) fmt::print(stdout, __VA_ARGS__);
 
@@ -325,13 +325,8 @@ namespace weasel { namespace casino {
         for (auto i = 0u; i < 4; ++i) {
             is >> line;
             std::vector<std::string> tokens(3u);
-            boost::split(tokens, line, boost::is_any_of(","));
-            while (tokens.size() < 3) {
-                tokens.emplace_back();
-            }
-            table._players.emplace_back(
-                tokens.at(0), Hand { parseCards(tokens.at(1)) });
-            table._players.back().collect(parseCards(tokens.at(2)));
+            const auto index = line.find(',');
+            table._players.emplace_back(line.substr(0, index), Hand { parseCards(line.substr(index + 1)) });
         }
         return is;
     }

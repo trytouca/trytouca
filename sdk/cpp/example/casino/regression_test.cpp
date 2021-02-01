@@ -2,10 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "boost/format.hpp"
-#include "boost/lexical_cast.hpp"
 #include "cxxopts.hpp"
 #include "example/casino/code_under_test.hpp"
+#include "fmt/core.h"
 #include "weasel/devkit/filesystem.hpp"
 #include "weasel/weasel.hpp"
 #include <fstream>
@@ -61,9 +60,7 @@ bool simulate_table(weasel::casino::Table& table, const Options& opts)
         for (auto i = 0u; i < 13; i++) {
             std::cout << "Round: " << i + 1 << std::endl;
             const auto result = table.playRound();
-            boost::format fmt { "round_%02d" };
-            fmt % (i + 1);
-            weasel::add_result(fmt.str(), result);
+            weasel::add_result(fmt::format("round_{0:2d}", i + 1), result);
         }
         weasel::add_result("final_state", table);
     } catch (const std::exception& ex) {
@@ -115,7 +112,7 @@ bool Operation<kGenerate>::run() const
             out << table << std::endl;
         }
     };
-    const auto num = boost::lexical_cast<unsigned int>(_opts.at("count"));
+    const auto num = std::strtoul(_opts.at("count").c_str(), nullptr, 10);
     if (!_opts.count("output")) {
         print(num, std::cout);
         return true;
@@ -139,7 +136,7 @@ bool Operation<kGenerate>::validate() const
     if (!_opts.count("count")) {
         return false;
     }
-    const auto& num = boost::lexical_cast<unsigned int>(_opts.at("count"));
+    const auto& num = std::strtoul(_opts.at("count").c_str(), nullptr, 10);
     if (100 < num) {
         std::cerr << "maximum number of testcases to generate is 100"
                   << std::endl;
@@ -191,11 +188,9 @@ bool Operation<kTest>::run() const
         return EXIT_FAILURE;
     }
 
-    auto delay = 0u;
-    if (_opts.count("delay")) {
-        boost::conversion::try_lexical_convert<unsigned>(
-            _opts.at("delay"), delay);
-    }
+    const auto delay = _opts.count("delay")
+        ? std::strtoul(_opts.at("delay").c_str(), nullptr, 10)
+        : 0u;
 
     for (auto& table : parse_file(_opts.at("input"))) {
         if (!simulate_table(table, _opts)) {
@@ -243,12 +238,14 @@ bool Operation<kTest>::validate() const
         }
     }
     // also check that provided delay is an unsigned integer
-    unsigned delay = 0;
-    if (!boost::conversion::try_lexical_convert<unsigned>(
-            _opts.at("delay"), delay)) {
-        std::wcerr << "delay must be an unsigned integer" << std::endl;
-        return false;
+    if (_opts.count("delay")) {
+        const auto out = std::strtoul(_opts.at("delay").c_str(), nullptr, 10);
+        if (out == 0 || out == ULONG_MAX) {
+            std::cerr << "delay must be an unsigned integer" << std::endl;
+            return false;
+        }
     }
+
     return true;
 }
 
