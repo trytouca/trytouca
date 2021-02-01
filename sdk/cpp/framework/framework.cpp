@@ -517,7 +517,7 @@ namespace weasel { namespace framework {
         long long count(const std::string& key)
         {
             const auto& dur = _tocs.at(key) - _tics.at(key);
-            return std::chrono::duration_cast<std::chrono::seconds>(dur)
+            return std::chrono::duration_cast<std::chrono::milliseconds>(dur)
                 .count();
         }
     };
@@ -843,7 +843,7 @@ namespace weasel { namespace framework {
 
             // report testcase statistics
 
-            printer.print(" ({:>3} of {:<3}) {:<32} ({}, {} sec)\n",
+            printer.print(" ({:>3} of {:<3}) {:<32} ({}, {:d} ms)\n",
                 i, suite->size(), testcase, errors.empty() ? "pass" : "fail",
                 timer.count(testcase));
             for (const auto& err : errors) {
@@ -868,7 +868,7 @@ namespace weasel { namespace framework {
                 stats.count(ExecutionOutcome::Skip), suite->size());
         }
         printer.print(
-            "\nprocessed {} of {} testcases\ntest completed in {} seconds\n\n",
+            "\nprocessed {} of {} testcases\ntest completed in {:d} ms\n\n",
             stats.count(ExecutionOutcome::Pass), suite->size(),
             timer.count("__workflow__"));
 

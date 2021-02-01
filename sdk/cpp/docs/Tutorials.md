@@ -282,17 +282,17 @@ Weasel Regression Test Framework
 Suite: is_prime
 Revision: 1.0
 
- (  1 of 8  ) 1                                (pass, 0 sec)
- (  2 of 8  ) 2                                (pass, 0 sec)
- (  3 of 8  ) 3                                (pass, 0 sec)
- (  4 of 8  ) 4                                (pass, 0 sec)
- (  5 of 8  ) 7                                (pass, 0 sec)
- (  6 of 8  ) 673                              (pass, 0 sec)
- (  7 of 8  ) 745                              (pass, 0 sec)
- (  8 of 8  ) 14747                            (pass, 0 sec)
+ (  1 of 8  ) 1                                (pass, 0 ms)
+ (  2 of 8  ) 2                                (pass, 0 ms)
+ (  3 of 8  ) 3                                (pass, 0 ms)
+ (  4 of 8  ) 4                                (pass, 0 ms)
+ (  5 of 8  ) 7                                (pass, 0 ms)
+ (  6 of 8  ) 673                              (pass, 0 ms)
+ (  7 of 8  ) 745                              (pass, 0 ms)
+ (  8 of 8  ) 14747                            (pass, 0 ms)
 
 processed 8 of 8 testcases
-test completed in 0 seconds
+test completed in 0 ms
 
 ```
 

@@ -107,7 +107,7 @@ TEST_CASE("framework-dummy-workflow")
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK_THAT(caller.cout(), Catch::Contains("1 of 1"));
         CHECK_THAT(caller.cout(), Catch::Contains("some-case"));
-        CHECK_THAT(caller.cout(), Catch::Contains("(pass, 0 sec)"));
+        CHECK_THAT(caller.cout(), Catch::Contains("(pass,"));
         CHECK_THAT(caller.cout(), Catch::Contains("processed 1 of 1 testcases"));
         CHECK(caller.cerr().empty());
     }
@@ -120,7 +120,7 @@ TEST_CASE("framework-dummy-workflow")
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK_THAT(caller.cout(), Catch::Contains("1 of 1"));
         CHECK_THAT(caller.cout(), Catch::Contains("some-case"));
-        CHECK_THAT(caller.cout(), Catch::Contains("(pass, 0 sec)"));
+        CHECK_THAT(caller.cout(), Catch::Contains("(pass,"));
         CHECK_THAT(caller.cout(), Catch::Contains("processed 1 of 1 testcases"));
         CHECK(caller.cerr().empty());
     }
@@ -149,7 +149,7 @@ TEST_CASE("framework-dummy-workflow")
         CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
         CHECK_THAT(caller.cout(), Catch::Contains("1 of 1"));
         CHECK_THAT(caller.cout(), Catch::Contains("some-case"));
-        CHECK_THAT(caller.cout(), Catch::Contains("(pass, 0 sec)"));
+        CHECK_THAT(caller.cout(), Catch::Contains("(pass,"));
         CHECK_THAT(caller.cout(), Catch::Contains("processed 1 of 1 testcases"));
         CHECK(caller.cerr().empty());
     }
@@ -173,11 +173,11 @@ TEST_CASE("framework-simple-workflow-valid-use")
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
         CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
-        CHECK_THAT(caller.cout(), Catch::Contains("(  5 of 6  ) 23                               (pass, 0 sec)"));
-        CHECK_THAT(caller.cout(), Catch::Contains("(  6 of 6  ) 42                               (fail, 0 sec)"));
+        CHECK_THAT(caller.cout(), Catch::Contains("(  5 of 6  ) 23                               (pass, 0 ms)"));
+        CHECK_THAT(caller.cout(), Catch::Contains("(  6 of 6  ) 42                               (fail, 0 ms)"));
         CHECK_THAT(caller.cout(), Catch::Contains("- some-error"));
         CHECK_THAT(caller.cout(), Catch::Contains("processed 5 of 6 testcases"));
-        CHECK_THAT(caller.cout(), Catch::Contains("test completed in 0 seconds"));
+        CHECK_THAT(caller.cout(), Catch::Contains("test completed in"));
         CHECK(caller.cerr().empty());
     }
 
@@ -191,11 +191,11 @@ TEST_CASE("framework-simple-workflow-valid-use")
         CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
         CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
         CHECK_THAT(caller.cout(), Catch::Contains("(  5 of 6  ) 23                               (skip)"));
-        CHECK_THAT(caller.cout(), Catch::Contains("(  6 of 6  ) 42                               (fail, 0 sec)"));
+        CHECK_THAT(caller.cout(), Catch::Contains("(  6 of 6  ) 42                               (fail, 0 ms)"));
         CHECK_THAT(caller.cout(), Catch::Contains("- some-error"));
         CHECK_THAT(caller.cout(), Catch::Contains("skipped 5 of 6 testcases"));
         CHECK_THAT(caller.cout(), Catch::Contains("processed 0 of 6 testcases"));
-        CHECK_THAT(caller.cout(), Catch::Contains("test completed in 0 seconds"));
+        CHECK_THAT(caller.cout(), Catch::Contains("test completed in"));
         CHECK(caller.cerr().empty());
     }
 
@@ -208,11 +208,11 @@ TEST_CASE("framework-simple-workflow-valid-use")
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
         CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
-        CHECK_THAT(caller.cout(), Catch::Contains("(  5 of 6  ) 23                               (pass, 0 sec)"));
-        CHECK_THAT(caller.cout(), Catch::Contains("(  6 of 6  ) 42                               (fail, 0 sec)"));
+        CHECK_THAT(caller.cout(), Catch::Contains("(  5 of 6  ) 23                               (pass, 0 ms)"));
+        CHECK_THAT(caller.cout(), Catch::Contains("(  6 of 6  ) 42                               (fail, 0 ms)"));
         CHECK_THAT(caller.cout(), Catch::Contains("- some-error"));
         CHECK_THAT(caller.cout(), Catch::Contains("processed 5 of 6 testcases"));
-        CHECK_THAT(caller.cout(), Catch::Contains("test completed in 0 seconds"));
+        CHECK_THAT(caller.cout(), Catch::Contains("test completed in"));
         CHECK(caller.cerr().empty());
     }
 
