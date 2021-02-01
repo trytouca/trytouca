@@ -545,6 +545,44 @@ namespace weasel { namespace framework {
     };
 
     /**
+     * @brief Notifies the platform that all test cases are executed and no
+     *        further test results will be submitted for this version.
+     *
+     * @todo Currently, sealing the test results is an opt-in feature.
+     *       Test framework should be explicltly configured to seal the
+     *       version after execution of all the test cases. In v1.3, we
+     *       would like to make this the default behavior.
+     */
+    bool seal_version(const Options& options, const LogFrontend& logger)
+    {
+        // skip if framework is configured to run offline.
+
+        if (options.count("skip-post") && options.at("skip-post") == "true") {
+            logger.log(LogLevel::Debug, "skipped sealing: test framework is configured to run offline");
+            return true;
+        }
+
+        // skip if framework is configured not to seal version.
+        // see todo item above.
+
+        if (!options.count("seal") || options.at("seal") != "true") {
+            logger.log(LogLevel::Debug, "skipped sealing: test framework is not configured to perform this operation");
+            return true;
+        }
+
+        // submit request to seal this version and await platform response
+
+        logger.log(LogLevel::Debug, "attempting to seal this version");
+        if (!weasel::seal()) {
+            logger.log(LogLevel::Error, "failed to seal this version");
+            return false;
+        }
+
+        logger.log(LogLevel::Info, "sealed this version");
+        return true;
+    }
+
+    /**
      *
      */
     int main_impl(int argc, char* argv[], Workflow& workflow)
@@ -871,6 +909,12 @@ namespace weasel { namespace framework {
             "\nprocessed {} of {} testcases\ntest completed in {:d} ms\n\n",
             stats.count(ExecutionOutcome::Pass), suite->size(),
             timer.count("__workflow__"));
+
+        // seal this version if configured to do so.
+
+        if (!seal_version(options, logger)) {
+            weasel::print_warning("failed to seal this version\n");
+        }
 
         logger.log(lg::Info, "application completed execution");
         return EXIT_SUCCESS;
