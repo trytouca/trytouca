@@ -197,6 +197,19 @@ router.post(
 )
 
 /**
+ *
+ */
+router.post(
+  '/:team/:suite/:batch/seal2',
+  middleware.isClientAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  middleware.hasSuite,
+  middleware.hasBatch,
+  promisable(ctrlBatchSeal, 'seal a batch')
+)
+
+/**
  * Promote a batch to baseline of the suite it belongs to.
  *
  * @api [post] /batch/:team/:suite/:batch/promote

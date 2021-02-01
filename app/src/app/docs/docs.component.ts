@@ -43,7 +43,7 @@ export class DocsComponent implements OnDestroy {
   readonly externalPages: { name: string; path: string }[] = [
     { name: 'C++ Client API', path: '/docs/clients/cpp/index.html' },
     { name: 'Platform API', path: '/docs/backend/index.html' },
-    { name: 'Product Roadmap', path: 'https://bit.ly/3q4EOcI' }
+    { name: 'Product Roadmap', path: 'http://bit.ly/3ap39n7' }
   ];
 
   private _subQueryParamMap: Subscription;
