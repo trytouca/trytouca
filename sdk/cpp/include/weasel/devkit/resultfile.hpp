@@ -58,14 +58,6 @@ namespace weasel {
         explicit ResultFile(const weasel::filesystem::path& path);
 
         /**
-         * string representation of the path to file on disk associated
-         * with this object.
-         *
-         * @return path to file on disk associated with this object.
-         */
-        weasel::filesystem::path path() const;
-
-        /**
          * Checks if content of the regular file on disk associated with
          * this object describes valid weasel results.
          *

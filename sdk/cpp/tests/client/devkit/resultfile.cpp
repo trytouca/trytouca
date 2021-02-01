@@ -47,7 +47,6 @@ TEST_CASE("Result File Operations")
      */
     SECTION("validate empty file")
     {
-        REQUIRE(resultFile.path() == tmpFile.path);
         REQUIRE_FALSE(resultFile.validate());
     }
 

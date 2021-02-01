@@ -23,14 +23,6 @@ namespace weasel {
     /**
      *
      */
-    weasel::filesystem::path ResultFile::path() const
-    {
-        return _path;
-    }
-
-    /**
-     *
-     */
     bool ResultFile::validate() const
     {
         // if file is already loaded, we have already validated its content
