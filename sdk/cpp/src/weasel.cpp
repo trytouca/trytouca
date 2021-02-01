@@ -224,6 +224,14 @@ namespace weasel {
     /**
      *
      */
+    bool seal()
+    {
+        return instance.seal();
+    }
+
+    /**
+     *
+     */
     scoped_timer::scoped_timer(const std::string& name)
         : _name(name)
     {

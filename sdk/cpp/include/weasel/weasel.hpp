@@ -630,6 +630,28 @@ namespace weasel {
      */
     WEASEL_CLIENT_API bool post();
 
+
+    /**
+     * @brief Notifies Weasel Platform that all test cases were executed
+     *        and no further test result is expected to be submitted.
+     *
+     * @details Expected to be called by the test tool once all test cases
+     *          are executed and all test results are posted.
+     *
+     *          Sealing the version is optional. The Platform automatically
+     *          performs this operation once a certain amount of time has
+     *          passed since the last test case was submitted. This duration
+     *          is configurable from the "Settings" tab in "Suite" Page.
+     *
+     * @return true if Weasel Platform accepts our request.
+     *
+     * @throw runtime_error if configuration parameter `api-url` is
+     *        not provided during configuration operation.
+     *
+     * @since v1.3
+     */
+    WEASEL_CLIENT_API bool seal();
+
     /**
      * @namespace weasel::compare
      *

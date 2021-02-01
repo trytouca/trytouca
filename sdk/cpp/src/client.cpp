@@ -225,6 +225,17 @@ namespace weasel {
     /**
      *
      */
+    bool ClientImpl::seal() const
+    {
+        ApiUrl apiUrl(_opts.api_root, _opts.team, _opts.suite, _opts.revision);
+        ApiConnector apiConnector(apiUrl, _opts.api_token);
+        return apiConnector.postJson(fmt::format("/batch/{}/{}/{}/seal2",
+            _opts.team, _opts.suite, _opts.revision));
+    }
+
+    /**
+     *
+     */
     bool ClientImpl::hasLastTestcase() const
     {
         // if client is not configured, report that no testcase has been
@@ -304,7 +315,7 @@ namespace weasel {
         }
         const auto& buffer = Testcase::serialize(tcs);
         std::string content((const char*)buffer.data(), buffer.size());
-        ApiUrl apiUrl { _opts.api_root, _opts.team, _opts.suite, _opts.revision };
+        ApiUrl apiUrl(_opts.api_root, _opts.team, _opts.suite, _opts.revision);
         ApiConnector apiConnector(apiUrl, _opts.api_token);
         const auto errors = apiConnector.submitResults(content, _opts.post_max_retries);
         for (const auto& err : errors) {

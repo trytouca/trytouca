@@ -224,4 +224,14 @@ namespace weasel {
         return response.code == 204;
     }
 
+    /**
+     *
+     */
+    bool ApiConnector::postJson(const std::string& route, const std::string& content) const
+    {
+        HttpClient httpClient(_apiUrl.root);
+        const auto response = httpClient.postJson(route, content, _apiToken);
+        return response.code == 204;
+    }
+
 } // namespace weasel

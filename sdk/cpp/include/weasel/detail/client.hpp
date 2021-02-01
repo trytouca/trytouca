@@ -125,6 +125,11 @@ namespace weasel {
          */
         bool post() const;
 
+        /**
+         *
+         */
+        bool seal() const;
+
     private:
         /**
          *

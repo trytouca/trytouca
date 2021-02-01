@@ -34,11 +34,12 @@ namespace weasel {
 
         Response postJson(
             const std::string& route,
-            const std::string& body);
+            const std::string& content,
+            const std::string& apiToken = "");
 
         Response patchJson(
             const std::string& route,
-            const std::string& body);
+            const std::string& content);
 
         Response postBinary(
             const std::string& route,
@@ -59,7 +60,7 @@ namespace weasel {
         HttpClient::Response jsonImpl(
             const Method method,
             const std::string& route,
-            const std::string& body);
+            const std::string& content);
     };
 
 } // namespace weasel

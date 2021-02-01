@@ -55,7 +55,7 @@ namespace weasel {
     HttpClient::Response HttpClient::jsonImpl(
         const Method method,
         const std::string& route,
-        const std::string& body)
+        const std::string& content)
     {
         HttpClient::Response response;
         _headers = curl_slist_append(_headers, "Accept: application/json");
@@ -78,11 +78,11 @@ namespace weasel {
             curl_easy_setopt(_curl, CURLOPT_HTTPGET, 1);
             break;
         case Method::Post:
-            curl_easy_setopt(_curl, CURLOPT_POSTFIELDS, body.c_str());
+            curl_easy_setopt(_curl, CURLOPT_POSTFIELDS, content.c_str());
             curl_easy_setopt(_curl, CURLOPT_POSTFIELDSIZE, -1L);
             break;
         case Method::Patch:
-            curl_easy_setopt(_curl, CURLOPT_POSTFIELDS, body.c_str());
+            curl_easy_setopt(_curl, CURLOPT_POSTFIELDS, content.c_str());
             curl_easy_setopt(_curl, CURLOPT_POSTFIELDSIZE, -1L);
             curl_easy_setopt(_curl, CURLOPT_CUSTOMREQUEST, "PATCH");
             break;
@@ -122,9 +122,13 @@ namespace weasel {
      */
     HttpClient::Response HttpClient::postJson(
         const std::string& route,
-        const std::string& body)
+        const std::string& content,
+        const std::string& apiToken)
     {
-        return jsonImpl(Method::Post, route, body);
+        if (!apiToken.empty()) {
+            _headers = curl_slist_append(_headers, fmt::format("Authorization: Bearer {}", apiToken).c_str());
+        }
+        return jsonImpl(Method::Post, route, content);
     }
 
     /**
@@ -132,11 +136,14 @@ namespace weasel {
      */
     HttpClient::Response HttpClient::patchJson(
         const std::string& route,
-        const std::string& body)
+        const std::string& content)
     {
-        return jsonImpl(Method::Patch, route, body);
+        return jsonImpl(Method::Patch, route, content);
     }
 
+    /**
+     *
+     */
     HttpClient::Response HttpClient::postBinary(
         const std::string& route,
         const std::string& content,

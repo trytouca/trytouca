@@ -100,6 +100,11 @@ namespace weasel {
          */
         bool patchJson(const std::string& route, const std::string& body) const;
 
+        /**
+         *
+         */
+        bool postJson(const std::string& route, const std::string& content = "") const;
+
     private:
         const ApiUrl _apiUrl;
         const std::string _apiToken;
