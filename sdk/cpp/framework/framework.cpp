@@ -217,13 +217,16 @@ namespace weasel { namespace framework {
             }
             for (const auto& rjMember : document[topLevelKey].GetObject()) {
                 const auto& key = rjMember.name.GetString();
+                if (rjMember.value.IsBool()) {
+                    options[key] = rjMember.value.GetBool() ? "true" : "false";
+                    continue;
+                }
                 if (!rjMember.value.IsString()) {
                     weasel::print_warning("Ignoring option \"{}\":\"{}\" in configuration file.\n");
                     weasel::print_warning("Expected value to be of type string.\n", topLevelKey, key);
                     continue;
                 }
-                const auto& value = rjMember.value.GetString();
-                options[key] = value;
+                options[key] = rjMember.value.GetString();
             }
         }
 

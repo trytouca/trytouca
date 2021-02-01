@@ -2,8 +2,8 @@
   "framework": {
     "log-level": "info",
     "output-dir": "./local/example-advanced-output",
-    "save-as-binary": "true",
-    "save-as-json": "true"
+    "save-as-binary": true,
+    "save-as-json": true
   },
   "weasel": {
     "api-key": "<YOUR API KEY>",
