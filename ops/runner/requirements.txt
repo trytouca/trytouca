@@ -1,0 +1,5 @@
+jsonschema
+loguru
+pylint
+pytest
+requests
