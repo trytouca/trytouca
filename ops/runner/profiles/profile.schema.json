@@ -18,7 +18,7 @@
               "repo": { "type": "string" },
               "group": { "type": "string" },
               "name": { "type": "string" },
-              "version-prefix": { "type": "string" }
+              "version-filter": { "type": "string" }
           }
       },
       "execution": {

@@ -8,6 +8,7 @@ import os
 import sys
 from jsonschema import validate, Draft3Validator, ValidationError
 from loguru import logger
+import requests
 
 def merge_dict(source: dict, destination: dict):
     for key, value in source.items():
@@ -82,6 +83,17 @@ def profile_validate(config: dict) -> list:
             ".".join(list(error.relative_path)), error.message)
     return not errors
 
+def find_artifact_version(config: dict) -> str:
+    cfg = config["artifactory"]
+    fmt = "{base_url}/api/search/latestVersion?g={group}&a={name}&repos={repo}"
+    query_url = fmt.format(
+        base_url=cfg["base-url"], group=cfg["group"],
+        name=cfg["name"], repo=cfg["repo"])
+    if "version-filter" in cfg:
+        query_url += "&v=" + cfg["version-filter"]
+    logger.debug("finding latest version: {}", query_url)
+    return requests.get(query_url).text
+
 @logger.catch
 def main():
 
@@ -98,6 +110,11 @@ def main():
         format="<green>{time:HH:mm:ss!UTC}</green> | <cyan>{level: <7}</cyan> | <lvl>{message}</lvl>")
     logger.add("logs/runner_{time:YYMMDD!UTC}.log", level="DEBUG", rotation="1 day", compression="zip")
 
+    # parse profile_name
+
+    profile_name = os.path.splitext(os.path.basename(os.path.abspath(args_app.profile)))[0]
+    logger.debug("running profile: {}", profile_name)
+
     # check that profile is a valid json file
 
     config = profile_parse(os.path.abspath(args_app.profile))
@@ -111,18 +128,25 @@ def main():
         logger.error("failed to validate test profile")
         return False
 
+    # find version of the test artifact
+
+    artifact_version = find_artifact_version(config)
+    if not artifact_version:
+        logger.error("failed to find artifact version")
+        return False
+
     # check if version is already executed
 
-    archive_dir = make_absolute_path(config["execution"]["archive-dir"], args_app.profile)
-    print(archive_dir)
+    archive_root = make_absolute_path(config["execution"]["archive-dir"], args_app.profile)
+    if os.path.exists(os.path.join(archive_root, profile_name, artifact_version)):
+        logger.info("version {} of profile {} is already executed", artifact_version, profile_name)
+        return True
 
-    # find the test version
+    # download the test artifact
 
-    # download the artifact
+    # install the test artifact
 
-    # install the artifact
-
-    # run the test
+    # run the test on a separate thread
 
     # archive the test results
 
