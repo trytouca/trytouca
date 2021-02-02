@@ -38,30 +38,29 @@ int main(int argc, char* argv[])
         return EXIT_FAILURE;
     }
 
-    //
+    // initialize resources
 
     Resources resources;
     std::vector<std::thread> workers;
 
-    //
+    // launch a thread dedicated to polling the platform for jobs and
+    // populating the queue.
 
     workers.push_back(std::thread(collector, options, std::ref(resources)));
 
-    //
+    // launch worker threads dedicated to taking jobs from the queue and
+    // processing them.
 
     for (unsigned i = 0u; i < options.processor_threads; i++) {
         workers.push_back(std::thread(processor, options, std::ref(resources)));
     }
 
-    //
+    // launch a separate thread to periodically generate a status report
 
     workers.push_back(std::thread(reporter, options, std::ref(resources)));
 
-    //
+    // block the main thread to keep other threads continuously working
 
     std::for_each(workers.begin(), workers.end(), [](auto& t) { t.join(); });
-
-    //
-
     return EXIT_SUCCESS;
 }

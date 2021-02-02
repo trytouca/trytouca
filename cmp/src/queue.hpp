@@ -44,13 +44,9 @@ namespace weasel {
          */
         void push_item(std::unique_ptr<Task> item)
         {
-            std::unique_lock<std::mutex> lock(_mutex);
-            const auto wasEmpty = _queue.empty();
+            std::lock_guard<std::mutex> lock(_mutex);
             _queue.push(std::move(item));
-            lock.unlock();
-            if (wasEmpty) {
-                _cv.notify_all();
-            }
+            _cv.notify_one();
         }
 
         /**
@@ -63,25 +59,10 @@ namespace weasel {
         std::unique_ptr<Task> pop_item()
         {
             std::unique_lock<std::mutex> lock(_mutex);
-            while (_queue.empty()) {
-                _cv.wait(lock);
-            }
+            _cv.wait(lock, [&]{ return !_queue.empty(); });
             auto item = std::move(_queue.front());
             _queue.pop();
             return item;
-        }
-
-        /**
-         * @brief Attempts to safely check if queue is empty.
-         *
-         * @details Intended for use by consumer threads.
-         *
-         * @return false if queue is empty.
-         */
-        bool has_item()
-        {
-            std::unique_lock<std::mutex> lock(_mutex);
-            return !_queue.empty();
         }
     };
 
