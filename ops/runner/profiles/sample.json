@@ -1,0 +1,8 @@
+{
+  "extends": "./templates/coyote.template.json",
+  "execution": {
+    "executable": "RegressionTest_Sample.exe",
+    "config": "sample.config.json",
+    "suite": "sample"
+  }
+}
