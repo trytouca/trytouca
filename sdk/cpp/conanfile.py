@@ -42,19 +42,16 @@ class WeaselConan(ConanFile):
         self.requires.add("ghc-filesystem/1.4.0")
         self.requires.add("rapidjson/1.1.0")
         self.requires.add("spdlog/1.8.2")
-        if not self.options.shared:
-            self.requires.add("libcurl/7.74.0")
         if self.options.with_examples or self.options.with_framework or self.options.with_utils:
             self.requires.add("cxxopts/2.2.1")
 
     def build_requirements(self):
         self.build_requires("flatc/1.12.0")
-        if self.options.shared:
-            self.build_requires("libcurl/7.74.0")
         if self.options.with_tests:
             self.build_requires("catch2/2.13.3")
 
     def configure(self):
+        self.options["fmt"].header_only = True
         self.options["spdlog"].header_only = True
 
     def _configure_cmake(self):
@@ -87,8 +84,6 @@ class WeaselConan(ConanFile):
             "rapidjson::rapidjson",
             "spdlog::spdlog"
         ]
-        if not self.options.shared:
-            client_requirements.append("libcurl::libcurl")
         if self.options.with_examples or self.options.with_framework or self.options.with_utils:
             client_requirements.append("cxxopts::cxxopts")
         self.cpp_info.name = "weasel"

@@ -5,7 +5,6 @@
 #include "weasel/devkit/httpclient.hpp"
 #include "fmt/core.h"
 #include "httplib.h"
-// #include <stdexcept>
 
 namespace weasel {
 

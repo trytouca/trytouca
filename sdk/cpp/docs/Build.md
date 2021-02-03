@@ -80,12 +80,12 @@ Weasel Client Library for C++ has the following dependencies:
 | Dependency     | Version |
 |----------------|---------|
 | catch2         | 2.13.3  |
+| cpp-httplib    | 0.8.0   |
 | cxxopts        | 2.2.1   |
 | flatbuffers    | 1.12.0  |
 | flatc          | 1.12.0  |
 | fmt            | 7.1.3   |
 | ghc-filesystem | 1.4.0   |
-| libcurl        | 7.74.0  |
 | rapidjson      | 1.1.0   |
 | spdlog         | 1.8.2   |
 

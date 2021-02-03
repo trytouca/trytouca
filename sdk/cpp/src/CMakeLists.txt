@@ -10,7 +10,6 @@ weasel_find_package("Flatbuffers")
 weasel_find_package("flatc")
 weasel_find_package("ghcFilesystem")
 weasel_find_package("httplib")
-weasel_find_package("CURL")
 weasel_find_package("RapidJSON")
 weasel_find_package("spdlog")
 
@@ -66,7 +65,6 @@ target_sources(
 target_link_libraries(
         weasel_client
     PRIVATE
-        CURL::CURL
         httplib::httplib
         spdlog::spdlog
     PUBLIC
