@@ -117,12 +117,11 @@ bool weasel::ClientOptions::parse(const OptionsMap& opts)
         { "api-url", api_url }
     };
 
-    // if `api-url` is given in long format, parse `team` and `suite`
-    // from its path.
+    // if `api-url` is given in long format, parse `team`, `suite`, and
+    // `version` from its path.
 
     if (!api_url.empty()) {
         const ApiUrl apiUrl(api_url);
-        api_root = apiUrl.root;
         for (const auto& param : { "team", "suite", "version" }) {
             if (!apiUrl.slugs.count(param) || apiUrl.slugs.at(param).empty()) {
                 continue;
@@ -156,20 +155,6 @@ bool weasel::ClientOptions::parse(const OptionsMap& opts)
         if (params.at(param).empty()) {
             return error("required configuration parameter \"{}\" is missing", param);
         }
-    }
-
-    // perform authentication to Weasel Platform using the provided
-    // API key and obtain API token for posting results.
-
-    weasel::ApiConnector apiConnector({ api_root, team, suite, revision });
-    try {
-        api_token = apiConnector.authenticate(api_key);
-    } catch (const std::exception& ex) {
-        return error("failed to authenticate to the weasel platform: {}", ex.what());
-    }
-
-    if (api_token.empty()) {
-        return error("failed to receive authentication token");
     }
 
     return true;

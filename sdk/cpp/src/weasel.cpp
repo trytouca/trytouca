@@ -4,7 +4,6 @@
 
 #include "weasel/weasel.hpp"
 #include "weasel/detail/client.hpp"
-#include "weasel/devkit/httpclient.hpp"
 #include "weasel/devkit/utils.hpp"
 
 namespace weasel {

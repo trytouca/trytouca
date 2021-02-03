@@ -5,6 +5,7 @@
 #pragma once
 
 #include "weasel/devkit/options.hpp"
+#include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/testcase.hpp"
 #include "weasel/extra/logger.hpp"
 #include <thread>
@@ -172,10 +173,16 @@ namespace weasel {
             const weasel::logger::Level severity,
             const std::string& msg) const;
 
-        ClientOptions _opts;
+        /**
+         *
+         */
+        bool check_handshake();
+
         bool _configured = false;
+        ClientOptions _opts;
         ElementsMap _testcases;
         std::string _mostRecentTestcase;
+        std::unique_ptr<PlatformV2> _platform;
         std::unordered_map<std::thread::id, std::string> _threadMap;
         std::vector<std::shared_ptr<weasel::logger>> _loggers;
     };

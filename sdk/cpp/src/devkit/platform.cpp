@@ -3,9 +3,8 @@
  */
 
 #include "weasel/devkit/platform.hpp"
+#include "httplib.h"
 #include "rapidjson/document.h"
-
-#include "weasel/devkit/httpclient.hpp"
 #include "weasel/devkit/utils.hpp"
 #include <sstream>
 
@@ -14,19 +13,19 @@ namespace weasel {
     /**
      *
      */
-    ApiUrl::ApiUrl(const std::string& apiUrl)
+    ApiUrl::ApiUrl(const std::string& api_url)
     {
-        root = apiUrl.substr(0, apiUrl.find_last_of('@'));
+        root = api_url.substr(0, api_url.find_last_of('@'));
         if (root.back() == '/') {
             root.pop_back();
         }
-        if (std::string::npos == apiUrl.find_last_of('@')) {
+        if (std::string::npos == api_url.find_last_of('@')) {
             slugs.emplace("team", "");
             slugs.emplace("suite", "");
             slugs.emplace("version", "");
             return;
         }
-        std::istringstream iss(apiUrl.substr(apiUrl.find_last_of('@') + 1));
+        std::istringstream iss(api_url.substr(api_url.find_last_of('@') + 1));
         std::vector<std::string> items;
         std::string item;
         while (std::getline(iss, item, '/')) {
@@ -45,26 +44,101 @@ namespace weasel {
     /**
      *
      */
-    ApiUrl::ApiUrl(
-        const std::string& apiRoot,
-        const std::string& team,
-        const std::string& suite,
-        const std::string& version)
-        : root(apiRoot)
+    HttpV2::HttpV2(const std::string& root)
+        : _root(root)
     {
-        slugs.emplace("team", team);
-        slugs.emplace("suite", suite);
-        slugs.emplace("version", version);
     }
 
     /**
      *
      */
-    ApiConnector::ApiConnector(
-        const ApiUrl& apiUrl,
-        const std::string& apiToken)
-        : _apiUrl(apiUrl)
-        , _apiToken(apiToken)
+    void HttpV2::set_token(const std::string& token)
+    {
+        _token = token;
+    }
+
+    /**
+     *
+     */
+    ResponseV2 HttpV2::get(const std::string& route) const
+    {
+        httplib::Client cli(_root.c_str());
+        if (!_token.empty()) {
+            cli.set_bearer_token_auth(_token.c_str());
+        }
+        httplib::Headers headers = {
+            { "Accept-Charset", "utf-8" },
+            { "Accept", "application/json" },
+            { "User-Agent", "weasel-client-cpp/1.2.1" }
+        };
+        const auto result = cli.Get(route.c_str(), headers);
+        return { result.value().status, result.value().body };
+    }
+
+    /**
+     *
+     */
+    ResponseV2 HttpV2::patch(const std::string& route, const std::string& body) const
+    {
+        httplib::Client cli(_root.c_str());
+        if (!_token.empty()) {
+            cli.set_bearer_token_auth(_token.c_str());
+        }
+        httplib::Headers headers = {
+            { "Accept-Charset", "utf-8" },
+            { "Accept", "application/json" },
+            { "User-Agent", "weasel-client-cpp/1.2.1" }
+        };
+        const auto result = cli.Patch(route.c_str(), headers, body, "application/json");
+        return { result.value().status, result.value().body };
+    }
+
+    /**
+     *
+     */
+    ResponseV2 HttpV2::post(const std::string& route, const std::string& body) const
+    {
+        httplib::Client cli(_root.c_str());
+        if (!_token.empty()) {
+            cli.set_bearer_token_auth(_token.c_str());
+        }
+        httplib::Headers headers = {
+            { "Accept-Charset", "utf-8" },
+            { "Accept", "application/json" },
+            { "User-Agent", "weasel-client-cpp/1.2.1" }
+        };
+        const auto result = cli.Post(route.c_str(), headers, body, "application/json");
+        return { result.value().status, result.value().body };
+    }
+
+    /**
+     *
+     */
+    ResponseV2 HttpV2::binary(const std::string& route, const std::string& content) const
+    {
+        httplib::Client cli(_root.c_str());
+        if (!_token.empty()) {
+            cli.set_bearer_token_auth(_token.c_str());
+        }
+        httplib::Headers headers = {
+            { "Accept-Charset", "utf-8" },
+            { "Accept", "application/json" },
+            { "User-Agent", "weasel-client-cpp/1.2.1" }
+        };
+        const auto result = cli.Post(route.c_str(), headers, content, "application/octet-stream");
+        return { result.value().status, result.value().body };
+    }
+
+    /**
+     *
+     */
+    PlatformV2::PlatformV2(
+        const std::string& root, const std::string& team,
+        const std::string& suite, const std::string& revision)
+        : _http(root)
+        , _team(team)
+        , _suite(suite)
+        , _revision(revision)
     {
     }
 
@@ -79,13 +153,12 @@ namespace weasel {
      * resurrect the log events and hence choose to keep the implementation
      * verbose.
      */
-    bool ApiConnector::handshake() const
+    bool PlatformV2::handshake() const
     {
-        HttpClient httpClient(_apiUrl.root);
         rapidjson::Document doc;
 
         // performing handshake with Weasel Platform
-        const auto response = httpClient.getJson("/platform");
+        const auto response = _http.get("/platform");
 
         if (response.status == -1) {
             // Weasel Platform appears to be down
@@ -120,13 +193,11 @@ namespace weasel {
      * Submit authentication request. If Platform accepts this request, parse
      * the response to extract the API Token issued by Weasel Platform.
      */
-    std::string ApiConnector::authenticate(const std::string& apiKey) const
+    bool PlatformV2::auth(const std::string& apiKey)
     {
-        HttpClient httpClient(_apiUrl.root);
         rapidjson::Document doc;
-
         const auto content = weasel::format("{{\"key\": \"{}\"}}", apiKey);
-        const auto response = httpClient.postJson("/client/signin", content);
+        const auto response = _http.post("/client/signin", content);
 
         // check status of response from Weasel Platform
 
@@ -146,19 +217,18 @@ namespace weasel {
             throw std::runtime_error("platform response malformed");
         }
 
-        return doc["token"].GetString();
+        _http.set_token(doc["token"].GetString());
+        _is_auth = true;
+        return true;
     }
 
     /**
      *
      */
-    std::vector<std::string> ApiConnector::getElements() const
+    std::vector<std::string> PlatformV2::elements() const
     {
-        HttpClient httpClient(_apiUrl.root);
-        rapidjson::Document doc;
-
-        const auto& path = weasel::format("/element/{}/{}", _apiUrl.slugs.at("team"), _apiUrl.slugs.at("suite"));
-        const auto response = httpClient.getJson(path, _apiToken);
+        const auto& route = weasel::format("/element/{}/{}", _team, _suite);
+        const auto response = _http.get(route);
 
         // check status of response from Weasel Platform
 
@@ -168,6 +238,7 @@ namespace weasel {
 
         // parse response from Weasel Platform
 
+        rapidjson::Document doc;
         if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
             throw std::runtime_error("failed to parse platform response");
         }
@@ -184,21 +255,20 @@ namespace weasel {
     /**
      *
      */
-    std::vector<std::string> ApiConnector::submitResults(
+    std::vector<std::string> PlatformV2::submit(
         const std::string& content,
-        const unsigned int maxRetries) const
+        const unsigned max_retries) const
     {
         std::vector<std::string> errors;
-        for (auto i = 0ul; i < maxRetries; ++i) {
-            HttpClient httpClient(_apiUrl.root);
-            const auto response = httpClient.postBinary("/client/submit", content, _apiToken);
+        for (auto i = 0ul; i < max_retries; ++i) {
+            const auto response = _http.binary("/client/submit", content);
             if (response.status == 204) {
                 return {};
             }
             errors.emplace_back(weasel::format(
                 "failed to post testresults for a group of testcases ({}/{})",
                 i + 1,
-                maxRetries));
+                max_retries));
         }
         errors.emplace_back("giving up on submitting testresults");
         return errors;
@@ -207,31 +277,20 @@ namespace weasel {
     /**
      *
      */
-    std::string ApiConnector::getJson(const std::string& route) const
+    bool PlatformV2::seal() const
     {
-        HttpClient httpClient(_apiUrl.root);
-        const auto response = httpClient.getJson(route);
-        return response.body;
-    }
-
-    /**
-     *
-     */
-    bool ApiConnector::patchJson(const std::string& route, const std::string& body) const
-    {
-        HttpClient httpClient(_apiUrl.root);
-        const auto response = httpClient.patchJson(route, body);
+        const auto route = fmt::format("/batch/{}/{}/{}/seal2",
+            _team, _suite, _revision);
+        const auto response = _http.post(route);
         return response.status == 204;
     }
 
     /**
      *
      */
-    bool ApiConnector::postJson(const std::string& route, const std::string& content) const
+    std::string PlatformV2::get_error() const
     {
-        HttpClient httpClient(_apiUrl.root);
-        const auto response = httpClient.postJson(route, content, _apiToken);
-        return response.status == 204;
+        return _error;
     }
 
 } // namespace weasel

@@ -20,7 +20,7 @@ namespace weasel {
      */
     void ClientImpl::configure(const ClientImpl::OptionsMap& opts)
     {
-        _configured = _opts.parse(opts);
+        _configured = _opts.parse(opts) && check_handshake();
     }
 
     /**
@@ -28,7 +28,7 @@ namespace weasel {
      */
     void ClientImpl::configure_by_file(const weasel::filesystem::path& path)
     {
-        _configured = _opts.parse_file(path);
+        _configured = _opts.parse_file(path) && check_handshake();
     }
 
     /**
@@ -183,10 +183,15 @@ namespace weasel {
      */
     bool ClientImpl::post() const
     {
-        // we will not post data if client is not configured to do so.
+        // check that client is configured to submit test results
 
-        if (_opts.api_key.empty() || _opts.api_url.empty()) {
-            throw std::runtime_error("weasel client is not configured to post testresults");
+        if (!_platform) {
+            notify_loggers(logger::Level::Error, "client is not configured to contact weasel platform");
+            return false;
+        }
+        if (!_platform->has_token()) {
+            notify_loggers(logger::Level::Error, "client is not authenticated to the weasel platform");
+            return false;
         }
 
         auto ret = true;
@@ -227,10 +232,19 @@ namespace weasel {
      */
     bool ClientImpl::seal() const
     {
-        ApiUrl apiUrl(_opts.api_root, _opts.team, _opts.suite, _opts.revision);
-        ApiConnector apiConnector(apiUrl, _opts.api_token);
-        return apiConnector.postJson(fmt::format("/batch/{}/{}/{}/seal2",
-            _opts.team, _opts.suite, _opts.revision));
+        if (!_platform) {
+            notify_loggers(logger::Level::Error, "client is not configured to contact weasel platform");
+            return false;
+        }
+        if (!_platform->has_token()) {
+            notify_loggers(logger::Level::Error, "client is not authenticated to the weasel platform");
+            return false;
+        }
+        if (!_platform->seal()) {
+            notify_loggers(logger::Level::Warning, _platform->get_error());
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -315,9 +329,7 @@ namespace weasel {
         }
         const auto& buffer = Testcase::serialize(tcs);
         std::string content((const char*)buffer.data(), buffer.size());
-        ApiUrl apiUrl(_opts.api_root, _opts.team, _opts.suite, _opts.revision);
-        ApiConnector apiConnector(apiUrl, _opts.api_token);
-        const auto errors = apiConnector.submitResults(content, _opts.post_max_retries);
+        const auto& errors = _platform->submit(content, _opts.post_max_retries);
         for (const auto& err : errors) {
             notify_loggers(logger::Level::Warning, err);
         }
@@ -372,6 +384,22 @@ namespace weasel {
     {
         for (const auto& logger : _loggers) {
             logger->log(severity, msg);
+        }
+    }
+
+    /**
+     * perform authentication to Weasel Platform using the provided
+     * API key and obtain API token for posting results.
+     */
+    bool ClientImpl::check_handshake()
+    {
+        _platform = std::unique_ptr<PlatformV2>(new PlatformV2(
+            _opts.api_root, _opts.team, _opts.suite, _opts.revision));
+        try {
+            return _platform->auth(_opts.api_key);
+        } catch (const std::exception& ex) {
+            _opts.parse_error = fmt::format("failed to authenticate to the weasel platform: {}", ex.what());
+            return false;
         }
     }
 

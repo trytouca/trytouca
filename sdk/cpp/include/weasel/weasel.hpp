@@ -630,7 +630,6 @@ namespace weasel {
      */
     WEASEL_CLIENT_API bool post();
 
-
     /**
      * @brief Notifies Weasel Platform that all test cases were executed
      *        and no further test result is expected to be submitted.
