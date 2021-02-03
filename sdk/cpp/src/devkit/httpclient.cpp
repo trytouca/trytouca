@@ -72,6 +72,7 @@ namespace weasel {
         curl_easy_setopt(_curl, CURLOPT_FOLLOWLOCATION, 1L);
         curl_easy_setopt(_curl, CURLOPT_WRITEFUNCTION, callbackFunction);
         curl_easy_setopt(_curl, CURLOPT_WRITEDATA, &response.body);
+        curl_easy_setopt(_curl, CURLOPT_NOSIGNAL, 1);
 
         switch (method) {
         case Method::Get:
