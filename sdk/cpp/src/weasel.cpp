@@ -10,7 +10,6 @@
 namespace weasel {
 
     static ClientImpl instance;
-    static GlobalHttp globalHttp;
 
     /**
      *

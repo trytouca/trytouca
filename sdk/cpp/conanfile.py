@@ -31,11 +31,12 @@ class WeaselConan(ConanFile):
     }
     generators = "cmake_find_package"
     exports_sources = [
-        "CMakeLists.txt", "config/weasel.fbs",
-        "include/**", "src/**", "framework/**", "tests/**", "utils/**"
+        "CMakeLists.txt", "config/weasel.fbs", "include/**", "src/**",
+        "framework/**", "tests/**", "utils/**"
     ]
 
     def requirements(self):
+        self.requires.add("cpp-httplib/0.8.0")
         self.requires.add("flatbuffers/1.12.0")
         self.requires.add("fmt/7.1.2")
         self.requires.add("ghc-filesystem/1.4.0")
@@ -79,6 +80,7 @@ class WeaselConan(ConanFile):
 
     def package_info(self):
         client_requirements = [
+            "cpp-httplib::cpp-httplib",
             "fmt::fmt",
             "flatbuffers::flatbuffers",
             "ghc-filesystem::ghc-filesystem",
