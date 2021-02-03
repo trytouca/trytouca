@@ -33,10 +33,7 @@ namespace weasel {
             headers.emplace("Authorization", fmt::format("Bearer {}", apiToken));
         }
         const auto result = cli.Get(route.c_str(), headers);
-        HttpClient::Response response;
-        response.body = result.value().body;
-        response.code = result.value().status;
-        return response;
+        return { result.value().status, result.value().body };
     }
 
     /**
@@ -57,10 +54,7 @@ namespace weasel {
             headers.emplace("Authorization", fmt::format("Bearer {}", apiToken));
         }
         const auto result = cli.Post(route.c_str(), headers, content, "application/json");
-        HttpClient::Response response;
-        response.body = result.value().body;
-        response.code = result.value().status;
-        return response;
+        return { result.value().status, result.value().body };
     }
 
     /**
@@ -81,10 +75,7 @@ namespace weasel {
             headers.emplace("Authorization", fmt::format("Bearer {}", apiToken));
         }
         const auto result = cli.Patch(route.c_str(), headers, content, "application/json");
-        HttpClient::Response response;
-        response.body = result.value().body;
-        response.code = result.value().status;
-        return response;
+        return { result.value().status, result.value().body };
     }
 
     /**
@@ -105,10 +96,7 @@ namespace weasel {
             headers.emplace("Authorization", fmt::format("Bearer {}", apiToken));
         }
         const auto result = cli.Post(route.c_str(), headers, content, "application/octet-stream");
-        HttpClient::Response response;
-        response.body = result.value().body;
-        response.code = result.value().status;
-        return response;
+        return { result.value().status, result.value().body };
     }
 
 } // namespace weasel

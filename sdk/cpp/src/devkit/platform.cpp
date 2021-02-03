@@ -87,12 +87,12 @@ namespace weasel {
         // performing handshake with Weasel Platform
         const auto response = httpClient.getJson("/platform");
 
-        if (response.code == -1) {
+        if (response.status == -1) {
             // Weasel Platform appears to be down
             return false;
         }
 
-        if (response.code != 200) {
+        if (response.status != 200) {
             // response from Weasel Platform is unexpected
             return false;
         }
@@ -130,8 +130,8 @@ namespace weasel {
 
         // check status of response from Weasel Platform
 
-        if (response.code != 200) {
-            throw std::runtime_error(weasel::format("platform authentication failed: {}", response.code));
+        if (response.status != 200) {
+            throw std::runtime_error(weasel::format("platform authentication failed: {}", response.status));
         }
 
         // Parse response from Weasel Platform
@@ -162,7 +162,7 @@ namespace weasel {
 
         // check status of response from Weasel Platform
 
-        if (response.code != 200) {
+        if (response.status != 200) {
             throw std::runtime_error("received unexpected platform response");
         }
 
@@ -192,7 +192,7 @@ namespace weasel {
         for (auto i = 0ul; i < maxRetries; ++i) {
             HttpClient httpClient(_apiUrl.root);
             const auto response = httpClient.postBinary("/client/submit", content, _apiToken);
-            if (response.code == 204) {
+            if (response.status == 204) {
                 return {};
             }
             errors.emplace_back(weasel::format(
@@ -221,7 +221,7 @@ namespace weasel {
     {
         HttpClient httpClient(_apiUrl.root);
         const auto response = httpClient.patchJson(route, body);
-        return response.code == 204;
+        return response.status == 204;
     }
 
     /**
@@ -231,7 +231,7 @@ namespace weasel {
     {
         HttpClient httpClient(_apiUrl.root);
         const auto response = httpClient.postJson(route, content, _apiToken);
-        return response.code == 204;
+        return response.status == 204;
     }
 
 } // namespace weasel

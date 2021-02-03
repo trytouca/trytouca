@@ -11,7 +11,8 @@ namespace weasel {
     class HttpClient {
     public:
         struct Response {
-            int code = -1;
+            Response(const int status, const std::string& body) : status(status), body(body) {};
+            int status = -1;
             std::string body;
         };
 
