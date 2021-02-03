@@ -1,8 +1,5 @@
 # ---- frontend (production version) ----
 
-# reciprocate any change to this build stage to frontend_dev_builder
-# in test.frontend.Dockerfile.
-
 FROM node:15-alpine as frontend_builder
 
 RUN apk add --no-cache bash
