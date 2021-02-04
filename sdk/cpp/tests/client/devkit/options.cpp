@@ -2,27 +2,28 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/options.hpp"
+#include "weasel/detail/client.hpp"
 #include "catch2/catch.hpp"
 #include "tmpfile.hpp"
 
 TEST_CASE("configure")
 {
-    weasel::ClientOptions opts;
+    weasel::ClientImpl client;
+    const auto& opts = client.options();
     std::unordered_map<std::string, std::string> input;
 
     SECTION("empty")
     {
-        REQUIRE_NOTHROW(opts.parse(input));
-        CHECK(opts.parse(input) == false);
+        REQUIRE_NOTHROW(client.configure(input));
+        CHECK(client.configure(input) == false);
         REQUIRE(opts.parse_error.empty() == false);
         CHECK_THAT(opts.parse_error, Catch::Contains("team"));
     }
     SECTION("api-key")
     {
         input.emplace("api-key", "some-api-key");
-        REQUIRE_NOTHROW(opts.parse(input));
-        CHECK(opts.parse(input) == false);
+        REQUIRE_NOTHROW(client.configure(input));
+        CHECK(client.configure(input) == false);
         REQUIRE(opts.parse_error.empty() == false);
         CHECK_THAT(opts.parse_error, Catch::Contains("team"));
         CHECK(opts.api_key == "some-api-key");
@@ -37,8 +38,8 @@ TEST_CASE("configure")
             { "api-url", "some-api-url" },
             { "handshake", "false" }
         };
-        REQUIRE_NOTHROW(opts.parse(input));
-        CHECK(opts.parse(input) == true);
+        REQUIRE_NOTHROW(client.configure(input));
+        CHECK(client.configure(input) == true);
         REQUIRE(opts.parse_error.empty() == true);
         CHECK(opts.team == "some-team");
         CHECK(opts.suite == "some-suite");
@@ -50,21 +51,21 @@ TEST_CASE("configure")
     SECTION("multiple-calls")
     {
         input.emplace("team", "some-team");
-        REQUIRE_NOTHROW(opts.parse(input));
-        CHECK(opts.parse(input) == false);
+        REQUIRE_NOTHROW(client.configure(input));
+        CHECK(client.configure(input) == false);
         REQUIRE(opts.parse_error.empty() == false);
         CHECK_THAT(opts.parse_error, Catch::Contains("suite"));
         CHECK(opts.team == "some-team");
         input.emplace("suite", "some-suite");
         input.emplace("version", "some-version");
-        CHECK(opts.parse(input) == false);
+        CHECK(client.configure(input) == false);
         REQUIRE(opts.parse_error.empty() == false);
         CHECK_THAT(opts.parse_error, Catch::Contains("api-key"));
         CHECK(opts.team == "some-team");
         CHECK(opts.suite == "some-suite");
         CHECK(opts.revision == "some-version");
         input.emplace("handshake", "false");
-        CHECK(opts.parse(input) == true);
+        CHECK(client.configure(input) == true);
         CHECK(opts.handshake == false);
         CHECK(opts.parse_error.empty() == true);
     }
@@ -73,7 +74,7 @@ TEST_CASE("configure")
         input.emplace("api-url", "https://api.example.com/@/some-team/some-suite/some-version");
         input.emplace("api-key", "some-api-key");
         input.emplace("handshake", "false");
-        CHECK(opts.parse(input) == true);
+        CHECK(client.configure(input) == true);
         CHECK(opts.parse_error.empty() == true);
         CHECK(opts.parse_error == "");
         CHECK(opts.team == "some-team");
@@ -83,7 +84,7 @@ TEST_CASE("configure")
     SECTION("missing-api-key")
     {
         input.emplace("api-url", "https://api.example.com/@/some-team/some-suite/some-version");
-        CHECK(opts.parse(input) == false);
+        CHECK(client.configure(input) == false);
         CHECK(opts.parse_error.empty() == false);
         CHECK_THAT(opts.parse_error, Catch::Contains("api-key"));
         CHECK(opts.team == "some-team");
@@ -94,7 +95,7 @@ TEST_CASE("configure")
     {
         input.emplace("api-url", "https://api.example.com/@/some-team/some-suite/some-version");
         input.emplace("handshake", "false");
-        CHECK(opts.parse(input) == true);
+        CHECK(client.configure(input) == true);
         CHECK(opts.parse_error.empty() == true);
         CHECK(opts.case_declaration == weasel::ConcurrencyMode::AllThreads);
         CHECK(opts.post_max_cases == 10);
@@ -102,7 +103,7 @@ TEST_CASE("configure")
         input.emplace("concurrency-mode", "per-thread");
         input.emplace("post-testcases", "3");
         input.emplace("post-maxretries", "20");
-        CHECK(opts.parse(input) == true);
+        CHECK(client.configure(input) == true);
         CHECK(opts.case_declaration == weasel::ConcurrencyMode::PerThread);
         CHECK(opts.post_max_cases == 3);
         CHECK(opts.post_max_retries == 20);
@@ -111,28 +112,29 @@ TEST_CASE("configure")
 
 TEST_CASE("configure-by-file")
 {
-    weasel::ClientOptions opts;
+    weasel::ClientImpl client;
+    const auto& opts = client.options();
     TmpFile file;
 
     SECTION("missing-file")
     {
-        REQUIRE_NOTHROW(opts.parse_file(file.path));
-        REQUIRE(opts.parse_file(file.path) == false);
+        REQUIRE_NOTHROW(client.configure_by_file(file.path));
+        REQUIRE(client.configure_by_file(file.path) == false);
         REQUIRE(opts.parse_error == "configuration file is missing");
     }
 
     SECTION("invalid-file")
     {
         file.write("");
-        REQUIRE_NOTHROW(opts.parse_file(file.path));
-        REQUIRE(opts.parse_file(file.path) == false);
+        REQUIRE_NOTHROW(client.configure_by_file(file.path));
+        REQUIRE(client.configure_by_file(file.path) == false);
         REQUIRE(opts.parse_error == "configuration file is not valid");
     }
 
     SECTION("valid-file")
     {
         file.write(R"({"weasel":{"team":"myteam","suite":"mysuite","version":"myversion"}})");
-        CHECK_NOTHROW(opts.parse_file(file.path));
+        CHECK_NOTHROW(client.configure_by_file(file.path));
         CHECK(opts.team == "myteam");
         CHECK(opts.suite == "mysuite");
         CHECK(opts.revision == "myversion");
@@ -141,6 +143,6 @@ TEST_CASE("configure-by-file")
     SECTION("valid-file-verbose")
     {
         file.write(R"({"weasel":{"team":"myteam","suite":"mysuite","version":"myversion"}})");
-        CHECK_NOTHROW(opts.parse_file(file.path));
+        CHECK_NOTHROW(client.configure_by_file(file.path));
     }
 }

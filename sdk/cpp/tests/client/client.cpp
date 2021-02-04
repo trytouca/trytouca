@@ -29,7 +29,7 @@ ElementsMap saveAndLoadBack(const weasel::ClientImpl& client)
 }
 
 /**
- * Calling post for a client with no testcase should be successful.
+ * Calling post for a client with no testcase should fail.
  */
 TEST_CASE("empty client")
 {
@@ -48,7 +48,7 @@ TEST_CASE("empty client")
     SECTION("post")
     {
         REQUIRE_NOTHROW(client.post());
-        CHECK(client.post());
+        CHECK(client.post() == false);
     }
 
     SECTION("save")
@@ -157,7 +157,7 @@ TEST_CASE("using a configured client")
     SECTION("post")
     {
         REQUIRE_NOTHROW(client.testcase("mycase"));
-        REQUIRE_THROWS_AS(client.post(), std::runtime_error);
-        REQUIRE_THROWS_WITH(client.post(), Catch::Contains("not configured"));
+        REQUIRE_NOTHROW(client.post());
+        REQUIRE(client.post() == false);
     }
 }

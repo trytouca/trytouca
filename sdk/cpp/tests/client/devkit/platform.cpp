@@ -52,16 +52,4 @@ TEST_CASE("parse api-url")
             CHECK(apiUrl.slugs.at(key).empty());
         }
     }
-
-    SECTION("construct by options")
-    {
-        ApiUrl apiUrl("http://localhost:8081", "team1", "suite1", "version1");
-        CHECK(apiUrl.root == "http://localhost:8081");
-
-        REQUIRE(apiUrl.slugs.size() == 3);
-        for (const auto& key : { "team", "suite", "version" }) {
-            REQUIRE(apiUrl.slugs.count(key));
-            CHECK(apiUrl.slugs.at(key) == std::string(key) + "1");
-        }
-    }
 }

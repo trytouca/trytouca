@@ -88,6 +88,14 @@ namespace weasel {
         /**
          *
          */
+        inline const ClientOptions& options() const
+        {
+            return _opts;
+        }
+
+        /**
+         *
+         */
         void add_logger(std::shared_ptr<weasel::logger> logger);
 
         /**
