@@ -202,19 +202,22 @@ namespace weasel {
         // check status of response from Weasel Platform
 
         if (response.status != 200) {
-            throw std::runtime_error(weasel::format("platform authentication failed: {}", response.status));
+            _error = weasel::format("platform authentication failed: {}", response.status);
+            return false;
         }
 
         // Parse response from Weasel Platform
 
         if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
-            throw std::runtime_error("failed to parse platform response");
+            _error = "failed to parse platform response";
+            return false;
         }
 
         // extract API Token issued by Weasel Platform
 
         if (!doc.HasMember("token") || !doc["token"].IsString()) {
-            throw std::runtime_error("platform response malformed");
+            _error = "platform response malformed";
+            return false;
         }
 
         _http.set_token(doc["token"].GetString());

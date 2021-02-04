@@ -12,23 +12,228 @@
 #include "weasel/devkit/utils.hpp"
 #include "weasel/impl/weasel_generated.h"
 #include <fstream>
+#include <sstream>
 
 namespace weasel {
+
+    using func_t = std::function<void(const std::string&)>;
 
     /**
      *
      */
-    void ClientImpl::configure(const ClientImpl::OptionsMap& opts)
+    template <typename T>
+    func_t parse_member(T& member);
+
+    /**
+     *
+     */
+    template <>
+    func_t parse_member(std::string& member)
     {
-        _configured = _opts.parse(opts) && check_handshake();
+        return [&member](const std::string& value) {
+            member = value;
+        };
     }
 
     /**
      *
      */
-    void ClientImpl::configure_by_file(const weasel::filesystem::path& path)
+    template <>
+    func_t parse_member(bool& member)
     {
-        _configured = _opts.parse_file(path) && check_handshake();
+        return [&member](const std::string& value) {
+            member = value != "false";
+        };
+    }
+
+    /**
+     *
+     */
+    template <>
+    func_t parse_member(unsigned long& member)
+    {
+        return [&member](const std::string& value) {
+            const auto out = std::strtoul(value.c_str(), nullptr, 10);
+            if (out != 0 && out != ULONG_MAX) {
+                member = out;
+            }
+        };
+    }
+
+    template <>
+    func_t parse_member(weasel::ConcurrencyMode& member)
+    {
+        return [&member](const std::string& value) {
+            member = value == "per-thread" ? weasel::ConcurrencyMode::PerThread : weasel::ConcurrencyMode::AllThreads;
+        };
+    }
+
+    /**
+     *
+     */
+    bool ClientImpl::configure(const ClientImpl::OptionsMap& opts)
+    {
+        _opts.parse_error.clear();
+
+        // initialize provided configuration parameters and reject unsupported ones
+
+        std::unordered_map<std::string, std::function<void(const std::string&)>> parsers;
+        parsers.emplace("team", parse_member(_opts.team));
+        parsers.emplace("suite", parse_member(_opts.suite));
+        parsers.emplace("version", parse_member(_opts.revision));
+        parsers.emplace("api-key", parse_member(_opts.api_key));
+        parsers.emplace("api-url", parse_member(_opts.api_url));
+        parsers.emplace("handshake", parse_member(_opts.handshake));
+        parsers.emplace("post-testcases", parse_member(_opts.post_max_cases));
+        parsers.emplace("post-maxretries", parse_member(_opts.post_max_retries));
+        parsers.emplace("concurrency-mode", parse_member(_opts.case_declaration));
+
+        for (const auto& kvp : opts) {
+            if (!parsers.count(kvp.first)) {
+                _opts.parse_error = weasel::format("unknown parameter \"{}\"", kvp.first);
+                return false;
+            }
+            parsers.at(kvp.first)(kvp.second);
+        }
+
+        // populate API key if it is set as environmnet variable.
+        // the implementation below ensures that `api-key` as environment variable
+        // takes precedence over the specified configuration parameter.
+
+        const auto env_value = std::getenv("WEASEL_API_KEY");
+        if (env_value != nullptr) {
+            _opts.api_key = env_value;
+        }
+
+        // associate a name to each string-based configuration parameter
+
+        const std::unordered_map<std::string, std::string&> params = {
+            { "team", _opts.team },
+            { "suite", _opts.suite },
+            { "version", _opts.revision },
+            { "api-key", _opts.api_key },
+            { "api-url", _opts.api_url }
+        };
+
+        // if `api-url` is given in long format, parse `team`, `suite`, and
+        // `version` from its path.
+
+        if (!_opts.api_url.empty()) {
+            const ApiUrl apiUrl(_opts.api_url);
+            for (const auto& param : { "team", "suite", "version" }) {
+                if (!apiUrl.slugs.count(param) || apiUrl.slugs.at(param).empty()) {
+                    continue;
+                }
+                if (!params.at(param).empty() && params.at(param) != apiUrl.slugs.at(param)) {
+                    _opts.parse_error = fmt::format("{0} specified in apiUrl has conflict with {0} configuration parameter", param);
+                    return false;
+                }
+                params.at(param) = apiUrl.slugs.at(param);
+            }
+        }
+
+        // check that the set of available configuration parameters includes
+        // the bare minimum required parameters.
+
+        for (const auto& param : { "team", "suite", "version" }) {
+            if (params.at(param).empty()) {
+                _opts.parse_error = fmt::format("required configuration parameter \"{}\" is missing", param);
+                return false;
+            }
+        }
+
+        // if `api_key` and `api_url` are not provided, assume user does
+        // not intend to submit results in which case we are done.
+
+        if (!_opts.handshake) {
+            _configured = true;
+            return true;
+        }
+
+        // otherwise, check that all necessary config params are provided.
+
+        for (const auto& param : { "api-key", "api-url" }) {
+            if (params.at(param).empty()) {
+                _opts.parse_error = fmt::format("required configuration parameter \"{}\" is missing", param);
+                return false;
+            }
+        }
+
+        // perform authentication to Weasel Platform using the provided
+        // API key and obtain API token for posting results.
+
+        _platform = std::unique_ptr<PlatformV2>(new PlatformV2(
+            _opts.api_root, _opts.team, _opts.suite, _opts.revision));
+        if (!_platform->auth(_opts.api_key)) {
+            _opts.parse_error = _platform->get_error();
+            return false;
+        }
+
+        _configured = true;
+        return true;
+    }
+
+    /**
+     *
+     */
+    bool ClientImpl::configure_by_file(const weasel::filesystem::path& path)
+    {
+        // check that specified path leads to an existing regular file on disk
+
+        if (!weasel::filesystem::is_regular_file(path)) {
+            _opts.parse_error = "configuration file is missing";
+            return false;
+        }
+
+        // load content of configuration file into memory
+
+        std::ifstream ifs(path.string());
+        std::stringstream ss;
+        ss << ifs.rdbuf();
+
+        // attempt to parse content of configuration file
+
+        rapidjson::Document rjDoc;
+        rjDoc.Parse(ss.str());
+
+        // check that configuration file has a top-level weasel section
+
+        if (rjDoc.HasParseError() || !rjDoc.IsObject()
+            || !rjDoc.HasMember("weasel") || !rjDoc["weasel"].IsObject()) {
+            _opts.parse_error = "configuration file is not valid";
+            return false;
+        }
+
+        // populate an OptionsMap with the value of configuration parameters
+        // specified in the JSON file.
+
+        OptionsMap opts;
+
+        // parse configuration parameters whose value may be specified as string
+
+        const auto& strKeys = {
+            "api-key", "api-url", "team",
+            "suite", "version", "handshake",
+            "post-testcases", "post-maxretries", "concurrency-mode"
+        };
+
+        const auto& rjObj = rjDoc["weasel"];
+        for (const auto& key : strKeys) {
+            if (rjObj.HasMember(key) && rjObj[key].IsString()) {
+                opts.emplace(key, rjObj[key].GetString());
+            }
+        }
+
+        // parse configuration parameters whose value may be specified as integer
+
+        const auto& intKeys = { "post-maxretries", "post-testcases" };
+        for (const auto& key : intKeys) {
+            if (rjObj.HasMember(key) && rjObj[key].IsUint()) {
+                opts.emplace(key, std::to_string(rjObj[key].GetUint()));
+            }
+        }
+
+        return configure(opts);
     }
 
     /**
@@ -384,22 +589,6 @@ namespace weasel {
     {
         for (const auto& logger : _loggers) {
             logger->log(severity, msg);
-        }
-    }
-
-    /**
-     * perform authentication to Weasel Platform using the provided
-     * API key and obtain API token for posting results.
-     */
-    bool ClientImpl::check_handshake()
-    {
-        _platform = std::unique_ptr<PlatformV2>(new PlatformV2(
-            _opts.api_root, _opts.team, _opts.suite, _opts.revision));
-        try {
-            return _platform->auth(_opts.api_key);
-        } catch (const std::exception& ex) {
-            _opts.parse_error = fmt::format("failed to authenticate to the weasel platform: {}", ex.what());
-            return false;
         }
     }
 

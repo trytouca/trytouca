@@ -52,7 +52,6 @@ target_sources(
         devkit/filesystem.cpp
         devkit/logger.cpp
         devkit/object.cpp
-        devkit/options.cpp
         devkit/platform.cpp
         devkit/resultfile.cpp
         devkit/testcase.cpp

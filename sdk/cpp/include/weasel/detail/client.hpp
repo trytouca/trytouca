@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "weasel/devkit/options.hpp"
+#include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/testcase.hpp"
 #include "weasel/extra/logger.hpp"
@@ -24,6 +24,35 @@ namespace weasel {
     };
 
     /**
+     *
+     */
+    enum class ConcurrencyMode : unsigned char {
+        PerThread,
+        AllThreads
+    };
+
+    /**
+     *
+     */
+    struct ClientOptions {
+        std::string api_key; /**< API Key to authenticate to Weasel Platform */
+        std::string api_url; /**< URL to Weasel Platform API */
+        std::string team; /**< version of code under test */
+        std::string suite; /**< Suite to which results should be submitted */
+        std::string revision; /**< Team to which this suite belongs */
+        bool handshake = true; /**< whether client should perform handshake with platform during configuration */
+        unsigned long post_max_cases = 10; /**< maximum number of testcases whose results may be posted in a single http request */
+        unsigned long post_max_retries = 2; /**< maximum number of attempts to re-submit failed http requests */
+        ConcurrencyMode case_declaration = ConcurrencyMode::AllThreads; /**< whether testcase declaration should be isolated to each thread */
+
+        /* The following member variables are internal and purposely not documented. */
+
+        std::string api_token; /**< API Token issued upon authentication. */
+        std::string api_root; /**< API URL in short format. */
+        std::string parse_error;
+    };
+
+    /**
      * We are exposing this class for convenient unit-testing.
      */
     class WEASEL_CLIENT_API ClientImpl {
@@ -33,12 +62,12 @@ namespace weasel {
         /**
          *
          */
-        void configure(const ClientImpl::OptionsMap& opts);
+        bool configure(const ClientImpl::OptionsMap& opts);
 
         /**
          *
          */
-        void configure_by_file(const weasel::filesystem::path& path);
+        bool configure_by_file(const weasel::filesystem::path& path);
 
         /**
          *
