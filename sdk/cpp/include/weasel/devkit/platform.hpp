@@ -11,17 +11,17 @@
 
 namespace weasel {
 
-    struct WEASEL_CLIENT_API ApiUrl {
-        ApiUrl(const std::string& api_url);
-        std::string root;
-        std::unordered_map<std::string, std::string> slugs;
-    };
-
+    /**
+     *
+     */
     struct ResponseV2 {
         const int status = -1;
         const std::string body;
     };
 
+    /**
+     *
+     */
     class HttpV2 {
     public:
         explicit HttpV2(const std::string& root);
@@ -36,25 +36,48 @@ namespace weasel {
         std::string _token;
     };
 
+    /**
+     *
+     */
+    struct WEASEL_CLIENT_API ApiUrl {
+        ApiUrl(const std::string& api_url);
+
+        bool confirm(
+            const std::string& team,
+            const std::string& suite,
+            const std::string& revision);
+
+        std::string _root;
+        std::string _team;
+        std::string _suite;
+        std::string _revision;
+        std::string _error;
+    };
+
+    /**
+     *
+     */
     class WEASEL_CLIENT_API PlatformV2 {
     public:
-        explicit PlatformV2(
-            const std::string& root, const std::string& team,
-            const std::string& suite, const std::string& revision);
+        explicit PlatformV2(const ApiUrl& api_url);
+        bool set_params(
+            const std::string& team,
+            const std::string& suite,
+            const std::string& revision);
         bool handshake() const;
         bool auth(const std::string& apiKey);
+        std::vector<std::string> submit(
+            const std::string& content,
+            const unsigned max_retries) const;
         bool seal() const;
-        std::vector<std::string> submit(const std::string& content, const unsigned max_retries) const;
         std::vector<std::string> elements() const;
-        std::string get_error() const;
         inline bool has_token() const { return _is_auth; }
+        inline std::string get_error() const { return _error; }
 
     private:
+        ApiUrl _api;
         HttpV2 _http;
         bool _is_auth = false;
-        const std::string& _team;
-        const std::string& _suite;
-        const std::string& _revision;
         mutable std::string _error;
     };
 

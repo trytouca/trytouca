@@ -3,15 +3,15 @@
  */
 
 #include "weasel/framework.hpp"
-#include "cxxopts.hpp"
-#include "fmt/printf.h"
-#include "rapidjson/document.h"
 #include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/utils.hpp"
 #include "weasel/extra/version.hpp"
 #include "weasel/framework/detail/utils.hpp"
 #include "weasel/weasel.hpp"
+#include "cxxopts.hpp"
+#include "fmt/printf.h"
+#include "rapidjson/document.h"
 #include <fstream>
 #include <iostream>
 #include <thread>
@@ -242,18 +242,15 @@ namespace weasel { namespace framework {
         if (!options.count("api-url")) {
             return true;
         }
-        weasel::ApiUrl apiUrl(options.at("api-url"));
-        const std::unordered_map<std::string, std::string> mapping = {
-            { "team", "team" },
-            { "suite", "suite" },
-            { "revision", "version" }
-        };
-        for (const auto& kvp : mapping) {
-            const auto& option = kvp.first;
-            const auto& segment = kvp.second;
-            if (!options.count(option) && apiUrl.slugs.count(segment) && !apiUrl.slugs.at(segment).empty()) {
-                options[option] = apiUrl.slugs.at(segment);
-            }
+        weasel::ApiUrl api(options.at("api-url"));
+        if (!options.count("team") && !api._team.empty()) {
+            options["team"] = api._team;
+        }
+        if (!options.count("suite") && !api._suite.empty()) {
+            options["suite"] = api._suite;
+        }
+        if (!options.count("revision") && !api._revision.empty()) {
+            options["revision"] = api._revision;
         }
         return true;
     }
@@ -296,22 +293,10 @@ namespace weasel { namespace framework {
      */
     bool validate_api_url(const Options& options)
     {
-        weasel::ApiUrl apiUrl(options.at("api-url"));
-        const std::unordered_map<std::string, std::string> mapping = {
-            { "team", "team" },
-            { "suite", "suite" },
-            { "revision", "version" }
-        };
-        for (const auto& kvp : mapping) {
-            const auto& option = kvp.first;
-            const auto& segment = kvp.second;
-            if (!options.count(option) || !apiUrl.slugs.count(segment) || apiUrl.slugs.at(segment).empty()) {
-                continue;
-            }
-            if (apiUrl.slugs.at(segment) != options.at(option)) {
-                fmt::print(std::cerr, "values of options \"api-url\" and \"{}\" are not consistent.\n", option);
-                return false;
-            }
+        weasel::ApiUrl api(options.at("api-url"));
+        if (!api.confirm(options.at("team"), options.at("suite"), options.at("revision"))) {
+            fmt::print(std::cerr, "{}\n", api._error);
+            return false;
         }
         return true;
     }

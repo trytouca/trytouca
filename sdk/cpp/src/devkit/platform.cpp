@@ -13,37 +13,6 @@ namespace weasel {
     /**
      *
      */
-    ApiUrl::ApiUrl(const std::string& api_url)
-    {
-        root = api_url.substr(0, api_url.find_last_of('@'));
-        if (root.back() == '/') {
-            root.pop_back();
-        }
-        if (std::string::npos == api_url.find_last_of('@')) {
-            slugs.emplace("team", "");
-            slugs.emplace("suite", "");
-            slugs.emplace("version", "");
-            return;
-        }
-        std::istringstream iss(api_url.substr(api_url.find_last_of('@') + 1));
-        std::vector<std::string> items;
-        std::string item;
-        while (std::getline(iss, item, '/')) {
-            if (!item.empty()) {
-                items.emplace_back(item);
-            }
-        }
-        while (items.size() < 3) {
-            items.emplace_back("");
-        }
-        slugs["team"] = items.at(0);
-        slugs["suite"] = items.at(1);
-        slugs["version"] = items.at(2);
-    }
-
-    /**
-     *
-     */
     HttpV2::HttpV2(const std::string& root)
         : _root(root)
     {
@@ -132,56 +101,122 @@ namespace weasel {
     /**
      *
      */
-    PlatformV2::PlatformV2(
-        const std::string& root, const std::string& team,
-        const std::string& suite, const std::string& revision)
-        : _http(root)
-        , _team(team)
-        , _suite(suite)
-        , _revision(revision)
+    ApiUrl::ApiUrl(const std::string& api_url)
     {
+        if (api_url.empty()) {
+            return;
+        }
+        const auto index = api_url.find_last_of('@');
+        _root = api_url.substr(0, index);
+        if (_root.back() == '/') {
+            _root.pop_back();
+        }
+        if (index == std::string::npos) {
+            return;
+        }
+        std::istringstream iss(api_url.substr(index + 1));
+        std::vector<std::string> items;
+        std::string item;
+        while (std::getline(iss, item, '/')) {
+            if (!item.empty()) {
+                items.emplace_back(item);
+            }
+        }
+        while (items.size() < 3) {
+            items.emplace_back("");
+        }
+        _team = items.at(0);
+        _suite = items.at(1);
+        _revision = items.at(2);
+    }
+
+    /**
+     *
+     */
+    bool ApiUrl::confirm(
+        const std::string& team,
+        const std::string& suite,
+        const std::string& revision)
+    {
+        if (!team.empty() && _team.empty()) {
+            _team = team;
+        }
+        if (!suite.empty() && _suite.empty()) {
+            _suite = suite;
+        }
+        if (!revision.empty() && _revision.empty()) {
+            _revision = revision;
+        }
+        const auto& set_error = [this](const std::string& k) {
+            _error = fmt::format("parameter \"{}\" is in conflict with API URL", k);
+            return false;
+        };
+        if (!revision.empty() && _revision != revision) {
+            return set_error("revision");
+        }
+        if (!suite.empty() && _suite != suite) {
+            return set_error("suite");
+        }
+        if (!team.empty() && _team != team) {
+            return set_error("team");
+        }
+        return true;
+    }
+
+    /**
+     *
+     */
+    PlatformV2::PlatformV2(const ApiUrl& api)
+        : _api(api)
+        , _http(api._root)
+    {
+    }
+
+    /**
+     *
+     */
+    bool PlatformV2::set_params(const std::string& team,
+        const std::string& suite, const std::string& revision)
+    {
+        if (!_api.confirm(team, suite, revision)) {
+            _error = _api._error;
+            return false;
+        }
+        return true;
     }
 
     /**
      * Perform handshake with Weasel Platform to ensure that it is ready
      * to serve further requests and queries. Parse response from Weasel
      * Platform as a precaution.
-     *
-     * This implementation is verbose for historical reasons. The inline
-     * comments in each condition used to be log events. Since this function
-     * is intended to be moved outside the client library, we plan to
-     * resurrect the log events and hence choose to keep the implementation
-     * verbose.
      */
     bool PlatformV2::handshake() const
     {
-        rapidjson::Document doc;
-
-        // performing handshake with Weasel Platform
         const auto response = _http.get("/platform");
 
         if (response.status == -1) {
-            // Weasel Platform appears to be down
+            _error = "the platform appears to be down";
             return false;
         }
 
         if (response.status != 200) {
-            // response from Weasel Platform is unexpected
+            _error = "response from the platform is unexpected";
             return false;
         }
 
+        rapidjson::Document doc;
         if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
-            // failed to parse response from Weasel Platform
+            _error = "failed to parse response from the platform";
             return false;
         }
 
         if (!doc.HasMember("ready") || !doc["ready"].IsBool()) {
-            // response from Weasel Platform is ill-formed
+            _error = "response form the platform is ill-formed";
             return false;
         }
 
         if (!doc["ready"].GetBool()) {
-            // Weasel Platform is not ready
+            _error = "platform is not ready";
             return false;
         }
 
@@ -195,7 +230,6 @@ namespace weasel {
      */
     bool PlatformV2::auth(const std::string& apiKey)
     {
-        rapidjson::Document doc;
         const auto content = weasel::format("{{\"key\": \"{}\"}}", apiKey);
         const auto response = _http.post("/client/signin", content);
 
@@ -208,6 +242,7 @@ namespace weasel {
 
         // Parse response from Weasel Platform
 
+        rapidjson::Document doc;
         if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
             _error = "failed to parse platform response";
             return false;
@@ -230,20 +265,22 @@ namespace weasel {
      */
     std::vector<std::string> PlatformV2::elements() const
     {
-        const auto& route = weasel::format("/element/{}/{}", _team, _suite);
+        const auto& route = weasel::format("/element/{}/{}", _api._team, _api._suite);
         const auto response = _http.get(route);
 
         // check status of response from Weasel Platform
 
         if (response.status != 200) {
-            throw std::runtime_error("received unexpected platform response");
+            _error = "received unexpected platform response";
+            return {};
         }
 
         // parse response from Weasel Platform
 
         rapidjson::Document doc;
         if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
-            throw std::runtime_error("failed to parse platform response");
+            _error = "failed to parse response from the platform";
+            return {};
         }
 
         // extract list of element slugs in the response from Weasel Platform
@@ -283,17 +320,9 @@ namespace weasel {
     bool PlatformV2::seal() const
     {
         const auto route = fmt::format("/batch/{}/{}/{}/seal2",
-            _team, _suite, _revision);
+            _api._team, _api._suite, _api._revision);
         const auto response = _http.post(route);
         return response.status == 204;
-    }
-
-    /**
-     *
-     */
-    std::string PlatformV2::get_error() const
-    {
-        return _error;
     }
 
 } // namespace weasel

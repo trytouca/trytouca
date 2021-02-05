@@ -118,19 +118,15 @@ namespace weasel {
         // if `api-url` is given in long format, parse `team`, `suite`, and
         // `version` from its path.
 
-        if (!_opts.api_url.empty()) {
-            const ApiUrl apiUrl(_opts.api_url);
-            for (const auto& param : { "team", "suite", "version" }) {
-                if (!apiUrl.slugs.count(param) || apiUrl.slugs.at(param).empty()) {
-                    continue;
-                }
-                if (!params.at(param).empty() && params.at(param) != apiUrl.slugs.at(param)) {
-                    _opts.parse_error = fmt::format("{0} specified in apiUrl has conflict with {0} configuration parameter", param);
-                    return false;
-                }
-                params.at(param) = apiUrl.slugs.at(param);
-            }
+        ApiUrl api_url(_opts.api_url);
+        if (!api_url.confirm(_opts.team, _opts.suite, _opts.revision))
+        {
+            _opts.parse_error = api_url._error;
+            return false;
         }
+        _opts.team = api_url._team;
+        _opts.suite = api_url._suite;
+        _opts.revision = api_url._revision;
 
         // check that the set of available configuration parameters includes
         // the bare minimum required parameters.
@@ -162,8 +158,7 @@ namespace weasel {
         // perform authentication to Weasel Platform using the provided
         // API key and obtain API token for posting results.
 
-        _platform = std::unique_ptr<PlatformV2>(new PlatformV2(
-            _opts.api_root, _opts.team, _opts.suite, _opts.revision));
+        _platform = std::unique_ptr<PlatformV2>(new PlatformV2(api_url));
         if (!_platform->auth(_opts.api_key)) {
             _opts.parse_error = _platform->get_error();
             return false;

@@ -77,9 +77,12 @@ bool PostOperation::run_impl() const
 
     // authenticate to the Weasel Platform
 
-    weasel::ApiUrl api_url(_api_url);
-    weasel::PlatformV2 platform(api_url.root, api_url.slugs.at("team"),
-        api_url.slugs.at("suite"), api_url.slugs.at("revision"));
+    weasel::PlatformV2 platform(_api_url);
+
+    if (!platform.handshake()) {
+        weasel::print_error("failed to contact Weasel Platform: {}\n", platform.get_error());
+        return false;
+    }
 
     if (!platform.auth(_api_key)) {
         weasel::print_error("failed to authenticate to Weasel Platform: {}\n", platform.get_error());
@@ -96,9 +99,7 @@ bool PostOperation::run_impl() const
     // we are done if there are no weasel result files in the given directory
 
     if (resultFiles.empty()) {
-        const auto msg = "failed to find any valid result file";
-        std::cerr << msg << std::endl;
-        WEASEL_LOG_ERROR(msg);
+        weasel::print_error("failed to find any valid result file");
         return false;
     }
 

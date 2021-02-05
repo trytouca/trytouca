@@ -32,17 +32,16 @@ namespace weasel { namespace framework {
             return;
         }
 
-        // authenticate to Weasel Platform and obtain an API Token.
-        // If authentication fails, an exception is thrown in which.
-        // We choose not to handle this exception here and propagate it
-        // to the Weasel Test Framework instead so it can be logged per
-        // user implementation.
+        // authenticate to Weasel Platform.
 
-        const auto& api_root = ApiUrl(_options.at("api-url")).root;
-        PlatformV2 platform(api_root, _options.at("team"), _options.at("suite"), _options.at("revision"));
+        ApiUrl api_url(_options.at("api-url"));
+        if (!api_url.confirm(_options.at("team"), _options.at("suite"), _options.at("revision"))) {
+            throw std::runtime_error(api_url._error);
+        }
 
+        PlatformV2 platform(api_url);
         if (!platform.auth(_options.at("api-key"))) {
-            return;
+            throw std::runtime_error(platform.get_error());
         }
 
         // ask Weasel Platform for the list of elements

@@ -11,45 +11,31 @@ TEST_CASE("parse api-url")
 
     SECTION("full format")
     {
-        ApiUrl apiUrl("https://getweasel.com/api/@/weasel/tutorial/1.0");
-
-        CHECK(apiUrl.root == "https://getweasel.com/api");
-
-        REQUIRE(apiUrl.slugs.size() == 3);
-        REQUIRE(apiUrl.slugs.count("team"));
-        REQUIRE(apiUrl.slugs.count("suite"));
-        REQUIRE(apiUrl.slugs.count("version"));
-
-        CHECK(apiUrl.slugs.at("team") == "weasel");
-        CHECK(apiUrl.slugs.at("suite") == "tutorial");
-        CHECK(apiUrl.slugs.at("version") == "1.0");
+        ApiUrl api("https://getweasel.com/api/@/weasel/tutorial/1.0");
+        CHECK(api._root == "https://getweasel.com/api");
+        CHECK(api._team == "weasel");
+        CHECK(api._suite == "tutorial");
+        CHECK(api._revision == "1.0");
+        CHECK(api._error.empty());
     }
 
     SECTION("long format")
     {
-        ApiUrl apiUrl("http://localhost:8081/@/weasel/tutorial");
-
-        CHECK(apiUrl.root == "http://localhost:8081");
-
-        REQUIRE(apiUrl.slugs.size() == 3);
-        REQUIRE(apiUrl.slugs.count("team"));
-        REQUIRE(apiUrl.slugs.count("suite"));
-        REQUIRE(apiUrl.slugs.count("version"));
-
-        CHECK(apiUrl.slugs.at("team") == "weasel");
-        CHECK(apiUrl.slugs.at("suite") == "tutorial");
-        CHECK(apiUrl.slugs.at("version").empty());
+        ApiUrl api("http://localhost:8081/@/weasel/tutorial");
+        CHECK(api._root == "http://localhost:8081");
+        CHECK(api._team == "weasel");
+        CHECK(api._suite == "tutorial");
+        CHECK(api._revision.empty());
+        CHECK(api._error.empty());
     }
 
     SECTION("short format")
     {
-        ApiUrl apiUrl("https://example-101.com");
-
-        CHECK(apiUrl.root == "https://example-101.com");
-        REQUIRE(apiUrl.slugs.size() == 3);
-        for (const auto& key : { "team", "suite", "version" }) {
-            REQUIRE(apiUrl.slugs.count(key));
-            CHECK(apiUrl.slugs.at(key).empty());
-        }
+        ApiUrl api("https://example-101.com");
+        CHECK(api._root == "https://example-101.com");
+        CHECK(api._team.empty());
+        CHECK(api._suite.empty());
+        CHECK(api._revision.empty());
+        CHECK(api._error.empty());
     }
 }

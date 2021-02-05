@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/detail/client.hpp"
 #include "catch2/catch.hpp"
 #include "tmpfile.hpp"
+#include "weasel/detail/client.hpp"
 
 TEST_CASE("configure")
 {
