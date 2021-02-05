@@ -52,6 +52,7 @@ class WeaselConan(ConanFile):
 
     def configure(self):
         self.options["fmt"].header_only = True
+        self.options["flatbuffers"].header_only = True
         self.options["spdlog"].header_only = True
 
     def _configure_cmake(self):
