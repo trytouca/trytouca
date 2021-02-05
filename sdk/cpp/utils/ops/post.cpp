@@ -75,20 +75,14 @@ bool PostOperation::run_impl() const
 {
     WEASEL_LOG_INFO("starting execution of operation: post");
 
-    // authenticate to Weasel Platform
+    // authenticate to the Weasel Platform
 
-    weasel::ApiUrl apiUrl(_api_url);
-    std::string apiToken;
+    weasel::ApiUrl api_url(_api_url);
+    weasel::PlatformV2 platform(api_url.root, api_url.slugs.at("team"),
+        api_url.slugs.at("suite"), api_url.slugs.at("revision"));
 
-    try {
-        apiToken = weasel::ApiConnector(apiUrl).authenticate(_api_key);
-    } catch (const std::exception& ex) {
-        weasel::print_error("failed to authenticate to Weasel Platform: {}\n", ex.what());
-        return false;
-    }
-
-    if (apiToken.empty()) {
-        weasel::print_error("failed to authenticate to Weasel Platform\n");
+    if (!platform.auth(_api_key)) {
+        weasel::print_error("failed to authenticate to Weasel Platform: {}\n", platform.get_error());
         return false;
     }
 
@@ -125,15 +119,9 @@ bool PostOperation::run_impl() const
     // specified result files.
 
     err_t errors;
-    weasel::ApiConnector apiConnector(apiUrl, apiToken);
     for (const auto& src : resultFiles) {
-        std::vector<std::string> errs;
-        try {
-            const auto& content = weasel::load_string_file(src, std::ios::binary);
-            errs = apiConnector.submitResults(content, 5u);
-        } catch (const std::exception& ex) {
-            errs.emplace_back(weasel::format("exception: {}", ex.what()));
-        }
+        const auto& content = weasel::load_string_file(src, std::ios::binary);
+        const auto& errs = platform.submit(content, 5u);
         if (errs.empty()) {
             WEASEL_LOG_INFO("submitted {}", src.string());
             continue;

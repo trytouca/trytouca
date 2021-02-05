@@ -38,18 +38,16 @@ namespace weasel { namespace framework {
         // to the Weasel Test Framework instead so it can be logged per
         // user implementation.
 
-        const auto apiRoot = ApiUrl(_options.at("api-url")).root;
-        ApiUrl apiUrl(apiRoot, _options.at("team"), _options.at("suite"), _options.at("revision"));
-        const auto& apiToken = ApiConnector(apiUrl).authenticate(_options.at("api-key"));
-        if (apiToken.empty()) {
+        const auto& api_root = ApiUrl(_options.at("api-url")).root;
+        PlatformV2 platform(api_root, _options.at("team"), _options.at("suite"), _options.at("revision"));
+
+        if (!platform.auth(_options.at("api-key"))) {
             return;
         }
 
         // ask Weasel Platform for the list of elements
 
-        ApiConnector apiConnector(apiUrl, apiToken);
-        const auto& elements = apiConnector.getElements();
-        for (const auto& element : elements) {
+        for (const auto& element : platform.elements()) {
             push(element);
         }
     }
