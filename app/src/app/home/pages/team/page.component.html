@@ -31,9 +31,13 @@
       <div class="print:hidden">
         <button type="button" (click)="openCreateModal()"
           *ngIf="currentTab === TabType.Suites && hasData() && hasItems()"
-          class="wsl-btn-sm wsl-btn-dark">
-          <fa-icon icon="plus"></fa-icon>
-          New Suite
+          class="wsl-btn-sm wsl-btn-dark group">
+          <svg class="inline h-4 opacity-75 group-hover:opacity-100"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>New Suite
         </button>
         <button type="button" (click)="openInviteModal()"
           *ngIf="currentTab === TabType.Members"

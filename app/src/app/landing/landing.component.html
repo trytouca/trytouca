@@ -1,5 +1,6 @@
 <app-header-outside></app-header-outside>
-<section class="wsl-min-h-screen-1 flex items-center bg-white">
+<section
+  class="wsl-min-h-screen-1 flex items-center bg-white font-sans antialiased">
   <div class="mx-auto container">
     <div class="lg:grid lg:grid-cols-5">
       <div class="lg:col-span-3 p-12 lg:p-4 space-y-4">
@@ -13,8 +14,13 @@
           performance.
         </p>
         <button type="button" role="button" routerLink="/signup"
-          class="wsl-btn-lg wsl-btn-dark">
-          Get Started For Free
+          class="wsl-btn-lg wsl-btn-dark group">Get Started For Free<svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="inline h-4 opacity-25 group-hover:opacity-100" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
         </button>
       </div>
       <div class="hidden lg:col-span-2 lg:block p-4">
