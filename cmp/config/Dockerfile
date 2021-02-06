@@ -31,7 +31,7 @@ RUN conan profile new default --detect \
 
 FROM ubuntu:focal
 
-LABEL maintainer="pejman@ghorbanzade.com"
+LABEL maintainer="hello@getweasel.com"
 
 COPY --from=builder /opt/comparator/local/dist /usr/local
 COPY --from=builder /opt/comparator/config/config.prod.json /usr/local/etc/comparator.json

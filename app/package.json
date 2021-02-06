@@ -9,7 +9,7 @@
   "homepage": "https://getweasel.com",
   "author": {
     "name": "Pejman Ghorbanzade",
-    "email": "pejman@ghorbanzade.com"
+    "email": "pejman@getweasel.com"
   },
   "scripts": {
     "ng": "ng",

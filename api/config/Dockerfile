@@ -25,7 +25,7 @@ RUN apk add --no-cache g++ make python yarn \
 
 FROM node:15-alpine
 
-LABEL maintainer="pejman@ghorbanzade.com"
+LABEL maintainer="hello@getweasel.com"
 EXPOSE 8081
 
 COPY --from=builder /home/dist /opt/weasel/dist

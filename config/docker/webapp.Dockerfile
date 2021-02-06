@@ -99,7 +99,7 @@ RUN mkdir -p /opt/docs/local/talks \
 # ---- production ----
 
 FROM nginx:1.18-alpine
-LABEL maintainer="pejman@ghorbanzade.com"
+LABEL maintainer="hello@getweasel.com"
 
 COPY --from=frontend_builder        /opt/frontend/dist                /www/data
 COPY --from=doc_api_builder         /opt/backend/local/docs/backend   /www/data/docs/backend

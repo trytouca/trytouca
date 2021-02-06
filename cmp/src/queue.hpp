@@ -13,9 +13,6 @@
  *
  * @brief Provides a generic thread-safe queue for sharing tasks between
  *        producer and consumer threads.
- *
- * @author Pejman Ghorbanzade <pejman@ghorbanzade.com>
- * @date 2020
  */
 
 namespace weasel {
