@@ -96,9 +96,10 @@ namespace weasel {
             parsers.at(kvp.first)(kvp.second);
         }
 
-        // populate API key if it is set as environmnet variable.
-        // the implementation below ensures that `api-key` as environment variable
-        // takes precedence over the specified configuration parameter.
+        // populate API key if it is set as environmnet variable. the
+        // implementation below ensures that `api-key` as environment
+        // variable takes precedence over the specified configuration
+        // parameter.
 
         const auto env_value = std::getenv("WEASEL_API_KEY");
         if (env_value != nullptr) {

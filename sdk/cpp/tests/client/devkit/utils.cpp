@@ -16,4 +16,10 @@ TEST_CASE("string formatting")
     {
         CHECK(weasel::format("hello {}", "world") == "hello world");
     }
+
+    SECTION("load missing file")
+    {
+        CHECK_THROWS_AS(weasel::load_string_file("invalid"), std::invalid_argument);
+        CHECK_THROWS_WITH(weasel::load_string_file("invalid"), "failed to read file");
+    }
 }

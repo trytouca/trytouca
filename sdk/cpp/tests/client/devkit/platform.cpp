@@ -7,9 +7,8 @@
 #include <string>
 #include <vector>
 
-void check_api(const std::string& url, const std::vector<std::string> parts)
+void check_api(const weasel::ApiUrl& api, const std::vector<std::string> parts)
 {
-    weasel::ApiUrl api(url);
     REQUIRE(!api.root().empty());
     std::vector<std::string> actual {
         api.root(), api.route(""), api._team, api._suite, api._revision
@@ -19,8 +18,23 @@ void check_api(const std::string& url, const std::vector<std::string> parts)
     }
 }
 
+void check_api(const std::string& url, const std::vector<std::string> parts)
+{
+    weasel::ApiUrl api(url);
+    check_api(api, parts);
+}
+
 TEST_CASE("api-url")
 {
+    SECTION("empty-url")
+    {
+        weasel::ApiUrl api("");
+        CHECK(api.root().empty());
+        CHECK_THAT(api._error, Catch::Contains("invalid"));
+        REQUIRE_NOTHROW(api.route("somewhere"));
+        CHECK(api.route("/some/path") == "/some/path");
+    }
+
     SECTION("no-scheme-local")
     {
         check_api("localhost", { "localhost" });
@@ -50,14 +64,18 @@ TEST_CASE("api-url")
 
     SECTION("scheme-host-port-with-prefix-1")
     {
-        check_api("http://api.example.com:8081/api",
-            { "http://api.example.com:8081", "api" });
+        weasel::ApiUrl api("http://api.example.com:8081/api");
+        check_api(api, { "http://api.example.com:8081", "api" });
+        CHECK(api.route("/one") == "/api/one");
+        CHECK(api.route("/two/three") == "/api/two/three");
     }
 
     SECTION("scheme-host-port-with-prefix-2")
     {
-        check_api("http://api.example.com:8081/api/v1",
-            { "http://api.example.com:8081", "api/v1" });
+        weasel::ApiUrl api("http://api.example.com:8081/api/v1");
+        check_api(api, { "http://api.example.com:8081", "api/v1" });
+        CHECK(api.route("/one") == "/api/v1/one");
+        CHECK(api.route("/two/three") == "/api/v1/two/three");
     }
 
     SECTION("scheme-host-port-with-prefix-and-team")
@@ -74,7 +92,49 @@ TEST_CASE("api-url")
 
     SECTION("scheme-host-port-with-prefix-and-revision")
     {
-        check_api("https://api.example.com:8081/api/@/team/suite/revision",
-            { "https://api.example.com:8081", "api", "team", "suite", "revision" });
+        weasel::ApiUrl api("example.com/api/@/team/suite/revision");
+        check_api(api, { "example.com", "api", "team", "suite", "revision" });
+    }
+
+    SECTION("confirm-pass")
+    {
+        weasel::ApiUrl api("example.com/api/@/team/suite/revision");
+        CHECK_NOTHROW(api.confirm("team", "suite", "revision"));
+        CHECK(api._error.empty());
+        CHECK(api._team == "team");
+        CHECK(api._suite == "suite");
+        CHECK(api._revision == "revision");
+    }
+
+    SECTION("confirm-fail")
+    {
+        weasel::ApiUrl api("example.com/api/@/team/suite/revision");
+        SECTION("team")
+        {
+            CHECK_NOTHROW(api.confirm("team2", "suite", "revision"));
+            CHECK_THAT(api._error, Catch::Contains("team"));
+        }
+        SECTION("suite")
+        {
+            CHECK_NOTHROW(api.confirm("team", "suite2", "revision"));
+            CHECK_THAT(api._error, Catch::Contains("suite"));
+        }
+        SECTION("revision")
+        {
+            CHECK_NOTHROW(api.confirm("team", "suite", "revision2"));
+            CHECK_THAT(api._error, Catch::Contains("revision"));
+        }
+        CHECK_THAT(api._error, Catch::Contains("conflict"));
+    }
+}
+
+TEST_CASE("platform")
+{
+    SECTION("empty-url")
+    {
+        weasel::ApiUrl api("");
+        weasel::Platform platform(api);
+        CHECK_THAT(platform.get_error(), Catch::Contains("invalid"));
+        CHECK(platform.has_token() == false);
     }
 }

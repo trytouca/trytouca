@@ -105,6 +105,7 @@ namespace weasel {
             R"(^(?:([a-z]+)://)?([^:/?#]+)(?::(\d+))?/?(.*)?$)");
         std::cmatch result;
         if (!std::regex_match(url.c_str(), result, pattern)) {
+            _error = weasel::format("invalid url: \"{}\"", url);
             return;
         }
         _root.scheme = result[1];
@@ -207,6 +208,9 @@ namespace weasel {
         : _api(api)
         , _http(new Http(api.root()))
     {
+        if (!_api._error.empty()) {
+            _error = _api._error;
+        }
     }
 
     /**
