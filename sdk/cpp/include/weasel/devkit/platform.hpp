@@ -5,6 +5,7 @@
 #pragma once
 
 #include "weasel/lib_api.hpp"
+#include <memory>
 #include <string>
 #include <unordered_map>
 #include <vector>

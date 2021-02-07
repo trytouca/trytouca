@@ -50,6 +50,7 @@ target_sources(
         weasel.cpp
         devkit/comparison.cpp
         devkit/filesystem.cpp
+        devkit/httpclient.cpp
         devkit/logger.cpp
         devkit/object.cpp
         devkit/platform.cpp
