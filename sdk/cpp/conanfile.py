@@ -54,6 +54,7 @@ class WeaselConan(ConanFile):
         self.options["fmt"].header_only = True
         self.options["flatbuffers"].header_only = True
         self.options["spdlog"].header_only = True
+        self.options["cpp-httplib"].with_openssl = True
 
     def _configure_cmake(self):
         cmake = CMake(self)

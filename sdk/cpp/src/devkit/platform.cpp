@@ -23,16 +23,26 @@ namespace weasel {
         Response binary(const std::string& route, const std::string& content) const;
 
     private:
-        std::unique_ptr<httplib::Client> make_client() const;
-        const std::string _root;
-        std::string _token;
+#ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+        mutable httplib::SSLClient _cli;
+#else
+        mutable httplib::Client _cli;
+#endif
     };
 
     /**
      *
      */
-    Http::Http(const std::string& root) : _root(root)
+    Http::Http(const std::string& root) : _cli(root.c_str())
     {
+        _cli.set_default_headers({
+            { "Accept-Charset", "utf-8" },
+            { "Accept", "application/json" },
+            { "User-Agent", "weasel-client-cpp/1.2.1" }
+        });
+#ifdef CPPHTTPLIB_OPENSSL_SUPPORT
+        _cli.enable_server_certificate_verification(false);
+#endif
     }
 
     /**
@@ -40,23 +50,7 @@ namespace weasel {
      */
     void Http::set_token(const std::string& token)
     {
-        _token = token;
-    }
-
-    /**
-     *
-     */
-    std::unique_ptr<httplib::Client> Http::make_client() const {
-        auto cli = std::unique_ptr<httplib::Client>(new httplib::Client(_root.c_str()));
-        cli->set_default_headers({
-            { "Accept-Charset", "utf-8" },
-            { "Accept", "application/json" },
-            { "User-Agent", "weasel-client-cpp/1.2.1" }
-        });
-        if (!_token.empty()) {
-            cli->set_bearer_token_auth(_token.c_str());
-        }
-        return cli;
+        _cli.set_bearer_token_auth(token.c_str());
     }
 
     /**
@@ -64,8 +58,7 @@ namespace weasel {
      */
     Response Http::get(const std::string& route) const
     {
-        auto cli = make_client();
-        const auto result = cli->Get(route.c_str());
+        const auto result = _cli.Get(route.c_str());
         if (!result) {
             return { -1, weasel::format("failed to submit HTTP GET request to {}", route) };
         }
@@ -77,8 +70,7 @@ namespace weasel {
      */
     Response Http::patch(const std::string& route, const std::string& body) const
     {
-        auto cli = make_client();
-        const auto result = cli->Patch(route.c_str(), body, "application/json");
+        const auto result = _cli.Patch(route.c_str(), body, "application/json");
         if (!result) {
             return { -1, weasel::format("failed to submit HTTP PATCH request to {}", route) };
         }
@@ -90,8 +82,7 @@ namespace weasel {
      */
     Response Http::post(const std::string& route, const std::string& body) const
     {
-        auto cli = make_client();
-        const auto result = cli->Post(route.c_str(), body, "application/json");
+        const auto result = _cli.Post(route.c_str(), body, "application/json");
         if (!result) {
             return { -1, weasel::format("failed to submit HTTP POST request to {}", route) };
         }
@@ -103,8 +94,7 @@ namespace weasel {
      */
     Response Http::binary(const std::string& route, const std::string& content) const
     {
-        auto cli = make_client();
-        const auto result = cli->Post(route.c_str(), content, "application/octet-stream");
+        const auto result = _cli.Post(route.c_str(), content, "application/octet-stream");
         if (!result) {
             return { -1, weasel::format("failed to submit HTTP POST request to {}", route) };
         }
