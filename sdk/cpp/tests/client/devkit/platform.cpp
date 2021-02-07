@@ -4,38 +4,77 @@
 
 #include "weasel/devkit/platform.hpp"
 #include "catch2/catch.hpp"
+#include <string>
+#include <vector>
 
-TEST_CASE("parse api-url")
+void check_api(const std::string& url, const std::vector<std::string> parts)
 {
-    using namespace weasel;
+    weasel::ApiUrl api(url);
+    REQUIRE(!api.root().empty());
+    std::vector<std::string> actual {
+        api.root(), api.route(""), api._team, api._suite, api._revision
+    };
+    for (auto i = 0u; i < parts.size() && i < actual.size(); i++) {
+        CHECK(actual.at(i) == parts.at(i));
+    }
+}
 
-    SECTION("full format")
+TEST_CASE("api-url")
+{
+    SECTION("no-scheme-local")
     {
-        ApiUrl api("https://getweasel.com/api/@/weasel/tutorial/1.0");
-        CHECK(api._root == "https://getweasel.com/api");
-        CHECK(api._team == "weasel");
-        CHECK(api._suite == "tutorial");
-        CHECK(api._revision == "1.0");
-        CHECK(api._error.empty());
+        check_api("localhost", { "localhost" });
     }
 
-    SECTION("long format")
+    SECTION("no-scheme-domain")
     {
-        ApiUrl api("http://localhost:8081/@/weasel/tutorial");
-        CHECK(api._root == "http://localhost:8081");
-        CHECK(api._team == "weasel");
-        CHECK(api._suite == "tutorial");
-        CHECK(api._revision.empty());
-        CHECK(api._error.empty());
+        check_api("api.example.com", { "api.example.com" });
     }
 
-    SECTION("short format")
+    SECTION("no-scheme-with-port")
     {
-        ApiUrl api("https://example-101.com");
-        CHECK(api._root == "https://example-101.com");
-        CHECK(api._team.empty());
-        CHECK(api._suite.empty());
-        CHECK(api._revision.empty());
-        CHECK(api._error.empty());
+        check_api("example.com:4200", { "example.com:4200" });
+    }
+
+    SECTION("scheme-host-port")
+    {
+        check_api("https://api.example.com:4200",
+            { "https://api.example.com:4200" });
+    }
+
+    SECTION("scheme-host-extra-slash")
+    {
+        check_api("https://api.example.com/",
+            { "https://api.example.com" });
+    }
+
+    SECTION("scheme-host-port-with-prefix-1")
+    {
+        check_api("http://api.example.com:8081/api",
+            { "http://api.example.com:8081", "api" });
+    }
+
+    SECTION("scheme-host-port-with-prefix-2")
+    {
+        check_api("http://api.example.com:8081/api/v1",
+            { "http://api.example.com:8081", "api/v1" });
+    }
+
+    SECTION("scheme-host-port-with-prefix-and-team")
+    {
+        check_api("https://api.example.com:8081/api/@/team",
+            { "https://api.example.com:8081", "api", "team" });
+    }
+
+    SECTION("scheme-host-port-with-prefix-and-suite")
+    {
+        check_api("https://api.example.com:8081/api/@/team/suite",
+            { "https://api.example.com:8081", "api", "team", "suite" });
+    }
+
+    SECTION("scheme-host-port-with-prefix-and-revision")
+    {
+        check_api("https://api.example.com:8081/api/@/team/suite/revision",
+            { "https://api.example.com:8081", "api", "team", "suite", "revision" });
     }
 }

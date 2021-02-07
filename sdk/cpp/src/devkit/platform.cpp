@@ -3,9 +3,10 @@
  */
 
 #include "weasel/devkit/platform.hpp"
+#include "rapidjson/document.h"
 #include "weasel/devkit/httpclient.hpp"
 #include "weasel/devkit/utils.hpp"
-#include "rapidjson/document.h"
+#include <regex>
 #include <sstream>
 
 namespace weasel {
@@ -13,20 +14,30 @@ namespace weasel {
     /**
      *
      */
-    ApiUrl::ApiUrl(const std::string& api_url)
+    ApiUrl::ApiUrl(const std::string& url)
     {
-        if (api_url.empty()) {
+        const static std::regex pattern(
+            R"(^(?:([a-z]+)://)?([^:/?#]+)(?::(\d+))?/?(.*)?$)");
+        std::cmatch result;
+        if (!std::regex_match(url.c_str(), result, pattern)) {
             return;
         }
-        const auto index = api_url.find_last_of('@');
-        _root = api_url.substr(0, index);
-        if (_root.back() == '/') {
-            _root.pop_back();
+        _root.scheme = result[1];
+        _root.host = result[2];
+        _root.port = result[3];
+        const std::string path = result[4];
+        if (path.empty()) {
+            return;
+        }
+        const auto index = path.find_last_of('@');
+        _prefix = path.substr(0, index);
+        if (_prefix.back() == '/') {
+            _prefix.pop_back();
         }
         if (index == std::string::npos) {
             return;
         }
-        std::istringstream iss(api_url.substr(index + 1));
+        std::istringstream iss(path.substr(index + 1));
         std::vector<std::string> items;
         std::string item;
         while (std::getline(iss, item, '/')) {
@@ -40,6 +51,32 @@ namespace weasel {
         _team = items.at(0);
         _suite = items.at(1);
         _revision = items.at(2);
+    }
+
+    /**
+     *
+     */
+    std::string ApiUrl::root() const
+    {
+        auto output = _root.host;
+        if (!_root.scheme.empty()) {
+            output.insert(0, weasel::format("{}://", _root.scheme));
+        }
+        if (!_root.port.empty()) {
+            return weasel::format("{}:{}", output, _root.port);
+        }
+        return output;
+    }
+
+    /**
+     *
+     */
+    std::string ApiUrl::route(const std::string& path) const
+    {
+        if (path.empty()) {
+            return _prefix;
+        }
+        return weasel::format("{}/{}", _prefix, path);
     }
 
     /**
@@ -79,7 +116,8 @@ namespace weasel {
      *
      */
     Platform::Platform(const ApiUrl& api)
-        : _api(api), _http(new Http(api._root))
+        : _api(api)
+        , _http(new Http(api.root()))
     {
     }
 
@@ -103,7 +141,7 @@ namespace weasel {
      */
     bool Platform::handshake() const
     {
-        const auto response = _http->get("/platform");
+        const auto response = _http->get(_api.route("/platform"));
         if (response.status == -1) {
             _error = "the platform appears to be down";
             return false;
@@ -135,7 +173,7 @@ namespace weasel {
     bool Platform::auth(const std::string& apiKey)
     {
         const auto content = weasel::format("{{\"key\": \"{}\"}}", apiKey);
-        const auto response = _http->post("/client/signin", content);
+        const auto response = _http->post(_api.route("/client/signin"), content);
         if (response.status == -1) {
             _error = "the platform appears to be down";
             return false;
@@ -163,8 +201,8 @@ namespace weasel {
      */
     std::vector<std::string> Platform::elements() const
     {
-        const auto& route = weasel::format("/element/{}/{}", _api._team, _api._suite);
-        const auto response = _http->get(route);
+        const auto& route = weasel::format("{}/element/{}/{}", _api._team, _api._suite);
+        const auto& response = _http->get(_api.route(route));
         if (response.status != 200) {
             _error = "received unexpected platform response";
             return {};
@@ -190,7 +228,7 @@ namespace weasel {
     {
         std::vector<std::string> errors;
         for (auto i = 0ul; i < max_retries; ++i) {
-            const auto response = _http->binary("/client/submit", content);
+            const auto response = _http->binary(_api.route("/client/submit"), content);
             if (response.status == 204) {
                 return {};
             }
@@ -208,9 +246,9 @@ namespace weasel {
      */
     bool Platform::seal() const
     {
-        const auto route = fmt::format("/batch/{}/{}/{}/seal2",
+        const auto route = fmt::format("{}/batch/{}/{}/{}/seal2",
             _api._team, _api._suite, _api._revision);
-        const auto response = _http->post(route);
+        const auto response = _http->post(_api.route(route));
         return response.status == 204;
     }
 

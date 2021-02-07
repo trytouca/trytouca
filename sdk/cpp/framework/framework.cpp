@@ -3,15 +3,15 @@
  */
 
 #include "weasel/framework.hpp"
+#include "cxxopts.hpp"
+#include "fmt/printf.h"
+#include "rapidjson/document.h"
 #include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/utils.hpp"
 #include "weasel/extra/version.hpp"
 #include "weasel/framework/detail/utils.hpp"
 #include "weasel/weasel.hpp"
-#include "cxxopts.hpp"
-#include "fmt/printf.h"
-#include "rapidjson/document.h"
 #include <fstream>
 #include <iostream>
 #include <thread>

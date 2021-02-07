@@ -7,7 +7,6 @@
 #include "weasel/lib_api.hpp"
 #include <memory>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 namespace weasel {
@@ -36,19 +35,30 @@ namespace weasel {
     /**
      *
      */
-    struct WEASEL_CLIENT_API ApiUrl {
-        ApiUrl(const std::string& api_url);
+    class WEASEL_CLIENT_API ApiUrl {
+    public:
+        ApiUrl(const std::string& url);
 
         bool confirm(
             const std::string& team,
             const std::string& suite,
             const std::string& revision);
 
-        std::string _root;
+        std::string root() const;
+        std::string route(const std::string& path) const;
+
         std::string _team;
         std::string _suite;
         std::string _revision;
         std::string _error;
+
+    private:
+        struct {
+            std::string scheme;
+            std::string host;
+            std::string port;
+        } _root;
+        std::string _prefix;
     };
 
     /**

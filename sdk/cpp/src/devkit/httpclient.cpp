@@ -10,13 +10,12 @@ namespace weasel {
     /**
      *
      */
-    Http::Http(const std::string& root) : _cli(root.c_str())
+    Http::Http(const std::string& root)
+        : _cli(root.c_str())
     {
-        _cli.set_default_headers({
-            { "Accept-Charset", "utf-8" },
+        _cli.set_default_headers({ { "Accept-Charset", "utf-8" },
             { "Accept", "application/json" },
-            { "User-Agent", "weasel-client-cpp/1.2.1" }
-        });
+            { "User-Agent", "weasel-client-cpp/1.2.1" } });
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
         _cli.enable_server_certificate_verification(false);
 #endif

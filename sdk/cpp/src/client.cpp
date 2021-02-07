@@ -119,8 +119,7 @@ namespace weasel {
         // `version` from its path.
 
         ApiUrl api_url(_opts.api_url);
-        if (!api_url.confirm(_opts.team, _opts.suite, _opts.revision))
-        {
+        if (!api_url.confirm(_opts.team, _opts.suite, _opts.revision)) {
             _opts.parse_error = api_url._error;
             return false;
         }
