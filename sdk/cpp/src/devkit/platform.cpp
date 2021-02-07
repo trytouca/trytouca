@@ -76,7 +76,10 @@ namespace weasel {
         if (path.empty()) {
             return _prefix;
         }
-        return weasel::format("{}/{}", _prefix, path);
+        if (_prefix.empty()) {
+            return path;
+        }
+        return "/" + _prefix + path;
     }
 
     /**
@@ -141,9 +144,10 @@ namespace weasel {
      */
     bool Platform::handshake() const
     {
+        _error.clear();
         const auto response = _http->get(_api.route("/platform"));
         if (response.status == -1) {
-            _error = "the platform appears to be down";
+            _error = response.body;
             return false;
         }
         if (response.status != 200) {
@@ -172,10 +176,11 @@ namespace weasel {
      */
     bool Platform::auth(const std::string& apiKey)
     {
+        _error.clear();
         const auto content = weasel::format("{{\"key\": \"{}\"}}", apiKey);
         const auto response = _http->post(_api.route("/client/signin"), content);
         if (response.status == -1) {
-            _error = "the platform appears to be down";
+            _error = response.body;
             return false;
         }
         if (response.status != 200) {
@@ -201,8 +206,13 @@ namespace weasel {
      */
     std::vector<std::string> Platform::elements() const
     {
+        _error.clear();
         const auto& route = weasel::format("{}/element/{}/{}", _api._team, _api._suite);
         const auto& response = _http->get(_api.route(route));
+        if (response.status == -1) {
+            _error = response.body;
+            return {};
+        }
         if (response.status != 200) {
             _error = "received unexpected platform response";
             return {};
@@ -246,10 +256,19 @@ namespace weasel {
      */
     bool Platform::seal() const
     {
+        _error.clear();
         const auto route = fmt::format("{}/batch/{}/{}/{}/seal2",
             _api._team, _api._suite, _api._revision);
-        const auto response = _http->post(_api.route(route));
-        return response.status == 204;
+        const auto& response = _http->post(_api.route(route));
+        if (response.status == -1) {
+            _error = response.body;
+            return false;
+        }
+        if (response.status != 204) {
+            _error = weasel::format("platform authentication failed: {}", response.status);
+            return false;
+        }
+        return true;
     }
 
 } // namespace weasel

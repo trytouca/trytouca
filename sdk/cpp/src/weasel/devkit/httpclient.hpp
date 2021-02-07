@@ -7,6 +7,8 @@
 
 namespace weasel {
 
+    using Cli = std::unique_ptr<httplib::Client>;
+
     /**
      *
      */
@@ -20,11 +22,7 @@ namespace weasel {
         Response binary(const std::string& route, const std::string& content) const;
 
     private:
-#ifdef CPPHTTPLIB_OPENSSL_SUPPORT
-        mutable httplib::SSLClient _cli;
-#else
-        mutable httplib::Client _cli;
-#endif
+        Cli _cli;
     };
 
 } // namespace weasel

@@ -38,8 +38,8 @@ TEST_CASE("api-url")
 
     SECTION("scheme-host-port")
     {
-        check_api("https://api.example.com:4200",
-            { "https://api.example.com:4200" });
+        check_api("http://api.example.com:4200",
+            { "http://api.example.com:4200" });
     }
 
     SECTION("scheme-host-extra-slash")
