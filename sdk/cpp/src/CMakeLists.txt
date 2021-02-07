@@ -50,7 +50,6 @@ target_sources(
         weasel.cpp
         devkit/comparison.cpp
         devkit/filesystem.cpp
-        devkit/httpclient.cpp
         devkit/logger.cpp
         devkit/object.cpp
         devkit/platform.cpp
@@ -75,8 +74,6 @@ target_link_libraries(
 
 target_include_directories(
         weasel_client
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}
     PUBLIC
         ${WEASEL_CLIENT_ROOT_DIR}/include
         ${CMAKE_BINARY_DIR}/generated
