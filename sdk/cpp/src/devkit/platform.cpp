@@ -13,15 +13,32 @@ namespace weasel {
     /**
      *
      */
-    HttpV2::HttpV2(const std::string& root)
-        : _root(root)
+    class Http : public Transport {
+    public:
+        explicit Http(const std::string& root);
+        void set_token(const std::string& token);
+        Response get(const std::string& route) const;
+        Response patch(const std::string& route, const std::string& body = "") const;
+        Response post(const std::string& route, const std::string& body = "") const;
+        Response binary(const std::string& route, const std::string& content) const;
+
+    private:
+        std::unique_ptr<httplib::Client> make_client() const;
+        const std::string _root;
+        std::string _token;
+    };
+
+    /**
+     *
+     */
+    Http::Http(const std::string& root) : _root(root)
     {
     }
 
     /**
      *
      */
-    void HttpV2::set_token(const std::string& token)
+    void Http::set_token(const std::string& token)
     {
         _token = token;
     }
@@ -29,18 +46,26 @@ namespace weasel {
     /**
      *
      */
-    ResponseV2 HttpV2::get(const std::string& route) const
-    {
-        httplib::Client cli(_root.c_str());
-        cli.set_default_headers({
+    std::unique_ptr<httplib::Client> Http::make_client() const {
+        auto cli = std::unique_ptr<httplib::Client>(new httplib::Client(_root.c_str()));
+        cli->set_default_headers({
             { "Accept-Charset", "utf-8" },
             { "Accept", "application/json" },
             { "User-Agent", "weasel-client-cpp/1.2.1" }
         });
         if (!_token.empty()) {
-            cli.set_bearer_token_auth(_token.c_str());
+            cli->set_bearer_token_auth(_token.c_str());
         }
-        const auto result = cli.Get(route.c_str());
+        return cli;
+    }
+
+    /**
+     *
+     */
+    Response Http::get(const std::string& route) const
+    {
+        auto cli = make_client();
+        const auto result = cli->Get(route.c_str());
         if (!result) {
             return { -1, weasel::format("failed to submit HTTP GET request to {}", route) };
         }
@@ -50,18 +75,10 @@ namespace weasel {
     /**
      *
      */
-    ResponseV2 HttpV2::patch(const std::string& route, const std::string& body) const
+    Response Http::patch(const std::string& route, const std::string& body) const
     {
-        httplib::Client cli(_root.c_str());
-        cli.set_default_headers({
-            { "Accept-Charset", "utf-8" },
-            { "Accept", "application/json" },
-            { "User-Agent", "weasel-client-cpp/1.2.1" }
-        });
-        if (!_token.empty()) {
-            cli.set_bearer_token_auth(_token.c_str());
-        }
-        const auto result = cli.Patch(route.c_str(), body, "application/json");
+        auto cli = make_client();
+        const auto result = cli->Patch(route.c_str(), body, "application/json");
         if (!result) {
             return { -1, weasel::format("failed to submit HTTP PATCH request to {}", route) };
         }
@@ -71,18 +88,10 @@ namespace weasel {
     /**
      *
      */
-    ResponseV2 HttpV2::post(const std::string& route, const std::string& body) const
+    Response Http::post(const std::string& route, const std::string& body) const
     {
-        httplib::Client cli(_root.c_str());
-        cli.set_default_headers({
-            { "Accept-Charset", "utf-8" },
-            { "Accept", "application/json" },
-            { "User-Agent", "weasel-client-cpp/1.2.1" }
-        });
-        if (!_token.empty()) {
-            cli.set_bearer_token_auth(_token.c_str());
-        }
-        const auto result = cli.Post(route.c_str(), body, "application/json");
+        auto cli = make_client();
+        const auto result = cli->Post(route.c_str(), body, "application/json");
         if (!result) {
             return { -1, weasel::format("failed to submit HTTP POST request to {}", route) };
         }
@@ -92,18 +101,10 @@ namespace weasel {
     /**
      *
      */
-    ResponseV2 HttpV2::binary(const std::string& route, const std::string& content) const
+    Response Http::binary(const std::string& route, const std::string& content) const
     {
-        httplib::Client cli(_root.c_str());
-        cli.set_default_headers({
-            { "Accept-Charset", "utf-8" },
-            { "Accept", "application/json" },
-            { "User-Agent", "weasel-client-cpp/1.2.1" }
-        });
-        if (!_token.empty()) {
-            cli.set_bearer_token_auth(_token.c_str());
-        }
-        const auto result = cli.Post(route.c_str(), content, "application/octet-stream");
+        auto cli = make_client();
+        const auto result = cli->Post(route.c_str(), content, "application/octet-stream");
         if (!result) {
             return { -1, weasel::format("failed to submit HTTP POST request to {}", route) };
         }
@@ -178,16 +179,15 @@ namespace weasel {
     /**
      *
      */
-    PlatformV2::PlatformV2(const ApiUrl& api)
-        : _api(api)
-        , _http(api._root)
+    Platform::Platform(const ApiUrl& api)
+        : _api(api), _http(new Http(api._root))
     {
     }
 
     /**
      *
      */
-    bool PlatformV2::set_params(const std::string& team,
+    bool Platform::set_params(const std::string& team,
         const std::string& suite, const std::string& revision)
     {
         if (!_api.confirm(team, suite, revision)) {
@@ -202,9 +202,9 @@ namespace weasel {
      * to serve further requests and queries. Parse response from Weasel
      * Platform as a precaution.
      */
-    bool PlatformV2::handshake() const
+    bool Platform::handshake() const
     {
-        const auto response = _http.get("/platform");
+        const auto response = _http->get("/platform");
         if (response.status == -1) {
             _error = "the platform appears to be down";
             return false;
@@ -233,10 +233,10 @@ namespace weasel {
      * Submit authentication request. If Platform accepts this request, parse
      * the response to extract the API Token issued by Weasel Platform.
      */
-    bool PlatformV2::auth(const std::string& apiKey)
+    bool Platform::auth(const std::string& apiKey)
     {
         const auto content = weasel::format("{{\"key\": \"{}\"}}", apiKey);
-        const auto response = _http.post("/client/signin", content);
+        const auto response = _http->post("/client/signin", content);
         if (response.status == -1) {
             _error = "the platform appears to be down";
             return false;
@@ -254,7 +254,7 @@ namespace weasel {
             _error = "platform response malformed";
             return false;
         }
-        _http.set_token(doc["token"].GetString());
+        _http->set_token(doc["token"].GetString());
         _is_auth = true;
         return true;
     }
@@ -262,10 +262,10 @@ namespace weasel {
     /**
      *
      */
-    std::vector<std::string> PlatformV2::elements() const
+    std::vector<std::string> Platform::elements() const
     {
         const auto& route = weasel::format("/element/{}/{}", _api._team, _api._suite);
-        const auto response = _http.get(route);
+        const auto response = _http->get(route);
         if (response.status != 200) {
             _error = "received unexpected platform response";
             return {};
@@ -285,13 +285,13 @@ namespace weasel {
     /**
      *
      */
-    std::vector<std::string> PlatformV2::submit(
+    std::vector<std::string> Platform::submit(
         const std::string& content,
         const unsigned max_retries) const
     {
         std::vector<std::string> errors;
         for (auto i = 0ul; i < max_retries; ++i) {
-            const auto response = _http.binary("/client/submit", content);
+            const auto response = _http->binary("/client/submit", content);
             if (response.status == 204) {
                 return {};
             }
@@ -307,11 +307,11 @@ namespace weasel {
     /**
      *
      */
-    bool PlatformV2::seal() const
+    bool Platform::seal() const
     {
         const auto route = fmt::format("/batch/{}/{}/{}/seal2",
             _api._team, _api._suite, _api._revision);
-        const auto response = _http.post(route);
+        const auto response = _http->post(route);
         return response.status == 204;
     }
 

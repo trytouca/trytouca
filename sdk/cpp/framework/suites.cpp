@@ -39,7 +39,7 @@ namespace weasel { namespace framework {
             throw std::runtime_error(api_url._error);
         }
 
-        PlatformV2 platform(api_url);
+        Platform platform(api_url);
         if (!platform.auth(_options.at("api-key"))) {
             throw std::runtime_error(platform.get_error());
         }

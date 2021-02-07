@@ -14,7 +14,7 @@ namespace weasel {
     /**
      *
      */
-    struct ResponseV2 {
+    struct Response {
         const int status = -1;
         const std::string body;
     };
@@ -22,18 +22,14 @@ namespace weasel {
     /**
      *
      */
-    class HttpV2 {
+    class WEASEL_CLIENT_API Transport {
     public:
-        explicit HttpV2(const std::string& root);
-        void set_token(const std::string& token);
-        ResponseV2 get(const std::string& route) const;
-        ResponseV2 patch(const std::string& route, const std::string& body = "") const;
-        ResponseV2 post(const std::string& route, const std::string& body = "") const;
-        ResponseV2 binary(const std::string& route, const std::string& content) const;
-
-    private:
-        std::string _root;
-        std::string _token;
+        virtual void set_token(const std::string& token) = 0;
+        virtual Response get(const std::string& route) const = 0;
+        virtual Response patch(const std::string& route, const std::string& body = "") const = 0;
+        virtual Response post(const std::string& route, const std::string& body = "") const = 0;
+        virtual Response binary(const std::string& route, const std::string& content) const = 0;
+        virtual ~Transport() = default;
     };
 
     /**
@@ -57,9 +53,9 @@ namespace weasel {
     /**
      *
      */
-    class WEASEL_CLIENT_API PlatformV2 {
+    class WEASEL_CLIENT_API Platform {
     public:
-        explicit PlatformV2(const ApiUrl& api_url);
+        explicit Platform(const ApiUrl& api_url);
         bool set_params(
             const std::string& team,
             const std::string& suite,
@@ -76,7 +72,7 @@ namespace weasel {
 
     private:
         ApiUrl _api;
-        HttpV2 _http;
+        std::unique_ptr<Transport> _http;
         bool _is_auth = false;
         mutable std::string _error;
     };

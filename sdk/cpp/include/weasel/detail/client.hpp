@@ -219,7 +219,7 @@ namespace weasel {
         ClientOptions _opts;
         ElementsMap _testcases;
         std::string _mostRecentTestcase;
-        std::unique_ptr<PlatformV2> _platform;
+        std::unique_ptr<Platform> _platform;
         std::unordered_map<std::thread::id, std::string> _threadMap;
         std::vector<std::shared_ptr<weasel::logger>> _loggers;
     };

@@ -77,7 +77,7 @@ bool PostOperation::run_impl() const
 
     // authenticate to the Weasel Platform
 
-    weasel::PlatformV2 platform(_api_url);
+    weasel::Platform platform(_api_url);
 
     if (!platform.handshake()) {
         weasel::print_error("failed to contact Weasel Platform: {}\n", platform.get_error());

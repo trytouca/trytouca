@@ -158,7 +158,7 @@ namespace weasel {
         // perform authentication to Weasel Platform using the provided
         // API key and obtain API token for posting results.
 
-        _platform = std::unique_ptr<PlatformV2>(new PlatformV2(api_url));
+        _platform = std::unique_ptr<Platform>(new Platform(api_url));
         if (!_platform->auth(_opts.api_key)) {
             _opts.parse_error = _platform->get_error();
             return false;
