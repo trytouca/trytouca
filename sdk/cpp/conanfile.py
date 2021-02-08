@@ -20,14 +20,16 @@ class WeaselConan(ConanFile):
         "with_tests": [ True, False ],
         "with_utils": [ True, False ],
         "with_examples": [ True, False ],
-        "with_framework": [ True, False ]
+        "with_framework": [ True, False ],
+        "with_openssl": [ True, False ]
     }
     default_options = {
         "shared": False,
         "with_tests": False,
         "with_utils": False,
         "with_examples": False,
-        "with_framework": False
+        "with_framework": False,
+        "with_openssl": True
     }
     generators = "cmake_find_package"
     exports_sources = [
@@ -54,7 +56,7 @@ class WeaselConan(ConanFile):
         self.options["fmt"].header_only = True
         self.options["flatbuffers"].header_only = True
         self.options["spdlog"].header_only = True
-        self.options["cpp-httplib"].with_openssl = True
+        self.options["cpp-httplib"].with_openssl = self.options.with_openssl
 
     def _configure_cmake(self):
         cmake = CMake(self)
