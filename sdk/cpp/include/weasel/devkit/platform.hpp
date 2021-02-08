@@ -66,7 +66,14 @@ namespace weasel {
      */
     class WEASEL_CLIENT_API Platform {
     public:
+        /**
+         *
+         */
         explicit Platform(const ApiUrl& api_url);
+
+        /**
+         *
+         */
         bool set_params(
             const std::string& team,
             const std::string& suite,
@@ -105,7 +112,6 @@ namespace weasel {
          * Informs the platform that no more testcases will be submitted for
          * the specified revision.
          *
-         * @param revision version of the workflow under test to be sealed.
          * @return true if we managed to seal the specified revision.
          */
         bool seal() const;
@@ -133,6 +139,16 @@ namespace weasel {
          * @return any error encountered during the last function call.
          */
         inline std::string get_error() const { return _error; }
+
+        /**
+         *
+         */
+        bool cmp_submit(const std::string& url, const std::string& content) const;
+
+        /**
+         *
+         */
+        bool cmp_jobs(std::string& content) const;
 
     private:
         ApiUrl _api;

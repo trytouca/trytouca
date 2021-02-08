@@ -355,9 +355,48 @@ namespace weasel {
             return false;
         }
         if (response.status != 204) {
-            _error = weasel::format("platform authentication failed: {}", response.status);
+            _error = weasel::format("failed to seal specified version: {}", response.status);
             return false;
         }
+        return true;
+    }
+
+    /**
+     *
+     */
+    bool Platform::cmp_submit(
+        const std::string& url,
+        const std::string& content) const
+    {
+        _error.clear();
+        const auto& response = _http->patch(_api.route(url), content);
+        if (response.status == -1) {
+            _error = response.body;
+            return false;
+        }
+        if (response.status != 204) {
+            _error = weasel::format("failed to submit result: {}", response.status);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *
+     */
+    bool Platform::cmp_jobs(std::string& content) const
+    {
+        _error.clear();
+        const auto& response = _http->get(_api.route("/cmp"));
+        if (response.status == -1) {
+            _error = response.body;
+            return false;
+        }
+        if (response.status != 200) {
+            _error = weasel::format("received unexpected platform response: {}", response.status);
+            return false;
+        }
+        content = response.body;
         return true;
     }
 
