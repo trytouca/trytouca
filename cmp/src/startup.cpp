@@ -27,10 +27,10 @@ bool run_startup_stage(const Options& options)
     const auto max_attempts = options.startup_timeout / options.startup_interval;
     const auto& interval = std::chrono::milliseconds(options.startup_interval);
     WEASEL_LOG_INFO("running start-up stage");
-    weasel::ApiUrl apiUrl(options.api_url);
-    weasel::ApiConnector apiConnector(apiUrl);
+    weasel::ApiUrl api(options.api_url);
+    weasel::Platform platform(api);
     for (auto i = 1u; i <= max_attempts; ++i) {
-        if (apiConnector.handshake()) {
+        if (platform.handshake()) {
             WEASEL_LOG_INFO("start-up phase completed");
             return true;
         }

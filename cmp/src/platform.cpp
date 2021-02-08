@@ -82,14 +82,12 @@ bool MessageJob::process(const Options& options) const
 
     // submit output to Weasel Platform
 
-    weasel::ApiUrl apiUrl(options.api_url);
-    weasel::ApiConnector apiConnector(apiUrl);
+    weasel::ApiUrl api(options.api_url);
+    weasel::Platform platform(api);
+
     const auto url = weasel::format("/cmp/message/{}", _messageId);
-
-    // @todo check that response code is 204
-
-    if (!apiConnector.patchJson(url, output)) {
-        WEASEL_LOG_WARN("{}: failed to submit message", name);
+    if (!platform.cmp_submit(url, output)) {
+        WEASEL_LOG_WARN("{}: failed to submit message: {}", name, platform.get_error());
         return false;
     }
 
@@ -142,14 +140,12 @@ bool ComparisonJob::process(const Options& options) const
 
     // submit output to Weasel Platform
 
-    weasel::ApiUrl apiUrl(options.api_url);
-    weasel::ApiConnector apiConnector(apiUrl);
+    weasel::ApiUrl api(options.api_url);
+    weasel::Platform platform(api);
+
     const auto url = weasel::format("/cmp/job/{}", _jobId);
-
-    // @todo check that response code is 204
-
-    if (!apiConnector.patchJson(url, output)) {
-        WEASEL_LOG_WARN("{}: failed to submit comparison result", tuple);
+    if (!platform.cmp_submit(url, output)) {
+        WEASEL_LOG_WARN("{}: failed to submit comparison result: {}", tuple, platform.get_error());
         return false;
     }
 
@@ -157,17 +153,20 @@ bool ComparisonJob::process(const Options& options) const
 }
 
 /**
- * @todo getJson check that response code != -1
- * @todo getJson check that response code == 200
+ *
  */
 std::vector<std::unique_ptr<Job>> retrieveJobs(const std::string& api_url)
 {
-    weasel::ApiUrl apiUrl(api_url);
-    weasel::ApiConnector apiConnector(apiUrl);
+    weasel::ApiUrl api(api_url);
+    weasel::Platform platform(api);
+
+    std::string body;
+    if (!platform.cmp_jobs(body)) {
+        WEASEL_LOG_ERROR("failed to obtain list of jobs: {}", platform.get_error());
+        return {};
+    }
+
     rapidjson::Document doc;
-
-    const auto body = apiConnector.getJson("/cmp");
-
     if (doc.Parse<0>(body.c_str()).HasParseError()) {
         WEASEL_LOG_ERROR("backend response for list of jobs is ill-formed");
         return {};
