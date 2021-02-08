@@ -3,9 +3,9 @@
  */
 
 #include "weasel/devkit/platform.hpp"
+#include "httplib.h"
 #include "rapidjson/document.h"
 #include "weasel/devkit/utils.hpp"
-#include "httplib.h"
 #include <regex>
 #include <sstream>
 
@@ -30,7 +30,8 @@ namespace weasel {
     /**
      *
      */
-    Http::Http(const std::string& root) : _cli(root.c_str())
+    Http::Http(const std::string& root)
+        : _cli(root.c_str())
     {
         _cli.set_default_headers({ { "Accept-Charset", "utf-8" },
             { "Accept", "application/json" },

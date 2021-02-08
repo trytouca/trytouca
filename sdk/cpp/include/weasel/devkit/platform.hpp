@@ -71,14 +71,67 @@ namespace weasel {
             const std::string& team,
             const std::string& suite,
             const std::string& revision);
+
+        /**
+         * Checks platform status.
+         *
+         * @return true if platform is ready to serve incoming requests.
+         */
         bool handshake() const;
-        bool auth(const std::string& apiKey);
+
+        /**
+         * Authenticates with the platform using the provided API Key.
+         *
+         * @param api_key API Key to be used for authentication.
+         *                Can be retrieved from platform and is unique for
+         *                each user account.
+         * @return true if authentication was successful.
+         */
+        bool auth(const std::string& api_key);
+
+        /**
+         * Submits test results in binary format for one or multiple testcases
+         * to the platform. Expects a valid API Token.
+         *
+         * @param content test results in binary format.
+         * @param max_retries maximum number of retries.
+         * @return a list of error messages useful for logging or printing
+         */
         std::vector<std::string> submit(
             const std::string& content,
             const unsigned max_retries) const;
+
+        /**
+         * Informs the platform that no more testcases will be submitted for
+         * the specified revision.
+         *
+         * @param revision version of the workflow under test to be sealed.
+         * @return true if we managed to seal the specified revision.
+         */
         bool seal() const;
+
+        /**
+         * Queries the platform for the list of testcases that are submitted
+         * to the baseline version of this suite. Expects a valid API Token.
+         *
+         * @return list of test cases of the baseline version of this suite.
+         */
         std::vector<std::string> elements() const;
+
+        /**
+         * Checks if we are already authenticated with the platform.
+         *
+         * @return true if object has a valid authentication token.
+         */
         inline bool has_token() const { return _is_auth; }
+
+        /**
+         * Provides a description of any error encountered during the
+         * execution of the most recently called member function.
+         * Intended to be used for logging purposes.
+         *
+         * @return any error encountered during the last function call.
+         */
         inline std::string get_error() const { return _error; }
 
     private:
