@@ -1,0 +1,36 @@
+#
+# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+#
+
+version: "{build}-{branch}"
+
+image:
+  - Visual Studio 2017
+
+platform:
+  - x64
+
+configuration:
+  - Release
+
+before_build:
+  - cmd: set PATH=%PATH%;%PYTHON%/Scripts/
+  - cmd: pip.exe install conan
+  - cmd: conan user
+  - cmd: conan --version
+  - cmd: mkdir .\local\build\logs
+  - cmd: conan install -o shared=True -o with_tests=True -o with_utils=True -o with_examples=True -o with_framework=True --install-folder .\local\build .\conanfile.py --build=missing
+  - cmd: cmake -B".\local\build" -H"." -G"Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWEASEL_BUILD_TESTS=ON -DWEASEL_BUILD_UTILS=ON -DWEASEL_BUILD_EXAMPLES=ON -DWEASEL_BUILD_FRAMEWORK=ON
+
+build:
+  project: .\local\build\ALL_BUILD.vcxproj
+  parallel: true
+  verbosity: normal
+
+after_build:
+  - cmd: cmake --install ".\local\build" --prefix ".\local\dist"
+
+test_script:
+  - set CTEST_OUTPUT_ON_FAILURE=1
+  - cmd: cd "local/build"
+  - cmd: ctest . -C Release
