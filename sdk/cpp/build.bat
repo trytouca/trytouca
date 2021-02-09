@@ -23,7 +23,7 @@ cmake -B".\local\build" -H"." -G"Visual Studio 15 2017 Win64" ^
     -DWEASEL_BUILD_EXAMPLES=ON ^
     -DWEASEL_BUILD_FRAMEWORK=ON
 
-cmake --build ".\local\build" --config Release ^
+cmake --build ".\local\build" --config Release --parallel ^
      > .\local\build\logs\weasel.build.stdout ^
      2> .\local\build\logs\weasel.build.stderr
 

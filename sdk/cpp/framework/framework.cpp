@@ -16,6 +16,10 @@
 #include <iostream>
 #include <thread>
 
+#ifdef _WIN32
+#undef GetObject
+#endif
+
 namespace weasel { namespace framework {
 
     /**

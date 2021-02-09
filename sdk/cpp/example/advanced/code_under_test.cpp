@@ -9,6 +9,10 @@
 #include <fstream>
 #include <thread>
 
+#ifdef _WIN32
+#undef GetObject
+#endif
+
 /**
  *
  */

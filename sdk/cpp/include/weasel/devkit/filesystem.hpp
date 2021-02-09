@@ -14,7 +14,11 @@ namespace weasel {
 #endif
 #endif
 #ifndef GHC_USE_STD_FS
+#if _WIN32
+#include <ghc/filesystem.hpp>
+#else
 #include <ghc/fs_fwd.hpp>
+#endif
 namespace weasel {
     namespace filesystem = ghc::filesystem;
 }

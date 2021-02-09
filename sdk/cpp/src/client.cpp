@@ -407,7 +407,7 @@ namespace weasel {
         // configuration parameter and post each group separately in
         // flatbuffers format.
         for (auto it = testcases.begin(); it != testcases.end();) {
-            const auto& tail = it + std::min(static_cast<ptrdiff_t>(_opts.post_max_cases), std::distance(it, testcases.end()));
+            const auto& tail = it + (std::min)(static_cast<ptrdiff_t>(_opts.post_max_cases), std::distance(it, testcases.end()));
             std::vector<std::string> batch(it, tail);
             // attempt to post results for this group of testcases.
             // currently we only support posting data in flatbuffers format.
