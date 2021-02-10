@@ -5,32 +5,6 @@
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
-weasel_find_package("fmt")
-weasel_find_package("Flatbuffers")
-weasel_find_package("flatc")
-weasel_find_package("ghcFilesystem")
-weasel_find_package("httplib")
-weasel_find_package("RapidJSON")
-weasel_find_package("spdlog")
-
-function(WeaselFlatbuffersGenerateCpp SCHEMA_FILES GENERATED_DIR GENERATED_CXX)
-    get_filename_component(_flatc_dir ${flatc_BUILD_MODULES_PATHS} DIRECTORY)
-    get_filename_component(_flatc_dir ${_flatc_dir} DIRECTORY)
-    set(flatbuffers_FLATC_EXECUTABLE "${_flatc_dir}/flatc")
-    foreach(SCHEMA_FILE ${SCHEMA_FILES})
-        get_filename_component(NAME ${SCHEMA_FILE} NAME_WE)
-        set(GENERATED_HEADER_FILE_PATH ${GENERATED_DIR}/${NAME}_generated.h)
-        add_custom_command(
-            DEPENDS ${flatbuffers_FLATC_EXECUTABLE}
-            OUTPUT ${GENERATED_HEADER_FILE_PATH}
-            COMMAND ${flatbuffers_FLATC_EXECUTABLE} --scoped-enums -o ${GENERATED_DIR} -c ${SCHEMA_FILE}
-            COMMENT "generating flatbuffers c++ header file: ${GENERATED_HEADER_FILE_PATH}"
-        )
-        list(APPEND GENERATED_FILES ${GENERATED_HEADER_FILE_PATH})
-    endforeach()
-    set(${GENERATED_CXX} ${GENERATED_FILES} PARENT_SCOPE)
-endfunction()
-
 WeaselFlatbuffersGenerateCpp(
     "${WEASEL_CLIENT_ROOT_DIR}/config/weasel.fbs"
     "${CMAKE_BINARY_DIR}/generated/weasel/impl"

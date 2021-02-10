@@ -209,15 +209,6 @@ build_build () {
         -DWEASEL_BUILD_COVERAGE_REPORT="$(cmake_option "with-coverage")"
     )
 
-    log_info "fetching dependencies for cpp components"
-    # we specify option `with_tests` to force conan to pull dependencies for
-    # all targets.
-    if [ ! -f "${dir_build}/conaninfo.txt" ]; then
-        conan install -o with_tests=True -o with_framework=True \
-            --install-folder "${dir_build}" \
-            "${dir_source}/conanfile.py" --build=missing
-    fi
-
     log_info "building cpp components using local toolchain"
     cmake "${cmake_config_general_args[@]}" "${cmake_config_weasel_args[@]}"
     cmake --build "${dir_build}" --parallel

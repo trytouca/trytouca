@@ -76,6 +76,7 @@ macro(weasel_find_package package_name)
     endif()
 endmacro()
 
+include(cmake/external.cmake)
 add_subdirectory(src)
 
 if (WEASEL_BUILD_TESTS)

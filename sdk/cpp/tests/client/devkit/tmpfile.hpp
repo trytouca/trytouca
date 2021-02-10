@@ -6,6 +6,7 @@
 
 #include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/utils.hpp"
+#include <fstream>
 
 struct TmpFile {
     TmpFile()
