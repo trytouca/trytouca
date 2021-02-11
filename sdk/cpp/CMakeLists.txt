@@ -87,6 +87,7 @@ message(DEBUG "weasel: using build type: ${CMAKE_BUILD_TYPE}")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 include(external)
+
 add_subdirectory(src)
 
 if (WEASEL_BUILD_TESTS)

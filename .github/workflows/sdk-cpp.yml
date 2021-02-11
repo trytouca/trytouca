@@ -12,8 +12,20 @@ on:
     - 'feature/**'
 
 jobs:
+
   test-native:
     name: unittest-native
+    runs-on: ubuntu-20.04
+    strategy:
+      matrix:
+        cxx: [g++-9, clang++-9]
+    steps:
+    - uses: actions/checkout@v1
+    - run: ./build.sh --with-tests --with-utils --with-examples --with-framework
+    - run: ./build.sh --test
+
+  test-conan:
+    name: unittest-conan
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -49,6 +61,7 @@ jobs:
         conan remote add --force weasel-conan https://api.bintray.com/conan/getweasel/weasel-cpp
         conan user -p ${{ secrets.BINTRAY_API_KEY }} -r weasel-conan ${{ secrets.BINTRAY_USERNAME }}
         conan upload "weasel/1.2.1" --confirm --parallel -r weasel-conan --all
+
   test-docker:
     name: unittest-docker
     runs-on: ubuntu-20.04
