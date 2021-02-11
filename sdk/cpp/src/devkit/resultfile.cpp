@@ -34,7 +34,7 @@ namespace weasel {
         if (!weasel::filesystem::is_regular_file(_path)) {
             return false;
         }
-        const auto& content = load_string_file(_path, std::ios::in | std::ios::binary);
+        const auto& content = load_string_file(_path.string(), std::ios::in | std::ios::binary);
         return validate(content);
     }
 
@@ -59,7 +59,7 @@ namespace weasel {
             return _testcases;
         }
 
-        const auto& content = load_string_file(_path, std::ios::in | std::ios::binary);
+        const auto& content = load_string_file(_path.string(), std::ios::in | std::ios::binary);
 
         // verify that given content represents valid flatbuffers data
         if (!validate(content)) {
