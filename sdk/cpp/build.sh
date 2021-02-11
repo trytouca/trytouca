@@ -159,7 +159,7 @@ build_build () {
             fi
         done
     fi
-    check_prerequisite_commands "cmake" "conan"
+    check_prerequisite_commands "cmake"
 
     local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
     local dir_build="${dir_source}/local/build"

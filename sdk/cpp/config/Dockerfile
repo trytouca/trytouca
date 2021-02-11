@@ -9,11 +9,9 @@ RUN apt-get update \
     | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
   && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main' \
   && apt-get install -y --no-install-recommends \
-    cmake g++ gcc make python3-pip python3-setuptools \
+    cmake g++ gcc git make \
   && rm -rf /var/lib/apt/lists/* \
-  && pip3 install conan --no-cache-dir --upgrade \
   && cmake --version \
-  && conan --version \
   && groupadd -r weasel && useradd -u 8002 -m --no-log-init -r -g weasel weasel
 
 COPY . /opt
@@ -24,9 +22,7 @@ WORKDIR /opt
 
 USER weasel
 
-RUN conan profile new default --detect \
-  && conan profile update settings.compiler.libcxx=libstdc++11 default \
-  && ./build.sh --with-tests --with-utils --with-examples --with-framework
+RUN ./build.sh --with-tests --with-utils --with-examples --with-framework
 
 # ---- client-cpp documentation ----
 

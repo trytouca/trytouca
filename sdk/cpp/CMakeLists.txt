@@ -2,11 +2,9 @@
 # Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
 #
 
-cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.14...3.19 FATAL_ERROR)
 
 project(weasel VERSION 1.2.1 LANGUAGES CXX)
-
-include(CTest)
 
 option(BUILD_SHARED_LIBS "build client as a shared library" OFF)
 option(WEASEL_BUILD_TESTS "build unittests" ON)
@@ -21,6 +19,11 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 set(CONAN_CMAKE_SILENT_OUTPUT ON)
+
+if (NOT DEFINED CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 11)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
 
 if (NOT DEFINED CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
@@ -42,6 +45,8 @@ if (NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
+set(CMAKE_CONFIGURATION_TYPES "Debug;Release" CACHE STRING "" FORCE)
+
 if (WEASEL_BUILD_TESTS)
     if (MSVC)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
@@ -49,6 +54,7 @@ if (WEASEL_BUILD_TESTS)
     else()
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra -Werror -Wfatal-errors")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
     endif()
 endif()
 
@@ -76,10 +82,15 @@ macro(weasel_find_package package_name)
     endif()
 endmacro()
 
-include(cmake/external.cmake)
+message(DEBUG "weasel: using cxx standard: ${CMAKE_CXX_STANDARD}")
+message(DEBUG "weasel: using build type: ${CMAKE_BUILD_TYPE}")
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+include(external)
 add_subdirectory(src)
 
 if (WEASEL_BUILD_TESTS)
+    include(CTest)
     add_subdirectory(tests/client)
     if (WEASEL_BUILD_FRAMEWORK)
         add_subdirectory(tests/framework)

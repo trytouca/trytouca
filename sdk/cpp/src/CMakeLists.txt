@@ -5,16 +5,6 @@
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
-WeaselFlatbuffersGenerateCpp(
-    "${WEASEL_CLIENT_ROOT_DIR}/config/weasel.fbs"
-    "${CMAKE_BINARY_DIR}/generated/weasel/impl"
-    flatbuffers_GENERATED_CXX
-)
-
-set_source_files_properties(
-    ${flatbuffers_GENERATED_CXX} PROPERTIES GENERATED TRUE
-)
-
 add_library(weasel_client "")
 
 target_sources(
@@ -31,7 +21,6 @@ target_sources(
         devkit/testcase.cpp
         devkit/types.cpp
         devkit/utils.cpp
-        ${flatbuffers_GENERATED_CXX}
 )
 
 target_link_libraries(
@@ -56,7 +45,6 @@ target_include_directories(
 target_compile_definitions(
         weasel_client
     PRIVATE
-        RAPIDJSON_HAS_STDSTRING
         $<$<CXX_COMPILER_ID:MSVC>:_WIN32_WINNT=0x0601>
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
@@ -64,6 +52,7 @@ target_compile_definitions(
 target_compile_features(
         weasel_client
     PRIVATE
+        cxx_variadic_templates
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:cxx_aggregate_default_initializers>
         cxx_defaulted_functions
         cxx_lambdas
