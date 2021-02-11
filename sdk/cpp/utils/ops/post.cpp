@@ -121,7 +121,7 @@ bool PostOperation::run_impl() const
 
     err_t errors;
     for (const auto& src : resultFiles) {
-        const auto& content = weasel::load_string_file(src, std::ios::binary);
+        const auto& content = weasel::load_string_file(src.string(), std::ios::binary);
         const auto& errs = platform.submit(content, 5u);
         if (errs.empty()) {
             WEASEL_LOG_INFO("submitted {}", src.string());
