@@ -96,7 +96,7 @@ public:
     inline std::string cout() const { return capturer.cout(); }
 
 private:
-    int exit_status;
+    int exit_status = 0;
     Workflow workflow;
     OutputCapturer capturer;
 };

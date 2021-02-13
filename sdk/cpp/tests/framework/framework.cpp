@@ -89,7 +89,8 @@ TEST_CASE("framework-dummy-workflow")
 
     SECTION("skip-post")
     {
-        caller.call_with({ "-r", "1.0", "-o", tmpFile.path, "--skip-post",
+        caller.call_with({ "--skip-post",
+            "-r", "1.0", "-o", tmpFile.path.string(),
             "--team", "some-team", "--suite", "some-suite" });
         CHECK(caller.exit_code() == EXIT_FAILURE);
         CHECK_THAT(caller.cout(), Catch::Contains("Weasel Regression Test Framework"));
@@ -101,7 +102,8 @@ TEST_CASE("framework-dummy-workflow")
 
     SECTION("single-testcase")
     {
-        caller.call_with({ "-r", "1.0", "-o", tmpFile.path, "--skip-post",
+        caller.call_with({ "--skip-post",
+            "-r", "1.0", "-o", tmpFile.path.string(),
             "--team", "some-team", "--suite", "some-suite",
             "--testcase", "some-case", "--save-as-binary", "false" });
         CHECK(caller.exit_code() == EXIT_SUCCESS);
@@ -114,7 +116,8 @@ TEST_CASE("framework-dummy-workflow")
 
     SECTION("api-url")
     {
-        caller.call_with({ "-r", "1.0", "-o", tmpFile.path, "--skip-post",
+        caller.call_with({ "--skip-post",
+            "-r", "1.0", "-o", tmpFile.path.string(),
             "--api-url", "http://localhost/api/@/some-team/some-suite",
             "--testcase", "some-case", "--save-as-binary", "false" });
         CHECK(caller.exit_code() == EXIT_SUCCESS);
@@ -129,8 +132,9 @@ TEST_CASE("framework-dummy-workflow")
     {
         TmpFile configFile;
         configFile.write(R"("Hello")");
-        caller.call_with({ "-r", "1.0", "-o", tmpFile.path, "--skip-post",
-            "--config-file", configFile.path });
+        caller.call_with({ "--skip-post",
+            "-r", "1.0", "-o", tmpFile.path.string(),
+            "--config-file", configFile.path.string() });
         CHECK(caller.exit_code() == EXIT_FAILURE);
         CHECK(caller.cout().empty());
         CHECK_THAT(caller.cerr(), Catch::Contains("expected configuration file to be a json object"));
@@ -141,8 +145,9 @@ TEST_CASE("framework-dummy-workflow")
     {
         TmpFile configFile;
         configFile.write(R"({ "framework": { "save-as-binary": "false", "save-as-json": "false", "skip-logs": "true", "log-level": "error", "overwrite": "false" }, "weasel": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://getweasel.com/api/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
-        caller.call_with({ "-r", "1.0", "-o", tmpFile.path, "--skip-post",
-            "--config-file", configFile.path,
+        caller.call_with({ "--skip-post",
+            "-r", "1.0", "-o", tmpFile.path.string(),
+            "--config-file", configFile.path.string(),
             "--testcase", "some-case" });
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
@@ -164,8 +169,9 @@ TEST_CASE("framework-simple-workflow-valid-use")
     TmpFile configFile;
     configFile.write(R"({ "weasel": { "api-url": "https://getweasel.com/api/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
 
-    caller.call_with({ "-r", "1.0", "-o", outputDir.path, "--skip-post",
-        "--config-file", configFile.path,
+    caller.call_with({ "--skip-post",
+        "-r", "1.0", "-o", outputDir.path.string(),
+        "--config-file", configFile.path.string(),
         "--save-as-json", "true" });
 
     SECTION("first-run")
@@ -183,8 +189,9 @@ TEST_CASE("framework-simple-workflow-valid-use")
 
     SECTION("second-run-without-overwrite")
     {
-        caller.call_with({ "-r", "1.0", "-o", outputDir.path, "--skip-post",
-            "--config-file", configFile.path,
+        caller.call_with({ "--skip-post",
+            "-r", "1.0", "-o", outputDir.path.string(),
+            "--config-file", configFile.path.string(),
             "--save-as-json", "true" });
 
         CHECK(caller.exit_code() == EXIT_SUCCESS);
@@ -201,8 +208,9 @@ TEST_CASE("framework-simple-workflow-valid-use")
 
     SECTION("second-run-with-overwrite")
     {
-        caller.call_with({ "-r", "1.0", "-o", outputDir.path, "--skip-post",
-            "--config-file", configFile.path,
+        caller.call_with({ "--skip-post",
+            "-r", "1.0", "-o", outputDir.path.string(),
+            "--config-file", configFile.path.string(),
             "--save-as-json", "true", "--overwrite" });
 
         CHECK(caller.exit_code() == EXIT_SUCCESS);

@@ -128,7 +128,7 @@ bool PostOperation::run_impl() const
             continue;
         }
 
-        errors.emplace(src, errs);
+        errors.emplace(src.string(), errs);
         WEASEL_LOG_WARN("failed to submit {}: {}", src.string(), errs.front());
 
         if (_fail_fast) {

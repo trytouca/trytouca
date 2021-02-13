@@ -17,7 +17,7 @@ std::string saveAndReadBack(const weasel::ClientImpl& client)
 {
     TmpFile file;
     CHECK_NOTHROW(client.save(file.path, {}, DataFormat::JSON, true));
-    return load_string_file(file.path);
+    return load_string_file(file.path.string());
 }
 
 ElementsMap saveAndLoadBack(const weasel::ClientImpl& client)
