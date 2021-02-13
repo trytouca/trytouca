@@ -5,7 +5,7 @@
 version: "1.2.1.{build}-{branch}"
 
 image:
-  - Visual Studio 2017
+  - Visual Studio 2019
 
 platform:
   - x64
@@ -14,7 +14,7 @@ configuration:
   - Release
 
 before_build:
-  - cmd: cmake -B".\local\build" -H"." -G"Visual Studio 15 2017 Win64" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWEASEL_BUILD_TESTS=ON -DWEASEL_BUILD_UTILS=ON -DWEASEL_BUILD_EXAMPLES=ON -DWEASEL_BUILD_FRAMEWORK=ON
+  - cmd: cmake -B".\local\build" -H"." -G"Visual Studio 16 2019" -A"x64" -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DWEASEL_BUILD_TESTS=ON -DWEASEL_BUILD_UTILS=ON -DWEASEL_BUILD_EXAMPLES=ON -DWEASEL_BUILD_FRAMEWORK=ON
 
 build:
   project: .\local\build\ALL_BUILD.vcxproj
