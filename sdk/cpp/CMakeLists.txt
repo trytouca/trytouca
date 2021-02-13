@@ -75,18 +75,10 @@ if (WEASEL_BUILD_COVERAGE_REPORT)
 endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
-macro(weasel_find_package package_name)
-    find_package(${package_name} QUIET)
-    if (NOT ${package_name}_FOUND)
-        message (FATAL_ERROR "required dependency on ${package_name} is missing")
-    endif()
-endmacro()
+include(cmake/external.cmake)
 
 message(DEBUG "weasel: using cxx standard: ${CMAKE_CXX_STANDARD}")
 message(DEBUG "weasel: using build type: ${CMAKE_BUILD_TYPE}")
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-include(external)
 
 add_subdirectory(src)
 
