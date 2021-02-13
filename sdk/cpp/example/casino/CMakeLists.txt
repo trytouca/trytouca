@@ -4,7 +4,7 @@
 
 add_executable(weasel_example_casino "")
 
-# weasel_find_package("cxxopts")
+weasel_find_package("cxxopts")
 
 target_sources(
         weasel_example_casino

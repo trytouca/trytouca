@@ -4,7 +4,7 @@
 
 include(GNUInstallDirs)
 
-# weasel_find_package("cxxopts")
+weasel_find_package("cxxopts")
 
 add_executable(weasel_example_advanced "")
 

@@ -5,6 +5,13 @@
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
+weasel_find_package("flatbuffers")
+weasel_find_package("fmt")
+weasel_find_package("ghcFilesystem")
+weasel_find_package("httplib")
+weasel_find_package("RapidJSON")
+weasel_find_package("spdlog")
+
 add_library(weasel_client "")
 
 target_sources(

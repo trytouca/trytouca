@@ -5,7 +5,7 @@
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
-# weasel_find_package("cxxopts")
+weasel_find_package("cxxopts")
 
 add_library(weasel_framework "")
 
