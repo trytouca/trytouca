@@ -7,9 +7,9 @@ cmake_minimum_required(VERSION 3.14...3.19 FATAL_ERROR)
 project(weasel VERSION 1.2.1 LANGUAGES CXX)
 
 option(BUILD_SHARED_LIBS "build client as a shared library" OFF)
-option(WEASEL_BUILD_TESTS "build unittests" ON)
-option(WEASEL_BUILD_UTILS "build utility applications" ON)
-option(WEASEL_BUILD_EXAMPLES "build sample regression test tool" ON)
+option(WEASEL_BUILD_TESTS "build unittests" OFF)
+option(WEASEL_BUILD_UTILS "build utility applications" OFF)
+option(WEASEL_BUILD_EXAMPLES "build sample regression test tool" OFF)
 option(WEASEL_BUILD_FRAMEWORK "build regression test framework" OFF)
 option(WEASEL_BUILD_COVERAGE_REPORT "enable code coverage generation" OFF)
 

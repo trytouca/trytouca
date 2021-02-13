@@ -1,8 +1,7 @@
 # Build Instructions
 
-This document provides instructions for building Weasel client-side components
-from source code. These components include the Weasel Client Library for C++,
-Weasel Test Framework for C++, and Weasel Utility Command Line Tool.
+This document provides instructions for building Weasel Client Library for C++
+and its side components.
 
 **Note**: To use Weasel as a dependency in your project, you do not need to
 follow these instructions. Follow our *Integration* document to learn how to
@@ -24,10 +23,9 @@ We test our library against the following compilers.
 
 ## Required Build Tools
 
-As of v1.2, We use [Conan] for managing our third-party dependencies and
-[CMake] as our build system. If you do not have [Conan] or [CMake] installed
-already, please consult with their documentation for instructions to install
-these tools on your platform.
+As of v1.3, We use [CMake] as our build system. If you do not have a recent
+version of CMake installed already, please consult with their documentation
+for instructions to install it on your platform.
 
 ## Obtaining the Source Code
 
@@ -37,12 +35,12 @@ We refer to this directory as `<project_directory>` in subsequent sections
 of this document.
 
 ```bash
-git clone git@github.com:getweasel/weasel-cpp.git weasel-cpp
+git clone git@github.com:getweasel/weasel-cpp.git
 ```
 
 ## Building with our Helper Scripts
 
-Weasel C++ Client has five main components.
+Weasel Client Library for C++ has five main components.
 
 | Name                         | Build Argument   |
 | ---------------------------- | ---------------- |
@@ -73,49 +71,6 @@ You can build all the components using the `--all` argument:
 If, for any reason, you do not want to build the components using our helper
 scripts, follow the subsequent sections to learn what our scripts do.
 
-## Installing Dependencies
-
-Weasel Client Library for C++ has the following dependencies:
-
-| Dependency     | Version |
-|----------------|---------|
-| catch2         | 2.13.3  |
-| cpp-httplib    | 0.8.0   |
-| cxxopts        | 2.2.1   |
-| flatbuffers    | 1.12.0  |
-| flatc          | 1.12.0  |
-| fmt            | 7.1.3   |
-| ghc-filesystem | 1.4.0   |
-| rapidjson      | 1.1.0   |
-| spdlog         | 1.8.2   |
-
-Since building these dependencies from source is time-consuming and
-inconvenient, we leverage [Conan] dependency manager to download their
-pre-compiled binaries for your build platform and use them during the
-build process. Once you downloaded and installed Conan, run the following
-commands to setup a Conan profile:
-
-```bash
-conan profile update settings.compiler.libcxx=libstdc++11 default
-```
-
-Now we can install the dependencies:
-
-```bash
-conan install -o with_tests=True -o with_framework=True \
-  --install-folder "<project_directory>/local/build" \
-  "<project_directory>/conanfile.py" --build=missing
-```
-
-Note the use of option `with_tests` in the command above that includes
-installation of the dependency `catch2` which is required only for building
-the unit tests.
-We are also adding option `with_framework` in the command above to pull the
-dependencies `cxxopts` which is used by the framework and the command line
-utility tool.
-This way, running `conan install` will remain a one-time operation even if
-we changed our mind about what components to build.
-
 ## Configuring the Build System
 
 Once the dependencies are installed, we can proceed with building the
@@ -139,9 +94,9 @@ the command whose list is given in the table below.
 
 | Option                 | Comment                     | Default |
 |------------------------|-----------------------------|---------|
-| WEASEL_BUILD_TESTS     | Unit-Tests                  | ON      |
-| WEASEL_BUILD_UTILS     | Command-Line Utility Tool   | ON      |
-| WEASEL_BUILD_EXAMPLES  | Sample Test Tools           | ON      |
+| WEASEL_BUILD_TESTS     | Unit-Tests                  | OFF     |
+| WEASEL_BUILD_UTILS     | Command-Line Utility Tool   | OFF     |
+| WEASEL_BUILD_EXAMPLES  | Sample Test Tools           | OFF     |
 | WEASEL_BUILD_FRAMEWORK | Test Framework Library      | OFF     |
 
 As an example, the command below enables building the test framework
@@ -158,12 +113,11 @@ Finally, we can proceed with building the source code via CMake which uses
 the native build tool of your platform.
 
 ```bash
-cmake --build "<project_directory>/local/build"
+cmake --build "<project_directory>/local/build" --parallel
 ```
 
 This command produces the build artifacts in `<project_directory>/local/dist`
 including the library `weasel_client` and the test framework `weasel_framework`
 to which you can link your regression test tools.
 
-[Conan]: https://conan.io/
 [CMake]: https://cmake.org/
