@@ -35,7 +35,7 @@ namespace weasel {
         struct WEASEL_CLIENT_API ComparisonResult {
             ElementsMap fresh;
             ElementsMap missing;
-            std::unordered_map<std::string, compare::TestcaseComparison> common;
+            std::map<std::string, compare::TestcaseComparison> common;
 
             /**
              * @brief provides description of this object in json format.

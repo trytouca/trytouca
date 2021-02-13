@@ -50,9 +50,9 @@ Wizard parse_profile(const std::string& path)
     }
     if (doc.HasMember("dob")) {
         const auto& rjDob = doc["dob"].GetObject();
-        const unsigned short y = rjDob["y"].GetInt();
-        const unsigned short m = rjDob["m"].GetInt();
-        const unsigned short d = rjDob["d"].GetInt();
+        const auto y = static_cast<unsigned short>(rjDob["y"].GetInt());
+        const auto m = static_cast<unsigned short>(rjDob["m"].GetInt());
+        const auto d = static_cast<unsigned short>(rjDob["d"].GetInt());
         wizard.dob = { y, m, d };
     }
 

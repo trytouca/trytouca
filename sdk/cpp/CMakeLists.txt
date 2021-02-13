@@ -83,7 +83,6 @@ message(DEBUG "weasel: using build type: ${CMAKE_BUILD_TYPE}")
 add_subdirectory(src)
 
 if (WEASEL_BUILD_TESTS)
-    include(CTest)
     add_subdirectory(tests/client)
     if (WEASEL_BUILD_FRAMEWORK)
         add_subdirectory(tests/framework)

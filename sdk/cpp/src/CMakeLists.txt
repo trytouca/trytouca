@@ -53,7 +53,7 @@ target_compile_definitions(
         weasel_client
     PRIVATE
         RAPIDJSON_HAS_STDSTRING
-        $<$<CXX_COMPILER_ID:MSVC>:_WIN32_WINNT=0x0601>
+        $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
 

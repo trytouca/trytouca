@@ -27,6 +27,12 @@ target_link_libraries(
         Catch2::Catch2
 )
 
+target_compile_definitions(
+        weasel_client_tests
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
+)
+
 set_target_properties(
         weasel_client_tests
     PROPERTIES

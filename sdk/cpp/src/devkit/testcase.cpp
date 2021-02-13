@@ -97,7 +97,7 @@ namespace weasel {
             if (!value) {
                 throw std::runtime_error("failed to parse metrics map entry");
             }
-            add_metric(key, value->value());
+            add_metric(key, static_cast<unsigned>(value->value()));
         }
     }
 

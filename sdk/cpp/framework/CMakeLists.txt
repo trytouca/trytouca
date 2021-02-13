@@ -30,6 +30,12 @@ target_include_directories(
         ${CMAKE_CURRENT_LIST_DIR}
 )
 
+target_compile_definitions(
+        weasel_framework
+    PRIVATE
+        $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+
 target_compile_options(
         weasel_framework
     PRIVATE
