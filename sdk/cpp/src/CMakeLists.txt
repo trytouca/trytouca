@@ -5,7 +5,7 @@
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
-weasel_find_package("flatbuffers")
+weasel_find_package("flatbuffers" "Flatbuffers")
 weasel_find_package("fmt")
 weasel_find_package("ghcFilesystem")
 weasel_find_package("httplib")
@@ -52,6 +52,7 @@ target_include_directories(
 target_compile_definitions(
         weasel_client
     PRIVATE
+        RAPIDJSON_HAS_STDSTRING
         $<$<CXX_COMPILER_ID:MSVC>:_WIN32_WINNT=0x0601>
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
