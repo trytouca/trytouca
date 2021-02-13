@@ -48,7 +48,6 @@ class WeaselConan(ConanFile):
             self.requires.add("cxxopts/2.2.1")
 
     def build_requirements(self):
-        self.build_requires("flatc/1.12.0")
         if self.options.with_tests:
             self.build_requires("catch2/2.13.3")
 
