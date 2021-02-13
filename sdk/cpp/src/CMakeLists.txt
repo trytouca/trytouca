@@ -76,10 +76,19 @@ target_compile_features(
 set_target_properties(
         weasel_client
     PROPERTIES
-        POSITION_INDEPENDENT_CODE ON
         SOVERSION 1
         VERSION 1.2.1
+        POSITION_INDEPENDENT_CODE ON
+        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
 )
+
+find_package(OpenSSL QUIET)
+if (OpenSSL_FOUND)
+    target_link_libraries(weasel_client PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+    target_compile_definitions(weasel_client PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT)
+else()
+    message(WARNING "Failed to find OpenSSL. Weasel will be built without HTTPS support.")
+endif()
 
 generate_export_header(
     weasel_client
