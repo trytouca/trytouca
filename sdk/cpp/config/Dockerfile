@@ -9,7 +9,7 @@ RUN apt-get update \
     | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
   && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main' \
   && apt-get install -y --no-install-recommends \
-    cmake g++ gcc git make \
+    cmake g++ gcc git make libssl-dev \
   && rm -rf /var/lib/apt/lists/* \
   && cmake --version \
   && groupadd -r weasel && useradd -u 8002 -m --no-log-init -r -g weasel weasel
