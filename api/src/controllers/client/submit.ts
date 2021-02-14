@@ -101,6 +101,17 @@ async function parseSubmissionMessages(
 }
 
 /**
+ * In the most common scenario, messages are submitted from a regression
+ * test tool in which case they belong to the same team, suite and batch.
+ * However, messages submitted to the platform are designed to be mutually
+ * exclusive. They may belong to different teams, different suites,
+ * different batches and different elements.
+ *
+ * To enable this more general scenario, we organize messages into a
+ * "Submission Tree" with multiple levels: team, suite, batch, element.
+ * This tree makes it easier for us to validate if client is allowed
+ * to submit messages for the specified teams, suites and batches.
+ *
  * @throws if there are multiple messages with the same elementName that
  *         belong to the same batch.
  */
@@ -753,17 +764,6 @@ export async function clientSubmit(
 
   const messages = await parseSubmissionMessages(req.body)
 
-  // In the most common scenario, messages are submitted from a regression
-  // test tool in which case they belong to the same team, suite and batch.
-  // However, messages submitted to the platform are designed to be mutually
-  // exclusive. They may belong to different teams, different suites,
-  // different batches and different elements.
-  //
-  // To enable this more general scenario, we organize messages into a
-  // "Submission Tree" with multiple levels: team, suite, batch, element.
-  // This tree makes it easier for us to validate if client is allowed
-  // to submit messages for the specified teams, suites and batches.
-
   const tree = await buildSubmissionTree(messages)
 
   // log the structure of the tree (mostly for debugging purposes)
@@ -775,7 +775,7 @@ export async function clientSubmit(
   const errors = await processSubmissionTree(user, tree)
   if (errors.length !== 0) {
     logger.warn('%s: failed to handle new submissions', user.username)
-    errors.map((e) => logger.warn(e))
+    errors.forEach((e) => logger.warn(e))
     return res.status(400).json({ errors })
   }
 

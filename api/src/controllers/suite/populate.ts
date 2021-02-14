@@ -21,7 +21,7 @@ export async function ctrlSuitePopulate(
   const team = res.locals.team as ITeam
   const user = res.locals.user as IUser
   const tuple = [team.slug, suite.slug].join('/')
-  logger.debug('%s: populating suite %s with sample data', user._id, tuple)
+  logger.debug('%s: asking to submit sample data to %s', user.username, tuple)
 
   // reject request if suite already has data
 

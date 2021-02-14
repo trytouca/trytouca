@@ -25,6 +25,11 @@ interface IConfig {
     port: number
     root: string
   }
+  logging: {
+    directory: string
+    filename: string
+    level: string
+  }
   mail: {
     host: string
     pass: string
@@ -46,6 +51,9 @@ interface IConfig {
     host: string
     port: number
   }
+  results: {
+    samplesDirectory: string
+  }
   services: {
     analytics: {
       checkInterval: number
@@ -62,11 +70,6 @@ interface IConfig {
       defaultDuration: number
       resultLifetime: number
     }
-  }
-  logging: {
-    directory: string
-    filename: string
-    level: string
   }
   storage: {
     directory: string
@@ -130,6 +133,9 @@ export const config: IConfig = {
     durationShort: Number(env.CACHE_DURATION_SHORT),
     host: env.REDIS_HOST,
     port: Number(env.REDIS_PORT)
+  },
+  results: {
+    samplesDirectory: path.normalize(`${__dirname}/../../` + env.SAMPLES_DIR)
   },
   services: {
     // analytics service
