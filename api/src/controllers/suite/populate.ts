@@ -3,7 +3,7 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import { batchSeal } from '../../models/batch'
+import { batchPromote, batchSeal } from '../../models/batch'
 import { BatchModel } from '../../schemas/batch'
 import { ISuiteDocument, SuiteModel } from '../../schemas/suite'
 import { ITeam } from '../../schemas/team'
@@ -82,7 +82,10 @@ export async function ctrlSuitePopulate(
         'Once you inspected differences found in a given version, ' +
         'you can set that version as the new baseline, so that ' +
         'future versions are compared against it.'
-      // await batchPromote(team, suite, batch, reason)
+      await batchPromote(team, suiteUpdated, batch, user, reason, {
+        reportJob: false
+      })
+      suiteUpdated = await SuiteModel.findById(suite._id)
     }
   }
 
@@ -95,8 +98,11 @@ export async function ctrlSuitePopulate(
   // seconds.
 
   for (let i = 1; i <= 6; i++) {
-    const key = `route_batchList_${team.slug}_${suite.slug}_${user.username}`
-    setTimeout(() => rclient.removeCached(key), i * 5000)
+    const keys = [
+      `route_batchList_${team.slug}_${suite.slug}_${user.username}`,
+      `route_suiteLookup_${team.slug}_${suite.slug}`
+    ]
+    setTimeout(() => keys.forEach((key) => rclient.removeCached(key)), i * 5000)
   }
 
   logger.info('%s: populated suite %s with sample data', user.username, tuple)
