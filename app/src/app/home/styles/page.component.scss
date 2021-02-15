@@ -40,11 +40,11 @@
           @apply inline-block bg-gray-200 rounded-full text-xs select-none;
         }
         &:hover {
-          @apply border-b border-gray-400;
+          @apply border-b border-lblue-200;
         }
         &:active,
         &.wsl-page-tab-active {
-          @apply border-b-2 border-gray-400;
+          @apply border-b-2 border-blue-400;
         }
       }
     }
