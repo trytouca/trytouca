@@ -3,16 +3,114 @@
  */
 
 import { messageRemove } from './message'
+import { ComparisonFunctions } from '../controllers/comparison'
 import { BatchModel, IBatchDocument } from '../schemas/batch'
 import { CommentModel } from '../schemas/comment'
 import { ReportModel, EReportType } from '../schemas/report'
 import { MessageModel } from '../schemas/message'
 import { SuiteModel, ISuiteDocument } from '../schemas/suite'
 import { TeamModel, ITeam } from '../schemas/team'
+import { IUser } from '../schemas/user'
 import { MessageInfo } from './messageInfo'
 import { filestore } from '../utils/filestore'
 import { rclient } from '../utils/redis'
 import logger from '../utils/logger'
+
+/**
+ *
+ */
+export async function batchPromote(
+  team: ITeam,
+  suite: ISuiteDocument,
+  batch: IBatchDocument,
+  user: IUser,
+  reason: string,
+  options: { reportJob: boolean } = { reportJob: true }
+): Promise<void> {
+  const tuple = [team.slug, suite.slug, batch.slug].join('/')
+
+  // perform promotion of batch
+
+  const baselineInfo = suite.promotions[suite.promotions.length - 1]
+
+  const entry: ISuiteDocument['promotions'][0] = {
+    at: new Date(),
+    by: user._id,
+    for: reason,
+    from: baselineInfo.to,
+    to: batch._id
+  }
+
+  await SuiteModel.findByIdAndUpdate(suite._id, {
+    $push: { promotions: entry }
+  })
+  suite.promotions.push(entry)
+
+  logger.info('%s: %s: promoted to baseline', user.username, tuple)
+
+  // find batches with more recent submission date than this batch, and:
+  //  * update their `superior` field to have them compare against this
+  //    batch by default.
+  //  * remove their `meta` field which was based on comparison with the
+  //    previous baseline. we leave it to analytics service to re-populate
+  //    this field.
+  //  * create comparison jobs for them against this batch.
+  //    Without this step, comparison jobs will only be created after the
+  //    user asks for the comparison result, e.g. by navigating to the batch
+  //    page, which is too late to correctly respond to requests such as for
+  //    the list of batches.
+
+  const batches = await BatchModel.find({
+    suite: suite._id,
+    submittedAt: { $gt: batch.submittedAt }
+  })
+
+  if (batches.length) {
+    logger.info('%s: refreshing metadata of %d batches', tuple, batches.length)
+
+    batches.forEach((v) => ComparisonFunctions.compareBatch(batch._id, v._id))
+
+    await BatchModel.updateMany(
+      { _id: { $in: batches.map((raw) => raw._id) } },
+      { $set: { superior: batch._id }, $unset: { meta: true } }
+    )
+  }
+
+  // remove information about list of known suites from cache.
+  // we wait for this operation to avoid race condition.
+
+  rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
+  await rclient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
+
+  if (!options.reportJob) {
+    logger.debug('%s: skipped creation of reporting job', tuple)
+    return
+  }
+
+  // find id of the latest batch
+
+  const result: IBatchDocument[] = await BatchModel.aggregate([
+    { $match: { suite: suite._id } },
+    { $sort: { submittedAt: -1 } },
+    { $limit: 1 },
+    { $project: { _id: 1 } }
+  ])
+
+  const srcBatchId = result[0]._id
+  const dstBatchId = batch._id
+
+  // create a comparison report job between the latest batch and this batch.
+  // note that we do this, even if this batch is the same as the latest batch.
+  // we rely on reporting service to send notifications, to reuse the same
+  // logic for this special case.
+
+  await ReportModel.create({
+    srcBatchId,
+    dstBatchId,
+    reportType: EReportType.Promote
+  })
+  logger.info('%s: created reporting job against latest', tuple)
+}
 
 /**
  *
