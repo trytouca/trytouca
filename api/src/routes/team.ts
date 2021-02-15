@@ -9,7 +9,7 @@ import * as ev from 'express-validator'
 import { ETeamRole } from '../commontypes'
 import * as middleware from '../middlewares'
 import { promisable } from '../utils/routing'
-import { teamCreate } from '../controllers/team/create'
+import { ctrlTeamCreate } from '../controllers/team/create'
 import { teamInviteAccept } from '../controllers/team/inviteAccept'
 import { teamInviteAdd } from '../controllers/team/inviteAdd'
 import { teamInviteDecline } from '../controllers/team/inviteDecline'
@@ -116,7 +116,7 @@ router.post(
       .exists()
       .withMessage('required')
   ]),
-  promisable(teamCreate, 'create team')
+  promisable(ctrlTeamCreate, 'create team')
 )
 
 /**

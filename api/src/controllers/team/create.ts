@@ -4,8 +4,8 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { TeamModel } from '../../schemas/team'
-import { IUser, UserModel } from '../../schemas/user'
+import { teamCreate } from '../../models/team'
+import { IUser } from '../../schemas/user'
 import logger from '../../utils/logger'
 import { config } from '../../utils/config'
 import * as mailer from '../../utils/mailer'
@@ -21,7 +21,7 @@ import { rclient } from '../../utils/redis'
  *
  * Performs up to three database queries.
  */
-export async function teamCreate(
+export async function ctrlTeamCreate(
   req: Request,
   res: Response,
   next: NextFunction
@@ -30,37 +30,22 @@ export async function teamCreate(
   const proposed = req.body as { slug: string; name: string }
   logger.debug('%s: creating team %s', user.username, proposed.slug)
 
-  // return 400 if team slug is taken
+  // return 409 if team slug is taken
 
-  if (await TeamModel.countDocuments({ slug: proposed.slug })) {
+  if (!(await teamCreate(user, proposed))) {
     return next({
       errors: ['team already registered'],
       status: 409
     })
   }
 
-  // register team in database
-
-  const newTeam = await TeamModel.create({
-    name: proposed.name,
-    owner: user._id,
-    slug: proposed.slug
-  })
-  logger.info('%s: created team %s', user.username, proposed.slug)
-
-  // add a reference to this team in the user document
-
-  await UserModel.findByIdAndUpdate(user._id, {
-    $push: { teams: newTeam._id }
-  })
-
   // notify platform admins that a new team was created
 
   const subject = 'New Team Registered'
   mailer.mailAdmins(subject, 'team-create-admin', {
     subject,
-    teamName: newTeam.name,
-    teamSlug: newTeam.slug,
+    teamName: proposed.name,
+    teamSlug: proposed.slug,
     username: user.username
   })
 
@@ -71,6 +56,6 @@ export async function teamCreate(
 
   // redirect to lookup route for this newly created team
 
-  const redirectPath = [config.express.root, 'team', newTeam.slug].join('/')
+  const redirectPath = [config.express.root, 'team', proposed.slug].join('/')
   return res.status(201).redirect(redirectPath.replace(/\/+/g, '/'))
 }
