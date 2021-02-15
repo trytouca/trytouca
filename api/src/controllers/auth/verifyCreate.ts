@@ -104,14 +104,5 @@ export async function authVerifyCreate(
     verificationLink
   })
 
-  // notify administrators that a user account is created
-  // we are intentionally not awaiting on this operation
-
-  mailer.mailAdmins('New User Registered', 'auth-signup-admin', {
-    email: newUser.email,
-    fullname: newUser.fullname || newUser.username,
-    username: newUser.username
-  })
-
   return res.status(201).send()
 }
