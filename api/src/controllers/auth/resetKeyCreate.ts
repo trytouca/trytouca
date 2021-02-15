@@ -4,7 +4,6 @@
 
 import { NextFunction, Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
-
 import { UserModel } from '../../schemas/user'
 import { config } from '../../utils/config'
 import logger from '../../utils/logger'

@@ -5,8 +5,8 @@
 import { NextFunction, Request, Response } from 'express'
 import * as bcrypt from 'bcrypt'
 import { once } from 'lodash'
-
 import { EPlatformRole } from '../../commontypes'
+import { addSampleData } from '../../models/sampleData'
 import { UserModel } from '../../schemas/user'
 import { config } from '../../utils/config'
 import logger from '../../utils/logger'
@@ -103,6 +103,18 @@ export async function authVerifyCreate(
     username: newUser.username,
     verificationLink
   })
+
+  // if configured to do so, create a "tutorial" suite and populate it with
+  // sample test results.
+
+  if (!config.samples.disabled) {
+    addSampleData(newUser)
+  } else {
+    logger.debug(
+      '%s: skipped submission of sample data. feature is disabled.',
+      newUser.username
+    )
+  }
 
   return res.status(201).send()
 }

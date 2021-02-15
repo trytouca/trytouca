@@ -51,8 +51,9 @@ interface IConfig {
     host: string
     port: number
   }
-  results: {
-    samplesDirectory: string
+  samples: {
+    directory: string
+    disabled: boolean
   }
   services: {
     analytics: {
@@ -134,8 +135,9 @@ export const config: IConfig = {
     host: env.REDIS_HOST,
     port: Number(env.REDIS_PORT)
   },
-  results: {
-    samplesDirectory: path.normalize(`${__dirname}/../../` + env.SAMPLES_DIR)
+  samples: {
+    directory: path.normalize(`${__dirname}/../../` + env.SAMPLES_DIR),
+    disabled: env.SAMPLES_DISABLED === 'true'
   },
   services: {
     // analytics service

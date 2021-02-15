@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { TeamModel } from '../schemas/team'
+import { ITeamDocument, TeamModel } from '../schemas/team'
 import { IUser, UserModel } from '../schemas/user'
 import logger from '../utils/logger'
 
@@ -12,11 +12,11 @@ import logger from '../utils/logger'
 export async function teamCreate(
   user: IUser,
   team: { slug: string; name: string }
-): Promise<boolean> {
+): Promise<ITeamDocument> {
   // check that team slug is available
 
   if (await TeamModel.countDocuments({ slug: team.slug })) {
-    return false
+    return
   }
 
   // register team in database
@@ -33,5 +33,5 @@ export async function teamCreate(
   await UserModel.findByIdAndUpdate(user._id, {
     $push: { teams: newTeam._id }
   })
-  return true
+  return newTeam
 }

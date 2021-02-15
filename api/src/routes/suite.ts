@@ -8,12 +8,10 @@ import * as ev from 'express-validator'
 
 import * as middleware from '../middlewares'
 import { promisable } from '../utils/routing'
-
 import { ctrlSuiteCreate } from '../controllers/suite/create'
 import { ctrlSuiteList } from '../controllers/suite/list'
 import { ctrlSuiteLookup } from '../controllers/suite/lookup'
 import { ctrlSuiteRemove } from '../controllers/suite/remove'
-import { ctrlSuitePopulate } from '../controllers/suite/populate'
 import { suiteSubscribe } from '../controllers/suite/subscribe'
 import { suiteUnsubscribe } from '../controllers/suite/unsubscribe'
 import { suiteUpdate } from '../controllers/suite/update'
@@ -286,53 +284,6 @@ router.delete(
   middleware.isTeamAdmin,
   middleware.hasSuite,
   promisable(ctrlSuiteRemove, 'remove suite')
-)
-
-/**
- * Add sample test results to an empty suite.
- *
- * @api [post] /suite/:team/:suite/populate
- *    tags:
- *      - Suite
- *    summary: 'Populate a Suite'
- *    operationId: 'suite_populate'
- *    description:
- *      Add sample test results to an empty suite.
- *      User initiating the request must be authenticated.
- *      User initiating the request must be member of the team.
- *      Suite must be empty.
- *    parameters:
- *      - $ref: '#/components/parameters/team'
- *      - $ref: '#/components/parameters/suite'
- *    responses:
- *      204:
- *        description: 'Sample test results were added to the suite.'
- *      400:
- *        $ref: '#/components/responses/RequestInvalid'
- *      401:
- *        $ref: '#/components/responses/Unauthorized'
- *      403:
- *        $ref: '#/components/responses/Forbidden'
- *      404:
- *        description: 'Team Not Found or Suite Not Found'
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Errors'
- *      409:
- *        description: 'Suite is not empty'
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Errors'
- */
-router.post(
-  '/:team/:suite/populate',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  promisable(ctrlSuitePopulate, 'populate suite')
 )
 
 /**

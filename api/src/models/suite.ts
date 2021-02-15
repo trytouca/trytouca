@@ -5,7 +5,7 @@
 import { batchRemove } from '../models/batch'
 import { BatchModel } from '../schemas/batch'
 import { CommentModel } from '../schemas/comment'
-import { SuiteModel, ISuiteDocument } from '../schemas/suite'
+import { ISuiteDocument, SuiteModel } from '../schemas/suite'
 import { ITeam, TeamModel } from '../schemas/team'
 import { IUser } from '../schemas/user'
 import { rclient } from '../utils/redis'
@@ -18,23 +18,23 @@ export async function suiteCreate(
   user: IUser,
   team: ITeam,
   suite: { slug: string; name: string }
-): Promise<boolean> {
+): Promise<ISuiteDocument> {
   // cehck that suite slug is available
 
   if (await SuiteModel.countDocuments({ team: team._id, slug: suite.slug })) {
-    return false
+    return
   }
 
   // register suite in database
 
-  await SuiteModel.create({
+  const newSuite = await SuiteModel.create({
     createdBy: user._id,
     name: suite.name,
     slug: suite.slug,
     subscribers: [user._id],
     team: team._id
   })
-  return true
+  return newSuite
 }
 
 /**
