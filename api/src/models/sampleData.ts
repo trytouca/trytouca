@@ -7,6 +7,7 @@ import path from 'path'
 import { processBinaryContent } from '../controllers/client/submit'
 import { BatchModel } from '../schemas/batch'
 import { SuiteModel } from '../schemas/suite'
+import { TeamModel } from '../schemas/team'
 import { IUser } from '../schemas/user'
 import { config } from '../utils/config'
 import { rclient } from '../utils/redis'
@@ -14,6 +15,19 @@ import logger from '../utils/logger'
 import { batchPromote, batchSeal } from './batch'
 import { suiteCreate } from './suite'
 import { teamCreate } from './team'
+
+/**
+ * Find a team slug that is not already registered.
+ */
+async function findTeamSlug() {
+  const random = () => Math.floor(100000 + Math.random() * 900000)
+  let slug = `tutorial-${random()}`
+  while (await TeamModel.countDocuments({ slug })) {
+    logger.warn('findTeamSlug() implementation may be inefficient')
+    slug = `tutorial-${random()}`
+  }
+  return slug
+}
 
 /**
  * Add sample test results to an empty suite.
@@ -28,12 +42,11 @@ import { teamCreate } from './team'
  * results on their own.
  */
 export async function addSampleData(user: IUser): Promise<void> {
-  const random = Math.floor(1000 + Math.random() * 9000)
   const team = await teamCreate(user, {
-    slug: `tutorial-${random}`,
+    slug: await findTeamSlug(),
     name: 'Tutorial'
   })
-  const suite = await suiteCreate(user, team, {
+  let suite = await suiteCreate(user, team, {
     slug: 'profile-db',
     name: 'Profile Database'
   })
@@ -58,7 +71,6 @@ export async function addSampleData(user: IUser): Promise<void> {
 
   logger.info('%s: submitting sample data to %s', tuple, user.username)
   const batchBaseline = 'v2.0' // batch to be baseline of the suite
-  let suiteUpdated = suite
   for (const sample of samples) {
     const content = fs.readFileSync(sample)
     const errors = await processBinaryContent(user, content, {
@@ -73,19 +85,36 @@ export async function addSampleData(user: IUser): Promise<void> {
     if (errors.length !== 0) {
       return
     }
-    suiteUpdated = await SuiteModel.findById(suite._id)
+
+    // seal this batch
+
+    // note that we are refreshing the `suite` object to make sure its
+    // `promotions` field is up-to-date when it is passed to the `batchSeal`
+    // function.
+
+    suite = await SuiteModel.findById(suite._id)
     const batchSlug = path.parse(sample).name
-    const batch = await BatchModel.findOne({ slug: batchSlug })
-    await batchSeal(team, suiteUpdated, batch, { reportJob: false })
+    const batch = await BatchModel.findOne({
+      suite: suite._id,
+      slug: batchSlug
+    })
+    await batchSeal(team, suite, batch, { reportJob: false })
+
+    // promote this batch if it should be the eventual baseline
+
+    // note that in the below impl, we are not refreshing the `batch` object.
+    // to reflect that it is now sealed. we are assuming that `batchPromote`
+    // does not care whether the batch is sealed.
+
     if (batchSlug === batchBaseline) {
       const reason =
         'Once you inspected differences found in a given version, ' +
         'you can set that version as the new baseline, so that ' +
         'future versions are compared against it.'
-      await batchPromote(team, suiteUpdated, batch, user, reason, {
+      await batchPromote(team, suite, batch, user, reason, {
         reportJob: false
       })
-      suiteUpdated = await SuiteModel.findById(suite._id)
+      suite = await SuiteModel.findById(suite._id)
     }
   }
 
