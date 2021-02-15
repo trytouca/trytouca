@@ -20,7 +20,8 @@ import logger from '../utils/logger'
 export async function batchSeal(
   team: ITeam,
   suite: ISuiteDocument,
-  batch: IBatchDocument
+  batch: IBatchDocument,
+  options: { reportJob: boolean } = { reportJob: true }
 ): Promise<void> {
   const tuple = [team.slug, suite.slug, batch.slug].join('/')
 
@@ -37,6 +38,11 @@ export async function batchSeal(
   )
   rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
   await rclient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
+
+  if (!options.reportJob) {
+    logger.debug('%s: skipped creation of reporting job', tuple)
+    return
+  }
 
   const baselineInfo = suite.promotions[suite.promotions.length - 1]
 

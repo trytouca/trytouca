@@ -6,7 +6,6 @@ import { NextFunction, Request, Response } from 'express'
 import { flatbuffers } from 'flatbuffers'
 import { minBy } from 'lodash'
 import mongoose from 'mongoose'
-
 import { EPlatformRole } from '../../commontypes'
 import { BatchModel, IBatchDocument } from '../../schemas/batch'
 import { ComparisonModel } from '../../schemas/comparison'
@@ -14,8 +13,7 @@ import { ElementModel, IElementDocument } from '../../schemas/element'
 import { MessageModel } from '../../schemas/message'
 import { ISuiteDocument, SuiteModel } from '../../schemas/suite'
 import { IUser } from '../../schemas/user'
-import { TeamModel, ITeamDocument } from '../../schemas/team'
-
+import { TeamModel, ITeam, ITeamDocument } from '../../schemas/team'
 import { removeComparison, removeResult } from '../../utils/elastic'
 import { filestore } from '../../utils/filestore'
 import logger from '../../utils/logger'
@@ -734,6 +732,48 @@ async function updateBatchElements(
 }
 
 /**
+ *
+ */
+export async function processBinaryContent(
+  user: IUser,
+  content: Uint8Array,
+  options?: {
+    override?: {
+      teamSlug: string
+      suiteSlug: string
+    }
+  }
+) {
+  // attempt to parse binary content into a list of messages
+
+  const messages = await parseSubmissionMessages(content)
+
+  // in a special case when platform is auto-populating a suite with sample
+  // test results, we want to submit the same binary data to different suites.
+  // to support this case, we like to override the slugs of team and suite
+  // in the submitted messages.
+
+  if (options?.override) {
+    for (const message of messages) {
+      message.teamName = options.override.teamSlug
+      message.suiteName = options.override.suiteSlug
+    }
+  }
+
+  // organize submitted messages into a tree hierarchy
+
+  const tree = await buildSubmissionTree(messages)
+
+  // log the structure of the tree (mostly for debugging purposes)
+
+  describeSubmissionTree(tree)
+
+  // process submission tree
+
+  return processSubmissionTree(user, tree)
+}
+
+/**
  * Handles testresults submitted by endpoints. We are only supporting
  * incoming data with flatbuffers format.
  *
@@ -762,17 +802,7 @@ export async function clientSubmit(
   }
   logger.debug('%s: received request for result submission', user.username)
 
-  const messages = await parseSubmissionMessages(req.body)
-
-  const tree = await buildSubmissionTree(messages)
-
-  // log the structure of the tree (mostly for debugging purposes)
-
-  describeSubmissionTree(tree)
-
-  // process submission tree
-
-  const errors = await processSubmissionTree(user, tree)
+  const errors = await processBinaryContent(user, req.body)
   if (errors.length !== 0) {
     logger.warn('%s: failed to handle new submissions', user.username)
     errors.forEach((e) => logger.warn(e))
