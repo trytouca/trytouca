@@ -3,7 +3,7 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import { SuiteModel } from '../../schemas/suite'
+import { suiteCreate } from '../../models/suite'
 import { ITeam } from '../../schemas/team'
 import { IUser } from '../../schemas/user'
 import { config } from '../../utils/config'
@@ -19,7 +19,7 @@ import { rclient } from '../../utils/redis'
  *  - may contain alphanumeric characters as well as hyphens
  *  - should start with an alphabetic character
  */
-export async function suiteCreate(
+export async function ctrlSuiteCreate(
   req: Request,
   res: Response,
   next: NextFunction
@@ -32,24 +32,12 @@ export async function suiteCreate(
 
   // return 409 if suite slug is taken
 
-  if (
-    await SuiteModel.countDocuments({ slug: proposed.slug, team: team._id })
-  ) {
+  if (!(await suiteCreate(user, team, proposed))) {
     return next({
       errors: ['suite already registered'],
       status: 409
     })
   }
-
-  // register suite in database
-
-  const newSuite = await SuiteModel.create({
-    createdBy: user._id,
-    name: proposed.name,
-    slug: proposed.slug,
-    subscribers: [user._id],
-    team: team._id
-  })
   logger.info('%s: created suite %s', user.username, tuple)
 
   // remove information about the list of known suites from cache.
@@ -59,11 +47,6 @@ export async function suiteCreate(
 
   // redirect to lookup route for this newly created suite
 
-  const redirectPath = [
-    config.express.root,
-    'suite',
-    team.slug,
-    newSuite.slug
-  ].join('/')
-  return res.status(201).redirect(redirectPath.replace(/\/+/g, '/'))
+  const redirectPath = [config.express.root, 'suite', team.slug, proposed.slug]
+  return res.status(201).redirect(redirectPath.join('/').replace(/\/+/g, '/'))
 }

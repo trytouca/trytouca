@@ -9,7 +9,7 @@ import * as ev from 'express-validator'
 import * as middleware from '../middlewares'
 import { promisable } from '../utils/routing'
 
-import { suiteCreate } from '../controllers/suite/create'
+import { ctrlSuiteCreate } from '../controllers/suite/create'
 import { ctrlSuiteList } from '../controllers/suite/list'
 import { ctrlSuiteLookup } from '../controllers/suite/lookup'
 import { ctrlSuiteRemove } from '../controllers/suite/remove'
@@ -122,7 +122,7 @@ router.post(
     middleware.validationRules.get('entity-slug'),
     ev.body('slug').exists().withMessage('required')
   ]),
-  promisable(suiteCreate, 'create suite')
+  promisable(ctrlSuiteCreate, 'create suite')
 )
 
 /**
