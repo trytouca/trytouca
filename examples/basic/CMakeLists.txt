@@ -4,12 +4,6 @@
 
 include(GNUInstallDirs)
 
-find_package("weasel" QUIET)
-
-if (NOT weasel_FOUND)
-    message(FATAL_ERROR "could not find weasel client library")
-endif()
-
 add_executable(weasel_example_basic "")
 
 target_sources(
@@ -24,7 +18,7 @@ target_sources(
 target_link_libraries(
         weasel_example_basic
     PRIVATE
-        weasel::client
+        weasel_client
 )
 
 source_group(
