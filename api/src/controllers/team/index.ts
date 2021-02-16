@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-export { teamCreate } from './create'
+export { ctrlTeamCreate } from './create'
 export { teamInviteAccept } from './inviteAccept'
 export { teamInviteAdd } from './inviteAdd'
 export { teamInviteDecline } from './inviteDecline'

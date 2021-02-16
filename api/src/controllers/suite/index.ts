@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-export { suiteCreate } from './create'
+export { ctrlSuiteCreate } from './create'
 export { ctrlSuiteList } from './list'
 export { ctrlSuiteLookup } from './lookup'
 export { ctrlSuiteRemove } from './remove'
