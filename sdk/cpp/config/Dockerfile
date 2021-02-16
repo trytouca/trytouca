@@ -1,4 +1,4 @@
-# ---- conan package ----
+# ---- build source code ----
 
 FROM ubuntu:focal AS client_cpp_build
 

@@ -40,6 +40,7 @@ target_link_libraries(
         flatbuffers::flatbuffers
         fmt::fmt
         RapidJSON::RapidJSON
+        $<$<PLATFORM_ID:Linux>:pthread>
 )
 
 target_include_directories(
