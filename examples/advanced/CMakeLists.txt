@@ -4,6 +4,8 @@
 
 include(GNUInstallDirs)
 
+weasel_find_cxxopts()
+
 add_executable(weasel_example_advanced "")
 
 target_sources(
@@ -18,7 +20,9 @@ target_sources(
 target_link_libraries(
         weasel_example_advanced
     PRIVATE
+        cxxopts::cxxopts
         weasel_framework
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:pthread>
 )
 
 source_group(

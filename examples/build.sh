@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+# exit on error
+set -e
+
 # we assume this script is placed in the top-level cpp directory
 dir_source="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

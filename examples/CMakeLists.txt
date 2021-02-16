@@ -20,35 +20,9 @@ if (NOT DEFINED CMAKE_RUNTIME_OUTPUT_DIRECTORY)
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
-# we use cmake FetchContent to pull Weasel Client Library and Test Framework
-# as dependencies.
-
-include(FetchContent)
-
-FetchContent_Declare(
-    weasel
-    GIT_REPOSITORY https://github.com/getweasel/weasel-cpp.git
-    GIT_TAG        origin/main
-)
-
-FetchContent_GetProperties(weasel)
-if(NOT weasel_POPULATED)
-    FetchContent_Populate(weasel)
-
-    # enable building of weasel test framework
-    set(WEASEL_BUILD_FRAMEWORK ON)
-
-    # Weasel Client Library for C++ requires OpenSSL to communicate with the
-    # Weasel Platform through HTTPS.
-    # If OpenSSL is not installed in the default location, we may need to
-    # provide its root directory as a hint to the library's build recipe.
-    # Below is an typical example of doing so on macOS in case OpenSSL is
-    # installed through `homebrew`.
-    #   set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
-
-    # proceed with building the Weasel Client Library and Test Framework.
-    add_subdirectory(${weasel_SOURCE_DIR})
-endif()
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
+include(cmake/external.cmake)
+weasel_find_weasel()
 
 add_subdirectory(basic)
 add_subdirectory(advanced)
