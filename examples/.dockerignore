@@ -1,2 +1,7 @@
-Dockerfile
+.dockerignore
+.clang-format
+.git
+.github
+.gitignore
 local
+Dockerfile

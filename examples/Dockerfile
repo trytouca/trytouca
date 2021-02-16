@@ -20,11 +20,9 @@ RUN apt-get update \
     | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
   && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main' \
   && apt-get install -y --no-install-recommends \
-    cmake g++ gcc make python3-pip python3-setuptools \
+    cmake g++ gcc git make libssl-dev \
   && rm -rf /var/lib/apt/lists/* \
-  && pip3 install conan --no-cache-dir --upgrade \
   && cmake --version \
-  && conan --version \
   && groupadd -r getweasel \
   && useradd --create-home --no-log-init --system --gid getweasel weasel \
   && usermod -aG sudo weasel \
@@ -53,8 +51,4 @@ WORKDIR /opt
 
 USER weasel:getweasel
 
-RUN conan profile new default --detect \
-  && conan profile update settings.compiler.libcxx=libstdc++11 default \
-  && conan remote add --force weasel-conan https://api.bintray.com/conan/getweasel/weasel-cpp \
-  && ./build.sh \
-  && sudo cmake --install local/build
+RUN ./build.sh && sudo cmake --install local/build
