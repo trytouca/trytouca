@@ -31,7 +31,6 @@ export class DocsComponent implements OnDestroy {
       docs: ['Quickstart_Cpp.md']
     },
     { link: 'tips', name: 'Best Practices', docs: ['BestPractices.md'] },
-    { link: 'features', name: 'New Features', docs: ['ReleaseNotes.md'] },
     { link: 'faq', name: 'FAQ', docs: ['Faq.md'] }
   ];
 
