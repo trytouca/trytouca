@@ -19,7 +19,6 @@ target_link_libraries(
         weasel_example_basic
     PRIVATE
         weasel_client
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:pthread>
 )
 
 source_group(

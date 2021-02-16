@@ -22,7 +22,6 @@ target_link_libraries(
     PRIVATE
         cxxopts::cxxopts
         weasel_framework
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:pthread>
 )
 
 source_group(
