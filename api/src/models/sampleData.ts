@@ -126,7 +126,7 @@ export async function addSampleData(user: IUser): Promise<void> {
   // "in progress", we set timers to remove this cached response every five
   // seconds.
 
-  for (let i = 1; i <= 6; i++) {
+  for (let i = 3; i <= 6; i++) {
     const keys = [
       `route_batchList_${team.slug}_${suite.slug}_${user.username}`,
       `route_suiteLookup_${team.slug}_${suite.slug}`
