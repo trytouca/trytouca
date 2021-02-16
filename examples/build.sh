@@ -22,7 +22,6 @@ rm -rf "${dir_build}"
 # create build directory if it does not exist
 mkdir -p "${dir_build}"
 
-
 # configure the build system
 cmake -B"${dir_build}" -H"${dir_source}" -G"Unix Makefiles" -DCMAKE_BUILD_TYPE="Release"
 
