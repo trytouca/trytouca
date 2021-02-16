@@ -107,7 +107,7 @@ export async function authVerifyCreate(
   // if configured to do so, create a "tutorial" suite and populate it with
   // sample test results.
 
-  if (!config.samples.disabled) {
+  if (config.samples.enabled) {
     addSampleData(newUser)
   } else {
     logger.debug(

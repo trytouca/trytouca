@@ -53,7 +53,7 @@ interface IConfig {
   }
   samples: {
     directory: string
-    disabled: boolean
+    enabled: boolean
   }
   services: {
     analytics: {
@@ -137,7 +137,7 @@ export const config: IConfig = {
   },
   samples: {
     directory: path.normalize(`${__dirname}/../../` + env.SAMPLES_DIR),
-    disabled: env.SAMPLES_DISABLED === 'true'
+    enabled: env.SAMPLES_ENABLED === 'true'
   },
   services: {
     // analytics service
