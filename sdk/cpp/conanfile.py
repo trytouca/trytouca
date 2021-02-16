@@ -33,8 +33,8 @@ class WeaselConan(ConanFile):
     }
     generators = "cmake_find_package"
     exports_sources = [
-        "CMakeLists.txt", "config/weasel.fbs", "include/**", "src/**",
-        "framework/**", "tests/**", "utils/**"
+        "CMakeLists.txt", "cmake/**", "include/**",
+        "src/**", "framework/**", "tests/**", "utils/**"
     ]
 
     def requirements(self):
