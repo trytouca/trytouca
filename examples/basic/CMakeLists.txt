@@ -7,7 +7,7 @@ include(GNUInstallDirs)
 find_package("weasel" QUIET)
 
 if (NOT weasel_FOUND)
-    message(FATAL_ERROR "required dependency on ${package_name} is missing")
+    message(FATAL_ERROR "could not find weasel client library")
 endif()
 
 add_executable(weasel_example_basic "")
