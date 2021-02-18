@@ -25,8 +25,10 @@ import type {
 import {
   AlertKind,
   AlertService,
-  NotificationService
+  NotificationService,
+  UserService
 } from '@weasel/core/services';
+import { getBackendUrl } from '@weasel/core/models/environment';
 import { AlertType } from '@weasel/shared/components/alert.component';
 import { PageTab, PageComponent } from '@weasel/home/components/page.component';
 import { SuitePageItem } from './suite.model';
@@ -62,6 +64,8 @@ type NotFound = Partial<{
 }>;
 
 type Fields = Partial<{
+  apiKey: string;
+  apiUrl: string;
   subscribe: {
     action: 'subscribe' | 'unsubscribe';
     count: number;
@@ -83,14 +87,14 @@ export class SuitePageComponent
   team: TeamItem;
   suite: SuiteLookupResponse;
   suites: SuiteItem[];
+  fields: Fields = {};
   TabType = SuitePageTabType;
 
   private _subTeam: Subscription;
   private _subSuite: Subscription;
   private _subSuites: Subscription;
   private _subAlert: Subscription;
-
-  fields: Fields = {};
+  private _subUser: Subscription;
 
   /**
    *
@@ -101,8 +105,9 @@ export class SuitePageComponent
     private suitePageService: SuitePageService,
     private titleService: Title,
     private notificationService: NotificationService,
-    private faIconLibrary: FaIconLibrary,
-    route: ActivatedRoute
+    faIconLibrary: FaIconLibrary,
+    route: ActivatedRoute,
+    userService: UserService
   ) {
     super(suitePageService, pageTabs, route);
     faIconLibrary.addIcons(
@@ -132,8 +137,17 @@ export class SuitePageComponent
       this.suite = v;
       this.tabs.find((t) => t.type === SuitePageTabType.Versions).counter =
         v.batchCount;
+      this.fields.apiUrl = [getBackendUrl(), '@', v.teamSlug, v.suiteSlug].join(
+        '/'
+      );
       this.updateFields();
       this.updateTitle(v);
+    });
+    if (userService?.currentUser?.apiKeys?.length !== 0) {
+      this.fields.apiKey = userService?.currentUser?.apiKeys[0];
+    }
+    this._subUser = userService.currentUser$.subscribe((v) => {
+      this.fields.apiKey = v.apiKeys[0];
     });
   }
 
@@ -152,6 +166,7 @@ export class SuitePageComponent
     this._subTeam.unsubscribe();
     this._subSuites.unsubscribe();
     this._subSuite.unsubscribe();
+    this._subUser.unsubscribe();
     super.ngOnDestroy();
   }
 

@@ -110,7 +110,7 @@
     }
   }
   .wsl-dropdown-menu {
-    @apply absolute z-10 right-0 w-48 py-2 mt-2 bg-white text-sm font-normal border rounded-md shadow-xl;
+    @apply absolute z-10 right-0 py-2 mt-2 bg-white text-sm font-normal border rounded-md shadow-xl;
   }
   .wsl-dropdown-item {
     @apply p-2 cursor-pointer select-none hover:bg-gray-100;
