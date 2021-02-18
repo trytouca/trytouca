@@ -29,7 +29,8 @@
           </li>
         </ol>
       </nav>
-      <div class="inline-block" wslDropdown>
+      <div class="inline-block" wslDropdown
+        *ngIf="currentTab === TabType.Versions && hasData() && hasItems()">
         <button class="wsl-dropdown-toggle wsl-btn-sm wsl-btn-dark"
           id="wsl-suite-quick-settings" aria-haspopup="true"
           aria-expanded="false">
