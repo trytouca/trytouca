@@ -17,7 +17,7 @@
               {{ suite?.suiteName }}&thinsp;<fa-icon icon="chevron-down"
                 size="xs"></fa-icon>
             </span>
-            <ul class="wsl-dropdown-menu hidden"
+            <ul class="wsl-dropdown-menu hidden w-48"
               aria-labelledby="wsl-suites-dropdown">
               <li *ngFor="let suiteItem of suites"
                 (click)="switchPage(suiteItem.suiteSlug)"
@@ -41,58 +41,52 @@
           </svg>
           Submit
         </button>
-        <div class="wsl-dropdown-menu w-80 hidden"
+        <div class="wsl-dropdown-menu hidden w-80"
           aria-labelledby="wsl-suite-quick-settings">
-          <ul class="p-2">
-            <li class="mb-1">
-              <div class="flex items-center space-x-1">
-                <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg"
-                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg><span class="font-medium">Using Client Libraries</span>
+          <div class="wsl-quick-settings-header">
+            <svg class="h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2"
+                d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg><span class="font-medium">Using Client Libraries</span>
+          </div>
+          <div class="wsl-input-group">
+            <div class="wsl-input-group-label">API Key</div>
+            <div class="wsl-input-group-param">
+              <div class="wsl-input-group-text">{{ fields.apiKey }}</div>
+              <div class="wsl-input-group-append" ngxClipboard
+                [cbContent]="fields.apiKey"
+                (cbOnSuccess)="onCopy($event, 'API Key')">
+                <span title="Copy API Key to clipboard">
+                  <svg class="h-4" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                  </svg>
+                </span>
               </div>
-            </li>
-            <li class="mb-1">
-              <label class="text-xs">API Key</label>
-              <div class="flex w-full">
-                <div
-                  class="px-2 flex flex-grow items-center bg-white border border-gray-300 rounded-l text-gray-500 text-xs font-mono whitespace-nowrap overflow-x-auto">
-                  {{ fields.apiKey }}</div>
-                <div
-                  class="p-2 flex justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r text-lblue-600 text-xs font-medium cursor-pointer hover:bg-gray-200">
-                  <span title="Copy API Key to clipboard">
-                    <svg class="h-4" xmlns="http://www.w3.org/2000/svg"
-                      fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                    </svg>
-                  </span>
-                </div>
+            </div>
+          </div>
+          <div class="wsl-input-group">
+            <div class="wsl-input-group-label">API URL</div>
+            <div class="wsl-input-group-param">
+              <div class="wsl-input-group-text">{{ fields.apiUrl }}</div>
+              <div class="wsl-input-group-append" ngxClipboard
+                [cbContent]="fields.apiUrl"
+                (cbOnSuccess)="onCopy($event, 'API URL')">
+                <span title="Copy API URL to clipboard">
+                  <svg class="h-4" xmlns="http://www.w3.org/2000/svg"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                  </svg>
+                </span>
               </div>
-            </li>
-            <li class="mb-1">
-              <label class="text-xs">API URL</label>
-              <div class="flex w-full">
-                <div
-                  class="px-2 flex flex-grow items-center bg-white border border-gray-300 rounded-l text-gray-500 text-xs font-mono whitespace-nowrap overflow-x-auto">
-                  {{ fields.apiUrl }}</div>
-                <div
-                  class="p-2 flex justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r text-lblue-600 text-xs font-medium cursor-pointer hover:bg-gray-200">
-                  <span title="Copy API Key to clipboard">
-                    <svg class="h-4" xmlns="http://www.w3.org/2000/svg"
-                      fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>

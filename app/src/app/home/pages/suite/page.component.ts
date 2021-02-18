@@ -78,7 +78,7 @@ type Fields = Partial<{
 @Component({
   selector: 'app-suite-page',
   templateUrl: './page.component.html',
-  styleUrls: ['../../styles/page.component.scss'],
+  styleUrls: ['../../styles/page.component.scss', './page.component.scss'],
   providers: [SuitePageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
 })
 export class SuitePageComponent
@@ -181,6 +181,16 @@ export class SuitePageComponent
       teamSlug,
       suiteSlug
     });
+  }
+
+  /**
+   *
+   */
+  onCopy(event: string, name: string) {
+    this.notificationService.notify(
+      AlertType.Success,
+      `Copied ${name} to clipboard.`
+    );
   }
 
   /**

@@ -13,7 +13,7 @@ import { Alert } from '@weasel/shared/components/alert.component';
     <app-alert
       *ngIf="showNotification"
       [alert]="alert"
-      class="fixed z-10 top-20 right-4 text-sm"
+      class="fixed z-20 top-20 right-4 text-sm"
     ></app-alert>
   `
 })
