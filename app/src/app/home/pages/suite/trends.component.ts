@@ -38,6 +38,7 @@ export class SuiteTabTrendsComponent implements OnDestroy {
         .filter((v) => v.type === SuitePageItemType.Batch)
         .map((v) => v.asBatch())
         .filter((v) => v.meta.metricsDurationHead)
+        .slice(-50)
         .map((v) => ({
           slug: v.batchSlug,
           duration: v.meta.metricsDurationHead
