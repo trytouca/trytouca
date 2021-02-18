@@ -5,13 +5,17 @@
       This chart plots the overall execution time of versions as they are
       submitted. It helps understand how performance of your workflow is
       changing over time. It also helps identify code changes with unintended
-      impact to the performance of your workflow. Remember that a gradual
-      increase or decrease of runtime may be expected: software evolves
-      over time.
+      impact to the performance of your workflow.
     </p>
     <div class="wsl-trend-chart">
-      <app-suite-chart-runtime [perfs]="fields.perfs">
+      <app-suite-chart-runtime *ngIf="fields.perfs.length !== 0; else noData"
+        [perfs]="fields.perfs">
       </app-suite-chart-runtime>
+      <ng-template #noData>
+        <img class="py-2 mx-auto"
+          src="./assets/undraw/undraw_Data_trends_re_2cdy_edited.svg" />
+        <p class="text-center font-light">This suite has no version yet.</p>
+      </ng-template>
     </div>
   </div>
 </section>
