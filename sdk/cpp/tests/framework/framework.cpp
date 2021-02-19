@@ -268,3 +268,25 @@ TEST_CASE("framework-simple-workflow-valid-use")
         CHECK_THAT(fileJson, Catch::Contains(R"("metrics":[])"));
     }
 }
+
+
+TEST_CASE("framework-stream-redirection-disabled")
+{
+    using fnames = std::vector<weasel::filesystem::path>;
+
+    MainCaller<SimpleWorkflow> caller;
+    TmpFile outputDir;
+    TmpFile configFile;
+    configFile.write(R"({ "weasel": { "api-url": "https://getweasel.com/api/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
+
+    caller.call_with({ "--skip-post",
+        "-r", "1.0", "-o", outputDir.path.string(),
+        "--config-file", configFile.path.string(),
+        "--stream-redirection", "false" });
+
+    SECTION("directory-content-streams")
+    {
+        fnames caseFiles = ResultChecker(fnames({ outputDir.path, "some-suite", "1.0" })).get_regular_files("8");
+        REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "weasel.bin" })));
+    }
+}
