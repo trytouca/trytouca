@@ -33,7 +33,7 @@
               </span>
               <span class="wsl-nav-text">{{ tab.name }}</span>
               <span class="wsl-nav-counter"
-                [hidden]="!tab.counter">{{ tab.counter }}</span>
+                *ngIf="tab.counter">{{ tab.counter }}</span>
             </li>
           </ng-container>
         </ul>

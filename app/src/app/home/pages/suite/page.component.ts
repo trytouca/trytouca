@@ -105,8 +105,8 @@ export class SuitePageComponent
     private suitePageService: SuitePageService,
     private titleService: Title,
     private notificationService: NotificationService,
-    faIconLibrary: FaIconLibrary,
     route: ActivatedRoute,
+    faIconLibrary: FaIconLibrary,
     userService: UserService
   ) {
     super(suitePageService, pageTabs, route);

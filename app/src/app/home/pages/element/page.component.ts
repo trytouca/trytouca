@@ -96,8 +96,8 @@ export class ElementPageComponent
     private elementPageService: ElementPageService,
     private router: Router,
     private titleService: Title,
-    private faIconLibrary: FaIconLibrary,
     route: ActivatedRoute,
+    faIconLibrary: FaIconLibrary,
     @Inject(LOCALE_ID) private locale: string
   ) {
     super(elementPageService, pageTabs, route);

@@ -2,9 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Inject, LOCALE_ID } from '@angular/core';
+import {
+  Component,
+  HostListener,
+  Inject,
+  LOCALE_ID,
+  OnInit,
+  OnDestroy
+} from '@angular/core';
 import { formatDate } from '@angular/common';
-import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -119,8 +125,8 @@ export class BatchPageComponent
     private dialogService: DialogService,
     private router: Router,
     private titleService: Title,
-    private faIconLibrary: FaIconLibrary,
     route: ActivatedRoute,
+    faIconLibrary: FaIconLibrary,
     @Inject(LOCALE_ID) private locale: string
   ) {
     super(batchPageService, pageTabs, route);

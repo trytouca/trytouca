@@ -79,8 +79,8 @@ export class TeamPageComponent
     private dialogService: DialogService,
     private router: Router,
     private teamPageService: TeamPageService,
-    private faIconLibrary: FaIconLibrary,
-    route: ActivatedRoute
+    route: ActivatedRoute,
+    faIconLibrary: FaIconLibrary
   ) {
     super(teamPageService, pageTabs, route);
     faIconLibrary.addIcons(
