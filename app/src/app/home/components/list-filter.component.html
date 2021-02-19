@@ -42,7 +42,8 @@
     </button>
   </div>
 </div>
-<ng-container *ngIf="stats.totalUnpaginatedRows !== stats.totalRows">
+<ng-container
+  *ngIf="stats.totalUnpaginatedRows !== stats.totalRows || (stats.totalUnpaginatedRows === 0 && stats.totalRows === 0)">
   <div *ngIf="stats.totalUnpaginatedRows !== 0"
     class="mt-4 flex justify-between items-center text-sm">
     <p>
