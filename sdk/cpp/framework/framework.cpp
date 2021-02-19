@@ -118,6 +118,9 @@ namespace weasel { namespace framework {
             ("save-as-binary",
                 "save a copy of test results on local disk in binary format",
                 cxxopts::value<std::string>()->default_value("true"))
+            ("stream-redirection",
+                "redirect content printed to standard streams to files",
+                cxxopts::value<std::string>()->default_value("true"))
             ("log-level",
                 "level of detail with which events are logged",
                 cxxopts::value<std::string>()->default_value("info"))
@@ -140,7 +143,7 @@ namespace weasel { namespace framework {
         opts.allow_unrecognised_options();
         try {
             const auto& result = opts.parse(argc, argv);
-            for (const auto& key : { "log-level", "output-dir", "save-as-binary" }) {
+            for (const auto& key : { "log-level", "output-dir", "save-as-binary", "stream-redirection" }) {
                 options[key] = result[key].as<std::string>();
             }
             for (const auto& opt : opts.group_help("main").options) {
@@ -821,7 +824,10 @@ namespace weasel { namespace framework {
             timer.tic(testcase);
             Errors errors;
             OutputCapturer capturer;
-            capturer.start_capture();
+            if (options.at("stream-redirection") == "true") {
+                capturer.start_capture();
+            }
+
             try {
                 errors = workflow.execute(testcase);
             } catch (const std::exception& ex) {
@@ -829,7 +835,10 @@ namespace weasel { namespace framework {
             } catch (...) {
                 errors = { "unknown exception" };
             }
-            capturer.stop_capture();
+
+            if (options.at("stream-redirection") == "true") {
+                capturer.stop_capture();
+            }
             timer.toc(testcase);
             stats.inc(errors.empty() ? ExecutionOutcome::Pass : ExecutionOutcome::Fail);
             logger.log(lg::Info, "processed testcase: {}", testcase);
