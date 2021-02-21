@@ -8,5 +8,6 @@ export const environment = {
   apiUrl: '/api',
   appVersion: version,
   dataRefreshInterval: 10000,
+  gtm_id: 'GTM-WQ2JMN4',
   production: true
 };

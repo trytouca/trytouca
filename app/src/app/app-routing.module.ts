@@ -4,7 +4,6 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { AuthGuardService } from '@weasel/core/services';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
@@ -17,22 +16,26 @@ import {
 } from './auth';
 
 const routes: Routes = [
-  { path: '', component: LandingComponent },
+  { path: '', component: LandingComponent, data: { page: 'landing' } },
   { path: 'activate', component: ActivateComponent },
-  { path: 'feedback', component: FeedbackComponent },
-  { path: 'reset', component: ResetComponent },
-  { path: 'signin', component: SigninComponent },
-  { path: 'signup', component: SignupComponent },
+  { path: 'reset', component: ResetComponent, data: { page: 'reset' } },
+  { path: 'signin', component: SigninComponent, data: { page: 'signin' } },
+  { path: 'signup', component: SignupComponent, data: { page: 'signup' } },
+  {
+    path: 'feedback',
+    component: FeedbackComponent,
+    data: { page: 'feedback' }
+  },
   {
     path: 'docs',
     loadChildren: () => import('./docs/docs.module').then((m) => m.DocsModule),
-    data: { title: 'Docs' }
+    data: { page: 'docs', title: 'Docs' }
   },
   {
     canActivate: [AuthGuardService],
     path: '~',
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
-    data: { title: 'Home' }
+    data: { page: 'home', title: 'Home' }
   },
   { path: '**', component: NotfoundComponent }
 ];
