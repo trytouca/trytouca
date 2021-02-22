@@ -9,7 +9,8 @@ import { AuthService } from '@weasel/core/services';
 
 @Component({
   selector: 'app-page-landing',
-  templateUrl: './landing.component.html'
+  templateUrl: './landing.component.html',
+  styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent {
   constructor(

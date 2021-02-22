@@ -1,30 +1,69 @@
 <app-header-outside></app-header-outside>
-<section
-  class="wsl-min-h-screen-1 flex items-center bg-white font-sans antialiased">
-  <div class="mx-auto container">
-    <div class="lg:grid lg:grid-cols-5">
-      <div class="lg:col-span-3 p-12 lg:p-4 space-y-4">
-        <h2 class="mb-2 text-4xl lg:text-5xl text-black font-bold">
-          Continuous regression testing for critical software workflows.
-        </h2>
-        <p class="text-xl text-gray-500">
-          An end-to-end solution to create regression test tools, automate
-          their execution, handle their test results, compare them against
-          known baselines and report newly-found differences in behavior or
-          performance.
-        </p>
-        <button type="button" role="button" routerLink="/signup"
-          class="wsl-btn-lg wsl-btn-dark group">Get Started For Free<svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="inline h-4 opacity-25 group-hover:opacity-100" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+<section class="flex flex-col wsl-min-h-screen-1">
+  <div class="bg-gradient-to-br from-primary to-secondary">
+    <div class="container mx-auto">
+      <div
+        class="lg:grid lg:grid-cols-2 lg:items-end lg:space-x-4 lg:px-8 lg:pt-16">
+        <div class="lg:col-span-1 px-8 lg:px-0 py-12 space-y-8 text-white">
+          <h2 class="text-4xl xl:text-5xl font-bold">
+            Continuous regression testing for critical software workflows.
+          </h2>
+          <p class="text-2xl">
+            Keep tabs on changes in behavior or performance
+            of your software without using snapshot files.
+          </p>
+          <div class="atf-cta-start space-y-2">
+            <form class="w-full h-10 space-x-2">
+              <input
+                class="h-full rounded-md shadow-md bg-white text-black border border-gray-300 focus:outline-none focus:border-gray-500 focus:ring-0"
+                type="email" placeholder="Email address" required>
+              <button type="submit" role="button"
+                class="h-full rounded-md shadow-md bg-green-500 font-medium border border-transparent focus:outline-none focus:border-gray-200 focus: focus:ring-0">
+                Get Started for Free</button>
+            </form>
+            <p>You can explore Weasel in action using the test results in our
+              playground.</p>
+          </div>
+          <div class="space-x-2 cursor-pointer group">
+            <button class="font-medium underline" type="button"
+              role="button">Get a Live Demo</button>
+            <svg class="inline h-4 opacity-50 group-hover:opacity-100"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </div>
+        </div>
+        <div class="lg:col-span-1 hidden lg:block rounded-t-md wsl-atf-visual">
+          <img alt="A Screen Shot of Weasel Regression Testing Platform"
+            src="./assets/images/weasel-atf-visual.png" />
+        </div>
       </div>
-      <div class="hidden lg:col-span-2 lg:block p-4">
-        <!-- <img src="./assets/undraw/undraw_blank_canvas_3rbb.svg" /> -->
+    </div>
+  </div>
+  <div class="flex-grow items-stretch bg-lblue-50">
+    <div class="container mx-auto">
+      <div class="flex mx-auto space-x-4 p-8">
+        <img class="rounded-full h-16"
+          src="/assets/images/pejman-photo-201110.jpg" />
+        <div>
+          <div class="h-16">
+            <h6 class="h-8 pt-2 font-medium">Pejman Ghorbanzade</h6>
+            <h6 class="h-8 pb-2 text-sm">
+              Senior Software Engineer at Vital Images, Inc.
+            </h6>
+          </div>
+          <p
+            class="p-4 bg-white border border-gray-200 rounded-xl rounded-tl-none shadow-sm">
+            We use Weasel at scale to perform nightly regression tests of
+            mission-critical workflows in the low-level components of our
+            medical imaging visualization software. It has helped us quickly
+            identify unintended side effects of our code changes before they
+            become too expensive to fix. I like how easy it is to write
+            Weasel regression tests and automate their execution.
+          </p>
+        </div>
       </div>
     </div>
   </div>

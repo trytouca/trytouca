@@ -12,7 +12,10 @@ module.exports = (isProd) => ({
   },
   darkMode: false,
   theme: {
-    gradientColorStops: false,
+    gradientColorStops: () => ({
+      primary: '#0369A1',
+      secondary: '#0284C7'
+    }),
     keyframes: false,
     order: false,
     roate: false,
