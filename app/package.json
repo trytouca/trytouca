@@ -7,6 +7,12 @@
   "repository": "https://github.com/getweasel/weasel.git",
   "bugs": "https://github.com/getweasel/weasel/issues",
   "homepage": "https://getweasel.com",
+  "keywords": [
+    "snapshot-testing",
+    "test-automation",
+    "test-framework",
+    "regression-testing"
+  ],
   "author": {
     "name": "Pejman Ghorbanzade",
     "email": "pejman@getweasel.com"
