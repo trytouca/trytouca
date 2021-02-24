@@ -1,51 +1,63 @@
 <app-header-outside></app-header-outside>
-<section class="flex flex-col wsl-min-h-screen-1">
-  <div class="bg-gradient-to-br from-primary to-secondary">
-    <div class="container mx-auto">
-      <div
-        class="lg:grid lg:grid-cols-2 lg:items-end lg:space-x-4 lg:px-8 lg:pt-16">
-        <div class="lg:col-span-1 px-8 lg:px-0 py-12 space-y-8 text-white">
-          <h2 class="max-w-xl text-white text-4xl xl:text-5xl font-bold">
-            Continuous regression testing for critical software workflows.
-          </h2>
-          <p class="max-w-xl text-2xl">
-            Keep tabs on changes in behavior or performance
-            of your software without using snapshot files.
-          </p>
-          <div class="atf-cta-start space-y-2">
-            <form class="w-full h-10 space-x-2">
-              <input
-                class="h-full rounded-md shadow-md bg-white text-black border border-gray-300 focus:outline-none focus:border-gray-500 focus:ring-0"
-                type="email" placeholder="Email address" required>
-              <button type="submit" role="button"
-                class="h-full rounded-md shadow-md bg-green-500 font-medium border border-transparent focus:outline-none focus:border-gray-200 focus: focus:ring-0">
-                Get Started for Free</button>
-            </form>
-            <p>You can explore Weasel in action using the test results in our
-              playground.</p>
-          </div>
-          <button class="py-2 space-x-2 font-medium focus:outline-none group"
-            type="button" role="button">
-            <span>Get a Live Demo</span>
-            <svg class="inline h-4 opacity-50 group-hover:opacity-100"
-              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor">
+<section class="wsl-atf">
+  <div class="wsl-atf-body lg:flex bg-gradient-to-br from-primary to-secondary">
+    <div class="container mx-auto grid lg:grid-cols-2 lg:gap-4 lg:items-center">
+      <div class="col-span-1 p-8 space-y-8 text-white">
+        <h2 class="max-w-xl text-4xl xl:text-5xl font-bold">
+          Continuous regression testing for critical software workflows.
+        </h2>
+        <p class="max-w-xl text-2xl">
+          Keep tabs on changes in behavior or performance
+          of your software without using snapshot files.
+        </p>
+        <div>
+          <form class="flex h-10 space-x-2" [formGroup]="startForm"
+            (ngSubmit)="ctaStart(startForm.value)" novalidate>
+            <input
+              class="flex-grow-0 lg:flex-grow h-full rounded-md shadow-md bg-white text-black border border-gray-300 focus:outline-none focus:border-gray-500 focus:ring-0"
+              type="email" placeholder="Email address" required
+              formControlName="email">
+            <button type="submit" role="button"
+              class="h-full px-4 rounded-md shadow-md bg-green-500 font-medium border border-transparent focus:outline-none focus:border-gray-200 focus: focus:ring-0">
+              Get Started for Free</button>
+          </form>
+          <div class="space-x-1 text-yellow-300" [hidden]="isStartFormValid()">
+            <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                stroke-width="2"
+                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-          </button>
+            <small>Please use a valid email address.</small>
+          </div>
+          <p class="mt-2">You can explore Weasel in action using the test
+            results in our
+            playground.</p>
         </div>
-        <div class="hidden lg:block lg:col-span-1 rounded-t-md wsl-atf-visual">
-          <img alt="A Screen Shot of Weasel Regression Testing Platform"
-            src="./assets/images/weasel-atf-visual.png" />
-        </div>
+        <button class="py-2 space-x-2 font-medium focus:outline-none group"
+          type="button" role="button" (click)="ctaLiveDemo()">
+          <span>Get a Live Demo</span>
+          <svg class="inline h-4 opacity-50 group-hover:opacity-100"
+            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </button>
+      </div>
+      <div class="col-span-1 p-8 select-none">
+        <img class="rounded-lg shadow-md"
+          alt="A Screen Shot of Weasel Regression Testing Platform"
+          src="./assets/images/weasel-atf-visual.png" />
       </div>
     </div>
   </div>
-  <div class="flex-grow items-stretch bg-lblue-50">
-    <div class="container max-w-3xl mx-auto text-center">
-      <p class="p-8 text-lg font-medium">Our mission is to
-        make changing software products cheaper and safer.</p>
+  <div class="wsl-atf-footer bg-lblue-50">
+    <div class="container mx-auto">
+      <div class="p-8 text-center">
+        <p class="md:text-lg font-light">Our mission is to
+          make maintaining software products cheaper and safer.</p>
+      </div>
     </div>
   </div>
 </section>

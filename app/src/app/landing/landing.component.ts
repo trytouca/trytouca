@@ -3,9 +3,11 @@
  */
 
 import { Component } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 import { AuthService } from '@weasel/core/services';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-page-landing',
@@ -13,6 +15,13 @@ import { AuthService } from '@weasel/core/services';
   styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent {
+  startForm = new FormGroup({
+    email: new FormControl('', {
+      validators: [Validators.required, Validators.email],
+      updateOn: 'blur'
+    })
+  });
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -31,5 +40,23 @@ export class LandingComponent {
         this.router.navigateByUrl(dst.p);
       }
     }
+  }
+
+  ctaLiveDemo() {
+    if (environment.production) {
+      window.open('https://calendly.com/ghorbanzade/weasel', '_blank');
+    }
+  }
+
+  ctaStart(model: { email: string }) {
+    if (!this.startForm.valid) {
+      return;
+    }
+    this.router.navigate(['/signup']);
+  }
+
+  isStartFormValid() {
+    const field = this.startForm.controls['email'];
+    return field.pristine || field.valid;
   }
 }

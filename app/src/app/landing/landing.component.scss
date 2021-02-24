@@ -2,29 +2,20 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-h2 {
-  text-shadow: 1px 3px 4px rgba(0, 0, 0, 0.25);
-}
-.wsl-atf-visual img {
-  box-shadow: 0px -2px 4px 2px rgba(255, 255, 255, 0.25);
-}
-
-.atf-cta-start form {
-  input {
-    width: 40%;
+.wsl-atf {
+  min-height: calc(100vh - 4rem);
+  .wsl-atf-footer {
+    display: flex;
+    align-items: center;
+    height: 4rem;
   }
-  button {
-    padding: 0 1rem;
+  h2 {
+    text-shadow: 1px 3px 4px rgba(0, 0, 0, 0.25);
   }
 }
 
 @media (min-width: 1024px) {
-  .atf-cta-start form {
-    input {
-      width: calc(60% - 0.25rem);
-    }
-    button {
-      width: calc(40% - 0.25rem);
-    }
+  .wsl-atf-body {
+    min-height: calc(100vh - 8rem);
   }
 }
