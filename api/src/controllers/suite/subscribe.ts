@@ -23,12 +23,12 @@ export async function suiteSubscribe(
   const team = res.locals.team as ITeam
   const user = res.locals.user as IUser
   const tuple = [team.slug, suite.slug].join('/')
-  logger.debug('%s: subscribing to %s', user._id, tuple)
+  logger.debug('%s: subscribing to %s', user.username, tuple)
 
   // we are done if user is already subscribed
 
   if (suite.subscribers.includes(user._id)) {
-    logger.info('%s: already subscribed to %s', user._id, tuple)
+    logger.info('%s: already subscribed to %s', user.username, tuple)
     return res.status(204).send()
   }
 
@@ -38,7 +38,7 @@ export async function suiteSubscribe(
     { _id: suite._id },
     { $push: { subscribers: user._id } }
   )
-  logger.info('%s: subscribed to %s', user._id, tuple)
+  logger.info('%s: subscribed to %s', user.username, tuple)
 
   return res.status(204).send()
 }

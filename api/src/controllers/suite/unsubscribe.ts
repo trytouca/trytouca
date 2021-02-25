@@ -23,12 +23,12 @@ export async function suiteUnsubscribe(
   const team = res.locals.team as ITeam
   const user = res.locals.user as IUser
   const tuple = [team.slug, suite.slug].join('/')
-  logger.debug('%s: unsubscribing from %s', user._id, tuple)
+  logger.debug('%s: unsubscribing from %s', user.username, tuple)
 
   // we are done if user was never subscribed yet
 
   if (!suite.subscribers.includes(user._id)) {
-    logger.info('%s: not subscribed to %s', user._id, tuple)
+    logger.info('%s: not subscribed to %s', user.username, tuple)
     return res.status(204).send()
   }
 
@@ -38,7 +38,7 @@ export async function suiteUnsubscribe(
     { _id: suite._id },
     { $pull: { subscribers: user._id } }
   )
-  logger.info('%s: unsubscribed from %s', user._id, tuple)
+  logger.info('%s: unsubscribed from %s', user.username, tuple)
 
   return res.status(204).send()
 }
