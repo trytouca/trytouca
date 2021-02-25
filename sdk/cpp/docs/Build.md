@@ -42,7 +42,7 @@ git clone git@github.com:getweasel/weasel-cpp.git
 
 Weasel Client Library for C++ has five main components.
 
-| Name                         | Build Argument   |
+| Component Name               | Build Argument   |
 | ---------------------------- | ---------------- |
 | Client Library for C++       |                  |
 | Test Framework for C++       | --with-framework |
@@ -89,12 +89,13 @@ Client Library. But as mentioned in previous section, this repository includes
 several other components that can be enabled by passing the appropriate options
 to the command above, as listed in the table below.
 
-| Option                 | Comment                      | Default |
-|------------------------|------------------------------|---------|
-| WEASEL_BUILD_FRAMEWORK | Test Framework for C++       | OFF     |
-| WEASEL_BUILD_UTILS     | Sample Regression Test Tools | OFF     |
-| WEASEL_BUILD_EXAMPLES  | Utility Command Line Tool    | OFF     |
-| WEASEL_BUILD_TESTS     | Unit Tests                   | OFF     |
+| Component Name               | CMake Option           | Default |
+|------------------------------|------------------------|---------|
+| Client Library for C++       |                        |         |
+| Test Framework for C++       | WEASEL_BUILD_FRAMEWORK | OFF     |
+| Sample Regression Test Tools | WEASEL_BUILD_UTILS     | OFF     |
+| Utility Command Line Tool    | WEASEL_BUILD_EXAMPLES  | OFF     |
+| Unit Tests                   | WEASEL_BUILD_TESTS     | OFF     |
 
 As an example, the command below enables building Weasel Test Framework for C++.
 
