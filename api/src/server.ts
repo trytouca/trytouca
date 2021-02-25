@@ -2,6 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+import fs from 'fs'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -61,6 +62,10 @@ async function launch(application) {
   // make sure we can connect to cache server
   if (!(await makeConnectionRedis())) {
     process.exit(1)
+  }
+
+  if (!fs.existsSync(config.samples.directory)) {
+    logger.warn('samples directory not found at %s', config.samples.directory)
   }
 
   // setup analytics service that performs background data processing
