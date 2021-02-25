@@ -30,6 +30,7 @@ EXPOSE 8081
 
 COPY --from=builder /home/dist /opt/weasel/dist
 COPY --from=builder /home/env /opt/weasel/env
+COPY --from=builder /home/samples /opt/weasel/samples
 COPY --from=builder /home/node_modules /opt/weasel/node_modules
 
 CMD ["node", "/opt/weasel/dist/server.js"]
