@@ -1,8 +1,8 @@
 <div align="center">
   <a href="https://getweasel.com" target="_blank" rel="noopener noreferrer">
-    <img alt="Weasel Logo" height="96px" src="https://getweasel.com/assets/logo/weasel-logo.svg">
+    <img alt="Weasel Logo" height="48px" src="https://getweasel.com/assets/logo/weasel-logo-w-text.svg">
   </a>
-  <h1>Weasel Client Library for C++</h1>
+  <h1>Client Library for C++</h1>
   <p>
     <a href="https://getweasel.com">Get Started</a>
     <span> &middot; </span>
@@ -13,8 +13,6 @@
     <a href="https://github.com/getweasel/weasel-cpp/blob/main/LICENSE">License</a>
   </p>
 </div>
-
----
 
 Weasel is a continuous regression testing solution that helps engineering
 teams understand the impact of their daily code changes on the behavior or

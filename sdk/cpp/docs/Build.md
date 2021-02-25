@@ -3,9 +3,9 @@
 This document provides instructions for building Weasel Client Library for C++
 and its side components.
 
-**Note**: To use Weasel as a dependency in your project, you do not need to
-follow these instructions. Follow our *Integration* document to learn how to
-pull Weasel as a third-party dependency.
+**Note**: To use Weasel as a dependency in your project, you may not need to
+follow these instructions. Read our [Integration Guide](./docs/Integration.md)
+to learn how to pull Weasel as a third-party dependency.
 
 ## Supported Toolchains
 
@@ -23,9 +23,9 @@ We test our library against the following compilers.
 
 ## Required Build Tools
 
-As of v1.3, We use [CMake] as our build system. If you do not have a recent
-version of CMake installed already, please consult with their documentation
-for instructions to install it on your platform.
+We use [CMake] as our build system. If you do not have a recent version
+of CMake installed already, please consult with their documentation for
+instructions to install it on your platform.
 
 ## Obtaining the Source Code
 
@@ -71,53 +71,50 @@ You can build all the components using the `--all` argument:
 If, for any reason, you do not want to build the components using our helper
 scripts, follow the subsequent sections to learn what our scripts do.
 
-## Configuring the Build System
+## Building with CMake
 
-Once the dependencies are installed, we can proceed with building the
-source code using [CMake]. To do so, we recommend running the following
-command first, to configure the set of targets to be built and the path
-in which build artifacts should be generated. While you can change the
-build directory to the directory of your choice, the subsequent
-instructions assume the default value of `./local/build`.
+You can opt to directly use [CMake] to build Weasel Client Library for C++ and
+its components. To do so, we recommend running the following command first, to
+configure the set of targets to be built and the path in which build artifacts
+should be generated. While you can change the build directory to the directory
+of your choice, the subsequent instructions assume the default value of
+`./local/build`.
 
 ```bash
 cmake -B"<project_directory>/local/build" -H"<project_directory>"
 ```
 
-By default, the above-mentioned command configures CMake to build the client
-library, its unittests, a sample regression test tool that uses the library
-and a utility tool that helps you manage generated Weasel results. The Weasel
-Test Framework for C++ is not built unless explicitly enabled.
+By default, the above-mentioned command configures CMake to build the Weasel
+Client Library. But as mentioned in previous section, this repository includes
+several other components that can be enabled by passing the appropriate options
+to the command above, as listed in the table below.
 
-You can disable building these targets by passing appropriate options to
-the command whose list is given in the table below.
+| Option                 | Comment                      | Default |
+|------------------------|------------------------------|---------|
+| WEASEL_BUILD_FRAMEWORK | Test Framework for C++       | OFF     |
+| WEASEL_BUILD_UTILS     | Sample Regression Test Tools | OFF     |
+| WEASEL_BUILD_EXAMPLES  | Utility Command Line Tool    | OFF     |
+| WEASEL_BUILD_TESTS     | Unit Tests                   | OFF     |
 
-| Option                 | Comment                     | Default |
-|------------------------|-----------------------------|---------|
-| WEASEL_BUILD_TESTS     | Unit-Tests                  | OFF     |
-| WEASEL_BUILD_UTILS     | Command-Line Utility Tool   | OFF     |
-| WEASEL_BUILD_EXAMPLES  | Sample Test Tools           | OFF     |
-| WEASEL_BUILD_FRAMEWORK | Test Framework Library      | OFF     |
-
-As an example, the command below enables building the test framework
-and disables building the unit-tests.
+As an example, the command below enables building Weasel Test Framework for C++.
 
 ```bash
-cmake -B"<project_directory>/local/build" -H"<project_directory>" \
-  -DWEASEL_BUILD_TESTS=OFF -DWEASEL_BUILD_FRAMEWORK=ON
+cmake -B"<project_directory>/local/build" -H"<project_directory>" -DWEASEL_BUILD_FRAMEWORK=ON
 ```
 
-## Running the Build System
-
-Finally, we can proceed with building the source code via CMake which uses
+Now we can proceed with building the source code via CMake which uses
 the native build tool of your platform.
 
 ```bash
 cmake --build "<project_directory>/local/build" --parallel
 ```
 
-This command produces the build artifacts in `<project_directory>/local/dist`
-including the library `weasel_client` and the test framework `weasel_framework`
-to which you can link your regression test tools.
+Optionally, as a last step, we can install the build artifacts in a directory
+of our choice for easier packaging.
+``.
+
+```bash
+cmake --install "<project_directory>/local/build" --prefix "<project_directory>/local/dist"
+```
 
 [CMake]: https://cmake.org/

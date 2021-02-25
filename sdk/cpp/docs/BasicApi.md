@@ -61,8 +61,8 @@ them on the local filesystem and/or submit them to the Weasel platform.
 
 The Platform compares the test results submitted for a given version against
 a baseline version known to behave as we expect. If differences are found
-Weasel notifies us so we can decide if those differences are expected are
-symptoms of an unintended side-effect of our change.
+Weasel notifies us so we can decide if those differences are expected or they
+are symptoms of an unintended side-effect of our change.
 
 Putting this all together, our very basic regression test tool may look like
 the following:
@@ -92,4 +92,5 @@ int main()
 ```
 
 We just scratched the surface of how Weasel can help us setup continuous
-regression testing for our software. We encourage you to explore Weasel documentation to learn how to get started.
+regression testing for our software. We encourage you to explore Weasel
+documentation to learn how to get started.
