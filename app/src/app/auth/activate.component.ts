@@ -26,7 +26,7 @@ export class ActivateComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private authService: AuthService,
-    private faIconLibrary: FaIconLibrary
+    faIconLibrary: FaIconLibrary
   ) {
     faIconLibrary.addIcons(faSpinner);
   }
@@ -40,14 +40,18 @@ export class ActivateComponent implements OnInit {
       this.router.navigate(['/']);
     }
     const key = queryMap.get('key');
-    if (!this.authService.isLoggedIn()) {
-      localStorage.setItem(ELocalStorageKey.Callback, `/activate?key=${key}`);
-      this.router.navigate(['/signin']);
-    }
     this.apiService.post(`/auth/activate/${key}`).subscribe(
       () => {
+        this.alert = {
+          type: AlertType.Success,
+          text: 'All set. Your account was verified.'
+        };
         localStorage.removeItem(ELocalStorageKey.Callback);
-        this.router.navigate(['/~']);
+        timer(3000).subscribe(() => {
+          this.router.navigate([
+            this.authService.isLoggedIn() ? '/~' : '/signin'
+          ]);
+        });
       },
       (err) => {
         const error = this.apiService.extractError(err, [
@@ -56,7 +60,9 @@ export class ActivateComponent implements OnInit {
         ]);
         this.alert = { type: AlertType.Danger, text: error };
         localStorage.removeItem(ELocalStorageKey.Callback);
-        timer(5000).subscribe(() => this.router.navigate(['/~']));
+        timer(3000).subscribe(() => {
+          this.router.navigate(['/~']);
+        });
       }
     );
   }

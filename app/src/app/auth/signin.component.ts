@@ -58,8 +58,7 @@ export class SigninComponent implements OnInit {
         type: AlertType.Info,
         text: 'It looks like you were signed out.'
       };
-    }
-    if (queryMap.has('n') && queryMap.get('n') === 'join') {
+    } else if (queryMap.has('n') && queryMap.get('n') === 'join') {
       this.alert = {
         type: AlertType.Info,
         text: 'Please sign in to respond to your team invitation.'
