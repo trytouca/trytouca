@@ -194,7 +194,9 @@ export class ResetComponent {
         this.resetForm.reset();
         this.submitted = false;
         this.shouldShowResetForm = false;
-        timer(3000).subscribe(() => this.router.navigate(['/signin']));
+        timer(3000).subscribe(() => {
+          this.router.navigate(['/signin']);
+        });
       },
       (err) => {
         const msg = this.apiService.extractError(err, [

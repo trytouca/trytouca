@@ -14,7 +14,7 @@ const filterInput: FilterInput<SuitePageItem> = {
     {
       key: 'none',
       name: 'None',
-      func: (a) => true
+      func: () => true
     },
     {
       key: 'versions',
