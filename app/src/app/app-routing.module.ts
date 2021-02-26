@@ -27,6 +27,12 @@ const routes: Routes = [
     data: { page: 'feedback' }
   },
   {
+    path: 'account',
+    loadChildren: () =>
+      import('./account/account.module').then((m) => m.AccountModule),
+    data: { page: 'account' }
+  },
+  {
     path: 'docs',
     loadChildren: () => import('./docs/docs.module').then((m) => m.DocsModule),
     data: { page: 'docs', title: 'Docs' }
