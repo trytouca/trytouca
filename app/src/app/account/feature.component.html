@@ -8,25 +8,21 @@
       </svg>
       <h3 class="text-2xl font-semibold">New Features</h3>
     </div>
-    <div class="p-1 text-xs font-semibold bg-green-500 rounded-md shadow-sm">
+    <div
+      class="p-1 text-xs text-lblue-800 font-semibold bg-lblue-200 rounded-md shadow-sm">
       March Edition
     </div>
   </div>
-  <ul class="ml-4 p-4 flex-grow list-disc text-sm space-y-4">
-    <li>
-      <p>Our platform now creates a team and populates it with
-        sample test results for new users.</p>
-    </li>
-    <li>
-      <p>You can now remove test results submitted for any given
-        version right from the user interface.</p>
-    </li>
-    <li>
-      <p>View your API Key and API URL and copy them to clipboard
-        at any time from the suite page.</p>
-    </li>
-    <li>
-      <p>Building our Client Library for C++ now only requires CMake.</p>
+  <ul class="p-4 flex-grow text-sm space-y-4">
+    <li class="flex space-x-2" *ngFor="let feature of features">
+      <div class="opacity-50">
+        <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+          viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+        </svg>
+      </div>
+      <p>{{ feature }}</p>
     </li>
   </ul>
   <div class="flex justify-end">
