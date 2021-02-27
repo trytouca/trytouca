@@ -4,13 +4,22 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SharedModule } from '@weasel/shared';
 import { AccountRoutingModule } from './account-routing.module';
 import { ActivateComponent } from './activate.component';
 import { OnboardComponent } from './onboard.component';
 import { StartComponent } from './start.component';
+import { FeatureComponent } from './feature.component';
+import { SigninComponent } from './signin.component';
 
 @NgModule({
-  declarations: [ActivateComponent, OnboardComponent, StartComponent],
-  imports: [AccountRoutingModule, CommonModule]
+  declarations: [
+    ActivateComponent,
+    OnboardComponent,
+    StartComponent,
+    FeatureComponent,
+    SigninComponent
+  ],
+  imports: [AccountRoutingModule, CommonModule, SharedModule]
 })
 export class AccountModule {}

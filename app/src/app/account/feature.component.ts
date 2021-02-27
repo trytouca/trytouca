@@ -5,7 +5,10 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'wsl-account-start',
-  templateUrl: './start.component.html'
+  selector: 'wsl-account-feature',
+  template: `
+    <p>feature works!</p>
+  `,
+  styles: []
 })
-export class StartComponent {}
+export class FeatureComponent {}
