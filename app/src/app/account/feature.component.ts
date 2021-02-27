@@ -6,9 +6,6 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'wsl-account-feature',
-  template: `
-    <p>feature works!</p>
-  `,
-  styles: []
+  templateUrl: './feature.component.html'
 })
 export class FeatureComponent {}
