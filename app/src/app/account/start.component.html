@@ -5,11 +5,15 @@
     <div class="grid md:grid-cols-2">
       <div
         class="pt-8 px-6 pb-4 grid-cols-1 bg-white sm:rounded-t-lg md:rounded-t-none md:rounded-l-lg">
-        <wsl-account-signin></wsl-account-signin>
+        <wsl-account-signup *ngIf="currentPage === PageType.Signup">
+        </wsl-account-signup>
+        <wsl-account-signin *ngIf="currentPage === PageType.Signin">
+        </wsl-account-signin>
       </div>
       <div
         class="pt-8 px-6 pb-4 grid-cols-1 bg-lblue-700 sm:rounded-b-lg md:rounded-b-none md:rounded-r-lg border-gray-200 border-t md:border-t-0 md:border-l">
-        <wsl-account-feature></wsl-account-feature>
+        <wsl-account-feature *ngIf="currentPage === PageType.Signin">
+        </wsl-account-feature>
       </div>
     </div>
   </div>

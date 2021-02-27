@@ -11,6 +11,7 @@ import { OnboardComponent } from './onboard.component';
 import { StartComponent } from './start.component';
 import { FeatureComponent } from './feature.component';
 import { SigninComponent } from './signin.component';
+import { SignupComponent } from './signup.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { SigninComponent } from './signin.component';
     OnboardComponent,
     StartComponent,
     FeatureComponent,
-    SigninComponent
+    SigninComponent,
+    SignupComponent
   ],
   imports: [AccountRoutingModule, CommonModule, SharedModule]
 })

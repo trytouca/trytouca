@@ -1,0 +1,37 @@
+<div class="h-full flex flex-col">
+  <h2 class="text-2xl font-semibold">Get Started for Free</h2>
+  <div class="flex-grow flex items-center">
+    <form class="wsl-form py-4 flex-grow" [formGroup]="formSignup"
+      (ngSubmit)="onSubmit(formSignup.value)" novalidate>
+      <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+      <div>
+        <label class="wsl-input-label" for="wsl-umail">Email Address</label>
+        <input class="wsl-input-field" type="email" id="wsl-umail" tabindex="1"
+          autocomplete="email" aria-describedby="wsl-umail-help" required
+          formControlName="umail" name="umail" data-lpignore="true">
+        <small class="wsl-text-danger" id="wsl-umail-help">
+          Please provide a valid email address.
+        </small>
+      </div>
+      <small class="text-muted">
+        By clicking “Sign up”, you agree to our <a class="text-lblue-600"
+          routerLink="/docs" [queryParams]="{page: 'terms'}">Terms of
+          Service</a> and <a class="text-lblue-600" routerLink="/docs"
+          [queryParams]="{page: 'privacy'}">Privacy Policy</a>.
+      </small>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button class="wsl-btn-lg wsl-btn-dark" type="submit" tabindex="2">
+            Sign up
+          </button>
+        </div>
+        <div class="wsl-form-links">
+          <button class="wsl-btn-lg wsl-btn-light" type="button"
+            routerLink="/account/signin" tabindex="3">
+            Already Registered?
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
