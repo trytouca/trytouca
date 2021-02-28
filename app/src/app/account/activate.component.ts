@@ -2,68 +2,61 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { timer } from 'rxjs';
+import { timer, Subscription } from 'rxjs';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { ApiService, AuthService } from '@weasel/core/services';
-import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 
 @Component({
   selector: 'wsl-account-activate',
   templateUrl: './activate.component.html'
 })
-export class ActivateComponent implements OnInit {
+export class ActivateComponent implements OnDestroy {
   alert: Alert;
+  private _sub: Partial<Record<'activate' | 'timer', Subscription>> = {};
 
   /**
    *
    */
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private apiService: ApiService,
-    private authService: AuthService,
-    faIconLibrary: FaIconLibrary
+    route: ActivatedRoute,
+    router: Router,
+    faIconLibrary: FaIconLibrary,
+    apiService: ApiService,
+    authService: AuthService
   ) {
     faIconLibrary.addIcons(faSpinner);
+    if (authService.isLoggedIn() || !route.snapshot.queryParamMap.has('key')) {
+      router.navigate(['/account']);
+      return;
+    }
+    const key = route.snapshot.queryParamMap.get('key');
+    this._sub.activate = apiService.post(`/auth/activate/${key}`).subscribe(
+      (doc) => {
+        localStorage.setItem(ELocalStorageKey.TokenExpiresAt, doc.expiresAt);
+        router.navigate(['/account/welcome']);
+      },
+      (err) => {
+        const error = apiService.extractError(err, [
+          [400, 'invalid activation key', 'This activation key is invalid.'],
+          [404, 'activation key not found', 'This activation key has expired.']
+        ]);
+        this.alert = { type: AlertType.Danger, text: error };
+        this._sub.timer = timer(3000).subscribe(() => {
+          router.navigate(['/account']);
+        });
+      }
+    );
   }
 
   /**
    *
    */
-  ngOnInit() {
-    const queryMap = this.route.snapshot.queryParamMap;
-    if (!queryMap.has('key')) {
-      this.router.navigate(['/']);
-    }
-    const key = queryMap.get('key');
-    this.apiService.post(`/auth/activate/${key}`).subscribe(
-      () => {
-        this.alert = {
-          type: AlertType.Success,
-          text: 'All set. Your account was verified.'
-        };
-        localStorage.removeItem(ELocalStorageKey.Callback);
-        timer(3000).subscribe(() => {
-          this.router.navigate([
-            this.authService.isLoggedIn() ? '/~' : '/signin'
-          ]);
-        });
-      },
-      (err) => {
-        const error = this.apiService.extractError(err, [
-          [400, 'invalid activation key', 'This activation key is invalid.'],
-          [404, 'activation key not found', 'This activation key has expired.']
-        ]);
-        this.alert = { type: AlertType.Danger, text: error };
-        localStorage.removeItem(ELocalStorageKey.Callback);
-        timer(3000).subscribe(() => {
-          this.router.navigate(['/~']);
-        });
-      }
-    );
+  ngOnDestroy() {
+    Object.values(this._sub).forEach((s) => s.unsubscribe());
   }
 }

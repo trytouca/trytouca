@@ -8,7 +8,6 @@ import { Component } from '@angular/core';
   selector: 'wsl-account-onboard',
   template: `
     <p>onboard works!</p>
-  `,
-  styles: []
+  `
 })
 export class OnboardComponent {}
