@@ -4,7 +4,7 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
+import { AuthGuardService } from '@weasel/core/services/auth-guard.service';
 import { ActivateComponent } from './activate.component';
 import { OnboardComponent } from './onboard.component';
 import { StartComponent } from './start.component';
@@ -18,10 +18,14 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: 'signin', pathMatch: 'full' },
       { path: 'activate', component: ActivateComponent },
-      { path: 'welcome', component: OnboardComponent },
       { path: 'signin', component: StartComponent, data: { page: 'signin' } },
       { path: 'signup', component: StartComponent, data: { page: 'signup' } },
-      { path: 'reset', component: StartComponent, data: { page: 'reset' } }
+      { path: 'reset', component: StartComponent, data: { page: 'reset' } },
+      {
+        path: 'welcome',
+        component: OnboardComponent,
+        canActivate: [AuthGuardService]
+      }
     ]
   }
 ];
