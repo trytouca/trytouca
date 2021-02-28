@@ -4,4 +4,3 @@
 
 export { ActivateComponent } from './activate.component';
 export { ResetComponent } from './reset.component';
-export { SigninComponent } from './signin.component';
