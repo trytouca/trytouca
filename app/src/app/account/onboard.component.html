@@ -1,0 +1,45 @@
+<app-header-outside></app-header-outside>
+<div class="wsl-min-h-screen-1 sm:p-4 grid sm:place-content-center bg-gray-50">
+  <div class="w-full p-4 mx-auto max-w-5xl space-y-2">
+    <h2 class="text-2xl text-center font-semibold">Welcome Aboard!</h2>
+    <p class="text-sm text-center">Before we get started, we'd like to know a
+      little more about you.</p>
+    <hr class="border-2 border-gray-200" />
+    <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+    <form class="wsl-form px-2 py-4 flex-grow" [formGroup]="onboardForm"
+      (ngSubmit)="onSubmit(onboardForm.value)" novalidate>
+      <div>
+        <label class="wsl-input-label" for="wsl-fname">Your Full Name</label>
+        <input class="wsl-input-field" type="text" id="wsl-fname" name="fname"
+          formControlName="fname" aria-describedby="wsl-fname-help" required
+          autocomplete="name" data-lpignore="true" tabindex="1">
+        <small class="wsl-text-muted">We do not share or use your full name
+          other than with your team members.</small>
+      </div>
+      <div>
+        <label class="wsl-input-label" for="wsl-uname">Username</label>
+        <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
+          formControlName="uname" aria-describedby="wsl-uname-help" required
+          autocomplete="username" tabindex="2">
+        <small class="wsl-text-muted">You can always update your information
+          from the <i>Account Settings</i> page.</small>
+      </div>
+      <div>
+        <label class="wsl-input-label" for="wsl-upass">Password</label>
+        <input class="wsl-input-field" type="password" id="wsl-upass"
+          name="upass" formControlName="upass" aria-describedby="wsl-upass-help"
+          required autocomplete="new-password" tabindex="3">
+        <small class="wsl-text-muted">
+          Use a strong password, please.
+        </small>
+      </div>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button class="wsl-btn-lg wsl-btn-dark" type="submit" tabindex="4">
+            Submit
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

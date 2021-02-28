@@ -19,6 +19,9 @@ export class StartComponent {
   currentPage: StartPageType;
   PageType = StartPageType;
 
+  /**
+   *
+   */
   constructor(route: ActivatedRoute) {
     this.currentPage = route.snapshot.data.page as StartPageType;
   }
