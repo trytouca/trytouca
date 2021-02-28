@@ -3,11 +3,12 @@
  */
 
 import { Component } from '@angular/core';
+import { Alert } from '@weasel/shared/components/alert.component';
 
 @Component({
   selector: 'wsl-account-onboard',
-  template: `
-    <p>onboard works!</p>
-  `
+  templateUrl: './onboard.component.html'
 })
-export class OnboardComponent {}
+export class OnboardComponent {
+  alert: Alert;
+}
