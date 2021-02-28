@@ -6,10 +6,10 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { timer, Subscription } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
-import { Alert } from '@weasel/shared/components/alert.component';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
 interface FormContent {
-  umail: string;
+  email: string;
 }
 
 @Component({
@@ -19,7 +19,7 @@ interface FormContent {
 })
 export class SignupComponent implements OnDestroy {
   formSignup = new FormGroup({
-    umail: new FormControl('', {
+    email: new FormControl('', {
       validators: [Validators.required, Validators.email],
       updateOn: 'blur'
     })
@@ -53,17 +53,33 @@ export class SignupComponent implements OnDestroy {
     if (!this.formSignup.valid) {
       return;
     }
-    this.isFormShown = false;
-    this.subBackButton = timer(30000).subscribe(() => {
-      this.isBackButtonShown = true;
-    });
+    this.apiService.post('/auth/signup', model).subscribe(
+      () => {
+        this.alert = undefined;
+        this.isFormShown = false;
+        this.subBackButton = timer(30000).subscribe(() => {
+          this.isBackButtonShown = true;
+        });
+      },
+      (err) => {
+        const msg = this.apiService.extractError(err, [
+          [400, 'email is invalid', 'Your email address appears invalid.'],
+          [
+            400,
+            'email already registered',
+            'There is already an account associated with this email address.'
+          ]
+        ]);
+        this.alert = { type: AlertType.Danger, text: msg };
+      }
+    );
   }
 
-  /**
+  /**a
    * Determines if help tip should be shown below the input field.
    */
   isFormValid() {
-    const field = this.formSignup.controls['umail'];
+    const field = this.formSignup.controls['email'];
     return field.pristine || field.valid;
   }
 
