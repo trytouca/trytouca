@@ -1,0 +1,42 @@
+<div class="h-full pb-4 flex flex-col">
+  <h2 class="text-2xl font-semibold">Reset Your Password</h2>
+  <div class="flex-grow flex items-center">
+    <form class="wsl-form py-4 flex-grow" [formGroup]="formReset"
+      (ngSubmit)="onSubmit(formReset.value)" novalidate>
+      <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+      <div>
+        <label class="wsl-input-label" for="wsl-mail">Email Address</label>
+        <input class="wsl-input-field" type="email" id="wsl-umail" tabindex="1"
+          autocomplete="email" aria-describedby="wsl-umail-help" required
+          formControlName="umail" name="umail" data-lpignore="true">
+        <div class="wsl-text-danger space-x-1" id="wsl-umail-help"
+          [hidden]="isFormValid()">
+          <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+            viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <small>Please use a valid email address.</small>
+        </div>
+      </div>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button class="wsl-btn-lg wsl-btn-dark" type="submit" tabindex="2">
+            Reset
+          </button>
+        </div>
+        <div class="wsl-form-links">
+          <button class="wsl-btn-lg wsl-btn-light" type="button"
+            routerLink="/account/signin" tabindex="3">
+            Changed your mind?
+          </button>
+          <button class="wsl-btn-lg wsl-btn-light" type="button"
+            routerLink="/account/signup" tabindex="4">
+            New to Weasel?
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
