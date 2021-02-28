@@ -1,8 +1,60 @@
-<app-header-outside></app-header-outside>
-<div class="wsl-page-auth">
-  <h2 class="wsl-page-auth-title">Get Started For Free</h2>
-  <div class="wsl-page-auth-body">
-    <app-forms-signup></app-forms-signup>
-  </div>
+<div class="wsl-page-auth-form">
+  <form class="wsl-form" [formGroup]="signupForm"
+    (ngSubmit)="onSubmit(signupForm.value)" novalidate>
+    <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+    <div>
+      <label class="wsl-input-label" for="wsl-mail">Email</label>
+      <input class="wsl-input-field" type="email" id="wsl-mail" tabindex="1"
+        autocomplete="email" aria-describedby="wsl-email-help" required
+        formControlName="email" name="email" data-lpignore="true">
+      <small class="wsl-text-danger" id="wsl-email-help"
+        [hidden]="shouldHideAriaDescription('email')">
+        Please provide a valid email address.
+      </small>
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-fname">Full Name</label>
+      <input class="wsl-input-field" type="text" id="wsl-fname" tabindex="2"
+        autocomplete="name" aria-describedby="wsl-fname-help" required
+        formControlName="fname" name="fname" data-lpignore="true">
+      <small class="wsl-text-danger" id="wsl-fname-help"
+        [hidden]="shouldHideAriaDescription('fname')">
+        Please provide your full name.
+      </small>
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-uname">Username</label>
+      <input class="wsl-input-field" type="text" id="wsl-uname" tabindex="3"
+        autocomplete="username" aria-describedby="wsl-uname-help" required
+        formControlName="uname" name="uname">
+      <small class="wsl-text-danger" id="wsl-uname-help"
+        [hidden]="shouldHideAriaDescription('uname')">
+        Your username must be at least three characters, may only contain
+        alphanumeric characters and may not start with a number.
+      </small>
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-upass">Password</label>
+      <input class="wsl-input-field" type="password" id="wsl-upass" tabindex="4"
+        autocomplete="current-password" aria-describedby="wsl-upass-help"
+        required formControlName="upass" name="upass">
+      <small class="wsl-text-danger" id="wsl-upass-help"
+        [hidden]="shouldHideAriaDescription('upass')">
+        Your password must be at least eight characters.
+      </small>
+    </div>
+    <div class="wsl-form-footer">
+      <div class="wsl-form-submit">
+        <button class="wsl-btn-lg wsl-btn-dark" type="submit" tabindex="5">
+          Sign up
+        </button>
+      </div>
+      <div class="wsl-form-links">
+        <button class="wsl-btn-lg wsl-btn-light" type="button"
+          routerLink="/signin" tabindex="6">
+          Already Registered?
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
-<app-footer-inside></app-footer-inside>

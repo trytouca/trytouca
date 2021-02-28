@@ -15,12 +15,7 @@ import { DocsModule } from './docs/docs.module';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
-import {
-  ActivateComponent,
-  ResetComponent,
-  SigninComponent,
-  SignupComponent
-} from './auth';
+import { ActivateComponent, ResetComponent, SigninComponent } from './auth';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -31,8 +26,7 @@ import { SharedModule } from './shared/shared.module';
     LandingComponent,
     NotfoundComponent,
     ResetComponent,
-    SigninComponent,
-    SignupComponent
+    SigninComponent
   ],
   imports: [
     AppRoutingModule,

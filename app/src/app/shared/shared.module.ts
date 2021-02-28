@@ -20,7 +20,6 @@ import {
 } from './components';
 import { environment } from '../../environments/environment';
 import { AutofocusDirective, DropdownDirective } from './directives';
-import { SignupFormComponent } from './forms/signup.component';
 
 @NgModule({
   imports: [
@@ -41,8 +40,7 @@ import { SignupFormComponent } from './forms/signup.component';
     FooterOutsideComponent,
     HeaderInsideComponent,
     HeaderOutsideComponent,
-    ServerDownComponent,
-    SignupFormComponent
+    ServerDownComponent
   ],
   exports: [
     AlertComponent,
@@ -59,8 +57,7 @@ import { SignupFormComponent } from './forms/signup.component';
     HeaderOutsideComponent,
     HttpClientModule,
     ReactiveFormsModule,
-    ServerDownComponent,
-    SignupFormComponent
+    ServerDownComponent
   ]
 })
 export class SharedModule {}
