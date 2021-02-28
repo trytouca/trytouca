@@ -3,8 +3,9 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-
-import { IUser, UserModel } from '../../schemas/user'
+import ip from 'ip'
+import { createUserSession } from '../../models/auth'
+import { UserModel } from '../../schemas/user'
 import { config } from '../../utils/config'
 import logger from '../../utils/logger'
 
@@ -17,6 +18,8 @@ export async function authVerifyActivate(
   next: NextFunction
 ) {
   const activationKey = req.params.key
+  const askedAgent = req.headers['user-agent']
+  const askedIpAddress = ip.toLong(req.connection.remoteAddress)
   logger.debug('received request to activate user')
 
   // return 400 if activation key is invalid
@@ -30,13 +33,13 @@ export async function authVerifyActivate(
 
   // check if activation key is associated with any inactive user
 
-  const user = (await UserModel.findOneAndUpdate(
+  const user = await UserModel.findOneAndUpdate(
     { activationKey },
     {
       $set: { activatedAt: new Date() },
       $unset: { activationKey: true }
     }
-  )) as IUser
+  )
 
   // return 404 if activation key is not found
 
@@ -46,7 +49,22 @@ export async function authVerifyActivate(
       status: 404
     })
   }
-  logger.info('%s: verified account', user.username)
 
-  return res.status(204).send()
+  // now that we activated this account, we acquire a session for the user
+  // so they don't have to sign in.
+
+  logger.info('%s: verified account', user.username)
+  const session = await createUserSession(user, { askedAgent, askedIpAddress })
+
+  // return session token to the user
+  // @todo consider setting path and secure attributes
+
+  res.cookie('authToken', session.token, {
+    expires: session.expiresAt,
+    httpOnly: true,
+    path: '/',
+    secure: false,
+    signed: true
+  })
+  return res.status(200).json({ expiresAt: session.expiresAt })
 }

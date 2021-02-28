@@ -95,9 +95,30 @@ router.post(
  *    operationId: 'account_verifyActivate'
  *    description:
  *      Activate a user account.
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - key
+ *            properties:
+ *              key:
+ *                type: string
+ *                minLength: 8
+ *      required: true
  *    responses:
- *      204:
+ *      200:
  *        description: 'Account Activated'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              additionalProperties: false
+ *              properties:
+ *                expiresAt:
+ *                  type: string
+ *                  format: date-time
  *      400:
  *        $ref: '#/components/responses/RequestInvalid'
  *      404:
