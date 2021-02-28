@@ -37,21 +37,10 @@ const router = e.Router()
  *            type: object
  *            required:
  *              - email
- *              - password
- *              - username
  *            properties:
  *              email:
  *                type: string
  *                format: email
- *              fullname:
- *                type: string
- *              password:
- *                type: string
- *                minLength: 8
- *              username:
- *                type: string
- *                minLength: 3
- *                maxLength: 32
  *      required: true
  *    responses:
  *      201:
@@ -68,12 +57,7 @@ const router = e.Router()
 router.post(
   '/signup',
   bodyParser.json(),
-  middleware.inputs([
-    middleware.validationRules.get('email'),
-    middleware.validationRules.get('username'),
-    middleware.validationRules.get('password'),
-    middleware.validationRules.get('fullname')
-  ]),
+  middleware.inputs([middleware.validationRules.get('email')]),
   promisable(authVerifyCreate, 'create user account')
 )
 

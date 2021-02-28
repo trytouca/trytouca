@@ -1,11 +1,29 @@
 <mjml>
   <mj-head>
     <mj-title>Welcome to Weasel</mj-title>
-    <mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
+    <mj-font
+      name="Nunito"
+      href="https://fonts.googleapis.com/css?family=Nunito"
+    />
     <mj-attributes>
       <mj-body background-color="#eee" />
-      <mj-button background-color="#5e6ebf" align="center" color="#ffffff" font-size="17px" font-weight="bold" padding-top="32px" width="300px" />
-      <mj-text color="#555" font-size="14px" font-weight="400" line-height="24px" padding-bottom="0px" padding-top="10px" />
+      <mj-button
+        background-color="#0284C7"
+        align="center"
+        color="#ffffff"
+        font-size="17px"
+        font-weight="bold"
+        padding-top="32px"
+        width="300px"
+      />
+      <mj-text
+        color="#555"
+        font-size="14px"
+        font-weight="400"
+        line-height="24px"
+        padding-bottom="0px"
+        padding-top="10px"
+      />
     </mj-attributes>
   </mj-head>
   <mj-body>
@@ -13,12 +31,11 @@
     <mj-section background-color="#fff">
       <mj-column>
         <mj-text>
-          <h2>Welcome, {{ fullname }}!</h2>
+          <h2>Welcome Aboard!</h2>
         </mj-text>
         <mj-text>
-          Thank you for creating an account on Weasel!
-          We hope that it helps you improve and maintain the quality
-          of your software product.
+          Thank you for creating an account on Weasel! We hope that it helps you
+          improve and maintain the quality of your software product.
         </mj-text>
         <mj-text>
           Before we get started, click below to verify your email address.
