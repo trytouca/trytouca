@@ -15,12 +15,11 @@ import { DocsModule } from './docs/docs.module';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
-import { ActivateComponent, ResetComponent } from './auth';
+import { ResetComponent } from './auth';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
   declarations: [
-    ActivateComponent,
     AppComponent,
     FeedbackComponent,
     LandingComponent,
