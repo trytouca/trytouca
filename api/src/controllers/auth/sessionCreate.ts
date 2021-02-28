@@ -5,11 +5,9 @@
 import * as bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
 import ip from 'ip'
-
+import { createUserSession } from '../../models/auth'
 import { UserModel } from '../../schemas/user'
-import { SessionModel } from '../../schemas/session'
 import { config } from '../../utils/config'
-import * as jwt from '../../utils/jwt'
 import logger from '../../utils/logger'
 import * as mailer from '../../utils/mailer'
 
@@ -108,69 +106,21 @@ export async function authSessionCreate(
     })
   }
 
-  // at this point, we recognize user attempt as legitimate.
+  // at this point, we recognize user attempt as legitimate and acquire
+  // a user session.
+
   logger.debug('%s: signin request validated', user.username)
-
-  // edge case:
-  // if user has an active unexpired session with matching metadata
-  // provide the same token that we had provided before.
-
-  const prevSession = await SessionModel.findOne({
-    agent: askedAgent,
-    expiresAt: { $gt: new Date() },
-    ipAddr: askedIpAddress,
-    userId: user._id
-  })
-  if (prevSession) {
-    logger.debug('%s: reusing previously issued token', user.username)
-    // @todo consider setting path and secure attributes
-    res.cookie('authToken', jwt.issue(prevSession), {
-      expires: prevSession.expiresAt,
-      httpOnly: true,
-      path: '/',
-      secure: false,
-      signed: true
-    })
-    return res.status(200).json({ expiresAt: prevSession.expiresAt })
-  }
-
-  // in the more likely case, when the user had no prior active session
-  // with matching metadata, issue a new auth token.
-
-  logger.debug('%s: issuing auth token for user', user.username)
-
-  await UserModel.findByIdAndUpdate(user._id, {
-    $unset: { lockedAt: true, loginAttempts: true }
-  })
-
-  // set expiration date of the token
-
-  const expiresAt = new Date()
-  expiresAt.setDate(expiresAt.getDate() + config.auth.jwtLifetime)
-
-  // add user session to database.
-
-  const session = await SessionModel.create({
-    agent: askedAgent,
-    expiresAt,
-    ipAddr: askedIpAddress,
-    userId: user._id
-  })
-
-  // generate a JSON web token
-
-  const token = jwt.issue(session)
-  logger.info('%s: issued auth token', user.username)
+  const session = await createUserSession(user, { askedAgent, askedIpAddress })
 
   // return session token to the user
-
   // @todo consider setting path and secure attributes
-  res.cookie('authToken', token, {
-    expires: expiresAt,
+
+  res.cookie('authToken', session.token, {
+    expires: session.expiresAt,
     httpOnly: true,
     path: '/',
     secure: false,
     signed: true
   })
-  return res.status(200).json({ expiresAt })
+  return res.status(200).json({ expiresAt: session.expiresAt })
 }
