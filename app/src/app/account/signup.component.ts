@@ -46,6 +46,15 @@ export class SignupComponent {
       return;
     }
     this.submitted = true;
+    this.prev = model;
     console.log(model);
+  }
+
+  /**
+   *
+   */
+  isStartFormValid() {
+    const field = this.formSignup.controls['umail'];
+    return field.pristine || field.valid;
   }
 }

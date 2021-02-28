@@ -12,6 +12,8 @@
       </div>
       <div
         class="pt-8 px-6 pb-4 grid-cols-1 bg-lblue-700 sm:rounded-b-lg md:rounded-b-none md:rounded-r-lg border-gray-200 border-t md:border-t-0 md:border-l">
+        <wsl-account-privacy *ngIf="currentPage === PageType.Signup">
+        </wsl-account-privacy>
         <wsl-account-feature *ngIf="currentPage === PageType.Signin">
         </wsl-account-feature>
       </div>

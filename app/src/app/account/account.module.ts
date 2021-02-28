@@ -10,6 +10,7 @@ import { ActivateComponent } from './activate.component';
 import { OnboardComponent } from './onboard.component';
 import { StartComponent } from './start.component';
 import { FeatureComponent } from './feature.component';
+import { PrivacyComponent } from './privacy.component';
 import { SigninComponent } from './signin.component';
 import { SignupComponent } from './signup.component';
 
@@ -19,6 +20,7 @@ import { SignupComponent } from './signup.component';
     OnboardComponent,
     StartComponent,
     FeatureComponent,
+    PrivacyComponent,
     SigninComponent,
     SignupComponent
   ],
