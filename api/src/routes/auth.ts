@@ -304,8 +304,7 @@ router.post(
 )
 
 /**
- * Provides basic information for an account associated with a given
- * reset key.
+ * Provides basic information for an account associated with a given reset key.
  *
  * @api [get] /auth/reset/:key
  *    tags:
