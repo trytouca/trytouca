@@ -4,8 +4,9 @@
 
 import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ApiService } from '@weasel/core/services';
+import { ApiService, UserService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
 interface FormContent {
@@ -52,6 +53,9 @@ class FormHint {
   templateUrl: './onboard.component.html'
 })
 export class OnboardComponent implements OnDestroy {
+  /**
+   *
+   */
   onboardForm = new FormGroup({
     fname: new FormControl('', {
       validators: [
@@ -65,8 +69,8 @@ export class OnboardComponent implements OnDestroy {
       validators: [
         Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(128),
-        Validators.pattern('[a-zA-Z][a-zA-Z0-9]+')
+        Validators.maxLength(32),
+        Validators.pattern('[a-zA-Z0-9]+')
       ],
       updateOn: 'blur'
     }),
@@ -79,12 +83,16 @@ export class OnboardComponent implements OnDestroy {
       updateOn: 'blur'
     })
   });
+
+  /**
+   *
+   */
   help: Record<'fname' | 'uname' | 'upass', FormHint> = {
     fname: new FormHint(
       'We do not share or use your full name other than with your team members.',
       {
         required: 'This field is required.',
-        maxlength: 'Value should be at most 128 characters.',
+        maxlength: 'Our engineers did not expect more than 128 characters.',
         minlength: 'This field cannot be empty.'
       }
     ),
@@ -92,8 +100,8 @@ export class OnboardComponent implements OnDestroy {
       'You can always update your information from the <i>Account Settings</i> page.',
       {
         required: 'This field is required.',
-        maxlength: 'Value should be at most 128 characters.',
-        minlength: 'Username must be at least 3 characters.',
+        maxlength: 'Username can be at most 32 characters.',
+        minlength: 'Username can be at least 3 characters.',
         pattern: 'Username can only contain alphanumeric characters.'
       }
     ),
@@ -103,6 +111,7 @@ export class OnboardComponent implements OnDestroy {
       maxlength: 'Password must be at most 64 characters.'
     })
   };
+
   alert: Alert;
   private _sub: Partial<Record<'fname' | 'uname' | 'upass', Subscription>> = {};
 
@@ -116,7 +125,11 @@ export class OnboardComponent implements OnDestroy {
   /**
    *
    */
-  constructor(private apiService: ApiService) {
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
+    private userService: UserService
+  ) {
     ['fname', 'uname', 'upass'].forEach((key: 'fname' | 'uname' | 'upass') => {
       const group = this.onboardForm.get(key);
       this._sub[key] = group.statusChanges.subscribe(() => {
@@ -145,7 +158,21 @@ export class OnboardComponent implements OnDestroy {
     if (!this.onboardForm.valid) {
       return;
     }
-    const error = this.apiService.extractError('', []);
-    this.alert = { text: error, type: AlertType.Danger };
+    this.apiService.patch('/user', model).subscribe(
+      () => {
+        this.alert = undefined;
+        Object.values(this.help).forEach((v) => v.setSuccess());
+        this.onboardForm.reset({}, { emitEvent: false });
+        this.userService.populate();
+        this.router.navigate(['/~']);
+      },
+      (err) => {
+        const error = this.apiService.extractError(err, [
+          [409, 'username already registered', 'This username is taken'],
+          [401, 'invalid login credentials', 'Incorrect username or password.']
+        ]);
+        this.alert = { text: error, type: AlertType.Danger };
+      }
+    );
   }
 }
