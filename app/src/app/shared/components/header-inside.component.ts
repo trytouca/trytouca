@@ -29,9 +29,9 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
    */
   constructor(
     private authService: AuthService,
-    private faIconLibrary: FaIconLibrary,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    faIconLibrary: FaIconLibrary
   ) {
     this._subUser = this.userService.currentUser$.subscribe(
       (user) => (this.currentUser = user)

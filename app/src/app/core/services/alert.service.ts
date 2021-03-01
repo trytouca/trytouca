@@ -10,7 +10,6 @@ export enum AlertKind {
   ApiConnectionDown = 1,
   ApiConnectionLost,
   InvalidAuthToken,
-  UserNotVerified,
 
   TeamNotFound,
   SuiteNotFound,
@@ -48,11 +47,6 @@ export class AlertService {
       kind: AlertKind.InvalidAuthToken,
       type: AlertType.Danger,
       text: 'Your session has expired. Please login once again.'
-    },
-    {
-      kind: AlertKind.UserNotVerified,
-      type: AlertType.Info,
-      text: 'Please check your mailbox to complete your account activation.'
     },
     { kind: AlertKind.TeamNotFound, type: AlertType.Danger, text: '' },
     { kind: AlertKind.SuiteNotFound, type: AlertType.Danger, text: '' },

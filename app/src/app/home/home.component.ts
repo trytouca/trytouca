@@ -22,7 +22,6 @@ export class HomeComponent {
   // application-wide alerts that should be shown on top of every page.
   alerts: ServiceAlert[] = [];
   isApiConnectionDown = false;
-  public currentUser: UserLookupResponse;
 
   /**
    *
@@ -47,14 +46,6 @@ export class HomeComponent {
         (k) => k.kind === AlertKind.ApiConnectionDown
       );
       this.alerts = v.filter((k) => k.text);
-    });
-    this.userService.currentUser$.subscribe((user) => {
-      this.currentUser = user;
-      if (user.isVerified) {
-        this.alertService.unset(AlertKind.UserNotVerified);
-      } else {
-        this.alertService.set(AlertKind.UserNotVerified);
-      }
     });
     this.userService.populate();
   }

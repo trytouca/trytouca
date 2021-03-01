@@ -27,7 +27,6 @@ export type UserLookupResponse = {
   apiKeys: string[];
   email: string;
   fullname: string;
-  isVerified: boolean;
   platformRole: EPlatformRole;
   username: string;
 };

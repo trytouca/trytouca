@@ -40,7 +40,6 @@ export type Userinfo = {
  *    - apiKeys
  *    - email
  *    - fullname
- *    - isVerified
  *    - platformRole
  *    - username
  *  properties:
@@ -54,7 +53,6 @@ export type Userinfo = {
  *      format: email
  *    fullname:
  *      type: string
- *    isVerified:
  *      type: boolean
  *    platformRole:
  *      $ref: '#/components/schemas/CT_EPlatformRole'
@@ -65,7 +63,6 @@ export type UserLookupResponse = {
   apiKeys: string[]
   email: string
   fullname: string
-  isVerified: boolean
   platformRole: EPlatformRole
   username: string
 }

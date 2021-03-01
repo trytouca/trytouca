@@ -36,7 +36,6 @@ export async function userLookup(
     apiKeys: info.apiKeys,
     email: user.email,
     fullname: user.fullname,
-    isVerified: Boolean(info.activatedAt),
     platformRole: info.platformRole,
     username: user.username
   }
