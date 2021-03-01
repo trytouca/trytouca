@@ -2,8 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
@@ -13,11 +14,44 @@ interface FormContent {
   upass: string;
 }
 
+class FormHint {
+  private _text: string;
+  private _type: string;
+  constructor(
+    private initial: string,
+    private errorMap: { [key: string]: string } = {},
+    private success?: string
+  ) {
+    this._text = initial;
+    this._type = 'wsl-text-muted';
+  }
+  setError(key: string): void {
+    if (key in this.errorMap) {
+      this._text = this.errorMap[key];
+      this._type = 'wsl-text-danger';
+    }
+  }
+  setSuccess(): void {
+    this._text = this.success ?? this.initial;
+    this._type = this.success ? 'wsl-text-success' : 'wsl-text-muted';
+  }
+  unsetError(): void {
+    this._text = this.initial;
+    this._type = 'wsl-text-muted';
+  }
+  get text(): string {
+    return this._text;
+  }
+  get type(): string {
+    return this._type;
+  }
+}
+
 @Component({
   selector: 'wsl-account-onboard',
   templateUrl: './onboard.component.html'
 })
-export class OnboardComponent {
+export class OnboardComponent implements OnDestroy {
   onboardForm = new FormGroup({
     fname: new FormControl('', {
       validators: [
@@ -31,6 +65,7 @@ export class OnboardComponent {
       validators: [
         Validators.required,
         Validators.minLength(3),
+        Validators.maxLength(128),
         Validators.pattern('[a-zA-Z][a-zA-Z0-9]+')
       ],
       updateOn: 'blur'
@@ -41,15 +76,64 @@ export class OnboardComponent {
         Validators.minLength(8),
         Validators.maxLength(64)
       ],
-      updateOn: 'change'
+      updateOn: 'blur'
     })
   });
+  help: Record<'fname' | 'uname' | 'upass', FormHint> = {
+    fname: new FormHint(
+      'We do not share or use your full name other than with your team members.',
+      {
+        required: 'This field is required.',
+        maxlength: 'Value should be at most 128 characters.',
+        minlength: 'This field cannot be empty.'
+      }
+    ),
+    uname: new FormHint(
+      'You can always update your information from the <i>Account Settings</i> page.',
+      {
+        required: 'This field is required.',
+        maxlength: 'Value should be at most 128 characters.',
+        minlength: 'Username must be at least 3 characters.',
+        pattern: 'Username can only contain alphanumeric characters.'
+      }
+    ),
+    upass: new FormHint('Use a strong password, please.', {
+      required: 'This field is required.',
+      minlength: 'Password must be at least 8 characters.',
+      maxlength: 'Password must be at most 64 characters.'
+    })
+  };
   alert: Alert;
+  private _sub: Partial<Record<'fname' | 'uname' | 'upass', Subscription>> = {};
 
   /**
    *
    */
-  constructor(private apiService: ApiService) {}
+  ngOnDestroy() {
+    Object.values(this._sub).forEach((s) => s.unsubscribe());
+  }
+
+  /**
+   *
+   */
+  constructor(private apiService: ApiService) {
+    ['fname', 'uname', 'upass'].forEach((key: 'fname' | 'uname' | 'upass') => {
+      const group = this.onboardForm.get(key);
+      this._sub[key] = group.statusChanges.subscribe(() => {
+        const help = this.help[key];
+        if (!group.errors) {
+          help.setSuccess();
+          return;
+        }
+        const errorTypes = Object.keys(group.errors);
+        if (errorTypes.length === 0) {
+          help.unsetError();
+          return;
+        }
+        help.setError(errorTypes[0]);
+      });
+    });
+  }
 
   /**
    *
@@ -61,5 +145,7 @@ export class OnboardComponent {
     if (!this.onboardForm.valid) {
       return;
     }
+    const error = this.apiService.extractError('', []);
+    this.alert = { text: error, type: AlertType.Danger };
   }
 }

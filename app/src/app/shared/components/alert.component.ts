@@ -20,7 +20,7 @@ export interface Alert {
   selector: 'app-alert',
   template: `
     <div *ngIf="alert" role="alert" [ngClass]="lookupClasses()">
-      <small [innerHtml]="alert.text" class="font-normal text-sm"></small>
+      <small [innerHTML]="alert.text" class="font-normal text-sm"></small>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush

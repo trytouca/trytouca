@@ -4,7 +4,7 @@
 <div class="wsl-modal-body">
   <app-alert [alert]="alert" *ngIf="alert"></app-alert>
   <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-    <p class="text-sm" [innerHtml]="elements.message"></p>
+    <p class="text-sm" [innerHTML]="elements.message"></p>
     <p class="text-sm" *ngIf="elements.confirmText">
       Please enter <b>{{ elements.confirmText }}</b> in the form below to
       confirm your intention.
