@@ -78,14 +78,13 @@ export class SignupComponent {
   }
 
   /**
-   * Makes request for another welcome email in case the original email
-   * did not get through.
-   *
-   * @todo instead of attempting to re-register user, we should create a
-   *       separate backend route that only resends the welcome email.
+   * Requests for another welcome email in case the original email did not get
+   * through.
    */
   onResend() {
-    this.onSubmit(this.formSignup.value);
+    this.apiService
+      .post('/auth/signup/resend', this.formSignup.value)
+      .subscribe();
   }
 
   /**

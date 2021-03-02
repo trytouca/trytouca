@@ -16,7 +16,7 @@ const routes: Routes = [
   {
     path: '',
     children: [
-      { path: '', redirectTo: 'signin', pathMatch: 'full' },
+      { path: '', redirectTo: 'signup', pathMatch: 'full' },
       { path: 'activate', component: ActivateComponent },
       { path: 'signin', component: StartComponent, data: { page: 'signin' } },
       { path: 'signup', component: StartComponent, data: { page: 'signup' } },
