@@ -6,10 +6,10 @@
       <app-alert [alert]="alert" *ngIf="alert"></app-alert>
       <div>
         <label class="wsl-input-label" for="wsl-mail">Email Address</label>
-        <input class="wsl-input-field" type="email" id="wsl-umail" tabindex="1"
-          autocomplete="email" aria-describedby="wsl-umail-help" required
-          formControlName="umail" name="umail" data-lpignore="true">
-        <div class="wsl-text-danger space-x-1" id="wsl-umail-help"
+        <input class="wsl-input-field" type="email" id="wsl-email" name="email"
+          formControlName="email" aria-describedby="wsl-email-help" required
+          autocomplete="email" data-lpignore="true" tabindex="1">
+        <div class="wsl-text-danger space-x-1" id="wsl-email-help"
           [hidden]="isFormValid()">
           <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
             viewBox="0 0 24 24" stroke="currentColor">

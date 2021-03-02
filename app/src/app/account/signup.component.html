@@ -8,9 +8,9 @@
         <div>
           <label class="wsl-input-label" for="wsl-email">Email Address</label>
           <input class="wsl-input-field" type="email" id="wsl-email"
-            autocomplete="email" aria-describedby="wsl-email-help" required
-            formControlName="email" name="email" data-lpignore="true"
-            tabindex="1">
+            name="email" formControlName="email"
+            aria-describedby="wsl-email-help" required autocomplete="email"
+            data-lpignore="true" tabindex="1">
           <div class="wsl-text-danger space-x-1" id="wsl-email-help"
             [hidden]="isFormValid()">
             <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg"

@@ -143,35 +143,7 @@ export class ResetComponent {
   /**
    *
    */
-  onRequestSubmission(model: IRequestFormContent) {
-    if (!this.requestForm.valid) {
-      return;
-    }
-    this.submitted = true;
-    this.apiService.post('/auth/reset', { email: model.email }).subscribe(
-      () => {
-        this.requestForm.reset();
-        this.submitted = false;
-        this.alert = {
-          type: AlertType.Success,
-          text: 'Please check your email for a link to reset your password.'
-        };
-      },
-      (err) => {
-        const msg = this.apiService.extractError(err, [
-          [400, 'request invalid', 'Your request was rejected by the server.'],
-          [
-            404,
-            'account not found',
-            'Your email is not associated with any account.'
-          ],
-          [423, 'account suspended', 'Your account is currently suspended.'],
-          [423, 'account locked', 'Your account is temporarily locked.']
-        ]);
-        this.alert = { type: AlertType.Danger, text: msg };
-      }
-    );
-  }
+  onRequestSubmission(model: IRequestFormContent) {}
 
   /**
    *
