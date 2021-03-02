@@ -4,7 +4,7 @@
   <div class="text-center">
     <ng-container *ngIf="isBackButtonShown">
       <span class="text-sm">
-        {{ input.isRetry ? input.textAfterFailure : input.textAfterSuccess }}
+        {{ isRetry ? input.textAfterFailure : input.textAfterSuccess }}
       </span>
     </ng-container>
     <ng-container *ngIf="!isBackButtonShown">
@@ -14,7 +14,7 @@
           d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
       <span class="text-sm">
-        {{ input.isRetry ? input.textFailure : input.textSuccess }}
+        {{ isRetry ? input.textFailure : input.textSuccess }}
       </span>
     </ng-container>
   </div>

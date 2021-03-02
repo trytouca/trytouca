@@ -17,7 +17,6 @@ export enum MailboxAction {
 }
 
 export interface MailboxInput {
-  isRetry: boolean;
   textAfterFailure: string;
   textAfterSuccess: string;
   textFailure: string;
@@ -33,6 +32,7 @@ export class MailboxComponent implements OnDestroy {
   @Output() action = new EventEmitter<MailboxAction>();
 
   isBackButtonShown = false;
+  isRetry = false;
   private _sub: Subscription;
 
   constructor() {
@@ -48,6 +48,7 @@ export class MailboxComponent implements OnDestroy {
   }
 
   resend() {
+    this.isRetry = true;
     this.reset();
     this.action.emit(MailboxAction.Resend);
   }

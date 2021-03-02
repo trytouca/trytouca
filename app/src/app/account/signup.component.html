@@ -44,7 +44,9 @@
       </form>
     </div>
   </ng-container>
-  <wsl-account-mailbox *ngIf="!isFormShown" [input]="mailboxInput"
-    (action)="mailboxAction($event)">
-  </wsl-account-mailbox>
+  <div class="flex-grow grid place-content-center" *ngIf="!isFormShown">
+    <wsl-account-mailbox [input]="mailboxInput"
+      (action)="mailboxAction($event)">
+    </wsl-account-mailbox>
+  </div>
 </div>

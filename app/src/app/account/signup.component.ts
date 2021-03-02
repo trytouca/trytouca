@@ -24,7 +24,7 @@ export class SignupComponent {
     email: new FormControl('', {
       validators: [
         Validators.required,
-        Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$')
+        Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
       ],
       updateOn: 'blur'
     })
@@ -34,7 +34,6 @@ export class SignupComponent {
    *
    */
   mailboxInput: MailboxInput = {
-    isRetry: false,
     textAfterSuccess: 'Did not receive the email? We can send you a new one.',
     textAfterFailure: 'Still not in your inbox? Maybe try one more time?',
     textFailure: 'We sent you another email. Maybe check your spam folder?',
@@ -96,10 +95,8 @@ export class SignupComponent {
     if (action === MailboxAction.Back) {
       this.isFormShown = true;
       this.formSignup.reset();
-      this.mailboxInput.isRetry = false;
     } else if (action === MailboxAction.Resend) {
       this.isFormShown = false;
-      this.mailboxInput.isRetry = true;
       this.onResend();
     }
   }

@@ -18,7 +18,7 @@ interface IFormContent {
 
 @Component({
   selector: 'app-forms-signup',
-  templateUrl: './signup.component.html'
+  template: ''
 })
 export class SignupFormComponent {
   signupForm = new FormGroup({
