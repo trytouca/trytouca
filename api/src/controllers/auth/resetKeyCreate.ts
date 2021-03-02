@@ -80,7 +80,7 @@ export async function authResetKeyCreate(
   const resetLink = `${config.webapp.root}/reset?key=${resetKey}`
 
   mailer.mailUser(user, 'Password Reset', 'auth-password-start', {
-    username: user.username,
+    greetings: user.fullname ? `Hi ${user.fullname}` : `Hello`,
     expiresIn: config.auth.maxResetKeyLifetime.toString(),
     resetLink
   })
