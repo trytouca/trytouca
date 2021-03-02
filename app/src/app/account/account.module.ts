@@ -7,24 +7,26 @@ import { CommonModule } from '@angular/common';
 import { SharedModule } from '@weasel/shared';
 import { AccountRoutingModule } from './account-routing.module';
 import { ActivateComponent } from './activate.component';
-import { OnboardComponent } from './onboard.component';
-import { StartComponent } from './start.component';
 import { FeatureComponent } from './feature.component';
+import { MailboxComponent } from './mailbox.component';
+import { OnboardComponent } from './onboard.component';
 import { PrivacyComponent } from './privacy.component';
 import { ResetComponent } from './reset.component';
 import { SigninComponent } from './signin.component';
 import { SignupComponent } from './signup.component';
+import { StartComponent } from './start.component';
 
 @NgModule({
   declarations: [
     ActivateComponent,
-    OnboardComponent,
-    StartComponent,
     FeatureComponent,
+    MailboxComponent,
+    OnboardComponent,
     PrivacyComponent,
     ResetComponent,
     SigninComponent,
-    SignupComponent
+    SignupComponent,
+    StartComponent
   ],
   imports: [AccountRoutingModule, CommonModule, SharedModule]
 })

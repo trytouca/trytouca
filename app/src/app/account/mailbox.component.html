@@ -1,0 +1,41 @@
+<div class="space-y-4">
+  <img class="max-h-48 mx-auto"
+    src="./assets/undraw/undraw_Mailbox_re_dvds.svg" />
+  <div class="text-center">
+    <ng-container *ngIf="isBackButtonShown">
+      <span class="text-sm">
+        {{ input.isRetry ? input.textAfterFailure : input.textAfterSuccess }}
+      </span>
+    </ng-container>
+    <ng-container *ngIf="!isBackButtonShown">
+      <svg class="inline h-6 text-green-500" xmlns="http://www.w3.org/2000/svg"
+        fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="text-sm">
+        {{ input.isRetry ? input.textFailure : input.textSuccess }}
+      </span>
+    </ng-container>
+  </div>
+  <div class="flex justify-between" *ngIf="isBackButtonShown">
+    <button class="wsl-btn-lg wsl-btn-light flex items-center space-x-1"
+      type="button" role="button" (click)="back()" tabindex="4">
+      <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+      </svg>
+      <span>Back</span>
+    </button>
+    <button class="wsl-btn-lg wsl-btn-light flex items-center space-x-1"
+      type="button" role="button" (click)="resend()" tabindex="5">
+      <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+      </svg>
+      <span>Resend</span>
+    </button>
+  </div>
+</div>
