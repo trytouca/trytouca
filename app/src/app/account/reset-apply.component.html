@@ -1,1 +1,51 @@
-<p>{{ input | json }}</p>
+<div class="h-full pb-4 flex flex-col">
+  <h2 class="text-2xl font-semibold">Reset Your Password</h2>
+  <div class="flex-grow flex items-center">
+    <form class="wsl-form py-4 flex-grow" [formGroup]="formReset"
+      (ngSubmit)="onSubmit(formReset.value)" novalidate>
+      <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+      <div>
+        <label class="wsl-input-label" for="wsl-uname">Username</label>
+        <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
+          formControlName="uname" aria-describedby="wsl-uname-help"
+          autocomplete="username" tabindex="1">
+      </div>
+      <div>
+        <label class="wsl-input-label" for="wsl-upass1">New Password</label>
+        <input class="wsl-input-field" type="password" id="wsl-upass1"
+          name="upass1" formControlName="upass1"
+          aria-describedby="wsl-upass1-help" required
+          autocomplete="new-password" tabindex="2">
+        <small class="wsl-text-danger" id="wsl-upass1-help"
+          [hidden]="shouldHideAriaDescriptionForUpass1()">
+          Your password must be at least eight characters.
+        </small>
+      </div>
+      <div>
+        <label class="wsl-input-label" for="wsl-upass2">Confirm New
+          Password</label>
+        <input class="wsl-input-field" type="password" id="wsl-upass2"
+          name="upass2" formControlName="upass2"
+          aria-describedby="wsl-upass2-help" required
+          autocomplete="new-password" tabindex="3">
+        <small class="wsl-text-danger" id="wsl-upass2-help"
+          [hidden]="shouldHideAriaDescriptionForUpass2()">
+          Your password must match the password you entered above.
+        </small>
+      </div>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button class="wsl-btn-lg wsl-btn-dark" type="submit" tabindex="4">
+            Reset
+          </button>
+        </div>
+        <div class="wsl-form-links">
+          <button class="wsl-btn-lg wsl-btn-light" type="button"
+            routerLink="/signin" tabindex="5">
+            Remember Your Password?
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

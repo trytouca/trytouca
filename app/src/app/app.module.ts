@@ -15,7 +15,6 @@ import { DocsModule } from './docs/docs.module';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
-import { ResetComponent } from './auth';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -23,8 +22,7 @@ import { SharedModule } from './shared/shared.module';
     AppComponent,
     FeedbackComponent,
     LandingComponent,
-    NotfoundComponent,
-    ResetComponent
+    NotfoundComponent
   ],
   imports: [
     AppRoutingModule,

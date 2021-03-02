@@ -8,11 +8,9 @@ import { AuthGuardService } from '@weasel/core/services';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
-import { ResetComponent } from './auth';
 
 const routes: Routes = [
   { path: '', component: LandingComponent, data: { page: 'landing' } },
-  { path: 'reset', component: ResetComponent, data: { page: 'reset' } },
   {
     path: 'feedback',
     component: FeedbackComponent,
