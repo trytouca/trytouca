@@ -12,6 +12,8 @@ import { MailboxComponent } from './mailbox.component';
 import { OnboardComponent } from './onboard.component';
 import { PrivacyComponent } from './privacy.component';
 import { ResetComponent } from './reset.component';
+import { ResetApplyComponent } from './reset-apply.component';
+import { ResetStartComponent } from './reset-start.component';
 import { SigninComponent } from './signin.component';
 import { SignupComponent } from './signup.component';
 import { StartComponent } from './start.component';
@@ -24,6 +26,8 @@ import { StartComponent } from './start.component';
     OnboardComponent,
     PrivacyComponent,
     ResetComponent,
+    ResetApplyComponent,
+    ResetStartComponent,
     SigninComponent,
     SignupComponent,
     StartComponent

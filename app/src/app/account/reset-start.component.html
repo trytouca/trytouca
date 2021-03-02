@@ -4,7 +4,7 @@
     <div class="flex-grow flex items-center">
       <form class="wsl-form py-4 flex-grow" [formGroup]="formReset"
         (ngSubmit)="onSubmit(formReset.value)" novalidate>
-        <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+        <app-alert [alert]="alert || input" *ngIf="alert || input"></app-alert>
         <div>
           <label class="wsl-input-label" for="wsl-mail">Email Address</label>
           <input class="wsl-input-field" type="email" id="wsl-email"
@@ -42,9 +42,11 @@
       </form>
     </div>
   </ng-container>
-  <div class="flex-grow grid place-content-center" *ngIf="!isFormShown">
-    <wsl-account-mailbox [input]="mailboxInput"
-      (action)="mailboxAction($event)">
-    </wsl-account-mailbox>
-  </div>
+  <ng-container *ngIf="!isFormShown">
+    <div class="flex-grow grid place-content-center">
+      <wsl-account-mailbox [input]="mailboxInput"
+        (action)="mailboxAction($event)">
+      </wsl-account-mailbox>
+    </div>
+  </ng-container>
 </div>
