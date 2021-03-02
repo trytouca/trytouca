@@ -64,24 +64,41 @@ router.post(
 /**
  * Resend account activation key.
  *
- * @api [post] /auth/resend/varification
+ * @api [post] /auth/resend/signup
  *    tags:
  *      - Account
  *    summary: 'Resend Activation Link'
  *    operationId: 'account_verifyResend'
  *    description:
  *      Resend account activation key.
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - email
+ *            properties:
+ *              email:
+ *                type: string
+ *                format: email
+ *      required: true
  *    responses:
  *      204:
  *        description: 'Activation Link Resent'
  *      400:
  *        $ref: '#/components/responses/RequestInvalid'
- *      401:
- *        $ref: '#/components/responses/Unauthorized'
+ *      404:
+ *        description: 'Account Not Found'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
  */
 router.post(
-  '/resend/verification',
-  middleware.isAuthenticated,
+  '/resend/signup',
+  bodyParser.json(),
+  middleware.inputs([middleware.validationRules.get('email')]),
   promisable(authVerifyResend, 'resend verification email')
 )
 

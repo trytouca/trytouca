@@ -99,10 +99,9 @@ export async function authVerifyCreate(
   // notify user that their user account is created
   // we are intentionally not awaiting on this operation
 
-  const verificationLink = `${config.webapp.root}/account/activate?key=${activationKey}`
-
+  const link = `${config.webapp.root}/account/activate?key=${activationKey}`
   mailer.mailUser(newUser, 'Welcome to Weasel', 'auth-signup-user', {
-    verificationLink
+    verificationLink: link
   })
 
   // if configured to do so, create a "tutorial" suite and populate it with
