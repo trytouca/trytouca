@@ -5,6 +5,7 @@
 export { authResetKeyApply } from './resetKeyApply'
 export { authResetKeyCheck } from './resetKeyCheck'
 export { authResetKeyCreate } from './resetKeyCreate'
+export { authResetKeyResend } from './resetKeyResend'
 export { authSessionCreate } from './sessionCreate'
 export { authSessionExtend } from './sessionExtend'
 export { authSessionRemove } from './sessionRemove'

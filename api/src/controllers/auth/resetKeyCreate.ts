@@ -17,12 +17,22 @@ export async function authResetKeyCreate(
   res: Response,
   next: NextFunction
 ) {
-  const askedEmail = req.body.email
+  const askedEmail = (req.body.email as string).toLowerCase()
   logger.debug('received request to create password reset key')
 
   // check if email is associated with any account
 
-  const user = await UserModel.findOne({ email: askedEmail })
+  const user = await UserModel.findOne(
+    { email: askedEmail },
+    {
+      _id: 1,
+      email: 1,
+      fullname: 1,
+      lockedAt: 1,
+      suspended: 1,
+      username: 1
+    }
+  )
 
   // abort if account associated with given email is not found
 

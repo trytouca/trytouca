@@ -3,7 +3,7 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import { IUser, UserModel } from '../../schemas/user'
+import { UserModel } from '../../schemas/user'
 import { config } from '../../utils/config'
 import logger from '../../utils/logger'
 import * as mailer from '../../utils/mailer'

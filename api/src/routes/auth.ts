@@ -11,6 +11,7 @@ import { promisable } from '../utils/routing'
 import { authResetKeyApply } from '../controllers/auth/resetKeyApply'
 import { authResetKeyCheck } from '../controllers/auth/resetKeyCheck'
 import { authResetKeyCreate } from '../controllers/auth/resetKeyCreate'
+import { authResetKeyResend } from '../controllers/auth/resetKeyResend'
 import { authSessionCreate } from '../controllers/auth/sessionCreate'
 import { authSessionExtend } from '../controllers/auth/sessionExtend'
 import { authSessionRemove } from '../controllers/auth/sessionRemove'
@@ -64,7 +65,7 @@ router.post(
 /**
  * Resend account activation key.
  *
- * @api [post] /auth/resend/signup
+ * @api [post] /auth/signup/resend
  *    tags:
  *      - Account
  *    summary: 'Resend Activation Link'
@@ -96,7 +97,7 @@ router.post(
  *              $ref: '#/components/schemas/Errors'
  */
 router.post(
-  '/resend/signup',
+  '/signup/resend',
   bodyParser.json(),
   middleware.inputs([middleware.validationRules.get('email')]),
   promisable(authVerifyResend, 'resend verification email')
@@ -318,6 +319,47 @@ router.post(
   bodyParser.json(),
   middleware.inputs([middleware.validationRules.get('email')]),
   promisable(authResetKeyCreate, 'create password reset key')
+)
+
+/**
+ * Resend password reset email.
+ *
+ * @api [post] /auth/reset/resend
+ *    tags:
+ *      - Account
+ *    summary: 'Resend Password Reset Key'
+ *    operationId: 'account_resetKeyResend'
+ *    description:
+ *      Resend password reset key.
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - email
+ *            properties:
+ *              email:
+ *                type: string
+ *                format: email
+ *      required: true
+ *    responses:
+ *      204:
+ *        description: 'Password Reset Key Resent'
+ *      400:
+ *        $ref: '#/components/responses/RequestInvalid'
+ *      404:
+ *        description: 'Account Not Found'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
+router.post(
+  '/reset/resend',
+  bodyParser.json(),
+  middleware.inputs([middleware.validationRules.get('email')]),
+  promisable(authResetKeyResend, 'resend password reset key')
 )
 
 /**

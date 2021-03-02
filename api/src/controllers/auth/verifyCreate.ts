@@ -47,7 +47,7 @@ export async function authVerifyCreate(
   res: Response,
   next: NextFunction
 ) {
-  const askedEmail = req.body.email
+  const askedEmail = (req.body.email as string).toLowerCase()
 
   // return 400 if email is already associated with any user
   // important not to use any of the static helper functions of user schema
