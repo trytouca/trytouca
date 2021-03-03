@@ -87,6 +87,19 @@ export class PageOverviewComponent {
         inputs.metricsDurationChange * inputs.metricsDurationSign
     );
     const type = metric.changeType();
+
+    // If the two versions have no elements in common, metric has no meaning.
+    if (type === Type.Missing) {
+      return {
+        header: 'Duration' + (inputs.inProgress ? ' (so far)' : ''),
+        footer: [''],
+        title: 'N/A',
+        backColor: RingColor.Gray,
+        frontColor: RingColor.Red,
+        frontValue: 1
+      };
+    }
+
     const headDesc = this.datetimePipe.transform(metric.src, 'duration');
     const changeDesc = this.datetimePipe.transform(
       metric.absoluteDifference(),
