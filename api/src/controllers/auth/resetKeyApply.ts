@@ -61,7 +61,7 @@ export async function authResetKeyApply(
     user,
     'Password Reset Confirmation',
     'auth-password-confirm',
-    { username: user.username }
+    { greetings: user.fullname ? `Hi ${user.fullname}` : `Hello` }
   )
 
   notifyPlatformAdmins('%s reset their password.', user.username)
