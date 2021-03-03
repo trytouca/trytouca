@@ -19,6 +19,9 @@ interface FormContent {
   templateUrl: './signin.component.html'
 })
 export class SigninComponent implements OnInit {
+  /**
+   *
+   */
   formSignin = new FormGroup({
     uname: new FormControl('', {
       validators: [
@@ -33,6 +36,7 @@ export class SigninComponent implements OnInit {
       updateOn: 'change'
     })
   });
+
   alert: Alert;
   submitted: boolean;
   prev: FormContent;

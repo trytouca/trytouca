@@ -22,6 +22,9 @@ export class LandingComponent {
     })
   });
 
+  /**
+   *
+   */
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -42,12 +45,18 @@ export class LandingComponent {
     }
   }
 
+  /**
+   *
+   */
   ctaLiveDemo() {
     if (environment.production) {
       window.open('https://calendly.com/ghorbanzade/weasel', '_blank');
     }
   }
 
+  /**
+   *
+   */
   ctaStart(model: { email: string }) {
     if (!this.startForm.valid) {
       return;
@@ -55,6 +64,9 @@ export class LandingComponent {
     this.router.navigate(['/signup']);
   }
 
+  /**
+   *
+   */
   isStartFormValid() {
     const field = this.startForm.controls['email'];
     return field.pristine || field.valid;

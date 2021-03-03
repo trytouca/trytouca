@@ -35,24 +35,39 @@ export class MailboxComponent implements OnDestroy {
   isRetry = false;
   private _sub: Subscription;
 
+  /**
+   *
+   */
   constructor() {
     this.reset();
   }
 
+  /**
+   *
+   */
   ngOnDestroy() {
     this._sub.unsubscribe();
   }
 
+  /**
+   *
+   */
   back() {
     this.action.emit(MailboxAction.Back);
   }
 
+  /**
+   *
+   */
   resend() {
     this.isRetry = true;
     this.reset();
     this.action.emit(MailboxAction.Resend);
   }
 
+  /**
+   *
+   */
   private reset() {
     this.isBackButtonShown = false;
     this._sub = timer(30000).subscribe(() => {

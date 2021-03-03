@@ -58,7 +58,7 @@ export class SignupComponent {
     if (!this.formSignup.valid) {
       return;
     }
-    this.apiService.post('/auth/signup', model).subscribe(
+    this.apiService.post('/auth/signup', { email: model.email }).subscribe(
       () => {
         this.alert = undefined;
         this.isFormShown = false;

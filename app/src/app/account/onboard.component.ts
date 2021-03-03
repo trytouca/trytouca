@@ -18,6 +18,10 @@ interface FormContent {
 class FormHint {
   private _text: string;
   private _type: string;
+
+  /**
+   *
+   */
   constructor(
     private initial: string,
     private errorMap: { [key: string]: string } = {},

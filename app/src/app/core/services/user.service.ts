@@ -2,6 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import {
@@ -51,7 +52,7 @@ export class UserService {
         this.currentUser = doc;
         this.subject.next(doc);
       },
-      (err) => {
+      (err: HttpErrorResponse) => {
         if (err.status === 0) {
           this.alertService.set(
             !this.currentUser

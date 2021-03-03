@@ -25,9 +25,9 @@ export class ActivateComponent implements OnDestroy {
   constructor(
     route: ActivatedRoute,
     router: Router,
-    faIconLibrary: FaIconLibrary,
     apiService: ApiService,
-    authService: AuthService
+    authService: AuthService,
+    faIconLibrary: FaIconLibrary
   ) {
     faIconLibrary.addIcons(faSpinner);
     if (authService.isLoggedIn() || !route.snapshot.queryParamMap.has('key')) {
