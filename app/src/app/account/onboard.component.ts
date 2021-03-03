@@ -15,6 +15,9 @@ interface FormContent {
   upass: string;
 }
 
+/**
+ *
+ */
 class FormHint {
   private _text: string;
   private _type: string;

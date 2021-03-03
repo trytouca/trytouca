@@ -4,29 +4,49 @@
     <div class="container mx-auto grid lg:grid-cols-2 lg:gap-4 lg:items-center">
       <div class="col-span-1 p-8 space-y-8 text-white">
         <h2 class="max-w-xl text-4xl xl:text-5xl font-bold">
-          Continuous regression testing for critical software workflows.
+          Continuous regression testing for critical software workflows
         </h2>
         <p class="max-w-xl text-2xl">
           Keep tabs on changes in behavior or performance
           of your software without using snapshot files.
         </p>
         <div>
-          <form class="flex h-10 space-x-2" [formGroup]="startForm"
-            (ngSubmit)="ctaStart(startForm.value)" novalidate>
+          <form class="flex h-10 space-x-2" [formGroup]="formSignup"
+            (ngSubmit)="ctaSignup(formSignup.value)" novalidate>
             <input
               class="flex-grow-0 lg:flex-grow h-full rounded-md shadow-md bg-white text-black border border-gray-300 focus:outline-none focus:border-gray-500 focus:ring-0"
               type="email" placeholder="Email address" required
               formControlName="email">
             <button type="submit" role="button"
               class="h-full px-4 rounded-md shadow-md bg-green-500 font-medium border border-transparent focus:outline-none focus:border-gray-200 focus: focus:ring-0">
-              Get Started for Free</button>
+              Signup for Free</button>
           </form>
-          <div class="space-x-1 text-yellow-300" [hidden]="isStartFormValid()">
+          <div class="font-medium space-x-1"
+            [ngClass]="ctaSignupOutcome.success ? 'text-green-300': 'text-yellow-300'"
+            *ngIf="isStartFormValid() && ctaSignupOutcome">
+            <svg class="inline h-4" *ngIf="ctaSignupOutcome.success"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <svg class="inline h-4" *ngIf="!ctaSignupOutcome.success"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <small>{{ ctaSignupOutcome.message }}</small>
+          </div>
+          <div class="font-medium text-yellow-300 space-x-1"
+            *ngIf="!isStartFormValid()">
             <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg"
               fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round"
                 stroke-width="2"
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <small>Please use a valid email address.</small>
           </div>

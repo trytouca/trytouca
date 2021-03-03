@@ -52,9 +52,6 @@ export class SignupComponent {
    *
    */
   onSubmit(model: FormContent) {
-    if (this.formSignup.pristine) {
-      return;
-    }
     if (!this.formSignup.valid) {
       return;
     }

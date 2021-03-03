@@ -5,8 +5,7 @@
       (ngSubmit)="onSubmit(formSignin.value)" novalidate>
       <app-alert [alert]="alert" *ngIf="alert"></app-alert>
       <div>
-        <label class="wsl-input-label" for="wsl-uname">Username or Email
-          Address</label>
+        <label class="wsl-input-label" for="wsl-uname">Username</label>
         <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
           formControlName="uname" aria-describedby="wsl-uname-help" required
           autocomplete="username" tabindex="1">

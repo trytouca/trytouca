@@ -74,9 +74,6 @@ export class ResetApplyComponent {
    *
    */
   onSubmit(model: FormContent) {
-    if (this.formReset.pristine) {
-      return;
-    }
     if (!this.formReset.valid) {
       return;
     }
