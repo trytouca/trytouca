@@ -4,11 +4,6 @@
 
 .wsl-atf {
   min-height: calc(100vh - 4rem);
-  .wsl-atf-footer {
-    display: flex;
-    align-items: center;
-    height: 4rem;
-  }
   h2 {
     text-shadow: 1px 3px 4px rgba(0, 0, 0, 0.25);
   }
@@ -16,6 +11,6 @@
 
 @media (min-width: 1024px) {
   .wsl-atf-body {
-    min-height: calc(100vh - 8rem);
+    min-height: calc(100vh - 4rem);
   }
 }

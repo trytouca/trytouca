@@ -53,7 +53,6 @@ export type Userinfo = {
  *      format: email
  *    fullname:
  *      type: string
- *      type: boolean
  *    platformRole:
  *      $ref: '#/components/schemas/CT_EPlatformRole'
  *    username:
