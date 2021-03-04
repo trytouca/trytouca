@@ -22,37 +22,43 @@ const routes: Routes = [
         pathMatch: 'full'
       },
       {
-        path: 'activate',
-        canActivate: [GuestGuard],
-        component: ActivateComponent
+        path: '',
+        canActivateChild: [GuestGuard],
+        children: [
+          {
+            path: 'activate',
+            component: ActivateComponent
+          },
+          {
+            path: 'signin',
+            component: StartComponent,
+            data: { page: StartPageType.Signin }
+          },
+          {
+            path: 'signup',
+            component: StartComponent,
+            data: { page: StartPageType.Signup }
+          },
+          {
+            path: 'reset',
+            component: StartComponent,
+            data: { page: StartPageType.Reset }
+          }
+        ]
       },
       {
-        path: 'signin',
-        canActivate: [GuestGuard],
-        component: StartComponent,
-        data: { page: StartPageType.Signin }
-      },
-      {
-        path: 'signup',
-        canActivate: [GuestGuard],
-        component: StartComponent,
-        data: { page: StartPageType.Signup }
-      },
-      {
-        path: 'reset',
-        canActivate: [GuestGuard],
-        component: StartComponent,
-        data: { page: StartPageType.Reset }
-      },
-      {
-        path: 'welcome',
-        canActivate: [AuthGuard],
-        component: OnboardComponent
-      },
-      {
-        path: 'profile',
-        canActivate: [AuthGuard],
-        component: OnboardComponent
+        path: '',
+        canActivateChild: [AuthGuard],
+        children: [
+          {
+            path: 'welcome',
+            component: OnboardComponent
+          },
+          {
+            path: 'profile',
+            component: OnboardComponent
+          }
+        ]
       }
     ]
   }
