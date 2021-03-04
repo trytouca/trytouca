@@ -2,7 +2,7 @@
   <ng-container *ngIf="isFormShown">
     <h2 class="text-2xl font-semibold">Get Started for Free</h2>
     <div class="flex-grow flex items-center">
-      <form class="wsl-form py-4 flex-grow" [formGroup]="formSignup"
+      <form class="py-4 flex-grow space-y-4" [formGroup]="formSignup"
         (ngSubmit)="onSubmit(formSignup.value)" novalidate>
         <app-alert [alert]="alert" *ngIf="alert"></app-alert>
         <div>
@@ -28,17 +28,20 @@
             Service</a> and <a class="text-lblue-600" routerLink="/docs"
             [queryParams]="{page: 'privacy'}">Privacy Policy</a>.
         </small>
-        <div class="wsl-form-footer">
-          <div class="wsl-form-submit">
+        <div
+          class="space-y-4 md:space-y-0 md:flex md:space-x-4 md:items-center md:justify-between">
+          <div>
             <button class="wsl-btn-lg wsl-btn-dark" type="submit" tabindex="2">
               Sign up
             </button>
           </div>
-          <div class="wsl-form-links">
-            <button class="wsl-btn-lg wsl-btn-light" type="button"
-              routerLink="/account/signin" tabindex="3">
-              Already Registered?
-            </button>
+          <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
+            <div>
+              <button class="wsl-btn-lg wsl-btn-light" type="button"
+                routerLink="/account/signin" tabindex="3">
+                Already Registered?
+              </button>
+            </div>
           </div>
         </div>
       </form>

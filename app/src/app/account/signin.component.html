@@ -1,7 +1,7 @@
 <div class="h-full flex flex-col">
   <h2 class="text-2xl font-semibold">Welcome Back!</h2>
   <div class="flex-grow flex items-center">
-    <form class="wsl-form py-4 flex-grow" [formGroup]="formSignin"
+    <form class="py-4 flex-grow space-y-4" [formGroup]="formSignin"
       (ngSubmit)="onSubmit(formSignin.value)" novalidate>
       <app-alert [alert]="alert" *ngIf="alert"></app-alert>
       <div>
@@ -16,21 +16,26 @@
           name="upass" formControlName="upass" aria-describedby="wsl-upass-help"
           required autocomplete="current-password" tabindex="2">
       </div>
-      <div class="wsl-form-footer">
-        <div class="wsl-form-submit">
+      <div
+        class="space-y-4 md:space-y-0 md:flex md:space-x-4 md:items-center md:justify-between">
+        <div>
           <button class="wsl-btn-lg wsl-btn-dark" type="submit" tabindex="3">
             Sign in
           </button>
         </div>
-        <div class="wsl-form-links">
-          <button class="wsl-btn-lg wsl-btn-light" type="button"
-            routerLink="/account/reset" tabindex="4">
-            Forgot Your Password?
-          </button>
-          <button class="wsl-btn-lg wsl-btn-light" type="button"
-            routerLink="/account/signup" tabindex="5">
-            New to Weasel?
-          </button>
+        <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
+          <div>
+            <button class="wsl-btn-lg wsl-btn-light" type="button"
+              routerLink="/account/reset" tabindex="4">
+              Forgot Your Password?
+            </button>
+          </div>
+          <div>
+            <button class="wsl-btn-lg wsl-btn-light" type="button"
+              routerLink="/account/signup" tabindex="5">
+              New to Weasel?
+            </button>
+          </div>
         </div>
       </div>
     </form>
