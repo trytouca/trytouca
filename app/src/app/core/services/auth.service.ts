@@ -12,6 +12,9 @@ import { ApiService } from './api.service';
   providedIn: 'root'
 })
 export class AuthService {
+  // the URL to redirect to after user logs in
+  redirectUrl: string;
+
   /**
    *
    */

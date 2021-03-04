@@ -97,7 +97,7 @@ export class SigninComponent implements OnInit {
           this.router.navigateByUrl(callback);
           return;
         }
-        this.router.navigate(['/~']);
+        this.router.navigate([this.authService.redirectUrl || '/~']);
       },
       (err) => {
         const msg = this.apiService.extractError(err, [

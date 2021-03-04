@@ -4,7 +4,7 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuardService } from '@weasel/core/services';
+import { AuthGuard } from '@weasel/core/services';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
@@ -28,7 +28,7 @@ const routes: Routes = [
     data: { page: 'docs', title: 'Docs' }
   },
   {
-    canActivate: [AuthGuardService],
+    canActivate: [AuthGuard],
     path: '~',
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
     data: { page: 'home', title: 'Home' }

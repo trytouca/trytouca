@@ -4,7 +4,7 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuardService } from '@weasel/core/services/auth-guard.service';
+import { AuthGuard } from '@weasel/core/services/auth.guard';
 import { ActivateComponent } from './activate.component';
 import { OnboardComponent } from './onboard.component';
 import { StartComponent, StartPageType } from './start.component';
@@ -36,7 +36,7 @@ const routes: Routes = [
       {
         path: 'welcome',
         component: OnboardComponent,
-        canActivate: [AuthGuardService]
+        canActivate: [AuthGuard]
       }
     ]
   }
