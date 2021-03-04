@@ -31,11 +31,11 @@ class Playbook:
                 yield partial(method, user, row[2:])
 
     def account_create(self, user: User, args):
-        user.fullname = args[0]
         WeaselApiClient().account_create(user)
 
-    def account_activate(self, user: User, args):
-        WeaselApiClient().account_activate(user)
+    def account_onboard(self, user: User, args):
+        user.fullname = args[0]
+        WeaselApiClient().account_onboard(user)
 
     def account_reset(self, user: User, args):
         WeaselApiClient().account_reset(user)

@@ -159,13 +159,15 @@ export class OnboardComponent implements OnDestroy {
    *
    */
   onSubmit(model: FormContent) {
-    if (this.onboardForm.pristine) {
-      return;
-    }
     if (!this.onboardForm.valid) {
       return;
     }
-    this.apiService.patch('/user', model).subscribe(
+    const info = {
+      fullname: model.fname,
+      username: model.uname,
+      password: model.upass
+    };
+    this.apiService.patch('/user', info).subscribe(
       () => {
         this.alert = undefined;
         Object.values(this.help).forEach((v) => v.setSuccess());

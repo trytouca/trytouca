@@ -1,23 +1,24 @@
 Username,Action,Team,Suite,Batch,Argument
-aanderson,account-create,,,,"Alice Anderson"
-bbrown,account-create,,,,"Bob Brown"
-cclark,account-create,,,,"Charlie Clark"
-ddavis,account-create,,,,"David Davis"
-eevans,account-create,,,,"Eve Evans"
-ffisher,account-create,,,,"Frank Fisher"
-ggreen,account-create,,,,"Grace Green"
-hharris,account-create,,,,"Heidi Harris"
-iingram,account-create,,,,"Ivan Ingram"
-jjohnson,account-create,,,,"Judy Johnson"
-aanderson,account-activate,,,,
-bbrown,account-activate,,,,
-cclark,account-activate,,,,
-ddavis,account-activate,,,,
-eevans,account-activate,,,,
-ffisher,account-activate,,,,
-ggreen,account-activate,,,,
-hharris,account-activate,,,,
-iingram,account-activate,,,,
+aanderson,account-create,,,,
+bbrown,account-create,,,,
+cclark,account-create,,,,
+ddavis,account-create,,,,
+eevans,account-create,,,,
+ffisher,account-create,,,,
+ggreen,account-create,,,,
+hharris,account-create,,,,
+iingram,account-create,,,,
+jjohnson,account-create,,,,
+aanderson,account-onboard,,,,"Alice Anderson"
+bbrown,account-onboard,,,,"Bob Brown"
+cclark,account-onboard,,,,"Charlie Clark"
+ddavis,account-onboard,,,,"David Davis"
+eevans,account-onboard,,,,"Eve Evans"
+ffisher,account-onboard,,,,"Frank Fisher"
+ggreen,account-onboard,,,,"Grace Green"
+hharris,account-onboard,,,,"Heidi Harris"
+iingram,account-onboard,,,,"Ivan Ingram"
+jjohnson,account-onboard,,,,"Judy Johnson"
 iingram,account-reset,,,,
 aanderson,team-create,hogwarts,,,"Old Hogwarts"
 aanderson,team-update,hogwarts,,,hogwarts,"Hogwarts"

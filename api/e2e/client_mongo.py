@@ -69,12 +69,12 @@ class WeaselMongoClient:
 
     def get_user_activation_key(self, user: User) -> str:
         result = self.client.get_collection('users').find_one(
-            { 'username': user.username, 'activationKey': { '$exists': True } },
+            { 'email': user.email, 'activationKey': { '$exists': True } },
             { '_id': 0, 'activationKey': 1 })
         return result.get('activationKey')
 
     def get_account_reset_key(self, user: User) -> str:
         result = self.client.get_collection("users").find_one(
-            { "username": user.username },
+            { "email": user.email },
             { '_id': 0, 'resetKey': 1 })
         return result.get('resetKey')

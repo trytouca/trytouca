@@ -20,9 +20,9 @@ export async function ctrlUserUpdate(
   const user = res.locals.user as IUser
   const tuple = user.username
   const proposed = {
-    fullname: req.body.fname,
-    username: req.body.uname,
-    password: req.body.upass
+    fullname: req.body.fullname,
+    username: req.body.username,
+    password: req.body.password
   }
   logger.debug('%s: updating account: %j', tuple, omit(proposed, 'password'))
 

@@ -80,19 +80,21 @@ class WeaselApiClient:
 
     def account_create(self, user: User) -> None:
         response = self.client.post_json('auth/signup', {
-            'email': user.email,
+            'email': user.email
+        })
+        self.expect_status(response, 201, "register account")
+
+    def account_onboard(self, user: User) -> None:
+        key = WeaselMongoClient().get_user_activation_key(user)
+        response = self.client.post_json(f'auth/activate/{key}')
+        self.expect_status(response, 200, "activate account")
+        response = self.client.patch_json('user', {
             'fullname': user.fullname,
             'username': user.username,
             'password': user.password
         })
         self.user = user
-        self.expect_status(response, 201, "register account")
-
-    def account_activate(self, user: User) -> None:
-        key = WeaselMongoClient().get_user_activation_key(user)
-        response = self.client.post_json(f'auth/activate/{key}')
-        self.user = user
-        self.expect_status(response, 204, "activate account")
+        self.expect_status(response, 204, "update user info")
 
     def account_reset(self, user: User) -> None:
         response = self.client.post_json("auth/reset", {
