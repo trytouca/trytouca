@@ -4,7 +4,7 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard } from '@weasel/core/services/auth.guard';
+import { AuthGuard, GuestGuard } from '@weasel/core/services';
 import { ActivateComponent } from './activate.component';
 import { OnboardComponent } from './onboard.component';
 import { StartComponent, StartPageType } from './start.component';
@@ -16,27 +16,43 @@ const routes: Routes = [
   {
     path: '',
     children: [
-      { path: '', redirectTo: 'signup', pathMatch: 'full' },
-      { path: 'activate', component: ActivateComponent },
+      {
+        path: '',
+        redirectTo: 'signup',
+        pathMatch: 'full'
+      },
+      {
+        path: 'activate',
+        canActivate: [GuestGuard],
+        component: ActivateComponent
+      },
       {
         path: 'signin',
+        canActivate: [GuestGuard],
         component: StartComponent,
         data: { page: StartPageType.Signin }
       },
       {
         path: 'signup',
+        canActivate: [GuestGuard],
         component: StartComponent,
         data: { page: StartPageType.Signup }
       },
       {
         path: 'reset',
+        canActivate: [GuestGuard],
         component: StartComponent,
         data: { page: StartPageType.Reset }
       },
       {
         path: 'welcome',
-        component: OnboardComponent,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        component: OnboardComponent
+      },
+      {
+        path: 'profile',
+        canActivate: [AuthGuard],
+        component: OnboardComponent
       }
     ]
   }

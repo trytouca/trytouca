@@ -28,8 +28,8 @@ const routes: Routes = [
     data: { page: 'docs', title: 'Docs' }
   },
   {
-    canActivate: [AuthGuard],
     path: '~',
+    canActivate: [AuthGuard],
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
     data: { page: 'home', title: 'Home' }
   },
