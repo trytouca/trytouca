@@ -1,10 +1,9 @@
-<section class="min-h-screen">
-  <app-header-outside class="fixed w-full bg-white">
+<section class="min-h-screen bg-gradient-to-br from-primary to-secondary">
+  <app-header-outside [transparent]="true">
   </app-header-outside>
-  <div class="min-h-screen lg:flex bg-gradient-to-br from-primary to-secondary">
-    <div
-      class="lg:mt-16 container mx-auto grid lg:grid-cols-2 lg:gap-4 lg:items-center">
-      <div class="pt-24 lg:pt-8 col-span-1 p-8 space-y-8 text-white">
+  <div class="wsl-min-h-screen-1 lg:flex">
+    <div class="container mx-auto grid lg:grid-cols-2 lg:gap-4 lg:items-center">
+      <div class="mx-auto pt-24 lg:pt-8 col-span-1 p-8 space-y-8 text-white">
         <h2 class="max-w-xl text-4xl xl:text-5xl font-bold">
           Continuous regression testing for critical software workflows
         </h2>
@@ -13,15 +12,19 @@
           of your software without using snapshot files.
         </p>
         <div>
-          <form class="flex h-10 space-x-2" [formGroup]="formSignup"
+          <form [formGroup]="formSignup"
             (ngSubmit)="ctaSignup(formSignup.value)" novalidate>
-            <input
-              class="flex-grow-0 lg:flex-grow h-full rounded-md shadow-md bg-white text-black border border-gray-300 focus:outline-none focus:border-gray-500 focus:ring-0"
-              type="email" placeholder="Email address" required
-              formControlName="email">
-            <button type="submit" role="button"
-              class="h-full px-4 bg-green-500 text-white font-medium rounded-md shadow-md border border-transparent focus:border-gray-200 focus:outline-none focus:ring-0">
-              Signup for Free</button>
+            <label class="wsl-input-label sr-only" for="wsl-email">Email
+              Address</label>
+            <div class="flex h-10 space-x-2">
+              <input
+                class="flex-grow-0 lg:flex-grow h-full rounded-md shadow-md bg-white text-black border border-gray-300 focus:outline-none focus:border-gray-500 focus:ring-0"
+                type="email" id="wsl-email" placeholder="Email address" required
+                formControlName="email">
+              <button type="submit" role="button"
+                class="h-full px-4 bg-green-500 text-white font-semibold rounded-md shadow-md border border-transparent focus:border-gray-200 focus:outline-none focus:ring-0">
+                Signup for Free</button>
+            </div>
           </form>
           <div class="font-medium space-x-1"
             [ngClass]="ctaSignupOutcome.success ? 'text-green-300': 'text-yellow-300'"
@@ -67,7 +70,12 @@
           </svg>
         </button>
       </div>
-      <div class="col-span-1 p-8 select-none">
+      <div
+        class="col-span-1 max-w-screen-md h-full w-full mx-auto px-8 pb-8 lg:py-0 lg:px-4 select-none flex items-center">
+        <!-- <svg width="100%" height="100%" viewBox="0 0 100 100"
+          preserveAspectRatio="xMidYMid meet">
+          <rect width="100%" height="100%" fill="white" />
+        </svg> -->
         <img class="rounded-lg shadow-md"
           alt="A Screen Shot of Weasel Regression Testing Platform"
           src="./assets/images/weasel-atf-visual.png" />
