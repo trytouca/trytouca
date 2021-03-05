@@ -1,19 +1,20 @@
-<header class="h-16 px-4 mx-auto container flex justify-between">
+<header
+  class="wsl-header-light h-16 px-4 mx-auto container flex justify-between">
   <div class="flex items-center select-none">
     <a class="h-16 flex items-center focus:outline-none" [routerLink]="'/'">
       <img class="h-12" src="./assets/logo/weasel-logo-transparent.svg"
         alt="Weasel Logo" />
-      <h1 class="text-2xl text-lblue-600 font-light tracking-tight">
+      <h1 class="text-2xl font-light tracking-tight">
         Weasel</h1>
     </a>
   </div>
   <nav class="flex items-center space-x-4">
     <div>
-      <a class="wsl-btn-lg wsl-btn-transparent" routerLink="/docs"
+      <a class="wsl-header-btn-secondary" routerLink="/docs"
         routerLinkActive="active">Docs</a>
     </div>
     <div wslDropdown>
-      <a class="wsl-dropdown-toggle wsl-btn-lg wsl-btn-transparent cursor-pointer select-none"
+      <a class="wsl-dropdown-toggle wsl-header-btn-secondary cursor-pointer select-none"
         id="wsl-user-dropdown" aria-haspopup="true" aria-expanded="false">
         <fa-icon icon="user" class="text-lg"></fa-icon>&nbsp;<fa-icon
           icon="chevron-down" size="sm" class="opacity-50"></fa-icon>
