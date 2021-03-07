@@ -3,7 +3,7 @@
   </app-header-outside>
   <div class="wsl-min-h-screen-1 lg:flex">
     <div class="container mx-auto grid lg:grid-cols-2 lg:gap-4 lg:items-center">
-      <div class="mx-auto pt-24 lg:pt-8 col-span-1 p-8 space-y-8 text-white">
+      <div class="col-span-1 mx-auto pt-24 lg:pt-8 p-8 space-y-8 text-white">
         <h2 class="max-w-xl text-4xl xl:text-5xl font-bold">
           Continuous regression testing for critical software workflows
         </h2>
@@ -22,7 +22,7 @@
                 type="email" id="wsl-email" placeholder="Email address" required
                 formControlName="email">
               <button type="submit" role="button"
-                class="h-full px-4 bg-green-500 text-white font-semibold rounded-md shadow-md border border-transparent focus:border-gray-200 focus:outline-none focus:ring-0">
+                class="h-full overflow-hidden px-4 bg-green-500 text-white font-semibold rounded-md shadow-md border border-transparent focus:border-gray-200 focus:outline-none focus:ring-0">
                 Signup for Free</button>
             </div>
           </form>
@@ -72,13 +72,46 @@
       </div>
       <div
         class="col-span-1 max-w-screen-md h-full w-full mx-auto px-8 pb-8 lg:py-0 lg:px-4 select-none flex items-center">
-        <!-- <svg width="100%" height="100%" viewBox="0 0 100 100"
-          preserveAspectRatio="xMidYMid meet">
-          <rect width="100%" height="100%" fill="white" />
-        </svg> -->
         <img class="rounded-lg shadow-md"
           alt="A Screen Shot of Weasel Regression Testing Platform"
           src="./assets/images/weasel-atf-visual.png" />
+      </div>
+    </div>
+  </div>
+</section>
+<section class="py-16 lg:flex bg-gray-200">
+  <div
+    class="container mx-auto grid lg:grid-cols-2 lg:gap-4 lg:items-center space-y-8 lg:space-y-0">
+    <div class="col-span-1 px-8 grid">
+      <div class="max-w-xl place-self-center space-y-4">
+        <p class="text-2xl">Our mission is to make it more efficient to build
+          and maintain software products.</p>
+        <p class="text-2xl lg:text-3xl font-extrabold">How much could an
+          escaped defect cost <span class="italic">your</span> business?</p>
+      </div>
+    </div>
+    <div
+      class="col-span-1 max-w-screen-md mx-auto px-8 lg:px-4 flex items-center">
+      <div
+        class="place-self-center bg-white shadow-md p-8 rounded-lg space-y-4">
+        <figcaption class="flex items-center space-x-2 md:space-x-4">
+          <img class="w-16 h-16 rounded-full"
+            src="../../assets/images/pejman-photo-201110.jpg">
+          <div class="font-medium">
+            <div>Pejman Ghorbanzade</div>
+            <div class="text-gray-600 text-sm">Sr. Software Engineer at Vital
+              Images,
+              Inc.</div>
+          </div>
+        </figcaption>
+        <blockquote class="text-black text-sm md:text-base font-normal">
+          <p>"We use Weasel at scale to perform nightly regression tests of
+            mission-critical workflows in the low-level components of our
+            medical imaging visualization software. It has helped us quickly
+            identify unintended side effects of our code changes before they
+            become too expensive to fix. I like how easy it is to write
+            Weasel regression tests and automate their execution."</p>
+        </blockquote>
       </div>
     </div>
   </div>
