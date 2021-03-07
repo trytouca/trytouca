@@ -18,10 +18,8 @@ module.exports = (isProd) => ({
     }),
     keyframes: false,
     order: false,
-    roate: false,
     scale: false,
     skew: false,
-    transform: false,
     transformOrigin: false,
     translate: false,
     colors: {
