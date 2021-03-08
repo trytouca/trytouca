@@ -16,19 +16,19 @@ h2 {
       }
       .wsl-landing-feature-card {
         @apply z-10 place-self-center w-full h-full p-4 bg-white bg-opacity-90 rounded-md shadow-md border border-gray-200 space-y-1;
-        svg {
-          @apply inline h-6;
-        }
-        .wsl-landing-feature-card-header {
-          @apply flex items-center space-x-2;
-          span {
-            @apply text-lg font-semibold uppercase;
-          }
-        }
         p {
           @apply text-sm lg:text-base;
         }
       }
+    }
+  }
+  .wsl-landing-feature-card-header {
+    @apply flex items-center space-x-2;
+    span {
+      @apply text-lg font-semibold uppercase;
+    }
+    svg {
+      @apply inline h-6;
     }
   }
 }
