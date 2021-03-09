@@ -1,12 +1,8 @@
 <div class="space-y-6">
-  <div class="px-2 flex items-center justify-between">
+  <div class="flex items-center justify-between">
     <div class="px-2 py-1 rounded-md flex items-center space-x-1"
       [ngClass]="data.colors">
-      <svg class="inline h-6" xmlns="http://www.w3.org/2000/svg" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-      </svg>
+      <span class="inline h-6" [innerHTML]="svg"></span>
       <span class="text-lg font-semibold uppercase">{{ data.title }}</span>
     </div>
   </div>
@@ -23,7 +19,7 @@
       <p class="pl-8">{{ feature.detail }}</p>
     </li>
   </ul>
-  <div class="px-2 flex items-center justify-between">
+  <div class="flex items-center justify-between">
     <div
       class="px-2 py-1 rounded-full font-medium flex items-center space-x-1 cursor-pointer"
       [ngClass]="data.colors" [routerLink]="data.learnMore.link"

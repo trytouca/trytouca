@@ -4,9 +4,7 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
 import { MarkdownModule } from 'ngx-markdown';
-
 import { DocsComponent } from './docs.component';
 import { DocsRoutingModule } from './docs-routing.module';
 import { SharedModule } from '../shared';
@@ -16,10 +14,8 @@ import { SharedModule } from '../shared';
     CommonModule,
     DocsRoutingModule,
     MarkdownModule.forRoot(),
-    SharedModule,
+    SharedModule
   ],
-  declarations: [
-    DocsComponent,
-  ]
+  declarations: [DocsComponent]
 })
-export class DocsModule { }
+export class DocsModule {}
