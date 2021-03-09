@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 import { ApiService, AuthService } from '@weasel/core/services';
 import { environment } from 'src/environments/environment';
+import { FeatureInput } from './feature.component';
 
 @Component({
   selector: 'app-page-landing',
@@ -15,6 +16,48 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent {
+  /**
+   *
+   */
+  featureSubmit: FeatureInput = {
+    colors: ['bg-red-50', 'text-red-800'],
+    images: [
+      {
+        alt: 'C++ Programming Language Language',
+        link: 'https://github.com/getweasel/weasel-cpp',
+        src: '../../assets/exticons/client-cpp.svg',
+        title: 'Check Out Weasel Client Library for C++'
+      }
+    ],
+    features: [
+      {
+        title: 'Easy Integration',
+        detail:
+          'Use our client libraries and test frameworks to build and run regression test tools for your workflow under test.'
+      },
+      {
+        title: 'Capture without Compromise',
+        detail:
+          'Capture test results and performance benchmarks of interest from anywhere within your test workflow.'
+      },
+      {
+        title: 'Forget Snapshot Files',
+        detail:
+          'Post your test results to a remote Weasel Platform where they are retained, compared and processed for insights.'
+      },
+      {
+        title: 'Lossless Comparison',
+        detail:
+          'Weasel automatically detects and preserves the data types of your test results when capturing and comparing them.'
+      }
+    ],
+    learnMore: {
+      link: 'docs',
+      title: 'Learn how to submit test results from your test tools'
+    },
+    title: 'Submit'
+  };
+
   /**
    *
    */

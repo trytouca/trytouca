@@ -1,0 +1,48 @@
+<div class="space-y-6">
+  <div class="px-2 flex items-center justify-between">
+    <div class="px-2 py-1 rounded-md flex items-center space-x-1"
+      [ngClass]="data.colors">
+      <svg class="inline h-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+      </svg>
+      <span class="text-lg font-semibold uppercase">{{ data.title }}</span>
+    </div>
+  </div>
+  <ul class="px-2 space-y-4">
+    <li *ngFor="let feature of data.features">
+      <div class="flex items-center space-x-2">
+        <svg class="inline h-6 text-gray-400" xmlns="http://www.w3.org/2000/svg"
+          fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+        </svg>
+        <span class="font-medium">{{ feature.title }}</span>
+      </div>
+      <p class="pl-8">{{ feature.detail }}</p>
+    </li>
+  </ul>
+  <div class="px-2 flex items-center justify-between">
+    <div
+      class="px-2 py-1 rounded-full font-medium flex items-center space-x-1 cursor-pointer"
+      [ngClass]="data.colors" [routerLink]="data.learnMore.link"
+      [title]="data.learnMore.title">
+      <span class="text-sm">Learn more</span>
+      <svg class="inline h-3" xmlns="http://www.w3.org/2000/svg" fill="none"
+        viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    </div>
+    <ul class="flex justify-end space-x-2">
+      <a *ngFor="let img of data.images" [href]="img.link" target="_blank"
+        rel="noopener">
+        <img
+          class="opacity-25 hover:opacity-100 duration-300 ease-in-out cursor-pointer"
+          [src]="img.src" width="32px" height="32px" [alt]="img.alt"
+          [title]="img.title">
+      </a>
+    </ul>
+  </div>
+</div>

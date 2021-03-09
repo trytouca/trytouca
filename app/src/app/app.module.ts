@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 import { AccountModule } from './account/account.module';
 import { DocsModule } from './docs/docs.module';
+import { FeatureComponent } from './landing/feature.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
@@ -20,6 +21,7 @@ import { SharedModule } from './shared/shared.module';
 @NgModule({
   declarations: [
     AppComponent,
+    FeatureComponent,
     FeedbackComponent,
     LandingComponent,
     NotfoundComponent
