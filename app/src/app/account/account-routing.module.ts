@@ -7,6 +7,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard, GuestGuard } from '@weasel/core/services';
 import { ActivateComponent } from './activate.component';
 import { OnboardComponent } from './onboard.component';
+import { PlatformComponent } from './platform.component';
 import { ProfileComponent } from './profile.component';
 import { StartComponent, StartPageType } from './start.component';
 
@@ -48,8 +49,9 @@ const routes: Routes = [
         path: '',
         canActivateChild: [AuthGuard],
         children: [
-          { path: 'welcome', component: OnboardComponent },
-          { path: 'profile', component: ProfileComponent }
+          { path: 'admin', component: PlatformComponent },
+          { path: 'profile', component: ProfileComponent },
+          { path: 'welcome', component: OnboardComponent }
         ]
       }
     ]
