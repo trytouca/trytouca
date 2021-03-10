@@ -22,7 +22,6 @@ export class LandingComponent {
   features: FeatureInput[] = [
     {
       colors: ['bg-red-50', 'text-red-800'],
-      icon: 'featureSubmit',
       images: [
         {
           alt: 'C++ Programming Language Language',
@@ -64,8 +63,6 @@ export class LandingComponent {
     },
     {
       colors: ['bg-green-50', 'text-green-800'],
-      icon: 'featureInterpret',
-      images: [],
       features: [
         {
           title: '',
@@ -81,8 +78,6 @@ export class LandingComponent {
     },
     {
       colors: ['bg-yellow-50', 'text-yellow-800'],
-      icon: 'featureCollaborate',
-      images: [],
       features: [
         {
           title: '',
@@ -98,8 +93,6 @@ export class LandingComponent {
     },
     {
       colors: ['bg-blue-50', 'text-blue-800'],
-      icon: 'featureAutomate',
-      images: [],
       features: [
         {
           title: '',
