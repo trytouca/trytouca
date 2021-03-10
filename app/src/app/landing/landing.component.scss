@@ -5,14 +5,6 @@
 h2 {
   text-shadow: 1px 3px 4px rgba(0, 0, 0, 0.25);
 }
-.wsl-landing-feature-detail-section {
-  align-items: center;
-  background-color: white;
-  display: flex;
-  min-height: 60vh;
-  padding: 2rem 0;
-}
-
 @layer components {
   .wsl-landing-feature-overview {
     @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 auto-cols-max gap-4 px-8 lg:px-4;
@@ -23,19 +15,32 @@ h2 {
       }
       .wsl-landing-feature-card {
         @apply z-10 place-self-center w-full h-full p-4 bg-white bg-opacity-90 rounded-md shadow-md border border-gray-200 space-y-1;
+        .wsl-landing-feature-card-header {
+          @apply flex items-center space-x-2;
+          span {
+            @apply text-lg font-semibold uppercase;
+          }
+          svg {
+            @apply inline h-6;
+          }
+        }
         p {
           @apply text-sm lg:text-base;
         }
       }
     }
   }
-  .wsl-landing-feature-card-header {
-    @apply flex items-center space-x-2;
-    span {
-      @apply text-lg font-semibold uppercase;
-    }
-    svg {
-      @apply inline h-6;
+  .wsl-landing-feature-detail-section {
+    @apply bg-white py-8 flex items-center;
+    min-height: 60vh;
+    & > div {
+      @apply container mx-auto grid lg:grid-cols-2 lg:gap-4 space-y-8 lg:space-y-0;
+      & > div {
+        @apply col-span-1 px-8 grid;
+        wsl-landing-feature {
+          @apply place-self-start;
+        }
+      }
     }
   }
 }
