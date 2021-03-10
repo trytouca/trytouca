@@ -17,6 +17,7 @@ import { ResetStartComponent } from './reset-start.component';
 import { SigninComponent } from './signin.component';
 import { SignupComponent } from './signup.component';
 import { StartComponent } from './start.component';
+import { ProfileComponent } from './profile.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { StartComponent } from './start.component';
     ResetStartComponent,
     SigninComponent,
     SignupComponent,
-    StartComponent
+    StartComponent,
+    ProfileComponent
   ],
   imports: [AccountRoutingModule, CommonModule, SharedModule]
 })
