@@ -2,8 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, Input } from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {
+  Component,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewChild
+} from '@angular/core';
 
 export interface FeatureInput {
   colors: string[];
@@ -18,14 +23,22 @@ export interface FeatureInput {
   selector: 'wsl-landing-feature',
   templateUrl: './feature.component.html'
 })
-export class FeatureComponent {
-  data: FeatureInput;
-  svg: SafeHtml;
-
-  @Input() set input(input: FeatureInput) {
-    this.data = input;
-    this.svg = this.sanitizer.bypassSecurityTrustHtml(input.icon);
+export class FeatureComponent implements OnInit {
+  @Input() data: FeatureInput;
+  @ViewChild('featureSubmit', { static: true }) featureSubmit;
+  @ViewChild('featureInterpret', { static: true }) featureInterpret;
+  @ViewChild('featureCollaborate', { static: true }) featureCollaborate;
+  @ViewChild('featureAutomate', { static: true }) featureAutomate;
+  refs: Map<string, TemplateRef<any>>;
+  getRef(feature: string): TemplateRef<any> {
+    return this.refs.get(feature);
   }
-
-  constructor(private sanitizer: DomSanitizer) {}
+  ngOnInit() {
+    this.refs = new Map<string, TemplateRef<any>>([
+      ['featureSubmit', this.featureSubmit],
+      ['featureInterpret', this.featureInterpret],
+      ['featureCollaborate', this.featureCollaborate],
+      ['featureAutomate', this.featureAutomate]
+    ]);
+  }
 }
