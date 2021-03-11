@@ -96,7 +96,7 @@ export class OnboardComponent implements OnDestroy {
    */
   help: Record<'fname' | 'uname' | 'upass', FormHint> = {
     fname: new FormHint(
-      'We do not share or use your full name other than with your team members.',
+      'We do not share your full name other than with your team members.',
       {
         required: 'This field is required.',
         maxlength: 'Our engineers did not expect more than 128 characters.',
@@ -125,13 +125,6 @@ export class OnboardComponent implements OnDestroy {
   /**
    *
    */
-  ngOnDestroy() {
-    Object.values(this._sub).forEach((s) => s.unsubscribe());
-  }
-
-  /**
-   *
-   */
   constructor(
     private router: Router,
     private apiService: ApiService,
@@ -153,6 +146,13 @@ export class OnboardComponent implements OnDestroy {
         help.setError(errorTypes[0]);
       });
     });
+  }
+
+  /**
+   *
+   */
+  ngOnDestroy() {
+    Object.values(this._sub).forEach((s) => s.unsubscribe());
   }
 
   /**

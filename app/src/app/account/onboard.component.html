@@ -3,8 +3,7 @@
     <div class="h-16 flex items-center focus:outline-none">
       <img class="h-12" src="./assets/logo/weasel-logo-transparent.svg"
         alt="Weasel Logo" />
-      <h1 class="text-2xl text-lblue-600 font-light tracking-tight">
-        Weasel</h1>
+      <h1 class="text-2xl text-lblue-600 font-light tracking-tight">Weasel</h1>
     </div>
   </div>
 </header>
@@ -19,7 +18,7 @@
       (ngSubmit)="onSubmit(onboardForm.value)" novalidate>
       <app-alert [alert]="alert" *ngIf="alert"></app-alert>
       <div>
-        <label class="wsl-input-label" for="wsl-fname">Your Full Name</label>
+        <label class="wsl-input-label" for="wsl-fname">Full Name</label>
         <input class="wsl-input-field" type="text" id="wsl-fname" name="fname"
           formControlName="fname" aria-describedby="wsl-fname-help" required
           autocomplete="name" data-lpignore="true" tabindex="1">

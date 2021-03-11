@@ -1,6 +1,28 @@
 <app-header-inside></app-header-inside>
-<div class="wsl-min-h-screen-1 border-t">
-  <div>
+<div class="wsl-min-h-screen-1 border-t flex flex-col">
+  <div class="bg-gray-50 border-b">
+    <div
+      class="h-16 px-4 py-2 mx-auto container flex items-center justify-between">
+      <div class="text-lg font-medium">Account Settings</div>
+      <div class="print:hidden">
+        <button class="wsl-btn-sm wsl-btn-dark group" type="button"
+          routerLink="/~">Back to Dashboard</button>
+      </div>
+    </div>
+  </div>
+  <div class="p-4 mx-auto container grid grid-cols-4 gap-4">
+    <div class="col-span-1">
+    </div>
+    <div class="col-span-2 p-4 space-y-4">
+      <div>
+        <h3 class="mb-2 text-xl font-medium border-b border-gray-100">Your
+          Information</h3>
+      </div>
+    </div>
+    <div class="col-span-1">
+    </div>
+  </div>
+  <!-- <div>
     <label class="wsl-input-label sr-only" for="wsl-news">Our Newsletter</label>
     <div class="flex items-center space-x-2">
       <input
@@ -11,6 +33,6 @@
     </div>
     <small class="wsl-text-muted sr-only" id="wsl-news-help">You can always
       manage your subscription from the <i>Account Settings</i> page.</small>
-  </div>
+  </div> -->
 </div>
 <app-footer-inside></app-footer-inside>
