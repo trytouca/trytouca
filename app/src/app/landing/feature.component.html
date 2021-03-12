@@ -1,6 +1,6 @@
 <div class="space-y-6">
   <div class="flex items-center justify-between">
-    <div class="px-2 py-1 rounded-md flex items-center space-x-1"
+    <div class="px-2 py-1 rounded-md flex items-center space-x-1 border"
       [ngClass]="data.colors" [ngSwitch]="data.title">
       <svg *ngSwitchCase="'Submit'" class="inline h-6"
         xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -52,7 +52,7 @@
   </ul>
   <div class="flex items-center justify-between">
     <div
-      class="px-2 py-1 rounded-full font-medium flex items-center space-x-1 cursor-pointer"
+      class="px-2 py-1 rounded-full font-medium flex items-center space-x-1 border cursor-pointer"
       [ngClass]="data.colors" [routerLink]="data.learnMore.link"
       [title]="data.learnMore.title">
       <span class="text-sm">Learn more</span>
@@ -62,7 +62,7 @@
           d="M14 5l7 7m0 0l-7 7m7-7H3" />
       </svg>
     </div>
-    <ul class="flex justify-end space-x-2" *ngIf="data.images">
+    <ul class="flex justify-end space-x-2">
       <a *ngFor="let img of data.images" [href]="img.link" target="_blank"
         rel="noopener">
         <img

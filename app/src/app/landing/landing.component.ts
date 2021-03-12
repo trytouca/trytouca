@@ -21,7 +21,7 @@ export class LandingComponent {
    */
   features: FeatureInput[] = [
     {
-      colors: ['bg-red-50', 'text-red-800'],
+      colors: ['bg-red-50', 'border-red-100', 'text-red-800'],
       images: [
         {
           alt: 'C++ Programming Language Language',
@@ -34,13 +34,13 @@ export class LandingComponent {
         {
           title: 'Integrate in Minutes',
           detail:
-            'Use our client libraries to build and run regression test ' +
-            'tools for your workflow under test.'
+            'Use our open source client libraries to build and run ' +
+            'regression test tools for your workflow under test.'
         },
         {
           title: 'Capture without Compromise',
           detail:
-            'Capture test results and performance benchmarks of interest ' +
+            'Record test results and performance benchmarks of interest ' +
             'from anywhere within your test workflow.'
         },
         {
@@ -48,11 +48,6 @@ export class LandingComponent {
           detail:
             'Post your test results to a remote Weasel Platform where ' +
             'they are retained, compared and processed for insights.'
-        },
-        {
-          title: 'Lossless Comparison',
-          detail:
-            'Weasel automatically detects and preserves the data types of your test results when capturing and comparing them.'
         }
       ],
       learnMore: {
@@ -62,47 +57,79 @@ export class LandingComponent {
       title: 'Submit'
     },
     {
-      colors: ['bg-green-50', 'text-green-800'],
+      colors: ['bg-green-50', 'border-green-100', 'text-green-800'],
       features: [
         {
-          title: '',
-          detail: ''
+          title: 'Get Real-Time Feedback',
+          detail:
+            'See newly-found differences between your current version and the baseline version, as your test is running.'
+        },
+        {
+          title: 'Start with Insights',
+          detail:
+            'Use insights generated based on the newly-found differences to have a head start in understanding their root cause.'
+        },
+        {
+          title: 'Stay in the Loop',
+          detail:
+            'Get notified when regressions occur in new versions of your software workflows.'
         }
       ],
       learnMore: {
         link: 'docs',
         title:
-          'Learn how Weasel processes your results and reports regressions in easy-to-understand format'
+          'Learn how Weasel processes your results and reports regressions in an easy-to-understand format'
       },
       title: 'Interpret'
     },
     {
-      colors: ['bg-yellow-50', 'text-yellow-800'],
+      colors: ['bg-yellow-50', 'border-yellow-100', 'text-yellow-800'],
       features: [
         {
-          title: '',
-          detail: ''
+          title: 'Comment on Test Results',
+          detail:
+            'Share the results of your investigation with your team and discuss whether newly-found differences are suspicious or expected.'
+        },
+        {
+          title: 'Manage your Baseline Version',
+          detail:
+            'Change the approved baseline version of your software workflows with a single click and a note to your colleagues to explain why.'
+        },
+        {
+          title: 'Generate Audit Reports',
+          detail:
+            'Export a report of how your software workflows and their baseline versions evolve over time for inclusion in release documents.'
         }
       ],
       learnMore: {
         link: 'docs',
         title:
-          'Learn how Weasel processes your results and reports regressions in easy-to-understand format'
+          'Learn how Weasel helps your team have an up-to-date understanding of the behavior of your software.'
       },
       title: 'Collaborate'
     },
     {
-      colors: ['bg-blue-50', 'text-blue-800'],
+      colors: ['bg-blue-50', 'border-blue-100', 'text-blue-800'],
       features: [
         {
-          title: '',
-          detail: ''
+          title: 'Make your Tests Continuous',
+          detail:
+            'Run your regression test workflows as part of your continuous ' +
+            'integration workflow or run them separately by installing our ' +
+            'remote agent on a dedicated test machine.'
+        },
+        {
+          title: 'Use a Unified Test Framework',
+          detail:
+            'Use our open-source extensible test frameworks to build ' +
+            'resilient easy-to-automate regression test tools in less ' +
+            'than a half hour.'
         }
       ],
       learnMore: {
         link: 'docs',
         title:
-          'Learn how Weasel processes your results and reports regressions in easy-to-understand format'
+          'Learn how Weasel can help you manage and automate the execution of your regression tests.'
       },
       title: 'Automate'
     }
