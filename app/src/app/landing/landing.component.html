@@ -232,7 +232,17 @@
 </section>
 <section class="wsl-landing-feature-detail-section bg-white">
   <div>
-    <div></div>
+    <div class="relative flex items-center">
+      <svg class="absolute fill-current text-red-200" width="100%" height="100%"
+        viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+        <path
+          d="M445.71 351.009C402.243 428.336 339.12 469.521 256.343 474.564C173.565 479.607 108.175 440.943 60.1717 358.573C12.1683 276.203 13.3023 196.145 63.5735 118.398C113.845 40.6504 174.321 11.4427 245.003 30.7744C315.686 50.1061 377.674 88.9797 430.969 147.395C484.264 205.811 489.178 273.682 445.71 351.009Z" />
+      </svg>
+      <div class="z-10">
+        <img class="rounded-md shadow-md"
+          src="../../assets/images/weasel_landing_feature_1.png" />
+      </div>
+    </div>
     <div>
       <wsl-landing-feature [data]="features[0]">
       </wsl-landing-feature>
