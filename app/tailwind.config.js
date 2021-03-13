@@ -17,7 +17,6 @@ module.exports = (isProd) => ({
       secondary: '#0369A1'
     }),
     keyframes: false,
-    order: false,
     scale: false,
     skew: false,
     transformOrigin: false,
