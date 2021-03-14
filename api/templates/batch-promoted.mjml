@@ -27,11 +27,11 @@
           Hi {{ username }},
         </mj-text>
         <mj-text>
-          User {{ promotedBy }} promoted version {{ promotedTo }}
-          of suite {{ suiteName }} to baseline.
-          All subsequent versions will now be compared against
-          results of version {{ promotedTo }}.
-          They provided the following reason for this change.
+          <b>{{ promotedBy.fullname }}</b> ({{ promotedBy.username }}) promoted
+          version <b>{{ promotedTo }}</b> of suite <b>{{ suiteName }}</b> to
+          baseline. All subsequent versions will now be compared against
+          results of version {{ promotedTo }}. They provided the following
+          reason for this change.
         </mj-text>
       </mj-column>
     </mj-section>

@@ -54,7 +54,7 @@ type ReportInputsCompare = {
  */
 type ReportInputsPromote = ReportInputsCommon &
   Partial<ReportInputsCompare> & {
-    promotedBy: string
+    promotedBy: IUser
     promotedTo: string
     promotedFor: string
   }
@@ -275,10 +275,10 @@ async function reportPromotion(
     headerColor: '#5e6ebf',
     batchLink,
     teamName: srcInfo.team.name,
-    suiteName: srcInfo.suite.slug,
+    suiteName: srcInfo.suite.name,
     batchName: srcInfo.batch.slug,
     hasComparison: false,
-    promotedBy: suiteInfo.promotedBy.username,
+    promotedBy: suiteInfo.promotedBy,
     promotedTo: suiteInfo.promotedTo,
     promotedFor: suiteInfo.promotedFor || 'N/A'
   }
@@ -329,7 +329,7 @@ async function reportSealed(
     headerColor: compareInputs.hasComparisonTable ? 'firebrick' : 'forestgreen',
     batchLink,
     teamName: srcInfo.team.name,
-    suiteName: srcInfo.suite.slug,
+    suiteName: srcInfo.suite.name,
     batchName: srcInfo.batch.slug,
     hasComparison: false,
     ...compareInputs
