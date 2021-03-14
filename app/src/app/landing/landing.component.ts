@@ -38,10 +38,16 @@ export class LandingComponent {
             'regression test tools for your workflow under test.'
         },
         {
-          title: 'Capture without Compromise',
+          title: 'Collect Test Results',
           detail:
-            'Record test results and performance benchmarks of interest ' +
-            'from anywhere within your test workflow.'
+            'Inspect important variables whose value should remain the ' +
+            'same between different versions, given the same set of inputs.'
+        },
+        {
+          title: 'Add Performance Benchmarks',
+          detail:
+            'Track runtime of functions and other execution flows ' +
+            'to identify noticeable changes between different versions.'
         },
         {
           title: 'Forget Snapshot Files',

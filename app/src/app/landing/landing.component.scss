@@ -34,7 +34,7 @@ h2 {
     @apply py-8 flex items-center;
     min-height: 60vh;
     & > div {
-      @apply container mx-auto space-y-8 grid gap-4 lg:grid-cols-2 lg:space-y-0;
+      @apply container mx-auto grid gap-4 lg:grid-cols-2;
       & > div {
         @apply max-w-xl mx-auto col-span-1 px-8 grid;
         wsl-landing-feature {
