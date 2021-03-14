@@ -1,4 +1,10 @@
-<mj-section background-color="white" padding-left="15px" padding-right="15px" padding-top="0" padding-bottom="0">
+<mj-section
+  background-color="white"
+  padding-left="15px"
+  padding-right="15px"
+  padding-top="0"
+  padding-bottom="0"
+>
   <mj-column width="100%">
     <mj-divider border-color="#DFE3E8" border-width="1px" />
   </mj-column>
@@ -6,19 +12,16 @@
 <mj-section background-color="white">
   <mj-column>
     <mj-text font-size="12px">
-      This is an auto-generated email.
-      You do not need to take any action.
-      You are receiving this notification because you are subscribed to
-      suite "{{ suiteName }}" of team {{ teamName }}.
+      This is an auto-generated email. You do not need to take any action. You
+      are receiving this notification because you are subscribed to suite "{{
+      suiteName }}" of team {{ teamName }}.
     </mj-text>
   </mj-column>
 </mj-section>
 <mj-wrapper full-width="full-width" padding="0">
   <mj-section>
     <mj-column width="100%">
-      <mj-text align="center">
-        &copy; Pejman Ghorbanzade. All Rights Reserved.
-      </mj-text>
+      <mj-text align="center">&copy; Weasel, Inc. All Rights Reserved.</mj-text>
     </mj-column>
   </mj-section>
 </mj-wrapper>
