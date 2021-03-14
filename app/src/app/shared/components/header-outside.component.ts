@@ -15,7 +15,8 @@ export class HeaderOutsideComponent {
   /**
    *
    */
-  @Input() transparent = false;
+  @Input() dark = false;
+  @Input() sticky = false;
 
   /**
    *
