@@ -32,8 +32,8 @@ export class LandingComponent {
         become too expensive to fix. I like how easy it is to write
         Weasel regression tests and automate their execution."`,
       learnMore: {
-        title:
-          'Learn why Vital Images chose Weasel and how it is helping them develop software more confidently.',
+        title: `Learn why Vital Images chose Weasel and how it is helping
+          them develop software more confidently.`,
         text: "Read <i>Vital Images</i>'s Story",
         link: '/feedback'
       }
@@ -57,27 +57,23 @@ export class LandingComponent {
       features: [
         {
           title: 'Integrate in Minutes',
-          detail:
-            'Use our open source client libraries to build and run ' +
-            'regression test tools for your workflow under test.'
+          detail: `Use our open source client libraries to build and
+            run regression test tools for your workflow under test.`
         },
         {
           title: 'Collect Test Results',
-          detail:
-            'Inspect important variables whose value should remain the ' +
-            'same between different versions, given the same set of inputs.'
+          detail: `Inspect important variables whose value should remain the
+            same between different versions, given the same set of inputs.`
         },
         {
           title: 'Add Performance Benchmarks',
-          detail:
-            'Track runtime of functions and other execution flows ' +
-            'to identify noticeable changes between different versions.'
+          detail: `Track runtime of functions and other execution flows
+            to identify noticeable changes between different versions.`
         },
         {
           title: 'Forget Snapshot Files',
-          detail:
-            'Post your test results to a remote Weasel Platform where ' +
-            'they are retained, compared and processed for insights.'
+          detail: `Post your test results to a remote Weasel Platform where
+            they are retained, compared and processed for insights.`
         }
       ],
       learnMore: {
@@ -91,24 +87,24 @@ export class LandingComponent {
       features: [
         {
           title: 'Get Real-Time Feedback',
-          detail:
-            'See newly-found differences between your current version and the baseline version, as your test is running.'
+          detail: `See newly-found differences between your current version
+            and the baseline version, as your test is running.`
         },
         {
           title: 'Start with Insights',
-          detail:
-            'Use insights generated based on the newly-found differences to have a head start in understanding their root cause.'
+          detail: `Use insights generated based on the newly-found differences
+            to have a head start in understanding their root cause.`
         },
         {
           title: 'Stay in the Loop',
-          detail:
-            'Get notified when regressions occur in new versions of your software workflows.'
+          detail: `Get notified when regressions occur in new versions of your
+            software workflows.`
         }
       ],
       learnMore: {
         link: 'docs',
-        title:
-          'Learn how Weasel processes your results and reports regressions in an easy-to-understand format'
+        title: `Learn how Weasel processes your results and reports
+          regressions in an easy-to-understand format`
       },
       title: 'Interpret'
     },
@@ -117,24 +113,27 @@ export class LandingComponent {
       features: [
         {
           title: 'Comment on Test Results',
-          detail:
-            'Share the results of your investigation with your team and discuss whether newly-found differences are suspicious or expected.'
+          detail: `Share the results of your investigation with your team
+            and discuss whether newly-found differences are suspicious or
+            expected.`
         },
         {
           title: 'Manage your Baseline Version',
-          detail:
-            'Change the approved baseline version of your software workflows with a single click and a note to your colleagues to explain why.'
+          detail: `Change the approved baseline version of your software
+            workflows with a single click and a note to your colleagues to
+            explain why.`
         },
         {
           title: 'Generate Audit Reports',
-          detail:
-            'Export a report of how your software workflows and their baseline versions evolve over time for inclusion in release documents.'
+          detail: `Export a report of how your software workflows and their
+            baseline versions evolve over time for inclusion in release
+            documents.`
         }
       ],
       learnMore: {
         link: 'docs',
-        title:
-          'Learn how Weasel helps your team have an up-to-date understanding of the behavior of your software.'
+        title: `Learn how Weasel helps your team have an up-to-date
+          understanding of the behavior of your software.`
       },
       title: 'Collaborate'
     },
@@ -143,23 +142,21 @@ export class LandingComponent {
       features: [
         {
           title: 'Make your Tests Continuous',
-          detail:
-            'Run your regression test workflows as part of your continuous ' +
-            'integration workflow or run them separately by installing our ' +
-            'remote agent on a dedicated test machine.'
+          detail: `Run your regression test workflows as part of your
+            continuous integration workflow or run them separately by
+            installing our remote agent on a dedicated test machine.`
         },
         {
           title: 'Use a Unified Test Framework',
-          detail:
-            'Use our open-source extensible test frameworks to build ' +
-            'resilient easy-to-automate regression test tools in less ' +
-            'than a half hour.'
+          detail: `Use our open-source extensible test frameworks to build
+            resilient easy-to-automate regression test tools in less than
+            a half hour.`
         }
       ],
       learnMore: {
         link: 'docs',
-        title:
-          'Learn how Weasel can help you manage and automate the execution of your regression tests.'
+        title: `Learn how Weasel can help you manage and automate the
+          execution of your regression tests.`
       },
       title: 'Automate'
     }
