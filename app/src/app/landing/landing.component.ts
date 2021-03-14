@@ -89,7 +89,7 @@ export class LandingComponent {
       title: 'Interpret'
     },
     {
-      colors: ['bg-yellow-50', 'border-yellow-100', 'text-yellow-800'],
+      colors: ['bg-blue-50', 'border-blue-100', 'text-blue-800'],
       features: [
         {
           title: 'Comment on Test Results',
@@ -115,7 +115,7 @@ export class LandingComponent {
       title: 'Collaborate'
     },
     {
-      colors: ['bg-blue-50', 'border-blue-100', 'text-blue-800'],
+      colors: ['bg-yellow-50', 'border-yellow-100', 'text-yellow-800'],
       features: [
         {
           title: 'Make your Tests Continuous',
