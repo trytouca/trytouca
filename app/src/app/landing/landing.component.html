@@ -99,40 +99,9 @@
           escaped defect cost <span class="italic">your</span> business?</p>
       </div>
     </div>
-    <div class="col-span-1 relative max-w-screen-md mx-auto">
-      <div class="absolute w-full h-full px-4 lg:px-2 xl:px-0">
-        <div class="bg-lblue-100 rounded-2xl w-full h-full transform -rotate-2">
-        </div>
-      </div>
-      <div class="z-10 px-8 lg:px-4 flex items-center transform">
-        <div
-          class="place-self-center p-8 bg-white border border-gray-100 shadow-md rounded-2xl space-y-4">
-          <figcaption class="flex items-center space-x-2 md:space-x-4">
-            <img class="w-16 h-16 rounded-full"
-              src="../../assets/images/pejman-photo-201110.jpg">
-            <div class="font-medium">
-              <div>Pejman Ghorbanzade</div>
-              <div class="text-gray-600 text-sm">Sr. Software Engineer at Vital
-                Images, Inc.</div>
-            </div>
-          </figcaption>
-          <blockquote class="text-black text-sm md:text-base font-normal">
-            <p>"We use Weasel at scale to perform nightly regression tests of
-              mission-critical workflows in the low-level components of our
-              medical imaging visualization software. It has helped us quickly
-              identify unintended side effects of our code changes before they
-              become too expensive to fix. I like how easy it is to write
-              Weasel regression tests and automate their execution."</p>
-          </blockquote>
-          <!-- <div class="text-right">
-            <a routerLink="/feedback"
-              title="Learn why Vital Images chose Weasel and how it is helping them develop software more confidently.">
-              <span class="text-sm text-lblue-600">Read <i>Vital Images</i>'s
-                Story</span>
-            </a>
-          </div> -->
-        </div>
-      </div>
+    <div class="col-span-1">
+      <wsl-landing-testimonial [data]="testimonials[0]">
+      </wsl-landing-testimonial>
     </div>
   </div>
 </section>

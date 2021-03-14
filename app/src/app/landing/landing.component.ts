@@ -9,6 +9,7 @@ import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 import { ApiService, AuthService } from '@weasel/core/services';
 import { environment } from 'src/environments/environment';
 import { FeatureInput } from './feature.component';
+import { TestimonialInput } from './testimonial.component';
 
 @Component({
   selector: 'app-page-landing',
@@ -16,6 +17,29 @@ import { FeatureInput } from './feature.component';
   styleUrls: ['./landing.component.scss']
 })
 export class LandingComponent {
+  /**
+   *
+   */
+  testimonials: TestimonialInput[] = [
+    {
+      image: '../../assets/images/pejman-photo-201110.jpg',
+      title: 'Pejman Ghorbanzade',
+      subtitle: 'Sr. Software Engineer at Vital Images, Inc.',
+      quote: `"We use Weasel at scale to perform nightly regression tests
+        of mission-critical workflows in the low-level components of our
+        medical imaging visualization software. It has helped us quickly
+        identify unintended side effects of our code changes before they
+        become too expensive to fix. I like how easy it is to write
+        Weasel regression tests and automate their execution."`,
+      learnMore: {
+        title:
+          'Learn why Vital Images chose Weasel and how it is helping them develop software more confidently.',
+        text: "Read <i>Vital Images</i>'s Story",
+        link: '/feedback'
+      }
+    }
+  ];
+
   /**
    *
    */

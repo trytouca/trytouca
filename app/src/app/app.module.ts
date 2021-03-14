@@ -17,6 +17,7 @@ import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 import { SharedModule } from './shared/shared.module';
+import { TestimonialComponent } from './landing/testimonial.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { SharedModule } from './shared/shared.module';
     FeatureComponent,
     FeedbackComponent,
     LandingComponent,
-    NotfoundComponent
+    NotfoundComponent,
+    TestimonialComponent
   ],
   imports: [
     AppRoutingModule,
