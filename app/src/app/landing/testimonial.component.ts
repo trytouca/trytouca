@@ -9,7 +9,12 @@ export interface TestimonialInput {
   title: string;
   subtitle: string;
   quote: string;
-  learnMore: Record<'title' | 'text' | 'link', string>;
+  learnMore: {
+    title: string;
+    text: string;
+    link: string;
+    hidden: boolean;
+  };
 }
 
 @Component({

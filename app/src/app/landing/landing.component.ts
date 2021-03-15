@@ -35,7 +35,8 @@ export class LandingComponent {
         title: `Learn why Vital Images chose Weasel and how it is helping
           them develop software more confidently.`,
         text: "Read <i>Vital Images</i>'s Story",
-        link: '/feedback'
+        link: '/feedback',
+        hidden: true
       }
     }
   ];

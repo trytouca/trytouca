@@ -16,7 +16,7 @@
       <blockquote class="text-black text-sm md:text-base font-normal">
         <p>{{ data.quote }}</p>
       </blockquote>
-      <div class="text-right">
+      <div class="text-right" [hidden]="data.learnMore.hidden">
         <a [routerLink]="data.learnMore.link" [title]="data.learnMore.title">
           <span class="text-sm text-lblue-600"
             [innerHTML]="data.learnMore.text"></span>
