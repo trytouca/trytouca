@@ -85,9 +85,9 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
             intersect: false,
             mode: 'nearest',
             callbacks: {
-              label: (item: TooltipItem) => {
-                const point = item.dataPoint as { x: number; y: number };
-                return this.datetimePipe?.transform(point.y, 'duration') || '';
+              label: (context) => {
+                const point = context.parsed.y;
+                return this.datetimePipe?.transform(point, 'duration') || '';
               }
             }
           }
@@ -99,15 +99,15 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
         scales: {
           y: {
             display: true,
-            scaleLabel: {
-              display: true,
-              labelString: 'Overall Execution Runtime'
-            },
             ticks: {
               callback: (value: number) => {
                 return this.datetimePipe.transform(value, 'duration');
               },
               maxTicksLimit: 5
+            },
+            title: {
+              display: true,
+              text: 'Overall Execution Runtime'
             }
           }
         }
