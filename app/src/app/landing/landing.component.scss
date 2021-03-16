@@ -31,8 +31,8 @@ h2 {
     }
   }
   .wsl-landing-feature-detail-section {
-    @apply py-8 flex items-center;
-    min-height: 60vh;
+    @apply py-16 flex items-center;
+    min-height: 70vh;
     & > div {
       @apply container mx-auto grid gap-4 lg:grid-cols-2;
       & > div {
