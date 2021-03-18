@@ -1,34 +1,17 @@
 <mjml>
   <mj-head>
     <mj-title>Welcome to Weasel</mj-title>
-    <mj-font
-      name="Nunito"
-      href="https://fonts.googleapis.com/css?family=Nunito"
-    />
+    <mj-preview>Welcome! Here is your account verification link.</mj-preview>
+    <mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
     <mj-attributes>
       <mj-body background-color="#eee" />
-      <mj-button
-        background-color="#0284C7"
-        align="center"
-        color="#ffffff"
-        font-size="17px"
-        font-weight="bold"
-        padding-top="32px"
-        width="300px"
-      />
-      <mj-text
-        color="#555"
-        font-size="14px"
-        font-weight="400"
-        line-height="24px"
-        padding-bottom="0px"
-        padding-top="10px"
-      />
+      <mj-text color="#555" font-size="14px" font-weight="400" line-height="24px" padding-bottom="0px" padding-top="10px" />
+      <mj-button background-color="#0284C7" align="center" color="#ffffff" font-size="17px" font-weight="bold" padding-top="32px" width="300px" />
     </mj-attributes>
   </mj-head>
   <mj-body>
     <mj-include path="./layout/header.mjml" />
-    <mj-section background-color="#fff">
+    <mj-section background-color="#fff" border-radius="16px 16px 0 0">
       <mj-column>
         <mj-text>
           <h2>Welcome Aboard!</h2>
@@ -40,9 +23,7 @@
         <mj-text>
           Before we get started, click below to verify your email address.
         </mj-text>
-        <mj-button href="{{ verificationLink }}">
-          Verify Email Address
-        </mj-button>
+        <mj-button href="{{ verificationLink }}">Verify Email Address</mj-button>
       </mj-column>
     </mj-section>
     <mj-include path="./layout/footer-user.mjml" />
