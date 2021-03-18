@@ -9,7 +9,7 @@
     <mj-divider border-color="#DFE3E8" border-width="1px" />
   </mj-column>
 </mj-section>
-<mj-section background-color="#fff">
+<mj-section background-color="#fff" border-radius="0 0 0 0">
   <mj-column>
     <mj-text font-size="12px">
       We are here to help. Send us

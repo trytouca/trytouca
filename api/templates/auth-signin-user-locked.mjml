@@ -1,11 +1,24 @@
 <mjml>
   <mj-head>
     <mj-title>Account Locked</mj-title>
-    <mj-preview>Due to multiple failed login attempts, we are temporarily locking your account.</mj-preview>
-    <mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
+    <mj-preview>
+      Due to multiple failed login attempts, we are temporarily locking your
+      account.
+    </mj-preview>
+    <mj-font
+      name="Nunito"
+      href="https://fonts.googleapis.com/css?family=Nunito"
+    />
     <mj-attributes>
       <mj-body background-color="#eee" />
-      <mj-text color="#555" font-size="14px" font-weight="400" line-height="24px" padding-bottom="0px" padding-top="10px" />
+      <mj-text
+        color="#555"
+        font-size="14px"
+        font-weight="400"
+        line-height="24px"
+        padding-bottom="0px"
+        padding-top="10px"
+      />
     </mj-attributes>
   </mj-head>
   <mj-body>
@@ -14,13 +27,14 @@
       <mj-column>
         <mj-text>{{ greetings }},</mj-text>
         <mj-text>
-          We have received multiple failed attempts to log into your Weasel account.
+          We have received multiple failed attempts to log into your Weasel
+          account.
         </mj-text>
         <mj-text>
           To protect against potential breach of your information, we have
           temporarily locked your account. It will be unlocked automatically
-          after a short period of time. You will be able to continue using
-          your account with your password.
+          after a short period of time. You will be able to continue using your
+          account with your password.
         </mj-text>
         <mj-text>
           If you are having trouble remembering your password, please consider
