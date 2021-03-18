@@ -87,7 +87,7 @@ export async function authSessionCreate(
         user,
         'Account Temporarily Locked',
         'auth-signin-user-locked',
-        { username: user.username }
+        { greetings: user.fullname ? `Hi ${user.fullname}` : `Hello` }
       )
     }
 
