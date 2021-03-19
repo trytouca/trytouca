@@ -107,7 +107,7 @@ We can now ask Conan to install Weasel as a dependency and generate a CMake
 find module that we can integrate with our build system.
 
 ```bash
-conan install -if "${dir_build}" -g cmake_find_package -b missing "weasel/1.2.1@_/_"
+conan install -if "${dir_build}" -g cmake_find_package -b missing "weasel/1.3.0@_/_"
 ```
 
 Where `${dir_build}` is the path to the CMake build directory.

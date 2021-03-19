@@ -12,7 +12,7 @@ class WeaselConan(ConanFile):
     topics = ( "regression-testing", "test-framework", "test-automation" )
     url = "https://getweasel.com/docs"
     license = "Apache-2.0"
-    version ="1.2.1"
+    version ="1.3.0"
     author = "Pejman Ghorbanzade <pejman@getweasel.com>"
     settings = "os", "compiler", "build_type", "arch"
     options = {
