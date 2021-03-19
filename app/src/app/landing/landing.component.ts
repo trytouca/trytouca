@@ -151,7 +151,7 @@ export class LandingComponent {
           title: 'Use a Unified Test Framework',
           detail: `Use our open-source extensible test frameworks to build
             resilient easy-to-automate regression test tools in less than
-            a half hour.`
+            half an hour.`
         }
       ],
       learnMore: {
@@ -212,7 +212,7 @@ export class LandingComponent {
    */
   ctaLiveDemo() {
     if (environment.production) {
-      window.open('https://calendly.com/ghorbanzade/weasel', '_blank');
+      window.open('https://calendly.com/ghorbanzade/30min', '_blank');
     }
   }
 
