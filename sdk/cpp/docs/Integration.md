@@ -20,7 +20,7 @@ dependency, using CMake's [FetchContent] module as shown below.
 FetchContent_Declare(
     weasel
     GIT_REPOSITORY https://github.com/getweasel/weasel-cpp.git
-    GIT_TAG        origin/main
+    GIT_TAG        v1.3.0
 )
 FetchContent_MakeAvailable(weasel)
 ```

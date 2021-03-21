@@ -56,7 +56,7 @@ function(weasel_find_ghcfilesystem)
     FetchContent_Declare(
         ghcFilesystem
         GIT_REPOSITORY  https://github.com/gulrak/filesystem.git
-        GIT_TAG         v1.5.0
+        GIT_TAG         v1.5.4
     )
     FetchContent_GetProperties(ghcFilesystem)
     if(NOT ghcfilesystem_POPULATED)
