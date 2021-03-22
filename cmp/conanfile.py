@@ -12,13 +12,13 @@ class WeaselConan(ConanFile):
     topics = ( "regression-testing", "snapshot-testing", "test-framework", "test-automation" )
     url = "https://getweasel.com/docs"
     license = "Private"
-    version ="1.2.1"
+    version ="1.3.0"
     author = "Pejman Ghorbanzade <pejman@getweasel.com>"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_find_package"
 
     def requirements(self):
-        self.requires.add("weasel/1.2.1")
+        self.requires.add("weasel/1.3.0")
         self.requires.add("cxxopts/2.2.1")
         self.requires.add("fmt/7.1.2")
 
