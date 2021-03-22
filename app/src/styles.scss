@@ -46,6 +46,18 @@
 }
 
 @layer utilities {
+  .wsl-min-h-screen-1 {
+    min-height: calc(100vh - 4rem);
+  }
+  .wsl-min-h-screen-2 {
+    min-height: calc(100vh - 8rem);
+  }
+  .wsl-min-h-screen-3 {
+    min-height: calc(100vh - 11rem);
+  }
+  .wsl-min-h-screen-4 {
+    min-height: calc(100vh - 14rem);
+  }
   .wsl-form {
     @apply space-y-4;
   }
@@ -115,22 +127,6 @@
   .wsl-dropdown-item {
     @apply p-2 cursor-pointer select-none hover:bg-gray-100;
   }
-}
-
-.wsl-min-h-screen-1 {
-  min-height: calc(100vh - 4rem);
-}
-
-.wsl-min-h-screen-2 {
-  min-height: calc(100vh - 8rem);
-}
-
-.wsl-min-h-screen-3 {
-  min-height: calc(100vh - 11rem);
-}
-
-.wsl-min-h-screen-4 {
-  min-height: calc(100vh - 14rem);
 }
 
 ngneat-dialog {
