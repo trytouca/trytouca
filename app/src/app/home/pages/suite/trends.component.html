@@ -1,13 +1,13 @@
 <section class="wsl-page-tab">
   <div>
-    <h2>Runtime Trend</h2>
-    <p>
+    <h2 class="pb-1 text-xl font-medium">Runtime Trend</h2>
+    <p class="text-sm">
       This chart plots the overall execution time of versions as they are
       submitted. It helps understand how performance of your workflow is
       changing over time. It also helps identify code changes with unintended
       impact to the performance of your workflow.
     </p>
-    <div class="wsl-trend-chart">
+    <div class="py-8">
       <app-suite-chart-runtime *ngIf="fields.perfs.length !== 0; else noData"
         [perfs]="fields.perfs">
       </app-suite-chart-runtime>

@@ -19,8 +19,7 @@ type Fields = Partial<{
 
 @Component({
   selector: 'app-suite-tab-trends',
-  templateUrl: './trends.component.html',
-  styleUrls: ['./trends.component.scss']
+  templateUrl: './trends.component.html'
 })
 export class SuiteTabTrendsComponent implements OnDestroy {
   fields: Fields = {
