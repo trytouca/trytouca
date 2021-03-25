@@ -65,7 +65,7 @@ namespace weasel {
         // parse results
 
         const auto& results = message->results()->entries();
-        for (const auto& result : *results) {
+        for (const auto&& result : *results) {
             const auto& key = result->key()->data();
             const auto& value = types::deserializeValue(result->value());
             if (!value) {
@@ -77,7 +77,7 @@ namespace weasel {
         // parse assertions
 
         const auto& assertions = message->assertions()->entries();
-        for (const auto& assertion : *assertions) {
+        for (const auto&& assertion : *assertions) {
             const auto& key = assertion->key()->data();
             const auto& value = types::deserializeValue(assertion->value());
             if (!value) {
@@ -90,7 +90,7 @@ namespace weasel {
         // parse metrics
 
         const auto& metrics = message->metrics()->entries();
-        for (const auto& metric : *metrics) {
+        for (const auto&& metric : *metrics) {
             const auto& key = metric->key()->data();
             const auto& ivalue = types::deserializeValue(metric->value());
             const auto& value = std::dynamic_pointer_cast<types::Number<int64_t>>(ivalue);

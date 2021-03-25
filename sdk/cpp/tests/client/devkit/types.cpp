@@ -388,7 +388,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const std::vector<bool>& vec) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (const auto& v : vec) {
+                for (const auto&& v : vec) {
                     ret->add(std::make_shared<types::Bool>(v));
                 }
                 return ret;
@@ -490,7 +490,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const std::vector<bool>& vec) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (const auto& v : vec) {
+                for (const auto&& v : vec) {
                     ret->add(std::make_shared<types::Bool>(v));
                 }
                 return ret;
@@ -581,7 +581,7 @@ TEST_CASE("Simple Data Types")
         {
             const auto& makeArray = [](const std::vector<bool>& vec) {
                 const auto& ret = std::make_shared<types::Array>();
-                for (const auto& v : vec) {
+                for (const auto&& v : vec) {
                     ret->add(std::make_shared<types::Bool>(v));
                 }
                 return ret;

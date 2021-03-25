@@ -80,7 +80,7 @@ namespace weasel { namespace types {
     void Object::deserialize(const fbs::Object* fbsObj)
     {
         _name = fbsObj->key()->data();
-        for (const auto& value : *fbsObj->values()) {
+        for (const auto&& value : *fbsObj->values()) {
             const auto& name = value->name()->data();
             const auto& obj = types::deserializeValue(value->value());
             if (!obj) {

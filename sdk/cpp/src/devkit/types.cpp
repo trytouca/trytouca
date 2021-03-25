@@ -532,7 +532,7 @@ namespace weasel { namespace types {
      */
     void Array::deserialize(const fbs::Array* obj)
     {
-        for (const auto& value : *obj->values()) {
+        for (const auto&& value : *obj->values()) {
             _values.push_back(deserializeValue(value));
         }
     }

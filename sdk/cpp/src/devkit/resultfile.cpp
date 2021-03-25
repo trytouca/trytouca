@@ -69,7 +69,7 @@ namespace weasel {
         ElementsMap testcases;
         // parse content of given file
         const auto& messages = weasel::fbs::GetMessages(content.c_str());
-        for (const auto& message : *messages->messages()) {
+        for (const auto&& message : *messages->messages()) {
             const auto& buffer = message->buf();
             const auto& ptr = buffer->data();
             std::vector<uint8_t> data(ptr, ptr + buffer->size());
