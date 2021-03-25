@@ -10,6 +10,10 @@ import { EPlatformRole } from '../commontypes'
 import * as middleware from '../middlewares'
 import { promisable } from '../utils/routing'
 import { platformAccountUpdate } from '../controllers/platform/accountUpdate'
+import {
+  accountDeleteOwn,
+  accountDeleteOther
+} from '../controllers/platform/accountDelete'
 import { platformHealth } from '../controllers/platform/health'
 
 const router = e.Router()
@@ -108,6 +112,18 @@ router.patch(
       .withMessage('invalid')
   ]),
   promisable(platformAccountUpdate, 'update account profile on platform')
+)
+
+router.delete(
+  '/account',
+  middleware.isAuthenticated,
+  promisable(accountDeleteOwn, 'delete own account')
+)
+
+router.delete(
+  '/account/:account',
+  middleware.isPlatformAdmin,
+  promisable(accountDeleteOther, 'delete another account')
 )
 
 export const platformRouter = router
