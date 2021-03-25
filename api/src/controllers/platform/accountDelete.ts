@@ -8,15 +8,7 @@ import { EPlatformRole } from '../../commontypes'
 import { IUser, UserModel } from '../../schemas/user'
 import logger from '../../utils/logger'
 
-export async function accountDeleteOther(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  return res.status(204).send()
-}
-
-export async function accountDeleteOwn(
+export async function accountDelete(
   req: Request,
   res: Response,
   next: NextFunction
@@ -55,7 +47,7 @@ export async function accountDeleteOwn(
   logger.info('%s: deleting account', user.username)
 
   await SessionModel.deleteMany({ userId: user._id })
-  await UserModel.deleteMany({ _id: user._id })
+  await UserModel.findByIdAndDelete(user._id)
 
   return res.status(204).send()
 }

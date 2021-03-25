@@ -10,10 +10,7 @@ import { EPlatformRole } from '../commontypes'
 import * as middleware from '../middlewares'
 import { promisable } from '../utils/routing'
 import { platformAccountUpdate } from '../controllers/platform/accountUpdate'
-import {
-  accountDeleteOwn,
-  accountDeleteOther
-} from '../controllers/platform/accountDelete'
+import { accountDelete } from '../controllers/platform/accountDelete'
 import { platformHealth } from '../controllers/platform/health'
 
 const router = e.Router()
@@ -114,16 +111,37 @@ router.patch(
   promisable(platformAccountUpdate, 'update account profile on platform')
 )
 
+/**
+ * Removes user's account and all data associated with it.
+ *
+ * @api [delete] /platform/account
+ *    tags:
+ *      - Account
+ *    summary: Remove Account
+ *    operationId: account_remove
+ *    description:
+ *      Removes user's account and all data associated with it.
+ *      User initiating the request must be authenticated.
+ *      User initiating the request must not be the platform owner.
+ *      User must not have any active team membership.
+ *      User must not have any pending team invitation.
+ *      User must not have any pending join request.
+ *    responses:
+ *      204:
+ *        description: 'Account Deleted'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        description: 'Account cannot be deleted'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
 router.delete(
   '/account',
   middleware.isAuthenticated,
-  promisable(accountDeleteOwn, 'delete own account')
-)
-
-router.delete(
-  '/account/:account',
-  middleware.isPlatformAdmin,
-  promisable(accountDeleteOther, 'delete another account')
+  promisable(accountDelete, 'delete own account')
 )
 
 export const platformRouter = router
