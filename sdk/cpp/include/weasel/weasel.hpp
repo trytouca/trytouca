@@ -15,8 +15,8 @@
  *          the client, register results and submit them to the Weasel
  *          platform.
  *
- * @author Pejman Ghorbanzade <pejman@ghorbanzade.com>
- * @date 2018-2020
+ * @author Pejman Ghorbanzade <pejman@getweasel.com>
+ * @date 2018-2021
  */
 
 #include "weasel/detail/scoped_timer.hpp"

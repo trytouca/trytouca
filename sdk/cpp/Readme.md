@@ -35,7 +35,7 @@ Checkout https://getweasel.com to learn more and get started.
 
 * **Lossless Comparison**  
   Weasel client libraries preserve the types of your captured data. The
-  platform compares test results of any two verisons of your workflow
+  platform compares test results of any two versions of your workflow
   in their original data type.
 
 * **Scale without Worry**  
