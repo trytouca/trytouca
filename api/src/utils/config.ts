@@ -37,6 +37,7 @@ interface IConfig {
     templatesDirectory: string
     user: string
   }
+  mode: 'self_hosted' | 'cloud_hosted'
   mongo: {
     database: string
     host: string
@@ -121,6 +122,7 @@ export const config: IConfig = {
     templatesDirectory: env.MAIL_TEMPLATE_DIR,
     user: env.MAIL_TRANSPORT_USER
   },
+  mode: env.DEPLOY_MODE === 'self_hosted' ? 'self_hosted' : 'cloud_hosted',
   mongo: {
     database: env.MONGO_BASE,
     host: env.MONGO_HOST,
