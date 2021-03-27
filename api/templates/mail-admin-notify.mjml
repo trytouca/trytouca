@@ -1,6 +1,7 @@
 <mjml>
   <mj-head>
-    <mj-title>{{ subject }}</mj-title>
+    <mj-title>Admin Alert</mj-title>
+    <mj-preview>{{ title }}</mj-preview>
     <mj-font
       name="Nunito"
       href="https://fonts.googleapis.com/css?family=Nunito"
@@ -19,15 +20,10 @@
   </mj-head>
   <mj-body>
     <mj-include path="./layout/header.mjml" />
-    <mj-section background-color="#fff">
+    <mj-section background-color="white">
       <mj-column>
-        <mj-text>
-          User
-          <b>{{ username }}</b>
-          created team
-          <b>{{ teamName }}</b>
-          .
-        </mj-text>
+        <mj-text><h3>{{ title }}</h3></mj-text>
+        <mj-text>{{{ body }}}</mj-text>
       </mj-column>
     </mj-section>
     <mj-include path="./layout/footer-admin.mjml" />

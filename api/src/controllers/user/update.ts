@@ -8,6 +8,7 @@ import { omit } from 'lodash'
 import { IUser, UserModel } from '../../schemas/user'
 import { config } from '../../utils/config'
 import logger from '../../utils/logger'
+import * as mailer from '../../utils/mailer'
 
 /**
  * Updates information about current user.
@@ -50,6 +51,14 @@ export async function ctrlUserUpdate(
 
   await UserModel.findOneAndUpdate({ _id: user._id }, { $set: proposed })
   logger.info('%s: updated account: %j', tuple, omit(proposed, 'password'))
+
+  // notify platform admins that a new user account was verified.
+  // we are intentionally not awaiting on this operation.
+
+  mailer.mailAdmins({
+    title: 'New Account Verified',
+    body: `New account created for <b>${proposed.fullname}</b> (<a href="mailto:${user.email}">${proposed.username}</a>).`
+  })
 
   return res.status(204).send()
 }

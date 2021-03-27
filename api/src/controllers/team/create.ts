@@ -41,12 +41,9 @@ export async function ctrlTeamCreate(
 
   // notify platform admins that a new team was created
 
-  const subject = 'New Team Registered'
-  mailer.mailAdmins(subject, 'team-create-admin', {
-    subject,
-    teamName: proposed.name,
-    teamSlug: proposed.slug,
-    username: user.username
+  mailer.mailAdmins({
+    title: 'New Team Registered',
+    body: `User <b>${user.username}</b> created team <b>${proposed.slug}</b>.`
   })
 
   // remove information about the list of known teams from cache.

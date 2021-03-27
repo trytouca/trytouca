@@ -126,21 +126,11 @@ async function mailUsersByRole(
 /**
  *
  */
-export async function mailAdmins(
-  subject: string,
-  filename: string,
-  params?: Record<string, string>
-) {
-  return mailUsersByRole(EPlatformRole.Admin, subject, filename, params)
-}
-
-/**
- *
- */
-export async function mailOwners(
-  subject: string,
-  filename: string,
-  params?: Record<string, string>
-) {
-  return mailUsersByRole(EPlatformRole.Owner, subject, filename, params)
+export async function mailAdmins(params: { title: string; body: string }) {
+  if (config.mode === 'cloud_hosted') {
+    const users = await UserModel.find({
+      platformRole: { $in: [EPlatformRole.Owner, EPlatformRole.Admin] }
+    })
+    return mailUsers(users, 'Admin Alert', 'mail-admin-notify', params)
+  }
 }
