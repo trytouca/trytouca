@@ -1,12 +1,29 @@
 <mjml>
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
-    <mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
+    <mj-font
+      name="Nunito"
+      href="https://fonts.googleapis.com/css?family=Nunito"
+    />
     <mj-attributes>
       <mj-body background-color="#eee" />
       <mj-class name="wsl-bg-color" background-color="{{ headerColor }}" />
-      <mj-button align="center" color="white" font-size="17px" font-weight="bold" padding-top="32px" width="300px" />
-      <mj-text color="#555" font-size="14px" font-weight="400" line-height="24px" padding-bottom="0px" padding-top="10px" />
+      <mj-button
+        align="center"
+        color="white"
+        font-size="17px"
+        font-weight="bold"
+        padding-top="32px"
+        width="300px"
+      />
+      <mj-text
+        color="#555"
+        font-size="14px"
+        font-weight="400"
+        line-height="24px"
+        padding-bottom="0px"
+        padding-top="10px"
+      />
     </mj-attributes>
   </mj-head>
   <mj-body>
@@ -23,20 +40,16 @@
     </mj-section>
     <mj-section background-color="white">
       <mj-column>
+        <mj-text>Hi {{ username }},</mj-text>
         <mj-text>
-          Hi {{ username }},
-        </mj-text>
-        <mj-text>
-          {{ commentBy }} added the following note to version {{ batchName }}
-          of suite {{ suiteName }}.
+          {{ commentBy }} added the following note to version {{ batchName }} of
+          suite {{ suiteName }}.
         </mj-text>
       </mj-column>
     </mj-section>
     <mj-section background-color="white">
       <mj-column background-color="#eee" width="90%">
-        <mj-text>
-          {{{ commentBody }}}
-        </mj-text>
+        <mj-text>{{{ commentBody }}}</mj-text>
       </mj-column>
     </mj-section>
     <mj-section background-color="white">

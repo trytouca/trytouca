@@ -1,29 +1,47 @@
 <mjml>
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
-    <mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
+    <mj-font
+      name="Nunito"
+      href="https://fonts.googleapis.com/css?family=Nunito"
+    />
     <mj-attributes>
       <mj-body background-color="#eee" />
-      <mj-button background-color="#5e6ebf" align="center" color="#ffffff" font-size="17px" font-weight="bold" padding-top="32px" width="300px" />
-      <mj-text color="#555" font-size="14px" font-weight="400" line-height="24px" padding-bottom="0px" padding-top="10px" />
+      <mj-text
+        color="#555"
+        font-size="14px"
+        font-weight="400"
+        line-height="24px"
+        padding-bottom="0px"
+        padding-top="10px"
+      />
     </mj-attributes>
   </mj-head>
   <mj-body>
     <mj-include path="./layout/header.mjml" />
     <mj-section background-color="#fff">
       <mj-column>
+        <mj-text>Hi {{ username }},</mj-text>
         <mj-text>
-          <h2>Hi {{ username }},</h2>
-        </mj-text>
-        <mj-text>
-          <b>{{ actorName }}</b> changed the identifier of team
-          "<a href="{{ teamLink }}">{{ teamName }}</a>" from
-          <b>{{ oldSlug }}</b> to <b>{{ newSlug }}</b>.
+          <b>{{ actorName }}</b>
+          changed the identifier of team "
+          <a href="{{ teamLink }}">{{ teamName }}</a>
+          " from
+          <b>{{ oldSlug }}</b>
+          to
+          <b>{{ newSlug }}</b>
+          .
         </mj-text>
       </mj-column>
     </mj-section>
 
-    <mj-section background-color="#ffffff" padding-left="15px" padding-right="15px" padding-top="0" padding-bottom="0">
+    <mj-section
+      background-color="#ffffff"
+      padding-left="15px"
+      padding-right="15px"
+      padding-top="0"
+      padding-bottom="0"
+    >
       <mj-column width="100%">
         <mj-divider border-color="#DFE3E8" border-width="1px" />
       </mj-column>
@@ -31,10 +49,10 @@
     <mj-section background-color="#fff">
       <mj-column>
         <mj-text font-size="12px">
-          This is an auto-generated email.
-          You do not need to take any action.
-          You are receiving this notification because you are a member of
-          team "<a href="{{ teamLink }}">{{ teamName }}</a>" on Weasel.
+          This is an auto-generated email. You do not need to take any action.
+          You are receiving this notification because you are a member of team "
+          <a href="{{ teamLink }}">{{ teamName }}</a>
+          " on Weasel.
         </mj-text>
       </mj-column>
     </mj-section>

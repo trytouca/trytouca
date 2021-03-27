@@ -29,11 +29,9 @@
   </mj-head>
   <mj-body>
     <mj-include path="./layout/header.mjml" />
-    <mj-section background-color="#fff" border-radius="16px 16px 0 0">
+    <mj-section background-color="#fff">
       <mj-column>
-        <mj-text>
-          <h2>Welcome Aboard!</h2>
-        </mj-text>
+        <mj-text>Welcome Aboard!</mj-text>
         <mj-text>
           Thank you for creating an account on Weasel! We hope that it helps you
           improve and maintain the quality of your software product.

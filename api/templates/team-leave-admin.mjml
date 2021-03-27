@@ -1,11 +1,20 @@
 <mjml>
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
-    <mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
+    <mj-font
+      name="Nunito"
+      href="https://fonts.googleapis.com/css?family=Nunito"
+    />
     <mj-attributes>
       <mj-body background-color="#eee" />
-      <mj-button background-color="#5e6ebf" align="center" color="#ffffff" font-size="17px" font-weight="bold" padding-top="32px" width="300px" />
-      <mj-text color="#555" font-size="14px" font-weight="400" line-height="24px" padding-bottom="0px" padding-top="10px" />
+      <mj-text
+        color="#555"
+        font-size="14px"
+        font-weight="400"
+        line-height="24px"
+        padding-bottom="0px"
+        padding-top="10px"
+      />
     </mj-attributes>
   </mj-head>
   <mj-body>
@@ -13,7 +22,11 @@
     <mj-section background-color="#fff">
       <mj-column>
         <mj-text>
-          User <b>{{ userName }}</b> left team <b>{{ teamName }}</b>.
+          User
+          <b>{{ userName }}</b>
+          left team
+          <b>{{ teamName }}</b>
+          .
         </mj-text>
       </mj-column>
     </mj-section>

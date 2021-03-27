@@ -1,23 +1,30 @@
 <mjml>
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
-    <mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
+    <mj-font
+      name="Nunito"
+      href="https://fonts.googleapis.com/css?family=Nunito"
+    />
     <mj-attributes>
       <mj-body background-color="#eee" />
-      <mj-button background-color="#5e6ebf" align="center" color="#ffffff" font-size="17px" font-weight="bold" padding-top="32px" width="300px" />
-      <mj-text color="#555" font-size="14px" font-weight="400" line-height="24px" padding-bottom="0px" padding-top="10px" />
+      <mj-text
+        color="#555"
+        font-size="14px"
+        font-weight="400"
+        line-height="24px"
+        padding-bottom="0px"
+        padding-top="10px"
+      />
     </mj-attributes>
   </mj-head>
   <mj-body>
     <mj-include path="./layout/header.mjml" />
     <mj-section background-color="#fff">
       <mj-column>
+        <mj-text>Hi {{ userName }},</mj-text>
         <mj-text>
-          <h2>Hi {{ userName }},</h2>
-        </mj-text>
-        <mj-text>
-          <a href="mailto:{{ ownerEmail }}">{{ ownerName }}</a> has added
-          you to team "{{ teamName }}" on Weasel.
+          <a href="mailto:{{ ownerEmail }}">{{ ownerName }}</a>
+          has added you to team "{{ teamName }}" on Weasel.
         </mj-text>
       </mj-column>
     </mj-section>
