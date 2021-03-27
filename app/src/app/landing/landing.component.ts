@@ -49,10 +49,16 @@ export class LandingComponent {
       colors: ['bg-red-50', 'border-red-100', 'text-red-800'],
       images: [
         {
-          alt: 'C++ Programming Language Language',
+          alt: 'Weasel SDK for C++',
           link: 'https://github.com/getweasel/weasel-cpp',
           src: '../../assets/exticons/client-cpp.svg',
-          title: 'Check Out Weasel Client Library for C++'
+          title: 'Check out our client library for C++'
+        },
+        {
+          alt: 'Weasel SDKs for Javascript',
+          link: 'https://github.com/getweasel/weasel-js',
+          src: '../../assets/exticons/client-js.svg',
+          title: 'Check out our client libraries for Javascript'
         }
       ],
       features: [

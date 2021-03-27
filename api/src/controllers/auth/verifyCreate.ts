@@ -105,7 +105,6 @@ export async function authVerifyCreate(
   })
 
   // notify platform admins that a new user account was verified.
-  // we are intentionally not awaiting on this operation.
 
   mailer.mailAdmins({
     title: 'New Account Created',

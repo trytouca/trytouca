@@ -53,7 +53,6 @@ export async function ctrlUserUpdate(
   logger.info('%s: updated account: %j', tuple, omit(proposed, 'password'))
 
   // notify platform admins that a new user account was verified.
-  // we are intentionally not awaiting on this operation.
 
   mailer.mailAdmins({
     title: 'New Account Verified',
