@@ -11,7 +11,7 @@ import { BatchModel } from '../../src/schemas/batch'
 describe('model-batch', function () {
   it('reject making batch doc with missing requierd keys', function (done) {
     const batchModel = new BatchModel({})
-    batchModel.validate(function (err) {
+    batchModel.validate(function (err: any) {
       expect(err.name).to.equal('ValidationError')
       expect(err.errors.slug.kind).to.equal('required')
       expect(err.errors.suite.kind).to.equal('required')

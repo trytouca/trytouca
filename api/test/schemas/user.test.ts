@@ -7,12 +7,17 @@ import { describe } from 'mocha'
 import sinon from 'sinon'
 
 import { EPlatformRole } from '../../src/commontypes'
+import {
+  wslFindByRole,
+  wslFindByUname,
+  wslGetSuperUser
+} from '../../src/models/user'
 import { UserModel } from '../../src/schemas/user'
 
 describe('model-user', function () {
-  it('reject making user doc if requierd keys are missing', function (done) {
+  it('reject making user doc if required keys are missing', function (done) {
     const userModel = new UserModel({})
-    userModel.validate(function (err) {
+    userModel.validate(function (err: any) {
       expect(err.name).to.equal('ValidationError')
       expect(err.errors.email.kind).to.equal('required')
       expect(err.errors.username.kind).to.equal('required')
@@ -47,7 +52,7 @@ describe('model-user', function () {
       mockObj.restore()
     })
     it('wslFindByUname', (done) => {
-      UserModel.wslFindByUname('some_userName').then((doc) => {
+      wslFindByUname('some_userName').then(() => {
         sinon.assert.calledWith(
           mockObj,
           { username: 'some_userName', suspended: false },
@@ -57,7 +62,7 @@ describe('model-user', function () {
       done()
     })
     it('wslGetSuperUser', (done) => {
-      UserModel.wslGetSuperUser().then((doc) => {
+      wslGetSuperUser().then(() => {
         sinon.assert.calledWith(
           mockObj,
           { platformRole: EPlatformRole.Super, suspended: false },
@@ -67,7 +72,7 @@ describe('model-user', function () {
       done()
     })
     it('wslFindByRole', (done) => {
-      UserModel.wslFindByRole(EPlatformRole.Admin).then((docs) => {
+      wslFindByRole(EPlatformRole.Admin).then(() => {
         sinon.assert.calledWith(
           mockObj,
           { platformRole: EPlatformRole.Admin, suspended: false },

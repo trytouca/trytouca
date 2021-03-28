@@ -3,6 +3,7 @@
  */
 
 import { EPlatformRole } from '../commontypes'
+import { wslFindByUname, wslGetSuperUser } from '../models/user'
 import { UserModel } from '../schemas/user'
 import logger from '../utils/logger'
 
@@ -14,7 +15,7 @@ import logger from '../utils/logger'
 export async function setupSuperuser() {
   // check if user is already registered in the database
 
-  const user = await UserModel.wslGetSuperUser()
+  const user = await wslGetSuperUser()
   if (user) {
     return user._id
   }
@@ -41,7 +42,7 @@ export async function setupSuperuser() {
 export async function setupAnonymousUser() {
   // check if user is already registered in the database
 
-  const user = await UserModel.wslFindByUname('anonymous')
+  const user = await wslFindByUname('anonymous')
   if (user) {
     return user._id
   }

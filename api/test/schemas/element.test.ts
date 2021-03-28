@@ -11,7 +11,7 @@ import { ElementModel } from '../../src/schemas/element'
 describe('model-element', function () {
   it('reject making element doc with missing requierd keys', function (done) {
     const elementModel = new ElementModel({})
-    elementModel.validate(function (err) {
+    elementModel.validate(function (err: any) {
       expect(err.name).to.equal('ValidationError')
       expect(err.errors.name.kind).to.equal('required')
       expect(err.errors.suiteId.kind).to.equal('required')

@@ -127,45 +127,7 @@ export type IUser = Pick<
 /**
  *
  */
-userSchema.statics.wslFindByRole = async function (
-  role: EPlatformRole
-): Promise<IUser[]> {
-  const users = await this.model('User').find(
-    { platformRole: role, suspended: false },
-    { _id: 1, email: 1, fullname: 1, platformRole: 1, username: 1 }
-  )
-  return users
-}
-
-/**
- *
- */
-userSchema.statics.wslFindByUname = async function (
-  uname: string
-): Promise<IUser> {
-  const user = await this.model('User').findOne(
-    { username: uname, suspended: false },
-    { _id: 1, email: 1, fullname: 1, platformRole: 1, username: 1 }
-  )
-  return user
-}
-
-/**
- * Provides information about the already registerd super user.
- */
-userSchema.statics.wslGetSuperUser = async function (): Promise<IUser> {
-  const users = await this.model('User').wslFindByRole(EPlatformRole.Super)
-  return users.length === 0 ? null : users[0]
-}
-
-/**
- *
- */
-export interface IUserModel extends mongoose.Model<IUserDocument> {
-  wslFindByRole: (platformRole: EPlatformRole) => Promise<IUser[]>
-  wslFindByUname: (uname: string) => Promise<IUser>
-  wslGetSuperUser: () => Promise<IUser>
-}
+export interface IUserModel extends mongoose.Model<IUserDocument> {}
 
 /**
  *

@@ -51,7 +51,6 @@ const commentSchema = new mongoose.Schema(
     type: {
       enum: Object.values(ECommentType),
       default: 'batch',
-      required: true,
       type: String
     }
   },

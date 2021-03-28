@@ -8,7 +8,7 @@ import { minBy } from 'lodash'
 import mongoose from 'mongoose'
 import { EPlatformRole } from '../../commontypes'
 import { BatchModel, IBatchDocument } from '../../schemas/batch'
-import { ComparisonModel } from '../../schemas/comparison'
+import { ComparisonModel, IComparisonDocument } from '../../schemas/comparison'
 import { ElementModel, IElementDocument } from '../../schemas/element'
 import { MessageModel } from '../../schemas/message'
 import { ISuiteDocument, SuiteModel } from '../../schemas/suite'
@@ -691,7 +691,9 @@ async function ensureMessage(
     { elasticId: 1 }
   )
     .cursor()
-    .eachAsync((job) => removeComparison(job.elasticId), { parallel: 10 })
+    .eachAsync((job: IComparisonDocument) => removeComparison(job.elasticId), {
+      parallel: 10
+    })
 
   if (message.elasticId) {
     removeResult(message.elasticId)

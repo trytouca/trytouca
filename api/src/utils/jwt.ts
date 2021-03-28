@@ -13,11 +13,6 @@ type TokenPayload = {
   sub: string
 }
 
-type TokenInput = {
-  expiresAt: Date
-  _id: string
-}
-
 /**
  * Generates a JSON Web Token (JWT) for a given user session.
  *
@@ -25,7 +20,7 @@ type TokenInput = {
  * information other than the session id which should be adequate
  * to identify the user.
  */
-export function issue(session: TokenInput): string {
+export function issue(session: ISessionDocument): string {
   return jws.sign({
     header: { alg: 'HS256', typ: 'JWT' },
     payload: {

@@ -7,7 +7,8 @@ import mongoose from 'mongoose'
 import ip from 'ip'
 
 import { EPlatformRole } from '../commontypes'
-import { IUser, UserModel } from '../schemas/user'
+import { wslFindByUname } from '../models/user'
+import { IUser } from '../schemas/user'
 import { SessionModel } from '../schemas/session'
 import * as jwt from '../utils/jwt'
 import logger from '../utils/logger'
@@ -200,7 +201,7 @@ export async function hasAccount(
   next: NextFunction
 ) {
   const username = req.params.account
-  const account = await UserModel.wslFindByUname(username)
+  const account = await wslFindByUname(username)
 
   // return 404 if account with specified username does not exist
 

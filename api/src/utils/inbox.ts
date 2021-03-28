@@ -4,8 +4,9 @@
 
 import { format as utilFormat } from 'util'
 import { EPlatformRole } from '../commontypes'
+import { wslFindByRole } from '../models/user'
 import { NotificationModel } from '../schemas/notification'
-import { IUser, UserModel } from '../schemas/user'
+import { IUser } from '../schemas/user'
 
 /**
  *
@@ -33,8 +34,8 @@ async function notifyUsers(users: IUser[], message: string) {
  */
 export async function notifyPlatformAdmins(fmtstr: string, ...args) {
   const message = utilFormat(fmtstr, ...args)
-  const platformAdmins = await UserModel.wslFindByRole(EPlatformRole.Admin)
-  const platformOwner = await UserModel.wslFindByRole(EPlatformRole.Owner)
+  const platformAdmins = await wslFindByRole(EPlatformRole.Admin)
+  const platformOwner = await wslFindByRole(EPlatformRole.Owner)
   const users = [...platformAdmins, ...platformOwner]
   return notifyUsers(users, message)
 }

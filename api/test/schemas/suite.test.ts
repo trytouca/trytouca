@@ -16,7 +16,7 @@ describe('model-suite', () => {
   describe('schema', () => {
     it('reject making suite doc if requierd keys are missing', function (done) {
       const suiteModel = new SuiteModel({})
-      suiteModel.validate(function (err) {
+      suiteModel.validate(function (err: any) {
         expect(err.errors.name.kind).to.equal('required')
         expect(err.errors.createdBy.kind).to.equal('required')
         expect(err.errors.slug.kind).to.equal('required')

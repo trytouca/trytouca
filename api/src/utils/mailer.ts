@@ -10,6 +10,7 @@ import nodemailer from 'nodemailer'
 import path from 'path'
 
 import { EPlatformRole } from '../commontypes'
+import { wslFindByRole, wslGetSuperUser } from '../models/user'
 import { MailModel } from '../schemas/mail'
 import { IUser, UserModel } from '../schemas/user'
 import { config, configMgr } from './config'
@@ -40,7 +41,7 @@ async function mailUserImpl(
   const bodyHtml = mustache.render(fileContent, view)
   const bodyPlain = htmlToText.fromString(bodyHtml, { wordwrap: 80 })
 
-  const superuser = await UserModel.wslGetSuperUser()
+  const superuser = await wslGetSuperUser()
 
   // storing mail into database
   const doc = new MailModel({
@@ -119,7 +120,7 @@ async function mailUsersByRole(
   filename: string,
   params?: Record<string, string>
 ): Promise<boolean> {
-  const users = await UserModel.wslFindByRole(role)
+  const users = await wslFindByRole(role)
   return await mailUsers(users, subject, filename, params)
 }
 

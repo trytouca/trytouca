@@ -11,7 +11,7 @@ import { MessageModel } from '../../src/schemas/message'
 describe('model-message', function () {
   it('reject making message doc with missing requierd keys', function (done) {
     const messageModel = new MessageModel({})
-    messageModel.validate(function (err) {
+    messageModel.validate(function (err: any) {
       expect(err.name).to.equal('ValidationError')
       expect(err.errors.batchId.kind).to.equal('required')
       expect(err.errors.builtAt.kind).to.equal('required')

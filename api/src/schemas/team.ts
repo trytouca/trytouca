@@ -80,6 +80,7 @@ teamSchema.index({ slug: 1 }, { unique: true })
  */
 export interface ITeamDocument extends mongoose.Document {
   admins: mongoose.Types.ObjectId[]
+  applicants: mongoose.Types.ObjectId[]
   invitees: { email: string; fullname: string; invitedAt: Date }[]
   members: mongoose.Types.ObjectId[]
   name: string

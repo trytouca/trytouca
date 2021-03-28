@@ -48,9 +48,10 @@ async function processSuite(team: ITeamDocument, suite: ISuiteDocument) {
   })
     .sort({ submittedAt: 1 })
     .cursor()
-    .eachAsync((batch) => populateBatchMeta(team, suite, batch), {
-      parallel: 1
-    })
+    .eachAsync(
+      (batch: IBatchDocument) => populateBatchMeta(team, suite, batch),
+      { parallel: 1 }
+    )
 }
 
 /**
@@ -64,6 +65,6 @@ export async function analyticsService(): Promise<void> {
     await SuiteModel.find({ team: team._id })
       .sort({ updatedAt: 1 })
       .cursor()
-      .eachAsync((v) => processSuite(team, v), { parallel: 1 })
+      .eachAsync((v: ISuiteDocument) => processSuite(team, v), { parallel: 1 })
   }
 }

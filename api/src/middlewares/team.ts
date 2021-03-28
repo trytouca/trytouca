@@ -4,8 +4,9 @@
 
 import { NextFunction, Request, Response } from 'express'
 
+import { wslFindByUname } from '../models/user'
 import { ITeam, TeamModel } from '../schemas/team'
-import { IUser, UserModel } from '../schemas/user'
+import { IUser } from '../schemas/user'
 import logger from '../utils/logger'
 
 /**
@@ -221,7 +222,7 @@ export async function hasMember(
 
   // check that the user exists
 
-  const member = await UserModel.wslFindByUname(username)
+  const member = await wslFindByUname(username)
   if (!member) {
     return next({
       errors: ['member not found'],

@@ -11,7 +11,7 @@ import { ComparisonModel } from '../../src/schemas/comparison'
 describe('model-comparison', function () {
   it('reject making comparison doc with missing requierd keys', function (done) {
     const cmpModel = new ComparisonModel({})
-    cmpModel.validate(function (err) {
+    cmpModel.validate(function (err: any) {
       expect(err.name).to.equal('ValidationError')
       expect(err.errors.dstMessageId.kind).to.equal('required')
       expect(err.errors.srcMessageId.kind).to.equal('required')

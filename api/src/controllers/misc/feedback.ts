@@ -5,7 +5,7 @@
 import { NextFunction, Request, Response } from 'express'
 import marked from 'marked'
 
-import { UserModel } from '../../schemas/user'
+import { wslFindByUname } from '../../models/user'
 import logger from '../../utils/logger'
 import * as mailer from '../../utils/mailer'
 
@@ -23,7 +23,7 @@ export async function feedback(
   // notify administrators of the user feedback
   // we are intentionally not awaiting on this operation
 
-  const superuser = await UserModel.wslFindByUname('weasel')
+  const superuser = await wslFindByUname('weasel')
   mailer.mailUser(superuser, 'New User Feedback', 'user-feedback', {
     username: feedback.name,
     page: feedback.page,
