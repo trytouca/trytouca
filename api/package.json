@@ -1,6 +1,6 @@
 {
-  "name": "weasel-backend",
-  "version": "1.2.1",
+  "name": "@getweasel/backend",
+  "version": "1.3.0",
   "description": "Continuous regression testing for critical software workflows.",
   "private": true,
   "license": "UNLICENSED",
@@ -22,7 +22,7 @@
     "build": "yarn run build-mails && yarn run build-ts",
     "build-mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/",
     "build-ts": "tsc",
-    "doc": "typedoc --out ./local/docs/platform --excludeExternals --exclude '**/*_generated.ts'",
+    "doc": "typedoc",
     "start": "node .",
     "test": "cross-env NODE_ENV=test ENV_FILE=test nyc mocha --require tsconfig-paths/register --require ts-node/register --require source-map-support/register --full-trace --bail test/**/*.test.ts",
     "lint": "eslint . --ext .ts",

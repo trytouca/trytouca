@@ -1,0 +1,9 @@
+{
+  "name": "Weasel Backend",
+  "entryPoints": ["src"],
+  "out": "./local/docs/platform",
+  "readme": "Readme.md",
+  "includes": "./",
+  "exclude": ["**/dist/**/*", "**/test/**/*", "**/*_generated.ts"],
+  "excludeExternals": true
+}
