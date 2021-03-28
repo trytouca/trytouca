@@ -8,10 +8,10 @@ import * as ev from 'express-validator'
 
 import { EPlatformRole } from '../commontypes'
 import * as middleware from '../middlewares'
-import { promisable } from '../utils/routing'
-import { platformAccountUpdate } from '../controllers/platform/accountUpdate'
-import { accountDelete } from '../controllers/platform/accountDelete'
-import { platformHealth } from '../controllers/platform/health'
+import { platformAccountUpdate } from '@weasel/controllers/platform/accountUpdate'
+import { accountDelete } from '@weasel/controllers/platform/accountDelete'
+import { platformHealth } from '@weasel/controllers/platform/health'
+import { promisable } from '@weasel/utils/routing'
 
 const router = e.Router()
 

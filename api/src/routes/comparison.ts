@@ -7,10 +7,10 @@ import e from 'express'
 import * as ev from 'express-validator'
 
 import * as middleware from '../middlewares'
-import { promisable } from '../utils/routing'
-import { comparisonList } from '../controllers/comparison/list'
-import { comparisonProcess } from '../controllers/comparison/process'
-import { messageProcess } from '../controllers/message/process'
+import { comparisonList } from '@weasel/controllers/comparison/list'
+import { comparisonProcess } from '@weasel/controllers/comparison/process'
+import { messageProcess } from '@weasel/controllers/message/process'
+import { promisable } from '@weasel/utils/routing'
 
 const router = e.Router()
 

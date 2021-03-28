@@ -6,14 +6,13 @@ import bodyParser from 'body-parser'
 import e from 'express'
 
 import * as middleware from '../middlewares'
-import { promisable } from '../utils/routing'
-
-import { ctrlBatchList } from '../controllers/batch/list'
-import { ctrlBatchLookup } from '../controllers/batch/lookup'
-import { ctrlBatchSeal } from '../controllers/batch/seal'
-import { ctrlBatchPromote } from '../controllers/batch/promote'
-import { ctrlBatchRemove } from '../controllers/batch/remove'
-import { batchCompare } from '../controllers/batch/compare'
+import { batchCompare } from '@weasel/controllers/batch/compare'
+import { ctrlBatchList } from '@weasel/controllers/batch/list'
+import { ctrlBatchLookup } from '@weasel/controllers/batch/lookup'
+import { ctrlBatchPromote } from '@weasel/controllers/batch/promote'
+import { ctrlBatchRemove } from '@weasel/controllers/batch/remove'
+import { ctrlBatchSeal } from '@weasel/controllers/batch/seal'
+import { promisable } from '@weasel/utils/routing'
 
 const router = e.Router()
 
@@ -226,7 +225,7 @@ router.post(
  *
  *      We support empty promotion reason only for the first submitted batch
  *      whose workflow does not include calling this route. hence, we choose
- *      to reject empty reasons for all subsequent promotions that happend
+ *      to reject empty reasons for all subsequent promotions that happened
  *      through this route.
  *
  *      We think a valid promotion reason should be no longer than

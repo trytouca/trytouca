@@ -4,10 +4,11 @@
 
 import bodyParser from 'body-parser'
 import e from 'express'
+
 import * as middleware from '../middlewares'
-import { promisable } from '../utils/routing'
-import { userLookup } from '../controllers/user/lookup'
-import { ctrlUserUpdate } from '../controllers/user/update'
+import { userLookup } from '@weasel/controllers/user/lookup'
+import { ctrlUserUpdate } from '@weasel/controllers/user/update'
+import { promisable } from '@weasel/utils/routing'
 
 const router = e.Router()
 

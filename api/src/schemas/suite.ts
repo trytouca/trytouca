@@ -5,7 +5,7 @@
 import mongoose from 'mongoose'
 
 import type { PromotionQueryOutput } from '../backendtypes'
-import { config } from '../utils/config'
+import { config } from '@weasel/utils/config'
 
 /**
  *

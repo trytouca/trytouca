@@ -3,9 +3,9 @@
  */
 
 import { EPlatformRole } from '../commontypes'
-import { wslFindByUname, wslGetSuperUser } from '../models/user'
-import { UserModel } from '../schemas/user'
-import logger from '../utils/logger'
+import { wslFindByUname, wslGetSuperUser } from '@weasel/models/user'
+import { UserModel } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
 
 /**
  * Registers primary user during server startup.

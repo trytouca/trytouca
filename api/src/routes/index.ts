@@ -7,33 +7,30 @@ import e from 'express'
 import * as ev from 'express-validator'
 
 import * as middleware from '../middlewares'
-
-import { authRouter } from './auth'
-import { batchRouter } from './batch'
-import { clientRouter } from './client'
-import { commentRouter } from './comment'
-import { comparisonRouter } from './comparison'
-import { elementRouter } from './element'
-import { inboxRouter } from './inbox'
-import { platformRouter } from './platform'
-import { suiteRouter } from './suite'
-import { teamRouter } from './team'
-import { userRouter } from './user'
-
-import { feedback } from '../controllers/misc/feedback'
-
-import { config } from '../utils/config'
-import { promisable } from '../utils/routing'
+import { feedback } from '@weasel/controllers/misc/feedback'
+import { authRouter } from '@weasel/routes/auth'
+import { batchRouter } from '@weasel/routes/batch'
+import { clientRouter } from '@weasel/routes/client'
+import { commentRouter } from '@weasel/routes/comment'
+import { comparisonRouter } from '@weasel/routes/comparison'
+import { elementRouter } from '@weasel/routes/element'
+import { inboxRouter } from '@weasel/routes/inbox'
+import { platformRouter } from '@weasel/routes/platform'
+import { suiteRouter } from '@weasel/routes/suite'
+import { teamRouter } from '@weasel/routes/team'
+import { userRouter } from '@weasel/routes/user'
+import { config } from '@weasel/utils/config'
+import { promisable } from '@weasel/utils/routing'
 
 const router = e.Router()
 
 /**
- * API Entrypoint
+ * API Entry-point
  *
  * @api [get] /
  *    tags:
  *      - Other
- *    summary: 'Entrypoint'
+ *    summary: 'Entry-point'
  *    operationId: 'misc_index'
  *    description:
  *      Reassures curious engineers who browse to the Backend URL that

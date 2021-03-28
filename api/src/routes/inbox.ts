@@ -5,10 +5,9 @@
 import e from 'express'
 
 import * as middleware from '../middlewares'
-import { promisable } from '../utils/routing'
-
-import { inboxList } from '../controllers/inbox/list'
-import { inboxSeen } from '../controllers/inbox/seen'
+import { inboxList } from '@weasel/controllers/inbox/list'
+import { inboxSeen } from '@weasel/controllers/inbox/seen'
+import { promisable } from '@weasel/utils/routing'
 
 const router = e.Router()
 

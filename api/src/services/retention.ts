@@ -2,14 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { batchRemove } from '../models/batch'
-import { comparisonRemove } from '../models/comparison'
-import { BatchModel, IBatchDocument } from '../schemas/batch'
-import { ComparisonModel } from '../schemas/comparison'
-import { MessageModel } from '../schemas/message'
-import { SuiteModel, ISuiteDocument } from '../schemas/suite'
-import { config } from '../utils/config'
-import logger from '../utils/logger'
+import { batchRemove } from '@weasel/models/batch'
+import { comparisonRemove } from '@weasel/models/comparison'
+import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
+import { ComparisonModel } from '@weasel/schemas/comparison'
+import { MessageModel } from '@weasel/schemas/message'
+import { SuiteModel, ISuiteDocument } from '@weasel/schemas/suite'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
 
 /**
  *

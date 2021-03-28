@@ -6,13 +6,12 @@ import bodyParser from 'body-parser'
 import e from 'express'
 
 import * as middleware from '../middlewares'
-import { promisable } from '../utils/routing'
-
-import { ctrlCommentCreate } from '../controllers/comment/create'
-import { ctrlCommentList } from '../controllers/comment/list'
-import { ctrlCommentRemove } from '../controllers/comment/remove'
-import { ctrlCommentReply } from '../controllers/comment/reply'
-import { ctrlCommentUpdate } from '../controllers/comment/update'
+import { ctrlCommentCreate } from '@weasel/controllers/comment/create'
+import { ctrlCommentList } from '@weasel/controllers/comment/list'
+import { ctrlCommentRemove } from '@weasel/controllers/comment/remove'
+import { ctrlCommentReply } from '@weasel/controllers/comment/reply'
+import { ctrlCommentUpdate } from '@weasel/controllers/comment/update'
+import { promisable } from '@weasel/utils/routing'
 
 const router = e.Router()
 

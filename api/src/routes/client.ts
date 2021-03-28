@@ -7,10 +7,9 @@ import e from 'express'
 import * as ev from 'express-validator'
 
 import * as middleware from '../middlewares'
-import { promisable } from '../utils/routing'
-
-import { clientSessionCreate } from '../controllers/client/sessionCreate'
-import { clientSubmit } from '../controllers/client/submit'
+import { clientSessionCreate } from '@weasel/controllers/client/sessionCreate'
+import { clientSubmit } from '@weasel/controllers/client/submit'
+import { promisable } from '@weasel/utils/routing'
 
 const router = e.Router()
 

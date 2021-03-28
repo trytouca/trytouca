@@ -5,11 +5,10 @@
 import e from 'express'
 
 import * as middleware from '../middlewares'
-import { promisable } from '../utils/routing'
-
-import { elementCompare } from '../controllers/element/compare'
-import { elementList } from '../controllers/element/list'
-import { elementLookup } from '../controllers/element/lookup'
+import { elementCompare } from '@weasel/controllers/element/compare'
+import { elementList } from '@weasel/controllers/element/list'
+import { elementLookup } from '@weasel/controllers/element/lookup'
+import { promisable } from '@weasel/utils/routing'
 
 const router = e.Router()
 
@@ -22,7 +21,7 @@ const router = e.Router()
  *    summary: List Elements
  *    operationId: element_list
  *    description:
- *      List all testsuites in baseline version of a given suite.
+ *      List all test suites in baseline version of a given suite.
  *      User performing the query must be authenticated.
  *      User performing the query must be a member of the team.
  *      Output may have been cached in the server.

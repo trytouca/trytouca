@@ -2,12 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ComparisonFunctions } from '../controllers/comparison'
-import { BatchModel, IBatchDocument } from '../schemas/batch'
-import { SuiteModel, ISuiteDocument } from '../schemas/suite'
-import { TeamModel, ITeamDocument } from '../schemas/team'
-import logger from '../utils/logger'
-import { rclient } from '../utils/redis'
+import { ComparisonFunctions } from '@weasel/controllers/comparison'
+import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
+import { SuiteModel, ISuiteDocument } from '@weasel/schemas/suite'
+import { TeamModel, ITeamDocument } from '@weasel/schemas/team'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  *
