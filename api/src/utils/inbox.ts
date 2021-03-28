@@ -3,10 +3,11 @@
  */
 
 import { format as utilFormat } from 'util'
+
 import { EPlatformRole } from '../commontypes'
-import { wslFindByRole } from '../models/user'
-import { NotificationModel } from '../schemas/notification'
-import { IUser } from '../schemas/user'
+import { wslFindByRole } from '@weasel/models/user'
+import { NotificationModel } from '@weasel/schemas/notification'
+import { IUser } from '@weasel/schemas/user'
 
 /**
  *

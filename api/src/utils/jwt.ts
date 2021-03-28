@@ -4,9 +4,9 @@
 
 import jws from 'jws'
 
-import { ISessionDocument } from '../schemas/session'
-import { config } from '../utils/config'
-import logger from '../utils/logger'
+import { ISessionDocument } from '@weasel/schemas/session'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
 
 type TokenPayload = {
   exp: number

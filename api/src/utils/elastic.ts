@@ -4,8 +4,8 @@
 
 import { Client } from '@elastic/elasticsearch'
 
-import { config } from './config'
-import logger from './logger'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
 
 const esClient = new Client({
   node: config.elastic.host + ':' + config.elastic.port

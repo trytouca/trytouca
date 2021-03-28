@@ -5,11 +5,11 @@
 import fs from 'fs'
 import path from 'path'
 import util from 'util'
-import logger from 'winston'
-
 import { Types } from 'mongoose'
-import { MessageInfo } from '../models/messageInfo'
-import { config } from './config'
+
+import { MessageInfo } from '@weasel/models/messageInfo'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
 
 /**
  *
@@ -40,7 +40,7 @@ class FileStore {
     content: Buffer
   ): Promise<void> {
     // filesystem directory hierarchy is defined by batchId and messageId of
-    // the submitted testresult.
+    // the submitted test result.
     const resultFilePath = path.join(this.rootDir, batchId, messageId)
     const resultDirPath = path.dirname(resultFilePath)
     // ensure parent directories are created
@@ -58,7 +58,7 @@ class FileStore {
   public async remove(msg: MessageInfo) {
     const tuple = msg.name()
     // filesystem directory hierarchy is defined by batchId and messageId of
-    // the submitted testresult.
+    // the submitted test result.
     const resultFilePath = path.join(
       this.rootDir,
       msg.batchId.toString(),

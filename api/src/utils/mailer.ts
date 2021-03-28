@@ -10,11 +10,11 @@ import nodemailer from 'nodemailer'
 import path from 'path'
 
 import { EPlatformRole } from '../commontypes'
-import { wslFindByRole, wslGetSuperUser } from '../models/user'
-import { MailModel } from '../schemas/mail'
-import { IUser, UserModel } from '../schemas/user'
-import { config, configMgr } from './config'
-import logger from './logger'
+import { wslFindByRole, wslGetSuperUser } from '@weasel/models/user'
+import { MailModel } from '@weasel/schemas/mail'
+import { IUser, UserModel } from '@weasel/schemas/user'
+import { config, configMgr } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
 
 const transporter = nodemailer.createTransport({
   auth: {

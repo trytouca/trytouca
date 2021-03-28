@@ -3,8 +3,9 @@
  */
 
 import mongoose from 'mongoose'
-import { configMgr } from './config'
-import logger from './logger'
+
+import { configMgr } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
 
 /**
  * attempt to connect to database server.

@@ -4,8 +4,8 @@
 
 import Redis from 'ioredis'
 
-import { config } from './config'
-import logger from './logger'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
 
 export const client = new Redis({
   host: config.redis.host,
@@ -58,7 +58,7 @@ export async function makeConnectionRedis(): Promise<boolean> {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
   for (let i = 1; i <= kMaxAttempts; i++) {
     if (client.status === 'ready') {
-      logger.info('succesfully connected to cache server')
+      logger.info('successfully connected to cache server')
       // once connection is established, we would like to enable logging
       // of future connection events.
       configureConnectionEventHandling()
