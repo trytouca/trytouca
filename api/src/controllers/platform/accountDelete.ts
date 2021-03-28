@@ -3,11 +3,51 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-
+import cuid from 'cuid'
 import { EPlatformRole } from '../../commontypes'
 import { SessionModel } from '@weasel/schemas/session'
+import { TeamModel } from '@weasel/schemas/team'
 import { IUser, UserModel } from '@weasel/schemas/user'
 import logger from '@weasel/utils/logger'
+
+async function accountDeleteImpl(account: IUser) {
+  await TeamModel.updateMany(
+    {},
+    {
+      $pull: {
+        admins: account._id,
+        applicants: account._id,
+        members: account._id,
+        invitees: { email: account.email }
+      }
+    }
+  )
+  const newUsername = cuid()
+  await UserModel.findByIdAndUpdate(account._id, {
+    $set: {
+      apiKeys: [],
+      email: `noreply+${newUsername}@getweasel.com`,
+      fullname: 'Anonymous User',
+      password: 'supersafehash',
+      platformRole: EPlatformRole.User,
+      prospectiveTeams: [],
+      suspended: true,
+      teams: [],
+      username: newUsername
+    },
+    $unset: {
+      activatedAt: 1,
+      activationKey: 1,
+      lockedAt: 1,
+      loginAttempts: 1,
+      resetAt: 1,
+      resetKey: 1,
+      resetKeyExpiresAt: 1
+    }
+  })
+  await SessionModel.deleteMany({ userId: account._id })
+  logger.info('%s: changed username to %s', account.username, newUsername)
+}
 
 export async function accountDelete(
   req: Request,
@@ -15,7 +55,6 @@ export async function accountDelete(
   next: NextFunction
 ) {
   const user = res.locals.user as IUser
-  const doc = await UserModel.findById(user._id)
   logger.info('%s: attempting to delete account', user.username)
 
   // reject request if user is owner of the platform
@@ -23,32 +62,22 @@ export async function accountDelete(
   if (user.platformRole === EPlatformRole.Owner) {
     return next({
       status: 403,
-      errors: ['refusing to delete account of platform owner']
+      errors: ['refusing to delete account: platform owner']
     })
   }
 
   // reject request if user is a member of a team
 
-  if (doc.teams.length !== 0) {
+  if ((await TeamModel.countDocuments({ owner: user._id })) !== 0) {
     return next({
       status: 403,
-      errors: ['refusing to delete account with active team membership']
-    })
-  }
-
-  // reject request if user has a pending invitation
-
-  if (doc.prospectiveTeams.length !== 0) {
-    return next({
-      status: 403,
-      errors: ['refusing to delete account with pending invitation']
+      errors: ['refusing to delete account: owns team']
     })
   }
 
   logger.info('%s: deleting account', user.username)
 
-  await SessionModel.deleteMany({ userId: user._id })
-  await UserModel.findByIdAndDelete(user._id)
+  res.status(202).send()
 
-  return res.status(204).send()
+  setTimeout(() => accountDeleteImpl(user), 5000)
 }

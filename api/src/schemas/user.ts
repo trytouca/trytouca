@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
   loginAttempts: {
     default: 0,
     required: false,
-    typee: Number
+    type: Number
   },
   password: {
     required: true,
