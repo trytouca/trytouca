@@ -5,9 +5,9 @@
 import { NextFunction, Request, Response } from 'express'
 import marked from 'marked'
 
-import { wslFindByUname } from '../../models/user'
-import logger from '../../utils/logger'
-import * as mailer from '../../utils/mailer'
+import { wslFindByUname } from '@weasel/models/user'
+import logger from '@weasel/utils/logger'
+import * as mailer from '@weasel/utils/mailer'
 
 /**
  *

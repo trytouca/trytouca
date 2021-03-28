@@ -4,10 +4,10 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { SessionModel } from '../../schemas/session'
-import { config } from '../../utils/config'
-import * as jwt from '../../utils/jwt'
-import logger from '../../utils/logger'
+import { SessionModel } from '@weasel/schemas/session'
+import { config } from '@weasel/utils/config'
+import * as jwt from '@weasel/utils/jwt'
+import logger from '@weasel/utils/logger'
 
 /**
  *

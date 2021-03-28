@@ -4,9 +4,12 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import * as elastic from '../../utils/elastic'
-import logger from '../../utils/logger'
-import { IComparisonDocument, ComparisonModel } from '../../schemas/comparison'
+import * as elastic from '@weasel/utils/elastic'
+import logger from '@weasel/utils/logger'
+import {
+  IComparisonDocument,
+  ComparisonModel
+} from '@weasel/schemas/comparison'
 
 /**
  * @todo validate incoming json data against a json schema

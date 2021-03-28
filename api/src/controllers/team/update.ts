@@ -5,15 +5,15 @@
 import { NextFunction, Request, Response } from 'express'
 import { isEqual } from 'lodash'
 
-import { findTeamUsersByRole } from './common'
 import { ETeamRole } from '../../commontypes'
-import { TeamModel } from '../../schemas/team'
-import { ITeam } from '../../schemas/team'
-import { IUser } from '../../schemas/user'
-import logger from '../../utils/logger'
-import { config } from '../../utils/config'
-import * as mailer from '../../utils/mailer'
-import { rclient } from '../../utils/redis'
+import { findTeamUsersByRole } from '@weasel/controllers/team/common'
+import { TeamModel } from '@weasel/schemas/team'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
+import { config } from '@weasel/utils/config'
+import * as mailer from '@weasel/utils/mailer'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  * @summary

@@ -8,15 +8,14 @@ import {
   BackendBatchComparisonItem,
   BackendBatchComparisonResponse
 } from '../../backendtypes'
-import { IUser } from '../../schemas/user'
-import { ITeam } from '../../schemas/team'
-import { ISuiteDocument, SuiteModel } from '../../schemas/suite'
-import { IBatchDocument, BatchModel } from '../../schemas/batch'
-import { ComparisonFunctions } from '../../controllers/comparison'
-
-import { config } from '../../utils/config'
-import logger from '../../utils/logger'
-import { rclient } from '../../utils/redis'
+import { ComparisonFunctions } from '@weasel/controllers/comparison'
+import { IBatchDocument, BatchModel } from '@weasel/schemas/batch'
+import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  *

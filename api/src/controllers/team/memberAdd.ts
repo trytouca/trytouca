@@ -3,12 +3,12 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import { IUser, UserModel } from '../../schemas/user'
-import { TeamModel } from '../../schemas/team'
-import { ITeam } from '../../schemas/team'
-import logger from '../../utils/logger'
-import * as mailer from '../../utils/mailer'
-import { rclient } from '../../utils/redis'
+
+import { ITeam, TeamModel } from '@weasel/schemas/team'
+import { IUser, UserModel } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
+import * as mailer from '@weasel/utils/mailer'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  * @summary

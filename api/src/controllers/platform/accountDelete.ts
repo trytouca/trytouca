@@ -3,10 +3,11 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import { SessionModel } from '../../schemas/session'
+
 import { EPlatformRole } from '../../commontypes'
-import { IUser, UserModel } from '../../schemas/user'
-import logger from '../../utils/logger'
+import { SessionModel } from '@weasel/schemas/session'
+import { IUser, UserModel } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
 
 export async function accountDelete(
   req: Request,

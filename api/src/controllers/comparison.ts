@@ -4,6 +4,7 @@
 
 import { floor } from 'lodash'
 import mongoose from 'mongoose'
+
 import type {
   BackendBatchComparisonItemCommon,
   BackendBatchComparisonItemSolo,
@@ -13,9 +14,12 @@ import type {
   BatchCompareOverview,
   CppTestcaseComparisonOverview
 } from '../commontypes'
-import { ComparisonModel, IComparisonDocument } from '../schemas/comparison'
-import { IMessageDocument, MessageModel } from '../schemas/message'
-import logger from '../utils/logger'
+import {
+  ComparisonModel,
+  IComparisonDocument
+} from '@weasel/schemas/comparison'
+import { IMessageDocument, MessageModel } from '@weasel/schemas/message'
+import logger from '@weasel/utils/logger'
 
 type ObjectId = mongoose.Types.ObjectId
 

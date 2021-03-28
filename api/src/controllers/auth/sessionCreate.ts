@@ -5,11 +5,12 @@
 import * as bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
 import ip from 'ip'
-import { createUserSession } from '../../models/auth'
-import { UserModel } from '../../schemas/user'
-import { config } from '../../utils/config'
-import logger from '../../utils/logger'
-import * as mailer from '../../utils/mailer'
+
+import { createUserSession } from '@weasel/models/auth'
+import { UserModel } from '@weasel/schemas/user'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
+import * as mailer from '@weasel/utils/mailer'
 
 /**
  *

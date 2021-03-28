@@ -3,13 +3,14 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
+
 import { EPlatformRole } from '../../commontypes'
-import { extractCommentTuple } from '../../models/comment'
-import { CommentModel, ICommentDocument } from '../../schemas/comment'
-import { ITeam, TeamModel } from '../../schemas/team'
-import { IUser } from '../../schemas/user'
-import logger from '../../utils/logger'
-import { rclient } from '../../utils/redis'
+import { extractCommentTuple } from '@weasel/models/comment'
+import { CommentModel, ICommentDocument } from '@weasel/schemas/comment'
+import { ITeam, TeamModel } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  *

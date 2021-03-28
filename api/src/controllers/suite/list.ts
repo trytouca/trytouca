@@ -3,20 +3,20 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
+import { Types } from 'mongoose'
 
 import type {
   BatchItemQueryOutput,
   SuiteItemQueryOutput
 } from '../../backendtypes'
 import type { SuiteListResponse } from '../../commontypes'
-import { ComparisonFunctions } from '../comparison'
-import { BatchModel } from '../../schemas/batch'
-import { SuiteModel, ISuiteDocument } from '../../schemas/suite'
-import { ITeam } from '../../schemas/team'
-import { IUser } from '../../schemas/user'
-import logger from '../../utils/logger'
-import { rclient } from '../../utils/redis'
-import { Types } from 'mongoose'
+import { ComparisonFunctions } from '@weasel/controllers/comparison'
+import { BatchModel } from '@weasel/schemas/batch'
+import { SuiteModel, ISuiteDocument } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  *

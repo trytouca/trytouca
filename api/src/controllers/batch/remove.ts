@@ -4,13 +4,13 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { batchRemove } from '../../models/batch'
-import { IUser } from '../../schemas/user'
-import { ITeam } from '../../schemas/team'
-import { ISuiteDocument } from '../../schemas/suite'
-import { IBatchDocument } from '../../schemas/batch'
-import { MessageModel } from '../../schemas/message'
-import logger from '../../utils/logger'
+import { batchRemove } from '@weasel/models/batch'
+import { IBatchDocument } from '@weasel/schemas/batch'
+import { MessageModel } from '@weasel/schemas/message'
+import { ISuiteDocument } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
 
 /**
  * @summary

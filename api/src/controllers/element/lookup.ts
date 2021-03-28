@@ -3,14 +3,15 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
+
 import type { ElementLookupResponse } from '../../commontypes'
-import { MessageModel } from '../../schemas/message'
-import { IElementDocument } from '../../schemas/element'
-import { ISuiteDocument } from '../../schemas/suite'
-import { ITeam } from '../../schemas/team'
-import { IUser } from '../../schemas/user'
-import logger from '../../utils/logger'
-import { rclient } from '../../utils/redis'
+import { IElementDocument } from '@weasel/schemas/element'
+import { MessageModel } from '@weasel/schemas/message'
+import { ISuiteDocument } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  * Lookup detailed information about an element.

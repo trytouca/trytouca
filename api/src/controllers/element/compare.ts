@@ -4,20 +4,18 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { IUser } from '../../schemas/user'
-import { ITeam } from '../../schemas/team'
-import { IBatchDocument, BatchModel } from '../../schemas/batch'
-import { IElementDocument, ElementModel } from '../../schemas/element'
-import { ISuiteDocument, SuiteModel } from '../../schemas/suite'
-import { MessageModel } from '../../schemas/message'
-
 import type { BackendBatchComparisonItemCommon } from '../../backendtypes'
-import { ComparisonFunctions } from '../../controllers/comparison'
-
-import { config } from '../../utils/config'
-import * as elastic from '../../utils/elastic'
-import logger from '../../utils/logger'
-import { rclient } from '../../utils/redis'
+import { ComparisonFunctions } from '@weasel/controllers/comparison'
+import { IBatchDocument, BatchModel } from '@weasel/schemas/batch'
+import { IElementDocument, ElementModel } from '@weasel/schemas/element'
+import { MessageModel } from '@weasel/schemas/message'
+import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import { config } from '@weasel/utils/config'
+import * as elastic from '@weasel/utils/elastic'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  *

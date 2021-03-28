@@ -4,12 +4,10 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { SuiteModel } from '../../schemas/suite'
-import { ISuiteDocument } from '../../schemas/suite'
-import { ITeam } from '../../schemas/team'
-import { IUser } from '../../schemas/user'
-import logger from '../../utils/logger'
-import * as mailer from '../../utils/mailer'
+import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
 
 /**
  * subscribe user to a given suite.

@@ -4,8 +4,9 @@
 
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
-import { ComparisonModel } from '../../schemas/comparison'
-import { MessageModel } from '../../schemas/message'
+
+import { ComparisonModel } from '@weasel/schemas/comparison'
+import { MessageModel } from '@weasel/schemas/message'
 
 type ObjectId = mongoose.Types.ObjectId
 type ComparisonJob = {

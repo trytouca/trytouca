@@ -3,9 +3,10 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import { NotificationModel } from '../../schemas/notification'
-import { IUser } from '../../schemas/user'
-import logger from '../../utils/logger'
+
+import { NotificationModel } from '@weasel/schemas/notification'
+import { IUser } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
 
 /**
  *

@@ -3,14 +3,14 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import type { TeamItem, TeamListResponse } from '../../commontypes'
-import { ETeamRole } from '../../commontypes'
-import { ITeamDocument, TeamModel } from '../../schemas/team'
-import { IUser, UserModel } from '../../schemas/user'
-import logger from '../../utils/logger'
-import { config } from '../../utils/config'
-import { rclient } from '../../utils/redis'
 import { Types } from 'mongoose'
+
+import { ETeamRole, TeamItem, TeamListResponse } from '../../commontypes'
+import { ITeamDocument, TeamModel } from '@weasel/schemas/team'
+import { IUser, UserModel } from '@weasel/schemas/user'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  * Provides list of teams for a given user.

@@ -5,12 +5,12 @@
 import { NextFunction, Request, Response } from 'express'
 import { isEqual } from 'lodash'
 
-import { SuiteModel, ISuiteDocument } from '../../schemas/suite'
-import { ITeam } from '../../schemas/team'
-import { IUser } from '../../schemas/user'
-import { config } from '../../utils/config'
-import logger from '../../utils/logger'
-import { rclient } from '../../utils/redis'
+import { SuiteModel, ISuiteDocument } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  * Update metadata of a given suite.

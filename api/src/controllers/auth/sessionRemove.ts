@@ -5,9 +5,9 @@
 import { NextFunction, Request, Response } from 'express'
 import ip from 'ip'
 
-import { IUser } from '../../schemas/user'
-import { SessionModel } from '../../schemas/session'
-import logger from '../../utils/logger'
+import { SessionModel } from '@weasel/schemas/session'
+import { IUser } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
 
 /**
  *

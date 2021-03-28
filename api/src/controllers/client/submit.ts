@@ -6,19 +6,23 @@ import { NextFunction, Request, Response } from 'express'
 import { flatbuffers } from 'flatbuffers'
 import { minBy } from 'lodash'
 import mongoose from 'mongoose'
+
 import { EPlatformRole } from '../../commontypes'
-import { BatchModel, IBatchDocument } from '../../schemas/batch'
-import { ComparisonModel, IComparisonDocument } from '../../schemas/comparison'
-import { ElementModel, IElementDocument } from '../../schemas/element'
-import { MessageModel } from '../../schemas/message'
-import { ISuiteDocument, SuiteModel } from '../../schemas/suite'
-import { IUser } from '../../schemas/user'
-import { TeamModel, ITeam, ITeamDocument } from '../../schemas/team'
-import { removeComparison, removeResult } from '../../utils/elastic'
-import { filestore } from '../../utils/filestore'
-import logger from '../../utils/logger'
-import { rclient } from '../../utils/redis'
-import { weasel } from '../../utils/weasel_generated'
+import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
+import {
+  ComparisonModel,
+  IComparisonDocument
+} from '@weasel/schemas/comparison'
+import { ElementModel, IElementDocument } from '@weasel/schemas/element'
+import { MessageModel } from '@weasel/schemas/message'
+import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
+import { IUser } from '@weasel/schemas/user'
+import { TeamModel, ITeamDocument } from '@weasel/schemas/team'
+import { removeComparison, removeResult } from '@weasel/utils/elastic'
+import { filestore } from '@weasel/utils/filestore'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
+import { weasel } from '@weasel/utils/weasel_generated'
 
 const fbs = weasel.fbs
 

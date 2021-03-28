@@ -5,8 +5,8 @@
 import { NextFunction, Request, Response } from 'express'
 
 import type { UserLookupResponse } from '../../commontypes'
-import { IUser, UserModel } from '../../schemas/user'
-import logger from '../../utils/logger'
+import { IUser, UserModel } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
 
 /**
  *

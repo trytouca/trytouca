@@ -3,13 +3,14 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import { suiteRemove } from '../../models/suite'
-import { BatchModel } from '../../schemas/batch'
-import { MessageModel } from '../../schemas/message'
-import { ISuiteDocument } from '../../schemas/suite'
-import { ITeam } from '../../schemas/team'
-import { IUser } from '../../schemas/user'
-import logger from '../../utils/logger'
+
+import { suiteRemove } from '@weasel/models/suite'
+import { BatchModel } from '@weasel/schemas/batch'
+import { MessageModel } from '@weasel/schemas/message'
+import { ISuiteDocument } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
 
 /**
  * Remove a given suite and all data associated with it.

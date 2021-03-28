@@ -5,12 +5,13 @@
 import { NextFunction, Request, Response } from 'express'
 import * as bcrypt from 'bcrypt'
 import { once } from 'lodash'
+
 import { EPlatformRole } from '../../commontypes'
-import { addSampleData } from '../../models/sampleData'
-import { UserModel } from '../../schemas/user'
-import { config } from '../../utils/config'
-import logger from '../../utils/logger'
-import * as mailer from '../../utils/mailer'
+import { addSampleData } from '@weasel/models/sampleData'
+import { UserModel } from '@weasel/schemas/user'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
+import * as mailer from '@weasel/utils/mailer'
 
 /**
  * Find a username that is not already registered.

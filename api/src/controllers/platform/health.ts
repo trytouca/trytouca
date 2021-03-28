@@ -5,10 +5,10 @@
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
-import { configMgr } from '../../utils/config'
-import * as elastic from '../../utils/elastic'
-import logger from '../../utils/logger'
-import { rclient } from '../../utils/redis'
+import { configMgr } from '@weasel/utils/config'
+import * as elastic from '@weasel/utils/elastic'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  * @todo add version field in response whose value matches output of

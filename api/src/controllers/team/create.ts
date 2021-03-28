@@ -4,12 +4,12 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { teamCreate } from '../../models/team'
-import { IUser } from '../../schemas/user'
-import logger from '../../utils/logger'
-import { config } from '../../utils/config'
-import * as mailer from '../../utils/mailer'
-import { rclient } from '../../utils/redis'
+import { teamCreate } from '@weasel/models/team'
+import { IUser } from '@weasel/schemas/user'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
+import * as mailer from '@weasel/utils/mailer'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  * @summary

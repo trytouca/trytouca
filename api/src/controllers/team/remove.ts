@@ -3,14 +3,15 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import { suiteRemove } from '../../models/suite'
-import { BatchModel } from '../../schemas/batch'
-import { MessageModel } from '../../schemas/message'
-import { SuiteModel } from '../../schemas/suite'
-import { ITeam, TeamModel } from '../../schemas/team'
-import { IUser, UserModel } from '../../schemas/user'
-import { rclient } from '../../utils/redis'
-import logger from '../../utils/logger'
+
+import { suiteRemove } from '@weasel/models/suite'
+import { BatchModel } from '@weasel/schemas/batch'
+import { MessageModel } from '@weasel/schemas/message'
+import { SuiteModel } from '@weasel/schemas/suite'
+import { ITeam, TeamModel } from '@weasel/schemas/team'
+import { IUser, UserModel } from '@weasel/schemas/user'
+import { rclient } from '@weasel/utils/redis'
+import logger from '@weasel/utils/logger'
 
 /**
  * Removes a given team and all data associated with it.
