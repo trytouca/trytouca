@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": {},
+    "paths": {
+      "@weasel/controllers/*": ["src/controllers/*"],
+      "@weasel/models/*": ["src/models/*"],
+      "@weasel/routes/*": ["src/routes/*"],
+      "@weasel/schemas/*": ["src/schemas/*"],
+      "@weasel/utils/*": ["src/utils/*"]
+    },
     "outDir": "dist",
     "sourceMap": true,
     "module": "commonjs",

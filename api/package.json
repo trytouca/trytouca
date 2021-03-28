@@ -24,7 +24,7 @@
     "build-ts": "tsc",
     "doc": "typedoc --out ./local/docs/platform --excludeExternals --exclude '**/*_generated.ts'",
     "start": "node .",
-    "test": "cross-env NODE_ENV=test ENV_FILE=test nyc mocha --require ts-node/register --require source-map-support/register --full-trace --bail test/**/*.test.ts",
+    "test": "cross-env NODE_ENV=test ENV_FILE=test nyc mocha --require tsconfig-paths/register --require ts-node/register --require source-map-support/register --full-trace --bail test/**/*.test.ts",
     "lint": "eslint . --ext .ts",
     "dev": "nodemon ./src/server.ts",
     "dev:debug": "nodemon --inspect ./src/server.ts"
@@ -89,6 +89,7 @@
     "source-map-support": "^0.5.9",
     "swagger-inline": "^3.0.4",
     "ts-node": "^9.1.1",
+    "tsconfig-paths": "^3.9.0",
     "typedoc": "^0.20.34",
     "typescript": "^4.2.3"
   }
