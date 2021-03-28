@@ -3,13 +3,14 @@
  */
 
 import { Response } from 'express'
+
 import { ECommentType } from '../backendtypes'
-import { IBatchDocument } from '../schemas/batch'
-import { IElementDocument } from '../schemas/element'
-import { ISuiteDocument, SuiteModel } from '../schemas/suite'
-import { ITeam } from '../schemas/team'
-import { IUser } from '../schemas/user'
-import { mailUser } from '../utils/mailer'
+import { IBatchDocument } from '@weasel/schemas/batch'
+import { IElementDocument } from '@weasel/schemas/element'
+import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import { mailUser } from '@weasel/utils/mailer'
 
 /**
  *

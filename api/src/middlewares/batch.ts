@@ -4,10 +4,10 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ITeam } from '../schemas/team'
-import { BatchModel } from '../schemas/batch'
-import { ISuiteDocument } from '../schemas/suite'
-import logger from '../utils/logger'
+import { ITeam } from '@weasel/schemas/team'
+import { BatchModel } from '@weasel/schemas/batch'
+import { ISuiteDocument } from '@weasel/schemas/suite'
+import logger from '@weasel/utils/logger'
 
 /**
  * @summary

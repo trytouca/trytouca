@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ITeamDocument, TeamModel } from '../schemas/team'
-import { IUser, UserModel } from '../schemas/user'
-import logger from '../utils/logger'
+import { ITeamDocument, TeamModel } from '@weasel/schemas/team'
+import { IUser, UserModel } from '@weasel/schemas/user'
+import logger from '@weasel/utils/logger'
 
 /**
  *

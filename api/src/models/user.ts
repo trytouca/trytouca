@@ -3,7 +3,7 @@
  */
 
 import { EPlatformRole } from '../commontypes'
-import { IUser, UserModel } from '../schemas/user'
+import { IUser, UserModel } from '@weasel/schemas/user'
 
 /**
  *

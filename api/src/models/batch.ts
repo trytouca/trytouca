@@ -2,19 +2,19 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { messageRemove } from './message'
-import { ComparisonFunctions } from '../controllers/comparison'
-import { BatchModel, IBatchDocument } from '../schemas/batch'
-import { CommentModel } from '../schemas/comment'
-import { ReportModel, EReportType } from '../schemas/report'
-import { MessageModel } from '../schemas/message'
-import { SuiteModel, ISuiteDocument } from '../schemas/suite'
-import { TeamModel, ITeam } from '../schemas/team'
-import { IUser } from '../schemas/user'
-import { MessageInfo } from './messageInfo'
-import { filestore } from '../utils/filestore'
-import { rclient } from '../utils/redis'
-import logger from '../utils/logger'
+import { messageRemove } from '@weasel/models/message'
+import { MessageInfo } from '@weasel/models/messageInfo'
+import { ComparisonFunctions } from '@weasel/controllers/comparison'
+import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
+import { CommentModel } from '@weasel/schemas/comment'
+import { MessageModel } from '@weasel/schemas/message'
+import { ReportModel, EReportType } from '@weasel/schemas/report'
+import { SuiteModel, ISuiteDocument } from '@weasel/schemas/suite'
+import { TeamModel, ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import { filestore } from '@weasel/utils/filestore'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  *

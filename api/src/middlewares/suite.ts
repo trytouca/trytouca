@@ -4,9 +4,9 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ITeam } from '../schemas/team'
-import { SuiteModel } from '../schemas/suite'
-import logger from '../utils/logger'
+import { SuiteModel } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import logger from '@weasel/utils/logger'
 
 /**
  * @summary

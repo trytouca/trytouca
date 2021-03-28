@@ -2,15 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { comparisonRemove } from './comparison'
-import { BatchModel } from '../schemas/batch'
-import { ComparisonModel } from '../schemas/comparison'
-import { ElementModel } from '../schemas/element'
-import { MessageModel } from '../schemas/message'
-import { MessageInfo } from './messageInfo'
-import * as elastic from '../utils/elastic'
-import { filestore } from '../utils/filestore'
-import logger from '../utils/logger'
+import { comparisonRemove } from '@weasel/models/comparison'
+import { MessageInfo } from '@weasel/models/messageInfo'
+import { BatchModel } from '@weasel/schemas/batch'
+import { ComparisonModel } from '@weasel/schemas/comparison'
+import { ElementModel } from '@weasel/schemas/element'
+import { MessageModel } from '@weasel/schemas/message'
+import * as elastic from '@weasel/utils/elastic'
+import { filestore } from '@weasel/utils/filestore'
+import logger from '@weasel/utils/logger'
 
 /**
  *
@@ -23,7 +23,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
     // if a message has comparison jobs that are either waiting to be
     // compared or are in process of being compared by the comparator,
     // it is not appropriate to remove those jobs. since comparison jobs
-    // are processed asyncroneously, we cannot estimate when they are
+    // are processed asynchronously, we cannot estimate when they are
     // processed either. Hence, we leave it to the next scheduled
     // execution of this operation to deal with those pending jobs.
 

@@ -3,13 +3,10 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
+
 import { ECommentType } from '../backendtypes'
-import { EPlatformRole } from '../commontypes'
-import { IBatchDocument } from '../schemas/batch'
-import { IUser } from '../schemas/user'
-import { CommentModel, ICommentDocument } from '../schemas/comment'
-import { ITeam, TeamModel } from '../schemas/team'
-import logger from '../utils/logger'
+import { IBatchDocument } from '@weasel/schemas/batch'
+import { CommentModel } from '@weasel/schemas/comment'
 
 /**
  * @summary

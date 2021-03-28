@@ -3,15 +3,15 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import mongoose from 'mongoose'
 import ip from 'ip'
+import mongoose from 'mongoose'
 
 import { EPlatformRole } from '../commontypes'
-import { wslFindByUname } from '../models/user'
-import { IUser } from '../schemas/user'
-import { SessionModel } from '../schemas/session'
-import * as jwt from '../utils/jwt'
-import logger from '../utils/logger'
+import { wslFindByUname } from '@weasel/models/user'
+import { SessionModel } from '@weasel/schemas/session'
+import { IUser } from '@weasel/schemas/user'
+import * as jwt from '@weasel/utils/jwt'
+import logger from '@weasel/utils/logger'
 
 type AuthInput = {
   agent: string
@@ -102,7 +102,7 @@ async function isAuthenticatedImpl(input: AuthInput): Promise<IUser> {
  * - Database Queries: 1
  *
  * @returns
- * - Error 401 if user initiating the requst is not authenticated.
+ * - Error 401 if user initiating the request is not authenticated.
  */
 export async function isAuthenticated(
   req: Request,

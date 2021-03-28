@@ -10,7 +10,7 @@ import {
   ValidationChain
 } from 'express-validator'
 
-import logger from '../utils/logger'
+import logger from '@weasel/utils/logger'
 
 /**
  *

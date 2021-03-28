@@ -2,11 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { IUserDocument, UserModel } from '../schemas/user'
-import { SessionModel } from '../schemas/session'
-import { config } from '../utils/config'
-import * as jwt from '../utils/jwt'
-import logger from '../utils/logger'
+import { SessionModel } from '@weasel/schemas/session'
+import { IUserDocument, UserModel } from '@weasel/schemas/user'
+import { config } from '@weasel/utils/config'
+import * as jwt from '@weasel/utils/jwt'
+import logger from '@weasel/utils/logger'
 
 /**
  * Create a new user session or re-uses an existing one.

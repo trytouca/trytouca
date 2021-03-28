@@ -4,17 +4,18 @@
 
 import fs from 'fs'
 import path from 'path'
-import { processBinaryContent } from '../controllers/client/submit'
-import { BatchModel } from '../schemas/batch'
-import { SuiteModel } from '../schemas/suite'
-import { TeamModel } from '../schemas/team'
-import { IUser } from '../schemas/user'
-import { config } from '../utils/config'
-import { rclient } from '../utils/redis'
-import logger from '../utils/logger'
-import { batchPromote, batchSeal } from './batch'
-import { suiteCreate } from './suite'
-import { teamCreate } from './team'
+
+import { processBinaryContent } from '@weasel/controllers/client/submit'
+import { batchPromote, batchSeal } from '@weasel/models/batch'
+import { suiteCreate } from '@weasel/models/suite'
+import { teamCreate } from '@weasel/models/team'
+import { BatchModel } from '@weasel/schemas/batch'
+import { SuiteModel } from '@weasel/schemas/suite'
+import { TeamModel } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
+import { config } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
 
 /**
  * Find a team slug that is not already registered.
@@ -120,7 +121,7 @@ export async function addSampleData(user: IUser): Promise<void> {
 
   // at this point, it is likely that newly submitted batches have pending
   // comparison jobs and, therefore, are shown with a spinning icon in the
-  // user interface. Since processing these jobs is asyncroneous, it may
+  // user interface. Since processing these jobs is asynchronous, it may
   // happen after we have cached the response to the first request for the
   // list of batches. To minimize the time that we show batches as
   // "in progress", we set timers to remove this cached response every five

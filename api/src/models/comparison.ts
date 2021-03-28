@@ -2,9 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ComparisonModel, IComparisonDocument } from '../schemas/comparison'
-import * as elastic from '../utils/elastic'
-import logger from '../utils/logger'
+import {
+  ComparisonModel,
+  IComparisonDocument
+} from '@weasel/schemas/comparison'
+import * as elastic from '@weasel/utils/elastic'
+import logger from '@weasel/utils/logger'
 
 /**
  *

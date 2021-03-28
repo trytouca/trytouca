@@ -4,9 +4,9 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ElementModel } from '../schemas/element'
-import { ISuiteDocument } from '../schemas/suite'
-import logger from '../utils/logger'
+import { ElementModel } from '@weasel/schemas/element'
+import { ISuiteDocument } from '@weasel/schemas/suite'
+import logger from '@weasel/utils/logger'
 
 /**
  * @summary
