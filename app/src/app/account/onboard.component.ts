@@ -3,56 +3,17 @@
  */
 
 import { Component, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ApiService, UserService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { FormHint, formFields } from './form-hint';
 
 interface FormContent {
   fname: string;
   uname: string;
   upass: string;
-}
-
-/**
- *
- */
-class FormHint {
-  private _text: string;
-  private _type: string;
-
-  /**
-   *
-   */
-  constructor(
-    private initial: string,
-    private errorMap: { [key: string]: string } = {},
-    private success?: string
-  ) {
-    this._text = initial;
-    this._type = 'wsl-text-muted';
-  }
-  setError(key: string): void {
-    if (key in this.errorMap) {
-      this._text = this.errorMap[key];
-      this._type = 'wsl-text-danger';
-    }
-  }
-  setSuccess(): void {
-    this._text = this.success ?? this.initial;
-    this._type = this.success ? 'wsl-text-success' : 'wsl-text-muted';
-  }
-  unsetError(): void {
-    this._text = this.initial;
-    this._type = 'wsl-text-muted';
-  }
-  get text(): string {
-    return this._text;
-  }
-  get type(): string {
-    return this._type;
-  }
 }
 
 @Component({
@@ -65,28 +26,15 @@ export class OnboardComponent implements OnDestroy {
    */
   onboardForm = new FormGroup({
     fname: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.minLength(1),
-        Validators.maxLength(128)
-      ],
+      validators: formFields.fname.validators,
       updateOn: 'blur'
     }),
     uname: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.maxLength(32),
-        Validators.pattern('[a-zA-Z0-9]+')
-      ],
+      validators: formFields.uname.validators,
       updateOn: 'blur'
     }),
     upass: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(64)
-      ],
+      validators: formFields.upass.validators,
       updateOn: 'blur'
     })
   });
@@ -97,26 +45,16 @@ export class OnboardComponent implements OnDestroy {
   help: Record<'fname' | 'uname' | 'upass', FormHint> = {
     fname: new FormHint(
       'We do not share your full name other than with your team members.',
-      {
-        required: 'This field is required.',
-        maxlength: 'Our engineers did not expect more than 128 characters.',
-        minlength: 'This field cannot be empty.'
-      }
+      formFields.fname.validationErrors
     ),
     uname: new FormHint(
       'You can always update your information from the <i>Account Settings</i> page.',
-      {
-        required: 'This field is required.',
-        maxlength: 'Username can be at most 32 characters.',
-        minlength: 'Username can be at least 3 characters.',
-        pattern: 'Username can only contain alphanumeric characters.'
-      }
+      formFields.uname.validationErrors
     ),
-    upass: new FormHint('Use a strong password, please.', {
-      required: 'This field is required.',
-      minlength: 'Password must be at least 8 characters.',
-      maxlength: 'Password must be at most 64 characters.'
-    })
+    upass: new FormHint(
+      'Use a strong password, please.',
+      formFields.upass.validationErrors
+    )
   };
 
   alert: Alert;

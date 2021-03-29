@@ -4,6 +4,7 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DialogService } from '@ngneat/dialog';
@@ -14,6 +15,7 @@ import {
   ConfirmComponent,
   ConfirmElements
 } from '@weasel/home/components/confirm.component';
+import { FormHint, formFields } from '@weasel/account/form-hint';
 
 enum EModalType {
   DeleteAccount = 'deleteAccount'
@@ -28,6 +30,22 @@ export class ProfileComponent implements OnDestroy {
   alert: Partial<Record<EModalType, Alert>> = {};
   user: UserLookupResponse;
   EModalType = EModalType;
+
+  accountSettingsForm = new FormGroup({
+    fname: new FormControl('', {
+      validators: formFields.fname.validators,
+      updateOn: 'blur'
+    }),
+    uname: new FormControl('', {
+      validators: formFields.uname.validators,
+      updateOn: 'blur'
+    })
+  });
+
+  help: Record<'fname' | 'uname', FormHint> = {
+    fname: new FormHint('', formFields.fname.validationErrors),
+    uname: new FormHint('', formFields.uname.validationErrors)
+  };
 
   /**
    *
