@@ -42,7 +42,7 @@ export class OnboardComponent implements OnDestroy {
   /**
    *
    */
-  help: Record<'fname' | 'uname' | 'upass', FormHint> = {
+  help: Record<keyof FormContent, FormHint> = {
     fname: new FormHint(
       'We do not share your full name other than with your team members.',
       formFields.fname.validationErrors
@@ -58,7 +58,7 @@ export class OnboardComponent implements OnDestroy {
   };
 
   alert: Alert;
-  private _sub: Partial<Record<'fname' | 'uname' | 'upass', Subscription>> = {};
+  private _sub: Partial<Record<keyof FormContent, Subscription>> = {};
 
   /**
    *

@@ -14,28 +14,48 @@
     <div class="lg:col-span-1">
     </div>
     <div class="lg:col-span-2 p-4 space-y-4">
-      <div class="p-4 bg-gray-50">
-        <h2 class="mb-2 pb-2 text-xl font-medium border-b border-gray-200">
+      <form class="p-4 bg-gray-50 space-y-4" [formGroup]="accountSettingsForm"
+        (ngSubmit)="onSubmit(accountSettingsForm.value)" novalidate>
+        <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
           Your Information
         </h2>
-        <h3 class="font-medium">Name</h3>
-        <p class="mb-4 text-sm text-gray-600">{{ user.fullname }}</p>
-        <h3 class="font-medium">Username</h3>
-        <p class="mb-4 text-sm text-gray-600">{{ user.username }}</p>
-      </div>
-      <div class="p-4 bg-gray-50">
+        <div>
+          <app-alert *ngIf="alert[EModalType.ChangeFullName]"
+            [alert]="alert[EModalType.ChangeFullName]">
+          </app-alert>
+          <label class="wsl-input-label" for="wsl-fname">Name</label>
+          <input class="wsl-input-field" type="text" id="wsl-fname" name="fname"
+            formControlName="fname" aria-describedby="wsl-fname-help" required
+            autocomplete="name" data-lpignore="true" tabindex="11">
+          <small id="wsl-fname-help" [ngClass]="help.fname.type"
+            [innerHTML]="help.fname.text"></small>
+        </div>
+        <div>
+          <app-alert *ngIf="alert[EModalType.ChangeUserName]"
+            [alert]="alert[EModalType.ChangeUserName]">
+          </app-alert>
+          <label class="wsl-input-label" for="wsl-uname">Username</label>
+          <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
+            formControlName="uname" aria-describedby="wsl-uname-help" required
+            autocomplete="off" data-lpignore="true" tabindex="12">
+          <small id="wsl-uname-help" [ngClass]="help.uname.type"
+            [innerHTML]="help.uname.text"></small>
+        </div>
+        <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
+          tabindex="13">
+          Update
+        </button>
+      </form>
+      <div class="p-4 bg-gray-50 space-y-2">
         <h2
-          class="mb-2 pb-2 text-xl font-medium border-b border-gray-200 wsl-text-danger">
+          class="pb-1 text-xl font-medium border-b border-gray-200 wsl-text-danger">
           Danger Zone</h2>
-        <app-alert *ngIf="alert[EModalType.DeleteAccount]"
-          [alert]="alert[EModalType.DeleteAccount]">
-        </app-alert>
-        <p class="mb-4 text-sm text-gray-600">
+        <p class="text-sm text-gray-600">
           Remove your user account and all its associated data.
         </p>
         <button class="wsl-btn-sm wsl-btn-danger"
           (click)="openConfirmModal(EModalType.DeleteAccount)" type="button"
-          tabindex="4">
+          tabindex="15">
           Delete Account
         </button>
       </div>

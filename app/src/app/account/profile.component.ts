@@ -18,7 +18,14 @@ import {
 import { FormHint, formFields } from '@weasel/account/form-hint';
 
 enum EModalType {
+  ChangeFullName = 'changeFullname',
+  ChangeUserName = 'changeUsername',
   DeleteAccount = 'deleteAccount'
+}
+
+interface FormContent {
+  fname: string;
+  uname: string;
 }
 
 @Component({
@@ -59,6 +66,8 @@ export class ProfileComponent implements OnDestroy {
   ) {
     this._subUser = this.userService.currentUser$.subscribe((user) => {
       this.user = user;
+      this.accountSettingsForm.get('fname').setValue(user.fullname);
+      this.accountSettingsForm.get('uname').setValue(user.username);
     });
     this.userService.populate();
   }
@@ -68,6 +77,20 @@ export class ProfileComponent implements OnDestroy {
    */
   ngOnDestroy() {
     this._subUser.unsubscribe();
+  }
+
+  /**
+   *
+   */
+  onSubmit(model: FormContent) {
+    if (!this.accountSettingsForm.valid) {
+      return;
+    }
+    const info = {
+      fullname: model.fname,
+      username: model.uname
+    };
+    console.log(info);
   }
 
   /**
