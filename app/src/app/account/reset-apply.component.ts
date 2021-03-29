@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { timer } from 'rxjs';
 import { ApiService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { formFields } from './form-hint';
 
 export interface IAccountInfo {
   email: string;
@@ -36,11 +37,7 @@ export class ResetApplyComponent {
         validators: [Validators.required]
       }),
       upass1: new FormControl('', {
-        validators: [
-          Validators.required,
-          Validators.minLength(8),
-          Validators.maxLength(64)
-        ],
+        validators: formFields.upass.validators,
         updateOn: 'blur'
       }),
       upass2: new FormControl('', {

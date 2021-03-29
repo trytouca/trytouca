@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ApiService, UserService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { FormHint, formFields } from './form-hint';
+import { FormHint, formFields } from '@weasel/account/form-hint';
 
 interface FormContent {
   fname: string;

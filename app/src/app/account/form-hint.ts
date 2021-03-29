@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Validators } from '@angular/forms';
+import { Validators, ValidatorFn } from '@angular/forms';
 
 /**
  *
@@ -44,7 +44,10 @@ export class FormHint {
   }
 }
 
-export const formFields = {
+export const formFields: Record<
+  'fname' | 'email' | 'uname' | 'upass',
+  { validators: ValidatorFn[]; validationErrors: Record<string, string> }
+> = {
   fname: {
     validators: [
       Validators.required,
@@ -55,6 +58,16 @@ export const formFields = {
       required: 'This field is required.',
       maxlength: 'Our engineers did not expect more than 128 characters.',
       minlength: 'This field cannot be empty.'
+    }
+  },
+  email: {
+    validators: [
+      Validators.required,
+      Validators.pattern('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
+    ],
+    validationErrors: {
+      required: 'This field is required',
+      pattern: 'Please use a valid email address.'
     }
   },
   uname: {

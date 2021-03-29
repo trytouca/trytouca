@@ -3,11 +3,12 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 import { ApiService, AuthService, UserService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { formFields } from '@weasel/account/form-hint';
 
 interface FormContent {
   uname: string;
@@ -24,15 +25,11 @@ export class SigninComponent implements OnInit {
    */
   formSignin = new FormGroup({
     uname: new FormControl('', {
-      validators: [
-        Validators.required,
-        Validators.minLength(3),
-        Validators.pattern('[a-zA-Z0-9]+')
-      ],
+      validators: formFields.uname.validators,
       updateOn: 'blur'
     }),
     upass: new FormControl('', {
-      validators: [Validators.required, Validators.minLength(8)],
+      validators: formFields.upass.validators,
       updateOn: 'change'
     })
   });
