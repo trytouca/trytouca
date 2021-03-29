@@ -25,8 +25,7 @@
           Signed in as <b class="font-medium">{{ currentUser?.username }}</b>
         </div>
         <hr class="my-1">
-        <div class="wsl-dropdown-item" *ngIf="isPlatformAdmin"
-          routerLink="/account/profile">
+        <div class="wsl-dropdown-item" routerLink="/account/profile">
           <a class="text-lblue-700">My Account</a>
         </div>
         <div class="wsl-dropdown-item" *ngIf="isPlatformAdmin"

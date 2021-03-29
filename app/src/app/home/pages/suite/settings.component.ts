@@ -43,20 +43,16 @@ enum EModalType {
   styleUrls: ['../../styles/settings.component.scss']
 })
 export class SuiteTabSettingsComponent implements OnDestroy {
-  alert: Partial<Record<EModalType, Alert>> = {};
-
   protected submitted: boolean;
   public formName: FormGroup;
   public formSlug: FormGroup;
   public formRetainFor: FormGroup;
   public formSealAfter: FormGroup;
-
-  team: TeamLookupResponse;
-  suite: SuiteLookupResponse;
-
   private _subTeam: Subscription;
   private _subSuite: Subscription;
-
+  alert: Partial<Record<EModalType, Alert>> = {};
+  team: TeamLookupResponse;
+  suite: SuiteLookupResponse;
   ETeamRole = ETeamRole;
   EModalType = EModalType;
 

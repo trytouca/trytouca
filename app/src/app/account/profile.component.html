@@ -10,29 +10,38 @@
       </div>
     </div>
   </div>
-  <div class="p-4 mx-auto container grid grid-cols-4 gap-4">
-    <div class="col-span-1">
+  <div class="mx-auto container lg:grid lg:grid-cols-4 lg:gap-4">
+    <div class="lg:col-span-1">
     </div>
-    <div class="col-span-2 p-4 space-y-4">
-      <div>
-        <h3 class="mb-2 text-xl font-medium border-b border-gray-100">Your
-          Information</h3>
+    <div class="lg:col-span-2 p-4 space-y-4">
+      <div class="p-4 bg-gray-50">
+        <h2 class="mb-2 pb-2 text-xl font-medium border-b border-gray-200">
+          Your Information
+        </h2>
+        <h3 class="font-medium">Name</h3>
+        <p class="mb-4 text-sm text-gray-600">{{ user.fullname }}</p>
+        <h3 class="font-medium">Username</h3>
+        <p class="mb-4 text-sm text-gray-600">{{ user.username }}</p>
+      </div>
+      <div class="p-4 bg-gray-50">
+        <h2
+          class="mb-2 pb-2 text-xl font-medium border-b border-gray-200 wsl-text-danger">
+          Danger Zone</h2>
+        <app-alert *ngIf="alert[EModalType.DeleteAccount]"
+          [alert]="alert[EModalType.DeleteAccount]">
+        </app-alert>
+        <p class="mb-4 text-sm text-gray-600">
+          Remove your user account and all its associated data.
+        </p>
+        <button class="wsl-btn-sm wsl-btn-danger"
+          (click)="openConfirmModal(EModalType.DeleteAccount)" type="button"
+          tabindex="4">
+          Delete Account
+        </button>
       </div>
     </div>
-    <div class="col-span-1">
+    <div class="lg:col-span-1">
     </div>
   </div>
-  <!-- <div>
-    <label class="wsl-input-label sr-only" for="wsl-news">Our Newsletter</label>
-    <div class="flex items-center space-x-2">
-      <input
-        class="rounded-sm shadow-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50"
-        type="checkbox">
-      <p class="text-sm text-gray-500">Subscribe to our monthly newsletter?
-      </p>
-    </div>
-    <small class="wsl-text-muted sr-only" id="wsl-news-help">You can always
-      manage your subscription from the <i>Account Settings</i> page.</small>
-  </div> -->
 </div>
 <app-footer-inside></app-footer-inside>

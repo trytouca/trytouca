@@ -36,7 +36,7 @@ export class AuthService {
    */
   public logout() {
     return this.apiService.post('auth/signout').pipe(
-      catchError((err) => {
+      catchError(() => {
         return of([]);
       }),
       finalize(() => {
