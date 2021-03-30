@@ -22,24 +22,24 @@
         <input class="wsl-input-field" type="text" id="wsl-fname" name="fname"
           formControlName="fname" aria-describedby="wsl-fname-help" required
           autocomplete="name" data-lpignore="true" tabindex="1">
-        <small id="wsl-fname-help" [ngClass]="help.fname.type"
-          [innerHTML]="help.fname.text"></small>
+        <small id="wsl-fname-help" [ngClass]="hints.get('fname').type"
+          [innerHTML]="hints.get('fname').text"></small>
       </div>
       <div>
         <label class="wsl-input-label" for="wsl-uname">Username</label>
         <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
           formControlName="uname" aria-describedby="wsl-uname-help" required
           autocomplete="username" tabindex="2">
-        <small id="wsl-uname-help" [ngClass]="help.uname.type"
-          [innerHTML]="help.uname.text"></small>
+        <small id="wsl-uname-help" [ngClass]="hints.get('uname').type"
+          [innerHTML]="hints.get('uname').text"></small>
       </div>
       <div>
         <label class="wsl-input-label" for="wsl-upass">Password</label>
         <input class="wsl-input-field" type="password" id="wsl-upass"
           name="upass" formControlName="upass" aria-describedby="wsl-upass-help"
           required autocomplete="new-password" tabindex="3">
-        <small id="wsl-upass-help" [ngClass]="help.upass.type"
-          [innerHTML]="help.upass.text"></small>
+        <small id="wsl-upass-help" [ngClass]="hints.get('upass').type"
+          [innerHTML]="hints.get('upass').text"></small>
       </div>
       <div class="wsl-form-footer">
         <div class="wsl-form-submit">

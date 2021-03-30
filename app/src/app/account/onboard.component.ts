@@ -5,15 +5,10 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ApiService, UserService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import {
-  FormHint,
-  FormHints,
-  FormHintsSubscriptions,
-  formFields,
-  subscribeToFormHints
-} from '@weasel/account/form-hint';
+import { FormHint, FormHints, formFields } from '@weasel/account/form-hint';
 
 /**
  *
@@ -29,7 +24,7 @@ interface FormContent {
   templateUrl: './onboard.component.html'
 })
 export class OnboardComponent implements OnDestroy {
-  private _subHints: FormHintsSubscriptions<FormContent> = {};
+  private _subHints: Subscription;
   alert: Alert;
 
   /**
@@ -53,7 +48,7 @@ export class OnboardComponent implements OnDestroy {
   /**
    *
    */
-  help: FormHints<FormContent> = {
+  hints = new FormHints({
     fname: new FormHint(
       'We do not share your full name other than with your team members.',
       formFields.fname.validationErrors
@@ -66,7 +61,7 @@ export class OnboardComponent implements OnDestroy {
       'Use a strong password, please.',
       formFields.upass.validationErrors
     )
-  };
+  });
 
   /**
    *
@@ -76,19 +71,18 @@ export class OnboardComponent implements OnDestroy {
     private apiService: ApiService,
     private userService: UserService
   ) {
-    const keys: (keyof FormContent)[] = ['fname', 'uname', 'upass'];
-    this._subHints = subscribeToFormHints<FormContent>(
-      this.onboardForm,
-      this.help,
-      keys
-    );
+    this._subHints = this.hints.subscribe(this.onboardForm, [
+      'fname',
+      'uname',
+      'upass'
+    ]);
   }
 
   /**
    *
    */
   ngOnDestroy() {
-    Object.values(this._subHints).forEach((s) => s.unsubscribe());
+    this._subHints.unsubscribe();
   }
 
   /**
@@ -106,7 +100,7 @@ export class OnboardComponent implements OnDestroy {
     this.apiService.patch('/user', info).subscribe(
       () => {
         this.alert = undefined;
-        Object.values(this.help).forEach((v) => v.setSuccess());
+        this.hints.reset();
         this.onboardForm.reset({}, { emitEvent: false });
         this.userService.populate();
         this.router.navigate(['/~']);

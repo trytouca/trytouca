@@ -19,27 +19,24 @@
         <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
           Your Information
         </h2>
+        <app-alert *ngIf="alert[EModalType.ChangePersonal]"
+          [alert]="alert[EModalType.ChangePersonal]">
+        </app-alert>
         <div>
-          <app-alert *ngIf="alert[EModalType.ChangeFullName]"
-            [alert]="alert[EModalType.ChangeFullName]">
-          </app-alert>
           <label class="wsl-input-label" for="wsl-fname">Name</label>
           <input class="wsl-input-field" type="text" id="wsl-fname" name="fname"
             formControlName="fname" aria-describedby="wsl-fname-help" required
             autocomplete="name" data-lpignore="true" tabindex="11">
-          <small id="wsl-fname-help" [ngClass]="help.fname.type"
-            [innerHTML]="help.fname.text"></small>
+          <small id="wsl-fname-help" [ngClass]="hints.get('fname').type"
+            [innerHTML]="hints.get('fname').text"></small>
         </div>
         <div>
-          <app-alert *ngIf="alert[EModalType.ChangeUserName]"
-            [alert]="alert[EModalType.ChangeUserName]">
-          </app-alert>
           <label class="wsl-input-label" for="wsl-uname">Username</label>
           <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
             formControlName="uname" aria-describedby="wsl-uname-help" required
             autocomplete="off" data-lpignore="true" tabindex="12">
-          <small id="wsl-uname-help" [ngClass]="help.uname.type"
-            [innerHTML]="help.uname.text"></small>
+          <small id="wsl-uname-help" [ngClass]="hints.get('uname').type"
+            [innerHTML]="hints.get('uname').text"></small>
         </div>
         <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
           tabindex="13">

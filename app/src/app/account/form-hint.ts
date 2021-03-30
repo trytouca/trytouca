@@ -53,44 +53,54 @@ export class FormHint {
 /**
  *
  */
-export type FormHintsSubscriptions<T> = Partial<Record<keyof T, Subscription>>;
+export class FormHints {
+  private _subs: Subscription[] = [];
 
-/**
- *
- */
-export type FormHints<T> = Record<keyof T, FormHint>;
+  /**
+   *
+   */
+  constructor(readonly hints: { [key: string]: FormHint }) {}
 
-/**
- *
- */
-function updateFormHint(group: AbstractControl, hint: FormHint): Subscription {
-  return group.statusChanges.subscribe(() => {
-    if (!group.errors) {
-      hint.setSuccess();
-      return;
-    }
-    const errorTypes = Object.keys(group.errors);
-    if (errorTypes.length === 0) {
-      hint.unsetError();
-      return;
-    }
-    hint.setError(errorTypes[0]);
-  });
-}
+  /**
+   *
+   */
+  public subscribe(form: FormGroup, keys: string[]): Subscription {
+    keys.forEach((key) => {
+      this._subs.push(this.updateFormHint(form.get(key), this.hints[key]));
+    });
+    return new Subscription(() => {
+      this._subs.forEach((v) => v.unsubscribe());
+    });
+  }
 
-/**
- *
- */
-export function subscribeToFormHints<T>(
-  form: FormGroup,
-  help: FormHints<T>,
-  keys: Array<keyof T>
-): FormHintsSubscriptions<T> {
-  const subs: FormHintsSubscriptions<T> = {};
-  keys.forEach((key) => {
-    subs[key] = updateFormHint(form.get(key.toString()), help[key]);
-  });
-  return subs;
+  /**
+   *
+   */
+  public reset() {
+    Object.values(this.hints).forEach((v) => v.setSuccess());
+  }
+
+  public get(key: string): FormHint {
+    return this.hints[key];
+  }
+
+  /**
+   *
+   */
+  private updateFormHint(group: AbstractControl, hint: FormHint): Subscription {
+    return group.statusChanges.subscribe(() => {
+      if (!group.errors) {
+        hint.setSuccess();
+        return;
+      }
+      const errorTypes = Object.keys(group.errors);
+      if (errorTypes.length === 0) {
+        hint.unsetError();
+        return;
+      }
+      hint.setError(errorTypes[0]);
+    });
+  }
 }
 
 /**

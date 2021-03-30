@@ -11,21 +11,14 @@ import { DialogService } from '@ngneat/dialog';
 import { ApiService, AuthService, UserService } from '@weasel/core/services';
 import { UserLookupResponse } from '@weasel/core/models/commontypes';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { FormHint, FormHints, formFields } from '@weasel/account/form-hint';
 import {
   ConfirmComponent,
   ConfirmElements
 } from '@weasel/home/components/confirm.component';
-import {
-  FormHint,
-  FormHints,
-  FormHintsSubscriptions,
-  formFields,
-  subscribeToFormHints
-} from '@weasel/account/form-hint';
 
 enum EModalType {
-  ChangeFullName = 'changeFullname',
-  ChangeUserName = 'changeUsername',
+  ChangePersonal = 'changePersonal',
   DeleteAccount = 'deleteAccount'
 }
 
@@ -40,7 +33,7 @@ interface FormContent {
 })
 export class ProfileComponent implements OnDestroy {
   private _subUser: Subscription;
-  private _subHints: FormHintsSubscriptions<FormContent> = {};
+  private _subHints: Subscription;
   alert: Partial<Record<EModalType, Alert>> = {};
   user: UserLookupResponse;
   EModalType = EModalType;
@@ -62,10 +55,10 @@ export class ProfileComponent implements OnDestroy {
   /**
    *
    */
-  help: FormHints<FormContent> = {
+  hints = new FormHints({
     fname: new FormHint('', formFields.fname.validationErrors),
     uname: new FormHint('', formFields.uname.validationErrors)
-  };
+  });
 
   /**
    *
@@ -77,12 +70,10 @@ export class ProfileComponent implements OnDestroy {
     private authService: AuthService,
     private userService: UserService
   ) {
-    const keys: (keyof FormContent)[] = ['fname', 'uname'];
-    this._subHints = subscribeToFormHints<FormContent>(
-      this.accountSettingsForm,
-      this.help,
-      keys
-    );
+    this._subHints = this.hints.subscribe(this.accountSettingsForm, [
+      'fname',
+      'uname'
+    ]);
     this._subUser = this.userService.currentUser$.subscribe((user) => {
       this.user = user;
       this.accountSettingsForm.get('fname').setValue(user.fullname);
@@ -95,7 +86,7 @@ export class ProfileComponent implements OnDestroy {
    *
    */
   ngOnDestroy() {
-    Object.values(this._subHints).forEach((s) => s.unsubscribe());
+    this._subHints.unsubscribe();
     this._subUser.unsubscribe();
   }
 
