@@ -4,7 +4,7 @@
 
 import * as bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
-import { omit } from 'lodash'
+import { omit, pick, pickBy, identity } from 'lodash'
 
 import { IUser, UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
@@ -21,11 +21,10 @@ export async function ctrlUserUpdate(
 ) {
   const user = res.locals.user as IUser
   const tuple = user.username
-  const proposed = {
-    fullname: req.body.fullname,
-    username: req.body.username,
-    password: req.body.password
-  }
+  const proposed = pickBy(
+    pick(req.body, ['fullname', 'username', 'password']),
+    identity
+  )
   logger.debug('%s: updating account: %j', tuple, omit(proposed, 'password'))
 
   // if username is changing, check that the new username is not already taken
