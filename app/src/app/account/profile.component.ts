@@ -6,7 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, timer } from 'rxjs';
 import { DialogService } from '@ngneat/dialog';
 import { ApiService, AuthService, UserService } from '@weasel/core/services';
 import { UserLookupResponse } from '@weasel/core/models/commontypes';
@@ -97,11 +97,40 @@ export class ProfileComponent implements OnDestroy {
     if (!this.accountSettingsForm.valid) {
       return;
     }
-    const info = {
-      fullname: model.fname,
-      username: model.uname
-    };
-    console.log(info);
+    const info: Partial<Record<'fullname' | 'username', string>> = {};
+    if (this.user.fullname !== model.fname) {
+      info.fullname = model.fname;
+    }
+    if (this.user.username !== model.uname) {
+      info.username = model.uname;
+    }
+    if (Object.keys(info).length === 0) {
+      return;
+    }
+    this.apiService.patch('/user', info).subscribe(
+      () => {
+        this.alert.changePersonal = {
+          type: AlertType.Success,
+          text: 'Your account information was updated.'
+        };
+        timer(5000).subscribe(() => (this.alert.changePersonal = undefined));
+        this.hints.reset();
+        this.userService.reset();
+        this.userService.populate();
+      },
+      (err) => {
+        const error = this.apiService.extractError(err, [
+          [409, 'username already registered', 'This username is taken']
+        ]);
+        timer(2000).subscribe(() => {
+          this.alert.changePersonal = undefined;
+          this.hints.reset();
+          this.userService.reset();
+          this.userService.populate();
+        });
+        this.alert.changePersonal = { text: error, type: AlertType.Danger };
+      }
+    );
   }
 
   /**
