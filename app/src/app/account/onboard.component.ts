@@ -6,9 +6,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { FormHint, FormHints, formFields } from '@weasel/core/models/form-hint';
 import { ApiService, UserService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { FormHint, FormHints, formFields } from '@weasel/account/form-hint';
 
 /**
  *

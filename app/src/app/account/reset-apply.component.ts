@@ -6,9 +6,9 @@ import { Component, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { timer } from 'rxjs';
+import { formFields } from '@weasel/core/models/form-hint';
 import { ApiService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { formFields } from './form-hint';
 
 export interface IAccountInfo {
   email: string;

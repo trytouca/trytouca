@@ -8,10 +8,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription, timer } from 'rxjs';
 import { DialogService } from '@ngneat/dialog';
+import { FormHint, FormHints, formFields } from '@weasel/core/models/form-hint';
 import { ApiService, AuthService, UserService } from '@weasel/core/services';
 import { UserLookupResponse } from '@weasel/core/models/commontypes';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { FormHint, FormHints, formFields } from '@weasel/account/form-hint';
 import {
   ConfirmComponent,
   ConfirmElements
