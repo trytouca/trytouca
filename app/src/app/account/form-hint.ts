@@ -2,7 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Validators, ValidatorFn } from '@angular/forms';
+import {
+  Validators,
+  ValidatorFn,
+  AbstractControl,
+  FormGroup
+} from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 /**
  *
@@ -44,6 +50,52 @@ export class FormHint {
   }
 }
 
+/**
+ *
+ */
+export type FormHintsSubscriptions<T> = Partial<Record<keyof T, Subscription>>;
+
+/**
+ *
+ */
+export type FormHints<T> = Record<keyof T, FormHint>;
+
+/**
+ *
+ */
+function updateFormHint(group: AbstractControl, hint: FormHint): Subscription {
+  return group.statusChanges.subscribe(() => {
+    if (!group.errors) {
+      hint.setSuccess();
+      return;
+    }
+    const errorTypes = Object.keys(group.errors);
+    if (errorTypes.length === 0) {
+      hint.unsetError();
+      return;
+    }
+    hint.setError(errorTypes[0]);
+  });
+}
+
+/**
+ *
+ */
+export function subscribeToFormHints<T>(
+  form: FormGroup,
+  help: FormHints<T>,
+  keys: Array<keyof T>
+): FormHintsSubscriptions<T> {
+  const subs: FormHintsSubscriptions<T> = {};
+  keys.forEach((key) => {
+    subs[key] = updateFormHint(form.get(key.toString()), help[key]);
+  });
+  return subs;
+}
+
+/**
+ *
+ */
 export const formFields: Record<
   'fname' | 'email' | 'uname' | 'upass',
   { validators: ValidatorFn[]; validationErrors: Record<string, string> }

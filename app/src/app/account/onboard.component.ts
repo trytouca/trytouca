@@ -5,11 +5,19 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { ApiService, UserService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { FormHint, formFields } from '@weasel/account/form-hint';
+import {
+  FormHint,
+  FormHints,
+  FormHintsSubscriptions,
+  formFields,
+  subscribeToFormHints
+} from '@weasel/account/form-hint';
 
+/**
+ *
+ */
 interface FormContent {
   fname: string;
   uname: string;
@@ -21,6 +29,9 @@ interface FormContent {
   templateUrl: './onboard.component.html'
 })
 export class OnboardComponent implements OnDestroy {
+  private _subHints: FormHintsSubscriptions<FormContent> = {};
+  alert: Alert;
+
   /**
    *
    */
@@ -42,7 +53,7 @@ export class OnboardComponent implements OnDestroy {
   /**
    *
    */
-  help: Record<keyof FormContent, FormHint> = {
+  help: FormHints<FormContent> = {
     fname: new FormHint(
       'We do not share your full name other than with your team members.',
       formFields.fname.validationErrors
@@ -57,9 +68,6 @@ export class OnboardComponent implements OnDestroy {
     )
   };
 
-  alert: Alert;
-  private _sub: Partial<Record<keyof FormContent, Subscription>> = {};
-
   /**
    *
    */
@@ -68,29 +76,19 @@ export class OnboardComponent implements OnDestroy {
     private apiService: ApiService,
     private userService: UserService
   ) {
-    ['fname', 'uname', 'upass'].forEach((key: 'fname' | 'uname' | 'upass') => {
-      const group = this.onboardForm.get(key);
-      this._sub[key] = group.statusChanges.subscribe(() => {
-        const help = this.help[key];
-        if (!group.errors) {
-          help.setSuccess();
-          return;
-        }
-        const errorTypes = Object.keys(group.errors);
-        if (errorTypes.length === 0) {
-          help.unsetError();
-          return;
-        }
-        help.setError(errorTypes[0]);
-      });
-    });
+    const keys: (keyof FormContent)[] = ['fname', 'uname', 'upass'];
+    this._subHints = subscribeToFormHints<FormContent>(
+      this.onboardForm,
+      this.help,
+      keys
+    );
   }
 
   /**
    *
    */
   ngOnDestroy() {
-    Object.values(this._sub).forEach((s) => s.unsubscribe());
+    Object.values(this._subHints).forEach((s) => s.unsubscribe());
   }
 
   /**

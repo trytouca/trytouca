@@ -15,7 +15,13 @@ import {
   ConfirmComponent,
   ConfirmElements
 } from '@weasel/home/components/confirm.component';
-import { FormHint, formFields } from '@weasel/account/form-hint';
+import {
+  FormHint,
+  FormHints,
+  FormHintsSubscriptions,
+  formFields,
+  subscribeToFormHints
+} from '@weasel/account/form-hint';
 
 enum EModalType {
   ChangeFullName = 'changeFullname',
@@ -34,10 +40,14 @@ interface FormContent {
 })
 export class ProfileComponent implements OnDestroy {
   private _subUser: Subscription;
+  private _subHints: FormHintsSubscriptions<FormContent> = {};
   alert: Partial<Record<EModalType, Alert>> = {};
   user: UserLookupResponse;
   EModalType = EModalType;
 
+  /**
+   *
+   */
   accountSettingsForm = new FormGroup({
     fname: new FormControl('', {
       validators: formFields.fname.validators,
@@ -49,7 +59,10 @@ export class ProfileComponent implements OnDestroy {
     })
   });
 
-  help: Record<'fname' | 'uname', FormHint> = {
+  /**
+   *
+   */
+  help: FormHints<FormContent> = {
     fname: new FormHint('', formFields.fname.validationErrors),
     uname: new FormHint('', formFields.uname.validationErrors)
   };
@@ -64,6 +77,12 @@ export class ProfileComponent implements OnDestroy {
     private authService: AuthService,
     private userService: UserService
   ) {
+    const keys: (keyof FormContent)[] = ['fname', 'uname'];
+    this._subHints = subscribeToFormHints<FormContent>(
+      this.accountSettingsForm,
+      this.help,
+      keys
+    );
     this._subUser = this.userService.currentUser$.subscribe((user) => {
       this.user = user;
       this.accountSettingsForm.get('fname').setValue(user.fullname);
@@ -76,6 +95,7 @@ export class ProfileComponent implements OnDestroy {
    *
    */
   ngOnDestroy() {
+    Object.values(this._subHints).forEach((s) => s.unsubscribe());
     this._subUser.unsubscribe();
   }
 
