@@ -48,6 +48,7 @@
     "jws": "^4.0.0",
     "lodash": "^4.17.21",
     "marked": "^2.0.1",
+    "module-alias": "^2.2.2",
     "mongoose": "^5.12.2",
     "mustache": "^4.1.0",
     "nocache": "^2.0.0",
@@ -93,5 +94,12 @@
     "tsconfig-paths": "^3.9.0",
     "typedoc": "^0.20.34",
     "typescript": "^4.2.3"
+  },
+  "_moduleAliases": {
+    "@weasel/controllers": "dist/controllers",
+    "@weasel/models": "dist/models",
+    "@weasel/routes": "dist/routes",
+    "@weasel/schemas": "dist/schemas",
+    "@weasel/utils": "dist/utils"
   }
 }

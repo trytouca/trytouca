@@ -29,6 +29,7 @@ LABEL maintainer="hello@getweasel.com"
 EXPOSE 8081
 
 COPY --from=builder /home/dist /opt/weasel/dist
+COPY --from=builder /home/package.json /opt/weasel/package.json
 COPY --from=builder /home/env /opt/weasel/env
 COPY --from=builder /home/samples /opt/weasel/samples
 COPY --from=builder /home/node_modules /opt/weasel/node_modules

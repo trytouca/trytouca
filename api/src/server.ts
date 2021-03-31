@@ -2,6 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+import 'module-alias/register'
 import fs from 'fs'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
