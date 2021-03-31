@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "src",
     "paths": {
-      "@weasel/controllers/*": ["src/controllers/*"],
-      "@weasel/models/*": ["src/models/*"],
-      "@weasel/routes/*": ["src/routes/*"],
-      "@weasel/schemas/*": ["src/schemas/*"],
-      "@weasel/utils/*": ["src/utils/*"]
+      "@weasel/controllers/*": ["controllers/*"],
+      "@weasel/models/*": ["models/*"],
+      "@weasel/routes/*": ["routes/*"],
+      "@weasel/schemas/*": ["schemas/*"],
+      "@weasel/utils/*": ["utils/*"]
     },
     "outDir": "dist",
     "sourceMap": true,
