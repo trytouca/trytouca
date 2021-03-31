@@ -61,6 +61,16 @@ export async function authVerifyCreate(
     })
   }
 
+  // reject request if email has a domain that is on the deny list
+
+  logger.warn('askedEmail %s', askedEmail)
+  if (['aol.com', 'hotmail.com'].some((v) => askedEmail.endsWith(v))) {
+    return next({
+      errors: ['email address suspicious'],
+      status: 403
+    })
+  }
+
   const makePass = (length: number) =>
     [...Array(length)].map(() => Math.random().toString(36)[2]).join('')
 
