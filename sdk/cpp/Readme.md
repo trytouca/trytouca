@@ -1,14 +1,14 @@
 <div align="center">
-  <a href="https://getweasel.com" target="_blank" rel="noopener noreferrer">
+  <a href="https://getweasel.com" target="_blank" rel="noopener">
     <img alt="Weasel Logo" height="48px" src="https://getweasel.com/assets/logo/weasel-logo-w-text.svg">
   </a>
   <h1>Client Library for C++</h1>
   <p>
-    <a href="https://getweasel.com">Get Started</a>
+    <a href="https://getweasel.com" target="_blank" rel="noopener">Get Started</a>
     <span> &middot; </span>
-    <a href="https://getweasel.com/docs">Documentation</a>
+    <a href="https://docs.getweasel.com" target="_blank" rel="noopener">Documentation</a>
     <span> &middot; </span>
-    <a href="https://getweasel.slack.com">Community</a>
+    <a href="https://getweasel.slack.com" target="_blank" rel="noopener">Community</a>
     <span> &middot; </span>
     <a href="https://github.com/getweasel/weasel-cpp/blob/main/LICENSE">License</a>
   </p>
@@ -68,11 +68,11 @@ If you need help, have any questions, like to contribute or to provide
 feedback, join us on [Slack] or email us at [hello@getweasel.com].
 
 [Slack]: https://getweasel.slack.com
-[Calendly]: https://calendly.com/ghorbanzade/weasel
+[Calendly]: https://calendly.com/ghorbanzade/30min
 [YouTube]: https://www.youtube.com/channel/UCwa-rweWShIJo_DYhp2rVew
 [hello@getweasel.com]: mailto:hello@getweasel.com
 
 [Roadmap]: https://bit.ly/3q4EOcI
-[Documentation]: https://getweasel.com/docs
+[Documentation]: https://docs.getweasel.com
 [weasel-cpp-api]: https://getweasel.com/docs/clients/cpp/api.html
 [weasel-examples]: https://github.com/getweasel/examples
