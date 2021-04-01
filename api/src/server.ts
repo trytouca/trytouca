@@ -2,7 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import 'module-alias/register'
 import fs from 'fs'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
@@ -11,6 +10,15 @@ import express from 'express'
 import hidePoweredBy from 'hide-powered-by'
 import mongoose from 'mongoose'
 import nocache from 'nocache'
+import moduleAlias from 'module-alias'
+
+moduleAlias.addAliases({
+  '@weasel/controllers': `${__dirname}/controllers`,
+  '@weasel/models': `${__dirname}/models`,
+  '@weasel/routes': `${__dirname}/routes`,
+  '@weasel/schemas': `${__dirname}/schemas`,
+  '@weasel/utils': `${__dirname}/utils`
+})
 
 import {
   analyticsService,

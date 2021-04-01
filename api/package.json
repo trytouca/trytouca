@@ -19,9 +19,10 @@
   },
   "main": "dist/server.js",
   "scripts": {
-    "build": "yarn run build-mails && yarn run build-ts",
-    "build-mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/",
-    "build-ts": "tsc",
+    "build": "yarn run build:mails && yarn run build:ts",
+    "build:mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/",
+    "build:ts": "tsc",
+    "clean": "rimraf dist",
     "doc": "typedoc",
     "start": "node .",
     "test": "cross-env NODE_ENV=test ENV_FILE=test nyc mocha --require tsconfig-paths/register --require ts-node/register --require source-map-support/register --full-trace --bail test/**/*.test.ts",
@@ -87,6 +88,7 @@
     "nodemon": "^2.0.7",
     "nyc": "15.1.0",
     "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
     "sinon": "^10.0.0",
     "source-map-support": "^0.5.9",
     "swagger-inline": "^3.0.4",
@@ -94,12 +96,5 @@
     "tsconfig-paths": "^3.9.0",
     "typedoc": "^0.20.34",
     "typescript": "^4.2.3"
-  },
-  "_moduleAliases": {
-    "@weasel/controllers": "dist/controllers",
-    "@weasel/models": "dist/models",
-    "@weasel/routes": "dist/routes",
-    "@weasel/schemas": "dist/schemas",
-    "@weasel/utils": "dist/utils"
   }
 }
