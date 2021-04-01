@@ -1,1 +1,0 @@
-../../docs/TermsOfService.md

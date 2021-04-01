@@ -1,1 +1,0 @@
-../../docs/PrivacyPolicy.md
