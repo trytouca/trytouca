@@ -128,7 +128,7 @@ async function mailUsersByRole(
  *
  */
 export async function mailAdmins(params: { title: string; body: string }) {
-  if (config.mode === 'cloud_hosted') {
+  if (config.deployMode === 'cloud_hosted') {
     const users = await UserModel.find({
       platformRole: { $in: [EPlatformRole.Owner, EPlatformRole.Admin] }
     })

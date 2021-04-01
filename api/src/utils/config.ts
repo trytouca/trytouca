@@ -16,6 +16,7 @@ interface IConfig {
     maxLoginAttempts: number
     maxResetKeyLifetime: number // in minutes
   }
+  deployMode: 'self_hosted' | 'cloud_hosted'
   elastic: {
     host: string
     port: number
@@ -37,7 +38,6 @@ interface IConfig {
     templatesDirectory: string
     user: string
   }
-  mode: 'self_hosted' | 'cloud_hosted'
   mongo: {
     database: string
     host: string
@@ -101,6 +101,8 @@ export const config: IConfig = {
     maxLoginAttempts: 3,
     maxResetKeyLifetime: 30
   },
+  deployMode:
+    env.DEPLOY_MODE === 'cloud_hosted' ? 'cloud_hosted' : 'self_hosted',
   elastic: {
     host: env.ELASTIC_HOST,
     port: Number(env.ELASTIC_PORT)
@@ -122,7 +124,6 @@ export const config: IConfig = {
     templatesDirectory: env.MAIL_TEMPLATE_DIR,
     user: env.MAIL_TRANSPORT_USER
   },
-  mode: env.DEPLOY_MODE === 'self_hosted' ? 'self_hosted' : 'cloud_hosted',
   mongo: {
     database: env.MONGO_BASE,
     host: env.MONGO_HOST,
