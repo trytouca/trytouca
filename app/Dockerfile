@@ -5,7 +5,6 @@ FROM node:15-alpine as frontend_builder
 RUN apk add --no-cache bash
 
 COPY frontend /opt/frontend
-COPY docs /opt/docs
 
 RUN yarn --cwd /opt/frontend install --frozen-lockfile \
   && yarn --cwd /opt/frontend cache clean \
@@ -99,7 +98,14 @@ RUN mkdir -p /opt/docs/local/talks \
 # ---- production ----
 
 FROM nginx:1.18-alpine
+
 LABEL maintainer="hello@getweasel.com"
+LABEL org.opencontainers.image.title="weasel-webapp"
+LABEL org.opencontainers.image.description="Weasel Server Web Application"
+LABEL org.opencontainers.image.url="https://getweasel.com/"
+LABEL org.opencontainers.image.documentation="https://docs.getweasel.com"
+LABEL org.opencontainers.image.vendor="Weasel, Inc."
+LABEL org.opencontainers.image.authors="hello@getweasel.com"
 
 COPY --from=frontend_builder        /opt/frontend/dist                /www/data
 COPY --from=doc_api_builder         /opt/backend/local/docs/backend   /www/data/docs/backend
