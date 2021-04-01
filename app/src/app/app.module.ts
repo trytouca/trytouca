@@ -15,6 +15,8 @@ import { FeatureComponent } from './landing/feature.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
+import { PricingComponent } from './pricing/pricing.component';
+import { PricingPlanComponent } from './pricing/plan.component';
 import { SharedModule } from './shared/shared.module';
 import { TestimonialComponent } from './landing/testimonial.component';
 
@@ -25,6 +27,8 @@ import { TestimonialComponent } from './landing/testimonial.component';
     FeedbackComponent,
     LandingComponent,
     NotfoundComponent,
+    PricingComponent,
+    PricingPlanComponent,
     TestimonialComponent
   ],
   imports: [

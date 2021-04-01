@@ -29,6 +29,6 @@
     backdrop-filter: blur(8px);
   }
   .wsl-header-sticky {
-    @apply sticky top-0 z-20 wsl-bg-blur bg-opacity-90 bg-white shadow-md;
+    @apply sticky top-0 z-20 wsl-bg-blur bg-opacity-90 shadow-md;
   }
 }

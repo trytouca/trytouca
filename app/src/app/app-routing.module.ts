@@ -8,6 +8,7 @@ import { AuthGuard } from '@weasel/core/services';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
+import { PricingComponent } from './pricing/pricing.component';
 
 const routes: Routes = [
   { path: '', component: LandingComponent, data: { page: 'landing' } },
@@ -23,6 +24,11 @@ const routes: Routes = [
     data: { page: 'account' }
   },
   {
+    path: 'pricing',
+    component: PricingComponent,
+    data: { page: 'pricing' }
+  },
+  {
     path: '~',
     canActivate: [AuthGuard],
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
@@ -34,7 +40,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
-      relativeLinkResolution: 'legacy',
       scrollPositionRestoration: 'enabled'
     })
   ],
