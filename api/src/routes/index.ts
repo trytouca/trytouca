@@ -70,7 +70,7 @@ router.get('/', (req, res) => {
  *            $ref: '#/components/headers/Location'
  */
 router.get('/@/:team/:suite', (req, res) => {
-  res.redirect(308, config.webapp.root + '/docs')
+  res.redirect(308, 'https://docs.getweasel.com')
 })
 
 router.use('/auth', authRouter)

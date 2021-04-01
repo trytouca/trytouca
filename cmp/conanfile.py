@@ -10,7 +10,7 @@ class WeaselConan(ConanFile):
     homepage = "https://getweasel.com"
     description = "weasel platform component for comparing submitted test results"
     topics = ( "regression-testing", "snapshot-testing", "test-framework", "test-automation" )
-    url = "https://getweasel.com/docs"
+    url = "https://docs.getweasel.com"
     license = "Private"
     version ="1.3.0"
     author = "Pejman Ghorbanzade <pejman@getweasel.com>"
