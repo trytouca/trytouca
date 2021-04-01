@@ -23,11 +23,6 @@ const routes: Routes = [
     data: { page: 'account' }
   },
   {
-    path: 'docs',
-    loadChildren: () => import('./docs/docs.module').then((m) => m.DocsModule),
-    data: { page: 'docs', title: 'Docs' }
-  },
-  {
     path: '~',
     canActivate: [AuthGuard],
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),

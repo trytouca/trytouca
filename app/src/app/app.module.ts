@@ -11,7 +11,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { CoreModule } from './core/core.module';
 import { AccountModule } from './account/account.module';
-import { DocsModule } from './docs/docs.module';
 import { FeatureComponent } from './landing/feature.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
@@ -33,7 +32,6 @@ import { TestimonialComponent } from './landing/testimonial.component';
     BrowserModule,
     AccountModule,
     CoreModule,
-    DocsModule,
     SharedModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production
