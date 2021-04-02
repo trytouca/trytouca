@@ -84,7 +84,7 @@ export class LandingComponent {
         }
       ],
       learnMore: {
-        link: 'docs',
+        link: 'https://docs.getweasel.com/guides/submit',
         title: 'Learn how to submit test results from your test tools'
       },
       title: 'Submit'
@@ -109,7 +109,7 @@ export class LandingComponent {
         }
       ],
       learnMore: {
-        link: 'docs',
+        link: 'https://docs.getweasel.com/guides/interpret',
         title: `Learn how Weasel processes your results and reports
           regressions in an easy-to-understand format`
       },
@@ -138,7 +138,7 @@ export class LandingComponent {
         }
       ],
       learnMore: {
-        link: 'docs',
+        link: 'https://docs.getweasel.com/guides/collaborate',
         title: `Learn how Weasel helps your team have an up-to-date
           understanding of the behavior of your software.`
       },
@@ -161,7 +161,7 @@ export class LandingComponent {
         }
       ],
       learnMore: {
-        link: 'docs',
+        link: 'https://docs.getweasel.com/guides/automate',
         title: `Learn how Weasel can help you manage and automate the
           execution of your regression tests.`
       },

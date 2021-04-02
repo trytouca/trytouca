@@ -51,9 +51,8 @@
     </li>
   </ul>
   <div class="flex items-center justify-between">
-    <div
-      class="px-2 py-1 rounded-full font-medium flex items-center space-x-1 border cursor-pointer"
-      [ngClass]="data.colors" [routerLink]="data.learnMore.link"
+    <a class="px-2 py-1 rounded-full font-medium flex items-center space-x-1 border cursor-pointer"
+      [ngClass]="data.colors" [href]="data.learnMore.link" target="_blank"
       [title]="data.learnMore.title">
       <span class="text-sm">Learn more</span>
       <svg class="inline h-3" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -61,7 +60,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
           d="M14 5l7 7m0 0l-7 7m7-7H3" />
       </svg>
-    </div>
+    </a>
     <ul class="flex justify-end space-x-2">
       <a *ngFor="let img of data.images" [href]="img.link" target="_blank"
         rel="noopener">
