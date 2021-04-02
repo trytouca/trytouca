@@ -29,8 +29,9 @@
       </div>
     </div>
     <div class="flex justify-center">
-      <button class="wsl-btn-lg wsl-btn-light"
-        type="button">{{ plan.button.title }}</button>
+      <button class="wsl-btn-lg wsl-btn-light" type="button"
+        [routerLink]="plan.button.link"
+        [queryParams]="plan.button.query">{{ plan.button.title }}</button>
     </div>
   </div>
 </div>

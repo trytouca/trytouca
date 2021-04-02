@@ -24,7 +24,8 @@ export class PricingComponent {
       fee: 0,
       button: {
         title: 'Sign Up',
-        link: 'free'
+        link: '/account/signup',
+        query: { plan: 'free' }
       }
     },
     {
@@ -40,7 +41,8 @@ export class PricingComponent {
       ],
       button: {
         title: 'Start a Free Trial',
-        link: 'startup'
+        link: '/account/signup',
+        query: { plan: 'startup' }
       }
     },
     {
@@ -57,7 +59,8 @@ export class PricingComponent {
       ],
       button: {
         title: 'Start a Free Trial',
-        link: 'business'
+        link: '/account/signup',
+        query: { plan: 'business' }
       }
     },
     {
@@ -74,7 +77,8 @@ export class PricingComponent {
       ],
       button: {
         title: 'Contact Us',
-        link: 'enterprise'
+        link: '/account/signup',
+        query: { plan: 'enterprise' }
       }
     }
   ];

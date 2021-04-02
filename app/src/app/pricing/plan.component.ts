@@ -12,6 +12,7 @@ export interface PricingPlan {
   button: {
     title: string;
     link: string;
+    query: Record<string, string>;
   };
 }
 
