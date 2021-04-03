@@ -63,7 +63,6 @@ export async function authVerifyCreate(
 
   // reject request if email has a domain that is on the deny list
 
-  logger.warn('askedEmail %s', askedEmail)
   if (['aol.com', 'hotmail.com'].some((v) => askedEmail.endsWith(v))) {
     return next({
       errors: ['email address suspicious'],
