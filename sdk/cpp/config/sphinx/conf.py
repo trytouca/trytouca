@@ -17,7 +17,7 @@
 # -- Project information -----------------------------------------------------
 
 project = 'Weasel Client for C++'
-copyright = '2020, Pejman Ghorbanzade'
+copyright = '2021, Weasel, Inc'
 author = 'Pejman Ghorbanzade'
 
 # The full version, including alpha/beta/rc tags

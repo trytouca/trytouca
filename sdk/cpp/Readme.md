@@ -50,18 +50,9 @@ help your team refactor code, safer and more efficiently.
 
 ## Documentation
 
-* [Quickstart Guide](docs/BasicApi.md)
-* [Integration Guide](docs/Integration.md)
-* [Using the Client Library](docs/Quickstart.md)
-* [Using the Test Framework](docs/Tutorials.md)
-* [Build Instructions](docs/Build.md)
-
-Other Useful Links:
-
-* [Public Product Roadmap][Roadmap]
-* [Sample Regression Test Tools][weasel-examples]
 * [Online Documentation][Documentation]
-* [C++ Reference API][weasel-cpp-api]
+* [C++ API Reference][weasel-cpp-api]
+* [Sample Regression Test Tools][weasel-examples]
 
 We want Weasel to work well for you.
 If you need help, have any questions, like to contribute or to provide
@@ -72,7 +63,6 @@ feedback, join us on [Slack] or email us at [hello@getweasel.com].
 [YouTube]: https://www.youtube.com/channel/UCwa-rweWShIJo_DYhp2rVew
 [hello@getweasel.com]: mailto:hello@getweasel.com
 
-[Roadmap]: https://bit.ly/3q4EOcI
 [Documentation]: https://docs.getweasel.com
 [weasel-cpp-api]: https://getweasel.com/docs/clients/cpp/api.html
 [weasel-examples]: https://github.com/getweasel/examples

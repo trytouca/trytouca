@@ -1,3 +1,9 @@
-.caption {
-    text-align: center;
+.wy-nav-content {
+    padding: 1.5rem 3rem;
+}
+.wy-nav-content a:visited {
+  color: #2980b9;
+}
+.rst-content {
+    min-height: calc(100vh - 3rem);
 }
