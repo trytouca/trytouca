@@ -24,7 +24,7 @@ USER weasel
 
 RUN conan profile new default --detect \
   && conan profile update settings.compiler.libcxx=libstdc++11 default \
-  && conan remote add --force weasel-conan https://api.bintray.com/conan/getweasel/weasel-cpp \
+  && conan remote add --force weasel-conan https://getweasel.jfrog.io/artifactory/api/conan/weasel-cpp \
   && cd /opt/comparator && ./build.sh
 
 # ---- production ----
