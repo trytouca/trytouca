@@ -60,9 +60,9 @@ jobs:
     - name: upload conan
       if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
-        conan remote add --force weasel-conan https://getweasel.jfrog.io/artifactory/api/conan/weasel-cpp
-        conan user -p ${{ secrets.JFROG_API_KEY }} -r weasel-conan ${{ secrets.JFROG_USERNAME }}
-        conan upload "weasel/1.3.0" --confirm --parallel -r weasel-conan --all
+        conan remote add --force weasel-cpp https://getweasel.jfrog.io/artifactory/api/conan/weasel-cpp
+        conan user -p ${{ secrets.JFROG_API_KEY }} -r weasel-cpp ${{ secrets.JFROG_USERNAME }}
+        conan upload "weasel/1.3.0" --confirm --parallel -r weasel-cpp --all
 
   test-docker:
     name: unittest-docker
