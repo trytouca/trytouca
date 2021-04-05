@@ -107,7 +107,7 @@ export class FormHints {
  *
  */
 export const formFields: Record<
-  'fname' | 'email' | 'uname' | 'upass',
+  'fname' | 'email' | 'uname' | 'upass' | 'entityName' | 'entitySlug',
   { validators: ValidatorFn[]; validationErrors: Record<string, string> }
 > = {
   fname: {
@@ -156,6 +156,33 @@ export const formFields: Record<
       required: 'This field is required.',
       minlength: 'Password must be at least 8 characters.',
       maxlength: 'Password must be at most 64 characters.'
+    }
+  },
+  entityName: {
+    validators: [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(32)
+    ],
+    validationErrors: {
+      required: 'This field is required.',
+      minlength: 'Name must be at least 3 characters.',
+      maxlength: 'Name must be at most 32 characters.'
+    }
+  },
+  entitySlug: {
+    validators: [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(32),
+      Validators.pattern('[a-zA-Z][a-zA-Z0-9-]+')
+    ],
+    validationErrors: {
+      required: 'This field is required.',
+      minlength: 'Slug must be at least 3 characters.',
+      maxlength: 'Slug must be at most 32 characters.',
+      pattern:
+        'Only numbers and characters allowed, possibly separated by single hyphens.'
     }
   }
 };

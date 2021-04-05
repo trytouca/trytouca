@@ -2,10 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
+import { FormHint, FormHints, formFields } from '@weasel/core/models/form-hint';
 import { ApiService } from '@weasel/core/services';
 import { ModalComponent } from '@weasel/home/components';
 import { AlertType } from '@weasel/shared/components/alert.component';
@@ -33,7 +34,9 @@ type Content = {
   selector: 'app-teams-create',
   templateUrl: './create.component.html'
 })
-export class TeamsCreateTeamComponent extends ModalComponent {
+export class TeamsCreateTeamComponent
+  extends ModalComponent
+  implements OnDestroy {
   Mode = Mode;
   contents: Content[] = [
     {
@@ -63,23 +66,32 @@ export class TeamsCreateTeamComponent extends ModalComponent {
     super();
     super.form = new FormGroup({
       name: new FormControl('', {
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(32)
-        ],
+        validators: formFields.entityName.validators,
         updateOn: 'blur'
       }),
       slug: new FormControl('', {
-        validators: [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(16),
-          Validators.pattern('[a-zA-Z][a-zA-Z0-9]+')
-        ],
+        validators: formFields.entitySlug.validators,
         updateOn: 'blur'
       })
     });
+    super.hints = new FormHints({
+      name: new FormHint(
+        'Short user-friendly name. Appears on the Platform and the documents it generates.',
+        formFields.entityName.validationErrors
+      ),
+      slug: new FormHint(
+        'Unique url-friendly identifier. Used in the links to your test suites and test results.',
+        formFields.entitySlug.validationErrors
+      )
+    });
+    super.subscribeHints(['name', 'slug']);
+  }
+
+  /**
+   *
+   */
+  ngOnDestroy() {
+    super.unsubscribeHints();
   }
 
   /**
@@ -108,6 +120,7 @@ export class TeamsCreateTeamComponent extends ModalComponent {
     const url = 'team';
     this.apiService.post(url, body).subscribe(
       () => {
+        this.hints.reset();
         this.form.reset();
         this.submitted = false;
         this.dialogRef.close(true);
@@ -137,6 +150,7 @@ export class TeamsCreateTeamComponent extends ModalComponent {
     const url = ['team', model.slug.toLocaleLowerCase(), 'join'].join('/');
     this.apiService.post(url).subscribe(
       () => {
+        this.hints.reset();
         this.form.reset();
         this.submitted = false;
         this.dialogRef.close(true);

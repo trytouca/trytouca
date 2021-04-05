@@ -4,15 +4,27 @@
 
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { Subscription } from 'rxjs';
+import { FormHints } from '@weasel/core/models/form-hint';
 import { Alert } from '@weasel/shared/components/alert.component';
 
 @Component({
   template: ''
 })
 export class ModalComponent {
+  private _subHints: Subscription;
   public alert: Alert;
   public submitted: boolean;
   public form: FormGroup;
+  public hints: FormHints;
+
+  public subscribeHints(fields: string[]) {
+    this._subHints = this.hints.subscribe(this.form, fields);
+  }
+
+  public unsubscribeHints() {
+    this._subHints.unsubscribe();
+  }
 
   /**
    *
