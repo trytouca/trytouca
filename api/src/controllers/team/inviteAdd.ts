@@ -126,7 +126,6 @@ export async function teamInviteAdd(
 
   // send invitation email to user
 
-  const templateName = isRegistered ? 'team-invite-existing' : 'team-invite-new'
   const subject = `Join team "${team.name}" on Weasel`
   const recipient: IUser = {
     _id: null,
@@ -135,13 +134,14 @@ export async function teamInviteAdd(
     platformRole: null,
     username: askedEmail
   }
-  mailer.mailUser(recipient, subject, templateName, {
+  mailer.mailUser(recipient, subject, 'team-invite-new', {
+    greetings: isRegistered?.fullname ? `Hi ${isRegistered.fullname}` : `Hello`,
+    hasIntro: !isRegistered,
     joinLink: `${config.webapp.root}?redirect=join`,
     ownerName: user.fullname,
     ownerEmail: user.email,
     subject,
-    teamName: team.name,
-    userName: isRegistered?.fullname || isRegistered?.username
+    teamName: team.name
   })
 
   return res.status(204).send()
