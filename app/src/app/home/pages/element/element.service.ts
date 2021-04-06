@@ -3,6 +3,7 @@
  */
 
 import { Injectable } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 import { isEqual } from 'lodash-es';
 import { of, Observable, Subject, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -213,11 +214,11 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         );
 
         const durationCommonSrc = commonMetrics.reduce(
-          (acc, key) => acc + key.data.duration(),
+          (acc, key) => acc + key.data.src,
           0
         );
         const durationCommonDst = commonMetrics.reduce(
-          (acc, key) => acc + key.data.duration(),
+          (acc, key) => acc + key.data.dst,
           0
         );
         const durationFresh = freshMetrics.reduce(
@@ -249,7 +250,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         };
         this._overviewSubject.next(this._overview);
       },
-      (err) => {
+      (err: HttpErrorResponse) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items
@@ -309,7 +310,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         }
         this.fetchItems(params);
       },
-      (err) => {
+      (err: HttpErrorResponse) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items

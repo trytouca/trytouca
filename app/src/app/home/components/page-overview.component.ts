@@ -105,7 +105,7 @@ export class PageOverviewComponent {
       metric.absoluteDifference(),
       'duration'
     );
-    const scoreDesc = this.percentPipe.transform(metric.score(), '1.0-0');
+    const title = new Metric('', metric.src, metric.dst).changeDescription();
 
     return {
       header: 'Duration' + (inputs.inProgress ? ' (so far)' : ''),
@@ -119,8 +119,8 @@ export class PageOverviewComponent {
         type === Type.Same
           ? 'Same'
           : type === Type.Faster
-          ? scoreDesc
-          : '+' + scoreDesc,
+          ? '-' + title
+          : '+' + title,
       backColor: RingColor.Gray,
       frontColor: type === Type.Slower ? RingColor.Red : RingColor.Green,
       frontValue: 1
