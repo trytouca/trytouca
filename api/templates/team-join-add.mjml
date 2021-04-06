@@ -1,6 +1,7 @@
 <mjml>
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
+    <mj-preview>Someone wants to join your team {{ teamName }}.</mj-preview>
     <mj-font
       name="Nunito"
       href="https://fonts.googleapis.com/css?family=Nunito"

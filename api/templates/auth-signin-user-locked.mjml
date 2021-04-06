@@ -2,8 +2,8 @@
   <mj-head>
     <mj-title>Account Locked</mj-title>
     <mj-preview>
-      Due to multiple failed login attempts, we are temporarily locking your
-      account.
+      After multiple failed login attempts, we are temporarily locking your
+      account for protection.
     </mj-preview>
     <mj-font
       name="Nunito"

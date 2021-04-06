@@ -1,6 +1,7 @@
 <mjml>
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
+    <mj-preview>You are now a member of team {{ teamName }}.</mj-preview>
     <mj-font
       name="Nunito"
       href="https://fonts.googleapis.com/css?family=Nunito"
@@ -37,7 +38,7 @@
           ! {{ adminName }} accepted your request to join this team.
         </mj-text>
         <mj-button mj-class="wsl-bg-color" href="{{ teamLink }}">
-          Checkout Team
+          Check out your new team
         </mj-button>
       </mj-column>
     </mj-section>

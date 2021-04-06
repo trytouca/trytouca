@@ -1,6 +1,9 @@
 <mjml>
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
+    <mj-preview>
+      Team {{ teamName }} declined your request to join them.
+    </mj-preview>
     <mj-font
       name="Nunito"
       href="https://fonts.googleapis.com/css?family=Nunito"
