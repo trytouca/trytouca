@@ -20,7 +20,7 @@ static const unsigned MAX_FILE_SIZE = 10u * 1024 * 1024; // 10 megabytes
  */
 bool MergeOperation::parse_impl(int argc, char* argv[])
 {
-    cxxopts::Options options("weasel-cmp --mode=merge");
+    cxxopts::Options options("weasel-cli --mode=merge");
     // clang-format off
     options.add_options("main")
         ("src", "path to directory with one or more result files", cxxopts::value<std::string>())

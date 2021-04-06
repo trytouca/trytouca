@@ -18,7 +18,7 @@
  */
 bool PostOperation::parse_impl(int argc, char* argv[])
 {
-    cxxopts::Options options("weasel-cmp --mode=pos");
+    cxxopts::Options options("weasel-cli --mode=pos");
     // clang-format off
     options.add_options("main")
         ("src", "file or directory to be posted", cxxopts::value<std::string>())

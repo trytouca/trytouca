@@ -14,7 +14,7 @@
  */
 bool CompareOperation::parse_impl(int argc, char* argv[])
 {
-    cxxopts::Options options("weasel-cmp --mode=compare");
+    cxxopts::Options options("weasel-cli --mode=compare");
     // clang-format off
     options.add_options("main")
         ("src", "file or directory to compare", cxxopts::value<std::string>())

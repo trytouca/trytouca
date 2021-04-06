@@ -13,7 +13,7 @@
  */
 bool ViewOperation::parse_impl(int argc, char* argv[])
 {
-    cxxopts::Options options("weasel-cmp --mode=view");
+    cxxopts::Options options("weasel-cli --mode=view");
     // clang-format off
     options.add_options("main")
         ("src", "result file to view in json format", cxxopts::value<std::string>());

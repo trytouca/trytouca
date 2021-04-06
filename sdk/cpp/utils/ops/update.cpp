@@ -15,7 +15,7 @@
  */
 bool UpdateOperation::parse_impl(int argc, char* argv[])
 {
-    cxxopts::Options options("weasel-cmp --mode=update");
+    cxxopts::Options options("weasel-cli --mode=update");
     // clang-format off
     options.add_options("main")
         ("src", "path to directory with one or more result files", cxxopts::value<std::string>())
