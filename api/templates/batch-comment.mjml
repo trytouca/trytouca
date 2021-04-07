@@ -1,6 +1,10 @@
 <mjml>
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
+    <mj-preview>
+      {{ commentBy }} added a comment to version {{ batchName }} of suite {{
+      suiteName }}.
+    </mj-preview>
     <mj-font
       name="Nunito"
       href="https://fonts.googleapis.com/css?family=Nunito"

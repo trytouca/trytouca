@@ -1,6 +1,9 @@
 <mjml>
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
+    <mj-preview>
+      Version {{ promotedTo }} was promoted to baseline of suite {{ suiteName }}.
+    </mj-preview>
     <mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
     <mj-attributes>
       <mj-body background-color="#eee" />

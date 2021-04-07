@@ -40,10 +40,10 @@
 <!-- htmlmin:ignore -->{{#hasIntro}}<!-- htmlmin:ignore -->
         </mj-raw>
         <mj-text>
-          Weasel offers an end-to-end solution for regression
-          testing software workflows. It helps software engineers maintain
-          quality of their product by identifying unintended side-effects of
-          their day to day changes.
+          Weasel offers an end-to-end solution for regression testing software
+          workflows. It helps software engineers maintain quality of their
+          product by identifying unintended side-effects of their day to day
+          changes.
         </mj-text>
         <mj-raw>
 <!-- htmlmin:ignore -->{{/hasIntro}}<!-- htmlmin:ignore -->
