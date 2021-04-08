@@ -133,5 +133,5 @@ export async function authVerifyCreate(
     )
   }
 
-  return res.status(201).send()
+  return res.status(201).json({})
 }
