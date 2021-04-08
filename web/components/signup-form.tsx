@@ -3,24 +3,25 @@
  */
 
 import React from 'react';
+interface Props {}
 
 export default class SignupForm extends React.Component<{}, { umail: string }> {
-  constructor(props) {
+  constructor(props: Props) {
     super(props);
     this.state = { umail: '' };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
+  handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     this.setState({ umail: event.target.value });
   }
 
-  handleSubmit(event) {
+  handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     fetch('http://localhost:8081/auth/signup', {
       body: JSON.stringify({
-        email: event.target.umail.value
+        email: this.state.umail
       }),
       headers: {
         'Content-Type': 'application/json'

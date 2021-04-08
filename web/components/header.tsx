@@ -3,7 +3,6 @@
  */
 
 import Link from 'next/link';
-import Image from 'next/image';
 
 export default function Header() {
   return (
@@ -11,11 +10,9 @@ export default function Header() {
       <div className="flex items-center select-none">
         <Link href="/">
           <a className="h-16 flex items-center focus:outline-none">
-            <Image
-              priority
+            <img
+              className="h-12"
               src="/logo/weasel-logo-transparent.svg"
-              height={48}
-              width={48}
               alt="Weasel Logo"
             />
             <h1 className="text-2xl font-light text-white tracking-tight">
