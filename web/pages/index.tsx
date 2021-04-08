@@ -67,21 +67,19 @@ export default function Home() {
               <div className="container mx-auto space-y-4">
                 <p className="text-white uppercase">Trusted By</p>
                 <div className="flex space-x-2">
-                  <Link
+                  <a
                     href="https://vitalimages.com"
                     target="_blank"
                     rel="noopener">
-                    <a>
-                      <Image
-                        className="text-gray-50"
-                        priority
-                        src="/images/weasel-customer-logo-vital.svg"
-                        height={20}
-                        width={250}
-                        alt="Vital Images, Inc."
-                      />
-                    </a>
-                  </Link>
+                    <Image
+                      className="text-gray-50"
+                      priority
+                      src="/images/weasel-customer-logo-vital.svg"
+                      height={20}
+                      width={250}
+                      alt="Vital Images, Inc."
+                    />
+                  </a>
                 </div>
               </div>
             </div>
