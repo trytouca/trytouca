@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wsl-text-shadow {
+  text-shadow: 1px 3px 4px rgba(0, 0, 0, 0.25);
+}
+
+.wsl-min-h-screen-1 {
+  min-height: calc(100vh - 4rem);
+}
+
+@layer components {
+  .wsl-header-btn-primary {
+    @apply py-2 px-4 text-sm leading-6 font-semibold rounded-lg text-white bg-green-600 shadow-md focus:border-gray-200 focus:outline-none focus:ring-0;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+  }
+  .wsl-header-btn-secondary {
+    @apply py-2 px-4 text-sm leading-6 font-semibold rounded-lg text-white bg-transparent duration-150 ease-in-out hover:bg-light-blue-700 focus:ring-0;
+  }
+}
