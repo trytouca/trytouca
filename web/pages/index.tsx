@@ -3,11 +3,10 @@
  */
 
 import Head from 'next/head';
-import Image from 'next/image';
 
 import { ArrowRightIcon } from '@heroicons/react/solid';
 
-import SignupForm from '../components/signup-form';
+import SignupForm from '@/components/signup-form';
 
 export default function Home() {
   return (
@@ -51,12 +50,9 @@ export default function Home() {
                     href="https://vitalimages.com"
                     target="_blank"
                     rel="noopener">
-                    <Image
+                    <img
                       className="text-gray-50"
-                      priority
                       src="/images/weasel-customer-logo-vital.svg"
-                      height={20}
-                      width={250}
                       alt="Vital Images, Inc."
                     />
                   </a>
