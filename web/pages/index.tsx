@@ -4,9 +4,10 @@
 
 import Head from 'next/head';
 import Image from 'next/image';
-import Link from 'next/link';
 
 import { ArrowRightIcon } from '@heroicons/react/solid';
+
+import SignupForm from '../components/signup-form';
 
 export default function Home() {
   return (
@@ -30,28 +31,7 @@ export default function Home() {
                 software without using snapshot files.
               </p>
               <div>
-                <form>
-                  <label
-                    className="wsl-input-label sr-only"
-                    htmlFor="wsl-email">
-                    Email Address
-                  </label>
-                  <div className="flex h-10 space-x-2">
-                    <input
-                      className="flex-grow-0 lg:flex-grow h-full rounded-md shadow-md bg-white text-black border border-gray-300 focus:outline-none focus:border-gray-500 focus:ring-0"
-                      type="email"
-                      id="wsl-email"
-                      placeholder="Email address"
-                      required
-                    />
-                    <button
-                      className="h-full overflow-hidden px-4 bg-green-600 text-white font-semibold rounded-md shadow-md border border-transparent focus:border-gray-200 focus:outline-none focus:ring-0"
-                      type="submit"
-                      role="button">
-                      Signup for Free
-                    </button>
-                  </div>
-                </form>
+                <SignupForm></SignupForm>
                 <p className="mt-2">
                   You can explore Weasel in action using the test results in our
                   playground.
