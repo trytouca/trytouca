@@ -14,7 +14,7 @@ export default function FirstPost() {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
-      <section className="wsl-min-h-screen-1">Pricing Page</section>
+      <section className="wsl-min-h-screen-1 bg-gradient-to-b from-primary-900 to-light-blue-900"></section>
     </>
   );
 }

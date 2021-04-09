@@ -3,9 +3,9 @@
  */
 
 import Document, { Html, Head, Main, NextScript } from 'next/document';
-import Header from '@/components/header';
 import Footer from '@/components/footer';
 import { GA_TRACKING_ID } from '@/lib/gtag';
+import Header from '@/components/header';
 
 export default class MyDocument extends Document {
   render() {
@@ -54,7 +54,7 @@ export default class MyDocument extends Document {
             }}
           />
         </Head>
-        <body className="font-sans antialiased min-h-screen bg-gradient-to-b from-[#0d0d2b] to-light-blue-900">
+        <body className="font-sans antialiased min-h-screen bg-primary-900">
           <Header></Header>
           <Main />
           <Footer></Footer>
