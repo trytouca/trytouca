@@ -3,6 +3,8 @@
  */
 
 import React from 'react';
+import { event as gtag_event } from '@/lib/gtag';
+
 interface Props {}
 
 export default class SignupForm extends React.Component<{}, { umail: string }> {
@@ -30,8 +32,8 @@ export default class SignupForm extends React.Component<{}, { umail: string }> {
     })
       .then((res) => res.json())
       .then((res) => {
-        event.target.reset();
         this.setState({ umail: '' });
+        gtag_event({ action: 'sign_up' });
       })
       .catch((e) => console.error(e));
   }
