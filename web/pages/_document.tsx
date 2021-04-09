@@ -3,9 +3,9 @@
  */
 
 import Document, { Html, Head, Main, NextScript } from 'next/document';
-
 import Header from '@/components/header';
 import Footer from '@/components/footer';
+import { GA_TRACKING_ID } from '@/lib/gtag';
 
 export default class MyDocument extends Document {
   render() {
@@ -40,6 +40,19 @@ export default class MyDocument extends Document {
           <link rel="canonical" href="https://getweasel.com" />
           <link rel="icon" type="image/x-icon" href="favicon.ico" />
           <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_TRACKING_ID}', { page_path: window.location.pathname });`
+            }}
+          />
         </Head>
         <body className="font-sans antialiased min-h-screen bg-gradient-to-b from-light-blue-900 to-light-blue-700">
           <Header></Header>
