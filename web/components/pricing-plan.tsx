@@ -40,9 +40,9 @@ export default class PricingPlan extends React.Component<{ plan: Input }, {}> {
         </div>
         <div className="p-4 flex-grow flex flex-col justify-between bg-light-blue-900 bg-opacity-40 rounded-b-lg space-y-8">
           <div className="space-y-2">
-            {this.props.plan.features.map((feature) => {
+            {this.props.plan.features.map((feature, index) => {
               return (
-                <div className="flex space-x-4">
+                <div key={index} className="flex space-x-4">
                   <HiOutlineBadgeCheck
                     className="text-green-600"
                     size="1.5rem"></HiOutlineBadgeCheck>
