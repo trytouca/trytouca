@@ -3,9 +3,7 @@
  */
 
 import Head from 'next/head';
-
 import { HiArrowNarrowRight } from 'react-icons/hi';
-
 import SignupForm from '@/components/signup-form';
 
 export default function Home() {
@@ -18,11 +16,11 @@ export default function Home() {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
-      <section>
+      <section className="bg-gradient-to-b from-primary-900 to-light-blue-900">
         <div className="wsl-min-h-screen-1 lg:flex">
           <div className="container mx-auto grid lg:grid-cols-2 lg:gap-4 lg:items-center">
             <div className="col-span-1 mx-auto pt-24 lg:pt-8 p-8 space-y-8 text-white">
-              <h2 className="wsl-text-shadow' max-w-xl text-4xl xl:text-5xl font-bold">
+              <h2 className="wsl-text-gradient wsl-text-shadow max-w-xl text-4xl xl:text-5xl font-bold">
                 Continuous regression testing for critical software workflows
               </h2>
               <p className="max-w-xl text-2xl">
@@ -65,6 +63,23 @@ export default function Home() {
                 alt="A Screen Shot of Weasel Regression Testing Platform"
                 src="/images/weasel-atf-visual.png"
               />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="bg-gradient-to-b to-light-blue-900 from-primary-900">
+        <div className="min-h-[25vh] flex items-center bg-primary-900">
+          <div className="container mx-auto px-8 md:px-24 lg:px-8 xl:px-24">
+            <div className="space-y-2 text-white">
+              <h3 className="wsl-text-shadow text-3xl xl:text-4xl font-bold">
+                Try Weasel today
+              </h3>
+              <p className="text-lg">
+                See if Weasel can help you maintain software more efficiently.
+              </p>
+              <button className="wsl-btn-green px-4 py-2 text-base leading-6 rounded-lg shadow-md duration-150 ease-in-out focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400">
+                Get Started
+              </button>
             </div>
           </div>
         </div>
