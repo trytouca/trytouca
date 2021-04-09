@@ -65,20 +65,18 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="bg-gradient-to-b to-light-blue-900 from-primary-900">
-        <div className="min-h-[25vh] flex items-center bg-primary-900">
-          <div className="container mx-auto px-8 md:px-24 lg:px-8">
-            <div className="space-y-2 text-white">
-              <h3 className="wsl-text-shadow text-2xl xl:text-3xl font-bold">
-                Try Weasel today
-              </h3>
-              <p className="text-lg">
-                See if Weasel can help you maintain software more efficiently.
-              </p>
-              <button className="wsl-btn-green px-4 py-2 text-base leading-6 rounded-lg shadow-md focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400">
-                Get Started
-              </button>
-            </div>
+      <section className="py-8 min-h-[25vh] flex items-center bg-primary-900">
+        <div className="container mx-auto px-8 md:px-24 lg:px-8">
+          <div className="space-y-2 text-white">
+            <h3 className="wsl-text-shadow text-2xl xl:text-3xl font-bold">
+              Try Weasel today
+            </h3>
+            <p className="text-lg">
+              See if Weasel can help you maintain software more efficiently.
+            </p>
+            <button className="wsl-btn-green px-4 py-2 text-base leading-6 rounded-lg shadow-md focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400">
+              Get Started
+            </button>
           </div>
         </div>
       </section>

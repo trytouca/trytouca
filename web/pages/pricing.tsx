@@ -77,7 +77,7 @@ export default function PricingPage() {
               Scale as you grow. Free forever for individuals and non-profits.
             </p>
           </div>
-          <div className="auto-cols-fr">
+          <div className="p-8 auto-cols-fr">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               <div className="col-span-1">
                 <PricingPlan plan={plans[0]}></PricingPlan>
