@@ -26,7 +26,7 @@ const social = [
 
 export default function Header() {
   return (
-    <footer className="bg-gradient-to-r from-light-blue-800 to-light-blue-700 border-t border-light-blue-600">
+    <footer className="bg-gradient-to-r from-light-blue-900 to-[#0d0d2b] border-t border-light-blue-900">
       <div className="h-20 px-12 mx-auto container flex items-center justify-between">
         <p className="text-white text-sm">
           &copy; {copyrightYear} Weasel, Inc.
