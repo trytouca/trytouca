@@ -8,10 +8,10 @@
     "start": "next start"
   },
   "dependencies": {
-    "@heroicons/react": "^1.0.0",
     "next": "^10.0.0",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "react-icons": "^4.2.0"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.3.2",

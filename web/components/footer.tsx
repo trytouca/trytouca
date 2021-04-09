@@ -2,23 +2,25 @@
  * Copyright 2021 Weasel, Inc. All rights reserved.
  */
 
+import { FaGithub, FaTwitter, FaSlack } from 'react-icons/fa';
+
 const copyrightYear = new Date().getFullYear();
 
 const social = [
   {
     title: 'Join our Community',
     link: 'https://getweasel.slack.com',
-    icon: ['fab', 'slack']
+    icon: FaSlack
   },
   {
     title: 'Follow us on Twitter',
     link: 'https://twitter.com/getweasel',
-    icon: ['fab', 'twitter']
+    icon: FaTwitter
   },
   {
     title: 'Check us out on GitHub',
     link: 'https://github.com/getweasel',
-    icon: ['fab', 'github']
+    icon: FaGithub
   }
 ];
 
@@ -31,10 +33,13 @@ export default function Header() {
         </p>
         <ul className="flex space-x-4">
           {social.map((item) => {
+            const Icon = item.icon;
             return (
               <li key={item.link} title={item.title}>
                 <a href={item.link} target="_blank" rel="noopener">
-                  {item.icon}
+                  <Icon
+                    className="text-gray-200 hover:text-white"
+                    size="2rem"></Icon>
                 </a>
               </li>
             );
