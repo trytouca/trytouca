@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export default function Header() {
   return (
-    <header className="h-20 sticky top-0 z-10 bg-primary-900 bg-opacity-95 backdrop-filter backdrop-blur">
+    <header className="h-20 sticky top-0 z-10 bg-primary-900 bg-opacity-90 backdrop-filter backdrop-blur">
       <div className="px-4 mx-auto container flex justify-between">
         <div className="flex items-center select-none">
           <Link href="/">
