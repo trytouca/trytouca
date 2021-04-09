@@ -24,7 +24,7 @@ const social = [
   }
 ];
 
-export default function Header() {
+export default function Footer() {
   return (
     <footer className="bg-gradient-to-r from-light-blue-900 to-primary-900 border-t border-light-blue-900">
       <div className="h-20 px-12 mx-auto container flex items-center justify-between">
