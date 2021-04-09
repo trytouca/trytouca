@@ -69,9 +69,9 @@ export default function Home() {
       </section>
       <section className="bg-gradient-to-b to-light-blue-900 from-primary-900">
         <div className="min-h-[25vh] flex items-center bg-primary-900">
-          <div className="container mx-auto px-8 md:px-24 lg:px-8 xl:px-24">
+          <div className="container mx-auto px-8 md:px-24 lg:px-8">
             <div className="space-y-2 text-white">
-              <h3 className="wsl-text-shadow text-3xl xl:text-4xl font-bold">
+              <h3 className="wsl-text-shadow text-2xl xl:text-3xl font-bold">
                 Try Weasel today
               </h3>
               <p className="text-lg">
