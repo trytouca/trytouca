@@ -4,7 +4,7 @@
 
 import Head from 'next/head';
 
-import { ArrowRightIcon } from '@heroicons/react/solid';
+import { HiArrowNarrowRight } from 'react-icons/hi';
 
 import SignupForm from '@/components/signup-form';
 
@@ -41,7 +41,7 @@ export default function Home() {
                 type="button"
                 role="button">
                 <span>Get a Live Demo</span>
-                <ArrowRightIcon className="inline h-4 opacity-50 group-hover:opacity-100"></ArrowRightIcon>
+                <HiArrowNarrowRight className="inline h-4 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
               </button>
               <div className="container mx-auto space-y-4">
                 <p className="text-white uppercase">Trusted By</p>
