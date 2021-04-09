@@ -56,7 +56,7 @@ export default class SignupForm extends React.Component<{}, { umail: string }> {
             onChange={this.handleChange}
           />
           <button
-            className="h-full overflow-hidden px-4 bg-green-600 text-white font-semibold rounded-md shadow-md border border-transparent focus:border-gray-200 focus:outline-none focus:ring-0"
+            className="wsl-btn-green px-4 h-full overflow-hidden rounded-md border border-transparent"
             type="submit"
             role="button">
             Signup for Free

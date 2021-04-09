@@ -54,7 +54,7 @@ export default class MyDocument extends Document {
             }}
           />
         </Head>
-        <body className="font-sans antialiased min-h-screen bg-gradient-to-b from-light-blue-900 to-light-blue-700">
+        <body className="font-sans antialiased min-h-screen bg-gradient-to-b from-[#0d0d2b] to-light-blue-900">
           <Header></Header>
           <Main />
           <Footer></Footer>
