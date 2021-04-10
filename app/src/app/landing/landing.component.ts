@@ -244,6 +244,11 @@ export class LandingComponent {
             400,
             'email already registered',
             'There is already an account associated with this email address.'
+          ],
+          [
+            403,
+            'email address suspicious',
+            'Please use an email address with a different domain.'
           ]
         ]);
         this.ctaSignupOutcome = {
