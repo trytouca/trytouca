@@ -8,10 +8,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "formik": "^2.2.6",
     "next": "^10.0.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
-    "react-icons": "^4.2.0"
+    "react-icons": "^4.2.0",
+    "yup": "^0.32.9"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.3.2",
