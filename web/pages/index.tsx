@@ -4,8 +4,8 @@
 
 import Head from 'next/head';
 import { HiArrowNarrowRight } from 'react-icons/hi';
-import SignupForm from '@/components/signup-form';
 import FooterCta from '@/components/footer-cta';
+import SignupForm from '@/components/signup-form';
 
 export default function Home() {
   return (
@@ -19,7 +19,7 @@ export default function Home() {
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
         <div className="wsl-min-h-screen-1 container mx-auto grid lg:grid-cols-2 lg:gap-4 lg:items-center">
-          <div className="col-span-1 mx-auto pt-24 lg:pt-8 p-8 space-y-8 text-white">
+          <div className="col-span-1 mx-auto pt-24 lg:pt-8 p-8 text-white space-y-8">
             <h2 className="wsl-text-gradient wsl-text-shadow max-w-xl text-4xl xl:text-5xl font-bold">
               Continuous regression testing for critical software workflows
             </h2>
@@ -29,13 +29,9 @@ export default function Home() {
             </p>
             <div>
               <SignupForm></SignupForm>
-              <p className="mt-2">
-                You can explore Weasel in action using the test results in our
-                playground.
-              </p>
             </div>
             <button
-              className="py-2 space-x-2 font-medium hover:underline focus:underline focus:outline-none group"
+              className="py-2 font-medium space-x-2 hover:underline focus:underline focus:outline-none group"
               type="button"
               role="button">
               <span>Get a Live Demo</span>
