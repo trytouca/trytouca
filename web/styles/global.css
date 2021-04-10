@@ -19,6 +19,6 @@
     @apply wsl-btn-green py-2 px-4 text-sm leading-6 rounded-lg;
   }
   .wsl-header-btn-secondary {
-    @apply py-2 px-4 text-sm leading-6 font-semibold rounded-lg text-white bg-transparent duration-150 ease-in-out hover:bg-light-blue-900 focus:ring-0;
+    @apply py-2 px-4 text-sm leading-6 font-semibold rounded-lg text-white bg-transparent duration-150 ease-in-out hover:bg-dark-blue-700 focus:ring-0;
   }
 }

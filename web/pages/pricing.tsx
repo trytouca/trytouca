@@ -3,6 +3,7 @@
  */
 
 import Head from 'next/head';
+import FooterCta from '@/components/footer-cta';
 import PricingPlan, { Input } from '@/components/pricing-plan';
 
 const plans: Input[] = [
@@ -67,7 +68,7 @@ export default function PricingPage() {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
-      <section className="bg-gradient-to-b from-primary-900 via-primary-900 to-light-blue-900">
+      <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-light-blue-900">
         <div className="wsl-min-h-screen-1 container mx-auto">
           <div className="p-8 space-y-2 text-center">
             <h2 className="text-white text-4xl font-extrabold">
@@ -90,6 +91,11 @@ export default function PricingPage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+      <section className="py-8 min-h-[25vh] flex items-center bg-dark-blue-800">
+        <div className="container mx-auto px-8 md:px-24 lg:px-8">
+          <FooterCta></FooterCta>
         </div>
       </section>
     </>
