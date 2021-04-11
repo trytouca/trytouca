@@ -9,7 +9,6 @@ import { FeedbackComponent } from './feedback/feedback.component';
 import { NotfoundComponent } from './notfound/notfound.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/~', pathMatch: 'full' },
   {
     path: 'feedback',
     component: FeedbackComponent,
@@ -27,6 +26,7 @@ const routes: Routes = [
     loadChildren: () => import('./home/home.module').then((m) => m.HomeModule),
     data: { page: 'home', title: 'Home' }
   },
+  { path: '', redirectTo: '~', pathMatch: 'full' },
   { path: '**', component: NotfoundComponent }
 ];
 
