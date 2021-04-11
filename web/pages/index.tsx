@@ -31,6 +31,7 @@ type TestimonialInput = {
 
 type FeatureInput = {
   icon: IconType;
+  image?: string;
   title: string;
   description: string;
   button: {
@@ -104,6 +105,19 @@ const Feature = (props: { input: FeatureInput }) => {
   );
 };
 
+const FeatureHero = (props: { input: FeatureInput }) => {
+  return (
+    <div className="flex justify-center items-center">
+      <div className="md:p-4 xl:p-6 w-full bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
+        <img
+          className="mx-auto w-full rounded-md md:rounded-xl"
+          src={props.input.image}
+        />
+      </div>
+    </div>
+  );
+};
+
 const Testimonial = (props: { input: TestimonialInput }) => {
   return (
     <div className="bg-dark-blue-800 bg-opacity-75 p-8 rounded-lg shadow-xl space-y-4">
@@ -135,6 +149,7 @@ const content: PageContent = {
   features: [
     {
       icon: HiOutlineUpload,
+      image: '/images/weasel_landing_feature_1.png',
       title: 'Submit',
       description: `Use our client libraries to capture values of important
         variables and runtime of functions, for any number of test cases,
@@ -147,6 +162,7 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineLightBulb,
+      image: '/images/weasel_landing_feature_2.png',
       title: 'Interpret',
       description: `We compare your results against your baseline version and
         report any changes in behavior or performance.`,
@@ -159,6 +175,7 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineUserGroup,
+      image: '/images/weasel_landing_feature_3.png',
       title: 'Collaborate',
       description: `Work as a team to resolve or justify new differences.
         Maintain a shared understanding of how your software is supposed
@@ -171,6 +188,7 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineCog,
+      image: '/images/weasel_landing_feature_4.png',
       title: 'Automate',
       description: `Use our testing frameworks to automate your regression tests
         and manage their execution through our platform.`,
@@ -188,7 +206,7 @@ const content: PageContent = {
       find the true impact of any code change.`
     },
     {
-      title: 'Scale without Worry',
+      title: 'Scale without worry',
       description: `Test your most complex workflows with real-world inputs to
       find the true impact of any code change.`
     },
@@ -303,7 +321,9 @@ export default function Home() {
           <div className="wsl-landing-feature-nest">
             <Feature input={content.features[0]}></Feature>
           </div>
-          <div className="wsl-landing-feature-nest"></div>
+          <div className="lg:col-span-1 grid">
+            <FeatureHero input={content.features[0]} />
+          </div>
         </div>
       </section>
       <section className="min-h-[75vh] bg-dark-blue-900 grid">
@@ -311,7 +331,9 @@ export default function Home() {
           <div className="wsl-landing-feature-nest">
             <Feature input={content.features[1]}></Feature>
           </div>
-          <div className="wsl-landing-feature-nest"></div>
+          <div className="lg:col-span-1 grid">
+            <FeatureHero input={content.features[1]} />
+          </div>
         </div>
       </section>
       <section className="min-h-[75vh] bg-dark-blue-900 grid">
@@ -319,7 +341,9 @@ export default function Home() {
           <div className="wsl-landing-feature-nest">
             <Feature input={content.features[2]}></Feature>
           </div>
-          <div className="wsl-landing-feature-nest"></div>
+          <div className="lg:col-span-1 grid">
+            <FeatureHero input={content.features[2]} />
+          </div>
         </div>
       </section>
       <section className="min-h-[75vh] bg-dark-blue-900 grid">
@@ -327,7 +351,9 @@ export default function Home() {
           <div className="wsl-landing-feature-nest">
             <Feature input={content.features[3]}></Feature>
           </div>
-          <div className="wsl-landing-feature-nest"></div>
+          <div className="lg:col-span-1 grid">
+            <FeatureHero input={content.features[3]} />
+          </div>
         </div>
       </section>
       <section className="wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800 grid">
