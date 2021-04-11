@@ -4,7 +4,13 @@
 
 import Head from 'next/head';
 import { FaCity } from 'react-icons/fa';
-import { HiArrowNarrowRight } from 'react-icons/hi';
+import {
+  HiArrowNarrowRight,
+  HiOutlineCog,
+  HiOutlineLightBulb,
+  HiOutlineUpload,
+  HiOutlineUserGroup
+} from 'react-icons/hi';
 import FooterCta from '@/components/footer-cta';
 import SignupForm from '@/components/signup-form';
 
@@ -89,10 +95,110 @@ export default function Home() {
           We make maintaining software 10x more efficient.
         </p>
       </section>
+      <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
+        <div className="wsl-landing-feature-child">
+          <div className="wsl-landing-feature-nest">
+            <div className="flex items-center space-x-2">
+              <HiOutlineUpload
+                className="text-light-blue-600"
+                size="3rem"></HiOutlineUpload>
+              <h3 className="text-4xl xl:text-5xl text-white font-bold">
+                Collect
+              </h3>
+            </div>
+            <p className="text-2xl text-gray-300">
+              Use our client libraries to capture test results and performance
+              benchmarks from anywhere within your workflow.
+            </p>
+            <div>
+              <DimButton
+                link="https://docs.getweasel.com/guides/submit"
+                text="Learn More"
+                title="Learn how to submit test results from your test tools"></DimButton>
+            </div>
+          </div>
+          <div className="wsl-landing-feature-nest"></div>
+        </div>
+      </section>
+      <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
+        <div className="wsl-landing-feature-child">
+          <div className="wsl-landing-feature-nest">
+            <div className="flex items-center space-x-2">
+              <HiOutlineLightBulb
+                className="text-light-blue-600"
+                size="3rem"></HiOutlineLightBulb>
+              <h3 className="text-4xl xl:text-5xl text-white font-bold">
+                Interpret
+              </h3>
+            </div>
+            <p className="text-2xl text-gray-300">
+              We compare your results against their baseline version and help
+              you understand the impact of your code changes.
+            </p>
+            <div>
+              <DimButton
+                link="https://docs.getweasel.com/guides/interpret"
+                text="Learn More"
+                title="Learn how Weasel processes your results and reports regressions"></DimButton>
+            </div>
+          </div>
+          <div className="wsl-landing-feature-nest"></div>
+        </div>
+      </section>
+      <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
+        <div className="wsl-landing-feature-child">
+          <div className="wsl-landing-feature-nest">
+            <div className="flex items-center space-x-2">
+              <HiOutlineUserGroup
+                className="text-light-blue-600"
+                size="3rem"></HiOutlineUserGroup>
+              <h3 className="text-4xl xl:text-5xl text-white font-bold">
+                Collaborate
+              </h3>
+            </div>
+            <p className="text-2xl text-gray-300">
+              Add notes on test results for each version to easily audit how
+              your software evolves over time.
+            </p>
+            <div>
+              <DimButton
+                link="https://docs.getweasel.com/guides/collaborate"
+                text="Learn More"
+                title="Learn how to work as a team to handle regressions in your software."></DimButton>
+            </div>
+          </div>
+          <div className="wsl-landing-feature-nest"></div>
+        </div>
+      </section>
+      <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
+        <div className="wsl-landing-feature-child">
+          <div className="wsl-landing-feature-nest">
+            <div className="flex items-center space-x-2">
+              <HiOutlineCog
+                className="text-light-blue-600"
+                size="3rem"></HiOutlineCog>
+              <h3 className="text-4xl xl:text-5xl text-white font-bold">
+                Automate
+              </h3>
+            </div>
+            <p className="text-2xl text-gray-300">
+              Use our testing frameworks to automate your regression tests and
+              manage their execution through our platform.
+            </p>
+            <div>
+              <DimButton
+                link="https://docs.getweasel.com/guides/automate"
+                text="Learn More"
+                title="Learn how to automate the execution of your tests tools."></DimButton>
+            </div>
+          </div>
+          <div className="wsl-landing-feature-nest"></div>
+        </div>
+      </section>
       <section className="wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800 grid">
-        <div className="container mx-auto grid gap-16 lg:grid-cols-2">
-          <div className="max-w-xl mx-auto col-span-1 px-8 md:px-0 grid place-content-center space-y-6">
-            <FaCity className="text-gray-500" size="3rem"></FaCity>
+        <div className="wsl-landing-feature-child">
+          <div className="wsl-landing-feature-nest">
+            <FaCity className="text-light-blue-600" size="3rem"></FaCity>
             <h3 className="text-4xl xl:text-5xl text-white font-bold">
               Built for the Enterprise
             </h3>
@@ -102,7 +208,7 @@ export default function Home() {
               product.
             </p>
           </div>
-          <div className="max-w-xl mx-auto col-span-1 px-8 md:px-0 grid place-content-center">
+          <div className="wsl-landing-feature-nest">
             <div className="bg-dark-blue-800 bg-opacity-75 p-8 rounded-lg shadow-xl space-y-4">
               <figcaption className="flex items-center space-x-4">
                 <img

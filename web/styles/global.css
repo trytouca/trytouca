@@ -21,4 +21,10 @@
   .wsl-header-btn-secondary {
     @apply py-2 px-4 text-sm leading-6 font-semibold rounded-lg text-white bg-transparent duration-150 ease-in-out hover:bg-dark-blue-700 focus:ring-0;
   }
+  .wsl-landing-feature-child {
+    @apply container mx-auto grid gap-16 lg:grid-cols-2;
+  }
+  .wsl-landing-feature-nest {
+    @apply max-w-xl mx-auto col-span-1 px-8 md:px-0 grid place-content-center space-y-6;
+  }
 }
