@@ -13,7 +13,6 @@ import { DialogModule } from '@ngneat/dialog';
 import {
   AlertComponent,
   FooterInsideComponent,
-  FooterOutsideComponent,
   HeaderInsideComponent,
   HeaderOutsideComponent,
   ServerDownComponent
@@ -37,7 +36,6 @@ import { AutofocusDirective, DropdownDirective } from './directives';
     AutofocusDirective,
     DropdownDirective,
     FooterInsideComponent,
-    FooterOutsideComponent,
     HeaderInsideComponent,
     HeaderOutsideComponent,
     ServerDownComponent
@@ -50,7 +48,6 @@ import { AutofocusDirective, DropdownDirective } from './directives';
     DropdownDirective,
     FontAwesomeModule,
     FooterInsideComponent,
-    FooterOutsideComponent,
     FormsModule,
     GoogleTagManagerModule,
     HeaderInsideComponent,
