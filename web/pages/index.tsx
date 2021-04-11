@@ -8,6 +8,20 @@ import { HiArrowNarrowRight } from 'react-icons/hi';
 import FooterCta from '@/components/footer-cta';
 import SignupForm from '@/components/signup-form';
 
+const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
+  return (
+    <a href={props.link} title={props.title} target="_blank">
+      <button
+        className="px-4 py-2 bg-dark-blue-700 bg-opacity-25 text-light-blue-600 hover:text-light-blue-500 font-medium rounded-full space-x-1 focus:underline focus:outline-none group"
+        type="button"
+        role="button">
+        <span className="text-sm leading-6 font-medium">{props.text}</span>
+        <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
+      </button>
+    </a>
+  );
+};
+
 export default function Home() {
   return (
     <>
@@ -113,20 +127,10 @@ export default function Home() {
                 </p>
               </blockquote>
               <div className="text-right">
-                <a
-                  href="https://docs.getweasel.com/stories/vital"
-                  title="Learn more about how Vital Images uses Weasel"
-                  target="_blank">
-                  <button
-                    className="px-4 py-2 bg-dark-blue-700 bg-opacity-25 text-light-blue-600 hover:text-light-blue-500 font-medium rounded-full space-x-1 focus:underline focus:outline-none group"
-                    type="button"
-                    role="button">
-                    <span className="text-sm leading-6 font-medium">
-                      Read Vital Images' Story
-                    </span>
-                    <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
-                  </button>
-                </a>
+                <DimButton
+                  link="https://docs.getweasel.com/stories/vital"
+                  text="Read Vital Images' Story"
+                  title="Learn more about how Vital Images uses Weasel"></DimButton>
               </div>
             </div>
           </div>
