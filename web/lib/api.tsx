@@ -7,8 +7,10 @@ import {
   HiOutlineExclamationCircle
 } from 'react-icons/hi';
 
+const API_URL = process.env.NEXT_PUBLIC_WEASEL_API_URL;
+
 export async function post_json(body: Record<string, unknown>) {
-  return fetch('http://localhost:8081/auth/signup', {
+  return fetch(`${API_URL}/auth/signup`, {
     body: JSON.stringify(body),
     headers: { 'Content-Type': 'application/json' },
     method: 'POST'
