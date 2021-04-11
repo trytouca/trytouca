@@ -3,6 +3,7 @@
  */
 
 import Head from 'next/head';
+import { FaCity } from 'react-icons/fa';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 import FooterCta from '@/components/footer-cta';
 import SignupForm from '@/components/signup-form';
@@ -62,7 +63,68 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="py-8 min-h-[25vh] flex items-center bg-dark-blue-800">
+      <section className="bg-gradient-to-r from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
+        <p className="p-8 mx-auto container text-center text-xl text-white font-semibold">
+          We make maintaining software 10x more efficient.
+        </p>
+      </section>
+      <section className="wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800 grid">
+        <div className="container mx-auto grid gap-16 lg:grid-cols-2">
+          <div className="max-w-xl mx-auto col-span-1 px-8 md:px-0 grid place-content-center space-y-6">
+            <FaCity className="text-gray-500" size="3rem"></FaCity>
+            <h3 className="text-4xl xl:text-5xl text-white font-bold">
+              Built for the Enterprise
+            </h3>
+            <p className="text-2xl text-gray-300">
+              Weasel started as an internal tool at a medical software company
+              to find regressions in low-level components of a mission-critical
+              product.
+            </p>
+          </div>
+          <div className="max-w-xl mx-auto col-span-1 px-8 md:px-0 grid place-content-center">
+            <div className="bg-dark-blue-800 bg-opacity-75 p-8 rounded-lg shadow-xl space-y-4">
+              <figcaption className="flex items-center space-x-4">
+                <img
+                  className="w-20 h-20 rounded-2xl"
+                  src="/images/weasel-customer-testimonial-vital-profile.jpg"
+                />
+                <div className="font-medium">
+                  <div className="text-lg text-white">Pejman Ghorbanzade</div>
+                  <div className="text-light-blue-600 text-base">
+                    Sr. Software Engineer at Vital Images, Inc.
+                  </div>
+                </div>
+              </figcaption>
+              <blockquote className="text-gray-300 text-xl">
+                <p>
+                  "We use Weasel at scale to perform nightly regression tests of
+                  some of our critical workflows with thousands of datasets. It
+                  has helped us quickly identify unintended side effects of our
+                  code changes before they become too expensive to fix. I like
+                  how easy it is to write new regression tests and automate
+                  their execution."
+                </p>
+              </blockquote>
+              <div className="text-right">
+                <a
+                  href="https://docs.getweasel.com/stories/vital"
+                  title="Learn more about how Vital Images uses Weasel">
+                  <button
+                    className="px-4 py-2 bg-dark-blue-700 bg-opacity-25 text-light-blue-600 hover:text-light-blue-500 font-medium rounded-full space-x-1 focus:underline focus:outline-none group"
+                    type="button"
+                    role="button">
+                    <span className="text-sm leading-6 font-medium">
+                      Read Vital Images' Story
+                    </span>
+                    <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
+                  </button>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section className="py-32 lg:pt-8 min-h-[25vh] flex items-center bg-dark-blue-800">
         <div className="container mx-auto px-8 md:px-24 lg:px-8">
           <FooterCta></FooterCta>
         </div>
