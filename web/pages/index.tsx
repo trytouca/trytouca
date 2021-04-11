@@ -3,6 +3,7 @@
  */
 
 import Head from 'next/head';
+import { IconType } from 'react-icons';
 import { FaCity } from 'react-icons/fa';
 import {
   HiArrowNarrowRight,
@@ -25,6 +26,140 @@ const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
         <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
       </button>
     </a>
+  );
+};
+
+type TestimonialInput = {
+  image: string;
+  title: string;
+  subtitle: string;
+  quote: string;
+  learnMore: {
+    title: string;
+    text: string;
+    link: string;
+  };
+};
+
+const testimonials: TestimonialInput[] = [
+  {
+    image: '/images/weasel-customer-testimonial-vital-profile.jpg',
+    title: 'Pejman Ghorbanzade',
+    subtitle: 'Sr. Software Engineer at Vital Images, Inc.',
+    quote: `"We use Weasel at scale to perform nightly regression tests of
+      some of our critical workflows with thousands of datasets. It has helped
+      us quickly identify unintended side effects of our code changes before
+      they become too expensive to fix. I like how easy it is to write new
+      regression tests and automate their execution."`,
+    learnMore: {
+      title: `Learn more about how Vital Images uses Weasel`,
+      text: "Read Vital Images' Story",
+      link: 'https://docs.getweasel.com/stories/vital'
+    }
+  }
+];
+
+const Testimonial = (props: { input: TestimonialInput }) => {
+  return (
+    <div className="bg-dark-blue-800 bg-opacity-75 p-8 rounded-lg shadow-xl space-y-4">
+      <figcaption className="flex items-center space-x-4">
+        <img className="w-20 h-20 rounded-2xl" src={props.input.image} />
+        <div className="font-medium">
+          <div className="text-lg text-white">{props.input.title}</div>
+          <div className="text-light-blue-600 text-base">
+            {props.input.subtitle}
+          </div>
+        </div>
+      </figcaption>
+      <blockquote className="text-gray-300 text-xl">
+        <p>{props.input.quote}</p>
+      </blockquote>
+      <div className="text-right">
+        <DimButton
+          link={props.input.learnMore.link}
+          text={props.input.learnMore.text}
+          title={props.input.title}></DimButton>
+      </div>
+    </div>
+  );
+};
+
+type FeatureInput = {
+  icon: IconType;
+  title: string;
+  description: string;
+  button: {
+    link: string;
+    text: string;
+    title: string;
+  };
+};
+
+const features: FeatureInput[] = [
+  {
+    icon: HiOutlineUpload,
+    title: 'Submit',
+    description: `Use our client libraries to capture test results and
+      performance benchmarks from anywhere within your workflow.`,
+    button: {
+      link: 'https://docs.getweasel.com/guides/submit',
+      text: 'Learn More',
+      title: 'Learn how to submit test results from your test tools'
+    }
+  },
+  {
+    icon: HiOutlineLightBulb,
+    title: 'Interpret',
+    description: `We compare your results against their baseline version and help
+      you understand the impact of your code changes.`,
+    button: {
+      link: 'https://docs.getweasel.com/guides/interpret',
+      text: 'Learn More',
+      title: 'Learn how Weasel processes your results and reports regressions.'
+    }
+  },
+  {
+    icon: HiOutlineUserGroup,
+    title: 'Collaborate',
+    description: `Add notes on test results for each version to easily audit
+      how your software evolves over time.`,
+    button: {
+      link: 'https://docs.getweasel.com/guides/collaborate',
+      text: 'Learn More',
+      title: 'Learn how to work as a team to deal with regressions.'
+    }
+  },
+  {
+    icon: HiOutlineCog,
+    title: 'Automate',
+    description: `Use our testing frameworks to automate your regression tests
+      and manage their execution through our platform.`,
+    button: {
+      link: 'https://docs.getweasel.com/guides/automate',
+      text: 'Learn More',
+      title: 'Learn how to automate the execution of your tests tools.'
+    }
+  }
+];
+
+const Feature = (props: { input: FeatureInput }) => {
+  const Icon = props.input.icon;
+  return (
+    <>
+      <div className="flex items-center space-x-2">
+        <Icon className="text-light-blue-600" size="3rem"></Icon>
+        <h3 className="text-4xl xl:text-5xl text-white font-bold">
+          {props.input.title}
+        </h3>
+      </div>
+      <p className="text-2xl text-gray-300">{props.input.description}</p>
+      <div>
+        <DimButton
+          link={props.input.button.link}
+          text={props.input.button.text}
+          title={props.input.button.title}></DimButton>
+      </div>
+    </>
   );
 };
 
@@ -95,27 +230,11 @@ export default function Home() {
           We make maintaining software 10x more efficient.
         </p>
       </section>
+      <section className="wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 grid"></section>
       <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
-            <div className="flex items-center space-x-2">
-              <HiOutlineUpload
-                className="text-light-blue-600"
-                size="3rem"></HiOutlineUpload>
-              <h3 className="text-4xl xl:text-5xl text-white font-bold">
-                Collect
-              </h3>
-            </div>
-            <p className="text-2xl text-gray-300">
-              Use our client libraries to capture test results and performance
-              benchmarks from anywhere within your workflow.
-            </p>
-            <div>
-              <DimButton
-                link="https://docs.getweasel.com/guides/submit"
-                text="Learn More"
-                title="Learn how to submit test results from your test tools"></DimButton>
-            </div>
+            <Feature input={features[0]}></Feature>
           </div>
           <div className="wsl-landing-feature-nest"></div>
         </div>
@@ -123,24 +242,7 @@ export default function Home() {
       <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
-            <div className="flex items-center space-x-2">
-              <HiOutlineLightBulb
-                className="text-light-blue-600"
-                size="3rem"></HiOutlineLightBulb>
-              <h3 className="text-4xl xl:text-5xl text-white font-bold">
-                Interpret
-              </h3>
-            </div>
-            <p className="text-2xl text-gray-300">
-              We compare your results against their baseline version and help
-              you understand the impact of your code changes.
-            </p>
-            <div>
-              <DimButton
-                link="https://docs.getweasel.com/guides/interpret"
-                text="Learn More"
-                title="Learn how Weasel processes your results and reports regressions"></DimButton>
-            </div>
+            <Feature input={features[1]}></Feature>
           </div>
           <div className="wsl-landing-feature-nest"></div>
         </div>
@@ -148,24 +250,7 @@ export default function Home() {
       <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
-            <div className="flex items-center space-x-2">
-              <HiOutlineUserGroup
-                className="text-light-blue-600"
-                size="3rem"></HiOutlineUserGroup>
-              <h3 className="text-4xl xl:text-5xl text-white font-bold">
-                Collaborate
-              </h3>
-            </div>
-            <p className="text-2xl text-gray-300">
-              Add notes on test results for each version to easily audit how
-              your software evolves over time.
-            </p>
-            <div>
-              <DimButton
-                link="https://docs.getweasel.com/guides/collaborate"
-                text="Learn More"
-                title="Learn how to work as a team to handle regressions in your software."></DimButton>
-            </div>
+            <Feature input={features[2]}></Feature>
           </div>
           <div className="wsl-landing-feature-nest"></div>
         </div>
@@ -173,24 +258,7 @@ export default function Home() {
       <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
-            <div className="flex items-center space-x-2">
-              <HiOutlineCog
-                className="text-light-blue-600"
-                size="3rem"></HiOutlineCog>
-              <h3 className="text-4xl xl:text-5xl text-white font-bold">
-                Automate
-              </h3>
-            </div>
-            <p className="text-2xl text-gray-300">
-              Use our testing frameworks to automate your regression tests and
-              manage their execution through our platform.
-            </p>
-            <div>
-              <DimButton
-                link="https://docs.getweasel.com/guides/automate"
-                text="Learn More"
-                title="Learn how to automate the execution of your tests tools."></DimButton>
-            </div>
+            <Feature input={features[3]}></Feature>
           </div>
           <div className="wsl-landing-feature-nest"></div>
         </div>
@@ -209,36 +277,7 @@ export default function Home() {
             </p>
           </div>
           <div className="wsl-landing-feature-nest">
-            <div className="bg-dark-blue-800 bg-opacity-75 p-8 rounded-lg shadow-xl space-y-4">
-              <figcaption className="flex items-center space-x-4">
-                <img
-                  className="w-20 h-20 rounded-2xl"
-                  src="/images/weasel-customer-testimonial-vital-profile.jpg"
-                />
-                <div className="font-medium">
-                  <div className="text-lg text-white">Pejman Ghorbanzade</div>
-                  <div className="text-light-blue-600 text-base">
-                    Sr. Software Engineer at Vital Images, Inc.
-                  </div>
-                </div>
-              </figcaption>
-              <blockquote className="text-gray-300 text-xl">
-                <p>
-                  "We use Weasel at scale to perform nightly regression tests of
-                  some of our critical workflows with thousands of datasets. It
-                  has helped us quickly identify unintended side effects of our
-                  code changes before they become too expensive to fix. I like
-                  how easy it is to write new regression tests and automate
-                  their execution."
-                </p>
-              </blockquote>
-              <div className="text-right">
-                <DimButton
-                  link="https://docs.getweasel.com/stories/vital"
-                  text="Read Vital Images' Story"
-                  title="Learn more about how Vital Images uses Weasel"></DimButton>
-              </div>
-            </div>
+            <Testimonial input={testimonials[0]}></Testimonial>
           </div>
         </div>
       </section>
