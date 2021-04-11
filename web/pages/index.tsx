@@ -31,20 +31,27 @@ export default function Home() {
             <div>
               <SignupForm></SignupForm>
             </div>
-            <button
-              className="py-2 font-medium space-x-2 hover:underline focus:underline focus:outline-none group"
-              type="button"
-              role="button">
-              <span>Get a Live Demo</span>
-              <HiArrowNarrowRight className="inline h-4 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
-            </button>
+            <div>
+              <a
+                href="https://calendly.com/ghorbanzade/30min"
+                target="_blank"
+                rel="noopener noreferrer">
+                <button
+                  className="py-2 font-medium space-x-2 hover:underline focus:underline focus:outline-none group"
+                  type="button"
+                  role="button">
+                  <span>Get a Live Demo</span>
+                  <HiArrowNarrowRight className="inline h-4 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
+                </button>
+              </a>
+            </div>
             <div className="container mx-auto space-y-4">
               <p className="text-white uppercase">Trusted By</p>
               <div className="flex space-x-2">
                 <a
                   href="https://vitalimages.com"
                   target="_blank"
-                  rel="noopener">
+                  rel="noopener noreferrer">
                   <img
                     className="text-gray-50"
                     src="/images/weasel-customer-logo-vital.svg"
@@ -108,7 +115,8 @@ export default function Home() {
               <div className="text-right">
                 <a
                   href="https://docs.getweasel.com/stories/vital"
-                  title="Learn more about how Vital Images uses Weasel">
+                  title="Learn more about how Vital Images uses Weasel"
+                  target="_blank">
                   <button
                     className="px-4 py-2 bg-dark-blue-700 bg-opacity-25 text-light-blue-600 hover:text-light-blue-500 font-medium rounded-full space-x-1 focus:underline focus:outline-none group"
                     type="button"
