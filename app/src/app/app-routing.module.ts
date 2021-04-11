@@ -8,7 +8,6 @@ import { AuthGuard } from '@weasel/core/services';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { LandingComponent } from './landing/landing.component';
 import { NotfoundComponent } from './notfound/notfound.component';
-import { PricingComponent } from './pricing/pricing.component';
 
 const routes: Routes = [
   { path: '', component: LandingComponent, data: { page: 'landing' } },
@@ -22,11 +21,6 @@ const routes: Routes = [
     loadChildren: () =>
       import('./account/account.module').then((m) => m.AccountModule),
     data: { page: 'account' }
-  },
-  {
-    path: 'pricing',
-    component: PricingComponent,
-    data: { page: 'pricing' }
   },
   {
     path: '~',
