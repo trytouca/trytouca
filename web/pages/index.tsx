@@ -15,6 +15,41 @@ import {
 import FooterCta from '@/components/footer-cta';
 import SignupForm from '@/components/signup-form';
 
+type TestimonialInput = {
+  image: string;
+  title: string;
+  subtitle: string;
+  quote: string;
+  learnMore: {
+    title: string;
+    text: string;
+    link: string;
+    hidden: boolean;
+  };
+};
+
+type FeatureInput = {
+  icon: IconType;
+  title: string;
+  description: string;
+  button: {
+    link: string;
+    text: string;
+    title: string;
+  };
+};
+
+type SidePitchInput = {
+  title: string;
+  description: string;
+};
+
+type PageContent = {
+  features: FeatureInput[];
+  sidePitches: SidePitchInput[];
+  testimonials: TestimonialInput[];
+};
+
 const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
   return (
     <a href={props.link} title={props.title} target="_blank">
@@ -29,118 +64,16 @@ const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
   );
 };
 
-type TestimonialInput = {
-  image: string;
-  title: string;
-  subtitle: string;
-  quote: string;
-  learnMore: {
-    title: string;
-    text: string;
-    link: string;
-  };
-};
-
-const testimonials: TestimonialInput[] = [
-  {
-    image: '/images/weasel-customer-testimonial-vital-profile.jpg',
-    title: 'Pejman Ghorbanzade',
-    subtitle: 'Sr. Software Engineer at Vital Images, Inc.',
-    quote: `"We use Weasel at scale to perform nightly regression tests of
-      some of our critical workflows with thousands of datasets. It has helped
-      us quickly identify unintended side effects of our code changes before
-      they become too expensive to fix. I like how easy it is to write new
-      regression tests and automate their execution."`,
-    learnMore: {
-      title: `Learn more about how Vital Images uses Weasel`,
-      text: "Read Vital Images' Story",
-      link: 'https://docs.getweasel.com/stories/vital'
-    }
-  }
-];
-
-const Testimonial = (props: { input: TestimonialInput }) => {
+const SidePitch = (props: { input: SidePitchInput }) => {
   return (
-    <div className="bg-dark-blue-800 bg-opacity-75 p-8 rounded-lg shadow-xl space-y-4">
-      <figcaption className="flex items-center space-x-4">
-        <img className="w-20 h-20 rounded-2xl" src={props.input.image} />
-        <div className="font-medium">
-          <div className="text-lg text-white">{props.input.title}</div>
-          <div className="text-light-blue-600 text-base">
-            {props.input.subtitle}
-          </div>
-        </div>
-      </figcaption>
-      <blockquote className="text-gray-300 text-xl">
-        <p>{props.input.quote}</p>
-      </blockquote>
-      <div className="text-right">
-        <DimButton
-          link={props.input.learnMore.link}
-          text={props.input.learnMore.text}
-          title={props.input.title}></DimButton>
+    <>
+      <div className="p-8 col-span-1 bg-dark-blue-700 bg-opacity-40 rounded-xl shadow-2xl space-y-4">
+        <p className="text-3xl text-white font-semibold">{props.input.title}</p>
+        <p className="text-2xl text-gray-200">{props.input.description}</p>
       </div>
-    </div>
+    </>
   );
 };
-
-type FeatureInput = {
-  icon: IconType;
-  title: string;
-  description: string;
-  button: {
-    link: string;
-    text: string;
-    title: string;
-  };
-};
-
-const features: FeatureInput[] = [
-  {
-    icon: HiOutlineUpload,
-    title: 'Submit',
-    description: `Use our client libraries to capture test results and
-      performance benchmarks from anywhere within your workflow.`,
-    button: {
-      link: 'https://docs.getweasel.com/guides/submit',
-      text: 'Learn More',
-      title: 'Learn how to submit test results from your test tools'
-    }
-  },
-  {
-    icon: HiOutlineLightBulb,
-    title: 'Interpret',
-    description: `We compare your results against their baseline version and help
-      you understand the impact of your code changes.`,
-    button: {
-      link: 'https://docs.getweasel.com/guides/interpret',
-      text: 'Learn More',
-      title: 'Learn how Weasel processes your results and reports regressions.'
-    }
-  },
-  {
-    icon: HiOutlineUserGroup,
-    title: 'Collaborate',
-    description: `Add notes on test results for each version to easily audit
-      how your software evolves over time.`,
-    button: {
-      link: 'https://docs.getweasel.com/guides/collaborate',
-      text: 'Learn More',
-      title: 'Learn how to work as a team to deal with regressions.'
-    }
-  },
-  {
-    icon: HiOutlineCog,
-    title: 'Automate',
-    description: `Use our testing frameworks to automate your regression tests
-      and manage their execution through our platform.`,
-    button: {
-      link: 'https://docs.getweasel.com/guides/automate',
-      text: 'Learn More',
-      title: 'Learn how to automate the execution of your tests tools.'
-    }
-  }
-];
 
 const Feature = (props: { input: FeatureInput }) => {
   const Icon = props.input.icon;
@@ -163,6 +96,119 @@ const Feature = (props: { input: FeatureInput }) => {
   );
 };
 
+const Testimonial = (props: { input: TestimonialInput }) => {
+  return (
+    <div className="bg-dark-blue-800 bg-opacity-75 p-8 rounded-lg shadow-xl space-y-4">
+      <figcaption className="flex items-center space-x-4">
+        <img className="w-20 h-20 rounded-2xl" src={props.input.image} />
+        <div className="font-medium">
+          <div className="text-lg text-white">{props.input.title}</div>
+          <div className="text-light-blue-600 text-base">
+            {props.input.subtitle}
+          </div>
+        </div>
+      </figcaption>
+      <blockquote className="text-gray-300 text-xl">
+        <p>{props.input.quote}</p>
+      </blockquote>
+      {!props.input.learnMore.hidden && (
+        <div className="text-right">
+          <DimButton
+            link={props.input.learnMore.link}
+            text={props.input.learnMore.text}
+            title={props.input.title}></DimButton>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const content: PageContent = {
+  features: [
+    {
+      icon: HiOutlineUpload,
+      title: 'Submit',
+      description: `Use our client libraries to capture values of important
+        variables and runtime of functions, for any number of test cases,
+        from anywhere within your code.`,
+      button: {
+        link: 'https://docs.getweasel.com/guides/submit',
+        text: 'Learn More',
+        title: 'Learn how Weasel helps you write regression test tools.'
+      }
+    },
+    {
+      icon: HiOutlineLightBulb,
+      title: 'Interpret',
+      description: `We compare your results against your baseline version and
+        report any changes in behavior or performance.`,
+      button: {
+        link: 'https://docs.getweasel.com/guides/interpret',
+        text: 'Learn More',
+        title:
+          'Learn how Weasel processes your results and reports regressions.'
+      }
+    },
+    {
+      icon: HiOutlineUserGroup,
+      title: 'Collaborate',
+      description: `Add notes on test results for each version to easily audit
+        how your software evolves over time.`,
+      button: {
+        link: 'https://docs.getweasel.com/guides/collaborate',
+        text: 'Learn More',
+        title: 'Learn how to work as a team to deal with regressions.'
+      }
+    },
+    {
+      icon: HiOutlineCog,
+      title: 'Automate',
+      description: `Use our testing frameworks to automate your regression tests
+        and manage their execution through our platform.`,
+      button: {
+        link: 'https://docs.getweasel.com/guides/automate',
+        text: 'Learn More',
+        title: 'Learn how to automate the execution of your tests tools.'
+      }
+    }
+  ],
+  sidePitches: [
+    {
+      title: 'Avoid surprises',
+      description: `Test your most complex workflows with real-world inputs to
+      find the true impact of any code change.`
+    },
+    {
+      title: 'Scale without Worry',
+      description: `Test your most complex workflows with real-world inputs to
+      find the true impact of any code change.`
+    },
+    {
+      title: 'Stay in the loop',
+      description: `Test your most complex workflows with real-world inputs to
+      find the true impact of any code change.`
+    }
+  ],
+  testimonials: [
+    {
+      image: '/images/weasel-customer-testimonial-vital-profile.jpg',
+      title: 'Pejman Ghorbanzade',
+      subtitle: 'Sr. Software Engineer at Vital Images, Inc.',
+      quote: `"We use Weasel at scale to perform nightly regression tests of
+        some of our critical workflows with thousands of datasets. It has helped
+        us quickly identify unintended side effects of our code changes before
+        they become too expensive to fix. I like how easy it is to write new
+        regression tests and automate their execution."`,
+      learnMore: {
+        title: `Learn more about how Vital Images uses Weasel`,
+        text: "Read Vital Images' Story",
+        link: 'https://docs.getweasel.com/stories/vital',
+        hidden: false
+      }
+    }
+  ]
+};
+
 export default function Home() {
   return (
     <>
@@ -180,8 +226,8 @@ export default function Home() {
               Continuous regression testing for critical software workflows
             </h2>
             <p className="max-w-xl text-2xl">
-              Keep tabs on changes in behavior and performance of your software
-              without using snapshot files.
+              Test your most complex workflows with real-world inputs to find
+              the true impact of any code change.
             </p>
             <div>
               <SignupForm></SignupForm>
@@ -230,11 +276,23 @@ export default function Home() {
           We make maintaining software 10x more efficient.
         </p>
       </section>
-      <section className="wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 grid"></section>
+      <section className="py-8 wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 grid">
+        <div className="container mx-auto flex flex-col justify-between">
+          <p className="py-32 max-w-3xl mx-auto lg:text-4xl xl:text-5xl xl:leading-snug text-white font-light">
+            Test your most complex workflows with real-world inputs to find the
+            true impact of any code change.
+          </p>
+          <div className="px-8 grid grid-cols-3 gap-8">
+            <SidePitch input={content.sidePitches[0]}></SidePitch>
+            <SidePitch input={content.sidePitches[1]}></SidePitch>
+            <SidePitch input={content.sidePitches[2]}></SidePitch>
+          </div>
+        </div>
+      </section>
       <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
-            <Feature input={features[0]}></Feature>
+            <Feature input={content.features[0]}></Feature>
           </div>
           <div className="wsl-landing-feature-nest"></div>
         </div>
@@ -242,7 +300,7 @@ export default function Home() {
       <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
-            <Feature input={features[1]}></Feature>
+            <Feature input={content.features[1]}></Feature>
           </div>
           <div className="wsl-landing-feature-nest"></div>
         </div>
@@ -250,7 +308,7 @@ export default function Home() {
       <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
-            <Feature input={features[2]}></Feature>
+            <Feature input={content.features[2]}></Feature>
           </div>
           <div className="wsl-landing-feature-nest"></div>
         </div>
@@ -258,7 +316,7 @@ export default function Home() {
       <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
-            <Feature input={features[3]}></Feature>
+            <Feature input={content.features[3]}></Feature>
           </div>
           <div className="wsl-landing-feature-nest"></div>
         </div>
@@ -277,7 +335,7 @@ export default function Home() {
             </p>
           </div>
           <div className="wsl-landing-feature-nest">
-            <Testimonial input={testimonials[0]}></Testimonial>
+            <Testimonial input={content.testimonials[0]}></Testimonial>
           </div>
         </div>
       </section>
