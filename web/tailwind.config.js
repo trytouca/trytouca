@@ -6,8 +6,7 @@ module.exports = {
     content: [
       './pages/**/*.{js,ts,jsx,tsx}',
       './components/**/*.{js,ts,jsx,tsx}'
-    ],
-    options: { safelist: ['text-red-400', 'text-green-400', 'text-yellow-400'] }
+    ]
   },
   darkMode: false, // or 'media' or 'class'
   theme: {

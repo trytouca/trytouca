@@ -77,6 +77,9 @@ const SignupForm = () => (
           You can explore Weasel in action using the test results in our
           playground.
         </p>
+        <span className="text-green-400"></span>
+        <span className="text-yellow-400"></span>
+        <span className="text-red-400"></span>
       </Form>
     )}
   </Formik>

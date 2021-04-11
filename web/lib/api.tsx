@@ -49,7 +49,7 @@ export const Feedback = (props: FeedbackInput) => {
   };
   const Icon = icons[props.type];
   return (
-    <div className={'mt-2 flex items-center space-x-1 ' + colors[props.type]}>
+    <div className={'mt-2 flex items-center space-x-2 ' + colors[props.type]}>
       <Icon></Icon>
       <small>{props.message}</small>
     </div>
