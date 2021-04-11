@@ -6,7 +6,6 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
-import { GoogleTagManagerService } from 'angular-google-tag-manager';
 
 @Component({
   selector: 'app-root',
@@ -16,8 +15,7 @@ export class AppComponent {
   constructor(
     private activatedRoute: ActivatedRoute,
     private titleService: Title,
-    router: Router,
-    gtmService: GoogleTagManagerService
+    router: Router
   ) {
     router.events
       .pipe(
@@ -33,9 +31,6 @@ export class AppComponent {
         mergeMap((route) => route.data)
       )
       .subscribe((event: { page?: string; title?: string }) => {
-        if (event.page) {
-          gtmService.pushTag({ event: 'page', pageName: event.page });
-        }
         const title = 'title' in event ? `${event.title} - Weasel` : 'Weasel';
         this.titleService.setTitle(title);
       });
