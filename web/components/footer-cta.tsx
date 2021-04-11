@@ -11,9 +11,15 @@ export default function FooterCta() {
       <p className="text-xl">
         We make maintaining software 10x more efficient.
       </p>
-      <button className="wsl-btn-green px-4 py-2 text-base leading-6 rounded-lg shadow-md focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400">
-        Get Started
-      </button>
+      <div>
+        <a href="https://app.getweasel.com" target="_blank">
+          <button
+            className="wsl-btn-green px-4 py-2 text-base leading-6 rounded-lg shadow-md focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400"
+            type="button">
+            Get Started
+          </button>
+        </a>
+      </div>
     </div>
   );
 }
