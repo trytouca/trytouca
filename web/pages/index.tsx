@@ -7,6 +7,7 @@ import { IconType } from 'react-icons';
 import { FaCity } from 'react-icons/fa';
 import {
   HiArrowNarrowRight,
+  HiOutlineBadgeCheck,
   HiOutlineCog,
   HiOutlineLightBulb,
   HiOutlineUpload,
@@ -67,9 +68,16 @@ const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
 const SidePitch = (props: { input: SidePitchInput }) => {
   return (
     <>
-      <div className="p-8 col-span-1 bg-dark-blue-700 bg-opacity-40 rounded-xl shadow-2xl space-y-4">
-        <p className="text-3xl text-white font-semibold">{props.input.title}</p>
-        <p className="text-2xl text-gray-200">{props.input.description}</p>
+      <div className="p-8 col-span-1 bg-dark-blue-700 bg-opacity-30 rounded-xl shadow-2xl space-y-4">
+        <div className="flex items-center space-x-2">
+          <HiOutlineBadgeCheck className="text-light-blue-700" size="2rem" />
+          <p className="text-3xl text-white font-semibold">
+            {props.input.title}
+          </p>
+        </div>
+        <p className="pl-10 text-2xl text-gray-200">
+          {props.input.description}
+        </p>
       </div>
     </>
   );
@@ -152,8 +160,9 @@ const content: PageContent = {
     {
       icon: HiOutlineUserGroup,
       title: 'Collaborate',
-      description: `Add notes on test results for each version to easily audit
-        how your software evolves over time.`,
+      description: `Work as a team to resolve or justify new differences.
+        Maintain a shared understanding of how your software is supposed
+        to work.`,
       button: {
         link: 'https://docs.getweasel.com/guides/collaborate',
         text: 'Learn More',
@@ -278,18 +287,18 @@ export default function Home() {
       </section>
       <section className="py-8 wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 grid">
         <div className="container mx-auto flex flex-col justify-between">
-          <p className="py-32 max-w-3xl mx-auto lg:text-4xl xl:text-5xl xl:leading-snug text-white font-light">
+          <p className="px-8 py-32 max-w-3xl mx-auto text-3xl lg:text-4xl xl:text-5xl xl:leading-snug text-white font-light">
             Test your most complex workflows with real-world inputs to find the
             true impact of any code change.
           </p>
-          <div className="px-8 grid grid-cols-3 gap-8">
+          <div className="px-8 grid xl:grid-cols-3 gap-8">
             <SidePitch input={content.sidePitches[0]}></SidePitch>
             <SidePitch input={content.sidePitches[1]}></SidePitch>
             <SidePitch input={content.sidePitches[2]}></SidePitch>
           </div>
         </div>
       </section>
-      <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
+      <section className="min-h-[75vh] bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
             <Feature input={content.features[0]}></Feature>
@@ -297,7 +306,7 @@ export default function Home() {
           <div className="wsl-landing-feature-nest"></div>
         </div>
       </section>
-      <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
+      <section className="min-h-[75vh] bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
             <Feature input={content.features[1]}></Feature>
@@ -305,7 +314,7 @@ export default function Home() {
           <div className="wsl-landing-feature-nest"></div>
         </div>
       </section>
-      <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
+      <section className="min-h-[75vh] bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
             <Feature input={content.features[2]}></Feature>
@@ -313,7 +322,7 @@ export default function Home() {
           <div className="wsl-landing-feature-nest"></div>
         </div>
       </section>
-      <section className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
+      <section className="min-h-[75vh] bg-dark-blue-900 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
             <Feature input={content.features[3]}></Feature>
