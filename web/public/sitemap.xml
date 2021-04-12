@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"> 
+<urlset xmlns="http://sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.getweasel.com/</loc>
+    <loc>https://getweasel.com/</loc>
     <lastmod>2021-04-09</lastmod>
   </url>
   <url>
-    <loc>https://www.getweasel.com/pricing</loc>
+    <loc>https://getweasel.com/pricing</loc>
+    <lastmod>2021-04-09</lastmod>
+  </url>
+  <url>
+    <loc>https://getweasel.com/contact</loc>
     <lastmod>2021-04-09</lastmod>
   </url>
 </urlset>
