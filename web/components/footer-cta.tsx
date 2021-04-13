@@ -12,7 +12,7 @@ export default function FooterCta() {
         We make maintaining software 10x more efficient.
       </p>
       <div>
-        <a href="https://app.getweasel.com" target="_blank">
+        <a href="https://app.getweasel.com" target="_blank" rel="noopener">
           <button
             className="wsl-btn-green px-4 py-2 text-base leading-6 rounded-lg shadow-md focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400"
             type="button">
