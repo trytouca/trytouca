@@ -48,8 +48,14 @@ type SidePitchInput = {
 };
 
 type PageContent = {
+  pitch: {
+    title: string;
+    subtitle: string;
+    elevator: string;
+    banner: string;
+    sides: SidePitchInput[];
+  };
   features: FeatureInput[];
-  sidePitches: SidePitchInput[];
   testimonials: TestimonialInput[];
 };
 
@@ -147,6 +153,31 @@ const Testimonial = (props: { input: TestimonialInput }) => {
 };
 
 const content: PageContent = {
+  pitch: {
+    title: 'Continuous regression testing for critical software workflows',
+    subtitle: `Test your most complex workflows with real-world inputs to find
+      the true impact of any code change.`,
+    elevator: 'We make maintaining software 10x more efficient.',
+    banner: `Test your most complex workflows with real-world inputs to find
+      the true impact of any code change.`,
+    sides: [
+      {
+        title: 'Avoid surprises',
+        description: `Detect potentially unintended side effects of any code
+          change, during your development cycle.`
+      },
+      {
+        title: 'Scale without worry',
+        description: `Test your workflows with any number of inputs, without
+          generating and managing snapshot files.`
+      },
+      {
+        title: 'Stay in the loop',
+        description: `Maintain an accurate understanding of how your product
+          behaves, across your team.`
+      }
+    ]
+  },
   features: [
     {
       icon: HiOutlineUpload,
@@ -165,8 +196,8 @@ const content: PageContent = {
       icon: HiOutlineLightBulb,
       image: make_path('/images/weasel_landing_feature_2.png'),
       title: 'Interpret',
-      description: `We compare your results against your baseline version and
-        report any changes in behavior or performance.`,
+      description: `Weasel compares your results against your baseline version
+        and reports changes in behavior and performance of your software.`,
       button: {
         link: 'https://docs.getweasel.com/guides/interpret',
         text: 'Learn More',
@@ -191,30 +222,13 @@ const content: PageContent = {
       icon: HiOutlineCog,
       image: make_path('/images/weasel_landing_feature_4.png'),
       title: 'Automate',
-      description: `Use our testing frameworks to automate your regression tests
-        and manage their execution through our platform.`,
+      description: `Make your tests run continuously on a fixed schedule
+        or as you introduce new code changes.`,
       button: {
         link: 'https://docs.getweasel.com/guides/automate',
         text: 'Learn More',
         title: 'Learn how to automate the execution of your tests tools.'
       }
-    }
-  ],
-  sidePitches: [
-    {
-      title: 'Avoid surprises',
-      description: `Test your most complex workflows with real-world inputs to
-      find the true impact of any code change.`
-    },
-    {
-      title: 'Scale without worry',
-      description: `Test your most complex workflows with real-world inputs to
-      find the true impact of any code change.`
-    },
-    {
-      title: 'Stay in the loop',
-      description: `Test your most complex workflows with real-world inputs to
-      find the true impact of any code change.`
     }
   ],
   testimonials: [
@@ -251,12 +265,9 @@ export default function Home() {
         <div className="wsl-min-h-screen-1 container mx-auto grid lg:grid-cols-2 lg:gap-4 lg:items-center">
           <div className="col-span-1 mx-auto pt-24 lg:pt-8 p-8 text-white space-y-8">
             <h2 className="wsl-text-gradient wsl-text-shadow max-w-xl text-4xl xl:text-5xl font-bold">
-              Continuous regression testing for critical software workflows
+              {content.pitch.title}
             </h2>
-            <p className="max-w-xl text-2xl">
-              Test your most complex workflows with real-world inputs to find
-              the true impact of any code change.
-            </p>
+            <p className="max-w-xl text-2xl">{content.pitch.subtitle}</p>
             <div>
               <SignupForm></SignupForm>
             </div>
@@ -301,62 +312,35 @@ export default function Home() {
       </section>
       <section className="bg-gradient-to-r from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
         <p className="p-8 mx-auto container text-center text-xl text-white font-semibold">
-          We make maintaining software 10x more efficient.
+          {content.pitch.elevator}
         </p>
       </section>
       <section className="py-8 wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 grid">
         <div className="container mx-auto flex flex-col justify-between">
           <p className="px-8 py-32 max-w-3xl mx-auto text-3xl lg:text-4xl xl:text-5xl xl:leading-snug text-white font-light">
-            Test your most complex workflows with real-world inputs to find the
-            true impact of any code change.
+            {content.pitch.banner}
           </p>
           <div className="px-8 grid xl:grid-cols-3 gap-8">
-            <SidePitch input={content.sidePitches[0]}></SidePitch>
-            <SidePitch input={content.sidePitches[1]}></SidePitch>
-            <SidePitch input={content.sidePitches[2]}></SidePitch>
+            <SidePitch input={content.pitch.sides[0]}></SidePitch>
+            <SidePitch input={content.pitch.sides[1]}></SidePitch>
+            <SidePitch input={content.pitch.sides[2]}></SidePitch>
           </div>
         </div>
       </section>
-      <section className="min-h-[75vh] bg-dark-blue-900 grid">
-        <div className="wsl-landing-feature-child">
-          <div className="wsl-landing-feature-nest">
-            <Feature input={content.features[0]}></Feature>
+      {content.features.map((feature, index) => (
+        <section
+          key={index}
+          className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
+          <div className="wsl-landing-feature-child">
+            <div className="wsl-landing-feature-nest">
+              <Feature input={feature}></Feature>
+            </div>
+            <div className="lg:col-span-1 grid">
+              <FeatureHero input={feature} />
+            </div>
           </div>
-          <div className="lg:col-span-1 grid">
-            <FeatureHero input={content.features[0]} />
-          </div>
-        </div>
-      </section>
-      <section className="min-h-[75vh] bg-dark-blue-900 grid">
-        <div className="wsl-landing-feature-child">
-          <div className="wsl-landing-feature-nest">
-            <Feature input={content.features[1]}></Feature>
-          </div>
-          <div className="lg:col-span-1 grid">
-            <FeatureHero input={content.features[1]} />
-          </div>
-        </div>
-      </section>
-      <section className="min-h-[75vh] bg-dark-blue-900 grid">
-        <div className="wsl-landing-feature-child">
-          <div className="wsl-landing-feature-nest">
-            <Feature input={content.features[2]}></Feature>
-          </div>
-          <div className="lg:col-span-1 grid">
-            <FeatureHero input={content.features[2]} />
-          </div>
-        </div>
-      </section>
-      <section className="min-h-[75vh] bg-dark-blue-900 grid">
-        <div className="wsl-landing-feature-child">
-          <div className="wsl-landing-feature-nest">
-            <Feature input={content.features[3]}></Feature>
-          </div>
-          <div className="lg:col-span-1 grid">
-            <FeatureHero input={content.features[3]} />
-          </div>
-        </div>
-      </section>
+        </section>
+      ))}
       <section className="wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800 grid">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
