@@ -155,7 +155,7 @@ export class ProfileComponent implements OnDestroy {
           onActionSuccess: () => {
             this.authService.logout().subscribe(() => {
               this.userService.reset();
-              this.router.navigate(['/']);
+              this.router.navigate(['/account/signin']);
             });
           },
           onActionFailure: (err: HttpErrorResponse) => {

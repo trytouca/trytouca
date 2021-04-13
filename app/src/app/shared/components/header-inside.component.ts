@@ -60,7 +60,7 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
   public logout() {
     return this.authService.logout().subscribe(() => {
       this.userService.reset();
-      this.router.navigate(['/']);
+      this.router.navigate(['/account/signin']);
     });
   }
 

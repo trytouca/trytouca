@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthService } from '@weasel/core/services';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 
@@ -12,12 +12,6 @@ import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
   styleUrls: ['./header.components.scss']
 })
 export class HeaderOutsideComponent {
-  /**
-   *
-   */
-  @Input() dark = false;
-  @Input() sticky = false;
-
   /**
    *
    */

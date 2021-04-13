@@ -38,7 +38,7 @@ export class HomeComponent {
           this.authService.logout().subscribe(() => {
             this.alertService.reset();
             this.userService.reset();
-            this.router.navigate(['account', 'signin'], {
+            this.router.navigate(['/account/signin'], {
               queryParams: { e: '401' }
             });
           });
