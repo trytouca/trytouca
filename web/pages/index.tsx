@@ -123,6 +123,7 @@ const FeatureHero = (props: { input: FeatureInput }) => {
           className="mx-auto w-full rounded-md md:rounded-xl"
           src={props.input.image.link}
           alt={props.input.image.alt}
+          loading="lazy"
         />
       </div>
     </div>
@@ -137,6 +138,7 @@ const Testimonial = (props: { input: TestimonialInput }) => {
           className="w-20 h-20 rounded-2xl"
           src={props.input.image}
           alt={`${props.input.title}, ${props.input.subtitle}`}
+          loading="lazy"
         />
         <div className="font-medium">
           <div className="text-lg text-white">{props.input.title}</div>
@@ -316,6 +318,7 @@ export default function Home() {
                     className="text-gray-50"
                     src={make_path('/images/weasel-customer-logo-vital.svg')}
                     alt="Vital Images, Inc."
+                    loading="eager"
                   />
                 </a>
               </div>
@@ -326,6 +329,7 @@ export default function Home() {
               className="rounded-lg shadow-md"
               alt="A Screen Shot of Weasel Regression Testing Platform"
               src={make_path('/images/weasel-atf-visual.png')}
+              loading="eager"
             />
           </div>
         </div>

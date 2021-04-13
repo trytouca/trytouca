@@ -16,6 +16,7 @@ export default function Header() {
                 className="h-12"
                 src={make_path('/logo/weasel-logo-transparent.svg')}
                 alt="Weasel Logo"
+                loading="eager"
               />
               <h1 className="text-2xl font-light text-white tracking-tight">
                 Weasel
@@ -30,12 +31,13 @@ export default function Header() {
           <a
             className="wsl-header-btn-secondary"
             href="https://docs.getweasel.com"
-            target="_blank">
+            rel="noopener">
             Docs
           </a>
           <a
             className="wsl-header-btn-primary"
-            href="https://app.getweasel.com">
+            href="https://app.getweasel.com"
+            rel="noopener">
             Get Started
           </a>
         </nav>
