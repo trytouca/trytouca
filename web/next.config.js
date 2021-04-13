@@ -1,10 +1,6 @@
 module.exports = {
-  basePath: '/web',
   future: {
     webpack5: true
-  },
-  env: {
-    basePath: '/web'
   },
   poweredByHeader: false,
   reactStrictMode: true,
