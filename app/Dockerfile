@@ -1,6 +1,19 @@
-# ---- frontend (production version) ----
+# ---- website (production version) ----
 
-FROM node:15-alpine as frontend_builder
+FROM node:15-alpine as website_builder
+
+RUN apk add --no-cache bash
+
+COPY next /opt/next
+
+RUN  yarn --cwd /opt/next install --frozen-lockfile \
+  && yarn --cwd /opt/next cache clean \
+  && yarn --cwd /opt/next run next telemetry \
+  && yarn --cwd /opt/next build
+
+# ---- webapp (production version) ----
+
+FROM node:15-alpine as webapp_builder
 
 RUN apk add --no-cache bash
 
@@ -8,7 +21,7 @@ COPY frontend /opt/frontend
 
 RUN yarn --cwd /opt/frontend install --frozen-lockfile \
   && yarn --cwd /opt/frontend cache clean \
-  && yarn --cwd /opt/frontend build --prod --aot
+  && yarn --cwd /opt/frontend build --prod
 
 # ---- api documentation ----
 
@@ -107,9 +120,10 @@ LABEL org.opencontainers.image.documentation="https://docs.getweasel.com"
 LABEL org.opencontainers.image.vendor="Weasel, Inc."
 LABEL org.opencontainers.image.authors="hello@getweasel.com"
 
-COPY --from=frontend_builder        /opt/frontend/dist                /www/data
+COPY --from=website_builder         /opt/next/out                     /www/data/web
+COPY --from=webapp_builder          /opt/frontend/dist                /www/data/app
 COPY --from=doc_api_builder         /opt/backend/local/docs/backend   /www/data/docs/backend
 COPY --from=doc_platform_builder    /opt/backend/local/docs/platform  /www/data/docs/platform
 COPY --from=doc_client_cpp_builder  /opt/clients/cpp/local/docs/html  /www/data/docs/clients/cpp
 COPY --from=doc_talks_builder       /opt/docs/local/talks             /www/data/docs/talks
-COPY config/nginx/default.conf      /etc/nginx/conf.d/default.conf
+COPY                                frontend/nginx.conf               /etc/nginx/conf.d/default.conf
