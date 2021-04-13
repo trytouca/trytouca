@@ -3,6 +3,7 @@
  */
 
 import Link from 'next/link';
+import { make_path } from '@/lib/api';
 
 export default function Header() {
   return (
@@ -13,7 +14,7 @@ export default function Header() {
             <a className="h-20 flex items-center focus:outline-none">
               <img
                 className="h-12"
-                src="/logo/weasel-logo-transparent.svg"
+                src={make_path('/logo/weasel-logo-transparent.svg')}
                 alt="Weasel Logo"
               />
               <h1 className="text-2xl font-light text-white tracking-tight">
