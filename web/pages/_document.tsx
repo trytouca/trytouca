@@ -14,7 +14,8 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <base href="/" />
-          <meta name="theme-color" content="#0284C7" />
+          <meta charSet="utf-8" />
+          <meta name="theme-color" content="#0d0d2b" />
           <meta property="og:locale" content="en_US" />
           <meta property="og:type" content="website" />
           <meta property="og:site_name" content="Weasel" />

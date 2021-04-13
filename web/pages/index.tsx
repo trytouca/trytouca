@@ -32,7 +32,10 @@ type TestimonialInput = {
 
 type FeatureInput = {
   icon: IconType;
-  image?: string;
+  image: {
+    link: string;
+    alt: string;
+  };
   title: string;
   description: string;
   button: {
@@ -61,9 +64,9 @@ type PageContent = {
 
 const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
   return (
-    <a href={props.link} title={props.title} target="_blank">
+    <a href={props.link} title={props.title} target="_blank" rel="noopener">
       <button
-        className="px-4 py-2 bg-dark-blue-700 bg-opacity-25 text-light-blue-600 hover:text-light-blue-500 font-medium rounded-full space-x-1 focus:underline focus:outline-none group"
+        className="px-4 py-2 bg-dark-blue-700 bg-opacity-25 text-gray-300 hover:text-white rounded-full space-x-1 focus:underline focus:outline-none group"
         type="button"
         role="button">
         <span className="text-sm leading-6 font-medium">{props.text}</span>
@@ -118,7 +121,8 @@ const FeatureHero = (props: { input: FeatureInput }) => {
       <div className="md:p-4 xl:p-6 w-full bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
         <img
           className="mx-auto w-full rounded-md md:rounded-xl"
-          src={props.input.image}
+          src={props.input.image.link}
+          alt={props.input.image.alt}
         />
       </div>
     </div>
@@ -129,7 +133,11 @@ const Testimonial = (props: { input: TestimonialInput }) => {
   return (
     <div className="bg-dark-blue-800 bg-opacity-75 p-8 rounded-lg shadow-xl space-y-4">
       <figcaption className="flex items-center space-x-4">
-        <img className="w-20 h-20 rounded-2xl" src={props.input.image} />
+        <img
+          className="w-20 h-20 rounded-2xl"
+          src={props.input.image}
+          alt={`${props.input.title}, ${props.input.subtitle}`}
+        />
         <div className="font-medium">
           <div className="text-lg text-white">{props.input.title}</div>
           <div className="text-light-blue-600 text-base">
@@ -181,7 +189,10 @@ const content: PageContent = {
   features: [
     {
       icon: HiOutlineUpload,
-      image: make_path('/images/weasel_landing_feature_1.png'),
+      image: {
+        link: make_path('/images/weasel_landing_feature_1.png'),
+        alt: 'Submit regression test results with Weasel client libraries.'
+      },
       title: 'Submit',
       description: `Use our client libraries to capture values of important
         variables and runtime of functions, for any number of test cases,
@@ -194,7 +205,10 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineLightBulb,
-      image: make_path('/images/weasel_landing_feature_2.png'),
+      image: {
+        link: make_path('/images/weasel_landing_feature_2.png'),
+        alt: 'Get notified when Weasel finds regressions in your product.'
+      },
       title: 'Interpret',
       description: `Weasel compares your results against your baseline version
         and reports changes in behavior and performance of your software.`,
@@ -207,7 +221,10 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineUserGroup,
-      image: make_path('/images/weasel_landing_feature_3.png'),
+      image: {
+        link: make_path('/images/weasel_landing_feature_3.png'),
+        alt: 'Get notified when your team members promote the baseline version.'
+      },
       title: 'Collaborate',
       description: `Work as a team to resolve or justify new differences.
         Maintain a shared understanding of how your software is supposed
@@ -220,7 +237,10 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineCog,
-      image: make_path('/images/weasel_landing_feature_4.png'),
+      image: {
+        link: make_path('/images/weasel_landing_feature_4.png'),
+        alt: 'Automate your regression tests using Weasel test frameworks.'
+      },
       title: 'Automate',
       description: `Make your tests run continuously on a fixed schedule
         or as you introduce new code changes.`,
