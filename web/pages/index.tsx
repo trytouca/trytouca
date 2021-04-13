@@ -15,6 +15,7 @@ import {
 } from 'react-icons/hi';
 import FooterCta from '@/components/footer-cta';
 import SignupForm from '@/components/signup-form';
+import { make_path } from '@/lib/api';
 
 type TestimonialInput = {
   image: string;
@@ -149,7 +150,7 @@ const content: PageContent = {
   features: [
     {
       icon: HiOutlineUpload,
-      image: '/images/weasel_landing_feature_1.png',
+      image: make_path('/images/weasel_landing_feature_1.png'),
       title: 'Submit',
       description: `Use our client libraries to capture values of important
         variables and runtime of functions, for any number of test cases,
@@ -162,7 +163,7 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineLightBulb,
-      image: '/images/weasel_landing_feature_2.png',
+      image: make_path('/images/weasel_landing_feature_2.png'),
       title: 'Interpret',
       description: `We compare your results against your baseline version and
         report any changes in behavior or performance.`,
@@ -175,7 +176,7 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineUserGroup,
-      image: '/images/weasel_landing_feature_3.png',
+      image: make_path('/images/weasel_landing_feature_3.png'),
       title: 'Collaborate',
       description: `Work as a team to resolve or justify new differences.
         Maintain a shared understanding of how your software is supposed
@@ -188,7 +189,7 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineCog,
-      image: '/images/weasel_landing_feature_4.png',
+      image: make_path('/images/weasel_landing_feature_4.png'),
       title: 'Automate',
       description: `Use our testing frameworks to automate your regression tests
         and manage their execution through our platform.`,
@@ -218,7 +219,7 @@ const content: PageContent = {
   ],
   testimonials: [
     {
-      image: '/images/weasel-customer-testimonial-vital-profile.jpg',
+      image: make_path('/images/weasel-customer-testimonial-vital-profile.jpg'),
       title: 'Pejman Ghorbanzade',
       subtitle: 'Sr. Software Engineer at Vital Images, Inc.',
       quote: `"We use Weasel at scale to perform nightly regression tests of
@@ -282,7 +283,7 @@ export default function Home() {
                   rel="noopener noreferrer">
                   <img
                     className="text-gray-50"
-                    src="/images/weasel-customer-logo-vital.svg"
+                    src={make_path('/images/weasel-customer-logo-vital.svg')}
                     alt="Vital Images, Inc."
                   />
                 </a>
@@ -293,7 +294,7 @@ export default function Home() {
             <img
               className="rounded-lg shadow-md"
               alt="A Screen Shot of Weasel Regression Testing Platform"
-              src="/images/weasel-atf-visual.png"
+              src={make_path('/images/weasel-atf-visual.png')}
             />
           </div>
         </div>

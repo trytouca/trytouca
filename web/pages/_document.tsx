@@ -4,6 +4,7 @@
 
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import Footer from '@/components/footer';
+import { make_path } from '@/lib/api';
 import { GA_TRACKING_ID } from '@/lib/gtag';
 import Header from '@/components/header';
 
@@ -40,7 +41,10 @@ export default class MyDocument extends Document {
           <meta name="twitter:creator" content="@heypejman" />
           <link rel="canonical" href="https://getweasel.com" />
           <link rel="icon" type="image/x-icon" href="favicon.ico" />
-          <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+          <link
+            rel="apple-touch-icon"
+            href={make_path('/icons/apple-touch-icon.png')}
+          />
 
           <script
             async
