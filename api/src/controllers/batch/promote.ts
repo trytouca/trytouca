@@ -96,6 +96,9 @@ export async function ctrlBatchPromote(
   await batchPromote(team, suite, batch, user, reason)
   logger.info('%s: %s: promoted', user.username, tuple)
 
-  tracker.track(user, 'promote')
+  // add event to tracking system
+
+  tracker.track(user, 'promoted_batch')
+
   return res.status(204).send()
 }

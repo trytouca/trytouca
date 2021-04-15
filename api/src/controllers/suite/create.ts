@@ -10,6 +10,7 @@ import { IUser } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  * Register a new suite.
@@ -45,6 +46,10 @@ export async function ctrlSuiteCreate(
   // we intentionally wait for this operation to avoid race conditions
 
   await rclient.removeCached(`route_suiteList_${team.slug}_${user.username}`)
+
+  // add event to tracking system
+
+  tracker.track(user, 'created_suite')
 
   // redirect to lookup route for this newly created suite
 

@@ -9,6 +9,7 @@ import { createUserSession } from '@weasel/models/auth'
 import { UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  *
@@ -56,6 +57,10 @@ export async function authVerifyActivate(
 
   logger.info('%s: verified account', user.username)
   const session = await createUserSession(user, { askedAgent, askedIpAddress })
+
+  // add event to tracking system
+
+  tracker.track(user, 'activated_account')
 
   // return session token to the user
   // @todo consider setting path and secure attributes

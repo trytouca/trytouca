@@ -24,7 +24,7 @@ export async function authSessionCreate(
   const askedPassword = req.body.password
   const askedUsername = req.body.username
   const askedAgent = req.headers['user-agent']
-  const askedIpAddress = ip.toLong(req.connection.remoteAddress)
+  const askedIpAddress = req.connection.remoteAddress
   logger.debug('%s: received request to login user', askedUsername)
 
   // check if username is associated with any account
@@ -112,14 +112,17 @@ export async function authSessionCreate(
   // a user session.
 
   logger.debug('%s: signin request validated', user.username)
-  const session = await createUserSession(user, { askedAgent, askedIpAddress })
+  const session = await createUserSession(user, {
+    askedAgent,
+    askedIpAddress: ip.toLong(askedIpAddress)
+  })
+
+  // add event to tracking system
+
+  tracker.track(user, 'logged_in', { $ip: askedIpAddress })
 
   // return session token to the user
   // @todo consider setting path and secure attributes
-
-  tracker.track(user, 'login', {
-    agent: askedAgent
-  })
 
   res.cookie('authToken', session.token, {
     expires: session.expiresAt,

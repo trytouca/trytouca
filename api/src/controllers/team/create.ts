@@ -10,6 +10,7 @@ import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import * as mailer from '@weasel/utils/mailer'
 import { rclient } from '@weasel/utils/redis'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  * @summary
@@ -50,6 +51,10 @@ export async function ctrlTeamCreate(
   // we intentionally wait for this operation to avoid race conditions
 
   await rclient.removeCached(`route_teamList_${user.username}`)
+
+  // add event to tracking system
+
+  tracker.track(user, 'created_team')
 
   // redirect to lookup route for this newly created team
 

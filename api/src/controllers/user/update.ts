@@ -10,6 +10,7 @@ import { IUser, UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import * as mailer from '@weasel/utils/mailer'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  * Updates information about current user.
@@ -58,6 +59,15 @@ export async function ctrlUserUpdate(
     title: 'New Account Verified',
     body: `New account created for <b>${proposed.fullname}</b> (<a href="mailto:${user.email}">${proposed.username}</a>).`
   })
+
+  // add event to tracking system
+
+  if (user.fullname === '' && proposed.fullname) {
+    tracker.create(user, {
+      $name: proposed.fullname
+    })
+  }
+  tracker.track(user, 'updated_profile')
 
   return res.status(204).send()
 }
