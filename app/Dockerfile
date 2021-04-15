@@ -4,12 +4,12 @@ FROM node:15-alpine as website_builder
 
 RUN apk add --no-cache bash
 
-COPY next /opt/next
+COPY web /opt/web
 
-RUN  yarn --cwd /opt/next install --frozen-lockfile \
-  && yarn --cwd /opt/next cache clean \
-  && yarn --cwd /opt/next run next telemetry \
-  && yarn --cwd /opt/next build
+RUN  yarn --cwd /opt/web install --frozen-lockfile \
+  && yarn --cwd /opt/web cache clean \
+  && yarn --cwd /opt/web run next telemetry \
+  && yarn --cwd /opt/web build
 
 # ---- webapp (production version) ----
 
@@ -120,7 +120,7 @@ LABEL org.opencontainers.image.documentation="https://docs.getweasel.com"
 LABEL org.opencontainers.image.vendor="Weasel, Inc."
 LABEL org.opencontainers.image.authors="hello@getweasel.com"
 
-COPY --from=website_builder         /opt/next/out                     /www/data/web
+COPY --from=website_builder         /opt/web/out                      /www/data/web
 COPY --from=webapp_builder          /opt/frontend/dist                /www/data/app
 COPY --from=doc_api_builder         /opt/backend/local/docs/backend   /www/data/docs/backend
 COPY --from=doc_platform_builder    /opt/backend/local/docs/platform  /www/data/docs/platform
