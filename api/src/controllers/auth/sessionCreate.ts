@@ -11,6 +11,7 @@ import { UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import * as mailer from '@weasel/utils/mailer'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  *
@@ -115,6 +116,10 @@ export async function authSessionCreate(
 
   // return session token to the user
   // @todo consider setting path and secure attributes
+
+  tracker.track(user, 'login', {
+    agent: askedAgent
+  })
 
   res.cookie('authToken', session.token, {
     expires: session.expiresAt,

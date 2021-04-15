@@ -12,6 +12,7 @@ import { UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import * as mailer from '@weasel/utils/mailer'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  * Find a username that is not already registered.
@@ -120,6 +121,9 @@ export async function authVerifyCreate(
     title: 'New Account Created',
     body: `New account created for <b>${username}</b> (<a href="mailto:${askedEmail}">${askedEmail}</a>).`
   })
+
+  tracker.create(newUser, { $created: newUser.createdAt.toISOString() })
+  tracker.track(newUser, 'signup')
 
   // if configured to do so, create a "tutorial" suite and populate it with
   // sample test results.

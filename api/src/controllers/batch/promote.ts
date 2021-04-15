@@ -10,6 +10,7 @@ import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
 import { ITeam } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
 import logger from '@weasel/utils/logger'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  * @summary
@@ -95,5 +96,6 @@ export async function ctrlBatchPromote(
   await batchPromote(team, suite, batch, user, reason)
   logger.info('%s: %s: promoted', user.username, tuple)
 
+  tracker.track(user, 'promote')
   return res.status(204).send()
 }

@@ -76,6 +76,9 @@ interface IConfig {
   storage: {
     directory: string
   }
+  tracking: {
+    mixpanel: string
+  }
   webapp: {
     root: string
   }
@@ -168,6 +171,9 @@ export const config: IConfig = {
   },
   storage: {
     directory: path.normalize(`${__dirname}/../../` + env.DSP_DIR)
+  },
+  tracking: {
+    mixpanel: env.MIXPANEL_PROJECT_TOKEN
   },
   webapp: {
     root: env.WEBAPP_ROOT
