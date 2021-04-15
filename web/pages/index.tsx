@@ -82,11 +82,11 @@ const SidePitch = (props: { input: SidePitchInput }) => {
       <div className="p-8 col-span-1 bg-dark-blue-700 bg-opacity-30 rounded-xl shadow-2xl space-y-4">
         <div className="flex items-center space-x-2">
           <HiOutlineBadgeCheck className="text-light-blue-700" size="2rem" />
-          <p className="text-3xl text-white font-semibold">
+          <p className="text-2xl lg:text-3xl text-white font-semibold">
             {props.input.title}
           </p>
         </div>
-        <p className="pl-10 text-2xl text-gray-200">
+        <p className="pl-10 text-xl lg:text-2xl text-gray-200">
           {props.input.description}
         </p>
       </div>

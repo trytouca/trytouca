@@ -2,6 +2,8 @@
  * Copyright 2021 Weasel, Inc. All rights reserved.
  */
 
+import Link from 'next/link';
+
 const social = [
   {
     link: 'https://github.com/getweasel',
@@ -11,10 +13,11 @@ const social = [
   {
     link: 'https://twitter.com/getweasel',
     title: 'Follow us on Twitter',
-    text: 'Twitter'
+    text: 'Twitter',
+    internal: false
   },
   {
-    link: 'https://getweasel.com/contact',
+    link: '/contact',
     title: 'Get in Touch',
     text: 'Contact'
   },
@@ -33,12 +36,19 @@ export default function Footer() {
         <ul className="flex space-x-6">
           {social.map((item) => {
             return (
-              <li key={item.link} title={item.title}>
-                <a href={item.link} target="_blank" rel="noopener">
-                  <p className="text-gray-200 hover:text-white text-sm font-semibold">
+              <li
+                className="text-gray-200 hover:text-white text-sm font-semibold"
+                key={item.link}
+                title={item.title}>
+                {item.internal ? (
+                  <Link href={item.link}>
+                    <a>{item.text}</a>
+                  </Link>
+                ) : (
+                  <a href={item.link} target="_blank" rel="noopener noreferrer">
                     {item.text}
-                  </p>
-                </a>
+                  </a>
+                )}
               </li>
             );
           })}
