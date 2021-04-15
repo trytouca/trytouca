@@ -64,7 +64,11 @@ type PageContent = {
 
 const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
   return (
-    <a href={props.link} title={props.title} target="_blank" rel="noopener">
+    <a
+      href={props.link}
+      title={props.title}
+      target="_blank"
+      rel="noopener noreferrer">
       <button
         className="px-4 py-2 bg-dark-blue-700 bg-opacity-25 text-gray-300 hover:text-white rounded-full space-x-1 focus:underline focus:outline-none group"
         type="button"

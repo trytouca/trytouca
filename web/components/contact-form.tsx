@@ -3,7 +3,7 @@
  */
 
 import React from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, FormikProps, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Feedback, post_json, extract_error } from '@/lib/api';
 import { event as gtag_event } from '@/lib/gtag';
@@ -46,7 +46,7 @@ const ContactForm = () => (
     })}
     validateOnChange={false}
     validateOnBlur={true}>
-    {(props) => (
+    {(props: FormikProps<{ umail: string }>) => (
       <Form noValidate={true}>
         <label className="wsl-input-label sr-only" htmlFor="umail">
           Email Address

@@ -16,7 +16,10 @@ export type Input = {
   };
 };
 
-export default class PricingPlan extends React.Component<{ plan: Input }, {}> {
+export default class PricingPlan extends React.Component<
+  { plan: Input },
+  Record<string, never>
+> {
   render() {
     return (
       <div className="flex flex-col h-full shadow-xl">
