@@ -8,7 +8,7 @@ import * as Yup from 'yup';
 import { Feedback, post_json, extract_error } from '@/lib/api';
 import { event as gtag_event } from '@/lib/gtag';
 
-const SignupForm = () => (
+const ContactForm = () => (
   <Formik
     initialValues={{ umail: '' }}
     onSubmit={async (values, { setStatus, setSubmitting }) => {
@@ -73,7 +73,7 @@ const SignupForm = () => (
             message={props.status.message}
             type={props.status.type}></Feedback>
         )}
-        <p className="mt-2 text-white">
+        <p className="mt-2">
           You can explore Weasel in action using the test results in our
           playground.
         </p>
@@ -85,4 +85,4 @@ const SignupForm = () => (
   </Formik>
 );
 
-export default SignupForm;
+export default ContactForm;
