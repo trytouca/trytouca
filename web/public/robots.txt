@@ -1,4 +1,3 @@
 User-agent: *
-Disallow: /talks/
 
 Sitemap: https://getweasel.com/sitemap.xml
