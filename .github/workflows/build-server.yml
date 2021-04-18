@@ -1,0 +1,347 @@
+#
+# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+#
+
+name: Platform
+
+on:
+  push:
+
+jobs:
+  api-build-native:
+    name: api-build-native
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - name: authenticate to aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_PROD_ACCESS_KEY_SECRET }}
+          aws-region: us-east-2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+
+      - uses: actions/setup-node@v2
+        if: steps.changes.outputs.api == 'true'
+      - uses: actions/cache@v2
+        if: steps.changes.outputs.api == 'true'
+        with:
+          path: ${{ github.workspace }}/backend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('backend/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+
+      - if: steps.changes.outputs.api == 'true'
+        run: ./build.sh --fbs-modules --docker
+
+      - name: build api
+        if: steps.changes.outputs.api == 'true'
+        run: |
+          yarn --cwd=backend install
+          yarn --cwd=backend build
+          yarn --cwd=backend lint
+          yarn --cwd=backend test
+          yarn --cwd=backend docs
+
+      - name: push web to aws
+        if: steps.changes.outputs.api == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          tar -zcf api.tar.gz backend/dist
+          tar -zcf api-docs-external.tar.gz backend/local/docs/external
+          tar -zcf api-docs-internal.tar.gz backend/local/docs/external
+          tar -zcf api-test-coverage.tar.gz backend/local/tests/backend
+          aws s3 cp api.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+          aws s3 cp api-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+          aws s3 cp api-docs-internal.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+          aws s3 cp api-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+
+      - name: pull web from aws
+        if: steps.changes.outputs.api == 'false'
+        run: |
+          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api.tar.gz .
+          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api-docs-external.tar.gz .
+          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api-docs-internal.tar.gz .
+          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api-test-coverage.tar.gz .
+          tar -xf api.tar.gz -C ./backend --strip-components=1
+          tar -xf api-docs-external.tar.gz -C ./backend/local/docs/external --strip-components=1
+          tar -xf api-docs-internal.tar.gz -C ./backend/local/docs/internal --strip-components=1
+          tar -xf api-test-coverage.tar.gz -C ./backend/local/tests/backend --strip-components=1
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: api-bundle
+          path: ${{ github.workspace }}/backend/dist/
+          retention-days: 1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: docs-external-api
+          path: ${{ github.workspace }}/backend/local/docs/external/
+          retention-days: 1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: docs-internal-api
+          path: ${{ github.workspace }}/backend/local/docs/internal/
+          retention-days: 1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: tests-internal-api
+          path: ${{ github.workspace }}/backend/local/tests/backend/
+          retention-days: 1
+
+  app-build-native:
+    name: app-build-native
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - name: authenticate to aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_PROD_ACCESS_KEY_SECRET }}
+          aws-region: us-east-2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+
+      - uses: actions/setup-node@v2
+        if: steps.changes.outputs.app == 'true'
+      - uses: actions/cache@v2
+        if: steps.changes.outputs.app == 'true'
+        with:
+          path: ${{ github.workspace }}/frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      - name: build app
+        if: steps.changes.outputs.app == 'true'
+        run: |
+          yarn --cwd=frontend install --frozen-lockfile
+          yarn --cwd=frontend build --prod
+
+      - name: push app to aws
+        if: steps.changes.outputs.app == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          tar -zcf app.tar.gz frontend/dist
+          aws s3 cp app.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+
+      - name: pull app from aws
+        if: steps.changes.outputs.app == 'false'
+        run: |
+          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/app.tar.gz .
+          tar -xf app.tar.gz -C ./frontend --strip-components=1
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: app-bundle
+          path: ${{ github.workspace }}/frontend/dist/
+          retention-days: 1
+
+  web-build-native:
+    name: web-build-native
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - name: authenticate to aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_PROD_ACCESS_KEY_SECRET }}
+          aws-region: us-east-2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - uses: actions/setup-node@v2
+        if: steps.changes.outputs.web == 'true'
+      - uses: actions/cache@v2
+        if: steps.changes.outputs.web == 'true'
+        with:
+          path: ${{ github.workspace }}/web/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('web/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+
+      - name: build web
+        if: steps.changes.outputs.web == 'true'
+        run: |
+          yarn --cwd=web install
+          yarn --cwd=web run next telemetry
+          yarn --cwd=web lint
+          yarn --cwd=web build
+          yarn --cwd=web export
+
+      - name: push web to aws
+        if: steps.changes.outputs.web == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}
+          tar -zcf web.tar.gz web/out
+          aws s3 cp web.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+
+      - name: pull web from aws
+        if: steps.changes.outputs.web == 'false'
+        run: |
+          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/web.tar.gz .
+          tar -xf web.tar.gz -C ./web --strip-components=1
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: web-bundle
+          path: ${{ github.workspace }}/web/out/
+          retention-days: 1
+
+  cmp-build-native:
+    name: cmp-build-native
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - name: authenticate to aws
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_PROD_ACCESS_KEY_SECRET }}
+          aws-region: us-east-2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+
+      - uses: actions/setup-python@v1
+        if: steps.changes.outputs.cmp == 'true'
+      - name: install conan
+        if: steps.changes.outputs.cmp == 'true'
+        run: |
+          pip install --no-cache-dir --upgrade conan
+          conan profile new default --detect --force
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan remote add --force weasel-conan https://getweasel.jfrog.io/artifactory/api/conan/weasel-cpp
+      - name: build cmp
+        if: steps.changes.outputs.cmp == 'true'
+        run: comparator/build.sh
+
+      - name: push cmp to aws
+        if: steps.changes.outputs.cmp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          tar -zcf cmp.tar.gz comparator/local/dist
+          aws s3 cp cmp.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+
+      - name: pull cmp from aws
+        if: steps.changes.outputs.cmp == 'false'
+        run: |
+          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/cmp.tar.gz .
+          tar -xf cmp.tar.gz -C ./comparator --strip-components=1
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: cmp-bundle
+          path: ${{ github.workspace }}/comparator/local/dist
+          retention-days: 1
+
+  server-build-docker:
+    name: server-build-docker
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    needs:
+      - api-build-native
+      - app-build-native
+      - cmp-build-native
+      - web-build-native
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.CR_PAT }}
+          submodules: recursive
+      - name: authenticate to aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_PROD_ACCESS_KEY_SECRET }}
+          aws-region: us-east-2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+
+      - uses: actions/download-artifact@v2
+        if: steps.changes.outputs.api == 'true'
+        with:
+          name: api-bundle
+          path: ${{ github.workspace }}/backend/dist
+      - uses: actions/download-artifact@v2
+        if: steps.changes.outputs.app == 'true'
+        with:
+          name: docs-external-api
+          path: ${{ github.workspace }}/backend/local/docs/external
+      - uses: actions/download-artifact@v2
+        if: steps.changes.outputs.app == 'true'
+        with:
+          name: app-bundle
+          path: ${{ github.workspace }}/frontend/dist
+      - uses: actions/download-artifact@v2
+        if: steps.changes.outputs.app == 'true'
+        with:
+          name: web-bundle
+          path: ${{ github.workspace }}/web/out
+      - uses: actions/download-artifact@v2
+        if: steps.changes.outputs.cmp == 'true'
+        with:
+          name: cmp-bundle
+          path: ${{ github.workspace }}/comparator/local/dist
+      - name: pull client docs from aws
+        if: steps.changes.outputs.app == 'true'
+        run: |
+          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/docs/clients/cpp-api-reference.tar.gz .
+          tar -xf cpp-api-reference.tar.gz -C ./clients/cpp
+
+      - uses: actions/setup-node@v2
+        if: steps.changes.outputs.api == 'true'
+      - uses: actions/cache@v2
+        if: steps.changes.outputs.api == 'true'
+        with:
+          path: ${{ github.workspace }}/backend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('backend/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      - name: install api dependencies
+        if: steps.changes.outputs.api == 'true'
+        run: yarn --cwd=backend install --frozen-lockfile --production
+
+      - name: authenticate to ghcr
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
+      - name: push ops to aws
+        if: steps.changes.outputs.ops == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          tar -zcf deployment-scripts.tar.gz devops
+          aws s3 cp ${{ github.workspace }}/deployment-scripts.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+
+      - if: steps.changes.outputs.api == 'true'
+        run: docker build -f config/docker/api.Dockerfile -t ghcr.io/getweasel/weasel-backend .
+      - name: push api to ghcr
+        if: steps.changes.outputs.api == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker push ghcr.io/getweasel/weasel-backend
+
+      - if: steps.changes.outputs.app == 'true'
+        run: docker build -f config/docker/app.Dockerfile -t ghcr.io/getweasel/weasel-webapp .
+      - name: push app to ghcr
+        if: steps.changes.outputs.app == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker push ghcr.io/getweasel/weasel-webapp
+
+      - if: steps.changes.outputs.cmp == 'true'
+        run: docker build -f config/docker/cmp.Dockerfile -t ghcr.io/getweasel/weasel-comparator .
+      - name: push cmp to ghcr
+        if: steps.changes.outputs.cmp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker push ghcr.io/getweasel/weasel-comparator
