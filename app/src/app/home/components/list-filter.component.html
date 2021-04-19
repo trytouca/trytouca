@@ -59,10 +59,9 @@
     style="min-height: 20vh;">
     <div class="flex flex-col space-y-4 text-center text-sm">
       <p>
-        {{ stats.totalRows | i18nPlural: { '=1': 'The row in this list does not match', 'other': 'None of the # rows in this list matches' } }}
-        the specified filter.
+        {{ stats.totalRows | i18nPlural: { '=0': 'This page appears to have no result.', '=1': 'The row in this list does not match the specified filter.', 'other': 'None of the # rows in this list matches the specified filter.' } }}
       </p>
-      <div>
+      <div *ngIf="stats.totalRows !== 0">
         <button (click)="clearFilters()" class="wsl-btn-sm wsl-btn-dark">
           <span>Clear Filters</span>
         </button>

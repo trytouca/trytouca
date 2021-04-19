@@ -47,8 +47,8 @@
         *ngFor="let item of getShownRows(ItemType.Fresh); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Common)"
         [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Common)}">
-        <app-element-item-result [key]="item" [params]="params">
-        </app-element-item-result>
+        <app-element-item-metric [key]="item" [params]="params">
+        </app-element-item-metric>
       </li>
     </ul>
   </div>
@@ -73,8 +73,8 @@
         *ngFor="let item of getShownRows(ItemType.Missing); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh);"
         [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)}">
-        <app-element-item-result [key]="item" [params]="params">
-        </app-element-item-result>
+        <app-element-item-metric [key]="item" [params]="params">
+        </app-element-item-metric>
       </li>
     </ul>
   </div>

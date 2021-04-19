@@ -46,20 +46,20 @@
       </app-home-version-navigator>
     </ng-container>
     <div class="wsl-min-h-screen-4 grid place-content-center"
-      *ngIf="!hasData() || !hasItems()">
+      *ngIf="!hasData()">
       <div class="wsl-spinner">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </div>
     </div>
-    <div *ngIf="overview" [hidden]="!hasData() || !hasItems()">
+    <div *ngIf="overview" [hidden]="!hasData()">
       <app-home-page-overview [inputs]="overview">
       </app-home-page-overview>
     </div>
-    <div [hidden]="currentTab !== TabType.Results || !hasData() || !hasItems()">
+    <div [hidden]="currentTab !== TabType.Results || !hasData()">
       <app-element-tab-results>
       </app-element-tab-results>
     </div>
-    <div [hidden]="currentTab !== TabType.Metrics || !hasData() || !hasItems()">
+    <div [hidden]="currentTab !== TabType.Metrics || !hasData()">
       <app-element-tab-metrics>
       </app-element-tab-metrics>
     </div>

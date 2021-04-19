@@ -48,29 +48,29 @@ jobs:
           yarn --cwd=backend test
           yarn --cwd=backend docs
 
-      - name: push web to aws
+      - name: push api to aws
         if: steps.changes.outputs.api == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf api.tar.gz backend/dist
           tar -zcf api-docs-external.tar.gz backend/local/docs/external
-          tar -zcf api-docs-internal.tar.gz backend/local/docs/external
+          tar -zcf api-docs-internal.tar.gz backend/local/docs/internal
           tar -zcf api-test-coverage.tar.gz backend/local/tests/backend
           aws s3 cp api.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
           aws s3 cp api-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
           aws s3 cp api-docs-internal.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
           aws s3 cp api-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
 
-      - name: pull web from aws
+      - name: pull api from aws
         if: steps.changes.outputs.api == 'false'
         run: |
           aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api.tar.gz .
           aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api-docs-external.tar.gz .
           aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api-docs-internal.tar.gz .
           aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api-test-coverage.tar.gz .
-          tar -xf api.tar.gz -C ./backend --strip-components=1
-          tar -xf api-docs-external.tar.gz -C ./backend/local/docs/external --strip-components=1
-          tar -xf api-docs-internal.tar.gz -C ./backend/local/docs/internal --strip-components=1
-          tar -xf api-test-coverage.tar.gz -C ./backend/local/tests/backend --strip-components=1
+          tar -xf api.tar.gz
+          tar -xf api-docs-external.tar.gz
+          tar -xf api-docs-internal.tar.gz
+          tar -xf api-test-coverage.tar.gz
 
       - uses: actions/upload-artifact@v2
         with:
@@ -136,7 +136,7 @@ jobs:
         if: steps.changes.outputs.app == 'false'
         run: |
           aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/app.tar.gz .
-          tar -xf app.tar.gz -C ./frontend --strip-components=1
+          tar -xf app.tar.gz
 
       - uses: actions/upload-artifact@v2
         with:
@@ -191,7 +191,7 @@ jobs:
         if: steps.changes.outputs.web == 'false'
         run: |
           aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/web.tar.gz .
-          tar -xf web.tar.gz -C ./web --strip-components=1
+          tar -xf web.tar.gz
 
       - uses: actions/upload-artifact@v2
         with:
@@ -240,7 +240,7 @@ jobs:
         if: steps.changes.outputs.cmp == 'false'
         run: |
           aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/cmp.tar.gz .
-          tar -xf cmp.tar.gz -C ./comparator --strip-components=1
+          tar -xf cmp.tar.gz
 
       - uses: actions/upload-artifact@v2
         with:
