@@ -12,4 +12,4 @@ COPY web/out                        /www/data/web
 COPY frontend/dist                  /www/data/app
 COPY backend/local/docs/external    /www/data/docs/backend
 COPY clients/cpp/local/docs/html    /www/data/docs/clients/cpp
-COPY frontend/nginx.conf            /etc/nginx/conf.d/defaultf.conf
+COPY frontend/nginx.conf            /etc/nginx/conf.d/default.conf
