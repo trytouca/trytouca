@@ -308,9 +308,11 @@ jobs:
         if: steps.changes.outputs.api == 'true'
         run: yarn --cwd=backend install --frozen-lockfile --production
 
-      - name: authenticate to ghcr
+      - name: authenticate to container registry
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+        run: |
+          echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_PROD_ECR_REPO }}
 
       - name: push ops to aws
         if: steps.changes.outputs.ops == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -321,25 +323,37 @@ jobs:
       - if: steps.changes.outputs.api == 'true'
         run: |
           tar -xf api.tar.gz
-          docker build -f config/docker/api.Dockerfile -t ghcr.io/getweasel/weasel-backend .
-      - name: push api to ghcr
+          docker build -f config/docker/api.Dockerfile -t weasel-api .
+      - name: push api to container registry
         if: steps.changes.outputs.api == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: docker push ghcr.io/getweasel/weasel-backend
+        run: |
+          docker tag weasel-api ghcr.io/getweasel/weasel-backend:latest
+          docker push ghcr.io/getweasel/weasel-backend:latest
+          docker tag weasel-api ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-api:1.3
+          docker push ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-api:1.3
 
       - if: steps.changes.outputs.app == 'true'
         run: |
           tar -xf app.tar.gz
           tar -xf web.tar.gz
           tar -xf api-docs-external.tar.gz
-          docker build -f config/docker/app.Dockerfile -t ghcr.io/getweasel/weasel-webapp .
-      - name: push app to ghcr
+          docker build -f config/docker/app.Dockerfile -t weasel-app .
+      - name: push app to container registry
         if: steps.changes.outputs.app == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: docker push ghcr.io/getweasel/weasel-webapp
+        run: |
+          docker tag weasel-app ghcr.io/getweasel/weasel-webapp:latest
+          docker push ghcr.io/getweasel/weasel-webapp:latest
+          docker tag weasel-app ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-app:1.3
+          docker push ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-app:1.3
 
       - if: steps.changes.outputs.cmp == 'true'
         run: |
           tar -xf cmp.tar.gz
-          docker build -f config/docker/cmp.Dockerfile -t ghcr.io/getweasel/weasel-comparator .
-      - name: push cmp to ghcr
+          docker build -f config/docker/cmp.Dockerfile -t weasel-cmp .
+      - name: push cmp to container registry
         if: steps.changes.outputs.cmp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: docker push ghcr.io/getweasel/weasel-comparator
+        run: |
+          docker tag weasel-cmp ghcr.io/getweasel/weasel-comparator:latest
+          docker push ghcr.io/getweasel/weasel-comparator:latest
+          docker tag weasel-cmp ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-cmp:1.3
+          docker push ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-cmp:1.3
