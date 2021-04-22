@@ -1,8 +1,7 @@
-version: '3'
+version: "3"
 services:
-
   weasel_backend:
-    image: ghcr.io/getweasel/weasel-backend:latest
+    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-api:1.3
     environment:
       - ENV_FILE=prod
       - AUTH_JWT_SECRET=<SECRET>
@@ -21,19 +20,19 @@ services:
       - weasel_redis
     restart: always
 
-  weasel_comparator:
-    image: ghcr.io/getweasel/weasel-comparator:latest
-    volumes:
-      - ./local/data/weasel:/opt/local/data/weasel:ro
-      - ./local/logs/comparator:/opt/local/logs/comparator
+  weasel_webapp:
+    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-app:1.3
+    ports:
+      - 80:80
     depends_on:
       - weasel_backend
     restart: always
 
-  weasel_webapp:
-    image: ghcr.io/getweasel/weasel-webapp:latest
-    ports:
-      - 80:80
+  weasel_comparator:
+    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-cmp:1.3
+    volumes:
+      - ./local/data/weasel:/opt/local/data/weasel:ro
+      - ./local/logs/comparator:/opt/local/logs/comparator
     depends_on:
       - weasel_backend
     restart: always

@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 
-project(weasel_cmp VERSION 1.2.1 LANGUAGES CXX)
+project(weasel_cmp VERSION 1.3 LANGUAGES CXX)
 
 set(WEASEL_COMPARATOR_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 

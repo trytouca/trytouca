@@ -1,8 +1,8 @@
-openapi: "3.0.0"
+openapi: '3.0.0'
 info:
   description: >-
     Backend API specification of Weasel Regression Testing Platform
-  version: 1.2.1
+  version: 1.3
   title: Weasel Regression Testing Platform
   contact:
     email: support@getweasel.com
@@ -10,7 +10,6 @@ servers:
   - url: https://getweasel.com/api
 
 components:
-
   headers:
     Location:
       description: the url to redirect a page to
@@ -128,7 +127,7 @@ components:
           type: array
           items:
             type: string
-          example: [ 'error message' ]
+          example: ['error message']
     ObjectId:
       additionalProperties: false
       type: string

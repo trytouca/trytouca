@@ -1,6 +1,6 @@
 {
   "name": "weasel-webapp",
-  "version": "1.2.1",
+  "version": "1.3",
   "description": "Continuous regression testing for critical software workflows.",
   "private": true,
   "license": "UNLICENSED",
