@@ -7,6 +7,7 @@ set -o errexit -o pipefail -o noclobber -o nounset
 # declare project structure
 
 ARG_VERBOSE=0
+ARG_REGION="us-east-2"
 DIR_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DIR_PROJECT_ROOT="$(dirname "$DIR_SCRIPT")"
 
@@ -22,11 +23,10 @@ Usage:
 
   -r, --registry  ARG         docker registry url
   -u, --username  ARG         docker registry username
-  -p, --password  ARG         docker registry password
 
 Example:
 
-  ${BASH_SOURCE[0]} -r "ghcr.io" -u "ghorbanzade" -p "abcdefgh"
+  ${BASH_SOURCE[0]} -r "aws_account_number.${ARG_REGION}.amazonaws.com" -u "AWS"
 
 EOF
 }
@@ -57,7 +57,6 @@ ARG_HELP=0
 ARG_VERSION=0
 ARG_REGISTRY=""
 ARG_USERNAME=""
-ARG_PASSWORD=""
 
 for arg in "$@"; do
     case $arg in
@@ -77,18 +76,12 @@ for arg in "$@"; do
             shift
             shift
             ;;
-        "-p" | "--password")
-            ARG_PASSWORD="$2"
-            shift
-            shift
-            ;;
     esac
 done
 
 log_debug "Specified command line arguments:"
 log_debug " - ARG_REGISTRY: ${ARG_REGISTRY}"
 log_debug " - ARG_USERNAME: ${ARG_USERNAME}"
-log_debug " - ARG_PASSWORD: ${ARG_PASSWORD}"
 
 if [[ ${ARG_VERSION} -eq 1 ]]; then
     git describe --tags
@@ -112,18 +105,12 @@ if [[ -z "${ARG_USERNAME// }" ]]; then
     exit
 fi
 
-if [[ -z "${ARG_PASSWORD// }" ]]; then
-    log_warning "password to docker registry must be specified"
-    show_usage
-    exit
-fi
-
 # define deployment variables
 
 FILE_COMPOSE="${DIR_PROJECT_ROOT}/devops/docker-compose.prod.yml"
 PKG_REGISTRY="${ARG_REGISTRY}"
 PKG_USERNAME="${ARG_USERNAME}"
-PKG_PASSWORD="${ARG_PASSWORD}"
+PKG_REGION="${ARG_REGION}"
 
 if [ ! -f "${FILE_COMPOSE}" ]; then
     log_error "docker-compose file does not exist: ${FILE_COMPOSE}"
@@ -158,7 +145,8 @@ fi
 log_info "pruned docker resources"
 
 log_debug "authenticating to docker package registry"
-if ! echo "${PKG_PASSWORD}" | docker login "${PKG_REGISTRY}" -u "${PKG_USERNAME}" --password-stdin  >/dev/null; then
+
+if ! aws ecr get-login-password --region "${PKG_REGION}" | docker login "${PKG_REGISTRY}" -u "${PKG_USERNAME}" --password-stdin  >/dev/null; then
     log_error "failed to authenticate to docker package registry"
 fi
 log_info "authenticated to docker package registry"
