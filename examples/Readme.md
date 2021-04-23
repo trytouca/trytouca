@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://getweasel.com" target="_blank" rel="noopener">
-    <img alt="Weasel Logo" height="96px" src="https://getweasel.com/assets/logo/weasel-logo.svg">
+    <img alt="Weasel Logo" height="48px" src="https://getweasel.com/logo/weasel-logo-w-text.svg">
   </a>
   <h1>Sample Regression Test Tools</h1>
   <p>
@@ -20,7 +20,5 @@
 ## Resources
 
 * [Weasel C++ SDK][weasel-cpp]
-* [Weasel Javascript SDK][weasel-js]
 
 [weasel-cpp]: https://github.com/getweasel/weasel-cpp
-[weasel-js]: https://github.com/getweasel/weasel-js
