@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://getweasel.com" target="_blank" rel="noopener">
-    <img alt="Weasel Logo" height="48px" src="https://getweasel.com/assets/logo/weasel-logo-w-text.svg">
+    <img alt="Weasel Logo" height="48px" src="https://getweasel.com/logo/weasel-logo-w-text.svg">
   </a>
   <h1>Client Library for C++</h1>
   <p>
