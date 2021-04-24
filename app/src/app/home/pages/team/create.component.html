@@ -6,20 +6,20 @@
   <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)"
     novalidate>
     <div>
-      <label class="wsl-input-label" for="wsl-slug">Suite Slug</label>
-      <input class="wsl-input-field" type="text" id="wsl-slug" tabindex="1"
-        required autocomplete="off" aria-describedby="wsl-slug-help"
-        formControlName="slug" name="slug" wslAutofocus>
-      <small id="wsl-slug-help" [ngClass]="hints.get('slug').type"
-        [innerHTML]="hints.get('slug').text"></small>
-    </div>
-    <div>
       <label class="wsl-input-label" for="wsl-name">Suite Name</label>
-      <input class="wsl-input-field" type="text" id="wsl-name" tabindex="2"
+      <input class="wsl-input-field" type="text" id="wsl-name" tabindex="1"
         required autocomplete="off" aria-describedby="wsl-name-help"
-        formControlName="name" name="name">
+        formControlName="name" name="name" wslAutofocus>
       <small id="wsl-name-help" [ngClass]="hints.get('name').type"
         [innerHTML]="hints.get('name').text"></small>
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-slug">Suite Slug</label>
+      <input class="wsl-input-field" type="text" id="wsl-slug" tabindex="2"
+        required autocomplete="off" aria-describedby="wsl-slug-help"
+        formControlName="slug" name="slug">
+      <small id="wsl-slug-help" [ngClass]="hints.get('slug').type"
+        [innerHTML]="hints.get('slug').text"></small>
     </div>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
