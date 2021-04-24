@@ -13,13 +13,13 @@ const social = [
   {
     link: 'https://twitter.com/getweasel',
     title: 'Follow us on Twitter',
-    text: 'Twitter',
-    internal: false
+    text: 'Twitter'
   },
   {
     link: '/contact',
     title: 'Get in Touch',
-    text: 'Contact'
+    text: 'Contact',
+    internal: true
   },
   {
     link: 'https://docs.getweasel.com/legal/terms',
