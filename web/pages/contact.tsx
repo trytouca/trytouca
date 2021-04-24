@@ -13,7 +13,7 @@ interface PageContent {
 
 const content: PageContent = {
   title: 'Contact Us',
-  subtitle: 'We like to hear what you think'
+  subtitle: 'Let us know how we can help.'
 };
 
 export default function ContactPage() {
@@ -26,7 +26,7 @@ export default function ContactPage() {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
-      <section className="bg-gradient-to-b from-dark-blue-900 to-light-blue-900">
+      <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800">
         <div className="wsl-min-h-screen-1 container mx-auto flex flex-col justify-center">
           <div className="p-8 space-y-2 text-center">
             <h2 className="text-white text-4xl font-extrabold">
@@ -35,7 +35,7 @@ export default function ContactPage() {
             <p className="text-xl text-white">{content.subtitle}</p>
           </div>
           <section className="py-8 min-h-[25vh] flex items-center">
-            <div className="p-8 md:px-24 lg:px-8 mx-auto rounded-xl bg-dark-blue-700">
+            <div className="p-8 md:px-24 lg:px-8 mx-auto rounded-xl bg-gradient-to-b from-dark-blue-800 to-transparent">
               <ContactForm></ContactForm>
             </div>
           </section>
