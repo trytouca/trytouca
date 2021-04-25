@@ -24,6 +24,13 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
+          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v$(git describe --tags --abbrev=0 | cut -c 2-)"
 
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.api == 'true'
@@ -53,20 +60,20 @@ jobs:
           tar -zcf api-test-coverage.tar.gz backend/local/tests/backend
 
       - name: push api to aws
-        if: steps.changes.outputs.api == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: steps.changes.outputs.api == 'true' && steps.params.outputs.release == 'true'
         run: |
-          aws s3 cp api.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
-          aws s3 cp api-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
-          aws s3 cp api-docs-internal.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
-          aws s3 cp api-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+          aws s3 cp api.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 cp api-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 cp api-docs-internal.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 cp api-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
 
       - name: pull api from aws
         if: steps.changes.outputs.api == 'false'
         run: |
-          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api.tar.gz .
-          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api-docs-external.tar.gz .
-          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api-docs-internal.tar.gz .
-          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/api-test-coverage.tar.gz .
+          aws s3 cp ${{ steps.params.outputs.buckets }}/api.tar.gz .
+          aws s3 cp ${{ steps.params.outputs.buckets }}/api-docs-external.tar.gz .
+          aws s3 cp ${{ steps.params.outputs.buckets }}/api-docs-internal.tar.gz .
+          aws s3 cp ${{ steps.params.outputs.buckets }}/api-test-coverage.tar.gz .
 
       - uses: actions/upload-artifact@v2
         with:
@@ -105,6 +112,13 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
+          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v$(git describe --tags --abbrev=0 | cut -c 2-)"
 
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.app == 'true'
@@ -124,12 +138,12 @@ jobs:
           tar -zcf app.tar.gz frontend/dist
 
       - name: push app to aws
-        if: steps.changes.outputs.app == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: aws s3 cp app.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+        if: steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
+        run: aws s3 cp app.tar.gz ${{ steps.params.outputs.buckets }}/
 
       - name: pull app from aws
         if: steps.changes.outputs.app == 'false'
-        run: aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/app.tar.gz .
+        run: aws s3 cp ${{ steps.params.outputs.buckets }}/app.tar.gz .
 
       - uses: actions/upload-artifact@v2
         with:
@@ -153,6 +167,14 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
+          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v$(git describe --tags --abbrev=0 | cut -c 2-)"
+
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.web == 'true'
       - uses: actions/cache@v2
@@ -175,14 +197,14 @@ jobs:
           tar -zcf web.tar.gz web/out
 
       - name: push web to aws
-        if: steps.changes.outputs.web == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
         run: |
           aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}
-          aws s3 cp web.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+          aws s3 cp web.tar.gz ${{ steps.params.outputs.buckets }}/
 
       - name: pull web from aws
         if: steps.changes.outputs.web == 'false'
-        run: aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/web.tar.gz .
+        run: aws s3 cp ${{ steps.params.outputs.buckets }}/web.tar.gz .
 
       - uses: actions/upload-artifact@v2
         with:
@@ -206,6 +228,13 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
+          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v$(git describe --tags --abbrev=0 | cut -c 2-)"
 
       - uses: actions/setup-python@v1
         if: steps.changes.outputs.cmp == 'true'
@@ -223,13 +252,12 @@ jobs:
           tar -zcf cmp.tar.gz comparator/local/dist
 
       - name: push cmp to aws
-        if: steps.changes.outputs.cmp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: aws s3 cp cmp.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+        if: steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
+        run: aws s3 cp cmp.tar.gz ${{ steps.params.outputs.buckets }}/
 
       - name: pull cmp from aws
         if: steps.changes.outputs.cmp == 'false'
-        run: |
-          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/cmp.tar.gz .
+        run: aws s3 cp ${{ steps.params.outputs.buckets }}/cmp.tar.gz .
 
       - uses: actions/upload-artifact@v2
         with:
@@ -248,9 +276,6 @@ jobs:
       - web-build-native
     steps:
       - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.CR_PAT }}
-          submodules: recursive
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -261,6 +286,13 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
+          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v$(git describe --tags --abbrev=0 | cut -c 2-)"
 
       - uses: actions/download-artifact@v2
         if: steps.changes.outputs.api == 'true'
@@ -290,7 +322,7 @@ jobs:
       - name: pull client docs from aws
         if: steps.changes.outputs.app == 'true'
         run: |
-          aws s3 cp ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/docs/clients/cpp-api-reference.tar.gz .
+          aws s3 cp ${{ steps.params.outputs.buckets }}/docs/clients/cpp-api-reference.tar.gz .
           tar -xf cpp-api-reference.tar.gz -C ./clients/cpp
 
       - uses: actions/setup-node@v2
@@ -308,51 +340,46 @@ jobs:
         run: yarn --cwd=backend install --frozen-lockfile --production
 
       - name: authenticate to container registry
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_PROD_ECR_REPO }}
+        if: steps.params.outputs.release == 'true'
+        run: aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin ${{ secrets.AWS_PROD_ECR_REPO }}
 
       - name: push ops to aws
-        if: steps.changes.outputs.ops == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: steps.changes.outputs.ops == 'true' && steps.params.outputs.release == 'true'
         run: |
           tar -zcf deployment-scripts.tar.gz devops
-          aws s3 cp ${{ github.workspace }}/deployment-scripts.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}
+          aws s3 cp deployment-scripts.tar.gz ${{ steps.params.outputs.buckets }}/
 
-      - if: steps.changes.outputs.api == 'true'
+      - name: build api docker image
+        if: steps.changes.outputs.api == 'true'
         run: |
           tar -xf api.tar.gz
           docker build -f config/docker/api.Dockerfile -t weasel-api .
       - name: push api to container registry
-        if: steps.changes.outputs.api == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: steps.changes.outputs.api == 'true' && steps.params.outputs.release == 'true'
         run: |
-          docker tag weasel-api ghcr.io/getweasel/weasel-backend:latest
-          docker push ghcr.io/getweasel/weasel-backend:latest
-          docker tag weasel-api ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-api:1.3
-          docker push ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-api:1.3
+          docker tag weasel-api ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-api:${{ steps.params.outputs.version }}
+          docker push ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-api:${{ steps.params.outputs.version }}
 
-      - if: steps.changes.outputs.app == 'true'
+      - name: build app docker image
+        if: steps.changes.outputs.app == 'true'
         run: |
           tar -xf app.tar.gz
           tar -xf web.tar.gz
           tar -xf api-docs-external.tar.gz
           docker build -f config/docker/app.Dockerfile -t weasel-app .
       - name: push app to container registry
-        if: steps.changes.outputs.app == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
         run: |
-          docker tag weasel-app ghcr.io/getweasel/weasel-webapp:latest
-          docker push ghcr.io/getweasel/weasel-webapp:latest
-          docker tag weasel-app ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-app:1.3
-          docker push ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-app:1.3
+          docker tag weasel-app ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-app:${{ steps.params.outputs.version }}
+          docker push ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-app:${{ steps.params.outputs.version }}
 
-      - if: steps.changes.outputs.cmp == 'true'
+      - name: build cmp docker image
+        if: steps.changes.outputs.cmp == 'true'
         run: |
           tar -xf cmp.tar.gz
           docker build -f config/docker/cmp.Dockerfile -t weasel-cmp .
       - name: push cmp to container registry
-        if: steps.changes.outputs.cmp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
         run: |
-          docker tag weasel-cmp ghcr.io/getweasel/weasel-comparator:latest
-          docker push ghcr.io/getweasel/weasel-comparator:latest
-          docker tag weasel-cmp ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-cmp:1.3
-          docker push ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-cmp:1.3
+          docker tag weasel-cmp ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-cmp:${{ steps.params.outputs.version }}
+          docker push ${{ secrets.AWS_PROD_ECR_REPO }}/weasel-cmp:${{ steps.params.outputs.version }}
