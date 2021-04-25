@@ -18,7 +18,7 @@ const sessionSchema = new mongoose.Schema({
   },
   ipAddr: {
     required: true,
-    type: Number
+    type: String
   },
   userId: {
     ref: 'User',
@@ -33,7 +33,7 @@ const sessionSchema = new mongoose.Schema({
 export interface ISessionDocument extends mongoose.Document {
   agent: string
   expiresAt: Date
-  ipAddr: number
+  ipAddr: string
   userId: mongoose.Types.ObjectId
 }
 

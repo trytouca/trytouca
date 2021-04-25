@@ -40,6 +40,12 @@ app.use(nocache())
 app.use(hidePoweredBy())
 app.use(compression())
 
+// in cloud-hosted deployments where backend runs behind a reverse proxy,
+// configure nginx to trust the proxy and infer ip address from upstream.
+if (config.deployMode === 'cloud_hosted') {
+  app.set('trust proxy', ['loopback', 'uniquelocal'])
+}
+
 app.use('/', router)
 
 app.use((req, res, next) => {

@@ -3,8 +3,6 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import ip from 'ip'
-
 import { SessionModel } from '@weasel/schemas/session'
 import { UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
@@ -21,7 +19,7 @@ export async function clientSessionCreate(
 ) {
   const apiKey = req.body.key as string
   const askedAgent = req.headers['user-agent']
-  const askedIpAddress = ip.toLong(req.connection.remoteAddress)
+  const askedIpAddress = req.ip
   logger.silly('%s: received request to authenticate client', apiKey)
 
   // check if apiKey is associated with any user account

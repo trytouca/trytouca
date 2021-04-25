@@ -50,7 +50,7 @@ export async function authVerifyCreate(
   next: NextFunction
 ) {
   const askedEmail = (req.body.email as string).toLowerCase()
-  const askedIpAddress = req.connection.remoteAddress
+  const askedIpAddress = req.ip
 
   // return 400 if email is already associated with any user
   // important not to use any of the static helper functions of user schema
@@ -126,6 +126,8 @@ export async function authVerifyCreate(
   // add event to tracking system
 
   tracker.create(newUser, {
+    $name: newUser.fullname,
+    $email: newUser.email,
     $created: newUser.createdAt.toISOString(),
     $ip: askedIpAddress
   })

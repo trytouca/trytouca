@@ -4,8 +4,6 @@
 
 import * as bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
-import ip from 'ip'
-
 import { createUserSession } from '@weasel/models/auth'
 import { UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
@@ -24,7 +22,7 @@ export async function authSessionCreate(
   const askedPassword = req.body.password
   const askedUsername = req.body.username
   const askedAgent = req.headers['user-agent']
-  const askedIpAddress = req.connection.remoteAddress
+  const askedIpAddress = req.ip
   logger.debug('%s: received request to login user', askedUsername)
 
   // check if username is associated with any account
@@ -114,11 +112,12 @@ export async function authSessionCreate(
   logger.debug('%s: signin request validated', user.username)
   const session = await createUserSession(user, {
     askedAgent,
-    askedIpAddress: ip.toLong(askedIpAddress)
+    askedIpAddress
   })
 
   // add event to tracking system
 
+  tracker.create(user, { $ip: askedIpAddress })
   tracker.track(user, 'logged_in', { $ip: askedIpAddress })
 
   // return session token to the user

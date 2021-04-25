@@ -13,7 +13,7 @@ import logger from '@weasel/utils/logger'
  */
 export async function createUserSession(
   user: IUserDocument,
-  options: { askedAgent: string; askedIpAddress: number }
+  options: { askedAgent: string; askedIpAddress: string }
 ): Promise<{ token: string; expiresAt: Date }> {
   // edge case:
   // if user has an active unexpired session with matching metadata

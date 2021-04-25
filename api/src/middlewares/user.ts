@@ -3,9 +3,7 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import ip from 'ip'
 import mongoose from 'mongoose'
-
 import { EPlatformRole } from '../commontypes'
 import { wslFindByUname } from '@weasel/models/user'
 import { SessionModel } from '@weasel/schemas/session'
@@ -15,7 +13,7 @@ import logger from '@weasel/utils/logger'
 
 type AuthInput = {
   agent: string
-  ipAddr: number
+  ipAddr: string
   token: string
 }
 
@@ -111,7 +109,7 @@ export async function isAuthenticated(
 ) {
   const user = await isAuthenticatedImpl({
     agent: req.headers['user-agent'],
-    ipAddr: ip.toLong(req.connection.remoteAddress),
+    ipAddr: req.ip,
     token: req.signedCookies.authToken
   })
   if (!user) {
@@ -141,7 +139,7 @@ export async function isClientAuthenticated(
 ) {
   const user = await isAuthenticatedImpl({
     agent: req.headers['user-agent'],
-    ipAddr: ip.toLong(req.connection.remoteAddress),
+    ipAddr: req.ip,
     token: req.headers['authorization'].split(' ')[1]
   })
   if (!user) {

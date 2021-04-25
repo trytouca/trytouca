@@ -3,11 +3,10 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import ip from 'ip'
-
 import { SessionModel } from '@weasel/schemas/session'
 import { IUser } from '@weasel/schemas/user'
 import logger from '@weasel/utils/logger'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  *
@@ -19,7 +18,7 @@ export async function authSessionRemove(
 ) {
   const user = res.locals.user as IUser
   const askedAgent = req.headers['user-agent']
-  const askedIpAddress = ip.toLong(req.connection.remoteAddress)
+  const askedIpAddress = req.ip
   logger.debug('%s: received logout request', user.username)
 
   // find user session with matching metadata and expire it.
@@ -51,6 +50,10 @@ export async function authSessionRemove(
   }
 
   logger.info('%s: closed user session %s', user.username, session._id)
+
+  // add event to tracking system
+
+  tracker.track(user, 'logged_out', { $ip: askedIpAddress })
 
   return res.clearCookie('authToken').status(204).send()
 }

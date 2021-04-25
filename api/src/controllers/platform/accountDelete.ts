@@ -9,7 +9,11 @@ import { SessionModel } from '@weasel/schemas/session'
 import { TeamModel } from '@weasel/schemas/team'
 import { IUser, UserModel } from '@weasel/schemas/user'
 import logger from '@weasel/utils/logger'
+import { tracker } from '@weasel/utils/tracker'
 
+/**
+ *
+ */
 async function accountDeleteImpl(account: IUser) {
   await TeamModel.updateMany(
     {},
@@ -78,6 +82,10 @@ export async function accountDelete(
   logger.info('%s: deleting account', user.username)
 
   res.status(202).send()
+
+  // add event to tracking system
+
+  tracker.track(user, 'account_deleted')
 
   setTimeout(() => accountDeleteImpl(user), 5000)
 }

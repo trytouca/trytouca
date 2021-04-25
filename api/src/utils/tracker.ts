@@ -26,11 +26,7 @@ class Tracker {
    *
    */
   create(user: IUser, data: Mixpanel.PropertyDict) {
-    this.mixpanel?.people.set(user._id, {
-      $name: user.fullname,
-      $email: user.email,
-      ...data
-    })
+    this.mixpanel?.people.set(user._id, data)
   }
 
   /**

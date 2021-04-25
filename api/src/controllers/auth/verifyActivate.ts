@@ -3,8 +3,6 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-import ip from 'ip'
-
 import { createUserSession } from '@weasel/models/auth'
 import { UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
@@ -21,7 +19,7 @@ export async function authVerifyActivate(
 ) {
   const activationKey = req.params.key
   const askedAgent = req.headers['user-agent']
-  const askedIpAddress = ip.toLong(req.connection.remoteAddress)
+  const askedIpAddress = req.ip
   logger.debug('received request to activate user')
 
   // return 400 if activation key is invalid
