@@ -71,7 +71,7 @@ const content: PageContent = {
       ],
       button: {
         title: 'Contact Us',
-        link: 'mailto:support@getweasel.com'
+        link: '/contact'
       }
     }
   ],
