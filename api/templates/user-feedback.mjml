@@ -24,8 +24,8 @@
       <mj-column>
         <mj-text><h3>New User Feedback</h3></mj-text>
         <mj-text>
-          {{ username }} submitted their feedback for page {{ page }} of the
-          Weasel Platform.
+          <a href="mailto:{{ email }}">{{ name }}</a>
+          from {{ cname }} submitted the following message for page {{ page }}.
         </mj-text>
         <mj-text padding-left="40px" color="gray">{{{ body }}}</mj-text>
       </mj-column>

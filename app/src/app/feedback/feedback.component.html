@@ -3,14 +3,14 @@
   <h2 class="wsl-page-auth-title">Tell us what you think</h2>
   <div class="wsl-page-auth-body">
     <div class="wsl-page-auth-form">
-      <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit(feedbackForm.value)"
-        novalidate class="wsl-form">
+      <form class="wsl-form" [formGroup]="feedbackForm"
+        (ngSubmit)="onSubmit(feedbackForm.value)" novalidate>
         <app-alert [alert]="alert" *ngIf="alert"></app-alert>
         <div>
           <label for="wsl-body" class="wsl-input-label">Your Feedback</label>
-          <textarea id="wsl-body" rows="5" tabindex="1"
-            aria-describedby="wsl-body-help" required formControlName="body"
-            name="body" class="wsl-input-field"></textarea>
+          <textarea class="wsl-input-field" id="wsl-body" name="body"
+            formControlName="body" aria-describedby="wsl-body-help" required
+            rows="5" minlength="20" maxlength="1000"></textarea>
           <small id="wsl-body-help" [hidden]="shouldHideAriaDescription('body')"
             class="wsl-text-danger">
             Please provide more information in your message.
@@ -23,13 +23,13 @@
         </div>
         <div>
           <label for="wsl-name" class="wsl-input-label">Your Name</label>
-          <input type="text" id="wsl-name" tabindex="2" formControlName="name"
-            name="name" placeholder="optional" minlength="1" maxlength="64"
-            class="wsl-input-field">
+          <input class="wsl-input-field" type="text" id="wsl-name" name="name"
+            formControlName="name" placeholder="optional" minlength="1"
+            maxlength="100">
         </div>
         <div class="wsl-form-footer">
           <div class="wsl-form-submit">
-            <button type="submit" tabindex="3" class="wsl-btn-lg wsl-btn-dark">
+            <button class="wsl-btn-lg wsl-btn-dark" type="submit">
               Submit
             </button>
           </div>

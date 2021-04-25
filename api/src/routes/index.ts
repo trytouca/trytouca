@@ -106,13 +106,20 @@ router.use('/user', userRouter)
  *            properties:
  *              body:
  *                type: string
- *                maxLength: 1024
+ *                minLength: 20
+ *                maxLength: 1000
  *              name:
  *                type: string
- *                maxLength: 64
+ *                maxLength: 100
  *              page:
  *                type: string
  *                maxLength: 16
+ *              email:
+ *                type: string
+ *                maxLength: 100
+ *              cname:
+ *                type: string
+ *                maxLength: 100
  *      required: true
  *    responses:
  *      204:
@@ -131,14 +138,16 @@ router.post(
       .withMessage('required')
       .isString()
       .withMessage('must be a string')
-      .isLength({ max: 1024 })
-      .withMessage('too long'),
+      .isLength({ max: 1000 })
+      .withMessage('too long')
+      .isLength({ min: 20 })
+      .withMessage('too short'),
     ev
       .body('name')
       .optional()
       .isString()
       .withMessage('must be a string')
-      .isLength({ max: 64 })
+      .isLength({ max: 100 })
       .withMessage('too long'),
     ev
       .body('page')
@@ -149,7 +158,23 @@ router.post(
       .isLength({ max: 16 })
       .withMessage('too long')
       .isSlug()
-      .withMessage('invalid')
+      .withMessage('invalid'),
+    ev
+      .body('email')
+      .optional()
+      .isString()
+      .withMessage('must be a string')
+      .isEmail()
+      .withMessage('must be an email')
+      .isLength({ max: 100 })
+      .withMessage('too long'),
+    ev
+      .body('cname')
+      .optional()
+      .isString()
+      .withMessage('must be a string')
+      .isLength({ max: 100 })
+      .withMessage('too long')
   ]),
   promisable(feedback, 'handle user feedback')
 )

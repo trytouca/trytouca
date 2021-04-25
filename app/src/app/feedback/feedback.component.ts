@@ -27,12 +27,12 @@ export class FeedbackComponent {
       validators: [
         Validators.required,
         Validators.minLength(20),
-        Validators.maxLength(1024)
+        Validators.maxLength(1000)
       ],
       updateOn: 'blur'
     }),
     name: new FormControl('', {
-      validators: [Validators.minLength(1), Validators.maxLength(64)],
+      validators: [Validators.minLength(1), Validators.maxLength(100)],
       updateOn: 'blur'
     })
   });
@@ -70,7 +70,7 @@ export class FeedbackComponent {
     if (model.name === '') {
       model.name = 'Anonymous';
     }
-    model.page = 'dummy';
+    model.page = 'feedback-form';
     this.apiService.post('/feedback', model).subscribe(
       () => {
         this.alert = {
