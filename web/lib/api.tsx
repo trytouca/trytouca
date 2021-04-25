@@ -14,8 +14,8 @@ export function make_path(input: string): string {
   return `${BASE_URL}${input}`;
 }
 
-export async function post_json(body: Record<string, unknown>) {
-  return fetch(`${API_URL}/auth/signup`, {
+export async function post_json(path: string, body: Record<string, unknown>) {
+  return fetch(`${API_URL}/${path}`, {
     body: JSON.stringify(body),
     headers: { 'Content-Type': 'application/json' },
     method: 'POST'

@@ -12,7 +12,7 @@ const SignupForm = () => (
   <Formik
     initialValues={{ umail: '' }}
     onSubmit={async (values, { setStatus, setSubmitting }) => {
-      const response = await post_json({ email: values.umail });
+      const response = await post_json('auth/signup', { email: values.umail });
       if (response.status === 201) {
         setSubmitting(false);
         setStatus({
@@ -48,7 +48,7 @@ const SignupForm = () => (
     validateOnBlur={true}>
     {(props: FormikProps<{ umail: string }>) => (
       <Form noValidate={true}>
-        <label className="wsl-input-label sr-only" htmlFor="umail">
+        <label className="sr-only" htmlFor="umail">
           Email Address
         </label>
         <div className="flex h-10 space-x-2">
