@@ -4,11 +4,11 @@
 
 import { NextFunction, Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
-
 import { UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import * as mailer from '@weasel/utils/mailer'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  *
@@ -93,6 +93,10 @@ export async function authResetKeyCreate(
     expiresIn: config.auth.maxResetKeyLifetime.toString(),
     resetLink: `${config.webapp.root}/account/reset?key=${resetKey}`
   })
+
+  // add event to tracking system
+
+  tracker.track(user, 'password_initiated')
 
   return res.status(204).send()
 }

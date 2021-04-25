@@ -32,6 +32,7 @@ import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { makeConnectionMongo } from '@weasel/utils/mongo'
 import { client as redisClient, makeConnectionRedis } from '@weasel/utils/redis'
+
 const app = express()
 
 app.use(cors({ origin: true, credentials: true, preflightContinue: true }))

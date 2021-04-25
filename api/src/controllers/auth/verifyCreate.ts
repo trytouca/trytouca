@@ -5,7 +5,6 @@
 import { NextFunction, Request, Response } from 'express'
 import * as bcrypt from 'bcrypt'
 import { once } from 'lodash'
-
 import { EPlatformRole } from '../../commontypes'
 import { addSampleData } from '@weasel/models/sampleData'
 import { UserModel } from '@weasel/schemas/user'
@@ -123,16 +122,6 @@ export async function authVerifyCreate(
     body: `New account created for <b>${username}</b> (<a href="mailto:${askedEmail}">${askedEmail}</a>).`
   })
 
-  // add event to tracking system
-
-  tracker.create(newUser, {
-    $name: newUser.fullname,
-    $email: newUser.email,
-    $created: newUser.createdAt.toISOString(),
-    $ip: askedIpAddress
-  })
-  tracker.track(newUser, 'created_account')
-
   // if configured to do so, create a "tutorial" suite and populate it with
   // sample test results.
 
@@ -144,6 +133,15 @@ export async function authVerifyCreate(
       newUser.username
     )
   }
+
+  // add event to tracking system
+
+  tracker.create(newUser, {
+    $email: newUser.email,
+    $created: newUser.createdAt.toISOString(),
+    $ip: askedIpAddress
+  })
+  tracker.track(newUser, 'created_account')
 
   return res.status(201).json({})
 }

@@ -53,7 +53,7 @@ export async function authSessionRemove(
 
   // add event to tracking system
 
-  tracker.track(user, 'logged_out', { $ip: askedIpAddress })
+  tracker.track(user, 'logged_out')
 
   return res.clearCookie('authToken').status(204).send()
 }

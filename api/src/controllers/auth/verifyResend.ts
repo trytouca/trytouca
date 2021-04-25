@@ -3,11 +3,11 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-
 import { UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import * as mailer from '@weasel/utils/mailer'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  *
@@ -43,6 +43,10 @@ export async function authVerifyResend(
   mailer.mailUser(user, 'Welcome to Weasel', 'auth-signup-user', {
     verificationLink: link
   })
+
+  // add event to tracking system
+
+  tracker.track(user, 'resend_activation_link')
 
   return res.status(204).send()
 }

@@ -64,7 +64,8 @@ export async function ctrlUserUpdate(
 
   if (user.fullname === '' && proposed.fullname) {
     tracker.create(user, {
-      $name: proposed.fullname
+      $name: proposed.fullname,
+      username: proposed.username
     })
   }
   tracker.track(user, 'updated_profile')

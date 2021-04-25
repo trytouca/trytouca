@@ -3,7 +3,6 @@
  */
 
 import { NextFunction, Request, Response } from 'express'
-
 import { UserModel } from '@weasel/schemas/user'
 import logger from '@weasel/utils/logger'
 
@@ -40,6 +39,7 @@ export async function authResetKeyCheck(
   // return basic user information
 
   logger.info('%s: provided account information for reset key', user.username)
+
   return res.status(200).json({
     email: user.email,
     username: user.username,

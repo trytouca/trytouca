@@ -4,12 +4,12 @@
 
 import * as bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
-
 import { UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import { notifyPlatformAdmins } from '@weasel/utils/inbox'
 import logger from '@weasel/utils/logger'
 import * as mailer from '@weasel/utils/mailer'
+import { tracker } from '@weasel/utils/tracker'
 
 /**
  *
@@ -65,6 +65,10 @@ export async function authResetKeyApply(
   )
 
   notifyPlatformAdmins('%s reset their password.', user.username)
+
+  // add event to tracking system
+
+  tracker.track(user, 'password_reset')
 
   return res.status(204).send()
 }
