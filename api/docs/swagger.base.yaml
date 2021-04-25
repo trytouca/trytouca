@@ -2,7 +2,7 @@ openapi: '3.0.0'
 info:
   description: >-
     Backend API specification of Weasel Regression Testing Platform
-  version: 1.3
+  version: 1.4.0
   title: Weasel Regression Testing Platform
   contact:
     email: support@getweasel.com

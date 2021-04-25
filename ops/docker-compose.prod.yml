@@ -1,7 +1,7 @@
 version: "3"
 services:
   weasel_backend:
-    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-api:1.3
+    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-api:1.4.0
     environment:
       - ENV_FILE=prod
       - AUTH_JWT_SECRET=<SECRET>
@@ -21,7 +21,7 @@ services:
     restart: always
 
   weasel_webapp:
-    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-app:1.3
+    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-app:1.4.0
     ports:
       - 80:80
     depends_on:
@@ -29,7 +29,7 @@ services:
     restart: always
 
   weasel_comparator:
-    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-cmp:1.3
+    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-cmp:1.4.0
     volumes:
       - ./local/data/weasel:/opt/local/data/weasel:ro
       - ./local/logs/comparator:/opt/local/logs/comparator

@@ -12,7 +12,7 @@ class WeaselConan(ConanFile):
     topics = ( "regression-testing", "snapshot-testing", "test-framework", "test-automation" )
     url = "https://docs.getweasel.com"
     license = "Private"
-    version ="1.3.0"
+    version ="1.4.0"
     author = "Pejman Ghorbanzade <pejman@getweasel.com>"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_find_package"

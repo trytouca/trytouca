@@ -6,7 +6,7 @@
 
 """
 This script provides an example on how to authenticate and interact
-with Weasel Platform API v1.2.
+with Weasel Platform API.
 """
 
 import requests
@@ -18,14 +18,12 @@ import requests
 WeaselApiRoot="https://getweasel.com/api"
 
 # Credentials of the user account on whose behalf the client authenticates.
-# Note: there is an open ticket for v1.3.0 that allows authentication via
-# API Keys instead of username/password combination.
 ClientUsername="pghorbanzade"
 ClientPassword="Weasel$123"
 
 def main():
     """
-    In Weasel v1.2, clients are expected to authenticate with Platform API
+    clients are expected to authenticate with Platform API
     before they can make requests to access or modify information.
     """
 

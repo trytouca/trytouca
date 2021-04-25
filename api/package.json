@@ -1,6 +1,6 @@
 {
-  "name": "@getweasel/backend",
-  "version": "1.3.0",
+  "name": "@getweasel/api",
+  "version": "1.4.0",
   "description": "Continuous regression testing for critical software workflows.",
   "private": true,
   "license": "UNLICENSED",
