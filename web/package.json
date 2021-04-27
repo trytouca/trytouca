@@ -12,6 +12,7 @@
   "dependencies": {
     "formik": "^2.2.6",
     "next": "^10.0.0",
+    "next-pwa": "^5.2.15",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-icons": "^4.2.0",
