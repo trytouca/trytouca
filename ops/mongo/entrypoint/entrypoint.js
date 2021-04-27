@@ -1,8 +1,8 @@
-db = db.getSiblingDB('weasel')
+db.disableFreeMonitoring();
+
+db = db.getSiblingDB("weasel");
 db.createUser({
-  user: 'weaseluser',
-  pwd: 'weaselpass',
-  roles: [
-    {role: 'readWrite', db: 'weasel'}
-  ]
+  user: "weaseluser",
+  pwd: "weaselpass",
+  roles: [{ role: "readWrite", db: "weasel" }],
 });

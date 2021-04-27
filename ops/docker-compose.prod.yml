@@ -48,13 +48,15 @@ services:
   weasel_mongo:
     image: mongo:4-bionic
     environment:
-      - MONGO_INITDB_ROOT_USERNAME:weaselmaster
-      - MONGO_INITDB_ROOT_PASSWORD:weaselsecret
+      - MONGO_INITDB_ROOT_USERNAME=mongoadmin
+      - MONGO_INITDB_ROOT_PASSWORD=mongosecret
     volumes:
       - ./local/data/mongo:/data/db
+      - ./devops/mongo/mongod.conf:/etc/mongod.conf
       - ./devops/mongo/entrypoint/:/docker-entrypoint-initdb.d/
     # ports:
     #   - 27017:27017
+    command: --config /etc/mongod.conf
     restart: always
 
   weasel_elastic:
