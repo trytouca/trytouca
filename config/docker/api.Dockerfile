@@ -10,9 +10,9 @@ LABEL org.opencontainers.image.authors="hello@getweasel.com"
 
 EXPOSE 8081
 
-COPY backend/dist           /opt/weasel/dist
-COPY backend/env            /opt/weasel/env
-COPY backend/samples        /opt/weasel/samples
-COPY backend/node_modules   /opt/weasel/node_modules
+COPY api/dist           /opt/weasel/dist
+COPY api/env            /opt/weasel/env
+COPY api/samples        /opt/weasel/samples
+COPY api/node_modules   /opt/weasel/node_modules
 
 CMD ["node", "/opt/weasel/dist/server.js"]

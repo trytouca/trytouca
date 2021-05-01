@@ -1,6 +1,6 @@
 version: "3"
 services:
-  weasel_backend:
+  weasel_api:
     image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-api:1.4.0
     environment:
       ENV_FILE: prod
@@ -13,7 +13,7 @@ services:
       WEBAPP_ROOT: <UNKNOWN>
     volumes:
       - ./local/data/weasel:/opt/local/data/weasel
-      - ./local/logs/backend:/opt/local/logs/backend
+      - ./local/logs/api:/opt/local/logs/api
     depends_on:
       - weasel_minio
       - weasel_mongo
@@ -25,16 +25,16 @@ services:
     ports:
       - 80:80
     depends_on:
-      - weasel_backend
+      - weasel_api
     restart: always
 
-  weasel_comparator:
+  weasel_cmp:
     image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-cmp:1.4.0
     volumes:
       - ./local/data/weasel:/opt/local/data/weasel:ro
-      - ./local/logs/comparator:/opt/local/logs/comparator
+      - ./local/logs/cmp:/opt/local/logs/cmp
     depends_on:
-      - weasel_backend
+      - weasel_api
     restart: always
 
   weasel_redis:

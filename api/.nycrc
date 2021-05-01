@@ -23,6 +23,6 @@
     "all": true,
     "sourceMap": true,
     "instrument": true,
-    "report-dir": "local/tests/backend",
-    "temp-dir": "local/tests/backend/.nyc_output"
+    "report-dir": "local/tests",
+    "temp-dir": "local/tests/.nyc_output"
 }

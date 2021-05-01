@@ -2,12 +2,12 @@ api:
   - ".github/workflows/build.yml"
   - "config/docker/api.Dockerfile"
   - "config/flatbuffers/**"
-  - "backend/**"
+  - "api/**"
 
 app:
   - ".github/workflows/build.yml"
   - "config/docker/app.Dockerfile"
-  - "frontend/**"
+  - "app/**"
   - "web/**"
 
 cmp:
@@ -15,7 +15,7 @@ cmp:
   - "clients/cpp/**"
   - "config/docker/cmp.Dockerfile"
   - "config/flatbuffers/**"
-  - "comparator/**"
+  - "cmp/**"
 
 ops:
   - ".github/workflows/build.yml"

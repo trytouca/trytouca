@@ -6,7 +6,7 @@ from conans import ConanFile, CMake
 
 class WeaselConan(ConanFile):
 
-    name = "weasel_comparator"
+    name = "weasel_cmp"
     homepage = "https://getweasel.com"
     description = "weasel platform component for comparing submitted test results"
     topics = ( "regression-testing", "snapshot-testing", "test-framework", "test-automation" )

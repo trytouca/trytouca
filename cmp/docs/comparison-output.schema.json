@@ -34,13 +34,7 @@
     },
     "reportedResultType": {
       "type": "string",
-      "enum": [
-        "bool",
-        "number",
-        "string",
-        "array",
-        "object"
-      ]
+      "enum": ["bool", "number", "string", "array", "object"]
     },
     "reportedResultValue": {
       "type": "string",
@@ -57,10 +51,7 @@
     "testcaseMeta": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "version",
-        "builtAt"
-      ],
+      "required": ["version", "builtAt"],
       "properties": {
         "version": {
           "$ref": "#/definitions/version"
@@ -73,11 +64,7 @@
     "testcaseResults": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "newKeys",
-        "missingKeys",
-        "commonKeys"
-      ],
+      "required": ["newKeys", "missingKeys", "commonKeys"],
       "properties": {
         "commonKeys": {
           "type": "array",
@@ -111,14 +98,7 @@
     "resultEntity1": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "name",
-        "type",
-        "src",
-        "dst",
-        "score",
-        "desc"
-      ],
+      "required": ["name", "type", "src", "dst", "score", "desc"],
       "properties": {
         "name": {
           "$ref": "#/definitions/reportedKey"
@@ -149,11 +129,7 @@
     "resultEntity2": {
       "type": "object",
       "additionalProperties": false,
-      "required": [
-        "name",
-        "type",
-        "value"
-      ],
+      "required": ["name", "type", "value"],
       "properties": {
         "name": {
           "$ref": "#/definitions/reportedKey"
