@@ -9,6 +9,11 @@ import mongoose from 'mongoose'
  */
 const comparisonSchema = new mongoose.Schema(
   {
+    contentId: {
+      required: false,
+      unique: true,
+      type: String
+    },
     dstBatchId: {
       ref: 'Batch',
       required: true,
@@ -18,10 +23,6 @@ const comparisonSchema = new mongoose.Schema(
       ref: 'Message',
       required: true,
       type: mongoose.Schema.Types.ObjectId
-    },
-    elasticId: {
-      required: false,
-      type: String
     },
     meta: {
       required: false,
@@ -111,15 +112,15 @@ comparisonSchema.index({ srcMessageId: 1, dstMessageId: 1 })
 /**
  *
  */
-comparisonSchema.index({ elasticId: 1, processedAt: -1 })
+comparisonSchema.index({ contentId: 1, processedAt: -1 })
 
 /**
  *
  */
 export interface IComparisonDocument extends mongoose.Document {
+  contentId: string
   dstBatchId: mongoose.Types.ObjectId
   dstMessageId: mongoose.Types.ObjectId
-  elasticId: string
   meta: {
     keysCountCommon: number
     keysCountFresh: number

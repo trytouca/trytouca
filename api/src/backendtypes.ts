@@ -46,7 +46,7 @@ export type SuiteItemQueryOutput = Exclude<SuiteItem, 'baseline' | 'latest'> & {
  *
  */
 export type BackendBatchComparisonItem = BatchComparisonItem & {
-  elasticId: string
+  contentId: string
   messageId: Types.ObjectId
 }
 
@@ -59,7 +59,7 @@ export type BackendBatchComparisonItemCommon = {
   src: BackendBatchComparisonItem
 
   cmp?: unknown
-  elasticId?: string
+  contentId?: string
 }
 
 /**

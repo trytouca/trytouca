@@ -16,14 +16,17 @@ struct Options {
     std::string api_url;
     std::string log_level;
     std::optional<std::filesystem::path> log_dir;
-    std::filesystem::path project_dir;
-    std::filesystem::path storage_dir;
     unsigned max_failures;
     unsigned polling_interval;
     unsigned processor_threads;
     unsigned startup_interval;
     unsigned startup_timeout;
     unsigned status_report_interval;
+    std::string minio_host;
+    std::string minio_pass;
+    std::string minio_port;
+    std::string minio_user;
+    std::string minio_region;
 };
 
 /**

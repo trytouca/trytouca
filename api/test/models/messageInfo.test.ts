@@ -11,12 +11,12 @@ describe('model-messageInfo', function () {
   it('allow making message info using partial object', function (done) {
     const messageInfo = new MessageInfo({
       batchName: 'some_batchName',
-      elasticId: 'some_elasticId',
+      contentId: 'some_contentId',
       elementName: 'some_elementName',
       suiteName: 'some_suiteName'
     })
     expect(messageInfo.batchName).to.equal('some_batchName')
-    expect(messageInfo.elasticId).to.equal('some_elasticId')
+    expect(messageInfo.contentId).to.equal('some_contentId')
     expect(messageInfo.elementName).to.equal('some_elementName')
     expect(messageInfo.suiteName).to.equal('some_suiteName')
     expect(messageInfo.name()).to.equal(

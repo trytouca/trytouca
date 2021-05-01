@@ -13,8 +13,8 @@ import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
 import { ITeam } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
-import * as elastic from '@weasel/utils/elastic'
 import logger from '@weasel/utils/logger'
+import * as minio from '@weasel/utils/minio'
 import { rclient } from '@weasel/utils/redis'
 
 /**
@@ -33,11 +33,11 @@ type ICompareParamsElement = {
  *
  */
 function cleanOutput(output: BackendBatchComparisonItemCommon): void {
+  delete output.src.contentId
   delete output.src.messageId
-  delete output.src.elasticId
+  delete output.dst.contentId
   delete output.dst.messageId
-  delete output.dst.elasticId
-  delete output.elasticId
+  delete output.contentId
 }
 
 /**
@@ -185,7 +185,7 @@ export async function elementCompare(
       { batchId, elementId },
       {
         builtAt: 1,
-        elasticId: 1,
+        contentId: 1,
         elementId: 1,
         submittedAt: 1,
         submittedBy: 1
@@ -202,7 +202,7 @@ export async function elementCompare(
   const convert = async (msg) => {
     return {
       builtAt: msg.builtAt,
-      elasticId: msg.elasticId,
+      contentId: msg.contentId,
       elementName: msg.elementId.name,
       messageId: msg._id,
       submittedAt: msg.submittedAt,
@@ -225,9 +225,9 @@ export async function elementCompare(
     output
   )
     .then(async () => {
-      const isProcessed = output.elasticId
+      const isProcessed = output.contentId
       if (isProcessed) {
-        output.cmp = await elastic.fetchComparison(output.elasticId)
+        output.cmp = JSON.parse(await minio.getComparison(output.contentId))
         logger.info(
           '%s: compared %s with %s',
           user.username,

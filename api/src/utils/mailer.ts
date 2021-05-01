@@ -44,12 +44,11 @@ async function mailUserImpl(
   const superuser = await wslGetSuperUser()
 
   // storing mail into database
-  const doc = new MailModel({
+  await MailModel.create({
     recipient: recipient.email,
     sender: superuser.email,
     subject
   })
-  await doc.save()
 
   // send mail to user
 

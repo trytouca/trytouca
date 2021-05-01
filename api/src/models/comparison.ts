@@ -6,8 +6,8 @@ import {
   ComparisonModel,
   IComparisonDocument
 } from '@weasel/schemas/comparison'
-import * as elastic from '@weasel/utils/elastic'
 import logger from '@weasel/utils/logger'
+import * as minio from '@weasel/utils/minio'
 
 /**
  *
@@ -16,17 +16,17 @@ export async function comparisonRemove(
   jobs: IComparisonDocument[]
 ): Promise<void> {
   try {
-    // remove comparison results from elasticsearch
+    // remove comparison results from object storage
 
-    const removal = jobs.map((job) => elastic.removeComparison(job.elasticId))
+    const removal = jobs.map((job) => minio.removeComparison(job.contentId))
     await Promise.all(removal)
-    logger.silly('removed %d comparison results', jobs.length)
+    logger.debug('removed %d comparison results', jobs.length)
 
     // remove processed comparison jobs
 
     const jobIds = jobs.map((elem) => elem._id)
     await ComparisonModel.deleteMany({ _id: { $in: jobIds } })
-    logger.silly('removed %d processed comparison jobs', jobs.length)
+    logger.debug('removed %d processed comparison jobs', jobs.length)
   } catch (err) {
     logger.warn('failed to remove comparison jobs: %s', err)
   }

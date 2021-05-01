@@ -1,5 +1,7 @@
 {
   "api-url": "http://weasel_backend:8081",
-  "log-dir": "local/logs/comparator",
-  "project-dir": "/opt"
+  "log-dir": "/opt/local/logs/comparator",
+  "minio-host": "weasel_minio",
+  "minio-pass": "weaselpass",
+  "minio-user": "weaseluser"
 }

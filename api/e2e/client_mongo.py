@@ -7,7 +7,7 @@ import pymongo
 from loguru import logger
 from utilities import User
 
-WEASEL_MONGO_URL="mongodb://localhost:27017/"
+WEASEL_MONGO_URL="mongodb://weaseluser:weaselpass@localhost:27017/"
 
 class WeaselMongoClient:
     def __init__(self):
@@ -44,13 +44,14 @@ class WeaselMongoClient:
     def list_results(self):
         col_messages = self.client.get_collection('messages')
         query = col_messages.find(
-            { 'processedAt': { '$exists': True }, 'elasticId': { '$exists': True } },
-            { '_id': 1, 'batchId': 1, 'elasticId': 1 })
+            { 'processedAt': { '$exists': True }, 'contentId': { '$exists': True } },
+            { '_id': 1, 'batchId': 1, 'contentId': 1 })
         for result in query:
             yield {
                 'batch_id': str(result.get('batchId')),
+                'content_id': str(result.get('contentId')),
                 'message_id': str(result.get('_id')),
-                'elastic_id': str(result.get('elasticId')) }
+            }
 
     def remove_result(self, message_id):
         col_messages = self.client.get_collection('messages')
@@ -59,7 +60,7 @@ class WeaselMongoClient:
         col_comparisons = self.client.get_collection('comparisons')
         col_comparisons.delete_many({
             'processedAt': { '$exists': True },
-            'elastic_id': { '$exists': True },
+            'content_id': { '$exists': True },
             '$or': [
                 { 'srcMessageId': bson.ObjectId(message_id) },
                 { 'dstMessageId': bson.ObjectId(message_id) }

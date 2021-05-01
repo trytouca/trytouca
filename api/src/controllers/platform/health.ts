@@ -6,14 +6,14 @@ import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
 import { configMgr } from '@weasel/utils/config'
-import * as elastic from '@weasel/utils/elastic'
 import logger from '@weasel/utils/logger'
+import * as minio from '@weasel/utils/minio'
 import { rclient } from '@weasel/utils/redis'
 
 /**
  * @todo add version field in response whose value matches output of
  *       git describe on platform source repository.
- * @todo add size of elasticsearch and mongodb databases
+ * @todo add size of object storage and mongodb databases
  */
 export async function platformHealth(
   req: Request,
@@ -31,12 +31,12 @@ export async function platformHealth(
     return res.status(200).json(cachedResponse)
   }
 
-  // check elasticsearch and mongodb databases are up and running
-  const elasticConnection = await elastic.status()
+  // check that minio and mongodb are up and running
+  const minioConnection = await minio.status()
   const mongodbConnection = mongoose.connection.readyState === 1
   const response = {
     mail: configMgr.hasMailTransport(),
-    ready: elasticConnection && mongodbConnection
+    ready: minioConnection && mongodbConnection
   }
 
   // cache platform health information in redis database

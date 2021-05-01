@@ -4,9 +4,9 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { MessageModel, IMessageDocument } from '@weasel/schemas/message'
-import * as elastic from '@weasel/utils/elastic'
 import logger from '@weasel/utils/logger'
+import * as minio from '@weasel/utils/minio'
+import { MessageModel, IMessageDocument } from '@weasel/schemas/message'
 
 /**
  * @todo validate incoming json data against a json schema
@@ -33,16 +33,19 @@ export async function messageProcess(
   }
 
   // if message is already processed, remove its previous content from
-  // elastic database.
+  // object storage.
 
-  if (message.elasticId) {
+  if (message.contentId) {
     logger.warn('%s: message already processed', messageId)
-    await elastic.removeResult(message.elasticId)
+    await minio.removeResult(message._id.toHexString())
   }
 
-  // insert message in json format into elastic database
+  // insert message in json format into object storage
 
-  const doc = await elastic.addResult(input.body)
+  const doc = await minio.addResult(
+    message._id.toHexString(),
+    JSON.stringify(input.body, null)
+  )
   if (!doc) {
     return next({
       errors: ['failed to handle message body'],
@@ -55,9 +58,10 @@ export async function messageProcess(
   await MessageModel.findByIdAndUpdate(messageId, {
     $set: {
       processedAt: new Date(),
-      elasticId: doc,
+      contentId: message._id,
       meta: input.overview
-    }
+    },
+    $unset: { reservedAt: true }
   })
 
   logger.silly('%s: processed message', messageId)

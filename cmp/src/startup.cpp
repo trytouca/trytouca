@@ -3,6 +3,7 @@
  */
 
 #include "startup.hpp"
+#include "object_store.hpp"
 #include "weasel/devkit/logger.hpp"
 #include "weasel/devkit/platform.hpp"
 #include <chrono>
@@ -24,13 +25,14 @@ void initialize_loggers(const Options& options)
  */
 bool run_startup_stage(const Options& options)
 {
+    const auto& store = ObjectStore::get_instance(options);
     const auto max_attempts = options.startup_timeout / options.startup_interval;
     const auto& interval = std::chrono::milliseconds(options.startup_interval);
     WEASEL_LOG_INFO("running start-up stage");
     weasel::ApiUrl api(options.api_url);
     weasel::Platform platform(api);
     for (auto i = 1u; i <= max_attempts; ++i) {
-        if (platform.handshake()) {
+        if (platform.handshake() && store.status_check()) {
             WEASEL_LOG_INFO("start-up phase completed");
             return true;
         }

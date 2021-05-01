@@ -1,7 +1,9 @@
 {
   "api-url": "http://localhost:8081",
-  "log-dir": "local/logs/comparator",
+  "log-dir": "/Users/pejman/Projects/weasel/local/logs/comparator",
   "log-level": "debug",
-  "project-dir": "/Users/pejman/Projects/weasel",
-  "startup-interval": "6000"
+  "startup-interval": "6000",
+  "minio-host": "127.0.0.1",
+  "minio-pass": "weaselpass",
+  "minio-user": "weaseluser"
 }

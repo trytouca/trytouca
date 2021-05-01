@@ -34,13 +34,16 @@ cxxopts::Options config_options_file()
         ("log-dir", "relative path to log directory", cxxopts::value<std::string>())
         ("log-level", "level of detail to use for logging", cxxopts::value<std::string>()->default_value("info"))
         ("max-failures", "number of allowable consecutive failures", cxxopts::value<unsigned>()->default_value("10"))
-        ("project-dir", "full path to project root directory", cxxopts::value<std::string>())
         ("processor-threads", "number of processor threads", cxxopts::value<unsigned>()->default_value("4"))
         ("polling-interval", "minimum time (ms) before polling new jobs", cxxopts::value<unsigned>()->default_value("10000"))
         ("startup-interval", "minimum time (ms) before re-running startup stage", cxxopts::value<unsigned>()->default_value("12000"))
         ("startup-timeout", "total time (ms) before aborting startup stage", cxxopts::value<unsigned>()->default_value("120000"))
         ("status-report-interval", "total time (ms) between statistics reporting", cxxopts::value<unsigned>()->default_value("60000"))
-        ("storage-dir", "relative path to weasel data store", cxxopts::value<std::string>()->default_value("local/data/weasel"));
+        ("minio-host", "minio host", cxxopts::value<std::string>())
+        ("minio-user", "minio user", cxxopts::value<std::string>())
+        ("minio-pass", "minio pass", cxxopts::value<std::string>())
+        ("minio-port", "minio port", cxxopts::value<std::string>()->default_value("9000"))
+        ("minio-region", "minio region", cxxopts::value<std::string>()->default_value("us-east-2"));
     // clang-format on
     return opts_file;
 }
@@ -134,21 +137,6 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     options.api_url = result_file["api-url"].as<std::string>();
 
-    // validate option `project-dir`
-
-    if (!result_file.count("project-dir")) {
-        weasel::print_error("expected configuration parameter: `project-dir`\n");
-        fmt::print("{}\n", copts_file.help());
-        return false;
-    }
-
-    if (!weasel::filesystem::is_directory(result_file["project-dir"].as<std::string>())) {
-        weasel::print_error("option `project-dir` points to nonexistent directory");
-        return false;
-    }
-
-    options.project_dir = result_file["project-dir"].as<std::string>();
-
     // validate and set option `log-level`
 
     {
@@ -165,18 +153,36 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     // set option `log-dir` if it is provided
 
     if (result_file.count("log-dir")) {
-        options.log_dir = options.project_dir / result_file["log-dir"].as<std::string>();
-    }
-
-    // set option `storage-dir`
-
-    {
-        const auto& storage_dir = result_file["storage-dir"].as<std::string>();
-        if (!weasel::filesystem::is_directory(options.project_dir / storage_dir)) {
-            weasel::print_error("option `storage-dir` points to nonexistent directory");
+        options.log_dir = result_file["log-dir"].as<std::string>();
+        if (!weasel::filesystem::is_directory(*options.log_dir)) {
+            weasel::print_error("option `log-dir` points to nonexistent directory");
             return false;
         }
-        options.storage_dir = options.project_dir / storage_dir;
+    }
+
+    // validate and set minio parameters
+
+    for (const auto& key : { "minio-host", "minio-pass", "minio-user" }) {
+        if (!result_file.count("minio-host")) {
+            weasel::print_error("option `log-dir` points to nonexistent directory");
+            return false;
+        }
+    }
+
+    options.minio_host = result_file["minio-host"].as<std::string>();
+    options.minio_pass = result_file["minio-pass"].as<std::string>();
+    options.minio_port = result_file["minio-port"].as<std::string>();
+    options.minio_user = result_file["minio-user"].as<std::string>();
+    options.minio_region = result_file["minio-region"].as<std::string>();
+
+    // override minio username and password if they are provided
+    // as environment variables
+
+    if (const auto user = std::getenv("MINIO_USER")) {
+        options.minio_user = user;
+    }
+    if (const auto pass = std::getenv("MINIO_PASS")) {
+        options.minio_pass = pass;
     }
 
     // set other options with default numeric values

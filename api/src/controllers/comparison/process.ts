@@ -4,8 +4,8 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import * as elastic from '@weasel/utils/elastic'
 import logger from '@weasel/utils/logger'
+import * as minio from '@weasel/utils/minio'
 import {
   IComparisonDocument,
   ComparisonModel
@@ -37,16 +37,19 @@ export async function comparisonProcess(
 
   // we expect that comparison job is not already processed
 
-  if (comparison.elasticId) {
+  if (comparison.contentId) {
     return next({
       errors: ['comparison job already processed'],
       status: 409
     })
   }
 
-  // insert comparison result in json format into elastic database
+  // insert comparison result in json format into object storage database
 
-  const doc = await elastic.addComparison(input.body)
+  const doc = await minio.addComparison(
+    comparison._id.toHexString(),
+    JSON.stringify(input.body, null)
+  )
   if (!doc) {
     return next({
       errors: ['failed to handle comparison result'],
@@ -59,9 +62,10 @@ export async function comparisonProcess(
   await ComparisonModel.findByIdAndUpdate(jobId, {
     $set: {
       processedAt: new Date(),
-      elasticId: doc,
+      contentId: comparison._id,
       meta: input.overview
-    }
+    },
+    $unset: { reservedAt: true }
   })
 
   logger.debug('%s: processed comparison job', jobId)

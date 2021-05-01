@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+import { ComparisonFunctions } from '@weasel/controllers/comparison'
 import { messageRemove } from '@weasel/models/message'
 import { MessageInfo } from '@weasel/models/messageInfo'
-import { ComparisonFunctions } from '@weasel/controllers/comparison'
 import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
 import { CommentModel } from '@weasel/schemas/comment'
 import { MessageModel } from '@weasel/schemas/message'
@@ -12,7 +12,6 @@ import { ReportModel, EReportType } from '@weasel/schemas/report'
 import { SuiteModel, ISuiteDocument } from '@weasel/schemas/suite'
 import { TeamModel, ITeam } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
-import { filestore } from '@weasel/utils/filestore'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
 
@@ -181,7 +180,7 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
       {
         $match: {
           batchId: batch._id,
-          elasticId: { $exists: true },
+          contentId: { $exists: true },
           expiresAt: { $lt: new Date() },
           processedAt: { $exists: true }
         }
@@ -215,7 +214,7 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
           _id: 0,
           batchId: 1,
           batchName: { $arrayElemAt: ['$batchDoc.slug', 0] },
-          elasticId: 1,
+          contentId: 1,
           elementId: 1,
           elementName: { $arrayElemAt: ['$elementDoc.name', 0] },
           messageId: '$_id',
@@ -261,7 +260,6 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
   })
   await CommentModel.deleteMany({ batchId: batch._id })
   await BatchModel.findByIdAndRemove(batch._id)
-  await filestore.removeEmptyDir(batch._id)
   logger.info('%s: removed batch', tuple)
 
   rclient.removeCached(

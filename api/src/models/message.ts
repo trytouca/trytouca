@@ -8,9 +8,8 @@ import { BatchModel } from '@weasel/schemas/batch'
 import { ComparisonModel } from '@weasel/schemas/comparison'
 import { ElementModel } from '@weasel/schemas/element'
 import { MessageModel } from '@weasel/schemas/message'
-import * as elastic from '@weasel/utils/elastic'
-import { filestore } from '@weasel/utils/filestore'
 import logger from '@weasel/utils/logger'
+import * as minio from '@weasel/utils/minio'
 
 /**
  *
@@ -28,7 +27,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
     // execution of this operation to deal with those pending jobs.
 
     // for comparison results that are already processed, we proceed to
-    // removing them from elasticsearch and mongodb.
+    // removing them from object storage and mongodb.
 
     const jobs = await ComparisonModel.find(
       {
@@ -38,7 +37,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
         ],
         processedAt: { $exists: true }
       },
-      { _id: 1, elasticId: 1 }
+      { _id: 1, contentId: 1 }
     )
 
     if (jobs.length !== 0) {
@@ -62,9 +61,9 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
       return true
     }
 
-    // remove message from elastic database
+    // remove JSON representation of message from object storage
 
-    await elastic.removeResult(msgInfo.elasticId)
+    await minio.removeResult(msgInfo.messageId.toHexString())
 
     // remove message from database
 
@@ -90,9 +89,9 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
       )
     }
 
-    // remove the submission from local filesystem
+    // remove binary representation of message from object storage
 
-    await filestore.remove(msgInfo)
+    await minio.removeMessage(msgInfo.messageId.toHexString())
 
     logger.info('%s: removed message', tuple)
     return true

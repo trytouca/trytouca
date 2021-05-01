@@ -7,10 +7,12 @@ include(GNUInstallDirs)
 weasel_find_package("cxxopts")
 weasel_find_package("fmt")
 weasel_find_package("weasel")
+weasel_find_package("AWSSDK")
 
 add_executable(
     weasel_cmp
     main.cpp
+    object_store.cpp
     options.cpp
     options.hpp
     platform.cpp
@@ -30,6 +32,7 @@ target_link_libraries(
         cxxopts::cxxopts
         fmt::fmt
         weasel::client
+        AWS::aws-sdk-cpp-s3
 )
 
 target_include_directories(

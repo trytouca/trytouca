@@ -68,6 +68,10 @@ export async function ctrlTeamRemove(
       { teams: { $elemMatch: { $eq: team._id } } },
       { $pull: { teams: team._id } }
     )
+    await UserModel.updateMany(
+      { prospectiveTeams: { $elemMatch: { $eq: team._id } } },
+      { $pull: { prospectiveTeams: team._id } }
+    )
     await TeamModel.findByIdAndRemove(team._id)
     logger.info('%s: removed team', team.slug)
 

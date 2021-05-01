@@ -10,7 +10,7 @@ import mongoose from 'mongoose'
 export class MessageInfo {
   public batchId: mongoose.Types.ObjectId
   public batchName: string
-  public elasticId: string
+  public contentId: string
   public elementId: mongoose.Types.ObjectId
   public elementName: string
   public messageId: mongoose.Types.ObjectId

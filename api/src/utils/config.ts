@@ -17,10 +17,6 @@ interface IConfig {
     maxResetKeyLifetime: number // in minutes
   }
   deployMode: 'self_hosted' | 'cloud_hosted'
-  elastic: {
-    host: string
-    port: number
-  }
   env: string
   express: {
     port: number
@@ -37,6 +33,13 @@ interface IConfig {
     port: number
     templatesDirectory: string
     user: string
+  }
+  minio: {
+    host: string
+    pass: string
+    port: number
+    user: string
+    region: string
   }
   mongo: {
     database: string
@@ -106,10 +109,6 @@ export const config: IConfig = {
   },
   deployMode:
     env.DEPLOY_MODE === 'cloud_hosted' ? 'cloud_hosted' : 'self_hosted',
-  elastic: {
-    host: env.ELASTIC_HOST,
-    port: Number(env.ELASTIC_PORT)
-  },
   env: env.NODE_ENV,
   express: {
     port: Number(env.EXPRESS_PORT),
@@ -126,6 +125,13 @@ export const config: IConfig = {
     port: Number(env.MAIL_TRANSPORT_PORT),
     templatesDirectory: env.MAIL_TEMPLATE_DIR,
     user: env.MAIL_TRANSPORT_USER
+  },
+  minio: {
+    host: env.MINIO_HOST,
+    pass: env.MINIO_PASS,
+    port: Number(env.MINIO_PORT),
+    user: env.MINIO_USER,
+    region: env.MINIO_REGION || 'us-east-2'
   },
   mongo: {
     database: env.MONGO_BASE,

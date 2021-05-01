@@ -34,7 +34,7 @@ async function findComparisonResult(
 ): Promise<IComparisonDocument> {
   // define what makes a comparison job be considered as processed
 
-  const isProcessed = (obj: IComparisonDocument) => obj.elasticId
+  const isProcessed = (obj: IComparisonDocument) => obj.contentId
   let doc = await ComparisonModel.findOne({ srcMessageId, dstMessageId })
 
   // we are done if comparison job is already processed
@@ -90,7 +90,7 @@ async function compareCommonElement(
   // intentionally choosing to report 0.99999 as 0.9999 to distinguish
   // between perfect and partial matching scores.
 
-  item.elasticId = doc.elasticId
+  item.contentId = doc.contentId
   if (doc.meta) {
     item.meta = doc.meta
     item.meta.keysScore = floor(doc.meta.keysScore, 4)
@@ -116,7 +116,7 @@ async function categorize(
   const convert = (msg, includeMeta = false) => {
     return {
       builtAt: msg.builtAt,
-      elasticId: msg.elasticId,
+      contentId: msg.contentId,
       elementName: msg.elementId.name,
       messageId: msg._id,
       meta: includeMeta ? msg.meta : undefined
@@ -199,7 +199,7 @@ async function compareBatch(
   const getBatchMessages = async (batchId: ObjectId) =>
     MessageModel.find(
       { batchId },
-      { builtAt: 1, elasticId: 1, elementId: 1, meta: 1 }
+      { builtAt: 1, contentId: 1, elementId: 1, meta: 1 }
     ).populate({ path: 'elementId', select: 'name' })
 
   const dstMessages = (await getBatchMessages(dstBatchId)) as IMessageDocument[]
@@ -234,7 +234,7 @@ async function compareBatchOverview(
   const getBatchMessages = async (batchId: ObjectId) =>
     MessageModel.find(
       { batchId },
-      { builtAt: 1, elasticId: 1, elementId: 1, meta: 1 }
+      { builtAt: 1, contentId: 1, elementId: 1, meta: 1 }
     ).populate({ path: 'elementId', select: 'name' })
 
   const dstMessages = (await getBatchMessages(dstBatchId)) as IMessageDocument[]

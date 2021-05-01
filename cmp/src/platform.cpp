@@ -3,37 +3,13 @@
  */
 
 #include "platform.hpp"
+#include "object_store.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "weasel/devkit/comparison.hpp"
 #include "weasel/devkit/logger.hpp"
 #include "weasel/devkit/platform.hpp"
 #include "weasel/devkit/utils.hpp"
-
-/**
- *
- */
-std::shared_ptr<weasel::Testcase> loadResultFile(const std::filesystem::path& path)
-{
-    // check that the result file exists
-
-    if (!std::filesystem::is_regular_file(path)) {
-        WEASEL_LOG_ERROR("{}: result file is missing", path.string());
-        return nullptr;
-    }
-
-    // read binary data of stored result file and attempt to parse it
-    // into a TestCase object.
-
-    const auto binaryContent = weasel::load_string_file(path.string());
-    std::vector<uint8_t> buffer(binaryContent.begin(), binaryContent.end());
-    try {
-        return std::make_shared<weasel::Testcase>(buffer);
-    } catch (const std::exception& ex) {
-        WEASEL_LOG_WARN("{}: failed to parse result: {}", path.string(), ex.what());
-        return nullptr;
-    }
-}
 
 /**
  *
@@ -58,7 +34,8 @@ std::string MessageJob::desc() const
  */
 bool MessageJob::process(const Options& options) const
 {
-    const auto result = loadResultFile(options.storage_dir / _batchId / _messageId);
+    const auto& store = ObjectStore::get_instance(options);
+    const auto result = store.get_message(_messageId);
     if (!result) {
         WEASEL_LOG_WARN("{}: failed to process message", desc());
         return false;
@@ -107,8 +84,9 @@ std::string ComparisonJob::desc() const
  */
 bool ComparisonJob::process(const Options& options) const
 {
-    const auto dst = loadResultFile(options.storage_dir / _dstBatchId / _dstMessageId);
-    const auto src = loadResultFile(options.storage_dir / _srcBatchId / _srcMessageId);
+    const auto& store = ObjectStore::get_instance(options);
+    const auto dst = store.get_message(_dstMessageId);
+    const auto src = store.get_message(_srcMessageId);
 
     if (!src || !dst) {
         WEASEL_LOG_WARN("{}: comparison job is orphaned", desc());

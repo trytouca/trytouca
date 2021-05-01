@@ -18,9 +18,8 @@ import { MessageModel } from '@weasel/schemas/message'
 import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
 import { IUser } from '@weasel/schemas/user'
 import { TeamModel, ITeamDocument } from '@weasel/schemas/team'
-import { removeComparison, removeResult } from '@weasel/utils/elastic'
-import { filestore } from '@weasel/utils/filestore'
 import logger from '@weasel/utils/logger'
+import * as minio from '@weasel/utils/minio'
 import { rclient } from '@weasel/utils/redis'
 import { weasel } from '@weasel/utils/weasel_generated'
 
@@ -198,9 +197,9 @@ async function processElement(
       submission
     )
 
-    // store submission in binary form on filesystem
+    // store message in binary format in object storage
 
-    await filestore.add(batch.id, message.id, submission.raw)
+    await minio.addMessage(message._id.toHexString(), submission.raw)
 
     // update submission metadata with id of its parent nodes.
     // this is not an ideal design pattern but it removes the need
@@ -395,9 +394,9 @@ async function insertComparisonJob(
 
     // It is possible that the element is not included in the baseline
     // batch in which case we compare the message with itself. This is
-    // unintuitive but necessary as long as we rely on the comparator
+    // un-intuitive but necessary as long as we rely on the comparator
     // to parse flatbuffers data of the message and submit its content
-    // to the elastic search engine.
+    // to the MinIO object storage.
 
     let dstBatchId = msg.batchId
     let dstMessageId = srcMessageId
@@ -497,7 +496,7 @@ async function processSuite(
     // if suite has no baseline, establish the baseline at the earliest
     // received batch.
     //
-    // note: this operation involves an exceptional treatement of the
+    // note: this operation involves an exceptional treatment of the
     //       first submitted batch: normally, promotion of a batch to
     //       suite baseline is only possible when batch is already
     //       sealed. However in this case, we intentionally leave the
@@ -585,7 +584,7 @@ async function ensureBatch(
   // when this batch is sealed. In special case when this batch is the first
   // batch of the suite, we do not have id of the `superior` batch prior to
   // creating this batch. Therefore, we create the document and separately
-  // save it, instead of the usuall call to `BatchModel.create`.
+  // save it, instead of the usual call to `BatchModel.create`.
 
   const newBatch = new BatchModel({
     slug: batchSlug,
@@ -679,28 +678,30 @@ async function ensureMessage(
 
   if (!message) {
     logger.debug('%s: registered message', tuple)
-    return await new MessageModel(doc).save()
+    return await MessageModel.create(doc)
   }
 
   // If message is already known, overwrite it and extend its expiration
   // time. Given that the message may be different, all previously generated
   // comparison results may be invalid. So we opt to remove those comparison
-  // jobs both from Elastic and Mongo. For faster submission processing, we
+  // jobs both from MinIO and Mongo. For faster submission processing, we
   // choose not to wait for these removals to complete.
 
   const query = [{ dstMessageId: message._id }, { srcMessageId: message._id }]
 
   ComparisonModel.find(
-    { $or: query, elasticId: { $exists: true } },
-    { elasticId: 1 }
+    { $or: query, contentId: { $exists: true } },
+    { contentId: 1 }
   )
     .cursor()
-    .eachAsync((job: IComparisonDocument) => removeComparison(job.elasticId), {
-      parallel: 10
-    })
+    .eachAsync(
+      (job: IComparisonDocument) =>
+        minio.removeComparison(job._id.toHexString()),
+      { parallel: 10 }
+    )
 
-  if (message.elasticId) {
-    removeResult(message.elasticId)
+  if (message.contentId) {
+    minio.removeResult(message._id.toHexString())
   }
 
   await ComparisonModel.deleteOne({ $or: query })
@@ -708,7 +709,7 @@ async function ensureMessage(
   logger.debug('%s: overwrote message', tuple)
   return await MessageModel.findByIdAndUpdate(message._id, {
     $set: { doc },
-    $unset: { elasticId: 1, meta: 1, processedAt: 1 }
+    $unset: { contentId: 1, meta: 1, processedAt: 1 }
   })
 }
 
@@ -780,7 +781,7 @@ export async function processBinaryContent(
 }
 
 /**
- * Handles testresults submitted by endpoints. We are only supporting
+ * Handles test results submitted by endpoints. We are only supporting
  * incoming data with flatbuffers format.
  *
  * For a submission to be successful, the following conditions must be true:

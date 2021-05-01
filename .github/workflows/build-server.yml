@@ -248,7 +248,7 @@ jobs:
       - name: build cmp
         if: steps.changes.outputs.cmp == 'true'
         run: |
-          comparator/build.sh
+          CONAN_SYSREQUIRES_MODE=enabled comparator/build.sh
           tar -zcf cmp.tar.gz comparator/local/dist
 
       - name: push cmp to aws

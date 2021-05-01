@@ -30,9 +30,10 @@ import { setupSuperuser } from './startup'
 import router from './routes'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
-import { makeConnectionMongo } from '@weasel/utils/mongo'
-import { client as redisClient, makeConnectionRedis } from '@weasel/utils/redis'
-
+import { makeConnectionMinio } from '@weasel/utils/minio'
+import { makeConnectionMongo, shutdownMongo } from '@weasel/utils/mongo'
+import { makeConnectionRedis, shutdownRedis } from '@weasel/utils/redis'
+import { connectToServer } from '@weasel/utils/routing'
 const app = express()
 
 app.use(cors({ origin: true, credentials: true, preflightContinue: true }))
@@ -60,22 +61,20 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ errors: err.errors })
 })
 
-async function shutdown(): Promise<void> {
-  logger.info('disconnecting from mongoose')
-  await mongoose.disconnect()
-  logger.info('disconnecting from redis')
-  await redisClient.quit()
-}
-
 let server
 async function launch(application) {
+  // make sure we can connect to object storage
+  if (!(await connectToServer(makeConnectionMinio, 'object storage'))) {
+    process.exit(1)
+  }
+
   // make sure we can connect to database
-  if (!(await makeConnectionMongo())) {
+  if (!(await connectToServer(makeConnectionMongo, 'database'))) {
     process.exit(1)
   }
 
   // make sure we can connect to cache server
-  if (!(await makeConnectionRedis())) {
+  if (!(await connectToServer(makeConnectionRedis, 'cache server'))) {
     process.exit(1)
   }
 
@@ -109,6 +108,11 @@ async function launch(application) {
   server = application.listen(config.express.port, () => {
     logger.info('listening on port %d', server.address().port)
   })
+}
+
+async function shutdown(): Promise<void> {
+  await shutdownMongo()
+  await shutdownRedis()
 }
 
 process.once('SIGUSR2', () => {

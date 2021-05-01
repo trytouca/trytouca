@@ -21,6 +21,8 @@ class WeaselConan(ConanFile):
         self.requires.add("weasel/1.3.0")
         self.requires.add("cxxopts/2.2.1")
         self.requires.add("fmt/7.1.2")
+        self.requires.add("aws-sdk-cpp/1.8.130")
+        self.requires.add("openssl/1.1.1j")
 
     def source(self):
         self.run("git clone https://github.com/getweasel/weasel.git")
@@ -30,6 +32,7 @@ class WeaselConan(ConanFile):
         self.options["weasel"].with_tests = False
         self.options["weasel"].with_utils = False
         self.options["weasel"].with_framework = False
+        self.options["aws-sdk-cpp"].s3 = True
 
     def _configure_cmake(self):
         cmake = CMake(self)

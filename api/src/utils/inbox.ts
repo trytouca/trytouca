@@ -13,12 +13,11 @@ import { IUser } from '@weasel/schemas/user'
  *
  */
 async function notifyUser(recipient: IUser, message: string) {
-  const doc = new NotificationModel({
+  await NotificationModel.create({
     createdAt: new Date(),
     userId: recipient._id,
     text: message
   })
-  await doc.save()
 }
 
 /**

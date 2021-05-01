@@ -35,7 +35,7 @@ type ICompareParamsBatch = {
  */
 function cleanOutput(output: BackendBatchComparisonResponse): void {
   const cleanCmpElement = (cmp: BackendBatchComparisonItem) => {
-    delete cmp.elasticId
+    delete cmp.contentId
     delete cmp.messageId
   }
 
@@ -44,7 +44,7 @@ function cleanOutput(output: BackendBatchComparisonResponse): void {
   output.common.map((cmp) => {
     cleanCmpElement(cmp.dst)
     cleanCmpElement(cmp.src)
-    delete cmp.elasticId
+    delete cmp.contentId
   })
 }
 
@@ -148,10 +148,10 @@ export async function batchCompare(
     )
     logger.info('compared %s with %s', headName, baseName)
 
-    // check if all elements are processed. Since we rely on field `elasticId`,
+    // check if all elements are processed. Since we rely on field `contentId`,
     // this check must be done prior to cleanup of the output.
 
-    const isProcessed = output.common.every((v) => v.elasticId)
+    const isProcessed = output.common.every((v) => v.contentId)
 
     // remove backend-specific information that may have been needed during
     // processing but should not be exposed to the user.

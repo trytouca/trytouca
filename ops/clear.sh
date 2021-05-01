@@ -7,10 +7,9 @@ usage: $(basename "$0") [ -h | --long-options]
   --debug                   enable debug logs
 
 Components:
-  --elastic                 remove all data from elastic container
+  --minio                   remove all data from minio container
   --mongo                   remove all data from mongo container
   --redis                   remove all data from redis container
-  --store                   remove all data from local filesystem
   --all                     remove all testresults
 EOF
 }
@@ -57,14 +56,16 @@ build_components () {
 
 # build recipes
 
-func_elastic_clear () {
-    local port="9200"
+func_minio_clear () {
+    local port="9000"
     if ! is_port_open "${port}"; then
-        log_error "elasticsearch is not running on port ${port}"
+        log_error "minio is not running on port ${port}"
     fi
-    check_prerequisite_commands "curl"
-    curl -XDELETE "localhost:9200/comparisons"
-    curl -XDELETE "localhost:9200/results"
+    check_prerequisite_commands "mc"
+    for bucket in "comparisons" "messages" "results"; do
+        mc rm --recursive --force --dangerous "local/weasel-${bucket}" || true
+    done
+    log_info "removed all items in object storage database"
 }
 
 func_mongo_clear () {
@@ -99,29 +100,12 @@ func_redis_clear () {
     redis-cli FLUSHDB
 }
 
-func_store_clear () {
-    local dir_store="${DIR_PROJECT_ROOT}/local/data/weasel/"
-    local out
-    out=$(find "${dir_store}" -type f | wc -l)
-    out="${out// /}"
-    if [ "$out" -eq 0 ]; then
-        log_info "data store is empty"
-        return 0
-    fi
-    log_info "removing $out documents from weasel store"
-    for batch in $(find "${DIR_PROJECT_ROOT}/local" -mindepth 1 -maxdepth 1 -type d); do
-        log_info "removing ${batch}"
-        rm -rf "${batch}"
-    done
-}
-
 # check command line arguments
 
 declare -A COMPONENTS=(
-    ["elastic"]=0
+    ["minio"]=0
     ["mongo"]=0
     ["redis"]=0
-    ["store"]=0
 )
 declare -A BUILD_MODES=(
     ["help"]=0
@@ -138,8 +122,8 @@ for arg in "$@"; do
             # shellcheck disable=SC2034
             ARG_VERBOSE=1
             ;;
-        "--elastic")
-            COMPONENTS["elastic"]=1
+        "--minio")
+            COMPONENTS["minio"]=1
             ;;
         "--mongo")
             COMPONENTS["mongo"]=1
@@ -147,14 +131,10 @@ for arg in "$@"; do
         "--redis")
             COMPONENTS["redis"]=1
             ;;
-        "--store")
-            COMPONENTS["store"]=1
-            ;;
         "--all")
-            COMPONENTS["elastic"]=1
+            COMPONENTS["minio"]=1
             COMPONENTS["mongo"]=1
             COMPONENTS["redis"]=1
-            COMPONENTS["store"]=1
             ;;
         *)
             log_warning "invalid argument $arg"

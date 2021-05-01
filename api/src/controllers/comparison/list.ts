@@ -24,11 +24,11 @@ type MessageJob = {
 /**
  *
  */
-export async function messageListImpl() {
+async function messageListImpl() {
   const reservedAt = new Date()
   reservedAt.setSeconds(reservedAt.getSeconds() - 60)
   const result: MessageJob[] = await MessageModel.aggregate([
-    { $match: { elasticId: { $exists: false } } },
+    { $match: { contentId: { $exists: false } } },
     {
       $match: {
         $or: [
@@ -50,14 +50,14 @@ export async function messageListImpl() {
 /**
  *
  */
-export async function comparisonListImpl() {
+async function comparisonListImpl() {
   const reservedAt = new Date()
   reservedAt.setSeconds(reservedAt.getSeconds() - 60)
   const result: ComparisonJob[] = await ComparisonModel.aggregate([
     {
       $match: {
         processedAt: { $exists: false },
-        elasticId: { $exists: false }
+        contentId: { $exists: false }
       }
     },
     {
@@ -88,7 +88,7 @@ export async function comparisonListImpl() {
             $project: {
               _id: 0,
               processedAt: {
-                $cond: [{ $ifNull: ['$elasticId', false] }, true, false]
+                $cond: [{ $ifNull: ['$contentId', false] }, true, false]
               }
             }
           }

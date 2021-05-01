@@ -18,8 +18,9 @@ const messageSchema = new mongoose.Schema(
       required: true,
       type: Date
     },
-    elasticId: {
+    contentId: {
       required: false,
+      unique: true,
       type: String
     },
     elementId: {
@@ -83,15 +84,10 @@ messageSchema.index({ batchId: 1, elementId: 1 })
 /**
  *
  */
-messageSchema.index({ elasticId: 1 })
-
-/**
- *
- */
 export interface IMessageDocument extends mongoose.Document {
   batchId: mongoose.Types.ObjectId
   builtAt: Date
-  elasticId: string
+  contentId: string
   elementId: mongoose.Types.ObjectId
   expiresAt: Date
   meta: {

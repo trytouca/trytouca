@@ -101,7 +101,7 @@ async function pruneComparisonResults(): Promise<void> {
       processedAt: { $exists: true, $lt: threshold },
       srcBatchId: { $in: batches }
     },
-    { _id: 1, elasticId: 1 }
+    { _id: 1, contentId: 1 }
   )
 
   // remove all comparison jobs that can be pruned
