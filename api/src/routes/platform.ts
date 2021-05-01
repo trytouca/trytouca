@@ -8,6 +8,7 @@ import * as ev from 'express-validator'
 
 import { EPlatformRole } from '../commontypes'
 import * as middleware from '../middlewares'
+import { platformAccountPopulate } from '@weasel/controllers/platform/accountPopulate'
 import { platformAccountUpdate } from '@weasel/controllers/platform/accountUpdate'
 import { accountDelete } from '@weasel/controllers/platform/accountDelete'
 import { platformHealth } from '@weasel/controllers/platform/health'
@@ -109,6 +110,42 @@ router.patch(
       .withMessage('invalid')
   ]),
   promisable(platformAccountUpdate, 'update account profile on platform')
+)
+
+/**
+ * Populates an existing account with sample test results.
+ *
+ * @api [post] /platform/account/:account/populate
+ *    tags:
+ *      - Platform
+ *    summary: Populate account with sample data
+ *    operationId: platform_accountPopulate
+ *    description:
+ *      Populates an existing account with sample test results.
+ *      User initiating the request must be authenticated.
+ *      User initiating the request must be a platform admin.
+ *    parameters:
+ *      - $ref: '#/components/parameters/account'
+ *    responses:
+ *      204:
+ *        description: 'Sample data added'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ *      404:
+ *        description: User Not Found
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
+router.post(
+  '/account/:account/populate',
+  middleware.isAuthenticated,
+  middleware.isPlatformAdmin,
+  middleware.hasAccount,
+  promisable(platformAccountPopulate, 'populate account with sample data')
 )
 
 /**
