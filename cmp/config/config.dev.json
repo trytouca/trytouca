@@ -1,9 +1,8 @@
 {
-  "api-url": "http://localhost:8081",
+  "api-url": "localhost:8081",
   "log-dir": "/Users/pejman/Projects/weasel/local/logs/cmp",
   "log-level": "debug",
-  "startup-interval": "6000",
-  "minio-host": "127.0.0.1",
+  "minio-url": "localhost:9000",
   "minio-pass": "weaselpass",
   "minio-user": "weaseluser"
 }

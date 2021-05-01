@@ -32,7 +32,11 @@ bool run_startup_stage(const Options& options)
     weasel::ApiUrl api(options.api_url);
     weasel::Platform platform(api);
     for (auto i = 1u; i <= max_attempts; ++i) {
-        if (platform.handshake() && store.status_check()) {
+        if (!platform.handshake()) {
+            WEASEL_LOG_WARN("failed to connect to backend: {}", platform.get_error());
+        } else if (!store.status_check()) {
+            WEASEL_LOG_WARN("failed to connect to object storage");
+        } else {
             WEASEL_LOG_INFO("start-up phase completed");
             return true;
         }

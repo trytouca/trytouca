@@ -10,7 +10,11 @@ services:
       MAIL_TRANSPORT_USER: <SECRET>
       MAIL_TRANSPORT_PASS: <SECRET>
       MAIL_TRANSPORT_PORT: 587
-      WEBAPP_ROOT: <UNKNOWN>
+      MINIO_USER: weaseluser
+      MINIO_PASS: weaselpass
+      MONGO_USER: weaseluser
+      MONGO_PASS: weaselpass
+      WEBAPP_ROOT: http://localhost
     volumes:
       - ./local/data/weasel:/opt/local/data/weasel
       - ./local/logs/api:/opt/local/logs/api
@@ -18,23 +22,29 @@ services:
       - weasel_minio
       - weasel_mongo
       - weasel_redis
+    # ports:
+    #   - 8081:8081
     restart: always
 
-  weasel_webapp:
+  weasel_app:
     image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-app:1.4.0
-    ports:
-      - 80:80
     depends_on:
       - weasel_api
+    ports:
+      - 80:80
     restart: always
 
   weasel_cmp:
     image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-cmp:1.4.0
+    environment:
+      MINIO_USER: weaseluser
+      MINIO_PASS: weaselpass
     volumes:
       - ./local/data/weasel:/opt/local/data/weasel:ro
       - ./local/logs/cmp:/opt/local/logs/cmp
     depends_on:
       - weasel_api
+      - weasel_minio
     restart: always
 
   weasel_redis:

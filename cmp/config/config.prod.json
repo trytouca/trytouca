@@ -1,7 +1,7 @@
 {
   "api-url": "http://weasel_api:8081",
   "log-dir": "/opt/local/logs/cmp",
-  "minio-host": "weasel_minio",
+  "minio-url": "http://weasel_minio:9000",
   "minio-pass": "weaselpass",
   "minio-user": "weaseluser"
 }

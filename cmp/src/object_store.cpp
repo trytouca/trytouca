@@ -21,7 +21,7 @@ MinioClient::MinioClient(const Options& options)
     Aws::InitAPI(*_aws_sdk_options);
 
     Aws::Client::ClientConfiguration aws_config;
-    aws_config.endpointOverride = fmt::format("{}:{}", options.minio_host, options.minio_port);
+    aws_config.endpointOverride = options.minio_url;
     aws_config.region = options.minio_region;
     aws_config.scheme = Aws::Http::Scheme::HTTP;
     aws_config.verifySSL = false;

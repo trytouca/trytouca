@@ -22,9 +22,8 @@ struct Options {
     unsigned startup_interval;
     unsigned startup_timeout;
     unsigned status_report_interval;
-    std::string minio_host;
+    std::string minio_url;
     std::string minio_pass;
-    std::string minio_port;
     std::string minio_user;
     std::string minio_region;
 };

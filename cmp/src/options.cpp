@@ -4,6 +4,7 @@
 
 #include "options.hpp"
 #include "cxxopts.hpp"
+#include "fmt/format.h"
 #include "rapidjson/document.h"
 #include "weasel/devkit/filesystem.hpp"
 #include "weasel/devkit/utils.hpp"
@@ -36,13 +37,12 @@ cxxopts::Options config_options_file()
         ("max-failures", "number of allowable consecutive failures", cxxopts::value<unsigned>()->default_value("10"))
         ("processor-threads", "number of processor threads", cxxopts::value<unsigned>()->default_value("4"))
         ("polling-interval", "minimum time (ms) before polling new jobs", cxxopts::value<unsigned>()->default_value("10000"))
-        ("startup-interval", "minimum time (ms) before re-running startup stage", cxxopts::value<unsigned>()->default_value("12000"))
+        ("startup-interval", "minimum time (ms) before re-running startup stage", cxxopts::value<unsigned>()->default_value("6000"))
         ("startup-timeout", "total time (ms) before aborting startup stage", cxxopts::value<unsigned>()->default_value("120000"))
         ("status-report-interval", "total time (ms) between statistics reporting", cxxopts::value<unsigned>()->default_value("60000"))
-        ("minio-host", "minio host", cxxopts::value<std::string>())
+        ("minio-url", "minio url", cxxopts::value<std::string>())
         ("minio-user", "minio user", cxxopts::value<std::string>())
         ("minio-pass", "minio pass", cxxopts::value<std::string>())
-        ("minio-port", "minio port", cxxopts::value<std::string>()->default_value("9000"))
         ("minio-region", "minio region", cxxopts::value<std::string>()->default_value("us-east-2"));
     // clang-format on
     return opts_file;
@@ -127,15 +127,14 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     auto copts_file_argv = copts_args.data();
     const auto result_file = copts_file.parse(copts_file_argc, copts_file_argv);
 
-    // validate and set option `api-url`
+    // validate required parameters
 
-    if (!result_file.count("api-url")) {
-        weasel::print_error("expected configuration parameter: `api-url`\n");
-        fmt::print("{}\n", copts_file.help());
-        return false;
+    for (const auto& key : { "api-url", "minio-url", "minio-pass", "minio-user" }) {
+        if (!result_file.count(key)) {
+            weasel::print_error("expected configuration parameter: \"{}\"\n", key);
+            return false;
+        }
     }
-
-    options.api_url = result_file["api-url"].as<std::string>();
 
     // validate and set option `log-level`
 
@@ -143,11 +142,14 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
         const std::unordered_set<std::string> levels = { "debug", "info", "warning" };
         const auto level = result_file["log-level"].as<std::string>();
         if (!levels.count(level)) {
-            weasel::print_error("invalid value for option `log-level`");
+            weasel::print_error("invalid value for option `log-level`\n");
             fmt::print("{}\n", copts_file.help());
             return false;
         }
         options.log_level = level;
+        if (const auto level = std::getenv("LOG_LEVEL")) {
+            options.log_level = level;
+        }
     }
 
     // set option `log-dir` if it is provided
@@ -155,25 +157,27 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     if (result_file.count("log-dir")) {
         options.log_dir = result_file["log-dir"].as<std::string>();
         if (!weasel::filesystem::is_directory(*options.log_dir)) {
-            weasel::print_error("option `log-dir` points to nonexistent directory");
+            weasel::print_error("option `log-dir` points to nonexistent directory\n");
             return false;
         }
     }
 
-    // validate and set minio parameters
+    // set values for string parameters
 
-    for (const auto& key : { "minio-host", "minio-pass", "minio-user" }) {
-        if (!result_file.count("minio-host")) {
-            weasel::print_error("option `log-dir` points to nonexistent directory");
-            return false;
-        }
-    }
-
-    options.minio_host = result_file["minio-host"].as<std::string>();
+    options.api_url = result_file["api-url"].as<std::string>();
+    options.minio_url = result_file["minio-url"].as<std::string>();
     options.minio_pass = result_file["minio-pass"].as<std::string>();
-    options.minio_port = result_file["minio-port"].as<std::string>();
     options.minio_user = result_file["minio-user"].as<std::string>();
     options.minio_region = result_file["minio-region"].as<std::string>();
+
+    // set other options with default numeric values
+
+    options.max_failures = result_file["max-failures"].as<unsigned>();
+    options.polling_interval = result_file["polling-interval"].as<unsigned>();
+    options.processor_threads = result_file["processor-threads"].as<unsigned>();
+    options.startup_interval = result_file["startup-interval"].as<unsigned>();
+    options.startup_timeout = result_file["startup-timeout"].as<unsigned>();
+    options.status_report_interval = result_file["status-report-interval"].as<unsigned>();
 
     // override minio username and password if they are provided
     // as environment variables
@@ -185,14 +189,21 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
         options.minio_pass = pass;
     }
 
-    // set other options with default numeric values
+    // dump values of configuration parameters
 
-    options.max_failures = result_file["max-failures"].as<unsigned>();
-    options.polling_interval = result_file["polling-interval"].as<unsigned>();
-    options.processor_threads = result_file["processor-threads"].as<unsigned>();
-    options.startup_interval = result_file["startup-interval"].as<unsigned>();
-    options.startup_timeout = result_file["startup-timeout"].as<unsigned>();
-    options.status_report_interval = result_file["status-report-interval"].as<unsigned>();
+    if (options.log_level == "debug") {
+        fmt::print("configuration parameters:\n");
+        fmt::print(" - {}: {}\n", "max_failures", options.max_failures);
+        fmt::print(" - {}: {}\n", "minio_pass", options.minio_pass);
+        fmt::print(" - {}: {}\n", "minio_region", options.minio_region);
+        fmt::print(" - {}: {}\n", "minio_url", options.minio_url);
+        fmt::print(" - {}: {}\n", "minio_user", options.minio_user);
+        fmt::print(" - {}: {}\n", "polling_interval", options.polling_interval);
+        fmt::print(" - {}: {}\n", "processor_threads", options.processor_threads);
+        fmt::print(" - {}: {}\n", "startup_interval", options.startup_interval);
+        fmt::print(" - {}: {}\n", "startup_timeout", options.startup_timeout);
+        fmt::print(" - {}: {}\n", "status_report_interval", options.status_report_interval);
+    }
 
     return true;
 }
