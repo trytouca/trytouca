@@ -16,12 +16,21 @@
  */
 MinioClient::MinioClient(const Options& options)
 {
+    setenv("AWS_REGION", options.minio_region.c_str(), true);
+    setenv("AWS_EC2_METADATA_DISABLED", "TRUE", true);
+
     _aws_sdk_options = std::make_unique<Aws::SDKOptions>();
-    // _aws_sdk_options->loggingOptions.logLevel = Aws::Utils::Logging::LogLevel::Info;
+    if (options.log_level == "debug") {
+        _aws_sdk_options->loggingOptions.logLevel = Aws::Utils::Logging::LogLevel::Trace;
+    }
     Aws::InitAPI(*_aws_sdk_options);
 
     Aws::Client::ClientConfiguration aws_config;
     aws_config.endpointOverride = options.minio_url;
+    if (!options.minio_proxy_host.empty()) {
+        aws_config.proxyHost = options.minio_proxy_host;
+        aws_config.proxyPort = options.minio_proxy_port;
+    }
     aws_config.region = options.minio_region;
     aws_config.scheme = Aws::Http::Scheme::HTTP;
     aws_config.verifySSL = false;

@@ -76,9 +76,6 @@ interface IConfig {
       resultLifetime: number
     }
   }
-  storage: {
-    directory: string
-  }
   tracking: {
     mixpanel: string
   }
@@ -174,9 +171,6 @@ export const config: IConfig = {
       resultLifetime:
         Number(env.SERVICE_RETENTION_DEFAULT_RESULT_LIFETIME) || 30 * 86400
     }
-  },
-  storage: {
-    directory: path.normalize(`${__dirname}/../../` + env.DSP_DIR)
   },
   tracking: {
     mixpanel: env.MIXPANEL_PROJECT_TOKEN

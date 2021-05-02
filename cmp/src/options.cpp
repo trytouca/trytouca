@@ -43,6 +43,8 @@ cxxopts::Options config_options_file()
         ("minio-url", "minio url", cxxopts::value<std::string>())
         ("minio-user", "minio user", cxxopts::value<std::string>())
         ("minio-pass", "minio pass", cxxopts::value<std::string>())
+        ("minio-proxy-host", "minio proxy host", cxxopts::value<std::string>()->default_value(""))
+        ("minio-proxy-port", "minio proxy port", cxxopts::value<unsigned>()->default_value("9000"))
         ("minio-region", "minio region", cxxopts::value<std::string>()->default_value("us-east-2"));
     // clang-format on
     return opts_file;
@@ -169,9 +171,11 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     options.minio_pass = result_file["minio-pass"].as<std::string>();
     options.minio_user = result_file["minio-user"].as<std::string>();
     options.minio_region = result_file["minio-region"].as<std::string>();
+    options.minio_proxy_host = result_file["minio-proxy-host"].as<std::string>();
 
     // set other options with default numeric values
 
+    options.minio_proxy_port = result_file["minio-proxy-port"].as<unsigned>();
     options.max_failures = result_file["max-failures"].as<unsigned>();
     options.polling_interval = result_file["polling-interval"].as<unsigned>();
     options.processor_threads = result_file["processor-threads"].as<unsigned>();
@@ -182,6 +186,12 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     // override minio username and password if they are provided
     // as environment variables
 
+    if (const auto host = std::getenv("MINIO_PROXY_HOST")) {
+        options.minio_proxy_host = host;
+    }
+    if (const auto port = std::getenv("MINIO_PROXY_PORT")) {
+        options.minio_proxy_port = std::stoul(port);
+    }
     if (const auto user = std::getenv("MINIO_USER")) {
         options.minio_user = user;
     }
@@ -193,11 +203,12 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     if (options.log_level == "debug") {
         fmt::print("configuration parameters:\n");
-        fmt::print(" - {}: {}\n", "max_failures", options.max_failures);
-        fmt::print(" - {}: {}\n", "minio_pass", options.minio_pass);
-        fmt::print(" - {}: {}\n", "minio_region", options.minio_region);
+        fmt::print(" - {}: {}\n", "api_url", options.api_url);
         fmt::print(" - {}: {}\n", "minio_url", options.minio_url);
-        fmt::print(" - {}: {}\n", "minio_user", options.minio_user);
+        fmt::print(" - {}: {}\n", "minio_proxy_host", options.minio_proxy_host);
+        fmt::print(" - {}: {}\n", "minio_proxy_port", options.minio_proxy_port);
+        fmt::print(" - {}: {}\n", "minio_region", options.minio_region);
+        fmt::print(" - {}: {}\n", "max_failures", options.max_failures);
         fmt::print(" - {}: {}\n", "polling_interval", options.polling_interval);
         fmt::print(" - {}: {}\n", "processor_threads", options.processor_threads);
         fmt::print(" - {}: {}\n", "startup_interval", options.startup_interval);

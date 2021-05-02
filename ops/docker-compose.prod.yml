@@ -16,7 +16,6 @@ services:
       MONGO_PASS: weaselpass
       WEBAPP_ROOT: http://localhost
     volumes:
-      - ./local/data/weasel:/opt/local/data/weasel
       - ./local/logs/api:/opt/local/logs/api
     depends_on:
       - weasel_minio
@@ -40,7 +39,6 @@ services:
       MINIO_USER: weaseluser
       MINIO_PASS: weaselpass
     volumes:
-      - ./local/data/weasel:/opt/local/data/weasel:ro
       - ./local/logs/cmp:/opt/local/logs/cmp
     depends_on:
       - weasel_api

@@ -323,7 +323,8 @@ jobs:
         if: steps.changes.outputs.app == 'true'
         run: |
           aws s3 cp ${{ steps.params.outputs.buckets }}/docs/clients/cpp-api-reference.tar.gz .
-          tar -xf cpp-api-reference.tar.gz -C ./clients/cpp
+          mkdir -p ./stage/clients/cpp
+          tar -xf cpp-api-reference.tar.gz -C ./stage/clients/cpp
 
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.api == 'true'
@@ -352,8 +353,13 @@ jobs:
       - name: build api docker image
         if: steps.changes.outputs.api == 'true'
         run: |
-          tar -xf api.tar.gz
-          docker build -f config/docker/api.Dockerfile -t weasel-api .
+          mkdir -p ./stage
+          tar -xf api.tar.gz -C ./stage
+          cp -r ./api/env ./stage/api/env
+          cp -r ./api/samples ./stage/api/samples
+          cp -r ./api/node_modules ./stage/api/node_modules
+          docker build -f config/docker/api.Dockerfile -t weasel-api stage
+
       - name: push api to container registry
         if: steps.changes.outputs.api == 'true' && steps.params.outputs.release == 'true'
         run: |
@@ -363,10 +369,12 @@ jobs:
       - name: build app docker image
         if: steps.changes.outputs.app == 'true'
         run: |
-          tar -xf app.tar.gz
-          tar -xf web.tar.gz
-          tar -xf api-docs-external.tar.gz
-          docker build -f config/docker/app.Dockerfile -t weasel-app .
+          mkdir -p ./stage
+          tar -xf app.tar.gz -C ./stage
+          tar -xf web.tar.gz -C ./stage
+          tar -xf api-docs-external.tar.gz -C ./stage
+          mkdir -p ./stage/app && cp ./app/nginx.conf ./stage/app/
+          docker build -f config/docker/app.Dockerfile -t weasel-app stage
       - name: push app to container registry
         if: steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
         run: |
@@ -376,8 +384,10 @@ jobs:
       - name: build cmp docker image
         if: steps.changes.outputs.cmp == 'true'
         run: |
-          tar -xf cmp.tar.gz
-          docker build -f config/docker/cmp.Dockerfile -t weasel-cmp .
+          mkdir -p ./stage
+          tar -xf cmp.tar.gz -C ./stage
+          mkdir -p ./stage/cmp/config && cp ./cmp/config/config.prod.json ./stage/cmp/config/
+          docker build -f config/docker/cmp.Dockerfile -t weasel-cmp stage
       - name: push cmp to container registry
         if: steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
         run: |
