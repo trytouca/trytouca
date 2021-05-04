@@ -150,6 +150,11 @@ namespace weasel {
          */
         bool cmp_jobs(std::string& content) const;
 
+        /**
+         *
+         */
+        bool cmp_stats(const std::string& content) const;
+
     private:
         ApiUrl _api;
         std::unique_ptr<Transport> _http;

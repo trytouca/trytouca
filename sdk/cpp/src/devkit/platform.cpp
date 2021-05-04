@@ -400,4 +400,22 @@ namespace weasel {
         return true;
     }
 
+    /**
+     *
+     */
+    bool Platform::cmp_stats(const std::string& content) const
+    {
+        _error.clear();
+        const auto& response = _http->post(_api.route("/cmp/stats"), content);
+        if (response.status == -1) {
+            _error = response.body;
+            return false;
+        }
+        if (response.status != 204) {
+            _error = weasel::format("received unexpected platform response: {}", response.status);
+            return false;
+        }
+        return true;
+    }
+
 } // namespace weasel
