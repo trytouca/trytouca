@@ -16,7 +16,7 @@ interface IConfig {
     maxLoginAttempts: number
     maxResetKeyLifetime: number // in minutes
   }
-  deployMode: 'self_hosted' | 'cloud_hosted'
+  isCloudHosted: boolean
   env: string
   express: {
     port: number
@@ -104,8 +104,7 @@ export const config: IConfig = {
     maxLoginAttempts: 3,
     maxResetKeyLifetime: 30
   },
-  deployMode:
-    env.DEPLOY_MODE === 'cloud_hosted' ? 'cloud_hosted' : 'self_hosted',
+  isCloudHosted: env.DEPLOY_MODE === 'cloud_hosted',
   env: env.NODE_ENV,
   express: {
     port: Number(env.EXPRESS_PORT),

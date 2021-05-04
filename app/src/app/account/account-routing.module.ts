@@ -4,7 +4,7 @@
 
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { AuthGuard, GuestGuard } from '@weasel/core/services';
+import { AdminGuard, AuthGuard, GuestGuard } from '@weasel/core/services';
 import { ActivateComponent } from './activate.component';
 import { OnboardComponent } from './onboard.component';
 import { PlatformComponent } from './platform.component';
@@ -49,10 +49,14 @@ const routes: Routes = [
         path: '',
         canActivateChild: [AuthGuard],
         children: [
-          { path: 'admin', component: PlatformComponent },
           { path: 'profile', component: ProfileComponent },
           { path: 'welcome', component: OnboardComponent }
         ]
+      },
+      {
+        path: '',
+        canActivateChild: [AuthGuard, AdminGuard],
+        children: [{ path: 'admin', component: PlatformComponent }]
       }
     ]
   }

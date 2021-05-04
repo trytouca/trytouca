@@ -11,10 +11,9 @@ import {
   LineElement,
   PointElement,
   Tooltip,
-  TooltipItem,
   Filler
 } from 'chart.js';
-import { DateTimePipe } from '@weasel/home/pipes';
+import { DateTimePipe } from '@weasel/shared/pipes';
 
 Chart.register(
   LineController,

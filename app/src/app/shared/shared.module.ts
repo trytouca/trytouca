@@ -9,17 +9,21 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DialogModule } from '@ngneat/dialog';
+import { ClipboardModule } from 'ngx-clipboard';
 import {
   AlertComponent,
   FooterInsideComponent,
   HeaderInsideComponent,
   HeaderOutsideComponent,
+  NotificationComponent,
   ServerDownComponent
 } from './components';
 import { AutofocusDirective, DropdownDirective } from './directives';
+import { DateTimePipe } from './pipes';
 
 @NgModule({
   imports: [
+    ClipboardModule,
     CommonModule,
     FontAwesomeModule,
     FormsModule,
@@ -31,16 +35,20 @@ import { AutofocusDirective, DropdownDirective } from './directives';
   declarations: [
     AlertComponent,
     AutofocusDirective,
+    DateTimePipe,
     DropdownDirective,
     FooterInsideComponent,
     HeaderInsideComponent,
     HeaderOutsideComponent,
+    NotificationComponent,
     ServerDownComponent
   ],
   exports: [
     AlertComponent,
     AutofocusDirective,
+    ClipboardModule,
     CommonModule,
+    DateTimePipe,
     DialogModule,
     DropdownDirective,
     FontAwesomeModule,
@@ -49,6 +57,7 @@ import { AutofocusDirective, DropdownDirective } from './directives';
     HeaderInsideComponent,
     HeaderOutsideComponent,
     HttpClientModule,
+    NotificationComponent,
     ReactiveFormsModule,
     ServerDownComponent
   ]

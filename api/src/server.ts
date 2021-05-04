@@ -8,7 +8,6 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import hidePoweredBy from 'hide-powered-by'
-import mongoose from 'mongoose'
 import nocache from 'nocache'
 import moduleAlias from 'module-alias'
 
@@ -28,12 +27,17 @@ import {
 } from './services'
 import { setupSuperuser } from './startup'
 import router from './routes'
-import { config } from '@weasel/utils/config'
+import { config, configMgr } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { makeConnectionMinio } from '@weasel/utils/minio'
 import { makeConnectionMongo, shutdownMongo } from '@weasel/utils/mongo'
 import { makeConnectionRedis, shutdownRedis } from '@weasel/utils/redis'
 import { connectToServer } from '@weasel/utils/routing'
+
+/**
+ *
+ */
+
 const app = express()
 
 app.use(cors({ origin: true, credentials: true, preflightContinue: true }))
@@ -44,7 +48,7 @@ app.use(compression())
 
 // in cloud-hosted deployments where backend runs behind a reverse proxy,
 // configure nginx to trust the proxy and infer ip address from upstream.
-if (config.deployMode === 'cloud_hosted') {
+if (config.isCloudHosted) {
   app.set('trust proxy', ['loopback', 'uniquelocal'])
 }
 
@@ -134,5 +138,17 @@ process.on('SIGINT', () => {
       kill()
     })
 })
+
+if (config.isCloudHosted) {
+  logger.info('running in cloud-hosted mode')
+}
+
+if (!configMgr.hasMailTransport()) {
+  logger.warn('mail server not configured')
+}
+
+if (!config.samples.enabled) {
+  logger.warn('feature to submit sample data is disabled')
+}
 
 launch(app)

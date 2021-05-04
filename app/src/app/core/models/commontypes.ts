@@ -375,3 +375,35 @@ export type ElementComparisonResponse = {
   meta?: CppTestcaseComparisonOverview;
   src: ElementComparisonItem;
 };
+
+/**
+ *
+ */
+export type PlatformStatsUser = {
+  activationLink?: string;
+  createdAt: Date;
+  fullname?: string;
+  email: string;
+  resetKeyLink?: string;
+  resetKeyCreatedAt?: Date;
+  resetKeyExpiresAt?: Date;
+  role: EPlatformRole;
+  username: string;
+};
+
+/**
+ *
+ */
+export type PlatformStatsResponse = {
+  batches: number;
+  cmpPending: number;
+  cmpProcessed: number;
+  msgPending: number;
+  msgProcessed: number;
+  spaceFree: number;
+  spaceSize: number;
+  spaceUsed: number;
+  suites: number;
+  teams: number;
+  users: PlatformStatsUser[];
+};

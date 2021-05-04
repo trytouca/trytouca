@@ -13,7 +13,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { format, formatDistanceToNow } from 'date-fns';
 import { SuiteLookupResponse } from '@weasel/core/models/commontypes';
-import { DateTimePipe } from '@weasel/home/pipes';
+import { DateTimePipe } from '@weasel/shared/pipes';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
 import {
   Data,

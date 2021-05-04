@@ -12,6 +12,5 @@ export * from './modal.component';
 export * from './page.component';
 export * from './page-list.component';
 export * from './page-overview.component';
-export * from './notification.component';
 export * from './version-list.component';
 export * from './version-navigator.component';

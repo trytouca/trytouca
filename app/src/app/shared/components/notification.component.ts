@@ -20,20 +20,25 @@ import { Alert } from '@weasel/shared/components/alert.component';
 export class NotificationComponent implements OnDestroy {
   alert: Alert;
   showNotification = false;
-  timer: Subscription;
+  timers: Subscription[] = [];
 
   private _subNotification: Subscription;
 
   constructor(private notificationService: NotificationService) {
     this._subNotification = this.notificationService.notification$.subscribe(
       ([type, message]) => {
-        this.alert = { type: type, text: message };
-        this.showNotification = true;
-        if (this.timer) {
-          this.timer.unsubscribe();
+        let delay = 0;
+        if (this.showNotification) {
+          this.showNotification = false;
+          delay += 100;
         }
-        this.timer = timer(2000).subscribe(
-          () => (this.showNotification = false)
+        this.alert = { type: type, text: message };
+        this.timers.filter(Boolean).forEach((v) => v.unsubscribe());
+        this.timers.push(
+          timer(delay).subscribe(() => (this.showNotification = true))
+        );
+        this.timers.push(
+          timer(delay + 2000).subscribe(() => (this.showNotification = false))
         );
       }
     );
@@ -41,5 +46,6 @@ export class NotificationComponent implements OnDestroy {
 
   ngOnDestroy() {
     this._subNotification.unsubscribe();
+    this.timers.filter(Boolean).forEach((v) => v.unsubscribe());
   }
 }

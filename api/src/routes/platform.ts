@@ -12,6 +12,7 @@ import { platformAccountPopulate } from '@weasel/controllers/platform/accountPop
 import { platformAccountUpdate } from '@weasel/controllers/platform/accountUpdate'
 import { accountDelete } from '@weasel/controllers/platform/accountDelete'
 import { platformHealth } from '@weasel/controllers/platform/health'
+import { platformStats } from '@weasel/controllers/platform/stats'
 import { promisable } from '@weasel/utils/routing'
 
 const router = e.Router()
@@ -41,14 +42,34 @@ const router = e.Router()
  *                  type: boolean
  *                mail:
  *                  type: boolean
- *      503:
- *        description: Failed to assess platform health.
+ */
+router.get('/', promisable(platformHealth, 'check platform health'))
+
+/**
+ * @api [get] /platform/stats
+ *    tags:
+ *      - Platform
+ *    summary: 'Get Platform Statistics'
+ *    operationId: 'platform_stats'
+ *    description:
+ *      Provides statistics about this Weasel Platform instance.
+ *      User initiating the request must be authenticated.
+ *      User initiating the request must be a platform admin.
+ *    responses:
+ *      200:
+ *        description:
+ *          Statistics about this platform instance.
  *        content:
  *          application/json:
  *            schema:
- *              $ref: '#/components/schemas/Errors'
+ *              $ref: '#/components/schemas/CT_PlatformStatsResponse'
  */
-router.get('/', promisable(platformHealth, 'check platform health'))
+router.get(
+  '/stats',
+  middleware.isAuthenticated,
+  middleware.isPlatformAdmin,
+  promisable(platformStats, 'get platform statistics')
+)
 
 /**
  * Updates profile of an existing user on the platform.

@@ -952,3 +952,111 @@ export type ElementComparisonResponse = {
   meta?: CppTestcaseComparisonOverview
   src: ElementComparisonItem
 }
+
+/**
+ * @schema CT_PlatformStatsUser
+ *  additionalProperties: false
+ *  type: object
+ *  required:
+ *    - createdAt
+ *    - role
+ *    - teams
+ *    - username
+ *  properties:
+ *    activationLink:
+ *      type: string
+ *    createdAt:
+ *      type: string
+ *      format: date-time
+ *    email:
+ *      type: string
+ *      format: email
+ *    fullname:
+ *      type: string
+ *    resetKeyLink:
+ *      type: string
+ *    resetKeyCreatedAt:
+ *      type: Date
+ *    resetKeyExpiresAt:
+ *      type: Date
+ *    role:
+ *      $ref: '#/components/schemas/CT_ETeamRole'
+ *    username:
+ *      type: string
+ */
+export type PlatformStatsUser = {
+  activationLink?: string
+  createdAt: Date
+  fullname?: string
+  email: string
+  resetKeyLink?: string
+  resetKeyCreatedAt?: Date
+  resetKeyExpiresAt?: Date
+  role: EPlatformRole
+  username: string
+}
+
+/**
+ * @schema CT_PlatformStatsResponse
+ *  additionalProperties: false
+ *  type: object
+ *  required:
+ *    - batches
+ *    - cmpPending
+ *    - cmpProcessed
+ *    - msgPending
+ *    - msgProcessed
+ *    - spaceFree
+ *    - spaceSize
+ *    - spaceUsed
+ *    - suites
+ *    - users
+ *  properties:
+ *    batches:
+ *      type: number
+ *      format: int32
+ *    cmpPending:
+ *      type: number
+ *      format: int32
+ *    cmpProcessed:
+ *      type: number
+ *      format: int32
+ *    msgPending:
+ *      type: number
+ *      format: int32
+ *    msgProcessed:
+ *      type: number
+ *      format: int32
+ *    spaceFree:
+ *      type: number
+ *      format: int32
+ *    spaceSize:
+ *      type: number
+ *      format: int32
+ *    spaceUsed:
+ *      type: number
+ *      format: float
+ *    suites:
+ *      type: number
+ *      format: int32
+ *    teams:
+ *      type: number
+ *      format: int32
+ *    users:
+ *      type: array
+ *      items:
+ *        - $ref: '#/components/schemas/CT_PlatformStatsUser'
+ */
+export type PlatformStatsResponse = {
+  batches: number
+  cmpPending: number
+  cmpProcessed: number
+  msgPending: number
+  msgProcessed: number
+  spaceFree: number
+  spaceSize: number
+  spaceUsed: number
+  suites: number
+  teams: number
+  users: PlatformStatsUser[]
+}

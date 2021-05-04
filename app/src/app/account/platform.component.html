@@ -1,5 +1,128 @@
+<app-notification></app-notification>
 <app-header-inside></app-header-inside>
-<div class="wsl-min-h-screen-1 border-t">
-  Platform Settings
+<div class="wsl-min-h-screen-1 border-t flex flex-col">
+  <div class="bg-gray-100 border-b">
+    <div
+      class="h-16 px-4 py-2 mx-auto container flex items-center justify-between">
+      <div class="text-lg font-medium">Platform Settings</div>
+      <div class="print:hidden">
+        <button class="wsl-btn-sm wsl-btn-dark group" type="button"
+          routerLink="/~">Back to Dashboard</button>
+      </div>
+    </div>
+  </div>
+  <div class="py-8 bg-gray-50">
+    <div *ngIf="stats"
+      class="p-4 mx-auto container lg:grid lg:grid-cols-3 lg:gap-4 text-sm">
+      <div class="lg:col-span-1 p-4 bg-white rounded-md shadow-sm border">
+        <h4 class="font-medium">Database</h4>
+        <ul class="px-4 py-2">
+          <li class="flex justify-between">
+            <span>Teams:</span>
+            <span>{{ stats.teams }}</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Suites:</span>
+            <span>{{ stats.suites }}</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Batches:</span>
+            <span>{{ stats.batches }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="lg:col-span-1 p-4 bg-white rounded-md shadow-sm border">
+        <h4 class="font-medium">Disk Space</h4>
+        <ul class="px-4 py-2">
+          <li class="flex justify-between">
+            <span>Used:</span>
+            <span>{{ stats.spaceFree | number: '1.0-0' }} GB</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Size:</span>
+            <span>{{ stats.spaceSize | number: '1.0-0' }} GB</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Free:</span>
+            <span>{{ stats.spaceUsed | percent:'1.0-0' }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="lg:col-span-1 p-4 bg-white rounded-md shadow-sm border">
+        <h4 class="font-medium">Comparator</h4>
+        <ul class="px-4 py-2">
+          <li class="flex justify-between">
+            <span>Comparison Jobs:</span>
+            <span>{{ stats.cmpProcessed }}</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Average Process Time:</span>
+            <span>{{ 123 | number: '1.0-0' }} ms/job</span>
+          </li>
+          <li class="flex justify-between">
+            <span>Average Comparison Time:</span>
+            <span>{{ 123 | number: '1.0-0' }} ms/job</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="pt-8 pb-4 mx-auto container" *ngIf="events.length !== 0">
+    <h3 class="p-4 text-xl font-medium">Recent Events</h3>
+    <div class="px-8 flex items-center space-x-4">
+      <div class="flex-grow lg:grid lg:grid-cols-3 lg:gap-4">
+        <div
+          class="grid-cols-1 flex flex-col p-4 bg-gray-50 text-sm border border-gray-100 rounded-md space-y-2"
+          *ngFor="let event of events">
+          <div class="flex-grow">
+            <span class="text-lblue-600 font-medium"
+              [title]="event.username">{{ event.fullname}}</span>
+            <span> {{ event.copyText }}</span>
+          </div>
+          <div class="flex items-center justify-between">
+            <div>
+              {{ describeEventDate(event.eventDate) }}
+            </div>
+            <div class="flex space-x-1">
+              <div
+                class="px-2 py-1 flex justify-center bg-gray-100 border border-gray-300 rounded text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-200"
+                title="Copy email to clipboard" ngxClipboard
+                [cbContent]="event.email" (cbOnSuccess)="onCopy($event)">
+                <fa-icon [icon]="faEnvelope">
+                </fa-icon>
+              </div>
+              <div
+                class="px-2 py-1 flex justify-center bg-gray-100 border border-gray-300 rounded text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-200"
+                title="Copy link to clipboard" ngxClipboard
+                [cbContent]="event.copyLink" (cbOnSuccess)="onCopy($event)">
+                <fa-icon [icon]="faClipboard"></fa-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pt-4 pb-8 mx-auto container">
+    <h3 class="p-4 text-xl font-medium">Users</h3>
+    <ul class="px-8" *ngIf="stats">
+      <li class="h-8 flex items-center justify-start space-x-4"
+        *ngFor="let user of stats.users">
+        <div class="w-32 font-medium">
+          {{ user.fullname || 'Unknown' }}
+        </div>
+        <div class="w-24 whitespace-nowrap">
+          <span class="px-2 py-1 bg-gray-100 text-sm text-gray-700 rounded-md">
+            {{ user.username }}
+          </span>
+        </div>
+        <div class="w-24">
+          <span class="px-2 py-1 bg-gray-100 text-sm text-gray-700 rounded-md">
+            {{ user.role }}
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
 <app-footer-inside></app-footer-inside>

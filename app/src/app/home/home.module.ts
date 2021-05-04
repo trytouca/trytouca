@@ -4,7 +4,6 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ClipboardModule } from 'ngx-clipboard';
 import { MarkdownModule } from 'ngx-markdown';
 import { HomeComponent } from './home.component';
 import { HomeRoutingModule } from './home-routing.module';
@@ -18,14 +17,11 @@ import {
   ListFilterComponent,
   ListPagerComponent,
   ModalComponent,
-  NotificationComponent,
   PageListComponent,
   PageOverviewComponent,
   VersionListComponent,
   VersionNavigatorComponent
 } from './components';
-
-import { DateTimePipe } from './pipes';
 
 import {
   TeamsCreateTeamComponent,
@@ -80,7 +76,6 @@ import {
 @NgModule({
   providers: [],
   imports: [
-    ClipboardModule,
     CommonModule,
     HomeRoutingModule,
     MarkdownModule.forRoot(),
@@ -88,8 +83,6 @@ import {
   ],
   declarations: [
     HomeComponent,
-    // pipes
-    DateTimePipe,
     // shared components
     CommentComponent,
     ConfirmComponent,
@@ -100,7 +93,6 @@ import {
     ModalComponent,
     PageListComponent,
     PageOverviewComponent,
-    NotificationComponent,
     VersionListComponent,
     VersionNavigatorComponent,
     // teams page components

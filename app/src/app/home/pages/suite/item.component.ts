@@ -21,7 +21,7 @@ import {
   IconType,
   Topic
 } from '@weasel/home/models/page-item.model';
-import { DateTimePipe } from '@weasel/home/pipes';
+import { DateTimePipe } from '@weasel/shared/pipes';
 import { FrontendBatchItem } from '@weasel/core/models/frontendtypes';
 
 type Meta = Partial<{

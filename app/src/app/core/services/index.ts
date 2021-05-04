@@ -2,6 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+export * from './admin.guard';
 export * from './alert.service';
 export * from './api.service';
 export * from './auth.guard';

@@ -11,9 +11,7 @@ import * as minio from '@weasel/utils/minio'
 import { rclient } from '@weasel/utils/redis'
 
 /**
- * @todo add version field in response whose value matches output of
- *       git describe on platform source repository.
- * @todo add size of object storage and mongodb databases
+ *
  */
 export async function platformHealth(
   req: Request,
