@@ -973,6 +973,9 @@ export type ElementComparisonResponse = {
  *      format: email
  *    fullname:
  *      type: string
+ *    lockedAt:
+ *      type: string
+ *      date: date-time
  *    resetKeyLink:
  *      type: string
  *    resetKeyCreatedAt:
@@ -987,8 +990,9 @@ export type ElementComparisonResponse = {
 export type PlatformStatsUser = {
   activationLink?: string
   createdAt: Date
-  fullname?: string
   email: string
+  fullname?: string
+  lockedAt?: Date
   resetKeyLink?: string
   resetKeyCreatedAt?: Date
   resetKeyExpiresAt?: Date

@@ -13,7 +13,7 @@
   </div>
   <div class="py-8 bg-gray-50">
     <div *ngIf="stats"
-      class="p-4 mx-auto container grid lg:grid-cols-3 gap-4 text-sm">
+      class="p-4 mx-auto container grid sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
       <div class="lg:col-span-1 p-4 bg-white rounded-md shadow-sm border">
         <h4 class="font-medium">Database</h4>
         <ul class="px-4 py-2 leading-6">
@@ -69,12 +69,12 @@
       </div>
     </div>
   </div>
-  <div class="pt-8 pb-4 mx-auto container" *ngIf="events.length !== 0">
-    <h3 class="p-4 text-xl font-medium">Recent Events</h3>
-    <div class="px-8 flex items-center space-x-4">
-      <div class="flex-grow grid lg:grid-cols-3 gap-4">
+  <div class="py-8 mx-auto container md:grid md:grid-cols-3 gap-4">
+    <div class="md:col-span-1 md:order-2">
+      <h3 class="p-4 text-xl font-medium">Recent Events</h3>
+      <div class="p-4 space-y-4">
         <div
-          class="grid-cols-1 flex flex-col p-4 bg-gray-50 text-sm border border-gray-100 rounded-md space-y-2"
+          class="p-4 bg-gray-50 text-sm border border-gray-100 rounded-md space-y-2"
           *ngFor="let event of events">
           <div class="flex-grow">
             <span class="text-lblue-600 font-medium"
@@ -95,8 +95,9 @@
               </div>
               <div
                 class="px-2 py-1 flex justify-center bg-gray-100 border border-gray-300 rounded text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-200"
-                title="Copy link to clipboard" ngxClipboard
-                [cbContent]="event.copyLink" (cbOnSuccess)="onCopy($event)">
+                *ngIf="event.copyLink" title="Copy link to clipboard"
+                ngxClipboard [cbContent]="event.copyLink"
+                (cbOnSuccess)="onCopy($event)">
                 <fa-icon [icon]="faClipboard"></fa-icon>
               </div>
             </div>
@@ -104,27 +105,41 @@
         </div>
       </div>
     </div>
-  </div>
-  <div class="pt-4 pb-8 mx-auto container">
-    <h3 class="p-4 text-xl font-medium">Users</h3>
-    <ul class="px-8" *ngIf="stats">
-      <li class="h-8 flex items-center justify-start space-x-4"
-        *ngFor="let user of stats.users">
-        <div class="w-32 font-medium">
-          {{ user.fullname || 'Unknown' }}
-        </div>
-        <div class="w-24 whitespace-nowrap">
-          <span class="px-2 py-1 bg-gray-100 text-sm text-gray-700 rounded-md">
-            {{ user.username }}
-          </span>
-        </div>
-        <div class="w-24">
-          <span class="px-2 py-1 bg-gray-100 text-sm text-gray-700 rounded-md">
-            {{ user.role }}
-          </span>
-        </div>
-      </li>
-    </ul>
+    <div class="md:col-span-2">
+      <h3 class="p-4 text-xl font-medium">Users</h3>
+      <ul *ngIf="stats">
+        <li
+          class="px-4 h-8 flex items-center rounded-md transition duration-100 hover:bg-gray-50"
+          *ngFor="let user of stats.users">
+          <div class="flex-grow flex justify-between space-x-4">
+            <div class="w-32 font-medium">
+              {{ user.fullname || 'Unknown' }}
+            </div>
+            <div class="w-24 whitespace-nowrap">
+              <span
+                class="px-2 py-1 bg-gray-100 text-sm text-gray-700 rounded-md">
+                {{ user.username }}
+              </span>
+            </div>
+            <div class="w-24">
+              <span
+                class="px-2 py-1 bg-gray-100 text-sm text-gray-700 rounded-md">
+                {{ user.role }}
+              </span>
+            </div>
+          </div>
+          <div
+            class="p-1 flex place-items-center text-gray-300 hover:text-gray-700 cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+            </svg>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 <app-footer-inside></app-footer-inside>

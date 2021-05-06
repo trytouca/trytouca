@@ -10,7 +10,7 @@
     "module": "es2020",
     "moduleResolution": "node",
     "target": "es2015",
-    "lib": ["es2018", "dom"],
+    "lib": ["es2020", "dom"],
     "resolveJsonModule": true,
     "importHelpers": true,
     "declaration": false,

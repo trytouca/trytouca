@@ -384,6 +384,7 @@ export type PlatformStatsUser = {
   createdAt: Date;
   fullname?: string;
   email: string;
+  lockedAt?: Date;
   resetKeyLink?: string;
   resetKeyCreatedAt?: Date;
   resetKeyExpiresAt?: Date;

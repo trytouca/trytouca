@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { formatDistanceToNow } from 'date-fns';
 import { faClipboard, faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import {
   PlatformStatsResponse,
   PlatformStatsUser
@@ -35,6 +36,7 @@ export class PlatformComponent {
   stats: PlatformStatsResponse;
   events: RecentEvent[] = [];
   faClipboard = faClipboard;
+  faEllipsisV = faEllipsisV;
   faEnvelope = faEnvelope;
 
   /**
@@ -48,27 +50,30 @@ export class PlatformComponent {
       .get<PlatformStatsResponse>('/platform/stats')
       .subscribe((response) => {
         response.users.forEach((user) => {
-          const keys = ['createdAt', 'resetKeyExpiresAt', 'resetKeyCreatedAt'];
-          keys.forEach((k) => {
+          [
+            'createdAt',
+            'lockedAt',
+            'resetKeyExpiresAt',
+            'resetKeyCreatedAt'
+          ].forEach((k) => {
             if (k in user) {
               user[k] = new Date(user[k]);
             }
           });
         });
         this.stats = response;
-        const events: RecentEvent[] = [];
-        events.push(
-          ...response.users
-            .filter((v) => v.activationLink)
-            .map(this.build_signup_event)
-        );
-        events.push(
-          ...response.users
-            .filter((v) => v.resetKeyLink)
-            .map(this.build_reset_event)
-        );
-        this.events = events
-          .sort((a, b) => a.eventDate.getTime() - b.eventDate.getTime())
+        const actions: [
+          (arg: PlatformStatsUser) => boolean,
+          (arg: PlatformStatsUser) => RecentEvent
+        ][] = [
+          [(v) => !!v.activationLink, this.build_signup_event],
+          [(v) => !!v.resetKeyLink, this.build_reset_event],
+          [(v) => !!v.lockedAt, this.build_lock_event]
+        ];
+        this.events = actions
+          .map(([k, v]) => response.users.filter(k).map(v))
+          .flat()
+          .sort((a, b) => b.eventDate.getTime() - a.eventDate.getTime())
           .slice(0, 6);
       });
   }
@@ -78,6 +83,19 @@ export class PlatformComponent {
    */
   ngOnDestroy() {
     this._sub.unsubscribe();
+  }
+
+  /**
+   *
+   */
+  private build_lock_event(v: PlatformStatsUser): RecentEvent {
+    return {
+      eventDate: v.lockedAt,
+      email: v.email,
+      fullname: v.fullname || 'Someone',
+      username: v.username,
+      copyText: `had several failed login attempts. Their account is temporarily locked.`
+    };
   }
 
   /**
@@ -105,7 +123,7 @@ export class PlatformComponent {
     return {
       eventDate: v.resetKeyCreatedAt,
       email: v.email,
-      fullname: v.fullname,
+      fullname: v.fullname || 'Someone',
       username: v.username,
       copyLink: v.resetKeyLink,
       copyText
