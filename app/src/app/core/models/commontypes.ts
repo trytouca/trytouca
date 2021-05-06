@@ -395,15 +395,14 @@ export type PlatformStatsUser = {
  *
  */
 export type PlatformStatsResponse = {
-  batches: number;
-  cmpPending: number;
-  cmpProcessed: number;
-  msgPending: number;
-  msgProcessed: number;
+  cmpAvgCollectionTime: number;
+  cmpAvgProcessingTime: number;
+  countBatches: number;
+  countComparisons: number;
+  countElements: number;
+  countMessages: number;
   spaceFree: number;
   spaceSize: number;
   spaceUsed: number;
-  suites: number;
-  teams: number;
   users: PlatformStatsUser[];
 };

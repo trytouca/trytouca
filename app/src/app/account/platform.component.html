@@ -13,27 +13,27 @@
   </div>
   <div class="py-8 bg-gray-50">
     <div *ngIf="stats"
-      class="p-4 mx-auto container lg:grid lg:grid-cols-3 lg:gap-4 text-sm">
+      class="p-4 mx-auto container grid lg:grid-cols-3 gap-4 text-sm">
       <div class="lg:col-span-1 p-4 bg-white rounded-md shadow-sm border">
         <h4 class="font-medium">Database</h4>
-        <ul class="px-4 py-2">
+        <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
-            <span>Teams:</span>
-            <span>{{ stats.teams }}</span>
+            <span>Versions:</span>
+            <span>{{ stats.countBatches }}</span>
           </li>
           <li class="flex justify-between">
-            <span>Suites:</span>
-            <span>{{ stats.suites }}</span>
+            <span>Test Cases:</span>
+            <span>{{ stats.countElements }}</span>
           </li>
           <li class="flex justify-between">
-            <span>Batches:</span>
-            <span>{{ stats.batches }}</span>
+            <span>Submissions:</span>
+            <span>{{ stats.countMessages }}</span>
           </li>
         </ul>
       </div>
       <div class="lg:col-span-1 p-4 bg-white rounded-md shadow-sm border">
         <h4 class="font-medium">Disk Space</h4>
-        <ul class="px-4 py-2">
+        <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
             <span>Used:</span>
             <span>{{ stats.spaceFree | number: '1.0-0' }} GB</span>
@@ -50,18 +50,20 @@
       </div>
       <div class="lg:col-span-1 p-4 bg-white rounded-md shadow-sm border">
         <h4 class="font-medium">Comparator</h4>
-        <ul class="px-4 py-2">
+        <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
-            <span>Comparison Jobs:</span>
-            <span>{{ stats.cmpProcessed }}</span>
+            <span>Comparisons:</span>
+            <span>{{ stats.countComparisons }}</span>
           </li>
           <li class="flex justify-between">
             <span>Average Process Time:</span>
-            <span>{{ 123 | number: '1.0-0' }} ms/job</span>
+            <span>{{ stats.cmpAvgProcessingTime| number: '1.0-0' }}
+              ms/job</span>
           </li>
           <li class="flex justify-between">
-            <span>Average Comparison Time:</span>
-            <span>{{ 123 | number: '1.0-0' }} ms/job</span>
+            <span>Average Collection Time:</span>
+            <span>{{ stats.cmpAvgCollectionTime| number: '1.0-0' }}
+              ms/job</span>
           </li>
         </ul>
       </div>
@@ -70,7 +72,7 @@
   <div class="pt-8 pb-4 mx-auto container" *ngIf="events.length !== 0">
     <h3 class="p-4 text-xl font-medium">Recent Events</h3>
     <div class="px-8 flex items-center space-x-4">
-      <div class="flex-grow lg:grid lg:grid-cols-3 lg:gap-4">
+      <div class="flex-grow grid lg:grid-cols-3 gap-4">
         <div
           class="grid-cols-1 flex flex-col p-4 bg-gray-50 text-sm border border-gray-100 rounded-md space-y-2"
           *ngFor="let event of events">

@@ -1001,30 +1001,33 @@ export type PlatformStatsUser = {
  *  additionalProperties: false
  *  type: object
  *  required:
- *    - batches
- *    - cmpPending
- *    - cmpProcessed
- *    - msgPending
- *    - msgProcessed
+ *    - cmpAvgCollectionTime
+ *    - cmpAvgProcessingTime
+ *    - countBatches
+ *    - countComparisons
+ *    - countElements
+ *    - countMessages
  *    - spaceFree
  *    - spaceSize
  *    - spaceUsed
- *    - suites
  *    - users
  *  properties:
- *    batches:
+ *    cmpAvgCollectionTime:
+ *      type: number
+ *      format: float
+ *    cmpAvgProcessingTime:
+ *      type: number
+ *      format: float
+ *    countBatches:
  *      type: number
  *      format: int32
- *    cmpPending:
+ *    countComparisons:
  *      type: number
  *      format: int32
- *    cmpProcessed:
+ *    countElements:
  *      type: number
  *      format: int32
- *    msgPending:
- *      type: number
- *      format: int32
- *    msgProcessed:
+ *    countMessages:
  *      type: number
  *      format: int32
  *    spaceFree:
@@ -1036,27 +1039,20 @@ export type PlatformStatsUser = {
  *    spaceUsed:
  *      type: number
  *      format: float
- *    suites:
- *      type: number
- *      format: int32
- *    teams:
- *      type: number
- *      format: int32
  *    users:
  *      type: array
  *      items:
  *        - $ref: '#/components/schemas/CT_PlatformStatsUser'
  */
 export type PlatformStatsResponse = {
-  batches: number
-  cmpPending: number
-  cmpProcessed: number
-  msgPending: number
-  msgProcessed: number
+  cmpAvgCollectionTime: number
+  cmpAvgProcessingTime: number
+  countBatches: number
+  countComparisons: number
+  countElements: number
+  countMessages: number
   spaceFree: number
   spaceSize: number
   spaceUsed: number
-  suites: number
-  teams: number
   users: PlatformStatsUser[]
 }

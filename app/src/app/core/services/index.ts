@@ -5,6 +5,7 @@
 export * from './admin.guard';
 export * from './alert.service';
 export * from './api.service';
+export * from './admin.guard';
 export * from './auth.guard';
 export * from './auth.service';
 export * from './guest.guard';

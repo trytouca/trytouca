@@ -3,7 +3,9 @@
  */
 
 #include "worker.hpp"
+#include "platform.hpp"
 #include "weasel/devkit/logger.hpp"
+#include "weasel/devkit/platform.hpp"
 #include <thread>
 
 /**
@@ -52,10 +54,20 @@ void reporter(const Options& options, Resources& resources)
     while (true) {
         std::this_thread::sleep_for(interval);
         const auto& report = resources.stats.report();
-        if (report.compare(previous)) {
-            WEASEL_LOG_INFO("{}", report);
-            previous = report;
+        if (!report.compare(previous)) {
+            continue;
         }
+        WEASEL_LOG_INFO("{}", report);
+        previous = report;
+        if (resources.stats.job_count_collect == 0 || resources.stats.job_count_process == 0) {
+            continue;
+        }
+        weasel::ApiUrl api(options.api_url);
+        weasel::Platform platform(api);
+        if (!platform.cmp_stats(report)) {
+            WEASEL_LOG_WARN("failed to report statistics: {}", platform.get_error());
+        }
+        resources.stats.reset();
     }
 }
 

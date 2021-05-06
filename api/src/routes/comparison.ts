@@ -4,11 +4,11 @@
 
 import bodyParser from 'body-parser'
 import e from 'express'
-import * as ev from 'express-validator'
-
+import { body as vbody, param as vparam } from 'express-validator'
 import * as middleware from '../middlewares'
 import { comparisonList } from '@weasel/controllers/comparison/list'
 import { comparisonProcess } from '@weasel/controllers/comparison/process'
+import { comparisonStats } from '@weasel/controllers/comparison/stats'
 import { messageProcess } from '@weasel/controllers/message/process'
 import { promisable } from '@weasel/utils/routing'
 
@@ -112,7 +112,7 @@ router.get('/', promisable(comparisonList, 'list comparison jobs'))
  */
 router.patch(
   '/job/:job',
-  middleware.inputs([ev.param('job').isMongoId().withMessage('job invalid')]),
+  middleware.inputs([vparam('job').isMongoId().withMessage('job invalid')]),
   bodyParser.json({ limit: '5mb' }),
   promisable(comparisonProcess, 'process comparison job')
 )
@@ -173,11 +173,59 @@ router.patch(
  */
 router.patch(
   '/message/:message',
-  middleware.inputs([
-    ev.param('message').isMongoId().withMessage('job invalid')
-  ]),
+  middleware.inputs([vparam('message').isMongoId().withMessage('job invalid')]),
   bodyParser.json({ limit: '5mb' }),
   promisable(messageProcess, 'process message')
+)
+
+/**
+ * Submit comparator statistics.
+ *
+ * @api [post] /cmp/stats
+ *    tags:
+ *      - Comparison
+ *    summary: Submit Comparator Statistics
+ *    operationId: comparison_stats
+ *    description:
+ *      Submit comparator statistics.
+ *      Designed for use by Weasel Comparator.
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            additionalProperties: false
+ *            properties:
+ *              avgCollectionTime:
+ *                type: number
+ *              avgProcessingTime:
+ *                type: number
+ *              numCollectionJobs:
+ *                type: number
+ *              numProcessingJobs:
+ *                type: number
+ *    responses:
+ *      204:
+ *        description: 'Comparator Statistics Submitted'
+ */
+router.post(
+  '/stats',
+  bodyParser.json(),
+  middleware.inputs(
+    [
+      'avgCollectionTime',
+      'avgProcessingTime',
+      'numCollectionJobs',
+      'numProcessingJobs'
+    ].map((key) =>
+      vbody(key)
+        .exists()
+        .withMessage('required')
+        .isNumeric()
+        .withMessage('must be a number')
+    )
+  ),
+  promisable(comparisonStats, 'comparison stats')
 )
 
 export const comparisonRouter = router

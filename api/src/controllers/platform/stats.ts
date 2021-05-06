@@ -6,18 +6,14 @@ import { NextFunction, Request, Response } from 'express'
 import df from '@sindresorhus/df'
 import { BatchModel } from '@weasel/schemas/batch'
 import { ComparisonModel } from '@weasel/schemas/comparison'
+import { ElementModel } from '@weasel/schemas/element'
 import { MessageModel } from '@weasel/schemas/message'
-import { SuiteModel } from '@weasel/schemas/suite'
-import { TeamModel } from '@weasel/schemas/team'
+import { MetaModel } from '@weasel/schemas/meta'
 import { UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
-import {
-  EPlatformRole,
-  PlatformStatsResponse,
-  PlatformStatsUser
-} from '../../commontypes'
+import { EPlatformRole, PlatformStatsResponse } from '../../commontypes'
 
 /**
  *
@@ -64,6 +60,9 @@ export async function platformStats(
 
   const find = {
     resetKeyCreatedAt: (expiresAt: Date) => {
+      if (!expiresAt) {
+        return undefined
+      }
       const value = new Date(expiresAt)
       value.setMinutes(value.getMinutes() - 30)
       return value
@@ -80,23 +79,16 @@ export async function platformStats(
     }
   }
 
+  const meta = await MetaModel.findOne({}, { _id: 0 })
+
   const response: PlatformStatsResponse = {
-    batches: await BatchModel.countDocuments(),
-    cmpPending: await ComparisonModel.countDocuments({
-      processedAt: { $exists: false }
-    }),
-    cmpProcessed: await ComparisonModel.countDocuments({
-      processedAt: { $exists: true }
-    }),
-    msgPending: await MessageModel.countDocuments({
-      processedAt: { $exists: false }
-    }),
-    msgProcessed: await MessageModel.countDocuments({
-      processedAt: { $exists: true }
-    }),
+    cmpAvgCollectionTime: meta.cmpAvgCollectionTime,
+    cmpAvgProcessingTime: meta.cmpAvgProcessingTime,
+    countBatches: await BatchModel.countDocuments(),
+    countComparisons: await ComparisonModel.countDocuments(),
+    countElements: await ElementModel.countDocuments(),
+    countMessages: await MessageModel.countDocuments(),
     ...space,
-    suites: await SuiteModel.countDocuments(),
-    teams: await TeamModel.countDocuments(),
     users: users.map((v) => ({
       activationLink: find.activationLink(v.activationKey),
       createdAt: v.createdAt,

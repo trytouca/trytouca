@@ -27,6 +27,7 @@ import {
 } from './services'
 import { setupSuperuser } from './startup'
 import router from './routes'
+import { MetaModel } from '@weasel/schemas/meta'
 import { config, configMgr } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { makeConnectionMinio } from '@weasel/utils/minio'
@@ -82,8 +83,25 @@ async function launch(application) {
     process.exit(1)
   }
 
+  if ((await MetaModel.countDocuments()) === 0) {
+    await MetaModel.create({})
+    logger.info('created meta document with default values')
+  }
+
+  if (config.isCloudHosted) {
+    logger.info('running in cloud-hosted mode')
+  }
+
+  if (!configMgr.hasMailTransport()) {
+    logger.warn('mail server not configured')
+  }
+
   if (!fs.existsSync(config.samples.directory)) {
     logger.warn('samples directory not found at %s', config.samples.directory)
+  }
+
+  if (!config.samples.enabled) {
+    logger.warn('feature to submit sample data is disabled')
   }
 
   // setup analytics service that performs background data processing
@@ -138,17 +156,5 @@ process.on('SIGINT', () => {
       kill()
     })
 })
-
-if (config.isCloudHosted) {
-  logger.info('running in cloud-hosted mode')
-}
-
-if (!configMgr.hasMailTransport()) {
-  logger.warn('mail server not configured')
-}
-
-if (!config.samples.enabled) {
-  logger.warn('feature to submit sample data is disabled')
-}
 
 launch(app)
