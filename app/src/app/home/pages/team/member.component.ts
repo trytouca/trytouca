@@ -4,6 +4,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
   faUser,
   faUserEdit,
@@ -14,7 +15,7 @@ import {
 import { TeamMember, ETeamRole } from '@weasel/core/models/commontypes';
 
 type Icon = {
-  type: string;
+  type: IconProp;
 };
 
 type Topic = string;
@@ -43,7 +44,7 @@ export class TeamItemMemberComponent {
   /**
    *
    */
-  constructor(private faIconLibrary: FaIconLibrary) {
+  constructor(faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(
       faUser,
       faUserEdit,

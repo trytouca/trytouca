@@ -984,6 +984,8 @@ export type ElementComparisonResponse = {
  *      type: Date
  *    role:
  *      $ref: '#/components/schemas/CT_ETeamRole'
+ *    suspended:
+ *      type: boolean
  *    username:
  *      type: string
  */
@@ -997,6 +999,7 @@ export type PlatformStatsUser = {
   resetKeyCreatedAt?: Date
   resetKeyExpiresAt?: Date
   role: EPlatformRole
+  suspended?: boolean
   username: string
 }
 

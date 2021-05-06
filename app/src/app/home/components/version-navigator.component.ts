@@ -3,19 +3,18 @@
  */
 
 import { Component, Input } from '@angular/core';
+import { IClipboardResponse } from 'ngx-clipboard';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import type {
   SuiteLookupResponse,
   Promotion
 } from '@weasel/core/models/commontypes';
-import type {
-  FrontendBatchCompareParams,
-  FrontendElementCompareParams
-} from '@weasel/core/models/frontendtypes';
 import { NotificationService } from '@weasel/core/services';
 import { AlertType } from '@weasel/shared/components/alert.component';
-
-type ParamsType = FrontendBatchCompareParams | FrontendElementCompareParams;
+import {
+  isElementParams,
+  FrontendVersionListParamsType
+} from '@weasel/home/components/version-list.component';
 
 @Component({
   selector: 'app-home-version-navigator',
@@ -25,21 +24,12 @@ export class VersionNavigatorComponent {
   faLink = faLink;
 
   @Input() suite: SuiteLookupResponse;
-  @Input() params: ParamsType;
+  @Input() params: FrontendVersionListParamsType;
 
   /**
    *
    */
   constructor(private notificationService: NotificationService) {}
-
-  /**
-   *
-   */
-  private isElementParams(
-    type: ParamsType
-  ): type is FrontendElementCompareParams {
-    return 'srcElementSlug' in type;
-  }
 
   /**
    *
@@ -53,7 +43,7 @@ export class VersionNavigatorComponent {
    */
   get link() {
     const base = `${window.location.origin}/~/${this.params.teamSlug}`;
-    if (!this.isElementParams(this.params)) {
+    if (!isElementParams(this.params)) {
       return (
         `${base}/${this.params.srcSuiteSlug}` +
         `?v=${this.params.srcBatchSlug}` +
@@ -70,7 +60,7 @@ export class VersionNavigatorComponent {
   /**
    *
    */
-  public onCopy(event: string) {
+  public onCopy(event: IClipboardResponse) {
     this.notificationService.notify(
       AlertType.Success,
       'Copied value to clipboard.'

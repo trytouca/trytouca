@@ -6,6 +6,8 @@ import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Title } from '@angular/platform-browser';
+import { Subscription, timer } from 'rxjs';
+import { IClipboardResponse } from 'ngx-clipboard';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faBell,
@@ -16,7 +18,6 @@ import {
   faRobot,
   faTasks
 } from '@fortawesome/free-solid-svg-icons';
-import { Subscription, timer } from 'rxjs';
 import type {
   SuiteItem,
   SuiteLookupResponse,
@@ -186,7 +187,7 @@ export class SuitePageComponent
   /**
    *
    */
-  onCopy(event: string, name: string) {
+  onCopy(event: IClipboardResponse, name: string) {
     this.notificationService.notify(
       AlertType.Success,
       `Copied ${name} to clipboard.`

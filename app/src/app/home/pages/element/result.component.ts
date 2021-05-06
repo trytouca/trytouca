@@ -3,7 +3,9 @@
  */
 
 import { Component, Input } from '@angular/core';
+import { IClipboardResponse } from 'ngx-clipboard';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
   faCircle,
   faCheckCircle,
@@ -41,7 +43,7 @@ enum RowType {
 
 interface Icon {
   color: string;
-  type: string;
+  type: IconProp;
 }
 
 interface IMetadata {
@@ -182,7 +184,7 @@ export class ElementItemResultComponent {
     }
   }
 
-  public onCopy(event: string) {
+  public onCopy(event: IClipboardResponse) {
     this.notificationService.notify(
       AlertType.Success,
       'Copied value to clipboard.'

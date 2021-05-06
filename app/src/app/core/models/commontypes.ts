@@ -382,13 +382,14 @@ export type ElementComparisonResponse = {
 export type PlatformStatsUser = {
   activationLink?: string;
   createdAt: Date;
-  fullname?: string;
   email: string;
+  fullname?: string;
   lockedAt?: Date;
   resetKeyLink?: string;
   resetKeyCreatedAt?: Date;
   resetKeyExpiresAt?: Date;
   role: EPlatformRole;
+  suspended?: boolean;
   username: string;
 };
 

@@ -5,6 +5,7 @@
 import { Component } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { formatDistanceToNow } from 'date-fns';
+import { IClipboardResponse } from 'ngx-clipboard';
 import { faClipboard, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -133,11 +134,25 @@ export class PlatformComponent {
   /**
    *
    */
-  public onCopy(event: string) {
+  onCopy(event: IClipboardResponse, name: string) {
     this.notificationService.notify(
       AlertType.Success,
-      'Copied value to clipboard.'
+      `Copied ${name} to clipboard.`
     );
+  }
+
+  /**
+   *
+   */
+  suspendUser(user: PlatformStatsUser) {
+    this.apiService
+      .post(`/platform/account/${user.username}/suspend`)
+      .subscribe(() => {
+        this.notificationService.notify(
+          AlertType.Success,
+          `Account for ${user.fullname || user.username} was suspended.`
+        );
+      });
   }
 
   /**

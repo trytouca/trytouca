@@ -14,6 +14,7 @@ import { formatDate } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
 import {
   faCog,
   faComments,
@@ -74,7 +75,7 @@ type PageButton = {
   click: () => void;
   title: string;
   text: string;
-  icons?: string[];
+  icons?: [IconPrefix, IconName];
 };
 
 @Component({

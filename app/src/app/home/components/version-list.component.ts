@@ -14,13 +14,32 @@ import Fuse from 'fuse.js';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, skip } from 'rxjs/operators';
 import { isEqual } from 'lodash-es';
-import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
 import { SuiteLookupResponse } from '@weasel/core/models/commontypes';
+import {
+  FrontendBatchCompareParams,
+  FrontendElementCompareParams
+} from '@weasel/core/models/frontendtypes';
 
 type Version = {
   slug: string;
   tags: string[];
 };
+
+/**
+ *
+ */
+export type FrontendVersionListParamsType =
+  | FrontendBatchCompareParams
+  | FrontendElementCompareParams;
+
+/**
+ *
+ */
+export function isElementParams(
+  type: FrontendVersionListParamsType
+): type is FrontendElementCompareParams {
+  return 'srcElementSlug' in type;
+}
 
 @Component({
   selector: 'app-home-version-list',
@@ -29,7 +48,7 @@ type Version = {
 })
 export class VersionListComponent implements OnChanges {
   @Input() suite: SuiteLookupResponse;
-  @Input() params: FrontendElementCompareParams;
+  @Input() params: FrontendVersionListParamsType;
   @Input() side: 'head' | 'base';
 
   private _dstBatchChanged = new Subject<string>();
@@ -37,7 +56,7 @@ export class VersionListComponent implements OnChanges {
 
   private _versionQuery = '';
   private _relevantVersions: Version[] = [];
-  private _versionQueryChanged: Subject<string> = new Subject<string>();
+  private _versionQueryChanged: Subject<KeyboardEvent> = new Subject<KeyboardEvent>();
   private _searchOptions: Fuse.IFuseOptions<string> = {
     shouldSort: true,
     threshold: 0.3,
@@ -64,11 +83,7 @@ export class VersionListComponent implements OnChanges {
       .pipe(distinctUntilChanged(), skip(1))
       .subscribe((version) => {
         this.params.srcBatchSlug = version;
-        if (this.params.srcElementSlug === undefined) {
-          this.router.navigate(['..', version], {
-            relativeTo: this.route
-          });
-        } else {
+        if (isElementParams(this.params)) {
           this.router.navigate(
             [
               '~',
@@ -81,6 +96,10 @@ export class VersionListComponent implements OnChanges {
               queryParamsHandling: 'merge'
             }
           );
+        } else {
+          this.router.navigate(['..', version], {
+            relativeTo: this.route
+          });
         }
       });
     this._versionQueryChanged
@@ -189,7 +208,7 @@ export class VersionListComponent implements OnChanges {
   /**
    *
    */
-  onKeyupVersionFilter(text: string) {
+  onKeyupVersionFilter(text: KeyboardEvent) {
     this._versionQueryChanged.next(text);
   }
 

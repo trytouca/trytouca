@@ -55,6 +55,7 @@ export async function platformStats(
       resetKey: 1,
       resetKeyExpiresAt: 1,
       platformRole: 1,
+      suspended: 1,
       username: 1
     }
   )
@@ -100,11 +101,12 @@ export async function platformStats(
       resetKeyCreatedAt: find.resetKeyCreatedAt(v.resetKeyExpiresAt),
       resetKeyExpiresAt: v.resetKeyExpiresAt,
       role: v.platformRole,
+      suspended: v.suspended || undefined,
       username: v.username
     }))
   }
 
-  // cache platform health information in redis database
+  // cache platform statistics information in redis database
   logger.debug('caching statistics')
   rclient.cache(cacheKey, JSON.stringify(response), config.redis.durationLong)
 

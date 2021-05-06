@@ -6,6 +6,7 @@ import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
 import { timer } from 'rxjs';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { environment } from 'src/environments/environment';
 import { IPageService } from '@weasel/home/models/pages.model';
 
@@ -13,7 +14,7 @@ export type PageTab<TabType> = {
   type: TabType;
   name: string;
   link: string;
-  icon: string;
+  icon: IconProp;
   shown: boolean;
   counter?: number;
 };

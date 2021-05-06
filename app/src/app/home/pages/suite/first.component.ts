@@ -4,6 +4,7 @@
 
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { IClipboardResponse } from 'ngx-clipboard';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { NotificationService, UserService } from '@weasel/core/services';
@@ -61,7 +62,7 @@ export class SuiteFirstBatchComponent implements OnDestroy {
   /**
    *
    */
-  onCopy(event: string, name: string) {
+  onCopy(event: IClipboardResponse, name: string) {
     this.notificationService.notify(
       AlertType.Success,
       `Copied ${name} to clipboard.`

@@ -4,6 +4,7 @@
 
 import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
   faCircle,
   faCheckCircle,
@@ -19,7 +20,7 @@ import { ElementPageMetric, ElementPageItemType } from './element.model';
 
 interface Icon {
   color: string;
-  type: string;
+  type: IconProp;
 }
 
 interface IMetadata {

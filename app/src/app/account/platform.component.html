@@ -89,7 +89,8 @@
               <div
                 class="px-2 py-1 flex justify-center bg-gray-100 border border-gray-300 rounded text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-200"
                 title="Copy email to clipboard" ngxClipboard
-                [cbContent]="event.email" (cbOnSuccess)="onCopy($event)">
+                [cbContent]="event.email"
+                (cbOnSuccess)="onCopy($event, 'email address')">
                 <fa-icon [icon]="faEnvelope">
                 </fa-icon>
               </div>
@@ -97,7 +98,7 @@
                 class="px-2 py-1 flex justify-center bg-gray-100 border border-gray-300 rounded text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-200"
                 *ngIf="event.copyLink" title="Copy link to clipboard"
                 ngxClipboard [cbContent]="event.copyLink"
-                (cbOnSuccess)="onCopy($event)">
+                (cbOnSuccess)="onCopy($event, 'link')">
                 <fa-icon [icon]="faClipboard"></fa-icon>
               </div>
             </div>
@@ -112,7 +113,8 @@
           class="px-4 h-8 flex items-center rounded-md transition duration-100 hover:bg-gray-50"
           *ngFor="let user of stats.users">
           <div class="flex-grow flex justify-between space-x-4">
-            <div class="w-32 font-medium">
+            <div class="w-32 font-medium"
+              [ngClass]="{ 'text-gray-300 line-through': user.suspended }">
               {{ user.fullname || 'Unknown' }}
             </div>
             <div class="w-24 whitespace-nowrap">
@@ -128,14 +130,27 @@
               </span>
             </div>
           </div>
-          <div
-            class="p-1 flex place-items-center text-gray-300 hover:text-gray-700 cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
+          <div wslDropdown
+            class="p-1 flex items-center text-gray-300 hover:text-gray-700 cursor-pointer select-none">
+            <svg xmlns="http://www.w3.org/2000/svg"
+              class="h-4 w-4 wsl-dropdown-toggle" fill="none"
               viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round"
                 stroke-width="2"
                 d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
             </svg>
+            <div class="wsl-dropdown-menu hidden w-48 text-sm"
+              aria-labelledby="wsl-user-dropdown">
+              <div class="wsl-dropdown-item" ngxClipboard
+                [cbContent]="user.email"
+                (cbOnSuccess)="onCopy($event, 'email address')">
+                <a class="text-lblue-700">Copy Email</a>
+              </div>
+              <div class="wsl-dropdown-item" *ngIf="!user.suspended"
+                (click)="suspendUser(user)">
+                <a class="text-lblue-700">Suspend</a>
+              </div>
+            </div>
           </div>
         </li>
       </ul>

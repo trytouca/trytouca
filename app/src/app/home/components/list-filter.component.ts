@@ -12,6 +12,7 @@ import {
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
   faSortAmountDown,
   faSortAmountDownAlt
@@ -168,7 +169,7 @@ export class ListFilterComponent {
   /**
    *
    */
-  get sortOrderIcon(): string {
+  get sortOrderIcon(): IconProp {
     return this.params.order === 'asc'
       ? 'sort-amount-down-alt'
       : 'sort-amount-down';

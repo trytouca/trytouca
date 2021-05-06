@@ -25,7 +25,7 @@ type PageNumber = {
 export class ListPagerComponent {
   private _pagelSubject = new Subject<number>();
   private _pagenSubject = new Subject<number>();
-  private _pagenQueryChanged = new Subject<number>();
+  private _pagenQueryChanged = new Subject<KeyboardEvent>();
 
   @Input() params: FilterParams;
   @Input() stats: FilterStats;
@@ -181,7 +181,7 @@ export class ListPagerComponent {
   /**
    *
    */
-  onKeyupPageNumber(pageNumber: number) {
+  onKeyupPageNumber(pageNumber: KeyboardEvent) {
     this._pagenQueryChanged.next(pageNumber);
   }
 
