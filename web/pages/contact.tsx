@@ -3,6 +3,7 @@
  */
 
 import Head from 'next/head';
+
 import ContactForm from '@/components/contact-form';
 import FooterCta from '@/components/footer-cta';
 

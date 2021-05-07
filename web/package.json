@@ -1,12 +1,12 @@
 {
-  "name": "@weasel/landing",
+  "name": "@getweasel/landing",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "export": "next export",
-    "lint": "eslint . --ext ts --ext tsx",
+    "lint": "eslint . --ext .ts --ext .tsx",
     "start": "next start"
   },
   "dependencies": {
@@ -28,6 +28,7 @@
     "eslint": "^7.24.0",
     "eslint-config-prettier": "^8.2.0",
     "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "postcss": "^8.2.9",
     "prettier": "^2.2.1",
     "tailwindcss": "^2.1.1",

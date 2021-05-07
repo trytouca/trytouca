@@ -2,10 +2,11 @@
  * Copyright 2021 Weasel, Inc. All rights reserved.
  */
 
+import { ErrorMessage,Field, Form, Formik, FormikProps } from 'formik';
 import React from 'react';
-import { Formik, FormikProps, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Feedback, post_json, extract_error } from '@/lib/api';
+
+import { extract_error,Feedback, post_json } from '@/lib/api';
 import { event as gtag_event } from '@/lib/gtag';
 
 const SignupForm = () => (

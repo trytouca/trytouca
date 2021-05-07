@@ -1,14 +1,9 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  "ignorePatterns": ["out/", ".next/", "node_modules/", "out/"],
   "env": {
+    "es2020": true,
     "browser": true
   },
   "settings": {
@@ -16,13 +11,21 @@
       "version": "detect"
     }
   },
-  "rules": {
-    "react/react-in-jsx-scope": 0,
-    "@typescript-eslint/explicit-module-boundary-types": 0
-  },
   "parserOptions": {
     "project": "./tsconfig.json",
-    "ecmaVersion": 2017,
+    "ecmaVersion": 2020,
     "sourceType": "module"
+  },
+  "plugins": ["simple-import-sort"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "react/react-in-jsx-scope": 0,
+    "@typescript-eslint/explicit-module-boundary-types": 0,
+    "simple-import-sort/imports": "error"
   }
 }

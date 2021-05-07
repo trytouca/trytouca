@@ -13,6 +13,7 @@ import {
   HiOutlineUpload,
   HiOutlineUserGroup
 } from 'react-icons/hi';
+
 import FooterCta from '@/components/footer-cta';
 import SignupForm from '@/components/signup-form';
 import { make_path } from '@/lib/api';

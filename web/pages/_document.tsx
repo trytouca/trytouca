@@ -2,11 +2,12 @@
  * Copyright 2021 Weasel, Inc. All rights reserved.
  */
 
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import Document, { Head, Html, Main, NextScript } from 'next/document';
+
 import Footer from '@/components/footer';
+import Header from '@/components/header';
 import { make_path } from '@/lib/api';
 import { GA_TRACKING_ID } from '@/lib/gtag';
-import Header from '@/components/header';
 
 export default class MyDocument extends Document {
   render() {

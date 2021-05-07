@@ -2,11 +2,13 @@
  * Copyright 2021 Weasel, Inc. All rights reserved.
  */
 
+import '@/styles/global.css';
+
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+
 import { pageview as gtag_pageview } from '@/lib/gtag';
-import '@/styles/global.css';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
