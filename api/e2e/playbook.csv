@@ -9,6 +9,8 @@ ggreen,account-create,,,,
 hharris,account-create,,,,
 iingram,account-create,,,,
 jjohnson,account-create,,,,
+kkelly,account-create,,,,
+llewis,account-create,,,,
 aanderson,account-onboard,,,,"Alice Anderson"
 bbrown,account-onboard,,,,"Bob Brown"
 cclark,account-onboard,,,,"Charlie Clark"
@@ -19,7 +21,14 @@ ggreen,account-onboard,,,,"Grace Green"
 hharris,account-onboard,,,,"Heidi Harris"
 iingram,account-onboard,,,,"Ivan Ingram"
 jjohnson,account-onboard,,,,"Judy Johnson"
-iingram,account-reset,,,,
+kkelly,account-onboard,,,,"Kris Kelly"
+iingram,account-reset-request,,,,
+iingram,account-reset-apply,,,,
+jjohnson,account-reset-request,,,,
+kkelly,account-fail-login,,,,
+kkelly,account-fail-login,,,,
+kkelly,account-fail-login,,,,
+kkelly,account-fail-login,,,,
 aanderson,team-create,hogwarts,,,"Old Hogwarts"
 aanderson,team-update,hogwarts,,,hogwarts,"Hogwarts"
 aanderson,team-invite-add,hogwarts,,,bbrown,cclark,ddavis,eevans,ffisher,ggreen,hharris,iingram

@@ -81,6 +81,10 @@ export async function platformStats(
     }
   }
 
+  if ((await MetaModel.countDocuments()) === 0) {
+    await MetaModel.create({})
+  }
+
   const meta = await MetaModel.findOne({}, { _id: 0 })
 
   const response: PlatformStatsResponse = {

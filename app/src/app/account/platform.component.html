@@ -104,6 +104,14 @@
             </div>
           </div>
         </div>
+        <div
+          class="p-4 bg-gray-50 text-sm leading-6 border border-gray-100 rounded-md"
+          *ngIf="events.length === 0">
+          This section lists noteworthy user events that may require your
+          assistance. These events include account creation, password reset,
+          and consecutive failed login attempts that are not automatically
+          resolved by your users.
+        </div>
       </div>
     </div>
     <div class="md:col-span-2">

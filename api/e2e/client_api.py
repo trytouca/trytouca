@@ -84,6 +84,13 @@ class WeaselApiClient:
         })
         self.expect_status(response, 201, "register account")
 
+    def account_fail_login(self, user: User) -> None:
+        response = self.client.post_json("auth/signin", {
+            "username": user.username,
+            "password": user.password + 'fail'
+        })
+        self.expect_status(response, 401, "login with wrong password")
+
     def account_onboard(self, user: User) -> None:
         key = WeaselMongoClient().get_user_activation_key(user)
         response = self.client.post_json(f'auth/activate/{key}')
@@ -96,11 +103,7 @@ class WeaselApiClient:
         self.user = user
         self.expect_status(response, 204, "update user info")
 
-    def account_reset(self, user: User) -> None:
-        response = self.client.post_json("auth/reset", {
-            "email": user.email
-        })
-        self.expect_status(response, 204, "request password reset")
+    def account_reset_apply(self, user: User) -> None:
         key = WeaselMongoClient().get_account_reset_key(user)
         response = self.client.get_json(f"auth/reset/{key}")
         self.expect_status(response, 200, "get basic account information")
@@ -109,6 +112,12 @@ class WeaselApiClient:
             "password": user.password
         })
         self.expect_status(response, 204, "apply new password")
+
+    def account_reset_request(self, user: User) -> None:
+        response = self.client.post_json("auth/reset", {
+            "email": user.email
+        })
+        self.expect_status(response, 204, "request password reset")
 
     def get_api_key(self) -> str:
         response = self.client.get_json('user')

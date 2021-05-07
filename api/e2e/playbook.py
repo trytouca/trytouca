@@ -33,12 +33,18 @@ class Playbook:
     def account_create(self, user: User, args):
         WeaselApiClient().account_create(user)
 
+    def account_fail_login(self, user: User, args):
+        WeaselApiClient().account_fail_login(user)
+
     def account_onboard(self, user: User, args):
         user.fullname = args[0]
         WeaselApiClient().account_onboard(user)
 
-    def account_reset(self, user: User, args):
-        WeaselApiClient().account_reset(user)
+    def account_reset_apply(self, user: User, args):
+        WeaselApiClient().account_reset_apply(user)
+
+    def account_reset_request(self, user: User, args):
+        WeaselApiClient().account_reset_request(user)
 
     def team_create(self, user: User, args):
         team_slug, team_name = args
