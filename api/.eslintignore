@@ -1,3 +1,4 @@
-dist
-node_modules
+dist/
+local/
+node_modules/
 src/utils/weasel_generated.ts

@@ -2,15 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import bodyParser from 'body-parser'
-import e from 'express'
-import { body as vbody, param as vparam } from 'express-validator'
-import * as middleware from '../middlewares'
 import { comparisonList } from '@weasel/controllers/comparison/list'
 import { comparisonProcess } from '@weasel/controllers/comparison/process'
 import { comparisonStats } from '@weasel/controllers/comparison/stats'
 import { messageProcess } from '@weasel/controllers/message/process'
+import * as middleware from '@weasel/middlewares'
 import { promisable } from '@weasel/utils/routing'
+import bodyParser from 'body-parser'
+import e from 'express'
+import { body as vbody, param as vparam } from 'express-validator'
 
 const router = e.Router()
 

@@ -4,16 +4,17 @@
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DialogService, DialogRef } from '@ngneat/dialog';
-import { Subscription } from 'rxjs';
+import { DialogRef, DialogService } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
-import { FilterInput } from '@weasel/home/models/filter.model';
 import {
   ConfirmComponent,
   ConfirmElements
 } from '@weasel/home/components/confirm.component';
 import { PageListComponent } from '@weasel/home/components/page-list.component';
-import { TeamsPageTeam, TeamsPageItemType } from './teams.model';
+import { FilterInput } from '@weasel/home/models/filter.model';
+import { Subscription } from 'rxjs';
+
+import { TeamsPageItemType, TeamsPageTeam } from './teams.model';
 import { TeamsPageService } from './teams.service';
 
 const filterInput: FilterInput<TeamsPageTeam> = {

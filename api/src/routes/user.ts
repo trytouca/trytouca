@@ -2,13 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import bodyParser from 'body-parser'
-import e from 'express'
-
-import * as middleware from '../middlewares'
 import { userLookup } from '@weasel/controllers/user/lookup'
 import { ctrlUserUpdate } from '@weasel/controllers/user/update'
+import * as middleware from '@weasel/middlewares'
 import { promisable } from '@weasel/utils/routing'
+import bodyParser from 'body-parser'
+import e from 'express'
 
 const router = e.Router()
 

@@ -2,13 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import e from 'express'
-
-import * as middleware from '../middlewares'
 import { elementCompare } from '@weasel/controllers/element/compare'
 import { elementList } from '@weasel/controllers/element/list'
 import { elementLookup } from '@weasel/controllers/element/lookup'
+import * as middleware from '@weasel/middlewares'
 import { promisable } from '@weasel/utils/routing'
+import e from 'express'
 
 const router = e.Router()
 

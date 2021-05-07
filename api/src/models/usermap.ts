@@ -2,10 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Types } from 'mongoose'
-
-import type { Userinfo } from '../commontypes'
 import { UserModel } from '@weasel/schemas/user'
+import type { Userinfo } from '@weasel/types/commontypes'
+import { Types } from 'mongoose'
 
 /**
  *

@@ -3,13 +3,14 @@
  */
 
 import { Component, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { IClipboardResponse } from 'ngx-clipboard';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { NotificationService, UserService } from '@weasel/core/services';
 import { getBackendUrl } from '@weasel/core/models/environment';
+import { NotificationService, UserService } from '@weasel/core/services';
 import { AlertType } from '@weasel/shared/components/alert.component';
+import { IClipboardResponse } from 'ngx-clipboard';
+import { Subscription } from 'rxjs';
+
 import { SuitePageService } from './suite.service';
 
 type Fields = Partial<{

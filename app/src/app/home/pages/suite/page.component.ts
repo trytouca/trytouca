@@ -2,12 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Subscription, timer } from 'rxjs';
-import { IClipboardResponse } from 'ngx-clipboard';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faBell,
@@ -23,15 +21,18 @@ import type {
   SuiteLookupResponse,
   TeamItem
 } from '@weasel/core/models/commontypes';
+import { getBackendUrl } from '@weasel/core/models/environment';
 import {
   AlertKind,
   AlertService,
   NotificationService,
   UserService
 } from '@weasel/core/services';
-import { getBackendUrl } from '@weasel/core/models/environment';
+import { PageComponent, PageTab } from '@weasel/home/components/page.component';
 import { AlertType } from '@weasel/shared/components/alert.component';
-import { PageTab, PageComponent } from '@weasel/home/components/page.component';
+import { IClipboardResponse } from 'ngx-clipboard';
+import { Subscription, timer } from 'rxjs';
+
 import { SuitePageItem } from './suite.model';
 import { SuitePageService, SuitePageTabType } from './suite.service';
 
@@ -259,7 +260,9 @@ export class SuitePageComponent
             AlertType.Danger,
             'Your user session has expired. Please login again.'
           );
-          timer(2000).subscribe(() => this.router.navigate(['/']));
+          timer(2000).subscribe(() => {
+            this.router.navigate(['/']);
+          });
           return;
         }
         this.notificationService.notify(

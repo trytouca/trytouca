@@ -2,14 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
-import { ETeamRole } from '../../commontypes'
 import { findTeamRoleOfUser } from '@weasel/controllers/team/common'
 import { ITeam, TeamModel } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
+import { ETeamRole } from '@weasel/types/commontypes'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  * @summary

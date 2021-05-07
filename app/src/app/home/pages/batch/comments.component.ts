@@ -3,8 +3,7 @@
  */
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import type {
   BatchLookupResponse,
   CommentItem,
@@ -22,6 +21,8 @@ import {
   UserService
 } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { Subscription } from 'rxjs';
+
 import { BatchPageService } from './batch.service';
 
 type PageViewFields = {

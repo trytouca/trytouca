@@ -2,10 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import mongoose from 'mongoose'
-
-import type { PromotionQueryOutput } from '../backendtypes'
+import type { PromotionQueryOutput } from '@weasel/types/backendtypes'
 import { config } from '@weasel/utils/config'
+import mongoose from 'mongoose'
 
 /**
  *

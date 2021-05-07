@@ -3,9 +3,11 @@
     "baseUrl": "src",
     "paths": {
       "@weasel/controllers/*": ["controllers/*"],
+      "@weasel/middlewares": ["middlewares"],
       "@weasel/models/*": ["models/*"],
       "@weasel/routes/*": ["routes/*"],
       "@weasel/schemas/*": ["schemas/*"],
+      "@weasel/types/*": ["types/*"],
       "@weasel/utils/*": ["utils/*"]
     },
     "outDir": "dist",

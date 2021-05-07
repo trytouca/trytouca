@@ -2,12 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { format as utilFormat } from 'util'
-
-import { EPlatformRole } from '../commontypes'
 import { wslFindByRole } from '@weasel/models/user'
 import { NotificationModel } from '@weasel/schemas/notification'
 import { IUser } from '@weasel/schemas/user'
+import { EPlatformRole } from '@weasel/types/commontypes'
+import { format as utilFormat } from 'util'
 
 /**
  *

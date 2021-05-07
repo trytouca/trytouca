@@ -3,17 +3,18 @@
  */
 
 import { Injectable } from '@angular/core';
-import { isEqual } from 'lodash-es';
-import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { ETeamRole, TeamListResponse } from '@weasel/core/models/commontypes';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
-import { AlertService, AlertKind, ApiService } from '@weasel/core/services';
+import { AlertKind, AlertService, ApiService } from '@weasel/core/services';
 import { IPageService } from '@weasel/home/models/pages.model';
 import { errorLogger } from '@weasel/shared/utils/errorLogger';
+import { isEqual } from 'lodash-es';
+import { forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { TeamsPageItemType, TeamsPageTeam } from './teams.model';
 
-type FetchInput = {};
+type FetchInput = Record<string, never>;
 
 @Injectable()
 export class TeamsPageService extends IPageService<TeamsPageTeam> {

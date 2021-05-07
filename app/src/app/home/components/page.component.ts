@@ -2,13 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { takeWhile } from 'rxjs/operators';
-import { timer } from 'rxjs';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { environment } from 'src/environments/environment';
 import { IPageService } from '@weasel/home/models/pages.model';
+import { timer } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 export type PageTab<TabType> = {
   type: TabType;

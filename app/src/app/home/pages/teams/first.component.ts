@@ -3,10 +3,11 @@
  */
 
 import { Component, OnDestroy } from '@angular/core';
-import { DialogService, DialogRef } from '@ngneat/dialog';
+import { DialogRef, DialogService } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
-import { TeamsPageService } from './teams.service';
+
 import { TeamsCreateTeamComponent } from './create.component';
+import { TeamsPageService } from './teams.service';
 
 @Component({
   selector: 'app-teams-first',

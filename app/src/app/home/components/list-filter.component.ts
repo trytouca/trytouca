@@ -6,11 +6,9 @@ import {
   Component,
   EventEmitter,
   HostListener,
-  Output,
-  Input
+  Input,
+  Output
 } from '@angular/core';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -22,6 +20,8 @@ import {
   FilterParams,
   FilterStats
 } from '@weasel/home/models/filter.model';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home-list-filter',

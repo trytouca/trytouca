@@ -2,19 +2,20 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, OnDestroy, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import type { SuiteLookupResponse } from '@weasel/core/models/commontypes';
 import type { FrontendBatchCompareParams } from '@weasel/core/models/frontendtypes';
 import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { FilterInput } from '@weasel/home/models/filter.model';
-import { BatchPageService } from './batch.service';
+import { Subscription } from 'rxjs';
+
 import {
   BatchPageItem,
   BatchPageItemType,
   nextPageQueryParams
 } from './batch.model';
+import { BatchPageService } from './batch.service';
 
 const filterInput: FilterInput<BatchPageItem> = {
   filters: [

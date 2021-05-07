@@ -11,6 +11,7 @@ import {
   RouterStateSnapshot
 } from '@angular/router';
 import { map } from 'rxjs/operators';
+
 import { EPlatformRole, UserLookupResponse } from '../models/commontypes';
 import { ApiService } from './api.service';
 

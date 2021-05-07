@@ -2,13 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { MarkdownModule } from 'ngx-markdown';
-import { HomeComponent } from './home.component';
-import { HomeRoutingModule } from './home-routing.module';
-import { SharedModule } from '../shared';
 
+import { SharedModule } from '../shared';
 import {
   CommentComponent,
   ConfirmComponent,
@@ -22,15 +20,33 @@ import {
   VersionListComponent,
   VersionNavigatorComponent
 } from './components';
-
+import { HomeComponent } from './home.component';
+import { HomeRoutingModule } from './home-routing.module';
 import {
-  TeamsCreateTeamComponent,
-  TeamsFirstTeamComponent,
-  TeamsItemTeamComponent,
-  TeamsPageComponent,
-  TeamsTabTeamsComponent
-} from './pages/teams';
-
+  BatchCommentsComponent,
+  BatchItemElementComponent,
+  BatchListElementsComponent,
+  BatchPageComponent,
+  BatchPromoteComponent,
+  BatchSealComponent
+} from './pages/batch';
+import {
+  ElementItemMetricComponent,
+  ElementItemResultComponent,
+  ElementListMetricsComponent,
+  ElementListResultsComponent,
+  ElementPageComponent
+} from './pages/element';
+import {
+  SuiteChartRuntimeComponent,
+  SuiteFirstBatchComponent,
+  SuiteItemBatchComponent,
+  SuiteItemPromotionComponent,
+  SuiteListBatchesComponent,
+  SuitePageComponent,
+  SuiteTabSettingsComponent,
+  SuiteTabTrendsComponent
+} from './pages/suite';
 import {
   TeamCreateSuiteComponent,
   TeamFirstSuiteComponent,
@@ -44,34 +60,13 @@ import {
   TeamTabSettingsComponent,
   TeamTabSuitesComponent
 } from './pages/team';
-
 import {
-  SuiteChartRuntimeComponent,
-  SuiteFirstBatchComponent,
-  SuiteItemBatchComponent,
-  SuiteItemPromotionComponent,
-  SuiteListBatchesComponent,
-  SuitePageComponent,
-  SuiteTabSettingsComponent,
-  SuiteTabTrendsComponent
-} from './pages/suite';
-
-import {
-  BatchCommentsComponent,
-  BatchItemElementComponent,
-  BatchListElementsComponent,
-  BatchPageComponent,
-  BatchPromoteComponent,
-  BatchSealComponent
-} from './pages/batch';
-
-import {
-  ElementItemMetricComponent,
-  ElementItemResultComponent,
-  ElementListMetricsComponent,
-  ElementListResultsComponent,
-  ElementPageComponent
-} from './pages/element';
+  TeamsCreateTeamComponent,
+  TeamsFirstTeamComponent,
+  TeamsItemTeamComponent,
+  TeamsPageComponent,
+  TeamsTabTeamsComponent
+} from './pages/teams';
 
 @NgModule({
   providers: [],

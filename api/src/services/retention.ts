@@ -7,7 +7,7 @@ import { comparisonRemove } from '@weasel/models/comparison'
 import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
 import { ComparisonModel } from '@weasel/schemas/comparison'
 import { MessageModel } from '@weasel/schemas/message'
-import { SuiteModel, ISuiteDocument } from '@weasel/schemas/suite'
+import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 

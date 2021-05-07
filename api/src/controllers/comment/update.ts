@@ -2,13 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
 import { extractCommentTuple } from '@weasel/models/comment'
 import { CommentModel, ICommentDocument } from '@weasel/schemas/comment'
 import { IUser } from '@weasel/schemas/user'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  *

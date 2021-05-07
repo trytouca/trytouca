@@ -3,8 +3,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
 import { AlertType } from '@weasel/shared/components/alert.component';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class NotificationService {

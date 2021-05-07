@@ -5,25 +5,24 @@
 import { formatDate } from '@angular/common';
 import {
   Component,
+  HostListener,
   Inject,
   LOCALE_ID,
   OnDestroy,
-  OnInit,
-  HostListener
+  OnInit
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faSpinner,
   faStopwatch,
   faTasks
 } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
 import type {
+  BatchLookupResponse,
   ElementLookupResponse,
-  SuiteLookupResponse,
-  BatchLookupResponse
+  SuiteLookupResponse
 } from '@weasel/core/models/commontypes';
 import type {
   FrontendElementCompareParams,
@@ -32,6 +31,8 @@ import type {
 import { AlertKind, AlertService } from '@weasel/core/services';
 import { PageComponent, PageTab } from '@weasel/home/components/page.component';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { Subscription } from 'rxjs';
+
 import {
   ElementPageOverviewMetadata,
   ElementPageResult

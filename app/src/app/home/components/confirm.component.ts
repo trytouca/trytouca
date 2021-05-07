@@ -4,14 +4,15 @@
 
 import { Component, HostListener, Input } from '@angular/core';
 import {
-  FormGroup,
-  FormControl,
   AbstractControl,
+  FormControl,
+  FormGroup,
   ValidatorFn
 } from '@angular/forms';
-import { Observable, timer } from 'rxjs';
 import { DialogRef } from '@ngneat/dialog';
 import { AlertType } from '@weasel/shared/components/alert.component';
+import { Observable, timer } from 'rxjs';
+
 import { ModalComponent } from './modal.component';
 
 export type ConfirmElements = {

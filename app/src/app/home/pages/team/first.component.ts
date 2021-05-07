@@ -4,8 +4,9 @@
 
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DialogService, DialogRef } from '@ngneat/dialog';
+import { DialogRef, DialogService } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
+
 import { TeamCreateSuiteComponent } from './create.component';
 import { TeamPageService, TeamPageTabType } from './team.service';
 

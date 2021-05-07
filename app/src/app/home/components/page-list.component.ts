@@ -4,14 +4,14 @@
 
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { isEqual } from 'lodash-es';
-import { Subscription } from 'rxjs';
 import {
   FilterInput,
   FilterManager,
   FilterParams,
   FilterStats
 } from '@weasel/home/models/filter.model';
+import { isEqual } from 'lodash-es';
+import { Subscription } from 'rxjs';
 
 type CollectionType = string;
 

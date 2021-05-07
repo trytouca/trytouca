@@ -2,27 +2,28 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, OnDestroy, HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DialogService, DialogRef } from '@ngneat/dialog';
-import { Subscription } from 'rxjs';
-import { ConfirmComponent } from '@weasel/home/components/confirm.component';
+import { DialogRef, DialogService } from '@ngneat/dialog';
 import {
   ETeamRole,
+  TeamApplicant,
   TeamInvitee,
-  TeamMember,
   TeamLookupResponse,
-  TeamApplicant
+  TeamMember
 } from '@weasel/core/models/commontypes';
 import {
   ApiService,
   NotificationService,
   UserService
 } from '@weasel/core/services';
-import { AlertType } from '@weasel/shared/components/alert.component';
+import { ConfirmComponent } from '@weasel/home/components/confirm.component';
 import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { FilterInput } from '@weasel/home/models/filter.model';
-import { TeamPageMemberType, TeamPageMember } from './team.model';
+import { AlertType } from '@weasel/shared/components/alert.component';
+import { Subscription } from 'rxjs';
+
+import { TeamPageMember, TeamPageMemberType } from './team.model';
 import { TeamPageService } from './team.service';
 
 const filterInput: FilterInput<TeamPageMember> = {

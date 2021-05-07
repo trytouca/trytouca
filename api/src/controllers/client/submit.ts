@@ -2,12 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-import { flatbuffers } from 'flatbuffers'
-import { minBy } from 'lodash'
-import mongoose from 'mongoose'
-
-import { EPlatformRole } from '../../commontypes'
 import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
 import {
   ComparisonModel,
@@ -16,12 +10,17 @@ import {
 import { ElementModel, IElementDocument } from '@weasel/schemas/element'
 import { MessageModel } from '@weasel/schemas/message'
 import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
+import { ITeamDocument, TeamModel } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
-import { TeamModel, ITeamDocument } from '@weasel/schemas/team'
+import { EPlatformRole } from '@weasel/types/commontypes'
 import logger from '@weasel/utils/logger'
 import * as minio from '@weasel/utils/minio'
 import { rclient } from '@weasel/utils/redis'
 import { weasel } from '@weasel/utils/weasel_generated'
+import { NextFunction, Request, Response } from 'express'
+import { flatbuffers } from 'flatbuffers'
+import { minBy } from 'lodash'
+import mongoose from 'mongoose'
 
 const fbs = weasel.fbs
 

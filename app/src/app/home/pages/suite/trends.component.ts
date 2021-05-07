@@ -3,7 +3,6 @@
  */
 
 import { Component, OnDestroy } from '@angular/core';
-
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
 

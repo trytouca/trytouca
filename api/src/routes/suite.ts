@@ -2,11 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import bodyParser from 'body-parser'
-import e from 'express'
-import * as ev from 'express-validator'
-
-import * as middleware from '../middlewares'
 import { ctrlSuiteCreate } from '@weasel/controllers/suite/create'
 import { ctrlSuiteList } from '@weasel/controllers/suite/list'
 import { ctrlSuiteLookup } from '@weasel/controllers/suite/lookup'
@@ -14,7 +9,11 @@ import { ctrlSuiteRemove } from '@weasel/controllers/suite/remove'
 import { suiteSubscribe } from '@weasel/controllers/suite/subscribe'
 import { suiteUnsubscribe } from '@weasel/controllers/suite/unsubscribe'
 import { suiteUpdate } from '@weasel/controllers/suite/update'
+import * as middleware from '@weasel/middlewares'
 import { promisable } from '@weasel/utils/routing'
+import bodyParser from 'body-parser'
+import e from 'express'
+import * as ev from 'express-validator'
 
 const router = e.Router()
 

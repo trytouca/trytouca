@@ -4,8 +4,8 @@
 
 import { ComparisonFunctions } from '@weasel/controllers/comparison'
 import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
-import { SuiteModel, ISuiteDocument } from '@weasel/schemas/suite'
-import { TeamModel, ITeamDocument } from '@weasel/schemas/team'
+import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
+import { ITeamDocument, TeamModel } from '@weasel/schemas/team'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
 

@@ -2,9 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import fs from 'fs'
-import path from 'path'
-
 import { processBinaryContent } from '@weasel/controllers/client/submit'
 import { batchPromote, batchSeal } from '@weasel/models/batch'
 import { suiteCreate } from '@weasel/models/suite'
@@ -16,6 +13,8 @@ import { IUser } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import fs from 'fs'
+import path from 'path'
 
 /**
  * Find a team slug that is not already registered.

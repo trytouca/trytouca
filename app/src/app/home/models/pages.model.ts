@@ -12,12 +12,10 @@ export abstract class IPageService<T> {
   protected _itemsSubject = new Subject<T[]>();
   public items$ = this._itemsSubject.asObservable();
 
-  protected constructor() {}
-
   /**
    *
    */
-  public abstract fetchItems(args?: object): void;
+  public abstract fetchItems(args?: Record<string, unknown>): void;
 
   /**
    *

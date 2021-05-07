@@ -4,9 +4,10 @@
 
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DialogService, DialogRef } from '@ngneat/dialog';
-import { Subscription } from 'rxjs';
+import { DialogRef, DialogService } from '@ngneat/dialog';
 import { PageComponent, PageTab } from '@weasel/home/components';
+import { Subscription } from 'rxjs';
+
 import { TeamsCreateTeamComponent } from './create.component';
 import { TeamsPageTeam } from './teams.model';
 import { TeamsPageService } from './teams.service';
@@ -25,7 +26,7 @@ const pageTabs: PageTab<TabType>[] = [
   }
 ];
 
-type NotFound = Partial<{}>;
+type NotFound = Partial<Record<string, never>>;
 
 @Component({
   selector: 'app-teams-page',

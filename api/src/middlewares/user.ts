@@ -2,14 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-import mongoose from 'mongoose'
-import { EPlatformRole } from '../commontypes'
 import { wslFindByUname } from '@weasel/models/user'
 import { SessionModel } from '@weasel/schemas/session'
 import { IUser } from '@weasel/schemas/user'
+import { EPlatformRole } from '@weasel/types/commontypes'
 import * as jwt from '@weasel/utils/jwt'
 import logger from '@weasel/utils/logger'
+import { NextFunction, Request, Response } from 'express'
+import mongoose from 'mongoose'
 
 type AuthInput = {
   agent: string

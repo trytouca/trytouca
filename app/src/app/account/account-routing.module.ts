@@ -3,8 +3,9 @@
  */
 
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AdminGuard, AuthGuard, GuestGuard } from '@weasel/core/services';
+
 import { ActivateComponent } from './activate.component';
 import { OnboardComponent } from './onboard.component';
 import { PlatformComponent } from './platform.component';

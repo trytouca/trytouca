@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
 import { UserModel } from '@weasel/schemas/user'
 import logger from '@weasel/utils/logger'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  *

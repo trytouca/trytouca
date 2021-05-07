@@ -3,13 +3,14 @@
  */
 
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+
 import { HomeComponent } from './home.component';
-import { TeamsPageComponent } from './pages/teams';
-import { TeamPageComponent } from './pages/team';
-import { SuitePageComponent } from './pages/suite';
 import { BatchPageComponent } from './pages/batch';
 import { ElementPageComponent } from './pages/element';
+import { SuitePageComponent } from './pages/suite';
+import { TeamPageComponent } from './pages/team';
+import { TeamsPageComponent } from './pages/teams';
 
 /**
  *

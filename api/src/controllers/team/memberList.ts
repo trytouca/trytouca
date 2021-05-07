@@ -2,13 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
-import { ETeamRole, TeamMemberListResponse } from '../../commontypes'
 import { ITeam, TeamModel } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
+import { ETeamRole, TeamMemberListResponse } from '@weasel/types/commontypes'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  * Lookup list of members of a given team from database

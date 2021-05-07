@@ -10,18 +10,19 @@ import {
   faCog,
   faPlus,
   faTasks,
-  faUsers,
-  faUserPlus
+  faUserPlus,
+  faUsers
 } from '@fortawesome/free-solid-svg-icons';
-import { DialogService, DialogRef } from '@ngneat/dialog';
-import { Subscription } from 'rxjs';
+import { DialogRef, DialogService } from '@ngneat/dialog';
 import type { TeamItem } from '@weasel/core/models/commontypes';
-import { AlertService, AlertKind } from '@weasel/core/services';
+import { AlertKind, AlertService } from '@weasel/core/services';
 import { PageComponent, PageTab } from '@weasel/home/components';
+import { Subscription } from 'rxjs';
+
 import { TeamCreateSuiteComponent } from './create.component';
 import { TeamInviteComponent } from './invite.component';
 import { TeamPageSuite } from './team.model';
-import { TeamPageTabType, TeamPageService } from './team.service';
+import { TeamPageService, TeamPageTabType } from './team.service';
 
 const pageTabs: PageTab<TeamPageTabType>[] = [
   {

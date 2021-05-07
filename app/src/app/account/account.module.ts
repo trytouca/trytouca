@@ -2,20 +2,21 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { SharedModule } from '@weasel/shared';
+
 import { AccountRoutingModule } from './account-routing.module';
 import { ActivateComponent } from './activate.component';
 import { FeatureComponent } from './feature.component';
 import { MailboxComponent } from './mailbox.component';
 import { OnboardComponent } from './onboard.component';
+import { PlatformComponent } from './platform.component';
 import { PrivacyComponent } from './privacy.component';
+import { ProfileComponent } from './profile.component';
 import { ResetComponent } from './reset.component';
 import { ResetApplyComponent } from './reset-apply.component';
 import { ResetStartComponent } from './reset-start.component';
-import { PlatformComponent } from './platform.component';
-import { ProfileComponent } from './profile.component';
 import { SigninComponent } from './signin.component';
 import { SignupComponent } from './signup.component';
 import { StartComponent } from './start.component';

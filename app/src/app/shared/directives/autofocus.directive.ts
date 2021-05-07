@@ -2,22 +2,22 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   Directive,
   ElementRef,
-  Injectable,
   Inject,
+  Injectable,
   Input,
   PLATFORM_ID
 } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
 
 @Injectable()
 export class CustomRenderer {
   constructor(@Inject(PLATFORM_ID) private platformId: unknown) {}
 
-  invokeElementMethod(ref: ElementRef, method: string) {
+  invokeElementMethod(ref: ElementRef<HTMLInputElement>, method: 'focus') {
     if (isPlatformBrowser(this.platformId)) {
       ref.nativeElement[method]();
     }
@@ -31,7 +31,10 @@ export class CustomRenderer {
 export class AutofocusDirective implements AfterViewInit {
   private _autofocus = true;
 
-  constructor(private element: ElementRef, private renderer: CustomRenderer) {}
+  constructor(
+    private element: ElementRef<HTMLInputElement>,
+    private renderer: CustomRenderer
+  ) {}
 
   ngAfterViewInit() {
     if (this._autofocus) {

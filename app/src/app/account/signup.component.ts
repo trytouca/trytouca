@@ -3,11 +3,11 @@
  */
 
 import { Component } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MailboxAction, MailboxInput } from '@weasel/account/mailbox.component';
 import { formFields } from '@weasel/core/models/form-hint';
 import { ApiService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { MailboxAction, MailboxInput } from '@weasel/account/mailbox.component';
 
 interface FormContent {
   email: string;

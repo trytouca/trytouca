@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import mongoose from 'mongoose'
 import { configMgr } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
+import mongoose from 'mongoose'
 
 /**
  *

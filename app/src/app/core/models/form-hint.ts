@@ -3,10 +3,10 @@
  */
 
 import {
-  Validators,
-  ValidatorFn,
   AbstractControl,
-  FormGroup
+  FormGroup,
+  ValidatorFn,
+  Validators
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 

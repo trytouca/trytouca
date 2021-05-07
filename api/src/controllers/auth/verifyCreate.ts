@@ -2,16 +2,16 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-import * as bcrypt from 'bcrypt'
-import { once } from 'lodash'
-import { EPlatformRole } from '../../commontypes'
 import { addSampleData } from '@weasel/models/sampleData'
 import { UserModel } from '@weasel/schemas/user'
+import { EPlatformRole } from '@weasel/types/commontypes'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import * as mailer from '@weasel/utils/mailer'
 import { tracker } from '@weasel/utils/tracker'
+import * as bcrypt from 'bcrypt'
+import { NextFunction, Request, Response } from 'express'
+import { once } from 'lodash'
 
 /**
  * Find a username that is not already registered.

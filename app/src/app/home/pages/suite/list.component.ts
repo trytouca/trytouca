@@ -6,8 +6,9 @@ import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { FilterInput } from '@weasel/home/models/filter.model';
-import { SuitePageService } from './suite.service';
+
 import { SuitePageItem, SuitePageItemType } from './suite.model';
+import { SuitePageService } from './suite.service';
 
 const filterInput: FilterInput<SuitePageItem> = {
   filters: [

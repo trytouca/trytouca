@@ -2,16 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
 import { suiteRemove } from '@weasel/models/suite'
 import { BatchModel } from '@weasel/schemas/batch'
 import { MessageModel } from '@weasel/schemas/message'
 import { SuiteModel } from '@weasel/schemas/suite'
 import { ITeam, TeamModel } from '@weasel/schemas/team'
 import { IUser, UserModel } from '@weasel/schemas/user'
-import { rclient } from '@weasel/utils/redis'
 import logger from '@weasel/utils/logger'
+import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  * Removes a given team and all data associated with it.

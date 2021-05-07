@@ -2,12 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
-import { ITeam } from '@weasel/schemas/team'
 import { BatchModel } from '@weasel/schemas/batch'
 import { ISuiteDocument } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
 import logger from '@weasel/utils/logger'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  * @summary

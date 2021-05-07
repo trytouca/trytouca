@@ -2,25 +2,26 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, OnDestroy, HostListener } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component, HostListener, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
-import { isEqual } from 'lodash-es';
-import { Subscription, timer } from 'rxjs';
-import { ApiService } from '@weasel/core/services';
-import { ETeamRole } from '@weasel/core/models/commontypes';
 import type {
   SuiteLookupResponse,
   TeamLookupResponse
 } from '@weasel/core/models/commontypes';
+import { ETeamRole } from '@weasel/core/models/commontypes';
+import { ApiService } from '@weasel/core/services';
 import {
   ConfirmComponent,
   ConfirmElements
 } from '@weasel/home/components/confirm.component';
-import { SuitePageService, SuitePageTabType } from './suite.service';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { isEqual } from 'lodash-es';
+import { Subscription, timer } from 'rxjs';
+
+import { SuitePageService, SuitePageTabType } from './suite.service';
 
 interface IFormContent {
   name: string;

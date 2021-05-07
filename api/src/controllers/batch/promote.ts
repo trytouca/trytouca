@@ -2,8 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
 import { batchPromote } from '@weasel/models/batch'
 import { IBatchDocument } from '@weasel/schemas/batch'
 import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
@@ -11,6 +9,7 @@ import { ITeam } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
 import logger from '@weasel/utils/logger'
 import { tracker } from '@weasel/utils/tracker'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  * @summary

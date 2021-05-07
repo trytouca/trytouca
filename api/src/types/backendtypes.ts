@@ -5,9 +5,9 @@
 import type { Types } from 'mongoose'
 
 import type {
-  BatchItem,
-  BatchComparisonItem,
   BatchCompareOverview,
+  BatchComparisonItem,
+  BatchItem,
   CppTestcaseComparisonOverview,
   CppTestcaseOverview,
   SuiteItem,

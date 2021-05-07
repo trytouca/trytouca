@@ -3,22 +3,23 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { IClipboardResponse } from 'ngx-clipboard';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import {
-  faCircle,
   faCheckCircle,
-  faPlusCircle,
+  faCircle,
   faMinusCircle,
+  faPlusCircle,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
 import { NotificationService } from '@weasel/core/services';
 import { Result } from '@weasel/home/models/result.model';
 import { AlertType } from '@weasel/shared/components/alert.component';
-import { ElementPageResult, ElementPageItemType } from './element.model';
+import { IClipboardResponse } from 'ngx-clipboard';
+
+import { ElementPageItemType, ElementPageResult } from './element.model';
 
 enum MatchType {
   Irrelevant = 1,

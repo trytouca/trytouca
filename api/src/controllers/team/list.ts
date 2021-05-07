@@ -2,15 +2,18 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-import { Types } from 'mongoose'
-
-import { ETeamRole, TeamItem, TeamListResponse } from '../../commontypes'
 import { ITeamDocument, TeamModel } from '@weasel/schemas/team'
 import { IUser, UserModel } from '@weasel/schemas/user'
+import {
+  ETeamRole,
+  TeamItem,
+  TeamListResponse
+} from '@weasel/types/commontypes'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
+import { Types } from 'mongoose'
 
 /**
  * Provides list of teams for a given user.

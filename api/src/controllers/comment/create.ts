@@ -2,9 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
-import { ECommentType } from '../../backendtypes'
 import {
   CommentInputs,
   extractCommentTuple,
@@ -13,9 +10,11 @@ import {
 } from '@weasel/models/comment'
 import { CommentModel } from '@weasel/schemas/comment'
 import { IUser } from '@weasel/schemas/user'
+import { ECommentType } from '@weasel/types/backendtypes'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  *

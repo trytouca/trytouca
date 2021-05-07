@@ -4,9 +4,9 @@
 
 import { PercentPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { DateTimePipe } from '@weasel/shared/pipes';
 import { FrontendOverviewSection } from '@weasel/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
+import { DateTimePipe } from '@weasel/shared/pipes';
 
 type Ring = {
   header: string;

@@ -2,19 +2,18 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+import { wslFindByRole, wslGetSuperUser } from '@weasel/models/user'
+import { MailModel } from '@weasel/schemas/mail'
+import { IUser, UserModel } from '@weasel/schemas/user'
+import { EPlatformRole } from '@weasel/types/commontypes'
+import { config, configMgr } from '@weasel/utils/config'
+import logger from '@weasel/utils/logger'
 import fs from 'fs'
 import htmlToText from 'html-to-text'
 import { has as lodashHas } from 'lodash'
 import mustache from 'mustache'
 import nodemailer from 'nodemailer'
 import path from 'path'
-
-import { EPlatformRole } from '../commontypes'
-import { wslFindByRole, wslGetSuperUser } from '@weasel/models/user'
-import { MailModel } from '@weasel/schemas/mail'
-import { IUser, UserModel } from '@weasel/schemas/user'
-import { config, configMgr } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
 
 const transporter = nodemailer.createTransport({
   auth: {

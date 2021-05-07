@@ -2,12 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import bodyParser from 'body-parser'
-import e from 'express'
-import * as ev from 'express-validator'
-
-import { ETeamRole } from '../commontypes'
-import * as middleware from '../middlewares'
 import { ctrlTeamCreate } from '@weasel/controllers/team/create'
 import { teamInviteAccept } from '@weasel/controllers/team/inviteAccept'
 import { teamInviteAdd } from '@weasel/controllers/team/inviteAdd'
@@ -20,13 +14,18 @@ import { teamJoinRescind } from '@weasel/controllers/team/joinRescind'
 import { teamLeave } from '@weasel/controllers/team/leave'
 import { ctrlTeamList } from '@weasel/controllers/team/list'
 import { ctrlTeamLookup } from '@weasel/controllers/team/lookup'
-import { ctrlTeamRemove } from '@weasel/controllers/team/remove'
 import { teamMemberAdd } from '@weasel/controllers/team/memberAdd'
 import { teamMemberList } from '@weasel/controllers/team/memberList'
 import { teamMemberRemove } from '@weasel/controllers/team/memberRemove'
 import { teamMemberUpdate } from '@weasel/controllers/team/memberUpdate'
+import { ctrlTeamRemove } from '@weasel/controllers/team/remove'
 import { teamUpdate } from '@weasel/controllers/team/update'
+import * as middleware from '@weasel/middlewares'
+import { ETeamRole } from '@weasel/types/commontypes'
 import { promisable } from '@weasel/utils/routing'
+import bodyParser from 'body-parser'
+import e from 'express'
+import * as ev from 'express-validator'
 
 const router = e.Router()
 

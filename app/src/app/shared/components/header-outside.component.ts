@@ -3,8 +3,8 @@
  */
 
 import { Component } from '@angular/core';
-import { AuthService } from '@weasel/core/services';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
+import { AuthService } from '@weasel/core/services';
 
 @Component({
   selector: 'app-header-outside',

@@ -3,7 +3,7 @@
  */
 
 import { Component, HostListener } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { ApiService } from '@weasel/core/services';
 import { ModalComponent } from '@weasel/home/components';

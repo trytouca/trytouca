@@ -3,7 +3,6 @@
  */
 
 import { ParamMap } from '@angular/router';
-
 import Fuse from 'fuse.js';
 import { cloneDeep } from 'lodash-es';
 

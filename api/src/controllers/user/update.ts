@@ -2,15 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import * as bcrypt from 'bcrypt'
-import { NextFunction, Request, Response } from 'express'
-import { omit, pick, pickBy, identity } from 'lodash'
-
 import { IUser, UserModel } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import * as mailer from '@weasel/utils/mailer'
 import { tracker } from '@weasel/utils/tracker'
+import * as bcrypt from 'bcrypt'
+import { NextFunction, Request, Response } from 'express'
+import { identity, omit, pick, pickBy } from 'lodash'
 
 /**
  * Updates information about current user.

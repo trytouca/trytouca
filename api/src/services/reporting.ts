@@ -2,22 +2,21 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import mongoose from 'mongoose'
-
-import type { BackendBatchComparisonResponse } from '../backendtypes'
 import { ComparisonFunctions } from '@weasel/controllers/comparison'
 import { BatchModel } from '@weasel/schemas/batch'
 import { ComparisonModel } from '@weasel/schemas/comparison'
-import { SuiteModel } from '@weasel/schemas/suite'
-import { IUser } from '@weasel/schemas/user'
 import {
   EReportType,
-  ReportModel,
-  IReportDocument
+  IReportDocument,
+  ReportModel
 } from '@weasel/schemas/report'
+import { SuiteModel } from '@weasel/schemas/suite'
+import { IUser } from '@weasel/schemas/user'
+import type { BackendBatchComparisonResponse } from '@weasel/types/backendtypes'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { mailUser } from '@weasel/utils/mailer'
+import mongoose from 'mongoose'
 
 /**
  *

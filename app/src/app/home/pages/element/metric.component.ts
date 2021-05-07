@@ -6,17 +6,18 @@ import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
-  faCircle,
   faCheckCircle,
-  faTimesCircle,
-  faPlusCircle,
-  faMinusCircle,
   faChevronCircleDown,
-  faChevronCircleUp
+  faChevronCircleUp,
+  faCircle,
+  faMinusCircle,
+  faPlusCircle,
+  faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
 import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
-import { ElementPageMetric, ElementPageItemType } from './element.model';
+import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
+
+import { ElementPageItemType, ElementPageMetric } from './element.model';
 
 interface Icon {
   color: string;

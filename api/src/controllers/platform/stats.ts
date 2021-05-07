@@ -2,7 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
 import df from '@sindresorhus/df'
 import { BatchModel } from '@weasel/schemas/batch'
 import { ComparisonModel } from '@weasel/schemas/comparison'
@@ -10,10 +9,11 @@ import { ElementModel } from '@weasel/schemas/element'
 import { MessageModel } from '@weasel/schemas/message'
 import { MetaModel } from '@weasel/schemas/meta'
 import { UserModel } from '@weasel/schemas/user'
+import { EPlatformRole, PlatformStatsResponse } from '@weasel/types/commontypes'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
-import { EPlatformRole, PlatformStatsResponse } from '../../commontypes'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  *

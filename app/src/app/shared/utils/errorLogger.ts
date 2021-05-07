@@ -12,8 +12,6 @@ import { environment } from 'src/environments/environment';
  * future versions.
  */
 class ErrorLogger {
-  constructor() {}
-
   public notify(error: Error) {
     if (!environment.production) {
       console.warn('encountered error:', error.message);

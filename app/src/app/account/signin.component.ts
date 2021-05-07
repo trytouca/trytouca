@@ -3,7 +3,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { formFields } from '@weasel/core/models/form-hint';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';

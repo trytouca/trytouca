@@ -3,14 +3,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { isEqual } from 'lodash-es';
-import { of, Subject, Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
 import type {
   BatchListResponse,
-  SuiteLookupResponse,
-  SuiteListResponse,
   SuiteItem,
+  SuiteListResponse,
+  SuiteLookupResponse,
   TeamLookupResponse
 } from '@weasel/core/models/commontypes';
 import { FrontendBatchItem } from '@weasel/core/models/frontendtypes';
@@ -20,8 +17,12 @@ import {
   ApiService,
   UserService
 } from '@weasel/core/services';
-import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { IPageService } from '@weasel/home/models/pages.model';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
+import { isEqual } from 'lodash-es';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { SuitePageItem, SuitePageItemType } from './suite.model';
 
 export enum SuitePageTabType {

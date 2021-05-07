@@ -4,17 +4,18 @@
 
 import {
   Component,
-  OnDestroy,
   HostListener,
-  ViewChildren,
-  QueryList
+  OnDestroy,
+  QueryList,
+  ViewChildren
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 import type { SuiteLookupResponse } from '@weasel/core/models/commontypes';
 import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
 import { PageListComponent } from '@weasel/home/components/page-list.component';
 import { FilterInput } from '@weasel/home/models/filter.model';
+import { Subscription } from 'rxjs';
+
 import { ElementPageItemType, ElementPageResult } from './element.model';
 import { ElementPageService, ElementPageTabType } from './element.service';
 import { ElementItemResultComponent } from './result.component';

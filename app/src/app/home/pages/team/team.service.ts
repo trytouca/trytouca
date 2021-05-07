@@ -3,10 +3,6 @@
  */
 
 import { Injectable } from '@angular/core';
-import { isEqual } from 'lodash-es';
-import { of, Subject, Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ETeamRole } from '@weasel/core/models/commontypes';
 import type {
   SuiteListResponse,
   SuiteLookupResponse,
@@ -16,6 +12,7 @@ import type {
   TeamMember,
   TeamMemberListResponse
 } from '@weasel/core/models/commontypes';
+import { ETeamRole } from '@weasel/core/models/commontypes';
 import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
 import {
   AlertKind,
@@ -23,12 +20,16 @@ import {
   ApiService,
   UserService
 } from '@weasel/core/services';
-import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { IPageService } from '@weasel/home/models/pages.model';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
+import { isEqual } from 'lodash-es';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
-  TeamPageSuite,
   TeamPageMember,
   TeamPageMemberType,
+  TeamPageSuite,
   TeamPageSuiteType
 } from './team.model';
 

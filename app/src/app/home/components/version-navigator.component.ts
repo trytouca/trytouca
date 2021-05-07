@@ -3,18 +3,18 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { IClipboardResponse } from 'ngx-clipboard';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import type {
-  SuiteLookupResponse,
-  Promotion
+  Promotion,
+  SuiteLookupResponse
 } from '@weasel/core/models/commontypes';
 import { NotificationService } from '@weasel/core/services';
-import { AlertType } from '@weasel/shared/components/alert.component';
 import {
-  isElementParams,
-  FrontendVersionListParamsType
+  FrontendVersionListParamsType,
+  isElementParams
 } from '@weasel/home/components/version-list.component';
+import { AlertType } from '@weasel/shared/components/alert.component';
+import { IClipboardResponse } from 'ngx-clipboard';
 
 @Component({
   selector: 'app-home-version-navigator',

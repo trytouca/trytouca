@@ -4,11 +4,11 @@
 
 import { expect } from 'chai'
 import { describe } from 'mocha'
+import { Types } from 'mongoose'
 import sinon from 'sinon'
 
-import { Types } from 'mongoose'
-import { UserModel } from '../../src/schemas/user'
 import { UserMap } from '../../src/models/usermap'
+import { UserModel } from '../../src/schemas/user'
 
 describe('model-usermap', function () {
   let mockObj = null

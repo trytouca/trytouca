@@ -7,14 +7,13 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
-  faCircle,
   faCheckCircle,
-  faPlusCircle,
+  faCircle,
   faMinusCircle,
+  faPlusCircle,
   faSpinner,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { format, formatDistanceToNow } from 'date-fns';
 import { FrontendBatchCompareParams } from '@weasel/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
 import {
@@ -25,6 +24,8 @@ import {
   Topic
 } from '@weasel/home/models/page-item.model';
 import { DateTimePipe } from '@weasel/shared/pipes';
+import { format, formatDistanceToNow } from 'date-fns';
+
 import {
   BatchPageItem,
   BatchPageItemType,
@@ -101,21 +102,23 @@ export class BatchItemElementComponent {
     this._meta.builtAt = this._item.builtAt;
     let metric: Metric;
     switch (this._item.type) {
-      case BatchPageItemType.Fresh:
+      case BatchPageItemType.Fresh: {
         const fresh = this._item.asSolo();
         if (fresh.meta) {
           this._meta.keysCount = fresh.meta.keysCount;
           metric = new Metric('', fresh.meta.metricsDuration, null);
         }
         break;
-      case BatchPageItemType.Missing:
+      }
+      case BatchPageItemType.Missing: {
         const missing = this._item.asSolo();
         if (missing.meta) {
           this._meta.keysCount = missing.meta.keysCount;
           metric = new Metric('', null, missing.meta.metricsDuration);
         }
         break;
-      case BatchPageItemType.Common:
+      }
+      case BatchPageItemType.Common: {
         const common = this._item.asCommon();
         if (common.meta) {
           this._meta.keysCount =
@@ -130,6 +133,7 @@ export class BatchItemElementComponent {
           );
         }
         break;
+      }
     }
     if (metric) {
       this._meta.performance = this.initPerformance(metric);

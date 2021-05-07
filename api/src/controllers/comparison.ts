@@ -2,24 +2,23 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { floor } from 'lodash'
-import mongoose from 'mongoose'
-
-import type {
-  BackendBatchComparisonItemCommon,
-  BackendBatchComparisonItemSolo,
-  BackendBatchComparisonResponse
-} from '../backendtypes'
-import type {
-  BatchCompareOverview,
-  CppTestcaseComparisonOverview
-} from '../commontypes'
 import {
   ComparisonModel,
   IComparisonDocument
 } from '@weasel/schemas/comparison'
 import { IMessageDocument, MessageModel } from '@weasel/schemas/message'
+import type {
+  BackendBatchComparisonItemCommon,
+  BackendBatchComparisonItemSolo,
+  BackendBatchComparisonResponse
+} from '@weasel/types/backendtypes'
+import type {
+  BatchCompareOverview,
+  CppTestcaseComparisonOverview
+} from '@weasel/types/commontypes'
 import logger from '@weasel/utils/logger'
+import { floor } from 'lodash'
+import mongoose from 'mongoose'
 
 type ObjectId = mongoose.Types.ObjectId
 

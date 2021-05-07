@@ -6,8 +6,8 @@ import { expect } from 'chai'
 import { describe } from 'mocha'
 import mongoose from 'mongoose'
 
-import * as jwt from '../../src/utils/jwt'
 import { SessionModel } from '../../src/schemas/session'
+import * as jwt from '../../src/utils/jwt'
 
 describe('utils/jwt', () => {
   const expiresAt = new Date()

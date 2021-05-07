@@ -10,15 +10,15 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import Fuse from 'fuse.js';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, skip } from 'rxjs/operators';
-import { isEqual } from 'lodash-es';
 import { SuiteLookupResponse } from '@weasel/core/models/commontypes';
 import {
   FrontendBatchCompareParams,
   FrontendElementCompareParams
 } from '@weasel/core/models/frontendtypes';
+import Fuse from 'fuse.js';
+import { isEqual } from 'lodash-es';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, skip } from 'rxjs/operators';
 
 type Version = {
   slug: string;

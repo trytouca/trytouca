@@ -2,10 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import bodyParser from 'body-parser'
-import e from 'express'
-
-import * as middleware from '../middlewares'
 import { authResetKeyApply } from '@weasel/controllers/auth/resetKeyApply'
 import { authResetKeyCheck } from '@weasel/controllers/auth/resetKeyCheck'
 import { authResetKeyCreate } from '@weasel/controllers/auth/resetKeyCreate'
@@ -16,7 +12,10 @@ import { authSessionRemove } from '@weasel/controllers/auth/sessionRemove'
 import { authVerifyActivate } from '@weasel/controllers/auth/verifyActivate'
 import { authVerifyCreate } from '@weasel/controllers/auth/verifyCreate'
 import { authVerifyResend } from '@weasel/controllers/auth/verifyResend'
+import * as middleware from '@weasel/middlewares'
 import { promisable } from '@weasel/utils/routing'
+import bodyParser from 'body-parser'
+import e from 'express'
 
 const router = e.Router()
 

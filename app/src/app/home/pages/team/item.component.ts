@@ -2,18 +2,16 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, Input } from '@angular/core';
 import { I18nPluralPipe, PercentPipe } from '@angular/common';
+import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
+  faCheckCircle,
   faCircle,
   faSpinner,
-  faCheckCircle,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { format, formatDistanceToNow } from 'date-fns';
 import { SuiteLookupResponse } from '@weasel/core/models/commontypes';
-import { DateTimePipe } from '@weasel/shared/pipes';
 import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
 import {
   Data,
@@ -22,6 +20,8 @@ import {
   IconType,
   Topic
 } from '@weasel/home/models/page-item.model';
+import { DateTimePipe } from '@weasel/shared/pipes';
+import { format, formatDistanceToNow } from 'date-fns';
 
 type Meta = Partial<{
   base: string;

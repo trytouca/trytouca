@@ -2,15 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Injectable } from '@angular/core';
-import { getBackendUrl } from '@weasel/core/models/environment';
-
 import {
   HttpClient,
   HttpErrorResponse,
   HttpParams
 } from '@angular/common/http';
-
+import { Injectable } from '@angular/core';
+import { getBackendUrl } from '@weasel/core/models/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
@@ -45,7 +43,7 @@ export class ApiService {
   /**
    *
    */
-  patch(path: string, body: object): Observable<any> {
+  patch(path: string, body: Record<string, unknown>): Observable<any> {
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
 
@@ -55,7 +53,7 @@ export class ApiService {
   /**
    *
    */
-  post(path: string, body: object = {}): Observable<any> {
+  post(path: string, body: Record<string, unknown> = {}): Observable<any> {
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
 
@@ -89,18 +87,15 @@ export class ApiService {
     const defaultMsg =
       'Something went wrong. ' +
       'Please try this operation again at a later time.';
-    if (
-      !Array.isArray(httpError.error?.errors) ||
-      httpError.error?.errors.length === 0
-    ) {
+    const errors = httpError.error?.errors as string[] | undefined;
+    if (!Array.isArray(errors) || errors.length === 0) {
       return defaultMsg;
     }
-    const error = httpError.error.errors[0];
     if (!errorList) {
-      return error;
+      return errors[0];
     }
     const status = httpError.status;
-    const msg = errorList.find((el) => status === el[0] && error === el[1]);
+    const msg = errorList.find((el) => status === el[0] && errors[0] === el[1]);
     if (!msg) {
       return defaultMsg;
     }

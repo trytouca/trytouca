@@ -2,11 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, HostListener, OnDestroy } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, HostListener, OnDestroy } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
-import { FormHint, FormHints, formFields } from '@weasel/core/models/form-hint';
+import { formFields, FormHint, FormHints } from '@weasel/core/models/form-hint';
 import { ApiService } from '@weasel/core/services';
 import { ModalComponent } from '@weasel/home/components';
 import { AlertType } from '@weasel/shared/components/alert.component';

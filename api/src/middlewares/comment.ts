@@ -2,11 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
-import { ECommentType } from '../backendtypes'
 import { IBatchDocument } from '@weasel/schemas/batch'
 import { CommentModel } from '@weasel/schemas/comment'
+import { ECommentType } from '@weasel/types/backendtypes'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  * @summary

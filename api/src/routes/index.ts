@@ -2,12 +2,8 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import bodyParser from 'body-parser'
-import e from 'express'
-import * as ev from 'express-validator'
-
-import * as middleware from '../middlewares'
 import { feedback } from '@weasel/controllers/misc/feedback'
+import * as middleware from '@weasel/middlewares'
 import { authRouter } from '@weasel/routes/auth'
 import { batchRouter } from '@weasel/routes/batch'
 import { clientRouter } from '@weasel/routes/client'
@@ -21,6 +17,9 @@ import { teamRouter } from '@weasel/routes/team'
 import { userRouter } from '@weasel/routes/user'
 import { config } from '@weasel/utils/config'
 import { promisable } from '@weasel/utils/routing'
+import bodyParser from 'body-parser'
+import e from 'express'
+import * as ev from 'express-validator'
 
 const router = e.Router()
 

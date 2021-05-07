@@ -2,11 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
 import { ElementModel } from '@weasel/schemas/element'
 import { ISuiteDocument } from '@weasel/schemas/suite'
 import logger from '@weasel/utils/logger'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  * @summary

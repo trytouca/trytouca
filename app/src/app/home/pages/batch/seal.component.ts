@@ -5,8 +5,8 @@
 import { Component, HostListener } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
-import { ApiService } from '@weasel/core/services';
 import { BatchLookupResponse } from '@weasel/core/models/commontypes';
+import { ApiService } from '@weasel/core/services';
 import { ModalComponent } from '@weasel/home/components';
 import { AlertType } from '@weasel/shared/components/alert.component';
 
@@ -28,7 +28,7 @@ export class BatchSealComponent extends ModalComponent {
   /**
    *
    */
-  onSubmit(model: {}) {
+  onSubmit() {
     if (!this.form.valid) {
       return;
     }

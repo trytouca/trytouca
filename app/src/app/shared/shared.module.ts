@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DialogModule } from '@ngneat/dialog';
 import { ClipboardModule } from 'ngx-clipboard';
+
 import {
   AlertComponent,
   FooterInsideComponent,

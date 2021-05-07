@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { EPlatformRole } from '../commontypes'
 import { wslFindByUname, wslGetSuperUser } from '@weasel/models/user'
 import { UserModel } from '@weasel/schemas/user'
+import { EPlatformRole } from '@weasel/types/commontypes'
 import logger from '@weasel/utils/logger'
 
 /**

@@ -2,20 +2,19 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
-import {
-  BackendBatchComparisonItem,
-  BackendBatchComparisonResponse
-} from '../../backendtypes'
 import { ComparisonFunctions } from '@weasel/controllers/comparison'
-import { IBatchDocument, BatchModel } from '@weasel/schemas/batch'
+import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
 import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
 import { ITeam } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
+import {
+  BackendBatchComparisonItem,
+  BackendBatchComparisonResponse
+} from '@weasel/types/backendtypes'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  *

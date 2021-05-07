@@ -2,21 +2,20 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-import { Types } from 'mongoose'
-
+import { ComparisonFunctions } from '@weasel/controllers/comparison'
+import { BatchModel } from '@weasel/schemas/batch'
+import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
+import { ITeam } from '@weasel/schemas/team'
+import { IUser } from '@weasel/schemas/user'
 import type {
   BatchItemQueryOutput,
   SuiteItemQueryOutput
-} from '../../backendtypes'
-import type { SuiteListResponse } from '../../commontypes'
-import { ComparisonFunctions } from '@weasel/controllers/comparison'
-import { BatchModel } from '@weasel/schemas/batch'
-import { SuiteModel, ISuiteDocument } from '@weasel/schemas/suite'
-import { ITeam } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
+} from '@weasel/types/backendtypes'
+import type { SuiteListResponse } from '@weasel/types/commontypes'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
+import { Types } from 'mongoose'
 
 /**
  *

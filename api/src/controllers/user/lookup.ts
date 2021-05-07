@@ -2,11 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
-import type { UserLookupResponse } from '../../commontypes'
 import { IUser, UserModel } from '@weasel/schemas/user'
+import type { UserLookupResponse } from '@weasel/types/commontypes'
 import logger from '@weasel/utils/logger'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  *

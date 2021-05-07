@@ -2,15 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
-import type { ElementListResponse } from '../../commontypes'
 import { MessageModel } from '@weasel/schemas/message'
 import { ISuiteDocument } from '@weasel/schemas/suite'
 import { ITeam } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
+import type { ElementListResponse } from '@weasel/types/commontypes'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  * Find list of elements submitted to the baseline version of a given suite.

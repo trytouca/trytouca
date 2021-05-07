@@ -6,8 +6,8 @@ import type {
   CppTypeComparison,
   Userinfo
 } from '@weasel/core/models/commontypes';
-import { PageListItem } from '@weasel/home/models/page-list-item.model';
 import { Metric } from '@weasel/home/models/metric.model';
+import { PageListItem } from '@weasel/home/models/page-list-item.model';
 import { Result } from '@weasel/home/models/result.model';
 
 /**

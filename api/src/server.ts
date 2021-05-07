@@ -2,14 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import fs from 'fs'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
+import fs from 'fs'
 import hidePoweredBy from 'hide-powered-by'
-import nocache from 'nocache'
 import moduleAlias from 'module-alias'
+import nocache from 'nocache'
 
 moduleAlias.addAliases({
   '@weasel/controllers': `${__dirname}/controllers`,
@@ -19,14 +19,6 @@ moduleAlias.addAliases({
   '@weasel/utils': `${__dirname}/utils`
 })
 
-import {
-  analyticsService,
-  autosealService,
-  reportingService,
-  retentionService
-} from './services'
-import { setupSuperuser } from './startup'
-import router from './routes'
 import { MetaModel } from '@weasel/schemas/meta'
 import { config, configMgr } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
@@ -34,6 +26,15 @@ import { makeConnectionMinio } from '@weasel/utils/minio'
 import { makeConnectionMongo, shutdownMongo } from '@weasel/utils/mongo'
 import { makeConnectionRedis, shutdownRedis } from '@weasel/utils/redis'
 import { connectToServer } from '@weasel/utils/routing'
+
+import router from './routes'
+import {
+  analyticsService,
+  autosealService,
+  reportingService,
+  retentionService
+} from './services'
+import { setupSuperuser } from './startup'
 
 /**
  *

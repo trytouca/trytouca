@@ -2,15 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-import { isEqual } from 'lodash'
-
-import { SuiteModel, ISuiteDocument } from '@weasel/schemas/suite'
+import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
 import { ITeam } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
 import { config } from '@weasel/utils/config'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
+import { isEqual } from 'lodash'
 
 /**
  * Update metadata of a given suite.

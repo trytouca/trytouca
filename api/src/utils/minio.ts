@@ -3,6 +3,7 @@
  */
 
 import { Client } from 'minio'
+
 import { config } from './config'
 import logger from './logger'
 

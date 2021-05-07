@@ -7,8 +7,6 @@ import { describe } from 'mocha'
 import mongoose from 'mongoose'
 import sinon from 'sinon'
 
-import { ECommentType } from '../../src/backendtypes'
-import { EPlatformRole } from '../../src/commontypes'
 import {
   wslFindByRole,
   wslFindByUname,
@@ -25,6 +23,8 @@ import { EReportType, ReportModel } from '../../src/schemas/report'
 import { SuiteModel } from '../../src/schemas/suite'
 import { TeamModel } from '../../src/schemas/team'
 import { UserModel } from '../../src/schemas/user'
+import { ECommentType } from '../../src/types/backendtypes'
+import { EPlatformRole } from '../../src/types/commontypes'
 import { config } from '../../src/utils/config'
 
 describe('model-user', function () {

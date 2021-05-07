@@ -6,16 +6,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subscription, timer } from 'rxjs';
 import { DialogService } from '@ngneat/dialog';
-import { FormHint, FormHints, formFields } from '@weasel/core/models/form-hint';
-import { ApiService, AuthService, UserService } from '@weasel/core/services';
 import { UserLookupResponse } from '@weasel/core/models/commontypes';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { formFields, FormHint, FormHints } from '@weasel/core/models/form-hint';
+import { ApiService, AuthService, UserService } from '@weasel/core/services';
 import {
   ConfirmComponent,
   ConfirmElements
 } from '@weasel/home/components/confirm.component';
+import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { Subscription, timer } from 'rxjs';
 
 enum EModalType {
   ChangePersonal = 'changePersonal',

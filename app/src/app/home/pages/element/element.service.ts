@@ -2,21 +2,22 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-import { isEqual } from 'lodash-es';
-import { of, Observable, Subject, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 import type {
-  ElementLookupResponse,
+  BatchLookupResponse,
   ElementComparisonResponse,
-  SuiteLookupResponse,
-  BatchLookupResponse
+  ElementLookupResponse,
+  SuiteLookupResponse
 } from '@weasel/core/models/commontypes';
 import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@weasel/core/services';
-import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { IPageService } from '@weasel/home/models/pages.model';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
+import { isEqual } from 'lodash-es';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import {
   ElementPageItemType,
   ElementPageMetric,

@@ -2,10 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { formatDistanceToNow } from 'date-fns';
-import { IClipboardResponse } from 'ngx-clipboard';
+import { Component, OnDestroy } from '@angular/core';
 import { faClipboard, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import {
@@ -14,6 +11,9 @@ import {
 } from '@weasel/core/models/commontypes';
 import { ApiService, NotificationService } from '@weasel/core/services';
 import { AlertType } from '@weasel/shared/components/alert.component';
+import { formatDistanceToNow } from 'date-fns';
+import { IClipboardResponse } from 'ngx-clipboard';
+import { Subscription } from 'rxjs';
 
 /**
  *
@@ -32,7 +32,7 @@ interface RecentEvent {
   selector: 'wsl-account-platform',
   templateUrl: './platform.component.html'
 })
-export class PlatformComponent {
+export class PlatformComponent implements OnDestroy {
   private _sub: Subscription;
   stats: PlatformStatsResponse;
   events: RecentEvent[] = [];

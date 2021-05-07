@@ -2,19 +2,18 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import bodyParser from 'body-parser'
-import e from 'express'
-import * as ev from 'express-validator'
-
-import { EPlatformRole } from '../commontypes'
-import * as middleware from '../middlewares'
+import { accountDelete } from '@weasel/controllers/platform/accountDelete'
 import { platformAccountPopulate } from '@weasel/controllers/platform/accountPopulate'
 import { platformAccountSuspend } from '@weasel/controllers/platform/accountSuspend'
 import { platformAccountUpdate } from '@weasel/controllers/platform/accountUpdate'
-import { accountDelete } from '@weasel/controllers/platform/accountDelete'
 import { platformHealth } from '@weasel/controllers/platform/health'
 import { platformStats } from '@weasel/controllers/platform/stats'
+import * as middleware from '@weasel/middlewares'
+import { EPlatformRole } from '@weasel/types/commontypes'
 import { promisable } from '@weasel/utils/routing'
+import bodyParser from 'body-parser'
+import e from 'express'
+import * as ev from 'express-validator'
 
 const router = e.Router()
 

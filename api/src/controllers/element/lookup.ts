@@ -2,16 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
-import type { ElementLookupResponse } from '../../commontypes'
 import { IElementDocument } from '@weasel/schemas/element'
 import { MessageModel } from '@weasel/schemas/message'
 import { ISuiteDocument } from '@weasel/schemas/suite'
 import { ITeam } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
+import type { ElementLookupResponse } from '@weasel/types/commontypes'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  * Lookup detailed information about an element.

@@ -10,10 +10,10 @@ import {
   faInbox,
   faUser
 } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
 import type { UserLookupResponse } from '@weasel/core/models/commontypes';
 import { EPlatformRole } from '@weasel/core/models/commontypes';
 import { AuthService, UserService } from '@weasel/core/services';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-header-inside',

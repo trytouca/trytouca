@@ -3,16 +3,16 @@
  */
 
 import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '@weasel/core/services';
-import { errorLogger } from '@weasel/shared/utils/errorLogger';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+import { errorLogger } from '@weasel/shared/utils/errorLogger';
 
-interface IFormContent {
+type IFormContent = {
   body: string;
   name: string;
   page: string;
-}
+};
 
 @Component({
   selector: 'app-page-feedback',

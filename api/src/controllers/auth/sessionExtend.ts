@@ -2,11 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
 import { SessionModel } from '@weasel/schemas/session'
 import { config } from '@weasel/utils/config'
 import * as jwt from '@weasel/utils/jwt'
 import logger from '@weasel/utils/logger'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  *

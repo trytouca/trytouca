@@ -2,10 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { NextFunction, Request, Response } from 'express'
-
-import { ECommentType } from '../../backendtypes'
-import type { BatchLookupResponse } from '../../commontypes'
 import { ComparisonFunctions } from '@weasel/controllers/comparison'
 import { UserMap } from '@weasel/models/usermap'
 import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
@@ -13,8 +9,11 @@ import { CommentModel } from '@weasel/schemas/comment'
 import { ISuiteDocument } from '@weasel/schemas/suite'
 import { ITeam } from '@weasel/schemas/team'
 import { IUser } from '@weasel/schemas/user'
+import { ECommentType } from '@weasel/types/backendtypes'
+import type { BatchLookupResponse } from '@weasel/types/commontypes'
 import logger from '@weasel/utils/logger'
 import { rclient } from '@weasel/utils/redis'
+import { NextFunction, Request, Response } from 'express'
 
 /**
  * Provides information about a given batch.

@@ -2,29 +2,27 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+import { formatDate } from '@angular/common';
 import {
   Component,
   HostListener,
   Inject,
   LOCALE_ID,
-  OnInit,
-  OnDestroy
+  OnDestroy,
+  OnInit
 } from '@angular/core';
-import { formatDate } from '@angular/common';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { IconPrefix, IconName } from '@fortawesome/fontawesome-svg-core';
+import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
+import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import {
   faCog,
   faComments,
   faSpinner,
   faTasks
 } from '@fortawesome/free-solid-svg-icons';
-import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
-import { DialogService, DialogRef } from '@ngneat/dialog';
-import { isEqual } from 'lodash-es';
-import { Subscription } from 'rxjs';
+import { DialogRef, DialogService } from '@ngneat/dialog';
 import type {
   BatchItem,
   BatchLookupResponse,
@@ -43,6 +41,9 @@ import {
 import { ConfirmComponent, ConfirmElements } from '@weasel/home/components';
 import { PageComponent, PageTab } from '@weasel/home/components/page.component';
 import { AlertType } from '@weasel/shared/components/alert.component';
+import { isEqual } from 'lodash-es';
+import { Subscription } from 'rxjs';
+
 import { BatchPageItem, BatchPageOverviewMetadata } from './batch.model';
 import { BatchPageService, BatchPageTabType } from './batch.service';
 import { BatchPromoteComponent } from './promote.component';
