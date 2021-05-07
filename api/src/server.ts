@@ -13,9 +13,11 @@ import nocache from 'nocache'
 
 moduleAlias.addAliases({
   '@weasel/controllers': `${__dirname}/controllers`,
+  '@weasel/middlewares': `${__dirname}/middlewares`,
   '@weasel/models': `${__dirname}/models`,
   '@weasel/routes': `${__dirname}/routes`,
   '@weasel/schemas': `${__dirname}/schemas`,
+  '@weasel/types': `${__dirname}/types`,
   '@weasel/utils': `${__dirname}/utils`
 })
 
