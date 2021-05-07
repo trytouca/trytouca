@@ -2,9 +2,10 @@
  * Copyright 2021 Weasel, Inc. All rights reserved.
  */
 
-import React from 'react';
 import Head from 'next/head';
+import React from 'react';
 import { HiArrowNarrowRight } from 'react-icons/hi';
+
 import FooterCta from '@/components/footer-cta';
 import PricingPlan, { Input } from '@/components/pricing-plan';
 
