@@ -7,9 +7,14 @@ import { faClipboard, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import {
   PlatformStatsResponse,
-  PlatformStatsUser
+  PlatformStatsUser,
+  UserLookupResponse
 } from '@weasel/core/models/commontypes';
-import { ApiService, NotificationService } from '@weasel/core/services';
+import {
+  ApiService,
+  NotificationService,
+  UserService
+} from '@weasel/core/services';
 import { AlertType } from '@weasel/shared/components/alert.component';
 import { formatDistanceToNow } from 'date-fns';
 import { IClipboardResponse } from 'ngx-clipboard';
@@ -29,13 +34,14 @@ interface RecentEvent {
 }
 
 @Component({
-  selector: 'wsl-account-platform',
+  selector: 'app-account-platform',
   templateUrl: './platform.component.html'
 })
 export class PlatformComponent implements OnDestroy {
-  private _sub: Subscription;
-  stats: PlatformStatsResponse;
   events: RecentEvent[] = [];
+  stats: PlatformStatsResponse;
+  user: UserLookupResponse;
+  private _subs: Subscription[] = [];
   faClipboard = faClipboard;
   faEllipsisV = faEllipsisV;
   faEnvelope = faEnvelope;
@@ -45,9 +51,10 @@ export class PlatformComponent implements OnDestroy {
    */
   constructor(
     private apiService: ApiService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private userService: UserService
   ) {
-    this._sub = this.apiService
+    const sub1 = this.apiService
       .get<PlatformStatsResponse>('/platform/stats')
       .subscribe((response) => {
         response.users.forEach((user) => {
@@ -77,13 +84,18 @@ export class PlatformComponent implements OnDestroy {
           .sort((a, b) => b.eventDate.getTime() - a.eventDate.getTime())
           .slice(0, 6);
       });
+    const sub2 = this.userService.currentUser$.subscribe((user) => {
+      this.user = user;
+    });
+    this._subs.push(sub1, sub2);
+    this.userService.populate();
   }
 
   /**
    *
    */
   ngOnDestroy() {
-    this._sub.unsubscribe();
+    this._subs.filter(Boolean).forEach((v) => v.unsubscribe());
   }
 
   /**

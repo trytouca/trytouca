@@ -4,7 +4,7 @@
   </app-home-notfound>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!batch">
-  <div class="wsl-page-head">
+  <div class="bg-gray-100 border-b">
     <div class="wsl-page-head-content">
       <nav aria-label="breadcrumb">
         <ol>
@@ -16,9 +16,8 @@
         </ol>
       </nav>
       <div class="print:hidden">
-        <button *ngFor="let button of buttons" type="button"
-          (click)="button.click()" [title]="button.title"
-          class="wsl-btn-sm wsl-btn-dark">
+        <button class="wsl-btn-sm wsl-btn-dark" *ngFor="let button of buttons"
+          type="button" (click)="button.click()" [title]="button.title">
           {{ button.text }}
         </button>
         <div class="inline-block" *ngIf="subButtons.length !== 0" wslDropdown>
@@ -57,6 +56,13 @@
       </nav>
     </div>
   </div>
+  <div class="py-8 bg-gray-50"
+    [hidden]="currentTab !== TabType.Elements && (!hasData() || !hasItems())">
+    <div class="mx-auto container" *ngIf="overview">
+      <app-home-page-overview [inputs]="overview">
+      </app-home-page-overview>
+    </div>
+  </div>
   <div [hidden]="currentTab !== TabType.Elements">
     <ng-container *ngIf="suite && params">
       <app-home-version-navigator [suite]="suite" [params]="params">
@@ -67,10 +73,6 @@
       <div class="wsl-spinner">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </div>
-    </div>
-    <div *ngIf="overview" [hidden]="!hasData() || !hasItems()">
-      <app-home-page-overview [inputs]="overview">
-      </app-home-page-overview>
     </div>
     <div [hidden]="!hasData() || !hasItems()">
       <app-batch-list-elements>

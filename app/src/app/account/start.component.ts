@@ -12,7 +12,7 @@ export enum StartPageType {
 }
 
 @Component({
-  selector: 'wsl-account-start',
+  selector: 'app-account-start',
   templateUrl: './start.component.html'
 })
 export class StartComponent {

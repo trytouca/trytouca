@@ -12,7 +12,7 @@ import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 import { Subscription, timer } from 'rxjs';
 
 @Component({
-  selector: 'wsl-account-activate',
+  selector: 'app-account-activate',
   templateUrl: './activate.component.html'
 })
 export class ActivateComponent implements OnDestroy {

@@ -5,7 +5,7 @@
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!element || !batch">
   <app-alert [alert]="alert" class="text-center"></app-alert>
-  <div class="wsl-page-head">
+  <div class="bg-gray-100 border-b">
     <div class="wsl-page-head-content">
       <nav aria-label="breadcrumb">
         <ol>
@@ -40,6 +40,12 @@
       </nav>
     </div>
   </div>
+  <div class="py-8 bg-gray-50" [hidden]="!hasData()">
+    <div class="mx-auto container" *ngIf="overview">
+      <app-home-page-overview [inputs]="overview">
+      </app-home-page-overview>
+    </div>
+  </div>
   <div>
     <ng-container *ngIf="suite && params">
       <app-home-version-navigator [suite]="suite" [params]="params">
@@ -50,10 +56,6 @@
       <div class="wsl-spinner">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </div>
-    </div>
-    <div *ngIf="overview" [hidden]="!hasData()">
-      <app-home-page-overview [inputs]="overview">
-      </app-home-page-overview>
     </div>
     <div [hidden]="currentTab !== TabType.Results || !hasData()">
       <app-element-tab-results>

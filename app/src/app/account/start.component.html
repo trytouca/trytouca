@@ -4,19 +4,19 @@
     <div class="grid md:grid-cols-2">
       <div
         class="pt-8 px-6 pb-4 grid-cols-1 bg-white sm:rounded-t-lg md:rounded-t-none md:rounded-l-lg">
-        <wsl-account-signup *ngIf="currentPage === PageType.Signup">
-        </wsl-account-signup>
-        <wsl-account-signin *ngIf="currentPage === PageType.Signin">
-        </wsl-account-signin>
-        <wsl-account-reset *ngIf="currentPage === PageType.Reset">
-        </wsl-account-reset>
+        <app-account-signup *ngIf="currentPage === PageType.Signup">
+        </app-account-signup>
+        <app-account-signin *ngIf="currentPage === PageType.Signin">
+        </app-account-signin>
+        <app-account-reset *ngIf="currentPage === PageType.Reset">
+        </app-account-reset>
       </div>
       <div
         class="pt-8 px-6 pb-4 grid-cols-1 bg-lblue-700 sm:rounded-b-lg md:rounded-b-none md:rounded-r-lg border-gray-200 border-t md:border-t-0 md:border-l">
-        <wsl-account-privacy *ngIf="currentPage === PageType.Signup">
-        </wsl-account-privacy>
-        <wsl-account-feature *ngIf="currentPage !== PageType.Signup">
-        </wsl-account-feature>
+        <app-account-privacy *ngIf="currentPage === PageType.Signup">
+        </app-account-privacy>
+        <app-account-feature *ngIf="currentPage !== PageType.Signup">
+        </app-account-feature>
       </div>
     </div>
   </div>

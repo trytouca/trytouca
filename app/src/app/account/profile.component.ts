@@ -28,7 +28,7 @@ interface FormContent {
 }
 
 @Component({
-  selector: 'wsl-account-profile',
+  selector: 'app-account-profile',
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnDestroy {

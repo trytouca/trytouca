@@ -69,7 +69,7 @@
       </div>
     </div>
   </div>
-  <div class="py-8 mx-auto container md:grid md:grid-cols-3 gap-4">
+  <div class="py-4 mx-auto container md:grid md:grid-cols-3 gap-4">
     <div class="md:col-span-1 md:order-2">
       <h3 class="p-4 text-xl font-medium">Recent Events</h3>
       <div class="p-4 space-y-4">
@@ -119,22 +119,24 @@
       <ul *ngIf="stats">
         <li
           class="px-4 h-8 flex items-center rounded-md transition duration-100 hover:bg-gray-50"
-          *ngFor="let user of stats.users">
+          *ngFor="let account of stats.users">
           <div class="flex-grow flex justify-between space-x-4">
-            <div class="w-32 font-medium"
-              [ngClass]="{ 'text-gray-300 line-through': user.suspended }">
-              {{ user.fullname || 'Unknown' }}
+            <div class="w-40 font-medium whitespace-nowrap truncate"
+              [ngClass]="{ 'text-gray-300 line-through': account.suspended }">
+              {{ account.fullname || 'Unknown' }}
+              <span class="text-sm text-gray-500"
+                *ngIf="user.username === account.username">(You)</span>
             </div>
             <div class="w-24 whitespace-nowrap">
               <span
                 class="px-2 py-1 bg-gray-100 text-sm text-gray-700 rounded-md">
-                {{ user.username }}
+                {{ account.username }}
               </span>
             </div>
             <div class="w-24">
               <span
                 class="px-2 py-1 bg-gray-100 text-sm text-gray-700 rounded-md">
-                {{ user.role }}
+                {{ account.role }}
               </span>
             </div>
           </div>
@@ -150,12 +152,13 @@
             <div class="wsl-dropdown-menu hidden w-48 text-sm"
               aria-labelledby="wsl-user-dropdown">
               <div class="wsl-dropdown-item" ngxClipboard
-                [cbContent]="user.email"
+                [cbContent]="account.email"
                 (cbOnSuccess)="onCopy($event, 'email address')">
                 <a class="text-lblue-700">Copy Email</a>
               </div>
-              <div class="wsl-dropdown-item" *ngIf="!user.suspended"
-                (click)="suspendUser(user)">
+              <div class="wsl-dropdown-item"
+                *ngIf="!account.suspended && account.username !== user.username"
+                (click)="suspendUser(account)">
                 <a class="text-lblue-700">Suspend</a>
               </div>
             </div>

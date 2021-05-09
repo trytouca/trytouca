@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'wsl-account-feature',
+  selector: 'app-account-feature',
   templateUrl: './feature.component.html'
 })
 export class FeatureComponent {

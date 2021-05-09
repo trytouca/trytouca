@@ -20,7 +20,7 @@ interface FormContent {
 }
 
 @Component({
-  selector: 'wsl-account-onboard',
+  selector: 'app-account-onboard',
   templateUrl: './onboard.component.html'
 })
 export class OnboardComponent implements OnDestroy {

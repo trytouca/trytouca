@@ -49,9 +49,9 @@
   </ng-container>
   <ng-container *ngIf="!isFormShown">
     <div class="flex-grow grid place-content-center">
-      <wsl-account-mailbox [input]="mailboxInput"
+      <app-account-mailbox [input]="mailboxInput"
         (action)="mailboxAction($event)">
-      </wsl-account-mailbox>
+      </app-account-mailbox>
     </div>
   </ng-container>
 </div>

@@ -5,7 +5,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'wsl-account-privacy',
+  selector: 'app-account-privacy',
   templateUrl: './privacy.component.html'
 })
 export class PrivacyComponent {

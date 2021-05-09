@@ -14,7 +14,7 @@ interface FormContent {
 }
 
 @Component({
-  selector: 'wsl-account-signup',
+  selector: 'app-account-signup',
   templateUrl: './signup.component.html'
 })
 export class SignupComponent {

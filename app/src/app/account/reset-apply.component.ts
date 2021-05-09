@@ -24,7 +24,7 @@ interface FormContent {
 }
 
 @Component({
-  selector: 'wsl-account-reset-apply',
+  selector: 'app-account-reset-apply',
   templateUrl: './reset-apply.component.html'
 })
 export class ResetApplyComponent {

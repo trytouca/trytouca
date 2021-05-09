@@ -16,7 +16,7 @@ interface FormContent {
 }
 
 @Component({
-  selector: 'wsl-account-signin',
+  selector: 'app-account-signin',
   templateUrl: './signin.component.html'
 })
 export class SigninComponent implements OnInit {

@@ -24,7 +24,7 @@ export interface MailboxInput {
 }
 
 @Component({
-  selector: 'wsl-account-mailbox',
+  selector: 'app-account-mailbox',
   templateUrl: './mailbox.component.html'
 })
 export class MailboxComponent implements OnDestroy {

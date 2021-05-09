@@ -9,13 +9,13 @@ import { ApiService } from '@weasel/core/services';
 import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 
 @Component({
-  selector: 'wsl-account-reset',
+  selector: 'app-account-reset',
   template: `
     <ng-container *ngIf="!accountInfo">
-      <wsl-account-reset-start [input]="accountError"></wsl-account-reset-start>
+      <app-account-reset-start [input]="accountError"></app-account-reset-start>
     </ng-container>
     <ng-container *ngIf="accountInfo">
-      <wsl-account-reset-apply [input]="accountInfo"></wsl-account-reset-apply>
+      <app-account-reset-apply [input]="accountInfo"></app-account-reset-apply>
     </ng-container>
   `
 })
