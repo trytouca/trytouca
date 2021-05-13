@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Weasel, Inc. All rights reserved.
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
 import Head from 'next/head';
