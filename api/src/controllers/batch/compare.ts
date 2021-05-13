@@ -2,19 +2,20 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ComparisonFunctions } from '@weasel/controllers/comparison'
-import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
-import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
-import { ITeam } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
+import { NextFunction, Request, Response } from 'express'
+
+import { ComparisonFunctions } from '@/controllers/comparison'
+import { BatchModel, IBatchDocument } from '@/schemas/batch'
+import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
+import { ITeam } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
 import {
   BackendBatchComparisonItem,
   BackendBatchComparisonResponse
-} from '@weasel/types/backendtypes'
-import { config } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
-import { NextFunction, Request, Response } from 'express'
+} from '@/types/backendtypes'
+import { config } from '@/utils/config'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  *
@@ -61,8 +62,6 @@ function cleanOutput(output: BackendBatchComparisonResponse): void {
  *  - `isTeamMember`
  *  - `hasSuite` to yield `suite`
  *  - `hasBatch` to yield `batch`
- *
- * - Database Queries: Unknown
  */
 export async function batchCompare(
   req: Request,

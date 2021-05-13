@@ -2,24 +2,25 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { feedback } from '@weasel/controllers/misc/feedback'
-import * as middleware from '@weasel/middlewares'
-import { authRouter } from '@weasel/routes/auth'
-import { batchRouter } from '@weasel/routes/batch'
-import { clientRouter } from '@weasel/routes/client'
-import { commentRouter } from '@weasel/routes/comment'
-import { comparisonRouter } from '@weasel/routes/comparison'
-import { elementRouter } from '@weasel/routes/element'
-import { inboxRouter } from '@weasel/routes/inbox'
-import { platformRouter } from '@weasel/routes/platform'
-import { suiteRouter } from '@weasel/routes/suite'
-import { teamRouter } from '@weasel/routes/team'
-import { userRouter } from '@weasel/routes/user'
-import { config } from '@weasel/utils/config'
-import { promisable } from '@weasel/utils/routing'
 import bodyParser from 'body-parser'
 import e from 'express'
 import * as ev from 'express-validator'
+
+import { feedback } from '@/controllers/misc/feedback'
+import * as middleware from '@/middlewares'
+import { authRouter } from '@/routes/auth'
+import { batchRouter } from '@/routes/batch'
+import { clientRouter } from '@/routes/client'
+import { commentRouter } from '@/routes/comment'
+import { comparisonRouter } from '@/routes/comparison'
+import { elementRouter } from '@/routes/element'
+import { inboxRouter } from '@/routes/inbox'
+import { platformRouter } from '@/routes/platform'
+import { suiteRouter } from '@/routes/suite'
+import { teamRouter } from '@/routes/team'
+import { userRouter } from '@/routes/user'
+import { config } from '@/utils/config'
+import { promisable } from '@/utils/routing'
 
 const router = e.Router()
 

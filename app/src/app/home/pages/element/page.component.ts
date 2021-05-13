@@ -19,19 +19,20 @@ import {
   faStopwatch,
   faTasks
 } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+
 import type {
   BatchLookupResponse,
   ElementLookupResponse,
   SuiteLookupResponse
-} from '@weasel/core/models/commontypes';
+} from '@/core/models/commontypes';
 import type {
   FrontendElementCompareParams,
   FrontendOverviewSection
-} from '@weasel/core/models/frontendtypes';
-import { AlertKind, AlertService } from '@weasel/core/services';
-import { PageComponent, PageTab } from '@weasel/home/components/page.component';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { Subscription } from 'rxjs';
+} from '@/core/models/frontendtypes';
+import { AlertKind, AlertService } from '@/core/services';
+import { PageComponent, PageTab } from '@/home/components/page.component';
+import { Alert, AlertType } from '@/shared/components/alert.component';
 
 import {
   ElementPageOverviewMetadata,

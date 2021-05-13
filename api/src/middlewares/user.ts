@@ -2,14 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { wslFindByUname } from '@weasel/models/user'
-import { SessionModel } from '@weasel/schemas/session'
-import { IUser } from '@weasel/schemas/user'
-import { EPlatformRole } from '@weasel/types/commontypes'
-import * as jwt from '@weasel/utils/jwt'
-import logger from '@weasel/utils/logger'
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
+
+import { wslFindByUname } from '@/models/user'
+import { SessionModel } from '@/schemas/session'
+import { IUser } from '@/schemas/user'
+import { EPlatformRole } from '@/types/commontypes'
+import * as jwt from '@/utils/jwt'
+import logger from '@/utils/logger'
 
 type AuthInput = {
   agent: string

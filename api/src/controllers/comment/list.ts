@@ -2,20 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { extractCommentTuple, extractCommentType } from '@weasel/models/comment'
-import { CommentModel } from '@weasel/schemas/comment'
-import { IUser } from '@weasel/schemas/user'
-import {
-  CommentListQueryOutput,
-  ECommentType
-} from '@weasel/types/backendtypes'
-import type {
-  CommentItem,
-  CommentListResponse
-} from '@weasel/types/commontypes'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
 import { NextFunction, Request, Response } from 'express'
+
+import { extractCommentTuple, extractCommentType } from '@/models/comment'
+import { CommentModel } from '@/schemas/comment'
+import { IUser } from '@/schemas/user'
+import { CommentListQueryOutput, ECommentType } from '@/types/backendtypes'
+import type { CommentItem, CommentListResponse } from '@/types/commontypes'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  *

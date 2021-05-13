@@ -2,18 +2,18 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ComparisonFunctions } from '@weasel/controllers/comparison'
-import { messageRemove } from '@weasel/models/message'
-import { MessageInfo } from '@weasel/models/messageInfo'
-import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
-import { CommentModel } from '@weasel/schemas/comment'
-import { MessageModel } from '@weasel/schemas/message'
-import { EReportType, ReportModel } from '@weasel/schemas/report'
-import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
-import { ITeam, TeamModel } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
+import { ComparisonFunctions } from '@/controllers/comparison'
+import { messageRemove } from '@/models/message'
+import { MessageInfo } from '@/models/messageInfo'
+import { BatchModel, IBatchDocument } from '@/schemas/batch'
+import { CommentModel } from '@/schemas/comment'
+import { MessageModel } from '@/schemas/message'
+import { EReportType, ReportModel } from '@/schemas/report'
+import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
+import { ITeam, TeamModel } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  *

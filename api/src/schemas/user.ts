@@ -2,9 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { EPlatformRole } from '@weasel/types/commontypes'
 import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid'
+
+import { EPlatformRole } from '@/types/commontypes'
 
 /**
  *

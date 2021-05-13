@@ -5,20 +5,17 @@
 import { Component, OnDestroy } from '@angular/core';
 import { faClipboard, faEnvelope } from '@fortawesome/free-regular-svg-icons';
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
+import { formatDistanceToNow } from 'date-fns';
+import { IClipboardResponse } from 'ngx-clipboard';
+import { Subscription } from 'rxjs';
+
 import {
   PlatformStatsResponse,
   PlatformStatsUser,
   UserLookupResponse
-} from '@weasel/core/models/commontypes';
-import {
-  ApiService,
-  NotificationService,
-  UserService
-} from '@weasel/core/services';
-import { AlertType } from '@weasel/shared/components/alert.component';
-import { formatDistanceToNow } from 'date-fns';
-import { IClipboardResponse } from 'ngx-clipboard';
-import { Subscription } from 'rxjs';
+} from '@/core/models/commontypes';
+import { ApiService, NotificationService, UserService } from '@/core/services';
+import { AlertType } from '@/shared/components/alert.component';
 
 /**
  *

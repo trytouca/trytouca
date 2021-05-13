@@ -2,11 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ITeam, TeamModel } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
 import { NextFunction, Request, Response } from 'express'
+
+import { ITeam, TeamModel } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  * @summary
@@ -17,8 +18,6 @@ import { NextFunction, Request, Response } from 'express'
  *  - `isAuthenticated` to yield `user`
  *  - `hasTeam` to yield `team`
  *  - `isTeamInvitee`
- *
- * - Database Queries: 1
  */
 export async function teamInviteDecline(
   req: Request,

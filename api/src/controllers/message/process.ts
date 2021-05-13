@@ -2,10 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { IMessageDocument, MessageModel } from '@weasel/schemas/message'
-import logger from '@weasel/utils/logger'
-import * as minio from '@weasel/utils/minio'
 import { NextFunction, Request, Response } from 'express'
+
+import { IMessageDocument, MessageModel } from '@/schemas/message'
+import logger from '@/utils/logger'
+import * as minio from '@/utils/minio'
 
 /**
  * @todo validate incoming json data against a json schema

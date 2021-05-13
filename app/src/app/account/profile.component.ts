@@ -7,15 +7,16 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
-import { UserLookupResponse } from '@weasel/core/models/commontypes';
-import { formFields, FormHint, FormHints } from '@weasel/core/models/form-hint';
-import { ApiService, AuthService, UserService } from '@weasel/core/services';
+import { Subscription, timer } from 'rxjs';
+
+import { UserLookupResponse } from '@/core/models/commontypes';
+import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
+import { ApiService, AuthService, UserService } from '@/core/services';
 import {
   ConfirmComponent,
   ConfirmElements
-} from '@weasel/home/components/confirm.component';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { Subscription, timer } from 'rxjs';
+} from '@/home/components/confirm.component';
+import { Alert, AlertType } from '@/shared/components/alert.component';
 
 enum EModalType {
   ChangePersonal = 'changePersonal',

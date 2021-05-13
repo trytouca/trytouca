@@ -2,17 +2,18 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { findTeamUsersByRole } from '@weasel/controllers/team/common'
-import { ITeam } from '@weasel/schemas/team'
-import { TeamModel } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import { ETeamRole } from '@weasel/types/commontypes'
-import { config } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
-import * as mailer from '@weasel/utils/mailer'
-import { rclient } from '@weasel/utils/redis'
 import { NextFunction, Request, Response } from 'express'
 import { isEqual } from 'lodash'
+
+import { findTeamUsersByRole } from '@/controllers/team/common'
+import { ITeam } from '@/schemas/team'
+import { TeamModel } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import { ETeamRole } from '@/types/commontypes'
+import { config } from '@/utils/config'
+import logger from '@/utils/logger'
+import * as mailer from '@/utils/mailer'
+import { rclient } from '@/utils/redis'
 
 /**
  * @summary

@@ -2,10 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ElementModel } from '@weasel/schemas/element'
-import { ISuiteDocument } from '@weasel/schemas/suite'
-import logger from '@weasel/utils/logger'
 import { NextFunction, Request, Response } from 'express'
+
+import { ElementModel } from '@/schemas/element'
+import { ISuiteDocument } from '@/schemas/suite'
+import logger from '@/utils/logger'
 
 /**
  * @summary
@@ -18,7 +19,6 @@ import { NextFunction, Request, Response } from 'express'
  * - Populates local response variables: `element`.
  * - Expects request parameters: `element`
  * - Expects local response variables: `suite`
- * - Database Queries: 1
  *
  * @returns
  * - Error 404 if element (`element`) does not exist in suite `suite`.

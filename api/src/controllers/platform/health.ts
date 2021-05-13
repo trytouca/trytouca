@@ -2,12 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { configMgr } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
-import * as minio from '@weasel/utils/minio'
-import { rclient } from '@weasel/utils/redis'
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
+
+import { configMgr } from '@/utils/config'
+import logger from '@/utils/logger'
+import * as minio from '@/utils/minio'
+import { rclient } from '@/utils/redis'
 
 /**
  *

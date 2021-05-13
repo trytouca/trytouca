@@ -14,17 +14,18 @@ import {
   faSpinner,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { FrontendBatchCompareParams } from '@weasel/core/models/frontendtypes';
-import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
+import { format, formatDistanceToNow } from 'date-fns';
+
+import { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
+import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import {
   Data,
   Icon,
   IconColor,
   IconType,
   Topic
-} from '@weasel/home/models/page-item.model';
-import { DateTimePipe } from '@weasel/shared/pipes';
-import { format, formatDistanceToNow } from 'date-fns';
+} from '@/home/models/page-item.model';
+import { DateTimePipe } from '@/shared/pipes';
 
 import {
   BatchPageItem,

@@ -5,14 +5,15 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
-import { ApiService } from '@weasel/core/services';
+import { Subscription } from 'rxjs';
+
+import { ApiService } from '@/core/services';
 import {
   ConfirmComponent,
   ConfirmElements
-} from '@weasel/home/components/confirm.component';
-import { PageListComponent } from '@weasel/home/components/page-list.component';
-import { FilterInput } from '@weasel/home/models/filter.model';
-import { Subscription } from 'rxjs';
+} from '@/home/components/confirm.component';
+import { PageListComponent } from '@/home/components/page-list.component';
+import { FilterInput } from '@/home/models/filter.model';
 
 import { TeamsPageItemType, TeamsPageTeam } from './teams.model';
 import { TeamsPageService } from './teams.service';

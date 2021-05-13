@@ -2,18 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ITeamDocument, TeamModel } from '@weasel/schemas/team'
-import { IUser, UserModel } from '@weasel/schemas/user'
-import {
-  ETeamRole,
-  TeamItem,
-  TeamListResponse
-} from '@weasel/types/commontypes'
-import { config } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
 import { NextFunction, Request, Response } from 'express'
 import { Types } from 'mongoose'
+
+import { ITeamDocument, TeamModel } from '@/schemas/team'
+import { IUser, UserModel } from '@/schemas/user'
+import { ETeamRole, TeamItem, TeamListResponse } from '@/types/commontypes'
+import { config } from '@/utils/config'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  * Provides list of teams for a given user.
@@ -142,8 +139,6 @@ async function prospectiveTeamList(user: IUser): Promise<TeamListResponse> {
  *  - `isAuthenticated` to yield `user`
  *
  * Caches output returned for each user.
- *
- * Database Queries: 1
  */
 export async function ctrlTeamList(
   _req: Request,

@@ -9,9 +9,10 @@ import {
   Input,
   Output
 } from '@angular/core';
-import { FilterParams, FilterStats } from '@weasel/home/models/filter.model';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+
+import { FilterParams, FilterStats } from '@/home/models/filter.model';
 
 type PageNumber = {
   slug: number;

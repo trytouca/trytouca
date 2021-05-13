@@ -7,19 +7,20 @@ import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
+import { isEqual } from 'lodash-es';
+import { Subscription, timer } from 'rxjs';
+
 import type {
   SuiteLookupResponse,
   TeamLookupResponse
-} from '@weasel/core/models/commontypes';
-import { ETeamRole } from '@weasel/core/models/commontypes';
-import { ApiService } from '@weasel/core/services';
+} from '@/core/models/commontypes';
+import { ETeamRole } from '@/core/models/commontypes';
+import { ApiService } from '@/core/services';
 import {
   ConfirmComponent,
   ConfirmElements
-} from '@weasel/home/components/confirm.component';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { isEqual } from 'lodash-es';
-import { Subscription, timer } from 'rxjs';
+} from '@/home/components/confirm.component';
+import { Alert, AlertType } from '@/shared/components/alert.component';
 
 import { SuitePageService, SuitePageTabType } from './suite.service';
 

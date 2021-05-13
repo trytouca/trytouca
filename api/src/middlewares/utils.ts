@@ -2,7 +2,6 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import logger from '@weasel/utils/logger'
 import { NextFunction, Request, Response } from 'express'
 import {
   body as vbody,
@@ -10,6 +9,8 @@ import {
   ValidationChain,
   validationResult
 } from 'express-validator'
+
+import logger from '@/utils/logger'
 
 /**
  *

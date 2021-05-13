@@ -2,16 +2,17 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { batchCompare } from '@weasel/controllers/batch/compare'
-import { ctrlBatchList } from '@weasel/controllers/batch/list'
-import { ctrlBatchLookup } from '@weasel/controllers/batch/lookup'
-import { ctrlBatchPromote } from '@weasel/controllers/batch/promote'
-import { ctrlBatchRemove } from '@weasel/controllers/batch/remove'
-import { ctrlBatchSeal } from '@weasel/controllers/batch/seal'
-import * as middleware from '@weasel/middlewares'
-import { promisable } from '@weasel/utils/routing'
 import bodyParser from 'body-parser'
 import e from 'express'
+
+import { batchCompare } from '@/controllers/batch/compare'
+import { ctrlBatchList } from '@/controllers/batch/list'
+import { ctrlBatchLookup } from '@/controllers/batch/lookup'
+import { ctrlBatchPromote } from '@/controllers/batch/promote'
+import { ctrlBatchRemove } from '@/controllers/batch/remove'
+import { ctrlBatchSeal } from '@/controllers/batch/seal'
+import * as middleware from '@/middlewares'
+import { promisable } from '@/utils/routing'
 
 const router = e.Router()
 

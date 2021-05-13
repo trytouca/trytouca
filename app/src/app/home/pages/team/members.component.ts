@@ -5,23 +5,20 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
+import { Subscription } from 'rxjs';
+
 import {
   ETeamRole,
   TeamApplicant,
   TeamInvitee,
   TeamLookupResponse,
   TeamMember
-} from '@weasel/core/models/commontypes';
-import {
-  ApiService,
-  NotificationService,
-  UserService
-} from '@weasel/core/services';
-import { ConfirmComponent } from '@weasel/home/components/confirm.component';
-import { PageListComponent } from '@weasel/home/components/page-list.component';
-import { FilterInput } from '@weasel/home/models/filter.model';
-import { AlertType } from '@weasel/shared/components/alert.component';
-import { Subscription } from 'rxjs';
+} from '@/core/models/commontypes';
+import { ApiService, NotificationService, UserService } from '@/core/services';
+import { ConfirmComponent } from '@/home/components/confirm.component';
+import { PageListComponent } from '@/home/components/page-list.component';
+import { FilterInput } from '@/home/models/filter.model';
+import { AlertType } from '@/shared/components/alert.component';
 
 import { TeamPageMember, TeamPageMemberType } from './team.model';
 import { TeamPageService } from './team.service';

@@ -5,10 +5,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { formFields } from '@weasel/core/models/form-hint';
-import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
-import { ApiService, AuthService, UserService } from '@weasel/core/services';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+
+import { formFields } from '@/core/models/form-hint';
+import { ELocalStorageKey } from '@/core/models/frontendtypes';
+import { ApiService, AuthService, UserService } from '@/core/services';
+import { Alert, AlertType } from '@/shared/components/alert.component';
 
 interface FormContent {
   uname: string;

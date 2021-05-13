@@ -4,19 +4,20 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { isEqual } from 'lodash-es';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import type {
   BatchLookupResponse,
   ElementComparisonResponse,
   ElementLookupResponse,
   SuiteLookupResponse
-} from '@weasel/core/models/commontypes';
-import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
-import { AlertKind, AlertService, ApiService } from '@weasel/core/services';
-import { IPageService } from '@weasel/home/models/pages.model';
-import { errorLogger } from '@weasel/shared/utils/errorLogger';
-import { isEqual } from 'lodash-es';
-import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+} from '@/core/models/commontypes';
+import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
+import { AlertKind, AlertService, ApiService } from '@/core/services';
+import { IPageService } from '@/home/models/pages.model';
+import { errorLogger } from '@/shared/utils/errorLogger';
 
 import {
   ElementPageItemType,

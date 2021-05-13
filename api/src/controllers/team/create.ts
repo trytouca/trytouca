@@ -2,14 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { teamCreate } from '@weasel/models/team'
-import { IUser } from '@weasel/schemas/user'
-import { config } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
-import * as mailer from '@weasel/utils/mailer'
-import { rclient } from '@weasel/utils/redis'
-import { tracker } from '@weasel/utils/tracker'
 import { NextFunction, Request, Response } from 'express'
+
+import { teamCreate } from '@/models/team'
+import { IUser } from '@/schemas/user'
+import { config } from '@/utils/config'
+import logger from '@/utils/logger'
+import * as mailer from '@/utils/mailer'
+import { rclient } from '@/utils/redis'
+import { tracker } from '@/utils/tracker'
 
 /**
  * @summary

@@ -12,22 +12,22 @@ import moduleAlias from 'module-alias'
 import nocache from 'nocache'
 
 moduleAlias.addAliases({
-  '@weasel/controllers': `${__dirname}/controllers`,
-  '@weasel/middlewares': `${__dirname}/middlewares`,
-  '@weasel/models': `${__dirname}/models`,
-  '@weasel/routes': `${__dirname}/routes`,
-  '@weasel/schemas': `${__dirname}/schemas`,
-  '@weasel/types': `${__dirname}/types`,
-  '@weasel/utils': `${__dirname}/utils`
+  '@/controllers': `${__dirname}/controllers`,
+  '@/middlewares': `${__dirname}/middlewares`,
+  '@/models': `${__dirname}/models`,
+  '@/routes': `${__dirname}/routes`,
+  '@/schemas': `${__dirname}/schemas`,
+  '@/types': `${__dirname}/types`,
+  '@/utils': `${__dirname}/utils`
 })
 
-import { MetaModel } from '@weasel/schemas/meta'
-import { config, configMgr } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
-import { makeConnectionMinio } from '@weasel/utils/minio'
-import { makeConnectionMongo, shutdownMongo } from '@weasel/utils/mongo'
-import { makeConnectionRedis, shutdownRedis } from '@weasel/utils/redis'
-import { connectToServer } from '@weasel/utils/routing'
+import { MetaModel } from '@/schemas/meta'
+import { config, configMgr } from '@/utils/config'
+import logger from '@/utils/logger'
+import { makeConnectionMinio } from '@/utils/minio'
+import { makeConnectionMongo, shutdownMongo } from '@/utils/mongo'
+import { makeConnectionRedis, shutdownRedis } from '@/utils/redis'
+import { connectToServer } from '@/utils/routing'
 
 import router from './routes'
 import {

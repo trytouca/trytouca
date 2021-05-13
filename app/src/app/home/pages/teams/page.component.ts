@@ -5,8 +5,9 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
-import { PageComponent, PageTab } from '@weasel/home/components';
 import { Subscription } from 'rxjs';
+
+import { PageComponent, PageTab } from '@/home/components';
 
 import { TeamsCreateTeamComponent } from './create.component';
 import { TeamsPageTeam } from './teams.model';

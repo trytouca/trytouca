@@ -2,11 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { inboxList } from '@weasel/controllers/inbox/list'
-import { inboxSeen } from '@weasel/controllers/inbox/seen'
-import * as middleware from '@weasel/middlewares'
-import { promisable } from '@weasel/utils/routing'
 import e from 'express'
+
+import { inboxList } from '@/controllers/inbox/list'
+import { inboxSeen } from '@/controllers/inbox/seen'
+import * as middleware from '@/middlewares'
+import { promisable } from '@/utils/routing'
 
 const router = e.Router()
 

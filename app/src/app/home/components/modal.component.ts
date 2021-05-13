@@ -4,9 +4,10 @@
 
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { FormHints } from '@weasel/core/models/form-hint';
-import { Alert } from '@weasel/shared/components/alert.component';
 import { Subscription } from 'rxjs';
+
+import { FormHints } from '@/core/models/form-hint';
+import { Alert } from '@/shared/components/alert.component';
 
 @Component({
   template: ''

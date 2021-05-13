@@ -2,10 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { addSampleData } from '@weasel/models/sampleData'
-import { IUser } from '@weasel/schemas/user'
-import logger from '@weasel/utils/logger'
 import { NextFunction, Request, Response } from 'express'
+
+import { addSampleData } from '@/models/sampleData'
+import { IUser } from '@/schemas/user'
+import logger from '@/utils/logger'
 
 /**
  *

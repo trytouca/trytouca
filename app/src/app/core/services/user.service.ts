@@ -4,13 +4,14 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+
 import {
   EPlatformRole,
   ETeamRole,
   UserLookupResponse
-} from '@weasel/core/models/commontypes';
-import { errorLogger } from '@weasel/shared/utils/errorLogger';
-import { Subject } from 'rxjs';
+} from '@/core/models/commontypes';
+import { errorLogger } from '@/shared/utils/errorLogger';
 
 import { AlertKind, AlertService } from './alert.service';
 import { ApiService } from './api.service';

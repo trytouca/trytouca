@@ -4,8 +4,9 @@
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { PageListComponent } from '@weasel/home/components/page-list.component';
-import { FilterInput } from '@weasel/home/models/filter.model';
+
+import { PageListComponent } from '@/home/components/page-list.component';
+import { FilterInput } from '@/home/models/filter.model';
 
 import { TeamPageSuite, TeamPageSuiteType } from './team.model';
 import { TeamPageService } from './team.service';

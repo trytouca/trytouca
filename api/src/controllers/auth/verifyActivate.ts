@@ -2,12 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { createUserSession } from '@weasel/models/auth'
-import { UserModel } from '@weasel/schemas/user'
-import { config } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
-import { tracker } from '@weasel/utils/tracker'
 import { NextFunction, Request, Response } from 'express'
+
+import { createUserSession } from '@/models/auth'
+import { UserModel } from '@/schemas/user'
+import { config } from '@/utils/config'
+import logger from '@/utils/logger'
+import { tracker } from '@/utils/tracker'
 
 /**
  *

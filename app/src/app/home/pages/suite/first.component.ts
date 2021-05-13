@@ -5,11 +5,12 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faClipboard } from '@fortawesome/free-solid-svg-icons';
-import { getBackendUrl } from '@weasel/core/models/environment';
-import { NotificationService, UserService } from '@weasel/core/services';
-import { AlertType } from '@weasel/shared/components/alert.component';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription } from 'rxjs';
+
+import { getBackendUrl } from '@/core/models/environment';
+import { NotificationService, UserService } from '@/core/services';
+import { AlertType } from '@/shared/components/alert.component';
 
 import { SuitePageService } from './suite.service';
 

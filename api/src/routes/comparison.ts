@@ -2,15 +2,16 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { comparisonList } from '@weasel/controllers/comparison/list'
-import { comparisonProcess } from '@weasel/controllers/comparison/process'
-import { comparisonStats } from '@weasel/controllers/comparison/stats'
-import { messageProcess } from '@weasel/controllers/message/process'
-import * as middleware from '@weasel/middlewares'
-import { promisable } from '@weasel/utils/routing'
 import bodyParser from 'body-parser'
 import e from 'express'
 import { body as vbody, param as vparam } from 'express-validator'
+
+import { comparisonList } from '@/controllers/comparison/list'
+import { comparisonProcess } from '@/controllers/comparison/process'
+import { comparisonStats } from '@/controllers/comparison/stats'
+import { messageProcess } from '@/controllers/message/process'
+import * as middleware from '@/middlewares'
+import { promisable } from '@/utils/routing'
 
 const router = e.Router()
 

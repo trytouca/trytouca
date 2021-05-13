@@ -2,14 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { batchPromote } from '@weasel/models/batch'
-import { IBatchDocument } from '@weasel/schemas/batch'
-import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
-import { ITeam } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import logger from '@weasel/utils/logger'
-import { tracker } from '@weasel/utils/tracker'
 import { NextFunction, Request, Response } from 'express'
+
+import { batchPromote } from '@/models/batch'
+import { IBatchDocument } from '@/schemas/batch'
+import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
+import { ITeam } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import logger from '@/utils/logger'
+import { tracker } from '@/utils/tracker'
 
 /**
  * @summary
@@ -27,8 +28,6 @@ import { NextFunction, Request, Response } from 'express'
  *  - `hasBatch` to yield `batch`
  *
  * Expects `reason` field in request body.
- *
- * - Database Queries: 2
  */
 export async function ctrlBatchPromote(
   req: Request,

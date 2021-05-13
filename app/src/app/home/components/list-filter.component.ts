@@ -15,13 +15,14 @@ import {
   faSortAmountDown,
   faSortAmountDownAlt
 } from '@fortawesome/free-solid-svg-icons';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+
 import {
   FilterManager,
   FilterParams,
   FilterStats
-} from '@weasel/home/models/filter.model';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+} from '@/home/models/filter.model';
 
 @Component({
   selector: 'app-home-list-filter',

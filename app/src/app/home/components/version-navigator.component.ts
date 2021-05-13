@@ -4,17 +4,15 @@
 
 import { Component, Input } from '@angular/core';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import type {
-  Promotion,
-  SuiteLookupResponse
-} from '@weasel/core/models/commontypes';
-import { NotificationService } from '@weasel/core/services';
+import { IClipboardResponse } from 'ngx-clipboard';
+
+import type { Promotion, SuiteLookupResponse } from '@/core/models/commontypes';
+import { NotificationService } from '@/core/services';
 import {
   FrontendVersionListParamsType,
   isElementParams
-} from '@weasel/home/components/version-list.component';
-import { AlertType } from '@weasel/shared/components/alert.component';
-import { IClipboardResponse } from 'ngx-clipboard';
+} from '@/home/components/version-list.component';
+import { AlertType } from '@/shared/components/alert.component';
 
 @Component({
   selector: 'app-home-version-navigator',

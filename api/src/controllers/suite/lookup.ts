@@ -2,17 +2,18 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ComparisonFunctions } from '@weasel/controllers/comparison'
-import { BatchModel } from '@weasel/schemas/batch'
-import { ISuiteDocument } from '@weasel/schemas/suite'
-import { ITeam } from '@weasel/schemas/team'
-import { IUser, UserModel } from '@weasel/schemas/user'
-import type { BatchItemQueryOutput } from '@weasel/types/backendtypes'
-import type { SuiteLookupResponse } from '@weasel/types/commontypes'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash'
+
+import { ComparisonFunctions } from '@/controllers/comparison'
+import { BatchModel } from '@/schemas/batch'
+import { ISuiteDocument } from '@/schemas/suite'
+import { ITeam } from '@/schemas/team'
+import { IUser, UserModel } from '@/schemas/user'
+import type { BatchItemQueryOutput } from '@/types/backendtypes'
+import type { SuiteLookupResponse } from '@/types/commontypes'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  * Provides information about a given suite.

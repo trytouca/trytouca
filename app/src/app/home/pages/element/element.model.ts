@@ -2,13 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import type {
-  CppTypeComparison,
-  Userinfo
-} from '@weasel/core/models/commontypes';
-import { Metric } from '@weasel/home/models/metric.model';
-import { PageListItem } from '@weasel/home/models/page-list-item.model';
-import { Result } from '@weasel/home/models/result.model';
+import type { CppTypeComparison, Userinfo } from '@/core/models/commontypes';
+import { Metric } from '@/home/models/metric.model';
+import { PageListItem } from '@/home/models/page-list-item.model';
+import { Result } from '@/home/models/result.model';
 
 /**
  *

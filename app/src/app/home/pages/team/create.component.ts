@@ -5,10 +5,11 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
-import { formFields, FormHint, FormHints } from '@weasel/core/models/form-hint';
-import { ApiService } from '@weasel/core/services';
-import { ModalComponent } from '@weasel/home/components';
-import { AlertType } from '@weasel/shared/components/alert.component';
+
+import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
+import { ApiService } from '@/core/services';
+import { ModalComponent } from '@/home/components';
+import { AlertType } from '@/shared/components/alert.component';
 
 type IFormContent = {
   name: string;

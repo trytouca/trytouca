@@ -2,10 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { config } from '@weasel/utils/config'
 import fs from 'fs'
 import path from 'path'
 import logger from 'winston'
+
+import { config } from '@/utils/config'
 
 // Create the log directory if it does not exist
 const logDir = path.normalize(config.logging.directory)

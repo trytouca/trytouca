@@ -4,7 +4,8 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { SharedModule } from '@weasel/shared';
+
+import { SharedModule } from '@/shared';
 
 import { AccountRoutingModule } from './account-routing.module';
 import { ActivateComponent } from './activate.component';

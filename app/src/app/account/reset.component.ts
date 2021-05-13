@@ -4,9 +4,10 @@
 
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IAccountInfo } from '@weasel/account/reset-apply.component';
-import { ApiService } from '@weasel/core/services';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+
+import { IAccountInfo } from '@/account/reset-apply.component';
+import { ApiService } from '@/core/services';
+import { Alert, AlertType } from '@/shared/components/alert.component';
 
 @Component({
   selector: 'app-account-reset',

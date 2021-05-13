@@ -2,9 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { config } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
 import Redis from 'ioredis'
+
+import { config } from '@/utils/config'
+import logger from '@/utils/logger'
 
 export const client = new Redis({
   host: config.redis.host,

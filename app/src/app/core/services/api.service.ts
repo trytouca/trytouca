@@ -8,9 +8,10 @@ import {
   HttpParams
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { getBackendUrl } from '@weasel/core/models/environment';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+import { getBackendUrl } from '@/core/models/environment';
 
 @Injectable()
 export class ApiService {

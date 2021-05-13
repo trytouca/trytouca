@@ -16,22 +16,23 @@ import {
   faRobot,
   faTasks
 } from '@fortawesome/free-solid-svg-icons';
+import { IClipboardResponse } from 'ngx-clipboard';
+import { Subscription, timer } from 'rxjs';
+
 import type {
   SuiteItem,
   SuiteLookupResponse,
   TeamItem
-} from '@weasel/core/models/commontypes';
-import { getBackendUrl } from '@weasel/core/models/environment';
+} from '@/core/models/commontypes';
+import { getBackendUrl } from '@/core/models/environment';
 import {
   AlertKind,
   AlertService,
   NotificationService,
   UserService
-} from '@weasel/core/services';
-import { PageComponent, PageTab } from '@weasel/home/components/page.component';
-import { AlertType } from '@weasel/shared/components/alert.component';
-import { IClipboardResponse } from 'ngx-clipboard';
-import { Subscription, timer } from 'rxjs';
+} from '@/core/services';
+import { PageComponent, PageTab } from '@/home/components/page.component';
+import { AlertType } from '@/shared/components/alert.component';
 
 import { SuitePageItem } from './suite.model';
 import { SuitePageService, SuitePageTabType } from './suite.service';

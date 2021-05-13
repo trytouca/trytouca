@@ -3,13 +3,14 @@
  */
 
 import { ParamMap } from '@angular/router';
+
 import type {
   BatchCompareOverview,
   BatchComparisonItemCommon,
   BatchComparisonItemSolo,
   Userinfo
-} from '@weasel/core/models/commontypes';
-import { FrontendBatchCompareParams } from '@weasel/core/models/frontendtypes';
+} from '@/core/models/commontypes';
+import { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 
 type DataType = BatchComparisonItemCommon | BatchComparisonItemSolo;
 

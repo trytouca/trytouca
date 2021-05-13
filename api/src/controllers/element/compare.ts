@@ -2,19 +2,20 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ComparisonFunctions } from '@weasel/controllers/comparison'
-import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
-import { ElementModel, IElementDocument } from '@weasel/schemas/element'
-import { MessageModel } from '@weasel/schemas/message'
-import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
-import { ITeam } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import type { BackendBatchComparisonItemCommon } from '@weasel/types/backendtypes'
-import { config } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
-import * as minio from '@weasel/utils/minio'
-import { rclient } from '@weasel/utils/redis'
 import { NextFunction, Request, Response } from 'express'
+
+import { ComparisonFunctions } from '@/controllers/comparison'
+import { BatchModel, IBatchDocument } from '@/schemas/batch'
+import { ElementModel, IElementDocument } from '@/schemas/element'
+import { MessageModel } from '@/schemas/message'
+import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
+import { ITeam } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import type { BackendBatchComparisonItemCommon } from '@/types/backendtypes'
+import { config } from '@/utils/config'
+import logger from '@/utils/logger'
+import * as minio from '@/utils/minio'
+import { rclient } from '@/utils/redis'
 
 /**
  *
@@ -52,8 +53,6 @@ function cleanOutput(output: BackendBatchComparisonItemCommon): void {
  *  - `hasSuite` to yield `suite`
  *  - `hasElement` to yield `element`
  *  - `hasBatch` to yield `batch`
- *
- * - Database Queries: Unknown
  */
 export async function elementCompare(
   req: Request,

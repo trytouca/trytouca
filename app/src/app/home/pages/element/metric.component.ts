@@ -14,8 +14,9 @@ import {
   faPlusCircle,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
-import { Metric, MetricChangeType } from '@weasel/home/models/metric.model';
+
+import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
+import { Metric, MetricChangeType } from '@/home/models/metric.model';
 
 import { ElementPageItemType, ElementPageMetric } from './element.model';
 

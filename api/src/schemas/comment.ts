@@ -2,8 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ECommentType } from '@weasel/types/backendtypes'
 import mongoose from 'mongoose'
+
+import { ECommentType } from '@/types/backendtypes'
 
 /**
  *

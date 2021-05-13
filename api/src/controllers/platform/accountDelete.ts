@@ -2,14 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { SessionModel } from '@weasel/schemas/session'
-import { TeamModel } from '@weasel/schemas/team'
-import { IUser, UserModel } from '@weasel/schemas/user'
-import { EPlatformRole } from '@weasel/types/commontypes'
-import logger from '@weasel/utils/logger'
-import { tracker } from '@weasel/utils/tracker'
 import cuid from 'cuid'
 import { NextFunction, Request, Response } from 'express'
+
+import { SessionModel } from '@/schemas/session'
+import { TeamModel } from '@/schemas/team'
+import { IUser, UserModel } from '@/schemas/user'
+import { EPlatformRole } from '@/types/commontypes'
+import logger from '@/utils/logger'
+import { tracker } from '@/utils/tracker'
 
 /**
  *

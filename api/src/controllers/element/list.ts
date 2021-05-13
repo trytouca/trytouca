@@ -2,14 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { MessageModel } from '@weasel/schemas/message'
-import { ISuiteDocument } from '@weasel/schemas/suite'
-import { ITeam } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import type { ElementListResponse } from '@weasel/types/commontypes'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
 import { NextFunction, Request, Response } from 'express'
+
+import { MessageModel } from '@/schemas/message'
+import { ISuiteDocument } from '@/schemas/suite'
+import { ITeam } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import type { ElementListResponse } from '@/types/commontypes'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  * Find list of elements submitted to the baseline version of a given suite.
@@ -62,8 +63,6 @@ async function elementListImpl(
  *  - `hasSuite` to yield `suite`
  *
  * Caches returned output.
- *
- * Database Queries: 1
  */
 export async function elementList(
   req: Request,

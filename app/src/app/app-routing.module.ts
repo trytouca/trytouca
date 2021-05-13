@@ -4,7 +4,8 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGuard } from '@weasel/core/services';
+
+import { AuthGuard } from '@/core/services';
 
 import { FeedbackComponent } from './feedback/feedback.component';
 import { NotfoundComponent } from './notfound/notfound.component';

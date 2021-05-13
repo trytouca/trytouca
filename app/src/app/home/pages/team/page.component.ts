@@ -14,10 +14,11 @@ import {
   faUsers
 } from '@fortawesome/free-solid-svg-icons';
 import { DialogRef, DialogService } from '@ngneat/dialog';
-import type { TeamItem } from '@weasel/core/models/commontypes';
-import { AlertKind, AlertService } from '@weasel/core/services';
-import { PageComponent, PageTab } from '@weasel/home/components';
 import { Subscription } from 'rxjs';
+
+import type { TeamItem } from '@/core/models/commontypes';
+import { AlertKind, AlertService } from '@/core/services';
+import { PageComponent, PageTab } from '@/home/components';
 
 import { TeamCreateSuiteComponent } from './create.component';
 import { TeamInviteComponent } from './invite.component';

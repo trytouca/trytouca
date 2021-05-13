@@ -3,8 +3,9 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 import { Subject } from 'rxjs';
+
+import { Alert, AlertType } from '@/shared/components/alert.component';
 
 export enum AlertKind {
   ApiConnectionDown = 1,

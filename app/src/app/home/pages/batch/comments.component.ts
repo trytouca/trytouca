@@ -4,24 +4,21 @@
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
+
 import type {
   BatchLookupResponse,
   CommentItem,
   TeamLookupResponse
-} from '@weasel/core/models/commontypes';
-import { EPlatformRole, ETeamRole } from '@weasel/core/models/commontypes';
+} from '@/core/models/commontypes';
+import { EPlatformRole, ETeamRole } from '@/core/models/commontypes';
 import {
   FrontendCommentAction,
   FrontendCommentActionType,
   FrontendCommentItem
-} from '@weasel/core/models/frontendtypes';
-import {
-  ApiService,
-  NotificationService,
-  UserService
-} from '@weasel/core/services';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { Subscription } from 'rxjs';
+} from '@/core/models/frontendtypes';
+import { ApiService, NotificationService, UserService } from '@/core/services';
+import { Alert, AlertType } from '@/shared/components/alert.component';
 
 import { BatchPageService } from './batch.service';
 

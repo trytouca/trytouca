@@ -2,14 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { batchRemove } from '@weasel/models/batch'
-import { BatchModel } from '@weasel/schemas/batch'
-import { CommentModel } from '@weasel/schemas/comment'
-import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
-import { ITeam, TeamModel } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
+import { batchRemove } from '@/models/batch'
+import { BatchModel } from '@/schemas/batch'
+import { CommentModel } from '@/schemas/comment'
+import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
+import { ITeam, TeamModel } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  *

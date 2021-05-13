@@ -4,15 +4,16 @@
 
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import type { UserLookupResponse } from '@weasel/core/models/commontypes';
+import { timer } from 'rxjs';
+
+import type { UserLookupResponse } from '@/core/models/commontypes';
 import {
   AlertKind,
   AlertService,
   AuthService,
   ServiceAlert,
   UserService
-} from '@weasel/core/services';
-import { timer } from 'rxjs';
+} from '@/core/services';
 
 @Component({
   selector: 'app-page-home',

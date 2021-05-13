@@ -3,7 +3,6 @@
  */
 
 import { Component, Input, OnDestroy } from '@angular/core';
-import { DateTimePipe } from '@weasel/shared/pipes';
 import {
   CategoryScale,
   Chart,
@@ -14,6 +13,8 @@ import {
   PointElement,
   Tooltip
 } from 'chart.js';
+
+import { DateTimePipe } from '@/shared/pipes';
 
 Chart.register(
   LineController,

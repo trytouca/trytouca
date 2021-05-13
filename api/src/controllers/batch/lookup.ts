@@ -2,18 +2,19 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ComparisonFunctions } from '@weasel/controllers/comparison'
-import { UserMap } from '@weasel/models/usermap'
-import { BatchModel, IBatchDocument } from '@weasel/schemas/batch'
-import { CommentModel } from '@weasel/schemas/comment'
-import { ISuiteDocument } from '@weasel/schemas/suite'
-import { ITeam } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import { ECommentType } from '@weasel/types/backendtypes'
-import type { BatchLookupResponse } from '@weasel/types/commontypes'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
 import { NextFunction, Request, Response } from 'express'
+
+import { ComparisonFunctions } from '@/controllers/comparison'
+import { UserMap } from '@/models/usermap'
+import { BatchModel, IBatchDocument } from '@/schemas/batch'
+import { CommentModel } from '@/schemas/comment'
+import { ISuiteDocument } from '@/schemas/suite'
+import { ITeam } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import { ECommentType } from '@/types/backendtypes'
+import type { BatchLookupResponse } from '@/types/commontypes'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  * Provides information about a given batch.

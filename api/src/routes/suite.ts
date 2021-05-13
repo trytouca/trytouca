@@ -2,18 +2,19 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ctrlSuiteCreate } from '@weasel/controllers/suite/create'
-import { ctrlSuiteList } from '@weasel/controllers/suite/list'
-import { ctrlSuiteLookup } from '@weasel/controllers/suite/lookup'
-import { ctrlSuiteRemove } from '@weasel/controllers/suite/remove'
-import { suiteSubscribe } from '@weasel/controllers/suite/subscribe'
-import { suiteUnsubscribe } from '@weasel/controllers/suite/unsubscribe'
-import { suiteUpdate } from '@weasel/controllers/suite/update'
-import * as middleware from '@weasel/middlewares'
-import { promisable } from '@weasel/utils/routing'
 import bodyParser from 'body-parser'
 import e from 'express'
 import * as ev from 'express-validator'
+
+import { ctrlSuiteCreate } from '@/controllers/suite/create'
+import { ctrlSuiteList } from '@/controllers/suite/list'
+import { ctrlSuiteLookup } from '@/controllers/suite/lookup'
+import { ctrlSuiteRemove } from '@/controllers/suite/remove'
+import { suiteSubscribe } from '@/controllers/suite/subscribe'
+import { suiteUnsubscribe } from '@/controllers/suite/unsubscribe'
+import { suiteUpdate } from '@/controllers/suite/update'
+import * as middleware from '@/middlewares'
+import { promisable } from '@/utils/routing'
 
 const router = e.Router()
 

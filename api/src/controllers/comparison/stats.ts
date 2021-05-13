@@ -2,9 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { MetaModel } from '@weasel/schemas/meta'
-import logger from '@weasel/utils/logger'
 import { NextFunction, Request, Response } from 'express'
+
+import { MetaModel } from '@/schemas/meta'
+import logger from '@/utils/logger'
 
 /**
  *

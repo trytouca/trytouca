@@ -2,10 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { wslFindByUname } from '@weasel/models/user'
-import logger from '@weasel/utils/logger'
-import * as mailer from '@weasel/utils/mailer'
 import { NextFunction, Request, Response } from 'express'
+
+import { wslFindByUname } from '@/models/user'
+import logger from '@/utils/logger'
+import * as mailer from '@/utils/mailer'
 
 /**
  *

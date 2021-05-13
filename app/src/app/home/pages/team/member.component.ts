@@ -12,7 +12,8 @@ import {
   faUserNinja,
   faUserTie
 } from '@fortawesome/free-solid-svg-icons';
-import { ETeamRole, TeamMember } from '@weasel/core/models/commontypes';
+
+import { ETeamRole, TeamMember } from '@/core/models/commontypes';
 
 type Icon = {
   type: IconProp;

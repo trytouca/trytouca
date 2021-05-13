@@ -7,8 +7,8 @@ import type {
   TeamApplicant,
   TeamInvitee,
   TeamMember
-} from '@weasel/core/models/commontypes';
-import { PageListItem } from '@weasel/home/models/page-list-item.model';
+} from '@/core/models/commontypes';
+import { PageListItem } from '@/home/models/page-list-item.model';
 
 type DataType = TeamMember | TeamInvitee | TeamApplicant;
 

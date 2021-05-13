@@ -2,11 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
-import { ITeam } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import logger from '@weasel/utils/logger'
 import { NextFunction, Request, Response } from 'express'
+
+import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
+import { ITeam } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import logger from '@/utils/logger'
 
 /**
  * subscribe user to a given suite.

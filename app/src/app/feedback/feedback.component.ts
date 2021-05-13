@@ -4,9 +4,10 @@
 
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiService } from '@weasel/core/services';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
-import { errorLogger } from '@weasel/shared/utils/errorLogger';
+
+import { ApiService } from '@/core/services';
+import { Alert, AlertType } from '@/shared/components/alert.component';
+import { errorLogger } from '@/shared/utils/errorLogger';
 
 type IFormContent = {
   body: string;

@@ -2,19 +2,20 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { processBinaryContent } from '@weasel/controllers/client/submit'
-import { batchPromote, batchSeal } from '@weasel/models/batch'
-import { suiteCreate } from '@weasel/models/suite'
-import { teamCreate } from '@weasel/models/team'
-import { BatchModel } from '@weasel/schemas/batch'
-import { SuiteModel } from '@weasel/schemas/suite'
-import { TeamModel } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import { config } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
 import fs from 'fs'
 import path from 'path'
+
+import { processBinaryContent } from '@/controllers/client/submit'
+import { batchPromote, batchSeal } from '@/models/batch'
+import { suiteCreate } from '@/models/suite'
+import { teamCreate } from '@/models/team'
+import { BatchModel } from '@/schemas/batch'
+import { SuiteModel } from '@/schemas/suite'
+import { TeamModel } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import { config } from '@/utils/config'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  * Find a team slug that is not already registered.

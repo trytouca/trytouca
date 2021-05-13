@@ -2,11 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { wslFindByUname } from '@weasel/models/user'
-import { ITeam, TeamModel } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import logger from '@weasel/utils/logger'
 import { NextFunction, Request, Response } from 'express'
+
+import { wslFindByUname } from '@/models/user'
+import { ITeam, TeamModel } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import logger from '@/utils/logger'
 
 /**
  * @summary
@@ -19,7 +20,6 @@ import { NextFunction, Request, Response } from 'express'
  * - Populates local response variables: `team`.
  * - Expects request parameters: `team`
  * - Expects local response variables: N/A
- * - Database Queries: 1
  *
  * @returns
  * - Error 404 if team (`team`) is not registered or is suspended.
@@ -51,7 +51,6 @@ export async function hasTeam(req: Request, res: Response, next: NextFunction) {
  * - Populates local response variables: N/A.
  * - Expects request parameters: N/A
  * - Expects local response variables: `user`, `team`
- * - Database Queries: 1
  *
  * @returns
  *  - Error 403 if user `user` is not on invite list of team `team`.
@@ -88,7 +87,6 @@ export async function isTeamInvitee(
  * - Populates local response variables: N/A.
  * - Expects request parameters: N/A
  * - Expects local response variables: `user`, `team`
- * - Database Queries: 1
  *
  * @returns
  *  - Error 403 if user `user` is not member of team `team`.
@@ -130,7 +128,6 @@ export async function isTeamMember(
  * - Populates local response variables: N/A.
  * - Expects request parameters: N/A
  * - Expects local response variables: `user`, `team`
- * - Database Queries: 1
  *
  * @returns
  *  - Error 403 if user `user` is not admin of team `team`.
@@ -167,7 +164,6 @@ export async function isTeamAdmin(
  * - Populates local response variables: N/A.
  * - Expects request parameters: N/A
  * - Expects local response variables: `user`, `team`
- * - Database Queries: 1
  *
  * @returns
  *  - Error 403 if user `user` is not owner of team `team`.
@@ -206,7 +202,6 @@ export async function isTeamOwner(
  * - Populates local response variables: `member`.
  * - Expects request parameters: `member`
  * - Expects local response variables: `team`
- * - Database Queries: 2
  *
  * @returns
  * - Error 404 if member `member` is not a member of team `team`.

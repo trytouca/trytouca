@@ -5,10 +5,11 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
-import { IPageService } from '@weasel/home/models/pages.model';
 import { timer } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+
+import { IPageService } from '@/home/models/pages.model';
 
 export type PageTab<TabType> = {
   type: TabType;

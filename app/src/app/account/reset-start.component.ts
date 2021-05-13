@@ -4,10 +4,11 @@
 
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { MailboxAction, MailboxInput } from '@weasel/account/mailbox.component';
-import { formFields } from '@weasel/core/models/form-hint';
-import { ApiService } from '@weasel/core/services';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
+
+import { MailboxAction, MailboxInput } from '@/account/mailbox.component';
+import { formFields } from '@/core/models/form-hint';
+import { ApiService } from '@/core/services';
+import { Alert, AlertType } from '@/shared/components/alert.component';
 
 interface FormContent {
   email: string;

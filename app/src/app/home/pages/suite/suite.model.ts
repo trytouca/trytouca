@@ -5,8 +5,8 @@
 import type {
   FrontendBatchItem,
   PromotionItem
-} from '@weasel/core/models/frontendtypes';
-import { PageListItem } from '@weasel/home/models/page-list-item.model';
+} from '@/core/models/frontendtypes';
+import { PageListItem } from '@/home/models/page-list-item.model';
 
 type DataType = FrontendBatchItem | PromotionItem;
 

@@ -2,9 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ITeam, TeamModel } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import { ETeamRole } from '@weasel/types/commontypes'
+import { ITeam, TeamModel } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import { ETeamRole } from '@/types/commontypes'
 
 /**
  * @summary provides a list of members and admins of a given team.

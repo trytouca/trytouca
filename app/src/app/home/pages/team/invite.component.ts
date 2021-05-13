@@ -5,9 +5,10 @@
 import { Component, HostListener } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
-import { ApiService } from '@weasel/core/services';
-import { ModalComponent } from '@weasel/home/components';
-import { AlertType } from '@weasel/shared/components/alert.component';
+
+import { ApiService } from '@/core/services';
+import { ModalComponent } from '@/home/components';
+import { AlertType } from '@/shared/components/alert.component';
 
 type IFormContent = {
   name: string;

@@ -2,11 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { batchSeal } from '@weasel/models/batch'
-import { BatchModel } from '@weasel/schemas/batch'
-import { SuiteModel } from '@weasel/schemas/suite'
-import { TeamModel } from '@weasel/schemas/team'
-import logger from '@weasel/utils/logger'
+import { batchSeal } from '@/models/batch'
+import { BatchModel } from '@/schemas/batch'
+import { SuiteModel } from '@/schemas/suite'
+import { TeamModel } from '@/schemas/team'
+import logger from '@/utils/logger'
 
 /**
  *

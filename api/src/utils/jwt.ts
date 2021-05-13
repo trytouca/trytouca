@@ -2,10 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ISessionDocument } from '@weasel/schemas/session'
-import { config } from '@weasel/utils/config'
-import logger from '@weasel/utils/logger'
 import jws from 'jws'
+
+import { ISessionDocument } from '@/schemas/session'
+import { config } from '@/utils/config'
+import logger from '@/utils/logger'
 
 type TokenPayload = {
   exp: number

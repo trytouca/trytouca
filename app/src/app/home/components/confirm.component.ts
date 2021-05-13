@@ -10,8 +10,9 @@ import {
   ValidatorFn
 } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
-import { AlertType } from '@weasel/shared/components/alert.component';
 import { Observable, timer } from 'rxjs';
+
+import { AlertType } from '@/shared/components/alert.component';
 
 import { ModalComponent } from './modal.component';
 

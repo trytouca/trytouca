@@ -3,8 +3,9 @@
  */
 
 import { Component } from '@angular/core';
-import { ELocalStorageKey } from '@weasel/core/models/frontendtypes';
-import { AuthService } from '@weasel/core/services';
+
+import { ELocalStorageKey } from '@/core/models/frontendtypes';
+import { AuthService } from '@/core/services';
 
 @Component({
   selector: 'app-header-outside',

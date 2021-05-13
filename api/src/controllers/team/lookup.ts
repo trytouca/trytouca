@@ -2,13 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { findTeamRoleOfUser } from '@weasel/controllers/team/common'
-import { ITeam, TeamModel } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import type { TeamLookupResponse } from '@weasel/types/commontypes'
-import logger from '@weasel/utils/logger'
-import { rclient } from '@weasel/utils/redis'
 import { NextFunction, Request, Response } from 'express'
+
+import { findTeamRoleOfUser } from '@/controllers/team/common'
+import { ITeam, TeamModel } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import type { TeamLookupResponse } from '@/types/commontypes'
+import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 /**
  * Lookup detailed information about a team.
@@ -65,8 +66,6 @@ async function teamLookup(
  *  - `isTeamMember`
  *
  * Caches output returned for each user.
- *
- * Database Queries: 2
  */
 export async function ctrlTeamLookup(
   _req: Request,

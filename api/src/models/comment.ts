@@ -2,14 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { IBatchDocument } from '@weasel/schemas/batch'
-import { IElementDocument } from '@weasel/schemas/element'
-import { ISuiteDocument, SuiteModel } from '@weasel/schemas/suite'
-import { ITeam } from '@weasel/schemas/team'
-import { IUser } from '@weasel/schemas/user'
-import { ECommentType } from '@weasel/types/backendtypes'
-import { mailUser } from '@weasel/utils/mailer'
 import { Response } from 'express'
+
+import { IBatchDocument } from '@/schemas/batch'
+import { IElementDocument } from '@/schemas/element'
+import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
+import { ITeam } from '@/schemas/team'
+import { IUser } from '@/schemas/user'
+import { ECommentType } from '@/types/backendtypes'
+import { mailUser } from '@/utils/mailer'
 
 /**
  *

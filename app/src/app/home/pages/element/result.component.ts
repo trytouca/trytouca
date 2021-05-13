@@ -13,11 +13,12 @@ import {
   faPlusCircle,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import type { FrontendElementCompareParams } from '@weasel/core/models/frontendtypes';
-import { NotificationService } from '@weasel/core/services';
-import { Result } from '@weasel/home/models/result.model';
-import { AlertType } from '@weasel/shared/components/alert.component';
 import { IClipboardResponse } from 'ngx-clipboard';
+
+import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
+import { NotificationService } from '@/core/services';
+import { Result } from '@/home/models/result.model';
+import { AlertType } from '@/shared/components/alert.component';
 
 import { ElementPageItemType, ElementPageResult } from './element.model';
 

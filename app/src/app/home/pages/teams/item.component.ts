@@ -3,7 +3,8 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { Data, Icon, Topic } from '@weasel/home/models/page-item.model';
+
+import { Data, Icon, Topic } from '@/home/models/page-item.model';
 
 import { TeamsPageTeam } from './teams.model';
 

@@ -23,26 +23,27 @@ import {
   faTasks
 } from '@fortawesome/free-solid-svg-icons';
 import { DialogRef, DialogService } from '@ngneat/dialog';
+import { isEqual } from 'lodash-es';
+import { Subscription } from 'rxjs';
+
 import type {
   BatchItem,
   BatchLookupResponse,
   SuiteLookupResponse
-} from '@weasel/core/models/commontypes';
+} from '@/core/models/commontypes';
 import type {
   FrontendBatchCompareParams,
   FrontendOverviewSection
-} from '@weasel/core/models/frontendtypes';
+} from '@/core/models/frontendtypes';
 import {
   AlertKind,
   AlertService,
   ApiService,
   UserService
-} from '@weasel/core/services';
-import { ConfirmComponent, ConfirmElements } from '@weasel/home/components';
-import { PageComponent, PageTab } from '@weasel/home/components/page.component';
-import { AlertType } from '@weasel/shared/components/alert.component';
-import { isEqual } from 'lodash-es';
-import { Subscription } from 'rxjs';
+} from '@/core/services';
+import { ConfirmComponent, ConfirmElements } from '@/home/components';
+import { PageComponent, PageTab } from '@/home/components/page.component';
+import { AlertType } from '@/shared/components/alert.component';
 
 import { BatchPageItem, BatchPageOverviewMetadata } from './batch.model';
 import { BatchPageService, BatchPageTabType } from './batch.service';

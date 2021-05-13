@@ -2,10 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { wslFindByUname, wslGetSuperUser } from '@weasel/models/user'
-import { UserModel } from '@weasel/schemas/user'
-import { EPlatformRole } from '@weasel/types/commontypes'
-import logger from '@weasel/utils/logger'
+import { wslFindByUname, wslGetSuperUser } from '@/models/user'
+import { UserModel } from '@/schemas/user'
+import { EPlatformRole } from '@/types/commontypes'
+import logger from '@/utils/logger'
 
 /**
  * Registers primary user during server startup.

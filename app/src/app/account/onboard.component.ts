@@ -5,10 +5,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { formFields, FormHint, FormHints } from '@weasel/core/models/form-hint';
-import { ApiService, UserService } from '@weasel/core/services';
-import { Alert, AlertType } from '@weasel/shared/components/alert.component';
 import { Subscription } from 'rxjs';
+
+import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
+import { ApiService, UserService } from '@/core/services';
+import { Alert, AlertType } from '@/shared/components/alert.component';
 
 /**
  *

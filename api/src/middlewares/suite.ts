@@ -2,10 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { SuiteModel } from '@weasel/schemas/suite'
-import { ITeam } from '@weasel/schemas/team'
-import logger from '@weasel/utils/logger'
 import { NextFunction, Request, Response } from 'express'
+
+import { SuiteModel } from '@/schemas/suite'
+import { ITeam } from '@/schemas/team'
+import logger from '@/utils/logger'
 
 /**
  * @summary
@@ -18,7 +19,6 @@ import { NextFunction, Request, Response } from 'express'
  * - Populates local response variables: `suite`.
  * - Expects request parameters: `suite`
  * - Expects local response variables: `team`
- * - Database Queries: 1
  *
  * @returns
  * - Error 404 if suite (`suite`) does not exist in team `team`.

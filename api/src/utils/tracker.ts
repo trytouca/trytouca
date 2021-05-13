@@ -2,9 +2,10 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { IUser } from '@weasel/schemas/user'
-import { config } from '@weasel/utils/config'
 import Mixpanel from 'mixpanel'
+
+import { IUser } from '@/schemas/user'
+import { config } from '@/utils/config'
 
 /**
  *

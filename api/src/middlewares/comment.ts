@@ -2,10 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { IBatchDocument } from '@weasel/schemas/batch'
-import { CommentModel } from '@weasel/schemas/comment'
-import { ECommentType } from '@weasel/types/backendtypes'
 import { NextFunction, Request, Response } from 'express'
+
+import { IBatchDocument } from '@/schemas/batch'
+import { CommentModel } from '@/schemas/comment'
+import { ECommentType } from '@/types/backendtypes'
 
 /**
  * @summary
@@ -19,7 +20,6 @@ import { NextFunction, Request, Response } from 'express'
  * - Expects request body variables: N/A
  * - Expects request parameters: `comment`
  * - Expects local response variables: `comment`, `team`, `suite`, `batch`
- * - Database Queries: 1
  *
  * @returns
  * - Error 404 if comment with id (`comment`) is not registered.

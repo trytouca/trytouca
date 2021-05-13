@@ -3,9 +3,10 @@
  */
 
 import { Component, OnDestroy } from '@angular/core';
-import { NotificationService } from '@weasel/core/services';
-import { Alert } from '@weasel/shared/components/alert.component';
 import { Subscription, timer } from 'rxjs';
+
+import { NotificationService } from '@/core/services';
+import { Alert } from '@/shared/components/alert.component';
 
 @Component({
   selector: 'app-notification',
