@@ -4,18 +4,18 @@
 
 #pragma once
 
-#include "weasel/devkit/filesystem.hpp"
-#include "weasel/devkit/platform.hpp"
-#include "weasel/devkit/testcase.hpp"
-#include "weasel/extra/logger.hpp"
+#include "touca/devkit/filesystem.hpp"
+#include "touca/devkit/platform.hpp"
+#include "touca/devkit/testcase.hpp"
+#include "touca/extra/logger.hpp"
 #include <thread>
 
-namespace weasel {
+namespace touca {
 
     using path = std::string;
 
     /**
-     * @enum weasel::DataFormat
+     * @enum touca::DataFormat
      * @brief describes supported formats for storing testresults to disk
      */
     enum class DataFormat : unsigned char {
@@ -35,12 +35,12 @@ namespace weasel {
      *
      */
     struct ClientOptions {
-        std::string api_key; /**< API Key to authenticate to Weasel Platform */
-        std::string api_url; /**< URL to Weasel Platform API */
+        std::string api_key; /**< API Key to authenticate to the Touca server */
+        std::string api_url; /**< URL to Touca server API */
         std::string team; /**< version of code under test */
         std::string suite; /**< Suite to which results should be submitted */
         std::string revision; /**< Team to which this suite belongs */
-        bool handshake = true; /**< whether client should perform handshake with platform during configuration */
+        bool handshake = true; /**< whether client should perform handshake with the server during configuration */
         unsigned long post_max_cases = 10; /**< maximum number of testcases whose results may be posted in a single http request */
         unsigned long post_max_retries = 2; /**< maximum number of attempts to re-submit failed http requests */
         ConcurrencyMode case_declaration = ConcurrencyMode::AllThreads; /**< whether testcase declaration should be isolated to each thread */
@@ -55,7 +55,7 @@ namespace weasel {
     /**
      * We are exposing this class for convenient unit-testing.
      */
-    class WEASEL_CLIENT_API ClientImpl {
+    class TOUCA_CLIENT_API ClientImpl {
     public:
         using OptionsMap = std::unordered_map<std::string, std::string>;
 
@@ -67,7 +67,7 @@ namespace weasel {
         /**
          *
          */
-        bool configure_by_file(const weasel::filesystem::path& path);
+        bool configure_by_file(const touca::filesystem::path& path);
 
         /**
          *
@@ -96,7 +96,7 @@ namespace weasel {
         /**
          *
          */
-        void add_logger(std::shared_ptr<weasel::logger> logger);
+        void add_logger(std::shared_ptr<touca::logger> logger);
 
         /**
          *
@@ -153,7 +153,7 @@ namespace weasel {
          *
          */
         void save(
-            const weasel::filesystem::path& path,
+            const touca::filesystem::path& path,
             const std::vector<std::string>& testcases,
             const DataFormat format,
             const bool overwrite) const;
@@ -188,14 +188,14 @@ namespace weasel {
          *
          */
         void save_json(
-            const weasel::filesystem::path& path,
+            const touca::filesystem::path& path,
             const std::vector<std::string>& testcases) const;
 
         /**
          *
          */
         void save_flatbuffers(
-            const weasel::filesystem::path& path,
+            const touca::filesystem::path& path,
             const std::vector<std::string>& testcases) const;
 
         /**
@@ -207,7 +207,7 @@ namespace weasel {
          *
          */
         void notify_loggers(
-            const weasel::logger::Level severity,
+            const touca::logger::Level severity,
             const std::string& msg) const;
 
         /**
@@ -221,7 +221,7 @@ namespace weasel {
         std::string _mostRecentTestcase;
         std::unique_ptr<Platform> _platform;
         std::unordered_map<std::thread::id, std::string> _threadMap;
-        std::vector<std::shared_ptr<weasel::logger>> _loggers;
+        std::vector<std::shared_ptr<touca::logger>> _loggers;
     };
 
-} // namespace weasel
+} // namespace touca

@@ -4,8 +4,8 @@
 
 #include "utils/operations.hpp"
 #include "cxxopts.hpp"
-#include "weasel/devkit/utils.hpp"
-#include "weasel/extra/version.hpp"
+#include "touca/devkit/utils.hpp"
+#include "touca/extra/version.hpp"
 
 /**
  *
@@ -36,7 +36,7 @@ std::shared_ptr<Operation> Operation::make(const Operation::Command& mode)
         { Operation::Command::view, &std::make_shared<ViewOperation> }
     };
     if (!ops.count(mode)) {
-        weasel::print_error("operation not implemented: {}\n", mode);
+        touca::print_error("operation not implemented: {}\n", mode);
         return nullptr;
     }
     return ops.at(mode)();
@@ -50,7 +50,7 @@ bool Operation::parse(int argc, char* argv[])
     try {
         return parse_impl(argc, argv);
     } catch (const std::exception& ex) {
-        weasel::print_error("failed to parse operation options: {}\n", ex.what());
+        touca::print_error("failed to parse operation options: {}\n", ex.what());
     }
     return false;
 }
@@ -63,7 +63,7 @@ bool Operation::run() const
     try {
         return run_impl();
     } catch (const std::exception& ex) {
-        weasel::print_error("failed to run operation: {}\n", ex.what());
+        touca::print_error("failed to run operation: {}\n", ex.what());
     }
     return false;
 }
@@ -73,7 +73,7 @@ bool Operation::run() const
  */
 cxxopts::Options config_options_main()
 {
-    cxxopts::Options options("weasel_cli");
+    cxxopts::Options options("touca_cli");
     // clang-format off
     options.add_options("main")
         ("h,help", "displays this help message")
@@ -95,7 +95,7 @@ bool CliOptions::parse(int argc, char* argv[])
     try {
         return parse_impl(argc, argv);
     } catch (const std::exception& ex) {
-        weasel::print_error("failed to parse application options: {}\n", ex.what());
+        touca::print_error("failed to parse application options: {}\n", ex.what());
     }
     return false;
 }
@@ -119,10 +119,10 @@ bool CliOptions::parse_impl(int argc, char* argv[])
     }
 
     // if user asks for version, print application version and exit
-    // @todo add a version.hpp to weasel/devkit and use major/minor/patch below
+    // @todo add a version.hpp to touca/devkit and use major/minor/patch below
 
     if (result.count("version")) {
-        fmt::print(stdout, "Weasel Utility Command Line Tool v{}.{}.{}\n", WEASEL_VERSION_MAJOR, WEASEL_VERSION_MINOR, WEASEL_VERSION_PATCH);
+        fmt::print(stdout, "Touca Utility Command Line Tool v{}.{}.{}\n", TOUCA_VERSION_MAJOR, TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
         show_version = true;
         return true;
     }
@@ -130,7 +130,7 @@ bool CliOptions::parse_impl(int argc, char* argv[])
     // validate and set option `mode`
 
     if (!result.count("mode")) {
-        weasel::print_error("no command was specified\n");
+        touca::print_error("no command was specified\n");
         fmt::print(stderr, "{}\n", options.show_positional_help().help());
         return false;
     }
@@ -139,7 +139,7 @@ bool CliOptions::parse_impl(int argc, char* argv[])
     mode = Operation::find_mode(mode_name);
 
     if (mode == Operation::Command::unknown) {
-        weasel::print_error("provided command `{}` is invalid\n", mode_name);
+        touca::print_error("provided command `{}` is invalid\n", mode_name);
         fmt::print(stderr, "{}\n", options.show_positional_help().help());
         return false;
     }
@@ -151,7 +151,7 @@ bool CliOptions::parse_impl(int argc, char* argv[])
         const std::unordered_set<std::string> levels = { "debug", "info", "warning" };
         const auto level = result["log-level"].as<std::string>();
         if (!levels.count(level)) {
-            weasel::print_error("invalid value for option `log-level`");
+            touca::print_error("invalid value for option `log-level`");
             fmt::print("{}\n", options.show_positional_help().help());
             return false;
         }

@@ -3,9 +3,9 @@
  */
 
 #include "fmt/core.h"
+#include "touca/devkit/logger.hpp"
+#include "touca/devkit/utils.hpp"
 #include "utils/operations.hpp"
-#include "weasel/devkit/logger.hpp"
-#include "weasel/devkit/utils.hpp"
 
 /**
  *
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     // setup basic console logging
 
     if (!opts.log_level.empty()) {
-        weasel::setup_console_logger(opts.log_level);
+        touca::setup_console_logger(opts.log_level);
     }
 
     // create appropriate derived class
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     // setup file logging
 
     if (!opts.log_dir.empty()) {
-        weasel::setup_file_logger(opts.log_dir);
+        touca::setup_file_logger(opts.log_dir);
     }
 
     // execute operation

@@ -4,21 +4,21 @@
 
 #pragma once
 
-#include "weasel/framework.hpp"
+#include "touca/framework.hpp"
 
-namespace weasel { namespace framework {
+namespace touca { namespace framework {
 
     /**
      * @brief Provides testcases that were used in the baseline version of
      *        this workflow.
      *
-     * @details Queries the Weasel Platform to obtain the list of testcases
+     * @details Queries the Touca server to obtain the list of testcases
      *          that are part of the current baseline version of the workflow
      *          under test.
      *
      * @since v1.2.0
      */
-    class WEASEL_FRAMEWORK_API RemoteSuite final : public Suite {
+    class TOUCA_FRAMEWORK_API RemoteSuite final : public Suite {
     public:
         RemoteSuite(const Options& options);
 
@@ -37,7 +37,7 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    class WEASEL_FRAMEWORK_API FileSuite final : public Suite {
+    class TOUCA_FRAMEWORK_API FileSuite final : public Suite {
     public:
         FileSuite(const std::string& path);
 
@@ -47,4 +47,4 @@ namespace weasel { namespace framework {
         std::string _path;
     };
 
-}} // namespace weasel::framework
+}} // namespace touca::framework

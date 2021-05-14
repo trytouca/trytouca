@@ -4,16 +4,16 @@
 
 #pragma once
 
-#include "weasel/framework.hpp"
-#include "weasel/framework/detail/utils.hpp"
-#include "weasel/weasel.hpp"
+#include "touca/framework.hpp"
+#include "touca/framework/detail/utils.hpp"
+#include "touca/touca.hpp"
 #include <iostream>
 
-struct DummySuite final : public weasel::framework::Suite {
+struct DummySuite final : public touca::framework::Suite {
 };
 
-struct SimpleSuite final : public weasel::framework::Suite {
-    using Inputs = std::vector<weasel::framework::Testcase>;
+struct SimpleSuite final : public touca::framework::Suite {
+    using Inputs = std::vector<touca::framework::Testcase>;
     SimpleSuite(const Inputs& inputs)
         : Suite()
         , _inputs(inputs)
@@ -26,17 +26,17 @@ struct SimpleSuite final : public weasel::framework::Suite {
     Inputs _inputs;
 };
 
-struct DummyWorkflow : public weasel::framework::Workflow {
-    std::shared_ptr<weasel::framework::Suite> suite() const override
+struct DummyWorkflow : public touca::framework::Workflow {
+    std::shared_ptr<touca::framework::Suite> suite() const override
     {
         return std::make_shared<DummySuite>();
     }
-    weasel::framework::Errors execute(const weasel::framework::Testcase& testcase) const override
+    touca::framework::Errors execute(const touca::framework::Testcase& testcase) const override
     {
         std::ignore = testcase;
         return {};
     }
-    bool skip(const weasel::framework::Testcase& testcase) const override
+    bool skip(const touca::framework::Testcase& testcase) const override
     {
         return testcase == "case-to-exclude";
     }
@@ -46,17 +46,17 @@ struct DummyWorkflow : public weasel::framework::Workflow {
     }
 };
 
-struct SimpleWorkflow : public weasel::framework::Workflow {
+struct SimpleWorkflow : public touca::framework::Workflow {
     SimpleWorkflow()
         : Workflow()
     {
     }
-    std::shared_ptr<weasel::framework::Suite> suite() const override
+    std::shared_ptr<touca::framework::Suite> suite() const override
     {
         SimpleSuite::Inputs inputs = { "4", "8", "15", "16", "23", "42" };
         return std::make_shared<SimpleSuite>(inputs);
     }
-    weasel::framework::Errors execute(const weasel::framework::Testcase& testcase) const override
+    touca::framework::Errors execute(const touca::framework::Testcase& testcase) const override
     {
         if (testcase == "8") {
             std::cout << "simple message in output stream" << std::endl;
@@ -66,9 +66,9 @@ struct SimpleWorkflow : public weasel::framework::Workflow {
             return { "some-error" };
         }
         if (testcase == "4") {
-            weasel::add_result("some-number", 1024);
-            weasel::add_result("some-string", "foo");
-            weasel::add_array_element("some-array", "bar");
+            touca::add_result("some-number", 1024);
+            touca::add_result("some-string", "foo");
+            touca::add_array_element("some-array", "bar");
         }
         return {};
     }
@@ -87,7 +87,7 @@ public:
         argv.push_back(nullptr);
 
         capturer.start_capture();
-        exit_status = weasel::framework::main(argv.size() - 1, argv.data(), workflow);
+        exit_status = touca::framework::main(argv.size() - 1, argv.data(), workflow);
         capturer.stop_capture();
     }
 
@@ -104,7 +104,7 @@ private:
 struct ResultChecker {
 
 public:
-    ResultChecker(const std::vector<weasel::filesystem::path>& segments)
+    ResultChecker(const std::vector<touca::filesystem::path>& segments)
     {
         _path = segments.front();
         for (auto i = 1ul; i < segments.size(); i++) {
@@ -112,27 +112,27 @@ public:
         }
     }
 
-    std::vector<weasel::filesystem::path> get_regular_files(const std::string& filename) const
+    std::vector<touca::filesystem::path> get_regular_files(const std::string& filename) const
     {
-        return get_elements(filename, [](const weasel::filesystem::path& path) {
-            return weasel::filesystem::is_regular_file(path);
+        return get_elements(filename, [](const touca::filesystem::path& path) {
+            return touca::filesystem::is_regular_file(path);
         });
     }
 
-    std::vector<weasel::filesystem::path> get_directories(const std::string& filename) const
+    std::vector<touca::filesystem::path> get_directories(const std::string& filename) const
     {
-        return get_elements(filename, [](const weasel::filesystem::path& path) {
-            return weasel::filesystem::is_directory(path);
+        return get_elements(filename, [](const touca::filesystem::path& path) {
+            return touca::filesystem::is_directory(path);
         });
     }
 
 private:
-    std::vector<weasel::filesystem::path> get_elements(
+    std::vector<touca::filesystem::path> get_elements(
         const std::string& filename,
-        const std::function<bool(weasel::filesystem::path)> filter) const
+        const std::function<bool(touca::filesystem::path)> filter) const
     {
-        std::vector<weasel::filesystem::path> filenames;
-        for (const auto& entry : weasel::filesystem::directory_iterator(_path / filename)) {
+        std::vector<touca::filesystem::path> filenames;
+        for (const auto& entry : touca::filesystem::directory_iterator(_path / filename)) {
             if (filter(entry.path())) {
                 filenames.emplace_back(entry.path().filename());
             }
@@ -140,5 +140,5 @@ private:
         return filenames;
     }
 
-    weasel::filesystem::path _path;
+    touca::filesystem::path _path;
 };

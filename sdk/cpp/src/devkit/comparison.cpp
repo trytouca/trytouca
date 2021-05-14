@@ -2,14 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/comparison.hpp"
+#include "touca/devkit/comparison.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 #include <chrono>
 
-namespace weasel { namespace compare {
+namespace touca { namespace compare {
 
     /**
      *
@@ -281,4 +281,4 @@ namespace weasel { namespace compare {
         }
     }
 
-}} // namespace weasel::compare
+}} // namespace touca::compare

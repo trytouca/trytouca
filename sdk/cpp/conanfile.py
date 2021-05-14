@@ -4,16 +4,16 @@
 
 from conans import ConanFile, CMake
 
-class WeaselConan(ConanFile):
+class ToucaConan(ConanFile):
 
-    name = "weasel"
-    homepage = "https://getweasel.com"
+    name = "touca"
+    homepage = "https://touca.io"
     description = "client library for regression testing arbitrary execution workflows"
     topics = ( "regression-testing", "test-framework", "test-automation" )
-    url = "https://docs.getweasel.com"
+    url = "https://docs.touca.io"
     license = "Apache-2.0"
     version ="1.4.0"
-    author = "Pejman Ghorbanzade <pejman@getweasel.com>"
+    author = "Pejman Ghorbanzade <pejman@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     options = {
         "shared": [ True, False ],
@@ -59,10 +59,10 @@ class WeaselConan(ConanFile):
 
     def _configure_cmake(self):
         cmake = CMake(self)
-        cmake.definitions["WEASEL_BUILD_TESTS"] = self.options.with_tests
-        cmake.definitions["WEASEL_BUILD_UTILS"] = self.options.with_utils
-        cmake.definitions["WEASEL_BUILD_EXAMPLES"] = self.options.with_examples
-        cmake.definitions["WEASEL_BUILD_FRAMEWORK"] = self.options.with_framework
+        cmake.definitions["TOUCA_BUILD_TESTS"] = self.options.with_tests
+        cmake.definitions["TOUCA_BUILD_UTILS"] = self.options.with_utils
+        cmake.definitions["TOUCA_BUILD_EXAMPLES"] = self.options.with_examples
+        cmake.definitions["TOUCA_BUILD_FRAMEWORK"] = self.options.with_framework
         cmake.configure()
         return cmake
 
@@ -89,11 +89,11 @@ class WeaselConan(ConanFile):
         ]
         if self.options.with_examples or self.options.with_framework or self.options.with_utils:
             client_requirements.append("cxxopts::cxxopts")
-        self.cpp_info.name = "weasel"
+        self.cpp_info.name = "touca"
         self.cpp_info.components["client"].names["cmake_find_package"] = "client"
-        self.cpp_info.components["client"].libs = ["weasel_client"]
+        self.cpp_info.components["client"].libs = ["touca_client"]
         self.cpp_info.components["client"].requires = client_requirements
         if self.options.with_framework:
             self.cpp_info.components["framework"].names["cmake_find_package"] = "framework"
-            self.cpp_info.components["framework"].libs = ["weasel_framework"]
+            self.cpp_info.components["framework"].libs = ["touca_framework"]
             self.cpp_info.components["framework"].requires = ["client"]

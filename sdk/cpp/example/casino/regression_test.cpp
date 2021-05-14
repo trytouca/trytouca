@@ -5,8 +5,8 @@
 #include "cxxopts.hpp"
 #include "example/casino/code_under_test.hpp"
 #include "fmt/core.h"
-#include "weasel/devkit/filesystem.hpp"
-#include "weasel/weasel.hpp"
+#include "touca/devkit/filesystem.hpp"
+#include "touca/touca.hpp"
 #include <fstream>
 #include <iostream>
 #include <thread>
@@ -16,8 +16,8 @@ using Options = std::map<std::string, std::string>;
 /**
  *
  */
-std::vector<weasel::casino::Table> parse_file(
-    const weasel::filesystem::path& path)
+std::vector<touca::casino::Table> parse_file(
+    const touca::filesystem::path& path)
 {
     std::ifstream ifile(path.string());
     if (!ifile.is_open()) {
@@ -27,14 +27,14 @@ std::vector<weasel::casino::Table> parse_file(
     auto num = 0u;
     std::string line;
     std::string text;
-    std::vector<weasel::casino::Table> tables;
+    std::vector<touca::casino::Table> tables;
     while (std::getline(ifile, line)) {
         ++num;
         text += line + '\n';
         if (num % 6) {
             continue;
         }
-        weasel::casino::Table table;
+        touca::casino::Table table;
         std::istringstream iss(text);
         text.clear();
         iss >> table;
@@ -47,22 +47,22 @@ std::vector<weasel::casino::Table> parse_file(
 /**
  *
  */
-bool simulate_table(weasel::casino::Table& table, const Options& opts)
+bool simulate_table(touca::casino::Table& table, const Options& opts)
 {
-    using policy_t = weasel::casino::Policy::Type;
+    using policy_t = touca::casino::Policy::Type;
     const std::map<std::string, policy_t>& policies = {
         { "default", policy_t::Default }, { "simple", policy_t::Simple }
     };
     try {
         table.setPolicy(policies.at(opts.at("policy")));
-        weasel::declare_testcase(table.name());
-        weasel::add_assertion("original_state", table);
+        touca::declare_testcase(table.name());
+        touca::add_assertion("original_state", table);
         for (auto i = 0u; i < 13; i++) {
             std::cout << "Round: " << i + 1 << std::endl;
             const auto result = table.playRound();
-            weasel::add_result(fmt::format("round_{0:2d}", i + 1), result);
+            touca::add_result(fmt::format("round_{0:2d}", i + 1), result);
         }
-        weasel::add_result("final_state", table);
+        touca::add_result("final_state", table);
     } catch (const std::exception& ex) {
         std::cerr << ex.what() << std::endl;
         return false;
@@ -102,9 +102,9 @@ template <>
 bool Operation<kGenerate>::run() const
 {
     const auto& print = [](const unsigned int num, std::ostream& out) {
-        std::set<weasel::casino::Table> tables;
+        std::set<touca::casino::Table> tables;
         while (tables.size() < num) {
-            weasel::casino::Table table;
+            touca::casino::Table table;
             table.generate();
             tables.insert(table);
         }
@@ -117,9 +117,9 @@ bool Operation<kGenerate>::run() const
         print(num, std::cout);
         return true;
     }
-    const auto output = weasel::filesystem::absolute(_opts.at("output"));
-    if (!weasel::filesystem::exists(output.parent_path().string())
-        && !weasel::filesystem::create_directories(output.parent_path())) {
+    const auto output = touca::filesystem::absolute(_opts.at("output"));
+    if (!touca::filesystem::exists(output.parent_path().string())
+        && !touca::filesystem::create_directories(output.parent_path())) {
         std::cerr << "failed to create directory: " << output.string()
                   << std::endl;
         return false;
@@ -169,7 +169,7 @@ bool Operation<kExecute>::validate() const
         }
     }
     const auto& file = _opts.at("input");
-    if (!weasel::filesystem::is_regular_file(file)) {
+    if (!touca::filesystem::is_regular_file(file)) {
         std::cerr << "specified input file is missing" << std::endl;
         return false;
     }
@@ -179,12 +179,12 @@ bool Operation<kExecute>::validate() const
 template <>
 bool Operation<kTest>::run() const
 {
-    weasel::configure({ { "api-key", _opts.at("api-key") },
+    touca::configure({ { "api-key", _opts.at("api-key") },
         { "api-url", _opts.at("api-url") },
         { "version", _opts.at("version") } });
 
-    if (!weasel::is_configured()) {
-        std::cerr << weasel::configuration_error() << std::endl;
+    if (!touca::is_configured()) {
+        std::cerr << touca::configuration_error() << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -201,23 +201,21 @@ bool Operation<kTest>::run() const
         // if user has specified an explicit delay, submit each testcase
         // individually and wait after simulating each table.
         if (0u != delay) {
-            if (!weasel::post()) {
-                std::cerr << "failed to submit testresults to weasel platform"
-                          << std::endl;
+            if (!touca::post()) {
+                std::cerr << "failed to submit testresults to the server" << std::endl;
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(delay));
         }
     }
     // if user has not specified an explicit delay, submit all testcases
     // together in one post operation.
-    if (0u == delay && !weasel::post()) {
-        std::cerr << "failed to submit testresults to weasel platform"
-                  << std::endl;
+    if (0u == delay && !touca::post()) {
+        std::cerr << "failed to submit testresults to the server" << std::endl;
     }
 
     // we can also store testresults to disk if we like to.
     if (_opts.count("output")) {
-        weasel::save_json(_opts.at("output"));
+        touca::save_json(_opts.at("output"));
     }
     return true;
 }
@@ -273,8 +271,8 @@ cxxopts::Options get_options_description(const EMode mode)
         ("output", "path to file to write testresults into", cxxopts::value<std::string>())
         ("policy", "code under test implementation variant", cxxopts::value<std::string>()->default_value("default"))
         ("delay", "time to wait in milliseconds before submitting result for each testcase", cxxopts::value<std::string>()->default_value("0"))
-        ("api-key", "Weasel API key", cxxopts::value<std::string>())
-        ("api-url", "root url of Weasel platform", cxxopts::value<std::string>())
+        ("api-key", "Touca API key", cxxopts::value<std::string>())
+        ("api-url", "Touca server root url", cxxopts::value<std::string>())
         ("version", "testsuite version", cxxopts::value<std::string>());
     // clang-format on
 

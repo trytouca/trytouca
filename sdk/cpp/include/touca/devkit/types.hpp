@@ -6,10 +6,10 @@
 
 #include "flatbuffers/flatbuffers.h"
 #include "rapidjson/fwd.h"
-#include "weasel/lib_api.hpp"
+#include "touca/lib_api.hpp"
 #include <map>
 
-namespace weasel {
+namespace touca {
     namespace compare {
         struct TypeComparison;
     } // namespace compare
@@ -30,7 +30,7 @@ namespace weasel {
         /**
          *
          */
-        enum class WEASEL_CLIENT_API ValueType : unsigned char {
+        enum class TOUCA_CLIENT_API ValueType : unsigned char {
             Bool,
             Number,
             String,
@@ -42,7 +42,7 @@ namespace weasel {
         /**
          *
          */
-        class WEASEL_CLIENT_API IType {
+        class TOUCA_CLIENT_API IType {
         public:
             /**
              *
@@ -107,7 +107,7 @@ namespace weasel {
         /**
          *
          */
-        class WEASEL_CLIENT_API Bool : public IType {
+        class TOUCA_CLIENT_API Bool : public IType {
         public:
             /**
              *
@@ -139,13 +139,13 @@ namespace weasel {
         private:
             bool _value;
 
-        }; // class weasel::types::Bool
+        }; // class touca::types::Bool
 
         /**
          *
          */
         template <class T>
-        class WEASEL_CLIENT_API Number : public IType {
+        class TOUCA_CLIENT_API Number : public IType {
         public:
             /**
              *
@@ -182,12 +182,12 @@ namespace weasel {
         private:
             T _value;
 
-        }; // class weasel::types::Number
+        }; // class touca::types::Number
 
         /**
          *
          */
-        class WEASEL_CLIENT_API String : public IType {
+        class TOUCA_CLIENT_API String : public IType {
         public:
             /**
              *
@@ -219,12 +219,12 @@ namespace weasel {
         private:
             std::string _value;
 
-        }; // class weasel::types::String
+        }; // class touca::types::String
 
         /**
          *
          */
-        class WEASEL_CLIENT_API Array : public IType {
+        class TOUCA_CLIENT_API Array : public IType {
         public:
             /**
              *
@@ -266,13 +266,13 @@ namespace weasel {
         private:
             std::vector<std::shared_ptr<IType>> _values;
 
-        }; // class weasel::types::Array
+        }; // class touca::types::Array
 
         /**
          *
          */
-        std::shared_ptr<IType> WEASEL_CLIENT_API
+        std::shared_ptr<IType> TOUCA_CLIENT_API
         deserializeValue(const fbs::TypeWrapper* ptr);
 
     } // namespace types
-} // namespace weasel
+} // namespace touca

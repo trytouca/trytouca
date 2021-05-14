@@ -5,10 +5,10 @@
 #pragma once
 
 #include "rapidjson/fwd.h"
-#include "weasel/devkit/convert.hpp"
+#include "touca/devkit/convert.hpp"
 #include <chrono>
 
-namespace weasel {
+namespace touca {
     class ClientImpl;
     namespace compare {
         class TestcaseComparison;
@@ -17,9 +17,9 @@ namespace weasel {
     /**
      * Assertions map has the same characteristics as the results map,
      * however, the information stored in an assertions map is handled
-     * slightly differently by the Weasel Platform.
+     * slightly differently by the Touca server.
      */
-    class WEASEL_CLIENT_API Testcase {
+    class TOUCA_CLIENT_API Testcase {
         friend class ClientImpl;
         friend class compare::TestcaseComparison;
 
@@ -27,7 +27,7 @@ namespace weasel {
         /**
          *
          */
-        struct WEASEL_CLIENT_API Overview {
+        struct TOUCA_CLIENT_API Overview {
             std::int32_t keysCount = 0;
             std::int32_t metricsCount = 0;
             std::int32_t metricsDuration = 0;
@@ -41,7 +41,7 @@ namespace weasel {
         /**
          *
          */
-        struct WEASEL_CLIENT_API Metadata {
+        struct TOUCA_CLIENT_API Metadata {
             std::string teamslug;
             std::string testsuite;
             std::string version;
@@ -158,11 +158,10 @@ namespace weasel {
 
         /**
          * Converts a given list of `Testcase` objects to serialized binary
-         * data compliant with Weasel flatbuffers schema.
+         * data compliant with Touca flatbuffers schema.
          *
          * @param testcases list of `Testcase` objects to be serialized
-         * @return serialized binary data compliant with weasel flatbuffers
-         * format
+         * @return serialized binary data in flatbuffers format
          */
         static std::vector<uint8_t> serialize(
             const std::vector<Testcase>& testcases);
@@ -182,4 +181,4 @@ namespace weasel {
 
     using ElementsMap = std::unordered_map<std::string, std::shared_ptr<Testcase>>;
 
-} // namespace weasel
+} // namespace touca

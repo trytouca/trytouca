@@ -3,24 +3,23 @@
  */
 
 #include "cxxopts.hpp"
+#include "touca/devkit/filesystem.hpp"
+#include "touca/devkit/logger.hpp"
+#include "touca/devkit/resultfile.hpp"
+#include "touca/devkit/utils.hpp"
 #include "utils/misc/file.hpp"
 #include "utils/operations.hpp"
-#include "weasel/devkit/filesystem.hpp"
-#include "weasel/devkit/logger.hpp"
-#include "weasel/devkit/resultfile.hpp"
-#include "weasel/devkit/utils.hpp"
 
 static const unsigned MAX_FILE_SIZE = 10u * 1024 * 1024; // 10 megabytes
 
 /**
- * we can validate that the given directory has at least one weasel
- * result file. However, since finding weasel result files is an
- * expensive operation, we choose to defer this check to operation
- * run-time.
+ * we can validate that the given directory has at least one result file.
+ * However, since finding result files is an expensive operation, we choose
+ * to defer this check to operation run-time.
  */
 bool MergeOperation::parse_impl(int argc, char* argv[])
 {
-    cxxopts::Options options("weasel-cli --mode=merge");
+    cxxopts::Options options("touca_cli --mode=merge");
     // clang-format off
     options.add_options("main")
         ("src", "path to directory with one or more result files", cxxopts::value<std::string>())
@@ -37,13 +36,13 @@ bool MergeOperation::parse_impl(int argc, char* argv[])
 
     for (const auto& kvp : filetypes) {
         if (!result.count(kvp.first)) {
-            weasel::print_error("{} directory not provided\n", kvp.second);
+            touca::print_error("{} directory not provided\n", kvp.second);
             fmt::print(stdout, "{}\n", options.help());
             return false;
         }
         const auto filepath = result[kvp.first].as<std::string>();
-        if (!weasel::filesystem::is_directory(filepath)) {
-            weasel::print_error("{} directory `{}` does not exist\n", kvp.second, filepath);
+        if (!touca::filesystem::is_directory(filepath)) {
+            touca::print_error("{} directory `{}` does not exist\n", kvp.second, filepath);
             return false;
         }
     }
@@ -57,24 +56,24 @@ bool MergeOperation::parse_impl(int argc, char* argv[])
 /**
  * we expect user to specify a directory as source. we recursively
  * iterate over all the file system elements in that directory and
- * identify weasel result files.
+ * identify touca result files.
  */
 bool MergeOperation::run_impl() const
 {
-    WEASEL_LOG_INFO("starting execution of operation: merge");
+    TOUCA_LOG_INFO("starting execution of operation: merge");
 
     const auto resultFiles = findResultFiles(_src);
 
     if (resultFiles.empty()) {
-        WEASEL_LOG_ERROR("specified directory has no weasel result file");
+        TOUCA_LOG_ERROR("specified directory has no result file");
         return false;
     }
 
-    using chunk_t = std::vector<weasel::filesystem::path>;
+    using chunk_t = std::vector<touca::filesystem::path>;
     std::vector<chunk_t> chunks;
     for (auto i = 0u, j = 0u; i < resultFiles.size(); j = i) {
         for (auto chunkSize = 0ull; i < resultFiles.size(); ++i) {
-            const auto fileSize = weasel::filesystem::file_size(resultFiles.at(i));
+            const auto fileSize = touca::filesystem::file_size(resultFiles.at(i));
             if (MAX_FILE_SIZE < chunkSize + fileSize) {
                 ++i;
                 break;
@@ -84,26 +83,26 @@ bool MergeOperation::run_impl() const
         chunk_t chunk(resultFiles.begin() + j, resultFiles.begin() + i);
         chunks.emplace_back(chunk);
     }
-    WEASEL_LOG_INFO("results will be merged into {} files", chunks.size());
+    TOUCA_LOG_INFO("results will be merged into {} files", chunks.size());
 
-    const auto& root = weasel::filesystem::absolute(_out);
+    const auto& root = touca::filesystem::absolute(_out);
     for (auto i = 0ul; i < chunks.size(); ++i) {
-        const auto filestem = weasel::filesystem::path(_src).filename().string();
+        const auto filestem = touca::filesystem::path(_src).filename().string();
         const auto& filename = chunks.size() == 1ul
-            ? weasel::format("{}.bin", filestem)
-            : weasel::format("{}.part{}.bin", filestem, i + 1);
+            ? touca::format("{}.bin", filestem)
+            : touca::format("{}.part{}.bin", filestem, i + 1);
         auto filepath = (root / filename).string();
-        WEASEL_LOG_INFO(
+        TOUCA_LOG_INFO(
             "merging {:<3} result files into {}",
             chunks.at(i).size(),
             filepath);
-        weasel::ResultFile rf(filepath);
+        touca::ResultFile rf(filepath);
         for (const auto& file : chunks.at(i)) {
-            rf.merge(weasel::ResultFile(file));
+            rf.merge(touca::ResultFile(file));
         }
         rf.save();
     }
-    WEASEL_LOG_INFO("merged results into {} files", chunks.size());
+    TOUCA_LOG_INFO("merged results into {} files", chunks.size());
 
     return true;
 }

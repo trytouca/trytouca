@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include "weasel/weasel.hpp"
+#include "touca/touca.hpp"
 #include <array>
 #include <iostream>
 #include <unordered_map>
 #include <vector>
 
-namespace weasel { namespace casino {
+namespace touca { namespace casino {
 
     class Card {
     public:
@@ -142,14 +142,14 @@ namespace weasel { namespace casino {
         std::string name() const;
     };
 
-}} // namespace weasel::casino
+}} // namespace touca::casino
 
 // clang-format off
-WEASEL_CONVERSION_LOGIC(weasel::casino::Card)
+TOUCA_CONVERSION_LOGIC(touca::casino::Card)
 {
-    WEASEL_CONVERSION_FUNCTION(weasel::casino::Card, value)
+    TOUCA_CONVERSION_FUNCTION(touca::casino::Card, value)
     {
-        auto out = WEASEL_CUSTOM_TYPE("Card");
+        auto out = TOUCA_CUSTOM_TYPE("Card");
         //out->add("suite", static_cast<unsigned int>(value.suite()));
         //out->add("rank", static_cast<unsigned int>(value.rank()));
         out->add("value", value.describe());
@@ -157,22 +157,22 @@ WEASEL_CONVERSION_LOGIC(weasel::casino::Card)
     }
 };
 
-WEASEL_CONVERSION_LOGIC(weasel::casino::RoundResult)
+TOUCA_CONVERSION_LOGIC(touca::casino::RoundResult)
 {
-    WEASEL_CONVERSION_FUNCTION(weasel::casino::RoundResult, value)
+    TOUCA_CONVERSION_FUNCTION(touca::casino::RoundResult, value)
     {
-        auto out = WEASEL_CUSTOM_TYPE("RoundResult");
+        auto out = TOUCA_CUSTOM_TYPE("RoundResult");
         out->add("drawn_cards", value._bids);
         out->add("winner", value._winner);
         return out;
     }
 };
 
-WEASEL_CONVERSION_LOGIC(weasel::casino::Player)
+TOUCA_CONVERSION_LOGIC(touca::casino::Player)
 {
-    WEASEL_CONVERSION_FUNCTION(weasel::casino::Player, value)
+    TOUCA_CONVERSION_FUNCTION(touca::casino::Player, value)
     {
-        auto out = WEASEL_CUSTOM_TYPE("Player");
+        auto out = TOUCA_CUSTOM_TYPE("Player");
         out->add("name", value._name);
         out->add("hand", value._hand._cards);
         out->add("score", value._tricks.size() / 4u);
@@ -180,11 +180,11 @@ WEASEL_CONVERSION_LOGIC(weasel::casino::Player)
     }
 };
 
-WEASEL_CONVERSION_LOGIC(weasel::casino::Table)
+TOUCA_CONVERSION_LOGIC(touca::casino::Table)
 {
-    WEASEL_CONVERSION_FUNCTION(weasel::casino::Table, value)
+    TOUCA_CONVERSION_FUNCTION(touca::casino::Table, value)
     {
-        auto out = WEASEL_CUSTOM_TYPE("Table");
+        auto out = TOUCA_CUSTOM_TYPE("Table");
         out->add("name", value._name);
         out->add("button", value._button);
         out->add("players", value._players);

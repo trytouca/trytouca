@@ -4,10 +4,10 @@
 
 #pragma once
 
-#include "weasel/devkit/convert.hpp"
-#include "weasel/devkit/types.hpp"
+#include "touca/devkit/convert.hpp"
+#include "touca/devkit/types.hpp"
 
-namespace weasel {
+namespace touca {
     namespace compare {
         struct TypeComparison;
     }
@@ -16,7 +16,7 @@ namespace weasel {
         /**
          *
          */
-        class WEASEL_CLIENT_API Object : public IType {
+        class TOUCA_CLIENT_API Object : public IType {
         public:
             /**
              *
@@ -73,7 +73,7 @@ namespace weasel {
             std::string _name;
             KeyMap _values;
 
-        }; // class weasel::types::Object
+        }; // class touca::types::Object
 
     } // namespace types
 
@@ -116,4 +116,4 @@ namespace weasel {
 
     } // namespace convert
 
-} // namespace weasel
+} // namespace touca

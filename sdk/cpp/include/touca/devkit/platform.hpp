@@ -4,12 +4,12 @@
 
 #pragma once
 
-#include "weasel/lib_api.hpp"
+#include "touca/lib_api.hpp"
 #include <memory>
 #include <string>
 #include <vector>
 
-namespace weasel {
+namespace touca {
 
     /**
      *
@@ -22,7 +22,7 @@ namespace weasel {
     /**
      *
      */
-    class WEASEL_CLIENT_API Transport {
+    class TOUCA_CLIENT_API Transport {
     public:
         virtual void set_token(const std::string& token) = 0;
         virtual Response get(const std::string& route) const = 0;
@@ -35,7 +35,7 @@ namespace weasel {
     /**
      *
      */
-    class WEASEL_CLIENT_API ApiUrl {
+    class TOUCA_CLIENT_API ApiUrl {
     public:
         ApiUrl(const std::string& url);
 
@@ -64,7 +64,7 @@ namespace weasel {
     /**
      *
      */
-    class WEASEL_CLIENT_API Platform {
+    class TOUCA_CLIENT_API Platform {
     public:
         /**
          *
@@ -80,17 +80,17 @@ namespace weasel {
             const std::string& revision);
 
         /**
-         * Checks platform status.
+         * Checks server status.
          *
-         * @return true if platform is ready to serve incoming requests.
+         * @return true if server is ready to serve incoming requests.
          */
         bool handshake() const;
 
         /**
-         * Authenticates with the platform using the provided API Key.
+         * Authenticates with the server using the provided API Key.
          *
          * @param api_key API Key to be used for authentication.
-         *                Can be retrieved from platform and is unique for
+         *                Can be retrieved from server and is unique for
          *                each user account.
          * @return true if authentication was successful.
          */
@@ -98,7 +98,7 @@ namespace weasel {
 
         /**
          * Submits test results in binary format for one or multiple testcases
-         * to the platform. Expects a valid API Token.
+         * to the server. Expects a valid API Token.
          *
          * @param content test results in binary format.
          * @param max_retries maximum number of retries.
@@ -109,7 +109,7 @@ namespace weasel {
             const unsigned max_retries) const;
 
         /**
-         * Informs the platform that no more testcases will be submitted for
+         * Informs the server that no more testcases will be submitted for
          * the specified revision.
          *
          * @return true if we managed to seal the specified revision.
@@ -117,7 +117,7 @@ namespace weasel {
         bool seal() const;
 
         /**
-         * Queries the platform for the list of testcases that are submitted
+         * Queries the server for the list of testcases that are submitted
          * to the baseline version of this suite. Expects a valid API Token.
          *
          * @return list of test cases of the baseline version of this suite.
@@ -125,7 +125,7 @@ namespace weasel {
         std::vector<std::string> elements() const;
 
         /**
-         * Checks if we are already authenticated with the platform.
+         * Checks if we are already authenticated with the server.
          *
          * @return true if object has a valid authentication token.
          */
@@ -162,4 +162,4 @@ namespace weasel {
         mutable std::string _error;
     };
 
-} // namespace weasel
+} // namespace touca

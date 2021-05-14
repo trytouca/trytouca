@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-namespace weasel.fbs;
+namespace touca.fbs;
 
 union Type {
     Bool,

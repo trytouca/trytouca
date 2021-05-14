@@ -4,11 +4,11 @@
 
 #include "catch2/catch.hpp"
 #include "tmpfile.hpp"
-#include "weasel/detail/client.hpp"
+#include "touca/detail/client.hpp"
 
 TEST_CASE("configure")
 {
-    weasel::ClientImpl client;
+    touca::ClientImpl client;
     const auto& opts = client.options();
     std::unordered_map<std::string, std::string> input;
 
@@ -97,14 +97,14 @@ TEST_CASE("configure")
         input.emplace("handshake", "false");
         CHECK(client.configure(input) == true);
         CHECK(opts.parse_error.empty() == true);
-        CHECK(opts.case_declaration == weasel::ConcurrencyMode::AllThreads);
+        CHECK(opts.case_declaration == touca::ConcurrencyMode::AllThreads);
         CHECK(opts.post_max_cases == 10);
         CHECK(opts.post_max_retries == 2);
         input.emplace("concurrency-mode", "per-thread");
         input.emplace("post-testcases", "3");
         input.emplace("post-maxretries", "20");
         CHECK(client.configure(input) == true);
-        CHECK(opts.case_declaration == weasel::ConcurrencyMode::PerThread);
+        CHECK(opts.case_declaration == touca::ConcurrencyMode::PerThread);
         CHECK(opts.post_max_cases == 3);
         CHECK(opts.post_max_retries == 20);
     }
@@ -112,7 +112,7 @@ TEST_CASE("configure")
 
 TEST_CASE("configure-by-file")
 {
-    weasel::ClientImpl client;
+    touca::ClientImpl client;
     const auto& opts = client.options();
     TmpFile file;
 
@@ -133,7 +133,7 @@ TEST_CASE("configure-by-file")
 
     SECTION("valid-file")
     {
-        file.write(R"({"weasel":{"team":"myteam","suite":"mysuite","version":"myversion"}})");
+        file.write(R"({"touca":{"team":"myteam","suite":"mysuite","version":"myversion"}})");
         CHECK_NOTHROW(client.configure_by_file(file.path));
         CHECK(opts.team == "myteam");
         CHECK(opts.suite == "mysuite");
@@ -142,7 +142,7 @@ TEST_CASE("configure-by-file")
 
     SECTION("valid-file-verbose")
     {
-        file.write(R"({"weasel":{"team":"myteam","suite":"mysuite","version":"myversion"}})");
+        file.write(R"({"touca":{"team":"myteam","suite":"mysuite","version":"myversion"}})");
         CHECK_NOTHROW(client.configure_by_file(file.path));
     }
 }

@@ -16,8 +16,8 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'Weasel Client for C++'
-copyright = '2021, Weasel, Inc'
+project = 'Touca SDK for C++'
+copyright = '2021, Touca, Inc'
 author = 'Pejman Ghorbanzade'
 
 # The full version, including alpha/beta/rc tags
@@ -67,5 +67,5 @@ html_show_sphinx = False
 source_suffix = ['.rst', '.md']
 
 # Breathe Configuration
-breathe_default_project = "weasel"
-breathe_projects = { "weasel": "../../local/docs/xml" }
+breathe_default_project = "touca"
+breathe_projects = { "touca": "../../local/docs/xml" }

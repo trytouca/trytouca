@@ -2,12 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/platform.hpp"
+#include "touca/devkit/platform.hpp"
 #include "catch2/catch.hpp"
 #include <string>
 #include <vector>
 
-void check_api(const weasel::ApiUrl& api, const std::vector<std::string> parts)
+void check_api(const touca::ApiUrl& api, const std::vector<std::string> parts)
 {
     REQUIRE(!api.root().empty());
     std::vector<std::string> actual {
@@ -20,7 +20,7 @@ void check_api(const weasel::ApiUrl& api, const std::vector<std::string> parts)
 
 void check_api(const std::string& url, const std::vector<std::string> parts)
 {
-    weasel::ApiUrl api(url);
+    touca::ApiUrl api(url);
     check_api(api, parts);
 }
 
@@ -28,7 +28,7 @@ TEST_CASE("api-url")
 {
     SECTION("empty-url")
     {
-        weasel::ApiUrl api("");
+        touca::ApiUrl api("");
         CHECK(api.root().empty());
         CHECK_THAT(api._error, Catch::Contains("invalid"));
         REQUIRE_NOTHROW(api.route("somewhere"));
@@ -64,7 +64,7 @@ TEST_CASE("api-url")
 
     SECTION("scheme-host-port-with-prefix-1")
     {
-        weasel::ApiUrl api("http://api.example.com:8081/api");
+        touca::ApiUrl api("http://api.example.com:8081/api");
         check_api(api, { "http://api.example.com:8081", "api" });
         CHECK(api.route("/one") == "/api/one");
         CHECK(api.route("/two/three") == "/api/two/three");
@@ -72,7 +72,7 @@ TEST_CASE("api-url")
 
     SECTION("scheme-host-port-with-prefix-2")
     {
-        weasel::ApiUrl api("http://api.example.com:8081/api/v1");
+        touca::ApiUrl api("http://api.example.com:8081/api/v1");
         check_api(api, { "http://api.example.com:8081", "api/v1" });
         CHECK(api.route("/one") == "/api/v1/one");
         CHECK(api.route("/two/three") == "/api/v1/two/three");
@@ -92,13 +92,13 @@ TEST_CASE("api-url")
 
     SECTION("scheme-host-port-with-prefix-and-revision")
     {
-        weasel::ApiUrl api("example.com/api/@/team/suite/revision");
+        touca::ApiUrl api("example.com/api/@/team/suite/revision");
         check_api(api, { "example.com", "api", "team", "suite", "revision" });
     }
 
     SECTION("confirm-pass")
     {
-        weasel::ApiUrl api("example.com/api/@/team/suite/revision");
+        touca::ApiUrl api("example.com/api/@/team/suite/revision");
         CHECK_NOTHROW(api.confirm("team", "suite", "revision"));
         CHECK(api._error.empty());
         CHECK(api._team == "team");
@@ -108,7 +108,7 @@ TEST_CASE("api-url")
 
     SECTION("confirm-fail")
     {
-        weasel::ApiUrl api("example.com/api/@/team/suite/revision");
+        touca::ApiUrl api("example.com/api/@/team/suite/revision");
         SECTION("team")
         {
             CHECK_NOTHROW(api.confirm("team2", "suite", "revision"));
@@ -132,8 +132,8 @@ TEST_CASE("platform")
 {
     SECTION("empty-url")
     {
-        weasel::ApiUrl api("");
-        weasel::Platform platform(api);
+        touca::ApiUrl api("");
+        touca::Platform platform(api);
         CHECK_THAT(platform.get_error(), Catch::Contains("invalid"));
         CHECK(platform.has_token() == false);
     }

@@ -2,19 +2,19 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/detail/client.hpp"
+#include "touca/detail/client.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
-#include "weasel/devkit/filesystem.hpp"
-#include "weasel/devkit/platform.hpp"
-#include "weasel/devkit/resultfile.hpp"
-#include "weasel/devkit/utils.hpp"
-#include "weasel/impl/weasel_generated.h"
+#include "touca/devkit/filesystem.hpp"
+#include "touca/devkit/platform.hpp"
+#include "touca/devkit/resultfile.hpp"
+#include "touca/devkit/utils.hpp"
+#include "touca/impl/touca_generated.h"
 #include <fstream>
 #include <sstream>
 
-namespace weasel {
+namespace touca {
 
     using func_t = std::function<void(const std::string&)>;
 
@@ -61,10 +61,10 @@ namespace weasel {
     }
 
     template <>
-    func_t parse_member(weasel::ConcurrencyMode& member)
+    func_t parse_member(touca::ConcurrencyMode& member)
     {
         return [&member](const std::string& value) {
-            member = value == "per-thread" ? weasel::ConcurrencyMode::PerThread : weasel::ConcurrencyMode::AllThreads;
+            member = value == "per-thread" ? touca::ConcurrencyMode::PerThread : touca::ConcurrencyMode::AllThreads;
         };
     }
 
@@ -90,7 +90,7 @@ namespace weasel {
 
         for (const auto& kvp : opts) {
             if (!parsers.count(kvp.first)) {
-                _opts.parse_error = weasel::format("unknown parameter \"{}\"", kvp.first);
+                _opts.parse_error = touca::format("unknown parameter \"{}\"", kvp.first);
                 return false;
             }
             parsers.at(kvp.first)(kvp.second);
@@ -101,7 +101,7 @@ namespace weasel {
         // variable takes precedence over the specified configuration
         // parameter.
 
-        const auto env_value = std::getenv("WEASEL_API_KEY");
+        const auto env_value = std::getenv("TOUCA_API_KEY");
         if (env_value != nullptr) {
             _opts.api_key = env_value;
         }
@@ -155,7 +155,7 @@ namespace weasel {
             }
         }
 
-        // perform authentication to Weasel Platform using the provided
+        // perform authentication to server using the provided
         // API key and obtain API token for posting results.
 
         _platform = std::unique_ptr<Platform>(new Platform(api_url));
@@ -171,11 +171,11 @@ namespace weasel {
     /**
      *
      */
-    bool ClientImpl::configure_by_file(const weasel::filesystem::path& path)
+    bool ClientImpl::configure_by_file(const touca::filesystem::path& path)
     {
         // check that specified path leads to an existing regular file on disk
 
-        if (!weasel::filesystem::is_regular_file(path)) {
+        if (!touca::filesystem::is_regular_file(path)) {
             _opts.parse_error = "configuration file is missing";
             return false;
         }
@@ -191,10 +191,10 @@ namespace weasel {
         rapidjson::Document rjDoc;
         rjDoc.Parse(ss.str());
 
-        // check that configuration file has a top-level weasel section
+        // check that configuration file has a top-level `touca` section
 
         if (rjDoc.HasParseError() || !rjDoc.IsObject()
-            || !rjDoc.HasMember("weasel") || !rjDoc["weasel"].IsObject()) {
+            || !rjDoc.HasMember("touca") || !rjDoc["touca"].IsObject()) {
             _opts.parse_error = "configuration file is not valid";
             return false;
         }
@@ -212,7 +212,7 @@ namespace weasel {
             "post-testcases", "post-maxretries", "concurrency-mode"
         };
 
-        const auto& rjObj = rjDoc["weasel"];
+        const auto& rjObj = rjDoc["touca"];
         for (const auto& key : strKeys) {
             if (rjObj.HasMember(key) && rjObj[key].IsString()) {
                 opts.emplace(key, rjObj[key].GetString());
@@ -242,7 +242,7 @@ namespace weasel {
     /**
      *
      */
-    std::shared_ptr<weasel::Testcase> ClientImpl::testcase(const std::string& name)
+    std::shared_ptr<touca::Testcase> ClientImpl::testcase(const std::string& name)
     {
         if (!_configured) {
             return nullptr;
@@ -259,7 +259,7 @@ namespace weasel {
     void ClientImpl::forget_testcase(const std::string& name)
     {
         if (!_testcases.count(name)) {
-            const auto err = weasel::format("key `{}` does not exist", name);
+            const auto err = touca::format("key `{}` does not exist", name);
             notify_loggers(logger::Level::Warning, err);
             throw std::invalid_argument(err);
         }
@@ -347,12 +347,12 @@ namespace weasel {
      *
      */
     void ClientImpl::save(
-        const weasel::filesystem::path& path,
+        const touca::filesystem::path& path,
         const std::vector<std::string>& testcases,
         const DataFormat format,
         const bool overwrite) const
     {
-        if (weasel::filesystem::exists(path) && !overwrite) {
+        if (touca::filesystem::exists(path) && !overwrite) {
             throw std::invalid_argument("file already exists");
         }
 
@@ -361,9 +361,9 @@ namespace weasel {
             std::transform(_testcases.begin(), _testcases.end(), std::back_inserter(tcs), [](const ElementsMap::value_type& kvp) { return kvp.first; });
         }
 
-        const auto parentPath = weasel::filesystem::absolute(weasel::filesystem::path(path).parent_path());
-        if (!weasel::filesystem::exists(parentPath.string()) && !weasel::filesystem::create_directories(parentPath)) {
-            throw std::invalid_argument(weasel::format("failed to save content to disk: failed to create directory: {}", parentPath.string()));
+        const auto parentPath = touca::filesystem::absolute(touca::filesystem::path(path).parent_path());
+        if (!touca::filesystem::exists(parentPath.string()) && !touca::filesystem::create_directories(parentPath)) {
+            throw std::invalid_argument(touca::format("failed to save content to disk: failed to create directory: {}", parentPath.string()));
         }
 
         switch (format) {
@@ -386,11 +386,11 @@ namespace weasel {
         // check that client is configured to submit test results
 
         if (!_platform) {
-            notify_loggers(logger::Level::Error, "client is not configured to contact weasel platform");
+            notify_loggers(logger::Level::Error, "client is not configured to contact server");
             return false;
         }
         if (!_platform->has_token()) {
-            notify_loggers(logger::Level::Error, "client is not authenticated to the weasel platform");
+            notify_loggers(logger::Level::Error, "client is not authenticated to the server");
             return false;
         }
 
@@ -433,11 +433,11 @@ namespace weasel {
     bool ClientImpl::seal() const
     {
         if (!_platform) {
-            notify_loggers(logger::Level::Error, "client is not configured to contact weasel platform");
+            notify_loggers(logger::Level::Error, "client is not configured to contact server");
             return false;
         }
         if (!_platform->has_token()) {
-            notify_loggers(logger::Level::Error, "client is not authenticated to the weasel platform");
+            notify_loggers(logger::Level::Error, "client is not authenticated to the server");
             return false;
         }
         if (!_platform->seal()) {
@@ -464,7 +464,7 @@ namespace weasel {
         // If client is configured, check whether testcase declaration is set as
         // "shared" in which case report the most recently declared testcase.
 
-        if (_opts.case_declaration == weasel::ConcurrencyMode::AllThreads) {
+        if (_opts.case_declaration == touca::ConcurrencyMode::AllThreads) {
             return !_mostRecentTestcase.empty();
         }
 
@@ -490,7 +490,7 @@ namespace weasel {
         // "shared" in which case report the name of the most recently declared
         // testcase.
 
-        if (_opts.case_declaration == weasel::ConcurrencyMode::AllThreads) {
+        if (_opts.case_declaration == touca::ConcurrencyMode::AllThreads) {
             return _mostRecentTestcase;
         }
 
@@ -504,7 +504,7 @@ namespace weasel {
      *
      */
     void ClientImpl::save_flatbuffers(
-        const weasel::filesystem::path& path,
+        const touca::filesystem::path& path,
         const std::vector<std::string>& names) const
     {
         std::vector<Testcase> tcs;
@@ -561,7 +561,7 @@ namespace weasel {
      *
      */
     void ClientImpl::save_json(
-        const weasel::filesystem::path& path,
+        const touca::filesystem::path& path,
         const std::vector<std::string>& testcases) const
     {
         const auto& content = make_json(testcases);
@@ -571,7 +571,7 @@ namespace weasel {
             ofs.close();
         } catch (const std::exception& ex) {
             throw std::invalid_argument(
-                weasel::format("failed to save content to disk: {}", ex.what()));
+                touca::format("failed to save content to disk: {}", ex.what()));
         }
     }
 
@@ -587,4 +587,4 @@ namespace weasel {
         }
     }
 
-} // namespace weasel
+} // namespace touca

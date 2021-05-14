@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://getweasel.com/schemas/weasel/clients/cpp/config-file.schema.json",
+  "id": "https://touca.io/schemas/sdk/cpp/config-file.schema.json",
   "definitions": {
-    "weasel": {
+    "touca": {
       "properties": {
         "api-key": {
           "type": "string"
@@ -40,12 +40,12 @@
   },
   "additionalProperties": true,
   "properties": {
-    "weasel": {
-      "$ref": "#/definitions/weasel"
+    "touca": {
+      "$ref": "#/definitions/touca"
     }
   },
   "required": [
-    "weasel"
+    "touca"
   ],
   "type": "object"
 }

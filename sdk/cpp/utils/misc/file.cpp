@@ -3,27 +3,27 @@
  */
 
 #include "utils/misc/file.hpp"
-#include "weasel/devkit/logger.hpp"
-#include "weasel/devkit/resultfile.hpp"
+#include "touca/devkit/logger.hpp"
+#include "touca/devkit/resultfile.hpp"
 
 /**
  *
  */
-std::vector<weasel::filesystem::path> discover(const weasel::filesystem::path& path)
+std::vector<touca::filesystem::path> discover(const touca::filesystem::path& path)
 {
-    if (weasel::filesystem::is_regular_file(path)) {
-        weasel::ResultFile srcFile(path);
+    if (touca::filesystem::is_regular_file(path)) {
+        touca::ResultFile srcFile(path);
         if (!srcFile.validate()) {
             return {};
         }
         return { path };
     }
-    if (!weasel::filesystem::is_directory(path)) {
+    if (!touca::filesystem::is_directory(path)) {
         return {};
     }
-    std::vector<weasel::filesystem::path> output;
-    for (const auto& it : weasel::filesystem::recursive_directory_iterator(path)) {
-        weasel::ResultFile srcFile(it.path());
+    std::vector<touca::filesystem::path> output;
+    for (const auto& it : touca::filesystem::recursive_directory_iterator(path)) {
+        touca::ResultFile srcFile(it.path());
         if (!srcFile.validate()) {
             continue;
         }
@@ -35,14 +35,14 @@ std::vector<weasel::filesystem::path> discover(const weasel::filesystem::path& p
 /**
  *
  */
-std::vector<weasel::filesystem::path> findResultFiles(const weasel::filesystem::path& path)
+std::vector<touca::filesystem::path> findResultFiles(const touca::filesystem::path& path)
 {
-    WEASEL_LOG_DEBUG("finding weasel result files in {}", path.string());
+    TOUCA_LOG_DEBUG("finding result files in {}", path.string());
     auto output = discover(path);
-    WEASEL_LOG_INFO("found {} weasel result files", output.size());
+    TOUCA_LOG_INFO("found {} result files", output.size());
 
-    const auto& func = [](const weasel::filesystem::path& a, const weasel::filesystem::path& b) {
-        return weasel::filesystem::file_size(a) < weasel::filesystem::file_size(b);
+    const auto& func = [](const touca::filesystem::path& a, const touca::filesystem::path& b) {
+        return touca::filesystem::file_size(a) < touca::filesystem::file_size(b);
     };
     std::sort(output.begin(), output.end(), func);
     return output;

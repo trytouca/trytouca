@@ -2,12 +2,12 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/framework/suites.hpp"
-#include "weasel/devkit/platform.hpp"
+#include "touca/framework/suites.hpp"
+#include "touca/devkit/platform.hpp"
 #include <algorithm>
 #include <fstream>
 
-namespace weasel { namespace framework {
+namespace touca { namespace framework {
 
     /**
      *
@@ -23,7 +23,7 @@ namespace weasel { namespace framework {
      */
     void RemoteSuite::initialize()
     {
-        // To obtain list of testcases from Weasel Platform, we expect
+        // To obtain list of testcases from the server, we expect
         // the following configuration options are set.
 
         const std::vector<std::string> keys = { "api-key", "api-url", "team", "suite", "revision" };
@@ -32,7 +32,7 @@ namespace weasel { namespace framework {
             return;
         }
 
-        // authenticate to Weasel Platform.
+        // authenticate to the server.
 
         ApiUrl api_url(_options.at("api-url"));
         if (!api_url.confirm(_options.at("team"), _options.at("suite"), _options.at("revision"))) {
@@ -44,7 +44,7 @@ namespace weasel { namespace framework {
             throw std::runtime_error(platform.get_error());
         }
 
-        // ask Weasel Platform for the list of elements
+        // ask the server for the list of elements
 
         for (const auto& element : platform.elements()) {
             push(element);
@@ -81,4 +81,4 @@ namespace weasel { namespace framework {
         }
     }
 
-}} // namespace weasel::framework
+}} // namespace touca::framework

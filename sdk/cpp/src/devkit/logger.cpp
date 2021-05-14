@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/logger.hpp"
+#include "touca/devkit/logger.hpp"
 #include "spdlog/async.h"
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/rotating_file_sink.h"
@@ -14,13 +14,13 @@
  */
 void update_logger(spdlog::sink_ptr sink)
 {
-    auto main_logger = spdlog::get("weasel-cmp");
+    auto main_logger = spdlog::get("touca-cmp");
     if (main_logger) {
         main_logger->sinks().push_back(sink);
         return;
     }
     std::vector<spdlog::sink_ptr> sinks { sink };
-    auto logger = std::make_shared<spdlog::async_logger>("weasel-cmp", sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
+    auto logger = std::make_shared<spdlog::async_logger>("touca-cmp", sinks.begin(), sinks.end(), spdlog::thread_pool(), spdlog::async_overflow_policy::block);
     spdlog::register_logger(logger);
     spdlog::set_default_logger(logger);
 }
@@ -28,7 +28,7 @@ void update_logger(spdlog::sink_ptr sink)
 /**
  *
  */
-void weasel::setup_console_logger(const std::string& log_level)
+void touca::setup_console_logger(const std::string& log_level)
 {
     spdlog::init_thread_pool(8192, 1);
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
@@ -40,9 +40,9 @@ void weasel::setup_console_logger(const std::string& log_level)
 /**
  *
  */
-void weasel::setup_file_logger(const std::string& log_dir)
+void touca::setup_file_logger(const std::string& log_dir)
 {
-    const auto& log_file = fmt::format("{}/weasel.log", log_dir);
+    const auto& log_file = fmt::format("{}/touca.log", log_dir);
     auto file_sink = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(log_file, 1024 * 1024 * 10, 100);
     file_sink->set_pattern("[%Y-%m-%dT%H:%M:%SZ] [%t] [%l] %v");
     file_sink->set_level(spdlog::level::debug);
@@ -52,7 +52,7 @@ void weasel::setup_file_logger(const std::string& log_dir)
 /**
  *
  */
-void weasel::vlog(const weasel::log_level level, fmt::string_view format, fmt::format_args args)
+void touca::vlog(const touca::log_level level, fmt::string_view format, fmt::format_args args)
 {
     const auto slevel = static_cast<spdlog::level::level_enum>(level);
     spdlog::log(slevel, fmt::vformat(format, args));

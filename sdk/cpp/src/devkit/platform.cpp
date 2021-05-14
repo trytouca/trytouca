@@ -2,14 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/platform.hpp"
+#include "touca/devkit/platform.hpp"
 #include "httplib.h"
 #include "rapidjson/document.h"
-#include "weasel/devkit/utils.hpp"
+#include "touca/devkit/utils.hpp"
 #include <regex>
 #include <sstream>
 
-namespace weasel {
+namespace touca {
 
     /**
      *
@@ -35,7 +35,7 @@ namespace weasel {
     {
         _cli.set_default_headers({ { "Accept-Charset", "utf-8" },
             { "Accept", "application/json" },
-            { "User-Agent", "weasel-client-cpp/1.4.0" } });
+            { "User-Agent", "touca-client-cpp/1.4.0" } });
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
         _cli.enable_server_certificate_verification(false);
 #endif
@@ -56,7 +56,7 @@ namespace weasel {
     {
         const auto& result = _cli.Get(route.c_str());
         if (!result) {
-            return { -1, weasel::format("failed to submit HTTP GET request to {}", route) };
+            return { -1, touca::format("failed to submit HTTP GET request to {}", route) };
         }
         return { result->status, result->body };
     }
@@ -68,7 +68,7 @@ namespace weasel {
     {
         const auto& result = _cli.Patch(route.c_str(), body, "application/json");
         if (!result) {
-            return { -1, weasel::format("failed to submit HTTP PATCH request to {}", route) };
+            return { -1, touca::format("failed to submit HTTP PATCH request to {}", route) };
         }
         return { result->status, result->body };
     }
@@ -80,7 +80,7 @@ namespace weasel {
     {
         const auto& result = _cli.Post(route.c_str(), body, "application/json");
         if (!result) {
-            return { -1, weasel::format("failed to submit HTTP POST request to {}", route) };
+            return { -1, touca::format("failed to submit HTTP POST request to {}", route) };
         }
         return { result->status, result->body };
     }
@@ -92,7 +92,7 @@ namespace weasel {
     {
         const auto& result = _cli.Post(route.c_str(), content, "application/octet-stream");
         if (!result) {
-            return { -1, weasel::format("failed to submit HTTP POST request to {}", route) };
+            return { -1, touca::format("failed to submit HTTP POST request to {}", route) };
         }
         return { result->status, result->body };
     }
@@ -106,7 +106,7 @@ namespace weasel {
             R"(^(?:([a-z]+)://)?([^:/?#]+)(?::(\d+))?/?(.*)?$)");
         std::cmatch result;
         if (!std::regex_match(url.c_str(), result, pattern)) {
-            _error = weasel::format("invalid url: \"{}\"", url);
+            _error = touca::format("invalid url: \"{}\"", url);
             return;
         }
         _root.scheme = result[1];
@@ -147,10 +147,10 @@ namespace weasel {
     {
         auto output = _root.host;
         if (!_root.scheme.empty()) {
-            output.insert(0, weasel::format("{}://", _root.scheme));
+            output.insert(0, touca::format("{}://", _root.scheme));
         }
         if (!_root.port.empty()) {
-            return weasel::format("{}:{}", output, _root.port);
+            return touca::format("{}:{}", output, _root.port);
         }
         return output;
     }
@@ -228,9 +228,9 @@ namespace weasel {
     }
 
     /**
-     * Perform handshake with Weasel Platform to ensure that it is ready
-     * to serve further requests and queries. Parse response from Weasel
-     * Platform as a precaution.
+     * Perform handshake with the server to ensure that it is ready to
+     * serve further requests and queries. Parse response from the server
+     * as a precaution.
      */
     bool Platform::handshake() const
     {
@@ -241,49 +241,49 @@ namespace weasel {
             return false;
         }
         if (response.status != 200) {
-            _error = "response from the platform is unexpected";
+            _error = "unexpected server response";
             return false;
         }
         rapidjson::Document doc;
         if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
-            _error = "failed to parse response from the platform";
+            _error = "failed to parse response from the server";
             return false;
         }
         if (!doc.HasMember("ready") || !doc["ready"].IsBool()) {
-            _error = "response form the platform is ill-formed";
+            _error = "response form the server is ill-formed";
             return false;
         }
         if (!doc["ready"].GetBool()) {
-            _error = "platform is not ready";
+            _error = "server is not ready";
             return false;
         }
         return true;
     }
 
     /**
-     * Submit authentication request. If Platform accepts this request, parse
-     * the response to extract the API Token issued by Weasel Platform.
+     * Submit authentication request. If the server accepts this request,
+     * parse the response to extract the API Token issued by the server.
      */
     bool Platform::auth(const std::string& apiKey)
     {
         _error.clear();
-        const auto content = weasel::format("{{\"key\": \"{}\"}}", apiKey);
+        const auto content = touca::format("{{\"key\": \"{}\"}}", apiKey);
         const auto response = _http->post(_api.route("/client/signin"), content);
         if (response.status == -1) {
             _error = response.body;
             return false;
         }
         if (response.status != 200) {
-            _error = weasel::format("platform authentication failed: {}", response.status);
+            _error = touca::format("authentication failed: {}", response.status);
             return false;
         }
         rapidjson::Document doc;
         if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
-            _error = "failed to parse platform response";
+            _error = "failed to parse server response";
             return false;
         }
         if (!doc.HasMember("token") || !doc["token"].IsString()) {
-            _error = "platform response malformed";
+            _error = "unexpected server response";
             return false;
         }
         _http->set_token(doc["token"].GetString());
@@ -297,19 +297,19 @@ namespace weasel {
     std::vector<std::string> Platform::elements() const
     {
         _error.clear();
-        const auto& route = weasel::format("{}/element/{}/{}", _api._team, _api._suite);
+        const auto& route = touca::format("{}/element/{}/{}", _api._team, _api._suite);
         const auto& response = _http->get(_api.route(route));
         if (response.status == -1) {
             _error = response.body;
             return {};
         }
         if (response.status != 200) {
-            _error = "received unexpected platform response";
+            _error = "unexpected server response";
             return {};
         }
         rapidjson::Document doc;
         if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
-            _error = "failed to parse response from the platform";
+            _error = "failed to parse server response";
             return {};
         }
         std::vector<std::string> elements;
@@ -332,7 +332,7 @@ namespace weasel {
             if (response.status == 204) {
                 return {};
             }
-            errors.emplace_back(weasel::format(
+            errors.emplace_back(touca::format(
                 "failed to post testresults for a group of testcases ({}/{})",
                 i + 1,
                 max_retries));
@@ -355,7 +355,7 @@ namespace weasel {
             return false;
         }
         if (response.status != 204) {
-            _error = weasel::format("failed to seal specified version: {}", response.status);
+            _error = touca::format("failed to seal specified version: {}", response.status);
             return false;
         }
         return true;
@@ -375,7 +375,7 @@ namespace weasel {
             return false;
         }
         if (response.status != 204) {
-            _error = weasel::format("failed to submit result: {}", response.status);
+            _error = touca::format("failed to submit result: {}", response.status);
             return false;
         }
         return true;
@@ -393,7 +393,7 @@ namespace weasel {
             return false;
         }
         if (response.status != 200) {
-            _error = weasel::format("received unexpected platform response: {}", response.status);
+            _error = touca::format("unexpected server response: {}", response.status);
             return false;
         }
         content = response.body;
@@ -412,10 +412,10 @@ namespace weasel {
             return false;
         }
         if (response.status != 204) {
-            _error = weasel::format("received unexpected platform response: {}", response.status);
+            _error = touca::format("unexpected server response: {}", response.status);
             return false;
         }
         return true;
     }
 
-} // namespace weasel
+} // namespace touca

@@ -4,18 +4,18 @@
 
 #pragma once
 
-#include "weasel/lib_api.hpp"
+#include "touca/lib_api.hpp"
 #include <string>
 
-namespace weasel {
+namespace touca {
 
     /**
      * @brief a simple class that helps clients log the duration between
      *        its instantiation and destruction as a performance metric.
      *
-     * @see weasel::make_timer
+     * @see touca::make_timer
      */
-    class WEASEL_CLIENT_API scoped_timer {
+    class TOUCA_CLIENT_API scoped_timer {
     public:
         /**
          *
@@ -31,4 +31,4 @@ namespace weasel {
         std::string _name;
     };
 
-} // namespace weasel
+} // namespace touca

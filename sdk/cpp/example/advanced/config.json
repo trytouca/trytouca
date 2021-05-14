@@ -5,7 +5,7 @@
     "save-as-binary": true,
     "save-as-json": true
   },
-  "weasel": {
+  "touca": {
     "api-key": "<YOUR API KEY>",
     "api-url": "<YOUR API URL>"
   },

@@ -2,16 +2,16 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/framework.hpp"
+#include "touca/framework.hpp"
 #include "cxxopts.hpp"
 #include "fmt/printf.h"
 #include "rapidjson/document.h"
-#include "weasel/devkit/filesystem.hpp"
-#include "weasel/devkit/platform.hpp"
-#include "weasel/devkit/utils.hpp"
-#include "weasel/extra/version.hpp"
-#include "weasel/framework/detail/utils.hpp"
-#include "weasel/weasel.hpp"
+#include "touca/devkit/filesystem.hpp"
+#include "touca/devkit/platform.hpp"
+#include "touca/devkit/utils.hpp"
+#include "touca/extra/version.hpp"
+#include "touca/framework/detail/utils.hpp"
+#include "touca/touca.hpp"
 #include <fstream>
 #include <iostream>
 #include <thread>
@@ -20,7 +20,7 @@
 #undef GetObject
 #endif
 
-namespace weasel { namespace framework {
+namespace touca { namespace framework {
 
     /**
      *
@@ -37,18 +37,18 @@ namespace weasel { namespace framework {
      */
     bool Workflow::skip(const Testcase& testcase) const
     {
-        weasel::filesystem::path outputDirCase = _options.at("output-dir");
+        touca::filesystem::path outputDirCase = _options.at("output-dir");
         outputDirCase /= _options.at("suite");
         outputDirCase /= _options.at("revision");
         outputDirCase /= testcase;
         if (_options.count("save-as-binary") && _options.at("save-as-binary") == "true") {
-            outputDirCase /= "weasel.bin";
+            outputDirCase /= "touca.bin";
         } else if (_options.count("save-as-json") && _options.at("save-as-json") == "true") {
-            outputDirCase /= "weasel.json";
+            outputDirCase /= "touca.json";
         } else {
             return false;
         }
-        return weasel::filesystem::exists(outputDirCase.string());
+        return touca::filesystem::exists(outputDirCase.string());
     }
 
     /**
@@ -76,7 +76,7 @@ namespace weasel { namespace framework {
     cxxopts::Options cli_options()
     {
 
-        cxxopts::Options options("weasel-framework", "Command Line Options");
+        cxxopts::Options options("touca-framework", "Command Line Options");
 
         // clang-format off
         options.add_options("main")
@@ -92,10 +92,10 @@ namespace weasel { namespace framework {
                 "path to output directory",
                 cxxopts::value<std::string>()->default_value("./results"))
             ("api-key",
-                "weasel platform api key",
+                "Touca server api key",
                 cxxopts::value<std::string>())
             ("api-url",
-                "weasel platform api url",
+                "Touca server api url",
                 cxxopts::value<std::string>())
             ("suite",
                 "slug of suite to which testresults belong",
@@ -110,7 +110,7 @@ namespace weasel { namespace framework {
                 "do not generate log files",
                 cxxopts::value<std::string>()->implicit_value("true"))
             ("skip-post",
-                "do not submit results to weasel platform",
+                "do not submit results to Touca server",
                 cxxopts::value<std::string>()->implicit_value("true"))
             ("save-as-json",
                 "save a copy of test results on local disk in json format",
@@ -157,7 +157,7 @@ namespace weasel { namespace framework {
                 options[opt.l] = result[opt.l].as<std::string>();
             }
         } catch (const cxxopts::OptionParseException& ex) {
-            weasel::print_error("failed to parse command line arguments: {}\n", ex.what());
+            touca::print_error("failed to parse command line arguments: {}\n", ex.what());
             return false;
         }
 
@@ -180,7 +180,7 @@ namespace weasel { namespace framework {
         // exists in current directory, attempt to use that file.
 
         if (!options.count("config-file")) {
-            if (!weasel::filesystem::is_regular_file("./config.json")) {
+            if (!touca::filesystem::is_regular_file("./config.json")) {
                 return true;
             }
             options.emplace("config-file", "./config.json");
@@ -190,36 +190,36 @@ namespace weasel { namespace framework {
 
         // configuration file must exist if it is specified
 
-        if (!weasel::filesystem::is_regular_file(configFile)) {
-            weasel::print_error("configuration file not found: {}\n", configFile);
+        if (!touca::filesystem::is_regular_file(configFile)) {
+            touca::print_error("configuration file not found: {}\n", configFile);
             return false;
         }
 
         // load configuration file in memory
 
-        const auto& content = weasel::load_string_file(configFile);
+        const auto& content = touca::load_string_file(configFile);
 
         // parse configuration file
 
         rapidjson::Document document;
         if (document.Parse<0>(content.c_str()).HasParseError()) {
-            weasel::print_error("failed to parse configuration file\n");
+            touca::print_error("failed to parse configuration file\n");
             return false;
         }
 
         // we expect content to be a json object
 
         if (!document.IsObject()) {
-            weasel::print_error("expected configuration file to be a json object\n");
+            touca::print_error("expected configuration file to be a json object\n");
             return false;
         }
 
-        for (const auto& topLevelKey : { "framework", "weasel", "workflow" }) {
+        for (const auto& topLevelKey : { "framework", "touca", "workflow" }) {
             if (!document.HasMember(topLevelKey)) {
                 continue;
             }
             if (!document[topLevelKey].IsObject()) {
-                weasel::print_error("field {} in configuration file has unexpected type\n", topLevelKey);
+                touca::print_error("field {} in configuration file has unexpected type\n", topLevelKey);
                 return false;
             }
             for (const auto& rjMember : document[topLevelKey].GetObject()) {
@@ -229,8 +229,8 @@ namespace weasel { namespace framework {
                     continue;
                 }
                 if (!rjMember.value.IsString()) {
-                    weasel::print_warning("Ignoring option \"{}\":\"{}\" in configuration file.\n");
-                    weasel::print_warning("Expected value to be of type string.\n", topLevelKey, key);
+                    touca::print_warning("Ignoring option \"{}\":\"{}\" in configuration file.\n");
+                    touca::print_warning("Expected value to be of type string.\n", topLevelKey, key);
                     continue;
                 }
                 options[key] = rjMember.value.GetString();
@@ -249,7 +249,7 @@ namespace weasel { namespace framework {
         if (!options.count("api-url")) {
             return true;
         }
-        weasel::ApiUrl api(options.at("api-url"));
+        touca::ApiUrl api(options.at("api-url"));
         if (!options.count("team") && !api._team.empty()) {
             options["team"] = api._team;
         }
@@ -300,7 +300,7 @@ namespace weasel { namespace framework {
      */
     bool validate_api_url(const Options& options)
     {
-        weasel::ApiUrl api(options.at("api-url"));
+        touca::ApiUrl api(options.at("api-url"));
         if (!api.confirm(options.at("team"), options.at("suite"), options.at("revision"))) {
             fmt::print(std::cerr, "{}\n", api._error);
             return false;
@@ -341,7 +341,7 @@ namespace weasel { namespace framework {
             const auto& levels = { "debug", "info", "warning" };
             const auto isValid = std::find(levels.begin(), levels.end(), level) != levels.end();
             if (!isValid) {
-                weasel::print_error("value of option \"--log-level\" must be one of \"debug\", \"info\" or \"warning\".\n");
+                touca::print_error("value of option \"--log-level\" must be one of \"debug\", \"info\" or \"warning\".\n");
                 return false;
             }
         }
@@ -409,10 +409,10 @@ namespace weasel { namespace framework {
      */
     class FileLogger : public LogSubscriber {
     public:
-        FileLogger(const weasel::filesystem::path& logDir)
+        FileLogger(const touca::filesystem::path& logDir)
             : LogSubscriber()
         {
-            const auto logFilePath = logDir / "weasel.log";
+            const auto logFilePath = logDir / "touca.log";
             _ofs = std::ofstream(logFilePath.string(), std::ios::trunc);
         }
 
@@ -521,7 +521,7 @@ namespace weasel { namespace framework {
         std::ofstream _fout;
 
     public:
-        Printer(const weasel::filesystem::path& path)
+        Printer(const touca::filesystem::path& path)
             : _fout(path.string(), std::ios::trunc)
         {
         }
@@ -537,8 +537,8 @@ namespace weasel { namespace framework {
     };
 
     /**
-     * @brief Notifies the platform that all test cases are executed and no
-     *        further test results will be submitted for this version.
+     * @brief Notifies the server that all the test cases are executed and
+     *        no further test results will be submitted for this version.
      *
      * @todo Currently, sealing the test results is an opt-in feature.
      *       Test framework should be explicltly configured to seal the
@@ -562,10 +562,10 @@ namespace weasel { namespace framework {
             return true;
         }
 
-        // submit request to seal this version and await platform response
+        // submit request to seal this version and await server response
 
         logger.log(LogLevel::Debug, "attempting to seal this version");
-        if (!weasel::seal()) {
+        if (!touca::seal()) {
             logger.log(LogLevel::Error, "failed to seal this version");
             return false;
         }
@@ -604,14 +604,14 @@ namespace weasel { namespace framework {
         // if user asks for version, print version of this executable and exit
 
         if (options.count("version")) {
-            fmt::print(std::cout, "{}.{}.{}\n", WEASEL_VERSION_MAJOR, WEASEL_VERSION_MINOR, WEASEL_VERSION_PATCH);
+            fmt::print(std::cout, "{}.{}.{}\n", TOUCA_VERSION_MAJOR, TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
             return EXIT_SUCCESS;
         }
 
         // validate all configuration options
 
         if (!validate_options(options)) {
-            weasel::print_error("failed to validate configuration options.\n");
+            touca::print_error("failed to validate configuration options.\n");
             return EXIT_FAILURE;
         }
 
@@ -626,11 +626,11 @@ namespace weasel { namespace framework {
 
         // establish output directory for this revision
 
-        weasel::filesystem::path outputDirRevision = options.at("output-dir");
+        touca::filesystem::path outputDirRevision = options.at("output-dir");
         outputDirRevision /= options.at("suite");
         outputDirRevision /= options.at("revision");
 
-        weasel::filesystem::create_directories(outputDirRevision);
+        touca::filesystem::create_directories(outputDirRevision);
 
         // unless explicitly instructed not to do so, register a separate
         // file logger to write our events to a file in the output directory.
@@ -697,14 +697,14 @@ namespace weasel { namespace framework {
         Printer printer(outputDirRevision / "Console.log");
 
         // Provide feedback to user that regression test is starting.
-        // We perform this operation prior to configuring weasel client,
+        // We perform this operation prior to configuring Touca client,
         // which may take a noticeable time.
 
         printer.print(
-            "\nWeasel Regression Test Framework\nSuite: {}\nRevision: {}\n\n",
+            "\nTouca Regression Test Framework\nSuite: {}\nRevision: {}\n\n",
             options.at("suite"), options.at("revision"));
 
-        // initialize weasel client
+        // initialize the client
 
         Options opts;
         const auto copyOption = [&options, &opts](
@@ -730,16 +730,16 @@ namespace weasel { namespace framework {
 
         // configure the client library
 
-        weasel::configure(opts);
+        touca::configure(opts);
 
         // check that the client is properly configured
 
-        if (!weasel::is_configured()) {
-            logger.log(lg::Error, "failed to configure weasel client: {}",
-                weasel::configuration_error());
+        if (!touca::is_configured()) {
+            logger.log(lg::Error, "failed to configure touca client: {}",
+                touca::configuration_error());
             return EXIT_FAILURE;
         }
-        logger.log(lg::Info, "configured weasel client");
+        logger.log(lg::Info, "configured touca client");
 
         // initialize suite if workflow is providing one. In general, we expect
         // the workflow to provide a suite instance unless user intends always
@@ -798,14 +798,14 @@ namespace weasel { namespace framework {
                 continue;
             }
 
-            // declare testcase to weasel client
+            // declare testcase to the client
 
-            weasel::declare_testcase(testcase);
+            touca::declare_testcase(testcase);
 
             // remove result directory for this testcase if it already exists.
 
-            if (weasel::filesystem::exists(outputDirCase.string())) {
-                weasel::filesystem::remove_all(outputDirCase);
+            if (touca::filesystem::exists(outputDirCase.string())) {
+                touca::filesystem::remove_all(outputDirCase);
                 logger.log(lg::Debug, "removed existing result directory for {}", testcase);
 
                 // since subsequent operations may expect to write into
@@ -816,7 +816,7 @@ namespace weasel { namespace framework {
 
             // create result directory for this testcase
 
-            weasel::filesystem::create_directories(outputDirCase);
+            touca::filesystem::create_directories(outputDirCase);
 
             // execute workflow for this testcase
 
@@ -847,34 +847,34 @@ namespace weasel { namespace framework {
 
             if (!capturer.cerr().empty()) {
                 const auto resultFile = outputDirCase / "stderr.txt";
-                weasel::save_string_file(resultFile.string(), capturer.cerr());
+                touca::save_string_file(resultFile.string(), capturer.cerr());
             }
 
             // pipe stdout of code under test for this testcase into a file
 
             if (!capturer.cout().empty()) {
                 const auto resultFile = outputDirCase / "stdout.txt";
-                weasel::save_string_file(resultFile.string(), capturer.cout());
+                touca::save_string_file(resultFile.string(), capturer.cout());
             }
 
             // save testresults in binary format if configured to do so
 
             if (errors.empty() && options.count("save-as-binary") && options.at("save-as-binary") == "true") {
-                const auto resultFile = outputDirCase / "weasel.bin";
-                weasel::save_binary(resultFile.string(), { testcase });
+                const auto resultFile = outputDirCase / "touca.bin";
+                touca::save_binary(resultFile.string(), { testcase });
             }
 
             // save testresults in json format if configured to do so
 
             if (errors.empty() && options.count("save-as-json") && options.at("save-as-json") == "true") {
-                const auto resultFile = outputDirCase / "weasel.json";
-                weasel::save_json(resultFile.string(), { testcase });
+                const auto resultFile = outputDirCase / "touca.json";
+                touca::save_json(resultFile.string(), { testcase });
             }
 
-            // submit testresults to weasel platform
+            // submit testresults to Touca server
 
-            if (!options.count("skip-post") && !weasel::post()) {
-                logger.log(lg::Error, "failed to submit results to weasel platform");
+            if (!options.count("skip-post") && !touca::post()) {
+                logger.log(lg::Error, "failed to submit results to Touca server");
             }
 
             // report testcase statistics
@@ -892,7 +892,7 @@ namespace weasel { namespace framework {
             // now that we are done with this testcase, remove all results
             // associated with itfrom process memory.
 
-            weasel::forget_testcase(testcase);
+            touca::forget_testcase(testcase);
         }
 
         // write test execution statistics as footer to the user report
@@ -911,7 +911,7 @@ namespace weasel { namespace framework {
         // seal this version if configured to do so.
 
         if (!seal_version(options, logger)) {
-            weasel::print_warning("failed to seal this version\n");
+            touca::print_warning("failed to seal this version\n");
         }
 
         logger.log(lg::Info, "application completed execution");
@@ -926,12 +926,12 @@ namespace weasel { namespace framework {
         try {
             return main_impl(argc, argv, workflow);
         } catch (const std::exception& ex) {
-            weasel::print_error("aborting application: {}\n", ex.what());
+            touca::print_error("aborting application: {}\n", ex.what());
             return EXIT_FAILURE;
         } catch (...) {
-            weasel::print_error("aborting application due to unknown error\n");
+            touca::print_error("aborting application due to unknown error\n");
             return EXIT_FAILURE;
         }
     }
 
-}} // namespace weasel::framework
+}} // namespace touca::framework

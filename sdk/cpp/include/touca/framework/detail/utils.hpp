@@ -4,14 +4,14 @@
 
 #pragma once
 
-#include "weasel/framework/lib_api.hpp"
+#include "touca/framework/lib_api.hpp"
 #include <iostream>
 #include <sstream>
 
 /**
  * @brief Captures content printed to standard output and error streams.
  */
-struct WEASEL_FRAMEWORK_API OutputCapturer {
+struct TOUCA_FRAMEWORK_API OutputCapturer {
     OutputCapturer();
     ~OutputCapturer();
 

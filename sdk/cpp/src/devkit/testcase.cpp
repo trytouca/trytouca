@@ -2,15 +2,15 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/testcase.hpp"
+#include "touca/devkit/testcase.hpp"
 #include "flatbuffers/flatbuffers.h"
 #include "rapidjson/document.h"
-#include "weasel/devkit/comparison.hpp"
-#include "weasel/devkit/types.hpp"
-#include "weasel/devkit/utils.hpp"
-#include "weasel/impl/weasel_generated.h"
+#include "touca/devkit/comparison.hpp"
+#include "touca/devkit/types.hpp"
+#include "touca/devkit/utils.hpp"
+#include "touca/impl/touca_generated.h"
 
-namespace weasel {
+namespace touca {
 
     /**
      *
@@ -25,7 +25,7 @@ namespace weasel {
         // Add an ISO 8601 timestamp that shows the time of creation of this
         // testcase.
         // We use UTC time instead of local time to ensure that the times
-        // are correctly interpreted on the Platform that uses UTC timezone.
+        // are correctly interpreted on the server that uses UTC timezone.
         // We are using `system_clock` to obtain the time with milliseconds
         // precision.
         // We are using `strftime` instead of `fmt::localtime(tm)` provided
@@ -48,7 +48,7 @@ namespace weasel {
     Testcase::Testcase(const std::vector<uint8_t>& buffer)
         : _posted(true)
     {
-        const auto& message = flatbuffers::GetRoot<weasel::fbs::Message>(buffer.data());
+        const auto& message = flatbuffers::GetRoot<touca::fbs::Message>(buffer.data());
 
         // parse remaining metadata
 
@@ -135,7 +135,7 @@ namespace weasel {
      */
     std::string Testcase::Metadata::describe() const
     {
-        return weasel::format("{}/{}/{}/{}", teamslug, testsuite, version, testcase);
+        return touca::format("{}/{}/{}/{}", teamslug, testsuite, version, testcase);
     }
 
     /**
@@ -203,7 +203,7 @@ namespace weasel {
         const std::string& key,
         const std::shared_ptr<types::IType>& element)
     {
-        using weasel::types::Array;
+        using touca::types::Array;
         if (!_resultsMap.count(key)) {
             const auto value = std::make_shared<Array>();
             value->add(element);
@@ -211,7 +211,7 @@ namespace weasel {
             return;
         }
         const auto ivalue = _resultsMap.at(key);
-        if (ivalue->type() != weasel::types::ValueType::Array) {
+        if (ivalue->type() != touca::types::ValueType::Array) {
             throw std::invalid_argument("specified key is associated with a "
                                         "result of a different type");
         }
@@ -226,14 +226,14 @@ namespace weasel {
      */
     void Testcase::add_hit_count(const std::string& key)
     {
-        using number_t = weasel::types::Number<uint64_t>;
+        using number_t = touca::types::Number<uint64_t>;
         if (!_resultsMap.count(key)) {
             const auto value = std::make_shared<number_t>(1u);
             _resultsMap.emplace(key, value);
             return;
         }
         const auto ivalue = _resultsMap.at(key);
-        if (ivalue->type() != weasel::types::ValueType::Number) {
+        if (ivalue->type() != touca::types::ValueType::Number) {
             throw std::invalid_argument("specified key is associated with a "
                                         "result of a different type");
         }
@@ -462,4 +462,4 @@ namespace weasel {
         return { ptr, ptr + fbb.GetSize() };
     }
 
-} // namespace weasel
+} // namespace touca

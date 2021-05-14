@@ -12,15 +12,15 @@ RUN apt-get update \
     cmake g++ gcc git make libssl-dev \
   && rm -rf /var/lib/apt/lists/* \
   && cmake --version \
-  && groupadd -r weasel && useradd -u 8002 -m --no-log-init -r -g weasel weasel
+  && groupadd -r touca && useradd -u 8002 -m --no-log-init -r -g touca touca
 
 COPY . /opt
 
-RUN chown -v -R weasel:weasel /opt
+RUN chown -v -R touca:touca /opt
 
 WORKDIR /opt
 
-USER weasel
+USER touca
 
 RUN ./build.sh --with-tests --with-utils --with-examples --with-framework
 
@@ -40,14 +40,14 @@ RUN cd /opt && bash build.sh --docs
 # ---- production ----
 
 FROM scratch
-LABEL maintainer="hello@getweasel.com"
-LABEL org.opencontainers.image.title="weasel-cpp"
-LABEL org.opencontainers.image.description="Weasel Client Library for C++"
-LABEL org.opencontainers.image.url="https://getweasel.com/"
-LABEL org.opencontainers.image.documentation="https://docs.getweasel.com"
-LABEL org.opencontainers.image.vendor="Weasel, Inc."
-LABEL org.opencontainers.image.authors="hello@getweasel.com"
-LABEL org.opencontainers.image.licenses="https://github.com/getweasel/weasel-cpp/blob/master/LICENSE"
+LABEL maintainer="hello@touca.io"
+LABEL org.opencontainers.image.title="touca-cpp"
+LABEL org.opencontainers.image.description="Touca SDK for C++"
+LABEL org.opencontainers.image.url="https://touca.io/"
+LABEL org.opencontainers.image.documentation="https://docs.touca.io"
+LABEL org.opencontainers.image.vendor="Touca, Inc."
+LABEL org.opencontainers.image.authors="hello@touca.io"
+LABEL org.opencontainers.image.licenses="https://github.com/trytouca/touca-cpp/blob/master/LICENSE"
 
 COPY --from=client_cpp_build  /opt/local/dist      /opt/dist
 COPY --from=client_cpp_docs   /opt/local/docs/html /opt/docs

@@ -7,17 +7,17 @@
 /**
  * @file framework.hpp
  *
- * @brief Entry-point to the Weasel Test Framework for C++.
+ * @brief Entry-point to the Touca Test Framework for C++.
  *
- * @details `weasel/framework.hpp` provides the functions necessary to
+ * @details `touca/framework.hpp` provides the functions necessary to
  *          write a Regression Test tool that can submit its results to the
- *          Weasel platform.
+ *          Touca server.
  *
  * @author Pejman Ghorbanzade <pejman@ghorbanzade.com>
  * @date 2018-2020
  */
 
-#include "weasel/framework/lib_api.hpp"
+#include "touca/framework/lib_api.hpp"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -25,21 +25,21 @@
 #include <vector>
 
 /**
- * @namespace weasel::framework
+ * @namespace touca::framework
  *
- * @brief Provides API of Weasel Test Framework for C++.
+ * @brief Provides API of Touca Test Framework for C++.
  *
  * @details Helps engineers develop a regression test tool that can submit
- *          its results to the Weasel platform.
+ *          its results to the Touca server.
  */
-namespace weasel { namespace framework {
+namespace touca { namespace framework {
 
     /**
      * @brief An abstract representation of an input to the workflow under
      *        test that is expected to trigger a consistent behavior by that
      *        workflow.
      *
-     * @details On Weasel, a `framework::Testcase` can be thought of as a
+     * @details On Touca, a `framework::Testcase` can be thought of as a
      *          unique identifier for the input to the workflow and not the
      *          input itself. This distinction gives users the freedom to
      *          choose what constitutes an appropriate input for their
@@ -69,7 +69,7 @@ namespace weasel { namespace framework {
 
     /**
      * @brief A simple container for the configuration parameters used by
-     *        the application, the Weasel Test Framework and the workflow
+     *        the application, the Touca Test Framework and the workflow
      *        under test.
      *
      * @details For simplicity, the configuration parameters are always
@@ -97,7 +97,7 @@ namespace weasel { namespace framework {
     };
 
     /**
-     * @brief Allows extraction of log events produced by the Weasel Test
+     * @brief Allows extraction of log events produced by the Touca Test
      *        Framework in a controlled level of detail.
      *
      * @details Registering an instance of `LogSubscriber` to subscribe to
@@ -108,9 +108,9 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    struct WEASEL_FRAMEWORK_API LogSubscriber {
+    struct TOUCA_FRAMEWORK_API LogSubscriber {
         /**
-         * @brief Function called by the Weasel Test Framework every time
+         * @brief Function called by the Touca Test Framework every time
          *        it publishes a log event.
          *
          * @details Since Workflow allows registering only one LogSubscriber,
@@ -140,7 +140,7 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    class WEASEL_FRAMEWORK_API Suite {
+    class TOUCA_FRAMEWORK_API Suite {
     public:
         /**
          * @brief Populates the set of testcases stored in this object.
@@ -149,7 +149,7 @@ namespace weasel { namespace framework {
          *          create their own Suite. The implementation should use
          *          `Suite::push` to store testcases without the risk of
          *          duplication.
-         *          It is okay if this function throws an exception. Weasel
+         *          It is okay if this function throws an exception. Touca
          *          Test Framework is supposed to handle any thrown exception.
          *
          * @throws std::runtime_error if we failed to populate list of test
@@ -158,7 +158,7 @@ namespace weasel { namespace framework {
         virtual void initialize() {};
 
         /**
-         * @details This function enables easy iteration, by the Weasel Test
+         * @details This function enables easy iteration, by the Touca Test
          *          Framework, over the set of testcases in this suite.
          *
          * @return an iterator to the first testcase in this testsuite.
@@ -211,7 +211,7 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    class WEASEL_FRAMEWORK_API Workflow {
+    class TOUCA_FRAMEWORK_API Workflow {
     public:
         /**
          * @brief Describes extra command line arguments supported by this
@@ -228,7 +228,7 @@ namespace weasel { namespace framework {
          * @brief Merges configuration options `options` into the set of
          *        configuration options of the Workflow `_options`.
          *
-         * @details This function is used by the Weasel Test Framework to
+         * @details This function is used by the Touca Test Framework to
          *          make framework's own configuration parameters accessible
          *          from `Workflow::execute` and `Workflow::skip` functions,
          *          just in case developers want to use them.
@@ -238,7 +238,7 @@ namespace weasel { namespace framework {
          * @param options configuration options to be added to `_options`.
          *
          * @see `Workflow::execute` for a full list of configuration options
-         *      populated by the Weasel Test Framework.
+         *      populated by the Touca Test Framework.
          */
         void add_options(const Options& options);
 
@@ -279,7 +279,7 @@ namespace weasel { namespace framework {
 
         /**
          * @brief Registers an instance of LogSubscriber to subscribe to
-         *        the log events produced by the Weasel Test Framework.
+         *        the log events produced by the Touca Test Framework.
          *
          * @details Useful for Test Authors who use their own loggers to
          *          capture events of the workflow under test. Implementing
@@ -321,7 +321,7 @@ namespace weasel { namespace framework {
          *
          *          Implementing this function is **required**.
          *
-         * @see `weasel/framework/suites.hpp` to learn about the set of
+         * @see `touca/framework/suites.hpp` to learn about the set of
          *      ready to use subclasses of `Suite`.
          *
          * @return An instance of a `Suite` that contains the set of testcases
@@ -333,7 +333,7 @@ namespace weasel { namespace framework {
          * @brief Checks if a given testcase should be skipped by the Test
          *        Framework.
          *
-         * @details Called by the Weasel Test Framework for each testcase
+         * @details Called by the Touca Test Framework for each testcase
          *          prior to its execution. This function provides a mechanism
          *          for Test Authors to add custom logic to determine whether
          *          a given testcase should be excluded from the test.
@@ -403,7 +403,7 @@ namespace weasel { namespace framework {
      *          of a regression test tool, such as parsing of command line
      *          arguments and configuration files, logging, error handling,
      *          managing test results on filesystem and submitting them to
-     *          the Weasel Platform.
+     *          the Touca server.
      *
      *          In most typical regression test tools, this function is meant
      *          to be called from the application's `main` function, using the
@@ -413,7 +413,7 @@ namespace weasel { namespace framework {
      *              int main(int argc, char* argv[])
      *              {
      *                  MyWorkflow workflow;
-     *                  return weasel::framework::main(argc, argv, workflow);
+     *                  return touca::framework::main(argc, argv, workflow);
      *              }
      *          @endcode
      *
@@ -448,6 +448,6 @@ namespace weasel { namespace framework {
      *
      * @since v1.2.0
      */
-    WEASEL_FRAMEWORK_API int main(int argc, char* argv[], Workflow& workflow);
+    TOUCA_FRAMEWORK_API int main(int argc, char* argv[], Workflow& workflow);
 
-}} // namespace weasel::framework
+}} // namespace touca::framework

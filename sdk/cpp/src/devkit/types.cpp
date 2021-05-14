@@ -2,16 +2,16 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/types.hpp"
+#include "touca/devkit/types.hpp"
 #include "fmt/format.h"
 #include "rapidjson/document.h"
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
-#include "weasel/devkit/comparison.hpp"
-#include "weasel/devkit/convert.hpp"
-#include "weasel/devkit/object.hpp"
-#include "weasel/impl/weasel_generated.h"
+#include "touca/devkit/comparison.hpp"
+#include "touca/devkit/convert.hpp"
+#include "touca/devkit/object.hpp"
+#include "touca/impl/touca_generated.h"
 #include <cmath>
 
 namespace { namespace filescope {
@@ -21,18 +21,18 @@ namespace { namespace filescope {
      */
     template <typename T>
     typename std::enable_if<
-        weasel::convert::conform::is_weasel_number<T>::value
+        touca::convert::conform::is_touca_number<T>::value
             && std::is_same<float, typename std::remove_cv<T>::type>::value,
-        std::pair<flatbuffers::Offset<void>, weasel::fbs::Type>>::type
+        std::pair<flatbuffers::Offset<void>, touca::fbs::Type>>::type
     serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder)
     {
-        weasel::fbs::FloatBuilder fbsNumber_builder(builder);
+        touca::fbs::FloatBuilder fbsNumber_builder(builder);
         fbsNumber_builder.add_value(value);
         const auto& fbsNumber = fbsNumber_builder.Finish();
 
-        std::pair<flatbuffers::Offset<void>, weasel::fbs::Type> buffer;
+        std::pair<flatbuffers::Offset<void>, touca::fbs::Type> buffer;
         buffer.first = fbsNumber.Union();
-        buffer.second = weasel::fbs::Type::Float;
+        buffer.second = touca::fbs::Type::Float;
         return buffer;
     }
 
@@ -41,18 +41,18 @@ namespace { namespace filescope {
      */
     template <typename T>
     typename std::enable_if<
-        weasel::convert::conform::is_weasel_number<T>::value
+        touca::convert::conform::is_touca_number<T>::value
             && std::is_same<double, typename std::remove_cv<T>::type>::value,
-        std::pair<flatbuffers::Offset<void>, weasel::fbs::Type>>::type
+        std::pair<flatbuffers::Offset<void>, touca::fbs::Type>>::type
     serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder)
     {
-        weasel::fbs::DoubleBuilder fbsNumber_builder(builder);
+        touca::fbs::DoubleBuilder fbsNumber_builder(builder);
         fbsNumber_builder.add_value(value);
         const auto& fbsNumber = fbsNumber_builder.Finish();
 
-        std::pair<flatbuffers::Offset<void>, weasel::fbs::Type> buffer;
+        std::pair<flatbuffers::Offset<void>, touca::fbs::Type> buffer;
         buffer.first = fbsNumber.Union();
-        buffer.second = weasel::fbs::Type::Double;
+        buffer.second = touca::fbs::Type::Double;
         return buffer;
     }
 
@@ -61,18 +61,18 @@ namespace { namespace filescope {
      */
     template <typename T>
     typename std::enable_if<
-        weasel::convert::conform::is_weasel_number<T>::value
+        touca::convert::conform::is_touca_number<T>::value
             && !std::is_floating_point<T>::value && std::is_signed<T>::value,
-        std::pair<flatbuffers::Offset<void>, weasel::fbs::Type>>::type
+        std::pair<flatbuffers::Offset<void>, touca::fbs::Type>>::type
     serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder)
     {
-        weasel::fbs::IntBuilder fbsNumber_builder(builder);
+        touca::fbs::IntBuilder fbsNumber_builder(builder);
         fbsNumber_builder.add_value(value);
         const auto& fbsNumber = fbsNumber_builder.Finish();
 
-        std::pair<flatbuffers::Offset<void>, weasel::fbs::Type> buffer;
+        std::pair<flatbuffers::Offset<void>, touca::fbs::Type> buffer;
         buffer.first = fbsNumber.Union();
-        buffer.second = weasel::fbs::Type::Int;
+        buffer.second = touca::fbs::Type::Int;
         return buffer;
     }
 
@@ -81,18 +81,18 @@ namespace { namespace filescope {
      */
     template <typename T>
     typename std::enable_if<
-        weasel::convert::conform::is_weasel_number<T>::value
+        touca::convert::conform::is_touca_number<T>::value
             && !std::is_floating_point<T>::value && !std::is_signed<T>::value,
-        std::pair<flatbuffers::Offset<void>, weasel::fbs::Type>>::type
+        std::pair<flatbuffers::Offset<void>, touca::fbs::Type>>::type
     serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder)
     {
-        weasel::fbs::UIntBuilder fbsNumber_builder(builder);
+        touca::fbs::UIntBuilder fbsNumber_builder(builder);
         fbsNumber_builder.add_value(value);
         const auto& fbsNumber = fbsNumber_builder.Finish();
 
-        std::pair<flatbuffers::Offset<void>, weasel::fbs::Type> buffer;
+        std::pair<flatbuffers::Offset<void>, touca::fbs::Type> buffer;
         buffer.first = fbsNumber.Union();
-        buffer.second = weasel::fbs::Type::UInt;
+        buffer.second = touca::fbs::Type::UInt;
         return buffer;
     }
 
@@ -101,7 +101,7 @@ namespace { namespace filescope {
      */
     template <typename T>
     typename std::enable_if<
-        weasel::convert::conform::is_weasel_number<T>::value
+        touca::convert::conform::is_touca_number<T>::value
             && std::is_same<float, typename std::remove_cv<T>::type>::value,
         rapidjson::Value>::type
     jsonify_number(const T& value)
@@ -116,7 +116,7 @@ namespace { namespace filescope {
      */
     template <typename T>
     typename std::enable_if<
-        weasel::convert::conform::is_weasel_number<T>::value
+        touca::convert::conform::is_touca_number<T>::value
             && std::is_same<double, typename std::remove_cv<T>::type>::value,
         rapidjson::Value>::type
     jsonify_number(const T& value)
@@ -131,7 +131,7 @@ namespace { namespace filescope {
      */
     template <typename T>
     typename std::enable_if<
-        weasel::convert::conform::is_weasel_number<T>::value
+        touca::convert::conform::is_touca_number<T>::value
             && !std::is_floating_point<T>::value && std::is_signed<T>::value,
         rapidjson::Value>::type
     jsonify_number(const T& value)
@@ -146,7 +146,7 @@ namespace { namespace filescope {
      */
     template <typename T>
     typename std::enable_if<
-        weasel::convert::conform::is_weasel_number<T>::value
+        touca::convert::conform::is_touca_number<T>::value
             && !std::is_floating_point<T>::value && !std::is_signed<T>::value,
         rapidjson::Value>::type
     jsonify_number(const T& value)
@@ -160,16 +160,16 @@ namespace { namespace filescope {
      *
      */
     template <typename T, typename U>
-    std::shared_ptr<weasel::types::IType> deserialize(
-        const weasel::fbs::TypeWrapper* ptr)
+    std::shared_ptr<touca::types::IType> deserialize(
+        const touca::fbs::TypeWrapper* ptr)
     {
         const auto& castptr = static_cast<const T*>(ptr->value());
-        return std::shared_ptr<weasel::types::IType>(new U(castptr->value()));
+        return std::shared_ptr<touca::types::IType>(new U(castptr->value()));
     }
 
 }} // namespace ::filescope
 
-namespace weasel { namespace types {
+namespace touca { namespace types {
 
     /**
      *
@@ -681,4 +681,4 @@ namespace weasel { namespace types {
     template class Number<long long>;
     template class Number<unsigned long long>;
 
-}} // namespace weasel::types
+}} // namespace touca::types

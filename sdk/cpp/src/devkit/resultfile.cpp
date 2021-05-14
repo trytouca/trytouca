@@ -2,20 +2,20 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/resultfile.hpp"
+#include "touca/devkit/resultfile.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
-#include "weasel/devkit/utils.hpp"
-#include "weasel/impl/weasel_generated.h"
+#include "touca/devkit/utils.hpp"
+#include "touca/impl/touca_generated.h"
 #include <fstream>
 
-namespace weasel {
+namespace touca {
 
     /**
      *
      */
-    ResultFile::ResultFile(const weasel::filesystem::path& path)
+    ResultFile::ResultFile(const touca::filesystem::path& path)
         : _path(path)
     {
     }
@@ -31,7 +31,7 @@ namespace weasel {
         }
 
         // file must exist in order to be valid
-        if (!weasel::filesystem::is_regular_file(_path)) {
+        if (!touca::filesystem::is_regular_file(_path)) {
             return false;
         }
         const auto& content = load_string_file(_path.string(), std::ios::in | std::ios::binary);
@@ -46,7 +46,7 @@ namespace weasel {
         const auto& buffer = (const uint8_t*)content.data();
         const auto& length = content.size();
         flatbuffers::Verifier verifier(buffer, length);
-        return verifier.VerifyBuffer<weasel::fbs::Messages>();
+        return verifier.VerifyBuffer<touca::fbs::Messages>();
     }
 
     /**
@@ -68,7 +68,7 @@ namespace weasel {
 
         ElementsMap testcases;
         // parse content of given file
-        const auto& messages = weasel::fbs::GetMessages(content.c_str());
+        const auto& messages = touca::fbs::GetMessages(content.c_str());
         for (const auto&& message : *messages->messages()) {
             const auto& buffer = message->buf();
             const auto& ptr = buffer->data();
@@ -113,9 +113,9 @@ namespace weasel {
     void ResultFile::save(const std::vector<Testcase>& testcases)
     {
         // create parent directory if it does not exist
-        weasel::filesystem::path dstFile { _path };
-        const auto parentPath = weasel::filesystem::absolute(dstFile.parent_path());
-        if (!weasel::filesystem::exists(parentPath.string()) && !weasel::filesystem::create_directories(parentPath)) {
+        touca::filesystem::path dstFile { _path };
+        const auto parentPath = touca::filesystem::absolute(dstFile.parent_path());
+        if (!touca::filesystem::exists(parentPath.string()) && !touca::filesystem::create_directories(parentPath)) {
             throw std::invalid_argument("failed to create parent path");
         }
         // write content of testcases to the filesystem
@@ -244,4 +244,4 @@ namespace weasel {
         return strbuf.GetString();
     }
 
-} // namespace weasel
+} // namespace touca

@@ -4,16 +4,16 @@
 
 #pragma once
 
-#include "weasel/lib_api.hpp"
+#include "touca/lib_api.hpp"
 #include <string>
 
-namespace weasel {
+namespace touca {
 
     /**
-     * @see weasel::add_logger
+     * @see touca::add_logger
      * @since v1.1
      */
-    class WEASEL_CLIENT_API logger {
+    class TOUCA_CLIENT_API logger {
     public:
         enum class Level {
             Debug,
@@ -24,4 +24,4 @@ namespace weasel {
         virtual void log(const Level level, const std::string msg) const = 0;
     };
 
-} // namespace weasel
+} // namespace touca

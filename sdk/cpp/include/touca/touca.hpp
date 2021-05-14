@@ -5,30 +5,29 @@
 #pragma once
 
 /**
- * @file weasel.hpp
+ * @file touca.hpp
  *
- * @brief Entry-point to the Weasel Client Library for C++.
+ * @brief Entry-point to the Touca SDK for C++.
  *
- * @details `weasel/weasel.hpp` is the only header file of Weasel C++
- *          Client Library that users should include in their regression
- *          test tool. It provides all the functions necessary to configure
- *          the client, register results and submit them to the Weasel
- *          platform.
+ * @details `touca/touca.hpp` is the only header file of Touca SDK for C++
+ *          that users should include in their regression test tool.
+ *          It provides all the functions necessary to configure the client,
+ *          register results and submit them to the Touca server.
  *
- * @author Pejman Ghorbanzade <pejman@getweasel.com>
+ * @author Pejman Ghorbanzade <pejman@touca.io>
  * @date 2018-2021
  */
 
-#include "weasel/detail/scoped_timer.hpp"
-#include "weasel/devkit/convert.hpp"
-#include "weasel/extra/logger.hpp"
-#include "weasel/lib_api.hpp"
+#include "touca/detail/scoped_timer.hpp"
+#include "touca/devkit/convert.hpp"
+#include "touca/extra/logger.hpp"
+#include "touca/lib_api.hpp"
 #include <unordered_map>
 
 // the following header file(s) are included only to make it sufficient
 // for the users of this library to include only this header file
 
-#include "weasel/devkit/object.hpp"
+#include "touca/devkit/object.hpp"
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 #if (__cplusplus >= 201703L)
@@ -39,25 +38,25 @@
 #endif
 
 /**
- * @def WEASEL_SCOPED_TIMER
+ * @def TOUCA_SCOPED_TIMER
  * @brief convenience macro for logging performance of a function
- *        as a weasel performance metric.
- * @see weasel::make_timer()
+ *        as a performance metric.
+ * @see touca::make_timer()
  *      for more information about adding performance metrics.
  */
-#define WEASEL_SCOPED_TIMER                                                          \
-    MAYBE_UNUSED const auto& weasel_scoped_timer = weasel::make_timer(__FUNCTION__); \
-    std::ignore = weasel_scoped_timer;
+#define TOUCA_SCOPED_TIMER                                                         \
+    MAYBE_UNUSED const auto& touca_scoped_timer = touca::make_timer(__FUNCTION__); \
+    std::ignore = touca_scoped_timer;
 
 /**
- * @namespace weasel
+ * @namespace touca
  *
- * @brief Provides an interface to the Weasel C++ Client Library.
+ * @brief Provides an interface to the Touca SDK for C++.
  */
-namespace weasel {
+namespace touca {
 
     /**
-     * @brief Configures the weasel client.
+     * @brief Configures the touca client.
      *
      * @details Must be called before declaring testcases and adding
      *          results to the client. Should be regarded as a potentially
@@ -65,14 +64,14 @@ namespace weasel {
      *          list of key value pairs whose keys are from the list below.
      *
      * @li @b api-key
-     *        API Key issued by Weasel Platform.
+     *        API Key issued by Touca server.
      *        As an alternative to passing this parameter to `configure`,
-     *        you can set environment variable `WEASEL_API_KEY` instead.
+     *        you can set environment variable `TOUCA_API_KEY` instead.
      *
      * @li @b api-url
-     *        URL of Weasel Platform API. Can be provided either in long
-     *        format like `https://getweasel.com/api/@/myteam/mysuite` or
-     *        in short format like `https://getweasel.com/api`. If slug of
+     *        URL of Touca server API. Can be provided either in long
+     *        format like `https://api.touca.io/@/myteam/mysuite` or
+     *        in short format like `https://api.touca.io`. If slug of
      *        the team and suite to which the results belong are specified,
      *        separately passing `team` and `suite` configuration parameters
      *        will not be required.
@@ -92,7 +91,7 @@ namespace weasel {
      *        in short format.
      *
      * @li @b handshake
-     *        Ensures Weasel Platform is ready to accept incoming
+     *        Ensures Touca server is ready to accept incoming
      *        testresults as part of client configuration process.
      *        Handshake is performed only if `api-key` and `api-url`
      *        parameters are set.
@@ -100,13 +99,13 @@ namespace weasel {
      *
      * @li @b post-testcases
      *        Maximum number of testcases whose results may be included
-     *        in a single http post request, when `weasel::post` is called.
+     *        in a single http post request, when `touca::post` is called.
      *        Defaults to 10.
      *
      * @li @b post-maxretries
      *        Maximum number of consecutive attempts the client library
      *        should make to re-submit testresults if initial http post
-     *        request fails when `weasel::post` is called.
+     *        request fails when `touca::post` is called.
      *        Defaults to 2.
      *
      * @li @b concurrency-mode
@@ -122,11 +121,11 @@ namespace weasel {
      *
      * The most common pattern for configuring the client is to set
      * configuration parameters `api-url` and `version` as shown below,
-     * while providing `WEASEL_API_KEY` as an environment variable.
+     * while providing `TOUCA_API_KEY` as an environment variable.
      *
      * @code
-     *     weasel::configure({
-     *         { "api-url": "https://getweasel.com/api/@/some-team/some-suite" },
+     *     touca::configure({
+     *         { "api-url": "https://api.touca.io/@/your-team/your-suite" },
      *         { "version": "4.2.0" }
      *     });
      * @endcode
@@ -140,24 +139,24 @@ namespace weasel {
      * separately specify `team` slug and `suite` slug as shown below.
      *
      * @code
-     *     weasel::configure({
+     *     touca::configure({
      *         { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b" },
-     *         { "api-url": "https://getweasel.com/api" },
-     *         { "team": "some-team" },
-     *         { "suite": "some-suite" },
+     *         { "api-url": "https://api.touca.io" },
+     *         { "team": "your-team" },
+     *         { "suite": "your-suite" },
      *         { "version": "4.2.0" }
      *     });
      * @endcode
      *
      * When `api-key` and `api-url` are provided, the configuration process
-     * performs authentication to Weasel Platform, preparing for submission
-     * of results when `weasel::post` is called in the future. In case you
-     * do not intend to submit any result to the Platform, you can opt not
+     * performs authentication to Touca server, preparing for submission
+     * of results when `touca::post` is called in the future. In case you
+     * do not intend to submit any result to the server, you can opt not
      * to provide any of `api-key` and `api-url` parameters and to use the
      * following pattern instead.
      *
      * @code
-     *     weasel::configure({
+     *     touca::configure({
      *         { "team": "some-team" },
      *         { "suite": "some-suite" },
      *         { "version": "4.2.0" }
@@ -166,18 +165,18 @@ namespace weasel {
      *
      * @param opts a string-based map of configuration parameters
      */
-    WEASEL_CLIENT_API void configure(
+    TOUCA_CLIENT_API void configure(
         const std::unordered_map<std::string, std::string>& opts);
 
     /**
-     * @brief Configures the weasel client using a configuration file
+     * @brief Configures the touca client using a configuration file
      *        in specified filesystem path.
      *
      * @details Convenience function that configures client based on a
      *          a given configuration file. Expects the configuration
      *          file to be in json format.
      *          The configuration file must include a top-level property
-     *          `weasel` whose value is an object describing configuration
+     *          `touca` whose value is an object describing configuration
      *          parameters of the client. Formal specification of the
      *          expected json file is shown below.
      *
@@ -189,7 +188,7 @@ namespace weasel {
      *                parameters
      * @since v1.1
      */
-    WEASEL_CLIENT_API void configure(const std::string& path);
+    TOUCA_CLIENT_API void configure(const std::string& path);
 
     /**
      * @brief Checks if the client is configured to perform basic operations.
@@ -211,14 +210,13 @@ namespace weasel {
      *
      * @warning In addition to the configuration parameters above, the
      *          parameters `api-url` and `api-key` shall be provided for the
-     *          client to be able to submit captured test results to the weasel
-     *          platform.
+     *          client to be able to submit captured test results to the server.
      *
-     * @return true if weasel client is properly configured
+     * @return true if the client is properly configured
      * 
      * @see configure for a list of permissible configuration parameters
      */
-    WEASEL_CLIENT_API bool is_configured();
+    TOUCA_CLIENT_API bool is_configured();
 
     /**
      * @brief Provides the most recent error, if any, encountered during
@@ -226,25 +224,24 @@ namespace weasel {
      *
      * @return short description of the most recent configuration error
      */
-    WEASEL_CLIENT_API std::string configuration_error();
+    TOUCA_CLIENT_API std::string configuration_error();
 
     /**
      * @brief registers a custom logger that is notified when an event
      *        of potential interest takes place.
      *
      * @details This function enables users to register their own logger
-     *          derived from `weasel::logger` and listen for log events
-     *          generated by Weasel Client Library. Log events include
+     *          derived from `touca::logger` and listen for log events
+     *          generated by the client library. Log events include
      *          warnings and errors if client library is misused or fails
      *          to perform an instructed action.
-     *          Adding a logger is **not** necessary to use the weasel
-     *          client library.
+     *          Adding a logger is **not** necessary to use the client library.
      *
-     * @param logger a custom logger derived from `weasel::logger` that
-     *        is notified of log events generated by Weasel Client Library
+     * @param logger a custom logger derived from `touca::logger` that
+     *        is notified of log events generated by the client library.
      */
-    WEASEL_CLIENT_API void add_logger(
-        const std::shared_ptr<weasel::logger> logger);
+    TOUCA_CLIENT_API void add_logger(
+        const std::shared_ptr<touca::logger> logger);
 
     /**
      * @brief Declares name of the testcase to which all subsequent results
@@ -258,7 +255,7 @@ namespace weasel {
      *
      * @param name name of the testcase to be declared
      */
-    WEASEL_CLIENT_API void declare_testcase(const std::string& name);
+    TOUCA_CLIENT_API void declare_testcase(const std::string& name);
 
     /**
      * @brief wide string variant of the `declare_testcase` function.
@@ -267,7 +264,7 @@ namespace weasel {
      *
      * @see declare_testcase for more information
      */
-    WEASEL_CLIENT_API void declare_testcase(const std::wstring& name);
+    TOUCA_CLIENT_API void declare_testcase(const std::wstring& name);
 
     /**
      * @brief Removes all logged information associated with a given testcase.
@@ -276,20 +273,20 @@ namespace weasel {
      *          previously-declared testcase, for all threads, regardless
      *          of the `concurrency-mode` configuration parameter.
      *          This function does not remove testcase results from the
-     *          platform, in case they are already submitted.
+     *          server, in case they are already submitted.
      *          It clears all information about that testcase from the client
      *          library such that switching back to an already-declared or
      *          already-submitted testcase would behave similar to when that
      *          testcase was first declared.
      *          Calling this function is useful in long-running regression
-     *          test frameworks, after submission of testcase to the platform,
+     *          test frameworks, after submission of testcase to the server,
      *          if memory consumed by the client library is a concern or if
      *          there is a risk that a future testcase with a similar name
      *          may be executed.
      *
      * @param name name of the testcase to be removed from memory
      */
-    WEASEL_CLIENT_API void forget_testcase(const std::string& name);
+    TOUCA_CLIENT_API void forget_testcase(const std::string& name);
 
     /**
      * @brief wide string variant of the `forget_testcase` function.
@@ -298,12 +295,12 @@ namespace weasel {
      *
      * @see forget_testcase for more information
      */
-    WEASEL_CLIENT_API void forget_testcase(const std::wstring& name);
+    TOUCA_CLIENT_API void forget_testcase(const std::wstring& name);
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
     /**
-     * @namespace weasel::internal
+     * @namespace touca::internal
      *
      * @brief Provides functions internally used by client library.
      *
@@ -312,29 +309,29 @@ namespace weasel {
      */
     namespace internal {
 
-        WEASEL_CLIENT_API void add_result(
+        TOUCA_CLIENT_API void add_result(
             const std::string& key,
-            const std::shared_ptr<weasel::types::IType>& value);
+            const std::shared_ptr<touca::types::IType>& value);
 
-        WEASEL_CLIENT_API void add_result(
+        TOUCA_CLIENT_API void add_result(
             const std::wstring& key,
-            const std::shared_ptr<weasel::types::IType>& value);
+            const std::shared_ptr<touca::types::IType>& value);
 
-        WEASEL_CLIENT_API void add_assertion(
+        TOUCA_CLIENT_API void add_assertion(
             const std::string& key,
-            const std::shared_ptr<weasel::types::IType>& value);
+            const std::shared_ptr<touca::types::IType>& value);
 
-        WEASEL_CLIENT_API void add_assertion(
+        TOUCA_CLIENT_API void add_assertion(
             const std::wstring& key,
-            const std::shared_ptr<weasel::types::IType>& value);
+            const std::shared_ptr<touca::types::IType>& value);
 
-        WEASEL_CLIENT_API void add_array_element(
+        TOUCA_CLIENT_API void add_array_element(
             const std::string& key,
-            const std::shared_ptr<weasel::types::IType>& value);
+            const std::shared_ptr<touca::types::IType>& value);
 
-        WEASEL_CLIENT_API void add_array_element(
+        TOUCA_CLIENT_API void add_array_element(
             const std::wstring& key,
-            const std::shared_ptr<weasel::types::IType>& value);
+            const std::shared_ptr<touca::types::IType>& value);
 
     } // namespace internal
 
@@ -372,8 +369,8 @@ namespace weasel {
      * @details Assertions are a special category of test results that are
      *          hardly ever expected to change for a given test case between
      *          different versions of the workflow.
-     *          Assertions are treated differently by the Weasel Platform:
-     *          The platform specially highlights assertions if they are
+     *          Assertions are treated differently by the Touca server:
+     *          The server specially highlights assertions if they are
      *          different between two test versions and removes them from
      *          user focus if they remain unchanged.
      *          Therefore, assertions are particularly helpful for verifying
@@ -409,8 +406,8 @@ namespace weasel {
      *          @code
      *              for (const auto number : numbers) {
      *                  if (isPrime(number)) {
-     *                      weasel::add_array_element("prime numbers", number);
-     *                      weasel::add_hit_count("number of primes");
+     *                      touca::add_array_element("prime numbers", number);
+     *                      touca::add_hit_count("number of primes");
      *                  }
      *              }
      *          @endcode
@@ -424,16 +421,16 @@ namespace weasel {
      *                  }
      *              }
      *              if (!primes.empty()) {
-     *                  weasel::add_result("prime numbers", primes);
-     *                  weasel::add_result("number of primes", primes.size());
+     *                  touca::add_result("prime numbers", primes);
+     *                  touca::add_result("number of primes", primes.size());
      *              }
      *          @endcode
      *
      *          The elements added to the list are not required to be of the
      *          same type. The following code is acceptable:
      *          @code
-     *              weasel::add_array_element("elements", 42);
-     *              weasel::add_array_element("elements", "forty three");
+     *              touca::add_array_element("elements", 42);
+     *              touca::add_array_element("elements", "forty three");
      *          @endcode
      *
      * @tparam Char type of string to be associated with the value
@@ -449,7 +446,7 @@ namespace weasel {
      *
      * @throw std::invalid_argument if specified key is already associated
      *        with a test result whose type is not a derivative of
-     *        `weasel::types::array`.
+     *        `touca::types::array`.
      *
      * @see add_result
      *
@@ -488,8 +485,8 @@ namespace weasel {
      *                  }
      *              }
      *              if (!primes.empty()) {
-     *                  weasel::add_result("prime numbers", primes);
-     *                  weasel::add_result("number of primes", primes.size());
+     *                  touca::add_result("prime numbers", primes);
+     *                  touca::add_result("number of primes", primes.size());
      *              }
      *          @endcode
      *
@@ -500,19 +497,19 @@ namespace weasel {
      *
      * @since v1.1
      */
-    WEASEL_CLIENT_API void add_hit_count(const std::string& key);
+    TOUCA_CLIENT_API void add_hit_count(const std::string& key);
 
     /**
      * @brief adds an already obtained performance measurements.
      *
      * @details useful for logging a metric that is measured without using
-     *          weasel client.
+     *          the client library.
      *
      * @param key name to be associated with the performance metric
      * @param duration duration in number of milliseconds
      * @since v1.2.0
      */
-    WEASEL_CLIENT_API void add_metric(
+    TOUCA_CLIENT_API void add_metric(
         const std::string& key, const unsigned duration);
 
     /**
@@ -526,7 +523,7 @@ namespace weasel {
      *
      * @since v1.1
      */
-    WEASEL_CLIENT_API void start_timer(const std::string& key);
+    TOUCA_CLIENT_API void start_timer(const std::string& key);
 
     /**
      * @brief stops performance measurement of a given metric.
@@ -539,7 +536,7 @@ namespace weasel {
      *
      * @since v1.1
      */
-    WEASEL_CLIENT_API void stop_timer(const std::string& key);
+    TOUCA_CLIENT_API void stop_timer(const std::string& key);
 
     /**
      * @param key name to be associated with the performance metric
@@ -549,7 +546,7 @@ namespace weasel {
      *         logging the duration between the two events as a performance
      *         metric.
      */
-    WEASEL_CLIENT_API weasel::scoped_timer make_timer(const std::string& key);
+    TOUCA_CLIENT_API touca::scoped_timer make_timer(const std::string& key);
 
     /**
      * @brief Stores testresults in binary format in a file of specified path.
@@ -560,7 +557,7 @@ namespace weasel {
      *          test tools to locally store their testresults. This feature
      *          may be helpful for special cases such as when regression
      *          test tools have to be run in environments that have no
-     *          access to the Weasel Platform (e.g. running with no
+     *          access to the Touca server (e.g. running with no
      *          network access).
      *
      * @param path path to file in which testresults should be stored
@@ -572,7 +569,7 @@ namespace weasel {
      * @param overwrite determines whether to overwrite any file that exists
      *                  in the specified `path`. Defaults to **true**.
      */
-    WEASEL_CLIENT_API void save_binary(
+    TOUCA_CLIENT_API void save_binary(
         const std::string& path,
         const std::vector<std::string>& testcases = {},
         const bool overwrite = true);
@@ -592,72 +589,71 @@ namespace weasel {
      * @param overwrite determines whether to overwrite any file that exists
      *                  in the specified `path`. Defaults to **true**.
      */
-    WEASEL_CLIENT_API void save_json(
+    TOUCA_CLIENT_API void save_json(
         const std::string& path,
         const std::vector<std::string>& testcases = {},
         const bool overwrite = true);
 
     /**
-     * @brief Submits all testresults recorded so far to Weasel Platform.
+     * @brief Submits all testresults recorded so far to Touca server.
      *
      * @details posts all testresults of all testcases declared by this
-     *          client to Weasel server in flatbuffers format. Uses the
+     *          client to Touca server in flatbuffers format. Uses the
      *          following configuration parameters that are provided
      *          during configuration time:
      *
-     *          * `api-key`: API Key for Authenticating to Weasel Platform.
-     *          * `api-url`: URL to Weasel Platform API.
+     *          * `api-key`: API Key for Authenticating to Touca server.
+     *          * `api-url`: URL to Touca server API.
      *          * `post-testcases`: maximum number of testcases to include
      *            in every HTTP post request.
      *          * `post-maxretries`: maximum number of attempts to submit
      *            testresults in a bundle of testcases until the HTTP post
      *            request is successful.
      *
-     *          It is possible to call weasel::post() multiple
+     *          It is possible to call touca::post() multiple
      *          times during runtime of the regression test tool.
-     *          Testcases already submitted to platform whose testresults
+     *          Test cases already submitted to the server whose test results
      *          have not changed, will not be resubmitted.
      *          It is also possible to add testresults to a testcase
-     *          after it is submitted to the platform. Any subsequent call
-     *          to weasel::post() will resubmit the modified
+     *          after it is submitted to the server. Any subsequent call
+     *          to touca::post() will resubmit the modified
      *          testcase.
      *
-     * @return true if all testresults are successfully posted to
-     *         Weasel Platform.
+     * @return true if all testresults are successfully posted to the server.
      *
      * @throw runtime_error if configuration parameter `api-url` is
      *        not provided during configuration operation.
      */
-    WEASEL_CLIENT_API bool post();
+    TOUCA_CLIENT_API bool post();
 
     /**
-     * @brief Notifies Weasel Platform that all test cases were executed
+     * @brief Notifies Touca server that all test cases were executed
      *        and no further test result is expected to be submitted.
      *
      * @details Expected to be called by the test tool once all test cases
      *          are executed and all test results are posted.
      *
-     *          Sealing the version is optional. The Platform automatically
+     *          Sealing the version is optional. The Touca server automatically
      *          performs this operation once a certain amount of time has
      *          passed since the last test case was submitted. This duration
      *          is configurable from the "Settings" tab in "Suite" Page.
      *
-     * @return true if Weasel Platform accepts our request.
+     * @return true if Touca server accepts our request.
      *
      * @throw runtime_error if configuration parameter `api-url` is
      *        not provided during configuration operation.
      *
      * @since v1.3
      */
-    WEASEL_CLIENT_API bool seal();
+    TOUCA_CLIENT_API bool seal();
 
     /**
-     * @namespace weasel::compare
+     * @namespace touca::compare
      *
      * @brief Provides API for comparing testcases.
      *
      * @details Functions and classes declared in this namespace are
-     *          primarily exposed to be used by Weasel Comparator.
+     *          primarily exposed to be used by Touca Comparator.
      *          Users seeking to build regression test tools should
      *          disregard the API exposed through this namespace.
      */
@@ -665,17 +661,17 @@ namespace weasel {
     }
 
     /**
-     * @namespace weasel::convert
+     * @namespace touca::convert
      *
      * @brief Provides API for declaring how objects of custom classes
-     *        should be handled by Weasel C++ Client Library.
+     *        should be handled by Touca SDK for C++.
      *
      * @details Allows users seeking to build regression test tools to
-     *          leverage the extensible Weasel Type System and implement
-     *          specializations of the Weasel Conversion logic for their
+     *          leverage the extensible Touca Type System and implement
+     *          specializations of the Touca Conversion logic for their
      *          own custom types.
      */
     namespace convert {
     }
 
-} // namespace weasel
+} // namespace touca

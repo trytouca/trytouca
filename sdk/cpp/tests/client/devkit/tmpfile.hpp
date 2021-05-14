@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "weasel/devkit/filesystem.hpp"
-#include "weasel/devkit/utils.hpp"
+#include "touca/devkit/filesystem.hpp"
+#include "touca/devkit/utils.hpp"
 #include <fstream>
 
 struct TmpFile {
@@ -23,17 +23,17 @@ struct TmpFile {
 
     ~TmpFile()
     {
-        if (weasel::filesystem::exists(path)) {
-            weasel::filesystem::remove_all(path);
+        if (touca::filesystem::exists(path)) {
+            touca::filesystem::remove_all(path);
         }
     }
 
-    const weasel::filesystem::path path;
+    const touca::filesystem::path path;
 
 private:
-    weasel::filesystem::path make_temp_path() const
+    touca::filesystem::path make_temp_path() const
     {
-        const auto filename = weasel::format("weasel_{}", std::rand());
-        return weasel::filesystem::temp_directory_path() / filename;
+        const auto filename = touca::format("touca_{}", std::rand());
+        return touca::filesystem::temp_directory_path() / filename;
     }
 };

@@ -5,11 +5,11 @@
 #pragma once
 
 #include "fmt/color.h"
-#include "weasel/lib_api.hpp"
+#include "touca/lib_api.hpp"
 #include <ios>
 #include <string>
 
-namespace weasel {
+namespace touca {
 
     /**
      * @brief performs printf-like formatting using `libfmt` library.
@@ -27,7 +27,7 @@ namespace weasel {
     /**
      *
      */
-    WEASEL_CLIENT_API void print_impl(const fmt::terminal_color& style, fmt::string_view format, fmt::format_args args);
+    TOUCA_CLIENT_API void print_impl(const fmt::terminal_color& style, fmt::string_view format, fmt::format_args args);
 
     /**
      *
@@ -50,7 +50,7 @@ namespace weasel {
     /**
      *
      */
-    WEASEL_CLIENT_API std::string narrow(const std::wstring& value);
+    TOUCA_CLIENT_API std::string narrow(const std::wstring& value);
 
     /**
      * Utility function to load content of a file with given path.
@@ -66,15 +66,15 @@ namespace weasel {
      *
      * @return content of the file with given path
      */
-    WEASEL_CLIENT_API std::string load_string_file(
+    TOUCA_CLIENT_API std::string load_string_file(
         const std::string& path,
         const std::ios_base::openmode mode = std::ios::in);
 
     /**
      *
      */
-    WEASEL_CLIENT_API void save_string_file(
+    TOUCA_CLIENT_API void save_string_file(
         const std::string& path,
         const std::string& content);
 
-} // namespace weasel
+} // namespace touca

@@ -2,17 +2,17 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/testcase.hpp"
+#include "touca/devkit/testcase.hpp"
 #include "catch2/catch.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
-#include "weasel/devkit/comparison.hpp"
+#include "touca/devkit/comparison.hpp"
 
 /**
  * Helper function to provide `Testcase`, `TestcaseComparison`
  * and `TestcaseComparison::Overview` as json string.
  */
-std::string make_json(const std::function<rapidjson::Value(weasel::RJAllocator&)> func)
+std::string make_json(const std::function<rapidjson::Value(touca::RJAllocator&)> func)
 {
     rapidjson::Document doc(rapidjson::kObjectType);
     rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
@@ -27,7 +27,7 @@ std::string make_json(const std::function<rapidjson::Value(weasel::RJAllocator&)
 
 TEST_CASE("Testcase")
 {
-    weasel::Testcase testcase = weasel::Testcase("some-team", "some-suite", "some-version", "some-case");
+    touca::Testcase testcase = touca::Testcase("some-team", "some-suite", "some-version", "some-case");
 
     SECTION("metadata")
     {
@@ -42,7 +42,7 @@ TEST_CASE("Testcase")
 
     SECTION("assertion")
     {
-        const auto value = std::make_shared<weasel::types::Bool>(true);
+        const auto value = std::make_shared<touca::types::Bool>(true);
         testcase.add_assertion("some-key", value);
         testcase.add_assertion("some-other-key", value);
         CHECK_NOTHROW(testcase.add_assertion("some-key", value));
@@ -56,13 +56,13 @@ TEST_CASE("Testcase")
             testcase.add_hit_count("some-other-key");
             testcase.add_hit_count("some-key");
             const auto expected = R"("results":[{"key":"some-key","value":"2"},{"key":"some-other-key","value":"1"}])";
-            const auto output = make_json([&testcase](weasel::RJAllocator& allocator) { return testcase.json(allocator); });
+            const auto output = make_json([&testcase](touca::RJAllocator& allocator) { return testcase.json(allocator); });
             REQUIRE_THAT(output, Catch::Contains(expected));
         }
 
         SECTION("unexpected-use: key is already used to store boolean")
         {
-            const auto value = std::make_shared<weasel::types::Bool>(true);
+            const auto value = std::make_shared<touca::types::Bool>(true);
             testcase.add_result("some-key", value);
             CHECK_THROWS_AS(
                 testcase.add_hit_count("some-key"), std::invalid_argument);
@@ -74,7 +74,7 @@ TEST_CASE("Testcase")
 
         SECTION("unexpected-use: key is already used to store float")
         {
-            const auto value = std::make_shared<weasel::types::Number<float>>(1.0f);
+            const auto value = std::make_shared<touca::types::Number<float>>(1.0f);
             testcase.add_result("some-key", value);
             CHECK_THROWS_AS(
                 testcase.add_hit_count("some-key"), std::invalid_argument);
@@ -90,17 +90,17 @@ TEST_CASE("Testcase")
         SECTION("expected-use")
         {
             for (auto i = 0; i < 3; ++i) {
-                const auto value = std::make_shared<weasel::types::Number<uint64_t>>(i);
+                const auto value = std::make_shared<touca::types::Number<uint64_t>>(i);
                 testcase.add_array_element("some-key", value);
             }
             const auto expected = R"("results":[{"key":"some-key","value":"[0,1,2]"}])";
-            const auto output = make_json([&testcase](weasel::RJAllocator& allocator) { return testcase.json(allocator); });
+            const auto output = make_json([&testcase](touca::RJAllocator& allocator) { return testcase.json(allocator); });
             REQUIRE_THAT(output, Catch::Contains(expected));
         }
         SECTION("unexpected-use")
         {
-            const auto someBool = std::make_shared<weasel::types::Bool>(true);
-            const auto someNumber = std::make_shared<weasel::types::Number<uint64_t>>(1);
+            const auto someBool = std::make_shared<touca::types::Bool>(true);
+            const auto someNumber = std::make_shared<touca::types::Number<uint64_t>>(1);
             testcase.add_result("some-key", someBool);
             CHECK_THROWS_AS(
                 testcase.add_array_element("some-key", someNumber),
@@ -119,7 +119,7 @@ TEST_CASE("Testcase")
      */
     SECTION("clear")
     {
-        const auto value = std::make_shared<weasel::types::Bool>(true);
+        const auto value = std::make_shared<touca::types::Bool>(true);
         testcase.add_result("some-key", value);
         testcase.add_assertion("some-other-key", value);
         testcase.tic("some-metric");
@@ -127,9 +127,9 @@ TEST_CASE("Testcase")
         testcase.toc("some-metric");
         testcase.add_array_element("some-array", value);
 
-        const auto before = make_json([&testcase](weasel::RJAllocator& allocator) { return testcase.json(allocator); });
+        const auto before = make_json([&testcase](touca::RJAllocator& allocator) { return testcase.json(allocator); });
         testcase.clear();
-        const auto after = make_json([&testcase](weasel::RJAllocator& allocator) { return testcase.json(allocator); });
+        const auto after = make_json([&testcase](touca::RJAllocator& allocator) { return testcase.json(allocator); });
 
         const auto check1 = R"("results":[{"key":"some-array","value":"[true]"},{"key":"some-key","value":"true"},{"key":"some-new-key","value":"1"}])";
         const auto check2 = R"("assertion":[{"key":"some-other-key","value":"true"}])";
@@ -143,7 +143,7 @@ TEST_CASE("Testcase")
 
     SECTION("overview")
     {
-        const auto value = std::make_shared<weasel::types::Bool>(true);
+        const auto value = std::make_shared<touca::types::Bool>(true);
         const auto check_counters =
             [&testcase](const std::array<int32_t, 3>& counters) {
                 CHECK(testcase.overview().keysCount == counters[0]);
@@ -176,7 +176,7 @@ TEST_CASE("Testcase")
             CHECK(testcase.metrics().size() == 1);
             REQUIRE(testcase.metrics().count("some-key"));
             const auto metric = testcase.metrics().at("some-key");
-            CHECK(weasel::types::ValueType::Number == metric->type());
+            CHECK(touca::types::ValueType::Number == metric->type());
             CHECK(metric->string() == "1000");
         }
 
@@ -210,16 +210,16 @@ TEST_CASE("Testcase")
             CHECK(testcase.metrics().size() == 1);
             CHECK(testcase.metrics().count("b"));
             const auto metric = testcase.metrics().at("b");
-            CHECK(weasel::types::ValueType::Number == metric->type());
+            CHECK(touca::types::ValueType::Number == metric->type());
         }
     }
 
     SECTION("compare: empty")
     {
-        const auto& dst = std::make_shared<weasel::Testcase>("team", "suite", "version", "case");
+        const auto& dst = std::make_shared<touca::Testcase>("team", "suite", "version", "case");
         CHECK_NOTHROW(testcase.compare(dst));
         const auto& cmp = testcase.compare(dst);
-        const auto& output = make_json([&cmp](weasel::RJAllocator& allocator) { return cmp.json(allocator); });
+        const auto& output = make_json([&cmp](touca::RJAllocator& allocator) { return cmp.json(allocator); });
         const auto& check1 = R"("assertions":{"commonKeys":[],"missingKeys":[],"newKeys":[]})";
         const auto& check2 = R"("results":{"commonKeys":[],"missingKeys":[],"newKeys":[]})";
         const auto& check3 = R"("metrics":{"commonKeys":[],"missingKeys":[],"newKeys":[]})";
@@ -230,12 +230,12 @@ TEST_CASE("Testcase")
 
     SECTION("compare: full")
     {
-        auto dst = std::make_shared<weasel::Testcase>("team", "suite", "version", "case");
+        auto dst = std::make_shared<touca::Testcase>("team", "suite", "version", "case");
 
-        const auto value1 = std::make_shared<weasel::types::String>("leo-ferre");
-        const auto value2 = std::make_shared<weasel::types::String>("jean-ferrat");
-        const auto value3 = std::make_shared<weasel::types::Bool>(true);
-        const auto value4 = std::make_shared<weasel::types::Bool>(true);
+        const auto value1 = std::make_shared<touca::types::String>("leo-ferre");
+        const auto value2 = std::make_shared<touca::types::String>("jean-ferrat");
+        const auto value3 = std::make_shared<touca::types::Bool>(true);
+        const auto value4 = std::make_shared<touca::types::Bool>(true);
 
         // common result
         testcase.add_array_element("chanteur", value1);
@@ -263,7 +263,7 @@ TEST_CASE("Testcase")
         CHECK(cmp.overview().keysCountFresh == 1);
         CHECK(cmp.overview().keysCountMissing == 1);
 
-        const auto& comparison = make_json([&cmp](weasel::RJAllocator& allocator) { return cmp.json(allocator); });
+        const auto& comparison = make_json([&cmp](touca::RJAllocator& allocator) { return cmp.json(allocator); });
         const auto& check1 = R"("assertions":{"commonKeys":[],"missingKeys":[],"newKeys":[]})";
         const auto& check2 = R"("results":{"commonKeys":[{"name":"chanteur","score":0.0,"srcType":"array","srcValue":"[\"leo-ferre\"]","dstValue":"[\"jean-ferrat\"]"}],"missingKeys":[{"name":"some-other-key","dstType":"number","dstValue":"1"}],"newKeys":[{"name":"some-key","srcType":"number","srcValue":"1"}]})";
         const auto& check3 = R"("metrics":{"commonKeys":[{"name":"a","score":1.0,"srcType":"number","srcValue":"0"}],"missingKeys":[{"name":"c","dstType":"number","dstValue":"0"}],"newKeys":[{"name":"b","srcType":"number","srcValue":"0"}]})";
@@ -271,7 +271,7 @@ TEST_CASE("Testcase")
         CHECK_THAT(comparison, Catch::Contains(check2));
         CHECK_THAT(comparison, Catch::Contains(check3));
 
-        const auto& overview = make_json([&cmp](weasel::RJAllocator& allocator) { return cmp.overview().json(allocator); });
+        const auto& overview = make_json([&cmp](touca::RJAllocator& allocator) { return cmp.overview().json(allocator); });
         const auto& check4 = R"({"keysCountCommon":1,"keysCountFresh":1,"keysCountMissing":1,"keysScore":0.0,"metricsCountCommon":1,"metricsCountFresh":1,"metricsCountMissing":1,"metricsDurationCommonDst":0,"metricsDurationCommonSrc":0})";
         CHECK_THAT(overview, Catch::Contains(check4));
     }

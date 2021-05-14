@@ -4,12 +4,12 @@
 
 include(GNUInstallDirs)
 
-weasel_find_package("cxxopts")
+touca_find_package("cxxopts")
 
-add_executable(weasel_example_advanced "")
+add_executable(touca_example_advanced "")
 
 target_sources(
-        weasel_example_advanced
+        touca_example_advanced
     PRIVATE
         code_under_test.cpp
         code_under_test.hpp
@@ -18,20 +18,20 @@ target_sources(
 )
 
 target_link_libraries(
-        weasel_example_advanced
+        touca_example_advanced
     PRIVATE
-        weasel_framework
+        touca_framework
         cxxopts::cxxopts
 )
 
 target_include_directories(
-        weasel_example_advanced
+        touca_example_advanced
     PRIVATE
-        ${WEASEL_CLIENT_ROOT_DIR}
+        ${TOUCA_CLIENT_ROOT_DIR}
 )
 
 target_compile_definitions(
-        weasel_example_advanced
+        touca_example_advanced
     PRIVATE
         RAPIDJSON_HAS_STDSTRING
 )
@@ -40,10 +40,10 @@ source_group(
     TREE
         ${CMAKE_CURRENT_LIST_DIR}
     FILES
-        $<TARGET_PROPERTY:weasel_example_advanced,SOURCES>
+        $<TARGET_PROPERTY:touca_example_advanced,SOURCES>
 )
 
 install(
-    TARGETS weasel_example_advanced
+    TARGETS touca_example_advanced
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

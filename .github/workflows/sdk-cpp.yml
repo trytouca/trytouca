@@ -2,7 +2,7 @@
 # Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
 #
 
-name: weasel-cpp-main
+name: touca-cpp-main
 
 on:
   push:
@@ -60,9 +60,9 @@ jobs:
       - name: push conan package
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          conan remote add --force weasel-cpp https://getweasel.jfrog.io/artifactory/api/conan/weasel-cpp
-          conan user -p ${{ secrets.JFROG_API_KEY }} -r weasel-cpp ${{ secrets.JFROG_USERNAME }}
-          conan upload "weasel/1.4.0" --confirm --parallel -r weasel-cpp --all
+          conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
+          conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
+          conan upload "touca/1.4.0" --confirm --parallel -r touca-cpp --all
 
   docs-client-cpp:
     name: docs-client-cpp

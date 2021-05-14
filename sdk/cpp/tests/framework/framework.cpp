@@ -2,13 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/framework.hpp"
+#include "touca/framework.hpp"
 #include "catch2/catch.hpp"
 #include "tests/client/devkit/tmpfile.hpp"
 #include "tests/framework/utils.hpp"
-#include "weasel/devkit/utils.hpp"
-#include "weasel/extra/version.hpp"
-#include "weasel/framework/detail/utils.hpp"
+#include "touca/devkit/utils.hpp"
+#include "touca/extra/version.hpp"
+#include "touca/framework/detail/utils.hpp"
 
 TEST_CASE("suite")
 {
@@ -70,7 +70,7 @@ TEST_CASE("framework-dummy-workflow")
     SECTION("version")
     {
         caller.call_with({ "--version" });
-        const auto expected = weasel::format("{}.{}.{}\n", WEASEL_VERSION_MAJOR, WEASEL_VERSION_MINOR, WEASEL_VERSION_PATCH);
+        const auto expected = touca::format("{}.{}.{}\n", TOUCA_VERSION_MAJOR, TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
         CHECK(caller.exit_code() == EXIT_SUCCESS);
         CHECK(caller.cout() == expected);
         CHECK(caller.cerr().empty());
@@ -93,7 +93,7 @@ TEST_CASE("framework-dummy-workflow")
             "-r", "1.0", "-o", tmpFile.path.string(),
             "--team", "some-team", "--suite", "some-suite" });
         CHECK(caller.exit_code() == EXIT_FAILURE);
-        CHECK_THAT(caller.cout(), Catch::Contains("Weasel Regression Test Framework"));
+        CHECK_THAT(caller.cout(), Catch::Contains("Touca Regression Test Framework"));
         CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
         CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
         CHECK_THAT(caller.cout(), Catch::Contains("unable to proceed with empty list of testcases"));
@@ -144,7 +144,7 @@ TEST_CASE("framework-dummy-workflow")
     SECTION("valid-config-file")
     {
         TmpFile configFile;
-        configFile.write(R"({ "framework": { "save-as-binary": "false", "save-as-json": "false", "skip-logs": "true", "log-level": "error", "overwrite": "false" }, "weasel": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://getweasel.com/api/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
+        configFile.write(R"({ "framework": { "save-as-binary": "false", "save-as-json": "false", "skip-logs": "true", "log-level": "error", "overwrite": "false" }, "touca": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://api.touca.io/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
         caller.call_with({ "--skip-post",
             "-r", "1.0", "-o", tmpFile.path.string(),
             "--config-file", configFile.path.string(),
@@ -162,12 +162,12 @@ TEST_CASE("framework-dummy-workflow")
 
 TEST_CASE("framework-simple-workflow-valid-use")
 {
-    using fnames = std::vector<weasel::filesystem::path>;
+    using fnames = std::vector<touca::filesystem::path>;
 
     MainCaller<SimpleWorkflow> caller;
     TmpFile outputDir;
     TmpFile configFile;
-    configFile.write(R"({ "weasel": { "api-url": "https://getweasel.com/api/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
+    configFile.write(R"({ "touca": { "api-url": "https://api.touca.io/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
 
     caller.call_with({ "--skip-post",
         "-r", "1.0", "-o", outputDir.path.string(),
@@ -233,34 +233,34 @@ TEST_CASE("framework-simple-workflow-valid-use")
 
         fnames revisionFiles = ResultChecker(fnames({ outputDir.path, "some-suite" })).get_regular_files("1.0");
         fnames revisionDirs = ResultChecker(fnames({ outputDir.path, "some-suite" })).get_directories("1.0");
-        CHECK_THAT(revisionFiles, Catch::UnorderedEquals(fnames({ "Console.log", "weasel.log" })));
+        CHECK_THAT(revisionFiles, Catch::UnorderedEquals(fnames({ "Console.log", "touca.log" })));
         CHECK_THAT(revisionDirs, Catch::UnorderedEquals(fnames({ "42", "23", "16", "15", "8", "4" })));
 
         fnames caseFiles = ResultChecker(fnames({ outputDir.path, "some-suite", "1.0" })).get_regular_files("15");
         fnames caseDirs = ResultChecker(fnames({ outputDir.path, "some-suite", "1.0" })).get_directories("15");
-        CHECK_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "weasel.json", "weasel.bin" })));
+        CHECK_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "touca.json", "touca.bin" })));
         CHECK_THAT(caseDirs, Catch::UnorderedEquals(fnames({})));
     }
 
     SECTION("directory-content-streams")
     {
         fnames caseFiles = ResultChecker(fnames({ outputDir.path, "some-suite", "1.0" })).get_regular_files("8");
-        REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "stdout.txt", "stderr.txt", "weasel.json", "weasel.bin" })));
-        weasel::filesystem::path caseDir = outputDir.path;
+        REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "stdout.txt", "stderr.txt", "touca.json", "touca.bin" })));
+        touca::filesystem::path caseDir = outputDir.path;
         caseDir = caseDir / "some-suite" / "1.0" / "8";
-        const auto& fileOut = weasel::load_string_file((caseDir / "stdout.txt").string());
+        const auto& fileOut = touca::load_string_file((caseDir / "stdout.txt").string());
         CHECK(fileOut == "simple message in output stream\n");
-        const auto& fileErr = weasel::load_string_file((caseDir / "stderr.txt").string());
+        const auto& fileErr = touca::load_string_file((caseDir / "stderr.txt").string());
         CHECK(fileErr == "simple message in error stream\n");
     }
 
     SECTION("directory-content-json")
     {
         fnames caseFiles = ResultChecker(fnames({ outputDir.path, "some-suite", "1.0" })).get_regular_files("4");
-        REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "weasel.json", "weasel.bin" })));
-        weasel::filesystem::path caseDir = outputDir.path;
+        REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "touca.json", "touca.bin" })));
+        touca::filesystem::path caseDir = outputDir.path;
         caseDir = caseDir / "some-suite" / "1.0" / "4";
-        const auto& fileJson = weasel::load_string_file((caseDir / "weasel.json").string());
+        const auto& fileJson = touca::load_string_file((caseDir / "touca.json").string());
         CHECK_THAT(fileJson, Catch::Contains(R"("teamslug":"some-team","testsuite":"some-suite","version":"1.0","testcase":"4")"));
         CHECK_THAT(fileJson, Catch::Contains(R"({"key":"some-number","value":"1024"})"));
         CHECK_THAT(fileJson, Catch::Contains(R"({"key":"some-string","value":"foo"})"));
@@ -269,15 +269,14 @@ TEST_CASE("framework-simple-workflow-valid-use")
     }
 }
 
-
 TEST_CASE("framework-stream-redirection-disabled")
 {
-    using fnames = std::vector<weasel::filesystem::path>;
+    using fnames = std::vector<touca::filesystem::path>;
 
     MainCaller<SimpleWorkflow> caller;
     TmpFile outputDir;
     TmpFile configFile;
-    configFile.write(R"({ "weasel": { "api-url": "https://getweasel.com/api/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
+    configFile.write(R"({ "touca": { "api-url": "https://api.touca.io/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
 
     caller.call_with({ "--skip-post",
         "-r", "1.0", "-o", outputDir.path.string(),
@@ -287,6 +286,6 @@ TEST_CASE("framework-stream-redirection-disabled")
     SECTION("directory-content-streams")
     {
         fnames caseFiles = ResultChecker(fnames({ outputDir.path, "some-suite", "1.0" })).get_regular_files("8");
-        REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "weasel.bin" })));
+        REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({ "touca.bin" })));
     }
 }

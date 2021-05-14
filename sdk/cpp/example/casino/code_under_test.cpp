@@ -19,15 +19,15 @@
 namespace { namespace filescope {
 
     template <typename T>
-    std::shared_ptr<weasel::casino::Policy> makePolicy(
-        const weasel::casino::Hand& hand)
+    std::shared_ptr<touca::casino::Policy> makePolicy(
+        const touca::casino::Hand& hand)
     {
         return std::make_shared<T>(hand);
     }
 
 }} // namespace ::filescope
 
-namespace weasel { namespace casino {
+namespace touca { namespace casino {
 
     const std::vector<Card::Suite> Card::suites = { Suite::Clubs,
         Suite::Diamonds,
@@ -402,4 +402,4 @@ namespace weasel { namespace casino {
         return random(NameGenerator::adjectives);
     }
 
-}} // namespace weasel::casino
+}} // namespace touca::casino

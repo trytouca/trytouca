@@ -3,19 +3,19 @@
  */
 
 #include "cxxopts.hpp"
+#include "touca/devkit/filesystem.hpp"
+#include "touca/devkit/logger.hpp"
+#include "touca/devkit/resultfile.hpp"
+#include "touca/devkit/utils.hpp"
 #include "utils/misc/file.hpp"
 #include "utils/operations.hpp"
-#include "weasel/devkit/filesystem.hpp"
-#include "weasel/devkit/logger.hpp"
-#include "weasel/devkit/resultfile.hpp"
-#include "weasel/devkit/utils.hpp"
 
 /**
  *
  */
 bool UpdateOperation::parse_impl(int argc, char* argv[])
 {
-    cxxopts::Options options("weasel-cli --mode=update");
+    cxxopts::Options options("touca_cli --mode=update");
     // clang-format off
     options.add_options("main")
         ("src", "path to directory with one or more result files", cxxopts::value<std::string>())
@@ -35,13 +35,13 @@ bool UpdateOperation::parse_impl(int argc, char* argv[])
 
     for (const auto& kvp : filetypes) {
         if (!result.count(kvp.first)) {
-            weasel::print_error("{} directory not provided\n", kvp.second);
+            touca::print_error("{} directory not provided\n", kvp.second);
             fmt::print(stdout, "{}\n", options.help());
             return false;
         }
         const auto filepath = result[kvp.first].as<std::string>();
-        if (!weasel::filesystem::is_directory(filepath)) {
-            weasel::print_error("{} directory `{}` does not exist\n", kvp.second, filepath);
+        if (!touca::filesystem::is_directory(filepath)) {
+            touca::print_error("{} directory `{}` does not exist\n", kvp.second, filepath);
             return false;
         }
     }
@@ -62,24 +62,24 @@ bool UpdateOperation::parse_impl(int argc, char* argv[])
 /**
  * we expect user to specify a directory as source. we recursively
  * iterate over all the file system elements in that directory and
- * identify weasel result files.
+ * identify result files.
  */
 bool UpdateOperation::run_impl() const
 {
-    WEASEL_LOG_INFO("starting execution of operation: update");
+    TOUCA_LOG_INFO("starting execution of operation: update");
     const auto resultFiles = findResultFiles(_src);
     if (resultFiles.empty()) {
-        WEASEL_LOG_ERROR("specified directory has no weasel result file");
+        TOUCA_LOG_ERROR("specified directory has no result file");
         return false;
     }
 
-    const auto& root = weasel::filesystem::absolute(_out);
+    const auto& root = touca::filesystem::absolute(_out);
     for (const auto& srcFilePath : resultFiles) {
-        const auto filename = weasel::filesystem::path(srcFilePath).filename();
+        const auto filename = touca::filesystem::path(srcFilePath).filename();
         const auto dstFilePath = (root / filename).string();
 
-        weasel::ResultFile srcFile(srcFilePath);
-        std::vector<weasel::Testcase> content;
+        touca::ResultFile srcFile(srcFilePath);
+        std::vector<touca::Testcase> content;
         const auto& elementsMap = srcFile.parse();
         for (const auto& kvp : elementsMap) {
             auto meta = kvp.second->metadata();
@@ -95,7 +95,7 @@ bool UpdateOperation::run_impl() const
             kvp.second->setMetadata(meta);
             content.push_back(*kvp.second);
         }
-        weasel::ResultFile dstFile(dstFilePath);
+        touca::ResultFile dstFile(dstFilePath);
         dstFile.save(content);
     }
 

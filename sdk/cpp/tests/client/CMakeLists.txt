@@ -2,12 +2,12 @@
 # Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
 #
 
-weasel_find_package("Catch2")
+touca_find_package("Catch2")
 
-add_executable(weasel_client_tests "")
+add_executable(touca_client_tests "")
 
 target_sources(
-        weasel_client_tests
+        touca_client_tests
     PRIVATE
         client.cpp
         main.cpp
@@ -21,20 +21,20 @@ target_sources(
 )
 
 target_link_libraries(
-        weasel_client_tests
+        touca_client_tests
     PRIVATE
-        weasel_client
+        touca_client
         Catch2::Catch2
 )
 
 target_compile_definitions(
-        weasel_client_tests
+        touca_client_tests
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
 )
 
 set_target_properties(
-        weasel_client_tests
+        touca_client_tests
     PROPERTIES
         DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
         RELEASE_POSTFIX "${CMAKE_RELEASE_POSTFIX}"
@@ -44,12 +44,12 @@ source_group(
     TREE
         ${CMAKE_CURRENT_LIST_DIR}
     FILES
-        $<TARGET_PROPERTY:weasel_client_tests,SOURCES>
+        $<TARGET_PROPERTY:touca_client_tests,SOURCES>
 )
 
 enable_testing()
 
 add_test(
-    NAME weasel_client_tests
-    COMMAND $<TARGET_FILE:weasel_client_tests>
+    NAME touca_client_tests
+    COMMAND $<TARGET_FILE:touca_client_tests>
 )

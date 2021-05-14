@@ -27,7 +27,7 @@ set -o errexit -o pipefail -o noclobber -o nounset
 # declare project structure
 
 ARG_VERBOSE=0
-WEASEL_CLIENT_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TOUCA_CLIENT_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # initialize logging
 
@@ -161,7 +161,7 @@ build_build () {
     fi
     check_prerequisite_commands "cmake"
 
-    local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
+    local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
     local dir_build="${dir_source}/local/build"
     local dir_install="${dir_source}/local/dist"
 
@@ -201,12 +201,12 @@ build_build () {
         cmake_config_general_args+=("-DCMAKE_DEBUG_POSTFIX=_debug")
     fi
 
-    local cmake_config_weasel_args=(
-        -DWEASEL_BUILD_TESTS="$(cmake_option "with-tests")"
-        -DWEASEL_BUILD_UTILS="$(cmake_option "with-utils")"
-        -DWEASEL_BUILD_EXAMPLES="$(cmake_option "with-examples")"
-        -DWEASEL_BUILD_FRAMEWORK="$(cmake_option "with-framework")"
-        -DWEASEL_BUILD_COVERAGE_REPORT="$(cmake_option "with-coverage")"
+    local cmake_config_touca_args=(
+        -DTOUCA_BUILD_TESTS="$(cmake_option "with-tests")"
+        -DTOUCA_BUILD_UTILS="$(cmake_option "with-utils")"
+        -DTOUCA_BUILD_EXAMPLES="$(cmake_option "with-examples")"
+        -DTOUCA_BUILD_FRAMEWORK="$(cmake_option "with-framework")"
+        -DTOUCA_BUILD_COVERAGE_REPORT="$(cmake_option "with-coverage")"
     )
 
     # we specify option `with_tests` to force conan to pull dependencies
@@ -221,7 +221,7 @@ build_build () {
     fi
 
     log_info "building cpp components using local toolchain"
-    cmake "${cmake_config_general_args[@]}" "${cmake_config_weasel_args[@]}"
+    cmake "${cmake_config_general_args[@]}" "${cmake_config_touca_args[@]}"
     cmake --build "${dir_build}" --parallel
     cmake --install "${dir_build}" --prefix "${dir_install}"
     log_info "built specified cpp component(s)"
@@ -229,7 +229,7 @@ build_build () {
 
 build_coverage () {
     if [ $# -ne 1 ]; then return 1; fi
-    local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
+    local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
     local dir_build="${dir_source}/local/build"
     local dir_test="${dir_source}/local/tests"
     # check_prerequisite_commands "llvm-profdata" "llvm-cov"
@@ -244,10 +244,10 @@ build_coverage () {
         ["framework"]="src\/.+")
     for key in "${keys[@]}"; do
       local dir_key="${dir_test}/${key,,}"
-      local path_llvm_raw="${dir_key}/weasel-${key,,}.profraw"
-      local path_llvm_data="${dir_key}/weasel-${key,,}.profdata"
-      local path_report_stdout="${dir_key}/weasel-${key,,}.stdout"
-      local file_bin="${dir_bin}/weasel_${key}_tests_debug"
+      local path_llvm_raw="${dir_key}/touca-${key,,}.profraw"
+      local path_llvm_data="${dir_key}/touca-${key,,}.profdata"
+      local path_report_stdout="${dir_key}/touca-${key,,}.stdout"
+      local file_bin="${dir_bin}/touca_${key}_tests_debug"
       mkdir -p "$(dirname "${path_llvm_raw}")"
       log_info "running unittest ${file_bin}"
       LLVM_PROFILE_FILE="${path_llvm_raw}" "${file_bin}"
@@ -269,7 +269,7 @@ build_coverage () {
 build_lint () {
     if [ $# -ne 1 ]; then return 1; fi
     check_prerequisite_commands "clang-format"
-    local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
+    local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
     for dir in "utils" "framework" "src" "include" "tests" "example"; do
         find "${dir_source}/${dir}" \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
             -exec clang-format -i {} +
@@ -278,7 +278,7 @@ build_lint () {
 }
 
 build_package () {
-    local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
+    local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
     local dir_build="${dir_source}/local/build"
     local dir_export_pkg="${dir_build}/conan-export-pkg"
 
@@ -291,7 +291,7 @@ build_package () {
 
 build_clear () {
     if [ $# -ne 1 ]; then return 1; fi
-    local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
+    local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
     remove_dir_if_exists "${dir_source}/local/build"
     remove_dir_if_exists "${dir_source}/local/dist"
     remove_dir_if_exists "${dir_source}/local/docs"
@@ -300,7 +300,7 @@ build_clear () {
 
 build_docs () {
     if [ $# -ne 1 ]; then return 1; fi
-    local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
+    local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
     local config_dir_doxygen="${dir_source}/config/doxygen"
     local config_dir_sphinx="${dir_source}/config/sphinx"
     local dir_dst="${dir_source}/local/docs"
@@ -320,7 +320,7 @@ build_docs () {
 
 build_test () {
     if [ $# -ne 1 ]; then return 1; fi
-    local dir_source="${WEASEL_CLIENT_ROOT_DIR}"
+    local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
     cd "${dir_source}/local/build" && ctest "${dir_source}" -C Release && cd "$(pwd)"
     log_info "ran unittests for cpp client library"
 }

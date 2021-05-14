@@ -2,7 +2,7 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/utils.hpp"
+#include "touca/devkit/utils.hpp"
 #include "fmt/printf.h"
 #include <codecvt>
 #include <fstream>
@@ -10,7 +10,7 @@
 #include <locale>
 #include <sstream>
 
-namespace weasel {
+namespace touca {
 
     /**
      *
@@ -58,4 +58,4 @@ namespace weasel {
         ofs.close();
     }
 
-} // namespace weasel
+} // namespace touca

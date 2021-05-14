@@ -5,20 +5,20 @@
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
-weasel_find_package("flatbuffers" "Flatbuffers")
-weasel_find_package("fmt")
-weasel_find_package("ghcFilesystem")
-weasel_find_package("httplib")
-weasel_find_package("RapidJSON")
-weasel_find_package("spdlog")
+touca_find_package("flatbuffers" "Flatbuffers")
+touca_find_package("fmt")
+touca_find_package("ghcFilesystem")
+touca_find_package("httplib")
+touca_find_package("RapidJSON")
+touca_find_package("spdlog")
 
-add_library(weasel_client "")
+add_library(touca_client "")
 
 target_sources(
-        weasel_client
+        touca_client
     PRIVATE
         client.cpp
-        weasel.cpp
+        touca.cpp
         devkit/comparison.cpp
         devkit/filesystem.cpp
         devkit/logger.cpp
@@ -31,7 +31,7 @@ target_sources(
 )
 
 target_link_libraries(
-        weasel_client
+        touca_client
     PRIVATE
         httplib::httplib
         spdlog::spdlog
@@ -44,14 +44,14 @@ target_link_libraries(
 )
 
 target_include_directories(
-        weasel_client
+        touca_client
     PUBLIC
-        ${WEASEL_CLIENT_ROOT_DIR}/include
+        ${TOUCA_CLIENT_ROOT_DIR}/include
         ${CMAKE_BINARY_DIR}/generated
 )
 
 target_compile_definitions(
-        weasel_client
+        touca_client
     PRIVATE
         RAPIDJSON_HAS_STDSTRING
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
@@ -59,7 +59,7 @@ target_compile_definitions(
 )
 
 target_compile_features(
-        weasel_client
+        touca_client
     PRIVATE
         cxx_variadic_templates
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:cxx_aggregate_default_initializers>
@@ -75,7 +75,7 @@ target_compile_features(
 )
 
 set_target_properties(
-        weasel_client
+        touca_client
     PROPERTIES
         SOVERSION 1
         VERSION 1.4.0
@@ -85,35 +85,35 @@ set_target_properties(
 
 find_package(OpenSSL QUIET)
 if (OpenSSL_FOUND)
-    target_link_libraries(weasel_client PRIVATE OpenSSL::SSL OpenSSL::Crypto)
-    target_compile_definitions(weasel_client PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT)
+    target_link_libraries(touca_client PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+    target_compile_definitions(touca_client PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT)
 else()
-    message(WARNING "Failed to find OpenSSL. Weasel will be built without HTTPS support.")
+    message(WARNING "Failed to find OpenSSL. Touca will be built without HTTPS support.")
 endif()
 
 generate_export_header(
-    weasel_client
-    EXPORT_MACRO_NAME "WEASEL_CLIENT_API"
-    EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/generated/weasel/lib_api.hpp"
+    touca_client
+    EXPORT_MACRO_NAME "TOUCA_CLIENT_API"
+    EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/generated/touca/lib_api.hpp"
 )
 
 source_group(
     TREE
         ${CMAKE_CURRENT_LIST_DIR}
     FILES
-        $<TARGET_PROPERTY:weasel_client,SOURCES>
+        $<TARGET_PROPERTY:touca_client,SOURCES>
 )
 
-install(TARGETS weasel_client
+install(TARGETS touca_client
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            COMPONENT Weasel_Runtime
+            COMPONENT Touca_Runtime
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            COMPONENT Weasel_Runtime
-            NAMELINK_COMPONENT Weasel_Development
+            COMPONENT Touca_Runtime
+            NAMELINK_COMPONENT Touca_Development
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            COMPONENT Weasel_Development
+            COMPONENT Touca_Development
 )
-install(DIRECTORY "${WEASEL_CLIENT_ROOT_DIR}/include/weasel"
+install(DIRECTORY "${TOUCA_CLIENT_ROOT_DIR}/include/touca"
         DESTINATION include MESSAGE_NEVER FILES_MATCHING PATTERN "*.h*")
-install(DIRECTORY "${CMAKE_BINARY_DIR}/generated/weasel"
+install(DIRECTORY "${CMAKE_BINARY_DIR}/generated/touca"
         DESTINATION include MESSAGE_NEVER FILES_MATCHING PATTERN "*.h*")

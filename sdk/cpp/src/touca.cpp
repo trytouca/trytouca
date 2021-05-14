@@ -2,11 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/weasel.hpp"
-#include "weasel/detail/client.hpp"
-#include "weasel/devkit/utils.hpp"
+#include "touca/detail/client.hpp"
+#include "touca/devkit/utils.hpp"
+#include "touca/touca.hpp"
 
-namespace weasel {
+namespace touca {
 
     static ClientImpl instance;
 
@@ -63,7 +63,7 @@ namespace weasel {
      */
     void declare_testcase(const std::wstring& name)
     {
-        instance.testcase(weasel::narrow(name));
+        instance.testcase(touca::narrow(name));
     }
 
     /**
@@ -79,7 +79,7 @@ namespace weasel {
      */
     void forget_testcase(const std::wstring& name)
     {
-        instance.forget_testcase(weasel::narrow(name));
+        instance.forget_testcase(touca::narrow(name));
     }
 
     /**
@@ -104,7 +104,7 @@ namespace weasel {
             const std::wstring& key,
             const std::shared_ptr<types::IType>& value)
         {
-            instance.add_result(weasel::narrow(key), value);
+            instance.add_result(touca::narrow(key), value);
         }
 
         /**
@@ -124,7 +124,7 @@ namespace weasel {
             const std::wstring& key,
             const std::shared_ptr<types::IType>& value)
         {
-            instance.add_assertion(weasel::narrow(key), value);
+            instance.add_assertion(touca::narrow(key), value);
         }
 
         /**
@@ -144,7 +144,7 @@ namespace weasel {
             const std::wstring& key,
             const std::shared_ptr<types::IType>& value)
         {
-            instance.add_array_element(weasel::narrow(key), value);
+            instance.add_array_element(touca::narrow(key), value);
         }
 
     } // namespace internal
@@ -244,4 +244,4 @@ namespace weasel {
         stop_timer(_name);
     }
 
-} // namespace weasel
+} // namespace touca

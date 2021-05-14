@@ -6,7 +6,7 @@ include_guard()
 
 include(FetchContent)
 
-function(weasel_find_catch2)
+function(touca_find_catch2)
     FetchContent_Declare(
         catch2
         GIT_REPOSITORY  https://github.com/catchorg/Catch2.git
@@ -21,7 +21,7 @@ function(weasel_find_catch2)
     endif()
 endfunction()
 
-function(weasel_find_cxxopts)
+function(touca_find_cxxopts)
     FetchContent_Declare(
         cxxopts
         GIT_REPOSITORY  https://github.com/jarro2783/cxxopts
@@ -36,7 +36,7 @@ function(weasel_find_cxxopts)
     endif()
 endfunction()
 
-function(weasel_find_fmt)
+function(touca_find_fmt)
     FetchContent_Declare(
         fmt
         GIT_REPOSITORY  https://github.com/fmtlib/fmt.git
@@ -52,7 +52,7 @@ function(weasel_find_fmt)
     endif()
 endfunction()
 
-function(weasel_find_ghcfilesystem)
+function(touca_find_ghcfilesystem)
     FetchContent_Declare(
         ghcFilesystem
         GIT_REPOSITORY  https://github.com/gulrak/filesystem.git
@@ -67,7 +67,7 @@ function(weasel_find_ghcfilesystem)
     endif()
 endfunction()
 
-function(weasel_find_flatbuffers)
+function(touca_find_flatbuffers)
     FetchContent_Declare(
         flatbuffers
         GIT_REPOSITORY  https://github.com/google/flatbuffers.git
@@ -82,7 +82,7 @@ function(weasel_find_flatbuffers)
     endif()
 endfunction()
 
-function(weasel_find_httplib)
+function(touca_find_httplib)
     FetchContent_Declare(
         httplib
         GIT_REPOSITORY  https://github.com/yhirose/cpp-httplib.git
@@ -97,7 +97,7 @@ function(weasel_find_httplib)
     endif()
 endfunction()
 
-function(weasel_find_rapidjson)
+function(touca_find_rapidjson)
     FetchContent_Declare(
         rapidjson
         GIT_REPOSITORY  https://github.com/Tencent/rapidjson.git
@@ -112,7 +112,7 @@ function(weasel_find_rapidjson)
     endif()
 endfunction()
 
-function(weasel_find_spdlog)
+function(touca_find_spdlog)
     FetchContent_Declare(
         spdlog
         GIT_REPOSITORY  https://github.com/gabime/spdlog.git
@@ -128,7 +128,7 @@ function(weasel_find_spdlog)
     endif()
 endfunction()
 
-function(weasel_find_package)
+function(touca_find_package)
     set(target_name ${ARGV0}::${ARGV0})
     set(find_module_name ${ARGV0})
     string(TOLOWER ${ARGV0} ots_name)
@@ -141,9 +141,9 @@ function(weasel_find_package)
     endif()
     find_package(${find_module_name} QUIET)
     if (${find_module_name}_FOUND AND TARGET ${target_name})
-        message(DEBUG "weasel: found package: ${ots_name}")
+        message(DEBUG "Touca: found package: ${ots_name}")
         return()
     endif()
-    message(STATUS "weasel: fetching thirdparty dependency: ${ots_name}")
-    cmake_language(CALL weasel_find_${ots_name})
+    message(STATUS "Touca: fetching thirdparty dependency: ${ots_name}")
+    cmake_language(CALL touca_find_${ots_name})
 endfunction()

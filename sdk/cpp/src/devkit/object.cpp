@@ -2,13 +2,13 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/devkit/object.hpp"
+#include "touca/devkit/object.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/rapidjson.h"
-#include "weasel/devkit/comparison.hpp"
-#include "weasel/impl/weasel_generated.h"
+#include "touca/devkit/comparison.hpp"
+#include "touca/impl/touca_generated.h"
 
-namespace weasel { namespace types {
+namespace touca { namespace types {
 
     /**
      *
@@ -181,4 +181,4 @@ namespace weasel { namespace types {
         return members;
     }
 
-}} // namespace weasel::types
+}} // namespace touca::types

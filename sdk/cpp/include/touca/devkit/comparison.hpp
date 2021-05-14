@@ -4,15 +4,15 @@
 
 #pragma once
 
-#include "weasel/devkit/testcase.hpp"
-#include "weasel/devkit/types.hpp"
+#include "touca/devkit/testcase.hpp"
+#include "touca/devkit/types.hpp"
 #include <numeric>
 #include <unordered_map>
 
-namespace weasel { namespace compare {
+namespace touca { namespace compare {
 
     /**
-     * @enum weasel::compare::MatchType
+     * @enum touca::compare::MatchType
      * @brief describes overall result of comparing two testcases
      */
     enum class MatchType : unsigned char {
@@ -23,7 +23,7 @@ namespace weasel { namespace compare {
     /**
      *
      */
-    struct WEASEL_CLIENT_API TypeComparison {
+    struct TOUCA_CLIENT_API TypeComparison {
         std::string srcValue;
         std::string dstValue;
         types::ValueType srcType = types::ValueType::Unknown;
@@ -85,12 +85,12 @@ namespace weasel { namespace compare {
     /**
      *
      */
-    class WEASEL_CLIENT_API TestcaseComparison {
+    class TOUCA_CLIENT_API TestcaseComparison {
     public:
         /**
          *
          */
-        struct WEASEL_CLIENT_API Overview {
+        struct TOUCA_CLIENT_API Overview {
             std::int32_t keysCountCommon;
             std::int32_t keysCountFresh;
             std::int32_t keysCountMissing;
@@ -155,4 +155,4 @@ namespace weasel { namespace compare {
         const Testcase& _dst;
     };
 
-}} // namespace weasel::compare
+}} // namespace touca::compare

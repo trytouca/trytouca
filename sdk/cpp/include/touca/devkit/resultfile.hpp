@@ -7,22 +7,22 @@
 /**
  * @file resultfile.hpp
  *
- * @brief declares class weasel::ResultFile which provides utility
- *        functions for creating and interacting with weasel result
+ * @brief declares class touca::ResultFile which provides utility
+ *        functions for creating and interacting with test result
  *        files.
  */
 
-#include "weasel/devkit/comparison.hpp"
-#include "weasel/devkit/filesystem.hpp"
+#include "touca/devkit/comparison.hpp"
+#include "touca/devkit/filesystem.hpp"
 
-namespace weasel {
+namespace touca {
 
     /**
-     * @brief provides means for interacting with weasel result files.
+     * @brief provides means for interacting with test result files.
      *
      * @author Pejman Ghorbanzade
      */
-    class WEASEL_CLIENT_API ResultFile {
+    class TOUCA_CLIENT_API ResultFile {
     public:
         /**
          * @brief represents value returned by function `Resultfile::compare`.
@@ -32,7 +32,7 @@ namespace weasel {
          * @param common comparison results of all testcases shared between
          *             the two `ResultFile` objects.
          */
-        struct WEASEL_CLIENT_API ComparisonResult {
+        struct TOUCA_CLIENT_API ComparisonResult {
             ElementsMap fresh;
             ElementsMap missing;
             std::map<std::string, compare::TestcaseComparison> common;
@@ -55,19 +55,19 @@ namespace weasel {
          *       of that file. It does not guarantee that the file can
          *       be read from or written into.
          */
-        explicit ResultFile(const weasel::filesystem::path& path);
+        explicit ResultFile(const touca::filesystem::path& path);
 
         /**
          * Checks if content of the regular file on disk associated with
-         * this object describes valid weasel results.
+         * this object describes valid test results.
          *
          * @return true if the object refers to a regular file on disk
-         *         whose content describes valid weasel results.
+         *         whose content describes valid test results.
          */
         bool validate() const;
 
         /**
-         * Updates this object to hold weasel results stored in the regular
+         * Updates this object to hold test results stored in the regular
          * file on disk associated with this object.
          *
          * Calling other member functions such as `validate`, `parse`,
@@ -76,7 +76,7 @@ namespace weasel {
          * other operations if they are to be called several times.
          *
          * @throw std::runtime_error if file is missing or is not a valid
-         *        weasel result file.
+         *        test result file.
          */
         void load();
 
@@ -111,18 +111,17 @@ namespace weasel {
 
         /**
          * Parses content of a the regular file on disk associated with
-         * this object, assuming that it is a valid weasel result file.
+         * this object, assuming that it is a valid test result file.
          *
          * @throw std::runtime_error if file is missing or is not a valid
-         *        weasel result file.
+         *        test result file.
          *
-         * @return parsed weasel results in form of a list of `Testcase`
-         *         objects
+         * @return parsed test results in form of a list of `Testcase` objects
          */
         ElementsMap parse() const;
 
         /**
-         * Provides a string representation of weasel results stored in
+         * Provides a string representation of test results stored in
          * the specified file on disk that is associated with this object,
          * in json format.
          *
@@ -130,7 +129,7 @@ namespace weasel {
          *       that the function provides json view of the file already
          *       stored on disk and not the stored state of the object.
          *
-         * @return string representation of weasel results stored in the
+         * @return string representation of test results stored in the
          *         specified file in json format
          */
         std::string readFileInJson() const;
@@ -157,17 +156,17 @@ namespace weasel {
 
     private:
         /**
-         * @brief Checks if a given string describes valid weasel results in
+         * @brief Checks if a given string describes valid test results in
          *        well-structured flatbuffers binary format.
          *
          * @details Used by `parse` and `validate` functions.
          *
-         * @return true if the given string describes valid weasel results
+         * @return true if the given string describes valid test results
          */
         bool validate(const std::string& content) const;
 
         ElementsMap _testcases;
-        weasel::filesystem::path _path;
+        touca::filesystem::path _path;
     };
 
-} // namespace weasel
+} // namespace touca

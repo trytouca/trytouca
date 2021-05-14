@@ -3,7 +3,7 @@
  */
 
 #include "code_under_test.hpp"
-#include "weasel/weasel.hpp"
+#include "touca/touca.hpp"
 #include <thread>
 #include <unordered_map>
 
@@ -44,8 +44,8 @@ Wizard parse_profile(const std::string& path)
  */
 void custom_function_1(const Wizard& wizard)
 {
-    WEASEL_SCOPED_TIMER;
-    weasel::add_result("is_tall", (6.0f < wizard.height));
+    TOUCA_SCOPED_TIMER;
+    touca::add_result("is_tall", (6.0f < wizard.height));
     std::this_thread::sleep_for(std::chrono::milliseconds(10 + rand() % 50));
 }
 
@@ -55,8 +55,8 @@ void custom_function_1(const Wizard& wizard)
 void custom_function_2(const Wizard& wizard)
 {
     for (auto i = 0ul; i < wizard.wands.size(); ++i) {
-        weasel::scoped_timer timer("func2_wand_" + std::to_string(i));
-        weasel::add_hit_count("number of wands");
+        touca::scoped_timer timer("func2_wand_" + std::to_string(i));
+        touca::add_hit_count("number of wands");
         std::this_thread::sleep_for(std::chrono::milliseconds(10 + rand() % 50));
     }
 }
@@ -67,7 +67,7 @@ void custom_function_2(const Wizard& wizard)
 void custom_function_3(const Wizard& wizard)
 {
     for (const auto& wand : wizard.wands) {
-        weasel::add_array_element("wands", wand);
+        touca::add_array_element("wands", wand);
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(10 + rand() % 50));
 }

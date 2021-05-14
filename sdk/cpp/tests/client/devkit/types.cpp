@@ -3,15 +3,15 @@
  */
 
 #include "catch2/catch.hpp"
-#include "weasel/devkit/comparison.hpp"
-#include "weasel/devkit/convert.hpp"
-#include "weasel/devkit/object.hpp"
-#include "weasel/impl/weasel_generated.h"
+#include "touca/devkit/comparison.hpp"
+#include "touca/devkit/convert.hpp"
+#include "touca/devkit/object.hpp"
+#include "touca/impl/touca_generated.h"
 
 namespace creature {
 
     class Head {
-        friend struct weasel::convert::Conversion<creature::Head>;
+        friend struct touca::convert::Conversion<creature::Head>;
 
     public:
         explicit Head(const uint64_t eyes)
@@ -26,7 +26,7 @@ namespace creature {
 } // namespace creature
 
 template <>
-struct weasel::convert::Conversion<creature::Head> {
+struct touca::convert::Conversion<creature::Head> {
     std::shared_ptr<types::IType> operator()(const creature::Head& value)
     {
         auto out = std::make_shared<types::Object>("head");
@@ -35,7 +35,7 @@ struct weasel::convert::Conversion<creature::Head> {
     }
 };
 
-std::string serialize(const std::shared_ptr<weasel::types::IType>& value)
+std::string serialize(const std::shared_ptr<touca::types::IType>& value)
 {
     flatbuffers::FlatBufferBuilder builder;
     const auto& wrapper = value->serialize(builder);
@@ -44,9 +44,9 @@ std::string serialize(const std::shared_ptr<weasel::types::IType>& value)
     return { ptr, ptr + builder.GetSize() };
 }
 
-std::shared_ptr<weasel::types::IType> deserialize(const std::string& buffer)
+std::shared_ptr<touca::types::IType> deserialize(const std::string& buffer)
 {
-    using namespace weasel;
+    using namespace touca;
     using namespace flatbuffers;
     Verifier verifier((const uint8_t*)buffer.data(), buffer.size());
     CHECK(verifier.VerifyBuffer<fbs::TypeWrapper>());
@@ -56,7 +56,7 @@ std::shared_ptr<weasel::types::IType> deserialize(const std::string& buffer)
 
 TEST_CASE("Simple Data Types")
 {
-    using namespace weasel;
+    using namespace touca;
 
     SECTION("type: bool")
     {

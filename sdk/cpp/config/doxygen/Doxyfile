@@ -32,7 +32,7 @@ DOXYFILE_ENCODING      = UTF-8
 # title of most generated pages and in a few other places.
 # The default value is: My Project.
 
-PROJECT_NAME           = "Weasel Client for C++"
+PROJECT_NAME           = "Touca SDK for C++"
 
 # The PROJECT_NUMBER tag can be used to enter a project or revision number. This
 # could be handy for archiving the generated documentation or if some version
@@ -1333,7 +1333,7 @@ DOCSET_PUBLISHER_ID    = org.doxygen.Publisher
 # The default value is: Publisher.
 # This tag requires that the tag GENERATE_DOCSET is set to YES.
 
-DOCSET_PUBLISHER_NAME  = Weasel, Inc.
+DOCSET_PUBLISHER_NAME  = Touca, Inc.
 
 # If the GENERATE_HTMLHELP tag is set to YES then doxygen generates three
 # additional HTML index files: index.hhp, index.hhc, and index.hhk. The
@@ -2173,8 +2173,8 @@ INCLUDE_FILE_PATTERNS  =
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 PREDEFINED             = DOXYGEN_SHOULD_SKIP_THIS \
-                         WEASEL_CLIENT_API= \
-                         WEASEL_FRAMEWORK_API=
+                         TOUCA_CLIENT_API= \
+                         TOUCA_FRAMEWORK_API=
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The

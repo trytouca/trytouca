@@ -2,25 +2,25 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-#include "weasel/detail/client.hpp"
+#include "touca/detail/client.hpp"
 #include "catch2/catch.hpp"
 #include "devkit/tmpfile.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
-#include "weasel/devkit/resultfile.hpp"
-#include "weasel/devkit/utils.hpp"
+#include "touca/devkit/resultfile.hpp"
+#include "touca/devkit/utils.hpp"
 
-using namespace weasel;
+using namespace touca;
 
-std::string saveAndReadBack(const weasel::ClientImpl& client)
+std::string saveAndReadBack(const touca::ClientImpl& client)
 {
     TmpFile file;
     CHECK_NOTHROW(client.save(file.path, {}, DataFormat::JSON, true));
     return load_string_file(file.path.string());
 }
 
-ElementsMap saveAndLoadBack(const weasel::ClientImpl& client)
+ElementsMap saveAndLoadBack(const touca::ClientImpl& client)
 {
     TmpFile file;
     CHECK_NOTHROW(client.save(file.path, {}, DataFormat::FBS, true));
@@ -33,7 +33,7 @@ ElementsMap saveAndLoadBack(const weasel::ClientImpl& client)
  */
 TEST_CASE("empty client")
 {
-    weasel::ClientImpl client;
+    touca::ClientImpl client;
     REQUIRE(client.is_configured() == false);
     CHECK(client.configuration_error().empty() == true);
     REQUIRE_NOTHROW(client.configure({ { "api-key", "some-secret-key" },
@@ -60,8 +60,8 @@ TEST_CASE("empty client")
 
 TEST_CASE("using a configured client")
 {
-    weasel::ClientImpl client;
-    const weasel::ClientImpl::OptionsMap options_map = {
+    touca::ClientImpl client;
+    const touca::ClientImpl::OptionsMap options_map = {
         { "team", "myteam" },
         { "suite", "mysuite" },
         { "version", "myversion" },

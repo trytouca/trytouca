@@ -6,159 +6,159 @@ API Reference
 Client Library
 ++++++++++++++
 
-`weasel/weasel.hpp` is the main entry-point to the Weasel C++ Client Library.
+`touca/touca.hpp` is the main entry-point to the Touca SDK for C++.
 In most cases, it is the only header-file that users should include in their
 regression test tool. It provides all the functions necessary to configure
 the client, declare testcases, capture test results, and submit them to the
-Weasel Platform. This section documents the API exposed by this header file.
+Touca server. This section documents the API exposed by this header file.
 
 Configuring the Library
 -----------------------
 
-.. doxygenfunction:: weasel::configure(const std::unordered_map<std::string, std::string> &opts)
-   :project: weasel
+.. doxygenfunction:: touca::configure(const std::unordered_map<std::string, std::string> &opts)
+   :project: touca
 
-.. doxygenfunction:: weasel::configure(const std::string &path)
-   :project: weasel
+.. doxygenfunction:: touca::configure(const std::string &path)
+   :project: touca
 
-.. doxygenfunction:: weasel::is_configured
-   :project: weasel
+.. doxygenfunction:: touca::is_configured
+   :project: touca
 
-.. doxygenfunction:: weasel::configuration_error
-   :project: weasel
+.. doxygenfunction:: touca::configuration_error
+   :project: touca
 
-.. doxygenfunction:: weasel::add_logger
-   :project: weasel
+.. doxygenfunction:: touca::add_logger
+   :project: touca
 
 Declaring Testcases
 -------------------
 
-.. doxygenfunction:: weasel::declare_testcase(const std::string &name)
-   :project: weasel
+.. doxygenfunction:: touca::declare_testcase(const std::string &name)
+   :project: touca
 
-.. doxygenfunction:: weasel::declare_testcase(const std::wstring &name)
-   :project: weasel
+.. doxygenfunction:: touca::declare_testcase(const std::wstring &name)
+   :project: touca
 
-.. doxygenfunction:: weasel::forget_testcase(const std::string &name)
-   :project: weasel
+.. doxygenfunction:: touca::forget_testcase(const std::string &name)
+   :project: touca
 
-.. doxygenfunction:: weasel::forget_testcase(const std::wstring &name)
-   :project: weasel
+.. doxygenfunction:: touca::forget_testcase(const std::wstring &name)
+   :project: touca
 
 Capturing Test Results
 ----------------------
 
-.. doxygenfunction:: weasel::add_result
-   :project: weasel
+.. doxygenfunction:: touca::add_result
+   :project: touca
 
-.. doxygenfunction:: weasel::add_assertion
-   :project: weasel
+.. doxygenfunction:: touca::add_assertion
+   :project: touca
 
-.. doxygenfunction:: weasel::add_array_element
-   :project: weasel
+.. doxygenfunction:: touca::add_array_element
+   :project: touca
 
-.. doxygenfunction:: weasel::add_hit_count
-   :project: weasel
+.. doxygenfunction:: touca::add_hit_count
+   :project: touca
 
 Capturing Metrics
 -----------------
 
-.. doxygenfunction:: weasel::add_metric
-   :project: weasel
+.. doxygenfunction:: touca::add_metric
+   :project: touca
 
-.. doxygenfunction:: weasel::start_timer
-   :project: weasel
+.. doxygenfunction:: touca::start_timer
+   :project: touca
 
-.. doxygenfunction:: weasel::stop_timer
-   :project: weasel
+.. doxygenfunction:: touca::stop_timer
+   :project: touca
 
-.. doxygenfunction:: weasel::make_timer
-   :project: weasel
+.. doxygenfunction:: touca::make_timer
+   :project: touca
 
-.. doxygendefine:: WEASEL_SCOPED_TIMER
-   :project: weasel
+.. doxygendefine:: TOUCA_SCOPED_TIMER
+   :project: touca
 
 Saving Test Results
 -------------------
 
-.. doxygenfunction:: weasel::save_binary
-   :project: weasel
+.. doxygenfunction:: touca::save_binary
+   :project: touca
 
-.. doxygenfunction:: weasel::save_json
-   :project: weasel
+.. doxygenfunction:: touca::save_json
+   :project: touca
 
 Submitting Test Results
 -----------------------
 
-.. doxygenfunction:: weasel::post
-   :project: weasel
+.. doxygenfunction:: touca::post
+   :project: touca
 
-Extending Weasel Type System
+Extending Touca Type System
 ----------------------------
 
-.. doxygenstruct:: weasel::convert::Conversion
-   :project: weasel
+.. doxygenstruct:: touca::convert::Conversion
+   :project: touca
 
 Test Framework
 ++++++++++++++
 
-`weasel/framework.hpp` is the main entry-point to the Weasel Test Framework
+`touca/framework.hpp` is the main entry-point to the Touca Test Framework
 for C++. In typical test tools, it is the main header file used in the
-regression test tool. The Test Framework performs Weasel client configuration,
+regression test tool. The Test Framework performs Touca client configuration,
 testcase declaration, and saving and submitting the test results. As a result,
-users may not need to include `weasel/weasel.hpp` if capturing test results
+users may not need to include `touca/touca.hpp` if capturing test results
 happens from within the code under test and outside the regression test tool.
 
 Basic Types
 -----------
 
-.. doxygentypedef:: weasel::framework::Testcase
-   :project: weasel
+.. doxygentypedef:: touca::framework::Testcase
+   :project: touca
 
-.. doxygentypedef:: weasel::framework::Errors
-   :project: weasel
+.. doxygentypedef:: touca::framework::Errors
+   :project: touca
 
-.. doxygentypedef:: weasel::framework::Options
-   :project: weasel
+.. doxygentypedef:: touca::framework::Options
+   :project: touca
 
 Main Function
 -------------
 
-.. doxygenfunction:: weasel::framework::main
-   :project: weasel
+.. doxygenfunction:: touca::framework::main
+   :project: touca
 
 Workflow Class
 --------------
 
-.. doxygenclass:: weasel::framework::Workflow
-   :project: weasel
+.. doxygenclass:: touca::framework::Workflow
+   :project: touca
    :members:
 
 Suite Class
 -----------
 
-.. doxygenclass:: weasel::framework::Suite
-   :project: weasel
+.. doxygenclass:: touca::framework::Suite
+   :project: touca
    :members:
 
 Available Implementations
 *************************
 
-`weasel/framework/suites.hpp` provides the following implementations of the
+`touca/framework/suites.hpp` provides the following implementations of the
 abstract class `Suite`.
 
-.. doxygenclass:: weasel::framework::FileSuite
-   :project: weasel
+.. doxygenclass:: touca::framework::FileSuite
+   :project: touca
 
-.. doxygenclass:: weasel::framework::RemoteSuite
-   :project: weasel
+.. doxygenclass:: touca::framework::RemoteSuite
+   :project: touca
 
 Logging
 -------
 
-.. doxygenenum:: weasel::framework::LogLevel
-   :project: weasel
+.. doxygenenum:: touca::framework::LogLevel
+   :project: touca
 
-.. doxygenstruct:: weasel::framework::LogSubscriber
-   :project: weasel
+.. doxygenstruct:: touca::framework::LogSubscriber
+   :project: touca
    :members:
