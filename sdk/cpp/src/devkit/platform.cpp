@@ -35,7 +35,7 @@ namespace weasel {
     {
         _cli.set_default_headers({ { "Accept-Charset", "utf-8" },
             { "Accept", "application/json" },
-            { "User-Agent", "weasel-client-cpp/1.3.0" } });
+            { "User-Agent", "weasel-client-cpp/1.4.0" } });
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
         _cli.enable_server_certificate_verification(false);
 #endif

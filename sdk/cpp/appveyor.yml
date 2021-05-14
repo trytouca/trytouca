@@ -2,7 +2,7 @@
 # Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
 #
 
-version: "1.3.0.{build}-{branch}"
+version: "1.4.0.{build}-{branch}"
 
 image:
   - Visual Studio 2019

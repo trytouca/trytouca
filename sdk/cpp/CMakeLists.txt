@@ -4,7 +4,7 @@
 
 cmake_minimum_required(VERSION 3.14...3.19 FATAL_ERROR)
 
-project(weasel VERSION 1.3.0 LANGUAGES CXX)
+project(weasel VERSION 1.4.0 LANGUAGES CXX)
 
 option(BUILD_SHARED_LIBS "build client as a shared library" OFF)
 option(WEASEL_BUILD_TESTS "build unittests" OFF)

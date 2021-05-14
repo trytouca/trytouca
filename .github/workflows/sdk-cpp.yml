@@ -62,7 +62,7 @@ jobs:
         run: |
           conan remote add --force weasel-cpp https://getweasel.jfrog.io/artifactory/api/conan/weasel-cpp
           conan user -p ${{ secrets.JFROG_API_KEY }} -r weasel-cpp ${{ secrets.JFROG_USERNAME }}
-          conan upload "weasel/1.3.0" --confirm --parallel -r weasel-cpp --all
+          conan upload "weasel/1.4.0" --confirm --parallel -r weasel-cpp --all
 
   docs-client-cpp:
     name: docs-client-cpp
