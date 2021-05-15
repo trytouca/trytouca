@@ -6,12 +6,12 @@ import Link from 'next/link';
 
 const social = [
   {
-    link: 'https://github.com/getweasel',
+    link: 'https://github.com/trytouca',
     title: 'Check us out on GitHub',
     text: 'GitHub'
   },
   {
-    link: 'https://twitter.com/getweasel',
+    link: 'https://twitter.com/trytouca',
     title: 'Follow us on Twitter',
     text: 'Twitter'
   },
@@ -22,7 +22,7 @@ const social = [
     internal: true
   },
   {
-    link: 'https://docs.getweasel.com/legal/terms',
+    link: 'https://docs.touca.io/legal/terms',
     title: 'Terms of Service',
     text: 'Terms'
   }
@@ -32,7 +32,7 @@ export default function Footer() {
   return (
     <footer className="bg-gradient-to-r from-dark-blue-800 via-dark-blue-800 to-dark-blue-900 border-t border-dark-blue-800">
       <div className="h-20 px-12 mx-auto container flex items-center justify-between">
-        <p className="text-white text-sm font-semibold">&copy; Weasel, Inc.</p>
+        <p className="text-white text-sm font-semibold">&copy; Touca, Inc.</p>
         <ul className="flex space-x-6">
           {social.map((item) => {
             return (

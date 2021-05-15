@@ -7,7 +7,7 @@ import {
   HiOutlineExclamationCircle
 } from 'react-icons/hi';
 
-const API_URL = process.env.NEXT_PUBLIC_WEASEL_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_TOUCA_API_URL;
 const BASE_URL = process.env.basePath || '';
 
 export function make_path(input: string): string {

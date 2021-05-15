@@ -19,19 +19,19 @@ export default class MyDocument extends Document {
           <meta name="theme-color" content="#0d0d2b" />
           <meta property="og:locale" content="en_US" />
           <meta property="og:type" content="website" />
-          <meta property="og:site_name" content="Weasel" />
+          <meta property="og:site_name" content="Touca" />
           <meta
             property="og:image"
-            content="https://getweasel.com/images/weasel_open_graph_image.png"
+            content="https://touca.io/images/touca_open_graph_image.png"
           />
           <meta
             property="og:image:alt"
-            content="Weasel Continuous Regression Testing Platform"
+            content="Touca Continuous Regression Testing Platform"
           />
-          <meta property="og:url" content="https://getweasel.com" />
+          <meta property="og:url" content="https://touca.io" />
           <meta
             property="og:title"
-            content="Weasel Continuous Regression Testing Platform"
+            content="Touca Continuous Regression Testing Platform"
           />
           <meta
             property="og:description"
@@ -39,10 +39,10 @@ export default class MyDocument extends Document {
             content="Continuous regression testing for critical software workflows."
           />
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:site" content="@getweasel" />
+          <meta name="twitter:site" content="@trytouca" />
           <meta name="twitter:creator" content="@heypejman" />
           <link rel="manifest" href="/manifest.json" />
-          <link rel="canonical" href="https://getweasel.com" />
+          <link rel="canonical" href="https://touca.io" />
           <link rel="icon" type="image/x-icon" href="favicon.ico" />
           <link
             rel="apple-touch-icon"

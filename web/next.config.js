@@ -13,17 +13,17 @@ module.exports = withPWA({
     return [
       {
         source: '/docs',
-        destination: 'https://docs.getweasel.com/',
+        destination: 'https://docs.touca.io/',
         permanent: true
       },
       {
         source: '/terms',
-        destination: 'https://docs.getweasel.com/legal/terms',
+        destination: 'https://docs.touca.io/legal/terms',
         permanent: true
       },
       {
         source: '/privacy',
-        destination: 'https://docs.getweasel.com/legal/privacy',
+        destination: 'https://docs.touca.io/legal/privacy',
         permanent: true
       }
     ];

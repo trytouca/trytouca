@@ -38,7 +38,7 @@ const content: PageContent = {
       fee: 0,
       button: {
         title: 'Get Started',
-        link: 'https://app.getweasel.com/account/signup?plan=free'
+        link: 'https://app.touca.io/account/signup?plan=free'
       }
     },
     {
@@ -55,7 +55,7 @@ const content: PageContent = {
       ],
       button: {
         title: 'Get Started',
-        link: 'https://app.getweasel.com/account/signup?plan=startup'
+        link: 'https://app.touca.io/account/signup?plan=startup'
       }
     },
     {
@@ -85,7 +85,7 @@ const content: PageContent = {
           `At no extra charge, we offer teams on our paid plans online and
           on-site engineering support for tasks ranging from integrating our
           Client Libraries to deploying and upgrading their self-hosted
-          Weasel Platform.`,
+          Touca server.`,
           `We reserve time every month to work with your team, to make sure
           you are getting the most value from our product.`
         ]
@@ -93,7 +93,7 @@ const content: PageContent = {
       {
         question: 'What languages do you support?',
         answer: [
-          `Weasel Platform is language agnostic. But you'd need to integrate
+          `Touca server is language agnostic. But you'd need to integrate
           one of our SDKs with your code to capture test results and submit
           them to the platform. At the moment, we only provide an SDK for the
           C++ programming language.`,
@@ -106,24 +106,23 @@ const content: PageContent = {
         question: 'How does self-hosting work?',
         answer: [
           `Organizations on our Enterprise plan have the option to deploy and
-          run Weasel on-premise or on their private cloud network, if they
-          prefer to do so. Self-hosting Weasel allows organizations to create
-          as many teams as they require at no extra cost.`
+          run Touca on-premise or on their private cloud network, if they
+          prefer to do so. Self-hosting allows organizations to create as
+          many teams as they require at no extra cost.`
         ]
       },
       {
         question: 'What is Platform API Access?',
         answer: [
           `API Access allows teams to integrate their own applications with
-          the Weasel Platform to generate custom reports, trigger events, and
+          the Touca server to generate custom reports, trigger events, and
           programmatically import or export their submitted test results.`
         ]
       },
       {
-        question: 'How can I get in touch with Weasel?',
+        question: 'How can I get in touch with Touca?',
         answer: [
-          `You can always email us at support@getweasel.com or use our
-          Contact Us page.`
+          `You can always email us at hello@touca.io or use our Contact Us page.`
         ]
       }
     ]
@@ -196,7 +195,7 @@ export default function PricingPage() {
   return (
     <>
       <Head>
-        <title>Weasel Pricing</title>
+        <title>Touca Pricing</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
