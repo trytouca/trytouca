@@ -3,7 +3,7 @@
 #
 
 cmake_minimum_required(VERSION 3.14...3.19 FATAL_ERROR)
-project(weasel_cpp_tutorials VERSION 1.3 LANGUAGES CXX)
+project(touca_cpp_tutorials VERSION 1.3 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -22,7 +22,7 @@ endif()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
 include(cmake/external.cmake)
-weasel_find_weasel()
+touca_find_touca()
 
 add_subdirectory(basic)
 add_subdirectory(advanced)

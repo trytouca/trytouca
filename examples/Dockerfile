@@ -4,14 +4,14 @@
 
 FROM ubuntu:focal
 
-LABEL maintainer="hello@getweasel.com"
-LABEL org.opencontainers.image.title="weasel-examples"
-LABEL org.opencontainers.image.description="Sample Regression Test Tools using Weasel"
-LABEL org.opencontainers.image.url="https://getweasel.com/"
-LABEL org.opencontainers.image.documentation="https://docs.getweasel.com"
-LABEL org.opencontainers.image.vendor="Weasel, Inc."
-LABEL org.opencontainers.image.authors="hello@getweasel.com"
-LABEL org.opencontainers.image.licenses="https://github.com/getweasel/examples/blob/master/LICENSE"
+LABEL maintainer="hello@touca.io"
+LABEL org.opencontainers.image.title="touca-examples"
+LABEL org.opencontainers.image.description="Sample Regression Test Tools using Touca"
+LABEL org.opencontainers.image.url="https://touca.io/"
+LABEL org.opencontainers.image.documentation="https://docs.touca.io"
+LABEL org.opencontainers.image.vendor="Touca, Inc."
+LABEL org.opencontainers.image.authors="hello@touca.io"
+LABEL org.opencontainers.image.licenses="https://github.com/trytouca/examples/blob/master/LICENSE"
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
@@ -23,21 +23,21 @@ RUN apt-get update \
     cmake g++ gcc git make libssl-dev \
   && rm -rf /var/lib/apt/lists/* \
   && cmake --version \
-  && groupadd -r getweasel \
-  && useradd --create-home --no-log-init --system --gid getweasel weasel \
-  && usermod -aG sudo weasel \
+  && groupadd -r touca \
+  && useradd --create-home --no-log-init --system --gid touca touca \
+  && usermod -aG sudo touca \
   && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers \
   && echo '[ ! -z "$TERM" -a -r /etc/motd ] && cat /etc/motd' >> /etc/bash.bashrc \
   && echo "\n" \
-    "This container serves as a development environment and playground for the     \n" \
-    "\"getweasel/examples\" repository. The regression test tools are built and    \n" \
-    "installed in \"/opt/local/dist/bin\" and \"/usr/bin/local\". The following is \n" \
-    "an example of how to run one of these test tool:                              \n" \
+    "This container serves as a development environment and playground for     \n" \
+    "the \"trytouca/touca-examples\" repository. The regression test tools     \n" \
+    "are built and installed in \"/opt/local/dist/bin\" and \"/usr/bin/local\".\n" \
+    "The following is an example of how to run one of these test tool:         \n" \
     "                                                                          \n" \
-    "  weasel_example_advanced -c advanced/config.json -r <YOUR_VERSION>       \n" \
-    "              --api-key <WEASEL_API_KEY> --api-url <WEASEL_API_URL>       \n" \
+    "  touca_example_advanced -c advanced/config.json -r <YOUR_VERSION>        \n" \
+    "              --api-key <TOUCA_API_KEY> --api-url <TOUCA_API_URL>         \n" \
     "                                                                          \n" \
-    "Run "weasel_example_advanced --help" for a list of all supported command  \n" \
+    "Run "touca_example_advanced --help" for a list of all supported command   \n" \
     "line options. Use the "build.sh" script to rebuild the test tools if you  \n" \
     "liked to make changes to the source code.                                 \n" \
     "You can use \"sudo\" without a password.                                  \n" \
@@ -45,10 +45,10 @@ RUN apt-get update \
 
 COPY . /opt
 
-RUN chown -v -R weasel:getweasel /opt
+RUN chown -v -R touca:touca /opt
 
 WORKDIR /opt
 
-USER weasel:getweasel
+USER touca:touca
 
 RUN ./build.sh && sudo cmake --install local/build

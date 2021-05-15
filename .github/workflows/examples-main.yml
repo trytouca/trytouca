@@ -2,7 +2,7 @@
 # Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
 #
 
-name: weasel-examples
+name: touca-examples
 
 on:
   push:
@@ -27,7 +27,7 @@ jobs:
       - run: ./build.sh
       - name: run regression test
         env:
-          WEASEL_API_KEY: ${{ secrets.WEASEL_API_KEY }}
+          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
         run: |
           mkdir -p ./local/results
-          ./local/dist/bin/weasel_example_advanced -c ./advanced/config.json -r $(git describe --abbrev=4) --api-url https://api.getweasel.com/@/tutorial/advanced
+          ./local/dist/bin/touca_example_advanced -c ./advanced/config.json -r $(git describe --abbrev=4) --api-url https://api.touca.io/@/tutorial/advanced
