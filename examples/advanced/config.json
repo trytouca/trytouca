@@ -5,7 +5,7 @@
     "save-as-binary": "true",
     "save-as-json": "true"
   },
-  "weasel": {
+  "touca": {
     "post-testcases": "20",
     "post-maxretries": "5"
   },
