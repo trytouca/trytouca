@@ -9,12 +9,12 @@ import tempfile
 import urllib
 from loguru import logger
 import requests
-from client_mongo import WeaselMongoClient
+from client_mongo import MongoClient
 from utilities import User, pathify
 
-WEASEL_API_ROOT="http://localhost:8081/"
-WEASEL_UTILS_EXE=pathify("../../clients/cpp/local/dist/bin/weasel_cli")
-WEASEL_RESULTS_ARCHIVE=pathify("results.tar.gz")
+TOUCA_API_ROOT="http://localhost:8081/"
+TOUCA_UTILS_EXE=pathify("../../clients/cpp/local/dist/bin/touca_cli")
+TOUCA_RESULTS_ARCHIVE=pathify("results.tar.gz")
 
 class HttpClient:
     def __init__(self, root_url: str):
@@ -33,9 +33,9 @@ class HttpClient:
     def delete(self, path: str) -> requests.Response:
         return self.session.delete(url=self.root_url + path)
 
-class WeaselApiClient:
+class ApiClient:
     def __init__(self, user=None):
-        self.client = HttpClient(WEASEL_API_ROOT)
+        self.client = HttpClient(TOUCA_API_ROOT)
         self.user = user
 
     def __enter__(self):
@@ -92,7 +92,7 @@ class WeaselApiClient:
         self.expect_status(response, 401, "login with wrong password")
 
     def account_onboard(self, user: User) -> None:
-        key = WeaselMongoClient().get_user_activation_key(user)
+        key = MongoClient().get_user_activation_key(user)
         response = self.client.post_json(f'auth/activate/{key}')
         self.expect_status(response, 200, "activate account")
         response = self.client.patch_json('user', {
@@ -104,7 +104,7 @@ class WeaselApiClient:
         self.expect_status(response, 204, "update user info")
 
     def account_reset_apply(self, user: User) -> None:
-        key = WeaselMongoClient().get_account_reset_key(user)
+        key = MongoClient().get_account_reset_key(user)
         response = self.client.get_json(f"auth/reset/{key}")
         self.expect_status(response, 200, "get basic account information")
         response = self.client.post_json(f"auth/reset/{key}", {
@@ -249,13 +249,13 @@ class WeaselApiClient:
         slugs = [ team_slug, suite_slug, batch_slug ]
         api_key = self.get_api_key()
         api_route = '/'.join(['@', *slugs[0:2]])
-        api_url = urllib.parse.urljoin(WEASEL_API_ROOT, api_route)
+        api_url = urllib.parse.urljoin(TOUCA_API_ROOT, api_route)
         with tempfile.TemporaryDirectory() as tmpdir:
             logger.debug("created tmp directory: {}", tmpdir)
-            with tarfile.open(WEASEL_RESULTS_ARCHIVE) as tar:
+            with tarfile.open(TOUCA_RESULTS_ARCHIVE) as tar:
                 tar.extractall(tmpdir)
             batch_dir = os.path.join(tmpdir, 'results', *slugs[0:3])
-            command = [ WEASEL_UTILS_EXE, 'post',
+            command = [ TOUCA_UTILS_EXE, 'post',
                 '--api-url', api_url, '--api-key', api_key, '--src', batch_dir ]
             proc = subprocess.Popen(command)
             proc.communicate()

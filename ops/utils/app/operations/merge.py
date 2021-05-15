@@ -26,7 +26,7 @@ def utils_merge(srcDir, dstDir, utilsApp):
     if 0 != exit_status:
         logger.warning(f'failed to merge {srcDir}')
         if exit_status is not None:
-            logger.warning(f'program Weasel Utils returned code {exit_status}')
+            logger.warning(f'program Touca Utils returned code {exit_status}')
         return False
     logger.info(f'merged {srcDir}')
     return True
@@ -55,7 +55,7 @@ class Merge(Operation):
     def run(self) -> bool:
         inDir = self.__options.get('src')
         outDir = self.__options.get('out')
-        utilsApp = 'fullpath/to/weasel_cli'
+        utilsApp = 'fullpath/to/touca_cli'
 
         if not os.path.exists(inDir):
             logger.error(f'directory {inDir} does not exist')

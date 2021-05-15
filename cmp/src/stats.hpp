@@ -32,6 +32,6 @@ private:
  *
  */
 struct Resources {
-    weasel::Queue<Job> job_queue;
+    touca::Queue<Job> job_queue;
     Statistics stats;
 };

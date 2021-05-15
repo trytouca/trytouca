@@ -5,7 +5,7 @@
 #include "stats.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
-#include "weasel/devkit/utils.hpp"
+#include "touca/devkit/utils.hpp"
 
 /**
  *

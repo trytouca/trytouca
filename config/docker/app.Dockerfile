@@ -1,12 +1,12 @@
 FROM nginx:1.18-alpine
 
-LABEL maintainer="hello@getweasel.com"
-LABEL org.opencontainers.image.title="weasel-app"
-LABEL org.opencontainers.image.description="Weasel Web Application"
-LABEL org.opencontainers.image.url="https://app.getweasel.com/"
-LABEL org.opencontainers.image.documentation="https://docs.getweasel.com"
-LABEL org.opencontainers.image.vendor="Weasel, Inc."
-LABEL org.opencontainers.image.authors="hello@getweasel.com"
+LABEL maintainer="hello@touca.io"
+LABEL org.opencontainers.image.title="touca-app"
+LABEL org.opencontainers.image.description="Touca Web Application"
+LABEL org.opencontainers.image.url="https://app.touca.io/"
+LABEL org.opencontainers.image.documentation="https://docs.touca.io"
+LABEL org.opencontainers.image.vendor="Touca, Inc."
+LABEL org.opencontainers.image.authors="hello@touca.io"
 
 COPY api/local/docs/external        /www/data/docs/api
 COPY app/dist                       /www/data/app

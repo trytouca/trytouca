@@ -30,7 +30,7 @@ def utils_update(srcDir, outDir, teamslug, testsuite, utilsApp):
     if 0 != exit_status:
         logger.warning(f'failed to update {srcDir}')
         if exit_status is not None:
-            logger.warning(f'program Weasel Utils returned code {exit_status}')
+            logger.warning(f'program Touca Utils returned code {exit_status}')
         return False
     logger.info(f'updateed {srcDir}')
     return True
@@ -63,7 +63,7 @@ class Update(Operation):
         outDir = self.__options.get('out')
         teamslug = self.__options.get('teamslug')
         testsuite = self.__options.get('testsuite')
-        utilsApp = "fullpath/to/weasel_cli"
+        utilsApp = "fullpath/to/touca_cli"
 
         if not os.path.exists(srcDir):
             logger.error(f'directory {srcDir} does not exist')

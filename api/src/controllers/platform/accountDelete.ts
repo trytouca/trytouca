@@ -31,7 +31,7 @@ async function accountDeleteImpl(account: IUser) {
   await UserModel.findByIdAndUpdate(account._id, {
     $set: {
       apiKeys: [],
-      email: `noreply+${newUsername}@getweasel.com`,
+      email: `noreply+${newUsername}@touca.io`,
       fullname: 'Anonymous User',
       password: 'supersafehash',
       platformRole: EPlatformRole.User,

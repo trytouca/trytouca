@@ -62,9 +62,9 @@ find_files_with_extension() {
         ["dist"]="d"
         ["node_modules"]="d"
         [".env"]="d"
-        ["weasel_generated.ts"]="f"
+        ["touca_generated.ts"]="f"
     )
-    # local exclusion_list=("local" "node_modules" "weasel_generated.ts")
+    # local exclusion_list=("local" "node_modules" "touca_generated.ts")
     local exclude_cmd=""
     for item in "${!exclusion_items[@]}"; do
         local item_type="${exclusion_items[$item]}"

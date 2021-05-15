@@ -23,7 +23,7 @@ class User:
     def from_fullname(cls, fullname: str):
         username = fullname
         return cls(fullname=fullname, username=username,
-            email = username + '@getweasel.com', password = 'Weasel$123')
+            email = username + '@touca.io', password = 'Touca$123')
 
 @dataclass
 class Team:

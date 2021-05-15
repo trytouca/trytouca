@@ -4,13 +4,13 @@
 
 include(GNUInstallDirs)
 
-weasel_find_package("cxxopts")
-weasel_find_package("fmt")
-weasel_find_package("weasel")
-weasel_find_package("AWSSDK")
+touca_find_package("cxxopts")
+touca_find_package("fmt")
+touca_find_package("touca")
+touca_find_package("AWSSDK")
 
 add_executable(
-    weasel_cmp
+    touca_cmp
     main.cpp
     object_store.cpp
     options.cpp
@@ -27,22 +27,22 @@ add_executable(
 )
 
 target_link_libraries(
-        weasel_cmp
+        touca_cmp
     PRIVATE
         cxxopts::cxxopts
         fmt::fmt
-        weasel::client
+        touca::client
         AWS::aws-sdk-cpp-s3
 )
 
 target_include_directories(
-        weasel_cmp
+        touca_cmp
     PRIVATE
-        ${WEASEL_COMPARATOR_ROOT_DIR}/include
+        ${TOUCA_COMPARATOR_ROOT_DIR}/include
 )
 
 target_compile_definitions(
-        weasel_cmp
+        touca_cmp
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX=>
 )
@@ -51,10 +51,10 @@ source_group(
     TREE
         ${CMAKE_CURRENT_LIST_DIR}
     FILES
-        $<TARGET_PROPERTY:weasel_cmp,SOURCES>
+        $<TARGET_PROPERTY:touca_cmp,SOURCES>
 )
 
 install(
-    TARGETS weasel_cmp
+    TARGETS touca_cmp
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

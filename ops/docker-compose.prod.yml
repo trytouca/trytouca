@@ -1,7 +1,7 @@
 version: "3"
 services:
-  weasel_api:
-    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-api:1.4.0
+  touca_api:
+    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/touca-api:1.4.0
     environment:
       ENV_FILE: prod
       AUTH_JWT_SECRET: <SECRET>
@@ -10,42 +10,42 @@ services:
       MAIL_TRANSPORT_USER: <SECRET>
       MAIL_TRANSPORT_PASS: <SECRET>
       MAIL_TRANSPORT_PORT: 587
-      MINIO_USER: weaseluser
-      MINIO_PASS: weaselpass
-      MONGO_USER: weaseluser
-      MONGO_PASS: weaselpass
+      MINIO_USER: toucauser
+      MINIO_PASS: toucapass
+      MONGO_USER: toucauser
+      MONGO_PASS: toucapass
       WEBAPP_ROOT: http://localhost
     volumes:
       - ./local/logs/api:/opt/local/logs/api
     depends_on:
-      - weasel_minio
-      - weasel_mongo
-      - weasel_redis
+      - touca_minio
+      - touca_mongo
+      - touca_redis
     # ports:
     #   - 8081:8081
     restart: always
 
-  weasel_app:
-    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-app:1.4.0
+  touca_app:
+    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/touca-app:1.4.0
     depends_on:
-      - weasel_api
+      - touca_api
     ports:
       - 80:80
     restart: always
 
-  weasel_cmp:
-    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/weasel-cmp:1.4.0
+  touca_cmp:
+    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/touca-cmp:1.4.0
     environment:
-      MINIO_USER: weaseluser
-      MINIO_PASS: weaselpass
+      MINIO_USER: toucauser
+      MINIO_PASS: toucapass
     volumes:
       - ./local/logs/cmp:/opt/local/logs/cmp
     depends_on:
-      - weasel_api
-      - weasel_minio
+      - touca_api
+      - touca_minio
     restart: always
 
-  weasel_redis:
+  touca_redis:
     image: redis:6-alpine
     volumes:
       - ./local/data/redis:/data
@@ -53,11 +53,11 @@ services:
     #  - 6379:6379
     restart: always
 
-  weasel_minio:
+  touca_minio:
     image: minio/minio:RELEASE.2021-03-17T02-33-02Z
     environment:
-      MINIO_ROOT_USER: weaseluser
-      MINIO_ROOT_PASSWORD: weaselpass
+      MINIO_ROOT_USER: toucauser
+      MINIO_ROOT_PASSWORD: toucapass
     volumes:
       - ./local/data/minio:/data
     # ports:
@@ -65,11 +65,11 @@ services:
     command: server /data
     restart: always
 
-  weasel_mongo:
+  touca_mongo:
     image: mongo:4-bionic
     environment:
-      MONGO_INITDB_ROOT_USERNAME: weaseluser
-      MONGO_INITDB_ROOT_PASSWORD: weaselpass
+      MONGO_INITDB_ROOT_USERNAME: toucauser
+      MONGO_INITDB_ROOT_PASSWORD: toucapass
     volumes:
       - ./local/data/mongo:/data/db
       - ./devops/mongo/mongod.conf:/etc/mongod.conf

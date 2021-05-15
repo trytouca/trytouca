@@ -6,20 +6,20 @@
 
 """
 This script provides an example on how to authenticate and interact
-with Weasel Platform API.
+with Touca Server API.
 """
 
 import requests
 
-# URL to entry point of the Weasel Platform API
+# URL to entry point of the Touca Platform API
 # In on-prem deployments, this URL may be of the form
-# `https://weasel.your.company/api
+# `https://touca.your.company/api
 
-WeaselApiRoot="https://getweasel.com/api"
+ApiRoot="https://api.touca.io"
 
 # Credentials of the user account on whose behalf the client authenticates.
 ClientUsername="pghorbanzade"
-ClientPassword="Weasel$123"
+ClientPassword="Touca$123"
 
 def main():
     """
@@ -40,11 +40,11 @@ def main():
     # See API documentation for "/auth/signout" for more information.
     # But in small one-time scripts, we recommend that the client asks
     # for an access token every time during application startup process.
-    # Weasel API may choose to re-use an already issued access token.
+    # Touca API may choose to re-use an already issued access token.
 
     session = requests.Session()
     response = session.post(
-        url=WeaselApiRoot + "/auth/signin",
+        url=ApiRoot + "/auth/signin",
         json={'username': ClientUsername, 'password': ClientPassword})
 
     # we expect a response status of 200. In more serious applications,
@@ -63,7 +63,7 @@ def main():
     # requests for any API route, using the session that includes our
     # cookie.
 
-    response = session.get(WeaselApiRoot + "/user")
+    response = session.get(ApiRoot + "/user")
     response.raise_for_status()
     print(response.content)
 

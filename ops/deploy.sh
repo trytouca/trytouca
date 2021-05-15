@@ -121,7 +121,7 @@ fi
 run_compose () {
     if [ $# -eq 0 ]; then return 1; fi
     for arg in "$@"; do
-        local cmd="docker-compose -f \"${FILE_COMPOSE}\" -p weasel --project-directory \"${DIR_PROJECT_ROOT}\" $arg"
+        local cmd="docker-compose -f \"${FILE_COMPOSE}\" -p touca --project-directory \"${DIR_PROJECT_ROOT}\" $arg"
         if ! eval "$cmd"; then
             log_warning "failed to run $cmd"
             return 1

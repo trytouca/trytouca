@@ -87,7 +87,7 @@ router.post(
  *      Client initiating the request must be authenticated.
  *    requestBody:
  *      description:
- *        Valid binary data that conforms to Weasel flatbuffers schema.
+ *        Valid binary data that conforms to Touca flatbuffers schema.
  *        Submission file cannot be larger than 50 MB in size.
  *      content:
  *        application/octet-stream:
@@ -100,7 +100,7 @@ router.post(
  *        description: 'Results Submitted'
  *      400:
  *        description:
- *          Results do not conform to Weasel flatbuffers Schema.
+ *          Results do not conform to Touca flatbuffers Schema.
  *          Or platform rejects processing the results for other reasons.
  *        content:
  *          application/json:

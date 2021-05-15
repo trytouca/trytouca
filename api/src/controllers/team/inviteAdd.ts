@@ -126,7 +126,7 @@ export async function teamInviteAdd(
 
   // send invitation email to user
 
-  const subject = `Join team "${team.name}" on Weasel`
+  const subject = `Join team "${team.name}" on Touca`
   const recipient: IUser = {
     _id: null,
     email: askedEmail,

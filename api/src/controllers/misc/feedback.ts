@@ -27,12 +27,12 @@ export async function feedback(
 
   // we are intentionally not awaiting on this operation
 
-  const superuser = await wslFindByUname('weasel')
+  const superuser = await wslFindByUname('touca')
   mailer.mailUser(superuser, 'New User Feedback', 'user-feedback', {
     body: feedback.body,
     name: feedback.name,
     page: feedback.page,
-    email: feedback.email || 'noreply@getweasel.com',
+    email: feedback.email || 'noreply@touca.io',
     cname: feedback.cname || 'N/A'
   })
 

@@ -34,13 +34,13 @@
         <mj-text>{{ greetings }},</mj-text>
         <mj-text>
           <a href="mailto:{{ ownerEmail }}">{{ ownerName }}</a>
-          has invited you to join team "{{ teamName }}" on Weasel.
+          has invited you to join team "{{ teamName }}" on Touca.
         </mj-text>
         <mj-raw>
 <!-- htmlmin:ignore -->{{#hasIntro}}<!-- htmlmin:ignore -->
         </mj-raw>
         <mj-text>
-          Weasel offers an end-to-end solution for regression testing software
+          Touca offers an end-to-end solution for regression testing software
           workflows. It helps software engineers maintain quality of their
           product by identifying unintended side-effects of their day to day
           changes.

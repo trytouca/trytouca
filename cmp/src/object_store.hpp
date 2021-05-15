@@ -15,7 +15,7 @@ namespace Aws {
     }
 }
 
-namespace weasel {
+namespace touca {
     class Testcase;
 }
 
@@ -42,7 +42,7 @@ private:
 struct ObjectStore {
     ObjectStore(const Options& options);
     bool status_check() const;
-    std::shared_ptr<weasel::Testcase> get_message(const std::string& key) const;
+    std::shared_ptr<touca::Testcase> get_message(const std::string& key) const;
     static ObjectStore& get_instance(const Options& options);
 
 private:

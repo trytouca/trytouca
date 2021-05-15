@@ -25,7 +25,7 @@ const router = e.Router()
  *    summary: 'Check Platform Health'
  *    operationId: 'platform_health'
  *    description:
- *      Provides health status of the Weasel Platform
+ *      Provides health status of the Touca server
  *    responses:
  *      200:
  *        description:
@@ -53,7 +53,7 @@ router.get('/', promisable(platformHealth, 'check platform health'))
  *    summary: 'Get Platform Statistics'
  *    operationId: 'platform_stats'
  *    description:
- *      Provides statistics about this Weasel Platform instance.
+ *      Provides statistics about this Touca server instance.
  *      User initiating the request must be authenticated.
  *      User initiating the request must be a platform admin.
  *    responses:

@@ -52,9 +52,9 @@ def main():
         operation.parser().print_help()
         return False
 
-    if 'weasel-utils' in options.keys():
-        if not os.path.exists(options.get('weasel-utils')):
-            logger.fatal(f'weasel utils application does not exist')
+    if 'touca-utils' in options.keys():
+        if not os.path.exists(options.get('touca-utils')):
+            logger.fatal(f'touca utils application does not exist')
             return False
 
     logHandlers = []

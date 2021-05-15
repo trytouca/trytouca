@@ -25,7 +25,7 @@
         <mj-text>Hi {{ userName }},</mj-text>
         <mj-text>
           <a href="mailto:{{ ownerEmail }}">{{ ownerName }}</a>
-          has added you to team "{{ teamName }}" on Weasel.
+          has added you to team "{{ teamName }}" on Touca.
         </mj-text>
       </mj-column>
     </mj-section>

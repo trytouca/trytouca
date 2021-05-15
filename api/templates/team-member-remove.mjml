@@ -25,7 +25,7 @@
         <mj-text>Hi {{ userName }},</mj-text>
         <mj-text>
           <a href="mailto:{{ adminEmail }}">{{ adminName }}</a>
-          removed you from team "{{ teamName }}" on Weasel.
+          removed you from team "{{ teamName }}" on Touca.
         </mj-text>
       </mj-column>
     </mj-section>

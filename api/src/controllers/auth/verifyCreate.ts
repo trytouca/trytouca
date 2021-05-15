@@ -112,7 +112,7 @@ export async function authVerifyCreate(
   // we are intentionally not awaiting on this operation
 
   const link = `${config.webapp.root}/account/activate?key=${activationKey}`
-  mailer.mailUser(newUser, 'Welcome to Weasel', 'auth-signup-user', {
+  mailer.mailUser(newUser, 'Welcome to Touca', 'auth-signup-user', {
     verificationLink: link
   })
 

@@ -272,7 +272,7 @@ export class BatchPageComponent
       batch.batchSlug,
       batch.suiteName,
       batch.teamName,
-      'Weasel'
+      'Touca'
     ].join(' - ');
     this.titleService.setTitle(title);
   }

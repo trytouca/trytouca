@@ -8,8 +8,8 @@
 #include "aws/s3/S3Client.h"
 #include "aws/s3/model/GetObjectRequest.h"
 #include "fmt/core.h"
-#include "weasel/devkit/logger.hpp"
-#include "weasel/devkit/testcase.hpp"
+#include "touca/devkit/logger.hpp"
+#include "touca/devkit/testcase.hpp"
 
 /**
  *
@@ -78,7 +78,7 @@ void MinioClient::get_object(
     object_request.SetKey(object_key);
     auto outcome = _aws_client->GetObject(object_request);
     if (!outcome.IsSuccess()) {
-        WEASEL_LOG_WARN("{}: failed to retrieve object: {}", object_key, outcome.GetError().GetMessage());
+        TOUCA_LOG_WARN("{}: failed to retrieve object: {}", object_key, outcome.GetError().GetMessage());
     }
 
     auto&& result = outcome.GetResultWithOwnership();
@@ -102,7 +102,7 @@ bool ObjectStore::status_check() const
 {
     const auto& buckets = _minio.list_buckets();
     for (const auto& bucket : buckets) {
-        WEASEL_LOG_DEBUG("accessed bucket: {}", bucket);
+        TOUCA_LOG_DEBUG("accessed bucket: {}", bucket);
     }
     return buckets.size() == 3;
 }
@@ -110,20 +110,20 @@ bool ObjectStore::status_check() const
 /**
  *
  */
-std::shared_ptr<weasel::Testcase> ObjectStore::get_message(const std::string& key) const
+std::shared_ptr<touca::Testcase> ObjectStore::get_message(const std::string& key) const
 {
     std::vector<uint8_t> buffer;
-    _minio.get_object("weasel-messages", key, buffer);
+    _minio.get_object("touca-messages", key, buffer);
 
     if (buffer.size() == 0) {
-        WEASEL_LOG_WARN("{}: failed to retrieve object", key);
+        TOUCA_LOG_WARN("{}: failed to retrieve object", key);
         return nullptr;
     }
 
     try {
-        return std::make_shared<weasel::Testcase>(buffer);
+        return std::make_shared<touca::Testcase>(buffer);
     } catch (const std::exception& ex) {
-        WEASEL_LOG_WARN("{}: failed to parse object: {}", key, ex.what());
+        TOUCA_LOG_WARN("{}: failed to parse object: {}", key, ex.what());
     }
 
     return nullptr;

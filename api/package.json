@@ -1,12 +1,12 @@
 {
-  "name": "@getweasel/api",
+  "name": "@touca/api",
   "version": "1.4.0",
   "description": "Continuous regression testing for critical software workflows.",
   "private": true,
   "license": "UNLICENSED",
-  "repository": "https://github.com/getweasel/weasel.git",
-  "bugs": "https://github.com/getweasel/weasel/issues",
-  "homepage": "https://getweasel.com",
+  "repository": "https://github.com/trytouca/touca.git",
+  "bugs": "https://github.com/trytouca/touca/issues",
+  "homepage": "https://touca.io",
   "keywords": [
     "snapshot-testing",
     "test-automation",
@@ -15,7 +15,7 @@
   ],
   "author": {
     "name": "Pejman Ghorbanzade",
-    "email": "pejman@getweasel.com"
+    "email": "pejman@touca.io"
   },
   "main": "dist/server.js",
   "scripts": {
@@ -23,7 +23,7 @@
     "build:mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/",
     "build:ts": "tsc",
     "clean": "rimraf dist",
-    "docs:external": "mkdir -p local/docs/external; swagger-inline src/routes/*.ts src/types/commontypes.ts --base docs/swagger.base.yaml --format yaml > local/docs/external/swagger.yaml; redoc-cli bundle local/docs/external/swagger.yaml --options.hideDownloadButton=true --output=local/docs/external/index.html --title=\"Weasel Platform API Documentation\"",
+    "docs:external": "mkdir -p local/docs/external; swagger-inline src/routes/*.ts src/types/commontypes.ts --base docs/swagger.base.yaml --format yaml > local/docs/external/swagger.yaml; redoc-cli bundle local/docs/external/swagger.yaml --options.hideDownloadButton=true --output=local/docs/external/index.html --title=\"Touca Server API Reference\"",
     "docs:internal": "typedoc",
     "docs": "yarn run docs:external && yarn run docs:internal",
     "start": "node .",

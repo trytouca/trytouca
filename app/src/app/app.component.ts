@@ -31,7 +31,7 @@ export class AppComponent {
         mergeMap((route) => route.data)
       )
       .subscribe((event: { page?: string; title?: string }) => {
-        const title = 'title' in event ? `${event.title} - Weasel` : 'Weasel';
+        const title = 'title' in event ? `${event.title} - Touca` : 'Touca';
         this.titleService.setTitle(title);
       });
   }

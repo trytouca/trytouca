@@ -4,34 +4,34 @@
 
 from conans import ConanFile, CMake
 
-class WeaselConan(ConanFile):
+class ToucaConan(ConanFile):
 
-    name = "weasel_cmp"
-    homepage = "https://getweasel.com"
-    description = "weasel platform component for comparing submitted test results"
+    name = "touca_cmp"
+    homepage = "https://touca.io"
+    description = "Touca server component for comparing submitted test results"
     topics = ( "regression-testing", "snapshot-testing", "test-framework", "test-automation" )
-    url = "https://docs.getweasel.com"
+    url = "https://docs.touca.io"
     license = "Private"
     version ="1.4.0"
-    author = "Pejman Ghorbanzade <pejman@getweasel.com>"
+    author = "Pejman Ghorbanzade <pejman@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_find_package"
 
     def requirements(self):
-        self.requires.add("weasel/1.3.0")
+        self.requires.add("touca/1.4.0")
         self.requires.add("cxxopts/2.2.1")
         self.requires.add("fmt/7.1.2")
         self.requires.add("aws-sdk-cpp/1.8.130")
         self.requires.add("openssl/1.1.1j")
 
     def source(self):
-        self.run("git clone https://github.com/getweasel/weasel.git")
+        self.run("git clone https://github.com/trytouca/touca.git")
 
     def configure(self):
-        self.options["weasel"].shared = True
-        self.options["weasel"].with_tests = False
-        self.options["weasel"].with_utils = False
-        self.options["weasel"].with_framework = False
+        self.options["touca"].shared = True
+        self.options["touca"].with_tests = False
+        self.options["touca"].with_utils = False
+        self.options["touca"].with_framework = False
         self.options["aws-sdk-cpp"].s3 = True
 
     def _configure_cmake(self):

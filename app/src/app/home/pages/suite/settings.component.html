@@ -8,8 +8,8 @@
         [alert]="alert[EModalType.ChangeName]">
       </app-alert>
       <p>
-        Short user-friendly name used on Weasel Platform and documents generated
-        by it.
+        Short user-friendly name used by the Touca server and the documents
+        it generates.
       </p>
       <form class="space-x-2 flex" [formGroup]="formName"
         (ngSubmit)="onSubmit(EModalType.ChangeName, formName.value)" novalidate>
@@ -92,10 +92,9 @@
       <p>
         Newly submitted versions are set to be sealed after
         <b>{{ suite.sealAfter | datetime:'interval':'seconds' }}</b> from the
-        time
-        the last testcase was submitted. Sealing a version prevents further
-        submission of results to it. You may adjust this duration to up to
-        {{ 30 | datetime:'interval':'minutes' }}.
+        time the last test case was submitted.
+        Sealing a version prevents further submission of results to it. You may
+        adjust this duration to up to {{ 30 | datetime:'interval':'minutes' }}.
       </p>
       <small class="wsl-text-muted">
         Duration in minutes.

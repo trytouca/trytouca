@@ -55,7 +55,7 @@ async function mailUserImpl(
   const result = await transporter.sendMail({
     from: `"${superuser.fullname}" <${superuser.email}>`,
     html: bodyHtml,
-    subject: `[Weasel] ${subject}`,
+    subject,
     text: bodyPlain,
     to: recipient.email
   })

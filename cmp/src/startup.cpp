@@ -4,8 +4,8 @@
 
 #include "startup.hpp"
 #include "object_store.hpp"
-#include "weasel/devkit/logger.hpp"
-#include "weasel/devkit/platform.hpp"
+#include "touca/devkit/logger.hpp"
+#include "touca/devkit/platform.hpp"
 #include <chrono>
 #include <thread>
 
@@ -14,9 +14,9 @@
  */
 void initialize_loggers(const Options& options)
 {
-    weasel::setup_console_logger(options.log_level);
+    touca::setup_console_logger(options.log_level);
     if (options.log_dir.has_value()) {
-        weasel::setup_file_logger(options.log_dir.value().string());
+        touca::setup_file_logger(options.log_dir.value().string());
     }
 }
 
@@ -28,19 +28,19 @@ bool run_startup_stage(const Options& options)
     const auto& store = ObjectStore::get_instance(options);
     const auto max_attempts = options.startup_timeout / options.startup_interval;
     const auto& interval = std::chrono::milliseconds(options.startup_interval);
-    WEASEL_LOG_INFO("running start-up stage");
-    weasel::ApiUrl api(options.api_url);
-    weasel::Platform platform(api);
+    TOUCA_LOG_INFO("running start-up stage");
+    touca::ApiUrl api(options.api_url);
+    touca::Platform platform(api);
     for (auto i = 1u; i <= max_attempts; ++i) {
         if (!platform.handshake()) {
-            WEASEL_LOG_WARN("failed to connect to backend: {}", platform.get_error());
+            TOUCA_LOG_WARN("failed to connect to backend: {}", platform.get_error());
         } else if (!store.status_check()) {
-            WEASEL_LOG_WARN("failed to connect to object storage");
+            TOUCA_LOG_WARN("failed to connect to object storage");
         } else {
-            WEASEL_LOG_INFO("start-up phase completed");
+            TOUCA_LOG_INFO("start-up phase completed");
             return true;
         }
-        WEASEL_LOG_WARN("running start-up stage: attempt ({}/{})", i, max_attempts);
+        TOUCA_LOG_WARN("running start-up stage: attempt ({}/{})", i, max_attempts);
         std::this_thread::sleep_for(interval);
     }
     return false;

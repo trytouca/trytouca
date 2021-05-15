@@ -18,7 +18,7 @@ set -o errexit -o pipefail -o noclobber -o nounset
 # declare project structure
 
 ARG_VERBOSE=0
-WEASEL_COMPARATOR_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+TOUCA_COMPARATOR_ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # initialize logging
 
@@ -137,7 +137,7 @@ build_build () {
     if [ $# -ne 0 ]; then return 1; fi
     check_prerequisite_commands "cmake" "conan"
 
-    local dir_source="${WEASEL_COMPARATOR_ROOT_DIR}"
+    local dir_source="${TOUCA_COMPARATOR_ROOT_DIR}"
     local dir_build="${dir_source}/local/build"
     local dir_install="${dir_source}/local/dist"
     local buildtype="Release"
@@ -187,7 +187,7 @@ build_build () {
 build_lint () {
     if [ $# -ne 0 ]; then return 1; fi
     check_prerequisite_commands "clang-format"
-    local dir_source="${WEASEL_COMPARATOR_ROOT_DIR}"
+    local dir_source="${TOUCA_COMPARATOR_ROOT_DIR}"
     for dir in "src" "docs"; do
         find "${dir_source}/${dir}" \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
             -exec clang-format -i {} +
@@ -197,7 +197,7 @@ build_lint () {
 
 build_clear () {
     if [ $# -ne 0 ]; then return 1; fi
-    local dir_source="${WEASEL_COMPARATOR_ROOT_DIR}"
+    local dir_source="${TOUCA_COMPARATOR_ROOT_DIR}"
     remove_dir_if_exists "${dir_source}/local/build"
     remove_dir_if_exists "${dir_source}/local/dist"
 }

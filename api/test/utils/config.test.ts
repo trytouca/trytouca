@@ -16,7 +16,7 @@ describe('config', () => {
 describe('config-manager', () => {
   it('get-mongo-uri', () => {
     expect(configMgr.getMongoUri()).to.equal(
-      'mongodb://weaseluser:weaselpass@localhost:27017/test'
+      'mongodb://toucauser:toucapass@localhost:27017/test'
     )
   })
   it('get-redis-uri', () => {

@@ -16,9 +16,9 @@ const minioClient = new Client({
 })
 
 const bucketNames = {
-  comparisons: 'weasel-comparisons',
-  messages: 'weasel-messages',
-  results: 'weasel-results'
+  comparisons: 'touca-comparisons',
+  messages: 'touca-messages',
+  results: 'touca-results'
 }
 
 /**
@@ -138,9 +138,8 @@ export async function removeResult(messageId: string): Promise<boolean> {
 }
 
 /**
- * Checks whether Weasel Platform has an established connection with
- * Weasel minio instance.
- * Intended for use during platform health check.
+ * Checks whether we have an established connection with the object storage
+ * service. Intended for use during server health check.
  *
  * @return true if minio is ready and responsive
  */

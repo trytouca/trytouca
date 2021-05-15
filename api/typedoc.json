@@ -1,5 +1,5 @@
 {
-  "name": "Weasel Backend",
+  "name": "Touca Backend",
   "entryPoints": ["src"],
   "out": "./local/docs/internal",
   "readme": "Readme.md",

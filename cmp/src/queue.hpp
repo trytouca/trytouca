@@ -15,7 +15,7 @@
  *        producer and consumer threads.
  */
 
-namespace weasel {
+namespace touca {
 
     /**
      * @brief Generic thread-safe queue.
@@ -56,11 +56,11 @@ namespace weasel {
         std::unique_ptr<Task> pop_item()
         {
             std::unique_lock<std::mutex> lock(_mutex);
-            _cv.wait(lock, [&]{ return !_queue.empty(); });
+            _cv.wait(lock, [&] { return !_queue.empty(); });
             auto item = std::move(_queue.front());
             _queue.pop();
             return item;
         }
     };
 
-} // namespace weasel
+} // namespace touca

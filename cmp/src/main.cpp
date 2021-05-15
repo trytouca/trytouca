@@ -4,7 +4,7 @@
 
 #include "options.hpp"
 #include "startup.hpp"
-#include "weasel/devkit/logger.hpp"
+#include "touca/devkit/logger.hpp"
 #include "worker.hpp"
 #include <thread>
 
@@ -34,7 +34,7 @@ int main(int argc, char* argv[])
     // setup communication with backend
 
     if (!run_startup_stage(options)) {
-        WEASEL_LOG_ERROR("failed during start-up stage");
+        TOUCA_LOG_ERROR("failed during start-up stage");
         return EXIT_FAILURE;
     }
 

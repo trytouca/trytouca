@@ -257,7 +257,7 @@ export class ElementPageComponent
       element.elementName,
       element.suiteName,
       element.teamName,
-      'Weasel'
+      'Touca'
     ].join(' - ');
     this.titleService.setTitle(title);
   }

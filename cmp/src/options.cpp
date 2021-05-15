@@ -6,8 +6,8 @@
 #include "cxxopts.hpp"
 #include "fmt/format.h"
 #include "rapidjson/document.h"
-#include "weasel/devkit/filesystem.hpp"
-#include "weasel/devkit/utils.hpp"
+#include "touca/devkit/filesystem.hpp"
+#include "touca/devkit/utils.hpp"
 
 /**
  *
@@ -31,7 +31,7 @@ cxxopts::Options config_options_file()
     cxxopts::Options opts_file("", "");
     // clang-format off
     opts_file.add_options("configuration-file")
-        ("api-url", "url to weasel platform api", cxxopts::value<std::string>())
+        ("api-url", "url to touca server api", cxxopts::value<std::string>())
         ("log-dir", "relative path to log directory", cxxopts::value<std::string>())
         ("log-level", "level of detail to use for logging", cxxopts::value<std::string>()->default_value("info"))
         ("max-failures", "number of allowable consecutive failures", cxxopts::value<unsigned>()->default_value("10"))
@@ -71,7 +71,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     // if user does not provide a config-file, print help message and exit
 
     if (!result_cmd.count("config-file")) {
-        weasel::print_error("please provide a valid configuration file\n");
+        touca::print_error("please provide a valid configuration file\n");
         fmt::print(stderr, "{}\n", copts_cmd.help());
         return false;
     }
@@ -80,27 +80,27 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     // configuration file must exist if it is specified
 
-    if (!weasel::filesystem::is_regular_file(config_file_path)) {
-        weasel::print_error("configuration file not found: {}\n", config_file_path);
+    if (!touca::filesystem::is_regular_file(config_file_path)) {
+        touca::print_error("configuration file not found: {}\n", config_file_path);
         return false;
     }
 
     // load configuration file in memory
 
-    const auto& config_file_content = weasel::load_string_file(config_file_path);
+    const auto& config_file_content = touca::load_string_file(config_file_path);
 
     // attempt to parse config-file
 
     rapidjson::Document document;
     if (document.Parse<0>(config_file_content.c_str()).HasParseError()) {
-        weasel::print_error("failed to parse configuration file\n");
+        touca::print_error("failed to parse configuration file\n");
         return false;
     }
 
     // we expect content to be a json object
 
     if (!document.IsObject()) {
-        weasel::print_error("expected configuration file to be a json object\n");
+        touca::print_error("expected configuration file to be a json object\n");
         return false;
     }
 
@@ -112,8 +112,8 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
     for (const auto& rjMember : document.GetObject()) {
         const auto& key = rjMember.name.GetString();
         if (!rjMember.value.IsString()) {
-            weasel::print_warning("ignoring option \"{}\" in configuration file.\n", key);
-            weasel::print_warning("expected value type to be string.\n");
+            touca::print_warning("ignoring option \"{}\" in configuration file.\n", key);
+            touca::print_warning("expected value type to be string.\n");
             continue;
         }
         const auto& value = rjMember.value.GetString();
@@ -133,7 +133,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     for (const auto& key : { "api-url", "minio-url", "minio-pass", "minio-user" }) {
         if (!result_file.count(key)) {
-            weasel::print_error("expected configuration parameter: \"{}\"\n", key);
+            touca::print_error("expected configuration parameter: \"{}\"\n", key);
             return false;
         }
     }
@@ -144,7 +144,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
         const std::unordered_set<std::string> levels = { "debug", "info", "warning" };
         const auto level = result_file["log-level"].as<std::string>();
         if (!levels.count(level)) {
-            weasel::print_error("invalid value for option `log-level`\n");
+            touca::print_error("invalid value for option `log-level`\n");
             fmt::print("{}\n", copts_file.help());
             return false;
         }
@@ -158,8 +158,8 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options)
 
     if (result_file.count("log-dir")) {
         options.log_dir = result_file["log-dir"].as<std::string>();
-        if (!weasel::filesystem::is_directory(*options.log_dir)) {
-            weasel::print_error("option `log-dir` points to nonexistent directory\n");
+        if (!touca::filesystem::is_directory(*options.log_dir)) {
+            touca::print_error("option `log-dir` points to nonexistent directory\n");
             return false;
         }
     }
@@ -227,7 +227,7 @@ bool parse_arguments(int argc, char* argv[], Options& options)
     try {
         return parse_arguments_impl(argc, argv, options);
     } catch (const std::exception& ex) {
-        weasel::print_error("failed to parse application options: {}\n", ex.what());
+        touca::print_error("failed to parse application options: {}\n", ex.what());
     }
     return false;
 }

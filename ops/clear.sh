@@ -63,7 +63,7 @@ func_minio_clear () {
     fi
     check_prerequisite_commands "mc"
     for bucket in "comparisons" "messages" "results"; do
-        mc rm --recursive --force --dangerous "local/weasel-${bucket}" || true
+        mc rm --recursive --force --dangerous "local/touca-${bucket}" || true
     done
     log_info "removed all items in object storage database"
 }
@@ -75,7 +75,7 @@ func_mongo_clear () {
     fi
     check_prerequisite_commands "mongo"
 mongo <<EOF
-use weasel
+use touca
 db.comments.remove({})
 db.comparisons.remove({})
 db.suites.remove({})

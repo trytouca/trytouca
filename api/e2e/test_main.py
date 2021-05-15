@@ -9,17 +9,17 @@ from dataclasses import dataclass
 from loguru import logger
 from minio import Minio
 from playbook import Playbook
-from client_api import WeaselApiClient
-from client_mongo import WeaselMongoClient
+from client_api import ApiClient
+from client_mongo import MongoClient
 from utilities import pathify
 
-WEASEL_MINIO_URL="localhost:9000"
-WEASEL_USERS_FILE=pathify("users.txt")
-WEASEL_PLAYBOOK_FILE=pathify("playbook.csv")
+TOUCA_MINIO_URL="localhost:9000"
+TOUCA_USERS_FILE=pathify("users.txt")
+TOUCA_PLAYBOOK_FILE=pathify("playbook.csv")
 
-class WeaselMinioClient:
+class MinioClient:
     def __init__(self):
-        self.client = Minio(WEASEL_MINIO_URL, access_key="weaseluser", secret_key="weaselpass", secure=False)
+        self.client = Minio(TOUCA_MINIO_URL, access_key="toucauser", secret_key="toucapass", secure=False)
 
     def count_docs(self) -> int:
         return sum([len(list(self.client.list_objects(x.name))) for x in self.client.list_buckets()])
@@ -32,8 +32,8 @@ class WeaselMinioClient:
 
 @dataclass
 class DatabaseCounters:
-    minio_client: WeaselMinioClient
-    mongo_client: WeaselMongoClient
+    minio_client: MinioClient
+    mongo_client: MongoClient
 
     def get_counters(self):
         databases = [ self.minio_client, self.mongo_client ]
@@ -47,8 +47,8 @@ def setup_databases():
     Resets databases and test result directories.
     """
 
-    minio_client = WeaselMinioClient()
-    mongo_client = WeaselMongoClient()
+    minio_client = MinioClient()
+    mongo_client = MongoClient()
     counters = DatabaseCounters(minio_client, mongo_client)
     counters.log_counters("before database cleanup")
 
@@ -65,7 +65,7 @@ def setup_databases():
 @logger.catch
 def test_main():
     """
-    Integration Test for Weasel Platform API. This test requires a running
+    Integration Test for the Platform API service. This test requires a running
     platform server, minio, mongo, and redis databases.
     """
 
@@ -74,18 +74,18 @@ def test_main():
     logger.remove()
     logger.add(sys.stdout, level="INFO", colorize=True, \
         format="<green>{time:HH:mm:ss!UTC}</green> | <cyan>{level: <7}</cyan> | <lvl>{message}</lvl>")
-    logger.add("logs/weasel_{time:YYMMDD!UTC}.log", level="DEBUG", rotation="1 day", compression="zip")
+    logger.add("logs/touca_{time:YYMMDD!UTC}.log", level="DEBUG", rotation="1 day", compression="zip")
 
     # check that the platform is properly configured
 
-    api_client = WeaselApiClient()
+    api_client = ApiClient()
     if not api_client.is_up():
         logger.error('platform is not ready for this test')
         return
 
     setup_databases()
 
-    for action in Playbook.reader(WEASEL_PLAYBOOK_FILE):
+    for action in Playbook.reader(TOUCA_PLAYBOOK_FILE):
         action()
 
 if __name__ == '__main__':

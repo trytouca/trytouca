@@ -18,9 +18,9 @@ import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
-import { weasel } from '@/utils/weasel_generated'
+import { touca } from '@/utils/touca_generated'
 
-const fbs = weasel.fbs
+const fbs = touca.fbs
 
 type TeamSlug = string
 type SuiteSlug = string
@@ -410,7 +410,7 @@ async function insertComparisonJob(
     }
 
     // now that we know the parameters, create a comparison job for the
-    // Weasel Comparator to process.
+    // comparator to process.
 
     await ComparisonModel.create({
       dstBatchId,

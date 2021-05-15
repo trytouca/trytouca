@@ -34,11 +34,11 @@ const router = e.Router()
  *    operationId: 'misc_index'
  *    description:
  *      Reassures curious engineers who browse to the Backend URL that
- *      the Weasel Platform is up and running.
+ *      the server is up and running.
  *    responses:
  *      302:
  *        description:
- *          Path to route that provides Weasel Platform health status
+ *          Path to route that provides server health status
  *        headers:
  *          Location:
  *            $ref: '#/components/headers/Location'
@@ -48,7 +48,7 @@ router.get('/', (req, res) => {
 })
 
 /**
- * Placeholder for API URL provided to Weasel Clients.
+ * Placeholder for API URL provided to Touca Clients.
  *
  * @api [get] /@/:team/:suite
  *    tags:
@@ -57,20 +57,20 @@ router.get('/', (req, res) => {
  *    operationId: 'misc_placeholder'
  *    description:
  *      Reassures curious engineers who browse to the API URL provided
- *      for submitting results that the Weasel Platform is up and running.
+ *      for submitting results that the platform is up and running.
  *    parameters:
  *      - $ref: '#/components/parameters/team'
  *      - $ref: '#/components/parameters/suite'
  *    responses:
  *      308:
  *        description:
- *          Path to Weasel Documentations Page served by Web App
+ *          Path to the Documentations Page served by Web App
  *        headers:
  *          Location:
  *            $ref: '#/components/headers/Location'
  */
 router.get('/@/:team/:suite', (req, res) => {
-  res.redirect(308, 'https://docs.getweasel.com')
+  res.redirect(308, 'https://docs.touca.io')
 })
 
 router.use('/auth', authRouter)
@@ -94,7 +94,7 @@ router.use('/user', userRouter)
  *    summary: 'Provide Feedback'
  *    operationId: 'other_feedback'
  *    description:
- *      Submits user feedback to Weasel Engineering Team.
+ *      Submits user feedback to Touca Engineering Team.
  *    requestBody:
  *      content:
  *        application/json:

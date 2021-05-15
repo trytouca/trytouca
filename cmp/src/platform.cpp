@@ -6,10 +6,10 @@
 #include "object_store.hpp"
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
-#include "weasel/devkit/comparison.hpp"
-#include "weasel/devkit/logger.hpp"
-#include "weasel/devkit/platform.hpp"
-#include "weasel/devkit/utils.hpp"
+#include "touca/devkit/comparison.hpp"
+#include "touca/devkit/logger.hpp"
+#include "touca/devkit/platform.hpp"
+#include "touca/devkit/utils.hpp"
 
 /**
  *
@@ -26,7 +26,7 @@ MessageJob::MessageJob(const std::string& batchId, const std::string& messageId)
  */
 std::string MessageJob::desc() const
 {
-    return weasel::format("m:{}", _messageId);
+    return touca::format("m:{}", _messageId);
 }
 
 /**
@@ -37,7 +37,7 @@ bool MessageJob::process(const Options& options) const
     const auto& store = ObjectStore::get_instance(options);
     const auto result = store.get_message(_messageId);
     if (!result) {
-        WEASEL_LOG_WARN("{}: failed to process message", desc());
+        TOUCA_LOG_WARN("{}: failed to process message", desc());
         return false;
     }
 
@@ -57,14 +57,14 @@ bool MessageJob::process(const Options& options) const
     doc.Accept(writer);
     const auto output = strbuf.GetString();
 
-    // submit output to Weasel Platform
+    // submit output to the server
 
-    weasel::ApiUrl api(options.api_url);
-    weasel::Platform platform(api);
+    touca::ApiUrl api(options.api_url);
+    touca::Platform platform(api);
 
-    const auto url = weasel::format("/cmp/message/{}", _messageId);
+    const auto url = touca::format("/cmp/message/{}", _messageId);
     if (!platform.cmp_submit(url, output)) {
-        WEASEL_LOG_WARN("{}: failed to submit message: {}", name, platform.get_error());
+        TOUCA_LOG_WARN("{}: failed to submit message: {}", name, platform.get_error());
         return false;
     }
 
@@ -76,7 +76,7 @@ bool MessageJob::process(const Options& options) const
  */
 std::string ComparisonJob::desc() const
 {
-    return weasel::format("c:{}", _jobId);
+    return touca::format("c:{}", _jobId);
 }
 
 /**
@@ -89,14 +89,14 @@ bool ComparisonJob::process(const Options& options) const
     const auto src = store.get_message(_srcMessageId);
 
     if (!src || !dst) {
-        WEASEL_LOG_WARN("{}: comparison job is orphaned", desc());
+        TOUCA_LOG_WARN("{}: comparison job is orphaned", desc());
         return false;
     }
 
     const auto& dstName = src->metadata().describe();
     const auto& srcName = dst->metadata().describe();
-    const auto& tuple = weasel::format("{}_{}", dstName, srcName);
-    WEASEL_LOG_DEBUG("{}: processing comparison job", tuple);
+    const auto& tuple = touca::format("{}_{}", dstName, srcName);
+    TOUCA_LOG_DEBUG("{}: processing comparison job", tuple);
 
     // perform comparison
 
@@ -116,14 +116,14 @@ bool ComparisonJob::process(const Options& options) const
     doc.Accept(writer);
     const auto output = strbuf.GetString();
 
-    // submit output to Weasel Platform
+    // submit output to the server
 
-    weasel::ApiUrl api(options.api_url);
-    weasel::Platform platform(api);
+    touca::ApiUrl api(options.api_url);
+    touca::Platform platform(api);
 
-    const auto url = weasel::format("/cmp/job/{}", _jobId);
+    const auto url = touca::format("/cmp/job/{}", _jobId);
     if (!platform.cmp_submit(url, output)) {
-        WEASEL_LOG_WARN("{}: failed to submit comparison result: {}", tuple, platform.get_error());
+        TOUCA_LOG_WARN("{}: failed to submit comparison result: {}", tuple, platform.get_error());
         return false;
     }
 
@@ -135,28 +135,28 @@ bool ComparisonJob::process(const Options& options) const
  */
 std::vector<std::unique_ptr<Job>> retrieveJobs(const std::string& api_url)
 {
-    weasel::ApiUrl api(api_url);
-    weasel::Platform platform(api);
+    touca::ApiUrl api(api_url);
+    touca::Platform platform(api);
 
     std::string body;
     if (!platform.cmp_jobs(body)) {
-        WEASEL_LOG_ERROR("failed to obtain list of jobs: {}", platform.get_error());
+        TOUCA_LOG_ERROR("failed to obtain list of jobs: {}", platform.get_error());
         return {};
     }
 
     rapidjson::Document doc;
     if (doc.Parse<0>(body.c_str()).HasParseError()) {
-        WEASEL_LOG_ERROR("backend response for list of jobs is ill-formed");
+        TOUCA_LOG_ERROR("backend response for list of jobs is ill-formed");
         return {};
     }
 
     if (!doc.HasMember("messages") || !doc["messages"].IsArray()) {
-        WEASEL_LOG_ERROR("backend response has no field `messages`");
+        TOUCA_LOG_ERROR("backend response has no field `messages`");
         return {};
     }
 
     if (!doc.HasMember("comparisons") || !doc["comparisons"].IsArray()) {
-        WEASEL_LOG_ERROR("backend response has no field `comparisons`");
+        TOUCA_LOG_ERROR("backend response has no field `comparisons`");
         return {};
     }
 

@@ -53,7 +53,7 @@
           This is an auto-generated email. You do not need to take any action.
           You are receiving this notification because you are a member of team "
           <a href="{{ teamLink }}">{{ teamName }}</a>
-          " on Weasel.
+          " on Touca.
         </mj-text>
       </mj-column>
     </mj-section>

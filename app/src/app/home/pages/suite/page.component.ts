@@ -221,7 +221,7 @@ export class SuitePageComponent
    *
    */
   private updateTitle(suite: SuiteLookupResponse) {
-    const title = [suite.suiteName, suite.teamName, 'Weasel'].join(' - ');
+    const title = [suite.suiteName, suite.teamName, 'Touca'].join(' - ');
     this.titleService.setTitle(title);
   }
 

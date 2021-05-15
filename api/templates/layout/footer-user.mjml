@@ -13,9 +13,9 @@
   <mj-column>
     <mj-text font-size="12px">
       We are here to help. Send us
-      <a href="mailto:support@getweasel.com">an email</a>
+      <a href="mailto:support@touca.io">an email</a>
       if you have any questions or tell us what you think using our
-      <a href="https://getweasel.com/feedback">feedback page</a>
+      <a href="https://touca.io/feedback">feedback page</a>
       .
     </mj-text>
   </mj-column>
@@ -23,7 +23,7 @@
 <mj-wrapper full-width="full-width" padding="0">
   <mj-section>
     <mj-column width="100%">
-      <mj-text align="center">&copy; Weasel, Inc. All Rights Reserved.</mj-text>
+      <mj-text align="center">&copy; Touca, Inc. All Rights Reserved.</mj-text>
     </mj-column>
   </mj-section>
 </mj-wrapper>

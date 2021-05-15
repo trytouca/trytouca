@@ -7,11 +7,11 @@ import pymongo
 from loguru import logger
 from utilities import User
 
-WEASEL_MONGO_URL="mongodb://weaseluser:weaselpass@localhost:27017/"
+TOUCA_MONGO_URL="mongodb://toucauser:toucapass@localhost:27017/"
 
-class WeaselMongoClient:
+class MongoClient:
     def __init__(self):
-        self.client = pymongo.MongoClient(WEASEL_MONGO_URL).get_database('weasel')
+        self.client = pymongo.MongoClient(TOUCA_MONGO_URL).get_database('touca')
 
     def count_docs(self) -> dict:
         counter = {}

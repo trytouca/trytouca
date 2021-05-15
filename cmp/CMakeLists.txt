@@ -4,9 +4,9 @@
 
 cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 
-project(weasel_cmp VERSION 1.4.0 LANGUAGES CXX)
+project(touca_cmp VERSION 1.4.0 LANGUAGES CXX)
 
-set(WEASEL_COMPARATOR_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(TOUCA_COMPARATOR_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -31,7 +31,7 @@ endif()
 set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
-macro(weasel_find_package package_name)
+macro(touca_find_package package_name)
     find_package(${package_name} QUIET)
     if (NOT ${package_name}_FOUND)
         message (FATAL_ERROR "required dependency on ${package_name} is missing")

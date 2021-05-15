@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "weasel-webapp": {
+    "touca-webapp": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -78,18 +78,18 @@
         "serve": {
           "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "weasel-webapp:build"
+            "browserTarget": "touca-webapp:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "weasel-webapp:build:production"
+              "browserTarget": "touca-webapp:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "weasel-webapp:build"
+            "browserTarget": "touca-webapp:build"
           }
         },
         "test": {
@@ -120,5 +120,5 @@
       }
     }
   },
-  "defaultProject": "weasel-webapp"
+  "defaultProject": "touca-webapp"
 }

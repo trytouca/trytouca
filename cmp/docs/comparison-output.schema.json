@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "id": "https://getweasel.com/schemas/weasel/comparator-standalone.json",
+  "id": "https://touca.io/schemas/touca/comparator-standalone.json",
   "definitions": {
     "version": {
       "type": "string",

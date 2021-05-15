@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>Welcome to Weasel</mj-title>
+    <mj-title>Welcome to Touca</mj-title>
     <mj-preview>Welcome! Here is your account verification link.</mj-preview>
     <mj-font
       name="Nunito"
@@ -33,7 +33,7 @@
       <mj-column>
         <mj-text>Welcome Aboard!</mj-text>
         <mj-text>
-          Thank you for creating an account on Weasel! We hope that it helps you
+          Thank you for creating an account on Touca! We hope that it helps you
           improve and maintain the quality of your software product.
         </mj-text>
         <mj-text>

@@ -184,7 +184,7 @@ def main():
 
     # download and install the test artifact
 
-    with tempfile.TemporaryDirectory(prefix="weasel_runner_artifact") as tmpdir:
+    with tempfile.TemporaryDirectory(prefix="touca_runner_artifact") as tmpdir:
         msi_path = download_artifact(config, tmpdir, artifact_version)
         if not msi_path:
             logger.error("failed to download artifact: {}", artifact_version)

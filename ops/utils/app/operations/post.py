@@ -30,7 +30,7 @@ def utils_post(srcDir, apiKey, apiUrl, utilsApp):
     if 0 != exit_status:
         logger.warning(f'failed to post {srcDir}')
         if exit_status is not None:
-            logger.warning(f'program Weasel Utils returned code {exit_status}')
+            logger.warning(f'program Touca Utils returned code {exit_status}')
         return False
     logger.info(f'posted {srcDir}')
     return True
@@ -61,7 +61,7 @@ class Post(Operation):
         srcDir = self.__options.get('src')
         apiKey = self.__options.get('api_key')
         apiUrl = self.__options.get('api_url')
-        utilsApp = "fullpath/to/weasel_cli"
+        utilsApp = "fullpath/to/touca_cli"
 
         if not os.path.exists(srcDir):
             logger.error(f'directory {srcDir} does not exist')

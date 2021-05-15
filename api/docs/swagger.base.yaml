@@ -1,13 +1,13 @@
 openapi: '3.0.0'
 info:
   description: >-
-    Backend API specification of Weasel Regression Testing Platform
+    Backend API specification of Touca Regression Testing Platform
   version: 1.4.0
-  title: Weasel Regression Testing Platform
+  title: Touca Regression Testing Platform
   contact:
-    email: support@getweasel.com
+    email: support@touca.io
 servers:
-  - url: https://getweasel.com/api
+  - url: https://touca.io/api
 
 components:
   headers:

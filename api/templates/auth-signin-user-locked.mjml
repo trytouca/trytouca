@@ -27,7 +27,7 @@
       <mj-column>
         <mj-text>{{ greetings }},</mj-text>
         <mj-text>
-          We have received multiple failed attempts to log into your Weasel
+          We have received multiple failed attempts to log into your Touca
           account.
         </mj-text>
         <mj-text>

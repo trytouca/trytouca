@@ -7,7 +7,7 @@
 #include "options.hpp"
 #include "stats.hpp"
 
-namespace weasel {
+namespace touca {
     struct ComparisonJob;
     struct Testcase;
 }

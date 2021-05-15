@@ -25,7 +25,7 @@ const router = e.Router()
  *    operationId: comparison_list
  *    description:
  *      List pending comparison jobs.
- *      Designed for use by Weasel Comparator.
+ *      Designed for use by the comparator service.
  *    responses:
  *      200:
  *        description: List of comparison jobs.
@@ -72,7 +72,7 @@ router.get('/', promisable(comparisonList, 'list comparison jobs'))
  *    operationId: comparison_process
  *    description:
  *      Submit results for a comparison job.
- *      Designed for use by Weasel Comparator.
+ *      Designed for use by the comparator service.
  *    parameters:
  *      - $ref: '#/components/parameters/job'
  *    requestBody:
@@ -128,7 +128,7 @@ router.patch(
  *    operationId: message_process
  *    description:
  *      Submit parsed json representation of a message.
- *      Designed for use by Weasel Comparator.
+ *      Designed for use by the comparator service.
  *    parameters:
  *      - name: message
  *        in: path
@@ -189,7 +189,7 @@ router.patch(
  *    operationId: comparison_stats
  *    description:
  *      Submit comparator statistics.
- *      Designed for use by Weasel Comparator.
+ *      Designed for use by the comparator service.
  *    requestBody:
  *      content:
  *        application/json:

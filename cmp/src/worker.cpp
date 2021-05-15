@@ -4,8 +4,8 @@
 
 #include "worker.hpp"
 #include "platform.hpp"
-#include "weasel/devkit/logger.hpp"
-#include "weasel/devkit/platform.hpp"
+#include "touca/devkit/logger.hpp"
+#include "touca/devkit/platform.hpp"
 #include <thread>
 
 /**
@@ -17,7 +17,7 @@ void collector(const Options& options, Resources& resources)
     const auto& interval = chr::milliseconds(options.polling_interval);
 
     while (true) {
-        WEASEL_LOG_DEBUG("polling for new comparison jobs");
+        TOUCA_LOG_DEBUG("polling for new comparison jobs");
         const auto& tic = chr::system_clock::now();
         auto jobs = retrieveJobs(options.api_url);
 
@@ -30,7 +30,7 @@ void collector(const Options& options, Resources& resources)
 
         // update statistics
 
-        WEASEL_LOG_INFO("received {} comparison jobs", jobs.size());
+        TOUCA_LOG_INFO("received {} comparison jobs", jobs.size());
         const auto& toc = chr::system_clock::now();
         const auto& dur = chr::duration_cast<chr::milliseconds>(toc - tic);
         resources.stats.update_collector_stats(dur.count(), jobs.size());
@@ -57,15 +57,15 @@ void reporter(const Options& options, Resources& resources)
         if (!report.compare(previous)) {
             continue;
         }
-        WEASEL_LOG_INFO("{}", report);
+        TOUCA_LOG_INFO("{}", report);
         previous = report;
         if (resources.stats.job_count_collect == 0 || resources.stats.job_count_process == 0) {
             continue;
         }
-        weasel::ApiUrl api(options.api_url);
-        weasel::Platform platform(api);
+        touca::ApiUrl api(options.api_url);
+        touca::Platform platform(api);
         if (!platform.cmp_stats(report)) {
-            WEASEL_LOG_WARN("failed to report statistics: {}", platform.get_error());
+            TOUCA_LOG_WARN("failed to report statistics: {}", platform.get_error());
         }
         resources.stats.reset();
     }
@@ -80,11 +80,11 @@ void processor(const Options& options, Resources& resources)
     while (true) {
         const auto job = resources.job_queue.pop_item();
         const auto desc = job->desc();
-        WEASEL_LOG_DEBUG("{}: processing", desc);
+        TOUCA_LOG_DEBUG("{}: processing", desc);
         const auto& tic = chr::system_clock::now();
 
         if (!job->process(options)) {
-            WEASEL_LOG_ERROR("{}: failed to process job", desc);
+            TOUCA_LOG_ERROR("{}: failed to process job", desc);
             continue;
         }
 
@@ -92,7 +92,7 @@ void processor(const Options& options, Resources& resources)
 
         const auto& toc = chr::system_clock::now();
         const auto& dur = chr::duration_cast<chr::milliseconds>(toc - tic);
-        WEASEL_LOG_INFO("{}: processed ({} ms)", desc, dur.count());
+        TOUCA_LOG_INFO("{}: processed ({} ms)", desc, dur.count());
         resources.stats.update_processor_stats(dur.count());
     }
 }

@@ -23,11 +23,11 @@ export async function setupSuperuser() {
   // otherwise register the user in the database
 
   const superuser = await UserModel.create({
-    email: 'noreply@getweasel.com',
-    fullname: 'Weasel Platform',
+    email: 'noreply@touca.io',
+    fullname: 'Touca Platform',
     password: 'supersafehash',
     platformRole: EPlatformRole.Super,
-    username: 'weasel'
+    username: 'touca'
   })
 
   logger.info('startup stage: created superuser')
@@ -50,7 +50,7 @@ export async function setupAnonymousUser() {
   // otherwise register the user in the database
 
   const anonymousUser = await UserModel.create({
-    email: 'anonymous@getweasel.com',
+    email: 'anonymous@touca.io',
     fullname: 'Former User',
     password: 'supersafehash',
     platformRole: EPlatformRole.User,

@@ -1,4 +1,4 @@
 dist
 local
 node_modules
-src/utils/weasel_generated.ts
+src/utils/touca_generated.ts

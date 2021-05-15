@@ -19,16 +19,16 @@ RUN apt-get update \
   && pip3 install conan --no-cache-dir --upgrade \
   && cmake --version \
   && conan --version \
-  && groupadd -r weasel && useradd -u 8002 -m --no-log-init -r -g weasel weasel
+  && groupadd -r touca && useradd -u 8002 -m --no-log-init -r -g touca touca
 
 COPY cmp /opt/cmp
-RUN chown -v -R weasel:weasel /opt
+RUN chown -v -R touca:touca /opt
 WORKDIR /opt
-USER weasel
+USER touca
 
 RUN conan profile new default --detect \
   && conan profile update settings.compiler.libcxx=libstdc++11 default \
-  && conan remote add --force weasel-cpp https://getweasel.jfrog.io/artifactory/api/conan/weasel-cpp \
+  && conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp \
   && cd /opt/cmp && ./build.sh
 
 # ---- production image ----
@@ -38,4 +38,4 @@ FROM ubuntu:focal
 COPY --from=builder /opt/cmp/local/dist                 /usr/local
 COPY --from=builder /opt/cmp/config/config.prod.json    /usr/local/etc/config.json
 
-CMD [ "/usr/local/bin/weasel_cmp", "--config-file=/usr/local/etc/config.json" ]
+CMD [ "/usr/local/bin/touca_cmp", "--config-file=/usr/local/etc/config.json" ]
