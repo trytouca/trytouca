@@ -2,11 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ErrorMessage,Field, Form, Formik, FormikProps } from 'formik';
+import { ErrorMessage, Field, Form, Formik, FormikProps } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
 
-import { extract_error,Feedback, post_json } from '@/lib/api';
+import { extract_error, Feedback, post_json } from '@/lib/api';
 import { event as gtag_event } from '@/lib/gtag';
 
 const SignupForm = () => (
@@ -75,7 +75,7 @@ const SignupForm = () => (
             type={props.status.type}></Feedback>
         )}
         <p className="mt-2 text-white">
-          You can explore Weasel in action using the test results in our
+          You can explore Touca in action using the test results in our
           playground.
         </p>
         <span className="text-green-400"></span>

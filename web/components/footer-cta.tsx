@@ -6,14 +6,14 @@ export default function FooterCta() {
   return (
     <div className="text-white space-y-4">
       <h3 className="wsl-text-shadow text-2xl xl:text-3xl font-bold">
-        Try Weasel today
+        Try Touca Today
       </h3>
       <p className="text-xl">
         We make maintaining software 10x more efficient.
       </p>
       <div>
         <a
-          href="https://app.getweasel.com"
+          href="https://app.touca.io"
           target="_blank"
           rel="noopener noreferrer">
           <button

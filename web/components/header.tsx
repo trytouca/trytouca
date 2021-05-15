@@ -15,12 +15,12 @@ export default function Header() {
             <a className="h-20 flex items-center focus:outline-none">
               <img
                 className="h-12"
-                src={make_path('/logo/weasel-logo-transparent.svg')}
-                alt="Weasel Logo"
+                src={make_path('/logo/touca-logo-transparent.svg')}
+                alt="Touca Logo"
                 loading="eager"
               />
               <h1 className="text-2xl font-light text-white tracking-tight">
-                Weasel
+                Touca
               </h1>
             </a>
           </Link>
@@ -31,13 +31,13 @@ export default function Header() {
           </Link>
           <a
             className="wsl-header-btn-secondary"
-            href="https://docs.getweasel.com"
+            href="https://docs.touca.io"
             rel="noopener">
             Docs
           </a>
           <a
             className="wsl-header-btn-primary"
-            href="https://app.getweasel.com"
+            href="https://app.touca.io"
             rel="noopener">
             Get Started
           </a>

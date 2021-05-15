@@ -197,39 +197,38 @@ const content: PageContent = {
     {
       icon: HiOutlineUpload,
       image: {
-        link: make_path('/images/weasel_landing_feature_1.png'),
-        alt: 'Submit regression test results with Weasel client libraries.'
+        link: make_path('/images/touca_landing_feature_1.png'),
+        alt: 'Submit regression test results with Touca client libraries.'
       },
       title: 'Submit',
       description: `Use our client libraries to capture values of important
         variables and runtime of functions, for any number of test cases,
         from anywhere within your code.`,
       button: {
-        link: 'https://docs.getweasel.com/guides/submit',
+        link: 'https://docs.touca.io/guides/submit',
         text: 'Learn More',
-        title: 'Learn how Weasel helps you write regression test tools.'
+        title: 'Learn how Touca helps you write regression test tools.'
       }
     },
     {
       icon: HiOutlineLightBulb,
       image: {
-        link: make_path('/images/weasel_landing_feature_2.png'),
-        alt: 'Get notified when Weasel finds regressions in your product.'
+        link: make_path('/images/touca_landing_feature_2.png'),
+        alt: 'Get notified when Touca finds regressions in your product.'
       },
       title: 'Interpret',
-      description: `Weasel compares your results against your baseline version
+      description: `Touca compares your results against your baseline version
         and reports changes in behavior and performance of your software.`,
       button: {
-        link: 'https://docs.getweasel.com/guides/interpret',
+        link: 'https://docs.touca.io/guides/interpret',
         text: 'Learn More',
-        title:
-          'Learn how Weasel processes your results and reports regressions.'
+        title: 'Learn how Touca processes your results and reports regressions.'
       }
     },
     {
       icon: HiOutlineUserGroup,
       image: {
-        link: make_path('/images/weasel_landing_feature_3.png'),
+        link: make_path('/images/touca_landing_feature_3.png'),
         alt: 'Get notified when your team members promote the baseline version.'
       },
       title: 'Collaborate',
@@ -237,7 +236,7 @@ const content: PageContent = {
         Maintain a shared understanding of how your software is supposed
         to work.`,
       button: {
-        link: 'https://docs.getweasel.com/guides/collaborate',
+        link: 'https://docs.touca.io/guides/collaborate',
         text: 'Learn More',
         title: 'Learn how to work as a team to deal with regressions.'
       }
@@ -245,14 +244,14 @@ const content: PageContent = {
     {
       icon: HiOutlineCog,
       image: {
-        link: make_path('/images/weasel_landing_feature_4.png'),
-        alt: 'Automate your regression tests using Weasel test frameworks.'
+        link: make_path('/images/touca_landing_feature_4.png'),
+        alt: 'Automate your regression tests using Touca test frameworks.'
       },
       title: 'Automate',
       description: `Make your tests run continuously on a fixed schedule
         or as you introduce new code changes.`,
       button: {
-        link: 'https://docs.getweasel.com/guides/automate',
+        link: 'https://docs.touca.io/guides/automate',
         text: 'Learn More',
         title: 'Learn how to automate the execution of your tests tools.'
       }
@@ -260,18 +259,18 @@ const content: PageContent = {
   ],
   testimonials: [
     {
-      image: make_path('/images/weasel-customer-testimonial-vital-profile.jpg'),
+      image: make_path('/images/touca-customer-testimonial-vital-profile.jpg'),
       title: 'Pejman Ghorbanzade',
       subtitle: 'Sr. Software Engineer at Vital Images, Inc.',
-      quote: `"We use Weasel at scale to perform nightly regression tests of
+      quote: `"We use Touca at scale to perform nightly regression tests of
         some of our critical workflows with thousands of datasets. It has helped
         us quickly identify unintended side effects of our code changes before
         they become too expensive to fix. I like how easy it is to write new
         regression tests and automate their execution."`,
       learnMore: {
-        title: `Learn more about how Vital Images uses Weasel`,
+        title: `Learn more about how Vital Images uses Touca`,
         text: "Read Vital Images' Story",
-        link: 'https://docs.getweasel.com/stories/vital',
+        link: 'https://docs.touca.io/stories/vital',
         hidden: false
       }
     }
@@ -282,7 +281,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Weasel</title>
+        <title>Touca</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -321,7 +320,7 @@ export default function Home() {
                   rel="noopener noreferrer">
                   <img
                     className="text-gray-50"
-                    src={make_path('/images/weasel-customer-logo-vital.svg')}
+                    src={make_path('/images/touca-customer-logo-vital.svg')}
                     alt="Vital Images, Inc."
                     loading="eager"
                   />
@@ -332,8 +331,8 @@ export default function Home() {
           <div className="col-span-1 max-w-screen-md h-full w-full mx-auto px-8 pb-8 lg:py-0 lg:px-4 select-none flex items-center">
             <img
               className="rounded-lg shadow-md"
-              alt="A Screen Shot of Weasel Regression Testing Platform"
-              src={make_path('/images/weasel-atf-visual.png')}
+              alt="A Screen Shot of Touca Regression Testing Platform"
+              src={make_path('/images/touca-atf-visual.png')}
               loading="eager"
             />
           </div>
@@ -378,8 +377,8 @@ export default function Home() {
               Built for the Enterprise
             </h3>
             <p className="text-2xl text-gray-300">
-              Weasel started as an internal tool at a medical software company
-              to find regressions in low-level components of a mission-critical
+              Touca started as an internal tool at a medical software company to
+              find regressions in low-level components of a mission-critical
               product.
             </p>
           </div>

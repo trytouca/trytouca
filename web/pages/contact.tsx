@@ -21,7 +21,7 @@ export default function ContactPage() {
   return (
     <>
       <Head>
-        <title>Weasel - Contact Us</title>
+        <title>Touca - Contact Us</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
