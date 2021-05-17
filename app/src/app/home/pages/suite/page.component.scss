@@ -19,6 +19,6 @@
     @apply px-2 flex flex-grow items-center bg-white border border-gray-300 rounded-l text-gray-500 text-xs font-mono whitespace-nowrap overflow-x-hidden;
   }
   .wsl-input-group-append {
-    @apply p-2 flex justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r text-lblue-600 text-xs font-medium cursor-pointer hover:bg-gray-200;
+    @apply p-2 flex justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r text-light-blue-600 text-xs font-medium cursor-pointer hover:bg-gray-200;
   }
 }

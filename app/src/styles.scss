@@ -17,19 +17,19 @@
     @apply wsl-btn py-2 px-4 rounded-lg font-semibold;
   }
   .wsl-btn-dark {
-    @apply bg-lblue-600 text-white font-medium shadow-md hover:bg-lblue-700 duration-150 ease-in-out focus:ring-2 focus:ring-opacity-50 focus:ring-lblue-400;
+    @apply bg-light-blue-600 text-white font-medium shadow-md hover:bg-light-blue-700 duration-150 ease-in-out focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400;
   }
   .wsl-btn-danger {
     @apply bg-red-600 text-white font-medium shadow-md hover:bg-red-700 duration-150 ease-in-out focus:ring-2 focus:ring-opacity-50 focus:ring-red-400;
   }
   .wsl-btn-light {
-    @apply bg-lblue-100 text-lblue-700 shadow-sm hover:bg-lblue-200 focus:ring-2 focus:ring-opacity-50 focus:ring-lblue-400;
+    @apply bg-light-blue-100 text-light-blue-700 shadow-sm hover:bg-light-blue-200 focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400;
   }
   .wsl-btn-muted {
     @apply bg-gray-50 border hover:bg-gray-100 focus:ring-1 focus:ring-opacity-50 focus:ring-gray-400 disabled:text-gray-300;
   }
   .wsl-input-field {
-    @apply block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-lblue-300 focus:ring focus:ring-lblue-200 focus:ring-opacity-50;
+    @apply block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-light-blue-300 focus:ring focus:ring-light-blue-200 focus:ring-opacity-50;
   }
   .wsl-input-label {
     @apply mb-1 block text-sm font-medium text-gray-700;
@@ -109,7 +109,7 @@
       @apply p-4 text-left md:text-justify font-light;
     }
     a {
-      @apply text-lblue-700;
+      @apply text-light-blue-700;
     }
     button {
       @apply wsl-btn-lg wsl-btn-light;
@@ -118,7 +118,7 @@
   .wsl-spinner {
     @apply grid place-content-center;
     fa-icon {
-      @apply text-2xl text-lblue-600;
+      @apply text-2xl text-light-blue-600;
     }
   }
   .wsl-dropdown-menu {

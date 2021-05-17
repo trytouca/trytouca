@@ -21,7 +21,7 @@
               aria-labelledby="wsl-teams-dropdown">
               <li *ngFor="let teamItem of teams"
                 (click)="switchPage(teamItem.slug)" class="wsl-dropdown-item"
-                [ngClass]="{'bg-lblue-100': team?.slug === teamItem.slug}">
+                [ngClass]="{'bg-light-blue-100': team?.slug === teamItem.slug}">
                 {{ teamItem.name }}
               </li>
             </ul>

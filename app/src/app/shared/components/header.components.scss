@@ -5,13 +5,13 @@
 @layer utilities {
   .wsl-header-light {
     h1 {
-      @apply text-lblue-600;
+      @apply text-light-blue-600;
     }
     .wsl-header-btn-primary {
-      @apply py-2 px-4 text-sm leading-6 font-semibold rounded-lg text-white bg-lblue-600 shadow-md duration-150 ease-in-out hover:bg-lblue-700 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-lblue-400;
+      @apply py-2 px-4 text-sm leading-6 font-semibold rounded-lg text-white bg-light-blue-600 shadow-md duration-150 ease-in-out hover:bg-light-blue-700 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400;
     }
     .wsl-header-btn-secondary {
-      @apply py-2 px-4 text-sm leading-6 font-semibold rounded-lg text-lblue-600 bg-transparent hover:bg-lblue-100 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-lblue-400;
+      @apply py-2 px-4 text-sm leading-6 font-semibold rounded-lg text-light-blue-600 bg-transparent hover:bg-light-blue-100 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400;
     }
   }
 }

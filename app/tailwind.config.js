@@ -10,7 +10,7 @@ module.exports = (isProd) => ({
     enabled: isProd,
     content: ['./src/**/*.{html,ts}']
   },
-  darkMode: false,
+  darkMode: false, // or 'media' or 'class'
   theme: {
     gradientColorStops: () => ({
       primary: '#075985',
@@ -31,10 +31,10 @@ module.exports = (isProd) => ({
       yellow: colors.amber,
       green: colors.emerald,
       blue: colors.blue,
+      'light-blue': colors.lightBlue
       // indigo: colors.indigo,
       // purple: colors.violet,
       // pink: colors.pink,
-      lblue: colors.lightBlue
     },
     screens: {
       sm: '640px',

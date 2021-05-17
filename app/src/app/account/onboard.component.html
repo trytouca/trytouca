@@ -3,7 +3,7 @@
     <div class="h-16 flex items-center focus:outline-none">
       <img class="h-12" src="./assets/logo/touca-logo-transparent.svg"
         alt="Touca Logo" />
-      <h1 class="text-2xl text-lblue-600 font-light tracking-tight">Touca</h1>
+      <h1 class="text-2xl text-light-blue-600 font-light tracking-tight">Touca</h1>
     </div>
   </div>
 </header>
@@ -13,7 +13,7 @@
     <h2 class="text-2xl text-center font-semibold">Welcome Aboard!</h2>
     <p class="text-sm text-center">Before we get started, we'd like to know a
       little more about you.</p>
-    <hr class="border-2 border-lblue-100" />
+    <hr class="border-2 border-light-blue-100" />
     <form class="wsl-form px-2 py-4 flex-grow" [formGroup]="onboardForm"
       (ngSubmit)="onSubmit(onboardForm.value)" novalidate>
       <app-alert [alert]="alert" *ngIf="alert"></app-alert>

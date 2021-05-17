@@ -211,7 +211,7 @@ export async function hasMember(
   res: Response,
   next: NextFunction
 ) {
-  const team = (res.locals.team as ITeam) as ITeam
+  const team = res.locals.team as ITeam
   const username = req.params.member
 
   // check that the user exists

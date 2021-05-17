@@ -31,7 +31,10 @@ export class AlertComponent {
   lookupClasses(): string[] {
     const entries = new Map<AlertType, string[]>([
       [AlertType.Danger, ['bg-red-100', 'border-red-200', 'text-red-800']],
-      [AlertType.Info, ['bg-lblue-100', 'border-lblue-200', 'text-lblue-800']],
+      [
+        AlertType.Info,
+        ['bg-light-blue-100', 'border-light-blue-200', 'text-light-blue-800']
+      ],
       [
         AlertType.Success,
         ['bg-green-100', 'border-green-200', 'text-green-800']

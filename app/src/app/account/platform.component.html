@@ -77,7 +77,7 @@
           class="p-4 bg-gray-50 text-sm border border-gray-100 rounded-md space-y-2"
           *ngFor="let event of events">
           <div class="flex-grow">
-            <span class="text-lblue-600 font-medium"
+            <span class="text-light-blue-600 font-medium"
               [title]="event.username">{{ event.fullname}}</span>
             <span> {{ event.copyText }}</span>
           </div>
@@ -154,12 +154,12 @@
               <div class="wsl-dropdown-item" ngxClipboard
                 [cbContent]="account.email"
                 (cbOnSuccess)="onCopy($event, 'email address')">
-                <a class="text-lblue-700">Copy Email</a>
+                <a class="text-light-blue-700">Copy Email</a>
               </div>
               <div class="wsl-dropdown-item"
                 *ngIf="!account.suspended && account.username !== user.username"
                 (click)="suspendUser(account)">
-                <a class="text-lblue-700">Suspend</a>
+                <a class="text-light-blue-700">Suspend</a>
               </div>
             </div>
           </div>
