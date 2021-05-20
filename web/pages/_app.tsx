@@ -7,8 +7,11 @@ import '@/styles/global.css';
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { IntercomProvider } from 'react-use-intercom';
 
 import { pageview as gtag_pageview } from '@/lib/gtag';
+
+const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_ID;
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -22,5 +25,9 @@ export default function App({ Component, pageProps }: AppProps) {
     };
   }, [router.events]);
 
-  return <Component {...pageProps} />;
+  return (
+    <IntercomProvider appId={INTERCOM_APP_ID} autoBoot>
+      <Component {...pageProps} />
+    </IntercomProvider>
+  );
 }
