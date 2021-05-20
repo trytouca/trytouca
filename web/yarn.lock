@@ -3853,6 +3853,11 @@ react-refresh@0.8.3:
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.8.3.tgz#721d4657672d400c5e3c75d063c4a85fb2d5d68f"
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
+react-use-intercom@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/react-use-intercom/-/react-use-intercom-1.2.0.tgz#d0958f16bf82caa422d7b8bb3530077d674445a1"
+  integrity sha512-Cbs9E5p8ISzyq4GnV04mVluHhfgSwM84FlHeY7clk9shW0XvuIylNUjnyopMjZgh5HawKWHIhRrcml20gPWVSQ==
+
 react@17.0.2:
   version "17.0.2"
   resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
