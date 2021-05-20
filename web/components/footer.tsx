@@ -25,6 +25,11 @@ const social = [
     link: 'https://docs.touca.io/legal/terms',
     title: 'Terms of Service',
     text: 'Terms'
+  },
+  {
+    link: 'https://docs.touca.io/legal/privacy',
+    title: 'Privacy Policy',
+    text: 'Privacy'
   }
 ];
 
