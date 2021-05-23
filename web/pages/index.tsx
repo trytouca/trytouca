@@ -260,18 +260,20 @@ const content: PageContent = {
   testimonials: [
     {
       image: make_path('/images/touca-customer-testimonial-vital-profile.jpg'),
-      title: 'Pejman Ghorbanzade',
-      subtitle: 'Sr. Software Engineer at Vital Images, Inc.',
-      quote: `"We use Touca at scale to perform nightly regression tests of
-        some of our critical workflows with thousands of datasets. It has helped
-        us quickly identify unintended side effects of our code changes before
-        they become too expensive to fix. I like how easy it is to write new
-        regression tests and automate their execution."`,
+      title: 'Ben Jackson',
+      subtitle: 'Principal Software Engineer at Vital Images, Inc.',
+      quote: `"We use Touca to perform nightly regression tests of our critical
+        workflows. When we make changes to complex software, we need to have
+        confidence that there have been no unexpected consequences. Touca gives
+        us that confidence by tracking millions of output values computed from
+        thousands of input datasets and helping us understand exactly how those
+        outputs have changed from one build to the next. That confidence gives
+        us leverage to develop new features faster and with fewer problems."`,
       learnMore: {
         title: `Learn more about how Vital Images uses Touca`,
         text: "Read Vital Images' Story",
         link: 'https://docs.touca.io/stories/vital',
-        hidden: false
+        hidden: true
       }
     }
   ]
