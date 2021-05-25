@@ -17,6 +17,7 @@ import {
 import FooterCta from '@/components/footer-cta';
 import SignupForm from '@/components/signup-form';
 import { make_path } from '@/lib/api';
+import { ProductHunt } from '@/lib/product-hunt';
 
 type TestimonialInput = {
   image: string;
@@ -290,53 +291,60 @@ export default function Home() {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
-        <div className="wsl-min-h-screen-1 container mx-auto grid lg:grid-cols-2 lg:gap-4 lg:items-center">
-          <div className="col-span-1 mx-auto pt-24 lg:pt-8 p-8 text-white space-y-8">
-            <h2 className="wsl-text-gradient wsl-text-shadow max-w-xl text-4xl xl:text-5xl font-bold">
-              {content.pitch.title}
-            </h2>
-            <p className="max-w-xl text-2xl">{content.pitch.subtitle}</p>
-            <div>
-              <SignupForm></SignupForm>
+        <div className="wsl-min-h-screen-1 grid lg:items-center">
+          <div className="container mx-auto">
+            <div className="pb-8 flex justify-center">
+              <ProductHunt />
             </div>
-            <div>
-              <a
-                href="https://calendly.com/ghorbanzade/30min"
-                target="_blank"
-                rel="noopener noreferrer">
-                <button
-                  className="py-2 font-medium space-x-2 hover:underline focus:underline focus:outline-none group"
-                  type="button"
-                  role="button">
-                  <span>Get a Live Demo</span>
-                  <HiArrowNarrowRight className="inline h-4 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
-                </button>
-              </a>
-            </div>
-            <div className="container mx-auto space-y-4">
-              <p className="text-white uppercase">Trusted By</p>
-              <div className="flex space-x-2">
-                <a
-                  href="https://vitalimages.com"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <img
-                    className="text-gray-50"
-                    src={make_path('/images/touca-customer-logo-vital.svg')}
-                    alt="Vital Images, Inc."
-                    loading="eager"
-                  />
-                </a>
+            <div className="grid lg:grid-cols-2 lg:gap-4 lg:items-center">
+              <div className="col-span-1 mx-auto pt-24 lg:pt-8 p-8 text-white space-y-8">
+                <h2 className="wsl-text-gradient wsl-text-shadow max-w-xl text-4xl xl:text-5xl font-bold">
+                  {content.pitch.title}
+                </h2>
+                <p className="max-w-xl text-2xl">{content.pitch.subtitle}</p>
+                <div>
+                  <SignupForm></SignupForm>
+                </div>
+                <div>
+                  <a
+                    href="https://calendly.com/ghorbanzade/30min"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    <button
+                      className="py-2 font-medium space-x-2 hover:underline focus:underline focus:outline-none group"
+                      type="button"
+                      role="button">
+                      <span>Get a Live Demo</span>
+                      <HiArrowNarrowRight className="inline h-4 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
+                    </button>
+                  </a>
+                </div>
+                <div className="container mx-auto space-y-4">
+                  <p className="text-white uppercase">Trusted By</p>
+                  <div className="flex items-center justify-between space-x-2">
+                    <a
+                      href="https://vitalimages.com"
+                      target="_blank"
+                      rel="noopener noreferrer">
+                      <img
+                        className="text-gray-50"
+                        src={make_path('/images/touca-customer-logo-vital.svg')}
+                        alt="Vital Images, Inc."
+                        loading="eager"
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="col-span-1 max-w-screen-md h-full w-full mx-auto px-8 pb-8 lg:py-0 lg:px-4 select-none flex items-center">
+                <img
+                  className="rounded-lg shadow-md"
+                  alt="A Screen Shot of Touca Regression Testing Platform"
+                  src={make_path('/images/touca-atf-visual.png')}
+                  loading="eager"
+                />
               </div>
             </div>
-          </div>
-          <div className="col-span-1 max-w-screen-md h-full w-full mx-auto px-8 pb-8 lg:py-0 lg:px-4 select-none flex items-center">
-            <img
-              className="rounded-lg shadow-md"
-              alt="A Screen Shot of Touca Regression Testing Platform"
-              src={make_path('/images/touca-atf-visual.png')}
-              loading="eager"
-            />
           </div>
         </div>
       </section>
