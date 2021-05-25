@@ -9,7 +9,7 @@ import { make_path } from '@/lib/api';
 export default function Header() {
   return (
     <header className="h-20 sticky top-0 z-10 bg-dark-blue-900 bg-opacity-90 backdrop-filter backdrop-blur">
-      <div className="px-4 mx-auto container flex justify-between">
+      <div className="px-4 mx-auto container flex items-center justify-between">
         <div className="flex items-center select-none">
           <Link href="/">
             <a className="h-20 flex items-center focus:outline-none">
@@ -31,6 +31,12 @@ export default function Header() {
           </Link>
           <a
             className="wsl-header-btn-secondary"
+            href="https://blog.touca.io/starting-vision/"
+            rel="noopener">
+            Blog
+          </a>
+          <a
+            className="wsl-header-btn-secondary"
             href="https://docs.touca.io"
             rel="noopener">
             Docs
@@ -39,7 +45,8 @@ export default function Header() {
             className="wsl-header-btn-primary"
             href="https://app.touca.io"
             rel="noopener">
-            Get Started
+            <span className="md:hidden block">Start</span>
+            <span className="hidden md:block">Get Started</span>
           </a>
         </nav>
       </div>
