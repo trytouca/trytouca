@@ -37,7 +37,8 @@ type NotFound = Partial<Record<string, never>>;
 })
 export class TeamsPageComponent
   extends PageComponent<TeamsPageTeam, TabType, NotFound>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   TabType = TabType;
 
   private _dialogRef: DialogRef;
@@ -105,6 +106,10 @@ export class TeamsPageComponent
       if (this._dialogRef && !this._dialogSub.closed) {
         this._dialogRef.close();
       }
+    }
+    if ('Backspace' === event.key) {
+      // pressing key 'Backspace' should be no-op
+      event.stopImmediatePropagation();
     }
   }
 }

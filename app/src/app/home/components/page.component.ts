@@ -24,7 +24,8 @@ export type PageTab<TabType> = {
   template: ''
 })
 export abstract class PageComponent<PageItemType, TabType, NotFound>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   private _alive = true;
   private _interval = environment.dataRefreshInterval;
   protected _notFound: Partial<NotFound> = {};

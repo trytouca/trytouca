@@ -37,7 +37,8 @@ type Content = {
 })
 export class TeamsCreateTeamComponent
   extends ModalComponent
-  implements OnDestroy {
+  implements OnDestroy
+{
   Mode = Mode;
   contents: Content[] = [
     {

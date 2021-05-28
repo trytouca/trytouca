@@ -81,7 +81,8 @@ const filterInput: FilterInput<ElementPageResult> = {
 })
 export class ElementListResultsComponent
   extends PageListComponent<ElementPageResult>
-  implements OnDestroy {
+  implements OnDestroy
+{
   suite: SuiteLookupResponse;
   params: FrontendElementCompareParams;
   ItemType = ElementPageItemType;

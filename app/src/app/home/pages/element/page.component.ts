@@ -72,7 +72,8 @@ type NotFound = Partial<{
 })
 export class ElementPageComponent
   extends PageComponent<ElementPageResult, ElementPageTabType, NotFound>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   alert: Alert;
   suite: SuiteLookupResponse;
   batch: BatchLookupResponse;
@@ -115,9 +116,8 @@ export class ElementPageComponent
         this._notFound.batchSlug = this.route.snapshot.paramMap.get('batch');
       }
       if (v.some((k) => k.kind === AlertKind.ElementNotFound)) {
-        this._notFound.elementSlug = this.route.snapshot.paramMap.get(
-          'element'
-        );
+        this._notFound.elementSlug =
+          this.route.snapshot.paramMap.get('element');
       }
     });
     this._subSuite = this.elementPageService.suite$.subscribe((v) => {
@@ -246,6 +246,7 @@ export class ElementPageComponent
     if ('Backspace' === event.key) {
       const queryParams = this.findPreviousPageQueryParams();
       this.router.navigate(['..'], { queryParams, relativeTo: this.route });
+      event.stopImmediatePropagation();
     }
   }
 

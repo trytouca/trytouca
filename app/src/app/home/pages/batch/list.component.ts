@@ -176,7 +176,8 @@ const filterInput: FilterInput<BatchPageItem> = {
 })
 export class BatchListElementsComponent
   extends PageListComponent<BatchPageItem>
-  implements OnDestroy {
+  implements OnDestroy
+{
   suite: SuiteLookupResponse;
   params: FrontendBatchCompareParams;
   ItemType = BatchPageItemType;

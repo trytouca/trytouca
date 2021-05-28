@@ -65,7 +65,8 @@ const filterInput: FilterInput<TeamPageMember> = {
 })
 export class TeamTabMembersComponent
   extends PageListComponent<TeamPageMember>
-  implements OnDestroy {
+  implements OnDestroy
+{
   ItemType = TeamPageMemberType;
 
   isTeamAdmin = false;

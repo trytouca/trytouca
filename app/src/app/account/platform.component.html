@@ -35,7 +35,7 @@
         <h4 class="font-medium">Disk Space</h4>
         <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
-            <span>Used:</span>
+            <span>Free:</span>
             <span>{{ stats.spaceFree | number: '1.0-0' }} GB</span>
           </li>
           <li class="flex justify-between">
@@ -43,7 +43,7 @@
             <span>{{ stats.spaceSize | number: '1.0-0' }} GB</span>
           </li>
           <li class="flex justify-between">
-            <span>Free:</span>
+            <span>Used:</span>
             <span>{{ stats.spaceUsed | percent:'1.0-0' }}</span>
           </li>
         </ul>

@@ -68,7 +68,8 @@ const filterInput: FilterInput<SuitePageItem> = {
 })
 export class SuiteListBatchesComponent
   extends PageListComponent<SuitePageItem>
-  implements OnDestroy {
+  implements OnDestroy
+{
   ItemType = SuitePageItemType;
 
   /**

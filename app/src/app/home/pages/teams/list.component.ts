@@ -65,7 +65,8 @@ const filterInput: FilterInput<TeamsPageTeam> = {
 })
 export class TeamsTabTeamsComponent
   extends PageListComponent<TeamsPageTeam>
-  implements OnDestroy {
+  implements OnDestroy
+{
   ItemType = TeamsPageItemType;
   counters: Record<TeamsPageItemType, number> = {
     active: 0,

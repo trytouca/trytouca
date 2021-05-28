@@ -57,7 +57,8 @@ export class VersionListComponent implements OnChanges {
 
   private _versionQuery = '';
   private _relevantVersions: Version[] = [];
-  private _versionQueryChanged: Subject<KeyboardEvent> = new Subject<KeyboardEvent>();
+  private _versionQueryChanged: Subject<KeyboardEvent> =
+    new Subject<KeyboardEvent>();
   private _searchOptions: Fuse.IFuseOptions<string> = {
     shouldSort: true,
     threshold: 0.3,
@@ -143,7 +144,7 @@ export class VersionListComponent implements OnChanges {
     if (this._versionQuery.length !== 0) {
       const fuse = new Fuse(this.suite.batches, this._searchOptions);
       const result = fuse.search(this._versionQuery);
-      versions = result.map((v) => v.item) as string[];
+      versions = result.map((v) => v.item);
     } else {
       versions = this.suite.batches;
     }

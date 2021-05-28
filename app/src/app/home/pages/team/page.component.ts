@@ -61,7 +61,8 @@ type NotFound = Partial<{
 })
 export class TeamPageComponent
   extends PageComponent<TeamPageSuite, TeamPageTabType, NotFound>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   team: TeamItem;
   teams: TeamItem[];
   TabType = TeamPageTabType;
@@ -143,6 +144,7 @@ export class TeamPageComponent
     // pressing key 'Backspace' should return user to "Teams" page
     if ('Backspace' === event.key) {
       this.router.navigate(['..'], { relativeTo: this.route });
+      event.stopImmediatePropagation();
     }
   }
 

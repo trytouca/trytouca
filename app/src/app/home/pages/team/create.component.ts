@@ -21,7 +21,8 @@ type IFormContent = {
 })
 export class TeamCreateSuiteComponent
   extends ModalComponent
-  implements OnDestroy {
+  implements OnDestroy
+{
   elements: { teamSlug: string };
 
   /**

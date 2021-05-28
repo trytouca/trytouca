@@ -88,7 +88,8 @@ type PageButton = {
 })
 export class BatchPageComponent
   extends PageComponent<BatchPageItem, BatchPageTabType, NotFound>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   suite: SuiteLookupResponse;
   batches: BatchItem[];
   batch: BatchLookupResponse;
@@ -261,6 +262,7 @@ export class BatchPageComponent
     // pressing key 'Backspace' should return user to "Suite" page
     if ('Backspace' === event.key) {
       this.router.navigate(['..'], { relativeTo: this.route });
+      event.stopImmediatePropagation();
     }
   }
 

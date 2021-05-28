@@ -86,7 +86,8 @@ type Fields = Partial<{
 })
 export class SuitePageComponent
   extends PageComponent<SuitePageItem, SuitePageTabType, NotFound>
-  implements OnInit, OnDestroy {
+  implements OnInit, OnDestroy
+{
   team: TeamItem;
   suite: SuiteLookupResponse;
   suites: SuiteItem[];
@@ -204,6 +205,7 @@ export class SuitePageComponent
     // pressing key 'Backspace' should return user to "Team" page
     if ('Backspace' === event.key) {
       this.router.navigate(['..'], { relativeTo: this.route });
+      event.stopImmediatePropagation();
     }
   }
 

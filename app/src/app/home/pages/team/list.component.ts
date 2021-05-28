@@ -144,7 +144,8 @@ const filterInput: FilterInput<TeamPageSuite> = {
 })
 export class TeamTabSuitesComponent
   extends PageListComponent<TeamPageSuite>
-  implements OnDestroy {
+  implements OnDestroy
+{
   ItemType = TeamPageSuiteType;
 
   /**

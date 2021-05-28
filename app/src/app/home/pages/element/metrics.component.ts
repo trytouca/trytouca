@@ -78,7 +78,8 @@ const filterInput: FilterInput<ElementPageMetric> = {
 })
 export class ElementListMetricsComponent
   extends PageListComponent<ElementPageMetric>
-  implements OnDestroy {
+  implements OnDestroy
+{
   suite: SuiteLookupResponse;
   params: FrontendElementCompareParams;
   ItemType = ElementPageItemType;

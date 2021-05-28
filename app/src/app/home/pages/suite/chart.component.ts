@@ -48,9 +48,9 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
       return;
     }
     perfs.reverse();
-    const chartContext = (document.getElementById(
-      'suite-chart-runtime-trend'
-    ) as HTMLCanvasElement).getContext('2d');
+    const chartContext = (
+      document.getElementById('suite-chart-runtime-trend') as HTMLCanvasElement
+    ).getContext('2d');
     this.chart = new Chart(chartContext, {
       type: 'line',
       data: {
