@@ -35,14 +35,14 @@ const social = [
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-r from-dark-blue-800 via-dark-blue-800 to-dark-blue-900 border-t border-dark-blue-800">
-      <div className="h-20 px-12 mx-auto container flex items-center justify-between">
-        <p className="text-white text-sm font-semibold">&copy; Touca, Inc.</p>
+    <footer className="border-t bg-gradient-to-r from-dark-blue-800 via-dark-blue-800 to-dark-blue-900 border-dark-blue-800">
+      <div className="container flex items-center justify-between h-20 px-12 mx-auto">
+        <p className="text-sm font-semibold text-white">&copy; Touca, Inc.</p>
         <ul className="flex space-x-6">
           {social.map((item) => {
             return (
               <li
-                className="text-gray-200 hover:text-white text-sm font-semibold"
+                className="text-sm font-semibold text-gray-200 hover:text-white"
                 key={item.link}
                 title={item.title}>
                 {item.internal ? (

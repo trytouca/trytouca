@@ -146,11 +146,11 @@ class CommonQuestions extends React.Component<
   render() {
     return (
       <>
-        <div className="py-32 px-4 lg:px-8 wsl-min-h-screen-1 container mx-auto">
-          <h2 className="pb-16 text-white text-4xl font-bold">
+        <div className="container px-4 py-32 mx-auto lg:px-8 wsl-min-h-screen-1">
+          <h2 className="pb-16 text-4xl font-bold text-white">
             {content.faq.title}
           </h2>
-          <div className="grid lg:grid-cols-2 gap-8 xl:gap-16">
+          <div className="grid gap-8 lg:grid-cols-2 xl:gap-16">
             <div className="grid-cols-1 space-y-2">
               {content.faq.blocks.map((block, index) => {
                 const isActive = index === this.state.activeIndex;
@@ -163,7 +163,7 @@ class CommonQuestions extends React.Component<
                     key={index}
                     onClick={() => this.activate(index)}
                     className={`p-4 flex items-center justify-between rounded-lg cursor-pointer duration-300 ease-in-out ${left}`}>
-                    <h3 className="text-white text-xl lg:text-2xl text-medium">
+                    <h3 className="text-xl text-white lg:text-2xl text-medium">
                       {block.question}
                     </h3>
                     <HiArrowNarrowRight
@@ -174,7 +174,7 @@ class CommonQuestions extends React.Component<
               })}
             </div>
             <div className="grid-cols-1">
-              <div className="p-8 bg-dark-blue-700 bg-opacity-20 rounded-lg space-y-4">
+              <div className="p-8 space-y-4 rounded-lg bg-dark-blue-700 bg-opacity-20">
                 {content.faq.blocks[this.state.activeIndex].answer.map(
                   (text, index) => (
                     <p key={index} className="text-xl text-gray-300">
@@ -202,9 +202,9 @@ export default function PricingPage() {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
-        <div className="wsl-min-h-screen-1 container mx-auto flex flex-col justify-center">
+        <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
           <div className="p-8 space-y-2 text-center">
-            <h2 className="text-white text-4xl font-extrabold">
+            <h2 className="text-4xl font-extrabold text-white">
               {content.title}
             </h2>
             <p className="text-xl text-white">{content.subtitle}</p>
@@ -228,7 +228,7 @@ export default function PricingPage() {
         <CommonQuestions></CommonQuestions>
       </section>
       <section className="py-8 min-h-[25vh] flex items-center bg-dark-blue-800">
-        <div className="container mx-auto px-8 md:px-24 lg:px-8">
+        <div className="container px-8 mx-auto md:px-24 lg:px-8">
           <FooterCta></FooterCta>
         </div>
       </section>

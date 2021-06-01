@@ -2,11 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { ErrorMessage,Field, Form, Formik, FormikProps } from 'formik';
+import { ErrorMessage, Field, Form, Formik, FormikProps } from 'formik';
 import React from 'react';
 import * as Yup from 'yup';
 
-import { extract_error,post_json } from '@/lib/api';
+import { extract_error, post_json } from '@/lib/api';
 import { event as gtag_event } from '@/lib/gtag';
 
 const ContactForm = () => (
@@ -62,12 +62,12 @@ const ContactForm = () => (
       }>
     ) => (
       <Form className="space-y-4" noValidate={true}>
-        <div className="w-full flex flex-col space-y-1">
-          <label className="text-sm text-gray-700 font-medium" htmlFor="name">
+        <div className="flex flex-col w-full space-y-1">
+          <label className="text-sm font-medium text-gray-700" htmlFor="name">
             Full Name<span className="text-indigo-500">*</span>
           </label>
           <Field
-            className="bg-white text-black rounded-md border border-gray-300 focus:outline-none focus:border-indigo-300 focus:ring-0"
+            className="text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:border-indigo-300 focus:ring-0"
             type="text"
             name="name"
             id="name"
@@ -76,12 +76,12 @@ const ContactForm = () => (
             {(msg) => <small className="text-red-600">{msg}</small>}
           </ErrorMessage>
         </div>
-        <div className="w-full flex flex-col space-y-1">
-          <label className="text-sm text-gray-700 font-medium" htmlFor="email">
+        <div className="flex flex-col w-full space-y-1">
+          <label className="text-sm font-medium text-gray-700" htmlFor="email">
             Email Address<span className="text-indigo-500">*</span>
           </label>
           <Field
-            className="bg-white text-black rounded-md border border-gray-300 focus:outline-none focus:border-indigo-300 focus:ring-0"
+            className="text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:border-indigo-300 focus:ring-0"
             type="email"
             name="email"
             id="email"
@@ -90,12 +90,12 @@ const ContactForm = () => (
             {(msg) => <small className="text-red-600">{msg}</small>}
           </ErrorMessage>
         </div>
-        <div className="w-full flex flex-col space-y-1">
-          <label className="text-sm text-gray-700 font-medium" htmlFor="cname">
+        <div className="flex flex-col w-full space-y-1">
+          <label className="text-sm font-medium text-gray-700" htmlFor="cname">
             Company Name<span className="text-indigo-500">*</span>
           </label>
           <Field
-            className="bg-white text-black rounded-md border border-gray-300 focus:outline-none focus:border-indigo-300 focus:ring-0"
+            className="text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:border-indigo-300 focus:ring-0"
             type="text"
             name="cname"
             id="cname"
@@ -104,12 +104,12 @@ const ContactForm = () => (
             {(msg) => <small className="text-red-600">{msg}</small>}
           </ErrorMessage>
         </div>
-        <div className="w-full flex flex-col space-y-1">
-          <label className="text-sm text-gray-700 font-medium" htmlFor="body">
+        <div className="flex flex-col w-full space-y-1">
+          <label className="text-sm font-medium text-gray-700" htmlFor="body">
             How can we help?<span className="text-indigo-500">*</span>
           </label>
           <Field
-            className="bg-white text-black rounded-md border border-gray-300 focus:outline-none focus:border-indigo-300 focus:ring-0"
+            className="text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:border-indigo-300 focus:ring-0"
             component="textarea"
             name="body"
             id="body"
@@ -122,7 +122,7 @@ const ContactForm = () => (
         </div>
         <div className="flex items-center justify-between">
           <button
-            className="wsl-btn-green px-4 py-2 overflow-hidden rounded-md border border-transparent"
+            className="px-4 py-2 overflow-hidden border border-transparent rounded-md wsl-btn-green"
             type="submit">
             Submit
           </button>

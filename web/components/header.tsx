@@ -8,18 +8,18 @@ import { make_path } from '@/lib/api';
 
 export default function Header() {
   return (
-    <header className="h-20 sticky top-0 z-10 bg-dark-blue-900 bg-opacity-90 backdrop-filter backdrop-blur">
-      <div className="px-4 mx-auto container flex items-center justify-between">
+    <header className="sticky top-0 z-10 h-20 bg-dark-blue-900 bg-opacity-90 backdrop-filter backdrop-blur">
+      <div className="container flex items-center justify-between px-4 mx-auto">
         <div className="flex items-center select-none">
           <Link href="/">
-            <a className="h-20 flex items-center focus:outline-none">
+            <a className="flex items-center h-20 focus:outline-none">
               <img
                 className="h-12"
                 src={make_path('/logo/touca-logo-transparent.svg')}
                 alt="Touca Logo"
                 loading="eager"
               />
-              <h1 className="text-2xl font-light text-white tracking-tight">
+              <h1 className="text-2xl font-light tracking-tight text-white">
                 Touca
               </h1>
             </a>
@@ -45,7 +45,7 @@ export default function Header() {
             className="wsl-header-btn-primary"
             href="https://app.touca.io"
             rel="noopener">
-            <span className="md:hidden block">Start</span>
+            <span className="block md:hidden">Start</span>
             <span className="hidden md:block">Get Started</span>
           </a>
         </nav>

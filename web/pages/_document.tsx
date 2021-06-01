@@ -62,7 +62,7 @@ export default class MyDocument extends Document {
             }}
           />
         </Head>
-        <body className="font-sans antialiased min-h-screen bg-dark-blue-900">
+        <body className="min-h-screen font-sans antialiased bg-dark-blue-900">
           <Header></Header>
           <Main />
           <Footer></Footer>

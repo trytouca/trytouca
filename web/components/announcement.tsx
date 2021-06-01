@@ -5,7 +5,7 @@
 export default function Announcement() {
   return (
     <div className="h-10 bg-light-blue-100">
-      <div className="py-2 container mx-auto text-dark-blue-700 text-center font-semibold">
+      <div className="container py-2 mx-auto font-semibold text-center text-dark-blue-700">
         This is a special broadcasting message!
       </div>
     </div>

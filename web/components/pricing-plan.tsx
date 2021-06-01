@@ -23,16 +23,16 @@ export default class PricingPlan extends React.Component<
   render() {
     return (
       <div className="flex flex-col h-full shadow-xl">
-        <div className="p-4 bg-light-blue-900 bg-opacity-75 rounded-t-lg space-y-2">
+        <div className="p-4 space-y-2 bg-opacity-75 rounded-t-lg bg-light-blue-900">
           <div className="flex justify-between">
             <div>
-              <h4 className="text-xl text-white font-medium">
+              <h4 className="text-xl font-medium text-white">
                 {this.props.plan.title}
               </h4>
             </div>
             {!!this.props.plan.fee && (
               <div className="flex items-center justify-center">
-                <p className="text-xl text-white font-medium">
+                <p className="text-xl font-medium text-white">
                   <span>${this.props.plan.fee}</span>
                   <small className="text-sm opacity-75">/User/Month</small>
                 </p>
@@ -41,7 +41,7 @@ export default class PricingPlan extends React.Component<
           </div>
           <p className="text-sm text-white">{this.props.plan.description}</p>
         </div>
-        <div className="p-4 flex-grow flex flex-col justify-between bg-light-blue-900 bg-opacity-40 rounded-b-lg space-y-8">
+        <div className="flex flex-col justify-between flex-grow p-4 space-y-8 rounded-b-lg bg-light-blue-900 bg-opacity-40">
           <div className="space-y-2">
             {this.props.plan.features.map((feature, index) => {
               return (
@@ -49,7 +49,7 @@ export default class PricingPlan extends React.Component<
                   <HiOutlineBadgeCheck
                     className="text-green-600"
                     size="1.5rem"></HiOutlineBadgeCheck>
-                  <p className="text-white font-medium leading-6">{feature}</p>
+                  <p className="font-medium leading-6 text-white">{feature}</p>
                 </div>
               );
             })}
@@ -57,7 +57,7 @@ export default class PricingPlan extends React.Component<
           <div className="flex justify-center">
             <a href={this.props.plan.button.link} rel="noopener">
               <button
-                className="wsl-btn-green py-2 px-4 text-sm leading-6 rounded-lg"
+                className="px-4 py-2 text-sm leading-6 rounded-lg wsl-btn-green"
                 type="button">
                 {this.props.plan.button.title}
               </button>

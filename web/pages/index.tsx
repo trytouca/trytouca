@@ -72,10 +72,10 @@ const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
       target="_blank"
       rel="noopener noreferrer">
       <button
-        className="px-4 py-2 bg-dark-blue-700 bg-opacity-25 text-gray-300 hover:text-white rounded-full space-x-1 focus:underline focus:outline-none group"
+        className="px-4 py-2 space-x-1 text-gray-300 bg-opacity-25 rounded-full bg-dark-blue-700 hover:text-white focus:underline focus:outline-none group"
         type="button"
         role="button">
-        <span className="text-sm leading-6 font-medium">{props.text}</span>
+        <span className="text-sm font-medium leading-6">{props.text}</span>
         <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
       </button>
     </a>
@@ -85,14 +85,14 @@ const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
 const SidePitch = (props: { input: SidePitchInput }) => {
   return (
     <>
-      <div className="p-8 col-span-1 bg-dark-blue-700 bg-opacity-30 rounded-xl shadow-2xl space-y-4">
+      <div className="col-span-1 p-8 space-y-4 shadow-2xl bg-dark-blue-700 bg-opacity-30 rounded-xl">
         <div className="flex items-center space-x-2">
           <HiOutlineBadgeCheck className="text-light-blue-700" size="2rem" />
-          <p className="text-2xl lg:text-3xl text-white font-semibold">
+          <p className="text-2xl font-semibold text-white lg:text-3xl">
             {props.input.title}
           </p>
         </div>
-        <p className="pl-10 text-xl lg:text-2xl text-gray-200">
+        <p className="pl-10 text-xl text-gray-200 lg:text-2xl">
           {props.input.description}
         </p>
       </div>
@@ -106,7 +106,7 @@ const Feature = (props: { input: FeatureInput }) => {
     <>
       <div className="flex items-center space-x-2">
         <Icon className="text-light-blue-600" size="3rem"></Icon>
-        <h3 className="text-4xl xl:text-5xl text-white font-bold">
+        <h3 className="text-4xl font-bold text-white xl:text-5xl">
           {props.input.title}
         </h3>
       </div>
@@ -123,10 +123,10 @@ const Feature = (props: { input: FeatureInput }) => {
 
 const FeatureHero = (props: { input: FeatureInput }) => {
   return (
-    <div className="flex justify-center items-center">
-      <div className="md:p-4 xl:p-6 w-full bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
+    <div className="flex items-center justify-center">
+      <div className="w-full md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
         <img
-          className="mx-auto w-full rounded-md md:rounded-xl"
+          className="w-full mx-auto rounded-md md:rounded-xl"
           src={props.input.image.link}
           alt={props.input.image.alt}
           loading="lazy"
@@ -138,7 +138,7 @@ const FeatureHero = (props: { input: FeatureInput }) => {
 
 const Testimonial = (props: { input: TestimonialInput }) => {
   return (
-    <div className="bg-dark-blue-800 bg-opacity-75 p-8 rounded-lg shadow-xl space-y-4">
+    <div className="p-8 space-y-4 bg-opacity-75 rounded-lg shadow-xl bg-dark-blue-800">
       <figcaption className="flex items-center space-x-4">
         <img
           className="w-20 h-20 rounded-2xl"
@@ -148,12 +148,12 @@ const Testimonial = (props: { input: TestimonialInput }) => {
         />
         <div className="font-medium">
           <div className="text-lg text-white">{props.input.title}</div>
-          <div className="text-light-blue-600 text-base">
+          <div className="text-base text-light-blue-600">
             {props.input.subtitle}
           </div>
         </div>
       </figcaption>
-      <blockquote className="text-gray-300 text-xl">
+      <blockquote className="text-xl text-gray-300">
         <p>{props.input.quote}</p>
       </blockquote>
       {!props.input.learnMore.hidden && (
@@ -291,14 +291,14 @@ export default function Home() {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
-        <div className="wsl-min-h-screen-1 grid lg:items-center">
+        <div className="grid wsl-min-h-screen-1 lg:items-center">
           <div className="container mx-auto">
-            <div className="pb-8 flex justify-center">
+            <div className="flex justify-center pb-8">
               <ProductHunt />
             </div>
             <div className="grid lg:grid-cols-2 lg:gap-4 lg:items-center">
-              <div className="col-span-1 mx-auto pt-24 lg:pt-8 p-8 text-white space-y-8">
-                <h2 className="wsl-text-gradient wsl-text-shadow max-w-xl text-4xl xl:text-5xl font-bold">
+              <div className="col-span-1 p-8 pt-24 mx-auto space-y-8 text-white lg:pt-8">
+                <h2 className="max-w-xl text-4xl font-bold wsl-text-gradient wsl-text-shadow xl:text-5xl">
                   {content.pitch.title}
                 </h2>
                 <p className="max-w-xl text-2xl">{content.pitch.subtitle}</p>
@@ -311,7 +311,7 @@ export default function Home() {
                     target="_blank"
                     rel="noopener noreferrer">
                     <button
-                      className="py-2 font-medium space-x-2 hover:underline focus:underline focus:outline-none group"
+                      className="py-2 space-x-2 font-medium hover:underline focus:underline focus:outline-none group"
                       type="button"
                       role="button">
                       <span>Get a Live Demo</span>
@@ -336,7 +336,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="col-span-1 max-w-screen-md h-full w-full mx-auto px-8 pb-8 lg:py-0 lg:px-4 select-none flex items-center">
+              <div className="flex items-center w-full h-full max-w-screen-md col-span-1 px-8 pb-8 mx-auto select-none lg:py-0 lg:px-4">
                 <img
                   className="rounded-lg shadow-md"
                   alt="A Screen Shot of Touca Regression Testing Platform"
@@ -349,16 +349,16 @@ export default function Home() {
         </div>
       </section>
       <section className="bg-gradient-to-r from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
-        <p className="p-8 mx-auto container text-center text-xl text-white font-semibold">
+        <p className="container p-8 mx-auto text-xl font-semibold text-center text-white">
           {content.pitch.elevator}
         </p>
       </section>
-      <section className="py-8 wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 grid">
-        <div className="container mx-auto flex flex-col justify-between">
-          <p className="px-8 py-32 max-w-3xl mx-auto text-3xl lg:text-4xl xl:text-5xl xl:leading-snug text-white font-light">
+      <section className="grid py-8 wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
+        <div className="container flex flex-col justify-between mx-auto">
+          <p className="max-w-3xl px-8 py-32 mx-auto text-3xl font-light text-white lg:text-4xl xl:text-5xl xl:leading-snug">
             {content.pitch.banner}
           </p>
-          <div className="px-8 grid xl:grid-cols-3 gap-8">
+          <div className="grid gap-8 px-8 xl:grid-cols-3">
             <SidePitch input={content.pitch.sides[0]}></SidePitch>
             <SidePitch input={content.pitch.sides[1]}></SidePitch>
             <SidePitch input={content.pitch.sides[2]}></SidePitch>
@@ -368,22 +368,22 @@ export default function Home() {
       {content.features.map((feature, index) => (
         <section
           key={index}
-          className="wsl-min-h-screen-1 bg-dark-blue-900 grid">
+          className="grid wsl-min-h-screen-1 bg-dark-blue-900">
           <div className="wsl-landing-feature-child">
             <div className="wsl-landing-feature-nest">
               <Feature input={feature}></Feature>
             </div>
-            <div className="lg:col-span-1 grid">
+            <div className="grid lg:col-span-1">
               <FeatureHero input={feature} />
             </div>
           </div>
         </section>
       ))}
-      <section className="wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800 grid">
+      <section className="grid wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
             <FaCity className="text-light-blue-600" size="3rem"></FaCity>
-            <h3 className="text-4xl xl:text-5xl text-white font-bold">
+            <h3 className="text-4xl font-bold text-white xl:text-5xl">
               Built for the Enterprise
             </h3>
             <p className="text-2xl text-gray-300">
@@ -398,7 +398,7 @@ export default function Home() {
         </div>
       </section>
       <section className="py-32 lg:pt-8 min-h-[25vh] flex items-center bg-dark-blue-800">
-        <div className="container mx-auto px-8 md:px-24 lg:px-8">
+        <div className="container px-8 mx-auto md:px-24 lg:px-8">
           <FooterCta></FooterCta>
         </div>
       </section>
