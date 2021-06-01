@@ -6,9 +6,9 @@ import { ProductHunt } from '@/lib/product-hunt';
 
 export default function FooterCta() {
   return (
-    <div className="py-8 flex justify-between">
-      <div className="text-white space-y-4">
-        <h3 className="wsl-text-shadow text-2xl xl:text-3xl font-bold">
+    <div className="flex justify-between py-8">
+      <div className="space-y-4 text-white">
+        <h3 className="text-2xl font-bold wsl-text-shadow xl:text-3xl">
           Try Touca Today
         </h3>
         <p className="text-xl">
@@ -20,7 +20,7 @@ export default function FooterCta() {
             target="_blank"
             rel="noopener noreferrer">
             <button
-              className="wsl-btn-green px-4 py-2 text-base leading-6 rounded-lg shadow-md focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400"
+              className="px-4 py-2 text-base leading-6 rounded-lg shadow-md wsl-btn-green focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400"
               type="button">
               Get Started
             </button>
@@ -28,7 +28,7 @@ export default function FooterCta() {
         </div>
       </div>
       <div className="px-16">
-        <h4 className="text-2xl text-white font-bold">
+        <h4 className="text-2xl font-bold text-white">
           We launched on Product Hunt this week!
         </h4>
         <p className="pb-4 text-xl text-light-blue-200">

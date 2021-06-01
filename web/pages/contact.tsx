@@ -28,22 +28,22 @@ export default function ContactPage() {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800">
-        <div className="wsl-min-h-screen-1 container mx-auto flex flex-col justify-center">
-          <div className="p-4 text-center space-y-2">
-            <h2 className="text-white text-4xl font-extrabold">
+        <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
+          <div className="p-4 space-y-2 text-center">
+            <h2 className="text-4xl font-extrabold text-white">
               {content.title}
             </h2>
-            <p className="text-white text-xl">{content.subtitle}</p>
+            <p className="text-xl text-white">{content.subtitle}</p>
           </div>
           <section className="p-4 min-h-[25vh] flex items-center">
-            <div className="p-8 mx-auto w-full max-w-lg bg-white rounded-xl">
+            <div className="w-full max-w-lg p-8 mx-auto bg-white rounded-xl">
               <ContactForm></ContactForm>
             </div>
           </section>
         </div>
       </section>
       <section className="py-8 min-h-[25vh] flex items-center bg-dark-blue-800">
-        <div className="container mx-auto px-8 md:px-24 lg:px-8">
+        <div className="container px-8 mx-auto md:px-24 lg:px-8">
           <FooterCta></FooterCta>
         </div>
       </section>

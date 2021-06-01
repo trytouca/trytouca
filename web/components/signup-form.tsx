@@ -54,14 +54,14 @@ const SignupForm = () => (
         </label>
         <div className="flex h-10 space-x-2">
           <Field
-            className="flex-grow rounded-md shadow-md bg-white text-black border border-gray-300 focus:outline-none focus:border-gray-500 focus:ring-0"
+            className="flex-grow text-black bg-white border border-gray-300 rounded-md shadow-md focus:outline-none focus:border-gray-500 focus:ring-0"
             type="email"
             id="umail"
             name="umail"
             placeholder="Email address"
           />
           <button
-            className="wsl-btn-green px-4 overflow-hidden rounded-md border border-transparent"
+            className="px-4 overflow-hidden border border-transparent rounded-md wsl-btn-green"
             type="submit">
             Signup for Free
           </button>

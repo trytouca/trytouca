@@ -25,14 +25,14 @@ export default function NotFoundPage() {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 to-light-blue-900">
-        <div className="px-4 wsl-min-h-screen-1 container mx-auto grid place-content-center space-y-12">
-          <div className="text-center space-y-2">
-            <h2 className="text-white text-4xl font-light">{content.title}</h2>
+        <div className="container grid px-4 mx-auto space-y-12 wsl-min-h-screen-1 place-content-center">
+          <div className="space-y-2 text-center">
+            <h2 className="text-4xl font-light text-white">{content.title}</h2>
             <p className="text-xl text-white">{content.subtitle}</p>
           </div>
-          <div className="p-8 mx-auto max-w-xl bg-dark-blue-800 bg-opacity-50 border border-dark-blue-700 rounded-xl space-y-8">
+          <div className="max-w-xl p-8 mx-auto space-y-8 bg-opacity-50 border bg-dark-blue-800 border-dark-blue-700 rounded-xl">
             <div className="">
-              <p className="text-white text-lg md:text-xl font-light">
+              <p className="text-lg font-light text-white md:text-xl">
                 {content.description}
               </p>
             </div>
