@@ -17,7 +17,7 @@
               {{ team?.name }}&thinsp;<fa-icon icon="chevron-down" size="xs">
               </fa-icon>
             </span>
-            <ul class="wsl-dropdown-menu hidden w-48"
+            <ul class="hidden w-48 wsl-dropdown-menu"
               aria-labelledby="wsl-teams-dropdown">
               <li *ngFor="let teamItem of teams"
                 (click)="switchPage(teamItem.slug)" class="wsl-dropdown-item"

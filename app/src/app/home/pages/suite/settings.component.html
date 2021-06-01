@@ -11,13 +11,13 @@
         Short user-friendly name used by the Touca server and the documents
         it generates.
       </p>
-      <form class="space-x-2 flex" [formGroup]="formName"
+      <form class="flex space-x-2" [formGroup]="formName"
         (ngSubmit)="onSubmit(EModalType.ChangeName, formName.value)" novalidate>
         <input class="wsl-input-field" type="text" id="wsl-suite-name"
           tabindex="11" required autocomplete="off"
           aria-describedby="wsl-suite-name-help" formControlName="name"
           name="name">
-        <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
+        <button class="font-normal wsl-btn-sm wsl-btn-dark" type="submit"
           tabindex="12">Update</button>
       </form>
       <small class="wsl-text-muted" id="wsl-suite-name-help"
@@ -34,13 +34,13 @@
       <p>
         Unique url-friendly identifier used in the links to your test results.
       </p>
-      <form class="space-x-2 flex" [formGroup]="formSlug"
+      <form class="flex space-x-2" [formGroup]="formSlug"
         (ngSubmit)="onSubmit(EModalType.ChangeSlug, formSlug.value)" novalidate>
         <input class="wsl-input-field" type="text" id="wsl-suite-slug"
           tabindex="13" required autocomplete="off"
           aria-describedby="wsl-suite-slug-help" formControlName="slug"
           name="slug">
-        <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
+        <button class="font-normal wsl-btn-sm wsl-btn-dark" type="submit"
           tabindex="14">Update</button>
       </form>
       <small class="wsl-text-muted" id="wsl-suite-slug-help"
@@ -50,7 +50,7 @@
       </small>
     </div>
     <div
-      class="wsl-settings-image hidden lg:block lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-3">
+      class="hidden wsl-settings-image lg:block lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-3">
       <img src="./assets/undraw/undraw_adjustments_p22m.svg" />
     </div>
     <div class="wsl-settings-section">
@@ -67,14 +67,14 @@
       <small class="wsl-text-muted">
         Duration in months.
       </small>
-      <form class="space-x-2 flex" [formGroup]="formRetainFor"
+      <form class="flex space-x-2" [formGroup]="formRetainFor"
         (ngSubmit)="onSubmit(EModalType.ChangeRetainFor, formRetainFor.value)"
         novalidate>
         <input class="wsl-input-field" type="number" id="wsl-suite-retainFor"
           tabindex="15" required autocomplete="off"
           aria-describedby="wsl-suite-retainFor-help"
           formControlName="retainFor" name="retainFor">
-        <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
+        <button class="font-normal wsl-btn-sm wsl-btn-dark" type="submit"
           tabindex="16">
           Update
         </button>
@@ -99,14 +99,14 @@
       <small class="wsl-text-muted">
         Duration in minutes.
       </small>
-      <form class="space-x-2 flex" [formGroup]="formSealAfter"
+      <form class="flex space-x-2" [formGroup]="formSealAfter"
         (ngSubmit)="onSubmit(EModalType.ChangeSealAfter, formSealAfter.value)"
         novalidate>
         <input class="wsl-input-field" type="number" id="wsl-suite-sealAfter"
           tabindex="17" required autocomplete="off"
           aria-describedby="wsl-suite-sealAfter-help"
           formControlName="sealAfter" name="sealAfter">
-        <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
+        <button class="font-normal wsl-btn-sm wsl-btn-dark" type="submit"
           tabindex="18">
           Update
         </button>

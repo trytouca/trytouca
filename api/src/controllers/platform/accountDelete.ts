@@ -10,6 +10,7 @@ import { TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
+import * as mailer from '@/utils/mailer'
 import { tracker } from '@/utils/tracker'
 
 /**
@@ -83,6 +84,14 @@ export async function accountDelete(
   logger.info('%s: deleting account', user.username)
 
   res.status(202).send()
+
+  // notify platform admins that user deleted their account
+
+  mailer.mailAdmins({
+    title: 'Account Deleted',
+    body: `User <b>${user.fullname}</b> (<a href="mailto:${user.email}">
+      ${user.username}</a>) removed their account.`
+  })
 
   // add event to tracking system
 

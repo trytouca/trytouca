@@ -1,8 +1,8 @@
 <app-header-inside></app-header-inside>
-<div class="wsl-min-h-screen-1 border-t flex flex-col">
-  <div class="bg-gray-50 border-b">
+<div class="flex flex-col border-t wsl-min-h-screen-1">
+  <div class="border-b bg-gray-50">
     <div
-      class="h-16 px-4 py-2 mx-auto container flex items-center justify-between">
+      class="container flex items-center justify-between h-16 px-4 py-2 mx-auto">
       <div class="text-lg font-medium">Account Settings</div>
       <div class="print:hidden">
         <button class="wsl-btn-sm wsl-btn-dark group" type="button"
@@ -10,11 +10,11 @@
       </div>
     </div>
   </div>
-  <div class="mx-auto container lg:grid lg:grid-cols-4 lg:gap-4">
+  <div class="container mx-auto lg:grid lg:grid-cols-4 lg:gap-4">
     <div class="lg:col-span-1">
     </div>
-    <div class="lg:col-span-2 p-4 space-y-4">
-      <form class="p-4 bg-gray-50 space-y-4" [formGroup]="accountSettingsForm"
+    <div class="p-4 space-y-4 lg:col-span-2">
+      <form class="p-4 space-y-4 bg-gray-50" [formGroup]="accountSettingsForm"
         (ngSubmit)="onSubmit(accountSettingsForm.value)" novalidate>
         <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
           Your Information
@@ -38,27 +38,27 @@
           <small id="wsl-uname-help" [ngClass]="hints.get('uname').type"
             [innerHTML]="hints.get('uname').text"></small>
         </div>
-        <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
+        <button class="font-normal wsl-btn-sm wsl-btn-dark" type="submit"
           tabindex="13">
           Update
         </button>
       </form>
-      <!-- <div class="p-4 bg-gray-50 space-y-2">
+      <!-- <div class="p-4 space-y-2 bg-gray-50">
         <h2 class="pb-1 text-xl font-medium border-b">
           Notifications
         </h2>
-        <label class="wsl-input-label sr-only" for="wsl-news">Touca
+        <label class="sr-only wsl-input-label" for="wsl-news">Touca
           Newsletter</label>
         <div class="flex items-center space-x-2">
           <input
-            class="rounded-sm shadow-sm border-gray-300 focus:border-light-blue-300 focus:ring focus:ring-light-blue-200 focus:ring-opacity-50"
+            class="border-gray-300 rounded-sm shadow-sm focus:border-light-blue-300 focus:ring focus:ring-light-blue-200 focus:ring-opacity-50"
             type="checkbox" tabindex="14">
           <p class="text-sm text-gray-600">Subscribe to our newsletter to
             receive monthly product updates.
           </p>
         </div>
       </div> -->
-      <div class="p-4 bg-gray-50 space-y-2">
+      <div class="p-4 space-y-2 bg-gray-50">
         <h2
           class="pb-1 text-xl font-medium border-b border-gray-200 wsl-text-danger">
           Danger Zone</h2>

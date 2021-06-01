@@ -1,4 +1,4 @@
-<div class="px-4 py-2 mx-auto container md:grid md:grid-cols-3 text-sm"
+<div class="container px-4 py-2 mx-auto text-sm md:grid md:grid-cols-3"
   *ngIf="!(isFirstPage() && isLastPage() && pageLengths.length === 1)">
   <div></div>
   <div class="grid grid-cols-3 text-sm">
@@ -15,7 +15,7 @@
           <span class="font-medium">{{ pageNumber }}</span>&nbsp;<fa-icon
             icon="chevron-down" size="xs"></fa-icon>
         </div>
-        <div class="wsl-dropdown-menu hidden w-48 bottom-4">
+        <div class="hidden w-48 wsl-dropdown-menu bottom-4">
           <form id="wsl-pagen-form">
             <input class="wsl-input-field" type="number"
               placeholder="Go to page..." autocomplete="off" min="1"
@@ -48,7 +48,7 @@
           <span class="font-medium">{{ pageLength }}</span>&nbsp;<fa-icon
             icon="chevron-down" size="xs"></fa-icon>
         </div>
-        <div class="wsl-dropdown-menu hidden w-48 bottom-4">
+        <div class="hidden w-48 wsl-dropdown-menu bottom-4">
           <div class="wsl-dropdown-item" *ngFor="let length of pageLengths"
             (click)="pageLength=length">
             {{ length }}

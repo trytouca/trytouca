@@ -1,4 +1,4 @@
-<div class="py-2 px-6">
+<div class="px-6 py-2">
   <div class="flex justify-between">
     <p class="text-sm">
       <b *ngIf="item.bySelf" class="font-medium">
@@ -14,8 +14,8 @@
       {{ item.at | datetime:'distance' }}
     </div>
   </div>
-  <blockquote *ngIf="item.for" class="px-4 m-2 border-l-4 text-sm">
-    <markdown [data]="item.for" class="prose prose-sm">
+  <blockquote *ngIf="item.for" class="px-4 m-2 text-sm border-l-4">
+    <markdown [data]="item.for" class="prose-sm prose">
     </markdown>
   </blockquote>
 </div>

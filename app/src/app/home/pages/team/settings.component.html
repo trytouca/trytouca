@@ -9,13 +9,13 @@
       <p>
         Short user-friendly name used on the platform and all generated reports.
       </p>
-      <form class="space-x-2 flex" [formGroup]="formName"
+      <form class="flex space-x-2" [formGroup]="formName"
         (ngSubmit)="onSubmit(EModalType.ChangeName, formName.value)" novalidate>
         <input class="wsl-input-field" type="text" id="wsl-team-name"
           tabindex="11" required autocomplete="off"
           aria-describedby="wsl-team-name-help" formControlName="name"
           name="name">
-        <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
+        <button class="font-normal wsl-btn-sm wsl-btn-dark" type="submit"
           tabindex="12">
           Update
         </button>
@@ -34,13 +34,13 @@
         Unique URL-friendly identifier for this team. Changing the slug
         invalidates previous links to the test results for this team.
       </p>
-      <form class="space-x-2 flex" [formGroup]="formSlug"
+      <form class="flex space-x-2" [formGroup]="formSlug"
         (ngSubmit)="onSubmit(EModalType.ChangeSlug, formSlug.value)" novalidate>
         <input class="wsl-input-field" type="text" id="wsl-team-slug"
           tabindex="13" required autocomplete="off"
           aria-describedby="wsl-team-slug-help" formControlName="slug"
           name="slug">
-        <button class="wsl-btn-sm wsl-btn-dark font-normal" type="submit"
+        <button class="font-normal wsl-btn-sm wsl-btn-dark" type="submit"
           tabindex="14">
           Update
         </button>
@@ -83,7 +83,7 @@
       </button>
     </div>
     <div
-      class="wsl-settings-image hidden lg:block lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-4">
+      class="hidden wsl-settings-image lg:block lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-4">
       <img src="./assets/undraw/undraw_celebration_0jvk.svg" />
     </div>
   </div>

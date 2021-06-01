@@ -25,10 +25,10 @@
             id="wsl-batch-settings" aria-haspopup="true" aria-expanded="false">
             <fa-icon icon="cog" class="wsl-text-muted"></fa-icon>
           </button>
-          <ul class="wsl-dropdown-menu hidden w-48"
+          <ul class="hidden w-48 wsl-dropdown-menu"
             aria-labelledby="wsl-batch-settings">
             <li *ngFor="let button of subButtons"
-              class="wsl-dropdown-item space-x-4" (click)="button.click()"
+              class="space-x-4 wsl-dropdown-item" (click)="button.click()"
               [title]="button.title">
               <fa-icon class="wsl-text-muted" [icon]="button.icons">
               </fa-icon>
@@ -58,7 +58,7 @@
   </div>
   <div class="py-8 bg-gray-50"
     [hidden]="currentTab !== TabType.Elements && (!hasData() || !hasItems())">
-    <div class="mx-auto container" *ngIf="overview">
+    <div class="container mx-auto" *ngIf="overview">
       <app-home-page-overview [inputs]="overview">
       </app-home-page-overview>
     </div>
@@ -68,7 +68,7 @@
       <app-home-version-navigator [suite]="suite" [params]="params">
       </app-home-version-navigator>
     </ng-container>
-    <div class="wsl-min-h-screen-4 grid place-content-center"
+    <div class="grid wsl-min-h-screen-4 place-content-center"
       *ngIf="!hasData() || !hasItems()">
       <div class="wsl-spinner">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>

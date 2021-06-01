@@ -3,7 +3,7 @@
     <div class="text-light-blue-600">
       <b>{{ meta.commentAuthor }}</b>
     </div>
-    <div class="wsl-text-muted space-x-4">
+    <div class="space-x-4 wsl-text-muted">
       <small title="{{ meta.commentTime | datetime:'format' }}">
         {{ meta.commentTime | datetime:'distance' }}
       </small>
@@ -13,16 +13,16 @@
       </small>
     </div>
   </div>
-  <blockquote class="m-2 px-4 border-l-2 border-gray-200">
-    <markdown [data]="meta.commentBody" class="prose prose-sm">
+  <blockquote class="px-4 m-2 border-l-2 border-gray-200">
+    <markdown [data]="meta.commentBody" class="prose-sm prose">
     </markdown>
   </blockquote>
   <div class="space-x-4">
-    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonReply"
+    <a class="text-sm text-blue-500" role="button" *ngIf="meta.showButtonReply"
       (click)="performAction(ActionType.Reply)">Reply</a>
-    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonUpdate"
+    <a class="text-sm text-blue-500" role="button" *ngIf="meta.showButtonUpdate"
       (click)="performAction(ActionType.Update)">Edit</a>
-    <a class="text-blue-500 text-sm" role="button" *ngIf="meta.showButtonRemove"
+    <a class="text-sm text-blue-500" role="button" *ngIf="meta.showButtonRemove"
       (click)="performAction(ActionType.Remove)">Delete</a>
   </div>
 </article>

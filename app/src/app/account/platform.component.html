@@ -1,9 +1,9 @@
 <app-notification></app-notification>
 <app-header-inside></app-header-inside>
-<div class="wsl-min-h-screen-1 border-t flex flex-col">
+<div class="flex flex-col border-t wsl-min-h-screen-1">
   <div class="bg-gray-100 border-b">
     <div
-      class="h-16 px-4 py-2 mx-auto container flex items-center justify-between">
+      class="container flex items-center justify-between h-16 px-4 py-2 mx-auto">
       <div class="text-lg font-medium">Platform Settings</div>
       <div class="print:hidden">
         <button class="wsl-btn-sm wsl-btn-dark group" type="button"
@@ -13,8 +13,8 @@
   </div>
   <div class="py-8 bg-gray-50">
     <div *ngIf="stats"
-      class="p-4 mx-auto container grid sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-      <div class="lg:col-span-1 p-4 bg-white rounded-md shadow-sm border">
+      class="container grid gap-4 p-4 mx-auto text-sm sm:grid-cols-2 lg:grid-cols-3">
+      <div class="p-4 bg-white border rounded-md shadow-sm lg:col-span-1">
         <h4 class="font-medium">Database</h4>
         <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
@@ -31,7 +31,7 @@
           </li>
         </ul>
       </div>
-      <div class="lg:col-span-1 p-4 bg-white rounded-md shadow-sm border">
+      <div class="p-4 bg-white border rounded-md shadow-sm lg:col-span-1">
         <h4 class="font-medium">Disk Space</h4>
         <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
@@ -48,7 +48,7 @@
           </li>
         </ul>
       </div>
-      <div class="lg:col-span-1 p-4 bg-white rounded-md shadow-sm border">
+      <div class="p-4 bg-white border rounded-md shadow-sm lg:col-span-1">
         <h4 class="font-medium">Comparator</h4>
         <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
@@ -69,15 +69,15 @@
       </div>
     </div>
   </div>
-  <div class="py-4 mx-auto container md:grid md:grid-cols-3 gap-4">
+  <div class="container gap-4 py-4 mx-auto md:grid md:grid-cols-3">
     <div class="md:col-span-1 md:order-2">
       <h3 class="p-4 text-xl font-medium">Recent Events</h3>
       <div class="p-4 space-y-4">
         <div
-          class="p-4 bg-gray-50 text-sm border border-gray-100 rounded-md space-y-2"
+          class="p-4 space-y-2 text-sm border border-gray-100 rounded-md bg-gray-50"
           *ngFor="let event of events">
           <div class="flex-grow">
-            <span class="text-light-blue-600 font-medium"
+            <span class="font-medium text-light-blue-600"
               [title]="event.username">{{ event.fullname}}</span>
             <span> {{ event.copyText }}</span>
           </div>
@@ -87,7 +87,7 @@
             </div>
             <div class="flex space-x-1">
               <div
-                class="px-2 py-1 flex justify-center bg-gray-100 border border-gray-300 rounded text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-200"
+                class="flex justify-center px-2 py-1 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200"
                 title="Copy email to clipboard" ngxClipboard
                 [cbContent]="event.email"
                 (cbOnSuccess)="onCopy($event, 'email address')">
@@ -95,7 +95,7 @@
                 </fa-icon>
               </div>
               <div
-                class="px-2 py-1 flex justify-center bg-gray-100 border border-gray-300 rounded text-xs text-gray-500 font-medium cursor-pointer hover:bg-gray-200"
+                class="flex justify-center px-2 py-1 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200"
                 *ngIf="event.copyLink" title="Copy link to clipboard"
                 ngxClipboard [cbContent]="event.copyLink"
                 (cbOnSuccess)="onCopy($event, 'link')">
@@ -105,7 +105,7 @@
           </div>
         </div>
         <div
-          class="p-4 bg-gray-50 text-sm leading-6 border border-gray-100 rounded-md"
+          class="p-4 text-sm leading-6 border border-gray-100 rounded-md bg-gray-50"
           *ngIf="events.length === 0">
           This section lists noteworthy user events that may require your
           assistance. These events include account creation, password reset,
@@ -118,10 +118,10 @@
       <h3 class="p-4 text-xl font-medium">Users</h3>
       <ul *ngIf="stats">
         <li
-          class="px-4 h-8 flex items-center rounded-md transition duration-100 hover:bg-gray-50"
+          class="flex items-center h-8 px-4 transition duration-100 rounded-md hover:bg-gray-50"
           *ngFor="let account of stats.users">
-          <div class="flex-grow flex justify-between space-x-4">
-            <div class="w-40 font-medium whitespace-nowrap truncate"
+          <div class="flex justify-between flex-grow space-x-4">
+            <div class="w-40 font-medium truncate whitespace-nowrap"
               [ngClass]="{ 'text-gray-300 line-through': account.suspended }">
               {{ account.fullname || 'Unknown' }}
               <span class="text-sm text-gray-500"
@@ -129,27 +129,27 @@
             </div>
             <div class="w-24 whitespace-nowrap">
               <span
-                class="px-2 py-1 bg-gray-100 text-sm text-gray-700 rounded-md">
+                class="px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded-md">
                 {{ account.username }}
               </span>
             </div>
             <div class="w-24">
               <span
-                class="px-2 py-1 bg-gray-100 text-sm text-gray-700 rounded-md">
+                class="px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded-md">
                 {{ account.role }}
               </span>
             </div>
           </div>
           <div wslDropdown
-            class="p-1 flex items-center text-gray-300 hover:text-gray-700 cursor-pointer select-none">
+            class="flex items-center p-1 text-gray-300 cursor-pointer select-none hover:text-gray-700">
             <svg xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4 wsl-dropdown-toggle" fill="none"
+              class="w-4 h-4 wsl-dropdown-toggle" fill="none"
               viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round"
                 stroke-width="2"
                 d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
             </svg>
-            <div class="wsl-dropdown-menu hidden w-48 text-sm"
+            <div class="hidden w-48 text-sm wsl-dropdown-menu"
               aria-labelledby="wsl-user-dropdown">
               <div class="wsl-dropdown-item" ngxClipboard
                 [cbContent]="account.email"

@@ -1,5 +1,5 @@
 <div class="space-y-4">
-  <img class="max-h-48 mx-auto"
+  <img class="mx-auto max-h-48"
     src="./assets/undraw/undraw_Mailbox_re_dvds.svg" />
   <div class="text-center">
     <ng-container *ngIf="isBackButtonShown">
@@ -19,7 +19,7 @@
     </ng-container>
   </div>
   <div class="flex justify-between" *ngIf="isBackButtonShown">
-    <button class="wsl-btn-lg wsl-btn-light flex items-center space-x-1"
+    <button class="flex items-center space-x-1 wsl-btn-lg wsl-btn-light"
       type="button" role="button" (click)="back()" tabindex="4">
       <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
         viewBox="0 0 24 24" stroke="currentColor">
@@ -28,7 +28,7 @@
       </svg>
       <span>Back</span>
     </button>
-    <button class="wsl-btn-lg wsl-btn-light flex items-center space-x-1"
+    <button class="flex items-center space-x-1 wsl-btn-lg wsl-btn-light"
       type="button" role="button" (click)="resend()" tabindex="5">
       <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
         viewBox="0 0 24 24" stroke="currentColor">

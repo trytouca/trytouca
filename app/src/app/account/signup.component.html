@@ -1,8 +1,8 @@
-<div class="h-full pb-4 flex flex-col">
+<div class="flex flex-col h-full pb-4">
   <ng-container *ngIf="isFormShown">
     <h2 class="text-2xl font-semibold">Get Started for Free</h2>
-    <div class="flex-grow flex items-center">
-      <form class="py-4 flex-grow space-y-4" [formGroup]="formSignup"
+    <div class="flex items-center flex-grow">
+      <form class="flex-grow py-4 space-y-4" [formGroup]="formSignup"
         (ngSubmit)="onSubmit(formSignup.value)" novalidate>
         <app-alert [alert]="alert" *ngIf="alert"></app-alert>
         <div>
@@ -11,7 +11,7 @@
             name="email" formControlName="email"
             aria-describedby="wsl-email-help" required autocomplete="email"
             data-lpignore="true" tabindex="1">
-          <div class="wsl-text-danger space-x-1" id="wsl-email-help"
+          <div class="space-x-1 wsl-text-danger" id="wsl-email-help"
             [hidden]="isFormValid()">
             <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg"
               fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -23,8 +23,9 @@
           </div>
         </div>
         <small class="block wsl-text-muted">By creating an account, you agree to
-          our <a class="text-light-blue-600" href="https://docs.touca.io/legal/terms"
-            target="_blank">Terms of Service</a> and <a class="text-light-blue-600"
+          our <a class="text-light-blue-600"
+            href="https://docs.touca.io/legal/terms" target="_blank">Terms of
+            Service</a> and <a class="text-light-blue-600"
             href="https://docs.touca.io/legal/privacy" target="_blank">Privacy
             Policy</a>.
         </small>
@@ -47,7 +48,7 @@
       </form>
     </div>
   </ng-container>
-  <div class="flex-grow grid place-content-center" *ngIf="!isFormShown">
+  <div class="grid flex-grow place-content-center" *ngIf="!isFormShown">
     <app-account-mailbox [input]="mailboxInput"
       (action)="mailboxAction($event)">
     </app-account-mailbox>

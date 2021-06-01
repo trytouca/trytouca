@@ -17,7 +17,7 @@
               {{ suite?.suiteName }}&thinsp;<fa-icon icon="chevron-down"
                 size="xs"></fa-icon>
             </span>
-            <ul class="wsl-dropdown-menu hidden w-48"
+            <ul class="hidden w-48 wsl-dropdown-menu"
               aria-labelledby="wsl-suites-dropdown">
               <li *ngFor="let suiteItem of suites"
                 (click)="switchPage(suiteItem.suiteSlug)"
@@ -42,7 +42,7 @@
           </svg>
           Submit
         </button>
-        <div class="wsl-dropdown-menu hidden w-80"
+        <div class="hidden wsl-dropdown-menu w-80"
           aria-labelledby="wsl-suite-quick-settings">
           <div class="wsl-quick-settings-header">
             <svg class="h-4" xmlns="http://www.w3.org/2000/svg" fill="none"

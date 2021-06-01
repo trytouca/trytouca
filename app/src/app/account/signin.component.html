@@ -1,7 +1,7 @@
-<div class="h-full flex flex-col">
+<div class="flex flex-col h-full">
   <h2 class="text-2xl font-semibold">Welcome Back!</h2>
-  <div class="flex-grow flex items-center">
-    <form class="py-4 flex-grow space-y-4" [formGroup]="formSignin"
+  <div class="flex items-center flex-grow">
+    <form class="flex-grow py-4 space-y-4" [formGroup]="formSignin"
       (ngSubmit)="onSubmit(formSignin.value)" novalidate>
       <app-alert [alert]="alert" *ngIf="alert"></app-alert>
       <div>

@@ -8,11 +8,11 @@
   <div wslDropdown>
     <button type="button" id="dropdown-button-filter" aria-haspopup="true"
       aria-expanded="false"
-      class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle h-full">
+      class="h-full wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle">
       Filter: <b class="font-medium">{{ filterName }}</b>&nbsp;<fa-icon
         icon="chevron-down" size="xs" class="opacity-50"></fa-icon>
     </button>
-    <ul class="wsl-dropdown-menu hidden w-48"
+    <ul class="hidden w-48 wsl-dropdown-menu"
       aria-labelledby="dropdown-button-filter">
       <li *ngFor="let filter of filters" (click)="filterName=filter.key"
         class="wsl-dropdown-item">
@@ -23,11 +23,11 @@
   <div wslDropdown>
     <button type="button" id="dropdown-button-sort" aria-haspopup="true"
       aria-expanded="false" [disabled]="isSearchActive()"
-      class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle h-full">
+      class="h-full wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle">
       Sort: <b class="font-medium">{{ sorterName }}</b>&nbsp;<fa-icon
         icon="chevron-down" size="xs" class="opacity-50"></fa-icon>
     </button>
-    <ul class="wsl-dropdown-menu hidden w-48"
+    <ul class="hidden w-48 wsl-dropdown-menu"
       aria-labelledby="dropdown-button-sort">
       <li *ngFor="let sorter of sorters" (click)="sorterName=sorter.key"
         class="wsl-dropdown-item">
@@ -37,7 +37,7 @@
   </div>
   <div>
     <button (click)="sortOrderToggle()" [disabled]="isSearchActive()"
-      class="wsl-btn-sm wsl-btn-muted h-full">
+      class="h-full wsl-btn-sm wsl-btn-muted">
       <fa-icon [icon]="sortOrderIcon"></fa-icon>
     </button>
   </div>
@@ -45,7 +45,7 @@
 <ng-container
   *ngIf="stats.totalUnpaginatedRows !== stats.totalRows || (stats.totalUnpaginatedRows === 0 && stats.totalRows === 0)">
   <div *ngIf="stats.totalUnpaginatedRows !== 0"
-    class="mt-4 flex justify-between items-center text-sm">
+    class="flex items-center justify-between mt-4 text-sm">
     <p>
       <b>{{ stats.totalUnpaginatedRows }}</b> of <b>{{ stats.totalRows }}</b>
       rows match this filter.
@@ -55,9 +55,9 @@
     </button>
   </div>
   <div *ngIf="stats.totalUnpaginatedRows === 0"
-    class="mt-4 p-2 flex justify-center items-center bg-gray-100 border"
+    class="flex items-center justify-center p-2 mt-4 bg-gray-100 border"
     style="min-height: 20vh;">
-    <div class="flex flex-col space-y-4 text-center text-sm">
+    <div class="flex flex-col space-y-4 text-sm text-center">
       <p>
         {{ stats.totalRows | i18nPlural: { '=0': 'This page appears to have no result.', '=1': 'The row in this list does not match the specified filter.', 'other': 'None of the # rows in this list matches the specified filter.' } }}
       </p>
