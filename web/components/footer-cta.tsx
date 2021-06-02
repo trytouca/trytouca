@@ -29,7 +29,7 @@ export default function FooterCta() {
       </div>
       <div className="px-16">
         <h4 className="text-2xl font-bold text-white">
-          We launched on Product Hunt this week!
+          We launched on Product Hunt last week!
         </h4>
         <p className="pb-4 text-xl text-light-blue-200">
           Send us good vibes if you feel like it.
