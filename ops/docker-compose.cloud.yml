@@ -82,7 +82,13 @@ services:
   touca_blog:
     image: ghost:4-alpine
     environment:
-      url: https://blog.touca.io
+      url: <SECRET>
+      mail__transport: SMTP
+      mail__options__host: <SECRET>
+      mail__options__port: 465
+      mail__options__service: SES
+      mail__options__auth__user: <SECRET>
+      mail__options__auth__pass: <SECRET>
     volumes:
       - ./local/data/ghost:/var/lib/ghost/content
     ports:
