@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 import type { UserLookupResponse } from '@/core/models/commontypes';
 import { EPlatformRole } from '@/core/models/commontypes';
 import { AuthService, UserService } from '@/core/services';
+import { intercomClient } from '@/shared/utils/intercom';
 
 @Component({
   selector: 'app-header-inside',
@@ -34,9 +35,10 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
     private userService: UserService,
     faIconLibrary: FaIconLibrary
   ) {
-    this._subUser = this.userService.currentUser$.subscribe(
-      (user) => (this.currentUser = user)
-    );
+    this._subUser = this.userService.currentUser$.subscribe((user) => {
+      this.currentUser = user;
+      intercomClient.boot(user);
+    });
     faIconLibrary.addIcons(faChevronDown, faInbox, faUser);
   }
 

@@ -7,6 +7,8 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs/operators';
 
+import { intercomClient } from '@/shared/utils/intercom';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
@@ -33,6 +35,7 @@ export class AppComponent {
       .subscribe((event: { page?: string; title?: string }) => {
         const title = 'title' in event ? `${event.title} - Touca` : 'Touca';
         this.titleService.setTitle(title);
+        intercomClient.update();
       });
   }
 }

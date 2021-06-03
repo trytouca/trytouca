@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { AuthService } from '@/core/services';
+import { intercomClient } from '@/shared/utils/intercom';
 
 @Component({
   selector: 'app-header-outside',
@@ -16,7 +17,9 @@ export class HeaderOutsideComponent {
   /**
    *
    */
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+    intercomClient.boot();
+  }
 
   /**
    *

@@ -8,5 +8,6 @@ export const environment = {
   apiUrl: 'http://localhost:8081',
   appVersion: version,
   dataRefreshInterval: 10000,
+  intercomId: '',
   production: false
 };

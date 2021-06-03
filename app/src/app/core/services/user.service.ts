@@ -12,6 +12,7 @@ import {
   UserLookupResponse
 } from '@/core/models/commontypes';
 import { errorLogger } from '@/shared/utils/errorLogger';
+import { intercomClient } from '@/shared/utils/intercom';
 
 import { AlertKind, AlertService } from './alert.service';
 import { ApiService } from './api.service';
@@ -99,5 +100,6 @@ export class UserService {
       return;
     }
     this.currentUser = undefined;
+    intercomClient.shutdown();
   }
 }

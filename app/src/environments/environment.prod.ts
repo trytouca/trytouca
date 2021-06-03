@@ -8,5 +8,6 @@ export const environment = {
   apiUrl: '/api',
   appVersion: version,
   dataRefreshInterval: 10000,
+  intercomId: 'av9os1kf',
   production: true
 };
