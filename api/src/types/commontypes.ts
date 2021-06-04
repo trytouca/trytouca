@@ -55,6 +55,10 @@ export type Userinfo = {
  *      type: string
  *    platformRole:
  *      $ref: '#/components/schemas/CT_EPlatformRole'
+ *    user_hash:
+ *      type: string
+ *    user_id:
+ *      type: string
  *    username:
  *      type: string
  */
@@ -63,6 +67,8 @@ export type UserLookupResponse = {
   email: string
   fullname: string
   platformRole: EPlatformRole
+  user_hash: string
+  user_id: string
   username: string
 }
 

@@ -137,12 +137,13 @@ export async function authVerifyCreate(
 
   // add event to tracking system
 
-  tracker.create(newUser, {
-    $email: newUser.email,
-    $created: newUser.createdAt.toISOString(),
-    $ip: askedIpAddress
-  })
-  tracker.track(newUser, 'created_account')
+  tracker
+    .create(newUser, {
+      email: newUser.email,
+      created_at: newUser.createdAt,
+      ip_address: askedIpAddress
+    })
+    .then(() => tracker.track(newUser, 'created_account'))
 
   return res.status(201).json({})
 }

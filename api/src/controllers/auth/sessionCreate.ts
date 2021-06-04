@@ -118,7 +118,7 @@ export async function authSessionCreate(
 
   // add event to tracking system
 
-  tracker.create(user, { $ip: askedIpAddress })
+  tracker.create(user, { ip_address: askedIpAddress })
   tracker.track(user, 'logged_in')
 
   // return session token to the user

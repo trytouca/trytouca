@@ -28,6 +28,8 @@ export type UserLookupResponse = {
   email: string;
   fullname: string;
   platformRole: EPlatformRole;
+  user_id: string;
+  user_hash: string;
   username: string;
 };
 

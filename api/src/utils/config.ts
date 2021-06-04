@@ -77,6 +77,8 @@ interface IConfig {
     }
   }
   tracking: {
+    intercom_secret: string
+    intercom_token: string
     mixpanel: string
   }
   webapp: {
@@ -172,6 +174,8 @@ export const config: IConfig = {
     }
   },
   tracking: {
+    intercom_secret: env.INTERCOM_IDENTITY_SECRET,
+    intercom_token: env.INTERCOM_ACCESS_TOKEN,
     mixpanel: env.MIXPANEL_PROJECT_TOKEN
   },
   webapp: {

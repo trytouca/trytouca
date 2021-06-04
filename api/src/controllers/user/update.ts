@@ -62,12 +62,10 @@ export async function ctrlUserUpdate(
 
   // add event to tracking system
 
-  if (user.fullname === '' && proposed.fullname) {
-    tracker.create(user, {
-      $name: proposed.fullname,
-      username: proposed.username
-    })
-  }
+  tracker.create(user, {
+    name: proposed.fullname,
+    username: proposed.username
+  })
   tracker.track(user, 'updated_profile')
 
   return res.status(204).send()

@@ -89,8 +89,7 @@ export async function accountDelete(
 
   mailer.mailAdmins({
     title: 'Account Deleted',
-    body: `User <b>${user.fullname}</b> (<a href="mailto:${user.email}">
-      ${user.username}</a>) removed their account.`
+    body: `User <b>${user.fullname}</b> (<a href="mailto:${user.email}">${user.username}</a>) removed their account.`
   })
 
   // add event to tracking system

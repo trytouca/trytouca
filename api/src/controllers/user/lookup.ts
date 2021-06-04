@@ -7,6 +7,7 @@ import { NextFunction, Request, Response } from 'express'
 import { IUser, UserModel } from '@/schemas/user'
 import type { UserLookupResponse } from '@/types/commontypes'
 import logger from '@/utils/logger'
+import { intercomHash } from '@/utils/tracker'
 
 /**
  *
@@ -37,6 +38,8 @@ export async function userLookup(
     email: user.email,
     fullname: user.fullname,
     platformRole: info.platformRole,
+    user_id: user._id.toHexString(),
+    user_hash: intercomHash(user._id.toHexString()),
     username: user.username
   }
 

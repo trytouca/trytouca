@@ -17,9 +17,8 @@ class IntercomClient {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     (window as any).Intercom('boot', {
       app_id: environment.intercomId,
-      email: user?.email,
-      name: user?.fullname,
-      username: user?.username
+      user_id: user?.user_id,
+      user_hash: user?.user_hash
     });
   }
   public shutdown() {
