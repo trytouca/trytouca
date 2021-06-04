@@ -293,9 +293,6 @@ export default function Home() {
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
         <div className="grid wsl-min-h-screen-1 lg:items-center">
           <div className="container mx-auto">
-            <div className="flex justify-center pb-8">
-              <ProductHunt />
-            </div>
             <div className="grid lg:grid-cols-2 lg:gap-4 lg:items-center">
               <div className="col-span-1 p-8 pt-24 mx-auto space-y-8 text-white lg:pt-8">
                 <h2 className="max-w-xl text-4xl font-bold wsl-text-gradient wsl-text-shadow xl:text-5xl">
