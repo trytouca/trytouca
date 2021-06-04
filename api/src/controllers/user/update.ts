@@ -55,10 +55,12 @@ export async function ctrlUserUpdate(
 
   // notify platform admins that a new user account was verified.
 
-  mailer.mailAdmins({
-    title: 'New Account Verified',
-    body: `New account created for <b>${proposed.fullname}</b> (<a href="mailto:${user.email}">${proposed.username}</a>).`
-  })
+  if (user.fullname === '' && proposed.fullname) {
+    mailer.mailAdmins({
+      title: 'New Account Verified',
+      body: `New account created for <b>${proposed.fullname}</b> (<a href="mailto:${user.email}">${proposed.username}</a>).`
+    })
+  }
 
   // add event to tracking system
 
