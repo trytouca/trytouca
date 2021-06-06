@@ -336,7 +336,7 @@ export default function Home() {
               <div className="flex items-center w-full h-full max-w-screen-md col-span-1 px-8 pb-8 mx-auto select-none lg:py-0 lg:px-4">
                 <img
                   className="rounded-lg shadow-md"
-                  alt="A Screen Shot of Touca Regression Testing Platform"
+                  alt="Touca Continuous Regression Testing"
                   src={make_path('/images/touca-atf-visual.png')}
                   loading="eager"
                 />
