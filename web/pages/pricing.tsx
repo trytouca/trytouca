@@ -99,7 +99,7 @@ const content: PageContent = {
           C++ programming language.`,
           `We are developing SDKs for Python, Java, and Javascript as part of
           our 2021 product roadmap. Our Python SDK is in its final evaluation
-          phase and is scheduled to be released by May 2021.`
+          phase and is scheduled to be released by June 2021.`
         ]
       },
       {
