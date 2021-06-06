@@ -32,7 +32,7 @@ export async function hasElement(
   const elementSlug = req.params.element
 
   const element = await ElementModel.findOne({
-    name: elementSlug,
+    slug: elementSlug,
     suiteId: suite._id
   })
 

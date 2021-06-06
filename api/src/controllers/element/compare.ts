@@ -134,7 +134,7 @@ export async function elementCompare(
     params.dstElement = params.srcElement
   } else {
     params.dstElement = await ElementModel.findOne(
-      { name: names.dstElement, suiteId: params.dstSuite._id },
+      { slug: names.dstElement, suiteId: params.dstSuite._id },
       { _id: 1 }
     )
     if (!params.dstElement) {

@@ -1,7 +1,7 @@
 <div *ngIf="isApiConnectionDown">
   <app-header-outside></app-header-outside>
   <app-server-down></app-server-down>
-  <app-footer-inside></app-footer-inside>
+  <app-footer></app-footer>
 </div>
 <div *ngIf="!isApiConnectionDown">
   <app-header-inside></app-header-inside>
@@ -13,5 +13,5 @@
       </router-outlet>
     </div>
   </div>
-  <app-footer-inside></app-footer-inside>
+  <app-footer></app-footer>
 </div>

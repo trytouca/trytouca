@@ -13,6 +13,10 @@ const elementSchema = new mongoose.Schema(
       required: true,
       type: String
     },
+    slug: {
+      required: true,
+      type: String
+    },
     suiteId: {
       ref: 'Suite',
       required: true,
@@ -24,13 +28,14 @@ const elementSchema = new mongoose.Schema(
   }
 )
 
-elementSchema.index({ name: 1, suiteId: 1 })
+elementSchema.index({ slug: 1, suiteId: 1 })
 
 /**
  *
  */
 export interface IElementDocument extends mongoose.Document {
   name: string
+  slug: string
   suiteId: mongoose.Types.ObjectId
 }
 

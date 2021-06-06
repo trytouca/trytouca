@@ -726,10 +726,13 @@ export type BatchComparisonResponse = {
  *      type: number
  *    name:
  *      type: string
+ *    slug:
+ *      type: string
  */
 type ElementListResponseItem = {
   metricsDuration: number
   name: string
+  slug: string
 }
 
 /**

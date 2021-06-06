@@ -43,7 +43,8 @@ async function elementListImpl(
       $project: {
         _id: 0,
         metricsDuration: '$meta.metricsDuration',
-        name: '$elementDoc.name'
+        name: '$elementDoc.name',
+        slug: '$elementDoc.slug'
       }
     }
   ])

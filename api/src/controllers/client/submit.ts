@@ -25,14 +25,14 @@ const fbs = touca.fbs
 type TeamSlug = string
 type SuiteSlug = string
 type BatchSlug = string
-type ElementSlug = string
+type ElementName = string
 
 type SubmissionItem = {
   builtAt: Date
   teamName: TeamSlug
   suiteName: SuiteSlug
   batchName: BatchSlug
-  elementName: ElementSlug
+  elementName: ElementName
   raw: Buffer
 
   teamId?: string
@@ -42,7 +42,7 @@ type SubmissionItem = {
   messageId?: string
 }
 
-type ElementMap = Map<ElementSlug, SubmissionItem>
+type ElementMap = Map<ElementName, SubmissionItem>
 type BatchMap = Map<BatchSlug, ElementMap>
 type SuiteMap = Map<SuiteSlug, BatchMap>
 type TeamMap = Map<TeamSlug, SuiteMap>
@@ -132,7 +132,7 @@ async function buildSubmissionTree(
     }
     const batchMap = suiteMap.get(suite)
     if (!batchMap.has(batch)) {
-      batchMap.set(batch, new Map<ElementSlug, SubmissionItem>())
+      batchMap.set(batch, new Map<ElementName, SubmissionItem>())
     }
     const elementMap = batchMap.get(batch)
     if (elementMap.has(element)) {
@@ -179,12 +179,12 @@ async function processElement(
   team: ITeamDocument,
   suite: ISuiteDocument,
   batch: IBatchDocument,
-  elementSlug: ElementSlug,
+  elementName: ElementName,
   submission: SubmissionItem
 ): Promise<Job<IElementDocument>> {
-  const tuple = [team.slug, suite.slug, batch.slug, elementSlug].join('/')
+  const tuple = [team.slug, suite.slug, batch.slug, elementName].join('/')
   try {
-    const element = await ensureElement(team, suite, batch, elementSlug)
+    const element = await ensureElement(team, suite, batch, elementName)
     const message = await ensureMessage(
       user,
       team,
@@ -213,13 +213,13 @@ async function processElement(
     logger.info('%s: processed element', tuple)
 
     rclient.removeCached(
-      `route_elementLookup_${team.slug}_${suite.slug}_${elementSlug}`
+      `route_elementLookup_${team.slug}_${suite.slug}_${elementName}`
     )
     rclient.removeCached(`route_elementList_${team.slug}_${suite.slug}`)
 
     return { slug: tuple, doc: element }
   } catch (err) {
-    return makeError(elementSlug, err)
+    return makeError(elementName, err)
   }
 }
 
@@ -245,8 +245,8 @@ async function processBatch(
 
     // concurrently process submitted messages that belong to this batch
 
-    const jobs = Array.from(elementMap).map(([elementSlug, submission]) => {
-      return processElement(user, team, suite, batch, elementSlug, submission)
+    const jobs = Array.from(elementMap).map(([elementName, submission]) => {
+      return processElement(user, team, suite, batch, elementName, submission)
     })
 
     const results = await Promise.all(jobs)
@@ -607,14 +607,14 @@ async function ensureElement(
   team: ITeamDocument,
   suite: ISuiteDocument,
   batch: IBatchDocument,
-  elementSlug: string
+  elementName: string
 ) {
-  const tuple = [team.slug, suite.slug, batch.slug, elementSlug].join('/')
+  const tuple = [team.slug, suite.slug, batch.slug, elementName].join('/')
 
   // check if element is already registered
 
   const element = await ElementModel.findOne({
-    name: elementSlug,
+    slug: elementName,
     suiteId: suite._id
   })
 
@@ -629,7 +629,8 @@ async function ensureElement(
 
   logger.info('%s: registered element', tuple)
   return await ElementModel.create({
-    name: elementSlug,
+    name: elementName,
+    slug: elementName,
     suiteId: suite._id
   })
 }

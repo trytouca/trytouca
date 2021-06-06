@@ -141,7 +141,7 @@ export async function isClientAuthenticated(
   const user = await isAuthenticatedImpl({
     agent: req.headers['user-agent'],
     ipAddr: req.ip,
-    token: req.headers['authorization'].split(' ')[1]
+    token: req.headers['authorization']?.split(' ')[1]
   })
   if (!user) {
     return next({

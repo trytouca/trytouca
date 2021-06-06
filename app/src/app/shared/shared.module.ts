@@ -13,7 +13,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 
 import {
   AlertComponent,
-  FooterInsideComponent,
+  FooterComponent,
   HeaderInsideComponent,
   HeaderOutsideComponent,
   NotificationComponent,
@@ -38,7 +38,7 @@ import { DateTimePipe } from './pipes';
     AutofocusDirective,
     DateTimePipe,
     DropdownDirective,
-    FooterInsideComponent,
+    FooterComponent,
     HeaderInsideComponent,
     HeaderOutsideComponent,
     NotificationComponent,
@@ -53,7 +53,7 @@ import { DateTimePipe } from './pipes';
     DialogModule,
     DropdownDirective,
     FontAwesomeModule,
-    FooterInsideComponent,
+    FooterComponent,
     FormsModule,
     HeaderInsideComponent,
     HeaderOutsideComponent,
