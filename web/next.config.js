@@ -9,6 +9,12 @@ module.exports = withPWA({
   },
   poweredByHeader: false,
   reactStrictMode: true,
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback.fs = false;
+    }
+    return config;
+  },
   async redirects() {
     return [
       {
