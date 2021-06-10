@@ -9,7 +9,11 @@ export type Input = {
   title: string;
   description: string;
   features: string[];
-  fee?: number;
+  fee?: {
+    prefix?: string;
+    highlight: string;
+    suffix?: string;
+  };
   button: {
     title: string;
     link: string;
@@ -30,11 +34,20 @@ export default class PricingPlan extends React.Component<
                 {this.props.plan.title}
               </h4>
             </div>
-            {!!this.props.plan.fee && (
+            {this.props.plan.fee && (
               <div className="flex items-center justify-center">
                 <p className="text-xl font-medium text-white">
-                  <span>${this.props.plan.fee}</span>
-                  <small className="text-sm opacity-75">/User/Month</small>
+                  {this.props.plan.fee.prefix && (
+                    <span className="text-sm opacity-75">
+                      {this.props.plan.fee.prefix}
+                    </span>
+                  )}
+                  <span className="px-1">${this.props.plan.fee.highlight}</span>
+                  {this.props.plan.fee.suffix && (
+                    <span className="text-sm opacity-75">
+                      {this.props.plan.fee.suffix}
+                    </span>
+                  )}
                 </p>
               </div>
             )}
