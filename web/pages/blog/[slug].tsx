@@ -25,7 +25,7 @@ export default function BlogPage(props: StaticProps) {
   return (
     <>
       <Head>
-        <title>Touca Blog - Sharing Vision</title>
+        <title>Touca Blog - {props.main_article.title}</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"

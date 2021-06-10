@@ -23,8 +23,8 @@ interface PageContent {
 }
 
 const content: PageContent = {
-  title: 'Pricing that fits your size.',
-  subtitle: 'Scale as you grow. Free forever for individuals and non-profits.',
+  title: 'Simple pricing. Whenever you are ready.',
+  subtitle: 'Free forever for individuals and non-profits.',
   plans: [
     {
       title: 'Free',
@@ -35,7 +35,6 @@ const content: PageContent = {
         '50 versions per month',
         '1 Month Data Retention'
       ],
-      fee: 0,
       button: {
         title: 'Get Started',
         link: 'https://app.touca.io/account/signup?plan=free'
@@ -43,7 +42,10 @@ const content: PageContent = {
     },
     {
       title: 'Startup',
-      fee: 25,
+      fee: {
+        highlight: '25',
+        suffix: '/User/Month'
+      },
       description: 'Up to 20 users',
       features: [
         'Unlimited Suites',
@@ -60,6 +62,10 @@ const content: PageContent = {
     },
     {
       title: 'Enterprise',
+      fee: {
+        prefix: 'Starting',
+        highlight: '1000'
+      },
       description: 'Unlimited Users',
       features: [
         'Unlimited Suites',
