@@ -18,11 +18,34 @@ module.exports = {
           700: colors.lightBlue[900]
         },
         'light-blue': colors.lightBlue
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            color: colors.gray[300],
+            p: {
+              color: colors.white
+            },
+            h2: {
+              color: colors.white
+            },
+            h3: {
+              color: colors.white
+            },
+            a: {
+              color: colors.lightBlue[400],
+              '&:hover': {
+                color: colors.lightBlue[300]
+              },
+              textDecoration: 'none'
+            }
+          }
+        }
       }
     }
   },
   variants: {
     extend: {}
   },
-  plugins: [require('@tailwindcss/forms')]
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')]
 };

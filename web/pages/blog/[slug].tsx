@@ -1,0 +1,111 @@
+/**
+ * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
+ */
+
+import Head from 'next/head';
+import { HiOutlineCalendar, HiOutlineClock } from 'react-icons/hi';
+import remark from 'remark';
+import html from 'remark-html';
+
+import FooterCta from '@/components/footer-cta';
+import { Article, BlogPostArchive, getArticle, getArticles } from '@/lib/blog';
+
+type StaticProps = {
+  archived_articles: Article[];
+  main_article: Article;
+};
+
+type Params = {
+  params: {
+    slug: string;
+  };
+};
+
+export default function BlogPage(props: StaticProps) {
+  return (
+    <>
+      <Head>
+        <title>Touca Blog - Sharing Vision</title>
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+      </Head>
+      <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
+        <div className="min-h-[15vh]"></div>
+        <div className="container flex flex-col justify-center p-16 mx-auto space-y-8 wsl-min-h-screen-1">
+          <div className="mx-auto space-y-8">
+            <h3 className="max-w-4xl text-5xl font-bold text-white">
+              {props.main_article.title}
+            </h3>
+            <figcaption className="flex items-center space-x-4">
+              <img
+                className="w-16 h-16 rounded-2xl"
+                width="64px"
+                height="64px"
+                src={props.main_article.authorPhoto}
+                alt={props.main_article.authorName}
+                loading="lazy"
+              />
+              <div className="font-medium">
+                <div className="text-lg text-white">
+                  {props.main_article.authorName}
+                </div>
+                <div className="flex space-x-4">
+                  <div className="flex items-center space-x-1 font-medium text-gray-300">
+                    <HiOutlineCalendar className="opacity-50" size="1.5rem" />
+                    <span className="text-sm">
+                      {props.main_article.publishDate}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-1 font-medium text-gray-300">
+                    <HiOutlineClock className="opacity-50" size="1.5rem" />
+                    <span className="text-sm uppercase">
+                      {props.main_article.readTime} Min
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </figcaption>
+          </div>
+          <article
+            className="mx-auto prose lg:prose-xl"
+            dangerouslySetInnerHTML={{ __html: props.main_article.content }}
+          />
+        </div>
+      </section>
+      {props.archived_articles.length !== 0 && (
+        <section className="bg-dark-blue-900">
+          <BlogPostArchive articles={props.archived_articles}></BlogPostArchive>
+        </section>
+      )}
+      <section className="py-8 min-h-[25vh] flex items-center bg-dark-blue-800">
+        <div className="container px-8 mx-auto md:px-24 lg:px-8">
+          <FooterCta></FooterCta>
+        </div>
+      </section>
+    </>
+  );
+}
+
+export async function getStaticProps({ params }: Params) {
+  const archived_articles = getArticles().filter((v) => v.slug !== params.slug);
+  const main_article = getArticle(params.slug);
+  const result = await remark()
+    .use(html)
+    .process(main_article.content || '');
+  main_article.content = result.toString();
+  return {
+    props: {
+      main_article,
+      archived_articles
+    }
+  };
+}
+
+export async function getStaticPaths() {
+  return {
+    paths: getArticles().map((v) => ({ params: { slug: v.slug } })),
+    fallback: false
+  };
+}
