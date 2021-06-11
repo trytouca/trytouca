@@ -1,6 +1,4 @@
-/**
- * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
- */
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 #ifndef _WIN32
 #if ((defined(_MSVC_LANG) && _MSVC_LANG >= 201703L) || (defined(__cplusplus) && __cplusplus >= 201703L)) && defined(__has_include)
