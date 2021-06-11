@@ -1,6 +1,4 @@
-#
-# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
-#
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 cmake_minimum_required(VERSION 3.14...3.19 FATAL_ERROR)
 
@@ -96,6 +94,7 @@ endif()
 if (TOUCA_BUILD_EXAMPLES)
     add_subdirectory(example/basic)
     if (TOUCA_BUILD_FRAMEWORK)
+        add_subdirectory(example/starter)
         add_subdirectory(example/advanced)
         add_subdirectory(example/casino)
     endif()
