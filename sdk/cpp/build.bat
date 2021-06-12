@@ -1,6 +1,4 @@
-@REM
-@REM Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
-@REM
+@REM Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 @ECHO OFF
 SETLOCAL ENABLEEXTENSIONS

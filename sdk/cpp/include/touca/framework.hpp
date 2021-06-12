@@ -10,9 +10,6 @@
  * @details `touca/framework.hpp` provides the functions necessary to
  *          write a Regression Test tool that can submit its results to the
  *          Touca server.
- *
- * @author Pejman Ghorbanzade <pejman@ghorbanzade.com>
- * @date 2018-2020
  */
 
 #include "touca/framework/lib_api.hpp"

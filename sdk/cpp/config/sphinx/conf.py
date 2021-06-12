@@ -18,7 +18,7 @@
 
 project = 'Touca SDK for C++'
 copyright = '2021, Touca, Inc'
-author = 'Pejman Ghorbanzade'
+author = 'Touca, Inc.'
 
 # The full version, including alpha/beta/rc tags
 release = 'v1.4.0'

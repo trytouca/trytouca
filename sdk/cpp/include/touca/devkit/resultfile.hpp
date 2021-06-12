@@ -17,8 +17,6 @@ namespace touca {
 
     /**
      * @brief provides means for interacting with test result files.
-     *
-     * @author Pejman Ghorbanzade
      */
     class TOUCA_CLIENT_API ResultFile {
     public:

@@ -11,7 +11,7 @@ class ToucaConan(ConanFile):
     url = "https://docs.touca.io"
     license = "Apache-2.0"
     version ="1.4.0"
-    author = "Pejman Ghorbanzade <pejman@touca.io>"
+    author = "Touca, Inc. <hello@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     options = {
         "shared": [ True, False ],

@@ -10,10 +10,7 @@
  * @details `touca/touca.hpp` is the only header file of Touca SDK for C++
  *          that users should include in their regression test tool.
  *          It provides all the functions necessary to configure the client,
- *          register results and submit them to the Touca server.
- *
- * @author Pejman Ghorbanzade <pejman@touca.io>
- * @date 2018-2021
+ *          capture results and submit them to the Touca server.
  */
 
 #include "touca/detail/scoped_timer.hpp"
