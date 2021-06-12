@@ -39,6 +39,7 @@ namespace touca {
         std::string suite; /**< Suite to which results should be submitted */
         std::string revision; /**< Team to which this suite belongs */
         bool handshake = true; /**< whether client should perform handshake with the server during configuration */
+        bool allow_empty_suite = true; /**< whether it is okay if suite has no registered test cases */
         unsigned long post_max_cases = 10; /**< maximum number of testcases whose results may be posted in a single http request */
         unsigned long post_max_retries = 2; /**< maximum number of attempts to re-submit failed http requests */
         ConcurrencyMode case_declaration = ConcurrencyMode::AllThreads; /**< whether testcase declaration should be isolated to each thread */
@@ -99,7 +100,12 @@ namespace touca {
         /**
          *
          */
-        std::shared_ptr<Testcase> testcase(const std::string& name);
+        std::vector<std::string> get_testcases() const;
+
+        /**
+         *
+         */
+        std::shared_ptr<Testcase> declare_testcase(const std::string& name);
 
         /**
          *
@@ -211,12 +217,13 @@ namespace touca {
         /**
          *
          */
-        bool check_handshake();
+        bool is_platform_ready() const;
 
         bool _configured = false;
         ClientOptions _opts;
         ElementsMap _testcases;
         std::string _mostRecentTestcase;
+        std::vector<std::string> _elements;
         std::unique_ptr<Platform> _platform;
         std::unordered_map<std::thread::id, std::string> _threadMap;
         std::vector<std::shared_ptr<touca::logger>> _loggers;

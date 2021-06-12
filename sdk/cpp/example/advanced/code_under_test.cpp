@@ -3,6 +3,7 @@
 #include "code_under_test.hpp"
 #include "rapidjson/document.h"
 #include "touca/devkit/filesystem.hpp"
+#include "touca/extra/scoped_timer.hpp"
 #include "touca/touca.hpp"
 #include <fstream>
 #include <thread>

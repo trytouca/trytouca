@@ -85,6 +85,7 @@ namespace touca {
         parsers.emplace("post-testcases", parse_member(_opts.post_max_cases));
         parsers.emplace("post-maxretries", parse_member(_opts.post_max_retries));
         parsers.emplace("concurrency-mode", parse_member(_opts.case_declaration));
+        parsers.emplace("allow-empty-suite", parse_member(_opts.allow_empty_suite));
 
         for (const auto& kvp : opts) {
             if (!parsers.count(kvp.first)) {
@@ -158,6 +159,14 @@ namespace touca {
 
         _platform = std::unique_ptr<Platform>(new Platform(api_url));
         if (!_platform->auth(_opts.api_key)) {
+            _opts.parse_error = _platform->get_error();
+            return false;
+        }
+
+        // retrieve list of known test cases for this suite
+
+        _elements = _platform->elements();
+        if (!_opts.allow_empty_suite && _elements.empty()) {
             _opts.parse_error = _platform->get_error();
             return false;
         }
@@ -240,7 +249,15 @@ namespace touca {
     /**
      *
      */
-    std::shared_ptr<touca::Testcase> ClientImpl::testcase(const std::string& name)
+    std::vector<std::string> ClientImpl::get_testcases() const
+    {
+        return _elements;
+    }
+
+    /**
+     *
+     */
+    std::shared_ptr<touca::Testcase> ClientImpl::declare_testcase(const std::string& name)
     {
         if (!_configured) {
             return nullptr;

@@ -75,11 +75,11 @@ TEST_CASE("using a configured client")
     SECTION("testcase switch")
     {
         CHECK_NOTHROW(client.add_hit_count("ignored-key"));
-        CHECK(client.testcase("some-case"));
+        CHECK(client.declare_testcase("some-case"));
         CHECK_NOTHROW(client.add_hit_count("some-key"));
-        CHECK(client.testcase("some-other-case"));
+        CHECK(client.declare_testcase("some-other-case"));
         CHECK_NOTHROW(client.add_hit_count("some-other-key"));
-        CHECK(client.testcase("some-case"));
+        CHECK(client.declare_testcase("some-case"));
         CHECK_NOTHROW(client.add_hit_count("some-other-key"));
         const auto& content = saveAndLoadBack(client);
         REQUIRE(content.count("some-case"));
@@ -93,7 +93,7 @@ TEST_CASE("using a configured client")
      */
     SECTION("results")
     {
-        client.testcase("some-case");
+        client.declare_testcase("some-case");
         const auto& v1 = std::make_shared<types::Bool>(true);
         CHECK_NOTHROW(client.add_result("some-value", v1));
         CHECK_NOTHROW(client.add_hit_count("some-other-value"));
@@ -108,7 +108,7 @@ TEST_CASE("using a configured client")
      */
     SECTION("assertions")
     {
-        client.testcase("some-case");
+        client.declare_testcase("some-case");
         const auto& v1 = std::make_shared<types::Bool>(true);
         CHECK_NOTHROW(client.add_assertion("some-value", v1));
         const auto& content = saveAndReadBack(client);
@@ -118,7 +118,7 @@ TEST_CASE("using a configured client")
 
     SECTION("metrics")
     {
-        const auto& tc = client.testcase("some-case");
+        const auto& tc = client.declare_testcase("some-case");
         CHECK(tc->metrics().empty());
         CHECK_NOTHROW(client.start_timer("a"));
         CHECK(tc->metrics().empty());
@@ -138,7 +138,7 @@ TEST_CASE("using a configured client")
      */
     SECTION("forget_testcase")
     {
-        client.testcase("some-case");
+        client.declare_testcase("some-case");
         const auto& v1 = std::make_shared<types::Bool>(true);
         client.add_result("some-value", v1);
         client.add_assertion("some-assertion", v1);
@@ -154,7 +154,7 @@ TEST_CASE("using a configured client")
      */
     SECTION("post")
     {
-        REQUIRE_NOTHROW(client.testcase("mycase"));
+        REQUIRE_NOTHROW(client.declare_testcase("mycase"));
         REQUIRE_NOTHROW(client.post());
         REQUIRE(client.post() == false);
     }

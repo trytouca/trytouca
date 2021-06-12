@@ -1,6 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "code_under_test.hpp"
+#include "touca/extra/scoped_timer.hpp"
 #include "touca/touca.hpp"
 #include <thread>
 #include <unordered_map>

@@ -13,7 +13,6 @@
  *          capture results and submit them to the Touca server.
  */
 
-#include "touca/detail/scoped_timer.hpp"
 #include "touca/devkit/convert.hpp"
 #include "touca/extra/logger.hpp"
 #include "touca/lib_api.hpp"
@@ -23,25 +22,6 @@
 // for the users of this library to include only this header file
 
 #include "touca/devkit/object.hpp"
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-#if (__cplusplus >= 201703L)
-#define MAYBE_UNUSED [[maybe_unused]]
-#else
-#define MAYBE_UNUSED
-#endif
-#endif
-
-/**
- * @def TOUCA_SCOPED_TIMER
- * @brief convenience macro for logging performance of a function
- *        as a performance metric.
- * @see touca::make_timer()
- *      for more information about adding performance metrics.
- */
-#define TOUCA_SCOPED_TIMER                                                         \
-    MAYBE_UNUSED const auto& touca_scoped_timer = touca::make_timer(__FUNCTION__); \
-    std::ignore = touca_scoped_timer;
 
 /**
  * @namespace touca
@@ -237,6 +217,14 @@ namespace touca {
      */
     TOUCA_CLIENT_API void add_logger(
         const std::shared_ptr<touca::logger> logger);
+
+    /**
+     * Queries the Touca server for the list of testcases that are submitted
+     * to the baseline version of this suite
+     *
+     * @return list of test cases of the baseline version of this suite.
+     */
+    TOUCA_CLIENT_API std::vector<std::string> get_testcases();
 
     /**
      * @brief Declares name of the testcase to which all subsequent results
@@ -532,16 +520,6 @@ namespace touca {
      * @since v1.1
      */
     TOUCA_CLIENT_API void stop_timer(const std::string& key);
-
-    /**
-     * @param key name to be associated with the performance metric
-     *
-     * @return a scoped timer object that notifies this client instance
-     *         both when it is instantiated and when it goes out of scope;
-     *         logging the duration between the two events as a performance
-     *         metric.
-     */
-    TOUCA_CLIENT_API touca::scoped_timer make_timer(const std::string& key);
 
     /**
      * @brief Stores testresults in binary format in a file of specified path.

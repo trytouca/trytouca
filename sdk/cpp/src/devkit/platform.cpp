@@ -314,6 +314,9 @@ namespace touca {
         for (const auto& rjElement : doc.GetArray()) {
             elements.emplace_back(rjElement["name"].GetString());
         }
+        if (elements.empty()) {
+            _error = "suite has no test case";
+        }
         return elements;
     }
 
