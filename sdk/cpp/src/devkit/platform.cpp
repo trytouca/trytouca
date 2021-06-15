@@ -295,7 +295,7 @@ namespace touca {
     std::vector<std::string> Platform::elements() const
     {
         _error.clear();
-        const auto& route = touca::format("{}/element/{}/{}", _api._team, _api._suite);
+        const auto& route = touca::format("/element/{}/{}", _api._team, _api._suite);
         const auto& response = _http->get(_api.route(route));
         if (response.status == -1) {
             _error = response.body;

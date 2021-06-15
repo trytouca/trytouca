@@ -22,6 +22,7 @@
 // for the users of this library to include only this header file
 
 #include "touca/devkit/object.hpp"
+#include "touca/extra/scoped_timer.hpp"
 
 /**
  * @namespace touca
@@ -70,6 +71,11 @@ namespace touca {
      *        testresults as part of client configuration process.
      *        Handshake is performed only if `api-key` and `api-url`
      *        parameters are set.
+     *        Defaults to `true`.
+     * 
+     * @li @b allow-empty-suite
+     *        Declare configuration of the client as successful even if the
+     *        suite has no registered test cases on the Touca Server.
      *        Defaults to `true`.
      *
      * @li @b post-testcases

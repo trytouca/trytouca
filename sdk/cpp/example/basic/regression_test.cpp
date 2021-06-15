@@ -18,6 +18,7 @@ int main()
 
     for (const auto& username : { "rweasley", "hpotter", "hgranger" }) {
         touca::declare_testcase(username);
+        touca::scoped_timer scoped_timer("parse_profile");
 
         const auto& wizard = parse_profile(username);
 
