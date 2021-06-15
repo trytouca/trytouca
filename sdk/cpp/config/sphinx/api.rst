@@ -72,7 +72,7 @@ Capturing Metrics
 .. doxygenfunction:: touca::stop_timer
    :project: touca
 
-.. doxygenfunction:: touca::make_timer
+.. doxygenclass:: touca::scoped_timer
    :project: touca
 
 .. doxygendefine:: TOUCA_SCOPED_TIMER

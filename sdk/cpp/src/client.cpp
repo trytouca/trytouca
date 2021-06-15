@@ -95,7 +95,7 @@ namespace touca {
             parsers.at(kvp.first)(kvp.second);
         }
 
-        // populate API key if it is set as environmnet variable. the
+        // populate API key if it is set as environment variable. the
         // implementation below ensures that `api-key` as environment
         // variable takes precedence over the specified configuration
         // parameter.
@@ -126,6 +126,18 @@ namespace touca {
         _opts.team = api_url._team;
         _opts.suite = api_url._suite;
         _opts.revision = api_url._revision;
+
+        // if required parameters are not set, maybe user is just experimenting.
+
+        const auto is_pristine = [&params](const std::vector<std::string>& keys) {
+            return std::all_of(keys.begin(), keys.end(), [&params](const std::string& key) {
+                return params.at(key).empty();
+            });
+        };
+        if (is_pristine({ "team", "suite", "version", "api-key", "api-url" })) {
+            _configured = true;
+            return true;
+        }
 
         // check that the set of available configuration parameters includes
         // the bare minimum required parameters.

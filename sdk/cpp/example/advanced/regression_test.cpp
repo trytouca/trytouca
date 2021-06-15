@@ -157,25 +157,23 @@ touca::framework::Errors MyWorkflow::execute(const touca::framework::Testcase& t
 {
     touca::filesystem::path caseFile = _options.at("datasets-dir");
     caseFile /= testcase + ".json";
-    const auto& wizard = parse_profile(caseFile.string());
+    const auto& student = parse_profile(caseFile.string());
 
-    touca::add_assertion(L"id", wizard.username);
-    touca::add_assertion("name", wizard.fullname);
-    touca::add_result("height", wizard.height);
-    touca::add_result(L"weight", wizard.weight);
-    touca::add_result("birth_date", wizard.dob);
+    touca::add_assertion("username", student.username);
+    touca::add_result("fullname", student.fullname);
+    touca::add_result("birth_date", student.dob);
+    touca::add_result("gpa", calculate_gpa(student.courses));
 
-    custom_function_1(wizard);
+    custom_function_1(student);
 
-    std::thread t(custom_function_2, wizard);
+    std::thread t(custom_function_2, student);
     t.join();
 
     touca::start_timer("func3");
-    custom_function_3(wizard);
+    custom_function_3(student);
     touca::stop_timer("func3");
 
     touca::add_metric("external", 10);
-
     return {};
 }
 

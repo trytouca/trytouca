@@ -26,9 +26,6 @@ ElementsMap saveAndLoadBack(const touca::ClientImpl& client)
     return resultFile.parse();
 }
 
-/**
- * Calling post for a client with no testcase should fail.
- */
 TEST_CASE("empty client")
 {
     touca::ClientImpl client;
@@ -43,6 +40,7 @@ TEST_CASE("empty client")
     CHECK(client.is_configured() == true);
     CHECK(client.configuration_error().empty() == true);
 
+    // Calling post for a client with no testcase should fail.
     SECTION("post")
     {
         REQUIRE_NOTHROW(client.post());

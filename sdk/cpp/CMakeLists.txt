@@ -96,7 +96,6 @@ if (TOUCA_BUILD_EXAMPLES)
     if (TOUCA_BUILD_FRAMEWORK)
         add_subdirectory(example/starter)
         add_subdirectory(example/advanced)
-        add_subdirectory(example/casino)
     endif()
 endif()
 

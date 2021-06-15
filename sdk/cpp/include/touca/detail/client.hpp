@@ -61,7 +61,7 @@ namespace touca {
         /**
          *
          */
-        bool configure(const ClientImpl::OptionsMap& opts);
+        bool configure(const ClientImpl::OptionsMap& opts = {});
 
         /**
          *

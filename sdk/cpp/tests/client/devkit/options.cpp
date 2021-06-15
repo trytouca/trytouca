@@ -13,30 +13,95 @@ TEST_CASE("configure")
     SECTION("empty")
     {
         REQUIRE_NOTHROW(client.configure(input));
-        CHECK(client.configure(input) == false);
-        REQUIRE(opts.parse_error.empty() == false);
-        CHECK_THAT(opts.parse_error, Catch::Contains("team"));
+        CHECK(client.configure(input) == true);
+        REQUIRE(opts.parse_error.empty() == true);
+        CHECK(opts.team.empty());
+        CHECK(opts.suite.empty());
+        CHECK(opts.revision.empty());
+        CHECK(opts.api_key.empty());
+        CHECK(opts.api_url.empty());
     }
-    SECTION("api-key")
+    SECTION("missing-api-params")
+    {
+        input.emplace("handshake", "false");
+        input.emplace("team", "some-team");
+        CHECK(client.configure(input) == false);
+        CHECK_THAT(opts.parse_error, Catch::Contains("suite"));
+        input.emplace("suite", "some-suite");
+        CHECK(client.configure(input) == false);
+        CHECK_THAT(opts.parse_error, Catch::Contains("version"));
+        input.emplace("version", "some-version");
+        CHECK(client.configure(input) == true);
+        REQUIRE(opts.parse_error.empty() == true);
+        CHECK(opts.team == "some-team");
+        CHECK(opts.suite == "some-suite");
+        CHECK(opts.revision == "some-version");
+        CHECK(opts.api_key.empty());
+        CHECK(opts.api_url.empty());
+        CHECK(opts.handshake == false);
+    }
+    SECTION("missing-api-url")
     {
         input.emplace("api-key", "some-api-key");
         REQUIRE_NOTHROW(client.configure(input));
         CHECK(client.configure(input) == false);
         REQUIRE(opts.parse_error.empty() == false);
         CHECK_THAT(opts.parse_error, Catch::Contains("team"));
+        CHECK(opts.team.empty());
+        CHECK(opts.suite.empty());
+        CHECK(opts.revision.empty());
         CHECK(opts.api_key == "some-api-key");
+        CHECK(opts.api_url.empty());
+        CHECK(opts.handshake == true);
     }
-    SECTION("single-call")
+    SECTION("missing-api-key-1")
     {
-        input = {
-            { "team", "some-team" },
+        input.emplace("api-url", "some-api-url");
+        REQUIRE_NOTHROW(client.configure(input));
+        CHECK(client.configure(input) == false);
+        CHECK_THAT(opts.parse_error, Catch::Contains("team"));
+        CHECK(opts.team.empty());
+        CHECK(opts.suite.empty());
+        CHECK(opts.revision.empty());
+        CHECK(opts.api_key.empty());
+        CHECK(opts.api_url == "some-api-url");
+        CHECK(opts.handshake == true);
+    }
+    SECTION("missing-api-key-2")
+    {
+        input.emplace("api-url", "http://example.com/api/@/some-team/some-suite/some-version");
+        CHECK(client.configure(input) == false);
+        CHECK_THAT(opts.parse_error, Catch::Contains("api-key"));
+        CHECK(opts.team == "some-team");
+        CHECK(opts.suite == "some-suite");
+        CHECK(opts.revision == "some-version");
+        CHECK(opts.api_key.empty());
+        CHECK(opts.api_url == "http://example.com/api/@/some-team/some-suite/some-version");
+        CHECK(opts.handshake == true);
+    }
+    SECTION("missing-version-info")
+    {
+        input.emplace("api-key", "some-api-key");
+        input.emplace("api-url", "some-api-url");
+        input.emplace("handshake", "false");
+        CHECK(client.configure(input) == false);
+        REQUIRE(opts.parse_error.empty() == false);
+        CHECK_THAT(opts.parse_error, Catch::Contains("team"));
+        CHECK(opts.team.empty());
+        CHECK(opts.suite.empty());
+        CHECK(opts.revision.empty());
+        CHECK(opts.api_key == "some-api-key");
+        CHECK(opts.api_url == "some-api-url");
+        CHECK(opts.handshake == false);
+    }
+    SECTION("basic-usecase")
+    {
+        REQUIRE_NOTHROW(client.configure({ { "team", "some-team" },
             { "suite", "some-suite" },
             { "version", "some-version" },
             { "api-key", "some-api-key" },
             { "api-url", "some-api-url" },
-            { "handshake", "false" }
-        };
-        REQUIRE_NOTHROW(client.configure(input));
+            { "handshake", "false" } }));
         CHECK(client.configure(input) == true);
         REQUIRE(opts.parse_error.empty() == true);
         CHECK(opts.team == "some-team");
@@ -46,27 +111,6 @@ TEST_CASE("configure")
         CHECK(opts.api_url == "some-api-url");
         CHECK(opts.handshake == false);
     }
-    SECTION("multiple-calls")
-    {
-        input.emplace("team", "some-team");
-        REQUIRE_NOTHROW(client.configure(input));
-        CHECK(client.configure(input) == false);
-        REQUIRE(opts.parse_error.empty() == false);
-        CHECK_THAT(opts.parse_error, Catch::Contains("suite"));
-        CHECK(opts.team == "some-team");
-        input.emplace("suite", "some-suite");
-        input.emplace("version", "some-version");
-        CHECK(client.configure(input) == false);
-        REQUIRE(opts.parse_error.empty() == false);
-        CHECK_THAT(opts.parse_error, Catch::Contains("api-key"));
-        CHECK(opts.team == "some-team");
-        CHECK(opts.suite == "some-suite");
-        CHECK(opts.revision == "some-version");
-        input.emplace("handshake", "false");
-        CHECK(client.configure(input) == true);
-        CHECK(opts.handshake == false);
-        CHECK(opts.parse_error.empty() == true);
-    }
     SECTION("long-api-url")
     {
         input.emplace("api-url", "https://api.example.com/@/some-team/some-suite/some-version");
@@ -74,25 +118,13 @@ TEST_CASE("configure")
         input.emplace("handshake", "false");
         CHECK(client.configure(input) == true);
         CHECK(opts.parse_error.empty() == true);
-        CHECK(opts.parse_error == "");
-        CHECK(opts.team == "some-team");
-        CHECK(opts.suite == "some-suite");
-        CHECK(opts.revision == "some-version");
-    }
-    SECTION("missing-api-key")
-    {
-        input.emplace("api-url", "https://api.example.com/@/some-team/some-suite/some-version");
-        CHECK(client.configure(input) == false);
-        CHECK(opts.parse_error.empty() == false);
-        CHECK_THAT(opts.parse_error, Catch::Contains("api-key"));
+        CHECK(opts.api_url == "https://api.example.com/@/some-team/some-suite/some-version");
         CHECK(opts.team == "some-team");
         CHECK(opts.suite == "some-suite");
         CHECK(opts.revision == "some-version");
     }
     SECTION("override-defaults")
     {
-        input.emplace("api-url", "https://api.example.com/@/some-team/some-suite/some-version");
-        input.emplace("handshake", "false");
         CHECK(client.configure(input) == true);
         CHECK(opts.parse_error.empty() == true);
         CHECK(opts.case_declaration == touca::ConcurrencyMode::AllThreads);

@@ -16,3 +16,14 @@ struct touca::convert::Conversion<Date> {
         return out;
     }
 };
+
+template <>
+struct touca::convert::Conversion<Course> {
+    std::shared_ptr<types::IType> operator()(const Course& value)
+    {
+        auto out = std::make_shared<types::Object>("Course");
+        out->add("name", value.name);
+        out->add("grade", value.grade);
+        return out;
+    }
+};
