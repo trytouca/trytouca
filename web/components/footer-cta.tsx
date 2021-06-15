@@ -6,13 +6,13 @@ import { ProductHunt } from '@/lib/product-hunt';
 
 export default function FooterCta() {
   return (
-    <div className="flex justify-between py-8">
+    <div className="grid lg:p-8 gap-y-20 lg:grid-cols-2">
       <div className="space-y-4 text-white">
         <h3 className="text-2xl font-bold wsl-text-shadow xl:text-3xl">
           Try Touca Today
         </h3>
         <p className="text-xl">
-          We make maintaining software 10x more efficient.
+          Reduce the risks of changing mission-critical software
         </p>
         <div>
           <a
@@ -27,14 +27,16 @@ export default function FooterCta() {
           </a>
         </div>
       </div>
-      <div className="px-16">
+      <div className="lg:text-right">
         <h4 className="text-2xl font-bold text-white">
           We launched on Product Hunt in May!
         </h4>
         <p className="pb-4 text-xl text-light-blue-200">
           Send us good vibes if you feel like it.
         </p>
-        <ProductHunt />
+        <div className="lg:float-right">
+          <ProductHunt />
+        </div>
       </div>
     </div>
   );

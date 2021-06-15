@@ -152,7 +152,7 @@ const Testimonial = (props: { input: TestimonialInput }) => {
           </div>
         </div>
       </figcaption>
-      <blockquote className="text-xl text-gray-300">
+      <blockquote className="text-gray-300 lg:text-xl">
         <p>{props.input.quote}</p>
       </blockquote>
       {!props.input.learnMore.hidden && (
@@ -172,7 +172,7 @@ const content: PageContent = {
     title: 'Continuous regression testing for critical software workflows',
     subtitle: `Test your most complex workflows with real-world inputs to find
       the true impact of any code change.`,
-    elevator: 'We make maintaining software 10x more efficient.',
+    elevator: 'Reduce the risks of changing mission-critical software.',
     banner: `Test your most complex workflows with real-world inputs to find
       the true impact of any code change.`,
     sides: [
