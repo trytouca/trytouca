@@ -4,9 +4,6 @@ module.exports = withPWA({
   pwa: {
     dest: 'public'
   },
-  future: {
-    webpack5: true
-  },
   poweredByHeader: false,
   reactStrictMode: true,
   webpack: (config, { isServer }) => {

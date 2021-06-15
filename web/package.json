@@ -10,11 +10,11 @@
     "start": "next start"
   },
   "dependencies": {
-    "@tailwindcss/typography": "^0.4.0",
-    "date-fns": "^2.21.3",
-    "formik": "^2.2.6",
+    "@tailwindcss/typography": "^0.4.1",
+    "date-fns": "^2.22.1",
+    "formik": "^2.2.9",
     "gray-matter": "^4.0.3",
-    "next": "^10.2.0",
+    "next": "^11.0.0",
     "next-pwa": "^5.2.21",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -25,19 +25,20 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
-    "@tailwindcss/forms": "^0.3.2",
-    "@types/gtag.js": "^0.0.4",
-    "@types/react": "^17.0.5",
-    "@typescript-eslint/eslint-plugin": "^4.23.0",
-    "@typescript-eslint/parser": "^4.23.0",
-    "autoprefixer": "^10.2.5",
-    "eslint": "^7.26.0",
+    "@tailwindcss/forms": "^0.3.3",
+    "@types/gtag.js": "^0.0.5",
+    "@types/react": "^17.0.11",
+    "@typescript-eslint/eslint-plugin": "^4.27.0",
+    "@typescript-eslint/parser": "^4.27.0",
+    "autoprefixer": "^10.2.6",
+    "eslint": "^7.28.0",
+    "eslint-config-next": "^11.0.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-react": "^7.23.2",
+    "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-simple-import-sort": "^7.0.0",
-    "postcss": "^8.2.15",
-    "prettier": "^2.3.0",
-    "tailwindcss": "^2.1.2",
-    "typescript": "^4.2.4"
+    "postcss": "^8.3.4",
+    "prettier": "^2.3.1",
+    "tailwindcss": "^2.1.4",
+    "typescript": "^4.3.2"
   }
 }

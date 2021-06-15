@@ -63,7 +63,8 @@ const SignupForm = () => (
           <button
             className="px-4 overflow-hidden border border-transparent rounded-md wsl-btn-green"
             type="submit">
-            Signup for Free
+            <span className="hidden lg:block">Signup for Free</span>
+            <span className="lg:hidden">Sign up</span>
           </button>
         </div>
         <ErrorMessage name="umail">

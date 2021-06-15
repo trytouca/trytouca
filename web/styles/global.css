@@ -12,19 +12,19 @@
 
 @layer components {
   .wsl-btn-green {
-    @apply bg-green-600 text-white font-semibold shadow-md hover:bg-green-700 duration-150 ease-in-out focus:border-gray-200 focus:outline-none focus:ring-0;
+    @apply font-semibold text-white duration-150 ease-in-out bg-green-600 shadow-md hover:bg-green-700 focus:border-gray-200 focus:outline-none focus:ring-0;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
   }
   .wsl-header-btn-primary {
-    @apply wsl-btn-green py-2 px-4 text-sm leading-6 rounded-lg;
+    @apply px-4 py-2 text-sm leading-6 rounded-lg wsl-btn-green;
   }
   .wsl-header-btn-secondary {
-    @apply py-2 px-4 text-sm leading-6 font-semibold rounded-lg text-white bg-transparent duration-150 ease-in-out hover:bg-dark-blue-700 focus:ring-0;
+    @apply px-4 py-2 text-sm font-semibold leading-6 text-white duration-150 ease-in-out bg-transparent rounded-lg hover:bg-dark-blue-700 focus:ring-0;
   }
   .wsl-landing-feature-child {
-    @apply px-8 container mx-auto grid gap-16 lg:grid-cols-2;
+    @apply container grid gap-16 px-8 mx-auto lg:grid-cols-2;
   }
   .wsl-landing-feature-nest {
-    @apply lg:col-span-1 max-w-xl mx-auto px-8 md:px-0 grid place-content-center space-y-6;
+    @apply grid max-w-xl mx-auto space-y-6 lg:px-8 lg:col-span-1 md:px-0 place-content-center;
   }
 }
