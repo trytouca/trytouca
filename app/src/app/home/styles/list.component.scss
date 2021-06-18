@@ -2,39 +2,37 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@layer utilities {
-  img {
-    @apply md:max-w-screen-sm mx-auto px-8 py-4;
+img {
+  @apply md:max-w-screen-sm mx-auto px-8 py-4;
+}
+.wsl-requests-list {
+  h2 {
+    @apply pb-1 text-xl font-medium;
   }
-  .wsl-requests-list {
-    h2 {
-      @apply pb-1 text-xl font-medium;
-    }
-    li {
-      @apply p-4 flex justify-between items-center;
-      p {
-        @apply text-sm;
-      }
-      & > div {
-        @apply space-x-2;
-      }
-    }
-  }
-  .wsl-list-body {
-    @apply divide-y border-t border-b;
-    li {
-      @apply hover:bg-gray-50;
-    }
-    li.wsl-list-item-focused {
-      @apply bg-light-blue-50;
-    }
-  }
-  .wsl-list-head {
-    h2 {
-      @apply pb-1 text-xl font-medium;
-    }
+  li {
+    @apply p-4 flex justify-between items-center;
     p {
-      @apply pb-2 text-gray-500 text-xs;
+      @apply text-sm;
     }
+    & > div {
+      @apply space-x-2;
+    }
+  }
+}
+.wsl-list-body {
+  @apply divide-y border-t border-b;
+  li {
+    @apply hover:bg-gray-50;
+  }
+  li.wsl-list-item-focused {
+    @apply bg-sky-50;
+  }
+}
+.wsl-list-head {
+  h2 {
+    @apply pb-1 text-xl font-medium;
+  }
+  p {
+    @apply pb-2 text-gray-500 text-xs;
   }
 }

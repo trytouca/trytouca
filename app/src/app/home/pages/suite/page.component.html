@@ -22,7 +22,7 @@
               <li *ngFor="let suiteItem of suites"
                 (click)="switchPage(suiteItem.suiteSlug)"
                 class="wsl-dropdown-item"
-                [ngClass]="{'bg-light-blue-100': suite?.suiteSlug === suiteItem.suiteSlug}">
+                [ngClass]="{'bg-sky-100': suite?.suiteSlug === suiteItem.suiteSlug}">
                 {{ suiteItem.suiteName }}
               </li>
             </ul>

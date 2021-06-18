@@ -4,59 +4,24 @@
 
 const colors = require('tailwindcss/colors');
 
-module.exports = (isProd) => ({
-  prefix: '',
+module.exports = {
+  mode: process.env.TAILWIND_MODE ? 'jit' : 'aot',
   purge: {
-    enabled: isProd,
-    content: ['./src/**/*.{html,ts}']
+    enabled: true,
+    content: ['./src/**/*.html', './src/**/*.ts', './src/**/*.scss']
   },
-  darkMode: false, // or 'media' or 'class'
   theme: {
-    gradientColorStops: () => ({
-      primary: '#075985',
-      secondary: '#0369A1'
-    }),
-    keyframes: false,
-    scale: false,
-    skew: false,
-    transformOrigin: false,
-    translate: false,
-    colors: {
-      transparent: 'transparent',
-      current: 'currentColor',
-      black: colors.black,
-      white: colors.white,
-      gray: colors.coolGray,
-      red: colors.red,
-      yellow: colors.amber,
-      green: colors.emerald,
-      blue: colors.blue,
-      'light-blue': colors.lightBlue
-      // indigo: colors.indigo,
-      // purple: colors.violet,
-      // pink: colors.pink,
-    },
-    screens: {
-      sm: '640px',
-      md: '768px',
-      lg: '1024px',
-      xl: '1280px',
-      print: { raw: 'print' }
-    },
     extend: {
-      container: {
-        screens: {
-          lg: '1200px'
-        }
+      colors: {
+        sky: colors.sky
+      },
+      screens: {
+        print: { raw: 'print' }
       }
     }
   },
   variants: {
-    extend: {
-      backgroundColor: ['disabled'],
-      textColor: ['disabled'],
-      visibility: ['group-hover', 'hover']
-    }
+    extend: {}
   },
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')]
-});
+};

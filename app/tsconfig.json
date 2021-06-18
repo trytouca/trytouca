@@ -9,7 +9,7 @@
     "sourceMap": true,
     "module": "es2020",
     "moduleResolution": "node",
-    "target": "es2015",
+    "target": "es2017",
     "lib": ["es2020", "dom"],
     "resolveJsonModule": true,
     "importHelpers": true,

@@ -2,51 +2,49 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-@layer utilities {
-  .wsl-page-head {
-    @apply bg-gray-50 border-b;
-  }
-  .wsl-page-head-content {
-    @apply h-16 px-4 py-2 mx-auto container flex items-center text-lg font-medium;
-    nav {
-      @apply flex-grow;
-      ol {
-        @apply flex;
-        & > li:not(:last-child):after {
-          content: '\2002/\2002';
-        }
-        a {
-          @apply text-blue-500;
-        }
+.wsl-page-head {
+  @apply bg-gray-50 border-b;
+}
+.wsl-page-head-content {
+  @apply h-16 px-4 py-2 mx-auto container flex items-center text-lg font-medium;
+  nav {
+    @apply flex-grow;
+    ol {
+      @apply flex;
+      & > li:not(:last-child):after {
+        content: '\2002/\2002';
       }
-    }
-    nav + div {
-      @apply space-x-2;
+      a {
+        @apply text-blue-500;
+      }
     }
   }
-  .wsl-page-nav {
-    @apply mx-auto container flex justify-between;
-    ul {
-      @apply -mb-px flex;
+}
+nav + div {
+  @apply space-x-2;
+}
+.wsl-page-nav {
+  @apply mx-auto container flex justify-between;
+  ul {
+    @apply -mb-px flex;
+  }
+  li {
+    @apply py-1 px-4 leading-10 text-sm border-b border-transparent cursor-pointer;
+    span {
+      @apply px-1;
+      &.wsl-nav-icon {
+        @apply hidden md:inline-block text-gray-500;
+      }
     }
-    li {
-      @apply py-1 px-4 leading-10 text-sm border-b border-transparent cursor-pointer;
-      span {
-        @apply px-1;
-        &.wsl-nav-icon {
-          @apply hidden md:inline-block text-gray-500;
-        }
-      }
-      .wsl-nav-counter {
-        @apply inline-block bg-gray-200 rounded-full text-xs select-none;
-      }
-      &:hover {
-        @apply border-b border-light-blue-200;
-      }
-      &:active,
-      &.wsl-page-tab-active {
-        @apply border-b-2 border-blue-400;
-      }
+    .wsl-nav-counter {
+      @apply inline-block bg-gray-200 rounded-full text-xs select-none;
+    }
+    &:hover {
+      @apply border-b border-sky-200;
+    }
+    &:active,
+    &.wsl-page-tab-active {
+      @apply border-b-2 border-blue-400;
     }
   }
 }
