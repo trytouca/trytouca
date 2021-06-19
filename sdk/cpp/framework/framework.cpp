@@ -9,6 +9,7 @@
 #include "touca/devkit/utils.hpp"
 #include "touca/extra/version.hpp"
 #include "touca/framework/detail/utils.hpp"
+#include "touca/framework/suites.hpp"
 #include "touca/touca.hpp"
 #include <fstream>
 #include <iostream>
@@ -103,6 +104,9 @@ namespace touca { namespace framework {
                 cxxopts::value<std::string>())
             ("testcase",
                 "single testcase to feed to the workflow",
+                cxxopts::value<std::string>())
+            ("testcase-file",
+                "single file listing testcases to feed to the workflow",
                 cxxopts::value<std::string>())
             ("skip-logs",
                 "do not generate log files",
@@ -739,9 +743,7 @@ namespace touca { namespace framework {
         }
         logger.log(lg::Info, "configured touca client");
 
-        // initialize suite if workflow is providing one. In general, we expect
-        // the workflow to provide a suite instance unless user intends always
-        // to use `--testcase` configuration option (unlikely).
+        // initialize suite if workflow is providing one.
 
         auto suite = workflow.suite();
         if (suite) {
@@ -758,6 +760,9 @@ namespace touca { namespace framework {
 
         if (options.count("testcase")) {
             suite = std::make_shared<SingleCaseSuite>(options.at("testcase"));
+        } else if (options.count("testcase-file")) {
+            suite = std::make_shared<FileSuite>(options.at("testcase-file"));
+            suite->initialize();
         }
 
         // if workflow does not provide a suite, we choose not to proceed
