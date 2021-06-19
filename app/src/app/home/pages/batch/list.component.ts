@@ -102,6 +102,27 @@ const filterInput: FilterInput<BatchPageItem> = {
       }
     },
     {
+      key: 'duration-change',
+      name: 'Duration Change',
+      func: (a, b) => {
+        if (a.type !== b.type) {
+          return b.type < a.type ? 1 : -1;
+        }
+        const getDurationChange = (v: BatchPageItem) => {
+          if (v.type === BatchPageItemType.Common) {
+            const metaCommon = v.asCommon().meta;
+            return metaCommon
+              ? metaCommon.metricsDurationCommonSrc -
+                  metaCommon.metricsDurationCommonDst
+              : 0;
+          }
+          const metaSolo = v.asSolo().meta;
+          return metaSolo ? metaSolo.metricsDuration : 0;
+        };
+        return getDurationChange(b) - getDurationChange(a);
+      }
+    },
+    {
       key: 'keys',
       name: 'Number of Keys',
       func: (a, b) => {
