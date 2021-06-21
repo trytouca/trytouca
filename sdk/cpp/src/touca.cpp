@@ -179,4 +179,21 @@ namespace touca {
         return instance.seal();
     }
 
+    /**
+     *
+     */
+    scoped_timer::scoped_timer(const std::string& name)
+        : _name(name)
+    {
+        instance.start_timer(_name);
+    }
+
+    /**
+     *
+     */
+    scoped_timer::~scoped_timer()
+    {
+        instance.stop_timer(_name);
+    }
+
 } // namespace touca

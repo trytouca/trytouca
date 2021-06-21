@@ -24,9 +24,6 @@
 
 namespace touca {
 
-    void start_timer(const std::string& name);
-    void stop_timer(const std::string& name);
-
     /**
      * @brief a simple class that helps clients log the duration between
      *        its instantiation and destruction as a performance metric.
@@ -36,19 +33,12 @@ namespace touca {
         /**
          *
          */
-        explicit inline scoped_timer(const std::string& name)
-            : _name(name)
-        {
-            start_timer(_name);
-        }
+        explicit scoped_timer(const std::string& name);
 
         /**
          *
          */
-        inline ~scoped_timer()
-        {
-            stop_timer(_name);
-        }
+        ~scoped_timer();
 
     private:
         std::string _name;
