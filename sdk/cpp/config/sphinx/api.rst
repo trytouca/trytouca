@@ -36,13 +36,7 @@ Declaring Testcases
 .. doxygenfunction:: touca::declare_testcase(const std::string &name)
    :project: touca
 
-.. doxygenfunction:: touca::declare_testcase(const std::wstring &name)
-   :project: touca
-
 .. doxygenfunction:: touca::forget_testcase(const std::string &name)
-   :project: touca
-
-.. doxygenfunction:: touca::forget_testcase(const std::wstring &name)
    :project: touca
 
 Capturing Test Results

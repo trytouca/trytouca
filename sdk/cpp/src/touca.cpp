@@ -67,25 +67,9 @@ namespace touca {
     /**
      *
      */
-    void declare_testcase(const std::wstring& name)
-    {
-        instance.declare_testcase(touca::narrow(name));
-    }
-
-    /**
-     *
-     */
     void forget_testcase(const std::string& name)
     {
         instance.forget_testcase(name);
-    }
-
-    /**
-     *
-     */
-    void forget_testcase(const std::wstring& name)
-    {
-        instance.forget_testcase(touca::narrow(name));
     }
 
     /**
@@ -106,16 +90,6 @@ namespace touca {
         /**
          *
          */
-        void add_result(
-            const std::wstring& key,
-            const std::shared_ptr<types::IType>& value)
-        {
-            instance.add_result(touca::narrow(key), value);
-        }
-
-        /**
-         *
-         */
         void add_assertion(
             const std::string& key,
             const std::shared_ptr<types::IType>& value)
@@ -126,31 +100,11 @@ namespace touca {
         /**
          *
          */
-        void add_assertion(
-            const std::wstring& key,
-            const std::shared_ptr<types::IType>& value)
-        {
-            instance.add_assertion(touca::narrow(key), value);
-        }
-
-        /**
-         *
-         */
         void add_array_element(
             const std::string& key,
             const std::shared_ptr<types::IType>& value)
         {
             instance.add_array_element(key, value);
-        }
-
-        /**
-         *
-         */
-        void add_array_element(
-            const std::wstring& key,
-            const std::shared_ptr<types::IType>& value)
-        {
-            instance.add_array_element(touca::narrow(key), value);
         }
 
     } // namespace internal

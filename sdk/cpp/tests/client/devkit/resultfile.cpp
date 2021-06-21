@@ -5,16 +5,6 @@
 #include "tmpfile.hpp"
 #include "touca/devkit/utils.hpp"
 
-std::vector<touca::Testcase> make_cases()
-{
-    const auto firstname = std::make_shared<touca::types::String>("harry");
-    const auto lastname = std::make_shared<touca::types::String>("potter");
-    touca::Testcase tc("hogwarts", "wizards", "1.0", "hpotter");
-    tc.add_result("firstname", firstname);
-    tc.add_result("lastname", lastname);
-    return { tc };
-}
-
 void compare_cases(
     const std::vector<touca::Testcase>& tmpCases,
     const touca::ElementsMap& parsedCases)
@@ -49,10 +39,10 @@ TEST_CASE("Result File Operations")
 
     SECTION("stored result file")
     {
-        const auto tcs = make_cases();
-        const auto tcs_binary = touca::Testcase::serialize(tcs);
-        const std::string tcs_buffer { tcs_binary.begin(), tcs_binary.end() };
-        REQUIRE_NOTHROW(resultFile.save(tcs));
+        touca::Testcase tc("acme", "students", "1.0", "aanderson");
+        tc.add_result("firstname", std::make_shared<touca::types::String>("alice"));
+        tc.add_result("lastname", std::make_shared<touca::types::String>("anderson"));
+        REQUIRE_NOTHROW(resultFile.save({ tc }));
 
         /*
          * A newly saved file should pass validation check.
@@ -62,25 +52,46 @@ TEST_CASE("Result File Operations")
             REQUIRE(resultFile.validate());
         }
 
+        SECTION("calling validate without load should implicitly load")
+        {
+            touca::ResultFile newResultFile(tmpFile.path);
+            REQUIRE(newResultFile.validate());
+        }
+
         /**
-         * read back testcases frmo the result file
+         * read back testcases from the result file
          */
         SECTION("parse")
         {
-            REQUIRE_NOTHROW(resultFile.parse());
-
             const auto parsedCases = resultFile.parse();
-            compare_cases(tcs, parsedCases);
+            compare_cases({ tc }, parsedCases);
         }
 
         /**
          * Parse the result file into string in json format
          */
-        SECTION("readFileInJson")
+        SECTION("calling readFileInJson on loaded file will not re-parse file")
         {
             const auto tmpJson = resultFile.readFileInJson();
-            const auto expected = R"~("results":[{"key":"firstname","value":"harry"},{"key":"lastname","value":"potter"}],"assertion":[],"metrics":[])~";
+            const auto expected = R"~("results":[{"key":"firstname","value":"alice"},{"key":"lastname","value":"anderson"}],"assertion":[],"metrics":[])~";
             REQUIRE_THAT(tmpJson, Catch::Contains(expected));
+        }
+
+        SECTION("calling readFileInJson without load should implicitly parse")
+        {
+            touca::ResultFile newResultFile(tmpFile.path);
+            const auto tmpJson = newResultFile.readFileInJson();
+            const auto expected = R"~("results":[{"key":"firstname","value":"alice"},{"key":"lastname","value":"anderson"}],"assertion":[],"metrics":[])~";
+            REQUIRE_THAT(tmpJson, Catch::Contains(expected));
+        }
+
+        SECTION("merge")
+        {
+            TmpFile newTmpFile;
+            touca::ResultFile newResultFile(newTmpFile.path);
+            REQUIRE_NOTHROW(newResultFile.merge(resultFile));
+            REQUIRE(newResultFile.validate());
+            REQUIRE_NOTHROW(newResultFile.save());
         }
 
         /**
@@ -94,13 +105,13 @@ TEST_CASE("Result File Operations")
 
             REQUIRE_NOTHROW(newResultFile.parse());
             const auto parsedCases = newResultFile.parse();
-            compare_cases(tcs, parsedCases);
+            compare_cases({ tc }, parsedCases);
         }
 
         /**
-         * Compare a result file with another result file.
+         * Compare two result files that have the same content.
          */
-        SECTION("compare")
+        SECTION("compare_files_with_same_cases")
         {
             touca::ResultFile newResultFile(tmpFile.path);
             REQUIRE_NOTHROW(newResultFile.load());
@@ -113,7 +124,7 @@ TEST_CASE("Result File Operations")
                 CHECK(cmp.fresh.empty());
                 CHECK(cmp.missing.empty());
                 CHECK(cmp.common.size() == 1u);
-                REQUIRE(cmp.common.count("hpotter") == 1u);
+                REQUIRE(cmp.common.count("aanderson") == 1u);
             }
 
             SECTION("json-representation")
@@ -122,6 +133,43 @@ TEST_CASE("Result File Operations")
                 const auto& check1 = R"~({"newCases":[],"missingCases":[])~";
                 const auto& check2 = R"~("metrics":{"commonKeys":[],"missingKeys":[],"newKeys":[]})~";
                 const auto& check3 = R"~("assertions":{"commonKeys":[],"missingKeys":[],"newKeys":[]})~";
+                CHECK_THAT(output, Catch::Contains(check1));
+                CHECK_THAT(output, Catch::Contains(check2));
+                CHECK_THAT(output, Catch::Contains(check3));
+            }
+        }
+
+        /**
+         * Compare two result files that have different content.
+         */
+        SECTION("compare_files_with_different_cases")
+        {
+            TmpFile newTmpFile;
+
+            touca::ResultFile newResultFile(newTmpFile.path);
+            touca::Testcase tc_dst("acme", "students", "1.0", "bbrown");
+            tc_dst.add_result("firstname", std::make_shared<touca::types::String>("bob"));
+            tc_dst.add_result("lastname", std::make_shared<touca::types::String>("brown"));
+            REQUIRE_NOTHROW(newResultFile.save({ tc_dst }));
+
+            touca::ResultFile newResultFile2(newTmpFile.path);
+            REQUIRE_NOTHROW(newResultFile2.compare(resultFile));
+            const auto cmp = newResultFile2.compare(resultFile);
+
+            SECTION("basic-metadata")
+            {
+                CHECK(cmp.fresh.size() == 1u);
+                CHECK(cmp.missing.size() == 1u);
+                REQUIRE(cmp.fresh.count("bbrown") == 1u);
+                REQUIRE(cmp.missing.count("aanderson") == 1u);
+            }
+
+            SECTION("json-representation")
+            {
+                const auto& output = cmp.json();
+                const auto& check1 = R"~(,"commonCases":[]})~";
+                const auto& check2 = R"~("missingCases":[{"teamslug":"acme","testsuite":"students","version":"1.0","testcase":"aanderson","builtAt":)~";
+                const auto& check3 = R"~({"newCases":[{"teamslug":"acme","testsuite":"students","version":"1.0","testcase":"bbrown","builtAt":)~";
                 CHECK_THAT(output, Catch::Contains(check1));
                 CHECK_THAT(output, Catch::Contains(check2));
                 CHECK_THAT(output, Catch::Contains(check3));

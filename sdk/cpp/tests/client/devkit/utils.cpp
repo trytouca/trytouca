@@ -5,11 +5,6 @@
 
 TEST_CASE("string formatting")
 {
-    SECTION("narrow")
-    {
-        CHECK(touca::narrow(L"hello") == "hello");
-    }
-
     SECTION("format")
     {
         CHECK(touca::format("hello {}", "world") == "hello world");

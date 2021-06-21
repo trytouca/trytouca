@@ -247,15 +247,6 @@ namespace touca {
     TOUCA_CLIENT_API void declare_testcase(const std::string& name);
 
     /**
-     * @brief wide string variant of the `declare_testcase` function.
-     *
-     * @param name name of the testcase to be declared
-     *
-     * @see declare_testcase for more information
-     */
-    TOUCA_CLIENT_API void declare_testcase(const std::wstring& name);
-
-    /**
      * @brief Removes all logged information associated with a given testcase.
      *
      * @details Removes from memory, all information that is logged for the
@@ -277,15 +268,6 @@ namespace touca {
      */
     TOUCA_CLIENT_API void forget_testcase(const std::string& name);
 
-    /**
-     * @brief wide string variant of the `forget_testcase` function.
-     *
-     * @param name name of the testcase to be removed from memory
-     *
-     * @see forget_testcase for more information
-     */
-    TOUCA_CLIENT_API void forget_testcase(const std::wstring& name);
-
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
     /**
@@ -302,24 +284,12 @@ namespace touca {
             const std::string& key,
             const std::shared_ptr<touca::types::IType>& value);
 
-        TOUCA_CLIENT_API void add_result(
-            const std::wstring& key,
-            const std::shared_ptr<touca::types::IType>& value);
-
         TOUCA_CLIENT_API void add_assertion(
             const std::string& key,
             const std::shared_ptr<touca::types::IType>& value);
 
-        TOUCA_CLIENT_API void add_assertion(
-            const std::wstring& key,
-            const std::shared_ptr<touca::types::IType>& value);
-
         TOUCA_CLIENT_API void add_array_element(
             const std::string& key,
-            const std::shared_ptr<touca::types::IType>& value);
-
-        TOUCA_CLIENT_API void add_array_element(
-            const std::wstring& key,
             const std::shared_ptr<touca::types::IType>& value);
 
     } // namespace internal
@@ -335,7 +305,7 @@ namespace touca {
      *
      * @tparam Char type of string to be associated with the value
      *         stored as a result. Expected to be convertible to
-     *         `std::basic_string<char>` or `std::basic_string<wchar_t>`.
+     *         `std::basic_string<char>`.
      *
      * @tparam Value original type of value `value` to be stored as
      *               a result in association with given key `key`.
@@ -367,7 +337,7 @@ namespace touca {
      *
      * @tparam Char type of string to be associated with the value
      *         stored as an assertion. Expected to be convertible to
-     *         `std::basic_string<char>` or `std::basic_string<wchar_t>`.
+     *         `std::basic_string<char>`.
      *
      * @tparam Value original type of value `value` to be stored as
      *               an assertion in association with given key `key`.
@@ -424,7 +394,7 @@ namespace touca {
      *
      * @tparam Char type of string to be associated with the value
      *         stored as an element. Expected to be convertible to
-     *         `std::basic_string<char>` or `std::basic_string<wchar_t>`.
+     *         `std::basic_string<char>`.
      *
      * @tparam Value original type of value `value` to be stored as
      *               an element of an array associated with given key `key`.

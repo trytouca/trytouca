@@ -46,11 +46,6 @@ namespace touca {
     }
 
     /**
-     *
-     */
-    TOUCA_CLIENT_API std::string narrow(const std::wstring& value);
-
-    /**
      * Utility function to load content of a file with given path.
      * For consumption by Comparator and Utils applications.
      *
