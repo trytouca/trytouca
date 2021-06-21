@@ -20,7 +20,21 @@ namespace touca {
         class IType;
     } // namespace types
 
+    enum class ResultsMapValueType {
+        Check = 1,
+        Assert
+    };
+    struct ResultsMapValue {
+        std::shared_ptr<types::IType> val;
+        ResultsMapValueType typ;
+    };
+    struct MetricsMapValue {
+        std::shared_ptr<types::IType> value;
+    };
+
     using RJAllocator = rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>;
+    using ResultsMap = std::map<std::string, ResultsMapValue>;
+    using MetricsMap = std::map<std::string, MetricsMapValue>;
     using KeyMap = std::map<std::string, std::shared_ptr<types::IType>>;
 
     namespace types {

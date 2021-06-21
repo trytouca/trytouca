@@ -127,7 +127,7 @@ namespace touca {
         /**
          *
          */
-        KeyMap metrics() const;
+        MetricsMap metrics() const;
 
         /**
          *
@@ -167,9 +167,7 @@ namespace touca {
     private:
         bool _posted;
         Metadata _metadata;
-
-        KeyMap _resultsMap;
-        KeyMap _assertionsMap;
+        ResultsMap _resultsMap;
 
         std::unordered_map<std::string, std::chrono::system_clock::time_point>
             _tics;

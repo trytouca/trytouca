@@ -31,7 +31,7 @@ namespace touca { namespace framework {
      *        testcases to be used in this workflow.
      *
      * @details Skips empty lines and any line starting with two consecutive
-     *          `#` characeters.
+     *          `#` characters.
      *
      * @since v1.2.0
      */

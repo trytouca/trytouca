@@ -134,7 +134,16 @@ namespace touca { namespace compare {
         /**
          *
          */
-        void initCellar(const KeyMap& src, const KeyMap& dst, Cellar& result);
+        void initCellar(
+            const ResultsMap& src,
+            const ResultsMap& dst,
+            const ResultsMapValueType& type,
+            Cellar& result);
+
+        /**
+         *
+         */
+        void initCellar(const MetricsMap& src, const MetricsMap& dst, Cellar& result);
 
         /**
          *

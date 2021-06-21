@@ -174,8 +174,8 @@ TEST_CASE("Testcase")
             CHECK(testcase.metrics().size() == 1);
             REQUIRE(testcase.metrics().count("some-key"));
             const auto metric = testcase.metrics().at("some-key");
-            CHECK(touca::types::ValueType::Number == metric->type());
-            CHECK(metric->string() == "1000");
+            CHECK(touca::types::ValueType::Number == metric.value->type());
+            CHECK(metric.value->string() == "1000");
         }
 
         SECTION("unexpected-use: tic without toc")
@@ -208,7 +208,7 @@ TEST_CASE("Testcase")
             CHECK(testcase.metrics().size() == 1);
             CHECK(testcase.metrics().count("b"));
             const auto metric = testcase.metrics().at("b");
-            CHECK(touca::types::ValueType::Number == metric->type());
+            CHECK(touca::types::ValueType::Number == metric.value->type());
         }
     }
 

@@ -55,14 +55,17 @@ table Array {
     values:[TypeWrapper];
 }
 
+enum ResultType:ubyte { Check = 1, Assert }
+
 table Result {
     key:string;
     value:TypeWrapper;
+    typ:ResultType = Check; // v1.4.0-
 }
 
 table Assertion {
-    key:string;
-    value:TypeWrapper;
+    key:string (deprecated); // -v1.4.0
+    value:TypeWrapper (deprecated); // -v1.4.0
 }
 
 table Metric {
@@ -75,7 +78,7 @@ table Results {
 }
 
 table Assertions {
-    entries:[Assertion];
+    entries:[Assertion] (deprecated); // -v1.4.0
 }
 
 table Metrics {
@@ -85,19 +88,16 @@ table Metrics {
 table Metadata {
     testsuite:string;
     version:string;
-    /// deprecated since v1.2.0
-    hostname:string (deprecated);
+    hostname:string (deprecated); // -v1.2.0
     testcase:string;
     builtAt:string;
-
-    /// since v1.2.0
-    teamslug:string;
+    teamslug:string; // v1.2.0-
 }
 
 table Message {
     metadata:Metadata;
     results:Results;
-    assertions:Assertions;
+    assertions:Assertions (deprecated); // -v1.4.0
     metrics:Metrics;
 }
 

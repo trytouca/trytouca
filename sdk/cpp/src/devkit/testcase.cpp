@@ -10,6 +10,16 @@
 
 namespace touca {
 
+    static const std::unordered_map<ResultsMapValueType, fbs::ResultType> result_types = {
+        { ResultsMapValueType::Check, fbs::ResultType::Check },
+        { ResultsMapValueType::Assert, fbs::ResultType::Assert },
+    };
+
+    static const std::unordered_map<fbs::ResultType, ResultsMapValueType> result_types_reverse = {
+        { fbs::ResultType::Check, ResultsMapValueType::Check },
+        { fbs::ResultType::Assert, ResultsMapValueType::Assert },
+    };
+
     /**
      *
      */
@@ -69,20 +79,7 @@ namespace touca {
             if (!value) {
                 throw std::runtime_error("failed to parse results map entry");
             }
-            _resultsMap.emplace(key, value);
-        }
-
-        // parse assertions
-
-        const auto& assertions = message->assertions()->entries();
-        for (const auto&& assertion : *assertions) {
-            const auto& key = assertion->key()->data();
-            const auto& value = types::deserializeValue(assertion->value());
-            if (!value) {
-                throw std::runtime_error(
-                    "failed to parse assertions map entry");
-            }
-            _assertionsMap.emplace(key, value);
+            _resultsMap.emplace(key, ResultsMapValue { value, result_types_reverse.at(result->typ()) });
         }
 
         // parse metrics
@@ -179,7 +176,7 @@ namespace touca {
         const std::string& key,
         const std::shared_ptr<types::IType>& value)
     {
-        _resultsMap.emplace(key, value);
+        _resultsMap.emplace(key, ResultsMapValue { value, ResultsMapValueType::Check });
         _posted = false;
     }
 
@@ -190,7 +187,7 @@ namespace touca {
         const std::string& key,
         const std::shared_ptr<types::IType>& value)
     {
-        _assertionsMap.emplace(key, value);
+        _resultsMap.emplace(key, ResultsMapValue { value, ResultsMapValueType::Assert });
         _posted = false;
     }
 
@@ -205,17 +202,17 @@ namespace touca {
         if (!_resultsMap.count(key)) {
             const auto value = std::make_shared<Array>();
             value->add(element);
-            _resultsMap.emplace(key, value);
+            _resultsMap.emplace(key, ResultsMapValue { value, ResultsMapValueType::Check });
             return;
         }
         const auto ivalue = _resultsMap.at(key);
-        if (ivalue->type() != touca::types::ValueType::Array) {
+        if (ivalue.val->type() != touca::types::ValueType::Array) {
             throw std::invalid_argument("specified key is associated with a "
                                         "result of a different type");
         }
-        const auto value = std::dynamic_pointer_cast<Array>(ivalue);
+        const auto value = std::dynamic_pointer_cast<Array>(ivalue.val);
         value->add(element);
-        _resultsMap[key] = value;
+        _resultsMap[key].val = value;
         _posted = false;
     }
 
@@ -227,10 +224,10 @@ namespace touca {
         using number_t = touca::types::Number<uint64_t>;
         if (!_resultsMap.count(key)) {
             const auto value = std::make_shared<number_t>(1u);
-            _resultsMap.emplace(key, value);
+            _resultsMap.emplace(key, ResultsMapValue { value, ResultsMapValueType::Check });
             return;
         }
-        const auto ivalue = _resultsMap.at(key);
+        const auto ivalue = _resultsMap.at(key).val;
         if (ivalue->type() != touca::types::ValueType::Number) {
             throw std::invalid_argument("specified key is associated with a "
                                         "result of a different type");
@@ -240,7 +237,7 @@ namespace touca {
             throw std::invalid_argument("specified key is associated with a "
                                         "result of a different type");
         }
-        _resultsMap[key] = std::make_shared<number_t>(value->value() + 1);
+        _resultsMap[key].val = std::make_shared<number_t>(value->value() + 1);
         _posted = false;
     }
 
@@ -259,9 +256,9 @@ namespace touca {
     /**
      *
      */
-    KeyMap Testcase::metrics() const
+    MetricsMap Testcase::metrics() const
     {
-        KeyMap metrics;
+        MetricsMap metrics;
         for (const auto& tic : _tics) {
             if (!_tocs.count(tic.first)) {
                 continue;
@@ -270,7 +267,7 @@ namespace touca {
             const auto& diff = _tocs.at(key) - _tics.at(key);
             const auto& duration = std::chrono::duration_cast<std::chrono::milliseconds>(diff);
             const auto& value = std::make_shared<types::Number<int64_t>>(duration.count());
-            metrics.emplace(key, value);
+            metrics.emplace(key, MetricsMapValue { value });
         }
         return metrics;
     }
@@ -281,22 +278,41 @@ namespace touca {
     rapidjson::Value Testcase::json(
         rapidjson::Document::AllocatorType& allocator) const
     {
-        const auto& func = [](const KeyMap& entries, rapidjson::Document::AllocatorType& allocator) {
-            rapidjson::Value rjEntries(rapidjson::kArrayType);
-            for (const auto& entry : entries) {
-                rapidjson::Value rjEntry(rapidjson::kObjectType);
-                rjEntry.AddMember("key", entry.first, allocator);
-                rjEntry.AddMember("value", entry.second->string(), allocator);
-                rjEntries.PushBack(rjEntry, allocator);
-            }
-            return rjEntries;
-        };
-
         rapidjson::Value out(rapidjson::kObjectType);
         out.AddMember("metadata", _metadata.json(allocator), allocator);
-        out.AddMember("results", func(_resultsMap, allocator), allocator);
-        out.AddMember("assertion", func(_assertionsMap, allocator), allocator);
-        out.AddMember("metrics", func(metrics(), allocator), allocator);
+
+        rapidjson::Value rjResults(rapidjson::kArrayType);
+        for (const auto& entry : _resultsMap) {
+            if (entry.second.typ != ResultsMapValueType::Check) {
+                continue;
+            }
+            rapidjson::Value rjEntry(rapidjson::kObjectType);
+            rjEntry.AddMember("key", entry.first, allocator);
+            rjEntry.AddMember("value", entry.second.val->string(), allocator);
+            rjResults.PushBack(rjEntry, allocator);
+        }
+        out.AddMember("results", rjResults, allocator);
+
+        rapidjson::Value rjAssertions(rapidjson::kArrayType);
+        for (const auto& entry : _resultsMap) {
+            if (entry.second.typ != ResultsMapValueType::Assert) {
+                continue;
+            }
+            rapidjson::Value rjEntry(rapidjson::kObjectType);
+            rjEntry.AddMember("key", entry.first, allocator);
+            rjEntry.AddMember("value", entry.second.val->string(), allocator);
+            rjAssertions.PushBack(rjEntry, allocator);
+        }
+        out.AddMember("assertion", rjAssertions, allocator);
+
+        rapidjson::Value rjMetrics(rapidjson::kArrayType);
+        for (const auto& entry : metrics()) {
+            rapidjson::Value rjEntry(rapidjson::kObjectType);
+            rjEntry.AddMember("key", entry.first, allocator);
+            rjEntry.AddMember("value", entry.second.value->string(), allocator);
+            rjMetrics.PushBack(rjEntry, allocator);
+        }
+        out.AddMember("metrics", rjMetrics, allocator);
 
         return out;
     }
@@ -327,10 +343,11 @@ namespace touca {
         std::vector<flatbuffers::Offset<fbs::Result>> fbsResultEntries_vector;
         for (const auto& result : _resultsMap) {
             const auto& fbsKey = builder.CreateString(result.first);
-            const auto& fbsValue = result.second->serialize(builder);
+            const auto& fbsValue = result.second.val->serialize(builder);
             fbs::ResultBuilder fbsResult_builder(builder);
             fbsResult_builder.add_key(fbsKey);
             fbsResult_builder.add_value(fbsValue);
+            fbsResult_builder.add_typ(result_types.at(result.second.typ));
             const auto& fbsEntry = fbsResult_builder.Finish();
             fbsResultEntries_vector.push_back(fbsEntry);
         }
@@ -340,31 +357,12 @@ namespace touca {
         fbsResults_builder.add_entries(fbsResultEntries);
         const auto& fbsResults = fbsResults_builder.Finish();
 
-        // serialize assertions map
-
-        std::vector<flatbuffers::Offset<fbs::Assertion>>
-            fbsAssertionEntries_vector;
-        for (const auto& assertion : _assertionsMap) {
-            const auto& fbsKey = builder.CreateString(assertion.first);
-            const auto& fbsValue = assertion.second->serialize(builder);
-            fbs::AssertionBuilder fbsAssertion_builder(builder);
-            fbsAssertion_builder.add_key(fbsKey);
-            fbsAssertion_builder.add_value(fbsValue);
-            const auto& fbsEntry = fbsAssertion_builder.Finish();
-            fbsAssertionEntries_vector.push_back(fbsEntry);
-        }
-        const auto& fbsAssertionEntries = builder.CreateVector(fbsAssertionEntries_vector);
-
-        fbs::AssertionsBuilder fbsAssertions_builder(builder);
-        fbsAssertions_builder.add_entries(fbsAssertionEntries);
-        const auto& fbsAssertions = fbsAssertions_builder.Finish();
-
         // serialize metrics
 
         std::vector<flatbuffers::Offset<fbs::Metric>> fbsMetricEntries_vector;
         for (const auto& metric : metrics()) {
             const auto& fbsKey = builder.CreateString(metric.first);
-            const auto& fbsValue = metric.second->serialize(builder);
+            const auto& fbsValue = metric.second.value->serialize(builder);
             fbs::MetricBuilder fbsMetric_builder(builder);
             fbsMetric_builder.add_key(fbsKey);
             fbsMetric_builder.add_value(fbsValue);
@@ -382,7 +380,6 @@ namespace touca {
         fbs::MessageBuilder fbsMessage_builder(builder);
         fbsMessage_builder.add_metadata(fbsMetadata);
         fbsMessage_builder.add_results(fbsResults);
-        fbsMessage_builder.add_assertions(fbsAssertions);
         fbsMessage_builder.add_metrics(fbsMetrics);
         const auto& message = fbsMessage_builder.Finish();
 
@@ -428,7 +425,6 @@ namespace touca {
     {
         _posted = false;
         _resultsMap.clear();
-        _assertionsMap.clear();
         _tics.clear();
         _tocs.clear();
     }

@@ -454,7 +454,7 @@ namespace touca {
      *
      * @details May be considered as a helper utility function.
      *          This method is particularly helpful to track variables
-     *          whose values are determined in loops with undeterminate
+     *          whose values are determined in loops with indeterminate
      *          execution cycles:
      *          @code
      *              for (const auto number : numbers) {

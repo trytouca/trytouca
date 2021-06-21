@@ -249,8 +249,8 @@ namespace touca { namespace compare {
         _srcMeta = _src.metadata();
         _dstMeta = _dst.metadata();
         // perform comparisons on assertions
-        initCellar(_src._assertionsMap, _dst._assertionsMap, _assertions);
-        initCellar(_src._resultsMap, _dst._resultsMap, _results);
+        initCellar(_src._resultsMap, _dst._resultsMap, ResultsMapValueType::Assert, _assertions);
+        initCellar(_src._resultsMap, _dst._resultsMap, ResultsMapValueType::Check, _results);
         initCellar(_src.metrics(), _dst.metrics(), _metrics);
     }
 
@@ -258,23 +258,55 @@ namespace touca { namespace compare {
      *
      */
     void TestcaseComparison::initCellar(
-        const KeyMap& src,
-        const KeyMap& dst,
+        const ResultsMap& src,
+        const ResultsMap& dst,
+        const ResultsMapValueType& type,
+        Cellar& result)
+    {
+        for (const auto& kv : dst) {
+            if (kv.second.typ != type) {
+                continue;
+            }
+            const auto& key = kv.first;
+            if (src.count(key)) {
+                const auto value = src.at(key).val->compare(kv.second.val);
+                result.common.emplace(key, value);
+                continue;
+            }
+            result.missing.emplace(key, kv.second.val);
+        }
+        for (const auto& kv : src) {
+            if (kv.second.typ != type) {
+                continue;
+            }
+            const auto& key = kv.first;
+            if (!dst.count(key)) {
+                result.fresh.emplace(key, kv.second.val);
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    void TestcaseComparison::initCellar(
+        const MetricsMap& src,
+        const MetricsMap& dst,
         Cellar& result)
     {
         for (const auto& kv : dst) {
             const auto& key = kv.first;
             if (src.count(key)) {
-                const auto value = src.at(key)->compare(kv.second);
+                const auto value = src.at(key).value->compare(kv.second.value);
                 result.common.emplace(key, value);
                 continue;
             }
-            result.missing.emplace(key, kv.second);
+            result.missing.emplace(key, kv.second.value);
         }
         for (const auto& kv : src) {
             const auto& key = kv.first;
             if (!dst.count(key)) {
-                result.fresh.emplace(key, kv.second);
+                result.fresh.emplace(key, kv.second.value);
             }
         }
     }

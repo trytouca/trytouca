@@ -1,0 +1,90 @@
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+
+namespace touca.fbs;
+
+union ValueType {
+    TypeBinary,
+    TypeBoolean,
+    TypeDecimal,
+    TypeInteger,
+    TypeObject,
+    TypeString,
+    TypeVector
+}
+
+table TypeWrapper {
+    v:ValueType;
+}
+
+table TypeBinary  { v:[ubyte]; }
+table TypeBoolean { v:bool; }
+table TypeInteger { v:int64; }
+table TypeDecimal { v:double; }
+table TypeString  { v:string; }
+
+table ObjectMember {
+    k:string;
+    v:TypeWrapper;
+}
+
+table TypeObject {
+    k:string;
+    v:[ObjectMember];
+}
+
+table TypeVector {
+    v:[TypeWrapper];
+    o:bool = true;
+}
+
+enum ResultType:ubyte {
+    Check = 1,
+    Assert,
+    Trace
+}
+
+table Result {
+    typ:ResultType = Check;
+    key:string;
+    tic:uint32;
+    val:ValueType;
+}
+
+enum MetricType:ubyte {
+    Check = 1
+}
+
+table Metric {
+    typ:MetricType = Check;
+    key:string;
+    tic:uint32;
+    toc:uint32;
+    num:uint32;
+    avg:uint32;
+    dev:uint32;
+}
+
+table Metadata {
+    tic:uint64; 
+    team:string;
+    suite:string;
+    batch:string;
+    case:string;
+}
+
+table Message {
+    metadata:Metadata;
+    metrics:[Metric];
+    results:[Result];
+}
+
+table MessageBuffer {
+    buf:[ubyte] (nested_flatbuffer: "Message");
+}
+
+table Messages {
+    messages:[MessageBuffer];
+    rev:short;
+}
+
+root_type Messages;

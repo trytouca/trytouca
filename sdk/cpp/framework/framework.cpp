@@ -543,7 +543,7 @@ namespace touca { namespace framework {
      *        no further test results will be submitted for this version.
      *
      * @todo Currently, sealing the test results is an opt-in feature.
-     *       Test framework should be explicltly configured to seal the
+     *       Test framework should be explicitly configured to seal the
      *       version after execution of all the test cases. In v1.3, we
      *       would like to make this the default behavior.
      */
