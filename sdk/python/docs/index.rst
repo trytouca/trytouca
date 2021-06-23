@@ -1,0 +1,14 @@
+Touca SDK for Python
+=====================
+
+.. note::
+   This page hosts the API Reference for Touca SDK for Python. Refer to our
+   `Documentation Website <https://docs.touca.io/api/cpp-python>`_ for
+   information about how to use this SDK, including getting started guides,
+   tutorials, and examples.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Contents:
+
+   Reference API <api>
