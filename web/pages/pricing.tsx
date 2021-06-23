@@ -62,10 +62,6 @@ const content: PageContent = {
     },
     {
       title: 'Enterprise',
-      fee: {
-        prefix: 'Starting',
-        highlight: '1000'
-      },
       description: 'Unlimited Users',
       features: [
         'Unlimited Suites',
