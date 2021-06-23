@@ -224,9 +224,9 @@ export class SuiteItemBatchComponent {
       } else if (this._meta.countFresh && this._meta.countMissing) {
         tcs += ` (${this._meta.countFresh} new, ${this._meta.countMissing} missing)`;
       } else if (this._meta.countFresh && !this._meta.countMissing) {
-        tcs += ` (${this._meta.countMissing} new)`;
+        tcs += ` (${this._meta.countFresh} new)`;
       } else if (!this._meta.countFresh && this._meta.countMissing) {
-        tcs += ` (${this._meta.countFresh} missing)`;
+        tcs += ` (${this._meta.countMissing} missing)`;
       }
       topics.push({ text: tcs });
     }
