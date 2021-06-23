@@ -40,9 +40,9 @@ namespace touca {
      *          list of key value pairs whose keys are from the list below.
      *
      * @li @b api-key
-     *        API Key issued by Touca server.
-     *        As an alternative to passing this parameter to `configure`,
-     *        you can set environment variable `TOUCA_API_KEY` instead.
+     *        API Key issued by the Touca server.
+     *        Instead of passing this parameter to `configure`,
+     *        you can set environment variable `TOUCA_API_KEY`.
      *
      * @li @b api-url
      *        URL of Touca server API. Can be provided either in long
@@ -54,7 +54,8 @@ namespace touca {
      *
      * @li @b version
      *        Version of the workflow under test.
-     *        Required at all times.
+     *        Required if `api-url` is not set or if `api-url` does not include
+     *        the version.
      *
      * @li @b suite
      *        Name of the testsuite to which testresults belong.
