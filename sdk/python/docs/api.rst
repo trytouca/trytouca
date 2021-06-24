@@ -6,5 +6,5 @@ API Reference
 Client Library
 ++++++++++++++
 
-.. automodule:: touca.api
+.. automodule:: touca.__init__
     :members:
