@@ -287,7 +287,7 @@ This repository is released under the Apache-2.0 License. See [`LICENSE`][licens
 [Calendly]: https://calendly.com/ghorbanzade/30min
 [YouTube]: https://www.youtube.com/channel/UCAGugoQDJY3wdMuqETTOvIA
 [hello@touca.io]: mailto:hello@touca.io
-[license]: https://github.com/getsentry/sentry-python/blob/master/LICENSE
+[license]: https://github.com/trytouca/touca-cpp/blob/main/LICENSE
 
 [docs-quickstart]: https://docs.touca.io/getting-started/quickstart
 [docs-submit]: https://docs.touca.io/guides/submit
