@@ -15,9 +15,7 @@ class Transport:
         """ """
         self._options = options
         self._token = None
-        self._pool = PoolManager(
-            cert_reqs="CERT_REQUIRED", ca_certs=certifi.where(), mariam=2
-        )
+        self._pool = PoolManager(cert_reqs="CERT_REQUIRED", ca_certs=certifi.where())
         self._handshake()
 
     def _handshake(self):
@@ -47,7 +45,14 @@ class Transport:
             headers=headers,
         )
 
-    def authenticate(self) -> None:
+    def update_options(self, options: dict):
+        """ """
+        if any(k in options for k in ["api_key", "api_url"]):
+            self._token = None
+        self._options.update(options)
+        self._handshake()
+
+    def authenticate(self):
         """
         :raises: ValueError if authentication fails
         """

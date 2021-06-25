@@ -2,9 +2,27 @@
 
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-from typing import Any, List
+from typing import List
 from threading import get_ident
 from touca._transport import Transport
+from touca._testcase import Testcase
+
+
+def relaymethod(func):
+    """ """
+    import inspect
+    from functools import wraps
+
+    func.__doc__ = inspect.getdoc(getattr(Testcase, func.__name__))
+
+    @wraps(func)
+    def wrapper(self, *args):
+        element = self._active_testcase_name()
+        if element:
+            testcase = self._cases.get(element)
+            getattr(testcase, func.__name__)(*args)
+
+    return wrapper
 
 
 class Client:
@@ -19,31 +37,36 @@ class Client:
 
     def __init__(self):
         """ """
+        self._cases = dict()
         self._configured = False
         self._configuration_error = str()
-        self._cases = list()
+        self._elements = list()
         self._options = dict()
         self._threads_case = str()
         self._threads_cases = dict()
         self._transport = None
 
-    def _has_active_case(self) -> bool:
+    def _active_testcase_name(self) -> str:
+        """ """
         if not self._configured:
-            return False
-        if self._options["concurrent"]:
-            return bool(self._threads_case)
-        return get_ident() in self._thread_map
+            return None
+        if self._options.get("concurrency"):
+            return self._threads_case
+        return self._threads_cases.get(get_ident())
 
     def _make_transport(self) -> bool:
+        """ """
         keys = ["api_key", "api_url", "team", "suite", "version"]
         if self._options.get("handshake") is False:
             return False
         if not all(k in self._options for k in keys):
             return False
-        if not self._transport or any(
-            self._transport._options.get(k) != self._options.get(k) for k in keys
-        ):
+        if not self._transport:
             self._transport = Transport(self._options)
+            return True
+        is_different = lambda k: self._transport._options.get(k) != self._options.get(k)
+        if any(is_different(k) for k in keys):
+            self._transport.update_options(list(filter(is_different, keys)))
             return True
 
     def configure(self, **kwargs) -> bool:
@@ -138,16 +161,14 @@ class Client:
         from touca._options import update_options
 
         self._configuration_error = ""
-
         try:
             update_options(self._options, kwargs)
             if self._make_transport():
                 self._transport.authenticate()
-                self._cases = self._transport.get_testcases()
+                self._elements = self._transport.get_testcases()
         except ValueError as err:
-            self._configuration_error = str(err)
+            self._configuration_error = f"Configuration failed: {err}"
             return False
-
         self._configured = True
         return True
 
@@ -196,52 +217,136 @@ class Client:
         to the baseline version of this suite.
 
         :raises: RuntimeError
-            if called on the client that is not properly configured to
-            communicate with the Touca server.
+            when called on the client that is not configured to communicate
+            with the Touca server.
 
         :return: list of test cases of the baseline version of this suite
         """
-        return self._cases
-
-    def declare_testcase(self, name: str) -> None:
-        """ """
-
-    def forget_testcase(self, name: str) -> None:
-        """ """
-
-    def add_result(self, key: str, value: Any) -> None:
-        """ """
-
-    def add_assertion(self, key: str, value: Any) -> None:
-        """ """
-
-    def add_array_element(self, key: str, value: Any) -> None:
-        """ """
-
-    def add_hit_count(self, key: str) -> None:
-        """ """
-
-    def add_metric(self, key: str, value: int) -> None:
-        """ """
-
-    def start_timer(self, key: str) -> None:
-        """ """
-
-    def stop_timer(self, key: str) -> None:
-        """ """
-
-    def save(self, key: str, cases: List[str] = [], overwrite=True, format="binary"):
-        """ """
-        return
-
-    def post(self) -> bool:
-        """ """
         if not self._transport:
             raise RuntimeError("client not configured to perform this operation")
-        return
+        return self._elements
 
-    def seal(self) -> bool:
+    def declare_testcase(self, name: str):
+        """
+        Declares name of the test case to which all subsequent results will be
+        submitted until a new test case is declared.
+
+        If configuration parameter ``concurrency`` is set to ``"enabled"``, when a
+        thread calls `declare_testcase` all other threads also have their most
+        recent testcase changed to the newly declared one. Otherwise, each
+        thread will submit to its own testcase.
+
+        :param name:
+            name of the testcase to be declared
+        """
+        if not self._configured:
+            return
+        if name not in self._cases:
+            self._cases[name] = Testcase(
+                team=self._options.get("team"),
+                suite=self._options.get("suite"),
+                version=self._options.get("version"),
+                testcase=name,
+            )
+        self._threads_case = name
+        self._threads_cases[get_ident()] = name
+        return self._cases.get(name)
+
+    def forget_testcase(self, name: str):
+        """
+        Removes all logged information associated with a given test case.
+
+        This information is removed from memory, such that switching back to
+        an already-declared or already-submitted test case would behave similar
+        to when that test case was first declared. This information is removed,
+        for all threads, regardless of the configuration option ``concurrency``.
+        Information already submitted to the server will not be removed from
+        the server.
+
+        This operation is useful in long-running regression test frameworks,
+        after submission of test case to the server, if memory consumed by
+        the client library is a concern or if there is a risk that a future
+        test case with a similar name may be executed.
+
+        :param name:
+            name of the testcase to be removed from memory
+
+        :raises: RuntimeError
+            when called with the name of a test case that was never declared
+        """
+        if name not in self._cases:
+            raise RuntimeError(f'test case "{name}" was never declared')
+        del self._cases[name]
+
+    @relaymethod
+    def add_result(self):
+        pass
+
+    @relaymethod
+    def add_assertion(self):
+        pass
+
+    @relaymethod
+    def add_array_element(self):
+        pass
+
+    @relaymethod
+    def add_hit_count(self):
+        pass
+
+    @relaymethod
+    def add_metric(self):
+        pass
+
+    @relaymethod
+    def start_timer(self):
+        pass
+
+    @relaymethod
+    def stop_timer(self):
+        pass
+
+    def save_binary(self, key: str, cases: list, overwrite: bool):
         """ """
+
+    def save_json(self, key: str, cases: list, overwrite: bool):
+        """ """
+        for name, testcase in self._cases.items():
+            print(name, testcase._results)
+
+    def post(self):
+        """
+        Submits all testresults recorded so far to Touca server.
+
+        It is possible to call :py:meth:`~post` multiple times during runtime
+        of the regression test tool. Test cases already submitted to the server
+        whose test results have not changed, will not be resubmitted.
+        It is also possible to add testresults to a testcase after it is
+        submitted to the server. Any subsequent call to :py:meth:`~post` will
+        resubmit the modified test case.
+
+        :raises: RuntimeError
+            when called on the client that is not configured to communicate
+            with the Touca server.
+        """
         if not self._transport:
             raise RuntimeError("client not configured to perform this operation")
-        return
+
+    def seal(self):
+        """
+        Notifies the Touca server that all test cases were executed for this
+        version and no further test result is expected to be submitted.
+        Expected to be called by the test tool once all test cases are executed
+        and all test results are posted.
+
+        Sealing the version is optional. The Touca server automatically
+        performs this operation once a certain amount of time has passed since
+        the last test case was submitted. This duration is configurable from
+        the "Settings" tab in "Suite" Page.
+
+        :raises: RuntimeError
+            when called on the client that is not configured to communicate
+            with the Touca server.
+        """
+        if not self._transport:
+            raise RuntimeError("client not configured to perform this operation")

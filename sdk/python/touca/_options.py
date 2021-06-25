@@ -12,15 +12,15 @@ def _apply_config_file(incoming: dict) -> None:
     if not path:
         return
     if not isfile(path):
-        raise ValueError("configuration file is missing")
+        raise ValueError("file not found")
     with open(path, "rt") as file:
         content = file.read()
         try:
             parsed = loads(content)
         except ValueError:
-            raise ValueError("configuration file has unexpected format")
+            raise ValueError("file has unexpected format")
     if "touca" not in parsed:
-        raise ValueError('configuration file is missing field: "touca"')
+        raise ValueError('file is missing JSON field: "touca"')
     for k in parsed["touca"]:
         if k not in incoming:
             incoming[k] = parsed["touca"][k]
@@ -56,6 +56,7 @@ def _apply_environment_variables(existing) -> None:
 
     for env, opt in [
         ("TOUCA_API_KEY", "api_key"),
+        ("TOUCA_API_URL", "api_url"),
         ("TOUCA_TEST_VERSION", "version"),
     ]:
         if environ.get(env):

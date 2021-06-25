@@ -18,12 +18,13 @@ If you are just getting started with Touca, we generally recommend that you
 install the SDK as a development-only dependency.
 """
 
-import inspect
 from typing import Any, List
 from touca._client import Client
 
 
 def clientmethod(f):
+    import inspect
+
     f.__doc__ = inspect.getdoc(getattr(Client, f.__name__))
     return f
 
@@ -49,63 +50,65 @@ def get_testcases() -> List[str]:
 
 
 @clientmethod
-def declare_testcase(name: str) -> None:
+def declare_testcase(name: str):
     Client.instance().declare_testcase(name)
 
 
 @clientmethod
-def forget_testcase(name: str) -> None:
+def forget_testcase(name: str):
     Client.instance().forget_testcase(name)
 
 
 @clientmethod
-def add_result(key: str, value: Any) -> None:
+def add_result(key: str, value: Any):
     Client.instance().add_result(key, value)
 
 
 @clientmethod
-def add_assertion(key: str, value: Any) -> None:
+def add_assertion(key: str, value: Any):
     Client.instance().add_assertion(key, value)
 
 
 @clientmethod
-def add_array_element(key: str, value: Any) -> None:
+def add_array_element(key: str, value: Any):
     Client.instance().add_array_element(key, value)
 
 
 @clientmethod
-def add_hit_count(key: str) -> None:
+def add_hit_count(key: str):
     Client.instance().add_hit_count(key)
 
 
 @clientmethod
-def add_metric(key: str, value: int) -> None:
+def add_metric(key: str, value: int):
     Client.instance().add_metric(key, value)
 
 
 @clientmethod
-def start_timer(key: str) -> None:
+def start_timer(key: str):
     Client.instance().start_timer(key)
 
 
 @clientmethod
-def stop_timer(key: str) -> None:
+def stop_timer(key: str):
     Client.instance().stop_timer(key)
 
 
-def save_binary(key: str, cases: List[str] = [], overwrite=True) -> None:
-    Client.instance().save(key, cases, overwrite, format="binary")
-
-
-def save_json(key: str, cases: List[str] = [], overwrite=True) -> None:
-    Client.instance().save(key, cases, overwrite, format="json")
+@clientmethod
+def save_binary(key: str, cases: List[str] = [], overwrite=True):
+    Client.instance().save_binary(key, cases, overwrite)
 
 
 @clientmethod
-def post() -> bool:
+def save_json(key: str, cases: List[str] = [], overwrite=True):
+    Client.instance().save_json(key, cases, overwrite)
+
+
+@clientmethod
+def post():
     return Client.instance().post()
 
 
 @clientmethod
-def seal() -> bool:
+def seal():
     return Client.instance().seal()

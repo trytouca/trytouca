@@ -4,18 +4,24 @@
 
 import json
 import os
-from touca._client import Client
+import touca
+from pytest import raises
 from tempfile import TemporaryDirectory
 
 
 def test_empty_client():
-    client = Client()
-    assert not client.is_configured()
-    assert not client.configuration_error()
-    client.configure()
-    assert client.is_configured()
-    assert not client.configuration_error()
-    assert not client.save("some_file")
+    assert not touca.is_configured()
+    assert not touca.configuration_error()
+    touca.configure()
+    assert touca.is_configured()
+    assert not touca.configuration_error()
+    for function in [touca.get_testcases, touca.seal, touca.post]:
+        with raises(
+            RuntimeError, match="client not configured to perform this operation"
+        ):
+            function()
+    assert not touca.save_binary("some_file")
+    assert not touca.save_json("some_file")
 
 
 def test_configure_by_file_empty():
@@ -23,9 +29,31 @@ def test_configure_by_file_empty():
         filepath = os.path.join(tmpdirname, "some_file")
         with open(filepath, "wt") as file:
             file.write(json.dumps({"touca": {}}))
-        client = Client()
-        assert client.configure(file=filepath)
-        assert not client.configuration_error()
+        assert touca.configure(file=filepath)
+        assert not touca.configuration_error()
+
+
+def test_configure_by_file_missing():
+    assert not touca.configure(file="missing_file")
+    assert "file not found" in touca.configuration_error()
+
+
+def test_configure_by_file_plaintext():
+    with TemporaryDirectory() as tmpdirname:
+        filepath = os.path.join(tmpdirname, "some_file")
+        with open(filepath, "wt") as file:
+            file.write("touca")
+        assert not touca.configure(file=filepath)
+        assert "file has unexpected format" in touca.configuration_error()
+
+
+def test_configure_by_file_invalid():
+    with TemporaryDirectory() as tmpdirname:
+        filepath = os.path.join(tmpdirname, "some_file")
+        with open(filepath, "wt") as file:
+            file.write(json.dumps({"field": {}}))
+        assert not touca.configure(file=filepath)
+        assert "file is missing JSON field" in touca.configuration_error()
 
 
 def test_configure_by_file_full():
@@ -45,7 +73,7 @@ def test_configure_by_file_full():
                     }
                 )
             )
-        client = Client()
+        client = touca.Client()
         assert client.configure(file=filepath)
         assert not client.configuration_error()
         for key, value in dict(
