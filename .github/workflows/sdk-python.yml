@@ -40,7 +40,17 @@ jobs:
           pip install -e .[dev]
       - name: run unit tests
         run: |
-          pytest --cov=touca --cov-report=term --cov-report=html:local/coverage tests
+          pytest --cov=touca --cov-report=term --cov-report=html:local/tests tests
       - name: generate docs
         run: |
           sphinx-build -b html -c docs docs local/docs
+      - name: push docs to aws
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          tar -zcf python-docs-external.tar.gz local/docs
+          aws s3 cp python-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0
+      - name: push coverage to aws
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          tar -zcf python-test-coverage.tar.gz local/tests
+          aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0
