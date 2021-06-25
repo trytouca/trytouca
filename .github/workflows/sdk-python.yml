@@ -19,6 +19,13 @@ jobs:
         python-version: [3.9]
     steps:
       - uses: actions/checkout@v2
+      - name: authenticate to aws
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-region: us-east-2
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
