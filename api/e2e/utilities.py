@@ -6,6 +6,7 @@ import os
 from dataclasses import dataclass
 from typing import List
 
+
 @dataclass
 class User:
     fullname: str
@@ -14,16 +15,21 @@ class User:
     password: str
 
     def __repr__(self):
-        return "User(\"{}\")".format(self.username)
+        return 'User("{}")'.format(self.username)
 
     def __str__(self):
-        return "\"{}\"".format(self.username)
+        return '"{}"'.format(self.username)
 
     @classmethod
     def from_fullname(cls, fullname: str):
         username = fullname
-        return cls(fullname=fullname, username=username,
-            email = username + '@touca.io', password = 'Touca$123')
+        return cls(
+            fullname=fullname,
+            username=username,
+            email=username + "@touca.io",
+            password="Touca$123",
+        )
+
 
 @dataclass
 class Team:
@@ -33,6 +39,7 @@ class Team:
     members: List[User]
     invitees: List[User]
     suites: List[str]
+
 
 def pathify(rel_path: str) -> str:
     start = os.path.dirname(__file__)

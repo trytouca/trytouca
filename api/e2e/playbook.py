@@ -9,21 +9,21 @@ from loguru import logger
 from client_api import ApiClient
 from utilities import User
 
+
 @dataclass
 class Playbook:
-
     @classmethod
     def reader(cls, filepath: str):
-        with open(filepath, 'rt') as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quotechar='\"')
+        with open(filepath, "rt") as csvfile:
+            reader = csv.reader(csvfile, delimiter=",", quotechar='"')
             next(reader, None)
             instance = cls()
             for row in reader:
                 row = list(filter(None, row))
-                if row[0].startswith('#'):
+                if row[0].startswith("#"):
                     continue
                 user = User.from_fullname(row[0])
-                method_name = "_".join(row[1].split('-'))
+                method_name = "_".join(row[1].split("-"))
                 method = getattr(instance, method_name, None)
                 if not method:
                     logger.warning("action {} has no class", row[1])
@@ -120,17 +120,17 @@ class Playbook:
             api_client.team_member_update(team_slug, member_user, new_role)
 
     def batch_seal(self, user: User, args):
-        batch_path = '/'.join(args[0:3])
+        batch_path = "/".join(args[0:3])
         with ApiClient(user) as api_client:
             api_client.batch_seal(batch_path)
-        logger.success("{} sealed {}", user, '/'.join(args[0:3]))
+        logger.success("{} sealed {}", user, "/".join(args[0:3]))
 
     def batch_promote(self, user: User, args):
-        batch_path = '/'.join(args[0:3])
+        batch_path = "/".join(args[0:3])
         promotion_reason = args[3]
         with ApiClient(user) as api_client:
             api_client.batch_promote(batch_path, promotion_reason)
-        logger.success("{} promoted {}", user, '/'.join(args[0:3]))
+        logger.success("{} promoted {}", user, "/".join(args[0:3]))
 
     def client_submit(self, user: User, args):
         team_slug, suite_slug, batch_slug = args
@@ -138,7 +138,7 @@ class Playbook:
             api_client.client_submit(team_slug, suite_slug, batch_slug)
 
     def comment_create(self, user: User, args):
-        batch_path = '/'.join(args[0:3])
+        batch_path = "/".join(args[0:3])
         comment_body = args[3]
         with ApiClient(user) as api_client:
             api_client.comment_create(batch_path, comment_body)
@@ -151,7 +151,9 @@ class Playbook:
     def suite_update(self, user: User, args):
         team_slug, old_suite_slug, new_suite_slug, new_suite_name = args
         with ApiClient(user) as api_client:
-            api_client.suite_update(team_slug, old_suite_slug, new_suite_slug, new_suite_name)
+            api_client.suite_update(
+                team_slug, old_suite_slug, new_suite_slug, new_suite_name
+            )
 
     def suite_remove(self, user: User, args):
         team_slug, suite_slug = args

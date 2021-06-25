@@ -322,9 +322,12 @@ jobs:
       - name: pull client docs from aws
         if: steps.changes.outputs.app == 'true'
         run: |
-          aws s3 cp ${{ steps.params.outputs.buckets }}/docs/clients/cpp-api-reference.tar.gz .
+          aws s3 cp ${{ steps.params.outputs.buckets }}/cpp-docs-external.tar.gz .
+          aws s3 cp ${{ steps.params.outputs.buckets }}/python-docs-external.tar.gz .
           mkdir -p ./stage/clients/cpp
-          tar -xf cpp-api-reference.tar.gz -C ./stage/clients/cpp
+          mkdir -p ./stage/clients/python
+          tar -xf cpp-docs-external.tar.gz -C ./stage/clients/cpp
+          tar -xf python-docs-external.tar.gz -C ./stage/clients/python
 
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.api == 'true'
