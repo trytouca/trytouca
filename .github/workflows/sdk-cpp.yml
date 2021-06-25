@@ -90,4 +90,4 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf cpp-api-reference.tar.gz local/docs/html
-          aws s3 cp cpp-api-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/docs/clients/
+          aws s3 cp cpp-api-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
