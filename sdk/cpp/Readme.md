@@ -293,4 +293,4 @@ This repository is released under the Apache-2.0 License. See [`LICENSE`][licens
 [docs-submit]: https://docs.touca.io/guides/submit
 [docs-cpp-integration]: https://docs.touca.io/api/cpp-sdk/integration
 [docs-cpp]: https://docs.touca.io/api/cpp-sdk
-[docs-cpp-api]: https://touca.io/docs/clients/cpp/api.html
+[docs-cpp-api]: https://app.touca.io/docs/clients/cpp/api.html

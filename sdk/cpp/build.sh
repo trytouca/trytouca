@@ -301,8 +301,8 @@ build_clear () {
 build_docs () {
     if [ $# -ne 1 ]; then return 1; fi
     local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
-    local config_dir_doxygen="${dir_source}/config/doxygen"
-    local config_dir_sphinx="${dir_source}/config/sphinx"
+    local config_dir_doxygen="${dir_source}/docs/doxygen"
+    local config_dir_sphinx="${dir_source}/docs/sphinx"
     local dir_dst="${dir_source}/local/docs"
     local dir_out="${dir_dst}/html"
     remove_dir_if_exists "$dir_dst"

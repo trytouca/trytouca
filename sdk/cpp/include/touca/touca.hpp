@@ -159,10 +159,7 @@ namespace touca {
      *          file to be in json format.
      *          The configuration file must include a top-level property
      *          `touca` whose value is an object describing configuration
-     *          parameters of the client. Formal specification of the
-     *          expected json file is shown below.
-     *
-     * @include config-file.schema.json
+     *          parameters of the client.
      *
      * @param path path to a configuration file with json format
      *
