@@ -19,7 +19,7 @@ to significantly reduce the risks of changing code in mission-critical systems.
 
 <img alt="Touca Server" src="https://gblobscdn.gitbook.com/assets%2F-MWzZns5gcbaOLND3iQY%2F-MbwEQRnyNCcNhCOZail%2F-MbwFdJnPRjj4AxZb5a9%2Fpic1.png?alt=media&token=53187b81-7358-4701-95e6-b3e420dd10bd" />
 
-# Features
+# ✨ Features
 
 Touca is an automated regression testing system for testing complex
 mission-critical workflows with any number of real-world inputs.
@@ -46,11 +46,9 @@ mission-critical workflows with any number of real-world inputs.
   against previous versions, and report any found differences in an easy
   to understand format.
 
-And many more! Checkout a [recorded product demo][YouTube] or
-[schedule a meeting][Calendly] with us to discuss if Touca can
-help your team refactor code, safer and more efficiently.
+And many more! Checkout a [recorded product demo][YouTube] to learn more.
 
-# Documentation
+# 📖 Documentation
 
 * If you are new to Touca, the best place to start is our
   [Quickstart Guide][docs-quickstart] on our documentation website.
@@ -59,11 +57,7 @@ help your team refactor code, safer and more efficiently.
 * If you cannot wait to start writing your first test with Touca,
   checkout our [C++ API Reference][docs-cpp-api].
 
-We want Touca to work well for you. If you need help, have any questions, or
-like to provide feedback, send us a note through the Intercom at Touca.io or
-send us an email us at [hello@touca.io].
-
-# Getting Started
+# 🚀 Getting Started
 
 > This section is a condensed version of the Quick Start Guide on our
 > documentation website, meant to give you a general idea of how Touca works.
@@ -172,12 +166,10 @@ processed 4 of 4 test cases
 test completed in 565 ms
 ```
 
-If and when we change the implementation of is_prime, we can rerun the test
+If and when we change the implementation of `is_prime`, we can rerun the test
 and submit the new results for the new version to the Touca server. The server
 takes care of storing and comparing the results submitted between the two
 versions and reports the differences in near real-time.
-
-## Recap
 
 This approach is effective in addressing common problems in the following
 situations:
@@ -194,7 +186,7 @@ us test these workflows at any scale.
 * Decoupling our test input from our test logic, can help us manage our long
   list of inputs without modifying the test logic. Managing that list on a
   remote server accessible to all members of our team, can help us add notes
-  to each test case, explain why there are needed and track how their
+  to each test case, explain why they are needed and track how their
   performance changes over time.
 * Submitting our test results to a remote server, instead of storing them in
   files, can help us avoid the mundane tasks of managing and processing of
@@ -203,6 +195,90 @@ us test these workflows at any scale.
   original data types and reports discovered differences in real-time to all
   interested members of our team. It allows us to audit how our software
   evolves over time and provides high-level information about our tests.
+
+# 🧑‍🔧 Integration
+
+> This section is a summarized version of the [Integration][docs-cpp-integration]
+> document on our documentation website.
+
+The easiest way to use Touca as a third-party dependency in your project is
+to use CMake version 3.11 or higher, via the FetchContent module as shown below:
+
+```cmake
+FetchContent_Declare(
+    touca
+    GIT_REPOSITORY https://github.com/trytouca/touca-cpp.git
+    GIT_TAG        v1.3.0
+)
+FetchContent_MakeAvailable(touca)
+```
+
+But in addition to the Client Library, Touca SDK for C++ also includes a
+Test Framework which is disabled by default. For serious regression test
+tools, we encourage the use of this test framework which can be build with
+a small modification to the code above:
+
+```cmake
+FetchContent_Declare(
+    touca
+    GIT_REPOSITORY https://github.com/trytouca/touca-cpp.git
+    GIT_TAG        v1.3.0
+)
+
+FetchContent_GetProperties(touca)
+if(NOT touca_POPULATED)
+    FetchContent_Populate(touca)
+
+    # enable building of touca test framework
+    set(TOUCA_BUILD_FRAMEWORK ON)
+
+    # optionally, provide the path to the OpenSSL root directory
+    # set(OPENSSL_ROOT_DIR <path_to_openssl>)
+
+    # proceed with building the touca Client Library and Test Framework.
+    add_subdirectory(${touca_SOURCE_DIR})
+endif()
+```
+
+The code above builds an additional CMake target touca_framework to be linked
+by regression test tools that make use of the Touca Test Framework.
+
+As an alternative, it is possible to use Conan for pulling Touca as a
+third-party library:
+
+```bash
+conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
+conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.4.0@_/_"
+```
+
+# 🕵️ Requirements
+
+We formally support building our library on Windows, Linux and macOS platforms
+using C++11, C++14 and C++17 standards. Both the library and the test framework
+can be built as shared or static libraries. We test our library against the
+following compilers. We intend to support any new version of these compilers.
+
+| Compiler     | Min Version | Max Version |
+| --------     | ----------- | ----------- |
+| x86-64 gcc   | 7.1         | 10.2        |
+| x86-64 clang | 7.0.0       | 11.0.0      |
+| x64 MSVC     | 1900        | 1927        |
+
+# 🙋 Ask for Help
+
+We want Touca to work well for you. If you need help, have any questions, or
+like to provide feedback, send us a note through the Intercom at Touca.io or
+send us an email us at [hello@touca.io].
+
+# 💸 What's Next?
+
+Touca client libraries are free and open-source. Our cloud-hosted version of
+Touca server at Touca.io has a free forever plan. You can create an account
+and explore Touca server capabilities on your own. But we want to help you
+get on-boarded and answer any questions you may have in the process.
+So we ask that you schedule a no-pressure chat with us [here][Calendly].
+We like to learn more about you, understand your software and its requirements,
+and do our best to make Touca provide value to you and your team.
 
 # License
 
