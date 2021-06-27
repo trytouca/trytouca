@@ -3,14 +3,37 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 from json import dumps
-from typing import List
+from typing import Any, Dict, List
 from threading import get_ident
 from touca._transport import Transport
 from touca._testcase import Testcase
 from touca._types import TypeHandler
 
 
-def resultmethod(func):
+def casemethod(func):
+    """ """
+    import inspect
+    from functools import wraps
+
+    func.__doc__ = inspect.getdoc(getattr(Testcase, func.__name__))
+
+    @wraps(func)
+    def wrapper(self, *args):
+        element = self._active_testcase_name()
+        if not element:
+            return
+        testcase = self._cases.get(element)
+        if len(args) != 2:
+            getattr(testcase, func.__name__)(*args)
+            return
+        value = self._type_handler.transform(args[1])
+        if value:
+            getattr(testcase, func.__name__)(args[0], value)
+
+    return wrapper
+
+
+def metricmethod(func):
     """ """
     import inspect
     from functools import wraps
@@ -62,7 +85,7 @@ class Client:
 
     def __init__(self):
         """ """
-        self._cases = dict()
+        self._cases: Dict[str, Testcase] = dict()
         self._configured = False
         self._configuration_error = str()
         self._elements = list()
@@ -242,7 +265,7 @@ class Client:
         Queries the Touca server for the list of testcases that are submitted
         to the baseline version of this suite.
 
-        :raises: RuntimeError
+        :raises RuntimeError:
             when called on the client that is not configured to communicate
             with the Touca server.
 
@@ -297,46 +320,78 @@ class Client:
         :param name:
             name of the testcase to be removed from memory
 
-        :raises: RuntimeError
+        :raises RuntimeError:
             when called with the name of a test case that was never declared
         """
         if name not in self._cases:
             raise RuntimeError(f'test case "{name}" was never declared')
         del self._cases[name]
 
-    @resultmethod
-    def add_result(self):
-        pass
+    @casemethod
+    def add_result(self, key: str, value: Any):
+        return self._type_handler.transform(value)
 
-    @resultmethod
-    def add_assertion(self):
-        pass
+    @casemethod
+    def add_assertion(self, key: str, value: Any):
+        return self._type_handler.transform(value)
 
-    @resultmethod
-    def add_array_element(self):
-        pass
+    @casemethod
+    def add_array_element(self, key: str, value: Any):
+        return self._type_handler.transform(value)
 
-    @resultmethod
-    def add_hit_count(self):
-        pass
+    @casemethod
+    def add_hit_count(self, key: str):
+        return
 
-    @metricmethod
-    def add_metric(self):
-        pass
+    @casemethod
+    def add_metric(self, key: str, milliseconds: int):
+        return milliseconds
 
-    @metricmethod
-    def start_timer(self):
-        pass
+    @casemethod
+    def start_timer(self, key: str):
+        return
 
-    @metricmethod
-    def stop_timer(self):
-        pass
+    @casemethod
+    def stop_timer(self, key: str):
+        return
 
     def save_binary(self, path: str, cases: list):
+        """
+        Stores test results and performance benchmarks in binary format
+        in a file of specified path.
+
+        Touca binary files can be submitted at a later time to the Touca
+        server.
+
+        We do not recommend as a general practice for regression test tools
+        to locally store their test results. This feature may be helpful for
+        special cases such as when regression test tools have to be run in
+        environments that have no access to the Touca server (e.g. running
+        with no network access).
+
+        :param path: path to file in which test results and performance
+            benchmarks should be stored
+        :param cases: names of test cases  whose results should be stored.
+            If a set is not specified or is set as empty, all test cases will
+            be stored in the specified file.
+        """
         pass
 
     def save_json(self, path: str, cases: list):
-        """ """
+        """
+        Stores test results and performance benchmarks in JSON format
+        in a file of specified path.
+
+        This feature may be helpful during development of regression tests
+        tools for quick inspection of the test results and performance metrics
+        being captured.
+
+        :param path: path to file in which test results and performance
+            benchmarks should be stored
+        :param cases: names of test cases  whose results should be stored.
+            If a set is not specified or is set as empty, all test cases will
+            be stored in the specified file.
+        """
         items = filter(lambda x: x in cases, self._cases) if cases else self._cases
         content = dumps([testcase.json() for testcase in items.values()])
         with open(path, mode="wt") as file:
@@ -353,7 +408,7 @@ class Client:
         submitted to the server. Any subsequent call to :py:meth:`~post` will
         resubmit the modified test case.
 
-        :raises: RuntimeError
+        :raises RuntimeError:
             when called on the client that is not configured to communicate
             with the Touca server.
         """
@@ -372,7 +427,7 @@ class Client:
         the last test case was submitted. This duration is configurable from
         the "Settings" tab in "Suite" Page.
 
-        :raises: RuntimeError
+        :raises RuntimeError:
             when called on the client that is not configured to communicate
             with the Touca server.
         """
