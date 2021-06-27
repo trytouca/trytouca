@@ -62,8 +62,8 @@ to learn more.
 ================
 
 -  If you are new to Touca, the best place to start is our `Quickstart Guide <https://docs.touca.io/getting-started/quickstart>`__ on our documentation website.
--  For information on how to use this library, examples, and tutorials, checkout our `C++ SDK Documentation <https://docs.touca.io/api/python-sdk>`__.
--  If you cannot wait to start writing your first test with Touca, checkout our `C++ API Reference <https://touca.io/docs/clients/python/api.html>`__.
+-  For information on how to use this library, examples, and tutorials, checkout our `Python SDK Documentation <https://docs.touca.io/api/python-sdk>`__.
+-  If you cannot wait to start writing your first test with Touca, checkout our `Python API Reference <https://app.touca.io/docs/clients/python/api.html>`__.
 
 🚀 Getting Started
 ==================
@@ -184,7 +184,7 @@ can help us test these workflows at any scale.
 🧑‍🔧 Install
 =============
 
-Touca SDK for Python can be installed via `pip <https://pip.pypa.io/>`__.
+Touca SDK for Python can be installed via `pip <https://pip.pypa.io/>`__:
 
 .. code:: bash
 
@@ -215,4 +215,4 @@ License
 =======
 
 This repository is released under the Apache-2.0 License. See
-`LICENSE <https://github.com/getsentry/sentry-python/blob/master/LICENSE>`__.
+`LICENSE <https://github.com/trytouca/touca-python/blob/main/LICENSE>`__.

@@ -2,13 +2,38 @@
 
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+from json import dumps
 from typing import List
 from threading import get_ident
 from touca._transport import Transport
 from touca._testcase import Testcase
+from touca._types import TypeHandler
 
 
-def relaymethod(func):
+def resultmethod(func):
+    """ """
+    import inspect
+    from functools import wraps
+
+    func.__doc__ = inspect.getdoc(getattr(Testcase, func.__name__))
+
+    @wraps(func)
+    def wrapper(self, *args):
+        element = self._active_testcase_name()
+        if not element:
+            return
+        testcase = self._cases.get(element)
+        if len(args) != 2:
+            getattr(testcase, func.__name__)(*args)
+            return
+        value = self._type_handler.transform(args[1])
+        if value:
+            getattr(testcase, func.__name__)(args[0], value)
+
+    return wrapper
+
+
+def metricmethod(func):
     """ """
     import inspect
     from functools import wraps
@@ -45,6 +70,7 @@ class Client:
         self._threads_case = str()
         self._threads_cases = dict()
         self._transport = None
+        self._type_handler = TypeHandler()
 
     def _active_testcase_name(self) -> str:
         """ """
@@ -246,7 +272,7 @@ class Client:
                 team=self._options.get("team"),
                 suite=self._options.get("suite"),
                 version=self._options.get("version"),
-                testcase=name,
+                name=name,
             )
         self._threads_case = name
         self._threads_cases[get_ident()] = name
@@ -278,41 +304,43 @@ class Client:
             raise RuntimeError(f'test case "{name}" was never declared')
         del self._cases[name]
 
-    @relaymethod
+    @resultmethod
     def add_result(self):
         pass
 
-    @relaymethod
+    @resultmethod
     def add_assertion(self):
         pass
 
-    @relaymethod
+    @resultmethod
     def add_array_element(self):
         pass
 
-    @relaymethod
+    @resultmethod
     def add_hit_count(self):
         pass
 
-    @relaymethod
+    @metricmethod
     def add_metric(self):
         pass
 
-    @relaymethod
+    @metricmethod
     def start_timer(self):
         pass
 
-    @relaymethod
+    @metricmethod
     def stop_timer(self):
         pass
 
-    def save_binary(self, key: str, cases: list, overwrite: bool):
-        """ """
+    def save_binary(self, path: str, cases: list):
+        pass
 
-    def save_json(self, key: str, cases: list, overwrite: bool):
+    def save_json(self, path: str, cases: list):
         """ """
-        for name, testcase in self._cases.items():
-            print(name, testcase._results)
+        items = filter(lambda x: x in cases, self._cases) if cases else self._cases
+        content = dumps([testcase.json() for testcase in items.values()])
+        with open(path, mode="wt") as file:
+            file.write(content)
 
     def post(self):
         """

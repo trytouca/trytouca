@@ -80,8 +80,8 @@ def add_hit_count(key: str):
 
 
 @clientmethod
-def add_metric(key: str, value: int):
-    Client.instance().add_metric(key, value)
+def add_metric(key: str, milliseconds: int):
+    Client.instance().add_metric(key, milliseconds)
 
 
 @clientmethod
@@ -95,13 +95,13 @@ def stop_timer(key: str):
 
 
 @clientmethod
-def save_binary(key: str, cases: List[str] = [], overwrite=True):
-    Client.instance().save_binary(key, cases, overwrite)
+def save_binary(key: str, cases: List[str] = []):
+    Client.instance().save_binary(key, cases)
 
 
 @clientmethod
-def save_json(key: str, cases: List[str] = [], overwrite=True):
-    Client.instance().save_json(key, cases, overwrite)
+def save_json(key: str, cases: List[str] = []):
+    Client.instance().save_json(key, cases)
 
 
 @clientmethod
@@ -112,3 +112,14 @@ def post():
 @clientmethod
 def seal():
     return Client.instance().seal()
+
+
+class scoped_timer:
+    def __init__(self, name):
+        self._name = name
+
+    def __enter__(self):
+        start_timer(self._name)
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        stop_timer(self._name)

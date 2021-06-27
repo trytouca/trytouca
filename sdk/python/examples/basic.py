@@ -6,6 +6,7 @@ import touca
 from dataclasses import dataclass
 from typing import List
 from time import sleep
+from threading import Thread
 
 
 @dataclass
@@ -58,8 +59,23 @@ def calculate_gpa(courses: List[Course]):
     return sum(k.grade for k in courses) / len(courses)
 
 
-def custom_function(student: Student):
-    sleep(0.03)
+def custom_function_1(student: Student):
+    with touca.scoped_timer(custom_function_1.__name__):
+        touca.add_result("is_adult", 18 <= 2021 - student.dob.year)
+        sleep(0.05)
+
+
+def custom_function_2(student: Student):
+    for idx, _ in enumerate(student.courses, start=1):
+        with touca.scoped_timer(f"func2_course_{idx}"):
+            touca.add_hit_count("number of courses")
+            sleep(0.05)
+
+
+def custom_function_3(student: Student):
+    for course in student.courses:
+        touca.add_array_element("course_names", course.name)
+    sleep(0.05)
 
 
 def main():
@@ -78,8 +94,14 @@ def main():
         touca.add_result("birth_date", student.dob)
         touca.add_result("gpa", calculate_gpa(student.courses))
 
+        custom_function_1(student)
+
+        thread = Thread(target=custom_function_2, args=[student])
+        thread.start()
+        thread.join()
+
         touca.start_timer("func3")
-        custom_function(student)
+        custom_function_3(student)
         touca.stop_timer("func3")
 
         touca.add_metric("external", 10)
