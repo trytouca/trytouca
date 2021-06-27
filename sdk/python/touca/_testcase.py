@@ -2,10 +2,11 @@
 
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-from touca._types import DecimalType, IntegerType, VectorType, ToucaType
+from touca._types import IntegerType, VectorType, ToucaType
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
+from typing import Dict, Tuple
 
 
 class ResultValueType(Enum):
@@ -29,16 +30,9 @@ class Testcase:
     def __init__(self, **kwargs):
         """ """
         self._meta = kwargs
-        self._results = dict()
-        self._tics = dict()
-        self._tocs = dict()
-
-    def _metrics(self):
-        for key, tic in self._tics.items():
-            if key not in self._tocs:
-                continue
-            diff = (self._tocs.get(key) - tic).microseconds / 1000
-            yield key, DecimalType(diff)
+        self._results: Dict[str, ResultEntry] = dict()
+        self._tics: Dict[str, datetime] = dict()
+        self._tocs: Dict[str, datetime] = dict()
 
     def add_result(self, key: str, value: ToucaType):
         """
@@ -199,16 +193,28 @@ class Testcase:
         if key in self._tics:
             self._tocs[key] = datetime.now()
 
+    def _metrics(self) -> Tuple[str, ToucaType]:
+        """ """
+        for key, tic in self._tics.items():
+            if key not in self._tocs:
+                continue
+            diff = (self._tocs.get(key) - tic).microseconds / 1000
+            yield key, IntegerType(int(diff))
+
+    def _metadata(self) -> Dict[str, str]:
+        """ """
+        return {
+            "teamslug": self._meta.get("team") or "unknown",
+            "testsuite": self._meta.get("suite") or "unknown",
+            "version": self._meta.get("version") or "unknown",
+            "testcase": self._meta.get("name") or "unknown",
+            "builtAt": datetime.now().isoformat(),
+        }
+
     def json(self):
         """ """
         return {
-            "metadata": {
-                "teamslug": self._meta.get("team") or "unknown",
-                "testsuite": self._meta.get("suite") or "unknown",
-                "version": self._meta.get("version") or "unknown",
-                "testcase": self._meta.get("name") or "unknown",
-                "builtAt": datetime.now().isoformat(),
-            },
+            "metadata": self._metadata(),
             "results": [
                 {"key": k, "value": v.val.json()}
                 for k, v in self._results.items()
@@ -221,3 +227,69 @@ class Testcase:
             ],
             "metrics": [{"key": k, "value": v.json()} for k, v in self._metrics()],
         }
+
+    def serialize(self) -> bytearray:
+        """ """
+        from flatbuffers import Builder
+        import touca._schema as schema
+
+        dicts = {
+            ResultValueType.Check: schema.ResultType.Check,
+            ResultValueType.Assert: schema.ResultType.Assert,
+        }
+        builder = Builder(1024)
+
+        metadata = {k: builder.CreateString(v) for k, v in self._metadata().items()}
+        schema.MetadataStart(builder)
+        schema.MetadataAddTeamslug(builder, metadata.get("teamslug"))
+        schema.MetadataAddTestsuite(builder, metadata.get("testsuite"))
+        schema.MetadataAddVersion(builder, metadata.get("version"))
+        schema.MetadataAddTestcase(builder, metadata.get("testcase"))
+        schema.MetadataAddBuiltAt(builder, metadata.get("builtAt"))
+        fbs_metadata = schema.MetadataEnd(builder)
+
+        result_entries = []
+        for k, v in self._results.items():
+            fbs_key = Builder.CreateString(builder, k)
+            fbs_value = v.val.serialize(builder)
+            schema.ResultStart(builder)
+            schema.ResultAddKey(builder, fbs_key)
+            schema.ResultAddValue(builder, fbs_value)
+            schema.ResultAddTyp(builder, dicts.get(v.typ))
+            result_entries.append(schema.ResultEnd(builder))
+
+        schema.ResultsStartEntriesVector(builder, len(result_entries))
+        for item in reversed(result_entries):
+            builder.PrependUOffsetTRelative(item)
+        fbs_result_entries = Builder.EndVector(builder, len(result_entries))
+
+        schema.ResultsStart(builder)
+        schema.ResultsAddEntries(builder, fbs_result_entries)
+        fbs_results = schema.ResultsEnd(builder)
+
+        metric_entries = []
+        for k, v in self._metrics():
+            fbs_key = Builder.CreateString(builder, k)
+            fbs_value = v.serialize(builder)
+            schema.MetricStart(builder)
+            schema.MetricAddKey(builder, fbs_key)
+            schema.MetricAddValue(builder, fbs_value)
+            metric_entries.append(schema.MetricEnd(builder))
+
+        schema.MetricsStartEntriesVector(builder, len(metric_entries))
+        for item in reversed(metric_entries):
+            builder.PrependUOffsetTRelative(item)
+        fbs_metric_entries = Builder.EndVector(builder, len(metric_entries))
+
+        schema.MetricsStart(builder)
+        schema.MetricsAddEntries(builder, fbs_metric_entries)
+        fbs_metrics = schema.MetricsEnd(builder)
+
+        schema.MessageStart(builder)
+        schema.MessageAddMetadata(builder, fbs_metadata)
+        schema.MessageAddResults(builder, fbs_results)
+        schema.MessageAddMetrics(builder, fbs_metrics)
+        fbs_message = schema.MessageEnd(builder)
+
+        builder.Finish(fbs_message)
+        return builder.Output()

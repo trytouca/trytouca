@@ -23,52 +23,12 @@ def casemethod(func):
         if not element:
             return
         testcase = self._cases.get(element)
-        if len(args) != 2:
-            getattr(testcase, func.__name__)(*args)
-            return
-        value = self._type_handler.transform(args[1])
-        if value:
-            getattr(testcase, func.__name__)(args[0], value)
-
-    return wrapper
-
-
-def metricmethod(func):
-    """ """
-    import inspect
-    from functools import wraps
-
-    func.__doc__ = inspect.getdoc(getattr(Testcase, func.__name__))
-
-    @wraps(func)
-    def wrapper(self, *args):
-        element = self._active_testcase_name()
-        if not element:
-            return
-        testcase = self._cases.get(element)
-        if len(args) != 2:
-            getattr(testcase, func.__name__)(*args)
-            return
-        value = self._type_handler.transform(args[1])
-        if value:
-            getattr(testcase, func.__name__)(args[0], value)
-
-    return wrapper
-
-
-def metricmethod(func):
-    """ """
-    import inspect
-    from functools import wraps
-
-    func.__doc__ = inspect.getdoc(getattr(Testcase, func.__name__))
-
-    @wraps(func)
-    def wrapper(self, *args):
-        element = self._active_testcase_name()
-        if element:
-            testcase = self._cases.get(element)
-            getattr(testcase, func.__name__)(*args)
+        method = getattr(testcase, func.__name__)
+        retval = func(self, *args)
+        if not retval:
+            method(*args)
+        else:
+            method(args[0], retval)
 
     return wrapper
 
@@ -88,10 +48,10 @@ class Client:
         self._cases: Dict[str, Testcase] = dict()
         self._configured = False
         self._configuration_error = str()
-        self._elements = list()
+        self._elements: List[str] = []
         self._options = dict()
         self._threads_case = str()
-        self._threads_cases = dict()
+        self._threads_cases: Dict[int, str] = dict()
         self._transport = None
         self._type_handler = TypeHandler()
 
@@ -117,6 +77,32 @@ class Client:
         if any(is_different(k) for k in keys):
             self._transport.update_options(list(filter(is_different, keys)))
             return True
+
+    def _serialize(self, cases: list) -> bytearray:
+        """ """
+        from flatbuffers import Builder
+        import touca._schema as schema
+
+        builder = Builder(1024)
+
+        message_buffers = []
+        for item in reversed(cases):
+            buffer = builder.CreateByteVector(item.serialize())
+            schema.MessageBufferStart(builder)
+            schema.MessageBufferAddBuf(builder, buffer)
+            message_buffers.append(schema.MessageBufferEnd(builder))
+
+        schema.MessageBufferStartBufVector(builder, len(message_buffers))
+        for msg_buf in reversed(message_buffers):
+            builder.PrependUOffsetTRelative(msg_buf)
+        fbs_msg_buffers = Builder.EndVector(builder, len(message_buffers))
+
+        schema.MessagesStart(builder)
+        schema.MessagesAddMessages(builder, fbs_msg_buffers)
+        fbs_messages = schema.MessagesEnd(builder)
+        builder.Finish(fbs_messages)
+
+        return builder.Output()
 
     def configure(self, **kwargs) -> bool:
         """
@@ -375,7 +361,10 @@ class Client:
             If a set is not specified or is set as empty, all test cases will
             be stored in the specified file.
         """
-        pass
+        items = filter(lambda x: x in cases, self._cases) if cases else self._cases
+        content = self._serialize(items.values())
+        with open(path, mode="wb") as file:
+            file.write(content)
 
     def save_json(self, path: str, cases: list):
         """
