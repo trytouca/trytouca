@@ -2,7 +2,7 @@
 
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-from touca._types import IntegerType, VectorType, ToucaType
+from ._types import IntegerType, VectorType, ToucaType
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
@@ -24,7 +24,7 @@ class ResultEntry:
     val: ToucaType
 
 
-class Testcase:
+class Case:
     """ """
 
     def __init__(self, **kwargs):
@@ -261,7 +261,7 @@ class Testcase:
         schema.ResultsStartEntriesVector(builder, len(result_entries))
         for item in reversed(result_entries):
             builder.PrependUOffsetTRelative(item)
-        fbs_result_entries = Builder.EndVector(builder, len(result_entries))
+        fbs_result_entries = builder.EndVector()
 
         schema.ResultsStart(builder)
         schema.ResultsAddEntries(builder, fbs_result_entries)
@@ -279,7 +279,7 @@ class Testcase:
         schema.MetricsStartEntriesVector(builder, len(metric_entries))
         for item in reversed(metric_entries):
             builder.PrependUOffsetTRelative(item)
-        fbs_metric_entries = Builder.EndVector(builder, len(metric_entries))
+        fbs_metric_entries = builder.EndVector()
 
         schema.MetricsStart(builder)
         schema.MetricsAddEntries(builder, fbs_metric_entries)

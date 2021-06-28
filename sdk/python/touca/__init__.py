@@ -19,7 +19,9 @@ install the SDK as a development-only dependency.
 """
 
 from typing import Any, List
-from touca._client import Client
+from ._client import Client
+from ._utils import scoped_timer
+from ._version import __version__
 
 
 def clientmethod(f):
@@ -112,14 +114,3 @@ def post():
 @clientmethod
 def seal():
     return Client.instance().seal()
-
-
-class scoped_timer:
-    def __init__(self, name):
-        self._name = name
-
-    def __enter__(self):
-        start_timer(self._name)
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        stop_timer(self._name)

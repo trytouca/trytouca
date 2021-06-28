@@ -5,9 +5,9 @@
 from json import dumps
 from typing import Any, Dict, List
 from threading import get_ident
-from touca._transport import Transport
-from touca._testcase import Testcase
-from touca._types import TypeHandler
+from ._transport import Transport
+from ._case import Case
+from ._types import TypeHandler
 
 
 def casemethod(func):
@@ -15,7 +15,7 @@ def casemethod(func):
     import inspect
     from functools import wraps
 
-    func.__doc__ = inspect.getdoc(getattr(Testcase, func.__name__))
+    func.__doc__ = inspect.getdoc(getattr(Case, func.__name__))
 
     @wraps(func)
     def wrapper(self, *args):
@@ -45,7 +45,7 @@ class Client:
 
     def __init__(self):
         """ """
-        self._cases: Dict[str, Testcase] = dict()
+        self._cases: Dict[str, Case] = dict()
         self._configured = False
         self._configuration_error = str()
         self._elements: List[str] = []
@@ -95,7 +95,7 @@ class Client:
         schema.MessageBufferStartBufVector(builder, len(message_buffers))
         for msg_buf in reversed(message_buffers):
             builder.PrependUOffsetTRelative(msg_buf)
-        fbs_msg_buffers = Builder.EndVector(builder, len(message_buffers))
+        fbs_msg_buffers = builder.EndVector()
 
         schema.MessagesStart(builder)
         schema.MessagesAddMessages(builder, fbs_msg_buffers)
@@ -201,7 +201,7 @@ class Client:
             if self._make_transport():
                 self._transport.authenticate()
                 self._elements = self._transport.get_testcases()
-        except ValueError as err:
+        except (RuntimeError, ValueError) as err:
             self._configuration_error = f"Configuration failed: {err}"
             return False
         self._configured = True
@@ -277,7 +277,7 @@ class Client:
         if not self._configured:
             return
         if name not in self._cases:
-            self._cases[name] = Testcase(
+            self._cases[name] = Case(
                 team=self._options.get("team"),
                 suite=self._options.get("suite"),
                 version=self._options.get("version"),
@@ -403,6 +403,9 @@ class Client:
         """
         if not self._transport:
             raise RuntimeError("client not configured to perform this operation")
+        if not self._transport._token:
+            raise RuntimeError("client not authenticated")
+        self._transport.post(content=self._serialize(self._cases.values()))
 
     def seal(self):
         """
@@ -422,3 +425,6 @@ class Client:
         """
         if not self._transport:
             raise RuntimeError("client not configured to perform this operation")
+        if not self._transport._token:
+            raise RuntimeError("client not authenticated")
+        self._transport.seal()

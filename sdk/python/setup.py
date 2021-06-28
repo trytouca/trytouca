@@ -51,7 +51,7 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3 :: Only",
     ],
-    install_requires=["urllib3", "flatbuffers<2.0"],
+    install_requires=["urllib3", "flatbuffers>=2.0"],
     setup_requires=[],
     tests_require=[],
     extras_require={

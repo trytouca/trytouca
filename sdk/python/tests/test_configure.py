@@ -4,8 +4,8 @@
 
 import json
 import os
+import pytest
 import touca
-from pytest import raises
 from tempfile import TemporaryDirectory
 
 
@@ -16,12 +16,14 @@ def test_empty_client():
     assert touca.is_configured()
     assert not touca.configuration_error()
     for function in [touca.get_testcases, touca.seal, touca.post]:
-        with raises(
+        with pytest.raises(
             RuntimeError, match="client not configured to perform this operation"
         ):
             function()
-    assert not touca.save_binary("some_file")
-    assert not touca.save_json("some_file")
+    with TemporaryDirectory() as tmpdirname:
+        tmpfile = os.path.join(tmpdirname, "some_file")
+        touca.save_binary(tmpfile)
+        touca.save_json(tmpfile)
 
 
 def test_configure_by_file_empty():

@@ -107,6 +107,7 @@ def main():
         touca.add_metric("external", 10)
         touca.post()
 
+    touca.seal()
     touca.save_binary("touca_tutorial.bin")
     touca.save_json("touca_tutorial.json")
 

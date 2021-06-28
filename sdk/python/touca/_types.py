@@ -104,7 +104,7 @@ class VectorType(ToucaType):
         schema.ArrayStartValuesVector(builder, len(items))
         for item in items:
             builder.PrependUOffsetTRelative(item)
-        values = builder.EndVector(len(items))
+        values = builder.EndVector()
         schema.ArrayStart(builder)
         schema.ArrayAddValues(builder, values)
         value = schema.ArrayEnd(builder)
@@ -138,7 +138,7 @@ class ObjectType(ToucaType):
         schema.ObjectStartValuesVector(builder, len(members))
         for item in reversed(members):
             builder.PrependUOffsetTRelative(item)
-        values = builder.EndVector(len(members))
+        values = builder.EndVector()
         schema.ObjectStart(builder)
         schema.ObjectAddKey(builder, key)
         schema.ObjectAddValues(builder, values)
@@ -166,7 +166,7 @@ class TypeHandler:
             return self._types.get(type(value))(value)
         if isinstance(value, Iterable):
             vec = VectorType()
-            for item in vec:
+            for item in vec._values:
                 vec.add(self.transform(item))
             return vec
         obj = ObjectType(value.__class__.__name__)
