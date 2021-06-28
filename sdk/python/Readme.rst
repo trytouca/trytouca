@@ -1,18 +1,9 @@
-.. raw:: html
+Touca SDK For Python
+####################
 
-   <div align="center">
-     <a href="https://touca.io" target="_blank" rel="noopener">
-       <img alt="Touca Logo" height="48px" src="https://touca.io/logo/touca-logo-w-text.svg" />
-     </a>
-     <h1>Touca SDK for Python</h1>
-     <p>
-       <a href="https://app.touca.io" target="_blank" rel="noopener">Get Started</a>
-       <span> &middot; </span>
-       <a href="https://docs.touca.io/api/python-sdk" target="_blank" rel="noopener">Documentation</a>
-       <span> &middot; </span>
-       <a href="https://github.com/trytouca/touca-python/blob/main/LICENSE">License</a>
-     </p>
-   </div>
+`Get Started <https://app.touca.io>`__
+`Documentation <https://docs.touca.io/api/python-sdk>`__
+`License <https://github.com/trytouca/touca-python/blob/main/LICENSE>`__
 
 Touca helps engineering teams understand the true impact of their code changes
 on the behavior and performance of their software. Test your most complex

@@ -12,8 +12,8 @@ from setuptools import setup
 
 def get_file_content(file_name):
     here = os.path.abspath(os.path.dirname(__file__))
-    with open(os.path.join(here, file_name), "rt") as file:
-        return file.read()
+    with open(os.path.join(here, file_name), "rb") as file:
+        return file.read().decode("utf-8")
 
 
 version = "0.1.0"
