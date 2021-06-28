@@ -1,4 +1,4 @@
-.. image:: https://touca-web-app.s3.us-east-2.amazonaws.com/logo/touca-logo-w-text.png
+.. image:: https://touca.io/logo/touca-logo-w-text.svg
     :alt: Touca Logo
     :height: 40px
     :target: https://touca.io
@@ -12,9 +12,15 @@ Touca SDK For Python
 
 .. image:: https://img.shields.io/pypi/pyversions/touca
     :alt: PyPI - Python Version
+    :target: https://pypi.org/project/touca/
+
+.. image:: https://readthedocs.org/projects/touca-python/badge/?version=latest
+    :alt: Documentation Status
+    :target: https://touca-python.readthedocs.io/en/latest/?badge=latest
 
 .. image:: https://img.shields.io/github/workflow/status/trytouca/touca-python/touca-python-main
     :alt: GitHub Workflow Status
+    :target: https://github.com/trytouca/touca-python/actions/workflows/main.yml?query=branch%3Amain+event%3Apush
 
 .. image:: https://img.shields.io/codecov/c/github/trytouca/touca-python
     :alt: Codecov
