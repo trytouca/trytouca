@@ -12,6 +12,7 @@
 #
 import os
 import sys
+from touca._version import __version__
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -22,7 +23,7 @@ copyright = "2021, Touca, Inc."
 author = "Touca, Inc."
 
 # The full version, including alpha/beta/rc tags
-release = "0.1.0"
+release = __version__
 
 # -- General configuration ---------------------------------------------------
 

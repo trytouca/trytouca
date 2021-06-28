@@ -48,7 +48,6 @@ class Client:
         self._cases: Dict[str, Case] = dict()
         self._configured = False
         self._configuration_error = str()
-        self._elements: List[str] = []
         self._options = dict()
         self._threads_case = str()
         self._threads_cases: Dict[int, str] = dict()
@@ -200,7 +199,6 @@ class Client:
             update_options(self._options, kwargs)
             if self._make_transport():
                 self._transport.authenticate()
-                self._elements = self._transport.get_testcases()
         except (RuntimeError, ValueError) as err:
             self._configuration_error = f"Configuration failed: {err}"
             return False
@@ -259,7 +257,7 @@ class Client:
         """
         if not self._transport:
             raise RuntimeError("client not configured to perform this operation")
-        return self._elements
+        return self._transport.get_testcases()
 
     def declare_testcase(self, name: str):
         """

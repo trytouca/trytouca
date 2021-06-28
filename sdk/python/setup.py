@@ -16,7 +16,15 @@ def get_file_content(file_name):
         return file.read().decode("utf-8")
 
 
-version = "0.1.0"
+def get_version():
+    for line in get_file_content("touca/_version.py").splitlines():
+        if line.startswith("__version__"):
+            delimeter = '"' if '"' in line else "'"
+            return line.split(delimeter)[1]
+    raise RuntimeError("Unable to find version string.")
+
+
+version = get_version()
 repo_url = "https://github.com/trytouca/touca-python"
 
 setup(
@@ -52,8 +60,6 @@ setup(
         "Programming Language :: Python :: 3 :: Only",
     ],
     install_requires=["urllib3", "flatbuffers>=2.0"],
-    setup_requires=[],
-    tests_require=[],
     extras_require={
         "dev": [
             "black>=21.6b0",

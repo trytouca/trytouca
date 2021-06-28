@@ -6,7 +6,7 @@ FBS_OUTPUT_FILE=$(abspath $(shell pwd)/touca/_schema.py)
 
 test:
 	pytest --cov=touca --cov-report=term --cov-report=html:local/tests \
-		--disable-pytest-warnings tests
+		--cov-report=xml:local/tests/coverage.xml --disable-pytest-warnings tests
 
 docs:
 	sphinx-build -b html -c docs docs local/docs

@@ -1,9 +1,32 @@
+.. image:: https://touca-web-app.s3.us-east-2.amazonaws.com/logo/touca-logo-w-text.png
+    :alt: Touca Logo
+    :height: 40px
+    :target: https://touca.io
+
 Touca SDK For Python
 ####################
 
-`Get Started <https://app.touca.io>`__
-`Documentation <https://docs.touca.io/api/python-sdk>`__
-`License <https://github.com/trytouca/touca-python/blob/main/LICENSE>`__
+.. image:: https://img.shields.io/pypi/v/touca
+    :alt: PyPI
+    :target: https://pypi.org/project/touca/
+
+.. image:: https://img.shields.io/pypi/pyversions/touca
+    :alt: PyPI - Python Version
+
+.. image:: https://img.shields.io/github/workflow/status/trytouca/touca-python/touca-python-main
+    :alt: GitHub Workflow Status
+
+.. image:: https://img.shields.io/codecov/c/github/trytouca/touca-python
+    :alt: Codecov
+    :target: https://app.codecov.io/gh/trytouca/touca-python
+
+.. image:: https://img.shields.io/codacy/grade/4c28f395f89442ffadc7cbd38a4db02b
+    :alt: Codacy grade
+    :target: https://app.codacy.com/gh/trytouca/touca-python
+
+.. image:: https://img.shields.io/pypi/l/touca
+    :alt: PyPI - License
+    :target: https://github.com/trytouca/touca-python/blob/main/LICENSE
 
 Touca helps engineering teams understand the true impact of their code changes
 on the behavior and performance of their software. Test your most complex
@@ -12,6 +35,17 @@ reduce the risks of changing code in mission-critical systems.
 
 .. image:: https://gblobscdn.gitbook.com/assets%2F-MWzZns5gcbaOLND3iQY%2F-MbwEQRnyNCcNhCOZail%2F-MbwFdJnPRjj4AxZb5a9%2Fpic1.png?alt=media&token=53187b81-7358-4701-95e6-b3e420dd10bd
   :alt: Touca Server
+
+🧑‍🔧 Install
+=============
+
+Touca SDK for Python can be installed via `pip <https://pip.pypa.io/>`__:
+
+.. code:: bash
+
+    pip install touca
+
+We formally support Python v3.9 and newer on Windows, Linux and macOS platforms.
 
 ✨ Features
 ===========
@@ -140,7 +174,7 @@ Notice that we are including the version of our code as part of the URL to
 our remote Touca server. Touca SDKs are very flexible in how we pass this
 information. The above command produces the following output:
 
-.. code:: plaintext
+.. code::
 
     Touca Regression Test Framework
     Suite: prime_app
@@ -171,17 +205,6 @@ can help us test these workflows at any scale.
 
 -  Decoupling our test input from our test logic, can help us manage our long list of inputs without modifying the test logic. Managing that list on a remote server accessible to all members of our team, can help us add notes to each test case, explain why they are needed and track how their performance changes over time.
 -  Submitting our test results to a remote server, instead of storing them in files, can help us avoid the mundane tasks of managing and processing of those results. The Touca server retains test results and makes them accessible to all members of the team. It compares test results using their original data types and reports discovered differences in real-time to all interested members of our team. It allows us to audit how our software evolves over time and provides high-level information about our tests.
-
-🧑‍🔧 Install
-=============
-
-Touca SDK for Python can be installed via `pip <https://pip.pypa.io/>`__:
-
-.. code:: bash
-
-    pip install touca
-
-We formally support Python v3.9 and newer on Windows, Linux and macOS platforms.
 
 🙋 Ask for Help
 =================

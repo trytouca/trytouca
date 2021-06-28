@@ -47,10 +47,10 @@ jobs:
           pip install -e .[dev]
       - name: run unit tests
         run: |
-          pytest --cov=touca --cov-report=term --cov-report=html:local/tests tests
+          make test
       - name: generate docs
         run: |
-          sphinx-build -b html -c docs docs local/docs
+          make docs
       - name: push docs to aws
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -61,3 +61,24 @@ jobs:
         run: |
           tar -zcf python-test-coverage.tar.gz local/tests
           aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+      - name: push to pypi
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+          TWINE_NON_INTERACTIVE: true
+        run: |
+          pip install setuptools twine wheel
+          python setup.py sdist
+          twine check dist/*
+      - name: upload coverage to codecov
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: codecov/codecov-action@v1
+        env:
+          OS: ${{ runner.os }}
+          PYTHON: ${{ matrix.python-version }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./local/tests/coverage.xml
+          env_vars: OS,PYTHON
+          fail_ci_if_error: true
