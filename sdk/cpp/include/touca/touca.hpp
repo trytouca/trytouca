@@ -357,7 +357,7 @@ namespace touca {
      * @brief adds a given element to a list of results for the declared
      *        testcase which is associated with the specified key.
      *
-     * @details May be considered as a helper utility function.
+     * @details Could be considered as a helper utility function.
      *          This method is particularly helpful to log a list of
      *          elements as they are found:
      *          @code
@@ -368,8 +368,8 @@ namespace touca {
      *                  }
      *              }
      *          @endcode
-     *          This pattern can be considered as a syntactic sugar for
-     *          for the following alternative:
+     *          This pattern can be considered as a syntactic sugar for the
+     *          following alternative:
      *          @code
      *              std::vector<unsigned> primes;
      *              for (const auto number : numbers) {
@@ -383,7 +383,7 @@ namespace touca {
      *              }
      *          @endcode
      *
-     *          The elements added to the list are not required to be of the
+     *          The items added to the list are not required to be of the
      *          same type. The following code is acceptable:
      *          @code
      *              touca::add_array_element("elements", 42);
@@ -432,8 +432,8 @@ namespace touca {
      *                  }
      *              }
      *          @endcode
-     *          This pattern can be considered as a syntactic sugar for
-     *          for the following alternative:
+     *          This pattern can be considered as a syntactic sugar for the
+     *          following alternative:
      *          @code
      *              std::vector<unsigned> primes;
      *              for (const auto number : numbers) {
@@ -510,8 +510,8 @@ namespace touca {
      * @param path path to file in which testresults should be stored
      *
      * @param testcases set of names of testcases whose results should be
-     *                  stored to disk. if given set is empty, all
-     *                  testcases will be stored in the specified file.
+     *                  stored. if given set is empty, all test cases will
+     *                  be stored in the specified file.
      *
      * @param overwrite determines whether to overwrite any file that exists
      *                  in the specified `path`. Defaults to **true**.

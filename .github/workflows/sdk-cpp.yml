@@ -82,7 +82,7 @@ jobs:
       - name: install build dependencies
         run: |
           sudo apt-get install doxygen
-          pip install --no-cache-dir --upgrade breathe m2r2 sphinx sphinx-rtd-theme
+          pip install --no-cache-dir --upgrade -r docs/sphinx/requirements.txt
 
       - run: ./build.sh --docs
 

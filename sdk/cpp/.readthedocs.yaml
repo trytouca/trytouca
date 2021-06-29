@@ -1,0 +1,12 @@
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+
+version: 2
+
+build:
+  image: testing
+python:
+  version: 3.9
+  install:
+    - requirements: docs/sphinx/requirements.txt
+sphinx:
+  configuration: docs/conf.py

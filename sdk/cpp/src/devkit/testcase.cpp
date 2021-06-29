@@ -251,6 +251,7 @@ namespace touca {
         const auto& toc = chr::system_clock::time_point(chr::milliseconds(duration));
         _tics.emplace(key, tic);
         _tocs.emplace(key, toc);
+        _posted = false;
     }
 
     /**
