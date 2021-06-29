@@ -4,11 +4,15 @@
   </a>
   <h1>Touca SDK for C++</h1>
   <p>
+    <a href="https://github.com/trytouca/touca-cpp/releases" target="_blank" rel="noopener"><img alt="Latest Release" src="https://img.shields.io/github/v/tag/trytouca/touca-cpp" /></a>
+    <a href="" target="_blank" rel="noopener"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/trytouca/touca-cpp/touca-cpp-main" /></a>
+    <a href="https://touca-cpp.readthedocs.io/" target="_blank" rel="noopener"><img alt="API Reference Documentation" src="https://readthedocs.org/projects/touca-cpp/badge/?version=latest" /></a>
+    <a href="https://github.com/trytouca/touca-cpp/blob/main/LICENSE" target="_blank" rel="noopener"><img alt="License" src="https://img.shields.io/github/license/trytouca/touca-cpp" /></a>
+  </p>
+  <p>
     <a href="https://app.touca.io" target="_blank" rel="noopener">Get Started</a>
     <span> &middot; </span>
     <a href="https://docs.touca.io/api/cpp-sdk" target="_blank" rel="noopener">Documentation</a>
-    <span> &middot; </span>
-    <a href="https://github.com/trytouca/touca-cpp/blob/main/LICENSE">License</a>
   </p>
 </div>
 
@@ -17,7 +21,7 @@ on the behavior and performance of their software.
 Test your most complex software workflows with any number of real-world inputs
 to significantly reduce the risks of changing code in mission-critical systems.
 
-<img alt="Touca Server" src="https://gblobscdn.gitbook.com/assets%2F-MWzZns5gcbaOLND3iQY%2F-MbwEQRnyNCcNhCOZail%2F-MbwFdJnPRjj4AxZb5a9%2Fpic1.png?alt=media&token=53187b81-7358-4701-95e6-b3e420dd10bd" />
+![Touca Server](https://gblobscdn.gitbook.com/assets%2F-MWzZns5gcbaOLND3iQY%2F-MbwEQRnyNCcNhCOZail%2F-MbwFdJnPRjj4AxZb5a9%2Fpic1.png?alt=media&token=53187b81-7358-4701-95e6-b3e420dd10bd)
 
 # ✨ Features
 
