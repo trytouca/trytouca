@@ -15,6 +15,8 @@ import os
 import subprocess
 # sys.path.insert(0, os.path.abspath('.'))
 
+if not os.path.exists('../../local'):
+    os.makedirs('../../local/docs')
 subprocess.call('cd ../..; doxygen docs/doxygen/Doxyfile', shell=True)
 
 # -- Project information -----------------------------------------------------

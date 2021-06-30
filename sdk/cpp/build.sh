@@ -308,7 +308,6 @@ build_docs () {
     remove_dir_if_exists "$dir_dst"
     log_info "building cpp client library documentation using local toolchain"
     check_prerequisite_commands "doxygen" "sphinx-build"
-    mkdir -p "$(dirname "${dir_dst}")"
     sphinx-build -b html -c "${config_dir_sphinx}" "${config_dir_sphinx}" "${dir_out}"
     if [ -d "$dir_dst" ]; then
         log_info "built cpp client library documentation using local toolchain"
