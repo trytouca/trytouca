@@ -46,7 +46,7 @@ setup(
         "Changelog": "{}/blob/master/CHANGELOG.rst".format(repo_url),
         "Documentation": "https://trytouca.readthedocs.io/en/stable/index.html",
     },
-    python_requires=">=3.9",
+    python_requires=">=3.6",
     classifiers=[
         "Development Status :: 1 - Planning",
         "Topic :: Software Development :: Testing :: Acceptance",
@@ -56,6 +56,9 @@ setup(
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3 :: Only",
     ],
@@ -68,6 +71,7 @@ setup(
             "pytest-cov>=2.12.1",
             "Sphinx>=4.0.2",
             "sphinx-rtd-theme>=0.5.2",
+            "tox>=3.9.0",
         ]
     },
 )

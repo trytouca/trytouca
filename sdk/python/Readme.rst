@@ -51,7 +51,7 @@ Touca SDK for Python can be installed via `pip <https://pip.pypa.io/>`__:
 
     pip install touca
 
-We formally support Python v3.9 and newer on Windows, Linux and macOS platforms.
+We formally support Python v3.6 and newer on Windows, Linux and macOS platforms.
 
 ✨ Features
 ===========

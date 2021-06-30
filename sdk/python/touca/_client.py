@@ -3,7 +3,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 from json import dumps
-from typing import Any, Dict, List
+from typing import Any, Dict, List, ValuesView
 from threading import get_ident
 from ._transport import Transport
 from ._case import Case
@@ -77,15 +77,16 @@ class Client:
             self._transport.update_options(list(filter(is_different, keys)))
             return True
 
-    def _serialize(self, cases: list) -> bytearray:
+    def _serialize(self, cases: ValuesView[Case]) -> bytearray:
         """ """
+        from sys import version_info
         from flatbuffers import Builder
         import touca._schema as schema
 
         builder = Builder(1024)
 
         message_buffers = []
-        for item in reversed(cases):
+        for item in reversed(list(cases) if version_info < (3, 8) else cases):
             buffer = builder.CreateByteVector(item.serialize())
             schema.MessageBufferStart(builder)
             schema.MessageBufferAddBuf(builder, buffer)

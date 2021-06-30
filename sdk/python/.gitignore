@@ -1,5 +1,7 @@
 .env
 .coverage
+.python-version
+.tox
 build
 dist
 local

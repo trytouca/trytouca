@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        python-version: [3.9]
+        python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
       - uses: actions/checkout@v2
       - name: authenticate to aws
@@ -72,7 +72,7 @@ jobs:
           python setup.py sdist
           twine check dist/*
       - name: upload coverage to codecov
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9
         uses: codecov/codecov-action@v1
         env:
           OS: ${{ runner.os }}
