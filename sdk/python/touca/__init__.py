@@ -18,7 +18,7 @@ If you are just getting started with Touca, we generally recommend that you
 install the SDK as a development-only dependency.
 """
 
-from typing import Any, List
+from typing import Any, Callable, Dict, List, Type
 from ._client import Client
 from ._utils import scoped_timer
 from ._version import __version__
@@ -94,6 +94,11 @@ def start_timer(key: str):
 @clientmethod
 def stop_timer(key: str):
     Client.instance().stop_timer(key)
+
+
+@clientmethod
+def add_serializer(datatype: Type, serializer: Callable[[Any], Dict]):
+    Client.instance().add_serializer(datatype, serializer)
 
 
 @clientmethod

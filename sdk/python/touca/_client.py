@@ -3,7 +3,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 from json import dumps
-from typing import Any, Dict, List, ValuesView
+from typing import Any, Callable, Dict, List, ValuesView, Type
 from threading import get_ident
 from ._transport import Transport
 from ._case import Case
@@ -339,6 +339,21 @@ class Client:
     @casemethod
     def stop_timer(self, key: str):
         return
+
+    def add_serializer(self, datatype: Type, serializer: Callable[[Any], Dict]):
+        """
+        Registers custom serialization logic for a given custom data type.
+
+        Calling this function is rarely needed. The library already handles
+        all custom data types by serializing all their properties. Custom
+        serializers allow you to exclude a subset of an object properties
+        during serialization.
+
+        :param datattype: type to be serialized
+        :param serializer: function that converts any object of the given type
+            to a dictionary.
+        """
+        self._type_handler.add_serializer(datatype, serializer)
 
     def save_binary(self, path: str, cases: list):
         """

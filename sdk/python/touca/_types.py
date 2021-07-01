@@ -173,16 +173,21 @@ class TypeHandler:
         if type(value) in self._primitives:
             return self._primitives.get(type(value))(value)
         if type(value) in self._types:
-            return self._types.get(type(value))(value)
+            return self.transform(self._types.get(type(value))(value))
+        if isinstance(value, dict):
+            obj = ObjectType(value.__class__.__name__)
+            for k, v in value.items():
+                obj.add(k, self.transform(v))
+            return obj
         if isinstance(value, Iterable):
             vec = VectorType()
-            for item in vec._values:
-                vec.add(self.transform(item))
+            for v in vec._values:
+                vec.add(self.transform(v))
             return vec
         obj = ObjectType(value.__class__.__name__)
         for k, v in value.__dict__.items():
             obj.add(k, self.transform(v))
         return obj
 
-    def add_serializer(self, datatype: Type, func: Callable[[Any], ToucaType]):
-        self._types[datatype] = func
+    def add_serializer(self, datatype: Type, serializer: Callable[[Any], Dict]):
+        self._types[datatype] = serializer

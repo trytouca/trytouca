@@ -86,5 +86,13 @@ def test_case_loaded_assertions(loaded_case):
     assert data[0].get("value") == "potter"
 
 
+def test_case_loaded_result_object(loaded_case):
+    json = loaded_case.json()
+    data = json.get("results")
+    item = next((x for x in data if x.get("key") == "dob"), None)
+    assert item is not None
+    assert item.get("value") == '{"year": 2000, "month": 1, "day": 1}'
+
+
 def test_case_loaded_serialize(loaded_case):
     assert loaded_case.serialize()

@@ -19,6 +19,23 @@ class DateOfBirth:
     day: int
 
 
+def write_json_and_read_back(client: Client):
+    with TemporaryDirectory() as dirname:
+        filepath_json = os.path.join(dirname, "output.json")
+        client.save_json(filepath_json, [])
+        assert os.path.exists(filepath_json)
+        with open(filepath_json, "rt") as file_json:
+            content = file_json.read()
+            return json.loads(content)
+
+
+def write_json_and_read_back_result(client: Client, key: str):
+    content = write_json_and_read_back(client)
+    assert len(content) == 1
+    data = content[0].get("results")
+    return next((x for x in data if x.get("key") == key), None)
+
+
 @pytest.fixture
 def loaded_client() -> Client:
     courses = ["math", "english"]
@@ -45,16 +62,10 @@ def loaded_client() -> Client:
 
 
 def test_client_loaded_json(loaded_client):
-    with TemporaryDirectory() as dirname:
-        filepath_json = os.path.join(dirname, "output.json")
-        loaded_client.save_json(filepath_json, [])
-        assert os.path.exists(filepath_json)
-        with open(filepath_json, "rt") as file_json:
-            content = file_json.read()
-            content_json = json.loads(content)
-            assert len(content_json) == 1
-            for key in ["metadata", "assertions", "results", "metrics"]:
-                assert key in content_json[0]
+    content_json = write_json_and_read_back(loaded_client)
+    assert len(content_json) == 1
+    for key in ["metadata", "assertions", "results", "metrics"]:
+        assert key in content_json[0]
 
 
 def test_client_loaded_binary(loaded_client):
@@ -62,3 +73,23 @@ def test_client_loaded_binary(loaded_client):
         file_binary = os.path.join(dirname, "output.bin")
         loaded_client.save_binary(file_binary, [])
         assert os.path.exists(file_binary)
+
+
+def test_client_loaded_object_default_serialize():
+    client = Client()
+    client.configure()
+    client.declare_testcase("some-case")
+    client.add_result("dob", DateOfBirth(2000, 1, 1))
+    result = write_json_and_read_back_result(client, "dob")
+    assert result.get("value") == '{"year": 2000, "month": 1, "day": 1}'
+
+
+def test_client_loaded_object_custom_serialize():
+    serializer = lambda x: {"y": x.year, "m": x.month, "d": x.day}
+    client = Client()
+    client.configure()
+    client.declare_testcase("some-case")
+    client.add_serializer(DateOfBirth, serializer)
+    client.add_result("dob", DateOfBirth(2000, 1, 1))
+    result = write_json_and_read_back_result(client, "dob")
+    assert result.get("value") == '{"y": 2000, "m": 1, "d": 1}'
