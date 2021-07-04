@@ -26,7 +26,7 @@ def _apply_config_file(incoming: dict) -> None:
             incoming[k] = parsed["touca"][k]
 
 
-def _apply_arguments(existing, incoming) -> None:
+def _apply_arguments(existing, incoming: dict) -> None:
     """ """
     for params, validate, transform in [
         (
@@ -34,12 +34,7 @@ def _apply_arguments(existing, incoming) -> None:
             lambda x: isinstance(x, str),
             lambda x: x,
         ),
-        (["handshake"], lambda x: isinstance(x, bool), lambda x: x),
-        (
-            ["concurrency"],
-            lambda x: x in ["enabled", "disabled"],
-            lambda x: x == "enabled",
-        ),
+        (["offline", "concurrency"], lambda x: isinstance(x, bool), lambda x: x),
     ]:
         for param in params:
             if param not in incoming:
@@ -86,7 +81,7 @@ def _reformat_parameters(existing: dict) -> None:
 def _validate_options(existing: dict) -> None:
     """ """
     expected_keys = ["team", "suite", "version"]
-    has_handshake = "handshake" not in existing or existing.get("handshake")
+    has_handshake = not existing.get("offline")
     if has_handshake and any(x in existing for x in ["api_key", "api_url"]):
         expected_keys.extend(["api_key", "api_url"])
     key_status = {k: k in existing for k in expected_keys}

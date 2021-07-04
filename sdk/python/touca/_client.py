@@ -65,7 +65,7 @@ class Client:
     def _make_transport(self) -> bool:
         """ """
         keys = ["api_key", "api_url", "team", "suite", "version"]
-        if self._options.get("handshake") is False:
+        if self._options.get("offline") is True:
             return False
         if not all(k in self._options for k in keys):
             return False
@@ -172,19 +172,18 @@ class Client:
         :param version:
             version of your workflow under test.
 
-        :param handshake:
-            determines whether client should
-            connect with the Touca server during the configuration. Defaults
-            to ``True`` when ``api_url`` and ``api_key`` are provided.
-        :type handshake: bool, optional
+        :type offline: bool, optional
+        :param offline:
+            determines whether client should connect with the Touca server
+            during the configuration. Defaults to ``False`` when ``api_url``
+            or ``api_key`` are provided.
 
-        :type concurrency: str, optional
+        :type concurrency: bool, optional
         :param concurrency:
-            determines whether the scope of
-            test case declaration is bound to the thread performing the
-            declaration, or covers all other threads. Can be one of "enabled"
-            or "disabled". Defaults to "enabled". If set to "enabled", when a
-            thread calls :py:meth:`~declare_testcase`,
+            determines whether the scope of test case declaration is bound to
+            the thread performing the declaration, or covers all other threads.
+            Defaults to ``True``.
+            If set to ``True``, when a thread calls :py:meth:`~declare_testcase`,
             all other threads also have their most recent test case changed to
             the newly declared test case and any subsequent call to data
             capturing functions such as :py:meth:`~add_result`
@@ -375,7 +374,11 @@ class Client:
             If a set is not specified or is set as empty, all test cases will
             be stored in the specified file.
         """
-        items = filter(lambda x: x in cases, self._cases) if cases else self._cases
+        items = (
+            {x: self._cases[x] for x in self._cases if x in cases}
+            if cases
+            else self._cases
+        )
         content = self._serialize(items.values())
         with open(path, mode="wb") as file:
             file.write(content)
@@ -395,7 +398,11 @@ class Client:
             If a set is not specified or is set as empty, all test cases will
             be stored in the specified file.
         """
-        items = filter(lambda x: x in cases, self._cases) if cases else self._cases
+        items = (
+            {x: self._cases[x] for x in self._cases if x in cases}
+            if cases
+            else self._cases
+        )
         content = dumps([testcase.json() for testcase in items.values()])
         with open(path, mode="wt") as file:
             file.write(content)

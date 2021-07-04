@@ -70,7 +70,7 @@ def test_configure_by_file_full():
                         "touca": {
                             "api_key": "to be overwritten",
                             "api_url": "https://api.touca.io/v1/@/acme/students",
-                            "handshake": False,
+                            "offline": True,
                         }
                     }
                 )
@@ -82,7 +82,7 @@ def test_configure_by_file_full():
             {
                 "api_url": "https://api.touca.io/v1",
                 "api_key": "sample_touca_key",
-                "handshake": False,
+                "offline": True,
                 "team": "acme",
                 "suite": "students",
                 "version": "v1.0",

@@ -149,7 +149,7 @@ Here's how the above test would look like:
     import touca
     from code_under_test import is_prime
 
-    @touca.test
+    @touca.Workflow
     def test_is_prime(testcase: str):
         touca.add_result("is_prime", is_prime(int(testcase)))
 
