@@ -48,7 +48,7 @@ setup(
     },
     python_requires=">=3.6",
     classifiers=[
-        "Development Status :: 1 - Planning",
+        "Development Status :: 2 - Pre-Alpha",
         "Topic :: Software Development :: Testing :: Acceptance",
         "Intended Audience :: Developers",
         "Natural Language :: English",

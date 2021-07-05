@@ -2,12 +2,9 @@
 
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-from json import dumps
 from typing import Any, Callable, Dict, List, ValuesView, Type
 from threading import get_ident
-from ._transport import Transport
 from ._case import Case
-from ._types import TypeHandler
 
 
 def casemethod(func):
@@ -45,6 +42,8 @@ class Client:
 
     def __init__(self):
         """ """
+        from ._types import TypeHandler
+
         self._cases: Dict[str, Case] = dict()
         self._configured = False
         self._configuration_error = str()
@@ -64,6 +63,8 @@ class Client:
 
     def _make_transport(self) -> bool:
         """ """
+        from ._transport import Transport
+
         keys = ["api_key", "api_url", "team", "suite", "version"]
         if self._options.get("offline") is True:
             return False
@@ -103,6 +104,15 @@ class Client:
         builder.Finish(fbs_messages)
 
         return builder.Output()
+
+    def _prepare_save(self, path, cases):
+        import os
+
+        if os.path.dirname(path):
+            os.makedirs(os.path.dirname(path), exist_ok=True)
+        if cases:
+            return [self._cases[x] for x in self._cases if x in cases]
+        return self._cases.values()
 
     def configure(self, **kwargs) -> bool:
         """
@@ -374,12 +384,8 @@ class Client:
             If a set is not specified or is set as empty, all test cases will
             be stored in the specified file.
         """
-        items = (
-            {x: self._cases[x] for x in self._cases if x in cases}
-            if cases
-            else self._cases
-        )
-        content = self._serialize(items.values())
+        items = self._prepare_save(path, cases)
+        content = self._serialize(items)
         with open(path, mode="wb") as file:
             file.write(content)
 
@@ -398,12 +404,10 @@ class Client:
             If a set is not specified or is set as empty, all test cases will
             be stored in the specified file.
         """
-        items = (
-            {x: self._cases[x] for x in self._cases if x in cases}
-            if cases
-            else self._cases
-        )
-        content = dumps([testcase.json() for testcase in items.values()])
+        from json import dumps
+
+        items = self._prepare_save(path, cases)
+        content = dumps([testcase.json() for testcase in items])
         with open(path, mode="wt") as file:
             file.write(content)
 

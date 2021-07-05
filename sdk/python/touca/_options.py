@@ -71,6 +71,9 @@ def _reformat_parameters(existing: dict) -> None:
     urlpath = [k.strip("/") for k in url.path.split("/@/")]
     existing["api_url"] = f"{url.scheme}://{url.netloc}/{urlpath[0]}".rstrip("/")
 
+    if len(urlpath) == 1:
+        return
+
     slugs = [k for k in urlpath[1].split("/") if k]
     for k, v in list(zip(["team", "suite", "version"], slugs)):
         if k in existing and existing.get(k) != v:
@@ -87,7 +90,7 @@ def _validate_options(existing: dict) -> None:
     key_status = {k: k in existing for k in expected_keys}
     if any(key_status.values()) and not all(key_status.values()):
         keys = list(filter(lambda x: not key_status[x], key_status))
-        raise ValueError(f"missing value for option(s) {','.join(keys)}")
+        raise ValueError(f"missing required option(s) {','.join(keys)}")
 
 
 def update_options(existing: dict, incoming: dict) -> None:

@@ -6,10 +6,6 @@ import touca
 from code_under_test import parse_profile, calculate_gpa
 
 
-class MyWorkflow(touca.Workflow):
-    pass
-
-
 @touca.Workflow
 def test_students(testcase: str):
     student = parse_profile(testcase)
@@ -20,4 +16,4 @@ def test_students(testcase: str):
 
 
 if __name__ == "__main__":
-    touca.Workflow.run()
+    touca.run()

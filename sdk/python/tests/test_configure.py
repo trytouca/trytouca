@@ -58,9 +58,9 @@ def test_configure_by_file_invalid():
         assert "file is missing JSON field" in touca.configuration_error()
 
 
-def test_configure_by_file_full():
-    os.environ["TOUCA_API_KEY"] = "sample_touca_key"
-    os.environ["TOUCA_TEST_VERSION"] = "v1.0"
+def test_configure_by_file_full(monkeypatch):
+    monkeypatch.setenv("TOUCA_API_KEY", "sample_touca_key")
+    monkeypatch.setenv("TOUCA_TEST_VERSION", "v1.0")
     with TemporaryDirectory() as tmpdirname:
         filepath = os.path.join(tmpdirname, "some_file")
         with open(filepath, "wt") as file:
