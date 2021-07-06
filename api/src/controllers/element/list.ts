@@ -21,6 +21,12 @@ async function elementListImpl(
   team: ITeam,
   suite: ISuiteDocument
 ): Promise<ElementListResponse> {
+  // return empty list of suite has no version
+
+  if (suite.promotions.length === 0) {
+    return []
+  }
+
   // find batch that is set as suite baseline
 
   const baselineInfo = suite.promotions[suite.promotions.length - 1]

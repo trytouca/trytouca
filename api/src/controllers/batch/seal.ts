@@ -19,7 +19,7 @@ import logger from '@/utils/logger'
  * Seals a batch `batch` of a suite `suite` to prevent further submission
  * of results in the future.
  *
- * This function is designed to be called after the following middlewares:
+ * This function is designed to be called after the following middleware:
  *  - `isAuthenticated` to yield `user`
  *  - `hasTeam` to yield `team`
  *  - `isTeamMember`

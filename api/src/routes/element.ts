@@ -13,7 +13,7 @@ import { promisable } from '@/utils/routing'
 const router = e.Router()
 
 /**
- * List testcases in baseline version of a given suite.
+ * List test cases in baseline version of a given suite.
  *
  * @api [get] /element/:team/:suite
  *    tags:
@@ -30,7 +30,7 @@ const router = e.Router()
  *      - $ref: '#/components/parameters/suite'
  *    responses:
  *      200:
- *        description: 'List of Testcases'
+ *        description: 'List of Test Cases'
  *        content:
  *          application/json:
  *            schema:
