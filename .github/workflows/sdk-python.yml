@@ -61,15 +61,13 @@ jobs:
         run: |
           tar -zcf python-test-coverage.tar.gz local/tests
           aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
-      - name: push to pypi
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      - name: build package distributable
+        if: github.ref == 'refs/heads/main' && matrix.python-version == 3.9
         env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
           TWINE_NON_INTERACTIVE: true
         run: |
           pip install setuptools twine wheel
-          python setup.py sdist
+          python setup.py sdist bdist_wheel
           twine check dist/*
       - name: upload coverage to codecov
         if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9

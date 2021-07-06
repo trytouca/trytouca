@@ -2,6 +2,33 @@
 
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+"""
+Touca Test Framework for Python is designed to make writing regression test
+workflows easy and straightforward. The test framework abstracts away many
+of the common expected features such as logging, error handling and reporting
+test progress.
+
+The following example demonstrates how to use this framework::
+
+    import touca
+    from code_under_test import parse_profile, calculate_gpa
+
+    @touca.Workflow
+    def test_students(testcase: str):
+        student = parse_profile(testcase)
+        touca.add_assertion("username", student.username)
+        touca.add_result("fullname", student.fullname)
+        touca.add_result("birth_date", student.dob)
+        touca.add_result("gpa", calculate_gpa(student.courses))
+
+    if __name__ == "__main__":
+        touca.run()
+
+It is uncommon to run multiple regression test workflows as part of a single
+suite. However, the pattern above allows introducing multiple workflows by
+defining functions with ``@touca.Workflow`` decorators.
+"""
+
 import os
 import sys
 import textwrap
@@ -125,13 +152,13 @@ def _update_testcase_list(options: dict):
     for running the workflows. The following implementation assumes options
     `--testcases` and `--testcase-file` are mutually exclusive.
     """
-    if "testcases" in options:
+    if options.get("testcases"):
         return
     if "testcase_file" in options:
         with open(options["testcase_file"], "rt") as file:
             keep = lambda x: x and not x.startswith("#")
             entries = list(filter(keep, file.read().splitlines()))
-            options.get("testcases").extend(entries)
+            options["testcases"] = entries
             return
     if options.get("offline") or any(k not in options for k in ["api_key", "api_url"]):
         raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
@@ -177,6 +204,7 @@ def _skip(options: dict, testcase: str):
 
 class _Statistics:
     def __init__(self):
+        """ """
         from collections import defaultdict
 
         self._v = defaultdict(int)
@@ -190,6 +218,7 @@ class _Statistics:
 
 class _Timer:
     def __init__(self):
+        """ """
         self._tics = {}
         self._times: Dict[str, timedelta] = {}
 
@@ -204,9 +233,25 @@ class _Timer:
 
 
 class Workflow:
-    """ """
+    """
+    Base class meant to be used as a decorator.
+
+    Registers the decorated function as a regression test workflow to be
+    executed, once, for each test case.
+
+    The following example demonstrates how this class should be used::
+
+        @touca.Workflow
+        def test_students(testcase: str):
+            student = parse_profile(testcase)
+            touca.add_assertion("username", student.username)
+            touca.add_result("fullname", student.fullname)
+            touca.add_result("birth_date", student.dob)
+            touca.add_result("gpa", calculate_gpa(student.courses))
+    """
 
     def __init__(self, func):
+        """ """
         from functools import update_wrapper
 
         update_wrapper(self, func)
@@ -303,6 +348,21 @@ def _run(args):
 
 
 def run():
+    """
+    Runs registered workflows, one by one, for available the test cases.
+
+    This function is intended to be called once from the main module as
+    shown in the example below::
+
+        if __name__ == "__main__":
+            touca.run()
+
+    :raises SystemExit:
+        When configuration options specified as command line arguments,
+        environment variables, or in a configuration file, have unexpected
+        values or are in conflict with each other. Capturing this exception
+        is not required.
+    """
     try:
         _run(sys.argv[1:])
     except _ToucaError as err:
