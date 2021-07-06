@@ -45,7 +45,7 @@ reduce the risks of changing code in mission-critical systems.
 🧑‍🔧 Install
 =============
 
-Touca SDK for Python can be installed via `pip <https://pip.pypa.io/>`__:
+Touca SDK for Python can be installed via `pip <https://pypi.org/project/touca>`__:
 
 .. code:: bash
 
@@ -152,6 +152,9 @@ Here's how the above test would look like:
     @touca.Workflow
     def test_is_prime(testcase: str):
         touca.add_result("is_prime", is_prime(int(testcase)))
+
+    if __name__ == "__main__":
+        touca.run()
 
 Yes, we agree. This code needs some explanation. Let us start by reviewing
 what is missing:
