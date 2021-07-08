@@ -26,7 +26,7 @@ int main()
         touca::add_assertion("username", wizard.username);
         touca::add_result("fullname", wizard.fullname);
         touca::add_result("height", wizard.height);
-        touca::add_result(L"weight", wizard.weight);
+        touca::add_result("weight", wizard.weight);
         touca::add_result("birth_date", wizard.dob);
 
         custom_function_1(wizard);

@@ -161,10 +161,10 @@ touca::framework::Errors MyWorkflow::execute(const touca::framework::Testcase& t
     caseFile /= testcase + ".json";
     const auto& wizard = parse_profile(caseFile.string());
 
-    touca::add_assertion(L"id", wizard.username);
+    touca::add_assertion("id", wizard.username);
     touca::add_assertion("name", wizard.fullname);
     touca::add_result("height", wizard.height);
-    touca::add_result(L"weight", wizard.weight);
+    touca::add_result("weight", wizard.weight);
     touca::add_result("birth_date", wizard.dob);
 
     custom_function_1(wizard);
