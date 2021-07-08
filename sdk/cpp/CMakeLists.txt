@@ -1,8 +1,8 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-cmake_minimum_required(VERSION 3.14...3.19 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.14...3.20 FATAL_ERROR)
 
-project(touca VERSION 1.4.0 LANGUAGES CXX)
+project(touca VERSION 1.4.1 LANGUAGES CXX)
 
 option(BUILD_SHARED_LIBS "build client as a shared library" OFF)
 option(TOUCA_BUILD_TESTS "build unittests" OFF)

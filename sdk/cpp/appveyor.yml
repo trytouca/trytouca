@@ -1,6 +1,6 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-version: "1.4.0.{build}-{branch}"
+version: "1.4.1.{build}-{branch}"
 
 image:
   - Visual Studio 2019

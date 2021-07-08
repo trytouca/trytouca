@@ -60,7 +60,7 @@ jobs:
         run: |
           conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
           conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
-          conan upload "touca/1.4.0" --confirm --parallel -r touca-cpp --all
+          conan upload "touca/1.4.1" --confirm --parallel -r touca-cpp --all
 
   docs-client-cpp:
     name: docs-client-cpp
@@ -90,4 +90,4 @@ jobs:
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf cpp-api-reference.tar.gz local/docs/html
-          aws s3 cp cpp-api-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp cpp-api-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.1/

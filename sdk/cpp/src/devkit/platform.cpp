@@ -33,7 +33,7 @@ namespace touca {
     {
         _cli.set_default_headers({ { "Accept-Charset", "utf-8" },
             { "Accept", "application/json" },
-            { "User-Agent", "touca-client-cpp/1.4.0" } });
+            { "User-Agent", "touca-client-cpp/1.4.1" } });
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
         _cli.enable_server_certificate_verification(false);
 #endif

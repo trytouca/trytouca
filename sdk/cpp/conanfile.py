@@ -2,24 +2,25 @@
 
 from conans import ConanFile, CMake
 
+
 class ToucaConan(ConanFile):
 
     name = "touca"
     homepage = "https://touca.io"
     description = "client library for regression testing arbitrary execution workflows"
-    topics = ( "regression-testing", "test-framework", "test-automation" )
+    topics = ("regression-testing", "test-framework", "test-automation")
     url = "https://docs.touca.io"
     license = "Apache-2.0"
-    version ="1.4.0"
+    version = "1.4.1"
     author = "Touca, Inc. <hello@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     options = {
-        "shared": [ True, False ],
-        "with_tests": [ True, False ],
-        "with_utils": [ True, False ],
-        "with_examples": [ True, False ],
-        "with_framework": [ True, False ],
-        "with_openssl": [ True, False ]
+        "shared": [True, False],
+        "with_tests": [True, False],
+        "with_utils": [True, False],
+        "with_examples": [True, False],
+        "with_framework": [True, False],
+        "with_openssl": [True, False],
     }
     default_options = {
         "shared": False,
@@ -27,12 +28,17 @@ class ToucaConan(ConanFile):
         "with_utils": False,
         "with_examples": False,
         "with_framework": False,
-        "with_openssl": True
+        "with_openssl": True,
     }
     generators = "cmake_find_package"
     exports_sources = [
-        "CMakeLists.txt", "cmake/**", "include/**",
-        "src/**", "framework/**", "tests/**", "utils/**"
+        "CMakeLists.txt",
+        "cmake/**",
+        "include/**",
+        "src/**",
+        "framework/**",
+        "tests/**",
+        "utils/**",
     ]
 
     def requirements(self):
@@ -42,7 +48,11 @@ class ToucaConan(ConanFile):
         self.requires.add("ghc-filesystem/1.4.0")
         self.requires.add("rapidjson/1.1.0")
         self.requires.add("spdlog/1.8.2")
-        if self.options.with_examples or self.options.with_framework or self.options.with_utils:
+        if (
+            self.options.with_examples
+            or self.options.with_framework
+            or self.options.with_utils
+        ):
             self.requires.add("cxxopts/2.2.1")
 
     def build_requirements(self):
@@ -83,15 +93,21 @@ class ToucaConan(ConanFile):
             "flatbuffers::flatbuffers",
             "ghc-filesystem::ghc-filesystem",
             "rapidjson::rapidjson",
-            "spdlog::spdlog"
+            "spdlog::spdlog",
         ]
-        if self.options.with_examples or self.options.with_framework or self.options.with_utils:
+        if (
+            self.options.with_examples
+            or self.options.with_framework
+            or self.options.with_utils
+        ):
             client_requirements.append("cxxopts::cxxopts")
         self.cpp_info.name = "touca"
         self.cpp_info.components["client"].names["cmake_find_package"] = "client"
         self.cpp_info.components["client"].libs = ["touca_client"]
         self.cpp_info.components["client"].requires = client_requirements
         if self.options.with_framework:
-            self.cpp_info.components["framework"].names["cmake_find_package"] = "framework"
+            self.cpp_info.components["framework"].names[
+                "cmake_find_package"
+            ] = "framework"
             self.cpp_info.components["framework"].libs = ["touca_framework"]
             self.cpp_info.components["framework"].requires = ["client"]

@@ -76,7 +76,7 @@ set_target_properties(
         touca_client
     PROPERTIES
         SOVERSION 1
-        VERSION 1.4.0
+        VERSION 1.4.1
         POSITION_INDEPENDENT_CODE ON
         DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
 )
