@@ -62,11 +62,14 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3 :: Only",
     ],
-    install_requires=["urllib3", "flatbuffers>=2.0"],
+    install_requires=[
+        "urllib3",
+        "certifi>=2021.5.30",
+        "flatbuffers>=2.0",
+    ],
     extras_require={
         "dev": [
             "black>=21.6b0",
-            "certifi>=2021.5.30",
             "pytest>=6.2.4",
             "pytest-cov>=2.12.1",
             "Sphinx>=4.0.2",
