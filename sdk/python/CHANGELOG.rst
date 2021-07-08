@@ -1,3 +1,15 @@
+v0.2.1
+========
+
+Fixes
+--------
+
+* Declare ``certifi`` as install dependency (#21)
+
+  This patch changes package ``certifi`` from a development-only dependency to
+  a production dependency, fixing an error when using the Touca test framework
+  which required separate installation of ``certifi``.
+
 v0.2.0
 ========
 
