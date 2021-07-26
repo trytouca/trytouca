@@ -28,7 +28,6 @@ import {
 } from './batch.model';
 
 export enum BatchPageTabType {
-  Comments = 'comments',
   Elements = 'elements'
 }
 
@@ -289,7 +288,7 @@ export class BatchPageService extends IPageService<BatchPageItem> {
     if (!this._batch) {
       onetime.push(this.fetchBatch(params));
     }
-    if (!this._comments || params.currentTab === BatchPageTabType.Comments) {
+    if (!this._comments) {
       onetime.push(this.fetchComments(params));
     }
 
@@ -370,15 +369,13 @@ export class BatchPageService extends IPageService<BatchPageItem> {
    *
    */
   public refetchBatch() {
-    const args = { currentTab: BatchPageTabType.Comments, ...this._params };
-    this.fetchBatch(args).subscribe();
+    this.fetchBatch(this._params).subscribe();
   }
 
   /**
    *
    */
   public refetchComments() {
-    const args = { currentTab: BatchPageTabType.Comments, ...this._params };
-    this.fetchComments(args).subscribe();
+    this.fetchComments(this._params).subscribe();
   }
 }

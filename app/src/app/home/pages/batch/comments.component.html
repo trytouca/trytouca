@@ -1,6 +1,24 @@
-<section class="wsl-page-tab">
+<aside class="p-4">
   <div>
-    <h2 class="pb-1 text-xl font-medium"><label
+    <h2 class="pb-1 text-xl font-medium">Comments</h2>
+    <article class="flex items-center justify-center p-2 text-sm text-gray-500"
+      *ngIf="comments.length === 0">
+      This version has no comments yet.
+    </article>
+    <div class="py-2" *ngFor="let item of comments">
+      <app-home-comment [meta]="item" (commentAction)="commentAction($event)">
+      </app-home-comment>
+      <div class="py-2 space-y-2">
+        <div class="ml-8" *ngFor="let reply of item.replies">
+          <app-home-comment [meta]="reply"
+            (commentAction)="commentAction($event)">
+          </app-home-comment>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="py-4">
+    <h2 class="pb-1 font-medium text-md"><label
         for="wsl-body">{{ fields.editorTitle }}</label></h2>
     <p class="text-sm">{{ fields.editorSubtitle }}</p>
     <app-alert [alert]="alert"></app-alert>
@@ -46,21 +64,4 @@
       </div>
     </form>
   </div>
-  <div>
-    <h2 class="pb-1 text-xl font-medium">Comments</h2>
-    <article
-      class="flex items-center justify-center h-32 p-2 text-sm border bg-gray-50"
-      *ngIf="comments.length === 0">
-      This version has no comments yet.
-    </article>
-    <div class="p-2" *ngFor="let item of comments">
-      <app-home-comment [meta]="item" (commentAction)="commentAction($event)">
-      </app-home-comment>
-      <div class="mx-12 border-t" *ngFor="let reply of item.replies">
-        <app-home-comment [meta]="reply"
-          (commentAction)="commentAction($event)">
-        </app-home-comment>
-      </div>
-    </div>
-  </div>
-</section>
+</aside>

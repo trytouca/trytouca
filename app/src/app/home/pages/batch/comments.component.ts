@@ -86,7 +86,7 @@ export class BatchCommentsComponent implements OnDestroy {
       body: new FormControl('', {
         validators: [
           Validators.required,
-          Validators.minLength(10),
+          Validators.minLength(1),
           Validators.maxLength(1000)
         ],
         updateOn: 'blur'
@@ -108,7 +108,7 @@ export class BatchCommentsComponent implements OnDestroy {
    */
   private processComments(comments: CommentItem[]): FrontendCommentItem[] {
     const myRolePlatform = this.userService.currentUser.platformRole;
-    const myRoleTeam = this._team.role;
+    const myRoleTeam = this._team?.role || ETeamRole.Member;
     const myUsername = this.userService.currentUser.username;
     const isPlatformAdmin = [EPlatformRole.Admin, EPlatformRole.Owner].includes(
       myRolePlatform
@@ -119,7 +119,7 @@ export class BatchCommentsComponent implements OnDestroy {
       commentBody: v.text,
       commentId: v.id,
       commentTime: v.at,
-      commentEditTime: v.editedAt ?? undefined,
+      commentEditTime: v.editedAt,
       replies: v.replies ? v.replies.map((k) => process(k, true)) : [],
       showButtonReply: isReply === false,
       showButtonUpdate: myUsername === v.by.username,
@@ -129,7 +129,7 @@ export class BatchCommentsComponent implements OnDestroy {
     });
     return comments
       .map((v) => process(v))
-      .sort((a, b) => +new Date(b.commentTime) - +new Date(a.commentTime));
+      .sort((a, b) => +new Date(a.commentTime) - +new Date(b.commentTime));
   }
 
   /**

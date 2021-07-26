@@ -57,13 +57,6 @@ const pageTabs: PageTab<BatchPageTabType>[] = [
     link: 'testcases',
     icon: 'tasks',
     shown: true
-  },
-  {
-    type: BatchPageTabType.Comments,
-    name: 'Comments',
-    link: 'comments',
-    icon: 'comments',
-    shown: true
   }
 ];
 
@@ -157,8 +150,6 @@ export class BatchPageComponent
     });
     this._subBatch = this.batchPageService.batch$.subscribe((v) => {
       this.batch = v;
-      this.tabs.find((t) => t.type === BatchPageTabType.Comments).counter =
-        v.commentCount;
       this.tabs.find((t) => t.type === BatchPageTabType.Elements).counter =
         v.messageCount;
       this.updateTitle(v);

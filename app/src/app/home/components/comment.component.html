@@ -1,7 +1,7 @@
-<article class="py-2">
-  <div class="flex space-x-4">
-    <div class="text-sky-600">
-      <b>{{ meta.commentAuthor }}</b>
+<article>
+  <div class="flex items-center space-x-2">
+    <div class="font-medium leading-8 text-blue-500">
+      {{ meta.commentAuthor }}
     </div>
     <div class="space-x-4 wsl-text-muted">
       <small title="{{ meta.commentTime | datetime:'format' }}">
@@ -13,7 +13,7 @@
       </small>
     </div>
   </div>
-  <blockquote class="px-4 m-2 border-l-2 border-gray-200">
+  <blockquote>
     <markdown [data]="meta.commentBody" class="prose-sm prose">
     </markdown>
   </blockquote>

@@ -75,12 +75,16 @@
       </div>
     </div>
     <div [hidden]="!hasData() || !hasItems()">
-      <app-batch-list-elements>
-      </app-batch-list-elements>
+      <div class="container grid gap-4 mx-auto lg:grid-cols-3">
+        <div class="lg:col-span-2 wsl-min-h-screen-4">
+          <app-batch-list-elements>
+          </app-batch-list-elements>
+        </div>
+        <div class="lg:col-span-1 wsl-min-h-screen-4">
+          <app-batch-tab-comments>
+          </app-batch-tab-comments>
+        </div>
+      </div>
     </div>
-  </div>
-  <div [hidden]="currentTab !== TabType.Comments">
-    <app-batch-tab-comments>
-    </app-batch-tab-comments>
   </div>
 </div>
