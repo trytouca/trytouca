@@ -72,8 +72,8 @@ export class FeedbackComponent {
       model.name = 'Anonymous';
     }
     model.page = 'feedback-form';
-    this.apiService.post('/feedback', model).subscribe(
-      () => {
+    this.apiService.post('/feedback', model).subscribe({
+      next: () => {
         this.alert = {
           type: AlertType.Success,
           text: 'Your message was delivered.'
@@ -82,7 +82,7 @@ export class FeedbackComponent {
         this.submitted = false;
         this.prev = null;
       },
-      (err) => {
+      error: (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
@@ -90,6 +90,6 @@ export class FeedbackComponent {
         errorLogger.notify(err);
         this.prev = model;
       }
-    );
+    });
   }
 }

@@ -1,21 +1,21 @@
-<div class="px-6 py-2">
-  <div class="flex justify-between">
-    <p class="text-sm">
-      <b *ngIf="item.bySelf" class="font-medium">
-        <span [title]="item.by.fullname" class="sr-only">You</span>
-        <span class="not-sr-only">{{ item.by.fullname }}</span>
-      </b>
-      <b *ngIf="!item.bySelf" class="font-medium">{{ item.by.fullname }}</b>
-      promoted baseline of this suite to version
-      <b class="font-medium">{{ item.to }}</b>.
-    </p>
-    <div class="text-xs wsl-text-muted"
+<div class="px-2 py-4 space-y-2">
+  <p class="text-sm">
+    <b *ngIf="item.bySelf" class="font-medium">
+      <span [title]="item.by.fullname" class="sr-only">You</span>
+      <span class="not-sr-only">{{ item.by.fullname }}</span>
+    </b>
+    <b *ngIf="!item.bySelf" class="font-medium">{{ item.by.fullname }}</b>
+    promoted <b class="font-medium">{{ item.to }}</b> as baseline.
+  </p>
+  <blockquote *ngIf="item.for && item.for !== 'N/A'"
+    class="px-2 text-sm border-l-2">
+    <markdown [data]="item.for" class="prose-sm prose">
+    </markdown>
+  </blockquote>
+  <div class="flex justify-end">
+    <div class="px-4 text-xs wsl-text-muted"
       title="{{ item.at | datetime:'format' }}">
       {{ item.at | datetime:'distance' }}
     </div>
   </div>
-  <blockquote *ngIf="item.for" class="px-4 m-2 text-sm border-l-4">
-    <markdown [data]="item.for" class="prose-sm prose">
-    </markdown>
-  </blockquote>
 </div>

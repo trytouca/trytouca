@@ -71,21 +71,21 @@ export class TeamCreateSuiteComponent
     this.submitted = true;
     const body = { name: model.name, slug: model.slug.toLocaleLowerCase() };
     const url = ['suite', this.elements.teamSlug].join('/');
-    this.apiService.post(url, body).subscribe(
-      () => {
+    this.apiService.post(url, body).subscribe({
+      next: () => {
         this.hints.reset();
         this.form.reset();
         this.submitted = false;
         this.dialogRef.close(true);
       },
-      (err) => {
+      error: (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
           [409, 'suite already registered', 'This suite is already registered.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
-    );
+    });
   }
 
   /**

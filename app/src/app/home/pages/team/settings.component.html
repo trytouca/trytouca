@@ -1,6 +1,6 @@
 <section class="wsl-page-tab" *ngIf="team">
-  <h2>Team Settings</h2>
-  <div class="wsl-settings">
+  <h2 class="pb-1 text-xl font-medium">Team Settings</h2>
+  <div class="grid gap-4 lg:grid-cols-2">
     <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
       <h3 for="wsl-team-name">Team Name</h3>
       <app-alert *ngIf="alert[EModalType.ChangeName]"
@@ -83,7 +83,7 @@
       </button>
     </div>
     <div
-      class="hidden wsl-settings-image lg:block lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-4">
+      class="hidden p-4 lg:block lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-4">
       <img src="./assets/undraw/undraw_celebration_0jvk.svg" />
     </div>
   </div>

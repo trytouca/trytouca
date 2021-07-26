@@ -4,8 +4,8 @@
   </app-home-notfound>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!suite">
-  <div class="wsl-page-head">
-    <div class="wsl-page-head-content">
+  <div class="border-t">
+    <div class="wsl-page-head">
       <nav aria-label="breadcrumb">
         <ol>
           <li>
@@ -125,13 +125,22 @@
       </nav>
     </div>
   </div>
+  <div class="py-8 border-t border-b border-gray-100 bg-gray-50"></div>
   <div [hidden]="currentTab !== TabType.Versions || !hasData() || hasItems()">
     <app-suite-first-batch>
     </app-suite-first-batch>
   </div>
   <div [hidden]="currentTab !== TabType.Versions || !hasData() || !hasItems()">
-    <app-suite-tab-batches>
-    </app-suite-tab-batches>
+    <div class="container grid gap-4 mx-auto lg:grid-cols-3">
+      <div class="lg:col-span-2 wsl-min-h-screen-4">
+        <app-suite-tab-batches>
+        </app-suite-tab-batches>
+      </div>
+      <div class="lg:col-span-1 wsl-min-h-screen-4">
+        <app-suite-tab-comments>
+        </app-suite-tab-comments>
+      </div>
+    </div>
   </div>
   <div [hidden]="currentTab !== TabType.Trends">
     <app-suite-tab-trends>
@@ -142,3 +151,5 @@
     </app-suite-tab-settings>
   </div>
 </div>
+<app-home-feedback-link [page]="'app-suite-tab-batches'">
+</app-home-feedback-link>

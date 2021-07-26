@@ -81,14 +81,14 @@ export class TeamsPageService extends IPageService<TeamsPageTeam> {
    */
   public fetchItems(args: FetchInput): void {
     const observables = [this.fetchTeams(args)];
-    forkJoin(observables).subscribe(
-      () => {
+    forkJoin(observables).subscribe({
+      next: () => {
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
           AlertKind.ApiConnectionLost
         );
       },
-      (err) => {
+      error: (err) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items
@@ -101,7 +101,7 @@ export class TeamsPageService extends IPageService<TeamsPageTeam> {
           errorLogger.notify(err);
         }
       }
-    );
+    });
   }
 
   /**

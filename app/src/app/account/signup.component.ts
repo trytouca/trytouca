@@ -54,12 +54,12 @@ export class SignupComponent {
     if (!this.formSignup.valid) {
       return;
     }
-    this.apiService.post('/auth/signup', { email: model.email }).subscribe(
-      () => {
+    this.apiService.post('/auth/signup', { email: model.email }).subscribe({
+      next: () => {
         this.alert = undefined;
         this.isFormShown = false;
       },
-      (err) => {
+      error: (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'email is invalid', 'Your email address appears invalid.'],
           [
@@ -75,7 +75,7 @@ export class SignupComponent {
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
-    );
+    });
   }
 
   /**

@@ -19,11 +19,6 @@ const filterInput: FilterInput<SuitePageItem> = {
       func: () => true
     },
     {
-      key: 'versions',
-      name: 'Versions',
-      func: (a) => a.type === SuitePageItemType.Batch
-    },
-    {
       key: 'different',
       name: 'Different',
       func: (a) => {
@@ -84,17 +79,6 @@ export class SuiteListBatchesComponent
     this._subAllItems = this.suitePageService.items$.subscribe((allItems) => {
       this.initCollections(allItems);
     });
-  }
-
-  /**
-   *
-   */
-  getListItems(): SuitePageItem[] {
-    const batches = this.getShownRows(SuitePageItemType.Batch) || [];
-    const promotions = this.getShownRows(SuitePageItemType.Promotion) || [];
-    const items = batches.concat(promotions);
-    items.sort(SuitePageItem.compareByDate);
-    return items;
   }
 
   /**

@@ -3,8 +3,8 @@
   </app-teams-first>
 </div>
 <div [hidden]="!hasData() || !hasItems()">
-  <div class="wsl-page-head">
-    <div class="wsl-page-head-content">
+  <div class="border-t">
+    <div class="wsl-page-head">
       <nav aria-label="breadcrumb">
         <ol>
           <li aria-current="page">Your Teams</li>
@@ -23,6 +23,7 @@
       </div>
     </div>
   </div>
+  <div class="py-8 border-t border-b border-gray-100 bg-gray-50"></div>
   <div [hidden]="currentTab !== TabType.Teams">
     <app-teams-tab-teams>
     </app-teams-tab-teams>

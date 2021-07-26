@@ -31,11 +31,11 @@ export class ResetComponent {
     const qmap = this.route.snapshot.queryParamMap;
     if (qmap.has('key')) {
       const resetKey = qmap.get('key');
-      this.apiService.get<IAccountInfo>(`/auth/reset/${resetKey}`).subscribe(
-        (doc) => {
+      this.apiService.get<IAccountInfo>(`/auth/reset/${resetKey}`).subscribe({
+        next: (doc) => {
           this.accountInfo = { ...doc, resetKey };
         },
-        (err) => {
+        error: (err) => {
           const msg = this.apiService.extractError(err, [
             [
               400,
@@ -47,7 +47,7 @@ export class ResetComponent {
           ]);
           this.accountError = { type: AlertType.Danger, text: msg };
         }
-      );
+      });
     }
   }
 }

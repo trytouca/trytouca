@@ -11,8 +11,7 @@
     <ul class="wsl-list-body">
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Member); let i = index;"
-        (click)="selectedRow = i;"
-        [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
+        (click)="selectedRow = i;" [ngClass]="{'bg-sky-50': selectedRow === i}">
         <app-team-item-member [item]="item.asMember()"
           [isTeamAdmin]="isTeamAdmin" [isSelf]="isSelf(item.asMember())"
           (confirmEdit)="confirmEdit($event)"
@@ -34,7 +33,7 @@
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Invitee); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Member);"
-        [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Member)}">
+        [ngClass]="{'bg-sky-50': selectedRow === i + countShownRows(ItemType.Member)}">
         <app-team-item-invitee [item]="item.asInvitee()"
           [isTeamAdmin]="isTeamAdmin" (confirmRescind)="confirmRescind($event)">
         </app-team-item-invitee>
@@ -54,7 +53,7 @@
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Applicant); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Member) + countShownRows(ItemType.Invitee);"
-        [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Member) + countShownRows(ItemType.Invitee)}">
+        [ngClass]="{'bg-sky-50': selectedRow === i + countShownRows(ItemType.Member) + countShownRows(ItemType.Invitee)}">
         <app-team-item-applicant [item]="item.asApplicant()"
           [isTeamAdmin]="isTeamAdmin" (confirmAccept)="confirmAccept($event)"
           (confirmDecline)="confirmDecline($event)">

@@ -14,7 +14,7 @@ import {
   faSpinner,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format } from 'date-fns';
 
 import { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
@@ -25,7 +25,7 @@ import {
   IconType,
   Topic
 } from '@/home/models/page-item.model';
-import { DateTimePipe } from '@/shared/pipes';
+import { DateAgoPipe, DateTimePipe } from '@/shared/pipes';
 
 import {
   BatchPageItem,
@@ -34,7 +34,7 @@ import {
 } from './batch.model';
 
 type Metadata = Partial<{
-  // Time since results for this testcase were submitted
+  // Time since results for this test case were submitted
   builtAt: Date;
   isCreatedRecently: boolean;
   isPendingComparison: boolean;
@@ -49,7 +49,7 @@ type Metadata = Partial<{
   selector: 'app-batch-item-element',
   templateUrl: './item.component.html',
   styleUrls: ['../../styles/item.component.scss'],
-  providers: [DateTimePipe, I18nPluralPipe, PercentPipe]
+  providers: [DateAgoPipe, DateTimePipe, I18nPluralPipe, PercentPipe]
 })
 export class BatchItemElementComponent {
   data: Data;
@@ -82,6 +82,7 @@ export class BatchItemElementComponent {
   constructor(
     private route: ActivatedRoute,
     private i18pluralPipe: I18nPluralPipe,
+    private dateagoPipe: DateAgoPipe,
     private datetimePipe: DateTimePipe,
     private percentPipe: PercentPipe,
     private faIconLibrary: FaIconLibrary
@@ -166,26 +167,26 @@ export class BatchItemElementComponent {
   }
 
   /**
-   * Determines what color should the testcase status be shown with.
+   * Determines what color should the test case status be shown with.
    *
-   * Testcase status is shown in green if either
+   * Test case status is shown in green if either
    *    * it is a fresh case (did not exist in baseline)
    *    * it has no missing keys and has perfect match score.
    *
-   * Testcase status is shown in orange if either
+   * Test case status is shown in orange if either
    *    * it has no keys
    *    * it has missing keys and at least one key that is either new or common
    *    * it has imperfect but non-zero match score
    *
-   * Testcase status is shown in red if either:
+   * Test case status is shown in red if either:
    *    * it is a missing case (did not exist in this batch)
    *    * it has missing keys and no new or common keys
    *    * it has zero match score
    *
-   * @returns name of the color of the testcase status
+   * @returns name of the color of the test case status
    */
   private initIcon(): Icon {
-    // if testcase is fresh (did not exist in baseline)
+    // if test case is fresh (did not exist in baseline)
     if (this._item.type === BatchPageItemType.Fresh) {
       return {
         color: IconColor.Green,
@@ -194,7 +195,7 @@ export class BatchItemElementComponent {
       };
     }
 
-    // if testcase is missing (did not exist in this batch)
+    // if test case is missing (did not exist in this batch)
     if (this._item.type === BatchPageItemType.Missing) {
       return {
         color: IconColor.Red,
@@ -203,7 +204,7 @@ export class BatchItemElementComponent {
       };
     }
 
-    // otherwise it is a common testcase which may still be pending comparison
+    // otherwise it is a common test case which may still be pending comparison
     if (this._item.isPendingComparison()) {
       return {
         color: IconColor.Blue,
@@ -214,7 +215,7 @@ export class BatchItemElementComponent {
 
     const score = this._item.asCommon().meta.keysScore;
 
-    // if testcase has no missing keys and has perfect match score.
+    // if test case has no missing keys and has perfect match score.
     if (1 === score && 0 === this._meta.keysCountMissing) {
       return {
         color: IconColor.Green,
@@ -223,7 +224,7 @@ export class BatchItemElementComponent {
       };
     }
 
-    // if testcase has no keys
+    // if test case has no keys
     if (0 === this._meta.keysCount + this._meta.keysCountMissing) {
       return {
         color: IconColor.Orange,
@@ -232,7 +233,7 @@ export class BatchItemElementComponent {
       };
     }
 
-    // if testcase has missing keys and at least one key that is either new or common
+    // if test case has missing keys and at least one key that is either new or common
     if (this._meta.keysCountMissing && 0 !== this._meta.keysCount) {
       return {
         color: IconColor.Orange,
@@ -241,7 +242,7 @@ export class BatchItemElementComponent {
       };
     }
 
-    // if testcase has imperfect but non-zero match score
+    // if test case has imperfect but non-zero match score
     if (0 !== score && 1 !== score) {
       return {
         color: IconColor.Orange,
@@ -250,7 +251,7 @@ export class BatchItemElementComponent {
       };
     }
 
-    // if testcase has missing keys and no new or common keys
+    // if test case has missing keys and no new or common keys
     if (0 === score) {
       return {
         color: IconColor.Red,
@@ -259,7 +260,7 @@ export class BatchItemElementComponent {
       };
     }
 
-    // if testcase has zero match score
+    // if test case has zero match score
     if (this._meta.keysCountMissing && 0 === this._meta.keysCount) {
       return {
         color: IconColor.Red,
@@ -277,7 +278,7 @@ export class BatchItemElementComponent {
 
     // it is possible that the function is called with no metric or a
     // metric with no duration in which case we opt not to show any
-    // information about the runtime duration of the testcase.
+    // information about the runtime duration of the test case.
     if (duration === 0) {
       return;
     }
@@ -343,9 +344,7 @@ export class BatchItemElementComponent {
 
     if (this._meta.isCreatedRecently) {
       topics.push({
-        text: formatDistanceToNow(this._meta.builtAt, {
-          addSuffix: true
-        }),
+        text: this.dateagoPipe.transform(this._meta.builtAt),
         title: format(this._meta.builtAt, 'PPpp')
       });
     }

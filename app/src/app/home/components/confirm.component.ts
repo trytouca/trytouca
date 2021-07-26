@@ -88,8 +88,8 @@ export class ConfirmComponent extends ModalComponent {
       type: AlertType.Info,
       text: 'We are working on your request.'
     };
-    this.elements.confirmAction().subscribe(
-      () => {
+    this.elements.confirmAction().subscribe({
+      next: () => {
         this.alert = { type: AlertType.Success, text: 'Done.' };
         timer(1000).subscribe(() => {
           this.dialogRef.close(true);
@@ -98,7 +98,7 @@ export class ConfirmComponent extends ModalComponent {
           }
         });
       },
-      (err) => {
+      error: (err) => {
         const func = this.elements.onActionFailure;
         const text = func
           ? func(err)
@@ -108,7 +108,7 @@ export class ConfirmComponent extends ModalComponent {
           text
         };
       }
-    );
+    });
   }
 
   /**

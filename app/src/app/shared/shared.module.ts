@@ -20,7 +20,7 @@ import {
   ServerDownComponent
 } from './components';
 import { AutofocusDirective, DropdownDirective } from './directives';
-import { DateTimePipe } from './pipes';
+import { DateAgoPipe, DateTimePipe } from './pipes';
 
 @NgModule({
   imports: [
@@ -36,6 +36,7 @@ import { DateTimePipe } from './pipes';
   declarations: [
     AlertComponent,
     AutofocusDirective,
+    DateAgoPipe,
     DateTimePipe,
     DropdownDirective,
     FooterComponent,
@@ -49,6 +50,7 @@ import { DateTimePipe } from './pipes';
     AutofocusDirective,
     ClipboardModule,
     CommonModule,
+    DateAgoPipe,
     DateTimePipe,
     DialogModule,
     DropdownDirective,

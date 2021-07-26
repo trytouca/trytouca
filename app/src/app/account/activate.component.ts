@@ -36,12 +36,12 @@ export class ActivateComponent implements OnDestroy {
       return;
     }
     const key = route.snapshot.queryParamMap.get('key');
-    this._sub.activate = apiService.post(`/auth/activate/${key}`).subscribe(
-      (doc) => {
+    this._sub.activate = apiService.post(`/auth/activate/${key}`).subscribe({
+      next: (doc) => {
         localStorage.setItem(ELocalStorageKey.TokenExpiresAt, doc.expiresAt);
         router.navigate(['/account/welcome']);
       },
-      (err) => {
+      error: (err) => {
         const error = apiService.extractError(err, [
           [400, 'invalid activation key', 'This activation key is invalid.'],
           [404, 'activation key not found', 'This activation key has expired.']
@@ -51,7 +51,7 @@ export class ActivateComponent implements OnDestroy {
           router.navigate(['/account']);
         });
       }
-    );
+    });
   }
 
   /**

@@ -1,0 +1,10 @@
+<aside class="p-4 divide-y divide-gray-200">
+  <div class="flex items-center pb-2 h-14">
+    <h3 class="font-semibold">Recent Events</h3>
+  </div>
+  <div *ngFor="let promotion of promotions">
+    <app-suite-item-promotion [item]="promotion">
+    </app-suite-item-promotion>
+  </div>
+  <div></div>
+</aside>

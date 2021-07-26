@@ -4,8 +4,10 @@
   <app-footer></app-footer>
 </div>
 <div *ngIf="!isApiConnectionDown">
-  <app-header-inside></app-header-inside>
-  <div class="border-t wsl-min-h-screen-1">
+  <div class="bg-gray-50">
+    <app-header-inside></app-header-inside>
+  </div>
+  <div class="wsl-min-h-screen-1">
     <app-alert *ngFor="let alert of alerts" [alert]="alert" class="text-center">
     </app-alert>
     <div>

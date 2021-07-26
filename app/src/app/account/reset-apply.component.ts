@@ -81,8 +81,8 @@ export class ResetApplyComponent {
     };
     this.apiService
       .post(`/auth/reset/${this.accountInfo.resetKey}`, body)
-      .subscribe(
-        () => {
+      .subscribe({
+        next: () => {
           this.alert = {
             type: AlertType.Success,
             text: 'Your password is reset.'
@@ -92,7 +92,7 @@ export class ResetApplyComponent {
             this.router.navigate(['/account/signin']);
           });
         },
-        (err) => {
+        error: (err) => {
           const msg = this.apiService.extractError(err, [
             [
               400,
@@ -107,7 +107,7 @@ export class ResetApplyComponent {
           ]);
           this.alert = { type: AlertType.Danger, text: msg };
         }
-      );
+      });
   }
 
   /**

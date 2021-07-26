@@ -98,21 +98,21 @@ export class OnboardComponent implements OnDestroy {
       username: model.uname,
       password: model.upass
     };
-    this.apiService.patch('/user', info).subscribe(
-      () => {
+    this.apiService.patch('/user', info).subscribe({
+      next: () => {
         this.alert = undefined;
         this.hints.reset();
         this.onboardForm.reset({}, { emitEvent: false });
         this.userService.populate();
         this.router.navigate(['/~']);
       },
-      (err) => {
+      error: (err) => {
         const error = this.apiService.extractError(err, [
           [409, 'username already registered', 'This username is taken'],
           [401, 'invalid login credentials', 'Incorrect username or password.']
         ]);
         this.alert = { text: error, type: AlertType.Danger };
       }
-    );
+    });
   }
 }

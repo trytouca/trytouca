@@ -175,8 +175,8 @@ export class ElementPageService extends IPageService<ElementPageResult> {
    *
    */
   public fetchItems(args: FrontendElementCompareParams): void {
-    this.fetchElementCompare(args).subscribe(
-      (doc: ElementComparisonResponse) => {
+    this.fetchElementCompare(args).subscribe({
+      next: (doc: ElementComparisonResponse) => {
         // if comparison result is not available, we have no choice but to wait
         if (!doc.cmp) {
           return;
@@ -252,7 +252,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         };
         this._overviewSubject.next(this._overview);
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items
@@ -267,7 +267,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           errorLogger.notify(err);
         }
       }
-    );
+    });
   }
 
   /**
@@ -286,8 +286,8 @@ export class ElementPageService extends IPageService<ElementPageResult> {
       onetime.push(this.fetchElement(params));
     }
 
-    forkJoin(onetime).subscribe(
-      () => {
+    forkJoin(onetime).subscribe({
+      next: () => {
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
           AlertKind.ApiConnectionLost,
@@ -312,7 +312,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         }
         this.fetchItems(params);
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items
@@ -327,7 +327,7 @@ export class ElementPageService extends IPageService<ElementPageResult> {
           errorLogger.notify(err);
         }
       }
-    );
+    });
   }
 
   /**

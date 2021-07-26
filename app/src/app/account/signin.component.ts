@@ -85,8 +85,8 @@ export class SigninComponent implements OnInit {
     if (this.prev === model) {
       return;
     }
-    this.authService.login(model.uname, model.upass).subscribe(
-      () => {
+    this.authService.login(model.uname, model.upass).subscribe({
+      next: () => {
         this.userService.populate();
         this.formSignin.reset();
         this.prev = null;
@@ -97,7 +97,7 @@ export class SigninComponent implements OnInit {
         }
         this.router.navigate([this.authService.redirectUrl || '/~']);
       },
-      (err) => {
+      error: (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
           [401, 'invalid login credentials', 'Incorrect username or password.'],
@@ -107,6 +107,6 @@ export class SigninComponent implements OnInit {
         this.alert = { type: AlertType.Danger, text: msg };
         this.prev = model;
       }
-    );
+    });
   }
 }

@@ -15,7 +15,7 @@
         <li class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Active); let i = index;"
           (click)="selectedRow = i;"
-          [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
+          [ngClass]="{'bg-sky-50': selectedRow === i}">
           <app-teams-item-team [item]="item">
           </app-teams-item-team>
         </li>
@@ -29,14 +29,14 @@
     </app-home-feedback-link>
   </ng-container>
   <div class="wsl-requests-list" *ngIf="counters.invited">
-    <h2>Your Invitations</h2>
+    <h2 class="pb-1 text-xl font-medium">Your Invitations</h2>
     <ul class="wsl-list-body">
-      <li class="wsl-list-item"
+      <li class="flex items-center justify-between p-4"
         *ngFor="let item of getShownRows(ItemType.Invited)">
-        <p>
+        <p class="text-sm">
           You have been invited to join team <b>{{ item.data.name }}</b>.
         </p>
-        <div>
+        <div class="space-x-2">
           <button class="wsl-btn-sm wsl-btn-light" (click)="accept(item)">
             Accept
           </button>
@@ -49,14 +49,15 @@
     </ul>
   </div>
   <div class="wsl-requests-list" *ngIf="counters.joining">
-    <h2>Your Requests</h2>
+    <h2 class="pb-1 text-xl font-medium">Your Requests</h2>
     <ul class="wsl-list-body">
-      <li *ngFor="let item of getShownRows(ItemType.Joining)">
-        <p>
+      <li class="flex items-center justify-between p-4"
+        *ngFor="let item of getShownRows(ItemType.Joining)">
+        <p class="text-sm">
           Your request to join team <b>{{ item.data.name }}</b> is pending
           approval by their administrators.
         </p>
-        <div>
+        <div class="space-x-2">
           <button class="wsl-btn-sm wsl-btn-muted"
             (click)="confirmRescind(item)">
             Cancel Request

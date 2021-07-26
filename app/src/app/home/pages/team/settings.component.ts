@@ -220,8 +220,8 @@ export class TeamTabSettingsComponent implements OnDestroy {
    */
   private updateTeamName(name: string) {
     const url = ['team', this.team.slug].join('/');
-    this.apiService.patch(url, { name }).subscribe(
-      () => {
+    this.apiService.patch(url, { name }).subscribe({
+      next: () => {
         this.alert.changeTeamName = {
           type: AlertType.Success,
           text: 'Team name was updated.'
@@ -232,13 +232,13 @@ export class TeamTabSettingsComponent implements OnDestroy {
           this.team.slug
         );
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         this.alert.changeTeamName = {
           type: AlertType.Danger,
           text: this.extractError(err)
         };
       }
-    );
+    });
   }
 
   /**
@@ -246,8 +246,8 @@ export class TeamTabSettingsComponent implements OnDestroy {
    */
   private updateTeamSlug(slug: string) {
     const url = ['team', this.team.slug].join('/');
-    this.apiService.patch(url, { slug }).subscribe(
-      () => {
+    this.apiService.patch(url, { slug }).subscribe({
+      next: () => {
         this.alert.changeTeamSlug = {
           type: AlertType.Success,
           text: 'Team slug was updated.'
@@ -256,12 +256,12 @@ export class TeamTabSettingsComponent implements OnDestroy {
         this.teamPageService.updateTeamSlug(TeamPageTabType.Settings, slug);
         this.router.navigate(['~', slug]);
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         this.alert.changeTeamSlug = {
           type: AlertType.Danger,
           text: this.extractError(err)
         };
       }
-    );
+    });
   }
 }

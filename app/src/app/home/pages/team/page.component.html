@@ -4,8 +4,8 @@
   </app-home-notfound>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!team">
-  <div class="wsl-page-head">
-    <div class="wsl-page-head-content">
+  <div class="border-t">
+    <div class="wsl-page-head">
       <nav aria-label="breadcrumb">
         <ol>
           <li>
@@ -65,6 +65,7 @@
       </nav>
     </div>
   </div>
+  <div class="py-8 border-t border-b border-gray-100 bg-gray-50"></div>
   <div [hidden]="currentTab !== TabType.Suites || !hasData() || hasItems()">
     <app-team-first-suite>
     </app-team-first-suite>

@@ -43,6 +43,7 @@ import {
   SuiteItemBatchComponent,
   SuiteItemPromotionComponent,
   SuiteListBatchesComponent,
+  SuiteListCommentsComponent,
   SuitePageComponent,
   SuiteTabSettingsComponent,
   SuiteTabTrendsComponent
@@ -114,6 +115,7 @@ import {
     SuiteItemBatchComponent,
     SuiteItemPromotionComponent,
     SuiteListBatchesComponent,
+    SuiteListCommentsComponent,
     SuiteChartRuntimeComponent,
     SuiteTabSettingsComponent,
     SuiteTabTrendsComponent,

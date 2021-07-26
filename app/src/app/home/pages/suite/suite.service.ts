@@ -166,41 +166,29 @@ export class SuitePageService extends IPageService<SuitePageItem> {
       onetime.push(this.fetchBatches(args));
     }
 
-    forkJoin(onetime).subscribe(
-      () => {
+    forkJoin(onetime).subscribe({
+      next: () => {
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
           AlertKind.ApiConnectionLost,
           AlertKind.TeamNotFound,
           AlertKind.SuiteNotFound
         );
-        const batches = this._batches.map((v) => {
-          const batch = v as FrontendBatchItem;
-          batch.isBaseline =
-            batch.batchSlug === this._suite.baseline?.batchSlug;
-          return new SuitePageItem(batch, SuitePageItemType.Batch);
-        });
-        const promotions = this._suite.promotions.map((v) => {
-          const bySelf =
-            this.userService.currentUser.username === v.by.username;
-          return new SuitePageItem(
-            { ...v, bySelf },
-            SuitePageItemType.Promotion
-          );
-        });
-        // since first batch of the suite is always the baseline, remove its
-        // corresponding promotion entry because it has no value for the user.
-        promotions.shift();
-        const items = [...batches, ...promotions].sort(
-          SuitePageItem.compareByDate
-        );
+        const items = this._batches
+          .map((v) => {
+            const batch = v as FrontendBatchItem;
+            batch.isBaseline =
+              batch.batchSlug === this._suite.baseline?.batchSlug;
+            return new SuitePageItem(batch, SuitePageItemType.Batch);
+          })
+          .sort(SuitePageItem.compareByDate);
         if (isEqual(this._items, items)) {
           return;
         }
         this._items = items;
         this._itemsSubject.next(this._items);
       },
-      (err) => {
+      error: (err) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items
@@ -215,7 +203,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
           errorLogger.notify(err);
         }
       }
-    );
+    });
   }
 
   /**

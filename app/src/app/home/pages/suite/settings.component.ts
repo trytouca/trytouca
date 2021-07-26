@@ -255,8 +255,8 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    */
   private updateSuiteName(name: string): void {
     const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
-    this.apiService.patch(url, { name }).subscribe(
-      () => {
+    this.apiService.patch(url, { name }).subscribe({
+      next: () => {
         this.alert.changeSuiteName = {
           type: AlertType.Success,
           text: 'Suite name was updated.'
@@ -267,13 +267,13 @@ export class SuiteTabSettingsComponent implements OnDestroy {
           this.suite.suiteSlug
         );
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         this.alert.changeSuiteName = {
           type: AlertType.Danger,
           text: this.extractError(err)
         };
       }
-    );
+    });
   }
 
   /**
@@ -281,8 +281,8 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    */
   private updateSuiteSlug(slug: string): void {
     const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
-    this.apiService.patch(url, { slug }).subscribe(
-      () => {
+    this.apiService.patch(url, { slug }).subscribe({
+      next: () => {
         this.alert.changeSuiteSlug = {
           type: AlertType.Success,
           text: 'Suite slug was updated.'
@@ -291,13 +291,13 @@ export class SuiteTabSettingsComponent implements OnDestroy {
         this.suitePageService.updateSuiteSlug(SuitePageTabType.Settings, slug);
         this.router.navigate(['~', this.suite.teamSlug, slug]);
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         this.alert.changeSuiteSlug = {
           type: AlertType.Danger,
           text: this.extractError(err)
         };
       }
-    );
+    });
   }
 
   /**
@@ -305,8 +305,8 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    */
   private updateSuiteRetainFor(retainFor: number): void {
     const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
-    this.apiService.patch(url, { retainFor }).subscribe(
-      () => {
+    this.apiService.patch(url, { retainFor }).subscribe({
+      next: () => {
         this.alert.changeSuiteRetainFor = {
           type: AlertType.Success,
           text: 'Data retention duration was updated.'
@@ -319,13 +319,13 @@ export class SuiteTabSettingsComponent implements OnDestroy {
           this.suite.suiteSlug
         );
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         this.alert.changeSuiteRetainFor = {
           type: AlertType.Danger,
           text: this.extractError(err)
         };
       }
-    );
+    });
   }
 
   /**
@@ -333,8 +333,8 @@ export class SuiteTabSettingsComponent implements OnDestroy {
    */
   private updateSuiteSealAfter(sealAfter: number): void {
     const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
-    this.apiService.patch(url, { sealAfter }).subscribe(
-      () => {
+    this.apiService.patch(url, { sealAfter }).subscribe({
+      next: () => {
         this.alert.changeSuiteSealAfter = {
           type: AlertType.Success,
           text: 'Auto seal duration was updated.'
@@ -347,12 +347,12 @@ export class SuiteTabSettingsComponent implements OnDestroy {
           this.suite.suiteSlug
         );
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         this.alert.changeSuiteSealAfter = {
           type: AlertType.Danger,
           text: this.extractError(err)
         };
       }
-    );
+    });
   }
 }

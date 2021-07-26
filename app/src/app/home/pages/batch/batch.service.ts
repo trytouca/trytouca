@@ -227,8 +227,8 @@ export class BatchPageService extends IPageService<BatchPageItem> {
    *
    */
   public fetchItems(args: FrontendBatchCompareParams): void {
-    this.fetchBatchCompare(args).subscribe(
-      (doc: BatchComparisonResponse) => {
+    this.fetchBatchCompare(args).subscribe({
+      next: (doc: BatchComparisonResponse) => {
         if (!doc || !this._batch) {
           return;
         }
@@ -253,7 +253,7 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         };
         this._overviewSubject.next(this._overview);
       },
-      (err) => {
+      error: (err) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items
@@ -268,7 +268,7 @@ export class BatchPageService extends IPageService<BatchPageItem> {
           errorLogger.notify(err);
         }
       }
-    );
+    });
   }
 
   /**
@@ -293,8 +293,8 @@ export class BatchPageService extends IPageService<BatchPageItem> {
       onetime.push(this.fetchComments(params));
     }
 
-    forkJoin(onetime).subscribe(
-      () => {
+    forkJoin(onetime).subscribe({
+      next: () => {
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
           AlertKind.ApiConnectionLost,
@@ -316,7 +316,7 @@ export class BatchPageService extends IPageService<BatchPageItem> {
           this.fetchItems(params);
         }
       },
-      (err) => {
+      error: (err) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items
@@ -331,7 +331,7 @@ export class BatchPageService extends IPageService<BatchPageItem> {
           errorLogger.notify(err);
         }
       }
-    );
+    });
   }
 
   /**

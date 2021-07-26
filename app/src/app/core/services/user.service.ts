@@ -46,8 +46,8 @@ export class UserService {
       this.subject.next(this.currentUser);
       return;
     }
-    this.apiService.get<UserLookupResponse>('user').subscribe(
-      (doc) => {
+    this.apiService.get<UserLookupResponse>('user').subscribe({
+      next: (doc) => {
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
           AlertKind.ApiConnectionLost
@@ -55,7 +55,7 @@ export class UserService {
         this.currentUser = doc;
         this.subject.next(doc);
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
           this.alertService.set(
             !this.currentUser
@@ -68,7 +68,7 @@ export class UserService {
           errorLogger.notify(err);
         }
       }
-    );
+    });
   }
 
   /**

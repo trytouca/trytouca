@@ -257,21 +257,21 @@ export class TeamTabMembersComponent
     const newRoleType =
       member.role === ETeamRole.Member ? ETeamRole.Admin : ETeamRole.Member;
     const url = ['team', this._team.slug, 'member', member.username].join('/');
-    this.apiService.patch(url, { role: newRoleType }).subscribe(
-      () => {
+    this.apiService.patch(url, { role: newRoleType }).subscribe({
+      next: () => {
         this.teamPageService.refreshMembers();
         this.notificationService.notify(
           AlertType.Success,
           `Changed ${member.fullname}'s role.`
         );
       },
-      () => {
+      error: () => {
         this.notificationService.notify(
           AlertType.Danger,
           `Something went wrong. We could not change ${member.fullname}'s role.`
         );
       }
-    );
+    });
   }
 
   /**
@@ -279,21 +279,21 @@ export class TeamTabMembersComponent
    */
   private remove(member: TeamMember): void {
     const url = ['team', this._team.slug, 'member', member.username].join('/');
-    this.apiService.delete(url).subscribe(
-      () => {
+    this.apiService.delete(url).subscribe({
+      next: () => {
         this.teamPageService.removeMember(member);
         this.notificationService.notify(
           AlertType.Success,
           `Removed ${member.fullname} from this team.`
         );
       },
-      () => {
+      error: () => {
         this.notificationService.notify(
           AlertType.Danger,
           `Something went wrong. We could not remove ${member.fullname}.`
         );
       }
-    );
+    });
   }
 
   /**
@@ -301,21 +301,21 @@ export class TeamTabMembersComponent
    */
   private rescind(invitee: TeamInvitee): void {
     const url = ['team', this._team.slug, 'invite', 'rescind'].join('/');
-    this.apiService.post(url, { email: invitee.email }).subscribe(
-      () => {
+    this.apiService.post(url, { email: invitee.email }).subscribe({
+      next: () => {
         this.teamPageService.removeInvitee(invitee);
         this.notificationService.notify(
           AlertType.Success,
           'Rescinded team invitation.'
         );
       },
-      () => {
+      error: () => {
         this.notificationService.notify(
           AlertType.Danger,
           'Something went wrong. We could not rescind team invitation.'
         );
       }
-    );
+    });
   }
 
   /**
@@ -323,19 +323,19 @@ export class TeamTabMembersComponent
    */
   private accept(applicant: TeamApplicant): void {
     const url = ['team', this._team.slug, 'join', applicant.username].join('/');
-    this.apiService.post(url).subscribe(
-      () => {
+    this.apiService.post(url).subscribe({
+      next: () => {
         const msg = `${applicant.fullname} is now a member of your team.`;
         this.teamPageService.refreshMembers();
         this.notificationService.notify(AlertType.Success, msg);
       },
-      () => {
+      error: () => {
         this.notificationService.notify(
           AlertType.Danger,
           'Something went wrong. We could not accept this request.'
         );
       }
-    );
+    });
   }
 
   /**
@@ -343,18 +343,18 @@ export class TeamTabMembersComponent
    */
   private decline(applicant: TeamApplicant): void {
     const url = ['team', this._team.slug, 'join', applicant.username].join('/');
-    this.apiService.delete(url).subscribe(
-      () => {
+    this.apiService.delete(url).subscribe({
+      next: () => {
         const msg = `You declined ${applicant.fullname}'s request to join your team.`;
         this.teamPageService.refreshMembers();
         this.notificationService.notify(AlertType.Success, msg);
       },
-      () => {
+      error: () => {
         this.notificationService.notify(
           AlertType.Danger,
           'Something went wrong. We could not decline this request.'
         );
       }
-    );
+    });
   }
 }

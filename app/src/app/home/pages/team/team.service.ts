@@ -210,15 +210,15 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
       onetime.push(this.fetchSuites(args));
     }
 
-    forkJoin(onetime).subscribe(
-      () => {
+    forkJoin(onetime).subscribe({
+      next: () => {
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
           AlertKind.ApiConnectionLost,
           AlertKind.TeamNotFound
         );
       },
-      (err) => {
+      error: (err) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items
@@ -233,7 +233,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
           errorLogger.notify(err);
         }
       }
-    );
+    });
   }
 
   /**

@@ -2,50 +2,47 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-.wsl-batches-first {
-  @apply mx-auto container flex items-center;
-  .wsl-batches-first-head {
-    @apply md:grid md:grid-cols-7;
+.wsl-batches-first-head {
+  @apply md:grid md:grid-cols-7;
+}
+.wsl-batches-first-left {
+  @apply p-8 md:col-span-4;
+  & > div {
+    @apply mb-4;
   }
-  .wsl-batches-first-left {
-    @apply p-8 md:col-span-4;
+  .wsl-batches-first-form {
+    .wsl-input-group {
+      @apply mb-3 flex w-full;
+      .wsl-input-group-prepend {
+        @apply p-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l text-xs font-medium whitespace-nowrap;
+      }
+      .wsl-input-group-text {
+        @apply px-2 flex flex-grow items-center bg-white border border-gray-300 text-red-600 text-xs font-mono overflow-x-auto;
+      }
+      .wsl-input-group-append {
+        @apply p-2 flex justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r text-xs font-medium cursor-pointer hover:bg-gray-200;
+      }
+    }
+  }
+  .wsl-client-libraries {
     & > div {
-      @apply mb-4;
+      @apply grid gap-4;
+      grid-template-columns: repeat(4, minmax(auto, 100px));
     }
-    .wsl-batches-first-form {
-      .wsl-input-group {
-        @apply mb-3 flex w-full;
-        .wsl-input-group-prepend {
-          @apply p-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l text-xs font-medium whitespace-nowrap;
-        }
-        .wsl-input-group-text {
-          @apply px-2 flex flex-grow items-center bg-white border border-gray-300 text-red-600 text-xs font-mono overflow-x-auto;
-        }
-        .wsl-input-group-append {
-          @apply p-2 flex justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r text-xs font-medium cursor-pointer hover:bg-gray-200;
-        }
+    .wsl-client-library {
+      @apply p-4 bg-gray-50 border border-gray-200 rounded-md;
+      img {
+        @apply w-full;
       }
-    }
-    .wsl-client-libraries {
-      & > div {
-        @apply grid gap-4;
-        grid-template-columns: repeat(4, minmax(auto, 100px));
-      }
-      .wsl-client-library {
-        @apply p-4 bg-gray-50 border border-gray-200 rounded-md;
-        img {
-          @apply w-full;
-        }
-        &:hover {
-          @apply bg-gray-100;
-        }
+      &:hover {
+        @apply bg-gray-100;
       }
     }
   }
-  .wsl-batches-first-right {
-    @apply hidden md:col-span-3 md:flex md:items-center md:justify-center;
-    img {
-      @apply md:w-3/4 md:mx-auto;
-    }
+}
+.wsl-batches-first-right {
+  @apply hidden md:col-span-3 md:flex md:items-center md:justify-center;
+  img {
+    @apply md:w-3/4 md:mx-auto;
   }
 }

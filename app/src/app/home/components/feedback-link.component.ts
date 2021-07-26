@@ -7,7 +7,10 @@ import { Component, Input, OnInit } from '@angular/core';
 @Component({
   selector: 'app-home-feedback-link',
   template: `
-    <div class="h-12 flex flex-col justify-center" *ngIf="message">
+    <div
+      class="container mx-auto px-4 h-12 flex flex-col justify-center"
+      *ngIf="message"
+    >
       <p class="wsl-text-muted text-sm text-right">
         <a [routerLink]="['/feedback']" [queryParams]="queryParams">
           {{ message }}

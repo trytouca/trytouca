@@ -20,8 +20,7 @@
     <ul class="wsl-list-body">
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Common); let i = index;"
-        (click)="selectedRow = i"
-        [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
+        (click)="selectedRow = i" [ngClass]="{'bg-sky-50': selectedRow === i}">
         <app-batch-item-element [item]="item" [params]="params">
         </app-batch-item-element>
       </li>
@@ -46,7 +45,7 @@
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Fresh); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Common)"
-        [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Common)}">
+        [ngClass]="{'bg-sky-50': selectedRow === i + countShownRows(ItemType.Common)}">
         <app-batch-item-element [item]="item" [params]="params">
         </app-batch-item-element>
       </li>
@@ -72,7 +71,7 @@
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Missing); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)"
-        [ngClass]="{'wsl-list-item-focused': selectedRow === i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)}">
+        [ngClass]="{'bg-sky-50': selectedRow === i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)}">
         <app-batch-item-element [item]="item" [params]="params">
         </app-batch-item-element>
       </li>

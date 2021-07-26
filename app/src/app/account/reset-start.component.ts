@@ -58,12 +58,12 @@ export class ResetStartComponent {
     if (!this.formReset.valid) {
       return;
     }
-    this.apiService.post('/auth/reset', { email: model.email }).subscribe(
-      () => {
+    this.apiService.post('/auth/reset', { email: model.email }).subscribe({
+      next: () => {
         this.alert = undefined;
         this.isFormShown = false;
       },
-      (err) => {
+      error: (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
           [
@@ -76,7 +76,7 @@ export class ResetStartComponent {
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
-    );
+    });
   }
 
   /**

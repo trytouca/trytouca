@@ -5,8 +5,8 @@
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!element || !batch">
   <app-alert [alert]="alert" class="text-center"></app-alert>
-  <div class="bg-gray-100 border-b">
-    <div class="wsl-page-head-content">
+  <div class="border-t">
+    <div class="wsl-page-head">
       <nav aria-label="breadcrumb">
         <ol>
           <li><a routerLink="../../..">{{ element?.teamName }}</a></li>
@@ -40,7 +40,8 @@
       </nav>
     </div>
   </div>
-  <div class="py-8 bg-gray-50" [hidden]="!hasData()">
+  <div class="py-8 border-t border-b border-gray-100 bg-gray-50"
+    [hidden]="!hasData()">
     <div class="container mx-auto" *ngIf="overview">
       <app-home-page-overview [inputs]="overview">
       </app-home-page-overview>

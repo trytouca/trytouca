@@ -10,8 +10,9 @@
       </a>
     </div>
   </div>
-  <div class="wsl-item-topics">
-    <div *ngFor="let topic of topics" class="wsl-item-topic">
+  <div class="flex flex-row space-x-1 text-xs leading-6 md:leading-8">
+    <div *ngFor="let topic of topics"
+      class="px-2 text-gray-500 bg-white border rounded-full select-none lg:px-4">
       <span [attr.title]="topic.title || null">
         {{ topic.text }}
       </span>

@@ -53,19 +53,19 @@ export class TeamInviteComponent extends ModalComponent {
     this.submitted = true;
     const body = { email: model.email, fullname: model.name };
     const url = ['team', this.elements.teamSlug, 'invite'].join('/');
-    this.apiService.post(url, body).subscribe(
-      () => {
+    this.apiService.post(url, body).subscribe({
+      next: () => {
         this.form.reset();
         this.submitted = false;
         this.dialogRef.close(true);
       },
-      (err) => {
+      error: (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
-    );
+    });
   }
 
   /**

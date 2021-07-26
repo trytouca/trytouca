@@ -12,7 +12,7 @@ import {
   faStar,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format } from 'date-fns';
 
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
@@ -23,7 +23,7 @@ import {
   IconType,
   Topic
 } from '@/home/models/page-item.model';
-import { DateTimePipe } from '@/shared/pipes';
+import { DateAgoPipe, DateTimePipe } from '@/shared/pipes';
 
 type Meta = Partial<{
   countFresh: number;
@@ -41,7 +41,7 @@ type Meta = Partial<{
   selector: 'app-suite-item-batch',
   templateUrl: './item.component.html',
   styleUrls: ['../../styles/item.component.scss'],
-  providers: [DateTimePipe, I18nPluralPipe, PercentPipe]
+  providers: [DateAgoPipe, DateTimePipe, I18nPluralPipe, PercentPipe]
 })
 export class SuiteItemBatchComponent {
   data: Data;
@@ -61,6 +61,7 @@ export class SuiteItemBatchComponent {
    *
    */
   constructor(
+    private dateagoPipe: DateAgoPipe,
     private datetimePipe: DateTimePipe,
     private i18pluralPipe: I18nPluralPipe,
     private percentPipe: PercentPipe,
@@ -171,7 +172,7 @@ export class SuiteItemBatchComponent {
 
     // it is possible that the function is called with no metric or a
     // metric with no duration in which case we opt not to show any
-    // information about the runtime duration of the testcase.
+    // information about the runtime duration of the test case.
     if (duration === 0) {
       return;
     }
@@ -232,9 +233,7 @@ export class SuiteItemBatchComponent {
     }
 
     topics.push({
-      text: formatDistanceToNow(this._meta.submittedAt, {
-        addSuffix: true
-      }),
+      text: this.dateagoPipe.transform(this._meta.submittedAt),
       title: format(this._meta.submittedAt, 'PPpp')
     });
 

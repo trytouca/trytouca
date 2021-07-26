@@ -1,6 +1,6 @@
 <section class="wsl-page-tab" *ngIf="suite && team">
-  <h2>Suite Settings</h2>
-  <div class="wsl-settings">
+  <h2 class="pb-1 text-xl font-medium">Suite Settings</h2>
+  <div class="grid gap-4 lg:grid-cols-2">
     <div class="wsl-settings-section"
       *ngIf="team.role === ETeamRole.Admin || team.role === ETeamRole.Owner">
       <h3 for="wsl-suite-name">Suite Name</h3>
@@ -50,7 +50,7 @@
       </small>
     </div>
     <div
-      class="hidden wsl-settings-image lg:block lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-3">
+      class="hidden p-4 lg:block lg:col-start-2 lg:col-end-3 lg:row-start-1 lg:row-end-3">
       <img src="./assets/undraw/undraw_adjustments_p22m.svg" />
     </div>
     <div class="wsl-settings-section">

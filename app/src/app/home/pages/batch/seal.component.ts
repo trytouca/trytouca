@@ -41,19 +41,19 @@ export class BatchSealComponent extends ModalComponent {
       this.elements.batch.batchSlug,
       'seal'
     ].join('/');
-    this.apiService.post(url).subscribe(
-      () => {
+    this.apiService.post(url).subscribe({
+      next: () => {
         this.form.reset();
         this.submitted = false;
         this.dialogRef.close(true);
       },
-      (err) => {
+      error: (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
-    );
+    });
   }
 
   /**

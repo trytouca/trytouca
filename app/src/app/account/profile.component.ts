@@ -108,8 +108,8 @@ export class ProfileComponent implements OnDestroy {
     if (Object.keys(info).length === 0) {
       return;
     }
-    this.apiService.patch('/user', info).subscribe(
-      () => {
+    this.apiService.patch('/user', info).subscribe({
+      next: () => {
         this.alert.changePersonal = {
           type: AlertType.Success,
           text: 'Your account information was updated.'
@@ -119,7 +119,7 @@ export class ProfileComponent implements OnDestroy {
         this.userService.reset();
         this.userService.populate();
       },
-      (err) => {
+      error: (err) => {
         const error = this.apiService.extractError(err, [
           [409, 'username already registered', 'This username is taken']
         ]);
@@ -131,7 +131,7 @@ export class ProfileComponent implements OnDestroy {
         });
         this.alert.changePersonal = { text: error, type: AlertType.Danger };
       }
-    );
+    });
   }
 
   /**

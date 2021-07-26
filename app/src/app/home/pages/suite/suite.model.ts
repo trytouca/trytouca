@@ -2,20 +2,16 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import type {
-  FrontendBatchItem,
-  PromotionItem
-} from '@/core/models/frontendtypes';
+import type { FrontendBatchItem } from '@/core/models/frontendtypes';
 import { PageListItem } from '@/home/models/page-list-item.model';
 
-type DataType = FrontendBatchItem | PromotionItem;
+type DataType = FrontendBatchItem;
 
 /**
  *
  */
 export enum SuitePageItemType {
-  Batch = 'batch',
-  Promotion = 'promotion'
+  Batch = 'batch'
 }
 
 /**
@@ -40,14 +36,7 @@ export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
    *
    */
   public asBatch(): FrontendBatchItem {
-    return this.data as FrontendBatchItem;
-  }
-
-  /**
-   *
-   */
-  public asPromotion(): PromotionItem {
-    return this.data as PromotionItem;
+    return this.data;
   }
 
   /**
@@ -57,8 +46,6 @@ export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
     switch (this.type) {
       case SuitePageItemType.Batch:
         return this.asBatch().submittedAt;
-      case SuitePageItemType.Promotion:
-        return this.asPromotion().at;
     }
   }
 
@@ -69,8 +56,6 @@ export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
     switch (this.type) {
       case SuitePageItemType.Batch:
         return this.asBatch().batchSlug;
-      case SuitePageItemType.Promotion:
-        return this.asPromotion().to;
     }
   }
 }

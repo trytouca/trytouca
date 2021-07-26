@@ -2,8 +2,7 @@
   <app-home-list-filter [manager]="filterManager" [params]="filterParams()"
     [stats]="filterStats()" (updateList)="updateList($event)">
   </app-home-list-filter>
-  <div class="wsl-list"
-    *ngIf="countShownRows(ItemType.Batch) + countShownRows(ItemType.Promotion)">
+  <div class="wsl-list" *ngIf="countShownRows(ItemType.Batch)">
     <div class="wsl-list-head">
       <p *ngIf="countShownRows(ItemType.Batch) !== countRows(ItemType.Batch)">
         You are viewing
@@ -13,21 +12,15 @@
     </div>
     <ul class="wsl-list-body">
       <li class="wsl-list-item-outer"
-        *ngFor="let item of getListItems(); let i = index;"
-        (click)="selectedRow = i;"
-        [ngClass]="{'wsl-list-item-focused': selectedRow === i}">
+        *ngFor="let item of getShownRows(ItemType.Batch); let i = index;"
+        (click)="selectedRow = i;" [ngClass]="{'bg-sky-50': selectedRow === i}">
         <app-suite-item-batch *ngIf="item.type === ItemType.Batch"
           [item]="item.asBatch()">
         </app-suite-item-batch>
-        <app-suite-item-promotion *ngIf="item.type === ItemType.Promotion"
-          [item]="item.asPromotion()">
-        </app-suite-item-promotion>
       </li>
     </ul>
   </div>
   <app-home-list-pager [params]="pagerParams()" [stats]="filterStats()"
     (updateList)="updateList($event)">
   </app-home-list-pager>
-  <app-home-feedback-link [page]="'app-suite-tab-batches'">
-  </app-home-feedback-link>
 </section>

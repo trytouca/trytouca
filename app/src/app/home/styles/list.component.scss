@@ -5,27 +5,10 @@
 img {
   @apply md:max-w-screen-sm mx-auto px-8 py-4;
 }
-.wsl-requests-list {
-  h2 {
-    @apply pb-1 text-xl font-medium;
-  }
-  li {
-    @apply p-4 flex justify-between items-center;
-    p {
-      @apply text-sm;
-    }
-    & > div {
-      @apply space-x-2;
-    }
-  }
-}
 .wsl-list-body {
   @apply divide-y border-t border-b;
   li {
     @apply hover:bg-gray-50;
-  }
-  li.wsl-list-item-focused {
-    @apply bg-sky-50;
   }
 }
 .wsl-list-head {

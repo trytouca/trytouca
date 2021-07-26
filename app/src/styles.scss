@@ -53,10 +53,10 @@
     min-height: calc(100vh - 8rem);
   }
   .wsl-min-h-screen-3 {
-    min-height: calc(100vh - 11rem);
+    min-height: calc(100vh - 18rem);
   }
   .wsl-min-h-screen-4 {
-    min-height: calc(100vh - 14rem);
+    min-height: calc(100vh - 18rem);
   }
   .wsl-form {
     @apply space-y-4;
@@ -87,9 +87,6 @@
   }
   .wsl-page-auth-body {
     @apply w-full mx-auto max-w-lg;
-  }
-  .wsl-page-auth-form {
-    @apply w-full mx-auto p-8 rounded-md shadow-lg;
   }
   .wsl-page-tab {
     @apply p-4 mx-auto container space-y-4;

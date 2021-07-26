@@ -120,14 +120,14 @@ export class TeamsCreateTeamComponent
     this.submitted = true;
     const body = { name: model.name, slug: model.slug.toLocaleLowerCase() };
     const url = 'team';
-    this.apiService.post(url, body).subscribe(
-      () => {
+    this.apiService.post(url, body).subscribe({
+      next: () => {
         this.hints.reset();
         this.form.reset();
         this.submitted = false;
         this.dialogRef.close(true);
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
           [
@@ -138,7 +138,7 @@ export class TeamsCreateTeamComponent
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
-    );
+    });
   }
 
   /**

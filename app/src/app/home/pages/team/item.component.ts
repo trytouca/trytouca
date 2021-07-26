@@ -11,7 +11,7 @@ import {
   faSpinner,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { format, formatDistanceToNow } from 'date-fns';
+import { format } from 'date-fns';
 
 import { SuiteLookupResponse } from '@/core/models/commontypes';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
@@ -22,7 +22,7 @@ import {
   IconType,
   Topic
 } from '@/home/models/page-item.model';
-import { DateTimePipe } from '@/shared/pipes';
+import { DateAgoPipe, DateTimePipe } from '@/shared/pipes';
 
 type Meta = Partial<{
   base: string;
@@ -41,7 +41,7 @@ type Meta = Partial<{
   selector: 'app-team-item-suite',
   templateUrl: './item.component.html',
   styleUrls: ['../../styles/item.component.scss'],
-  providers: [DateTimePipe, I18nPluralPipe, PercentPipe]
+  providers: [DateAgoPipe, DateTimePipe, I18nPluralPipe, PercentPipe]
 })
 export class TeamItemSuiteComponent {
   data: Data;
@@ -61,6 +61,7 @@ export class TeamItemSuiteComponent {
    *
    */
   constructor(
+    private dateagoPipe: DateAgoPipe,
     private datetimePipe: DateTimePipe,
     private i18pluralPipe: I18nPluralPipe,
     private percentPipe: PercentPipe,
@@ -129,7 +130,7 @@ export class TeamItemSuiteComponent {
       };
     }
 
-    // if suite has no common or new testcases
+    // if suite has no common or new test cases
     if (this._meta.countHead && this._meta.countHead === 0) {
       return {
         color: IconColor.Red,
@@ -138,7 +139,7 @@ export class TeamItemSuiteComponent {
       };
     }
 
-    // if testcase has zero match score
+    // if test case has zero match score
     if (this._meta.score && this._meta.score === 0) {
       return {
         color: IconColor.Red,
@@ -147,7 +148,7 @@ export class TeamItemSuiteComponent {
       };
     }
 
-    // if testcase has missing keys
+    // if test case has missing keys
     if (this._meta.countMissing && this._meta.countMissing !== 0) {
       return {
         color: IconColor.Orange,
@@ -156,7 +157,7 @@ export class TeamItemSuiteComponent {
       };
     }
 
-    // if testcase has imperfect match score
+    // if test case has imperfect match score
     if (1 !== this._meta.score) {
       return {
         color: IconColor.Orange,
@@ -181,7 +182,7 @@ export class TeamItemSuiteComponent {
 
     // it is possible that the function is called with no metric or a
     // metric with no duration in which case we opt not to show any
-    // information about the runtime duration of the testcase.
+    // information about the runtime duration of the test case.
     if (duration === 0) {
       return;
     }
@@ -242,9 +243,7 @@ export class TeamItemSuiteComponent {
     topics.push({ text: tcs });
 
     topics.push({
-      text: formatDistanceToNow(this._meta.submittedAt, {
-        addSuffix: true
-      }),
+      text: this.dateagoPipe.transform(this._meta.submittedAt),
       title: format(this._meta.submittedAt, 'PPpp')
     });
 

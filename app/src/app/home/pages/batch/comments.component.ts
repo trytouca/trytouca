@@ -258,19 +258,19 @@ export class BatchCommentsComponent implements OnDestroy {
       this._batch.batchSlug,
       'c'
     ].join('/');
-    this.apiService.post(url, { body: model.body }).subscribe(
-      () => {
+    this.apiService.post(url, { body: model.body }).subscribe({
+      next: () => {
         this.cancelForm();
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      (err) => {
+      error: (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
-    );
+    });
   }
 
   /**
@@ -285,19 +285,19 @@ export class BatchCommentsComponent implements OnDestroy {
       'c',
       commentId
     ].join('/');
-    this.apiService.delete(url).subscribe(
-      () => {
+    this.apiService.delete(url).subscribe({
+      next: () => {
         this.cancelForm();
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      (err) => {
+      error: (err) => {
         this.notificationService.notify(
           AlertType.Danger,
           'Something went wrong. Please try this operation again later.'
         );
       }
-    );
+    });
   }
 
   /**
@@ -313,13 +313,13 @@ export class BatchCommentsComponent implements OnDestroy {
       commentId,
       'reply'
     ].join('/');
-    this.apiService.post(url, { body: model.body }).subscribe(
-      () => {
+    this.apiService.post(url, { body: model.body }).subscribe({
+      next: () => {
         this.cancelForm();
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      (err) => {
+      error: (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
           [
@@ -330,7 +330,7 @@ export class BatchCommentsComponent implements OnDestroy {
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
-    );
+    });
   }
 
   /**
@@ -345,18 +345,18 @@ export class BatchCommentsComponent implements OnDestroy {
       'c',
       commentId
     ].join('/');
-    this.apiService.patch(url, { body: model.body }).subscribe(
-      () => {
+    this.apiService.patch(url, { body: model.body }).subscribe({
+      next: () => {
         this.cancelForm();
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      (err) => {
+      error: (err) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
-    );
+    });
   }
 }
