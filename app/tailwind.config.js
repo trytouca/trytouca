@@ -8,7 +8,7 @@ module.exports = {
   mode: process.env.TAILWIND_MODE ? 'jit' : 'aot',
   purge: {
     enabled: true,
-    content: ['./src/**/*.html', './src/**/*.ts', './src/**/*.scss']
+    content: ['./src/**/*.{html,scss,ts}']
   },
   theme: {
     extend: {
