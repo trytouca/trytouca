@@ -19,6 +19,5 @@
 
 ## Resources
 
-* [Touca C++ SDK][touca-cpp]
-
-[touca-cpp]: https://github.com/trytouca/touca-cpp
+* [Touca SDK for Python][https://github.com/trytouca/touca-python]
+* [Touca SDK for C++][https://github.com/trytouca/touca-cpp]
