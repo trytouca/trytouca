@@ -10,14 +10,15 @@ import {
 } from 'date-fns';
 
 @Pipe({
-  name: 'dateago'
+  name: 'dateAgo'
 })
 export class DateAgoPipe implements PipeTransform {
   /**
    *
    */
-  transform(input: number | Date): string {
-    const seconds = differenceInSeconds(new Date(), input);
+  transform(input: number | string | Date): string {
+    const inputDate = new Date(input);
+    const seconds = differenceInSeconds(new Date(), inputDate);
     const minutes = Math.round(seconds / 60);
     const hours = Math.round(minutes / 60);
     const days = Math.round(hours / 24);
@@ -31,9 +32,9 @@ export class DateAgoPipe implements PipeTransform {
       return `${hours} hours ago`;
     } else if (days === 1) {
       return `${days} day ago`;
-    } else if (differenceInBusinessDays(new Date(), input) < 6) {
+    } else if (differenceInBusinessDays(new Date(), inputDate) < 6) {
       return `${days} days ago`;
     }
-    return format(input, 'LLL dd');
+    return format(inputDate, 'LLL dd');
   }
 }

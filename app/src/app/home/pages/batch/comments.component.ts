@@ -54,6 +54,7 @@ export class BatchCommentsComponent implements OnDestroy {
     buttonSubmitText: 'Submit',
     previewShow: false
   };
+  isCommentFormShown: boolean;
 
   private _team: TeamLookupResponse;
   private _batch: BatchLookupResponse;
@@ -158,6 +159,10 @@ export class BatchCommentsComponent implements OnDestroy {
     }
   }
 
+  showCommentForm() {
+    this.isCommentFormShown = true;
+  }
+
   /**
    *
    */
@@ -186,6 +191,7 @@ export class BatchCommentsComponent implements OnDestroy {
     this.form.get('body').reset();
     this.form.get('body').enable();
     this.form.get('body').setValue('');
+    this.isCommentFormShown = false;
   }
 
   /**
@@ -213,6 +219,7 @@ export class BatchCommentsComponent implements OnDestroy {
     this._commentAction = event;
     this.fields.buttonCancelShow = true;
     this.form.reset();
+    this.isCommentFormShown = true;
     switch (event.actionType) {
       case FrontendCommentActionType.Remove:
         Object.assign(this.fields, {

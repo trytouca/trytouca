@@ -61,7 +61,7 @@ export class TeamItemSuiteComponent {
    *
    */
   constructor(
-    private dateagoPipe: DateAgoPipe,
+    private dateAgoPipe: DateAgoPipe,
     private datetimePipe: DateTimePipe,
     private i18pluralPipe: I18nPluralPipe,
     private percentPipe: PercentPipe,
@@ -243,7 +243,7 @@ export class TeamItemSuiteComponent {
     topics.push({ text: tcs });
 
     topics.push({
-      text: this.dateagoPipe.transform(this._meta.submittedAt),
+      text: this.dateAgoPipe.transform(this._meta.submittedAt),
       title: format(this._meta.submittedAt, 'PPpp')
     });
 

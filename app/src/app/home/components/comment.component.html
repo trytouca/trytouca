@@ -5,11 +5,11 @@
     </div>
     <div class="space-x-4 wsl-text-muted">
       <small title="{{ meta.commentTime | datetime:'format' }}">
-        {{ meta.commentTime | datetime:'distance' }}
+        {{ meta.commentTime | dateAgo }}
       </small>
       <small *ngIf="meta.commentEditTime"
         title="{{ meta.commentEditTime | datetime:'format' }}">
-        (edited {{ meta.commentEditTime | datetime:'distance' }})
+        (edited {{ meta.commentEditTime | dateAgo }})
       </small>
     </div>
   </div>

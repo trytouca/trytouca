@@ -17,7 +17,12 @@
       </div>
     </div>
   </div>
-  <div class="py-4">
+  <div class="py-4" [hidden]="isCommentFormShown">
+    <button class="w-full wsl-btn-sm wsl-btn-muted" (click)="showCommentForm()">
+      Write a Comment
+    </button>
+  </div>
+  <div class="py-4" [hidden]="!isCommentFormShown">
     <h2 class="pb-1 font-medium text-md"><label
         for="wsl-body">{{ fields.editorTitle }}</label></h2>
     <p class="text-sm">{{ fields.editorSubtitle }}</p>

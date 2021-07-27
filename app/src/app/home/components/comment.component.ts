@@ -9,10 +9,12 @@ import {
   FrontendCommentActionType,
   FrontendCommentItem
 } from '@/core/models/frontendtypes';
+import { DateAgoPipe } from '@/shared/pipes';
 
 @Component({
   selector: 'app-home-comment',
-  templateUrl: './comment.component.html'
+  templateUrl: './comment.component.html',
+  providers: [DateAgoPipe]
 })
 export class CommentComponent {
   ActionType = FrontendCommentActionType;

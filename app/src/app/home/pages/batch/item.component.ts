@@ -82,7 +82,7 @@ export class BatchItemElementComponent {
   constructor(
     private route: ActivatedRoute,
     private i18pluralPipe: I18nPluralPipe,
-    private dateagoPipe: DateAgoPipe,
+    private dateAgoPipe: DateAgoPipe,
     private datetimePipe: DateTimePipe,
     private percentPipe: PercentPipe,
     private faIconLibrary: FaIconLibrary
@@ -344,7 +344,7 @@ export class BatchItemElementComponent {
 
     if (this._meta.isCreatedRecently) {
       topics.push({
-        text: this.dateagoPipe.transform(this._meta.builtAt),
+        text: this.dateAgoPipe.transform(this._meta.builtAt),
         title: format(this._meta.builtAt, 'PPpp')
       });
     }
