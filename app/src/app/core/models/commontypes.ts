@@ -26,10 +26,11 @@ export type Userinfo = {
 export type UserLookupResponse = {
   apiKeys: string[];
   email: string;
+  feature_flags: string[];
   fullname: string;
   platformRole: EPlatformRole;
-  user_id: string;
   user_hash: string;
+  user_id: string;
   username: string;
 };
 

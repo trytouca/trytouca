@@ -4,7 +4,7 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import {
   EPlatformRole,
@@ -101,5 +101,19 @@ export class UserService {
     }
     this.currentUser = undefined;
     intercomClient.shutdown();
+  }
+
+  /**
+   *
+   */
+  updateFeatureFlag(slug: string, value: boolean): Observable<void> {
+    if (value) {
+      this.currentUser.feature_flags.push(slug);
+    } else {
+      const index = this.currentUser.feature_flags.indexOf(slug);
+      this.currentUser.feature_flags.splice(index, 1);
+    }
+    this.subject.next(this.currentUser);
+    return this.apiService.patch('/user', { flags: { [slug]: value } });
   }
 }

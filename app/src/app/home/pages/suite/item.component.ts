@@ -3,7 +3,7 @@
  */
 
 import { I18nPluralPipe, PercentPipe } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faCheckCircle,
@@ -15,13 +15,15 @@ import {
 import { format } from 'date-fns';
 
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
+import { UserService } from '@/core/services';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import {
   Data,
   Icon,
   IconColor,
   IconType,
-  Topic
+  Topic,
+  TopicType
 } from '@/home/models/page-item.model';
 import { DateAgoPipe, DateTimePipe } from '@/shared/pipes';
 
@@ -34,6 +36,7 @@ type Meta = Partial<{
   isSealed: boolean;
   performance: string;
   score: number;
+  slug: string;
   submittedAt: Date;
 }>;
 
@@ -47,24 +50,41 @@ export class SuiteItemBatchComponent {
   data: Data;
   icon: Icon;
   topics: Topic[];
-  private _meta: Meta = {};
+  shownTopics: Topic[];
+  toggleState: TopicType | null;
+  flag_colored_topics: boolean;
 
   /**
    *
    */
   @Input()
   set item(item: FrontendBatchItem) {
-    this.initMetadata(item);
+    const meta = this.initMetadata(item);
+    this.data = {
+      name: meta.slug,
+      link: meta.slug,
+      query: null
+    };
+    this.icon = this.initIcon(meta);
+    this.topics = this.initTopics(meta);
+    this.applyChosenTopics();
   }
+  @Input()
+  set chosenTopics(type: TopicType) {
+    this.toggleState = type;
+    this.applyChosenTopics(type);
+  }
+  @Output() updateChosenTopics = new EventEmitter<TopicType | null>();
 
   /**
    *
    */
   constructor(
     private dateAgoPipe: DateAgoPipe,
-    private datetimePipe: DateTimePipe,
+    private dateTimePipe: DateTimePipe,
     private i18pluralPipe: I18nPluralPipe,
     private percentPipe: PercentPipe,
+    private userService: UserService,
     private faIconLibrary: FaIconLibrary
   ) {
     faIconLibrary.addIcons(
@@ -74,54 +94,52 @@ export class SuiteItemBatchComponent {
       faStar,
       faTimesCircle
     );
+    this.userService.currentUser$.subscribe((user) => {
+      this.flag_colored_topics = user.feature_flags.includes('colored_topics');
+    });
+    this.userService.populate();
   }
 
   /**
    *
    */
-  private initMetadata(item: FrontendBatchItem): void {
-    this.data = {
-      name: item.batchSlug,
-      link: item.batchSlug,
-      query: null
-    };
-    this._meta.countFresh = item.meta.elementsCountFresh;
-    this._meta.countHead = item.meta.elementsCountHead;
-    this._meta.countMissing = item.meta.elementsCountMissing;
-    this._meta.countPending = item.meta.elementsCountPending;
-    this._meta.isBaseline = item.isBaseline;
-    this._meta.isSealed = item.isSealed;
-    this._meta.score = Math.floor(item.meta.elementsScoreAggregate * 100) / 100;
-    this._meta.submittedAt = new Date(item.submittedAt);
-
-    this._meta.performance = this.initPerformance(
-      new Metric(
-        '',
-        item.meta.metricsDurationHead,
-        item.meta.metricsDurationHead -
-          item.meta.metricsDurationChange * item.meta.metricsDurationSign
+  private initMetadata(item: FrontendBatchItem) {
+    return {
+      countFresh: item.meta.elementsCountFresh,
+      countHead: item.meta.elementsCountHead,
+      countMissing: item.meta.elementsCountMissing,
+      countPending: item.meta.elementsCountPending,
+      isBaseline: item.isBaseline,
+      isSealed: item.isSealed,
+      slug: item.batchSlug,
+      score: Math.floor(item.meta.elementsScoreAggregate * 100) / 100,
+      submittedAt: new Date(item.submittedAt),
+      performance: this.initPerformance(
+        new Metric(
+          '',
+          item.meta.metricsDurationHead,
+          item.meta.metricsDurationHead -
+            item.meta.metricsDurationChange * item.meta.metricsDurationSign
+        )
       )
-    );
-
-    this.icon = this.initIcon();
-    this.topics = this.initTopics();
+    };
   }
 
   /**
    *
    */
-  private initIcon(): Icon {
+  private initIcon(meta: Meta): Icon {
     // if batch is not sealed
-    if (!this._meta.isSealed || this._meta.countPending) {
+    if (!meta.isSealed || meta.countPending) {
       return {
-        color: this._meta.score === 1 ? IconColor.Green : IconColor.Orange,
+        color: meta.score === 1 ? IconColor.Green : IconColor.Orange,
         type: IconType.Spinner,
         spin: true
       };
     }
 
     // if batch is baseline {
-    if (this._meta.isBaseline) {
+    if (meta.isBaseline) {
       return {
         color: IconColor.Gold,
         type: IconType.Star,
@@ -130,7 +148,7 @@ export class SuiteItemBatchComponent {
     }
 
     // if batch has zero match score
-    if (this._meta.score === 0) {
+    if (meta.score === 0) {
       return {
         color: IconColor.Red,
         type: IconType.TimesCircle,
@@ -139,7 +157,7 @@ export class SuiteItemBatchComponent {
     }
 
     // if batch has missing elements
-    if (this._meta.countMissing !== 0) {
+    if (meta.countMissing !== 0) {
       return {
         color: IconColor.Orange,
         type: IconType.TimesCircle,
@@ -148,7 +166,7 @@ export class SuiteItemBatchComponent {
     }
 
     // if batch has imperfect match score
-    if (this._meta.score !== 1) {
+    if (meta.score !== 1) {
       return {
         color: IconColor.Orange,
         type: IconType.TimesCircle,
@@ -187,7 +205,7 @@ export class SuiteItemBatchComponent {
     }
 
     const changeType = metric.changeType();
-    const durationStr = this.datetimePipe.transform(duration, 'duration');
+    const durationStr = this.dateTimePipe.transform(duration, 'duration');
     if (
       changeType === MetricChangeType.Same ||
       changeType === MetricChangeType.Fresh ||
@@ -203,40 +221,76 @@ export class SuiteItemBatchComponent {
   /**
    *
    */
-  private initTopics(): Topic[] {
+  private initTopics(meta: Meta): Topic[] {
     const topics: Topic[] = [];
 
-    if (this._meta.score) {
-      const score = this.percentPipe.transform(this._meta.score, '1.0-0');
-      topics.push({ text: score, title: 'Match Score' });
+    if (meta.score) {
+      const score = this.percentPipe.transform(meta.score, '1.0-0');
+      topics.push({
+        type: TopicType.MatchRate,
+        color: ['bg-green-200'],
+        text: score,
+        title: 'Match Score',
+        click: () => this.toggleChosenTopics(TopicType.MatchRate)
+      });
     }
 
-    if (this._meta.performance) {
-      topics.push({ text: this._meta.performance });
+    if (meta.performance) {
+      topics.push({
+        type: TopicType.Performance,
+        color: ['bg-sky-200'],
+        text: meta.performance,
+        click: () => this.toggleChosenTopics(TopicType.Performance)
+      });
     }
 
-    if (this._meta.countHead) {
-      let tcs = this.i18pluralPipe.transform(this._meta.countHead, {
+    if (meta.countHead) {
+      let tcs = this.i18pluralPipe.transform(meta.countHead, {
         '=1': 'one case',
         other: '# cases'
       });
-      if (this._meta.countPending) {
-        tcs += ` (${this._meta.countPending} pending comparison)`;
-      } else if (this._meta.countFresh && this._meta.countMissing) {
-        tcs += ` (${this._meta.countFresh} new, ${this._meta.countMissing} missing)`;
-      } else if (this._meta.countFresh && !this._meta.countMissing) {
-        tcs += ` (${this._meta.countFresh} new)`;
-      } else if (!this._meta.countFresh && this._meta.countMissing) {
-        tcs += ` (${this._meta.countMissing} missing)`;
+      if (meta.countPending) {
+        tcs += ` (${meta.countPending} pending comparison)`;
+      } else if (meta.countFresh && meta.countMissing) {
+        tcs += ` (${meta.countFresh} new, ${meta.countMissing} missing)`;
+      } else if (meta.countFresh && !meta.countMissing) {
+        tcs += ` (${meta.countFresh} new)`;
+      } else if (!meta.countFresh && meta.countMissing) {
+        tcs += ` (${meta.countMissing} missing)`;
       }
-      topics.push({ text: tcs });
+      topics.push({
+        type: TopicType.TestCases,
+        color: ['bg-red-200'],
+        text: tcs,
+        click: () => this.toggleChosenTopics(TopicType.TestCases)
+      });
     }
 
     topics.push({
-      text: this.dateAgoPipe.transform(this._meta.submittedAt),
-      title: format(this._meta.submittedAt, 'PPpp')
+      type: TopicType.SubmissionDate,
+      color: ['bg-purple-200'],
+      text: this.dateAgoPipe.transform(meta.submittedAt),
+      title: format(meta.submittedAt, 'PPpp'),
+      click: () => this.toggleChosenTopics(TopicType.SubmissionDate)
     });
 
     return topics;
+  }
+
+  /**
+   *
+   */
+  private toggleChosenTopics(type: TopicType) {
+    this.updateChosenTopics.emit(this.toggleState === type ? null : type);
+  }
+
+  /**
+   *
+   */
+  private applyChosenTopics(type?: TopicType) {
+    this.toggleState = type;
+    this.shownTopics = type
+      ? this.topics.filter((v) => type === v.type)
+      : this.topics;
   }
 }

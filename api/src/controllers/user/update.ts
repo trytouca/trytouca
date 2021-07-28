@@ -13,6 +13,27 @@ import * as mailer from '@/utils/mailer'
 import { tracker } from '@/utils/tracker'
 
 /**
+ *
+ */
+async function updateFeatureFlags(user: IUser, flags: Record<string, boolean>) {
+  logger.debug('%s: updating feature flag: %j', user.username, flags)
+  const insert = Object.keys(flags).filter((v) => flags[v] === true)
+  if (insert) {
+    await UserModel.findByIdAndUpdate(user._id, {
+      $addToSet: { featureFlags: { $each: insert } }
+    })
+  }
+  const remove = Object.keys(flags).filter((v) => flags[v] === false)
+  if (remove) {
+    await UserModel.findByIdAndUpdate(user._id, {
+      $pull: { featureFlags: { $in: remove } }
+    })
+  }
+  logger.info('%s: updated feature flag: %j', user.username, flags)
+  tracker.track(user, 'updated_feature_flag', flags)
+}
+
+/**
  * Updates information about current user.
  */
 export async function ctrlUserUpdate(
@@ -22,6 +43,13 @@ export async function ctrlUserUpdate(
 ) {
   const user = res.locals.user as IUser
   const tuple = user.username
+
+  const flags = pick(req.body.flags, ['colored_topics'])
+  if (flags) {
+    updateFeatureFlags(user, flags)
+    return res.status(204).send()
+  }
+
   const proposed = pickBy(
     pick(req.body, ['fullname', 'username', 'password']),
     identity

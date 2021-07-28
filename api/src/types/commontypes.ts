@@ -39,6 +39,7 @@ export type Userinfo = {
  *  required:
  *    - apiKeys
  *    - email
+ *    - feature_flags
  *    - fullname
  *    - platformRole
  *    - username
@@ -51,6 +52,10 @@ export type Userinfo = {
  *    email:
  *      type: string
  *      format: email
+ *    feature_flags:
+ *      type: array
+ *      items:
+ *        type: string
  *    fullname:
  *      type: string
  *    platformRole:
@@ -65,6 +70,7 @@ export type Userinfo = {
 export type UserLookupResponse = {
   apiKeys: string[]
   email: string
+  feature_flags: string[]
   fullname: string
   platformRole: EPlatformRole
   user_hash: string

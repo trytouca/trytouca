@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true
   },
+  featureFlags: {
+    type: [String],
+    default: []
+  },
   fullname: {
     required: false,
     type: String
@@ -102,6 +106,7 @@ export interface IUserDocument extends mongoose.Document {
   apiKeys: string[]
   createdAt: Date
   email: string
+  featureFlags: string[]
   fullname: string
   lockedAt: Date
   loginAttempts: number

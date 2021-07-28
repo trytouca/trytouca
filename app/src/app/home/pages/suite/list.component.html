@@ -15,7 +15,8 @@
         *ngFor="let item of getShownRows(ItemType.Batch); let i = index;"
         (click)="selectedRow = i;" [ngClass]="{'bg-sky-50': selectedRow === i}">
         <app-suite-item-batch *ngIf="item.type === ItemType.Batch"
-          [item]="item.asBatch()">
+          [item]="item.asBatch()" [chosenTopics]="chosenTopic"
+          (updateChosenTopics)="updateChosenTopics($event)">
         </app-suite-item-batch>
       </li>
     </ul>

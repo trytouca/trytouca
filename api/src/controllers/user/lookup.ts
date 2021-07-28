@@ -30,12 +30,14 @@ export async function userLookup(
     activatedAt: 1,
     apiKeys: 1,
     createdAt: 1,
+    featureFlags: 1,
     platformRole: 1
   })
 
   const userInfo: UserLookupResponse = {
     apiKeys: info.apiKeys,
     email: user.email,
+    feature_flags: info.featureFlags,
     fullname: user.fullname,
     platformRole: info.platformRole,
     user_id: user._id.toHexString(),

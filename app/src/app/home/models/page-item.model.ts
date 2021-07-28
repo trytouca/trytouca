@@ -34,6 +34,16 @@ export type Data = {
 };
 
 export type Topic = {
+  color?: string[];
   text: string;
   title?: string;
+  type?: TopicType;
+  click?: () => void;
 };
+
+export enum TopicType {
+  MatchRate = 1,
+  Performance,
+  SubmissionDate,
+  TestCases
+}

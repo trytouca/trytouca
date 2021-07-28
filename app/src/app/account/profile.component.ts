@@ -28,15 +28,46 @@ interface FormContent {
   uname: string;
 }
 
+interface FeatureFlag {
+  default: boolean;
+  description: string;
+  experimental: boolean;
+  saved?: boolean;
+  slug: string;
+  title: string;
+  value?: boolean;
+}
+
 @Component({
   selector: 'app-account-profile',
-  templateUrl: './profile.component.html'
+  templateUrl: './profile.component.html',
+  styles: [
+    `
+      input:checked ~ .wsl-checkbox-line {
+        background-color: #0284c7;
+      }
+      input:checked ~ .wsl-checkbox-dot {
+        transform: translateX(100%);
+      }
+    `
+  ]
 })
 export class ProfileComponent implements OnDestroy {
   private _subUser: Subscription;
   private _subHints: Subscription;
   alert: Partial<Record<EModalType, Alert>> = {};
   user: UserLookupResponse;
+  feature_flags: FeatureFlag[] = [
+    {
+      default: false,
+      description:
+        'Use color identifiers to better distinguish properties of each test case',
+      experimental: true,
+      saved: false,
+      slug: 'colored_topics',
+      title: 'Colored Topics'
+    }
+  ];
   EModalType = EModalType;
 
   /**
@@ -76,6 +107,9 @@ export class ProfileComponent implements OnDestroy {
       'uname'
     ]);
     this._subUser = this.userService.currentUser$.subscribe((user) => {
+      this.feature_flags.forEach(
+        (v) => (v.value = user.feature_flags.includes(v.slug))
+      );
       this.user = user;
       this.accountSettingsForm.get('fname').setValue(user.fullname);
       this.accountSettingsForm.get('uname').setValue(user.username);
@@ -183,6 +217,20 @@ export class ProfileComponent implements OnDestroy {
       closeButton: false,
       data: elements.get(type),
       minHeight: '10vh'
+    });
+  }
+
+  /**
+   *
+   */
+  onCheckboxChange(flag: FeatureFlag) {
+    const node = this.feature_flags.find((v) => v.slug === flag.slug);
+    node.value = !node.value;
+    this.userService.updateFeatureFlag(flag.slug, node.value).subscribe({
+      next: () => {
+        node.saved = true;
+        timer(3000).subscribe(() => (node.saved = false));
+      }
     });
   }
 }

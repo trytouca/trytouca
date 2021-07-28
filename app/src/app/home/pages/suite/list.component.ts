@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
+import { TopicType } from '@/home/models/page-item.model';
 
 import { SuitePageItem, SuitePageItemType } from './suite.model';
 import { SuitePageService } from './suite.service';
@@ -66,6 +67,7 @@ export class SuiteListBatchesComponent
   implements OnDestroy
 {
   ItemType = SuitePageItemType;
+  chosenTopic: TopicType;
 
   /**
    *
@@ -114,5 +116,9 @@ export class SuiteListBatchesComponent
         });
       }
     }
+  }
+
+  updateChosenTopics(type: TopicType) {
+    this.chosenTopic = type;
   }
 }
