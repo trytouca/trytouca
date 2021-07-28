@@ -27,7 +27,7 @@ export class SigninComponent implements OnInit {
   formSignin = new FormGroup({
     uname: new FormControl('', {
       validators: formFields.uname.validators,
-      updateOn: 'blur'
+      updateOn: 'change'
     }),
     upass: new FormControl('', {
       validators: formFields.upass.validators,

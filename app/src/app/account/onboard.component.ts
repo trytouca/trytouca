@@ -38,11 +38,11 @@ export class OnboardComponent implements OnDestroy {
     }),
     uname: new FormControl('', {
       validators: formFields.uname.validators,
-      updateOn: 'blur'
+      updateOn: 'change'
     }),
     upass: new FormControl('', {
       validators: formFields.upass.validators,
-      updateOn: 'blur'
+      updateOn: 'change'
     })
   });
 
