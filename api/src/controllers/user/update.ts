@@ -45,7 +45,7 @@ export async function ctrlUserUpdate(
   const tuple = user.username
 
   const flags = pick(req.body.flags, ['colored_topics'])
-  if (flags) {
+  if (Object.keys(flags).length !== 0) {
     updateFeatureFlags(user, flags)
     return res.status(204).send()
   }

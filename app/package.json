@@ -49,7 +49,6 @@
     "lodash-es": "^4.17.21",
     "ngx-clipboard": "^14.0.1",
     "ngx-markdown": "12.0.1",
-    "prismjs": "^1.23.0",
     "rxjs": "~7.1.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.11.4"
