@@ -97,11 +97,11 @@ const content: PageContent = {
         answer: [
           `Touca server is language agnostic. But you'd need to integrate
           one of our SDKs with your code to capture test results and submit
-          them to the platform. At the moment, we only provide an SDK for the
-          C++ programming language.`,
-          `We are developing SDKs for Python, Java, and Javascript as part of
-          our 2021 product roadmap. Our Python SDK is in its final evaluation
-          phase and is scheduled to be released by June 2021.`
+          them to the platform. At the moment, we provide SDKs for
+          C++ and Python programming languages.`,
+          `We are developing SDKs for Javascript and Java as part of our 2021
+          product roadmap. Our Javascript SDK is in its final evaluation phase
+          and is scheduled to be released in August 2021.`
         ]
       },
       {
