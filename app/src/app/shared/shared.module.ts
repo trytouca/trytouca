@@ -13,6 +13,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 
 import {
   AlertComponent,
+  CheckboxComponent,
   FooterComponent,
   HeaderInsideComponent,
   HeaderOutsideComponent,
@@ -36,6 +37,7 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
   declarations: [
     AlertComponent,
     AutofocusDirective,
+    CheckboxComponent,
     DateAgoPipe,
     DateTimePipe,
     DropdownDirective,
@@ -48,6 +50,7 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
   exports: [
     AlertComponent,
     AutofocusDirective,
+    CheckboxComponent,
     ClipboardModule,
     CommonModule,
     DateAgoPipe,

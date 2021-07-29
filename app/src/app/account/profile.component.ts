@@ -17,6 +17,7 @@ import {
   ConfirmElements
 } from '@/home/components/confirm.component';
 import { Alert, AlertType } from '@/shared/components/alert.component';
+import { Checkbox } from '@/shared/components/checkbox.component';
 
 enum EModalType {
   ChangePersonal = 'changePersonal',
@@ -28,47 +29,37 @@ interface FormContent {
   uname: string;
 }
 
-interface FeatureFlag {
-  default: boolean;
-  description: string;
-  experimental: boolean;
-  saved?: boolean;
-  slug: string;
-  title: string;
-  value?: boolean;
-}
-
 @Component({
   selector: 'app-account-profile',
-  templateUrl: './profile.component.html',
-  styles: [
-    `
-      input:checked ~ .wsl-checkbox-line {
-        background-color: #0284c7;
-      }
-      input:checked ~ .wsl-checkbox-dot {
-        transform: translateX(100%);
-      }
-    `
-  ]
+  templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnDestroy {
   private _subUser: Subscription;
   private _subHints: Subscription;
   alert: Partial<Record<EModalType, Alert>> = {};
   user: UserLookupResponse;
-  feature_flags: FeatureFlag[] = [
-    {
+  EModalType = EModalType;
+
+  preferences: Record<string, Checkbox> = {
+    newsletter_product: {
+      default: false,
+      description:
+        'Receive monthly updates about newly released features and improvements',
+      experimental: false,
+      saved: false,
+      slug: 'newsletter_product',
+      title: 'Subscribe to Product Updates Newsletter'
+    },
+    colored_topics: {
       default: false,
       description:
         'Use color identifiers to better distinguish properties of each test case',
       experimental: true,
       saved: false,
       slug: 'colored_topics',
-      title: 'Colored Topics'
+      title: 'Color Identifiers'
     }
-  ];
-  EModalType = EModalType;
+  };
 
   /**
    *
@@ -107,9 +98,9 @@ export class ProfileComponent implements OnDestroy {
       'uname'
     ]);
     this._subUser = this.userService.currentUser$.subscribe((user) => {
-      this.feature_flags.forEach(
-        (v) => (v.value = user.feature_flags.includes(v.slug))
-      );
+      user.feature_flags.forEach((v) => {
+        this.preferences[v].value = true;
+      });
       this.user = user;
       this.accountSettingsForm.get('fname').setValue(user.fullname);
       this.accountSettingsForm.get('uname').setValue(user.username);
@@ -223,9 +214,9 @@ export class ProfileComponent implements OnDestroy {
   /**
    *
    */
-  onCheckboxChange(flag: FeatureFlag) {
-    const node = this.feature_flags.find((v) => v.slug === flag.slug);
-    node.value = !node.value;
+  toggleFeatureFlag(flag: Checkbox) {
+    const node = this.preferences[flag.slug];
+    node.value = !(node.value ?? false);
     this.userService.updateFeatureFlag(flag.slug, node.value).subscribe({
       next: () => {
         node.saved = true;

@@ -47,51 +47,20 @@
         <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
           Preferences
         </h2>
-        <div *ngFor="let flag of feature_flags">
-          <div class="flex items-center justify-between">
-            <div class="space-x-1">
-              <span class="mb-1 text-sm font-medium text-gray-700">
-                {{ flag.title }}</span>
-              <span class="text-sm text-gray-500"
-                *ngIf="flag.experimental">(Beta feature)</span>
-            </div>
-            <div class="flex items-center space-x-1">
-              <span class="text-xs text-green-600"
-                *ngIf="flag.saved">Saved</span>
-              <label for="wsl-beta-color">
-                <div class="relative cursor-pointer">
-                  <input class="sr-only" type="checkbox" id="wsl-beta-color"
-                    [checked]="flag.value || flag.default"
-                    (change)="onCheckboxChange(flag)">
-                  <div
-                    class="block w-8 h-5 bg-gray-200 rounded-full wsl-checkbox-line">
-                  </div>
-                  <div
-                    class="absolute w-3 h-3 transition bg-white rounded-full wsl-checkbox-dot left-1 top-1">
-                  </div>
-                </div>
-              </label>
-            </div>
-          </div>
-          <small class="wsl-text-muted"
-            id="wsl-beta-color-help">{{ flag.description }}</small>
+        <div>
+          <app-settings-checkbox [data]="preferences.newsletter_product"
+            (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
         </div>
       </div>
-      <!-- <div class="p-4 space-y-2 bg-gray-50">
-        <h2 class="pb-1 text-xl font-medium border-b">
-          Notifications
+      <div class="p-4 space-y-2 bg-gray-50">
+        <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
+          Experimental Features
         </h2>
-        <label class="sr-only wsl-input-label" for="wsl-news">Touca
-          Newsletter</label>
-        <div class="flex items-center space-x-2">
-          <input
-            class="border-gray-300 rounded-sm shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
-            type="checkbox" tabindex="14">
-          <p class="text-sm text-gray-600">Subscribe to our newsletter to
-            receive monthly product updates.
-          </p>
+        <div>
+          <app-settings-checkbox [data]="preferences.colored_topics"
+            (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
         </div>
-      </div> -->
+      </div>
       <div class="p-4 space-y-2 bg-gray-50">
         <h2
           class="pb-1 text-xl font-medium border-b border-gray-200 wsl-text-danger">

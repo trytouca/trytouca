@@ -19,7 +19,6 @@ import { platformRouter } from '@/routes/platform'
 import { suiteRouter } from '@/routes/suite'
 import { teamRouter } from '@/routes/team'
 import { userRouter } from '@/routes/user'
-import { config } from '@/utils/config'
 import { promisable } from '@/utils/routing'
 
 const router = e.Router()

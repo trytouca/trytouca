@@ -6,13 +6,13 @@
     </div>
     <div class="wsl-item-title">
       <a [routerLink]="data.link" [queryParams]="data.query">
-        <h4>{{ data.name }}</h4>
+        <h4 class="whitespace-nowrap">{{ data.name }}</h4>
       </a>
     </div>
   </div>
   <div class="flex flex-row space-x-1 text-xs leading-6 md:leading-8">
     <div *ngFor="let topic of topics"
-      class="px-2 text-gray-500 bg-white border rounded-full select-none lg:px-4">
+      class="px-2 overflow-hidden text-gray-500 bg-white border rounded-full select-none lg:px-4 whitespace-nowrap">
       <span [attr.title]="topic.title || null">
         {{ topic.text }}
       </span>
