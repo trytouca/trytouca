@@ -5,7 +5,7 @@
 .wsl-page-head {
   @apply h-16 px-4 py-2 mx-auto container flex items-center text-lg font-medium;
   nav {
-    @apply flex-grow;
+    @apply flex-grow whitespace-nowrap;
     ol {
       @apply flex;
       & > li:not(:last-child):after {

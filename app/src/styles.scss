@@ -29,7 +29,7 @@
     @apply bg-gray-50 border hover:bg-gray-100 focus:ring-1 focus:ring-opacity-50 focus:ring-gray-400 disabled:text-gray-300;
   }
   .wsl-input-field {
-    @apply block w-full rounded-md shadow-sm sm:text-sm border-gray-300 focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50;
+    @apply block w-full rounded-md shadow-sm text-sm border-gray-300 focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50;
   }
   .wsl-input-label {
     @apply mb-1 block text-sm font-medium text-gray-700;

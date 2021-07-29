@@ -15,7 +15,7 @@
           </li>
         </ol>
       </nav>
-      <div class="print:hidden">
+      <div class="print:hidden whitespace-nowrap">
         <button class="wsl-btn-sm wsl-btn-dark" *ngFor="let button of buttons"
           type="button" (click)="button.click()" [title]="button.title">
           {{ button.text }}

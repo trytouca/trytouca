@@ -65,6 +65,10 @@ export class ProfileComponent implements OnDestroy {
    *
    */
   accountSettingsForm = new FormGroup({
+    email: new FormControl('', {
+      validators: formFields.email.validators,
+      updateOn: 'blur'
+    }),
     fname: new FormControl('', {
       validators: formFields.fname.validators,
       updateOn: 'blur'
@@ -79,6 +83,10 @@ export class ProfileComponent implements OnDestroy {
    *
    */
   hints = new FormHints({
+    email: new FormHint(
+      'Contact us if you like to change your email address',
+      formFields.email.validationErrors
+    ),
     fname: new FormHint('', formFields.fname.validationErrors),
     uname: new FormHint('', formFields.uname.validationErrors)
   });
@@ -102,6 +110,8 @@ export class ProfileComponent implements OnDestroy {
         this.preferences[v].value = true;
       });
       this.user = user;
+      this.accountSettingsForm.get('email').setValue(user.email);
+      this.accountSettingsForm.get('email').disable();
       this.accountSettingsForm.get('fname').setValue(user.fullname);
       this.accountSettingsForm.get('uname').setValue(user.username);
     });
