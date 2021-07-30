@@ -46,13 +46,6 @@ const pageTabs: PageTab<SuitePageTabType>[] = [
     shown: true
   },
   {
-    type: SuitePageTabType.Trends,
-    name: 'Trends',
-    link: 'trends',
-    icon: 'chart-line',
-    shown: true
-  },
-  {
     type: SuitePageTabType.Settings,
     name: 'Settings',
     link: 'settings',
@@ -147,7 +140,7 @@ export class SuitePageComponent
       this.updateFields();
       this.updateTitle(v);
     });
-    if (userService?.currentUser?.apiKeys?.length !== 0) {
+    if (userService.currentUser?.apiKeys?.length !== 0) {
       this.fields.apiKey = userService?.currentUser?.apiKeys[0];
     }
     this._subUser = userService.currentUser$.subscribe((v) => {

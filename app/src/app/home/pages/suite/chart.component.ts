@@ -73,8 +73,9 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
         ]
       },
       options: {
-        aspectRatio: 3,
+        aspectRatio: 2,
         responsive: true,
+        maintainAspectRatio: true,
         plugins: {
           legend: {
             display: false
@@ -106,8 +107,7 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
               maxTicksLimit: 5
             },
             title: {
-              display: true,
-              text: 'Overall Execution Runtime'
+              display: false
             }
           }
         }

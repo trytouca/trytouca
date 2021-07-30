@@ -17,7 +17,26 @@ module.exports = {
       },
       screens: {
         print: { raw: 'print' }
-      }
+      },
+      typography: (theme) => ({
+        DEFAULT: {
+          css: {
+            code: {
+              backgroundColor: theme('colors.gray.100'),
+              borderRadius: '0.25rem',
+              color: theme('colors.gray.700'),
+              fontWeight: '500',
+              padding: '0.25rem'
+            },
+            'code::before': {
+              content: ''
+            },
+            'code::after': {
+              content: ''
+            }
+          }
+        }
+      })
     }
   },
   variants: {

@@ -28,7 +28,6 @@ import { SuitePageItem, SuitePageItemType } from './suite.model';
 
 export enum SuitePageTabType {
   Versions = 'versions',
-  Trends = 'trends',
   Settings = 'settings'
 }
 

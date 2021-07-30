@@ -4,7 +4,7 @@
   </app-home-notfound>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!suite">
-  <div class="border-t">
+  <div class="border-t border-gray-100">
     <div class="wsl-page-head">
       <nav aria-label="breadcrumb">
         <ol>
@@ -125,28 +125,28 @@
       </nav>
     </div>
   </div>
-  <div class="py-8 border-t border-b border-gray-100 bg-gray-50"></div>
-  <div [hidden]="currentTab !== TabType.Versions || !hasData() || hasItems()">
+  <div class="border-t border-gray-100"
+    [hidden]="currentTab !== TabType.Versions || !hasData() || hasItems()">
     <app-suite-first-batch>
     </app-suite-first-batch>
   </div>
-  <div [hidden]="currentTab !== TabType.Versions || !hasData() || !hasItems()">
+  <div class="border-t border-gray-100"
+    [hidden]="currentTab !== TabType.Versions || !hasData() || !hasItems()">
     <div class="container grid gap-4 mx-auto lg:grid-cols-3">
-      <div class="lg:col-span-2 lg:wsl-min-h-screen-4">
+      <div class="lg:col-span-2 lg:wsl-min-h-screen-suite">
         <app-suite-tab-batches>
         </app-suite-tab-batches>
       </div>
-      <div class="lg:col-span-1 lg:wsl-min-h-screen-4">
+      <div class="lg:col-span-1 lg:wsl-min-h-screen-suite">
+        <app-suite-trends-runtime>
+        </app-suite-trends-runtime>
         <app-suite-tab-comments>
         </app-suite-tab-comments>
       </div>
     </div>
   </div>
-  <div [hidden]="currentTab !== TabType.Trends">
-    <app-suite-tab-trends>
-    </app-suite-tab-trends>
-  </div>
-  <div [hidden]="currentTab !== TabType.Settings">
+  <div class="border-t border-gray-100"
+    [hidden]="currentTab !== TabType.Settings">
     <app-suite-tab-settings>
     </app-suite-tab-settings>
   </div>

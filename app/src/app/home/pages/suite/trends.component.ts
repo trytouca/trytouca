@@ -3,6 +3,8 @@
  */
 
 import { Component, OnDestroy } from '@angular/core';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
 
@@ -17,20 +19,26 @@ type Fields = Partial<{
 }>;
 
 @Component({
-  selector: 'app-suite-tab-trends',
+  selector: 'app-suite-trends-runtime',
   templateUrl: './trends.component.html'
 })
-export class SuiteTabTrendsComponent implements OnDestroy {
+export class SuiteTrendsRuntimeComponent implements OnDestroy {
   fields: Fields = {
     perfs: []
   };
 
   private _subItems: Subscription;
+  faInfoCircle = faInfoCircle;
+  isTooltipActive = false;
 
   /**
    *
    */
-  constructor(private suitePageService: SuitePageService) {
+  constructor(
+    private suitePageService: SuitePageService,
+    faIconLibrary: FaIconLibrary
+  ) {
+    faIconLibrary.addIcons(faInfoCircle);
     this._subItems = this.suitePageService.items$.subscribe((allItems) => {
       const perfs = allItems
         .filter((v) => v.type === SuitePageItemType.Batch)

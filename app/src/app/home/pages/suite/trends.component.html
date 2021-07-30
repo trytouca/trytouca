@@ -1,23 +1,23 @@
-<section class="wsl-page-tab">
-  <div>
-    <h2 class="pb-1 text-xl font-medium">Runtime Trend</h2>
-    <p class="text-sm">
-      This chart plots the overall execution time of versions as they are
-      submitted. It helps understand how performance of your workflow is
-      changing over time. It also helps identify code changes with unintended
-      impact to the performance of your workflow.
-    </p>
-    <div class="py-8">
-      <app-suite-chart-runtime *ngIf="fields.perfs.length !== 0; else noData"
-        [perfs]="fields.perfs">
-      </app-suite-chart-runtime>
-      <ng-template #noData>
-        <img class="py-2 mx-auto"
-          src="./assets/undraw/undraw_setup_analytics_8qkl_edited_2.svg" />
-        <div class="text-center">
-          <span class="text-sm">This suite has no version yet.</span>
-        </div>
-      </ng-template>
-    </div>
+<aside class="p-4 divide-y divide-gray-200">
+  <div class="flex items-center h-12 space-x-2">
+    <h3 class="font-semibold">Runtime Trend</h3>
+    <fa-icon class="text-blue-100 cursor-pointer hover:text-blue-400"
+      [icon]="faInfoCircle" (click)="isTooltipActive = !isTooltipActive">
+    </fa-icon>
   </div>
-</section>
+  <p class="pt-4 text-sm" *ngIf="isTooltipActive">This chart plots the overall
+    execution time of recent versions. It shows how the overall performance of
+    your workflow has changed over time.</p>
+  <div class="pt-4" *ngIf="!isTooltipActive">
+    <app-suite-chart-runtime *ngIf="fields.perfs.length !== 0; else noData"
+      [perfs]="fields.perfs">
+    </app-suite-chart-runtime>
+    <ng-template #noData>
+      <img class="py-2 mx-auto"
+        src="./assets/undraw/undraw_setup_analytics_8qkl_edited_2.svg" />
+      <div class="text-center">
+        <span class="text-sm">This suite has no version yet.</span>
+      </div>
+    </ng-template>
+  </div>
+</aside>

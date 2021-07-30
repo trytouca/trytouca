@@ -2,6 +2,9 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
+.wsl-min-h-screen-suite {
+  min-height: calc(100vh - 12rem);
+}
 .wsl-quick-settings-header {
   @apply flex items-center space-x-1;
 }

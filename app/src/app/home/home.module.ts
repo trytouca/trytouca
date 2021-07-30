@@ -46,7 +46,7 @@ import {
   SuiteListCommentsComponent,
   SuitePageComponent,
   SuiteTabSettingsComponent,
-  SuiteTabTrendsComponent
+  SuiteTrendsRuntimeComponent
 } from './pages/suite';
 import {
   TeamCreateSuiteComponent,
@@ -118,7 +118,7 @@ import {
     SuiteListCommentsComponent,
     SuiteChartRuntimeComponent,
     SuiteTabSettingsComponent,
-    SuiteTabTrendsComponent,
+    SuiteTrendsRuntimeComponent,
     // batch page components
     BatchCommentsComponent,
     BatchPageComponent,

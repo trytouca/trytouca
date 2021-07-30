@@ -10,4 +10,4 @@ export { SuiteListBatchesComponent } from './list.component';
 export { SuiteListCommentsComponent } from './comments.component';
 export { SuitePageComponent } from './page.component';
 export { SuiteTabSettingsComponent } from './settings.component';
-export { SuiteTabTrendsComponent } from './trends.component';
+export { SuiteTrendsRuntimeComponent } from './trends.component';
