@@ -44,16 +44,7 @@ export class BatchCommentsComponent implements OnDestroy {
   alert: Alert;
   comments: FrontendCommentItem[] = [];
   form: FormGroup;
-  fields: PageViewFields = {
-    editorSubtitle:
-      'Share results of your investigations with your colleagues.',
-    editorTitle: 'Write a Comment',
-    buttonCancelShow: false,
-    buttonPreviewShow: true,
-    buttonPreviewText: 'Preview',
-    buttonSubmitText: 'Submit',
-    previewShow: false
-  };
+  fields: PageViewFields;
   isCommentFormShown: boolean;
 
   private _team: TeamLookupResponse;
@@ -74,6 +65,7 @@ export class BatchCommentsComponent implements OnDestroy {
     private notificationService: NotificationService,
     private userService: UserService
   ) {
+    this.resetFields();
     this._subTeam = this.batchPageService.team$.subscribe((v) => {
       this._team = v;
     });
@@ -102,6 +94,19 @@ export class BatchCommentsComponent implements OnDestroy {
     this._subTeam.unsubscribe();
     this._subBatch.unsubscribe();
     this._subComments.unsubscribe();
+  }
+
+  private resetFields() {
+    this.fields = {
+      editorSubtitle:
+        'Share results of your investigations with your colleagues.',
+      editorTitle: 'Write a Comment',
+      buttonCancelShow: true,
+      buttonPreviewShow: true,
+      buttonPreviewText: 'Preview',
+      buttonSubmitText: 'Submit',
+      previewShow: false
+    };
   }
 
   /**
@@ -161,6 +166,7 @@ export class BatchCommentsComponent implements OnDestroy {
 
   showCommentForm() {
     this.isCommentFormShown = true;
+    this.fields.previewShow = false;
   }
 
   /**
@@ -181,12 +187,7 @@ export class BatchCommentsComponent implements OnDestroy {
       actionType: FrontendCommentActionType.Post
     };
     this.alert = undefined;
-    this.fields.buttonCancelShow = false;
-    this.fields.buttonPreviewShow = true;
-    this.fields.buttonSubmitText = 'Submit';
-    this.fields.editorSubtitle =
-      'Share results of your investigations with your colleagues.';
-    this.fields.editorTitle = 'Write a New Comment';
+    this.resetFields();
     this.form.reset();
     this.form.get('body').reset();
     this.form.get('body').enable();
@@ -243,7 +244,7 @@ export class BatchCommentsComponent implements OnDestroy {
         break;
       case FrontendCommentActionType.Update:
         Object.assign(this.fields, {
-          buttonPreviewShow: false,
+          buttonPreviewShow: true,
           buttonSubmitText: 'Edit',
           editorTitle: 'Edit This Comment',
           editorSubtitle: 'You are editing a previously submitted comment.'
