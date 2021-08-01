@@ -44,6 +44,7 @@
     "express": "^4.16.4",
     "express-validator": "^6.11.1",
     "flatbuffers": "^1.10.2",
+    "google-auth-library": "^7.4.1",
     "hide-powered-by": "^1.0.0",
     "html-to-text": "^7.1.1",
     "intercom-client": "^2.11.2",

@@ -383,6 +383,15 @@ export type ElementComparisonResponse = {
 /**
  *
  */
+export type PlatformStatus = {
+  mail: boolean;
+  ready: boolean;
+  self_hosted: boolean;
+};
+
+/**
+ *
+ */
 export type PlatformStatsUser = {
   activationLink?: string;
   createdAt: Date;

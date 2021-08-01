@@ -13,10 +13,13 @@ import { config } from '@/utils/config'
  *
  */
 export type TrackerInfo = {
+  avatar: string
   created_at: Date
   email: string
   ip_address: string
   name: string
+  first_name: string
+  last_name: string
   user_id: string
   username: string
 }
@@ -76,9 +79,12 @@ class Tracker {
       }
     })
     this.mixpanel?.people.set(user._id, {
+      $avatar: data.avatar,
       $created: data.created_at?.toISOString(),
       $email: data.email,
       $name: data.name,
+      $first_name: data.first_name,
+      $last_name: data.last_name,
       $ip: data.ip_address,
       username: data.username
     })

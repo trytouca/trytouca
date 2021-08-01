@@ -969,6 +969,28 @@ export type ElementComparisonResponse = {
 }
 
 /**
+ * @schema CT_PlatformStatus
+ *  additionalProperties: false
+ *  type: object
+ *  required:
+ *    - ready
+ *    - mail
+ *    - self_hosted
+ *  properties:
+ *    ready:
+ *      type: boolean
+ *    mail:
+ *      type: boolean
+ *    self_hosted:
+ *      type: boolean
+ */
+export type PlatformStatus = {
+  mail: boolean
+  ready: boolean
+  self_hosted: boolean
+}
+
+/**
  * @schema CT_PlatformStatsUser
  *  additionalProperties: false
  *  type: object

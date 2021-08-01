@@ -1,47 +1,83 @@
 <div class="flex flex-col h-full">
   <h2 class="text-2xl font-semibold">Welcome Back!</h2>
+  <div class="my-2">
+    <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+  </div>
   <div class="flex items-center flex-grow">
-    <form class="flex-grow py-4 space-y-4" [formGroup]="formSignin"
-      (ngSubmit)="onSubmit(formSignin.value)" novalidate>
-      <app-alert [alert]="alert" *ngIf="alert"></app-alert>
-      <div>
-        <label class="wsl-input-label" for="wsl-uname">Username</label>
-        <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
-          formControlName="uname" aria-describedby="wsl-uname-help" required
-          autocomplete="username" tabindex="1">
-      </div>
-      <div>
-        <label class="wsl-input-label" for="wsl-upass">Password</label>
-        <input class="wsl-input-field" type="password" id="wsl-upass"
-          name="upass" formControlName="upass" aria-describedby="wsl-upass-help"
-          required autocomplete="current-password" tabindex="2">
-      </div>
-      <div
-        class="space-y-4 md:space-y-0 md:flex md:space-x-2 md:items-center md:justify-between">
-        <div>
+    <div class="flex-grow py-8">
+      <div class="space-y-4" *ngIf="showForm === false">
+        <div class="flex justify-center">
           <button
-            class="overflow-hidden wsl-btn-lg wsl-btn-dark whitespace-nowrap"
-            type="submit" tabindex="3">
-            Sign in
+            class="flex items-center justify-center w-1/2 p-2 space-x-2 transition duration-300 border rounded-md cursor-pointer focus:outline-none hover:bg-gray-100 focus:border-gray-400"
+            (click)="signinGoogle()">
+            <img src="assets/exticons/google.svg" />
+            <span class="text-sm">Sign in with Google</span>
           </button>
         </div>
-        <div class="space-y-4 md:space-y-0 md:flex md:space-x-2">
-          <div>
-            <button
-              class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-light"
-              type="button" routerLink="/account/reset" tabindex="4">
-              Reset Password
-            </button>
-          </div>
-          <div>
-            <button
-              class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-light"
-              type="button" routerLink="/account/signup" tabindex="5">
-              Sign up
-            </button>
-          </div>
+        <div class="flex items-center w-full">
+          <span class="flex-grow border-t border-gray-200"></span>
+          <span
+            class="px-2 text-sm font-semibold text-gray-400 select-none">or</span>
+          <span class="flex-grow border-t border-gray-200"></span>
+        </div>
+        <div class="flex justify-center">
+          <button
+            class="flex items-center justify-center w-1/2 p-2 space-x-2 transition duration-300 border rounded-md cursor-pointer focus:outline-none hover:bg-gray-100 focus:border-gray-400"
+            (click)="showForm = true">
+            <img class="h-5" src="assets/logo/touca-logo-transparent.svg" />
+            <span class="text-sm">Sign in with password</span>
+          </button>
+        </div>
+        <div class="flex justify-center">
+          <button
+            class="pt-4 text-sm text-gray-500 cursor-pointer focus:outline-none hover:text-gray-600"
+            routerLink="/account/signup">
+            Don't have an account? <a class="text-sky-600">Sign up!</a>
+          </button>
         </div>
       </div>
-    </form>
+      <form class="space-y-4" *ngIf="showForm === true" [formGroup]="formSignin"
+        (ngSubmit)="onSubmit(formSignin.value)" novalidate>
+        <div>
+          <label class="wsl-input-label" for="wsl-uname">Username</label>
+          <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
+            formControlName="uname" aria-describedby="wsl-uname-help" required
+            autocomplete="username" tabindex="1">
+        </div>
+        <div>
+          <label class="wsl-input-label" for="wsl-upass">Password</label>
+          <input class="wsl-input-field" type="password" id="wsl-upass"
+            name="upass" formControlName="upass"
+            aria-describedby="wsl-upass-help" required
+            autocomplete="current-password" tabindex="2">
+        </div>
+        <div
+          class="space-y-4 md:space-y-0 md:flex md:space-x-2 md:items-center md:justify-between">
+          <div>
+            <button
+              class="overflow-hidden wsl-btn-lg wsl-btn-dark whitespace-nowrap"
+              type="submit" tabindex="3">
+              Sign in
+            </button>
+          </div>
+          <div class="space-y-4 md:space-y-0 md:flex md:space-x-2">
+            <div>
+              <button
+                class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-light"
+                type="button" routerLink="/account/reset" tabindex="4">
+                Reset Password
+              </button>
+            </div>
+            <div>
+              <button
+                class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-light"
+                type="button" routerLink="/account/signup" tabindex="5">
+                Sign up
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
   </div>
 </div>

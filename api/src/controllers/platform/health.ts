@@ -5,7 +5,7 @@
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
-import { configMgr } from '@/utils/config'
+import { config, configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
@@ -34,7 +34,8 @@ export async function platformHealth(
   const mongodbConnection = mongoose.connection.readyState === 1
   const response = {
     mail: configMgr.hasMailTransport(),
-    ready: minioConnection && mongodbConnection
+    ready: minioConnection && mongodbConnection,
+    self_hosted: config.auth.googleClientId === undefined
   }
 
   // cache platform health information in redis database

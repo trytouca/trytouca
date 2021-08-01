@@ -36,10 +36,7 @@ export async function authVerifyActivate(
 
   const user = await UserModel.findOneAndUpdate(
     { activationKey },
-    {
-      $set: { activatedAt: new Date() },
-      $unset: { activationKey: true }
-    }
+    { $set: { activatedAt: new Date() } }
   )
 
   // return 404 if activation key is not found

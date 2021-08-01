@@ -8,15 +8,24 @@ import {
   HttpParams
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
+import { PlatformStatus } from '@/core/models/commontypes';
 import { getBackendUrl } from '@/core/models/environment';
 
 @Injectable()
 export class ApiService {
+  _status: PlatformStatus;
+
+  /**
+   *
+   */
   constructor(private http: HttpClient) {}
 
+  /**
+   *
+   */
   private makeUrl(path: string): string {
     if (!path.startsWith('/')) {
       path = '/' + path;
@@ -72,6 +81,21 @@ export class ApiService {
   }
 
   /**
+   *
+   */
+  status(): Observable<PlatformStatus> {
+    if (this._status) {
+      return of(this._status);
+    }
+    return this.get<PlatformStatus>('/platform').pipe(
+      map((doc) => {
+        this._status = doc;
+        return doc;
+      })
+    );
+  }
+
+  /**
    * Utility function to extract error message provided by backend
    * from a given HttpErrorResponse and map it to a user-friendly
    * error message.
@@ -81,7 +105,7 @@ export class ApiService {
    *                  to a user-friendly message. If missing, function
    *                  returns error message as provided by backend.
    */
-  public extractError(
+  extractError(
     httpError: HttpErrorResponse,
     errorList?: [number, string, string][]
   ): string {

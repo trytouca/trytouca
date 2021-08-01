@@ -2,12 +2,14 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { MailboxAction, MailboxInput } from '@/account/mailbox.component';
+import { PlatformStatus } from '@/core/models/commontypes';
 import { formFields } from '@/core/models/form-hint';
-import { ApiService } from '@/core/services';
+import { ApiService, AuthService, UserService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';
 
 interface FormContent {
@@ -41,11 +43,22 @@ export class SignupComponent {
 
   alert: Alert;
   isFormShown = true;
+  showForm: boolean;
 
   /**
    *
    */
-  constructor(private apiService: ApiService) {}
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
+    private authService: AuthService,
+    private userService: UserService,
+    private zone: NgZone
+  ) {
+    this.apiService.status().subscribe((response) => {
+      this.showForm = response.self_hosted;
+    });
+  }
 
   /**
    *
@@ -107,5 +120,34 @@ export class SignupComponent {
   isFormValid() {
     const field = this.formSignup.controls['email'];
     return field.pristine || field.valid;
+  }
+
+  /**
+   *
+   */
+  signupGoogle() {
+    this.authService.google_login().subscribe({
+      next: () => {
+        this.userService.populate();
+        this.zone.run(() => {
+          this.router.navigate([this.authService.redirectUrl || '/~']);
+        });
+      },
+      error: (err) => {
+        const msg = this.apiService.extractError(err, [
+          [
+            403,
+            'feature not available',
+            'Feature not available for self-hosted deployments.'
+          ],
+          [401, 'account not verified', 'Your Google account is not verified.'],
+          [423, 'account suspended', 'Your account is currently suspended.'],
+          [423, 'account locked', 'Your account is temporarily locked.']
+        ]);
+        this.zone.run(() => {
+          this.alert = { type: AlertType.Danger, text: msg };
+        });
+      }
+    });
   }
 }

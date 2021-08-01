@@ -33,16 +33,7 @@ const router = e.Router()
  *        content:
  *          application/json:
  *            schema:
- *              type: object
- *              additionalProperties: false
- *              required:
- *                - ready
- *                - mail
- *              properties:
- *                ready:
- *                  type: boolean
- *                mail:
- *                  type: boolean
+ *              $ref: '#/components/schemas/CT_PlatformStatus'
  */
 router.get('/', promisable(platformHealth, 'check platform health'))
 

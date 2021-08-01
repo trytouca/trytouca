@@ -65,6 +65,14 @@ export const validationRules = new Map<string, ValidationChain>([
       .withMessage('too long')
   ],
   [
+    'google_token',
+    vbody('google_token')
+      .exists()
+      .withMessage('required')
+      .isString()
+      .withMessage('must be a string')
+  ],
+  [
     'fullname',
     vbody('fullname').optional().isString().withMessage('must be a string')
   ],

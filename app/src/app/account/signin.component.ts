@@ -2,10 +2,11 @@
  * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { PlatformStatus } from '@/core/models/commontypes';
 import { formFields } from '@/core/models/form-hint';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { ApiService, AuthService, UserService } from '@/core/services';
@@ -38,6 +39,7 @@ export class SigninComponent implements OnInit {
   alert: Alert;
   submitted: boolean;
   prev: FormContent;
+  showForm: boolean;
 
   /**
    *
@@ -47,8 +49,13 @@ export class SigninComponent implements OnInit {
     private router: Router,
     private apiService: ApiService,
     private authService: AuthService,
-    private userService: UserService
-  ) {}
+    private userService: UserService,
+    private zone: NgZone
+  ) {
+    this.apiService.status().subscribe((response) => {
+      this.showForm = response.self_hosted;
+    });
+  }
 
   /**
    *
@@ -106,6 +113,41 @@ export class SigninComponent implements OnInit {
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
         this.prev = model;
+      }
+    });
+  }
+
+  /**
+   *
+   */
+  signinGoogle() {
+    this.authService.google_login().subscribe({
+      next: () => {
+        this.userService.populate();
+        this.prev = null;
+        const callback = localStorage.getItem(ELocalStorageKey.Callback);
+        this.zone.run(() => {
+          if (callback) {
+            this.router.navigateByUrl(callback);
+            return;
+          }
+          this.router.navigate([this.authService.redirectUrl || '/~']);
+        });
+      },
+      error: (err) => {
+        const msg = this.apiService.extractError(err, [
+          [
+            403,
+            'feature not available',
+            'Feature not available for self-hosted deployments.'
+          ],
+          [401, 'account not verified', 'Your Google account is not verified.'],
+          [423, 'account suspended', 'Your account is currently suspended.'],
+          [423, 'account locked', 'Your account is temporarily locked.']
+        ]);
+        this.zone.run(() => {
+          this.alert = { type: AlertType.Danger, text: msg };
+        });
       }
     });
   }

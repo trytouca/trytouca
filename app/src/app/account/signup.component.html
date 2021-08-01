@@ -1,53 +1,89 @@
 <div class="flex flex-col h-full pb-4">
   <ng-container *ngIf="isFormShown">
     <h2 class="text-2xl font-semibold">Get Started for Free</h2>
+    <small class="block wsl-text-muted">By creating an account, you agree
+      to our <a class="text-sky-600" href="https://docs.touca.io/legal/terms"
+        target="_blank">Terms of Service</a> and <a class="text-sky-600"
+        href="https://docs.touca.io/legal/privacy" target="_blank">Privacy
+        Policy</a>.
+    </small>
+    <div class="my-2">
+      <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+    </div>
     <div class="flex items-center flex-grow">
-      <form class="flex-grow py-4 space-y-4" [formGroup]="formSignup"
-        (ngSubmit)="onSubmit(formSignup.value)" novalidate>
-        <app-alert [alert]="alert" *ngIf="alert"></app-alert>
-        <div>
-          <label class="wsl-input-label" for="wsl-email">Email Address</label>
-          <input class="wsl-input-field" type="email" id="wsl-email"
-            name="email" formControlName="email"
-            aria-describedby="wsl-email-help" required autocomplete="email"
-            data-lpignore="true" tabindex="1">
-          <div class="space-x-1 wsl-text-danger" id="wsl-email-help"
-            [hidden]="isFormValid()">
-            <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg"
-              fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <small>Please use a valid email address.</small>
-          </div>
-        </div>
-        <small class="block wsl-text-muted">By creating an account, you agree to
-          our <a class="text-sky-600" href="https://docs.touca.io/legal/terms"
-            target="_blank">Terms of Service</a> and <a class="text-sky-600"
-            href="https://docs.touca.io/legal/privacy" target="_blank">Privacy
-            Policy</a>.
-        </small>
-        <div
-          class="space-y-4 md:space-y-0 md:flex md:space-x-2 md:items-center md:justify-between">
-          <div>
+      <div class="flex-grow py-8">
+        <div class="space-y-4" *ngIf="showForm === false">
+          <div class="flex justify-center">
             <button
-              class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-dark"
-              type="submit" tabindex="2">
-              Sign up
+              class="flex items-center justify-center w-1/2 p-2 space-x-2 transition duration-300 border rounded-md focus:outline-none hover:bg-gray-100 focus:border-gray-400"
+              (click)="signupGoogle()">
+              <img src="assets/exticons/google.svg" />
+              <span class="text-sm">Sign up with Google</span>
             </button>
           </div>
-          <div class="space-y-4 md:space-y-0 md:flex md:space-x-2">
-            <div>
-              <button
-                class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-light"
-                type="button" routerLink="/account/signin" tabindex="3">
-                Sign in
-              </button>
-            </div>
+          <div class="flex items-center w-full">
+            <span class="flex-grow border-t border-gray-200"></span>
+            <span
+              class="px-2 text-sm font-semibold text-gray-400 select-none">or</span>
+            <span class="flex-grow border-t border-gray-200"></span>
+          </div>
+          <div class="flex justify-center">
+            <button
+              class="flex items-center justify-center w-1/2 p-2 space-x-2 transition duration-300 border rounded-md cursor-pointer focus:outline-none hover:bg-gray-100 focus:border-gray-400"
+              (click)="showForm = true">
+              <img class="h-5" src="assets/logo/touca-logo-transparent.svg" />
+              <span class="text-sm">Sign up with password</span>
+            </button>
+          </div>
+          <div class="flex justify-center">
+            <button
+              class="pt-4 text-sm text-gray-500 cursor-pointer focus:outline-none hover:text-gray-600"
+              routerLink="/account/signin">
+              Already have an account? <a class="text-sky-600">Sign in!</a>
+            </button>
           </div>
         </div>
-      </form>
+        <form class="space-y-4" *ngIf="showForm === true"
+          [formGroup]="formSignup" (ngSubmit)="onSubmit(formSignup.value)"
+          novalidate>
+          <div>
+            <label class="wsl-input-label" for="wsl-email">Email Address</label>
+            <input class="wsl-input-field" type="email" id="wsl-email"
+              name="email" formControlName="email"
+              aria-describedby="wsl-email-help" required autocomplete="email"
+              data-lpignore="true" tabindex="1">
+            <div class="space-x-1 wsl-text-danger" id="wsl-email-help"
+              [hidden]="isFormValid()">
+              <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <small>Please use a valid email address.</small>
+            </div>
+          </div>
+          <div
+            class="space-y-4 md:space-y-0 md:flex md:space-x-2 md:items-center md:justify-between">
+            <div>
+              <button
+                class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-dark"
+                type="submit" tabindex="2">
+                Sign up
+              </button>
+            </div>
+            <div class="space-y-4 md:space-y-0 md:flex md:space-x-2">
+              <div>
+                <button
+                  class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-light"
+                  type="button" routerLink="/account/signin" tabindex="3">
+                  Sign in
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
   </ng-container>
   <div class="grid flex-grow place-content-center" *ngIf="!isFormShown">

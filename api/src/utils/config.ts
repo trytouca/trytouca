@@ -10,6 +10,7 @@ interface IConfig {
     activationKeyLength: number
     bcryptSaltRound: number
     cookieSecret: string
+    googleClientId: string
     jwtLifetime: number // in days
     jwtLifetimeClient: number // in days
     jwtSecret: string
@@ -100,6 +101,7 @@ export const config: IConfig = {
     activationKeyLength: 8,
     bcryptSaltRound: 10,
     cookieSecret: env.AUTH_COOKIE_SECRET,
+    googleClientId: env.AUTH_GOOGLE_CLIENT_ID,
     jwtLifetime: 30,
     jwtLifetimeClient: 1,
     jwtSecret: env.AUTH_JWT_SECRET,
