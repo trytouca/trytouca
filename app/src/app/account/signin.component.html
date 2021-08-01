@@ -8,7 +8,7 @@
       <div class="space-y-4" *ngIf="showForm === false">
         <div class="flex justify-center">
           <button
-            class="flex items-center justify-center w-1/2 p-2 space-x-2 transition duration-300 border rounded-md cursor-pointer focus:outline-none hover:bg-gray-100 focus:border-gray-400"
+            class="flex items-center justify-center w-3/4 p-2 space-x-2 transition duration-300 border rounded-md cursor-pointer sm:w-1/2 focus:outline-none hover:bg-gray-100 focus:border-gray-400"
             (click)="signinGoogle()">
             <img src="assets/exticons/google.svg" />
             <span class="text-sm">Sign in with Google</span>
@@ -22,7 +22,7 @@
         </div>
         <div class="flex justify-center">
           <button
-            class="flex items-center justify-center w-1/2 p-2 space-x-2 transition duration-300 border rounded-md cursor-pointer focus:outline-none hover:bg-gray-100 focus:border-gray-400"
+            class="flex items-center justify-center w-3/4 p-2 space-x-2 transition duration-300 border rounded-md cursor-pointer sm:w-1/2 focus:outline-none hover:bg-gray-100 focus:border-gray-400"
             (click)="showForm = true">
             <img class="h-5" src="assets/logo/touca-logo-transparent.svg" />
             <span class="text-sm">Sign in with password</span>
