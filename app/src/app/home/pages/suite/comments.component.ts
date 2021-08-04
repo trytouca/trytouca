@@ -14,7 +14,7 @@ import { SuitePageService } from './suite.service';
   templateUrl: './comments.component.html'
 })
 export class SuiteListCommentsComponent {
-  promotions: PromotionItem[];
+  promotions: PromotionItem[] = [];
 
   /**
    *

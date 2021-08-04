@@ -2,7 +2,8 @@
   <div class="flex items-center h-12 space-x-2">
     <h3 class="font-semibold">Runtime Trend</h3>
     <fa-icon class="text-blue-100 cursor-pointer hover:text-blue-400"
-      [icon]="faInfoCircle" (click)="isTooltipActive = !isTooltipActive">
+      [icon]="faInfoCircle" (click)="isTooltipActive = !isTooltipActive"
+      [hidden]="fields.perfs.length === 0">
     </fa-icon>
   </div>
   <p class="pt-4 text-sm" *ngIf="isTooltipActive">This chart plots the overall
@@ -16,7 +17,7 @@
       <img class="py-2 mx-auto"
         src="./assets/undraw/undraw_setup_analytics_8qkl_edited_2.svg" />
       <div class="text-center">
-        <span class="text-sm">This suite has no version yet.</span>
+        <p class="text-sm">This suite has no performance data, yet.</p>
       </div>
     </ng-template>
   </div>
