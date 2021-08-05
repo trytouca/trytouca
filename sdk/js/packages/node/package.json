@@ -1,0 +1,44 @@
+{
+  "name": "@getweasel/node",
+  "version": "0.0.1",
+  "description": "Weasel Client Library for Node.js",
+  "license": "Apache-2.0",
+  "repository": "git://github.com:getweasel/weasel-js.git",
+  "bugs": "https://github.com/getweasel/weasel-js/issues",
+  "homepage": "https://getweasel.com",
+  "keywords": [
+    "regression-testing",
+    "snapshot-testing",
+    "test-framework",
+    "client-library"
+  ],
+  "author": {
+    "name": "Pejman Ghorbanzade",
+    "email": "pejman@getweasel.com"
+  },
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib/**/*"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "flatbuffers": "^1.12.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.22.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "rimraf": "^3.0.2"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf lib",
+    "lint": "eslint . --ext .ts",
+    "test": "jest"
+  }
+}
