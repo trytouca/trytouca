@@ -66,6 +66,11 @@ setup(
         "urllib3",
         "certifi>=2021.5.30",
         "flatbuffers>=2.0",
+        # The core library has no dependency on dataclasses at the moment.
+        # This may change in the future. For now, we are specifying this
+        # dependency to allow users to run getting started examples that
+        # may be using dataclasses.
+        'dataclasses; python_version<"3.7"',
     ],
     extras_require={
         "dev": [

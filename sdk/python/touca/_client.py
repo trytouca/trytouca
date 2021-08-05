@@ -274,8 +274,8 @@ class Client:
         Declares name of the test case to which all subsequent results will be
         submitted until a new test case is declared.
 
-        If configuration parameter ``concurrency`` is set to ``"enabled"``, when a
-        thread calls `declare_testcase` all other threads also have their most
+        If configuration parameter ``concurrency`` is set to ``"enabled"``, when
+        a thread calls `declare_testcase` all other threads also have their most
         recent testcase changed to the newly declared one. Otherwise, each
         thread will submit to its own testcase.
 
@@ -413,12 +413,12 @@ class Client:
 
     def post(self):
         """
-        Submits all testresults recorded so far to Touca server.
+        Submits all test results recorded so far to Touca server.
 
         It is possible to call :py:meth:`~post` multiple times during runtime
         of the regression test tool. Test cases already submitted to the server
         whose test results have not changed, will not be resubmitted.
-        It is also possible to add testresults to a testcase after it is
+        It is also possible to add test results to a testcase after it is
         submitted to the server. Any subsequent call to :py:meth:`~post` will
         resubmit the modified test case.
 

@@ -3,7 +3,6 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 from ._types import IntegerType, VectorType, ToucaType
-from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Dict, Tuple
@@ -16,13 +15,24 @@ class ResultValueType(Enum):
     Assert = 2
 
 
-@dataclass
 class ResultEntry:
-    """ """
+    """
+    Wrapper around a given ``ToucaType`` value that includes the category
+    it should belong to.
 
-    typ: ResultValueType
-    val: ToucaType
+    We are intentionally not using ``@dataclass`` to ensure the core library
+    has no dependency on ``dataclasses`` module. This may change in the future.
+    """
 
+    def __init__(self, typ: ResultValueType, val: ToucaType):
+        """
+        Creates an entry given its value and the category it should belong to.
+
+        :param typ: type of the entry
+        :param val: value of the entry
+        """
+        self.typ = typ
+        self.val = val
 
 class Case:
     """ """
