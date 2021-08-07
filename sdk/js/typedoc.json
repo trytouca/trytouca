@@ -1,0 +1,11 @@
+{
+  "name": "Weasel Client Libraries for Javascript",
+  "entryPoints": ["packages"],
+  "out": "/tmp/@getweasel/weasel-js/docs",
+  "readme": "Readme.md",
+  "includes": "./",
+  "exclude": ["**/lib/**/*", "**/test/**/*"],
+  "includeVersion": true,
+  "excludeExternals": true,
+  "excludePrivate": true
+}
