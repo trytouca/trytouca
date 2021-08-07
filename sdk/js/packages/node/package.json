@@ -1,11 +1,11 @@
 {
-  "name": "@getweasel/node",
+  "name": "@touca/node",
   "version": "0.0.1",
-  "description": "Weasel Client Library for Node.js",
+  "description": "Touca Client Library for Node.js",
   "license": "Apache-2.0",
-  "repository": "git://github.com:getweasel/weasel-js.git",
-  "bugs": "https://github.com/getweasel/weasel-js/issues",
-  "homepage": "https://getweasel.com",
+  "repository": "git://github.com:trytouca/touca-js.git",
+  "bugs": "https://github.com/trytouca/touca-js/issues",
+  "homepage": "https://touca.io",
   "keywords": [
     "regression-testing",
     "snapshot-testing",
@@ -14,7 +14,7 @@
   ],
   "author": {
     "name": "Pejman Ghorbanzade",
-    "email": "pejman@getweasel.com"
+    "email": "pejman@touca.io"
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -1,7 +1,7 @@
 {
-  "name": "Weasel Client Libraries for Javascript",
+  "name": "Touca Client Libraries for Javascript",
   "entryPoints": ["packages"],
-  "out": "/tmp/@getweasel/weasel-js/docs",
+  "out": "/tmp/@touca/touca-js/docs",
   "readme": "Readme.md",
   "includes": "./",
   "exclude": ["**/lib/**/*", "**/test/**/*"],

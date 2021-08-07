@@ -7,7 +7,7 @@
     "sourceMap": true,
     "strict": true,
     "paths": {
-      "@weasel/*": ["*/src"]
+      "@/*": ["*/src"]
     }
   }
 }
