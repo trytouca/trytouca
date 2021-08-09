@@ -1,11 +1,21 @@
 {
-  "name": "Touca Client Libraries for Javascript",
-  "entryPoints": ["packages"],
-  "out": "/tmp/@touca/touca-js/docs",
-  "readme": "Readme.md",
-  "includes": "./",
-  "exclude": ["**/lib/**/*", "**/test/**/*"],
-  "includeVersion": true,
+  "name": "Touca SDK for JavaScript",
+  "out": "./local/docs",
+  "entryPoints": ["packages/node/src"],
+  "includes": ["packages/node"],
+  "exclude": [
+    "**/*.js",
+    "**/coverage/**/*",
+    "**/dist/**/*",
+    "**/node_modules/**/*",
+    "**/test/**/*"
+  ],
+  "disableSources": true,
   "excludeExternals": true,
-  "excludePrivate": true
+  "excludePrivate": true,
+  "hideGenerator": true,
+  "includeVersion": true,
+  "readme": "Readme.md",
+  "sort": ["visibility", "static-first", "source-order"],
+  "theme": "default"
 }

@@ -1,6 +1,4 @@
-#
-# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
-#
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 name: touca-js-main
 
@@ -22,7 +20,9 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
       - uses: actions/cache@v2
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
@@ -34,3 +34,4 @@ jobs:
       - run: yarn build
       - run: yarn lint
       - run: yarn test
+      - run: yarn docs

@@ -1,7 +1,9 @@
 {
+  "collectCoverage": true,
   "transform": {
-    "^.+\\.(t|j)sx?$": "ts-jest"
+    "^.+\\.ts$": "ts-jest"
   },
-  "testRegex": "(/test/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-  "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
+  "testEnvironment": "node",
+  "testMatch": ["**/*.test.ts"],
+  "moduleFileExtensions": ["js", "ts"]
 }

@@ -39,6 +39,7 @@
     "build": "tsc",
     "clean": "rimraf lib",
     "lint": "eslint . --ext .ts",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch"
   }
 }

@@ -1,5 +1,10 @@
-/**
- * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
- */
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-export { configure, declare_testcase, add_result, post } from './main';
+import { NodeClient } from './client';
+
+const client = new NodeClient();
+const touca = {
+  configure: client.configure
+};
+export { touca };
+export { VERSION } from './version';

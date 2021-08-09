@@ -4,20 +4,22 @@
   "scripts": {
     "build": "lerna run --stream --concurrency 1 --sort build",
     "clean": "lerna run --parallel clean && lerna clean --yes",
+    "docs": "typedoc",
     "lint": "lerna run --parallel lint",
-    "test": "lerna run --stream --concurrency 1 --sort test"
+    "test": "lerna run --stream --concurrency 1 --sort test",
+    "test:watch": "lerna run --stream --concurrency 1 --sort test:watch"
   },
   "workspaces": [
     "packages/node"
   ],
   "dependencies": {},
   "devDependencies": {
-    "@types/jest": "^26.0.21",
-    "jest": "^26.6.3",
+    "@types/jest": "^26.0.24",
+    "jest": "^27.0.6",
     "lerna": "^4.0.0",
-    "prettier": "^2.2.1",
-    "ts-jest": "^26.5.4",
-    "typedoc": "^0.20.34",
-    "typescript": "^4.2.3"
+    "prettier": "^2.3.2",
+    "ts-jest": "^27.0.4",
+    "typedoc": "^0.21.5",
+    "typescript": "^4.3.5"
   }
 }

@@ -2,8 +2,9 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "lib"
+    "outDir": "dist",
+    "types": ["node", "jest"]
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "**/test/*"]
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["dist"]
 }
