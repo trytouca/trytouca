@@ -6,6 +6,7 @@
   <p>
     <a href="" target="_blank" rel="noopener"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/trytouca/touca-js/touca-js-main" /></a>
     <a href="https://github.com/trytouca/touca-js/blob/main/LICENSE" target="_blank" rel="noopener"><img alt="License" src="https://img.shields.io/github/license/trytouca/touca-js" /></a>
+    <a href="https://app.codecov.io/gh/trytouca/touca-js"><img src="https://img.shields.io/codecov/c/github/trytouca/touca-js"/></a>
   </p>
   <p>
     <a href="https://app.touca.io" target="_blank" rel="noopener">Get Started</a>

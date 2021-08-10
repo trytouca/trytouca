@@ -53,5 +53,16 @@ jobs:
       - name: push coverage to aws
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          tar -zcf js-node-test-coverage.tar.gz packages/node/coverage
+          tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
           aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+      - name: upload coverage to codecov
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.node-version == 14
+        uses: codecov/codecov-action@v2
+        env:
+          OS: ${{ runner.os }}
+          NODE: ${{ matrix.node-version }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/node/coverage/clover.xml
+          env_vars: OS,NODE
+          fail_ci_if_error: true
