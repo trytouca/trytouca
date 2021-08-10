@@ -4,14 +4,31 @@ import { IntegerType, NumberType, ToucaType, VectorType } from './types';
 import { Builder } from 'flatbuffers';
 import * as schema from './schema';
 
-enum ResultValueType {
+enum ResultCategory {
   Check = 1,
   Assert
 }
 
 type ResultEntry = {
-  typ: ResultValueType;
+  typ: ResultCategory;
   val: ToucaType;
+};
+
+type ResultValueType = boolean | number | string;
+
+type CppTestcaseMetadata = {
+  builtAt: string;
+  testcase: string;
+  testsuite: string;
+  teamslug: string;
+  version: string;
+};
+
+type CaseJson = {
+  metadata: CppTestcaseMetadata;
+  results: { key: string; value: ResultValueType }[];
+  assertions: { key: string; value: ResultValueType }[];
+  metrics: { key: string; value: ResultValueType }[];
 };
 
 /**
@@ -42,7 +59,7 @@ export class Case {
    * @param value value to be logged as a test result
    */
   add_result(key: string, value: ToucaType): void {
-    this._results.set(key, { typ: ResultValueType.Check, val: value });
+    this._results.set(key, { typ: ResultCategory.Check, val: value });
   }
 
   /**
@@ -53,7 +70,7 @@ export class Case {
    * @param value value to be logged as a test result
    */
   add_assertion(key: string, value: ToucaType): void {
-    this._results.set(key, { typ: ResultValueType.Assert, val: value });
+    this._results.set(key, { typ: ResultCategory.Assert, val: value });
   }
 
   /**
@@ -62,18 +79,15 @@ export class Case {
   add_array_element(key: string, value: ToucaType): void {
     if (!this._results.has(key)) {
       this._results.set(key, {
-        typ: ResultValueType.Check,
+        typ: ResultCategory.Check,
         val: new VectorType()
       });
     }
-    const vec = this._results.get(key);
-    if (
-      vec?.typ !== ResultValueType.Check ||
-      !(vec.val instanceof VectorType)
-    ) {
+    const val = this._results.get(key) as ResultEntry;
+    if (val.typ !== ResultCategory.Check || !(val.val instanceof VectorType)) {
       throw new Error('specified key has a different type');
     }
-    vec.val.add(value);
+    val.val.add(value);
   }
 
   /**
@@ -82,19 +96,16 @@ export class Case {
   add_hit_count(key: string): void {
     if (!this._results.has(key)) {
       this._results.set(key, {
-        typ: ResultValueType.Check,
+        typ: ResultCategory.Check,
         val: new NumberType(1)
       });
       return;
     }
-    const value = this._results.get(key);
-    if (
-      value?.typ !== ResultValueType.Check ||
-      !(value.val instanceof NumberType)
-    ) {
+    const val = this._results.get(key) as ResultEntry;
+    if (val.typ !== ResultCategory.Check || !(val.val instanceof NumberType)) {
       throw new Error('specified key has a different type');
     }
-    value.val.increment();
+    val.val.increment();
   }
 
   /**
@@ -142,12 +153,12 @@ export class Case {
   /**
    *
    */
-  private _metadata(): Record<string, string> {
+  private _metadata(): CppTestcaseMetadata {
     return {
       teamslug: this.meta.team ?? 'unknown',
       testsuite: this.meta.suite ?? 'unknown',
       version: this.meta.version ?? 'unknown',
-      testcase: this.meta.name ?? 'unknown',
+      testcase: this.meta.name,
       builtAt: new Date().toUTCString()
     };
   }
@@ -155,15 +166,17 @@ export class Case {
   /**
    *
    */
-  json(): Record<string, unknown> {
+  json(): CaseJson {
     const results = [];
     const assertions = [];
     for (const [key, entry] of this._results.entries()) {
       const item = { key, value: entry.val.json() };
-      if (entry.typ === ResultValueType.Assert) {
-        results.push(item);
-      } else {
-        assertions.push(item);
+      switch (entry.typ) {
+        case ResultCategory.Assert:
+          assertions.push(item);
+          break;
+        default:
+          results.push(item);
       }
     }
     const metrics = this._metrics().map((kvp) => ({
@@ -182,15 +195,16 @@ export class Case {
    *
    */
   serialize(): Uint8Array {
-    const result_types = new Map<ResultValueType, schema.ResultType>([
-      [ResultValueType.Check, schema.ResultType.Check],
-      [ResultValueType.Assert, schema.ResultType.Assert]
+    const result_types = new Map<ResultCategory, schema.ResultType>([
+      [ResultCategory.Check, schema.ResultType.Check],
+      [ResultCategory.Assert, schema.ResultType.Assert]
     ]);
     const builder = new Builder(1024);
 
     const meta = this._metadata();
+    const keys = Object.keys(meta) as (keyof CppTestcaseMetadata)[];
     const metadata = new Map<string, number>(
-      Object.keys(meta).map((k) => [k, builder.createString(meta[k])])
+      keys.map((k) => [k, builder.createString(meta[k])])
     );
     schema.Metadata.startMetadata(builder);
     schema.Metadata.addTeamslug(builder, metadata.get('teamslug') as number);

@@ -5,8 +5,9 @@
   <h1>Touca SDK for JavaScript</h1>
   <p>
     <a href="" target="_blank" rel="noopener"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/trytouca/touca-js/touca-js-main" /></a>
-    <a href="https://github.com/trytouca/touca-js/blob/main/LICENSE" target="_blank" rel="noopener"><img alt="License" src="https://img.shields.io/github/license/trytouca/touca-js" /></a>
     <a href="https://app.codecov.io/gh/trytouca/touca-js"><img src="https://img.shields.io/codecov/c/github/trytouca/touca-js"/></a>
+    <a href="https://app.codacy.com/gh/trytouca/touca-js"><img src="https://img.shields.io/codacy/grade/dca09feb49f142468bdd864a8015a53f"/></a>
+    <a href="https://github.com/trytouca/touca-js/blob/main/LICENSE" target="_blank" rel="noopener"><img alt="License" src="https://img.shields.io/github/license/trytouca/touca-js" /></a>
   </p>
   <p>
     <a href="https://app.touca.io" target="_blank" rel="noopener">Get Started</a>
@@ -27,29 +28,33 @@ to significantly reduce the risks of changing code in mission-critical systems.
 Touca is an automated regression testing system for testing complex
 mission-critical workflows with any number of real-world inputs.
 
-* **Say Goodbye to Snapshot Files**  
-  Touca offers client libraries that help you capture test results or
-  performance benchmarks from anywhere within your workflow and submit
-  them to a remote Touca server where they are stored and compared
-  against your baseline.
+  * **Say Goodbye to Snapshot Files**
 
-* **Capture without Compromise**  
-  Unlike snapshot files that often store the output of a given version
-  of your workflows, Touca gives you fine-grained control over what
-  variables and return values to capture as test result.
+    Touca offers client libraries that help you capture test results or
+    performance benchmarks from anywhere within your workflow and submit
+    them to a remote Touca server where they are stored and compared
+    against your baseline.
 
-* **Lossless Comparison**  
-  Touca client libraries preserve the types of your captured data. The
-  Touca server compares test results of any two versions of your workflow
-  in their original data type.
+  * **Capture without Compromise**
 
-* **Scale without Worry**  
-  Managing result files for hundreds of test cases is not feasible at
-  scale. Let the Touca server manage your test results, compare them
-  against previous versions, and report any found differences in an easy
-  to understand format.
+    Unlike snapshot files that often store the output of a given version
+    of your workflows, Touca gives you fine-grained control over what
+    variables and return values to capture as test result.
 
-And many more! Checkout a [recorded product demo][YouTube] to learn more.
+  * **Lossless Comparison**
+
+    Touca client libraries preserve the types of your captured data. The
+    Touca server compares test results of any two versions of your workflow
+    in their original data type.
+
+  * **Scale without Worry**
+
+    Managing result files for hundreds of test cases is not feasible at
+    scale. Let the Touca server manage your test results, compare them
+    against previous versions, and report any found differences in an easy
+    to understand format.
+
+And many more! Checkout a [recorded product demo][youtube] to learn more.
 
 ## 📖 Documentation
 
@@ -63,16 +68,16 @@ And many more! Checkout a [recorded product demo][YouTube] to learn more.
 ## 🙋 Ask for Help
 
 We want Touca to work well for you. If you need help, have any questions, or
-like to provide feedback, send us a note through the Intercom at Touca.io or
-send us an email us at [hello@touca.io].
+like to provide feedback, send us a note through the Intercom at [touca.io] or
+send us an email us at [hello@touca.io](mailto:hello@touca.io).
 
 ## 💸 What's Next?
 
 Touca client libraries are free and open-source. Our cloud-hosted version of
-Touca server at Touca.io has a free forever plan. You can create an account
+Touca server at [touca.io] has a free forever plan. You can create an account
 and explore Touca server capabilities on your own. But we want to help you
 get on-boarded and answer any questions you may have in the process.
-So we ask that you schedule a no-pressure chat with us [here][Calendly].
+So we ask that you schedule a no-pressure chat with us [here][calendly].
 We like to learn more about you, understand your software and its requirements,
 and do our best to make Touca provide value to you and your team.
 
@@ -80,13 +85,12 @@ and do our best to make Touca provide value to you and your team.
 
 This repository is released under the Apache-2.0 License. See [`LICENSE`][license].
 
-[Calendly]: https://calendly.com/ghorbanzade/30min
-[YouTube]: https://www.youtube.com/channel/UCAGugoQDJY3wdMuqETTOvIA
+[touca.io]: https://touca.io
+[calendly]: https://calendly.com/ghorbanzade/30min
+[youtube]: https://www.youtube.com/channel/UCAGugoQDJY3wdMuqETTOvIA
 [hello@touca.io]: mailto:hello@touca.io
 [license]: https://github.com/trytouca/touca-js/blob/main/LICENSE
 
 [docs-quickstart]: https://docs.touca.io/getting-started/quickstart
-[docs-submit]: https://docs.touca.io/guides/submit
-[docs-js-integration]: https://docs.touca.io/api/js-sdk/integration
 [docs-js]: https://docs.touca.io/api/js-sdk
 [docs-js-api]: https://app.touca.io/docs/clients/js/api.html
