@@ -71,3 +71,16 @@ describe('basic operations', () => {
     expect(val.json()).toEqual('{"year":2000,"month":1,"day":1}');
   });
 });
+
+describe('custom serializer', () => {
+  test('override default serialization', () => {
+    const handler = new types.TypeHandler();
+    handler.add_serializer(DateOfBirth.name, (x) => ({
+      y: x.year,
+      m: x.month,
+      d: x.day
+    }));
+    const val = handler.transform(new DateOfBirth(2000, 1, 1));
+    expect(val.json()).toEqual('{"y":2000,"m":1,"d":1}');
+  });
+});

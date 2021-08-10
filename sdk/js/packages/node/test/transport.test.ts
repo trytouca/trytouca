@@ -9,7 +9,7 @@ const config = {
   version: 'some-version'
 };
 
-describe('http transport', () => {
+describe('check authentication', () => {
   beforeEach(() => nock.cleanAll());
 
   test('check basic authentication', async () => {
@@ -57,9 +57,13 @@ describe('http transport', () => {
     await expect(client.seal()).rejects.toThrowError(error);
     await expect(client.post()).rejects.toThrowError(error);
   });
+});
 
-  test('get testcases', async () => {
-    nock('https://api.example.com')
+describe('check failure errors', () => {
+  let scope: nock.Scope;
+  beforeEach(() => {
+    nock.cleanAll();
+    scope = nock('https://api.example.com')
       .get('/v1/platform')
       .reply(200, {
         ready: true
@@ -68,20 +72,22 @@ describe('http transport', () => {
       .reply(200, {
         expiresAt: new Date(),
         token: 'some-token'
-      })
-      .get('/v1/element/some-team/some-suite')
-      .reply(200, [
-        {
-          metricsDuration: 10,
-          name: 'Some Case',
-          slug: 'some-case'
-        },
-        {
-          metricsDuration: 10,
-          name: 'Some Other Case',
-          slug: 'some-other-case'
-        }
-      ]);
+      });
+  });
+
+  test('get testcases', async () => {
+    scope.get('/v1/element/some-team/some-suite').reply(200, [
+      {
+        metricsDuration: 10,
+        name: 'Some Case',
+        slug: 'some-case'
+      },
+      {
+        metricsDuration: 10,
+        name: 'Some Other Case',
+        slug: 'some-other-case'
+      }
+    ]);
     const client = new NodeClient();
     await client.configure(config);
     expect(client.configuration_error()).toEqual('');
@@ -90,5 +96,47 @@ describe('http transport', () => {
       'Some Case',
       'Some Other Case'
     ]);
+  });
+
+  test('when post fails', async () => {
+    scope.post('/v1/client/submit').reply(400, {
+      status: 400,
+      errors: ['bad submission']
+    });
+    const client = new NodeClient();
+    await client.configure(config);
+    expect(client.configuration_error()).toEqual('');
+    expect(client.is_configured()).toEqual(true);
+    await expect(client.post()).rejects.toThrowError(
+      'Failed to submit test results to platform'
+    );
+  });
+
+  test('when seal fails', async () => {
+    scope.post('/v1/batch/some-team/some-suite/some-version/seal2').reply(404, {
+      errors: ['batch not found'],
+      status: 404
+    });
+    const client = new NodeClient();
+    await client.configure(config);
+    expect(client.configuration_error()).toEqual('');
+    expect(client.is_configured()).toEqual(true);
+    await expect(client.seal()).rejects.toThrowError(
+      'Failed to seal this version'
+    );
+  });
+
+  test('when get_testcases fails', async () => {
+    scope.get('/v1/element/some-team/some-suite').reply(404, {
+      errors: ['suite not found'],
+      status: 404
+    });
+    const client = new NodeClient();
+    await client.configure(config);
+    expect(client.configuration_error()).toEqual('');
+    expect(client.is_configured()).toEqual(true);
+    await expect(client.get_testcases()).rejects.toThrowError(
+      'Failed to obtain list of test cases'
+    );
   });
 });

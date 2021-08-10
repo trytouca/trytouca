@@ -80,7 +80,7 @@ export class Transport {
         res.on('error', reject);
         res.on('end', () => {
           if (!res.statusCode) {
-            return reject(new Error('HTTP request failed: ' + options.path));
+            return reject(new Error(`HTTP request failed: ${options.path}`));
           }
           return resolve({ status: res.statusCode, body });
         });

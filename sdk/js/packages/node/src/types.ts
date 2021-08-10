@@ -202,7 +202,7 @@ export class TypeHandler {
     }
     // eslint-disable-next-line @typescript-eslint/ban-types
     const name = (value as object).constructor.name;
-    if (name in this._types) {
+    if (this._types.has(name)) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       return this.transform(this._types.get(name)!(value));
     }
@@ -228,7 +228,8 @@ export class TypeHandler {
    */
   public add_serializer(
     datatype: string,
-    serializer: () => Record<string, unknown>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    serializer: (x: any) => Record<string, unknown>
   ): void {
     this._types.set(datatype, serializer);
   }
