@@ -34,6 +34,7 @@ class ResultEntry:
         self.typ = typ
         self.val = val
 
+
 class Case:
     """ """
 
@@ -89,7 +90,7 @@ class Case:
             for number in numbers:
                 if is_prime(number):
                     primes.append(number)
-            if not primes:
+            if primes:
                 touca.add_result("prime numbers", primes)
                 touca.add_result("number of primes", len(primes))
 
@@ -143,7 +144,7 @@ class Case:
             for number in numbers:
                 if is_prime(number):
                     primes.append(number)
-            if not primes:
+            if primes:
                 touca.add_result("prime numbers", primes)
                 touca.add_result("number of primes", len(primes))
 

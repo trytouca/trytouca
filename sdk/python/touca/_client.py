@@ -74,9 +74,9 @@ class Client:
             self._transport = Transport(self._options)
             return True
         is_different = lambda k: self._transport._options.get(k) != self._options.get(k)
-        if any(is_different(k) for k in keys):
-            self._transport.update_options(list(filter(is_different, keys)))
-            return True
+        if list(filter(is_different, self._options.keys())):
+            self._transport.update_options(self._options)
+        return True
 
     def _serialize(self, cases: ValuesView[Case]) -> bytearray:
         """ """

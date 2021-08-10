@@ -51,8 +51,8 @@ class Transport:
         """ """
         if any(k in options for k in ["api_key", "api_url"]):
             self._token = None
+            self._handshake()
         self._options.update(options)
-        self._handshake()
 
     def authenticate(self):
         """
@@ -65,7 +65,7 @@ class Transport:
             path="/client/signin",
             body={"key": self._options.get("api_key")},
         )
-        if response.status == 400:
+        if response.status == 401:
             raise ValueError("Authentication failed: API Key Invalid")
         if response.status != 200:
             raise ValueError("Authentication failed: Invalid Response")
@@ -82,13 +82,6 @@ class Transport:
         body = json.loads(response.data.decode("utf-8"))
         return [k["name"] for k in body]
 
-    def seal(self):
-        """ """
-        slugs = "/".join(self._options.get(k) for k in ["team", "suite", "version"])
-        response = self._send_request(method="POST", path=f"/batch/{slugs}/seal2")
-        if response.status != 204:
-            raise RuntimeError("Failed to seal this version")
-
     def post(self, content):
         """ """
         response = self._send_request(
@@ -99,3 +92,10 @@ class Transport:
         )
         if response.status != 204:
             raise RuntimeError("Failed to submit test results to platform")
+
+    def seal(self):
+        """ """
+        slugs = "/".join(self._options.get(k) for k in ["team", "suite", "version"])
+        response = self._send_request(method="POST", path=f"/batch/{slugs}/seal2")
+        if response.status != 204:
+            raise RuntimeError("Failed to seal this version")

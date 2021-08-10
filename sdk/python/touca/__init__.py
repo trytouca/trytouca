@@ -114,9 +114,9 @@ def save_json(key: str, cases: List[str] = []):
 
 @clientmethod
 def post():
-    return Client.instance().post()
+    Client.instance().post()
 
 
 @clientmethod
 def seal():
-    return Client.instance().seal()
+    Client.instance().seal()
