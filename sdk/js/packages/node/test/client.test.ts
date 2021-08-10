@@ -5,14 +5,6 @@ import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
 
-class DateOfBirth {
-  constructor(
-    public readonly year: number,
-    public readonly month: number,
-    public readonly day: number
-  ) {}
-}
-
 async function make_client(): Promise<NodeClient> {
   const delay = (ms: number) => new Promise((v) => setTimeout(v, ms));
   const courses = ['math', 'english'];
@@ -28,7 +20,7 @@ async function make_client(): Promise<NodeClient> {
   client.add_result('tall', 6.1);
   client.add_result('age', 21);
   client.add_result('name', 'harry');
-  client.add_result('dob', new DateOfBirth(2000, 1, 1));
+  client.add_result('dob', { year: 2000, month: 1, day: 1 });
   client.add_result('courses', courses);
   for (const course of courses) {
     client.add_array_element('course-names', course);

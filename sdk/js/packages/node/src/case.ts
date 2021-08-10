@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { IntegerType, NumberType, ToucaType, VectorType } from './types';
+import { IntegerType, ToucaType, VectorType } from './types';
 import { Builder } from 'flatbuffers';
 import * as schema from './schema';
 
@@ -97,12 +97,12 @@ export class Case {
     if (!this._results.has(key)) {
       this._results.set(key, {
         typ: ResultCategory.Check,
-        val: new NumberType(1)
+        val: new IntegerType(1)
       });
       return;
     }
     const val = this._results.get(key) as ResultEntry;
-    if (val.typ !== ResultCategory.Check || !(val.val instanceof NumberType)) {
+    if (val.typ !== ResultCategory.Check || !(val.val instanceof IntegerType)) {
       throw new Error('specified key has a different type');
     }
     val.val.increment();

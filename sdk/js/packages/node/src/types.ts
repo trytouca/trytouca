@@ -16,9 +16,11 @@ export interface ToucaType {
  */
 class BoolType implements ToucaType {
   constructor(private readonly value: boolean) {}
+
   public json(): boolean {
     return this.value;
   }
+
   public serialize(builder: Builder): number {
     schema.Bool.startBool(builder);
     schema.Bool.addValue(builder, this.value);
@@ -33,17 +35,17 @@ class BoolType implements ToucaType {
 /**
  *
  */
-export class NumberType implements ToucaType {
+export class DecimalType implements ToucaType {
   private _value: number;
+
   constructor(value: number) {
     this._value = value;
   }
-  public increment(): void {
-    this._value += 1;
-  }
+
   public json(): number {
     return this._value;
   }
+
   public serialize(builder: Builder): number {
     schema.Double.startDouble(builder);
     schema.Double.addValue(builder, this._value);
@@ -60,15 +62,19 @@ export class NumberType implements ToucaType {
  */
 export class IntegerType implements ToucaType {
   private _value: number;
+
   constructor(value: number) {
     this._value = value;
   }
+
   public increment(): void {
     this._value += 1;
   }
+
   public json(): number {
     return this._value;
   }
+
   public serialize(builder: Builder): number {
     schema.Int.startInt(builder);
     schema.Int.addValue(builder, createLong(this._value, this._value));
@@ -85,9 +91,11 @@ export class IntegerType implements ToucaType {
  */
 class StringType implements ToucaType {
   constructor(private readonly value: string) {}
+
   public json(): string {
     return this.value;
   }
+
   public serialize(builder: Builder): number {
     const content = builder.createString(this.value);
     schema.T_String.startString(builder);
@@ -104,16 +112,16 @@ class StringType implements ToucaType {
  *
  */
 export class VectorType implements ToucaType {
-  private _value: ToucaType[];
-  constructor(value: ToucaType[] = []) {
-    this._value = value;
-  }
+  private _value: ToucaType[] = [];
+
   public add(value: ToucaType): void {
     this._value.push(value);
   }
+
   public json(): string {
     return JSON.stringify(this._value.map((v) => v.json()));
   }
+
   public serialize(builder: Builder): number {
     const items = this._value.map((v) => v.serialize(builder));
     const values = schema.Array.createValuesVector(builder, items);
@@ -131,12 +139,42 @@ export class VectorType implements ToucaType {
  *
  */
 class ObjectType implements ToucaType {
-  constructor(private readonly value: Record<string, unknown>) {}
-  public json(): string {
-    return JSON.stringify(this.value);
+  private _values = new Map<string, ToucaType>();
+
+  constructor(private readonly name: string) {}
+
+  public add(key: string, value: ToucaType) {
+    this._values.set(key, value);
   }
+
+  public json(): string {
+    const values: Record<string, unknown> = {};
+    for (const [k, v] of this._values) {
+      values[k] = v.json();
+    }
+    return JSON.stringify(values);
+  }
+
   public serialize(builder: Builder): number {
-    return new BoolType(false).serialize(builder);
+    const fbs_name = builder.createString(this.name);
+    const members = [];
+    for (const [k, v] of this._values) {
+      const member_key = builder.createString(k);
+      const member_value = v.serialize(builder);
+      schema.ObjectMember.startObjectMember(builder);
+      schema.ObjectMember.addName(builder, member_key);
+      schema.ObjectMember.addValue(builder, member_value);
+      members.push(schema.ObjectMember.endObjectMember(builder));
+    }
+    const fbs_members = schema.T_Object.createValuesVector(builder, members);
+    schema.T_Object.startObject(builder);
+    schema.T_Object.addKey(builder, fbs_name);
+    schema.T_Object.addValues(builder, fbs_members);
+    const value = schema.T_Object.endObject(builder);
+    schema.TypeWrapper.startTypeWrapper(builder);
+    schema.TypeWrapper.addValue(builder, value);
+    schema.TypeWrapper.addValueType(builder, value);
+    return schema.TypeWrapper.endTypeWrapper(builder);
   }
 }
 
@@ -146,10 +184,14 @@ class ObjectType implements ToucaType {
 export class TypeHandler {
   private readonly _primitives: Record<string, (x: unknown) => ToucaType> = {
     boolean: (x) => new BoolType(x as boolean),
-    number: (x) => new NumberType(x as number),
+    number: (x) => {
+      return Number.isInteger(x)
+        ? new IntegerType(x as number)
+        : new DecimalType(x as number);
+    },
     string: (x) => new StringType(x as string)
   };
-  private _types = new Map<string, () => Record<string, unknown>>([]);
+  private _types = new Map<string, (arg: unknown) => Record<string, unknown>>();
 
   /**
    *
@@ -158,14 +200,27 @@ export class TypeHandler {
     if (typeof value in this._primitives) {
       return this._primitives[typeof value](value);
     }
-    if (Array.isArray(value)) {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    const name = (value as object).constructor.name;
+    if (name in this._types) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      return this.transform(this._types.get(name)!(value));
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (typeof (value as any)[Symbol.iterator] === 'function') {
+      const v_obj = value as Iterable<unknown>;
       const vec = new VectorType();
-      for (const v of value) {
+      for (const v of v_obj) {
         vec.add(this.transform(v));
       }
       return vec;
     }
-    return new ObjectType(value as Record<string, unknown>);
+    const v_obj = value as Record<string, unknown>;
+    const obj = new ObjectType(name);
+    for (const k in v_obj) {
+      obj.add(k, this.transform(v_obj[k]));
+    }
+    return obj;
   }
 
   /**

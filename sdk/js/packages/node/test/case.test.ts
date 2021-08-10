@@ -50,4 +50,13 @@ describe('basic operations', () => {
       testcase.json().metrics.findIndex((v) => v.key === 'some-toc')
     ).toEqual(-1);
   });
+
+  test('hit count', () => {
+    testcase.add_hit_count('some-hit-count');
+    testcase.add_hit_count('some-other-hit-count');
+    const find = (k: string) =>
+      testcase.json().results.find((v) => v.key === k);
+    expect(find('some-hit-count')?.value).toEqual(2);
+    expect(find('some-other-hit-count')?.value).toEqual(1);
+  });
 });
