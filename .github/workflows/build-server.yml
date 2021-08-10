@@ -323,10 +323,13 @@ jobs:
         if: steps.changes.outputs.app == 'true'
         run: |
           aws s3 cp ${{ steps.params.outputs.buckets }}/cpp-docs-external.tar.gz .
+          aws s3 cp ${{ steps.params.outputs.buckets }}/js-node-docs-external.tar.gz .
           aws s3 cp ${{ steps.params.outputs.buckets }}/python-docs-external.tar.gz .
           mkdir -p ./stage/clients/cpp
+          mkdir -p ./stage/clients/js
           mkdir -p ./stage/clients/python
           tar -xf cpp-docs-external.tar.gz -C ./stage/clients/cpp
+          tar -xf js-node-docs-external.tar.gz -C ./stage/clients/js
           tar -xf python-docs-external.tar.gz -C ./stage/clients/python
 
       - uses: actions/setup-node@v2

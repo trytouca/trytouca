@@ -12,5 +12,6 @@ COPY api/local/docs/external        /www/data/docs/api
 COPY app/dist                       /www/data/app
 COPY app/nginx.conf                 /etc/nginx/conf.d/default.conf
 COPY clients/cpp/local/docs/html    /www/data/docs/clients/cpp
+COPY clients/js/local/docs          /www/data/docs/clients/js
 COPY clients/python/local/docs      /www/data/docs/clients/python
 COPY web/out                        /www/data/web
