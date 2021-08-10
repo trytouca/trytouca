@@ -171,5 +171,6 @@ describe('check saving file', () => {
     const filepath = path.join(dir, 'some-file');
     await client.save_binary(filepath);
     const content = fs.readFileSync(filepath, { encoding: 'binary' });
+    expect(content.length).not.toEqual(0);
   });
 });

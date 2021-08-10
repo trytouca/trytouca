@@ -13,7 +13,7 @@ import { dirname } from 'path';
  *
  */
 interface BaseClient<Options> {
-  configure(options: Options): void;
+  configure(options: Options): Promise<boolean>;
   is_configured(): boolean;
   configuration_error(): string;
   get_testcases(): PromiseLike<string[]>;
@@ -26,8 +26,8 @@ interface BaseClient<Options> {
   add_metric(key: string, milliseconds: number): void;
   start_timer(key: string): void;
   stop_timer(key: string): void;
-  post(): PromiseLike<boolean>;
-  seal(): PromiseLike<boolean>;
+  post(): PromiseLike<void>;
+  seal(): PromiseLike<void>;
 }
 
 /**
@@ -63,10 +63,12 @@ export class NodeClient implements BaseClient<NodeOptions> {
       this._transport = new Transport(this._options);
       return true;
     }
-    const is_different = (k: keyof NodeOptions) =>
-      this._transport?.options[k] !== this._options[k];
-    if (keys.some(is_different)) {
-      this._transport.update_options(keys.filter(is_different));
+    const diff = keys.filter(
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      (k) => this._transport!.options[k] !== this._options[k]
+    );
+    if (diff.length !== 0) {
+      this._transport.update_options(this._options);
     }
     return true;
   }
@@ -142,12 +144,12 @@ export class NodeClient implements BaseClient<NodeOptions> {
    *
    * @return `True` if client is ready to capture data.
    */
-  public configure(options: NodeOptions): boolean {
+  public async configure(options: NodeOptions): Promise<boolean> {
     this._configuration_error = '';
     try {
       update_options(this._options, options);
       if (this._make_transport()) {
-        this._transport?.authenticate();
+        await this._transport?.authenticate();
       }
     } catch (err) {
       this._configuration_error = `Configuration failed: ${err.message}`;
@@ -502,7 +504,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
    *
    * @returns a promise that is resolved when all test results are submitted.
    */
-  public async post(): Promise<boolean> {
+  public async post(): Promise<void> {
     if (!this._transport) {
       throw new Error('client not configured to perform this operation');
     }
@@ -529,7 +531,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
    *
    * @returns a promise that is resolved when the version is sealed.
    */
-  public async seal(): Promise<boolean> {
+  public async seal(): Promise<void> {
     if (!this._transport) {
       throw new Error('client not configured to perform this operation');
     }
