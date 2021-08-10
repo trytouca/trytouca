@@ -3,7 +3,9 @@
 import { Case } from './case';
 import { NodeOptions, update_options } from './options';
 import { Transport } from './transport';
+import * as schema from './schema';
 import { TypeHandler } from './types';
+import { Builder } from 'flatbuffers';
 import { mkdirSync, writeFileSync } from 'fs';
 import { dirname } from 'path';
 
@@ -72,8 +74,22 @@ export class NodeClient implements BaseClient<NodeOptions> {
   /**
    *
    */
-  private _serialize(cases: Case[]): string {
-    return '';
+  private _serialize(cases: Case[]): Uint8Array {
+    const builder = new Builder(1024);
+    const msg_buf = [];
+    for (const item of cases.reverse()) {
+      const content = item.serialize();
+      const buf = schema.MessageBuffer.createBufVector(builder, content);
+      schema.MessageBuffer.startMessageBuffer(builder);
+      schema.MessageBuffer.addBuf(builder, buf);
+      msg_buf.push(schema.MessageBuffer.endMessageBuffer(builder));
+    }
+    const fbs_msg_buf = schema.Messages.createMessagesVector(builder, msg_buf);
+    schema.Messages.startMessages(builder);
+    schema.Messages.addMessages(builder, fbs_msg_buf);
+    const fbs_messages = schema.Messages.endMessages(builder);
+    builder.finish(fbs_messages);
+    return builder.asUint8Array();
   }
 
   /**

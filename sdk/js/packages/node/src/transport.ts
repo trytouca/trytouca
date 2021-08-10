@@ -34,7 +34,7 @@ export class Transport {
     return Promise.resolve([]);
   }
 
-  public async post(content: string): Promise<boolean> {
+  public async post(content: Uint8Array): Promise<boolean> {
     return Promise.resolve(true);
   }
 

@@ -105,6 +105,27 @@ describe('check saving file', () => {
     fs.rmSync(dir, { recursive: true, force: true });
   });
 
+  test('without calling configure', async () => {
+    const client = new NodeClient();
+    client.declare_testcase('some-case');
+    client.add_result('some-key', 'some-result');
+    client.add_assertion('some-other-key', 'some-assertion');
+    client.add_metric('some-metric', 10);
+    const filepath = path.join(dir, 'some-file');
+    await client.save_json(filepath);
+    const content = fs.readFileSync(filepath, { encoding: 'utf-8' });
+    expect(content).toEqual('[]');
+  });
+
+  test('after calling forget', async () => {
+    const client = await make_client();
+    client.forget_testcase('some-case');
+    const filepath = path.join(dir, 'some-file');
+    await client.save_json(filepath);
+    const content = fs.readFileSync(filepath, { encoding: 'utf-8' });
+    expect(content).toEqual('[]');
+  });
+
   test('all cases in json format', async () => {
     const client = new NodeClient();
     client.configure({});
@@ -145,24 +166,10 @@ describe('check saving file', () => {
     expect(content).not.toContain('"testcase":"yet-another-case"');
   });
 
-  test('without calling configure', async () => {
-    const client = new NodeClient();
-    client.declare_testcase('some-case');
-    client.add_result('some-key', 'some-result');
-    client.add_assertion('some-other-key', 'some-assertion');
-    client.add_metric('some-metric', 10);
-    const filepath = path.join(dir, 'some-file');
-    await client.save_json(filepath);
-    const content = fs.readFileSync(filepath, { encoding: 'utf-8' });
-    expect(content).toEqual('[]');
-  });
-
-  test('after calling forget', async () => {
+  test('all cases in binary format', async () => {
     const client = await make_client();
-    client.forget_testcase('some-case');
     const filepath = path.join(dir, 'some-file');
-    await client.save_json(filepath);
-    const content = fs.readFileSync(filepath, { encoding: 'utf-8' });
-    expect(content).toEqual('[]');
+    await client.save_binary(filepath);
+    const content = fs.readFileSync(filepath, { encoding: 'binary' });
   });
 });
