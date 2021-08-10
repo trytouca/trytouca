@@ -20,16 +20,6 @@ export enum ResultType {
 }
 
 export class TypeWrapper {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): TypeWrapper {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startTypeWrapper(builder: Builder): void {
     builder.startObject(2);
   }
@@ -49,16 +39,6 @@ export class TypeWrapper {
 }
 
 export class Bool {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Bool {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startBool(builder: Builder): void {
     builder.startObject(1);
   }
@@ -74,16 +54,6 @@ export class Bool {
 }
 
 export class Int {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Int {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startInt(builder: Builder): void {
     builder.startObject(1);
   }
@@ -99,16 +69,6 @@ export class Int {
 }
 
 export class UInt {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): UInt {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startUInt(builder: Builder): void {
     builder.startObject(1);
   }
@@ -123,16 +83,6 @@ export class UInt {
   }
 }
 export class Float {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Float {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startFloat(builder: Builder): void {
     builder.startObject(1);
   }
@@ -148,16 +98,6 @@ export class Float {
 }
 
 export class Double {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Double {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startDouble(builder: Builder): void {
     builder.startObject(1);
   }
@@ -173,16 +113,6 @@ export class Double {
 }
 
 export class T_String {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): T_String {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startString(builder: Builder): void {
     builder.startObject(1);
   }
@@ -198,16 +128,6 @@ export class T_String {
 }
 
 export class ObjectMember {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): ObjectMember {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startObjectMember(builder: Builder): void {
     builder.startObject(2);
   }
@@ -227,16 +147,6 @@ export class ObjectMember {
 }
 
 export class T_Object {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): T_Object {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startObject(builder: Builder): void {
     builder.startObject(2);
   }
@@ -268,16 +178,6 @@ export class T_Object {
 }
 
 export class Array {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Array {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startArray(builder: Builder): void {
     builder.startObject(1);
   }
@@ -305,16 +205,6 @@ export class Array {
 }
 
 export class Result {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Result {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startResult(builder: Builder): void {
     builder.startObject(3);
   }
@@ -338,16 +228,6 @@ export class Result {
 }
 
 export class Assertion {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Assertion {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startAssertion(builder: Builder): void {
     builder.startObject(2);
   }
@@ -359,16 +239,6 @@ export class Assertion {
 }
 
 export class Metric {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Metric {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startMetric(builder: Builder): void {
     builder.startObject(2);
   }
@@ -387,16 +257,6 @@ export class Metric {
   }
 }
 export class Results {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Results {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startResults(builder: Builder): void {
     builder.startObject(1);
   }
@@ -424,16 +284,6 @@ export class Results {
 }
 
 export class Assertions {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Assertions {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startAssertions(builder: Builder): void {
     builder.startObject(1);
   }
@@ -445,16 +295,6 @@ export class Assertions {
 }
 
 export class Metrics {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Metrics {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startMetrics(builder: Builder): void {
     builder.startObject(1);
   }
@@ -482,16 +322,6 @@ export class Metrics {
 }
 
 export class Metadata {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Metadata {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startMetadata(builder: Builder): void {
     builder.startObject(6);
   }
@@ -523,16 +353,6 @@ export class Metadata {
 }
 
 export class Message {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Message {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startMessage(builder: Builder): void {
     builder.startObject(4);
   }
@@ -556,16 +376,6 @@ export class Message {
 }
 
 export class MessageBuffer {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): MessageBuffer {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startMessageBuffer(builder: Builder): void {
     builder.startObject(1);
   }
@@ -596,16 +406,6 @@ export class MessageBuffer {
 }
 
 export class Messages {
-  bb: ByteBuffer | null = null;
-
-  bb_pos = 0;
-
-  __init(i: number, bb: ByteBuffer): Messages {
-    this.bb_pos = i;
-    this.bb = bb;
-    return this;
-  }
-
   static startMessages(builder: Builder): void {
     builder.startObject(1);
   }

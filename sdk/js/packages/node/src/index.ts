@@ -3,8 +3,5 @@
 import { NodeClient } from './client';
 
 const client = new NodeClient();
-const touca = {
-  configure: client.configure
-};
-export { touca };
+export { client as touca };
 export { VERSION } from './version';

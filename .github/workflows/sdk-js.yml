@@ -18,11 +18,21 @@ jobs:
     name: unittest-native
     runs-on: ubuntu-20.04
     timeout-minutes: 15
+    strategy:
+      matrix:
+        node-version: [14]
     steps:
       - uses: actions/checkout@v2
+      - name: authenticate to aws
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-region: us-east-2
       - uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: ${{ matrix.node-version }}
       - uses: actions/cache@v2
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
@@ -35,3 +45,13 @@ jobs:
       - run: yarn lint
       - run: yarn test
       - run: yarn docs
+      - name: push docs to aws
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          tar -zcf js-node-docs-external.tar.gz local/docs
+          aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+      - name: push coverage to aws
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          tar -zcf js-node-test-coverage.tar.gz packages/node/coverage
+          aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
