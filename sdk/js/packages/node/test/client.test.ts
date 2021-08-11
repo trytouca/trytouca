@@ -120,7 +120,7 @@ describe('check saving file', () => {
 
   test('all cases in json format', async () => {
     const client = new NodeClient();
-    client.configure({});
+    client.configure();
     expect(client.is_configured()).toEqual(true);
     client.declare_testcase('some-case');
     client.add_result('some-key', 'some-result');
@@ -140,7 +140,7 @@ describe('check saving file', () => {
 
   test('some cases in json format', async () => {
     const client = new NodeClient();
-    client.configure({});
+    client.configure();
     expect(client.is_configured()).toEqual(true);
     client.declare_testcase('some-case');
     client.add_result('some-key', 'some-result');

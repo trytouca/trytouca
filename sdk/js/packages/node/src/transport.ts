@@ -92,7 +92,7 @@ export class Transport {
   }
 
   /**
-   *
+   * @todo find a better way to set path without using regex
    */
   private async _send_request(args: Request): Promise<Response> {
     if (!args.content_type) {
@@ -104,7 +104,7 @@ export class Transport {
       host: url.host,
       port: url.port,
       hostname: url.hostname,
-      path: url.pathname + args.path,
+      path: url.pathname.concat(args.path).replace(/\/\//g, '/'),
       method: args.method,
       headers: {
         Accept: 'application/json',

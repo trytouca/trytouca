@@ -144,7 +144,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
    *
    * @return `True` if client is ready to capture data.
    */
-  public async configure(options: NodeOptions): Promise<boolean> {
+  public async configure(options: NodeOptions = {}): Promise<boolean> {
     this._configuration_error = '';
     try {
       update_options(this._options, options);

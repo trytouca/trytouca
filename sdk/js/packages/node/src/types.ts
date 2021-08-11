@@ -158,7 +158,7 @@ class ObjectType implements ToucaType {
   public serialize(builder: Builder): number {
     const fbs_name = builder.createString(this.name);
     const members = [];
-    for (const [k, v] of this._values) {
+    for (const [k, v] of Array.from(this._values.entries()).reverse()) {
       const member_key = builder.createString(k);
       const member_value = v.serialize(builder);
       schema.ObjectMember.startObjectMember(builder);
@@ -173,7 +173,7 @@ class ObjectType implements ToucaType {
     const value = schema.T_Object.endObject(builder);
     schema.TypeWrapper.startTypeWrapper(builder);
     schema.TypeWrapper.addValue(builder, value);
-    schema.TypeWrapper.addValueType(builder, value);
+    schema.TypeWrapper.addValueType(builder, schema.Type.Object);
     return schema.TypeWrapper.endTypeWrapper(builder);
   }
 }
@@ -184,14 +184,13 @@ class ObjectType implements ToucaType {
 export class TypeHandler {
   private readonly _primitives: Record<string, (x: unknown) => ToucaType> = {
     boolean: (x) => new BoolType(x as boolean),
-    number: (x) => {
-      return Number.isInteger(x)
-        ? new IntegerType(x as number)
-        : new DecimalType(x as number);
-    },
-    string: (x) => new StringType(x as string)
+    number: (x) => new DecimalType(x as number),
+    string: (x) => new StringType(x as string),
+    undefined: (x) => new StringType('undefined')
   };
-  private _types = new Map<string, (arg: unknown) => Record<string, unknown>>();
+  private _types = new Map<string, (arg: unknown) => Record<string, unknown>>([
+    ['Date', (x) => ({ v: (x as Date).toISOString() })]
+  ]);
 
   /**
    *
@@ -199,6 +198,9 @@ export class TypeHandler {
   public transform(value: unknown): ToucaType {
     if (typeof value in this._primitives) {
       return this._primitives[typeof value](value);
+    }
+    if (value === null) {
+      return new StringType('null');
     }
     // eslint-disable-next-line @typescript-eslint/ban-types
     const name = (value as object).constructor.name;
