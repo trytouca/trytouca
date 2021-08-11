@@ -355,8 +355,4 @@ export class Messages {
     const offset = builder.endObject();
     return offset;
   }
-
-  static finishMessagesBuffer(builder: Builder, offset: Offset): void {
-    builder.finish(offset);
-  }
 }

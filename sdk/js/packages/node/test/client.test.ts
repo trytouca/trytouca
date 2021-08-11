@@ -94,7 +94,7 @@ describe('check saving file', () => {
   });
 
   afterAll(() => {
-    fs.rmSync(dir, { recursive: true, force: true });
+    fs.rmdirSync(dir, { recursive: true });
   });
 
   test('without calling configure', async () => {

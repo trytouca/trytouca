@@ -8,11 +8,6 @@ on:
       - main
       - 'feature/**'
 
-env:
-  CACHED_DEPENDENCY_PATHS: |
-    ${{ github.workspace }}/node_modules
-    ${{ github.workspace }}/packages/**/node_modules
-
 jobs:
   test-native:
     name: unittest-native
@@ -20,11 +15,11 @@ jobs:
     timeout-minutes: 15
     strategy:
       matrix:
-        node-version: [14]
+        node-version: [12, 14, 16]
     steps:
       - uses: actions/checkout@v2
       - name: authenticate to aws
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
@@ -34,6 +29,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - uses: actions/cache@v2
+        env:
+          CACHED_DEPENDENCY_PATHS: |
+            ${{ github.workspace }}/node_modules
+            ${{ github.workspace }}/packages/**/node_modules
         with:
           path: ${{ env.CACHED_DEPENDENCY_PATHS }}
           key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
@@ -42,21 +41,25 @@ jobs:
             ${{ runner.os }}-
       - run: yarn install
       - run: yarn build
-      - run: yarn lint
       - run: yarn test
-      - run: yarn docs
+      - name: lint source code
+        if: matrix.node-version == 14 && github.event_name == 'push'
+        run: yarn lint
+      - name: generate docs
+        if: matrix.node-version == 14 && github.event_name == 'push'
+        run: yarn docs
       - name: push docs to aws
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
         run: |
           tar -zcf js-node-docs-external.tar.gz local/docs
           aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
       - name: push coverage to aws
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
         run: |
           tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
           aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
       - name: upload coverage to codecov
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.node-version == 14
+        if: github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
         uses: codecov/codecov-action@v2
         env:
           OS: ${{ runner.os }}

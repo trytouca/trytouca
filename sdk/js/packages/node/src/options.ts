@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { readFileSync, statSync } from 'fs';
+import * as fs from 'fs';
 
 /**
  *
@@ -64,16 +64,26 @@ export interface NodeOptions {
 }
 
 /**
- *
+ * When we drop support for Node v12, we can switch to the following:
+ * ```js
+ *  if (!statSync(incoming.file, { throwIfNoEntry: false })?.isFile()) {
+ *    throw new Error('config file not found');
+ *  }
+ * ```
  */
 function _apply_config_file(incoming: NodeOptions): void {
   if (!incoming.file) {
     return;
   }
-  if (!statSync(incoming.file, { throwIfNoEntry: false })?.isFile()) {
+  // we are intentionally not using statSync with throw
+  try {
+    if (!fs.statSync(incoming.file).isFile()) {
+      throw new Error('config file not found');
+    }
+  } catch (err) {
     throw new Error('config file not found');
   }
-  const content = readFileSync(incoming.file, { encoding: 'utf8' });
+  const content = fs.readFileSync(incoming.file, { encoding: 'utf8' });
   const parsed = JSON.parse(content);
   if (!parsed.touca) {
     throw new Error('file is missing JSON field: "touca"');
