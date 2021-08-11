@@ -4,7 +4,8 @@
   </a>
   <h1>Touca SDK for JavaScript</h1>
   <p>
-    <a href="" target="_blank" rel="noopener"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/trytouca/touca-js/touca-js-main" /></a>
+    <a href="https://www.npmjs.com/package/@touca/node" target="_blank" rel="noopener"><img alt="npm version" src="https://img.shields.io/npm/v/@touca/node?color=blue" /></a>
+    <a href="https://github.com/trytouca/touca-js/actions" target="_blank" rel="noopener"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/trytouca/touca-js/touca-js-main" /></a>
     <a href="https://app.codecov.io/gh/trytouca/touca-js" target="_blank" rel="noopener"><img alt="Code Coverage" src="https://img.shields.io/codecov/c/github/trytouca/touca-js" /></a>
     <a href="https://app.codacy.com/gh/trytouca/touca-js" target="_blank" rel="noopener"><img alt="Code Quality" src="https://img.shields.io/codacy/grade/dca09feb49f142468bdd864a8015a53f" /></a>
     <a href="https://github.com/trytouca/touca-js/blob/main/LICENSE" target="_blank" rel="noopener"><img alt="License" src="https://img.shields.io/github/license/trytouca/touca-js" /></a>
