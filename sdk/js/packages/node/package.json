@@ -1,6 +1,6 @@
 {
   "name": "@touca/node",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Touca SDK for Node.js",
   "license": "Apache-2.0",
   "repository": "git://github.com:trytouca/touca-js.git",
