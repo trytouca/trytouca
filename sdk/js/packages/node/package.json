@@ -1,7 +1,7 @@
 {
   "name": "@touca/node",
   "version": "0.0.1",
-  "description": "Touca Client Library for Node.js",
+  "description": "Touca SDK for Node.js",
   "license": "Apache-2.0",
   "repository": "git://github.com:trytouca/touca-js.git",
   "bugs": "https://github.com/trytouca/touca-js/issues",
@@ -16,10 +16,10 @@
     "name": "Pejman Ghorbanzade",
     "email": "pejman@touca.io"
   },
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "files": [
-    "lib/**/*"
+    "dist/**/*"
   ],
   "publishConfig": {
     "access": "public"
@@ -27,18 +27,9 @@
   "dependencies": {
     "flatbuffers": "^2.0.3"
   },
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.19.0",
-    "@typescript-eslint/parser": "^4.19.0",
-    "eslint": "^7.22.0",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-plugin-prettier": "^3.3.1",
-    "nock": "^13.1.1",
-    "rimraf": "^3.0.2"
-  },
   "scripts": {
     "build": "tsc",
-    "clean": "rimraf lib",
+    "clean": "rimraf dist",
     "lint": "eslint . --ext .ts",
     "test": "jest",
     "test:watch": "jest --watch"

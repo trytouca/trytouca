@@ -5,8 +5,8 @@
   <h1>Touca SDK for JavaScript</h1>
   <p>
     <a href="" target="_blank" rel="noopener"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/trytouca/touca-js/touca-js-main" /></a>
-    <a href="https://app.codecov.io/gh/trytouca/touca-js"><img src="https://img.shields.io/codecov/c/github/trytouca/touca-js"/></a>
-    <a href="https://app.codacy.com/gh/trytouca/touca-js"><img src="https://img.shields.io/codacy/grade/dca09feb49f142468bdd864a8015a53f"/></a>
+    <a href="https://app.codecov.io/gh/trytouca/touca-js" target="_blank" rel="noopener"><img alt="Code Coverage" src="https://img.shields.io/codecov/c/github/trytouca/touca-js" /></a>
+    <a href="https://app.codacy.com/gh/trytouca/touca-js" target="_blank" rel="noopener"><img alt="Code Quality" src="https://img.shields.io/codacy/grade/dca09feb49f142468bdd864a8015a53f" /></a>
     <a href="https://github.com/trytouca/touca-js/blob/main/LICENSE" target="_blank" rel="noopener"><img alt="License" src="https://img.shields.io/github/license/trytouca/touca-js" /></a>
   </p>
   <p>
@@ -88,7 +88,6 @@ This repository is released under the Apache-2.0 License. See [`LICENSE`][licens
 [touca.io]: https://touca.io
 [calendly]: https://calendly.com/ghorbanzade/30min
 [youtube]: https://www.youtube.com/channel/UCAGugoQDJY3wdMuqETTOvIA
-[hello@touca.io]: mailto:hello@touca.io
 [license]: https://github.com/trytouca/touca-js/blob/main/LICENSE
 
 [docs-quickstart]: https://docs.touca.io/getting-started/quickstart
