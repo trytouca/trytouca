@@ -8,7 +8,7 @@ from enum import Enum
 from typing import Dict, Tuple
 
 
-class ResultValueType(Enum):
+class ResultCategory(Enum):
     """ """
 
     Check = 1
@@ -24,7 +24,7 @@ class ResultEntry:
     has no dependency on ``dataclasses`` module. This may change in the future.
     """
 
-    def __init__(self, typ: ResultValueType, val: ToucaType):
+    def __init__(self, typ: ResultCategory, val: ToucaType):
         """
         Creates an entry given its value and the category it should belong to.
 
@@ -53,7 +53,7 @@ class Case:
         :param key: name to be associated with the logged test result
         :param value: value to be logged as a test result
         """
-        self._results[key] = ResultEntry(typ=ResultValueType.Check, val=value)
+        self._results[key] = ResultEntry(typ=ResultCategory.Check, val=value)
 
     def add_assertion(self, key: str, value: ToucaType):
         """
@@ -63,7 +63,7 @@ class Case:
         :param key: name to be associated with the logged test result
         :param value: value to be logged as a test result
         """
-        self._results[key] = ResultEntry(typ=ResultValueType.Assert, val=value)
+        self._results[key] = ResultEntry(typ=ResultCategory.Assert, val=value)
 
     def add_array_element(self, key: str, value: ToucaType):
         """
@@ -111,11 +111,9 @@ class Case:
         :see also: :py:meth:`~add_result`
         """
         if key not in self._results:
-            self._results[key] = ResultEntry(
-                typ=ResultValueType.Check, val=VectorType()
-            )
+            self._results[key] = ResultEntry(typ=ResultCategory.Check, val=VectorType())
         vec = self._results.get(key)
-        if vec.typ is not ResultValueType.Check or not isinstance(vec.val, VectorType):
+        if vec.typ is not ResultCategory.Check or not isinstance(vec.val, VectorType):
             raise RuntimeError("specified key has a different type")
         vec.val.add(value)
 
@@ -157,11 +155,11 @@ class Case:
         """
         if key not in self._results:
             self._results[key] = ResultEntry(
-                typ=ResultValueType.Check, val=IntegerType(1)
+                typ=ResultCategory.Check, val=IntegerType(1)
             )
             return
         value = self._results.get(key)
-        if value.typ is not ResultValueType.Check or not isinstance(
+        if value.typ is not ResultCategory.Check or not isinstance(
             value.val, IntegerType
         ):
             raise RuntimeError("specified key has a different type")
@@ -229,12 +227,12 @@ class Case:
             "results": [
                 {"key": k, "value": v.val.json()}
                 for k, v in self._results.items()
-                if v.typ is ResultValueType.Check
+                if v.typ is ResultCategory.Check
             ],
             "assertions": [
                 {"key": k, "value": v.val.json()}
                 for k, v in self._results.items()
-                if v.typ is ResultValueType.Assert
+                if v.typ is ResultCategory.Assert
             ],
             "metrics": [{"key": k, "value": v.json()} for k, v in self._metrics()],
         }
@@ -245,8 +243,8 @@ class Case:
         import touca._schema as schema
 
         dicts = {
-            ResultValueType.Check: schema.ResultType.Check,
-            ResultValueType.Assert: schema.ResultType.Assert,
+            ResultCategory.Check: schema.ResultType.Check,
+            ResultCategory.Assert: schema.ResultType.Assert,
         }
         builder = Builder(1024)
 
