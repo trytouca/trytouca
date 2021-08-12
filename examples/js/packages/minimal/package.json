@@ -30,8 +30,5 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist"
-  },
-  "devDependencies": {
-    "@types/node": "^16.6.0"
   }
 }
