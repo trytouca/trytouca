@@ -9,10 +9,14 @@ on:
     branches:
       - main
       - development
+    paths:
+      - '!js/**'
   pull_request:
     branches:
       - main
       - test
+    paths:
+      - '!js/**'
 
 jobs:
   build-tutorial:
