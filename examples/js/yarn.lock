@@ -889,6 +889,18 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
+"@touca/node@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@touca/node/-/node-0.0.3.tgz#fc34f92897a0310bb1b1e61c61ded210737e12a7"
+  integrity sha512-HluM1cibggKdG0vxTb/GISVWPk/l7daMQpCc3h3OyV5Gs1V6xcIAeS48YXXAuJ7a7LmUznhc1nVRa8i5HrPo/A==
+  dependencies:
+    flatbuffers "^2.0.3"
+
+"@touca/node@file:packages/minimal":
+  version "0.0.0"
+  dependencies:
+    "@touca/node" "^0.0.3"
+
 "@types/minimatch@^3.0.3":
   version "3.0.5"
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.5.tgz#1001cc5e6a3704b83c236027e77f2f58ea010f40"
@@ -898,6 +910,11 @@
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.2.tgz#ee771e2ba4b3dc5b372935d549fd9617bf345b8c"
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
+
+"@types/node@^16.6.0":
+  version "16.6.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-16.6.0.tgz#0d5685f85066f94e97f19e8a67fe003c5fadacc4"
+  integrity sha512-OyiZPohMMjZEYqcVo/UJ04GyAxXOJEZO/FpzyXxcH4r/ArrVoXHf4MbUrkLp0Tz7/p1mMKpo5zJ6ZHl8XBNthQ==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -1775,6 +1792,11 @@ find-up@^4.0.0, find-up@^4.1.0:
   dependencies:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
+
+flatbuffers@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/flatbuffers/-/flatbuffers-2.0.3.tgz#3bfb2c00c0d5acc1a5d219087e0ee25c756f410a"
+  integrity sha512-lTN0GS4FjwPY6h8BDDuq8f2ZORIyRgI4pHXzIt7GBsTgyCt2z9OAPiWNaeEaNcjrmuLLzFagEDwpYiqGv5BEWg==
 
 forever-agent@~0.6.1:
   version "0.6.1"

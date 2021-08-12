@@ -8,7 +8,8 @@ on:
       - main
       - 'feature/**'
     paths:
-      - 'js/**'
+      - ".github/workflows/javascript.yml"
+      - "js/**"
 
 jobs:
   test-native:
@@ -23,11 +24,11 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: |
-            ${{ github.workspace }}/node_modules
-            ${{ github.workspace }}/packages/**/node_modules
+            ${{ github.workspace }}/js/node_modules
+            ${{ github.workspace }}/js/packages/**/node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-      - run: yarn install
-      - run: yarn build
+      - run: yarn --cwd=js install
+      - run: yarn --cwd=js build
