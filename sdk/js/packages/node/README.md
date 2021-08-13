@@ -2,7 +2,7 @@
   <a href="https://touca.io" target="_blank" rel="noopener">
     <img alt="Touca Logo" height="48px" src="https://touca.io/logo/touca-logo-w-text.svg" />
   </a>
-  <h1>Touca SDK for JavaScript</h1>
+  <h1>Touca SDK for Node.js</h1>
   <p>
     <a href="https://www.npmjs.com/package/@touca/node" target="_blank" rel="noopener"><img alt="npm version" src="https://img.shields.io/npm/v/@touca/node?color=blue" /></a>
     <a href="https://github.com/trytouca/touca-js/actions" target="_blank" rel="noopener"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/trytouca/touca-js/touca-js-main" /></a>
@@ -23,6 +23,10 @@ on the behavior and performance of their software, as they write code.
 ![Touca Server](https://gblobscdn.gitbook.com/assets%2F-MWzZns5gcbaOLND3iQY%2F-MbwEQRnyNCcNhCOZail%2F-MbwFdJnPRjj4AxZb5a9%2Fpic1.png?alt=media&token=53187b81-7358-4701-95e6-b3e420dd10bd)
 
 ## 👀 Sneak Peak
+
+> For a more thorough guide of how to use Touca SDK for Node.js, check
+> out the `examples` directory or visit our documentation website at
+> [docs.touca.io](https://docs.touca.io).
 
 Let us imagine the following function as our code under test.
 

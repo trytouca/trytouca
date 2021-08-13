@@ -301,7 +301,7 @@ export class Runner {
     const options = _parse_cli_options(args);
     await this._initialize(options);
     process.stdout.write(
-      `\nTouca Regression Test Framework\nSuite: ${options.suite}\nRevision: ${options.version}\n\n`
+      `\nTouca Test Framework\nSuite: ${options.suite}\nRevision: ${options.version}\n\n`
     );
 
     const offline = options.offline || !options.api_key || !options.api_url;
