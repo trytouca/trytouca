@@ -18,8 +18,10 @@ describe('basic operations', () => {
       client.add_result('some-key', 'some-value');
     });
     await client.run();
-    expect(mock_stdout).toHaveBeenCalledWith(
-      `Touca encountered an error when executing this test:\nOptions "team", "suite", "version" are required when using this test framework.`
-    );
+    const prefix = 'Touca encountered an error when executing this test';
+    const message = `
+      Options "team", "suite", "version" are required when using this test framework.
+      `;
+    expect(mock_stdout).toHaveBeenCalledWith(`${prefix}:\n${message}\n`);
   });
 });

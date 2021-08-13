@@ -45,7 +45,7 @@ interface RunnerOptions extends NodeOptions {
   testcases: string[];
   testcase_file: string;
   output_directory: string;
-  log_level: 'debug' | 'info' | 'warn';
+  // log_level: 'debug' | 'info' | 'warn';
 }
 
 /**
@@ -54,6 +54,7 @@ interface RunnerOptions extends NodeOptions {
 enum ToucaErrorCode {
   MissingWorkflow = 1,
   MissingSlugs,
+  NoCaseMissingFile,
   NoCaseMissingRemote,
   NoCaseEmptyRemote
 }
@@ -64,10 +65,23 @@ enum ToucaErrorCode {
 class ToucaError {
   private _message = '';
   private _errors = new Map<ToucaErrorCode, string>([
-    [ToucaErrorCode.MissingWorkflow, 'No workflow is registered.'],
+    [
+      ToucaErrorCode.MissingWorkflow,
+      `
+      No workflow is registered.
+      `
+    ],
     [
       ToucaErrorCode.MissingSlugs,
-      'Options %s are required when using this test framework.'
+      `
+      Options %s are required when using this test framework.
+      `
+    ],
+    [
+      ToucaErrorCode.NoCaseMissingFile,
+      `
+      Specified testcase file "%s" does not exist.
+      `
     ],
     [
       ToucaErrorCode.NoCaseMissingRemote,
@@ -118,7 +132,7 @@ class Statistics {
     if (!(name in this._values)) {
       this._values[name] = 0;
     }
-    this._values[name] + 1;
+    this._values[name] += 1;
   }
 
   public count(name: string) {
@@ -152,14 +166,6 @@ class Timer {
 function _parse_cli_options(args: string[]): RunnerOptions {
   const parser = yargs(args.slice(2))
     .version(VERSION)
-    .example(
-      'TOUCA_API_KEY=<YOUR_API_KEY> TOUCA_API_URL=<YOUR_API_URL> node $0 --revision <TEST_VERSION>',
-      'setting some options as environment variables'
-    )
-    .example(
-      'node $0 --api-key <YOUR_API_KEY> --api-url <YOUR_API_URL> --revision <TEST_VERSION>',
-      'passing all options as command line arguments'
-    )
     .epilog('Visit https://docs.touca.io for more information')
     .options({
       'api-key': {
@@ -216,12 +222,12 @@ function _parse_cli_options(args: string[]): RunnerOptions {
         desc: 'Path to a local directory to store result files',
         default: './results'
       },
-      'log-level': {
-        type: 'string',
-        desc: 'Level of detail with which events are logged',
-        choices: ['debug', 'info', 'warn'],
-        default: 'info'
-      },
+      // 'log-level': {
+      //   type: 'string',
+      //   desc: 'Level of detail with which events are logged',
+      //   choices: ['debug', 'info', 'warn'],
+      //   default: 'info'
+      // },
       offline: {
         type: 'string',
         desc: 'Disables all communications with the Touca server',
@@ -236,13 +242,13 @@ function _parse_cli_options(args: string[]): RunnerOptions {
     team: argv['team'],
     suite: argv['suite'],
     file: argv['config-file'],
-    offline: argv['offline'],
+    offline: [undefined, true].includes(argv['offline']),
     save_json: argv['save-as-json'],
     save_binary: argv['save-as-binary'],
     output_directory: argv['output-directory'],
-    log_level: argv['log-level'] as 'debug' | 'info' | 'warn',
+    // log_level: argv['log-level'] as 'debug' | 'info' | 'warn',
     overwrite: argv['overwrite'],
-    testcases: argv['testcase'] as string[],
+    testcases: (argv['testcase'] || []).map(String),
     testcase_file: argv['testcase-file'] as string
   };
 }
@@ -276,7 +282,10 @@ export class Runner {
       await this._run_workflows(process.argv);
     } catch (error) {
       process.stderr.write(
-        `Touca encountered an error when executing this test:\n${error.message}`
+        util.format(
+          'Touca encountered an error when executing this test:\n%s\n',
+          error.message
+        )
       );
       process.exit(1);
     }
@@ -292,7 +301,7 @@ export class Runner {
     const options = _parse_cli_options(args);
     await this._initialize(options);
     process.stdout.write(
-      `\nTouca Regression Test Framework\nSuite: ${options.suite}\nRevision: ${options.version}\n`
+      `\nTouca Regression Test Framework\nSuite: ${options.suite}\nRevision: ${options.version}\n\n`
     );
 
     const offline = options.offline || !options.api_key || !options.api_url;
@@ -308,9 +317,15 @@ export class Runner {
         testcase
       );
 
-      if (options.overwrite && this._skip(options, testcase)) {
-        const message = '';
-        process.stdout.write(message);
+      if (!options.overwrite && this._skip(options, testcase)) {
+        process.stdout.write(
+          util.format(
+            ' (%d of %d) %s (skip)\n',
+            index + 1,
+            options.testcases.length,
+            testcase
+          )
+        );
         stats.inc('skip');
         continue;
       }
@@ -344,7 +359,7 @@ export class Runner {
 
       process.stdout.write(
         util.format(
-          ' (%d of %d) %s (%s, %d ms)',
+          ' (%d of %d) %s (%s, %d ms)\n',
           index + 1,
           options.testcases.length,
           testcase,
@@ -359,7 +374,7 @@ export class Runner {
     timer.toc('__workflow__');
     process.stdout.write(
       util.format(
-        '\nProcessed %d of %d test cases.\nTest completed in %d ms\n',
+        '\nProcessed %d of %d test cases.\nTest completed in %d ms\n\n',
         stats.count('pass'),
         options.testcases.length,
         timer.count('__workflow__')
@@ -384,6 +399,13 @@ export class Runner {
     if (missing.length !== 0) {
       throw new ToucaError(ToucaErrorCode.MissingSlugs, [
         missing.map((v) => `"${v}"`).join(', ')
+      ]);
+    }
+
+    // Check that testcase file exists
+    if (options.testcase_file && !fs.existsSync(options.testcase_file)) {
+      throw new ToucaError(ToucaErrorCode.NoCaseMissingFile, [
+        options.testcase_file
       ]);
     }
 
@@ -412,7 +434,7 @@ export class Runner {
    * `--testcases` and `--testcase-file` are mutually exclusive.
    */
   private async _update_testcase_list(options: RunnerOptions): Promise<void> {
-    if (options.testcases) {
+    if (options.testcases.length !== 0) {
       return;
     }
     if (options.testcase_file) {
@@ -421,7 +443,7 @@ export class Runner {
       });
       options.testcases = content
         .split('\n')
-        .filter((v) => v.length !== 0 && v.startsWith('#'));
+        .filter((v) => v.length !== 0 && !v.startsWith('#'));
       return;
     }
     if (
