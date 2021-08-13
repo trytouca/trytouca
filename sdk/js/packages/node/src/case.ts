@@ -1,8 +1,9 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { IntegerType, ToucaType, VectorType } from './types';
 import { Builder } from 'flatbuffers';
+
 import * as schema from './schema';
+import { IntegerType, ToucaType, VectorType } from './types';
 
 enum ResultCategory {
   Check = 1,

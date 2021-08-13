@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Builder, ByteBuffer, Long, Offset } from 'flatbuffers';
+import { Builder, Long, Offset } from 'flatbuffers';
 
 export enum Type {
   NONE = 0,

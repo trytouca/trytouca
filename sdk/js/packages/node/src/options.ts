@@ -64,18 +64,14 @@ export interface NodeOptions {
 }
 
 /**
- * When we drop support for Node v12, we can switch to the following:
- * ```js
- *  if (!statSync(incoming.file, { throwIfNoEntry: false })?.isFile()) {
- *    throw new Error('config file not found');
- *  }
- * ```
+ *
  */
 function _apply_config_file(incoming: NodeOptions): void {
   if (!incoming.file) {
     return;
   }
-  // we are intentionally not using statSync with throw
+  // starting Node v14, statSync accepts { throwIfNoEntry: false } as a second
+  // parameter. We are intentionally not using this option to support Node v12.
   try {
     if (!fs.statSync(incoming.file).isFile()) {
       throw new Error('config file not found');
@@ -124,6 +120,9 @@ function _apply_arguments(existing: NodeOptions, incoming: NodeOptions): void {
         continue;
       }
       const value = incoming[param];
+      if (value === undefined) {
+        continue;
+      }
       if (!input.validate(value)) {
         throw new Error(`parameter "${param}" has unexpected type`);
       }

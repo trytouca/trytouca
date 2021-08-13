@@ -1,8 +1,9 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { NodeOptions } from './options';
-import { RequestOptions, request } from 'https';
+import { request, RequestOptions } from 'https';
 import { URL } from 'url';
+
+import { NodeOptions } from './options';
 import { VERSION } from './version';
 
 interface Response {

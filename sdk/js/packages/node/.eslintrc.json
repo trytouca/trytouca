@@ -6,7 +6,7 @@
     "ecmaVersion": 2017,
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["simple-import-sort"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
@@ -15,6 +15,7 @@
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/no-empty-function": "off"
+    "@typescript-eslint/no-empty-function": "off",
+    "simple-import-sort/imports": "error"
   }
 }

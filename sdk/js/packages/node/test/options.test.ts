@@ -1,7 +1,8 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { NodeOptions, update_options } from '../src/options';
 import * as fs from 'fs';
+
+import { NodeOptions, update_options } from '../src/options';
 
 test('pass when empty options are passed', () => {
   const existing: NodeOptions = {};

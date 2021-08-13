@@ -1,9 +1,10 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { NodeClient } from '../src/client';
-import * as os from 'os';
 import * as fs from 'fs';
+import * as os from 'os';
 import * as path from 'path';
+
+import { NodeClient } from '../src/client';
 
 async function make_client(): Promise<NodeClient> {
   const delay = (ms: number) => new Promise((v) => setTimeout(v, ms));
