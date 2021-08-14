@@ -1,0 +1,18 @@
+{
+  "name": "@touca/examples-node-client-api",
+  "version": "0.0.4",
+  "description": "Touca Example Introducing Client API of Node.js SDK",
+  "license": "Apache-2.0",
+  "main": "dist/wizards_test.js",
+  "types": "dist/wizards_test.js.d",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@touca/node": "^0.0.4"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist"
+  }
+}

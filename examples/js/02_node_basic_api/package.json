@@ -1,0 +1,19 @@
+{
+  "name": "@touca/examples-node-basic-api",
+  "version": "0.0.4",
+  "description": "Touca Example Introducing Basic API of Node.js SDK",
+  "license": "Apache-2.0",
+  "main": "dist/students_test.js",
+  "types": "dist/students_test.js.d",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@touca/node": "^0.0.4"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "test": "yarn build && node dist/students_test.js --testcase alice bob charlie"
+  }
+}

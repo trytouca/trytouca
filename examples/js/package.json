@@ -7,10 +7,11 @@
     "clean": "lerna run --parallel clean && lerna clean --yes"
   },
   "workspaces": [
-    "packages/minimal"
+    "01_node_minimal",
+    "02_node_basic_api",
+    "03_node_client_api"
   ],
   "dependencies": {
-    "@touca/node": "file:packages/minimal"
   },
   "devDependencies": {
     "@types/node": "^16.6.0",

@@ -3,7 +3,7 @@
  */
 
 import { touca } from '@touca/node';
-import { parse_profile } from './code_under_test';
+import { parse_profile } from './wizards';
 
 const delay = (ms: number) => new Promise((v) => setTimeout(v, ms));
 

@@ -1,6 +1,6 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-name: touca-js-main
+name: touca-examples-javascript
 
 on:
   push:
@@ -8,19 +8,27 @@ on:
       - main
       - 'feature/**'
     paths:
-      - ".github/workflows/javascript.yml"
-      - "js/**"
+      - ".github/workflows/build-js.yml"
+      - "javascript/**"
 
 jobs:
   test-native:
     name: unittest-native
     runs-on: ubuntu-20.04
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./javascript
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: 14
+      - name: get version number
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - uses: actions/cache@v2
         with:
           path: |
@@ -30,5 +38,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-      - run: yarn --cwd=js install
-      - run: yarn --cwd=js build
+      - run: yarn install
+      - run: yarn build
+      - name: run example javascript application
+        env:
+          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+          TOUCA_API_URL: https://api.touca.io/@/examples/javascript
+        run: yarn --cwd=02_node_basic_api test --revision ${{ steps.params.outputs.version }}
