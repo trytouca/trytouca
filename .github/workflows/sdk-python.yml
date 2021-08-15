@@ -6,21 +6,20 @@ on:
   push:
     branches:
       - main
-      - development
       - 'feature/**'
 
 jobs:
-
   test-native:
     name: unittest-native
     runs-on: ubuntu-20.04
+    timeout-minutes: 15
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
       - uses: actions/checkout@v2
       - name: authenticate to aws
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
@@ -52,12 +51,12 @@ jobs:
         run: |
           make docs
       - name: push docs to aws
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
         run: |
           tar -zcf python-docs-external.tar.gz local/docs
           aws s3 cp python-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
       - name: push coverage to aws
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
         run: |
           tar -zcf python-test-coverage.tar.gz local/tests
           aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
@@ -70,7 +69,7 @@ jobs:
           python setup.py sdist bdist_wheel
           twine check dist/*
       - name: upload coverage to codecov
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9
+        if: github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
         uses: codecov/codecov-action@v1
         env:
           OS: ${{ runner.os }}

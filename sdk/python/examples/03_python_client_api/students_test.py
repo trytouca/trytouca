@@ -1,10 +1,8 @@
-#!/usr/bin/env python
-
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import touca
 from threading import Thread
-from code_under_test import (
+from students import (
     parse_profile,
     calculate_gpa,
     custom_function_1,
