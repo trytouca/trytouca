@@ -31,7 +31,7 @@ snippet into it.
 
 ```ts
 import { touca } from '@touca/node';
-import { is_prime } from './code_under_test';
+import { is_prime } from './is_prime';
 
 touca.workflow('is_prime_test', (testcase: string) => {
   const number = Number.parseInt(testcase);

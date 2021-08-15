@@ -2,7 +2,7 @@
 
 import hashlib
 import touca
-from code_under_test import process_image
+from students import process_image
 
 
 @touca.Workflow
