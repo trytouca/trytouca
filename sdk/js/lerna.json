@@ -1,6 +1,11 @@
 {
-  "packages": ["packages/node"],
-  "version": "0.0.3",
+  "packages": [
+    "packages/node",
+    "examples/01_node_quickstart",
+    "examples/02_node_basic_api",
+    "examples/03_node_client_api"
+  ],
+  "version": "0.0.4",
   "npmClient": "yarn",
   "useWorkspaces": true
 }

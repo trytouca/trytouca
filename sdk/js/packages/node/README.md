@@ -20,7 +20,7 @@
 Touca helps engineering teams see the true impact of their code changes
 on the behavior and performance of their software, as they write code.
 
-![Touca Server](https://gblobscdn.gitbook.com/assets%2F-MWzZns5gcbaOLND3iQY%2F-MbwEQRnyNCcNhCOZail%2F-MbwFdJnPRjj4AxZb5a9%2Fpic1.png?alt=media&token=53187b81-7358-4701-95e6-b3e420dd10bd)
+![Touca Server](https://gblobscdn.gitbook.com/assets%2F-MWzZns5gcbaOLND3iQY%2F-MbwEQRnyNCcNhCOZail%2F-MbwFdJnPRjj4AxZb5a9%2Fpic1.png?alt=media\&token=53187b81-7358-4701-95e6-b3e420dd10bd)
 
 ## 👀 Sneak Peak
 
@@ -72,7 +72,7 @@ Where `TOUCA_API_KEY` and `TOUCA_API_URL` can be obtained from the
 Touca server at [app.touca.io](https://app.touca.io).
 This command produces the following output:
 
-```plaintext
+```text
 Touca Test Framework
 Suite: is_prime_test
 Revision: v1.0
@@ -90,18 +90,18 @@ Test completed in 565 ms
 
 ## 📖 Documentation
 
-* If you are new to Touca, the best place to start is our
-  [Quickstart Guide][docs-quickstart] on our documentation website.
-* For information on how to use our JavaScript SDK,
-  see our [JavaScript SDK Documentation][docs-js].
-* If you cannot wait to start writing your first test with Touca,
-  see our [JavaScript API Reference][docs-js-api].
+*   If you are new to Touca, the best place to start is our
+    [Quickstart Guide][docs-quickstart] on our documentation website.
+*   For information on how to use our JavaScript SDK,
+    see our [JavaScript SDK Documentation][docs-js].
+*   If you cannot wait to start writing your first test with Touca,
+    see our [JavaScript API Reference][docs-js-api].
 
 ## 🙋 Ask for Help
 
 We want Touca to work well for you. If you need help, have any questions, or
 like to provide feedback, send us a note through the Intercom at [touca.io]
-or email us at [hello@touca.io](mailto:hello@touca.io).
+or email us at <hello@touca.io>.
 
 ## 💸 What's Next?
 
@@ -118,10 +118,15 @@ and help you decide if Touca would be useful to you and your team.
 This repository is released under the Apache-2.0 License. See [`LICENSE`][license].
 
 [touca.io]: https://touca.io
+
 [calendly]: https://calendly.com/ghorbanzade/30min
+
 [youtube]: https://www.youtube.com/channel/UCAGugoQDJY3wdMuqETTOvIA
+
 [license]: https://github.com/trytouca/touca-js/blob/main/LICENSE
 
 [docs-quickstart]: https://docs.touca.io/getting-started/quickstart
+
 [docs-js]: https://docs.touca.io/api/js-sdk
+
 [docs-js-api]: https://app.touca.io/docs/clients/js/api.html

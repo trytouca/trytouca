@@ -1,4 +1,4 @@
-# Example 1: Primality Test
+# Introducing Touca using Node.js SDK
 
 This simple example attempts to test the following function as our
 code under test using Touca high-level API.
@@ -15,12 +15,23 @@ since we expect this implementation to change in future versions of
 our software. For now, we will copy the content of file
 [`is_prime.ts`](./is_prime.ts) as our v1.0 implementation.
 
+```ts
+function is_prime(input: number): boolean {
+  for (let i = 2; i < input; i++) {
+    if (input % i === 0) {
+      return false;
+    }
+  }
+  return true;
+}
+```
+
 Now let's create a file `is_prime_test.ts` and copy the following code
 snippet into it.
 
 ```ts
 import { touca } from '@touca/node';
-import { is_prime } from './code_under_test';
+import { is_prime } from './is_prime';
 
 touca.workflow('is_prime_test', (testcase: string) => {
   const number = Number.parseInt(testcase);
@@ -63,20 +74,20 @@ them with version `v1.0`. Now if someone changes the implementation of our
 as, say, `v2.0`. Once we do so, the server will compare the new test results
 against our test results for `v1.0` and visualizes all differences.
 
-```plaintext
+```text
 Touca Test Framework
 Suite: is_prime_test
 Revision: v1.0
 
  (1 of 7) 17 (pass, 0 ms)
 
-Processed 1 of 1 test cases.
+Processed 1 of 1 test cases
 Test completed in 1 ms
 ```
 
 ## General Model
 
-The pattern used in this example is generally applicable testing
+The pattern used in this example is generally applicable to testing
 real-world workflows of any complexity.
 
 ```ts
@@ -92,15 +103,15 @@ touca.run();
 The code you insert as your workflow under test generally performs
 the following operations.
 
-1. Map a given testcase name to its corresponding input.
+1.  Map a given testcase name to its corresponding input.
 
     > We did this by calling `Number.parseInt(testcase)`.
 
-2. Call your code under test with that input.
+2.  Call your code under test with that input.
 
     > We did this by calling `is_prime(number)`.
 
-3. Describe the behavior and performance of your code under test.
+3.  Describe the behavior and performance of your code under test.
 
     > We can do this by capturing values of interesting variables
     > and runtime of important functions.

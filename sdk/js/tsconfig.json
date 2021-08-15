@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": "packages",
+    "baseUrl": ".",
     "alwaysStrict": true,
     "declaration": true,
     "declarationMap": true,
@@ -9,7 +9,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "paths": {
-      "@touca/*": ["*/src"]
+      "@touca/node/*": ["packages/node/src/*"]
     },
     "sourceMap": true,
     "strict": true,

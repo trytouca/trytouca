@@ -15,7 +15,7 @@
   "excludePrivate": true,
   "hideGenerator": true,
   "includeVersion": true,
-  "readme": "Readme.md",
+  "readme": "README.md",
   "sort": ["visibility", "static-first", "source-order"],
   "theme": "default"
 }
