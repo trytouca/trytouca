@@ -1,7 +1,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import touca
-from code_under_test import parse_profile, calculate_gpa
+from students import parse_profile, calculate_gpa
 
 
 @touca.Workflow
