@@ -1,10 +1,8 @@
-/**
- * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
- */
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
-#include "code_under_test.hpp"
+#include "students.hpp"
 #include <touca/touca.hpp>
 
 template <>

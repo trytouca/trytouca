@@ -1,8 +1,8 @@
 {
-  "name": "@touca/examples-node-basic-api",
+  "private": true,
+  "name": "@touca/example-node-basic-api",
   "version": "0.0.4",
   "description": "Touca Example Introducing Basic API of Node.js SDK",
-  "license": "Apache-2.0",
   "main": "dist/students_test.js",
   "types": "dist/students_test.js.d",
   "files": [

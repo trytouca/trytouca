@@ -32,8 +32,9 @@ jobs:
       - name: build cpp examples
         run: ./build.sh
       - name: run example cpp application
+        if: github.ref == 'refs/heads/main'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
         run: |
           mkdir -p ./local/results
-          ./local/dist/bin/touca_example_advanced -c ./advanced/config.json --api-url https://api.touca.io/@/examples/cpp --revision ${{ steps.params.outputs.version }}
+          ./local/dist/bin/example_cpp_basic_api -c ./advanced/config.json --api-url https://api.touca.io/@/examples/cpp --revision ${{ steps.params.outputs.version }}
