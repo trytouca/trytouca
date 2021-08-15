@@ -31,7 +31,7 @@ export default function Header() {
           </Link>
           <a
             className="wsl-header-btn-secondary"
-            href="https://blog.touca.io/starting-vision/"
+            href="https://blog.touca.io"
             rel="noopener">
             Blog
           </a>
