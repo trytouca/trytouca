@@ -30,9 +30,11 @@ jobs:
           git fetch --prune --unshallow --tags
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - name: run example python application
+        if: github.ref == 'refs/heads/main'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
           TOUCA_API_URL: https://api.touca.io/@/examples/python
+          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         run: |
-          pip install -r flowers/requirements.txt
-          cd flowers && python regression_test.py --testcase-file testcases.txt --revision ${{ steps.params.outputs.version }}
+          pip install -r 02_python_basic_api/requirements.txt
+          cd 02_python_basic_api && python students_test.py

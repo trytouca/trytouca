@@ -1,2 +1,6 @@
 cpp/local
 javascript/**/dist
+python/.python-version
+python/**/.env
+python/**/output
+python/**/__pycache__

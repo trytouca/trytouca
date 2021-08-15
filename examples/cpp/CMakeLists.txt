@@ -1,6 +1,4 @@
-#
-# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
-#
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 cmake_minimum_required(VERSION 3.14...3.19 FATAL_ERROR)
 project(touca_cpp_tutorials VERSION 1.3 LANGUAGES CXX)
@@ -24,5 +22,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
 include(cmake/external.cmake)
 touca_find_touca()
 
-add_subdirectory(basic)
-add_subdirectory(advanced)
+add_subdirectory(01_cpp_minimal)
+add_subdirectory(02_cpp_basic_api)
+add_subdirectory(03_cpp_client_api)
+add_subdirectory(04_cpp_external_input)

@@ -1,6 +1,4 @@
-/**
- * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
- */
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
@@ -20,11 +18,11 @@ struct Date {
  *
  */
 struct Wizard {
+    std::string username;
+    std::wstring fullname;
     Date dob;
     float height;
     double weight;
-    std::string username;
-    std::string fullname;
     std::vector<std::string> wands;
 };
 
