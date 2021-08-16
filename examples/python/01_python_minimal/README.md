@@ -1,17 +1,14 @@
-# Introducing Touca using Node.js SDK
+# Introducing Touca using Python SDK
 
 This simple example attempts to test the following function as our
-code under test using our high-level Node.js API.
+code under test using our high-level Python API.
 
-```ts
-function is_prime(input: number): boolean {
-  for (let i = 2; i < input; i++) {
-    if (input % i === 0) {
-      return false;
-    }
-  }
-  return true;
-}
+```python
+def is_prime(number: int) -> bool:
+  for i in range(2, number):
+    if number % i == 0:
+      return False
+  return True
 ```
 
 The efficiency and correctness of this implementation is not important
@@ -23,25 +20,25 @@ the behavior and performance of our code under test.
 
 ## Getting Started
 
-Let's create a file `is_prime_test.ts` and copy the following code
+Let's create a file `is_prime_test.py` and copy the following code
 snippet into it.
 
-```ts
-import { touca } from '@touca/node';
-import { is_prime } from './is_prime';
+```python
+import touca
+from is_prime import is_prime
 
-touca.workflow('is_prime_test', (testcase: string) => {
-  const number = Number.parseInt(testcase);
-  touca.add_result('is_prime_output', is_prime(number));
-});
+@touca.Workflow
+def is_prime(testcase: str):
+    touca.add_result("is_prime", is_prime(int(testcase)))
 
-touca.run();
+if __name__ == "__main__":
+    touca.run()
 ```
 
-Where `@touca/node` is the name of our Node.js SDK on NPM.
+Where `touca` is the name of our Python SDK on PyPI.
 
 ```bash
-npm install @touca/node
+pip install touca
 ```
 
 Notice how our Touca test code does not specify the list of numbers we
@@ -53,7 +50,7 @@ we can now test our code with any number of test cases, without changing
 our test code:
 
 ```bash
-node is_prime_test.js
+python is_prime_test.py
   --api-key <YOUR API KEY>
   --api-url <YOUR API URL>
   --revision v1.0
@@ -89,15 +86,16 @@ test results for `v1.0` and visualizes all differences.
 The pattern used in this example is generally applicable to testing
 real-world workflows of any complexity.
 
-```ts
-import { touca } from '@touca/node';
-// import your code under test here
+```python
+import touca
+# import your code under test here
 
-touca.workflow('name_of_suite', (testcase: string) => {
-  // your code goes here
-});
+@touca.Workflow
+def name_of_suite(testcase: str):
+    # your code goes here
 
-touca.run();
+if __name__ == "__main__":
+    touca.run()
 ```
 
 The code you insert as your workflow under test generally performs
@@ -105,11 +103,11 @@ the following operations.
 
 1. Map a given testcase name to its corresponding input.
 
-    > We did this by calling `Number.parseInt(testcase)`.
+    > We did this by calling `int(testcase)`.
 
 2. Call your code under test with that input.
 
-    > We did this by calling `is_prime(number)`.
+    > We did this by calling `is_prime(int(testcase))`.
 
 3. Describe the behavior and performance of your code under test.
 

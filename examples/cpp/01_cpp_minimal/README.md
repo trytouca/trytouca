@@ -1,16 +1,22 @@
-# Introducing Touca using Node.js SDK
+# Introducing Touca using C++ SDK
 
 This simple example attempts to test the following function as our
-code under test using our high-level Node.js API.
+code under test using our high-level C++ API.
 
-```ts
-function is_prime(input: number): boolean {
-  for (let i = 2; i < input; i++) {
-    if (input % i === 0) {
-      return false;
+```cpp
+#include <cmath>
+
+bool is_prime(const unsigned long number)
+{
+    if (number < 2) {
+        return false;
     }
-  }
-  return true;
+    for (auto i = 2u; i < number; i++) {
+        if (number % i == 0) {
+            return false;
+        }
+    }
+    return true;
 }
 ```
 
@@ -23,25 +29,20 @@ the behavior and performance of our code under test.
 
 ## Getting Started
 
-Let's create a file `is_prime_test.ts` and copy the following code
+Let's create a file `is_prime_test.cpp` and copy the following code
 snippet into it.
 
-```ts
-import { touca } from '@touca/node';
-import { is_prime } from './is_prime';
+```cpp
+#include "is_prime.hpp"
+#include "touca/touca.hpp"
+#include "touca/touca_main.hpp"
+#include <string>
 
-touca.workflow('is_prime_test', (testcase: string) => {
-  const number = Number.parseInt(testcase);
-  touca.add_result('is_prime_output', is_prime(number));
-});
-
-touca.run();
-```
-
-Where `@touca/node` is the name of our Node.js SDK on NPM.
-
-```bash
-npm install @touca/node
+void touca::main(const std::string& testcase)
+{
+    const auto number = std::stoul(testcase);
+    touca::add_result("is_prime", is_prime(number));
+}
 ```
 
 Notice how our Touca test code does not specify the list of numbers we
@@ -53,7 +54,7 @@ we can now test our code with any number of test cases, without changing
 our test code:
 
 ```bash
-node is_prime_test.js
+./example_cpp_minimal
   --api-key <YOUR API KEY>
   --api-url <YOUR API URL>
   --revision v1.0
@@ -89,15 +90,16 @@ test results for `v1.0` and visualizes all differences.
 The pattern used in this example is generally applicable to testing
 real-world workflows of any complexity.
 
-```ts
-import { touca } from '@touca/node';
+```cpp
+#include "touca/touca.hpp"
+#include "touca/touca_main.hpp"
+#include <string>
 // import your code under test here
 
-touca.workflow('name_of_suite', (testcase: string) => {
+void touca::main(const std::string& testcase)
+{
   // your code goes here
-});
-
-touca.run();
+}
 ```
 
 The code you insert as your workflow under test generally performs
@@ -105,7 +107,7 @@ the following operations.
 
 1. Map a given testcase name to its corresponding input.
 
-    > We did this by calling `Number.parseInt(testcase)`.
+    > We did this by calling `std::stoul(testcase)`.
 
 2. Call your code under test with that input.
 
@@ -117,7 +119,7 @@ the following operations.
     > and runtime of important functions.
     >
     > In our example, we captured the return value of our `is_prime`
-    > function via `touca.add_result`. We could also capture runtime
+    > function via `touca::add_result`. We could also capture runtime
     > of functions and other performance data but our example here
     > was too trivial to showcase all possibilities. See our next
     > example for more details.

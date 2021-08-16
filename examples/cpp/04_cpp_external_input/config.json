@@ -1,15 +1,15 @@
 {
   "framework": {
     "log-level": "info",
-    "output-dir": "./local/results",
-    "save-as-binary": "true",
-    "save-as-json": "true"
+    "output-dir": "./local/examples/04_cpp_external_input",
+    "save-as-binary": true,
+    "save-as-json": true
   },
   "touca": {
-    "post-testcases": "20",
-    "post-maxretries": "5"
+    "api-key": "<YOUR API KEY>",
+    "api-url": "<YOUR API URL>"
   },
   "workflow": {
-    "datasets-dir": "./advanced/datasets"
+    "datasets-dir": "./examples/cpp/04_cpp_external_input/datasets"
   }
 }

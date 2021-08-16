@@ -2,7 +2,7 @@
 
 include(GNUInstallDirs)
 
-touca_find_cxxopts()
+touca_find_package("cxxopts")
 
 add_executable(example_cpp_external_input "")
 
@@ -18,8 +18,20 @@ target_sources(
 target_link_libraries(
         example_cpp_external_input
     PRIVATE
-        cxxopts::cxxopts
         touca_framework
+        cxxopts::cxxopts
+)
+
+target_include_directories(
+        example_cpp_external_input
+    PRIVATE
+        ${TOUCA_CLIENT_ROOT_DIR}
+)
+
+target_compile_definitions(
+        example_cpp_external_input
+    PRIVATE
+        RAPIDJSON_HAS_STDSTRING
 )
 
 source_group(

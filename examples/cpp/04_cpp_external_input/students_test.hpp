@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include <touca/framework.hpp>
+#include "touca/framework.hpp"
 
 /**
  *

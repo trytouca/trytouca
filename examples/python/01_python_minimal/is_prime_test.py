@@ -1,6 +1,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import touca
+from is_prime import is_prime
 
 
 @touca.Workflow
