@@ -117,8 +117,6 @@ This repository is released under the Apache-2.0 License. See [`LICENSE`][licens
 
 [calendly]: https://calendly.com/ghorbanzade/30min
 
-[youtube]: https://www.youtube.com/channel/UCAGugoQDJY3wdMuqETTOvIA
-
 [license]: https://github.com/trytouca/touca-js/blob/main/LICENSE
 
 [docs-quickstart]: https://docs.touca.io/getting-started/quickstart

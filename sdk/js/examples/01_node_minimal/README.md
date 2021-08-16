@@ -1,19 +1,7 @@
 # Introducing Touca using Node.js SDK
 
 This simple example attempts to test the following function as our
-code under test using Touca high-level API.
-
-```ts
-function is_prime(input: number): boolean;
-```
-
-## Getting Started
-
-Let's start by adding an implementation for our code under test.
-The efficiency and correctness of this implementation is not important
-since we expect this implementation to change in future versions of
-our software. For now, we will copy the content of file
-[`is_prime.ts`](./is_prime.ts) as our v1.0 implementation.
+code under test using our high-level Node.js API.
 
 ```ts
 function is_prime(input: number): boolean {
@@ -26,7 +14,16 @@ function is_prime(input: number): boolean {
 }
 ```
 
-Now let's create a file `is_prime_test.ts` and copy the following code
+The efficiency and correctness of this implementation is not important
+since we expect this implementation to change in future versions of
+our software.
+
+Touca helps us understand how these future changes impact
+the behavior and performance of our code under test.
+
+## Getting Started
+
+Let's create a file `is_prime_test.ts` and copy the following code
 snippet into it.
 
 ```ts
@@ -56,7 +53,7 @@ we can now test our code with any number of test cases, without changing
 our test code:
 
 ```bash
-node ./packages/node/dist/examples/is_prime/is_prime_test.js
+node is_prime_test.js
   --api-key <YOUR API KEY>
   --api-url <YOUR API URL>
   --revision v1.0
@@ -69,10 +66,7 @@ node ./packages/node/dist/examples/is_prime/is_prime_test.js
 The command above will execute our code under test with testcase "17" and
 captures the return value of our `is_prime` function as a Touca test result.
 The test tool will submit our captured data to the Touca server and associates
-them with version `v1.0`. Now if someone changes the implementation of our
-`is_prime` function, we can rerun this test again to submit the new information
-as, say, `v2.0`. Once we do so, the server will compare the new test results
-against our test results for `v1.0` and visualizes all differences.
+them with version `v1.0`.
 
 ```text
 Touca Test Framework
@@ -85,6 +79,11 @@ Processed 1 of 1 test cases
 Test completed in 1 ms
 ```
 
+Now if someone changes the implementation of our `is_prime` function, we
+can rerun this test again to submit the new information as, say, `v2.0`.
+Once we do so, the server will compare the new test results against our
+test results for `v1.0` and visualizes all differences.
+
 ## General Model
 
 The pattern used in this example is generally applicable to testing
@@ -92,6 +91,7 @@ real-world workflows of any complexity.
 
 ```ts
 import { touca } from '@touca/node';
+// import your code under test here
 
 touca.workflow('name_of_suite', (testcase: string) => {
   // your code goes here
@@ -103,15 +103,15 @@ touca.run();
 The code you insert as your workflow under test generally performs
 the following operations.
 
-1.  Map a given testcase name to its corresponding input.
+1. Map a given testcase name to its corresponding input.
 
     > We did this by calling `Number.parseInt(testcase)`.
 
-2.  Call your code under test with that input.
+2. Call your code under test with that input.
 
     > We did this by calling `is_prime(number)`.
 
-3.  Describe the behavior and performance of your code under test.
+3. Describe the behavior and performance of your code under test.
 
     > We can do this by capturing values of interesting variables
     > and runtime of important functions.
