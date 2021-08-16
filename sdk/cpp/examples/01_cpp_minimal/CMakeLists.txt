@@ -2,23 +2,23 @@
 
 include(GNUInstallDirs)
 
-add_executable(touca_example_starter "")
+add_executable(example_cpp_minimal "")
 
 target_sources(
-        touca_example_starter
+        example_cpp_minimal
     PRIVATE
-        code_under_test.hpp
-        regression_test.cpp
+        is_prime.hpp
+        is_prime_test.cpp
 )
 
 target_link_libraries(
-        touca_example_starter
+        example_cpp_minimal
     PRIVATE
         touca_framework
 )
 
 target_include_directories(
-        touca_example_starter
+        example_cpp_minimal
     PRIVATE
         ${TOUCA_CLIENT_ROOT_DIR}
 )
@@ -27,10 +27,10 @@ source_group(
     TREE
         ${CMAKE_CURRENT_LIST_DIR}
     FILES
-        $<TARGET_PROPERTY:touca_example_starter,SOURCES>
+        $<TARGET_PROPERTY:example_cpp_minimal,SOURCES>
 )
 
 install(
-    TARGETS touca_example_starter
+    TARGETS example_cpp_minimal
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )

@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "code_under_test.hpp"
+#include "is_prime.hpp"
 #include "touca/touca.hpp"
 #include "touca/touca_main.hpp"
 #include <string>

@@ -1,7 +1,7 @@
 {
   "framework": {
     "log-level": "info",
-    "output-dir": "./local/example-advanced-output",
+    "output-dir": "./local/examples/04_cpp_external_input",
     "save-as-binary": true,
     "save-as-json": true
   },
@@ -10,6 +10,6 @@
     "api-url": "<YOUR API URL>"
   },
   "workflow": {
-    "datasets-dir": "./example/advanced/datasets"
+    "datasets-dir": "./examples/04_cpp_external_input/datasets"
   }
 }

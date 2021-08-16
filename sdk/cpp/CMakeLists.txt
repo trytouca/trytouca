@@ -92,11 +92,7 @@ if (TOUCA_BUILD_UTILS)
 endif()
 
 if (TOUCA_BUILD_EXAMPLES)
-    add_subdirectory(example/basic)
-    if (TOUCA_BUILD_FRAMEWORK)
-        add_subdirectory(example/starter)
-        add_subdirectory(example/advanced)
-    endif()
+    add_subdirectory(examples)
 endif()
 
 if (TOUCA_BUILD_FRAMEWORK)

@@ -1,8 +1,8 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "regression_test.hpp"
-#include "code_under_test.hpp"
+#include "students_test.hpp"
 #include "cxxopts.hpp"
+#include "students.hpp"
 #include "touca/devkit/filesystem.hpp"
 #include "touca/framework/suites.hpp"
 #include "touca/touca.hpp"
