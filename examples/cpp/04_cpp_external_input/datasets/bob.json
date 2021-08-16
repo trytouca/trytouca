@@ -1,0 +1,18 @@
+{
+  "name": "Bob Brown",
+  "dob": {
+    "y": 1996,
+    "m": 6,
+    "d": 31
+  },
+  "courses": [
+    {
+      "name": "english",
+      "grade": 3.7
+    },
+    {
+      "name": "history",
+      "grade": 3.9
+    }
+  ]
+}

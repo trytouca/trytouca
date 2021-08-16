@@ -1,0 +1,17 @@
+{
+  "name": "Charlie Clark",
+  "dob": {
+    "y": 2003,
+    "m": 9,
+    "d": 19
+  },
+  "courses": [
+    { "name": "math",
+      "grade": 2.9
+    },
+    {
+      "name": "computers",
+      "grade": 3.7
+    }
+  ]
+}

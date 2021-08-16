@@ -127,7 +127,7 @@ std::shared_ptr<touca::framework::Suite> MyWorkflow::suite() const
 {
     // if option `testsuite-file` is specified, use the testcases listed
     // in that file. For this purpose, we use the `FileSuite` helper class
-    // that is provided by the Touca Test Framework. It expects that the
+    // that is provided by the Touca test framework. It expects that the
     // testsuite file has one testcase per line, while skipping empty lines
     // and lines that start with `##`.
 
@@ -136,9 +136,9 @@ std::shared_ptr<touca::framework::Suite> MyWorkflow::suite() const
     }
 
     // if option `testsuite-remote` is specified, use the testcases that are
-    // part of the version submitted to the Touca Platform that is currently
+    // part of the version submitted to the Touca server that is currently
     // the suite baseline. For this purpose, we use the `RemoteSuite` helper
-    // class that is provided by the Touca Test Framework.
+    // class that is provided by the Touca test framework.
 
     if (_options.count("testsuite-remote") && _options.at("testsuite-remote") == "true") {
         return std::make_shared<touca::framework::RemoteSuite>(_options);
@@ -157,25 +157,23 @@ touca::framework::Errors MyWorkflow::execute(const touca::framework::Testcase& t
 {
     touca::filesystem::path caseFile = _options.at("datasets-dir");
     caseFile /= testcase + ".json";
-    const auto& wizard = parse_profile(caseFile.string());
+    const auto& student = parse_profile(caseFile.string());
 
-    touca::add_assertion("id", wizard.username);
-    touca::add_assertion("name", wizard.fullname);
-    touca::add_result("height", wizard.height);
-    touca::add_result("weight", wizard.weight);
-    touca::add_result("birth_date", wizard.dob);
+    touca::add_assertion("username", student.username);
+    touca::add_result("fullname", student.fullname);
+    touca::add_result("birth_date", student.dob);
+    touca::add_result("gpa", calculate_gpa(student.courses));
 
-    custom_function_1(wizard);
+    custom_function_1(student);
 
-    std::thread t(custom_function_2, wizard);
+    std::thread t(custom_function_2, student);
     t.join();
 
     touca::start_timer("func3");
-    custom_function_3(wizard);
+    custom_function_3(student);
     touca::stop_timer("func3");
 
     touca::add_metric("external", 10);
-
     return {};
 }
 
