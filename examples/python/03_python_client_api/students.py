@@ -53,7 +53,7 @@ def parse_profile(username: str) -> Student:
 
 
 def calculate_gpa(courses: List[Course]):
-    return sum(k.grade for k in courses) / len(courses)
+    return sum(k.grade for k in courses) / len(courses) if courses else 0
 
 
 def custom_function_1(student: Student):

@@ -18,8 +18,8 @@ The efficiency and correctness of this implementation is not important
 since we expect this implementation to change in future versions of
 our software.
 
-Touca helps us understand how these future changes impact
-the behavior and performance of our code under test.
+Touca helps us understand how these future changes impact the behavior
+and performance of our code under test.
 
 ## Getting Started
 

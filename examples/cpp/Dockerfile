@@ -28,17 +28,22 @@ RUN apt-get update \
   && echo '[ ! -z "$TERM" -a -r /etc/motd ] && cat /etc/motd' >> /etc/bash.bashrc \
   && echo "\n" \
     "This container serves as a development environment and playground  \n" \
-    "for the \"trytouca/examples\" repository. The test tools are built \n" \
-    "and installed in \"/opt/local/dist/bin\" and \"/usr/bin/local\".   \n" \
-    "The following is an example of how to run one of these test tool:  \n" \
+    "for the C++ examples in our \"trytouca/examples\" repository.      \n" \
+    "The test tools are built and installed in \"/opt/local/dist/bin\"  \n" \
+    "and \"/usr/bin/local\". The following is an example of how to run  \n" \
+    "one of these test tools:                                           \n" \
     "                                                                   \n" \
-    "  example_cpp_basic_api -c advanced/config.json -r <YOUR_VERSION>  \n" \
-    "              --api-key <TOUCA_API_KEY> --api-url <TOUCA_API_URL>  \n" \
+    "  example_cpp_basic_api --api-key <TOUCA_API_KEY>                  \n" \
+    "                        --api-url <TOUCA_API_URL>                  \n" \
+    "                        --revision <TOUCA_TEST_VERSION>            \n" \
+    "                        --testcase alice                           \n" \
     "                                                                   \n" \
-    "Run "example_cpp_basic_api --help" for a list of all supported     \n" \
-    "command line options. Use the "build.sh" script to rebuild the     \n" \
+    "Run \"example_cpp_basic_api --help\" for a list of all supported   \n" \
+    "command line options. Use the \"build.sh\" script to rebuild the   \n" \
     "test tools if you liked to make changes to the source code.        \n" \
     "You can use \"sudo\" without a password.                           \n" \
+    "This allows you to install missing packages, like vim, after       \n" \
+    "running \"sudo apt update\".                                       \n" \
     >> /etc/motd
 
 COPY . /opt
