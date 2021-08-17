@@ -14,6 +14,7 @@
 #include <fstream>
 #include <iostream>
 #include <thread>
+#include <unordered_map>
 
 #ifdef _WIN32
 #undef GetObject
@@ -245,6 +246,25 @@ namespace touca { namespace framework {
     /**
      *
      */
+    bool parse_env_variables(Options& options)
+    {
+        const std::unordered_map<std::string, std::string> env_table = {
+            { "TOUCA_API_KEY", "api-key" },
+            { "TOUCA_API_URL", "api-url" },
+            { "TOUCA_TEST_VERSION", "revision" },
+        };
+        for (const auto& kvp : env_table) {
+            const auto env_value = std::getenv(kvp.first.c_str());
+            if (env_value != nullptr) {
+                options[kvp.second] = env_value;
+            }
+        }
+        return true;
+    }
+
+    /**
+     *
+     */
     bool parse_api_url(Options& options)
     {
         // it is okay if configuration option `--api-url` is not specified
@@ -272,6 +292,7 @@ namespace touca { namespace framework {
         auto ret = true;
         ret &= parse_cli_options(argc, argv, options);
         ret &= parse_file_options(options);
+        ret &= parse_env_variables(options);
         ret &= parse_api_url(options);
         return ret;
     }
