@@ -54,6 +54,26 @@ TEST_CASE("empty client")
     }
 }
 
+#if _POSIX_C_SOURCE >= 200112L
+TEST_CASE("configure with environment variables")
+{
+    touca::ClientImpl client;
+    client.configure();
+    CHECK(client.is_configured() == true);
+    setenv("TOUCA_API_KEY", "some-key", 1);
+    setenv("TOUCA_API_URL", "https://api.touca.io/@/some-team/some-suite", 1);
+    client.configure({ { "version", "myversion" },
+        { "handshake", "false" } });
+    CHECK(client.is_configured() == true);
+    CHECK(client.configuration_error() == "");
+    CHECK(client.options().api_key == "some-key");
+    CHECK(client.options().team == "some-team");
+    CHECK(client.options().suite == "some-suite");
+    unsetenv("TOUCA_API_KEY");
+    unsetenv("TOUCA_API_URL");
+}
+#endif
+
 TEST_CASE("using a configured client")
 {
     touca::ClientImpl client;

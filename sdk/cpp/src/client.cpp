@@ -95,14 +95,20 @@ namespace touca {
             parsers.at(kvp.first)(kvp.second);
         }
 
-        // populate API key if it is set as environment variable. the
-        // implementation below ensures that `api-key` as environment
-        // variable takes precedence over the specified configuration
-        // parameter.
+        // apply environment variables. the implementation below ensures
+        // that the environment variables take precedence over the specified
+        // configuration parameters.
 
-        const auto env_value = std::getenv("TOUCA_API_KEY");
-        if (env_value != nullptr) {
-            _opts.api_key = env_value;
+        const std::unordered_map<std::string, std::string&> env_table = {
+            { "TOUCA_API_KEY", _opts.api_key },
+            { "TOUCA_API_URL", _opts.api_url },
+            { "TOUCA_TEST_VERSION", _opts.revision },
+        };
+        for (const auto& kvp : env_table) {
+            const auto env_value = std::getenv(kvp.first.c_str());
+            if (env_value != nullptr) {
+                kvp.second = env_value;
+            }
         }
 
         // associate a name to each string-based configuration parameter

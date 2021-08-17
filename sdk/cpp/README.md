@@ -23,12 +23,12 @@ on the behavior and performance of their software, as they write code.
 
 ## 📖 Documentation
 
-* If you are new to Touca, the best place to start is our
-  [Quickstart Guide][docs-quickstart] on our documentation website.
-* For information on how to use this library, examples, and tutorials,
-  checkout our [C++ SDK Documentation][docs-cpp].
-* If you cannot wait to start writing your first test with Touca,
-  checkout our [C++ API Reference][docs-cpp-api].
+*   If you are new to Touca, the best place to start is our
+    [Quickstart Guide][docs-quickstart] on our documentation website.
+*   For information on how to use this library, examples, and tutorials,
+    checkout our [C++ SDK Documentation][docs-cpp].
+*   If you cannot wait to start writing your first test with Touca,
+    checkout our [C++ API Reference][docs-cpp-api].
 
 ## 🚀 Getting Started
 
@@ -65,11 +65,11 @@ In the example above, the input and output of the Code Under Test were a
 number and a boolean, respectively. If we were testing a video compression
 algorithm, they may have been video files. In that case:
 
-* Describing the expected output for a given video file would be difficult.
-* When we make changes to our compression algorithm, accurately reflecting
-  those changes in our expected values would be time-consuming.
-* We would need a large number of input video files to gain confidence that
-  our algorithm works correctly.
+*   Describing the expected output for a given video file would be difficult.
+*   When we make changes to our compression algorithm, accurately reflecting
+    those changes in our expected values would be time-consuming.
+*   We would need a large number of input video files to gain confidence that
+    our algorithm works correctly.
 
 We've built Touca to make it easier for software engineering teams to
 continuously test their complex workflows with any number of real-world inputs.
@@ -95,15 +95,15 @@ void touca::main(const std::string& testcase)
 Yes, we agree. This code needs some explanation. Let us start by reviewing
 what is missing:
 
-* We have fully decoupled our test inputs from our test logic. Touca refers to
-  these inputs as "test cases". The SDK retrieves the test cases from a file or
-  a remote Touca server and feeds them one by one to our code under test.
-* We have completely removed the concept of "expected values". Instead, we
-  are capturing the actual return value of `is_prime` via `add_result`. We can
-  capture any number of values, from anywhere within our code under test.
-  These captured values are associated with their corresponding input value
-  (test case) and are submitted to a remote Touca server, as we run the code
-  under test for each input.
+*   We have fully decoupled our test inputs from our test logic. Touca refers to
+    these inputs as "test cases". The SDK retrieves the test cases from a file or
+    a remote Touca server and feeds them one by one to our code under test.
+*   We have completely removed the concept of "expected values". Instead, we
+    are capturing the actual return value of `is_prime` via `add_result`. We can
+    capture any number of values, from anywhere within our code under test.
+    These captured values are associated with their corresponding input value
+    (test case) and are submitted to a remote Touca server, as we run the code
+    under test for each input.
 
 You may wonder how we verify the correctness of our code under test without
 using expected values. Let us clarify: we don't. Since Touca is a regression
@@ -147,27 +147,27 @@ versions and reports the differences in near real-time.
 This approach is effective in addressing common problems in the following
 situations:
 
-* When we need to test our workflow with a large number of inputs.
-* When the output of our workflow is too complex, or too difficult to describe
-  in our unit tests.
-* When interesting information to check for regression is not exposed by the
-  workflow's interface.
+*   When we need to test our workflow with a large number of inputs.
+*   When the output of our workflow is too complex, or too difficult to describe
+    in our unit tests.
+*   When interesting information to check for regression is not exposed by the
+    workflow's interface.
 
 The fundamental design features of Touca that we highlighted earlier can help
 us test these workflows at any scale.
 
-* Decoupling our test input from our test logic, can help us manage our long
-  list of inputs without modifying the test logic. Managing that list on a
-  remote server accessible to all members of our team, can help us add notes
-  to each test case, explain why they are needed and track how their
-  performance changes over time.
-* Submitting our test results to a remote server, instead of storing them in
-  files, can help us avoid the mundane tasks of managing and processing of
-  those results. The Touca server retains test results and makes them
-  accessible to all members of the team. It compares test results using their
-  original data types and reports discovered differences in real-time to all
-  interested members of our team. It allows us to audit how our software
-  evolves over time and provides high-level information about our tests.
+*   Decoupling our test input from our test logic, can help us manage our long
+    list of inputs without modifying the test logic. Managing that list on a
+    remote server accessible to all members of our team, can help us add notes
+    to each test case, explain why they are needed and track how their
+    performance changes over time.
+*   Submitting our test results to a remote server, instead of storing them in
+    files, can help us avoid the mundane tasks of managing and processing of
+    those results. The Touca server retains test results and makes them
+    accessible to all members of the team. It compares test results using their
+    original data types and reports discovered differences in real-time to all
+    interested members of our team. It allows us to audit how our software
+    evolves over time and provides high-level information about our tests.
 
 ## 🧑‍🔧 Integration
 
@@ -223,8 +223,6 @@ third-party library:
 conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
 conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.4.0@_/_"
 ```
-
-
 
 ## 🕵️ Requirements
 

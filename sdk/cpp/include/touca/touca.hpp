@@ -148,7 +148,7 @@ namespace touca {
      * @param opts a string-based map of configuration parameters
      */
     TOUCA_CLIENT_API void configure(
-        const std::unordered_map<std::string, std::string>& opts);
+        const std::unordered_map<std::string, std::string>& opts = {});
 
     /**
      * @brief Configures the touca client using a configuration file

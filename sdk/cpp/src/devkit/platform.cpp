@@ -348,7 +348,7 @@ namespace touca {
     bool Platform::seal() const
     {
         _error.clear();
-        const auto route = fmt::format("{}/batch/{}/{}/{}/seal2",
+        const auto route = fmt::format("/batch/{}/{}/{}/seal2",
             _api._team, _api._suite, _api._revision);
         const auto& response = _http->post(_api.route(route));
         if (response.status == -1) {
