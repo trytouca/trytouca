@@ -103,15 +103,15 @@ touca.run();
 The code you insert as your workflow under test generally performs
 the following operations.
 
-1. Map a given testcase name to its corresponding input.
+1.  Map a given testcase name to its corresponding input.
 
     > We did this by calling `Number.parseInt(testcase)`.
 
-2. Call your code under test with that input.
+2.  Call your code under test with that input.
 
     > We did this by calling `is_prime(number)`.
 
-3. Describe the behavior and performance of your code under test.
+3.  Describe the behavior and performance of your code under test.
 
     > We can do this by capturing values of interesting variables
     > and runtime of important functions.

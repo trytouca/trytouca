@@ -47,4 +47,4 @@ jobs:
           TOUCA_API_URL: https://api.touca.io/@/examples/javascript
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         run: |
-          yarn --cwd=02_node_basic_api test
+          yarn --cwd=02_node_basic_api test:touca

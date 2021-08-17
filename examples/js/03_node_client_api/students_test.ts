@@ -4,7 +4,6 @@ import { touca } from '@touca/node';
 import { parse_profile } from './students';
 
 (async () => {
-
   await touca.configure();
   for (const username of ['alice', 'bob', 'charlie']) {
     touca.declare_testcase(username);
@@ -27,5 +26,4 @@ import { parse_profile } from './students';
   }
   await touca.post();
   await touca.seal();
-
 })();
