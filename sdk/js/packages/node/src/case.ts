@@ -3,7 +3,7 @@
 import { Builder } from 'flatbuffers';
 
 import * as schema from './schema';
-import { IntegerType, ToucaType, VectorType } from './types';
+import { IntegerType, ResultJson, ToucaType, VectorType } from './types';
 
 enum ResultCategory {
   Check = 1,
@@ -15,8 +15,6 @@ type ResultEntry = {
   val: ToucaType;
 };
 
-type ResultValueType = boolean | number | string;
-
 type CppTestcaseMetadata = {
   builtAt: string;
   testcase: string;
@@ -27,9 +25,9 @@ type CppTestcaseMetadata = {
 
 type CaseJson = {
   metadata: CppTestcaseMetadata;
-  results: { key: string; value: ResultValueType }[];
-  assertions: { key: string; value: ResultValueType }[];
-  metrics: { key: string; value: ResultValueType }[];
+  results: { key: string; value: ResultJson }[];
+  assertions: { key: string; value: ResultJson }[];
+  metrics: { key: string; value: ResultJson }[];
 };
 
 /**

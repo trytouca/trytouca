@@ -4,11 +4,18 @@ import { Builder, createLong } from 'flatbuffers';
 
 import * as schema from './schema';
 
+export type ResultJson =
+  | boolean
+  | number
+  | string
+  | Record<string, unknown>
+  | ResultJson[];
+
 /**
  *
  */
 export interface ToucaType {
-  json(): boolean | number | string;
+  json(): ResultJson;
   serialize(builder: Builder): number;
 }
 
@@ -119,8 +126,8 @@ export class VectorType implements ToucaType {
     this._value.push(value);
   }
 
-  public json(): string {
-    return JSON.stringify(this._value.map((v) => v.json()));
+  public json(): ResultJson {
+    return this._value.map((v) => v.json());
   }
 
   public serialize(builder: Builder): number {
@@ -148,12 +155,12 @@ class ObjectType implements ToucaType {
     this._values.set(key, value);
   }
 
-  public json(): string {
+  public json(): ResultJson {
     const values: Record<string, unknown> = {};
     for (const [k, v] of this._values) {
       values[k] = v.json();
     }
-    return JSON.stringify(values);
+    return values;
   }
 
   public serialize(builder: Builder): number {

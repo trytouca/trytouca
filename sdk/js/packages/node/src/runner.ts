@@ -351,7 +351,7 @@ export class Runner {
       }
       if (errors.length === 0 && options.save_json) {
         const filepath = path.join(testcase_directory, 'touca.json');
-        await this._client.save_binary(filepath, [testcase]);
+        await this._client.save_json(filepath, [testcase]);
       }
       if (errors.length === 0 && !offline) {
         await this._client.post();

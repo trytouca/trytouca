@@ -22,7 +22,7 @@ describe('basic operations', () => {
   });
   test('check date', () => {
     const val = handler.transform(new Date(Date.UTC(2021, 8, 11, 11, 29)));
-    expect(val.json()).toEqual('{"v":"2021-09-11T11:29:00.000Z"}');
+    expect(val.json()).toEqual({ v: '2021-09-11T11:29:00.000Z' });
   });
   test('check boolean type', () => {
     const val = handler.transform(true);
@@ -42,19 +42,19 @@ describe('basic operations', () => {
   });
   test('when empty', () => {
     const val = handler.transform([]);
-    expect(val.json()).toEqual('[]');
+    expect(val.json()).toEqual([]);
   });
   test('with numbers', () => {
     const val = handler.transform([0, 1]);
-    expect(val.json()).toEqual('[0,1]');
+    expect(val.json()).toEqual([0, 1]);
   });
   test('with strings', () => {
     const val = handler.transform(['cat', 'dog']);
-    expect(val.json()).toEqual('["cat","dog"]');
+    expect(val.json()).toEqual(['cat', 'dog']);
   });
   test('with tuple', () => {
     const val = handler.transform(['cat', 1]);
-    expect(val.json()).toEqual('["cat",1]');
+    expect(val.json()).toEqual(['cat', 1]);
   });
   test('with map', () => {
     const input = new Map([
@@ -62,25 +62,26 @@ describe('basic operations', () => {
       ['dog', 'max']
     ]);
     const val = handler.transform(input);
-    expect(val.json()).toEqual(
-      '["[\\"cat\\",\\"felix\\"]","[\\"dog\\",\\"max\\"]"]'
-    );
+    expect(val.json()).toEqual([
+      ['cat', 'felix'],
+      ['dog', 'max']
+    ]);
   });
   test('with set', () => {
     const val = handler.transform(new Set(['cat', 'dog', 'cat']));
-    expect(val.json()).toEqual('["cat","dog"]');
+    expect(val.json()).toEqual(['cat', 'dog']);
   });
   test('with empty object', () => {
     const val = handler.transform({});
-    expect(val.json()).toEqual('{}');
+    expect(val.json()).toEqual({});
   });
   test('with named object', () => {
     const val = handler.transform(new DateOfBirth(2000, 1, 1));
-    expect(val.json()).toEqual('{"year":2000,"month":1,"day":1}');
+    expect(val.json()).toEqual({ year: 2000, month: 1, day: 1 });
   });
   test('with unnamed object', () => {
     const val = handler.transform({ year: 2000, month: 1, day: 1 });
-    expect(val.json()).toEqual('{"year":2000,"month":1,"day":1}');
+    expect(val.json()).toEqual({ year: 2000, month: 1, day: 1 });
   });
 });
 
@@ -93,6 +94,6 @@ describe('custom serializer', () => {
       d: x.day
     }));
     const val = handler.transform(new DateOfBirth(2000, 1, 1));
-    expect(val.json()).toEqual('{"y":2000,"m":1,"d":1}');
+    expect(val.json()).toEqual({ y: 2000, m: 1, d: 1 });
   });
 });
