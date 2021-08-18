@@ -1,6 +1,6 @@
 # Touca Node.js SDK
 
-In the [previous tutorial](../01_node_basic_api), we showed how to
+In the [previous tutorial](../01\_node_minimal), we showed how to
 write and run a simple Touca test using our Node.js SDK. But our
 `is_prime` example was too minimal to show how Touca can help us
 describe the behavior and performance of real-world software workflows.

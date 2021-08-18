@@ -31,7 +31,7 @@ async function make_client(): Promise<NodeClient> {
   client.start_timer('small_time');
   await delay(10);
   client.stop_timer('small_time');
-  await client.scoped_timer('scoped_timer', () => {
+  await client.scoped_timer('scoped_timer', async () => {
     delay(10);
   });
   return client;

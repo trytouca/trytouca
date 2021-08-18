@@ -443,9 +443,17 @@ export class NodeClient implements BaseClient<NodeOptions> {
   }
 
   /**
-   * @TODO
+   *
    */
-  public async scoped_timer(key: string, callback: () => void): Promise<void> {}
+  public async scoped_timer<T>(
+    key: string,
+    callback: () => Promise<T>
+  ): Promise<T> {
+    this.start_timer(key);
+    const v = await callback();
+    this.stop_timer(key);
+    return v;
+  }
 
   /**
    * Stores test results and performance benchmarks in binary format

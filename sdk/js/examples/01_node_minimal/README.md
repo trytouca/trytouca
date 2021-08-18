@@ -102,13 +102,6 @@ we can rerun this test to submit the new information as, say, `v2.0`.
 The Touca server compares the new test results against our test results for
 `v1.0` and reports any differences in real-time.
 
-> We hope this section was not too confusing? We intentionally cut out a lot
-> of details to get you started with Touca in as little time as possible.
->
-> Check out our [Getting Started](https://docs.touca.io) guide if you like
-> to read more about how Touca works and how it is different from other
-> commonly-used testing techniques.
-
 ## General Model
 
 The pattern used in this example is generally applicable to testing
