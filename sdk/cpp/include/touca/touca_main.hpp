@@ -7,6 +7,11 @@
 #include <memory>
 #include <string>
 
+// the following header file(s) are included only to make it sufficient
+// for the users of this library to include only this header file
+
+#include "touca/touca.hpp"
+
 namespace touca {
     void main(const std::string& testcase);
 }
