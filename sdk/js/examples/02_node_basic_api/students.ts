@@ -1,51 +1,58 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { touca } from '@touca/node';
+
 interface Course {
   name: string;
   grade: number;
 }
 
-class Student {
-  constructor(
-    public readonly username: string,
-    public readonly fullname: string,
-    public readonly dob: Date,
-    public readonly courses: { name: string; grade: number }[]
-  ) {}
+interface Student {
+  username: string;
+  fullname: string;
+  dob: Date;
+  gpa: number;
 }
 
-/**
- *
- */
-export function parse_profile(username: string): Student {
-  return new Map<string, Student>([
-    [
-      'alice',
-      new Student('alice', 'Alice Anderson', new Date(2006, 3, 1), [
-        { name: 'math', grade: 4.0 },
-        { name: 'computers', grade: 3.8 }
-      ])
-    ],
-    [
-      'bob',
-      new Student('bob', 'Bob Brown', new Date(1996, 6, 31), [
-        { name: 'english', grade: 3.7 },
-        { name: 'history', grade: 3.9 }
-      ])
-    ],
-    [
-      'charlie',
-      new Student('charlie', 'Charlie Clark', new Date(2003, 9, 19), [
-        { name: 'math', grade: 2.9 },
-        { name: 'computers', grade: 3.7 }
-      ])
+const students = [
+  {
+    username: 'alice',
+    fullname: 'Alice Anderson',
+    dob: new Date(2006, 3, 1),
+    courses: [
+      { name: 'math', grade: 4.0 },
+      { name: 'computers', grade: 3.8 }
     ]
-  ]).get(username) as Student;
+  },
+  {
+    username: 'bob',
+    fullname: 'Bob Brown',
+    dob: new Date(1996, 6, 31),
+    courses: [
+      { name: 'english', grade: 3.7 },
+      { name: 'history', grade: 3.9 }
+    ]
+  },
+  {
+    username: 'charlie',
+    fullname: 'Charlie Clark',
+    dob: new Date(2003, 9, 19),
+    courses: [
+      { name: 'math', grade: 2.9 },
+      { name: 'computers', grade: 3.7 }
+    ]
+  }
+];
+
+export async function parse_profile(username: string): Promise<Student> {
+  await new Promise((v) => setTimeout(v, 100));
+  const { courses, ...student } = students.find(
+    (v) => v.username === username
+  )!;
+  return { ...student, gpa: calculate_gpa(courses) };
 }
 
-/**
- *
- */
-export function calculate_gpa(courses: Course[]): number {
+function calculate_gpa(courses: Course[]): number {
+  touca.add_result('courses', courses);
   return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
 }

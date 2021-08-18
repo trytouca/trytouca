@@ -1,7 +1,7 @@
 {
   "packages": [
     "packages/node",
-    "examples/01_node_quickstart",
+    "examples/01_node_minimal",
     "examples/02_node_basic_api",
     "examples/03_node_client_api"
   ],
