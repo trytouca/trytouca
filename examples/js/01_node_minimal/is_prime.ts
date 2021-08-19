@@ -6,5 +6,5 @@ export function is_prime(input: number): boolean {
       return false;
     }
   }
-  return true;
+  return 1 < input;
 }
