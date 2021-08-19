@@ -1,7 +1,7 @@
-# Touca Node.js SDK
+# Touca C++ SDK
 
-In the [previous tutorial](../01\_node_minimal), we showed how to
-write and run a simple Touca test using our Node.js SDK. But our
+In the [previous tutorial](../01\_cpp_minimal), we showed how to
+write and run a simple Touca test using our C++ SDK. But our
 `is_prime` example was too minimal to show how Touca can help us
 describe the behavior and performance of real-world software workflows.
 
@@ -10,35 +10,35 @@ the username of a student and returns basic information about them,
 such as their name, date of birth, and GPA.
 
 Let us imagine that our code under test has the following entry-point.
-See [`students.ts`](students.ts) for a possible implementation.
+See [`students.cpp`](students.cpp) for a possible implementation.
 
-```ts
-export async function parse_profile(username: string): Student;
+```cpp
+Student parse_profile(const std::string& username);
 ```
 
-where `Student` has the following properties:
+where `Student` has the following member attributes:
 
-```ts
-interface Student {
-  username: string;
-  fullname: string;
-  dob: Date;
-  gpa: number;
-}
+```cpp
+struct Student {
+    std::string username;
+    std::string fullname;
+    Date dob;
+    float gpa;
+};
 ```
 
 Here's a Touca test we can write for our code under test:
 
-```ts
-import { touca } from '@touca/node';
-import { parse_profile } from './students';
+```cpp
+#include "students.hpp"
+#include "students_types.hpp"
+#include "touca/touca_main.hpp"
 
-touca.workflow('students_test', async (username: string) => {
-  const student = await parse_profile(username);
-  // more to write here
-});
-
-touca.run();
+void touca::main(const std::string& username)
+{
+    const auto& student = parse_profile(username);
+    // more to write here
+}
 ```
 
 ## Describing Behavior
@@ -49,8 +49,8 @@ versions of our software.
 
 We can start small and capture the entire returned object as a Touca result:
 
-```ts
-  touca.add_result('student', student);
+```cpp
+  touca::add_result("student", student);
 ```
 
 We can run our test from the command line:
@@ -58,7 +58,7 @@ We can run our test from the command line:
 ```bash
 export TOUCA_API_KEY="your-api-key"
 export TOUCA_API_URL="your-api-url"
-node ./students_test.js --revision v1.0 --testcase alice bob charlie
+./local/dist/bin/example_cpp_basic_api --revision v1.0 --testcase alice bob charlie
 ```
 
 the Touca SDK captures the `Student` object with all its properties and
@@ -67,7 +67,7 @@ on the web app but we can also ask the SDK to generate a JSON result file
 for us:
 
 ```bash
-node ./students_test.js --revision v2.0 --save-as-json
+./local/dist/bin/example_cpp_basic_api --revision v1.0 --save-as-json
 ```
 
 You can use `--help` to learn about available command line options.
@@ -83,11 +83,11 @@ reported whether the profile was fetched from the cache?
 Since this information may change every time we run our tests, we can
 choose to capture different fields as separate entities.
 
-```ts
-  touca.add_assertion('username', student.username);
-  touca.add_result('fullname', student.fullname);
-  touca.add_result('birth_date', student.dob);
-  touca.add_result('gpa', student.gpa);
+```cpp
+  touca::add_assertion("username", student.username);
+  touca::add_result("fullname", student.fullname);
+  touca::add_result("birth_date", student.dob);
+  touca::add_result("gpa", student.gpa);
 ```
 
 This approach allows Touca to report differences in a more helpful format,
@@ -109,15 +109,20 @@ to trace a reported difference in GPA to its root cause. Assuming that
 the courses enrolled by a student are not expected to change, we can track
 them without redesigning our API:
 
-```ts
-function calculate_gpa(courses: Course[]): number {
-  touca.add_result('courses', courses);
-  return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
+```cpp
+float calculate_gpa(const std::vector<Course>& courses)
+{
+    touca::add_result("courses", courses);
+    const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
+        [](const float sum, const Course& course) {
+            return sum + course.grade;
+        });
+    return courses.empty() ? 0.0f : sum / courses.size();
 }
 ```
 
 Touca data capturing functions remain no-op in production environments.
-They are only activated when running in the context of a `touca.workflow`
+They are only activated when running in the context of a `touca::main`
 function call. See the next tutorial to learn more.
 
 ## Describing Performance
@@ -129,27 +134,35 @@ functions to describe their performance.
 Touca can notify us when future changes to our implementation result in
 significantly changes in the measured runtime values.
 
-```ts
-  touca.start_timer('parse_time');
-  const student = parse_profile(username);
-  touca.stop_timer('parse_time');
+```cpp
+    touca::start_timer("parse_profile");
+    const auto& student = parse_profile(username);
+    touca::stop_timer("parse_profile");
 ```
 
 The two functions `start_timer` and `stop_timer` provide fine-grained
 control for runtime measurement. If they feel too verbose, we can opt to
 use `scoped_timer` as an alternatives:
 
-```ts
-  const student = await touca.scoped_timer('parse_profile', () =>
-    parse_profile(username)
-  );
+```cpp
+Student parse_profile(const std::string& username)
+{
+    TOUCA_SCOPED_TIMER;
+    // implementation
+}
+```
+
+We can also measure the lifetime of a scoped variable:
+
+```cpp
+  touca::scoped_timer timer("parse_time");
 ```
 
 It is also possible to add measurements obtained by other performance
 benchmarking tools.
 
-```ts
-  touca.add_metric('external_source', 150);
+```cpp
+  touca::add_metric("external_source", 150);
 ```
 
 In addition to these data capturing functions, Touca test framework

@@ -10,7 +10,7 @@ target_sources(
         students.cpp
         students.hpp
         students_test.cpp
-        students_test.hpp
+        students_types.hpp
 )
 
 target_link_libraries(
