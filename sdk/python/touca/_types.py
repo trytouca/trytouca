@@ -181,7 +181,7 @@ class TypeHandler:
             return obj
         if isinstance(value, Iterable):
             vec = VectorType()
-            for v in vec._values:
+            for v in value:
                 vec.add(self.transform(v))
             return vec
         obj = ObjectType(value.__class__.__name__)

@@ -48,9 +48,9 @@ def loaded_client() -> Client:
     client.add_result("age", 21)
     client.add_result("name", "harry")
     client.add_result("dob", DateOfBirth(2000, 1, 1))
-    client.add_result("courses", courses)
+    client.add_result("dates", [DateOfBirth(2000, 1, 1), DateOfBirth(1990, 1, 1)])
     for course in courses:
-        client.add_array_element("course-names", course)
+        client.add_array_element("courses", course)
         client.add_hit_count("course-count")
     client.add_metric("exam_time", 42)
     client.start_timer("small_time")
@@ -66,6 +66,20 @@ def test_client_loaded_json(loaded_client):
     assert len(content_json) == 1
     for key in ["metadata", "assertions", "results", "metrics"]:
         assert key in content_json[0]
+    get_result_key = lambda x: next(
+        k["value"] for k in content_json[0]["results"] if k["key"] == x
+    )
+    assert get_result_key("is_famous") == True
+    assert get_result_key("tall") == 6.1
+    assert get_result_key("age") == 21
+    assert get_result_key("name") == "harry"
+    assert get_result_key("dob") == '{"year": 2000, "month": 1, "day": 1}'
+    assert (
+        get_result_key("dates")
+        == '["{\\"year\\": 2000, \\"month\\": 1, \\"day\\": 1}", "{\\"year\\": 1990, \\"month\\": 1, \\"day\\": 1}"]'
+    )
+    assert get_result_key("courses") == '["math", "english"]'
+    assert get_result_key("course-count") == 2
 
 
 def test_client_loaded_binary(loaded_client):
