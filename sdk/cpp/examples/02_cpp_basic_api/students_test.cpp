@@ -11,4 +11,5 @@ void touca::main(const std::string& username)
     touca::add_result("fullname", student.fullname);
     touca::add_result("birth_date", student.dob);
     touca::add_result("gpa", student.gpa);
+    touca::add_metric("external_source", 1500);
 }
