@@ -1,11 +1,11 @@
 {
   "name": "@touca/node",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Touca SDK for Node.js",
   "license": "Apache-2.0",
   "repository": "git://github.com:trytouca/touca-js.git",
   "bugs": "https://github.com/trytouca/touca-js/issues",
-  "homepage": "https://touca.io",
+  "homepage": "https://github.com/trytouca/touca-js/tree/main/packages/node",
   "keywords": [
     "regression-testing",
     "snapshot-testing",

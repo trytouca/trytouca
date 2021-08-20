@@ -1,11 +1,15 @@
 # Changelog
 
-## Unreleased
+## v0.0.6
+
+Features:
+
+*   Add new function `add_serializer` for customizing type serialization (#25)
 
 Improvements:
 
 *   Update top-level readme file (#26)
-*   Update example projects and improve their documentation (#25)
+*   Update example projects and improve their documentation (#25, #27)
 
 ## v0.0.5
 
