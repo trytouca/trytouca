@@ -13,7 +13,7 @@ def students_test(username: str):
     touca.add_result("fullname", student.fullname)
     touca.add_result("birth_date", student.dob)
     touca.add_result("gpa", student.gpa)
-    touca.add_metric("external_sources", 150)
+    touca.add_metric("external_source", 1500)
 
 
 if __name__ == "__main__":

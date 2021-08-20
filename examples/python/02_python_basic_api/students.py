@@ -3,22 +3,8 @@
 from dataclasses import dataclass
 from time import sleep
 from typing import List
+from datetime import date
 import touca
-
-
-@dataclass
-class Date:
-    year: int
-    month: int
-    day: int
-
-
-@dataclass
-class Student:
-    username: str
-    fullname: str
-    dob: Date
-    gpa: float
 
 
 @dataclass
@@ -28,30 +14,30 @@ class Course:
 
 
 @dataclass
-class StudentData:
+class Student:
     username: str
     fullname: str
-    dob: Date
-    courses: List[Course]
+    dob: date
+    gpa: float
 
 
 students = [
-    StudentData(
+    (
         "alice",
         "Alice Anderson",
-        Date(2006, 3, 1),
+        date(2006, 3, 1),
         [Course("math", 4.0), Course("computers", 3.8)],
     ),
-    StudentData(
+    (
         "bob",
         "Bob Brown",
-        Date(1996, 6, 31),
+        date(1996, 6, 30),
         [Course("english", 3.7), Course("history", 3.9)],
     ),
-    StudentData(
+    (
         "charlie",
         "Charlie Clark",
-        Date(2003, 9, 19),
+        date(2003, 9, 19),
         [Course("math", 2.9), Course("computers", 3.7)],
     ),
 ]
@@ -63,8 +49,8 @@ def calculate_gpa(courses: List[Course]):
 
 
 def parse_profile(username: str) -> Student:
-    sleep(0.1)
-    data = next((k for k in students if k.username == username), None)
+    sleep(0.2)
+    data = next((k for k in students if k[0] == username), None)
     if not data:
         raise ValueError(f"no student found for username: ${username}")
-    return Student(data.username, data.fullname, data.dob, calculate_gpa(data.courses))
+    return Student(data[0], data[1], data[2], calculate_gpa(data[3]))

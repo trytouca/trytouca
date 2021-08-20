@@ -3,7 +3,9 @@
 #include "students.hpp"
 #include "students_types.hpp"
 #include <numeric>
+#include <stdexcept>
 #include <thread>
+#include <unordered_map>
 #include <vector>
 
 struct StudentData {
@@ -13,13 +15,16 @@ struct StudentData {
     std::vector<Course> courses;
 };
 
-static std::vector<StudentData> students = {
-    { "alice", "Alice Anderson", Date { 2006, 3, 1 },
-        { Course { "math", 4.0 }, Course { "computers", 3.8 } } },
-    { "bob", "Bob Brown", Date { 1996, 6, 31 },
-        { Course { "english", 3.7 }, Course { "history", 3.9 } } },
-    { "charlie", "Charlie Clark", Date { 2003, 9, 19 },
-        { Course { "math", 2.9 }, Course { "computers", 3.7 } } }
+static std::unordered_map<std::string, StudentData> students = {
+    { "alice",
+        { "alice", "Alice Anderson", Date { 2006, 3, 1 },
+            { Course { "math", 4.0 }, Course { "computers", 3.8 } } } },
+    { "bob",
+        { "bob", "Bob Brown", Date { 1996, 6, 31 },
+            { Course { "english", 3.7 }, Course { "history", 3.9 } } } },
+    { "charlie",
+        { "charlie", "Charlie Clark", Date { 2003, 9, 19 },
+            { Course { "math", 2.9 }, Course { "computers", 3.7 } } } }
 };
 
 float calculate_gpa(const std::vector<Course>& courses)
@@ -35,17 +40,15 @@ float calculate_gpa(const std::vector<Course>& courses)
 Student parse_profile(const std::string& username)
 {
     TOUCA_SCOPED_TIMER;
-    std::this_thread::sleep_for(std::chrono::milliseconds(10 + rand() % 50));
-    const auto student = std::find_if(students.begin(), students.end(), [&username](const StudentData& student) {
-        return student.username == username;
-    });
-    if (student == students.end()) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(200 + rand() % 50));
+    if (!students.count(username)) {
         throw std::invalid_argument("no student found for username: " + username);
     }
+    const auto& student = students.at(username);
     return {
-        student->username,
-        student->fullname,
-        student->dob,
-        calculate_gpa(student->courses)
+        student.username,
+        student.fullname,
+        student.dob,
+        calculate_gpa(student.courses)
     };
 }

@@ -10,9 +10,20 @@ struct touca::convert::Conversion<Date> {
     std::shared_ptr<types::IType> operator()(const Date& value)
     {
         auto out = std::make_shared<types::Object>("Date");
-        out->add("year", value._year);
-        out->add("month", value._month);
-        out->add("day", value._day);
+        out->add("year", value.year);
+        out->add("month", value.month);
+        out->add("day", value.day);
+        return out;
+    }
+};
+
+template <>
+struct touca::convert::Conversion<Course> {
+    std::shared_ptr<types::IType> operator()(const Course& value)
+    {
+        auto out = std::make_shared<types::Object>("Course");
+        out->add("name", value.name);
+        out->add("grade", value.grade);
         return out;
     }
 };
