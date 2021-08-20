@@ -183,7 +183,7 @@ export class Course {
 
 By default, the SDK serializes objects of this class using by serializing
 all of its public properties. This behavior results in object
-`Course('math', 3.9)` to be serializes as `{name: 'math', grade: '3.9}`.
+`Course('math', 3.9)` to be serialized as `{name: 'math', grade: '3.9}`.
 We can use `touca.add_serializer` to override this default behavior.
 The following code results in the same object to be serialized as
 `['math', 3.9]`:
