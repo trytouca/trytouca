@@ -16,7 +16,7 @@ See [`students.cpp`](students.cpp) for a possible implementation.
 Student parse_profile(const std::string& username);
 ```
 
-where `Student` has the following member attributes:
+where `Student` has the following members:
 
 ```cpp
 struct Student {
@@ -58,7 +58,15 @@ We can run our test from the command line:
 ```bash
 export TOUCA_API_KEY="your-api-key"
 export TOUCA_API_URL="your-api-url"
-./local/dist/bin/example_cpp_basic_api --revision v1.0 --testcase alice bob charlie
+./local/dist/bin/example_cpp_basic_api --revision v1.0 --testcase-file ./testcases.txt
+```
+
+Where `./testcases.txt` has the following content:
+
+```text
+alice
+bob
+charlie
 ```
 
 the Touca SDK captures the `Student` object with all its properties and
@@ -67,7 +75,7 @@ on the web app but we can also ask the SDK to generate a JSON result file
 for us:
 
 ```bash
-./local/dist/bin/example_cpp_basic_api --revision v1.0 --save-as-json
+./local/dist/bin/example_cpp_basic_api --revision v2.0 --save-as-json
 ```
 
 You can use `--help` to learn about available command line options.
@@ -155,14 +163,14 @@ Student parse_profile(const std::string& username)
 We can also measure the lifetime of a scoped variable:
 
 ```cpp
-  touca::scoped_timer timer("parse_time");
+  touca::scoped_timer timer("parse_profile");
 ```
 
 It is also possible to add measurements obtained by other performance
 benchmarking tools.
 
 ```cpp
-  touca::add_metric("external_source", 150);
+  touca::add_metric("external_source", 1500);
 ```
 
 In addition to these data capturing functions, Touca test framework

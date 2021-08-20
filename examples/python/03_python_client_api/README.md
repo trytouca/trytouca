@@ -1,54 +1,57 @@
-# Touca Node.js API
+# Touca Python API
 
-In the [previous tutorial](../02\_node_basic_api), we covered the
-high-level API of our Node.js SDK and learned how to test a `parse_profile`
+In the [previous tutorial](../02\_python_basic_api), we covered the
+high-level API of our Python SDK and learned how to test a `parse_profile`
 function using the Touca test framework:
 
-```ts
-import { touca } from '@touca/node';
-import { parse_profile } from './students';
+```py
+import touca
+from students import parse_profile
 
-touca.workflow('students_test', async (username: string) => {
-  const student = await parse_profile(username);
-  // insert code here to describe the behavior
-  // and performance of the workflow under test
-});
+@touca.Workflow
+def students_test(username: str):
+    student = parse_profile(username)
+    # insert code here to describe the behavior
+    # and performance of the workflow under test
 
-touca.run();
+if __name__ == "__main__":
+    touca.run()
 ```
 
-Functions `touca.workflow` and `touca.run` are the entry-points to the
+`touca.Workflow` and `touca.run` are the entry-points to the
 Touca test framework. In addition to running our workflow under test with
 different test cases, the test framework provides facilities that include
 reporting progress, handling errors, parsing command line arguments, and
 many more. We intentionally designed this API to abstract away these common
 features to let developers focus on their workflow under test.
 
-Touca SDK for Node.js provides a separate lower-level Client API that offers
+Touca SDK for Python provides a separate lower-level Client API that offers
 more flexibility and control over how tests are executed and how their
 results are handled. This API is most useful when integrating Touca with
 other existing test frameworks.
 
-```ts
-import { touca } from '@touca/node';
-import { parse_profile } from './students';
+```py
+import touca
+from students import parse_profile
 
-(async () => {
-  await touca.configure();
-  for (const username of await touca.get_testcases()) {
-    touca.declare_testcase(username);
+def main():
+    touca.configure()
+    for username in touca.get_testcases():
+        touca.declare_testcase(username)
 
-    const student = await parse_profile(username);
-    // insert code here to describe the behavior
-    // and performance of the workflow under test
+        student = parse_profile(username)
+        # insert code here to describe the behavior
+        # and performance of the workflow under test
 
-    await touca.post();
-    await touca.save_binary(`touca_${username}.bin`);
-    await touca.save_json(`touca_${username}.json`);
-    touca.forget_testcase(username);
-  }
-  await touca.seal();
-})();
+        touca.post()
+        touca.save_json(f"touca_{username}.json")
+        touca.save_binary(f"touca_{username}.bin")
+        touca.forget_testcase(username)
+
+    touca.seal()
+
+if __name__ == "__main__":
+    main()
 ```
 
 The above code uses the low-level Touca Client API to perform the same
@@ -68,16 +71,16 @@ in our production code without having to worry about their performance impact.
 
 The `configure` function can take various configuration parameters including
 the Touca API Key and API URL. You can also specify an external JSON
-configuration file via the `file` option. Check out Node.js SDK reference
+configuration file via the `file` option. Check out Python SDK reference
 API documentation for the full list of acceptable configuration parameters
 and their impact.
 
-```ts
-  await touca.configure({
-    api_key: "<TOUCA_API_KEY>",
-    api_url: "<TOUCA_API_URL>",
-    revision: "<TOUCA_TEST_VERSION>"
-  });
+```py
+    touca.configure(
+      api_key="<TOUCA_API_KEY>",
+      api_url="<TOUCA_API_URL>",
+      revision="<TOUCA_TEST_VERSION>"
+    )
 ```
 
 > Touca API Key should be treated as a secret. We advise against
@@ -98,10 +101,9 @@ You can always force the client to run in offline mode by passing the
 
 ## Preparing Test Cases
 
-```ts
-  for (const username of await touca.get_testcases()) {
-    // insert the code to run for each test case
-  }
+```py
+    for username in touca.get_testcases():
+        # insert the code to run for each test case
 ```
 
 The Touca test framework expects test cases to be specified via the
@@ -121,12 +123,11 @@ each test case to indicate that subsequent calls to the data capturing
 functions like `add_result` should associate the captured data with that
 declared test case.
 
-```ts
-  for (const username of await touca.get_testcases()) {
-    touca.declare_testcase(username);
-    // now we can start calling our code under test
-    // and describing its behavior and performance
-  }
+```py
+    for username in touca.get_testcases():
+        touca.declare_testcase(username)
+        # now we can start calling our code under test
+        # and describing its behavior and performance
 ```
 
 With Touca, we consider test cases as a set of unique names that identify
@@ -139,7 +140,7 @@ from our test tool, and not from our code under test.
 
 ## Capturing Test Results
 
-In the [previous tutorial](../02\_node_basic_api), we reviewed the main
+In the [previous tutorial](../02\_python_basic_api), we reviewed the main
 Touca functions for describing behavior and performance of our code under
 test, by capturing values of important variables and runtime of interesting
 functions. In this section, we dive a little deeper to explain how Touca
@@ -151,17 +152,18 @@ Touca data capturing functions such as `touca.add_result`, preserve the
 types of all captured data so that the Touca server can compare them in
 their original type.
 
-```ts
-    touca.add_result('username', student.username);
-    touca.add_result('fullname', student.fullname);
-    touca.add_result('birth_date', student.dob);
-    touca.add_result('gpa', student.gpa);
+```py
+    touca.add_result("username", student.username)
+    touca.add_result("fullname", student.fullname)
+    touca.add_result("birth_date", student.dob)
+    touca.add_result("gpa", student.gpa)
 ```
 
 In the example above, `touca.add_result` stores value of properties
 `username` and `fullname` as string while properties `dob` and `gpa`
-are stored as `Date` and `number` respectively. The server visualizes
-possible differences in these values based on their types.
+are stored as `datetime.date` and `float` respectively.
+The server visualizes possible differences in these values based
+on their types.
 
 The SDK is designed to handle iterables and custom objects by serializing
 their elements and properties. This makes it possible for us to add object
@@ -175,25 +177,25 @@ any given non-primitive data type.
 
 Consider the following definition for a custom class `Course`.
 
-```ts
-export class Course {
-  constructor(public readonly name: string, public readonly grade: number) {}
-}
+```py
+@dataclass
+class Course:
+    name: str
+    grade: float
 ```
 
 By default, the SDK serializes objects of this class using by serializing
 all of its public properties. This behavior results in object
-`Course('math', 3.9)` to be serialized as `{name: 'math', grade: '3.9}`.
+`Course("math", 3.9)` to be serialized as `{name: "math", grade: 3.9}`.
 We can use `touca.add_serializer` to override this default behavior.
 The following code results in the same object to be serialized as
-`['math', 3.9]`:
+`["math", 3.9]`:
 
-```ts
-    touca.add_serializer(Course.name, (x: Course) => [x.name, x.grade]);
-    for (const course of student.courses) {
-      touca.add_array_element('courses', course);
-      touca.add_hit_count('number of courses');
-    }
+```py
+    touca.add_serializer(Course, lambda x: [x.name, x.grade])
+    for course in student.courses:
+        touca.add_array_element("courses", course)
+        touca.add_hit_count("number of courses")
 ```
 
 While our serializer changed the way `Course` data is serialized and
@@ -210,8 +212,8 @@ Once we execute our code under test for each test case and describe its
 behavior and performance, we can have the option to submit them to the
 Touca server by calling `touca.post`.
 
-```ts
-    await touca.post();
+```py
+    touca.post()
 ```
 
 The server stores the captured data, compares them against the submitted
@@ -235,9 +237,9 @@ If we like to do so, we can store our captured data for one or more
 declared test cases on the local filesystem for further processing
 or later submission to the Touca server.
 
-```ts
-    await touca.save_binary(`touca_${username}.bin`);
-    await touca.save_json(`touca_${username}.json`);
+```py
+    touca.save_binary(f"touca_${username}.bin")
+    touca.save_json(f"touca_${username}.json")
 ```
 
 We can store captured data in JSON or binary format using
@@ -252,8 +254,8 @@ workflow and capture significant amount of information for each test case,
 you can use `touca.forget_testcase` to release all the captured information
 from process memory, when you are done with a given test case.
 
-```ts
-    await touca.forget_testcase();
+```py
+    touca.forget_testcase()
 ```
 
 ## Sealing Test Results
@@ -264,8 +266,8 @@ know that no further test result is expected to be submitted for it.
 This allows the server to send the final comparison result report to
 interested users, as soon as it is available.
 
-```ts
-  await touca.seal();
+```py
+  touca.seal()
 ```
 
 Sealing the version is optional. The Touca server automatically

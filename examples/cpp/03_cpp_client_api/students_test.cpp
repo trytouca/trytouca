@@ -2,7 +2,6 @@
 
 #include "students_test.hpp"
 #include <iostream>
-#include <thread>
 
 int main()
 {
@@ -13,32 +12,33 @@ int main()
         return EXIT_FAILURE;
     }
 
-    for (const auto& username : { "alice", "bob", "charlie" }) {
+    for (const auto& username : touca::get_testcases()) {
         touca::declare_testcase(username);
 
+        touca::start_timer("parse_profile");
         const auto& student = parse_profile(username);
+        touca::stop_timer("parse_profile");
 
         touca::add_assertion("username", student.username);
         touca::add_result("fullname", student.fullname);
         touca::add_result("birth_date", student.dob);
-        touca::add_result("gpa", calculate_gpa(student.courses));
 
-        custom_function_1(student);
+        for (const auto& course : student.courses) {
+            touca::add_array_element("courses", course);
+            touca::add_hit_count("number of courses");
+        }
 
-        std::thread t(custom_function_2, student);
-        t.join();
+        {
+            touca::scoped_timer timer("calculate_gpa");
+            touca::add_result("gpa", calculate_gpa(student.courses));
+        }
+        touca::add_metric("external_source", 1500);
 
-        touca::start_timer("func3");
-        custom_function_3(student);
-        touca::stop_timer("func3");
-
-        touca::add_metric("external", 10);
         touca::post();
+        touca::save_binary("touca_" + username + ".bin");
+        touca::save_json("touca_" + username + ".json");
+        touca::forget_testcase(username);
     }
 
     touca::seal();
-    touca::save_binary("touca_tutorial.bin");
-    touca::save_json("touca_tutorial.json");
-
-    return EXIT_SUCCESS;
 }

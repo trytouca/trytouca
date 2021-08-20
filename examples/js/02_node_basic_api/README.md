@@ -130,9 +130,9 @@ Touca can notify us when future changes to our implementation result in
 significantly changes in the measured runtime values.
 
 ```ts
-  touca.start_timer('parse_time');
+  touca.start_timer('parse_profile');
   const student = parse_profile(username);
-  touca.stop_timer('parse_time');
+  touca.stop_timer('parse_profile');
 ```
 
 The two functions `start_timer` and `stop_timer` provide fine-grained

@@ -23,7 +23,7 @@ where `Student` has the following properties:
 class Student:
     username: str
     fullname: str
-    dob: Date
+    dob: datetime.date
     gpa: float
 ```
 
@@ -51,7 +51,7 @@ versions of our software.
 We can start small and capture the entire returned object as a Touca result:
 
 ```py
-    touca.add_result('student', student)
+    touca.add_result("student", student)
 ```
 
 We can run our test from the command line:
@@ -148,7 +148,7 @@ It is also possible to add measurements obtained by other performance
 benchmarking tools.
 
 ```py
-    touca.add_metric("external_source", 150)
+    touca.add_metric("external_source", 1500)
 ```
 
 In addition to these data capturing functions, Touca test framework

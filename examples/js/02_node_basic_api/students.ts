@@ -27,7 +27,7 @@ const students = [
   {
     username: 'bob',
     fullname: 'Bob Brown',
-    dob: new Date(1996, 6, 31),
+    dob: new Date(1996, 6, 30),
     courses: [
       { name: 'english', grade: 3.7 },
       { name: 'history', grade: 3.9 }
@@ -46,13 +46,17 @@ const students = [
 
 function calculate_gpa(courses: Course[]): number {
   touca.add_result('courses', courses);
-  return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
+  return courses.length
+    ? courses.reduce((sum, v) => sum + v.grade, 0) / courses.length
+    : 0.0;
 }
 
 export async function parse_profile(username: string): Promise<Student> {
   await new Promise((v) => setTimeout(v, 100));
-  const { courses, ...student } = students.find(
-    (v) => v.username === username
-  )!;
+  const data = students.find((v) => v.username === username);
+  if (!data) {
+    throw new Error(`no student found for username: ${username}`);
+  }
+  const { courses, ...student } = data;
   return { ...student, gpa: calculate_gpa(courses) };
 }

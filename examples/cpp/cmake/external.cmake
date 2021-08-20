@@ -23,9 +23,9 @@ function(touca_find_touca)
         # the Touca Platform through HTTPS.
         # If OpenSSL is not installed in the default location, we may need to
         # provide its root directory as a hint to the library's build recipe.
-        # Below is an typical example of doing so on macOS in case OpenSSL is
+        # Below is a typical example of doing so on macOS in case OpenSSL is
         # installed through `homebrew`.
-        #   set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
+        # set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
 
         # proceed with building the Touca Client Library and Test Framework.
         add_subdirectory(${touca_SOURCE_DIR})
