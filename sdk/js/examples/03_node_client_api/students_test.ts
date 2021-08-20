@@ -23,7 +23,7 @@ import { Course, calculate_gpa, parse_profile } from './students';
     }
 
     await touca.scoped_timer('parse_profile', async () =>
-      touca.add_result('gpa', calculate_gpa(student.courses))
+      touca.add_result('gpa', await calculate_gpa(student.courses))
     );
     touca.add_metric('external_source', 1500);
 

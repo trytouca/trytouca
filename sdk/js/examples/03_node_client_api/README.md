@@ -160,7 +160,7 @@ their original type.
 
 In the example above, `touca.add_result` stores value of properties
 `username` and `fullname` as string while properties `dob` and `gpa`
-are stored as `Date` and `number` accordingly. These server visualizes
+are stored as `Date` and `number` respectively. The server visualizes
 possible differences in these values based on their types.
 
 The SDK is designed to handle iterables and custom objects by serializing

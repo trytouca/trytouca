@@ -24,7 +24,7 @@ software, visualize all differences, and report them in near real-time.
 
 ## 🧑‍🔧 Install
 
-You can install Touca with [via NPM][npm]:
+You can install Touca with [NPM][npm]:
 
 ```bash
 npm install @touca/node
@@ -164,7 +164,7 @@ We want Touca to work well for you. If you need help, have any questions, or
 like to provide feedback, send us a note through the Intercom at
 [touca.io][touca.io] or email us at <hello@touca.io>.
 
-## 🚀 What's Next
+## 🚀 Next Steps
 
 Touca client libraries are free and open-source. Our cloud-hosted Touca server
 at [touca.io][touca.io] has a free forever plan. You can create an account and

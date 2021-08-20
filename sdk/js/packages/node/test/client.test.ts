@@ -139,6 +139,26 @@ describe('check saving file', () => {
     expect(content).toContain('"testcase":"yet-another-case"');
   });
 
+  test('results in json format', async () => {
+    const client = await make_client();
+    const filepath = path.join(dir, 'some-json-file');
+    await client.save_json(filepath, ['some-case']);
+    const content = fs.readFileSync(filepath, { encoding: 'utf-8' });
+    const parsed = JSON.parse(content)[0].results as {
+      key: string;
+      value: unknown;
+    }[];
+    const results = new Map(parsed.map((kvp) => [kvp.key, kvp.value]));
+    expect(results.get('is_famous')).toBe(true);
+    expect(results.get('tall')).toBe(6.1);
+    expect(results.get('age')).toBe(21);
+    expect(results.get('name')).toBe('harry');
+    expect(results.get('dob')).toEqual({ year: 2000, month: 1, day: 1 });
+    expect(results.get('courses')).toEqual(['math', 'english']);
+    expect(results.get('course-names')).toEqual(['math', 'english']);
+    expect(results.get('course-count')).toEqual(2);
+  });
+
   test('some cases in json format', async () => {
     const client = new NodeClient();
     client.configure();

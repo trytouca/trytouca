@@ -32,12 +32,16 @@ const students: Student[] = [
   }
 ];
 
-export async function parse_profile(username: string) {
-  await new Promise((v) => setTimeout(v, 200 + Math.random() * 50));
-  return students.find((v) => v.username === username)!;
-}
-
 export async function calculate_gpa(courses: Course[]) {
   await new Promise((v) => setTimeout(v, 100 + Math.random() * 50));
   return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
+}
+
+export async function parse_profile(username: string) {
+  await new Promise((v) => setTimeout(v, 200 + Math.random() * 50));
+  const student = students.find((v) => v.username === username);
+  if (!student) {
+    throw new Error(`no student found for username: ${username}`);
+  }
+  return student;
 }
