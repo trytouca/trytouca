@@ -1,48 +1,41 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import touca
-from threading import Thread
-from students import (
-    parse_profile,
-    calculate_gpa,
-    custom_function_1,
-    custom_function_2,
-    custom_function_3,
-)
+from students import Course, calculate_gpa, parse_profile
 
 
 def main():
-    touca.configure(api_url="https://api.touca.io/@/students/student-db")
+    touca.configure()
     if not touca.is_configured():
         print(touca.configuration_error())
         return False
 
-    for username in ["alice", "bob", "charlie"]:
+    for username in touca.get_testcases():
         touca.declare_testcase(username)
 
+        touca.start_timer("parse_profile")
         student = parse_profile(username)
+        touca.stop_timer("parse_profile")
 
         touca.add_assertion("username", student.username)
         touca.add_result("fullname", student.fullname)
         touca.add_result("birth_date", student.dob)
-        touca.add_result("gpa", calculate_gpa(student.courses))
 
-        custom_function_1(student)
+        touca.add_serializer(Course, lambda x: [x.name, x.grade])
+        for course in student.courses:
+            touca.add_array_element("courses", course)
+            touca.add_hit_count("number of courses")
 
-        thread = Thread(target=custom_function_2, args=[student])
-        thread.start()
-        thread.join()
+        with touca.scoped_timer("calculate_gpa"):
+            touca.add_result("gpa", calculate_gpa(student.courses))
+        touca.add_metric("external_source", 1500)
 
-        touca.start_timer("func3")
-        custom_function_3(student)
-        touca.stop_timer("func3")
-
-        touca.add_metric("external", 10)
         touca.post()
+        touca.save_json(f"touca_{username}.json")
+        touca.save_binary(f"touca_{username}.bin")
+        touca.forget_testcase(username)
 
     touca.seal()
-    touca.save_binary("touca_tutorial.bin")
-    touca.save_json("touca_tutorial.json")
 
 
 if __name__ == "__main__":

@@ -44,6 +44,8 @@ class DateOfBirth:
 
 @pytest.fixture
 def loaded_case() -> Case:
+    from datetime import date
+
     type_handler = TypeHandler()
     case = Case(
         team="some-team", suite="some-suite", version="some-version", name="some-case"
@@ -51,6 +53,7 @@ def loaded_case() -> Case:
     case.add_assertion("username", type_handler.transform("potter"))
     case.add_result("name", type_handler.transform("harry"))
     case.add_result("dob", type_handler.transform(DateOfBirth(2000, 1, 1)))
+    case.add_result("enroll_date", type_handler.transform(date(2018, 3, 1)))
     for course in ["math", "english"]:
         case.add_array_element("course-names", type_handler.transform(course))
         case.add_hit_count("course-count")
@@ -92,6 +95,9 @@ def test_case_loaded_result_object(loaded_case):
     item = next((x for x in data if x.get("key") == "dob"), None)
     assert item is not None
     assert item.get("value") == '{"year": 2000, "month": 1, "day": 1}'
+    item2 = next((x for x in data if x.get("key") == "enroll_date"), None)
+    assert item2 is not None
+    assert item2.get("value") == '{"year": 2018, "month": 3, "day": 1}'
 
 
 def test_case_loaded_serialize(loaded_case):

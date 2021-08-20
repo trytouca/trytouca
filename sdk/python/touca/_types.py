@@ -161,13 +161,15 @@ class ObjectType(ToucaType):
 class TypeHandler:
     def __init__(self):
         """ """
+        from datetime import date
+
         self._primitives: Dict[Type, Callable[[Any], ToucaType]] = {
             bool: BoolType,
             float: DecimalType,
             int: IntegerType,
             str: StringType,
         }
-        self._types = {}
+        self._types = {date: (lambda x: dict(year=x.year, month=x.month, day=x.day))}
 
     def transform(self, value: Any):
         if type(value) in self._primitives:
@@ -184,10 +186,24 @@ class TypeHandler:
             for v in value:
                 vec.add(self.transform(v))
             return vec
-        obj = ObjectType(value.__class__.__name__)
-        for k, v in value.__dict__.items():
-            obj.add(k, self.transform(v))
-        return obj
+        return self._objectify(value)
 
     def add_serializer(self, datatype: Type, serializer: Callable[[Any], Dict]):
         self._types[datatype] = serializer
+
+    def _objectify(self, value: Any):
+        obj = ObjectType(value.__class__.__name__)
+        if hasattr(value, "__slots__"):
+            if isinstance(value, Iterable):
+                for k in value.__slots__:
+                    obj.add(k, self.transform(getattr(value, k)))
+        elif hasattr(value, "__dict__"):
+            for k, v in value.__dict__.items():
+                obj.add(k, self.transform(v))
+        else:
+            for k in dir(value):
+                v = getattr(value, k)
+                if k.startswith("_") or callable(v) or type(value) == type(v):
+                    continue
+                obj.add(k, self.transform(v))
+        return obj

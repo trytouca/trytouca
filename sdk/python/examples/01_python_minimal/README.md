@@ -4,7 +4,7 @@ Let us imagine we are building a simple software that checks whether
 a given number is prime or not. We may come up with the following
 implementation as `v1.0` of our software.
 
-```python
+```py
 def is_prime(number: int):
     for i in range(2, number):
         if number % i == 0:
@@ -25,14 +25,13 @@ improvements do not introduce unexpected side-effects.
 If we were to write unit tests for our `is_prime` function, we could
 start with the following code.
 
-```python
+```py
 from code_under_test import is_prime
 
 def test_is_prime():
-    assert is_prime(-1) == False
-    assert is_prime(1)  == False
-    assert is_prime(2)  == True
     assert is_prime(13) == True
+    assert is_prime(17)  == True
+    assert is_prime(51)  == False
 ```
 
 Unit tests are very effective but they require calling our code under
@@ -41,7 +40,7 @@ our function against a hard-coded set of expected values.
 
 Touca takes a very different approach than unit testing:
 
-```python
+```py
 import touca
 from is_prime import is_prime
 
@@ -104,7 +103,7 @@ The Touca server compares the new test results against our test results for
 The pattern used in this example is generally applicable to testing
 real-world workflows of any complexity.
 
-```python
+```py
 import touca
 # import your code under test here
 

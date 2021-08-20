@@ -1,3 +1,14 @@
+v0.2.2
+========
+
+Fixes
+--------
+
+* Serializing Iterables should not yield empty array (#29)
+* Update example projects and improve their documentation (#26, #27, #28)
+* Update HTTP transport when client is reconfigured (#24)
+* Add dependency on ``dataclasses`` for older Python versions (#23)
+
 v0.2.1
 ========
 
