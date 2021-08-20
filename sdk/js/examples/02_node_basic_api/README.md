@@ -50,7 +50,7 @@ versions of our software.
 We can start small and capture the entire returned object as a Touca result:
 
 ```ts
-  touca.add_result('parse_profile_output', student);
+  touca.add_result('student', student);
 ```
 
 We can run our test from the command line:

@@ -456,6 +456,22 @@ export class NodeClient implements BaseClient<NodeOptions> {
   }
 
   /**
+   * Registers custom serialization logic for a given custom data type.
+   *
+   * Calling this function is rarely needed. The library already handles
+   * all custom data types by serializing all their properties. Custom
+   * serializers allow you to exclude a subset of an object properties
+   * during serialization.
+   */
+  public add_serializer(
+    type: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    serializer: (x: any) => any
+  ): void {
+    this._type_handler.add_serializer(type, serializer);
+  }
+
+  /**
    * Stores test results and performance benchmarks in binary format
    * in a file of specified path.
    *

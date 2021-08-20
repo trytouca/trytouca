@@ -44,15 +44,15 @@ const students = [
   }
 ];
 
+function calculate_gpa(courses: Course[]): number {
+  touca.add_result('courses', courses);
+  return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
+}
+
 export async function parse_profile(username: string): Promise<Student> {
   await new Promise((v) => setTimeout(v, 100));
   const { courses, ...student } = students.find(
     (v) => v.username === username
   )!;
   return { ...student, gpa: calculate_gpa(courses) };
-}
-
-function calculate_gpa(courses: Course[]): number {
-  touca.add_result('courses', courses);
-  return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
 }

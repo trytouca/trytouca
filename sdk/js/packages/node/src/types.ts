@@ -239,7 +239,7 @@ export class TypeHandler {
   public add_serializer(
     datatype: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    serializer: (x: any) => Record<string, unknown>
+    serializer: (x: any) => any
   ): void {
     this._types.set(datatype, serializer);
   }
