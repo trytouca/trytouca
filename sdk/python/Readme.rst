@@ -152,15 +152,15 @@ can help us test these workflows at any scale.
 -  If you cannot wait to start writing your first test with Touca, see our `Python API Reference <https://app.touca.io/docs/clients/python/api.html>`__.
 
 🙋 Ask for Help
-=================
+===============
 
 We want Touca to work well for you. If you need help, have any
 questions, or like to provide feedback, send us a note through
 the Intercom at `touca.io <https://touca.io>`__ or email us at
 `hello@touca.io <mailto:hello@touca.io>`__.
 
-🚀 What's Next
-===============
+🚀 Next Steps
+=============
 
 Touca client libraries are free and open-source. Our cloud-hosted
 Touca server at `touca.io <https://touca.io>`__ has a free forever plan.

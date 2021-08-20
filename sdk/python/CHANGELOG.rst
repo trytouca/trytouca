@@ -1,19 +1,22 @@
 v0.2.2
 ========
 
-Fixes
---------
+Fixes:
 
+* Support serializing objects with no ``__dict__`` (#30)
+* Add default serialization for ``datetime.date`` (#30)
 * Serializing Iterables should not yield empty array (#29)
-* Update example projects and improve their documentation (#26, #27, #28)
 * Update HTTP transport when client is reconfigured (#24)
 * Add dependency on ``dataclasses`` for older Python versions (#23)
+
+Improvements:
+
+* Update example projects and improve their documentation (#26, #27, #28, #30)
 
 v0.2.1
 ========
 
-Fixes
---------
+Fixes:
 
 * Declare ``certifi`` as install dependency (#21)
 
@@ -24,8 +27,7 @@ Fixes
 v0.2.0
 ========
 
-Features
---------
+Features:
 
 * Add Touca Test Framework for Python (#17, #18, #19)
 
