@@ -6,6 +6,7 @@ from students import Course, calculate_gpa, parse_profile
 
 def main():
     touca.configure()
+
     if not touca.is_configured():
         print(touca.configuration_error())
         return False

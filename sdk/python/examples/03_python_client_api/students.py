@@ -43,14 +43,14 @@ students = [
 ]
 
 
-def parse_profile(username: str) -> Student:
+def calculate_gpa(courses: List[Course]):
     sleep(0.1 + random() * 0.05)
+    return sum(k.grade for k in courses) / len(courses) if courses else 0
+
+
+def parse_profile(username: str) -> Student:
+    sleep(0.2 + random() * 0.05)
     data = next((k for k in students if k[0] == username), None)
     if not data:
         raise ValueError(f"no student found for username: ${username}")
     return Student(*data)
-
-
-def calculate_gpa(courses: List[Course]):
-    sleep(0.2 + random() * 0.05)
-    return sum(k.grade for k in courses) / len(courses) if courses else 0

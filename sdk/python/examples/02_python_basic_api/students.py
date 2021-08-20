@@ -43,14 +43,14 @@ students = [
 ]
 
 
+def calculate_gpa(courses: List[Course]):
+    touca.add_result("courses", courses)
+    return sum(k.grade for k in courses) / len(courses) if courses else 0
+
+
 def parse_profile(username: str) -> Student:
-    sleep(0.1)
+    sleep(0.2)
     data = next((k for k in students if k[0] == username), None)
     if not data:
         raise ValueError(f"no student found for username: ${username}")
     return Student(*data[0:2], calculate_gpa(data[3]))
-
-
-def calculate_gpa(courses: List[Course]):
-    touca.add_result("courses", courses)
-    return sum(k.grade for k in courses) / len(courses) if courses else 0
