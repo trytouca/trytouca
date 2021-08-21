@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.0.7
+
+Improvements:
+
+*   Add CI workflow to publish releases to NPM
+
 ## v0.0.6
 
 Features:

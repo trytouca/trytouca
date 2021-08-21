@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@touca/example-node-basic-api",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Touca Example Introducing Basic API of Node.js SDK",
   "main": "dist/students_test.js",
   "types": "dist/students_test.js.d",
@@ -9,7 +9,7 @@
     "dist"
   ],
   "dependencies": {
-    "@touca/node": "^0.0.6"
+    "@touca/node": "^0.0.7"
   },
   "scripts": {
     "build": "tsc",

@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "build": "lerna run --stream --concurrency 1 --sort build",
+    "build:prod": "lerna run --stream --concurrency 1 --sort build:prod",
     "clean": "lerna run --parallel clean && lerna clean --yes",
     "docs": "typedoc",
     "lint": "lerna run --parallel lint",

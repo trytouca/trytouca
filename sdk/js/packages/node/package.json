@@ -1,6 +1,6 @@
 {
   "name": "@touca/node",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Touca SDK for Node.js",
   "license": "Apache-2.0",
   "repository": "git://github.com:trytouca/touca-js.git",
@@ -26,6 +26,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "build:prod": "tsc -p tsconfig.prod.json",
     "clean": "rimraf dist",
     "lint": "eslint . --ext .ts",
     "test": "jest",
