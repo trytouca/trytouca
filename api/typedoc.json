@@ -2,7 +2,7 @@
   "name": "Touca Backend",
   "entryPoints": ["src"],
   "out": "./local/docs/internal",
-  "readme": "Readme.md",
+  "readme": "README.md",
   "includes": "./",
   "exclude": ["**/dist/**/*", "**/test/**/*", "**/*_generated.ts"],
   "excludeExternals": true
