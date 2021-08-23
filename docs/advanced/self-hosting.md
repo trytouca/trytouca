@@ -12,7 +12,7 @@ Our Enterprise Plan includes dedicated support and professional services for dep
 
 ## Prerequisites
 
-We provide a dedicated _access token_ to our enterprise customers. You will need this token to download any stable release of the on-premise version of the Touca server.
+We provide a dedicated *access token* to our enterprise customers. You will need this token to download any stable release of the on-premise version of the Touca server.
 
 We recommend that you deploy Touca on a machine with at least 2 GB of memory.
 
@@ -80,7 +80,6 @@ OpenSSH (v6)               ALLOW       Anywhere (v6)
 {% endtab %}
 
 {% tab title="Install Docker" %}
-#### Install Docker
 
 Update the apt package index:
 
@@ -112,7 +111,7 @@ Update the apt package index:
 sudo apt-get update
 ```
 
-Install the _latest version of Docker Engine - Community_ and _containerd_:
+Install the latest version of *Docker Engine - Community* and *containerd*:
 
 ```bash
 sudo apt-get install docker-ce docker-ce-cli containerd.io
@@ -138,7 +137,6 @@ docker run hello-world
 {% endtab %}
 
 {% tab title="Install docker-compose" %}
-#### Install docker-compose
 
 Download `docker-compose` executable from artifacts of their latest GitHub release:
 
@@ -154,7 +152,6 @@ sudo chmod +x /usr/local/bin/docker-compose
 {% endtab %}
 
 {% tab title="Install AWS CLI" %}
-#### Install AWS CLI
 
 Download and install official AWS command line tools.
 
@@ -178,12 +175,12 @@ rm awscliv2.zip
 
 Assuming you have installed Docker, docker-compose, and AWS CLI on your machine, we can start with obtaining Touca docker images from Touca container registry on AWS. The commands in this section reference the following parameters that should be replaced with credentials that we provide to you upon your purchase.
 
-* `TOUCA_AWS_ACCESS_KEY_ID`
-* `TOUCA_AWS_SECRET_ACCESS_KEY`
-* `TOUCA_AWS_REGION`
-* `TOUCA_AWS_REPO`
+*   `TOUCA_AWS_ACCESS_KEY_ID`
+*   `TOUCA_AWS_SECRET_ACCESS_KEY`
+*   `TOUCA_AWS_REGION`
+*   `TOUCA_AWS_REPO`
 
-#### Authenticate to AWS Container Registry
+### Authenticate to AWS Container Registry
 
 Run the following command to create an AWS profile.
 
@@ -245,17 +242,17 @@ mkdir -p local/data/minio local/data/mongo local/data/redis
 
 Modify values of the following environment variables in `devops/docker-compose.prod.yaml` file. Do not wrap the values in single or double quotations.
 
-* `AUTH_JWT_SECRET`, `AUTH_COOKIE_SECRET`
+*   `AUTH_JWT_SECRET`, `AUTH_COOKIE_SECRET`
 
-  We recommend a randomly generated string of 32 characters length.
+    We recommend a randomly generated string of 32 characters length.
 
-* `MAIL_TRANSPORT_HOST`, `MAIL_TRANSPORT_USER`, `MAIL_TRANSPORT_PASS`
+*   `MAIL_TRANSPORT_HOST`, `MAIL_TRANSPORT_USER`, `MAIL_TRANSPORT_PASS`
 
-  Set these values based on your mail server configurations.
+    Set these values based on your mail server configurations.
 
-* `WEBAPP_ROOT`
+*   `WEBAPP_ROOT`
 
-  Root URL of the Touca server. Can be of the form `https://touca.your-company.com` or `http://172.129.29.29`.
+    Root URL of the Touca server. Can be of the form `https://touca.your-company.com` or `http://172.129.29.29`.
 
 Now run `devops/deploy.sh` to deploy Touca via `docker-compose`.
 
@@ -274,4 +271,3 @@ At this time, you should be able to verify that Touca is up and running by navig
 {% hint style="success" %}
 Did we miss out a required step? We'd love to hear about your experience. Share your thoughts with [support@touca.io](mailto:support@touca.io).
 {% endhint %}
-
