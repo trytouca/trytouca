@@ -1,11 +1,11 @@
 ---
-description: Touca SDK for the C++ Programming Language
+description: Touca SDK for C++
 ---
 
 # C++ SDK
 
 {% hint style="info" %}
-This section is meant to introduce basic function API of our C++ core library. See  our [C++ Client Library](cpp-library.md) document to learn how to use Touca to develop regression test tools.
+This section is meant to introduce basic function API of our C++ core library. See our [C++ Client Library](cpp-library.md) document to learn how to use Touca to develop regression test tools.
 {% endhint %}
 
 Let us imagine that we like to setup continuous regression testing for the following Code Under Test:
@@ -31,7 +31,7 @@ Our goal is to run this regression test tool every time we make changes to our s
     }
 ```
 
-But all Touca functions are disabled by default until we configure the library which is meant to be done only in our regression test tool. This behavior allows us to move our data caputring functions inside the implementation of our Code Under Test if we liked to do so. When our software is running in a production environment, the client is not configured and all its functions remain no-op.
+But all Touca functions are disabled by default until we configure the library which is meant to be done only in our regression test tool. This behavior allows us to move our data capturing functions inside the implementation of our Code Under Test if we liked to do so. When our software is running in a production environment, the client is not configured and all its functions remain no-op.
 
 ```cpp
     touca::configure({
@@ -41,7 +41,7 @@ But all Touca functions are disabled by default until we configure the library w
     });
 ```
 
-Once all our desired test results are added to the testcase\(s\), we may save them on the local filesystem and/or submit them to the Touca platform.
+Once all our desired test results are added to the testcase\(s\), we may save them on the local filesystem and/or submit them to the Touca server.
 
 ```cpp
     touca::save_binary("tutorial.bin");
@@ -49,7 +49,7 @@ Once all our desired test results are added to the testcase\(s\), we may save th
     touca::post();
 ```
 
-The Platform compares the test results submitted for a given version against a baseline version known to behave as we expect. If differences are found Touca notifies us so we can decide if those differences are expected or they are symptoms of an unintended side-effect of our change.
+The server compares the test results submitted for a given version against a baseline version known to behave as we expect. If differences are found Touca notifies us so we can decide if those differences are expected or they are symptoms of an unintended side-effect of our change.
 
 Putting this all together, our very basic regression test tool may look like the following:
 
@@ -77,5 +77,18 @@ int main()
 }
 ```
 
-We just scratched the surface of how Touca can help us setup continuous regression testing for our software. We encourage you to explore Touca documentation to learn how to get started.
+We can simplify the above code via using the Touca test framework for C++:
 
+```cpp
+#include "is_prime.hpp"
+#include "touca/touca_main.hpp"
+#include <string>
+
+void touca::main(const std::string& testcase)
+{
+    const auto number = std::stoul(testcase);
+    touca::add_result("is_prime", is_prime(number));
+}
+```
+
+We just scratched the surface of how Touca can help us setup continuous regression testing for our software. We encourage you to explore Touca documentation to learn how to get started.
