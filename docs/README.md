@@ -32,9 +32,8 @@ Because snapshot files store the overall output of a workflow, they may contain 
 
 ## How Did Touca Start?
 
-Touca started as an internal tool at [Vital Images Inc](https://vitalimages.com)., a Canon Group company, to help with testing a software product for [3D visualization of medical images](https://www.youtube.com/watch?v=LEuNpEOzNSo). It was first used to test a complex product component responsible for ingesting MRI and CT scan datasets and producing an in-memory representation of each dataset, ready for consumption by rendering algorithms and high-level clinical applications. This 500K line-of-code component had no clear user interface and was expected to correctly handle thousands of datasets of various characteristics.
+Touca started as an internal tool at [Vital Images Inc.](https://vitalimages.com), a Canon Group company, to help with testing a software product for [3D visualization of medical images](https://www.youtube.com/watch?v=LEuNpEOzNSo). It was first used to test a complex product component responsible for ingesting MRI and CT scan datasets and producing an in-memory representation of each dataset, ready for consumption by rendering algorithms and high-level clinical applications. This 500K line-of-code component had no clear user interface and was expected to correctly handle thousands of datasets of various characteristics.
 
 ## What to read next
 
 If you are interested in learning more about Touca, we recommend that you read our [Quickstart guide](getting-started/quickstart.md) next. It is specifically written to give you a basic understanding of how Touca works in action.
-
