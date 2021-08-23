@@ -33,7 +33,7 @@ On most Unix systems, this command installs the executable in the `/usr/local/bi
 ## Supported Commands
 
 {% hint style="info" %}
-We are considering to expand Touca CLI features and functionalities in 2022. We like to learn more about your needs and use cases. Use our [feedback page](https://getweasel.com/feedback) to share your thoughts and suggest features.
+We are considering to expand Touca CLI features and functionalities in 2022. We like to learn more about your needs and use cases. Use our [feedback page](https://app.touca.io/feedback) to share your thoughts and suggest features.
 {% endhint %}
 
 Touca CLI currently supports five different operations on one or multiple result files. When running the CLI tool, you can specify which one of these operations you want to perform by passing the appropriate `mode` as an argument to `touca_cli`. Each operational mode has its own set of command line options and arguments. You can find the full list of all supported options for each mode by passing the `--help` argument as shown below:
@@ -85,4 +85,3 @@ touca_cli merge --src "path/to/originl_directory" --out "path/to/new_merged_dire
 ```
 
 If the size of the Test Results stored in the set of original files is too large, `touca_cli` may decide to generate more than one "merged" file.
-

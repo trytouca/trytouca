@@ -1,5 +1,5 @@
 ---
-description: Touca SDK for the Python Programming Language
+description: Touca SDK for Python
 ---
 
 # Python SDK
@@ -11,8 +11,7 @@ This section is meant to introduce basic function API of our Python core library
 Let us imagine that we like to setup continuous regression testing for the following Code Under Test:
 
 ```python
-def is_prime(number: str):
-    pass
+def is_prime(number: str) -> bool:
 ```
 
 As a first step, we can create a regression test executable that has access to the entry-point of our Code Under Test. See our [Integration Guide](docs/Integration.md) to learn how to integrate Touca as a third-party dependency with your code.
@@ -48,34 +47,27 @@ Once all our desired test results are added to the test case\(s\), we may save t
     touca.post()
 ```
 
-The Platform compares the test results submitted for a given version against a baseline version known to behave as we expect. If differences are found Touca notifies us so we can decide if those differences are expected or they are symptoms of an unintended side-effect of our change.
+The server compares the test results submitted for a given version against a baseline version known to behave as we expect. If differences are found Touca notifies us so we can decide if those differences are expected or they are symptoms of an unintended side-effect of our change.
 
 Putting this all together, our very basic regression test tool may look like the following:
 
 ```python
 import touca
-from code_under_test import parse_profile
+from is_prime import is_prime
 
 def main():
     touca.configure(
-        api_key="7e6f0cc4-37d3-4fa7-8bd5-f09d10b485fd",
-        api_url="https://api.touca.io/@/acme/students-db/v1.0"
+        api_key="<your-api-key>",
+        api_url="<your-api-url>"
     )
-    for username in [1, 2, 3, 4, 7, 673, 7453, 14747]:
-        touca.declare_testcase(username)
+    for input_number in [1, 2, 3, 4, 7, 673, 7453, 14747]:
+        touca.declare_testcase(str(input_number))
+        with touca.scoped_timer("is_prime_runtime"):
+          touca.add_result("is_prime_output", is_prime(input_number))
 
-        touca.start_timer("parse_profile")
-        student = parse_profile(username)
-        touca.stop_timer("parse_profile")
-
-        touca.add_result("fullname", student.fullname)
-        touca.add_result("birth_date", student.dob)
-        touca.add_result("courses", student.courses)
-
-        touca.post()
-    
     touca.save_binary("tutorial.bin")
     touca.save_json("tutorial.json")
+    touca.post()
 
 if __name__ == "__main__":
     main()
@@ -85,19 +77,15 @@ We can simplify the above code via using the Touca test framework for Python:
 
 ```python
 import touca
-from code_under_test import parse_profile
+from is_prime import is_prime
 
 @touca.Workflow
-def students_db():
-    with touca.scoped_timer("parse_profile"):
-        student = parse_profile(username)
-    touca.add_result("fullname", student.fullname)
-    touca.add_result("birth_date", student.dob)
-    touca.add_result("courses", student.courses)
+def is_prime_test(testcase: str):
+    with touca.scoped_timer("is_prime_runtime"):
+        touca.add_result("is_prime_output", is_prime(int(testcase)))
 
 if __name__ == "__main__":
     touca.run()
 ```
 
 We just scratched the surface of how Touca can help us setup continuous regression testing for our software. We encourage you to explore Touca documentation to learn how to get started.
-
