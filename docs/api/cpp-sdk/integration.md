@@ -63,7 +63,7 @@ set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
 
 ## Using Conan
 
-As an alternative, it is possible to use [Conan](https://conan.io/) for pulling Touca as a third-party library. Conan is an open-source cross-platform package manager that enables efficient management of project dependencies across build systems. If you have never used Conan, we refer you to their [online documentation](https://docs.conan.io/) to learn more about it.
+As an alternative, you can use [Conan](https://conan.io/) to pull Touca as a third-party library. Conan is an open-source cross-platform package manager that enables efficient management of project dependencies across build systems. If you have never used Conan, we refer you to their [online documentation](https://docs.conan.io/) to learn more about it.
 
 ### Setting Up Conan
 
@@ -110,4 +110,3 @@ This lets us link the Touca Client Library or Test Framework with our project li
 ```text
 target_link_libraries(<YOUR_PROJECT> PRIVATE touca::client)
 ```
-
