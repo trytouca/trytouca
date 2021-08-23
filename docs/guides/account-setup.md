@@ -2,7 +2,7 @@
 
 ## Create an Account
 
-If you have not done so already, go ahead and create an account through our [Get Started](https://getweasel.com/account/signup) page.
+If you have not done so already, go ahead and create an account on [https://app.touca.io][https://app.touca.io]
 
 ![You only need to provide your email address to create a user account on Touca.](../.gitbook/assets/weasel-create-account-step1.png)
 
@@ -22,8 +22,8 @@ We encourage you to explore the sample test results in the "Tutorial" team, but 
 
 Creating a team requires choosing a "slug" and a "name". We recommend that you choose descriptive values for both. You will share them with those you invite to your team. Other users who want to join your team would need to know your team slug to send requests.
 
-* A team slug can be any string no less than 3 and no more than 32 characters in length. It can mix numeric digits and ASCII letters with hyphens in between. `acme-proj-2` is a valid slug.
-* A team name can be any string up to 32 characters in length.
+*   A team slug can be any string no less than 3 and no more than 32 characters in length. It can mix numeric digits and ASCII letters with hyphens in between. `acme-proj-2` is a valid slug.
+*   A team name can be any string up to 32 characters in length.
 
 ![You don&apos;t need a credit card to create a new team.](../.gitbook/assets/weasel-create-account-step5.png)
 
@@ -37,9 +37,9 @@ Each team on Touca can have no more than one owner. Therefore, your colleagues m
 
 You can create as many suites within a team. Each suite can corresponds to a regression test workflow and can host test results submitted for different versions of that workflow. Similar to a team, creating a Suite requires a slug and a name. The requirements for suite slug and suite name are similar to team slug and team name, respectively. Suites created within a team can be accessed by all members in that team.
 
-![You can always change the name and the slug of your suite from the &quot;Settings&quot; tab.](../.gitbook/assets/weasel-create-account-step7.png)
+![You can always change the name and the slug of your suite from the Settings tab.](../.gitbook/assets/weasel-create-account-step7.png)
+
 
 You will notice that upon creation of a new suite, the Touca Server provides you with an API Key and an API URL. You can use this information to submit your test results for any given version of your software workflow.
 
 In the next section, we will show you how to create your first regression test tool.
-

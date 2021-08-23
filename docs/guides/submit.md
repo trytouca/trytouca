@@ -8,10 +8,10 @@ This document is intended to introduce the basics of creating a test tool using 
 
 As we read in our [Quickstart Guide](../getting-started/quickstart.md), Touca is a regression testing system with a fundamentally different approach than unit testing:
 
-* In unit testing, we run our code with a specific input and we hard-code our expected output to verify that our code produces the "right" output.
-* In regression testing, we run our code with a large number of inputs, and for each input, we make note of the actual output to verify that our code produces the "same" output as in a previous trusted version.
+*   In unit testing, we run our code with a specific input and we hard-code our expected output to verify that our code produces the "right" output.
+*   In regression testing, we run our code with a large number of inputs, and for each input, we make note of the actual output to verify that our code produces the "same" output as in a previous trusted version.
 
-This difference in approach explains why Touca regression test tools do not include _assertions_, rather they capture actual values of variables and runtime of functions. We already saw a glimpse of this in the test code for our `is_prime` function.
+This difference in approach explains why Touca regression test tools do not include *assertions*, rather they capture actual values of variables and runtime of functions. We already saw a glimpse of this in the test code for our `is_prime` function.
 
 {% tabs %}
 {% tab title="C++" %}
@@ -59,7 +59,7 @@ TOUCA_API_KEY=<YOUR_API_KEY> ./prime_app_test \
 {% endtab %}
 
 {% tab title="Python" %}
-```
+```bash
 TOUCA_API_KEY=<YOUR_API_KEY> python3 ./starter.py \
     --api-url https://api.touca.io/@/acme/prime_app \
     --version v2.0 \
@@ -298,17 +298,16 @@ The framework not only abstracts away common operations, it provides added funct
 {% tab title="C++" %}
 ```bash
 TOUCA_API_KEY=<YOUR_API_KEY> ./students_db_test \
-    --api-url https://api.touca.io/@/<YOUR_TEAM>/students-db \
+    --api-url "https://api.touca.io/@/<YOUR_TEAM>/students-db" \
     --version v2.0
 ```
 {% endtab %}
 
 {% tab title="Python" %}
-```
+```bash
 TOUCA_API_KEY=<YOUR_API_KEY> python3 ./examples/starter.py \
-    --api-url https://api.touca.io/@/<YOUR_TEAM>/students-db \
+    --api-url "https://api.touca.io/@/<YOUR_TEAM>/students-db" \
     --version v2.0
 ```
 {% endtab %}
 {% endtabs %}
-
