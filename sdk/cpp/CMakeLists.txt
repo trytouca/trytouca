@@ -7,7 +7,7 @@ project(touca VERSION 1.4.1 LANGUAGES CXX)
 option(BUILD_SHARED_LIBS "build client as a shared library" OFF)
 option(TOUCA_BUILD_TESTS "build unittests" OFF)
 option(TOUCA_BUILD_UTILS "build utility applications" OFF)
-option(TOUCA_BUILD_EXAMPLES "build sample regression test tool" OFF)
+option(TOUCA_BUILD_EXAMPLES "build example test projects" OFF)
 option(TOUCA_BUILD_FRAMEWORK "build regression test framework" OFF)
 option(TOUCA_BUILD_COVERAGE_REPORT "enable code coverage generation" OFF)
 

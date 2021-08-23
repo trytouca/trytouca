@@ -319,7 +319,7 @@ build_docs () {
 build_test () {
     if [ $# -ne 1 ]; then return 1; fi
     local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
-    cd "${dir_source}/local/build" && ctest "${dir_source}" -C Release && cd "$(pwd)"
+    cd "${dir_source}/local/build" && ctest "${dir_source}" -C Release || { echo 'unit tests failed' ; exit 1; } && cd "$(pwd)"
     log_info "ran unittests for cpp client library"
 }
 

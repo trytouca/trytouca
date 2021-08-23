@@ -724,7 +724,7 @@ namespace touca { namespace framework {
         // which may take a noticeable time.
 
         printer.print(
-            "\nTouca Regression Test Framework\nSuite: {}\nRevision: {}\n\n",
+            "\nTouca Test Framework\nSuite: {}\nRevision: {}\n\n",
             options.at("suite"), options.at("revision"));
 
         // initialize the client

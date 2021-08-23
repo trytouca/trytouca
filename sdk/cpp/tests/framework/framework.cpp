@@ -91,7 +91,7 @@ TEST_CASE("framework-dummy-workflow")
             "-r", "1.0", "-o", tmpFile.path.string(),
             "--team", "some-team", "--suite", "some-suite" });
         CHECK(caller.exit_code() == EXIT_FAILURE);
-        CHECK_THAT(caller.cout(), Catch::Contains("Touca Regression Test Framework"));
+        CHECK_THAT(caller.cout(), Catch::Contains("Touca Test Framework"));
         CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
         CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
         CHECK_THAT(caller.cout(), Catch::Contains("unable to proceed with empty list of testcases"));
