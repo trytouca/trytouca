@@ -23,8 +23,8 @@ software, visualize all differences, and report them in near real-time.
 
 ## 👀 Sneak Peak
 
-> For a more thorough guide of how to use Touca SDK for C++, check
-> out the `examples` directory or visit our documentation website at
+> For a more thorough guide of how to use Touca SDK for C++, check out the
+> [`examples`][cpp-examples] directory or visit our documentation website at
 > [docs.touca.io](https://docs.touca.io).
 
 Let us imagine that we want to test a software workflow that reports
@@ -160,21 +160,21 @@ to use CMake version 3.11 or higher, via the FetchContent module as shown below:
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/touca-cpp.git
-    GIT_TAG        v1.4.0
+    GIT_TAG        v1.4.1
 )
 FetchContent_MakeAvailable(touca)
 ```
 
 But in addition to the Client Library, Touca SDK for C++ also includes a
 Test Framework which is disabled by default. For serious regression test
-tools, we encourage the use of this test framework which can be build with
+tools, we encourage the use of this test framework which can be built with
 a small modification to the code above:
 
 ```cmake
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/touca-cpp.git
-    GIT_TAG        v1.4.0
+    GIT_TAG        v1.4.1
 )
 
 FetchContent_GetProperties(touca)
@@ -200,7 +200,7 @@ third-party library:
 
 ```bash
 conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
-conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.4.0@_/_"
+conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.4.1@_/_"
 ```
 
 ## 🕵️ Requirements
@@ -210,11 +210,11 @@ using C++11, C++14 and C++17 standards. Both the library and the test framework
 can be built as shared or static libraries. We test our library against the
 following compilers.
 
-| Compiler     | Min Version | Max Version |
-| --------     | ----------- | ----------- |
-| x86-64 gcc   | 7.1         | 10.2        |
-| x86-64 clang | 7.0.0       | 11.0.0      |
-| x64 MSVC     | 1900        | 1927        |
+| Compiler     | Min Version |
+| --------     | ----------- |
+| x86-64 gcc   | 7.1         |
+| x86-64 clang | 7.0.0       |
+| x64 MSVC     | 1900        |
 
 ## 🙋 Ask for Help
 
@@ -240,6 +240,8 @@ This repository is released under the Apache-2.0 License. See [`LICENSE`][licens
 [calendly]: https://calendly.com/ghorbanzade/30min
 
 [license]: https://github.com/trytouca/touca-cpp/blob/main/LICENSE
+
+[cpp-examples]: https://github.com/trytouca/touca-cpp/tree/main/examples
 
 [docs-quickstart]: https://docs.touca.io/getting-started/quickstart
 
