@@ -11,7 +11,7 @@ class ToucaConan(ConanFile):
     topics = ("regression-testing", "test-framework", "test-automation")
     url = "https://docs.touca.io"
     license = "Apache-2.0"
-    version = "1.4.1"
+    version = "1.4.2"
     author = "Touca, Inc. <hello@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     options = {
@@ -42,18 +42,18 @@ class ToucaConan(ConanFile):
     ]
 
     def requirements(self):
-        self.requires.add("cpp-httplib/0.8.0")
-        self.requires.add("flatbuffers/1.12.0")
-        self.requires.add("fmt/7.1.2")
-        self.requires.add("ghc-filesystem/1.4.0")
-        self.requires.add("rapidjson/1.1.0")
-        self.requires.add("spdlog/1.8.2")
+        self.requires("cpp-httplib/0.8.0")
+        self.requires("flatbuffers/1.12.0")
+        self.requires("fmt/7.1.2")
+        self.requires("ghc-filesystem/1.4.0")
+        self.requires("rapidjson/1.1.0")
+        self.requires("spdlog/1.8.2")
         if (
             self.options.with_examples
             or self.options.with_framework
             or self.options.with_utils
         ):
-            self.requires.add("cxxopts/2.2.1")
+            self.requires("cxxopts/2.2.1")
 
     def build_requirements(self):
         if self.options.with_tests:
