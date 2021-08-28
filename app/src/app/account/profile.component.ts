@@ -6,12 +6,25 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+  faClipboard,
+  faEye,
+  faEyeSlash,
+  faSyncAlt
+} from '@fortawesome/free-solid-svg-icons';
 import { DialogService } from '@ngneat/dialog';
+import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription, timer } from 'rxjs';
 
 import { UserLookupResponse } from '@/core/models/commontypes';
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
-import { ApiService, AuthService, UserService } from '@/core/services';
+import {
+  ApiService,
+  AuthService,
+  NotificationService,
+  UserService
+} from '@/core/services';
 import {
   ConfirmComponent,
   ConfirmElements
@@ -29,6 +42,30 @@ interface FormContent {
   uname: string;
 }
 
+class ApiKey {
+  private _clean: string;
+  private _shown = false;
+  constructor(private readonly _key: string) {
+    const parts = this._key.split('-');
+    const middle = parts
+      .splice(1, parts.length - 2)
+      .map((v) => new Array(v.length + 1).join('*'));
+    this._clean = [parts[0], ...middle, parts[parts.length - 1]].join('-');
+  }
+  toggle(): void {
+    this._shown = !this._shown;
+  }
+  get plain(): string {
+    return this._key;
+  }
+  get shown(): boolean {
+    return this._shown;
+  }
+  get value(): string {
+    return this._shown ? this._key : this._clean;
+  }
+}
+
 @Component({
   selector: 'app-account-profile',
   templateUrl: './profile.component.html'
@@ -39,6 +76,7 @@ export class ProfileComponent implements OnDestroy {
   alert: Partial<Record<EModalType, Alert>> = {};
   user: UserLookupResponse;
   EModalType = EModalType;
+  apiKeys: ApiKey[];
 
   preferences: Record<string, Checkbox> = {
     newsletter_product: {
@@ -95,12 +133,15 @@ export class ProfileComponent implements OnDestroy {
    *
    */
   constructor(
-    private router: Router,
-    private dialogService: DialogService,
     private apiService: ApiService,
     private authService: AuthService,
-    private userService: UserService
+    private dialogService: DialogService,
+    private notificationService: NotificationService,
+    private router: Router,
+    private userService: UserService,
+    private faIconLibrary: FaIconLibrary
   ) {
+    faIconLibrary.addIcons(faClipboard, faEye, faEyeSlash, faSyncAlt);
     this._subHints = this.hints.subscribe(this.accountSettingsForm, [
       'fname',
       'uname'
@@ -114,6 +155,7 @@ export class ProfileComponent implements OnDestroy {
       this.accountSettingsForm.get('email').disable();
       this.accountSettingsForm.get('fname').setValue(user.fullname);
       this.accountSettingsForm.get('uname').setValue(user.username);
+      this.apiKeys = user.apiKeys.map((v) => new ApiKey(v));
     });
     this.userService.populate();
   }
@@ -233,5 +275,15 @@ export class ProfileComponent implements OnDestroy {
         timer(3000).subscribe(() => (node.saved = false));
       }
     });
+  }
+
+  /**
+   *
+   */
+  public onCopy(event: IClipboardResponse) {
+    this.notificationService.notify(
+      AlertType.Success,
+      'Copied API Key to clipboard.'
+    );
   }
 }

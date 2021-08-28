@@ -1,3 +1,4 @@
+<app-notification></app-notification>
 <app-header-inside></app-header-inside>
 <div class="flex flex-col border-t wsl-min-h-screen-1">
   <div class="border-b bg-gray-50">
@@ -52,6 +53,38 @@
           Update
         </button>
       </form>
+      <div class="p-4 space-y-2 bg-gray-50" *ngIf="apiKeys">
+        <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
+          API Keys
+        </h2>
+        <div *ngFor="let key of apiKeys; let i = index">
+          <label class="block mb-1 text-sm font-medium text-gray-700">Key
+            {{i + 1}}</label>
+          <div
+            class="flex items-center p-2 bg-white border border-gray-300 rounded-md shadow-sm">
+            <div class="flex-grow">
+              <span class="font-mono text-sm text-gray-700 cursor-pointer"
+                ngxClipboard [cbContent]="key.plain"
+                (cbOnSuccess)="onCopy($event)">
+                {{key.value}}</span>
+            </div>
+            <div class="space-x-2">
+              <button
+                class="w-4 text-xs opacity-50 hover:opacity-100 focus:outline-none"
+                ngxClipboard [cbContent]="key.plain"
+                (cbOnSuccess)="onCopy($event)">
+                <fa-icon icon="clipboard" class="wsl-text-muted"></fa-icon>
+              </button>
+              <button
+                class="w-4 text-xs opacity-50 hover:opacity-100 focus:outline-none"
+                (click)="key.toggle()">
+                <fa-icon [icon]="key.shown ? 'eye-slash' : 'eye'"
+                  class="wsl-text-muted"></fa-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="p-4 space-y-2 bg-gray-50">
         <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
           Preferences

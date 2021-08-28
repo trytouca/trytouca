@@ -1,13 +1,12 @@
 openapi: '3.0.0'
 info:
-  description: >-
-    Backend API specification of Touca Regression Testing Platform
+  description: Touca Server API Specification
   version: 1.4.0
-  title: Touca Regression Testing Platform
+  title: Touca Server API
   contact:
     email: support@touca.io
 servers:
-  - url: https://touca.io/api
+  - url: https://api.touca.io
 
 components:
   headers:
