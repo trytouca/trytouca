@@ -116,4 +116,16 @@ export class UserService {
     this.subject.next(this.currentUser);
     return this.apiService.patch('/user', { flags: { [slug]: value } });
   }
+
+  /**
+   *
+   */
+  updateApiKey(key: string): void {
+    this.apiService.patch('/user', { key }).subscribe({
+      next: (doc) => {
+        this.currentUser.apiKeys = doc.apiKeys;
+        this.subject.next(this.currentUser);
+      }
+    });
+  }
 }

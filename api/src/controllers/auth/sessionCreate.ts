@@ -118,8 +118,9 @@ export async function authSessionCreate(
 
   // add event to tracking system
 
-  tracker.create(user, { ip_address: askedIpAddress })
-  tracker.track(user, 'logged_in')
+  tracker.create(user, { ip_address: askedIpAddress }).then(() => {
+    tracker.track(user, 'logged_in')
+  })
 
   // return session token to the user
   // @todo consider setting path and secure attributes

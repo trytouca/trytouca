@@ -5,6 +5,7 @@
 import * as bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
 import { identity, omit, pick, pickBy } from 'lodash'
+import { v4 as uuidv4 } from 'uuid'
 
 import { IUser, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
@@ -50,6 +51,27 @@ export async function ctrlUserUpdate(
     return res.status(204).send()
   }
 
+  if (req.body.key) {
+    const askedKey = req.body.key
+    const userKeys = await UserModel.findOne(
+      {
+        _id: user._id,
+        apiKeys: { $in: askedKey }
+      },
+      { apiKeys: 1 }
+    )
+    if (!userKeys) {
+      return next({
+        errors: ['api key not known'],
+        status: 400
+      })
+    }
+    const apiKeys = userKeys.apiKeys
+    apiKeys.splice(apiKeys.indexOf(askedKey), 1, uuidv4())
+    await UserModel.findByIdAndUpdate(user._id, { $set: { apiKeys } })
+    return res.status(200).json({ apiKeys })
+  }
+
   const proposed = pickBy(
     pick(req.body, ['fullname', 'username', 'password']),
     identity
@@ -90,7 +112,8 @@ export async function ctrlUserUpdate(
     })
   }
 
-  // add event to tracking system
+  // add event to tracking system. since user is already registered,
+  // we can perform the two operations independently.
 
   tracker.create(user, {
     name: proposed.fullname,

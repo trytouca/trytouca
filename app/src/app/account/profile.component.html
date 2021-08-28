@@ -71,15 +71,14 @@
             <div class="space-x-2">
               <button
                 class="w-4 text-xs opacity-50 hover:opacity-100 focus:outline-none"
-                ngxClipboard [cbContent]="key.plain"
-                (cbOnSuccess)="onCopy($event)">
-                <fa-icon icon="clipboard" class="wsl-text-muted"></fa-icon>
-              </button>
-              <button
-                class="w-4 text-xs opacity-50 hover:opacity-100 focus:outline-none"
                 (click)="key.toggle()">
                 <fa-icon [icon]="key.shown ? 'eye-slash' : 'eye'"
                   class="wsl-text-muted"></fa-icon>
+              </button>
+              <button
+                class="w-4 text-xs opacity-50 hover:opacity-100 focus:outline-none"
+                (click)="regenerateApiKey(i)">
+                <fa-icon icon="sync-alt" class="wsl-text-muted"></fa-icon>
               </button>
             </div>
           </div>

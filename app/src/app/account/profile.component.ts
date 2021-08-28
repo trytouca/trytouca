@@ -280,10 +280,18 @@ export class ProfileComponent implements OnDestroy {
   /**
    *
    */
-  public onCopy(event: IClipboardResponse) {
+  onCopy(event: IClipboardResponse) {
     this.notificationService.notify(
       AlertType.Success,
       'Copied API Key to clipboard.'
     );
+  }
+
+  /**
+   *
+   */
+  regenerateApiKey(index: number): void {
+    this.userService.updateApiKey(this.user.apiKeys[index]);
+    console.log('generate');
   }
 }
