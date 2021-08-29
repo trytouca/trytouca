@@ -33,6 +33,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as util from 'util';
 import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
 import { NodeClient } from './client';
 import { NodeOptions, update_options } from './options';
@@ -164,7 +165,7 @@ class Timer {
  *
  */
 function _parse_cli_options(args: string[]): RunnerOptions {
-  const parser = yargs(args.slice(2))
+  const argv = yargs(hideBin(args))
     .version(VERSION)
     .epilog('Visit https://docs.touca.io for more information')
     .options({
@@ -233,8 +234,7 @@ function _parse_cli_options(args: string[]): RunnerOptions {
         desc: 'Disables all communications with the Touca server',
         default: false
       }
-    });
-  const argv = parser.argv;
+    }).argv;
   return {
     api_key: argv['api-key'],
     api_url: argv['api-url'],

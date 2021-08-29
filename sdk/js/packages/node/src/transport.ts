@@ -1,6 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { request, RequestOptions } from 'https';
+import * as http from 'http';
+import * as https from 'https';
 import { URL } from 'url';
 
 import { NodeOptions } from './options';
@@ -71,11 +72,13 @@ export class Transport {
    *
    */
   private async _request(
-    options: RequestOptions,
+    options: http.RequestOptions,
     data: string | Uint8Array = ''
   ): Promise<Response> {
     return new Promise((resolve, reject) => {
-      const req = request(options, (res) => {
+      const transport =
+        options.protocol === 'https:' ? require('https') : require('http');
+      const req = transport.request(options, (res: http.IncomingMessage) => {
         let body = '';
         res.on('data', (chunk) => (body += chunk.toString()));
         res.on('error', reject);
@@ -100,7 +103,7 @@ export class Transport {
       args.content_type = 'application/json';
     }
     const url = new URL(this._options.api_url as string);
-    const options: RequestOptions = {
+    const options: http.RequestOptions = {
       protocol: url.protocol,
       host: url.host,
       port: url.port,

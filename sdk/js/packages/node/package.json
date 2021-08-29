@@ -3,27 +3,24 @@
   "version": "0.0.8",
   "description": "Touca SDK for Node.js",
   "license": "Apache-2.0",
-  "repository": "git://github.com:trytouca/touca-js.git",
-  "bugs": "https://github.com/trytouca/touca-js/issues",
-  "homepage": "https://github.com/trytouca/touca-js/tree/main/packages/node",
-  "keywords": [
-    "regression-testing",
-    "snapshot-testing",
-    "test-framework",
-    "client-library"
-  ],
+  "homepage": "https://touca.io",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "author": {
     "name": "Pejman Ghorbanzade",
     "email": "pejman@touca.io"
   },
-  "main": "dist/src/index.js",
-  "types": "dist/src/index.d.ts",
+  "bugs": {
+    "url": "https://github.com/trytouca/touca-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trytouca/touca-js",
+    "directory": "packages/node"
+  },
   "files": [
     "dist/**/*"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "build": "tsc",
     "build:prod": "tsc -p tsconfig.prod.json",
@@ -35,5 +32,14 @@
   "dependencies": {
     "flatbuffers": "^2.0.3",
     "yargs": "^17.1.1"
+  },
+  "keywords": [
+    "regression-testing",
+    "snapshot-testing",
+    "test-framework",
+    "client-library"
+  ],
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -96,10 +96,10 @@ describe('when api url is given', () => {
     const existing: NodeOptions = {};
     const incoming: NodeOptions = {
       api_key: 'some-key',
-      api_url: 'https://localhost:8081//v2//@/team//suite/version/'
+      api_url: 'http://localhost:8081//v2//@/team//suite/version/'
     };
     expect(() => update_options(existing, incoming)).not.toThrow();
-    expect(existing.api_url).toEqual('https://localhost:8081/v2');
+    expect(existing.api_url).toEqual('http://localhost:8081/v2');
     expect(existing.team).toEqual('team');
     expect(existing.suite).toEqual('suite');
     expect(existing.version).toEqual('version');
@@ -109,12 +109,12 @@ describe('when api url is given', () => {
     const existing: NodeOptions = {};
     const incoming: NodeOptions = {
       api_key: 'some-key',
-      api_url: 'https://127.0.0.1/api'
+      api_url: 'http://127.0.0.1/api'
     };
     expect(() => update_options(existing, incoming)).toThrowError(
       'missing required option(s) "team", "suite", "version"'
     );
-    expect(existing.api_url).toEqual('https://127.0.0.1/api');
+    expect(existing.api_url).toEqual('http://127.0.0.1/api');
   });
 
   test('reject conflicting input', () => {
