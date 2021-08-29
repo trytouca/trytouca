@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Builder, createLong } from 'flatbuffers';
+import { Builder } from 'flatbuffers';
 
 import * as schema from './schema';
 
@@ -85,7 +85,7 @@ export class IntegerType implements ToucaType {
 
   public serialize(builder: Builder): number {
     schema.Int.startInt(builder);
-    schema.Int.addValue(builder, createLong(this._value, this._value));
+    schema.Int.addValue(builder, builder.createLong(this._value, 0));
     const value = schema.Int.endInt(builder);
     schema.TypeWrapper.startTypeWrapper(builder);
     schema.TypeWrapper.addValue(builder, value);

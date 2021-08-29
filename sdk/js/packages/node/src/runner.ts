@@ -230,7 +230,7 @@ function _parse_cli_options(args: string[]): RunnerOptions {
       //   default: 'info'
       // },
       offline: {
-        type: 'string',
+        type: 'boolean',
         desc: 'Disables all communications with the Touca server',
         default: false
       }
