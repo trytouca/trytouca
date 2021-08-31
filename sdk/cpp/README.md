@@ -147,10 +147,9 @@ can help us test these workflows at any scale.
 *   If you cannot wait to start writing your first test with Touca,
     see our [C++ API Reference][docs-cpp-api].
 
-
 ## 🧑‍🔧 Integration
 
-> This section is a summarized version of the [Integration][docs-cpp-integration]
+> This section is a summarized version of the [Integration][docs-cpp-installing]
 > document on our documentation website.
 
 The easiest way to use Touca as a third-party dependency in your project is
@@ -220,12 +219,12 @@ following compilers.
 
 We want Touca to work well for you. If you need help, have any questions, or
 like to provide feedback, send us a note through the Intercom at
-[touca.io][touca.io] or email us at <hello@touca.io>.
+[app.touca.io](https://app.touca.io) or email us at <hello@touca.io>.
 
 ## 🚀 What's Next
 
 Touca client libraries are free and open-source. Our cloud-hosted Touca server
-at [touca.io][touca.io] has a free forever plan. You can create an account and
+at [app.touca.io](https://app.touca.io) has a free forever plan. You can create an account and
 explore Touca on your own. We are also happy to [chat 1:1][calendly] to help
 you get on-boarded and answer any questions you may have in the process.
 We'd love to learn more about you, understand your software and its requirements,
@@ -235,18 +234,16 @@ and help you decide if Touca would be useful to you and your team.
 
 This repository is released under the Apache-2.0 License. See [`LICENSE`][license].
 
-[touca.io]: https://touca.io
-
 [calendly]: https://calendly.com/ghorbanzade/30min
 
 [license]: https://github.com/trytouca/touca-cpp/blob/main/LICENSE
 
 [cpp-examples]: https://github.com/trytouca/touca-cpp/tree/main/examples
 
-[docs-quickstart]: https://docs.touca.io/getting-started/quickstart
+[docs-quickstart]: https://docs.touca.io/basics/quickstart
 
-[docs-cpp]: https://docs.touca.io/api/cpp-sdk
+[docs-cpp]: https://docs.touca.io/sdk/cpp
 
 [docs-cpp-api]: https://app.touca.io/docs/clients/cpp/api.html
 
-[docs-cpp-integration]: https://docs.touca.io/api/cpp-sdk/integration
+[docs-cpp-installing]: https://docs.touca.io/sdk/cpp/installing
