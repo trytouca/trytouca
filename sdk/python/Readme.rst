@@ -147,8 +147,8 @@ can help us test these workflows at any scale.
 📖 Documentation
 ================
 
--  If you are new to Touca, the best place to start is our `Quickstart Guide <https://docs.touca.io/getting-started/quickstart>`__ on our documentation website.
--  For information on how to use our Python SDK, see our `Python SDK Documentation <https://docs.touca.io/api/python-sdk>`__.
+-  If you are new to Touca, the best place to start is our `Quickstart Guide <https://docs.touca.io/basics/quickstart>`__ on our documentation website.
+-  For information on how to use our Python SDK, see our `Python SDK Documentation <https://docs.touca.io/sdk/python>`__.
 -  If you cannot wait to start writing your first test with Touca, see our `Python API Reference <https://app.touca.io/docs/clients/python/api.html>`__.
 
 🙋 Ask for Help

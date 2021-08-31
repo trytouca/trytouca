@@ -2,7 +2,7 @@ Source Files for API Reference Docs
 ===================================
 
     Looking for the SDK documentation? Check out our
-    `documentation website <https://docs.touca.io/api/cpp-python>`__ for quick
+    `documentation website <https://docs.touca.io/sdk/python>`__ for quick
     start guides, tutorials, examples, and instructions to build and integrate
     with the library.
 
@@ -12,6 +12,6 @@ You can find the generated output `here <https://app.touca.io/docs/clients/pytho
 Have Questions?
 ---------------
 
-- Reach out via our Intercom on `Touca.io <https://touca.io>`__
+- Reach out via our Intercom on `app.touca.io <https://app.touca.io>`__
 - Tweet at `@trytouca <https://twitter.com/trytouca>`__
 - Send us an `email <mailto:hello@touca.io>`__

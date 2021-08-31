@@ -270,7 +270,7 @@ def _run(args):
     options = _parse_cli_options(args)
     _initialize(options)
     print(
-        "\nTouca Regression Test Framework\n"
+        "\nTouca Test Framework\n"
         f"Suite: {options.get('suite')}\n"
         f"Revision: {options.get('version')}\n"
     )
@@ -368,4 +368,4 @@ def run():
     except _ToucaError as err:
         sys.exit(err)
     except Exception as err:
-        sys.exit(f"Regression test failed: {err}")
+        sys.exit(f"Test failed: {err}")

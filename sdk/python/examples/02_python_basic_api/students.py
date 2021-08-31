@@ -53,4 +53,4 @@ def parse_profile(username: str) -> Student:
     data = next((k for k in students if k[0] == username), None)
     if not data:
         raise ValueError(f"no student found for username: ${username}")
-    return Student(*data[0:2], calculate_gpa(data[3]))
+    return Student(data[0], data[1], data[2], calculate_gpa(data[3]))
