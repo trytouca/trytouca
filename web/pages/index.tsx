@@ -205,7 +205,7 @@ const content: PageContent = {
         variables and runtime of functions, for any number of test cases,
         from anywhere within your code.`,
       button: {
-        link: 'https://docs.touca.io/guides/submit',
+        link: 'https://docs.touca.io/basics/submit',
         text: 'Learn More',
         title: 'Learn how Touca helps you write regression test tools.'
       }
@@ -220,7 +220,7 @@ const content: PageContent = {
       description: `Touca compares your results against your baseline version
         and reports changes in behavior and performance of your software.`,
       button: {
-        link: 'https://docs.touca.io/guides/interpret',
+        link: 'https://docs.touca.io/basics/interpret',
         text: 'Learn More',
         title: 'Learn how Touca processes your results and reports regressions.'
       }
@@ -236,7 +236,7 @@ const content: PageContent = {
         Maintain a shared understanding of how your software is supposed
         to work.`,
       button: {
-        link: 'https://docs.touca.io/guides/collaborate',
+        link: 'https://docs.touca.io/basics/integrate',
         text: 'Learn More',
         title: 'Learn how to work as a team to deal with regressions.'
       }
@@ -251,7 +251,7 @@ const content: PageContent = {
       description: `Make your tests run continuously on a fixed schedule
         or as you introduce new code changes.`,
       button: {
-        link: 'https://docs.touca.io/guides/automate',
+        link: 'https://docs.touca.io/basics/automate',
         text: 'Learn More',
         title: 'Learn how to automate the execution of your tests tools.'
       }
