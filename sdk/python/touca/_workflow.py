@@ -59,9 +59,9 @@ def _parse_cli_options(args) -> Dict[str, Any]:
         help="Slug of team to which test results belong")
 
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("--testcase", metavar="",
-        dest='testcases', action="append",
-        help="Single testcase to feed to the workflow")
+    group.add_argument("--testcase", "--testcases", metavar="",
+        dest='testcases', action="append", nargs="+",
+        help="One or more testcases to feed to the workflow")
     group.add_argument("--testcase-file", metavar="",
         help="Single file listing testcases to feed to the workflows")
 
@@ -74,17 +74,13 @@ def _parse_cli_options(args) -> Dict[str, Any]:
     parser.add_argument("--log-level",
         choices=["debug", "info", "warn"], default="info",
         help="Level of detail with which events are logged")
-    parser.add_argument("--save-as-binary", metavar="",
-        action="store", default=True,
+    parser.add_argument("--save-as-binary", const=True, default=True, nargs="?",
         help="Save a copy of test results on local filesystem in binary format")
-    parser.add_argument("--save-as-json", metavar="",
-        action="store", default=False,
+    parser.add_argument("--save-as-json", const=True, default=False, nargs="?",
         help="Save a copy of test results on local filesystem in JSON format")
-    parser.add_argument("--offline", metavar="",
-        action="store", default=False,
+    parser.add_argument("--offline", const=True, default=False, nargs="?",
         help="Disables all communications with the Touca server")
-    parser.add_argument("--overwrite", metavar="",
-        action="store", default=False,
+    parser.add_argument("--overwrite", const=True, default=False, nargs="?",
         help="Overwrite result directory for testcase if it already exists")
     # fmt: on
 
@@ -153,6 +149,7 @@ def _update_testcase_list(options: dict):
     `--testcases` and `--testcase-file` are mutually exclusive.
     """
     if options.get("testcases"):
+        options["testcases"] = [i for k in options.get("testcases") for i in k]
         return
     if "testcase_file" in options:
         with open(options["testcase_file"], "rt") as file:
