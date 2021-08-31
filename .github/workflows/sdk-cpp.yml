@@ -6,7 +6,6 @@ on:
   push:
     branches:
       - main
-      - development
       - 'feature/**'
     paths-ignore:
       - 'appveyor.yml'
@@ -79,15 +78,50 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
 
-      - name: install build dependencies
+      - name: install dependencies
         run: |
           sudo apt-get install doxygen
           pip install --no-cache-dir --upgrade -r docs/sphinx/requirements.txt
 
-      - run: ./build.sh --docs
+      - name: generate docs
+        run: ./build.sh --docs
 
       - name: push docs to aws
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf cpp-api-reference.tar.gz local/docs/html
           aws s3 cp cpp-api-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+
+  coverage-client-cpp:
+    name: coverage-client-cpp
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - test-native
+      - test-conan
+    steps:
+      - uses: actions/checkout@v2
+      - name: authenticate to aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-region: us-east-2
+      - name: install dependencies
+        run: pip install gcovr
+      - name: generate coverage
+        run: ./build.sh --coverage
+      - name: push coverage to aws
+        run: |
+          tar -zcf cpp-test-coverage.tar.gz ./local/coverage/html
+          aws s3 cp cpp-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+      - name: upload coverage to codecov
+        uses: codecov/codecov-action@v2
+        env:
+          OS: ${{ runner.os }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./local/coverage/coverage.xml
+          env_vars: OS
+          fail_ci_if_error: true

@@ -232,7 +232,7 @@ build_coverage () {
     local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
     local dir_build="${dir_source}/local/build"
     local dir_test="${dir_source}/local/tests"
-    local dir_coverage="${dir_source}/local/coverage/coverage"
+    local dir_coverage="${dir_source}/local/coverage"
     # check_prerequisite_commands "llvm-profdata" "llvm-cov"
     log_info "building coverage report for cpp client library"
 
@@ -270,7 +270,6 @@ build_coverage () {
             --txt "${dir_coverage}/coverage.txt" \
             --json "${dir_coverage}/coverage.json" --json-pretty \
             --xml "${dir_coverage}/coverage.xml" --xml-pretty \
-            --html "${dir_coverage}/coverage.html" \
             --html-details "${dir_coverage}/html/coverage.html"
       fi
       log_info "generated code-coverage report for cpp components (${key,,})"
