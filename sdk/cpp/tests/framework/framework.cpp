@@ -85,9 +85,9 @@ TEST_CASE("framework-dummy-workflow")
         CHECK_THAT(caller.cerr(), Catch::Contains(" - team"));
     }
 
-    SECTION("skip-post")
+    SECTION("offline")
     {
-        caller.call_with({ "--skip-post",
+        caller.call_with({ "--offline",
             "-r", "1.0", "-o", tmpFile.path.string(),
             "--team", "some-team", "--suite", "some-suite" });
         CHECK(caller.exit_code() == EXIT_FAILURE);
@@ -100,7 +100,7 @@ TEST_CASE("framework-dummy-workflow")
 
     SECTION("single-testcase")
     {
-        caller.call_with({ "--skip-post",
+        caller.call_with({ "--offline",
             "-r", "1.0", "-o", tmpFile.path.string(),
             "--team", "some-team", "--suite", "some-suite",
             "--testcase", "some-case", "--save-as-binary", "false" });
@@ -114,7 +114,7 @@ TEST_CASE("framework-dummy-workflow")
 
     SECTION("api-url")
     {
-        caller.call_with({ "--skip-post",
+        caller.call_with({ "--offline",
             "-r", "1.0", "-o", tmpFile.path.string(),
             "--api-url", "http://localhost/api/@/some-team/some-suite",
             "--testcase", "some-case", "--save-as-binary", "false" });
@@ -130,7 +130,7 @@ TEST_CASE("framework-dummy-workflow")
     {
         TmpFile configFile;
         configFile.write(R"("Hello")");
-        caller.call_with({ "--skip-post",
+        caller.call_with({ "--offline",
             "-r", "1.0", "-o", tmpFile.path.string(),
             "--config-file", configFile.path.string() });
         CHECK(caller.exit_code() == EXIT_FAILURE);
@@ -143,7 +143,7 @@ TEST_CASE("framework-dummy-workflow")
     {
         TmpFile configFile;
         configFile.write(R"({ "framework": { "save-as-binary": "false", "save-as-json": "false", "skip-logs": "true", "log-level": "error", "overwrite": "false" }, "touca": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://api.touca.io/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
-        caller.call_with({ "--skip-post",
+        caller.call_with({ "--offline",
             "-r", "1.0", "-o", tmpFile.path.string(),
             "--config-file", configFile.path.string(),
             "--testcase", "some-case" });
@@ -167,7 +167,7 @@ TEST_CASE("framework-simple-workflow-valid-use")
     TmpFile configFile;
     configFile.write(R"({ "touca": { "api-url": "https://api.touca.io/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
 
-    caller.call_with({ "--skip-post",
+    caller.call_with({ "--offline",
         "-r", "1.0", "-o", outputDir.path.string(),
         "--config-file", configFile.path.string(),
         "--save-as-json", "true" });
@@ -187,7 +187,7 @@ TEST_CASE("framework-simple-workflow-valid-use")
 
     SECTION("second-run-without-overwrite")
     {
-        caller.call_with({ "--skip-post",
+        caller.call_with({ "--offline",
             "-r", "1.0", "-o", outputDir.path.string(),
             "--config-file", configFile.path.string(),
             "--save-as-json", "true" });
@@ -206,7 +206,7 @@ TEST_CASE("framework-simple-workflow-valid-use")
 
     SECTION("second-run-with-overwrite")
     {
-        caller.call_with({ "--skip-post",
+        caller.call_with({ "--offline",
             "-r", "1.0", "-o", outputDir.path.string(),
             "--config-file", configFile.path.string(),
             "--save-as-json", "true", "--overwrite" });
@@ -276,7 +276,7 @@ TEST_CASE("framework-stream-redirection-disabled")
     TmpFile configFile;
     configFile.write(R"({ "touca": { "api-url": "https://api.touca.io/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
 
-    caller.call_with({ "--skip-post",
+    caller.call_with({ "--offline",
         "-r", "1.0", "-o", outputDir.path.string(),
         "--config-file", configFile.path.string(),
         "--stream-redirection", "false" });

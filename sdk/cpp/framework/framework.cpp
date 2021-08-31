@@ -112,15 +112,15 @@ namespace touca { namespace framework {
             ("skip-logs",
                 "do not generate log files",
                 cxxopts::value<std::string>()->implicit_value("true"))
-            ("skip-post",
+            ("offline",
                 "do not submit results to Touca server",
                 cxxopts::value<std::string>()->implicit_value("true"))
             ("save-as-json",
                 "save a copy of test results on local disk in json format",
-                cxxopts::value<std::string>()->implicit_value("true"))
+                cxxopts::value<std::string>()->implicit_value("true")->default_value("false"))
             ("save-as-binary",
                 "save a copy of test results on local disk in binary format",
-                cxxopts::value<std::string>()->default_value("true"))
+                cxxopts::value<std::string>()->implicit_value("true")->default_value("true"))
             ("stream-redirection",
                 "redirect content printed to standard streams to files",
                 cxxopts::value<std::string>()->default_value("true"))
@@ -146,7 +146,7 @@ namespace touca { namespace framework {
         opts.allow_unrecognised_options();
         try {
             const auto& result = opts.parse(argc, argv);
-            for (const auto& key : { "log-level", "output-dir", "save-as-binary", "stream-redirection" }) {
+            for (const auto& key : { "log-level", "output-dir", "save-as-binary", "save-as-json", "stream-redirection" }) {
                 options[key] = result[key].as<std::string>();
             }
             for (const auto& opt : opts.group_help("main").options) {
@@ -342,10 +342,10 @@ namespace touca { namespace framework {
             return false;
         }
 
-        // unless command line option `--skip-post` is specified,
+        // unless command line option `--offline` is specified,
         // we expect a value for option `--api-url`.
 
-        if (!options.count("skip-post") && !expect_options(options, { "api-url" })) {
+        if (!options.count("offline") && !expect_options(options, { "api-url" })) {
             return false;
         }
 
@@ -572,7 +572,7 @@ namespace touca { namespace framework {
     {
         // skip if framework is configured to run offline.
 
-        if (options.count("skip-post") && options.at("skip-post") == "true") {
+        if (options.count("offline") && options.at("offline") == "true") {
             logger.log(LogLevel::Debug, "skipped sealing: test framework is configured to run offline");
             return true;
         }
@@ -744,7 +744,7 @@ namespace touca { namespace framework {
         // without passing api-related options so that we can still store
         // testcases in memory and later save them in file.
 
-        if (!options.count("skip-post")) {
+        if (!options.count("offline")) {
             copyOption("api-key", "api-key");
             copyOption("api-url", "api-url");
         } else {
@@ -897,7 +897,7 @@ namespace touca { namespace framework {
 
             // submit testresults to Touca server
 
-            if (!options.count("skip-post") && !touca::post()) {
+            if (!options.count("offline") && !touca::post()) {
                 logger.log(lg::Error, "failed to submit results to Touca server");
             }
 
