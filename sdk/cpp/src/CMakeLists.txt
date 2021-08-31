@@ -33,6 +33,7 @@ target_link_libraries(
     PRIVATE
         httplib::httplib
         spdlog::spdlog
+        touca_project_options
     PUBLIC
         ghcFilesystem::ghcFilesystem
         flatbuffers::flatbuffers

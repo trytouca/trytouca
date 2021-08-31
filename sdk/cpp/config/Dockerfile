@@ -37,6 +37,33 @@ COPY . /opt
 
 RUN cd /opt && bash build.sh --docs
 
+# ---- client-cpp coverage ----
+
+FROM ubuntu:focal AS client_cpp_coverage
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    apt-transport-https ca-certificates gnupg software-properties-common wget \
+  && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+    | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
+  && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main' \
+  && apt-get install -y --no-install-recommends \
+    cmake g++ gcc git make libssl-dev python3-pip \
+  && rm -rf /var/lib/apt/lists/* \
+  && cmake --version \
+  && pip install gcovr \
+  && groupadd -r touca && useradd -u 8002 -m --no-log-init -r -g touca touca
+
+COPY . /opt
+
+RUN chown -v -R touca:touca /opt
+
+WORKDIR /opt
+
+USER touca
+
+RUN ./build.sh --coverage
+
 # ---- production ----
 
 FROM scratch
@@ -49,5 +76,6 @@ LABEL org.opencontainers.image.vendor="Touca, Inc."
 LABEL org.opencontainers.image.authors="hello@touca.io"
 LABEL org.opencontainers.image.licenses="https://github.com/trytouca/touca-cpp/blob/master/LICENSE"
 
-COPY --from=client_cpp_build  /opt/local/dist      /opt/dist
-COPY --from=client_cpp_docs   /opt/local/docs/html /opt/docs
+COPY --from=client_cpp_build    /opt/local/dist       /opt/dist
+COPY --from=client_cpp_docs     /opt/local/docs/html  /opt/docs
+COPY --from=client_cpp_coverage /opt/local/coverage   /opt/coverage

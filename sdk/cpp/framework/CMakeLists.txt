@@ -19,6 +19,7 @@ target_link_libraries(
     PUBLIC
         touca_client
     PRIVATE
+        touca_project_options
         cxxopts::cxxopts
 )
 
