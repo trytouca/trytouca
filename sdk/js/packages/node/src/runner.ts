@@ -206,16 +206,19 @@ function _parse_cli_options(args: string[]): RunnerOptions {
       'save-as-binary': {
         type: 'boolean',
         desc: 'Save a copy of test results on local filesystem in binary format',
-        default: false
+        boolean: true,
+        default: true
       },
       'save-as-json': {
         type: 'boolean',
         desc: 'Save a copy of test results on local filesystem in JSON format',
+        boolean: true,
         default: false
       },
       overwrite: {
         type: 'boolean',
         desc: 'Overwrite result directory for testcase if it already exists',
+        boolean: true,
         default: false
       },
       'output-directory': {
@@ -232,6 +235,7 @@ function _parse_cli_options(args: string[]): RunnerOptions {
       offline: {
         type: 'boolean',
         desc: 'Disables all communications with the Touca server',
+        boolean: true,
         default: false
       }
     }).argv;
@@ -330,6 +334,11 @@ export class Runner {
         continue;
       }
 
+      if (fs.existsSync(testcase_directory)) {
+        fs.rmdirSync(testcase_directory, { recursive: true });
+        fs.mkdirSync(testcase_directory);
+      }
+
       this._client.declare_testcase(testcase);
       timer.tic(testcase);
 
@@ -359,10 +368,10 @@ export class Runner {
 
       process.stdout.write(
         util.format(
-          ' (%d of %d) %s (%s, %d ms)\n',
-          index + 1,
-          options.testcases.length,
-          testcase,
+          ' (%s of %s) %s (%s, %d ms)\n',
+          String(index + 1).padStart(3),
+          String(options.testcases.length).padEnd(3),
+          testcase.padEnd(32),
           errors.length === 0 ? 'pass' : 'fail',
           timer.count(testcase)
         )
@@ -374,7 +383,7 @@ export class Runner {
     timer.toc('__workflow__');
     process.stdout.write(
       util.format(
-        '\nProcessed %d of %d test cases.\nTest completed in %d ms\n\n',
+        '\nProcessed %d of %d testcases\nTest completed in %d ms\n\n',
         stats.count('pass'),
         options.testcases.length,
         timer.count('__workflow__')
