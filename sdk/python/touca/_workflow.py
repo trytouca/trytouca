@@ -30,6 +30,7 @@ defining functions with ``@touca.Workflow`` decorators.
 """
 
 import os
+import shutil
 import sys
 import textwrap
 from datetime import datetime, timedelta
@@ -291,6 +292,10 @@ def _run(args):
             )
             stats.inc("skip")
             continue
+
+        if os.path.exists(casedir):
+            shutil.rmtree(casedir)
+            os.makedirs(casedir)
 
         Client.instance().declare_testcase(testcase)
         timer.tic(testcase)
