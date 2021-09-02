@@ -189,7 +189,8 @@ We can run Touca tests with any number of inputs from the command line:
 python3 prime_app_test.py
   --api-key <TOUCA_API_KEY>
   --api-url <TOUCA_API_URL>
-  --revision v2.0
+  --revision v1.0
+  --testcase 13 17 51
 ```
 
 {% endtab %}
@@ -200,7 +201,8 @@ python3 prime_app_test.py
 ./prime_app_test
   --api-key <TOUCA_API_KEY>
   --api-url <TOUCA_API_URL>
-  --revision v2.0
+  --revision v1.0
+  --testcase 13 17 51
 ```
 
 {% endtab %}
@@ -211,7 +213,8 @@ python3 prime_app_test.py
 node dist/is_prime_test.js
   --api-key <TOUCA_API_KEY>
   --api-url <TOUCA_API_URL>
-  --revision v2.0
+  --revision v1.0
+  --testcase 13 17 51
 ```
 
 {% endtab %}
@@ -260,8 +263,8 @@ situations:
 - When interesting information to check for regression is not exposed through
   the interface of our workflow.
 
-The fundamental design features of Touca that we highlighted earlier can help us
-test these workflows at any scale.
+The highlighted design features of Touca can help us test these workflows at any
+scale.
 
 - Decoupling our test input from our test logic, can help us manage our long
   list of inputs without modifying the test logic. Managing that list on a
