@@ -48,7 +48,7 @@ clicking the "Join an Existing Team" button and entering the slug for the team
 you want to join. This will send a Join Request that the team admins or the team
 owner can approve or decline.
 
-![You will need approval from a Team Admin to join that team.](../.gitbook/assets/touca-teams-request-join.png)
+![You will need approval from a Team Admin to join that team.](../.gitbook/assets/touca-team-request-join.png)
 
 ## Create a Suite
 

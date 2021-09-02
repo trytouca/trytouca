@@ -6,7 +6,7 @@
 
 - [Quick Start](basics/quickstart.md)
 - [Setup Your Account](basics/account-setup.md)
-- [Create a Test](basics/submit.md)
+- [Your First Touca Test](basics/submit.md)
 - [Interpret Results](basics/interpret.md)
 - [Manage Notifications](basics/integrate.md)
 - [Automate Your Tests](basics/automate.md)
