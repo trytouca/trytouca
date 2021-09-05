@@ -127,7 +127,7 @@ to the directory for your preferred programming language. We have added several
 examples for each language. Each example serves as a standalone hands-on
 tutorial that showcases different Touca SDK features.
 
-In this document, we will be using the `02_<lang>_basic_api` example which
+In this document, we will be using the `02_<lang>_main_api` example which
 includes two modules `students` and `students_test`. The `students` module
 represents our code under test: the production code for our _profile database_
 software. Our code under test can have any complexity. It may call various
@@ -140,7 +140,7 @@ Check out the `students` module for a possible "current" implementation:
 
 {% tab title="Python" %}
 
-{% code title="python/02_python_basic_api/students.py" %}
+{% code title="python/02_python_main_api/students.py" %}
 
 ```python
 def parse_profile(username: str) -> Student:
@@ -157,7 +157,7 @@ def parse_profile(username: str) -> Student:
 
 {% tab title="C++" %}
 
-{% code title="cpp/02_cpp_basic_api/students.cpp" %}
+{% code title="cpp/02_cpp_main_api/students.cpp" %}
 
 ```cpp
 Student parse_profile(const std::string& username)
@@ -182,7 +182,7 @@ Student parse_profile(const std::string& username)
 
 {% tab title="JavaScript" %}
 
-{% code title="javascript/02_node_basic_api/students.ts" %}
+{% code title="javascript/02_node_main_api/students.ts" %}
 
 ```typescript
 export async function parse_profile(username: string): Promise<Student> {
@@ -229,7 +229,7 @@ Here is a possible implementation for our first Touca test code:
 
 {% tab title="Python" %}
 
-{% code title="python/02_python_basic_api/students_test.py" %}
+{% code title="python/02_python_main_api/students_test.py" %}
 
 ```python
 import touca
@@ -253,7 +253,7 @@ if __name__ == "__main__":
 
 {% tab title="C++" %}
 
-{% code title="cpp/02_cpp_basic_api/students_test.cpp" %}
+{% code title="cpp/02_cpp_main_api/students_test.cpp" %}
 
 ```cpp
 #include "students.hpp"
@@ -276,7 +276,7 @@ void touca::main(const std::string& username)
 
 {% tab title="JavaScript" %}
 
-{% code title="javascript/02_node_basic_api/students_test.ts" %}
+{% code title="javascript/02_node_main_api/students_test.ts" %}
 
 ```typescript
 import { touca } from "@touca/node";
@@ -319,7 +319,7 @@ creating a separate test workflow.
 
 {% tab title="Python" %}
 
-{% code title="python/02_python_basic_api/students.py" %}
+{% code title="python/02_python_main_api/students.py" %}
 
 ```python
 def calculate_gpa(courses: List[Course]):
@@ -333,7 +333,7 @@ def calculate_gpa(courses: List[Course]):
 
 {% tab title="C++" %}
 
-{% code title="cpp/02_cpp_basic_api/students.cpp" %}
+{% code title="cpp/02_cpp_main_api/students.cpp" %}
 
 ```cpp
 float calculate_gpa(const std::vector<Course>& courses)
@@ -353,7 +353,7 @@ float calculate_gpa(const std::vector<Course>& courses)
 
 {% tab title="JavaScript" %}
 
-{% code title="javascript/02_node_basic_api/students.ts" %}
+{% code title="javascript/02_node_main_api/students.ts" %}
 
 ```typescript
 function calculate_gpa(courses: Course[]): number {
@@ -385,7 +385,7 @@ as shown below.
 
 {% tab title="Python" %}
 
-{% code title="python/02_python_basic_api/students_test.py" %}
+{% code title="python/02_python_main_api/students_test.py" %}
 
 ```python
 import touca
@@ -412,7 +412,7 @@ if __name__ == "__main__":
 
 {% tab title="C++" %}
 
-{% code title="cpp/02_cpp_basic_api/students_test.cpp" %}
+{% code title="cpp/02_cpp_main_api/students_test.cpp" %}
 
 ```cpp
 #include "students.hpp"
@@ -436,7 +436,7 @@ void touca::main(const std::string& username)
 
 {% tab title="JavaScript" %}
 
-{% code title="javascript/02_node_basic_api/students_test.ts" %}
+{% code title="javascript/02_node_main_api/students_test.ts" %}
 
 ```typescript
 import { touca } from "@touca/node";
@@ -476,7 +476,7 @@ software.
 
 {% tab title="Python" %}
 
-Navigate to directory `python/02_python_basic_api` in the `examples` repository
+Navigate to directory `python/02_python_main_api` in the `examples` repository
 and create a virtual environment using Python v3.6 or newer.
 
 {% code %}
@@ -502,9 +502,9 @@ pip install touca
 
 {% tab title="C++" %}
 
-Navigate to directory `cpp/02_cpp_basic_api` in the `examples` repository and
-run `build.sh` or `build.bat` depending on your platform using CMake 3.14 or
-newer. This command produces executables in a `./local/dist/bin` directory.
+Navigate to directory `cpp/02_cpp_main_api` in the `examples` repository and run
+`build.sh` or `build.bat` depending on your platform using CMake 3.14 or newer.
+This command produces executables in a `./local/dist/bin` directory.
 
 {% code %}
 
@@ -523,9 +523,8 @@ our SDK documentation for instructions to use Conan, instead.
 
 {% tab title="JavaScript" %}
 
-Navigate to directory `javascript/02_node_basic_api` in the `examples`
-repository and use either of `yarn` or `npm` to build examples using Node v12 or
-newer.
+Navigate to directory `javascript/02_node_main_api` in the `examples` repository
+and use either of `yarn` or `npm` to build examples using Node v12 or newer.
 
 {% code %}
 
@@ -563,6 +562,7 @@ python3 prime_app_test.py
   --api-key <TOUCA_API_KEY>
   --api-url <TOUCA_API_URL>
   --revision v1.0
+  --testcase alice bob charlie
 ```
 
 {% endcode %}
@@ -574,10 +574,11 @@ python3 prime_app_test.py
 {% code %}
 
 ```bash
-./prime_app_test
+./local/dist/bin/example_cpp_main_api
   --api-key <TOUCA_API_KEY>
   --api-url <TOUCA_API_URL>
   --revision v1.0
+  --testcase-file testcases.txt
 ```
 
 {% endcode %}
@@ -593,6 +594,7 @@ node dist/is_prime_test.js
   --api-key <TOUCA_API_KEY>
   --api-url <TOUCA_API_URL>
   --revision v1.0
+  --testcase alice bob charlie
 ```
 
 {% endcode %}
@@ -612,12 +614,12 @@ The above command produces the following output.
 
 ```text
 Touca Test Framework
-Suite: is_prime_test
-Revision: v1.0
+Suite: students_test
+Revision: 1.0
 
- (  1 of 3  ) 13                   (pass, 127 ms)
- (  2 of 3  ) 17                   (pass, 123 ms)
- (  3 of 3  ) 51                   (pass, 159 ms)
+ (  1 of 3  ) alice                (pass, 127 ms)
+ (  2 of 3  ) bob                  (pass, 123 ms)
+ (  3 of 3  ) charlie              (pass, 159 ms)
 
 Processed 3 of 3 testcases
 Test completed in 565 ms
