@@ -14,7 +14,7 @@ reason, unlike other SDKs, the test framework does not seal the version after
 executing the test case.
 
 ```bash
-./local/dist/bin/example_cpp_basic_api \
+./local/dist/bin/example_cpp_main_api \
   --team some-team --suite some-suite --revision 1.0 \
   --offline --overwrite --save-as-json --save-as-binary \
   --testcase alice

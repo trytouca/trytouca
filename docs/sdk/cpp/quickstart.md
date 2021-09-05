@@ -3,8 +3,8 @@
 {% hint style="info" %}
 
 This section is meant to introduce basic function API of our C++ core library.
-See our [C++ Client Library](cpp-library.md) document to learn how to use Touca
-to develop regression test tools.
+See our Main API document to learn how to use Touca to develop regression test
+tools.
 
 {% endhint %}
 
@@ -16,9 +16,9 @@ bool is_prime(const unsigned number);
 ```
 
 As a first step, we can create a regression test executable that has access to
-the entry-point of our Code Under Test. See our
-[Integration Guide](Integration.md) to learn how to integrate Touca as a
-third-party dependency with your code.
+the entry-point of our Code Under Test. See our [Installing](./installing.md)
+document to learn how to integrate Touca as a third-party dependency with your
+code.
 
 ```cpp
 #include "touca/touca.hpp"

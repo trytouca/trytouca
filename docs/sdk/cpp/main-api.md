@@ -14,7 +14,7 @@ consuming.
 
 In this section, we demonstrate some of the capabilities of this Test Framework
 by building a new Regression Test Tool for the same trivial Code Under Test that
-we used in the [C++ Client Library](cpp-library.md) document.
+we used in the Core API document.
 
 ## Common Features
 

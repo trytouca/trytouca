@@ -3,32 +3,6 @@ You can find the code above in the "starter" directory of Touca's open-source
 top-level `build.sh` to build the example test tools and run the code above via
 the following command:
 
-{% tabs %}
-
-{% tab title="C++" %}
-
-```bash
-TOUCA_API_KEY=<YOUR_API_KEY> ./prime_app_test \
-    --api-url https://api.touca.io/@/acme/prime_app \
-    --version v2.0 \
-    --testcase 17
-```
-
-{% endtab %}
-
-{% tab title="Python" %}
-
-```bash
-TOUCA_API_KEY=<YOUR_API_KEY> python3 ./starter.py \
-    --api-url https://api.touca.io/@/acme/prime_app \
-    --version v2.0 \
-    --testcase 17
-```
-
-{% endtab %}
-
-{% endtabs %}
-
 So what is happening here? The header `touca/touca_main.hpp` includes the
 application's main function. The function finds the list of inputs and calls
 `touca::main`, once for each input, to capture the actual return value of
@@ -47,109 +21,10 @@ testing workflows of any complexity.
 Let us suppose that we want to test a software workflow that takes the username
 of a student and provides basic information about them.
 
-{% tabs %}
-
-{% tab title="C++" %}
-
-{% code title="example/basic/code\_under\_test.hpp" %}
-
-```cpp
-struct Student {
-    std::string username;
-    std::string fullname;
-    Date dob; // user-defined type
-    std::vector<Course> courses; // user-defined type
-};
-
-Student parse_profile(const std::string& username);
-```
-
-{% endcode %}
-
-{% endtab %}
-
-{% tab title="Python" %}
-
-{% code title="examples/code\_under\_test.py" %}
-
-```python
-from dataclasses import dataclass
-from typing import List
-
-@dataclass
-class Student:
-    username: str
-    fullname: str
-    dob: Date # user-defined type
-    courses: List[Course] # user-defined type
-
-def parse_profile(username: str) -> Student:
-    # some implementation here
-```
-
-{% endcode %}
-
-{% endtab %}
-
-{% endtabs %}
-
 We want to understand if and how changes in the implementation of the
 `parse_profile` function change the overall software behavior. For each version
 of its implementation, we can invoke `parse_profile` as our code under test,
 with a set of usernames and inspect its return value.
-
-{% tabs %}
-
-{% tab title="C++" %}
-
-```cpp
-#include "code_under_test.hpp"
-#include "touca/touca.hpp"
-
-int main()
-{
-    touca::configure();
-    for (const auto& username : { "alice", "bob", "charlie" }) {
-        touca::declare_testcase(username);
-        touca::scoped_timer scoped_timer("parse_profile");
-        const auto& student = parse_profile(username);
-        touca::add_result("fullname", student.fullname);
-        touca::add_result("birth_date", student.dob);
-        touca::add_result("courses", student.courses);
-    }
-    touca::save_binary("touca_output.bin");
-}
-```
-
-{% endtab %}
-
-{% tab title="Python" %}
-
-```python
-import touca
-
-def main():
-    touca.configure()
-    for username in [ "alice", "bob", "charlie" ]:
-        touca.declare_testcase(username)
-
-        touca.start_timer("parse_profile")
-        student = parse_profile(username)
-        touca.stop_timer("parse_profile")
-
-        touca.add_result("fullname", student.fullname)
-        touca.add_result("birth_date", student.dob)
-        touca.add_result("courses", student.courses)
-
-    touca.save_binary("touca_output.bin")
-
-if __name__ == "__main__":
-    main()
-```
-
-{% endtab %}
-
-{% endtabs %}
 
 ### Declaring a Testcase
 
@@ -217,11 +92,58 @@ server to leverage its powers in comparing our data, visualizing differences and
 generating reports. We can use `post` to do submit our data, either after each
 test case is executed or after all test cases are executed.
 
+Notice in the code above that in addition to calling `post`, we are passing
+parameters `api-key` and `api-url` to the `configure` function. We are asking
+the library to submit results to suite `students-db` of team `acme` and consider
+them as results for version `v1.0` of our code under test.
+
+### Decoupling test cases
+
+Now that our SDK is configured to communicate with a Touca server, we can
+retrieve the list of test cases from the server too. In the code above, we
+replaced our hard-coded list of usernames with `get_testcases`. This way, we can
+manage our test cases through the Touca server user interface that provides
+insights and statistics about each test case and lets us add notes and tags to
+them.
+
+### Cleaning up
+
+At this point, we can build and run our test tool from the command line, without
+passing any arguments. The application is going to authenticate to the Touca
+server using our API Key, get the list of test cases and run them one by one to
+collect test results and submit them to the server.
+
+All regression test tools using Touca SDKs follow this same pattern. We may want
+to abstract away common operations such as configuring the library and posting
+results after each test is executed. Fortunately, Touca SDKs come with a
+versatile test framework.
+
+The framework not only abstracts away common operations, it provides added
+functionality such as error handling, logging, and progress reporting. It
+provides an extensible set of command line options that help us specify
+`api-key` and `api-url` as environment variables or command line arguments.
+
 {% tabs %}
 
 {% tab title="C++" %}
 
 ```cpp
+#include "code_under_test.hpp"
+#include "touca/touca.hpp"
+
+int main()
+{
+    touca::configure();
+    for (const auto& username : { "alice", "bob", "charlie" }) {
+        touca::declare_testcase(username);
+        touca::scoped_timer scoped_timer("parse_profile");
+        const auto& student = parse_profile(username);
+        touca::add_result("fullname", student.fullname);
+        touca::add_result("birth_date", student.dob);
+        touca::add_result("courses", student.courses);
+    }
+    touca::save_binary("touca_output.bin");
+}
 #include "code_under_test.hpp"
 #include "touca/touca.hpp"
 
@@ -249,6 +171,25 @@ int main()
 
 ```python
 import touca
+
+def main():
+    touca.configure()
+    for username in [ "alice", "bob", "charlie" ]:
+        touca.declare_testcase(username)
+
+        touca.start_timer("parse_profile")
+        student = parse_profile(username)
+        touca.stop_timer("parse_profile")
+
+        touca.add_result("fullname", student.fullname)
+        touca.add_result("birth_date", student.dob)
+        touca.add_result("courses", student.courses)
+
+    touca.save_binary("touca_output.bin")
+
+if __name__ == "__main__":
+    main()
+import touca
 from code_under_test import parse_profile
 
 def main():
@@ -271,104 +212,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-```
-
-{% endtab %}
-
-{% endtabs %}
-
-Notice in the code above that in addition to calling `post`, we are passing
-parameters `api-key` and `api-url` to the `configure` function. We are asking
-the library to submit results to suite `students-db` of team `acme` and consider
-them as results for version `v1.0` of our code under test.
-
-### Decoupling test cases
-
-Now that our SDK is configured to communicate with a Touca server, we can
-retrieve the list of test cases from the server too. In the code above, we
-replaced our hard-coded list of usernames with `get_testcases`. This way, we can
-manage our test cases through the Touca server user interface that provides
-insights and statistics about each test case and lets us add notes and tags to
-them.
-
-### Cleaning up
-
-At this point, we can build and run our test tool from the command line, without
-passing any arguments. The application is going to authenticate to the Touca
-server using our API Key, get the list of test cases and run them one by one to
-collect test results and submit them to the server.
-
-All regression test tools using Touca SDKs follow this same pattern. We may want
-to abstract away common operations such as configuring the library and posting
-results after each test is executed. Fortunately, Touca SDKs come with a
-versatile test framework.
-
-{% tabs %}
-
-{% tab title="C++" %}
-
-```cpp
-#include "code_under_test.hpp"
-#include "touca/touca.hpp"
-#include "touca/touca_main.hpp"
-
-void touca::main(const std::string& username)
-{
-    touca::scoped_timer scoped_timer("parse_profile");
-    const auto& student = parse_profile(username);
-    touca::add_result("fullname", student.fullname);
-    touca::add_result("birth_date", student.dob);
-    touca::add_result("courses", student.courses);
-}
-```
-
-{% endtab %}
-
-{% tab title="Python" %}
-
-```python
-import touca
-from code_under_test import parse_profile
-
-@touca.Workflow
-def is_prime(testcase: str):
-    with touca.scoped_timer("parse_profile"):
-        student = parse_profile(username)
-    touca.add_result("fullname", student.fullname)
-    touca.add_result("birth_date", student.dob)
-    touca.add_result("courses", student.courses)
-
-if __name__ == "__main__":
-    touca.run()
-```
-
-{% endtab %}
-
-{% endtabs %}
-
-The framework not only abstracts away common operations, it provides added
-functionality such as error handling, logging, and progress reporting. It
-provides an extensible set of command line options that help us specify
-`api-key` and `api-url` as environment variables or command line arguments.
-
-{% tabs %}
-
-{% tab title="C++" %}
-
-```bash
-TOUCA_API_KEY=<YOUR_API_KEY> ./students_db_test \
-    --api-url "https://api.touca.io/@/<YOUR_TEAM>/students-db" \
-    --version v2.0
-```
-
-{% endtab %}
-
-{% tab title="Python" %}
-
-```bash
-TOUCA_API_KEY=<YOUR_API_KEY> python3 ./examples/starter.py \
-    --api-url "https://api.touca.io/@/<YOUR_TEAM>/students-db" \
-    --version v2.0
 ```
 
 {% endtab %}
