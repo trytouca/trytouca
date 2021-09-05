@@ -39,4 +39,4 @@ jobs:
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         run: |
           mkdir -p ./local/results
-          ./local/dist/bin/example_cpp_basic_api
+          ./local/dist/bin/example_cpp_main_api

@@ -17,7 +17,7 @@ reading our [Getting Started](https://docs.touca.io) guide, first.
     In 3 minutes, you will learn what Touca is, how it works, and how a
     typical Touca test looks like.
 
-2.  [Touca Python SDK](./02\_python_basic_api)
+2.  [Touca Python SDK](./02\_python_main_api)
 
     This example shows you how to use Touca Python SDK to write and run
     test tools that describe the behavior and performance of your code
@@ -26,7 +26,7 @@ reading our [Getting Started](https://docs.touca.io) guide, first.
     In 3 minutes, you will learn how to use Touca SDK to test your own
     workflows.
 
-3.  [Touca Python API](./03\_python_client_api)
+3.  [Touca Python API](./03\_python_core_api)
 
     This example walks you through the lower-level Python client API.
     It is most helpful to engineers who want to use Touca data capturing

@@ -33,12 +33,12 @@ RUN apt-get update \
     "and \"/usr/bin/local\". The following is an example of how to run  \n" \
     "one of these test tools:                                           \n" \
     "                                                                   \n" \
-    "  example_cpp_basic_api --api-key <TOUCA_API_KEY>                  \n" \
-    "                        --api-url <TOUCA_API_URL>                  \n" \
-    "                        --revision <TOUCA_TEST_VERSION>            \n" \
-    "                        --testcase alice                           \n" \
+    "  example_cpp_main_api --api-key <TOUCA_API_KEY>                   \n" \
+    "                       --api-url <TOUCA_API_URL>                   \n" \
+    "                       --revision <TOUCA_TEST_VERSION>             \n" \
+    "                       --testcase alice                            \n" \
     "                                                                   \n" \
-    "Run \"example_cpp_basic_api --help\" for a list of all supported   \n" \
+    "Run \"example_cpp_main_api --help\" for a list of all supported    \n" \
     "command line options. Use the \"build.sh\" script to rebuild the   \n" \
     "test tools if you liked to make changes to the source code.        \n" \
     "You can use \"sudo\" without a password.                           \n" \
