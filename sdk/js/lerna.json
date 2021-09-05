@@ -2,8 +2,8 @@
   "packages": [
     "packages/node",
     "examples/01_node_minimal",
-    "examples/02_node_basic_api",
-    "examples/03_node_client_api"
+    "examples/02_node_main_api",
+    "examples/03_node_core_api"
   ],
   "version": "0.0.8",
   "npmClient": "yarn",

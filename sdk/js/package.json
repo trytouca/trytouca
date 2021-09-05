@@ -14,8 +14,8 @@
   "workspaces": [
     "packages/node",
     "examples/01_node_minimal",
-    "examples/02_node_basic_api",
-    "examples/03_node_client_api"
+    "examples/02_node_main_api",
+    "examples/03_node_core_api"
   ],
   "devDependencies": {
     "@types/jest": "^26.0.24",

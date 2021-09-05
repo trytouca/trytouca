@@ -17,7 +17,7 @@ reading our [Getting Started](https://docs.touca.io) guide, first.
     In 3 minutes, you will learn what Touca is, how it works, and how a
     typical Touca test looks like.
 
-2.  [Touca Node.js SDK](./02\_node_basic_api)
+2.  [Touca Node.js SDK](./02\_node_main_api)
 
     This example shows you how to use Touca Node.js SDK to write and run
     test tools that describe the behavior and performance of your code
@@ -26,7 +26,7 @@ reading our [Getting Started](https://docs.touca.io) guide, first.
     In 3 minutes, you will learn how to use Touca SDK to test your own
     workflows.
 
-3.  [Touca Node.js API](./03\_node_client_api)
+3.  [Touca Node.js API](./03\_node_core_api)
 
     This example walks you through the lower-level Node.js client API.
     It is most helpful to engineers who want to use Touca data capturing

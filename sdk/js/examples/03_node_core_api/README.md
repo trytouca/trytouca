@@ -1,6 +1,6 @@
 # Touca Node.js API
 
-In the [previous tutorial](../02\_node_basic_api), we covered the
+In the [previous tutorial](../02_node_main_api), we covered the
 high-level API of our Node.js SDK and learned how to test a `parse_profile`
 function using the Touca test framework:
 
@@ -73,11 +73,11 @@ API documentation for the full list of acceptable configuration parameters
 and their impact.
 
 ```ts
-  await touca.configure({
-    api_key: "<TOUCA_API_KEY>",
-    api_url: "<TOUCA_API_URL>",
-    revision: "<TOUCA_TEST_VERSION>"
-  });
+await touca.configure({
+  api_key: '<TOUCA_API_KEY>',
+  api_url: '<TOUCA_API_URL>',
+  revision: '<TOUCA_TEST_VERSION>'
+});
 ```
 
 > Touca API Key should be treated as a secret. We advise against
@@ -99,9 +99,9 @@ You can always force the client to run in offline mode by passing the
 ## Preparing Test Cases
 
 ```ts
-  for (const username of await touca.get_testcases()) {
-    // insert the code to run for each test case
-  }
+for (const username of await touca.get_testcases()) {
+  // insert the code to run for each test case
+}
 ```
 
 The Touca test framework expects test cases to be specified via the
@@ -122,11 +122,11 @@ functions like `add_result` should associate the captured data with that
 declared test case.
 
 ```ts
-  for (const username of await touca.get_testcases()) {
-    touca.declare_testcase(username);
-    // now we can start calling our code under test
-    // and describing its behavior and performance
-  }
+for (const username of await touca.get_testcases()) {
+  touca.declare_testcase(username);
+  // now we can start calling our code under test
+  // and describing its behavior and performance
+}
 ```
 
 With Touca, we consider test cases as a set of unique names that identify
@@ -139,7 +139,7 @@ from our test tool, and not from our code under test.
 
 ## Capturing Test Results
 
-In the [previous tutorial](../02\_node_basic_api), we reviewed the main
+In the [previous tutorial](../02_node_main_api), we reviewed the main
 Touca functions for describing behavior and performance of our code under
 test, by capturing values of important variables and runtime of interesting
 functions. In this section, we dive a little deeper to explain how Touca
@@ -152,10 +152,10 @@ types of all captured data so that the Touca server can compare them in
 their original type.
 
 ```ts
-    touca.add_result('username', student.username);
-    touca.add_result('fullname', student.fullname);
-    touca.add_result('birth_date', student.dob);
-    touca.add_result('gpa', student.gpa);
+touca.add_result('username', student.username);
+touca.add_result('fullname', student.fullname);
+touca.add_result('birth_date', student.dob);
+touca.add_result('gpa', student.gpa);
 ```
 
 In the example above, `touca.add_result` stores value of properties
@@ -189,11 +189,11 @@ The following code results in the same object to be serialized as
 `['math', 3.9]`:
 
 ```ts
-    touca.add_serializer(Course.name, (x: Course) => [x.name, x.grade]);
-    for (const course of student.courses) {
-      touca.add_array_element('courses', course);
-      touca.add_hit_count('number of courses');
-    }
+touca.add_serializer(Course.name, (x: Course) => [x.name, x.grade]);
+for (const course of student.courses) {
+  touca.add_array_element('courses', course);
+  touca.add_hit_count('number of courses');
+}
 ```
 
 While our serializer changed the way `Course` data is serialized and
@@ -211,7 +211,7 @@ behavior and performance, we can have the option to submit them to the
 Touca server by calling `touca.post`.
 
 ```ts
-    await touca.post();
+await touca.post();
 ```
 
 The server stores the captured data, compares them against the submitted
@@ -236,8 +236,8 @@ declared test cases on the local filesystem for further processing
 or later submission to the Touca server.
 
 ```ts
-    await touca.save_binary(`touca_${username}.bin`);
-    await touca.save_json(`touca_${username}.json`);
+await touca.save_binary(`touca_${username}.bin`);
+await touca.save_json(`touca_${username}.json`);
 ```
 
 We can store captured data in JSON or binary format using
@@ -253,7 +253,7 @@ you can use `touca.forget_testcase` to release all the captured information
 from process memory, when you are done with a given test case.
 
 ```ts
-    await touca.forget_testcase();
+await touca.forget_testcase();
 ```
 
 ## Sealing Test Results
@@ -265,7 +265,7 @@ This allows the server to send the final comparison result report to
 interested users, as soon as it is available.
 
 ```ts
-  await touca.seal();
+await touca.seal();
 ```
 
 Sealing the version is optional. The Touca server automatically
