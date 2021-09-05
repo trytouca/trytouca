@@ -58,7 +58,7 @@ We can run our test from the command line:
 ```bash
 export TOUCA_API_KEY="your-api-key"
 export TOUCA_API_URL="your-api-url"
-./local/dist/bin/example_cpp_basic_api --revision v1.0 --testcase-file ./testcases.txt
+./local/dist/bin/example_cpp_main_api --revision v1.0 --testcase-file ./testcases.txt
 ```
 
 Where `./testcases.txt` has the following content:
@@ -75,7 +75,7 @@ on the web app but we can also ask the SDK to generate a JSON result file
 for us:
 
 ```bash
-./local/dist/bin/example_cpp_basic_api --revision v2.0 --save-as-json
+./local/dist/bin/example_cpp_main_api --revision v2.0 --save-as-json
 ```
 
 You can use `--help` to learn about available command line options.
