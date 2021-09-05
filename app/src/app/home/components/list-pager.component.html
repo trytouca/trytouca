@@ -43,7 +43,7 @@
   </div>
 </div>
 <div class="container px-4 py-2 mx-auto text-sm text-center"
-  *ngIf="pageLengths.length">
+  *ngIf="!(isFirstPage() && isLastPage() && pageLengths.length === 1)">
   <div class="inline-block" *ngIf="1 < pageLengths.length" wslDropdown>
     <div class="wsl-dropdown-toggle" id="pagel-dropdown" aria-haspopup="true"
       aria-expanded="false">

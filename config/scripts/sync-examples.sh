@@ -41,15 +41,15 @@ done
 
 rm -rf "${DIR_EXAMPLES}/python"
 cp -r "${DIR_CLIENTS}/python/examples" "${DIR_EXAMPLES}/python"
-for filename in "01_python_minimal/requirements.txt" "02_python_basic_api/requirements.txt" "03_python_client_api/requirements.txt" "04_python_external_files"; do
+for filename in "01_python_minimal/requirements.txt" "02_python_main_api/requirements.txt" "03_python_core_api/requirements.txt" "04_python_external_files"; do
     git -C "${DIR_EXAMPLES}" checkout "${DIR_EXAMPLES}/python/${filename}"
 done
 
 rm -rf "${DIR_EXAMPLES}/javascript"
 cp -r "${DIR_CLIENTS}/js/examples" "${DIR_EXAMPLES}/javascript"
 sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/01_node_minimal/tsconfig.json"
-sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/02_node_basic_api/tsconfig.json"
-sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/03_node_client_api/tsconfig.json"
+sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/02_node_main_api/tsconfig.json"
+sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/03_node_core_api/tsconfig.json"
 for filename in "lerna.json" "package.json" "tsconfig.json" "yarn.lock"; do
     git -C "${DIR_EXAMPLES}" checkout "${DIR_EXAMPLES}/javascript/${filename}"
 done
