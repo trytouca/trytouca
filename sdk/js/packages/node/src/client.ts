@@ -155,7 +155,8 @@ export class NodeClient implements BaseClient<NodeOptions> {
         await this._transport?.authenticate();
       }
     } catch (err) {
-      this._configuration_error = `Configuration failed: ${err.message}`;
+      const error = err instanceof Error ? err.message : 'Unknown Error';
+      this._configuration_error = `Configuration failed: ${error}`;
       return false;
     }
     this._configured = true;

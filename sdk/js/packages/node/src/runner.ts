@@ -63,9 +63,8 @@ enum ToucaErrorCode {
 /**
  *
  */
-class ToucaError {
-  private _message = '';
-  private _errors = new Map<ToucaErrorCode, string>([
+class ToucaError extends Error {
+  static errors = new Map<ToucaErrorCode, string>([
     [
       ToucaErrorCode.MissingWorkflow,
       `
@@ -110,16 +109,11 @@ class ToucaError {
    *
    */
   constructor(code: ToucaErrorCode, args: string[] = []) {
-    this._message = this._errors.has(code)
-      ? util.format(this._errors.get(code), ...args)
-      : 'Unknown Error';
-  }
-
-  /**
-   *
-   */
-  public get message(): string {
-    return this._message;
+    super(
+      ToucaError.errors.has(code)
+        ? util.format(ToucaError.errors.get(code), ...args)
+        : 'Unknown Error'
+    );
   }
 }
 
@@ -284,11 +278,12 @@ export class Runner {
   public async run_workflows(): Promise<void> {
     try {
       await this._run_workflows(process.argv);
-    } catch (error) {
+    } catch (err) {
+      const error = err instanceof Error ? err.message : 'Unknown Eror';
       process.stderr.write(
         util.format(
           'Touca encountered an error when executing this test:\n%s\n',
-          error.message
+          error
         )
       );
       process.exit(1);
@@ -347,8 +342,9 @@ export class Runner {
         for (const workflow_name in this._workflows) {
           await this._workflows[workflow_name](testcase);
         }
-      } catch (error) {
-        errors.push('message' in error ? error.message : 'unknown error');
+      } catch (err) {
+        const error = err instanceof Error ? err.message : 'Unknown Error';
+        errors.push(error);
       }
 
       timer.toc(testcase);
