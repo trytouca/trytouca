@@ -16,7 +16,7 @@
  */
 bool PostOperation::parse_impl(int argc, char* argv[])
 {
-    cxxopts::Options options("touca_cli --mode=pos");
+    cxxopts::Options options("touca_cli --mode=post");
     // clang-format off
     options.add_options("main")
         ("src", "file or directory to be posted", cxxopts::value<std::string>())

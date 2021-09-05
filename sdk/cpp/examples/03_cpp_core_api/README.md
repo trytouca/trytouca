@@ -1,6 +1,6 @@
 # Touca C++ API
 
-In the [previous tutorial](../02\_cpp_basic_api), we covered the
+In the [previous tutorial](../02\_cpp_main_api), we covered the
 high-level API of our C++ SDK and learned how to test a `parse_profile`
 function using the Touca test framework:
 
@@ -140,7 +140,7 @@ from our test tool, and not from our code under test.
 
 ## Capturing Test Results
 
-In the [previous tutorial](../02\_cpp_basic_api), we reviewed the main
+In the [previous tutorial](../02\_cpp_main_api), we reviewed the main
 Touca functions for describing behavior and performance of our code under
 test, by capturing values of important variables and runtime of interesting
 functions. In this section, we dive a little deeper to explain how Touca
