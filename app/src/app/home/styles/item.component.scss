@@ -16,7 +16,7 @@
     @apply text-blue-500;
   }
   h4 {
-    @apply text-base font-medium leading-8;
+    @apply text-base font-medium leading-8 max-w-xs truncate xl:max-w-lg;
   }
 }
 .wsl-item-subtitle {

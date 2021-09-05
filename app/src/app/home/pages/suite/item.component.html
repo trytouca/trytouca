@@ -1,4 +1,4 @@
-<div class="wsl-list-item">
+<div class="wsl-list-item md:space-x-4">
   <div class="wsl-item-heading">
     <div *ngIf="icon" class="wsl-item-status">
       <fa-icon [icon]="icon.type" [spin]="icon.spin"
@@ -10,7 +10,8 @@
       </a>
     </div>
   </div>
-  <div class="flex flex-row space-x-1 text-xs leading-6 md:leading-8">
+  <div
+    class="flex flex-row space-x-1 overflow-hidden text-xs leading-6 md:leading-8 whitespace-nowrap">
     <div *ngFor="let topic of shownTopics"
       class="flex items-center px-2 space-x-1 overflow-hidden text-gray-500 bg-white border rounded-full cursor-pointer select-none hover:text-black lg:px-4 whitespace-nowrap"
       (click)="topic.click()">

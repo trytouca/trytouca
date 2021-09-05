@@ -1,4 +1,4 @@
-<div class="wsl-list-item">
+<div class="wsl-list-item md:space-x-4">
   <div class="wsl-item-heading">
     <div *ngIf="icon" class="wsl-item-status">
       <fa-icon [icon]="icon.type" [spin]="icon.spin"
@@ -6,11 +6,12 @@
     </div>
     <div class="wsl-item-title">
       <a [routerLink]="data.link" [queryParams]="data.query">
-        <h4 class="whitespace-nowrap">{{ data.name }}</h4>
+        <h4>{{ data.name }}</h4>
       </a>
     </div>
   </div>
-  <div class="flex flex-row space-x-1 text-xs leading-6 md:leading-8">
+  <div
+    class="flex flex-row space-x-1 overflow-hidden text-xs leading-6 md:leading-8 whitespace-nowrap">
     <div *ngFor="let topic of topics"
       class="px-2 overflow-hidden text-gray-500 bg-white border rounded-full select-none lg:px-4 whitespace-nowrap">
       <span [attr.title]="topic.title || null">

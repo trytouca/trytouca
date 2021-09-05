@@ -11,7 +11,7 @@
           <li><a routerLink="../..">{{ batch?.teamName }}</a></li>
           <li><a routerLink="..">{{ batch?.suiteName }}</a></li>
           <li class="active" aria-current="page">
-            <span>{{ batch?.batchSlug }}</span>
+            <span>{{ batch?.batchSlug.split('@')[0] }}</span>
           </li>
         </ol>
       </nav>

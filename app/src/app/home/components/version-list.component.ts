@@ -22,6 +22,7 @@ import {
 } from '@/core/models/frontendtypes';
 
 type Version = {
+  name: string;
   slug: string;
   tags: string[];
 };
@@ -148,7 +149,9 @@ export class VersionListComponent implements OnChanges {
     } else {
       versions = this.suite.batches;
     }
-    const items = versions.slice(0, 10).map((v) => ({ slug: v, tags: [] }));
+    const items = versions
+      .slice(0, 10)
+      .map((v) => ({ name: v?.split('@')[0], slug: v, tags: [] }));
     const setTag = (name: string, func: (v: Version) => boolean) => {
       const item = items.find(func);
       if (item) {
@@ -187,9 +190,11 @@ export class VersionListComponent implements OnChanges {
    *
    */
   get currentVersion(): string {
-    return this.side === 'head'
-      ? this.params.srcBatchSlug
-      : this.params.dstBatchSlug;
+    const slug =
+      this.side === 'head'
+        ? this.params.srcBatchSlug
+        : this.params.dstBatchSlug;
+    return slug?.split('@')[0];
   }
 
   /**

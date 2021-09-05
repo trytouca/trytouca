@@ -1,13 +1,14 @@
-<div class="container px-4 py-2 mx-auto text-sm md:grid md:grid-cols-3"
+<div class="container px-4 py-2 mx-auto text-sm"
   *ngIf="!(isFirstPage() && isLastPage() && pageLengths.length === 1)">
-  <div></div>
   <div class="grid grid-cols-3 text-sm">
-    <div [style.visibility]="isFirstPage() ? 'hidden' : 'visible'"
+    <div class="text-left"
+      [style.visibility]="isFirstPage() ? 'hidden' : 'visible'"
       (click)="previousPage()">
       Previous Page
     </div>
     <div
-      [style.visibility]="isFirstPage() && isLastPage() ? 'hidden' : 'visible'">
+      [style.visibility]="isFirstPage() && isLastPage() ? 'hidden' : 'visible'"
+      class="text-center whitespace-nowrap">
       Page&nbsp;
       <div class="inline-block" wslDropdown>
         <div class="wsl-dropdown-toggle" id="pagen-dropdown"
@@ -34,29 +35,28 @@
       </div>
       &nbsp;of&nbsp;<span class="font-medium">{{ lastPageNumber }}</span>
     </div>
-    <div [style.visibility]="isLastPage() ? 'hidden' : 'visible'"
+    <div class="text-right"
+      [style.visibility]="isLastPage() ? 'hidden' : 'visible'"
       (click)="nextPage()">
       Next Page
     </div>
   </div>
-  <div class="md:text-right">
-    <ng-container *ngIf="pageLengths.length">
-      You are viewing
-      <div class="inline-block" *ngIf="1 < pageLengths.length" wslDropdown>
-        <div class="wsl-dropdown-toggle" id="pagel-dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          <span class="font-medium">{{ pageLength }}</span>&nbsp;<fa-icon
-            icon="chevron-down" size="xs"></fa-icon>
-        </div>
-        <div class="hidden w-48 wsl-dropdown-menu bottom-4">
-          <div class="wsl-dropdown-item" *ngFor="let length of pageLengths"
-            (click)="pageLength=length">
-            {{ length }}
-          </div>
-        </div>
+</div>
+<div class="container px-4 py-2 mx-auto text-sm text-center"
+  *ngIf="pageLengths.length">
+  <div class="inline-block" *ngIf="1 < pageLengths.length" wslDropdown>
+    <div class="wsl-dropdown-toggle" id="pagel-dropdown" aria-haspopup="true"
+      aria-expanded="false">
+      <span class="font-medium">{{ pageLength }}</span>&nbsp;<fa-icon
+        icon="chevron-down" size="xs"></fa-icon>
+    </div>
+    <div class="hidden w-48 text-left wsl-dropdown-menu bottom-4">
+      <div class="wsl-dropdown-item" *ngFor="let length of pageLengths"
+        (click)="pageLength=length">
+        {{ length }}
       </div>
-      <span *ngIf="pageLengths.length < 2">{{ pageLength }}</span>
-      keys per page.
-    </ng-container>
+    </div>
   </div>
+  <span *ngIf="pageLengths.length < 2">{{ pageLength }}</span>
+  rows per page
 </div>

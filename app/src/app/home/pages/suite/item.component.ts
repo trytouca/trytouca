@@ -61,8 +61,8 @@ export class SuiteItemBatchComponent {
   set item(item: FrontendBatchItem) {
     const meta = this.initMetadata(item);
     this.data = {
-      name: meta.slug,
       link: meta.slug,
+      name: meta.slug.split('@')[0],
       query: null
     };
     this.icon = this.initIcon(meta);

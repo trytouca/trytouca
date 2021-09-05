@@ -26,12 +26,14 @@ import { DateAgoPipe, DateTimePipe } from '@/shared/pipes';
 
 type Meta = Partial<{
   base: string;
+  baseName: string;
   batchCount: number;
   countFresh: number;
   countHead: number;
   countMissing: number;
   countPending: number;
   head: string;
+  headName: string;
   performance: string;
   score: number;
   submittedAt: Date;
@@ -99,9 +101,11 @@ export class TeamItemSuiteComponent {
     }
     if (item.baseline) {
       this._meta.base = item.baseline.batchSlug;
+      this._meta.baseName = item.baseline.batchSlug.split('@')[0];
     }
     if (item.latest) {
       this._meta.head = item.latest.batchSlug;
+      this._meta.headName = item.latest.batchSlug.split('@')[0];
       this._meta.submittedAt = new Date(item.latest.submittedAt);
     }
     this.icon = this.initIcon();
@@ -230,10 +234,10 @@ export class TeamItemSuiteComponent {
     }
 
     if (this._meta.base === this._meta.head) {
-      topics.push({ text: `${this._meta.base} (baseline, latest)` });
+      topics.push({ text: `${this._meta.baseName} (baseline, latest)` });
     } else {
-      topics.push({ text: `${this._meta.base} (baseline)` });
-      topics.push({ text: `${this._meta.head} (latest)` });
+      topics.push({ text: `${this._meta.baseName} (baseline)` });
+      topics.push({ text: `${this._meta.headName} (latest)` });
     }
 
     const tcs = this.i18pluralPipe.transform(this._meta.batchCount, {

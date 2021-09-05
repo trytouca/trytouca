@@ -224,13 +224,16 @@ export class BatchPageComponent
       const queryMap = this.route.snapshot.queryParamMap;
       const getQuery = (key: string) =>
         queryMap.has(key) ? queryMap.get(key) : null;
+      const dstBatchSlug = getQuery('cv');
       this.params = {
         currentTab: this.currentTab,
         teamSlug: paramMap.get('team'),
         srcSuiteSlug: paramMap.get('suite'),
         srcBatchSlug: paramMap.get('batch'),
+        srcBatchName: paramMap.get('batch').split('@')[0],
         dstSuiteSlug: getQuery('cn'),
-        dstBatchSlug: getQuery('cv')
+        dstBatchSlug,
+        dstBatchName: dstBatchSlug?.split('@')[0]
       };
     }
     this.batchPageService.updateRequestParams(this.params);

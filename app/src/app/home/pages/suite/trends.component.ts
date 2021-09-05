@@ -13,6 +13,7 @@ import { SuitePageService } from './suite.service';
 
 type Fields = Partial<{
   perfs: {
+    name: string;
     slug: string;
     duration: number;
   }[];
@@ -47,6 +48,7 @@ export class SuiteTrendsRuntimeComponent implements OnDestroy {
         .slice(-50)
         .map((v) => ({
           slug: v.batchSlug,
+          name: v.batchSlug.split('@')[0],
           duration: v.meta.metricsDurationHead
         }));
       if (!isEqual(perfs, this.fields.perfs)) {

@@ -22,7 +22,7 @@ export class DateAgoPipe implements PipeTransform {
     const minutes = Math.round(seconds / 60);
     const hours = Math.round(minutes / 60);
     const days = Math.round(hours / 24);
-    if (minutes === 1) {
+    if (minutes <= 1) {
       return `${seconds} seconds ago`;
     } else if (minutes < 45) {
       return `${minutes} minutes ago`;

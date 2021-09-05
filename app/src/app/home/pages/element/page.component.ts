@@ -202,9 +202,11 @@ export class ElementPageComponent
         teamSlug: paramMap.get('team'),
         srcSuiteSlug: paramMap.get('suite'),
         srcBatchSlug: getQuery('v') || paramMap.get('batch'),
+        srcBatchName: this.batchName(getQuery('v') || paramMap.get('batch')),
         srcElementSlug: paramMap.get('element'),
         dstSuiteSlug: getQuery('cn'),
         dstBatchSlug: getQuery('cv'),
+        dstBatchName: this.batchName(getQuery('cv')),
         dstElementSlug: getQuery('ct')
       };
       this.setCustomAlerts();
@@ -221,9 +223,9 @@ export class ElementPageComponent
       this.alert = {
         type: AlertType.Info,
         text: `Element <b>${this.params.srcElementSlug}</b> is missing
-          from version <b>${queryMap.get('bv')}</b>. You are viewing
-          results for version <b>${
-            this.params.dstBatchSlug || this.params.srcBatchSlug
+          from version <b>${this.batchName(queryMap.get('bv'))}</b>.
+          You are viewing results for version <b>${
+            this.params.dstBatchName || this.params.srcBatchName
           }</b>.`
       };
     }
@@ -231,8 +233,10 @@ export class ElementPageComponent
       this.alert = {
         type: AlertType.Info,
         text: `Element <b>${this.params.srcElementSlug}</b> is missing
-          from version <b>${queryMap.get('bcv')}</b>. You are viewing
-          results for version <b>${this.params.srcBatchSlug}</b>.`
+          from version <b>${this.batchName(queryMap.get('bcv'))}</b>.
+          You are viewing results for version <b>${
+            this.params.srcBatchName
+          }</b>.`
       };
     }
   }
@@ -368,5 +372,9 @@ export class ElementPageComponent
       metricsDurationSign: meta.metricsDurationSign,
       statements
     };
+  }
+
+  private batchName(batchSlug: string) {
+    return batchSlug?.split('@')[0];
   }
 }

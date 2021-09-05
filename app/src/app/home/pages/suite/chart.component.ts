@@ -43,7 +43,7 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
   }
 
   @Input()
-  set perfs(perfs: { slug: string; duration: number }[]) {
+  set perfs(perfs: { name: string; slug: string; duration: number }[]) {
     if (!perfs || perfs.length == 0) {
       return;
     }
@@ -57,7 +57,7 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
     this.chart = new Chart(chartContext, {
       type: 'line',
       data: {
-        labels: perfs.map((v) => v.slug),
+        labels: perfs.map((v) => v.name),
         datasets: [
           {
             backgroundColor: 'rgba(148,159,177,0.2)',

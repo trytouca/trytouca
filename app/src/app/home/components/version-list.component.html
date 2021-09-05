@@ -1,8 +1,8 @@
 <div *ngIf="countVersions() !== 0" wslDropdown>
   <div class="wsl-dropdown-toggle" id="version-dropdown-{{ side }}"
     aria-haspopup="true" aria-expanded="false">
-    <span class="font-semibold">{{ currentVersion }}</span>&nbsp;<fa-icon
-      icon="chevron-down" size="xs"></fa-icon>
+    <span class="font-semibold">{{ currentVersion }}</span>&nbsp;
+    <fa-icon icon="chevron-down" size="xs"></fa-icon>
   </div>
   <div class="hidden w-48 wsl-dropdown-menu">
     <span class="px-2 wsl-text-muted">Choose a {{ side }} version</span>
@@ -15,7 +15,7 @@
     <hr class="my-2">
     <div class="wsl-dropdown-item" *ngFor="let version of relevantVersions"
       (click)="updateVersion(version.slug)">
-      {{ version.slug }}
+      {{ version.name }}
       <ng-container *ngFor="let tag of version.tags">
         <span> ({{ tag }})</span>
       </ng-container>

@@ -1,13 +1,13 @@
-<div class="wsl-list-item">
+<div class="wsl-list-item md:space-x-4">
   <div class="wsl-item-heading">
     <div class="wsl-item-status">
       <fa-icon [icon]="meta.icon.type" [ngStyle]="{color: meta.icon.color}">
       </fa-icon>
     </div>
     <div class="wsl-item-title">
-      <span class="wsl-item-head" [title]="result.name">
+      <p class="max-w-xs truncate xl:max-w-lg" [title]="result.name">
         {{ result.name }}
-      </span>
+      </p>
     </div>
   </div>
   <div [ngSwitch]="meta.rowType">
@@ -29,11 +29,11 @@
     <div class="wsl-item-topics"
       *ngSwitchCase="rowType.Common_Imperfect_Simple">
       <div class="wsl-item-topic">
-        <span>value in version {{ params.srcBatchSlug }}:
+        <span>value in version {{ params.srcBatchName }}:
           <b>{{ result.srcValue }}</b></span>
       </div>
       <div class="wsl-item-topic">
-        <span>value in version {{ params.dstBatchSlug }}:
+        <span>value in version {{ params.dstBatchName }}:
           <b>{{ result.dstValue }}</b></span>
       </div>
       <div class="wsl-item-topic">
@@ -57,22 +57,22 @@
     <div class="wsl-item-topics"
       *ngSwitchCase="rowType.Common_Different_Simple">
       <div class="wsl-item-topic">
-        <span>value in version {{ params.srcBatchSlug }}:
+        <span>value in version {{ params.srcBatchName }}:
           <b>{{ result.srcValue }}</b> ({{ result.srcType }})</span>
       </div>
       <div class="wsl-item-topic">
-        <span>value in version {{ params.dstBatchSlug }}:
+        <span>value in version {{ params.dstBatchName }}:
           <b>{{ result.dstValue }}</b> ({{ result.dstType }})</span>
       </div>
     </div>
     <div class="wsl-item-topics"
       *ngSwitchCase="rowType.Common_Different_Complex">
       <div class="wsl-item-topic">
-        <span>value in version {{ params.srcBatchSlug }}:
+        <span>value in version {{ params.srcBatchName }}:
           ({{ result.srcType }})</span>
       </div>
       <div class="wsl-item-topic">
-        <span>value in version {{ params.dstBatchSlug }}:
+        <span>value in version {{ params.dstBatchName }}:
           ({{ result.dstType }})</span>
       </div>
       <div class="wsl-item-topic">
@@ -121,7 +121,7 @@
         <div class="wsl-complex-block-head">
           <div></div>
           <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.dstBatchSlug }}</span>
+            <span>value in version {{ params.dstBatchName }}</span>
           </div>
           <div class="wsl-complex-block-icons">
             <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"
@@ -137,7 +137,7 @@
         <div class="wsl-complex-block-head">
           <div></div>
           <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.srcBatchSlug }}</span>
+            <span>value in version {{ params.srcBatchName }}</span>
           </div>
           <div class="wsl-complex-block-icons">
             <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"
@@ -175,7 +175,7 @@
         <div class="wsl-complex-block-head">
           <div></div>
           <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.dstBatchSlug }}
+            <span>value in version {{ params.dstBatchName }}
               ({{ result.dstType }})</span>
           </div>
           <div class="wsl-complex-block-icons">
@@ -192,7 +192,7 @@
         <div class="wsl-complex-block-head">
           <div></div>
           <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.srcBatchSlug }}
+            <span>value in version {{ params.srcBatchName }}
               ({{ result.srcType }})</span>
           </div>
           <div class="wsl-complex-block-icons">
@@ -212,7 +212,7 @@
         <div class="wsl-complex-block-head">
           <div></div>
           <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.dstBatchSlug }}</span>
+            <span>value in version {{ params.dstBatchName }}</span>
           </div>
           <div class="wsl-complex-block-icons">
             <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"
@@ -231,7 +231,7 @@
         <div class="wsl-complex-block-head">
           <div></div>
           <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.srcBatchSlug }}</span>
+            <span>value in version {{ params.srcBatchName }}</span>
           </div>
           <div class="wsl-complex-block-icons">
             <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"

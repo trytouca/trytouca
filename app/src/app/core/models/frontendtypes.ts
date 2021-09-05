@@ -34,8 +34,10 @@ export type FrontendBatchCompareParams = {
   currentTab: string;
   teamSlug: string;
   srcSuiteSlug: string;
+  srcBatchName: string;
   srcBatchSlug: string;
   dstSuiteSlug: string;
+  dstBatchName: string;
   dstBatchSlug: string;
 };
 

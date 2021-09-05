@@ -1,25 +1,25 @@
-<div class="wsl-list-item">
+<div class="wsl-list-item md:space-x-4">
   <div class="wsl-item-heading">
     <div class="wsl-item-status">
       <fa-icon [icon]="meta.icon.type" [ngStyle]="{color: meta.icon.color}">
       </fa-icon>
     </div>
     <div class="wsl-item-title">
-      <span [title]="metric.name">
+      <p class="max-w-xs truncate xl:max-w-lg" [title]="metric.name">
         {{ metric.name }}
-      </span>
+      </p>
     </div>
   </div>
   <div class="wsl-item-topics">
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Fresh">
       {{ metric.duration() | datetime:'duration' }} in version
-      {{ params.srcBatchSlug }}
+      {{ params.srcBatchName }}
     </div>
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Missing">
       {{ metric.duration() | datetime:'duration' }} in version
-      {{ params.dstBatchSlug }}
+      {{ params.dstBatchName }}
     </div>
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Same">
@@ -27,19 +27,19 @@
     </div>
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Same">
-      same as in version {{ params.dstBatchSlug }}
+      same as in version {{ params.dstBatchName }}
     </div>
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Faster">
       {{ metric.absoluteDifference() | datetime:'duration' }}
       ({{ metric.changeDescription() }} <b class="wsl-text-success">faster</b>
-      than in version {{ params.dstBatchSlug }})
+      than in version {{ params.dstBatchName }})
     </div>
     <div class="wsl-item-topic"
       *ngIf="meta.changeType === MetricChangeType.Slower">
       {{ metric.absoluteDifference() | datetime:'duration' }}
       ({{ metric.changeDescription() }} <b class="wsl-text-danger">slower</b>
-      than in version {{ params.dstBatchSlug }})
+      than in version {{ params.dstBatchName }})
     </div>
   </div>
 </div>

@@ -306,6 +306,8 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         if (!params.dstElementSlug) {
           params.dstElementSlug = params.srcElementSlug;
         }
+        params.dstBatchName = params.dstBatchSlug.split('@')[0];
+        params.srcBatchName = params.srcBatchSlug.split('@')[0];
         if (!isEqual(params, this._params)) {
           this._params = params;
           this._paramsSubject.next(this._params);

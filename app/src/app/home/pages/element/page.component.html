@@ -13,7 +13,7 @@
           <li><a routerLink="../..">{{ element?.suiteName }}</a></li>
           <li>
             <a routerLink=".." [queryParams]="findPreviousPageQueryParams()">
-              {{ batch?.batchSlug }}
+              {{ batch?.batchSlug.split('@')[0] }}
             </a>
           </li>
           <li class="active" aria-current="page">

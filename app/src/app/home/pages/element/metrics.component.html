@@ -6,9 +6,9 @@
     <div class="wsl-list-head">
       <h2>Common Metrics</h2>
       <p>
-        Metrics that are both in version {{ params.srcBatchSlug }}
+        Metrics that are both in version {{ params.srcBatchName }}
         {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
-        and in version {{ params.dstBatchSlug }}
+        and in version {{ params.dstBatchName }}
         {{ suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : '' }}
       </p>
       <p *ngIf="countShownRows(ItemType.Common) !== countRows(ItemType.Common)">
@@ -30,9 +30,9 @@
     <div class="wsl-list-head">
       <h2>New Metrics</h2>
       <p>
-        Metrics that are submitted in version {{ params.srcBatchSlug }}
+        Metrics that are submitted in version {{ params.srcBatchName }}
         {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
-        but were not included in version {{ params.dstBatchSlug }}
+        but were not included in version {{ params.dstBatchName }}
         {{ suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : '' }}
       </p>
       <p *ngIf="countShownRows(ItemType.Fresh) !== countRows(ItemType.Fresh)">
@@ -55,9 +55,10 @@
     <div class="wsl-list-head">
       <h2>Missing Metrics</h2>
       <p>
-        Metrics that were included in version {{ params.dstBatchSlug }}
+        Metrics that were included in version
+        {{ params.dstBatchName }}
         {{ suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : '' }}
-        but are not submitted in version {{ params.srcBatchSlug }}
+        but are not submitted in version {{ params.srcBatchName }}
         {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
       </p>
       <p
