@@ -135,8 +135,8 @@ Revision: 1.0
  (  2 of 3  ) 51                               (pass, 0 ms)
  (  3 of 3  ) 97                               (pass, 0 ms)
 
-processed 3 of 3 testcases
-test completed in 574 ms
+Processed 3 of 3 testcases
+Test completed in 574 ms
 ```
 
 ![Touca server after submitting results for v1.0](../../.gitbook/assets/touca-sdk-quickstart-1.png)

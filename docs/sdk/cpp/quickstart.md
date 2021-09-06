@@ -91,8 +91,8 @@ Revision: 1.0
 
  (  1 of 1  ) 13                               (pass, 0 ms)
 
-processed 1 of 1 testcases
-test completed in 0 ms
+Processed 1 of 1 testcases
+Test completed in 0 ms
 ```
 
 The Touca test framework passes `13` as the `testcase` parameter to our test
@@ -137,8 +137,8 @@ Revision: 1.0
  (  2 of 3  ) 51                               (pass, 0 ms)
  (  3 of 3  ) 97                               (pass, 0 ms)
 
-processed 3 of 3 testcases
-test completed in 574 ms
+Processed 3 of 3 testcases
+Test completed in 574 ms
 ```
 
 ![Touca server after submitting results for v1.0](../../.gitbook/assets/touca-sdk-quickstart-1.png)
@@ -160,8 +160,8 @@ Revision: 2.0
  (  2 of 3  ) 51                               (pass, 0 ms)
  (  3 of 3  ) 97                               (pass, 0 ms)
 
-processed 3 of 3 testcases
-test completed in 546 ms
+Processed 3 of 3 testcases
+Test completed in 546 ms
 ```
 
 ![Touca server after submitting results for v2.0](../../.gitbook/assets/touca-sdk-quickstart-2.png)
