@@ -1,220 +1,171 @@
 # Core API of C++ SDK
 
-## Sample Code Under Test
-
-Touca is designed for easy integration with any production code of any size.
-Regardless of its order of complexity, any code under test can be considered as
-a function that takes _some_ set of inputs and performs _some_ operation,
-possibly producing _some_ output. For simplicity, let us assume that our code
-under test is a function that takes a number and determines whether it is prime
-or not.
-
-{% code title="code\_under\_test.hpp" %}
+[Previously](./main-api.md), we covered the high-level API of our C++ SDK and
+learned how to test a `parse_profile` software using the Touca test framework:
 
 ```cpp
-bool is_prime(const unsigned number);
+#include "students.hpp"
+#include "students_types.hpp"
+#include "touca/touca_main.hpp"
+
+void touca::main(const std::string& username)
+{
+    const auto& student = parse_profile(username);
+    // insert code here to describe the behavior
+    // and performance of the workflow under test
+}
 ```
 
-{% endcode %}
+Functions `touca::workflow` and `touca::run` are the entry-points to the Touca
+test framework. In addition to running our workflow under test with different
+test cases, the test framework provides facilities that include reporting
+progress, handling errors, parsing command line arguments, and many more. We
+intentionally designed this API to abstract away these common features to let
+developers focus on their workflow under test.
 
-We are not providing any implementation here since any Code Under Test is
-expected to change over time. We assume that different Revisions of this
-function may have different implementations but will share the same expected
-behavior.
-
-Our objective is to create a simple Regression Test Tool that we can build and
-run for any Revision of the Code Under Test to identify any change in the actual
-behavior of the function.
-
-## Anatomy of a Test Tool
-
-Like any Test Tool, a Regression Test Tool is a standalone application that can
-invoke our Code Under Test once or several times with one or more sets of
-inputs.
-
-The lifecycle of our Test Tool can be thought to have three phases:
-
-1.  **Initialization**: We configure our application resources and prepare a
-    list of our Test Cases.
-2.  **Execution**: We execute our Workflow Under Test, once per each Test Case,
-    and capture any data that characterize some aspect of the _behavior_ or
-    _performance_ of our Workflow.
-3.  **Reporting**: We can print our captured data on the screen, or write them
-    into a file. When using Touca, we also have the option to submit them to the
-    Touca server.
-
-When using any of the Touca SDKs, we configure the client library in the
-initialization phase, capture Test Results and Metrics during the execution
-phase, and submit our captured data to the Touca server during the reporting
-phase.
-
-## Integrating the Client
-
-Touca SDK for C++ is cross-platform and supports all popular compilers. It
-offers a build script that simplifies its build process into one single terminal
-command. See our "Build Instructions" document to learn how to build the library
-with your preferred toolchain and integrate it with your software development
-ecosystem.
-
-Once the Client Library is linked to our Test Tool, we can start making use of
-it by including its entry-point header file.
+Touca SDK for C++ provides a separate lower-level Client API that offers more
+flexibility and control over how tests are executed and how their results are
+handled. This API is most useful when integrating Touca with other existing test
+frameworks.
 
 ```cpp
 #include "touca/touca.hpp"
+#include "students_test.hpp"
+
+int main()
+{
+  touca::configure();
+  for (const username of touca::get_testcases()) {
+    touca::declare_testcase(username);
+
+    const auto& student = parse_profile(username);
+    // insert code here to describe the behavior
+    // and performance of the workflow under test
+
+    touca::post();
+    touca::save_binary("touca_" + username + ".bin");
+    touca::save_json("touca_" + username + ".json");
+    touca::forget_testcase(username);
+  }
+  touca::seal();
+}
 ```
+
+The above code uses the low-level Touca API to perform the same operations as
+the Touca test framework, without handling errors, reporting progress, and
+handling command line arguments. In this section, we will review the functions
+used in this code and explain what they do.
 
 ## Configuring the Client
 
-Touca Client requires a one-time call of function `touca::configure`. This
+Touca Client requires a one-time call of function `configure`. This
 configuration effectively activates all other Touca functions for capturing data
 and submission of results. Therefore, this function must be called from our Test
-Tool, and not from our Code Under Test. This design enables us to leave the
+Tool, and not from our code under test. This design enables us to leave the
 calls to Touca data capturing functions in our production code without having to
 worry about their performance impact.
 
-An ideal context to configure the Touca Client is the `main` function of our
-Test Tool during the application's initialization phase.
+The `configure` function can take various configuration parameters including the
+Touca API Key and API URL. You can also specify an external JSON configuration
+file via the `file` option. Check out C++ SDK reference API documentation for
+the full list of acceptable configuration parameters and their impact.
 
 ```cpp
-touca::configure({
-    { "api-key", "<YOUR API KEY>"},
-    { "api-url", "https://api.touca.io/@/team/workflow/v1.0" }
-});
+  touca::configure({
+    { api_key: "<TOUCA_API_KEY>" },
+    { api_url: "<TOUCA_API_URL>" },
+    { revision: "<TOUCA_TEST_VERSION>" },
+  });
 ```
 
-As shown above, configuring the client is as simple as calling `configure` with
-our configuration parameters in string format. The example above uses a set of
-configuration parameters that ensures the client is properly configured for any
-operation.
+> Touca API Key should be treated as a secret. We advise against hard-coding
+> this parameter.
 
-- `"version"` is an identifier for the implementation of our Workflow at a
-  particular point in time. This parameter is expected to be different for
-  different implementations of the Code Under Test.
-- `"suite"` is an identifier for our Regression Test Workflow. It is used on the
-  Touca Platform to distinguish our captured data from the captured data
-  submitted by other Touca-based regression test applications. This parameter is
-  expected to remain the same for different implementations of the Code Under
-  Test.
-- `"team"` is an identifier for the group of users who work on the Code Under
-  Test and are potentially interested in reviewing the submitted test results.
-- `"api-key"` is a user-specific token for authenticating to the Touca server
-  API. You can access your API Key from the "Account Settings" page on the Touca
-  Web Application.
-- `"api-url"` includes the URL to the Touca server API as well as the slugs for
-  the Team and Suite to which our test results should be associated.
+The three common parameters, API Key, API URL, and version of the code under
+test can also be set as environment variables `TOUCA_API_KEY`, `TOUCA_API_URL`,
+and `TOUCA_TEST_VERSION`. Environment variables always override the parameters
+passed to the `configure` function.
 
-Consult with our Reference API documentation for a complete list of valid
-configuration parameters and an explanation of their effects.
+All of the configuration parameters passed to `configure` are optional. When
+`api_key` and `api_url` are missing, the client is configured in the offline
+mode. It can still capture data and store them to files but it will not submit
+them to the Touca server.
 
-**Note**: We suggest that you assume configuring the Touca client is a
-time-consuming procedure that may take up to a tens of milliseconds.
+You can always force the client to run in offline mode by passing the `offline`
+parameter to the `configure` function.
+
+## Preparing Test Cases
+
+```cpp
+  for (const username of touca::get_testcases()) {
+    // insert the code to run for each test case
+  }
+```
+
+The Touca test framework expects test cases to be specified via the Touca server
+UI or via command line arguments. With the Client API, you can obtain the list
+of test cases from any source and pass them, one by one, to your code under test
+using a simple for loop.
+
+You can still use the function `get_testcases` to obtain the list of test cases
+from the Touca server, as our high-level API does. This function should be
+called when the client is configured to run in offline mode.
 
 ## Declaring Test Cases
 
-In the example above, our `is_prime` function which serves as our Code Under
-Test takes a non-negative number as its input. Naturally, it makes sense for our
-Regression Test Tool to test any implementation of `is_prime` with a set of
-prime and non-prime numbers. Let us suppose that we choose the following set of
-input numbers for our test.
+Once the client is configured, you can call `declare_testcase` once for each
+test case to indicate that subsequent calls to the data capturing functions like
+`add_result` should associate the captured data with that declared test case.
 
 ```cpp
-const auto input_numbers = { 1, 2, 3, 4, 7, 673, 7453, 14747 };
+  for (const username of touca::get_testcases()) {
+    touca::declare_testcase(username);
+    // now we can start calling our code under test
+    // and describing its behavior and performance
+  }
 ```
 
-We can give each input number to our `is_prime` function and capture data about
-its behavior and performance. Since we have multiple input numbers, we need a
-way to distinguish our captured data for each input.
+With Touca, we consider test cases as a set of unique names that identify
+different inputs to our code under test. These inputs can be anything as long as
+they are expected to produce the same behavior every time our code is executed.
 
-With Touca, we do so by matching each input number with a Test Case of a unique
-name. For the example above, we can use the string representation of each input
-number as the name of its Test Case.
+Similar to `touca::configure`, we should only call `touca::declare_testcase`
+from our test tool, and not from our code under test.
 
-Before passing each input to the Code Under Test, we can declare our Test Case
-by calling `touca::declare_testcase` to indicate that any subsequent calls to
-Touca's data capturing functions should associate the captured data with the
-declared Test Case.
+## Capturing Test Results
+
+In the [previous document](./main-api.md), we reviewed the main Touca functions
+for describing behavior and performance of our code under test, by capturing
+values of important variables and runtime of interesting functions. In this
+section, we dive a little deeper to explain how Touca tracks values of variables
+and performance benchmarks.
+
+### Preserving Data Types
+
+Touca data capturing functions such as `touca::add_result`, preserve the types
+of all captured data so that the Touca server can compare them in their original
+type.
 
 ```cpp
-for (const auto& input_number : input_numbers))
-{
-    touca::declare_testcase(std::to_string(input_number));
-    // ... execution
-}
+    touca::add_result("username", student.username);
+    touca::add_result("fullname", student.fullname);
+    touca::add_result("gpa", student.gpa);
 ```
 
-Note that the choice of the entity to define as a Test Case is for us, as
-authors of the Test Tool, to make. As a rule of thumb, the definition must be
-such that the Code Under Test is expected to yield a consistent behavior in
-different Revisions.
+In the example above, `touca::add_result` stores value of properties `username`
+and `fullname` as `std::string` while property `gpa` is stored as `float`. The
+server visualizes possible differences in these values based on their types.
 
-Similar to `touca::configure`, `touca::declare_testcase` should be called from
-our Test Tool, and not from our Code Under Test.
+### Customizing Data Serialization
 
-## Adding Results
+Touca SDK type system has built-in support for many commonly-used types of the
+C++ standard library and can easily be extended to support custom data types,
+such as `Date`.
 
-Once a Test Case is declared, we can start executing the Code Under Test that
-takes the input associated with the Test Case and performs _some_ operation on
-it. As we do so, we can capture as test results, values of any variable in the
-code that we intend to test for regression between different Revisions.
-
-In our example, our Code Under Test is a single function `is_prime` with a
-straightforward output indicating whether our number is prime or not. Since this
-output demonstrates the overall behavior of our Code Under Test, it is worth
-capturing as a Test Result.
+Consider the following definition for a user-defined type `Date`.
 
 ```cpp
-touca::add_result("is_prime", is_prime(input_number));
-```
-
-The return value of function `is_prime` is captured in its original type along
-with a unique identifier as the name of this data point, as reported on the
-Touca server.
-
-Since we are capturing the return output of our function, we are calling
-`touca::add_result` to the implementation of our Test Tool but we are not bound
-to do so. We can add any of Touca's data capturing functions to any function
-that may be executed when we run our Workflow Under Test.
-
-```cpp
-bool is_prime(const unsigned number)
-{
-    const auto is_even = number % 2 == 0;
-    touca::add_result("is_even", is_even);
-    if (is_even) {
-      return false;
-    }
-    // ...
-}
-```
-
-When our Code Under Test is running in production mode, all the data capturing
-functions of the Touca library will be ineffective and will have no impact on
-the behavior of the software. In our Test Tool, our call to `touca::configure`
-activates the data capturing functions, allowing us to extract information about
-the internal state of the production functions without the need to expose them.
-
-We can add any number of test results for each Test Case. The Library offers
-variants of function `touca::add_result` like `touca::add_array_element` and
-`touca::add_hit_count` that make it convenient to capture data in various code
-patterns. You can find a complete list of these functions in our API Reference
-document.
-
-Touca data capturing functions preserve the type of the original data and
-compare the captured results in their original type. Touca's type system has
-built-in support for many commonly-used types of the C++ standard library and
-can easily be extended to support custom data types; as we will see in the next
-section.
-
-## Supporting Custom Types
-
-In the code snippet above, variable `is_even` had a primitive data type. But let
-us assume that we were interested to capture a variable in a more complex Code
-Under Test that had a custom user-defined type `Date` with the following
-structure.
-
-```cpp
-struct Date
-{
+struct Date {
     unsigned short year;
     unsigned short month;
     unsigned short day;
@@ -228,15 +179,16 @@ solve this, we can extend Touca type system to support type `Date` by defining a
 partial template specialization function for it.
 
 ```cpp
+#include "touca/touca.hpp"
+
 template <>
-struct touca::convert::Conversion<Date>
-{
+struct touca::convert::Conversion<Date> {
     std::shared_ptr<types::IType> operator()(const Date& value)
     {
         auto out = std::make_shared<types::Object>("Date");
-        out->add("year", value._year);
-        out->add("month", value._month);
-        out->add("day", value._day);
+        out->add("year", value.year);
+        out->add("month", value.month);
+        out->add("day", value.day);
         return out;
     }
 };
@@ -245,173 +197,81 @@ struct touca::convert::Conversion<Date>
 Once the client library learns how to handle a custom type, it automatically
 supports handling it as sub-component of other types. As an example, with the
 above-mentioned partial template specialization function for type `Date`, we can
-start adding test results of type `std::vector<Date>` or type
-`std::map<string, Date>`. Additionally, supporting type `Date` enables objects
-of this type to be used as smaller components of even more complex types.
+start adding test results of `type std::vector<Date>` or
+`type std::map<string, Date>`. Additionally, supporting type `Date` enables
+objects of this type to be used as smaller components of even more complex
+types.
+
+```cpp
+    touca::add_result("birth_date", student.dob);
+```
 
 Consult with the Touca Type System section in Reference API documentation for
 more explanation and examples for supporting custom types.
 
-## Adding Assertions
+## Submitting Test Results
 
-There are always certain variables in the Code Under Test that are expected
-hardly ever to change for the same input between different Revisions of the
-software unless basic assumptions about the behavior of the Code Under Test are
-violated. When such variables do change, inspecting the change is of the highest
-priority and changes in other Test Results are usually less noteworthy.
-
-Touca offers a special feature for tracking these variables by capturing them as
-"assertions". Assertions are treated differently by the Touca server: The
-platform especially highlights assertions if they are different between two test
-versions and removes them from user focus if they remain unchanged. Therefore,
-assertions are particularly helpful for verifying assumptions about input data
-and their properties without overwhelming the Test Result reports.
-
-Even though our `is_prime` example is too primitive, we can capture the input
-number as an assertion making sure that the Test Case always represents that
-number.
+Once we execute our code under test for each test case and describe its behavior
+and performance, we can have the option to submit them to the Touca server by
+calling `touca::post`.
 
 ```cpp
-touca::add_assertion("input_number", input_number);
+    touca::post();
 ```
 
-Type handling of Assertions is similar to type handling of Results as mentioned
-in the previous section.
-
-## Adding Metrics
-
-Besides test results, Touca enables testing the _performance_ of our code under
-test to track if the changes introduced in a given revision make the workflow
-slower or faster for any subset of test cases. We refer to the captured
-performance data as Metrics. Touca offers a variety of patterns to collect
-metrics for any part of our software.
-
-In our `is_prime` example, we may want to track the overall runtime of our
-function. The code snippet below shows one way of collecting that information.
-
-```cpp
-int main()
-{
-    // ...
-    touca::start_timer("overall runtime");
-    touca::add_result("is_prime", is_prime(input_number));
-    touca::stop_timer("overall runtime");
-    // ...
-}
-```
-
-Alternatively, we can add a `touca::scoped_timer` to the `is_prime` function
-implementation:
-
-```cpp
-bool is_prime(const unsigned number)
-{
-    touca::scoped_timer timer("overall runtime");
-    touca::add_assertion("input_number", input_number);
-    // ...
-}
-```
-
-The Reference API documents a complete list of Touca functions for capturing
-Metrics.
-
-## Posting Results
-
-Once we execute our Code Under Test and capture our test results, we have the
-option to submit them to the Touca server using the function `touca::post`.
-Doing so allows us to inspect the captured data and compare them with our
-previously captured expected data.
-
-```cpp
-touca::post();
-```
+The server stores the captured data, compares them against the submitted data
+for pervious versions of our code, visualizes any differences, and reports them
+in real-time.
 
 It is possible to call `touca::post` multiple times during the runtime of our
-test application. Test cases already submitted to the Touca server whose results
-have not changed, will not be resubmitted. It is also possible to add results to
-an already submitted test case. Any subsequent call to `touca::post` will
-resubmit the modified Test Cases.
+test tool. Test cases already submitted to the Touca server whose results have
+not changed, will not be resubmitted. It is also possible to add results to an
+already submitted test case. Any subsequent call to `touca::post` will resubmit
+the modified test cases.
 
 We generally recommend that `touca::post` be called every time the code under
-test is executed for a given test case. This practice enables getting real-time
-feedback by comparing results with the suite baseline.
+test is executed for a given test case. This practice ensures real-time feedback
+about the test results, as they are being executed.
 
-See the Reference API documentation for further information about function
-`touca::post`.
-
-## Storing Results
+## Storing Test Results
 
 If we like to do so, we can store our captured data for one or more declared
 test cases on the local filesystem for further processing or later submission to
 the Touca server.
 
-Captured Data may be stored in either JSON or binary format using functions
-`touca::save_json` or `touca::save_binary` respectively. While JSON files are
-preferable for quick inspections, only binary files may be posted to the Touca
-server at a later time.
-
 ```cpp
-touca::save_binary("tutorial.bin");
-touca::save_json("tutorial.json");
+    touca::save_binary("touca_" + username + ".bin");
+    touca::save_json("touca_" + username + ".json");
 ```
 
-## The Final Test Tool
+We can store captured data in JSON or binary format using `touca::save_json` or
+`touca::save_binary` respectively. While JSON files are preferable for quick
+inspections, only binary files may be posted to the Touca server at a later
+time.
 
-Putting things together, the code snippet below demonstrates the fundamental
-structure of the Regression Test Tool using Touca SDK for C++.
+## Releasing a Test Case from Memory
 
-{% code title="regression\_test.hpp" %}
+If you are submitted thousands of test cases for each version of your workflow
+and capture significant amount of information for each test case, you can use
+`touca::forget_testcase` to release all the captured information from process
+memory, when you are done with a given test case.
 
 ```cpp
-#include "code_under_test.hpp"
-#include "touca/touca.hpp"
-
-int main()
-{
-    touca::configure({
-        { "api-key", "<YOUR API KEY>"},
-        { "api-url", "<YOUR API URL>" }
-        { "version", "<REVISION>" },
-    });
-
-    for (const auto& input_number : { 1, 2, 3, 4, 7, 673, 7453, 14747 }))
-    {
-        touca::declare_testcase(std::to_string(input_number));
-        touca::add_assertion("input_number", input_number);
-        touca::start_timer("overall runtime");
-        touca::add_result("is_prime", is_prime(input_number));
-        touca::stop_timer("overall runtime");
-    }
-
-    touca::save_binary("tutorial.bin");
-    touca::save_json("tutorial.json");
-    touca::post();
-}
+    touca::forget_testcase();
 ```
 
-{% endcode %}
+## Sealing Test Results
 
-Evidently, the code above is missing many features of a useful test tool:
+When all the test cases are executed for a given version of our code under test,
+we have the option to seal the version to let the server know that no further
+test result is expected to be submitted for it. This allows the server to send
+the final comparison result report to interested users, as soon as it is
+available.
 
-- The test cases are hard-coded. Running the code under test with a different
-  set of Test Cases requires rebuilding the Test Tool.
-- Version is hard-coded. Manually changes the Revision number every time a
-  change is introduced to the Code Under Test is not practical.
-- API Key is hard-coded. Touca API Key should be considered private user
-  information. It is preferable that it is read from a file or set as an
-  environment variable.
-- The application is missing appropriate error handling and error checking. A
-  serious Test Tool should handle any potential exception thrown by the code
-  under test for any test case. Also, function `touca::configure` may throw if
-  it is passed invalid or missing configuration parameters.
+```cpp
+  touca::seal();
+```
 
-In addition to the issues above, a typical Regression Test Tool for a
-non-trivial Code Under Test may demand supporting command-line options and
-configuration files, reporting its progress to the standard output, logging
-events generated by the Code Under Test, and many other usual application
-features.
-
-While it is possible to implement these features in the application above, Touca
-provides a separate Test Framework for C++ that helps abstract away many of the
-common features so developers can focus on testing the code under test. We cover
-this Test Framework in the "Tutorials" document.
+Sealing the version is optional. The Touca server automatically performs this
+operation once a certain amount of time has passed since the last test case was
+submitted.
