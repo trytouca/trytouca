@@ -27,6 +27,7 @@
   - [Getting Started](sdk/cpp/quickstart.md)
   - [Main API](sdk/cpp/main-api.md)
   - [Core API](sdk/cpp/core-api.md)
+  - [Legacy Framework](sdk/cpp/legacy.md)
   - [API Reference](https://app.touca.io/docs/clients/cpp/api.html)
   - [Github Repository](https://github.com/trytouca/touca-cpp)
 - [JavaScript SDK](sdk/javascript/README.md)

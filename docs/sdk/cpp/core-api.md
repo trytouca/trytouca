@@ -34,7 +34,11 @@ frameworks.
 
 int main()
 {
-  touca::configure();
+  touca::configure({
+    { "api-key", "<TOUCA_API_KEY>" },
+    { "api-url", "<TOUCA_API_URL>" },
+    { "version", "<TOUCA_TEST_VERSION>" }
+  });
   for (const username of touca::get_testcases()) {
     touca::declare_testcase(username);
 
@@ -60,8 +64,8 @@ used in this code and explain what they do.
 
 Touca Client requires a one-time call of function `configure`. This
 configuration effectively activates all other Touca functions for capturing data
-and submission of results. Therefore, this function must be called from our Test
-Tool, and not from our code under test. This design enables us to leave the
+and submission of results. Therefore, this function must be called from our test
+tool, and not from our code under test. This design enables us to leave the
 calls to Touca data capturing functions in our production code without having to
 worry about their performance impact.
 
@@ -71,11 +75,11 @@ file via the `file` option. Check out C++ SDK reference API documentation for
 the full list of acceptable configuration parameters and their impact.
 
 ```cpp
-  touca::configure({
-    { api_key: "<TOUCA_API_KEY>" },
-    { api_url: "<TOUCA_API_URL>" },
-    { revision: "<TOUCA_TEST_VERSION>" },
-  });
+touca::configure({
+  { "api-key": "<TOUCA_API_KEY>" },
+  { "api-url": "<TOUCA_API_URL>" },
+  { "revision": "<TOUCA_TEST_VERSION>" },
+});
 ```
 
 > Touca API Key should be treated as a secret. We advise against hard-coding
@@ -97,9 +101,9 @@ parameter to the `configure` function.
 ## Preparing Test Cases
 
 ```cpp
-  for (const username of touca::get_testcases()) {
-    // insert the code to run for each test case
-  }
+for (const username of touca::get_testcases()) {
+  // insert the code to run for each test case
+}
 ```
 
 The Touca test framework expects test cases to be specified via the Touca server
@@ -114,15 +118,16 @@ called when the client is configured to run in offline mode.
 ## Declaring Test Cases
 
 Once the client is configured, you can call `declare_testcase` once for each
-test case to indicate that subsequent calls to the data capturing functions like
-`add_result` should associate the captured data with that declared test case.
+test case to indicate that all subsequent captured data and performance
+benchmarks belong to the specified test case, until a different test case is
+declared. We can change this behavior for multi-threaded software workflows.
 
 ```cpp
-  for (const username of touca::get_testcases()) {
-    touca::declare_testcase(username);
-    // now we can start calling our code under test
-    // and describing its behavior and performance
-  }
+for (const username of touca::get_testcases()) {
+  touca::declare_testcase(username);
+  // now we can start calling our code under test
+  // and describing its behavior and performance
+}
 ```
 
 With Touca, we consider test cases as a set of unique names that identify
@@ -147,9 +152,9 @@ of all captured data so that the Touca server can compare them in their original
 type.
 
 ```cpp
-    touca::add_result("username", student.username);
-    touca::add_result("fullname", student.fullname);
-    touca::add_result("gpa", student.gpa);
+touca::add_result("username", student.username);
+touca::add_result("fullname", student.fullname);
+touca::add_result("gpa", student.gpa);
 ```
 
 In the example above, `touca::add_result` stores value of properties `username`
@@ -203,7 +208,7 @@ objects of this type to be used as smaller components of even more complex
 types.
 
 ```cpp
-    touca::add_result("birth_date", student.dob);
+touca::add_result("birth_date", student.dob);
 ```
 
 Consult with the Touca Type System section in Reference API documentation for
@@ -212,11 +217,10 @@ more explanation and examples for supporting custom types.
 ## Submitting Test Results
 
 Once we execute our code under test for each test case and describe its behavior
-and performance, we can have the option to submit them to the Touca server by
-calling `touca::post`.
+and performance, we can submit them to the Touca server.
 
 ```cpp
-    touca::post();
+touca::post();
 ```
 
 The server stores the captured data, compares them against the submitted data
@@ -225,9 +229,9 @@ in real-time.
 
 It is possible to call `touca::post` multiple times during the runtime of our
 test tool. Test cases already submitted to the Touca server whose results have
-not changed, will not be resubmitted. It is also possible to add results to an
-already submitted test case. Any subsequent call to `touca::post` will resubmit
-the modified test cases.
+not changed, will not be resubmitted. It is also possible to add new results for
+an already submitted test case. Any subsequent call to `touca::post` will
+resubmit the modified test cases.
 
 We generally recommend that `touca::post` be called every time the code under
 test is executed for a given test case. This practice ensures real-time feedback
@@ -235,13 +239,13 @@ about the test results, as they are being executed.
 
 ## Storing Test Results
 
-If we like to do so, we can store our captured data for one or more declared
-test cases on the local filesystem for further processing or later submission to
-the Touca server.
+We can choose to store captured test results and performance benchmarks for one
+or more of our declared test cases on the local filesystem for further
+processing or later submission to the Touca server.
 
 ```cpp
-    touca::save_binary("touca_" + username + ".bin");
-    touca::save_json("touca_" + username + ".json");
+touca::save_binary("touca_" + username + ".bin");
+touca::save_json("touca_" + username + ".json");
 ```
 
 We can store captured data in JSON or binary format using `touca::save_json` or
@@ -249,7 +253,7 @@ We can store captured data in JSON or binary format using `touca::save_json` or
 inspections, only binary files may be posted to the Touca server at a later
 time.
 
-## Releasing a Test Case from Memory
+## Forgetting Test Cases
 
 If you are submitted thousands of test cases for each version of your workflow
 and capture significant amount of information for each test case, you can use
@@ -257,7 +261,7 @@ and capture significant amount of information for each test case, you can use
 memory, when you are done with a given test case.
 
 ```cpp
-    touca::forget_testcase();
+touca::forget_testcase();
 ```
 
 ## Sealing Test Results
@@ -269,7 +273,7 @@ the final comparison result report to interested users, as soon as it is
 available.
 
 ```cpp
-  touca::seal();
+touca::seal();
 ```
 
 Sealing the version is optional. The Touca server automatically performs this
