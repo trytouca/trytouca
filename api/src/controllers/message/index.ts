@@ -1,5 +1,3 @@
-/**
- * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
- */
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 export { messageProcess } from './process'

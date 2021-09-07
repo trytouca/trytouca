@@ -1,8 +1,6 @@
-#
-# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
-#
-
 #!/usr/bin/env python
+
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 """
 This script provides an example on how to authenticate and interact
@@ -15,11 +13,12 @@ import requests
 # In on-prem deployments, this URL may be of the form
 # `https://touca.your.company/api
 
-ApiRoot="https://api.touca.io"
+ApiRoot = "https://api.touca.io"
 
 # Credentials of the user account on whose behalf the client authenticates.
-ClientUsername="pghorbanzade"
-ClientPassword="Touca$123"
+ClientUsername = "bbrown"
+ClientPassword = "Touca$123"
+
 
 def main():
     """
@@ -45,7 +44,8 @@ def main():
     session = requests.Session()
     response = session.post(
         url=ApiRoot + "/auth/signin",
-        json={'username': ClientUsername, 'password': ClientPassword})
+        json={"username": ClientUsername, "password": ClientPassword},
+    )
 
     # we expect a response status of 200. In more serious applications,
     # consider checking response.status_code instead.
@@ -72,5 +72,6 @@ def main():
     # Consult with Platform API documentation to learn more about the
     # expected Platform and/or Team roles for each route.
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

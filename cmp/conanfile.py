@@ -1,18 +1,24 @@
-#
-# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
-#
+#!/usr/bin/env python
+
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 from conans import ConanFile, CMake
+
 
 class ToucaConan(ConanFile):
 
     name = "touca_cmp"
     homepage = "https://touca.io"
     description = "Touca server component for comparing submitted test results"
-    topics = ( "regression-testing", "snapshot-testing", "test-framework", "test-automation" )
+    topics = (
+        "regression-testing",
+        "snapshot-testing",
+        "test-framework",
+        "test-automation",
+    )
     url = "https://docs.touca.io"
     license = "Private"
-    version ="1.4.0"
+    version = "1.4.0"
     author = "Pejman Ghorbanzade <pejman@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_find_package"

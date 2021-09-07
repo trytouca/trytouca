@@ -1,6 +1,4 @@
-#
-# Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
-#
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 

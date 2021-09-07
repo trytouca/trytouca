@@ -1,6 +1,4 @@
-/**
- * Copyright 2018-2020 Pejman Ghorbanzade. All rights reserved.
- */
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
