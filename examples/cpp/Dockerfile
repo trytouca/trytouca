@@ -18,7 +18,7 @@ RUN apt-get update \
     | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null \
   && apt-add-repository 'deb https://apt.kitware.com/ubuntu/ focal main' \
   && apt-get install -y --no-install-recommends \
-    cmake g++ gcc git make libssl-dev \
+    cmake g++ gcc git make libssl-dev vim \
   && rm -rf /var/lib/apt/lists/* \
   && cmake --version \
   && groupadd -r touca \
@@ -41,9 +41,8 @@ RUN apt-get update \
     "Run \"example_cpp_main_api --help\" for a list of all supported    \n" \
     "command line options. Use the \"build.sh\" script to rebuild the   \n" \
     "test tools if you liked to make changes to the source code.        \n" \
-    "You can use \"sudo\" without a password.                           \n" \
-    "This allows you to install missing packages, like vim, after       \n" \
-    "running \"sudo apt update\".                                       \n" \
+    "You can use \"sudo\" without a password to install missing         \n" \
+    "packages after running \"sudo apt update\".                        \n" \
     >> /etc/motd
 
 COPY . /opt

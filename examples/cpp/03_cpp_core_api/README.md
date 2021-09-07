@@ -257,7 +257,7 @@ We can store captured data in JSON or binary format using
 While JSON files are preferable for quick inspections, only binary
 files may be posted to the Touca server at a later time.
 
-## Releasing a Test Case from Memory
+## Forgetting Test Cases
 
 If you are submitted thousands of test cases for each version of your
 workflow and capture significant amount of information for each test case,
