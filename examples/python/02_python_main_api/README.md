@@ -59,7 +59,7 @@ We can run our test from the command line:
 ```bash
 export TOUCA_API_KEY="your-api-key"
 export TOUCA_API_URL="your-api-url"
-python ./students_test.py --revision v1.0 --testcase alice --testcase bob --testcase charlie
+python ./students_test.py --revision v1.0 --testcase alice bob charlie
 ```
 
 the Touca SDK captures the `Student` object with all its properties and

@@ -8,7 +8,7 @@ dir_source="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # make sure cmake is installed
 if ! hash "cmake" 2>/dev/null; then
-    printf "\e[1;33m%-10s\e[m %s\\n" "warning" "cmake build system generator is not installed"
+    printf "\e[1;33m%-10s\e[m %s\\n" "warning" "cmake is not installed"
     exit 1
 fi
 
