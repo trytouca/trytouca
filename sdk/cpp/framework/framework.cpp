@@ -928,7 +928,7 @@ namespace touca { namespace framework {
                 stats.count(ExecutionOutcome::Skip), suite->size());
         }
         printer.print(
-            "\nprocessed {} of {} testcases\ntest completed in {:d} ms\n\n",
+            "\nProcessed {} of {} testcases\nTest completed in {:d} ms\n\n",
             stats.count(ExecutionOutcome::Pass), suite->size(),
             timer.count("__workflow__"));
 
