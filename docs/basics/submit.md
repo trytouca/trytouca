@@ -558,7 +558,7 @@ code under test, without ever changing our test logic.
 {% code %}
 
 ```bash
-python3 prime_app_test.py
+python3 02_python_main_api/students_test.py
   --api-key <TOUCA_API_KEY>
   --api-url <TOUCA_API_URL>
   --revision v1.0
@@ -590,7 +590,7 @@ python3 prime_app_test.py
 {% code %}
 
 ```bash
-node dist/is_prime_test.js
+node 02_node_main_api/dist/students_test.js
   --api-key <TOUCA_API_KEY>
   --api-url <TOUCA_API_URL>
   --revision v1.0
