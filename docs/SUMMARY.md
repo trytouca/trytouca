@@ -42,7 +42,7 @@
 ## Guides <a id="guides"></a>
 
 - [Self Hosting](guides/self-hosting.md)
-- [Command Line Tool](guides/cli.md)
+- [Command Line Tools](guides/cli.md)
 - [Best Practices](guides/best-practices.md)
 - [Keyboard Shortcuts](guides/keyboard.md)
 - [Pricing Plans](guides/pricing.md)
