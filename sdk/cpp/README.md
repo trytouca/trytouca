@@ -158,33 +158,6 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(touca)
 ```
 
-The SDK has an optional dependency on OpenSSL for communicating with the Touca
-server over HTTPS. If CMake could not detect OpenSSL, it will build the SDK
-without HTTPS support. You can fix that by explicitly passing a hint about the
-location of OpenSSL, using the code below:
-
-```cmake
-FetchContent_Declare(
-    touca
-    GIT_REPOSITORY https://github.com/trytouca/touca-cpp.git
-    GIT_TAG        v1.4.1
-)
-
-FetchContent_GetProperties(touca)
-if(NOT touca_POPULATED)
-    FetchContent_Populate(touca)
-
-    # provide the path to the OpenSSL root directory
-    set(OPENSSL_ROOT_DIR <path_to_openssl>)
-
-    # proceed with building the touca Client Library and Test Framework.
-    add_subdirectory(${touca_SOURCE_DIR})
-endif()
-```
-
-The code above builds an additional CMake target touca_framework to be linked
-by regression test tools that make use of the Touca Test Framework.
-
 As an alternative, it is possible to use Conan for pulling Touca as a
 third-party library:
 

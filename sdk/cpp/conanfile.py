@@ -36,7 +36,6 @@ class ToucaConan(ConanFile):
         "cmake/**",
         "include/**",
         "src/**",
-        "framework/**",
         "tests/**",
         "utils/**",
     ]
