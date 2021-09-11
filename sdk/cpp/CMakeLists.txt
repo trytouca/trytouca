@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.14...3.21 FATAL_ERROR)
 
-project(touca VERSION 1.4.2 LANGUAGES CXX)
+include(cmake/utils.cmake)
 
 option(BUILD_SHARED_LIBS "build client as a shared library" OFF)
 option(TOUCA_BUILD_TESTS "build unittests" OFF)
@@ -17,6 +17,8 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN ON)
 set(CONAN_CMAKE_SILENT_OUTPUT ON)
+
+project(touca VERSION ${TOUCA_VERSION} LANGUAGES CXX)
 
 if (NOT DEFINED CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 11)
@@ -86,6 +88,7 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
 include(cmake/external.cmake)
 
+message(DEBUG "Touca: building version: ${TOUCA_VERSION}")
 message(DEBUG "Touca: using cxx standard: ${CMAKE_CXX_STANDARD}")
 message(DEBUG "Touca: using build type: ${CMAKE_BUILD_TYPE}")
 

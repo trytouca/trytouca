@@ -1,15 +1,9 @@
-<div align="center">
-  <a href="https://touca.io" target="_blank" rel="noopener">
-    <img alt="Touca Logo" height="48px" src="https://touca.io/logo/touca-logo-w-text.svg" />
-  </a>
-  <h1>Touca SDK for C++</h1>
-  <p>
-    <a href="https://github.com/trytouca/touca-cpp/releases" target="_blank" rel="noopener"><img alt="Latest version" src="https://img.shields.io/github/v/release/trytouca/touca-cpp" /></a>
-    <a href="https://github.com/trytouca/touca-cpp/actions" target="_blank" rel="noopener"><img alt="Build Status" src="https://img.shields.io/github/workflow/status/trytouca/touca-cpp/touca-cpp-main" /></a>
-    <a href="https://touca-cpp.readthedocs.io/" target="_blank" rel="noopener"><img alt="API Reference Documentation" src="https://readthedocs.org/projects/touca-cpp/badge/?version=latest" /></a>
-    <a href="https://github.com/trytouca/touca-cpp/blob/main/LICENSE" target="_blank" rel="noopener"><img alt="License" src="https://img.shields.io/github/license/trytouca/touca-cpp" /></a>
-  </p>
-</div>
+# Touca SDK for C++
+
+[![Latest version](https://img.shields.io/github/v/release/trytouca/touca-cpp)](https://github.com/trytouca/touca-cpp/releases)
+[![Build Status](https://img.shields.io/github/workflow/status/trytouca/touca-cpp/touca-cpp-main)](https://github.com/trytouca/touca-cpp/actions)
+[![API Reference Documentation](https://readthedocs.org/projects/touca-cpp/badge/?version=latest)](https://touca-cpp.readthedocs.io)
+[![License](https://img.shields.io/github/license/trytouca/touca-cpp)](https://github.com/trytouca/touca-cpp/blob/main/LICENSE)
 
 Touca helps you understand the true impact of your day to day code changes
 on the behavior and performance of your overall software, as you write code.

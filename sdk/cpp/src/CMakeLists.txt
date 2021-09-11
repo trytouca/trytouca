@@ -76,8 +76,8 @@ target_compile_features(
 set_target_properties(
         touca_client
     PROPERTIES
-        SOVERSION 1
-        VERSION 1.4.1
+        SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
+        VERSION ${TOUCA_VERSION}
         POSITION_INDEPENDENT_CODE ON
         DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
 )
@@ -87,7 +87,10 @@ if (OpenSSL_FOUND)
     target_link_libraries(touca_client PRIVATE OpenSSL::SSL OpenSSL::Crypto)
     target_compile_definitions(touca_client PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT)
 else()
-    message(WARNING "Failed to find OpenSSL. Touca will be built without HTTPS support.")
+    message(WARNING
+        " Failed to find OpenSSL."
+        " Touca will be built without HTTPS support.\n"
+        " See https://docs.touca.io/sdk/cpp/installing#enabling-https")
 endif()
 
 generate_export_header(
