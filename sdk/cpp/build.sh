@@ -239,10 +239,7 @@ build_coverage () {
     build_build "$1"
 
     local dir_bin="${dir_build}/bin"
-    declare -a keys=("client" "framework")
-    declare -A exclude_directory=(
-        ["client"]="framework\/.+"
-        ["framework"]="src\/.+")
+    declare -a keys=("client")
     for key in "${keys[@]}"; do
       local dir_key="${dir_test}/${key,,}"
       local file_bin="${dir_bin}/touca_${key}_tests_debug"
@@ -258,8 +255,7 @@ build_coverage () {
             -instr-profile="${path_llvm_data}" \
             -format=html -o "${dir_key}" \
             --ignore-filename-regex=".+_generated.h" \
-            --ignore-filename-regex="tests\/.+" \
-            --ignore-filename-regex="${exclude_directory[${key,,}]}"
+            --ignore-filename-regex="tests\/.+"
         xcrun llvm-cov report "${file_bin}" \
             -instr-profile="${path_llvm_data}" >| "${path_report_stdout}"
       else
@@ -282,7 +278,7 @@ build_lint () {
     if [ $# -ne 1 ]; then return 1; fi
     check_prerequisite_commands "clang-format"
     local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
-    for dir in "utils" "framework" "src" "include" "tests" "example"; do
+    for dir in "utils" "src" "include" "tests" "example"; do
         find "${dir_source}/${dir}" \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
             -exec clang-format -i {} +
     done

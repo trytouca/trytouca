@@ -2,7 +2,7 @@
 
 #include "touca/framework.hpp"
 #include "catch2/catch.hpp"
-#include "tests/client/devkit/tmpfile.hpp"
+#include "tests/devkit/tmpfile.hpp"
 #include "tests/framework/utils.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/extra/version.hpp"

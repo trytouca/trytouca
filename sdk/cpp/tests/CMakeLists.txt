@@ -18,6 +18,21 @@ target_sources(
         devkit/tmpfile.hpp
 )
 
+if (TOUCA_BUILD_FRAMEWORK)
+    target_sources(
+            touca_client_tests
+        PRIVATE
+            framework/framework.cpp
+            framework/utils.hpp
+    )
+endif()
+
+target_include_directories(
+        touca_client_tests
+    PRIVATE
+        ${TOUCA_CLIENT_ROOT_DIR}
+)
+
 target_link_libraries(
         touca_client_tests
     PRIVATE
