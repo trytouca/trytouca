@@ -18,7 +18,7 @@ target_include_directories(
 target_link_libraries(
         touca_framework_tests
     PRIVATE
-        touca_framework
+        touca_client
         Catch2::Catch2
 )
 

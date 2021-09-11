@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "touca/framework/lib_api.hpp"
+#include "touca/lib_api.hpp"
 #include <iostream>
 #include <sstream>
 
 /**
  * @brief Captures content printed to standard output and error streams.
  */
-struct TOUCA_FRAMEWORK_API OutputCapturer {
+struct TOUCA_CLIENT_API OutputCapturer {
     OutputCapturer();
     ~OutputCapturer();
 

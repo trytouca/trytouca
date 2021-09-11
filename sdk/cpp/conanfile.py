@@ -27,7 +27,7 @@ class ToucaConan(ConanFile):
         "with_tests": False,
         "with_utils": False,
         "with_examples": False,
-        "with_framework": False,
+        "with_framework": True,
         "with_openssl": True,
     }
     generators = "cmake_find_package"
@@ -105,9 +105,3 @@ class ToucaConan(ConanFile):
         self.cpp_info.components["client"].names["cmake_find_package"] = "client"
         self.cpp_info.components["client"].libs = ["touca_client"]
         self.cpp_info.components["client"].requires = client_requirements
-        if self.options.with_framework:
-            self.cpp_info.components["framework"].names[
-                "cmake_find_package"
-            ] = "framework"
-            self.cpp_info.components["framework"].libs = ["touca_framework"]
-            self.cpp_info.components["framework"].requires = ["client"]

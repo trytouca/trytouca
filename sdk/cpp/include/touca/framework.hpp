@@ -8,11 +8,11 @@
  * @brief Entry-point to the Touca Test Framework for C++.
  *
  * @details `touca/framework.hpp` provides the functions necessary to
- *          write a Regression Test tool that can submit its results to the
+ *          write a Touca test tool that can submit its results to the
  *          Touca server.
  */
 
-#include "touca/framework/lib_api.hpp"
+#include "touca/lib_api.hpp"
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -103,7 +103,7 @@ namespace touca { namespace framework {
      *
      * @since v1.2.0
      */
-    struct TOUCA_FRAMEWORK_API LogSubscriber {
+    struct TOUCA_CLIENT_API LogSubscriber {
         /**
          * @brief Function called by the Touca Test Framework every time
          *        it publishes a log event.
@@ -135,7 +135,7 @@ namespace touca { namespace framework {
      *
      * @since v1.2.0
      */
-    class TOUCA_FRAMEWORK_API Suite {
+    class TOUCA_CLIENT_API Suite {
     public:
         /**
          * @brief Populates the set of testcases stored in this object.
@@ -206,7 +206,7 @@ namespace touca { namespace framework {
      *
      * @since v1.2.0
      */
-    class TOUCA_FRAMEWORK_API Workflow {
+    class TOUCA_CLIENT_API Workflow {
     public:
         /**
          * @brief Describes extra command line arguments supported by this
@@ -443,6 +443,6 @@ namespace touca { namespace framework {
      *
      * @since v1.2.0
      */
-    TOUCA_FRAMEWORK_API int main(int argc, char* argv[], Workflow& workflow);
+    TOUCA_CLIENT_API int main(int argc, char* argv[], Workflow& workflow);
 
 }} // namespace touca::framework

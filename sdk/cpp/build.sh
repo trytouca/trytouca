@@ -10,7 +10,7 @@ usage: $(basename "$0") [ -h | --long-options]
   --with-tests              include client library unittests in build
   --with-utils              include client-side utility application in build
   --with-examples           include sample regression test tool in build
-  --with-framework          include sample regression test framework in build
+  --without-framework       exclude regression test framework
   --all                     include all components
 
   --docs                    build client library documentation
@@ -128,7 +128,7 @@ validate_arguments () {
     declare -A options=${2#*=}
     local count_options
     count_options="$(count_keys_if_set "$(declare -p options)")"
-    if [ "${modes["build"]}" -eq 0 ] && [ "${modes["coverage"]}" -eq 0 ] && [ "$count_options" -ne 0 ]; then
+    if [ "${modes["build"]}" -eq 0 ] && [ "${modes["coverage"]}" -eq 0 ] && [ "$count_options" -gt 1 ]; then
         log_error "build mode does not support specified options"
     fi
 }
@@ -352,7 +352,7 @@ declare -A BUILD_OPTIONS=(
     ["with-tests"]=0
     ["with-utils"]=0
     ["with-examples"]=0
-    ["with-framework"]=0
+    ["with-framework"]=1
     ["with-coverage"]=0
 )
 
@@ -412,8 +412,11 @@ for arg in "$@"; do
         "--with-examples")
             BUILD_OPTIONS["with-examples"]=1
             ;;
-        "--with-framework")
+        "--with-framework") # deprecated (included for backward compatibility)
             BUILD_OPTIONS["with-framework"]=1
+            ;;
+        "--without-framework")
+            BUILD_OPTIONS["with-framework"]=0
             ;;
         *)
             log_warning "invalid argument $arg"

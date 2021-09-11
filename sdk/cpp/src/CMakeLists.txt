@@ -9,6 +9,9 @@ touca_find_package("ghcFilesystem")
 touca_find_package("httplib")
 touca_find_package("RapidJSON")
 touca_find_package("spdlog")
+if (TOUCA_BUILD_FRAMEWORK)
+    touca_find_package("cxxopts")
+endif()
 
 add_library(touca_client "")
 
@@ -28,6 +31,16 @@ target_sources(
         devkit/utils.cpp
 )
 
+if (TOUCA_BUILD_FRAMEWORK)
+    target_sources(
+        touca_client
+    PRIVATE
+        framework/framework.cpp
+        framework/suites.cpp
+        framework/utils.cpp
+    )
+endif()
+
 target_link_libraries(
         touca_client
     PRIVATE
@@ -42,11 +55,16 @@ target_link_libraries(
         $<$<PLATFORM_ID:Linux>:pthread>
 )
 
+if (TOUCA_BUILD_FRAMEWORK)
+    target_link_libraries(touca_client PRIVATE cxxopts::cxxopts)
+endif()
+
 target_include_directories(
         touca_client
     PUBLIC
-        ${TOUCA_CLIENT_ROOT_DIR}/include
-        ${CMAKE_BINARY_DIR}/generated
+        $<BUILD_INTERFACE:${TOUCA_CLIENT_ROOT_DIR}/include>
+        $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_compile_definitions(
@@ -55,6 +73,12 @@ target_compile_definitions(
         RAPIDJSON_HAS_STDSTRING
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
+)
+
+target_compile_options(
+        touca_client
+    PRIVATE
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-unused-parameter>
 )
 
 target_compile_features(
@@ -105,17 +129,3 @@ source_group(
     FILES
         $<TARGET_PROPERTY:touca_client,SOURCES>
 )
-
-install(TARGETS touca_client
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            COMPONENT Touca_Runtime
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            COMPONENT Touca_Runtime
-            NAMELINK_COMPONENT Touca_Development
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            COMPONENT Touca_Development
-)
-install(DIRECTORY "${TOUCA_CLIENT_ROOT_DIR}/include/touca"
-        DESTINATION include MESSAGE_NEVER FILES_MATCHING PATTERN "*.h*")
-install(DIRECTORY "${CMAKE_BINARY_DIR}/generated/touca"
-        DESTINATION include MESSAGE_NEVER FILES_MATCHING PATTERN "*.h*")

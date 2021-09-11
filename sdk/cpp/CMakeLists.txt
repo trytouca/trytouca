@@ -4,12 +4,20 @@ cmake_minimum_required(VERSION 3.14...3.21 FATAL_ERROR)
 
 include(cmake/utils.cmake)
 
+if (NOT DEFINED TOUCA_MAIN_PROJECT)
+    set(TOUCA_MAIN_PROJECT OFF)
+    if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+        set(TOUCA_MAIN_PROJECT ON)
+    endif()
+endif()
+
 option(BUILD_SHARED_LIBS "build client as a shared library" OFF)
 option(TOUCA_BUILD_TESTS "build unittests" OFF)
 option(TOUCA_BUILD_UTILS "build utility applications" OFF)
 option(TOUCA_BUILD_EXAMPLES "build example test projects" OFF)
-option(TOUCA_BUILD_FRAMEWORK "build regression test framework" OFF)
+option(TOUCA_BUILD_FRAMEWORK "build regression test framework" ON)
 option(TOUCA_ENABLE_COVERAGE "enable code coverage generation" OFF)
+option(TOUCA_INSTALL "Generate the install target" ${TOUCA_MAIN_PROJECT})
 
 set(TOUCA_CLIENT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -21,12 +29,12 @@ set(CONAN_CMAKE_SILENT_OUTPUT ON)
 project(touca VERSION ${TOUCA_VERSION} LANGUAGES CXX)
 
 if (NOT DEFINED CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 11)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+    set(CMAKE_CXX_STANDARD 11)
+    set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
 if (NOT DEFINED CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  set(CMAKE_BUILD_TYPE Release)
+    set(CMAKE_BUILD_TYPE Release)
 endif()
 
 if (NOT DEFINED CMAKE_DEBUG_POSTFIX)
@@ -110,6 +118,19 @@ if (TOUCA_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
-if (TOUCA_BUILD_FRAMEWORK)
-    add_subdirectory(framework)
+if (TOUCA_INSTALL)
+    install(
+        TARGETS touca_client
+        EXPORT touca
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+                COMPONENT Touca_Runtime
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                COMPONENT Touca_Runtime NAMELINK_COMPONENT Touca_Development
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                COMPONENT Touca_Development
+    )
+    install(DIRECTORY "${TOUCA_CLIENT_ROOT_DIR}/include/touca"
+            DESTINATION include MESSAGE_NEVER FILES_MATCHING PATTERN "*.h*")
+    install(DIRECTORY "${CMAKE_BINARY_DIR}/generated/touca"
+            DESTINATION include MESSAGE_NEVER FILES_MATCHING PATTERN "*.h*")
 endif()

@@ -158,10 +158,10 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(touca)
 ```
 
-But in addition to the Client Library, Touca SDK for C++ also includes a
-Test Framework which is disabled by default. For serious regression test
-tools, we encourage the use of this test framework which can be built with
-a small modification to the code above:
+The SDK has an optional dependency on OpenSSL for communicating with the Touca
+server over HTTPS. If CMake could not detect OpenSSL, it will build the SDK
+without HTTPS support. You can fix that by explicitly passing a hint about the
+location of OpenSSL, using the code below:
 
 ```cmake
 FetchContent_Declare(
@@ -174,11 +174,8 @@ FetchContent_GetProperties(touca)
 if(NOT touca_POPULATED)
     FetchContent_Populate(touca)
 
-    # enable building of touca test framework
-    set(TOUCA_BUILD_FRAMEWORK ON)
-
-    # optionally, provide the path to the OpenSSL root directory
-    # set(OPENSSL_ROOT_DIR <path_to_openssl>)
+    # provide the path to the OpenSSL root directory
+    set(OPENSSL_ROOT_DIR <path_to_openssl>)
 
     # proceed with building the touca Client Library and Test Framework.
     add_subdirectory(${touca_SOURCE_DIR})

@@ -16,7 +16,7 @@ namespace touca { namespace framework {
      *
      * @since v1.2.0
      */
-    class TOUCA_FRAMEWORK_API RemoteSuite final : public Suite {
+    class TOUCA_CLIENT_API RemoteSuite final : public Suite {
     public:
         RemoteSuite(const Options& options);
 
@@ -35,7 +35,7 @@ namespace touca { namespace framework {
      *
      * @since v1.2.0
      */
-    class TOUCA_FRAMEWORK_API FileSuite final : public Suite {
+    class TOUCA_CLIENT_API FileSuite final : public Suite {
     public:
         FileSuite(const std::string& path);
 
