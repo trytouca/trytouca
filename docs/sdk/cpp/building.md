@@ -35,22 +35,22 @@ Touca SDK for C++ has five main components.
 
 | Name                         | Build Argument     |
 | ---------------------------- | ------------------ |
-| Client Library for C++       |                    |
-| Test Framework for C++       | `--with-framework` |
+| Core Library                 |                    |
+| Test Framework               | `--with-framework` |
 | Sample Regression Test Tools | `--with-examples`  |
 | Utility Command Line Tool    | `--with-utils`     |
 | Unit Tests                   | `--with-tests`     |
 
 We provide build scripts `build.sh` and `build.bat` for Unix and Windows
-platforms, respectively. The build scripts build "Client Library for C++" by
-default. You can pass the appropriate argument shown in the table above to build
-other components as needed.
+platforms, respectively. The build scripts build the core library and the test
+framework by default. You can pass the appropriate argument shown in the table
+above to build other components as needed.
 
 As an example, the command below builds all the components except the unit
 tests.
 
 ```bash
-./build.sh --with-framework --with-utils --with-examples
+./build.sh --with-utils --with-examples
 ```
 
 You can build all of the components using the `--all` argument.
@@ -77,21 +77,21 @@ Client Library. But Touca has several other components that can be enabled by
 passing the appropriate options to the command above, as listed in the table
 below.
 
-| Component Name            | CMake Option            | Default |
-| ------------------------- | ----------------------- | ------- |
-| Test Framework Library    | `TOUCA_BUILD_FRAMEWORK` | OFF     |
-| Command-Line Utility Tool | `TOUCA_BUILD_UTILS`     | OFF     |
-| Sample Test Tools         | `TOUCA_BUILD_EXAMPLES`  | OFF     |
-| Unit-Tests                | `TOUCA_BUILD_TESTS`     | OFF     |
+| Component Name           | CMake Option            | Default |
+| ------------------------ | ----------------------- | ------- |
+| Test Framework           | `TOUCA_BUILD_FRAMEWORK` | ON      |
+| Command-Line Application | `TOUCA_BUILD_UTILS`     | OFF     |
+| Sample Test Tools        | `TOUCA_BUILD_EXAMPLES`  | OFF     |
+| Unit-Tests               | `TOUCA_BUILD_TESTS`     | OFF     |
 
-As an example, the command below enables building Touca Test Framework for C++.
+As an example, the command below enables building sample Touca tests.
 
 ```bash
-cmake -B"<project_directory>/local/build" -H"<project_directory>" -DTOUCA_BUILD_FRAMEWORK=ON
+cmake -B"<project_directory>/local/build" -H"<project_directory>" -DTOUCA_BUILD_EXAMPLES=ON
 ```
 
-Now we can proceed with building the source code via CMake which uses the native
-build tool of your platform.
+We can build the source code via CMake which uses the native build tool of your
+platform.
 
 ```bash
 cmake --build "<project_directory>/local/build" --parallel

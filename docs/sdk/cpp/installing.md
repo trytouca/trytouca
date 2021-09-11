@@ -24,10 +24,14 @@ FetchContent_MakeAvailable(touca)
 The above CMake code pulls the latest stable code of the Touca client library
 and generates a `touca_client` CMake target that you can link to.
 
-In addition to the client library, the SDK includes a test framework with a
-high-level API which makes writing Touca tests much more easier. While this
-framework is disabled by default, we highly encourage its use, when you do not
-need direct access to the low-level Touca Client API.
+### Enabling HTTPS
+
+The SDK has an optional dependency on OpenSSL for communicating with the Touca
+server over HTTPS. In most platforms, this library is automatically discovered
+and used by the build recipe. If OpenSSL is not installed in the default
+location, we may need to provide its root directory as a hint to the library’s
+build recipe. Here is a typical way to do so on macOS when OpenSSL is installed
+through `homebrew`.
 
 ```text
 FetchContent_Declare(
@@ -40,30 +44,11 @@ FetchContent_GetProperties(touca)
 if(NOT touca_POPULATED)
     FetchContent_Populate(touca)
 
-    # enable building of touca test framework
-    set(TOUCA_BUILD_FRAMEWORK ON)
+    # provide the path to the OpenSSL root directory
+    set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
 
-    # optionally, provide the path to the OpenSSL root directory
-    # set(OPENSSL_ROOT_DIR <path_to_openssl>)
-
-    # proceed with building the touca client library and test framework.
     add_subdirectory(${touca_SOURCE_DIR})
 endif()
-```
-
-The code above builds an additional CMake target `touca_framework` that you can
-link to.
-
-### Enabling HTTPS
-
-Our SDK requires OpenSSL to communicate with the Touca server through HTTPS. In
-most platforms, this library is automatically discovered and used by the build
-recipe. But if OpenSSL is not installed in the default location, we may need to
-provide its root directory as a hint to the library’s build recipe. Here is a
-typical way to do so on macOS when OpenSSL is installed through `homebrew`.
-
-```text
-set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
 ```
 
 ## Using Conan
