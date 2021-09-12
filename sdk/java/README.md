@@ -50,8 +50,8 @@ This repository is released under the Apache-2.0 License. See [`LICENSE`][licens
 
 [docs-quickstart]: https://docs.touca.io/basics/quickstart
 
-[docs-java]: https://docs.touca.io/sdk/cpp
+[docs-java]: https://docs.touca.io/sdk/java
 
-[docs-java-api]: https://app.touca.io/docs/clients/cpp/api.html
+[docs-java-api]: https://app.touca.io/docs/clients/java/api.html
 
-[docs-java-installing]: https://docs.touca.io/sdk/cpp/installing
+[docs-java-installing]: https://docs.touca.io/sdk/java/installing

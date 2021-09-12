@@ -52,3 +52,13 @@ jobs:
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
+      - name: upload coverage to codecov
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: codecov/codecov-action@v1
+        env:
+          OS: ${{ runner.os }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./touca/build/reports/jacoco/test/jacocoTestReport.xml
+          env_vars: OS
+          fail_ci_if_error: true
