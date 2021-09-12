@@ -21,17 +21,14 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(touca)
 ```
 
-The above CMake code pulls the latest stable code of the Touca client library
-and generates a `touca_client` CMake target that you can link to.
+### Building Extra Components
 
-### Enabling HTTPS
+The above code pulls the latest stable release of the Touca SDK for C++ and
+generates a `touca_client` CMake target that you can link to.
 
-The SDK has an optional dependency on OpenSSL for communicating with the Touca
-server over HTTPS. In most platforms, this library is automatically discovered
-and used by the build recipe. If OpenSSL is not installed in the default
-location, we may need to provide its root directory as a hint to the library’s
-build recipe. Here is a typical way to do so on macOS when OpenSSL is installed
-through `homebrew`.
+We can use the slightly more verbose `FetchContent_GetProperties` pattern to
+customize the set of build targets, to include building Touca command-line
+application and example projects or to exclude building the test framework:
 
 ```text
 FetchContent_Declare(
@@ -43,12 +40,23 @@ FetchContent_Declare(
 FetchContent_GetProperties(touca)
 if(NOT touca_POPULATED)
     FetchContent_Populate(touca)
-
-    # provide the path to the OpenSSL root directory
-    set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
-
+    set(TOUCA_BUILD_UTILS ON)
+    set(TOUCA_BUILD_EXAMPLES ON)
     add_subdirectory(${touca_SOURCE_DIR})
 endif()
+```
+
+### Enabling HTTPS
+
+The SDK has an optional dependency on OpenSSL for communicating with the Touca
+server over HTTPS. In most platforms, this library is automatically discovered
+and used by the build recipe. If OpenSSL is not installed in the default
+location, we may need to provide its root directory as a hint to the library’s
+build recipe. Here is a typical way to do so on macOS when OpenSSL is installed
+through `homebrew`.
+
+```text
+set(OPENSSL_ROOT_DIR /usr/local/opt/openssl)
 ```
 
 ## Using Conan
