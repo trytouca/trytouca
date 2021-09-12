@@ -1,7 +1,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-cmake_minimum_required(VERSION 3.14...3.19 FATAL_ERROR)
-project(touca_cpp_tutorials VERSION 1.3 LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.14...3.21 FATAL_ERROR)
+project(touca_cpp_tutorials VERSION 1.4.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_EXTENSIONS OFF)
