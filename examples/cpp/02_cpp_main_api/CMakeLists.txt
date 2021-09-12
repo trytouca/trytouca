@@ -16,7 +16,7 @@ target_sources(
 target_link_libraries(
         example_cpp_main_api
     PRIVATE
-        touca_framework
+        touca_client
 )
 
 source_group(

@@ -64,7 +64,7 @@ C++ SDK.
 target_link_libraries(
     example_cpp_minimal
   PRIVATE
-    touca_framework
+    touca_client
 )
 ```
 
