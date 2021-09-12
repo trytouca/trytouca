@@ -1,21 +1,13 @@
-/*
- *
- */
-
-version = "0.1.0"
-group = "io.touca.tocua-client"
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 plugins {
     `java-library`
-}
-
-repositories {
-    mavenCentral()
+    jacoco
 }
 
 dependencies {
-    api("org.apache.commons:commons-math3:3.6.1")
-    implementation("com.google.guava:guava:30.0-jre")
+    implementation("com.google.code.gson:gson:2.8.8")
+    implementation("com.google.flatbuffers:flatbuffers-java:2.0.3")
     testImplementation("junit:junit:4.13.1")
 }
 
@@ -29,4 +21,17 @@ tasks.jar {
 java {
     withSourcesJar()
     withJavadocJar()
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.isEnabled = true
+        html.isEnabled = true
+    }
+}
+
+tasks {
+    check {
+        dependsOn(jacocoTestReport)
+    }
 }
