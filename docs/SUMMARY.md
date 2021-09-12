@@ -36,6 +36,12 @@
   - [Core API](sdk/javascript/core-api.md)
   - [API Reference](https://app.touca.io/docs/clients/js/index.html)
   - [GitHub Repository](https://github.com/trytouca/touca-js)
+- [Java SDK](sdk/java/README.md)
+  - [Getting Started](sdk/java/quickstart.md)
+  - [Main API](sdk/java/main-api.md)
+  - [Core API](sdk/java/core-api.md)
+  - [API Reference](https://app.touca.io/docs/clients/java/index.html)
+  - [GitHub Repository](https://github.com/trytouca/touca-java)
 - [Differences](sdk/differences.md)
 - [Server API](https://app.touca.io/docs/api/index.html)
 

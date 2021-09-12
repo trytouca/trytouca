@@ -48,4 +48,11 @@ Touca test framework for JavaScript does not support:
 
 {% endtab %}
 
+{% tab title="Java" %}
+
+This SDK is currently in early stages of development and is missing many
+features. Tentative beta release date is September 14th, 2021.
+
+{% endtab %}
+
 {% endtabs %}
