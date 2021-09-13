@@ -24,7 +24,7 @@ public class Client {
      *
      */
     public boolean isConfigured() {
-        return false;
+        return true;
     }
 
     /**

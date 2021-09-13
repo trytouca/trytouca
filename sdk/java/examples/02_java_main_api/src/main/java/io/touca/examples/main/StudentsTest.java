@@ -4,7 +4,7 @@ package io.touca.examples.main;
 
 import io.touca.Touca;
 
-public class StudentsTest {
+public final class StudentsTest {
     public static void main(String[] args) {
         Touca.workflow("students_test", (final String username) -> {
             Touca.startTimer("parse_profile");

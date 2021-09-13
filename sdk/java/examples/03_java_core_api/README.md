@@ -173,6 +173,44 @@ The SDK is designed to handle iterables and custom objects by serializing
 their elements and properties. This makes it possible for us to add object
 `student` as a single entity, if we so choose.
 
+### Customizing Data Serialization
+
+While Touca data capturing functions automatically support objects and
+custom types, it is possible to override the serialization logic for
+any given non-primitive data type.
+
+Consider the following definition for a custom class `Course`.
+
+```java
+public final class Course {
+    public String name;
+    public double grade;
+
+    public Course(final String name, final double grade) {
+        this.name = name;
+        this.grade = grade;
+    }
+}
+```
+
+By default, the SDK serializes objects of this class using by serializing
+all of its public properties. This behavior results in object
+`Course("math", 3.9)` to be serialized as `{name: "math", grade: 3.9}`.
+We can use `Touca.addSerializer` to override this default behavior.
+The following code excludes the property `name` during serialization and
+limits the comparison to `grade`:
+
+```java
+Touca.addSerializer(Course.class, course -> { return course.grade; });
+for (Course course: student.courses) {
+    Touca.addArrayElement("courses", course);
+    Touca.addHitCount("number of courses");
+}
+```
+
+It is sufficient to register each serializer once per lifetime of the
+test application.
+
 ## Submitting Test Results
 
 Once we execute our code under test for each test case and describe its
@@ -214,7 +252,7 @@ We can store captured data in JSON or binary format using
 While JSON files are preferable for quick inspections, only binary
 files may be posted to the Touca server at a later time.
 
-## Releasing a Test Case from Memory
+## Forgetting Test Cases
 
 If you are submitted thousands of test cases for each version of your
 workflow and capture significant amount of information for each test case,

@@ -5,7 +5,7 @@ package io.touca.examples.main;
 import io.touca.Touca;
 import java.util.Arrays;
 
-public class Students {
+public final class Students {
 
     public static Student parseProfile(final String username) {
         Students.sleep(200);

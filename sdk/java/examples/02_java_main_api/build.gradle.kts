@@ -6,9 +6,20 @@ plugins {
 }
 
 application {
-    mainClass.set("io.touca.examples.main.Main")
+    mainClass.set("io.touca.examples.main.StudentsTest")
 }
 
 dependencies {
     implementation(project(":touca"))
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "io.touca.examples.main.StudentsTest"
+    }
+}
+
+task<JavaExec>("runExampleMain") {
+    main = "io.touca.examples.main.StudentsTest"
+    classpath = sourceSets["main"].runtimeClasspath
 }

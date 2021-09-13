@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
-public class Students {
+public final class Students {
     final static Student[] students = new Student[] {
             new Student("alice", "Alice Anderson", LocalDate.of(2006, 3, 1),
                     new Course[] { new Course("math", 4.0), new Course("computers", 3.8) }),

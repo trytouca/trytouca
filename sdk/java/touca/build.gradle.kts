@@ -11,6 +11,11 @@ dependencies {
     testImplementation("junit:junit:4.13.1")
 }
 
+configure<JavaPluginConvention> {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 tasks.jar {
     manifest {
         attributes(mapOf("Implementation-Title" to project.name,

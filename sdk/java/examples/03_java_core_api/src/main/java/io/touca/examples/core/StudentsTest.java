@@ -4,7 +4,7 @@ package io.touca.examples.core;
 
 import io.touca.Touca;
 
-public class StudentsTest {
+public final class StudentsTest {
     public static void main(String[] args) {
         Touca.configure(options -> {
             options.offline = true;

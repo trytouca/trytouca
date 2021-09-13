@@ -4,7 +4,7 @@ package io.touca.examples.main;
 
 import java.time.LocalDate;
 
-public class Student {
+public final class Student {
     public String username;
     public String fullname;
     public LocalDate dob;

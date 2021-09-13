@@ -64,12 +64,18 @@ We can run our test from the command line:
 ```bash
 export TOUCA_API_KEY="your-api-key"
 export TOUCA_API_URL="your-api-url"
+gradle runExampleMain --args='--revision v1.0 --testcase 13 17 51'
 ```
 
 the Touca SDK captures the `Student` object with all its properties and
 submits that information to the Touca server. We can check this output
 on the web app but we can also ask the SDK to generate a JSON result file
 for us:
+
+```bash
+gradle runExampleMain --args='--revision v2.0 --save-as-json'
+```
+
 You can use `--help` to learn about available command line options.
 
 Notice that we are not specifying the list of test cases anymore.

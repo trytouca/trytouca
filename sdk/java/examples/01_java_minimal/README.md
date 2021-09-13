@@ -32,6 +32,18 @@ improvements do not introduce unexpected side-effects.
 If we were to write unit tests for our `isPrime` function, we could
 start with the following code.
 
+```java
+import static org.junit.Assert;
+
+public class PrimeTest {
+    public static void main(String[] args) {
+        Assert.assertTrue(is_prime(13));
+        Assert.assertTrue(is_prime(17));
+        Assert.assertFalse(is_prime(51));
+    }
+}
+```
+
 Unit tests are very effective but they require calling our code under
 test with a hard-coded set of inputs and comparing the return value of
 our function against a hard-coded set of expected values.
@@ -54,11 +66,28 @@ public final class PrimeTest {
 }
 ```
 
+Where `io.touca` is the `packageId` of our Java SDK on Maven Central repository.
+
+```groovy
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation('io.touca:touca:0.1.0')
+}
+```
+
 Notice how our Touca test code does not specify the list of numbers we
 will be using to test our `isPrime` function. Similarly, it does not
 include the expected return value of our `isPrime` function for different
 inputs. By decoupling the test cases from our test logic, we can test
 our software with any number of test cases, without changing our test code:
+
+```bash
+gradle runExampleMinimal --args='--api-key <TOUCA_API_KEY> --api-url <TOUCA_API_URL> --revision v1.0 --testcase 13 17 51'
+```
+
 Where `TOUCA_API_KEY` and `TOUCA_API_URL` can be obtained from the [Touca
 server](https://app.touca.io).
 
