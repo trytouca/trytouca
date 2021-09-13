@@ -1,4 +1,6 @@
 {
+  "proseWrap": "always",
+  "semi": true,
   "singleQuote": true,
   "trailingComma": "none",
   "htmlWhitespaceSensitivity": "ignore"
