@@ -1,16 +1,4 @@
-<div align="center">
-  <a href="https://touca.io" target="_blank" rel="noopener">
-    <img alt="Touca Logo" height="48px" src="https://touca.io/logo/touca-logo-w-text.svg" />
-  </a>
-  <h1>Sample Touca Tests</h1>
-  <p>
-    <a target="_blank" rel="noopener" href="https://app.touca.io">Get Started</a>
-    <span> &middot; </span>
-    <a target="_blank" rel="noopener" href="https://docs.touca.io">Documentation</a>
-    <span> &middot; </span>
-    <a href="https://github.com/trytouca/touca-examples/blob/main/LICENSE">License</a>
-  </p>
-</div>
+# Sample Touca Tests
 
 This repository includes example projects in different programming languages
 to help you get started with Touca. All examples are documented to serve as
@@ -24,8 +12,9 @@ guide, first.
 
 # Links
 
-*   [Touca SDK for Python](https://github.com/trytouca/touca-python)
-*   [Touca SDK for JavaScript](https://github.com/trytouca/touca-js)
 *   [Touca SDK for C++](https://github.com/trytouca/touca-cpp)
+*   [Touca SDK for Java](https://github.com/trytouca/touca-java)
+*   [Touca SDK for JavaScript](https://github.com/trytouca/touca-js)
+*   [Touca SDK for Python](https://github.com/trytouca/touca-python)
 *   [Touca Documentation Website](https://docs.touca.io)
 *   [Touca Cloud-Hosted Instance](https://app.touca.io)

@@ -6,9 +6,8 @@ from students import parse_profile
 
 @touca.Workflow
 def students_test(username: str):
-    touca.start_timer("parse_profile")
-    student = parse_profile(username)
-    touca.stop_timer("parse_profile")
+    with touca.scoped_timer("parse_profile"):
+        student = parse_profile(username)
     touca.add_assertion("username", student.username)
     touca.add_result("fullname", student.fullname)
     touca.add_result("birth_date", student.dob)

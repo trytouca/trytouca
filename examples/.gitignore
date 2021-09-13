@@ -4,3 +4,5 @@ python/.python-version
 python/**/.env
 python/**/output
 python/**/__pycache__
+java/.gradle
+java/**/build
