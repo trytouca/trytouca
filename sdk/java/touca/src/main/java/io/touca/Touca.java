@@ -1,4 +1,4 @@
-/** Copyright 2021 Touca, Inc. Subject to Apache-2.0 License. */
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca;
 
@@ -136,6 +136,22 @@ public final class Touca {
     /**
      *
      */
+    public static void scopedTimer(final String key, final Runnable callback) {
+        try (ScopedTimer timer = new ScopedTimer("calculate_gpa")) {
+            callback.run();
+        }
+    }
+
+    /**
+     *
+     */
+    public static <T> void addSerializer(final Class<T> type, Client.SerializerCallback<T> callback) {
+        Client.instance().addSerializer(type, callback);
+    }
+
+    /**
+     *
+     */
     public static void post() {
         Client.instance().post();
     }
@@ -150,7 +166,26 @@ public final class Touca {
     /**
      *
      */
+    public static void workflow(final String name, final Workflow workflow) {
+    }
+
+    /**
+     *
+     */
+    public static void run(String[] args) {
+    }
+
+    /**
+     *
+     */
     public interface Callback {
         void configure(Options options);
+    }
+
+    /**
+     *
+     */
+    public interface Workflow {
+        void run(final String testcase);
     }
 }

@@ -1,4 +1,4 @@
-/** Copyright 2021 Touca, Inc. Subject to Apache-2.0 License. */
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca;
 
@@ -98,6 +98,12 @@ public class Client {
     /**
      *
      */
+    public <T> void addSerializer(final Class<T> type, SerializerCallback<T> callback) {
+    }
+
+    /**
+     *
+     */
     public void saveBinary(final String key, final Iterable<String> cases) {
     }
 
@@ -117,6 +123,13 @@ public class Client {
      *
      */
     public void seal() {
+    }
+
+    /**
+     *
+     */
+    public interface SerializerCallback<T> {
+        Object call(T dataType);
     }
 
 }
