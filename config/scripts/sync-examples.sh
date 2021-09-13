@@ -41,15 +41,31 @@ done
 
 rm -rf "${DIR_EXAMPLES}/python"
 cp -r "${DIR_CLIENTS}/python/examples" "${DIR_EXAMPLES}/python"
+rm "${DIR_EXAMPLES}/python/02_python_main_api/unit_test.py"
 for filename in "01_python_minimal/requirements.txt" "02_python_main_api/requirements.txt" "03_python_core_api/requirements.txt" "04_python_external_files"; do
     git -C "${DIR_EXAMPLES}" checkout "${DIR_EXAMPLES}/python/${filename}"
 done
 
 rm -rf "${DIR_EXAMPLES}/javascript"
 cp -r "${DIR_CLIENTS}/js/examples" "${DIR_EXAMPLES}/javascript"
-sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/01_node_minimal/tsconfig.json"
-sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/02_node_main_api/tsconfig.json"
-sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/03_node_core_api/tsconfig.json"
 for filename in "lerna.json" "package.json" "tsconfig.json" "yarn.lock"; do
     git -C "${DIR_EXAMPLES}" checkout "${DIR_EXAMPLES}/javascript/${filename}"
 done
+sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/01_node_minimal/tsconfig.json"
+sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/02_node_main_api/tsconfig.json"
+sed -i '' 's/\("extends":\).*/\1 "..\/tsconfig.json",/g' "${DIR_EXAMPLES}/javascript/03_node_core_api/tsconfig.json"
+sed -i '' 's/\("version":\).*/\1 "0.0.8",/g' "${DIR_EXAMPLES}/javascript/01_node_minimal/package.json"
+sed -i '' 's/\("version":\).*/\1 "0.0.8",/g' "${DIR_EXAMPLES}/javascript/02_node_main_api/package.json"
+sed -i '' 's/\("version":\).*/\1 "0.0.8",/g' "${DIR_EXAMPLES}/javascript/03_node_core_api/package.json"
+sed -i '' 's/\("@touca\/node":\).*/\1 "^0.0.8"/g' "${DIR_EXAMPLES}/javascript/01_node_minimal/package.json"
+sed -i '' 's/\("@touca\/node":\).*/\1 "^0.0.8"/g' "${DIR_EXAMPLES}/javascript/02_node_main_api/package.json"
+sed -i '' 's/\("@touca\/node":\).*/\1 "^0.0.8"/g' "${DIR_EXAMPLES}/javascript/03_node_core_api/package.json"
+
+rm -rf "${DIR_EXAMPLES}/java"
+cp -r "${DIR_CLIENTS}/java/examples" "${DIR_EXAMPLES}/java"
+for filename in "gradlew" "gradlew.bat" "build.gradle.kts" "gradle" "settings.gradle.kts"; do
+    git -C "${DIR_EXAMPLES}" checkout "${DIR_EXAMPLES}/java/${filename}"
+done
+sed -i '' 's/implementation.*/implementation("io.touca:touca:0.1.0")/g' "${DIR_EXAMPLES}/java/01_java_minimal/build.gradle.kts"
+sed -i '' 's/implementation.*/implementation("io.touca:touca:0.1.0")/g' "${DIR_EXAMPLES}/java/02_java_main_api/build.gradle.kts"
+sed -i '' 's/implementation.*/implementation("io.touca:touca:0.1.0")/g' "${DIR_EXAMPLES}/java/03_java_core_api/build.gradle.kts"
