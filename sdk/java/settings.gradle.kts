@@ -5,5 +5,7 @@ rootProject.buildFileName = "build.gradle.kts"
 
 include(
     "touca",
-    "examples:core",
+    "examples:01_java_minimal",
+    "examples:02_java_main_api",
+    "examples:03_java_core_api",
 )
