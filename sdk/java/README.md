@@ -3,6 +3,7 @@
 [![Latest version](https://img.shields.io/github/v/release/trytouca/touca-java)](https://github.com/trytouca/touca-java/releases)
 [![Build Status](https://img.shields.io/github/workflow/status/trytouca/touca-java/touca-java-main)](https://github.com/trytouca/touca-java/actions)
 [![License](https://img.shields.io/github/license/trytouca/touca-java)](https://github.com/trytouca/touca-java/blob/main/LICENSE)
+[![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/touca-java)](https://app.codecov.io/gh/trytouca/touca-java)
 
 Touca helps you understand the true impact of your day to day code changes
 on the behavior and performance of your overall software, as you write code.

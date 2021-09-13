@@ -2,7 +2,7 @@
 
 package io.touca;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Client {
     private static final Client instance = new Client();
@@ -37,6 +37,13 @@ public class Client {
     /**
      *
      */
+    public Iterable<String> getTestCases() {
+        return new ArrayList<String>();
+    }
+
+    /**
+     *
+     */
     public void declareTestcase(final String name) {
     }
 
@@ -55,13 +62,49 @@ public class Client {
     /**
      *
      */
-    public void saveBinary(final String key, final List<String> cases) {
+    public <T> void addAssertion(final String key, final T value) {
     }
 
     /**
      *
      */
-    public void saveJson(final String key, final List<String> cases) {
+    public <T> void addArrayElement(final String key, final T value) {
+    }
+
+    /**
+     *
+     */
+    public void addHitCount(final String key) {
+    }
+
+    /**
+     *
+     */
+    public void addMetric(final String key, final long milliseconds) {
+    }
+
+    /**
+     *
+     */
+    public void startTimer(final String key) {
+    }
+
+    /**
+     *
+     */
+    public void stopTimer(final String key) {
+    }
+
+    /**
+     *
+     */
+    public void saveBinary(final String key, final Iterable<String> cases) {
+    }
+
+    /**
+     *
+     */
+    public void saveJson(final String key, final Iterable<String> cases) {
     }
 
     /**

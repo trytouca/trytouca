@@ -2,7 +2,7 @@
 
 package io.touca;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Touca SDK for Java main API entry point.
@@ -38,6 +38,13 @@ public final class Touca {
     /**
      *
      */
+    public static Iterable<String> getTestCases() {
+        return Client.instance().getTestCases();
+    }
+
+    /**
+     *
+     */
     public static void declareTestcase(final String name) {
         Client.instance().declareTestcase(name);
     }
@@ -52,22 +59,78 @@ public final class Touca {
     /**
      *
      */
-    public static <T> void addResult(final String name, final T value) {
-        Client.instance().addResult(name, value);
+    public static <T> void addResult(final String key, final T value) {
+        Client.instance().addResult(key, value);
     }
 
     /**
      *
      */
-    public static void saveBinary(final String key, final List<String> cases) {
+    public static <T> void addAssertion(final String key, final T value) {
+        Client.instance().addAssertion(key, value);
+    }
+
+    /**
+     *
+     */
+    public static <T> void addArrayElement(final String key, final T value) {
+        Client.instance().addArrayElement(key, value);
+    }
+
+    /**
+     *
+     */
+    public static void addHitCount(final String key) {
+        Client.instance().addHitCount(key);
+    }
+
+    /**
+     *
+     */
+    public static void addMetric(final String key, final long milliseconds) {
+        Client.instance().addMetric(key, milliseconds);
+    }
+
+    /**
+     *
+     */
+    public static void startTimer(final String key) {
+        Client.instance().startTimer(key);
+    }
+
+    /**
+     *
+     */
+    public static void stopTimer(final String key) {
+        Client.instance().stopTimer(key);
+    }
+
+    /**
+     *
+     */
+    public static void saveBinary(final String path, final Iterable<String> cases) {
+        Client.instance().saveJson(path, cases);
+    }
+
+    /**
+     *
+     */
+    public static void saveBinary(final String path) {
+        Touca.saveBinary(path, new ArrayList<String>());
+    }
+
+    /**
+     *
+     */
+    public static void saveJson(final String key, final Iterable<String> cases) {
         Client.instance().saveJson(key, cases);
     }
 
     /**
      *
      */
-    public static void saveJson(final String key, final List<String> cases) {
-        Client.instance().saveJson(key, cases);
+    public static void saveJson(final String key) {
+        Client.instance().saveJson(key, new ArrayList<String>());
     }
 
     /**
