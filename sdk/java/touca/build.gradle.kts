@@ -2,13 +2,23 @@
 
 plugins {
     `java-library`
+    `maven-publish`
     jacoco
+    signing
 }
 
 dependencies {
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("com.google.flatbuffers:flatbuffers-java:2.0.3")
-    testImplementation("junit:junit:4.13.1")
+    testImplementation(platform("org.junit:junit-bom:5.8.0"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+}
+
+tasks.test {
+    useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+    }
 }
 
 configure<JavaPluginConvention> {
@@ -19,7 +29,8 @@ configure<JavaPluginConvention> {
 tasks.jar {
     manifest {
         attributes(mapOf("Implementation-Title" to project.name,
-                         "Implementation-Version" to project.version))
+                         "Implementation-Version" to project.version,
+                         "Implementation-Vendor" to "Touca, Inc."))
     }
 }
 
@@ -38,5 +49,71 @@ tasks.jacocoTestReport {
 tasks {
     check {
         dependsOn(jacocoTestReport)
+    }
+}
+
+configure<PublishingExtension> {
+    publications {
+        create<MavenPublication>("touca") {
+            from(components["java"])
+            afterEvaluate {
+                pom {
+                    name.set("${groupId}:${artifactId}")
+                    description.set("Touca SDK for Java")
+                    url.set("https://github.com/trytouca/touca-java.git")
+                    licenses {
+                        license {
+                            name.set("Apache License 2.0")
+                            url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        }
+                    }
+                    organization {
+                        name.set("Touca")
+                        url.set("https://touca.io")
+                    }
+                    developers {
+                        developer {
+                            id.set("ghorbanzade")
+                            name.set("Pejman Ghorbanzade")
+                            email.set("pejman@touca.io")
+                            organization.set("Touca")
+                            organizationUrl.set("https://touca.io")
+                            inceptionYear.set("2021")
+                        }
+                    }
+                    scm {
+                        url.set("https://github.com/trytouca/touca-java")
+                        connection.set("scm:git:https://github.com/trytouca/touca-java.git")
+                        developerConnection.set("scm:git:ssh://git@github.com:trytouca/touca-java.git")
+                    }
+                }
+            }
+        }
+    }
+
+    repositories {
+        if (System.getenv("ORG_GRADLE_PROJECT_ossrhUsername") != null) {
+            maven {
+                name = "ossrh"
+                credentials(PasswordCredentials::class)
+                val releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2"
+                val snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots"
+                url = uri(if (version.toString().endsWith("SNAPSHOT")) snapshotsRepoUrl else releasesRepoUrl)
+            }
+        }
+        maven {
+            name = "build"
+            url = uri(layout.buildDirectory.dir("repo"))
+        }
+    }
+
+    signing {
+        val signingKey: String? by project
+        val signingKeyId: String? by project
+        val signingPassword: String? by project
+        if (signingKey != null && signingKey != "") {
+            useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+            sign(publishing.publications["touca"])
+        }
     }
 }

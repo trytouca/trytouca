@@ -9,6 +9,9 @@ import java.util.ArrayList;
  */
 public final class Touca {
 
+    /**
+     *
+     */
     private Touca() {
     }
 

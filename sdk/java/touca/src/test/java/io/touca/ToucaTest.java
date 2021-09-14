@@ -3,8 +3,7 @@
 package io.touca;
 
 import io.touca.Touca;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
 
 public class ToucaTest {
     @Test

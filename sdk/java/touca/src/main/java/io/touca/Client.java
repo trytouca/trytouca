@@ -4,12 +4,25 @@ package io.touca;
 
 import java.util.ArrayList;
 
+/**
+ *
+ */
 public class Client {
+
+    /**
+     *
+     */
     private static final Client instance = new Client();
 
+    /**
+     *
+     */
     private Client() {
     };
 
+    /**
+     *
+     */
     public static Client instance() {
         return instance;
     }

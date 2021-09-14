@@ -2,6 +2,9 @@
 
 package io.touca;
 
+/**
+ *
+ */
 public class Options {
     public String file;
     public String apiKey;

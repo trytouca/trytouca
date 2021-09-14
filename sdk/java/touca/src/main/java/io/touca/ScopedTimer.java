@@ -9,11 +9,17 @@ public final class ScopedTimer implements AutoCloseable {
     private String key;
     private boolean closed = false;
 
+    /**
+     *
+     */
     public ScopedTimer(final String key) {
         this.key = key;
         Client.instance().startTimer(key);
     }
 
+    /**
+     *
+     */
     @Override
     public void close() {
         if (!this.closed) {

@@ -3,7 +3,7 @@
 [![Latest version](https://img.shields.io/github/v/release/trytouca/touca-java)](https://github.com/trytouca/touca-java/releases)
 [![License](https://img.shields.io/github/license/trytouca/touca-java?color=blue)](https://github.com/trytouca/touca-java/blob/main/LICENSE)
 [![Build Status](https://img.shields.io/github/workflow/status/trytouca/touca-java/touca-java-main)](https://github.com/trytouca/touca-java/actions)
-[![Code Quality](https://img.shields.io/codacy/grade/4c28f395f89442ffadc7cbd38a4db02b)](https://app.codacy.com/gh/trytouca/touca-python)
+[![Code Quality](https://img.shields.io/codacy/grade/a98ce7c10db1482da22c6922c334959f)](https://app.codacy.com/gh/trytouca/touca-java)
 [![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/touca-java)](https://app.codecov.io/gh/trytouca/touca-java)
 
 Touca helps you understand the true impact of your day to day code changes on
