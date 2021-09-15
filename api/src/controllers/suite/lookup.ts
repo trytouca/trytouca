@@ -114,16 +114,24 @@ async function suiteLookup(
     { _id: 1, username: 1, fullname: 1 }
   )
 
-  output.promotions = suite.promotions.map((raw) => ({
-    at: raw.at,
-    by: pick(
-      promoters.find((v) => v._id.equals(raw.by)),
-      ['username', 'fullname']
-    ),
-    for: raw.for,
-    from: queryOutput.find((v) => v._id.equals(raw.from)).batchSlug,
-    to: queryOutput.find((v) => v._id.equals(raw.to)).batchSlug
-  }))
+  // known defect: when batch is expired, we remove its corresponding doc from
+  // database but never update the "promotions" field in the "suites" collection
+  // which leaves references to the removed batch that cannot be resolved.
+  // our remedy for now is to null check for invalid references and remove
+  // promotion events wih missing `from` or `to` fields. But this is just to
+  // prevent crashes. The right approach is to fix data retention logic.
+  output.promotions = suite.promotions
+    .map((raw) => ({
+      at: raw.at,
+      by: pick(
+        promoters.find((v) => v._id.equals(raw.by)),
+        ['username', 'fullname']
+      ),
+      for: raw.for,
+      from: queryOutput.find((v) => v._id.equals(raw.from))?.batchSlug,
+      to: queryOutput.find((v) => v._id.equals(raw.to))?.batchSlug
+    }))
+    .filter((v) => v.from && v.to)
 
   output.promotions.forEach((v: any) => delete v.by._id)
   queryOutput.forEach((v) => delete v._id)
