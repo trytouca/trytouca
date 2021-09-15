@@ -10,14 +10,14 @@ buildscript {
 }
 
 allprojects {
-    repositories {
-        mavenCentral()
-    }
-
     val release: String? by project
     val baseVersion: String? by project
     val suffix = if (release == "true") "" else "-SNAPSHOT"
     version = baseVersion + suffix
     group = "io.touca"
     description = "Touca SDK for Java"
+
+    repositories {
+        mavenCentral()
+    }
 }

@@ -39,16 +39,26 @@ java {
     withJavadocJar()
 }
 
-tasks.jacocoTestReport {
-    reports {
-        xml.isEnabled = true
-        html.isEnabled = true
-    }
-}
-
 tasks {
+    jacocoTestReport {
+        reports {
+            xml.isEnabled = true
+            html.isEnabled = true
+        }
+    }
+
     check {
         dependsOn(jacocoTestReport)
+    }
+
+    javadoc {
+        (options as StandardJavadocDocletOptions).apply {
+            if (JavaVersion.current() >= JavaVersion.VERSION_1_9) {
+                addBooleanOption("html5", true)
+                setWindowTitle("Touca ${project.version}")
+                setDocTitle("Touca ${project.version}")
+            }
+        }
     }
 }
 
