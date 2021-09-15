@@ -10,7 +10,8 @@ username of a student and returns basic information about them, such as their
 name, date of birth, and GPA.
 
 Let us imagine that our code under test has the following entry-point. See
-[`Students.java`](Students.java) for a possible implementation.
+[`Students.java`](./src/main/java/io/touca/examples/main/Students.java) for a
+possible implementation.
 
 ```java
 public static Student parseProfile(final String username);
