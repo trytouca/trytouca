@@ -40,12 +40,24 @@ Student parse_profile(const std::string& username);
 
 {% endtab %}
 
-{% tab title="JavaScript" %}
+{% tab title="TypeScript" %}
 
 {% code %}
 
 ```typescript
 async function parse_profile(username: string): Promise<Student>;
+```
+
+{% endcode %}
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+{% code %}
+
+```java
+public static Student parseProfile(final String username);
 ```
 
 {% endcode %}
@@ -92,7 +104,7 @@ struct Student {
 
 {% endtab %}
 
-{% tab title="JavaScript" %}
+{% tab title="TypeScript" %}
 
 {% code %}
 
@@ -102,6 +114,25 @@ interface Student {
   fullname: string;
   dob: Date;
   gpa: number;
+}
+```
+
+{% endcode %}
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+{% code %}
+
+```java
+import java.time.LocalDate;
+
+public class Student {
+    public String username;
+    public String fullname;
+    public LocalDate dob;
+    public double gpa;
 }
 ```
 
@@ -180,7 +211,7 @@ Student parse_profile(const std::string& username)
 
 {% endtab %}
 
-{% tab title="JavaScript" %}
+{% tab title="TypeScript" %}
 
 {% code title="javascript/02_node_main_api/students.ts" %}
 
@@ -193,6 +224,26 @@ export async function parse_profile(username: string): Promise<Student> {
   }
   const { courses, ...student } = data;
   return { ...student, gpa: calculate_gpa(courses) };
+}
+```
+
+{% endcode %}
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+{% code title="java/02_java_main_api/Students.java" %}
+
+```java
+public static Student parseProfile(final String username) throws InterruptedException {
+    Thread.sleep(200);
+    for (Student student : Students.students) {
+        if (student.username.equals(username)) {
+            return new Student(data.username, data.fullname, data.dob, Students.calculateGPA(data.courses));
+        }
+    }
+    throw new NoSuchElementException(String.format("No student found for username: %s", username));
 }
 ```
 
@@ -274,7 +325,7 @@ void touca::main(const std::string& username)
 
 {% endtab %}
 
-{% tab title="JavaScript" %}
+{% tab title="TypeScript" %}
 
 {% code title="javascript/02_node_main_api/students_test.ts" %}
 
@@ -291,6 +342,31 @@ touca.workflow("students_test", async (username: string) => {
 });
 
 touca.run();
+```
+
+{% endcode %}
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+{% code title="java/02_java_main_api/StudentsTest.ts" %}
+
+```java
+import io.touca.Touca;
+
+public class StudentsTest {
+    public static void main(String[] args) {
+        Touca.workflow("students_test", (final String username) -> {
+            Student student = Students.parseProfile(username);
+            Touca.addAssertion("username", student.username);
+            Touca.addResult("fullname", student.fullname);
+            Touca.addResult("birth_date", student.dob);
+            Touca.addResult("gpa", student.gpa);
+        });
+        Touca.run(args);
+    }
+}
 ```
 
 {% endcode %}
@@ -351,7 +427,7 @@ float calculate_gpa(const std::vector<Course>& courses)
 
 {% endtab %}
 
-{% tab title="JavaScript" %}
+{% tab title="TypeScript" %}
 
 {% code title="javascript/02_node_main_api/students.ts" %}
 
@@ -361,6 +437,22 @@ function calculate_gpa(courses: Course[]): number {
   return courses.length
     ? courses.reduce((sum, v) => sum + v.grade, 0) / courses.length
     : 0.0;
+}
+```
+
+{% endcode %}
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+{% code title="java/02_java_main_api/Students.java" %}
+
+```java
+private static double calculateGPA(final Course[] courses) {
+    Touca.addResult("courses", courses);
+    double sum = Arrays.asList(courses).stream().mapToDouble(item -> item.grade).sum();
+    return courses.length == 0 ? sum / courses.length : 0.0;
 }
 ```
 
@@ -434,7 +526,7 @@ void touca::main(const std::string& username)
 
 {% endtab %}
 
-{% tab title="JavaScript" %}
+{% tab title="TypeScript" %}
 
 {% code title="javascript/02_node_main_api/students_test.ts" %}
 
@@ -454,6 +546,34 @@ touca.workflow("students_test", async (username: string) => {
 });
 
 touca.run();
+```
+
+{% endcode %}
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+{% code title="java/02_java_main_api/StudentsTest.ts" %}
+
+```java
+import io.touca.Touca;
+
+public class StudentsTest {
+    public static void main(String[] args) {
+        Touca.workflow("students_test", (final String username) -> {
+            Touca.startTimer("parse_profile");
+            Student student = Students.parseProfile(username);
+            Touca.stopTimer("parse_profile");
+            Touca.addAssertion("username", student.username);
+            Touca.addResult("fullname", student.fullname);
+            Touca.addResult("birth_date", student.dob);
+            Touca.addResult("gpa", student.gpa);
+            Touca.addMetric("external_source", 1500);
+        });
+        Touca.run(args);
+    }
+}
 ```
 
 {% endcode %}
@@ -521,7 +641,7 @@ our SDK documentation for instructions to use Conan, instead.
 
 {% endtab %}
 
-{% tab title="JavaScript" %}
+{% tab title="TypeScript" %}
 
 Navigate to directory `javascript/02_node_main_api` in the `examples` repository
 and use either of `yarn` or `npm` to build examples using Node v12 or newer.
@@ -531,6 +651,21 @@ and use either of `yarn` or `npm` to build examples using Node v12 or newer.
 ```bash
 npm install
 npm build
+```
+
+{% endcode %}
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+Navigate to directory `java/02_java_main_api` in the `examples` repository and
+use `gradle` to build examples using Java 8 or newer.
+
+{% code %}
+
+```bash
+./gradlew build
 ```
 
 {% endcode %}
@@ -585,7 +720,7 @@ python3 02_python_main_api/students_test.py
 
 {% endtab %}
 
-{% tab title="JavaScript" %}
+{% tab title="TypeScript" %}
 
 {% code %}
 
@@ -595,6 +730,18 @@ node 02_node_main_api/dist/students_test.js
   --api-url <TOUCA_API_URL>
   --revision v1.0
   --testcase alice bob charlie
+```
+
+{% endcode %}
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+{% code %}
+
+```bash
+gradle runExampleMain --args='--api-key <TOUCA_API_KEY> --api-url <TOUCA_API_URL> --revision v1.0 --testcase alice bob charlie'
 ```
 
 {% endcode %}

@@ -35,7 +35,7 @@ Touca test framework for Python does not support:
 
 {% endtab %}
 
-{% tab title="JavaScript" %}
+{% tab title="TypeScript" %}
 
 Touca test framework for JavaScript does not support:
 
