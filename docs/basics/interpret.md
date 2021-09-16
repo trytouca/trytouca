@@ -69,7 +69,7 @@ example_cpp_main_api --revision 2.0
 
 {% endtab %}
 
-{% tab title="JavaScript" %}
+{% tab title="TypeScript" %}
 
 While we can make any changes to our code under test, for now we are going to
 replicate a change in behavior by changing one of Alice's courses from
@@ -81,6 +81,22 @@ test again, this time for version 2.0 of our code.
 ```bash
 yarn build
 node ./students_test.js --revision 2.0
+```
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+While we can make any changes to our code under test, for now we are going to
+replicate a change in behavior by changing one of Alice's courses from
+`Course("math", 4.0)` to `Course("english", 3.6)`.
+
+Once we rebuild our software and its corresponding test tool, we can run our
+test again, this time for version 2.0 of our code.
+
+```bash
+./gradlew build
+gradle runExampleMain --args='--revision 2.0'
 ```
 
 {% endtab %}

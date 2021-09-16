@@ -35,6 +35,14 @@ function is_prime(number: number): boolean;
 
 {% endtab %}
 
+{% tab title="Java" %}
+
+```java
+public static Student parseProfile(final String username);
+```
+
+{% endtab %}
+
 {% endtabs %}
 
 We can use unit testing in which we hard-code a set of input numbers and list
@@ -84,6 +92,22 @@ test("test is_prime", () => {
   expect(is_prime(2)).toEqual(true);
   expect(is_prime(13)).toEqual(true);
 });
+```
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+```java
+import static org.junit.Assert;
+
+public class PrimeTest {
+    public static void main(String[] args) {
+        Assert.assertTrue(Prime.isPrime(13));
+        Assert.assertTrue(Prime.isPrime(17));
+        Assert.assertFalse(Prime.isPrime(51));
+    }
+}
 ```
 
 {% endtab %}
@@ -164,6 +188,24 @@ touca.run();
 
 {% endtab %}
 
+{% tab title="Java" %}
+
+```java
+import io.touca.Touca;
+
+public final class PrimeTest {
+    public static void main(String[] args) {
+        Touca.workflow("is_prime_test", (final String testcase) -> {
+            final int number = Integer.parseInt(testcase);
+            Touca.addResult("is_prime", Prime.isPrime(number));
+        });
+        Touca.run(args);
+    }
+}
+```
+
+{% endtab %}
+
 {% endtabs %}
 
 This code needs some explanation. Let us start by reviewing what is missing:
@@ -215,6 +257,14 @@ node dist/is_prime_test.js
   --api-url <TOUCA_API_URL>
   --revision v1.0
   --testcase 13 17 51
+```
+
+{% endtab %}
+
+{% tab title="Java" %}
+
+```bash
+gradle runExampleMinimal --args='--api-key <TOUCA_API_KEY> --api-url <TOUCA_API_URL> --revision v1.0 --testcase 13 17 51'
 ```
 
 {% endtab %}
