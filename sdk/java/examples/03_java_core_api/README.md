@@ -39,7 +39,7 @@ public class StudentsTest {
         Touca.configure(options -> {
             options.offline = true;
         });
-        for (String username : Touca.getTestCases()) {
+        for (String username : Touca.getTestcases()) {
             Touca.declareTestcase(username);
             Student student = Students.parseProfile(username);
 
@@ -79,7 +79,7 @@ the full list of acceptable configuration parameters and their impact.
 ```java
 Touca.configure(options -> {
     options.apiKey = "<TOUCA_API_KEY>";
-    options.apiURL = "<TOUCA_API_URL>";
+    options.apiUrl = "<TOUCA_API_URL>";
     options.version = "<TOUCA_TEST_VERSION>";
 });
 ```
@@ -103,7 +103,7 @@ parameter to the `configure` function.
 ## Preparing Test Cases
 
 ```java
-for (String username: Touca.getTestCases()) {
+for (String username: Touca.getTestcases()) {
     // insert the code to run for each test case
 }
 ```
@@ -113,7 +113,7 @@ UI or via command line arguments. With the Client API, you can obtain the list
 of test cases from any source and pass them, one by one, to your code under test
 using a simple for loop.
 
-You can still use the function `getTestCases` to obtain the list of test cases
+You can still use the function `getTestcases` to obtain the list of test cases
 from the Touca server, as our high-level API does. This function should be
 called when the client is configured to run in offline mode.
 

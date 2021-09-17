@@ -13,7 +13,7 @@ public final class StudentsTest {
             System.err.print(Touca.configurationError());
             System.exit(1);
         }
-        for (String username : Touca.getTestCases()) {
+        for (String username : Touca.getTestcases()) {
             Touca.declareTestcase(username);
             Touca.startTimer("parse_profile");
             Student student = Students.parseProfile(username);

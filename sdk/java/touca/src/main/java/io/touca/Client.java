@@ -3,45 +3,44 @@
 package io.touca;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  *
  */
 public class Client {
 
+    private Map<String, Case> cases = new HashMap<String, Case>();
     private String configurationError;
-    private boolean configured = true;
-
-    /**
-     *
-     */
-    private static final Client instance = new Client();
-
-    /**
-     *
-     */
-    private Client() {
-    };
-
-    /**
-     * Entry-point to member functions.
-     *
-     * @return instance object that manages and submits all captured data.
-     */
-    public static Client instance() {
-        return instance;
-    }
+    private boolean configured = false;
+    private Options options = new Options();
+    private String activeCase;
+    private Map<Long, String> threadMap = new HashMap<Long, String>();
 
     /**
      * Configures the touca client.
      * 
      * Must be called before declaring testcases and adding results to the client.
      * Should be regarded as a potentially expensive operation.
-     * 
-     * @param options configuration parameters
+     *
+     * @param callback configuration parameters
+     * @return true if client is ready to capture data
      * @see Touca#configure
      */
-    public void configure(final Options options) {
+    public boolean configure(final Consumer<Options> callback) {
+        final Options options = new Options();
+        callback.accept(options);
+        this.configurationError = null;
+        try {
+            this.options.update(options);
+        } catch (ConfigurationException ex) {
+            this.configurationError = String.format("Configuration failed: %s", ex.getMessage());
+            return false;
+        }
+        this.configured = true;
+        return true;
     }
 
     /**
@@ -86,7 +85,7 @@ public class Client {
      *                               configured to communicate with the Touca
      *                               server.
      */
-    public Iterable<String> getTestCases() {
+    public Iterable<String> getTestcases() {
         return new ArrayList<String>();
     }
 
@@ -102,6 +101,20 @@ public class Client {
      * @param name name of the testcase to be declared
      */
     public void declareTestcase(final String name) {
+        if (!this.configured) {
+            return;
+        }
+        if (!this.cases.containsKey(name)) {
+            Case testcase = new Case(meta -> {
+                meta.testCase = name;
+                meta.teamSlug = this.options.team;
+                meta.testSuite = this.options.suite;
+                meta.version = this.options.version;
+            });
+            this.cases.put(name, testcase);
+        }
+        this.threadMap.put(Thread.currentThread().getId(), name);
+        this.activeCase = name;
     }
 
     /**
@@ -123,6 +136,15 @@ public class Client {
      *                                  that was never declared
      */
     public void forgetTestcase(final String name) {
+        if (!this.configured) {
+            return;
+        }
+        if (!this.cases.containsKey(name)) {
+            String error = String.format("key %s does not exist", name);
+            throw new IllegalArgumentException(error);
+        }
+        this.cases.get(name).clear();
+        this.cases.remove(name);
     }
 
     /**
@@ -290,6 +312,7 @@ public class Client {
     /**
      *
      */
+    @FunctionalInterface
     public interface SerializerCallback<T> {
         Object call(T dataType);
     }

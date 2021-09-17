@@ -14,7 +14,7 @@ public final class ScopedTimer implements AutoCloseable {
      */
     public ScopedTimer(final String key) {
         this.key = key;
-        Client.instance().startTimer(key);
+        Touca.startTimer(key);
     }
 
     /**
@@ -23,7 +23,7 @@ public final class ScopedTimer implements AutoCloseable {
     @Override
     public void close() {
         if (!this.closed) {
-            Client.instance().stopTimer(key);
+            Touca.stopTimer(key);
         }
     }
 }

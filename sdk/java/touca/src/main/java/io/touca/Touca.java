@@ -3,6 +3,7 @@
 package io.touca;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 /**
  * Entry-point to the Touca SDK for Java.
@@ -12,39 +13,57 @@ public final class Touca {
     /**
      *
      */
+    private static final Client instance = new Client();
+
+    /**
+     *
+     */
     private Touca() {
     }
 
     /**
-     * Configures the touca client.
-     * 
+     * Activates Touca data capturing functions.
+     *
      * Must be called before declaring testcases and adding results to the client.
-     * Should be regarded as a potentially expensive operation.
+     * Should be regarded as a potentially expensive operation. Should be called
+     * only from your test environment.
      *
-     * The most common pattern for configuring the client is to set configuration
-     * parameters `api-url` and `version` as shown below, while providing
-     * `TOUCA_API_KEY` as an environment variable.
+     * You can pass a variety of configuration parameters that customzie the SDK
+     * behavior. Passing no option configures the client with minimum functionality
+     * which allows you to capture test results and performance benchmarks and store
+     * them in local filesystem but does not allow the SDK to communicate with the
+     * Touca server.
      *
-     * It is possible to provide your API key as a value for `api-key` configuration
-     * parameter instead of setting an environment variable. We advise **against**
-     * doing so. API key should be considered as sensitive user information and
-     * should not be hard-coded.
+     * As long as the API Key and API URL to the Touca server are known to the
+     * client, it attempts to perform a handshake with the Touca server to
+     * authenticate with the server and obtain the list of known test cases for the
+     * baseline version of the specified suite. You can explicitly disable this
+     * handshake in rare cases where you want to prevent ever communicating with the
+     * Touca server.
      *
-     * It is also possible to provide `api-url` in short format and to separately
-     * specify `team` slug and `suite` slug as shown below.
+     * You can call this function any number of times. The client preserves the
+     * configuration parameters specified in previous calls to this function.
      *
-     * When `api-key` and `api-url` are provided, the configuration process performs
-     * authentication to Touca server, preparing for submission of results when
-     * {@link #post} is called in the future. In case you do not intend to submit
-     * any result to the server, you can opt not to provide any of `api-key` and
-     * `api-url` parameters and to use the following pattern instead.
-     *
-     * @param callback for setting configuration parameters
+     * @param callback lambda function for setting configuration parameters
+     * @return true if client is ready to capture data
      */
-    public static void configure(final Callback callback) {
-        final Options options = new Options();
-        callback.configure(options);
-        Client.instance().configure(options);
+    public static boolean configure(final Consumer<Options> callback) {
+        return instance.configure(callback);
+    }
+
+    /**
+     * Convenience function for {@link #configure(Consumer)}.
+     *
+     * Configures the Touca client with minimum functionality. The client would be
+     * able to capture behavior and performance data and store them on a local
+     * filesystem but it will not be able to post them to the Touca server.
+     *
+     * @return true if client is ready to capture data
+     * @see configure(Consumer)
+     */
+    public static boolean configure() {
+        return instance.configure((options) -> {
+        });
     }
 
     /**
@@ -56,12 +75,12 @@ public final class Touca {
      * before calling other functions of the library::
      *
      * <pre>
-     * <code>
+     * {@code
      *   if (!touca.isConfigured()) {
      *       System.out.println(touca.configurationError());
      *       System.exit(1);
      *   }
-     * </code>
+     * }
      * </pre>
      *
      * At a minimum, the client is considered configured if it can capture test
@@ -77,7 +96,7 @@ public final class Touca {
      * @see configure
      */
     public static boolean isConfigured() {
-        return Client.instance().isConfigured();
+        return instance.isConfigured();
     }
 
     /**
@@ -88,7 +107,7 @@ public final class Touca {
      * @see configure
      */
     public static String configurationError() {
-        return Client.instance().configurationError();
+        return instance.configurationError();
     }
 
     /**
@@ -100,8 +119,8 @@ public final class Touca {
      *                               configured to communicate with the Touca
      *                               server.
      */
-    public static Iterable<String> getTestCases() {
-        return Client.instance().getTestCases();
+    public static Iterable<String> getTestcases() {
+        return instance.getTestcases();
     }
 
     /**
@@ -116,7 +135,7 @@ public final class Touca {
      * @param name name of the testcase to be declared
      */
     public static void declareTestcase(final String name) {
-        Client.instance().declareTestcase(name);
+        instance.declareTestcase(name);
     }
 
     /**
@@ -138,7 +157,7 @@ public final class Touca {
      *                               was never declared
      */
     public static void forgetTestcase(final String name) {
-        Client.instance().forgetTestcase(name);
+        instance.forgetTestcase(name);
     }
 
     /**
@@ -150,7 +169,7 @@ public final class Touca {
      * @param value value to be logged as a test result
      */
     public static <T> void addResult(final String key, final T value) {
-        Client.instance().addResult(key, value);
+        instance.addResult(key, value);
     }
 
     /**
@@ -162,7 +181,7 @@ public final class Touca {
      * @param value value to be logged as a test result
      */
     public static <T> void addAssertion(final String key, final T value) {
-        Client.instance().addAssertion(key, value);
+        instance.addAssertion(key, value);
     }
 
     /**
@@ -217,7 +236,7 @@ public final class Touca {
      *                                  a test result which was not iterable
      */
     public static <T> void addArrayElement(final String key, final T value) {
-        Client.instance().addArrayElement(key, value);
+        instance.addArrayElement(key, value);
     }
 
     /**
@@ -261,7 +280,7 @@ public final class Touca {
      *                                  a test result which was not an integer
      */
     public static void addHitCount(final String key) {
-        Client.instance().addHitCount(key);
+        instance.addHitCount(key);
     }
 
     /**
@@ -274,7 +293,7 @@ public final class Touca {
      * @param milliseconds duration of this measurement in milliseconds
      */
     public static void addMetric(final String key, final long milliseconds) {
-        Client.instance().addMetric(key, milliseconds);
+        instance.addMetric(key, milliseconds);
     }
 
     /**
@@ -286,7 +305,7 @@ public final class Touca {
      * @param key name to be associated with the performance metric
      */
     public static void startTimer(final String key) {
-        Client.instance().startTimer(key);
+        instance.startTimer(key);
     }
 
     /**
@@ -298,7 +317,7 @@ public final class Touca {
      * @param key name to be associated with the performance metric
      */
     public static void stopTimer(final String key) {
-        Client.instance().stopTimer(key);
+        instance.stopTimer(key);
     }
 
     /**
@@ -319,7 +338,7 @@ public final class Touca {
      *              in the specified file.
      */
     public static void saveBinary(final String path, final Iterable<String> cases) {
-        Client.instance().saveJson(path, cases);
+        instance.saveJson(path, cases);
     }
 
     /**
@@ -346,7 +365,7 @@ public final class Touca {
      *              in the specified file.
      */
     public static void saveJson(final String path, final Iterable<String> cases) {
-        Client.instance().saveJson(path, cases);
+        instance.saveJson(path, cases);
     }
 
     /**
@@ -356,7 +375,7 @@ public final class Touca {
      * @see saveJson
      */
     public static void saveJson(final String path) {
-        Client.instance().saveJson(path, new ArrayList<String>());
+        instance.saveJson(path, new ArrayList<String>());
     }
 
     /**
@@ -380,7 +399,7 @@ public final class Touca {
      *                 object with different member variables.
      */
     public static <T> void addSerializer(final Class<T> type, Client.SerializerCallback<T> callback) {
-        Client.instance().addSerializer(type, callback);
+        instance.addSerializer(type, callback);
     }
 
     /**
@@ -399,7 +418,7 @@ public final class Touca {
      *                               server.
      */
     public static void post() {
-        Client.instance().post();
+        instance.post();
     }
 
     /**
@@ -418,7 +437,7 @@ public final class Touca {
      *                               server.
      */
     public static void seal() {
-        Client.instance().seal();
+        instance.seal();
     }
 
     /**
@@ -445,13 +464,7 @@ public final class Touca {
     /**
      *
      */
-    public interface Callback {
-        void configure(Options options);
-    }
-
-    /**
-     *
-     */
+    @FunctionalInterface
     public interface Workflow {
         void run(final String testcase);
     }
