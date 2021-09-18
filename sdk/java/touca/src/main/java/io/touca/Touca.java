@@ -5,6 +5,9 @@ package io.touca;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+import io.touca.devkit.Client;
+import io.touca.devkit.Options;
+
 /**
  * Entry-point to the Touca SDK for Java.
  */
@@ -164,7 +167,7 @@ public final class Touca {
      * Logs a given value as a test result for the declared test case and associates
      * it with the specified key.
      *
-     * @param <T>   type of the value to be captured. Could be anything.
+     * @param <T>   type of the value to be captured.
      * @param key   name to be associated with the logged test result
      * @param value value to be logged as a test result
      */
@@ -176,7 +179,7 @@ public final class Touca {
      * Logs a given value as an assertion for the declared test case and associates
      * it with the specified key.
      *
-     * @param <T>   type of the value to be captured. Could be anything.
+     * @param <T>   type of the value to be captured.
      * @param key   name to be associated with the logged test result
      * @param value value to be logged as a test result
      */
@@ -229,7 +232,7 @@ public final class Touca {
      * </code>
      * </pre>
      *
-     * @param <T>   type of the value to be captured. Could be anything.
+     * @param <T>   type of the value to be captured.
      * @param key   name to be associated with the logged test result
      * @param value element to be appended to the array
      * @throws IllegalArgumentException if specified key is already associated with
@@ -443,7 +446,7 @@ public final class Touca {
     /**
      *
      */
-    public static void workflow(final String name, final Workflow workflow) {
+    public static void workflow(final String name, final Consumer<String> workflow) {
     }
 
     /**
@@ -459,13 +462,5 @@ public final class Touca {
      * @param args list of command-line arguments as provided to the application
      */
     public static void run(String[] args) {
-    }
-
-    /**
-     *
-     */
-    @FunctionalInterface
-    public interface Workflow {
-        void run(final String testcase);
     }
 }

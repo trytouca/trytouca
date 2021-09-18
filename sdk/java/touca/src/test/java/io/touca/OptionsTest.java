@@ -15,21 +15,25 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import io.touca.devkit.Options;
+import io.touca.exceptions.ConfigException;
+
 public final class OptionsTest {
 
     @Test
     public void passWithEmptyOptions() {
-        Options options = new Options();
-        options.update(new Options());
-        assertTrue(options.concurrency);
+        Options existing = new Options();
+        existing.update(new Options());
+        assertTrue(existing.concurrency);
     }
 
     @Test
     public void failWhenFileIsMissing() {
         Options existing = new Options();
-        Options incoming = new Options();
-        incoming.file = "some/path";
-        Exception ex = assertThrowsExactly(ConfigurationException.class, () -> {
+        Options incoming = new Options(opts -> {
+            opts.file = "some/path";
+        });
+        Exception ex = assertThrowsExactly(ConfigException.class, () -> {
             existing.update(incoming);
         });
         assertEquals("config file not found", ex.getMessage());
@@ -38,9 +42,10 @@ public final class OptionsTest {
     @Test
     public void failWhenDirectoryIsPassedAsFile(@TempDir Path tempDir) {
         Options existing = new Options();
-        Options incoming = new Options();
-        incoming.file = tempDir.toString();
-        Exception ex = assertThrowsExactly(ConfigurationException.class, () -> {
+        Options incoming = new Options(opts -> {
+            opts.file = tempDir.toString();
+        });
+        Exception ex = assertThrowsExactly(ConfigException.class, () -> {
             existing.update(incoming);
         });
         assertEquals("config file not found", ex.getMessage());
@@ -51,9 +56,10 @@ public final class OptionsTest {
         Path configFile = tempDir.resolve("config.json");
         Files.write(configFile, "content".getBytes(StandardCharsets.UTF_8));
         Options existing = new Options();
-        Options incoming = new Options();
-        incoming.file = configFile.toString();
-        Exception ex = assertThrowsExactly(ConfigurationException.class, () -> {
+        Options incoming = new Options(opts -> {
+            opts.file = configFile.toString();
+        });
+        Exception ex = assertThrowsExactly(ConfigException.class, () -> {
             existing.update(incoming);
         });
         assertEquals("failed to parse config file", ex.getMessage());
@@ -64,8 +70,9 @@ public final class OptionsTest {
         Path configFile = tempDir.resolve("config.json");
         Files.write(configFile, "{\"key\": \"value\"}".getBytes(StandardCharsets.UTF_8));
         Options existing = new Options();
-        Options incoming = new Options();
-        incoming.file = configFile.toString();
+        Options incoming = new Options(opts -> {
+            opts.file = configFile.toString();
+        });
         assertDoesNotThrow(() -> {
             existing.update(incoming);
         });
@@ -76,9 +83,11 @@ public final class OptionsTest {
         Path configFile = tempDir.resolve("config.json");
         Files.write(configFile, "{\"touca\": {\"offline\": \"some-string\"}}".getBytes(StandardCharsets.UTF_8));
         Options existing = new Options();
-        Options incoming = new Options();
+        Options incoming = new Options(opts -> {
+            opts.file = configFile.toString();
+        });
         incoming.file = configFile.toString();
-        Exception ex = assertThrowsExactly(ConfigurationException.class, () -> {
+        Exception ex = assertThrowsExactly(ConfigException.class, () -> {
             existing.update(incoming);
         });
         assertEquals("failed to parse config file", ex.getMessage());
@@ -90,8 +99,9 @@ public final class OptionsTest {
         String content = "{\"touca\": {\"team\": \"some-team\", \"suite\": \"some-suite\", \"version\": \"some-version\", \"concurrency\": true}}";
         Files.write(configFile, content.getBytes(StandardCharsets.UTF_8));
         Options existing = new Options();
-        Options incoming = new Options();
-        incoming.file = configFile.toString();
+        Options incoming = new Options(opts -> {
+            opts.file = configFile.toString();
+        });
         assertDoesNotThrow(() -> {
             existing.update(incoming);
         });
@@ -104,12 +114,13 @@ public final class OptionsTest {
     @Test
     public void checkDefaultProtocol() {
         Options existing = new Options();
-        Options incoming = new Options();
-        incoming.apiKey = "some-key";
-        incoming.apiUrl = "api.touca.io";
-        incoming.team = "some-team";
-        incoming.suite = "some-suite";
-        incoming.version = "some-version";
+        Options incoming = new Options(opts -> {
+            opts.apiKey = "some-key";
+            opts.apiUrl = "api.touca.io";
+            opts.team = "some-team";
+            opts.suite = "some-suite";
+            opts.version = "some-version";
+        });
         assertDoesNotThrow(() -> {
             existing.update(incoming);
         });
@@ -122,9 +133,10 @@ public final class OptionsTest {
     @Test
     public void checkLongFormatUrl() {
         Options existing = new Options();
-        Options incoming = new Options();
-        incoming.apiKey = "some-key";
-        incoming.apiUrl = "http://localhost:8081//v2//@/team//suite/version/";
+        Options incoming = new Options(opts -> {
+            opts.apiKey = "some-key";
+            opts.apiUrl = "http://localhost:8081//v2//@/team//suite/version/";
+        });
         assertDoesNotThrow(() -> {
             existing.update(incoming);
         });
@@ -137,10 +149,11 @@ public final class OptionsTest {
     @Test
     public void checkShortFormatUrl() {
         Options existing = new Options();
-        Options incoming = new Options();
-        incoming.apiKey = "some-key";
-        incoming.apiUrl = "http://127.0.0.1/api";
-        Exception ex = assertThrowsExactly(ConfigurationException.class, () -> {
+        Options incoming = new Options(opts -> {
+            opts.apiKey = "some-key";
+            opts.apiUrl = "http://127.0.0.1/api";
+        });
+        Exception ex = assertThrowsExactly(ConfigException.class, () -> {
             existing.update(incoming);
         });
         assertEquals("missing required options: suite, team, version", ex.getMessage());
@@ -151,11 +164,12 @@ public final class OptionsTest {
     @Test
     public void failConflictingInput() {
         Options existing = new Options();
-        Options incoming = new Options();
-        incoming.apiKey = "some-key";
-        incoming.apiUrl = "http://localhost:8081/@/team/suite/version";
-        incoming.suite = "some-other-version";
-        Exception ex = assertThrowsExactly(ConfigurationException.class, () -> {
+        Options incoming = new Options(opts -> {
+            opts.apiKey = "some-key";
+            opts.apiUrl = "http://localhost:8081/@/team/suite/version";
+            opts.suite = "some-other-version";
+        });
+        Exception ex = assertThrowsExactly(ConfigException.class, () -> {
             existing.update(incoming);
         });
         assertEquals("option \"suite\" is in conflict with provided api url", ex.getMessage());

@@ -1,11 +1,16 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca;
+package io.touca.devkit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import io.touca.Touca;
+import io.touca.exceptions.ConfigException;
+import io.touca.types.ToucaType;
 
 /**
  *
@@ -13,10 +18,12 @@ import java.util.function.Consumer;
 public class Client {
 
     private Map<String, Case> cases = new HashMap<String, Case>();
-    private String configurationError;
     private boolean configured = false;
+    private String configurationError;
     private Options options = new Options();
     private String activeCase;
+    private Transport transport;
+    private TypeHandler typeHandler = new TypeHandler();
     private Map<Long, String> threadMap = new HashMap<Long, String>();
 
     /**
@@ -35,12 +42,32 @@ public class Client {
         this.configurationError = null;
         try {
             this.options.update(options);
-        } catch (ConfigurationException ex) {
+            configureTransport(this.options);
+        } catch (ConfigException ex) {
             this.configurationError = String.format("Configuration failed: %s", ex.getMessage());
             return false;
         }
         this.configured = true;
         return true;
+    }
+
+    /**
+     *
+     */
+    private void configureTransport(final Options options) {
+        if (options.offline != null && options.offline == true) {
+            return;
+        }
+        final Map<String, String> existing = options.diff(new Options());
+        final String[] checks = { "team", "suite", "version", "apiKey", "apiUrl" };
+        final String[] missing = Arrays.stream(checks).filter(x -> !existing.containsValue(x)).toArray(String[]::new);
+        if (missing.length != 0) {
+            return;
+        }
+        if (this.transport == null) {
+            this.transport = new Transport();
+        }
+        this.transport.update(options);
     }
 
     /**
@@ -151,22 +178,30 @@ public class Client {
      * Logs a given value as a test result for the declared test case and associates
      * it with the specified key.
      *
-     * @param <T>   type of the value to be captured. Could be anything.
      * @param key   name to be associated with the logged test result
      * @param value value to be logged as a test result
      */
-    public <T> void addResult(final String key, final T value) {
+    public void addResult(final String key, final Object value) {
+        final String testcase = getLastTestcase();
+        if (testcase != null) {
+            final ToucaType toucaValue = this.typeHandler.transform(value);
+            cases.get(testcase).addResult(key, toucaValue);
+        }
     }
 
     /**
      * Logs a given value as an assertion for the declared test case and associates
      * it with the specified key.
      *
-     * @param <T>   type of the value to be captured. Could be anything.
      * @param key   name to be associated with the logged test result
      * @param value value to be logged as a test result
      */
-    public <T> void addAssertion(final String key, final T value) {
+    public void addAssertion(final String key, final Object value) {
+        final String testcase = getLastTestcase();
+        if (testcase != null) {
+            final ToucaType toucaValue = this.typeHandler.transform(value);
+            cases.get(testcase).addAssertion(key, toucaValue);
+        }
     }
 
     /**
@@ -307,6 +342,19 @@ public class Client {
      *                               server.
      */
     public void seal() {
+    }
+
+    /**
+     *
+     */
+    private String getLastTestcase() {
+        if (!isConfigured()) {
+            return null;
+        }
+        if (options.concurrency) {
+            return activeCase;
+        }
+        return threadMap.get(Thread.currentThread().getId());
     }
 
     /**

@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca;
+package io.touca.devkit;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.google.gson.Gson;
@@ -25,11 +27,12 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import io.touca.exceptions.ConfigException;
 
 /**
  *
  */
-public class Options {
+public final class Options {
     public String file;
     public String apiKey;
     public String apiUrl;
@@ -40,26 +43,56 @@ public class Options {
     public Boolean concurrency;
 
     /**
-     *
-     */
-    public void update(final Options incoming) throws ConfigurationException {
-        applyConfigFile(incoming);
-        Options.applyArguments(this, incoming);
-        applyEnvironmentVariables();
-        reformatParameters();
-        validateOptions();
+    *
+    */
+    public Options() {
+        this(options -> {
+        });
     }
 
     /**
      *
      */
-    private void applyConfigFile(Options incoming) throws ConfigurationException {
+    public Options(Consumer<Options> options) {
+        options.accept(this);
+    }
+
+    /**
+     *
+     */
+    public void update(final Options incoming) {
+        Options.update(this, incoming);
+    }
+
+    /**
+     *
+     */
+    public final Map<String, String> diff(final Options options) {
+        Map<String, String> entries = new HashMap<String, String>();
+        return entries;
+    }
+
+    /**
+     *
+     */
+    private static void update(final Options existing, final Options incoming) {
+        applyConfigFile(incoming);
+        applyArguments(existing, incoming);
+        applyEnvironmentVariables(existing);
+        reformatParameters(existing);
+        validateOptions(existing);
+    }
+
+    /**
+     *
+     */
+    private static void applyConfigFile(Options incoming) {
         if (incoming.file == null) {
             return;
         }
         final File configFile = new File(incoming.file);
         if (!configFile.exists() || !configFile.isFile()) {
-            throw new ConfigurationException("config file not found");
+            throw new ConfigException("config file not found");
         }
         final Gson gson = new GsonBuilder().registerTypeAdapter(Options.class, new Options.Deserializer()).create();
         final String content;
@@ -69,20 +102,20 @@ public class Options {
             Options options = gson.fromJson(content, Options.class);
             Options.applyArguments(incoming, options);
         } catch (IOException ex) {
-            throw new ConfigurationException("failed to read config file");
+            throw new ConfigException("failed to read config file");
         } catch (JsonParseException ex) {
-            throw new ConfigurationException("failed to parse config file");
+            throw new ConfigException("failed to parse config file");
         }
     }
 
     /**
      *
      */
-    private void applyEnvironmentVariables() {
+    private static void applyEnvironmentVariables(Options existing) {
         final Map<String, Consumer<String>> options = new HashMap<String, Consumer<String>>();
-        options.put("TOUCA_API_KEY", (String k) -> this.apiKey = k);
-        options.put("TOUCA_API_URL", (String k) -> this.apiUrl = k);
-        options.put("TOUCA_TEST_VERSION", (String k) -> this.version = k);
+        options.put("TOUCA_API_KEY", k -> existing.apiKey = k);
+        options.put("TOUCA_API_URL", k -> existing.apiUrl = k);
+        options.put("TOUCA_TEST_VERSION", k -> existing.version = k);
         for (final Map.Entry<String, Consumer<String>> entry : options.entrySet()) {
             final String env = System.getenv(entry.getKey());
             if (env == null || env.isEmpty()) {
@@ -95,85 +128,95 @@ public class Options {
     /**
      *
      */
-    private void reformatParameters() {
-        if (this.concurrency == null) {
-            this.concurrency = true;
+    private static void reformatParameters(final Options existing) {
+        if (existing.concurrency == null) {
+            existing.concurrency = true;
         }
-        if (this.apiUrl == null) {
+        if (existing.apiUrl == null) {
             return;
         }
         final String[] segments;
         try {
-            if (!this.apiUrl.startsWith("http://") && !this.apiUrl.startsWith("https://")) {
-                this.apiUrl = "https://" + this.apiUrl;
+            if (!existing.apiUrl.startsWith("http://") && !existing.apiUrl.startsWith("https://")) {
+                existing.apiUrl = "https://" + existing.apiUrl;
             }
-            final URL url = new URL(this.apiUrl);
+            final URL url = new URL(existing.apiUrl);
             segments = url.getPath().split("/@/");
             String urlPath = String.join("/", Arrays.asList(segments[0].split("/")).stream().filter(x -> !x.isEmpty())
                     .collect(Collectors.toList()));
             final URI uri = new URI(url.getProtocol(), url.getAuthority(), "/" + urlPath, null, null);
-            this.apiUrl = uri.toURL().toString();
+            existing.apiUrl = uri.toURL().toString();
         } catch (MalformedURLException ex) {
-            final String error = String.format("api url is invalid: %s", ex.getMessage());
-            throw new ConfigurationException(error);
+            throw new ConfigException(String.format("api url is invalid: %s", ex.getMessage()));
         } catch (URISyntaxException ex) {
-            final String error = String.format("api url is invalid: %s", ex.getMessage());
-            throw new ConfigurationException(error);
+            throw new ConfigException(String.format("api url is invalid: %s", ex.getMessage()));
         }
-        if (segments.length == 1) {
+        if (1 == segments.length) {
             return;
         }
-        final String[] slugs = Arrays.asList(segments[1].split("/")).stream().filter(x -> !x.isEmpty())
+        reformatSlugs(existing, segments[1]);
+    }
+
+    /**
+     *
+     */
+    private static void reformatSlugs(final Options existing, final String path) {
+        final String[] givenSlugs = Arrays.asList(path.split("/")).stream().filter(x -> !x.isEmpty())
                 .toArray(String[]::new);
-        if (1 <= slugs.length) {
-            if (this.team != null && !this.team.equals(slugs[0])) {
-                final String error = String.format("option \"%s\" is in conflict with provided api url", "team");
-                throw new ConfigurationException(error);
+        final SlugEntry[] slugs = { new SlugEntry("team", o -> o.team, (o, k) -> o.team = k),
+                new SlugEntry("suite", o -> o.suite, (o, k) -> o.suite = k),
+                new SlugEntry("version", o -> o.version, (o, k) -> o.version = k) };
+        for (int i = 0; i < givenSlugs.length; i++) {
+            final String actual = slugs[i].getter.apply(existing);
+            if (actual != null && !actual.equals(givenSlugs[i])) {
+                throw new ConfigException(
+                        String.format("option \"%s\" is in conflict with provided api url", slugs[i].name));
             }
-            this.team = slugs[0];
-        }
-        if (2 <= slugs.length) {
-            if (this.suite != null && !this.suite.equals(slugs[0])) {
-                final String error = String.format("option \"%s\" is in conflict with provided api url", "suite");
-                throw new ConfigurationException(error);
-            }
-            this.suite = slugs[1];
-        }
-        if (3 <= slugs.length) {
-            if (this.version != null && !this.version.equals(slugs[0])) {
-                final String error = String.format("option \"%s\" is in conflict with provided api url", "version");
-                throw new ConfigurationException(error);
-            }
-            this.version = slugs[2];
+            slugs[i].setter.accept(existing, givenSlugs[i]);
         }
     }
 
     /**
      *
      */
-    private void validateOptions() {
+    private static final class SlugEntry {
+        public String name;
+        public Function<Options, String> getter;
+        public BiConsumer<Options, String> setter;
+
+        public SlugEntry(final String name, final Function<Options, String> getter,
+                final BiConsumer<Options, String> setter) {
+            this.name = name;
+            this.getter = getter;
+            this.setter = setter;
+        }
+    }
+
+    /**
+     *
+     */
+    private static void validateOptions(final Options existing) {
         final Map<String, Boolean> expectedKeys = new HashMap<String, Boolean>();
-        expectedKeys.put("team", this.team != null);
-        expectedKeys.put("suite", this.suite != null);
-        expectedKeys.put("version", this.version != null);
-        boolean hasHandshake = this.offline == null || this.offline == true;
-        if (hasHandshake && (this.apiKey != null || this.apiUrl != null)) {
-            expectedKeys.put("apiKey", this.apiKey != null);
-            expectedKeys.put("apiUrl", this.apiUrl != null);
+        expectedKeys.put("team", existing.team != null);
+        expectedKeys.put("suite", existing.suite != null);
+        expectedKeys.put("version", existing.version != null);
+        boolean hasHandshake = existing.offline == null || existing.offline == true;
+        if (hasHandshake && (existing.apiKey != null || existing.apiUrl != null)) {
+            expectedKeys.put("apiKey", existing.apiKey != null);
+            expectedKeys.put("apiUrl", existing.apiUrl != null);
         }
         final List<String> setKeys = filterKeys(expectedKeys, true);
         final List<String> missingKeys = filterKeys(expectedKeys, false);
         if (setKeys.isEmpty() || missingKeys.isEmpty()) {
             return;
         }
-        final String error = String.format("missing required options: %s", String.join(", ", missingKeys));
-        throw new ConfigurationException(error);
+        throw new ConfigException(String.format("missing required options: %s", String.join(", ", missingKeys)));
     }
 
     /**
      *
      */
-    private List<String> filterKeys(final Map<String, Boolean> keys, final boolean status) {
+    private static List<String> filterKeys(final Map<String, Boolean> keys, final boolean status) {
         return keys.entrySet().stream().filter(entry -> {
             return entry.getValue() == status;
         }).map(entry -> {
@@ -224,19 +267,19 @@ public class Options {
         public Options deserialize(final JsonElement json, final Type type, final JsonDeserializationContext context)
                 throws JsonParseException {
             final JsonObject root = json.getAsJsonObject();
-            final Options options = new Options();
             if (!root.has("touca")) {
-                return options;
+                return new Options();
             }
             final JsonObject fileOptions = root.get("touca").getAsJsonObject();
-            updateStringField(fileOptions, "api_key", (String k) -> options.apiKey = k);
-            updateStringField(fileOptions, "api_url", (String k) -> options.apiUrl = k);
-            updateStringField(fileOptions, "team", (String k) -> options.team = k);
-            updateStringField(fileOptions, "suite", (String k) -> options.suite = k);
-            updateStringField(fileOptions, "version", (String k) -> options.version = k);
-            updateBooleanField(fileOptions, "offline", (Boolean k) -> options.offline = k);
-            updateBooleanField(fileOptions, "concurrency", (Boolean k) -> options.concurrency = k);
-            return options;
+            return new Options(options -> {
+                updateStringField(fileOptions, "api_key", k -> options.apiKey = k);
+                updateStringField(fileOptions, "api_url", k -> options.apiUrl = k);
+                updateStringField(fileOptions, "team", k -> options.team = k);
+                updateStringField(fileOptions, "suite", k -> options.suite = k);
+                updateStringField(fileOptions, "version", k -> options.version = k);
+                updateBooleanField(fileOptions, "offline", k -> options.offline = k);
+                updateBooleanField(fileOptions, "concurrency", k -> options.concurrency = k);
+            });
         }
 
         /**
@@ -272,4 +315,5 @@ public class Options {
             field.accept(obj.get(key).getAsBoolean());
         }
     }
+
 }
