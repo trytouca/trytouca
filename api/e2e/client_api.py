@@ -2,24 +2,23 @@
 
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import json
 import os
-import subprocess
 import tarfile
 import tempfile
-import urllib
 from loguru import logger
 import requests
 from client_mongo import MongoClient
 from utilities import User, pathify
 
-TOUCA_API_ROOT = "http://localhost:8081/"
-TOUCA_UTILS_EXE = pathify("../../clients/cpp/local/dist/bin/touca_cli")
+TOUCA_API_ROOT = "http://localhost:8081"
 TOUCA_RESULTS_ARCHIVE = pathify("results.tar.gz")
 
 
 class HttpClient:
     def __init__(self, root_url: str):
-        self.root_url = root_url
+        self._token = None
+        self.root_url = root_url + "/"
         self.session = requests.Session()
 
     def get_json(self, path: str) -> requests.Response:
@@ -33,6 +32,23 @@ class HttpClient:
 
     def delete(self, path: str) -> requests.Response:
         return self.session.delete(url=self.root_url + path)
+
+    def post_binary(self, path: str) -> requests.Response:
+        with open(path, "rb") as file:
+            content = file.read()
+        return self.session.post(
+            url=self.root_url + "client/submit",
+            data=content,
+            headers={
+                "Content-Type": "application/octet-stream",
+                "Authorization": f"Bearer {self._token}",
+            },
+        )
+
+    def client_auth(self, path: str, body=None):
+        response = self.session.post(url=self.root_url + path, json=body)
+        self._token = response.json()["token"]
+        return response
 
 
 class ApiClient:
@@ -261,26 +277,22 @@ class ApiClient:
         self.expect_status(response, 204, f"promote {batch_path}")
 
     def client_submit(self, team_slug: str, suite_slug: str, batch_slug: str):
-        slugs = [team_slug, suite_slug, batch_slug]
         api_key = self.get_api_key()
-        api_route = "/".join(["@", *slugs[0:2]])
-        api_url = urllib.parse.urljoin(TOUCA_API_ROOT, api_route)
+        response = self.client.client_auth("client/signin", {"key": api_key})
+        self.expect_status(response, 200, "get auth token")
+        slugs = [team_slug, suite_slug, batch_slug]
         with tempfile.TemporaryDirectory() as tmpdir:
             logger.debug("created tmp directory: {}", tmpdir)
             with tarfile.open(TOUCA_RESULTS_ARCHIVE) as tar:
                 tar.extractall(tmpdir)
             batch_dir = os.path.join(tmpdir, "results", *slugs[0:3])
-            command = [
-                TOUCA_UTILS_EXE,
-                "post",
-                "--api-url",
-                api_url,
-                "--api-key",
-                api_key,
-                "--src",
-                batch_dir,
+            binaries = [
+                os.path.join(root, filename)
+                for root, _, filenames in os.walk(batch_dir)
+                for filename in filenames
+                if filename.endswith(".bin")
             ]
-            proc = subprocess.Popen(command)
-            proc.communicate()
-            assert proc.returncode == 0
-            logger.success("{} submitted {}", self.user, "/".join(slugs[0:3]))
+            for binary in binaries:
+                response = self.client.post_binary(binary)
+                self.expect_status(response, 204, f"submit {binary}")
+        logger.success("{} submitted {}", self.user, "/".join(slugs[0:3]))
