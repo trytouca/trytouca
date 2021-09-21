@@ -6,95 +6,155 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
 
+import io.touca.devkit.ResultEntry.ResultCategory;
 import io.touca.types.ArrayType;
 import io.touca.types.ToucaType;
 import io.touca.types.NumberType;
 
 public class Case {
-    private boolean posted = false;
-    private Metadata meta;
-    private Map<String, ResultEntry> resultsMap = new HashMap<String, ResultEntry>();
-    private Map<String, Long> tics = new HashMap<String, Long>();
-    private Map<String, Long> tocs = new HashMap<String, Long>();
 
-    public Case(final Consumer<Metadata> meta) {
-        meta.accept(this.meta);
-    }
+  public static final class Metadata {
+    public String testCase;
+    public String teamSlug;
+    public String testSuite;
+    public String version;
+    private String builtAt;
 
-    public static final class Metadata {
-        public LocalDateTime builtAt;
-        public String testCase;
-        public String testSuite;
-        public String teamSlug;
-        public String version;
+    public Metadata(final String testCase, final String teamSlug,
+        final String testSuite, final String version) {
+      this.testCase = testCase;
+      this.teamSlug = teamSlug;
+      this.testSuite = testSuite;
+      this.version = version;
+      this.builtAt = LocalDateTime.now().toString();
     }
+  }
 
-    public void tic(final String key) {
-        tics.put(key, Instant.now().toEpochMilli());
-        posted = false;
-    }
+  private Metadata meta;
+  private Map<String, ResultEntry> results = new HashMap<String, ResultEntry>();
+  private Map<String, Long> tics = new HashMap<String, Long>();
+  private Map<String, Long> tocs = new HashMap<String, Long>();
 
-    public void toc(final String key) {
-        if (!tics.containsKey(key)) {
-            throw new IllegalArgumentException("timer was never started for given key");
-        }
-        tocs.put(key, Instant.now().toEpochMilli());
-        posted = false;
-    }
+  /**
+   * Creates a Test Case instance that stores all the test results and
+   * performance benchmarks captured for a given test case.
+   *
+   * @param metadata metadata for this test case
+   */
+  public Case(final Metadata metadata) {
+    this.meta = metadata;
+  }
 
-    public void addResult(final String key, final ToucaType value) {
-        resultsMap.put(key, new ResultEntry(value, ResultEntry.ResultCategory.Check));
-        posted = false;
-    }
+  /**
+   * Logs a given value as a test result for the declared test case and
+   * associates it with the specified key.
+   * 
+   * @param key name to be associated with the logged test result
+   * @param value value to be logged as a test result
+   */
+  public void addResult(final String key, final ToucaType value) {
+    this.results.put(key,
+        new ResultEntry(value, ResultEntry.ResultCategory.Check));
+  }
 
-    public void addAssertion(final String key, final ToucaType value) {
-        resultsMap.put(key, new ResultEntry(value, ResultEntry.ResultCategory.Assert));
-        posted = false;
-    }
+  /**
+   * Logs a given value as an assertion for the declared test case and
+   * associates it with the specified key.
+   * 
+   * @param key name to be associated with the logged test result
+   * @param value value to be logged as a test result
+   */
+  public void addAssertion(final String key, final ToucaType value) {
+    this.results.put(key,
+        new ResultEntry(value, ResultEntry.ResultCategory.Assert));
+  }
 
-    public void addArrayElement(final String key, final ToucaType element) {
-        if (!resultsMap.containsKey(key)) {
-            ArrayType value = new ArrayType();
-            value.add(element);
-            resultsMap.put(key, new ResultEntry(value, ResultEntry.ResultCategory.Check));
-            return;
-        }
-        ResultEntry ivalue = resultsMap.get(key);
-        if (ivalue.value.type() != ToucaType.Types.Array) {
-            throw new IllegalArgumentException("specified key is associated with a result of a different type");
-        }
-        ArrayType value = (ArrayType) ivalue.value;
-        value.add(element);
-        resultsMap.get(key).value = value;
-        posted = false;
+  /**
+   * Adds a given value to a list of results for the declared test case which is
+   * associated with the specified key.
+   *
+   * @param key name to be associated with the logged test result
+   * @param element element to be appended to the array
+   */
+  public void addArrayElement(final String key, final ToucaType element) {
+    if (!this.results.containsKey(key)) {
+      ArrayType value = new ArrayType();
+      value.add(element);
+      this.results.put(key,
+          new ResultEntry(value, ResultEntry.ResultCategory.Check));
+      return;
     }
+    ResultEntry entry = this.results.get(key);
+    if (entry.type != ResultCategory.Check
+        || entry.value.type() != ToucaType.Types.Array) {
+      throw new IllegalArgumentException("specified key has a different type");
+    }
+    ArrayType value = (ArrayType) entry.value;
+    value.add(element);
+    this.results.get(key).value = value;
+  }
 
-    public void addHitCount(final String key) {
-        if (!resultsMap.containsKey(key)) {
-            NumberType value = new NumberType(1);
-            resultsMap.put(key, new ResultEntry(value, ResultEntry.ResultCategory.Check));
-            return;
-        }
-        ResultEntry ivalue = resultsMap.get(key);
-        if (ivalue.value.type() != ToucaType.Types.Number) {
-            throw new IllegalArgumentException("specified key is associated with a result of a different type");
-        }
-        NumberType value = (NumberType) ivalue.value;
-        value.increment();
+  /**
+   * Increments value of key every time it is executed. creates the key with
+   * initial value of one if it does not exist.
+   *
+   * @param key name to be associated with the logged test result
+   */
+  public void addHitCount(final String key) {
+    if (!this.results.containsKey(key)) {
+      NumberType value = new NumberType(1);
+      this.results.put(key,
+          new ResultEntry(value, ResultEntry.ResultCategory.Check));
+      return;
     }
+    ResultEntry entry = this.results.get(key);
+    if (entry.value.type() != ToucaType.Types.Number) {
+      throw new IllegalArgumentException(
+          "specified key is associated with a result of a different type");
+    }
+    NumberType value = (NumberType) entry.value;
+    value.increment();
+  }
 
-    public void addMetric(final String key, final Long milliseconds) {
-        tics.put(key, 0l);
-        tocs.put(key, milliseconds);
-        posted = false;
-    }
+  /**
+   * Adds an already obtained measurements to the list of captured performance
+   * benchmarks.
+   *
+   * Useful for logging a metric that is measured without using this SDK.
+   *
+   * @param key name to be associated with this performance benchmark
+   * @param milliseconds duration of this measurement in milliseconds
+   */
+  public void addMetric(final String key, final Long milliseconds) {
+    long timePoint = Instant.now().toEpochMilli();
+    this.tics.put(key, timePoint);
+    this.tocs.put(key, timePoint + milliseconds);
+  }
 
-    public void clear() {
-        this.posted = false;
-        this.resultsMap.clear();
-        this.tics.clear();
-        this.tocs.clear();
+  /**
+   * Starts timing an event with the specified name.
+   *
+   * Measurement of the event is only complete when function {@link stopTimer}
+   * is later called for the specified name.
+   *
+   * @param key name to be associated with the performance metric
+   */
+  public void startTimer(final String key) {
+    this.tics.put(key, Instant.now().toEpochMilli());
+  }
+
+  /**
+   * Stops timing an event with the specified name.
+   * 
+   * Expects function {@link startTimer} to have been called previously with the
+   * specified name.
+   * 
+   * @param key name to be associated with the performance metric
+   */
+  public void stopTimer(final String key) {
+    if (tics.containsKey(key)) {
+      this.tocs.put(key, Instant.now().toEpochMilli());
     }
+  }
 }

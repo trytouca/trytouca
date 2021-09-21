@@ -4,18 +4,18 @@ package io.touca.types;
 
 public final class NumberType extends ToucaType {
 
-    private Integer value;
+  private Integer value;
 
-    public NumberType(final Integer value) {
-        this.value = value;
-    }
+  public NumberType(final Integer value) {
+    this.value = value;
+  }
 
-    @Override
-    public final ToucaType.Types type() {
-        return ToucaType.Types.Number;
-    }
+  @Override
+  public final ToucaType.Types type() {
+    return ToucaType.Types.Number;
+  }
 
-    public void increment() {
-        this.value += 1;
-    }
+  public void increment() {
+    this.value += 1;
+  }
 }

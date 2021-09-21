@@ -5,11 +5,11 @@ package io.touca.exceptions;
 /**
  *
  */
-public final class ConfigException extends ToucaException {
+public final class StateException extends ToucaException {
   /**
    *
    */
-  public ConfigException(final String message) {
+  public StateException(final String message) {
     super(message);
   }
 }

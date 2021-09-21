@@ -12,8 +12,7 @@ import com.google.flatbuffers.Table;
 
 public final class Schema {
   public static final class TType {
-    private TType() {
-    }
+    private TType() {}
 
     public static final byte NONE = 0;
     public static final byte TBool = 1;
@@ -25,8 +24,8 @@ public final class Schema {
     public static final byte TObject = 7;
     public static final byte TArray = 8;
 
-    public static final String[] names = { "NONE", "TBool", "TInt", "TUInt", "TFloat", "TDouble", "TString", "TObject",
-        "TArray", };
+    public static final String[] names = {"NONE", "TBool", "TInt", "TUInt",
+        "TFloat", "TDouble", "TString", "TObject", "TArray",};
 
     public static String name(int e) {
       return names[e];
@@ -34,13 +33,12 @@ public final class Schema {
   }
 
   public static final class ResultType {
-    private ResultType() {
-    }
+    private ResultType() {}
 
     public static final int Check = 1;
     public static final int Assert = 2;
 
-    public static final String[] names = { "Check", "Assert", };
+    public static final String[] names = {"Check", "Assert",};
 
     public static String name(int e) {
       return names[e - Check];
@@ -56,7 +54,8 @@ public final class Schema {
       return getRootAsTypeWrapper(_bb, new TypeWrapper());
     }
 
-    public static TypeWrapper getRootAsTypeWrapper(ByteBuffer _bb, TypeWrapper obj) {
+    public static TypeWrapper getRootAsTypeWrapper(ByteBuffer _bb,
+        TypeWrapper obj) {
       _bb.order(ByteOrder.LITTLE_ENDIAN);
       return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb));
     }
@@ -80,7 +79,8 @@ public final class Schema {
       return o != 0 ? __union(obj, o + bb_pos) : null;
     }
 
-    public static int createTypeWrapper(FlatBufferBuilder builder, byte value_type, int valueOffset) {
+    public static int createTypeWrapper(FlatBufferBuilder builder,
+        byte value_type, int valueOffset) {
       builder.startTable(2);
       TypeWrapper.addValue(builder, valueOffset);
       TypeWrapper.addValueType(builder, value_type);
@@ -471,7 +471,8 @@ public final class Schema {
       return __vector_in_bytebuffer(_bb, 4, 1);
     }
 
-    public static int createTString(FlatBufferBuilder builder, int valueOffset) {
+    public static int createTString(FlatBufferBuilder builder,
+        int valueOffset) {
       builder.startTable(1);
       TString.addValue(builder, valueOffset);
       return TString.endTString(builder);
@@ -515,7 +516,8 @@ public final class Schema {
       return getRootAsTObjectMember(_bb, new TObjectMember());
     }
 
-    public static TObjectMember getRootAsTObjectMember(ByteBuffer _bb, TObjectMember obj) {
+    public static TObjectMember getRootAsTObjectMember(ByteBuffer _bb,
+        TObjectMember obj) {
       _bb.order(ByteOrder.LITTLE_ENDIAN);
       return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb));
     }
@@ -551,7 +553,8 @@ public final class Schema {
       return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null;
     }
 
-    public static int createTObjectMember(FlatBufferBuilder builder, int nameOffset, int valueOffset) {
+    public static int createTObjectMember(FlatBufferBuilder builder,
+        int nameOffset, int valueOffset) {
       builder.startTable(2);
       TObjectMember.addValue(builder, valueOffset);
       TObjectMember.addName(builder, nameOffset);
@@ -650,7 +653,8 @@ public final class Schema {
       return o != 0 ? obj.__assign(__vector(o), 4, bb) : null;
     }
 
-    public static int createTObject(FlatBufferBuilder builder, int keyOffset, int valuesOffset) {
+    public static int createTObject(FlatBufferBuilder builder, int keyOffset,
+        int valuesOffset) {
       builder.startTable(2);
       TObject.addValues(builder, valuesOffset);
       TObject.addKey(builder, keyOffset);
@@ -669,14 +673,16 @@ public final class Schema {
       builder.addOffset(1, valuesOffset, 0);
     }
 
-    public static int createValuesVector(FlatBufferBuilder builder, int[] data) {
+    public static int createValuesVector(FlatBufferBuilder builder,
+        int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
         builder.addOffset(data[i]);
       return builder.endVector();
     }
 
-    public static void startValuesVector(FlatBufferBuilder builder, int numElems) {
+    public static void startValuesVector(FlatBufferBuilder builder,
+        int numElems) {
       builder.startVector(4, numElems, 4);
     }
 
@@ -747,7 +753,8 @@ public final class Schema {
       return o != 0 ? obj.__assign(__vector(o), 4, bb) : null;
     }
 
-    public static int createTArray(FlatBufferBuilder builder, int valuesOffset) {
+    public static int createTArray(FlatBufferBuilder builder,
+        int valuesOffset) {
       builder.startTable(1);
       TArray.addValues(builder, valuesOffset);
       return TArray.endTArray(builder);
@@ -761,14 +768,16 @@ public final class Schema {
       builder.addOffset(0, valuesOffset, 0);
     }
 
-    public static int createValuesVector(FlatBufferBuilder builder, int[] data) {
+    public static int createValuesVector(FlatBufferBuilder builder,
+        int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
         builder.addOffset(data[i]);
       return builder.endVector();
     }
 
-    public static void startValuesVector(FlatBufferBuilder builder, int numElems) {
+    public static void startValuesVector(FlatBufferBuilder builder,
+        int numElems) {
       builder.startVector(4, numElems, 4);
     }
 
@@ -843,7 +852,8 @@ public final class Schema {
       return o != 0 ? bb.get(o + bb_pos) & 0xFF : 1;
     }
 
-    public static int createResult(FlatBufferBuilder builder, int keyOffset, int valueOffset, int typ) {
+    public static int createResult(FlatBufferBuilder builder, int keyOffset,
+        int valueOffset, int typ) {
       builder.startTable(3);
       Result.addValue(builder, valueOffset);
       Result.addKey(builder, keyOffset);
@@ -933,7 +943,8 @@ public final class Schema {
       return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null;
     }
 
-    public static int createMetric(FlatBufferBuilder builder, int keyOffset, int valueOffset) {
+    public static int createMetric(FlatBufferBuilder builder, int keyOffset,
+        int valueOffset) {
       builder.startTable(2);
       Metric.addValue(builder, valueOffset);
       Metric.addKey(builder, keyOffset);
@@ -1019,7 +1030,8 @@ public final class Schema {
       return o != 0 ? obj.__assign(__vector(o), 4, bb) : null;
     }
 
-    public static int createResults(FlatBufferBuilder builder, int entriesOffset) {
+    public static int createResults(FlatBufferBuilder builder,
+        int entriesOffset) {
       builder.startTable(1);
       Results.addEntries(builder, entriesOffset);
       return Results.endResults(builder);
@@ -1029,18 +1041,21 @@ public final class Schema {
       builder.startTable(1);
     }
 
-    public static void addEntries(FlatBufferBuilder builder, int entriesOffset) {
+    public static void addEntries(FlatBufferBuilder builder,
+        int entriesOffset) {
       builder.addOffset(0, entriesOffset, 0);
     }
 
-    public static int createEntriesVector(FlatBufferBuilder builder, int[] data) {
+    public static int createEntriesVector(FlatBufferBuilder builder,
+        int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
         builder.addOffset(data[i]);
       return builder.endVector();
     }
 
-    public static void startEntriesVector(FlatBufferBuilder builder, int numElems) {
+    public static void startEntriesVector(FlatBufferBuilder builder,
+        int numElems) {
       builder.startVector(4, numElems, 4);
     }
 
@@ -1111,7 +1126,8 @@ public final class Schema {
       return o != 0 ? obj.__assign(__vector(o), 4, bb) : null;
     }
 
-    public static int createMetrics(FlatBufferBuilder builder, int entriesOffset) {
+    public static int createMetrics(FlatBufferBuilder builder,
+        int entriesOffset) {
       builder.startTable(1);
       Metrics.addEntries(builder, entriesOffset);
       return Metrics.endMetrics(builder);
@@ -1121,18 +1137,21 @@ public final class Schema {
       builder.startTable(1);
     }
 
-    public static void addEntries(FlatBufferBuilder builder, int entriesOffset) {
+    public static void addEntries(FlatBufferBuilder builder,
+        int entriesOffset) {
       builder.addOffset(0, entriesOffset, 0);
     }
 
-    public static int createEntriesVector(FlatBufferBuilder builder, int[] data) {
+    public static int createEntriesVector(FlatBufferBuilder builder,
+        int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
         builder.addOffset(data[i]);
       return builder.endVector();
     }
 
-    public static void startEntriesVector(FlatBufferBuilder builder, int numElems) {
+    public static void startEntriesVector(FlatBufferBuilder builder,
+        int numElems) {
       builder.startVector(4, numElems, 4);
     }
 
@@ -1245,8 +1264,9 @@ public final class Schema {
       return __vector_in_bytebuffer(_bb, 14, 1);
     }
 
-    public static int createMetadata(FlatBufferBuilder builder, int testsuiteOffset, int versionOffset,
-        int testcaseOffset, int builtAtOffset, int teamslugOffset) {
+    public static int createMetadata(FlatBufferBuilder builder,
+        int testsuiteOffset, int versionOffset, int testcaseOffset,
+        int builtAtOffset, int teamslugOffset) {
       builder.startTable(6);
       Metadata.addTeamslug(builder, teamslugOffset);
       Metadata.addBuiltAt(builder, builtAtOffset);
@@ -1260,23 +1280,28 @@ public final class Schema {
       builder.startTable(6);
     }
 
-    public static void addTestsuite(FlatBufferBuilder builder, int testsuiteOffset) {
+    public static void addTestsuite(FlatBufferBuilder builder,
+        int testsuiteOffset) {
       builder.addOffset(0, testsuiteOffset, 0);
     }
 
-    public static void addVersion(FlatBufferBuilder builder, int versionOffset) {
+    public static void addVersion(FlatBufferBuilder builder,
+        int versionOffset) {
       builder.addOffset(1, versionOffset, 0);
     }
 
-    public static void addTestcase(FlatBufferBuilder builder, int testcaseOffset) {
+    public static void addTestcase(FlatBufferBuilder builder,
+        int testcaseOffset) {
       builder.addOffset(3, testcaseOffset, 0);
     }
 
-    public static void addBuiltAt(FlatBufferBuilder builder, int builtAtOffset) {
+    public static void addBuiltAt(FlatBufferBuilder builder,
+        int builtAtOffset) {
       builder.addOffset(4, builtAtOffset, 0);
     }
 
-    public static void addTeamslug(FlatBufferBuilder builder, int teamslugOffset) {
+    public static void addTeamslug(FlatBufferBuilder builder,
+        int teamslugOffset) {
       builder.addOffset(5, teamslugOffset, 0);
     }
 
@@ -1351,8 +1376,8 @@ public final class Schema {
       return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null;
     }
 
-    public static int createMessage(FlatBufferBuilder builder, int metadataOffset, int resultsOffset,
-        int metricsOffset) {
+    public static int createMessage(FlatBufferBuilder builder,
+        int metadataOffset, int resultsOffset, int metricsOffset) {
       builder.startTable(4);
       Message.addMetrics(builder, metricsOffset);
       Message.addResults(builder, resultsOffset);
@@ -1364,15 +1389,18 @@ public final class Schema {
       builder.startTable(4);
     }
 
-    public static void addMetadata(FlatBufferBuilder builder, int metadataOffset) {
+    public static void addMetadata(FlatBufferBuilder builder,
+        int metadataOffset) {
       builder.addOffset(0, metadataOffset, 0);
     }
 
-    public static void addResults(FlatBufferBuilder builder, int resultsOffset) {
+    public static void addResults(FlatBufferBuilder builder,
+        int resultsOffset) {
       builder.addOffset(1, resultsOffset, 0);
     }
 
-    public static void addMetrics(FlatBufferBuilder builder, int metricsOffset) {
+    public static void addMetrics(FlatBufferBuilder builder,
+        int metricsOffset) {
       builder.addOffset(3, metricsOffset, 0);
     }
 
@@ -1406,7 +1434,8 @@ public final class Schema {
       return getRootAsMessageBuffer(_bb, new MessageBuffer());
     }
 
-    public static MessageBuffer getRootAsMessageBuffer(ByteBuffer _bb, MessageBuffer obj) {
+    public static MessageBuffer getRootAsMessageBuffer(ByteBuffer _bb,
+        MessageBuffer obj) {
       _bb.order(ByteOrder.LITTLE_ENDIAN);
       return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb));
     }
@@ -1456,7 +1485,8 @@ public final class Schema {
       return o != 0 ? obj.__assign(__indirect(__vector(o)), bb) : null;
     }
 
-    public static int createMessageBuffer(FlatBufferBuilder builder, int bufOffset) {
+    public static int createMessageBuffer(FlatBufferBuilder builder,
+        int bufOffset) {
       builder.startTable(1);
       MessageBuffer.addBuf(builder, bufOffset);
       return MessageBuffer.endMessageBuffer(builder);
@@ -1474,7 +1504,8 @@ public final class Schema {
       return builder.createByteVector(data);
     }
 
-    public static int createBufVector(FlatBufferBuilder builder, ByteBuffer data) {
+    public static int createBufVector(FlatBufferBuilder builder,
+        ByteBuffer data) {
       return builder.createByteVector(data);
     }
 
@@ -1549,7 +1580,8 @@ public final class Schema {
       return o != 0 ? obj.__assign(__vector(o), 4, bb) : null;
     }
 
-    public static int createMessages(FlatBufferBuilder builder, int messagesOffset) {
+    public static int createMessages(FlatBufferBuilder builder,
+        int messagesOffset) {
       builder.startTable(1);
       Messages.addMessages(builder, messagesOffset);
       return Messages.endMessages(builder);
@@ -1559,18 +1591,21 @@ public final class Schema {
       builder.startTable(1);
     }
 
-    public static void addMessages(FlatBufferBuilder builder, int messagesOffset) {
+    public static void addMessages(FlatBufferBuilder builder,
+        int messagesOffset) {
       builder.addOffset(0, messagesOffset, 0);
     }
 
-    public static int createMessagesVector(FlatBufferBuilder builder, int[] data) {
+    public static int createMessagesVector(FlatBufferBuilder builder,
+        int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
         builder.addOffset(data[i]);
       return builder.endVector();
     }
 
-    public static void startMessagesVector(FlatBufferBuilder builder, int numElems) {
+    public static void startMessagesVector(FlatBufferBuilder builder,
+        int numElems) {
       builder.startVector(4, numElems, 4);
     }
 
@@ -1579,11 +1614,13 @@ public final class Schema {
       return o;
     }
 
-    public static void finishMessagesBuffer(FlatBufferBuilder builder, int offset) {
+    public static void finishMessagesBuffer(FlatBufferBuilder builder,
+        int offset) {
       builder.finish(offset);
     }
 
-    public static void finishSizePrefixedMessagesBuffer(FlatBufferBuilder builder, int offset) {
+    public static void finishSizePrefixedMessagesBuffer(
+        FlatBufferBuilder builder, int offset) {
       builder.finishSizePrefixed(offset);
     }
 

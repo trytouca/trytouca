@@ -3,18 +3,18 @@
 package io.touca;
 
 public final class ScopedTimer implements AutoCloseable {
-    private String key;
-    private boolean closed = false;
+  private String key;
+  private boolean closed = false;
 
-    public ScopedTimer(final String key) {
-        this.key = key;
-        Touca.startTimer(key);
-    }
+  public ScopedTimer(final String key) {
+    this.key = key;
+    Touca.startTimer(key);
+  }
 
-    @Override
-    public void close() {
-        if (!this.closed) {
-            Touca.stopTimer(key);
-        }
+  @Override
+  public void close() {
+    if (!this.closed) {
+      Touca.stopTimer(key);
     }
+  }
 }

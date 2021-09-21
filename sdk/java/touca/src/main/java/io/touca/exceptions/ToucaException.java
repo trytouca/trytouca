@@ -6,10 +6,10 @@ package io.touca.exceptions;
  *
  */
 public abstract class ToucaException extends RuntimeException {
-    /**
-     *
-     */
-    public ToucaException(final String message) {
-        super(message);
-    }
+  /**
+   *
+   */
+  public ToucaException(final String message) {
+    super(message);
+  }
 }

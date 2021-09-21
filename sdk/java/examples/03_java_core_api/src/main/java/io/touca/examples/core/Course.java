@@ -3,11 +3,11 @@
 package io.touca.examples.core;
 
 public final class Course {
-    public String name;
-    public double grade;
+  public String name;
+  public double grade;
 
-    public Course(final String name, final Double grade) {
-        this.name = name;
-        this.grade = grade;
-    }
+  public Course(final String name, final Double grade) {
+    this.name = name;
+    this.grade = grade;
+  }
 }
