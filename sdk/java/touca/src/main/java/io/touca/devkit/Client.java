@@ -3,6 +3,7 @@
 package io.touca.devkit;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -11,6 +12,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import io.touca.Touca;
 import io.touca.exceptions.ConfigException;
 import io.touca.exceptions.StateException;
@@ -141,8 +145,8 @@ public class Client {
       return;
     }
     if (!this.cases.containsKey(name)) {
-      Case testcase = new Case(new Case.Metadata(name, this.options.team,
-          this.options.suite, this.options.version));
+      Case testcase = new Case(name, this.options.team, this.options.suite,
+          this.options.version);
       this.cases.put(name, testcase);
     }
     this.threadMap.put(Thread.currentThread().getId(), name);
@@ -208,12 +212,14 @@ public class Client {
    * exclude a subset of an object properties during serialization.
    *
    * @param <T> type of the value to be captured. Could be anything.
-   * @param type type to be serialized
+   * @param clazz type to be serialized
    * @param callback function that converts an instance of a given type to an
    *        object with different member variables.
    */
-  public <T> void addSerializer(final Class<T> type,
-      final Function<T, ?> callback) {}
+  public <T> void addSerializer(final Class<T> clazz,
+      final Function<T, ?> callback) {
+    this.typeHandler.addSerializer(clazz, callback);
+  }
 
   /**
    * Stores test results and performance benchmarks in binary format in a file
@@ -262,7 +268,7 @@ public class Client {
       throws IOException {
     final Case[] items = this.save(path, cases);
     final String content = this.makeJson(items);
-    Files.write(path, content.getBytes());
+    Files.write(path, content.getBytes(StandardCharsets.UTF_8));
   }
 
   /**
@@ -340,15 +346,21 @@ public class Client {
    *
    */
   private String makeJson(final Case[] testcases) {
-    return new String("hello");
+    final Gson gson = new GsonBuilder().create();
+    final JsonArray array = new JsonArray(testcases.length);
+    for (final Case testcase : testcases) {
+      array.add(testcase.json());
+    }
+    return gson.toJson(array);
   }
 
   /**
    *
    */
   private Case[] save(final Path path, final Set<String> cases) {
-    if (path.getParent() != null) {
-      path.getParent().toFile().mkdirs();
+    Path parent = path.getParent();
+    if (parent != null && parent.toFile().mkdirs()) {
+      // TODO: log that directory was created
     }
     if (cases.isEmpty()) {
       return this.cases.values().toArray(new Case[this.cases.size()]);

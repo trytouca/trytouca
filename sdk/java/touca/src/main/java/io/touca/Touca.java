@@ -424,7 +424,7 @@ public final class Touca {
    * types by serializing all their properties. Custom serializers allow you to
    * exclude a subset of an object properties during serialization.
    *
-   * @param <T> type of the value to be captured. Could be anything.
+   * @param <T> type of the value to be captured.
    * @param type type to be serialized
    * @param callback function that converts an instance of a given type to an
    *        object with different member variables.

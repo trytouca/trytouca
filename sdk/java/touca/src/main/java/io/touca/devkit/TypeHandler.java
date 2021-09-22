@@ -2,28 +2,60 @@
 
 package io.touca.devkit;
 
-import io.touca.types.ToucaType;
-
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import io.touca.TypeSerializer;
 import io.touca.types.BooleanType;
-import io.touca.types.NumberType;
+import io.touca.types.DecimalType;
+import io.touca.types.IntegerType;
+import io.touca.types.ObjectType;
+import io.touca.types.StringType;
+import io.touca.types.ToucaType;
 
 public final class TypeHandler {
-  private Map<Class<?>, Function<Object, ToucaType>> primitives =
-      new HashMap<Class<?>, Function<Object, ToucaType>>() {
-        {
-          put(Boolean.class, x -> new BooleanType((Boolean) x));
-        }
-      };
+  private Map<Class<?>, Function<Object, ToucaType>> primitives;
+  private Map<Class<?>, TypeSerializer<?>> customTypes;
+
+  public TypeHandler() {
+    this.primitives = new HashMap<Class<?>, Function<Object, ToucaType>>() {
+      {
+        put(Boolean.class, x -> new BooleanType((Boolean) x));
+        put(String.class, x -> new StringType((String) x));
+        put(Integer.class, x -> new IntegerType((Integer) x));
+        put(Long.class, x -> new IntegerType((Long) x));
+        put(Double.class, x -> new DecimalType((Double) x));
+        put(Float.class, x -> new DecimalType((Float) x));
+      }
+    };
+    this.customTypes = new HashMap<Class<?>, TypeSerializer<?>>();
+  }
 
   public final ToucaType transform(final Object value) {
-    if (this.primitives.containsKey(value.getClass())) {
-      return this.primitives.get(value.getClass()).apply(value);
+    final Class<? extends Object> clazz = value.getClass();
+    if (primitives.containsKey(clazz)) {
+      return primitives.get(clazz).apply(value);
     }
-    return new NumberType(1);
+    if (customTypes.containsKey(clazz)) {
+      // TODO: implement
+      return new IntegerType(1l);
+    }
+    final ObjectType obj = new ObjectType();
+    for (final Field field : clazz.getFields()) {
+      try {
+        obj.add(field.getName(), this.transform(field.get(value)));
+      } catch (final IllegalAccessException ex) {
+        // TODO: implement
+      }
+    }
+    return obj;
+  }
+
+  public <T> void addSerializer(final Class<T> clazz,
+      final Function<T, ? extends Object> serializer) {
+    // customTypes.put(clazz, serializer);
   }
 
 }

@@ -4,7 +4,9 @@ plugins {
     `java-library`
     `maven-publish`
     jacoco
+    pmd
     signing
+    id("com.github.spotbugs") version "5.0.0-beta.1"
 }
 
 dependencies {
@@ -59,6 +61,24 @@ tasks {
                 setDocTitle("Touca ${project.version}")
             }
         }
+    }
+
+    pmd {
+        isConsoleOutput = true
+        toolVersion = "6.38.0"
+        isIgnoreFailures = true
+    }
+
+    spotbugs {
+        ignoreFailures.set(true)
+        showProgress.set(true)
+        showStackTraces.set(false)
+    }
+
+    withType<com.github.spotbugs.snom.SpotBugsTask> {
+        enabled = baseName.equals("main")
+        reports.maybeCreate("html").isEnabled = true
+        reports.maybeCreate("xml").isEnabled = false
     }
 }
 

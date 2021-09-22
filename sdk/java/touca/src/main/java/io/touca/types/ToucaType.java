@@ -2,6 +2,8 @@
 
 package io.touca.types;
 
+import com.google.gson.JsonElement;
+
 public abstract class ToucaType {
 
   public enum Types {
@@ -9,4 +11,6 @@ public abstract class ToucaType {
   }
 
   public abstract ToucaType.Types type();
+
+  public abstract JsonElement json();
 }

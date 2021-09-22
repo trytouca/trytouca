@@ -46,7 +46,7 @@ public final class Schema {
   }
 
   public static final class TypeWrapper extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -121,7 +121,7 @@ public final class Schema {
   }
 
   public static final class TBool extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -184,7 +184,7 @@ public final class Schema {
   }
 
   public static final class TInt extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -247,7 +247,7 @@ public final class Schema {
   }
 
   public static final class TUInt extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -310,7 +310,7 @@ public final class Schema {
   }
 
   public static final class TFloat extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -373,7 +373,7 @@ public final class Schema {
   }
 
   public static final class TDouble extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -436,7 +436,7 @@ public final class Schema {
   }
 
   public static final class TString extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -508,7 +508,7 @@ public final class Schema {
   }
 
   public static final class TObjectMember extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -595,7 +595,7 @@ public final class Schema {
   }
 
   public static final class TObject extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -708,7 +708,7 @@ public final class Schema {
   }
 
   public static final class TArray extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -803,7 +803,7 @@ public final class Schema {
   }
 
   public static final class Result extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -899,7 +899,7 @@ public final class Schema {
   }
 
   public static final class Metric extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -985,7 +985,7 @@ public final class Schema {
   }
 
   public static final class Results extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -1081,7 +1081,7 @@ public final class Schema {
   }
 
   public static final class Metrics extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -1177,7 +1177,7 @@ public final class Schema {
   }
 
   public static final class Metadata extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -1327,7 +1327,7 @@ public final class Schema {
   }
 
   public static final class Message extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -1426,7 +1426,7 @@ public final class Schema {
   }
 
   public static final class MessageBuffer extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 
@@ -1535,7 +1535,7 @@ public final class Schema {
   }
 
   public static final class Messages extends Table {
-    public static void ValidateVersion() {
+    public static void validateVersion() {
       Constants.FLATBUFFERS_2_0_0();
     }
 

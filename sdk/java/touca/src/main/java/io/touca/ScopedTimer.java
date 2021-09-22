@@ -3,7 +3,7 @@
 package io.touca;
 
 public final class ScopedTimer implements AutoCloseable {
-  private String key;
+  private final String key;
   private boolean closed = false;
 
   public ScopedTimer(final String key) {
