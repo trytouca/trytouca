@@ -2,12 +2,14 @@
 
 package io.touca.devkit;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 import io.touca.TypeSerializer;
+import io.touca.types.ArrayType;
 import io.touca.types.BooleanType;
 import io.touca.types.DecimalType;
 import io.touca.types.IntegerType;
@@ -41,6 +43,20 @@ public final class TypeHandler {
     if (customTypes.containsKey(clazz)) {
       // TODO: implement
       return new IntegerType(1l);
+    }
+    if (value instanceof Iterable) {
+      final ArrayType arr = new ArrayType();
+      for (Object element : (Iterable<?>) value) {
+        arr.add(transform(element));
+      }
+      return arr;
+    }
+    if (value.getClass().isArray()) {
+      final ArrayType arr = new ArrayType();
+      for (int i = 0; i < Array.getLength(value); i++) {
+        arr.add(transform(Array.get(value, i)));
+      }
+      return arr;
     }
     final ObjectType obj = new ObjectType();
     for (final Field field : clazz.getFields()) {

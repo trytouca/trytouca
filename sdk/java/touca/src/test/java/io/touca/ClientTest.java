@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import io.touca.devkit.Client;
@@ -34,6 +36,12 @@ public final class ClientTest {
   private Client makeClient() {
     final Client client = new Client();
     final String[] courses = {"math", "english"};
+    final List<String> parents = new ArrayList<String>() {
+      {
+        add("Lily");
+        add("James");
+      }
+    };
     client.configure(x -> {
       x.team = "some-team";
       x.suite = "some-suite";
@@ -44,7 +52,10 @@ public final class ClientTest {
       x.addAssertion("username", client.transform("potter"));
       x.addResult("is_famous", client.transform(true));
       x.addResult("tall", client.transform(6.1));
+      x.addResult("age", client.transform(21));
+      x.addResult("name", client.transform("harry"));
       x.addResult("dob", client.transform(new CustomDate(2000, 1, 1)));
+      x.addResult("parents", client.transform(parents));
       x.addResult("courses", client.transform(courses));
       for (final String course : courses) {
         x.addArrayElement("course-names", client.transform(course));
@@ -134,6 +145,34 @@ public final class ClientTest {
         "\"assertions\":[{\"key\":\"some-assertion\",\"value\":\"some-other-value\"}]"));
     assertTrue(content
         .contains("\"metrics\":[{\"key\":\"some-metric\",\"value\":10}]"));
+  }
+
+  @Test
+  public void checkResultsInJson(@TempDir Path tempDir) throws IOException {
+    Path outputFile = tempDir.resolve("some-file");
+    Client client = makeClient();
+    assertDoesNotThrow(() -> {
+      client.saveJson(outputFile, new HashSet<String>() {
+        {
+          add("some-case");
+        }
+      });
+    });
+    final byte[] encoded = Files.readAllBytes(outputFile);
+    final String content = new String(encoded, StandardCharsets.UTF_8);
+    assertTrue(content.contains("{\"key\":\"is_famous\",\"value\":true}"));
+    assertTrue(content.contains("{\"key\":\"tall\",\"value\":6.1}"));
+    assertTrue(content.contains("{\"key\":\"age\",\"value\":21}"));
+    assertTrue(content.contains("{\"key\":\"name\",\"value\":\"harry\"}"));
+    assertTrue(content.contains(
+        "{\"key\":\"dob\",\"value\":{\"year\":2000,\"month\":1,\"day\":1}}"));
+    assertTrue(content
+        .contains("{\"key\":\"parents\",\"value\":[\"Lily\",\"James\"]}"));
+    assertTrue(content
+        .contains("{\"key\":\"courses\",\"value\":[\"math\",\"english\"]}"));
+    assertTrue(content.contains(
+        "{\"key\":\"course-names\",\"value\":[\"math\",\"english\"]}"));
+    assertTrue(content.contains("{\"key\":\"course-count\",\"value\":2}"));
   }
 
   @Test

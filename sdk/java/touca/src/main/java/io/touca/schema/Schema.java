@@ -2,15 +2,11 @@
 
 package io.touca.schema;
 
-import java.nio.ByteBuffer;
-import com.google.flatbuffers.Constants;
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.flatbuffers.Table;
 
 public final class Schema {
   public static final class TType {
-    private TType() {}
-
     public static final byte NONE = 0;
     public static final byte TBool = 1;
     public static final byte TInt = 2;
@@ -20,13 +16,15 @@ public final class Schema {
     public static final byte TString = 6;
     public static final byte TObject = 7;
     public static final byte TArray = 8;
+
+    private TType() {}
   }
 
   public static final class ResultType {
-    private ResultType() {}
-
     public static final int Check = 1;
     public static final int Assert = 2;
+
+    private ResultType() {}
   }
 
   public static final class TypeWrapper extends Table {
