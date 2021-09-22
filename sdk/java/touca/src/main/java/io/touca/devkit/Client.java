@@ -12,12 +12,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import io.touca.Touca;
 import io.touca.exceptions.ConfigException;
 import io.touca.exceptions.StateException;
+import io.touca.schema.Schema;
 import io.touca.types.ToucaType;
 
 /**
@@ -339,7 +341,21 @@ public class Client {
    *
    */
   private byte[] serialize(final Case[] testcases) {
-    return new byte[0];
+    final FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+    final int[] msgBuf = new int[testcases.length];
+    for (int i = 0; i < testcases.length; i++) {
+      final byte[] content = testcases[i].serialize();
+      final int buf = Schema.MessageBuffer.createBufVector(builder, content);
+      Schema.MessageBuffer.startMessageBuffer(builder);
+      Schema.MessageBuffer.addBuf(builder, buf);
+      msgBuf[i] = Schema.MessageBuffer.endMessageBuffer(builder);
+    }
+    final int fbsMsgBuf = Schema.Messages.createMessagesVector(builder, msgBuf);
+    Schema.Messages.startMessages(builder);
+    Schema.Messages.addMessages(builder, fbsMsgBuf);
+    final int fbsMessages = Schema.Messages.endMessages(builder);
+    builder.finish(fbsMessages);
+    return builder.sizedByteArray();
   }
 
   /**

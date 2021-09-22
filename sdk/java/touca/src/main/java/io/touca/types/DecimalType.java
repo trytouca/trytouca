@@ -2,8 +2,10 @@
 
 package io.touca.types;
 
+import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.touca.schema.Schema;
 
 public final class DecimalType extends ToucaType {
 
@@ -24,6 +26,17 @@ public final class DecimalType extends ToucaType {
 
   @Override
   public JsonElement json() {
-    return new JsonPrimitive(this.value);
+    return new JsonPrimitive(value);
+  }
+
+  @Override
+  public int serialize(final FlatBufferBuilder builder) {
+    Schema.TDouble.startTDouble(builder);
+    Schema.TDouble.addValue(builder, value);
+    final int fbsValue = Schema.TDouble.endTDouble(builder);
+    Schema.TypeWrapper.startTypeWrapper(builder);
+    Schema.TypeWrapper.addValue(builder, fbsValue);
+    Schema.TypeWrapper.addValueType(builder, Schema.TType.TDouble);
+    return Schema.TypeWrapper.endTypeWrapper(builder);
   }
 }

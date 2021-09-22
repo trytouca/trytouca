@@ -3,25 +3,42 @@
 package io.touca.devkit;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.Map.Entry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.touca.devkit.ResultEntry.ResultCategory;
+import io.touca.schema.Schema;
+import io.touca.schema.Schema.ResultType;
 import io.touca.types.ArrayType;
 import io.touca.types.ToucaType;
 import io.touca.types.IntegerType;
 
+
 public class Case {
-  private CaseMetadata meta;
+
+  private String testCase;
+  private String teamSlug;
+  private String testSuite;
+  private String version;
+  private String builtAt;
   private Map<String, ResultEntry> results = new HashMap<String, ResultEntry>();
   private Map<String, Long> tics = new HashMap<String, Long>();
   private Map<String, Long> tocs = new HashMap<String, Long>();
+  private static Map<ResultCategory, Integer> resultTypes =
+      new HashMap<ResultCategory, Integer>() {
+        {
+          put(ResultCategory.Check, ResultType.Check);
+          put(ResultCategory.Assert, ResultType.Assert);
+        }
+      };
 
   /**
    * Creates a Test Case instance that stores all the test results and
@@ -34,7 +51,11 @@ public class Case {
    */
   public Case(final String testCase, final String team, final String suite,
       final String version) {
-    this.meta = new CaseMetadata(testCase, team, suite, version);
+    this.testCase = testCase;
+    this.teamSlug = team != null ? team : "unknown";
+    this.testSuite = suite != null ? suite : "unknown";
+    this.version = version != null ? version : "unknown";
+    this.builtAt = LocalDateTime.now().toString();
   }
 
   /**
@@ -155,6 +176,13 @@ public class Case {
    * @return a json element that to be serialized by the caller
    */
   public final JsonElement json() {
+    final JsonObject jsonMetadata = new JsonObject();
+    jsonMetadata.addProperty("teamslug", teamSlug);
+    jsonMetadata.addProperty("testsuite", testSuite);
+    jsonMetadata.addProperty("version", version);
+    jsonMetadata.addProperty("testcase", testCase);
+    jsonMetadata.addProperty("builtAt", builtAt);
+
     final JsonArray jsonResults = new JsonArray();
     final JsonArray jsonAssertions = new JsonArray();
     for (Map.Entry<String, ResultEntry> result : results.entrySet()) {
@@ -170,6 +198,7 @@ public class Case {
           jsonResults.add(obj);
       }
     }
+
     final JsonArray jsonMetrics = new JsonArray();
     for (Entry<String, ToucaType> entry : metrics()) {
       final JsonObject jsonMetric = new JsonObject();
@@ -177,8 +206,9 @@ public class Case {
       jsonMetric.add("value", entry.getValue().json());
       jsonMetrics.add(jsonMetric);
     }
+
     final JsonObject output = new JsonObject();
-    output.add("metadata", meta.json());
+    output.add("metadata", jsonMetadata);
     output.add("results", jsonResults);
     output.add("assertions", jsonAssertions);
     output.add("metrics", jsonMetrics);
@@ -188,8 +218,74 @@ public class Case {
   /**
    *
    */
+  public byte[] serialize() {
+    final FlatBufferBuilder builder = new FlatBufferBuilder(1024);
+
+    final Map<String, Integer> metadata = new HashMap<String, Integer>() {
+      {
+        put("teamslug", builder.createString(teamSlug));
+        put("testsuite", builder.createString(testSuite));
+        put("version", builder.createString(version));
+        put("testcase", builder.createString(testCase));
+        put("builtAt", builder.createString(builtAt));
+      }
+    };
+
+    Schema.Metadata.startMetadata(builder);
+    Schema.Metadata.addTeamslug(builder, metadata.get("teamslug"));
+    Schema.Metadata.addTestsuite(builder, metadata.get("testsuite"));
+    Schema.Metadata.addVersion(builder, metadata.get("version"));
+    Schema.Metadata.addTestcase(builder, metadata.get("testcase"));
+    Schema.Metadata.addBuiltAt(builder, metadata.get("builtAt"));
+    final int fbsMetadata = Schema.Metadata.endMetadata(builder);
+
+    final List<Integer> resultEntries = new ArrayList<Integer>(results.size());
+    for (final Map.Entry<String, ResultEntry> entry : results.entrySet()) {
+      final int fbsKey = builder.createString(entry.getKey());
+      final int fbsValue = entry.getValue().value.serialize(builder);
+      Schema.Result.startResult(builder);
+      Schema.Result.addKey(builder, fbsKey);
+      Schema.Result.addValue(builder, fbsValue);
+      Schema.Result.addTyp(builder, resultTypes.get(entry.getValue().type));
+      resultEntries.add(Schema.Result.endResult(builder));
+    }
+    final int fbsResultEntries = Schema.Results.createEntriesVector(builder,
+        resultEntries.stream().mapToInt(x -> x).toArray());
+    Schema.Results.startResults(builder);
+    Schema.Results.addEntries(builder, fbsResultEntries);
+    final int fbsResults = Schema.Results.endResults(builder);
+
+    final List<SimpleEntry<String, ToucaType>> rMetrics = metrics();
+    final List<Integer> metricEntries = new ArrayList<Integer>(rMetrics.size());
+    for (final SimpleEntry<String, ToucaType> entry : rMetrics) {
+      final int fbsKey = builder.createString(entry.getKey());
+      final int fbsValue = entry.getValue().serialize(builder);
+      Schema.Metric.startMetric(builder);
+      Schema.Metric.addKey(builder, fbsKey);
+      Schema.Metric.addValue(builder, fbsValue);
+      metricEntries.add(Schema.Metric.endMetric(builder));
+    }
+    final int fbsMetricEntries = Schema.Metrics.createEntriesVector(builder,
+        metricEntries.stream().mapToInt(x -> x).toArray());
+    Schema.Metrics.startMetrics(builder);
+    Schema.Metrics.addEntries(builder, fbsMetricEntries);
+    final int fbsMetrics = Schema.Metrics.endMetrics(builder);
+
+    Schema.Message.startMessage(builder);
+    Schema.Message.addMetadata(builder, fbsMetadata);
+    Schema.Message.addResults(builder, fbsResults);
+    Schema.Message.addMetrics(builder, fbsMetrics);
+    final int fbsMessage = Schema.Message.endMessage(builder);
+
+    builder.finish(fbsMessage);
+    return builder.sizedByteArray();
+  }
+
+  /**
+   *
+   */
   private List<SimpleEntry<String, ToucaType>> metrics() {
-    List<SimpleEntry<String, ToucaType>> metrics =
+    final List<SimpleEntry<String, ToucaType>> metrics =
         new ArrayList<SimpleEntry<String, ToucaType>>();
     for (Map.Entry<String, Long> entry : tics.entrySet()) {
       final String key = entry.getKey();

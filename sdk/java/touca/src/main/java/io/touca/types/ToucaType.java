@@ -2,6 +2,7 @@
 
 package io.touca.types;
 
+import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonElement;
 
 public abstract class ToucaType {
@@ -13,4 +14,6 @@ public abstract class ToucaType {
   public abstract ToucaType.Types type();
 
   public abstract JsonElement json();
+
+  public abstract int serialize(final FlatBufferBuilder builder);
 }

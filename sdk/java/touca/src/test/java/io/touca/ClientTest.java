@@ -7,6 +7,7 @@ import org.junit.jupiter.api.io.TempDir;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -17,6 +18,49 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import io.touca.devkit.Client;
 
 public final class ClientTest {
+
+  public static final class CustomDate {
+    public final int year;
+    public final int month;
+    public final int day;
+
+    public CustomDate(final int year, final int month, final int day) {
+      this.year = year;
+      this.month = month;
+      this.day = day;
+    }
+  }
+
+  private Client makeClient() {
+    final Client client = new Client();
+    final String[] courses = {"math", "english"};
+    client.configure(x -> {
+      x.team = "some-team";
+      x.suite = "some-suite";
+      x.version = "some-version";
+    });
+    client.declareTestcase("some-case");
+    client.perform(x -> {
+      x.addAssertion("username", client.transform("potter"));
+      x.addResult("is_famous", client.transform(true));
+      x.addResult("tall", client.transform(6.1));
+      x.addResult("dob", client.transform(new CustomDate(2000, 1, 1)));
+      x.addResult("courses", client.transform(courses));
+      for (final String course : courses) {
+        x.addArrayElement("course-names", client.transform(course));
+        x.addHitCount("course-count");
+      }
+      x.addMetric("exam_time", 42L);
+      x.startTimer("small_time");
+      try {
+        Thread.sleep(10);
+      } catch (final InterruptedException ex) {
+        fail(ex.getMessage());
+      }
+      x.stopTimer("small_time");
+    });
+    return client;
+  }
 
   @Test
   public void checkEmptyConfigure() {
@@ -90,5 +134,17 @@ public final class ClientTest {
         "\"assertions\":[{\"key\":\"some-assertion\",\"value\":\"some-other-value\"}]"));
     assertTrue(content
         .contains("\"metrics\":[{\"key\":\"some-metric\",\"value\":10}]"));
+  }
+
+  @Test
+  public void saveBinary(@TempDir Path tempDir) throws IOException {
+    Path outputFile = tempDir.resolve("some-file");
+    Client client = makeClient();
+    assertDoesNotThrow(() -> {
+      client.saveBinary(outputFile, new HashSet<String>());
+    });
+    final byte[] encoded = Files.readAllBytes(outputFile);
+    final String content = new String(encoded, StandardCharsets.UTF_8);
+    assertTrue(!content.isEmpty());
   }
 }
