@@ -35,6 +35,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
       - run: ./gradlew build
+      - name: run example java application
+        if: github.ref == 'refs/heads/main'
+        env:
+          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+          TOUCA_API_URL: https://api.touca.io/@/examples/java
+          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
+        run: ./gradlew runExampleCore
       - name: cleanup gradle cache
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
