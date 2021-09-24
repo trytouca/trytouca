@@ -5,15 +5,16 @@ package io.touca.examples.core;
 import java.time.LocalDate;
 
 public final class Student {
-    public String username;
-    public String fullname;
-    public LocalDate dob;
-    public Course[] courses;
+  public String username;
+  public String fullname;
+  public LocalDate dob;
+  public Course[] courses;
 
-    public Student(final String username, final String fullname, final LocalDate dob, final Course[] courses) {
-        this.username = username;
-        this.fullname = fullname;
-        this.dob = dob;
-        this.courses = courses;
-    }
+  public Student(final String username, final String fullname,
+      final LocalDate dob, final Course[] courses) {
+    this.username = username;
+    this.fullname = fullname;
+    this.dob = dob;
+    this.courses = courses;
+  }
 }

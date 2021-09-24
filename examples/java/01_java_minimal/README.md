@@ -37,9 +37,9 @@ import static org.junit.Assert;
 
 public class PrimeTest {
     public static void main(String[] args) {
-        Assert.assertTrue(is_prime(13));
-        Assert.assertTrue(is_prime(17));
-        Assert.assertFalse(is_prime(51));
+        Assert.assertTrue(Prime.isPrime(13));
+        Assert.assertTrue(Prime.isPrime(17));
+        Assert.assertFalse(Prime.isPrime(51));
     }
 }
 ```
@@ -74,7 +74,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation('io.touca:touca:0.1.0')
+    testImplementation('io.touca:touca:0.2')
 }
 ```
 
