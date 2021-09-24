@@ -38,7 +38,7 @@ class Transport:
             "Content-Type": content_type,
             "User-Agent": f"touca-client-python/{client_version}",
         }
-        if self._token and "Authorization" not in headers:
+        if self._token:
             headers.update({"Authorization": f"Bearer {self._token}"})
         return self._pool.request(
             method=method,
@@ -91,7 +91,7 @@ class Transport:
             content_type="application/octet-stream",
         )
         if response.status != 204:
-            raise RuntimeError("Failed to submit test results to platform")
+            raise RuntimeError("failed to submit test results")
 
     def seal(self):
         """ """

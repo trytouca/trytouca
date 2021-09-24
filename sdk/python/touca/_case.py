@@ -194,7 +194,7 @@ class Case:
         """
         Stops timing an event with the specified name.
 
-        Expects function :py:meth:`~stop_timer` to have been called previously
+        Expects function :py:meth:`~start_timer` to have been called previously
         with the specified name.
 
         :param key: name to be associated with the performance metric

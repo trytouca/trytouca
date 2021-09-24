@@ -28,13 +28,12 @@ def _apply_config_file(incoming: dict) -> None:
 
 def _apply_arguments(existing, incoming: dict) -> None:
     """ """
-    for params, validate, transform in [
+    for params, validate in [
         (
             ["team", "suite", "version", "api_key", "api_url"],
             lambda x: isinstance(x, str),
-            lambda x: x,
         ),
-        (["offline", "concurrency"], lambda x: isinstance(x, bool), lambda x: x),
+        (["offline", "concurrency"], lambda x: isinstance(x, bool)),
     ]:
         for param in params:
             if param not in incoming:
@@ -42,7 +41,7 @@ def _apply_arguments(existing, incoming: dict) -> None:
             value = incoming.get(param)
             if not validate(value):
                 raise ValueError(f"parameter {param} has unexpected type")
-            existing[param] = transform(value)
+            existing[param] = value
 
 
 def _apply_environment_variables(existing) -> None:
