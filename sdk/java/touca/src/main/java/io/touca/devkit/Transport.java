@@ -107,19 +107,28 @@ public final class Transport {
   /**
    *
    */
+  private final HttpURLConnection makeConnection(final String path)
+      throws IOException {
+    final URL url = new URL(options.apiUrl + path);
+    final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+    con.setRequestProperty("Accept", "application/json");
+    con.setRequestProperty("Accept-Charset", "utf-8");
+    con.setRequestProperty("User-Agent",
+        String.format("touca-client-java/%s", "0.2"));
+    if (token != null) {
+      con.setRequestProperty("Authorization",
+          String.format("Bearer %s", token));
+    }
+    return con;
+  }
+
+  /**
+   *
+   */
   private final Response getRequest(final String path) {
     try {
-      final URL url = new URL(options.apiUrl + path);
-      final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+      final HttpURLConnection con = makeConnection(path);
       con.setRequestMethod("GET");
-      con.setRequestProperty("Accept", "application/json");
-      con.setRequestProperty("Accept-Charset", "utf-8");
-      con.setRequestProperty("User-Agent",
-          String.format("touca-client-java/%s", "0.2"));
-      if (token != null) {
-        con.setRequestProperty("Authorization",
-            String.format("Bearer %s", token));
-      }
       return new Response(con.getResponseCode(),
           readResponse(con.getInputStream()));
     } catch (final IOException ex) {
@@ -133,19 +142,10 @@ public final class Transport {
   private final Response postRequest(final String path,
       final String contentType, final byte[] content) {
     try {
-      final URL url = new URL(options.apiUrl + path);
-      final HttpURLConnection con = (HttpURLConnection) url.openConnection();
+      final HttpURLConnection con = makeConnection(path);
       con.setDoOutput(true);
       con.setRequestMethod("POST");
-      con.setRequestProperty("Accept", "application/json");
-      con.setRequestProperty("Accept-Charset", "utf-8");
       con.setRequestProperty("Content-Type", contentType);
-      con.setRequestProperty("User-Agent",
-          String.format("touca-client-java/%s", "0.2"));
-      if (token != null) {
-        con.setRequestProperty("Authorization",
-            String.format("Bearer %s", token));
-      }
       con.connect();
       if (content.length != 0) {
         try (OutputStream os = con.getOutputStream()) {
