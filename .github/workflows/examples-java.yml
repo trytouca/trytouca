@@ -25,8 +25,12 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '8'
-      - name: cache gradle dependencies
-        uses: actions/cache@v2
+      - name: get version number
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+      - uses: actions/cache@v2
         with:
           path: |
             ~/.gradle/caches
