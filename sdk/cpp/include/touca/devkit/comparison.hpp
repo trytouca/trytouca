@@ -137,7 +137,7 @@ namespace touca { namespace compare {
         void initCellar(
             const ResultsMap& src,
             const ResultsMap& dst,
-            const ResultsMapValueType& type,
+            const ResultCategory& type,
             Cellar& result);
 
         /**

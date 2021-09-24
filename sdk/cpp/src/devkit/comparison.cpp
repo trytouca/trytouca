@@ -249,8 +249,8 @@ namespace touca { namespace compare {
         _srcMeta = _src.metadata();
         _dstMeta = _dst.metadata();
         // perform comparisons on assertions
-        initCellar(_src._resultsMap, _dst._resultsMap, ResultsMapValueType::Assert, _assertions);
-        initCellar(_src._resultsMap, _dst._resultsMap, ResultsMapValueType::Check, _results);
+        initCellar(_src._resultsMap, _dst._resultsMap, ResultCategory::Assert, _assertions);
+        initCellar(_src._resultsMap, _dst._resultsMap, ResultCategory::Check, _results);
         initCellar(_src.metrics(), _dst.metrics(), _metrics);
     }
 
@@ -260,7 +260,7 @@ namespace touca { namespace compare {
     void TestcaseComparison::initCellar(
         const ResultsMap& src,
         const ResultsMap& dst,
-        const ResultsMapValueType& type,
+        const ResultCategory& type,
         Cellar& result)
     {
         for (const auto& kv : dst) {

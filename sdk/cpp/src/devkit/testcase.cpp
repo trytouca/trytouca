@@ -10,14 +10,14 @@
 
 namespace touca {
 
-    static const std::unordered_map<ResultsMapValueType, fbs::ResultType> result_types = {
-        { ResultsMapValueType::Check, fbs::ResultType::Check },
-        { ResultsMapValueType::Assert, fbs::ResultType::Assert },
+    static const std::unordered_map<ResultCategory, fbs::ResultType> result_types = {
+        { ResultCategory::Check, fbs::ResultType::Check },
+        { ResultCategory::Assert, fbs::ResultType::Assert },
     };
 
-    static const std::unordered_map<fbs::ResultType, ResultsMapValueType> result_types_reverse = {
-        { fbs::ResultType::Check, ResultsMapValueType::Check },
-        { fbs::ResultType::Assert, ResultsMapValueType::Assert },
+    static const std::unordered_map<fbs::ResultType, ResultCategory> result_types_reverse = {
+        { fbs::ResultType::Check, ResultCategory::Check },
+        { fbs::ResultType::Assert, ResultCategory::Assert },
     };
 
     /**
@@ -79,7 +79,7 @@ namespace touca {
             if (!value) {
                 throw std::runtime_error("failed to parse results map entry");
             }
-            _resultsMap.emplace(key, ResultsMapValue { value, result_types_reverse.at(result->typ()) });
+            _resultsMap.emplace(key, ResultEntry { value, result_types_reverse.at(result->typ()) });
         }
 
         // parse metrics
@@ -176,7 +176,7 @@ namespace touca {
         const std::string& key,
         const std::shared_ptr<types::IType>& value)
     {
-        _resultsMap.emplace(key, ResultsMapValue { value, ResultsMapValueType::Check });
+        _resultsMap.emplace(key, ResultEntry { value, ResultCategory::Check });
         _posted = false;
     }
 
@@ -187,7 +187,7 @@ namespace touca {
         const std::string& key,
         const std::shared_ptr<types::IType>& value)
     {
-        _resultsMap.emplace(key, ResultsMapValue { value, ResultsMapValueType::Assert });
+        _resultsMap.emplace(key, ResultEntry { value, ResultCategory::Assert });
         _posted = false;
     }
 
@@ -202,7 +202,7 @@ namespace touca {
         if (!_resultsMap.count(key)) {
             const auto value = std::make_shared<Array>();
             value->add(element);
-            _resultsMap.emplace(key, ResultsMapValue { value, ResultsMapValueType::Check });
+            _resultsMap.emplace(key, ResultEntry { value, ResultCategory::Check });
             return;
         }
         const auto ivalue = _resultsMap.at(key);
@@ -224,7 +224,7 @@ namespace touca {
         using number_t = touca::types::Number<uint64_t>;
         if (!_resultsMap.count(key)) {
             const auto value = std::make_shared<number_t>(1u);
-            _resultsMap.emplace(key, ResultsMapValue { value, ResultsMapValueType::Check });
+            _resultsMap.emplace(key, ResultEntry { value, ResultCategory::Check });
             return;
         }
         const auto ivalue = _resultsMap.at(key).val;
@@ -284,7 +284,7 @@ namespace touca {
 
         rapidjson::Value rjResults(rapidjson::kArrayType);
         for (const auto& entry : _resultsMap) {
-            if (entry.second.typ != ResultsMapValueType::Check) {
+            if (entry.second.typ != ResultCategory::Check) {
                 continue;
             }
             rapidjson::Value rjEntry(rapidjson::kObjectType);
@@ -296,7 +296,7 @@ namespace touca {
 
         rapidjson::Value rjAssertions(rapidjson::kArrayType);
         for (const auto& entry : _resultsMap) {
-            if (entry.second.typ != ResultsMapValueType::Assert) {
+            if (entry.second.typ != ResultCategory::Assert) {
                 continue;
             }
             rapidjson::Value rjEntry(rapidjson::kObjectType);

@@ -209,11 +209,11 @@ namespace touca { namespace convert {
      *           in `operator()()` member function.
      *
      * @details Allows users developing regression tools to provide
-     *          explicit full speciailization of this class that makes
+     *          explicit full specialization of this class that makes
      *          it convenient to pass objects of their non-trivial type
      *          directly to Touca API functions that accept testresults.
      *
-     * The following example illustrates a spcialization of Conversion
+     * The following example illustrates a specialization of Conversion
      * for a custom type `Date`.
      *
      * @code{.cpp}
