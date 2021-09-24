@@ -5,8 +5,8 @@ python/**/.env
 python/**/output
 python/**/__pycache__
 java/.gradle
-java/.project
 java/**/build
 java/**/.classpath
-java/**/.project
 java/**/org.eclipse.buildship.core.prefs
+#java
+.project
