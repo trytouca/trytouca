@@ -100,18 +100,14 @@ function _apply_arguments(existing: NodeOptions, incoming: NodeOptions): void {
   const inputs: {
     params: (keyof NodeOptions)[];
     validate: (x: Param) => boolean;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    transform: (x: Param) => any;
   }[] = [
     {
       params: ['team', 'suite', 'version', 'api_key', 'api_url'],
-      validate: (x) => typeof x === 'string',
-      transform: (x) => x
+      validate: (x) => typeof x === 'string'
     },
     {
       params: ['offline', 'concurrency'],
-      validate: (x) => typeof x === 'boolean',
-      transform: (x) => x
+      validate: (x) => typeof x === 'boolean'
     }
   ];
   for (const input of inputs) {
@@ -126,7 +122,7 @@ function _apply_arguments(existing: NodeOptions, incoming: NodeOptions): void {
       if (!input.validate(value)) {
         throw new Error(`parameter "${param}" has unexpected type`);
       }
-      existing[param] = input.transform(value);
+      existing[param] = value as any;
     }
   }
 }

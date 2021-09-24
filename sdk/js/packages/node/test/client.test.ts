@@ -50,6 +50,7 @@ test('check basic configure', () => {
     });
   }).not.toThrow();
   expect(client.is_configured()).toEqual(true);
+  expect(client.configuration_error()).toEqual('');
 });
 
 test('check missing options', () => {

@@ -184,7 +184,7 @@ export class Transport {
       content_type: 'application/octet-stream'
     });
     if (response.status !== 204) {
-      throw new Error('Failed to submit test results to platform');
+      throw new Error('failed to submit test results');
     }
   }
 

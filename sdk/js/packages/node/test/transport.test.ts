@@ -109,7 +109,7 @@ describe('check failure errors', () => {
     expect(client.configuration_error()).toEqual('');
     expect(client.is_configured()).toEqual(true);
     await expect(client.post()).rejects.toThrowError(
-      'Failed to submit test results to platform'
+      'failed to submit test results'
     );
   });
 

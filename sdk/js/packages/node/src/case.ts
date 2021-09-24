@@ -73,7 +73,11 @@ export class Case {
   }
 
   /**
+   * Adds a given value to a list of results for the declared test case which is
+   * associated with the specified key.
    *
+   * @param key name to be associated with the logged test result
+   * @param value element to be appended to the array
    */
   add_array_element(key: string, value: ToucaType): void {
     if (!this._results.has(key)) {
@@ -90,7 +94,10 @@ export class Case {
   }
 
   /**
+   * Increments value of key every time it is executed. creates the key with
+   * initial value of one if it does not exist.
    *
+   * @param key name to be associated with the logged test result
    */
   add_hit_count(key: string): void {
     if (!this._results.has(key)) {
@@ -108,7 +115,13 @@ export class Case {
   }
 
   /**
+   * Adds an already obtained measurements to the list of captured performance
+   * benchmarks.
    *
+   * Useful for logging a metric that is measured without using this SDK.
+   *
+   * @param key name to be associated with this performance benchmark
+   * @param milliseconds duration of this measurement in milliseconds
    */
   add_metric(key: string, milliseconds: number): void {
     const now = new Date();
@@ -118,14 +131,24 @@ export class Case {
   }
 
   /**
+   * Starts timing an event with the specified name.
    *
+   * Measurement of the event is only complete when function `stop_timer` is
+   * later called for the specified name.
+   *
+   * @param key name to be associated with the performance metric
    */
   start_timer(key: string): void {
     this._tics.set(key, new Date().getTime());
   }
 
   /**
+   * Stops timing an event with the specified name.
    *
+   * Expects function `startTimer` to have been called previously with the
+   * specified name.
+   *
+   * @param key name to be associated with the performance metric
    */
   stop_timer(key: string): void {
     if (this._tics.has(key)) {

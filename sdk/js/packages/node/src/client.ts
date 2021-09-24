@@ -195,8 +195,8 @@ export class NodeClient implements BaseClient<NodeOptions> {
   }
 
   /**
-   * Provides the most recent error, if any, that is encountered during
-   * client configuration.
+   * Provides the most recent error, if any, that is encountered during client
+   * configuration.
    *
    * @returns short description of the most recent configuration error
    */
