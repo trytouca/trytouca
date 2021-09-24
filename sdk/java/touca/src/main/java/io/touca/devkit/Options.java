@@ -147,7 +147,7 @@ public final class Options {
   /**
    *
    */
-  private void merge(final Map<String, String> incoming) {
+  public void merge(final Map<String, String> incoming) {
     if (incoming.containsKey("apiKey")) {
       this.apiKey = incoming.get("apiKey");
     }
