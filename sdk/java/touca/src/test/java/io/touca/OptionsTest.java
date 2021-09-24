@@ -184,7 +184,7 @@ public final class OptionsTest {
     assertDoesNotThrow(() -> {
       existing.apply(incoming);
     });
-    assertEquals("https://api.touca.io/", existing.apiUrl);
+    assertEquals("https://api.touca.io", existing.apiUrl);
     assertEquals("some-team", existing.team);
     assertEquals("some-suite", existing.suite);
     assertEquals("some-version", existing.version);
@@ -235,6 +235,6 @@ public final class OptionsTest {
     });
     assertEquals("option \"suite\" is in conflict with provided api url",
         ex.getMessage());
-    assertEquals("http://localhost:8081/", existing.apiUrl);
+    assertEquals("http://localhost:8081", existing.apiUrl);
   }
 }

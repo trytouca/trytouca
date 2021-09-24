@@ -4,6 +4,7 @@ package io.touca.devkit;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -58,12 +59,19 @@ public final class TypeHandler {
       }
       return arr;
     }
+    return reflect(clazz, value);
+  }
+
+  private ObjectType reflect(final Class<?> clazz, final Object value) {
     final ObjectType obj = new ObjectType();
-    for (final Field field : clazz.getFields()) {
+    for (final Field field : clazz.getDeclaredFields()) {
       try {
+        if (Modifier.isStatic(field.getModifiers())) {
+          continue;
+        }
         obj.add(field.getName(), this.transform(field.get(value)));
       } catch (final IllegalAccessException ex) {
-        // TODO: implement
+        // TODO: what should we do on failure
       }
     }
     return obj;

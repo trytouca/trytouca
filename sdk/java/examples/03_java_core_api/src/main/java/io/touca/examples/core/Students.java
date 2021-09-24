@@ -34,7 +34,7 @@ public final class Students {
     Students.sleep(100);
     double sum =
         Arrays.asList(courses).stream().mapToDouble(item -> item.grade).sum();
-    return courses.length == 0 ? sum / courses.length : 0.0;
+    return courses.length == 0 ? 0.0 : sum / courses.length;
   }
 
   private static void sleep(final long delay) {

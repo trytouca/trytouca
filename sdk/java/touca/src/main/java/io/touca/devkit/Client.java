@@ -70,9 +70,9 @@ public class Client {
       return;
     }
     final String[] checks = {"team", "suite", "version", "apiKey", "apiUrl"};
-    final String[] missing =
-        Arrays.stream(checks).filter(x -> !options.entrySet().containsValue(x))
-            .toArray(String[]::new);
+    final String[] missing = Arrays.stream(checks)
+        .filter(x -> !options.entrySet().containsKey(x) == true)
+        .toArray(String[]::new);
     if (missing.length != 0) {
       return;
     }

@@ -239,7 +239,7 @@ public final class Options {
       String urlPath = String.join("/", Arrays.asList(segments[0].split("/"))
           .stream().filter(x -> !x.isEmpty()).collect(Collectors.toList()));
       final URI uri = new URI(url.getProtocol(), url.getAuthority(),
-          "/" + urlPath, null, null);
+          urlPath.isEmpty() ? urlPath : "/" + urlPath, null, null);
       existing.apiUrl = uri.toURL().toString();
     } catch (MalformedURLException ex) {
       throw new ConfigException(

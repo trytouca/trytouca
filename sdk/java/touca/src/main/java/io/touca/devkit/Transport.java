@@ -63,9 +63,12 @@ public final class Transport {
       return;
     }
     this.options.merge(fresh);
-    if (fresh.containsKey("apiKey") || fresh.containsKey("apiUrl")) {
-      this.token = null;
+    if (fresh.containsKey("apiUrl")) {
       this.handshake();
+      this.token = null;
+      if (fresh.containsKey("apiKey")) {
+        this.authenticate();
+      }
     }
   }
 
@@ -190,7 +193,7 @@ public final class Transport {
     }
     final JsonElement content = JsonParser.parseString(response.content);
     final JsonArray array = content.getAsJsonArray();
-    List<String> elements = new ArrayList<String>();
+    final List<String> elements = new ArrayList<String>();
     for (int i = 0; i < array.size(); i++) {
       final JsonObject element = array.get(i).getAsJsonObject();
       elements.add(element.get("name").getAsString());
@@ -213,8 +216,8 @@ public final class Transport {
    *
    */
   public void seal() {
-    final String path = String.format("/batch/%s/%s/%s/seal2",
-        this.options.team, this.options.suite, this.options.version);
+    final String path = String.format("/batch/%s/%s/%s/seal2", options.team,
+        options.suite, options.version);
     final Response response =
         postRequest(path, "application/json", new byte[0]);
     if (response.code != 204) {
