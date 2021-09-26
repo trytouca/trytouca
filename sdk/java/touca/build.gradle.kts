@@ -12,6 +12,7 @@ plugins {
 dependencies {
     implementation("com.google.code.gson:gson:2.8.8")
     implementation("com.google.flatbuffers:flatbuffers-java:2.0.3")
+    implementation("commons-cli:commons-cli:1.4")
     testImplementation(platform("org.junit:junit-bom:5.8.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
@@ -64,14 +65,14 @@ tasks {
     }
 
     pmd {
-        isConsoleOutput = true
+        isConsoleOutput = false
         toolVersion = "6.38.0"
         isIgnoreFailures = true
     }
 
     spotbugs {
         ignoreFailures.set(true)
-        showProgress.set(true)
+        showProgress.set(false)
         showStackTraces.set(false)
     }
 

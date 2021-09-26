@@ -4,7 +4,7 @@ package io.touca;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.google.gson.GsonBuilder;
-import io.touca.devkit.TypeHandler;
+import io.touca.core.TypeHandler;
 import io.touca.types.ToucaType;
 import org.junit.jupiter.api.Test;
 

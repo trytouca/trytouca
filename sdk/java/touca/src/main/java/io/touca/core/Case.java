@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.devkit;
+package io.touca.core;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -14,7 +14,7 @@ import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.touca.devkit.ResultEntry.ResultCategory;
+import io.touca.core.ResultEntry.ResultCategory;
 import io.touca.schema.Schema;
 import io.touca.schema.Schema.ResultType;
 import io.touca.types.ArrayType;

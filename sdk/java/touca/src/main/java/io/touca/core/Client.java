@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.devkit;
+package io.touca.core;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -16,7 +17,6 @@ import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import io.touca.Touca;
 import io.touca.exceptions.ConfigException;
 import io.touca.exceptions.StateException;
 import io.touca.schema.Schema;
@@ -37,18 +37,28 @@ public class Client {
   private Map<Long, String> threadMap = new HashMap<Long, String>();
 
   /**
-   * Configures the touca client.
-   * 
-   * Must be called before declaring testcases and adding results to the client.
-   * Should be regarded as a potentially expensive operation.
+   * Configures the touca client based on configuration options set via the
+   * given callback.
    *
-   * @param callback configuration parameters
+   * @param callback callback setting configuration parameters
    * @return true if client is ready to capture data
-   * @see Touca#configure
    */
   public boolean configure(final Consumer<Options> callback) {
     final Options options = new Options();
     callback.accept(options);
+    return configure(options);
+  }
+
+  /**
+   * Configures the touca client using the given options.
+   *
+   * Must be called before declaring testcases and adding results to the client.
+   * Should be regarded as a potentially expensive operation.
+   *
+   * @param options configuration parameters
+   * @return true if client is ready to capture data
+   */
+  public boolean configure(final Options options) {
     this.configurationError = null;
     try {
       this.options.apply(options);
@@ -123,7 +133,7 @@ public class Client {
    * @throws StateException when called on the client that is not configured to
    *         communicate with the Touca server.
    */
-  public Iterable<String> getTestcases() {
+  public List<String> getTestcases() {
     if (this.transport == null) {
       throw new StateException(
           "client not configured to perform this operation");

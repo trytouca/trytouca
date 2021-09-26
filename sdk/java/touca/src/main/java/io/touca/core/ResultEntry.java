@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.devkit;
+package io.touca.core;
 
 import io.touca.types.ToucaType;
 

@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.devkit;
+package io.touca.core;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -185,7 +185,7 @@ public final class Transport {
   /**
    *
    */
-  public Iterable<String> getTestcases() {
+  public List<String> getTestcases() {
     final Response response = getRequest(
         String.format("/element/%s/%s", options.team, options.suite));
     if (response.code != 200) {

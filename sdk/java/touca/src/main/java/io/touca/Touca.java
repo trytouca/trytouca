@@ -3,13 +3,18 @@
 package io.touca;
 
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import io.touca.devkit.Client;
-import io.touca.devkit.Options;
+import io.touca.core.Client;
+import io.touca.core.Options;
+import io.touca.core.Runner;
 import io.touca.exceptions.StateException;
 
 /**
@@ -471,16 +476,6 @@ public final class Touca {
   }
 
   /**
-   * Declares a test workflow of a given name to be executed by the test
-   * framework with multiple test cases, one at a time.
-   * 
-   * @param name name of the workflow
-   * @param workflow test logic to be executed by the test framework
-   */
-  public static void workflow(final String name,
-      final Consumer<String> workflow) {}
-
-  /**
    * Runs registered workflows, one by one, for available the test cases.
    *
    * This function is intended to be called once from the main function after
@@ -490,7 +485,21 @@ public final class Touca {
    * arguments, environment variables, or in a configuration file, have
    * unexpected values or are in conflict with each other.
    *
-   * @param args list of command-line arguments as provided to the application
+   * @param mainClass class that includes the main method of test application
+   * @param mainArgs command-line arguments provided to the application
    */
-  public static void run(String[] args) {}
+  public static void run(final Class<?> mainClass, final String[] mainArgs) {
+    new Runner(instance).parse(mainArgs).findWorkflows(mainClass).run();
+  }
+
+  /**
+   * Declares a test workflow to be executed by the test framework with multiple
+   * test cases, one at a time.
+   */
+  @Target(ElementType.METHOD)
+  @Retention(RetentionPolicy.RUNTIME)
+  public @interface Workflow {
+    // no value
+  }
+
 }

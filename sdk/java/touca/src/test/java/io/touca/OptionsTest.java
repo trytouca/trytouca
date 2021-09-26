@@ -15,8 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-
-import io.touca.devkit.Options;
+import io.touca.core.Options;
 import io.touca.exceptions.ConfigException;
 
 public final class OptionsTest {

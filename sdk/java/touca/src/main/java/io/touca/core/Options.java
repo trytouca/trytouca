@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.devkit;
+package io.touca.core;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,13 +32,13 @@ import io.touca.exceptions.ConfigException;
 /**
  *
  */
-public final class Options {
-  public String file;
+public class Options {
   public String apiKey;
   public String apiUrl;
   public String team;
   public String suite;
   public String version;
+  public String file;
   public Boolean offline;
   public Boolean concurrency;
 
@@ -135,6 +135,9 @@ public final class Options {
     }
     if (incoming.version != null) {
       this.version = incoming.version;
+    }
+    if (incoming.file != null) {
+      this.file = incoming.file;
     }
     if (incoming.offline != null) {
       this.offline = incoming.offline;
