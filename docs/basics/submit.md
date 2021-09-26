@@ -128,7 +128,7 @@ interface Student {
 ```java
 import java.time.LocalDate;
 
-public class Student {
+public final class Student {
     public String username;
     public String fullname;
     public LocalDate dob;
@@ -236,14 +236,16 @@ export async function parse_profile(username: string): Promise<Student> {
 {% code title="java/02_java_main_api/Students.java" %}
 
 ```java
-public static Student parseProfile(final String username) throws InterruptedException {
-    Thread.sleep(200);
-    for (Student student : Students.students) {
-        if (student.username.equals(username)) {
-            return new Student(data.username, data.fullname, data.dob, Students.calculateGPA(data.courses));
-        }
+public static Student parseProfile(final String username) {
+  Thread.sleep(200);
+  for (Student student : Students.students) {
+    if (student.username.equals(username)) {
+      return new Student(data.username, data.fullname, data.dob,
+          calculateGPA(data.courses));
     }
-    throw new NoSuchElementException(String.format("No student found for username: %s", username));
+  }
+  throw new NoSuchElementException(
+      String.format("No student found for username: %s", username));
 }
 ```
 
@@ -355,17 +357,21 @@ touca.run();
 ```java
 import io.touca.Touca;
 
-public class StudentsTest {
-    public static void main(String[] args) {
-        Touca.workflow("students_test", (final String username) -> {
-            Student student = Students.parseProfile(username);
-            Touca.addAssertion("username", student.username);
-            Touca.addResult("fullname", student.fullname);
-            Touca.addResult("birth_date", student.dob);
-            Touca.addResult("gpa", student.gpa);
-        });
-        Touca.run(args);
-    }
+public final class StudentsTest {
+
+  @Touca.Workflow
+  public void parseProfile(final String username) {
+    Student student = Students.parseProfile(username);
+    Touca.addAssertion("username", student.username);
+    Touca.addResult("fullname", student.fullname);
+    Touca.addResult("birth_date", student.dob);
+    Touca.addResult("gpa", student.gpa);
+  }
+
+  public static void main(String[] args) {
+    Touca.run(StudentsTest.class, args);
+  }
+
 }
 ```
 
@@ -559,20 +565,24 @@ touca.run();
 ```java
 import io.touca.Touca;
 
-public class StudentsTest {
-    public static void main(String[] args) {
-        Touca.workflow("students_test", (final String username) -> {
-            Touca.startTimer("parse_profile");
-            Student student = Students.parseProfile(username);
-            Touca.stopTimer("parse_profile");
-            Touca.addAssertion("username", student.username);
-            Touca.addResult("fullname", student.fullname);
-            Touca.addResult("birth_date", student.dob);
-            Touca.addResult("gpa", student.gpa);
-            Touca.addMetric("external_source", 1500);
-        });
-        Touca.run(args);
-    }
+public final class StudentsTest {
+
+  @Touca.Workflow
+  public void parseProfile(final String username) {
+    Touca.startTimer("parse_profile");
+    Student student = Students.parseProfile(username);
+    Touca.stopTimer("parse_profile");
+    Touca.addAssertion("username", student.username);
+    Touca.addResult("fullname", student.fullname);
+    Touca.addResult("birth_date", student.dob);
+    Touca.addResult("gpa", student.gpa);
+    Touca.addMetric("external_source", 1500);
+  }
+
+  public static void main(String[] args) {
+    Touca.run(StudentsTest.class, args);
+  }
+
 }
 ```
 
