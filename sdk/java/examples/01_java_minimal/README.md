@@ -33,14 +33,19 @@ If we were to write unit tests for our `isPrime` function, we could start with
 the following code.
 
 ```java
-import static org.junit.Assert;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PrimeTest {
-    public static void main(String[] args) {
-        Assert.assertTrue(Prime.isPrime(13));
-        Assert.assertTrue(Prime.isPrime(17));
-        Assert.assertFalse(Prime.isPrime(51));
-    }
+public final class PrimeTest {
+
+  @Test
+  public void isPrime() {
+    assertTrue(Prime.isPrime(13));
+    assertTrue(Prime.isPrime(17));
+    assertFalse(Prime.isPrime(51));
+  }
+
 }
 ```
 
@@ -56,19 +61,23 @@ package io.touca.examples.minimal;
 import io.touca.Touca;
 
 public final class PrimeTest {
-    public static void main(String[] args) {
-        Touca.workflow("is_prime_test", (final String testcase) -> {
-            final int number = Integer.parseInt(testcase);
-            Touca.addResult("is_prime_output", Prime.isPrime(number));
-        });
-        Touca.run(args);
-    }
+
+  @Touca.Workflow
+  public void isPrime(final String testcase) {
+    final int number = Integer.parseInt(testcase);
+    Touca.addResult("output", Prime.isPrime(number));
+  }
+
+  public static void main(String[] args) {
+    Touca.run(PrimeTest.class, args);
+  }
+
 }
 ```
 
 Where `io.touca` is the `packageId` of our Java SDK on Maven Central repository.
 
-```groovy
+```kotlin
 repositories {
     mavenCentral()
 }
@@ -123,12 +132,15 @@ import io.touca.Touca;
 // import your code under test here
 
 public final class ExampleTest {
-    public static void main(String[] args) {
-        Touca.workflow("name_of_suite", (final String testcase) -> {
-            // your code goes here
-        });
-        Touca.run(args);
-    }
+
+  @Touca.Workflow
+  public void workflowName(final String testcase) {
+    // your code goes here
+  }
+
+  public static void main(String[] args) {
+    Touca.run(ExampleTest.class, args);
+  }
 }
 ```
 
