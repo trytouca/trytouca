@@ -99,14 +99,20 @@ test("test is_prime", () => {
 {% tab title="Java" %}
 
 ```java
-import static org.junit.Assert;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class PrimeTest {
-    public static void main(String[] args) {
-        Assert.assertTrue(Prime.isPrime(13));
-        Assert.assertTrue(Prime.isPrime(17));
-        Assert.assertFalse(Prime.isPrime(51));
-    }
+public final class PrimeTest {
+
+  @Test
+  public void isPrime() {
+    assertFalse(Prime.isPrime(-1));
+    assertFalse(Prime.isPrime(1));
+    assertTrue(Prime.isPrime(2));
+    assertTrue(Prime.isPrime(13));
+  }
+
 }
 ```
 
@@ -194,13 +200,17 @@ touca.run();
 import io.touca.Touca;
 
 public final class PrimeTest {
-    public static void main(String[] args) {
-        Touca.workflow("is_prime_test", (final String testcase) -> {
-            final int number = Integer.parseInt(testcase);
-            Touca.addResult("is_prime", Prime.isPrime(number));
-        });
-        Touca.run(args);
-    }
+
+  @Touca.Workflow
+  public void isPrime(final String testcase) {
+    final int number = Integer.parseInt(testcase);
+    Touca.addResult("output", Prime.isPrime(number));
+  }
+
+  public static void main(String[] args) {
+    Touca.run(PrimeTest.class, args);
+  }
+
 }
 ```
 

@@ -34,14 +34,14 @@ whether a given number is prime. You can find a possible first implementation in
 
 ```java
 public final class Prime {
-    public static boolean isPrime(final int number) {
-        for (int i = 2; i < number; i++) {
-            if (number % i == 0) {
-                return false;
-            }
-        }
-        return 1 < number;
+  public static boolean isPrime(final int number) {
+    for (int i = 2; i < number; i++) {
+      if (number % i == 0) {
+        return false;
+      }
     }
+    return 1 < number;
+  }
 }
 ```
 
@@ -59,13 +59,17 @@ Java.
 import io.touca.Touca;
 
 public final class PrimeTest {
-    public static void main(String[] args) {
-        Touca.workflow("is_prime", (final String testcase) -> {
-            final int number = Integer.parseInt(testcase);
-            Touca.addResult("is_prime_output", Prime.isPrime(number));
-        });
-        Touca.run(args);
-    }
+
+  @Touca.Workflow
+  public void isPrime(final String testcase) {
+    final int number = Integer.parseInt(testcase);
+    Touca.addResult("output", Prime.isPrime(number));
+  }
+
+  public static void main(String[] args) {
+    Touca.run(PrimeTest.class, args);
+  }
+
 }
 ```
 

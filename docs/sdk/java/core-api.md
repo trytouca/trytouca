@@ -31,29 +31,30 @@ handled. This API is most useful when integrating Touca with other existing test
 frameworks.
 
 ```java
+import java.io.IOException;
 import io.touca.Touca;
 
 public class StudentsTest {
-    public static void main(String[] args) {
-        Touca.configure(options -> {
-            options.api_key = "<TOUCA_API_KEY>";
-            options.api_url = "<TOUCA_API_URL>";
-            options.revision = "<TOUCA_TEST_VERSION>";
-        });
-        for (String username : Touca.getTestCases()) {
-            Touca.declareTestcase(username);
+  public static void main(String[] args) throws IOException {
+    Touca.configure(options -> {
+      options.apiKey = "<TOUCA_API_KEY>";
+      options.apiUrl = "<TOUCA_API_URL>";
+      options.version = "<TOUCA_TEST_VERSION>";
+    });
+    for (String username : Touca.getTestcases()) {
+      Touca.declareTestcase(username);
 
-            Student student = Students.parseProfile(username);
-            // insert code here to describe the behavior
-            // and performance of the workflow under test
+      Student student = Students.parseProfile(username);
+      // insert code here to describe the behavior
+      // and performance of the workflow under test
 
-            Touca.post();
-            Touca.saveJson(String.format("touca_%s.json", username));
-            Touca.saveBinary(String.format("touca_%s.bin", username));
-            Touca.forgetTestcase(username);
-        }
-        Touca.seal();
+      Touca.post();
+      Touca.saveJson(String.format("touca_%s.json", username));
+      Touca.saveBinary(String.format("touca_%s.bin", username));
+      Touca.forgetTestcase(username);
     }
+    Touca.seal();
+  }
 }
 ```
 
@@ -78,9 +79,9 @@ the full list of acceptable configuration parameters and their impact.
 
 ```java
 Touca.configure(opt -> {
-  opt.api_key = "<TOUCA_API_KEY>";
-  opt.api_url = "<TOUCA_API_URL>";
-  opt.revision = "<TOUCA_TEST_VERSION>";
+  opt.apiKey = "<TOUCA_API_KEY>";
+  opt.apiUrl = "<TOUCA_API_URL>";
+  opt.version = "<TOUCA_TEST_VERSION>";
 });
 ```
 
@@ -103,7 +104,7 @@ parameter to the `configure` function.
 ## Preparing Test Cases
 
 ```java
-for (String username: Touca.getTestCases()) {
+for (String username: Touca.getTestcases()) {
   // insert the code to run for each test case
 }
 ```
@@ -113,7 +114,7 @@ UI or via command line arguments. With the Client API, you can obtain the list
 of test cases from any source and pass them, one by one, to your code under test
 using a simple for loop.
 
-You can still use the function `getTestCases` to obtain the list of test cases
+You can still use the function `getTestcases` to obtain the list of test cases
 from the Touca server, as our high-level API does. This function should be
 called when the client is configured to run in offline mode.
 
@@ -125,7 +126,7 @@ belong to the specified test case, until a different test case is declared. We
 can change this behavior for multi-threaded software workflows.
 
 ```java
-for (String username: Touca.getTestCases()) {
+for (String username: Touca.getTestcases()) {
   Touca.declareTestCase(username);
   // now we can start calling our code under test
   // and describing its behavior and performance
