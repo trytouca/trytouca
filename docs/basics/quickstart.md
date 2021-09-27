@@ -38,7 +38,7 @@ function is_prime(number: number): boolean;
 {% tab title="Java" %}
 
 ```java
-public static Student parseProfile(final String username);
+public static boolean isPrime(final int number);
 ```
 
 {% endtab %}
@@ -112,7 +112,6 @@ public final class PrimeTest {
     assertTrue(Prime.isPrime(2));
     assertTrue(Prime.isPrime(13));
   }
-
 }
 ```
 
@@ -156,7 +155,7 @@ import touca
 
 @touca.Workflow
 def is_prime_test(testcase: str):
-    touca.add_result("is_prime", is_prime(int(testcase)))
+    touca.add_result("output", is_prime(int(testcase)))
 
 if __name__ == "__main__":
     touca.run()
@@ -174,7 +173,7 @@ if __name__ == "__main__":
 void touca::main(const std::string& testcase)
 {
     const auto number = std::stoul(testcase);
-    touca::add_result("is_prime", is_prime(number));
+    touca::add_result("output", is_prime(number));
 }
 ```
 
@@ -184,9 +183,10 @@ void touca::main(const std::string& testcase)
 
 ```typescript
 import { touca } from "@touca/node";
+import { is_prime } from "./code_under_test";
 
 touca.workflow("is_prime_test", (testcase: string) => {
-  touca.add_result("is_prime", is_prime(Number.parseInt(testcase)));
+  touca.add_result("output", is_prime(Number.parseInt(testcase)));
 });
 
 touca.run();
@@ -210,7 +210,6 @@ public final class PrimeTest {
   public static void main(String[] args) {
     Touca.run(PrimeTest.class, args);
   }
-
 }
 ```
 

@@ -50,8 +50,12 @@ Touca test framework for JavaScript does not support:
 
 {% tab title="Java" %}
 
-This SDK is currently in early stages of development and is missing many
-features. Tentative beta release date is September 14th, 2021.
+Touca test framework for Java does not support:
+
+- Generating log files and does not integrate with external loggers.
+- Stream redirection: Any content written by the workflow to the standard output
+  or standard error will show up in the standard output during the test
+  execution.
 
 {% endtab %}
 
