@@ -31,8 +31,8 @@ public final class StudentsTest {
       Touca.addMetric("external_source", 1500);
 
       Touca.post();
-      Touca.saveJson(String.format("touca_%s.json", username));
-      Touca.saveBinary(String.format("touca_%s.bin", username));
+      Touca.saveJson(String.format("touca_%s.json", username), null);
+      Touca.saveBinary(String.format("touca_%s.bin", username), null);
       Touca.forgetTestcase(username);
     }
     Touca.seal();

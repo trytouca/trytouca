@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 public final class Students {
-  final static Student[] students =
+  static final Student[] students =
       new Student[] {
           new Student("alice", "Alice Anderson", LocalDate.of(2006, 3, 1),
               new Course[] {new Course("math", 4.0),

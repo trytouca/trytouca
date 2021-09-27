@@ -8,10 +8,10 @@ import java.util.Arrays;
 public final class Students {
 
   public static Student parseProfile(final String username) {
-    Students.sleep(200);
+    sleep(200);
     StudentData data = StudentData.of(username);
     return new Student(data.username, data.fullname, data.dob,
-        Students.calculateGPA(data.courses));
+        calculateGPA(data.courses));
   }
 
   private static double calculateGPA(final Course[] courses) {
