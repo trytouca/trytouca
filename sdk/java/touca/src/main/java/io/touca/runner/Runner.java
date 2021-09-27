@@ -124,7 +124,8 @@ public class Runner {
 
       BiFunction<String, Boolean, Boolean> parseBoolean =
           (String a, Boolean b) -> {
-            return Boolean.parseBoolean(cmd.getOptionValue(a, b.toString()));
+            return cmd.hasOption(a) && cmd.getOptionValue(a) == null ? true
+                : Boolean.parseBoolean(cmd.getOptionValue(a, b.toString()));
           };
 
       options.apply(new RunnerOptions(x -> {
@@ -303,9 +304,9 @@ public class Runner {
         workflow.method.invoke(obj, testcase);
       } catch (InvocationTargetException ex) {
         final Throwable targetException = ex.getTargetException();
-        System.err.printf("%s: %s%n", targetException.getClass().getName(),
-            targetException.getMessage());
-        continue;
+        errors.add(String.format("%s: %s%n",
+            targetException.getClass().getSimpleName(),
+            targetException.getMessage()));
       } catch (ReflectiveOperationException ex) {
         System.err.printf("Exception: %s%n", ex.getMessage());
         continue;
@@ -336,8 +337,12 @@ public class Runner {
         client.post();
       }
 
-      System.out.printf(" (%d of %d) %s (%s, %d ms)%n", index + 1,
-          options.testcases.length, testcase, "pass", timer.count(testcase));
+      System.out.printf(" (%3d of %-3d) %-32s (%s, %d ms)%n", index + 1,
+          options.testcases.length, testcase,
+          errors.size() == 0 ? "pass" : "fail", timer.count(testcase));
+      for (final String error : errors) {
+        System.out.printf("%13s %s%n", "-", error);
+      }
 
       client.forgetTestcase(testcase);
     }
