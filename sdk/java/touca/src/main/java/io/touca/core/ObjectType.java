@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.types;
+package io.touca.core;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import java.util.List;
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.touca.schema.Schema;
 
 public final class ObjectType extends ToucaType {
   private List<SimpleEntry<String, ToucaType>> members =

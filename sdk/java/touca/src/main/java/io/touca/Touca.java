@@ -8,27 +8,22 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.file.Paths;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import io.touca.core.Client;
 import io.touca.core.Options;
-import io.touca.core.Runner;
 import io.touca.exceptions.StateException;
+import io.touca.runner.Runner;
 
 /**
  * Entry-point to the Touca SDK for Java.
  */
 public final class Touca {
 
-  /**
-   *
-   */
   private static final Client instance = new Client();
 
   /**
-   *
+   * This class is designed to be used as utility and cannot be instantiated.
    */
   private Touca() {}
 
@@ -126,8 +121,8 @@ public final class Touca {
    * the baseline version of this suite.
    *
    * @return list of test cases of the baseline version of this suite
-   * @throws IllegalStateException when called on the client that is not
-   *         configured to communicate with the Touca server.
+   * @throws StateException when called on the client that is not configured to
+   *         communicate with the Touca server.
    */
   public static Iterable<String> getTestcases() {
     return instance.getTestcases();
@@ -164,8 +159,6 @@ public final class Touca {
    * similar name may be executed.
    *
    * @param name name of the testcase to be removed from memory
-   * @throws IllegalStateException when called with the name of a test case that
-   *         was never declared
    */
   public static void forgetTestcase(final String name) {
     instance.forgetTestcase(name);
@@ -371,25 +364,13 @@ public final class Touca {
    *
    * @param path path to file in which test results and performance benchmarks
    *        should be stored
-   * @param cases names of test cases whose results should be stored. If a set
-   *        is not specified or is set as empty, all test cases will be stored
-   *        in the specified file.
+   * @param cases names of test cases whose results should be stored. If set to
+   *        null or empty, all test cases will be stored in the specified file.
    * @throws IOException if we encounter any filesystem error
    */
-  public static void saveBinary(final String path, final Set<String> cases)
+  public static void saveBinary(final String path, final String[] cases)
       throws IOException {
     instance.saveBinary(Paths.get(path), cases);
-  }
-
-  /**
-   * Create a binary file with captured data for all declared test cases.
-   *
-   * @param path path to binary file to be created
-   * @throws IOException if we encounter any filesystem error
-   * @see saveBinary
-   */
-  public static void saveBinary(final String path) throws IOException {
-    Touca.saveBinary(path, new HashSet<String>());
   }
 
   /**
@@ -402,25 +383,13 @@ public final class Touca {
    *
    * @param path path to file in which test results and performance benchmarks
    *        should be stored
-   * @param cases names of test cases whose results should be stored. If a set
-   *        is not specified or is set as empty, all test cases will be stored
-   *        in the specified file.
+   * @param cases names of test cases whose results should be stored. If set to
+   *        null or empty, all test cases will be stored in the specified file.
    * @throws IOException if we encounter any filesystem error
    */
-  public static void saveJson(final String path, final Set<String> cases)
+  public static void saveJson(final String path, final String[] cases)
       throws IOException {
     instance.saveJson(Paths.get(path), cases);
-  }
-
-  /**
-   * Create a JSON file with captured data for all declared test cases.
-   *
-   * @param path path to JSON file to be created
-   * @throws IOException if we encounter any filesystem error
-   * @see saveJson
-   */
-  public static void saveJson(final String path) throws IOException {
-    Touca.saveJson(path, new HashSet<String>());
   }
 
   /**
@@ -489,7 +458,7 @@ public final class Touca {
    * @param mainArgs command-line arguments provided to the application
    */
   public static void run(final Class<?> mainClass, final String[] mainArgs) {
-    new Runner(instance).parse(mainArgs).findWorkflows(mainClass).run();
+    new Runner().parse(mainArgs).findWorkflows(mainClass).run(instance);
   }
 
   /**

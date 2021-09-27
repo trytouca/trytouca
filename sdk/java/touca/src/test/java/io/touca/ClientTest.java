@@ -13,7 +13,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import io.touca.core.Client;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -113,7 +112,7 @@ public final class ClientTest {
         client.transform("some-other-value")));
     client.perform(x -> x.addMetric("some-metric", 10l));
     assertDoesNotThrow(() -> {
-      client.saveJson(outputFile, new HashSet<String>());
+      client.saveJson(outputFile, null);
     });
     final byte[] encoded = Files.readAllBytes(outputFile);
     final String content = new String(encoded, StandardCharsets.UTF_8);
@@ -133,7 +132,7 @@ public final class ClientTest {
         client.transform("some-other-value")));
     client.perform(x -> x.addMetric("some-metric", 10l));
     assertDoesNotThrow(() -> {
-      client.saveJson(outputFile, new HashSet<String>());
+      client.saveJson(outputFile, null);
     });
     final byte[] encoded = Files.readAllBytes(outputFile);
     final String content = new String(encoded, StandardCharsets.UTF_8);
@@ -152,11 +151,7 @@ public final class ClientTest {
     Path outputFile = tempDir.resolve("some-file");
     Client client = makeClient();
     assertDoesNotThrow(() -> {
-      client.saveJson(outputFile, new HashSet<String>() {
-        {
-          add("some-case");
-        }
-      });
+      client.saveJson(outputFile, new String[] {"some-case"});
     });
     final byte[] encoded = Files.readAllBytes(outputFile);
     final String content = new String(encoded, StandardCharsets.UTF_8);
@@ -180,7 +175,7 @@ public final class ClientTest {
     Path outputFile = tempDir.resolve("some-file");
     Client client = makeClient();
     assertDoesNotThrow(() -> {
-      client.saveBinary(outputFile, new HashSet<String>());
+      client.saveBinary(outputFile, null);
     });
     final byte[] encoded = Files.readAllBytes(outputFile);
     final String content = new String(encoded, StandardCharsets.UTF_8);

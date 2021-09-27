@@ -1,11 +1,14 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.schema;
+package io.touca.core;
 
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.flatbuffers.Table;
 
 public final class Schema {
+
+  private Schema() {}
+
   public static final class TType {
     public static final byte NONE = 0;
     public static final byte TBool = 1;

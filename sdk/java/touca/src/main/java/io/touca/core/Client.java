@@ -10,17 +10,15 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import io.touca.exceptions.ConfigException;
 import io.touca.exceptions.StateException;
-import io.touca.schema.Schema;
-import io.touca.types.ToucaType;
 
 /**
  *
@@ -181,17 +179,12 @@ public class Client {
    * similar name may be executed.
    *
    * @param name name of the testcase to be removed from memory
-   * @throws IllegalArgumentException when called with the name of a test case
-   *         that was never declared
    */
   public void forgetTestcase(final String name) {
     if (!this.configured) {
       return;
     }
-    if (!this.cases.containsKey(name)) {
-      String error = String.format("key %s does not exist", name);
-      throw new IllegalArgumentException(error);
-    }
+    // remove testcase if it exists
     this.cases.remove(name);
   }
 
@@ -253,7 +246,7 @@ public class Client {
    * @throws IOException if we encounter file system errors when writing content
    *         to file
    */
-  public void saveBinary(final Path path, final Set<String> cases)
+  public void saveBinary(final Path path, final String[] cases)
       throws IOException {
     final Case[] items = this.save(path, cases);
     final byte[] content = this.serialize(items);
@@ -276,7 +269,7 @@ public class Client {
    * @throws IOException if we encounter file system errors when writing content
    *         to file
    */
-  public void saveJson(final Path path, final Set<String> cases)
+  public void saveJson(final Path path, final String[] cases)
       throws IOException {
     final Case[] items = this.save(path, cases);
     final String content = this.makeJson(items);
@@ -383,17 +376,19 @@ public class Client {
   /**
    *
    */
-  private Case[] save(final Path path, final Set<String> cases) {
+  private Case[] save(final Path path, final String[] cases) {
     Path parent = path.getParent();
     if (parent != null && parent.toFile().mkdirs()) {
       // TODO: log that directory was created
     }
-    if (cases.isEmpty()) {
-      return this.cases.values().toArray(new Case[this.cases.size()]);
+    if (cases == null || cases.length == 0) {
+      return this.cases.values().stream().collect(Collectors.toSet())
+          .toArray(new Case[0]);
     }
     return this.cases.entrySet().stream()
-        .filter(x -> cases.contains(x.getKey())).map(x -> x.getValue())
-        .toArray(Case[]::new);
+        .filter(x -> Arrays.asList(cases).contains(x.getKey()))
+        .map(x -> x.getValue()).collect(Collectors.toSet())
+        .toArray(new Case[0]);
   }
 
 }

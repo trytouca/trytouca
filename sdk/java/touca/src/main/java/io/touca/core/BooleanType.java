@@ -1,22 +1,21 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.types;
+package io.touca.core;
 
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.touca.schema.Schema;
 
-public final class StringType extends ToucaType {
-  private String value;
+public final class BooleanType extends ToucaType {
+  private Boolean value;
 
-  public StringType(final String value) {
+  public BooleanType(final Boolean value) {
     this.value = value;
   }
 
   @Override
   public final ToucaType.Types type() {
-    return ToucaType.Types.String;
+    return ToucaType.Types.Boolean;
   }
 
   @Override
@@ -26,13 +25,12 @@ public final class StringType extends ToucaType {
 
   @Override
   public int serialize(final FlatBufferBuilder builder) {
-    final int content = builder.createString(this.value);
-    Schema.TString.startTString(builder);
-    Schema.TString.addValue(builder, content);
-    final int fbsValue = Schema.TString.endTString(builder);
+    Schema.TBool.startBool(builder);
+    Schema.TBool.addValue(builder, value);
+    final int fbsValue = Schema.TBool.endBool(builder);
     Schema.TypeWrapper.startTypeWrapper(builder);
     Schema.TypeWrapper.addValue(builder, fbsValue);
-    Schema.TypeWrapper.addValueType(builder, Schema.TType.TString);
+    Schema.TypeWrapper.addValueType(builder, Schema.TType.TBool);
     return Schema.TypeWrapper.endTypeWrapper(builder);
   }
 }

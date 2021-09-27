@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.types;
+package io.touca.core;
 
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonElement;

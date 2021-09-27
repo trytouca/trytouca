@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.core;
+package io.touca.runner;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,12 +16,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.BiFunction;
 import io.touca.Touca.Workflow;
+import io.touca.core.Client;
 import io.touca.exceptions.ConfigException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -31,24 +30,32 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
 /**
- *
+ * Entry-point to the Touca test framework.
  */
 public class Runner {
 
-  private List<ClassMethod> workflows = new ArrayList<ClassMethod>();
-  private RunnerOptions options = new RunnerOptions();
-  private Statistics stats = new Statistics();
-  private Timer timer = new Timer();
-  private Client client;
+  private final List<ClassMethod> workflows = new ArrayList<ClassMethod>();
+  private final RunnerOptions options = new RunnerOptions();
+  private final Statistics stats = new Statistics();
+  private final Timer timer = new Timer();
 
-  private class Timer {
+  /**
+   *
+   */
+  private static final class Timer {
     private final Map<String, Long> tics = new HashMap<String, Long>();
     private final Map<String, Long> times = new HashMap<String, Long>();
 
+    /**
+     *
+     */
     public void tic(final String key) {
       tics.put(key, System.currentTimeMillis());
     }
 
+    /**
+     *
+     */
     public void toc(final String key) {
       Long tic = tics.get(key);
       if (tic != null) {
@@ -56,20 +63,32 @@ public class Runner {
       }
     }
 
+    /**
+     *
+     */
     public Long count(final String key) {
       return times.getOrDefault(key, 0L);
     }
   }
 
-  private class Statistics {
+  /**
+   *
+   */
+  private static final class Statistics {
     private final Map<String, Long> values = new HashMap<String, Long>();
 
+    /**
+     *
+     */
     public void increment(final String key) {
       if (values.computeIfPresent(key, (k, v) -> v + 1) == null) {
         values.put(key, 1L);
       }
     }
 
+    /**
+     *
+     */
     public Long count(final String key) {
       return values.getOrDefault(key, 0L);
     }
@@ -78,7 +97,7 @@ public class Runner {
   /**
    *
    */
-  private class ClassMethod {
+  private static final class ClassMethod {
     public Class<?> clazz;
     public Method method;
 
@@ -92,14 +111,11 @@ public class Runner {
   }
 
   /**
+   * Parses command line arguments to retrieve the configuration options for the
+   * Touca test framework.
    *
-   */
-  public Runner(final Client client) {
-    this.client = client;
-  }
-
-  /**
-   *
+   * @param mainArgs command-line arguments provided to the application
+   * @return this instance
    */
   public Runner parse(final String[] mainArgs) {
     CommandLineParser parser = new DefaultParser();
@@ -131,25 +147,74 @@ public class Runner {
     } catch (final ParseException ex) {
       throw new ConfigException(ex.getMessage());
     }
-    validateOptions();
     return this;
   }
 
   /**
+   * Discovers all methods annotated with `Touca.Workflow` to be later executed
+   * via the {@link run} function.
    *
+   * @param mainClass class that includes the main method of test application
+   * @return this instance
    */
-  private void validateOptions() throws ConfigException {
+  public Runner findWorkflows(final Class<?> mainClass) {
+    final String className = mainClass.getCanonicalName();
+    final String packageName =
+        className.substring(0, className.lastIndexOf("."));
+    final Iterable<Class<?>> classes = findClasses(packageName);
+    for (final Class<?> clazz : classes) {
+      for (final Method method : clazz.getMethods()) {
+        if (method.isAnnotationPresent(Workflow.class)) {
+          workflows.add(new ClassMethod(clazz, method));
+        }
+      }
+    }
+    return this;
+  }
+
+  /**
+   * Executes workflow functions one by one with the set of test cases specified
+   * via command line arguments or obtained from the Touca server.
+   *
+   * @param client Touca client instance to use when running workflows.
+   */
+  public void run(final Client client) {
+    initialize(client);
+    for (final ClassMethod workflow : workflows) {
+      try {
+        runWorkflow(client, workflow);
+      } catch (final Exception ex) {
+        System.err.printf("failed to complete workflow: %s: %s%n",
+            ex.getClass().getSimpleName(), ex.getMessage());
+      }
+    }
+  }
+
+  /**
+   * Prepare the test framework for execution of test workflows.
+   *
+   * @param client Touca client instance to use when running workflows.
+   */
+  private void initialize(final Client client) throws ConfigException {
     if (!client.configure(options)) {
       throw new ConfigException(client.configurationError());
     }
-    updateTestcases();
+    if (!Paths.get(options.outputDirectory).toFile().exists()) {
+      if (!Paths.get(options.outputDirectory).toFile().mkdirs()) {
+        throw new ConfigException(String.format(
+            "failed to create directory: %s%n", options.outputDirectory));
+      }
+    }
+    updateTestcases(client);
   }
 
   /**
    * Use provided config options to find the final list of test cases to use for
    * running the workflows.
+   *
+   * @param client Touca client instance to use when running workflows.
    */
-  private void updateTestcases() throws ConfigException {
+  private void updateTestcases(final Client client) throws ConfigException {
     if (options.testcases != null) {
       if (options.testcaseFile != null) {
         throw new ConfigException(
@@ -176,7 +241,7 @@ public class Runner {
     }
     if (options.offline || options.apiKey == null || options.apiUrl == null) {
       throw new ConfigException(
-          String.join("\n", "Cannot proceed without a test case.",
+          String.join("%n", "Cannot proceed without a test case.",
               "Either use '--testcase' or '--testcase-file' to pass test cases",
               "or use '--api-key' and '--api-url' to let the library query",
               "the Touca Server to obtain and reuse the list of test cases",
@@ -185,7 +250,7 @@ public class Runner {
     options.testcases = client.getTestcases().stream().toArray(String[]::new);
     if (options.testcases.length == 0) {
       throw new ConfigException(
-          String.join("\n", "Cannot proceed without a test case.",
+          String.join("%n", "Cannot proceed without a test case.",
               "Neither '--testcase' nor '--testcase-file' were provided.",
               "Attempted to query the Touca Server to obtain and reuse the",
               "list of test cases submitted to the baseline version of this",
@@ -194,46 +259,17 @@ public class Runner {
   }
 
   /**
+   * Runs a given workflow with multiple test cases.
    *
+   * @param client Touca client instance to use when running workflows.
+   * @param workflow workflow to be executed
    */
-  public Runner findWorkflows(final Class<?> mainClass) {
-    final String className = mainClass.getCanonicalName();
-    final String packageName =
-        className.substring(0, className.lastIndexOf("."));
-    final Iterable<Class<?>> classes = findClasses(packageName);
-    for (final Class<?> clazz : classes) {
-      for (final Method method : clazz.getMethods()) {
-        if (method.isAnnotationPresent(Workflow.class)) {
-          workflows.add(new ClassMethod(clazz, method));
-        }
-      }
-    }
-    return this;
-  }
-
-  /**
-   *
-   */
-  public void run() {
-    if (!Paths.get(options.outputDirectory).toFile().exists()) {
-      Paths.get(options.outputDirectory).toFile().mkdirs();
-    }
-    for (final ClassMethod workflow : workflows) {
-      try {
-        runWorkflow(workflow);
-      } catch (final Exception ex) {
-        ex.getMessage();
-      }
-    }
-  }
-
-  private void runWorkflow(final ClassMethod workflow) {
+  private void runWorkflow(final Client client, final ClassMethod workflow) {
     boolean isOffline = (options.offline != null && options.offline == true)
         || options.apiKey == null || options.apiUrl == null;
 
-    System.out.println(
-        String.format("\nTouca Test Framework\nSuite: %s\nRevision: %s\n\n",
-            options.suite, options.version));
+    System.out.printf("%nTouca Test Framework%nSuite: %s%nRevision: %s%n%n",
+        options.suite, options.version);
     timer.tic("__workflow__");
 
     for (int index = 0; index < options.testcases.length; index++) {
@@ -244,7 +280,7 @@ public class Runner {
           .resolve(options.suite).resolve(options.version).resolve(testcase);
 
       if (!options.overwrite && this.shouldSkip(testcase)) {
-        System.out.printf(" (%d of %d) %s (skip)\n", index + 1,
+        System.out.printf(" (%d of %d) %s (skip)%n", index + 1,
             options.testcases.length, testcase);
         stats.increment("skip");
         continue;
@@ -254,10 +290,9 @@ public class Runner {
         try {
           Files.walk(testcaseDirectory).map(Path::toFile).forEach(File::delete);
         } catch (final IOException ex) {
-          System.err.printf("failed to remove directory: %s\n",
+          System.err.printf("failed to remove directory: %s%n",
               testcaseDirectory);
         }
-        testcaseDirectory.toFile().mkdirs();
       }
 
       client.declareTestcase(testcase);
@@ -268,11 +303,11 @@ public class Runner {
         workflow.method.invoke(obj, testcase);
       } catch (InvocationTargetException ex) {
         final Throwable targetException = ex.getTargetException();
-        System.err.printf("%s: %s\n", targetException.getClass().getName(),
+        System.err.printf("%s: %s%n", targetException.getClass().getName(),
             targetException.getMessage());
         continue;
       } catch (ReflectiveOperationException ex) {
-        System.err.printf("Exception: %s\n", ex.getMessage());
+        System.err.printf("Exception: %s%n", ex.getMessage());
         continue;
       }
 
@@ -280,30 +315,28 @@ public class Runner {
       stats.increment(errors.size() == 0 ? "pass" : "fail");
 
       if (errors.size() == 0 && options.saveAsBinary) {
-        Set<String> caseList = new HashSet<String>();
-        caseList.add(testcase);
+        final Path path = testcaseDirectory.resolve("touca.bin");
         try {
-          client.saveBinary(testcaseDirectory.resolve("touca.bin"), caseList);
+          client.saveBinary(path, new String[] {testcase});
         } catch (final IOException ex) {
-          System.err.printf(" failed to create binary file: %s\n",
-              ex.getMessage());
+          errors.add(String.format("failed to create file %s: %s%n",
+              path.toString(), ex.getMessage()));
         }
       }
       if (errors.size() == 0 && options.saveAsJson) {
-        Set<String> caseList = new HashSet<String>();
-        caseList.add(testcase);
+        final Path path = testcaseDirectory.resolve("touca.json");
         try {
-          client.saveJson(testcaseDirectory.resolve("touca.json"), caseList);
+          client.saveJson(path, new String[] {testcase});
         } catch (final IOException ex) {
-          System.err.printf(" failed to create json file: %s\n",
-              ex.getMessage());
+          errors.add(String.format("failed to create file %s: %s%n",
+              path.toString(), ex.getMessage()));
         }
       }
       if (errors.size() == 0 && !isOffline) {
         client.post();
       }
 
-      System.out.printf(" (%d of %d) %s (%s, %d ms)\n", index + 1,
+      System.out.printf(" (%d of %d) %s (%s, %d ms)%n", index + 1,
           options.testcases.length, testcase, "pass", timer.count(testcase));
 
       client.forgetTestcase(testcase);
@@ -311,7 +344,7 @@ public class Runner {
 
     timer.toc("__workflow__");
     System.out.printf(
-        "\nProcessed %d of %d testcases\nTest completed in %d ms\n\n",
+        "%nProcessed %d of %d testcases%nTest completed in %d ms%n%n",
         stats.count("pass"), options.testcases.length,
         timer.count("__workflow__"));
 
@@ -321,8 +354,10 @@ public class Runner {
   }
 
   /**
-   *
-   * @param testcase
+   * Checks whether the test framework should skip running a given test case.
+   * 
+   * @param testcase name of the test case
+   * @return true if running the specified test case should be skipped.
    */
   private boolean shouldSkip(final String testcase) {
     final Path testcaseDirectory = Paths.get(options.outputDirectory)
@@ -399,7 +434,7 @@ public class Runner {
         classes.addAll(findClasses(directory, packageName));
       }
     } catch (URISyntaxException | IOException ex) {
-      System.err.printf("Exception: %s\n", ex.getMessage());
+      System.err.printf("Exception: %s%n", ex.getMessage());
     }
     return classes;
   }
@@ -418,6 +453,9 @@ public class Runner {
       return classes;
     }
     final File[] files = directory.listFiles();
+    if (files == null) {
+      return classes;
+    }
     for (final File file : files) {
       if (file.isDirectory()) {
         classes.addAll(findClasses(file, packageName + "." + file.getName()));

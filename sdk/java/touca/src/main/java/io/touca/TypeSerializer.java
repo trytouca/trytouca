@@ -2,7 +2,7 @@
 
 package io.touca;
 
-import io.touca.types.ObjectType;
+import io.touca.core.ObjectType;
 
 /**
  * Interface to be implemented by consumers to customize the serialization of a

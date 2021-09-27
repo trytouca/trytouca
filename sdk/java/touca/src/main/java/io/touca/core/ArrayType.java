@@ -1,13 +1,12 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.types;
+package io.touca.core;
 
 import java.util.ArrayList;
 import java.util.List;
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import io.touca.schema.Schema;
 
 public final class ArrayType extends ToucaType {
   private List<ToucaType> elements = new ArrayList<ToucaType>();

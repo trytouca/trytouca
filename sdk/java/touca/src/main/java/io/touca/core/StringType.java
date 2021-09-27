@@ -1,27 +1,21 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-package io.touca.types;
+package io.touca.core;
 
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import io.touca.schema.Schema;
 
-public final class DecimalType extends ToucaType {
+public final class StringType extends ToucaType {
+  private String value;
 
-  private Double value;
-
-  public DecimalType(final Double value) {
+  public StringType(final String value) {
     this.value = value;
-  }
-
-  public DecimalType(final Float value) {
-    this.value = Double.valueOf(value);
   }
 
   @Override
   public final ToucaType.Types type() {
-    return ToucaType.Types.Number;
+    return ToucaType.Types.String;
   }
 
   @Override
@@ -31,12 +25,13 @@ public final class DecimalType extends ToucaType {
 
   @Override
   public int serialize(final FlatBufferBuilder builder) {
-    Schema.TDouble.startTDouble(builder);
-    Schema.TDouble.addValue(builder, value);
-    final int fbsValue = Schema.TDouble.endTDouble(builder);
+    final int content = builder.createString(this.value);
+    Schema.TString.startTString(builder);
+    Schema.TString.addValue(builder, content);
+    final int fbsValue = Schema.TString.endTString(builder);
     Schema.TypeWrapper.startTypeWrapper(builder);
     Schema.TypeWrapper.addValue(builder, fbsValue);
-    Schema.TypeWrapper.addValueType(builder, Schema.TType.TDouble);
+    Schema.TypeWrapper.addValueType(builder, Schema.TType.TString);
     return Schema.TypeWrapper.endTypeWrapper(builder);
   }
 }

@@ -21,7 +21,7 @@ import io.touca.exceptions.ConfigException;
 import io.touca.exceptions.ServerException;
 
 /**
- *
+ * Contains logic for communicating with the Touca server.
  */
 public final class Transport {
   private Options options;
@@ -30,7 +30,7 @@ public final class Transport {
   /**
    *
    */
-  private final class Response {
+  private static final class Response {
     public int code;
     public String content;
 
@@ -41,33 +41,38 @@ public final class Transport {
   }
 
   /**
-   *
+   * Creates an instance of this class, without setting any configuration
+   * option.
    */
   public Transport() {
     this.options = new Options();
   }
 
   /**
-   *
+   * Reports whether we are already authenticated with the Touca server.
+   * 
+   * @return true if we are authenticated with the Touca server.
    */
   public boolean hasToken() {
     return !this.token.isEmpty();
   }
 
   /**
+   * Applies configuration options of a given instance to this instance.
    *
+   * @param incoming configuration options to apply to this instance
    */
-  public void update(final Options options) {
-    final Map<String, String> fresh = this.options.diff(options);
+  public void update(final Options incoming) {
+    final Map<String, String> fresh = options.diff(incoming);
     if (fresh.isEmpty()) {
       return;
     }
-    this.options.merge(fresh);
+    options.mergeMap(fresh);
     if (fresh.containsKey("apiUrl")) {
-      this.handshake();
-      this.token = null;
+      handshake();
+      token = null;
       if (fresh.containsKey("apiKey")) {
-        this.authenticate();
+        authenticate();
       }
     }
   }
@@ -95,8 +100,8 @@ public final class Transport {
   private final String readResponse(final InputStream inputStream)
       throws IOException {
     final StringBuilder builder = new StringBuilder();
-    try (BufferedReader reader =
-        new BufferedReader(new InputStreamReader(inputStream))) {
+    try (BufferedReader reader = new BufferedReader(
+        new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
       for (String line; (line = reader.readLine()) != null;) {
         builder.append(line);
       }
@@ -183,7 +188,10 @@ public final class Transport {
   }
 
   /**
-   *
+   * Queries the Touca server for the list of test cases submitted for the
+   * baseline version of this suite.
+   * 
+   * @return list of test cases for this suite.
    */
   public List<String> getTestcases() {
     final Response response = getRequest(
@@ -202,7 +210,9 @@ public final class Transport {
   }
 
   /**
+   * Submits given binary data to the Touca server.
    *
+   * @param content serialized binary representation of one or more test cases.
    */
   public void post(final byte[] content) {
     final Response response =
@@ -213,7 +223,8 @@ public final class Transport {
   }
 
   /**
-   *
+   * Notifies the Touca server that all test cases were executed for this
+   * version and no further test result is expected to be submitted.
    */
   public void seal() {
     final String path = String.format("/batch/%s/%s/%s/seal2", options.team,

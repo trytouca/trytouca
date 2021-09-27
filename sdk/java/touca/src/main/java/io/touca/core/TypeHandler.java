@@ -10,13 +10,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import io.touca.TypeSerializer;
-import io.touca.types.ArrayType;
-import io.touca.types.BooleanType;
-import io.touca.types.DecimalType;
-import io.touca.types.IntegerType;
-import io.touca.types.ObjectType;
-import io.touca.types.StringType;
-import io.touca.types.ToucaType;
 
 public final class TypeHandler {
   private Map<Class<?>, Function<Object, ToucaType>> primitives;

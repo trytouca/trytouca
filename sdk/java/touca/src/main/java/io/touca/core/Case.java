@@ -14,14 +14,11 @@ import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import io.touca.core.ResultEntry.ResultCategory;
-import io.touca.schema.Schema;
-import io.touca.schema.Schema.ResultType;
-import io.touca.types.ArrayType;
-import io.touca.types.ToucaType;
-import io.touca.types.IntegerType;
+import io.touca.core.Schema.ResultType;
 
-
+/**
+ *
+ */
 public class Case {
 
   private String testCase;
@@ -39,6 +36,32 @@ public class Case {
           put(ResultCategory.Assert, ResultType.Assert);
         }
       };
+
+  /**
+   *
+   */
+  private static enum ResultCategory {
+    Check, Assert
+  }
+
+  /**
+   *
+   */
+  private static final class ResultEntry {
+    public ToucaType value;
+    public ResultCategory type;
+
+    /**
+     * Wraps a given data point for easier organization.
+     *
+     * @param value the object storing actual value of the captured variable
+     * @param type the category that this entry belongs to
+     */
+    public ResultEntry(final ToucaType value, ResultCategory type) {
+      this.value = value;
+      this.type = type;
+    }
+  }
 
   /**
    * Creates a Test Case instance that stores all the test results and
@@ -66,8 +89,7 @@ public class Case {
    * @param value value to be logged as a test result
    */
   public void addResult(final String key, final ToucaType value) {
-    this.results.put(key,
-        new ResultEntry(value, ResultEntry.ResultCategory.Check));
+    this.results.put(key, new ResultEntry(value, ResultCategory.Check));
   }
 
   /**
@@ -78,8 +100,7 @@ public class Case {
    * @param value value to be logged as a test result
    */
   public void addAssertion(final String key, final ToucaType value) {
-    this.results.put(key,
-        new ResultEntry(value, ResultEntry.ResultCategory.Assert));
+    this.results.put(key, new ResultEntry(value, ResultCategory.Assert));
   }
 
   /**
@@ -93,8 +114,7 @@ public class Case {
     if (!this.results.containsKey(key)) {
       ArrayType value = new ArrayType();
       value.add(element);
-      this.results.put(key,
-          new ResultEntry(value, ResultEntry.ResultCategory.Check));
+      this.results.put(key, new ResultEntry(value, ResultCategory.Check));
       return;
     }
     ResultEntry entry = this.results.get(key);
@@ -116,8 +136,7 @@ public class Case {
   public void addHitCount(final String key) {
     if (!this.results.containsKey(key)) {
       IntegerType value = new IntegerType(1l);
-      this.results.put(key,
-          new ResultEntry(value, ResultEntry.ResultCategory.Check));
+      this.results.put(key, new ResultEntry(value, ResultCategory.Check));
       return;
     }
     ResultEntry entry = this.results.get(key);
@@ -172,7 +191,7 @@ public class Case {
 
   /**
    * Reports stored content for JSON serialization
-   * 
+   *
    * @return a json element that to be serialized by the caller
    */
   public final JsonElement json() {
@@ -216,7 +235,9 @@ public class Case {
   }
 
   /**
-   *
+   * Serialize this instance using Touca's FlatBuffers schema
+   * 
+   * @return binary representation of this test case
    */
   public byte[] serialize() {
     final FlatBufferBuilder builder = new FlatBufferBuilder(1024);

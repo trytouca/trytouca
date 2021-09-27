@@ -30,7 +30,7 @@ import com.google.gson.JsonParseException;
 import io.touca.exceptions.ConfigException;
 
 /**
- *
+ * Configuration options for the Touca core library.
  */
 public class Options {
   public String apiKey;
@@ -53,14 +53,16 @@ public class Options {
    * Creates an Options instance with a callback function that lets you set a
    * subset of available configuration options.
    *
-   * @param options callback to set configurations options
+   * @param callback callback to set configurations options
    */
-  public Options(Consumer<Options> options) {
-    options.accept(this);
+  public Options(Consumer<Options> callback) {
+    callback.accept(this);
   }
 
   /**
+   * Applies configuration options of a given instance to this instance.
    *
+   * @param incoming configuration options to apply to this instance
    */
   public void apply(final Options incoming) {
     incoming.applyConfigFile();
@@ -71,7 +73,11 @@ public class Options {
   }
 
   /**
+   * Provides a copy of the configuration options specified for this instance in
+   * form of map.
    *
+   * @return a map that contains a copy of all configuration options specified
+   *         for this instance.
    */
   public final Map<String, String> entrySet() {
     final Map<String, String> entries = new HashMap<String, String>();
@@ -97,7 +103,12 @@ public class Options {
   }
 
   /**
-   *
+   * Compares the set of configuration options stored in a given instance with
+   * the set of configuration options stored in this instance.
+   * 
+   * @param incoming configuration options to compare
+   * @return list of configuration options that are available in the given
+   *         instance but are not set in this instance.
    */
   public final Map<String, String> diff(final Options incoming) {
     final Map<String, String> output = new HashMap<String, String>();
@@ -148,9 +159,12 @@ public class Options {
   }
 
   /**
+   * Applies the configuration options specified in a given map to this
+   * instance.
    *
+   * @param incoming configuration options to apply to this instance
    */
-  public void merge(final Map<String, String> incoming) {
+  public void mergeMap(final Map<String, String> incoming) {
     if (incoming.containsKey("apiKey")) {
       this.apiKey = incoming.get("apiKey");
     }
