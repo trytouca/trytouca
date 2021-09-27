@@ -5,6 +5,7 @@
 Features:
 
 - Add high-level test framework (#23, #25)
+- Report errors during test execution (#26)
 
 Improvements:
 
