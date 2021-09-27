@@ -7,15 +7,18 @@ Touca test framework:
 ```java
 import io.touca.Touca;
 
-public class StudentsTest {
-    public static void main(String[] args) {
-        Touca.workflow("students_test", (final String username) -> {
-            Student student = Students.parseProfile(username);
-            // insert code here to describe the behavior
-            // and performance of the workflow under test
-        });
-        Touca.run(args);
-    }
+public final class StudentsTest {
+
+  @Touca.Workflow
+  public void parseProfile(final String username) {
+    Student student = Students.parseProfile(username);
+    // insert code here to describe the behavior
+    // and performance of the workflow under test
+  }
+
+  public static void main(String[] args) {
+    Touca.run(StudentsTest.class, args);
+  }
 }
 ```
 

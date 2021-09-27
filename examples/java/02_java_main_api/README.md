@@ -37,14 +37,17 @@ Here's a Touca test we can write for our code under test:
 ```java
 import io.touca.Touca;
 
-public class StudentsTest {
-    public static void main(String[] args) {
-        Touca.workflow("students_test", (final String username) -> {
-            Student student = Students.parseProfile(username);
-            // more to write here
-        });
-        Touca.run(args);
-    }
+public final class StudentsTest {
+
+  @Touca.Workflow
+  public void parseProfile(final String username) {
+    Student student = Students.parseProfile(username);
+    // more to write here
+  }
+
+  public static void main(String[] args) {
+    Touca.run(StudentsTest.class, args);
+  }
 }
 ```
 

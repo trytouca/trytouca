@@ -14,6 +14,6 @@ allprojects {
         mavenCentral()
     }
     group = "io.touca"
-    version = "0.2"
+    version = "0.3.0"
     description = "Sample Projects for using Touca SDK for Java"
 }

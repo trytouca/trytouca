@@ -4,9 +4,10 @@ python/.python-version
 python/**/.env
 python/**/output
 python/**/__pycache__
-java/.gradle
 java/**/build
 java/**/.classpath
 java/**/org.eclipse.buildship.core.prefs
 #java
 .project
+.gradle
+.settings
