@@ -47,7 +47,7 @@ export default function BlogPage(props: StaticProps) {
                 <h3 className="text-4xl font-bold lg:text-5xl">
                   {content.title}
                 </h3>
-                <p className="text-xl font-light lg:text-2xl text-light-blue-200">
+                <p className="text-xl font-light lg:text-2xl text-sky-200">
                   {content.subtitle}
                 </p>
               </div>

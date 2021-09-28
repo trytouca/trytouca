@@ -8,8 +8,6 @@ import FooterCta from '@/components/footer-cta';
 import PricingPlan, { Input } from '@/components/pricing-plan';
 
 interface PageContent {
-  title: string;
-  subtitle: string;
   plans: Input[];
   faq: {
     title: string;
@@ -21,8 +19,6 @@ interface PageContent {
 }
 
 const content: PageContent = {
-  title: 'Simple pricing. Whenever you are ready.',
-  subtitle: 'Free forever for individuals and non-profits.',
   plans: [
     {
       title: 'Free',
@@ -84,7 +80,7 @@ const content: PageContent = {
         answer: [
           `At no extra charge, we offer teams on our paid plans online and
           on-site engineering support for tasks ranging from integrating our
-          Client Libraries to deploying and upgrading their self-hosted
+          SDK libraries to deploying and upgrading their self-hosted
           Touca server.`,
           `We reserve time every month to work with your team, to make sure
           you are getting the most value from our product.`
@@ -96,8 +92,7 @@ const content: PageContent = {
           `Touca server is language agnostic. But you'd need to integrate
           one of our SDKs with your code to capture test results and submit
           them to the platform. At the moment, we provide SDKs for
-          C++, Python, and JavaScript programming languages.`,
-          `Our Java SDK is scheduled to be released in September 2021.`
+          C++, Python, Java, and JavaScript programming languages.`
         ]
       },
       {
@@ -202,12 +197,12 @@ export default function PricingPage() {
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
         <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
           <div className="p-8 space-y-2 text-center">
-            <h2 className="text-4xl font-extrabold text-white">
-              {content.title}
+            <h2 className="leading-tight text-3xl sm:text-4xl lg:text-5xl max-w-2xl mx-auto font-extrabold text-white">
+              <span className="text-yellow-500">Pays for itself</span> in
+              happier, more productive engineers
             </h2>
-            <p className="text-xl text-white">{content.subtitle}</p>
           </div>
-          <div className="p-8 auto-cols-fr">
+          <div className="py-8 px-20 auto-cols-fr">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
               <div className="col-span-1">
                 <PricingPlan plan={content.plans[0]}></PricingPlan>

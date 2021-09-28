@@ -25,7 +25,7 @@ export default class PricingPlan extends React.Component<
   render() {
     return (
       <div className="flex flex-col h-full shadow-xl">
-        <div className="p-4 space-y-2 bg-opacity-75 rounded-t-lg bg-light-blue-900">
+        <div className="p-4 space-y-2 bg-opacity-75 rounded-t-lg bg-sky-900">
           <div className="flex justify-between">
             <div>
               <h4 className="text-xl font-medium text-white">
@@ -52,27 +52,18 @@ export default class PricingPlan extends React.Component<
           </div>
           <p className="text-sm text-white">{this.props.plan.description}</p>
         </div>
-        <div className="flex flex-col justify-between flex-grow p-4 space-y-8 rounded-b-lg bg-light-blue-900 bg-opacity-40">
+        <div className="flex flex-col justify-between flex-grow p-4 space-y-8 rounded-b-lg bg-sky-900 bg-opacity-40">
           <div className="space-y-2">
             {this.props.plan.features.map((feature, index) => {
               return (
                 <div key={index} className="flex space-x-4">
                   <HiOutlineBadgeCheck
-                    className="text-green-600"
+                    className="text-sky-600"
                     size="1.5rem"></HiOutlineBadgeCheck>
                   <p className="font-medium leading-6 text-white">{feature}</p>
                 </div>
               );
             })}
-          </div>
-          <div className="flex justify-center">
-            <a href={this.props.plan.button.link} rel="noopener">
-              <button
-                className="px-4 py-2 text-sm leading-6 rounded-lg wsl-btn-green"
-                type="button">
-                {this.props.plan.button.title}
-              </button>
-            </a>
           </div>
         </div>
       </div>

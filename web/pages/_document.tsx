@@ -24,12 +24,12 @@ export default class MyDocument extends Document {
           />
           <meta
             property="og:image:alt"
-            content="Touca Continuous Regression Testing Platform"
+            content="Developer-focused Continuous Regression Testing"
           />
           <meta property="og:url" content="https://touca.io" />
           <meta
             property="og:title"
-            content="Touca Continuous Regression Testing Platform"
+            content="Developer-focused Continuous Regression Testing"
           />
           <meta
             property="og:description"

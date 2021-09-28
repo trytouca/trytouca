@@ -54,7 +54,6 @@ type PageContent = {
     title: string;
     subtitle: string;
     elevator: string;
-    banner: string;
     sides: SidePitchInput[];
   };
   features: FeatureInput[];
@@ -84,7 +83,7 @@ const SidePitch = (props: { input: SidePitchInput }) => {
     <>
       <div className="col-span-1 p-8 space-y-4 shadow-2xl bg-dark-blue-700 bg-opacity-30 rounded-xl">
         <div className="flex items-center space-x-2">
-          <HiOutlineBadgeCheck className="text-light-blue-700" size="2rem" />
+          <HiOutlineBadgeCheck className="text-sky-700" size="2rem" />
           <p className="text-2xl font-semibold text-white lg:text-3xl">
             {props.input.title}
           </p>
@@ -102,7 +101,7 @@ const Feature = (props: { input: FeatureInput }) => {
   return (
     <>
       <div className="flex items-center space-x-2">
-        <Icon className="text-light-blue-600" size="3rem"></Icon>
+        <Icon className="text-sky-600" size="3rem"></Icon>
         <h3 className="text-4xl font-bold text-white xl:text-5xl">
           {props.input.title}
         </h3>
@@ -145,9 +144,7 @@ const Testimonial = (props: { input: TestimonialInput }) => {
         />
         <div className="font-medium">
           <div className="text-lg text-white">{props.input.title}</div>
-          <div className="text-base text-light-blue-600">
-            {props.input.subtitle}
-          </div>
+          <div className="text-base text-sky-600">{props.input.subtitle}</div>
         </div>
       </figcaption>
       <blockquote className="text-gray-300 lg:text-xl">
@@ -167,12 +164,11 @@ const Testimonial = (props: { input: TestimonialInput }) => {
 
 const content: PageContent = {
   pitch: {
-    title: 'Continuous regression testing for critical software workflows',
-    subtitle: `Test your most complex workflows with real-world inputs to find
-      the true impact of any code change.`,
-    elevator: 'Reduce the risks of changing mission-critical software.',
-    banner: `Test your most complex workflows with real-world inputs to find
-      the true impact of any code change.`,
+    title: 'See the side effects of your changes, as your write code.',
+    subtitle: `Continuously test your software workflows to find
+      the true impact of any code change during development.`,
+    elevator:
+      "Fixing silly mistakes shouldn't need a round-trip with your QA team.",
     sides: [
       {
         title: 'Avoid surprises',
@@ -199,7 +195,7 @@ const content: PageContent = {
         alt: 'Submit regression test results with Touca client libraries.'
       },
       title: 'Submit',
-      description: `Use our client libraries to capture values of important
+      description: `Use our open-source SDKs to capture values of important
         variables and runtime of functions, for any number of test cases,
         from anywhere within your code.`,
       button: {
@@ -349,9 +345,18 @@ export default function Home() {
       </section>
       <section className="grid py-8 wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
         <div className="container flex flex-col justify-between mx-auto">
-          <p className="max-w-3xl px-8 py-32 mx-auto text-3xl font-light text-white lg:text-4xl xl:text-5xl xl:leading-snug">
-            {content.pitch.banner}
-          </p>
+          <div className="max-w-5xl px-8 py-44 mx-auto text-center text-white ">
+            <p className="text-3xl lg:text-4xl py-4">
+              It takes{' '}
+              <span className="text-yellow-400 font-medium">23 days</span> for
+              software engineers to gain confidence that a given code change
+              works as they expect.
+            </p>
+            <p className="text-2xl py-4">
+              Touca reduces this to{' '}
+              <span className="text-yellow-400">minutes</span>.
+            </p>
+          </div>
           <div className="grid gap-8 px-8 xl:grid-cols-3">
             <SidePitch input={content.pitch.sides[0]}></SidePitch>
             <SidePitch input={content.pitch.sides[1]}></SidePitch>
@@ -376,7 +381,7 @@ export default function Home() {
       <section className="grid wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800">
         <div className="wsl-landing-feature-child">
           <div className="wsl-landing-feature-nest">
-            <FaCity className="text-light-blue-600" size="3rem"></FaCity>
+            <FaCity className="text-sky-600" size="3rem"></FaCity>
             <h3 className="text-4xl font-bold text-white xl:text-5xl">
               Built for the Enterprise
             </h3>
