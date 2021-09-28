@@ -56,8 +56,8 @@ jobs:
       - name: push coverage to aws
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          tar -zcf python-test-coverage.tar.gz touca/build/reports/jacoco/test/html
-          aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          tar -zcf java-test-coverage.tar.gz touca/build/reports/jacoco/test/html
+          aws s3 cp java-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
       - name: cleanup gradle cache
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
