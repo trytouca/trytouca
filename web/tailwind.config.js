@@ -15,9 +15,9 @@ module.exports = {
         'dark-blue': {
           900: '#0d0d2b',
           800: '#0d2040',
-          700: colors.lightBlue[900]
+          700: colors.sky[900]
         },
-        'light-blue': colors.lightBlue
+        sky: colors.sky
       },
       typography: {
         DEFAULT: {
@@ -33,9 +33,9 @@ module.exports = {
               color: colors.white
             },
             a: {
-              color: colors.lightBlue[400],
+              color: colors.sky[400],
               '&:hover': {
-                color: colors.lightBlue[300]
+                color: colors.sky[300]
               },
               textDecoration: 'none'
             }

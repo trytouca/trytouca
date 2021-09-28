@@ -14,7 +14,7 @@ export default function FooterCta() {
             target="_blank"
             rel="noopener noreferrer">
             <button
-              className="px-4 py-2 text-base leading-6 rounded-lg shadow-md wsl-btn-green focus:ring-2 focus:ring-opacity-50 focus:ring-light-blue-400"
+              className="px-4 py-2 text-base leading-6 rounded-lg shadow-md wsl-btn-green focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400"
               type="button">
               Get Started
             </button>
