@@ -23,7 +23,7 @@ export default function Header() {
             </a>
           </Link>
         </div>
-        <nav className="flex items-center space-x-4">
+        <nav className="flex items-center space-x-1 md:space-x-4">
           <Link href="/pricing">
             <a className="wsl-header-btn-secondary">Pricing</a>
           </Link>
