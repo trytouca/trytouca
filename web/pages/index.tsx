@@ -137,7 +137,7 @@ export default function Home() {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
-        <div className="grid wsl-min-h-screen lg:items-center">
+        <div className="grid wsl-min-h-screen-1 lg:items-center">
           <div className="container flex items-center mx-auto">
             <div className="grid gap-8 px-8 lg:grid-cols-2 lg:items-center">
               <div className="flex flex-col justify-around h-full py-12 mx-auto space-y-4 text-white lg:py-4 xl:py-0 lg:space-y-8">
@@ -207,7 +207,7 @@ export default function Home() {
           </p>
         )}
       </section>
-      <section className="flex items-center wsl-min-h-screen bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
+      <section className="flex items-center wsl-min-h-screen-3 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
         <div className="container mx-auto">
           <div className="max-w-5xl px-8 mx-auto text-white">
             <p className="py-4 text-3xl text-left lg:text-4xl">

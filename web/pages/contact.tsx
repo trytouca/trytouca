@@ -26,7 +26,7 @@ export default function ContactPage() {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800">
-        <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen">
+        <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
           <div className="p-4 space-y-2 text-center">
             <h2 className="text-4xl font-extrabold text-white">
               {content.title}
