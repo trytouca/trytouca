@@ -2,5 +2,6 @@
   "singleQuote": true,
   "trailingComma": "none",
   "htmlWhitespaceSensitivity": "ignore",
-  "jsxBracketSameLine": true
+  "jsxBracketSameLine": true,
+  "proseWrap": "always"
 }
