@@ -20,6 +20,12 @@ import { make_path } from '@/lib/api';
 import { FeatureInput } from '@/lib/feature';
 
 type PageContent = {
+  announcement: {
+    action: string;
+    hidden: boolean;
+    link: string;
+    text: string;
+  };
   pitch: {
     title: string;
     subtitle: string;
@@ -30,6 +36,12 @@ type PageContent = {
 };
 
 const content: PageContent = {
+  announcement: {
+    action: 'Check it out on GitHub',
+    hidden: false,
+    link: 'https://github.com/trytouca/touca-java',
+    text: 'We released our open-source Touca SDK for Java today.'
+  },
   pitch: {
     title: 'See the side effects of your changes, as your write code.',
     subtitle: `Continuously test your software workflows to find
@@ -125,15 +137,15 @@ export default function Home() {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
-        <div className="grid wsl-min-h-screen-1 lg:items-center">
-          <div className="container mx-auto">
-            <div className="grid lg:grid-cols-2 lg:gap-4 lg:items-center">
-              <div className="col-span-1 p-8 pt-24 mx-auto space-y-8 text-white lg:pt-8">
+        <div className="grid wsl-min-h-screen lg:items-center">
+          <div className="container flex items-center mx-auto">
+            <div className="grid gap-8 px-8 lg:grid-cols-2 lg:items-center">
+              <div className="flex flex-col justify-around h-full py-12 mx-auto space-y-4 text-white lg:py-4 xl:py-0 lg:space-y-8">
                 <h2 className="max-w-xl text-4xl font-bold wsl-text-gradient wsl-text-shadow xl:text-5xl">
                   {content.pitch.title}
                 </h2>
                 <p className="max-w-xl text-2xl">{content.pitch.subtitle}</p>
-                <div>
+                <div className="max-w-xl">
                   <SignupForm></SignupForm>
                 </div>
                 <div>
@@ -167,7 +179,7 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <div className="flex items-center w-full h-full max-w-screen-md col-span-1 px-8 pb-8 mx-auto select-none lg:py-0 lg:px-4">
+              <div className="items-center hidden w-full h-full max-w-screen-md col-span-1 px-8 pb-8 mx-auto select-none sm:flex lg:py-0 lg:px-4">
                 <img
                   className="rounded-lg shadow-md"
                   alt="Touca Continuous Regression Testing"
@@ -180,11 +192,22 @@ export default function Home() {
         </div>
       </section>
       <section className="bg-gradient-to-r from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
-        <p className="container p-8 mx-auto text-xl font-semibold text-center text-white">
-          {content.pitch.elevator}
-        </p>
+        {(content.announcement.hidden && (
+          <p className="container p-8 mx-auto text-xl font-semibold text-center text-white">
+            {content.pitch.elevator}
+          </p>
+        )) || (
+          <p className="container p-8 mx-auto space-x-2 text-lg font-medium text-center text-white">
+            <span>{content.announcement.text}</span>
+            <a
+              className="font-bold underline hover:text-gray-200 "
+              href={content.announcement.link}>
+              {content.announcement.action}
+            </a>
+          </p>
+        )}
       </section>
-      <section className="flex items-center wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
+      <section className="flex items-center wsl-min-h-screen bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
         <div className="container mx-auto">
           <div className="max-w-5xl px-8 mx-auto text-white">
             <p className="py-4 text-3xl text-left lg:text-4xl">

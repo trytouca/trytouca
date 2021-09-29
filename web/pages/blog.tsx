@@ -40,7 +40,7 @@ export default function BlogPage(props: StaticProps) {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
-        <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
+        <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen">
           <div className="grid grid-cols-1 gap-4 p-8 space-y-8 lg:grid-cols-2 lg:space-y-0">
             <div className="grid col-span-1 place-content-center">
               <div className="max-w-lg space-y-4 text-white">
@@ -61,7 +61,7 @@ export default function BlogPage(props: StaticProps) {
         </div>
       </section>
       {props.archived_articles.length !== 0 && (
-        <section className="wsl-min-h-screen-1 bg-dark-blue-900">
+        <section className="wsl-min-h-screen bg-dark-blue-900">
           <BlogPostArchive articles={props.archived_articles}></BlogPostArchive>
         </section>
       )}

@@ -12,13 +12,13 @@ export default function Header() {
           <Link href="/">
             <a className="flex items-center h-20 focus:outline-none">
               <img
-                className="h-12"
+                className="h-10"
                 src={make_path('/logo/touca-logo-transparent.svg')}
                 alt="Touca Logo"
                 loading="eager"
               />
-              <h1 className="text-2xl font-light tracking-tight text-white">
-                Touca
+              <h1 className="text-2xl font-bold leading-10 tracking-tight text-white">
+                touca<span className="text-sky-300">.io</span>
               </h1>
             </a>
           </Link>

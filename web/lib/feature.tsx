@@ -2,8 +2,6 @@
 
 import { IconType } from 'react-icons';
 
-import { DimButton } from '../components/dim-button';
-
 export type FeatureInput = {
   icon?: IconType;
   image?: {

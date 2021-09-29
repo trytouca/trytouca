@@ -22,7 +22,7 @@ export default function FeatureTestimonials(props: {
   input: TestimonialInput[];
 }) {
   return (
-    <section className="grid wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800">
+    <section className="grid wsl-min-h-screen bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800">
       <div className="container grid gap-16 px-8 mx-auto lg:grid-cols-2">
         <div className="grid mx-auto space-y-6 lg:px-8 lg:col-span-1 md:px-0 place-content-center">
           <FaCity className="text-sky-600" size="3rem"></FaCity>

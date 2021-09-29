@@ -3,7 +3,7 @@
 import Head from 'next/head';
 import { HiOutlineCalendar, HiOutlineClock } from 'react-icons/hi';
 import remark from 'remark';
-import html from 'remark-html';
+import remarkHtml from 'remark-html';
 
 import FooterCta from '@/components/footer-cta';
 import { Article, BlogPostArchive, getArticle, getArticles } from '@/lib/blog';
@@ -31,7 +31,7 @@ export default function BlogPage(props: StaticProps) {
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
         <div className="min-h-[15vh]"></div>
-        <div className="container flex flex-col justify-center p-16 mx-auto space-y-8 wsl-min-h-screen-1">
+        <div className="container flex flex-col justify-center p-16 mx-auto space-y-8 wsl-min-h-screen">
           <div className="mx-auto space-y-8">
             <h3 className="max-w-4xl text-5xl font-bold text-white">
               {props.main_article.title}
@@ -90,7 +90,7 @@ export async function getStaticProps({ params }: Params) {
   const archived_articles = getArticles().filter((v) => v.slug !== params.slug);
   const main_article = getArticle(params.slug);
   const result = await remark()
-    .use(html)
+    .use(remarkHtml)
     .process(main_article.content || '');
   main_article.content = result.toString();
   return {
