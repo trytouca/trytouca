@@ -1,165 +1,32 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import Head from 'next/head';
-import { IconType } from 'react-icons';
-import { FaCity } from 'react-icons/fa';
 import {
   HiArrowNarrowRight,
-  HiOutlineBadgeCheck,
-  HiOutlineCog,
   HiOutlineLightBulb,
-  HiOutlineUpload,
   HiOutlineUserGroup
 } from 'react-icons/hi';
 
+import FeatureAutomate from '@/components/feature-automate';
+import FeatureCollaborate from '@/components/feature-collaborate';
+import FeatureCompare from '@/components/feature-compare';
+import FeatureSubmit from '@/components/feature-submit';
+import FeatureTestimonials, {
+  TestimonialInput
+} from '@/components/feature-testimonials';
 import FooterCta from '@/components/footer-cta';
 import SignupForm from '@/components/signup-form';
 import { make_path } from '@/lib/api';
-
-type TestimonialInput = {
-  image: string;
-  title: string;
-  subtitle: string;
-  quote: string;
-  learnMore: {
-    title: string;
-    text: string;
-    link: string;
-    hidden: boolean;
-  };
-};
-
-type FeatureInput = {
-  icon: IconType;
-  image: {
-    link: string;
-    alt: string;
-  };
-  title: string;
-  description: string;
-  button: {
-    link: string;
-    text: string;
-    title: string;
-  };
-};
-
-type SidePitchInput = {
-  title: string;
-  description: string;
-};
+import { FeatureInput } from '@/lib/feature';
 
 type PageContent = {
   pitch: {
     title: string;
     subtitle: string;
     elevator: string;
-    sides: SidePitchInput[];
   };
   features: FeatureInput[];
   testimonials: TestimonialInput[];
-};
-
-const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
-  return (
-    <a
-      href={props.link}
-      title={props.title}
-      target="_blank"
-      rel="noopener noreferrer">
-      <button
-        className="px-4 py-2 space-x-1 text-gray-300 bg-opacity-25 rounded-full bg-dark-blue-700 hover:text-white focus:underline focus:outline-none group"
-        type="button"
-        role="button">
-        <span className="text-sm font-medium leading-6">{props.text}</span>
-        <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
-      </button>
-    </a>
-  );
-};
-
-const SidePitch = (props: { input: SidePitchInput }) => {
-  return (
-    <>
-      <div className="col-span-1 p-8 space-y-4 shadow-2xl bg-dark-blue-700 bg-opacity-30 rounded-xl">
-        <div className="flex items-center space-x-2">
-          <HiOutlineBadgeCheck className="text-sky-700" size="2rem" />
-          <p className="text-2xl font-semibold text-white lg:text-3xl">
-            {props.input.title}
-          </p>
-        </div>
-        <p className="pl-10 text-xl text-gray-200 lg:text-2xl">
-          {props.input.description}
-        </p>
-      </div>
-    </>
-  );
-};
-
-const Feature = (props: { input: FeatureInput }) => {
-  const Icon = props.input.icon;
-  return (
-    <>
-      <div className="flex items-center space-x-2">
-        <Icon className="text-sky-600" size="3rem"></Icon>
-        <h3 className="text-4xl font-bold text-white xl:text-5xl">
-          {props.input.title}
-        </h3>
-      </div>
-      <p className="text-2xl text-gray-300">{props.input.description}</p>
-      <div>
-        <DimButton
-          link={props.input.button.link}
-          text={props.input.button.text}
-          title={props.input.button.title}></DimButton>
-      </div>
-    </>
-  );
-};
-
-const FeatureHero = (props: { input: FeatureInput }) => {
-  return (
-    <div className="flex items-center justify-center">
-      <div className="w-full md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
-        <img
-          className="w-full mx-auto rounded-md md:rounded-xl"
-          src={props.input.image.link}
-          alt={props.input.image.alt}
-          loading="lazy"
-        />
-      </div>
-    </div>
-  );
-};
-
-const Testimonial = (props: { input: TestimonialInput }) => {
-  return (
-    <div className="p-8 space-y-4 bg-opacity-75 rounded-lg shadow-xl bg-dark-blue-800">
-      <figcaption className="flex items-center space-x-4">
-        <img
-          className="w-20 h-20 rounded-2xl"
-          src={props.input.image}
-          alt={`${props.input.title}, ${props.input.subtitle}`}
-          loading="lazy"
-        />
-        <div className="font-medium">
-          <div className="text-lg text-white">{props.input.title}</div>
-          <div className="text-base text-sky-600">{props.input.subtitle}</div>
-        </div>
-      </figcaption>
-      <blockquote className="text-gray-300 lg:text-xl">
-        <p>{props.input.quote}</p>
-      </blockquote>
-      {!props.input.learnMore.hidden && (
-        <div className="text-right">
-          <DimButton
-            link={props.input.learnMore.link}
-            text={props.input.learnMore.text}
-            title={props.input.title}></DimButton>
-        </div>
-      )}
-    </div>
-  );
 };
 
 const content: PageContent = {
@@ -168,34 +35,12 @@ const content: PageContent = {
     subtitle: `Continuously test your software workflows to find
       the true impact of any code change during development.`,
     elevator:
-      "Fixing silly mistakes shouldn't need a round-trip with your QA team.",
-    sides: [
-      {
-        title: 'Avoid surprises',
-        description: `Detect potentially unintended side effects of any code
-          change, during your development cycle.`
-      },
-      {
-        title: 'Scale without worry',
-        description: `Test your workflows with any number of inputs, without
-          generating and managing snapshot files.`
-      },
-      {
-        title: 'Stay in the loop',
-        description: `Maintain an accurate understanding of how your product
-          behaves, across your team.`
-      }
-    ]
+      "Fixing silly mistakes shouldn't need a round-trip with your QA team."
   },
   features: [
     {
-      icon: HiOutlineUpload,
-      image: {
-        link: make_path('/images/touca_landing_feature_1.png'),
-        alt: 'Submit regression test results with Touca client libraries.'
-      },
-      title: 'Submit',
-      description: `Use our open-source SDKs to capture values of important
+      title: 'Describe the behavior and performance of your workflow',
+      description: `Use our open-source SDKs to capture values of
         variables and runtime of functions, for any number of test cases,
         from anywhere within your code.`,
       button: {
@@ -210,9 +55,9 @@ const content: PageContent = {
         link: make_path('/images/touca_landing_feature_2.png'),
         alt: 'Get notified when Touca finds regressions in your product.'
       },
-      title: 'Interpret',
-      description: `Touca compares your results against your baseline version
-        and reports changes in behavior and performance of your software.`,
+      title: 'See how your description compares against your baseline',
+      description: `We remotely compare your description against a previous trusted version
+        of your software and report differences in near real-time.`,
       button: {
         link: 'https://docs.touca.io/basics/interpret',
         text: 'Learn More',
@@ -225,7 +70,7 @@ const content: PageContent = {
         link: make_path('/images/touca_landing_feature_3.png'),
         alt: 'Get notified when your team members promote the baseline version.'
       },
-      title: 'Collaborate',
+      title: 'Work as a team to fix discovered regressions',
       description: `Work as a team to resolve or justify new differences.
         Maintain a shared understanding of how your software is supposed
         to work.`,
@@ -236,14 +81,10 @@ const content: PageContent = {
       }
     },
     {
-      icon: HiOutlineCog,
-      image: {
-        link: make_path('/images/touca_landing_feature_4.png'),
-        alt: 'Automate your regression tests using Touca test frameworks.'
-      },
-      title: 'Automate',
-      description: `Make your tests run continuously on a fixed schedule
-        or as you introduce new code changes.`,
+      title: 'Continuously run Touca tests at any scale',
+      description: `Automate the execution of your tests, locally or as part of
+        your build pipeline, or on a dedicated test server; however you like,
+        whenever you like. We give you real-time feedback, when you need it.`,
       button: {
         link: 'https://docs.touca.io/basics/automate',
         text: 'Learn More',
@@ -343,59 +184,27 @@ export default function Home() {
           {content.pitch.elevator}
         </p>
       </section>
-      <section className="grid py-8 wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
-        <div className="container flex flex-col justify-between mx-auto">
-          <div className="max-w-5xl px-8 py-44 mx-auto text-center text-white ">
-            <p className="text-3xl lg:text-4xl py-4">
+      <section className="flex items-center wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
+        <div className="container mx-auto">
+          <div className="max-w-5xl px-8 mx-auto text-white">
+            <p className="py-4 text-3xl text-left lg:text-4xl">
               It takes{' '}
-              <span className="text-yellow-400 font-medium">23 days</span> for
+              <span className="font-medium text-yellow-500">23 days</span> for
               software engineers to gain confidence that a given code change
               works as they expect.
             </p>
-            <p className="text-2xl py-4">
+            <p className="py-4 text-2xl text-right">
               Touca reduces this to{' '}
-              <span className="text-yellow-400">minutes</span>.
+              <span className="text-yellow-500">minutes</span>.
             </p>
-          </div>
-          <div className="grid gap-8 px-8 xl:grid-cols-3">
-            <SidePitch input={content.pitch.sides[0]}></SidePitch>
-            <SidePitch input={content.pitch.sides[1]}></SidePitch>
-            <SidePitch input={content.pitch.sides[2]}></SidePitch>
           </div>
         </div>
       </section>
-      {content.features.map((feature, index) => (
-        <section
-          key={index}
-          className="grid wsl-min-h-screen-1 bg-dark-blue-900">
-          <div className="wsl-landing-feature-child">
-            <div className="wsl-landing-feature-nest">
-              <Feature input={feature}></Feature>
-            </div>
-            <div className="grid lg:col-span-1">
-              <FeatureHero input={feature} />
-            </div>
-          </div>
-        </section>
-      ))}
-      <section className="grid wsl-min-h-screen-1 bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800">
-        <div className="wsl-landing-feature-child">
-          <div className="wsl-landing-feature-nest">
-            <FaCity className="text-sky-600" size="3rem"></FaCity>
-            <h3 className="text-4xl font-bold text-white xl:text-5xl">
-              Built for the Enterprise
-            </h3>
-            <p className="text-2xl text-gray-300">
-              Touca started as an internal tool at a medical software company to
-              find regressions in low-level components of a mission-critical
-              product.
-            </p>
-          </div>
-          <div className="wsl-landing-feature-nest">
-            <Testimonial input={content.testimonials[0]}></Testimonial>
-          </div>
-        </div>
-      </section>
+      <FeatureSubmit input={content.features[0]}></FeatureSubmit>
+      <FeatureCompare input={content.features[1]}></FeatureCompare>
+      <FeatureCollaborate input={content.features[2]}></FeatureCollaborate>
+      <FeatureAutomate input={content.features[3]}></FeatureAutomate>
+      <FeatureTestimonials input={content.testimonials}></FeatureTestimonials>
       <section className="py-32 lg:pt-8 min-h-[25vh] flex items-center bg-dark-blue-800">
         <div className="container px-8 mx-auto md:px-24 lg:px-8">
           <FooterCta></FooterCta>
