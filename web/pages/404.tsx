@@ -23,7 +23,7 @@ export default function NotFoundPage() {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 to-sky-900">
-        <div className="container grid px-4 mx-auto space-y-12 wsl-min-h-screen place-content-center">
+        <div className="container grid px-4 mx-auto space-y-12 wsl-min-h-screen-1 place-content-center">
           <div className="space-y-2 text-center">
             <h2 className="text-4xl font-light text-white">{content.title}</h2>
             <p className="text-xl text-white">{content.subtitle}</p>

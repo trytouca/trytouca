@@ -139,7 +139,7 @@ class CommonQuestions extends React.Component<
   render() {
     return (
       <>
-        <div className="container px-4 py-32 mx-auto lg:px-8 wsl-min-h-screen">
+        <div className="container px-4 py-32 mx-auto lg:px-8 wsl-min-h-screen-1">
           <h2 className="pb-16 text-4xl font-bold text-white">
             {content.faq.title}
           </h2>
@@ -195,7 +195,7 @@ export default function PricingPage() {
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
-        <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen">
+        <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
           <div className="p-8 space-y-2 text-center">
             <h2 className="max-w-2xl mx-auto text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
               <span className="text-yellow-500">Pays for itself</span> in
