@@ -1,9 +1,10 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import React from 'react';
+import { HiChevronRight } from 'react-icons/hi';
 
 import { DimButton } from '@/components/dim-button';
-import { FeatureHero, FeatureInput } from '@/lib/feature';
+import { FeatureInput } from '@/lib/feature';
 
 export default function FeatureCollaborate(props: { input: FeatureInput }) {
   return (
@@ -24,7 +25,39 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
             <p className="text-2xl text-gray-300">{props.input.description}</p>
           </div>
           <div className="grid lg:col-span-1">
-            <FeatureHero input={props.input} />
+            <div className="w-full md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
+              <div className="space-y-4">
+                <div className="flex items-center pb-4 space-x-1 font-medium text-white border-b-2 border-blue-500">
+                  <span>Acme</span>
+                  <HiChevronRight />
+                  <span>Tax Calculator</span>
+                  <HiChevronRight />
+                  <span>5.0</span>
+                </div>
+                <div className="p-1 space-y-2 text-white">
+                  <p>Hi Bob,</p>
+                  <p>
+                    <span className="font-medium" title="aanderson">
+                      Alice Anderson
+                    </span>{' '}
+                    promoted version <span className="font-medium">v5.0</span>{' '}
+                    of suite Tax Calculator as the new baseline. All subsequent
+                    versions will now be compared against version{' '}
+                    <span className="font-medium">v5.0</span>. They provided the
+                    following reason for this change.
+                  </p>
+                  <p className="p-3 text-gray-200 rounded-lg bg-dark-blue-800">
+                    Changed the logic to include child tax credit. Differences
+                    for test case{' '}
+                    <span className="font-mono text-sm">rweaseley</span> are
+                    expected.
+                  </p>
+                </div>
+                <div className="pt-4 mx-auto font-medium text-white border-t-2 border-blue-500">
+                  View Results
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className="px-8 py-8 text-right lg:py-0">

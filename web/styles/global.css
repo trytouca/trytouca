@@ -29,6 +29,6 @@
     @apply px-4 py-2 text-sm leading-6 rounded-lg wsl-btn-green;
   }
   .wsl-header-btn-secondary {
-    @apply px-4 py-2 text-sm font-semibold leading-6 text-white duration-150 ease-in-out bg-transparent rounded-lg hover:bg-dark-blue-700 focus:ring-0;
+    @apply px-2 py-2 text-sm font-semibold leading-6 text-white duration-150 ease-in-out bg-transparent rounded-lg lg:px-4 hover:bg-dark-blue-700 focus:ring-0;
   }
 }

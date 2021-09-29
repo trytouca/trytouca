@@ -43,7 +43,7 @@ const content: PageContent = {
     text: 'We released our open-source Touca SDK for Java today.'
   },
   pitch: {
-    title: 'See the side effects of your changes, as your write code.',
+    title: 'See the side effects of your changes, as you write code.',
     subtitle: `Continuously test your software workflows to find
       the true impact of any code change during development.`,
     elevator:
