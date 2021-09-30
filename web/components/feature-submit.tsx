@@ -7,7 +7,8 @@ import { DimButton } from '@/components/dim-button';
 import { FeatureInput } from '@/lib/feature';
 
 const snippets = [
-  `#include "touca/touca.hpp"
+  {
+    snippet: `#include "touca/touca.hpp"
 #include "touca/touca_main.hpp"
 #include "code_under_test.hpp"
 
@@ -15,7 +16,11 @@ void touca::main(const std::string& testcase) {
   const auto number = std::stoul(testcase);
   touca::add_result("output", is_prime(number));
 }`,
-  `import touca
+    language: 'cpp',
+    repository: 'https://github.com/trytouca/touca-cpp'
+  },
+  {
+    snippet: `import touca
 
 @touca.Workflow
 def is_prime(testcase: str):
@@ -23,7 +28,11 @@ def is_prime(testcase: str):
 
 if __name__ == "__main__":
   touca.run()`,
-  `import { touca } from "@touca/node";
+    language: 'python',
+    repository: 'https://github.com/trytouca/touca-python'
+  },
+  {
+    snippet: `import { touca } from "@touca/node";
 import { is_prime } from "./code_under_test";
 
 touca.workflow("is_prime", (testcase: string) => {
@@ -32,7 +41,11 @@ touca.workflow("is_prime", (testcase: string) => {
 });
 
 touca.run();`,
-  `import io.touca.Touca;
+    language: 'typescript',
+    repository: 'https://github.com/trytouca/touca-js'
+  },
+  {
+    snippet: `import io.touca.Touca;
 
 public final class PrimeTest {
 
@@ -41,7 +54,10 @@ public final class PrimeTest {
     final int number = Integer.parseInt(testcase);
     Touca.addResult("output", Prime.isPrime(number));
   }
-}`
+}`,
+    language: 'java',
+    repository: 'https://github.com/trytouca/touca-java'
+  }
 ];
 
 export default class FeatureSubmit extends React.Component<
@@ -119,10 +135,8 @@ export default class FeatureSubmit extends React.Component<
             <div className="grid lg:col-span-1">
               <CodeSnippet
                 input={{
-                  code: snippets[this.state.activeIndex],
-                  language: ['cpp', 'python', 'typescript', 'java'][
-                    this.state.activeIndex
-                  ]
+                  code: snippets[this.state.activeIndex].snippet,
+                  language: snippets[this.state.activeIndex].language
                 }}></CodeSnippet>
             </div>
           </div>

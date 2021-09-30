@@ -25,7 +25,7 @@ export default function FeatureCompare(props: { input: FeatureInput }) {
             <p className="text-2xl text-gray-300">{props.input.description}</p>
           </div>
           <div className="grid lg:col-span-1">
-            <div className="w-full md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
+            <div className="w-full p-2 md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
               <div className="space-y-4">
                 <div className="flex items-center pb-4 space-x-1 font-medium text-white border-b-2 border-green-500">
                   <span>Acme</span>
