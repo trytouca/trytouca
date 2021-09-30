@@ -1,6 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import React from 'react';
+import { FaGithub } from 'react-icons/fa';
 
 import CodeSnippet from '@/components/code-snippet';
 import { DimButton } from '@/components/dim-button';
@@ -11,11 +12,11 @@ Touca Test Framework
 Suite: acme/tax-calculator
 Version: 6.0
 
- (  1 of 5  ) Joseph Buquet          (pass, 118 ms)
- (  2 of 5  ) Christine Daaé         (pass, 97  ms)
- (  3 of 5  ) Raoul de Chagny        (pass, 132 ms)
- (  4 of 5  ) Marius Pontmercy       (pass, 50  ms)
- (  5 of 5  ) Jean Valjean           (pass, 640 ms)
+ (  1 of 5  ) Joseph Buquet      (pass, 118 ms)
+ (  2 of 5  ) Christine Daaé     (pass, 97  ms)
+ (  3 of 5  ) Raoul de Chagny    (pass, 132 ms)
+ (  4 of 5  ) Marius Pontmercy   (pass, 50  ms)
+ (  5 of 5  ) Jean Valjean       (pass, 640 ms)
 
 Processed 5 of 5 testcases
 Test completed in 1062 ms
@@ -38,6 +39,24 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
               </h3>
             </div>
             <p className="text-2xl text-gray-300">{props.input.description}</p>
+            <div className="flex items-center space-x-2 group">
+              <a
+                href={'https://github.com/trytouca/touca-wrench'}
+                target="_blank"
+                rel="noopener noreferrer">
+                <div className="p-4 font-mono bg-opacity-50 text-sky-300 bg-dark-blue-800 rounded-xl">
+                  pip install touca-wrench
+                </div>
+              </a>
+              <a
+                href={'https://github.com/trytouca/touca-wrench'}
+                target="_blank"
+                rel="noopener noreferrer">
+                <div className="p-3 text-gray-400 bg-opacity-50 group-hover:text-gray-300 bg-dark-blue-800 rounded-xl">
+                  <FaGithub size="2rem" />
+                </div>
+              </a>
+            </div>
           </div>
           <div className="grid lg:col-span-1">
             <CodeSnippet

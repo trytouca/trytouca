@@ -7,9 +7,10 @@ import { DimButton } from '@/components/dim-button';
 
 export type TestimonialInput = {
   image: string;
-  title: string;
-  subtitle: string;
-  quote: string;
+  name: string;
+  role: string;
+  company: string;
+  quote: string[];
   learnMore: {
     title: string;
     text: string;
@@ -50,23 +51,26 @@ const Testimonial = (props: { input: TestimonialInput }) => {
         <img
           className="w-20 h-20 rounded-2xl"
           src={props.input.image}
-          alt={`${props.input.title}, ${props.input.subtitle}`}
+          alt={`${props.input.name}, ${props.input.role} at ${props.input.company}`}
           loading="lazy"
         />
         <div className="font-medium">
-          <div className="text-lg text-white">{props.input.title}</div>
-          <div className="text-base text-sky-600">{props.input.subtitle}</div>
+          <div className="text-lg text-white">{props.input.name}</div>
+          <div className="text-base text-gray-300">{props.input.role}</div>
+          <div className="text-base text-gray-300">{props.input.company}</div>
         </div>
       </figcaption>
       <blockquote className="text-gray-300 lg:text-xl">
-        <p>{props.input.quote}</p>
+        {props.input.quote.map((paragraph, index) => (
+          <p key={index}>{paragraph}</p>
+        ))}
       </blockquote>
       {!props.input.learnMore.hidden && (
         <div className="text-right">
           <DimButton
             link={props.input.learnMore.link}
             text={props.input.learnMore.text}
-            title={props.input.title}></DimButton>
+            title={props.input.company}></DimButton>
         </div>
       )}
     </div>
