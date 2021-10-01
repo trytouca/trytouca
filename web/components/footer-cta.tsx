@@ -1,5 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { HiArrowNarrowRight } from 'react-icons/hi';
+
 export default function FooterCta() {
   return (
     <div className="grid lg:p-8 gap-y-20 lg:grid-cols-2">
@@ -10,13 +12,17 @@ export default function FooterCta() {
         <p className="text-xl">It could change how you build software.</p>
         <div>
           <a
+            className="text-lg"
             href="https://app.touca.io"
             target="_blank"
             rel="noopener noreferrer">
             <button
-              className="px-4 py-2 text-base leading-6 rounded-lg shadow-md wsl-btn-green focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400"
-              type="button">
-              Get Started
+              style={{ boxShadow: '0 0 5px #7dd3fc' }}
+              className="p-3 space-x-2 font-medium text-white duration-150 ease-in-out bg-opacity-25 box-shadow rounded-xl focus:outline-none bg-dark-blue-700 hover:bg-opacity-50 group"
+              type="button"
+              role="button">
+              <span>Get Started</span>
+              <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
             </button>
           </a>
         </div>

@@ -47,7 +47,7 @@ export default function FeatureCompare(props: { input: FeatureInput }) {
                     or missing test cases.
                   </p>
                 </div>
-                <div className="pt-4 mx-auto font-medium text-white border-t-2 border-green-500">
+                <div className="pt-4 mx-auto font-medium text-gray-300 border-t-2 border-green-500">
                   View Results
                 </div>
               </div>

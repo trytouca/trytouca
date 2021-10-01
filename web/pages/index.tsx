@@ -15,7 +15,6 @@ import FeatureTestimonials, {
   TestimonialInput
 } from '@/components/feature-testimonials';
 import FooterCta from '@/components/footer-cta';
-import SignupForm from '@/components/signup-form';
 import { make_path } from '@/lib/api';
 import { FeatureInput } from '@/lib/feature';
 
@@ -40,7 +39,7 @@ const content: PageContent = {
     action: 'Check it out on GitHub',
     hidden: false,
     link: 'https://github.com/trytouca/touca-java',
-    text: 'We released our open-source Touca SDK for Java today.'
+    text: 'We released our open-source Touca SDK for Java last week.'
   },
   pitch: {
     title: 'See the side effects of your changes, as you write code.',
@@ -83,9 +82,9 @@ const content: PageContent = {
         alt: 'Get notified when your team members promote the baseline version.'
       },
       title: 'Work as a team to fix discovered regressions',
-      description: `Work as a team to resolve or justify new differences.
-        Maintain a shared understanding of how your software is supposed
-        to work.`,
+      description: `Receive notifications when differences are found. Work
+        together to resolve or justify them. Maintain a shared understanding
+        of how your software works and is supposed to work.`,
       button: {
         link: 'https://docs.touca.io/basics/integrate',
         text: 'Learn More',
@@ -142,26 +141,39 @@ export default function Home() {
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
         <div className="grid wsl-min-h-screen-1 lg:items-center">
           <div className="container flex items-center mx-auto">
-            <div className="grid gap-8 px-8 lg:grid-cols-2 lg:items-center">
-              <div className="flex flex-col justify-around h-full py-12 mx-auto space-y-4 text-white lg:py-4 xl:py-0 lg:space-y-8">
-                <h2 className="max-w-xl text-4xl font-bold wsl-text-gradient wsl-text-shadow xl:text-5xl">
+            <div className="grid gap-8 p-8 xl:grid-cols-5 lg:items-center">
+              <div className="flex flex-col justify-around h-full py-12 mx-auto space-y-8 xl:col-span-2 lg:py-4 xl:py-0">
+                <h2 className="max-w-xl text-4xl font-bold text-white wsl-text-gradient wsl-text-shadow xl:text-5xl">
                   {content.pitch.title}
                 </h2>
-                <p className="max-w-xl text-2xl">{content.pitch.subtitle}</p>
-                <div className="max-w-xl">
-                  <SignupForm></SignupForm>
-                </div>
-                <div>
+                <p className="max-w-xl text-2xl text-white">
+                  {content.pitch.subtitle}
+                </p>
+                <div className="space-x-4">
                   <a
+                    className="text-lg"
+                    href="https://app.touca.io"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    <button
+                      style={{ boxShadow: '0 0 5px #7dd3fc' }}
+                      className="p-3 space-x-2 font-medium text-white duration-150 ease-in-out bg-opacity-25 box-shadow rounded-xl focus:outline-none bg-dark-blue-700 hover:bg-opacity-50 group"
+                      type="button"
+                      role="button">
+                      <span>Get Started</span>
+                      <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
+                    </button>
+                  </a>
+                  <a
+                    className="text-md"
                     href="https://calendly.com/ghorbanzade/30min"
                     target="_blank"
                     rel="noopener noreferrer">
                     <button
-                      className="py-2 space-x-2 font-medium hover:underline focus:underline focus:outline-none group"
+                      className="p-3 space-x-2 font-medium text-gray-300 duration-150 ease-in-out bg-opacity-50 hover:text-white rounded-xl focus:outline-none group"
                       type="button"
                       role="button">
-                      <span>Get a Live Demo</span>
-                      <HiArrowNarrowRight className="inline h-4 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
+                      <span>or Get a Live Demo</span>
                     </button>
                   </a>
                 </div>
@@ -176,18 +188,18 @@ export default function Home() {
                         className="text-gray-50"
                         src={make_path('/images/touca-customer-logo-vital.svg')}
                         alt="Vital Images, Inc."
-                        loading="eager"
+                        loading="lazy"
                       />
                     </a>
                   </div>
                 </div>
               </div>
-              <div className="items-center hidden w-full h-full max-w-screen-md col-span-1 px-8 pb-8 mx-auto select-none sm:flex lg:py-0 lg:px-4">
+              <div className="items-center hidden w-full h-full p-8 mx-auto select-none xl:col-span-3 sm:flex sm:p-0">
                 <img
-                  className="rounded-lg shadow-md"
+                  className="shadow-md rounded-xl"
                   alt="Touca Continuous Regression Testing"
                   src={make_path('/images/touca-atf-visual.png')}
-                  loading="eager"
+                  loading="lazy"
                 />
               </div>
             </div>

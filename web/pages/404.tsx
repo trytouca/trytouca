@@ -22,7 +22,7 @@ export default function NotFoundPage() {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
-      <section className="bg-gradient-to-b from-dark-blue-900 to-sky-900">
+      <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
         <div className="container grid px-4 mx-auto space-y-12 wsl-min-h-screen-1 place-content-center">
           <div className="space-y-2 text-center">
             <h2 className="text-4xl font-light text-white">{content.title}</h2>
@@ -36,7 +36,9 @@ export default function NotFoundPage() {
             </div>
             <div className="text-center">
               <Link href="/">
-                <a className="wsl-header-btn-primary">Back to Main Page</a>
+                <a className="p-4 text-sm leading-6 text-gray-300 bg-opacity-50 border border-transparent hover:text-white bg-sky-900 rounded-xl hover:border-sky-900">
+                  Back to Main Page
+                </a>
               </Link>
             </div>
           </div>
