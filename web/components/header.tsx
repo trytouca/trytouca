@@ -23,7 +23,7 @@ export default function Header() {
             </a>
           </Link>
         </div>
-        <nav className="flex items-center space-x-1 md:space-x-4">
+        <nav className="flex items-center space-x-2">
           <Link href="/pricing">
             <a className="wsl-header-btn-secondary">Pricing</a>
           </Link>
@@ -40,11 +40,10 @@ export default function Header() {
             Docs
           </a>
           <a
-            className="wsl-header-btn-primary"
+            className="wsl-header-btn-secondary"
             href="https://app.touca.io"
             rel="noopener">
-            <span className="block md:hidden">Start</span>
-            <span className="hidden md:block">Get Started</span>
+            Login
           </a>
         </nav>
       </div>

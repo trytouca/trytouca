@@ -215,6 +215,9 @@ export default function PricingPage() {
               </div>
             </div>
           </div>
+          <div className="p-2 text-center text-gray-300">
+            <p>Pay us when you were happy.</p>
+          </div>
         </div>
       </section>
       <section className="bg-dark-blue-900">

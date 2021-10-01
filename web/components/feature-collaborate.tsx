@@ -1,7 +1,8 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import React from 'react';
-import { HiChevronRight } from 'react-icons/hi';
+import { FaSlack } from 'react-icons/fa';
+import { HiChevronRight, HiOutlineMail } from 'react-icons/hi';
 
 import { DimButton } from '@/components/dim-button';
 import { FeatureInput } from '@/lib/feature';
@@ -23,6 +24,24 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
               </h3>
             </div>
             <p className="text-2xl text-gray-300">{props.input.description}</p>
+            <div className="flex items-center space-x-2">
+              <a
+                href={'https://docs.touca.io/basics/integrate'}
+                target="_blank"
+                rel="noopener noreferrer">
+                <div className="p-3 text-gray-400 bg-opacity-50 hover:text-gray-300 bg-dark-blue-800 rounded-xl">
+                  <HiOutlineMail size="2rem" />
+                </div>
+              </a>
+              <a
+                href={'https://docs.touca.io/basics/integrate'}
+                target="_blank"
+                rel="noopener noreferrer">
+                <div className="p-3 text-gray-400 bg-opacity-50 hover:text-gray-300 bg-dark-blue-800 rounded-xl">
+                  <FaSlack size="2rem" />
+                </div>
+              </a>
+            </div>
           </div>
           <div className="grid lg:col-span-1">
             <div className="w-full p-2 md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
@@ -53,7 +72,7 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
                     expected.
                   </p>
                 </div>
-                <div className="pt-4 mx-auto font-medium text-white border-t-2 border-blue-500">
+                <div className="pt-4 mx-auto font-medium text-gray-300 border-t-2 border-blue-500">
                   View Results
                 </div>
               </div>
