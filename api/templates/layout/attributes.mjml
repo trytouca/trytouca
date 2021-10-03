@@ -1,4 +1,4 @@
-<mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
+<mj-font name="Roboto" href="https://fonts.googleapis.com/css?family=Roboto" />
 <mj-attributes>
   <mj-body background-color="#E2E8F0" />
   <mj-class
@@ -24,7 +24,7 @@
     color="#334155"
     font-size="14px"
     font-weight="400"
-    font-family="Nunito"
+    font-family="Roboto"
     line-height="24px"
     padding-bottom="0px"
     padding-top="10px"
@@ -33,7 +33,7 @@
     background-color="#075985"
     align="center"
     color="#ffffff"
-    font-family="Nunito"
+    font-family="Roboto"
     font-size="14px"
     font-weight="bold"
     padding-top="16px"

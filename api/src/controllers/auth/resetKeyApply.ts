@@ -60,7 +60,10 @@ export async function authResetKeyApply(
     user,
     'Password Reset Confirmation',
     'auth-password-confirm',
-    { greetings: user.fullname ? `Hi ${user.fullname}` : `Hello` }
+    {
+      greetings: user.fullname ? `Hi ${user.fullname}` : `Hi there`,
+      loginLink: `${config.webapp.root}/account/signin`
+    }
   )
 
   notifyPlatformAdmins('%s reset their password.', user.username)

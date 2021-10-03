@@ -1,7 +1,7 @@
 <mjml>
   <mj-head>
     <mj-title>Welcome to Touca 👋🏼</mj-title>
-    <mj-preview>Here is your email verification link.</mj-preview>
+    <mj-preview>{{ previewMessage }}</mj-preview>
     <mj-include path="./layout/attributes.mjml" />
   </mj-head>
   <mj-body>
@@ -14,9 +14,9 @@
           side-effects of their changes as they write code.
         </mj-text>
         <mj-text>
-          My name is Pejman and my job is to make sure you that will have a
-          great onboarding experience. I'm here to help you get started and
-          unlock value with Touca.
+          My name is Pejman and I'll be making sure that you will have a great
+          onboarding experience. I'm here to help you get started and unlock
+          value with Touca.
         </mj-text>
         <mj-text>
           Please reach out if you have any questions or need help with anything.

@@ -42,6 +42,7 @@ export async function authVerifyResend(
   mailer.mailUser(user, 'Welcome to Touca 👋🏼', 'auth-signup-user', {
     firstName: user.fullname ?? 'there',
     hasVerificationLink: true,
+    previewMessage: 'Here is your email verification link.',
     verificationLink: link
   })
 

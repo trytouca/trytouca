@@ -90,6 +90,9 @@ export async function createUserAccount(
   mailer.mailUser(newUser, 'Welcome to Touca 👋🏼', 'auth-signup-user', {
     firstName: payload.name ?? 'there',
     hasVerificationLink: !payload.name,
+    previewMessage: payload.name
+      ? "We're excited to have you!"
+      : 'Here is your email verification link.',
     verificationLink: link
   })
 

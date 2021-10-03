@@ -1,10 +1,10 @@
-<mj-wrapper full-width="full-width" padding="0">
+<mj-wrapper padding="0px">
   <mj-section>
     <mj-column width="100%">
       <mj-image
-        src="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-logo-w-text.svg"
+        src="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-logo-w-text-xs.png"
         href="https://app.touca.io"
-        height="48px"
+        width="120px"
       ></mj-image>
     </mj-column>
   </mj-section>
