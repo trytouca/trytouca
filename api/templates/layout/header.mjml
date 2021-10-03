@@ -1,14 +1,11 @@
 <mj-wrapper full-width="full-width" padding="0">
   <mj-section>
     <mj-column width="100%">
-      <mj-text
-        align="center"
-        font-family="Nunito"
-        font-size="24px"
-        font-weight="700"
-      >
-        TOUCA
-      </mj-text>
+      <mj-image
+        src="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-logo-w-text.svg"
+        href="https://app.touca.io"
+        height="48px"
+      ></mj-image>
     </mj-column>
   </mj-section>
 </mj-wrapper>

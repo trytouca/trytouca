@@ -4,72 +4,51 @@
     <mj-preview>
       Version {{ srcBatchSlug }} was submitted for suite {{ suiteName }}.
     </mj-preview>
-    <mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
+    <mj-include path="./layout/attributes.mjml" />
     <mj-attributes>
-      <mj-body background-color="#eee" />
       <mj-class name="wsl-bg-color" background-color="{{ headerColor }}" />
-      <mj-button align="center" color="white" font-size="17px" font-weight="bold" padding-top="32px" width="300px" />
-      <mj-text color="#555" font-size="14px" font-weight="400" line-height="24px" padding-bottom="0px" padding-top="10px" />
     </mj-attributes>
   </mj-head>
   <mj-body>
     <mj-include path="./layout/header.mjml" />
-
     <mj-section mj-class="wsl-bg-color" padding="0px">
       <mj-column>
-        <mj-text color="white">
+        <mj-text color="white" padding-top="0px">
           <h3 href="{{ batchLink }}">
             {{ teamName }} > {{ suiteName }} > {{ batchName }}
           </h3>
         </mj-text>
       </mj-column>
     </mj-section>
-    <mj-section background-color="white">
+    <mj-section mj-class="wsl-border-x">
       <mj-column>
+        <mj-text>Hi {{ username }},</mj-text>
         <mj-text>
-          Hi {{ username }},
-        </mj-text>
-        <mj-text>
-          A new version {{ srcBatchSlug }} was submitted for suite {{ suiteName }}.
+          A new version {{ srcBatchSlug }} was submitted for suite {{ suiteName
+          }}.
         </mj-text>
         <mj-text>
           We compared this version against baseline version {{ dstBatchSlug }}.
-          {{#hasDifferentCases}}
-            We found differences in {{ elementsCountDifferent }} of
-            {{ elementsCountHead }} testcases.
-          {{/hasDifferentCases}}
-          {{^hasDifferentCases}}
-            We found no differences between common testcases.
-          {{/hasDifferentCases}}
-          {{#hasFreshCases}}
-            {{#hasMissingCases}}
-              There are {{ elementsCountFresh }} new testcases and
-              {{ elementsCountMissing }} missing testcases.
-            {{/hasMissingCases}}
-            {{^hasMissingCases}}
-              There are {{ elementsCountFresh }} new testcases.
-            {{/hasMissingCases}}
-          {{/hasFreshCases}}
-          {{^hasFreshCases}}
-            {{#hasMissingCases}}
-              There are {{ elementsCountMissing }} missing testcases.
-            {{/hasMissingCases}}
-            {{^hasMissingCases}}
-              There are no new or missing testcases.
-            {{/hasMissingCases}}
-          {{/hasFreshCases}}
+          {{#hasDifferentCases}} We found differences in {{
+          elementsCountDifferent }} of {{ elementsCountHead }} testcases.
+          {{/hasDifferentCases}} {{^hasDifferentCases}} We found no differences
+          between common testcases. {{/hasDifferentCases}} {{#hasFreshCases}}
+          {{#hasMissingCases}} There are {{ elementsCountFresh }} new testcases
+          and {{ elementsCountMissing }} missing testcases. {{/hasMissingCases}}
+          {{^hasMissingCases}} There are {{ elementsCountFresh }} new testcases.
+          {{/hasMissingCases}} {{/hasFreshCases}} {{^hasFreshCases}}
+          {{#hasMissingCases}} There are {{ elementsCountMissing }} missing
+          testcases. {{/hasMissingCases}} {{^hasMissingCases}} There are no new
+          or missing testcases. {{/hasMissingCases}} {{/hasFreshCases}}
         </mj-text>
       </mj-column>
     </mj-section>
-    <mj-include path="./layout/comparison-table.mjml">
-    <mj-section background-color="white">
+    <mj-include path="./layout/comparison-table.mjml" />
+    <mj-section mj-class="wsl-border-b">
       <mj-column>
-        <mj-button mj-class="wsl-bg-color" href="{{ batchLink }}">
-          View Results
-        </mj-button>
+        <mj-button href="{{ batchLink }}">View Results</mj-button>
       </mj-column>
     </mj-section>
-
     <mj-include path="./layout/footer-subscribers.mjml" />
   </mj-body>
 </mjml>

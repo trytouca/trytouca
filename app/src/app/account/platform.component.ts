@@ -100,7 +100,7 @@ export class PlatformComponent implements OnDestroy {
     return {
       eventDate: v.lockedAt,
       email: v.email,
-      fullname: v.fullname || 'Someone',
+      fullname: v.fullname ?? 'Someone',
       username: v.username,
       copyText: `had several failed login attempts. Their account is temporarily locked.`
     };
@@ -131,7 +131,7 @@ export class PlatformComponent implements OnDestroy {
     return {
       eventDate: v.resetKeyCreatedAt,
       email: v.email,
-      fullname: v.fullname || 'Someone',
+      fullname: v.fullname ?? 'Someone',
       username: v.username,
       copyLink: v.resetKeyLink,
       copyText

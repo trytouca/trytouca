@@ -123,7 +123,7 @@
           <div class="flex justify-between flex-grow space-x-4">
             <div class="w-40 font-medium truncate whitespace-nowrap"
               [ngClass]="{ 'text-gray-300 line-through': account.suspended }">
-              {{ account.fullname || 'Unknown' }}
+              {{ account.fullname ?? 'Unknown' }}
               <span class="text-sm text-gray-500"
                 *ngIf="user.username === account.username">(You)</span>
             </div>

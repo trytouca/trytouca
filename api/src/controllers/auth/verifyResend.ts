@@ -39,7 +39,9 @@ export async function authVerifyResend(
   logger.info('%s: resending verification email', user.username)
 
   const link = `${config.webapp.root}/account/activate?key=${user.activationKey}`
-  mailer.mailUser(user, 'Welcome to Touca', 'auth-signup-user', {
+  mailer.mailUser(user, 'Welcome to Touca 👋🏼', 'auth-signup-user', {
+    firstName: user.fullname ?? 'there',
+    hasVerificationLink: true,
     verificationLink: link
   })
 

@@ -89,7 +89,7 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
             callbacks: {
               label: (context) => {
                 const point = context.parsed.y;
-                return this.datetimePipe?.transform(point, 'duration') || '';
+                return this.datetimePipe?.transform(point, 'duration') ?? '';
               }
             }
           }

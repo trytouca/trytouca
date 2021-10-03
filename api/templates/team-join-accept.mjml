@@ -2,46 +2,22 @@
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
     <mj-preview>You are now a member of team {{ teamName }}.</mj-preview>
-    <mj-font
-      name="Nunito"
-      href="https://fonts.googleapis.com/css?family=Nunito"
-    />
-    <mj-attributes>
-      <mj-body background-color="#eee" />
-      <mj-text
-        color="#555"
-        font-size="14px"
-        font-weight="400"
-        line-height="24px"
-        padding-bottom="0px"
-        padding-top="10px"
-      />
-      <mj-button
-        background-color="#0284C7"
-        align="center"
-        color="#ffffff"
-        font-size="17px"
-        font-weight="bold"
-        padding-top="32px"
-        width="300px"
-      />
-    </mj-attributes>
+    <mj-include path="./layout/attributes.mjml" />
   </mj-head>
   <mj-body>
     <mj-include path="./layout/header.mjml" />
-    <mj-section background-color="#fff">
+    <mj-section mj-class="wsl-border">
       <mj-column>
         <mj-text>Hi {{ userName }},</mj-text>
         <mj-text>
-          Welcome to team
-          <b>{{ teamName }}</b>
-          ! {{ adminName }} accepted your request to join this team.
+          Welcome to team {{ teamName }}! {{ adminName }} accepted your request
+          to join them.
         </mj-text>
         <mj-button mj-class="wsl-bg-color" href="{{ teamLink }}">
-          Check out your new team
+          Check out the team
         </mj-button>
       </mj-column>
     </mj-section>
-    <mj-include path="./layout/footer-user.mjml" />
+    <mj-include path="./layout/footer.mjml" />
   </mj-body>
 </mjml>

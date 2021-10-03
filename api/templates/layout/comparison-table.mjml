@@ -3,7 +3,7 @@
   {{#hasComparisonTable}}
   <!-- htmlmin:ignore -->
 </mj-raw>
-<mj-section background-color="white">
+<mj-section mj-class="wsl-border-x">
   <mj-column>
     <mj-text>
       Here is a
@@ -13,7 +13,7 @@
     </mj-text>
   </mj-column>
 </mj-section>
-<mj-section background-color="white">
+<mj-section mj-class="wsl-border-x">
   <mj-column>
     <mj-table padding="0 10%">
       <tr>

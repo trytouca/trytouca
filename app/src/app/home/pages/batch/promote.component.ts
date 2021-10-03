@@ -41,7 +41,7 @@ export class BatchPromoteComponent extends ModalComponent {
       return;
     }
     this.submitted = true;
-    const body = { reason: model.reason || '' };
+    const body = { reason: model.reason ?? '' };
     const url = [
       'batch',
       this.elements.batch.teamSlug,

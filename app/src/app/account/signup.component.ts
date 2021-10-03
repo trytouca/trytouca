@@ -128,7 +128,7 @@ export class SignupComponent {
       next: () => {
         this.userService.populate();
         this.zone.run(() => {
-          this.router.navigate([this.authService.redirectUrl || '/~']);
+          this.router.navigate([this.authService.redirectUrl ?? '/~']);
         });
       },
       error: (err) => {

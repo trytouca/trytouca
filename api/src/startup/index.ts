@@ -22,7 +22,7 @@ export async function setupSuperuser() {
 
   const superuser = await UserModel.create({
     email: 'noreply@touca.io',
-    fullname: 'Touca Platform',
+    fullname: 'Touca',
     password: 'supersafehash',
     platformRole: EPlatformRole.Super,
     username: 'touca'

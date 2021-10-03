@@ -2,33 +2,19 @@
   <mj-head>
     <mj-title>{{ subject }}</mj-title>
     <mj-preview>You are now a member of team {{ teamName }}.</mj-preview>
-    <mj-font
-      name="Nunito"
-      href="https://fonts.googleapis.com/css?family=Nunito"
-    />
-    <mj-attributes>
-      <mj-body background-color="#eee" />
-      <mj-text
-        color="#555"
-        font-size="14px"
-        font-weight="400"
-        line-height="24px"
-        padding-bottom="0px"
-        padding-top="10px"
-      />
-    </mj-attributes>
+    <mj-include path="./layout/attributes.mjml" />
   </mj-head>
   <mj-body>
     <mj-include path="./layout/header.mjml" />
-    <mj-section background-color="#fff">
+    <mj-section mj-class="wsl-border">
       <mj-column>
         <mj-text>Hi {{ userName }},</mj-text>
         <mj-text>
           <a href="mailto:{{ ownerEmail }}">{{ ownerName }}</a>
-          has added you to team "{{ teamName }}" on Touca.
+          added you to team {{ teamName }} on Touca.
         </mj-text>
       </mj-column>
     </mj-section>
-    <mj-include path="./layout/footer-user.mjml" />
+    <mj-include path="./layout/footer.mjml" />
   </mj-body>
 </mjml>

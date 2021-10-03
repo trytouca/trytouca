@@ -86,12 +86,12 @@ export async function createUserAccount(
   // notify user that their user account is created
   // we are intentionally not awaiting on this operation
 
-  if (!payload.name) {
-    const link = `${config.webapp.root}/account/activate?key=${activationKey}`
-    mailer.mailUser(newUser, 'Welcome to Touca', 'auth-signup-user', {
-      verificationLink: link
-    })
-  }
+  const link = `${config.webapp.root}/account/activate?key=${activationKey}`
+  mailer.mailUser(newUser, 'Welcome to Touca 👋🏼', 'auth-signup-user', {
+    firstName: payload.name ?? 'there',
+    hasVerificationLink: !payload.name,
+    verificationLink: link
+  })
 
   // notify platform admins that a new user account was verified.
 

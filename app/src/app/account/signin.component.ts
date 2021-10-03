@@ -100,7 +100,7 @@ export class SigninComponent implements OnInit {
           this.router.navigateByUrl(callback);
           return;
         }
-        this.router.navigate([this.authService.redirectUrl || '/~']);
+        this.router.navigate([this.authService.redirectUrl ?? '/~']);
       },
       error: (err) => {
         const msg = this.apiService.extractError(err, [
@@ -129,7 +129,7 @@ export class SigninComponent implements OnInit {
             this.router.navigateByUrl(callback);
             return;
           }
-          this.router.navigate([this.authService.redirectUrl || '/~']);
+          this.router.navigate([this.authService.redirectUrl ?? '/~']);
         });
       },
       error: (err) => {

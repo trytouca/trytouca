@@ -1,49 +1,45 @@
 <mjml>
   <mj-head>
-    <mj-title>Welcome to Touca</mj-title>
-    <mj-preview>Welcome! Here is your account verification link.</mj-preview>
-    <mj-font
-      name="Nunito"
-      href="https://fonts.googleapis.com/css?family=Nunito"
-    />
-    <mj-attributes>
-      <mj-body background-color="#eee" />
-      <mj-text
-        color="#555"
-        font-size="14px"
-        font-weight="400"
-        line-height="24px"
-        padding-bottom="0px"
-        padding-top="10px"
-      />
-      <mj-button
-        background-color="#0284C7"
-        align="center"
-        color="#ffffff"
-        font-size="17px"
-        font-weight="bold"
-        padding-top="32px"
-        width="300px"
-      />
-    </mj-attributes>
+    <mj-title>Welcome to Touca 👋🏼</mj-title>
+    <mj-preview>Here is your email verification link.</mj-preview>
+    <mj-include path="./layout/attributes.mjml" />
   </mj-head>
   <mj-body>
     <mj-include path="./layout/header.mjml" />
-    <mj-section background-color="#fff">
+    <mj-section mj-class="wsl-border">
       <mj-column>
-        <mj-text>Welcome Aboard!</mj-text>
+        <mj-text><h3>Hi {{ firstName }}, welcome to Touca! 🎉</h3></mj-text>
         <mj-text>
-          Thank you for creating an account on Touca! We hope that it helps you
-          improve and maintain the quality of your software product.
+          Touca is a developer tool that helps software engineers see the
+          side-effects of their changes as they write code.
         </mj-text>
         <mj-text>
-          Before we get started, click below to verify your email address.
+          My name is Pejman and my job is to make sure you that will have a
+          great onboarding experience. I'm here to help you get started and
+          unlock value with Touca.
+        </mj-text>
+        <mj-text>
+          Please reach out if you have any questions or need help with anything.
+        </mj-text>
+        <mj-raw>
+          <!-- htmlmin:ignore -->
+          {{#hasVerificationLink}}
+          <!-- htmlmin:ignore -->
+        </mj-raw>
+        <mj-divider border-color="#E2E8F0" border-width="2px"></mj-divider>
+        <mj-text>
+          To get started, click the link below to verify your email address.
         </mj-text>
         <mj-button href="{{ verificationLink }}">
           Verify Email Address
         </mj-button>
+        <mj-raw>
+          <!-- htmlmin:ignore -->
+          {{/hasVerificationLink}}
+          <!-- htmlmin:ignore -->
+        </mj-raw>
       </mj-column>
     </mj-section>
-    <mj-include path="./layout/footer-user.mjml" />
+    <mj-include path="./layout/footer.mjml" />
   </mj-body>
 </mjml>

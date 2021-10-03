@@ -1,0 +1,42 @@
+<mj-font name="Nunito" href="https://fonts.googleapis.com/css?family=Nunito" />
+<mj-attributes>
+  <mj-body background-color="#E2E8F0" />
+  <mj-class
+    name="wsl-border-x"
+    background-color="white"
+    border-right="1px solid #CBD5E1"
+    border-left="1px solid #CBD5E1"
+    padding-bottom="0px"
+  />
+  <mj-class
+    name="wsl-border-b"
+    background-color="white"
+    border-right="1px solid #CBD5E1"
+    border-left="1px solid #CBD5E1"
+    border-bottom="1px solid #CBD5E1"
+  />
+  <mj-class
+    name="wsl-border"
+    background-color="white"
+    border="1px solid #CBD5E1"
+  />
+  <mj-text
+    color="#334155"
+    font-size="14px"
+    font-weight="400"
+    font-family="Nunito"
+    line-height="24px"
+    padding-bottom="0px"
+    padding-top="10px"
+  />
+  <mj-button
+    background-color="#075985"
+    align="center"
+    color="#ffffff"
+    font-family="Nunito"
+    font-size="14px"
+    font-weight="bold"
+    padding-top="16px"
+    width="200px"
+  />
+</mj-attributes>

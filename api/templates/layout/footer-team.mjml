@@ -2,7 +2,9 @@
   <mj-section padding="0px">
     <mj-column>
       <mj-text font-size="12px">
-        We thought you should know since you are subscribed to suite {{ suiteName }} of team {{ teamName }}.
+        We thought you should know since you are a member of team
+        <a href="{{ teamLink }}">{{ teamName }}</a>
+        on Touca.
       </mj-text>
     </mj-column>
   </section>

@@ -9,7 +9,7 @@ with Touca Server API.
 
 import requests
 
-# URL to entry point of the Touca Platform API
+# URL to entry point of the Touca Server API
 # In on-prem deployments, this URL may be of the form
 # `https://touca.your.company/api
 
