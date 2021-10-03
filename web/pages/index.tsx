@@ -108,7 +108,7 @@ const content: PageContent = {
       image: make_path('/images/touca-customer-testimonial-vital-profile.jpg'),
       name: 'Ben Jackson',
       role: 'Principal Software Engineer',
-      company: 'Vital Images, Inc.',
+      company: 'Canon Medical Informatics',
       quote: [
         `"We use Touca to perform nightly regression tests of our critical
         workflows. When we make changes to complex software, we need to have
@@ -119,8 +119,8 @@ const content: PageContent = {
         us leverage to develop new features faster and with fewer problems."`
       ],
       learnMore: {
-        title: `Learn more about how Vital Images uses Touca`,
-        text: "Read Vital Images' Story",
+        title: `Learn how Canon Medical Informatics uses Touca`,
+        text: "Read Canon Medical's Story",
         link: 'https://docs.touca.io/stories/vital',
         hidden: true
       }
@@ -187,7 +187,7 @@ export default function Home() {
                       <img
                         className="text-gray-50"
                         src={make_path('/images/touca-customer-logo-vital.svg')}
-                        alt="Vital Images, Inc."
+                        alt="Canon Medical Informatics"
                         loading="lazy"
                       />
                     </a>
