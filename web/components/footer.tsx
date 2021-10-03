@@ -38,6 +38,11 @@ const social: {
     icon: HiOutlineMail
   },
   {
+    link: 'https://status.touca.io',
+    title: 'Cloud Server Status',
+    text: 'Status'
+  },
+  {
     link: 'https://docs.touca.io/legal/terms',
     title: 'Terms of Service',
     text: 'Terms'
