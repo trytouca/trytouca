@@ -2,7 +2,7 @@
   <mj-section>
     <mj-column width="100%">
       <mj-image
-        src="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-logo-w-text-xs.png"
+        src="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-logo-w-text.png"
         href="https://app.touca.io"
         width="120px"
       ></mj-image>

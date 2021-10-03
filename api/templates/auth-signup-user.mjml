@@ -8,18 +8,23 @@
     <mj-include path="./layout/header.mjml" />
     <mj-section mj-class="wsl-border">
       <mj-column>
-        <mj-text><h3>Hi {{ firstName }}, welcome to Touca! 🎉</h3></mj-text>
+        <mj-text><h3>Welcome to Touca, {{ firstName }}! 🎉</h3></mj-text>
         <mj-text>
-          Touca is a developer tool that helps software engineers see the
-          side-effects of their changes as they write code.
+          We help software engineers see the side-effects of their changes as
+          they write code.
         </mj-text>
         <mj-text>
-          My name is Pejman and I'll be making sure that you will have a great
-          onboarding experience. I'm here to help you get started and unlock
-          value with Touca.
+          My name is Pejman and I'm here to help you get started and to make
+          sure that you will have a great onboarding experience.
         </mj-text>
         <mj-text>
-          Please reach out if you have any questions or need help with anything.
+          Please reach out
+          <a href="pejman@touca.io">via email</a>
+          or via the Intercom if you have any questions or need help with
+          anything. Also, if you're open to having a short chat, I'd love to
+          learn more about you and your work. You can find my schedule
+          <a href="https://calendly.com/ghorbanzade/30min">here</a>
+          .
         </mj-text>
         <mj-raw>
           <!-- htmlmin:ignore -->
