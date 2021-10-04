@@ -73,7 +73,7 @@ const content: PageContent = {
     }
   ],
   faq: {
-    title: 'Common Questions.',
+    title: 'Common Questions',
     blocks: [
       {
         question: 'What professional services do you offer?',
@@ -89,10 +89,12 @@ const content: PageContent = {
       {
         question: 'What languages do you support?',
         answer: [
-          `Touca server is language agnostic. But you'd need to integrate
-          one of our SDKs with your code to capture test results and submit
-          them to the platform. At the moment, we provide SDKs for
-          C++, Python, Java, and JavaScript programming languages.`
+          `Touca server is language agnostic. But you'd need to integrate one
+          of our SDKs with your code to describe the behavior and performance
+          of your code by capturing actual values of variables and runtime of
+          functions.`,
+          `At the moment, we provide SDKs for C++, Python, Java, and JavaScript
+          programming languages.`
         ]
       },
       {
@@ -108,7 +110,7 @@ const content: PageContent = {
         question: 'What is Platform API Access?',
         answer: [
           `API Access allows teams to integrate their own applications with
-          the Touca server to generate custom reports, trigger events, and
+          Touca to generate custom reports, trigger events, and
           programmatically import or export their submitted test results.`
         ]
       },
@@ -202,8 +204,8 @@ export default function PricingPage() {
               happier, more productive engineers
             </h2>
           </div>
-          <div className="px-20 py-8 auto-cols-fr">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="p-8 auto-cols-fr">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div className="col-span-1">
                 <PricingPlan plan={content.plans[0]}></PricingPlan>
               </div>
