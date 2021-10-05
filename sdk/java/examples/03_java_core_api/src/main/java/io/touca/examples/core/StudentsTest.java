@@ -20,7 +20,7 @@ public final class StudentsTest {
       Student student = Students.parseProfile(username);
       Touca.stopTimer("parse_profile");
 
-      Touca.addSerializer(Course.class, course -> {
+      Touca.addTypeAdapter(Course.class, course -> {
         return course.name;
       });
       Touca.addAssertion("username", student.username);

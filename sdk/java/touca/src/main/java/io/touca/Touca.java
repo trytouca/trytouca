@@ -9,7 +9,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import io.touca.core.Client;
 import io.touca.core.Options;
 import io.touca.exceptions.StateException;
@@ -393,19 +392,21 @@ public final class Touca {
   }
 
   /**
-   * Registers custom serialization logic for a given custom data type. Calling
-   * this function is rarely needed. The library already handles all custom data
-   * types by serializing all their properties. Custom serializers allow you to
-   * exclude a subset of an object properties during serialization.
+   * Registers custom conversion logic for a given data type.
    *
-   * @param <T> type of the value to be captured.
-   * @param type type to be serialized
-   * @param callback function that converts an instance of a given type to an
-   *        object with different member variables.
+   * By default, Touca handles custom data types by serializing all their
+   * properties. Registering a type adapter for a given type allows you to
+   * override this behavior. During serialization, when Touca encounters a type
+   * with a registered type adapter, it applies the type conversion before
+   * performing the serialization.
+   *
+   * @param <T> type of the value to be captured
+   * @param type type to be converted
+   * @param adapter logic to convert an instance of a given type to an object
    */
-  public static <T> void addSerializer(final Class<T> type,
-      Function<T, ?> callback) {
-    instance.addSerializer(type, callback);
+  public static <T> void addTypeAdapter(final Class<T> type,
+      TypeAdapter<T> adapter) {
+    instance.addTypeAdapter(type, adapter);
   }
 
   /**

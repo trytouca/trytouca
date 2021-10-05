@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 import io.touca.core.Client;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -29,6 +30,10 @@ public final class ClientTest {
       this.year = year;
       this.month = month;
       this.day = day;
+    }
+
+    public final String toString() {
+      return LocalDate.of(year, month, day).toString();
     }
   }
 
@@ -47,6 +52,7 @@ public final class ClientTest {
       x.version = "some-version";
     });
     client.declareTestcase("some-case");
+    client.addTypeAdapter(CustomDate.class, data -> data.toString());
     client.perform(x -> {
       x.addAssertion("username", client.transform("potter"));
       x.addResult("is_famous", client.transform(true));
@@ -159,8 +165,7 @@ public final class ClientTest {
     assertTrue(content.contains("{\"key\":\"tall\",\"value\":6.1}"));
     assertTrue(content.contains("{\"key\":\"age\",\"value\":21}"));
     assertTrue(content.contains("{\"key\":\"name\",\"value\":\"harry\"}"));
-    assertTrue(content.contains(
-        "{\"key\":\"dob\",\"value\":{\"year\":2000,\"month\":1,\"day\":1}}"));
+    assertTrue(content.contains("\"key\":\"dob\",\"value\":\"2000-01-01\""));
     assertTrue(content
         .contains("{\"key\":\"parents\",\"value\":[\"Lily\",\"James\"]}"));
     assertTrue(content

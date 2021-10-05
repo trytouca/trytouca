@@ -11,12 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import io.touca.TypeAdapter;
 import io.touca.exceptions.ConfigException;
 import io.touca.exceptions.StateException;
 
@@ -211,19 +211,21 @@ public class Client {
   }
 
   /**
-   * Registers custom serialization logic for a given custom data type. Calling
-   * this function is rarely needed. The library already handles all custom data
-   * types by serializing all their properties. Custom serializers allow you to
-   * exclude a subset of an object properties during serialization.
+   * Registers custom conversion logic for a given data type.
    *
-   * @param <T> type of the value to be captured. Could be anything.
-   * @param clazz type to be serialized
-   * @param callback function that converts an instance of a given type to an
-   *        object with different member variables.
+   * By default, the client handles custom data types by serializing all their
+   * properties. Registering a type adapter for a given type allows you to
+   * override this behavior. During serialization, when the client encounters a
+   * type with a registered type adapter, it applies the type conversion before
+   * performing the serialization.
+   *
+   * @param <T> type of the value to be captured
+   * @param clazz type to be converted
+   * @param adapter logic to convert an instance of a given type to an object
    */
-  public <T> void addSerializer(final Class<T> clazz,
-      final Function<T, ?> callback) {
-    this.typeHandler.addSerializer(clazz, callback);
+  public <T> void addTypeAdapter(final Class<T> clazz,
+      final TypeAdapter<T> adapter) {
+    this.typeHandler.addTypeAdapter(clazz, adapter);
   }
 
   /**

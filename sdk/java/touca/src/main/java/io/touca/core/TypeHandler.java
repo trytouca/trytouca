@@ -7,13 +7,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Iterator;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.function.Function;
 
-import io.touca.TypeSerializer;
+import io.touca.TypeAdapter;
+import io.touca.TypeAdapterContext;
 
 public final class TypeHandler {
   private Map<Class<?>, Function<Object, ToucaType>> primitives;
-  private Map<Class<?>, TypeSerializer<?>> customTypes;
+  private Map<Class<?>, TypeAdapter<? super Object>> adapters;
 
   public TypeHandler() {
     this.primitives = new HashMap<Class<?>, Function<Object, ToucaType>>() {
@@ -26,17 +29,29 @@ public final class TypeHandler {
         put(Float.class, x -> new DecimalType((Float) x));
       }
     };
-    this.customTypes = new HashMap<Class<?>, TypeSerializer<?>>();
+    this.adapters = new HashMap<Class<?>, TypeAdapter<? super Object>>();
   }
 
   public final ToucaType transform(final Object value) {
+    if (value instanceof ToucaType) {
+      return (ToucaType) value;
+    }
+    if (value instanceof TypeAdapterContext) {
+      final Iterator<SimpleEntry<String, Object>> iterator =
+          ((TypeAdapterContext) value).iterator();
+      final ObjectType obj = new ObjectType();
+      while (iterator.hasNext()) {
+        final SimpleEntry<String, Object> entry = iterator.next();
+        obj.add(entry.getKey(), transform(entry.getValue()));
+      }
+      return obj;
+    }
     final Class<? extends Object> clazz = value.getClass();
     if (primitives.containsKey(clazz)) {
       return primitives.get(clazz).apply(value);
     }
-    if (customTypes.containsKey(clazz)) {
-      // TODO: implement
-      return new IntegerType(1l);
+    if (adapters.containsKey(clazz)) {
+      return transform(adapters.get(clazz).adapt(value));
     }
     if (value instanceof Iterable) {
       final ArrayType arr = new ArrayType();
@@ -70,9 +85,10 @@ public final class TypeHandler {
     return obj;
   }
 
-  public <T> void addSerializer(final Class<T> clazz,
-      final Function<T, ? extends Object> serializer) {
-    // customTypes.put(clazz, serializer);
+  @SuppressWarnings("unchecked")
+  public <T> void addTypeAdapter(final Class<T> clazz,
+      final TypeAdapter<T> adapter) {
+    adapters.put(clazz, (TypeAdapter<? super Object>) adapter);
   }
 
 }
