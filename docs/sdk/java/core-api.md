@@ -187,12 +187,12 @@ public final class Course {
 
 By default, the SDK serializes objects of this class using by serializing all of
 its public properties. This behavior results in object `Course("math", 3.9)` to
-be serialized as `{name: "math", grade: 3.9}`. We can use `Touca.addSerializer`
+be serialized as `{name: "math", grade: 3.9}`. We can use `Touca.addTypeAdapter`
 to override this default behavior. The following code excludes the property
 `name` during serialization and limits the comparison to `grade`:
 
 ```java
-Touca.addSerializer(Course.class, course -> { return course.grade; });
+Touca.addTypeAdapter(Course.class, course -> course.grade);
 for (Course course: student.courses) {
     Touca.addArrayElement("courses", course);
     Touca.addHitCount("number of courses");

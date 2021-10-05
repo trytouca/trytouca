@@ -30,8 +30,6 @@ Touca test framework for Python does not support:
 - Stream redirection: Any content written by the workflow to the standard output
   or standard error will show up in the standard output during the test
   execution.
-- Error handling: exceptions thrown by the workflow under test are not printed
-  in the test output.
 
 {% endtab %}
 
