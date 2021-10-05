@@ -85,7 +85,7 @@ def _parse_cli_options(args) -> Dict[str, Any]:
         help="Overwrite result directory for testcase if it already exists")
     # fmt: on
 
-    parsed = vars(parser.parse_args(args)).items()
+    parsed = vars(parser.parse_known_args(args)[0]).items()
 
     # remove entries with value None from the map
     parsed = dict(filter(lambda x: x[1] is not None, parsed))
@@ -304,8 +304,8 @@ def _run(args):
         try:
             for workflow in Workflow._workflows:
                 workflow.__call__(testcase)
-        except RuntimeError as err:
-            errors.append(str(err))
+        except BaseException as err:
+            errors.append(": ".join([err.__class__.__name__, str(err)]))
         except:
             errors.append("unknown error")
 
@@ -332,6 +332,10 @@ def _run(args):
                 timer.count(testcase),
             )
         )
+        for error in errors:
+            print("{:>13} {}".format("-", error))
+        if len(errors):
+            print()
 
         Client.instance().forget_testcase(testcase)
 
