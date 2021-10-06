@@ -34,7 +34,7 @@ export default class MyDocument extends Document {
           <meta
             property="og:description"
             name="description"
-            content="Continuous regression testing for critical software workflows."
+            content="See the side-effects of your changes, as you write code."
           />
           <meta name="twitter:card" content="summary_large_image" />
           <meta name="twitter:site" content="@trytouca" />
