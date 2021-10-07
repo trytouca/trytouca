@@ -1,6 +1,6 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-"""Touca SDK for Python"""
+"""Touca SDK for Python."""
 
 import os
 from setuptools import setup

@@ -1,5 +1,26 @@
 # Changelog
 
+## v0.2.3
+
+Features:
+
+- Add plugin for Django test framework (#41, #42)
+- Print errors raised during test case execution (#40)
+
+Fixes:
+
+- Gracefully handle unknown command line arguments (#40)
+- Remove previous content of testcase directory when overwriting (#35)
+- Allow passing multiple test cases without repeating option (#34)
+
+Improvements:
+
+- Remove unnecessary code in configuration logic (#39)
+- Enable auto-formatting of markdown files (#38)
+- Add sample unit test to main api example (#37)
+- Rename example projects to conform with documentation (#36)
+- Update links to documentation website (#33)
+
 ## v0.2.2
 
 Fixes:
