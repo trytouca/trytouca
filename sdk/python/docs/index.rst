@@ -9,6 +9,6 @@ Touca SDK for Python
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
+   :caption: Contents
 
    Reference API <api>
