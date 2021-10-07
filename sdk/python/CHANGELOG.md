@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.4
+
+Fixes:
+
+- Include plugins in release package (#44)
+
 ## v0.2.3
 
 Features:

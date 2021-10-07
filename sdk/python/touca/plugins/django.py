@@ -3,8 +3,44 @@
 """Touca plugin for Django test framework."""
 
 from django.test.runner import DiscoverRunner
-from ._unittest import ToucaTestSuite, ToucaTestRunner
+from unittest import TestSuite, TestCase, TextTestRunner
 import touca
+
+
+class _TestCase(TestCase):
+    """Specialized TestCase to be handled by the Touca runner for Django."""
+
+    def __init__(self, case: TestCase):
+        """Clone a given ``TestCase`` instance for added functionality."""
+        super().__init__()
+        self.case = case
+
+    def runTest(self):
+        """
+        Execute test case.
+
+        Includes a simplified version of the default logic in the Touca test
+        framework to be run for each test case.
+        """
+        touca.declare_testcase(self.case._testMethodName)
+        self.case.run()
+        instance = touca._client.Client.instance()
+        active_case = instance._cases.get(instance._active_testcase_name())
+        if instance._transport and (
+            len(active_case._results) or len(active_case._tics)
+        ):
+            touca.post()
+        if instance.is_configured():
+            touca.forget_testcase(self.case._testMethodName)
+
+
+class _TestRunner(TextTestRunner):
+    """Specialized ``TextTestRunner`` to be used by the Touca runner for Django."""
+
+    def run(self, test: TestSuite):
+        """Run a given test suite."""
+        test._tests = [_TestCase(x) for x in test._tests]
+        return super().run(test)
 
 
 class Runner(DiscoverRunner):
@@ -29,7 +65,6 @@ class Runner(DiscoverRunner):
         self.touca_options = {
             k: v for k, v in self.touca_options.items() if v is not None
         }
-        print(self.touca_options)
 
     def setup_test_environment(self, **kwargs):
         """Configure the Touca client after performing default setup."""
@@ -38,9 +73,7 @@ class Runner(DiscoverRunner):
 
     def run_tests(self, test_labels, extra_tests=None, **kwargs):
         """Run Django test cases with extra Touca functionalities."""
-        self.test_suite = ToucaTestSuite
-        self.test_loader.suiteClass = ToucaTestSuite
-        self.test_runner = ToucaTestRunner
+        self.test_runner = _TestRunner
         super().run_tests(test_labels, extra_tests, **kwargs)
 
     @classmethod

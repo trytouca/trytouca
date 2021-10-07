@@ -29,7 +29,7 @@ setup(
     license="Apache-2.0",
     description="Touca SDK for Python",
     packages=["touca"],
-    package_data={"touca": ["py.typed"]},
+    package_data={"touca": ["py.typed", "plugins/*.py"]},
     keywords=["touca", "snapshot testing", "regression testing"],
     long_description=get_file_content("README.md"),
     long_description_content_type="text/markdown",
