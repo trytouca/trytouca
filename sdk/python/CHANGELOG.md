@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.5
+
+Fixes:
+
+- Add support for Touca environment variables to Django plugin (#45)
+
 ## v0.2.4
 
 Fixes:

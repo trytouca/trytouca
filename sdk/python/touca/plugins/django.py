@@ -55,11 +55,13 @@ class Runner(DiscoverRunner):
         To be passed to the Django test framework via the ``--testrunner``
         command line option.
         """
+        from os import environ
+
         super().__init__(**kwargs)
         self.touca_options = {
-            "api_key": api_key,
-            "api_url": api_url,
-            "version": revision,
+            "api_key": environ.get("TOUCA_API_KEY", api_key),
+            "api_url": environ.get("TOUCA_API_URL", api_url),
+            "version": environ.get("TOUCA_TEST_VERSION", revision),
             "offline": True if offline in [True, "True", "true"] else False,
         }
         self.touca_options = {
