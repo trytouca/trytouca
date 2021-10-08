@@ -6,9 +6,9 @@
 #include "stats.hpp"
 
 namespace touca {
-    struct ComparisonJob;
-    struct Testcase;
-}
+struct ComparisonJob;
+struct Testcase;
+}  // namespace touca
 
 /**
  *
