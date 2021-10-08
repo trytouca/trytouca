@@ -41,12 +41,12 @@ class ToucaConan(ConanFile):
     ]
 
     def requirements(self):
-        self.requires("cpp-httplib/0.8.0")
-        self.requires("flatbuffers/1.12.0")
-        self.requires("fmt/7.1.2")
-        self.requires("ghc-filesystem/1.4.0")
+        self.requires("cpp-httplib/0.9.5")
+        self.requires("flatbuffers/2.0.0")
+        self.requires("fmt/8.0.1")
+        self.requires("ghc-filesystem/1.5.8")
         self.requires("rapidjson/1.1.0")
-        self.requires("spdlog/1.8.2")
+        self.requires("spdlog/1.9.2")
         if (
             self.options.with_examples
             or self.options.with_framework
@@ -56,7 +56,7 @@ class ToucaConan(ConanFile):
 
     def build_requirements(self):
         if self.options.with_tests:
-            self.build_requires("catch2/2.13.3")
+            self.build_requires("catch2/2.13.7")
 
     def configure(self):
         self.options["fmt"].header_only = True

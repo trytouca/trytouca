@@ -8,7 +8,7 @@ function(touca_find_catch2)
     FetchContent_Declare(
         catch2
         GIT_REPOSITORY  https://github.com/catchorg/Catch2.git
-        GIT_TAG         v2.13.4
+        GIT_TAG         v2.13.7
     )
     FetchContent_GetProperties(catch2)
     if (NOT catch2_POPULATED)
@@ -38,7 +38,7 @@ function(touca_find_fmt)
     FetchContent_Declare(
         fmt
         GIT_REPOSITORY  https://github.com/fmtlib/fmt.git
-        GIT_TAG         7.1.3
+        GIT_TAG         8.0.1
     )
     FetchContent_GetProperties(fmt)
     if (NOT fmt_POPULATED)
@@ -54,7 +54,7 @@ function(touca_find_ghcfilesystem)
     FetchContent_Declare(
         ghcFilesystem
         GIT_REPOSITORY  https://github.com/gulrak/filesystem.git
-        GIT_TAG         v1.5.4
+        GIT_TAG         v1.5.8
     )
     FetchContent_GetProperties(ghcFilesystem)
     if(NOT ghcfilesystem_POPULATED)
@@ -69,7 +69,7 @@ function(touca_find_flatbuffers)
     FetchContent_Declare(
         flatbuffers
         GIT_REPOSITORY  https://github.com/google/flatbuffers.git
-        GIT_TAG         v1.12.0
+        GIT_TAG         v2.0.0
     )
     FetchContent_GetProperties(flatbuffers)
     if (NOT flatbuffers_POPULATED)
@@ -84,7 +84,7 @@ function(touca_find_httplib)
     FetchContent_Declare(
         httplib
         GIT_REPOSITORY  https://github.com/yhirose/cpp-httplib.git
-        GIT_TAG         v0.8.3
+        GIT_TAG         v0.9.5
     )
     FetchContent_GetProperties(httplib)
     if (NOT httplib_POPULATED)
@@ -114,7 +114,7 @@ function(touca_find_spdlog)
     FetchContent_Declare(
         spdlog
         GIT_REPOSITORY  https://github.com/gabime/spdlog.git
-        GIT_TAG         v1.8.2
+        GIT_TAG         v1.9.2
     )
     FetchContent_GetProperties(spdlog)
     if (NOT spdlog_POPULATED)

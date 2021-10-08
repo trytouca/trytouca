@@ -2,8 +2,9 @@
 
 [![Latest version](https://img.shields.io/github/v/release/trytouca/touca-cpp)](https://github.com/trytouca/touca-cpp/releases)
 [![License](https://img.shields.io/github/license/trytouca/touca-cpp?color=blue)](https://github.com/trytouca/touca-cpp/blob/main/LICENSE)
-[![Build Status](https://img.shields.io/github/workflow/status/trytouca/touca-cpp/touca-cpp-main)](https://github.com/trytouca/touca-cpp/actions)
-[![API Reference Documentation](https://readthedocs.org/projects/touca-cpp/badge/?version=latest)](https://touca-cpp.readthedocs.io)
+[![Build Status](https://img.shields.io/github/workflow/status/trytouca/touca-cpp/touca-cpp-main)](https://github.com/trytouca/touca-cpp/actions/workflows/main.yml?query=branch:main+event:push)
+[![Documentation Status](https://readthedocs.org/projects/touca-cpp/badge/?version=latest)](https://touca-cpp.readthedocs.io)
+[![Codecov](https://img.shields.io/codecov/c/github/trytouca/touca-cpp)](https://app.codecov.io/gh/trytouca/touca-cpp)
 
 Touca helps you understand the true impact of your day to day code changes on
 the behavior and performance of your overall software, as you write code.
@@ -18,7 +19,7 @@ visualize all differences, and report them in near real-time.
 ## 👀 Sneak Peak
 
 > For a more thorough guide of how to use Touca SDK for C++, check out the
-> [`examples`][cpp-examples] directory or visit our documentation website at
+> examples directory or visit our documentation website at
 > [docs.touca.io](https://docs.touca.io).
 
 Let us imagine that we want to test a software workflow that reports whether a
@@ -34,10 +35,8 @@ of our code under test are a number and a boolean. If we were testing a video
 compression algorithm, they may have been video files. In that case:
 
 - Describing the expected output for a given video file would be difficult.
-
 - When we make changes to our compression algorithm, accurately reflecting those
   changes in our expected values would be time-consuming.
-
 - We would need a large number of input video files to gain confidence that our
   algorithm works correctly.
 
@@ -62,7 +61,6 @@ Touca tests have two main differences compared to typical unit tests:
   inputs as "test cases". The SDK retrieves the test cases from the command
   line, or a file, or a remote Touca server and feeds them one by one to our
   code under test.
-
 - We have removed the concept of _expected values_. With Touca, we only describe
   the _actual_ behavior and performance of our code under test by capturing
   values of interesting variables and runtime of important functions, anywhere
@@ -104,10 +102,8 @@ Touca is very effective in addressing common problems in the following
 situations:
 
 - When we need to test our workflow with a large number of inputs.
-
 - When the output of our workflow is too complex, or too difficult to describe
   in our unit tests.
-
 - When interesting information to check for regression is not exposed through
   the interface of our workflow.
 
@@ -119,7 +115,6 @@ test these workflows at any scale.
   remote server accessible to all members of our team, can help us add notes to
   each test case, explain why they are needed and track how their performance
   changes over time.
-
 - Submitting our test results to a remote server, instead of storing them in
   files, can help us avoid the mundane tasks of managing and processing of those
   results. The Touca server retains test results and makes them accessible to
@@ -130,22 +125,17 @@ test these workflows at any scale.
 
 ## 📖 Documentation
 
-- If you are new to Touca, the best place to start is our [Quickstart
-  Guide][docs-quickstart] on our documentation website.
-
-- For information on how to use our C++ SDK, see our [C++ SDK
-  Documentation][docs-cpp].
-
-- If you cannot wait to start writing your first test with Touca, see our [C++
-  API Reference][docs-cpp-api].
+- If you are new to Touca, the best place to start is the
+  [Quickstart Guide](https://docs.touca.io/basics/quickstart) on our
+  documentation website.
+- For information on how to use this SDK, see our
+  [C++ SDK Documentation](https://docs.touca.io/sdk/cpp).
+- If you cannot wait to start writing your first test with Touca, see our
+  [C++ API Reference](https://app.touca.io/docs/clients/cpp/api.html).
 
 ## 🧑‍🔧 Integration
 
-> This section is a summarized version of the [Integration][docs-cpp-installing]
-> document on our documentation website.
-
-The easiest way to use Touca as a third-party dependency in your project is to
-use CMake version 3.11 or higher, via the FetchContent module as shown below:
+You can install Touca with CMake 3.11 or higher:
 
 ```cmake
 FetchContent_Declare(
@@ -156,20 +146,20 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(touca)
 ```
 
-As an alternative, it is possible to use Conan for pulling Touca as a
-third-party library:
+Or you can use Conan:
 
 ```bash
 conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
 conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.4.1@_/_"
 ```
 
+See the [Integration](https://docs.touca.io/sdk/cpp/installing) section on our
+documentation website to learn more.
+
 ## 🕵️ Requirements
 
-We formally support building our library on Windows, Linux and macOS platforms
-using C++11, C++14 and C++17 standards. Both the library and the test framework
-can be built as shared or static libraries. We test our library against the
-following compilers.
+We formally support C++11 and higher standards on Windows, Linux and macOS
+platforms. We test our library against the following compilers:
 
 | Compiler     | Min Version |
 | ------------ | ----------- |
@@ -186,22 +176,14 @@ like to provide feedback, send us a note through the Intercom at
 ## 🚀 What's Next
 
 Touca client libraries are free and open-source. Our cloud-hosted Touca server
-at [app.touca.io](https://app.touca.io) has a free forever plan. You can create
-an account and explore Touca on your own. We are also happy to [chat
-1:1][calendly] to help you get on-boarded and answer any questions you may have
-in the process. We'd love to learn more about you, understand your software and
-its requirements, and help you decide if Touca would be useful to you and your
-team.
+at [app.touca.io](https://app.touca.io) has a free plan. You can create an
+account and explore Touca on your own. We are also happy to
+[chat 1:1](https://calendly.com/ghorbanzade/30min) to help you get on-boarded
+and answer any questions you may have in the process. We'd love to learn more
+about you, understand your software and its requirements, and help you decide if
+Touca would be useful to you and your team.
 
 ## License
 
 This repository is released under the Apache-2.0 License. See
-[`LICENSE`][license].
-
-[calendly]: https://calendly.com/ghorbanzade/30min
-[license]: https://github.com/trytouca/touca-cpp/blob/main/LICENSE
-[cpp-examples]: https://github.com/trytouca/touca-cpp/tree/main/examples
-[docs-quickstart]: https://docs.touca.io/basics/quickstart
-[docs-cpp]: https://docs.touca.io/sdk/cpp
-[docs-cpp-api]: https://app.touca.io/docs/clients/cpp/api.html
-[docs-cpp-installing]: https://docs.touca.io/sdk/cpp/installing
+[`LICENSE`](https://github.com/trytouca/touca-cpp/blob/main/LICENSE).

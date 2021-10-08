@@ -2,6 +2,8 @@
 
 #include "utils/operations.hpp"
 
+#include <functional>
+
 #include "cxxopts.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/extra/version.hpp"

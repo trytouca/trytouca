@@ -8,6 +8,7 @@
 #include <unordered_map>
 
 #include "cxxopts.hpp"
+#include "fmt/ostream.h"
 #include "fmt/printf.h"
 #include "rapidjson/document.h"
 #include "touca/devkit/filesystem.hpp"
@@ -529,8 +530,8 @@ class Printer {
   template <typename... Args>
   void print(const std::string& fmtstr, Args&&... args) {
     const auto content = fmt::format(fmtstr, std::forward<Args>(args)...);
-    fmt::fprintf(_fout, content);
-    fmt::fprintf(std::cout, content);
+    fmt::print(_fout, content);
+    fmt::print(std::cout, content);
     _fout.flush();
     std::cout.flush();
   }
