@@ -82,92 +82,6 @@ namespace fbs {
         MAX = Array
     };
 
-    inline const Type (&EnumValuesType())[9]
-    {
-        static const Type values[] = {
-            Type::NONE,
-            Type::Bool,
-            Type::Int,
-            Type::UInt,
-            Type::Float,
-            Type::Double,
-            Type::String,
-            Type::Object,
-            Type::Array
-        };
-        return values;
-    }
-
-    inline const char* const* EnumNamesType()
-    {
-        static const char* const names[10] = {
-            "NONE",
-            "Bool",
-            "Int",
-            "UInt",
-            "Float",
-            "Double",
-            "String",
-            "Object",
-            "Array",
-            nullptr
-        };
-        return names;
-    }
-
-    inline const char* EnumNameType(Type e)
-    {
-        if (flatbuffers::IsOutRange(e, Type::NONE, Type::Array))
-            return "";
-        const size_t index = static_cast<size_t>(e);
-        return EnumNamesType()[index];
-    }
-
-    template <typename T>
-    struct TypeTraits {
-        static const Type enum_value = Type::NONE;
-    };
-
-    template <>
-    struct TypeTraits<touca::fbs::Bool> {
-        static const Type enum_value = Type::Bool;
-    };
-
-    template <>
-    struct TypeTraits<touca::fbs::Int> {
-        static const Type enum_value = Type::Int;
-    };
-
-    template <>
-    struct TypeTraits<touca::fbs::UInt> {
-        static const Type enum_value = Type::UInt;
-    };
-
-    template <>
-    struct TypeTraits<touca::fbs::Float> {
-        static const Type enum_value = Type::Float;
-    };
-
-    template <>
-    struct TypeTraits<touca::fbs::Double> {
-        static const Type enum_value = Type::Double;
-    };
-
-    template <>
-    struct TypeTraits<touca::fbs::String> {
-        static const Type enum_value = Type::String;
-    };
-
-    template <>
-    struct TypeTraits<touca::fbs::Object> {
-        static const Type enum_value = Type::Object;
-    };
-
-    template <>
-    struct TypeTraits<touca::fbs::Array> {
-        static const Type enum_value = Type::Array;
-    };
-
     bool VerifyType(flatbuffers::Verifier& verifier, const void* obj, Type type);
     bool VerifyTypeVector(flatbuffers::Verifier& verifier, const flatbuffers::Vector<flatbuffers::Offset<void>>* values, const flatbuffers::Vector<uint8_t>* types);
 
@@ -177,33 +91,6 @@ namespace fbs {
         MIN = Check,
         MAX = Assert
     };
-
-    inline const ResultType (&EnumValuesResultType())[2]
-    {
-        static const ResultType values[] = {
-            ResultType::Check,
-            ResultType::Assert
-        };
-        return values;
-    }
-
-    inline const char* const* EnumNamesResultType()
-    {
-        static const char* const names[3] = {
-            "Check",
-            "Assert",
-            nullptr
-        };
-        return names;
-    }
-
-    inline const char* EnumNameResultType(ResultType e)
-    {
-        if (flatbuffers::IsOutRange(e, ResultType::Check, ResultType::Assert))
-            return "";
-        const size_t index = static_cast<size_t>(e) - static_cast<size_t>(ResultType::Check);
-        return EnumNamesResultType()[index];
-    }
 
     struct TypeWrapper FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef TypeWrapperBuilder Builder;
@@ -219,93 +106,11 @@ namespace fbs {
         {
             return GetPointer<const void*>(VT_VALUE);
         }
-        template <typename T>
-        const T* value_as() const;
-        const touca::fbs::Bool* value_as_Bool() const
-        {
-            return value_type() == touca::fbs::Type::Bool ? static_cast<const touca::fbs::Bool*>(value()) : nullptr;
-        }
-        const touca::fbs::Int* value_as_Int() const
-        {
-            return value_type() == touca::fbs::Type::Int ? static_cast<const touca::fbs::Int*>(value()) : nullptr;
-        }
-        const touca::fbs::UInt* value_as_UInt() const
-        {
-            return value_type() == touca::fbs::Type::UInt ? static_cast<const touca::fbs::UInt*>(value()) : nullptr;
-        }
-        const touca::fbs::Float* value_as_Float() const
-        {
-            return value_type() == touca::fbs::Type::Float ? static_cast<const touca::fbs::Float*>(value()) : nullptr;
-        }
-        const touca::fbs::Double* value_as_Double() const
-        {
-            return value_type() == touca::fbs::Type::Double ? static_cast<const touca::fbs::Double*>(value()) : nullptr;
-        }
-        const touca::fbs::String* value_as_String() const
-        {
-            return value_type() == touca::fbs::Type::String ? static_cast<const touca::fbs::String*>(value()) : nullptr;
-        }
-        const touca::fbs::Object* value_as_Object() const
-        {
-            return value_type() == touca::fbs::Type::Object ? static_cast<const touca::fbs::Object*>(value()) : nullptr;
-        }
-        const touca::fbs::Array* value_as_Array() const
-        {
-            return value_type() == touca::fbs::Type::Array ? static_cast<const touca::fbs::Array*>(value()) : nullptr;
-        }
         bool Verify(flatbuffers::Verifier& verifier) const
         {
             return VerifyTableStart(verifier) && VerifyField<uint8_t>(verifier, VT_VALUE_TYPE) && VerifyOffset(verifier, VT_VALUE) && VerifyType(verifier, value(), value_type()) && verifier.EndTable();
         }
     };
-
-    template <>
-    inline const touca::fbs::Bool* TypeWrapper::value_as<touca::fbs::Bool>() const
-    {
-        return value_as_Bool();
-    }
-
-    template <>
-    inline const touca::fbs::Int* TypeWrapper::value_as<touca::fbs::Int>() const
-    {
-        return value_as_Int();
-    }
-
-    template <>
-    inline const touca::fbs::UInt* TypeWrapper::value_as<touca::fbs::UInt>() const
-    {
-        return value_as_UInt();
-    }
-
-    template <>
-    inline const touca::fbs::Float* TypeWrapper::value_as<touca::fbs::Float>() const
-    {
-        return value_as_Float();
-    }
-
-    template <>
-    inline const touca::fbs::Double* TypeWrapper::value_as<touca::fbs::Double>() const
-    {
-        return value_as_Double();
-    }
-
-    template <>
-    inline const touca::fbs::String* TypeWrapper::value_as<touca::fbs::String>() const
-    {
-        return value_as_String();
-    }
-
-    template <>
-    inline const touca::fbs::Object* TypeWrapper::value_as<touca::fbs::Object>() const
-    {
-        return value_as_Object();
-    }
-
-    template <>
-    inline const touca::fbs::Array* TypeWrapper::value_as<touca::fbs::Array>() const
-    {
-        return value_as_Array();
-    }
 
     struct TypeWrapperBuilder {
         typedef TypeWrapper Table;
@@ -331,17 +136,6 @@ namespace fbs {
             return o;
         }
     };
-
-    inline flatbuffers::Offset<TypeWrapper> CreateTypeWrapper(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        touca::fbs::Type value_type = touca::fbs::Type::NONE,
-        flatbuffers::Offset<void> value = 0)
-    {
-        TypeWrapperBuilder builder_(_fbb);
-        builder_.add_value(value);
-        builder_.add_value_type(value_type);
-        return builder_.Finish();
-    }
 
     struct Bool FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef BoolBuilder Builder;
@@ -613,16 +407,6 @@ namespace fbs {
         return builder_.Finish();
     }
 
-    inline flatbuffers::Offset<String> CreateStringDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const char* value = nullptr)
-    {
-        auto value__ = value ? _fbb.CreateString(value) : 0;
-        return touca::fbs::CreateString(
-            _fbb,
-            value__);
-    }
-
     struct ObjectMember FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef ObjectMemberBuilder Builder;
         enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -667,29 +451,6 @@ namespace fbs {
             return o;
         }
     };
-
-    inline flatbuffers::Offset<ObjectMember> CreateObjectMember(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        flatbuffers::Offset<flatbuffers::String> name = 0,
-        flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0)
-    {
-        ObjectMemberBuilder builder_(_fbb);
-        builder_.add_value(value);
-        builder_.add_name(name);
-        return builder_.Finish();
-    }
-
-    inline flatbuffers::Offset<ObjectMember> CreateObjectMemberDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const char* name = nullptr,
-        flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0)
-    {
-        auto name__ = name ? _fbb.CreateString(name) : 0;
-        return touca::fbs::CreateObjectMember(
-            _fbb,
-            name__,
-            value);
-    }
 
     struct Object FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef ObjectBuilder Builder;
@@ -736,30 +497,6 @@ namespace fbs {
         }
     };
 
-    inline flatbuffers::Offset<Object> CreateObject(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        flatbuffers::Offset<flatbuffers::String> key = 0,
-        flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<touca::fbs::ObjectMember>>> values = 0)
-    {
-        ObjectBuilder builder_(_fbb);
-        builder_.add_values(values);
-        builder_.add_key(key);
-        return builder_.Finish();
-    }
-
-    inline flatbuffers::Offset<Object> CreateObjectDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const char* key = nullptr,
-        const std::vector<flatbuffers::Offset<touca::fbs::ObjectMember>>* values = nullptr)
-    {
-        auto key__ = key ? _fbb.CreateString(key) : 0;
-        auto values__ = values ? _fbb.CreateVector<flatbuffers::Offset<touca::fbs::ObjectMember>>(*values) : 0;
-        return touca::fbs::CreateObject(
-            _fbb,
-            key__,
-            values__);
-    }
-
     struct Array FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef ArrayBuilder Builder;
         enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -795,25 +532,6 @@ namespace fbs {
             return o;
         }
     };
-
-    inline flatbuffers::Offset<Array> CreateArray(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<touca::fbs::TypeWrapper>>> values = 0)
-    {
-        ArrayBuilder builder_(_fbb);
-        builder_.add_values(values);
-        return builder_.Finish();
-    }
-
-    inline flatbuffers::Offset<Array> CreateArrayDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const std::vector<flatbuffers::Offset<touca::fbs::TypeWrapper>>* values = nullptr)
-    {
-        auto values__ = values ? _fbb.CreateVector<flatbuffers::Offset<touca::fbs::TypeWrapper>>(*values) : 0;
-        return touca::fbs::CreateArray(
-            _fbb,
-            values__);
-    }
 
     struct Result FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef ResultBuilder Builder;
@@ -869,33 +587,6 @@ namespace fbs {
         }
     };
 
-    inline flatbuffers::Offset<Result> CreateResult(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        flatbuffers::Offset<flatbuffers::String> key = 0,
-        flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0,
-        touca::fbs::ResultType typ = touca::fbs::ResultType::Check)
-    {
-        ResultBuilder builder_(_fbb);
-        builder_.add_value(value);
-        builder_.add_key(key);
-        builder_.add_typ(typ);
-        return builder_.Finish();
-    }
-
-    inline flatbuffers::Offset<Result> CreateResultDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const char* key = nullptr,
-        flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0,
-        touca::fbs::ResultType typ = touca::fbs::ResultType::Check)
-    {
-        auto key__ = key ? _fbb.CreateString(key) : 0;
-        return touca::fbs::CreateResult(
-            _fbb,
-            key__,
-            value,
-            typ);
-    }
-
     struct Assertion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef AssertionBuilder Builder;
         enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -906,30 +597,6 @@ namespace fbs {
             return VerifyTableStart(verifier) && verifier.EndTable();
         }
     };
-
-    struct AssertionBuilder {
-        typedef Assertion Table;
-        flatbuffers::FlatBufferBuilder& fbb_;
-        flatbuffers::uoffset_t start_;
-        explicit AssertionBuilder(flatbuffers::FlatBufferBuilder& _fbb)
-            : fbb_(_fbb)
-        {
-            start_ = fbb_.StartTable();
-        }
-        flatbuffers::Offset<Assertion> Finish()
-        {
-            const auto end = fbb_.EndTable(start_);
-            auto o = flatbuffers::Offset<Assertion>(end);
-            return o;
-        }
-    };
-
-    inline flatbuffers::Offset<Assertion> CreateAssertion(
-        flatbuffers::FlatBufferBuilder& _fbb)
-    {
-        AssertionBuilder builder_(_fbb);
-        return builder_.Finish();
-    }
 
     struct Metric FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef MetricBuilder Builder;
@@ -976,29 +643,6 @@ namespace fbs {
         }
     };
 
-    inline flatbuffers::Offset<Metric> CreateMetric(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        flatbuffers::Offset<flatbuffers::String> key = 0,
-        flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0)
-    {
-        MetricBuilder builder_(_fbb);
-        builder_.add_value(value);
-        builder_.add_key(key);
-        return builder_.Finish();
-    }
-
-    inline flatbuffers::Offset<Metric> CreateMetricDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const char* key = nullptr,
-        flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0)
-    {
-        auto key__ = key ? _fbb.CreateString(key) : 0;
-        return touca::fbs::CreateMetric(
-            _fbb,
-            key__,
-            value);
-    }
-
     struct Results FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef ResultsBuilder Builder;
         enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1035,25 +679,6 @@ namespace fbs {
         }
     };
 
-    inline flatbuffers::Offset<Results> CreateResults(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<touca::fbs::Result>>> entries = 0)
-    {
-        ResultsBuilder builder_(_fbb);
-        builder_.add_entries(entries);
-        return builder_.Finish();
-    }
-
-    inline flatbuffers::Offset<Results> CreateResultsDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const std::vector<flatbuffers::Offset<touca::fbs::Result>>* entries = nullptr)
-    {
-        auto entries__ = entries ? _fbb.CreateVector<flatbuffers::Offset<touca::fbs::Result>>(*entries) : 0;
-        return touca::fbs::CreateResults(
-            _fbb,
-            entries__);
-    }
-
     struct Assertions FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef AssertionsBuilder Builder;
         enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1064,30 +689,6 @@ namespace fbs {
             return VerifyTableStart(verifier) && verifier.EndTable();
         }
     };
-
-    struct AssertionsBuilder {
-        typedef Assertions Table;
-        flatbuffers::FlatBufferBuilder& fbb_;
-        flatbuffers::uoffset_t start_;
-        explicit AssertionsBuilder(flatbuffers::FlatBufferBuilder& _fbb)
-            : fbb_(_fbb)
-        {
-            start_ = fbb_.StartTable();
-        }
-        flatbuffers::Offset<Assertions> Finish()
-        {
-            const auto end = fbb_.EndTable(start_);
-            auto o = flatbuffers::Offset<Assertions>(end);
-            return o;
-        }
-    };
-
-    inline flatbuffers::Offset<Assertions> CreateAssertions(
-        flatbuffers::FlatBufferBuilder& _fbb)
-    {
-        AssertionsBuilder builder_(_fbb);
-        return builder_.Finish();
-    }
 
     struct Metrics FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef MetricsBuilder Builder;
@@ -1124,25 +725,6 @@ namespace fbs {
             return o;
         }
     };
-
-    inline flatbuffers::Offset<Metrics> CreateMetrics(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        flatbuffers::Offset<flatbuffers::Vector<flatbuffers::Offset<touca::fbs::Metric>>> entries = 0)
-    {
-        MetricsBuilder builder_(_fbb);
-        builder_.add_entries(entries);
-        return builder_.Finish();
-    }
-
-    inline flatbuffers::Offset<Metrics> CreateMetricsDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const std::vector<flatbuffers::Offset<touca::fbs::Metric>>* entries = nullptr)
-    {
-        auto entries__ = entries ? _fbb.CreateVector<flatbuffers::Offset<touca::fbs::Metric>>(*entries) : 0;
-        return touca::fbs::CreateMetrics(
-            _fbb,
-            entries__);
-    }
 
     struct Metadata FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef MetadataBuilder Builder;
@@ -1231,28 +813,6 @@ namespace fbs {
         builder_.add_version(version);
         builder_.add_testsuite(testsuite);
         return builder_.Finish();
-    }
-
-    inline flatbuffers::Offset<Metadata> CreateMetadataDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const char* testsuite = nullptr,
-        const char* version = nullptr,
-        const char* testcase = nullptr,
-        const char* builtAt = nullptr,
-        const char* teamslug = nullptr)
-    {
-        auto testsuite__ = testsuite ? _fbb.CreateString(testsuite) : 0;
-        auto version__ = version ? _fbb.CreateString(version) : 0;
-        auto testcase__ = testcase ? _fbb.CreateString(testcase) : 0;
-        auto builtAt__ = builtAt ? _fbb.CreateString(builtAt) : 0;
-        auto teamslug__ = teamslug ? _fbb.CreateString(teamslug) : 0;
-        return touca::fbs::CreateMetadata(
-            _fbb,
-            testsuite__,
-            version__,
-            testcase__,
-            builtAt__,
-            teamslug__);
     }
 
     struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -1371,16 +931,6 @@ namespace fbs {
         return builder_.Finish();
     }
 
-    inline flatbuffers::Offset<MessageBuffer> CreateMessageBufferDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const std::vector<uint8_t>* buf = nullptr)
-    {
-        auto buf__ = buf ? _fbb.CreateVector<uint8_t>(*buf) : 0;
-        return touca::fbs::CreateMessageBuffer(
-            _fbb,
-            buf__);
-    }
-
     struct Messages FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
         typedef MessagesBuilder Builder;
         enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1424,16 +974,6 @@ namespace fbs {
         MessagesBuilder builder_(_fbb);
         builder_.add_messages(messages);
         return builder_.Finish();
-    }
-
-    inline flatbuffers::Offset<Messages> CreateMessagesDirect(
-        flatbuffers::FlatBufferBuilder& _fbb,
-        const std::vector<flatbuffers::Offset<touca::fbs::MessageBuffer>>* messages = nullptr)
-    {
-        auto messages__ = messages ? _fbb.CreateVector<flatbuffers::Offset<touca::fbs::MessageBuffer>>(*messages) : 0;
-        return touca::fbs::CreateMessages(
-            _fbb,
-            messages__);
     }
 
     inline bool VerifyType(flatbuffers::Verifier& verifier, const void* obj, Type type)

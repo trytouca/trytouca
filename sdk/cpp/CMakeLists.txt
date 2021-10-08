@@ -20,6 +20,9 @@ option(TOUCA_ENABLE_COVERAGE "enable code coverage generation" OFF)
 option(TOUCA_INSTALL "Generate the install target" ${TOUCA_MAIN_PROJECT})
 
 set(TOUCA_CLIENT_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(TOUCA_TARGET_MAIN touca)
+set(TOUCA_TARGET_TEST touca_tests)
+
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -117,7 +120,7 @@ endif()
 
 if (TOUCA_INSTALL)
     install(
-        TARGETS touca_client
+        TARGETS ${TOUCA_TARGET_MAIN}
         EXPORT touca
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
                 COMPONENT Touca_Runtime

@@ -102,5 +102,5 @@ class ToucaConan(ConanFile):
             client_requirements.append("cxxopts::cxxopts")
         self.cpp_info.name = "touca"
         self.cpp_info.components["client"].names["cmake_find_package"] = "client"
-        self.cpp_info.components["client"].libs = ["touca_client"]
+        self.cpp_info.components["client"].libs = ["touca"]
         self.cpp_info.components["client"].requires = client_requirements

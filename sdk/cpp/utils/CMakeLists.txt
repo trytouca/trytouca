@@ -30,7 +30,7 @@ set_target_properties(
 target_link_libraries(
         touca_cli
     PRIVATE
-        touca_client
+        ${TOUCA_TARGET_MAIN}
         cxxopts::cxxopts
 )
 

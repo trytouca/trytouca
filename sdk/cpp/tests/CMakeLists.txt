@@ -2,10 +2,10 @@
 
 touca_find_package("Catch2")
 
-add_executable(touca_client_tests "")
+add_executable(${TOUCA_TARGET_TEST} "")
 
 target_sources(
-        touca_client_tests
+        ${TOUCA_TARGET_TEST}
     PRIVATE
         client.cpp
         main.cpp
@@ -20,7 +20,7 @@ target_sources(
 
 if (TOUCA_BUILD_FRAMEWORK)
     target_sources(
-            touca_client_tests
+            ${TOUCA_TARGET_TEST}
         PRIVATE
             framework/framework.cpp
             framework/utils.hpp
@@ -28,26 +28,26 @@ if (TOUCA_BUILD_FRAMEWORK)
 endif()
 
 target_include_directories(
-        touca_client_tests
+        ${TOUCA_TARGET_TEST}
     PRIVATE
         ${TOUCA_CLIENT_ROOT_DIR}
 )
 
 target_link_libraries(
-        touca_client_tests
+        ${TOUCA_TARGET_TEST}
     PRIVATE
-        touca_client
+        ${TOUCA_TARGET_MAIN}
         Catch2::Catch2
 )
 
 target_compile_definitions(
-        touca_client_tests
+        ${TOUCA_TARGET_TEST}
     PRIVATE
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
 )
 
 set_target_properties(
-        touca_client_tests
+        ${TOUCA_TARGET_TEST}
     PROPERTIES
         DEBUG_POSTFIX "${CMAKE_DEBUG_POSTFIX}"
         RELEASE_POSTFIX "${CMAKE_RELEASE_POSTFIX}"
@@ -57,12 +57,12 @@ source_group(
     TREE
         ${CMAKE_CURRENT_LIST_DIR}
     FILES
-        $<TARGET_PROPERTY:touca_client_tests,SOURCES>
+        $<TARGET_PROPERTY:${TOUCA_TARGET_TEST},SOURCES>
 )
 
 enable_testing()
 
 add_test(
-    NAME touca_client_tests
-    COMMAND $<TARGET_FILE:touca_client_tests>
+    NAME ${TOUCA_TARGET_TEST}
+    COMMAND $<TARGET_FILE:${TOUCA_TARGET_TEST}>
 )

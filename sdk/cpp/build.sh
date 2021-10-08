@@ -242,7 +242,7 @@ build_coverage () {
     declare -a keys=("client")
     for key in "${keys[@]}"; do
       local dir_key="${dir_test}/${key,,}"
-      local file_bin="${dir_bin}/touca_${key}_tests_debug"
+      local file_bin="${dir_bin}/touca_tests_debug"
       if [[ "$OSTYPE" == "darwin"* ]]; then
         local path_llvm_raw="${dir_key}/touca-${key,,}.profraw"
         local path_llvm_data="${dir_key}/touca-${key,,}.profdata"

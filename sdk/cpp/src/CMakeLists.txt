@@ -13,10 +13,10 @@ if (TOUCA_BUILD_FRAMEWORK)
     touca_find_package("cxxopts")
 endif()
 
-add_library(touca_client "")
+add_library(${TOUCA_TARGET_MAIN} "")
 
 target_sources(
-        touca_client
+        ${TOUCA_TARGET_MAIN}
     PRIVATE
         client.cpp
         touca.cpp
@@ -33,7 +33,7 @@ target_sources(
 
 if (TOUCA_BUILD_FRAMEWORK)
     target_sources(
-        touca_client
+        ${TOUCA_TARGET_MAIN}
     PRIVATE
         framework/framework.cpp
         framework/suites.cpp
@@ -42,7 +42,7 @@ if (TOUCA_BUILD_FRAMEWORK)
 endif()
 
 target_link_libraries(
-        touca_client
+        ${TOUCA_TARGET_MAIN}
     PRIVATE
         httplib::httplib
         spdlog::spdlog
@@ -56,11 +56,11 @@ target_link_libraries(
 )
 
 if (TOUCA_BUILD_FRAMEWORK)
-    target_link_libraries(touca_client PRIVATE cxxopts::cxxopts)
+    target_link_libraries(${TOUCA_TARGET_MAIN} PRIVATE cxxopts::cxxopts)
 endif()
 
 target_include_directories(
-        touca_client
+        ${TOUCA_TARGET_MAIN}
     PUBLIC
         $<BUILD_INTERFACE:${TOUCA_CLIENT_ROOT_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_BINARY_DIR}/generated>
@@ -68,7 +68,7 @@ target_include_directories(
 )
 
 target_compile_definitions(
-        touca_client
+        ${TOUCA_TARGET_MAIN}
     PRIVATE
         RAPIDJSON_HAS_STDSTRING
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
@@ -76,13 +76,13 @@ target_compile_definitions(
 )
 
 target_compile_options(
-        touca_client
+        ${TOUCA_TARGET_MAIN}
     PRIVATE
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wno-unused-parameter>
 )
 
 target_compile_features(
-        touca_client
+        ${TOUCA_TARGET_MAIN}
     PRIVATE
         cxx_variadic_templates
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:cxx_aggregate_default_initializers>
@@ -98,7 +98,7 @@ target_compile_features(
 )
 
 set_target_properties(
-        touca_client
+        ${TOUCA_TARGET_MAIN}
     PROPERTIES
         SOVERSION ${CPACK_PACKAGE_VERSION_MAJOR}
         VERSION ${TOUCA_VERSION}
@@ -108,8 +108,8 @@ set_target_properties(
 
 find_package(OpenSSL QUIET)
 if (OpenSSL_FOUND)
-    target_link_libraries(touca_client PRIVATE OpenSSL::SSL OpenSSL::Crypto)
-    target_compile_definitions(touca_client PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT)
+    target_link_libraries(${TOUCA_TARGET_MAIN} PRIVATE OpenSSL::SSL OpenSSL::Crypto)
+    target_compile_definitions(${TOUCA_TARGET_MAIN} PRIVATE CPPHTTPLIB_OPENSSL_SUPPORT)
 else()
     message(WARNING
         " Failed to find OpenSSL."
@@ -118,7 +118,7 @@ else()
 endif()
 
 generate_export_header(
-    touca_client
+    ${TOUCA_TARGET_MAIN}
     EXPORT_MACRO_NAME "TOUCA_CLIENT_API"
     EXPORT_FILE_NAME "${CMAKE_BINARY_DIR}/generated/touca/lib_api.hpp"
 )
@@ -127,5 +127,5 @@ source_group(
     TREE
         ${CMAKE_CURRENT_LIST_DIR}
     FILES
-        $<TARGET_PROPERTY:touca_client,SOURCES>
+        $<TARGET_PROPERTY:${TOUCA_TARGET_MAIN},SOURCES>
 )
