@@ -4,6 +4,7 @@
 
 Improvements:
 
+- Upgrade library dependencies (#71)
 - Rename main library from `touca_client` to `touca` (#69)
 - Merge test framework into core library (#64)
 - Improve formatting of the test framework summary report (#62)

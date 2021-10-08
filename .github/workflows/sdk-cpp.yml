@@ -6,12 +6,11 @@ on:
   push:
     branches:
       - main
-      - 'feature/**'
+      - "feature/**"
     paths-ignore:
-      - 'appveyor.yml'
+      - "appveyor.yml"
 
 jobs:
-
   test-native:
     name: unittest-native
     runs-on: ubuntu-20.04

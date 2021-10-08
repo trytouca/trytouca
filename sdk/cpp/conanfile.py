@@ -33,6 +33,8 @@ class ToucaConan(ConanFile):
     generators = "cmake_find_package"
     exports_sources = [
         "CMakeLists.txt",
+        "LICENSE",
+        "README.md",
         "cmake/**",
         "include/**",
         "src/**",

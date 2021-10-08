@@ -24,7 +24,7 @@ subprocess.call("cd ../..; doxygen docs/doxygen/Doxyfile", shell=True)
 # -- Project information -----------------------------------------------------
 
 project = "Touca SDK for C++"
-copyright = "2021, Touca, Inc"
+copyright = "2021, Touca, Inc."
 author = "Touca, Inc."
 
 # The full version, including alpha/beta/rc tags
