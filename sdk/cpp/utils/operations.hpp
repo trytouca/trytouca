@@ -10,173 +10,166 @@
  *
  */
 struct Operation {
-    /**
-     *
-     */
-    enum class Command {
-        compare,
-        merge,
-        post,
-        unknown,
-        update,
-        view
-    };
+  /**
+   *
+   */
+  enum class Command { compare, merge, post, unknown, update, view };
 
-    /**
-     *
-     */
-    static Command find_mode(const std::string& name);
+  /**
+   *
+   */
+  static Command find_mode(const std::string& name);
 
-    /**
-     *
-     */
-    static std::shared_ptr<Operation> make(const Command& mode);
+  /**
+   *
+   */
+  static std::shared_ptr<Operation> make(const Command& mode);
 
-    /**
-     *
-     */
-    virtual bool parse(int argc, char* argv[]) final;
+  /**
+   *
+   */
+  virtual bool parse(int argc, char* argv[]) final;
 
-    /**
-     *
-     */
-    virtual bool run() const final;
+  /**
+   *
+   */
+  virtual bool run() const final;
 
-protected:
-    virtual ~Operation() = default;
+ protected:
+  virtual ~Operation() = default;
 
-private:
-    /**
-     *
-     */
-    virtual bool parse_impl(int argc, char* argv[]) = 0;
+ private:
+  /**
+   *
+   */
+  virtual bool parse_impl(int argc, char* argv[]) = 0;
 
-    /**
-     *
-     */
-    virtual bool run_impl() const = 0;
+  /**
+   *
+   */
+  virtual bool run_impl() const = 0;
 };
 
 /**
  *
  */
 struct CliOptions {
-    bool show_help = false;
-    bool show_version = false;
-    std::string log_dir;
-    std::string log_level = "warning";
-    Operation::Command mode = Operation::Command::unknown;
+  bool show_help = false;
+  bool show_version = false;
+  std::string log_dir;
+  std::string log_level = "warning";
+  Operation::Command mode = Operation::Command::unknown;
 
-    /**
-     *
-     */
-    bool parse(int argc, char* argv[]);
+  /**
+   *
+   */
+  bool parse(int argc, char* argv[]);
 
-private:
-    /**
-     *
-     */
-    bool parse_impl(int argc, char* argv[]);
+ private:
+  /**
+   *
+   */
+  bool parse_impl(int argc, char* argv[]);
 };
 
 /**
  *
  */
 struct ViewOperation : public Operation {
-protected:
-    /**
-     *
-     */
-    bool parse_impl(int argc, char* argv[]) override;
+ protected:
+  /**
+   *
+   */
+  bool parse_impl(int argc, char* argv[]) override;
 
-    /**
-     *
-     */
-    bool run_impl() const override;
+  /**
+   *
+   */
+  bool run_impl() const override;
 
-private:
-    std::string _src;
+ private:
+  std::string _src;
 };
 
 /**
  *
  */
 struct CompareOperation : public Operation {
-protected:
-    /**
-     *
-     */
-    bool parse_impl(int argc, char* argv[]) override;
+ protected:
+  /**
+   *
+   */
+  bool parse_impl(int argc, char* argv[]) override;
 
-    /**
-     *
-     */
-    bool run_impl() const override;
+  /**
+   *
+   */
+  bool run_impl() const override;
 
-private:
-    std::string _src;
-    std::string _dst;
+ private:
+  std::string _src;
+  std::string _dst;
 };
 
 /**
  *
  */
 struct MergeOperation : public Operation {
-protected:
-    /**
-     *
-     */
-    bool parse_impl(int argc, char* argv[]) override;
+ protected:
+  /**
+   *
+   */
+  bool parse_impl(int argc, char* argv[]) override;
 
-    /**
-     *
-     */
-    bool run_impl() const override;
+  /**
+   *
+   */
+  bool run_impl() const override;
 
-private:
-    std::string _src;
-    std::string _out;
+ private:
+  std::string _src;
+  std::string _out;
 };
 
 /**
  *
  */
 struct PostOperation : public Operation {
-protected:
-    /**
-     *
-     */
-    bool parse_impl(int argc, char* argv[]) override;
+ protected:
+  /**
+   *
+   */
+  bool parse_impl(int argc, char* argv[]) override;
 
-    /**
-     *
-     */
-    bool run_impl() const override;
+  /**
+   *
+   */
+  bool run_impl() const override;
 
-private:
-    bool _fail_fast;
-    std::string _src;
-    std::string _api_key;
-    std::string _api_url;
+ private:
+  bool _fail_fast;
+  std::string _src;
+  std::string _api_key;
+  std::string _api_url;
 };
 
 /**
  *
  */
 struct UpdateOperation : public Operation {
-protected:
-    /**
-     *
-     */
-    bool parse_impl(int argc, char* argv[]) override;
+ protected:
+  /**
+   *
+   */
+  bool parse_impl(int argc, char* argv[]) override;
 
-    /**
-     *
-     */
-    bool run_impl() const override;
+  /**
+   *
+   */
+  bool run_impl() const override;
 
-private:
-    std::string _src;
-    std::string _out;
-    std::unordered_map<std::string, std::string> _fields;
+ private:
+  std::string _src;
+  std::string _out;
+  std::unordered_map<std::string, std::string> _fields;
 };

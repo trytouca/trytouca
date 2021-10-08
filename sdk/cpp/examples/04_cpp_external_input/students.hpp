@@ -6,21 +6,21 @@
 #include <vector>
 
 struct Date {
-    unsigned short _year;
-    unsigned short _month;
-    unsigned short _day;
+  unsigned short _year;
+  unsigned short _month;
+  unsigned short _day;
 };
 
 struct Course {
-    std::string name;
-    float grade;
+  std::string name;
+  float grade;
 };
 
 struct Student {
-    std::string username;
-    std::string fullname;
-    Date dob;
-    std::vector<Course> courses;
+  std::string username;
+  std::string fullname;
+  Date dob;
+  std::vector<Course> courses;
 };
 
 Student parse_profile(const std::string& username);

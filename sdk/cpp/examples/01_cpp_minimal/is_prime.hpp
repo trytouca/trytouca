@@ -2,12 +2,11 @@
 
 #include <cmath>
 
-bool is_prime(const unsigned long number)
-{
-    for (auto i = 2u; i < number; i++) {
-        if (number % i == 0) {
-            return false;
-        }
+bool is_prime(const unsigned long number) {
+  for (auto i = 2u; i < number; i++) {
+    if (number % i == 0) {
+      return false;
     }
-    return 1 < number;
+  }
+  return 1 < number;
 }

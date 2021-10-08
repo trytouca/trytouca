@@ -278,7 +278,7 @@ build_lint () {
     if [ $# -ne 1 ]; then return 1; fi
     check_prerequisite_commands "clang-format"
     local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
-    for dir in "utils" "src" "include" "tests" "example"; do
+    for dir in "examples" "include" "src"  "tests" "utils"; do
         find "${dir_source}/${dir}" \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
             -exec clang-format -i {} +
     done

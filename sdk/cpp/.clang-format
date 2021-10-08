@@ -1,6 +1,4 @@
 ---
 Language: Cpp
-BasedOnStyle: WebKit
-NamespaceIndentation: All
-CompactNamespaces: true
+BasedOnStyle: Google
 ...
