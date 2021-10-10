@@ -6,6 +6,7 @@ on:
   push:
     branches:
       - main
+      - next
       - "feature/**"
     paths-ignore:
       - "appveyor.yml"

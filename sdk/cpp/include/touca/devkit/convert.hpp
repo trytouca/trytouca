@@ -29,8 +29,8 @@
  * @code
  *      struct some_type
  *      {
- *          int number;
  *          std::string message;
+ *          int number;
  *      };
  *
  *      TOUCA_CONVERSION_LOGIC(some_type)
@@ -38,8 +38,8 @@
  *          TOUCA_CONVERSION_FUNCTION(some_type, value)
  *          {
  *              auto out = TOUCA_CUSTOM_TYPE("some_type");
- *              out->add("number", value.number);
  *              out->add("message", value.message);
+ *              out->add("number", value.number);
  *              return out;
  *          }
  *      }
