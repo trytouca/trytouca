@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "utils/misc/file.hpp"
+#include "touca/cli/filesystem.hpp"
 
 #include "touca/devkit/logger.hpp"
 #include "touca/devkit/resultfile.hpp"

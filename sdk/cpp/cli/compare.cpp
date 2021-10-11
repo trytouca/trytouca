@@ -3,10 +3,10 @@
 #include <unordered_map>
 
 #include "cxxopts.hpp"
+#include "touca/cli/operations.hpp"
 #include "touca/devkit/filesystem.hpp"
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
-#include "utils/operations.hpp"
 
 /**
  *

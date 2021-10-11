@@ -20,7 +20,7 @@ jobs:
         cxx: [g++-9, clang++-9]
     steps:
       - uses: actions/checkout@v2
-      - run: ./build.sh --with-tests --with-utils --with-examples
+      - run: ./build.sh --with-tests --with-cli --with-examples
       - run: ./build.sh --test
 
   test-conan:
@@ -50,7 +50,7 @@ jobs:
           conan profile new default --detect --force
           conan profile update settings.compiler.libcxx=libstdc++11 default
 
-      - run: ./build.sh --with-tests --with-utils --with-examples
+      - run: ./build.sh --with-tests --with-cli --with-examples
       - run: ./build.sh --test
       - run: ./build.sh --package
 

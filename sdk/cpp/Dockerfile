@@ -22,7 +22,7 @@ WORKDIR /opt
 
 USER touca
 
-RUN ./build.sh --with-tests --with-utils --with-examples
+RUN ./build.sh --with-tests --with-cli --with-examples
 
 # ---- client-cpp documentation ----
 

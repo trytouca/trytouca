@@ -8,7 +8,7 @@ usage: $(basename "$0") [ -h | --long-options]
   --debug                   enable debug logs
 
   --with-tests              include client library unittests in build
-  --with-utils              include client-side utility application in build
+  --with-cli                include client-side utility application in build
   --with-examples           include sample regression test tool in build
   --without-framework       exclude regression test framework
   --all                     include all components
@@ -203,7 +203,7 @@ build_build () {
 
     local cmake_config_touca_args=(
         -DTOUCA_BUILD_TESTS="$(cmake_option "with-tests")"
-        -DTOUCA_BUILD_UTILS="$(cmake_option "with-utils")"
+        -DTOUCA_BUILD_CLI="$(cmake_option "with-cli")"
         -DTOUCA_BUILD_EXAMPLES="$(cmake_option "with-examples")"
         -DTOUCA_BUILD_FRAMEWORK="$(cmake_option "with-framework")"
         -DTOUCA_ENABLE_COVERAGE="$(cmake_option "with-coverage")"
@@ -278,7 +278,7 @@ build_lint () {
     if [ $# -ne 1 ]; then return 1; fi
     check_prerequisite_commands "clang-format"
     local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
-    for dir in "examples" "include" "src"  "tests" "utils"; do
+    for dir in "examples" "include" "src"  "tests" "cli"; do
         find "${dir_source}/${dir}" \( -name "*.cpp" -o -name "*.hpp" -o -name "*.h" \) \
             -exec clang-format -i {} +
     done
@@ -346,7 +346,7 @@ declare -A BUILD_MODES=(
 )
 declare -A BUILD_OPTIONS=(
     ["with-tests"]=0
-    ["with-utils"]=0
+    ["with-cli"]=0
     ["with-examples"]=0
     ["with-framework"]=1
     ["with-coverage"]=0
@@ -394,7 +394,7 @@ for arg in "$@"; do
             ;;
 
         "-a" | "--all")
-            BUILD_OPTIONS["with-utils"]=1
+            BUILD_OPTIONS["with-cli"]=1
             BUILD_OPTIONS["with-framework"]=1
             BUILD_OPTIONS["with-examples"]=1
             BUILD_OPTIONS["with-tests"]=1
@@ -402,8 +402,8 @@ for arg in "$@"; do
         "--with-tests")
             BUILD_OPTIONS["with-tests"]=1
             ;;
-        "--with-utils")
-            BUILD_OPTIONS["with-utils"]=1
+        "--with-cli")
+            BUILD_OPTIONS["with-cli"]=1
             ;;
         "--with-examples")
             BUILD_OPTIONS["with-examples"]=1

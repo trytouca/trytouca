@@ -1,12 +1,12 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "cxxopts.hpp"
+#include "touca/cli/filesystem.hpp"
+#include "touca/cli/operations.hpp"
 #include "touca/devkit/filesystem.hpp"
 #include "touca/devkit/logger.hpp"
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
-#include "utils/misc/file.hpp"
-#include "utils/operations.hpp"
 
 /**
  *

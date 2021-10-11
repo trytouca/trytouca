@@ -1,12 +1,12 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "cxxopts.hpp"
+#include "touca/cli/filesystem.hpp"
+#include "touca/cli/operations.hpp"
 #include "touca/devkit/filesystem.hpp"
 #include "touca/devkit/logger.hpp"
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
-#include "utils/misc/file.hpp"
-#include "utils/operations.hpp"
 
 static const unsigned MAX_FILE_SIZE = 10u * 1024 * 1024;  // 10 megabytes
 

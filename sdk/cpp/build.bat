@@ -21,7 +21,7 @@ FOR %%D IN (%dir_bin%, %dir_build%, %dir_dist%, %dir_script%\%dir_export%) DO (
 WHERE /q conan && (
     conan install -o shared=True ^
         -o with_tests=True ^
-        -o with_utils=True ^
+        -o with_cli=True ^
         -o with_examples=True ^
         -o with_framework=True ^
         --install-folder "%dir_build%" ^
@@ -33,7 +33,7 @@ cmake -B".\local\build" -H"." -G"Visual Studio 16 2019" -A"x64" ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DBUILD_SHARED_LIBS=ON ^
     -DTOUCA_BUILD_TESTS=ON ^
-    -DTOUCA_BUILD_UTILS=ON ^
+    -DTOUCA_BUILD_CLI=ON ^
     -DTOUCA_BUILD_EXAMPLES=ON ^
     -DTOUCA_BUILD_FRAMEWORK=ON ^
     || (echo "failed to configure cmake" && exit /b !ERRORLEVEL!)

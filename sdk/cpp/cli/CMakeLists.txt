@@ -10,15 +10,13 @@ target_sources(
         touca_cli
     PRIVATE
         main.cpp
-        misc/file.cpp
-        misc/file.hpp
+        filesystem.cpp
         operations.cpp
-        operations.hpp
-        ops/compare.cpp
-        ops/merge.cpp
-        ops/post.cpp
-        ops/update.cpp
-        ops/view.cpp
+        compare.cpp
+        merge.cpp
+        post.cpp
+        update.cpp
+        view.cpp
 )
 
 set_target_properties(
@@ -32,12 +30,6 @@ target_link_libraries(
     PRIVATE
         ${TOUCA_TARGET_MAIN}
         cxxopts::cxxopts
-)
-
-target_include_directories(
-        touca_cli
-    PRIVATE
-        ${TOUCA_CLIENT_ROOT_DIR}
 )
 
 target_compile_definitions(

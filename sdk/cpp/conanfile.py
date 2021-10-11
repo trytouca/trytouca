@@ -17,7 +17,7 @@ class ToucaConan(ConanFile):
     options = {
         "shared": [True, False],
         "with_tests": [True, False],
-        "with_utils": [True, False],
+        "with_cli": [True, False],
         "with_examples": [True, False],
         "with_framework": [True, False],
         "with_openssl": [True, False],
@@ -25,7 +25,7 @@ class ToucaConan(ConanFile):
     default_options = {
         "shared": False,
         "with_tests": False,
-        "with_utils": False,
+        "with_cli": False,
         "with_examples": False,
         "with_framework": True,
         "with_openssl": True,
@@ -39,7 +39,7 @@ class ToucaConan(ConanFile):
         "include/**",
         "src/**",
         "tests/**",
-        "utils/**",
+        "cli/**",
     ]
 
     def requirements(self):
@@ -52,7 +52,7 @@ class ToucaConan(ConanFile):
         if (
             self.options.with_examples
             or self.options.with_framework
-            or self.options.with_utils
+            or self.options.with_cli
         ):
             self.requires("cxxopts/2.2.1")
 
@@ -69,7 +69,7 @@ class ToucaConan(ConanFile):
     def _configure_cmake(self):
         cmake = CMake(self)
         cmake.definitions["TOUCA_BUILD_TESTS"] = self.options.with_tests
-        cmake.definitions["TOUCA_BUILD_UTILS"] = self.options.with_utils
+        cmake.definitions["TOUCA_BUILD_CLI"] = self.options.with_cli
         cmake.definitions["TOUCA_BUILD_EXAMPLES"] = self.options.with_examples
         cmake.definitions["TOUCA_BUILD_FRAMEWORK"] = self.options.with_framework
         cmake.configure()
@@ -99,7 +99,7 @@ class ToucaConan(ConanFile):
         if (
             self.options.with_examples
             or self.options.with_framework
-            or self.options.with_utils
+            or self.options.with_cli
         ):
             client_requirements.append("cxxopts::cxxopts")
         self.cpp_info.name = "touca"
