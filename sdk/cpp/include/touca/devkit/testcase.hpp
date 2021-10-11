@@ -5,7 +5,7 @@
 #include <chrono>
 
 #include "rapidjson/fwd.h"
-#include "touca/devkit/convert.hpp"
+#include "touca/client/convert.hpp"
 
 namespace touca {
 class ClientImpl;

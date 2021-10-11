@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "touca/framework.hpp"
-#include "touca/framework/detail/utils.hpp"
+#include "touca/framework/detail/ostream.hpp"
 #include "touca/touca.hpp"
 
 struct DummySuite final : public touca::framework::Suite {};

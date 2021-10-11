@@ -23,7 +23,7 @@ if (TOUCA_BUILD_FRAMEWORK)
             ${TOUCA_TARGET_TEST}
         PRIVATE
             framework/framework.cpp
-            framework/utils.hpp
+            framework/ostream.hpp
     )
 endif()
 

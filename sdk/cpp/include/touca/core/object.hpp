@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "touca/devkit/convert.hpp"
-#include "touca/devkit/types.hpp"
+#include "touca/client/convert.hpp"
+#include "touca/core/types.hpp"
 
 namespace touca {
 namespace compare {

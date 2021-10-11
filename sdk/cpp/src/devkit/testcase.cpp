@@ -4,10 +4,10 @@
 
 #include "flatbuffers/flatbuffers.h"
 #include "rapidjson/document.h"
+#include "touca/core/types.hpp"
 #include "touca/devkit/comparison.hpp"
-#include "touca/devkit/types.hpp"
 #include "touca/devkit/utils.hpp"
-#include "touca/impl/touca_generated.h"
+#include "touca/impl/schema.hpp"
 
 namespace touca {
 

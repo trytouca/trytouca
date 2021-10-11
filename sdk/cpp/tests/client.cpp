@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/detail/client.hpp"
+#include "touca/client/detail/client.hpp"
 
 #include "catch2/catch.hpp"
 #include "devkit/tmpfile.hpp"

@@ -1,11 +1,11 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/devkit/object.hpp"
+#include "touca/core/object.hpp"
 
 #include "rapidjson/document.h"
 #include "rapidjson/rapidjson.h"
 #include "touca/devkit/comparison.hpp"
-#include "touca/impl/touca_generated.h"
+#include "touca/impl/schema.hpp"
 
 namespace touca {
 namespace types {

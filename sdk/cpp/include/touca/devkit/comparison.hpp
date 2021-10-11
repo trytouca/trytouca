@@ -5,8 +5,8 @@
 #include <numeric>
 #include <unordered_map>
 
+#include "touca/core/types.hpp"
 #include "touca/devkit/testcase.hpp"
-#include "touca/devkit/types.hpp"
 
 namespace touca {
 namespace compare {

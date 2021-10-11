@@ -18,16 +18,16 @@ add_library(${TOUCA_TARGET_MAIN} "")
 target_sources(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
-        client.cpp
-        touca.cpp
+        client/client.cpp
+        client/touca.cpp
+        core/filesystem.cpp
+        core/object.cpp
+        core/types.cpp
         devkit/comparison.cpp
-        devkit/filesystem.cpp
         devkit/logger.cpp
-        devkit/object.cpp
         devkit/platform.cpp
         devkit/resultfile.cpp
         devkit/testcase.cpp
-        devkit/types.cpp
         devkit/utils.cpp
 )
 
@@ -36,8 +36,9 @@ if (TOUCA_BUILD_FRAMEWORK)
         ${TOUCA_TARGET_MAIN}
     PRIVATE
         framework/framework.cpp
+        framework/ostream.cpp
+        framework/runner.cpp
         framework/suites.cpp
-        framework/utils.cpp
     )
 endif()
 
@@ -74,6 +75,14 @@ target_compile_definitions(
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )
+
+if (TOUCA_BUILD_FRAMEWORK)
+target_compile_definitions(
+        ${TOUCA_TARGET_MAIN}
+    INTERFACE
+        TOUCA_INCLUDE_FRAMEWORK
+)
+endif()
 
 target_compile_options(
         ${TOUCA_TARGET_MAIN}

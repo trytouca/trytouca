@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/detail/client.hpp"
+#include "touca/client/detail/client.hpp"
 
 #include <fstream>
 #include <sstream>
@@ -12,7 +12,7 @@
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
-#include "touca/impl/touca_generated.h"
+#include "touca/impl/schema.hpp"
 
 namespace touca {
 

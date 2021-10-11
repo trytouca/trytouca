@@ -7,13 +7,15 @@ test framework:
 ```cpp
 #include "students.hpp"
 #include "students_types.hpp"
-#include "touca/touca_main.hpp"
+#include "touca/touca.hpp"
 
-void touca::main(const std::string& username)
-{
+int main(int argc, char* argv[]) {
+  touca::workflow("parse_profile", [](const std::string& username) {
     const auto& student = parse_profile(username);
     // insert code here to describe the behavior
     // and performance of the workflow under test
+  });
+  touca::run(argc, argv);
 }
 ```
 

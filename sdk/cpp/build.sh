@@ -254,7 +254,6 @@ build_coverage () {
         xcrun llvm-cov show "${file_bin}" \
             -instr-profile="${path_llvm_data}" \
             -format=html -o "${dir_key}" \
-            --ignore-filename-regex=".+_generated.h" \
             --ignore-filename-regex="tests\/.+"
         xcrun llvm-cov report "${file_bin}" \
             -instr-profile="${path_llvm_data}" >| "${path_report_stdout}"

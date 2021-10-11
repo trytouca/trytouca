@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/devkit/types.hpp"
+#include "touca/core/types.hpp"
 
 #include <cmath>
 
@@ -9,10 +9,10 @@
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
+#include "touca/client/convert.hpp"
+#include "touca/core/object.hpp"
 #include "touca/devkit/comparison.hpp"
-#include "touca/devkit/convert.hpp"
-#include "touca/devkit/object.hpp"
-#include "touca/impl/touca_generated.h"
+#include "touca/impl/schema.hpp"
 
 namespace {
 namespace filescope {

@@ -4,10 +4,10 @@
 
 #include "catch2/catch.hpp"
 #include "tests/devkit/tmpfile.hpp"
-#include "tests/framework/utils.hpp"
+#include "tests/framework/ostream.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/extra/version.hpp"
-#include "touca/framework/detail/utils.hpp"
+#include "touca/framework/detail/ostream.hpp"
 
 TEST_CASE("suite") {
   SECTION("dummy suite") {

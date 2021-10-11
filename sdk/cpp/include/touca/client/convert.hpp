@@ -11,7 +11,7 @@
 #include <unordered_map>
 #include <utility>
 
-#include "touca/devkit/types.hpp"
+#include "touca/core/types.hpp"
 
 /**
  * @def TOUCA_CONVERSION_LOGIC

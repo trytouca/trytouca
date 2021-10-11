@@ -15,7 +15,7 @@
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/extra/version.hpp"
-#include "touca/framework/detail/utils.hpp"
+#include "touca/framework/detail/ostream.hpp"
 #include "touca/framework/suites.hpp"
 #include "touca/touca.hpp"
 

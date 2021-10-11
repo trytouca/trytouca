@@ -15,15 +15,19 @@
 
 #include <unordered_map>
 
-#include "touca/devkit/convert.hpp"
+#include "touca/client/convert.hpp"
 #include "touca/extra/logger.hpp"
 #include "touca/lib_api.hpp"
 
 // the following header file(s) are included only to make it sufficient
 // for the users of this library to include only this header file
 
-#include "touca/devkit/object.hpp"
+#include "touca/core/object.hpp"
 #include "touca/extra/scoped_timer.hpp"
+
+#ifdef TOUCA_INCLUDE_FRAMEWORK
+#include "touca/framework/runner.hpp"
+#endif
 
 /**
  * @namespace touca

@@ -2,7 +2,7 @@
 
 #include "touca/touca.hpp"
 
-#include "touca/detail/client.hpp"
+#include "touca/client/detail/client.hpp"
 #include "touca/devkit/utils.hpp"
 
 namespace touca {

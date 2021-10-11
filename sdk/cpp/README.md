@@ -45,13 +45,14 @@ any number of test cases.
 
 ```cpp
 #include "touca/touca.hpp"
-#include "touca/touca_main.hpp"
 #include "code_under_test.hpp"
 
-void touca::main(const std::string& testcase)
-{
+int main(int argc, char* argv[]) {
+  touca::workflow("is_prime", [](const std::string& testcase) {
     const auto number = std::stoul(testcase);
-    touca::add_result("is_prime", is_prime(number));
+    touca::add_result("output", is_prime(number));
+  });
+  touca::run(argc, argv);
 }
 ```
 

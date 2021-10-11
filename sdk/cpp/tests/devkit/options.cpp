@@ -2,7 +2,7 @@
 
 #include "catch2/catch.hpp"
 #include "tmpfile.hpp"
-#include "touca/detail/client.hpp"
+#include "touca/client/detail/client.hpp"
 
 TEST_CASE("configure") {
   touca::ClientImpl client;

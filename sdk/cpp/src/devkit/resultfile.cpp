@@ -8,7 +8,7 @@
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 #include "touca/devkit/utils.hpp"
-#include "touca/impl/touca_generated.h"
+#include "touca/impl/schema.hpp"
 
 namespace touca {
 

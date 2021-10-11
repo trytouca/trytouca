@@ -4,9 +4,12 @@
 
 #include <string>
 
-#include "touca/touca_main.hpp"
+#include "touca/touca.hpp"
 
-void touca::main(const std::string& testcase) {
-  const auto number = std::stoul(testcase);
-  touca::add_result("is_prime", is_prime(number));
+int main(int argc, char* argv[]) {
+  touca::workflow("is_prime", [](const std::string& testcase) {
+    const auto number = std::stoul(testcase);
+    touca::add_result("output", is_prime(number));
+  });
+  touca::run(argc, argv);
 }

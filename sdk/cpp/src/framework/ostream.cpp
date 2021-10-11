@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/framework/detail/utils.hpp"
+#include "touca/framework/detail/ostream.hpp"
 
 /**
  *

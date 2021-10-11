@@ -32,12 +32,14 @@ Here's a Touca test we can write for our code under test:
 ```cpp
 #include "students.hpp"
 #include "students_types.hpp"
-#include "touca/touca_main.hpp"
+#include "touca/touca.hpp"
 
-void touca::main(const std::string& username)
-{
+int main(int argc, char* argv[]) {
+  touca::workflow("parse_profile", [](const std::string& username) {
     const auto& student = parse_profile(username);
     // more to write here
+  });
+  touca::run(argc, argv);
 }
 ```
 
@@ -127,8 +129,8 @@ float calculate_gpa(const std::vector<Course>& courses)
 ```
 
 Touca data capturing functions remain no-op in production environments. They are
-only activated when running in the context of a `touca::main` function call. See
-the next tutorial to learn more.
+only activated when running in the context of the `touca::run` function call.
+See the next tutorial to learn more.
 
 ## Describing Performance
 
