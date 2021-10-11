@@ -40,7 +40,7 @@ export async function authVerifyResend(
 
   const link = `${config.webapp.root}/account/activate?key=${user.activationKey}`
   mailer.mailUser(user, 'Welcome to Touca 👋🏼', 'auth-signup-user', {
-    firstName: user.fullname ?? 'there',
+    firstName: user.fullname ? `, ${user.fullname}` : '',
     hasVerificationLink: true,
     previewMessage: 'Here is your email verification link.',
     verificationLink: link

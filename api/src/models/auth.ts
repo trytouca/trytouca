@@ -88,7 +88,7 @@ export async function createUserAccount(
 
   const link = `${config.webapp.root}/account/activate?key=${activationKey}`
   mailer.mailUser(newUser, 'Welcome to Touca 👋🏼', 'auth-signup-user', {
-    firstName: payload.name ?? 'there',
+    firstName: payload.name ? `, ${payload.name}` : '',
     hasVerificationLink: !payload.name,
     previewMessage: payload.name
       ? "We're excited to have you!"

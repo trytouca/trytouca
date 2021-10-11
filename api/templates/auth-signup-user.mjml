@@ -8,7 +8,7 @@
     <mj-include path="./layout/header.mjml" />
     <mj-section mj-class="wsl-border">
       <mj-column>
-        <mj-text><h3>Welcome to Touca, {{ firstName }}! 🎉</h3></mj-text>
+        <mj-text><h3>Welcome to Touca{{ firstName }}! 🎉</h3></mj-text>
         <mj-text>
           We help software engineers see the side-effects of their changes as
           they write code.
