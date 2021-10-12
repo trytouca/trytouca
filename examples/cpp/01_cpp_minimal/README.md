@@ -47,24 +47,25 @@ against a hard-coded set of expected values.
 Touca takes a very different approach than unit testing:
 
 ```cpp
-#include "touca/touca_main.hpp"
+#include "touca/touca.hpp"
 #include "is_prime.hpp"
 
-void touca::main(const std::string& testcase)
-{
+int main(int argc, char* argv[]) {
+  touca::workflow("is_prime", [](const std::string& testcase) {
     const auto number = std::stoul(testcase);
-    touca::add_result("is_prime_output", is_prime(number));
+    touca::check("output", is_prime(number));
+  });
+  touca::run(argc, argv);
 }
 ```
 
-Where `touca/touca_main.hpp` is the entry-point to high-level API of our C++
-SDK.
+Where `touca/touca.hpp` is the entry-point to high-level API of our C++ SDK.
 
 ```cmake
 target_link_libraries(
     example_cpp_minimal
   PRIVATE
-    touca_client
+    touca
 )
 ```
 
@@ -113,13 +114,15 @@ The pattern used in this example is generally applicable to testing real-world
 workflows of any complexity.
 
 ```cpp
-#include "touca/touca_main.hpp"
+#include "touca/touca.hpp"
 #include <string>
 // import your code under test here
 
-void touca::main(const std::string& testcase)
-{
+int main(int argc, char* argv[]) {
+  touca::workflow("workflow_name", [](const std::string& testcase) {
   // your code goes here
+  });
+  touca::run(argc, argv);
 }
 ```
 
@@ -140,6 +143,6 @@ operations.
     > important functions.
     >
     > In our example, we captured the return value of our `is_prime` function
-    > via `touca::add_result`. We could also capture runtime of functions and
-    > other performance data but our example here was too trivial to showcase
-    > all possibilities. See our next example for more details.
+    > via `touca::check`. We could also capture runtime of functions and other
+    > performance data but our example here was too trivial to showcase all
+    > possibilities. See our next example for more details.
