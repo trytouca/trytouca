@@ -5,6 +5,7 @@
 #include <numeric>
 #include <unordered_map>
 
+#include "nlohmann/json_fwd.hpp"
 #include "touca/core/types.hpp"
 #include "touca/devkit/testcase.hpp"
 
@@ -54,7 +55,7 @@ struct Cellar {
   /**
    *
    */
-  rapidjson::Value json(RJAllocator& allocator) const;
+  nlohmann::ordered_json json() const;
 
  private:
   /**
@@ -65,14 +66,13 @@ struct Cellar {
   /**
    *
    */
-  rapidjson::Value buildJsonSolo(const KeyMap& elements, RJAllocator& allocator,
-                                 const Category category) const;
+  nlohmann::ordered_json buildJsonSolo(const KeyMap& elements,
+                                       const Category category) const;
 
   /**
    *
    */
-  rapidjson::Value buildJsonCommon(const ComparisonMap& elements,
-                                   RJAllocator& allocator) const;
+  nlohmann::ordered_json buildJsonCommon(const ComparisonMap& elements) const;
 };
 
 /**
@@ -97,7 +97,7 @@ class TOUCA_CLIENT_API TestcaseComparison {
     /**
      *
      */
-    rapidjson::Value json(RJAllocator& allocator) const;
+    nlohmann::ordered_json json() const;
   };
 
   /**
@@ -108,7 +108,7 @@ class TOUCA_CLIENT_API TestcaseComparison {
   /**
    *
    */
-  rapidjson::Value json(RJAllocator& allocator) const;
+  nlohmann::ordered_json json() const;
 
   /**
    *

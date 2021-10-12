@@ -28,12 +28,6 @@ target_include_directories(
         ${TOUCA_CLIENT_ROOT_DIR}
 )
 
-target_compile_definitions(
-        example_cpp_external_input
-    PRIVATE
-        RAPIDJSON_HAS_STDSTRING
-)
-
 source_group(
     TREE ${CMAKE_CURRENT_LIST_DIR}
     FILES $<TARGET_PROPERTY:example_cpp_external_input,SOURCES>

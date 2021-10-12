@@ -4,10 +4,7 @@
 
 #include <chrono>
 
-#include "rapidjson/document.h"
-#include "rapidjson/rapidjson.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/writer.h"
+#include "nlohmann/json.hpp"
 
 namespace touca {
 namespace compare {
@@ -32,89 +29,59 @@ std::string Cellar::stringify(const types::value_t type) const {
 /**
  *
  */
-rapidjson::Value Cellar::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  auto rjCommon = buildJsonCommon(common, allocator);
-  auto rjMissing = buildJsonSolo(missing, allocator, Category::Missing);
-  auto rjFresh = buildJsonSolo(fresh, allocator, Category::Fresh);
-  rapidjson::Value result(rapidjson::kObjectType);
-  result.AddMember("commonKeys", rjCommon, allocator);
-  result.AddMember("missingKeys", rjMissing, allocator);
-  result.AddMember("newKeys", rjFresh, allocator);
-  return result;
+nlohmann::ordered_json Cellar::json() const {
+  auto rjCommon = buildJsonCommon(common);
+  auto rjMissing = buildJsonSolo(missing, Category::Missing);
+  auto rjFresh = buildJsonSolo(fresh, Category::Fresh);
+  return nlohmann::ordered_json({
+      {"commonKeys", rjCommon},
+      {"missingKeys", rjMissing},
+      {"newKeys", rjFresh},
+  });
 }
 
 /**
  *
  */
-rapidjson::Value Cellar::buildJsonSolo(
-    const KeyMap& keyMap, rapidjson::Document::AllocatorType& allocator,
-    const Category category) const {
-  rapidjson::Value rjElements(rapidjson::kArrayType);
+nlohmann::ordered_json Cellar::buildJsonSolo(const KeyMap& keyMap,
+                                             const Category category) const {
+  nlohmann::ordered_json elements = nlohmann::json::array();
   for (const auto& kv : keyMap) {
     const auto& type = stringify(kv.second->type());
-    rapidjson::Value rjEntry(rapidjson::kObjectType);
-    rjEntry.AddMember("name", kv.first, allocator);
-    if (category == Category::Fresh) {
-      rjEntry.AddMember("srcType", type, allocator);
-      rjEntry.AddMember("srcValue", kv.second->string(), allocator);
-    } else {
-      rjEntry.AddMember("dstType", type, allocator);
-      rjEntry.AddMember("dstValue", kv.second->string(), allocator);
-    }
-    rjElements.PushBack(rjEntry, allocator);
+    elements.push_back(nlohmann::ordered_json(
+        {{"name", kv.first},
+         {category == Category::Fresh ? "srcType" : "dstType", type},
+         {category == Category::Fresh ? "srcValue" : "dstValue",
+          kv.second->string()}}));
   }
-  return rjElements;
+  return elements;
 }
 
 /**
  *
  */
-rapidjson::Value Cellar::buildJsonCommon(
-    const ComparisonMap& elements,
-    rapidjson::Document::AllocatorType& allocator) const {
-  namespace rj = rapidjson;
-  rj::Value rjElements(rapidjson::kArrayType);
+nlohmann::ordered_json Cellar::buildJsonCommon(
+    const ComparisonMap& elements) const {
+  nlohmann::ordered_json output = nlohmann::json::array();
   for (const auto& kv : elements) {
-    rj::Value rjDstType;
-    rj::Value rjDstValue;
-    rj::Value rjDesc(rj::kArrayType);
-
-    rj::Value rjName{kv.first, allocator};
-    rj::Value rjScore{kv.second.score};
-    rj::Value rjSrcType{stringify(kv.second.srcType), allocator};
-    rj::Value rjSrcValue{kv.second.srcValue, allocator};
+    nlohmann::ordered_json item({
+        {"name", kv.first},
+        {"score", kv.second.score},
+        {"srcType", stringify(kv.second.srcType)},
+        {"srcValue", kv.second.srcValue},
+    });
     if (types::value_t::unknown != kv.second.dstType) {
-      rjDstType.Set(stringify(kv.second.dstType), allocator);
+      item["dstType"] = stringify(kv.second.dstType);
     }
     if (compare::MatchType::Perfect != kv.second.match) {
-      rjDstValue.Set(kv.second.dstValue, allocator);
+      item["dstValue"] = kv.second.dstValue;
     }
     if (!kv.second.desc.empty()) {
-      for (const auto& entry : kv.second.desc) {
-        rj::Value rjEntry(rj::kStringType);
-        rjEntry.SetString(entry, allocator);
-        rjDesc.PushBack(rjEntry, allocator);
-      }
+      item["desc"] = kv.second.desc;
     }
-
-    rj::Value rjElement(rj::kObjectType);
-    rjElement.AddMember("name", rjName, allocator);
-    rjElement.AddMember("score", rjScore, allocator);
-    rjElement.AddMember("srcType", rjSrcType, allocator);
-    rjElement.AddMember("srcValue", rjSrcValue, allocator);
-    if (types::value_t::unknown != kv.second.dstType) {
-      rjElement.AddMember("dstType", rjDstType, allocator);
-    }
-    if (compare::MatchType::Perfect != kv.second.match) {
-      rjElement.AddMember("dstValue", rjDstValue, allocator);
-    }
-    if (!kv.second.desc.empty()) {
-      rjElement.AddMember("desc", rjDesc, allocator);
-    }
-    rjElements.PushBack(rjElement, allocator);
+    output.push_back(item);
   }
-  return rjElements;
+  return output;
 }
 
 /**
@@ -128,46 +95,29 @@ TestcaseComparison::TestcaseComparison(const Testcase& src, const Testcase& dst)
 /**
  *
  */
-rapidjson::Value TestcaseComparison::Overview::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  rapidjson::Value out(rapidjson::kObjectType);
-  out.AddMember("keysCountCommon", keysCountCommon, allocator);
-  out.AddMember("keysCountFresh", keysCountFresh, allocator);
-  out.AddMember("keysCountMissing", keysCountMissing, allocator);
-  out.AddMember("keysScore", keysScore, allocator);
-  out.AddMember("metricsCountCommon", metricsCountCommon, allocator);
-  out.AddMember("metricsCountFresh", metricsCountFresh, allocator);
-  out.AddMember("metricsCountMissing", metricsCountMissing, allocator);
-  out.AddMember("metricsDurationCommonDst", metricsDurationCommonDst,
-                allocator);
-  out.AddMember("metricsDurationCommonSrc", metricsDurationCommonSrc,
-                allocator);
-  return out;
+nlohmann::ordered_json TestcaseComparison::Overview::json() const {
+  return nlohmann::ordered_json({
+      {"keysCountCommon", keysCountCommon},
+      {"keysCountFresh", keysCountFresh},
+      {"keysCountMissing", keysCountMissing},
+      {"keysScore", keysScore},
+      {"metricsCountCommon", metricsCountCommon},
+      {"metricsCountFresh", metricsCountFresh},
+      {"metricsCountMissing", metricsCountMissing},
+      {"metricsDurationCommonDst", metricsDurationCommonDst},
+      {"metricsDurationCommonSrc", metricsDurationCommonSrc},
+  });
 }
 
 /**
  *
  */
-rapidjson::Value TestcaseComparison::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  const auto& fromMetadata = [](const Testcase::Metadata& meta,
-                                rapidjson::Document::AllocatorType& allocator) {
-    rapidjson::Value value(rapidjson::kObjectType);
-    value.AddMember("teamslug", meta.teamslug, allocator);
-    value.AddMember("testsuite", meta.testsuite, allocator);
-    value.AddMember("version", meta.version, allocator);
-    value.AddMember("testcase", meta.testcase, allocator);
-    value.AddMember("builtAt", meta.builtAt, allocator);
-    return value;
-  };
-
-  rapidjson::Value out(rapidjson::kObjectType);
-  out.AddMember("src", fromMetadata(_srcMeta, allocator), allocator);
-  out.AddMember("dst", fromMetadata(_dstMeta, allocator), allocator);
-  out.AddMember("assertions", _assumptions.json(allocator), allocator);
-  out.AddMember("results", _results.json(allocator), allocator);
-  out.AddMember("metrics", _metrics.json(allocator), allocator);
-  return out;
+nlohmann::ordered_json TestcaseComparison::json() const {
+  return nlohmann::ordered_json({{"src", _srcMeta.json()},
+                                 {"dst", _dstMeta.json()},
+                                 {"assertions", _assumptions.json()},
+                                 {"results", _results.json()},
+                                 {"metrics", _metrics.json()}});
 }
 
 /**

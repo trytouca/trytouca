@@ -2,6 +2,7 @@
 
 #pragma once
 
+#include "nlohmann/json_fwd.hpp"
 #include "touca/client/convert.hpp"
 #include "touca/core/types.hpp"
 
@@ -34,7 +35,7 @@ class TOUCA_CLIENT_API ObjectType : public IType {
   /**
    *
    */
-  rapidjson::Value json(RJAllocator& allocator) const override;
+  nlohmann::ordered_json json() const override;
 
   /**
    *

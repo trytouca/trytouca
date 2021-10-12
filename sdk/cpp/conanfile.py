@@ -47,7 +47,7 @@ class ToucaConan(ConanFile):
         self.requires("flatbuffers/2.0.0")
         self.requires("fmt/8.0.1")
         self.requires("ghc-filesystem/1.5.8")
-        self.requires("rapidjson/1.1.0")
+        self.requires("nlohmann_json/3.10.3")
         self.requires("spdlog/1.9.2")
         if (
             self.options.with_examples
@@ -93,7 +93,7 @@ class ToucaConan(ConanFile):
             "fmt::fmt",
             "flatbuffers::flatbuffers",
             "ghc-filesystem::ghc-filesystem",
-            "rapidjson::rapidjson",
+            "nlohmann_json::nlohmann_json",
             "spdlog::spdlog",
         ]
         if (

@@ -2,8 +2,7 @@
 
 #include "touca/core/object.hpp"
 
-#include "rapidjson/document.h"
-#include "rapidjson/rapidjson.h"
+#include "nlohmann/json.hpp"
 #include "touca/devkit/comparison.hpp"
 #include "touca/impl/schema.hpp"
 
@@ -23,22 +22,17 @@ value_t ObjectType::type() const { return value_t::object; }
 /**
  *
  */
-rapidjson::Value ObjectType::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  rapidjson::Value rjMembers(rapidjson::kObjectType);
+nlohmann::ordered_json ObjectType::json() const {
+  nlohmann::ordered_json members = nlohmann::json::object();
   for (const auto& member : _values) {
-    rapidjson::Value rjKey{member.first, allocator};
-    rjMembers.AddMember(rjKey, member.second->json(allocator), allocator);
+    members[member.first] = member.second->json();
   }
 
   if (_name.empty()) {
-    return rjMembers;
+    return members;
   }
 
-  rapidjson::Value rjValue(rapidjson::kObjectType);
-  rapidjson::Value rjName{_name, allocator};
-  rjValue.AddMember(rjName, rjMembers, allocator);
-  return rjValue;
+  return nlohmann::ordered_json({{_name, members}});
 }
 
 /**

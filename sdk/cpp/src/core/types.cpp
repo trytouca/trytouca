@@ -5,10 +5,7 @@
 #include <cmath>
 
 #include "fmt/format.h"
-#include "rapidjson/document.h"
-#include "rapidjson/rapidjson.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/writer.h"
+#include "nlohmann/json.hpp"
 #include "touca/client/convert.hpp"
 #include "touca/core/object.hpp"
 #include "touca/devkit/comparison.hpp"
@@ -96,62 +93,6 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
 /**
  *
  */
-template <typename T>
-typename std::enable_if<
-    touca::detail::is_touca_number<T>::value &&
-        std::is_same<float, typename std::remove_cv<T>::type>::value,
-    rapidjson::Value>::type
-jsonify_number(const T& value) {
-  rapidjson::Value ret(rapidjson::kNumberType);
-  ret.SetFloat(value);
-  return ret;
-}
-
-/**
- *
- */
-template <typename T>
-typename std::enable_if<
-    touca::detail::is_touca_number<T>::value &&
-        std::is_same<double, typename std::remove_cv<T>::type>::value,
-    rapidjson::Value>::type
-jsonify_number(const T& value) {
-  rapidjson::Value ret(rapidjson::kNumberType);
-  ret.SetDouble(value);
-  return ret;
-}
-
-/**
- *
- */
-template <typename T>
-typename std::enable_if<touca::detail::is_touca_number<T>::value &&
-                            !std::is_floating_point<T>::value &&
-                            std::is_signed<T>::value,
-                        rapidjson::Value>::type
-jsonify_number(const T& value) {
-  rapidjson::Value ret(rapidjson::kNumberType);
-  ret.SetInt64(value);
-  return ret;
-}
-
-/**
- *
- */
-template <typename T>
-typename std::enable_if<touca::detail::is_touca_number<T>::value &&
-                            !std::is_floating_point<T>::value &&
-                            !std::is_signed<T>::value,
-                        rapidjson::Value>::type
-jsonify_number(const T& value) {
-  rapidjson::Value ret(rapidjson::kNumberType);
-  ret.SetUint64(value);
-  return ret;
-}
-
-/**
- *
- */
 template <typename T, typename U>
 std::shared_ptr<touca::types::IType> deserialize(
     const touca::fbs::TypeWrapper* ptr) {
@@ -169,17 +110,10 @@ namespace types {
  *
  */
 std::string IType::string() const {
-  rapidjson::Document doc;
-  auto& allocator = doc.GetAllocator();
-  const auto& value = json(allocator);
-  if (value.IsString()) {
-    return value.GetString();
-  }
-  rapidjson::StringBuffer strbuf;
-  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-  writer.SetMaxDecimalPlaces(3);
-  value.Accept(writer);
-  return strbuf.GetString();
+  const auto& element = json();
+  return element.type() == nlohmann::json::value_t::string
+             ? element.get<std::string>()
+             : element.dump();
 }
 
 /**
@@ -231,11 +165,7 @@ value_t BooleanType::type() const { return value_t::boolean; }
 /**
  *
  */
-rapidjson::Value BooleanType::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  std::ignore = allocator;
-  return rapidjson::Value{_value};
-}
+nlohmann::ordered_json BooleanType::json() const { return _value; }
 
 /**
  *
@@ -302,10 +232,8 @@ value_t Number<T>::type() const {
  *
  */
 template <class T>
-rapidjson::Value Number<T>::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  std::ignore = allocator;
-  return filescope::jsonify_number<T>(_value);
+nlohmann::ordered_json Number<T>::json() const {
+  return _value;
 }
 
 /**
@@ -391,10 +319,7 @@ value_t StringType::type() const { return value_t::string; }
 /**
  *
  */
-rapidjson::Value StringType::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  return rapidjson::Value{_value, allocator};
-}
+nlohmann::ordered_json StringType::json() const { return _value; }
 
 /**
  *
@@ -452,13 +377,12 @@ value_t ArrayType::type() const { return value_t::array; }
 /**
  *
  */
-rapidjson::Value ArrayType::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  rapidjson::Value rjValue(rapidjson::kArrayType);
+nlohmann::ordered_json ArrayType::json() const {
+  nlohmann::ordered_json out = nlohmann::json::array();
   for (const auto& v : _values) {
-    rjValue.PushBack(v->json(allocator), allocator);
+    out.push_back(v->json());
   }
-  return rjValue;
+  return out;
 }
 
 /**

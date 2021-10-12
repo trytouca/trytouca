@@ -4,7 +4,7 @@
 
 #include <chrono>
 
-#include "rapidjson/fwd.h"
+#include "nlohmann/json_fwd.hpp"
 #include "touca/client/convert.hpp"
 
 namespace touca {
@@ -34,7 +34,7 @@ class TOUCA_CLIENT_API Testcase {
     /**
      *
      */
-    rapidjson::Value json(RJAllocator& allocator) const;
+    nlohmann::ordered_json json() const;
   };
 
   /**
@@ -55,7 +55,7 @@ class TOUCA_CLIENT_API Testcase {
     /**
      *
      */
-    rapidjson::Value json(RJAllocator& allocator) const;
+    nlohmann::ordered_json json() const;
   };
 
   /**
@@ -127,7 +127,7 @@ class TOUCA_CLIENT_API Testcase {
   /**
    *
    */
-  rapidjson::Value json(RJAllocator& allocator) const;
+  nlohmann::ordered_json json() const;
 
   /**
    *

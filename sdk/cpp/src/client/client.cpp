@@ -5,9 +5,7 @@
 #include <fstream>
 #include <sstream>
 
-#include "rapidjson/document.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/writer.h"
+#include "nlohmann/json.hpp"
 #include "touca/devkit/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/resultfile.hpp"
@@ -208,13 +206,12 @@ bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
 
   // attempt to parse content of configuration file
 
-  rapidjson::Document rjDoc;
-  rjDoc.Parse(ss.str());
+  const auto& parsed = nlohmann::json::parse(ss.str(), nullptr, false);
 
   // check that configuration file has a top-level `touca` section
 
-  if (rjDoc.HasParseError() || !rjDoc.IsObject() || !rjDoc.HasMember("touca") ||
-      !rjDoc["touca"].IsObject()) {
+  if (!parsed.is_object() || !parsed.contains("touca") ||
+      !parsed["touca"].is_object()) {
     _opts.parse_error = "configuration file is not valid";
     return false;
   }
@@ -231,10 +228,10 @@ bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
       "suite",          "version",         "handshake",
       "post-testcases", "post-maxretries", "concurrency-mode"};
 
-  const auto& rjObj = rjDoc["touca"];
+  const auto& config = parsed["touca"];
   for (const auto& key : strKeys) {
-    if (rjObj.HasMember(key) && rjObj[key].IsString()) {
-      opts.emplace(key, rjObj[key].GetString());
+    if (config.contains(key) && config[key].is_string()) {
+      opts.emplace(key, config[key].get<std::string>());
     }
   }
 
@@ -242,8 +239,8 @@ bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
 
   const auto& intKeys = {"post-maxretries", "post-testcases"};
   for (const auto& key : intKeys) {
-    if (rjObj.HasMember(key) && rjObj[key].IsUint()) {
-      opts.emplace(key, std::to_string(rjObj[key].GetUint()));
+    if (config.contains(key) && config[key].is_number()) {
+      opts.emplace(key, std::to_string(config[key].get<std::uint64_t>()));
     }
   }
 
@@ -554,19 +551,11 @@ bool ClientImpl::post_flatbuffers(const std::vector<std::string>& names) const {
  */
 std::string ClientImpl::make_json(
     const std::vector<std::string>& testcases) const {
-  rapidjson::Document doc(rapidjson::kArrayType);
-  rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-
+  nlohmann::ordered_json doc = nlohmann::json::array();
   for (const auto& testcase : testcases) {
-    doc.PushBack(_testcases.at(testcase)->json(allocator), allocator);
+    doc.push_back(_testcases.at(testcase)->json());
   }
-
-  rapidjson::StringBuffer strbuf;
-  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-  writer.SetMaxDecimalPlaces(3);
-  doc.Accept(writer);
-
-  return strbuf.GetString();
+  return doc.dump();
 }
 
 /**

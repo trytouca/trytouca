@@ -7,7 +7,7 @@ touca_find_package("flatbuffers" "Flatbuffers")
 touca_find_package("fmt")
 touca_find_package("ghcFilesystem")
 touca_find_package("httplib")
-touca_find_package("RapidJSON")
+touca_find_package("nlohmann_json")
 touca_find_package("spdlog")
 if (TOUCA_BUILD_FRAMEWORK)
     touca_find_package("cxxopts")
@@ -52,7 +52,7 @@ target_link_libraries(
         ghcFilesystem::ghcFilesystem
         flatbuffers::flatbuffers
         fmt::fmt
-        RapidJSON::RapidJSON
+        nlohmann_json::nlohmann_json
         $<$<PLATFORM_ID:Linux>:pthread>
 )
 
@@ -71,7 +71,6 @@ target_include_directories(
 target_compile_definitions(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
-        RAPIDJSON_HAS_STDSTRING
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )

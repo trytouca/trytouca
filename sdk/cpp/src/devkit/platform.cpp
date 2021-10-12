@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include "httplib.h"
-#include "rapidjson/document.h"
+#include "nlohmann/json.hpp"
 #include "touca/devkit/utils.hpp"
 
 namespace touca {
@@ -232,16 +232,16 @@ bool Platform::handshake() const {
     _error = "unexpected server response";
     return false;
   }
-  rapidjson::Document doc;
-  if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
+  const auto& parsed = nlohmann::json::parse(response.body, nullptr, false);
+  if (parsed.is_discarded()) {
     _error = "failed to parse response from the server";
     return false;
   }
-  if (!doc.HasMember("ready") || !doc["ready"].IsBool()) {
+  if (parsed.count("ready") == 0 || !parsed.at("ready").is_boolean()) {
     _error = "response form the server is ill-formed";
     return false;
   }
-  if (!doc["ready"].GetBool()) {
+  if (!parsed.at("ready").get<bool>()) {
     _error = "server is not ready";
     return false;
   }
@@ -264,16 +264,16 @@ bool Platform::auth(const std::string& apiKey) {
     _error = touca::format("authentication failed: {}", response.status);
     return false;
   }
-  rapidjson::Document doc;
-  if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
+  const auto& parsed = nlohmann::json::parse(response.body, nullptr, false);
+  if (parsed.is_discarded()) {
     _error = "failed to parse server response";
     return false;
   }
-  if (!doc.HasMember("token") || !doc["token"].IsString()) {
+  if (parsed.count("token") == 0 || !parsed["token"].is_string()) {
     _error = "unexpected server response";
     return false;
   }
-  _http->set_token(doc["token"].GetString());
+  _http->set_token(parsed["token"].get<std::string>());
   _is_auth = true;
   return true;
 }
@@ -293,14 +293,18 @@ std::vector<std::string> Platform::elements() const {
     _error = "unexpected server response";
     return {};
   }
-  rapidjson::Document doc;
-  if (doc.Parse<0>(response.body.c_str()).HasParseError()) {
+  const auto& parsed = nlohmann::json::parse(response.body, nullptr, false);
+  if (parsed.is_discarded()) {
     _error = "failed to parse server response";
     return {};
   }
+  if (!parsed.is_array()) {
+    _error = "unexpected server response";
+    return {};
+  }
   std::vector<std::string> elements;
-  for (const auto& rjElement : doc.GetArray()) {
-    elements.emplace_back(rjElement["name"].GetString());
+  for (const auto& rjElement : parsed) {
+    elements.emplace_back(rjElement["name"].get<std::string>());
   }
   if (elements.empty()) {
     _error = "suite has no test case";

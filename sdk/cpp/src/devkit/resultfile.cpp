@@ -4,9 +4,7 @@
 
 #include <fstream>
 
-#include "rapidjson/document.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/writer.h"
+#include "nlohmann/json.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/impl/schema.hpp"
 
@@ -126,22 +124,11 @@ void ResultFile::save(const std::vector<Testcase>& testcases) {
  *
  */
 std::string ResultFile::readFileInJson() const {
-  const auto testcases = _testcases.empty() ? parse() : _testcases;
-
-  rapidjson::Document doc(rapidjson::kArrayType);
-  rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-
-  for (const auto& item : testcases) {
-    auto val = item.second->json(allocator);
-    doc.PushBack(val, allocator);
+  nlohmann::ordered_json out;
+  for (const auto& item : _testcases.empty() ? parse() : _testcases) {
+    out.push_back(item.second->json());
   }
-
-  // return string version of the constructed json
-  rapidjson::StringBuffer strbuf;
-  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-  writer.SetMaxDecimalPlaces(3);
-  doc.Accept(writer);
-  return strbuf.GetString();
+  return out.dump();
 }
 
 /**
@@ -182,50 +169,27 @@ ResultFile::ComparisonResult ResultFile::compare(
  *
  */
 std::string ResultFile::ComparisonResult::json() const {
-  const auto& fromMetadata = [](const Testcase::Metadata& meta,
-                                rapidjson::Document::AllocatorType& allocator) {
-    rapidjson::Value value(rapidjson::kObjectType);
-    value.AddMember("teamslug", meta.teamslug, allocator);
-    value.AddMember("testsuite", meta.testsuite, allocator);
-    value.AddMember("version", meta.version, allocator);
-    value.AddMember("testcase", meta.testcase, allocator);
-    value.AddMember("builtAt", meta.builtAt, allocator);
-    return value;
-  };
-
-  rapidjson::Document doc(rapidjson::kObjectType);
-  auto& allocator = doc.GetAllocator();
-
-  // add new testcases to json object
-  rapidjson::Value rjFresh(rapidjson::kArrayType);
+  nlohmann::ordered_json items_fresh = nlohmann::json::array();
   for (const auto& item : fresh) {
-    auto val = fromMetadata(item.second->metadata(), allocator);
-    rjFresh.PushBack(val, allocator);
+    auto val = item.second->metadata().json();
+    items_fresh.push_back(val);
   }
 
-  // add missing testcases to json object
-  rapidjson::Value rjMissing(rapidjson::kArrayType);
+  nlohmann::ordered_json items_missing = nlohmann::json::array();
   for (const auto& item : missing) {
-    auto val = fromMetadata(item.second->metadata(), allocator);
-    rjMissing.PushBack(val, allocator);
+    auto val = item.second->metadata().json();
+    items_missing.push_back(val);
   }
 
-  // add common testcases to json object
-  rapidjson::Value rjCommon(rapidjson::kArrayType);
+  nlohmann::ordered_json items_common = nlohmann::json::array();
   for (const auto& item : common) {
-    rjCommon.PushBack(item.second.json(allocator), allocator);
+    items_common.push_back(item.second.json());
   }
 
-  doc.AddMember("newCases", rjFresh, allocator);
-  doc.AddMember("missingCases", rjMissing, allocator);
-  doc.AddMember("commonCases", rjCommon, allocator);
-
-  // return string version of the constructed json in pretty print format
-  rapidjson::StringBuffer strbuf;
-  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-  writer.SetMaxDecimalPlaces(3);
-  doc.Accept(writer);
-  return strbuf.GetString();
+  return nlohmann::ordered_json({{"newCases", items_fresh},
+                                 {"missingCases", items_missing},
+                                 {"commonCases", items_common}})
+      .dump();
 }
 
 }  // namespace touca

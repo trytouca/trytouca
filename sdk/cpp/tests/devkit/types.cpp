@@ -411,10 +411,14 @@ TEST_CASE("Simple Data Types") {
       const auto& cmp = value->compare(itype);
 
       CHECK(types::value_t::array == itype->type());
-      CHECK(itype->string() == R"([1.1,1.2,1.299,1.399])");
+      CHECK(
+          itype->string() ==
+          R"([1.100000023841858,1.2000000476837158,1.2999999523162842,1.399999976158142])");
       CHECK(types::value_t::array == cmp.srcType);
       CHECK(types::value_t::unknown == cmp.dstType);
-      CHECK(cmp.srcValue == R"([1.1,1.2,1.299,1.399])");
+      CHECK(
+          cmp.srcValue ==
+          R"([1.100000023841858,1.2000000476837158,1.2999999523162842,1.399999976158142])");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);

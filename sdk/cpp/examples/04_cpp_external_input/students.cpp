@@ -6,7 +6,7 @@
 #include <numeric>
 #include <thread>
 
-#include "rapidjson/document.h"
+#include "nlohmann/json.hpp"
 #include "touca/devkit/filesystem.hpp"
 #include "touca/extra/scoped_timer.hpp"
 #include "touca/touca.hpp"
@@ -26,28 +26,25 @@ Student parse_profile(const std::string& path) {
   Student student;
   student.username = touca::filesystem::path(path).stem().string();
 
-  rapidjson::Document doc;
-  if (doc.Parse<0>(content.c_str()).HasParseError()) {
+  const auto& parsed = nlohmann::json::parse(content, nullptr, false);
+  if (parsed.is_discarded()) {
     throw std::runtime_error("failed to parse profile");
   }
 
-  if (doc.HasMember("name")) {
-    student.fullname = doc["name"].GetString();
+  if (parsed.count("name") && parsed["name"].is_string()) {
+    student.fullname = parsed["name"].get<std::string>();
   }
-  if (doc.HasMember("dob")) {
-    const auto& rjDob = doc["dob"].GetObject();
-    const auto y = static_cast<unsigned short>(rjDob["y"].GetInt());
-    const auto m = static_cast<unsigned short>(rjDob["m"].GetInt());
-    const auto d = static_cast<unsigned short>(rjDob["d"].GetInt());
+  if (parsed.count("dob") && parsed.is_object()) {
+    const auto y = static_cast<unsigned short>(parsed["dob"]["y"].get<int>());
+    const auto m = static_cast<unsigned short>(parsed["dob"]["m"].get<int>());
+    const auto d = static_cast<unsigned short>(parsed["dob"]["d"].get<int>());
     student.dob = {y, m, d};
   }
-  if (doc.HasMember("courses")) {
+  if (parsed.count("courses") && parsed.is_array()) {
     std::vector<Course> courses;
-    const auto& rjCourses = doc["courses"].GetArray();
-    for (rapidjson::SizeType i = 0; i < rjCourses.Size(); i++) {
-      const auto& rjCourse = rjCourses[i].GetObject();
-      Course course{rjCourse["name"].GetString(), rjCourse["grade"].GetFloat()};
-      courses.emplace_back(course);
+    for (const auto& course : parsed["courses"]) {
+      courses.emplace_back(Course{course["name"].get<std::string>(),
+                                  course["grade"].get<float>()});
     }
     student.courses = courses;
   }

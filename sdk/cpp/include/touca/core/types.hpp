@@ -5,7 +5,7 @@
 #include <map>
 
 #include "flatbuffers/flatbuffers.h"
-#include "rapidjson/fwd.h"
+#include "nlohmann/json_fwd.hpp"
 #include "touca/lib_api.hpp"
 
 namespace touca {
@@ -30,7 +30,6 @@ struct MetricsMapValue {
   std::shared_ptr<types::IType> value;
 };
 
-using RJAllocator = rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>;
 using ResultsMap = std::map<std::string, ResultEntry>;
 using MetricsMap = std::map<std::string, MetricsMapValue>;
 using KeyMap = std::map<std::string, std::shared_ptr<types::IType>>;
@@ -82,7 +81,7 @@ class TOUCA_CLIENT_API IType {
   /**
    *
    */
-  virtual rapidjson::Value json(RJAllocator& allocator) const = 0;
+  virtual nlohmann::ordered_json json() const = 0;
 
   /**
    *
@@ -129,7 +128,7 @@ class TOUCA_CLIENT_API BooleanType : public IType {
   /**
    *
    */
-  rapidjson::Value json(RJAllocator& allocator) const override;
+  nlohmann::ordered_json json() const override;
 
   /**
    *
@@ -167,7 +166,7 @@ class TOUCA_CLIENT_API Number : public IType {
   /**
    *
    */
-  rapidjson::Value json(RJAllocator& allocator) const override;
+  nlohmann::ordered_json json() const override;
 
   /**
    *
@@ -209,7 +208,7 @@ class TOUCA_CLIENT_API StringType : public IType {
   /**
    *
    */
-  rapidjson::Value json(RJAllocator& allocator) const override;
+  nlohmann::ordered_json json() const override;
 
   /**
    *
@@ -246,7 +245,7 @@ class TOUCA_CLIENT_API ArrayType : public IType {
   /**
    *
    */
-  rapidjson::Value json(RJAllocator& allocator) const override;
+  nlohmann::ordered_json json() const override;
 
   /**
    *

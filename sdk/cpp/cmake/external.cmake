@@ -95,18 +95,18 @@ function(touca_find_httplib)
     endif()
 endfunction()
 
-function(touca_find_rapidjson)
+function(touca_find_nlohmann_json)
     FetchContent_Declare(
-        rapidjson
-        GIT_REPOSITORY  https://github.com/Tencent/rapidjson.git
-        GIT_TAG         13dfc96c9c2b104be7b0b09a9f6e06871ed3e81d
+        nlohmann_json
+        GIT_REPOSITORY  https://github.com/nlohmann/json.git
+        GIT_TAG         v3.10.3
     )
-    FetchContent_GetProperties(RapidJSON)
-    if (NOT rapidjson_POPULATED)
-        FetchContent_Populate(RapidJSON)
-        add_library(RapidJSON INTERFACE)
-        add_library(RapidJSON::RapidJSON ALIAS RapidJSON)
-        target_include_directories(RapidJSON INTERFACE ${rapidjson_SOURCE_DIR}/include)
+    FetchContent_GetProperties(nlohmann_json)
+    if (NOT nlohmann_json_POPULATED)
+        FetchContent_Populate(nlohmann_json)
+        add_library(nlohmann_json INTERFACE)
+        add_library(nlohmann_json::nlohmann_json ALIAS nlohmann_json)
+        target_include_directories(nlohmann_json INTERFACE ${nlohmann_json_SOURCE_DIR}/include)
     endif()
 endfunction()
 

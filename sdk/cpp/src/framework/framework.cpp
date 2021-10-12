@@ -10,7 +10,7 @@
 #include "cxxopts.hpp"
 #include "fmt/ostream.h"
 #include "fmt/printf.h"
-#include "rapidjson/document.h"
+#include "nlohmann/json.hpp"
 #include "touca/devkit/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
@@ -204,42 +204,42 @@ bool parse_file_options(Options& options) {
 
   // parse configuration file
 
-  rapidjson::Document document;
-  if (document.Parse<0>(content.c_str()).HasParseError()) {
+  const auto& parsed = nlohmann::json::parse(content, nullptr, false);
+  if (parsed.is_discarded()) {
     touca::print_error("failed to parse configuration file\n");
     return false;
   }
 
   // we expect content to be a json object
 
-  if (!document.IsObject()) {
+  if (!parsed.is_object()) {
     touca::print_error("expected configuration file to be a json object\n");
     return false;
   }
 
   for (const auto& topLevelKey : {"framework", "touca", "workflow"}) {
-    if (!document.HasMember(topLevelKey)) {
+    if (!parsed.contains(topLevelKey)) {
       continue;
     }
-    if (!document[topLevelKey].IsObject()) {
+    if (!parsed[topLevelKey].is_object()) {
       touca::print_error("field {} in configuration file has unexpected type\n",
                          topLevelKey);
       return false;
     }
-    for (const auto& rjMember : document[topLevelKey].GetObject()) {
-      const auto& key = rjMember.name.GetString();
-      if (rjMember.value.IsBool()) {
-        options[key] = rjMember.value.GetBool() ? "true" : "false";
+    for (const auto& field :
+         parsed[topLevelKey].get<nlohmann::json::object_t>()) {
+      if (field.second.is_boolean()) {
+        options[field.first] = field.second.get<bool>() ? "true" : "false";
         continue;
       }
-      if (!rjMember.value.IsString()) {
+      if (!field.second.is_string()) {
         touca::print_warning(
             "Ignoring option \"{}\":\"{}\" in configuration file.\n");
         touca::print_warning("Expected value to be of type string.\n",
-                             topLevelKey, key);
+                             topLevelKey, field.first);
         continue;
       }
-      options[key] = rjMember.value.GetString();
+      options[field.first] = field.second.get<std::string>();
     }
   }
 

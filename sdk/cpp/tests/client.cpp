@@ -4,9 +4,6 @@
 
 #include "catch2/catch.hpp"
 #include "devkit/tmpfile.hpp"
-#include "rapidjson/document.h"
-#include "rapidjson/stringbuffer.h"
-#include "rapidjson/writer.h"
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
 

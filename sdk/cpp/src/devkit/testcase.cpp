@@ -3,7 +3,7 @@
 #include "touca/devkit/testcase.hpp"
 
 #include "flatbuffers/flatbuffers.h"
-#include "rapidjson/document.h"
+#include "nlohmann/json.hpp"
 #include "touca/core/types.hpp"
 #include "touca/devkit/comparison.hpp"
 #include "touca/devkit/utils.hpp"
@@ -100,13 +100,10 @@ Testcase::Testcase(const std::vector<uint8_t>& buffer) : _posted(true) {
 /**
  *
  */
-rapidjson::Value Testcase::Overview::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  rapidjson::Value out(rapidjson::kObjectType);
-  out.AddMember("keysCount", keysCount, allocator);
-  out.AddMember("metricsCount", metricsCount, allocator);
-  out.AddMember("metricsDuration", metricsDuration, allocator);
-  return out;
+nlohmann::ordered_json Testcase::Overview::json() const {
+  return nlohmann::ordered_json({{"keysCount", keysCount},
+                                 {"metricsCount", metricsCount},
+                                 {"metricsDuration", metricsDuration}});
 }
 
 /**
@@ -129,15 +126,14 @@ std::string Testcase::Metadata::describe() const {
 /**
  *
  */
-rapidjson::Value Testcase::Metadata::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  rapidjson::Value out(rapidjson::kObjectType);
-  out.AddMember("teamslug", teamslug, allocator);
-  out.AddMember("testsuite", testsuite, allocator);
-  out.AddMember("version", version, allocator);
-  out.AddMember("testcase", testcase, allocator);
-  out.AddMember("builtAt", builtAt, allocator);
-  return out;
+nlohmann::ordered_json Testcase::Metadata::json() const {
+  return nlohmann::ordered_json({
+      {"teamslug", teamslug},
+      {"testsuite", testsuite},
+      {"version", version},
+      {"testcase", testcase},
+      {"builtAt", builtAt},
+  });
 }
 
 /**
@@ -262,45 +258,35 @@ MetricsMap Testcase::metrics() const {
 /**
  *
  */
-rapidjson::Value Testcase::json(
-    rapidjson::Document::AllocatorType& allocator) const {
-  rapidjson::Value out(rapidjson::kObjectType);
-  out.AddMember("metadata", _metadata.json(allocator), allocator);
-
-  rapidjson::Value rjResults(rapidjson::kArrayType);
+nlohmann::ordered_json Testcase::json() const {
+  auto results = nlohmann::json::array();
   for (const auto& entry : _resultsMap) {
     if (entry.second.typ != ResultCategory::Check) {
       continue;
     }
-    rapidjson::Value rjEntry(rapidjson::kObjectType);
-    rjEntry.AddMember("key", entry.first, allocator);
-    rjEntry.AddMember("value", entry.second.val->string(), allocator);
-    rjResults.PushBack(rjEntry, allocator);
+    results.push_back(
+        {{"key", entry.first}, {"value", entry.second.val->string()}});
   }
-  out.AddMember("results", rjResults, allocator);
 
-  rapidjson::Value rjAssertions(rapidjson::kArrayType);
+  auto assumptions = nlohmann::json::array();
   for (const auto& entry : _resultsMap) {
     if (entry.second.typ != ResultCategory::Assert) {
       continue;
     }
-    rapidjson::Value rjEntry(rapidjson::kObjectType);
-    rjEntry.AddMember("key", entry.first, allocator);
-    rjEntry.AddMember("value", entry.second.val->string(), allocator);
-    rjAssertions.PushBack(rjEntry, allocator);
+    assumptions.push_back(
+        {{"key", entry.first}, {"value", entry.second.val->string()}});
   }
-  out.AddMember("assertion", rjAssertions, allocator);
 
-  rapidjson::Value rjMetrics(rapidjson::kArrayType);
+  auto json_metrics = nlohmann::json::array();
   for (const auto& entry : metrics()) {
-    rapidjson::Value rjEntry(rapidjson::kObjectType);
-    rjEntry.AddMember("key", entry.first, allocator);
-    rjEntry.AddMember("value", entry.second.value->string(), allocator);
-    rjMetrics.PushBack(rjEntry, allocator);
+    json_metrics.push_back(
+        {{"key", entry.first}, {"value", entry.second.value->string()}});
   }
-  out.AddMember("metrics", rjMetrics, allocator);
 
-  return out;
+  return nlohmann::ordered_json({{"metadata", {_metadata.json()}},
+                                 {"results", results},
+                                 {"assertion", assumptions},
+                                 {"metrics", json_metrics}});
 }
 
 /**
