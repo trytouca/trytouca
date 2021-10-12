@@ -771,7 +771,7 @@ struct MessageBuilder {
   void add_metadata(flatbuffers::Offset<touca::fbs::Metadata> metadata) {
     fbb_.AddOffset(Message::VT_METADATA, metadata);
   }
-  void add_results(flatbuffers::Offset<touca::fbs::Results> results) {
+  void checks(flatbuffers::Offset<touca::fbs::Results> results) {
     fbb_.AddOffset(Message::VT_RESULTS, results);
   }
   void add_metrics(flatbuffers::Offset<touca::fbs::Metrics> metrics) {
@@ -794,7 +794,7 @@ inline flatbuffers::Offset<Message> CreateMessage(
     flatbuffers::Offset<touca::fbs::Metrics> metrics = 0) {
   MessageBuilder builder_(_fbb);
   builder_.add_metrics(metrics);
-  builder_.add_results(results);
+  builder_.checks(results);
   builder_.add_metadata(metadata);
   return builder_.Finish();
 }

@@ -50,7 +50,7 @@ any number of test cases.
 int main(int argc, char* argv[]) {
   touca::workflow("is_prime", [](const std::string& testcase) {
     const auto number = std::stoul(testcase);
-    touca::add_result("output", is_prime(number));
+    touca::check("output", is_prime(number));
   });
   touca::run(argc, argv);
 }

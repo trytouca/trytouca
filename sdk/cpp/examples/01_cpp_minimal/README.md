@@ -53,7 +53,7 @@ Touca takes a very different approach than unit testing:
 int main(int argc, char* argv[]) {
   touca::workflow("is_prime", [](const std::string& testcase) {
     const auto number = std::stoul(testcase);
-    touca::add_result("output", is_prime(number));
+    touca::check("output", is_prime(number));
   });
   touca::run(argc, argv);
 }
@@ -143,6 +143,6 @@ operations.
     > important functions.
     >
     > In our example, we captured the return value of our `is_prime` function
-    > via `touca::add_result`. We could also capture runtime of functions and
-    > other performance data but our example here was too trivial to showcase
-    > all possibilities. See our next example for more details.
+    > via `touca::check`. We could also capture runtime of functions and other
+    > performance data but our example here was too trivial to showcase all
+    > possibilities. See our next example for more details.

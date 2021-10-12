@@ -14,8 +14,8 @@ class TestcaseComparison;
 }
 
 /**
- * Assertions map has the same characteristics as the results map,
- * however, the information stored in an assertions map is handled
+ * Assumptions map has the same characteristics as the results map,
+ * however, the information stored in an assumptions map is handled
  * slightly differently by the Touca server.
  */
 class TOUCA_CLIENT_API Testcase {
@@ -88,14 +88,14 @@ class TOUCA_CLIENT_API Testcase {
   /**
    *
    */
-  void add_result(const std::string& key,
-                  const std::shared_ptr<types::IType>& value);
+  void check(const std::string& key,
+             const std::shared_ptr<types::IType>& value);
 
   /**
    *
    */
-  void add_assertion(const std::string& key,
-                     const std::shared_ptr<types::IType>& value);
+  void assume(const std::string& key,
+              const std::shared_ptr<types::IType>& value);
 
   /**
    *
@@ -114,7 +114,7 @@ class TOUCA_CLIENT_API Testcase {
   void add_metric(const std::string& key, const unsigned duration);
 
   /**
-   * Removes all assertions, results and metrics that have been
+   * Removes all assumptions, checks and metrics that have been
    * associated with this testcase.
    */
   void clear();

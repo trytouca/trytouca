@@ -19,9 +19,9 @@ int main() {
     const auto& student = parse_profile(username);
     touca::stop_timer("parse_profile");
 
-    touca::add_assertion("username", student.username);
-    touca::add_result("fullname", student.fullname);
-    touca::add_result("birth_date", student.dob);
+    touca::assume("username", student.username);
+    touca::check("fullname", student.fullname);
+    touca::check("birth_date", student.dob);
 
     for (const auto& course : student.courses) {
       touca::add_array_element("courses", course);
@@ -30,7 +30,7 @@ int main() {
 
     {
       touca::scoped_timer timer("calculate_gpa");
-      touca::add_result("gpa", calculate_gpa(student.courses));
+      touca::check("gpa", calculate_gpa(student.courses));
     }
     touca::add_metric("external_source", 1500);
 

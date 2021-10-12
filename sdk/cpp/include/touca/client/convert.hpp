@@ -142,7 +142,7 @@ to_string(const T& value) {
  *      {
  *          std::shared_ptr<types::IType> convert(const Date& value)
  *          {
- *              auto out = std::make_shared<types::ObjectType>("Date");
+ *              auto out = std::make_shared<types::ObjectType>();
  *              out->add("year", value._year);
  *              out->add("month", value._month);
  *              out->add("day", value._day);
@@ -158,7 +158,7 @@ to_string(const T& value) {
  * @code{.cpp}
  *
  *      Date date { 1961, 8, 4 };
- *      touca::add_result("Obama's Birthday", date);
+ *      touca::check("birthday", date);
  *
  * @endcode
  *
@@ -179,15 +179,15 @@ to_string(const T& value) {
  *      {
  *          std::shared_ptr<types::IType> convert(const Person& value)
  *          {
- *              auto out = std::make_shared<types::ObjectType>("Person");
+ *              auto out = std::make_shared<types::ObjectType>();
  *              out->add("name", val._name);
  *              out->add("birthday", val._birthday);
  *              return out;
  *          }
  *      };
  *
- *      Person president { "obama", { 1961, 8, 4 } };
- *      touca::add_result("44th", president);
+ *      Person person { "alex", { 1961, 8, 4 } };
+ *      touca::check("person", person);
  *
  * @endcode
  */

@@ -162,8 +162,8 @@ void Testcase::toc(const std::string& key) {
 /**
  *
  */
-void Testcase::add_result(const std::string& key,
-                          const std::shared_ptr<types::IType>& value) {
+void Testcase::check(const std::string& key,
+                     const std::shared_ptr<types::IType>& value) {
   _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Check});
   _posted = false;
 }
@@ -171,8 +171,8 @@ void Testcase::add_result(const std::string& key,
 /**
  *
  */
-void Testcase::add_assertion(const std::string& key,
-                             const std::shared_ptr<types::IType>& value) {
+void Testcase::assume(const std::string& key,
+                      const std::shared_ptr<types::IType>& value) {
   _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Assert});
   _posted = false;
 }
@@ -364,7 +364,7 @@ std::vector<uint8_t> Testcase::flatbuffers() const {
 
   fbs::MessageBuilder fbsMessage_builder(builder);
   fbsMessage_builder.add_metadata(fbsMetadata);
-  fbsMessage_builder.add_results(fbsResults);
+  fbsMessage_builder.checks(fbsResults);
   fbsMessage_builder.add_metrics(fbsMetrics);
   const auto& message = fbsMessage_builder.Finish();
 

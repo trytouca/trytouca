@@ -35,7 +35,7 @@ static std::unordered_map<std::string, StudentData> students = {
       {Course{"math", 2.9}, Course{"computers", 3.7}}}}};
 
 float calculate_gpa(const std::vector<Course>& courses) {
-  touca::add_result("courses", courses);
+  touca::check("courses", courses);
   const auto& sum = std::accumulate(
       courses.begin(), courses.end(), 0.0f,
       [](const float sum, const Course& course) { return sum + course.grade; });

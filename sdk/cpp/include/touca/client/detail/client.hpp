@@ -112,14 +112,14 @@ class TOUCA_CLIENT_API ClientImpl {
   /**
    *
    */
-  void add_result(const std::string& key,
-                  const std::shared_ptr<types::IType>& value);
+  void check(const std::string& key,
+             const std::shared_ptr<types::IType>& value);
 
   /**
    *
    */
-  void add_assertion(const std::string& key,
-                     const std::shared_ptr<types::IType>& value);
+  void assume(const std::string& key,
+              const std::shared_ptr<types::IType>& value);
 
   /**
    *

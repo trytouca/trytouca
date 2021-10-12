@@ -53,8 +53,8 @@ struct SimpleWorkflow : public touca::framework::Workflow {
       return {"some-error"};
     }
     if (testcase == "4") {
-      touca::add_result("some-number", 1024);
-      touca::add_result("some-string", "foo");
+      touca::check("some-number", 1024);
+      touca::check("some-string", "foo");
       touca::add_array_element("some-array", "bar");
     }
     return {};

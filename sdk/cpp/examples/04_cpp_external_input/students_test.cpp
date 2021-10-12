@@ -154,10 +154,10 @@ touca::framework::Errors MyWorkflow::execute(
   caseFile /= testcase + ".json";
   const auto& student = parse_profile(caseFile.string());
 
-  touca::add_assertion("username", student.username);
-  touca::add_result("fullname", student.fullname);
-  touca::add_result("birth_date", student.dob);
-  touca::add_result("gpa", calculate_gpa(student.courses));
+  touca::assume("username", student.username);
+  touca::check("fullname", student.fullname);
+  touca::check("birth_date", student.dob);
+  touca::check("gpa", calculate_gpa(student.courses));
 
   custom_function_1(student);
 
@@ -178,7 +178,7 @@ touca::framework::Errors MyWorkflow::execute(
 template <>
 struct touca::converter<Date> {
   std::shared_ptr<types::IType> convert(const Date& value) {
-    auto out = std::make_shared<types::ObjectType>("Date");
+    auto out = std::make_shared<types::ObjectType>();
     out->add("year", value._year);
     out->add("month", value._month);
     out->add("day", value._day);

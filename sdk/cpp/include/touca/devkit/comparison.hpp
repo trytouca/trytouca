@@ -146,7 +146,7 @@ class TOUCA_CLIENT_API TestcaseComparison {
   Testcase::Metadata _srcMeta;
   Testcase::Metadata _dstMeta;
   // containers to hold comparison results
-  Cellar _assertions;
+  Cellar _assumptions;
   Cellar _results;
   Cellar _metrics;
   // pointers to testcases we are comparing

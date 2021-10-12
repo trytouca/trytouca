@@ -31,6 +31,10 @@ rapidjson::Value ObjectType::json(
     rjMembers.AddMember(rjKey, member.second->json(allocator), allocator);
   }
 
+  if (_name.empty()) {
+    return rjMembers;
+  }
+
   rapidjson::Value rjValue(rapidjson::kObjectType);
   rapidjson::Value rjName{_name, allocator};
   rjValue.AddMember(rjName, rjMembers, allocator);

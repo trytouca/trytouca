@@ -63,17 +63,16 @@ namespace internal {
 /**
  *
  */
-void add_result(const std::string& key,
-                const std::shared_ptr<types::IType>& value) {
-  instance.add_result(key, value);
+void check(const std::string& key, const std::shared_ptr<types::IType>& value) {
+  instance.check(key, value);
 }
 
 /**
  *
  */
-void add_assertion(const std::string& key,
-                   const std::shared_ptr<types::IType>& value) {
-  instance.add_assertion(key, value);
+void assume(const std::string& key,
+            const std::shared_ptr<types::IType>& value) {
+  instance.assume(key, value);
 }
 
 /**

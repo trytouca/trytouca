@@ -38,11 +38,11 @@ TEST_CASE("Testcase") {
     CHECK(meta.describe() == "some-team/some-suite/some-version/some-case");
   }
 
-  SECTION("assertion") {
+  SECTION("assume") {
     const auto value = std::make_shared<touca::types::BooleanType>(true);
-    testcase.add_assertion("some-key", value);
-    testcase.add_assertion("some-other-key", value);
-    CHECK_NOTHROW(testcase.add_assertion("some-key", value));
+    testcase.assume("some-key", value);
+    testcase.assume("some-other-key", value);
+    CHECK_NOTHROW(testcase.assume("some-key", value));
   }
 
   SECTION("add_hit_count") {
@@ -60,7 +60,7 @@ TEST_CASE("Testcase") {
 
     SECTION("unexpected-use: key is already used to store boolean") {
       const auto value = std::make_shared<touca::types::BooleanType>(true);
-      testcase.add_result("some-key", value);
+      testcase.check("some-key", value);
       CHECK_THROWS_AS(testcase.add_hit_count("some-key"),
                       std::invalid_argument);
       CHECK_THROWS_WITH(testcase.add_hit_count("some-key"),
@@ -70,7 +70,7 @@ TEST_CASE("Testcase") {
 
     SECTION("unexpected-use: key is already used to store float") {
       const auto value = std::make_shared<touca::types::Number<float>>(1.0f);
-      testcase.add_result("some-key", value);
+      testcase.check("some-key", value);
       CHECK_THROWS_AS(testcase.add_hit_count("some-key"),
                       std::invalid_argument);
       CHECK_THROWS_WITH(testcase.add_hit_count("some-key"),
@@ -96,13 +96,13 @@ TEST_CASE("Testcase") {
       const auto someBool = std::make_shared<touca::types::BooleanType>(true);
       const auto someNumber =
           std::make_shared<touca::types::Number<uint64_t>>(1);
-      testcase.add_result("some-key", someBool);
+      testcase.check("some-key", someBool);
       CHECK_THROWS_AS(testcase.add_array_element("some-key", someNumber),
                       std::invalid_argument);
       CHECK_THROWS_WITH(testcase.add_array_element("some-key", someNumber),
                         Catch::Contains("different type"));
-      CHECK_NOTHROW(testcase.add_result("some-key", someBool));
-      CHECK_NOTHROW(testcase.add_result("some-other-key", someNumber));
+      CHECK_NOTHROW(testcase.check("some-key", someBool));
+      CHECK_NOTHROW(testcase.check("some-other-key", someNumber));
     }
   }
 
@@ -112,8 +112,8 @@ TEST_CASE("Testcase") {
    */
   SECTION("clear") {
     const auto value = std::make_shared<touca::types::BooleanType>(true);
-    testcase.add_result("some-key", value);
-    testcase.add_assertion("some-other-key", value);
+    testcase.check("some-key", value);
+    testcase.assume("some-other-key", value);
     testcase.tic("some-metric");
     testcase.add_hit_count("some-new-key");
     testcase.toc("some-metric");
@@ -148,7 +148,7 @@ TEST_CASE("Testcase") {
           CHECK(testcase.overview().metricsDuration == counters[2]);
         };
     check_counters({0, 0, 0});
-    testcase.add_result("some-key", value);
+    testcase.check("some-key", value);
     check_counters({1, 0, 0});
     testcase.tic("some-metric");
     testcase.toc("some-metric");

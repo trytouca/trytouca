@@ -102,7 +102,7 @@ TEST_CASE("using a configured client") {
   SECTION("results") {
     client.declare_testcase("some-case");
     const auto& v1 = std::make_shared<types::BooleanType>(true);
-    CHECK_NOTHROW(client.add_result("some-value", v1));
+    CHECK_NOTHROW(client.check("some-value", v1));
     CHECK_NOTHROW(client.add_hit_count("some-other-value"));
     CHECK_NOTHROW(client.add_array_element("some-array-value", v1));
     const auto& content = saveAndReadBack(client);
@@ -114,10 +114,10 @@ TEST_CASE("using a configured client") {
   /**
    * bug
    */
-  SECTION("assertions") {
+  SECTION("assumptions") {
     client.declare_testcase("some-case");
     const auto& v1 = std::make_shared<types::BooleanType>(true);
-    CHECK_NOTHROW(client.add_assertion("some-value", v1));
+    CHECK_NOTHROW(client.assume("some-value", v1));
     const auto& content = saveAndReadBack(client);
     const auto& expected = R"([])";
     CHECK_THAT(content, Catch::Contains(expected));
@@ -146,8 +146,8 @@ TEST_CASE("using a configured client") {
   SECTION("forget_testcase") {
     client.declare_testcase("some-case");
     const auto& v1 = std::make_shared<types::BooleanType>(true);
-    client.add_result("some-value", v1);
-    client.add_assertion("some-assertion", v1);
+    client.check("some-value", v1);
+    client.assume("some-assertion", v1);
     client.start_timer("some-metric");
     client.stop_timer("some-metric");
     client.forget_testcase("some-case");

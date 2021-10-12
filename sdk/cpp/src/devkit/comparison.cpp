@@ -164,7 +164,7 @@ rapidjson::Value TestcaseComparison::json(
   rapidjson::Value out(rapidjson::kObjectType);
   out.AddMember("src", fromMetadata(_srcMeta, allocator), allocator);
   out.AddMember("dst", fromMetadata(_dstMeta, allocator), allocator);
-  out.AddMember("assertions", _assertions.json(allocator), allocator);
+  out.AddMember("assertions", _assumptions.json(allocator), allocator);
   out.AddMember("results", _results.json(allocator), allocator);
   out.AddMember("metrics", _metrics.json(allocator), allocator);
   return out;
@@ -235,9 +235,9 @@ void TestcaseComparison::compare() {
   // initialize metadata
   _srcMeta = _src.metadata();
   _dstMeta = _dst.metadata();
-  // perform comparisons on assertions
+  // perform comparisons on assumptions
   initCellar(_src._resultsMap, _dst._resultsMap, ResultCategory::Assert,
-             _assertions);
+             _assumptions);
   initCellar(_src._resultsMap, _dst._resultsMap, ResultCategory::Check,
              _results);
   initCellar(_src.metrics(), _dst.metrics(), _metrics);

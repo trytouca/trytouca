@@ -42,10 +42,10 @@ Declaring Testcases
 Capturing Test Results
 ----------------------
 
-.. doxygenfunction:: touca::add_result
+.. doxygenfunction:: touca::check
    :project: touca
 
-.. doxygenfunction:: touca::add_assertion
+.. doxygenfunction:: touca::assume
    :project: touca
 
 .. doxygenfunction:: touca::add_array_element

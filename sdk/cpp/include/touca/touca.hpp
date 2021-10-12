@@ -104,7 +104,7 @@ namespace touca {
  *        `declare_testcase` all other threads also have their
  *        most recent testcase changed to the newly declared
  *        testcase and any future call to logging functions like
- *        `add_result` will affect the newly declared testcase.
+ *        `check` will affect the newly declared testcase.
  *
  * The most common pattern for configuring the client is to set
  * configuration parameters `api-url` and `version` as shown below,
@@ -282,11 +282,11 @@ TOUCA_CLIENT_API void forget_testcase(const std::string& name);
  */
 namespace internal {
 
-TOUCA_CLIENT_API void add_result(
-    const std::string& key, const std::shared_ptr<touca::types::IType>& value);
+TOUCA_CLIENT_API void check(const std::string& key,
+                            const std::shared_ptr<touca::types::IType>& value);
 
-TOUCA_CLIENT_API void add_assertion(
-    const std::string& key, const std::shared_ptr<touca::types::IType>& value);
+TOUCA_CLIENT_API void assume(const std::string& key,
+                             const std::shared_ptr<touca::types::IType>& value);
 
 TOUCA_CLIENT_API void add_array_element(
     const std::string& key, const std::shared_ptr<touca::types::IType>& value);
@@ -314,42 +314,42 @@ TOUCA_CLIENT_API void add_array_element(
  * @param value value to be logged as a test result
  */
 template <typename Char, typename Value>
-void add_result(Char&& key, const Value& value) {
+void check(Char&& key, const Value& value) {
   const auto& ivalue = converter<Value>().convert(value);
-  internal::add_result(std::forward<Char>(key), ivalue);
+  internal::check(std::forward<Char>(key), ivalue);
 }
 
 /**
- * @brief Logs a given value as an assertion for the declared testcase
+ * @brief Logs a given value as an assumption for the declared testcase
  *        and associates it with the specified key.
  *
  * @details Assertions are a special category of test results that are
  *          hardly ever expected to change for a given test case between
  *          different versions of the workflow.
  *          Assertions are treated differently by the Touca server:
- *          The server specially highlights assertions if they are
+ *          The server specially highlights assumptions if they are
  *          different between two test versions and removes them from
  *          user focus if they remain unchanged.
- *          Therefore, assertions are particularly helpful for verifying
+ *          Therefore, assumptions are particularly helpful for verifying
  *          assumptions about input data and their properties.
  *
  * @tparam Char type of string to be associated with the value
- *         stored as an assertion. Expected to be convertible to
+ *         stored as an assumption. Expected to be convertible to
  *         `std::basic_string<char>`.
  *
  * @tparam Value original type of value `value` to be stored as
- *               an assertion in association with given key `key`.
+ *               an assumption in association with given key `key`.
  *
  * @param key name to be associated with the logged test result.
  *
- * @param value value to be logged as an assertion
+ * @param value value to be logged as an assumption
  *
- * @see add_result
+ * @see check
  */
 template <typename Char, typename Value>
-void add_assertion(Char&& key, const Value& value) {
+void assume(Char&& key, const Value& value) {
   const auto& ivalue = converter<Value>().convert(value);
-  internal::add_assertion(std::forward<Char>(key), ivalue);
+  internal::assume(std::forward<Char>(key), ivalue);
 }
 
 /**
@@ -377,8 +377,8 @@ void add_assertion(Char&& key, const Value& value) {
  *                  }
  *              }
  *              if (!primes.empty()) {
- *                  touca::add_result("prime numbers", primes);
- *                  touca::add_result("number of primes", primes.size());
+ *                  touca::check("prime numbers", primes);
+ *                  touca::check("number of primes", primes.size());
  *              }
  *          @endcode
  *
@@ -404,7 +404,7 @@ void add_assertion(Char&& key, const Value& value) {
  *        with a test result whose type is not a derivative of
  *        `touca::types::array`.
  *
- * @see add_result
+ * @see check
  *
  * @since v1.1
  */
@@ -440,8 +440,8 @@ void add_array_element(Char&& key, const Value& value) {
  *                  }
  *              }
  *              if (!primes.empty()) {
- *                  touca::add_result("prime numbers", primes);
- *                  touca::add_result("number of primes", primes.size());
+ *                  touca::check("prime numbers", primes);
+ *                  touca::check("number of primes", primes.size());
  *              }
  *          @endcode
  *

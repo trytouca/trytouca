@@ -119,7 +119,7 @@ called when the client is configured to run in offline mode.
 
 Once the client is configured, you can call `declare_testcase` once for each
 test case to indicate that subsequent calls to the data capturing functions like
-`add_result` should associate the captured data with that declared test case.
+`check` should associate the captured data with that declared test case.
 
 ```cpp
   for (const username of touca::get_testcases()) {
@@ -146,18 +146,17 @@ variables and performance benchmarks.
 
 ### Preserving Data Types
 
-Touca data capturing functions such as `touca::add_result`, preserve the types
-of all captured data so that the Touca server can compare them in their original
-type.
+Touca data capturing functions such as `touca::check`, preserve the types of all
+captured data so that the Touca server can compare them in their original type.
 
 ```cpp
-    touca::add_result("username", student.username);
-    touca::add_result("fullname", student.fullname);
-    touca::add_result("gpa", student.gpa);
+    touca::check("username", student.username);
+    touca::check("fullname", student.fullname);
+    touca::check("gpa", student.gpa);
 ```
 
-In the example above, `touca::add_result` stores value of properties `username`
-and `fullname` as `std::string` while property `gpa` is stored as `float`. The
+In the example above, `touca::check` stores value of properties `username` and
+`fullname` as `std::string` while property `gpa` is stored as `float`. The
 server visualizes possible differences in these values based on their types.
 
 ### Customizing Data Serialization
@@ -189,7 +188,7 @@ template <>
 struct touca::converter<Date> {
     std::shared_ptr<types::IType> convert(const Date& value)
     {
-        auto out = std::make_shared<types::ObjectType>("Date");
+        auto out = std::make_shared<types::ObjectType>();
         out->add("year", value.year);
         out->add("month", value.month);
         out->add("day", value.day);
@@ -207,7 +206,7 @@ objects of this type to be used as smaller components of even more complex
 types.
 
 ```cpp
-    touca::add_result("birth_date", student.dob);
+    touca::check("birth_date", student.dob);
 ```
 
 Consult with the Touca Type System section in Reference API documentation for

@@ -293,20 +293,20 @@ void ClientImpl::forget_testcase(const std::string& name) {
 /**
  *
  */
-void ClientImpl::add_result(const std::string& key,
-                            const std::shared_ptr<types::IType>& value) {
+void ClientImpl::check(const std::string& key,
+                       const std::shared_ptr<types::IType>& value) {
   if (hasLastTestcase()) {
-    _testcases.at(getLastTestcase())->add_result(key, value);
+    _testcases.at(getLastTestcase())->check(key, value);
   }
 }
 
 /**
  *
  */
-void ClientImpl::add_assertion(const std::string& key,
-                               const std::shared_ptr<types::IType>& value) {
+void ClientImpl::assume(const std::string& key,
+                        const std::shared_ptr<types::IType>& value) {
   if (hasLastTestcase()) {
-    _testcases.at(getLastTestcase())->add_assertion(key, value);
+    _testcases.at(getLastTestcase())->assume(key, value);
   }
 }
 
