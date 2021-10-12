@@ -8,23 +8,24 @@
  *
  */
 class MyWorkflow : public touca::framework::Workflow {
-public:
-    MyWorkflow();
-    std::string describe_options() const override;
-    bool parse_options(int argc, char* argv[]) override;
-    bool validate_options() const override;
-    std::shared_ptr<touca::framework::Suite> suite() const override;
-    touca::framework::Errors execute(const touca::framework::Testcase& testcase) const override;
+ public:
+  MyWorkflow();
+  std::string describe_options() const override;
+  bool parse_options(int argc, char* argv[]) override;
+  bool validate_options() const override;
+  std::shared_ptr<touca::framework::Suite> suite() const override;
+  touca::framework::Errors execute(
+      const touca::framework::Testcase& testcase) const override;
 };
 
 /**
  *
  */
 class MySuite final : public touca::framework::Suite {
-public:
-    MySuite(const std::string& datasetDir);
-    void initialize() override;
+ public:
+  MySuite(const std::string& datasetDir);
+  void initialize() override;
 
-private:
-    std::string _dir;
+ private:
+  std::string _dir;
 };

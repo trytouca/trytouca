@@ -5,21 +5,21 @@
 #include <vector>
 
 struct Date {
-    unsigned short year;
-    unsigned short month;
-    unsigned short day;
+  unsigned short year;
+  unsigned short month;
+  unsigned short day;
 };
 
 struct Course {
-    std::string name;
-    float grade;
+  std::string name;
+  float grade;
 };
 
 struct Student {
-    std::string username;
-    std::string fullname;
-    Date dob;
-    std::vector<Course> courses;
+  std::string username;
+  std::string fullname;
+  Date dob;
+  std::vector<Course> courses;
 };
 
 float calculate_gpa(const std::vector<Course>& courses);
