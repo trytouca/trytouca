@@ -15,14 +15,14 @@ namespace compare {
 /**
  *
  */
-std::string Cellar::stringify(const types::ValueType type) const {
-  using vt = types::ValueType;
-  const std::unordered_map<types::ValueType, std::string> store = {
-      {vt::Bool, "bool"},
-      {vt::Number, "number"},
-      {vt::String, "string"},
-      {vt::Array, "array"},
-      {vt::Object, "object"}};
+std::string Cellar::stringify(const types::value_t type) const {
+  using vt = types::value_t;
+  const std::unordered_map<types::value_t, std::string> store = {
+      {vt::boolean, "bool"},
+      {vt::numeric, "number"},
+      {vt::string, "string"},
+      {vt::array, "array"},
+      {vt::object, "object"}};
   if (store.count(type)) {
     return store.at(type);
   }
@@ -84,7 +84,7 @@ rapidjson::Value Cellar::buildJsonCommon(
     rj::Value rjScore{kv.second.score};
     rj::Value rjSrcType{stringify(kv.second.srcType), allocator};
     rj::Value rjSrcValue{kv.second.srcValue, allocator};
-    if (types::ValueType::Unknown != kv.second.dstType) {
+    if (types::value_t::unknown != kv.second.dstType) {
       rjDstType.Set(stringify(kv.second.dstType), allocator);
     }
     if (compare::MatchType::Perfect != kv.second.match) {
@@ -103,7 +103,7 @@ rapidjson::Value Cellar::buildJsonCommon(
     rjElement.AddMember("score", rjScore, allocator);
     rjElement.AddMember("srcType", rjSrcType, allocator);
     rjElement.AddMember("srcValue", rjSrcValue, allocator);
-    if (types::ValueType::Unknown != kv.second.dstType) {
+    if (types::value_t::unknown != kv.second.dstType) {
       rjElement.AddMember("dstType", rjDstType, allocator);
     }
     if (compare::MatchType::Perfect != kv.second.match) {

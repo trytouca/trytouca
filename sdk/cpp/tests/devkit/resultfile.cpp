@@ -34,9 +34,10 @@ TEST_CASE("Result File Operations") {
 
   SECTION("stored result file") {
     touca::Testcase tc("acme", "students", "1.0", "aanderson");
-    tc.add_result("firstname", std::make_shared<touca::types::String>("alice"));
+    tc.add_result("firstname",
+                  std::make_shared<touca::types::StringType>("alice"));
     tc.add_result("lastname",
-                  std::make_shared<touca::types::String>("anderson"));
+                  std::make_shared<touca::types::StringType>("anderson"));
     REQUIRE_NOTHROW(resultFile.save({tc}));
 
     /*
@@ -135,9 +136,9 @@ TEST_CASE("Result File Operations") {
       touca::ResultFile newResultFile(newTmpFile.path);
       touca::Testcase tc_dst("acme", "students", "1.0", "bbrown");
       tc_dst.add_result("firstname",
-                        std::make_shared<touca::types::String>("bob"));
+                        std::make_shared<touca::types::StringType>("bob"));
       tc_dst.add_result("lastname",
-                        std::make_shared<touca::types::String>("brown"));
+                        std::make_shared<touca::types::StringType>("brown"));
       REQUIRE_NOTHROW(newResultFile.save({tc_dst}));
 
       touca::ResultFile newResultFile2(newTmpFile.path);

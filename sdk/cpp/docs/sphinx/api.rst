@@ -90,7 +90,7 @@ Submitting Test Results
 Extending Touca Type System
 ----------------------------
 
-.. doxygenstruct:: touca::convert::Conversion
+.. doxygenstruct:: touca::converter
    :project: touca
 
 Test Framework

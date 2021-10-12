@@ -26,8 +26,8 @@ enum class MatchType : unsigned char {
 struct TOUCA_CLIENT_API TypeComparison {
   std::string srcValue;
   std::string dstValue;
-  types::ValueType srcType = types::ValueType::Unknown;
-  types::ValueType dstType = types::ValueType::Unknown;
+  types::value_t srcType = types::value_t::unknown;
+  types::value_t dstType = types::value_t::unknown;
   double score = 0.0;
   std::set<std::string> desc;
   MatchType match = MatchType::None;
@@ -60,7 +60,7 @@ struct Cellar {
   /**
    *
    */
-  std::string stringify(const types::ValueType type) const;
+  std::string stringify(const types::value_t type) const;
 
   /**
    *

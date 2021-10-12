@@ -9,7 +9,7 @@
 namespace creature {
 
 class Head {
-  friend struct touca::convert::Conversion<creature::Head>;
+  friend struct touca::converter<creature::Head>;
 
  public:
   explicit Head(const uint64_t eyes) : _eyes(eyes) {}
@@ -21,9 +21,9 @@ class Head {
 }  // namespace creature
 
 template <>
-struct touca::convert::Conversion<creature::Head> {
-  std::shared_ptr<types::IType> operator()(const creature::Head& value) {
-    auto out = std::make_shared<types::Object>("head");
+struct touca::converter<creature::Head> {
+  std::shared_ptr<types::IType> convert(const creature::Head& value) {
+    auto out = std::make_shared<types::ObjectType>("head");
     out->add("eyes", value._eyes);
     return out;
   }
@@ -50,19 +50,19 @@ TEST_CASE("Simple Data Types") {
   using namespace touca;
 
   SECTION("type: bool") {
-    const auto& value = std::make_shared<types::Bool>(true);
+    const auto& value = std::make_shared<types::BooleanType>(true);
 
     SECTION("initialize") {
       CHECK(value->flatten().empty());
       CHECK(value->string() == "true");
-      CHECK(types::ValueType::Bool == value->type());
+      CHECK(types::value_t::boolean == value->type());
     }
 
     SECTION("compare: match") {
-      const auto& right = std::make_shared<types::Bool>(true);
+      const auto& right = std::make_shared<types::BooleanType>(true);
       const auto& cmp = value->compare(right);
-      CHECK(types::ValueType::Bool == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::boolean == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "true");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -71,10 +71,10 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch value") {
-      const auto& right = std::make_shared<types::Bool>(false);
+      const auto& right = std::make_shared<types::BooleanType>(false);
       const auto& cmp = value->compare(right);
-      CHECK(types::ValueType::Bool == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::boolean == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "true");
       CHECK(cmp.dstValue == "false");
       CHECK(compare::MatchType::None == cmp.match);
@@ -83,10 +83,10 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch type") {
-      const auto& right = std::make_shared<types::String>("true");
+      const auto& right = std::make_shared<types::StringType>("true");
       const auto& cmp = value->compare(right);
-      CHECK(types::ValueType::Bool == cmp.srcType);
-      CHECK(types::ValueType::String == cmp.dstType);
+      CHECK(types::value_t::boolean == cmp.srcType);
+      CHECK(types::value_t::string == cmp.dstType);
       CHECK(cmp.srcValue == "true");
       CHECK(cmp.dstValue == "true");
       CHECK(compare::MatchType::None == cmp.match);
@@ -99,10 +99,10 @@ TEST_CASE("Simple Data Types") {
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
       const auto& cmp = value->compare(itype);
-      CHECK(types::ValueType::Bool == itype->type());
+      CHECK(types::value_t::boolean == itype->type());
       CHECK(itype->string() == "true");
-      CHECK(types::ValueType::Bool == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::boolean == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "true");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -116,15 +116,15 @@ TEST_CASE("Simple Data Types") {
       types::Number<int> value(42);
       CHECK(value.flatten().empty());
       CHECK(value.string() == "42");
-      CHECK(types::ValueType::Number == value.type());
+      CHECK(types::value_t::numeric == value.type());
     }
 
     SECTION("compare: match") {
       types::Number<int> value(42);
       const auto& right = std::make_shared<types::Number<int>>(42);
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::Number == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::numeric == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "42");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -136,8 +136,8 @@ TEST_CASE("Simple Data Types") {
       types::Number<int> value(5);
       const auto& right = std::make_shared<types::Number<int>>(10);
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::Number == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::numeric == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "5");
       CHECK(cmp.dstValue == "10");
       CHECK(compare::MatchType::None == cmp.match);
@@ -150,8 +150,8 @@ TEST_CASE("Simple Data Types") {
       types::Number<int> value(12);
       const auto& right = std::make_shared<types::Number<int>>(10);
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::Number == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::numeric == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "12");
       CHECK(cmp.dstValue == "10");
       CHECK(compare::MatchType::None == cmp.match);
@@ -162,10 +162,10 @@ TEST_CASE("Simple Data Types") {
 
     SECTION("compare: mismatch type") {
       types::Number<int> value(42);
-      const auto& right = std::make_shared<types::Bool>(false);
+      const auto& right = std::make_shared<types::BooleanType>(false);
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::Number == cmp.srcType);
-      CHECK(types::ValueType::Bool == cmp.dstType);
+      CHECK(types::value_t::numeric == cmp.srcType);
+      CHECK(types::value_t::boolean == cmp.dstType);
       CHECK(cmp.srcValue == "42");
       CHECK(cmp.dstValue == "false");
       CHECK(compare::MatchType::None == cmp.match);
@@ -179,10 +179,10 @@ TEST_CASE("Simple Data Types") {
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
       const auto& cmp = value->compare(itype);
-      CHECK(types::ValueType::Number == itype->type());
+      CHECK(types::value_t::numeric == itype->type());
       CHECK(itype->string() == "42");
-      CHECK(types::ValueType::Number == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::numeric == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "42");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -196,15 +196,15 @@ TEST_CASE("Simple Data Types") {
       types::Number<double> value(0.0);
       CHECK(value.flatten().empty());
       CHECK(value.string() == "0.0");
-      CHECK(types::ValueType::Number == value.type());
+      CHECK(types::value_t::numeric == value.type());
     }
 
     SECTION("match") {
       types::Number<double> value(1.0);
       const auto& right = std::make_shared<types::Number<double>>(1.0);
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::Number == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::numeric == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "1.0");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -216,8 +216,8 @@ TEST_CASE("Simple Data Types") {
       types::Number<double> value(0.0);
       const auto& right = std::make_shared<types::Number<double>>(1.0);
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::Number == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::numeric == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "0.0");
       CHECK(cmp.dstValue == "1.0");
       CHECK(compare::MatchType::None == cmp.match);
@@ -230,8 +230,8 @@ TEST_CASE("Simple Data Types") {
       types::Number<double> value(1.1);
       const auto& right = std::make_shared<types::Number<double>>(1.0);
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::Number == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::numeric == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "1.1");
       CHECK(cmp.dstValue == "1.0");
       CHECK(compare::MatchType::None == cmp.match);
@@ -242,10 +242,10 @@ TEST_CASE("Simple Data Types") {
 
     SECTION("compare: mismatch type") {
       types::Number<double> value(1.0);
-      const auto& right = std::make_shared<types::Bool>(false);
+      const auto& right = std::make_shared<types::BooleanType>(false);
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::Number == cmp.srcType);
-      CHECK(types::ValueType::Bool == cmp.dstType);
+      CHECK(types::value_t::numeric == cmp.srcType);
+      CHECK(types::value_t::boolean == cmp.dstType);
       CHECK(cmp.srcValue == "1.0");
       CHECK(cmp.dstValue == "false");
       CHECK(compare::MatchType::None == cmp.match);
@@ -259,10 +259,10 @@ TEST_CASE("Simple Data Types") {
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
       const auto& cmp = value->compare(itype);
-      CHECK(types::ValueType::Number == itype->type());
+      CHECK(types::value_t::numeric == itype->type());
       CHECK(itype->string() == "1.0");
-      CHECK(types::ValueType::Number == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::numeric == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "1.0");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -273,18 +273,18 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: string") {
     SECTION("initialize") {
-      types::String value("some_value");
+      types::StringType value("some_value");
       CHECK(value.flatten().empty());
       CHECK(value.string() == "some_value");
-      CHECK(types::ValueType::String == value.type());
+      CHECK(types::value_t::string == value.type());
     }
 
     SECTION("compare: match") {
-      types::String value("some_value");
-      const auto& right = std::make_shared<types::String>("some_value");
+      types::StringType value("some_value");
+      const auto& right = std::make_shared<types::StringType>("some_value");
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::String == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::string == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -293,11 +293,11 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch value") {
-      types::String value("some_value");
-      const auto& right = std::make_shared<types::String>("other_value");
+      types::StringType value("some_value");
+      const auto& right = std::make_shared<types::StringType>("other_value");
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::String == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::string == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
       CHECK(cmp.dstValue == "other_value");
       CHECK(compare::MatchType::None == cmp.match);
@@ -306,11 +306,11 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch type") {
-      types::String value("some_value");
-      const auto& right = std::make_shared<types::Bool>(false);
+      types::StringType value("some_value");
+      const auto& right = std::make_shared<types::BooleanType>(false);
       const auto& cmp = value.compare(right);
-      CHECK(types::ValueType::String == cmp.srcType);
-      CHECK(types::ValueType::Bool == cmp.dstType);
+      CHECK(types::value_t::string == cmp.srcType);
+      CHECK(types::value_t::boolean == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
       CHECK(cmp.dstValue == "false");
       CHECK(compare::MatchType::None == cmp.match);
@@ -319,14 +319,14 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("serialize") {
-      const auto& value = std::make_shared<types::String>("some_value");
+      const auto& value = std::make_shared<types::StringType>("some_value");
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
       const auto& cmp = value->compare(itype);
-      CHECK(types::ValueType::String == itype->type());
+      CHECK(types::value_t::string == itype->type());
       CHECK(itype->string() == "some_value");
-      CHECK(types::ValueType::String == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::string == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -337,21 +337,21 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: array") {
     SECTION("initialize") {
-      const auto& element1 = std::make_shared<types::Bool>(false);
-      types::Array value;
+      const auto& element1 = std::make_shared<types::BooleanType>(false);
+      types::ArrayType value;
       CHECK(value.flatten().empty());
       CHECK(value.string() == "[]");
       CHECK_NOTHROW(value.add(element1));
       CHECK(value.flatten().count("[0]"));
       CHECK(value.string() == "[false]");
-      CHECK(types::ValueType::Array == value.type());
+      CHECK(types::value_t::array == value.type());
     }
 
     SECTION("compare: match: value of type bool") {
       const auto& makeArray = [](const std::vector<bool>& vec) {
-        const auto& ret = std::make_shared<types::Array>();
+        const auto& ret = std::make_shared<types::ArrayType>();
         for (const auto&& v : vec) {
-          ret->add(std::make_shared<types::Bool>(v));
+          ret->add(std::make_shared<types::BooleanType>(v));
         }
         return ret;
       };
@@ -362,10 +362,10 @@ TEST_CASE("Simple Data Types") {
       CHECK(left->flatten().size() == 4ul);
       CHECK(left->string() == "[true,true,true,true]");
       CHECK(right->string() == "[true,true,true,true]");
-      CHECK(types::ValueType::Array == left->type());
-      CHECK(types::ValueType::Array == right->type());
-      CHECK(types::ValueType::Array == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::array == left->type());
+      CHECK(types::value_t::array == right->type());
+      CHECK(types::value_t::array == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "[true,true,true,true]");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -375,7 +375,7 @@ TEST_CASE("Simple Data Types") {
 
     SECTION("compare: match value of type int") {
       const auto& makeArray = [](const std::vector<int>& vec) {
-        const auto& ret = std::make_shared<types::Array>();
+        const auto& ret = std::make_shared<types::ArrayType>();
         for (const auto& v : vec) {
           ret->add(std::make_shared<types::Number<int64_t>>(v));
         }
@@ -386,10 +386,10 @@ TEST_CASE("Simple Data Types") {
       const auto& itype = deserialize(buffer);
       const auto& cmp = value->compare(itype);
 
-      CHECK(types::ValueType::Array == itype->type());
+      CHECK(types::value_t::array == itype->type());
       CHECK(itype->string() == R"([41,42,43,44])");
-      CHECK(types::ValueType::Array == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::array == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == R"([41,42,43,44])");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -399,7 +399,7 @@ TEST_CASE("Simple Data Types") {
 
     SECTION("compare: match value of type float") {
       const auto& makeArray = [](const std::vector<float>& vec) {
-        const auto& ret = std::make_shared<types::Array>();
+        const auto& ret = std::make_shared<types::ArrayType>();
         for (const auto& v : vec) {
           ret->add(std::make_shared<types::Number<float>>(v));
         }
@@ -410,10 +410,10 @@ TEST_CASE("Simple Data Types") {
       const auto& itype = deserialize(buffer);
       const auto& cmp = value->compare(itype);
 
-      CHECK(types::ValueType::Array == itype->type());
+      CHECK(types::value_t::array == itype->type());
       CHECK(itype->string() == R"([1.1,1.2,1.299,1.399])");
-      CHECK(types::ValueType::Array == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::array == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == R"([1.1,1.2,1.299,1.399])");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -423,9 +423,9 @@ TEST_CASE("Simple Data Types") {
 
     SECTION("compare: match value of type string") {
       const auto& makeArray = [](const std::vector<std::string>& vec) {
-        const auto& ret = std::make_shared<types::Array>();
+        const auto& ret = std::make_shared<types::ArrayType>();
         for (const auto& v : vec) {
-          ret->add(std::make_shared<types::String>(v));
+          ret->add(std::make_shared<types::StringType>(v));
         }
         return ret;
       };
@@ -433,11 +433,11 @@ TEST_CASE("Simple Data Types") {
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
 
-      CHECK(types::ValueType::Array == itype->type());
+      CHECK(types::value_t::array == itype->type());
       CHECK(itype->string() == R"(["a","b","c","d"])");
       const auto& cmp = value->compare(itype);
-      CHECK(types::ValueType::Array == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::array == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == R"(["a","b","c","d"])");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -447,9 +447,9 @@ TEST_CASE("Simple Data Types") {
 
     SECTION("compare: mismatch value of type bool") {
       const auto& makeArray = [](const std::vector<bool>& vec) {
-        const auto& ret = std::make_shared<types::Array>();
+        const auto& ret = std::make_shared<types::ArrayType>();
         for (const auto&& v : vec) {
-          ret->add(std::make_shared<types::Bool>(v));
+          ret->add(std::make_shared<types::BooleanType>(v));
         }
         return ret;
       };
@@ -460,10 +460,10 @@ TEST_CASE("Simple Data Types") {
       CHECK(left->flatten().size() == 4ul);
       CHECK(left->string() == "[false,true,false,true]");
       CHECK(right->string() == "[true,false,false,true]");
-      CHECK(types::ValueType::Array == left->type());
-      CHECK(types::ValueType::Array == right->type());
-      CHECK(types::ValueType::Array == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::array == left->type());
+      CHECK(types::value_t::array == right->type());
+      CHECK(types::value_t::array == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "[false,true,false,true]");
       CHECK(cmp.dstValue == "[true,false,false,true]");
       CHECK(compare::MatchType::None == cmp.match);
@@ -473,7 +473,7 @@ TEST_CASE("Simple Data Types") {
 
     SECTION("compare: mismatch value of type int") {
       const auto& makeArray = [](const std::vector<int>& vec) {
-        const auto& ret = std::make_shared<types::Array>();
+        const auto& ret = std::make_shared<types::ArrayType>();
         for (const auto& v : vec) {
           ret->add(std::make_shared<types::Number<int>>(v));
         }
@@ -488,8 +488,8 @@ TEST_CASE("Simple Data Types") {
 
       CHECK(left->flatten().size() == 20ul);
       CHECK(right->flatten().size() == 20ul);
-      CHECK(types::ValueType::Array == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::array == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(compare::MatchType::None == cmp.match);
       CHECK(cmp.score == 0.95);
       CHECK(cmp.desc.size() == 1u);
@@ -498,7 +498,7 @@ TEST_CASE("Simple Data Types") {
 
     SECTION("compare: mismatch size") {
       const auto& makeArray = [](const size_t length) {
-        const auto& ret = std::make_shared<types::Array>();
+        const auto& ret = std::make_shared<types::ArrayType>();
         for (auto i = 0u; i < length; i++) {
           ret->add(std::make_shared<types::Number<int>>(1));
         }
@@ -513,8 +513,8 @@ TEST_CASE("Simple Data Types") {
       CHECK(right->string() == "[1,1,1,1,1,1]");
 
       const auto& cmp1 = left->compare(right);
-      CHECK(types::ValueType::Array == cmp1.srcType);
-      CHECK(types::ValueType::Unknown == cmp1.dstType);
+      CHECK(types::value_t::array == cmp1.srcType);
+      CHECK(types::value_t::unknown == cmp1.dstType);
       CHECK(cmp1.srcValue == "[1,1,1,1]");
       CHECK(cmp1.dstValue == "[1,1,1,1,1,1]");
       CHECK(compare::MatchType::None == cmp1.match);
@@ -523,8 +523,8 @@ TEST_CASE("Simple Data Types") {
       CHECK(cmp1.desc.count("array size shrunk by 2 elements"));
 
       const auto& cmp2 = right->compare(left);
-      CHECK(types::ValueType::Array == cmp2.srcType);
-      CHECK(types::ValueType::Unknown == cmp2.dstType);
+      CHECK(types::value_t::array == cmp2.srcType);
+      CHECK(types::value_t::unknown == cmp2.dstType);
       CHECK(cmp2.srcValue == "[1,1,1,1,1,1]");
       CHECK(cmp2.dstValue == "[1,1,1,1]");
       CHECK(compare::MatchType::None == cmp2.match);
@@ -535,9 +535,9 @@ TEST_CASE("Simple Data Types") {
 
     SECTION("serialize") {
       const auto& makeArray = [](const std::vector<bool>& vec) {
-        const auto& ret = std::make_shared<types::Array>();
+        const auto& ret = std::make_shared<types::ArrayType>();
         for (const auto&& v : vec) {
-          ret->add(std::make_shared<types::Bool>(v));
+          ret->add(std::make_shared<types::BooleanType>(v));
         }
         return ret;
       };
@@ -546,10 +546,10 @@ TEST_CASE("Simple Data Types") {
       const auto& itype = deserialize(buffer);
       const auto& cmp = value->compare(itype);
 
-      CHECK(types::ValueType::Array == itype->type());
+      CHECK(types::value_t::array == itype->type());
       CHECK(itype->string() == R"([false,true,false,true])");
-      CHECK(types::ValueType::Array == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::array == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == R"([false,true,false,true])");
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -560,7 +560,7 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: object") {
     SECTION("initialize: add number to object") {
-      types::Object value("creature");
+      types::ObjectType value("creature");
       CHECK(value.flatten().empty());
       CHECK(value.string() == R"({"creature":{}})");
       value.add("number of heads", 1);
@@ -573,7 +573,7 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("initialize: add object to object") {
-      types::Object value("creature");
+      types::ObjectType value("creature");
       CHECK(value.flatten().empty());
       creature::Head head1(2);
       value.add("first_head", head1);
@@ -583,14 +583,14 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: match") {
-      types::Object value("creature");
+      types::ObjectType value("creature");
       value.add("first_head", creature::Head(2));
-      auto right = std::make_shared<types::Object>("some_other_creature");
+      auto right = std::make_shared<types::ObjectType>("some_other_creature");
       right->add("first_head", creature::Head(2));
       const auto& cmp = value.compare(right);
 
-      CHECK(types::ValueType::Object == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::object == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue ==
             R"({"creature":{"first_head":{"head":{"eyes":2}}}})");
       CHECK(cmp.dstValue == R"()");
@@ -600,14 +600,14 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch value") {
-      types::Object value("creature");
+      types::ObjectType value("creature");
       value.add("first_head", creature::Head(2));
-      auto right = std::make_shared<types::Object>("some_other_creature");
+      auto right = std::make_shared<types::ObjectType>("some_other_creature");
       right->add("first_head", creature::Head(3));
       const auto& cmp = value.compare(right);
 
-      CHECK(types::ValueType::Object == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::object == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue ==
             R"({"creature":{"first_head":{"head":{"eyes":2}}}})");
       CHECK(cmp.dstValue ==
@@ -619,7 +619,7 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("serialize") {
-      const auto& value = std::make_shared<types::Object>("creature");
+      const auto& value = std::make_shared<types::ObjectType>("creature");
       value->add("first_head", creature::Head(2));
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
@@ -627,10 +627,10 @@ TEST_CASE("Simple Data Types") {
           R"({"creature":{"first_head":{"head":{"eyes":2}}}})";
       const auto& cmp = value->compare(itype);
 
-      CHECK(types::ValueType::Object == itype->type());
+      CHECK(types::value_t::object == itype->type());
       CHECK(itype->string() == expected);
-      CHECK(types::ValueType::Object == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::object == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == expected);
       CHECK(cmp.dstValue == "");
       CHECK(compare::MatchType::Perfect == cmp.match);
@@ -645,7 +645,7 @@ TEST_CASE("Simple Data Types") {
         for (const auto& v : vec) {
           inputs.emplace_back(v);
         }
-        return convert::Conversion<type_t>()(inputs);
+        return converter<type_t>().convert(inputs);
       };
       const auto& left = make({1, 3, 4, 1, 0});
       const auto& right = make({1, 3, 4, 0, 1});
@@ -669,8 +669,8 @@ TEST_CASE("Simple Data Types") {
       const auto& expected = R"({"std::pair":{"first":true,"second":false}})";
 
       SECTION("initialize") {
-        const auto& itype = convert::Conversion<type_t>()(value);
-        CHECK(types::ValueType::Object == itype->type());
+        const auto& itype = converter<type_t>().convert(value);
+        CHECK(types::value_t::object == itype->type());
         CHECK(itype->string() == expected);
         CHECK_FALSE(itype->flatten().empty());
         CHECK(itype->flatten().count("first"));
@@ -680,11 +680,11 @@ TEST_CASE("Simple Data Types") {
       SECTION("compare") {
         const type_t leftValue(true, false);
         const type_t rightValue(false, false);
-        const auto& left = convert::Conversion<type_t>()(leftValue);
-        const auto& right = convert::Conversion<type_t>()(rightValue);
+        const auto& left = converter<type_t>().convert(leftValue);
+        const auto& right = converter<type_t>().convert(rightValue);
         const auto& cmp = left->compare(right);
-        CHECK(types::ValueType::Object == cmp.srcType);
-        CHECK(types::ValueType::Unknown == cmp.dstType);
+        CHECK(types::value_t::object == cmp.srcType);
+        CHECK(types::value_t::unknown == cmp.dstType);
         CHECK(cmp.srcValue == expected);
         CHECK(cmp.dstValue ==
               R"({"std::pair":{"first":false,"second":false}})");
@@ -698,12 +698,12 @@ TEST_CASE("Simple Data Types") {
       using type_t = std::vector<std::pair<std::wstring, std::wstring>>;
       const type_t leftValue{{L"k1", L"v1"}, {L"k2", L"v2"}};
       const type_t rightValue{{L"k1", L"v1"}, {L"k2", L"v2"}};
-      const auto& left = convert::Conversion<type_t>()(leftValue);
-      const auto& right = convert::Conversion<type_t>()(rightValue);
+      const auto& left = converter<type_t>().convert(leftValue);
+      const auto& right = converter<type_t>().convert(rightValue);
       const auto& cmp = left->compare(right);
 
-      CHECK(types::ValueType::Array == cmp.srcType);
-      CHECK(types::ValueType::Unknown == cmp.dstType);
+      CHECK(types::value_t::array == cmp.srcType);
+      CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(
           cmp.srcValue ==
           R"([{"std::pair":{"first":"k1","second":"v1"}},{"std::pair":{"first":"k2","second":"v2"}}])");
@@ -717,8 +717,8 @@ TEST_CASE("Simple Data Types") {
 
       SECTION("initialize") {
         const auto& value = std::make_shared<bool>(true);
-        const auto& itype = convert::Conversion<type_t>()(value);
-        CHECK(types::ValueType::Object == itype->type());
+        const auto& itype = converter<type_t>().convert(value);
+        CHECK(types::value_t::object == itype->type());
         CHECK(itype->string() == R"({"std::shared_ptr":{"v":true}})");
         CHECK_FALSE(itype->flatten().empty());
         CHECK(itype->flatten().count("v"));
@@ -727,8 +727,8 @@ TEST_CASE("Simple Data Types") {
 
       SECTION("initialize: null") {
         const type_t value;
-        const auto& itype = convert::Conversion<type_t>()(value);
-        CHECK(types::ValueType::Object == itype->type());
+        const auto& itype = converter<type_t>().convert(value);
+        CHECK(types::value_t::object == itype->type());
         CHECK(itype->string() == R"({"std::shared_ptr":{}})");
         CHECK(itype->flatten().empty());
       }
@@ -736,14 +736,14 @@ TEST_CASE("Simple Data Types") {
       SECTION("compare: mismatch") {
         const auto& leftValue = std::make_shared<bool>(true);
         const auto& rightValue = std::make_shared<bool>(false);
-        const auto& left = convert::Conversion<type_t>()(leftValue);
-        const auto& right = convert::Conversion<type_t>()(rightValue);
+        const auto& left = converter<type_t>().convert(leftValue);
+        const auto& right = converter<type_t>().convert(rightValue);
         const auto& cmp = left->compare(right);
 
         CHECK(compare::MatchType::None == cmp.match);
         CHECK(cmp.score == 0.0);
-        CHECK(types::ValueType::Object == cmp.srcType);
-        CHECK(types::ValueType::Unknown == cmp.dstType);
+        CHECK(types::value_t::object == cmp.srcType);
+        CHECK(types::value_t::unknown == cmp.dstType);
         CHECK(cmp.srcValue == R"({"std::shared_ptr":{"v":true}})");
         CHECK(cmp.dstValue == R"({"std::shared_ptr":{"v":false}})");
         CHECK(cmp.desc.empty());
@@ -753,9 +753,9 @@ TEST_CASE("Simple Data Types") {
     SECTION("std::map") {
       using type_t = std::map<unsigned int, bool>;
       type_t value = {{1u, true}, {2u, false}};
-      const auto& itype = convert::Conversion<type_t>()(value);
+      const auto& itype = converter<type_t>().convert(value);
 
-      CHECK(types::ValueType::Array == itype->type());
+      CHECK(types::value_t::array == itype->type());
       CHECK(
           itype->string() ==
           R"([{"std::pair":{"first":1,"second":true}},{"std::pair":{"first":2,"second":false}}])");

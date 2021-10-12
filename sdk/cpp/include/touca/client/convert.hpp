@@ -13,73 +13,11 @@
 
 #include "touca/core/types.hpp"
 
-/**
- * @def TOUCA_CONVERSION_LOGIC
- * @brief convenience macro for defining conversion logic for a custom type
- * @details
- *
- * This macro abstracts away template specialization declaration for
- * handling custom types by Touca SDK for C++. We recommend using this
- * macro together with TOUCA_CONVERSION_FUNCTION and TOUCA_CUSTOM_TYPE
- * macros.
- *
- * A sample code snippet to define how Touca should handle an object
- * of type `some_type` is provided as follows:
- *
- * @code
- *      struct some_type
- *      {
- *          std::string message;
- *          int number;
- *      };
- *
- *      TOUCA_CONVERSION_LOGIC(some_type)
- *      {
- *          TOUCA_CONVERSION_FUNCTION(some_type, value)
- *          {
- *              auto out = TOUCA_CUSTOM_TYPE("some_type");
- *              out->add("message", value.message);
- *              out->add("number", value.number);
- *              return out;
- *          }
- *      }
- * @endcode
- *
- * @see touca::convert::Conversion
- *      for more information about handling objects of custom types
- *      by Touca SDK for C++
- */
-#define TOUCA_CONVERSION_LOGIC(T) \
-  template <>                     \
-  struct touca::convert::Conversion<T>
-
-/**
- * @def TOUCA_CONVERSION_FUNCTION
- * @brief convenience macro for defining conversion logic for a custom type
- *
- * @see touca::convert::Conversion
- *      for more information about handling objects of custom types
- *      by Touca SDK for C++
- */
-#define TOUCA_CONVERSION_FUNCTION(T, N) \
-  std::shared_ptr<types::IType> operator()(const T& N)
-
-/**
- * @def TOUCA_CUSTOM_TYPE
- * @brief convenience macro for defining conversion logic for a custom type
- *
- * @see touca::convert::Conversion
- *      for more information about handling objects of custom types
- *      by Touca SDK for C++
- */
-#define TOUCA_CUSTOM_TYPE(N) std::make_shared<types::Object>(N)
-
 namespace touca {
-namespace convert {
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-namespace conform {
+namespace detail {
 /**
  * unlike std::integral_constant children such as is_same and
  * is_base_of there is no off-the-shelf function to check if a
@@ -171,7 +109,7 @@ to_string(const T& value) {
   return conv.to_bytes(value);
 }
 
-}  // namespace conform
+}  // namespace detail
 
 #endif  // DOXYGEN_SHOULD_SKIP_THIS
 
@@ -180,14 +118,14 @@ to_string(const T& value) {
  *        logic for handling objects of custom types by the
  *        Touca SDK for C++.
  * @tparam T type whose handling logic is to be implemented
- *           in `operator()()` member function.
+ *           in `convert` member function.
  *
  * @details Allows users developing regression tools to provide
  *          explicit full specialization of this class that makes
  *          it convenient to pass objects of their non-trivial type
  *          directly to Touca API functions that accept testresults.
  *
- * The following example illustrates a specialization of Conversion
+ * The following example illustrates a specialization of converter
  * for a custom type `Date`.
  *
  * @code{.cpp}
@@ -200,32 +138,11 @@ to_string(const T& value) {
  *      };
  *
  *      template <>
- *      struct touca::convert::Conversion<Date>
+ *      struct touca::converter<Date>
  *      {
- *          std::shared_ptr<types::IType> operator()(const Date& value)
+ *          std::shared_ptr<types::IType> convert(const Date& value)
  *          {
- *              auto out = std::make_shared<types::Object>("Date");
- *              out->add("year", value._year);
- *              out->add("month", value._month);
- *              out->add("day", value._day);
- *              return out;
- *          }
- *      };
- *
- * @endcode
- *
- * You may also opt to leverage convenience macros provided by the
- * Touca SDK for C++ to abstract away the template specialization
- * syntax. To illustrate, the conversion logic shown above can also be
- * declared as the following:
- *
- * @code{.cpp}
- *
- *      TOUCA_CONVERSION_LOGIC(Date)
- *      {
- *          TOUCA_CONVERSION_FUNCTION(Date, value)
- *          {
- *              auto out = TOUCA_CUSTOM_TYPE("Date");
+ *              auto out = std::make_shared<types::ObjectType>("Date");
  *              out->add("year", value._year);
  *              out->add("month", value._month);
  *              out->add("day", value._day);
@@ -257,11 +174,12 @@ to_string(const T& value) {
  *          const Date _birthday;
  *      };
  *
- *      TOUCA_CONVERSION_LOGIC(Person)
+ *      template <>
+ *      struct touca::converter<Person>
  *      {
- *          TOUCA_CONVERSION_FUNCTION(Person, value)
+ *          std::shared_ptr<types::IType> convert(const Person& value)
  *          {
- *              auto out = TOUCA_CUSTOM_TYPE("Person");
+ *              auto out = std::make_shared<types::ObjectType>("Person");
  *              out->add("name", val._name);
  *              out->add("birthday", val._birthday);
  *              return out;
@@ -274,7 +192,7 @@ to_string(const T& value) {
  * @endcode
  */
 template <typename T, typename Enable = void>
-struct Conversion {
+struct converter {
   /**
    * @brief describes logic for handling objects of custom types.
    * @details Implements how object of given type should be decomposed
@@ -285,9 +203,9 @@ struct Conversion {
    * @return shared pointer to a generic type that the Touca SDK for C++
    *         knows how to handle.
    */
-  std::shared_ptr<types::IType> operator()(const T& value) {
+  std::shared_ptr<types::IType> convert(const T& value) {
     static_assert(std::is_same<std::shared_ptr<types::IType>, T>::value,
-                  "did not find any partial specialization of Conversion "
+                  "did not find any partial specialization of converter "
                   "function to convert your value to a Touca type");
     return static_cast<T>(value);
   }
@@ -296,56 +214,56 @@ struct Conversion {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 /**
- * @brief Conversion specialization that describes how any type that
- *        conforms to touca boolean specifications should be handled
+ * @brief converter specialization that describes how any type that
+ *        details to touca boolean specifications should be handled
  *        by the Touca SDK for C++.
  */
 template <typename T>
-struct Conversion<
-    T, typename std::enable_if<conform::is_touca_boolean<T>::value>::type> {
-  std::shared_ptr<types::IType> operator()(const T& value) {
-    return std::make_shared<types::Bool>(value);
+struct converter<
+    T, typename std::enable_if<detail::is_touca_boolean<T>::value>::type> {
+  std::shared_ptr<types::IType> convert(const T& value) {
+    return std::make_shared<types::BooleanType>(value);
   }
 };
 
 /**
- * @brief Conversion specialization that describes how any type that
- *        conforms to touca number specifications should be handled
+ * @brief converter specialization that describes how any type that
+ *        details to touca number specifications should be handled
  *        by the Touca SDK for C++.
  */
 template <typename T>
-struct Conversion<
-    T, typename std::enable_if<conform::is_touca_number<T>::value>::type> {
-  std::shared_ptr<types::IType> operator()(const T& value) {
+struct converter<
+    T, typename std::enable_if<detail::is_touca_number<T>::value>::type> {
+  std::shared_ptr<types::IType> convert(const T& value) {
     return std::make_shared<types::Number<T>>(value);
   }
 };
 
 /**
- * @brief Conversion specialization that describes how any type that
- *        conforms to touca string specifications should be handled
+ * @brief converter specialization that describes how any type that
+ *        details to touca string specifications should be handled
  *        by the Touca SDK for C++.
  */
 template <typename T>
-struct Conversion<
-    T, typename std::enable_if<conform::is_touca_string<T>::value>::type> {
-  std::shared_ptr<types::IType> operator()(const T& value) {
-    return std::make_shared<types::String>(conform::to_string<T>(value));
+struct converter<
+    T, typename std::enable_if<detail::is_touca_string<T>::value>::type> {
+  std::shared_ptr<types::IType> convert(const T& value) {
+    return std::make_shared<types::StringType>(detail::to_string<T>(value));
   }
 };
 
 /**
- * @brief Conversion specialization that describes how any type that
- *        conforms to touca array specifications should be handled
+ * @brief converter specialization that describes how any type that
+ *        details to touca array specifications should be handled
  *        by the Touca SDK for C++.
  */
 template <typename T>
-struct Conversion<
-    T, typename std::enable_if<conform::is_touca_array<T>::value>::type> {
-  std::shared_ptr<types::IType> operator()(const T& value) {
-    auto out = std::make_shared<types::Array>();
+struct converter<
+    T, typename std::enable_if<detail::is_touca_array<T>::value>::type> {
+  std::shared_ptr<types::IType> convert(const T& value) {
+    auto out = std::make_shared<types::ArrayType>();
     for (const auto& v : value) {
-      out->add(Conversion<typename T::value_type>()(v));
+      out->add(converter<typename T::value_type>().convert(v));
     }
     return out;
   }
@@ -353,5 +271,4 @@ struct Conversion<
 
 #endif /** DOXYGEN_SHOULD_SKIP_THIS */
 
-}  // namespace convert
 }  // namespace touca

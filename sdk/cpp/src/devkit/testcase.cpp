@@ -182,20 +182,20 @@ void Testcase::add_assertion(const std::string& key,
  */
 void Testcase::add_array_element(const std::string& key,
                                  const std::shared_ptr<types::IType>& element) {
-  using touca::types::Array;
+  using touca::types::ArrayType;
   if (!_resultsMap.count(key)) {
-    const auto value = std::make_shared<Array>();
+    const auto value = std::make_shared<ArrayType>();
     value->add(element);
     _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Check});
     return;
   }
   const auto ivalue = _resultsMap.at(key);
-  if (ivalue.val->type() != touca::types::ValueType::Array) {
+  if (ivalue.val->type() != touca::types::value_t::array) {
     throw std::invalid_argument(
         "specified key is associated with a "
         "result of a different type");
   }
-  const auto value = std::dynamic_pointer_cast<Array>(ivalue.val);
+  const auto value = std::dynamic_pointer_cast<ArrayType>(ivalue.val);
   value->add(element);
   _resultsMap[key].val = value;
   _posted = false;
@@ -212,7 +212,7 @@ void Testcase::add_hit_count(const std::string& key) {
     return;
   }
   const auto ivalue = _resultsMap.at(key).val;
-  if (ivalue->type() != touca::types::ValueType::Number) {
+  if (ivalue->type() != touca::types::value_t::numeric) {
     throw std::invalid_argument(
         "specified key is associated with a "
         "result of a different type");

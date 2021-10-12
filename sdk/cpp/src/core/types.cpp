@@ -22,7 +22,7 @@ namespace filescope {
  */
 template <typename T>
 typename std::enable_if<
-    touca::convert::conform::is_touca_number<T>::value &&
+    touca::detail::is_touca_number<T>::value &&
         std::is_same<float, typename std::remove_cv<T>::type>::value,
     std::pair<flatbuffers::Offset<void>, touca::fbs::Type>>::type
 serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
@@ -41,7 +41,7 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
  */
 template <typename T>
 typename std::enable_if<
-    touca::convert::conform::is_touca_number<T>::value &&
+    touca::detail::is_touca_number<T>::value &&
         std::is_same<double, typename std::remove_cv<T>::type>::value,
     std::pair<flatbuffers::Offset<void>, touca::fbs::Type>>::type
 serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
@@ -60,7 +60,7 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
  */
 template <typename T>
 typename std::enable_if<
-    touca::convert::conform::is_touca_number<T>::value &&
+    touca::detail::is_touca_number<T>::value &&
         !std::is_floating_point<T>::value && std::is_signed<T>::value,
     std::pair<flatbuffers::Offset<void>, touca::fbs::Type>>::type
 serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
@@ -79,7 +79,7 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
  */
 template <typename T>
 typename std::enable_if<
-    touca::convert::conform::is_touca_number<T>::value &&
+    touca::detail::is_touca_number<T>::value &&
         !std::is_floating_point<T>::value && !std::is_signed<T>::value,
     std::pair<flatbuffers::Offset<void>, touca::fbs::Type>>::type
 serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
@@ -98,7 +98,7 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
  */
 template <typename T>
 typename std::enable_if<
-    touca::convert::conform::is_touca_number<T>::value &&
+    touca::detail::is_touca_number<T>::value &&
         std::is_same<float, typename std::remove_cv<T>::type>::value,
     rapidjson::Value>::type
 jsonify_number(const T& value) {
@@ -112,7 +112,7 @@ jsonify_number(const T& value) {
  */
 template <typename T>
 typename std::enable_if<
-    touca::convert::conform::is_touca_number<T>::value &&
+    touca::detail::is_touca_number<T>::value &&
         std::is_same<double, typename std::remove_cv<T>::type>::value,
     rapidjson::Value>::type
 jsonify_number(const T& value) {
@@ -125,7 +125,7 @@ jsonify_number(const T& value) {
  *
  */
 template <typename T>
-typename std::enable_if<touca::convert::conform::is_touca_number<T>::value &&
+typename std::enable_if<touca::detail::is_touca_number<T>::value &&
                             !std::is_floating_point<T>::value &&
                             std::is_signed<T>::value,
                         rapidjson::Value>::type
@@ -139,7 +139,7 @@ jsonify_number(const T& value) {
  *
  */
 template <typename T>
-typename std::enable_if<touca::convert::conform::is_touca_number<T>::value &&
+typename std::enable_if<touca::detail::is_touca_number<T>::value &&
                             !std::is_floating_point<T>::value &&
                             !std::is_signed<T>::value,
                         rapidjson::Value>::type
@@ -190,7 +190,7 @@ std::shared_ptr<IType> deserializeValue(const fbs::TypeWrapper* ptr) {
   const auto& type = ptr->value_type();
   switch (type) {
     case fbs::Type::Bool:
-      return filescope::deserialize<fbs::Bool, Bool>(ptr);
+      return filescope::deserialize<fbs::Bool, BooleanType>(ptr);
     case fbs::Type::Int:
       return filescope::deserialize<fbs::Int, Number<int64_t>>(ptr);
     case fbs::Type::UInt:
@@ -201,15 +201,15 @@ std::shared_ptr<IType> deserializeValue(const fbs::TypeWrapper* ptr) {
       return filescope::deserialize<fbs::Double, Number<double>>(ptr);
     case fbs::Type::String: {
       const auto& str = static_cast<const fbs::String*>(value);
-      return std::make_shared<String>(str->value()->data());
+      return std::make_shared<StringType>(str->value()->data());
     }
     case fbs::Type::Object: {
-      auto obj = std::make_shared<Object>();
+      auto obj = std::make_shared<ObjectType>();
       obj->deserialize(static_cast<const fbs::Object*>(value));
       return obj;
     }
     case fbs::Type::Array: {
-      auto arr = std::make_shared<Array>();
+      auto arr = std::make_shared<ArrayType>();
       arr->deserialize(static_cast<const fbs::Array*>(value));
       return arr;
     }
@@ -221,17 +221,17 @@ std::shared_ptr<IType> deserializeValue(const fbs::TypeWrapper* ptr) {
 /**
  *
  */
-Bool::Bool(bool value) : _value(value) {}
+BooleanType::BooleanType(bool value) : _value(value) {}
 
 /**
  *
  */
-ValueType Bool::type() const { return ValueType::Bool; }
+value_t BooleanType::type() const { return value_t::boolean; }
 
 /**
  *
  */
-rapidjson::Value Bool::json(
+rapidjson::Value BooleanType::json(
     rapidjson::Document::AllocatorType& allocator) const {
   std::ignore = allocator;
   return rapidjson::Value{_value};
@@ -240,7 +240,7 @@ rapidjson::Value Bool::json(
 /**
  *
  */
-flatbuffers::Offset<fbs::TypeWrapper> Bool::serialize(
+flatbuffers::Offset<fbs::TypeWrapper> BooleanType::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
   fbs::BoolBuilder bool_builder(builder);
   bool_builder.add_value(_value);
@@ -254,7 +254,7 @@ flatbuffers::Offset<fbs::TypeWrapper> Bool::serialize(
 /**
  *
  */
-compare::TypeComparison Bool::compare(
+compare::TypeComparison BooleanType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
   result.srcType = type();
@@ -272,7 +272,7 @@ compare::TypeComparison Bool::compare(
 
   // two Bool objects are equal if they have identical values.
 
-  const auto dst = std::dynamic_pointer_cast<Bool>(itype);
+  const auto dst = std::dynamic_pointer_cast<BooleanType>(itype);
   if (_value == dst->_value) {
     result.match = compare::MatchType::Perfect;
     result.score = 1.0;
@@ -294,8 +294,8 @@ Number<T>::Number(T value) : _value(value) {}
  *
  */
 template <class T>
-ValueType Number<T>::type() const {
-  return ValueType::Number;
+value_t Number<T>::type() const {
+  return value_t::numeric;
 }
 
 /**
@@ -381,17 +381,17 @@ compare::TypeComparison Number<T>::compare(
 /**
  *
  */
-String::String(const std::string& value) : _value(value) {}
+StringType::StringType(const std::string& value) : _value(value) {}
 
 /**
  *
  */
-ValueType String::type() const { return ValueType::String; }
+value_t StringType::type() const { return value_t::string; }
 
 /**
  *
  */
-rapidjson::Value String::json(
+rapidjson::Value StringType::json(
     rapidjson::Document::AllocatorType& allocator) const {
   return rapidjson::Value{_value, allocator};
 }
@@ -399,7 +399,7 @@ rapidjson::Value String::json(
 /**
  *
  */
-flatbuffers::Offset<fbs::TypeWrapper> String::serialize(
+flatbuffers::Offset<fbs::TypeWrapper> StringType::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
   const auto& fbsStringValue = builder.CreateString(_value);
   fbs::StringBuilder string_builder(builder);
@@ -414,7 +414,7 @@ flatbuffers::Offset<fbs::TypeWrapper> String::serialize(
 /**
  *
  */
-compare::TypeComparison String::compare(
+compare::TypeComparison StringType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
   result.srcType = type();
@@ -432,7 +432,7 @@ compare::TypeComparison String::compare(
 
   // two String objects are equal if they have identical values
 
-  const auto dst = std::dynamic_pointer_cast<String>(itype);
+  const auto dst = std::dynamic_pointer_cast<StringType>(itype);
   if (0 == _value.compare(dst->_value)) {
     result.match = compare::MatchType::Perfect;
     result.score = 1.0;
@@ -447,12 +447,12 @@ compare::TypeComparison String::compare(
 /**
  *
  */
-ValueType Array::type() const { return ValueType::Array; }
+value_t ArrayType::type() const { return value_t::array; }
 
 /**
  *
  */
-rapidjson::Value Array::json(
+rapidjson::Value ArrayType::json(
     rapidjson::Document::AllocatorType& allocator) const {
   rapidjson::Value rjValue(rapidjson::kArrayType);
   for (const auto& v : _values) {
@@ -464,7 +464,7 @@ rapidjson::Value Array::json(
 /**
  *
  */
-flatbuffers::Offset<fbs::TypeWrapper> Array::serialize(
+flatbuffers::Offset<fbs::TypeWrapper> ArrayType::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
   std::vector<flatbuffers::Offset<fbs::TypeWrapper>> fbsEntries_vector;
   for (const auto& value : _values) {
@@ -483,14 +483,14 @@ flatbuffers::Offset<fbs::TypeWrapper> Array::serialize(
 /**
  *
  */
-void Array::add(const std::shared_ptr<types::IType>& value) {
+void ArrayType::add(const std::shared_ptr<types::IType>& value) {
   _values.push_back(value);
 }
 
 /**
  *
  */
-void Array::deserialize(const fbs::Array* obj) {
+void ArrayType::deserialize(const fbs::Array* obj) {
   for (const auto&& value : *obj->values()) {
     _values.push_back(deserializeValue(value));
   }
@@ -499,7 +499,7 @@ void Array::deserialize(const fbs::Array* obj) {
 /**
  *
  */
-compare::TypeComparison Array::compare(
+compare::TypeComparison ArrayType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
   result.srcType = type();
@@ -517,7 +517,7 @@ compare::TypeComparison Array::compare(
 
   // helper function to get flattened list of elements of an Array
   // object.
-  const auto get_flattened = [](const Array& arr) {
+  const auto get_flattened = [](const ArrayType& arr) {
     const auto kvps = arr.flatten();
     std::vector<std::shared_ptr<IType>> items;
     items.reserve(kvps.size());
@@ -527,7 +527,7 @@ compare::TypeComparison Array::compare(
     return items;
   };
 
-  const auto dst = std::dynamic_pointer_cast<Array>(itype);
+  const auto dst = std::dynamic_pointer_cast<ArrayType>(itype);
   const auto srcMembers = get_flattened(*this);
   const auto dstMembers = get_flattened(*dst);
 
@@ -608,7 +608,7 @@ compare::TypeComparison Array::compare(
 /**
  *
  */
-KeyMap Array::flatten() const {
+KeyMap ArrayType::flatten() const {
   KeyMap members;
   for (unsigned i = 0; i < _values.size(); ++i) {
     const auto& value = _values.at(i);

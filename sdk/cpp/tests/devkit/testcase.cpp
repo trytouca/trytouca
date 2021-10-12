@@ -39,7 +39,7 @@ TEST_CASE("Testcase") {
   }
 
   SECTION("assertion") {
-    const auto value = std::make_shared<touca::types::Bool>(true);
+    const auto value = std::make_shared<touca::types::BooleanType>(true);
     testcase.add_assertion("some-key", value);
     testcase.add_assertion("some-other-key", value);
     CHECK_NOTHROW(testcase.add_assertion("some-key", value));
@@ -59,7 +59,7 @@ TEST_CASE("Testcase") {
     }
 
     SECTION("unexpected-use: key is already used to store boolean") {
-      const auto value = std::make_shared<touca::types::Bool>(true);
+      const auto value = std::make_shared<touca::types::BooleanType>(true);
       testcase.add_result("some-key", value);
       CHECK_THROWS_AS(testcase.add_hit_count("some-key"),
                       std::invalid_argument);
@@ -93,7 +93,7 @@ TEST_CASE("Testcase") {
       REQUIRE_THAT(output, Catch::Contains(expected));
     }
     SECTION("unexpected-use") {
-      const auto someBool = std::make_shared<touca::types::Bool>(true);
+      const auto someBool = std::make_shared<touca::types::BooleanType>(true);
       const auto someNumber =
           std::make_shared<touca::types::Number<uint64_t>>(1);
       testcase.add_result("some-key", someBool);
@@ -111,7 +111,7 @@ TEST_CASE("Testcase") {
    * metrics associated with it.
    */
   SECTION("clear") {
-    const auto value = std::make_shared<touca::types::Bool>(true);
+    const auto value = std::make_shared<touca::types::BooleanType>(true);
     testcase.add_result("some-key", value);
     testcase.add_assertion("some-other-key", value);
     testcase.tic("some-metric");
@@ -140,7 +140,7 @@ TEST_CASE("Testcase") {
   }
 
   SECTION("overview") {
-    const auto value = std::make_shared<touca::types::Bool>(true);
+    const auto value = std::make_shared<touca::types::BooleanType>(true);
     const auto check_counters =
         [&testcase](const std::array<int32_t, 3>& counters) {
           CHECK(testcase.overview().keysCount == counters[0]);
@@ -170,7 +170,7 @@ TEST_CASE("Testcase") {
       CHECK(testcase.metrics().size() == 1);
       REQUIRE(testcase.metrics().count("some-key"));
       const auto metric = testcase.metrics().at("some-key");
-      CHECK(touca::types::ValueType::Number == metric.value->type());
+      CHECK(touca::types::value_t::numeric == metric.value->type());
       CHECK(metric.value->string() == "1000");
     }
 
@@ -200,7 +200,7 @@ TEST_CASE("Testcase") {
       CHECK(testcase.metrics().size() == 1);
       CHECK(testcase.metrics().count("b"));
       const auto metric = testcase.metrics().at("b");
-      CHECK(touca::types::ValueType::Number == metric.value->type());
+      CHECK(touca::types::value_t::numeric == metric.value->type());
     }
   }
 
@@ -226,10 +226,11 @@ TEST_CASE("Testcase") {
     auto dst =
         std::make_shared<touca::Testcase>("team", "suite", "version", "case");
 
-    const auto value1 = std::make_shared<touca::types::String>("leo-ferre");
-    const auto value2 = std::make_shared<touca::types::String>("jean-ferrat");
-    const auto value3 = std::make_shared<touca::types::Bool>(true);
-    const auto value4 = std::make_shared<touca::types::Bool>(true);
+    const auto value1 = std::make_shared<touca::types::StringType>("leo-ferre");
+    const auto value2 =
+        std::make_shared<touca::types::StringType>("jean-ferrat");
+    const auto value3 = std::make_shared<touca::types::BooleanType>(true);
+    const auto value4 = std::make_shared<touca::types::BooleanType>(true);
 
     // common result
     testcase.add_array_element("chanteur", value1);

@@ -14,22 +14,22 @@ namespace types {
 /**
  *
  */
-class TOUCA_CLIENT_API Object : public IType {
+class TOUCA_CLIENT_API ObjectType : public IType {
  public:
   /**
    *
    */
-  Object() = default;
+  ObjectType() = default;
 
   /**
    *
    */
-  explicit Object(const std::string& name);
+  explicit ObjectType(const std::string& name);
 
   /**
    *
    */
-  ValueType type() const override;
+  value_t type() const override;
 
   /**
    *
@@ -41,7 +41,7 @@ class TOUCA_CLIENT_API Object : public IType {
    */
   template <typename T>
   void add(const std::string& key, T value) {
-    _values.emplace(key, convert::Conversion<T>()(value));
+    _values.emplace(key, converter<T>().convert(value));
   }
 
   /**
@@ -70,20 +70,18 @@ class TOUCA_CLIENT_API Object : public IType {
   std::string _name;
   KeyMap _values;
 
-};  // class touca::types::Object
+};  // class touca::types::ObjectType
 
 }  // namespace types
-
-namespace convert {
 
 /**
  *
  */
 template <typename T>
-struct Conversion<T, typename std::enable_if<conform::is_specialization<
-                         T, std::pair>::value>::type> {
-  std::shared_ptr<types::IType> operator()(const T& value) {
-    auto out = std::make_shared<types::Object>("std::pair");
+struct converter<T, typename std::enable_if<
+                        detail::is_specialization<T, std::pair>::value>::type> {
+  std::shared_ptr<types::IType> convert(const T& value) {
+    auto out = std::make_shared<types::ObjectType>("std::pair");
     out->add("first", value.first);
     out->add("second", value.second);
     return out;
@@ -94,17 +92,15 @@ struct Conversion<T, typename std::enable_if<conform::is_specialization<
  *
  */
 template <typename T>
-struct Conversion<T, typename std::enable_if<conform::is_specialization<
-                         T, std::shared_ptr>::value>::type> {
-  std::shared_ptr<types::IType> operator()(const T& value) {
-    auto out = std::make_shared<types::Object>("std::shared_ptr");
+struct converter<T, typename std::enable_if<detail::is_specialization<
+                        T, std::shared_ptr>::value>::type> {
+  std::shared_ptr<types::IType> convert(const T& value) {
+    auto out = std::make_shared<types::ObjectType>("std::shared_ptr");
     if (value) {
       out->add("v", *value);
     }
     return out;
   }
 };
-
-}  // namespace convert
 
 }  // namespace touca

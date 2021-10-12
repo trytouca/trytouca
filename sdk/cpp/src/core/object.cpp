@@ -13,17 +13,17 @@ namespace types {
 /**
  *
  */
-Object::Object(const std::string& name) : _name(name) {}
+ObjectType::ObjectType(const std::string& name) : _name(name) {}
 
 /**
  *
  */
-ValueType Object::type() const { return ValueType::Object; }
+value_t ObjectType::type() const { return value_t::object; }
 
 /**
  *
  */
-rapidjson::Value Object::json(
+rapidjson::Value ObjectType::json(
     rapidjson::Document::AllocatorType& allocator) const {
   rapidjson::Value rjMembers(rapidjson::kObjectType);
   for (const auto& member : _values) {
@@ -40,7 +40,7 @@ rapidjson::Value Object::json(
 /**
  *
  */
-flatbuffers::Offset<fbs::TypeWrapper> Object::serialize(
+flatbuffers::Offset<fbs::TypeWrapper> ObjectType::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
   std::vector<flatbuffers::Offset<fbs::ObjectMember>> fbsObjectMembers_vector;
   for (const auto& value : _values) {
@@ -67,7 +67,7 @@ flatbuffers::Offset<fbs::TypeWrapper> Object::serialize(
 /**
  *
  */
-void Object::deserialize(const fbs::Object* fbsObj) {
+void ObjectType::deserialize(const fbs::Object* fbsObj) {
   _name = fbsObj->key()->data();
   for (const auto&& value : *fbsObj->values()) {
     const auto& name = value->name()->data();
@@ -82,7 +82,7 @@ void Object::deserialize(const fbs::Object* fbsObj) {
 /**
  *
  */
-compare::TypeComparison Object::compare(
+compare::TypeComparison ObjectType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
   result.srcType = type();
@@ -98,7 +98,7 @@ compare::TypeComparison Object::compare(
     return result;
   }
 
-  const auto dst = std::dynamic_pointer_cast<Object>(itype);
+  const auto dst = std::dynamic_pointer_cast<ObjectType>(itype);
   const auto& srcMembers = flatten();
   const auto& dstMembers = dst->flatten();
 
@@ -151,7 +151,7 @@ compare::TypeComparison Object::compare(
 /**
  *
  */
-KeyMap Object::flatten() const {
+KeyMap ObjectType::flatten() const {
   KeyMap members;
   for (const auto& value : _values) {
     const auto& name = value.first;

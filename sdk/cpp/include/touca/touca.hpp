@@ -315,7 +315,7 @@ TOUCA_CLIENT_API void add_array_element(
  */
 template <typename Char, typename Value>
 void add_result(Char&& key, const Value& value) {
-  const auto& ivalue = convert::Conversion<Value>()(value);
+  const auto& ivalue = converter<Value>().convert(value);
   internal::add_result(std::forward<Char>(key), ivalue);
 }
 
@@ -348,7 +348,7 @@ void add_result(Char&& key, const Value& value) {
  */
 template <typename Char, typename Value>
 void add_assertion(Char&& key, const Value& value) {
-  const auto& ivalue = convert::Conversion<Value>()(value);
+  const auto& ivalue = converter<Value>().convert(value);
   internal::add_assertion(std::forward<Char>(key), ivalue);
 }
 
@@ -410,7 +410,7 @@ void add_assertion(Char&& key, const Value& value) {
  */
 template <typename Char, typename Value>
 void add_array_element(Char&& key, const Value& value) {
-  const auto& ivalue = convert::Conversion<Value>()(value);
+  const auto& ivalue = converter<Value>().convert(value);
   internal::add_array_element(std::forward<Char>(key), ivalue);
 }
 
@@ -601,18 +601,5 @@ TOUCA_CLIENT_API bool seal();
  *          disregard the API exposed through this namespace.
  */
 namespace compare {}
-
-/**
- * @namespace touca::convert
- *
- * @brief Provides API for declaring how objects of custom classes
- *        should be handled by Touca SDK for C++.
- *
- * @details Allows users seeking to build regression test tools to
- *          leverage the extensible Touca Type System and implement
- *          specializations of the Touca Conversion logic for their
- *          own custom types.
- */
-namespace convert {}
 
 }  // namespace touca

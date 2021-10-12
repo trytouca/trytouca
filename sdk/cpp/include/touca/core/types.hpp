@@ -40,13 +40,13 @@ namespace types {
 /**
  *
  */
-enum class TOUCA_CLIENT_API ValueType : unsigned char {
-  Bool,
-  Number,
-  String,
-  Array,
-  Object,
-  Unknown
+enum class TOUCA_CLIENT_API value_t : std::uint8_t {
+  object,
+  array,
+  string,
+  boolean,
+  numeric,
+  unknown
 };
 
 /**
@@ -72,7 +72,7 @@ class TOUCA_CLIENT_API IType {
   /**
    *
    */
-  virtual ValueType type() const = 0;
+  virtual value_t type() const = 0;
 
   /**
    *
@@ -98,7 +98,7 @@ class TOUCA_CLIENT_API IType {
 
   /**
    * This function flattens all of the object's nested ITypes into
-   * one flat map. Only Object and Array types can have nested
+   * one flat map. Only ObjectType and ArrayType can have nested
    * values, so they are the only ones to override this default
    */
   virtual KeyMap flatten() const { return {}; }
@@ -114,17 +114,17 @@ class TOUCA_CLIENT_API IType {
 /**
  *
  */
-class TOUCA_CLIENT_API Bool : public IType {
+class TOUCA_CLIENT_API BooleanType : public IType {
  public:
   /**
    *
    */
-  explicit Bool(bool value);
+  explicit BooleanType(bool value);
 
   /**
    *
    */
-  ValueType type() const override;
+  value_t type() const override;
 
   /**
    *
@@ -146,7 +146,7 @@ class TOUCA_CLIENT_API Bool : public IType {
  private:
   bool _value;
 
-};  // class touca::types::Bool
+};  // class touca::types::BooleanType
 
 /**
  *
@@ -162,7 +162,7 @@ class TOUCA_CLIENT_API Number : public IType {
   /**
    *
    */
-  ValueType type() const override;
+  value_t type() const override;
 
   /**
    *
@@ -194,17 +194,17 @@ class TOUCA_CLIENT_API Number : public IType {
 /**
  *
  */
-class TOUCA_CLIENT_API String : public IType {
+class TOUCA_CLIENT_API StringType : public IType {
  public:
   /**
    *
    */
-  explicit String(const std::string& value);
+  explicit StringType(const std::string& value);
 
   /**
    *
    */
-  ValueType type() const override;
+  value_t type() const override;
 
   /**
    *
@@ -226,12 +226,12 @@ class TOUCA_CLIENT_API String : public IType {
  private:
   std::string _value;
 
-};  // class touca::types::String
+};  // class touca::types::StringType
 
 /**
  *
  */
-class TOUCA_CLIENT_API Array : public IType {
+class TOUCA_CLIENT_API ArrayType : public IType {
  public:
   /**
    *
@@ -241,7 +241,7 @@ class TOUCA_CLIENT_API Array : public IType {
   /**
    *
    */
-  ValueType type() const override;
+  value_t type() const override;
 
   /**
    *
@@ -273,7 +273,7 @@ class TOUCA_CLIENT_API Array : public IType {
  private:
   std::vector<std::shared_ptr<IType>> _values;
 
-};  // class touca::types::Array
+};  // class touca::types::ArrayType
 
 /**
  *
