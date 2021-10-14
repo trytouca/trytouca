@@ -57,7 +57,7 @@ bool MergeOperation::parse_impl(int argc, char* argv[]) {
 bool MergeOperation::run_impl() const {
   TOUCA_LOG_INFO("starting execution of operation: merge");
 
-  const auto resultFiles = findResultFiles(_src);
+  const auto resultFiles = find_binary_files(_src);
 
   if (resultFiles.empty()) {
     TOUCA_LOG_ERROR("specified directory has no result file");

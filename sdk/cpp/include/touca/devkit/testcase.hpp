@@ -61,7 +61,8 @@ class TOUCA_CLIENT_API Testcase {
   /**
    *
    */
-  explicit Testcase(const std::vector<uint8_t>& buffer);
+  Testcase(const Metadata& meta, const ResultsMap& results,
+           const std::unordered_map<std::string, unsigned long>& metrics);
 
   /**
    *

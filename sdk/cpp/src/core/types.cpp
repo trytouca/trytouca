@@ -11,8 +11,8 @@
 #include "touca/devkit/comparison.hpp"
 #include "touca/impl/schema.hpp"
 
-namespace {
-namespace filescope {
+namespace touca {
+namespace detail {
 
 /**
  *
@@ -90,21 +90,14 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
   return buffer;
 }
 
+}  // namespace detail
+
+namespace types {
+
 /**
  *
  */
-template <typename T, typename U>
-std::shared_ptr<touca::types::IType> deserialize(
-    const touca::fbs::TypeWrapper* ptr) {
-  const auto& castptr = static_cast<const T*>(ptr->value());
-  return std::shared_ptr<touca::types::IType>(new U(castptr->value()));
-}
-
-}  // namespace filescope
-}  // namespace
-
-namespace touca {
-namespace types {
+value_t IType::type() const { return _type_t; }
 
 /**
  *
@@ -119,48 +112,7 @@ std::string IType::string() const {
 /**
  *
  */
-std::shared_ptr<IType> deserializeValue(const fbs::TypeWrapper* ptr) {
-  const auto& value = ptr->value();
-  const auto& type = ptr->value_type();
-  switch (type) {
-    case fbs::Type::Bool:
-      return filescope::deserialize<fbs::Bool, BooleanType>(ptr);
-    case fbs::Type::Int:
-      return filescope::deserialize<fbs::Int, Number<int64_t>>(ptr);
-    case fbs::Type::UInt:
-      return filescope::deserialize<fbs::UInt, Number<uint64_t>>(ptr);
-    case fbs::Type::Float:
-      return filescope::deserialize<fbs::Float, Number<float>>(ptr);
-    case fbs::Type::Double:
-      return filescope::deserialize<fbs::Double, Number<double>>(ptr);
-    case fbs::Type::String: {
-      const auto& str = static_cast<const fbs::String*>(value);
-      return std::make_shared<StringType>(str->value()->data());
-    }
-    case fbs::Type::Object: {
-      auto obj = std::make_shared<ObjectType>();
-      obj->deserialize(static_cast<const fbs::Object*>(value));
-      return obj;
-    }
-    case fbs::Type::Array: {
-      auto arr = std::make_shared<ArrayType>();
-      arr->deserialize(static_cast<const fbs::Array*>(value));
-      return arr;
-    }
-    default:
-      throw std::runtime_error("encountered unexpected type");
-  }
-}
-
-/**
- *
- */
-BooleanType::BooleanType(bool value) : _value(value) {}
-
-/**
- *
- */
-value_t BooleanType::type() const { return value_t::boolean; }
+BooleanType::BooleanType(bool value) : IType(value_t::boolean), _value(value) {}
 
 /**
  *
@@ -187,13 +139,13 @@ flatbuffers::Offset<fbs::TypeWrapper> BooleanType::serialize(
 compare::TypeComparison BooleanType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
-  result.srcType = type();
+  result.srcType = _type_t;
   result.srcValue = string();
 
   // the two result keys are considered completely different
   // if they are different in types.
 
-  if (type() != itype->type()) {
+  if (_type_t != itype->type()) {
     result.dstType = itype->type();
     result.dstValue = itype->string();
     result.desc.insert("result types are different");
@@ -218,15 +170,7 @@ compare::TypeComparison BooleanType::compare(
  *
  */
 template <class T>
-Number<T>::Number(T value) : _value(value) {}
-
-/**
- *
- */
-template <class T>
-value_t Number<T>::type() const {
-  return value_t::numeric;
-}
+Number<T>::Number(T value) : IType(value_t::numeric), _value(value) {}
 
 /**
  *
@@ -250,7 +194,7 @@ T Number<T>::value() const {
 template <class T>
 flatbuffers::Offset<fbs::TypeWrapper> Number<T>::serialize(
     flatbuffers::FlatBufferBuilder& fbb) const {
-  const auto& buffer = filescope::serialize_number<T>(_value, fbb);
+  const auto& buffer = detail::serialize_number<T>(_value, fbb);
   fbs::TypeWrapperBuilder fbsTypeWrapper_builder(fbb);
   fbsTypeWrapper_builder.add_value(buffer.first);
   fbsTypeWrapper_builder.add_value_type(buffer.second);
@@ -264,13 +208,13 @@ template <class T>
 compare::TypeComparison Number<T>::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
-  result.srcType = type();
+  result.srcType = _type_t;
   result.srcValue = string();
 
   // the two result keys are considered completely different
   // if they are different in types.
 
-  if (type() != itype->type()) {
+  if (_type_t != itype->type()) {
     result.dstType = itype->type();
     result.dstValue = itype->string();
     result.desc.insert("result types are different");
@@ -309,12 +253,8 @@ compare::TypeComparison Number<T>::compare(
 /**
  *
  */
-StringType::StringType(const std::string& value) : _value(value) {}
-
-/**
- *
- */
-value_t StringType::type() const { return value_t::string; }
+StringType::StringType(const std::string& value)
+    : IType(value_t::string), _value(value) {}
 
 /**
  *
@@ -342,13 +282,13 @@ flatbuffers::Offset<fbs::TypeWrapper> StringType::serialize(
 compare::TypeComparison StringType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
-  result.srcType = type();
+  result.srcType = _type_t;
   result.srcValue = string();
 
   // the two result keys are considered completely different
   // if they are different in types.
 
-  if (type() != itype->type()) {
+  if (_type_t != itype->type()) {
     result.dstType = itype->type();
     result.dstValue = itype->string();
     result.desc.insert("result types are different");
@@ -372,7 +312,7 @@ compare::TypeComparison StringType::compare(
 /**
  *
  */
-value_t ArrayType::type() const { return value_t::array; }
+ArrayType::ArrayType() : IType(value_t::array) {}
 
 /**
  *
@@ -414,25 +354,16 @@ void ArrayType::add(const std::shared_ptr<types::IType>& value) {
 /**
  *
  */
-void ArrayType::deserialize(const fbs::Array* obj) {
-  for (const auto&& value : *obj->values()) {
-    _values.push_back(deserializeValue(value));
-  }
-}
-
-/**
- *
- */
 compare::TypeComparison ArrayType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
-  result.srcType = type();
+  result.srcType = _type_t;
   result.srcValue = string();
 
   // the two result keys are considered completely different
   // if they are different in types.
 
-  if (type() != itype->type()) {
+  if (_type_t != itype->type()) {
     result.dstType = itype->type();
     result.dstValue = itype->string();
     result.desc.insert("result types are different");

@@ -20,7 +20,7 @@ class TOUCA_CLIENT_API ObjectType : public IType {
   /**
    *
    */
-  ObjectType() = default;
+  ObjectType();
 
   /**
    *
@@ -28,9 +28,9 @@ class TOUCA_CLIENT_API ObjectType : public IType {
   explicit ObjectType(const std::string& name);
 
   /**
-   *
+   * Used in deserialization
    */
-  value_t type() const override;
+  ObjectType(const std::string& name, const KeyMap& values);
 
   /**
    *
@@ -50,11 +50,6 @@ class TOUCA_CLIENT_API ObjectType : public IType {
    */
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& builder) const override;
-
-  /**
-   *
-   */
-  void deserialize(const fbs::Object* fbsObj);
 
   /**
    *

@@ -92,7 +92,7 @@ bool PostOperation::run_impl() const {
   // iterate over all the file system elements in that directory and
   // identify Touca result files.
 
-  const auto resultFiles = findResultFiles(_src);
+  const auto resultFiles = find_binary_files(_src);
 
   // we are done if there are no Touca result files in the given directory
 

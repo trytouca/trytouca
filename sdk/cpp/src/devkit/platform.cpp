@@ -234,11 +234,11 @@ bool Platform::handshake() const {
   }
   const auto& parsed = nlohmann::json::parse(response.body, nullptr, false);
   if (parsed.is_discarded()) {
-    _error = "failed to parse response from the server";
+    _error = "failed to parse server response";
     return false;
   }
-  if (parsed.count("ready") == 0 || !parsed.at("ready").is_boolean()) {
-    _error = "response form the server is ill-formed";
+  if (!parsed.contains("ready") || !parsed.at("ready").is_boolean()) {
+    _error = "unexpected server response";
     return false;
   }
   if (!parsed.at("ready").get<bool>()) {
@@ -269,7 +269,7 @@ bool Platform::auth(const std::string& apiKey) {
     _error = "failed to parse server response";
     return false;
   }
-  if (parsed.count("token") == 0 || !parsed["token"].is_string()) {
+  if (!parsed.contains("token") || !parsed["token"].is_string()) {
     _error = "unexpected server response";
     return false;
   }

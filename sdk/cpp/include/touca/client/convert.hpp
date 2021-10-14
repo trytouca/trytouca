@@ -33,7 +33,7 @@ struct is_specialization<Ref<Args...>, Ref> : std::true_type {};
 template <typename T>
 using is_touca_boolean = std::is_same<T, bool>;
 
-template <typename T, typename Enable = void>
+template <typename T, typename = void>
 struct is_touca_number : std::false_type {};
 
 template <typename T>
@@ -47,13 +47,8 @@ struct is_touca_number<
                                !is_touca_boolean<T>::value>::type>
     : std::true_type {};
 
-template <typename T, typename Enable = void>
+template <typename T, typename = void>
 struct is_touca_string : std::false_type {};
-
-// template <typename C, typename T, typename A>
-// struct is_touca_string<std::basic_string<C, T, A>> :
-// std::true_type
-// {};
 
 template <typename T>
 struct is_touca_string<T, typename std::enable_if<
@@ -66,7 +61,7 @@ struct is_touca_string<
     typename std::enable_if<std::is_convertible<T, std::wstring>::value>::type>
     : std::true_type {};
 
-template <typename T, typename Enable = void>
+template <typename T, typename = void>
 struct is_touca_array : std::false_type {};
 
 template <typename T>
@@ -191,7 +186,7 @@ to_string(const T& value) {
  *
  * @endcode
  */
-template <typename T, typename Enable = void>
+template <typename T, typename = void>
 struct converter {
   /**
    * @brief describes logic for handling objects of custom types.

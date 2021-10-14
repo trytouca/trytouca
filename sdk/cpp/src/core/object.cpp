@@ -12,12 +12,19 @@ namespace types {
 /**
  *
  */
-ObjectType::ObjectType(const std::string& name) : _name(name) {}
+ObjectType::ObjectType() : IType(value_t::object) {}
 
 /**
  *
  */
-value_t ObjectType::type() const { return value_t::object; }
+ObjectType::ObjectType(const std::string& name)
+    : IType(value_t::object), _name(name) {}
+
+/**
+ *
+ */
+ObjectType::ObjectType(const std::string& name, const KeyMap& values)
+    : IType(value_t::object), _name(name), _values(values) {}
 
 /**
  *
@@ -50,31 +57,16 @@ flatbuffers::Offset<fbs::TypeWrapper> ObjectType::serialize(
     const auto& fbsObjectMember = fbsObjectMember_builder.Finish();
     fbsObjectMembers_vector.push_back(fbsObjectMember);
   }
-  const auto& fbsObjectMemebers = builder.CreateVector(fbsObjectMembers_vector);
+  const auto& fbsObjectMembers = builder.CreateVector(fbsObjectMembers_vector);
   const auto& fbsKey = builder.CreateString(_name);
   fbs::ObjectBuilder fbsObject_builder(builder);
-  fbsObject_builder.add_values(fbsObjectMemebers);
+  fbsObject_builder.add_values(fbsObjectMembers);
   fbsObject_builder.add_key(fbsKey);
   const auto& fbsValue = fbsObject_builder.Finish();
   fbs::TypeWrapperBuilder typeWrapper_builder(builder);
   typeWrapper_builder.add_value(fbsValue.Union());
   typeWrapper_builder.add_value_type(fbs::Type::Object);
   return typeWrapper_builder.Finish();
-}
-
-/**
- *
- */
-void ObjectType::deserialize(const fbs::Object* fbsObj) {
-  _name = fbsObj->key()->data();
-  for (const auto&& value : *fbsObj->values()) {
-    const auto& name = value->name()->data();
-    const auto& obj = types::deserializeValue(value->value());
-    if (!obj) {
-      throw std::runtime_error("Could not deserialize the object");
-    }
-    _values.emplace(name, obj);
-  }
 }
 
 /**

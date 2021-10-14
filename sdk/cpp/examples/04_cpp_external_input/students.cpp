@@ -31,16 +31,16 @@ Student parse_profile(const std::string& path) {
     throw std::runtime_error("failed to parse profile");
   }
 
-  if (parsed.count("name") && parsed["name"].is_string()) {
+  if (parsed.contains("name") && parsed["name"].is_string()) {
     student.fullname = parsed["name"].get<std::string>();
   }
-  if (parsed.count("dob") && parsed.is_object()) {
+  if (parsed.contains("dob") && parsed.is_object()) {
     const auto y = static_cast<unsigned short>(parsed["dob"]["y"].get<int>());
     const auto m = static_cast<unsigned short>(parsed["dob"]["m"].get<int>());
     const auto d = static_cast<unsigned short>(parsed["dob"]["d"].get<int>());
     student.dob = {y, m, d};
   }
-  if (parsed.count("courses") && parsed.is_array()) {
+  if (parsed.contains("courses") && parsed.is_array()) {
     std::vector<Course> courses;
     for (const auto& course : parsed["courses"]) {
       courses.emplace_back(Course{course["name"].get<std::string>(),

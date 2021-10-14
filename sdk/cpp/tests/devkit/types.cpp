@@ -4,6 +4,7 @@
 #include "touca/client/convert.hpp"
 #include "touca/core/object.hpp"
 #include "touca/devkit/comparison.hpp"
+#include "touca/devkit/deserialize.hpp"
 #include "touca/impl/schema.hpp"
 
 namespace creature {
@@ -43,7 +44,7 @@ std::shared_ptr<touca::types::IType> deserialize(const std::string& buffer) {
   Verifier verifier((const uint8_t*)buffer.data(), buffer.size());
   CHECK(verifier.VerifyBuffer<fbs::TypeWrapper>());
   const auto& wrapper = GetRoot<fbs::TypeWrapper>(buffer.data());
-  return types::deserializeValue(wrapper);
+  return types::deserialize_value(wrapper);
 }
 
 TEST_CASE("Simple Data Types") {

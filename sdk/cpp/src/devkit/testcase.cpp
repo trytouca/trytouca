@@ -17,12 +17,6 @@ static const std::unordered_map<ResultCategory, fbs::ResultType> result_types =
         {ResultCategory::Assert, fbs::ResultType::Assert},
 };
 
-static const std::unordered_map<fbs::ResultType, ResultCategory>
-    result_types_reverse = {
-        {fbs::ResultType::Check, ResultCategory::Check},
-        {fbs::ResultType::Assert, ResultCategory::Assert},
-};
-
 /**
  *
  */
@@ -54,46 +48,17 @@ Testcase::Testcase(const std::string& teamslug, const std::string& testsuite,
 /**
  *
  */
-Testcase::Testcase(const std::vector<uint8_t>& buffer) : _posted(true) {
-  const auto& message =
-      flatbuffers::GetRoot<touca::fbs::Message>(buffer.data());
-
-  // parse remaining metadata
-
-  const auto& teamSlug = message->metadata()->teamslug()
-                             ? message->metadata()->teamslug()->data()
-                             : "vital";
-
-  _metadata = {teamSlug, message->metadata()->testsuite()->data(),
-               message->metadata()->version()->data(),
-               message->metadata()->testcase()->data(),
-               message->metadata()->builtAt()->data()};
-
-  // parse results
-
-  const auto& results = message->results()->entries();
-  for (const auto&& result : *results) {
-    const auto& key = result->key()->data();
-    const auto& value = types::deserializeValue(result->value());
-    if (!value) {
-      throw std::runtime_error("failed to parse results map entry");
-    }
-    _resultsMap.emplace(
-        key, ResultEntry{value, result_types_reverse.at(result->typ())});
-  }
-
-  // parse metrics
-
-  const auto& metrics = message->metrics()->entries();
-  for (const auto&& metric : *metrics) {
-    const auto& key = metric->key()->data();
-    const auto& ivalue = types::deserializeValue(metric->value());
-    const auto& value =
-        std::dynamic_pointer_cast<types::Number<int64_t>>(ivalue);
-    if (!value) {
-      throw std::runtime_error("failed to parse metrics map entry");
-    }
-    add_metric(key, static_cast<unsigned>(value->value()));
+Testcase::Testcase(
+    const Metadata& meta, const ResultsMap& results,
+    const std::unordered_map<std::string, unsigned long>& metrics)
+    : _posted(true), _metadata(meta), _resultsMap(results) {
+  for (const auto& metric : metrics) {
+    namespace chr = std::chrono;
+    const auto& tic = chr::system_clock::time_point(chr::milliseconds(0));
+    const auto& toc =
+        chr::system_clock::time_point(chr::milliseconds(metric.second));
+    _tics.emplace(metric.first, tic);
+    _tocs.emplace(metric.first, toc);
   }
 }
 

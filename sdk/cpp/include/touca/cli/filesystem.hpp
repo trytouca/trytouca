@@ -9,5 +9,5 @@
  * @param path path to a file or directory that may be or may have result files.
  * @return list of valid result files
  */
-std::vector<touca::filesystem::path> findResultFiles(
+std::vector<touca::filesystem::path> find_binary_files(
     const touca::filesystem::path& path);

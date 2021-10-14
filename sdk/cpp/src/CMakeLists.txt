@@ -24,6 +24,7 @@ target_sources(
         core/object.cpp
         core/types.cpp
         devkit/comparison.cpp
+        devkit/deserialize.cpp
         devkit/logger.cpp
         devkit/platform.cpp
         devkit/resultfile.cpp

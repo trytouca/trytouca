@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "nlohmann/json.hpp"
+#include "touca/devkit/deserialize.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/impl/schema.hpp"
 
@@ -67,7 +68,8 @@ ElementsMap ResultFile::parse() const {
     const auto& buffer = message->buf();
     const auto& ptr = buffer->data();
     std::vector<uint8_t> data(ptr, ptr + buffer->size());
-    const auto& testcase = std::make_shared<Testcase>(data);
+    const auto& testcase =
+        std::make_shared<Testcase>(deserialize_testcase(data));
     testcases.emplace(testcase->metadata().testcase, testcase);
   }
   return testcases;

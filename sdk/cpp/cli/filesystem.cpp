@@ -34,7 +34,7 @@ std::vector<touca::filesystem::path> discover(
 /**
  *
  */
-std::vector<touca::filesystem::path> findResultFiles(
+std::vector<touca::filesystem::path> find_binary_files(
     const touca::filesystem::path& path) {
   TOUCA_LOG_DEBUG("finding result files in {}", path.string());
   auto output = discover(path);

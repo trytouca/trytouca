@@ -48,50 +48,23 @@ enum class TOUCA_CLIENT_API value_t : std::uint8_t {
   unknown
 };
 
-/**
- *
- */
 class TOUCA_CLIENT_API IType {
  public:
-  /**
-   *
-   */
   IType(const IType&) = delete;
 
-  /**
-   *
-   */
   IType& operator=(const IType&) = delete;
 
-  /**
-   *
-   */
   virtual ~IType() = default;
 
-  /**
-   *
-   */
-  virtual value_t type() const = 0;
+  value_t type() const;
 
-  /**
-   *
-   */
   std::string string() const;
 
-  /**
-   *
-   */
   virtual nlohmann::ordered_json json() const = 0;
 
-  /**
-   *
-   */
   virtual flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const = 0;
 
-  /**
-   *
-   */
   virtual compare::TypeComparison compare(
       const std::shared_ptr<IType>& itype) const = 0;
 
@@ -103,42 +76,21 @@ class TOUCA_CLIENT_API IType {
   virtual KeyMap flatten() const { return {}; }
 
  protected:
-  /**
-   *
-   */
-  IType() = default;
+  IType(const value_t type_t) : _type_t(type_t){};
+
+  const value_t _type_t;
 
 };  // class IType
 
-/**
- *
- */
 class TOUCA_CLIENT_API BooleanType : public IType {
  public:
-  /**
-   *
-   */
   explicit BooleanType(bool value);
 
-  /**
-   *
-   */
-  value_t type() const override;
-
-  /**
-   *
-   */
   nlohmann::ordered_json json() const override;
 
-  /**
-   *
-   */
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const override;
 
-  /**
-   *
-   */
   compare::TypeComparison compare(
       const std::shared_ptr<IType>& itype) const override;
 
@@ -153,35 +105,15 @@ class TOUCA_CLIENT_API BooleanType : public IType {
 template <class T>
 class TOUCA_CLIENT_API Number : public IType {
  public:
-  /**
-   *
-   */
   explicit Number(const T value);
 
-  /**
-   *
-   */
-  value_t type() const override;
-
-  /**
-   *
-   */
   nlohmann::ordered_json json() const override;
 
-  /**
-   *
-   */
   T value() const;
 
-  /**
-   *
-   */
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const override;
 
-  /**
-   *
-   */
   compare::TypeComparison compare(
       const std::shared_ptr<IType>& itype) const override;
 
@@ -190,35 +122,15 @@ class TOUCA_CLIENT_API Number : public IType {
 
 };  // class touca::types::Number
 
-/**
- *
- */
 class TOUCA_CLIENT_API StringType : public IType {
  public:
-  /**
-   *
-   */
   explicit StringType(const std::string& value);
 
-  /**
-   *
-   */
-  value_t type() const override;
-
-  /**
-   *
-   */
   nlohmann::ordered_json json() const override;
 
-  /**
-   *
-   */
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const override;
 
-  /**
-   *
-   */
   compare::TypeComparison compare(
       const std::shared_ptr<IType>& itype) const override;
 
@@ -227,58 +139,26 @@ class TOUCA_CLIENT_API StringType : public IType {
 
 };  // class touca::types::StringType
 
-/**
- *
- */
 class TOUCA_CLIENT_API ArrayType : public IType {
  public:
-  /**
-   *
-   */
+  ArrayType();
+
   void add(const std::shared_ptr<IType>& value);
 
-  /**
-   *
-   */
-  value_t type() const override;
-
-  /**
-   *
-   */
   nlohmann::ordered_json json() const override;
 
-  /**
-   *
-   */
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const override;
 
-  /**
-   *
-   */
-  void deserialize(const fbs::Array* obj);
-
-  /**
-   *
-   */
   compare::TypeComparison compare(
       const std::shared_ptr<IType>& itype) const override;
 
-  /**
-   *
-   */
   KeyMap flatten() const override;
 
  private:
   std::vector<std::shared_ptr<IType>> _values;
 
 };  // class touca::types::ArrayType
-
-/**
- *
- */
-std::shared_ptr<IType> TOUCA_CLIENT_API
-deserializeValue(const fbs::TypeWrapper* ptr);
 
 }  // namespace types
 }  // namespace touca
