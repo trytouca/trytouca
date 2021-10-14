@@ -3,8 +3,8 @@
 [![PyPI](https://img.shields.io/pypi/v/touca?color=blue)](https://pypi.org/project/touca/)
 [![License](https://img.shields.io/pypi/l/touca?color=blue)](https://github.com/trytouca/touca-python/blob/main/LICENSE)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/touca)](https://pypi.org/project/touca)
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/trytouca/touca-python/touca-python-main)](https://github.com/trytouca/touca-python/actions/workflows/main.yml?query=branch%3Amain+event%3Apush)
-[![Documentation Status](https://readthedocs.org/projects/touca-python/badge/?version=latest)](https://touca-python.readthedocs.io/en/latest/?badge=latest)
+[![Build Status](https://img.shields.io/github/workflow/status/trytouca/touca-python/touca-python-main)](https://github.com/trytouca/touca-python/actions/workflows/main.yml?query=branch%3Amain+event%3Apush)
+[![Documentation Status](https://readthedocs.org/projects/touca-python/badge/?version=latest)](https://touca-python.readthedocs.io)
 [![Code Quality](https://img.shields.io/codacy/grade/4c28f395f89442ffadc7cbd38a4db02b)](https://app.codacy.com/gh/trytouca/touca-python)
 [![Codecov](https://img.shields.io/codecov/c/github/trytouca/touca-python)](https://app.codecov.io/gh/trytouca/touca-python)
 
@@ -138,10 +138,10 @@ test these workflows at any scale.
 
 ## 📖 Documentation
 
-- If you are new to Touca, the best place to start is our
+- If you are new to Touca, the best place to start is the
   [Quickstart Guide](https://docs.touca.io/basics/quickstart) on our
   documentation website.
-- For information on how to use our Python SDK, see our
+- For information on how to use this SDK, see our
   [Python SDK Documentation](https://docs.touca.io/sdk/python).
 - If you cannot wait to start writing your first test with Touca, see our
   [Python API Reference](https://app.touca.io/docs/clients/python/api.html).
@@ -150,13 +150,12 @@ test these workflows at any scale.
 
 We want Touca to work well for you. If you need help, have any questions, or
 like to provide feedback, send us a note through the Intercom at
-[touca.io](https://touca.io) or email us at
-[hello@touca.io](mailto:hello@touca.io).
+[touca.io](https://touca.io) or email us at <hello@touca.io>.
 
 ## 🚀 Next Steps
 
 Touca client libraries are free and open-source. Our cloud-hosted Touca server
-at [touca.io](https://touca.io) has a free forever plan. You can create an
+at [app.touca.io](https://app.touca.io) has a free plan. You can create an
 account and explore Touca on your own. We are also happy to
 [chat 1:1](https://calendly.com/ghorbanzade/30min) to help you get on-boarded
 and answer any questions you may have in the process. We'd love to learn more
@@ -166,4 +165,4 @@ Touca would be useful to you and your team.
 ## License
 
 This repository is released under the Apache-2.0 License. See
-[LICENSE](https://github.com/trytouca/touca-python/blob/main/LICENSE).
+[`LICENSE`](https://github.com/trytouca/touca-python/blob/main/LICENSE).

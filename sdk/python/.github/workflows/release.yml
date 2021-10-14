@@ -9,7 +9,6 @@ on:
   workflow_dispatch:
 
 jobs:
-
   publish-pypi:
     name: release-publish-pypi
     runs-on: ubuntu-20.04
