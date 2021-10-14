@@ -23,25 +23,16 @@ std::string format(const FormatString& msg, Args&&... args) {
   return fmt::format(msg, std::forward<Args>(args)...);
 }
 
-/**
- *
- */
 TOUCA_CLIENT_API void print_impl(const fmt::terminal_color& style,
                                  fmt::string_view format,
                                  fmt::format_args args);
 
-/**
- *
- */
 template <typename FormatString, typename... Args>
 void print_error(const FormatString& format, Args&&... args) {
   print_impl(fmt::terminal_color::red, format,
              fmt::make_args_checked<Args...>(format, args...));
 }
 
-/**
- *
- */
 template <typename FormatString, typename... Args>
 void print_warning(const FormatString& format, Args&&... args) {
   print_impl(fmt::terminal_color::yellow, format,
@@ -65,15 +56,9 @@ void print_warning(const FormatString& format, Args&&... args) {
 TOUCA_CLIENT_API std::string load_string_file(
     const std::string& path, const std::ios_base::openmode mode = std::ios::in);
 
-/**
- *
- */
 TOUCA_CLIENT_API void save_string_file(const std::string& path,
                                        const std::string& content);
 
-/**
- *
- */
 TOUCA_CLIENT_API void save_binary_file(const std::string& path,
                                        const std::vector<uint8_t>& content);
 

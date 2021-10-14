@@ -8,9 +8,6 @@
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
 
-/**
- *
- */
 bool CompareOperation::parse_impl(int argc, char* argv[]) {
   cxxopts::Options options("touca_cli --mode=compare");
   // clang-format off
@@ -44,9 +41,6 @@ bool CompareOperation::parse_impl(int argc, char* argv[]) {
   return true;
 }
 
-/**
- *
- */
 bool CompareOperation::run_impl() const {
   touca::ResultFile src(_src);
   touca::ResultFile dst(_dst);

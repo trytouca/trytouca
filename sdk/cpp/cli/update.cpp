@@ -8,9 +8,6 @@
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
 
-/**
- *
- */
 bool UpdateOperation::parse_impl(int argc, char* argv[]) {
   cxxopts::Options options("touca_cli --mode=update");
   // clang-format off

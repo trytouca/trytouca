@@ -9,9 +9,6 @@
 namespace touca {
 namespace compare {
 
-/**
- *
- */
 std::string Cellar::stringify(const types::value_t type) const {
   using vt = types::value_t;
   const std::unordered_map<types::value_t, std::string> store = {
@@ -26,9 +23,6 @@ std::string Cellar::stringify(const types::value_t type) const {
   return "unknown";
 }
 
-/**
- *
- */
 nlohmann::ordered_json Cellar::json() const {
   auto rjCommon = buildJsonCommon(common);
   auto rjMissing = buildJsonSolo(missing, Category::Missing);
@@ -40,9 +34,6 @@ nlohmann::ordered_json Cellar::json() const {
   });
 }
 
-/**
- *
- */
 nlohmann::ordered_json Cellar::buildJsonSolo(const KeyMap& keyMap,
                                              const Category category) const {
   nlohmann::ordered_json elements = nlohmann::json::array();
@@ -57,9 +48,6 @@ nlohmann::ordered_json Cellar::buildJsonSolo(const KeyMap& keyMap,
   return elements;
 }
 
-/**
- *
- */
 nlohmann::ordered_json Cellar::buildJsonCommon(
     const ComparisonMap& elements) const {
   nlohmann::ordered_json output = nlohmann::json::array();
@@ -84,17 +72,11 @@ nlohmann::ordered_json Cellar::buildJsonCommon(
   return output;
 }
 
-/**
- *
- */
 TestcaseComparison::TestcaseComparison(const Testcase& src, const Testcase& dst)
     : _src(src), _dst(dst) {
   compare();
 }
 
-/**
- *
- */
 nlohmann::ordered_json TestcaseComparison::Overview::json() const {
   return nlohmann::ordered_json({
       {"keysCountCommon", keysCountCommon},
@@ -109,9 +91,6 @@ nlohmann::ordered_json TestcaseComparison::Overview::json() const {
   });
 }
 
-/**
- *
- */
 nlohmann::ordered_json TestcaseComparison::json() const {
   return nlohmann::ordered_json({{"src", _srcMeta.json()},
                                  {"dst", _dstMeta.json()},
@@ -120,9 +99,6 @@ nlohmann::ordered_json TestcaseComparison::json() const {
                                  {"metrics", _metrics.json()}});
 }
 
-/**
- *
- */
 double TestcaseComparison::scoreResults() const {
   using pair_t = std::pair<std::string, TypeComparison>;
   const auto& op = [](const double t, const pair_t& item) {
@@ -142,9 +118,6 @@ double TestcaseComparison::scoreResults() const {
   return sum / count;
 }
 
-/**
- *
- */
 TestcaseComparison::Overview TestcaseComparison::overview() const {
   Overview output;
 
@@ -178,9 +151,6 @@ TestcaseComparison::Overview TestcaseComparison::overview() const {
   return output;
 }
 
-/**
- *
- */
 void TestcaseComparison::compare() {
   // initialize metadata
   _srcMeta = _src.metadata();
@@ -193,9 +163,6 @@ void TestcaseComparison::compare() {
   initCellar(_src.metrics(), _dst.metrics(), _metrics);
 }
 
-/**
- *
- */
 void TestcaseComparison::initCellar(const ResultsMap& src,
                                     const ResultsMap& dst,
                                     const ResultCategory& type,
@@ -223,9 +190,6 @@ void TestcaseComparison::initCellar(const ResultsMap& src,
   }
 }
 
-/**
- *
- */
 void TestcaseComparison::initCellar(const MetricsMap& src,
                                     const MetricsMap& dst, Cellar& result) {
   for (const auto& kv : dst) {

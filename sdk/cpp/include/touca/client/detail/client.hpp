@@ -22,14 +22,8 @@ enum class DataFormat : unsigned char {
   JSON /**< json */
 };
 
-/**
- *
- */
 enum class ConcurrencyMode : unsigned char { PerThread, AllThreads };
 
-/**
- *
- */
 struct ClientOptions {
   std::string api_key;   /**< API Key to authenticate to the Touca server */
   std::string api_url;   /**< URL to Touca server API */

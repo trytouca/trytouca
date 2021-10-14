@@ -75,9 +75,6 @@ TEST_CASE("using a configured client") {
   REQUIRE(client.is_configured() == true);
   CHECK(client.configuration_error().empty() == true);
 
-  /**
-   *
-   */
   SECTION("testcase switch") {
     CHECK_NOTHROW(client.add_hit_count("ignored-key"));
     CHECK(client.declare_testcase("some-case"));
@@ -93,9 +90,6 @@ TEST_CASE("using a configured client") {
     CHECK(content.at("some-other-case")->overview().keysCount == 1);
   }
 
-  /**
-   *
-   */
   SECTION("results") {
     client.declare_testcase("some-case");
     const auto& v1 = std::make_shared<types::BooleanType>(true);
@@ -137,9 +131,6 @@ TEST_CASE("using a configured client") {
     CHECK_THAT(content, Catch::Contains(expected));
   }
 
-  /**
-   *
-   */
   SECTION("forget_testcase") {
     client.declare_testcase("some-case");
     const auto& v1 = std::make_shared<types::BooleanType>(true);

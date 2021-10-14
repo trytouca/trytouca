@@ -12,14 +12,8 @@
 
 namespace touca {
 
-/**
- *
- */
 ResultFile::ResultFile(const touca::filesystem::path& path) : _path(path) {}
 
-/**
- *
- */
 bool ResultFile::validate() const {
   // if file is already loaded, we have already validated its content
   if (!_testcases.empty()) {
@@ -35,9 +29,6 @@ bool ResultFile::validate() const {
   return validate(content);
 }
 
-/**
- *
- */
 bool ResultFile::validate(const std::string& content) const {
   const auto& buffer = (const uint8_t*)content.data();
   const auto& length = content.size();
@@ -45,9 +36,6 @@ bool ResultFile::validate(const std::string& content) const {
   return verifier.VerifyBuffer<touca::fbs::Messages>();
 }
 
-/**
- *
- */
 ElementsMap ResultFile::parse() const {
   // if file is already loaded, return the already parsed testcases
   if (!_testcases.empty()) {
@@ -76,19 +64,10 @@ ElementsMap ResultFile::parse() const {
   return testcases;
 }
 
-/**
- *
- */
 void ResultFile::load() { _testcases = parse(); }
 
-/**
- *
- */
 bool ResultFile::isLoaded() const { return !_testcases.empty(); }
 
-/**
- *
- */
 void ResultFile::save() {
   std::vector<Testcase> tcs;
   for (const auto& testcase : _testcases) {
@@ -97,9 +76,6 @@ void ResultFile::save() {
   return save(tcs);
 }
 
-/**
- *
- */
 void ResultFile::save(const std::vector<Testcase>& testcases) {
   save_binary_file(_path.string(), Testcase::serialize(testcases));
   // update map of stored testcases so that it only contains entries
@@ -107,9 +83,6 @@ void ResultFile::save(const std::vector<Testcase>& testcases) {
   load();
 }
 
-/**
- *
- */
 std::string ResultFile::readFileInJson() const {
   nlohmann::ordered_json out;
   for (const auto& item : _testcases.empty() ? parse() : _testcases) {
@@ -118,17 +91,11 @@ std::string ResultFile::readFileInJson() const {
   return out.dump();
 }
 
-/**
- *
- */
 void ResultFile::merge(const ResultFile& other) {
   const auto tcs = other.parse();
   _testcases.insert(tcs.begin(), tcs.end());
 }
 
-/**
- *
- */
 ResultFile::ComparisonResult ResultFile::compare(
     const ResultFile& other) const {
   const auto srcCases = _testcases.empty() ? parse() : _testcases;
@@ -152,9 +119,6 @@ ResultFile::ComparisonResult ResultFile::compare(
   return cmp;
 }
 
-/**
- *
- */
 std::string ResultFile::ComparisonResult::json() const {
   nlohmann::ordered_json items_fresh = nlohmann::json::array();
   for (const auto& item : fresh) {

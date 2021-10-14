@@ -26,18 +26,12 @@
 namespace touca {
 namespace framework {
 
-/**
- *
- */
 bool Workflow::parse_options(int argc, char* argv[]) {
   std::ignore = argc;
   std::ignore = argv;
   return true;
 }
 
-/**
- *
- */
 bool Workflow::skip(const Testcase& testcase) const {
   touca::filesystem::path outputDirCase = _options.at("output-dir");
   outputDirCase /= _options.at("suite");
@@ -55,16 +49,10 @@ bool Workflow::skip(const Testcase& testcase) const {
   return touca::filesystem::exists(outputDirCase.string());
 }
 
-/**
- *
- */
 void Workflow::add_options(const Options& options) {
   _options.insert(options.begin(), options.end());
 }
 
-/**
- *
- */
 void Suite::push(const Testcase& testcase) {
   if (!_set.count(testcase)) {
     _set.insert(testcase);
@@ -72,9 +60,6 @@ void Suite::push(const Testcase& testcase) {
   }
 }
 
-/**
- *
- */
 cxxopts::Options cli_options() {
   cxxopts::Options options("touca-framework", "Command Line Options");
 
@@ -168,9 +153,6 @@ bool parse_cli_options(int argc, char* argv[], Options& options) {
   return true;
 }
 
-/**
- *
- */
 bool parse_file_options(Options& options) {
   // if user is asking for help description or framework version,
   // do not parse the configuration file even if it is specified.
@@ -246,9 +228,6 @@ bool parse_file_options(Options& options) {
   return true;
 }
 
-/**
- *
- */
 bool parse_env_variables(Options& options) {
   const std::unordered_map<std::string, std::string> env_table = {
       {"TOUCA_API_KEY", "api-key"},
@@ -264,9 +243,6 @@ bool parse_env_variables(Options& options) {
   return true;
 }
 
-/**
- *
- */
 bool parse_api_url(Options& options) {
   // it is okay if configuration option `--api-url` is not specified
   if (!options.count("api-url")) {
@@ -285,9 +261,6 @@ bool parse_api_url(Options& options) {
   return true;
 }
 
-/**
- *
- */
 bool parse_options(int argc, char* argv[], Options& options) {
   auto ret = true;
   ret &= parse_cli_options(argc, argv, options);
@@ -297,9 +270,6 @@ bool parse_options(int argc, char* argv[], Options& options) {
   return ret;
 }
 
-/**
- *
- */
 bool expect_options(const Options& options,
                     const std::vector<std::string>& keys) {
   const auto isMissing = [&options](const std::string& key) {
@@ -318,9 +288,6 @@ bool expect_options(const Options& options,
   return false;
 }
 
-/**
- *
- */
 bool validate_api_url(const Options& options) {
   touca::ApiUrl api(options.at("api-url"));
   if (!api.confirm(options.at("team"), options.at("suite"),
@@ -331,9 +298,6 @@ bool validate_api_url(const Options& options) {
   return true;
 }
 
-/**
- *
- */
 bool validate_options(const Options& options) {
   // we always expect a value for options `--revision` and `output-dir`.
 
@@ -374,9 +338,6 @@ bool validate_options(const Options& options) {
   return true;
 }
 
-/**
- *
- */
 class LogFrontend {
  public:
   template <typename... Args>
@@ -404,9 +365,6 @@ class LogFrontend {
       _subscribers;
 };
 
-/**
- *
- */
 std::string stringify(const LogLevel& log_level) {
   static const std::map<LogLevel, std::string> names = {
       {LogLevel::Debug, "debug"},
@@ -417,9 +375,6 @@ std::string stringify(const LogLevel& log_level) {
   return names.at(log_level);
 }
 
-/**
- *
- */
 class ConsoleLogger : public LogSubscriber {
  public:
   void log(const LogLevel level, const std::string& msg) override {
@@ -427,9 +382,6 @@ class ConsoleLogger : public LogSubscriber {
   }
 };
 
-/**
- *
- */
 class FileLogger : public LogSubscriber {
  public:
   FileLogger(const touca::filesystem::path& logDir) : LogSubscriber() {
@@ -456,9 +408,6 @@ class FileLogger : public LogSubscriber {
   std::ofstream _ofs;
 };
 
-/**
- *
- */
 LogLevel find_log_level(const std::string& name) {
   static const std::unordered_map<std::string, LogLevel> values = {
       {"debug", LogLevel::Debug},
@@ -468,21 +417,12 @@ LogLevel find_log_level(const std::string& name) {
   return values.at(name);
 }
 
-/**
- *
- */
 struct SingleCaseSuite final : public Suite {
   SingleCaseSuite(const Testcase& testcase) { push(testcase); }
 };
 
-/**
- *
- */
 enum ExecutionOutcome : unsigned char { Pass, Fail, Skip };
 
-/**
- *
- */
 class Statistics {
   std::map<ExecutionOutcome, unsigned long> _v;
 
@@ -498,9 +438,6 @@ class Statistics {
   }
 };
 
-/**
- *
- */
 class Timer {
   std::unordered_map<std::string, std::chrono::system_clock::time_point> _tics;
   std::unordered_map<std::string, std::chrono::system_clock::time_point> _tocs;
@@ -518,9 +455,6 @@ class Timer {
   }
 };
 
-/**
- *
- */
 class Printer {
   std::ofstream _fout;
 
@@ -577,9 +511,6 @@ bool seal_version(const Options& options, const LogFrontend& logger) {
   return true;
 }
 
-/**
- *
- */
 int main_impl(int argc, char* argv[], Workflow& workflow) {
   using lg = LogLevel;
   Options options;
@@ -925,9 +856,6 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   return EXIT_SUCCESS;
 }
 
-/**
- *
- */
 int main(int argc, char* argv[], Workflow& workflow) {
   try {
     return main_impl(argc, argv, workflow);

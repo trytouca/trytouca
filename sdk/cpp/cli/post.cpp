@@ -65,9 +65,6 @@ bool PostOperation::parse_impl(int argc, char* argv[]) {
   return true;
 }
 
-/**
- *
- */
 bool PostOperation::run_impl() const {
   TOUCA_LOG_INFO("starting execution of operation: post");
 

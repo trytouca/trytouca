@@ -5,9 +5,6 @@
 #include "touca/devkit/logger.hpp"
 #include "touca/devkit/utils.hpp"
 
-/**
- *
- */
 int main(int argc, char* argv[]) {
   CliOptions opts;
 

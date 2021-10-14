@@ -10,14 +10,8 @@
 namespace touca {
 namespace framework {
 
-/**
- *
- */
 RemoteSuite::RemoteSuite(const Options& options) : Suite(), _options(options) {}
 
-/**
- *
- */
 void RemoteSuite::initialize() {
   // To obtain list of testcases from the server, we expect
   // the following configuration options are set.
@@ -51,14 +45,8 @@ void RemoteSuite::initialize() {
   }
 }
 
-/**
- *
- */
 FileSuite::FileSuite(const std::string& path) : Suite(), _path(path) {}
 
-/**
- *
- */
 void FileSuite::initialize() {
   std::string line;
   std::ifstream ifs(_path);

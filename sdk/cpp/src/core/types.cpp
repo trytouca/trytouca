@@ -14,9 +14,6 @@
 namespace touca {
 namespace detail {
 
-/**
- *
- */
 template <typename T>
 typename std::enable_if<
     touca::detail::is_touca_number<T>::value &&
@@ -33,9 +30,6 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
   return buffer;
 }
 
-/**
- *
- */
 template <typename T>
 typename std::enable_if<
     touca::detail::is_touca_number<T>::value &&
@@ -52,9 +46,6 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
   return buffer;
 }
 
-/**
- *
- */
 template <typename T>
 typename std::enable_if<
     touca::detail::is_touca_number<T>::value &&
@@ -71,9 +62,6 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
   return buffer;
 }
 
-/**
- *
- */
 template <typename T>
 typename std::enable_if<
     touca::detail::is_touca_number<T>::value &&
@@ -94,14 +82,8 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
 
 namespace types {
 
-/**
- *
- */
 value_t IType::type() const { return _type_t; }
 
-/**
- *
- */
 std::string IType::string() const {
   const auto& element = json();
   return element.type() == nlohmann::json::value_t::string
@@ -109,19 +91,10 @@ std::string IType::string() const {
              : element.dump();
 }
 
-/**
- *
- */
 BooleanType::BooleanType(bool value) : IType(value_t::boolean), _value(value) {}
 
-/**
- *
- */
 nlohmann::ordered_json BooleanType::json() const { return _value; }
 
-/**
- *
- */
 flatbuffers::Offset<fbs::TypeWrapper> BooleanType::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
   fbs::BoolBuilder bool_builder(builder);
@@ -133,9 +106,6 @@ flatbuffers::Offset<fbs::TypeWrapper> BooleanType::serialize(
   return typeWrapper_builder.Finish();
 }
 
-/**
- *
- */
 compare::TypeComparison BooleanType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
@@ -166,31 +136,19 @@ compare::TypeComparison BooleanType::compare(
   return result;
 }
 
-/**
- *
- */
 template <class T>
 Number<T>::Number(T value) : IType(value_t::numeric), _value(value) {}
 
-/**
- *
- */
 template <class T>
 nlohmann::ordered_json Number<T>::json() const {
   return _value;
 }
 
-/**
- *
- */
 template <class T>
 T Number<T>::value() const {
   return _value;
 }
 
-/**
- *
- */
 template <class T>
 flatbuffers::Offset<fbs::TypeWrapper> Number<T>::serialize(
     flatbuffers::FlatBufferBuilder& fbb) const {
@@ -201,9 +159,6 @@ flatbuffers::Offset<fbs::TypeWrapper> Number<T>::serialize(
   return fbsTypeWrapper_builder.Finish();
 }
 
-/**
- *
- */
 template <class T>
 compare::TypeComparison Number<T>::compare(
     const std::shared_ptr<IType>& itype) const {
@@ -250,20 +205,11 @@ compare::TypeComparison Number<T>::compare(
   return result;
 }
 
-/**
- *
- */
 StringType::StringType(const std::string& value)
     : IType(value_t::string), _value(value) {}
 
-/**
- *
- */
 nlohmann::ordered_json StringType::json() const { return _value; }
 
-/**
- *
- */
 flatbuffers::Offset<fbs::TypeWrapper> StringType::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
   const auto& fbsStringValue = builder.CreateString(_value);
@@ -276,9 +222,6 @@ flatbuffers::Offset<fbs::TypeWrapper> StringType::serialize(
   return typeWrapper_builder.Finish();
 }
 
-/**
- *
- */
 compare::TypeComparison StringType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
@@ -309,14 +252,8 @@ compare::TypeComparison StringType::compare(
   return result;
 }
 
-/**
- *
- */
 ArrayType::ArrayType() : IType(value_t::array) {}
 
-/**
- *
- */
 nlohmann::ordered_json ArrayType::json() const {
   nlohmann::ordered_json out = nlohmann::json::array();
   for (const auto& v : _values) {
@@ -325,9 +262,6 @@ nlohmann::ordered_json ArrayType::json() const {
   return out;
 }
 
-/**
- *
- */
 flatbuffers::Offset<fbs::TypeWrapper> ArrayType::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
   std::vector<flatbuffers::Offset<fbs::TypeWrapper>> fbsEntries_vector;
@@ -344,16 +278,10 @@ flatbuffers::Offset<fbs::TypeWrapper> ArrayType::serialize(
   return typeWrapper_builder.Finish();
 }
 
-/**
- *
- */
 void ArrayType::add(const std::shared_ptr<types::IType>& value) {
   _values.push_back(value);
 }
 
-/**
- *
- */
 compare::TypeComparison ArrayType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
@@ -460,9 +388,6 @@ compare::TypeComparison ArrayType::compare(
   return result;
 }
 
-/**
- *
- */
 KeyMap ArrayType::flatten() const {
   KeyMap members;
   for (unsigned i = 0; i < _values.size(); ++i) {
@@ -480,10 +405,6 @@ KeyMap ArrayType::flatten() const {
   }
   return members;
 }
-
-/**
- *
- */
 
 template class Number<float>;
 template class Number<double>;

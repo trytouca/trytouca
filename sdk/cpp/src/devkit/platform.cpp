@@ -11,9 +11,6 @@
 
 namespace touca {
 
-/**
- *
- */
 class Http : public Transport {
  public:
   explicit Http(const std::string& root);
@@ -27,9 +24,6 @@ class Http : public Transport {
   mutable httplib::Client _cli;
 };
 
-/**
- *
- */
 Http::Http(const std::string& root) : _cli(root.c_str()) {
   _cli.set_default_headers({{"Accept-Charset", "utf-8"},
                             {"Accept", "application/json"},
@@ -39,16 +33,10 @@ Http::Http(const std::string& root) : _cli(root.c_str()) {
 #endif
 }
 
-/**
- *
- */
 void Http::set_token(const std::string& token) {
   _cli.set_bearer_token_auth(token.c_str());
 }
 
-/**
- *
- */
 Response Http::get(const std::string& route) const {
   const auto& result = _cli.Get(route.c_str());
   if (!result) {
@@ -58,9 +46,6 @@ Response Http::get(const std::string& route) const {
   return {result->status, result->body};
 }
 
-/**
- *
- */
 Response Http::patch(const std::string& route, const std::string& body) const {
   const auto& result = _cli.Patch(route.c_str(), body, "application/json");
   if (!result) {
@@ -70,9 +55,6 @@ Response Http::patch(const std::string& route, const std::string& body) const {
   return {result->status, result->body};
 }
 
-/**
- *
- */
 Response Http::post(const std::string& route, const std::string& body) const {
   const auto& result = _cli.Post(route.c_str(), body, "application/json");
   if (!result) {
@@ -82,9 +64,6 @@ Response Http::post(const std::string& route, const std::string& body) const {
   return {result->status, result->body};
 }
 
-/**
- *
- */
 Response Http::binary(const std::string& route,
                       const std::string& content) const {
   const auto& result =
@@ -96,9 +75,6 @@ Response Http::binary(const std::string& route,
   return {result->status, result->body};
 }
 
-/**
- *
- */
 ApiUrl::ApiUrl(const std::string& url) {
   const static std::regex pattern(
       R"(^(?:([a-z]+)://)?([^:/?#]+)(?::(\d+))?/?(.*)?$)");
@@ -138,9 +114,6 @@ ApiUrl::ApiUrl(const std::string& url) {
   _revision = items.at(2);
 }
 
-/**
- *
- */
 std::string ApiUrl::root() const {
   auto output = _root.host;
   if (!_root.scheme.empty()) {
@@ -152,9 +125,6 @@ std::string ApiUrl::root() const {
   return output;
 }
 
-/**
- *
- */
 std::string ApiUrl::route(const std::string& path) const {
   if (path.empty()) {
     return _prefix;
@@ -165,9 +135,6 @@ std::string ApiUrl::route(const std::string& path) const {
   return "/" + _prefix + path;
 }
 
-/**
- *
- */
 bool ApiUrl::confirm(const std::string& team, const std::string& suite,
                      const std::string& revision) {
   if (!team.empty() && _team.empty()) {
@@ -195,18 +162,12 @@ bool ApiUrl::confirm(const std::string& team, const std::string& suite,
   return true;
 }
 
-/**
- *
- */
 Platform::Platform(const ApiUrl& api) : _api(api), _http(new Http(api.root())) {
   if (!_api._error.empty()) {
     _error = _api._error;
   }
 }
 
-/**
- *
- */
 bool Platform::set_params(const std::string& team, const std::string& suite,
                           const std::string& revision) {
   if (!_api.confirm(team, suite, revision)) {
@@ -278,9 +239,6 @@ bool Platform::auth(const std::string& apiKey) {
   return true;
 }
 
-/**
- *
- */
 std::vector<std::string> Platform::elements() const {
   _error.clear();
   const auto& route = touca::format("/element/{}/{}", _api._team, _api._suite);
@@ -312,9 +270,6 @@ std::vector<std::string> Platform::elements() const {
   return elements;
 }
 
-/**
- *
- */
 std::vector<std::string> Platform::submit(const std::string& content,
                                           const unsigned max_retries) const {
   std::vector<std::string> errors;
@@ -331,9 +286,6 @@ std::vector<std::string> Platform::submit(const std::string& content,
   return errors;
 }
 
-/**
- *
- */
 bool Platform::seal() const {
   _error.clear();
   const auto route = fmt::format("/batch/{}/{}/{}/seal2", _api._team,
@@ -351,9 +303,6 @@ bool Platform::seal() const {
   return true;
 }
 
-/**
- *
- */
 bool Platform::cmp_submit(const std::string& url,
                           const std::string& content) const {
   _error.clear();
@@ -369,9 +318,6 @@ bool Platform::cmp_submit(const std::string& url,
   return true;
 }
 
-/**
- *
- */
 bool Platform::cmp_jobs(std::string& content) const {
   _error.clear();
   const auto& response = _http->get(_api.route("/cmp"));
@@ -387,9 +333,6 @@ bool Platform::cmp_jobs(std::string& content) const {
   return true;
 }
 
-/**
- *
- */
 bool Platform::cmp_stats(const std::string& content) const {
   _error.clear();
   const auto& response = _http->post(_api.route("/cmp/stats"), content);

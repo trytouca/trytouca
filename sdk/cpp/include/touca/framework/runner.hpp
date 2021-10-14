@@ -9,16 +9,10 @@
 
 namespace touca {
 
-/**
- *
- */
 TOUCA_CLIENT_API void workflow(
     const std::string& name,
     const std::function<void(const std::string&)> workflow);
 
-/**
- *
- */
 TOUCA_CLIENT_API void run(int argc, char* argv[]);
 
 }  // namespace touca

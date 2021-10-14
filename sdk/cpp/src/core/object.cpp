@@ -9,26 +9,14 @@
 namespace touca {
 namespace types {
 
-/**
- *
- */
 ObjectType::ObjectType() : IType(value_t::object) {}
 
-/**
- *
- */
 ObjectType::ObjectType(const std::string& name)
     : IType(value_t::object), _name(name) {}
 
-/**
- *
- */
 ObjectType::ObjectType(const std::string& name, const KeyMap& values)
     : IType(value_t::object), _name(name), _values(values) {}
 
-/**
- *
- */
 nlohmann::ordered_json ObjectType::json() const {
   nlohmann::ordered_json members = nlohmann::json::object();
   for (const auto& member : _values) {
@@ -42,9 +30,6 @@ nlohmann::ordered_json ObjectType::json() const {
   return nlohmann::ordered_json({{_name, members}});
 }
 
-/**
- *
- */
 flatbuffers::Offset<fbs::TypeWrapper> ObjectType::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
   std::vector<flatbuffers::Offset<fbs::ObjectMember>> fbsObjectMembers_vector;
@@ -69,9 +54,6 @@ flatbuffers::Offset<fbs::TypeWrapper> ObjectType::serialize(
   return typeWrapper_builder.Finish();
 }
 
-/**
- *
- */
 compare::TypeComparison ObjectType::compare(
     const std::shared_ptr<IType>& itype) const {
   compare::TypeComparison result;
@@ -138,9 +120,6 @@ compare::TypeComparison ObjectType::compare(
   return result;
 }
 
-/**
- *
- */
 KeyMap ObjectType::flatten() const {
   KeyMap members;
   for (const auto& value : _values) {

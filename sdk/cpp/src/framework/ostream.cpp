@@ -2,23 +2,14 @@
 
 #include "touca/framework/detail/ostream.hpp"
 
-/**
- *
- */
 OutputCapturer::OutputCapturer() {}
 
-/**
- *
- */
 OutputCapturer::~OutputCapturer() {
   if (_capturing) {
     stop_capture();
   }
 }
 
-/**
- *
- */
 void OutputCapturer::start_capture() {
   _buferr.str("");
   _buferr.clear();
@@ -31,21 +22,12 @@ void OutputCapturer::start_capture() {
   _capturing = true;
 }
 
-/**
- *
- */
 void OutputCapturer::stop_capture() {
   std::cerr.rdbuf(_err);
   std::cout.rdbuf(_out);
   _capturing = false;
 }
 
-/**
- *
- */
 std::string OutputCapturer::cerr() const { return _buferr.str(); }
 
-/**
- *
- */
 std::string OutputCapturer::cout() const { return _bufout.str(); }

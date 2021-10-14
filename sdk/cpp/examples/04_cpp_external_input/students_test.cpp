@@ -11,22 +11,13 @@
 #include "touca/framework/suites.hpp"
 #include "touca/touca.hpp"
 
-/**
- *
- */
 int main(int argc, char* argv[]) {
   MyWorkflow workflow;
   return touca::framework::main(argc, argv, workflow);
 }
 
-/**
- *
- */
 MySuite::MySuite(const std::string& datasetDir) : _dir(datasetDir) {}
 
-/**
- *
- */
 void MySuite::initialize() {
   for (const auto& it : touca::filesystem::directory_iterator(_dir)) {
     if (!touca::filesystem::is_regular_file(it.path().string())) {
@@ -36,9 +27,6 @@ void MySuite::initialize() {
   }
 }
 
-/**
- *
- */
 cxxopts::Options application_options() {
   cxxopts::Options options{""};
   // clang-format off
@@ -50,21 +38,12 @@ cxxopts::Options application_options() {
   return options;
 }
 
-/**
- *
- */
 MyWorkflow::MyWorkflow() : touca::framework::Workflow() {}
 
-/**
- *
- */
 std::string MyWorkflow::describe_options() const {
   return application_options().help();
 }
 
-/**
- *
- */
 bool MyWorkflow::parse_options(int argc, char* argv[]) {
   auto options = application_options();
   options.allow_unrecognised_options();
@@ -78,9 +57,6 @@ bool MyWorkflow::parse_options(int argc, char* argv[]) {
   return true;
 }
 
-/**
- *
- */
 bool MyWorkflow::validate_options() const {
   // check that option `datasets-dir` is provided.
 
@@ -114,9 +90,6 @@ bool MyWorkflow::validate_options() const {
   return true;
 }
 
-/**
- *
- */
 std::shared_ptr<touca::framework::Suite> MyWorkflow::suite() const {
   // if option `testsuite-file` is specified, use the testcases listed
   // in that file. For this purpose, we use the `FileSuite` helper class
@@ -145,9 +118,6 @@ std::shared_ptr<touca::framework::Suite> MyWorkflow::suite() const {
   return std::make_shared<MySuite>(_options.at("datasets-dir"));
 }
 
-/**
- *
- */
 touca::framework::Errors MyWorkflow::execute(
     const touca::framework::Testcase& testcase) const {
   touca::filesystem::path caseFile = _options.at("datasets-dir");
@@ -172,9 +142,6 @@ touca::framework::Errors MyWorkflow::execute(
   return {};
 }
 
-/**
- *
- */
 template <>
 struct touca::converter<Date> {
   std::shared_ptr<types::IType> convert(const Date& value) {

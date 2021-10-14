@@ -4,9 +4,6 @@
 
 #include "touca/framework.hpp"
 
-/**
- *
- */
 class MyWorkflow : public touca::framework::Workflow {
  public:
   MyWorkflow();
@@ -18,9 +15,6 @@ class MyWorkflow : public touca::framework::Workflow {
       const touca::framework::Testcase& testcase) const override;
 };
 
-/**
- *
- */
 class MySuite final : public touca::framework::Suite {
  public:
   MySuite(const std::string& datasetDir);

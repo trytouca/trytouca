@@ -31,14 +31,8 @@ namespace touca {
  */
 class TOUCA_CLIENT_API scoped_timer {
  public:
-  /**
-   *
-   */
   explicit scoped_timer(const std::string& name);
 
-  /**
-   *
-   */
   ~scoped_timer();
 
  private:

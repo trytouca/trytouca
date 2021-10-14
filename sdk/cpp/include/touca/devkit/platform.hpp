@@ -10,17 +10,11 @@
 
 namespace touca {
 
-/**
- *
- */
 struct Response {
   const int status = -1;
   const std::string body;
 };
 
-/**
- *
- */
 class TOUCA_CLIENT_API Transport {
  public:
   virtual void set_token(const std::string& token) = 0;
@@ -34,9 +28,6 @@ class TOUCA_CLIENT_API Transport {
   virtual ~Transport() = default;
 };
 
-/**
- *
- */
 class TOUCA_CLIENT_API ApiUrl {
  public:
   ApiUrl(const std::string& url);
@@ -61,19 +52,10 @@ class TOUCA_CLIENT_API ApiUrl {
   std::string _prefix;
 };
 
-/**
- *
- */
 class TOUCA_CLIENT_API Platform {
  public:
-  /**
-   *
-   */
   explicit Platform(const ApiUrl& api_url);
 
-  /**
-   *
-   */
   bool set_params(const std::string& team, const std::string& suite,
                   const std::string& revision);
 
@@ -137,19 +119,10 @@ class TOUCA_CLIENT_API Platform {
    */
   inline std::string get_error() const { return _error; }
 
-  /**
-   *
-   */
   bool cmp_submit(const std::string& url, const std::string& content) const;
 
-  /**
-   *
-   */
   bool cmp_jobs(std::string& content) const;
 
-  /**
-   *
-   */
   bool cmp_stats(const std::string& content) const;
 
  private:

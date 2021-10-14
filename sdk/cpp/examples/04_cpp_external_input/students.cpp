@@ -15,9 +15,6 @@
 #undef GetObject
 #endif
 
-/**
- *
- */
 Student parse_profile(const std::string& path) {
   std::ifstream ifs(path, std::ios::in);
   std::string content((std::istreambuf_iterator<char>(ifs)),
@@ -51,9 +48,6 @@ Student parse_profile(const std::string& path) {
   return student;
 }
 
-/**
- *
- */
 float calculate_gpa(const std::vector<Course>& courses) {
   const auto& func = [](const double& sum, const Course& course) {
     std::this_thread::sleep_for(std::chrono::milliseconds(50 + rand() % 10));
@@ -63,18 +57,12 @@ float calculate_gpa(const std::vector<Course>& courses) {
          courses.size();
 }
 
-/**
- *
- */
 void custom_function_1(const Student& student) {
   TOUCA_SCOPED_TIMER;
   touca::check("is_adult", 18 <= 2021 - student.dob._year);
   std::this_thread::sleep_for(std::chrono::milliseconds(10 + rand() % 50));
 }
 
-/**
- *
- */
 void custom_function_2(const Student& student) {
   for (auto i = 0ul; i < student.courses.size(); ++i) {
     touca::scoped_timer timer("func2_course_" + std::to_string(i));
@@ -83,9 +71,6 @@ void custom_function_2(const Student& student) {
   }
 }
 
-/**
- *
- */
 void custom_function_3(const Student& student) {
   for (const auto& course : student.courses) {
     touca::add_array_element("course_names", course.name);

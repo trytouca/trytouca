@@ -23,9 +23,6 @@ class TOUCA_CLIENT_API Testcase {
   friend class compare::TestcaseComparison;
 
  public:
-  /**
-   *
-   */
   struct TOUCA_CLIENT_API Overview {
     std::int32_t keysCount = 0;
     std::int32_t metricsCount = 0;
@@ -37,9 +34,6 @@ class TOUCA_CLIENT_API Testcase {
     nlohmann::ordered_json json() const;
   };
 
-  /**
-   *
-   */
   struct TOUCA_CLIENT_API Metadata {
     std::string teamslug;
     std::string testsuite;
@@ -58,60 +52,30 @@ class TOUCA_CLIENT_API Testcase {
     nlohmann::ordered_json json() const;
   };
 
-  /**
-   *
-   */
   Testcase(const Metadata& meta, const ResultsMap& results,
            const std::unordered_map<std::string, unsigned long>& metrics);
 
-  /**
-   *
-   */
   Testcase(const std::string& teamslug, const std::string& testsuite,
            const std::string& version, const std::string& name);
 
-  /**
-   *
-   */
   compare::TestcaseComparison compare(
       const std::shared_ptr<Testcase>& tc) const;
 
-  /**
-   *
-   */
   void tic(const std::string& key);
 
-  /**
-   *
-   */
   void toc(const std::string& key);
 
-  /**
-   *
-   */
   void check(const std::string& key,
              const std::shared_ptr<types::IType>& value);
 
-  /**
-   *
-   */
   void assume(const std::string& key,
               const std::shared_ptr<types::IType>& value);
 
-  /**
-   *
-   */
   void add_array_element(const std::string& key,
                          const std::shared_ptr<types::IType>& value);
 
-  /**
-   *
-   */
   void add_hit_count(const std::string& key);
 
-  /**
-   *
-   */
   void add_metric(const std::string& key, const unsigned duration);
 
   /**
@@ -120,34 +84,16 @@ class TOUCA_CLIENT_API Testcase {
    */
   void clear();
 
-  /**
-   *
-   */
   MetricsMap metrics() const;
 
-  /**
-   *
-   */
   nlohmann::ordered_json json() const;
 
-  /**
-   *
-   */
   std::vector<uint8_t> flatbuffers() const;
 
-  /**
-   *
-   */
   Metadata metadata() const;
 
-  /**
-   *
-   */
   void setMetadata(const Metadata& metadata);
 
-  /**
-   *
-   */
   Overview overview() const;
 
   /**

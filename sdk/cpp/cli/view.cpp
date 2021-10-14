@@ -6,9 +6,6 @@
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
 
-/**
- *
- */
 bool ViewOperation::parse_impl(int argc, char* argv[]) {
   cxxopts::Options options("touca_cli --mode=view");
   // clang-format off
@@ -30,9 +27,6 @@ bool ViewOperation::parse_impl(int argc, char* argv[]) {
   return true;
 }
 
-/**
- *
- */
 bool ViewOperation::run_impl() const {
   touca::ResultFile file(_src);
   try {

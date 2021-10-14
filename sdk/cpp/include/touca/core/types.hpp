@@ -36,9 +36,6 @@ using KeyMap = std::map<std::string, std::shared_ptr<types::IType>>;
 
 namespace types {
 
-/**
- *
- */
 enum class TOUCA_CLIENT_API value_t : std::uint8_t {
   object,
   array,
@@ -99,9 +96,6 @@ class TOUCA_CLIENT_API BooleanType : public IType {
 
 };  // class touca::types::BooleanType
 
-/**
- *
- */
 template <class T>
 class TOUCA_CLIENT_API Number : public IType {
  public:

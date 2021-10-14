@@ -21,9 +21,6 @@ enum class MatchType : unsigned char {
   None     /**< Indicates that compared objects were different */
 };
 
-/**
- *
- */
 struct TOUCA_CLIENT_API TypeComparison {
   std::string srcValue;
   std::string dstValue;
@@ -34,55 +31,28 @@ struct TOUCA_CLIENT_API TypeComparison {
   MatchType match = MatchType::None;
 };
 
-/**
- *
- */
 using ComparisonMap = std::unordered_map<std::string, TypeComparison>;
 
-/**
- *
- */
 enum class Category { Common, Missing, Fresh };
 
-/**
- *
- */
 struct Cellar {
   ComparisonMap common;
   KeyMap missing;
   KeyMap fresh;
 
-  /**
-   *
-   */
   nlohmann::ordered_json json() const;
 
  private:
-  /**
-   *
-   */
   std::string stringify(const types::value_t type) const;
 
-  /**
-   *
-   */
   nlohmann::ordered_json buildJsonSolo(const KeyMap& elements,
                                        const Category category) const;
 
-  /**
-   *
-   */
   nlohmann::ordered_json buildJsonCommon(const ComparisonMap& elements) const;
 };
 
-/**
- *
- */
 class TOUCA_CLIENT_API TestcaseComparison {
  public:
-  /**
-   *
-   */
   struct TOUCA_CLIENT_API Overview {
     std::int32_t keysCountCommon;
     std::int32_t keysCountFresh;
@@ -100,46 +70,22 @@ class TOUCA_CLIENT_API TestcaseComparison {
     nlohmann::ordered_json json() const;
   };
 
-  /**
-   *
-   */
   TestcaseComparison(const Testcase& src, const Testcase& dst);
 
-  /**
-   *
-   */
   nlohmann::ordered_json json() const;
 
-  /**
-   *
-   */
   Overview overview() const;
 
  private:
-  /**
-   *
-   */
   double scoreResults() const;
 
-  /**
-   *
-   */
   void compare();
 
-  /**
-   *
-   */
   void initCellar(const ResultsMap& src, const ResultsMap& dst,
                   const ResultCategory& type, Cellar& result);
 
-  /**
-   *
-   */
   void initCellar(const MetricsMap& src, const MetricsMap& dst, Cellar& result);
 
-  /**
-   *
-   */
   void initMetadata(const Testcase& tc, Testcase::Metadata& meta);
 
   // metadata

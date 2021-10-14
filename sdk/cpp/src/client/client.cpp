@@ -15,31 +15,19 @@ namespace touca {
 
 using func_t = std::function<void(const std::string&)>;
 
-/**
- *
- */
 template <typename T>
 func_t parse_member(T& member);
 
-/**
- *
- */
 template <>
 func_t parse_member(std::string& member) {
   return [&member](const std::string& value) { member = value; };
 }
 
-/**
- *
- */
 template <>
 func_t parse_member(bool& member) {
   return [&member](const std::string& value) { member = value != "false"; };
 }
 
-/**
- *
- */
 template <>
 func_t parse_member(unsigned long& member) {
   return [&member](const std::string& value) {
@@ -58,9 +46,6 @@ func_t parse_member(touca::ConcurrencyMode& member) {
   };
 }
 
-/**
- *
- */
 bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
   _opts.parse_error.clear();
 
@@ -186,9 +171,6 @@ bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
   return true;
 }
 
-/**
- *
- */
 bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
   // check that specified path leads to an existing regular file on disk
 
@@ -246,21 +228,12 @@ bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
   return configure(opts);
 }
 
-/**
- *
- */
 void ClientImpl::add_logger(std::shared_ptr<logger> logger) {
   _loggers.push_back(logger);
 }
 
-/**
- *
- */
 std::vector<std::string> ClientImpl::get_testcases() const { return _elements; }
 
-/**
- *
- */
 std::shared_ptr<touca::Testcase> ClientImpl::declare_testcase(
     const std::string& name) {
   if (!_configured) {
@@ -286,9 +259,6 @@ void ClientImpl::forget_testcase(const std::string& name) {
   _testcases.erase(name);
 }
 
-/**
- *
- */
 void ClientImpl::check(const std::string& key,
                        const std::shared_ptr<types::IType>& value) {
   if (hasLastTestcase()) {
@@ -296,9 +266,6 @@ void ClientImpl::check(const std::string& key,
   }
 }
 
-/**
- *
- */
 void ClientImpl::assume(const std::string& key,
                         const std::shared_ptr<types::IType>& value) {
   if (hasLastTestcase()) {
@@ -306,9 +273,6 @@ void ClientImpl::assume(const std::string& key,
   }
 }
 
-/**
- *
- */
 void ClientImpl::add_array_element(const std::string& key,
                                    const std::shared_ptr<types::IType>& value) {
   if (hasLastTestcase()) {
@@ -316,45 +280,30 @@ void ClientImpl::add_array_element(const std::string& key,
   }
 }
 
-/**
- *
- */
 void ClientImpl::add_hit_count(const std::string& key) {
   if (hasLastTestcase()) {
     _testcases.at(getLastTestcase())->add_hit_count(key);
   }
 }
 
-/**
- *
- */
 void ClientImpl::add_metric(const std::string& key, const unsigned duration) {
   if (hasLastTestcase()) {
     _testcases.at(getLastTestcase())->add_metric(key, duration);
   }
 }
 
-/**
- *
- */
 void ClientImpl::start_timer(const std::string& key) {
   if (hasLastTestcase()) {
     _testcases.at(getLastTestcase())->tic(key);
   }
 }
 
-/**
- *
- */
 void ClientImpl::stop_timer(const std::string& key) {
   if (hasLastTestcase()) {
     _testcases.at(getLastTestcase())->toc(key);
   }
 }
 
-/**
- *
- */
 void ClientImpl::save(const touca::filesystem::path& path,
                       const std::vector<std::string>& testcases,
                       const DataFormat format, const bool overwrite) const {
@@ -381,9 +330,6 @@ void ClientImpl::save(const touca::filesystem::path& path,
   }
 }
 
-/**
- *
- */
 bool ClientImpl::post() const {
   // check that client is configured to submit test results
 
@@ -432,9 +378,6 @@ bool ClientImpl::post() const {
   return ret;
 }
 
-/**
- *
- */
 bool ClientImpl::seal() const {
   if (!_platform) {
     notify_loggers(logger::Level::Error,
@@ -453,9 +396,6 @@ bool ClientImpl::seal() const {
   return true;
 }
 
-/**
- *
- */
 bool ClientImpl::hasLastTestcase() const {
   // if client is not configured, report that no testcase has been
   // declared. this behavior renders calls to other data capturing
@@ -479,9 +419,6 @@ bool ClientImpl::hasLastTestcase() const {
   return _threadMap.count(std::this_thread::get_id());
 }
 
-/**
- *
- */
 std::string ClientImpl::getLastTestcase() const {
   // We do not expect this function to be called without calling
   // `hasLastTestcase` first.
@@ -504,9 +441,6 @@ std::string ClientImpl::getLastTestcase() const {
   return _threadMap.at(std::this_thread::get_id());
 }
 
-/**
- *
- */
 std::vector<Testcase> ClientImpl::find_testcases(
     const std::vector<std::string>& names) const {
   std::vector<Testcase> testcases;
@@ -517,9 +451,6 @@ std::vector<Testcase> ClientImpl::find_testcases(
   return testcases;
 }
 
-/**
- *
- */
 void ClientImpl::save_json(const touca::filesystem::path& path,
                            const std::vector<Testcase>& testcases) const {
   nlohmann::ordered_json doc = nlohmann::json::array();
@@ -529,18 +460,12 @@ void ClientImpl::save_json(const touca::filesystem::path& path,
   save_string_file(path.string(), doc.dump());
 }
 
-/**
- *
- */
 void ClientImpl::save_flatbuffers(
     const touca::filesystem::path& path,
     const std::vector<Testcase>& testcases) const {
   save_binary_file(path.string(), Testcase::serialize(testcases));
 }
 
-/**
- *
- */
 bool ClientImpl::post_flatbuffers(
     const std::vector<Testcase>& testcases) const {
   const auto& buffer = Testcase::serialize(testcases);
@@ -552,9 +477,6 @@ bool ClientImpl::post_flatbuffers(
   return errors.empty();
 }
 
-/**
- *
- */
 void ClientImpl::notify_loggers(const logger::Level severity,
                                 const std::string& msg) const {
   for (const auto& logger : _loggers) {

@@ -8,9 +8,6 @@
 #include "touca/devkit/utils.hpp"
 #include "touca/extra/version.hpp"
 
-/**
- *
- */
 Operation::Command Operation::find_mode(const std::string& name) {
   const std::unordered_map<std::string, Operation::Command> modes{
       {"compare", Operation::Command::compare},
@@ -21,9 +18,6 @@ Operation::Command Operation::find_mode(const std::string& name) {
   return modes.count(name) ? modes.at(name) : Operation::Command::unknown;
 }
 
-/**
- *
- */
 std::shared_ptr<Operation> Operation::make(const Operation::Command& mode) {
   using func_t = std::function<std::shared_ptr<Operation>()>;
   std::map<Operation::Command, func_t> ops{
@@ -39,9 +33,6 @@ std::shared_ptr<Operation> Operation::make(const Operation::Command& mode) {
   return ops.at(mode)();
 }
 
-/**
- *
- */
 bool Operation::parse(int argc, char* argv[]) {
   try {
     return parse_impl(argc, argv);
@@ -51,9 +42,6 @@ bool Operation::parse(int argc, char* argv[]) {
   return false;
 }
 
-/**
- *
- */
 bool Operation::run() const {
   try {
     return run_impl();
@@ -63,9 +51,6 @@ bool Operation::run() const {
   return false;
 }
 
-/**
- *
- */
 cxxopts::Options config_options_main() {
   cxxopts::Options options("touca_cli");
   // clang-format off
@@ -81,9 +66,6 @@ cxxopts::Options config_options_main() {
   return options;
 }
 
-/**
- *
- */
 bool CliOptions::parse(int argc, char* argv[]) {
   try {
     return parse_impl(argc, argv);
@@ -93,9 +75,6 @@ bool CliOptions::parse(int argc, char* argv[]) {
   return false;
 }
 
-/**
- *
- */
 bool CliOptions::parse_impl(int argc, char* argv[]) {
   // parse command line arguments
 

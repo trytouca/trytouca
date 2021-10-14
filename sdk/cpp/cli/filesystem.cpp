@@ -5,9 +5,6 @@
 #include "touca/devkit/logger.hpp"
 #include "touca/devkit/resultfile.hpp"
 
-/**
- *
- */
 std::vector<touca::filesystem::path> discover(
     const touca::filesystem::path& path) {
   if (touca::filesystem::is_regular_file(path)) {
@@ -31,9 +28,6 @@ std::vector<touca::filesystem::path> discover(
   return output;
 }
 
-/**
- *
- */
 std::vector<touca::filesystem::path> find_binary_files(
     const touca::filesystem::path& path) {
   TOUCA_LOG_DEBUG("finding result files in {}", path.string());

@@ -17,9 +17,6 @@ static const std::unordered_map<ResultCategory, fbs::ResultType> result_types =
         {ResultCategory::Assert, fbs::ResultType::Assert},
 };
 
-/**
- *
- */
 Testcase::Testcase(const std::string& teamslug, const std::string& testsuite,
                    const std::string& version, const std::string& name)
     : _posted(false) {
@@ -45,9 +42,6 @@ Testcase::Testcase(const std::string& teamslug, const std::string& testsuite,
   _metadata = {teamslug, testsuite, version, name, builtAt};
 }
 
-/**
- *
- */
 Testcase::Testcase(
     const Metadata& meta, const ResultsMap& results,
     const std::unordered_map<std::string, unsigned long>& metrics)
@@ -62,35 +56,20 @@ Testcase::Testcase(
   }
 }
 
-/**
- *
- */
 nlohmann::ordered_json Testcase::Overview::json() const {
   return nlohmann::ordered_json({{"keysCount", keysCount},
                                  {"metricsCount", metricsCount},
                                  {"metricsDuration", metricsDuration}});
 }
 
-/**
- *
- */
 Testcase::Metadata Testcase::metadata() const { return _metadata; }
 
-/**
- *
- */
 void Testcase::setMetadata(const Metadata& metadata) { _metadata = metadata; }
 
-/**
- *
- */
 std::string Testcase::Metadata::describe() const {
   return touca::format("{}/{}/{}/{}", teamslug, testsuite, version, testcase);
 }
 
-/**
- *
- */
 nlohmann::ordered_json Testcase::Metadata::json() const {
   return nlohmann::ordered_json({
       {"teamslug", teamslug},
@@ -101,17 +80,11 @@ nlohmann::ordered_json Testcase::Metadata::json() const {
   });
 }
 
-/**
- *
- */
 void Testcase::tic(const std::string& key) {
   _tics.emplace(key, std::chrono::system_clock::now());
   _posted = false;
 }
 
-/**
- *
- */
 void Testcase::toc(const std::string& key) {
   if (!_tics.count(key)) {
     throw std::invalid_argument("timer was never started for given key");
@@ -120,27 +93,18 @@ void Testcase::toc(const std::string& key) {
   _posted = false;
 }
 
-/**
- *
- */
 void Testcase::check(const std::string& key,
                      const std::shared_ptr<types::IType>& value) {
   _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Check});
   _posted = false;
 }
 
-/**
- *
- */
 void Testcase::assume(const std::string& key,
                       const std::shared_ptr<types::IType>& value) {
   _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Assert});
   _posted = false;
 }
 
-/**
- *
- */
 void Testcase::add_array_element(const std::string& key,
                                  const std::shared_ptr<types::IType>& element) {
   using touca::types::ArrayType;
@@ -162,9 +126,6 @@ void Testcase::add_array_element(const std::string& key,
   _posted = false;
 }
 
-/**
- *
- */
 void Testcase::add_hit_count(const std::string& key) {
   using number_t = touca::types::Number<uint64_t>;
   if (!_resultsMap.count(key)) {
@@ -188,9 +149,6 @@ void Testcase::add_hit_count(const std::string& key) {
   _posted = false;
 }
 
-/**
- *
- */
 void Testcase::add_metric(const std::string& key, const unsigned duration) {
   namespace chr = std::chrono;
   const auto& tic = chr::system_clock::time_point(chr::milliseconds(0));
@@ -200,9 +158,6 @@ void Testcase::add_metric(const std::string& key, const unsigned duration) {
   _posted = false;
 }
 
-/**
- *
- */
 MetricsMap Testcase::metrics() const {
   MetricsMap metrics;
   for (const auto& tic : _tics) {
@@ -220,9 +175,6 @@ MetricsMap Testcase::metrics() const {
   return metrics;
 }
 
-/**
- *
- */
 nlohmann::ordered_json Testcase::json() const {
   auto results = nlohmann::json::array();
   for (const auto& entry : _resultsMap) {
@@ -254,9 +206,6 @@ nlohmann::ordered_json Testcase::json() const {
                                  {"metrics", json_metrics}});
 }
 
-/**
- *
- */
 std::vector<uint8_t> Testcase::flatbuffers() const {
   flatbuffers::FlatBufferBuilder builder;
 
@@ -325,17 +274,11 @@ std::vector<uint8_t> Testcase::flatbuffers() const {
   return {ptr, ptr + builder.GetSize()};
 }
 
-/**
- *
- */
 compare::TestcaseComparison Testcase::compare(
     const std::shared_ptr<Testcase>& tc) const {
   return {*this, *tc};
 }
 
-/**
- *
- */
 Testcase::Overview Testcase::overview() const {
   Testcase::Overview overview;
   overview.keysCount = static_cast<std::int32_t>(_resultsMap.size());
@@ -353,9 +296,6 @@ Testcase::Overview Testcase::overview() const {
   return overview;
 }
 
-/**
- *
- */
 void Testcase::clear() {
   _posted = false;
   _resultsMap.clear();
@@ -363,9 +303,6 @@ void Testcase::clear() {
   _tocs.clear();
 }
 
-/**
- *
- */
 std::vector<uint8_t> Testcase::serialize(
     const std::vector<Testcase>& testcases) {
   flatbuffers::FlatBufferBuilder fbb;

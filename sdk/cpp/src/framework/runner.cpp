@@ -12,17 +12,11 @@ namespace touca {
 std::vector<std::pair<std::string, std::function<void(const std::string&)>>>
     _workflows;
 
-/**
- *
- */
 void workflow(const std::string& name,
               const std::function<void(const std::string&)> workflow) {
   _workflows.push_back(std::make_pair(name, workflow));
 }
 
-/**
- *
- */
 void run(int argc, char* argv[]) {
   for (const auto& workflow : _workflows) {
     struct Runner : public touca::framework::Workflow {
