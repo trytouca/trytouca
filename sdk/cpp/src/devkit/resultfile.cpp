@@ -6,6 +6,7 @@
 
 #include "nlohmann/json.hpp"
 #include "touca/devkit/deserialize.hpp"
+#include "touca/devkit/testcase.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/impl/schema.hpp"
 
@@ -100,23 +101,7 @@ void ResultFile::save() {
  *
  */
 void ResultFile::save(const std::vector<Testcase>& testcases) {
-  // create parent directory if it does not exist
-  touca::filesystem::path dstFile{_path};
-  const auto parentPath = touca::filesystem::absolute(dstFile.parent_path());
-  if (!touca::filesystem::exists(parentPath.string()) &&
-      !touca::filesystem::create_directories(parentPath)) {
-    throw std::invalid_argument("failed to create parent path");
-  }
-  // write content of testcases to the filesystem
-  const auto buffer = Testcase::serialize(testcases);
-  try {
-    std::ofstream out(_path, std::ios::binary);
-    out.write((const char*)buffer.data(), buffer.size());
-    out.close();
-  } catch (const std::exception& ex) {
-    const auto& msg = "failed to save content to disk: {}";
-    throw std::invalid_argument(fmt::format(msg, ex.what()));
-  }
+  save_binary_file(_path.string(), Testcase::serialize(testcases));
   // update map of stored testcases so that it only contains entries
   // for the new testcases we used for saving the file
   load();

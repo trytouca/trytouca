@@ -178,24 +178,25 @@ class TOUCA_CLIENT_API ClientImpl {
   /**
    *
    */
-  std::string make_json(const std::vector<std::string>& testcases) const;
+  std::vector<Testcase> find_testcases(
+      const std::vector<std::string>& names) const;
 
   /**
    *
    */
   void save_json(const touca::filesystem::path& path,
-                 const std::vector<std::string>& testcases) const;
+                 const std::vector<Testcase>& testcases) const;
 
   /**
    *
    */
   void save_flatbuffers(const touca::filesystem::path& path,
-                        const std::vector<std::string>& testcases) const;
+                        const std::vector<Testcase>& testcases) const;
 
   /**
    *
    */
-  bool post_flatbuffers(const std::vector<std::string>& testcases) const;
+  bool post_flatbuffers(const std::vector<Testcase>& testcases) const;
 
   /**
    *

@@ -4,6 +4,7 @@
 
 #include <ios>
 #include <string>
+#include <vector>
 
 #include "fmt/color.h"
 #include "touca/lib_api.hpp"
@@ -69,5 +70,11 @@ TOUCA_CLIENT_API std::string load_string_file(
  */
 TOUCA_CLIENT_API void save_string_file(const std::string& path,
                                        const std::string& content);
+
+/**
+ *
+ */
+TOUCA_CLIENT_API void save_binary_file(const std::string& path,
+                                       const std::vector<uint8_t>& content);
 
 }  // namespace touca

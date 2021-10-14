@@ -8,7 +8,6 @@
 #include "nlohmann/json.hpp"
 #include "touca/devkit/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
-#include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/impl/schema.hpp"
 
@@ -370,21 +369,12 @@ void ClientImpl::save(const touca::filesystem::path& path,
         [](const ElementsMap::value_type& kvp) { return kvp.first; });
   }
 
-  const auto parentPath =
-      touca::filesystem::absolute(touca::filesystem::path(path).parent_path());
-  if (!touca::filesystem::exists(parentPath.string()) &&
-      !touca::filesystem::create_directories(parentPath)) {
-    throw std::invalid_argument(touca::format(
-        "failed to save content to disk: failed to create directory: {}",
-        parentPath.string()));
-  }
-
   switch (format) {
     case DataFormat::JSON:
-      save_json(path, tcs);
+      save_json(path, find_testcases(tcs));
       break;
     case DataFormat::FBS:
-      save_flatbuffers(path, tcs);
+      save_flatbuffers(path, find_testcases(tcs));
       break;
     default:
       throw std::invalid_argument("saving in given format not supported");
@@ -427,7 +417,7 @@ bool ClientImpl::post() const {
     std::vector<std::string> batch(it, tail);
     // attempt to post results for this group of testcases.
     // currently we only support posting data in flatbuffers format.
-    const auto isPosted = post_flatbuffers(batch);
+    const auto isPosted = post_flatbuffers(find_testcases(batch));
     it = tail;
     if (!isPosted) {
       notify_loggers(logger::Level::Error,
@@ -517,61 +507,49 @@ std::string ClientImpl::getLastTestcase() const {
 /**
  *
  */
-void ClientImpl::save_flatbuffers(const touca::filesystem::path& path,
-                                  const std::vector<std::string>& names) const {
-  std::vector<Testcase> tcs;
-  tcs.reserve(names.size());
+std::vector<Testcase> ClientImpl::find_testcases(
+    const std::vector<std::string>& names) const {
+  std::vector<Testcase> testcases;
+  testcases.reserve(names.size());
   for (const auto& name : names) {
-    tcs.emplace_back(*_testcases.at(name));
+    testcases.emplace_back(*_testcases.at(name));
   }
-  ResultFile rfile(path);
-  rfile.save(tcs);
-}
-
-/**
- *
- */
-bool ClientImpl::post_flatbuffers(const std::vector<std::string>& names) const {
-  std::vector<Testcase> tcs;
-  tcs.reserve(names.size());
-  for (const auto& name : names) {
-    tcs.emplace_back(*_testcases.at(name));
-  }
-  const auto& buffer = Testcase::serialize(tcs);
-  std::string content((const char*)buffer.data(), buffer.size());
-  const auto& errors = _platform->submit(content, _opts.post_max_retries);
-  for (const auto& err : errors) {
-    notify_loggers(logger::Level::Warning, err);
-  }
-  return errors.empty();
-}
-
-/**
- *
- */
-std::string ClientImpl::make_json(
-    const std::vector<std::string>& testcases) const {
-  nlohmann::ordered_json doc = nlohmann::json::array();
-  for (const auto& testcase : testcases) {
-    doc.push_back(_testcases.at(testcase)->json());
-  }
-  return doc.dump();
+  return testcases;
 }
 
 /**
  *
  */
 void ClientImpl::save_json(const touca::filesystem::path& path,
-                           const std::vector<std::string>& testcases) const {
-  const auto& content = make_json(testcases);
-  try {
-    std::ofstream ofs(path);
-    ofs << content;
-    ofs.close();
-  } catch (const std::exception& ex) {
-    throw std::invalid_argument(
-        touca::format("failed to save content to disk: {}", ex.what()));
+                           const std::vector<Testcase>& testcases) const {
+  nlohmann::ordered_json doc = nlohmann::json::array();
+  for (const auto& testcase : testcases) {
+    doc.push_back(testcase.json());
   }
+  save_string_file(path.string(), doc.dump());
+}
+
+/**
+ *
+ */
+void ClientImpl::save_flatbuffers(
+    const touca::filesystem::path& path,
+    const std::vector<Testcase>& testcases) const {
+  save_binary_file(path.string(), Testcase::serialize(testcases));
+}
+
+/**
+ *
+ */
+bool ClientImpl::post_flatbuffers(
+    const std::vector<Testcase>& testcases) const {
+  const auto& buffer = Testcase::serialize(testcases);
+  std::string content((const char*)buffer.data(), buffer.size());
+  const auto& errors = _platform->submit(content, _opts.post_max_retries);
+  for (const auto& err : errors) {
+    notify_loggers(logger::Level::Warning, err);
+  }
+  return errors.empty();
 }
 
 /**
