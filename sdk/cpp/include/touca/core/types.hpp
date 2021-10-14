@@ -4,10 +4,14 @@
 
 #include <map>
 
-#include "flatbuffers/flatbuffers.h"
 #include "nlohmann/json_fwd.hpp"
 #include "touca/lib_api.hpp"
 
+namespace flatbuffers {
+class FlatBufferBuilder;
+template <typename Type>
+struct Offset;
+}  // namespace flatbuffers
 namespace touca {
 namespace compare {
 struct TypeComparison;
@@ -37,6 +41,7 @@ using KeyMap = std::map<std::string, std::shared_ptr<types::IType>>;
 namespace types {
 
 enum class TOUCA_CLIENT_API value_t : std::uint8_t {
+  null,
   object,
   array,
   string,
@@ -78,6 +83,19 @@ class TOUCA_CLIENT_API IType {
   const value_t _type_t;
 
 };  // class IType
+
+class TOUCA_CLIENT_API NoneType : public IType {
+ public:
+  explicit NoneType();
+
+  nlohmann::ordered_json json() const override;
+
+  flatbuffers::Offset<fbs::TypeWrapper> serialize(
+      flatbuffers::FlatBufferBuilder& fbb) const override;
+
+  compare::TypeComparison compare(
+      const std::shared_ptr<IType>& itype) const override;
+};  // class touca::types::NoneType
 
 class TOUCA_CLIENT_API BooleanType : public IType {
  public:

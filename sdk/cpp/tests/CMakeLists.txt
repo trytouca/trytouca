@@ -7,8 +7,8 @@ add_executable(${TOUCA_TARGET_TEST} "")
 target_sources(
         ${TOUCA_TARGET_TEST}
     PRIVATE
-        client.cpp
         main.cpp
+        client/client.cpp
         devkit/options.cpp
         devkit/platform.cpp
         devkit/resultfile.cpp

@@ -3,7 +3,7 @@
 #include "touca/devkit/resultfile.hpp"
 
 #include "catch2/catch.hpp"
-#include "tmpfile.hpp"
+#include "tests/devkit/tmpfile.hpp"
 #include "touca/devkit/utils.hpp"
 
 void compare_cases(const std::vector<touca::Testcase>& tmpCases,

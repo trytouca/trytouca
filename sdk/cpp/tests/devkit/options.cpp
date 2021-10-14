@@ -1,7 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "catch2/catch.hpp"
-#include "tmpfile.hpp"
+#include "tests/devkit/tmpfile.hpp"
 #include "touca/client/detail/client.hpp"
 
 TEST_CASE("configure") {

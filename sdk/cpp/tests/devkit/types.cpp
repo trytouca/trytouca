@@ -50,6 +50,15 @@ std::shared_ptr<touca::types::IType> deserialize(const std::string& buffer) {
 TEST_CASE("Simple Data Types") {
   using namespace touca;
 
+  SECTION("type: null") {
+    const auto& value = std::make_shared<types::NoneType>();
+    SECTION("initialize") {
+      CHECK(value->flatten().empty());
+      CHECK(value->string() == "{}");
+      CHECK(types::value_t::null == value->type());
+    }
+  }
+
   SECTION("type: bool") {
     const auto& value = std::make_shared<types::BooleanType>(true);
 

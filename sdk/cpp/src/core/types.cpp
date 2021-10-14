@@ -4,6 +4,7 @@
 
 #include <cmath>
 
+#include "flatbuffers/flatbuffers.h"
 #include "fmt/format.h"
 #include "nlohmann/json.hpp"
 #include "touca/client/convert.hpp"
@@ -89,6 +90,22 @@ std::string IType::string() const {
   return element.type() == nlohmann::json::value_t::string
              ? element.get<std::string>()
              : element.dump();
+}
+
+NoneType::NoneType() : IType(value_t::null) {}
+
+nlohmann::ordered_json NoneType::json() const {
+  return nlohmann::json::object();
+}
+
+flatbuffers::Offset<fbs::TypeWrapper> NoneType::serialize(
+    flatbuffers::FlatBufferBuilder& builder) const {
+  return BooleanType(false).serialize(builder);
+}
+
+compare::TypeComparison NoneType::compare(
+    const std::shared_ptr<IType>& itype) const {
+  return BooleanType(false).compare(itype);
 }
 
 BooleanType::BooleanType(bool value) : IType(value_t::boolean), _value(value) {}

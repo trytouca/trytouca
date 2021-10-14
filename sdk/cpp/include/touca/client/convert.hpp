@@ -7,6 +7,7 @@
 #include <list>
 #include <locale>
 #include <map>
+#include <set>
 #include <string>
 #include <unordered_map>
 #include <utility>
@@ -29,6 +30,9 @@ struct is_specialization : std::false_type {};
 
 template <template <typename...> class Ref, typename... Args>
 struct is_specialization<Ref<Args...>, Ref> : std::true_type {};
+
+template <typename T>
+using is_touca_null = std::is_same<T, std::nullptr_t>;
 
 template <typename T>
 using is_touca_boolean = std::is_same<T, bool>;
@@ -208,11 +212,15 @@ struct converter {
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-/**
- * @brief converter specialization that describes how any type that
- *        details to touca boolean specifications should be handled
- *        by the Touca SDK for C++.
- */
+template <typename T>
+struct converter<
+    T, typename std::enable_if<detail::is_touca_null<T>::value>::type> {
+  std::shared_ptr<types::IType> convert(const T& value) {
+    std::ignore = value;
+    return std::make_shared<types::NoneType>();
+  }
+};
+
 template <typename T>
 struct converter<
     T, typename std::enable_if<detail::is_touca_boolean<T>::value>::type> {
