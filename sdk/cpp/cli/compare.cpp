@@ -4,7 +4,7 @@
 
 #include "cxxopts.hpp"
 #include "touca/cli/operations.hpp"
-#include "touca/devkit/filesystem.hpp"
+#include "touca/core/utils.hpp"
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
 

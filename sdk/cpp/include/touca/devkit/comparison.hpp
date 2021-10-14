@@ -6,14 +6,13 @@
 #include <unordered_map>
 
 #include "nlohmann/json_fwd.hpp"
+#include "touca/core/testcase.hpp"
 #include "touca/core/types.hpp"
-#include "touca/devkit/testcase.hpp"
 
 namespace touca {
-namespace compare {
 
 /**
- * @enum touca::compare::MatchType
+ * @enum touca::MatchType
  * @brief describes overall result of comparing two testcases
  */
 enum class MatchType : unsigned char {
@@ -100,5 +99,4 @@ class TOUCA_CLIENT_API TestcaseComparison {
   const Testcase& _dst;
 };
 
-}  // namespace compare
 }  // namespace touca

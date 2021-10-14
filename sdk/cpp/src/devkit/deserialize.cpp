@@ -4,8 +4,8 @@
 
 #include "flatbuffers/flatbuffers.h"
 #include "touca/core/object.hpp"
+#include "touca/core/testcase.hpp"
 #include "touca/core/types.hpp"
-#include "touca/devkit/testcase.hpp"
 #include "touca/impl/schema.hpp"
 
 namespace touca {
@@ -36,13 +36,13 @@ std::shared_ptr<IType> deserialize_value(const fbs::TypeWrapper* ptr) {
     case fbs::Type::Bool:
       return detail::deserialize<fbs::Bool, BooleanType>(ptr);
     case fbs::Type::Int:
-      return detail::deserialize<fbs::Int, Number<int64_t>>(ptr);
+      return detail::deserialize<fbs::Int, NumberType<int64_t>>(ptr);
     case fbs::Type::UInt:
-      return detail::deserialize<fbs::UInt, Number<uint64_t>>(ptr);
+      return detail::deserialize<fbs::UInt, NumberType<uint64_t>>(ptr);
     case fbs::Type::Float:
-      return detail::deserialize<fbs::Float, Number<float>>(ptr);
+      return detail::deserialize<fbs::Float, NumberType<float>>(ptr);
     case fbs::Type::Double:
-      return detail::deserialize<fbs::Double, Number<double>>(ptr);
+      return detail::deserialize<fbs::Double, NumberType<double>>(ptr);
     case fbs::Type::String: {
       const auto& str = static_cast<const fbs::String*>(value);
       return std::make_shared<StringType>(str->value()->data());
@@ -104,7 +104,7 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
     const auto& key = metric->key()->data();
     const auto& ivalue = types::deserialize_value(metric->value());
     const auto& value =
-        std::dynamic_pointer_cast<types::Number<int64_t>>(ivalue);
+        std::dynamic_pointer_cast<types::NumberType<int64_t>>(ivalue);
     if (!value) {
       throw std::runtime_error("failed to parse metrics map entry");
     }

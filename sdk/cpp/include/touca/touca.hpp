@@ -15,7 +15,7 @@
 
 #include <unordered_map>
 
-#include "touca/client/convert.hpp"
+#include "touca/core/convert.hpp"
 #include "touca/extra/logger.hpp"
 #include "touca/lib_api.hpp"
 
@@ -589,17 +589,5 @@ TOUCA_CLIENT_API bool post();
  * @since v1.3
  */
 TOUCA_CLIENT_API bool seal();
-
-/**
- * @namespace touca::compare
- *
- * @brief Provides API for comparing testcases.
- *
- * @details Functions and classes declared in this namespace are
- *          primarily exposed to be used by Touca Comparator.
- *          Users seeking to build regression test tools should
- *          disregard the API exposed through this namespace.
- */
-namespace compare {}
 
 }  // namespace touca

@@ -20,15 +20,15 @@ target_sources(
     PRIVATE
         client/client.cpp
         client/touca.cpp
-        core/filesystem.cpp
+        core/utils.cpp
         core/object.cpp
+        core/testcase.cpp
         core/types.cpp
         devkit/comparison.cpp
         devkit/deserialize.cpp
         devkit/logger.cpp
         devkit/platform.cpp
         devkit/resultfile.cpp
-        devkit/testcase.cpp
         devkit/utils.cpp
 )
 

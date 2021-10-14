@@ -11,7 +11,7 @@
 #include "fmt/ostream.h"
 #include "fmt/printf.h"
 #include "nlohmann/json.hpp"
-#include "touca/devkit/filesystem.hpp"
+#include "touca/core/utils.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/extra/version.hpp"

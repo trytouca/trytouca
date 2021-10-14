@@ -238,7 +238,7 @@ template <typename T>
 struct converter<
     T, typename std::enable_if<detail::is_touca_number<T>::value>::type> {
   std::shared_ptr<types::IType> convert(const T& value) {
-    return std::make_shared<types::Number<T>>(value);
+    return std::make_shared<types::NumberType<T>>(value);
   }
 };
 

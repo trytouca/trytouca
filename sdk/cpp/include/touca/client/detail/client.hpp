@@ -4,9 +4,9 @@
 
 #include <thread>
 
-#include "touca/devkit/filesystem.hpp"
+#include "touca/core/testcase.hpp"
+#include "touca/core/utils.hpp"
 #include "touca/devkit/platform.hpp"
-#include "touca/devkit/testcase.hpp"
 #include "touca/extra/logger.hpp"
 
 namespace touca {

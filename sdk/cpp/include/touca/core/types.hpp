@@ -13,9 +13,7 @@ template <typename Type>
 struct Offset;
 }  // namespace flatbuffers
 namespace touca {
-namespace compare {
 struct TypeComparison;
-}  // namespace compare
 namespace fbs {
 struct Array;
 struct Object;
@@ -67,8 +65,7 @@ class TOUCA_CLIENT_API IType {
   virtual flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const = 0;
 
-  virtual compare::TypeComparison compare(
-      const std::shared_ptr<IType>& itype) const = 0;
+  virtual TypeComparison compare(const std::shared_ptr<IType>& itype) const = 0;
 
   /**
    * This function flattens all of the object's nested ITypes into
@@ -93,8 +90,7 @@ class TOUCA_CLIENT_API NoneType : public IType {
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const override;
 
-  compare::TypeComparison compare(
-      const std::shared_ptr<IType>& itype) const override;
+  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
 };  // class touca::types::NoneType
 
 class TOUCA_CLIENT_API BooleanType : public IType {
@@ -106,8 +102,7 @@ class TOUCA_CLIENT_API BooleanType : public IType {
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const override;
 
-  compare::TypeComparison compare(
-      const std::shared_ptr<IType>& itype) const override;
+  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
 
  private:
   bool _value;
@@ -115,9 +110,9 @@ class TOUCA_CLIENT_API BooleanType : public IType {
 };  // class touca::types::BooleanType
 
 template <class T>
-class TOUCA_CLIENT_API Number : public IType {
+class TOUCA_CLIENT_API NumberType : public IType {
  public:
-  explicit Number(const T value);
+  explicit NumberType(const T value);
 
   nlohmann::ordered_json json() const override;
 
@@ -126,13 +121,12 @@ class TOUCA_CLIENT_API Number : public IType {
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const override;
 
-  compare::TypeComparison compare(
-      const std::shared_ptr<IType>& itype) const override;
+  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
 
  private:
   T _value;
 
-};  // class touca::types::Number
+};  // class touca::types::NumberType
 
 class TOUCA_CLIENT_API StringType : public IType {
  public:
@@ -143,8 +137,7 @@ class TOUCA_CLIENT_API StringType : public IType {
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const override;
 
-  compare::TypeComparison compare(
-      const std::shared_ptr<IType>& itype) const override;
+  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
 
  private:
   std::string _value;
@@ -162,8 +155,7 @@ class TOUCA_CLIENT_API ArrayType : public IType {
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& fbb) const override;
 
-  compare::TypeComparison compare(
-      const std::shared_ptr<IType>& itype) const override;
+  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
 
   KeyMap flatten() const override;
 

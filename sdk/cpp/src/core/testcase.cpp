@@ -1,12 +1,12 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/devkit/testcase.hpp"
+#include "touca/core/testcase.hpp"
 
 #include "flatbuffers/flatbuffers.h"
 #include "nlohmann/json.hpp"
 #include "touca/core/types.hpp"
+#include "touca/core/utils.hpp"
 #include "touca/devkit/comparison.hpp"
-#include "touca/devkit/utils.hpp"
 #include "touca/impl/schema.hpp"
 
 namespace touca {
@@ -127,7 +127,7 @@ void Testcase::add_array_element(const std::string& key,
 }
 
 void Testcase::add_hit_count(const std::string& key) {
-  using number_t = touca::types::Number<uint64_t>;
+  using number_t = touca::types::NumberType<uint64_t>;
   if (!_resultsMap.count(key)) {
     const auto value = std::make_shared<number_t>(1u);
     _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Check});
@@ -169,7 +169,7 @@ MetricsMap Testcase::metrics() const {
     const auto& duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(diff);
     const auto& value =
-        std::make_shared<types::Number<int64_t>>(duration.count());
+        std::make_shared<types::NumberType<int64_t>>(duration.count());
     metrics.emplace(key, MetricsMapValue{value});
   }
   return metrics;
@@ -274,7 +274,7 @@ std::vector<uint8_t> Testcase::flatbuffers() const {
   return {ptr, ptr + builder.GetSize()};
 }
 
-compare::TestcaseComparison Testcase::compare(
+TestcaseComparison Testcase::compare(
     const std::shared_ptr<Testcase>& tc) const {
   return {*this, *tc};
 }

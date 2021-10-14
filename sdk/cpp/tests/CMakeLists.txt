@@ -9,11 +9,11 @@ target_sources(
     PRIVATE
         main.cpp
         client/client.cpp
+        core/testcase.cpp
+        core/types.cpp
         devkit/options.cpp
         devkit/platform.cpp
         devkit/resultfile.cpp
-        devkit/testcase.cpp
-        devkit/types.cpp
         devkit/utils.cpp
         devkit/tmpfile.hpp
 )

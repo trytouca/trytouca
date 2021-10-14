@@ -5,13 +5,11 @@
 #include <chrono>
 
 #include "nlohmann/json_fwd.hpp"
-#include "touca/client/convert.hpp"
+#include "touca/core/convert.hpp"
 
 namespace touca {
 class ClientImpl;
-namespace compare {
 class TestcaseComparison;
-}
 
 /**
  * Assumptions map has the same characteristics as the results map,
@@ -20,7 +18,7 @@ class TestcaseComparison;
  */
 class TOUCA_CLIENT_API Testcase {
   friend class ClientImpl;
-  friend class compare::TestcaseComparison;
+  friend class TestcaseComparison;
 
  public:
   struct TOUCA_CLIENT_API Overview {
@@ -58,8 +56,7 @@ class TOUCA_CLIENT_API Testcase {
   Testcase(const std::string& teamslug, const std::string& testsuite,
            const std::string& version, const std::string& name);
 
-  compare::TestcaseComparison compare(
-      const std::shared_ptr<Testcase>& tc) const;
+  TestcaseComparison compare(const std::shared_ptr<Testcase>& tc) const;
 
   void tic(const std::string& key);
 

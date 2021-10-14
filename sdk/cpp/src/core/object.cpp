@@ -54,9 +54,8 @@ flatbuffers::Offset<fbs::TypeWrapper> ObjectType::serialize(
   return typeWrapper_builder.Finish();
 }
 
-compare::TypeComparison ObjectType::compare(
-    const std::shared_ptr<IType>& itype) const {
-  compare::TypeComparison result;
+TypeComparison ObjectType::compare(const std::shared_ptr<IType>& itype) const {
+  TypeComparison result;
   result.srcType = type();
   result.srcValue = string();
 
@@ -83,7 +82,7 @@ compare::TypeComparison ObjectType::compare(
       const auto& dstKey = dstMembers.at(srcMember.first);
       const auto& tmp = srcMember.second->compare(dstKey);
       scoreEarned += tmp.score;
-      if (compare::MatchType::Perfect == tmp.match) {
+      if (MatchType::Perfect == tmp.match) {
         continue;
       }
       for (const auto& desc : tmp.desc) {
@@ -108,7 +107,7 @@ compare::TypeComparison ObjectType::compare(
 
   // report comparison as perfect match if all children match
   if (scoreEarned == scoreTotal) {
-    result.match = compare::MatchType::Perfect;
+    result.match = MatchType::Perfect;
     result.score = 1.0;
     return result;
   }

@@ -7,7 +7,7 @@
 #include "flatbuffers/flatbuffers.h"
 #include "fmt/format.h"
 #include "nlohmann/json.hpp"
-#include "touca/client/convert.hpp"
+#include "touca/core/convert.hpp"
 #include "touca/core/object.hpp"
 #include "touca/devkit/comparison.hpp"
 #include "touca/impl/schema.hpp"
@@ -103,8 +103,7 @@ flatbuffers::Offset<fbs::TypeWrapper> NoneType::serialize(
   return BooleanType(false).serialize(builder);
 }
 
-compare::TypeComparison NoneType::compare(
-    const std::shared_ptr<IType>& itype) const {
+TypeComparison NoneType::compare(const std::shared_ptr<IType>& itype) const {
   return BooleanType(false).compare(itype);
 }
 
@@ -123,9 +122,8 @@ flatbuffers::Offset<fbs::TypeWrapper> BooleanType::serialize(
   return typeWrapper_builder.Finish();
 }
 
-compare::TypeComparison BooleanType::compare(
-    const std::shared_ptr<IType>& itype) const {
-  compare::TypeComparison result;
+TypeComparison BooleanType::compare(const std::shared_ptr<IType>& itype) const {
+  TypeComparison result;
   result.srcType = _type_t;
   result.srcValue = string();
 
@@ -143,7 +141,7 @@ compare::TypeComparison BooleanType::compare(
 
   const auto dst = std::dynamic_pointer_cast<BooleanType>(itype);
   if (_value == dst->_value) {
-    result.match = compare::MatchType::Perfect;
+    result.match = MatchType::Perfect;
     result.score = 1.0;
     return result;
   }
@@ -154,20 +152,20 @@ compare::TypeComparison BooleanType::compare(
 }
 
 template <class T>
-Number<T>::Number(T value) : IType(value_t::numeric), _value(value) {}
+NumberType<T>::NumberType(T value) : IType(value_t::numeric), _value(value) {}
 
 template <class T>
-nlohmann::ordered_json Number<T>::json() const {
+nlohmann::ordered_json NumberType<T>::json() const {
   return _value;
 }
 
 template <class T>
-T Number<T>::value() const {
+T NumberType<T>::value() const {
   return _value;
 }
 
 template <class T>
-flatbuffers::Offset<fbs::TypeWrapper> Number<T>::serialize(
+flatbuffers::Offset<fbs::TypeWrapper> NumberType<T>::serialize(
     flatbuffers::FlatBufferBuilder& fbb) const {
   const auto& buffer = detail::serialize_number<T>(_value, fbb);
   fbs::TypeWrapperBuilder fbsTypeWrapper_builder(fbb);
@@ -177,9 +175,9 @@ flatbuffers::Offset<fbs::TypeWrapper> Number<T>::serialize(
 }
 
 template <class T>
-compare::TypeComparison Number<T>::compare(
+TypeComparison NumberType<T>::compare(
     const std::shared_ptr<IType>& itype) const {
-  compare::TypeComparison result;
+  TypeComparison result;
   result.srcType = _type_t;
   result.srcValue = string();
 
@@ -196,9 +194,9 @@ compare::TypeComparison Number<T>::compare(
   // two Number objects are equal if their numeric value is equal
   // in their original type.
 
-  const auto dst = std::dynamic_pointer_cast<Number<T>>(itype);
+  const auto dst = std::dynamic_pointer_cast<NumberType<T>>(itype);
   if (_value == dst->_value) {
-    result.match = compare::MatchType::Perfect;
+    result.match = MatchType::Perfect;
     result.score = 1.0;
     return result;
   }
@@ -239,9 +237,8 @@ flatbuffers::Offset<fbs::TypeWrapper> StringType::serialize(
   return typeWrapper_builder.Finish();
 }
 
-compare::TypeComparison StringType::compare(
-    const std::shared_ptr<IType>& itype) const {
-  compare::TypeComparison result;
+TypeComparison StringType::compare(const std::shared_ptr<IType>& itype) const {
+  TypeComparison result;
   result.srcType = _type_t;
   result.srcValue = string();
 
@@ -259,7 +256,7 @@ compare::TypeComparison StringType::compare(
 
   const auto dst = std::dynamic_pointer_cast<StringType>(itype);
   if (0 == _value.compare(dst->_value)) {
-    result.match = compare::MatchType::Perfect;
+    result.match = MatchType::Perfect;
     result.score = 1.0;
     return result;
   }
@@ -299,9 +296,8 @@ void ArrayType::add(const std::shared_ptr<types::IType>& value) {
   _values.push_back(value);
 }
 
-compare::TypeComparison ArrayType::compare(
-    const std::shared_ptr<IType>& itype) const {
-  compare::TypeComparison result;
+TypeComparison ArrayType::compare(const std::shared_ptr<IType>& itype) const {
+  TypeComparison result;
   result.srcType = _type_t;
   result.srcValue = string();
 
@@ -339,7 +335,7 @@ compare::TypeComparison ArrayType::compare(
   // divide by zero.
 
   if (0u == minmax.second) {
-    result.match = compare::MatchType::Perfect;
+    result.match = MatchType::Perfect;
     result.score = 1.0;
     return result;
   }
@@ -374,7 +370,7 @@ compare::TypeComparison ArrayType::compare(
   for (auto i = 0u; i < minmax.first; i++) {
     const auto tmp = srcMembers.at(i)->compare(dstMembers.at(i));
     scoreEarned += tmp.score;
-    if (compare::MatchType::None == tmp.match) {
+    if (MatchType::None == tmp.match) {
       differences.emplace(i, tmp.desc);
     }
   }
@@ -397,7 +393,7 @@ compare::TypeComparison ArrayType::compare(
   }
 
   if (1.0 == result.score) {
-    result.match = compare::MatchType::Perfect;
+    result.match = MatchType::Perfect;
     return result;
   }
 
@@ -423,18 +419,18 @@ KeyMap ArrayType::flatten() const {
   return members;
 }
 
-template class Number<float>;
-template class Number<double>;
-template class Number<char>;
-template class Number<unsigned char>;
-template class Number<short>;
-template class Number<unsigned short>;
-template class Number<int>;
-template class Number<unsigned int>;
-template class Number<long>;
-template class Number<unsigned long>;
-template class Number<long long>;
-template class Number<unsigned long long>;
+template class NumberType<float>;
+template class NumberType<double>;
+template class NumberType<char>;
+template class NumberType<unsigned char>;
+template class NumberType<short>;
+template class NumberType<unsigned short>;
+template class NumberType<int>;
+template class NumberType<unsigned int>;
+template class NumberType<long>;
+template class NumberType<unsigned long>;
+template class NumberType<long long>;
+template class NumberType<unsigned long long>;
 
 }  // namespace types
 }  // namespace touca

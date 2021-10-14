@@ -7,7 +7,7 @@
 
 #include "httplib.h"
 #include "nlohmann/json.hpp"
-#include "touca/devkit/utils.hpp"
+#include "touca/core/utils.hpp"
 
 namespace touca {
 

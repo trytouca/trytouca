@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "touca/devkit/filesystem.hpp"
+#include "touca/core/utils.hpp"
 
 /**
  * @brief Finds all valid result files within the specified path.

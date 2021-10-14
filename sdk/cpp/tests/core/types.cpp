@@ -1,7 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "catch2/catch.hpp"
-#include "touca/client/convert.hpp"
+#include "touca/core/convert.hpp"
 #include "touca/core/object.hpp"
 #include "touca/devkit/comparison.hpp"
 #include "touca/devkit/deserialize.hpp"
@@ -75,7 +75,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "true");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -87,7 +87,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "true");
       CHECK(cmp.dstValue == "false");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.0);
       CHECK(cmp.desc.empty());
     }
@@ -99,7 +99,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::string == cmp.dstType);
       CHECK(cmp.srcValue == "true");
       CHECK(cmp.dstValue == "true");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.0);
       CHECK(cmp.desc.size() == 1u);
       CHECK(cmp.desc.count("result types are different"));
@@ -115,7 +115,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "true");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -123,69 +123,69 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: number integer") {
     SECTION("initialize") {
-      types::Number<int> value(42);
+      types::NumberType<int> value(42);
       CHECK(value.flatten().empty());
       CHECK(value.string() == "42");
       CHECK(types::value_t::numeric == value.type());
     }
 
     SECTION("compare: match") {
-      types::Number<int> value(42);
-      const auto& right = std::make_shared<types::Number<int>>(42);
+      types::NumberType<int> value(42);
+      const auto& right = std::make_shared<types::NumberType<int>>(42);
       const auto& cmp = value.compare(right);
       CHECK(types::value_t::numeric == cmp.srcType);
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "42");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
 
     SECTION("compare: mismatch: smaller") {
-      types::Number<int> value(5);
-      const auto& right = std::make_shared<types::Number<int>>(10);
+      types::NumberType<int> value(5);
+      const auto& right = std::make_shared<types::NumberType<int>>(10);
       const auto& cmp = value.compare(right);
       CHECK(types::value_t::numeric == cmp.srcType);
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "5");
       CHECK(cmp.dstValue == "10");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.0);
       CHECK(cmp.desc.size() == 1u);
       CHECK(cmp.desc.count("value is smaller by 5.000000"));
     }
 
     SECTION("compare: mismatch: percent") {
-      types::Number<int> value(12);
-      const auto& right = std::make_shared<types::Number<int>>(10);
+      types::NumberType<int> value(12);
+      const auto& right = std::make_shared<types::NumberType<int>>(10);
       const auto& cmp = value.compare(right);
       CHECK(types::value_t::numeric == cmp.srcType);
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "12");
       CHECK(cmp.dstValue == "10");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.0);
       CHECK(cmp.desc.size() == 1u);
       CHECK(cmp.desc.count("value is larger by 20.000000 percent"));
     }
 
     SECTION("compare: mismatch type") {
-      types::Number<int> value(42);
+      types::NumberType<int> value(42);
       const auto& right = std::make_shared<types::BooleanType>(false);
       const auto& cmp = value.compare(right);
       CHECK(types::value_t::numeric == cmp.srcType);
       CHECK(types::value_t::boolean == cmp.dstType);
       CHECK(cmp.srcValue == "42");
       CHECK(cmp.dstValue == "false");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.0);
       CHECK(cmp.desc.size() == 1u);
       CHECK(cmp.desc.count("result types are different"));
     }
 
     SECTION("serialize") {
-      const auto& value = std::make_shared<types::Number<int64_t>>(42);
+      const auto& value = std::make_shared<types::NumberType<int64_t>>(42);
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
       const auto& cmp = value->compare(itype);
@@ -195,7 +195,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "42");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -203,69 +203,69 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: double") {
     SECTION("initialize") {
-      types::Number<double> value(0.0);
+      types::NumberType<double> value(0.0);
       CHECK(value.flatten().empty());
       CHECK(value.string() == "0.0");
       CHECK(types::value_t::numeric == value.type());
     }
 
     SECTION("match") {
-      types::Number<double> value(1.0);
-      const auto& right = std::make_shared<types::Number<double>>(1.0);
+      types::NumberType<double> value(1.0);
+      const auto& right = std::make_shared<types::NumberType<double>>(1.0);
       const auto& cmp = value.compare(right);
       CHECK(types::value_t::numeric == cmp.srcType);
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "1.0");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
 
     SECTION("compare: mismatch value") {
-      types::Number<double> value(0.0);
-      const auto& right = std::make_shared<types::Number<double>>(1.0);
+      types::NumberType<double> value(0.0);
+      const auto& right = std::make_shared<types::NumberType<double>>(1.0);
       const auto& cmp = value.compare(right);
       CHECK(types::value_t::numeric == cmp.srcType);
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "0.0");
       CHECK(cmp.dstValue == "1.0");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.0);
       CHECK(cmp.desc.size() == 1u);
       CHECK(cmp.desc.count("value is smaller by 1.000000"));
     }
 
     SECTION("compare: mismatch value: percent") {
-      types::Number<double> value(1.1);
-      const auto& right = std::make_shared<types::Number<double>>(1.0);
+      types::NumberType<double> value(1.1);
+      const auto& right = std::make_shared<types::NumberType<double>>(1.0);
       const auto& cmp = value.compare(right);
       CHECK(types::value_t::numeric == cmp.srcType);
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "1.1");
       CHECK(cmp.dstValue == "1.0");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == Approx(0.9));
       CHECK(cmp.desc.size() == 1u);
       CHECK(cmp.desc.count("value is larger by 10.000000 percent"));
     }
 
     SECTION("compare: mismatch type") {
-      types::Number<double> value(1.0);
+      types::NumberType<double> value(1.0);
       const auto& right = std::make_shared<types::BooleanType>(false);
       const auto& cmp = value.compare(right);
       CHECK(types::value_t::numeric == cmp.srcType);
       CHECK(types::value_t::boolean == cmp.dstType);
       CHECK(cmp.srcValue == "1.0");
       CHECK(cmp.dstValue == "false");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.0);
       CHECK(!cmp.desc.empty());
       CHECK(cmp.desc.count("result types are different"));
     }
 
     SECTION("serialize") {
-      const auto& value = std::make_shared<types::Number<double>>(1.0);
+      const auto& value = std::make_shared<types::NumberType<double>>(1.0);
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
       const auto& cmp = value->compare(itype);
@@ -275,7 +275,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "1.0");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -297,7 +297,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -310,7 +310,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
       CHECK(cmp.dstValue == "other_value");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.0);
       CHECK(cmp.desc.empty());
     }
@@ -323,7 +323,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::boolean == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
       CHECK(cmp.dstValue == "false");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.0);
       CHECK(cmp.desc.count("result types are different"));
     }
@@ -339,7 +339,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -378,7 +378,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "[true,true,true,true]");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -387,7 +387,7 @@ TEST_CASE("Simple Data Types") {
       const auto& makeArray = [](const std::vector<int>& vec) {
         const auto& ret = std::make_shared<types::ArrayType>();
         for (const auto& v : vec) {
-          ret->add(std::make_shared<types::Number<int64_t>>(v));
+          ret->add(std::make_shared<types::NumberType<int64_t>>(v));
         }
         return ret;
       };
@@ -402,7 +402,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == R"([41,42,43,44])");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -411,7 +411,7 @@ TEST_CASE("Simple Data Types") {
       const auto& makeArray = [](const std::vector<float>& vec) {
         const auto& ret = std::make_shared<types::ArrayType>();
         for (const auto& v : vec) {
-          ret->add(std::make_shared<types::Number<float>>(v));
+          ret->add(std::make_shared<types::NumberType<float>>(v));
         }
         return ret;
       };
@@ -430,7 +430,7 @@ TEST_CASE("Simple Data Types") {
           cmp.srcValue ==
           R"([1.100000023841858,1.2000000476837158,1.2999999523162842,1.399999976158142])");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -454,7 +454,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == R"(["a","b","c","d"])");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -480,7 +480,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "[false,true,false,true]");
       CHECK(cmp.dstValue == "[true,false,false,true]");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.5);
       CHECK(cmp.desc.empty());
     }
@@ -489,7 +489,7 @@ TEST_CASE("Simple Data Types") {
       const auto& makeArray = [](const std::vector<int>& vec) {
         const auto& ret = std::make_shared<types::ArrayType>();
         for (const auto& v : vec) {
-          ret->add(std::make_shared<types::Number<int>>(v));
+          ret->add(std::make_shared<types::NumberType<int>>(v));
         }
         return ret;
       };
@@ -504,7 +504,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(right->flatten().size() == 20ul);
       CHECK(types::value_t::array == cmp.srcType);
       CHECK(types::value_t::unknown == cmp.dstType);
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.95);
       CHECK(cmp.desc.size() == 1u);
       CHECK(cmp.desc.count("[5]:value is larger by 14.000000"));
@@ -514,7 +514,7 @@ TEST_CASE("Simple Data Types") {
       const auto& makeArray = [](const size_t length) {
         const auto& ret = std::make_shared<types::ArrayType>();
         for (auto i = 0u; i < length; i++) {
-          ret->add(std::make_shared<types::Number<int>>(1));
+          ret->add(std::make_shared<types::NumberType<int>>(1));
         }
         return ret;
       };
@@ -531,7 +531,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp1.dstType);
       CHECK(cmp1.srcValue == "[1,1,1,1]");
       CHECK(cmp1.dstValue == "[1,1,1,1,1,1]");
-      CHECK(compare::MatchType::None == cmp1.match);
+      CHECK(MatchType::None == cmp1.match);
       CHECK(cmp1.score == 0.0);
       CHECK(cmp1.desc.size() == 1u);
       CHECK(cmp1.desc.count("array size shrunk by 2 elements"));
@@ -541,7 +541,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp2.dstType);
       CHECK(cmp2.srcValue == "[1,1,1,1,1,1]");
       CHECK(cmp2.dstValue == "[1,1,1,1]");
-      CHECK(compare::MatchType::None == cmp2.match);
+      CHECK(MatchType::None == cmp2.match);
       CHECK(cmp2.score == 0.0);
       CHECK(cmp2.desc.size() == 1u);
       CHECK(cmp2.desc.count("array size grown by 2 elements"));
@@ -566,7 +566,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == R"([false,true,false,true])");
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -608,7 +608,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(cmp.srcValue ==
             R"({"creature":{"first_head":{"head":{"eyes":2}}}})");
       CHECK(cmp.dstValue == R"()");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -626,7 +626,7 @@ TEST_CASE("Simple Data Types") {
             R"({"creature":{"first_head":{"head":{"eyes":2}}}})");
       CHECK(cmp.dstValue ==
             R"({"some_other_creature":{"first_head":{"head":{"eyes":3}}}})");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.0);
       CHECK(cmp.desc.size() == 1u);
       CHECK(cmp.desc.count("first_head.eyes: value is smaller by 1.000000"));
@@ -647,7 +647,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(types::value_t::unknown == cmp.dstType);
       CHECK(cmp.srcValue == expected);
       CHECK(cmp.dstValue == "");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -671,7 +671,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(left->flatten().size() == 5ul);
       CHECK(left->flatten().count("[2]eyes"));
       CHECK(left->flatten().at("[2]eyes")->string() == R"(4)");
-      CHECK(compare::MatchType::None == cmp.match);
+      CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.6);
     }
   }
@@ -702,7 +702,7 @@ TEST_CASE("Simple Data Types") {
         CHECK(cmp.srcValue == expected);
         CHECK(cmp.dstValue ==
               R"({"std::pair":{"first":false,"second":false}})");
-        CHECK(compare::MatchType::None == cmp.match);
+        CHECK(MatchType::None == cmp.match);
         CHECK(cmp.score == 0.5);
         CHECK(cmp.desc.empty());
       }
@@ -721,7 +721,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(
           cmp.srcValue ==
           R"([{"std::pair":{"first":"k1","second":"v1"}},{"std::pair":{"first":"k2","second":"v2"}}])");
-      CHECK(compare::MatchType::Perfect == cmp.match);
+      CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
       CHECK(cmp.desc.empty());
     }
@@ -754,7 +754,7 @@ TEST_CASE("Simple Data Types") {
         const auto& right = converter<type_t>().convert(rightValue);
         const auto& cmp = left->compare(right);
 
-        CHECK(compare::MatchType::None == cmp.match);
+        CHECK(MatchType::None == cmp.match);
         CHECK(cmp.score == 0.0);
         CHECK(types::value_t::object == cmp.srcType);
         CHECK(types::value_t::unknown == cmp.dstType);

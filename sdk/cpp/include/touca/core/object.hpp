@@ -3,13 +3,11 @@
 #pragma once
 
 #include "nlohmann/json_fwd.hpp"
-#include "touca/client/convert.hpp"
+#include "touca/core/convert.hpp"
 #include "touca/core/types.hpp"
 
 namespace touca {
-namespace compare {
 struct TypeComparison;
-}
 namespace types {
 
 class TOUCA_CLIENT_API ObjectType : public IType {
@@ -18,9 +16,6 @@ class TOUCA_CLIENT_API ObjectType : public IType {
 
   explicit ObjectType(const std::string& name);
 
-  /**
-   * Used in deserialization
-   */
   ObjectType(const std::string& name, const KeyMap& values);
 
   nlohmann::ordered_json json() const override;
@@ -33,8 +28,7 @@ class TOUCA_CLIENT_API ObjectType : public IType {
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& builder) const override;
 
-  compare::TypeComparison compare(
-      const std::shared_ptr<IType>& itype) const override;
+  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
 
   KeyMap flatten() const override;
 

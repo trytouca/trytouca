@@ -5,8 +5,8 @@
 #include <fstream>
 
 #include "nlohmann/json.hpp"
+#include "touca/core/testcase.hpp"
 #include "touca/devkit/deserialize.hpp"
-#include "touca/devkit/testcase.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/impl/schema.hpp"
 

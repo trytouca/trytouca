@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/devkit/testcase.hpp"
+#include "touca/core/testcase.hpp"
 
 #include "catch2/catch.hpp"
 #include "nlohmann/json.hpp"
@@ -48,7 +48,8 @@ TEST_CASE("Testcase") {
     }
 
     SECTION("unexpected-use: key is already used to store float") {
-      const auto value = std::make_shared<touca::types::Number<float>>(1.0f);
+      const auto value =
+          std::make_shared<touca::types::NumberType<float>>(1.0f);
       testcase.check("some-key", value);
       CHECK_THROWS_AS(testcase.add_hit_count("some-key"),
                       std::invalid_argument);
@@ -61,7 +62,8 @@ TEST_CASE("Testcase") {
   SECTION("add_array_element") {
     SECTION("expected-use") {
       for (auto i = 0; i < 3; ++i) {
-        const auto value = std::make_shared<touca::types::Number<uint64_t>>(i);
+        const auto value =
+            std::make_shared<touca::types::NumberType<uint64_t>>(i);
         testcase.add_array_element("some-key", value);
       }
       const auto expected =
@@ -71,7 +73,7 @@ TEST_CASE("Testcase") {
     SECTION("unexpected-use") {
       const auto someBool = std::make_shared<touca::types::BooleanType>(true);
       const auto someNumber =
-          std::make_shared<touca::types::Number<uint64_t>>(1);
+          std::make_shared<touca::types::NumberType<uint64_t>>(1);
       testcase.check("some-key", someBool);
       CHECK_THROWS_AS(testcase.add_array_element("some-key", someNumber),
                       std::invalid_argument);

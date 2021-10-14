@@ -10,8 +10,8 @@
  *        files.
  */
 
+#include "touca/core/utils.hpp"
 #include "touca/devkit/comparison.hpp"
-#include "touca/devkit/filesystem.hpp"
 
 namespace touca {
 
@@ -31,7 +31,7 @@ class TOUCA_CLIENT_API ResultFile {
   struct TOUCA_CLIENT_API ComparisonResult {
     ElementsMap fresh;
     ElementsMap missing;
-    std::map<std::string, compare::TestcaseComparison> common;
+    std::map<std::string, TestcaseComparison> common;
 
     /**
      * @brief provides description of this object in json format.

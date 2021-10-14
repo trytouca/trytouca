@@ -7,7 +7,6 @@
 #include "nlohmann/json.hpp"
 
 namespace touca {
-namespace compare {
 
 std::string Cellar::stringify(const types::value_t type) const {
   using vt = types::value_t;
@@ -61,7 +60,7 @@ nlohmann::ordered_json Cellar::buildJsonCommon(
     if (types::value_t::unknown != kv.second.dstType) {
       item["dstType"] = stringify(kv.second.dstType);
     }
-    if (compare::MatchType::Perfect != kv.second.match) {
+    if (MatchType::Perfect != kv.second.match) {
       item["dstValue"] = kv.second.dstValue;
     }
     if (!kv.second.desc.empty()) {
@@ -209,5 +208,4 @@ void TestcaseComparison::initCellar(const MetricsMap& src,
   }
 }
 
-}  // namespace compare
 }  // namespace touca
