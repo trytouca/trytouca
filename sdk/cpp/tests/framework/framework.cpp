@@ -62,8 +62,8 @@ TEST_CASE("framework-dummy-workflow") {
   SECTION("version") {
     caller.call_with({"--version"});
     const auto expected =
-        touca::format("{}.{}.{}\n", TOUCA_VERSION_MAJOR, TOUCA_VERSION_MINOR,
-                      TOUCA_VERSION_PATCH);
+        touca::detail::format("{}.{}.{}\n", TOUCA_VERSION_MAJOR,
+                              TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK(caller.cout() == expected);
     CHECK(caller.cerr().empty());
@@ -262,10 +262,10 @@ TEST_CASE("framework-simple-workflow-valid-use") {
     touca::filesystem::path caseDir = outputDir.path;
     caseDir = caseDir / "some-suite" / "1.0" / "8";
     const auto& fileOut =
-        touca::load_string_file((caseDir / "stdout.txt").string());
+        touca::detail::load_string_file((caseDir / "stdout.txt").string());
     CHECK(fileOut == "simple message in output stream\n");
     const auto& fileErr =
-        touca::load_string_file((caseDir / "stderr.txt").string());
+        touca::detail::load_string_file((caseDir / "stderr.txt").string());
     CHECK(fileErr == "simple message in error stream\n");
   }
 
@@ -278,7 +278,7 @@ TEST_CASE("framework-simple-workflow-valid-use") {
     touca::filesystem::path caseDir = outputDir.path;
     caseDir = caseDir / "some-suite" / "1.0" / "4";
     const auto& fileJson =
-        touca::load_string_file((caseDir / "touca.json").string());
+        touca::detail::load_string_file((caseDir / "touca.json").string());
     CHECK_THAT(
         fileJson,
         Catch::Contains(

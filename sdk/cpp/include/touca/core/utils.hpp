@@ -49,6 +49,7 @@ namespace filesystem = ghc::filesystem;
 #include "touca/lib_api.hpp"
 
 namespace touca {
+namespace detail {
 
 /**
  * @brief performs printf-like formatting using `libfmt` library.
@@ -85,4 +86,5 @@ TOUCA_CLIENT_API void save_string_file(const std::string& path,
 TOUCA_CLIENT_API void save_binary_file(const std::string& path,
                                        const std::vector<uint8_t>& content);
 
+}  // namespace detail
 }  // namespace touca

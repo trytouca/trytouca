@@ -8,7 +8,6 @@
 
 namespace touca {
 struct TypeComparison;
-namespace types {
 
 class TOUCA_CLIENT_API ObjectType : public IType {
  public:
@@ -36,15 +35,13 @@ class TOUCA_CLIENT_API ObjectType : public IType {
   std::string _name;
   KeyMap _values;
 
-};  // class touca::types::ObjectType
-
-}  // namespace types
+};  // class touca::ObjectType
 
 template <typename T>
 struct converter<T, typename std::enable_if<
                         detail::is_specialization<T, std::pair>::value>::type> {
-  std::shared_ptr<types::IType> convert(const T& value) {
-    auto out = std::make_shared<types::ObjectType>("std::pair");
+  std::shared_ptr<IType> convert(const T& value) {
+    auto out = std::make_shared<ObjectType>("std::pair");
     out->add("first", value.first);
     out->add("second", value.second);
     return out;
@@ -54,8 +51,8 @@ struct converter<T, typename std::enable_if<
 template <typename T>
 struct converter<T, typename std::enable_if<detail::is_specialization<
                         T, std::shared_ptr>::value>::type> {
-  std::shared_ptr<types::IType> convert(const T& value) {
-    auto out = std::make_shared<types::ObjectType>("std::shared_ptr");
+  std::shared_ptr<IType> convert(const T& value) {
+    auto out = std::make_shared<ObjectType>("std::shared_ptr");
     if (value) {
       out->add("v", *value);
     }

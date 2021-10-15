@@ -84,8 +84,9 @@ bool MergeOperation::run_impl() const {
   for (auto i = 0ul; i < chunks.size(); ++i) {
     const auto filestem = touca::filesystem::path(_src).filename().string();
     const auto& filename =
-        chunks.size() == 1ul ? touca::format("{}.bin", filestem)
-                             : touca::format("{}.part{}.bin", filestem, i + 1);
+        chunks.size() == 1ul
+            ? touca::detail::format("{}.bin", filestem)
+            : touca::detail::format("{}.part{}.bin", filestem, i + 1);
     auto filepath = (root / filename).string();
     TOUCA_LOG_INFO("merging {:<3} result files into {}", chunks.at(i).size(),
                    filepath);

@@ -3,19 +3,17 @@
 #include "touca/core/object.hpp"
 
 #include "nlohmann/json.hpp"
-#include "touca/devkit/comparison.hpp"
 #include "touca/impl/schema.hpp"
 
 namespace touca {
-namespace types {
 
-ObjectType::ObjectType() : IType(value_t::object) {}
+ObjectType::ObjectType() : IType(internal_type::object) {}
 
 ObjectType::ObjectType(const std::string& name)
-    : IType(value_t::object), _name(name) {}
+    : IType(internal_type::object), _name(name) {}
 
 ObjectType::ObjectType(const std::string& name, const KeyMap& values)
-    : IType(value_t::object), _name(name), _values(values) {}
+    : IType(internal_type::object), _name(name), _values(values) {}
 
 nlohmann::ordered_json ObjectType::json() const {
   nlohmann::ordered_json members = nlohmann::json::object();
@@ -136,5 +134,4 @@ KeyMap ObjectType::flatten() const {
   return members;
 }
 
-}  // namespace types
 }  // namespace touca

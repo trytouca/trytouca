@@ -26,7 +26,7 @@ struct TmpFile {
 
  private:
   touca::filesystem::path make_temp_path() const {
-    const auto filename = touca::format("touca_{}", std::rand());
+    const auto filename = touca::detail::format("touca_{}", std::rand());
     return touca::filesystem::temp_directory_path() / filename;
   }
 };

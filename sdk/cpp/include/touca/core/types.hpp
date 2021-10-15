@@ -3,6 +3,7 @@
 #pragma once
 
 #include <map>
+#include <set>
 
 #include "nlohmann/json_fwd.hpp"
 #include "touca/lib_api.hpp"
@@ -13,38 +14,38 @@ template <typename Type>
 struct Offset;
 }  // namespace flatbuffers
 namespace touca {
+class IType;
 struct TypeComparison;
 namespace fbs {
 struct Array;
 struct Object;
 struct TypeWrapper;
 }  // namespace fbs
-namespace types {
-class IType;
-}  // namespace types
 
 enum class ResultCategory { Check = 1, Assert };
 struct ResultEntry {
-  std::shared_ptr<types::IType> val;
+  std::shared_ptr<IType> val;
   ResultCategory typ;
 };
 struct MetricsMapValue {
-  std::shared_ptr<types::IType> value;
+  std::shared_ptr<IType> value;
 };
 
 using ResultsMap = std::map<std::string, ResultEntry>;
 using MetricsMap = std::map<std::string, MetricsMapValue>;
-using KeyMap = std::map<std::string, std::shared_ptr<types::IType>>;
+using KeyMap = std::map<std::string, std::shared_ptr<IType>>;
 
-namespace types {
-
-enum class TOUCA_CLIENT_API value_t : std::uint8_t {
+enum class TOUCA_CLIENT_API internal_type : std::uint8_t {
   null,
   object,
   array,
   string,
   boolean,
-  numeric,
+  number_signed,
+  number_unsigned,
+  number_float,
+  number_double,
+  binary,
   unknown
 };
 
@@ -56,7 +57,7 @@ class TOUCA_CLIENT_API IType {
 
   virtual ~IType() = default;
 
-  value_t type() const;
+  internal_type type() const;
 
   std::string string() const;
 
@@ -75,11 +76,10 @@ class TOUCA_CLIENT_API IType {
   virtual KeyMap flatten() const { return {}; }
 
  protected:
-  IType(const value_t type_t) : _type_t(type_t){};
+  IType(const internal_type type_t) : _type_t(type_t){};
 
-  const value_t _type_t;
-
-};  // class IType
+  const internal_type _type_t;
+};
 
 class TOUCA_CLIENT_API NoneType : public IType {
  public:
@@ -91,7 +91,7 @@ class TOUCA_CLIENT_API NoneType : public IType {
       flatbuffers::FlatBufferBuilder& fbb) const override;
 
   TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
-};  // class touca::types::NoneType
+};
 
 class TOUCA_CLIENT_API BooleanType : public IType {
  public:
@@ -106,8 +106,7 @@ class TOUCA_CLIENT_API BooleanType : public IType {
 
  private:
   bool _value;
-
-};  // class touca::types::BooleanType
+};
 
 template <class T>
 class TOUCA_CLIENT_API NumberType : public IType {
@@ -125,8 +124,7 @@ class TOUCA_CLIENT_API NumberType : public IType {
 
  private:
   T _value;
-
-};  // class touca::types::NumberType
+};
 
 class TOUCA_CLIENT_API StringType : public IType {
  public:
@@ -141,8 +139,7 @@ class TOUCA_CLIENT_API StringType : public IType {
 
  private:
   std::string _value;
-
-};  // class touca::types::StringType
+};
 
 class TOUCA_CLIENT_API ArrayType : public IType {
  public:
@@ -161,8 +158,25 @@ class TOUCA_CLIENT_API ArrayType : public IType {
 
  private:
   std::vector<std::shared_ptr<IType>> _values;
+};
 
-};  // class touca::types::ArrayType
+/**
+ * @enum touca::MatchType
+ * @brief describes overall result of comparing two testcases
+ */
+enum class MatchType : unsigned char {
+  Perfect, /**< Indicates that compared objects were identical */
+  None     /**< Indicates that compared objects were different */
+};
 
-}  // namespace types
+struct TOUCA_CLIENT_API TypeComparison {
+  std::string srcValue;
+  std::string dstValue;
+  internal_type srcType = internal_type::unknown;
+  internal_type dstType = internal_type::unknown;
+  double score = 0.0;
+  std::set<std::string> desc;
+  MatchType match = MatchType::None;
+};
+
 }  // namespace touca

@@ -144,8 +144,8 @@ touca::framework::Errors MyWorkflow::execute(
 
 template <>
 struct touca::converter<Date> {
-  std::shared_ptr<types::IType> convert(const Date& value) {
-    auto out = std::make_shared<types::ObjectType>();
+  std::shared_ptr<IType> convert(const Date& value) {
+    auto out = std::make_shared<ObjectType>();
     out->add("year", value._year);
     out->add("month", value._month);
     out->add("day", value._day);

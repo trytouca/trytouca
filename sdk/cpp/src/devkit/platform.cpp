@@ -40,8 +40,8 @@ void Http::set_token(const std::string& token) {
 Response Http::get(const std::string& route) const {
   const auto& result = _cli.Get(route.c_str());
   if (!result) {
-    return {-1,
-            touca::format("failed to submit HTTP GET request to {}", route)};
+    return {-1, touca::detail::format("failed to submit HTTP GET request to {}",
+                                      route)};
   }
   return {result->status, result->body};
 }
@@ -49,8 +49,8 @@ Response Http::get(const std::string& route) const {
 Response Http::patch(const std::string& route, const std::string& body) const {
   const auto& result = _cli.Patch(route.c_str(), body, "application/json");
   if (!result) {
-    return {-1,
-            touca::format("failed to submit HTTP PATCH request to {}", route)};
+    return {-1, touca::detail::format(
+                    "failed to submit HTTP PATCH request to {}", route)};
   }
   return {result->status, result->body};
 }
@@ -58,8 +58,8 @@ Response Http::patch(const std::string& route, const std::string& body) const {
 Response Http::post(const std::string& route, const std::string& body) const {
   const auto& result = _cli.Post(route.c_str(), body, "application/json");
   if (!result) {
-    return {-1,
-            touca::format("failed to submit HTTP POST request to {}", route)};
+    return {-1, touca::detail::format(
+                    "failed to submit HTTP POST request to {}", route)};
   }
   return {result->status, result->body};
 }
@@ -69,8 +69,8 @@ Response Http::binary(const std::string& route,
   const auto& result =
       _cli.Post(route.c_str(), content, "application/octet-stream");
   if (!result) {
-    return {-1,
-            touca::format("failed to submit HTTP POST request to {}", route)};
+    return {-1, touca::detail::format(
+                    "failed to submit HTTP POST request to {}", route)};
   }
   return {result->status, result->body};
 }
@@ -80,7 +80,7 @@ ApiUrl::ApiUrl(const std::string& url) {
       R"(^(?:([a-z]+)://)?([^:/?#]+)(?::(\d+))?/?(.*)?$)");
   std::cmatch result;
   if (!std::regex_match(url.c_str(), result, pattern)) {
-    _error = touca::format("invalid url: \"{}\"", url);
+    _error = touca::detail::format("invalid url: \"{}\"", url);
     return;
   }
   _root.scheme = result[1];
@@ -117,10 +117,10 @@ ApiUrl::ApiUrl(const std::string& url) {
 std::string ApiUrl::root() const {
   auto output = _root.host;
   if (!_root.scheme.empty()) {
-    output.insert(0, touca::format("{}://", _root.scheme));
+    output.insert(0, touca::detail::format("{}://", _root.scheme));
   }
   if (!_root.port.empty()) {
-    return touca::format("{}:{}", output, _root.port);
+    return touca::detail::format("{}:{}", output, _root.port);
   }
   return output;
 }
@@ -215,14 +215,15 @@ bool Platform::handshake() const {
  */
 bool Platform::auth(const std::string& apiKey) {
   _error.clear();
-  const auto content = touca::format("{{\"key\": \"{}\"}}", apiKey);
+  const auto content = touca::detail::format("{{\"key\": \"{}\"}}", apiKey);
   const auto response = _http->post(_api.route("/client/signin"), content);
   if (response.status == -1) {
     _error = response.body;
     return false;
   }
   if (response.status != 200) {
-    _error = touca::format("authentication failed: {}", response.status);
+    _error =
+        touca::detail::format("authentication failed: {}", response.status);
     return false;
   }
   const auto& parsed = nlohmann::json::parse(response.body, nullptr, false);
@@ -241,7 +242,8 @@ bool Platform::auth(const std::string& apiKey) {
 
 std::vector<std::string> Platform::elements() const {
   _error.clear();
-  const auto& route = touca::format("/element/{}/{}", _api._team, _api._suite);
+  const auto& route =
+      touca::detail::format("/element/{}/{}", _api._team, _api._suite);
   const auto& response = _http->get(_api.route(route));
   if (response.status == -1) {
     _error = response.body;
@@ -278,7 +280,7 @@ std::vector<std::string> Platform::submit(const std::string& content,
     if (response.status == 204) {
       return {};
     }
-    errors.emplace_back(touca::format(
+    errors.emplace_back(touca::detail::format(
         "failed to post testresults for a group of testcases ({}/{})", i + 1,
         max_retries));
   }
@@ -296,8 +298,8 @@ bool Platform::seal() const {
     return false;
   }
   if (response.status != 204) {
-    _error =
-        touca::format("failed to seal specified version: {}", response.status);
+    _error = touca::detail::format("failed to seal specified version: {}",
+                                   response.status);
     return false;
   }
   return true;
@@ -312,7 +314,8 @@ bool Platform::cmp_submit(const std::string& url,
     return false;
   }
   if (response.status != 204) {
-    _error = touca::format("failed to submit result: {}", response.status);
+    _error =
+        touca::detail::format("failed to submit result: {}", response.status);
     return false;
   }
   return true;
@@ -326,7 +329,8 @@ bool Platform::cmp_jobs(std::string& content) const {
     return false;
   }
   if (response.status != 200) {
-    _error = touca::format("unexpected server response: {}", response.status);
+    _error = touca::detail::format("unexpected server response: {}",
+                                   response.status);
     return false;
   }
   content = response.body;
@@ -341,7 +345,8 @@ bool Platform::cmp_stats(const std::string& content) const {
     return false;
   }
   if (response.status != 204) {
-    _error = touca::format("unexpected server response: {}", response.status);
+    _error = touca::detail::format("unexpected server response: {}",
+                                   response.status);
     return false;
   }
   return true;

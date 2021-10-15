@@ -8,17 +8,14 @@
 #include "touca/lib_api.hpp"
 
 namespace touca {
+class IType;
 class Testcase;
 namespace fbs {
 struct TypeWrapper;
 }  // namespace fbs
-namespace types {
-class IType;
 
 std::shared_ptr<IType> TOUCA_CLIENT_API
 deserialize_value(const fbs::TypeWrapper* ptr);
-
-}  // namespace types
 
 Testcase TOUCA_CLIENT_API
 deserialize_testcase(const std::vector<uint8_t>& buffer);

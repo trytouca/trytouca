@@ -12,7 +12,7 @@ using namespace touca;
 std::string saveAndReadBack(const touca::ClientImpl& client) {
   TmpFile file;
   CHECK_NOTHROW(client.save(file.path, {}, DataFormat::JSON, true));
-  return load_string_file(file.path.string());
+  return detail::load_string_file(file.path.string());
 }
 
 ElementsMap saveAndLoadBack(const touca::ClientImpl& client) {
@@ -92,7 +92,7 @@ TEST_CASE("using a configured client") {
 
   SECTION("results") {
     client.declare_testcase("some-case");
-    const auto& v1 = std::make_shared<types::BooleanType>(true);
+    const auto& v1 = std::make_shared<BooleanType>(true);
     CHECK_NOTHROW(client.check("some-value", v1));
     CHECK_NOTHROW(client.add_hit_count("some-other-value"));
     CHECK_NOTHROW(client.add_array_element("some-array-value", v1));
@@ -107,7 +107,7 @@ TEST_CASE("using a configured client") {
    */
   SECTION("assumptions") {
     client.declare_testcase("some-case");
-    const auto& v1 = std::make_shared<types::BooleanType>(true);
+    const auto& v1 = std::make_shared<BooleanType>(true);
     CHECK_NOTHROW(client.assume("some-value", v1));
     const auto& content = saveAndReadBack(client);
     const auto& expected = R"([])";
@@ -133,7 +133,7 @@ TEST_CASE("using a configured client") {
 
   SECTION("forget_testcase") {
     client.declare_testcase("some-case");
-    const auto& v1 = std::make_shared<types::BooleanType>(true);
+    const auto& v1 = std::make_shared<BooleanType>(true);
     client.check("some-value", v1);
     client.assume("some-assertion", v1);
     client.start_timer("some-metric");

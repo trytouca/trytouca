@@ -6,7 +6,6 @@
 #include "nlohmann/json.hpp"
 #include "touca/core/types.hpp"
 #include "touca/core/utils.hpp"
-#include "touca/devkit/comparison.hpp"
 #include "touca/impl/schema.hpp"
 
 namespace touca {
@@ -67,7 +66,8 @@ Testcase::Metadata Testcase::metadata() const { return _metadata; }
 void Testcase::setMetadata(const Metadata& metadata) { _metadata = metadata; }
 
 std::string Testcase::Metadata::describe() const {
-  return touca::format("{}/{}/{}/{}", teamslug, testsuite, version, testcase);
+  return touca::detail::format("{}/{}/{}/{}", teamslug, testsuite, version,
+                               testcase);
 }
 
 nlohmann::ordered_json Testcase::Metadata::json() const {
@@ -94,20 +94,20 @@ void Testcase::toc(const std::string& key) {
 }
 
 void Testcase::check(const std::string& key,
-                     const std::shared_ptr<types::IType>& value) {
+                     const std::shared_ptr<IType>& value) {
   _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Check});
   _posted = false;
 }
 
 void Testcase::assume(const std::string& key,
-                      const std::shared_ptr<types::IType>& value) {
+                      const std::shared_ptr<IType>& value) {
   _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Assert});
   _posted = false;
 }
 
 void Testcase::add_array_element(const std::string& key,
-                                 const std::shared_ptr<types::IType>& element) {
-  using touca::types::ArrayType;
+                                 const std::shared_ptr<IType>& element) {
+  using touca::ArrayType;
   if (!_resultsMap.count(key)) {
     const auto value = std::make_shared<ArrayType>();
     value->add(element);
@@ -115,7 +115,7 @@ void Testcase::add_array_element(const std::string& key,
     return;
   }
   const auto ivalue = _resultsMap.at(key);
-  if (ivalue.val->type() != touca::types::value_t::array) {
+  if (ivalue.val->type() != touca::internal_type::array) {
     throw std::invalid_argument(
         "specified key is associated with a "
         "result of a different type");
@@ -127,14 +127,14 @@ void Testcase::add_array_element(const std::string& key,
 }
 
 void Testcase::add_hit_count(const std::string& key) {
-  using number_t = touca::types::NumberType<uint64_t>;
+  using number_t = touca::NumberType<uint64_t>;
   if (!_resultsMap.count(key)) {
     const auto value = std::make_shared<number_t>(1u);
     _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Check});
     return;
   }
   const auto ivalue = _resultsMap.at(key).val;
-  if (ivalue->type() != touca::types::value_t::numeric) {
+  if (ivalue->type() != touca::internal_type::number_signed) {
     throw std::invalid_argument(
         "specified key is associated with a "
         "result of a different type");
@@ -168,8 +168,7 @@ MetricsMap Testcase::metrics() const {
     const auto& diff = _tocs.at(key) - _tics.at(key);
     const auto& duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(diff);
-    const auto& value =
-        std::make_shared<types::NumberType<int64_t>>(duration.count());
+    const auto& value = std::make_shared<NumberType<int64_t>>(duration.count());
     metrics.emplace(key, MetricsMapValue{value});
   }
   return metrics;
@@ -272,11 +271,6 @@ std::vector<uint8_t> Testcase::flatbuffers() const {
 
   const auto& ptr = builder.GetBufferPointer();
   return {ptr, ptr + builder.GetSize()};
-}
-
-TestcaseComparison Testcase::compare(
-    const std::shared_ptr<Testcase>& tc) const {
-  return {*this, *tc};
 }
 
 Testcase::Overview Testcase::overview() const {

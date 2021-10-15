@@ -66,7 +66,8 @@ bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
 
   for (const auto& kvp : opts) {
     if (!parsers.count(kvp.first)) {
-      _opts.parse_error = touca::format("unknown parameter \"{}\"", kvp.first);
+      _opts.parse_error =
+          touca::detail::format("unknown parameter \"{}\"", kvp.first);
       return false;
     }
     parsers.at(kvp.first)(kvp.second);
@@ -251,7 +252,7 @@ std::shared_ptr<touca::Testcase> ClientImpl::declare_testcase(
 
 void ClientImpl::forget_testcase(const std::string& name) {
   if (!_testcases.count(name)) {
-    const auto err = touca::format("key `{}` does not exist", name);
+    const auto err = touca::detail::format("key `{}` does not exist", name);
     notify_loggers(logger::Level::Warning, err);
     throw std::invalid_argument(err);
   }
@@ -260,21 +261,21 @@ void ClientImpl::forget_testcase(const std::string& name) {
 }
 
 void ClientImpl::check(const std::string& key,
-                       const std::shared_ptr<types::IType>& value) {
+                       const std::shared_ptr<IType>& value) {
   if (hasLastTestcase()) {
     _testcases.at(getLastTestcase())->check(key, value);
   }
 }
 
 void ClientImpl::assume(const std::string& key,
-                        const std::shared_ptr<types::IType>& value) {
+                        const std::shared_ptr<IType>& value) {
   if (hasLastTestcase()) {
     _testcases.at(getLastTestcase())->assume(key, value);
   }
 }
 
 void ClientImpl::add_array_element(const std::string& key,
-                                   const std::shared_ptr<types::IType>& value) {
+                                   const std::shared_ptr<IType>& value) {
   if (hasLastTestcase()) {
     _testcases.at(getLastTestcase())->add_array_element(key, value);
   }
@@ -457,13 +458,13 @@ void ClientImpl::save_json(const touca::filesystem::path& path,
   for (const auto& testcase : testcases) {
     doc.push_back(testcase.json());
   }
-  save_string_file(path.string(), doc.dump());
+  detail::save_string_file(path.string(), doc.dump());
 }
 
 void ClientImpl::save_flatbuffers(
     const touca::filesystem::path& path,
     const std::vector<Testcase>& testcases) const {
-  save_binary_file(path.string(), Testcase::serialize(testcases));
+  detail::save_binary_file(path.string(), Testcase::serialize(testcases));
 }
 
 bool ClientImpl::post_flatbuffers(

@@ -19,15 +19,12 @@ static const std::unordered_map<fbs::ResultType, ResultCategory>
 };
 
 template <typename T, typename U>
-std::shared_ptr<touca::types::IType> deserialize(
-    const touca::fbs::TypeWrapper* ptr) {
+std::shared_ptr<touca::IType> deserialize(const touca::fbs::TypeWrapper* ptr) {
   const auto& castptr = static_cast<const T*>(ptr->value());
-  return std::shared_ptr<touca::types::IType>(new U(castptr->value()));
+  return std::shared_ptr<touca::IType>(new U(castptr->value()));
 }
 
 }  // namespace detail
-
-namespace types {
 
 std::shared_ptr<IType> deserialize_value(const fbs::TypeWrapper* ptr) {
   const auto& value = ptr->value();
@@ -69,8 +66,6 @@ std::shared_ptr<IType> deserialize_value(const fbs::TypeWrapper* ptr) {
   }
 }
 
-}  // namespace types
-
 Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
   const auto& message =
       flatbuffers::GetRoot<touca::fbs::Message>(buffer.data());
@@ -89,7 +84,7 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
   const auto& results = message->results()->entries();
   for (const auto&& result : *results) {
     const auto& key = result->key()->data();
-    const auto& value = types::deserialize_value(result->value());
+    const auto& value = deserialize_value(result->value());
     if (!value) {
       throw std::runtime_error("failed to parse results map entry");
     }
@@ -102,9 +97,8 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
   const auto& metrics = message->metrics()->entries();
   for (const auto&& metric : *metrics) {
     const auto& key = metric->key()->data();
-    const auto& ivalue = types::deserialize_value(metric->value());
-    const auto& value =
-        std::dynamic_pointer_cast<types::NumberType<int64_t>>(ivalue);
+    const auto& ivalue = deserialize_value(metric->value());
+    const auto& value = std::dynamic_pointer_cast<NumberType<int64_t>>(ivalue);
     if (!value) {
       throw std::runtime_error("failed to parse metrics map entry");
     }

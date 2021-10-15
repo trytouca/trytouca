@@ -106,20 +106,18 @@ class TOUCA_CLIENT_API ClientImpl {
   /**
    *
    */
-  void check(const std::string& key,
-             const std::shared_ptr<types::IType>& value);
+  void check(const std::string& key, const std::shared_ptr<IType>& value);
 
   /**
    *
    */
-  void assume(const std::string& key,
-              const std::shared_ptr<types::IType>& value);
+  void assume(const std::string& key, const std::shared_ptr<IType>& value);
 
   /**
    *
    */
   void add_array_element(const std::string& key,
-                         const std::shared_ptr<types::IType>& value);
+                         const std::shared_ptr<IType>& value);
 
   /**
    *

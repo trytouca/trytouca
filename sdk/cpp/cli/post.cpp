@@ -117,7 +117,7 @@ bool PostOperation::run_impl() const {
   err_t errors;
   for (const auto& src : resultFiles) {
     const auto& content =
-        touca::load_string_file(src.string(), std::ios::binary);
+        touca::detail::load_string_file(src.string(), std::ios::binary);
     const auto& errs = platform.submit(content, 5u);
     if (errs.empty()) {
       TOUCA_LOG_INFO("submitted {}", src.string());

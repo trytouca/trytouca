@@ -9,7 +9,6 @@
 #include "nlohmann/json.hpp"
 #include "touca/core/convert.hpp"
 #include "touca/core/object.hpp"
-#include "touca/devkit/comparison.hpp"
 #include "touca/impl/schema.hpp"
 
 namespace touca {
@@ -81,9 +80,7 @@ serialize_number(const T& value, flatbuffers::FlatBufferBuilder& builder) {
 
 }  // namespace detail
 
-namespace types {
-
-value_t IType::type() const { return _type_t; }
+internal_type IType::type() const { return _type_t; }
 
 std::string IType::string() const {
   const auto& element = json();
@@ -92,7 +89,7 @@ std::string IType::string() const {
              : element.dump();
 }
 
-NoneType::NoneType() : IType(value_t::null) {}
+NoneType::NoneType() : IType(internal_type::null) {}
 
 nlohmann::ordered_json NoneType::json() const {
   return nlohmann::json::object();
@@ -107,7 +104,8 @@ TypeComparison NoneType::compare(const std::shared_ptr<IType>& itype) const {
   return BooleanType(false).compare(itype);
 }
 
-BooleanType::BooleanType(bool value) : IType(value_t::boolean), _value(value) {}
+BooleanType::BooleanType(bool value)
+    : IType(internal_type::boolean), _value(value) {}
 
 nlohmann::ordered_json BooleanType::json() const { return _value; }
 
@@ -152,7 +150,8 @@ TypeComparison BooleanType::compare(const std::shared_ptr<IType>& itype) const {
 }
 
 template <class T>
-NumberType<T>::NumberType(T value) : IType(value_t::numeric), _value(value) {}
+NumberType<T>::NumberType(T value)
+    : IType(internal_type::number_signed), _value(value) {}
 
 template <class T>
 nlohmann::ordered_json NumberType<T>::json() const {
@@ -221,7 +220,7 @@ TypeComparison NumberType<T>::compare(
 }
 
 StringType::StringType(const std::string& value)
-    : IType(value_t::string), _value(value) {}
+    : IType(internal_type::string), _value(value) {}
 
 nlohmann::ordered_json StringType::json() const { return _value; }
 
@@ -266,7 +265,7 @@ TypeComparison StringType::compare(const std::shared_ptr<IType>& itype) const {
   return result;
 }
 
-ArrayType::ArrayType() : IType(value_t::array) {}
+ArrayType::ArrayType() : IType(internal_type::array) {}
 
 nlohmann::ordered_json ArrayType::json() const {
   nlohmann::ordered_json out = nlohmann::json::array();
@@ -292,7 +291,7 @@ flatbuffers::Offset<fbs::TypeWrapper> ArrayType::serialize(
   return typeWrapper_builder.Finish();
 }
 
-void ArrayType::add(const std::shared_ptr<types::IType>& value) {
+void ArrayType::add(const std::shared_ptr<IType>& value) {
   _values.push_back(value);
 }
 
@@ -432,5 +431,4 @@ template class NumberType<unsigned long>;
 template class NumberType<long long>;
 template class NumberType<unsigned long long>;
 
-}  // namespace types
 }  // namespace touca

@@ -24,6 +24,7 @@
 #include "touca/core/utils.hpp"
 
 namespace touca {
+namespace detail {
 
 std::string load_string_file(const std::string& path,
                              const std::ios_base::openmode mode) {
@@ -72,4 +73,5 @@ void save_binary_file(const std::string& path,
   }
 }
 
+}  // namespace detail
 }  // namespace touca

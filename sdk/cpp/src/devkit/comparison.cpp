@@ -8,14 +8,13 @@
 
 namespace touca {
 
-std::string Cellar::stringify(const types::value_t type) const {
-  using vt = types::value_t;
-  const std::unordered_map<types::value_t, std::string> store = {
-      {vt::boolean, "bool"},
-      {vt::numeric, "number"},
-      {vt::string, "string"},
-      {vt::array, "array"},
-      {vt::object, "object"}};
+std::string Cellar::stringify(const internal_type type) const {
+  const std::unordered_map<internal_type, std::string> store = {
+      {internal_type::boolean, "bool"},
+      {internal_type::number_signed, "number"},
+      {internal_type::string, "string"},
+      {internal_type::array, "array"},
+      {internal_type::object, "object"}};
   if (store.count(type)) {
     return store.at(type);
   }
@@ -57,7 +56,7 @@ nlohmann::ordered_json Cellar::buildJsonCommon(
         {"srcType", stringify(kv.second.srcType)},
         {"srcValue", kv.second.srcValue},
     });
-    if (types::value_t::unknown != kv.second.dstType) {
+    if (internal_type::unknown != kv.second.dstType) {
       item["dstType"] = stringify(kv.second.dstType);
     }
     if (MatchType::Perfect != kv.second.match) {

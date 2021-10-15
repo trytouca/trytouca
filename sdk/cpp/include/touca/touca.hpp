@@ -283,13 +283,13 @@ TOUCA_CLIENT_API void forget_testcase(const std::string& name);
 namespace internal {
 
 TOUCA_CLIENT_API void check(const std::string& key,
-                            const std::shared_ptr<touca::types::IType>& value);
+                            const std::shared_ptr<touca::IType>& value);
 
 TOUCA_CLIENT_API void assume(const std::string& key,
-                             const std::shared_ptr<touca::types::IType>& value);
+                             const std::shared_ptr<touca::IType>& value);
 
 TOUCA_CLIENT_API void add_array_element(
-    const std::string& key, const std::shared_ptr<touca::types::IType>& value);
+    const std::string& key, const std::shared_ptr<touca::IType>& value);
 
 }  // namespace internal
 
@@ -402,7 +402,7 @@ void assume(Char&& key, const Value& value) {
  *
  * @throw std::invalid_argument if specified key is already associated
  *        with a test result whose type is not a derivative of
- *        `touca::types::array`.
+ *        `touca::array`.
  *
  * @see check
  *

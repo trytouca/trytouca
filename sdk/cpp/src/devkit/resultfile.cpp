@@ -25,7 +25,7 @@ bool ResultFile::validate() const {
     return false;
   }
   const auto& content =
-      load_string_file(_path.string(), std::ios::in | std::ios::binary);
+      detail::load_string_file(_path.string(), std::ios::in | std::ios::binary);
   return validate(content);
 }
 
@@ -43,7 +43,7 @@ ElementsMap ResultFile::parse() const {
   }
 
   const auto& content =
-      load_string_file(_path.string(), std::ios::in | std::ios::binary);
+      detail::load_string_file(_path.string(), std::ios::in | std::ios::binary);
 
   // verify that given content represents valid flatbuffers data
   if (!validate(content)) {
@@ -77,7 +77,7 @@ void ResultFile::save() {
 }
 
 void ResultFile::save(const std::vector<Testcase>& testcases) {
-  save_binary_file(_path.string(), Testcase::serialize(testcases));
+  detail::save_binary_file(_path.string(), Testcase::serialize(testcases));
   // update map of stored testcases so that it only contains entries
   // for the new testcases we used for saving the file
   load();
@@ -104,8 +104,8 @@ ResultFile::ComparisonResult ResultFile::compare(
   for (const auto& tc : srcCases) {
     const auto& key = tc.first;
     if (dstCases.count(key)) {
-      const auto value = tc.second->compare(dstCases.at(key));
-      cmp.common.emplace(key, value);
+      cmp.common.emplace(key,
+                         TestcaseComparison(*tc.second, *dstCases.at(key)));
       continue;
     }
     cmp.fresh.emplace(tc);

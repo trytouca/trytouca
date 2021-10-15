@@ -2,115 +2,10 @@
 
 #pragma once
 
-#include <array>
-#include <codecvt>
-#include <list>
-#include <locale>
-#include <map>
-#include <set>
-#include <string>
-#include <unordered_map>
-#include <utility>
-
+#include "touca/core/detail/convert.hpp"
 #include "touca/core/types.hpp"
 
 namespace touca {
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
-
-namespace detail {
-/**
- * unlike std::integral_constant children such as is_same and
- * is_base_of there is no off-the-shelf function to check if a
- * type is specialization of a template. The following is an
- * implementation of this concept.
- */
-template <typename Test, template <typename...> class Ref>
-struct is_specialization : std::false_type {};
-
-template <template <typename...> class Ref, typename... Args>
-struct is_specialization<Ref<Args...>, Ref> : std::true_type {};
-
-template <typename T>
-using is_touca_null = std::is_same<T, std::nullptr_t>;
-
-template <typename T>
-using is_touca_boolean = std::is_same<T, bool>;
-
-template <typename T, typename = void>
-struct is_touca_number : std::false_type {};
-
-template <typename T>
-struct is_touca_number<
-    T, typename std::enable_if<std::is_floating_point<T>::value>::type>
-    : std::true_type {};
-
-template <typename T>
-struct is_touca_number<
-    T, typename std::enable_if<std::is_integral<T>::value &&
-                               !is_touca_boolean<T>::value>::type>
-    : std::true_type {};
-
-template <typename T, typename = void>
-struct is_touca_string : std::false_type {};
-
-template <typename T>
-struct is_touca_string<T, typename std::enable_if<
-                              std::is_convertible<T, std::string>::value>::type>
-    : std::true_type {};
-
-template <typename T>
-struct is_touca_string<
-    T,
-    typename std::enable_if<std::is_convertible<T, std::wstring>::value>::type>
-    : std::true_type {};
-
-template <typename T, typename = void>
-struct is_touca_array : std::false_type {};
-
-template <typename T>
-struct is_touca_array<T&> : is_touca_array<T> {};
-
-template <typename... args>
-struct is_touca_array<std::vector<args...>> : std::true_type {};
-
-template <typename... args>
-struct is_touca_array<std::list<args...>> : std::true_type {};
-
-template <typename... args>
-struct is_touca_array<std::set<args...>> : std::true_type {};
-
-template <typename T, std::size_t N>
-struct is_touca_array<std::array<T, N>> : std::true_type {};
-
-template <typename T>
-struct is_touca_array<
-    T, typename std::enable_if<is_specialization<T, std::map>::value>::type>
-    : std::true_type {};
-
-template <typename T>
-struct is_touca_array<T, typename std::enable_if<is_specialization<
-                             T, std::unordered_map>::value>::type>
-    : std::true_type {};
-
-template <typename T>
-typename std::enable_if<std::is_convertible<T, std::string>::value,
-                        std::string>::type
-to_string(const T& value) {
-  return value;
-}
-
-template <typename T>
-typename std::enable_if<std::is_convertible<T, std::wstring>::value,
-                        std::string>::type
-to_string(const T& value) {
-  std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
-  return conv.to_bytes(value);
-}
-
-}  // namespace detail
-
-#endif  // DOXYGEN_SHOULD_SKIP_THIS
 
 /**
  * @brief Non-specialized template declaration of conversion
@@ -139,9 +34,9 @@ to_string(const T& value) {
  *      template <>
  *      struct touca::converter<Date>
  *      {
- *          std::shared_ptr<types::IType> convert(const Date& value)
+ *          std::shared_ptr<IType> convert(const Date& value)
  *          {
- *              auto out = std::make_shared<types::ObjectType>();
+ *              auto out = std::make_shared<ObjectType>();
  *              out->add("year", value._year);
  *              out->add("month", value._month);
  *              out->add("day", value._day);
@@ -176,9 +71,9 @@ to_string(const T& value) {
  *      template <>
  *      struct touca::converter<Person>
  *      {
- *          std::shared_ptr<types::IType> convert(const Person& value)
+ *          std::shared_ptr<IType> convert(const Person& value)
  *          {
- *              auto out = std::make_shared<types::ObjectType>();
+ *              auto out = std::make_shared<ObjectType>();
  *              out->add("name", val._name);
  *              out->add("birthday", val._birthday);
  *              return out;
@@ -202,8 +97,8 @@ struct converter {
    * @return shared pointer to a generic type that the Touca SDK for C++
    *         knows how to handle.
    */
-  std::shared_ptr<types::IType> convert(const T& value) {
-    static_assert(std::is_same<std::shared_ptr<types::IType>, T>::value,
+  std::shared_ptr<IType> convert(const T& value) {
+    static_assert(std::is_same<std::shared_ptr<IType>, T>::value,
                   "did not find any partial specialization of converter "
                   "function to convert your value to a Touca type");
     return static_cast<T>(value);
@@ -215,17 +110,17 @@ struct converter {
 template <typename T>
 struct converter<
     T, typename std::enable_if<detail::is_touca_null<T>::value>::type> {
-  std::shared_ptr<types::IType> convert(const T& value) {
+  std::shared_ptr<IType> convert(const T& value) {
     std::ignore = value;
-    return std::make_shared<types::NoneType>();
+    return std::make_shared<NoneType>();
   }
 };
 
 template <typename T>
 struct converter<
     T, typename std::enable_if<detail::is_touca_boolean<T>::value>::type> {
-  std::shared_ptr<types::IType> convert(const T& value) {
-    return std::make_shared<types::BooleanType>(value);
+  std::shared_ptr<IType> convert(const T& value) {
+    return std::make_shared<BooleanType>(value);
   }
 };
 
@@ -237,8 +132,8 @@ struct converter<
 template <typename T>
 struct converter<
     T, typename std::enable_if<detail::is_touca_number<T>::value>::type> {
-  std::shared_ptr<types::IType> convert(const T& value) {
-    return std::make_shared<types::NumberType<T>>(value);
+  std::shared_ptr<IType> convert(const T& value) {
+    return std::make_shared<NumberType<T>>(value);
   }
 };
 
@@ -250,8 +145,8 @@ struct converter<
 template <typename T>
 struct converter<
     T, typename std::enable_if<detail::is_touca_string<T>::value>::type> {
-  std::shared_ptr<types::IType> convert(const T& value) {
-    return std::make_shared<types::StringType>(detail::to_string<T>(value));
+  std::shared_ptr<IType> convert(const T& value) {
+    return std::make_shared<StringType>(detail::to_string<T>(value));
   }
 };
 
@@ -263,8 +158,8 @@ struct converter<
 template <typename T>
 struct converter<
     T, typename std::enable_if<detail::is_touca_array<T>::value>::type> {
-  std::shared_ptr<types::IType> convert(const T& value) {
-    auto out = std::make_shared<types::ArrayType>();
+  std::shared_ptr<IType> convert(const T& value) {
+    auto out = std::make_shared<ArrayType>();
     for (const auto& v : value) {
       out->add(converter<typename T::value_type>().convert(v));
     }

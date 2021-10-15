@@ -182,7 +182,7 @@ bool parse_file_options(Options& options) {
 
   // load configuration file in memory
 
-  const auto& content = touca::load_string_file(configFile);
+  const auto& content = touca::detail::load_string_file(configFile);
 
   // parse configuration file
 
@@ -785,14 +785,14 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
     if (!capturer.cerr().empty()) {
       const auto resultFile = outputDirCase / "stderr.txt";
-      touca::save_string_file(resultFile.string(), capturer.cerr());
+      touca::detail::save_string_file(resultFile.string(), capturer.cerr());
     }
 
     // pipe stdout of code under test for this testcase into a file
 
     if (!capturer.cout().empty()) {
       const auto resultFile = outputDirCase / "stdout.txt";
-      touca::save_string_file(resultFile.string(), capturer.cout());
+      touca::detail::save_string_file(resultFile.string(), capturer.cout());
     }
 
     // save testresults in binary format if configured to do so

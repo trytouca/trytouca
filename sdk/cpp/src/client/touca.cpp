@@ -33,17 +33,16 @@ void forget_testcase(const std::string& name) {
 
 namespace internal {
 
-void check(const std::string& key, const std::shared_ptr<types::IType>& value) {
+void check(const std::string& key, const std::shared_ptr<IType>& value) {
   instance.check(key, value);
 }
 
-void assume(const std::string& key,
-            const std::shared_ptr<types::IType>& value) {
+void assume(const std::string& key, const std::shared_ptr<IType>& value) {
   instance.assume(key, value);
 }
 
 void add_array_element(const std::string& key,
-                       const std::shared_ptr<types::IType>& value) {
+                       const std::shared_ptr<IType>& value) {
   instance.add_array_element(key, value);
 }
 
