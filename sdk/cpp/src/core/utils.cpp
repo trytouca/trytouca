@@ -21,7 +21,7 @@
 #include <sstream>
 
 #include "fmt/core.h"
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 
 namespace touca {
 namespace detail {

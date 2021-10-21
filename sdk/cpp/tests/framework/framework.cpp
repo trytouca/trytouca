@@ -5,8 +5,8 @@
 #include "catch2/catch.hpp"
 #include "tests/devkit/tmpfile.hpp"
 #include "tests/framework/ostream.hpp"
+#include "touca/core/config.hpp"
 #include "touca/devkit/utils.hpp"
-#include "touca/extra/version.hpp"
 #include "touca/framework/detail/ostream.hpp"
 
 TEST_CASE("suite") {

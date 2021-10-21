@@ -7,7 +7,7 @@
 #include <thread>
 
 #include "nlohmann/json.hpp"
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 #include "touca/extra/scoped_timer.hpp"
 #include "touca/touca.hpp"
 

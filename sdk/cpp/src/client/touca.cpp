@@ -31,7 +31,7 @@ void forget_testcase(const std::string& name) {
   instance.forget_testcase(name);
 }
 
-namespace internal {
+namespace detail {
 
 void check(const std::string& key, const std::shared_ptr<IType>& value) {
   instance.check(key, value);
@@ -46,7 +46,7 @@ void add_array_element(const std::string& key,
   instance.add_array_element(key, value);
 }
 
-}  // namespace internal
+}  // namespace detail
 
 void add_hit_count(const std::string& key) { instance.add_hit_count(key); }
 

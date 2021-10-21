@@ -2,9 +2,8 @@
 
 #pragma once
 
-#include <touca/touca.hpp>
-
 #include "students.hpp"
+#include "touca/touca.hpp"
 
 template <>
 struct touca::converter<Date> {

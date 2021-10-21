@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include "nlohmann/json.hpp"
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/impl/schema.hpp"

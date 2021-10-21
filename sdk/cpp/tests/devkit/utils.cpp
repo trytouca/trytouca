@@ -3,7 +3,7 @@
 #include "touca/devkit/utils.hpp"
 
 #include "catch2/catch.hpp"
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 
 TEST_CASE("string formatting") {
   SECTION("format") {

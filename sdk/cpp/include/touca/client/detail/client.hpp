@@ -4,8 +4,8 @@
 
 #include <thread>
 
+#include "touca/core/filesystem.hpp"
 #include "touca/core/testcase.hpp"
-#include "touca/core/utils.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/extra/logger.hpp"
 

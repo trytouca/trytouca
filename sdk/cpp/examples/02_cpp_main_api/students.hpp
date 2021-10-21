@@ -7,9 +7,9 @@
 #include "touca/touca.hpp"
 
 struct Date {
-  unsigned short _year;
-  unsigned short _month;
-  unsigned short _day;
+  std::uint16_t _year;
+  std::uint16_t _month;
+  std::uint16_t _day;
 };
 
 struct Course {

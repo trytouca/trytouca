@@ -273,14 +273,14 @@ TOUCA_CLIENT_API void forget_testcase(const std::string& name);
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 /**
- * @namespace touca::internal
+ * @namespace touca::detail
  *
  * @brief Provides functions internally used by client library.
  *
  * @details Directly calling functions exposed in this namespace
  *          is strongly discouraged.
  */
-namespace internal {
+namespace detail {
 
 TOUCA_CLIENT_API void check(const std::string& key,
                             const std::shared_ptr<touca::IType>& value);
@@ -291,7 +291,7 @@ TOUCA_CLIENT_API void assume(const std::string& key,
 TOUCA_CLIENT_API void add_array_element(
     const std::string& key, const std::shared_ptr<touca::IType>& value);
 
-}  // namespace internal
+}  // namespace detail
 
 #endif  // DOXYGEN_SHOULD_SKIP_THIS
 
@@ -316,7 +316,7 @@ TOUCA_CLIENT_API void add_array_element(
 template <typename Char, typename Value>
 void check(Char&& key, const Value& value) {
   const auto& ivalue = converter<Value>().convert(value);
-  internal::check(std::forward<Char>(key), ivalue);
+  detail::check(std::forward<Char>(key), ivalue);
 }
 
 /**
@@ -349,7 +349,7 @@ void check(Char&& key, const Value& value) {
 template <typename Char, typename Value>
 void assume(Char&& key, const Value& value) {
   const auto& ivalue = converter<Value>().convert(value);
-  internal::assume(std::forward<Char>(key), ivalue);
+  detail::assume(std::forward<Char>(key), ivalue);
 }
 
 /**
@@ -411,7 +411,7 @@ void assume(Char&& key, const Value& value) {
 template <typename Char, typename Value>
 void add_array_element(Char&& key, const Value& value) {
   const auto& ivalue = converter<Value>().convert(value);
-  internal::add_array_element(std::forward<Char>(key), ivalue);
+  detail::add_array_element(std::forward<Char>(key), ivalue);
 }
 
 /**

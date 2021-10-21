@@ -1,8 +1,8 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-file(READ "include/touca/extra/version.hpp" version_file_content)
+file(READ "include/touca/core/config.hpp" version_file_content)
 if (NOT version_file_content MATCHES "TOUCA_VERSION ([0-9]+)([0-9][0-9])([0-9][0-9])")
-    message(FATAL_ERROR "Cannot extract TOUCA_VERSION from version.hpp")
+    message(FATAL_ERROR "Cannot extract TOUCA_VERSION from config.hpp")
 endif()
 math(EXPR CPACK_PACKAGE_VERSION_MAJOR ${CMAKE_MATCH_1})
 math(EXPR CPACK_PACKAGE_VERSION_MINOR ${CMAKE_MATCH_2})

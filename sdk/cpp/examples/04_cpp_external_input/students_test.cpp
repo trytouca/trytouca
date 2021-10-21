@@ -7,7 +7,7 @@
 
 #include "cxxopts.hpp"
 #include "students.hpp"
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 #include "touca/framework/suites.hpp"
 #include "touca/touca.hpp"
 

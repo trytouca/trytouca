@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.14...3.21 FATAL_ERROR)
 
-include(cmake/utils.cmake)
+include(cmake/find_version.cmake)
 
 if (NOT DEFINED TOUCA_MAIN_PROJECT)
     set(TOUCA_MAIN_PROJECT OFF)

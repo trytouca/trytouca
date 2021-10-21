@@ -10,7 +10,7 @@
  *        files.
  */
 
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 #include "touca/devkit/comparison.hpp"
 
 namespace touca {

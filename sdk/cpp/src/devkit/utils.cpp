@@ -9,8 +9,8 @@
 #include <sstream>
 
 #include "fmt/printf.h"
+#include "touca/core/filesystem.hpp"
 #include "touca/core/testcase.hpp"
-#include "touca/core/utils.hpp"
 
 namespace touca {
 

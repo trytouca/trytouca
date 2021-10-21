@@ -3,7 +3,7 @@
 #include "cxxopts.hpp"
 #include "touca/cli/filesystem.hpp"
 #include "touca/cli/operations.hpp"
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 #include "touca/devkit/logger.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"

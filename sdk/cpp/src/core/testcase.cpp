@@ -4,8 +4,8 @@
 
 #include "flatbuffers/flatbuffers.h"
 #include "nlohmann/json.hpp"
+#include "touca/core/filesystem.hpp"
 #include "touca/core/types.hpp"
-#include "touca/core/utils.hpp"
 #include "touca/impl/schema.hpp"
 
 namespace touca {

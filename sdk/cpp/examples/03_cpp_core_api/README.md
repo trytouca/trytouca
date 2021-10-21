@@ -169,9 +169,9 @@ Consider the following definition for a user-defined type `Date`.
 
 ```cpp
 struct Date {
-    unsigned short year;
-    unsigned short month;
-    unsigned short day;
+  std::uint16_t _year;
+  std::uint16_t _month;
+  std::uint16_t _day;
 };
 ```
 

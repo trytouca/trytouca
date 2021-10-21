@@ -5,8 +5,8 @@
 #include <functional>
 
 #include "cxxopts.hpp"
+#include "touca/core/config.hpp"
 #include "touca/devkit/utils.hpp"
-#include "touca/extra/version.hpp"
 
 Operation::Command Operation::find_mode(const std::string& name) {
   const std::unordered_map<std::string, Operation::Command> modes{
@@ -90,7 +90,7 @@ bool CliOptions::parse_impl(int argc, char* argv[]) {
   }
 
   // if user asks for version, print application version and exit
-  // @todo add a version.hpp to touca/devkit and use major/minor/patch below
+  // @todo add a config.hpp to touca/devkit and use major/minor/patch below
 
   if (result.count("version")) {
     fmt::print(stdout, "Touca Utility Command Line Tool v{}.{}.{}\n",

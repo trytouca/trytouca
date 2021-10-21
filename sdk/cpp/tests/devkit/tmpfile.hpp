@@ -4,7 +4,7 @@
 
 #include <fstream>
 
-#include "touca/core/utils.hpp"
+#include "touca/core/filesystem.hpp"
 #include "touca/devkit/utils.hpp"
 
 struct TmpFile {
