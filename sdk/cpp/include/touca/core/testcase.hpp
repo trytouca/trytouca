@@ -3,6 +3,7 @@
 #pragma once
 
 #include <chrono>
+#include <unordered_map>
 
 #include "nlohmann/json_fwd.hpp"
 #include "touca/core/convert.hpp"

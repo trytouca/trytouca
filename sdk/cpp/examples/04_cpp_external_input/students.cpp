@@ -15,7 +15,7 @@
 #undef GetObject
 #endif
 
-Student parse_profile(const std::string& path) {
+Student find_student(const std::string& path) {
   std::ifstream ifs(path, std::ios::in);
   std::string content((std::istreambuf_iterator<char>(ifs)),
                       std::istreambuf_iterator<char>());

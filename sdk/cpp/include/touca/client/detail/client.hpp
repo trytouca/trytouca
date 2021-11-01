@@ -14,7 +14,7 @@ namespace touca {
 using path = std::string;
 
 /**
- * @enum touca::DataFormat
+ * @enum DataFormat
  * @brief describes supported formats for storing testresults to disk
  */
 enum class DataFormat : unsigned char {

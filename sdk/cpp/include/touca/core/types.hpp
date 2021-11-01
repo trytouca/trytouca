@@ -161,7 +161,7 @@ class TOUCA_CLIENT_API ArrayType : public IType {
 };
 
 /**
- * @enum touca::MatchType
+ * @enum MatchType
  * @brief describes overall result of comparing two testcases
  */
 enum class MatchType : unsigned char {

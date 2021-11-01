@@ -79,22 +79,6 @@ namespace touca {
  *        parameters are set.
  *        Defaults to `true`.
  *
- * @li @b allow-empty-suite
- *        Declare configuration of the client as successful even if the
- *        suite has no registered test cases on the Touca Server.
- *        Defaults to `true`.
- *
- * @li @b post-testcases
- *        Maximum number of testcases whose results may be included
- *        in a single http post request, when `touca::post` is called.
- *        Defaults to 10.
- *
- * @li @b post-maxretries
- *        Maximum number of consecutive attempts the client library
- *        should make to re-submit testresults if initial http post
- *        request fails when `touca::post` is called.
- *        Defaults to 2.
- *
  * @li @b concurrency-mode
  *        Can be one of `all-threads` and `per-thread`.
  *        Defaults to `all-threads`.
@@ -547,11 +531,6 @@ TOUCA_CLIENT_API void save_json(const std::string& path,
  *
  *          * `api-key`: API Key for Authenticating to Touca server.
  *          * `api-url`: URL to Touca server API.
- *          * `post-testcases`: maximum number of testcases to include
- *            in every HTTP post request.
- *          * `post-maxretries`: maximum number of attempts to submit
- *            testresults in a bundle of testcases until the HTTP post
- *            request is successful.
  *
  *          It is possible to call touca::post() multiple
  *          times during runtime of the regression test tool.

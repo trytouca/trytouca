@@ -122,7 +122,7 @@ touca::framework::Errors MyWorkflow::execute(
     const touca::framework::Testcase& testcase) const {
   touca::filesystem::path caseFile = _options.at("datasets-dir");
   caseFile /= testcase + ".json";
-  const auto& student = parse_profile(caseFile.string());
+  const auto& student = find_student(caseFile.string());
 
   touca::assume("username", student.username);
   touca::check("fullname", student.fullname);

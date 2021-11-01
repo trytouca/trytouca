@@ -1,7 +1,7 @@
 # Touca C++ API
 
 In the [previous tutorial](../02_cpp_main_api), we covered the high-level API of
-our C++ SDK and learned how to test a `parse_profile` function using the Touca
+our C++ SDK and learned how to test a `find_student` function using the Touca
 test framework:
 
 ```cpp
@@ -10,8 +10,8 @@ test framework:
 #include "touca/touca.hpp"
 
 int main(int argc, char* argv[]) {
-  touca::workflow("parse_profile", [](const std::string& username) {
-    const auto& student = parse_profile(username);
+  touca::workflow("find_student", [](const std::string& username) {
+    const auto& student = find_student(username);
     // insert code here to describe the behavior
     // and performance of the workflow under test
   });
@@ -41,7 +41,7 @@ int main()
   for (const username of touca::get_testcases()) {
     touca::declare_testcase(username);
 
-    const auto& student = parse_profile(username);
+    const auto& student = find_student(username);
     // insert code here to describe the behavior
     // and performance of the workflow under test
 
@@ -169,9 +169,9 @@ Consider the following definition for a user-defined type `Date`.
 
 ```cpp
 struct Date {
-  std::uint16_t _year;
-  std::uint16_t _month;
-  std::uint16_t _day;
+  unsigned short _year;
+  unsigned short _month;
+  unsigned short _day;
 };
 ```
 

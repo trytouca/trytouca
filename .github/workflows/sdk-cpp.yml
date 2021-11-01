@@ -77,10 +77,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
           aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
-
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
       - name: install dependencies
         run: |
           sudo apt-get install doxygen
+          python -m pip install --upgrade pip
           pip install --no-cache-dir --upgrade -r docs/sphinx/requirements.txt
 
       - name: generate docs

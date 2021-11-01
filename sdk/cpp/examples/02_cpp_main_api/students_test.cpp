@@ -6,8 +6,8 @@
 #include "touca/touca.hpp"
 
 int main(int argc, char* argv[]) {
-  touca::workflow("parse_profile", [](const std::string& username) {
-    const auto& student = parse_profile(username);
+  touca::workflow("find_student", [](const std::string& username) {
+    const auto& student = find_student(username);
     touca::assume("username", student.username);
     touca::check("fullname", student.fullname);
     touca::check("birth_date", student.dob);
