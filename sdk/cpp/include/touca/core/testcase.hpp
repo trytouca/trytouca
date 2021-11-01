@@ -3,14 +3,30 @@
 #pragma once
 
 #include <chrono>
+#include <map>
 #include <unordered_map>
 
 #include "nlohmann/json_fwd.hpp"
-#include "touca/core/serializer.hpp"
+#include "touca/core/types.hpp"
+#include "touca/lib_api.hpp"
 
 namespace touca {
 class ClientImpl;
 class TestcaseComparison;
+
+enum class ResultCategory { Check = 1, Assert };
+
+struct MetricsMapValue {
+  std::shared_ptr<IType> value;
+};
+
+struct ResultEntry {
+  std::shared_ptr<IType> val;
+  ResultCategory typ;
+};
+
+using MetricsMap = std::map<std::string, MetricsMapValue>;
+using ResultsMap = std::map<std::string, ResultEntry>;
 
 /**
  * Assumptions map has the same characteristics as the results map,

@@ -22,7 +22,6 @@
 // the following header file(s) are included only to make it sufficient
 // for the users of this library to include only this header file
 
-#include "touca/core/object.hpp"
 #include "touca/extra/scoped_timer.hpp"
 
 #ifdef TOUCA_INCLUDE_FRAMEWORK
@@ -299,8 +298,7 @@ TOUCA_CLIENT_API void add_array_element(
  */
 template <typename Char, typename Value>
 void check(Char&& key, const Value& value) {
-  const auto& ivalue = serializer<Value>().serialize(value);
-  detail::check(std::forward<Char>(key), ivalue);
+  detail::check(std::forward<Char>(key), serializer<Value>().serialize(value));
 }
 
 /**
@@ -332,8 +330,7 @@ void check(Char&& key, const Value& value) {
  */
 template <typename Char, typename Value>
 void assume(Char&& key, const Value& value) {
-  const auto& ivalue = serializer<Value>().serialize(value);
-  detail::assume(std::forward<Char>(key), ivalue);
+  detail::assume(std::forward<Char>(key), serializer<Value>().serialize(value));
 }
 
 /**
@@ -394,8 +391,8 @@ void assume(Char&& key, const Value& value) {
  */
 template <typename Char, typename Value>
 void add_array_element(Char&& key, const Value& value) {
-  const auto& ivalue = serializer<Value>().serialize(value);
-  detail::add_array_element(std::forward<Char>(key), ivalue);
+  detail::add_array_element(std::forward<Char>(key),
+                            serializer<Value>().serialize(value));
 }
 
 /**

@@ -9,9 +9,9 @@ template <>
 struct touca::serializer<Date> {
   std::shared_ptr<IType> serialize(const Date& value) {
     auto out = std::make_shared<ObjectType>();
-    out->add("year", value._year);
-    out->add("month", value._month);
-    out->add("day", value._day);
+    out->add("year", value.year);
+    out->add("month", value.month);
+    out->add("day", value.day);
     return out;
   }
 };

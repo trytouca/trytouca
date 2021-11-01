@@ -59,7 +59,7 @@ float calculate_gpa(const std::vector<Course>& courses) {
 
 void custom_function_1(const Student& student) {
   TOUCA_SCOPED_TIMER;
-  touca::check("is_adult", 18 <= 2021 - student.dob._year);
+  touca::check("is_adult", 18 <= 2021 - student.dob.year);
   std::this_thread::sleep_for(std::chrono::milliseconds(10 + rand() % 50));
 }
 

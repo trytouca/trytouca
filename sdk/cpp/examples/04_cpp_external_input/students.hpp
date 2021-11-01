@@ -6,9 +6,9 @@
 #include <vector>
 
 struct Date {
-  unsigned short _year;
-  unsigned short _month;
-  unsigned short _day;
+  unsigned short year;
+  unsigned short month;
+  unsigned short day;
 };
 
 struct Course {

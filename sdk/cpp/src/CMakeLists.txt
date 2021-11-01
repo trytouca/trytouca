@@ -20,8 +20,7 @@ target_sources(
     PRIVATE
         client/client.cpp
         client/touca.cpp
-        core/utils.cpp
-        core/object.cpp
+        core/filesystem.cpp
         core/testcase.cpp
         core/types.cpp
         devkit/comparison.cpp

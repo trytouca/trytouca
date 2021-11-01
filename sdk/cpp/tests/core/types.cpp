@@ -1,7 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "catch2/catch.hpp"
-#include "touca/core/object.hpp"
 #include "touca/core/serializer.hpp"
 #include "touca/devkit/comparison.hpp"
 #include "touca/devkit/deserialize.hpp"

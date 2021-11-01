@@ -2,14 +2,14 @@
 
 #include "touca/devkit/deserialize.hpp"
 
+#include <stdexcept>
+
 #include "flatbuffers/flatbuffers.h"
-#include "touca/core/object.hpp"
 #include "touca/core/testcase.hpp"
 #include "touca/core/types.hpp"
 #include "touca/impl/schema.hpp"
 
 namespace touca {
-
 namespace detail {
 
 static const std::unordered_map<fbs::ResultType, ResultCategory>
