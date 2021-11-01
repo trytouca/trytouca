@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "touca/core/detail/convert.hpp"
+#include "touca/core/detail/serializer.hpp"
 #include "touca/core/types.hpp"
 
 namespace touca {
@@ -118,11 +118,6 @@ struct serializer<
   }
 };
 
-/**
- * @brief serializer specialization that describes how any type that
- *        details to touca number specifications should be handled
- *        by the Touca SDK for C++.
- */
 template <typename T>
 struct serializer<
     T, typename std::enable_if<detail::is_touca_number<T>::value>::type> {
@@ -131,11 +126,6 @@ struct serializer<
   }
 };
 
-/**
- * @brief serializer specialization that describes how any type that
- *        details to touca string specifications should be handled
- *        by the Touca SDK for C++.
- */
 template <typename T>
 struct serializer<
     T, typename std::enable_if<detail::is_touca_string<T>::value>::type> {
@@ -144,11 +134,6 @@ struct serializer<
   }
 };
 
-/**
- * @brief serializer specialization that describes how any type that
- *        details to touca array specifications should be handled
- *        by the Touca SDK for C++.
- */
 template <typename T>
 struct serializer<
     T, typename std::enable_if<detail::is_touca_array<T>::value>::type> {

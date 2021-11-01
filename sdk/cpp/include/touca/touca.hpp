@@ -15,7 +15,7 @@
 
 #include <unordered_map>
 
-#include "touca/core/convert.hpp"
+#include "touca/core/serializer.hpp"
 #include "touca/extra/logger.hpp"
 #include "touca/lib_api.hpp"
 

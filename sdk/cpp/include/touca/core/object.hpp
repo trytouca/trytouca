@@ -3,7 +3,7 @@
 #pragma once
 
 #include "nlohmann/json_fwd.hpp"
-#include "touca/core/convert.hpp"
+#include "touca/core/serializer.hpp"
 #include "touca/core/types.hpp"
 
 namespace touca {

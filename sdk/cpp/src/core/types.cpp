@@ -7,8 +7,8 @@
 #include "flatbuffers/flatbuffers.h"
 #include "fmt/format.h"
 #include "nlohmann/json.hpp"
-#include "touca/core/convert.hpp"
 #include "touca/core/object.hpp"
+#include "touca/core/serializer.hpp"
 #include "touca/impl/schema.hpp"
 
 namespace touca {

@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 #include "nlohmann/json_fwd.hpp"
-#include "touca/core/convert.hpp"
+#include "touca/core/serializer.hpp"
 
 namespace touca {
 class ClientImpl;

@@ -33,30 +33,30 @@ using std::void_t;
 
 #else
 
-template <class...>
+template <typename...>
 struct conjunction : std::true_type {};
 
-template <class B1>
-struct conjunction<B1> : B1 {};
+template <typename T>
+struct conjunction<T> : T {};
 
-template <class B1, class... Bn>
-struct conjunction<B1, Bn...>
-    : std::conditional<B1::value != false, conjunction<Bn...>, B1>::type {};
+template <typename T, typename... Ts>
+struct conjunction<T, Ts...>
+    : std::conditional<T::value != false, conjunction<Ts...>, T>::type {};
 
-template <class...>
+template <typename...>
 struct disjunction : std::false_type {};
 
-template <class B1>
-struct disjunction<B1> : B1 {};
+template <typename T>
+struct disjunction<T> : T {};
 
-template <class B1, class... Bn>
-struct disjunction<B1, Bn...>
-    : std::conditional<B1::value != false, B1, disjunction<Bn...>>::type {};
+template <typename T, typename... Ts>
+struct disjunction<T, Ts...>
+    : std::conditional<T::value != false, T, disjunction<Ts...>>::type {};
 
-template <class B>
-struct negation : std::integral_constant<bool, !B::value> {};
+template <typename T>
+struct negation : std::integral_constant<bool, !T::value> {};
 
-template <class...>
+template <typename...>
 using void_t = void;
 
 #endif
