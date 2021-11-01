@@ -299,7 +299,7 @@ TOUCA_CLIENT_API void add_array_element(
  */
 template <typename Char, typename Value>
 void check(Char&& key, const Value& value) {
-  const auto& ivalue = converter<Value>().convert(value);
+  const auto& ivalue = serializer<Value>().serialize(value);
   detail::check(std::forward<Char>(key), ivalue);
 }
 
@@ -332,7 +332,7 @@ void check(Char&& key, const Value& value) {
  */
 template <typename Char, typename Value>
 void assume(Char&& key, const Value& value) {
-  const auto& ivalue = converter<Value>().convert(value);
+  const auto& ivalue = serializer<Value>().serialize(value);
   detail::assume(std::forward<Char>(key), ivalue);
 }
 
@@ -394,7 +394,7 @@ void assume(Char&& key, const Value& value) {
  */
 template <typename Char, typename Value>
 void add_array_element(Char&& key, const Value& value) {
-  const auto& ivalue = converter<Value>().convert(value);
+  const auto& ivalue = serializer<Value>().serialize(value);
   detail::add_array_element(std::forward<Char>(key), ivalue);
 }
 

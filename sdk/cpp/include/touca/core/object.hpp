@@ -21,7 +21,7 @@ class TOUCA_CLIENT_API ObjectType : public IType {
 
   template <typename T>
   void add(const std::string& key, T value) {
-    _values.emplace(key, converter<T>().convert(value));
+    _values.emplace(key, serializer<T>().serialize(value));
   }
 
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
@@ -38,9 +38,9 @@ class TOUCA_CLIENT_API ObjectType : public IType {
 };  // class touca::ObjectType
 
 template <typename T>
-struct converter<T, typename std::enable_if<
-                        detail::is_specialization<T, std::pair>::value>::type> {
-  std::shared_ptr<IType> convert(const T& value) {
+struct serializer<T, typename std::enable_if<detail::is_specialization<
+                         T, std::pair>::value>::type> {
+  std::shared_ptr<IType> serialize(const T& value) {
     auto out = std::make_shared<ObjectType>("std::pair");
     out->add("first", value.first);
     out->add("second", value.second);
@@ -49,9 +49,9 @@ struct converter<T, typename std::enable_if<
 };
 
 template <typename T>
-struct converter<T, typename std::enable_if<detail::is_specialization<
-                        T, std::shared_ptr>::value>::type> {
-  std::shared_ptr<IType> convert(const T& value) {
+struct serializer<T, typename std::enable_if<detail::is_specialization<
+                         T, std::shared_ptr>::value>::type> {
+  std::shared_ptr<IType> serialize(const T& value) {
     auto out = std::make_shared<ObjectType>("std::shared_ptr");
     if (value) {
       out->add("v", *value);

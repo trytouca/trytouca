@@ -6,8 +6,8 @@
 #include "touca/touca.hpp"
 
 template <>
-struct touca::converter<Date> {
-  std::shared_ptr<IType> convert(const Date& value) {
+struct touca::serializer<Date> {
+  std::shared_ptr<IType> serialize(const Date& value) {
     auto out = std::make_shared<ObjectType>();
     out->add("year", value.year);
     out->add("month", value.month);
@@ -17,8 +17,8 @@ struct touca::converter<Date> {
 };
 
 template <>
-struct touca::converter<Course> {
-  std::shared_ptr<IType> convert(const Course& value) {
+struct touca::serializer<Course> {
+  std::shared_ptr<IType> serialize(const Course& value) {
     auto out = std::make_shared<ObjectType>();
     out->add("name", value.name);
     out->add("grade", value.grade);

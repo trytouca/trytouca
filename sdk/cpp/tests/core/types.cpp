@@ -10,7 +10,7 @@
 namespace creature {
 
 class Head {
-  friend struct touca::converter<creature::Head>;
+  friend struct touca::serializer<creature::Head>;
 
  public:
   explicit Head(const uint64_t eyes) : _eyes(eyes) {}
@@ -22,8 +22,8 @@ class Head {
 }  // namespace creature
 
 template <>
-struct touca::converter<creature::Head> {
-  std::shared_ptr<IType> convert(const creature::Head& value) {
+struct touca::serializer<creature::Head> {
+  std::shared_ptr<IType> serialize(const creature::Head& value) {
     auto out = std::make_shared<ObjectType>("head");
     out->add("eyes", value._eyes);
     return out;
@@ -659,7 +659,7 @@ TEST_CASE("Simple Data Types") {
         for (const auto& v : vec) {
           inputs.emplace_back(v);
         }
-        return converter<type_t>().convert(inputs);
+        return serializer<type_t>().serialize(inputs);
       };
       const auto& left = make({1, 3, 4, 1, 0});
       const auto& right = make({1, 3, 4, 0, 1});
@@ -683,7 +683,7 @@ TEST_CASE("Simple Data Types") {
       const auto& expected = R"({"std::pair":{"first":true,"second":false}})";
 
       SECTION("initialize") {
-        const auto& itype = converter<type_t>().convert(value);
+        const auto& itype = serializer<type_t>().serialize(value);
         CHECK(internal_type::object == itype->type());
         CHECK(itype->string() == expected);
         CHECK_FALSE(itype->flatten().empty());
@@ -694,8 +694,8 @@ TEST_CASE("Simple Data Types") {
       SECTION("compare") {
         const type_t leftValue(true, false);
         const type_t rightValue(false, false);
-        const auto& left = converter<type_t>().convert(leftValue);
-        const auto& right = converter<type_t>().convert(rightValue);
+        const auto& left = serializer<type_t>().serialize(leftValue);
+        const auto& right = serializer<type_t>().serialize(rightValue);
         const auto& cmp = left->compare(right);
         CHECK(internal_type::object == cmp.srcType);
         CHECK(internal_type::unknown == cmp.dstType);
@@ -712,8 +712,8 @@ TEST_CASE("Simple Data Types") {
       using type_t = std::vector<std::pair<std::wstring, std::wstring>>;
       const type_t leftValue{{L"k1", L"v1"}, {L"k2", L"v2"}};
       const type_t rightValue{{L"k1", L"v1"}, {L"k2", L"v2"}};
-      const auto& left = converter<type_t>().convert(leftValue);
-      const auto& right = converter<type_t>().convert(rightValue);
+      const auto& left = serializer<type_t>().serialize(leftValue);
+      const auto& right = serializer<type_t>().serialize(rightValue);
       const auto& cmp = left->compare(right);
 
       CHECK(internal_type::array == cmp.srcType);
@@ -731,7 +731,7 @@ TEST_CASE("Simple Data Types") {
 
       SECTION("initialize") {
         const auto& value = std::make_shared<bool>(true);
-        const auto& itype = converter<type_t>().convert(value);
+        const auto& itype = serializer<type_t>().serialize(value);
         CHECK(internal_type::object == itype->type());
         CHECK(itype->string() == R"({"std::shared_ptr":{"v":true}})");
         CHECK_FALSE(itype->flatten().empty());
@@ -741,7 +741,7 @@ TEST_CASE("Simple Data Types") {
 
       SECTION("initialize: null") {
         const type_t value;
-        const auto& itype = converter<type_t>().convert(value);
+        const auto& itype = serializer<type_t>().serialize(value);
         CHECK(internal_type::object == itype->type());
         CHECK(itype->string() == R"({"std::shared_ptr":{}})");
         CHECK(itype->flatten().empty());
@@ -750,8 +750,8 @@ TEST_CASE("Simple Data Types") {
       SECTION("compare: mismatch") {
         const auto& leftValue = std::make_shared<bool>(true);
         const auto& rightValue = std::make_shared<bool>(false);
-        const auto& left = converter<type_t>().convert(leftValue);
-        const auto& right = converter<type_t>().convert(rightValue);
+        const auto& left = serializer<type_t>().serialize(leftValue);
+        const auto& right = serializer<type_t>().serialize(rightValue);
         const auto& cmp = left->compare(right);
 
         CHECK(MatchType::None == cmp.match);
@@ -767,7 +767,7 @@ TEST_CASE("Simple Data Types") {
     SECTION("std::map") {
       using type_t = std::map<unsigned int, bool>;
       type_t value = {{1u, true}, {2u, false}};
-      const auto& itype = converter<type_t>().convert(value);
+      const auto& itype = serializer<type_t>().serialize(value);
 
       CHECK(internal_type::array == itype->type());
       CHECK(

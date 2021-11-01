@@ -185,15 +185,14 @@ partial template specialization function for it.
 #include "touca/touca.hpp"
 
 template <>
-struct touca::converter<Date> {
-    std::shared_ptr<IType> convert(const Date& value)
-    {
-        auto out = std::make_shared<ObjectType>();
-        out->add("year", value.year);
-        out->add("month", value.month);
-        out->add("day", value.day);
-        return out;
-    }
+struct touca::serializer<Date> {
+  std::shared_ptr<IType> serialize(const Date& value) {
+    auto out = std::make_shared<ObjectType>();
+    out->add("year", value.year);
+    out->add("month", value.month);
+    out->add("day", value.day);
+    return out;
+  }
 };
 ```
 

@@ -12,36 +12,33 @@ namespace touca {
  *        logic for handling objects of custom types by the
  *        Touca SDK for C++.
  * @tparam T type whose handling logic is to be implemented
- *           in `convert` member function.
+ *         in `serialize` member function.
  *
  * @details Allows users developing regression tools to provide
  *          explicit full specialization of this class that makes
  *          it convenient to pass objects of their non-trivial type
  *          directly to Touca API functions that accept testresults.
  *
- * The following example illustrates a specialization of converter
+ * The following example illustrates a specialization of serializer
  * for a custom type `Date`.
  *
  * @code{.cpp}
  *
- *      struct Date
- *      {
- *          const unsigned short _year;
- *          const unsigned short _month;
- *          const unsigned short _day;
+ *      struct Date {
+ *        const unsigned short year;
+ *        const unsigned short month;
+ *        const unsigned short day;
  *      };
  *
  *      template <>
- *      struct touca::converter<Date>
- *      {
- *          std::shared_ptr<IType> convert(const Date& value)
- *          {
- *              auto out = std::make_shared<ObjectType>();
- *              out->add("year", value._year);
- *              out->add("month", value._month);
- *              out->add("day", value._day);
- *              return out;
- *          }
+ *      struct touca::serializer<Date> {
+ *        std::shared_ptr<IType> serialize(const Date& value) {
+ *          auto out = std::make_shared<ObjectType>();
+ *          out->add("year", value.year);
+ *          out->add("month", value.month);
+ *          out->add("day", value.day);
+ *          return out;
+ *        }
  *      };
  *
  * @endcode
@@ -62,22 +59,19 @@ namespace touca {
  *
  * @code{.cpp}
  *
- *      struct Person
- *      {
- *          const std::string _name;
- *          const Date _birthday;
+ *      struct Person {
+ *        const std::string _name;
+ *        const Date _birthday;
  *      };
  *
  *      template <>
- *      struct touca::converter<Person>
- *      {
- *          std::shared_ptr<IType> convert(const Person& value)
- *          {
- *              auto out = std::make_shared<ObjectType>();
- *              out->add("name", val._name);
- *              out->add("birthday", val._birthday);
- *              return out;
- *          }
+ *      struct touca::serializer<Person> {
+ *        std::shared_ptr<IType> serialize(const Person& value) {
+ *          auto out = std::make_shared<ObjectType>();
+ *          out->add("name", val._name);
+ *          out->add("birthday", val._birthday);
+ *          return out;
+ *        }
  *      };
  *
  *      Person person { "alex", { 1961, 8, 4 } };
@@ -86,7 +80,7 @@ namespace touca {
  * @endcode
  */
 template <typename T, typename = void>
-struct converter {
+struct serializer {
   /**
    * @brief describes logic for handling objects of custom types.
    * @details Implements how object of given type should be decomposed
@@ -97,9 +91,9 @@ struct converter {
    * @return shared pointer to a generic type that the Touca SDK for C++
    *         knows how to handle.
    */
-  std::shared_ptr<IType> convert(const T& value) {
+  std::shared_ptr<IType> serialize(const T& value) {
     static_assert(std::is_same<std::shared_ptr<IType>, T>::value,
-                  "did not find any partial specialization of converter "
+                  "did not find any partial specialization of serializer "
                   "function to convert your value to a Touca type");
     return static_cast<T>(value);
   }
@@ -108,60 +102,60 @@ struct converter {
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 template <typename T>
-struct converter<
+struct serializer<
     T, typename std::enable_if<detail::is_touca_null<T>::value>::type> {
-  std::shared_ptr<IType> convert(const T& value) {
+  std::shared_ptr<IType> serialize(const T& value) {
     std::ignore = value;
     return std::make_shared<NoneType>();
   }
 };
 
 template <typename T>
-struct converter<
+struct serializer<
     T, typename std::enable_if<detail::is_touca_boolean<T>::value>::type> {
-  std::shared_ptr<IType> convert(const T& value) {
+  std::shared_ptr<IType> serialize(const T& value) {
     return std::make_shared<BooleanType>(value);
   }
 };
 
 /**
- * @brief converter specialization that describes how any type that
+ * @brief serializer specialization that describes how any type that
  *        details to touca number specifications should be handled
  *        by the Touca SDK for C++.
  */
 template <typename T>
-struct converter<
+struct serializer<
     T, typename std::enable_if<detail::is_touca_number<T>::value>::type> {
-  std::shared_ptr<IType> convert(const T& value) {
+  std::shared_ptr<IType> serialize(const T& value) {
     return std::make_shared<NumberType<T>>(value);
   }
 };
 
 /**
- * @brief converter specialization that describes how any type that
+ * @brief serializer specialization that describes how any type that
  *        details to touca string specifications should be handled
  *        by the Touca SDK for C++.
  */
 template <typename T>
-struct converter<
+struct serializer<
     T, typename std::enable_if<detail::is_touca_string<T>::value>::type> {
-  std::shared_ptr<IType> convert(const T& value) {
+  std::shared_ptr<IType> serialize(const T& value) {
     return std::make_shared<StringType>(detail::to_string<T>(value));
   }
 };
 
 /**
- * @brief converter specialization that describes how any type that
+ * @brief serializer specialization that describes how any type that
  *        details to touca array specifications should be handled
  *        by the Touca SDK for C++.
  */
 template <typename T>
-struct converter<
+struct serializer<
     T, typename std::enable_if<detail::is_touca_array<T>::value>::type> {
-  std::shared_ptr<IType> convert(const T& value) {
+  std::shared_ptr<IType> serialize(const T& value) {
     auto out = std::make_shared<ArrayType>();
     for (const auto& v : value) {
-      out->add(converter<typename T::value_type>().convert(v));
+      out->add(serializer<typename T::value_type>().serialize(v));
     }
     return out;
   }
