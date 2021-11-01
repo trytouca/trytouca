@@ -47,17 +47,16 @@ std::shared_ptr<IType> deserialize_value(const fbs::TypeWrapper* ptr) {
     case fbs::Type::Object: {
       auto fbsObj = static_cast<const fbs::Object*>(value);
       KeyMap keyMap;
-      for (const auto&& value : *fbsObj->values()) {
-        keyMap.emplace(value->name()->data(),
-                       deserialize_value(value->value()));
+      for (const auto&& item : *fbsObj->values()) {
+        keyMap.emplace(item->name()->data(), deserialize_value(item->value()));
       }
       return std::make_shared<ObjectType>(fbsObj->key()->data(), keyMap);
     }
     case fbs::Type::Array: {
       auto fbsArr = static_cast<const fbs::Array*>(value);
       auto arr = std::make_shared<ArrayType>();
-      for (const auto&& value : *fbsArr->values()) {
-        arr->add(deserialize_value(value));
+      for (const auto&& item : *fbsArr->values()) {
+        arr->add(deserialize_value(item));
       }
       return arr;
     }

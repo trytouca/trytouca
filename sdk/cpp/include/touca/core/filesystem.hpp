@@ -17,7 +17,10 @@ namespace filesystem = std::filesystem;
 #endif
 #ifndef GHC_USE_STD_FS
 #if _WIN32
+#pragma warning(push)
+#pragma warning(disable : 4127)
 #include <ghc/filesystem.hpp>
+#pragma warning(pop)
 #else
 #include <ghc/fs_fwd.hpp>
 #endif

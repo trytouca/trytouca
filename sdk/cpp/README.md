@@ -1,5 +1,6 @@
 # Touca SDK for C++
 
+![Supported Platforms](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-blue.svg)
 [![Latest version](https://img.shields.io/github/v/release/trytouca/touca-cpp)](https://github.com/trytouca/touca-cpp/releases)
 [![License](https://img.shields.io/github/license/trytouca/touca-cpp?color=blue)](https://github.com/trytouca/touca-cpp/blob/main/LICENSE)
 [![Build Status](https://img.shields.io/github/workflow/status/trytouca/touca-cpp/touca-cpp-main)](https://github.com/trytouca/touca-cpp/actions/workflows/main.yml?query=branch:main+event:push)
