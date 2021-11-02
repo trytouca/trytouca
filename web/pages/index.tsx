@@ -36,10 +36,10 @@ type PageContent = {
 
 const content: PageContent = {
   announcement: {
-    action: 'Check it out on GitHub',
-    hidden: false,
-    link: 'https://github.com/trytouca/touca-java',
-    text: 'We released our open-source Touca SDK for Java last week.'
+    action: '',
+    hidden: true,
+    link: '',
+    text: ''
   },
   pitch: {
     title: 'See the side effects of your changes, as you write code.',
