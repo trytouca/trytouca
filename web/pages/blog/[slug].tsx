@@ -2,7 +2,7 @@
 
 import Head from 'next/head';
 import { HiOutlineCalendar, HiOutlineClock } from 'react-icons/hi';
-import remark from 'remark';
+import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 
 import FooterCta from '@/components/footer-cta';
