@@ -38,7 +38,7 @@ async function isAuthenticatedImpl(input: AuthInput): Promise<IUser> {
   // find if the token corresponds to a valid unexpired session for an
   // account that is neither locked nor suspended
 
-  const sessionId = mongoose.Types.ObjectId(payload.sub)
+  const sessionId = new mongoose.Types.ObjectId(payload.sub)
 
   const sessions = await SessionModel.aggregate([
     { $match: { _id: sessionId } },

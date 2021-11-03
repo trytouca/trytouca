@@ -186,9 +186,10 @@ jobs:
 
       - name: build web
         if: steps.changes.outputs.web == 'true'
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
         run: |
           yarn --cwd=web install
-          yarn --cwd=web run next telemetry
           yarn --cwd=web lint
           yarn --cwd=web build
           yarn --cwd=web export

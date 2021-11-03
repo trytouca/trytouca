@@ -1,8 +1,9 @@
 {
-  "name": "Touca Backend",
-  "entryPoints": ["src"],
+  "name": "Touca Server API",
+  "entryPoints": ["./src"],
+  "entryPointStrategy": "expand",
   "out": "./local/docs/internal",
-  "readme": "README.md",
+  "readme": "./README.md",
   "includes": "./",
   "exclude": ["**/dist/**/*", "**/test/**/*", "**/*_generated.ts"],
   "excludeExternals": true

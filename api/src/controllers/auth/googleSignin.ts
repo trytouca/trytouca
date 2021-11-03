@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 import { OAuth2Client } from 'google-auth-library'
 
 import { createUserAccount, createUserSession } from '@/models/auth'
-import { UserModel } from '@/schemas/user'
+import { IUserDocument, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { tracker } from '@/utils/tracker'
@@ -50,7 +50,7 @@ export async function authGoogleSignin(
 
   // create account if google account is not recognized
 
-  let user = await UserModel.findOne({ email: payload.email })
+  let user: IUserDocument = await UserModel.findOne({ email: payload.email })
   if (user) {
     await UserModel.findByIdAndUpdate(user._id, {
       $set: { activatedAt: new Date(), fullname: payload.name }

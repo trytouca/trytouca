@@ -167,9 +167,9 @@ describe('model-message', function () {
   })
   it('allow making message doc if required keys exist', function (done) {
     const messageModel = new MessageModel({
-      batchId: mongoose.Types.ObjectId(),
+      batchId: new mongoose.Types.ObjectId(),
       builtAt: new Date(),
-      elementId: mongoose.Types.ObjectId(),
+      elementId: new mongoose.Types.ObjectId(),
       expiresAt: new Date(),
       submittedAt: new Date()
     })
@@ -194,7 +194,7 @@ describe('model-batch', function () {
   it('allow making result doc if required keys exist', function (done) {
     const batchModel = new BatchModel({
       slug: 'some_batch',
-      suite: mongoose.Types.ObjectId()
+      suite: new mongoose.Types.ObjectId()
     })
     batchModel.superior = batchModel._id
     batchModel.validate(function (err) {
@@ -216,10 +216,10 @@ describe('model-comparison', function () {
   })
   it('allow making comparison doc if required keys exist', function (done) {
     const cmpModel = new ComparisonModel({
-      dstBatchId: mongoose.Types.ObjectId(),
-      dstMessageId: mongoose.Types.ObjectId(),
-      srcBatchId: mongoose.Types.ObjectId(),
-      srcMessageId: mongoose.Types.ObjectId()
+      dstBatchId: new mongoose.Types.ObjectId(),
+      dstMessageId: new mongoose.Types.ObjectId(),
+      srcBatchId: new mongoose.Types.ObjectId(),
+      srcMessageId: new mongoose.Types.ObjectId()
     })
     cmpModel.validate(function (err) {
       expect(err).to.equal(null)
@@ -243,7 +243,7 @@ describe('model-element', function () {
     const elementModel = new ElementModel({
       name: 'Some Element',
       slug: 'some_element',
-      suiteId: mongoose.Types.ObjectId()
+      suiteId: new mongoose.Types.ObjectId()
     })
     elementModel.validate(function (err) {
       expect(err).to.equal(null)
