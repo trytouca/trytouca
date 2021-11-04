@@ -1,7 +1,7 @@
 # Core API of Java SDK
 
 [Previously](./main-api.md), we covered the high-level API of our Java SDK and
-learned how to test a `parseProfile` software using the Touca test framework:
+learned how to test a `findStudent` software using the Touca test framework:
 
 ```java
 import io.touca.Touca;
@@ -9,7 +9,7 @@ import io.touca.Touca;
 public class StudentsTest {
     public static void main(String[] args) {
         Touca.workflow("students_test", (final String username) -> {
-            Student student = Students.parseProfile(username);
+            Student student = Students.findStudent(username);
             // insert code here to describe the behavior
             // and performance of the workflow under test
         });
@@ -44,7 +44,7 @@ public class StudentsTest {
     for (String username : Touca.getTestcases()) {
       Touca.declareTestcase(username);
 
-      Student student = Students.parseProfile(username);
+      Student student = Students.findStudent(username);
       // insert code here to describe the behavior
       // and performance of the workflow under test
 

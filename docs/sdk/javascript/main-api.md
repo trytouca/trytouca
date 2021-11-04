@@ -8,7 +8,7 @@ example that takes the username of a student and returns basic information about
 them, such as their name, date of birth, and GPA.
 
 ```ts
-export async function parse_profile(username: string): Student;
+export async function find_student(username: string): Student;
 ```
 
 where `Student` has the following properties:
@@ -26,12 +26,12 @@ Here's a Touca test we can write for our code under test:
 
 ```ts
 import { touca } from "@touca/node";
-import { parse_profile } from "./students";
+import { find_student } from "./students";
 
 touca.workflow("students_test", async (username: string) => {
-  touca.start_timer("parse_profile");
-  const student = await parse_profile(username);
-  touca.stop_timer("parse_profile");
+  touca.start_timer("find_student");
+  const student = await find_student(username);
+  touca.stop_timer("find_student");
   touca.add_assertion("username", student.username);
   touca.add_result("fullname", student.fullname);
   touca.add_result("birth_date", student.dob);
@@ -49,7 +49,7 @@ can help us detect regressions in future versions of our software.
 
 ## Describing Behavior
 
-For any given username, we can call our `parse_profile` function and capture the
+For any given username, we can call our `find_student` function and capture the
 properties of its output that are expected to remain the same in future versions
 of our software.
 
@@ -60,7 +60,7 @@ touca.add_result("student", student);
 ```
 
 Adding the output object as a single entity works. But what if we decided to add
-a field to the return value of `parse_profile` that reported whether the profile
+a field to the return value of `find_student` that reported whether the profile
 was fetched from the cache?
 
 Since this information may change every time we run our tests, we can choose to
@@ -74,7 +74,7 @@ touca.add_result("gpa", student.gpa);
 ```
 
 This approach allows Touca to report differences in a more helpful format,
-providing analytics for different fields. If we changed our `parse_profile`
+providing analytics for different fields. If we changed our `find_student`
 implementation to always capitalize student names, we could better visualize the
 differences to make sure that only the value associated with key `fullname`
 changes across our test cases.
@@ -111,9 +111,9 @@ Touca can notify us when future changes to our implementation result in
 significantly changes in the measured runtime values.
 
 ```ts
-touca.start_timer("parse_profile");
-const student = parse_profile(username);
-touca.stop_timer("parse_profile");
+touca.start_timer("find_student");
+const student = find_student(username);
+touca.stop_timer("find_student");
 ```
 
 The two functions `start_timer` and `stop_timer` provide fine-grained control
@@ -121,8 +121,8 @@ for runtime measurement. If they feel too verbose, we can opt to use
 `scoped_timer` as an alternatives:
 
 ```ts
-const student = await touca.scoped_timer("parse_profile", () =>
-  parse_profile(username)
+const student = await touca.scoped_timer("find_student", () =>
+  find_student(username)
 );
 ```
 

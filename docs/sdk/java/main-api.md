@@ -8,7 +8,7 @@ example that takes the username of a student and returns basic information about
 them, such as their name, date of birth, and GPA.
 
 ```java
-public static Student parseProfile(final String username);
+public static Student findStudent(final String username);
 ```
 
 where `Student` has the following members:
@@ -32,10 +32,10 @@ import io.touca.Touca;
 public final class StudentsTest {
 
   @Touca.Workflow
-  public void parseProfile(final String username) {
-    Touca.startTimer("parse_profile");
-    Student student = Students.parseProfile(username);
-    Touca.stopTimer("parse_profile");
+  public void findStudent(final String username) {
+    Touca.startTimer("find_student");
+    Student student = Students.findStudent(username);
+    Touca.stopTimer("find_student");
     Touca.addAssertion("username", student.username);
     Touca.addResult("fullname", student.fullname);
     Touca.addResult("birth_date", student.dob);
@@ -57,7 +57,7 @@ can help us detect regressions in future versions of our software.
 
 ## Describing Behavior
 
-For any given username, we can call our `parseProfile` function and capture the
+For any given username, we can call our `findStudent` function and capture the
 properties of its output that are expected to remain the same in future versions
 of our software.
 
@@ -68,7 +68,7 @@ Touca.addResult("student", student);
 ```
 
 Adding the output object as a single entity works. But what if we decided to add
-a field to the return value of `parseProfile` that reported whether the profile
+a field to the return value of `findStudent` that reported whether the profile
 was fetched from the cache?
 
 Since this information may change every time we run our tests, we can choose to
@@ -82,7 +82,7 @@ Touca.addResult("gpa", student.gpa);
 ```
 
 This approach allows Touca to report differences in a more helpful format,
-providing analytics for different fields. If we changed our `parseProfile`
+providing analytics for different fields. If we changed our `findStudent`
 implementation to always capitalize student names, we could better visualize the
 differences to make sure that only the value associated with key `fullname`
 changes across our test cases.
@@ -120,9 +120,9 @@ Touca can notify us when future changes to our implementation result in
 significantly changes in the measured runtime values.
 
 ```java
-Touca.startTimer("parse_profile");
-Student student = parse_profile(username);
-Touca.stopTimer("parse_profile");
+Touca.startTimer("find_student");
+Student student = find_student(username);
+Touca.stopTimer("find_student");
 ```
 
 The two functions `startTimer` and `stopTimer` provide fine-grained control for
@@ -130,8 +130,8 @@ runtime measurement. If they feel too verbose, we can opt to use `scopedTimer`
 as an alternatives:
 
 ```java
-Touca.scopedTimer("parse_profile", () -> {
-    student = Students.parseProfile(username);
+Touca.scopedTimer("find_student", () -> {
+    student = Students.findStudent(username);
 });
 ```
 
@@ -139,8 +139,8 @@ Alternatively, we could use `io.touca.ScopedTimer` in a `try-with-resources`
 statement:
 
 ```java
-try (ScopedTimer timer = ScopedTimer("parse_profile")) {
-    Student student = Students.parseProfile(username);
+try (ScopedTimer timer = ScopedTimer("find_student")) {
+    Student student = Students.findStudent(username);
 }
 ```
 

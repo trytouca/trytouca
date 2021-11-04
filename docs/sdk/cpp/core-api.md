@@ -1,7 +1,7 @@
 # Core API of C++ SDK
 
 [Previously](./main-api.md), we covered the high-level API of our C++ SDK and
-learned how to test a `parse_profile` software using the Touca test framework:
+learned how to test a `find_student` software using the Touca test framework:
 
 ```cpp
 #include "students.hpp"
@@ -10,7 +10,7 @@ learned how to test a `parse_profile` software using the Touca test framework:
 
 void touca::main(const std::string& username)
 {
-    const auto& student = parse_profile(username);
+    const auto& student = find_student(username);
     // insert code here to describe the behavior
     // and performance of the workflow under test
 }
@@ -42,7 +42,7 @@ int main()
   for (const username of touca::get_testcases()) {
     touca::declare_testcase(username);
 
-    const auto& student = parse_profile(username);
+    const auto& student = find_student(username);
     // insert code here to describe the behavior
     // and performance of the workflow under test
 
