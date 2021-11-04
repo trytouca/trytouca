@@ -71,11 +71,11 @@ Features:
 
   ```py
   import touca
-  from code_under_test import parse_profile, calculate_gpa
+  from code_under_test import find_student, calculate_gpa
 
   @touca.Workflow
   def test_students(testcase: str):
-      student = parse_profile(testcase)
+      student = find_student(testcase)
       touca.add_assertion("username", student.username)
       touca.add_result("fullname", student.fullname)
       touca.add_result("birth_date", student.dob)

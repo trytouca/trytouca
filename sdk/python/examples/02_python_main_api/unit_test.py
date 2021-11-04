@@ -1,18 +1,18 @@
-from students import parse_profile, Date
+from students import find_student, Date
 
 
-def test_parse_profile():
-    alice = parse_profile("alice")
+def test_find_student():
+    alice = find_student("alice")
     assert alice.fullname == "Alice Anderson"
     assert alice.dob == Date(2006, 3, 1)
     assert alice.gpa == 3.9
 
-    bob = parse_profile("bob")
+    bob = find_student("bob")
     assert bob.fullname == "Bob Brown"
     assert bob.dob == Date(1996, 6, 31)
     assert bob.gpa == 3.8
 
-    charlie = parse_profile("charlie")
+    charlie = find_student("charlie")
     assert charlie.fullname == "Charlie Clark"
     assert charlie.dob == Date(2003, 9, 19)
     assert charlie.gpa == 3.3

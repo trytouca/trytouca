@@ -1,16 +1,16 @@
 # Touca Python API
 
 In the [previous tutorial](../02_python_main_api), we covered the high-level API
-of our Python SDK and learned how to test a `parse_profile` function using the
+of our Python SDK and learned how to test a `find_student` function using the
 Touca test framework:
 
 ```py
 import touca
-from students import parse_profile
+from students import find_student
 
 @touca.Workflow
 def students_test(username: str):
-    student = parse_profile(username)
+    student = find_student(username)
     # insert code here to describe the behavior
     # and performance of the workflow under test
 
@@ -32,14 +32,14 @@ frameworks.
 
 ```py
 import touca
-from students import parse_profile
+from students import find_student
 
 def main():
     touca.configure()
     for username in touca.get_testcases():
         touca.declare_testcase(username)
 
-        student = parse_profile(username)
+        student = find_student(username)
         # insert code here to describe the behavior
         # and performance of the workflow under test
 
