@@ -37,7 +37,7 @@ export async function calculate_gpa(courses: Course[]) {
   return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
 }
 
-export async function parse_profile(username: string) {
+export async function find_student(username: string) {
   await new Promise((v) => setTimeout(v, 200 + Math.random() * 50));
   const student = students.find((v) => v.username === username);
   if (!student) {

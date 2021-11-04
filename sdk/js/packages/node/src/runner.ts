@@ -12,10 +12,10 @@
  *
  * ```js
  *  import { touca } from '@touca/node';
- *  import { parse_profile, calculate_gpa } from  './code_under_test';
+ *  import { find_student, calculate_gpa } from  './code_under_test';
  *
  *  touca.workflow('test_students', (testcase: string) => {
- *    const student = parse_profile(testcase);
+ *    const student = find_student(testcase);
  *    touca.add_assertion('username', student.username);
  *    touca.add_result('fullname', student.fullname);
  *    touca.add_result('birth_date', student.dob);
@@ -189,7 +189,7 @@ function _parse_cli_options(args: string[]): RunnerOptions {
       },
       testcase: {
         type: 'array',
-        desc: 'Single testcase to feed to the workflow',
+        desc: 'One or more testcases to feed to the workflow',
         conflicts: 'testcase-file'
       },
       'testcase-file': {
