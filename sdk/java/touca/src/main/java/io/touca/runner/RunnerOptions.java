@@ -19,7 +19,9 @@ public final class RunnerOptions extends Options {
   /**
    * Creates an instance without setting any configuration option.
    */
-  public RunnerOptions() {}
+  public RunnerOptions() {
+    super();
+  }
 
   /**
    * Creates an instance with a callback function that lets you set a subset of
@@ -27,7 +29,8 @@ public final class RunnerOptions extends Options {
    *
    * @param callback callback to set configuration options
    */
-  public RunnerOptions(Consumer<RunnerOptions> callback) {
+  public RunnerOptions(final Consumer<RunnerOptions> callback) {
+    super();
     callback.accept(this);
   }
 

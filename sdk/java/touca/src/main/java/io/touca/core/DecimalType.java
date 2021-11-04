@@ -8,18 +8,20 @@ import com.google.gson.JsonPrimitive;
 
 public final class DecimalType extends ToucaType {
 
-  private Double value;
+  final private Double value;
 
   public DecimalType(final Double value) {
+    super();
     this.value = value;
   }
 
   public DecimalType(final Float value) {
+    super();
     this.value = Double.valueOf(value);
   }
 
   @Override
-  public final ToucaType.Types type() {
+  public ToucaType.Types type() {
     return ToucaType.Types.Number;
   }
 

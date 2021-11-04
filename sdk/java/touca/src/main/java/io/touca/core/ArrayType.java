@@ -9,21 +9,21 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 
 public final class ArrayType extends ToucaType {
-  private List<ToucaType> elements = new ArrayList<ToucaType>();
+  final private List<ToucaType> elements = new ArrayList<>();
 
   public void add(final ToucaType value) {
     elements.add(value);
   }
 
   @Override
-  public final ToucaType.Types type() {
+  public ToucaType.Types type() {
     return ToucaType.Types.Array;
   }
 
   @Override
   public JsonElement json() {
-    JsonArray array = new JsonArray();
-    for (ToucaType element : elements) {
+    final JsonArray array = new JsonArray();
+    for (final ToucaType element : elements) {
       array.add(element.json());
     }
     return array;
@@ -31,7 +31,7 @@ public final class ArrayType extends ToucaType {
 
   @Override
   public int serialize(final FlatBufferBuilder builder) {
-    final List<Integer> items = new ArrayList<Integer>(this.elements.size());
+    final List<Integer> items = new ArrayList<>(this.elements.size());
     for (final ToucaType element : this.elements) {
       items.add(element.serialize(builder));
     }

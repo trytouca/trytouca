@@ -21,14 +21,14 @@ import io.touca.core.Schema.ResultType;
  */
 public class Case {
 
-  private String testCase;
-  private String teamSlug;
-  private String testSuite;
-  private String version;
-  private String builtAt;
-  private Map<String, ResultEntry> results = new HashMap<String, ResultEntry>();
-  private Map<String, Long> tics = new HashMap<String, Long>();
-  private Map<String, Long> tocs = new HashMap<String, Long>();
+  final private String testCase;
+  final private String teamSlug;
+  final private String testSuite;
+  final private String version;
+  final private String builtAt;
+  final private Map<String, ResultEntry> results = new HashMap<>();
+  final private Map<String, Long> tics = new HashMap<>();
+  final private Map<String, Long> tocs = new HashMap<>();
   private static Map<ResultCategory, Integer> resultTypes =
       new HashMap<ResultCategory, Integer>() {
         {
@@ -112,17 +112,17 @@ public class Case {
    */
   public void addArrayElement(final String key, final ToucaType element) {
     if (!this.results.containsKey(key)) {
-      ArrayType value = new ArrayType();
+      final ArrayType value = new ArrayType();
       value.add(element);
       this.results.put(key, new ResultEntry(value, ResultCategory.Check));
       return;
     }
-    ResultEntry entry = this.results.get(key);
+    final ResultEntry entry = this.results.get(key);
     if (entry.type != ResultCategory.Check
         || entry.value.type() != ToucaType.Types.Array) {
       throw new IllegalArgumentException("specified key has a different type");
     }
-    ArrayType value = (ArrayType) entry.value;
+    final ArrayType value = (ArrayType) entry.value;
     value.add(element);
     this.results.get(key).value = value;
   }
@@ -135,16 +135,16 @@ public class Case {
    */
   public void addHitCount(final String key) {
     if (!this.results.containsKey(key)) {
-      IntegerType value = new IntegerType(1l);
+      final IntegerType value = new IntegerType(1l);
       this.results.put(key, new ResultEntry(value, ResultCategory.Check));
       return;
     }
-    ResultEntry entry = this.results.get(key);
+    final ResultEntry entry = this.results.get(key);
     if (entry.value.type() != ToucaType.Types.Number) {
       throw new IllegalArgumentException(
           "specified key is associated with a result of a different type");
     }
-    IntegerType value = (IntegerType) entry.value;
+    final IntegerType value = (IntegerType) entry.value;
     value.increment();
   }
 
@@ -158,7 +158,7 @@ public class Case {
    * @param milliseconds duration of this measurement in milliseconds
    */
   public void addMetric(final String key, final Long milliseconds) {
-    long timePoint = Instant.now().toEpochMilli();
+    final long timePoint = Instant.now().toEpochMilli();
     this.tics.put(key, timePoint);
     this.tocs.put(key, timePoint + milliseconds);
   }
@@ -204,7 +204,7 @@ public class Case {
 
     final JsonArray jsonResults = new JsonArray();
     final JsonArray jsonAssertions = new JsonArray();
-    for (Map.Entry<String, ResultEntry> result : results.entrySet()) {
+    for (final Map.Entry<String, ResultEntry> result : results.entrySet()) {
       final ResultEntry value = result.getValue();
       final JsonObject obj = new JsonObject();
       obj.addProperty("key", result.getKey());
@@ -215,11 +215,12 @@ public class Case {
           break;
         default:
           jsonResults.add(obj);
+          break;
       }
     }
 
     final JsonArray jsonMetrics = new JsonArray();
-    for (Entry<String, ToucaType> entry : metrics()) {
+    for (final Entry<String, ToucaType> entry : metrics()) {
       final JsonObject jsonMetric = new JsonObject();
       jsonMetric.addProperty("key", entry.getKey());
       jsonMetric.add("value", entry.getValue().json());
@@ -260,7 +261,7 @@ public class Case {
     Schema.Metadata.addBuiltAt(builder, metadata.get("builtAt"));
     final int fbsMetadata = Schema.Metadata.endMetadata(builder);
 
-    final List<Integer> resultEntries = new ArrayList<Integer>(results.size());
+    final List<Integer> resultEntries = new ArrayList<>(results.size());
     for (final Map.Entry<String, ResultEntry> entry : results.entrySet()) {
       final int fbsKey = builder.createString(entry.getKey());
       final int fbsValue = entry.getValue().value.serialize(builder);
@@ -277,7 +278,7 @@ public class Case {
     final int fbsResults = Schema.Results.endResults(builder);
 
     final List<SimpleEntry<String, ToucaType>> rMetrics = metrics();
-    final List<Integer> metricEntries = new ArrayList<Integer>(rMetrics.size());
+    final List<Integer> metricEntries = new ArrayList<>(rMetrics.size());
     for (final SimpleEntry<String, ToucaType> entry : rMetrics) {
       final int fbsKey = builder.createString(entry.getKey());
       final int fbsValue = entry.getValue().serialize(builder);
@@ -306,9 +307,8 @@ public class Case {
    *
    */
   private List<SimpleEntry<String, ToucaType>> metrics() {
-    final List<SimpleEntry<String, ToucaType>> metrics =
-        new ArrayList<SimpleEntry<String, ToucaType>>();
-    for (Map.Entry<String, Long> entry : tics.entrySet()) {
+    final List<SimpleEntry<String, ToucaType>> metrics = new ArrayList<>();
+    for (final Map.Entry<String, Long> entry : tics.entrySet()) {
       final String key = entry.getKey();
       final Long tic = entry.getValue();
       if (!tocs.containsKey(key)) {

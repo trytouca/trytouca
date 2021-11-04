@@ -10,10 +10,10 @@ plugins {
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.8.8")
+    implementation("com.google.code.gson:gson:2.8.9")
     implementation("com.google.flatbuffers:flatbuffers-java:2.0.3")
-    implementation("commons-cli:commons-cli:1.4")
-    testImplementation(platform("org.junit:junit-bom:5.8.0"))
+    implementation("commons-cli:commons-cli:1.5.0")
+    testImplementation(platform("org.junit:junit-bom:5.8.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
@@ -66,8 +66,10 @@ tasks {
 
     pmd {
         isConsoleOutput = false
-        toolVersion = "6.38.0"
+        toolVersion = "6.40.0"
         isIgnoreFailures = true
+        ruleSetFiles = files("../config/pmd/myRuleSet.xml")
+        ruleSets = emptyList()
     }
 
     spotbugs {

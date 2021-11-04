@@ -24,7 +24,7 @@ import io.touca.exceptions.ServerException;
  * Contains logic for communicating with the Touca server.
  */
 public final class Transport {
-  private Options options;
+  final private Options options;
   private String token;
 
   /**
@@ -83,7 +83,7 @@ public final class Transport {
    */
   private void handshake() {
     final Response response = getRequest("/platform");
-    if (response.code != 200) {
+    if (response.code != HttpURLConnection.HTTP_OK) {
       throw new ServerException("could not communicate with server");
     }
     final JsonElement element = JsonParser.parseString(response.content);
@@ -97,7 +97,7 @@ public final class Transport {
   /**
    *
    */
-  private final String readResponse(final InputStream inputStream)
+  private String readResponse(final InputStream inputStream)
       throws IOException {
     final StringBuilder builder = new StringBuilder();
     try (BufferedReader reader = new BufferedReader(
@@ -112,7 +112,7 @@ public final class Transport {
   /**
    *
    */
-  private final HttpURLConnection makeConnection(final String path)
+  private HttpURLConnection makeConnection(final String path)
       throws IOException {
     final URL url = new URL(options.apiUrl + path);
     final HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -130,7 +130,7 @@ public final class Transport {
   /**
    *
    */
-  private final Response getRequest(final String path) {
+  private Response getRequest(final String path) {
     try {
       final HttpURLConnection con = makeConnection(path);
       con.setRequestMethod("GET");
@@ -144,8 +144,8 @@ public final class Transport {
   /**
    *
    */
-  private final Response postRequest(final String path,
-      final String contentType, final byte[] content) {
+  private Response postRequest(final String path, final String contentType,
+      final byte[] content) {
     try {
       final HttpURLConnection con = makeConnection(path);
       con.setDoOutput(true);
@@ -153,8 +153,8 @@ public final class Transport {
       con.setRequestProperty("Content-Type", contentType);
       con.connect();
       if (content.length != 0) {
-        try (OutputStream os = con.getOutputStream()) {
-          os.write(content, 0, content.length);
+        try (OutputStream stream = con.getOutputStream()) {
+          stream.write(content, 0, content.length);
         }
       }
       return new Response(con.getResponseCode(),
@@ -177,9 +177,9 @@ public final class Transport {
     final String content = String.format("{\"key\":\"%s\"}", options.apiKey);
     final Response response = postRequest("/client/signin", "application/json",
         content.getBytes(StandardCharsets.UTF_8));
-    if (response.code == 401) {
+    if (response.code == HttpURLConnection.HTTP_UNAUTHORIZED) {
       throw new ServerException("authentication failed: API key invalid");
-    } else if (response.code != 200) {
+    } else if (response.code != HttpURLConnection.HTTP_OK) {
       throw new ServerException("authentication failed: invalid response");
     }
     final JsonElement element = JsonParser.parseString(response.content);
@@ -196,12 +196,12 @@ public final class Transport {
   public List<String> getTestcases() {
     final Response response = getRequest(
         String.format("/element/%s/%s", options.team, options.suite));
-    if (response.code != 200) {
+    if (response.code != HttpURLConnection.HTTP_OK) {
       throw new ServerException("failed to obtain list of test cases");
     }
     final JsonElement content = JsonParser.parseString(response.content);
     final JsonArray array = content.getAsJsonArray();
-    final List<String> elements = new ArrayList<String>();
+    final List<String> elements = new ArrayList<>();
     for (int i = 0; i < array.size(); i++) {
       final JsonObject element = array.get(i).getAsJsonObject();
       elements.add(element.get("name").getAsString());
@@ -217,7 +217,7 @@ public final class Transport {
   public void post(final byte[] content) {
     final Response response =
         postRequest("/client/submit", "application/octet-stream", content);
-    if (response.code != 204) {
+    if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
       throw new ServerException("failed to submit test results");
     }
   }
@@ -231,7 +231,7 @@ public final class Transport {
         options.suite, options.version);
     final Response response =
         postRequest(path, "application/json", new byte[0]);
-    if (response.code != 204) {
+    if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
       throw new ServerException("failed to seal this version");
     }
   }

@@ -32,123 +32,127 @@ public final class Schema {
 
   public static final class TypeWrapper extends Table {
 
-    public static void startTypeWrapper(FlatBufferBuilder builder) {
+    public static void startTypeWrapper(final FlatBufferBuilder builder) {
       builder.startTable(2);
     }
 
-    public static void addValueType(FlatBufferBuilder builder, byte valueType) {
+    public static void addValueType(final FlatBufferBuilder builder,
+        final byte valueType) {
       builder.addByte(0, valueType, 0);
     }
 
-    public static void addValue(FlatBufferBuilder builder, int valueOffset) {
+    public static void addValue(final FlatBufferBuilder builder,
+        final int valueOffset) {
       builder.addOffset(1, valueOffset, 0);
     }
 
-    public static int endTypeWrapper(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endTypeWrapper(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class TBool extends Table {
 
-    public static void startBool(FlatBufferBuilder builder) {
+    public static void startBool(final FlatBufferBuilder builder) {
       builder.startTable(1);
     }
 
-    public static void addValue(FlatBufferBuilder builder, boolean value) {
+    public static void addValue(final FlatBufferBuilder builder,
+        final boolean value) {
       builder.addBoolean(0, value, false);
     }
 
-    public static int endBool(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endBool(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
 
   }
 
   public static final class TInt extends Table {
-    public static void startTInt(FlatBufferBuilder builder) {
+    public static void startTInt(final FlatBufferBuilder builder) {
       builder.startTable(1);
     }
 
-    public static void addValue(FlatBufferBuilder builder, long value) {
+    public static void addValue(final FlatBufferBuilder builder,
+        final long value) {
       builder.addLong(0, value, 0L);
     }
 
-    public static int endTInt(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endTInt(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class TDouble extends Table {
 
-    public static void startTDouble(FlatBufferBuilder builder) {
+    public static void startTDouble(final FlatBufferBuilder builder) {
       builder.startTable(1);
     }
 
-    public static void addValue(FlatBufferBuilder builder, double value) {
+    public static void addValue(final FlatBufferBuilder builder,
+        final double value) {
       builder.addDouble(0, value, 0.0);
     }
 
-    public static int endTDouble(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endTDouble(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class TString extends Table {
 
-    public static void startTString(FlatBufferBuilder builder) {
+    public static void startTString(final FlatBufferBuilder builder) {
       builder.startTable(1);
     }
 
-    public static void addValue(FlatBufferBuilder builder, int valueOffset) {
+    public static void addValue(final FlatBufferBuilder builder,
+        final int valueOffset) {
       builder.addOffset(0, valueOffset, 0);
     }
 
-    public static int endTString(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endTString(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class TObjectMember extends Table {
 
-    public static void startTObjectMember(FlatBufferBuilder builder) {
+    public static void startTObjectMember(final FlatBufferBuilder builder) {
       builder.startTable(2);
     }
 
-    public static void addName(FlatBufferBuilder builder, int nameOffset) {
+    public static void addName(final FlatBufferBuilder builder,
+        final int nameOffset) {
       builder.addOffset(0, nameOffset, 0);
     }
 
-    public static void addValue(FlatBufferBuilder builder, int valueOffset) {
+    public static void addValue(final FlatBufferBuilder builder,
+        final int valueOffset) {
       builder.addOffset(1, valueOffset, 0);
     }
 
-    public static int endTObjectMember(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endTObjectMember(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class TObject extends Table {
 
-    public static void startTObject(FlatBufferBuilder builder) {
+    public static void startTObject(final FlatBufferBuilder builder) {
       builder.startTable(2);
     }
 
-    public static void addKey(FlatBufferBuilder builder, int keyOffset) {
+    public static void addKey(final FlatBufferBuilder builder,
+        final int keyOffset) {
       builder.addOffset(0, keyOffset, 0);
     }
 
-    public static void addValues(FlatBufferBuilder builder, int valuesOffset) {
+    public static void addValues(final FlatBufferBuilder builder,
+        final int valuesOffset) {
       builder.addOffset(1, valuesOffset, 0);
     }
 
-    public static int createValuesVector(FlatBufferBuilder builder,
+    public static int createValuesVector(final FlatBufferBuilder builder,
         int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
@@ -156,235 +160,232 @@ public final class Schema {
       return builder.endVector();
     }
 
-    public static int endTObject(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endTObject(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class TArray extends Table {
 
-    public static void startTArray(FlatBufferBuilder builder) {
+    public static void startTArray(final FlatBufferBuilder builder) {
       builder.startTable(1);
     }
 
-    public static void addValues(FlatBufferBuilder builder, int valuesOffset) {
+    public static void addValues(final FlatBufferBuilder builder,
+        final int valuesOffset) {
       builder.addOffset(0, valuesOffset, 0);
     }
 
-    public static int createValuesVector(FlatBufferBuilder builder,
-        int[] data) {
+    public static int createValuesVector(final FlatBufferBuilder builder,
+        final int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
         builder.addOffset(data[i]);
       return builder.endVector();
     }
 
-    public static int endTArray(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endTArray(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class Result extends Table {
 
-    public static void startResult(FlatBufferBuilder builder) {
+    public static void startResult(final FlatBufferBuilder builder) {
       builder.startTable(3);
     }
 
-    public static void addKey(FlatBufferBuilder builder, int keyOffset) {
+    public static void addKey(final FlatBufferBuilder builder,
+        final int keyOffset) {
       builder.addOffset(0, keyOffset, 0);
     }
 
-    public static void addValue(FlatBufferBuilder builder, int valueOffset) {
+    public static void addValue(final FlatBufferBuilder builder,
+        final int valueOffset) {
       builder.addOffset(1, valueOffset, 0);
     }
 
-    public static void addTyp(FlatBufferBuilder builder, int typ) {
+    public static void addTyp(final FlatBufferBuilder builder, final int typ) {
       builder.addByte(2, (byte) typ, (byte) 1);
     }
 
-    public static int endResult(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endResult(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class Metric extends Table {
 
-    public static void startMetric(FlatBufferBuilder builder) {
+    public static void startMetric(final FlatBufferBuilder builder) {
       builder.startTable(2);
     }
 
-    public static void addKey(FlatBufferBuilder builder, int keyOffset) {
+    public static void addKey(final FlatBufferBuilder builder,
+        final int keyOffset) {
       builder.addOffset(0, keyOffset, 0);
     }
 
-    public static void addValue(FlatBufferBuilder builder, int valueOffset) {
+    public static void addValue(final FlatBufferBuilder builder,
+        final int valueOffset) {
       builder.addOffset(1, valueOffset, 0);
     }
 
-    public static int endMetric(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endMetric(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class Results extends Table {
 
-    public static void startResults(FlatBufferBuilder builder) {
+    public static void startResults(final FlatBufferBuilder builder) {
       builder.startTable(1);
     }
 
-    public static void addEntries(FlatBufferBuilder builder,
-        int entriesOffset) {
+    public static void addEntries(final FlatBufferBuilder builder,
+        final int entriesOffset) {
       builder.addOffset(0, entriesOffset, 0);
     }
 
-    public static int createEntriesVector(FlatBufferBuilder builder,
-        int[] data) {
+    public static int createEntriesVector(final FlatBufferBuilder builder,
+        final int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
         builder.addOffset(data[i]);
       return builder.endVector();
     }
 
-    public static int endResults(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endResults(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class Metrics extends Table {
 
-    public static void startMetrics(FlatBufferBuilder builder) {
+    public static void startMetrics(final FlatBufferBuilder builder) {
       builder.startTable(1);
     }
 
-    public static void addEntries(FlatBufferBuilder builder,
+    public static void addEntries(final FlatBufferBuilder builder,
         int entriesOffset) {
       builder.addOffset(0, entriesOffset, 0);
     }
 
-    public static int createEntriesVector(FlatBufferBuilder builder,
-        int[] data) {
+    public static int createEntriesVector(final FlatBufferBuilder builder,
+        final int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
         builder.addOffset(data[i]);
       return builder.endVector();
     }
 
-    public static int endMetrics(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endMetrics(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class Metadata extends Table {
 
-    public static void startMetadata(FlatBufferBuilder builder) {
+    public static void startMetadata(final FlatBufferBuilder builder) {
       builder.startTable(6);
     }
 
-    public static void addTestsuite(FlatBufferBuilder builder,
-        int testsuiteOffset) {
+    public static void addTestsuite(final FlatBufferBuilder builder,
+        final int testsuiteOffset) {
       builder.addOffset(0, testsuiteOffset, 0);
     }
 
-    public static void addVersion(FlatBufferBuilder builder,
-        int versionOffset) {
+    public static void addVersion(final FlatBufferBuilder builder,
+        final int versionOffset) {
       builder.addOffset(1, versionOffset, 0);
     }
 
-    public static void addTestcase(FlatBufferBuilder builder,
-        int testcaseOffset) {
+    public static void addTestcase(final FlatBufferBuilder builder,
+        final int testcaseOffset) {
       builder.addOffset(3, testcaseOffset, 0);
     }
 
-    public static void addBuiltAt(FlatBufferBuilder builder,
-        int builtAtOffset) {
+    public static void addBuiltAt(final FlatBufferBuilder builder,
+        final int builtAtOffset) {
       builder.addOffset(4, builtAtOffset, 0);
     }
 
-    public static void addTeamslug(FlatBufferBuilder builder,
-        int teamslugOffset) {
+    public static void addTeamslug(final FlatBufferBuilder builder,
+        final int teamslugOffset) {
       builder.addOffset(5, teamslugOffset, 0);
     }
 
-    public static int endMetadata(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endMetadata(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class Message extends Table {
 
-    public static void startMessage(FlatBufferBuilder builder) {
+    public static void startMessage(final FlatBufferBuilder builder) {
       builder.startTable(4);
     }
 
-    public static void addMetadata(FlatBufferBuilder builder,
-        int metadataOffset) {
+    public static void addMetadata(final FlatBufferBuilder builder,
+        final int metadataOffset) {
       builder.addOffset(0, metadataOffset, 0);
     }
 
-    public static void addResults(FlatBufferBuilder builder,
-        int resultsOffset) {
+    public static void addResults(final FlatBufferBuilder builder,
+        final int resultsOffset) {
       builder.addOffset(1, resultsOffset, 0);
     }
 
-    public static void addMetrics(FlatBufferBuilder builder,
-        int metricsOffset) {
+    public static void addMetrics(final FlatBufferBuilder builder,
+        final int metricsOffset) {
       builder.addOffset(3, metricsOffset, 0);
     }
 
-    public static int endMessage(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endMessage(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class MessageBuffer extends Table {
 
-    public static void startMessageBuffer(FlatBufferBuilder builder) {
+    public static void startMessageBuffer(final FlatBufferBuilder builder) {
       builder.startTable(1);
     }
 
-    public static void addBuf(FlatBufferBuilder builder, int bufOffset) {
+    public static void addBuf(final FlatBufferBuilder builder,
+        final int bufOffset) {
       builder.addOffset(0, bufOffset, 0);
     }
 
-    public static int createBufVector(FlatBufferBuilder builder, byte[] data) {
+    public static int createBufVector(final FlatBufferBuilder builder,
+        final byte[] data) {
       return builder.createByteVector(data);
     }
 
-    public static int endMessageBuffer(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endMessageBuffer(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
   public static final class Messages extends Table {
-    public static void startMessages(FlatBufferBuilder builder) {
+    public static void startMessages(final FlatBufferBuilder builder) {
       builder.startTable(1);
     }
 
-    public static void addMessages(FlatBufferBuilder builder,
-        int messagesOffset) {
+    public static void addMessages(final FlatBufferBuilder builder,
+        final int messagesOffset) {
       builder.addOffset(0, messagesOffset, 0);
     }
 
-    public static int createMessagesVector(FlatBufferBuilder builder,
-        int[] data) {
+    public static int createMessagesVector(final FlatBufferBuilder builder,
+        final int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
         builder.addOffset(data[i]);
       return builder.endVector();
     }
 
-    public static int endMessages(FlatBufferBuilder builder) {
-      int o = builder.endTable();
-      return o;
+    public static int endMessages(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 

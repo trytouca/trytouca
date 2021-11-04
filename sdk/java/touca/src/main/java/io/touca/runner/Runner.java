@@ -34,7 +34,7 @@ import org.apache.commons.cli.ParseException;
  */
 public class Runner {
 
-  private final List<ClassMethod> workflows = new ArrayList<ClassMethod>();
+  private final List<ClassMethod> workflows = new ArrayList<>();
   private final RunnerOptions options = new RunnerOptions();
   private final Statistics stats = new Statistics();
   private final Timer timer = new Timer();
@@ -43,8 +43,8 @@ public class Runner {
    *
    */
   private static final class Timer {
-    private final Map<String, Long> tics = new HashMap<String, Long>();
-    private final Map<String, Long> times = new HashMap<String, Long>();
+    private final Map<String, Long> tics = new HashMap<>();
+    private final Map<String, Long> times = new HashMap<>();
 
     /**
      *
@@ -57,7 +57,7 @@ public class Runner {
      *
      */
     public void toc(final String key) {
-      Long tic = tics.get(key);
+      final Long tic = tics.get(key);
       if (tic != null) {
         times.put(key, System.currentTimeMillis() - tic);
       }
@@ -75,7 +75,7 @@ public class Runner {
    *
    */
   private static final class Statistics {
-    private final Map<String, Long> values = new HashMap<String, Long>();
+    private final Map<String, Long> values = new HashMap<>();
 
     /**
      *
@@ -104,7 +104,7 @@ public class Runner {
     /**
      *
      */
-    ClassMethod(Class<?> clazz, Method method) {
+    ClassMethod(final Class<?> clazz, final Method method) {
       this.clazz = clazz;
       this.method = method;
     }
@@ -118,14 +118,14 @@ public class Runner {
    * @return this instance
    */
   public Runner parse(final String[] mainArgs) {
-    CommandLineParser parser = new DefaultParser();
+    final CommandLineParser parser = new DefaultParser();
     try {
-      CommandLine cmd = parser.parse(buildOptions(), mainArgs);
+      final CommandLine cmd = parser.parse(buildOptions(), mainArgs);
 
-      BiFunction<String, Boolean, Boolean> parseBoolean =
+      final BiFunction<String, Boolean, Boolean> parseBoolean =
           (String a, Boolean b) -> {
-            return cmd.hasOption(a) && cmd.getOptionValue(a) == null ? true
-                : Boolean.parseBoolean(cmd.getOptionValue(a, b.toString()));
+            return (cmd.hasOption(a) && cmd.getOptionValue(a) == null)
+                || Boolean.parseBoolean(cmd.getOptionValue(a, b.toString()));
           };
 
       options.apply(new RunnerOptions(x -> {
@@ -161,7 +161,7 @@ public class Runner {
   public Runner findWorkflows(final Class<?> mainClass) {
     final String className = mainClass.getCanonicalName();
     final String packageName =
-        className.substring(0, className.lastIndexOf("."));
+        className.substring(0, className.lastIndexOf('.'));
     final Iterable<Class<?>> classes = findClasses(packageName);
     for (final Class<?> clazz : classes) {
       for (final Method method : clazz.getMethods()) {
@@ -200,11 +200,10 @@ public class Runner {
     if (!client.configure(options)) {
       throw new ConfigException(client.configurationError());
     }
-    if (!Paths.get(options.outputDirectory).toFile().exists()) {
-      if (!Paths.get(options.outputDirectory).toFile().mkdirs()) {
-        throw new ConfigException(String.format(
-            "failed to create directory: %s%n", options.outputDirectory));
-      }
+    if (!Paths.get(options.outputDirectory).toFile().exists()
+        && !Paths.get(options.outputDirectory).toFile().mkdirs()) {
+      throw new ConfigException(String
+          .format("failed to create directory: %s%n", options.outputDirectory));
     }
     updateTestcases(client);
   }
@@ -226,7 +225,7 @@ public class Runner {
       }
     }
     if (options.testcaseFile != null) {
-      Path file = Paths.get(options.testcaseFile);
+      final Path file = Paths.get(options.testcaseFile);
       if (!file.toFile().exists() || !file.toFile().isFile()) {
         throw new ConfigException(String.format(
             "Specified testcase file \"%s\" does not exist", file.toString()));
@@ -266,7 +265,7 @@ public class Runner {
    * @param workflow workflow to be executed
    */
   private void runWorkflow(final Client client, final ClassMethod workflow) {
-    boolean isOffline = (options.offline != null && options.offline == true)
+    final boolean isOffline = (options.offline != null && options.offline)
         || options.apiKey == null || options.apiUrl == null;
 
     System.out.printf("%nTouca Test Framework%nSuite: %s%nRevision: %s%n%n",
@@ -313,9 +312,9 @@ public class Runner {
       }
 
       timer.toc(testcase);
-      stats.increment(errors.size() == 0 ? "pass" : "fail");
+      stats.increment(errors.isEmpty() ? "pass" : "fail");
 
-      if (errors.size() == 0 && options.saveAsBinary) {
+      if (errors.isEmpty() && options.saveAsBinary) {
         final Path path = testcaseDirectory.resolve("touca.bin");
         try {
           client.saveBinary(path, new String[] {testcase});
@@ -324,7 +323,7 @@ public class Runner {
               path.toString(), ex.getMessage()));
         }
       }
-      if (errors.size() == 0 && options.saveAsJson) {
+      if (errors.isEmpty() && options.saveAsJson) {
         final Path path = testcaseDirectory.resolve("touca.json");
         try {
           client.saveJson(path, new String[] {testcase});
@@ -333,13 +332,13 @@ public class Runner {
               path.toString(), ex.getMessage()));
         }
       }
-      if (errors.size() == 0 && !isOffline) {
+      if (errors.isEmpty() && !isOffline) {
         client.post();
       }
 
       System.out.printf(" (%3d of %-3d) %-32s (%s, %d ms)%n", index + 1,
           options.testcases.length, testcase,
-          errors.size() == 0 ? "pass" : "fail", timer.count(testcase));
+          errors.isEmpty() ? "pass" : "fail", timer.count(testcase));
       for (final String error : errors) {
         System.out.printf("%13s %s%n", "-", error);
       }
@@ -380,7 +379,7 @@ public class Runner {
    *
    */
   private Options buildOptions() {
-    Options options = new Options();
+    final Options options = new Options();
     options.addOption(null, "api-key", true,
         "API Key issued by the Touca server");
     options.addOption(null, "api-url", true,
@@ -423,19 +422,20 @@ public class Runner {
    * @param packageName The base package
    * @return List of classes in a given package name
    */
-  private static List<Class<?>> findClasses(String packageName) {
-    List<Class<?>> classes = new ArrayList<Class<?>>();
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    String path = packageName.replace('.', '/');
+  private static List<Class<?>> findClasses(final String packageName) {
+    final List<Class<?>> classes = new ArrayList<>();
+    final ClassLoader classLoader =
+        Thread.currentThread().getContextClassLoader();
+    final String path = packageName.replace('.', '/');
     try {
-      Enumeration<URL> resources = classLoader.getResources(path);
-      List<File> dirs = new ArrayList<File>();
+      final Enumeration<URL> resources = classLoader.getResources(path);
+      final List<File> dirs = new ArrayList<>();
       while (resources.hasMoreElements()) {
-        URL resource = resources.nextElement();
-        URI uri = new URI(resource.toString());
+        final URL resource = resources.nextElement();
+        final URI uri = new URI(resource.toString());
         dirs.add(new File(uri.getPath()));
       }
-      for (File directory : dirs) {
+      for (final File directory : dirs) {
         classes.addAll(findClasses(directory, packageName));
       }
     } catch (URISyntaxException | IOException ex) {
@@ -453,7 +453,7 @@ public class Runner {
    */
   private static List<Class<?>> findClasses(final File directory,
       final String packageName) {
-    final List<Class<?>> classes = new ArrayList<Class<?>>();
+    final List<Class<?>> classes = new ArrayList<>();
     if (!directory.exists()) {
       return classes;
     }

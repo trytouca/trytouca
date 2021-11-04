@@ -16,9 +16,9 @@ public final class StudentsTest {
     }
     for (String username : Touca.getTestcases()) {
       Touca.declareTestcase(username);
-      Touca.startTimer("parse_profile");
-      Student student = Students.parseProfile(username);
-      Touca.stopTimer("parse_profile");
+      Touca.startTimer("find_student");
+      Student student = Students.findStudent(username);
+      Touca.stopTimer("find_student");
 
       Touca.addTypeAdapter(Course.class, course -> {
         return course.name;

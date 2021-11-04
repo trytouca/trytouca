@@ -11,6 +11,7 @@ import java.util.AbstractMap.SimpleEntry;
  * @see TypeAdapter
  */
 public final class TypeAdapterContext {
+  /** list of data points within a given object */
   private final List<SimpleEntry<String, Object>> members = new ArrayList<>();
 
   /**
@@ -28,7 +29,7 @@ public final class TypeAdapterContext {
    *
    * @return iterator to members of this object.
    */
-  public final Iterator<SimpleEntry<String, Object>> iterator() {
+  public Iterator<SimpleEntry<String, Object>> iterator() {
     return members.iterator();
   }
 }

@@ -17,7 +17,7 @@ package io.touca;
  */
 public final class ScopedTimer implements AutoCloseable {
   private final String key;
-  private boolean closed = false;
+  private boolean closed;
 
   /**
    * Creates an instance that automatically starts runtime measurement.

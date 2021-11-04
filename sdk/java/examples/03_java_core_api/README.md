@@ -1,8 +1,8 @@
 # Touca Java API
 
 In the [previous tutorial](../02_java_main_api), we covered the high-level API
-of our Java SDK and learned how to test a `parseProfile` function using the
-Touca test framework:
+of our Java SDK and learned how to test a `findStudent` function using the Touca
+test framework:
 
 ```java
 import io.touca.Touca;
@@ -10,8 +10,8 @@ import io.touca.Touca;
 public final class StudentsTest {
 
   @Touca.Workflow
-  public void parseProfile(final String username) {
-    Student student = Students.parseProfile(username);
+  public void findStudent(final String username) {
+    Student student = Students.findStudent(username);
     // insert code here to describe the behavior
     // and performance of the workflow under test
   }
@@ -44,7 +44,7 @@ public class StudentsTest {
         });
         for (String username : Touca.getTestcases()) {
             Touca.declareTestcase(username);
-            Student student = Students.parseProfile(username);
+            Student student = Students.findStudent(username);
 
             // insert code here to describe the behavior
             // and performance of the workflow under test

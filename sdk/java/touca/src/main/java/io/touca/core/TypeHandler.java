@@ -15,24 +15,21 @@ import io.touca.TypeAdapter;
 import io.touca.TypeAdapterContext;
 
 public final class TypeHandler {
-  private Map<Class<?>, Function<Object, ToucaType>> primitives;
-  private Map<Class<?>, TypeAdapter<? super Object>> adapters;
+  final private Map<Class<?>, Function<Object, ToucaType>> primitives =
+      new HashMap<>();
+  final private Map<Class<?>, TypeAdapter<? super Object>> adapters =
+      new HashMap<>();
 
   public TypeHandler() {
-    this.primitives = new HashMap<Class<?>, Function<Object, ToucaType>>() {
-      {
-        put(Boolean.class, x -> new BooleanType((Boolean) x));
-        put(String.class, x -> new StringType((String) x));
-        put(Integer.class, x -> new IntegerType((Integer) x));
-        put(Long.class, x -> new IntegerType((Long) x));
-        put(Double.class, x -> new DecimalType((Double) x));
-        put(Float.class, x -> new DecimalType((Float) x));
-      }
-    };
-    this.adapters = new HashMap<Class<?>, TypeAdapter<? super Object>>();
+    this.primitives.put(Boolean.class, x -> new BooleanType((Boolean) x));
+    this.primitives.put(String.class, x -> new StringType((String) x));
+    this.primitives.put(Integer.class, x -> new IntegerType((Integer) x));
+    this.primitives.put(Long.class, x -> new IntegerType((Long) x));
+    this.primitives.put(Double.class, x -> new DecimalType((Double) x));
+    this.primitives.put(Float.class, x -> new DecimalType((Float) x));
   }
 
-  public final ToucaType transform(final Object value) {
+  public ToucaType transform(final Object value) {
     if (value instanceof ToucaType) {
       return (ToucaType) value;
     }
@@ -55,7 +52,7 @@ public final class TypeHandler {
     }
     if (value instanceof Iterable) {
       final ArrayType arr = new ArrayType();
-      for (Object element : (Iterable<?>) value) {
+      for (final Object element : (Iterable<?>) value) {
         arr.add(transform(element));
       }
       return arr;

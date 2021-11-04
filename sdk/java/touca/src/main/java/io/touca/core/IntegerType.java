@@ -11,10 +11,12 @@ public final class IntegerType extends ToucaType {
   private Long value;
 
   public IntegerType(final Integer value) {
+    super();
     this.value = Long.valueOf(value);
   }
 
   public IntegerType(final Long value) {
+    super();
     this.value = value;
   }
 
@@ -23,7 +25,7 @@ public final class IntegerType extends ToucaType {
   }
 
   @Override
-  public final ToucaType.Types type() {
+  public ToucaType.Types type() {
     return ToucaType.Types.Number;
   }
 

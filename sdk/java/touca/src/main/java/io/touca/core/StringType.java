@@ -7,14 +7,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
 public final class StringType extends ToucaType {
-  private String value;
+  final private String value;
 
   public StringType(final String value) {
+    super();
     this.value = value;
   }
 
   @Override
-  public final ToucaType.Types type() {
+  public ToucaType.Types type() {
     return ToucaType.Types.String;
   }
 

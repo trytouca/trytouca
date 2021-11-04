@@ -15,6 +15,6 @@ public interface TypeAdapter<T> {
    * @param src the object to be converted
    * @return any converted object
    */
-  public abstract Object adapt(final T src);
+  Object adapt(final T src);
 
 }

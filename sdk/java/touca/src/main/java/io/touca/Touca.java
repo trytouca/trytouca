@@ -17,6 +17,7 @@ import io.touca.runner.Runner;
 /**
  * Entry-point to the Touca SDK for Java.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public final class Touca {
 
   private static final Client instance = new Client();
@@ -405,7 +406,7 @@ public final class Touca {
    * @param adapter logic to convert an instance of a given type to an object
    */
   public static <T> void addTypeAdapter(final Class<T> type,
-      TypeAdapter<T> adapter) {
+      final TypeAdapter<T> adapter) {
     instance.addTypeAdapter(type, adapter);
   }
 
@@ -423,7 +424,7 @@ public final class Touca {
    * @throws StateException when called on the client that is not configured to
    *         communicate with the Touca server.
    */
-  public static void post() throws StateException {
+  public static void post() {
     instance.post();
   }
 
@@ -441,7 +442,7 @@ public final class Touca {
    * @throws StateException when called on the client that is not configured to
    *         communicate with the Touca server.
    */
-  public static void seal() throws StateException {
+  public static void seal() {
     instance.seal();
   }
 

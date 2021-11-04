@@ -10,22 +10,22 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public final class ObjectType extends ToucaType {
-  private List<SimpleEntry<String, ToucaType>> members =
-      new ArrayList<SimpleEntry<String, ToucaType>>();
+  final private List<SimpleEntry<String, ToucaType>> members =
+      new ArrayList<>();
 
   public void add(final String key, final ToucaType value) {
     members.add(new SimpleEntry<String, ToucaType>(key, value));
   }
 
   @Override
-  public final ToucaType.Types type() {
+  public ToucaType.Types type() {
     return ToucaType.Types.Object;
   }
 
   @Override
   public JsonElement json() {
     final JsonObject obj = new JsonObject();
-    for (SimpleEntry<String, ToucaType> member : members) {
+    for (final SimpleEntry<String, ToucaType> member : members) {
       obj.add(member.getKey(), member.getValue().json());
     }
     return obj;
@@ -33,8 +33,8 @@ public final class ObjectType extends ToucaType {
 
   @Override
   public int serialize(final FlatBufferBuilder builder) {
-    final int fbsName = builder.createString("some-name");
-    final List<Integer> membersOffsets = new ArrayList<Integer>();
+    final int fbsName = builder.createString("");
+    final List<Integer> membersOffsets = new ArrayList<>();
     for (final SimpleEntry<String, ToucaType> entry : this.members) {
       final int memberKey = builder.createString(entry.getKey());
       final int memberValue = entry.getValue().serialize(builder);

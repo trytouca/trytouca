@@ -47,7 +47,9 @@ public class Options {
    * passed to the Client, would configure the Client with minimum
    * functionality.
    */
-  public Options() {}
+  public Options() {
+    // intentionally left empty
+  }
 
   /**
    * Creates an Options instance with a callback function that lets you set a
@@ -55,7 +57,7 @@ public class Options {
    *
    * @param callback callback to set configurations options
    */
-  public Options(Consumer<Options> callback) {
+  public Options(final Consumer<Options> callback) {
     callback.accept(this);
   }
 
@@ -80,7 +82,7 @@ public class Options {
    *         for this instance.
    */
   public final Map<String, String> entrySet() {
-    final Map<String, String> entries = new HashMap<String, String>();
+    final Map<String, String> entries = new HashMap<>();
     final BiConsumer<String, String> insertString = (name, value) -> {
       if (value != null) {
         entries.put(name, value);
@@ -111,7 +113,7 @@ public class Options {
    *         instance but are not set in this instance.
    */
   public final Map<String, String> diff(final Options incoming) {
-    final Map<String, String> output = new HashMap<String, String>();
+    final Map<String, String> output = new HashMap<>();
     final Map<String, String> base = this.entrySet();
     final Map<String, String> head = incoming.entrySet();
     final String[] fields = {"apiUrl", "apiKey", "team", "suite", "version",
@@ -205,7 +207,7 @@ public class Options {
         .create();
     final String content;
     try {
-      byte[] encoded = Files.readAllBytes(configFile.toPath());
+      final byte[] encoded = Files.readAllBytes(configFile.toPath());
       content = new String(encoded, StandardCharsets.UTF_8);
       incoming.merge(gson.fromJson(content, Options.class));
     } catch (IOException ex) {
@@ -220,8 +222,7 @@ public class Options {
    */
   private void applyEnvironmentVariables() {
     final Options existing = this;
-    final Map<String, Consumer<String>> options =
-        new HashMap<String, Consumer<String>>();
+    final Map<String, Consumer<String>> options = new HashMap<>();
     options.put("TOUCA_API_KEY", k -> existing.apiKey = k);
     options.put("TOUCA_API_URL", k -> existing.apiUrl = k);
     options.put("TOUCA_TEST_VERSION", k -> existing.version = k);
@@ -253,15 +254,13 @@ public class Options {
       }
       final URL url = new URL(existing.apiUrl);
       segments = url.getPath().split("/@/");
-      String urlPath = String.join("/", Arrays.asList(segments[0].split("/"))
-          .stream().filter(x -> !x.isEmpty()).collect(Collectors.toList()));
+      final String urlPath =
+          String.join("/", Arrays.asList(segments[0].split("/")).stream()
+              .filter(x -> !x.isEmpty()).collect(Collectors.toList()));
       final URI uri = new URI(url.getProtocol(), url.getAuthority(),
           urlPath.isEmpty() ? urlPath : "/" + urlPath, null, null);
       existing.apiUrl = uri.toURL().toString();
-    } catch (MalformedURLException ex) {
-      throw new ConfigException(
-          String.format("api url is invalid: %s", ex.getMessage()));
-    } catch (URISyntaxException ex) {
+    } catch (MalformedURLException | URISyntaxException ex) {
       throw new ConfigException(
           String.format("api url is invalid: %s", ex.getMessage()));
     }
@@ -313,11 +312,11 @@ public class Options {
    */
   private void validateOptions() {
     final Options existing = this;
-    final Map<String, Boolean> expectedKeys = new HashMap<String, Boolean>();
+    final Map<String, Boolean> expectedKeys = new HashMap<>();
     expectedKeys.put("team", existing.team != null);
     expectedKeys.put("suite", existing.suite != null);
     expectedKeys.put("version", existing.version != null);
-    boolean hasHandshake = existing.offline == null || existing.offline == true;
+    final boolean hasHandshake = existing.offline == null || existing.offline;
     if (hasHandshake && (existing.apiKey != null || existing.apiUrl != null)) {
       expectedKeys.put("apiKey", existing.apiKey != null);
       expectedKeys.put("apiUrl", existing.apiUrl != null);
@@ -379,7 +378,7 @@ public class Options {
      *
      */
     private void updateStringField(final JsonObject obj, final String key,
-        Consumer<String> field) {
+        final Consumer<String> field) {
       if (!obj.has(key)) {
         return;
       }
@@ -396,7 +395,7 @@ public class Options {
      *
      */
     private void updateBooleanField(final JsonObject obj, final String key,
-        Consumer<Boolean> field) throws JsonParseException {
+        final Consumer<Boolean> field) throws JsonParseException {
       if (!obj.has(key)) {
         return;
       }

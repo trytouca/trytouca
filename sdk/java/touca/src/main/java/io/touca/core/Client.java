@@ -23,16 +23,17 @@ import io.touca.exceptions.StateException;
 /**
  *
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class Client {
 
-  private Map<String, Case> cases = new HashMap<String, Case>();
-  private boolean configured = false;
-  private String configurationError;
-  private Options options = new Options();
+  final private Map<String, Case> cases = new HashMap<>();
+  private boolean configured;
+  private String configError;
+  final private Options options = new Options();
   private String activeCase;
   private Transport transport;
-  private TypeHandler typeHandler = new TypeHandler();
-  private Map<Long, String> threadMap = new HashMap<Long, String>();
+  final private TypeHandler typeHandler = new TypeHandler();
+  final private Map<Long, String> threadMap = new HashMap<>();
 
   /**
    * Configures the touca client based on configuration options set via the
@@ -57,12 +58,12 @@ public class Client {
    * @return true if client is ready to capture data
    */
   public boolean configure(final Options options) {
-    this.configurationError = null;
+    this.configError = null;
     try {
       this.options.apply(options);
       configureTransport(this.options);
     } catch (ConfigException ex) {
-      this.configurationError =
+      this.configError =
           String.format("Configuration failed: %s", ex.getMessage());
       return false;
     }
@@ -74,13 +75,12 @@ public class Client {
    *
    */
   private void configureTransport(final Options options) {
-    if (options.offline != null && options.offline == true) {
+    if (options.offline != null && options.offline) {
       return;
     }
     final String[] checks = {"team", "suite", "version", "apiKey", "apiUrl"};
     final String[] missing = Arrays.stream(checks)
-        .filter(x -> !options.entrySet().containsKey(x) == true)
-        .toArray(String[]::new);
+        .filter(x -> !options.entrySet().containsKey(x)).toArray(String[]::new);
     if (missing.length != 0) {
       return;
     }
@@ -120,7 +120,7 @@ public class Client {
    * @return short description of the most recent configuration error
    */
   public String configurationError() {
-    return this.configurationError;
+    return this.configError;
   }
 
   /**
@@ -155,8 +155,8 @@ public class Client {
       return;
     }
     if (!this.cases.containsKey(name)) {
-      Case testcase = new Case(name, this.options.team, this.options.suite,
-          this.options.version);
+      final Case testcase = new Case(name, this.options.team,
+          this.options.suite, this.options.version);
       this.cases.put(name, testcase);
     }
     this.threadMap.put(Thread.currentThread().getId(), name);
@@ -300,7 +300,8 @@ public class Client {
     if (!this.transport.hasToken()) {
       throw new StateException("client not authenticated");
     }
-    byte[] content = this.serialize(this.cases.values().toArray(new Case[] {}));
+    final byte[] content =
+        this.serialize(this.cases.values().toArray(new Case[] {}));
     this.transport.post(content);
   }
 
@@ -379,7 +380,7 @@ public class Client {
    *
    */
   private Case[] save(final Path path, final String[] cases) {
-    Path parent = path.getParent();
+    final Path parent = path.getParent();
     if (parent != null && parent.toFile().mkdirs()) {
       // TODO: log that directory was created
     }

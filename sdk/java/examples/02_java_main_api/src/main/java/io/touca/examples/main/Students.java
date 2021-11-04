@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public final class Students {
 
-  public static Student parseProfile(final String username) {
+  public static Student findStudent(final String username) {
     sleep(200);
     StudentData data = StudentData.of(username);
     return new Student(data.username, data.fullname, data.dob,
