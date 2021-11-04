@@ -1,15 +1,15 @@
 # Core API of JavaScript SDK
 
 [Previously](./main-api.md), we covered the high-level API of our Node.js SDK
-and learned how to test a `parse_profile` software using the Touca test
+and learned how to test a `find_student` software using the Touca test
 framework:
 
 ```ts
 import { touca } from "@touca/node";
-import { parse_profile } from "./students";
+import { find_student } from "./students";
 
 touca.workflow("students_test", async (username: string) => {
-  const student = await parse_profile(username);
+  const student = await find_student(username);
   // insert code here to describe the behavior
   // and performance of the workflow under test
 });
@@ -31,14 +31,14 @@ test frameworks.
 
 ```ts
 import { touca } from "@touca/node";
-import { parse_profile } from "./students";
+import { find_student } from "./students";
 
 (async () => {
   await touca.configure();
   for (const username of await touca.get_testcases()) {
     touca.declare_testcase(username);
 
-    const student = await parse_profile(username);
+    const student = await find_student(username);
     // insert code here to describe the behavior
     // and performance of the workflow under test
 

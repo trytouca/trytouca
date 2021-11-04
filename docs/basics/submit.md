@@ -21,7 +21,7 @@ personal information of students based on their username.
 {% code %}
 
 ```python
-def parse_profile(username: str) -> Student:
+def find_student(username: str) -> Student:
 ```
 
 {% endcode %}
@@ -33,7 +33,7 @@ def parse_profile(username: str) -> Student:
 {% code %}
 
 ```cpp
-Student parse_profile(const std::string& username);
+Student find_student(const std::string& username);
 ```
 
 {% endcode %}
@@ -45,7 +45,7 @@ Student parse_profile(const std::string& username);
 {% code %}
 
 ```typescript
-async function parse_profile(username: string): Promise<Student>;
+async function find_student(username: string): Promise<Student>;
 ```
 
 {% endcode %}
@@ -57,7 +57,7 @@ async function parse_profile(username: string): Promise<Student>;
 {% code %}
 
 ```java
-public static Student parseProfile(final String username);
+public static Student findStudent(final String username);
 ```
 
 {% endcode %}
@@ -174,7 +174,7 @@ Check out the `students` module for a possible "current" implementation:
 {% code title="python/02_python_main_api/students.py" %}
 
 ```python
-def parse_profile(username: str) -> Student:
+def find_student(username: str) -> Student:
     sleep(0.2)
     data = next((k for k in students if k[0] == username), None)
     if not data:
@@ -191,7 +191,7 @@ def parse_profile(username: str) -> Student:
 {% code title="cpp/02_cpp_main_api/students.cpp" %}
 
 ```cpp
-Student parse_profile(const std::string& username)
+Student find_student(const std::string& username)
 {
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
   if (!students.count(username)) {
@@ -216,7 +216,7 @@ Student parse_profile(const std::string& username)
 {% code title="javascript/02_node_main_api/students.ts" %}
 
 ```typescript
-export async function parse_profile(username: string): Promise<Student> {
+export async function find_student(username: string): Promise<Student> {
   await new Promise((v) => setTimeout(v, 200));
   const data = students.find((v) => v.username === username);
   if (!data) {
@@ -236,7 +236,7 @@ export async function parse_profile(username: string): Promise<Student> {
 {% code title="java/02_java_main_api/Students.java" %}
 
 ```java
-public static Student parseProfile(final String username) {
+public static Student findStudent(final String username) {
   Thread.sleep(200);
   for (Student student : Students.students) {
     if (student.username.equals(username)) {
@@ -286,11 +286,11 @@ Here is a possible implementation for our first Touca test code:
 
 ```python
 import touca
-from students import parse_profile
+from students import find_student
 
 @touca.Workflow
 def students_test(username: str):
-    student = parse_profile(username)
+    student = find_student(username)
     touca.add_assertion("username", student.username)
     touca.add_result("fullname", student.fullname)
     touca.add_result("birth_date", student.dob)
@@ -315,7 +315,7 @@ if __name__ == "__main__":
 
 void touca::main(const std::string& username)
 {
-    const auto& student = parse_profile(username);
+    const auto& student = find_student(username);
     touca::add_assertion("username", student.username);
     touca::add_result("fullname", student.fullname);
     touca::add_result("birth_date", student.dob);
@@ -333,10 +333,10 @@ void touca::main(const std::string& username)
 
 ```typescript
 import { touca } from "@touca/node";
-import { parse_profile } from "./students";
+import { find_student } from "./students";
 
 touca.workflow("students_test", async (username: string) => {
-  const student = await parse_profile(username);
+  const student = await find_student(username);
   touca.add_assertion("username", student.username);
   touca.add_result("fullname", student.fullname);
   touca.add_result("birth_date", student.dob);
@@ -360,8 +360,8 @@ import io.touca.Touca;
 public final class StudentsTest {
 
   @Touca.Workflow
-  public void parseProfile(final String username) {
-    Student student = Students.parseProfile(username);
+  public void findStudent(final String username) {
+    Student student = Students.findStudent(username);
     Touca.addAssertion("username", student.username);
     Touca.addResult("fullname", student.fullname);
     Touca.addResult("birth_date", student.dob);
@@ -384,9 +384,9 @@ public final class StudentsTest {
 Notice the absence of hard-coded inputs and expected outputs. Each Touca
 workflow, takes a short, unique, and URL-friendly testcase name, maps that to a
 corresponding input and passes that input to our code under test. In the above
-code snippet, once we receive the output of our `parse_profile` workflow, we use
+code snippet, once we receive the output of our `find_student` workflow, we use
 `add_result` to track various characteristics of that output. Touca notifies us
-if these characteristics change in a future version of our `parse_profile`
+if these characteristics change in a future version of our `find_student`
 workflow.
 
 We can track any number of variables in each Touca test workflow. More
@@ -487,13 +487,13 @@ as shown below.
 
 ```python
 import touca
-from students import parse_profile
+from students import find_student
 
 @touca.Workflow
 def students_test(username: str):
-    touca.start_timer("parse_profile")
-    student = parse_profile(username)
-    touca.stop_timer("parse_profile")
+    touca.start_timer("find_student")
+    student = find_student(username)
+    touca.stop_timer("find_student")
     touca.add_assertion("username", student.username)
     touca.add_result("fullname", student.fullname)
     touca.add_result("birth_date", student.dob)
@@ -519,7 +519,7 @@ if __name__ == "__main__":
 
 void touca::main(const std::string& username)
 {
-    const auto& student = parse_profile(username);
+    const auto& student = find_student(username);
     touca::add_assertion("username", student.username);
     touca::add_result("fullname", student.fullname);
     touca::add_result("birth_date", student.dob);
@@ -538,12 +538,12 @@ void touca::main(const std::string& username)
 
 ```typescript
 import { touca } from "@touca/node";
-import { parse_profile } from "./students";
+import { find_student } from "./students";
 
 touca.workflow("students_test", async (username: string) => {
-  touca.start_timer("parse_profile");
-  const student = await parse_profile(username);
-  touca.stop_timer("parse_profile");
+  touca.start_timer("find_student");
+  const student = await find_student(username);
+  touca.stop_timer("find_student");
   touca.add_assertion("username", student.username);
   touca.add_result("fullname", student.fullname);
   touca.add_result("birth_date", student.dob);
@@ -568,10 +568,10 @@ import io.touca.Touca;
 public final class StudentsTest {
 
   @Touca.Workflow
-  public void parseProfile(final String username) {
-    Touca.startTimer("parse_profile");
-    Student student = Students.parseProfile(username);
-    Touca.stopTimer("parse_profile");
+  public void findStudent(final String username) {
+    Touca.startTimer("find_student");
+    Student student = Students.findStudent(username);
+    Touca.stopTimer("find_student");
     Touca.addAssertion("username", student.username);
     Touca.addResult("fullname", student.fullname);
     Touca.addResult("birth_date", student.dob);
