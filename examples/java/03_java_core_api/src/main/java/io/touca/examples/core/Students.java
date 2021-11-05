@@ -19,7 +19,7 @@ public final class Students {
               new Course[] {new Course("math", 2.9),
                   new Course("computers", 3.7)})};
 
-  public static Student parseProfile(final String username) {
+  public static Student findStudent(final String username) {
     Students.sleep(200);
     for (Student student : Students.students) {
       if (student.username.equals(username)) {

@@ -1,13 +1,13 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import touca
-from students import parse_profile
+from students import find_student
 
 
 @touca.Workflow
 def students_test(username: str):
-    with touca.scoped_timer("parse_profile"):
-        student = parse_profile(username)
+    with touca.scoped_timer("find_student"):
+        student = find_student(username)
     touca.add_assertion("username", student.username)
     touca.add_result("fullname", student.fullname)
     touca.add_result("birth_date", student.dob)

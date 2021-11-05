@@ -6,20 +6,20 @@
 #include "touca/touca.hpp"
 
 template <>
-struct touca::converter<Date> {
-  std::shared_ptr<types::IType> convert(const Date& value) {
-    auto out = std::make_shared<types::ObjectType>();
-    out->add("year", value._year);
-    out->add("month", value._month);
-    out->add("day", value._day);
+struct touca::serializer<Date> {
+  std::shared_ptr<IType> serialize(const Date& value) {
+    auto out = std::make_shared<ObjectType>();
+    out->add("year", value.year);
+    out->add("month", value.month);
+    out->add("day", value.day);
     return out;
   }
 };
 
 template <>
-struct touca::converter<Course> {
-  std::shared_ptr<types::IType> convert(const Course& value) {
-    auto out = std::make_shared<types::ObjectType>();
+struct touca::serializer<Course> {
+  std::shared_ptr<IType> serialize(const Course& value) {
+    auto out = std::make_shared<ObjectType>();
     out->add("name", value.name);
     out->add("grade", value.grade);
     return out;
@@ -27,9 +27,9 @@ struct touca::converter<Course> {
 };
 
 template <>
-struct touca::converter<Student> {
-  std::shared_ptr<types::IType> convert(const Student& value) {
-    auto out = std::make_shared<types::ObjectType>();
+struct touca::serializer<Student> {
+  std::shared_ptr<IType> serialize(const Student& value) {
+    auto out = std::make_shared<ObjectType>();
     out->add("username", value.username);
     out->add("fullname", value.fullname);
     out->add("birth_date", value.dob);

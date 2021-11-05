@@ -1,16 +1,16 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { touca } from '@touca/node';
-import { Course, calculate_gpa, parse_profile } from './students';
+import { Course, calculate_gpa, find_student } from './students';
 
 (async () => {
   await touca.configure();
   for (const username of await touca.get_testcases()) {
     touca.declare_testcase(username);
 
-    touca.start_timer('parse_profile');
-    const student = await parse_profile(username);
-    touca.stop_timer('parse_profile');
+    touca.start_timer('find_student');
+    const student = await find_student(username);
+    touca.stop_timer('find_student');
 
     touca.add_assertion('username', student.username);
     touca.add_result('fullname', student.fullname);
@@ -22,7 +22,7 @@ import { Course, calculate_gpa, parse_profile } from './students';
       touca.add_hit_count('number of courses');
     }
 
-    await touca.scoped_timer('parse_profile', async () =>
+    await touca.scoped_timer('find_student', async () =>
       touca.add_result('gpa', await calculate_gpa(student.courses))
     );
     touca.add_metric('external_source', 1500);

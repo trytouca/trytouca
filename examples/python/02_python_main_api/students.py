@@ -48,7 +48,7 @@ def calculate_gpa(courses: List[Course]):
     return sum(k.grade for k in courses) / len(courses) if courses else 0
 
 
-def parse_profile(username: str) -> Student:
+def find_student(username: str) -> Student:
     sleep(0.2)
     data = next((k for k in students if k[0] == username), None)
     if not data:

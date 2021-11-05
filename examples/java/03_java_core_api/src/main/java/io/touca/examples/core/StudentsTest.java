@@ -7,18 +7,20 @@ import io.touca.Touca;
 
 public final class StudentsTest {
   public static void main(String[] args) throws IOException {
-    Touca.configure();
+    Touca.configure(options -> {
+      options.offline = true;
+    });
     if (!Touca.isConfigured()) {
       System.err.print(Touca.configurationError());
       System.exit(1);
     }
     for (String username : Touca.getTestcases()) {
       Touca.declareTestcase(username);
-      Touca.startTimer("parse_profile");
-      Student student = Students.parseProfile(username);
-      Touca.stopTimer("parse_profile");
+      Touca.startTimer("find_student");
+      Student student = Students.findStudent(username);
+      Touca.stopTimer("find_student");
 
-      Touca.addSerializer(Course.class, course -> {
+      Touca.addTypeAdapter(Course.class, course -> {
         return course.name;
       });
       Touca.addAssertion("username", student.username);

@@ -51,7 +51,7 @@ function calculate_gpa(courses: Course[]): number {
     : 0.0;
 }
 
-export async function parse_profile(username: string): Promise<Student> {
+export async function find_student(username: string): Promise<Student> {
   await new Promise((v) => setTimeout(v, 100));
   const data = students.find((v) => v.username === username);
   if (!data) {

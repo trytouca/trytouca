@@ -15,9 +15,9 @@ int main() {
   for (const auto& username : touca::get_testcases()) {
     touca::declare_testcase(username);
 
-    touca::start_timer("parse_profile");
-    const auto& student = parse_profile(username);
-    touca::stop_timer("parse_profile");
+    touca::start_timer("find_student");
+    const auto& student = find_student(username);
+    touca::stop_timer("find_student");
 
     touca::assume("username", student.username);
     touca::check("fullname", student.fullname);
