@@ -88,7 +88,7 @@ public class Case {
    * @param key name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
-  public void addResult(final String key, final ToucaType value) {
+  public void check(final String key, final ToucaType value) {
     this.results.put(key, new ResultEntry(value, ResultCategory.Check));
   }
 
@@ -99,7 +99,7 @@ public class Case {
    * @param key name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
-  public void addAssertion(final String key, final ToucaType value) {
+  public void assume(final String key, final ToucaType value) {
     this.results.put(key, new ResultEntry(value, ResultCategory.Assert));
   }
 

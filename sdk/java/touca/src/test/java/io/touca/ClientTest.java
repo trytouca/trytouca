@@ -54,14 +54,14 @@ public final class ClientTest {
     client.declareTestcase("some-case");
     client.addTypeAdapter(CustomDate.class, data -> data.toString());
     client.perform(x -> {
-      x.addAssertion("username", client.transform("potter"));
-      x.addResult("is_famous", client.transform(true));
-      x.addResult("tall", client.transform(6.1));
-      x.addResult("age", client.transform(21));
-      x.addResult("name", client.transform("harry"));
-      x.addResult("dob", client.transform(new CustomDate(2000, 1, 1)));
-      x.addResult("parents", client.transform(parents));
-      x.addResult("courses", client.transform(courses));
+      x.assume("username", client.transform("potter"));
+      x.check("is_famous", client.transform(true));
+      x.check("tall", client.transform(6.1));
+      x.check("age", client.transform(21));
+      x.check("name", client.transform("harry"));
+      x.check("dob", client.transform(new CustomDate(2000, 1, 1)));
+      x.check("parents", client.transform(parents));
+      x.check("courses", client.transform(courses));
       for (final String course : courses) {
         x.addArrayElement("course-names", client.transform(course));
         x.addHitCount("course-count");
@@ -113,8 +113,8 @@ public final class ClientTest {
     Client client = new Client();
     client.declareTestcase("some-case");
     client.perform(
-        x -> x.addResult("some-result", client.transform("some-value")));
-    client.perform(x -> x.addAssertion("some-assertion",
+        x -> x.check("some-result", client.transform("some-value")));
+    client.perform(x -> x.assume("some-assertion",
         client.transform("some-other-value")));
     client.perform(x -> x.addMetric("some-metric", 10l));
     assertDoesNotThrow(() -> {
@@ -133,8 +133,8 @@ public final class ClientTest {
     });
     client.declareTestcase("some-case");
     client.perform(
-        x -> x.addResult("some-result", client.transform("some-value")));
-    client.perform(x -> x.addAssertion("some-assertion",
+        x -> x.check("some-result", client.transform("some-value")));
+    client.perform(x -> x.assume("some-assertion",
         client.transform("some-other-value")));
     client.perform(x -> x.addMetric("some-metric", 10l));
     assertDoesNotThrow(() -> {

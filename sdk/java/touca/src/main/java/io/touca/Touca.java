@@ -172,9 +172,9 @@ public final class Touca {
    * @param key name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
-  public static <T> void addResult(final String key, final T value) {
+  public static <T> void check(final String key, final T value) {
     instance.perform(element -> {
-      element.addResult(key, instance.transform(value));
+      element.check(key, instance.transform(value));
     });
   }
 
@@ -186,9 +186,9 @@ public final class Touca {
    * @param key name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
-  public static <T> void addAssertion(final String key, final T value) {
+  public static <T> void assume(final String key, final T value) {
     instance.perform(element -> {
-      element.addAssertion(key, instance.transform(value));
+      element.assume(key, instance.transform(value));
     });
   }
 
@@ -221,8 +221,8 @@ public final class Touca {
    *     }
    * }
    * if (!primes.isEmpty()) {
-   *     Touca.addResult("prime numbers", primes);
-   *     Touca.addResult("number of primes", primes.size());
+   *     Touca.check("prime numbers", primes);
+   *     Touca.check("number of primes", primes.size());
    * }
    * </code>
    * </pre>
@@ -279,8 +279,8 @@ public final class Touca {
    *     }
    * }
    * if (!primes.isEmpty()) {
-   *     Touca.addResult("prime numbers", primes);
-   *     Touca.addResult("number of primes", primes.size());
+   *     Touca.check("prime numbers", primes);
+   *     Touca.check("number of primes", primes.size());
    * }
    * </code>
    * </pre>

@@ -15,7 +15,7 @@ public final class Students {
   }
 
   private static double calculateGPA(final Course[] courses) {
-    Touca.addResult("courses", courses);
+    Touca.check("courses", courses);
     double sum =
         Arrays.asList(courses).stream().mapToDouble(item -> item.grade).sum();
     return courses.length == 0 ? 0.0 : sum / courses.length;
