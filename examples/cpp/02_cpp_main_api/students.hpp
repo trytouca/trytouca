@@ -7,9 +7,9 @@
 #include "touca/touca.hpp"
 
 struct Date {
-  unsigned short _year;
-  unsigned short _month;
-  unsigned short _day;
+  unsigned short year;
+  unsigned short month;
+  unsigned short day;
 };
 
 struct Course {
@@ -24,4 +24,4 @@ struct Student {
   float gpa;
 };
 
-Student parse_profile(const std::string& username);
+Student find_student(const std::string& username);

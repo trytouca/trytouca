@@ -10,7 +10,7 @@ application {
 }
 
 dependencies {
-    implementation("io.touca:touca:0.3.0")
+    implementation("io.touca:touca:0.3.1")
 }
 
 tasks.withType<Jar> {

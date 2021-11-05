@@ -1,7 +1,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import touca
-from students import Course, calculate_gpa, parse_profile
+from students import Course, calculate_gpa, find_student
 
 
 def main():
@@ -14,9 +14,9 @@ def main():
     for username in touca.get_testcases():
         touca.declare_testcase(username)
 
-        touca.start_timer("parse_profile")
-        student = parse_profile(username)
-        touca.stop_timer("parse_profile")
+        touca.start_timer("find_student")
+        student = find_student(username)
+        touca.stop_timer("find_student")
 
         touca.add_assertion("username", student.username)
         touca.add_result("fullname", student.fullname)

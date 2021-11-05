@@ -32,7 +32,7 @@ float calculate_gpa(const std::vector<Course>& courses) {
   return courses.empty() ? 0.0f : sum / courses.size();
 }
 
-Student parse_profile(const std::string& username) {
+Student find_student(const std::string& username) {
   std::this_thread::sleep_for(std::chrono::milliseconds(200 + rand() % 50));
   if (!students.count(username)) {
     throw std::invalid_argument("no student found for username: " + username);

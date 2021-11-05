@@ -7,7 +7,7 @@
 #include <thread>
 
 #include "nlohmann/json.hpp"
-#include "touca/devkit/filesystem.hpp"
+#include "touca/core/filesystem.hpp"
 #include "touca/extra/scoped_timer.hpp"
 #include "touca/touca.hpp"
 
@@ -15,10 +15,7 @@
 #undef GetObject
 #endif
 
-/**
- *
- */
-Student parse_profile(const std::string& path) {
+Student find_student(const std::string& path) {
   std::ifstream ifs(path, std::ios::in);
   std::string content((std::istreambuf_iterator<char>(ifs)),
                       std::istreambuf_iterator<char>());
@@ -31,16 +28,16 @@ Student parse_profile(const std::string& path) {
     throw std::runtime_error("failed to parse profile");
   }
 
-  if (parsed.count("name") && parsed["name"].is_string()) {
+  if (parsed.contains("name") && parsed["name"].is_string()) {
     student.fullname = parsed["name"].get<std::string>();
   }
-  if (parsed.count("dob") && parsed.is_object()) {
+  if (parsed.contains("dob") && parsed.is_object()) {
     const auto y = static_cast<unsigned short>(parsed["dob"]["y"].get<int>());
     const auto m = static_cast<unsigned short>(parsed["dob"]["m"].get<int>());
     const auto d = static_cast<unsigned short>(parsed["dob"]["d"].get<int>());
     student.dob = {y, m, d};
   }
-  if (parsed.count("courses") && parsed.is_array()) {
+  if (parsed.contains("courses") && parsed.is_array()) {
     std::vector<Course> courses;
     for (const auto& course : parsed["courses"]) {
       courses.emplace_back(Course{course["name"].get<std::string>(),
@@ -51,9 +48,6 @@ Student parse_profile(const std::string& path) {
   return student;
 }
 
-/**
- *
- */
 float calculate_gpa(const std::vector<Course>& courses) {
   const auto& func = [](const double& sum, const Course& course) {
     std::this_thread::sleep_for(std::chrono::milliseconds(50 + rand() % 10));
@@ -63,18 +57,12 @@ float calculate_gpa(const std::vector<Course>& courses) {
          courses.size();
 }
 
-/**
- *
- */
 void custom_function_1(const Student& student) {
   TOUCA_SCOPED_TIMER;
-  touca::check("is_adult", 18 <= 2021 - student.dob._year);
+  touca::check("is_adult", 18 <= 2021 - student.dob.year);
   std::this_thread::sleep_for(std::chrono::milliseconds(10 + rand() % 50));
 }
 
-/**
- *
- */
 void custom_function_2(const Student& student) {
   for (auto i = 0ul; i < student.courses.size(); ++i) {
     touca::scoped_timer timer("func2_course_" + std::to_string(i));
@@ -83,9 +71,6 @@ void custom_function_2(const Student& student) {
   }
 }
 
-/**
- *
- */
 void custom_function_3(const Student& student) {
   for (const auto& course : student.courses) {
     touca::add_array_element("course_names", course.name);

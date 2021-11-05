@@ -23,4 +23,4 @@ struct Student {
 };
 
 float calculate_gpa(const std::vector<Course>& courses);
-Student parse_profile(const std::string& username);
+Student find_student(const std::string& username);

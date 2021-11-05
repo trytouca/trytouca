@@ -6,9 +6,9 @@
 #include <vector>
 
 struct Date {
-  unsigned short _year;
-  unsigned short _month;
-  unsigned short _day;
+  unsigned short year;
+  unsigned short month;
+  unsigned short day;
 };
 
 struct Course {
@@ -23,7 +23,7 @@ struct Student {
   std::vector<Course> courses;
 };
 
-Student parse_profile(const std::string& username);
+Student find_student(const std::string& username);
 float calculate_gpa(const std::vector<Course>& courses);
 
 void custom_function_1(const Student& student);

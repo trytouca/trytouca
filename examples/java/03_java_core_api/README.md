@@ -1,8 +1,8 @@
 # Touca Java API
 
 In the [previous tutorial](../02_java_main_api), we covered the high-level API
-of our Java SDK and learned how to test a `parseProfile` function using the
-Touca test framework:
+of our Java SDK and learned how to test a `findStudent` function using the Touca
+test framework:
 
 ```java
 import io.touca.Touca;
@@ -10,8 +10,8 @@ import io.touca.Touca;
 public final class StudentsTest {
 
   @Touca.Workflow
-  public void parseProfile(final String username) {
-    Student student = Students.parseProfile(username);
+  public void findStudent(final String username) {
+    Student student = Students.findStudent(username);
     // insert code here to describe the behavior
     // and performance of the workflow under test
   }
@@ -44,7 +44,7 @@ public class StudentsTest {
         });
         for (String username : Touca.getTestcases()) {
             Touca.declareTestcase(username);
-            Student student = Students.parseProfile(username);
+            Student student = Students.findStudent(username);
 
             // insert code here to describe the behavior
             // and performance of the workflow under test
@@ -193,12 +193,12 @@ public final class Course {
 
 By default, the SDK serializes objects of this class using by serializing all of
 its public properties. This behavior results in object `Course("math", 3.9)` to
-be serialized as `{name: "math", grade: 3.9}`. We can use `Touca.addSerializer`
+be serialized as `{name: "math", grade: 3.9}`. We can use `Touca.addTypeAdapter`
 to override this default behavior. The following code excludes the property
 `name` during serialization and limits the comparison to `grade`:
 
 ```java
-Touca.addSerializer(Course.class, course -> { return course.grade; });
+Touca.addTypeAdapter(Course.class, course -> course.grade);
 for (Course course: student.courses) {
     Touca.addArrayElement("courses", course);
     Touca.addHitCount("number of courses");
