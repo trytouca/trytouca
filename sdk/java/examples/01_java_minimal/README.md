@@ -83,7 +83,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation('io.touca:touca:0.3.0')
+    testImplementation('io.touca:touca:0.3.1')
 }
 ```
 

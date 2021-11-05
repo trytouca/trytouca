@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.3.1
+
+Features:
+
+- Enable overriding default serialization for custom types (#30)
+
+Improvements:
+
+- Remove placeholder name for objects (#31)
+
 ## v0.3.0
 
 Features:
