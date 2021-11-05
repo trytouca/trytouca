@@ -92,7 +92,9 @@ Touca tests have two main differences compared to typical unit tests:
 We can run Touca tests with any number of inputs from the command line:
 
 ```bash
-gradle runExampleMinimal --args='--api-key <TOUCA_API_KEY> --api-url <TOUCA_API_URL> --revision v1.0 --testcase 13 17 51'
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+gradle runExampleMinimal --args='--revision v1.0 --testcase 13 17 51'
 ```
 
 Where `TOUCA_API_KEY` and `TOUCA_API_URL` can be obtained from the Touca server
@@ -101,7 +103,7 @@ output:
 
 ```text
 Touca Test Framework
-Suite: is_prime_test
+Suite: isPrime
 Revision: v1.0
 
 (  1 of 3  ) 13                   (pass, 127 ms)
