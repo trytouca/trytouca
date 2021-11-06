@@ -142,8 +142,7 @@ struct is_touca_number<
 }  // namespace detail
 
 template <typename T>
-struct serializer<
-    T, typename std::enable_if<detail::is_touca_null<T>::value>::type> {
+struct serializer<T, detail::enable_if_t<detail::is_touca_null<T>::value>> {
   std::shared_ptr<IType> serialize(const T& value) {
     std::ignore = value;
     return std::make_shared<NoneType>();
@@ -151,32 +150,28 @@ struct serializer<
 };
 
 template <typename T>
-struct serializer<
-    T, typename std::enable_if<detail::is_touca_boolean<T>::value>::type> {
+struct serializer<T, detail::enable_if_t<detail::is_touca_boolean<T>::value>> {
   std::shared_ptr<IType> serialize(const T& value) {
     return std::make_shared<BooleanType>(value);
   }
 };
 
 template <typename T>
-struct serializer<
-    T, typename std::enable_if<detail::is_touca_number<T>::value>::type> {
+struct serializer<T, detail::enable_if_t<detail::is_touca_number<T>::value>> {
   std::shared_ptr<IType> serialize(const T& value) {
     return std::make_shared<NumberType<T>>(value);
   }
 };
 
 template <typename T>
-struct serializer<
-    T, typename std::enable_if<detail::is_touca_string<T>::value>::type> {
+struct serializer<T, detail::enable_if_t<detail::is_touca_string<T>::value>> {
   std::shared_ptr<IType> serialize(const T& value) {
     return std::make_shared<StringType>(detail::to_string<T>(value));
   }
 };
 
 template <typename T>
-struct serializer<
-    T, typename std::enable_if<detail::is_touca_array<T>::value>::type> {
+struct serializer<T, detail::enable_if_t<detail::is_touca_array<T>::value>> {
   std::shared_ptr<IType> serialize(const T& value) {
     auto out = std::make_shared<ArrayType>();
     for (const auto& v : value) {
@@ -187,8 +182,8 @@ struct serializer<
 };
 
 template <typename T>
-struct serializer<T, typename std::enable_if<detail::is_specialization<
-                         T, std::pair>::value>::type> {
+struct serializer<
+    T, detail::enable_if_t<detail::is_specialization<T, std::pair>::value>> {
   std::shared_ptr<IType> serialize(const T& value) {
     auto out = std::make_shared<ObjectType>("std::pair");
     out->add("first", value.first);
@@ -198,8 +193,9 @@ struct serializer<T, typename std::enable_if<detail::is_specialization<
 };
 
 template <typename T>
-struct serializer<T, typename std::enable_if<detail::is_specialization<
-                         T, std::shared_ptr>::value>::type> {
+struct serializer<
+    T,
+    detail::enable_if_t<detail::is_specialization<T, std::shared_ptr>::value>> {
   std::shared_ptr<IType> serialize(const T& value) {
     auto out = std::make_shared<ObjectType>("std::shared_ptr");
     if (value) {

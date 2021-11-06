@@ -430,11 +430,9 @@ nlohmann::ordered_json ObjectType::json() const {
   for (const auto& member : _values) {
     members[member.first] = member.second->json();
   }
-
   if (_name.empty()) {
     return members;
   }
-
   return nlohmann::ordered_json({{_name, members}});
 }
 

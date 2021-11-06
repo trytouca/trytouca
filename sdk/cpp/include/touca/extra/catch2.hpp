@@ -10,6 +10,7 @@
 #define CATCH_CONFIG_RUNNER
 #include "catch2/catch.hpp"
 #include "touca/touca.hpp"
+#include <array>
 
 int main(int argc, char* argv[]) {
   Catch::Session session;

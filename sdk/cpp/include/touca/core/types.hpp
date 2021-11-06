@@ -175,7 +175,7 @@ class TOUCA_CLIENT_API ArrayType : public IType {
  *      template <>
  *      struct touca::serializer<Date> {
  *        std::shared_ptr<IType> serialize(const Date& value) {
- *          auto out = std::make_shared<ObjectType>();
+ *          auto out = std::make_shared<ObjectType>("Date");
  *          out->add("year", value.year);
  *          out->add("month", value.month);
  *          out->add("day", value.day);
@@ -209,7 +209,7 @@ class TOUCA_CLIENT_API ArrayType : public IType {
  *      template <>
  *      struct touca::serializer<Person> {
  *        std::shared_ptr<IType> serialize(const Person& value) {
- *          auto out = std::make_shared<ObjectType>();
+ *          auto out = std::make_shared<ObjectType>("Person");
  *          out->add("name", val._name);
  *          out->add("birthday", val._birthday);
  *          return out;
