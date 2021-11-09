@@ -19,7 +19,7 @@ import { tracker, TrackerInfo } from '@/utils/tracker'
 async function makeUsername(): Promise<string> {
   const random = () => Math.floor(100000 + Math.random() * 900000)
   let slug = `user${random()}`
-  while (await UserModel.countDocuments({ slug })) {
+  while (await UserModel.countDocuments({ username: slug })) {
     logger.warn('makeUsername() implementation may be inefficient')
     slug = `user${random()}`
   }

@@ -66,6 +66,6 @@ cp -r "${DIR_CLIENTS}/java/examples" "${DIR_EXAMPLES}/java"
 for filename in "gradlew" "gradlew.bat" "build.gradle.kts" "gradle" "settings.gradle.kts"; do
     git -C "${DIR_EXAMPLES}" checkout "${DIR_EXAMPLES}/java/${filename}"
 done
-sed -i '' 's/implementation.*/implementation("io.touca:touca:0.3.0")/g' "${DIR_EXAMPLES}/java/01_java_minimal/build.gradle.kts"
-sed -i '' 's/implementation.*/implementation("io.touca:touca:0.3.0")/g' "${DIR_EXAMPLES}/java/02_java_main_api/build.gradle.kts"
-sed -i '' 's/implementation.*/implementation("io.touca:touca:0.3.0")/g' "${DIR_EXAMPLES}/java/03_java_core_api/build.gradle.kts"
+sed -i '' 's/implementation.*/implementation("io.touca:touca:0.3.1")/g' "${DIR_EXAMPLES}/java/01_java_minimal/build.gradle.kts"
+sed -i '' 's/implementation.*/implementation("io.touca:touca:0.3.1")/g' "${DIR_EXAMPLES}/java/02_java_main_api/build.gradle.kts"
+sed -i '' 's/implementation.*/implementation("io.touca:touca:0.3.1")/g' "${DIR_EXAMPLES}/java/03_java_core_api/build.gradle.kts"

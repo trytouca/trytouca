@@ -27,12 +27,22 @@ import {
   templateUrl: './list-filter.component.html'
 })
 export class ListFilterComponent {
+  filters: { key: string; name: string }[] = [];
+  sorters: { key: string; name: string }[] = [];
+  private _manager: FilterManager<unknown>;
   private _filterSubject = new Subject<string>();
   private _searchSubject = new Subject<string>();
   private _sorterSubject = new Subject<string>();
   private _orderSubject = new Subject<string>();
 
-  @Input() manager: FilterManager<unknown>;
+  @Input() set manager(v: FilterManager<unknown>) {
+    if (v !== this._manager) {
+      console.log('take it');
+      this._manager = v;
+      this.filters = this._manager.filters;
+      this.sorters = this._manager.sorters;
+    }
+  }
   @Input() params: FilterParams;
   @Input() stats: FilterStats;
   @Output() updateList = new EventEmitter<FilterParams>();
@@ -40,7 +50,7 @@ export class ListFilterComponent {
   /**
    *
    */
-  constructor(private faIconLibrary: FaIconLibrary) {
+  constructor(faIconLibrary: FaIconLibrary) {
     const updateFilter = () => {
       this.updateList.emit({
         filter: this.params.filter,
@@ -98,22 +108,8 @@ export class ListFilterComponent {
   /**
    *
    */
-  get filters(): { key: string; name: string }[] {
-    return this.manager.filters;
-  }
-
-  /**
-   *
-   */
-  get sorters(): { key: string; name: string }[] {
-    return this.manager.sorters;
-  }
-
-  /**
-   *
-   */
   get filterQueryPlaceholder(): string {
-    return this.manager.placeholder;
+    return this._manager.placeholder;
   }
 
   /**
@@ -127,7 +123,7 @@ export class ListFilterComponent {
    *
    */
   get filterName(): string {
-    return this.manager.filters.find(
+    return this._manager.filters.find(
       (v) => v.key.localeCompare(this.params.filter) === 0
     ).name;
   }
@@ -146,7 +142,7 @@ export class ListFilterComponent {
     if (this.isSearchActive()) {
       return 'Relevance';
     }
-    return this.manager.sorters.find(
+    return this._manager.sorters.find(
       (v) => v.key.localeCompare(this.params.sorter) === 0
     ).name;
   }
@@ -179,10 +175,10 @@ export class ListFilterComponent {
    */
   clearFilters() {
     if (this.params.search) {
-      this._searchSubject.next(this.manager.defaults.search);
+      this._searchSubject.next(this._manager.defaults.search);
     }
-    if (this.params.filter !== this.manager.defaults.filter) {
-      this._filterSubject.next(this.manager.defaults.filter);
+    if (this.params.filter !== this._manager.defaults.filter) {
+      this._filterSubject.next(this._manager.defaults.filter);
     }
   }
 
