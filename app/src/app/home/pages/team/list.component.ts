@@ -115,7 +115,7 @@ const filterInput: FilterInput<TeamPageSuite> = {
       }
     }
   ],
-  searchBy: ['name', 'slug'],
+  searchBy: ['_data.suiteName', '_data.suiteSlug'],
   defaults: {
     filter: 'none',
     search: '',
@@ -156,6 +156,7 @@ export class TeamTabSuitesComponent
   ) {
     super(filterInput, Object.values(TeamPageSuiteType), route, router);
     this._subAllItems = this.teamPageService.items$.subscribe((allItems) => {
+      console.log(allItems);
       this.initCollections(allItems);
     });
   }
