@@ -10,6 +10,12 @@ License. It is publicly available
 [on Maven Central](https://search.maven.org/artifact/io.touca/touca) and can be
 pulled as a runtime or test dependency.
 
+{% tabs %}
+
+{% tab title="Apache Maven" %}
+
+{% code %}
+
 ```xml
 <dependency>
   <groupId>io.touca</groupId>
@@ -17,6 +23,36 @@ pulled as a runtime or test dependency.
   <version>0.1.0</version>
 </dependency>
 ```
+
+{% endcode %}
+
+{% endtab %}
+
+{% tab title="Gradle Groovy DSL" %}
+
+{% code %}
+
+```groovy
+implementation 'io.touca:touca:0.3.1'
+```
+
+{% endcode %}
+
+{% endtab %}
+
+{% tab title="Gradle Kotlin DSL" %}
+
+{% code %}
+
+```kotlin
+implementation("io.touca:touca:0.3.1")
+```
+
+{% endcode %}
+
+{% endtab %}
+
+{% endtabs %}
 
 In this tutorial, we will use Touca examples repository whose Java examples
 already list this package as a dependency. Clone this repository to a local
