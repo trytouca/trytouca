@@ -29,9 +29,14 @@ import {
 } from '@ng-icons/heroicons';
 import {
   FeatherChevronDown,
+  FeatherGift,
   FeatherList,
+  FeatherPlusCircle,
+  FeatherSend,
   FeatherSettings,
   FeatherUser,
+  FeatherUserMinus,
+  FeatherUserPlus,
   FeatherUsers
 } from '@ng-icons/feather-icons';
 
@@ -57,9 +62,14 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     HttpClientModule,
     NgIconsModule.withIcons({
       FeatherChevronDown,
+      FeatherGift,
       FeatherList,
+      FeatherPlusCircle,
+      FeatherSend,
       FeatherSettings,
       FeatherUser,
+      FeatherUserMinus,
+      FeatherUserPlus,
       FeatherUsers,
       HeroBadgeCheck,
       HeroCheckCircle,

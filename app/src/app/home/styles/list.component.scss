@@ -10,10 +10,23 @@ img {
   }
 }
 .wsl-list-head {
-  h2 {
+  h2,
+  h3 {
     @apply pb-1 text-xl font-medium;
   }
   p {
     @apply pb-2 text-gray-500 text-xs;
+  }
+}
+.wsl2-list-body {
+  @apply divide-y;
+  li {
+    @apply hover:bg-gray-50;
+  }
+  li:first-of-type {
+    @apply rounded-t-md;
+  }
+  li:last-of-type {
+    @apply rounded-b-md;
   }
 }

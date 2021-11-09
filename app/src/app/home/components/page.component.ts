@@ -14,6 +14,7 @@ export type PageTab<TabType> = {
   name: string;
   link: string;
   icon: IconProp;
+  icon2?: string;
   shown: boolean;
   counter?: number;
 };

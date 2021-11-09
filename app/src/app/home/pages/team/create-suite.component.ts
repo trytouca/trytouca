@@ -15,7 +15,7 @@ type IFormContent = {
 };
 
 @Component({
-  templateUrl: './create.component.html'
+  templateUrl: './create-suite.component.html'
 })
 export class TeamCreateSuiteComponent
   extends ModalComponent

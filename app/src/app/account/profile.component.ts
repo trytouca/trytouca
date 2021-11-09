@@ -290,6 +290,5 @@ export class ProfileComponent implements OnDestroy {
    */
   regenerateApiKey(index: number): void {
     this.userService.updateApiKey(this.user.apiKeys[index]);
-    console.log('generate');
   }
 }

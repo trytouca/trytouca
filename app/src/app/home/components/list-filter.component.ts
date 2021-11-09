@@ -37,7 +37,6 @@ export class ListFilterComponent {
 
   @Input() set manager(v: FilterManager<unknown>) {
     if (v !== this._manager) {
-      console.log('take it');
       this._manager = v;
       this.filters = this._manager.filters;
       this.sorters = this._manager.sorters;

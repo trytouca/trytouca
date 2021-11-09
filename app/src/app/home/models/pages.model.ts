@@ -26,6 +26,6 @@ export abstract class IPageService<T> {
    *
    */
   public countItems() {
-    return this._items.length || 0;
+    return this._items?.length || 0;
   }
 }

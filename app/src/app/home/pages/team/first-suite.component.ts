@@ -1,18 +1,18 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 
-import { TeamsCreateTeamComponent } from './create.component';
-import { TeamsPageService } from './teams.service';
+import { TeamCreateSuiteComponent } from './create-suite.component';
+import { TeamPageService } from './team.service';
 
 @Component({
-  selector: 'app-teams-first',
-  templateUrl: './first.component.html',
-  styles: ['img { margin: 5vh auto; }']
+  selector: 'app-team-first-suite',
+  templateUrl: './first-suite.component.html'
 })
-export class TeamsFirstTeamComponent implements OnDestroy {
+export class TeamFirstSuiteComponent implements OnDestroy {
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
 
@@ -20,8 +20,9 @@ export class TeamsFirstTeamComponent implements OnDestroy {
    *
    */
   constructor(
+    private route: ActivatedRoute,
     private dialogService: DialogService,
-    private teamsPageService: TeamsPageService
+    private teamPageService: TeamPageService
   ) {}
 
   /**
@@ -36,22 +37,17 @@ export class TeamsFirstTeamComponent implements OnDestroy {
   /**
    *
    */
-  fetchItems(): void {
-    this.teamsPageService.fetchItems({});
-  }
-
-  /**
-   *
-   */
   openCreateModal() {
-    this._dialogRef = this.dialogService.open(TeamsCreateTeamComponent, {
-      closeButton: false,
-      minHeight: '10vh'
+    const paramMap = this.route.snapshot.paramMap;
+    this._dialogRef = this.dialogService.open(TeamCreateSuiteComponent, {
+      data: {
+        teamSlug: paramMap.get('team')
+      }
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe(
       (state: boolean) => {
         if (state) {
-          this.fetchItems();
+          this.teamPageService.refreshSuites();
         }
       }
     );

@@ -48,7 +48,9 @@ import {
 } from './pages/suite';
 import {
   TeamCreateSuiteComponent,
+  TeamCreateTeamComponent,
   TeamFirstSuiteComponent,
+  TeamFirstTeamComponent,
   TeamInviteComponent,
   TeamItemApplicantComponent,
   TeamItemInviteeComponent,
@@ -59,13 +61,6 @@ import {
   TeamTabSettingsComponent,
   TeamTabSuitesComponent
 } from './pages/team';
-import {
-  TeamsCreateTeamComponent,
-  TeamsFirstTeamComponent,
-  TeamsItemTeamComponent,
-  TeamsPageComponent,
-  TeamsTabTeamsComponent
-} from './pages/teams';
 
 @NgModule({
   providers: [],
@@ -89,16 +84,12 @@ import {
     PageOverviewComponent,
     VersionListComponent,
     VersionNavigatorComponent,
-    // teams page components
-    TeamsPageComponent,
-    TeamsCreateTeamComponent,
-    TeamsFirstTeamComponent,
-    TeamsItemTeamComponent,
-    TeamsTabTeamsComponent,
     // team page components
     TeamPageComponent,
     TeamCreateSuiteComponent,
+    TeamCreateTeamComponent,
     TeamFirstSuiteComponent,
+    TeamFirstTeamComponent,
     TeamInviteComponent,
     TeamItemApplicantComponent,
     TeamItemInviteeComponent,

@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
@@ -15,37 +15,18 @@ import { DialogRef, DialogService } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 
 import type { TeamItem } from '@/core/models/commontypes';
-import { AlertKind, AlertService } from '@/core/services';
-import { PageComponent, PageTab } from '@/home/components';
-
-import { TeamCreateSuiteComponent } from './create.component';
+import { ELocalStorageKey } from '@/core/models/frontendtypes';
+import { AlertKind, AlertService, ApiService } from '@/core/services';
+import { ConfirmComponent, ConfirmElements, PageTab } from '@/home/components';
+import { TeamCreateSuiteComponent } from './create-suite.component';
 import { TeamInviteComponent } from './invite.component';
-import { TeamPageSuite } from './team.model';
-import { TeamPageService, TeamPageTabType } from './team.service';
-
-const pageTabs: PageTab<TeamPageTabType>[] = [
-  {
-    type: TeamPageTabType.Suites,
-    name: 'Suites',
-    link: 'suites',
-    icon: 'tasks',
-    shown: true
-  },
-  {
-    type: TeamPageTabType.Members,
-    name: 'Members',
-    link: 'members',
-    icon: 'users',
-    shown: true
-  },
-  {
-    type: TeamPageTabType.Settings,
-    name: 'Settings',
-    link: 'settings',
-    icon: 'cog',
-    shown: true
-  }
-];
+import {
+  TeamPageService,
+  TeamPageTabType,
+  TeamBannerType,
+  RefinedTeamList
+} from './team.service';
+import { TeamCreateTeamComponent } from './create-team.component';
 
 type NotFound = Partial<{
   teamSlug: string;
@@ -55,19 +36,25 @@ type NotFound = Partial<{
   selector: 'app-team-page',
   templateUrl: './page.component.html',
   styleUrls: ['../../styles/page.component.scss'],
-  providers: [TeamPageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
+  providers: [TeamPageService]
 })
-export class TeamPageComponent
-  extends PageComponent<TeamPageSuite, TeamPageTabType, NotFound>
-  implements OnInit, OnDestroy
-{
+export class TeamPageComponent implements OnInit, OnDestroy {
+  teams: RefinedTeamList;
   team: TeamItem;
-  teams: TeamItem[];
+
+  tabs: PageTab<TeamPageTabType>[];
+  currentTab: TeamPageTabType;
   TabType = TeamPageTabType;
+
+  banner: TeamBannerType;
+  BannerType = TeamBannerType;
 
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
+  private _notFound: Partial<NotFound> = {};
 
+  private _subBanner: Subscription;
+  private _subTabs: Subscription;
   private _subTeams: Subscription;
   private _subTeam: Subscription;
   private _subAlert: Subscription;
@@ -77,13 +64,13 @@ export class TeamPageComponent
    */
   constructor(
     private alertService: AlertService,
+    private apiService: ApiService,
     private dialogService: DialogService,
     private router: Router,
     private teamPageService: TeamPageService,
-    route: ActivatedRoute,
+    private route: ActivatedRoute,
     faIconLibrary: FaIconLibrary
   ) {
-    super(teamPageService, pageTabs, route);
     faIconLibrary.addIcons(
       faChevronDown,
       faCog,
@@ -94,10 +81,31 @@ export class TeamPageComponent
     );
     this._subAlert = this.alertService.alerts$.subscribe((v) => {
       if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
+        this.banner = TeamBannerType.TeamNotFound;
         this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
       }
     });
+    this._subBanner = this.teamPageService.banner$.subscribe((v) => {
+      this.banner = v;
+      if (this.banner === this.BannerType.TeamNotFound) {
+        this._notFound.teamSlug = route.snapshot.paramMap.get('team');
+      }
+    });
+    this._subTabs = this.teamPageService.tabs$.subscribe((v) => {
+      this.tabs = v;
+      const queryMap = this.route.snapshot.queryParamMap;
+      const getQuery = (key: string) =>
+        queryMap.has(key) ? queryMap.get(key) : null;
+      const tab = this.tabs.find((v) => v.link === getQuery('t')) || v[0];
+      this.currentTab = tab.type;
+    });
     this._subTeams = this.teamPageService.teams$.subscribe((v) => {
+      if (v.active.length && !this.route.snapshot.params.team) {
+        const activeTeam =
+          localStorage.getItem(ELocalStorageKey.LastVisitedTeam) ??
+          v.active[0].slug;
+        this.router.navigate(['~', activeTeam]);
+      }
       this.teams = v;
     });
     this._subTeam = this.teamPageService.team$.subscribe((v) => {
@@ -109,7 +117,7 @@ export class TeamPageComponent
    *
    */
   ngOnInit() {
-    super.ngOnInit();
+    this.teamPageService.init(this.route.snapshot.params as { team: string });
   }
 
   /**
@@ -117,33 +125,51 @@ export class TeamPageComponent
    */
   ngOnDestroy() {
     this._subAlert.unsubscribe();
+    this._subBanner.unsubscribe();
+    this._subTabs.unsubscribe();
     this._subTeams.unsubscribe();
     this._subTeam.unsubscribe();
     if (this._dialogSub) {
       this._dialogSub.unsubscribe();
     }
-    super.ngOnDestroy();
   }
 
   /**
    *
    */
   fetchItems(): void {
-    const paramMap = this.route.snapshot.paramMap;
-    const teamSlug = paramMap.get('team');
-    this.pageService.fetchItems({ currentTab: this.currentTab, teamSlug });
+    const teamSlug = this.route.snapshot.paramMap.get('team');
+    this.teamPageService.fetchItems({ teamSlug });
   }
 
   /**
    *
    */
-  @HostListener('document:keydown', ['$event'])
-  onKeydown(event: KeyboardEvent) {
-    // pressing key 'Backspace' should return user to "Teams" page
-    if ('Backspace' === event.key) {
-      this.router.navigate(['..'], { relativeTo: this.route });
-      event.stopImmediatePropagation();
+  public hasData() {
+    return this.teamPageService.hasData();
+  }
+
+  /**
+   *
+   */
+  public hasItems() {
+    return this.teamPageService.countItems() !== 0;
+  }
+
+  /**
+   *
+   */
+  public notFound(): Partial<NotFound> | null {
+    if (Object.keys(this._notFound).length) {
+      return this._notFound;
     }
+  }
+
+  /**
+   *
+   */
+  public switchTab(type: TeamPageTabType) {
+    this.currentTab = type;
   }
 
   /**
@@ -152,7 +178,7 @@ export class TeamPageComponent
   public switchPage(teamSlug: string) {
     if (this.team.slug !== teamSlug) {
       this.router.navigate(['~', teamSlug]);
-      this.teamPageService.updateTeamSlug(this.currentTab, teamSlug);
+      this.teamPageService.updateTeamSlug(teamSlug);
     }
   }
 
@@ -168,7 +194,7 @@ export class TeamPageComponent
     this._dialogSub = this._dialogRef.afterClosed$.subscribe(
       (state: boolean) => {
         if (state) {
-          this.fetchItems();
+          this.teamPageService.refreshSuites();
         }
       }
     );
@@ -190,5 +216,95 @@ export class TeamPageComponent
         }
       }
     );
+  }
+
+  openCreateTeamModel() {
+    this._dialogRef = this.dialogService.open(TeamCreateTeamComponent, {
+      closeButton: false,
+      minHeight: '10vh'
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state) => {
+      if (state) {
+        if (state.action === 'create') {
+          this.router.navigate(['~', state.slug]);
+          this.teamPageService.refreshTeams(state.slug);
+        } else {
+          this.teamPageService.refreshTeams();
+        }
+      }
+    });
+  }
+
+  /**
+   *
+   */
+  confirmDecline(item: TeamItem): void {
+    const elements: ConfirmElements = {
+      title: 'Decline Team Invitation',
+      message: `<p>Can you confirm you want to decline team <em>${item.name}</em>'s invitation?</p>`,
+      button: 'Decline Invitation'
+    };
+    this.showConfirmation(elements, () => this.decline(item));
+  }
+
+  /**
+   *
+   */
+  confirmRescind(item: TeamItem): void {
+    const elements: ConfirmElements = {
+      title: 'Rescind Join Request',
+      message: `<p>Can you confirm you want to cancel your request to join team <em>${item.name}</em>?</p>`,
+      button: 'Rescind Request'
+    };
+    this.showConfirmation(elements, () => this.rescind(item));
+  }
+
+  /**
+   *
+   */
+  private showConfirmation(elements: ConfirmElements, func: () => void) {
+    this._dialogRef = this.dialogService.open(ConfirmComponent, {
+      closeButton: false,
+      data: elements,
+      minHeight: '10vh'
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (!state) {
+          return;
+        }
+        func();
+      }
+    );
+  }
+
+  /**
+   *
+   */
+  accept(item: TeamItem) {
+    const url = ['team', item.slug, 'invite', 'accept'].join('/');
+    this.apiService.post(url).subscribe(() => {
+      this.teamPageService.init(this.route.snapshot.params as { team: string });
+    });
+  }
+
+  /**
+   *
+   */
+  private decline(item: TeamItem) {
+    const url = ['team', item.slug, 'invite', 'decline'].join('/');
+    this.apiService.post(url).subscribe(() => {
+      this.teamPageService.init(this.route.snapshot.params as { team: string });
+    });
+  }
+
+  /**
+   *
+   */
+  private rescind(item: TeamItem) {
+    const url = ['team', item.slug, 'join'].join('/');
+    this.apiService.delete(url).subscribe(() => {
+      this.teamPageService.init(this.route.snapshot.params as { team: string });
+    });
   }
 }

@@ -1,14 +1,14 @@
 <section class="wsl-page-tab" id="wsl-team-members">
   <div class="wsl-list" *ngIf="countRows(ItemType.Member)">
     <div class="wsl-list-head">
-      <h2>Team Members</h2>
+      <h3>Active Members</h3>
       <p>
-        There are currently
+        You have
         {{ countShownRows(ItemType.Member) | i18nPlural: { '=0': 'no members', '=1': 'one member', 'other': '# members' } }}
         in your team.
       </p>
     </div>
-    <ul class="wsl-list-body">
+    <ul class="wsl2-list-body wsl2-white-box">
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Member); let i = index;"
         (click)="selectedRow = i;" [ngClass]="{'bg-sky-50': selectedRow === i}">
@@ -22,14 +22,14 @@
   </div>
   <div class="wsl-list" *ngIf="countRows(ItemType.Invitee)">
     <div class="wsl-list-head">
-      <h2>Invited Members</h2>
+      <h3>Invited Members</h3>
       <p>
-        There are currently
+        You have invited
         {{ countShownRows(ItemType.Invitee) | i18nPlural: { '=1': 'one user', 'other': '# users' } }}
-        invited to your team.
+        to your team.
       </p>
     </div>
-    <ul class="wsl-list-body">
+    <ul class="wsl2-list-body wsl2-white-box">
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Invitee); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Member);"
@@ -42,14 +42,13 @@
   </div>
   <div class="wsl-list" *ngIf="countRows(ItemType.Applicant)">
     <div class="wsl-list-head">
-      <h2>Pending Members</h2>
+      <h3>Pending Members</h3>
       <p>
-        There are currently
-        {{ countShownRows(ItemType.Applicant) | i18nPlural: { '=1': 'one user', 'other': '# users' } }}
-        requesting to join your team.
+        {{ countShownRows(ItemType.Applicant) | i18nPlural: { '=1': 'One user wants', 'other': '# users want' } }}
+        to join your team.
       </p>
     </div>
-    <ul class="wsl-list-body">
+    <ul class="wsl2-list-body wsl2-white-box">
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Applicant); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Member) + countShownRows(ItemType.Invitee);"

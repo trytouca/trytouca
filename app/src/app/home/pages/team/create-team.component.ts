@@ -30,10 +30,10 @@ type Content = {
 };
 
 @Component({
-  selector: 'app-teams-create',
-  templateUrl: './create.component.html'
+  selector: 'app-team-create-team',
+  templateUrl: './create-team.component.html'
 })
-export class TeamsCreateTeamComponent
+export class TeamCreateTeamComponent
   extends ModalComponent
   implements OnDestroy
 {
@@ -123,7 +123,10 @@ export class TeamsCreateTeamComponent
         this.hints.reset();
         this.form.reset();
         this.submitted = false;
-        this.dialogRef.close(true);
+        this.dialogRef.close({
+          action: 'create',
+          slug: model.slug.toLocaleLowerCase()
+        });
       },
       error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
@@ -148,14 +151,17 @@ export class TeamsCreateTeamComponent
     }
     this.submitted = true;
     const url = ['team', model.slug.toLocaleLowerCase(), 'join'].join('/');
-    this.apiService.post(url).subscribe(
-      () => {
+    this.apiService.post(url).subscribe({
+      next: () => {
         this.hints.reset();
         this.form.reset();
         this.submitted = false;
-        this.dialogRef.close(true);
+        this.dialogRef.close({
+          action: 'join',
+          slug: model.slug.toLocaleLowerCase()
+        });
       },
-      (err: HttpErrorResponse) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
           [
@@ -176,7 +182,7 @@ export class TeamsCreateTeamComponent
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
-    );
+    });
   }
 
   /**

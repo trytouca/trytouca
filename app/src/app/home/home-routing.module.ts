@@ -8,7 +8,6 @@ import { BatchPageComponent } from './pages/batch';
 import { ElementPageComponent } from './pages/element';
 import { SuitePageComponent } from './pages/suite';
 import { TeamPageComponent } from './pages/team';
-import { TeamsPageComponent } from './pages/teams';
 
 /**
  *
@@ -18,7 +17,7 @@ const routes: Routes = [
     path: '',
     component: HomeComponent,
     children: [
-      { path: '', component: TeamsPageComponent },
+      { path: '', component: TeamPageComponent },
       { path: ':team', component: TeamPageComponent },
       { path: ':team/:suite', component: SuitePageComponent },
       { path: ':team/:suite/:batch', component: BatchPageComponent },

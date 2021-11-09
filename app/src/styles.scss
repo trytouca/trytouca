@@ -122,6 +122,29 @@
   .wsl-dropdown-item {
     @apply p-2 cursor-pointer select-none hover:bg-gray-100;
   }
+  .wsl2-white-box {
+    @apply bg-white rounded-md shadow-sm;
+  }
+  .wsl2-sidebar-menu {
+    li {
+      @apply flex items-center px-4 py-2 space-x-4 rounded-md cursor-pointer hover:bg-gray-200 hover:bg-opacity-50;
+      ng-icon {
+        @apply text-gray-500;
+      }
+      p {
+        @apply flex-grow font-medium text-gray-800;
+      }
+      span {
+        @apply w-6 h-6 p-1 text-xs font-medium text-center bg-gray-100 rounded-full;
+      }
+      &.wsl2-sidebar-tab-active {
+        @apply bg-gray-200;
+        p {
+          @apply font-semibold text-dark-900;
+        }
+      }
+    }
+  }
 }
 
 ngneat-dialog {

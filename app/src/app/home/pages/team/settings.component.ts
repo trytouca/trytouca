@@ -8,8 +8,8 @@ import { DialogService } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 
-import type { TeamLookupResponse } from '@/core/models/commontypes';
-import { ETeamRole } from '@/core/models/commontypes';
+import { ETeamRole, TeamLookupResponse } from '@/core/models/commontypes';
+import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { ApiService } from '@/core/services';
 import {
   ConfirmComponent,
@@ -17,7 +17,7 @@ import {
 } from '@/home/components/confirm.component';
 import { Alert, AlertType } from '@/shared/components/alert.component';
 
-import { TeamPageService, TeamPageTabType } from './team.service';
+import { TeamPageService } from './team.service';
 
 interface IFormContent {
   name: string;
@@ -144,6 +144,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
             return this.apiService.delete(url);
           },
           onActionSuccess: () => {
+            localStorage.removeItem(ELocalStorageKey.LastVisitedTeam);
             this.router.navigate(['..'], { relativeTo: this.route });
           },
           onActionFailure: (err: HttpErrorResponse) => this.extractError(err)
@@ -225,10 +226,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
           text: 'Team name was updated.'
         };
         timer(5000).subscribe(() => (this.alert.changeTeamName = undefined));
-        this.teamPageService.updateTeamSlug(
-          TeamPageTabType.Settings,
-          this.team.slug
-        );
+        this.teamPageService.updateTeamSlug(this.team.slug);
       },
       error: (err: HttpErrorResponse) => {
         this.alert.changeTeamName = {
@@ -251,7 +249,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
           text: 'Team slug was updated.'
         };
         timer(5000).subscribe(() => (this.alert.changeTeamSlug = undefined));
-        this.teamPageService.updateTeamSlug(TeamPageTabType.Settings, slug);
+        this.teamPageService.updateTeamSlug(slug);
         this.router.navigate(['~', slug]);
       },
       error: (err: HttpErrorResponse) => {

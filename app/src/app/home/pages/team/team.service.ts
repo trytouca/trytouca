@@ -5,26 +5,22 @@ import { isEqual } from 'lodash-es';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import type {
+import {
+  ETeamRole,
   SuiteListResponse,
   SuiteLookupResponse,
   TeamInvitee,
+  TeamItem,
   TeamListResponse,
   TeamLookupResponse,
   TeamMember,
   TeamMemberListResponse
 } from '@/core/models/commontypes';
-import { ETeamRole } from '@/core/models/commontypes';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
-import {
-  AlertKind,
-  AlertService,
-  ApiService,
-  UserService
-} from '@/core/services';
+import { AlertKind, AlertService, ApiService } from '@/core/services';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
-
+import { PageTab } from '@/home/components';
 import {
   TeamPageMember,
   TeamPageMemberType,
@@ -35,24 +31,91 @@ import {
 export enum TeamPageTabType {
   Suites = 'suites',
   Members = 'members',
-  Settings = 'settings'
+  Settings = 'settings',
+  Invitations = 'invitations',
+  Requests = 'requests',
+  FirstTeam = 'firstTeam'
+}
+
+export enum TeamBannerType {
+  TeamNotFound = 'not-found'
 }
 
 type FetchInput = {
-  currentTab: string;
   teamSlug: string;
+};
+
+export type RefinedTeamList = Record<
+  'active' | 'invitations' | 'requests',
+  TeamItem[]
+>;
+
+const availableTabs: Record<TeamPageTabType, PageTab<TeamPageTabType>> = {
+  [TeamPageTabType.Suites]: {
+    type: TeamPageTabType.Suites,
+    name: 'Suites',
+    link: 'suites',
+    icon: 'tasks',
+    icon2: 'feather-list',
+    shown: true
+  },
+  [TeamPageTabType.Members]: {
+    type: TeamPageTabType.Members,
+    name: 'Members',
+    link: 'members',
+    icon: 'users',
+    icon2: 'feather-users',
+    shown: true
+  },
+  [TeamPageTabType.Settings]: {
+    type: TeamPageTabType.Settings,
+    name: 'Settings',
+    link: 'settings',
+    icon: 'cog',
+    icon2: 'feather-settings',
+    shown: true
+  },
+  [TeamPageTabType.FirstTeam]: {
+    type: TeamPageTabType.FirstTeam,
+    name: 'New Team',
+    link: 'first-team',
+    icon: 'cog',
+    icon2: 'feather-plus-circle',
+    shown: true
+  },
+  [TeamPageTabType.Invitations]: {
+    type: TeamPageTabType.Invitations,
+    name: 'Invitations',
+    link: 'invitations',
+    icon: 'cog',
+    icon2: 'feather-gift',
+    shown: true
+  },
+  [TeamPageTabType.Requests]: {
+    type: TeamPageTabType.Requests,
+    name: 'Requests',
+    link: 'requests',
+    icon: 'cog',
+    icon2: 'feather-send',
+    shown: true
+  }
 };
 
 @Injectable()
 export class TeamPageService extends IPageService<TeamPageSuite> {
+  private _bannerSubject = new Subject<TeamBannerType>();
+  banner$ = this._bannerSubject.asObservable();
+
+  private _tabsSubject = new Subject<PageTab<TeamPageTabType>[]>();
+  tabs$ = this._tabsSubject.asObservable();
+
+  private _teams: RefinedTeamList;
+  private _teamsSubject = new Subject<RefinedTeamList>();
+  teams$ = this._teamsSubject.asObservable();
+
   private _team: TeamLookupResponse;
   private _teamSubject = new Subject<TeamLookupResponse>();
   team$ = this._teamSubject.asObservable();
-
-  private _teams: TeamListResponse;
-  private _teamsCache: TeamListResponse;
-  private _teamsSubject = new Subject<TeamListResponse>();
-  teams$ = this._teamsSubject.asObservable();
 
   private _members: TeamPageMember[];
   private _membersSubject = new Subject<TeamPageMember[]>();
@@ -63,8 +126,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
    */
   constructor(
     private alertService: AlertService,
-    private apiService: ApiService,
-    private userService: UserService
+    private apiService: ApiService
   ) {
     super();
   }
@@ -72,27 +134,56 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   /**
    * Find list of all my teams.
    */
-  private fetchTeams(args: FetchInput): Observable<TeamListResponse> {
-    const url = ['team'].join('/');
-    return this.apiService.get<TeamListResponse>(url).pipe(
-      map((doc: TeamListResponse) => {
-        if (!doc) {
+  public init(params: { team?: string } = {}) {
+    this.apiService.get<TeamListResponse>('team').subscribe({
+      next: (doc) => {
+        const byRole = (...roles: ETeamRole[]) =>
+          doc.filter((v) => roles.includes(v.role));
+        const teams: RefinedTeamList = {
+          requests: byRole(ETeamRole.Applicant),
+          invitations: byRole(ETeamRole.Invited),
+          active: byRole(ETeamRole.Owner, ETeamRole.Admin, ETeamRole.Member)
+        };
+        if (!params.team && teams.active.length) {
+          this._teamsSubject.next(teams);
           return;
         }
-        if (isEqual(doc, this._teamsCache)) {
-          return doc;
+        if (params.team && !teams.active.some((v) => v.slug === params.team)) {
+          this._bannerSubject.next(TeamBannerType.TeamNotFound);
+          return;
         }
-        const activeRoles = [
-          ETeamRole.Member,
-          ETeamRole.Admin,
-          ETeamRole.Owner
-        ];
-        this._teams = doc.filter((v) => activeRoles.includes(v.role));
-        this._teamsSubject.next(this._teams);
-        this._teamsCache = doc;
-        return doc;
-      })
-    );
+        const activeTabs: PageTab<TeamPageTabType>[] = [];
+        if (teams.active.length) {
+          activeTabs.push(
+            availableTabs.suites,
+            availableTabs.members,
+            availableTabs.settings
+          );
+        } else {
+          activeTabs.push(availableTabs.firstTeam);
+        }
+        if (teams.invitations.length) {
+          activeTabs.push(availableTabs.invitations);
+        }
+        if (teams.requests.length) {
+          activeTabs.push(availableTabs.requests);
+        }
+        this._tabsSubject.next(activeTabs);
+        this._teams = teams;
+        this._teamsSubject.next(teams);
+        if (!teams.active.length) {
+          return;
+        }
+        const activeTeam =
+          params.team ??
+          localStorage.getItem(ELocalStorageKey.LastVisitedTeam) ??
+          teams.active[0].slug;
+        this.fetchItems({ teamSlug: activeTeam });
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
   }
 
   /**
@@ -196,15 +287,15 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     const onetime: Observable<unknown>[] = [of(0)];
 
     if (!this._teams) {
-      onetime.push(this.fetchTeams(args));
+      this.init();
     }
     if (!this._team) {
       onetime.push(this.fetchTeam(args));
     }
-    if (!this._members || args.currentTab === TeamPageTabType.Members) {
+    if (!this._members) {
       onetime.push(this.fetchMembers(args));
     }
-    if (!this._items || args.currentTab === TeamPageTabType.Suites) {
+    if (!this._items) {
       onetime.push(this.fetchSuites(args));
     }
 
@@ -242,11 +333,19 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
    *  - User switches to another team
    *  - User updates slug of this team
    */
-  public updateTeamSlug(currentTab: TeamPageTabType, teamSlug: string): void {
-    this._teams = null;
+  public updateTeamSlug(teamSlug: string): void {
     this._team = null;
     this._members = null;
-    this.fetchItems({ currentTab, teamSlug });
+    this._items = null;
+    this.fetchItems({ teamSlug });
+  }
+
+  /**
+   * Used by first-suite when new suite is created.
+   */
+  public refreshSuites() {
+    this._items = null;
+    this.fetchItems({ teamSlug: this._team.slug });
   }
 
   /**
@@ -254,10 +353,16 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
    */
   public refreshMembers(): void {
     this._members = null;
-    this.fetchItems({
-      currentTab: TeamPageTabType.Members,
-      teamSlug: this._team.slug
-    });
+    this.fetchItems({ teamSlug: this._team.slug });
+  }
+
+  public refreshTeams(nextTeam?: string) {
+    const teamSlug = nextTeam ?? this._team?.slug;
+    this._teams = null;
+    this._team = null;
+    this._members = null;
+    this._items = null;
+    this.init({ team: teamSlug });
   }
 
   /**

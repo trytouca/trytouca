@@ -30,12 +30,7 @@ export class HeaderOutsideComponent {
    *
    */
   homeLink(): string {
-    const lastTeamVisited = localStorage.getItem(
-      ELocalStorageKey.LastVisitedTeam
-    );
-    if (lastTeamVisited) {
-      return ['/~', lastTeamVisited].join('/');
-    }
-    return '/~';
+    const teamSlug = localStorage.getItem(ELocalStorageKey.LastVisitedTeam);
+    return teamSlug ? ['/~', teamSlug].join('/') : '/~';
   }
 }
