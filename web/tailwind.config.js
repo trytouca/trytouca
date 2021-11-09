@@ -22,15 +22,8 @@ module.exports = {
       typography: {
         DEFAULT: {
           css: {
-            color: colors.gray[300],
-            p: {
-              color: colors.white
-            },
-            h2: {
-              color: colors.white
-            },
-            h3: {
-              color: colors.white
+            blockquote: {
+              fontWeight: 400
             },
             a: {
               color: colors.sky[400],
