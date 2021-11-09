@@ -29,11 +29,11 @@ export default function BlogPage(props: StaticProps) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
-      <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
+      <section className="bg-white">
         <div className="min-h-[15vh]"></div>
         <div className="container flex flex-col justify-center p-16 mx-auto space-y-8 wsl-min-h-screen-1">
           <div className="mx-auto space-y-8">
-            <h3 className="max-w-4xl text-5xl font-bold text-white">
+            <h3 className="max-w-4xl text-5xl font-bold text-dark-blue-900">
               {props.main_article.title}
             </h3>
             <figcaption className="flex items-center space-x-4">
@@ -46,17 +46,17 @@ export default function BlogPage(props: StaticProps) {
                 loading="lazy"
               />
               <div className="font-medium">
-                <div className="text-lg text-white">
+                <div className="text-lg text-dark-blue-800">
                   {props.main_article.authorName}
                 </div>
                 <div className="flex space-x-4">
-                  <div className="flex items-center space-x-1 font-medium text-gray-300">
+                  <div className="flex items-center space-x-1 font-medium text-gray-600">
                     <HiOutlineCalendar className="opacity-50" size="1.5rem" />
                     <span className="text-sm">
                       {props.main_article.publishDate}
                     </span>
                   </div>
-                  <div className="flex items-center space-x-1 font-medium text-gray-300">
+                  <div className="flex items-center space-x-1 font-medium text-gray-600">
                     <HiOutlineClock className="opacity-50" size="1.5rem" />
                     <span className="text-sm uppercase">
                       {props.main_article.readTime} Min
