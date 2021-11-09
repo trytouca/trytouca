@@ -1,28 +1,27 @@
 {
-    "check-coverage": true,
-    "per-file": false,
-    "lines": 4,
-    "include": [
-        "src/**/*.ts"
-    ],
-    "exclude": [
-      "src/**/*.d.ts",
-      "src/**/*_generated.ts"
-    ],
-    "extension": [
-        ".ts"
-    ],
-    "require": [
-        "ts-node/register"
-    ],
-    "reporter": [
-        "text",
-        "html"
-    ],
-    "cache": true,
-    "all": true,
-    "sourceMap": true,
-    "instrument": true,
-    "report-dir": "local/tests",
-    "temp-dir": "local/tests/.nyc_output"
+  "check-coverage": true,
+  "per-file": false,
+  "lines": 3,
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/**/*.d.ts"
+  ],
+  "extension": [
+    ".ts"
+  ],
+  "require": [
+    "ts-node/register"
+  ],
+  "reporter": [
+    "text",
+    "html"
+  ],
+  "cache": true,
+  "all": true,
+  "sourceMap": true,
+  "instrument": true,
+  "report-dir": "local/tests",
+  "temp-dir": "local/tests/.nyc_output"
 }

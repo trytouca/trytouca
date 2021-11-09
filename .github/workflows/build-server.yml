@@ -41,9 +41,6 @@ jobs:
             ${{ runner.os }}-node-
             ${{ runner.os }}-
 
-      - if: steps.changes.outputs.api == 'true'
-        run: ./build.sh --fbs-modules --docker
-
       - name: build api
         if: steps.changes.outputs.api == 'true'
         run: |

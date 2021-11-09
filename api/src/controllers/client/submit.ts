@@ -1,7 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
-import { flatbuffers } from 'flatbuffers'
+import { ByteBuffer } from 'flatbuffers'
 import { minBy } from 'lodash'
 import mongoose from 'mongoose'
 
@@ -16,9 +16,7 @@ import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
-import { touca } from '@/utils/touca_generated'
-
-const fbs = touca.fbs
+import { Message, Messages } from '@/utils/schema'
 
 type TeamSlug = string
 type SuiteSlug = string
@@ -74,14 +72,14 @@ const makeError = (slug: string, error: string) => {
 async function parseSubmissionMessages(
   content: Uint8Array
 ): Promise<SubmissionItem[]> {
-  const buf = new flatbuffers.ByteBuffer(content)
-  const msgs = fbs.Messages.getRootAsMessages(buf)
+  const buf = new ByteBuffer(content)
+  const msgs = Messages.getRootAsMessages(buf)
   const messages: SubmissionItem[] = []
   for (let i = 0; i < msgs.messagesLength(); i++) {
     const msgBuffer = msgs.messages(i)
     const msgData = msgBuffer.bufArray()
-    const msgByteBuffer = new flatbuffers.ByteBuffer(msgData)
-    const msg = fbs.Message.getRootAsMessage(msgByteBuffer)
+    const msgByteBuffer = new ByteBuffer(msgData)
+    const msg = Message.getRootAsMessage(msgByteBuffer)
     const meta = msg.metadata()
 
     messages.push({

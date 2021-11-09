@@ -5,6 +5,6 @@
   "out": "./local/docs/internal",
   "readme": "./README.md",
   "includes": "./",
-  "exclude": ["**/dist/**/*", "**/test/**/*", "**/*_generated.ts"],
+  "exclude": ["**/dist/**/*", "**/test/**/*"],
   "excludeExternals": true
 }

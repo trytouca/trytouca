@@ -1,4 +1,3 @@
 dist/
 local/
 node_modules/
-src/utils/touca_generated.ts
