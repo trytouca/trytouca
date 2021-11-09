@@ -11,6 +11,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        dark: {
+          900: '#0d0d2b'
+        },
         sky: colors.sky
       },
       screens: {

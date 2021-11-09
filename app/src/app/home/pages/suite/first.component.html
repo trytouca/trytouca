@@ -17,9 +17,8 @@
           <div class="wsl-input-group-append" ngxClipboard
             [cbContent]="fields.apiKey"
             (cbOnSuccess)="onCopy($event, 'API Key')">
-            <span title="Copy API Key to clipboard">
-              <fa-icon icon="clipboard"></fa-icon>
-            </span>
+            <ng-icon title="Copy API Key to clipboard"
+              name="hero-clipboard-copy" size="1rem"></ng-icon>
           </div>
         </div>
         <div class="wsl-input-group">
@@ -28,9 +27,8 @@
           <div class="wsl-input-group-append" ngxClipboard
             [cbContent]="fields.apiUrl"
             (cbOnSuccess)="onCopy($event, 'API URL')">
-            <span title="Copy API URL to clipboard">
-              <fa-icon icon="clipboard"></fa-icon>
-            </span>
+            <ng-icon title="Copy API URL to clipboard"
+              name="hero-clipboard-copy" size="1rem"></ng-icon>
           </div>
         </div>
       </div>

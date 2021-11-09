@@ -5,7 +5,6 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { MailboxAction, MailboxInput } from '@/account/mailbox.component';
-import { PlatformStatus } from '@/core/models/commontypes';
 import { formFields } from '@/core/models/form-hint';
 import { ApiService, AuthService, UserService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';

@@ -41,9 +41,6 @@ class Tracker {
   private intercom: IntercomClient
   private mixpanel: Mixpanel.Mixpanel
 
-  /**
-   *
-   */
   constructor() {
     if (config.tracking.intercom_token) {
       this.intercom = new IntercomClient({
@@ -60,9 +57,6 @@ class Tracker {
     }
   }
 
-  /**
-   *
-   */
   async create(user: IUser, data: Partial<TrackerInfo>) {
     const intercom_registered = this.intercom?.users.create({
       user_id: user._id,
@@ -89,9 +83,6 @@ class Tracker {
     return Promise.all([intercom_registered])
   }
 
-  /**
-   *
-   */
   track(user: IUser, name: string, data?: Mixpanel.PropertyDict) {
     this.intercom?.events.create({
       event_name: name,

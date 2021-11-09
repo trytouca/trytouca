@@ -87,19 +87,18 @@
             </div>
             <div class="flex space-x-1">
               <div
-                class="flex justify-center px-2 py-1 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200"
+                class="flex justify-center p-2 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200"
                 title="Copy email to clipboard" ngxClipboard
                 [cbContent]="event.email"
                 (cbOnSuccess)="onCopy($event, 'email address')">
-                <fa-icon [icon]="faEnvelope">
-                </fa-icon>
+                <ng-icon name="hero-mail" size="1rem"></ng-icon>
               </div>
               <div
-                class="flex justify-center px-2 py-1 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200"
+                class="flex justify-center p-2 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200"
                 *ngIf="event.copyLink" title="Copy link to clipboard"
                 ngxClipboard [cbContent]="event.copyLink"
                 (cbOnSuccess)="onCopy($event, 'link')">
-                <fa-icon [icon]="faClipboard"></fa-icon>
+                <ng-icon name="hero-clipboard-copy" size="1rem"></ng-icon>
               </div>
             </div>
           </div>
@@ -142,13 +141,8 @@
           </div>
           <div wslDropdown
             class="flex items-center p-1 text-gray-300 cursor-pointer select-none hover:text-gray-700">
-            <svg xmlns="http://www.w3.org/2000/svg"
-              class="w-4 h-4 wsl-dropdown-toggle" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-            </svg>
+            <ng-icon class="w-4 h-4 wsl-dropdown-toggle"
+              name="hero-dots-vertical"></ng-icon>
             <div class="hidden w-48 text-sm wsl-dropdown-menu"
               aria-labelledby="wsl-user-dropdown">
               <div class="wsl-dropdown-item" ngxClipboard

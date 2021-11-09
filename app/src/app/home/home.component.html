@@ -4,9 +4,7 @@
   <app-footer></app-footer>
 </div>
 <div *ngIf="!isApiConnectionDown">
-  <div class="bg-gray-50">
-    <app-header-inside></app-header-inside>
-  </div>
+  <app-header-inside></app-header-inside>
   <div class="wsl-min-h-screen-1">
     <app-alert *ngFor="let alert of alerts" [alert]="alert" class="text-center">
     </app-alert>
@@ -15,5 +13,4 @@
       </router-outlet>
     </div>
   </div>
-  <app-footer></app-footer>
 </div>

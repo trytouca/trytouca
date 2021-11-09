@@ -154,6 +154,9 @@ function doFindBatchComparisonOverview(
   const score2 = elementsCompared.reduce((acc, v) => acc + v.keysScore, 0)
   const getScore = (score, count) => (count === 0 ? 1 : floor(score / count, 4))
   const getDuration = (dates: Date[]): number => {
+    if (dates.length === 1) {
+      return 0
+    }
     const diff =
       +new Date(Math.max.apply(null, dates)) -
       +new Date(Math.min.apply(null, dates))
@@ -241,13 +244,13 @@ async function compareBatchOverview(
 
   // find metadata of compared common elements
 
-  const metaObjs = await ComparisonModel.aggregate([
+  const metaObjects = await ComparisonModel.aggregate([
     { $match: { dstBatchId, srcBatchId, meta: { $exists: true } } },
     { $project: { _id: 0, meta: 1 } }
   ])
 
   // @todo: combine this operation with aggregate operation above
-  const metaList = metaObjs.map(
+  const metaList = metaObjects.map(
     (el) => el.meta
   ) as CppTestcaseComparisonOverview[]
 

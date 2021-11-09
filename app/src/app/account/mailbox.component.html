@@ -1,18 +1,15 @@
 <div class="space-y-4">
   <img class="mx-auto max-h-48"
     src="./assets/undraw/undraw_Mailbox_re_dvds.svg" />
-  <div class="text-center">
+  <div class="flex items-center space-x-1 text-center">
     <ng-container *ngIf="isBackButtonShown">
       <span class="text-sm">
         {{ isRetry ? input.textAfterFailure : input.textAfterSuccess }}
       </span>
     </ng-container>
     <ng-container *ngIf="!isBackButtonShown">
-      <svg class="inline h-6 text-green-500" xmlns="http://www.w3.org/2000/svg"
-        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
+      <ng-icon class="text-green-500" name="hero-check-circle" size="1.5rem">
+      </ng-icon>
       <span class="text-sm">
         {{ isRetry ? input.textFailure : input.textSuccess }}
       </span>
@@ -21,20 +18,13 @@
   <div class="flex justify-between" *ngIf="isBackButtonShown">
     <button class="flex items-center space-x-1 wsl-btn-lg wsl-btn-light"
       type="button" role="button" (click)="back()" tabindex="4">
-      <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-      </svg>
+      <ng-icon class="h-4" name="hero-chevron-double-left" size="1.25rem">
+      </ng-icon>
       <span>Back</span>
     </button>
     <button class="flex items-center space-x-1 wsl-btn-lg wsl-btn-light"
       type="button" role="button" (click)="resend()" tabindex="5">
-      <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
-        viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-      </svg>
+      <ng-icon class="h-4" name="hero-mail" size="1.25rem"></ng-icon>
       <span>Resend</span>
     </button>
   </div>

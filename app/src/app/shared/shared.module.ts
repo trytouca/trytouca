@@ -8,6 +8,32 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DialogModule } from '@ngneat/dialog';
 import { ClipboardModule } from 'ngx-clipboard';
+import { NgIconsModule } from '@ng-icons/core';
+import {
+  HeroBadgeCheck,
+  HeroCheckCircle,
+  HeroChevronDoubleLeft,
+  HeroChevronDown,
+  HeroClipboardCopy,
+  HeroDotsVertical,
+  HeroExclamationCircle,
+  HeroEye,
+  HeroEyeOff,
+  HeroInformationCircle,
+  HeroMail,
+  HeroPlusSolid,
+  HeroRefresh,
+  HeroSpeakerphone,
+  HeroTerminal,
+  HeroUpload
+} from '@ng-icons/heroicons';
+import {
+  FeatherChevronDown,
+  FeatherList,
+  FeatherSettings,
+  FeatherUser,
+  FeatherUsers
+} from '@ng-icons/feather-icons';
 
 import {
   AlertComponent,
@@ -25,10 +51,33 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
   imports: [
     ClipboardModule,
     CommonModule,
+    DialogModule.forRoot(),
     FontAwesomeModule,
     FormsModule,
     HttpClientModule,
-    DialogModule.forRoot(),
+    NgIconsModule.withIcons({
+      FeatherChevronDown,
+      FeatherList,
+      FeatherSettings,
+      FeatherUser,
+      FeatherUsers,
+      HeroBadgeCheck,
+      HeroCheckCircle,
+      HeroChevronDoubleLeft,
+      HeroChevronDown,
+      HeroClipboardCopy,
+      HeroDotsVertical,
+      HeroExclamationCircle,
+      HeroEye,
+      HeroEyeOff,
+      HeroInformationCircle,
+      HeroMail,
+      HeroPlusSolid,
+      HeroRefresh,
+      HeroSpeakerphone,
+      HeroTerminal,
+      HeroUpload
+    }),
     ReactiveFormsModule,
     RouterModule
   ],
@@ -61,6 +110,7 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     HeaderInsideComponent,
     HeaderOutsideComponent,
     HttpClientModule,
+    NgIconsModule,
     NotificationComponent,
     ReactiveFormsModule,
     ServerDownComponent

@@ -4,7 +4,7 @@
   </app-home-notfound>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!suite">
-  <div class="border-t border-gray-100">
+  <div class="bg-gray-100 border-b border-gray-200">
     <div class="wsl-page-head">
       <nav aria-label="breadcrumb">
         <ol>
@@ -31,26 +31,19 @@
       </nav>
       <div class="inline-block" wslDropdown
         *ngIf="currentTab === TabType.Versions && hasData() && hasItems()">
-        <button class="wsl-dropdown-toggle wsl-btn-sm wsl-btn-dark"
+        <button
+          class="flex items-center space-x-1 wsl-dropdown-toggle wsl-btn-sm wsl-btn-dark"
           id="wsl-suite-quick-settings" aria-haspopup="true"
           aria-expanded="false">
-          <svg class="inline h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              stroke-width="2"
-              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-          </svg>
-          Submit
+          <ng-icon class="h-4" name="hero-upload" size="1rem">
+          </ng-icon>
+          <span>Submit</span>
         </button>
         <div class="hidden wsl-dropdown-menu w-80"
           aria-labelledby="wsl-suite-quick-settings">
           <div class="wsl-quick-settings-header">
-            <svg class="h-4" xmlns="http://www.w3.org/2000/svg" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg><span class="font-medium">Using Client Libraries</span>
+            <ng-icon class="h-4" name="hero-terminal" size="1rem"></ng-icon>
+            <span class="font-medium">Using Client Libraries</span>
           </div>
           <div class="wsl-input-group">
             <div class="wsl-input-group-label">API Key</div>
@@ -59,14 +52,8 @@
               <div class="wsl-input-group-append" ngxClipboard
                 [cbContent]="fields.apiKey"
                 (cbOnSuccess)="onCopy($event, 'API Key')">
-                <span title="Copy API Key to clipboard">
-                  <svg class="h-4" xmlns="http://www.w3.org/2000/svg"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                  </svg>
-                </span>
+                <ng-icon title="Copy API Key to clipboard"
+                  name="hero-clipboard-copy" size="1rem"></ng-icon>
               </div>
             </div>
           </div>
@@ -77,14 +64,8 @@
               <div class="wsl-input-group-append" ngxClipboard
                 [cbContent]="fields.apiUrl"
                 (cbOnSuccess)="onCopy($event, 'API URL')">
-                <span title="Copy API URL to clipboard">
-                  <svg class="h-4" xmlns="http://www.w3.org/2000/svg"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
-                  </svg>
-                </span>
+                <ng-icon title="Copy API URL to clipboard"
+                  name="hero-clipboard-copy" size="1rem"></ng-icon>
               </div>
             </div>
           </div>
@@ -125,13 +106,11 @@
       </nav>
     </div>
   </div>
-  <div class="border-t border-gray-100"
-    [hidden]="currentTab !== TabType.Versions || !hasData() || hasItems()">
+  <div [hidden]="currentTab !== TabType.Versions || !hasData() || hasItems()">
     <app-suite-first-batch>
     </app-suite-first-batch>
   </div>
-  <div class="border-t border-gray-100"
-    [hidden]="currentTab !== TabType.Versions || !hasData() || !hasItems()">
+  <div [hidden]="currentTab !== TabType.Versions || !hasData() || !hasItems()">
     <div class="container grid gap-4 mx-auto lg:grid-cols-3">
       <div class="lg:col-span-2 lg:wsl-min-h-screen-suite">
         <app-suite-tab-batches>

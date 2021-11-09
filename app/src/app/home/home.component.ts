@@ -3,8 +3,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { timer } from 'rxjs';
-
-import type { UserLookupResponse } from '@/core/models/commontypes';
 import {
   AlertKind,
   AlertService,

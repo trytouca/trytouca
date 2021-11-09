@@ -3,7 +3,7 @@
   </app-teams-first>
 </div>
 <div [hidden]="!hasData() || !hasItems()">
-  <div class="border-t border-gray-100">
+  <div class="bg-gray-100 border-b border-gray-200">
     <div class="wsl-page-head">
       <nav aria-label="breadcrumb">
         <ol>
@@ -12,18 +12,14 @@
       </nav>
       <div class="print:hidden">
         <button type="button" (click)="openCreateModal()"
-          class="wsl-btn-sm wsl-btn-dark group"><svg
-            class="inline h-4 opacity-75 group-hover:opacity-100"
-            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>New Team
+          class="flex items-center space-x-1 wsl-btn-sm wsl-btn-dark group">
+          <ng-icon class="inline h-4 opacity-75 group-hover:opacity-100"
+            name="hero-plus-solid"></ng-icon>
+          <span>New Team</span>
         </button>
       </div>
     </div>
   </div>
-  <div class="py-8 border-t border-b border-gray-100 bg-gray-50"></div>
   <div [hidden]="currentTab !== TabType.Teams">
     <app-teams-tab-teams>
     </app-teams-tab-teams>

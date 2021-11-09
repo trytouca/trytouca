@@ -68,17 +68,19 @@
                 (cbOnSuccess)="onCopy($event)">
                 {{key.value}}</span>
             </div>
-            <div class="space-x-2">
+            <div class="flex items-center space-x-2">
               <button
-                class="w-4 text-xs opacity-50 hover:opacity-100 focus:outline-none"
+                class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
                 (click)="key.toggle()">
-                <fa-icon [icon]="key.shown ? 'eye-slash' : 'eye'"
-                  class="wsl-text-muted"></fa-icon>
+                <ng-icon class="wsl-text-muted"
+                  [name]="key.shown ? 'hero-eye-off' : 'hero-eye'"
+                  size="1.1rem"></ng-icon>
               </button>
               <button
-                class="w-4 text-xs opacity-50 hover:opacity-100 focus:outline-none"
+                class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
                 (click)="regenerateApiKey(i)">
-                <fa-icon icon="sync-alt" class="wsl-text-muted"></fa-icon>
+                <ng-icon class="wsl-text-muted" name="hero-refresh"
+                  size="1.1rem"></ng-icon>
               </button>
             </div>
           </div>

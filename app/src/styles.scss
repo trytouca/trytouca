@@ -51,7 +51,7 @@
     min-height: calc(100vh - 8rem);
   }
   .wsl-min-h-screen-3 {
-    min-height: calc(100vh - 18rem);
+    min-height: calc(100vh - 10.5rem);
   }
   .wsl-min-h-screen-4 {
     min-height: calc(100vh - 18rem);
@@ -98,7 +98,7 @@
       @apply text-xl wsl-text-muted;
     }
     img {
-      @apply px-8 py-4 mx-auto w-3/4;
+      @apply p-4 mx-auto w-3/5;
     }
     p {
       @apply p-4 text-left md:text-justify font-light;
