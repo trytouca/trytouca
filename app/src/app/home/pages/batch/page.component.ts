@@ -109,9 +109,6 @@ export class BatchPageComponent
   private _dialogRefSeal: DialogRef;
   private _dialogSubSeal: Subscription;
 
-  /**
-   *
-   */
   constructor(
     private apiService: ApiService,
     private alertService: AlertService,
@@ -184,16 +181,10 @@ export class BatchPageComponent
     });
   }
 
-  /**
-   *
-   */
   ngOnInit() {
     super.ngOnInit();
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subTeam.unsubscribe();
     this._subSuite.unsubscribe();
@@ -213,9 +204,6 @@ export class BatchPageComponent
     super.ngOnDestroy();
   }
 
-  /**
-   *
-   */
   fetchItems(): void {
     if (!this.params) {
       const paramMap = this.route.snapshot.paramMap;
@@ -237,9 +225,6 @@ export class BatchPageComponent
     this.batchPageService.updateRequestParams(this.params);
   }
 
-  /**
-   *
-   */
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     // pressing key 'Escape' should hide seal or promote dialogs
@@ -258,9 +243,6 @@ export class BatchPageComponent
     }
   }
 
-  /**
-   *
-   */
   private updateTitle(batch: BatchLookupResponse) {
     const title = [
       batch.batchSlug,
@@ -271,9 +253,6 @@ export class BatchPageComponent
     this.titleService.setTitle(title);
   }
 
-  /**
-   *
-   */
   private findPageButtons(): PageButton[] {
     if (this.currentTab !== this.TabType.Elements) {
       return [];
@@ -321,9 +300,6 @@ export class BatchPageComponent
     return buttons;
   }
 
-  /**
-   *
-   */
   private findPageSubButtons(): PageButton[] {
     if (this.currentTab !== this.TabType.Elements) {
       return [];
@@ -345,9 +321,6 @@ export class BatchPageComponent
     return buttons;
   }
 
-  /**
-   *
-   */
   private openSealModal() {
     this._dialogRefSeal = this.dialogService.open(BatchSealComponent, {
       closeButton: false,
@@ -364,9 +337,6 @@ export class BatchPageComponent
     );
   }
 
-  /**
-   *
-   */
   private openPromoteModal() {
     this._dialogRefPromote = this.dialogService.open(BatchPromoteComponent, {
       closeButton: false,
@@ -417,9 +387,6 @@ export class BatchPageComponent
     });
   }
 
-  /**
-   *
-   */
   private findOverviewInputs(
     meta: BatchPageOverviewMetadata
   ): FrontendOverviewSection {

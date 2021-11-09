@@ -6,9 +6,6 @@
 #include "rapidjson/writer.h"
 #include "touca/devkit/utils.hpp"
 
-/**
- *
- */
 void Statistics::update_collector_stats(long long duration,
                                         unsigned long jobs) {
   std::scoped_lock lock(_mutex);
@@ -18,9 +15,6 @@ void Statistics::update_collector_stats(long long duration,
   counter_collect++;
 }
 
-/**
- *
- */
 void Statistics::update_processor_stats(long long duration) {
   std::scoped_lock lock(_mutex);
   const auto count = counter_process;
@@ -29,9 +23,6 @@ void Statistics::update_processor_stats(long long duration) {
   counter_process++;
 }
 
-/**
- *
- */
 std::string Statistics::report() {
   std::scoped_lock lock(_mutex);
   rapidjson::Document doc(rapidjson::kObjectType);
@@ -53,9 +44,6 @@ std::string Statistics::report() {
   return strbuf.GetString();
 }
 
-/**
- *
- */
 void Statistics::reset() {
   avg_time_collect = 0;
   job_count_collect = 0;

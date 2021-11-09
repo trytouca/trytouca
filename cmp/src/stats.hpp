@@ -7,9 +7,6 @@
 #include "platform.hpp"
 #include "queue.hpp"
 
-/**
- *
- */
 struct Statistics {
   unsigned long job_count_collect = 0ul;
   unsigned long job_count_process = 0ul;
@@ -27,9 +24,6 @@ struct Statistics {
   std::mutex _mutex;
 };
 
-/**
- *
- */
 struct Resources {
   touca::Queue<Job> job_queue;
   Statistics stats;

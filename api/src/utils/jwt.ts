@@ -29,9 +29,6 @@ export function issue(session: ISessionDocument): string {
   })
 }
 
-/**
- *
- */
 export function extractPayload(token: string): TokenPayload {
   if (!token) {
     logger.silly('authentication cookie missing')

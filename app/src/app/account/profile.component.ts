@@ -97,9 +97,6 @@ export class ProfileComponent implements OnDestroy {
     }
   };
 
-  /**
-   *
-   */
   accountSettingsForm = new FormGroup({
     email: new FormControl('', {
       validators: formFields.email.validators,
@@ -115,9 +112,6 @@ export class ProfileComponent implements OnDestroy {
     })
   });
 
-  /**
-   *
-   */
   hints = new FormHints({
     email: new FormHint(
       'Contact us if you like to change your email address',
@@ -127,9 +121,6 @@ export class ProfileComponent implements OnDestroy {
     uname: new FormHint('', formFields.uname.validationErrors)
   });
 
-  /**
-   *
-   */
   constructor(
     private apiService: ApiService,
     private authService: AuthService,
@@ -158,17 +149,11 @@ export class ProfileComponent implements OnDestroy {
     this.userService.populate();
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subHints.unsubscribe();
     this._subUser.unsubscribe();
   }
 
-  /**
-   *
-   */
   onSubmit(model: FormContent) {
     if (!this.accountSettingsForm.valid) {
       return;
@@ -209,9 +194,6 @@ export class ProfileComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   openConfirmModal(type: EModalType) {
     const elements = new Map<EModalType, ConfirmElements>([
       [
@@ -261,9 +243,6 @@ export class ProfileComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   toggleFeatureFlag(flag: Checkbox) {
     const node = this.preferences[flag.slug];
     node.value = !(node.value ?? false);
@@ -275,9 +254,6 @@ export class ProfileComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   onCopy(event: IClipboardResponse) {
     this.notificationService.notify(
       AlertType.Success,
@@ -285,9 +261,6 @@ export class ProfileComponent implements OnDestroy {
     );
   }
 
-  /**
-   *
-   */
   regenerateApiKey(index: number): void {
     this.userService.updateApiKey(this.user.apiKeys[index]);
   }

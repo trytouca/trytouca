@@ -8,9 +8,6 @@ import { config } from '@/utils/config'
 import * as jwt from '@/utils/jwt'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export async function clientSessionCreate(
   req: Request,
   res: Response,

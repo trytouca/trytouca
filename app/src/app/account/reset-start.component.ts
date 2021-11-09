@@ -17,9 +17,6 @@ interface FormContent {
   templateUrl: './reset-start.component.html'
 })
 export class ResetStartComponent {
-  /**
-   *
-   */
   formReset = new FormGroup({
     email: new FormControl('', {
       validators: formFields.email.validators,
@@ -27,9 +24,6 @@ export class ResetStartComponent {
     })
   });
 
-  /**
-   *
-   */
   mailboxInput: MailboxInput = {
     textAfterSuccess: 'Did not receive the email? We can send you a new one.',
     textAfterFailure: 'Still not in your inbox? Maybe try one more time?',
@@ -41,14 +35,8 @@ export class ResetStartComponent {
   isFormShown = true;
   @Input() input: Alert;
 
-  /**
-   *
-   */
   constructor(private apiService: ApiService) {}
 
-  /**
-   *
-   */
   onSubmit(model: FormContent) {
     if (this.formReset.pristine) {
       return;
@@ -87,9 +75,6 @@ export class ResetStartComponent {
       .subscribe();
   }
 
-  /**
-   *
-   */
   mailboxAction(action: MailboxAction) {
     if (action === MailboxAction.Back) {
       this.isFormShown = true;

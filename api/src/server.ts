@@ -36,10 +36,6 @@ import {
 } from './services'
 import { setupSuperuser } from './startup'
 
-/**
- *
- */
-
 const app = express()
 
 app.use(cors({ origin: true, credentials: true, preflightContinue: true }))

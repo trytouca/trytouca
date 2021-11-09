@@ -5,9 +5,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { EPlatformRole } from '@/types/commontypes'
 
-/**
- *
- */
 const userSchema = new mongoose.Schema({
   activatedAt: {
     required: false,
@@ -95,9 +92,6 @@ const userSchema = new mongoose.Schema({
   }
 })
 
-/**
- *
- */
 export interface IUserDocument extends mongoose.Document {
   activatedAt: Date
   activationKey: string
@@ -119,22 +113,13 @@ export interface IUserDocument extends mongoose.Document {
   username: string
 }
 
-/**
- *
- */
 export type IUser = Pick<
   IUserDocument,
   '_id' | 'email' | 'fullname' | 'platformRole' | 'username'
 >
 
-/**
- *
- */
 export interface IUserModel extends mongoose.Model<IUserDocument> {}
 
-/**
- *
- */
 export const UserModel: IUserModel = mongoose.model<IUserDocument, IUserModel>(
   'User',
   userSchema

@@ -19,9 +19,6 @@ type IFormContent = {
 export class TeamInviteComponent extends ModalComponent {
   elements: { teamSlug: string };
 
-  /**
-   *
-   */
   constructor(private apiService: ApiService, public dialogRef: DialogRef) {
     super();
     super.form = new FormGroup({
@@ -41,9 +38,6 @@ export class TeamInviteComponent extends ModalComponent {
     this.elements = dialogRef.data as { teamSlug: string };
   }
 
-  /**
-   *
-   */
   onSubmit(model: IFormContent) {
     if (!this.form.valid) {
       return;
@@ -66,9 +60,6 @@ export class TeamInviteComponent extends ModalComponent {
     });
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     super.keydownGuard(['j', 'k', 'Enter', 'Backspace'], event);

@@ -1,8 +1,5 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-/**
- *
- */
 export enum MetricChangeType {
   Missing = 1,
   Slower,
@@ -11,9 +8,6 @@ export enum MetricChangeType {
   Fresh
 }
 
-/**
- *
- */
 export class Metric {
   constructor(
     readonly name: string,
@@ -21,9 +15,6 @@ export class Metric {
     readonly dst: number | null
   ) {}
 
-  /**
-   *
-   */
   public changeType(): MetricChangeType {
     // define threshold (in milliseconds) for the amount of time
     // that is considered prone to noise and measurement error

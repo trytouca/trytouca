@@ -9,9 +9,6 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 async function isBatchDueForRemoval(batch: IBatchDocument): Promise<boolean> {
   const suite = await SuiteModel.findById(batch.suite)
   const tuple = [suite.slug, batch.slug].join('/')
@@ -41,9 +38,6 @@ async function isBatchDueForRemoval(batch: IBatchDocument): Promise<boolean> {
   return true
 }
 
-/**
- *
- */
 async function pruneBatches(): Promise<void> {
   const batches = await BatchModel.find({ expirable: true })
   for (const batch of batches) {
@@ -53,9 +47,6 @@ async function pruneBatches(): Promise<void> {
   }
 }
 
-/**
- *
- */
 async function pruneComparisonResults(): Promise<void> {
   // find list of every suite that has a baseline
 

@@ -10,9 +10,6 @@ import { IUser } from '@/schemas/user'
 import { ECommentType } from '@/types/backendtypes'
 import { mailUser } from '@/utils/mailer'
 
-/**
- *
- */
 export type CommentInputs = {
   user: IUser
   team: ITeam
@@ -21,9 +18,6 @@ export type CommentInputs = {
   element?: IElementDocument
 }
 
-/**
- *
- */
 export function extractCommentTuple(res: Response) {
   const keys = []
   for (const key of ['team', 'suite', 'batch', 'element']) {
@@ -35,9 +29,6 @@ export function extractCommentTuple(res: Response) {
   return keys.join('_')
 }
 
-/**
- *
- */
 export function extractCommentType(res: Response): ECommentType {
   if (res.locals.element) {
     return ECommentType.Element
@@ -51,9 +42,6 @@ export function extractCommentType(res: Response): ECommentType {
   return ECommentType.Team
 }
 
-/**
- *
- */
 async function getSuiteSubscribers(
   suiteId: ISuiteDocument['_id']
 ): Promise<IUser[]> {
@@ -99,9 +87,6 @@ type MailInputs = {
   username: string
 }
 
-/**
- *
- */
 export async function notifySubscribers(
   inputs: MailInputs,
   locals: CommentInputs

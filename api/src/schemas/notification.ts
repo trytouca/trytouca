@@ -2,9 +2,6 @@
 
 import mongoose from 'mongoose'
 
-/**
- *
- */
 const notificationSchema = new mongoose.Schema({
   createdAt: {
     required: true,
@@ -27,9 +24,6 @@ const notificationSchema = new mongoose.Schema({
 
 notificationSchema.index({ userId: 1, createdAt: -1 })
 
-/**
- *
- */
 export interface INotificationDocument extends mongoose.Document {
   createdAt: Date
   seenAt: Date
@@ -37,15 +31,9 @@ export interface INotificationDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId
 }
 
-/**
- *
- */
 export interface INotificationModel
   extends mongoose.Model<INotificationDocument> {}
 
-/**
- *
- */
 export const NotificationModel: INotificationModel = mongoose.model<
   INotificationDocument,
   INotificationModel

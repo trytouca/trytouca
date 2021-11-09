@@ -7,9 +7,6 @@ export enum EReportType {
   Promote = 'promote'
 }
 
-/**
- *
- */
 const reportSchema = new mongoose.Schema(
   {
     dstBatchId: {
@@ -37,14 +34,8 @@ const reportSchema = new mongoose.Schema(
   }
 )
 
-/**
- *
- */
 reportSchema.index({ srcBatchId: 1, dstBatchId: 1 })
 
-/**
- *
- */
 export interface IReportDocument extends mongoose.Document {
   dstBatchId: mongoose.Types.ObjectId
   reportedAt: Date
@@ -52,14 +43,8 @@ export interface IReportDocument extends mongoose.Document {
   srcBatchId: mongoose.Types.ObjectId
 }
 
-/**
- *
- */
 interface IReportModel extends mongoose.Model<IReportDocument> {}
 
-/**
- *
- */
 export const ReportModel: IReportModel = mongoose.model<
   IReportDocument,
   IReportModel

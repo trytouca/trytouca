@@ -23,9 +23,6 @@ export class TeamCreateSuiteComponent
 {
   elements: { teamSlug: string };
 
-  /**
-   *
-   */
   constructor(private apiService: ApiService, public dialogRef: DialogRef) {
     super();
     super.form = new FormGroup({
@@ -52,16 +49,10 @@ export class TeamCreateSuiteComponent
     this.elements = dialogRef.data as { teamSlug: string };
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     super.unsubscribeHints();
   }
 
-  /**
-   *
-   */
   onSubmit(model: IFormContent) {
     if (!this.form.valid) {
       return;
@@ -86,9 +77,6 @@ export class TeamCreateSuiteComponent
     });
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     super.keydownGuard(['j', 'k', 'Enter', 'Backspace'], event);

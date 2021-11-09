@@ -30,9 +30,6 @@ export class SuiteTrendsRuntimeComponent implements OnDestroy {
   faInfoCircle = faInfoCircle;
   isTooltipActive = false;
 
-  /**
-   *
-   */
   constructor(
     private suitePageService: SuitePageService,
     faIconLibrary: FaIconLibrary
@@ -55,9 +52,6 @@ export class SuiteTrendsRuntimeComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subItems.unsubscribe();
   }

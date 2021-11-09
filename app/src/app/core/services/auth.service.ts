@@ -17,14 +17,8 @@ export class AuthService {
   redirectUrl: string;
   private authInstance: gapi.auth2.GoogleAuth;
 
-  /**
-   *
-   */
   constructor(private apiService: ApiService, private zone: NgZone) {}
 
-  /**
-   *
-   */
   public login(username: string, password: string) {
     return this.apiService.post('auth/signin', { username, password }).pipe(
       map((doc) => {
@@ -33,9 +27,6 @@ export class AuthService {
     );
   }
 
-  /**
-   *
-   */
   public logout() {
     return this.apiService.post('auth/signout').pipe(
       catchError(() => {
@@ -50,17 +41,11 @@ export class AuthService {
     );
   }
 
-  /**
-   *
-   */
   public isLoggedIn() {
     const expiresAt = localStorage.getItem(ELocalStorageKey.TokenExpiresAt);
     return expiresAt && new Date() < new Date(expiresAt);
   }
 
-  /**
-   *
-   */
   private google_initialize(): Observable<gapi.auth2.GoogleAuth> {
     if (this.authInstance !== undefined) {
       return of(this.authInstance);
@@ -75,9 +60,6 @@ export class AuthService {
     );
   }
 
-  /**
-   *
-   */
   private google_authenticate(): Observable<gapi.auth2.GoogleUser> {
     if (this.authInstance !== undefined && this.authInstance.isSignedIn) {
       return of(this.authInstance.currentUser.get());
@@ -88,9 +70,6 @@ export class AuthService {
     return this.google_initialize().pipe(mergeMap((auth) => auth.signIn()));
   }
 
-  /**
-   *
-   */
   google_login(): Observable<void> {
     const set_expiration_date = (doc) => {
       localStorage.setItem(ELocalStorageKey.TokenExpiresAt, doc.expiresAt);

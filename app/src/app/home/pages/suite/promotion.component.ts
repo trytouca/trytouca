@@ -9,8 +9,5 @@ import type { PromotionItem } from '@/core/models/frontendtypes';
   templateUrl: './promotion.component.html'
 })
 export class SuiteItemPromotionComponent {
-  /**
-   *
-   */
   @Input() item: PromotionItem;
 }

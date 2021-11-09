@@ -12,9 +12,6 @@ import type { BatchListResponse } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
   const queryOutput: BatchItemQueryOutput[] = await BatchModel.aggregate([
     { $match: { suite: suite._id } },

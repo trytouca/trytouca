@@ -10,9 +10,6 @@ import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 export async function ctrlCommentRemove(
   req: Request,
   res: Response,

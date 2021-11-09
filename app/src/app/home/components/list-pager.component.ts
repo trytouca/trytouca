@@ -30,9 +30,6 @@ export class ListPagerComponent {
   @Input() stats: FilterStats;
   @Output() updateList = new EventEmitter<FilterParams>();
 
-  /**
-   *
-   */
   constructor() {
     const update = () =>
       this.updateList.emit({
@@ -63,9 +60,6 @@ export class ListPagerComponent {
       });
   }
 
-  /**
-   *
-   */
   isFirstPage(): boolean {
     return this.params.pagen === 1;
   }
@@ -79,41 +73,26 @@ export class ListPagerComponent {
     return this.lastPageNumber <= this.params.pagen;
   }
 
-  /**
-   *
-   */
   previousPage(): void {
     if (!this.isFirstPage()) {
       this._pagenSubject.next(this.params.pagen - 1);
     }
   }
 
-  /**
-   *
-   */
   nextPage(): void {
     if (!this.isLastPage()) {
       this._pagenSubject.next(this.params.pagen + 1);
     }
   }
 
-  /**
-   *
-   */
   get pageNumber(): number {
     return this.params.pagen;
   }
 
-  /**
-   *
-   */
   set pageNumber(pageNumber: number) {
     this._pagenSubject.next(pageNumber);
   }
 
-  /**
-   *
-   */
   get pageNumbers(): PageNumber[] {
     const count = Math.min(
       5,
@@ -147,46 +126,28 @@ export class ListPagerComponent {
     return output;
   }
 
-  /**
-   *
-   */
   get lastPageNumber(): number {
     return Math.ceil(this.stats.totalUnpaginatedRows / this.params.pagel);
   }
 
-  /**
-   *
-   */
   get pageLength(): number {
     return this.params.pagel;
   }
 
-  /**
-   *
-   */
   set pageLength(pageLength: number) {
     this._pagelSubject.next(pageLength);
   }
 
-  /**
-   *
-   */
   get pageLengths(): number[] {
     return [10, 20, 50, 100, 200, 500].filter(
       (v) => v < this.stats.totalUnpaginatedRows && v !== this.pageLength
     );
   }
 
-  /**
-   *
-   */
   onKeyupPageNumber(pageNumber: KeyboardEvent) {
     this._pagenQueryChanged.next(pageNumber);
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     const hotKeys = ['j', 'k', 'Backspace', 'Enter', 'Escape'];

@@ -5,9 +5,6 @@ import mongoose from 'mongoose'
 import type { PromotionQueryOutput } from '@/types/backendtypes'
 import { config } from '@/utils/config'
 
-/**
- *
- */
 const suiteSchema = new mongoose.Schema(
   {
     createdBy: {
@@ -84,14 +81,8 @@ const suiteSchema = new mongoose.Schema(
   }
 )
 
-/**
- *
- */
 suiteSchema.index({ team: 1, slug: 1 }, { unique: true })
 
-/**
- *
- */
 export interface ISuiteDocument extends mongoose.Document {
   createdBy: mongoose.Types.ObjectId
   name: string
@@ -103,14 +94,8 @@ export interface ISuiteDocument extends mongoose.Document {
   team: mongoose.Types.ObjectId
 }
 
-/**
- *
- */
 export interface ISuiteModel extends mongoose.Model<ISuiteDocument> {}
 
-/**
- *
- */
 export const SuiteModel: ISuiteModel = mongoose.model<
   ISuiteDocument,
   ISuiteModel

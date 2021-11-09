@@ -11,9 +11,6 @@ import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 import { tracker } from '@/utils/tracker'
 
-/**
- *
- */
 async function accountDeleteImpl(account: IUser) {
   await TeamModel.updateMany(
     {},

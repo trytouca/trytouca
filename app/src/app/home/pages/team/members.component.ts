@@ -73,9 +73,6 @@ export class TeamTabMembersComponent
   private _team: TeamLookupResponse;
   private _subTeam: Subscription;
 
-  /**
-   *
-   */
   constructor(
     private apiService: ApiService,
     private dialogService: DialogService,
@@ -95,9 +92,6 @@ export class TeamTabMembersComponent
     });
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._dialogSub) {
       this._dialogSub.unsubscribe();
@@ -106,9 +100,6 @@ export class TeamTabMembersComponent
     super.ngOnDestroy();
   }
 
-  /**
-   *
-   */
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     // pressing keys 'j' and 'k' should navigate through items on the list
@@ -123,17 +114,11 @@ export class TeamTabMembersComponent
     }
   }
 
-  /**
-   *
-   */
   isSelf(member: TeamMember): boolean {
     const self = this.userService.currentUser;
     return !self || self.username === member.username;
   }
 
-  /**
-   *
-   */
   confirmEdit(member: TeamMember): void {
     const newRoleName =
       member.role === ETeamRole.Member ? 'an Administrator' : 'a Member';
@@ -156,9 +141,6 @@ export class TeamTabMembersComponent
     );
   }
 
-  /**
-   *
-   */
   confirmRemove(member: TeamMember): void {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
       closeButton: false,
@@ -179,9 +161,6 @@ export class TeamTabMembersComponent
     );
   }
 
-  /**
-   *
-   */
   confirmRescind(invitee: TeamInvitee): void {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
       closeButton: false,
@@ -202,9 +181,6 @@ export class TeamTabMembersComponent
     );
   }
 
-  /**
-   *
-   */
   confirmAccept(applicant: TeamApplicant): void {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
       closeButton: false,
@@ -225,9 +201,6 @@ export class TeamTabMembersComponent
     );
   }
 
-  /**
-   *
-   */
   confirmDecline(applicant: TeamApplicant): void {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
       closeButton: false,
@@ -248,9 +221,6 @@ export class TeamTabMembersComponent
     );
   }
 
-  /**
-   *
-   */
   private edit(member: TeamMember): void {
     const newRoleType =
       member.role === ETeamRole.Member ? ETeamRole.Admin : ETeamRole.Member;
@@ -272,9 +242,6 @@ export class TeamTabMembersComponent
     });
   }
 
-  /**
-   *
-   */
   private remove(member: TeamMember): void {
     const url = ['team', this._team.slug, 'member', member.username].join('/');
     this.apiService.delete(url).subscribe({
@@ -294,9 +261,6 @@ export class TeamTabMembersComponent
     });
   }
 
-  /**
-   *
-   */
   private rescind(invitee: TeamInvitee): void {
     const url = ['team', this._team.slug, 'invite', 'rescind'].join('/');
     this.apiService.post(url, { email: invitee.email }).subscribe({
@@ -316,9 +280,6 @@ export class TeamTabMembersComponent
     });
   }
 
-  /**
-   *
-   */
   private accept(applicant: TeamApplicant): void {
     const url = ['team', this._team.slug, 'join', applicant.username].join('/');
     this.apiService.post(url).subscribe({
@@ -336,9 +297,6 @@ export class TeamTabMembersComponent
     });
   }
 
-  /**
-   *
-   */
   private decline(applicant: TeamApplicant): void {
     const url = ['team', this._team.slug, 'join', applicant.username].join('/');
     this.apiService.delete(url).subscribe({

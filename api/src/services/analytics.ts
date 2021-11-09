@@ -7,9 +7,6 @@ import { ITeamDocument, TeamModel } from '@/schemas/team'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 async function populateBatchMeta(
   team: ITeamDocument,
   suite: ISuiteDocument,
@@ -35,9 +32,6 @@ async function populateBatchMeta(
   rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}`)
 }
 
-/**
- *
- */
 async function processSuite(team: ITeamDocument, suite: ISuiteDocument) {
   await BatchModel.find({
     suite: suite._id,
@@ -52,9 +46,6 @@ async function processSuite(team: ITeamDocument, suite: ISuiteDocument) {
     )
 }
 
-/**
- *
- */
 export async function analyticsService(): Promise<void> {
   logger.silly('analytics service: running')
 

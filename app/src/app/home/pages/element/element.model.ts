@@ -5,9 +5,6 @@ import { Metric } from '@/home/models/metric.model';
 import { PageListItem } from '@/home/models/page-list-item.model';
 import { Result } from '@/home/models/result.model';
 
-/**
- *
- */
 export type ElementPageOverviewMetadata = {
   resultsCountHead: number;
   resultsCountFresh: number;
@@ -27,18 +24,12 @@ export type ElementPageOverviewMetadata = {
   messageSubmittedBy: Userinfo;
 };
 
-/**
- *
- */
 export enum ElementPageItemType {
   Common = 'common',
   Missing = 'missing',
   Fresh = 'fresh'
 }
 
-/**
- *
- */
 export class ElementPageResult extends PageListItem<
   Result,
   ElementPageItemType
@@ -48,9 +39,6 @@ export class ElementPageResult extends PageListItem<
   }
 }
 
-/**
- *
- */
 export class ElementPageMetric extends PageListItem<
   Metric,
   ElementPageItemType

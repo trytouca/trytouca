@@ -9,9 +9,6 @@ import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 export async function suiteCreate(
   user: IUser,
   team: ITeam,
@@ -35,9 +32,6 @@ export async function suiteCreate(
   return newSuite
 }
 
-/**
- *
- */
 export async function suiteRemove(suite: ISuiteDocument): Promise<boolean> {
   const team = await TeamModel.findById(suite.team)
   const tuple = [team.slug, suite.slug].join('/')

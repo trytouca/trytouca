@@ -18,9 +18,6 @@ namespace touca {
 class Testcase;
 }
 
-/**
- *
- */
 struct MinioClient {
   MinioClient(const Options& options);
   ~MinioClient();
@@ -33,9 +30,6 @@ struct MinioClient {
   std::unique_ptr<Aws::SDKOptions> _aws_sdk_options;
 };
 
-/**
- *
- */
 struct ObjectStore {
   ObjectStore(const Options& options);
   bool status_check() const;

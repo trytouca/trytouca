@@ -4,9 +4,6 @@ import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export async function teamCreate(
   user: IUser,
   team: { slug: string; name: string }

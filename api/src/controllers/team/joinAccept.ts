@@ -9,9 +9,6 @@ import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 export async function teamJoinAccept(
   req: Request,
   res: Response,

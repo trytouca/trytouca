@@ -19,9 +19,6 @@ type MessageJob = {
   batchId: ObjectId
 }
 
-/**
- *
- */
 async function messageListImpl() {
   const reservedAt = new Date()
   reservedAt.setSeconds(reservedAt.getSeconds() - 60)
@@ -45,9 +42,6 @@ async function messageListImpl() {
   return result
 }
 
-/**
- *
- */
 async function comparisonListImpl() {
   const reservedAt = new Date()
   reservedAt.setSeconds(reservedAt.getSeconds() - 60)
@@ -114,9 +108,6 @@ async function comparisonListImpl() {
   return result
 }
 
-/**
- *
- */
 export async function comparisonList(
   req: Request,
   res: Response,

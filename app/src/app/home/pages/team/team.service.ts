@@ -121,9 +121,6 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   private _membersSubject = new Subject<TeamPageMember[]>();
   members$ = this._membersSubject.asObservable();
 
-  /**
-   *
-   */
   constructor(
     private alertService: AlertService,
     private apiService: ApiService
@@ -280,9 +277,6 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     );
   }
 
-  /**
-   *
-   */
   public fetchItems(args: FetchInput): void {
     const onetime: Observable<unknown>[] = [of(0)];
 
@@ -348,9 +342,6 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     this.fetchItems({ teamSlug: this._team.slug });
   }
 
-  /**
-   *
-   */
   public refreshMembers(): void {
     this._members = null;
     this.fetchItems({ teamSlug: this._team.slug });
@@ -365,9 +356,6 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     this.init({ team: teamSlug });
   }
 
-  /**
-   *
-   */
   public removeInvitee(invitee: TeamInvitee): void {
     const index = this._members.findIndex((v) => {
       return (
@@ -379,9 +367,6 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     this._membersSubject.next(this._members);
   }
 
-  /**
-   *
-   */
   public removeMember(member: TeamMember): void {
     const index = this._members.findIndex((v) => {
       return (

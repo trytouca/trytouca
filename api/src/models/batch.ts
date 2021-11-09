@@ -13,9 +13,6 @@ import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 export async function batchPromote(
   team: ITeam,
   suite: ISuiteDocument,
@@ -109,9 +106,6 @@ export async function batchPromote(
   logger.info('%s: created reporting job against latest', tuple)
 }
 
-/**
- *
- */
 export async function batchSeal(
   team: ITeam,
   suite: ISuiteDocument,
@@ -162,9 +156,6 @@ export async function batchSeal(
   logger.debug('%s: created reporting job against baseline', tuple)
 }
 
-/**
- *
- */
 export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
   const suite = await SuiteModel.findById(batch.suite)
   const team = await TeamModel.findById(suite.team)

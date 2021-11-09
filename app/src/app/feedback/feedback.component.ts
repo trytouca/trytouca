@@ -18,9 +18,6 @@ type IFormContent = {
   templateUrl: './feedback.component.html'
 })
 export class FeedbackComponent {
-  /**
-   *
-   */
   feedbackForm = new FormGroup({
     body: new FormControl('', {
       validators: [
@@ -39,14 +36,8 @@ export class FeedbackComponent {
   submitted: boolean;
   prev: IFormContent;
 
-  /**
-   *
-   */
   constructor(private apiService: ApiService) {}
 
-  /**
-   *
-   */
   shouldHideAriaDescription(field: string): boolean {
     return (
       (!this.submitted && this.feedbackForm.controls[field].pristine) ||
@@ -54,9 +45,6 @@ export class FeedbackComponent {
     );
   }
 
-  /**
-   *
-   */
   onSubmit(model: IFormContent) {
     if (!this.feedbackForm.valid) {
       this.alert = { type: AlertType.Danger, text: 'Your message is invalid.' };

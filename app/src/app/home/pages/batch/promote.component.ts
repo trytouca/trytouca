@@ -19,9 +19,6 @@ interface IFormContent {
 export class BatchPromoteComponent extends ModalComponent {
   elements: { batch: BatchLookupResponse };
 
-  /**
-   *
-   */
   constructor(private apiService: ApiService, public dialogRef: DialogRef) {
     super();
     super.form = new FormGroup({
@@ -33,9 +30,6 @@ export class BatchPromoteComponent extends ModalComponent {
     this.elements = dialogRef.data as { batch: BatchLookupResponse };
   }
 
-  /**
-   *
-   */
   onSubmit(model: IFormContent) {
     if (!this.form.valid) {
       return;
@@ -64,18 +58,12 @@ export class BatchPromoteComponent extends ModalComponent {
     });
   }
 
-  /**
-   *
-   */
   public closeModal() {
     this.form.reset();
     this.submitted = false;
     this.dialogRef.close(false);
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     super.keydownGuard(['j', 'k', 'Enter', 'Escape', 'Backspace'], event);

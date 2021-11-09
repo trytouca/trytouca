@@ -11,9 +11,6 @@ import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 import { tracker } from '@/utils/tracker'
 
-/**
- *
- */
 async function updateFeatureFlags(user: IUser, flags: Record<string, boolean>) {
   logger.debug('%s: updating feature flag: %j', user.username, flags)
   const insert = Object.keys(flags).filter((v) => flags[v] === true)

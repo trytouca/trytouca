@@ -4,9 +4,6 @@ import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 
-/**
- *
- */
 export async function comparisonRemove(
   jobs: IComparisonDocument[]
 ): Promise<void> {

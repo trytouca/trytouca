@@ -6,9 +6,6 @@ import { addSampleData } from '@/models/sampleData'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export async function platformAccountPopulate(
   req: Request,
   res: Response,

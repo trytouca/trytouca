@@ -16,9 +16,6 @@ type AuthInput = {
   token: string
 }
 
-/**
- *
- */
 async function isAuthenticatedImpl(input: AuthInput): Promise<IUser> {
   // request should have an http-only cookie with a signed JWT bearer token
   // and a payload format according to our expectations.
@@ -128,9 +125,6 @@ export async function isAuthenticated(
   return next()
 }
 
-/**
- *
- */
 export async function isClientAuthenticated(
   req: Request,
   res: Response,
@@ -153,9 +147,6 @@ export async function isClientAuthenticated(
   return next()
 }
 
-/**
- *
- */
 export async function isPlatformAdmin(
   req: Request,
   res: Response,

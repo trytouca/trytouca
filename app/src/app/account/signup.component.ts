@@ -18,9 +18,6 @@ interface FormContent {
   templateUrl: './signup.component.html'
 })
 export class SignupComponent {
-  /**
-   *
-   */
   formSignup = new FormGroup({
     email: new FormControl('', {
       validators: formFields.email.validators,
@@ -28,9 +25,6 @@ export class SignupComponent {
     })
   });
 
-  /**
-   *
-   */
   mailboxInput: MailboxInput = {
     textAfterSuccess: 'Did not receive the email? We can send you a new one.',
     textAfterFailure: 'Still not in your inbox? Maybe try one more time?',
@@ -42,9 +36,6 @@ export class SignupComponent {
   isFormShown = true;
   showForm: boolean;
 
-  /**
-   *
-   */
   constructor(
     private router: Router,
     private apiService: ApiService,
@@ -57,9 +48,6 @@ export class SignupComponent {
     });
   }
 
-  /**
-   *
-   */
   onSubmit(model: FormContent) {
     if (!this.formSignup.valid) {
       return;
@@ -98,9 +86,6 @@ export class SignupComponent {
       .subscribe();
   }
 
-  /**
-   *
-   */
   mailboxAction(action: MailboxAction) {
     if (action === MailboxAction.Back) {
       this.isFormShown = true;
@@ -111,7 +96,7 @@ export class SignupComponent {
     }
   }
 
-  /**a
+  /**
    * Determines if help tip should be shown below the input field.
    */
   isFormValid() {
@@ -119,9 +104,6 @@ export class SignupComponent {
     return field.pristine || field.valid;
   }
 
-  /**
-   *
-   */
   signupGoogle() {
     this.authService.google_login().subscribe({
       next: () => {

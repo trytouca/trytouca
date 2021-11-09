@@ -6,9 +6,6 @@ import { SuiteModel } from '@/schemas/suite'
 import { TeamModel } from '@/schemas/team'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export async function autosealService(): Promise<void> {
   logger.silly('auto-seal service: running')
   for (const team of await TeamModel.find()) {

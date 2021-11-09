@@ -4,9 +4,6 @@ import { environment } from 'src/environments/environment';
 
 import { UserLookupResponse } from '@/core/models/commontypes';
 
-/**
- *
- */
 class IntercomClient {
   public boot(user?: UserLookupResponse) {
     if (environment.intercomId === '') {

@@ -12,9 +12,6 @@ import type {
   Userinfo
 } from './commontypes'
 
-/**
- *
- */
 export type PromotionQueryOutput = {
   at: Date
   by: Types.ObjectId
@@ -23,34 +20,22 @@ export type PromotionQueryOutput = {
   to: Types.ObjectId
 }
 
-/**
- *
- */
 export type BatchItemQueryOutput = Exclude<BatchItem, 'submittedBy'> & {
   _id: Types.ObjectId
   submittedBy: Types.ObjectId[]
   superior: Types.ObjectId
 }
 
-/**
- *
- */
 export type SuiteItemQueryOutput = Exclude<SuiteItem, 'baseline' | 'latest'> & {
   baseline: BatchItemQueryOutput
   latest: BatchItemQueryOutput
 }
 
-/**
- *
- */
 export type BackendBatchComparisonItem = BatchComparisonItem & {
   contentId: string
   messageId: Types.ObjectId
 }
 
-/**
- *
- */
 export type BackendBatchComparisonItemCommon = {
   dst: BackendBatchComparisonItem
   meta?: CppTestcaseComparisonOverview
@@ -60,16 +45,10 @@ export type BackendBatchComparisonItemCommon = {
   contentId?: string
 }
 
-/**
- *
- */
 export type BackendBatchComparisonItemSolo = BackendBatchComparisonItem & {
   meta?: CppTestcaseOverview
 }
 
-/**
- *
- */
 export type BackendBatchComparisonResponse = {
   common: BackendBatchComparisonItemCommon[]
   fresh: BackendBatchComparisonItemSolo[]
@@ -77,9 +56,6 @@ export type BackendBatchComparisonResponse = {
   overview?: BatchCompareOverview
 }
 
-/**
- *
- */
 export enum ECommentType {
   Batch = 'batch',
   Element = 'element',
@@ -87,9 +63,6 @@ export enum ECommentType {
   Team = 'team'
 }
 
-/**
- *
- */
 export type CommentListQueryOutput = {
   _id: Types.ObjectId
   at: Date

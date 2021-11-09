@@ -19,9 +19,6 @@ export class CommentComponent {
   @Input() meta: FrontendCommentItem;
   @Output() commentAction = new EventEmitter<FrontendCommentAction>();
 
-  /**
-   *
-   */
   performAction(actionType: FrontendCommentActionType): void {
     this.commentAction.emit({ actionType, commentId: this.meta.commentId });
   }

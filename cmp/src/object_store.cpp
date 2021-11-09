@@ -10,9 +10,6 @@
 #include "touca/devkit/logger.hpp"
 #include "touca/devkit/testcase.hpp"
 
-/**
- *
- */
 MinioClient::MinioClient(const Options& options) {
   setenv("AWS_REGION", options.minio_region.c_str(), true);
   setenv("AWS_EC2_METADATA_DISABLED", "TRUE", true);
@@ -41,14 +38,8 @@ MinioClient::MinioClient(const Options& options) {
                                                     policy, false);
 }
 
-/**
- *
- */
 MinioClient::~MinioClient() { Aws::ShutdownAPI(*_aws_sdk_options); }
 
-/**
- *
- */
 std::vector<std::string> MinioClient::list_buckets() const {
   std::vector<std::string> bucket_names;
   const auto& outcome = _aws_client->ListBuckets();
@@ -61,9 +52,6 @@ std::vector<std::string> MinioClient::list_buckets() const {
   return bucket_names;
 }
 
-/**
- *
- */
 void MinioClient::get_object(const std::string& bucket_name,
                              const std::string& object_key,
                              std::vector<uint8_t>& buffer) const {
@@ -82,15 +70,9 @@ void MinioClient::get_object(const std::string& bucket_name,
   result_body.read((char*)&buffer[0], buffer.size());
 }
 
-/**
- *
- */
 ObjectStore::ObjectStore(const Options& options)
     : _minio(MinioClient(options)) {}
 
-/**
- *
- */
 bool ObjectStore::status_check() const {
   const auto& buckets = _minio.list_buckets();
   for (const auto& bucket : buckets) {
@@ -99,9 +81,6 @@ bool ObjectStore::status_check() const {
   return buckets.size() == 3;
 }
 
-/**
- *
- */
 std::shared_ptr<touca::Testcase> ObjectStore::get_message(
     const std::string& key) const {
   std::vector<uint8_t> buffer;
@@ -121,9 +100,6 @@ std::shared_ptr<touca::Testcase> ObjectStore::get_message(
   return nullptr;
 }
 
-/**
- *
- */
 ObjectStore& ObjectStore::get_instance(const Options& options) {
   static ObjectStore store(options);
   return store;

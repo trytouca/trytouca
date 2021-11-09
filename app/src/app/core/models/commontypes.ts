@@ -1,8 +1,5 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-/**
- *
- */
 export enum EPlatformRole {
   User = 'user',
   Admin = 'admin',
@@ -10,17 +7,11 @@ export enum EPlatformRole {
   Super = 'super'
 }
 
-/**
- *
- */
 export type Userinfo = {
   fullname: string;
   username: string;
 };
 
-/**
- *
- */
 export type UserLookupResponse = {
   apiKeys: string[];
   email: string;
@@ -32,23 +23,14 @@ export type UserLookupResponse = {
   username: string;
 };
 
-/**
- *
- */
 export type NotificationItem = {
   createdAt: Date;
   seenAt?: Date;
   text: string;
 };
 
-/**
- *
- */
 export type NotificationListResponse = NotificationItem[];
 
-/**
- *
- */
 export enum ETeamRole {
   Invalid = 'unknown',
   Applicant = 'applicant',
@@ -58,66 +40,42 @@ export enum ETeamRole {
   Owner = 'owner'
 }
 
-/**
- *
- */
 export type TeamItem = {
   role: ETeamRole;
   name: string;
   slug: string;
 };
 
-/**
- *
- */
 export type TeamLookupResponse = TeamItem & {
   userCount: number;
 };
 
-/**
- *
- */
 export type TeamListResponse = TeamItem[];
 
-/**
- *
- */
 export type TeamMember = {
   fullname: string;
   role: ETeamRole;
   username: string;
 };
 
-/**
- *
- */
 export type TeamInvitee = {
   email: string;
   fullname: string;
   invitedAt: Date;
 };
 
-/**
- *
- */
 export type TeamApplicant = {
   email: string;
   fullname: string;
   username: string;
 };
 
-/**
- *
- */
 export type TeamMemberListResponse = {
   applicants: TeamApplicant[];
   invitees: TeamInvitee[];
   members: TeamMember[];
 };
 
-/**
- *
- */
 export type Promotion = {
   at: Date;
   by: Userinfo;
@@ -126,9 +84,6 @@ export type Promotion = {
   to: string;
 };
 
-/**
- *
- */
 export type BatchCompareOverview = {
   elementsCountDifferent: number;
   elementsCountFresh: number;
@@ -142,9 +97,6 @@ export type BatchCompareOverview = {
   metricsDurationSign: number;
 };
 
-/**
- *
- */
 export type BatchItemRaw = {
   batchSlug: string;
   comparedAgainst: string;
@@ -156,16 +108,10 @@ export type BatchItemRaw = {
   updatedAt: Date;
 };
 
-/**
- *
- */
 export type BatchItem = BatchItemRaw & {
   meta: BatchCompareOverview;
 };
 
-/**
- *
- */
 export type BatchLookupResponse = BatchItem & {
   commentCount: number;
   suiteName: string;
@@ -174,14 +120,8 @@ export type BatchLookupResponse = BatchItem & {
   teamSlug: string;
 };
 
-/**
- *
- */
 export type BatchListResponse = BatchItem[];
 
-/**
- *
- */
 export type CommentItem = {
   at: Date;
   by: Userinfo;
@@ -191,14 +131,8 @@ export type CommentItem = {
   text: string;
 };
 
-/**
- *
- */
 export type CommentListResponse = CommentItem[];
 
-/**
- *
- */
 export type SuiteItem = {
   baseline?: BatchItemRaw;
   batchCount: number;
@@ -208,9 +142,6 @@ export type SuiteItem = {
   suiteSlug: string;
 };
 
-/**
- *
- */
 export type SuiteLookupResponse = SuiteItem & {
   batches: string[];
   isSubscribed: boolean;
@@ -222,23 +153,14 @@ export type SuiteLookupResponse = SuiteItem & {
   teamSlug: string;
 };
 
-/**
- *
- */
 export type SuiteListResponse = SuiteItem[];
 
-/**
- *
- */
 export type CppTestcaseOverview = {
   keysCount: number;
   metricsCount: number;
   metricsDuration: number;
 };
 
-/**
- *
- */
 export type CppTestcaseComparisonOverview = {
   keysCountCommon: number;
   keysCountFresh: number;
@@ -251,33 +173,21 @@ export type CppTestcaseComparisonOverview = {
   metricsDurationCommonSrc: number;
 };
 
-/**
- *
- */
 export type BatchComparisonItem = {
   builtAt: Date;
   elementName: string;
 };
 
-/**
- *
- */
 export type BatchComparisonItemCommon = {
   dst: BatchComparisonItem;
   meta?: CppTestcaseComparisonOverview;
   src: BatchComparisonItem;
 };
 
-/**
- *
- */
 export type BatchComparisonItemSolo = BatchComparisonItem & {
   meta?: CppTestcaseOverview;
 };
 
-/**
- *
- */
 export type BatchComparisonResponse = {
   common: BatchComparisonItemCommon[];
   fresh: BatchComparisonItemSolo[];
@@ -285,23 +195,14 @@ export type BatchComparisonResponse = {
   overview?: BatchCompareOverview;
 };
 
-/**
- *
- */
 type ElementListResponseItem = {
   metricsDuration: number;
   name: string;
   slug: string;
 };
 
-/**
- *
- */
 export type ElementListResponse = ElementListResponseItem[];
 
-/**
- *
- */
 export type ElementLookupResponse = {
   batches: {
     slug: string;
@@ -316,17 +217,11 @@ export type ElementLookupResponse = {
   teamSlug: string;
 };
 
-/**
- *
- */
 export type ElementComparisonItem = BatchComparisonItem & {
   submittedAt: Date;
   submittedBy: Userinfo;
 };
 
-/**
- *
- */
 export type CppTypeComparison = {
   name: string;
   score?: number;
@@ -337,18 +232,12 @@ export type CppTypeComparison = {
   dstValue?: string;
 };
 
-/**
- *
- */
 type CppCellar = {
   commonKeys: CppTypeComparison[];
   missingKeys: CppTypeComparison[];
   newKeys: CppTypeComparison[];
 };
 
-/**
- *
- */
 type CppTestcaseMetadata = {
   builtAt: Date;
   teamslug: string;
@@ -357,9 +246,6 @@ type CppTestcaseMetadata = {
   version: string;
 };
 
-/**
- *
- */
 type CppTestcaseComparison = {
   assertions: CppCellar;
   dst: CppTestcaseMetadata;
@@ -368,9 +254,6 @@ type CppTestcaseComparison = {
   src: CppTestcaseMetadata;
 };
 
-/**
- *
- */
 export type ElementComparisonResponse = {
   cmp?: CppTestcaseComparison;
   dst: ElementComparisonItem;
@@ -378,18 +261,12 @@ export type ElementComparisonResponse = {
   src: ElementComparisonItem;
 };
 
-/**
- *
- */
 export type PlatformStatus = {
   mail: boolean;
   ready: boolean;
   self_hosted: boolean;
 };
 
-/**
- *
- */
 export type PlatformStatsUser = {
   activationLink?: string;
   createdAt: Date;
@@ -404,9 +281,6 @@ export type PlatformStatsUser = {
   username: string;
 };
 
-/**
- *
- */
 export type PlatformStatsResponse = {
   cmpAvgCollectionTime: number;
   cmpAvgProcessingTime: number;

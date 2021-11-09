@@ -5,9 +5,6 @@ import mongoose from 'mongoose'
 import { configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export async function makeConnectionMongo(): Promise<boolean> {
   mongoose.Promise = Promise
   await mongoose.connect(configMgr.getMongoUri(), {

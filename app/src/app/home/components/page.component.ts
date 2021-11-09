@@ -30,9 +30,6 @@ export abstract class PageComponent<PageItemType, TabType, NotFound>
   protected _notFound: Partial<NotFound> = {};
   public currentTab: TabType;
 
-  /**
-   *
-   */
   constructor(
     protected pageService: IPageService<PageItemType>,
     @Inject('PAGE_TABS') public tabs: PageTab<TabType>[],
@@ -45,9 +42,6 @@ export abstract class PageComponent<PageItemType, TabType, NotFound>
     this.currentTab = tab.type;
   }
 
-  /**
-   *
-   */
   ngOnInit() {
     timer(0, this._interval)
       .pipe(takeWhile(() => this._alive && !this.notFound()))
@@ -56,44 +50,26 @@ export abstract class PageComponent<PageItemType, TabType, NotFound>
       });
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._alive = false;
   }
 
-  /**
-   *
-   */
   abstract fetchItems(): void;
 
-  /**
-   *
-   */
   public hasData() {
     return this.pageService.hasData();
   }
 
-  /**
-   *
-   */
   public hasItems() {
     return this.pageService.countItems() !== 0;
   }
 
-  /**
-   *
-   */
   public notFound(): Partial<NotFound> | null {
     if (Object.keys(this._notFound).length) {
       return this._notFound;
     }
   }
 
-  /**
-   *
-   */
   public switchTab(type: TabType) {
     this.currentTab = type;
     if (!this.hasData()) {

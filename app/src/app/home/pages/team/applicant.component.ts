@@ -17,23 +17,14 @@ export class TeamItemApplicantComponent {
   @Output() confirmAccept = new EventEmitter<TeamApplicant>();
   @Output() confirmDecline = new EventEmitter<TeamApplicant>();
 
-  /**
-   *
-   */
   constructor(private faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(faUser, faUserPlus);
   }
 
-  /**
-   *
-   */
   accept(): void {
     this.confirmAccept.emit(this.item);
   }
 
-  /**
-   *
-   */
   decline(): void {
     this.confirmDecline.emit(this.item);
   }

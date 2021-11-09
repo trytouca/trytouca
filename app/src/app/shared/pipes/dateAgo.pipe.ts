@@ -11,9 +11,6 @@ import {
   name: 'dateAgo'
 })
 export class DateAgoPipe implements PipeTransform {
-  /**
-   *
-   */
   transform(input: number | string | Date): string {
     const inputDate = new Date(input);
     const seconds = differenceInSeconds(new Date(), inputDate);

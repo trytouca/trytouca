@@ -2,9 +2,6 @@
 
 import mongoose from 'mongoose'
 
-/**
- *
- */
 const batchSchema = new mongoose.Schema(
   {
     elements: [
@@ -69,14 +66,8 @@ const batchSchema = new mongoose.Schema(
   }
 )
 
-/**
- *
- */
 batchSchema.index({ slug: 1, suite: 1 }, { unique: true })
 
-/**
- *
- */
 export interface IBatchDocument extends mongoose.Document {
   elements: mongoose.Types.ObjectId[]
   expirable: boolean
@@ -101,14 +92,8 @@ export interface IBatchDocument extends mongoose.Document {
   superior: mongoose.Types.ObjectId
 }
 
-/**
- *
- */
 export interface IBatchModel extends mongoose.Model<IBatchDocument> {}
 
-/**
- *
- */
 export const BatchModel: IBatchModel = mongoose.model<
   IBatchDocument,
   IBatchModel

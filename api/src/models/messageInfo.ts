@@ -2,9 +2,6 @@
 
 import mongoose from 'mongoose'
 
-/**
- *
- */
 export class MessageInfo {
   public batchId: mongoose.Types.ObjectId
   public batchName: string

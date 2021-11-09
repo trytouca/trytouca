@@ -8,9 +8,6 @@
 #include "touca/devkit/filesystem.hpp"
 #include "touca/devkit/utils.hpp"
 
-/**
- *
- */
 cxxopts::Options config_options_cmd() {
   cxxopts::Options opts_cmd("", "");
   // clang-format off
@@ -21,9 +18,6 @@ cxxopts::Options config_options_cmd() {
   return opts_cmd;
 }
 
-/**
- *
- */
 cxxopts::Options config_options_file() {
   cxxopts::Options opts_file("", "");
   // clang-format off
@@ -47,9 +41,6 @@ cxxopts::Options config_options_file() {
   return opts_file;
 }
 
-/**
- *
- */
 bool parse_arguments_impl(int argc, char* argv[], Options& options) {
   // parse command line arguments
 
@@ -218,9 +209,6 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options) {
   return true;
 }
 
-/**
- *
- */
 bool parse_arguments(int argc, char* argv[], Options& options) {
   try {
     return parse_arguments_impl(argc, argv, options);

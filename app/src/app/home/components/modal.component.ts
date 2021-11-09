@@ -25,9 +25,6 @@ export class ModalComponent {
     this._subHints.unsubscribe();
   }
 
-  /**
-   *
-   */
   public shouldHideAriaDescription(field: string): boolean {
     return (
       (!this.submitted && this.form.controls[field].pristine) ||
@@ -35,9 +32,6 @@ export class ModalComponent {
     );
   }
 
-  /**
-   *
-   */
   protected keydownGuard(keys: string[], event: KeyboardEvent) {
     if (keys.includes(event.key)) {
       event.stopImmediatePropagation();

@@ -13,9 +13,6 @@ import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { mailUser } from '@/utils/mailer'
 
-/**
- *
- */
 type ReportInputsCommon = {
   dstBatchSlug: string
   srcBatchSlug: string
@@ -29,9 +26,6 @@ type ReportInputsCommon = {
   username?: string
 }
 
-/**
- *
- */
 type ReportInputsCompare = {
   hasComparison: boolean
   hasComparisonTable: boolean
@@ -48,9 +42,6 @@ type ReportInputsCompare = {
   listType: 'complete' | 'partial'
 }
 
-/**
- *
- */
 type ReportInputsPromote = ReportInputsCommon &
   Partial<ReportInputsCompare> & {
     promotedBy: IUser
@@ -58,14 +49,8 @@ type ReportInputsPromote = ReportInputsCommon &
     promotedFor: string
   }
 
-/**
- *
- */
 type ReportInputsSeal = ReportInputsCommon & Partial<ReportInputsCompare>
 
-/**
- *
- */
 type BatchInfo = {
   team: {
     _id: mongoose.Types.ObjectId
@@ -83,9 +68,6 @@ type BatchInfo = {
   }
 }
 
-/**
- *
- */
 type SuiteInfo = {
   promotedAt: Date
   promotedBy: IUser
@@ -94,9 +76,6 @@ type SuiteInfo = {
   subscribers: IUser[]
 }
 
-/**
- *
- */
 async function getSuiteInfo(suiteId: BatchInfo['suite']['_id']) {
   const result: SuiteInfo[] = await SuiteModel.aggregate([
     { $match: { _id: suiteId } },
@@ -162,9 +141,6 @@ async function getSuiteInfo(suiteId: BatchInfo['suite']['_id']) {
   return result[0]
 }
 
-/**
- *
- */
 async function getBatchInfo(batchId: IReportDocument['_id']) {
   const result: BatchInfo[] = await BatchModel.aggregate([
     { $match: { _id: batchId } },
@@ -209,9 +185,6 @@ async function getBatchInfo(batchId: IReportDocument['_id']) {
   return result[0]
 }
 
-/**
- *
- */
 async function extractComparisonInputs(
   cmp: BackendBatchComparisonResponse
 ): Promise<ReportInputsCompare> {
@@ -251,9 +224,6 @@ async function extractComparisonInputs(
   }
 }
 
-/**
- *
- */
 async function reportPromotion(
   dstInfo: BatchInfo,
   srcInfo: BatchInfo,
@@ -301,9 +271,6 @@ async function reportPromotion(
   }
 }
 
-/**
- *
- */
 async function reportSealed(
   dstInfo: BatchInfo,
   srcInfo: BatchInfo,
@@ -349,9 +316,6 @@ async function reportSealed(
   }
 }
 
-/**
- *
- */
 async function processReportJob(job: IReportDocument) {
   const dstInfo = await getBatchInfo(job.dstBatchId)
   const srcInfo = await getBatchInfo(job.srcBatchId)

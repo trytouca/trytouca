@@ -9,9 +9,6 @@ import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { tracker } from '@/utils/tracker'
 
-/**
- *
- */
 export async function authGoogleSignin(
   req: Request,
   res: Response,

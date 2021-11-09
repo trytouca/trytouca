@@ -5,9 +5,6 @@ import { NextFunction, Request, Response } from 'express'
 import { UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export async function authResetKeyCheck(
   req: Request,
   res: Response,

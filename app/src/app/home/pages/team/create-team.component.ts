@@ -59,9 +59,6 @@ export class TeamCreateTeamComponent
   ];
   content: Content = this.contents.find((v) => v.mode === Mode.Create);
 
-  /**
-   *
-   */
   constructor(private apiService: ApiService, public dialogRef: DialogRef) {
     super();
     super.form = new FormGroup({
@@ -87,16 +84,10 @@ export class TeamCreateTeamComponent
     super.subscribeHints(['name', 'slug']);
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     super.unsubscribeHints();
   }
 
-  /**
-   *
-   */
   toggleMode() {
     const newMode = this.content.mode === Mode.Create ? Mode.Join : Mode.Create;
     const nameValidators = [Validators.minLength(3), Validators.maxLength(32)];
@@ -108,9 +99,6 @@ export class TeamCreateTeamComponent
     this.content = this.contents.find((v) => v.mode === newMode);
   }
 
-  /**
-   *
-   */
   onCreate(model: IFormContent) {
     if (!this.form.valid) {
       return;
@@ -142,9 +130,6 @@ export class TeamCreateTeamComponent
     });
   }
 
-  /**
-   *
-   */
   onJoin(model: IFormContent) {
     if (!this.form.valid) {
       return;
@@ -185,9 +170,6 @@ export class TeamCreateTeamComponent
     });
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     super.keydownGuard(['j', 'k', 'Enter', 'Escape'], event);

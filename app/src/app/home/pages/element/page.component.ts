@@ -89,9 +89,6 @@ export class ElementPageComponent
   private _subParamMap: Subscription;
   private _subQueryParamMap: Subscription;
 
-  /**
-   *
-   */
   constructor(
     private alertService: AlertService,
     private elementPageService: ElementPageService,
@@ -164,16 +161,10 @@ export class ElementPageComponent
     });
   }
 
-  /**
-   *
-   */
   ngOnInit() {
     super.ngOnInit();
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subSuite.unsubscribe();
     this._subBatch.unsubscribe();
@@ -186,9 +177,6 @@ export class ElementPageComponent
     super.ngOnDestroy();
   }
 
-  /**
-   *
-   */
   fetchItems(): void {
     if (!this.params) {
       const queryMap = this.route.snapshot.queryParamMap;
@@ -212,9 +200,6 @@ export class ElementPageComponent
     this.elementPageService.updateRequestParams(this.params);
   }
 
-  /**
-   *
-   */
   private setCustomAlerts() {
     const queryMap = this.route.snapshot.queryParamMap;
     if (queryMap.has('bv')) {
@@ -239,9 +224,6 @@ export class ElementPageComponent
     }
   }
 
-  /**
-   *
-   */
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     // pressing key 'Backspace' should return user to "Batch" page
@@ -252,9 +234,6 @@ export class ElementPageComponent
     }
   }
 
-  /**
-   *
-   */
   updateTitle(element: ElementLookupResponse) {
     const title = [
       element.elementName,
@@ -265,9 +244,6 @@ export class ElementPageComponent
     this.titleService.setTitle(title);
   }
 
-  /**
-   *
-   */
   public findPreviousPageQueryParams() {
     const paramMap = this.route.snapshot.paramMap;
     const queryMap = this.route.snapshot.queryParamMap;
@@ -283,9 +259,6 @@ export class ElementPageComponent
     return queryParams;
   }
 
-  /**
-   *
-   */
   private findOverviewInputs(
     meta: ElementPageOverviewMetadata
   ): FrontendOverviewSection {

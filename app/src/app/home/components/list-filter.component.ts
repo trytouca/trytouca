@@ -46,9 +46,6 @@ export class ListFilterComponent {
   @Input() stats: FilterStats;
   @Output() updateList = new EventEmitter<FilterParams>();
 
-  /**
-   *
-   */
   constructor(faIconLibrary: FaIconLibrary) {
     const updateFilter = () => {
       this.updateList.emit({
@@ -90,53 +87,32 @@ export class ListFilterComponent {
     faIconLibrary.addIcons(faSortAmountDown, faSortAmountDownAlt);
   }
 
-  /**
-   *
-   */
   onKeyupRowFilter(event) {
     this._searchSubject.next(event.target.value);
   }
 
-  /**
-   *
-   */
   public isSearchActive(): boolean {
     return 2 < this.params.search.length;
   }
 
-  /**
-   *
-   */
   get filterQueryPlaceholder(): string {
     return this._manager.placeholder;
   }
 
-  /**
-   *
-   */
   get filterQueryValue(): string {
     return this.params.search;
   }
 
-  /**
-   *
-   */
   get filterName(): string {
     return this._manager.filters.find(
       (v) => v.key.localeCompare(this.params.filter) === 0
     ).name;
   }
 
-  /**
-   *
-   */
   set filterName(filterName: string) {
     this._filterSubject.next(filterName);
   }
 
-  /**
-   *
-   */
   get sorterName(): string {
     if (this.isSearchActive()) {
       return 'Relevance';
@@ -146,32 +122,20 @@ export class ListFilterComponent {
     ).name;
   }
 
-  /**
-   *
-   */
   set sorterName(sorterName: string) {
     this._sorterSubject.next(sorterName);
   }
 
-  /**
-   *
-   */
   sortOrderToggle(): void {
     this._orderSubject.next(this.params.order === 'dsc' ? 'asc' : 'dsc');
   }
 
-  /**
-   *
-   */
   get sortOrderIcon(): IconProp {
     return this.params.order === 'asc'
       ? 'sort-amount-down-alt'
       : 'sort-amount-down';
   }
 
-  /**
-   *
-   */
   clearFilters() {
     if (this.params.search) {
       this._searchSubject.next(this._manager.defaults.search);
@@ -181,9 +145,6 @@ export class ListFilterComponent {
     }
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     if (['j', 'k', 'c', 'Enter', 'Escape', 'Backspace'].includes(event.key)) {

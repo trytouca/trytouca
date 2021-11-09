@@ -10,18 +10,12 @@ import { PageListItem } from '@/home/models/page-list-item.model';
 
 type DataType = TeamMember | TeamInvitee | TeamApplicant;
 
-/**
- *
- */
 export enum TeamPageMemberType {
   Applicant = 'applicant',
   Invitee = 'invitee',
   Member = 'member'
 }
 
-/**
- *
- */
 export class TeamPageMember extends PageListItem<DataType, TeamPageMemberType> {
   public constructor(data: DataType, type: TeamPageMemberType) {
     super(data, type);
@@ -40,16 +34,10 @@ export class TeamPageMember extends PageListItem<DataType, TeamPageMemberType> {
   }
 }
 
-/**
- *
- */
 export enum TeamPageSuiteType {
   Suite = 'suite'
 }
 
-/**
- *
- */
 export class TeamPageSuite extends PageListItem<
   SuiteLookupResponse,
   TeamPageSuiteType

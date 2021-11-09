@@ -24,9 +24,6 @@ const transporter = nodemailer.createTransport({
   secure: false
 })
 
-/**
- *
- */
 async function mailUserImpl(
   recipient: IUser,
   subject: string,
@@ -65,9 +62,6 @@ async function mailUserImpl(
   }
 }
 
-/**
- *
- */
 export async function mailUser(
   recipient: IUser,
   subject: string,
@@ -94,9 +88,6 @@ export async function mailUser(
   }
 }
 
-/**
- *
- */
 export async function mailUsers(
   users: IUser[],
   subject: string,
@@ -108,9 +99,6 @@ export async function mailUsers(
   return results.every(Boolean)
 }
 
-/**
- *
- */
 async function mailUsersByRole(
   role: EPlatformRole,
   subject: string,
@@ -121,9 +109,6 @@ async function mailUsersByRole(
   return await mailUsers(users, subject, filename, params)
 }
 
-/**
- *
- */
 export async function mailAdmins(params: { title: string; body: string }) {
   if (config.isCloudHosted) {
     const users = await UserModel.find({

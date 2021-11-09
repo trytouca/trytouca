@@ -54,9 +54,6 @@ export class BatchCommentsComponent implements OnDestroy {
     actionType: FrontendCommentActionType.Post
   };
 
-  /**
-   *
-   */
   constructor(
     private apiService: ApiService,
     private batchPageService: BatchPageService,
@@ -85,9 +82,6 @@ export class BatchCommentsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   ngOnDestroy(): void {
     this._subTeam.unsubscribe();
     this._subBatch.unsubscribe();
@@ -107,9 +101,6 @@ export class BatchCommentsComponent implements OnDestroy {
     };
   }
 
-  /**
-   *
-   */
   private processComments(comments: CommentItem[]): FrontendCommentItem[] {
     const myRolePlatform = this.userService.currentUser.platformRole;
     const myRoleTeam = this._team?.role || ETeamRole.Member;
@@ -136,9 +127,6 @@ export class BatchCommentsComponent implements OnDestroy {
       .sort((a, b) => +new Date(a.commentTime) - +new Date(b.commentTime));
   }
 
-  /**
-   *
-   */
   onSubmit(model: IFormContent) {
     if (
       this._commentAction.actionType !== FrontendCommentActionType.Remove &&
@@ -167,9 +155,6 @@ export class BatchCommentsComponent implements OnDestroy {
     this.fields.previewShow = false;
   }
 
-  /**
-   *
-   */
   togglePreview() {
     this.fields.previewShow = !this.fields.previewShow;
     this.fields.buttonPreviewText = this.fields.previewShow
@@ -177,9 +162,6 @@ export class BatchCommentsComponent implements OnDestroy {
       : 'Preview';
   }
 
-  /**
-   *
-   */
   cancelForm() {
     this._commentAction = {
       actionType: FrontendCommentActionType.Post
@@ -193,9 +175,6 @@ export class BatchCommentsComponent implements OnDestroy {
     this.isCommentFormShown = false;
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     const keys = ['j', 'k', 'p', 'Enter', 'Escape', 'Backspace'];
@@ -204,9 +183,6 @@ export class BatchCommentsComponent implements OnDestroy {
     }
   }
 
-  /**
-   *
-   */
   public commentAction(event: FrontendCommentAction): void {
     let comment = this.comments.find((v) => v.commentId === event.commentId);
     if (!comment) {
@@ -253,9 +229,6 @@ export class BatchCommentsComponent implements OnDestroy {
     }
   }
 
-  /**
-   *
-   */
   private commentPost(model: IFormContent) {
     const url = [
       'comment',
@@ -279,9 +252,6 @@ export class BatchCommentsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   private commentRemove(commentId: string) {
     const url = [
       'comment',
@@ -306,9 +276,6 @@ export class BatchCommentsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   private commentReply(model: IFormContent, commentId: string) {
     const url = [
       'comment',
@@ -339,9 +306,6 @@ export class BatchCommentsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   private commentUpdate(model: IFormContent, commentId: string) {
     const url = [
       'comment',

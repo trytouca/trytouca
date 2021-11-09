@@ -40,9 +40,6 @@ export class TeamItemMemberComponent {
   @Output() confirmEdit = new EventEmitter<TeamMember>();
   @Output() confirmRemove = new EventEmitter<TeamMember>();
 
-  /**
-   *
-   */
   constructor(faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(
       faUser,
@@ -53,9 +50,6 @@ export class TeamItemMemberComponent {
     );
   }
 
-  /**
-   *
-   */
   private initIcon(): Icon {
     switch (this.data.role) {
       case ETeamRole.Owner:
@@ -67,16 +61,10 @@ export class TeamItemMemberComponent {
     }
   }
 
-  /**
-   *
-   */
   public edit(): void {
     this.confirmEdit.emit(this.data);
   }
 
-  /**
-   *
-   */
   public remove(): void {
     this.confirmRemove.emit(this.data);
   }

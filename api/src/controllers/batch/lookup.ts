@@ -58,9 +58,6 @@ async function batchLookup(
   }
 }
 
-/**
- *
- */
 export async function ctrlBatchLookup(
   req: Request,
   res: Response,

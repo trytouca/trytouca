@@ -53,9 +53,6 @@ export class AlertService {
     { kind: AlertKind.ElementNotFound, type: AlertType.Danger, text: '' }
   ];
 
-  /**
-   *
-   */
   private publish(): void {
     const alerts = Array.from(this._alerts).map((v) => {
       return (
@@ -69,9 +66,6 @@ export class AlertService {
     this._alertsSubject.next(alerts);
   }
 
-  /**
-   *
-   */
   public set(...keys: AlertKind[]): void {
     for (const key of keys) {
       this._alerts.add(key);
@@ -79,9 +73,6 @@ export class AlertService {
     this.publish();
   }
 
-  /**
-   *
-   */
   public unset(...keys: AlertKind[]): void {
     for (const key of keys) {
       this._alerts.delete(key);
@@ -89,9 +80,6 @@ export class AlertService {
     this.publish();
   }
 
-  /**
-   *
-   */
   public reset() {
     this._alerts.clear();
     this.publish();

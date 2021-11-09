@@ -146,9 +146,6 @@ export class TeamTabSuitesComponent
 {
   ItemType = TeamPageSuiteType;
 
-  /**
-   *
-   */
   constructor(
     private teamPageService: TeamPageService,
     route: ActivatedRoute,
@@ -161,16 +158,10 @@ export class TeamTabSuitesComponent
     });
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     super.ngOnDestroy();
   }
 
-  /**
-   *
-   */
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     // pressing keys 'j' and 'k' should navigate

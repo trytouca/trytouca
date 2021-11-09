@@ -2,9 +2,6 @@
 
 import mongoose from 'mongoose'
 
-/**
- *
- */
 const teamSchema = new mongoose.Schema(
   {
     admins: [
@@ -68,14 +65,8 @@ const teamSchema = new mongoose.Schema(
   }
 )
 
-/**
- *
- */
 teamSchema.index({ slug: 1 }, { unique: true })
 
-/**
- *
- */
 export interface ITeamDocument extends mongoose.Document {
   admins: mongoose.Types.ObjectId[]
   applicants: mongoose.Types.ObjectId[]
@@ -87,19 +78,10 @@ export interface ITeamDocument extends mongoose.Document {
   suspended: boolean
 }
 
-/**
- *
- */
 export type ITeam = Pick<ITeamDocument, '_id' | 'name' | 'slug'>
 
-/**
- *
- */
 export interface ITeamModel extends mongoose.Model<ITeamDocument> {}
 
-/**
- *
- */
 export const TeamModel: ITeamModel = mongoose.model<ITeamDocument, ITeamModel>(
   'Team',
   teamSchema

@@ -15,9 +15,6 @@ import {
 import { ApiService, NotificationService, UserService } from '@/core/services';
 import { AlertType } from '@/shared/components/alert.component';
 
-/**
- *
- */
 interface RecentEvent {
   copyLink?: string;
   copyText: string;
@@ -41,9 +38,6 @@ export class PlatformComponent implements OnDestroy {
   faEllipsisV = faEllipsisV;
   faEnvelope = faEnvelope;
 
-  /**
-   *
-   */
   constructor(
     private apiService: ApiService,
     private notificationService: NotificationService,
@@ -86,16 +80,10 @@ export class PlatformComponent implements OnDestroy {
     this.userService.populate();
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subs.filter(Boolean).forEach((v) => v.unsubscribe());
   }
 
-  /**
-   *
-   */
   private build_lock_event(v: PlatformStatsUser): RecentEvent {
     return {
       eventDate: v.lockedAt,
@@ -106,9 +94,6 @@ export class PlatformComponent implements OnDestroy {
     };
   }
 
-  /**
-   *
-   */
   private build_signup_event(v: PlatformStatsUser): RecentEvent {
     return {
       eventDate: v.createdAt,
@@ -120,9 +105,6 @@ export class PlatformComponent implements OnDestroy {
     };
   }
 
-  /**
-   *
-   */
   private build_reset_event(v: PlatformStatsUser): RecentEvent {
     let copyText = 'requested a password reset.';
     if (v.resetKeyExpiresAt.getTime() < new Date().getTime()) {
@@ -138,9 +120,6 @@ export class PlatformComponent implements OnDestroy {
     };
   }
 
-  /**
-   *
-   */
   onCopy(event: IClipboardResponse, name: string) {
     this.notificationService.notify(
       AlertType.Success,
@@ -148,9 +127,6 @@ export class PlatformComponent implements OnDestroy {
     );
   }
 
-  /**
-   *
-   */
   suspendUser(user: PlatformStatsUser) {
     this.apiService
       .post(`/platform/account/${user.username}/suspend`)
@@ -162,9 +138,6 @@ export class PlatformComponent implements OnDestroy {
       });
   }
 
-  /**
-   *
-   */
   describeEventDate(eventDate: Date) {
     return formatDistanceToNow(eventDate, { addSuffix: true });
   }

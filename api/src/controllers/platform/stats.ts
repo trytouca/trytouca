@@ -14,9 +14,6 @@ import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 export async function platformStats(
   req: Request,
   res: Response,

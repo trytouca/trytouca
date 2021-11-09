@@ -6,9 +6,6 @@ import { NotificationModel } from '@/schemas/notification'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export async function inboxSeen(
   req: Request,
   res: Response,

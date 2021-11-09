@@ -5,9 +5,6 @@ import { NextFunction, Request, Response } from 'express'
 import { createUserAccount } from '@/models/auth'
 import { UserModel } from '@/schemas/user'
 
-/**
- *
- */
 export async function authVerifyCreate(
   req: Request,
   res: Response,

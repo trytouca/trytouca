@@ -17,14 +17,8 @@ import { ApiService } from './api.service';
   providedIn: 'root'
 })
 export class AdminGuard implements CanActivate, CanActivateChild {
-  /**
-   *
-   */
   constructor(private apiService: ApiService, private router: Router) {}
 
-  /**
-   *
-   */
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     const roles = [EPlatformRole.Admin, EPlatformRole.Owner];
     return this.apiService.get<UserLookupResponse>('/user').pipe(
@@ -37,9 +31,6 @@ export class AdminGuard implements CanActivate, CanActivateChild {
     );
   }
 
-  /**
-   *
-   */
   canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     return this.canActivate(route, state);
   }

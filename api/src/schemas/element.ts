@@ -2,9 +2,6 @@
 
 import mongoose from 'mongoose'
 
-/**
- *
- */
 const elementSchema = new mongoose.Schema(
   {
     name: {
@@ -28,23 +25,14 @@ const elementSchema = new mongoose.Schema(
 
 elementSchema.index({ slug: 1, suiteId: 1 })
 
-/**
- *
- */
 export interface IElementDocument extends mongoose.Document {
   name: string
   slug: string
   suiteId: mongoose.Types.ObjectId
 }
 
-/**
- *
- */
 export interface IElementModel extends mongoose.Model<IElementDocument> {}
 
-/**
- *
- */
 export const ElementModel: IElementModel = mongoose.model<
   IElementDocument,
   IElementModel

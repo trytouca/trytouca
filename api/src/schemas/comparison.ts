@@ -2,9 +2,6 @@
 
 import mongoose from 'mongoose'
 
-/**
- *
- */
 const comparisonSchema = new mongoose.Schema(
   {
     contentId: {
@@ -87,34 +84,16 @@ const comparisonSchema = new mongoose.Schema(
   }
 )
 
-/**
- *
- */
 comparisonSchema.index({ srcMessageId: 1 })
 
-/**
- *
- */
 comparisonSchema.index({ dstMessageId: 1 })
 
-/**
- *
- */
 comparisonSchema.index({ srcBatchId: 1, dstBatchId: 1 })
 
-/**
- *
- */
 comparisonSchema.index({ srcMessageId: 1, dstMessageId: 1 })
 
-/**
- *
- */
 comparisonSchema.index({ contentId: 1, processedAt: -1 })
 
-/**
- *
- */
 export interface IComparisonDocument extends mongoose.Document {
   contentId: string
   dstBatchId: mongoose.Types.ObjectId
@@ -137,14 +116,8 @@ export interface IComparisonDocument extends mongoose.Document {
   srcMessageId: mongoose.Types.ObjectId
 }
 
-/**
- *
- */
 interface IComparisonModel extends mongoose.Model<IComparisonDocument> {}
 
-/**
- *
- */
 export const ComparisonModel: IComparisonModel = mongoose.model<
   IComparisonDocument,
   IComparisonModel

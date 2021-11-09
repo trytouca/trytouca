@@ -9,9 +9,6 @@ import { MessageModel } from '@/schemas/message'
 import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 
-/**
- *
- */
 export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
   const tuple = msgInfo.name()
   logger.silly('%s: attempting to remove message', tuple)

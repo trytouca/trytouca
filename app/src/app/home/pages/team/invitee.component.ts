@@ -16,16 +16,10 @@ export class TeamItemInviteeComponent {
   @Input() isTeamAdmin: boolean;
   @Output() confirmRescind = new EventEmitter<TeamInvitee>();
 
-  /**
-   *
-   */
   constructor(private faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(faUser);
   }
 
-  /**
-   *
-   */
   rescind(): void {
     this.confirmRescind.emit(this.item);
   }

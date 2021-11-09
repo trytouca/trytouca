@@ -12,27 +12,18 @@ import { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 
 type DataType = BatchComparisonItemCommon | BatchComparisonItemSolo;
 
-/**
- *
- */
 export type BatchPageOverviewMetadata = BatchCompareOverview & {
   batchIsSealed: boolean;
   batchSubmittedAt: Date;
   batchSubmittedBy: Userinfo[];
 };
 
-/**
- *
- */
 export enum BatchPageItemType {
   Common = 'common',
   Missing = 'missing',
   Fresh = 'fresh'
 }
 
-/**
- *
- */
 type BatchNextPageQueryParams = {
   cv: string;
   v: string;
@@ -40,9 +31,6 @@ type BatchNextPageQueryParams = {
   bv: string;
 };
 
-/**
- *
- */
 export function nextPageQueryParams(
   queryParamMap: ParamMap,
   params: FrontendBatchCompareParams,
@@ -67,9 +55,6 @@ export function nextPageQueryParams(
   return queries;
 }
 
-/**
- *
- */
 export class BatchPageItem {
   private _solo: BatchComparisonItemSolo;
   private _common: BatchComparisonItemCommon;
@@ -77,9 +62,6 @@ export class BatchPageItem {
   public elementName: string;
   public builtAt: Date;
 
-  /**
-   *
-   */
   public constructor(data: DataType, type: BatchPageItemType) {
     this._type = type;
     if (type === BatchPageItemType.Common) {
@@ -96,30 +78,18 @@ export class BatchPageItem {
     }
   }
 
-  /**
-   *
-   */
   public get type(): BatchPageItemType {
     return this._type;
   }
 
-  /**
-   *
-   */
   public asCommon(): BatchComparisonItemCommon {
     return this._common;
   }
 
-  /**
-   *
-   */
   public asSolo(): BatchComparisonItemSolo {
     return this._solo;
   }
 
-  /**
-   *
-   */
   public isPendingComparison(): boolean {
     return this._type === BatchPageItemType.Common && !this._common.meta;
   }

@@ -8,9 +8,6 @@
 #include "touca/devkit/logger.hpp"
 #include "touca/devkit/platform.hpp"
 
-/**
- *
- */
 void collector(const Options& options, Resources& resources) {
   namespace chr = std::chrono;
   const auto& interval = chr::milliseconds(options.polling_interval);
@@ -42,9 +39,6 @@ void collector(const Options& options, Resources& resources) {
   }
 }
 
-/**
- *
- */
 void reporter(const Options& options, Resources& resources) {
   namespace chr = std::chrono;
   const auto& interval = chr::milliseconds(options.status_report_interval);
@@ -70,9 +64,6 @@ void reporter(const Options& options, Resources& resources) {
   }
 }
 
-/**
- *
- */
 void processor(const Options& options, Resources& resources) {
   namespace chr = std::chrono;
   while (true) {

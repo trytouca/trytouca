@@ -7,9 +7,6 @@ import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 import { tracker } from '@/utils/tracker'
 
-/**
- *
- */
 export async function authSessionRemove(
   req: Request,
   res: Response,

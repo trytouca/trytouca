@@ -77,9 +77,6 @@ export class DateTimePipe implements PipeTransform {
     );
   }
 
-  /**
-   *
-   */
   transform(
     input: string | number | Date,
     type: 'format' | 'distance' | 'interval' | 'duration',

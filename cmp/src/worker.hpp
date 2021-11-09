@@ -10,17 +10,8 @@ struct ComparisonJob;
 struct Testcase;
 }  // namespace touca
 
-/**
- *
- */
 void collector(const Options& options, Resources& resources);
 
-/**
- *
- */
 void reporter(const Options& options, Resources& resources);
 
-/**
- *
- */
 void processor(const Options& options, Resources& resources);

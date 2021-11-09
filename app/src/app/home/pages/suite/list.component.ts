@@ -67,9 +67,6 @@ export class SuiteListBatchesComponent
   ItemType = SuitePageItemType;
   chosenTopic: TopicType;
 
-  /**
-   *
-   */
   constructor(
     private suitePageService: SuitePageService,
     route: ActivatedRoute,
@@ -81,16 +78,10 @@ export class SuiteListBatchesComponent
     });
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     super.ngOnDestroy();
   }
 
-  /**
-   *
-   */
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     // pressing keys 'j' and 'k' should navigate through items on the list

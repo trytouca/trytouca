@@ -6,9 +6,6 @@ import { IUser, UserModel } from '@/schemas/user'
 import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export async function platformAccountUpdate(
   req: Request,
   res: Response,

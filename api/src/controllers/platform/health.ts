@@ -8,9 +8,6 @@ import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 export async function platformHealth(
   req: Request,
   res: Response,

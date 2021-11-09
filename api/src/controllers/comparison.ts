@@ -18,9 +18,6 @@ import logger from '@/utils/logger'
 
 type ObjectId = mongoose.Types.ObjectId
 
-/**
- *
- */
 async function findComparisonResult(
   dstBatchId: ObjectId,
   dstMessageId: ObjectId,
@@ -92,9 +89,6 @@ async function compareCommonElement(
   }
 }
 
-/**
- *
- */
 async function categorize(
   dstMessages: IMessageDocument[],
   srcMessages: IMessageDocument[]
@@ -138,9 +132,6 @@ async function categorize(
   return { common, fresh, missing }
 }
 
-/**
- *
- */
 function doFindBatchComparisonOverview(
   output: BackendBatchComparisonResponse,
   metaList: CppTestcaseComparisonOverview[]
@@ -185,9 +176,6 @@ function doFindBatchComparisonOverview(
   }
 }
 
-/**
- *
- */
 async function compareBatch(
   dstBatchId: ObjectId,
   srcBatchId: ObjectId
@@ -220,9 +208,6 @@ async function compareBatch(
   return output
 }
 
-/**
- *
- */
 async function compareBatchOverview(
   dstBatchId: ObjectId,
   srcBatchId: ObjectId
@@ -259,9 +244,6 @@ async function compareBatchOverview(
   return doFindBatchComparisonOverview(output, metaList)
 }
 
-/**
- *
- */
 export const ComparisonFunctions = {
   compareBatch,
   compareBatchOverview,

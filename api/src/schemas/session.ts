@@ -2,9 +2,6 @@
 
 import mongoose from 'mongoose'
 
-/**
- *
- */
 const sessionSchema = new mongoose.Schema({
   agent: {
     required: true,
@@ -25,9 +22,6 @@ const sessionSchema = new mongoose.Schema({
   }
 })
 
-/**
- *
- */
 export interface ISessionDocument extends mongoose.Document {
   agent: string
   expiresAt: Date
@@ -35,14 +29,8 @@ export interface ISessionDocument extends mongoose.Document {
   userId: mongoose.Types.ObjectId
 }
 
-/**
- *
- */
 export interface ISessionModel extends mongoose.Model<ISessionDocument> {}
 
-/**
- *
- */
 export const SessionModel: ISessionModel = mongoose.model<
   ISessionDocument,
   ISessionModel

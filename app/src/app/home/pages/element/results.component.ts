@@ -92,9 +92,6 @@ export class ElementListResultsComponent
   @ViewChildren(ElementItemResultComponent)
   resultRows: QueryList<ElementItemResultComponent>;
 
-  /**
-   *
-   */
   constructor(
     private elementPageService: ElementPageService,
     route: ActivatedRoute,
@@ -112,18 +109,12 @@ export class ElementListResultsComponent
     });
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subSuite.unsubscribe();
     this._subParams.unsubscribe();
     super.ngOnDestroy();
   }
 
-  /**
-   *
-   */
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     // pressing keys 'j' and 'k' should navigate through items on the list

@@ -139,9 +139,6 @@ async function buildSubmissionTree(
   return tree
 }
 
-/**
- *
- */
 function describeSubmissionTree(tree: SubmissionTree): void {
   tree.forEach((suiteMap, teamName) => {
     suiteMap.forEach((batchMap, suiteName) => {
@@ -167,9 +164,6 @@ function describeSubmissionTree(tree: SubmissionTree): void {
   })
 }
 
-/**
- *
- */
 async function processElement(
   user: IUser,
   team: ITeamDocument,
@@ -219,9 +213,6 @@ async function processElement(
   }
 }
 
-/**
- *
- */
 async function processBatch(
   user: IUser,
   team: ITeamDocument,
@@ -274,9 +265,6 @@ async function processBatch(
   }
 }
 
-/**
- *
- */
 async function processTeam(
   user: IUser,
   teamSlug: TeamSlug,
@@ -326,9 +314,6 @@ async function processTeam(
   return { slug: teamSlug, doc: team }
 }
 
-/**
- *
- */
 async function processSubmissionTree(
   user: IUser,
   teamMap: TeamMap
@@ -342,9 +327,6 @@ async function processSubmissionTree(
   return extractJobErrors(results)
 }
 
-/**
- *
- */
 async function insertComparisonJob(
   msg: SubmissionItem,
   baseline: mongoose.Types.ObjectId
@@ -421,9 +403,6 @@ async function insertComparisonJob(
   }
 }
 
-/**
- *
- */
 async function insertComparisonJobs(
   batchMap: BatchMap,
   baseline: mongoose.Types.ObjectId
@@ -540,9 +519,6 @@ async function processSuite(
   }
 }
 
-/**
- *
- */
 async function ensureBatch(
   user: IUser,
   team: ITeamDocument,
@@ -596,9 +572,6 @@ async function ensureBatch(
   return { slug: batchSlug, doc: newBatch }
 }
 
-/**
- *
- */
 async function ensureElement(
   team: ITeamDocument,
   suite: ISuiteDocument,
@@ -631,9 +604,6 @@ async function ensureElement(
   })
 }
 
-/**
- *
- */
 async function ensureMessage(
   user: IUser,
   team: ITeamDocument,
@@ -707,9 +677,6 @@ async function ensureMessage(
   })
 }
 
-/**
- *
- */
 async function updateBatchElements(
   batch: IBatchDocument,
   elements: IElementDocument[]
@@ -732,9 +699,6 @@ async function updateBatchElements(
   }
 }
 
-/**
- *
- */
 export async function processBinaryContent(
   user: IUser,
   content: Uint8Array,

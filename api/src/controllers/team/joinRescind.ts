@@ -7,9 +7,6 @@ import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 export async function teamJoinRescind(
   req: Request,
   res: Response,

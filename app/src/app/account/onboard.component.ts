@@ -9,9 +9,6 @@ import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
 import { ApiService, UserService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';
 
-/**
- *
- */
 interface FormContent {
   fname: string;
   uname: string;
@@ -26,9 +23,6 @@ export class OnboardComponent implements OnDestroy {
   private _subHints: Subscription;
   alert: Alert;
 
-  /**
-   *
-   */
   onboardForm = new FormGroup({
     fname: new FormControl('', {
       validators: formFields.fname.validators,
@@ -44,9 +38,6 @@ export class OnboardComponent implements OnDestroy {
     })
   });
 
-  /**
-   *
-   */
   hints = new FormHints({
     fname: new FormHint(
       'We do not share your full name other than with your team members.',
@@ -62,9 +53,6 @@ export class OnboardComponent implements OnDestroy {
     )
   });
 
-  /**
-   *
-   */
   constructor(
     private router: Router,
     private apiService: ApiService,
@@ -77,16 +65,10 @@ export class OnboardComponent implements OnDestroy {
     ]);
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subHints.unsubscribe();
   }
 
-  /**
-   *
-   */
   onSubmit(model: FormContent) {
     if (!this.onboardForm.valid) {
       return;

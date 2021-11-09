@@ -10,9 +10,6 @@ import type { CommentItem, CommentListResponse } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 async function commentList(res: Response): Promise<CommentListResponse> {
   const type = extractCommentType(res)
   const matchQuery = {
@@ -81,9 +78,6 @@ async function commentList(res: Response): Promise<CommentListResponse> {
   return output
 }
 
-/**
- *
- */
 export async function ctrlCommentList(
   req: Request,
   res: Response,

@@ -27,9 +27,6 @@ interface FormContent {
   templateUrl: './reset-apply.component.html'
 })
 export class ResetApplyComponent {
-  /**
-   *
-   */
   formReset = new FormGroup(
     {
       uname: new FormControl('', {
@@ -52,23 +49,14 @@ export class ResetApplyComponent {
   accountInfo: IAccountInfo;
   alert: Alert;
 
-  /**
-   *
-   */
   @Input() set input(v: IAccountInfo) {
     this.accountInfo = v;
     this.formReset.get('uname').setValue(v.username);
     this.formReset.get('uname').disable();
   }
 
-  /**
-   *
-   */
   constructor(private router: Router, private apiService: ApiService) {}
 
-  /**
-   *
-   */
   onSubmit(model: FormContent) {
     if (!this.formReset.valid) {
       return;
@@ -108,26 +96,17 @@ export class ResetApplyComponent {
       });
   }
 
-  /**
-   *
-   */
   passwordMatchValidator(fromGroup: FormGroup) {
     return fromGroup.get('upass1').value === fromGroup.get('upass2').value
       ? null
       : { mismatch: true };
   }
 
-  /**
-   *
-   */
   shouldHideAriaDescriptionForUpass1(): boolean {
     const field = this.formReset.controls['upass1'];
     return field.pristine || field.valid;
   }
 
-  /**
-   *
-   */
   shouldHideAriaDescriptionForUpass2(): boolean {
     const field = this.formReset.controls['upass2'];
     return field.pristine || (field.valid && this.formReset.valid);

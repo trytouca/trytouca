@@ -58,9 +58,6 @@ export class ElementPageService extends IPageService<ElementPageResult> {
   private _allMetricsSubject = new Subject<ElementPageMetric[]>();
   allMetricKeys$ = this._allMetricsSubject.asObservable();
 
-  /**
-   *
-   */
   constructor(
     private alertService: AlertService,
     private apiService: ApiService
@@ -169,9 +166,6 @@ export class ElementPageService extends IPageService<ElementPageResult> {
     );
   }
 
-  /**
-   *
-   */
   public fetchItems(args: FrontendElementCompareParams): void {
     this.fetchElementCompare(args).subscribe({
       next: (doc: ElementComparisonResponse) => {
@@ -268,9 +262,6 @@ export class ElementPageService extends IPageService<ElementPageResult> {
     });
   }
 
-  /**
-   *
-   */
   public updateRequestParams(params: FrontendElementCompareParams) {
     const onetime: Observable<unknown>[] = [of(0)];
 

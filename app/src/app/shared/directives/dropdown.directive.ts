@@ -16,23 +16,14 @@ export class DropdownDirective implements AfterViewInit {
   private _menu: Element;
   private _toggle: Element;
 
-  /**
-   *
-   */
   constructor(private element: ElementRef, private renderer: Renderer2) {}
 
-  /**
-   *
-   */
   private collapse() {
     this.renderer.addClass(this._menu, 'hidden');
     this.renderer.setAttribute(this._toggle, 'aria-expanded', 'false');
     this._isOpen = false;
   }
 
-  /**
-   *
-   */
   private expand() {
     this.renderer.removeClass(this._menu, 'hidden');
     this.renderer.setAttribute(this._toggle, 'aria-expanded', 'true');
@@ -44,9 +35,6 @@ export class DropdownDirective implements AfterViewInit {
     this._isOpen = true;
   }
 
-  /**
-   *
-   */
   private toggleMenu() {
     if (this._isOpen) {
       this.collapse();
@@ -55,9 +43,6 @@ export class DropdownDirective implements AfterViewInit {
     }
   }
 
-  /**
-   *
-   */
   ngAfterViewInit() {
     const nativeElement = this.element.nativeElement as Element;
     if (!nativeElement) {
@@ -77,9 +62,6 @@ export class DropdownDirective implements AfterViewInit {
     });
   }
 
-  /**
-   *
-   */
   @HostListener('document:click', ['$event'])
   public onDocumentClick(event: MouseEvent): void {
     if (!this._isOpen) {

@@ -91,9 +91,6 @@ export class SuitePageComponent
   private _subAlert: Subscription;
   private _subUser: Subscription;
 
-  /**
-   *
-   */
   constructor(
     private router: Router,
     private alertService: AlertService,
@@ -146,16 +143,10 @@ export class SuitePageComponent
     });
   }
 
-  /**
-   *
-   */
   ngOnInit(): void {
     super.ngOnInit();
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subAlert.unsubscribe();
     this._subTeam.unsubscribe();
@@ -165,9 +156,6 @@ export class SuitePageComponent
     super.ngOnDestroy();
   }
 
-  /**
-   *
-   */
   fetchItems(): void {
     const teamSlug = this.route.snapshot.paramMap.get('team');
     const suiteSlug = this.route.snapshot.paramMap.get('suite');
@@ -178,9 +166,6 @@ export class SuitePageComponent
     });
   }
 
-  /**
-   *
-   */
   onCopy(event: IClipboardResponse, name: string) {
     this.notificationService.notify(
       AlertType.Success,
@@ -188,9 +173,6 @@ export class SuitePageComponent
     );
   }
 
-  /**
-   *
-   */
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     // pressing key 'Backspace' should return user to "Team" page
@@ -200,9 +182,6 @@ export class SuitePageComponent
     }
   }
 
-  /**
-   *
-   */
   public switchPage(suiteSlug: string) {
     if (this.suite.suiteSlug !== suiteSlug) {
       this.router.navigate(['~', this.suite.teamSlug, suiteSlug]);
@@ -210,17 +189,11 @@ export class SuitePageComponent
     }
   }
 
-  /**
-   *
-   */
   private updateTitle(suite: SuiteLookupResponse) {
     const title = [suite.suiteName, suite.teamName, 'Touca'].join(' - ');
     this.titleService.setTitle(title);
   }
 
-  /**
-   *
-   */
   private updateFields() {
     this.fields.subscribe = {
       action: this.suite.isSubscribed ? 'unsubscribe' : 'subscribe',
@@ -235,9 +208,6 @@ export class SuitePageComponent
     };
   }
 
-  /**
-   *
-   */
   public toggleSubscription(): void {
     const action = this.fields.subscribe.action;
     const successMessage = this.fields.subscribe.message;

@@ -50,9 +50,6 @@ export class TeamTabSettingsComponent implements OnDestroy {
   ETeamRole = ETeamRole;
   EModalType = EModalType;
 
-  /**
-   *
-   */
   constructor(
     private apiService: ApiService,
     private dialogService: DialogService,
@@ -88,16 +85,10 @@ export class TeamTabSettingsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subTeam.unsubscribe();
   }
 
-  /**
-   *
-   */
   onSubmit(type: EModalType, model: IFormContent) {
     switch (type) {
       case EModalType.ChangeName:
@@ -123,9 +114,6 @@ export class TeamTabSettingsComponent implements OnDestroy {
     this.submitted = true;
   }
 
-  /**
-   *
-   */
   openConfirmModal(type: EModalType) {
     const elements = new Map<EModalType, ConfirmElements>([
       [
@@ -181,17 +169,11 @@ export class TeamTabSettingsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     event.stopImmediatePropagation();
   }
 
-  /**
-   *
-   */
   private extractError(err: HttpErrorResponse) {
     return this.apiService.extractError(err, [
       [400, 'request invalid', 'Your request was rejected by the server.'],
@@ -214,9 +196,6 @@ export class TeamTabSettingsComponent implements OnDestroy {
     ]);
   }
 
-  /**
-   *
-   */
   private updateTeamName(name: string) {
     const url = ['team', this.team.slug].join('/');
     this.apiService.patch(url, { name }).subscribe({
@@ -237,9 +216,6 @@ export class TeamTabSettingsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   private updateTeamSlug(slug: string) {
     const url = ['team', this.team.slug].join('/');
     this.apiService.patch(url, { slug }).subscribe({

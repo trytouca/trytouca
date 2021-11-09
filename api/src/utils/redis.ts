@@ -37,9 +37,6 @@ export async function makeConnectionRedis(): Promise<boolean> {
   return true
 }
 
-/**
- *
- */
 export async function shutdownRedis() {
   logger.info('disconnecting from redis')
   if (client.status === 'ready') {
@@ -47,24 +44,15 @@ export async function shutdownRedis() {
   }
 }
 
-/**
- *
- */
 async function isCached(cacheKey: string): Promise<boolean> {
   return Boolean(await client.exists(cacheKey))
 }
 
-/**
- *
- */
 async function getCached<T>(cacheKey: string): Promise<T> {
   const str = await client.get(cacheKey)
   return JSON.parse(str) as T
 }
 
-/**
- *
- */
 async function cache(
   cacheKey: string,
   output: unknown,

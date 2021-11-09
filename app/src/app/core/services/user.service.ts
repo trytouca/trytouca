@@ -24,18 +24,12 @@ export class UserService {
   private subject = new Subject<UserLookupResponse>();
   public currentUser$ = this.subject.asObservable();
 
-  /**
-   *
-   */
   constructor(
     private alertService: AlertService,
     private apiService: ApiService,
     private authService: AuthService
   ) {}
 
-  /**
-   *
-   */
   populate(): void {
     if (!this.authService.isLoggedIn()) {
       return;
@@ -69,9 +63,6 @@ export class UserService {
     });
   }
 
-  /**
-   *
-   */
   isTeamAdmin(role: ETeamRole): boolean {
     if (this.currentUser) {
       const role = this.currentUser.platformRole;
@@ -101,9 +92,6 @@ export class UserService {
     intercomClient.shutdown();
   }
 
-  /**
-   *
-   */
   updateFeatureFlag(slug: string, value: boolean): Observable<void> {
     if (value) {
       this.currentUser.feature_flags.push(slug);
@@ -115,9 +103,6 @@ export class UserService {
     return this.apiService.patch('/user', { flags: { [slug]: value } });
   }
 
-  /**
-   *
-   */
   updateApiKey(key: string): void {
     this.apiService.patch('/user', { key }).subscribe({
       next: (doc) => {

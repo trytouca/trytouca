@@ -7,9 +7,6 @@
 #include "touca/devkit/logger.hpp"
 #include "worker.hpp"
 
-/**
- *
- */
 int main(int argc, char* argv[]) {
   Options options;
 

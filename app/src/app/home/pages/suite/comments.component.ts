@@ -14,9 +14,6 @@ import { SuitePageService } from './suite.service';
 export class SuiteListCommentsComponent {
   promotions: PromotionItem[] = [];
 
-  /**
-   *
-   */
   constructor(suitePageService: SuitePageService, userService: UserService) {
     suitePageService.suite$.subscribe((suite) => {
       const promotions = suite.promotions

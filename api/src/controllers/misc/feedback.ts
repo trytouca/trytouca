@@ -6,9 +6,6 @@ import { wslFindByUname } from '@/models/user'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 
-/**
- *
- */
 export async function feedback(
   req: Request,
   res: Response,

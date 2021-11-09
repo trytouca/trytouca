@@ -16,14 +16,8 @@ import { getBackendUrl } from '@/core/models/environment';
 export class ApiService {
   _status: PlatformStatus;
 
-  /**
-   *
-   */
   constructor(private http: HttpClient) {}
 
-  /**
-   *
-   */
   private makeUrl(path: string): string {
     if (!path.startsWith('/')) {
       path = '/' + path;
@@ -31,16 +25,10 @@ export class ApiService {
     return getBackendUrl() + path;
   }
 
-  /**
-   *
-   */
   private handleError(error: HttpErrorResponse) {
     return throwError(error);
   }
 
-  /**
-   *
-   */
   get<T>(path: string, params: HttpParams = new HttpParams()): Observable<T> {
     const url = this.makeUrl(path);
     const opts = { params, withCredentials: true };
@@ -48,9 +36,6 @@ export class ApiService {
     return this.http.get<T>(url, opts).pipe(catchError(this.handleError));
   }
 
-  /**
-   *
-   */
   patch(path: string, body: Record<string, unknown>): Observable<any> {
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
@@ -58,9 +43,6 @@ export class ApiService {
     return this.http.patch(url, body, opts).pipe(catchError(this.handleError));
   }
 
-  /**
-   *
-   */
   post(path: string, body: Record<string, unknown> = {}): Observable<any> {
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
@@ -68,9 +50,6 @@ export class ApiService {
     return this.http.post(url, body, opts).pipe(catchError(this.handleError));
   }
 
-  /**
-   *
-   */
   delete(path: string): Observable<any> {
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
@@ -78,9 +57,6 @@ export class ApiService {
     return this.http.delete(url, opts).pipe(catchError(this.handleError));
   }
 
-  /**
-   *
-   */
   status(): Observable<PlatformStatus> {
     if (this._status) {
       return of(this._status);

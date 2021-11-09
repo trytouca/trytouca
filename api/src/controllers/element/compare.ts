@@ -15,9 +15,6 @@ import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
 
-/**
- *
- */
 type ICompareParamsElement = {
   dstSuite?: ISuiteDocument
   dstBatch?: IBatchDocument
@@ -27,9 +24,6 @@ type ICompareParamsElement = {
   srcElement?: IElementDocument
 }
 
-/**
- *
- */
 function cleanOutput(output: BackendBatchComparisonItemCommon): void {
   delete output.src.contentId
   delete output.src.messageId

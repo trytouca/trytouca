@@ -8,16 +8,10 @@ import {
 } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
-/**
- *
- */
 export class FormHint {
   private _text: string;
   private _type: string;
 
-  /**
-   *
-   */
   constructor(
     private initial: string,
     private errorMap: { [key: string]: string } = {},
@@ -48,20 +42,11 @@ export class FormHint {
   }
 }
 
-/**
- *
- */
 export class FormHints {
   private _subs: Subscription[] = [];
 
-  /**
-   *
-   */
   constructor(readonly hints: { [key: string]: FormHint }) {}
 
-  /**
-   *
-   */
   public subscribe(form: FormGroup, keys: string[]): Subscription {
     keys.forEach((key) => {
       this._subs.push(this.updateFormHint(form.get(key), this.hints[key]));
@@ -71,9 +56,6 @@ export class FormHints {
     });
   }
 
-  /**
-   *
-   */
   public reset() {
     Object.values(this.hints).forEach((v) => v.setSuccess());
   }
@@ -82,9 +64,6 @@ export class FormHints {
     return this.hints[key];
   }
 
-  /**
-   *
-   */
   private updateFormHint(group: AbstractControl, hint: FormHint): Subscription {
     return group.statusChanges.subscribe(() => {
       if (!group.errors) {
@@ -101,9 +80,6 @@ export class FormHints {
   }
 }
 
-/**
- *
- */
 export const formFields: Record<
   'fname' | 'email' | 'uname' | 'upass' | 'entityName' | 'entitySlug',
   { validators: ValidatorFn[]; validationErrors: Record<string, string> }

@@ -20,9 +20,6 @@ export class HomeComponent {
   alerts: ServiceAlert[] = [];
   isApiConnectionDown = false;
 
-  /**
-   *
-   */
   constructor(
     private alertService: AlertService,
     private authService: AuthService,

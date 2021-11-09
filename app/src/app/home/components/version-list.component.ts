@@ -25,16 +25,10 @@ type Version = {
   tags: string[];
 };
 
-/**
- *
- */
 export type FrontendVersionListParamsType =
   | FrontendBatchCompareParams
   | FrontendElementCompareParams;
 
-/**
- *
- */
 export function isElementParams(
   type: FrontendVersionListParamsType
 ): type is FrontendElementCompareParams {
@@ -66,9 +60,6 @@ export class VersionListComponent implements OnChanges {
     minMatchCharLength: 1
   };
 
-  /**
-   *
-   */
   constructor(private route: ActivatedRoute, private router: Router) {
     this._dstBatchChanged
       .pipe(distinctUntilChanged(), skip(1))
@@ -116,9 +107,6 @@ export class VersionListComponent implements OnChanges {
       });
   }
 
-  /**
-   *
-   */
   ngOnChanges(changes: SimpleChanges) {
     if (!this.params || !this.suite) {
       return;
@@ -135,9 +123,6 @@ export class VersionListComponent implements OnChanges {
     }
   }
 
-  /**
-   *
-   */
   refreshVersionList() {
     let versions: string[] = [];
     if (this._versionQuery.length !== 0) {
@@ -166,9 +151,6 @@ export class VersionListComponent implements OnChanges {
     this._relevantVersions = items;
   }
 
-  /**
-   *
-   */
   updateVersion(version: string) {
     if (this.side === 'head') {
       this._srcBatchChanged.next(version);
@@ -177,16 +159,10 @@ export class VersionListComponent implements OnChanges {
     }
   }
 
-  /**
-   *
-   */
   get relevantVersions(): Version[] {
     return this._relevantVersions;
   }
 
-  /**
-   *
-   */
   get currentVersion(): string {
     const slug =
       this.side === 'head'
@@ -195,31 +171,19 @@ export class VersionListComponent implements OnChanges {
     return slug?.split('@')[0];
   }
 
-  /**
-   *
-   */
   public countVersions(): number {
     return this.suite.batchCount;
   }
 
-  /**
-   *
-   */
   public countVersionsNotShown(): number {
     const count = this.countVersions();
     return count === 0 ? 0 : count - this._relevantVersions.length;
   }
 
-  /**
-   *
-   */
   onKeyupVersionFilter(text: KeyboardEvent) {
     this._versionQueryChanged.next(text);
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     const hotKeys = ['j', 'k', 'Backspace', 'Enter', 'Escape'];

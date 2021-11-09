@@ -3,9 +3,6 @@
 import { IUser, UserModel } from '@/schemas/user'
 import { EPlatformRole } from '@/types/commontypes'
 
-/**
- *
- */
 export async function wslFindByRole(role: EPlatformRole): Promise<IUser[]> {
   return await UserModel.find(
     { platformRole: role, suspended: false },
@@ -13,9 +10,6 @@ export async function wslFindByRole(role: EPlatformRole): Promise<IUser[]> {
   )
 }
 
-/**
- *
- */
 export async function wslFindByUname(uname: string): Promise<IUser> {
   return await UserModel.findOne(
     { username: uname, suspended: false },

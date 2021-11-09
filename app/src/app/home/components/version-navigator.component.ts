@@ -22,21 +22,12 @@ export class VersionNavigatorComponent {
   @Input() suite: SuiteLookupResponse;
   @Input() params: FrontendVersionListParamsType;
 
-  /**
-   *
-   */
   constructor(private notificationService: NotificationService) {}
 
-  /**
-   *
-   */
   get baseline(): Promotion {
     return this.suite.promotions.slice(-1)[0];
   }
 
-  /**
-   *
-   */
   get link() {
     const base = `${window.location.origin}/~/${this.params.teamSlug}`;
     if (!isElementParams(this.params)) {
@@ -53,9 +44,6 @@ export class VersionNavigatorComponent {
     );
   }
 
-  /**
-   *
-   */
   public onCopy(event: IClipboardResponse) {
     this.notificationService.notify(
       AlertType.Success,

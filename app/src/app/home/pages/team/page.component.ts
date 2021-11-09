@@ -59,9 +59,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
   private _subTeam: Subscription;
   private _subAlert: Subscription;
 
-  /**
-   *
-   */
   constructor(
     private alertService: AlertService,
     private apiService: ApiService,
@@ -113,16 +110,10 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   ngOnInit() {
     this.teamPageService.init(this.route.snapshot.params as { team: string });
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subAlert.unsubscribe();
     this._subBanner.unsubscribe();
@@ -134,47 +125,29 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   *
-   */
   fetchItems(): void {
     const teamSlug = this.route.snapshot.paramMap.get('team');
     this.teamPageService.fetchItems({ teamSlug });
   }
 
-  /**
-   *
-   */
   public hasData() {
     return this.teamPageService.hasData();
   }
 
-  /**
-   *
-   */
   public hasItems() {
     return this.teamPageService.countItems() !== 0;
   }
 
-  /**
-   *
-   */
   public notFound(): Partial<NotFound> | null {
     if (Object.keys(this._notFound).length) {
       return this._notFound;
     }
   }
 
-  /**
-   *
-   */
   public switchTab(type: TeamPageTabType) {
     this.currentTab = type;
   }
 
-  /**
-   *
-   */
   public switchPage(teamSlug: string) {
     if (this.team.slug !== teamSlug) {
       this.router.navigate(['~', teamSlug]);
@@ -182,9 +155,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   *
-   */
   openCreateModal() {
     this._dialogRef = this.dialogService.open(TeamCreateSuiteComponent, {
       closeButton: false,
@@ -200,9 +170,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   *
-   */
   openInviteModal() {
     this._dialogRef = this.dialogService.open(TeamInviteComponent, {
       closeButton: false,
@@ -235,9 +202,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   confirmDecline(item: TeamItem): void {
     const elements: ConfirmElements = {
       title: 'Decline Team Invitation',
@@ -247,9 +211,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     this.showConfirmation(elements, () => this.decline(item));
   }
 
-  /**
-   *
-   */
   confirmRescind(item: TeamItem): void {
     const elements: ConfirmElements = {
       title: 'Rescind Join Request',
@@ -259,9 +220,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     this.showConfirmation(elements, () => this.rescind(item));
   }
 
-  /**
-   *
-   */
   private showConfirmation(elements: ConfirmElements, func: () => void) {
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
       closeButton: false,
@@ -278,9 +236,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     );
   }
 
-  /**
-   *
-   */
   accept(item: TeamItem) {
     const url = ['team', item.slug, 'invite', 'accept'].join('/');
     this.apiService.post(url).subscribe(() => {
@@ -288,9 +243,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   private decline(item: TeamItem) {
     const url = ['team', item.slug, 'invite', 'decline'].join('/');
     this.apiService.post(url).subscribe(() => {
@@ -298,9 +250,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   private rescind(item: TeamItem) {
     const url = ['team', item.slug, 'join'].join('/');
     this.apiService.delete(url).subscribe(() => {

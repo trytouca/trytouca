@@ -7,9 +7,6 @@ import Mixpanel from 'mixpanel'
 import { IUser } from '@/schemas/user'
 import { config } from '@/utils/config'
 
-/**
- *
- */
 export type TrackerInfo = {
   avatar: string
   created_at: Date
@@ -22,9 +19,6 @@ export type TrackerInfo = {
   username: string
 }
 
-/**
- *
- */
 export function intercomHash(user_id: string) {
   if (!config.tracking.intercom_secret) {
     return
@@ -34,9 +28,6 @@ export function intercomHash(user_id: string) {
     .digest('hex')
 }
 
-/**
- *
- */
 class Tracker {
   private intercom: IntercomClient
   private mixpanel: Mixpanel.Mixpanel
@@ -97,7 +88,4 @@ class Tracker {
   }
 }
 
-/**
- *
- */
 export const tracker = new Tracker()

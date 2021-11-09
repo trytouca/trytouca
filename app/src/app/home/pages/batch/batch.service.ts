@@ -61,9 +61,6 @@ export class BatchPageService extends IPageService<BatchPageItem> {
   private _commentsSubject = new Subject<CommentItem[]>();
   comments$ = this._commentsSubject.asObservable();
 
-  /**
-   *
-   */
   constructor(
     private alertService: AlertService,
     private apiService: ApiService
@@ -193,9 +190,6 @@ export class BatchPageService extends IPageService<BatchPageItem> {
     );
   }
 
-  /**
-   *
-   */
   private fetchComments(
     args: FrontendBatchCompareParams
   ): Observable<CommentListResponse> {
@@ -220,9 +214,6 @@ export class BatchPageService extends IPageService<BatchPageItem> {
     );
   }
 
-  /**
-   *
-   */
   public fetchItems(args: FrontendBatchCompareParams): void {
     this.fetchBatchCompare(args).subscribe({
       next: (doc: BatchComparisonResponse) => {
@@ -268,9 +259,6 @@ export class BatchPageService extends IPageService<BatchPageItem> {
     });
   }
 
-  /**
-   *
-   */
   public updateRequestParams(params: FrontendBatchCompareParams) {
     const onetime: Observable<unknown>[] = [of(0)];
 
@@ -347,32 +335,20 @@ export class BatchPageService extends IPageService<BatchPageItem> {
     this.updateRequestParams(params);
   }
 
-  /**
-   *
-   */
   public removeCacheBatch() {
     this._batch = null;
   }
 
-  /**
-   *
-   */
   public removeCacheSuiteAndBatches() {
     this._suite = null;
     this._batches = null;
     this._batch = null;
   }
 
-  /**
-   *
-   */
   public refetchBatch() {
     this.fetchBatch(this._params).subscribe();
   }
 
-  /**
-   *
-   */
   public refetchComments() {
     this.fetchComments(this._params).subscribe();
   }

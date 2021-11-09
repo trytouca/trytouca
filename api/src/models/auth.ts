@@ -26,9 +26,6 @@ async function makeUsername(): Promise<string> {
   return slug
 }
 
-/**
- *
- */
 async function getPlatformOwner(): Promise<EPlatformRole> {
   const hasOwner = await UserModel.countDocuments({
     platformRole: EPlatformRole.Owner

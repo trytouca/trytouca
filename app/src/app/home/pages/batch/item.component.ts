@@ -74,9 +74,6 @@ export class BatchItemElementComponent {
     this.initMetadata();
   }
 
-  /**
-   *
-   */
   constructor(
     private route: ActivatedRoute,
     private i18pluralPipe: I18nPluralPipe,
@@ -95,9 +92,6 @@ export class BatchItemElementComponent {
     );
   }
 
-  /**
-   *
-   */
   private initMetadata(): void {
     this._meta.builtAt = this._item.builtAt;
     let metric: Metric;
@@ -147,9 +141,6 @@ export class BatchItemElementComponent {
     this.topics = this.initTopics();
   }
 
-  /**
-   *
-   */
   private initData(): Data {
     if (this._params && this._item) {
       return {
@@ -268,9 +259,6 @@ export class BatchItemElementComponent {
     }
   }
 
-  /**
-   *
-   */
   private initPerformance(metric: Metric): string {
     const duration = metric.duration();
 
@@ -304,9 +292,6 @@ export class BatchItemElementComponent {
     return `${durationStr} (${change} ${sign})`;
   }
 
-  /**
-   *
-   */
   private initTopics(): Topic[] {
     const topics: Topic[] = [];
 

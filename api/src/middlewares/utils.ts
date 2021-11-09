@@ -10,9 +10,6 @@ import {
 
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export const validationRules = new Map<string, ValidationChain>([
   [
     'body',
@@ -106,9 +103,6 @@ export const validationRules = new Map<string, ValidationChain>([
   ]
 ])
 
-/**
- *
- */
 async function validateOperation(
   req: Request,
   res: Response,
@@ -131,9 +125,6 @@ async function validateOperation(
   return res.status(400).json({ errors })
 }
 
-/**
- *
- */
 export function inputs(rules: ValidationChain[]) {
   return (req: Request, res: Response, next: NextFunction) =>
     validateOperation(req, res, next, rules)

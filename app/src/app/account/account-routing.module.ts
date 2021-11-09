@@ -11,9 +11,6 @@ import { PlatformComponent } from './platform.component';
 import { ProfileComponent } from './profile.component';
 import { StartComponent, StartPageType } from './start.component';
 
-/**
- *
- */
 const routes: Routes = [
   {
     path: '',

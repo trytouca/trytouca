@@ -16,27 +16,18 @@ export class TeamFirstSuiteComponent implements OnDestroy {
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
 
-  /**
-   *
-   */
   constructor(
     private route: ActivatedRoute,
     private dialogService: DialogService,
     private teamPageService: TeamPageService
   ) {}
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._dialogSub) {
       this._dialogSub.unsubscribe();
     }
   }
 
-  /**
-   *
-   */
   openCreateModal() {
     const paramMap = this.route.snapshot.paramMap;
     this._dialogRef = this.dialogService.open(TeamCreateSuiteComponent, {

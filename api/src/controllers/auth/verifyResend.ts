@@ -8,9 +8,6 @@ import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 import { tracker } from '@/utils/tracker'
 
-/**
- *
- */
 export async function authVerifyResend(
   req: Request,
   res: Response,

@@ -5,9 +5,6 @@ import { Types } from 'mongoose'
 import { UserModel } from '@/schemas/user'
 import type { Userinfo } from '@/types/commontypes'
 
-/**
- *
- */
 export class UserMap {
   private data: (Userinfo & { _id: Types.ObjectId })[] = []
   private groups = new Map<string, Types.ObjectId[]>()

@@ -6,9 +6,6 @@
 #include <optional>
 #include <string>
 
-/**
- *
- */
 struct Options {
   std::optional<bool> help;
   std::string api_url;
@@ -28,7 +25,4 @@ struct Options {
   std::string minio_region;
 };
 
-/**
- *
- */
 bool parse_arguments(int argc, char* argv[], Options& options);

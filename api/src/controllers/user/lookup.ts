@@ -7,9 +7,6 @@ import type { UserLookupResponse } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { intercomHash } from '@/utils/tracker'
 
-/**
- *
- */
 export async function userLookup(
   req: Request,
   res: Response,

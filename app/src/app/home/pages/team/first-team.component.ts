@@ -16,26 +16,17 @@ export class TeamFirstTeamComponent implements OnDestroy {
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
 
-  /**
-   *
-   */
   constructor(
     private dialogService: DialogService,
     private teamPageService: TeamPageService
   ) {}
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._dialogSub) {
       this._dialogSub.unsubscribe();
     }
   }
 
-  /**
-   *
-   */
   openCreateModal() {
     this._dialogRef = this.dialogService.open(TeamCreateTeamComponent, {
       closeButton: false,

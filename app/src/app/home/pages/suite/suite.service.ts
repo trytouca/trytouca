@@ -53,9 +53,6 @@ export class SuitePageService extends IPageService<SuitePageItem> {
   private _batchesSubject = new Subject<BatchListResponse>();
   batches$ = this._batchesSubject.asObservable();
 
-  /**
-   *
-   */
   constructor(
     private alertService: AlertService,
     private apiService: ApiService,
@@ -144,9 +141,6 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     );
   }
 
-  /**
-   *
-   */
   public fetchItems(args: FetchInput): void {
     const onetime: Observable<unknown>[] = [of(0)];
 
@@ -222,9 +216,6 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     this.fetchItems({ currentTab, teamSlug, suiteSlug });
   }
 
-  /**
-   *
-   */
   public updateSubscription(
     action: 'subscribe' | 'unsubscribe'
   ): Observable<void> {

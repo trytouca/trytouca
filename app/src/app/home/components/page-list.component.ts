@@ -45,9 +45,6 @@ export class PageListComponent<ItemType> implements OnDestroy {
 
   private _params: FilterParams = {};
 
-  /**
-   *
-   */
   constructor(
     @Inject('FILTER_INPUT') filterInput: FilterInput<ItemType>,
     @Inject('COLLECTION_KEYS') private collectionKeys: CollectionType[],
@@ -57,39 +54,24 @@ export class PageListComponent<ItemType> implements OnDestroy {
     this.filterManager = new FilterManager<ItemType>(filterInput);
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     if (this._subAllItems) {
       this._subAllItems.unsubscribe();
     }
   }
 
-  /**
-   *
-   */
   countRows(type: CollectionType): number {
     return this._allItemsCounter.get(type);
   }
 
-  /**
-   *
-   */
   countShownRows(type: CollectionType): number {
     return this._collections.has(type) ? this._collections.get(type).length : 0;
   }
 
-  /**
-   *
-   */
   getShownRows(type: CollectionType): ItemType[] {
     return this._collections.get(type);
   }
 
-  /**
-   *
-   */
   protected initCollections(allItems: ItemType[]) {
     const queryMap = this.route.snapshot.queryParamMap;
     this._allItems = allItems;
@@ -103,9 +85,6 @@ export class PageListComponent<ItemType> implements OnDestroy {
     this.updateCollections();
   }
 
-  /**
-   *
-   */
   public updateList(params: FilterParams) {
     Object.assign(this._params, params);
     this.updateCollections();
@@ -114,9 +93,6 @@ export class PageListComponent<ItemType> implements OnDestroy {
     this.selectedRow = -1;
   }
 
-  /**
-   *
-   */
   private updateCollections() {
     const items = this.filterManager.filterSortPage(
       this._allItems,
@@ -142,9 +118,6 @@ export class PageListComponent<ItemType> implements OnDestroy {
     this._itemsCache = this._items;
   }
 
-  /**
-   *
-   */
   private updateRouter() {
     this.router.navigate([], {
       relativeTo: this.route,
@@ -153,9 +126,6 @@ export class PageListComponent<ItemType> implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   public filterParams(): FilterParams {
     const defaults = this.filterManager.defaults;
     const queries = this.route.snapshot.queryParamMap;
@@ -168,9 +138,6 @@ export class PageListComponent<ItemType> implements OnDestroy {
     };
   }
 
-  /**
-   *
-   */
   public pagerParams(): FilterParams {
     const defaults = this.filterManager.defaults;
     const queries = this.route.snapshot.queryParamMap;
@@ -181,9 +148,6 @@ export class PageListComponent<ItemType> implements OnDestroy {
     };
   }
 
-  /**
-   *
-   */
   public filterStats(): FilterStats {
     const totalRows = this.collectionKeys
       .map((v) => this._allItemsCounter.get(v))
@@ -196,9 +160,6 @@ export class PageListComponent<ItemType> implements OnDestroy {
     return { totalRows, totalUnpaginatedRows };
   }
 
-  /**
-   *
-   */
   keyboardNavigateList(event: KeyboardEvent, listId: string) {
     if (!['j', 'k'].includes(event.key)) {
       return;

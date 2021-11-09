@@ -10,22 +10,13 @@
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
 
-/**
- *
- */
 MessageJob::MessageJob(const std::string& batchId, const std::string& messageId)
     : Job(), _batchId(batchId), _messageId(messageId) {}
 
-/**
- *
- */
 std::string MessageJob::desc() const {
   return touca::format("m:{}", _messageId);
 }
 
-/**
- *
- */
 bool MessageJob::process(const Options& options) const {
   const auto& store = ObjectStore::get_instance(options);
   const auto result = store.get_message(_messageId);
@@ -65,16 +56,10 @@ bool MessageJob::process(const Options& options) const {
   return true;
 }
 
-/**
- *
- */
 std::string ComparisonJob::desc() const {
   return touca::format("c:{}", _jobId);
 }
 
-/**
- *
- */
 bool ComparisonJob::process(const Options& options) const {
   const auto& store = ObjectStore::get_instance(options);
   const auto dst = store.get_message(_dstMessageId);
@@ -123,9 +108,6 @@ bool ComparisonJob::process(const Options& options) const {
   return true;
 }
 
-/**
- *
- */
 std::vector<std::unique_ptr<Job>> retrieveJobs(const std::string& api_url) {
   touca::ApiUrl api(api_url);
   touca::Platform platform(api);

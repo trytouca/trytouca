@@ -18,9 +18,6 @@ export class ActivateComponent implements OnDestroy {
   alert: Alert;
   private _sub: Partial<Record<'activate' | 'timer', Subscription>> = {};
 
-  /**
-   *
-   */
   constructor(
     route: ActivatedRoute,
     router: Router,
@@ -52,9 +49,6 @@ export class ActivateComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     Object.values(this._sub).forEach((s) => s.unsubscribe());
   }

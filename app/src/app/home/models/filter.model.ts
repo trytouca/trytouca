@@ -44,36 +44,21 @@ export type FilterStats = {
   totalRows: number;
 };
 
-/**
- *
- */
 export class FilterManager<T> {
-  /**
-   *
-   */
   constructor(private readonly input: FilterInput<T>) {}
 
-  /**
-   *
-   */
   private getFilter(key: string): FilterInputItem<T> {
     const findItem = (k: string) =>
       this.input.filters.find((v) => v.key.localeCompare(k) === 0);
     return findItem(key) || findItem(this.input.defaults.filter);
   }
 
-  /**
-   *
-   */
   private getSorter(key: string): SorterInputItem<T> {
     const findItem = (k: string) =>
       this.input.sorters.find((v) => v.key.localeCompare(k) === 0);
     return findItem(key) || findItem(this.input.defaults.sorter);
   }
 
-  /**
-   *
-   */
   public parseQueryMap(queryMap: ParamMap): FilterParams {
     const qFilter = queryMap.get(this.input.queryKeys.filter);
     const qSearch = queryMap.get(this.input.queryKeys.search);
@@ -96,9 +81,6 @@ export class FilterManager<T> {
     return { filter, search, sorter, order, pagen, pagel };
   }
 
-  /**
-   *
-   */
   public buildQueryMap(event: FilterParams): Params<string> {
     const getKey = (key: string): string => this.input.queryKeys[key];
     const getValue = (key: string): any => {
@@ -116,9 +98,6 @@ export class FilterManager<T> {
     };
   }
 
-  /**
-   *
-   */
   public filterSortPage(items: ReadonlyArray<T>, event: FilterParams): T[] {
     const opts: Fuse.IFuseOptions<T> = {
       shouldSort: true,
@@ -146,9 +125,6 @@ export class FilterManager<T> {
     return output;
   }
 
-  /**
-   *
-   */
   public paginate(items: T[], event: FilterParams): T[] {
     if (event.pagel && event.pagen) {
       const start = Math.max(0, (event.pagen - 1) * event.pagel);
@@ -158,30 +134,18 @@ export class FilterManager<T> {
     return items;
   }
 
-  /**
-   *
-   */
   get filters(): { key: string; name: string }[] {
     return this.input.filters.map((v) => ({ key: v.key, name: v.name }));
   }
 
-  /**
-   *
-   */
   get sorters(): { key: string; name: string }[] {
     return this.input.sorters.map((v) => ({ key: v.key, name: v.name }));
   }
 
-  /**
-   *
-   */
   get defaults(): Required<Params<number>> {
     return this.input.defaults;
   }
 
-  /**
-   *
-   */
   get placeholder(): string {
     return this.input.placeholder;
   }

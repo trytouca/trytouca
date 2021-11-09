@@ -12,23 +12,14 @@ import { intercomClient } from '@/shared/utils/intercom';
   styleUrls: ['./header.components.scss']
 })
 export class HeaderOutsideComponent {
-  /**
-   *
-   */
   constructor(private authService: AuthService) {
     intercomClient.boot();
   }
 
-  /**
-   *
-   */
   public isLoggedIn() {
     return this.authService.isLoggedIn();
   }
 
-  /**
-   *
-   */
   homeLink(): string {
     const teamSlug = localStorage.getItem(ELocalStorageKey.LastVisitedTeam);
     return teamSlug ? ['/~', teamSlug].join('/') : '/~';

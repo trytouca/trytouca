@@ -2,32 +2,20 @@
 
 import { BatchItem, EPlatformRole, ETeamRole, Promotion } from './commontypes';
 
-/**
- *
- */
 export type PromotionItem = Promotion & {
   bySelf: boolean;
 };
 
-/**
- *
- */
 export enum ELocalStorageKey {
   Callback = 'callback',
   LastVisitedTeam = 'lvt',
   TokenExpiresAt = 'expiresAt'
 }
 
-/**
- *
- */
 export type FrontendBatchItem = BatchItem & {
   isBaseline: boolean;
 };
 
-/**
- *
- */
 export type FrontendBatchCompareParams = {
   currentTab: string;
   teamSlug: string;
@@ -39,17 +27,11 @@ export type FrontendBatchCompareParams = {
   dstBatchSlug: string;
 };
 
-/**
- *
- */
 export type FrontendElementCompareParams = FrontendBatchCompareParams & {
   srcElementSlug: string;
   dstElementSlug: string;
 };
 
-/**
- *
- */
 export type FrontendOverviewSection = {
   inProgress: boolean;
   metricsDurationHead: number;
@@ -59,9 +41,6 @@ export type FrontendOverviewSection = {
   statements: string[];
 };
 
-/**
- *
- */
 export type FrontendCommentItem = {
   commentAuthor: string;
   commentBody: string;
@@ -74,9 +53,6 @@ export type FrontendCommentItem = {
   showButtonRemove: boolean;
 };
 
-/**
- *
- */
 export enum FrontendCommentActionType {
   Post = 0,
   Remove,
@@ -84,9 +60,6 @@ export enum FrontendCommentActionType {
   Update
 }
 
-/**
- *
- */
 export type FrontendCommentAction = {
   actionType: FrontendCommentActionType;
   commentId?: string;

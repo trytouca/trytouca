@@ -5,16 +5,10 @@ import { PageListItem } from '@/home/models/page-list-item.model';
 
 type DataType = FrontendBatchItem;
 
-/**
- *
- */
 export enum SuitePageItemType {
   Batch = 'batch'
 }
 
-/**
- *
- */
 export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
   /**
    * to be removed
@@ -23,23 +17,14 @@ export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
     return +new Date(b.eventDate()) - +new Date(a.eventDate());
   }
 
-  /**
-   *
-   */
   public constructor(data: DataType, type: SuitePageItemType) {
     super(data, type);
   }
 
-  /**
-   *
-   */
   public asBatch(): FrontendBatchItem {
     return this.data;
   }
 
-  /**
-   *
-   */
   public eventDate(): Date {
     switch (this.type) {
       case SuitePageItemType.Batch:
@@ -47,9 +32,6 @@ export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
     }
   }
 
-  /**
-   *
-   */
   public get searchKey(): string {
     switch (this.type) {
       case SuitePageItemType.Batch:

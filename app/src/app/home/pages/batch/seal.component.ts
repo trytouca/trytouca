@@ -15,18 +15,12 @@ import { AlertType } from '@/shared/components/alert.component';
 export class BatchSealComponent extends ModalComponent {
   elements: { batch: BatchLookupResponse };
 
-  /**
-   *
-   */
   constructor(private apiService: ApiService, public dialogRef: DialogRef) {
     super();
     super.form = new FormGroup({});
     this.elements = dialogRef.data as { batch: BatchLookupResponse };
   }
 
-  /**
-   *
-   */
   onSubmit() {
     if (!this.form.valid) {
       return;
@@ -54,18 +48,12 @@ export class BatchSealComponent extends ModalComponent {
     });
   }
 
-  /**
-   *
-   */
   public closeModal() {
     this.form.reset();
     this.submitted = false;
     this.dialogRef.close(false);
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     super.keydownGuard(['j', 'k', 'Enter', 'Escape', 'Backspace'], event);

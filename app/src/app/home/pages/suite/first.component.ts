@@ -28,9 +28,6 @@ export class SuiteFirstBatchComponent implements OnDestroy {
   private _subSuite: Subscription;
   private _subUser: Subscription;
 
-  /**
-   *
-   */
   constructor(
     private notificationService: NotificationService,
     faIconLibrary: FaIconLibrary,
@@ -51,17 +48,11 @@ export class SuiteFirstBatchComponent implements OnDestroy {
     faIconLibrary.addIcons(faClipboard);
   }
 
-  /**
-   *
-   */
   ngOnDestroy(): void {
     this._subSuite.unsubscribe();
     this._subUser.unsubscribe();
   }
 
-  /**
-   *
-   */
   onCopy(event: IClipboardResponse, name: string) {
     this.notificationService.notify(
       AlertType.Success,

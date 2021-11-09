@@ -59,9 +59,6 @@ export class PageOverviewComponent {
     this.updateCircle(circles[3], this.metricsRing.frontValue);
   }
 
-  /**
-   *
-   */
   private findResultsRing(inputs: FrontendOverviewSection): Ring {
     return {
       header: 'Match Rate' + (inputs.inProgress ? ' (so far)' : ''),
@@ -126,9 +123,6 @@ export class PageOverviewComponent {
     };
   }
 
-  /**
-   *
-   */
   private updateCircle(circle: SVGCircleElement, value: number) {
     const radius = circle.r.baseVal.value;
     const circumference = radius * 2 * Math.PI;

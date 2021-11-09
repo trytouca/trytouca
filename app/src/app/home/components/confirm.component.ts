@@ -32,9 +32,6 @@ export type ConfirmElements = {
 export class ConfirmComponent extends ModalComponent {
   @Input() elements: ConfirmElements;
 
-  /**
-   *
-   */
   constructor(public dialogRef: DialogRef) {
     super();
     super.form = new FormGroup({
@@ -46,9 +43,6 @@ export class ConfirmComponent extends ModalComponent {
     this.elements = dialogRef.data as ConfirmElements;
   }
 
-  /**
-   *
-   */
   validator(): ValidatorFn {
     return (control: AbstractControl) => {
       if (!this.elements?.confirmText) {
@@ -64,9 +58,6 @@ export class ConfirmComponent extends ModalComponent {
     };
   }
 
-  /**
-   *
-   */
   onSubmit() {
     if (!this.form.valid) {
       const errors = this.form.controls.confirmText.errors;
@@ -109,27 +100,18 @@ export class ConfirmComponent extends ModalComponent {
     });
   }
 
-  /**
-   *
-   */
   public closeModal() {
     this.form.reset();
     this.submitted = false;
     this.dialogRef.close(false);
   }
 
-  /**
-   *
-   */
   lookupButtonClass() {
     return this.elements?.severity === AlertType.Danger
       ? 'wsl-btn-danger'
       : 'wsl-btn-dark';
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     super.keydownGuard(['j', 'k', 'Enter', 'Escape', 'Backspace'], event);

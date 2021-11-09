@@ -4,9 +4,6 @@ import mongoose from 'mongoose'
 
 import { ECommentType } from '@/types/backendtypes'
 
-/**
- *
- */
 const commentSchema = new mongoose.Schema(
   {
     at: {
@@ -57,14 +54,8 @@ const commentSchema = new mongoose.Schema(
   }
 )
 
-/**
- *
- */
 commentSchema.index({ type: 1 }, { unique: true })
 
-/**
- *
- */
 export interface ICommentDocument extends mongoose.Document {
   at: Date
   batchId: mongoose.Types.ObjectId
@@ -77,14 +68,8 @@ export interface ICommentDocument extends mongoose.Document {
   type: ECommentType
 }
 
-/**
- *
- */
 export interface ICommentModel extends mongoose.Model<ICommentDocument> {}
 
-/**
- *
- */
 export const CommentModel: ICommentModel = mongoose.model<
   ICommentDocument,
   ICommentModel

@@ -16,14 +16,8 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate, CanActivateChild {
-  /**
-   *
-   */
   constructor(private authService: AuthService, private router: Router) {}
 
-  /**
-   *
-   */
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
@@ -35,9 +29,6 @@ export class AuthGuard implements CanActivate, CanActivateChild {
     return this.router.parseUrl('/account/signup');
   }
 
-  /**
-   *
-   */
   canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     return this.canActivate(route, state);
   }

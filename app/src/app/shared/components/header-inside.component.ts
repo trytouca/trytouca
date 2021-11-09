@@ -24,9 +24,6 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
   currentUser: UserLookupResponse;
   private _subUser: Subscription;
 
-  /**
-   *
-   */
   constructor(
     private authService: AuthService,
     private router: Router,
@@ -48,16 +45,10 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
     this._subUser.unsubscribe();
   }
 
-  /**
-   *
-   */
   public isLoggedIn() {
     return this.authService.isLoggedIn();
   }
 
-  /**
-   *
-   */
   public logout() {
     return this.authService.logout().subscribe(() => {
       this.userService.reset();
@@ -65,9 +56,6 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   get isPlatformAdmin() {
     return [EPlatformRole.Owner, EPlatformRole.Admin].includes(
       this.currentUser?.platformRole

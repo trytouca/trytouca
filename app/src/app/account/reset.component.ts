@@ -22,9 +22,6 @@ export class ResetComponent {
   accountInfo: IAccountInfo;
   accountError: Alert;
 
-  /**
-   *
-   */
   constructor(private route: ActivatedRoute, private apiService: ApiService) {
     const qmap = this.route.snapshot.queryParamMap;
     if (qmap.has('key')) {

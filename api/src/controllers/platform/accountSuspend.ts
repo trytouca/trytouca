@@ -7,9 +7,6 @@ import { IUser, UserModel } from '@/schemas/user'
 import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export async function platformAccountSuspend(
   req: Request,
   res: Response,

@@ -49,17 +49,11 @@ export class TeamItemSuiteComponent {
   topics: Topic[];
   private _meta: Meta = {};
 
-  /**
-   *
-   */
   @Input()
   set item(item: SuiteLookupResponse) {
     this.initMetadata(item);
   }
 
-  /**
-   *
-   */
   constructor(
     private dateAgoPipe: DateAgoPipe,
     private datetimePipe: DateTimePipe,
@@ -70,9 +64,6 @@ export class TeamItemSuiteComponent {
     faIconLibrary.addIcons(faCircle, faSpinner, faCheckCircle, faTimesCircle);
   }
 
-  /**
-   *
-   */
   private initMetadata(item: SuiteLookupResponse): void {
     this.data = {
       name: item.suiteName || item.suiteSlug,
@@ -110,9 +101,6 @@ export class TeamItemSuiteComponent {
     this.topics = this.initTopics();
   }
 
-  /**
-   *
-   */
   private initIcon(): Icon {
     // if suite has no batches
     if (!this._meta.base) {
@@ -176,9 +164,6 @@ export class TeamItemSuiteComponent {
     };
   }
 
-  /**
-   *
-   */
   private initPerformance(metric: Metric): string {
     const duration = metric.duration();
 
@@ -212,9 +197,6 @@ export class TeamItemSuiteComponent {
     return `${durationStr} (${change} ${sign})`;
   }
 
-  /**
-   *
-   */
   private initTopics(): Topic[] {
     const topics: Topic[] = [];
 

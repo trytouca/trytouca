@@ -52,9 +52,6 @@ export class SuiteItemBatchComponent {
   toggleState: TopicType | null;
   flag_colored_topics: boolean;
 
-  /**
-   *
-   */
   @Input()
   set item(item: FrontendBatchItem) {
     const meta = this.initMetadata(item);
@@ -74,9 +71,6 @@ export class SuiteItemBatchComponent {
   }
   @Output() updateChosenTopics = new EventEmitter<TopicType | null>();
 
-  /**
-   *
-   */
   constructor(
     private dateAgoPipe: DateAgoPipe,
     private dateTimePipe: DateTimePipe,
@@ -98,9 +92,6 @@ export class SuiteItemBatchComponent {
     this.userService.populate();
   }
 
-  /**
-   *
-   */
   private initMetadata(item: FrontendBatchItem) {
     return {
       countFresh: item.meta.elementsCountFresh,
@@ -123,9 +114,6 @@ export class SuiteItemBatchComponent {
     };
   }
 
-  /**
-   *
-   */
   private initIcon(meta: Meta): Icon {
     // if batch is not sealed
     if (!meta.isSealed || meta.countPending) {
@@ -180,9 +168,6 @@ export class SuiteItemBatchComponent {
     };
   }
 
-  /**
-   *
-   */
   private initPerformance(metric: Metric): string {
     const duration = metric.duration();
 
@@ -216,9 +201,6 @@ export class SuiteItemBatchComponent {
     return `${durationStr} (${change} ${sign})`;
   }
 
-  /**
-   *
-   */
   private initTopics(meta: Meta): Topic[] {
     const topics: Topic[] = [];
 
@@ -275,16 +257,10 @@ export class SuiteItemBatchComponent {
     return topics;
   }
 
-  /**
-   *
-   */
   private toggleChosenTopics(type: TopicType) {
     this.updateChosenTopics.emit(this.toggleState === type ? null : type);
   }
 
-  /**
-   *
-   */
   private applyChosenTopics(type?: TopicType) {
     this.toggleState = type;
     this.shownTopics = type

@@ -20,9 +20,6 @@ interface FormContent {
   templateUrl: './signin.component.html'
 })
 export class SigninComponent implements OnInit {
-  /**
-   *
-   */
   formSignin = new FormGroup({
     uname: new FormControl('', {
       validators: formFields.uname.validators,
@@ -39,9 +36,6 @@ export class SigninComponent implements OnInit {
   prev: FormContent;
   showForm: boolean;
 
-  /**
-   *
-   */
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -55,9 +49,6 @@ export class SigninComponent implements OnInit {
     });
   }
 
-  /**
-   *
-   */
   ngOnInit() {
     const queryMap = this.route.snapshot.queryParamMap;
     if (queryMap.has('e') && queryMap.get('e') === '401') {
@@ -73,9 +64,6 @@ export class SigninComponent implements OnInit {
     }
   }
 
-  /**
-   *
-   */
   onSubmit(model: FormContent) {
     if (this.formSignin.pristine) {
       return;
@@ -115,9 +103,6 @@ export class SigninComponent implements OnInit {
     });
   }
 
-  /**
-   *
-   */
   signinGoogle() {
     this.authService.google_login().subscribe({
       next: () => {

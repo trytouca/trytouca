@@ -19,9 +19,6 @@ const bucketNames = {
   results: 'touca-results'
 }
 
-/**
- *
- */
 export async function makeConnectionMinio(): Promise<boolean> {
   for (const name of Object.values(bucketNames)) {
     if (!(await minioClient.bucketExists(name))) {
@@ -32,7 +29,7 @@ export async function makeConnectionMinio(): Promise<boolean> {
 }
 
 /**
- *
+ * Store comparison result with given id in the object storage.
  *
  * @param comparisonId string representation of the comparison id
  * @param content JSON representation of the comparison result to be stored

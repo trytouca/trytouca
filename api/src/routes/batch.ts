@@ -193,9 +193,6 @@ router.post(
   promisable(ctrlBatchSeal, 'seal a batch')
 )
 
-/**
- *
- */
 router.post(
   '/:team/:suite/:batch/seal2',
   middleware.isClientAuthenticated,

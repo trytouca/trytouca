@@ -5,9 +5,6 @@ import { NextFunction, Request, Response } from 'express'
 import { MetaModel } from '@/schemas/meta'
 import logger from '@/utils/logger'
 
-/**
- *
- */
 export async function comparisonStats(
   req: Request,
   res: Response,

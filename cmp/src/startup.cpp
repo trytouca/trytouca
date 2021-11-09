@@ -9,9 +9,6 @@
 #include "touca/devkit/logger.hpp"
 #include "touca/devkit/platform.hpp"
 
-/**
- *
- */
 void initialize_loggers(const Options& options) {
   touca::setup_console_logger(options.log_level);
   if (options.log_dir.has_value()) {
@@ -19,9 +16,6 @@ void initialize_loggers(const Options& options) {
   }
 }
 
-/**
- *
- */
 bool run_startup_stage(const Options& options) {
   const auto& store = ObjectStore::get_instance(options);
   const auto max_attempts = options.startup_timeout / options.startup_interval;

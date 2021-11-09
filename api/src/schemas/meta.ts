@@ -2,9 +2,6 @@
 
 import mongoose from 'mongoose'
 
-/**
- *
- */
 const metaSchema = new mongoose.Schema(
   {
     cmpAvgCollectionTime: {
@@ -34,9 +31,6 @@ const metaSchema = new mongoose.Schema(
   }
 )
 
-/**
- *
- */
 export interface IMetaDocument extends mongoose.Document {
   cmpAvgCollectionTime: number
   cmpAvgProcessingTime: number
@@ -44,14 +38,8 @@ export interface IMetaDocument extends mongoose.Document {
   cmpNumProcessingJobs: number
 }
 
-/**
- *
- */
 interface IMetaModel extends mongoose.Model<IMetaDocument> {}
 
-/**
- *
- */
 export const MetaModel: IMetaModel = mongoose.model<IMetaDocument, IMetaModel>(
   'Meta',
   metaSchema

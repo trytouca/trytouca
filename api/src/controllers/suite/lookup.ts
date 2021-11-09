@@ -147,9 +147,6 @@ async function suiteLookup(
   return output
 }
 
-/**
- *
- */
 export async function ctrlSuiteLookup(
   req: Request,
   res: Response,

@@ -2,9 +2,6 @@
 
 import mongoose from 'mongoose'
 
-/**
- *
- */
 const messageSchema = new mongoose.Schema(
   {
     batchId: {
@@ -74,14 +71,8 @@ const messageSchema = new mongoose.Schema(
   }
 )
 
-/**
- *
- */
 messageSchema.index({ batchId: 1, elementId: 1 })
 
-/**
- *
- */
 export interface IMessageDocument extends mongoose.Document {
   batchId: mongoose.Types.ObjectId
   builtAt: Date
@@ -100,14 +91,8 @@ export interface IMessageDocument extends mongoose.Document {
   submittedBy: mongoose.Types.ObjectId
 }
 
-/**
- *
- */
 export interface IMessageModel extends mongoose.Model<IMessageDocument> {}
 
-/**
- *
- */
 export const MessageModel: IMessageModel = mongoose.model<
   IMessageDocument,
   IMessageModel

@@ -56,9 +56,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
   ETeamRole = ETeamRole;
   EModalType = EModalType;
 
-  /**
-   *
-   */
   constructor(
     private apiService: ApiService,
     private dialogService: DialogService,
@@ -121,17 +118,11 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   ngOnDestroy() {
     this._subTeam.unsubscribe();
     this._subSuite.unsubscribe();
   }
 
-  /**
-   *
-   */
   onSubmit(type: EModalType, model: IFormContent) {
     switch (type) {
       case EModalType.ChangeName:
@@ -174,9 +165,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     this.submitted = true;
   }
 
-  /**
-   *
-   */
   openConfirmModal(type: EModalType) {
     const elements = new Map<EModalType, ConfirmElements>([
       [
@@ -215,17 +203,11 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     event.stopImmediatePropagation();
   }
 
-  /**
-   *
-   */
   private extractError(err: HttpErrorResponse) {
     return this.apiService.extractError(err, [
       [400, 'request invalid', 'Your request was rejected by the server.'],
@@ -248,9 +230,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     ]);
   }
 
-  /**
-   *
-   */
   private updateSuiteName(name: string): void {
     const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
     this.apiService.patch(url, { name }).subscribe({
@@ -274,9 +253,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   private updateSuiteSlug(slug: string): void {
     const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
     this.apiService.patch(url, { slug }).subscribe({
@@ -298,9 +274,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   private updateSuiteRetainFor(retainFor: number): void {
     const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
     this.apiService.patch(url, { retainFor }).subscribe({
@@ -326,9 +299,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     });
   }
 
-  /**
-   *
-   */
   private updateSuiteSealAfter(sealAfter: number): void {
     const url = ['suite', this.suite.teamSlug, this.suite.suiteSlug].join('/');
     this.apiService.patch(url, { sealAfter }).subscribe({

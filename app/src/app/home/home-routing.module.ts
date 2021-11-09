@@ -9,9 +9,6 @@ import { ElementPageComponent } from './pages/element';
 import { SuitePageComponent } from './pages/suite';
 import { TeamPageComponent } from './pages/team';
 
-/**
- *
- */
 const routes: Routes = [
   {
     path: '',
