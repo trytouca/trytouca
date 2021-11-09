@@ -59,6 +59,12 @@ export default class MyDocument extends Document {
               gtag('config', '${GA_TRACKING_ID}', { page_path: window.location.pathname });`
             }}
           />
+          <script
+            async
+            defer
+            src="//js.hs-scripts.com/14530326.js"
+            type="text/javascript"
+            id="hs-script-loader"></script>
         </Head>
         <body className="min-h-screen font-sans antialiased bg-dark-blue-900">
           <Header></Header>
