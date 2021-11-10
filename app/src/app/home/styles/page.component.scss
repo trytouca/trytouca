@@ -43,3 +43,9 @@ nav + div {
     }
   }
 }
+.wsl2-page-aside {
+  height: calc(100vh - 8rem);
+}
+.wsl2-page-main {
+  min-height: calc(100vh - 8rem);
+}
