@@ -7,7 +7,7 @@
 #include "aws/s3/S3Client.h"
 #include "aws/s3/model/GetObjectRequest.h"
 #include "fmt/core.h"
-#include "touca/devkit/logger.hpp"
+#include "logger.hpp"
 #include "touca/devkit/testcase.hpp"
 
 MinioClient::MinioClient(const Options& options) {
@@ -60,8 +60,8 @@ void MinioClient::get_object(const std::string& bucket_name,
   object_request.SetKey(object_key);
   auto outcome = _aws_client->GetObject(object_request);
   if (!outcome.IsSuccess()) {
-    TOUCA_LOG_WARN("{}: failed to retrieve object: {}", object_key,
-                   outcome.GetError().GetMessage());
+    touca::log_warn("{}: failed to retrieve object: {}", object_key,
+                    outcome.GetError().GetMessage());
   }
 
   auto&& result = outcome.GetResultWithOwnership();
@@ -76,7 +76,7 @@ ObjectStore::ObjectStore(const Options& options)
 bool ObjectStore::status_check() const {
   const auto& buckets = _minio.list_buckets();
   for (const auto& bucket : buckets) {
-    TOUCA_LOG_DEBUG("accessed bucket: {}", bucket);
+    touca::log_debug("accessed bucket: {}", bucket);
   }
   return buckets.size() == 3;
 }
@@ -87,14 +87,14 @@ std::shared_ptr<touca::Testcase> ObjectStore::get_message(
   _minio.get_object("touca-messages", key, buffer);
 
   if (buffer.size() == 0) {
-    TOUCA_LOG_WARN("{}: failed to retrieve object", key);
+    touca::log_warn("{}: failed to retrieve object", key);
     return nullptr;
   }
 
   try {
     return std::make_shared<touca::Testcase>(buffer);
   } catch (const std::exception& ex) {
-    TOUCA_LOG_WARN("{}: failed to parse object: {}", key, ex.what());
+    touca::log_warn("{}: failed to parse object: {}", key, ex.what());
   }
 
   return nullptr;

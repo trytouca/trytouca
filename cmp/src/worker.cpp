@@ -4,8 +4,8 @@
 
 #include <thread>
 
+#include "logger.hpp"
 #include "platform.hpp"
-#include "touca/devkit/logger.hpp"
 #include "touca/devkit/platform.hpp"
 
 void collector(const Options& options, Resources& resources) {
@@ -13,7 +13,7 @@ void collector(const Options& options, Resources& resources) {
   const auto& interval = chr::milliseconds(options.polling_interval);
 
   while (true) {
-    TOUCA_LOG_DEBUG("polling for new comparison jobs");
+    touca::log_debug("polling for new comparison jobs");
     const auto& tic = chr::system_clock::now();
     auto jobs = retrieveJobs(options.api_url);
 
@@ -26,7 +26,7 @@ void collector(const Options& options, Resources& resources) {
 
     // update statistics
 
-    TOUCA_LOG_INFO("received {} comparison jobs", jobs.size());
+    touca::log_info("received {} comparison jobs", jobs.size());
     const auto& toc = chr::system_clock::now();
     const auto& dur = chr::duration_cast<chr::milliseconds>(toc - tic);
     resources.stats.update_collector_stats(dur.count(), jobs.size());
@@ -49,7 +49,7 @@ void reporter(const Options& options, Resources& resources) {
     if (!report.compare(previous)) {
       continue;
     }
-    TOUCA_LOG_INFO("{}", report);
+    touca::log_info("{}", report);
     previous = report;
     if (resources.stats.job_count_collect == 0 ||
         resources.stats.job_count_process == 0) {
@@ -58,7 +58,7 @@ void reporter(const Options& options, Resources& resources) {
     touca::ApiUrl api(options.api_url);
     touca::Platform platform(api);
     if (!platform.cmp_stats(report)) {
-      TOUCA_LOG_WARN("failed to report statistics: {}", platform.get_error());
+      touca::log_warn("failed to report statistics: {}", platform.get_error());
     }
     resources.stats.reset();
   }
@@ -69,11 +69,11 @@ void processor(const Options& options, Resources& resources) {
   while (true) {
     const auto job = resources.job_queue.pop_item();
     const auto desc = job->desc();
-    TOUCA_LOG_DEBUG("{}: processing", desc);
+    touca::log_debug("{}: processing", desc);
     const auto& tic = chr::system_clock::now();
 
     if (!job->process(options)) {
-      TOUCA_LOG_ERROR("{}: failed to process job", desc);
+      touca::log_error("{}: failed to process job", desc);
       continue;
     }
 
@@ -81,7 +81,7 @@ void processor(const Options& options, Resources& resources) {
 
     const auto& toc = chr::system_clock::now();
     const auto& dur = chr::duration_cast<chr::milliseconds>(toc - tic);
-    TOUCA_LOG_INFO("{}: processed ({} ms)", desc, dur.count());
+    touca::log_info("{}: processed ({} ms)", desc, dur.count());
     resources.stats.update_processor_stats(dur.count());
   }
 }

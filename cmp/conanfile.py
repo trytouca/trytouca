@@ -24,21 +24,23 @@ class ToucaConan(ConanFile):
     generators = "cmake_find_package"
 
     def requirements(self):
-        self.requires.add("touca/1.4.2")
-        self.requires.add("cxxopts/2.2.1")
-        self.requires.add("fmt/8.0.1")
-        self.requires.add("aws-sdk-cpp/1.8.130")
-        self.requires.add("openssl/1.1.1j")
+        self.requires("aws-sdk-cpp/1.8.130")
+        self.requires("cxxopts/2.2.1")
+        self.requires("fmt/8.0.1")
+        self.requires("openssl/1.1.1j")
+        self.requires("spdlog/1.9.2")
+        self.requires("touca/1.4.2")
 
     def source(self):
         self.run("git clone https://github.com/trytouca/touca.git")
 
     def configure(self):
+        self.options["aws-sdk-cpp"].s3 = True
+        self.options["spdlog"].header_only = True
         self.options["touca"].shared = True
         self.options["touca"].with_tests = False
         self.options["touca"].with_utils = False
         self.options["touca"].with_framework = False
-        self.options["aws-sdk-cpp"].s3 = True
 
     def _configure_cmake(self):
         cmake = CMake(self)

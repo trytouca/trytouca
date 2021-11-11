@@ -5,8 +5,8 @@
 #include <chrono>
 #include <thread>
 
+#include "logger.hpp"
 #include "object_store.hpp"
-#include "touca/devkit/logger.hpp"
 #include "touca/devkit/platform.hpp"
 
 void initialize_loggers(const Options& options) {
@@ -20,19 +20,19 @@ bool run_startup_stage(const Options& options) {
   const auto& store = ObjectStore::get_instance(options);
   const auto max_attempts = options.startup_timeout / options.startup_interval;
   const auto& interval = std::chrono::milliseconds(options.startup_interval);
-  TOUCA_LOG_INFO("running start-up stage");
+  touca::log_info("running start-up stage");
   touca::ApiUrl api(options.api_url);
   touca::Platform platform(api);
   for (auto i = 1u; i <= max_attempts; ++i) {
     if (!platform.handshake()) {
-      TOUCA_LOG_WARN("failed to connect to backend: {}", platform.get_error());
+      touca::log_warn("failed to connect to backend: {}", platform.get_error());
     } else if (!store.status_check()) {
-      TOUCA_LOG_WARN("failed to connect to object storage");
+      touca::log_warn("failed to connect to object storage");
     } else {
-      TOUCA_LOG_INFO("start-up phase completed");
+      touca::log_info("start-up phase completed");
       return true;
     }
-    TOUCA_LOG_WARN("running start-up stage: attempt ({}/{})", i, max_attempts);
+    touca::log_warn("running start-up stage: attempt ({}/{})", i, max_attempts);
     std::this_thread::sleep_for(interval);
   }
   return false;

@@ -10,6 +10,7 @@ touca_find_package("AWSSDK")
 add_executable(
     touca_cmp
     main.cpp
+    logger.cpp
     object_store.cpp
     options.cpp
     options.hpp
@@ -27,10 +28,11 @@ add_executable(
 target_link_libraries(
         touca_cmp
     PRIVATE
+        AWS::aws-sdk-cpp-s3
         cxxopts::cxxopts
         fmt::fmt
+        spdlog::spdlog
         touca::client
-        AWS::aws-sdk-cpp-s3
 )
 
 target_include_directories(
