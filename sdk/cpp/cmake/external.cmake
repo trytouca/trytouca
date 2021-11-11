@@ -110,22 +110,6 @@ function(touca_find_nlohmann_json)
     endif()
 endfunction()
 
-function(touca_find_spdlog)
-    FetchContent_Declare(
-        spdlog
-        GIT_REPOSITORY  https://github.com/gabime/spdlog.git
-        GIT_TAG         v1.9.2
-    )
-    FetchContent_GetProperties(spdlog)
-    if (NOT spdlog_POPULATED)
-        FetchContent_Populate(spdlog)
-        add_library(spdlog INTERFACE)
-        add_library(spdlog::spdlog ALIAS spdlog)
-        target_compile_definitions(spdlog INTERFACE SPDLOG_FMT_EXTERNAL)
-        target_include_directories(spdlog INTERFACE ${spdlog_SOURCE_DIR}/include)
-    endif()
-endfunction()
-
 function(touca_find_package)
     set(target_name ${ARGV0}::${ARGV0})
     set(find_module_name ${ARGV0})

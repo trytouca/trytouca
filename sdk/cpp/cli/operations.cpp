@@ -57,9 +57,7 @@ cxxopts::Options config_options_main() {
     options.add_options("main")
         ("h,help", "displays this help message")
         ("v,version", "prints version of this executable")
-        ("m,mode", "operational mode of this application", cxxopts::value<std::string>())
-        ("log-dir", "relative path to log directory", cxxopts::value<std::string>())
-        ("log-level", "level of detail to use for logging", cxxopts::value<std::string>()->default_value("warning"));
+        ("m,mode", "operational mode of this application", cxxopts::value<std::string>());
   // clang-format on
   options.parse_positional("mode");
   options.allow_unrecognised_options();
@@ -114,26 +112,6 @@ bool CliOptions::parse_impl(int argc, char* argv[]) {
     touca::print_error("provided command `{}` is invalid\n", mode_name);
     fmt::print(stderr, "{}\n", options.show_positional_help().help());
     return false;
-  }
-
-  // validate and set option `log-level`
-
-  {
-    // setup console logging with appropriate log level
-    const std::unordered_set<std::string> levels = {"debug", "info", "warning"};
-    const auto level = result["log-level"].as<std::string>();
-    if (!levels.count(level)) {
-      touca::print_error("invalid value for option `log-level`");
-      fmt::print("{}\n", options.show_positional_help().help());
-      return false;
-    }
-    log_level = level;
-  }
-
-  // set option `log-dir` if it is provided
-
-  if (result.count("log-dir")) {
-    log_dir = result["log-dir"].as<std::string>();
   }
 
   return true;

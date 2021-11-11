@@ -29,8 +29,6 @@ struct Operation {
 struct CliOptions {
   bool show_help = false;
   bool show_version = false;
-  std::string log_dir;
-  std::string log_level = "warning";
   Operation::Command mode = Operation::Command::unknown;
 
   bool parse(int argc, char* argv[]);

@@ -2,7 +2,6 @@
 
 #include "fmt/core.h"
 #include "touca/cli/operations.hpp"
-#include "touca/devkit/logger.hpp"
 #include "touca/devkit/utils.hpp"
 
 int main(int argc, char* argv[]) {
@@ -26,24 +25,12 @@ int main(int argc, char* argv[]) {
     return EXIT_FAILURE;
   }
 
-  // setup basic console logging
-
-  if (!opts.log_level.empty()) {
-    touca::setup_console_logger(opts.log_level);
-  }
-
   // create appropriate derived class
 
   const auto& operation = Operation::make(opts.mode);
 
   if (!operation || !operation->parse(argc, argv)) {
     return EXIT_FAILURE;
-  }
-
-  // setup file logging
-
-  if (!opts.log_dir.empty()) {
-    touca::setup_file_logger(opts.log_dir);
   }
 
   // execute operation

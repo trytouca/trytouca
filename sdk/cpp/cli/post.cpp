@@ -4,7 +4,6 @@
 #include "touca/cli/filesystem.hpp"
 #include "touca/cli/operations.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/devkit/logger.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
 
@@ -66,8 +65,6 @@ bool PostOperation::parse_impl(int argc, char* argv[]) {
 }
 
 bool PostOperation::run_impl() const {
-  TOUCA_LOG_INFO("starting execution of operation: post");
-
   // authenticate to the Touca server
 
   touca::Platform platform(_api_url);
@@ -98,8 +95,6 @@ bool PostOperation::run_impl() const {
     return false;
   }
 
-  TOUCA_LOG_DEBUG("found {} touca result file", resultFiles.size());
-
   using err_t = std::unordered_map<std::string, std::vector<std::string>>;
   const auto print = [](const err_t& errors) {
     for (const auto& src : errors) {
@@ -120,27 +115,23 @@ bool PostOperation::run_impl() const {
         touca::detail::load_string_file(src.string(), std::ios::binary);
     const auto& errs = platform.submit(content, 5u);
     if (errs.empty()) {
-      TOUCA_LOG_INFO("submitted {}", src.string());
       continue;
     }
 
     errors.emplace(src.string(), errs);
-    TOUCA_LOG_WARN("failed to submit {}: {}", src.string(), errs.front());
+    touca::print_warning("failed to submit {}: {}", src.string(), errs.front());
 
     if (_fail_fast) {
-      TOUCA_LOG_INFO("aborting due to fail-fast policy");
       print(errors);
       return false;
     }
   }
 
   if (errors.empty()) {
-    TOUCA_LOG_INFO("successfully submitted all {} result files",
-                   resultFiles.size());
     return true;
   }
 
-  TOUCA_LOG_ERROR("failed to submit {} result files", errors.size());
+  touca::print_error("failed to submit {} result files", errors.size());
   print(errors);
   return false;
 }

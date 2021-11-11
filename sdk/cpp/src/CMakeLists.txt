@@ -8,7 +8,6 @@ touca_find_package("fmt")
 touca_find_package("ghcFilesystem")
 touca_find_package("httplib")
 touca_find_package("nlohmann_json")
-touca_find_package("spdlog")
 if (TOUCA_BUILD_FRAMEWORK)
     touca_find_package("cxxopts")
 endif()
@@ -25,7 +24,6 @@ target_sources(
         core/types.cpp
         devkit/comparison.cpp
         devkit/deserialize.cpp
-        devkit/logger.cpp
         devkit/platform.cpp
         devkit/resultfile.cpp
         devkit/utils.cpp
@@ -46,7 +44,6 @@ target_link_libraries(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
         httplib::httplib
-        spdlog::spdlog
         touca_project_options
     PUBLIC
         ghcFilesystem::ghcFilesystem

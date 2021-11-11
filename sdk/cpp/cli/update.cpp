@@ -4,7 +4,6 @@
 #include "touca/cli/filesystem.hpp"
 #include "touca/cli/operations.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/devkit/logger.hpp"
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
 
@@ -58,10 +57,9 @@ bool UpdateOperation::parse_impl(int argc, char* argv[]) {
  * identify result files.
  */
 bool UpdateOperation::run_impl() const {
-  TOUCA_LOG_INFO("starting execution of operation: update");
   const auto resultFiles = find_binary_files(_src);
   if (resultFiles.empty()) {
-    TOUCA_LOG_ERROR("specified directory has no result file");
+    touca::print_error("specified directory has no result file");
     return false;
   }
 

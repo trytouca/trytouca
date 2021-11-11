@@ -4,7 +4,6 @@
 #include "touca/cli/filesystem.hpp"
 #include "touca/cli/operations.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/devkit/logger.hpp"
 #include "touca/devkit/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
 
@@ -55,12 +54,10 @@ bool MergeOperation::parse_impl(int argc, char* argv[]) {
  * identify touca result files.
  */
 bool MergeOperation::run_impl() const {
-  TOUCA_LOG_INFO("starting execution of operation: merge");
-
   const auto resultFiles = find_binary_files(_src);
 
   if (resultFiles.empty()) {
-    TOUCA_LOG_ERROR("specified directory has no result file");
+    touca::print_error("specified directory has no result file");
     return false;
   }
 
@@ -78,7 +75,6 @@ bool MergeOperation::run_impl() const {
     chunk_t chunk(resultFiles.begin() + j, resultFiles.begin() + i);
     chunks.emplace_back(chunk);
   }
-  TOUCA_LOG_INFO("results will be merged into {} files", chunks.size());
 
   const auto& root = touca::filesystem::absolute(_out);
   for (auto i = 0ul; i < chunks.size(); ++i) {
@@ -87,16 +83,13 @@ bool MergeOperation::run_impl() const {
         chunks.size() == 1ul
             ? touca::detail::format("{}.bin", filestem)
             : touca::detail::format("{}.part{}.bin", filestem, i + 1);
-    auto filepath = (root / filename).string();
-    TOUCA_LOG_INFO("merging {:<3} result files into {}", chunks.at(i).size(),
-                   filepath);
+    const auto filepath = (root / filename).string();
     touca::ResultFile rf(filepath);
     for (const auto& file : chunks.at(i)) {
       rf.merge(touca::ResultFile(file));
     }
     rf.save();
   }
-  TOUCA_LOG_INFO("merged results into {} files", chunks.size());
 
   return true;
 }

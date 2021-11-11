@@ -39,7 +39,6 @@ std::string load_string_file(const std::string& path,
 }
 
 void create_parent_directory(const std::string& path) {
-  // create parent directory if it does not exist
   touca::filesystem::path dstFile{path};
   const auto parentPath = touca::filesystem::absolute(dstFile.parent_path());
   if (!touca::filesystem::exists(parentPath.string()) &&

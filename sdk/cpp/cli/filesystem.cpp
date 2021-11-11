@@ -2,8 +2,8 @@
 
 #include "touca/cli/filesystem.hpp"
 
-#include "touca/devkit/logger.hpp"
 #include "touca/devkit/resultfile.hpp"
+#include "touca/devkit/utils.hpp"
 
 std::vector<touca::filesystem::path> discover(
     const touca::filesystem::path& path) {
@@ -30,10 +30,7 @@ std::vector<touca::filesystem::path> discover(
 
 std::vector<touca::filesystem::path> find_binary_files(
     const touca::filesystem::path& path) {
-  TOUCA_LOG_DEBUG("finding result files in {}", path.string());
   auto output = discover(path);
-  TOUCA_LOG_INFO("found {} result files", output.size());
-
   const auto& func = [](const touca::filesystem::path& a,
                         const touca::filesystem::path& b) {
     return touca::filesystem::file_size(a) < touca::filesystem::file_size(b);
