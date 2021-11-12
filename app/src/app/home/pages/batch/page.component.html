@@ -64,10 +64,10 @@
     </div>
   </div>
   <div [hidden]="currentTab !== TabType.Elements">
-    <ng-container *ngIf="suite && params">
+    <div class="sticky z-10 bg-white shadow-sm top-16" *ngIf="suite && params">
       <app-home-version-navigator [suite]="suite" [params]="params">
       </app-home-version-navigator>
-    </ng-container>
+    </div>
     <div class="grid wsl-min-h-screen-4 place-content-center"
       *ngIf="!hasData() || !hasItems()">
       <div class="wsl-spinner">
