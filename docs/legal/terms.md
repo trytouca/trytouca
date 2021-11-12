@@ -1,99 +1,243 @@
-# Terms of Service
+# Terms and Conditions
 
-Touca, Inc. \("we", "our", "us"\) offers a variety of developer productivity
-tools available online \(collectively, the "Service"\), via websites, including
-but not limited to [touca.io](https://touca.io) and its subdomains \(the
-"Websites"\).
+{% file src="../.gitbook/assets/touca-terms.pdf" caption="Download Terms and Conditions" %}
 
-Your access to and use of the Service is conditioned upon your acceptance of and
-compliance with these Terms. These Terms apply to all visitors, users and others
-who wish to access or use the Service.
+**Effective as of November 12, 2021.**
 
-By accessing or using the Service you agree to be bound by these Terms. If you
-disagree with any part of the terms then you do not have permission to access
-the Service.
+This agreement constitutes a binding legal contract between Touca, Inc.
+(**“Touca”**) (sometimes referred to as “we”, “us” or “our”) and you, with
+respect to your use of **https://touca.io** and all websites, applications and
+communications that post a link to this agreement (collectively, the
+**“Site”**)(**“Terms and Conditions”**).
 
-We may revise the Terms from time to time. If a revision is material, as
-determined solely by us, we will notify you \(for example via email to the email
-address associated with your account\). The most current version will always be
-posted on our Terms page. By continuing to use Touca after revisions become
-effective, you agree to be bound by the revised Terms. If you do not agree to
-the new Terms, please stop using Touca.
+We reserve our right to change these Terms and Conditions in the future. Except
+as explicitly stated otherwise, your continued use of the Site will constitute
+deemed acceptance of our updated Terms and Conditions.
 
-## Content
+1.  **Site**
 
-Our Service allows you to post, link, store, share and otherwise make available
-certain information, text, graphics, videos, or other material \("Content"\).
-You are responsible for the Content that you post on or through the Service,
-including its legality, reliability, and appropriateness.
+    - We may from time to time, at our sole and absolute discretion and without
+      notice to you, update the Site (or any part of it). We will not be liable
+      to you or any third party for any modification, variation, interruption,
+      suspension or discontinuation of the Site.
 
-By posting Content on or through the Service, You represent and warrant that:
-\(i\) the Content is yours \(you own it\) and/or you have the right to use it
-and the right to grant us the rights and license as provided in these Terms, and
-\(ii\) that the posting of your Content on or through the Service does not
-violate the privacy rights, publicity rights, copyrights, contract rights or any
-other rights of any person or entity. We reserve the right to terminate the
-account of anyone found to be infringing on a copyright.
+    - The Site may provide links to third party websites that are not owned,
+      managed or controlled by us. You expressly acknowledge and agree that we
+      are not responsible for the content of those third party websites. You are
+      encouraged to read that third party’s terms and conditions, privacy policy
+      and any other document that governs your relationship with that third
+      party.
 
-You retain any and all of your rights to any Content you submit, post or display
-on or through the Service and you are responsible for protecting those rights.
-We take no responsibility and assume no liability for Content you or any third
-party posts on or through the Service. Touca has the right but not the
-obligation to monitor all Content provided by users.
+    - The Site uses cookies in accordance with our Cookies Policy, which can be
+      found here: https://docs.touca.io/legal/privacy.
 
-In addition, Content found on or through this Service that are not originally
-submitted, posted, or displayed by users are the property of Touca or used with
-permission. You may not distribute, modify, transmit, reuse, download, repost,
-copy, or use said Content, whether in whole or in part, for commercial purposes
-or for personal gain, without express advance written permission from us.
+2.  **Account**
 
-You can remove your content by deleting it. However, in certain instances, some
-of your content \(such as Content you submit to teams you do not own\) may not
-be completely removed and copies of your content may continue to exist on Touca.
-We’re not responsible or liable for the removal or deletion of \(or the failure
-to remove or delete\) any of your content.
+    - To access certain features on the Site, you may be required to create an
+      account with us in the form provided by us.
 
-## Eligibility
+    - You agree that by registering an account with us that: all information you
+      provide to us during the registration process is true and accurate to the
+      best of your belief; you are at least 18 years of age; and you have
+      capacity to enter into contractual arrangements.
 
-To use the Service and Websites you must be, and represent and warrant that you
-are, at least 13 years of age and competent to agree to these Terms. If Touca
-has previously prohibited you from accessing or using the Service and Websites,
-you are not permitted to access or use the Service and Websites.
+    - You agree that you are solely responsible for your account and all
+      activities conducted on your account. You must keep your password and any
+      other login information private and secure. Your account is registered to
+      you, and you may not assign, transfer or otherwise dispose of your
+      interest in your account without our express written permission.
 
-## Intellectual property rights
+    - We may, from time to time, provide rules that govern your activities
+      whilst using your account (**“Account Rules”**). You expressly acknowledge
+      and agree that you will abide by these Rules. Should you be in breach of
+      the Account Rules, we may (at our absolute and sole discretion) restrict,
+      prohibit, suspend or terminate your account. Should your account be
+      terminated in accordance with this clause, we are not liable to you, or
+      any third party, for any loss or damage suffered.
 
-Touca and its licensors exclusively own Touca, including all associated
-intellectual property rights. You acknowledge that Touca is protected by
-copyright, trademark, and other laws of the United States and foreign countries.
-You agree not to remove, alter or obscure any copyright, trademark, service mark
-or other proprietary rights or notices incorporated in or accompanying Touca.
+    - You may terminate your account, for any reason, by notifying us. You
+      agree, however, that by terminating your account, your experience on the
+      Site may be limited. We are not liable to you, or any third party, for any
+      loss or damage suffered because of this.
 
-Touca grants you a limited, non-exclusive, non-transferable license to view,
-copy, and display Touca solely in connection with your permitted use of Touca.
+3.  **Communications**
 
-## Disclaimer
+    - By using the Site and providing your e-mail address, you agree to
+      subscribe to newsletters, marketing or promotional materials and other
+      information we may send. You may unsubscribe from these emails at any
+      time.
 
-Your use of the Service is at your sole risk. The Service is provided on an "AS
-IS" and "AS AVAILABLE" basis. The Service is provided without warranties of any
-kind, whether express or implied, including, but not limited to, implied
-warranties of merchantability, fitness for a particular purpose,
-non-infringement or course of performance.
+4.  **User Submitted Content**
 
-Touca, its subsidiaries, affiliates, and its licensors do not warrant that a\)
-the Service will function uninterrupted, secure or available at any particular
-time or location; b\) any errors or defects will be corrected; c\) the Service
-is free of viruses or other harmful components; or d\) the results of using the
-Service will meet your requirements.
+    - The Site may allow you to publish, share, store and otherwise make
+      available certain information, text, graphics, videos, or other content
+      (**“Content”**).
 
-## Governing law
+    - We cannot guarantee the accuracy, integrity or quality of Content posted
+      by users of the Site.
+    - We are not liable for any statements, representations, or Content provided
+      by Site users. Any opinions, advice or recommendations expressed therein
+      are those of the users providing such Content and not those of Touca.
+    - You represent and warrant that you own or otherwise control the Content
+      you post on the Site, and that the sharing of your Content on or through
+      the Site does not violate the privacy rights, publicity rights,
+      copyrights, contract rights or any other rights of any person or entity.
+    - We take no responsibility and assume no liability for Content you or any
+      third party posts on or through the Site. However, by posting Content you
+      grant us a perpetual, worldwide, irrevocable, un-restrictive,
+      non-exclusive royalty-free license to use any Content in any manner
+      whatsoever without compensation or attribution to you.
 
-These Terms shall be governed and construed in accordance with the laws of the
-state of Minnesota, United States, without regard to its conflict of law
-provisions.
+5.  **Prohibited Uses**
 
-Our failure to enforce any right or provision of these Terms will not be
-considered a waiver of those rights. If any provision of these Terms is held to
-be invalid or unenforceable by a court, the remaining provisions of these Terms
-will remain in effect. These Terms constitute the entire agreement between us
-regarding our Service, and supersede and replace any prior agreements we might
-have had between us regarding the Service.
+    Unless explicitly agreed by us, you acknowledge and agree that you may not
+    use our Site for the following purposes:
+
+    - use the Site in any way that violates any applicable local, national or
+      international law or regulation
+    - impersonate or attempt to impersonate any person or entity
+    - engage in any conduct that restricts or inhibits anyone’s use or enjoyment
+      of the Site
+    - monitor or copy any of the material on the Site for any unauthorized
+      purpose without our prior written consent
+    - attempt to gain unauthorized access to, interfere with, damage or disrupt
+      any parts of the Site
+    - use the Site in any manner that could disable, overburden, damage, or
+      impair the Site
+    - attempt to interfere with the proper working of the Site in any way
+      whatsoever
+
+6.  **Fees and Payment**
+
+    - You may be required to purchase or pay a fee to access some features of
+      the Site. You agree to pay all fees due and payable to us (including all
+      applicable taxes) at the prices then in effect for your purchases.
+    - You represent and warrant that the information you provide to us is true,
+      correct and complete.
+    - Where payments are processed through our Site using third party payment
+      processors, you also agree to any terms and conditions set by those
+      payment processors.
+
+7.  **Free Trial**
+
+    Where we provide you with a free trial to use the Site, for the duration of
+    the free trial period, we may at our sole discretion: (i) limit your ability
+    to access certain features; (ii) limit any technical support to you that may
+    usually be available to paying users; (iii) without notice to you, stop your
+    free trial.
+
+8.  **Specifications**
+
+    - We may, from time to time, set certain minimum specifications required to
+      access our Site to ensure all users have the best possible experience. You
+      are solely responsible to obtain, keep and maintain all equipment and
+      other software that meets our minimum specifications to enable you to have
+      the best possible experience of our Site.
+
+    - We may from time to time, at our sole discretion and without notice to
+      you, make variations, modifications, alterations or updates to our Site
+      (**“Enhancements”**). These Enhancements may be made to improve our Site
+      to you or to comply with relevant legal requirements.
+
+    - We will use reasonable endeavors to notify you of any scheduled
+      disruptions to our Site, including those due to any Enhancements. However,
+      regardless of whether a disruption is scheduled or not, we are not liable
+      to you or any third party for any loss or damage caused by any disruption
+      to our Site.
+
+9.  **Copyrights and Trademarks**
+
+    - Except as expressly stated otherwise, you acknowledge and agree that the
+      original content on the Site, and the software, features and functionality
+      comprising the Site are the exclusive property of Touca (the
+      **“Materials”**) and its licensors.
+    - You agree you will not copy, reproduce, create derivative works from,
+      transmit or distribute the Materials in any way without our prior written
+      consent.
+
+10. **Limitation of Liability, Indemnities and Warranties**
+
+    - Except as expressly provided by law, we shall not be liable to you or any
+      third parties for any loss, damage, expenses or any other liability
+      arising directly or indirectly from the performance of our services to
+      you. To the fullest extent permitted by law, all warranties or conditions
+      implied by statute, at law, by trade, custom or otherwise are excluded.
+    - You acknowledge and agree that you assume sole and entire responsibility
+      for, and indemnify and hold us harmless from, any and all claims,
+      liabilities, losses, expenses, responsibilities and damages by reason of
+      any claim, proceedings, action, liability or injury arising out of or as a
+      result of (i) your conduct in relation to these Terms and Conditions; (ii)
+      your use of any material, advice or other results of the services provided
+      to you; (iii) your relations with your clients and/or other third parties;
+      or (iv) any breach of these Terms and Conditions by you.
+
+11. **Term and Termination**
+
+    - These Terms and Conditions will remain in full force and effect while you
+      use the Site.
+    - We may, without notice to you, immediately stop providing any services to
+      you at our sole discretion for any reason whatsoever.
+    - Where these Terms and Conditions are terminated in accordance with these
+      Terms and Conditions, they will terminate without prejudice to any rights
+      either party may have had against the other prior to termination. Further,
+      all provisions of which by their nature should survive termination shall
+      survive termination, including, without limitation: (i) all intellectual
+      property you have granted us under these Terms and Conditions; and (ii)
+      your obligation to pay any fees due to us at the time of termination; and
+      (iii) warranty disclaimers, indemnity and limitations of liability.
+
+12. **Assignment**
+
+    - These Terms and Conditions will bind and inure for the benefit of the
+      parties, including their respective successors, permitted assigns and
+      legal representatives. We may, without notice to you, immediately stop
+      providing any services to you at our sole discretion for any reason
+      whatsoever. Provided your rights are not affected under these Terms and
+      Conditions, we will be permitted to assign our interest in these Terms and
+      Conditions without prior notice to you. However, you may not assign,
+      transfer, novate or other dispose of your rights and obligations under
+      these Terms and Conditions without our express written approval (which we
+      may withhold in our sole discretion).
+
+13. **Privacy**
+
+    You acknowledge that you have read and understood the terms of Touca’s
+    Privacy Policy, which can be found here:
+    https://docs.touca.io/legal/privacy. You agree that we may use your
+    information (including disclosure to third parties) in accordance with the
+    terms of our Privacy Policy.
+
+14. **Non-Waiver**
+
+    Our failure to exercise, or delay in exercising, our rights under these
+    Terms and Conditions does not operate as a waiver of that right.
+
+15. **Exclusion of Implied Relationships**
+
+    Nothing in these Terms and Conditions shall be deemed or construed to
+    constitute any party a partner, agent, representative, employer or employee
+    of another party or to create any trust or commercial partnership unless
+    specifically otherwise provided. We do not owe you any duty of good faith
+    under these Terms and Conditions.
+
+16. **Severability**
+
+    If any part of these Terms and Conditions are held to be illegal, invalid,
+    or unenforceable, then that part shall be deemed deleted and shall not
+    affect the validity and enforceability of the remaining provisions of these
+    Terms and Conditions.
+
+17. **Entire Agreement**
+
+    These Terms and Conditions constitute the entire agreement between the
+    parties with respect to the Company’s services and supersede all previous
+    versions of the Terms and Conditions, understandings, arrangements,
+    agreements, and communications, whether verbal or written, between the
+    parties.
+
+18. **Applicable Law and Jurisdiction**
+
+    These Terms and Conditions shall be governed by and construed in accordance
+    with Minnesota law. Both parties agree to submit to the jurisdiction of the
+    courts of Minnesota with respect to any claim or dispute arising out of
+    these Terms and Conditions.
