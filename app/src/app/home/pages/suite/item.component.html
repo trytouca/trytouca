@@ -15,8 +15,7 @@
     <div *ngFor="let topic of shownTopics"
       class="flex items-center px-2 space-x-1 overflow-hidden text-gray-500 bg-white border rounded-full cursor-pointer select-none hover:text-black lg:px-4 whitespace-nowrap"
       (click)="topic.click()">
-      <div class="hidden w-2 h-2 rounded lg:block" [ngClass]="topic.color"
-        *ngIf="flag_colored_topics">
+      <div class="hidden w-2 h-2 rounded lg:block" [ngClass]="topic.color">
       </div>
       <span [attr.title]="topic.title || null">
         {{ topic.text }}

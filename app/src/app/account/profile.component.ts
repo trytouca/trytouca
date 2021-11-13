@@ -85,15 +85,6 @@ export class ProfileComponent implements OnDestroy {
       saved: false,
       slug: 'newsletter_product',
       title: 'Subscribe to Product Updates Newsletter'
-    },
-    colored_topics: {
-      default: false,
-      description:
-        'Use color identifiers to better distinguish properties of each test case',
-      experimental: true,
-      saved: false,
-      slug: 'colored_topics',
-      title: 'Color Identifiers'
     }
   };
 

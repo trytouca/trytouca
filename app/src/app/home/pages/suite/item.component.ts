@@ -13,7 +13,6 @@ import {
 import { format } from 'date-fns';
 
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
-import { UserService } from '@/core/services';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import {
   Data,
@@ -50,7 +49,6 @@ export class SuiteItemBatchComponent {
   topics: Topic[];
   shownTopics: Topic[];
   toggleState: TopicType | null;
-  flag_colored_topics: boolean;
 
   @Input()
   set item(item: FrontendBatchItem) {
@@ -76,7 +74,6 @@ export class SuiteItemBatchComponent {
     private dateTimePipe: DateTimePipe,
     private i18pluralPipe: I18nPluralPipe,
     private percentPipe: PercentPipe,
-    private userService: UserService,
     private faIconLibrary: FaIconLibrary
   ) {
     faIconLibrary.addIcons(
@@ -86,10 +83,6 @@ export class SuiteItemBatchComponent {
       faStar,
       faTimesCircle
     );
-    this.userService.currentUser$.subscribe((user) => {
-      this.flag_colored_topics = user.feature_flags.includes('colored_topics');
-    });
-    this.userService.populate();
   }
 
   private initMetadata(item: FrontendBatchItem) {

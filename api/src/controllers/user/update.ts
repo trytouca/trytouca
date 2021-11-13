@@ -40,7 +40,7 @@ export async function ctrlUserUpdate(
   const user = res.locals.user as IUser
   const tuple = user.username
 
-  const flags = pick(req.body.flags, ['colored_topics', 'newsletter_product'])
+  const flags = pick(req.body.flags, ['newsletter_product'])
   if (Object.keys(flags).length !== 0) {
     updateFeatureFlags(user, flags)
     return res.status(204).send()
