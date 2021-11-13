@@ -12,13 +12,15 @@ import {
 import { format } from 'date-fns';
 
 import { SuiteLookupResponse } from '@/core/models/commontypes';
+import { PillContainerComponent } from '@/home/components';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import {
   Data,
   Icon,
   IconColor,
   IconType,
-  Topic
+  Topic,
+  TopicType
 } from '@/home/models/page-item.model';
 import { DateAgoPipe, DateTimePipe } from '@/shared/pipes';
 
@@ -43,15 +45,15 @@ type Meta = Partial<{
   styleUrls: ['../../styles/item.component.scss'],
   providers: [DateAgoPipe, DateTimePipe, I18nPluralPipe, PercentPipe]
 })
-export class TeamItemSuiteComponent {
+export class TeamItemSuiteComponent extends PillContainerComponent {
   data: Data;
   icon: Icon;
-  topics: Topic[];
   private _meta: Meta = {};
 
   @Input()
   set item(item: SuiteLookupResponse) {
     this.initMetadata(item);
+    this.applyChosenTopics();
   }
 
   constructor(
@@ -61,6 +63,7 @@ export class TeamItemSuiteComponent {
     private percentPipe: PercentPipe,
     private faIconLibrary: FaIconLibrary
   ) {
+    super();
     faIconLibrary.addIcons(faCircle, faSpinner, faCheckCircle, faTimesCircle);
   }
 
@@ -201,34 +204,58 @@ export class TeamItemSuiteComponent {
     const topics: Topic[] = [];
 
     if (this._meta.batchCount === 0) {
-      return [{ text: 'No Results Yet' }];
+      return [{ text: 'No Results Yet', type: TopicType.EmptyNode }];
     }
 
     if (this._meta.score) {
-      const score = this.percentPipe.transform(this._meta.score, '1.0-0');
-      topics.push({ text: score, title: 'Match Score' });
+      topics.push({
+        color: ['text-sky-600'],
+        icon: 'oct-diff',
+        text: this.percentPipe.transform(this._meta.score, '1.0-0'),
+        title: 'Match Score',
+        type: TopicType.MatchRate
+      });
     }
 
     if (this._meta.performance) {
-      topics.push({ text: this._meta.performance });
+      topics.push({
+        color: ['text-green-600'],
+        icon: 'hero-clock',
+        text: this._meta.performance,
+        type: TopicType.Performance
+      });
     }
-
-    if (this._meta.base === this._meta.head) {
-      topics.push({ text: `${this._meta.baseName} (baseline, latest)` });
-    } else {
-      topics.push({ text: `${this._meta.baseName} (baseline)` });
-      topics.push({ text: `${this._meta.headName} (latest)` });
-    }
-
-    const tcs = this.i18pluralPipe.transform(this._meta.batchCount, {
-      '=1': 'one version',
-      other: '# versions'
-    });
-    topics.push({ text: tcs });
 
     topics.push({
+      color: ['text-yellow-500'],
+      icon: 'hero-star',
+      text: `${this._meta.baseName} (baseline)`,
+      type: TopicType.BaselineVersion
+    });
+
+    topics.push({
+      color: ['text-green-500'],
+      icon: 'hero-lightning-bolt',
+      text: `${this._meta.headName} (latest)`,
+      type: TopicType.LatestVersion
+    });
+
+    topics.push({
+      color: ['text-sky-600'],
+      icon: 'feather-file-text',
+      text: this.i18pluralPipe.transform(this._meta.batchCount, {
+        '=1': 'one version',
+        other: '# versions'
+      }),
+      type: TopicType.Children
+    });
+
+    topics.push({
+      color: ['text-purple-500'],
+      icon: 'hero-calendar',
       text: this.dateAgoPipe.transform(this._meta.submittedAt),
-      title: format(this._meta.submittedAt, 'PPpp')
+      title: format(this._meta.submittedAt, 'PPpp'),
+      type: TopicType.SubmissionDate
     });
 
     return topics;

@@ -33,15 +33,18 @@ export type Data = {
 
 export type Topic = {
   color?: string[];
+  icon?: string;
   text: string;
   title?: string;
   type?: TopicType;
-  click?: () => void;
 };
 
 export enum TopicType {
-  MatchRate = 1,
+  BaselineVersion = 1,
+  Children,
+  EmptyNode,
+  LatestVersion,
+  MatchRate,
   Performance,
-  SubmissionDate,
-  TestCases
+  SubmissionDate
 }

@@ -43,6 +43,7 @@
     "@ng-icons/core": "^12.3.0",
     "@ng-icons/feather-icons": "^12.3.0",
     "@ng-icons/heroicons": "^12.3.0",
+    "@ng-icons/octicons": "^12.4.0",
     "@ngneat/dialog": "^1.7.0",
     "chart.js": "^3.6.0",
     "core-js": "^3.19.1",

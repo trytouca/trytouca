@@ -8,6 +8,7 @@ import type { SuiteLookupResponse } from '@/core/models/commontypes';
 import type { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
+import { TopicType } from '@/home/models/page-item.model';
 
 import {
   BatchPageItem,
@@ -200,6 +201,7 @@ export class BatchListElementsComponent
   suite: SuiteLookupResponse;
   params: FrontendBatchCompareParams;
   ItemType = BatchPageItemType;
+  chosenTopic: TopicType;
 
   private _subSuite: Subscription;
   private _subParams: Subscription;
@@ -253,5 +255,9 @@ export class BatchListElementsComponent
         queryParams
       });
     }
+  }
+
+  updateChosenTopics(type: TopicType) {
+    this.chosenTopic = type;
   }
 }

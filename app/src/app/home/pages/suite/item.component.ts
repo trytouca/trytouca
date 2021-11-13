@@ -1,7 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { I18nPluralPipe, PercentPipe } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
   faCheckCircle,
@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
+import { PillContainerComponent } from '@/home/components';
 import {
   Data,
   Icon,
@@ -43,12 +44,9 @@ type Meta = Partial<{
   styleUrls: ['../../styles/item.component.scss'],
   providers: [DateAgoPipe, DateTimePipe, I18nPluralPipe, PercentPipe]
 })
-export class SuiteItemBatchComponent {
+export class SuiteItemBatchComponent extends PillContainerComponent {
   data: Data;
   icon: Icon;
-  topics: Topic[];
-  shownTopics: Topic[];
-  toggleState: TopicType | null;
 
   @Input()
   set item(item: FrontendBatchItem) {
@@ -62,12 +60,6 @@ export class SuiteItemBatchComponent {
     this.topics = this.initTopics(meta);
     this.applyChosenTopics();
   }
-  @Input()
-  set chosenTopics(type: TopicType) {
-    this.toggleState = type;
-    this.applyChosenTopics(type);
-  }
-  @Output() updateChosenTopics = new EventEmitter<TopicType | null>();
 
   constructor(
     private dateAgoPipe: DateAgoPipe,
@@ -76,6 +68,7 @@ export class SuiteItemBatchComponent {
     private percentPipe: PercentPipe,
     private faIconLibrary: FaIconLibrary
   ) {
+    super();
     faIconLibrary.addIcons(
       faCircle,
       faSpinner,
@@ -200,20 +193,20 @@ export class SuiteItemBatchComponent {
     if (meta.score) {
       const score = this.percentPipe.transform(meta.score, '1.0-0');
       topics.push({
-        type: TopicType.MatchRate,
-        color: ['bg-green-200'],
+        color: ['text-sky-600'],
+        icon: 'oct-diff',
         text: score,
         title: 'Match Score',
-        click: () => this.toggleChosenTopics(TopicType.MatchRate)
+        type: TopicType.MatchRate
       });
     }
 
     if (meta.performance) {
       topics.push({
-        type: TopicType.Performance,
-        color: ['bg-sky-200'],
+        color: ['text-green-600'],
+        icon: 'hero-clock',
         text: meta.performance,
-        click: () => this.toggleChosenTopics(TopicType.Performance)
+        type: TopicType.Performance
       });
     }
 
@@ -232,32 +225,21 @@ export class SuiteItemBatchComponent {
         tcs += ` (${meta.countMissing} missing)`;
       }
       topics.push({
-        type: TopicType.TestCases,
-        color: ['bg-red-200'],
+        color: ['text-sky-600'],
+        icon: 'feather-file-text',
         text: tcs,
-        click: () => this.toggleChosenTopics(TopicType.TestCases)
+        type: TopicType.Children
       });
     }
 
     topics.push({
-      type: TopicType.SubmissionDate,
-      color: ['bg-purple-200'],
+      color: ['text-purple-500'],
+      icon: 'hero-calendar',
       text: this.dateAgoPipe.transform(meta.submittedAt),
       title: format(meta.submittedAt, 'PPpp'),
-      click: () => this.toggleChosenTopics(TopicType.SubmissionDate)
+      type: TopicType.SubmissionDate
     });
 
     return topics;
-  }
-
-  private toggleChosenTopics(type: TopicType) {
-    this.updateChosenTopics.emit(this.toggleState === type ? null : type);
-  }
-
-  private applyChosenTopics(type?: TopicType) {
-    this.toggleState = type;
-    this.shownTopics = type
-      ? this.topics.filter((v) => type === v.type)
-      : this.topics;
   }
 }

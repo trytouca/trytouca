@@ -8,6 +8,7 @@ import { FilterInput } from '@/home/models/filter.model';
 
 import { TeamPageSuite, TeamPageSuiteType } from './team.model';
 import { TeamPageService } from './team.service';
+import { TopicType } from '@/home/models/page-item.model';
 
 const filterInput: FilterInput<TeamPageSuite> = {
   filters: [
@@ -145,6 +146,7 @@ export class TeamTabSuitesComponent
   implements OnDestroy
 {
   ItemType = TeamPageSuiteType;
+  chosenTopic: TopicType;
 
   constructor(
     private teamPageService: TeamPageService,
@@ -182,5 +184,9 @@ export class TeamTabSuitesComponent
         queryParams: {}
       });
     }
+  }
+
+  updateChosenTopics(type: TopicType) {
+    this.chosenTopic = type;
   }
 }

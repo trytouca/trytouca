@@ -11,24 +11,29 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { NgIconsModule } from '@ng-icons/core';
 import {
   HeroBadgeCheck,
+  HeroCalendar,
   HeroCheckCircle,
   HeroChevronDoubleLeft,
   HeroChevronDown,
   HeroClipboardCopy,
+  HeroClock,
   HeroDotsVertical,
   HeroExclamationCircle,
   HeroEye,
   HeroEyeOff,
   HeroInformationCircle,
+  HeroLightningBolt,
   HeroMail,
   HeroPlusSolid,
   HeroRefresh,
   HeroSpeakerphone,
+  HeroStar,
   HeroTerminal,
   HeroUpload
 } from '@ng-icons/heroicons';
 import {
   FeatherChevronDown,
+  FeatherFileText,
   FeatherGift,
   FeatherList,
   FeatherPlusCircle,
@@ -39,6 +44,7 @@ import {
   FeatherUserPlus,
   FeatherUsers
 } from '@ng-icons/feather-icons';
+import { OctDiff } from '@ng-icons/octicons';
 
 import {
   AlertComponent,
@@ -62,6 +68,7 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     HttpClientModule,
     NgIconsModule.withIcons({
       FeatherChevronDown,
+      FeatherFileText,
       FeatherGift,
       FeatherList,
       FeatherPlusCircle,
@@ -72,21 +79,26 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
       FeatherUserPlus,
       FeatherUsers,
       HeroBadgeCheck,
+      HeroCalendar,
       HeroCheckCircle,
       HeroChevronDoubleLeft,
       HeroChevronDown,
       HeroClipboardCopy,
+      HeroClock,
       HeroDotsVertical,
       HeroExclamationCircle,
       HeroEye,
       HeroEyeOff,
       HeroInformationCircle,
+      HeroLightningBolt,
       HeroMail,
       HeroPlusSolid,
       HeroRefresh,
       HeroSpeakerphone,
+      HeroStar,
       HeroTerminal,
-      HeroUpload
+      HeroUpload,
+      OctDiff
     }),
     ReactiveFormsModule,
     RouterModule

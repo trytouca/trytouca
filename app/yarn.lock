@@ -1415,6 +1415,13 @@
   dependencies:
     tslib "^2.2.0"
 
+"@ng-icons/octicons@^12.4.0":
+  version "12.4.0"
+  resolved "https://registry.yarnpkg.com/@ng-icons/octicons/-/octicons-12.4.0.tgz#a415a2cdfde9b6502a7b912592e1a4ea36d651fa"
+  integrity sha512-lDNueGu0LBJrN2w4RiUp+bdMTSUzY68kVvmUpNmTfkV8VfMYzQ2pXz8DegE2s6xOifJk8mCzI/MtdaPF3t4IpA==
+  dependencies:
+    tslib "^2.2.0"
+
 "@ngneat/dialog@^1.7.0":
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/@ngneat/dialog/-/dialog-1.7.0.tgz#d02aa1728b6266ce6b9fc8286e00a7ff484f0330"

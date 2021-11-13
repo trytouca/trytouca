@@ -16,12 +16,14 @@ import { format } from 'date-fns';
 
 import { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
+import { PillContainerComponent } from '@/home/components';
 import {
   Data,
   Icon,
   IconColor,
   IconType,
-  Topic
+  Topic,
+  TopicType
 } from '@/home/models/page-item.model';
 import { DateAgoPipe, DateTimePipe } from '@/shared/pipes';
 
@@ -49,10 +51,10 @@ type Metadata = Partial<{
   styleUrls: ['../../styles/item.component.scss'],
   providers: [DateAgoPipe, DateTimePipe, I18nPluralPipe, PercentPipe]
 })
-export class BatchItemElementComponent {
+export class BatchItemElementComponent extends PillContainerComponent {
   data: Data;
   icon: Icon;
-  topics: Topic[];
+
   private _meta: Metadata = {
     keysCount: 0,
     keysCountFresh: 0,
@@ -72,6 +74,7 @@ export class BatchItemElementComponent {
   set item(item: BatchPageItem) {
     this._item = item;
     this.initMetadata();
+    this.applyChosenTopics();
   }
 
   constructor(
@@ -82,6 +85,7 @@ export class BatchItemElementComponent {
     private percentPipe: PercentPipe,
     private faIconLibrary: FaIconLibrary
   ) {
+    super();
     faIconLibrary.addIcons(
       faCircle,
       faCheckCircle,
@@ -296,16 +300,27 @@ export class BatchItemElementComponent {
     const topics: Topic[] = [];
 
     if (this._meta.isPendingComparison) {
-      topics.push({ text: 'Being Compared' });
+      topics.push({ text: 'Being Compared', type: TopicType.EmptyNode });
     }
 
     if (this._meta.keysCount && this._meta.keysScore) {
       const score = this.percentPipe.transform(this._meta.keysScore, '1.0-1');
-      topics.push({ text: score, title: 'Match Score' });
+      topics.push({
+        color: ['text-sky-600'],
+        icon: 'oct-diff',
+        text: score,
+        title: 'Match Score',
+        type: TopicType.MatchRate
+      });
     }
 
     if (this._meta.performance) {
-      topics.push({ text: this._meta.performance });
+      topics.push({
+        color: ['text-green-600'],
+        icon: 'hero-clock',
+        text: this._meta.performance,
+        type: TopicType.Performance
+      });
     }
 
     if (this._meta.keysCount) {
@@ -322,13 +337,21 @@ export class BatchItemElementComponent {
       if (!this._meta.keysCountFresh && this._meta.keysCountMissing) {
         tcs += ` (${this._meta.keysCountMissing} missing)`;
       }
-      topics.push({ text: tcs });
+      topics.push({
+        color: ['text-sky-600'],
+        icon: 'feather-file-text',
+        text: tcs,
+        type: TopicType.Children
+      });
     }
 
     if (this._meta.isCreatedRecently) {
       topics.push({
+        color: ['text-purple-500'],
+        icon: 'hero-calendar',
         text: this.dateAgoPipe.transform(this._meta.builtAt),
-        title: format(this._meta.builtAt, 'PPpp')
+        title: format(this._meta.builtAt, 'PPpp'),
+        type: TopicType.SubmissionDate
       });
     }
 

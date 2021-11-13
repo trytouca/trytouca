@@ -6,20 +6,18 @@
     </div>
     <div class="wsl-item-title">
       <a [routerLink]="data.link" [queryParams]="data.query">
-        <h4>{{ data.name }}</h4>
+        <p>{{ data.name }}</p>
       </a>
     </div>
   </div>
-  <div
-    class="flex flex-row space-x-1 overflow-hidden text-xs leading-6 md:leading-8 whitespace-nowrap">
-    <div *ngFor="let topic of shownTopics"
-      class="flex items-center px-2 space-x-1 overflow-hidden text-gray-500 bg-white border rounded-full cursor-pointer select-none hover:text-black lg:px-4 whitespace-nowrap"
-      (click)="topic.click()">
-      <div class="hidden w-2 h-2 rounded lg:block" [ngClass]="topic.color">
-      </div>
-      <span [attr.title]="topic.title || null">
-        {{ topic.text }}
+  <div class="wsl-item-pills">
+    <div class="wsl-item-pill" *ngFor="let topic of shownTopics"
+      (click)="toggleChosenTopics(topic.type)">
+      <span class="hidden lg:flex">
+        <ng-icon [ngClass]="topic.color" [name]="topic.icon" size="0.875rem"
+          *ngIf="topic.icon"></ng-icon>
       </span>
+      <span [attr.title]="topic.title || null">{{ topic.text }}</span>
     </div>
   </div>
 </div>

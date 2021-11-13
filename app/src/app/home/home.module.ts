@@ -15,6 +15,7 @@ import {
   ModalComponent,
   PageListComponent,
   PageOverviewComponent,
+  PillContainerComponent,
   VersionListComponent,
   VersionNavigatorComponent
 } from './components';
@@ -82,6 +83,7 @@ import {
     ModalComponent,
     PageListComponent,
     PageOverviewComponent,
+    PillContainerComponent,
     VersionListComponent,
     VersionNavigatorComponent,
     // team page components

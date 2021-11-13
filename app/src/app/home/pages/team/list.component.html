@@ -14,7 +14,8 @@
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Suite); let i = index;"
         (click)="selectedRow = i;" [ngClass]="{'bg-sky-50': selectedRow === i}">
-        <app-team-item-suite [item]="item.data">
+        <app-team-item-suite [item]="item.data" [chosenTopics]="chosenTopic"
+          (updateChosenTopics)="updateChosenTopics($event)">
         </app-team-item-suite>
       </li>
     </ul>
