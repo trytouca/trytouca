@@ -42,13 +42,13 @@ def loaded_client() -> Client:
     client = Client()
     client.configure(team="some-team", suite="some-suite", version="some-version")
     client.declare_testcase("some-case")
-    client.add_assertion("username", "potter")
-    client.add_result("is_famous", True)
-    client.add_result("tall", 6.1)
-    client.add_result("age", 21)
-    client.add_result("name", "harry")
-    client.add_result("dob", DateOfBirth(2000, 1, 1))
-    client.add_result("dates", [DateOfBirth(2000, 1, 1), DateOfBirth(1990, 1, 1)])
+    client.assume("username", "potter")
+    client.check("is_famous", True)
+    client.check("tall", 6.1)
+    client.check("age", 21)
+    client.check("name", "harry")
+    client.check("dob", DateOfBirth(2000, 1, 1))
+    client.check("dates", [DateOfBirth(2000, 1, 1), DateOfBirth(1990, 1, 1)])
     for course in courses:
         client.add_array_element("courses", course)
         client.add_hit_count("course-count")
@@ -93,7 +93,7 @@ def test_client_loaded_object_default_serialize():
     client = Client()
     client.configure()
     client.declare_testcase("some-case")
-    client.add_result("dob", DateOfBirth(2000, 1, 1))
+    client.check("dob", DateOfBirth(2000, 1, 1))
     result = write_json_and_read_back_result(client, "dob")
     assert result.get("value") == '{"year": 2000, "month": 1, "day": 1}'
 
@@ -104,6 +104,6 @@ def test_client_loaded_object_custom_serialize():
     client.configure()
     client.declare_testcase("some-case")
     client.add_serializer(DateOfBirth, serializer)
-    client.add_result("dob", DateOfBirth(2000, 1, 1))
+    client.check("dob", DateOfBirth(2000, 1, 1))
     result = write_json_and_read_back_result(client, "dob")
     assert result.get("value") == '{"y": 2000, "m": 1, "d": 1}'

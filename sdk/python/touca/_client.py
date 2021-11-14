@@ -196,7 +196,7 @@ class Client:
             If set to ``True``, when a thread calls :py:meth:`~declare_testcase`,
             all other threads also have their most recent test case changed to
             the newly declared test case and any subsequent call to data
-            capturing functions such as :py:meth:`~add_result`
+            capturing functions such as :py:meth:`~check`
             will affect the newly declared test case.
 
         :return: ``True`` if client is ready to capture data.
@@ -322,11 +322,11 @@ class Client:
         del self._cases[name]
 
     @casemethod
-    def add_result(self, key: str, value: Any):
+    def check(self, key: str, value: Any):
         return self._type_handler.transform(value)
 
     @casemethod
-    def add_assertion(self, key: str, value: Any):
+    def assume(self, key: str, value: Any):
         return self._type_handler.transform(value)
 
     @casemethod

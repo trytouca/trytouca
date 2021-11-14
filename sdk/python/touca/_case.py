@@ -45,7 +45,7 @@ class Case:
         self._tics: Dict[str, datetime] = dict()
         self._tocs: Dict[str, datetime] = dict()
 
-    def add_result(self, key: str, value: ToucaType):
+    def check(self, key: str, value: ToucaType):
         """
         Logs a given value as a test result for the declared test case
         and associates it with the specified key.
@@ -55,7 +55,7 @@ class Case:
         """
         self._results[key] = ResultEntry(typ=ResultCategory.Check, val=value)
 
-    def add_assertion(self, key: str, value: ToucaType):
+    def assume(self, key: str, value: ToucaType):
         """
         Logs a given value as an assertion for the declared test case
         and associates it with the specified key.
@@ -91,16 +91,16 @@ class Case:
                 if is_prime(number):
                     primes.append(number)
             if primes:
-                touca.add_result("prime numbers", primes)
-                touca.add_result("number of primes", len(primes))
+                touca.check("prime numbers", primes)
+                touca.check("number of primes", len(primes))
 
         The items added to the list are not required to be of the same type.
         The following code is acceptable:
 
         .. code-block:: python
 
-            touca.add_result("prime numbers", 42)
-            touca.add_result("prime numbers", "forty three")
+            touca.check("prime numbers", 42)
+            touca.check("prime numbers", "forty three")
 
         :raises RuntimeError:
             if specified key is already associated with
@@ -108,7 +108,7 @@ class Case:
 
         :param key: name to be associated with the logged test result
         :param value: element to be appended to the array
-        :see also: :py:meth:`~add_result`
+        :see also: :py:meth:`~check`
         """
         if key not in self._results:
             self._results[key] = ResultEntry(typ=ResultCategory.Check, val=VectorType())
@@ -143,15 +143,15 @@ class Case:
                 if is_prime(number):
                     primes.append(number)
             if primes:
-                touca.add_result("prime numbers", primes)
-                touca.add_result("number of primes", len(primes))
+                touca.check("prime numbers", primes)
+                touca.check("number of primes", len(primes))
 
         :raises RuntimeError:
             if specified key is already associated with
             a test result which was not an integer
 
         :param key: name to be associated with the logged test result
-        :see also: :py:meth:`~add_result`
+        :see also: :py:meth:`~check`
         """
         if key not in self._results:
             self._results[key] = ResultEntry(

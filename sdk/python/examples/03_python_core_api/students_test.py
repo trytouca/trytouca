@@ -18,9 +18,9 @@ def main():
         student = find_student(username)
         touca.stop_timer("find_student")
 
-        touca.add_assertion("username", student.username)
-        touca.add_result("fullname", student.fullname)
-        touca.add_result("birth_date", student.dob)
+        touca.assume("username", student.username)
+        touca.check("fullname", student.fullname)
+        touca.check("birth_date", student.dob)
 
         touca.add_serializer(Course, lambda x: [x.name, x.grade])
         for course in student.courses:
@@ -28,7 +28,7 @@ def main():
             touca.add_hit_count("number of courses")
 
         with touca.scoped_timer("calculate_gpa"):
-            touca.add_result("gpa", calculate_gpa(student.courses))
+            touca.check("gpa", calculate_gpa(student.courses))
         touca.add_metric("external_source", 1500)
 
         touca.post()

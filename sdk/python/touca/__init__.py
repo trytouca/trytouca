@@ -12,7 +12,7 @@ You can install this sdk via ``pip install touca`` and import it in your code vi
 Alternatively, you can import individual functions which may be useful in rare
 cases if and when you want to call them from production code::
 
-    from touca import add_result
+    from touca import check
 
 If you are just getting started with Touca, we generally recommend that you
 install the SDK as a development-only dependency.
@@ -63,13 +63,13 @@ def forget_testcase(name: str):
 
 
 @clientmethod
-def add_result(key: str, value: Any):
-    Client.instance().add_result(key, value)
+def check(key: str, value: Any):
+    Client.instance().check(key, value)
 
 
 @clientmethod
-def add_assertion(key: str, value: Any):
-    Client.instance().add_assertion(key, value)
+def assume(key: str, value: Any):
+    Client.instance().assume(key, value)
 
 
 @clientmethod

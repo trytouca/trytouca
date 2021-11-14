@@ -50,10 +50,10 @@ def loaded_case() -> Case:
     case = Case(
         team="some-team", suite="some-suite", version="some-version", name="some-case"
     )
-    case.add_assertion("username", type_handler.transform("potter"))
-    case.add_result("name", type_handler.transform("harry"))
-    case.add_result("dob", type_handler.transform(DateOfBirth(2000, 1, 1)))
-    case.add_result("enroll_date", type_handler.transform(date(2018, 3, 1)))
+    case.assume("username", type_handler.transform("potter"))
+    case.check("name", type_handler.transform("harry"))
+    case.check("dob", type_handler.transform(DateOfBirth(2000, 1, 1)))
+    case.check("enroll_date", type_handler.transform(date(2018, 3, 1)))
     for course in ["math", "english"]:
         case.add_array_element("course-names", type_handler.transform(course))
         case.add_hit_count("course-count")
