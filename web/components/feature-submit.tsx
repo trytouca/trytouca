@@ -14,7 +14,7 @@ const snippets = [
 
 void touca::main(const std::string& testcase) {
   const auto number = std::stoul(testcase);
-  touca::add_result("output", is_prime(number));
+  touca::check("output", is_prime(number));
 }`,
     language: 'cpp',
     repository: 'https://github.com/trytouca/touca-cpp'
@@ -24,7 +24,7 @@ void touca::main(const std::string& testcase) {
 
 @touca.Workflow
 def is_prime(testcase: str):
-  touca.add_result("output", is_prime(int(testcase)))
+  touca.check("output", is_prime(int(testcase)))
 
 if __name__ == "__main__":
   touca.run()`,
@@ -37,7 +37,7 @@ import { is_prime } from "./code_under_test";
 
 touca.workflow("is_prime", (testcase: string) => {
   const input = is_prime(Number.parseInt(testcase));
-  touca.add_result("output", input);
+  touca.check("output", input);
 });
 
 touca.run();`,
@@ -52,7 +52,7 @@ public final class PrimeTest {
   @Touca.Workflow
   public void isPrime(final String testcase) {
     final int number = Integer.parseInt(testcase);
-    Touca.addResult("output", Prime.isPrime(number));
+    Touca.check("output", Prime.isPrime(number));
   }
 }`,
     language: 'java',
