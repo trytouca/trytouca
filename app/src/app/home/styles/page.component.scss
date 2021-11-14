@@ -45,6 +45,7 @@ nav + div {
 }
 .wsl2-page-aside {
   height: calc(100vh - 8rem);
+  width: min(18rem, 20%);
 }
 .wsl2-page-main {
   min-height: calc(100vh - 8rem);
