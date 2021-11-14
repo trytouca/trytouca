@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.2.6
+
+Breaking Changes:
+
+- Rename data capturing functions (#48)
+
+Improvements:
+
+- Update function name in example apps (#47)
+- Extend test environments to cover Python 3.10 (#46)
+
 ## v0.2.5
 
 Fixes:
