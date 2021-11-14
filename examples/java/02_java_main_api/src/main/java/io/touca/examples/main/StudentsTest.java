@@ -12,10 +12,10 @@ public final class StudentsTest {
     Touca.startTimer("find_student");
     Student student = Students.findStudent(username);
     Touca.stopTimer("find_student");
-    Touca.addAssertion("username", student.username);
-    Touca.addResult("fullname", student.fullname);
-    Touca.addResult("birth_date", student.dob);
-    Touca.addResult("gpa", student.gpa);
+    Touca.assume("username", student.username);
+    Touca.check("fullname", student.fullname);
+    Touca.check("birth_date", student.dob);
+    Touca.check("gpa", student.gpa);
     Touca.addMetric("external_source", 1500);
   }
 

@@ -23,12 +23,12 @@ public final class StudentsTest {
       Touca.addTypeAdapter(Course.class, course -> {
         return course.name;
       });
-      Touca.addAssertion("username", student.username);
-      Touca.addResult("fullname", student.fullname);
-      Touca.addResult("birth_date", student.dob);
+      Touca.assume("username", student.username);
+      Touca.check("fullname", student.fullname);
+      Touca.check("birth_date", student.dob);
 
       Touca.scopedTimer("calculate_gpa", () -> {
-        Touca.addResult("gpa", Students.calculateGPA(student.courses));
+        Touca.check("gpa", Students.calculateGPA(student.courses));
       });
       Touca.addMetric("external_source", 1500);
 

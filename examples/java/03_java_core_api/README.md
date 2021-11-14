@@ -124,7 +124,7 @@ called when the client is configured to run in offline mode.
 
 Once the client is configured, you can call `declareTestcase` once for each test
 case to indicate that subsequent calls to the data capturing functions like
-`addResult` should associate the captured data with that declared test case.
+`check` should associate the captured data with that declared test case.
 
 ```java
 for (String username: Touca.getTestcases()) {
@@ -151,19 +151,18 @@ variables and performance benchmarks.
 
 ### Preserving Data Types
 
-Touca data capturing functions such as `Touca.addResult`, preserve the types of
-all captured data so that the Touca server can compare them in their original
-type.
+Touca data capturing functions such as `Touca.check`, preserve the types of all
+captured data so that the Touca server can compare them in their original type.
 
 ```java
-Touca.addResult("username", student.username);
-Touca.addResult("fullname", student.fullname);
-Touca.addResult("birth_date", student.dob);
-Touca.addResult("gpa", student.gpa);
+Touca.check("username", student.username);
+Touca.check("fullname", student.fullname);
+Touca.check("birth_date", student.dob);
+Touca.check("gpa", student.gpa);
 ```
 
-In the example above, `Touca.addResult` stores value of properties `username`
-and `fullname` as `String` while properties `dob` and `gpa` are stored as
+In the example above, `Touca.check` stores value of properties `username` and
+`fullname` as `String` while properties `dob` and `gpa` are stored as
 `java.time.LocalDate` and `double` respectively. The server visualizes possible
 differences in these values based on their types.
 

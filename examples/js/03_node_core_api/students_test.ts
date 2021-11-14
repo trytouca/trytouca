@@ -12,9 +12,9 @@ import { Course, calculate_gpa, find_student } from './students';
     const student = await find_student(username);
     touca.stop_timer('find_student');
 
-    touca.add_assertion('username', student.username);
-    touca.add_result('fullname', student.fullname);
-    touca.add_result('birth_date', student.dob);
+    touca.assume('username', student.username);
+    touca.check('fullname', student.fullname);
+    touca.check('birth_date', student.dob);
 
     touca.add_serializer(Course.name, (x: Course) => [x.name, x.grade]);
     for (const course of student.courses) {
@@ -23,7 +23,7 @@ import { Course, calculate_gpa, find_student } from './students';
     }
 
     await touca.scoped_timer('find_student', async () =>
-      touca.add_result('gpa', await calculate_gpa(student.courses))
+      touca.check('gpa', await calculate_gpa(student.courses))
     );
     touca.add_metric('external_source', 1500);
 

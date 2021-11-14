@@ -9,7 +9,7 @@ public final class PrimeTest {
   @Touca.Workflow
   public void isPrime(final String testcase) {
     final int number = Integer.parseInt(testcase);
-    Touca.addResult("output", Prime.isPrime(number));
+    Touca.check("output", Prime.isPrime(number));
   }
 
   public static void main(String[] args) {

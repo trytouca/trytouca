@@ -50,7 +50,7 @@ import { is_prime } from './is_prime';
 
 touca.workflow('is_prime_test', (testcase: string) => {
   const number = Number.parseInt(testcase);
-  touca.add_result('is_prime_output', is_prime(number));
+  touca.check('is_prime_output', is_prime(number));
 });
 
 touca.run();
@@ -134,6 +134,6 @@ operations.
     > important functions.
     >
     > In our example, we captured the return value of our `is_prime` function
-    > via `touca.add_result`. We could also capture runtime of functions and
-    > other performance data but our example here was too trivial to showcase
-    > all possibilities. See our next example for more details.
+    > via `touca.check`. We could also capture runtime of functions and other
+    > performance data but our example here was too trivial to showcase all
+    > possibilities. See our next example for more details.

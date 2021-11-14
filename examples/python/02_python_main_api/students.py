@@ -44,7 +44,7 @@ students = [
 
 
 def calculate_gpa(courses: List[Course]):
-    touca.add_result("courses", courses)
+    touca.check("courses", courses)
     return sum(k.grade for k in courses) / len(courses) if courses else 0
 
 

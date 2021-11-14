@@ -50,7 +50,7 @@ of our software.
 We can start small and capture the entire returned object as a Touca result:
 
 ```ts
-touca.add_result('student', student);
+touca.check('student', student);
 ```
 
 We can run our test from the command line:
@@ -82,10 +82,10 @@ Since this information may change every time we run our tests, we can choose to
 capture different fields as separate entities.
 
 ```ts
-touca.add_assertion('username', student.username);
-touca.add_result('fullname', student.fullname);
-touca.add_result('birth_date', student.dob);
-touca.add_result('gpa', student.gpa);
+touca.assume('username', student.username);
+touca.check('fullname', student.fullname);
+touca.check('birth_date', student.dob);
+touca.check('gpa', student.gpa);
 ```
 
 This approach allows Touca to report differences in a more helpful format,
@@ -94,8 +94,8 @@ implementation to always capitalize student names, we could better visualize the
 differences to make sure that only the value associated with key `fullname`
 changes across our test cases.
 
-Note that we used Touca function `add_assertion` to track the `username`. Touca
-does not visualize the values captured as assertion unless they are different.
+Note that we used Touca function `assume` to track the `username`. Touca does
+not visualize the values captured as assertion unless they are different.
 
 We can capture the value of any number of variables, including the ones that are
 not exposed by the interface of our code under test. In our example, let us
@@ -108,7 +108,7 @@ redesigning our API:
 
 ```ts
 function calculate_gpa(courses: Course[]): number {
-  touca.add_result('courses', courses);
+  touca.check('courses', courses);
   return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
 }
 ```
