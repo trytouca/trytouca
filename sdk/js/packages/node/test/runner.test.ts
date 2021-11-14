@@ -15,7 +15,7 @@ describe('basic operations', () => {
       .mockImplementation();
     const client = new NodeClient();
     client.workflow('some-workflow', () => {
-      client.add_result('some-key', 'some-value');
+      client.check('some-key', 'some-value');
     });
     await client.run();
     const prefix = 'Touca encountered an error when executing this test';

@@ -49,7 +49,7 @@ export interface NodeOptions {
    * If set to `True`, when a thread calls {@link declare_testcase}, all
    * other threads also have their most recent test case changed to the
    * newly declared test case and any subsequent call to data capturing
-   * functions such as {@link add_result} will affect the newly declared
+   * functions such as {@link check} will affect the newly declared
    * test case.
    */
   concurrency?: boolean;

@@ -116,7 +116,7 @@ called when the client is configured to run in offline mode.
 
 Once the client is configured, you can call `declare_testcase` once for each
 test case to indicate that subsequent calls to the data capturing functions like
-`add_result` should associate the captured data with that declared test case.
+`check` should associate the captured data with that declared test case.
 
 ```ts
 for (const username of await touca.get_testcases()) {
@@ -143,20 +143,19 @@ variables and performance benchmarks.
 
 ### Preserving Data Types
 
-Touca data capturing functions such as `touca.add_result`, preserve the types of
-all captured data so that the Touca server can compare them in their original
-type.
+Touca data capturing functions such as `touca.check`, preserve the types of all
+captured data so that the Touca server can compare them in their original type.
 
 ```ts
-touca.add_result('username', student.username);
-touca.add_result('fullname', student.fullname);
-touca.add_result('birth_date', student.dob);
-touca.add_result('gpa', student.gpa);
+touca.check('username', student.username);
+touca.check('fullname', student.fullname);
+touca.check('birth_date', student.dob);
+touca.check('gpa', student.gpa);
 ```
 
-In the example above, `touca.add_result` stores value of properties `username`
-and `fullname` as string while properties `dob` and `gpa` are stored as `Date`
-and `number` respectively. The server visualizes possible differences in these
+In the example above, `touca.check` stores value of properties `username` and
+`fullname` as string while properties `dob` and `gpa` are stored as `Date` and
+`number` respectively. The server visualizes possible differences in these
 values based on their types.
 
 The SDK is designed to handle iterables and custom objects by serializing their

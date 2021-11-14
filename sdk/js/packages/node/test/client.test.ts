@@ -16,13 +16,13 @@ async function make_client(): Promise<NodeClient> {
     version: 'some-version'
   });
   client.declare_testcase('some-case');
-  client.add_assertion('username', 'potter');
-  client.add_result('is_famous', true);
-  client.add_result('tall', 6.1);
-  client.add_result('age', 21);
-  client.add_result('name', 'harry');
-  client.add_result('dob', { year: 2000, month: 1, day: 1 });
-  client.add_result('courses', courses);
+  client.assume('username', 'potter');
+  client.check('is_famous', true);
+  client.check('tall', 6.1);
+  client.check('age', 21);
+  client.check('name', 'harry');
+  client.check('dob', { year: 2000, month: 1, day: 1 });
+  client.check('courses', courses);
   for (const course of courses) {
     client.add_array_element('course-names', course);
     client.add_hit_count('course-count');
@@ -102,8 +102,8 @@ describe('check saving file', () => {
   test('without calling configure', async () => {
     const client = new NodeClient();
     client.declare_testcase('some-case');
-    client.add_result('some-key', 'some-result');
-    client.add_assertion('some-other-key', 'some-assertion');
+    client.check('some-key', 'some-result');
+    client.assume('some-other-key', 'some-assertion');
     client.add_metric('some-metric', 10);
     const filepath = path.join(dir, 'some-file');
     await client.save_json(filepath);
@@ -125,9 +125,9 @@ describe('check saving file', () => {
     client.configure();
     expect(client.is_configured()).toEqual(true);
     client.declare_testcase('some-case');
-    client.add_result('some-key', 'some-result');
+    client.check('some-key', 'some-result');
     client.declare_testcase('some-other-case');
-    client.add_assertion('some-other-key', 'some-assertion');
+    client.assume('some-other-key', 'some-assertion');
     client.declare_testcase('yet-another-case');
     client.add_metric('some-metric', 10);
     const filepath = path.join(dir, 'some-file');
@@ -165,9 +165,9 @@ describe('check saving file', () => {
     client.configure();
     expect(client.is_configured()).toEqual(true);
     client.declare_testcase('some-case');
-    client.add_result('some-key', 'some-result');
+    client.check('some-key', 'some-result');
     client.declare_testcase('some-other-case');
-    client.add_assertion('some-other-key', 'some-assertion');
+    client.assume('some-other-key', 'some-assertion');
     client.declare_testcase('yet-another-case');
     client.add_metric('some-metric', 10);
     const filepath = path.join(dir, 'some-file');

@@ -13,9 +13,9 @@ describe('basic operations', () => {
   beforeEach(() => {
     testcase = new Case({ name: 'some-case' });
     testcase.add_array_element('some-array', transform('some-array-element'));
-    testcase.add_result('some-result', transform('some-result-value'));
+    testcase.assume('some-assertion', transform('some-assertion-value'));
+    testcase.check('some-result', transform('some-result-value'));
     testcase.add_hit_count('some-hit-count');
-    testcase.add_assertion('some-assertion', transform('some-assertion-value'));
     testcase.add_metric('some-metric', 10);
   });
 

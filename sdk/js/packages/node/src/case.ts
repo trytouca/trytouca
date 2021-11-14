@@ -57,7 +57,7 @@ export class Case {
    * @param key name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
-  add_result(key: string, value: ToucaType): void {
+  check(key: string, value: ToucaType): void {
     this._results.set(key, { typ: ResultCategory.Check, val: value });
   }
 
@@ -68,7 +68,7 @@ export class Case {
    * @param key name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
-  add_assertion(key: string, value: ToucaType): void {
+  assume(key: string, value: ToucaType): void {
     this._results.set(key, { typ: ResultCategory.Assert, val: value });
   }
 

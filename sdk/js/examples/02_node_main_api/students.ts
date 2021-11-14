@@ -45,7 +45,7 @@ const students = [
 ];
 
 function calculate_gpa(courses: Course[]): number {
-  touca.add_result('courses', courses);
+  touca.check('courses', courses);
   return courses.length
     ? courses.reduce((sum, v) => sum + v.grade, 0) / courses.length
     : 0.0;

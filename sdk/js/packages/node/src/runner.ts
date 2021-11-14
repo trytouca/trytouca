@@ -16,10 +16,10 @@
  *
  *  touca.workflow('test_students', (testcase: string) => {
  *    const student = find_student(testcase);
- *    touca.add_assertion('username', student.username);
- *    touca.add_result('fullname', student.fullname);
- *    touca.add_result('birth_date', student.dob);
- *    touca.add_result('gpa', calculate_gpa(student.courses));
+ *    touca.assume('username', student.username);
+ *    touca.check('fullname', student.fullname);
+ *    touca.check('birth_date', student.dob);
+ *    touca.check('gpa', calculate_gpa(student.courses));
  *  });
  *
  *  touca.run();
