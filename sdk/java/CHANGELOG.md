@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.3.2
+
+Breaking Changes:
+
+- Rename top-level data capturing functions (#33)
+
+Improvements:
+
+- Set API Key and URL as env vars in Readme file (#34)
+
 ## v0.3.1
 
 Features:
