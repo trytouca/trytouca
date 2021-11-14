@@ -18,7 +18,7 @@ void touca::main(const std::string& testcase)
 {
     const auto number = std::stoul(testcase);
     touca::scoped_timer timer("is_prime");
-    touca::add_result("is_prime", is_prime(number));
+    touca::check("is_prime", is_prime(number));
 }
 ```
 
@@ -46,7 +46,7 @@ public:
     {
         const auto number = std::stoul(testcase);
         touca::scoped_timer timer("is_prime");
-        touca::add_result("is_prime", is_prime(number));
+        touca::check("is_prime", is_prime(number));
         return {};
     }
 };

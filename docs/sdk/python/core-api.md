@@ -143,19 +143,18 @@ and performance benchmarks.
 
 ### Preserving Data Types
 
-Touca data capturing functions such as `touca.add_result`, preserve the types of
-all captured data so that the Touca server can compare them in their original
-type.
+Touca data capturing functions such as `touca.check`, preserve the types of all
+captured data so that the Touca server can compare them in their original type.
 
 ```py
-touca.add_result("username", student.username)
-touca.add_result("fullname", student.fullname)
-touca.add_result("birth_date", student.dob)
-touca.add_result("gpa", student.gpa)
+touca.check("username", student.username)
+touca.check("fullname", student.fullname)
+touca.check("birth_date", student.dob)
+touca.check("gpa", student.gpa)
 ```
 
-In the example above, `touca.add_result` stores value of properties `username`
-and `fullname` as string while properties `dob` and `gpa` are stored as
+In the example above, `touca.check` stores value of properties `username` and
+`fullname` as string while properties `dob` and `gpa` are stored as
 `datetime.date` and `float` respectively. The server visualizes possible
 differences in these values based on their types.
 

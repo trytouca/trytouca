@@ -147,18 +147,17 @@ and performance benchmarks.
 
 ### Preserving Data Types
 
-Touca data capturing functions such as `touca::add_result`, preserve the types
-of all captured data so that the Touca server can compare them in their original
-type.
+Touca data capturing functions such as `touca::check`, preserve the types of all
+captured data so that the Touca server can compare them in their original type.
 
 ```cpp
-touca::add_result("username", student.username);
-touca::add_result("fullname", student.fullname);
-touca::add_result("gpa", student.gpa);
+touca::check("username", student.username);
+touca::check("fullname", student.fullname);
+touca::check("gpa", student.gpa);
 ```
 
-In the example above, `touca::add_result` stores value of properties `username`
-and `fullname` as `std::string` while property `gpa` is stored as `float`. The
+In the example above, `touca::check` stores value of properties `username` and
+`fullname` as `std::string` while property `gpa` is stored as `float`. The
 server visualizes possible differences in these values based on their types.
 
 ### Customizing Data Serialization
@@ -208,7 +207,7 @@ objects of this type to be used as smaller components of even more complex
 types.
 
 ```cpp
-touca::add_result("birth_date", student.dob);
+touca::check("birth_date", student.dob);
 ```
 
 Consult with the Touca Type System section in Reference API documentation for

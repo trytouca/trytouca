@@ -56,7 +56,7 @@ import { is_prime } from "./is_prime";
 
 touca.workflow("is_prime_test", (testcase: string) => {
   const number = Number.parseInt(testcase);
-  touca.add_result("is_prime_output", is_prime(number));
+  touca.check("is_prime_output", is_prime(number));
 });
 
 touca.run();
@@ -164,9 +164,9 @@ Test completed in 546 ms
 
 ![Touca server after submitting results for v2.0](../../.gitbook/assets/touca-sdk-quickstart-2.png)
 
-In our example, we captured the output of our workflow using `touca.add_result`.
-But unlike integration tests, we are not bound to the output of our workflow. We
-can capture any number of data points and from anywhere within our code. This is
+In our example, we captured the output of our workflow using `touca.check`. But
+unlike integration tests, we are not bound to the output of our workflow. We can
+capture any number of data points and from anywhere within our code. This is
 specially useful if our workflow has multiple stages. We can capture the output
 of each stage without publicly exposing its API. If the behavior of that stage
 changes in a future version of our code, we can leverage the captured output to

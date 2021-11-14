@@ -150,21 +150,20 @@ and performance benchmarks.
 
 ### Preserving Data Types
 
-Touca data capturing functions such as `Touca.addResult`, preserve the types of
-all captured data so that the Touca server can compare them in their original
-type.
+Touca data capturing functions such as `Touca.check`, preserve the types of all
+captured data so that the Touca server can compare them in their original type.
 
 ```java
-Touca.addResult("username", student.username);
-Touca.addResult("fullname", student.fullname);
-Touca.addResult("birth_date", student.dob);
-Touca.addResult("gpa", student.gpa);
+Touca.check("username", student.username);
+Touca.check("fullname", student.fullname);
+Touca.check("birth_date", student.dob);
+Touca.check("gpa", student.gpa);
 ```
 
-In the example above, `Touca.addResult` stores value of properties `username`
-and `fullname` as string while properties `dob` and `gpa` are stored as
-`LocalDate` and `float` respectively. The server visualizes possible differences
-in these values based on their types.
+In the example above, `Touca.check` stores value of properties `username` and
+`fullname` as string while properties `dob` and `gpa` are stored as `LocalDate`
+and `float` respectively. The server visualizes possible differences in these
+values based on their types.
 
 The SDK is designed to handle iterables and custom objects by serializing their
 elements and properties. This makes it possible for us to add object `student`

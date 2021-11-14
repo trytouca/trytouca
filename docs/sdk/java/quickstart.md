@@ -99,7 +99,7 @@ public final class PrimeTest {
   @Touca.Workflow
   public void isPrime(final String testcase) {
     final int number = Integer.parseInt(testcase);
-    Touca.addResult("output", Prime.isPrime(number));
+    Touca.check("output", Prime.isPrime(number));
   }
 
   public static void main(String[] args) {
@@ -211,9 +211,9 @@ Test completed in 546 ms
 
 ![Touca server after submitting results for v2.0](../../.gitbook/assets/touca-sdk-quickstart-2.png)
 
-In our example, we captured the output of our workflow using `Touca.addResult`.
-But unlike integration tests, we are not bound to the output of our workflow. We
-can capture any number of data points and from anywhere within our code. This is
+In our example, we captured the output of our workflow using `Touca.check`. But
+unlike integration tests, we are not bound to the output of our workflow. We can
+capture any number of data points and from anywhere within our code. This is
 specially useful if our workflow has multiple stages. We can capture the output
 of each stage without publicly exposing its API. If the behavior of that stage
 changes in a future version of our code, we can leverage the captured output to

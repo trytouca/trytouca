@@ -60,7 +60,7 @@ for C++.
 void touca::main(const std::string& testcase)
 {
     const auto number = std::stoul(testcase);
-    touca::add_result("is_prime", is_prime(number));
+    touca::check("is_prime", is_prime(number));
 }
 ```
 
@@ -166,13 +166,13 @@ Test completed in 546 ms
 
 ![Touca server after submitting results for v2.0](../../.gitbook/assets/touca-sdk-quickstart-2.png)
 
-In our example, we captured the output of our workflow using
-`touca::add_result`. But unlike integration tests, we are not bound to the
-output of our workflow. We can capture any number of data points and from
-anywhere within our code. This is specially useful if our workflow has multiple
-stages. We can capture the output of each stage without publicly exposing its
-API. If the behavior of that stage changes in a future version of our code, we
-can leverage the captured output to find the root cause more easily.
+In our example, we captured the output of our workflow using `touca::check`. But
+unlike integration tests, we are not bound to the output of our workflow. We can
+capture any number of data points and from anywhere within our code. This is
+specially useful if our workflow has multiple stages. We can capture the output
+of each stage without publicly exposing its API. If the behavior of that stage
+changes in a future version of our code, we can leverage the captured output to
+find the root cause more easily.
 
 In the next documents, we will learn how to use Touca SDK for C++ to test
 real-world software workflows.
