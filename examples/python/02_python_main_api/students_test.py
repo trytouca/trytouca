@@ -8,10 +8,10 @@ from students import find_student
 def students_test(username: str):
     with touca.scoped_timer("find_student"):
         student = find_student(username)
-    touca.add_assertion("username", student.username)
-    touca.add_result("fullname", student.fullname)
-    touca.add_result("birth_date", student.dob)
-    touca.add_result("gpa", student.gpa)
+    touca.assume("username", student.username)
+    touca.check("fullname", student.fullname)
+    touca.check("birth_date", student.dob)
+    touca.check("gpa", student.gpa)
     touca.add_metric("external_source", 1500)
 
 

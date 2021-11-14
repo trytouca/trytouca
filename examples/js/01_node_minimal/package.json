@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@touca/example-node-minimal",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Touca Example Introducing Node.js SDK",
   "main": "dist/is_prime_test.js",
   "types": "dist/is_prime_test.js.d",
@@ -9,7 +9,7 @@
     "dist"
   ],
   "dependencies": {
-    "@touca/node": "^0.0.8"
+    "@touca/node": "^0.0.9"
   },
   "scripts": {
     "build": "tsc",

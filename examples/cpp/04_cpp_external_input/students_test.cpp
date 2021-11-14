@@ -145,7 +145,7 @@ touca::framework::Errors MyWorkflow::execute(
 template <>
 struct touca::serializer<Date> {
   std::shared_ptr<IType> serialize(const Date& value) {
-    auto out = std::make_shared<ObjectType>();
+    auto out = std::make_shared<ObjectType>("Date");
     out->add("year", value.year);
     out->add("month", value.month);
     out->add("day", value.day);

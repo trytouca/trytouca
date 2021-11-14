@@ -65,7 +65,7 @@ public final class PrimeTest {
   @Touca.Workflow
   public void isPrime(final String testcase) {
     final int number = Integer.parseInt(testcase);
-    Touca.addResult("output", Prime.isPrime(number));
+    Touca.check("output", Prime.isPrime(number));
   }
 
   public static void main(String[] args) {
@@ -83,7 +83,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation('io.touca:touca:0.3.1')
+    testImplementation('io.touca:touca:0.3.2')
 }
 ```
 
@@ -161,6 +161,6 @@ operations.
     > important functions.
     >
     > In our example, we captured the return value of our `isPrime` function via
-    > `Touca.addResult`. We could also capture runtime of functions and other
+    > `Touca.check`. We could also capture runtime of functions and other
     > performance data but our example here was too trivial to showcase all
     > possibilities. See our next example for more details.
