@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.0.9
+
+Breaking Changes:
+
+- Rename data capturing functions (#40)
+
+Improvements:
+
+- Update function name in example apps (#39)
+- Add more documentation for data capturing functions (#38)
+- Enable auto-formatting of markdown files (#37)
+- Make ToucaError subclass of Error (#36)
+
 ## v0.0.8
 
 Fixes:
