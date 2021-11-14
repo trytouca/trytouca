@@ -291,10 +291,10 @@ from students import find_student
 @touca.Workflow
 def students_test(username: str):
     student = find_student(username)
-    touca.add_assertion("username", student.username)
-    touca.add_result("fullname", student.fullname)
-    touca.add_result("birth_date", student.dob)
-    touca.add_result("gpa", student.gpa)
+    touca.assume("username", student.username)
+    touca.check("fullname", student.fullname)
+    touca.check("birth_date", student.dob)
+    touca.check("gpa", student.gpa)
 
 if __name__ == "__main__":
     touca.run()
@@ -316,10 +316,10 @@ if __name__ == "__main__":
 void touca::main(const std::string& username)
 {
     const auto& student = find_student(username);
-    touca::add_assertion("username", student.username);
-    touca::add_result("fullname", student.fullname);
-    touca::add_result("birth_date", student.dob);
-    touca::add_result("gpa", student.gpa);
+    touca::assume("username", student.username);
+    touca::check("fullname", student.fullname);
+    touca::check("birth_date", student.dob);
+    touca::check("gpa", student.gpa);
 }
 ```
 
@@ -337,10 +337,10 @@ import { find_student } from "./students";
 
 touca.workflow("students_test", async (username: string) => {
   const student = await find_student(username);
-  touca.add_assertion("username", student.username);
-  touca.add_result("fullname", student.fullname);
-  touca.add_result("birth_date", student.dob);
-  touca.add_result("gpa", student.gpa);
+  touca.assume("username", student.username);
+  touca.check("fullname", student.fullname);
+  touca.check("birth_date", student.dob);
+  touca.check("gpa", student.gpa);
 });
 
 touca.run();
@@ -362,10 +362,10 @@ public final class StudentsTest {
   @Touca.Workflow
   public void findStudent(final String username) {
     Student student = Students.findStudent(username);
-    Touca.addAssertion("username", student.username);
-    Touca.addResult("fullname", student.fullname);
-    Touca.addResult("birth_date", student.dob);
-    Touca.addResult("gpa", student.gpa);
+    Touca.assume("username", student.username);
+    Touca.check("fullname", student.fullname);
+    Touca.check("birth_date", student.dob);
+    Touca.check("gpa", student.gpa);
   }
 
   public static void main(String[] args) {
@@ -385,9 +385,8 @@ Notice the absence of hard-coded inputs and expected outputs. Each Touca
 workflow, takes a short, unique, and URL-friendly testcase name, maps that to a
 corresponding input and passes that input to our code under test. In the above
 code snippet, once we receive the output of our `find_student` workflow, we use
-`add_result` to track various characteristics of that output. Touca notifies us
-if these characteristics change in a future version of our `find_student`
-workflow.
+`check` to track various characteristics of that output. Touca notifies us if
+these characteristics change in a future version of our `find_student` workflow.
 
 We can track any number of variables in each Touca test workflow. More
 importantly, we can track important variables that might not necessarily be
@@ -405,7 +404,7 @@ creating a separate test workflow.
 
 ```python
 def calculate_gpa(courses: List[Course]):
-    touca.add_result("courses", courses)
+    touca.check("courses", courses)
     return sum(k.grade for k in courses) / len(courses) if courses else 0
 ```
 
@@ -420,7 +419,7 @@ def calculate_gpa(courses: List[Course]):
 ```cpp
 float calculate_gpa(const std::vector<Course>& courses)
 {
-    touca::add_result("courses", courses);
+    touca::check("courses", courses);
     const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
         [](const float sum, const Course& course) {
             return sum + course.grade;
@@ -439,7 +438,7 @@ float calculate_gpa(const std::vector<Course>& courses)
 
 ```typescript
 function calculate_gpa(courses: Course[]): number {
-  touca.add_result("courses", courses);
+  touca.check("courses", courses);
   return courses.length
     ? courses.reduce((sum, v) => sum + v.grade, 0) / courses.length
     : 0.0;
@@ -456,7 +455,7 @@ function calculate_gpa(courses: Course[]): number {
 
 ```java
 private static double calculateGPA(final Course[] courses) {
-    Touca.addResult("courses", courses);
+    Touca.check("courses", courses);
     double sum = Arrays.asList(courses).stream().mapToDouble(item -> item.grade).sum();
     return courses.length == 0 ? sum / courses.length : 0.0;
 }
@@ -468,8 +467,8 @@ private static double calculateGPA(final Course[] courses) {
 
 {% endtabs %}
 
-Notice that we are using Touca `add_result` inside our production code. Touca
-data capturing functions are no-op in the production environment. When they are
+Notice that we are using Touca `check` inside our production code. Touca data
+capturing functions are no-op in the production environment. When they are
 executed by Touca workflow in a test environment, they start capturing values
 and associating them with the active test case.
 
@@ -494,10 +493,10 @@ def students_test(username: str):
     touca.start_timer("find_student")
     student = find_student(username)
     touca.stop_timer("find_student")
-    touca.add_assertion("username", student.username)
-    touca.add_result("fullname", student.fullname)
-    touca.add_result("birth_date", student.dob)
-    touca.add_result("gpa", student.gpa)
+    touca.assume("username", student.username)
+    touca.check("fullname", student.fullname)
+    touca.check("birth_date", student.dob)
+    touca.check("gpa", student.gpa)
     touca.add_metric("external_source", 1500)
 
 if __name__ == "__main__":
@@ -520,10 +519,10 @@ if __name__ == "__main__":
 void touca::main(const std::string& username)
 {
     const auto& student = find_student(username);
-    touca::add_assertion("username", student.username);
-    touca::add_result("fullname", student.fullname);
-    touca::add_result("birth_date", student.dob);
-    touca::add_result("gpa", student.gpa);
+    touca::assume("username", student.username);
+    touca::check("fullname", student.fullname);
+    touca::check("birth_date", student.dob);
+    touca::check("gpa", student.gpa);
     touca::add_metric("external_source", 1500);
 }
 ```
@@ -544,10 +543,10 @@ touca.workflow("students_test", async (username: string) => {
   touca.start_timer("find_student");
   const student = await find_student(username);
   touca.stop_timer("find_student");
-  touca.add_assertion("username", student.username);
-  touca.add_result("fullname", student.fullname);
-  touca.add_result("birth_date", student.dob);
-  touca.add_result("gpa", student.gpa);
+  touca.assume("username", student.username);
+  touca.check("fullname", student.fullname);
+  touca.check("birth_date", student.dob);
+  touca.check("gpa", student.gpa);
   touca.add_metric("external_source", 1500);
 });
 
@@ -572,10 +571,10 @@ public final class StudentsTest {
     Touca.startTimer("find_student");
     Student student = Students.findStudent(username);
     Touca.stopTimer("find_student");
-    Touca.addAssertion("username", student.username);
-    Touca.addResult("fullname", student.fullname);
-    Touca.addResult("birth_date", student.dob);
-    Touca.addResult("gpa", student.gpa);
+    Touca.assume("username", student.username);
+    Touca.check("fullname", student.fullname);
+    Touca.check("birth_date", student.dob);
+    Touca.check("gpa", student.gpa);
     Touca.addMetric("external_source", 1500);
   }
 

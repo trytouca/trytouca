@@ -155,7 +155,7 @@ import touca
 
 @touca.Workflow
 def is_prime_test(testcase: str):
-    touca.add_result("output", is_prime(int(testcase)))
+    touca.check("output", is_prime(int(testcase)))
 
 if __name__ == "__main__":
     touca.run()
@@ -173,7 +173,7 @@ if __name__ == "__main__":
 void touca::main(const std::string& testcase)
 {
     const auto number = std::stoul(testcase);
-    touca::add_result("output", is_prime(number));
+    touca::check("output", is_prime(number));
 }
 ```
 
@@ -186,7 +186,7 @@ import { touca } from "@touca/node";
 import { is_prime } from "./code_under_test";
 
 touca.workflow("is_prime_test", (testcase: string) => {
-  touca.add_result("output", is_prime(Number.parseInt(testcase)));
+  touca.check("output", is_prime(Number.parseInt(testcase)));
 });
 
 touca.run();
@@ -204,7 +204,7 @@ public final class PrimeTest {
   @Touca.Workflow
   public void isPrime(final String testcase) {
     final int number = Integer.parseInt(testcase);
-    Touca.addResult("output", Prime.isPrime(number));
+    Touca.check("output", Prime.isPrime(number));
   }
 
   public static void main(String[] args) {

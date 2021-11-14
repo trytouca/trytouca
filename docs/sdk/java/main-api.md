@@ -36,10 +36,10 @@ public final class StudentsTest {
     Touca.startTimer("find_student");
     Student student = Students.findStudent(username);
     Touca.stopTimer("find_student");
-    Touca.addAssertion("username", student.username);
-    Touca.addResult("fullname", student.fullname);
-    Touca.addResult("birth_date", student.dob);
-    Touca.addResult("gpa", student.gpa);
+    Touca.assume("username", student.username);
+    Touca.check("fullname", student.fullname);
+    Touca.check("birth_date", student.dob);
+    Touca.check("gpa", student.gpa);
     Touca.addMetric("external_source", 1500);
   }
 
@@ -64,7 +64,7 @@ of our software.
 We can start small and capture the entire returned object as a Touca result:
 
 ```java
-Touca.addResult("student", student);
+Touca.check("student", student);
 ```
 
 Adding the output object as a single entity works. But what if we decided to add
@@ -75,10 +75,10 @@ Since this information may change every time we run our tests, we can choose to
 capture different fields as separate entities.
 
 ```java
-Touca.addAssertion("username", student.username);
-Touca.addResult("fullname", student.fullname);
-Touca.addResult("birth_date", student.dob);
-Touca.addResult("gpa", student.gpa);
+Touca.assume("username", student.username);
+Touca.check("fullname", student.fullname);
+Touca.check("birth_date", student.dob);
+Touca.check("gpa", student.gpa);
 ```
 
 This approach allows Touca to report differences in a more helpful format,
@@ -87,8 +87,8 @@ implementation to always capitalize student names, we could better visualize the
 differences to make sure that only the value associated with key `fullname`
 changes across our test cases.
 
-Note that we used Touca function `addAssertion` to track the `username`. Touca
-does not visualize the values captured as assertion unless they are different.
+Note that we used Touca function `assume` to track the `username`. Touca does
+not visualize the values captured as assertion unless they are different.
 
 We can capture the value of any number of variables, including the ones that are
 not exposed by the interface of our code under test. In our example, let us
@@ -101,7 +101,7 @@ redesigning our API:
 
 ```java
 private static double calculateGPA(final Course[] courses) {
-    Touca.addResult("courses", courses);
+    Touca.check("courses", courses);
     double sum = Arrays.asList(courses).stream().mapToDouble(item -> item.grade).sum();
     return courses.length == 0 ? sum / courses.length : 0.0;
 }
