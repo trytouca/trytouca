@@ -278,10 +278,10 @@ router.delete(
  *              email:
  *                type: string
  *                format: email
- *                example: 'hpotter@hsww.edu'
+ *                example: 'alice@example.com'
  *              fullname:
  *                type: string
- *                example: 'Harry Potter'
+ *                example: 'Alice Anderson'
  *      required: true
  *    responses:
  *      204:
@@ -345,7 +345,7 @@ router.post(
  *              email:
  *                type: string
  *                format: email
- *                example: 'hpotter@hsww.edu'
+ *                example: 'alice@example.com'
  *      required: true
  *    responses:
  *      204:

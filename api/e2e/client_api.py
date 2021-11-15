@@ -12,7 +12,7 @@ from client_mongo import MongoClient
 from utilities import User, pathify
 
 TOUCA_API_ROOT = "http://localhost:8081"
-TOUCA_RESULTS_ARCHIVE = pathify("results.tar.gz")
+TOUCA_RESULTS_ARCHIVE = pathify("../samples")
 
 
 class HttpClient:
@@ -283,16 +283,7 @@ class ApiClient:
         slugs = [team_slug, suite_slug, batch_slug]
         with tempfile.TemporaryDirectory() as tmpdir:
             logger.debug("created tmp directory: {}", tmpdir)
-            with tarfile.open(TOUCA_RESULTS_ARCHIVE) as tar:
-                tar.extractall(tmpdir)
-            batch_dir = os.path.join(tmpdir, "results", *slugs[0:3])
-            binaries = [
-                os.path.join(root, filename)
-                for root, _, filenames in os.walk(batch_dir)
-                for filename in filenames
-                if filename.endswith(".bin")
-            ]
-            for binary in binaries:
-                response = self.client.post_binary(binary)
-                self.expect_status(response, 204, f"submit {binary}")
+        binary = os.path.join(TOUCA_RESULTS_ARCHIVE, f"{batch_slug}.bin")
+        response = self.client.post_binary(binary)
+        self.expect_status(response, 204, f"submit {binary}")
         logger.success("{} submitted {}", self.user, "/".join(slugs[0:3]))

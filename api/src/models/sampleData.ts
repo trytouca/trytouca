@@ -46,8 +46,8 @@ export async function addSampleData(user: IUser): Promise<void> {
     name: 'Tutorial'
   })
   let suite = await suiteCreate(user, team, {
-    slug: 'profile-db',
-    name: 'Profile Database'
+    slug: 'students',
+    name: 'Students'
   })
 
   const tuple = [team.slug, suite.slug].join('/')

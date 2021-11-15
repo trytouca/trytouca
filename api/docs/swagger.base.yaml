@@ -24,7 +24,7 @@ components:
       description: username of account to be updated
       schema:
         type: string
-        example: hpotter
+        example: alice
     member:
       name: member
       in: path
@@ -32,7 +32,7 @@ components:
       description: username of member to be updated
       schema:
         type: string
-        example: hpotter
+        example: alice
     account:
       name: account
       in: path
@@ -40,7 +40,7 @@ components:
       description: username of account to be updated
       schema:
         type: string
-        example: hpotter
+        example: alice
     team:
       name: team
       in: path
@@ -48,7 +48,7 @@ components:
       description: 'slug of this team'
       schema:
         type: string
-        example: hogwarts
+        example: acme
     suite:
       name: suite
       in: path
