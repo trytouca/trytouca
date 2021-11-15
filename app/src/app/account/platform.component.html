@@ -115,11 +115,12 @@
     </div>
     <div class="md:col-span-2">
       <h3 class="p-4 text-xl font-medium">Users</h3>
-      <ul *ngIf="stats && user">
+      <ul *ngIf="user && accounts">
         <li
           class="flex items-center h-8 px-4 transition duration-100 rounded-md hover:bg-gray-50"
-          *ngFor="let account of stats.users">
-          <div class="flex justify-between flex-grow space-x-4">
+          *ngFor="let account of accounts; let rowNumber = index">
+          <div class="w-8 text-sm font-medium">{{rowNumber + 1}}</div>
+          <div class="flex items-center justify-between flex-grow space-x-4">
             <div class="w-40 font-medium truncate whitespace-nowrap"
               [ngClass]="{ 'text-gray-300 line-through': account.suspended }">
               {{ account.fullname ?? 'Unknown' }}

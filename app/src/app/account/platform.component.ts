@@ -28,8 +28,9 @@ interface RecentEvent {
   templateUrl: './platform.component.html'
 })
 export class PlatformComponent implements OnDestroy {
+  accounts: PlatformStatsUser[];
   events: RecentEvent[] = [];
-  stats: PlatformStatsResponse;
+  stats: Omit<PlatformStatsResponse, 'users'>;
   user: UserLookupResponse;
   private _subs: Subscription[] = [];
 
@@ -53,19 +54,9 @@ export class PlatformComponent implements OnDestroy {
     return this.apiService
       .get<PlatformStatsResponse>('/platform/stats')
       .subscribe((response) => {
-        response.users.forEach((user) => {
-          [
-            'createdAt',
-            'lockedAt',
-            'resetKeyExpiresAt',
-            'resetKeyCreatedAt'
-          ].forEach((k) => {
-            if (k in user) {
-              user[k] = new Date(user[k]);
-            }
-          });
-        });
-        this.stats = response;
+        const { users, ...stats } = response;
+        this.accounts = this.build_account_list(users);
+        this.stats = stats;
         const actions: [
           (arg: PlatformStatsUser) => boolean,
           (arg: PlatformStatsUser) => RecentEvent
@@ -116,6 +107,32 @@ export class PlatformComponent implements OnDestroy {
       copyLink: v.resetKeyLink,
       copyText
     };
+  }
+
+  private build_account_list(users: PlatformStatsUser[]) {
+    return users
+      .filter(
+        (user) =>
+          !(
+            user.suspended &&
+            user.fullname === 'Anonymous User' &&
+            user.email.startsWith('noreply+') &&
+            user.email.endsWith('@touca.io')
+          )
+      )
+      .map((user) => {
+        [
+          'createdAt',
+          'lockedAt',
+          'resetKeyExpiresAt',
+          'resetKeyCreatedAt'
+        ].forEach((k) => {
+          if (k in user) {
+            user[k] = new Date(user[k]);
+          }
+        });
+        return user;
+      });
   }
 
   onCopy(event: IClipboardResponse, name: string) {
