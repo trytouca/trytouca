@@ -115,7 +115,7 @@
     </div>
     <div class="md:col-span-2">
       <h3 class="p-4 text-xl font-medium">Users</h3>
-      <ul *ngIf="stats">
+      <ul *ngIf="stats && user">
         <li
           class="flex items-center h-8 px-4 transition duration-100 rounded-md hover:bg-gray-50"
           *ngFor="let account of stats.users">
@@ -141,7 +141,7 @@
           </div>
           <div wslDropdown
             class="flex items-center p-1 text-gray-300 cursor-pointer select-none hover:text-gray-700">
-            <ng-icon class="w-4 h-4 wsl-dropdown-toggle"
+            <ng-icon class="w-4 h-full wsl-dropdown-toggle"
               name="hero-dots-vertical"></ng-icon>
             <div class="hidden w-48 text-sm wsl-dropdown-menu"
               aria-labelledby="wsl-user-dropdown">
@@ -151,9 +151,14 @@
                 <a class="text-sky-700">Copy Email</a>
               </div>
               <div class="wsl-dropdown-item"
-                *ngIf="!account.suspended && account.username !== user.username"
-                (click)="suspendUser(account)">
+                *ngIf="account.username !== user.username && !account.suspended"
+                (click)="suspendAccount(account)">
                 <a class="text-sky-700">Suspend</a>
+              </div>
+              <div class="wsl-dropdown-item"
+                *ngIf="account.username !== user.username && account.suspended && account.activationLink"
+                (click)="deleteAccount(account)">
+                <a class="text-sky-700">Delete</a>
               </div>
             </div>
           </div>

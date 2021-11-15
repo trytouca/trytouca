@@ -40,7 +40,10 @@ export async function platformStats(
     .shift()
 
   const users = await UserModel.find(
-    { platformRole: { $not: { $eq: EPlatformRole.Super } } },
+    {
+      platformRole: { $not: { $eq: EPlatformRole.Super } },
+      activationKey: { $exists: true }
+    },
     {
       _id: 0,
       activationKey: 1,

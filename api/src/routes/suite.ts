@@ -1,7 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import bodyParser from 'body-parser'
-import e from 'express'
+import express from 'express'
 import * as ev from 'express-validator'
 
 import { ctrlSuiteCreate } from '@/controllers/suite/create'
@@ -14,7 +13,7 @@ import { suiteUpdate } from '@/controllers/suite/update'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * Lists all the suites registered for a given team.
@@ -111,7 +110,7 @@ router.post(
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     middleware.validationRules.get('entity-name'),
     ev.body('name').exists().withMessage('required'),
@@ -224,7 +223,7 @@ router.patch(
   middleware.hasTeam,
   middleware.isTeamMember,
   middleware.hasSuite,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     middleware.validationRules.get('entity-name').optional(),
     middleware.validationRules.get('entity-slug').optional(),

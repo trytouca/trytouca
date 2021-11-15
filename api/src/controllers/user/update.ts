@@ -32,7 +32,7 @@ async function updateFeatureFlags(user: IUser, flags: Record<string, boolean>) {
 /**
  * Updates information about current user.
  */
-export async function ctrlUserUpdate(
+export async function userUpdate(
   req: Request,
   res: Response,
   next: NextFunction

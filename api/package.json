@@ -35,7 +35,6 @@
   "dependencies": {
     "@sindresorhus/df": "^3.1.1",
     "bcrypt": "^5.0.1",
-    "body-parser": "^1.18.3",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -64,7 +63,6 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
-    "@types/body-parser": "^1.19.1",
     "@types/chai": "^4.2.22",
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.13",

@@ -1,7 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import bodyParser from 'body-parser'
-import e from 'express'
+import express from 'express'
 
 import { batchCompare } from '@/controllers/batch/compare'
 import { ctrlBatchList } from '@/controllers/batch/list'
@@ -12,7 +11,7 @@ import { ctrlBatchSeal } from '@/controllers/batch/seal'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * List all batches in a given suite.
@@ -267,7 +266,7 @@ router.post(
   middleware.isTeamMember,
   middleware.hasSuite,
   middleware.hasBatch,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([middleware.validationRules.get('reason')]),
   promisable(ctrlBatchPromote, 'promote a batch')
 )

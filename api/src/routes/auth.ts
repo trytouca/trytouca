@@ -1,7 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import bodyParser from 'body-parser'
-import e from 'express'
+import express from 'express'
 
 import { authGoogleSignin } from '@/controllers/auth/googleSignin'
 import { authResetKeyApply } from '@/controllers/auth/resetKeyApply'
@@ -17,7 +16,7 @@ import { authVerifyResend } from '@/controllers/auth/verifyResend'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * Create a user account.
@@ -55,7 +54,7 @@ const router = e.Router()
  */
 router.post(
   '/signup',
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([middleware.validationRules.get('email')]),
   promisable(authVerifyCreate, 'create user account')
 )
@@ -96,7 +95,7 @@ router.post(
  */
 router.post(
   '/signup/resend',
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([middleware.validationRules.get('email')]),
   promisable(authVerifyResend, 'resend verification email')
 )
@@ -202,7 +201,7 @@ router.post(
  */
 router.post(
   '/signin',
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     middleware.validationRules.get('username'),
     middleware.validationRules.get('password')
@@ -257,7 +256,7 @@ router.post(
  */
 router.post(
   '/signin/google',
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([middleware.validationRules.get('google_token')]),
   promisable(authGoogleSignin, 'create google session')
 )
@@ -366,7 +365,7 @@ router.post(
  */
 router.post(
   '/reset',
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([middleware.validationRules.get('email')]),
   promisable(authResetKeyCreate, 'create password reset key')
 )
@@ -407,7 +406,7 @@ router.post(
  */
 router.post(
   '/reset/resend',
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([middleware.validationRules.get('email')]),
   promisable(authResetKeyResend, 'resend password reset key')
 )
@@ -480,7 +479,7 @@ router.get(
  */
 router.post(
   '/reset/:key',
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     middleware.validationRules.get('resetKey'),
     middleware.validationRules.get('username'),

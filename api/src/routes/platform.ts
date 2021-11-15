@@ -1,10 +1,9 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import bodyParser from 'body-parser'
-import e from 'express'
+import express from 'express'
 import * as ev from 'express-validator'
 
-import { accountDelete } from '@/controllers/platform/accountDelete'
+import { platformAccountDelete } from '@/controllers/platform/accountDelete'
 import { platformAccountPopulate } from '@/controllers/platform/accountPopulate'
 import { platformAccountSuspend } from '@/controllers/platform/accountSuspend'
 import { platformAccountUpdate } from '@/controllers/platform/accountUpdate'
@@ -14,7 +13,7 @@ import * as middleware from '@/middlewares'
 import { EPlatformRole } from '@/types/commontypes'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * @api [get] /platform
@@ -106,7 +105,7 @@ router.patch(
   middleware.isAuthenticated,
   middleware.isPlatformAdmin,
   middleware.hasAccount,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     ev
       .body('role')
@@ -198,18 +197,18 @@ router.post(
 /**
  * Removes user's account and all data associated with it.
  *
- * @api [delete] /platform/account
+ * @api [post] /platform/account/:account/delete
  *    tags:
- *      - Account
- *    summary: Remove Account
- *    operationId: account_remove
+ *      - Platform
+ *    summary: Delete a given account
+ *    operationId: platform_accountDelete
  *    description:
- *      Removes user's account and all data associated with it.
+ *      Deletes a given account and all data associated with it.
  *      User initiating the request must be authenticated.
- *      User initiating the request must not be the platform owner.
- *      User must not have any active team membership.
- *      User must not have any pending team invitation.
- *      User must not have any pending join request.
+ *      User initiating the request must be a platform admin.
+ *      User being removed must not have any active team membership.
+ *      User being removed must not have any pending team invitation.
+ *      User being removed must not have any pending join request.
  *    responses:
  *      204:
  *        description: 'Account Deleted'
@@ -222,10 +221,12 @@ router.post(
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.delete(
-  '/account',
+router.post(
+  '/account/:account/delete',
   middleware.isAuthenticated,
-  promisable(accountDelete, 'delete own account')
+  middleware.isPlatformAdmin,
+  middleware.hasSuspendedAccount,
+  promisable(platformAccountDelete, 'delete account')
 )
 
 export const platformRouter = router

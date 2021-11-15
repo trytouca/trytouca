@@ -155,7 +155,6 @@ export class TeamTabSuitesComponent
   ) {
     super(filterInput, Object.values(TeamPageSuiteType), route, router);
     this._subAllItems = this.teamPageService.items$.subscribe((allItems) => {
-      console.log(allItems);
       this.initCollections(allItems);
     });
   }

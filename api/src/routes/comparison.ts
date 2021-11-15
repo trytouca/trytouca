@@ -1,7 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import bodyParser from 'body-parser'
-import e from 'express'
+import express from 'express'
 import { body as vbody, param as vparam } from 'express-validator'
 
 import { comparisonList } from '@/controllers/comparison/list'
@@ -11,7 +10,7 @@ import { messageProcess } from '@/controllers/message/process'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * List pending comparison jobs.
@@ -112,7 +111,7 @@ router.get('/', promisable(comparisonList, 'list comparison jobs'))
 router.patch(
   '/job/:job',
   middleware.inputs([vparam('job').isMongoId().withMessage('job invalid')]),
-  bodyParser.json({ limit: '5mb' }),
+  express.json({ limit: '5mb' }),
   promisable(comparisonProcess, 'process comparison job')
 )
 
@@ -173,7 +172,7 @@ router.patch(
 router.patch(
   '/message/:message',
   middleware.inputs([vparam('message').isMongoId().withMessage('job invalid')]),
-  bodyParser.json({ limit: '5mb' }),
+  express.json({ limit: '5mb' }),
   promisable(messageProcess, 'process message')
 )
 
@@ -209,7 +208,7 @@ router.patch(
  */
 router.post(
   '/stats',
-  bodyParser.json(),
+  express.json(),
   middleware.inputs(
     [
       'avgCollectionTime',

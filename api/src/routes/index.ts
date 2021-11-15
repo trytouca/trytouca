@@ -1,7 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import bodyParser from 'body-parser'
-import e from 'express'
+import express from 'express'
 import * as ev from 'express-validator'
 
 import { feedback } from '@/controllers/misc/feedback'
@@ -19,7 +18,7 @@ import { teamRouter } from '@/routes/team'
 import { userRouter } from '@/routes/user'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * API Entry-point
@@ -127,7 +126,7 @@ router.use('/user', userRouter)
  */
 router.post(
   '/feedback',
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     ev
       .body('body')

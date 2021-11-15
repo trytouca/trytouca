@@ -1,8 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, OnDestroy } from '@angular/core';
-import { faClipboard, faEnvelope } from '@fortawesome/free-regular-svg-icons';
-import { faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { formatDistanceToNow } from 'date-fns';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription } from 'rxjs';
@@ -34,16 +32,25 @@ export class PlatformComponent implements OnDestroy {
   stats: PlatformStatsResponse;
   user: UserLookupResponse;
   private _subs: Subscription[] = [];
-  faClipboard = faClipboard;
-  faEllipsisV = faEllipsisV;
-  faEnvelope = faEnvelope;
 
   constructor(
     private apiService: ApiService,
     private notificationService: NotificationService,
-    private userService: UserService
+    userService: UserService
   ) {
-    const sub1 = this.apiService
+    this._subs.push(
+      this.fetchStats(),
+      userService.currentUser$.subscribe((user) => (this.user = user))
+    );
+    userService.populate();
+  }
+
+  ngOnDestroy() {
+    this._subs.filter(Boolean).forEach((v) => v.unsubscribe());
+  }
+
+  private fetchStats() {
+    return this.apiService
       .get<PlatformStatsResponse>('/platform/stats')
       .subscribe((response) => {
         response.users.forEach((user) => {
@@ -73,15 +80,6 @@ export class PlatformComponent implements OnDestroy {
           .sort((a, b) => b.eventDate.getTime() - a.eventDate.getTime())
           .slice(0, 6);
       });
-    const sub2 = this.userService.currentUser$.subscribe((user) => {
-      this.user = user;
-    });
-    this._subs.push(sub1, sub2);
-    this.userService.populate();
-  }
-
-  ngOnDestroy() {
-    this._subs.filter(Boolean).forEach((v) => v.unsubscribe());
   }
 
   private build_lock_event(v: PlatformStatsUser): RecentEvent {
@@ -127,15 +125,25 @@ export class PlatformComponent implements OnDestroy {
     );
   }
 
-  suspendUser(user: PlatformStatsUser) {
-    this.apiService
-      .post(`/platform/account/${user.username}/suspend`)
-      .subscribe(() => {
-        this.notificationService.notify(
-          AlertType.Success,
-          `Account for ${user.fullname || user.username} was suspended.`
-        );
-      });
+  suspendAccount(user: PlatformStatsUser) {
+    this.updateAccount(
+      `/platform/account/${user.username}/suspend`,
+      `Account for ${user.fullname || user.username} was suspended.`
+    );
+  }
+
+  deleteAccount(user: PlatformStatsUser) {
+    this.updateAccount(
+      `/platform/account/${user.username}/delete`,
+      `Account for ${user.fullname || user.username} was deleted.`
+    );
+  }
+
+  private updateAccount(url: string, successMessage: string) {
+    this.apiService.post(url).subscribe(() => {
+      this.notificationService.notify(AlertType.Success, successMessage);
+      this.fetchStats();
+    });
   }
 
   describeEventDate(eventDate: Date) {

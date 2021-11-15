@@ -41,7 +41,6 @@ export class AutofocusDirective implements AfterViewInit {
   }
 
   @Input() set autofocus(condition: boolean) {
-    console.log(condition);
     this._autofocus = condition != false;
   }
 }

@@ -1,7 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import bodyParser from 'body-parser'
-import e from 'express'
+import express from 'express'
 
 import { ctrlCommentCreate } from '@/controllers/comment/create'
 import { ctrlCommentList } from '@/controllers/comment/list'
@@ -11,7 +10,7 @@ import { ctrlCommentUpdate } from '@/controllers/comment/update'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * List comments submitted for a given page.
@@ -111,7 +110,7 @@ router.post(
   middleware.isTeamMember,
   middleware.hasSuite,
   middleware.hasBatch,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([middleware.validationRules.get('body')]),
   promisable(ctrlCommentCreate, 'create comment')
 )
@@ -171,7 +170,7 @@ router.patch(
   middleware.hasSuite,
   middleware.hasBatch,
   middleware.hasComment,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([middleware.validationRules.get('body')]),
   promisable(ctrlCommentUpdate, 'update comment')
 )
@@ -263,7 +262,7 @@ router.post(
   middleware.hasSuite,
   middleware.hasBatch,
   middleware.hasComment,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([middleware.validationRules.get('body')]),
   promisable(ctrlCommentReply, 'reply to comment')
 )

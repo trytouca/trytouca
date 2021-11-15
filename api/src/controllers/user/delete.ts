@@ -8,12 +8,12 @@ import { IUser } from '@/schemas/user'
 import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 
-export async function platformAccountDelete(
+export async function ctrlUserDelete(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  const account = res.locals.account as IUser
+  const account = res.locals.user as IUser
   logger.info('%s: attempting to delete account', account.username)
 
   // reject request if account is owner of the platform
@@ -32,6 +32,6 @@ export async function platformAccountDelete(
     })
   }
 
-  await userDelete(account)
-  return res.status(204).send()
+  res.status(202).send()
+  userDelete(account)
 }

@@ -1,7 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import bodyParser from 'body-parser'
-import e from 'express'
+import express from 'express'
 import * as ev from 'express-validator'
 
 import { ctrlTeamCreate } from '@/controllers/team/create'
@@ -26,7 +25,7 @@ import * as middleware from '@/middlewares'
 import { ETeamRole } from '@/types/commontypes'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * Lists all the teams of which user is a member.
@@ -103,7 +102,7 @@ router.get(
 router.post(
   '/',
   middleware.isAuthenticated,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     middleware.validationRules
       .get('entity-name')
@@ -213,7 +212,7 @@ router.patch(
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamOwner,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     middleware.validationRules.get('entity-name').optional(),
     middleware.validationRules.get('entity-slug').optional()
@@ -313,7 +312,7 @@ router.post(
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamAdmin,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     middleware.validationRules.get('email'),
     middleware.validationRules.get('fullname')
@@ -369,7 +368,7 @@ router.post(
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamAdmin,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([middleware.validationRules.get('email')]),
   promisable(teamInviteRescind, 'rescind team invitation')
 )
@@ -609,7 +608,7 @@ router.patch(
   middleware.hasTeam,
   middleware.isTeamAdmin,
   middleware.hasMember,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     ev
       .body('role')

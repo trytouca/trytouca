@@ -1,14 +1,14 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import bodyParser from 'body-parser'
-import e from 'express'
+import express from 'express'
 
+import { ctrlUserDelete } from '@/controllers/user/delete'
 import { userLookup } from '@/controllers/user/lookup'
-import { ctrlUserUpdate } from '@/controllers/user/update'
+import { userUpdate } from '@/controllers/user/update'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * Provides non-sensitive account information about this user.
@@ -43,7 +43,7 @@ router.get(
  *
  * @api [patch] /user
  *    tags:
- *      - Suite
+ *      - User
  *    summary: Update Account Information
  *    operationId: user_update
  *    description:
@@ -71,13 +71,46 @@ router.get(
 router.patch(
   '/',
   middleware.isAuthenticated,
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     middleware.validationRules.get('fullname').optional(),
     middleware.validationRules.get('username').optional(),
     middleware.validationRules.get('password').optional()
   ]),
-  promisable(ctrlUserUpdate, 'update user')
+  promisable(userUpdate, 'update user')
+)
+
+/**
+ * Removes user's account and all data associated with it.
+ *
+ * @api [delete] /user
+ *    tags:
+ *      - User
+ *    summary: Delete User Account
+ *    operationId: user_delete
+ *    description:
+ *      Removes user's account and all data associated with it.
+ *      User initiating the request must be authenticated.
+ *      User initiating the request must not be the platform owner.
+ *      User must not have any active team membership.
+ *      User must not have any pending team invitation.
+ *      User must not have any pending join request.
+ *    responses:
+ *      204:
+ *        description: 'Account Deleted'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        description: 'Account cannot be deleted'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
+router.delete(
+  '/',
+  middleware.isAuthenticated,
+  promisable(ctrlUserDelete, 'delete own account')
 )
 
 export const userRouter = router

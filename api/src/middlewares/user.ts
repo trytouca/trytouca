@@ -5,7 +5,7 @@ import mongoose from 'mongoose'
 
 import { wslFindByUname } from '@/models/user'
 import { SessionModel } from '@/schemas/session'
-import { IUser } from '@/schemas/user'
+import { IUser, UserModel } from '@/schemas/user'
 import { EPlatformRole } from '@/types/commontypes'
 import * as jwt from '@/utils/jwt'
 import logger from '@/utils/logger'
@@ -190,17 +190,28 @@ export async function hasAccount(
 ) {
   const username = req.params.account
   const account = await wslFindByUname(username)
-
-  // return 404 if account with specified username does not exist
-
   if (!account) {
-    return next({
-      errors: ['user not found'],
-      status: 404
-    })
+    return next({ errors: ['user not found'], status: 404 })
   }
-
   logger.silly('%s: account exists', username)
+  res.locals.account = account
+  return next()
+}
+
+export async function hasSuspendedAccount(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const username = req.params.account
+  const account = await UserModel.findOne(
+    { username: username, suspended: true },
+    { _id: 1, email: 1, fullname: 1, platformRole: 1, username: 1 }
+  )
+  if (!account) {
+    return next({ errors: ['suspended account not found'], status: 404 })
+  }
+  logger.silly('%s: suspended account exists', username)
   res.locals.account = account
   return next()
 }

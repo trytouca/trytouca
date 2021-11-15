@@ -1,7 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import bodyParser from 'body-parser'
-import e from 'express'
+import express from 'express'
 import * as ev from 'express-validator'
 
 import { clientSessionCreate } from '@/controllers/client/sessionCreate'
@@ -9,7 +8,7 @@ import { clientSubmit } from '@/controllers/client/submit'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * Authenticate via API Key.
@@ -59,7 +58,7 @@ const router = e.Router()
  */
 router.post(
   '/signin',
-  bodyParser.json(),
+  express.json(),
   middleware.inputs([
     ev
       .body('key')
@@ -118,7 +117,7 @@ router.post(
 router.post(
   '/submit',
   middleware.isClientAuthenticated,
-  bodyParser.raw({ limit: '50mb' }),
+  express.raw({ limit: '50mb' }),
   promisable(clientSubmit, 'handle submitted result')
 )
 

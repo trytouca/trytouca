@@ -199,7 +199,7 @@ export class ProfileComponent implements OnDestroy {
           severity: AlertType.Danger,
           confirmText: this.user.username,
           confirmAction: () => {
-            return this.apiService.delete('/platform/account');
+            return this.apiService.delete('/user');
           },
           onActionSuccess: () => {
             this.authService.logout().subscribe(() => {
