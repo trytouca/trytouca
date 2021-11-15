@@ -67,7 +67,7 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
                   </p>
                   <p className="p-3 text-gray-200 rounded-lg bg-dark-blue-800">
                     Changed the logic to include child tax credit. Differences
-                    for test case <span className="font-mono text-sm">bob</span>
+                    for test case <span className="font-mono text-sm">bob</span>{' '}
                     are expected.
                   </p>
                 </div>
