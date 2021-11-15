@@ -4,7 +4,7 @@
 and learned how to test a `find_student` software using the Touca test
 framework:
 
-```ts
+```typescript
 import { touca } from "@touca/node";
 import { find_student } from "./students";
 
@@ -29,7 +29,7 @@ more flexibility and control over how tests are executed and how their results
 are handled. This API is most useful when integrating Touca with other existing
 test frameworks.
 
-```ts
+```typescript
 import { touca } from "@touca/node";
 import { find_student } from "./students";
 
@@ -70,7 +70,7 @@ Touca API Key and API URL. You can also specify an external JSON configuration
 file via the `file` option. Check out Node.js SDK reference API documentation
 for the full list of acceptable configuration parameters and their impact.
 
-```ts
+```typescript
 await touca.configure({
   api_key: "<TOUCA_API_KEY>",
   api_url: "<TOUCA_API_URL>",
@@ -96,7 +96,7 @@ parameter to the `configure` function.
 
 ## Preparing Test Cases
 
-```ts
+```typescript
 for (const username of await touca.get_testcases()) {
   // insert the code to run for each test case
 }
@@ -118,7 +118,7 @@ test case to indicate that all subsequent captured data and performance
 benchmarks belong to the specified test case, until a different test case is
 declared.
 
-```ts
+```typescript
 for (const username of await touca.get_testcases()) {
   touca.declare_testcase(username);
   // now we can start calling our code under test
@@ -146,7 +146,7 @@ and performance benchmarks.
 Touca data capturing functions such as `touca.check`, preserve the types of all
 captured data so that the Touca server can compare them in their original type.
 
-```ts
+```typescript
 touca.check("username", student.username);
 touca.check("fullname", student.fullname);
 touca.check("birth_date", student.dob);
@@ -170,7 +170,7 @@ non-primitive data type.
 
 Consider the following definition for a custom class `Course`.
 
-```ts
+```typescript
 export class Course {
   constructor(public readonly name: string, public readonly grade: number) {}
 }
@@ -182,7 +182,7 @@ be serialized as `{name: 'math', grade: '3.9}`. We can use
 `touca.add_serializer` to override this default behavior. The following code
 results in the same object to be serialized as `['math', 3.9]`:
 
-```ts
+```typescript
 touca.add_serializer(Course.name, (x: Course) => [x.name, x.grade]);
 for (const course of student.courses) {
   touca.add_array_element("courses", course);
@@ -203,7 +203,7 @@ application.
 Once we execute our code under test for each test case and describe its behavior
 and performance, we can submit them to the Touca server.
 
-```ts
+```typescript
 await touca.post();
 ```
 
@@ -227,7 +227,7 @@ We can choose to store captured test results and performance benchmarks for one
 or more of our declared test cases on the local filesystem for further
 processing or later submission to the Touca server.
 
-```ts
+```typescript
 await touca.save_binary(`touca_${username}.bin`);
 await touca.save_json(`touca_${username}.json`);
 ```
@@ -244,7 +244,7 @@ and capture significant amount of information for each test case, you can use
 `touca.forget_testcase` to release all the captured information from process
 memory, when you are done with a given test case.
 
-```ts
+```typescript
 await touca.forget_testcase();
 ```
 
@@ -256,7 +256,7 @@ test result is expected to be submitted for it. This allows the server to send
 the final comparison result report to interested users, as soon as it is
 available.
 
-```ts
+```typescript
 await touca.seal();
 ```
 

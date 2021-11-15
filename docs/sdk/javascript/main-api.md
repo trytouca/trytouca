@@ -7,13 +7,13 @@ real-world software workflows. Let us use a Profile Lookup software as another
 example that takes the username of a student and returns basic information about
 them, such as their name, date of birth, and GPA.
 
-```ts
+```typescript
 export async function find_student(username: string): Student;
 ```
 
 where `Student` has the following properties:
 
-```ts
+```typescript
 interface Student {
   username: string;
   fullname: string;
@@ -24,7 +24,7 @@ interface Student {
 
 Here's a Touca test we can write for our code under test:
 
-```ts
+```typescript
 import { touca } from "@touca/node";
 import { find_student } from "./students";
 
@@ -55,7 +55,7 @@ of our software.
 
 We can start small and capture the entire returned object as a Touca result:
 
-```ts
+```typescript
 touca.check("student", student);
 ```
 
@@ -66,7 +66,7 @@ was fetched from the cache?
 Since this information may change every time we run our tests, we can choose to
 capture different fields as separate entities.
 
-```ts
+```typescript
 touca.assume("username", student.username);
 touca.check("fullname", student.fullname);
 touca.check("birth_date", student.dob);
@@ -91,7 +91,7 @@ trace a reported difference in GPA to its root cause. Assuming that the courses
 enrolled by a student are not expected to change, we can track them without
 redesigning our API:
 
-```ts
+```typescript
 function calculate_gpa(courses: Course[]): number {
   touca.check("courses", courses);
   return courses.reduce((sum, v) => sum + v.grade, 0) / courses.length;
@@ -110,7 +110,7 @@ describe their performance.
 Touca can notify us when future changes to our implementation result in
 significantly changes in the measured runtime values.
 
-```ts
+```typescript
 touca.start_timer("find_student");
 const student = find_student(username);
 touca.stop_timer("find_student");
@@ -120,7 +120,7 @@ The two functions `start_timer` and `stop_timer` provide fine-grained control
 for runtime measurement. If they feel too verbose, we can opt to use
 `scoped_timer` as an alternatives:
 
-```ts
+```typescript
 const student = await touca.scoped_timer("find_student", () =>
   find_student(username)
 );
@@ -129,7 +129,7 @@ const student = await touca.scoped_timer("find_student", () =>
 It is also possible to add measurements obtained by other performance
 benchmarking tools.
 
-```ts
+```typescript
 touca.add_metric("external_source", 150);
 ```
 
