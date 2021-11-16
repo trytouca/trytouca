@@ -49,9 +49,6 @@ interface RunnerOptions extends NodeOptions {
   // log_level: 'debug' | 'info' | 'warn';
 }
 
-/**
- *
- */
 enum ToucaErrorCode {
   MissingWorkflow = 1,
   MissingSlugs,
@@ -60,9 +57,6 @@ enum ToucaErrorCode {
   NoCaseEmptyRemote
 }
 
-/**
- *
- */
 class ToucaError extends Error {
   static errors = new Map<ToucaErrorCode, string>([
     [
@@ -105,9 +99,6 @@ class ToucaError extends Error {
     ]
   ]);
 
-  /**
-   *
-   */
   constructor(code: ToucaErrorCode, args: string[] = []) {
     super(
       ToucaError.errors.has(code)
@@ -117,9 +108,6 @@ class ToucaError extends Error {
   }
 }
 
-/**
- *
- */
 class Statistics {
   private _values: Record<string, number> = {};
 
@@ -135,9 +123,6 @@ class Statistics {
   }
 }
 
-/**
- *
- */
 class Timer {
   private _tics: Record<string, number> = {};
   private _times: Record<string, number> = {};
@@ -155,9 +140,6 @@ class Timer {
   }
 }
 
-/**
- *
- */
 function _parse_cli_options(args: string[]): RunnerOptions {
   const argv = yargs(hideBin(args))
     .version(VERSION)
@@ -251,20 +233,11 @@ function _parse_cli_options(args: string[]): RunnerOptions {
   };
 }
 
-/**
- *
- */
 export class Runner {
   private _workflows: Record<string, (testcase: string) => void> = {};
 
-  /**
-   *
-   */
   constructor(private readonly _client: NodeClient) {}
 
-  /**
-   *
-   */
   public async add_workflow(
     name: string,
     workflow: (testcase: string) => void
@@ -272,9 +245,6 @@ export class Runner {
     this._workflows[name] = workflow;
   }
 
-  /**
-   *
-   */
   public async run_workflows(): Promise<void> {
     try {
       await this._run_workflows(process.argv);
@@ -290,9 +260,6 @@ export class Runner {
     }
   }
 
-  /**
-   *
-   */
   private async _run_workflows(args: string[]): Promise<void> {
     if (this._workflows === {}) {
       throw new ToucaError(ToucaErrorCode.MissingWorkflow);
@@ -463,9 +430,6 @@ export class Runner {
     }
   }
 
-  /**
-   *
-   */
   private _skip(options: RunnerOptions, testcase: string): boolean {
     const testcase_directory = path.join(
       options.output_directory,

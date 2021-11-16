@@ -11,9 +11,6 @@ import * as schema from './schema';
 import { Transport } from './transport';
 import { TypeHandler } from './types';
 
-/**
- *
- */
 interface BaseClient<Options> {
   configure(options: Options): Promise<boolean>;
   is_configured(): boolean;
@@ -32,9 +29,6 @@ interface BaseClient<Options> {
   seal(): PromiseLike<void>;
 }
 
-/**
- *
- */
 export class NodeClient implements BaseClient<NodeOptions> {
   private _cases = new Map<string, Case>();
   private _configured = false;
@@ -45,9 +39,6 @@ export class NodeClient implements BaseClient<NodeOptions> {
   private _type_handler = new TypeHandler();
   private _runner = new Runner(this);
 
-  /**
-   *
-   */
   private _make_transport(): boolean {
     const keys: (keyof NodeOptions)[] = [
       'api_key',
@@ -76,9 +67,6 @@ export class NodeClient implements BaseClient<NodeOptions> {
     return true;
   }
 
-  /**
-   *
-   */
   private _serialize(cases: Case[]): Uint8Array {
     const builder = new Builder(1024);
     const msg_buf = [];
@@ -97,9 +85,6 @@ export class NodeClient implements BaseClient<NodeOptions> {
     return builder.asUint8Array();
   }
 
-  /**
-   *
-   */
   private _prepare_save(path: string, cases: string[]): Case[] {
     if (dirname(path).length !== 0) {
       mkdirSync(dirname(path), { recursive: true });
@@ -443,9 +428,6 @@ export class NodeClient implements BaseClient<NodeOptions> {
     }
   }
 
-  /**
-   *
-   */
   public async scoped_timer<T>(
     key: string,
     callback: () => Promise<T>
@@ -569,16 +551,10 @@ export class NodeClient implements BaseClient<NodeOptions> {
     return this._transport.seal();
   }
 
-  /**
-   *
-   */
   public async run(): Promise<void> {
     return await this._runner.run_workflows();
   }
 
-  /**
-   *
-   */
   public async workflow(
     name: string,
     callback: (testcase: string) => void

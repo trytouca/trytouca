@@ -11,17 +11,11 @@ export type ResultJson =
   | Record<string, unknown>
   | ResultJson[];
 
-/**
- *
- */
 export interface ToucaType {
   json(): ResultJson;
   serialize(builder: Builder): number;
 }
 
-/**
- *
- */
 class BoolType implements ToucaType {
   constructor(private readonly value: boolean) {}
 
@@ -40,9 +34,6 @@ class BoolType implements ToucaType {
   }
 }
 
-/**
- *
- */
 export class DecimalType implements ToucaType {
   private _value: number;
 
@@ -65,9 +56,6 @@ export class DecimalType implements ToucaType {
   }
 }
 
-/**
- *
- */
 export class IntegerType implements ToucaType {
   private _value: number;
 
@@ -94,9 +82,6 @@ export class IntegerType implements ToucaType {
   }
 }
 
-/**
- *
- */
 class StringType implements ToucaType {
   constructor(private readonly value: string) {}
 
@@ -116,9 +101,6 @@ class StringType implements ToucaType {
   }
 }
 
-/**
- *
- */
 export class VectorType implements ToucaType {
   private _value: ToucaType[] = [];
 
@@ -143,9 +125,6 @@ export class VectorType implements ToucaType {
   }
 }
 
-/**
- *
- */
 class ObjectType implements ToucaType {
   private _values = new Map<string, ToucaType>();
 
@@ -186,9 +165,6 @@ class ObjectType implements ToucaType {
   }
 }
 
-/**
- *
- */
 export class TypeHandler {
   private readonly _primitives: Record<string, (x: unknown) => ToucaType> = {
     boolean: (x) => new BoolType(x as boolean),
@@ -200,9 +176,6 @@ export class TypeHandler {
     ['Date', (x) => ({ v: (x as Date).toISOString() })]
   ]);
 
-  /**
-   *
-   */
   public transform(value: unknown): ToucaType {
     if (typeof value in this._primitives) {
       return this._primitives[typeof value](value);
@@ -233,9 +206,6 @@ export class TypeHandler {
     return obj;
   }
 
-  /**
-   *
-   */
   public add_serializer(
     datatype: string,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -36,24 +36,15 @@ interface PlatformStatus {
   self_hosted: boolean;
 }
 
-/**
- *
- */
 export class Transport {
   private _token?: string;
   private _options: NodeOptions;
 
-  /**
-   *
-   */
   constructor(options: NodeOptions) {
     this._options = { ...options };
     this._handshake();
   }
 
-  /**
-   *
-   */
   private async _handshake(): Promise<void> {
     const response = await this._send_request({
       method: 'GET',
@@ -68,9 +59,6 @@ export class Transport {
     }
   }
 
-  /**
-   *
-   */
   private async _request(
     options: http.RequestOptions,
     data: string | Uint8Array = ''
@@ -123,9 +111,6 @@ export class Transport {
     return this._request(options, args.body);
   }
 
-  /**
-   *
-   */
   public update_options(options: NodeOptions): void {
     if (['api_key', 'api_url'].filter((k) => k in options).length !== 0) {
       this._token = undefined;
@@ -134,9 +119,6 @@ export class Transport {
     this._options = { ...this._options, ...options };
   }
 
-  /**
-   *
-   */
   public async authenticate(): Promise<void> {
     if (this._token) {
       return;
@@ -156,9 +138,6 @@ export class Transport {
     this._token = body.token;
   }
 
-  /**
-   *
-   */
   public async get_testcases(): Promise<string[]> {
     const team = this._options.team;
     const suite = this._options.suite;
@@ -173,9 +152,6 @@ export class Transport {
     return body.map((k) => k.name);
   }
 
-  /**
-   *
-   */
   public async post(content: Uint8Array): Promise<void> {
     const response = await this._send_request({
       method: 'POST',
@@ -188,9 +164,6 @@ export class Transport {
     }
   }
 
-  /**
-   *
-   */
   public async seal(): Promise<void> {
     const slugs = [
       this._options.team,
@@ -206,16 +179,10 @@ export class Transport {
     }
   }
 
-  /**
-   *
-   */
   public has_token(): boolean {
     return this._token !== undefined;
   }
 
-  /**
-   *
-   */
   public get options(): NodeOptions {
     return this._options;
   }

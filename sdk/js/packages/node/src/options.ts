@@ -2,9 +2,6 @@
 
 import * as fs from 'fs';
 
-/**
- *
- */
 export interface NodeOptions {
   /**
    * API Key issued by the Touca server that
@@ -63,9 +60,6 @@ export interface NodeOptions {
   file?: string;
 }
 
-/**
- *
- */
 function _apply_config_file(incoming: NodeOptions): void {
   if (!incoming.file) {
     return;
@@ -92,9 +86,6 @@ function _apply_config_file(incoming: NodeOptions): void {
   }
 }
 
-/**
- *
- */
 function _apply_arguments(existing: NodeOptions, incoming: NodeOptions): void {
   type Param = NodeOptions[keyof NodeOptions];
   const inputs: {
@@ -127,9 +118,6 @@ function _apply_arguments(existing: NodeOptions, incoming: NodeOptions): void {
   }
 }
 
-/**
- *
- */
 function _apply_environment_variables(existing: NodeOptions): void {
   const options: Record<string, 'api_key' | 'api_url' | 'version'> = {
     TOUCA_API_KEY: 'api_key',
@@ -145,9 +133,6 @@ function _apply_environment_variables(existing: NodeOptions): void {
   }
 }
 
-/**
- *
- */
 function _reformat_parameters(existing: NodeOptions): void {
   if (!existing.concurrency) {
     existing.concurrency = true;
@@ -186,9 +171,6 @@ function _reformat_parameters(existing: NodeOptions): void {
   }
 }
 
-/**
- *
- */
 function _validate_options(existing: NodeOptions): void {
   const expected_keys: (keyof NodeOptions)[] = ['team', 'suite', 'version'];
   const has_handshake = existing.offline !== true;
@@ -208,9 +190,6 @@ function _validate_options(existing: NodeOptions): void {
   }
 }
 
-/**
- *
- */
 export function update_options(
   existing: NodeOptions,
   incoming: NodeOptions

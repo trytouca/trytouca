@@ -30,17 +30,11 @@ type CaseJson = {
   metrics: { key: string; value: ResultJson }[];
 };
 
-/**
- *
- */
 export class Case {
   private _results = new Map<string, ResultEntry>();
   private _tics = new Map<string, number>();
   private _tocs = new Map<string, number>();
 
-  /**
-   *
-   */
   constructor(
     private readonly meta: {
       name: string;
@@ -156,9 +150,6 @@ export class Case {
     }
   }
 
-  /**
-   *
-   */
   private _metrics(): [string, ToucaType][] {
     const metrics: [string, ToucaType][] = [];
     for (const [key, tic] of this._tics) {
@@ -172,9 +163,6 @@ export class Case {
     return metrics;
   }
 
-  /**
-   *
-   */
   private _metadata(): CppTestcaseMetadata {
     return {
       teamslug: this.meta.team ?? 'unknown',
@@ -185,9 +173,6 @@ export class Case {
     };
   }
 
-  /**
-   *
-   */
   json(): CaseJson {
     const results = [];
     const assertions = [];
@@ -213,9 +198,6 @@ export class Case {
     };
   }
 
-  /**
-   *
-   */
   serialize(): Uint8Array {
     const result_types = new Map<ResultCategory, schema.ResultType>([
       [ResultCategory.Check, schema.ResultType.Check],
