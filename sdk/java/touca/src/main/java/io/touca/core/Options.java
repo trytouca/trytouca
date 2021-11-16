@@ -130,9 +130,6 @@ public class Options {
     return output;
   }
 
-  /**
-   *
-   */
   private void merge(final Options incoming) {
     if (incoming.apiKey != null) {
       this.apiKey = incoming.apiKey;
@@ -190,9 +187,6 @@ public class Options {
     }
   }
 
-  /**
-   *
-   */
   private void applyConfigFile() {
     final Options incoming = this;
     if (incoming.file == null) {
@@ -217,9 +211,6 @@ public class Options {
     }
   }
 
-  /**
-   *
-   */
   private void applyEnvironmentVariables() {
     final Options existing = this;
     final Map<String, Consumer<String>> options = new HashMap<>();
@@ -235,9 +226,6 @@ public class Options {
     }
   }
 
-  /**
-   *
-   */
   private void reformatParameters() {
     final Options existing = this;
     if (existing.concurrency == null) {
@@ -270,9 +258,6 @@ public class Options {
     reformatSlugs(existing, segments[1]);
   }
 
-  /**
-   *
-   */
   private static void reformatSlugs(final Options existing, final String path) {
     final String[] givenSlugs = Arrays.asList(path.split("/")).stream()
         .filter(x -> !x.isEmpty()).toArray(String[]::new);
@@ -291,9 +276,6 @@ public class Options {
     }
   }
 
-  /**
-   *
-   */
   private static final class SlugEntry {
     public String name;
     public Function<Options, String> getter;
@@ -307,9 +289,6 @@ public class Options {
     }
   }
 
-  /**
-   *
-   */
   private void validateOptions() {
     final Options existing = this;
     final Map<String, Boolean> expectedKeys = new HashMap<>();
@@ -330,9 +309,6 @@ public class Options {
         String.join(", ", missingKeys)));
   }
 
-  /**
-   *
-   */
   private static List<String> filterKeys(final Map<String, Boolean> keys,
       final boolean status) {
     return keys.entrySet().stream().filter(entry -> {
@@ -342,9 +318,6 @@ public class Options {
     }).collect(Collectors.toList());
   }
 
-  /**
-   *
-   */
   public static class Deserializer implements JsonDeserializer<Options> {
 
     /**
@@ -374,9 +347,6 @@ public class Options {
       });
     }
 
-    /**
-     *
-     */
     private void updateStringField(final JsonObject obj, final String key,
         final Consumer<String> field) {
       if (!obj.has(key)) {
@@ -391,9 +361,6 @@ public class Options {
       field.accept(obj.get(key).getAsString());
     }
 
-    /**
-     *
-     */
     private void updateBooleanField(final JsonObject obj, final String key,
         final Consumer<Boolean> field) throws JsonParseException {
       if (!obj.has(key)) {

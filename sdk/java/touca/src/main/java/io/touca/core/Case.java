@@ -16,9 +16,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.touca.core.Schema.ResultType;
 
-/**
- *
- */
 public class Case {
 
   final private String testCase;
@@ -37,16 +34,10 @@ public class Case {
         }
       };
 
-  /**
-   *
-   */
   private static enum ResultCategory {
     Check, Assert
   }
 
-  /**
-   *
-   */
   private static final class ResultEntry {
     public ToucaType value;
     public ResultCategory type;
@@ -303,9 +294,6 @@ public class Case {
     return builder.sizedByteArray();
   }
 
-  /**
-   *
-   */
   private List<SimpleEntry<String, ToucaType>> metrics() {
     final List<SimpleEntry<String, ToucaType>> metrics = new ArrayList<>();
     for (final Map.Entry<String, Long> entry : tics.entrySet()) {

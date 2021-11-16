@@ -39,23 +39,14 @@ public class Runner {
   private final Statistics stats = new Statistics();
   private final Timer timer = new Timer();
 
-  /**
-   *
-   */
   private static final class Timer {
     private final Map<String, Long> tics = new HashMap<>();
     private final Map<String, Long> times = new HashMap<>();
 
-    /**
-     *
-     */
     public void tic(final String key) {
       tics.put(key, System.currentTimeMillis());
     }
 
-    /**
-     *
-     */
     public void toc(final String key) {
       final Long tic = tics.get(key);
       if (tic != null) {
@@ -63,47 +54,29 @@ public class Runner {
       }
     }
 
-    /**
-     *
-     */
     public Long count(final String key) {
       return times.getOrDefault(key, 0L);
     }
   }
 
-  /**
-   *
-   */
   private static final class Statistics {
     private final Map<String, Long> values = new HashMap<>();
 
-    /**
-     *
-     */
     public void increment(final String key) {
       if (values.computeIfPresent(key, (k, v) -> v + 1) == null) {
         values.put(key, 1L);
       }
     }
 
-    /**
-     *
-     */
     public Long count(final String key) {
       return values.getOrDefault(key, 0L);
     }
   }
 
-  /**
-   *
-   */
   private static final class ClassMethod {
     public Class<?> clazz;
     public Method method;
 
-    /**
-     *
-     */
     ClassMethod(final Class<?> clazz, final Method method) {
       this.clazz = clazz;
       this.method = method;
@@ -375,9 +348,6 @@ public class Runner {
     return false;
   }
 
-  /**
-   *
-   */
   private Options buildOptions() {
     final Options options = new Options();
     options.addOption(null, "api-key", true,

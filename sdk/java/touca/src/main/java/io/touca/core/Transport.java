@@ -27,9 +27,6 @@ public final class Transport {
   final private Options options;
   private String token;
 
-  /**
-   *
-   */
   private static final class Response {
     public int code;
     public String content;
@@ -78,9 +75,6 @@ public final class Transport {
   }
 
 
-  /**
-   *
-   */
   private void handshake() {
     final Response response = getRequest("/platform");
     if (response.code != HttpURLConnection.HTTP_OK) {
@@ -94,9 +88,6 @@ public final class Transport {
   }
 
 
-  /**
-   *
-   */
   private String readResponse(final InputStream inputStream)
       throws IOException {
     final StringBuilder builder = new StringBuilder();
@@ -109,9 +100,6 @@ public final class Transport {
     return builder.toString();
   }
 
-  /**
-   *
-   */
   private HttpURLConnection makeConnection(final String path)
       throws IOException {
     final URL url = new URL(options.apiUrl + path);
@@ -127,9 +115,6 @@ public final class Transport {
     return con;
   }
 
-  /**
-   *
-   */
   private Response getRequest(final String path) {
     try {
       final HttpURLConnection con = makeConnection(path);
@@ -141,9 +126,6 @@ public final class Transport {
     }
   }
 
-  /**
-   *
-   */
   private Response postRequest(final String path, final String contentType,
       final byte[] content) {
     try {
@@ -164,9 +146,6 @@ public final class Transport {
     }
   }
 
-  /**
-   *
-   */
   public void authenticate() {
     if (this.token != null) {
       return;

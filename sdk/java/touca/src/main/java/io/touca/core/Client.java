@@ -20,9 +20,6 @@ import io.touca.TypeAdapter;
 import io.touca.exceptions.ConfigException;
 import io.touca.exceptions.StateException;
 
-/**
- *
- */
 @SuppressWarnings("PMD.TooManyMethods")
 public class Client {
 
@@ -71,9 +68,6 @@ public class Client {
     return true;
   }
 
-  /**
-   *
-   */
   private void configureTransport(final Options options) {
     if (options.offline != null && options.offline) {
       return;
@@ -330,9 +324,6 @@ public class Client {
     this.transport.seal();
   }
 
-  /**
-   *
-   */
   private String getLastTestcase() {
     if (!isConfigured()) {
       return null;
@@ -343,9 +334,6 @@ public class Client {
     return threadMap.get(Thread.currentThread().getId());
   }
 
-  /**
-   *
-   */
   private byte[] serialize(final Case[] testcases) {
     final FlatBufferBuilder builder = new FlatBufferBuilder(1024);
     final int[] msgBuf = new int[testcases.length];
@@ -364,9 +352,6 @@ public class Client {
     return builder.sizedByteArray();
   }
 
-  /**
-   *
-   */
   private String makeJson(final Case[] testcases) {
     final Gson gson = new GsonBuilder().create();
     final JsonArray array = new JsonArray(testcases.length);
@@ -376,9 +361,6 @@ public class Client {
     return gson.toJson(array);
   }
 
-  /**
-   *
-   */
   private Case[] save(final Path path, final String[] cases) {
     final Path parent = path.getParent();
     if (parent != null && parent.toFile().mkdirs()) {
