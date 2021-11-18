@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 import { IUser, UserModel } from '@/schemas/user'
 import type { UserLookupResponse } from '@/types/commontypes'
 import logger from '@/utils/logger'
-import { intercomHash } from '@/utils/tracker'
+import { getChatToken } from '@/utils/tracker'
 
 export async function userLookup(
   req: Request,
@@ -35,8 +35,8 @@ export async function userLookup(
     feature_flags: info.featureFlags,
     fullname: user.fullname,
     platformRole: info.platformRole,
+    user_hash: await getChatToken(user),
     user_id: user._id.toHexString(),
-    user_hash: intercomHash(user._id.toHexString()),
     username: user.username
   }
 

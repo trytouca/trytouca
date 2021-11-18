@@ -32,7 +32,7 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
   ) {
     this._subUser = this.userService.currentUser$.subscribe((user) => {
       this.currentUser = user;
-      intercomClient.boot(user);
+      intercomClient.setUser(user);
     });
     faIconLibrary.addIcons(faChevronDown, faInbox, faUser);
   }

@@ -152,3 +152,15 @@ ngneat-dialog {
     border-radius: 0.5rem;
   }
 }
+
+#chat-box {
+  height: 530px;
+  width: 376px;
+  @apply absolute md:right-4 bottom-16;
+  #hubspot-conversations-inline-parent {
+    @apply h-full;
+  }
+  iframe {
+    @apply h-full w-full rounded-lg border border-gray-200 shadow-lg;
+  }
+}

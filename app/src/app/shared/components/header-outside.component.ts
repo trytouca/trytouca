@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
 
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { AuthService } from '@/core/services';
-import { intercomClient } from '@/shared/utils/intercom';
 
 @Component({
   selector: 'app-header-outside',
@@ -12,9 +11,7 @@ import { intercomClient } from '@/shared/utils/intercom';
   styleUrls: ['./header.components.scss']
 })
 export class HeaderOutsideComponent {
-  constructor(private authService: AuthService) {
-    intercomClient.boot();
-  }
+  constructor(private authService: AuthService) {}
 
   public isLoggedIn() {
     return this.authService.isLoggedIn();

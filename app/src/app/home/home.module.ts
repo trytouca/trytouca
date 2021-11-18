@@ -8,7 +8,6 @@ import { SharedModule } from '../shared';
 import {
   CommentComponent,
   ConfirmComponent,
-  FeedbackLinkComponent,
   HomeNotFoundComponent,
   ListFilterComponent,
   ListPagerComponent,
@@ -76,7 +75,6 @@ import {
     // shared components
     CommentComponent,
     ConfirmComponent,
-    FeedbackLinkComponent,
     HomeNotFoundComponent,
     ListFilterComponent,
     ListPagerComponent,

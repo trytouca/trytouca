@@ -76,8 +76,8 @@ interface IConfig {
     }
   }
   tracking: {
-    intercom_secret: string
-    intercom_token: string
+    hubspot_key: string
+    hubspot_token: string
     mixpanel: string
   }
   webapp: {
@@ -174,8 +174,8 @@ export const config: IConfig = {
     }
   },
   tracking: {
-    intercom_secret: env.INTERCOM_IDENTITY_SECRET,
-    intercom_token: env.INTERCOM_ACCESS_TOKEN,
+    hubspot_key: env.HUBSPOT_API_KEY,
+    hubspot_token: env.HUBSPOT_ACCESS_TOKEN,
     mixpanel: env.MIXPANEL_PROJECT_TOKEN
   },
   webapp: {

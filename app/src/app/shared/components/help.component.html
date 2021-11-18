@@ -1,0 +1,49 @@
+<div id="chat-box" [ngClass]="{'hidden': !isChatWidgetOpen}"></div>
+<div class="relative" wslDropdown>
+  <div
+    class="absolute flex items-center justify-center w-12 h-12 text-lg font-semibold text-gray-500 duration-150 ease-in-out bg-white border border-gray-300 rounded-full cursor-pointer select-none bottom-4 right-4 hover:border-gray-300 wsl-dropdown-toggle"
+    id="wsl-help-dropdown" aria-haspopup="true" aria-expanded="false"
+    title="Need Help?" (click)="closeChatWidgetIfOpen()">
+    <span>?</span>
+  </div>
+  <ul class="hidden w-48 wsl-dropdown-menu" style="top: -12rem; right: 1rem;"
+    aria-labelledby="wsl-help-dropdown">
+    <li class="wsl-dropdown-item" *ngIf="isCloudHosted()"
+      (click)="openChatWidget()">
+      <div class="flex items-center px-2 space-x-2"
+        title="We use HubSpot for messaging.&#013;Make sure it's not blocked by your browser.">
+        <ng-icon class="text-gray-500" name="hero-chat-alt2" size="1rem">
+        </ng-icon>
+        <span class="text-gray-600">Send us a message</span>
+      </div>
+    </li>
+    <li class="wsl-dropdown-item" [routerLink]="['/feedback']"
+      [queryParams]="{page: 'team'}">
+      <a class="flex items-center px-2 space-x-2"
+        title="Let us know how we can improve your experience.">
+        <ng-icon class="text-gray-500" name="hero-mail" size="1rem">
+        </ng-icon>
+        <span class="text-gray-600">Feedback</span>
+      </a>
+    </li>
+    <hr class="my-1">
+    <li class="wsl-dropdown-item">
+      <a class="flex items-center px-2 space-x-2"
+        href="https://github.com/trytouca" target="_blank"
+        rel="noopener noreferrer" title="Give us a Star on GitHub">
+        <ng-icon class="text-gray-500" name="feather-github" size="1rem">
+        </ng-icon>
+        <span class="text-xs text-gray-600">Touca on GitHub</span>
+      </a>
+    </li>
+    <li class="wsl-dropdown-item">
+      <a class="flex items-center px-2 space-x-2"
+        href="https://twitter.com/trytouca" target="_blank"
+        rel="noopener noreferrer" title="Let's be friends on Twitter">
+        <ng-icon class="text-gray-500" name="feather-twitter" size="1rem">
+        </ng-icon>
+        <span class="text-xs text-gray-600">Touca on Twitter</span>
+      </a>
+    </li>
+  </ul>
+</div>

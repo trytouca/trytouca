@@ -2,7 +2,6 @@
 
 export { CommentComponent } from './comment.component';
 export * from './confirm.component';
-export * from './feedback-link.component';
 export * from './home-notfound.component';
 export * from './list-filter.component';
 export * from './list-pager.component';

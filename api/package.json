@@ -33,6 +33,7 @@
     "dev:debug": "nodemon --inspect ./src/server.ts"
   },
   "dependencies": {
+    "@hubspot/api-client": "^5.0.0",
     "@sindresorhus/df": "^3.1.1",
     "bcrypt": "^5.0.1",
     "compression": "^1.7.3",
@@ -46,7 +47,6 @@
     "google-auth-library": "^7.10.2",
     "hide-powered-by": "^1.0.0",
     "html-to-text": "^8.0.0",
-    "intercom-client": "^2.11.2",
     "ioredis": "^4.28.0",
     "jws": "^4.0.0",
     "lodash": "^4.17.21",
@@ -67,7 +67,6 @@
     "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4.17.13",
     "@types/flatbuffers": "^1.9.0",
-    "@types/intercom-client": "^2.11.11",
     "@types/ioredis": "^4.27.8",
     "@types/jws": "^3.2.4",
     "@types/lodash": "^4.14.176",
