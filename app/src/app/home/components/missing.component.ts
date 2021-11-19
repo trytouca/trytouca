@@ -25,8 +25,8 @@ type PageElements = {
 };
 
 @Component({
-  selector: 'app-home-notfound',
-  templateUrl: './home-notfound.component.html'
+  selector: 'app-missing',
+  templateUrl: './missing.component.html'
 })
 export class HomeNotFoundComponent {
   data: PageElements;

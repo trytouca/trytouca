@@ -2,15 +2,6 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import {
-  faChevronDown,
-  faCog,
-  faPlus,
-  faTasks,
-  faUserPlus,
-  faUsers
-} from '@fortawesome/free-solid-svg-icons';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 
@@ -50,64 +41,55 @@ export class TeamPageComponent implements OnInit, OnDestroy {
   BannerType = TeamBannerType;
 
   private _dialogRef: DialogRef;
-  private _dialogSub: Subscription;
   private _notFound: Partial<NotFound> = {};
-
-  private _subBanner: Subscription;
-  private _subTabs: Subscription;
-  private _subTeams: Subscription;
-  private _subTeam: Subscription;
-  private _subAlert: Subscription;
+  private _sub: Record<
+    'alert' | 'banner' | 'dialog' | 'tabs' | 'teams' | 'team',
+    Subscription
+  >;
 
   constructor(
-    private alertService: AlertService,
+    alertService: AlertService,
     private apiService: ApiService,
     private dialogService: DialogService,
     private router: Router,
     private teamPageService: TeamPageService,
-    private route: ActivatedRoute,
-    faIconLibrary: FaIconLibrary
+    private route: ActivatedRoute
   ) {
-    faIconLibrary.addIcons(
-      faChevronDown,
-      faCog,
-      faPlus,
-      faTasks,
-      faUserPlus,
-      faUsers
-    );
-    this._subAlert = this.alertService.alerts$.subscribe((v) => {
-      if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
-        this.banner = TeamBannerType.TeamNotFound;
-        this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
-      }
-    });
-    this._subBanner = this.teamPageService.banner$.subscribe((v) => {
-      this.banner = v;
-      if (this.banner === this.BannerType.TeamNotFound) {
-        this._notFound.teamSlug = route.snapshot.paramMap.get('team');
-      }
-    });
-    this._subTabs = this.teamPageService.tabs$.subscribe((v) => {
-      this.tabs = v;
-      const queryMap = this.route.snapshot.queryParamMap;
-      const getQuery = (key: string) =>
-        queryMap.has(key) ? queryMap.get(key) : null;
-      const tab = this.tabs.find((v) => v.link === getQuery('t')) || v[0];
-      this.currentTab = tab.type;
-    });
-    this._subTeams = this.teamPageService.teams$.subscribe((v) => {
-      if (v.active.length && !this.route.snapshot.params.team) {
-        const activeTeam =
-          localStorage.getItem(ELocalStorageKey.LastVisitedTeam) ??
-          v.active[0].slug;
-        this.router.navigate(['~', activeTeam]);
-      }
-      this.teams = v;
-    });
-    this._subTeam = this.teamPageService.team$.subscribe((v) => {
-      this.team = v;
-    });
+    this._sub = {
+      alert: alertService.alerts$.subscribe((v) => {
+        if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
+          this.banner = TeamBannerType.TeamNotFound;
+          this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
+        }
+      }),
+      banner: teamPageService.banner$.subscribe((v) => {
+        this.banner = v;
+        if (this.banner === this.BannerType.TeamNotFound) {
+          this._notFound.teamSlug = route.snapshot.paramMap.get('team');
+        }
+      }),
+      dialog: undefined,
+      tabs: teamPageService.tabs$.subscribe((v) => {
+        this.tabs = v;
+        const queryMap = this.route.snapshot.queryParamMap;
+        const getQuery = (key: string) =>
+          queryMap.has(key) ? queryMap.get(key) : null;
+        const tab = this.tabs.find((v) => v.link === getQuery('t')) || v[0];
+        this.currentTab = tab.type;
+      }),
+      teams: teamPageService.teams$.subscribe((v) => {
+        if (v.active.length && !this.route.snapshot.params.team) {
+          const activeTeam =
+            localStorage.getItem(ELocalStorageKey.LastVisitedTeam) ??
+            v.active[0].slug;
+          this.router.navigate(['~', activeTeam]);
+        }
+        this.teams = v;
+      }),
+      team: teamPageService.team$.subscribe((v) => {
+        this.team = v;
+      })
+    };
   }
 
   ngOnInit() {
@@ -115,14 +97,9 @@ export class TeamPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this._subAlert.unsubscribe();
-    this._subBanner.unsubscribe();
-    this._subTabs.unsubscribe();
-    this._subTeams.unsubscribe();
-    this._subTeam.unsubscribe();
-    if (this._dialogSub) {
-      this._dialogSub.unsubscribe();
-    }
+    Object.values(this._sub)
+      .filter(Boolean)
+      .forEach((v) => v.unsubscribe());
   }
 
   fetchItems(): void {
@@ -161,7 +138,7 @@ export class TeamPageComponent implements OnInit, OnDestroy {
       data: { teamSlug: this.team.slug },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+    this._sub.dialog = this._dialogRef.afterClosed$.subscribe(
       (state: boolean) => {
         if (state) {
           this.teamPageService.refreshSuites();
@@ -176,7 +153,7 @@ export class TeamPageComponent implements OnInit, OnDestroy {
       data: { teamSlug: this.team.slug },
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+    this._sub.dialog = this._dialogRef.afterClosed$.subscribe(
       (state: boolean) => {
         if (state) {
           this.teamPageService.refreshMembers();
@@ -190,7 +167,7 @@ export class TeamPageComponent implements OnInit, OnDestroy {
       closeButton: false,
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe((state) => {
+    this._sub.dialog = this._dialogRef.afterClosed$.subscribe((state) => {
       if (state) {
         if (state.action === 'create') {
           this.router.navigate(['~', state.slug]);
@@ -226,7 +203,7 @@ export class TeamPageComponent implements OnInit, OnDestroy {
       data: elements,
       minHeight: '10vh'
     });
-    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+    this._sub.dialog = this._dialogRef.afterClosed$.subscribe(
       (state: boolean) => {
         if (!state) {
           return;

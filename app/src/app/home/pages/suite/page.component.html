@@ -1,7 +1,7 @@
 <app-notification></app-notification>
 <ng-container *ngIf="notFound()">
-  <app-home-notfound [args]="notFound()">
-  </app-home-notfound>
+  <app-missing [args]="notFound()">
+  </app-missing>
 </ng-container>
 <div *ngIf="!notFound()" [hidden]="!suite">
   <div class="bg-gray-100 border-b border-gray-200">

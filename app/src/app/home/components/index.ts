@@ -2,9 +2,9 @@
 
 export { CommentComponent } from './comment.component';
 export * from './confirm.component';
-export * from './home-notfound.component';
 export * from './list-filter.component';
 export * from './list-pager.component';
+export * from './missing.component';
 export * from './modal.component';
 export * from './page.component';
 export * from './page-list.component';
