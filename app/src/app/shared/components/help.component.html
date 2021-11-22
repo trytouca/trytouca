@@ -4,7 +4,7 @@
     aria-expanded="false" title="Need Help?" (click)="closeChatWidgetIfOpen()">
     <span>?</span>
   </div>
-  <ul class="hidden w-48 wsl-dropdown-menu" style="bottom: 4rem; right: 1rem;"
+  <ul class="hidden wsl-dropdown-menu wsl-help-dropdown-menu"
     aria-labelledby="wsl-help-dropdown">
     <li class="wsl-dropdown-item" *ngIf="isCloudHosted()"
       (click)="openChatWidget()"

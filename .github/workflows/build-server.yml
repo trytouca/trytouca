@@ -129,7 +129,7 @@ jobs:
         if: steps.changes.outputs.app == 'true'
         run: |
           yarn --cwd=app install --frozen-lockfile
-          yarn --cwd=app build --prod
+          yarn --cwd=app build
           tar -zcf app.tar.gz app/dist
 
       - name: push app to aws
