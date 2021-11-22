@@ -57,7 +57,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this._subTeam = this.teamPageService.team$.subscribe((team) => {
+    this._subTeam = this.teamPageService.data.team$.subscribe((team) => {
       this.team = team;
       this.formName.setValue({ name: team.name });
       this.formSlug.setValue({ slug: team.slug });

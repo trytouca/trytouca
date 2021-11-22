@@ -1,4 +1,15 @@
-<section class="wsl-page-tab" id="wsl-team-members">
+<section class="wsl-page-tab" id="wsl-team-tab-members">
+  <div class="flex">
+    <h2 class="flex-grow text-2xl font-semibold">Team Members</h2>
+    <div class="print:hidden">
+      <button type="button" (click)="invite()"
+        class="flex items-center space-x-1 wsl-btn-sm wsl-btn-dark group">
+        <ng-icon class="inline h-4 opacity-75 group-hover:opacity-100"
+          name="feather-user-plus"></ng-icon>
+        <span>Invite Member</span>
+      </button>
+    </div>
+  </div>
   <div class="wsl-list" *ngIf="countRows(ItemType.Member)">
     <div class="wsl-list-head">
       <h3>Active Members</h3>
@@ -8,7 +19,7 @@
         in your team.
       </p>
     </div>
-    <ul class="wsl2-list-body wsl2-white-box">
+    <ul class="wsl2-list-body wsl-box">
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Member); let i = index;"
         (click)="selectedRow = i;" [ngClass]="{'bg-sky-50': selectedRow === i}">
@@ -29,7 +40,7 @@
         to your team.
       </p>
     </div>
-    <ul class="wsl2-list-body wsl2-white-box">
+    <ul class="wsl2-list-body wsl-box">
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Invitee); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Member);"
@@ -48,7 +59,7 @@
         to join your team.
       </p>
     </div>
-    <ul class="wsl2-list-body wsl2-white-box">
+    <ul class="wsl2-list-body wsl-box">
       <li class="wsl-list-item-outer"
         *ngFor="let item of getShownRows(ItemType.Applicant); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Member) + countShownRows(ItemType.Invitee);"

@@ -233,7 +233,7 @@ export class BatchListElementsComponent
   onKeydown(event: KeyboardEvent) {
     // pressing keys 'j' and 'k' should navigate through items on the list
     if (['j', 'k'].includes(event.key)) {
-      super.keyboardNavigateList(event, '#wsl-batch-elements');
+      super.keyboardNavigateList(event, '#wsl-batch-tab-elements');
       return;
     }
     const row = this.selectedRow;

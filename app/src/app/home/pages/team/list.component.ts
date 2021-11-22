@@ -2,13 +2,17 @@
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DialogRef, DialogService } from '@ngneat/dialog';
+import { Subscription } from 'rxjs';
 
+import { TeamLookupResponse } from '@/core/models/commontypes';
 import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
+import { TopicType } from '@/home/models/page-item.model';
 
+import { TeamCreateSuiteComponent } from './create-suite.component';
 import { TeamPageSuite, TeamPageSuiteType } from './team.model';
 import { TeamPageService } from './team.service';
-import { TopicType } from '@/home/models/page-item.model';
 
 const filterInput: FilterInput<TeamPageSuite> = {
   filters: [
@@ -147,19 +151,31 @@ export class TeamTabSuitesComponent
 {
   ItemType = TeamPageSuiteType;
   chosenTopic: TopicType;
+  private _dialogRef: DialogRef;
+  private _dialogSub: Subscription;
+  private _team: TeamLookupResponse;
+  private _subTeam: Subscription;
 
   constructor(
+    private dialogService: DialogService,
     private teamPageService: TeamPageService,
     route: ActivatedRoute,
     router: Router
   ) {
     super(filterInput, Object.values(TeamPageSuiteType), route, router);
+    this._subTeam = this.teamPageService.data.team$.subscribe((v) => {
+      this._team = v;
+    });
     this._subAllItems = this.teamPageService.items$.subscribe((allItems) => {
       this.initCollections(allItems);
     });
   }
 
   ngOnDestroy() {
+    if (this._dialogSub) {
+      this._dialogSub.unsubscribe();
+    }
+    this._subTeam.unsubscribe();
     super.ngOnDestroy();
   }
 
@@ -187,5 +203,20 @@ export class TeamTabSuitesComponent
 
   updateChosenTopics(type: TopicType) {
     this.chosenTopic = type;
+  }
+
+  openCreateModal() {
+    this._dialogRef = this.dialogService.open(TeamCreateSuiteComponent, {
+      closeButton: false,
+      data: { teamSlug: this._team.slug },
+      minHeight: '10vh'
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (state) {
+          this.teamPageService.refreshSuites();
+        }
+      }
+    );
   }
 }

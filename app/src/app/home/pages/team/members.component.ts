@@ -18,6 +18,7 @@ import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
 import { AlertType } from '@/shared/components/alert.component';
 
+import { TeamInviteComponent } from './invite.component';
 import { TeamPageMember, TeamPageMemberType } from './team.model';
 import { TeamPageService } from './team.service';
 
@@ -66,7 +67,6 @@ export class TeamTabMembersComponent
   implements OnDestroy
 {
   ItemType = TeamPageMemberType;
-
   isTeamAdmin = false;
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
@@ -83,13 +83,15 @@ export class TeamTabMembersComponent
     router: Router
   ) {
     super(filterInput, Object.values(TeamPageMemberType), route, router);
-    this._subTeam = this.teamPageService.team$.subscribe((v) => {
+    this._subTeam = this.teamPageService.data.team$.subscribe((v) => {
       this._team = v;
       this.isTeamAdmin = this.userService.isTeamAdmin(v.role);
     });
-    this._subAllItems = this.teamPageService.members$.subscribe((allItems) => {
-      this.initCollections(allItems);
-    });
+    this._subAllItems = this.teamPageService.data.members$.subscribe(
+      (allItems) => {
+        this.initCollections(allItems);
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -104,7 +106,7 @@ export class TeamTabMembersComponent
   onKeydown(event: KeyboardEvent) {
     // pressing keys 'j' and 'k' should navigate through items on the list
     if (['j', 'k'].includes(event.key)) {
-      super.keyboardNavigateList(event, '#wsl-team-members');
+      super.keyboardNavigateList(event, '#wsl-team-tab-members');
       return;
     }
     const row = this.selectedRow;
@@ -117,6 +119,21 @@ export class TeamTabMembersComponent
   isSelf(member: TeamMember): boolean {
     const self = this.userService.currentUser;
     return !self || self.username === member.username;
+  }
+
+  invite() {
+    this._dialogRef = this.dialogService.open(TeamInviteComponent, {
+      closeButton: false,
+      data: { teamSlug: this._team.slug },
+      minHeight: '10vh'
+    });
+    this._dialogSub = this._dialogRef.afterClosed$.subscribe(
+      (state: boolean) => {
+        if (state) {
+          this.teamPageService.refreshMembers();
+        }
+      }
+    );
   }
 
   confirmEdit(member: TeamMember): void {

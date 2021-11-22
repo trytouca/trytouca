@@ -8,10 +8,8 @@
   <div class="wsl-min-h-screen-1">
     <app-alert *ngFor="let alert of alerts" [alert]="alert" class="text-center">
     </app-alert>
-    <div>
-      <router-outlet>
-      </router-outlet>
-    </div>
+    <router-outlet>
+    </router-outlet>
   </div>
   <app-help></app-help>
 </div>

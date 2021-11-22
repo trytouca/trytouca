@@ -1,7 +1,7 @@
 <app-notification></app-notification>
 <app-header-inside></app-header-inside>
-<div class="flex flex-col border-t wsl-min-h-screen-1">
-  <div class="bg-gray-100 border-b">
+<div class="flex flex-col space-y-8 border-t wsl-min-h-screen-1">
+  <div class="bg-white border-b">
     <div
       class="container flex items-center justify-between h-16 px-4 py-2 mx-auto">
       <div class="text-lg font-medium">Platform Settings</div>
@@ -11,10 +11,10 @@
       </div>
     </div>
   </div>
-  <div class="py-8 border-t border-b border-gray-100 bg-gray-50">
+  <div>
     <div *ngIf="stats"
-      class="container grid gap-4 p-4 mx-auto text-sm sm:grid-cols-2 lg:grid-cols-3">
-      <div class="p-4 bg-white border rounded-md shadow-sm lg:col-span-1">
+      class="container grid gap-4 mx-auto text-sm sm:grid-cols-2 lg:grid-cols-3">
+      <div class="p-4 border wsl-box lg:col-span-1">
         <h4 class="font-medium">Database</h4>
         <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
@@ -31,7 +31,7 @@
           </li>
         </ul>
       </div>
-      <div class="p-4 bg-white border rounded-md shadow-sm lg:col-span-1">
+      <div class="p-4 border wsl-box lg:col-span-1">
         <h4 class="font-medium">Disk Space</h4>
         <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
@@ -48,7 +48,7 @@
           </li>
         </ul>
       </div>
-      <div class="p-4 bg-white border rounded-md shadow-sm lg:col-span-1">
+      <div class="p-4 border wsl-box lg:col-span-1">
         <h4 class="font-medium">Comparator</h4>
         <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
@@ -69,8 +69,8 @@
       </div>
     </div>
   </div>
-  <div class="container gap-4 py-4 mx-auto md:grid md:grid-cols-3">
-    <div class="md:col-span-1 md:order-2">
+  <div class="container gap-4 mx-auto md:grid md:grid-cols-3">
+    <div class="border md:col-span-1 md:order-2 wsl-box">
       <h3 class="p-4 text-xl font-medium">Recent Events</h3>
       <div class="p-4 space-y-4">
         <div
@@ -104,7 +104,7 @@
           </div>
         </div>
         <div
-          class="p-4 text-sm leading-6 border border-gray-100 rounded-md bg-gray-50"
+          class="p-4 text-sm leading-6 border border-gray-100 rounded-md wsl-box"
           *ngIf="events.length === 0">
           This section lists noteworthy user events that may require your
           assistance. These events include account creation, password reset,
@@ -113,11 +113,11 @@
         </div>
       </div>
     </div>
-    <div class="md:col-span-2">
+    <div class="border md:col-span-2 wsl-box">
       <h3 class="p-4 text-xl font-medium">Users</h3>
-      <ul *ngIf="user && accounts">
+      <ul class="px-4" *ngIf="user && accounts">
         <li
-          class="flex items-center h-8 px-4 transition duration-100 rounded-md hover:bg-gray-50"
+          class="flex items-center h-8 px-4 transition duration-100 rounded-md hover:bg-gray-100 group"
           *ngFor="let account of accounts; let rowNumber = index">
           <div class="w-8 text-sm font-medium">{{rowNumber + 1}}</div>
           <div class="flex items-center justify-between flex-grow space-x-4">
@@ -129,13 +129,13 @@
             </div>
             <div class="w-24 whitespace-nowrap">
               <span
-                class="px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded-md">
+                class="px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded-md group-hover:bg-gray-200">
                 {{ account.username }}
               </span>
             </div>
             <div class="w-24">
               <span
-                class="px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded-md">
+                class="px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded-md group-hover:bg-gray-200">
                 {{ account.role }}
               </span>
             </div>

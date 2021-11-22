@@ -53,7 +53,7 @@ const pageTabs: PageTab<BatchPageTabType>[] = [
     type: BatchPageTabType.Elements,
     name: 'Testcases',
     link: 'testcases',
-    icon: 'tasks',
+    icon: 'feather-list',
     shown: true
   }
 ];
@@ -78,9 +78,10 @@ type PageButton = {
   providers: [BatchPageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
 })
 export class BatchPageComponent
-  extends PageComponent<BatchPageItem, BatchPageTabType, NotFound>
+  extends PageComponent<BatchPageItem, NotFound>
   implements OnInit, OnDestroy
 {
+  currentTab: BatchPageTabType;
   suite: SuiteLookupResponse;
   batches: BatchItem[];
   batch: BatchLookupResponse;
@@ -89,6 +90,7 @@ export class BatchPageComponent
   overview: FrontendOverviewSection;
   params: FrontendBatchCompareParams;
   TabType = BatchPageTabType;
+  tabs = pageTabs;
   private _isTeamAdmin = false;
 
   private _subTeam: Subscription;
@@ -117,11 +119,16 @@ export class BatchPageComponent
     private dialogService: DialogService,
     private router: Router,
     private titleService: Title,
-    route: ActivatedRoute,
+    private route: ActivatedRoute,
     faIconLibrary: FaIconLibrary,
     @Inject(LOCALE_ID) private locale: string
   ) {
-    super(batchPageService, pageTabs, route);
+    super(batchPageService);
+    const queryMap = route.snapshot.queryParamMap;
+    const getQuery = (key: string) =>
+      queryMap.has(key) ? queryMap.get(key) : null;
+    const tab = this.tabs.find((v) => v.link === getQuery('t')) || this.tabs[0];
+    this.currentTab = tab.type;
     faIconLibrary.addIcons(faCog, faComments, faSpinner, faTasks, faTrashAlt);
     this._subAlert = this.alertService.alerts$.subscribe((v) => {
       if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
@@ -448,5 +455,12 @@ export class BatchPageComponent
       resultsScore: meta.elementsScoreAggregate,
       statements
     };
+  }
+
+  public switchTab(type: BatchPageTabType) {
+    this.currentTab = type;
+    if (!this.hasData()) {
+      this.fetchItems();
+    }
   }
 }

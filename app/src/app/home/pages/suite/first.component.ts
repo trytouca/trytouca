@@ -40,7 +40,7 @@ export class SuiteFirstBatchComponent implements OnDestroy {
     this._subUser = userService.currentUser$.subscribe((v) => {
       this.fields.apiKey = v.apiKeys[0];
     });
-    this._subSuite = suitePageService.suite$.subscribe((v) => {
+    this._subSuite = suitePageService.data.suite$.subscribe((v) => {
       this.fields.apiUrl = [getBackendUrl(), '@', v.teamSlug, v.suiteSlug].join(
         '/'
       );

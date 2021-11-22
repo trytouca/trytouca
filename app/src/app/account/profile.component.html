@@ -1,7 +1,7 @@
 <app-notification></app-notification>
 <app-header-inside></app-header-inside>
 <div class="flex flex-col border-t wsl-min-h-screen-1">
-  <div class="border-b bg-gray-50">
+  <div class="border-b wsl-box">
     <div
       class="container flex items-center justify-between h-16 px-4 py-2 mx-auto">
       <div class="text-lg font-medium">Account Settings</div>
@@ -15,7 +15,7 @@
     <div class="lg:col-span-1">
     </div>
     <div class="p-4 space-y-4 lg:col-span-2">
-      <form class="p-4 space-y-4 bg-gray-50" [formGroup]="accountSettingsForm"
+      <form class="p-4 space-y-4 wsl-box" [formGroup]="accountSettingsForm"
         (ngSubmit)="onSubmit(accountSettingsForm.value)" novalidate>
         <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
           Your Information
@@ -53,7 +53,7 @@
           Update
         </button>
       </form>
-      <div class="p-4 space-y-2 bg-gray-50" *ngIf="apiKeys">
+      <div class="p-4 space-y-2 wsl-box" *ngIf="apiKeys">
         <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
           API Keys
         </h2>
@@ -86,7 +86,7 @@
           </div>
         </div>
       </div>
-      <div class="p-4 space-y-2 bg-gray-50">
+      <div class="p-4 space-y-2 wsl-box">
         <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
           Preferences
         </h2>
@@ -95,7 +95,7 @@
             (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
         </div>
       </div>
-      <div class="p-4 space-y-2 bg-gray-50">
+      <div class="p-4 space-y-2 wsl-box">
         <h2
           class="pb-1 text-xl font-medium border-b border-gray-200 wsl-text-danger">
           Danger Zone</h2>

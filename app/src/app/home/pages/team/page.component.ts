@@ -8,16 +8,20 @@ import { Subscription } from 'rxjs';
 import type { TeamItem } from '@/core/models/commontypes';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
-import { ConfirmComponent, ConfirmElements, PageTab } from '@/home/components';
-import { TeamCreateSuiteComponent } from './create-suite.component';
-import { TeamInviteComponent } from './invite.component';
+import {
+  ConfirmComponent,
+  ConfirmElements,
+  PageComponent,
+  PageTab
+} from '@/home/components';
+import { TeamCreateTeamComponent } from './create-team.component';
+import { TeamPageSuite } from './team.model';
 import {
   TeamPageService,
   TeamPageTabType,
   TeamBannerType,
   RefinedTeamList
 } from './team.service';
-import { TeamCreateTeamComponent } from './create-team.component';
 
 type NotFound = Partial<{
   teamSlug: string;
@@ -29,7 +33,10 @@ type NotFound = Partial<{
   styleUrls: ['../../styles/page.component.scss'],
   providers: [TeamPageService]
 })
-export class TeamPageComponent implements OnInit, OnDestroy {
+export class TeamPageComponent
+  extends PageComponent<TeamPageSuite, NotFound>
+  implements OnInit, OnDestroy
+{
   teams: RefinedTeamList;
   team: TeamItem;
 
@@ -41,7 +48,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
   BannerType = TeamBannerType;
 
   private _dialogRef: DialogRef;
-  private _notFound: Partial<NotFound> = {};
   private _sub: Record<
     'alert' | 'banner' | 'dialog' | 'tabs' | 'teams' | 'team',
     Subscription
@@ -51,15 +57,16 @@ export class TeamPageComponent implements OnInit, OnDestroy {
     alertService: AlertService,
     private apiService: ApiService,
     private dialogService: DialogService,
+    private route: ActivatedRoute,
     private router: Router,
-    private teamPageService: TeamPageService,
-    private route: ActivatedRoute
+    private teamPageService: TeamPageService
   ) {
+    super(teamPageService);
     this._sub = {
       alert: alertService.alerts$.subscribe((v) => {
         if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
           this.banner = TeamBannerType.TeamNotFound;
-          this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
+          this._notFound.teamSlug = route.snapshot.paramMap.get('team');
         }
       }),
       banner: teamPageService.banner$.subscribe((v) => {
@@ -69,7 +76,7 @@ export class TeamPageComponent implements OnInit, OnDestroy {
         }
       }),
       dialog: undefined,
-      tabs: teamPageService.tabs$.subscribe((v) => {
+      tabs: teamPageService.data.tabs$.subscribe((v) => {
         this.tabs = v;
         const queryMap = this.route.snapshot.queryParamMap;
         const getQuery = (key: string) =>
@@ -77,7 +84,7 @@ export class TeamPageComponent implements OnInit, OnDestroy {
         const tab = this.tabs.find((v) => v.link === getQuery('t')) || v[0];
         this.currentTab = tab.type;
       }),
-      teams: teamPageService.teams$.subscribe((v) => {
+      teams: teamPageService.data.teams$.subscribe((v) => {
         if (v.active.length && !this.route.snapshot.params.team) {
           const activeTeam =
             localStorage.getItem(ELocalStorageKey.LastVisitedTeam) ??
@@ -86,42 +93,30 @@ export class TeamPageComponent implements OnInit, OnDestroy {
         }
         this.teams = v;
       }),
-      team: teamPageService.team$.subscribe((v) => {
+      team: teamPageService.data.team$.subscribe((v) => {
         this.team = v;
       })
     };
   }
 
   ngOnInit() {
-    this.teamPageService.init(this.route.snapshot.params as { team: string });
+    super.ngOnInit();
   }
 
   ngOnDestroy() {
     Object.values(this._sub)
       .filter(Boolean)
       .forEach((v) => v.unsubscribe());
+    super.ngOnDestroy();
   }
 
   fetchItems(): void {
-    const teamSlug = this.route.snapshot.paramMap.get('team');
-    this.teamPageService.fetchItems({ teamSlug });
+    this.teamPageService.fetchItems({
+      teamSlug: this.route.snapshot.paramMap.get('team')
+    });
   }
 
-  public hasData() {
-    return this.teamPageService.hasData();
-  }
-
-  public hasItems() {
-    return this.teamPageService.countItems() !== 0;
-  }
-
-  public notFound(): Partial<NotFound> | null {
-    if (Object.keys(this._notFound).length) {
-      return this._notFound;
-    }
-  }
-
-  public switchTab(type: TeamPageTabType) {
+  switchTab(type: TeamPageTabType) {
     this.currentTab = type;
   }
 
@@ -130,36 +125,6 @@ export class TeamPageComponent implements OnInit, OnDestroy {
       this.router.navigate(['~', teamSlug]);
       this.teamPageService.updateTeamSlug(teamSlug);
     }
-  }
-
-  openCreateModal() {
-    this._dialogRef = this.dialogService.open(TeamCreateSuiteComponent, {
-      closeButton: false,
-      data: { teamSlug: this.team.slug },
-      minHeight: '10vh'
-    });
-    this._sub.dialog = this._dialogRef.afterClosed$.subscribe(
-      (state: boolean) => {
-        if (state) {
-          this.teamPageService.refreshSuites();
-        }
-      }
-    );
-  }
-
-  openInviteModal() {
-    this._dialogRef = this.dialogService.open(TeamInviteComponent, {
-      closeButton: false,
-      data: { teamSlug: this.team.slug },
-      minHeight: '10vh'
-    });
-    this._sub.dialog = this._dialogRef.afterClosed$.subscribe(
-      (state: boolean) => {
-        if (state) {
-          this.teamPageService.refreshMembers();
-        }
-      }
-    );
   }
 
   openCreateTeamModel() {
@@ -216,21 +181,27 @@ export class TeamPageComponent implements OnInit, OnDestroy {
   accept(item: TeamItem) {
     const url = ['team', item.slug, 'invite', 'accept'].join('/');
     this.apiService.post(url).subscribe(() => {
-      this.teamPageService.init(this.route.snapshot.params as { team: string });
+      this.teamPageService.fetchItems({
+        teamSlug: this.route.snapshot.paramMap.get('team')
+      });
     });
   }
 
   private decline(item: TeamItem) {
     const url = ['team', item.slug, 'invite', 'decline'].join('/');
     this.apiService.post(url).subscribe(() => {
-      this.teamPageService.init(this.route.snapshot.params as { team: string });
+      this.teamPageService.fetchItems({
+        teamSlug: this.route.snapshot.paramMap.get('team')
+      });
     });
   }
 
   private rescind(item: TeamItem) {
     const url = ['team', item.slug, 'join'].join('/');
     this.apiService.delete(url).subscribe(() => {
-      this.teamPageService.init(this.route.snapshot.params as { team: string });
+      this.teamPageService.fetchItems({
+        teamSlug: this.route.snapshot.paramMap.get('team')
+      });
     });
   }
 }

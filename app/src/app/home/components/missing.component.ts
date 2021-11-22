@@ -36,9 +36,9 @@ export class HomeNotFoundComponent {
     if (args.elementSlug) {
       this.data = {
         type: ENotFound.Element,
-        title: 'Element Not Found',
+        title: 'Test Case Not Found',
         image: './assets/undraw/undraw_not_found_60pq.svg',
-        message: `Element <b>${args.elementSlug}</b> does not exist.`,
+        message: `Test Case <b>${args.elementSlug}</b> does not exist.`,
         button: 'Back to Version'
       };
     }

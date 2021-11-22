@@ -43,14 +43,14 @@ const pageTabs: PageTab<ElementPageTabType>[] = [
     type: ElementPageTabType.Results,
     name: 'Results',
     link: 'results',
-    icon: 'tasks',
+    icon: 'feather-list',
     shown: true
   },
   {
     type: ElementPageTabType.Metrics,
     name: 'Metrics',
     link: 'metrics',
-    icon: 'stopwatch',
+    icon: 'hero-clock',
     shown: true
   }
 ];
@@ -69,9 +69,10 @@ type NotFound = Partial<{
   providers: [ElementPageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
 })
 export class ElementPageComponent
-  extends PageComponent<ElementPageResult, ElementPageTabType, NotFound>
+  extends PageComponent<ElementPageResult, NotFound>
   implements OnInit, OnDestroy
 {
+  currentTab: ElementPageTabType;
   alert: Alert;
   suite: SuiteLookupResponse;
   batch: BatchLookupResponse;
@@ -79,6 +80,7 @@ export class ElementPageComponent
   overview: FrontendOverviewSection;
   params: FrontendElementCompareParams;
   TabType = ElementPageTabType;
+  tabs = pageTabs;
 
   private _subSuite: Subscription;
   private _subBatch: Subscription;
@@ -94,11 +96,16 @@ export class ElementPageComponent
     private elementPageService: ElementPageService,
     private router: Router,
     private titleService: Title,
-    route: ActivatedRoute,
+    private route: ActivatedRoute,
     faIconLibrary: FaIconLibrary,
     @Inject(LOCALE_ID) private locale: string
   ) {
-    super(elementPageService, pageTabs, route);
+    super(elementPageService);
+    const queryMap = route.snapshot.queryParamMap;
+    const getQuery = (key: string) =>
+      queryMap.has(key) ? queryMap.get(key) : null;
+    const tab = this.tabs.find((v) => v.link === getQuery('t')) || this.tabs[0];
+    this.currentTab = tab.type;
     faIconLibrary.addIcons(faSpinner, faStopwatch, faTasks);
     this._subAlert = this.alertService.alerts$.subscribe((v) => {
       if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
@@ -347,5 +354,12 @@ export class ElementPageComponent
 
   private batchName(batchSlug: string) {
     return batchSlug?.split('@')[0];
+  }
+
+  public switchTab(type: ElementPageTabType) {
+    this.currentTab = type;
+    if (!this.hasData()) {
+      this.fetchItems();
+    }
   }
 }

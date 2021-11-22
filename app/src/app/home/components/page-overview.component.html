@@ -1,7 +1,6 @@
-<div class="container px-4 mx-auto space-y-4 wsl-page-overview">
-  <div class="grid gap-4 py-2" style="grid-template-columns:  1fr auto 1fr;">
-    <div class="p-4 text-center bg-white rounded-sm shadow-sm"
-      [hidden]="!resultsRing">
+<div class="wsl-page-overview">
+  <div class="grid gap-4" style="grid-template-columns:  1fr auto 1fr;">
+    <div class="p-4 text-center wsl-box" [hidden]="!resultsRing">
       <small class="font-medium">{{ resultsRing?.header }}</small>
       <svg class="mx-auto" width="80" height="80">
         <circle fill="transparent" r="32" cx="40" cy="40" stroke-width="4"
@@ -17,13 +16,12 @@
         <small>{{ footer }}</small>
       </div>
     </div>
-    <div class="flex flex-col justify-center p-4 bg-white rounded-sm shadow-sm">
+    <div class="flex flex-col justify-center p-4 wsl-box">
       <p class="text-sm leading-6" *ngFor="let statement of statements">
         <span [innerHTML]="statement"></span>
       </p>
     </div>
-    <div class="p-4 text-center bg-white rounded-sm shadow-sm"
-      [hidden]="!metricsRing">
+    <div class="p-4 text-center wsl-box" [hidden]="!metricsRing">
       <small class="font-medium">{{ metricsRing?.header }}</small>
       <svg class="mx-auto" width="80" height="80">
         <circle fill="transparent" r="32" cx="40" cy="40" stroke-width="4"

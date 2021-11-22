@@ -2,12 +2,10 @@
 
 import { Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
-import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { forkJoin, of, Subject } from 'rxjs';
 
 import {
   ETeamRole,
-  SuiteListResponse,
   SuiteLookupResponse,
   TeamInvitee,
   TeamItem,
@@ -55,48 +53,42 @@ const availableTabs: Record<TeamPageTabType, PageTab<TeamPageTabType>> = {
     type: TeamPageTabType.Suites,
     name: 'Suites',
     link: 'suites',
-    icon: 'tasks',
-    icon2: 'feather-list',
+    icon: 'feather-list',
     shown: true
   },
   [TeamPageTabType.Members]: {
     type: TeamPageTabType.Members,
     name: 'Members',
     link: 'members',
-    icon: 'users',
-    icon2: 'feather-users',
+    icon: 'feather-users',
     shown: true
   },
   [TeamPageTabType.Settings]: {
     type: TeamPageTabType.Settings,
     name: 'Settings',
     link: 'settings',
-    icon: 'cog',
-    icon2: 'feather-settings',
+    icon: 'feather-settings',
     shown: true
   },
   [TeamPageTabType.FirstTeam]: {
     type: TeamPageTabType.FirstTeam,
     name: 'New Team',
     link: 'first-team',
-    icon: 'cog',
-    icon2: 'feather-plus-circle',
+    icon: 'feather-plus-circle',
     shown: true
   },
   [TeamPageTabType.Invitations]: {
     type: TeamPageTabType.Invitations,
     name: 'Invitations',
     link: 'invitations',
-    icon: 'cog',
-    icon2: 'feather-gift',
+    icon: 'feather-gift',
     shown: true
   },
   [TeamPageTabType.Requests]: {
     type: TeamPageTabType.Requests,
     name: 'Requests',
     link: 'requests',
-    icon: 'cog',
-    icon2: 'feather-send',
+    icon: 'feather-send',
     shown: true
   }
 };
@@ -106,20 +98,31 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   private _bannerSubject = new Subject<TeamBannerType>();
   banner$ = this._bannerSubject.asObservable();
 
-  private _tabsSubject = new Subject<PageTab<TeamPageTabType>[]>();
-  tabs$ = this._tabsSubject.asObservable();
+  private _cache: {
+    tabs: PageTab<TeamPageTabType>[];
+    teams: RefinedTeamList;
+    team: TeamLookupResponse;
+    members: TeamPageMember[];
+  } = {
+    tabs: undefined,
+    teams: undefined,
+    team: undefined,
+    members: undefined
+  };
 
-  private _teams: RefinedTeamList;
-  private _teamsSubject = new Subject<RefinedTeamList>();
-  teams$ = this._teamsSubject.asObservable();
+  private _subjects = {
+    tabs: new Subject<PageTab<TeamPageTabType>[]>(),
+    teams: new Subject<RefinedTeamList>(),
+    team: new Subject<TeamLookupResponse>(),
+    members: new Subject<TeamPageMember[]>()
+  };
 
-  private _team: TeamLookupResponse;
-  private _teamSubject = new Subject<TeamLookupResponse>();
-  team$ = this._teamSubject.asObservable();
-
-  private _members: TeamPageMember[];
-  private _membersSubject = new Subject<TeamPageMember[]>();
-  members$ = this._membersSubject.asObservable();
+  data = {
+    tabs$: this._subjects.tabs.asObservable(),
+    teams$: this._subjects.teams.asObservable(),
+    team$: this._subjects.team.asObservable(),
+    members$: this._subjects.members.asObservable()
+  };
 
   constructor(
     private alertService: AlertService,
@@ -128,173 +131,119 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     super();
   }
 
-  /**
-   * Find list of all my teams.
-   */
-  public init(params: { team?: string } = {}) {
-    this.apiService.get<TeamListResponse>('team').subscribe({
-      next: (doc) => {
-        const byRole = (...roles: ETeamRole[]) =>
-          doc.filter((v) => roles.includes(v.role));
-        const teams: RefinedTeamList = {
-          requests: byRole(ETeamRole.Applicant),
-          invitations: byRole(ETeamRole.Invited),
-          active: byRole(ETeamRole.Owner, ETeamRole.Admin, ETeamRole.Member)
-        };
-        if (!params.team && teams.active.length) {
-          this._teamsSubject.next(teams);
-          return;
-        }
-        if (params.team && !teams.active.some((v) => v.slug === params.team)) {
-          this._bannerSubject.next(TeamBannerType.TeamNotFound);
-          return;
-        }
-        const activeTabs: PageTab<TeamPageTabType>[] = [];
-        if (teams.active.length) {
-          activeTabs.push(
-            availableTabs.suites,
-            availableTabs.members,
-            availableTabs.settings
-          );
-        } else {
-          activeTabs.push(availableTabs.firstTeam);
-        }
-        if (teams.invitations.length) {
-          activeTabs.push(availableTabs.invitations);
-        }
-        if (teams.requests.length) {
-          activeTabs.push(availableTabs.requests);
-        }
-        this._tabsSubject.next(activeTabs);
-        this._teams = teams;
-        this._teamsSubject.next(teams);
-        if (!teams.active.length) {
-          return;
-        }
-        const activeTeam =
-          params.team ??
-          localStorage.getItem(ELocalStorageKey.LastVisitedTeam) ??
-          teams.active[0].slug;
-        this.fetchItems({ teamSlug: activeTeam });
-      },
-      error: (err) => {
-        console.log(err);
+  private update(key: string, response: unknown) {
+    if (response && !isEqual(response, this._cache[key])) {
+      this._cache[key] = response;
+      this._subjects[key].next(response);
+    }
+  }
+
+  private prepareTeams(doc: TeamListResponse) {
+    if (!doc) {
+      return;
+    }
+    const byRole = (...roles: ETeamRole[]) =>
+      doc.filter((v) => roles.includes(v.role));
+    const teams: RefinedTeamList = {
+      requests: byRole(ETeamRole.Applicant),
+      invitations: byRole(ETeamRole.Invited),
+      active: byRole(ETeamRole.Owner, ETeamRole.Admin, ETeamRole.Member)
+    };
+    this.update('teams', teams);
+  }
+
+  private prepareTabs() {
+    const activeTabs: PageTab<TeamPageTabType>[] = [];
+    if (this._cache.teams.active.length) {
+      activeTabs.push(
+        availableTabs.suites,
+        availableTabs.members,
+        availableTabs.settings
+      );
+    } else {
+      activeTabs.push(availableTabs.firstTeam);
+    }
+    if (this._cache.teams.invitations.length) {
+      activeTabs.push(availableTabs.invitations);
+    }
+    if (this._cache.teams.requests.length) {
+      activeTabs.push(availableTabs.requests);
+    }
+    this.update('tabs', activeTabs);
+  }
+
+  private prepareTeam(doc: TeamLookupResponse) {
+    if (!doc || isEqual(doc, this._cache.team)) {
+      return;
+    }
+    this._cache.team = doc;
+    this._subjects.team.next(doc);
+    try {
+      localStorage.setItem(ELocalStorageKey.LastVisitedTeam, doc.slug);
+    } catch (err) {
+      errorLogger.notify(err);
+    }
+  }
+
+  private prepareSuites(doc: SuiteLookupResponse[]) {
+    if (!doc) {
+      return;
+    }
+    const suites = doc.map((item) => {
+      const suite = item;
+      const batches = [];
+      if (suite.baseline) {
+        batches.push(suite.baseline.batchSlug);
       }
+      if (suite.latest) {
+        batches.push(suite.latest.batchSlug);
+      }
+      suite.batches = batches;
+      return new TeamPageSuite(suite, TeamPageSuiteType.Suite);
     });
+    if (suites && !isEqual(suites, this._items)) {
+      this._items = suites;
+      this._itemsSubject.next(suites);
+    }
   }
 
-  /**
-   * Learn more about this team.
-   *
-   * For better user experience, we like to memorize the last team user
-   * has interacted with, so that when they navigate to other parts of
-   * the web app, they can skip the "team list" page. To do so we
-   * use local storage (if it is enabled).
-   * We perform this operation here to limit it to teams with valid slugs.
-   */
-  private fetchTeam(args: FetchInput): Observable<TeamLookupResponse> {
-    const url = ['team', args.teamSlug].join('/');
-    return this.apiService.get<TeamLookupResponse>(url).pipe(
-      map((doc: TeamLookupResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this._team)) {
-          return doc;
-        }
-        this._team = doc;
-        this._teamSubject.next(this._team);
-
-        try {
-          localStorage.setItem(ELocalStorageKey.LastVisitedTeam, args.teamSlug);
-        } catch (err) {
-          errorLogger.notify(err);
-        }
-        return doc;
-      })
+  private prepareMembers(doc: TeamMemberListResponse) {
+    if (!doc) {
+      return;
+    }
+    const applicants = doc.applicants.map(
+      (v) => new TeamPageMember(v, TeamPageMemberType.Applicant)
     );
-  }
-
-  /**
-   * Find list of all suites in this team.
-   */
-  private fetchSuites(args: FetchInput): Observable<TeamPageSuite[]> {
-    const url = ['suite', args.teamSlug].join('/');
-    return this.apiService.get<SuiteListResponse>(url).pipe(
-      map((doc: SuiteListResponse) => {
-        if (!doc) {
-          return;
-        }
-        const items = doc.map((item) => {
-          const suite = item as SuiteLookupResponse;
-          const batches = [];
-          if (suite.baseline) {
-            batches.push(suite.baseline.batchSlug);
-          }
-          if (suite.latest) {
-            batches.push(suite.latest.batchSlug);
-          }
-          suite.batches = batches;
-          return new TeamPageSuite(suite, TeamPageSuiteType.Suite);
-        });
-        if (isEqual(items, this._items)) {
-          return items;
-        }
-        this._items = items;
-        this._itemsSubject.next(this._items);
-        return items;
-      })
+    const invitees = doc.invitees.map(
+      (v) => new TeamPageMember(v, TeamPageMemberType.Invitee)
     );
-  }
-
-  /**
-   * Find list of all members in this team.
-   */
-  private fetchMembers(args: FetchInput): Observable<TeamPageMember[]> {
-    const url = ['team', args.teamSlug, 'member'].join('/');
-    return this.apiService.get<TeamMemberListResponse>(url).pipe(
-      map((doc: TeamMemberListResponse) => {
-        if (!doc) {
-          return;
-        }
-        const applicants = doc.applicants.map(
-          (v) => new TeamPageMember(v, TeamPageMemberType.Applicant)
-        );
-        const invitees = doc.invitees.map(
-          (v) => new TeamPageMember(v, TeamPageMemberType.Invitee)
-        );
-        const members = doc.members.map(
-          (v) => new TeamPageMember(v, TeamPageMemberType.Member)
-        );
-        const items = [...applicants, ...invitees, ...members];
-        if (isEqual(this._members, items)) {
-          return items;
-        }
-        this._members = items;
-        this._membersSubject.next(this._members);
-        return items;
-      })
+    const members = doc.members.map(
+      (v) => new TeamPageMember(v, TeamPageMemberType.Member)
     );
+    const items = [...applicants, ...invitees, ...members];
+    this.update('members', items);
   }
 
   public fetchItems(args: FetchInput): void {
-    const onetime: Observable<unknown>[] = [of(0)];
-
-    if (!this._teams) {
-      this.init();
-    }
-    if (!this._team) {
-      onetime.push(this.fetchTeam(args));
-    }
-    if (!this._members) {
-      onetime.push(this.fetchMembers(args));
-    }
-    if (!this._items) {
-      onetime.push(this.fetchSuites(args));
-    }
-
-    forkJoin(onetime).subscribe({
-      next: () => {
+    const url = {
+      teams: ['team'],
+      team: args.teamSlug ? ['team', args.teamSlug] : undefined,
+      suites: args.teamSlug ? ['suite', args.teamSlug] : undefined,
+      members: args.teamSlug ? ['team', args.teamSlug, 'member'] : undefined
+    };
+    const elements = Object.keys(url).filter((v) => Boolean(url[v]));
+    const requests = elements.map((key) => {
+      return this._cache[key]
+        ? of(0)
+        : this.apiService.get<unknown>(url[key].join('/'));
+    });
+    forkJoin(requests).subscribe({
+      next: (doc) => {
+        this.prepareTeams(doc[0] as TeamListResponse);
+        this.prepareTeam(doc[1] as TeamLookupResponse);
+        this.prepareSuites(doc[2] as SuiteLookupResponse[]);
+        this.prepareMembers(doc[3] as TeamMemberListResponse);
+        this.prepareTabs();
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
           AlertKind.ApiConnectionLost,
@@ -328,8 +277,8 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
    *  - User updates slug of this team
    */
   public updateTeamSlug(teamSlug: string): void {
-    this._team = null;
-    this._members = null;
+    this._cache.team = null;
+    this._cache.members = null;
     this._items = null;
     this.fetchItems({ teamSlug });
   }
@@ -339,42 +288,42 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
    */
   public refreshSuites() {
     this._items = null;
-    this.fetchItems({ teamSlug: this._team.slug });
+    this.fetchItems({ teamSlug: this._cache.team.slug });
   }
 
   public refreshMembers(): void {
-    this._members = null;
-    this.fetchItems({ teamSlug: this._team.slug });
+    this._cache.members = null;
+    this.fetchItems({ teamSlug: this._cache.team.slug });
   }
 
   public refreshTeams(nextTeam?: string) {
-    const teamSlug = nextTeam ?? this._team?.slug;
-    this._teams = null;
-    this._team = null;
-    this._members = null;
+    const teamSlug = nextTeam ?? this._cache.team?.slug;
+    this._cache.teams = null;
+    this._cache.team = null;
+    this._cache.members = null;
     this._items = null;
-    this.init({ team: teamSlug });
+    this.fetchItems({ teamSlug });
   }
 
   public removeInvitee(invitee: TeamInvitee): void {
-    const index = this._members.findIndex((v) => {
+    const index = this._cache.members.findIndex((v) => {
       return (
         v.type === TeamPageMemberType.Invitee &&
         v.asInvitee().email === invitee.email
       );
     });
-    this._members.splice(index, 1);
-    this._membersSubject.next(this._members);
+    this._cache.members.splice(index, 1);
+    this._subjects.members.next(this._cache.members);
   }
 
   public removeMember(member: TeamMember): void {
-    const index = this._members.findIndex((v) => {
+    const index = this._cache.members.findIndex((v) => {
       return (
         v.type === TeamPageMemberType.Member &&
         v.asMember().username === member.username
       );
     });
-    this._members.splice(index, 1);
-    this._membersSubject.next(this._members);
+    this._cache.members.splice(index, 1);
+    this._subjects.members.next(this._cache.members);
   }
 }

@@ -3,10 +3,11 @@
   <app-missing [args]="notFound()">
   </app-missing>
 </ng-container>
-<div *ngIf="!notFound()" [hidden]="!element || !batch">
-  <app-alert [alert]="alert" class="text-center"></app-alert>
-  <div class="border-t border-gray-100">
-    <div class="wsl-page-head">
+<app-alert [alert]="alert" class="text-center"></app-alert>
+<div class="max-w-screen-xl py-8 mx-auto" *ngIf="!notFound()"
+  [hidden]="!element || !batch">
+  <main class="wsl-min-h-screen-2">
+    <div class="wsl-page-head wsl-box">
       <nav aria-label="breadcrumb">
         <ol>
           <li><a routerLink="../../..">{{ element?.teamName }}</a></li>
@@ -22,33 +23,24 @@
         </ol>
       </nav>
     </div>
-    <div class="wsl-page-nav">
-      <nav>
-        <ul>
-          <ng-container *ngFor="let tab of tabs">
-            <li *ngIf="tab.shown" (click)="switchTab(tab.type)"
-              [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }">
-              <span class="wsl-nav-icon">
-                <fa-icon [icon]="tab.icon"></fa-icon>
-              </span>
-              <span class="wsl-nav-text">{{ tab.name }}</span>
-              <span class="wsl-nav-counter"
-                *ngIf="tab.counter">{{ tab.counter }}</span>
-            </li>
-          </ng-container>
-        </ul>
-      </nav>
-    </div>
-  </div>
-  <div class="py-8 border-t border-b border-gray-100 bg-gray-50"
-    [hidden]="!hasData()">
-    <div class="container mx-auto" *ngIf="overview">
+    <nav>
+      <ul class="flex space-x-4">
+        <ng-container *ngFor="let tab of tabs">
+          <li class="wsl-page-nav-item"
+            [ngClass]="{'wsl-tab-active': tab.type === currentTab }"
+            *ngIf="tab.shown" (click)="switchTab(tab.type)">
+            <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+            <p>{{ tab.name }}</p>
+            <span *ngIf="tab.counter">{{ tab.counter }}</span>
+          </li>
+        </ng-container>
+      </ul>
+    </nav>
+    <div *ngIf="overview" [hidden]="!hasData()">
       <app-home-page-overview [inputs]="overview">
       </app-home-page-overview>
     </div>
-  </div>
-  <div>
-    <div class="sticky z-10 bg-white shadow-sm top-16" *ngIf="suite && params">
+    <div class="sticky z-10 wsl-box top-16" *ngIf="suite && params">
       <app-home-version-navigator [suite]="suite" [params]="params">
       </app-home-version-navigator>
     </div>
@@ -66,5 +58,5 @@
       <app-element-tab-metrics>
       </app-element-tab-metrics>
     </div>
-  </div>
+  </main>
 </div>

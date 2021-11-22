@@ -119,7 +119,7 @@ export class ElementListResultsComponent
   onKeydown(event: KeyboardEvent) {
     // pressing keys 'j' and 'k' should navigate through items on the list
     if (['j', 'k'].includes(event.key)) {
-      super.keyboardNavigateList(event, '#wsl-element-results');
+      super.keyboardNavigateList(event, '#wsl-element-tab-results');
       return;
     }
     const row = this.selectedRow;

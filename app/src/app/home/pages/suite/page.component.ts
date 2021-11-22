@@ -29,28 +29,15 @@ import {
   NotificationService,
   UserService
 } from '@/core/services';
-import { PageComponent, PageTab } from '@/home/components/page.component';
+import { PageComponent, PageTab } from '@/home/components';
 import { AlertType } from '@/shared/components/alert.component';
 
 import { SuitePageItem } from './suite.model';
-import { SuitePageService, SuitePageTabType } from './suite.service';
-
-const pageTabs: PageTab<SuitePageTabType>[] = [
-  {
-    type: SuitePageTabType.Versions,
-    name: 'Versions',
-    link: 'versions',
-    icon: 'tasks',
-    shown: true
-  },
-  {
-    type: SuitePageTabType.Settings,
-    name: 'Settings',
-    link: 'settings',
-    icon: 'cog',
-    shown: true
-  }
-];
+import {
+  SuiteBannerType,
+  SuitePageService,
+  SuitePageTabType
+} from './suite.service';
 
 type NotFound = Partial<{
   teamSlug: string;
@@ -73,35 +60,40 @@ type Fields = Partial<{
   selector: 'app-suite-page',
   templateUrl: './page.component.html',
   styleUrls: ['../../styles/page.component.scss', './page.component.scss'],
-  providers: [SuitePageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
+  providers: [SuitePageService]
 })
 export class SuitePageComponent
-  extends PageComponent<SuitePageItem, SuitePageTabType, NotFound>
+  extends PageComponent<SuitePageItem, NotFound>
   implements OnInit, OnDestroy
 {
   team: TeamItem;
-  suite: SuiteLookupResponse;
   suites: SuiteItem[];
+  suite: SuiteLookupResponse;
   fields: Fields = {};
+
+  tabs: PageTab<SuitePageTabType>[];
+  currentTab: SuitePageTabType;
   TabType = SuitePageTabType;
 
-  private _subTeam: Subscription;
-  private _subSuite: Subscription;
-  private _subSuites: Subscription;
-  private _subAlert: Subscription;
-  private _subUser: Subscription;
+  banner: SuiteBannerType;
+  BannerType = SuiteBannerType;
+
+  private _sub: Record<
+    'alert' | 'banner' | 'tabs' | 'team' | 'suites' | 'suite' | 'user',
+    Subscription
+  >;
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
-    private alertService: AlertService,
     private suitePageService: SuitePageService,
     private titleService: Title,
     private notificationService: NotificationService,
-    route: ActivatedRoute,
+    alertService: AlertService,
     faIconLibrary: FaIconLibrary,
     userService: UserService
   ) {
-    super(suitePageService, pageTabs, route);
+    super(suitePageService);
     faIconLibrary.addIcons(
       faBell,
       faChartLine,
@@ -111,36 +103,54 @@ export class SuitePageComponent
       faRobot,
       faTasks
     );
-    this._subAlert = this.alertService.alerts$.subscribe((v) => {
-      if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
-        this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
-      }
-      if (v.some((k) => k.kind === AlertKind.SuiteNotFound)) {
-        this._notFound.suiteSlug = this.route.snapshot.paramMap.get('suite');
-      }
-    });
-    this._subTeam = this.suitePageService.team$.subscribe((v) => {
-      this.team = v;
-    });
-    this._subSuites = this.suitePageService.suites$.subscribe((v) => {
-      this.suites = v;
-    });
-    this._subSuite = this.suitePageService.suite$.subscribe((v) => {
-      this.suite = v;
-      this.tabs.find((t) => t.type === SuitePageTabType.Versions).counter =
-        v.batchCount;
-      this.fields.apiUrl = [getBackendUrl(), '@', v.teamSlug, v.suiteSlug].join(
-        '/'
-      );
-      this.updateFields();
-      this.updateTitle(v);
-    });
+    this._sub = {
+      alert: alertService.alerts$.subscribe((v) => {
+        if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
+          this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
+        }
+        if (v.some((k) => k.kind === AlertKind.SuiteNotFound)) {
+          this._notFound.suiteSlug = this.route.snapshot.paramMap.get('suite');
+        }
+      }),
+      banner: suitePageService.banner$.subscribe((v) => {
+        this.banner = v;
+        if (this.banner === this.BannerType.SuiteNotFound) {
+          this._notFound.teamSlug = route.snapshot.paramMap.get('team');
+          this._notFound.suiteSlug = route.snapshot.paramMap.get('suite');
+        }
+      }),
+      tabs: suitePageService.data.tabs$.subscribe((v) => {
+        this.tabs = v;
+        const queryMap = this.route.snapshot.queryParamMap;
+        const getQuery = (key: string) =>
+          queryMap.has(key) ? queryMap.get(key) : null;
+        const tab = this.tabs.find((v) => v.link === getQuery('t')) || v[0];
+        this.currentTab = tab.type;
+      }),
+      team: suitePageService.data.team$.subscribe((v) => {
+        this.team = v;
+      }),
+      suites: suitePageService.data.suites$.subscribe((v) => {
+        this.suites = v;
+      }),
+      suite: suitePageService.data.suite$.subscribe((v) => {
+        this.suite = v;
+        this.fields.apiUrl = [
+          getBackendUrl(),
+          '@',
+          v.teamSlug,
+          v.suiteSlug
+        ].join('/');
+        this.updateFields();
+        this.updateTitle(v);
+      }),
+      user: userService.currentUser$.subscribe((v) => {
+        this.fields.apiKey = v.apiKeys[0];
+      })
+    };
     if (userService.currentUser?.apiKeys?.length !== 0) {
       this.fields.apiKey = userService?.currentUser?.apiKeys[0];
     }
-    this._subUser = userService.currentUser$.subscribe((v) => {
-      this.fields.apiKey = v.apiKeys[0];
-    });
   }
 
   ngOnInit(): void {
@@ -148,22 +158,22 @@ export class SuitePageComponent
   }
 
   ngOnDestroy() {
-    this._subAlert.unsubscribe();
-    this._subTeam.unsubscribe();
-    this._subSuites.unsubscribe();
-    this._subSuite.unsubscribe();
-    this._subUser.unsubscribe();
+    Object.values(this._sub)
+      .filter(Boolean)
+      .forEach((v) => v.unsubscribe());
     super.ngOnDestroy();
   }
 
   fetchItems(): void {
-    const teamSlug = this.route.snapshot.paramMap.get('team');
-    const suiteSlug = this.route.snapshot.paramMap.get('suite');
     this.suitePageService.fetchItems({
       currentTab: this.currentTab,
-      teamSlug,
-      suiteSlug
+      teamSlug: this.route.snapshot.paramMap.get('team'),
+      suiteSlug: this.route.snapshot.paramMap.get('suite')
     });
+  }
+
+  switchTab(type: SuitePageTabType) {
+    this.currentTab = type;
   }
 
   onCopy(event: IClipboardResponse, name: string) {

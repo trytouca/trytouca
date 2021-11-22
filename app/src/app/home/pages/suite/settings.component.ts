@@ -63,10 +63,10 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     private route: ActivatedRoute,
     private router: Router
   ) {
-    this._subTeam = this.suitePageService.team$.subscribe((team) => {
+    this._subTeam = this.suitePageService.data.team$.subscribe((team) => {
       this.team = team;
     });
-    this._subSuite = this.suitePageService.suite$.subscribe((suite) => {
+    this._subSuite = this.suitePageService.data.suite$.subscribe((suite) => {
       this.suite = suite;
       this.formName.setValue({ name: suite.suiteName });
       this.formSlug.setValue({ slug: suite.suiteSlug });

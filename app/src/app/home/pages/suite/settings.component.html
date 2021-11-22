@@ -1,5 +1,5 @@
-<section class="wsl-page-tab" *ngIf="suite && team">
-  <h2 class="pb-1 text-xl font-medium">Suite Settings</h2>
+<section class="wsl-page-tab" id="wsl-suite-tab-settings" *ngIf="suite && team">
+  <h2 class="text-2xl font-semibold">Suite Settings</h2>
   <div class="grid gap-4 lg:grid-cols-2">
     <div class="wsl-settings-section"
       *ngIf="team.role === ETeamRole.Admin || team.role === ETeamRole.Owner">
@@ -8,8 +8,7 @@
         [alert]="alert[EModalType.ChangeName]">
       </app-alert>
       <p>
-        Short user-friendly name used by the Touca server and the documents
-        it generates.
+        Short user-friendly name for this suite.
       </p>
       <form class="flex space-x-2" [formGroup]="formName"
         (ngSubmit)="onSubmit(EModalType.ChangeName, formName.value)" novalidate>
@@ -32,7 +31,7 @@
         [alert]="alert[EModalType.ChangeSlug]">
       </app-alert>
       <p>
-        Unique url-friendly identifier used in the links to your test results.
+        Unique url-friendly identifier for this suite.
       </p>
       <form class="flex space-x-2" [formGroup]="formSlug"
         (ngSubmit)="onSubmit(EModalType.ChangeSlug, formSlug.value)" novalidate>
@@ -123,7 +122,7 @@
         You may delete this suite if you so choose.
         This action permanently removes all data associated with
         suite <b>{{ suite.suiteName }}</b>, including submitted
-        testresults for all versions, comments and promotions.
+        test results for all versions, comments and promotions.
       </p>
       <button class="wsl-btn-sm wsl-btn-danger"
         (click)="openConfirmModal(EModalType.DeleteSuite)" type="button"

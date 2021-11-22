@@ -33,6 +33,8 @@ import {
   HeroUpload
 } from '@ng-icons/heroicons';
 import {
+  FeatherBell,
+  FeatherBellOff,
   FeatherChevronDown,
   FeatherFileText,
   FeatherGift,
@@ -72,6 +74,8 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     FormsModule,
     HttpClientModule,
     NgIconsModule.withIcons({
+      FeatherBell,
+      FeatherBellOff,
       FeatherChevronDown,
       FeatherFileText,
       FeatherGift,

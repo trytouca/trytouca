@@ -3,22 +3,16 @@
 import { Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 import type {
   BatchListResponse,
   SuiteItem,
-  SuiteListResponse,
   SuiteLookupResponse,
   TeamLookupResponse
 } from '@/core/models/commontypes';
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
-import {
-  AlertKind,
-  AlertService,
-  ApiService,
-  UserService
-} from '@/core/services';
+import { AlertKind, AlertService, ApiService } from '@/core/services';
+import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
 
@@ -29,147 +23,112 @@ export enum SuitePageTabType {
   Settings = 'settings'
 }
 
+export enum SuiteBannerType {
+  SuiteNotFound = 'not-found'
+}
+
 type FetchInput = {
   currentTab: string;
   teamSlug: string;
   suiteSlug: string;
 };
 
+const availableTabs: Record<SuitePageTabType, PageTab<SuitePageTabType>> = {
+  [SuitePageTabType.Versions]: {
+    type: SuitePageTabType.Versions,
+    name: 'Versions',
+    link: 'versions',
+    icon: 'feather-list',
+    shown: true
+  },
+  [SuitePageTabType.Settings]: {
+    type: SuitePageTabType.Settings,
+    name: 'Settings',
+    link: 'settings',
+    icon: 'feather-settings',
+    shown: true
+  }
+};
+
 @Injectable()
 export class SuitePageService extends IPageService<SuitePageItem> {
-  private _team: TeamLookupResponse;
-  private _teamSubject = new Subject<TeamLookupResponse>();
-  team$ = this._teamSubject.asObservable();
+  private _bannerSubject = new Subject<SuiteBannerType>();
+  banner$ = this._bannerSubject.asObservable();
 
-  private _suites: SuiteItem[];
-  private _suitesSubject = new Subject<SuiteItem[]>();
-  suites$ = this._suitesSubject.asObservable();
+  private _cache: {
+    tabs: PageTab<SuitePageTabType>[];
+    team: TeamLookupResponse;
+    suites: SuiteItem[];
+    suite: SuiteLookupResponse;
+    batches: BatchListResponse;
+  } = {
+    tabs: undefined,
+    team: undefined,
+    suites: undefined,
+    suite: undefined,
+    batches: undefined
+  };
 
-  private _suite: SuiteLookupResponse;
-  private _suiteSubject = new Subject<SuiteLookupResponse>();
-  suite$ = this._suiteSubject.asObservable();
+  private _subjects = {
+    tabs: new Subject<PageTab<SuitePageTabType>[]>(),
+    team: new Subject<TeamLookupResponse>(),
+    suites: new Subject<SuiteItem[]>(),
+    suite: new Subject<SuiteLookupResponse>(),
+    batches: new Subject<BatchListResponse>()
+  };
 
-  private _batches: BatchListResponse;
-  private _batchesSubject = new Subject<BatchListResponse>();
-  batches$ = this._batchesSubject.asObservable();
+  data = {
+    tabs$: this._subjects.tabs.asObservable(),
+    team$: this._subjects.team.asObservable(),
+    suites$: this._subjects.suites.asObservable(),
+    suite$: this._subjects.suite.asObservable(),
+    batches$: this._subjects.batches.asObservable()
+  };
 
   constructor(
     private alertService: AlertService,
-    private apiService: ApiService,
-    private userService: UserService
+    private apiService: ApiService
   ) {
     super();
   }
 
-  /**
-   * Learn more about this team.
-   */
-  private fetchTeam(args: FetchInput): Observable<TeamLookupResponse> {
-    const url = ['team', args.teamSlug].join('/');
-    return this.apiService.get<TeamLookupResponse>(url).pipe(
-      map((doc: TeamLookupResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this._team)) {
-          return doc;
-        }
-        this._team = doc;
-        this._teamSubject.next(this._team);
-        return doc;
-      })
-    );
-  }
-
-  /**
-   * Find list of all suites in this team.
-   */
-  private fetchSuites(args: FetchInput): Observable<SuiteListResponse> {
-    const url = ['suite', args.teamSlug].join('/');
-    return this.apiService.get<SuiteListResponse>(url).pipe(
-      map((doc: SuiteListResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this._suites)) {
-          return doc;
-        }
-        this._suites = doc;
-        this._suitesSubject.next(this._suites);
-        return doc;
-      })
-    );
-  }
-
-  /**
-   * Learn more about this suite.
-   */
-  private fetchSuite(args: FetchInput): Observable<SuiteLookupResponse> {
-    const url = ['suite', args.teamSlug, args.suiteSlug].join('/');
-    return this.apiService.get<SuiteLookupResponse>(url).pipe(
-      map((doc: SuiteLookupResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this._suite)) {
-          return doc;
-        }
-        this._suite = doc;
-        this._suiteSubject.next(this._suite);
-        return doc;
-      })
-    );
-  }
-
-  /**
-   * Find list of all batches in this suite.
-   */
-  private fetchBatches(args: FetchInput): Observable<BatchListResponse> {
-    const url = ['batch', args.teamSlug, args.suiteSlug].join('/');
-    return this.apiService.get<BatchListResponse>(url).pipe(
-      map((doc: BatchListResponse) => {
-        if (!doc) {
-          return;
-        }
-        if (isEqual(doc, this._batches)) {
-          return doc;
-        }
-        this._batches = doc;
-        this._batchesSubject.next(this._batches);
-        return doc;
-      })
-    );
-  }
-
   public fetchItems(args: FetchInput): void {
-    const onetime: Observable<unknown>[] = [of(0)];
-
-    if (!this._team) {
-      onetime.push(this.fetchTeam(args));
-    }
-    if (!this._suites) {
-      onetime.push(this.fetchSuites(args));
-    }
-    if (!this._suite) {
-      onetime.push(this.fetchSuite(args));
-    }
-    if (!this._batches || args.currentTab === SuitePageTabType.Versions) {
-      onetime.push(this.fetchBatches(args));
-    }
-
-    forkJoin(onetime).subscribe({
-      next: () => {
+    const url = [
+      ['team', args.teamSlug],
+      ['suite', args.teamSlug],
+      ['suite', args.teamSlug, args.suiteSlug],
+      ['batch', args.teamSlug, args.suiteSlug]
+    ];
+    const elements = ['team', 'suites', 'suite', 'batches'];
+    const update = (key: string, response: unknown) => {
+      if (response && !isEqual(response, this._cache[key])) {
+        this._cache[key] = response;
+        this._subjects[key].next(response);
+      }
+    };
+    const requests = elements.map((key, index) => {
+      return this._cache[key]
+        ? of(0)
+        : this.apiService.get<unknown>(url[index].join('/'));
+    });
+    forkJoin(requests).subscribe({
+      next: (doc) => {
+        elements.forEach((key, index) => update(key, doc[index]));
+        const tabs = [availableTabs.versions, availableTabs.settings];
+        tabs.find((v) => v.type === SuitePageTabType.Versions).counter =
+          this._cache.batches.length;
+        update('tabs', tabs);
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
           AlertKind.ApiConnectionLost,
           AlertKind.TeamNotFound,
           AlertKind.SuiteNotFound
         );
-        const items = this._batches
+        const items = this._cache.batches
           .map((v) => {
             const batch = v as FrontendBatchItem;
             batch.isBaseline =
-              batch.batchSlug === this._suite.baseline?.batchSlug;
+              batch.batchSlug === this._cache.suite.baseline?.batchSlug;
             return new SuitePageItem(batch, SuitePageItemType.Batch);
           })
           .sort(SuitePageItem.compareByDate);
@@ -209,10 +168,10 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     currentTab: SuitePageTabType,
     suiteSlug: string
   ): void {
-    const teamSlug = this._suite.teamSlug;
-    this._suites = null;
-    this._suite = null;
-    this._batches = null;
+    const teamSlug = this._cache.suite.teamSlug;
+    this._cache.suites = null;
+    this._cache.suite = null;
+    this._cache.batches = null;
     this.fetchItems({ currentTab, teamSlug, suiteSlug });
   }
 
@@ -221,8 +180,8 @@ export class SuitePageService extends IPageService<SuitePageItem> {
   ): Observable<void> {
     const url = [
       'suite',
-      this._suite.teamSlug,
-      this._suite.suiteSlug,
+      this._cache.suite.teamSlug,
+      this._cache.suite.suiteSlug,
       action
     ].join('/');
     return this.apiService.post(url);

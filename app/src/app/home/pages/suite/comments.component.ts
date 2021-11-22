@@ -15,7 +15,7 @@ export class SuiteListCommentsComponent {
   promotions: PromotionItem[] = [];
 
   constructor(suitePageService: SuitePageService, userService: UserService) {
-    suitePageService.suite$.subscribe((suite) => {
+    suitePageService.data.suite$.subscribe((suite) => {
       const promotions = suite.promotions
         .map((v) => {
           const bySelf = userService.currentUser.username === v.by.username;

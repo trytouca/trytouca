@@ -4,7 +4,7 @@ app-alert {
   @apply mb-4 block;
 }
 .wsl-settings-section {
-  @apply p-4;
+  @apply p-4 bg-white rounded-md shadow-sm;
   h3 {
     @apply mb-2 pb-2 text-lg font-medium border-b;
   }

@@ -1,14 +1,13 @@
-<h2 class="flex-grow text-2xl font-semibold">Team Settings</h2>
-<section class="wsl-page-tab" *ngIf="team">
+<section class="wsl-page-tab" id="wsl-team-tab-settings" *ngIf="team">
+  <h2 class="text-2xl font-semibold">Team Settings</h2>
   <div class="grid gap-4 lg:grid-cols-2">
-    <div class="wsl-settings-section wsl2-white-box"
-      *ngIf="team.role === ETeamRole.Owner">
+    <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
       <h3 for="wsl-team-name">Team Name</h3>
       <app-alert *ngIf="alert[EModalType.ChangeName]"
         [alert]="alert[EModalType.ChangeName]">
       </app-alert>
       <p>
-        Short user-friendly name used on the platform and all generated reports.
+        Short user-friendly name for this team.
       </p>
       <form class="flex space-x-2" [formGroup]="formName"
         (ngSubmit)="onSubmit(EModalType.ChangeName, formName.value)" novalidate>
@@ -24,8 +23,7 @@
         Should contain 3 to 32 characters.
       </small>
     </div>
-    <div class="wsl-settings-section wsl2-white-box"
-      *ngIf="team.role === ETeamRole.Owner">
+    <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
       <h3 for="wsl-team-slug">Team Slug</h3>
       <app-alert *ngIf="alert[EModalType.ChangeSlug]"
         [alert]="alert[EModalType.ChangeSlug]">
@@ -49,8 +47,7 @@
         number.
       </small>
     </div>
-    <div class="wsl-settings-section wsl2-white-box"
-      *ngIf="team.role !== ETeamRole.Owner">
+    <div class="wsl-settings-section" *ngIf="team.role !== ETeamRole.Owner">
       <h3 class="wsl-text-danger">Danger Zone</h3>
       <app-alert *ngIf="alert[EModalType.LeaveTeam]"
         [alert]="alert[EModalType.LeaveTeam]">
@@ -66,8 +63,7 @@
         Leave Team
       </button>
     </div>
-    <div class="wsl-settings-section wsl2-white-box"
-      *ngIf="team.role === ETeamRole.Owner">
+    <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
       <h3 class="wsl-text-danger">Danger Zone</h3>
       <app-alert *ngIf="alert[EModalType.DeleteTeam]"
         [alert]="alert[EModalType.DeleteTeam]">

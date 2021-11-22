@@ -1,8 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { timer } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
@@ -13,34 +11,20 @@ export type PageTab<TabType> = {
   type: TabType;
   name: string;
   link: string;
-  icon: IconProp;
-  icon2?: string;
+  icon: string;
   shown: boolean;
   counter?: number;
 };
 
-@Component({
-  template: ''
-})
-export abstract class PageComponent<PageItemType, TabType, NotFound>
+@Component({ template: '' })
+export abstract class PageComponent<PageItemType, NotFound>
   implements OnInit, OnDestroy
 {
   private _alive = true;
   private _interval = environment.dataRefreshInterval;
   protected _notFound: Partial<NotFound> = {};
-  public currentTab: TabType;
 
-  constructor(
-    protected pageService: IPageService<PageItemType>,
-    @Inject('PAGE_TABS') public tabs: PageTab<TabType>[],
-    protected route: ActivatedRoute
-  ) {
-    const queryMap = this.route.snapshot.queryParamMap;
-    const getQuery = (key: string) =>
-      queryMap.has(key) ? queryMap.get(key) : null;
-    const tab = this.tabs.find((v) => v.link === getQuery('t')) || this.tabs[0];
-    this.currentTab = tab.type;
-  }
+  constructor(protected pageService: IPageService<PageItemType>) {}
 
   ngOnInit() {
     timer(0, this._interval)
@@ -67,13 +51,6 @@ export abstract class PageComponent<PageItemType, TabType, NotFound>
   public notFound(): Partial<NotFound> | null {
     if (Object.keys(this._notFound).length) {
       return this._notFound;
-    }
-  }
-
-  public switchTab(type: TabType) {
-    this.currentTab = type;
-    if (!this.hasData()) {
-      this.fetchItems();
     }
   }
 }

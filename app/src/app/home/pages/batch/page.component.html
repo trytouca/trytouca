@@ -3,9 +3,9 @@
   <app-missing [args]="notFound()">
   </app-missing>
 </ng-container>
-<div *ngIf="!notFound()" [hidden]="!batch">
-  <div class="border-t border-gray-100">
-    <div class="wsl-page-head">
+<div class="max-w-screen-xl py-8 mx-auto" *ngIf="!notFound()" [hidden]="!batch">
+  <main class="wsl-min-h-screen-2">
+    <div class="wsl-page-head wsl-box">
       <nav aria-label="breadcrumb">
         <ol>
           <li><a routerLink="../..">{{ batch?.teamName }}</a></li>
@@ -15,15 +15,16 @@
           </li>
         </ol>
       </nav>
-      <div class="print:hidden whitespace-nowrap">
+      <div class="flex space-x-2 print:hidden whitespace-nowrap">
         <button class="wsl-btn-sm wsl-btn-dark" *ngFor="let button of buttons"
           type="button" (click)="button.click()" [title]="button.title">
           {{ button.text }}
         </button>
-        <div class="inline-block" *ngIf="subButtons.length !== 0" wslDropdown>
-          <button class="wsl-dropdown-toggle wsl-btn-sm wsl-btn-muted"
+        <div *ngIf="subButtons.length !== 0" wslDropdown>
+          <button
+            class="flex items-center h-full wsl-dropdown-toggle wsl-btn-sm wsl-btn-muted wsl-text-muted"
             id="wsl-batch-settings" aria-haspopup="true" aria-expanded="false">
-            <fa-icon icon="cog" class="wsl-text-muted"></fa-icon>
+            <ng-icon name="feather-settings" size="1.05rem"></ng-icon>
           </button>
           <ul class="hidden w-48 wsl-dropdown-menu"
             aria-labelledby="wsl-batch-settings">
@@ -38,53 +39,44 @@
         </div>
       </div>
     </div>
-    <div class="wsl-page-nav">
-      <nav>
-        <ul>
-          <ng-container *ngFor="let tab of tabs">
-            <li *ngIf="tab.shown" (click)="switchTab(tab.type)"
-              [ngClass]="{'wsl-page-tab-active': tab.type === currentTab }">
-              <span class="wsl-nav-icon">
-                <fa-icon [icon]="tab.icon"></fa-icon>
-              </span>
-              <span class="wsl-nav-text">{{ tab.name }}</span>
-              <span class="wsl-nav-counter"
-                *ngIf="tab.counter">{{ tab.counter }}</span>
-            </li>
-          </ng-container>
-        </ul>
-      </nav>
-    </div>
-  </div>
-  <div class="py-8 border-t border-b border-gray-100 bg-gray-50"
-    [hidden]="currentTab !== TabType.Elements && (!hasData() || !hasItems())">
-    <div class="container mx-auto" *ngIf="overview">
+    <nav>
+      <ul class="flex space-x-4">
+        <ng-container *ngFor="let tab of tabs">
+          <li class="wsl-page-nav-item" *ngIf="tab.shown"
+            (click)="switchTab(tab.type)"
+            [ngClass]="{'wsl-tab-active': tab.type === currentTab }">
+            <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+            <p>{{ tab.name }}</p>
+            <span *ngIf="tab.counter">{{ tab.counter }}</span>
+          </li>
+        </ng-container>
+      </ul>
+    </nav>
+    <div *ngIf="overview"
+      [hidden]="currentTab !== TabType.Elements || !hasData() || !hasItems()">
       <app-home-page-overview [inputs]="overview">
       </app-home-page-overview>
     </div>
-  </div>
-  <div [hidden]="currentTab !== TabType.Elements">
-    <div class="sticky z-10 bg-white shadow-sm top-16" *ngIf="suite && params">
+    <div class="sticky z-10 wsl-box top-16" *ngIf="suite && params"
+      [hidden]="currentTab !== TabType.Elements">
       <app-home-version-navigator [suite]="suite" [params]="params">
       </app-home-version-navigator>
     </div>
     <div class="grid wsl-min-h-screen-4 place-content-center"
-      *ngIf="!hasData() || !hasItems()">
+      *ngIf="currentTab === TabType.Elements && (!hasData() || !hasItems())">
       <div class="wsl-spinner">
         <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
       </div>
     </div>
-    <div [hidden]="!hasData() || !hasItems()">
-      <div class="container grid gap-4 mx-auto lg:grid-cols-3">
-        <div class="lg:col-span-2 lg:wsl-min-h-screen-4">
-          <app-batch-list-elements>
-          </app-batch-list-elements>
-        </div>
-        <div class="lg:col-span-1 lg:wsl-min-h-screen-4">
-          <app-batch-tab-comments>
-          </app-batch-tab-comments>
-        </div>
-      </div>
+    <div
+      [hidden]="currentTab !== TabType.Elements || !hasData() || !hasItems()">
+      <app-batch-list-elements>
+      </app-batch-list-elements>
     </div>
-  </div>
+    <div
+      [hidden]="currentTab !== TabType.Elements || !hasData() || !hasItems()">
+      <app-batch-tab-comments>
+      </app-batch-tab-comments>
+    </div>
+  </main>
 </div>

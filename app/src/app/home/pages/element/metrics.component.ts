@@ -115,7 +115,7 @@ export class ElementListMetricsComponent
   onKeydown(event: KeyboardEvent) {
     // pressing keys 'j' and 'k' should navigate through items on the list
     if (['j', 'k'].includes(event.key)) {
-      super.keyboardNavigateList(event, '#wsl-element-metrics');
+      super.keyboardNavigateList(event, '#wsl-element-tab-metrics');
       return;
     }
   }

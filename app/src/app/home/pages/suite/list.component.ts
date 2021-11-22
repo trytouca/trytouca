@@ -86,7 +86,7 @@ export class SuiteListBatchesComponent
   onKeydown(event: KeyboardEvent) {
     // pressing keys 'j' and 'k' should navigate through items on the list
     if (['j', 'k'].includes(event.key)) {
-      super.keyboardNavigateList(event, '#wsl-suite-batches');
+      super.keyboardNavigateList(event, '#wsl-suite-tab-batches');
       return;
     }
     const row = this.selectedRow;
