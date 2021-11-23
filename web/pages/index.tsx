@@ -160,7 +160,7 @@ export default function Home() {
                       className="p-3 space-x-2 font-medium text-white duration-150 ease-in-out bg-opacity-25 box-shadow rounded-xl focus:outline-none bg-dark-blue-700 hover:bg-opacity-50 group"
                       type="button"
                       role="button">
-                      <span>Get Started</span>
+                      <span>Get Started for Free</span>
                       <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
                     </button>
                   </a>
@@ -185,7 +185,6 @@ export default function Home() {
                       target="_blank"
                       rel="noopener noreferrer">
                       <img
-                        className="text-gray-50"
                         src={make_path('/images/touca-customer-logo-vital.svg')}
                         alt="Canon Medical Informatics"
                         loading="lazy"

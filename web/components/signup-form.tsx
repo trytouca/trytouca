@@ -5,7 +5,7 @@ import React from 'react';
 import * as Yup from 'yup';
 
 import { extract_error, Feedback, post_json } from '@/lib/api';
-import { event as gtag_event } from '@/lib/gtag';
+import { tracker } from '@/lib/tracker';
 
 const SignupForm = () => (
   <Formik
@@ -36,7 +36,7 @@ const SignupForm = () => (
           ])
         });
       }
-      gtag_event({ action: 'sign_up' });
+      tracker.track({ action: 'sign_up' });
     }}
     validationSchema={Yup.object({
       umail: Yup.string()

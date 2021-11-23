@@ -5,6 +5,7 @@ import React from 'react';
 import CodeSnippet from '@/components/code-snippet';
 import { DimButton } from '@/components/dim-button';
 import { FeatureInput } from '@/lib/feature';
+import { tracker } from '@/lib/tracker';
 
 const snippets = [
   {
@@ -71,6 +72,10 @@ export default class FeatureSubmit extends React.Component<
   }
 
   activate(index: number) {
+    tracker.track(
+      { action: 'sdk-activate' },
+      { language: snippets[index].language }
+    );
     this.setState({ activeIndex: index });
   }
 
