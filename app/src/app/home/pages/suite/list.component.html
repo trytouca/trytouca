@@ -1,36 +1,40 @@
 <section class="wsl-page-tab" id="wsl-suite-tab-batches">
-  <div class="grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4">
-    <app-suite-tab-comments class="col-span-1 xl:col-span-2 wsl-box">
-    </app-suite-tab-comments>
-    <app-suite-trends-runtime class="hidden lg:block wsl-box">
-    </app-suite-trends-runtime>
-  </div>
-  <div class="p-4 space-y-4 wsl-box">
-    <app-home-list-filter [manager]="filterManager" [params]="filterParams()"
-      [stats]="filterStats()" (updateList)="updateList($event)">
-    </app-home-list-filter>
-    <div class="wsl-list" *ngIf="countShownRows(ItemType.Batch)">
-      <div class="wsl-list-head">
-        <p *ngIf="countShownRows(ItemType.Batch) !== countRows(ItemType.Batch)">
-          You are viewing
-          <b>{{ countShownRows(ItemType.Batch) | i18nPlural: { '=0': 'none', '=1': 'one', 'other': '#' } }}</b>
-          of {{ countRows(ItemType.Batch) }} versions.
-        </p>
+  <div
+    class="grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4 wsl-min-h-screen-3 place-items-stretch">
+    <div class="col-span-1 p-4 space-y-4 wsl-box xl:col-span-2">
+      <app-home-list-filter [manager]="filterManager" [params]="filterParams()"
+        [stats]="filterStats()" (updateList)="updateList($event)">
+      </app-home-list-filter>
+      <div class="wsl-list" *ngIf="countShownRows(ItemType.Batch)">
+        <div class="wsl-list-head">
+          <p
+            *ngIf="countShownRows(ItemType.Batch) !== countRows(ItemType.Batch)">
+            You are viewing
+            <b>{{ countShownRows(ItemType.Batch) | i18nPlural: { '=0': 'none', '=1': 'one', 'other': '#' } }}</b>
+            of {{ countRows(ItemType.Batch) }} versions.
+          </p>
+        </div>
+        <ul class="wsl-list-body">
+          <li class="wsl-list-item-outer"
+            *ngFor="let item of getShownRows(ItemType.Batch); let i = index;"
+            (click)="selectedRow = i;"
+            [ngClass]="{'bg-sky-50': selectedRow === i}">
+            <app-suite-item-batch *ngIf="item.type === ItemType.Batch"
+              [item]="item.asBatch()" [chosenTopics]="chosenTopic"
+              (updateChosenTopics)="updateChosenTopics($event)">
+            </app-suite-item-batch>
+          </li>
+        </ul>
       </div>
-      <ul class="wsl-list-body">
-        <li class="wsl-list-item-outer"
-          *ngFor="let item of getShownRows(ItemType.Batch); let i = index;"
-          (click)="selectedRow = i;"
-          [ngClass]="{'bg-sky-50': selectedRow === i}">
-          <app-suite-item-batch *ngIf="item.type === ItemType.Batch"
-            [item]="item.asBatch()" [chosenTopics]="chosenTopic"
-            (updateChosenTopics)="updateChosenTopics($event)">
-          </app-suite-item-batch>
-        </li>
-      </ul>
+      <app-home-list-pager [params]="pagerParams()" [stats]="filterStats()"
+        (updateList)="updateList($event)">
+      </app-home-list-pager>
     </div>
-    <app-home-list-pager [params]="pagerParams()" [stats]="filterStats()"
-      (updateList)="updateList($event)">
-    </app-home-list-pager>
+    <div class="flex flex-col space-y-4">
+      <app-suite-trends-runtime class="hidden lg:block wsl-box">
+      </app-suite-trends-runtime>
+      <app-suite-tab-comments class="flex-grow wsl-box">
+      </app-suite-tab-comments>
+    </div>
   </div>
 </section>
