@@ -1,6 +1,6 @@
 <app-notification></app-notification>
 <app-header-inside></app-header-inside>
-<div class="flex flex-col space-y-8 border-t wsl-min-h-screen-1">
+<div class="flex flex-col space-y-4 border-t wsl-min-h-screen-1">
   <div class="bg-white border-b">
     <div
       class="container flex items-center justify-between h-16 px-4 py-2 mx-auto">
@@ -13,7 +13,7 @@
   </div>
   <div>
     <div *ngIf="stats"
-      class="container grid gap-4 mx-auto text-sm sm:grid-cols-2 lg:grid-cols-3">
+      class="container grid gap-4 px-4 mx-auto text-sm sm:grid-cols-2 lg:grid-cols-3">
       <div class="p-4 border wsl-box lg:col-span-1">
         <h4 class="font-medium">Database</h4>
         <ul class="px-4 py-2 leading-6">
@@ -69,7 +69,7 @@
       </div>
     </div>
   </div>
-  <div class="container gap-4 mx-auto md:grid md:grid-cols-3">
+  <div class="container gap-4 px-4 mx-auto md:grid md:grid-cols-3">
     <div class="border md:col-span-1 md:order-2 wsl-box">
       <h3 class="p-4 text-xl font-medium">Recent Events</h3>
       <div class="p-4 space-y-4">
@@ -113,11 +113,11 @@
         </div>
       </div>
     </div>
-    <div class="border md:col-span-2 wsl-box">
-      <h3 class="p-4 text-xl font-medium">Users</h3>
-      <ul class="px-4" *ngIf="user && accounts">
+    <div class="p-4 border md:col-span-2 wsl-box">
+      <h3 class="text-xl font-medium">Users</h3>
+      <ul class="px-4 py-2" *ngIf="user && accounts">
         <li
-          class="flex items-center h-8 px-4 transition duration-100 rounded-md hover:bg-gray-100 group"
+          class="flex items-center h-8 transition duration-100 rounded-md hover:bg-gray-100 group"
           *ngFor="let account of accounts; let rowNumber = index">
           <div class="w-8 text-sm font-medium">{{rowNumber + 1}}</div>
           <div class="flex items-center justify-between flex-grow space-x-4">
