@@ -123,15 +123,9 @@ TEST_CASE("configure") {
     CHECK(client.configure(input) == true);
     CHECK(opts.parse_error.empty() == true);
     CHECK(opts.case_declaration == touca::ConcurrencyMode::AllThreads);
-    CHECK(opts.post_max_cases == 10);
-    CHECK(opts.post_max_retries == 2);
     input.emplace("concurrency-mode", "per-thread");
-    input.emplace("post-testcases", "3");
-    input.emplace("post-maxretries", "20");
     CHECK(client.configure(input) == true);
     CHECK(opts.case_declaration == touca::ConcurrencyMode::PerThread);
-    CHECK(opts.post_max_cases == 3);
-    CHECK(opts.post_max_retries == 20);
   }
 }
 

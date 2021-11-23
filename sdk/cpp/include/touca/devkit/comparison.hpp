@@ -44,9 +44,6 @@ class TOUCA_CLIENT_API TestcaseComparison {
     std::int32_t metricsDurationCommonDst;
     std::int32_t metricsDurationCommonSrc;
 
-    /**
-     *
-     */
     nlohmann::ordered_json json() const;
   };
 

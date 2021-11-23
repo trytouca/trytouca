@@ -43,9 +43,6 @@ class TOUCA_CLIENT_API Testcase {
     std::int32_t metricsCount = 0;
     std::int32_t metricsDuration = 0;
 
-    /**
-     *
-     */
     nlohmann::ordered_json json() const;
   };
 
@@ -56,14 +53,8 @@ class TOUCA_CLIENT_API Testcase {
     std::string testcase;
     std::string builtAt;
 
-    /**
-     *
-     */
     std::string describe() const;
 
-    /**
-     *
-     */
     nlohmann::ordered_json json() const;
   };
 

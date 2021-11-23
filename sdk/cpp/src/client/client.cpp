@@ -11,6 +11,12 @@
 #include "touca/devkit/utils.hpp"
 #include "touca/impl/schema.hpp"
 
+/** maximum number of attempts to re-submit failed http requests */
+constexpr unsigned long post_max_retries = 2;
+
+/** maximum number of cases to be posted in a single http request */
+constexpr unsigned long post_max_cases = 10;
+
 namespace touca {
 
 using func_t = std::function<void(const std::string&)>;
@@ -59,10 +65,7 @@ bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
   parsers.emplace("api-key", parse_member(_opts.api_key));
   parsers.emplace("api-url", parse_member(_opts.api_url));
   parsers.emplace("handshake", parse_member(_opts.handshake));
-  parsers.emplace("post-testcases", parse_member(_opts.post_max_cases));
-  parsers.emplace("post-maxretries", parse_member(_opts.post_max_retries));
   parsers.emplace("concurrency-mode", parse_member(_opts.case_declaration));
-  parsers.emplace("allow-empty-suite", parse_member(_opts.allow_empty_suite));
 
   for (const auto& kvp : opts) {
     if (!parsers.count(kvp.first)) {
@@ -163,7 +166,7 @@ bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
   // retrieve list of known test cases for this suite
 
   _elements = _platform->elements();
-  if (!_opts.allow_empty_suite && _elements.empty()) {
+  if (_elements.empty()) {
     _opts.parse_error = _platform->get_error();
     return false;
   }
@@ -205,24 +208,14 @@ bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
 
   // parse configuration parameters whose value may be specified as string
 
-  const auto& strKeys = {
-      "api-key",        "api-url",         "team",
-      "suite",          "version",         "handshake",
-      "post-testcases", "post-maxretries", "concurrency-mode"};
+  const auto& strKeys = {"api-key",         "api-url", "team",
+                         "suite",           "version", "handshake",
+                         "concurrency-mode"};
 
   const auto& config = parsed["touca"];
   for (const auto& key : strKeys) {
     if (config.contains(key) && config[key].is_string()) {
       opts.emplace(key, config[key].get<std::string>());
-    }
-  }
-
-  // parse configuration parameters whose value may be specified as integer
-
-  const auto& intKeys = {"post-maxretries", "post-testcases"};
-  for (const auto& key : intKeys) {
-    if (config.contains(key) && config[key].is_number()) {
-      opts.emplace(key, std::to_string(config[key].get<std::uint64_t>()));
     }
   }
 
@@ -358,9 +351,8 @@ bool ClientImpl::post() const {
   // configuration parameter and post each group separately in
   // flatbuffers format.
   for (auto it = testcases.begin(); it != testcases.end();) {
-    const auto& tail =
-        it + (std::min)(static_cast<ptrdiff_t>(_opts.post_max_cases),
-                        std::distance(it, testcases.end()));
+    const auto& tail = it + (std::min)(static_cast<ptrdiff_t>(post_max_cases),
+                                       std::distance(it, testcases.end()));
     std::vector<std::string> batch(it, tail);
     // attempt to post results for this group of testcases.
     // currently we only support posting data in flatbuffers format.
@@ -471,7 +463,7 @@ bool ClientImpl::post_flatbuffers(
     const std::vector<Testcase>& testcases) const {
   const auto& buffer = Testcase::serialize(testcases);
   std::string content((const char*)buffer.data(), buffer.size());
-  const auto& errors = _platform->submit(content, _opts.post_max_retries);
+  const auto& errors = _platform->submit(content, post_max_retries);
   for (const auto& err : errors) {
     notify_loggers(logger::Level::Warning, err);
   }
