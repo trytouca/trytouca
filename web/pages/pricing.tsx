@@ -35,7 +35,7 @@ const content: PageContent = {
       }
     },
     {
-      title: 'Startup',
+      title: 'Pro',
       fee: {
         highlight: '25',
         suffix: '/User/Month'
@@ -51,7 +51,7 @@ const content: PageContent = {
       ],
       button: {
         title: 'Get Started',
-        link: 'https://app.touca.io/account/signup?plan=startup'
+        link: 'https://app.touca.io/account/signup?plan=pro'
       }
     },
     {
