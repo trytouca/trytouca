@@ -32,7 +32,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as util from 'util';
-import yargs from 'yargs';
+import yargs = require('yargs/yargs'); // cannot be partially imported
 import { hideBin } from 'yargs/helpers';
 
 import { NodeClient } from './client';
@@ -141,9 +141,13 @@ class Timer {
 }
 
 function _parse_cli_options(args: string[]): RunnerOptions {
-  const argv = yargs(hideBin(args))
+  const y = yargs(hideBin(args));
+  const argv = y
+    .help('help')
     .version(VERSION)
-    .epilog('Visit https://docs.touca.io for more information')
+    .showHelpOnFail(false, 'Specify --help for available options')
+    .epilog('Visit https://docs.touca.io for more information.')
+    .wrap(y.terminalWidth())
     .options({
       'api-key': {
         type: 'string',

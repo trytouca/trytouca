@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "flatbuffers": "^2.0.3",
-    "yargs": "^17.1.1"
+    "yargs": "^17.2.1"
   },
   "keywords": [
     "regression-testing",
