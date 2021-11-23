@@ -4,15 +4,17 @@ import '@/styles/global.css';
 
 import { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
+import Script from 'next/script';
 import { useEffect } from 'react';
 
-import { pageview as gtag_pageview } from '@/lib/gtag';
+import { GA_TRACKING_ID } from '@/lib/tracker';
+import { tracker } from '@/lib/tracker';
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   useEffect(() => {
     const handleRouteChange = (url: string) => {
-      gtag_pageview(url);
+      tracker.view(url);
     };
     router.events.on('routeChangeComplete', handleRouteChange);
     return () => {
@@ -20,5 +22,31 @@ export default function App({ Component, pageProps }: AppProps) {
     };
   }, [router.events]);
 
-  return <Component {...pageProps} />;
+  return (
+    <>
+      {tracker.enabled() && (
+        <>
+          <Script
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+            strategy="afterInteractive"
+          />
+          <Script
+            dangerouslySetInnerHTML={{
+              __html: `window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_TRACKING_ID}', { page_path: window.location.pathname });`
+            }}
+            strategy="afterInteractive"
+          />
+          <Script
+            id="hs-script-loader"
+            src="//js.hs-scripts.com/14530326.js"
+            strategy="lazyOnload"
+          />
+        </>
+      )}
+      <Component {...pageProps} />
+    </>
+  );
 }

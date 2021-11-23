@@ -5,7 +5,7 @@ import React from 'react';
 import * as Yup from 'yup';
 
 import { extract_error, post_json } from '@/lib/api';
-import { event as gtag_event } from '@/lib/gtag';
+import { tracker } from '@/lib/tracker';
 
 const ContactForm = () => (
   <Formik
@@ -31,7 +31,7 @@ const ContactForm = () => (
           ])
         });
       }
-      gtag_event({ action: 'contact_us' });
+      tracker.track({ action: 'contact_us' });
     }}
     validationSchema={Yup.object({
       body: Yup.string()

@@ -5,7 +5,6 @@ import Document, { Head, Html, Main, NextScript } from 'next/document';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import { make_path } from '@/lib/api';
-import { GA_TRACKING_ID } from '@/lib/gtag';
 
 export default class MyDocument extends Document {
   render() {
@@ -46,25 +45,6 @@ export default class MyDocument extends Document {
             rel="apple-touch-icon"
             href={make_path('/icons/apple-touch-icon.png')}
           />
-
-          <script
-            async
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-          />
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_TRACKING_ID}', { page_path: window.location.pathname });`
-            }}
-          />
-          <script
-            async
-            defer
-            src="//js.hs-scripts.com/14530326.js"
-            type="text/javascript"
-            id="hs-script-loader"></script>
         </Head>
         <body className="min-h-screen font-sans antialiased bg-dark-blue-900">
           <Header></Header>
