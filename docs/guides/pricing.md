@@ -20,20 +20,20 @@ these suites in any given billing cycle. To maintain our high quality service
 and prevent potential abuse, the test results submitted for each version is
 retained only for up to 1 month.
 
-## Startup Plan
+## Pro Plan
 
-Our Startup plan is tailored to larger teams and is designed to adapt to their
-needs as they scale their product. It allows you to create teams with up to 20
+Our Pro plan is tailored to larger teams and is designed to adapt to their needs
+as they scale their product. It allows you to create teams with up to 20
 members. It also enables submission of up to 500 versions each month. The
 submitted test results can be retained for up to 2 years, configurable for each
 suite.
 
-Customers on our Startup plan have full access to our Server API that allows
-them to develop scripts that implement extra functionality based on their unique
+Customers on our Pro plan have full access to our Server API that allows them to
+develop scripts that implement extra functionality based on their unique
 requirements.
 
-Our Startup plan includes a wide range of professional services of up to 4 hours
-a week, at no extra charge. These services include, but are not limited to:
+Our Pro plan includes a wide range of professional services of up to 4 hours a
+week, at no extra charge. These services include, but are not limited to:
 
 - Integrate Touca client libraries with your codebase.
 - Consult and assist in development of regression tests.
@@ -58,10 +58,10 @@ any number of teams and suites with no limit on the number of submitted versions
 and their test results. You can also set custom data retention policies for the
 submitted test results.
 
-Similar to the Startup plan, our Enterprise plan includes a wide range of
-optional professional services, rendered upon demand for up to 8 hours a week
-and at no extra cost. These services include all the professional services
-listed in our Startup plan, as well as the following:
+Similar to the Pro plan, our Enterprise plan includes a wide range of optional
+professional services, rendered upon demand for up to 8 hours a week and at no
+extra cost. These services include all the professional services listed in our
+Pro plan, as well as the following:
 
 - Deploy, maintain, and upgrade your self-hosted instance.
 - Setup a private cloud-hosted instance with exclusive access.
