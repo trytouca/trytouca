@@ -10,36 +10,31 @@
 namespace touca {
 namespace framework {
 
-RemoteSuite::RemoteSuite(const Options& options) : Suite(), _options(options) {}
+RemoteSuite::RemoteSuite(const FrameworkOptions& options)
+    : Suite(), _options(options) {}
 
 void RemoteSuite::initialize() {
   // To obtain list of testcases from the server, we expect
   // the following configuration options are set.
-
-  const std::vector<std::string> keys = {"api-key", "api-url", "team", "suite",
-                                         "revision"};
-  const auto predicate = [this](const std::string& k) {
-    return _options.count(k);
-  };
-  if (!std::all_of(keys.begin(), keys.end(), predicate)) {
+  if (_options.api_key.empty() || _options.api_url.empty() ||
+      _options.team.empty() || _options.suite.empty() ||
+      _options.revision.empty()) {
     return;
   }
 
   // authenticate to the server.
 
-  ApiUrl api_url(_options.at("api-url"));
-  if (!api_url.confirm(_options.at("team"), _options.at("suite"),
-                       _options.at("revision"))) {
+  ApiUrl api_url(_options.api_url);
+  if (!api_url.confirm(_options.team, _options.suite, _options.revision)) {
     throw std::runtime_error(api_url._error);
   }
 
   Platform platform(api_url);
-  if (!platform.auth(_options.at("api-key"))) {
+  if (!platform.auth(_options.api_key)) {
     throw std::runtime_error(platform.get_error());
   }
 
   // ask the server for the list of elements
-
   for (const auto& element : platform.elements()) {
     push(element);
   }

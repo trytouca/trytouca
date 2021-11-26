@@ -38,7 +38,6 @@ TEST_CASE("workflow") {
     CHECK(!workflow.skip("1"));
     CHECK(workflow.skip("case-to-exclude"));
     CHECK(!workflow.log_subscriber());
-    CHECK_NOTHROW(workflow.add_options({{"key", "value"}}));
   }
 
   SECTION("simple workflow") {
@@ -134,7 +133,7 @@ TEST_CASE("framework-dummy-workflow") {
   SECTION("valid-config-file") {
     TmpFile configFile;
     configFile.write(
-        R"({ "framework": { "save-as-binary": "false", "save-as-json": "false", "skip-logs": "true", "log-level": "error", "overwrite": "false" }, "touca": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://api.touca.io/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
+        R"({ "framework": { "save-as-binary": false, "save-as-json": false, "skip-logs": true, "log-level": "error", "overwrite": false }, "touca": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://api.touca.io/@/some-team/some-suite" }, "custom-key": "custom-value" })");
     caller.call_with({"--offline", "-r", "1.0", "-o", tmpFile.path.string(),
                       "--config-file", configFile.path.string(), "--testcase",
                       "some-case"});
@@ -156,7 +155,7 @@ TEST_CASE("framework-simple-workflow-valid-use") {
   TmpFile outputDir;
   TmpFile configFile;
   configFile.write(
-      R"({ "touca": { "api-url": "https://api.touca.io/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
+      R"({ "touca": { "api-url": "https://api.touca.io/@/some-team/some-suite" }, "custom-key": "custom-value" })");
 
   caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
                     "--config-file", configFile.path.string(), "--save-as-json",
@@ -292,7 +291,7 @@ TEST_CASE("framework-simple-workflow-valid-use") {
   }
 }
 
-TEST_CASE("framework-stream-redirection-disabled") {
+TEST_CASE("framework-redirect-output-disabled") {
   using fnames = std::vector<touca::filesystem::path>;
 
   MainCaller<SimpleWorkflow> caller;
@@ -303,7 +302,7 @@ TEST_CASE("framework-stream-redirection-disabled") {
 
   caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
                     "--config-file", configFile.path.string(),
-                    "--stream-redirection", "false"});
+                    "--redirect-output=false"});
 
   SECTION("directory-content-streams") {
     fnames caseFiles =

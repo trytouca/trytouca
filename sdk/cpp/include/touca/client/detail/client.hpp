@@ -23,22 +23,16 @@ enum class DataFormat : unsigned char {
   JSON /**< json */
 };
 
-enum class ConcurrencyMode : unsigned char { PerThread, AllThreads };
-
 struct ClientOptions {
-  std::string api_key;   /**< API Key to authenticate to the Touca server */
-  std::string api_url;   /**< URL to Touca server API */
-  std::string team;      /**< version of code under test */
-  std::string suite;     /**< Suite to which results should be submitted */
-  std::string revision;  /**< Team to which this suite belongs */
-  bool handshake = true; /**< whether client should perform handshake with the
-                            server during configuration */
-  ConcurrencyMode case_declaration =
-      ConcurrencyMode::AllThreads; /**< whether testcase declaration should be
-                                      isolated to each thread */
+  std::string api_key;  /**< API Key to authenticate to the Touca server */
+  std::string api_url;  /**< URL to Touca server API */
+  std::string team;     /**< version of code under test */
+  std::string suite;    /**< Suite to which results should be submitted */
+  std::string revision; /**< Team to which this suite belongs */
+  bool offline = false; /**< Perform server handshake during configuration */
+  bool single_thread = false; /**< Isolates testcase scope to calling thread */
 
-  /* The following member variables are internal and purposely not documented.
-   */
+  /* Internal variables purposely not documented: */
 
   std::string api_token; /**< API Token issued upon authentication. */
   std::string api_root;  /**< API URL in short format. */
@@ -52,7 +46,9 @@ class TOUCA_CLIENT_API ClientImpl {
  public:
   using OptionsMap = std::unordered_map<std::string, std::string>;
 
-  bool configure(const ClientImpl::OptionsMap& opts = {});
+  bool configure(const ClientImpl::OptionsMap& options);
+
+  bool configure(const ClientOptions& options = {});
 
   bool configure_by_file(const touca::filesystem::path& path);
 
@@ -94,6 +90,8 @@ class TOUCA_CLIENT_API ClientImpl {
   bool seal() const;
 
  private:
+  bool configure_impl();
+
   std::string getLastTestcase() const;
 
   bool hasLastTestcase() const;

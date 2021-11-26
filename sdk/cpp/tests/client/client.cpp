@@ -31,7 +31,7 @@ TEST_CASE("empty client") {
                                     {"team", "myteam"},
                                     {"suite", "mysuite"},
                                     {"version", "myversion"},
-                                    {"handshake", "false"}}));
+                                    {"offline", "true"}}));
   CHECK(client.is_configured() == true);
   CHECK(client.configuration_error().empty() == true);
 
@@ -54,7 +54,7 @@ TEST_CASE("configure with environment variables") {
   CHECK(client.is_configured() == true);
   setenv("TOUCA_API_KEY", "some-key", 1);
   setenv("TOUCA_API_URL", "https://api.touca.io/@/some-team/some-suite", 1);
-  client.configure({{"version", "myversion"}, {"handshake", "false"}});
+  client.configure({{"version", "myversion"}, {"offline", "true"}});
   CHECK(client.is_configured() == true);
   CHECK(client.configuration_error() == "");
   CHECK(client.options().api_key == "some-key");
@@ -70,7 +70,7 @@ TEST_CASE("using a configured client") {
   const touca::ClientImpl::OptionsMap options_map = {{"team", "myteam"},
                                                      {"suite", "mysuite"},
                                                      {"version", "myversion"},
-                                                     {"handshake", "false"}};
+                                                     {"offline", "true"}};
   REQUIRE_NOTHROW(client.configure(options_map));
   REQUIRE(client.is_configured() == true);
   CHECK(client.configuration_error().empty() == true);

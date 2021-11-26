@@ -71,23 +71,18 @@ namespace touca {
  *        Required if `api-url` is not set or if `api-url` is provided
  *        in short format.
  *
- * @li @b handshake
- *        Ensures Touca server is ready to accept incoming
- *        testresults as part of client configuration process.
- *        Handshake is performed only if `api-key` and `api-url`
- *        parameters are set.
- *        Defaults to `true`.
+ * @li @b offline
+ *        Disables all communications with the Touca server.
+ *        Defaults to `false`.
  *
- * @li @b concurrency-mode
- *        Can be one of `all-threads` and `per-thread`.
- *        Defaults to `all-threads`.
- *        Indicates whether testcase declaration is per thread or
- *        shared among all threads of the process. If testcase
- *        declaration is for all threads, when a thread calls
- *        `declare_testcase` all other threads also have their
- *        most recent testcase changed to the newly declared
- *        testcase and any future call to logging functions like
- *        `check` will affect the newly declared testcase.
+ * @li @b single-thread
+ *        Restricts scope of the testcase to the declaring thread.
+ *        Defaults to `false`.
+ *        If testcase declaration is for all threads, when a thread calls
+ *        `declare_testcase` all other threads also have their most recent
+ *        testcase changed to the newly declared testcase and any future call
+ *        to data capturing functions like `check` will affect the newly
+ *        declared testcase.
  *
  * The most common pattern for configuring the client is to set
  * configuration parameters `api-url` and `version` as shown below,
@@ -221,11 +216,9 @@ TOUCA_CLIENT_API std::vector<std::string> get_testcases();
  * @brief Declares name of the testcase to which all subsequent results
  *        will be submitted until a new testcase is declared.
  *
- * @details if configuration parameter `concurrency-mode` is
- *          set to `all-threads`, when a thread calls `declare_testcase`
- *          all other threads also have their most recent testcase
- *          changed to the newly declared one. Otherwise, each thread
- *          will submit to its own testcase.
+ * @details Unless configuration options `single-thread` is set, when a thread
+ *          calls `declare_testcase` all other threads also have their most
+ *          recent testcase changed to the newly declared one.
  *
  * @param name name of the testcase to be declared
  */
@@ -236,7 +229,7 @@ TOUCA_CLIENT_API void declare_testcase(const std::string& name);
  *
  * @details Removes from memory, all information that is logged for the
  *          previously-declared testcase, for all threads, regardless
- *          of the `concurrency-mode` configuration parameter.
+ *          of whether configuration option `single-thread` is set.
  *          This function does not remove testcase results from the
  *          server, in case they are already submitted.
  *          It clears all information about that testcase from the client

@@ -11,6 +11,8 @@ static ClientImpl instance;
 
 void configure(const ClientImpl::OptionsMap& opts) { instance.configure(opts); }
 
+void configure(const ClientOptions& options) { instance.configure(options); }
+
 void configure(const std::string& path) { instance.configure_by_file(path); }
 
 bool is_configured() { return instance.is_configured(); }

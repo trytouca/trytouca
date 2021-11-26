@@ -19,12 +19,12 @@ namespace framework {
  */
 class TOUCA_CLIENT_API RemoteSuite final : public Suite {
  public:
-  RemoteSuite(const Options& options);
+  RemoteSuite(const FrameworkOptions& options);
 
   void initialize() override;
 
  private:
-  Options _options;
+  FrameworkOptions _options;
 };
 
 /**

@@ -34,28 +34,8 @@ func_t parse_member(bool& member) {
   return [&member](const std::string& value) { member = value != "false"; };
 }
 
-template <>
-func_t parse_member(unsigned long& member) {
-  return [&member](const std::string& value) {
-    const auto out = std::strtoul(value.c_str(), nullptr, 10);
-    if (out != 0 && out != ULONG_MAX) {
-      member = out;
-    }
-  };
-}
-
-template <>
-func_t parse_member(touca::ConcurrencyMode& member) {
-  return [&member](const std::string& value) {
-    member = value == "per-thread" ? touca::ConcurrencyMode::PerThread
-                                   : touca::ConcurrencyMode::AllThreads;
-  };
-}
-
 bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
   _opts.parse_error.clear();
-
-  // initialize provided configuration parameters and reject unsupported ones
 
   std::unordered_map<std::string, std::function<void(const std::string&)>>
       parsers;
@@ -64,8 +44,8 @@ bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
   parsers.emplace("version", parse_member(_opts.revision));
   parsers.emplace("api-key", parse_member(_opts.api_key));
   parsers.emplace("api-url", parse_member(_opts.api_url));
-  parsers.emplace("handshake", parse_member(_opts.handshake));
-  parsers.emplace("concurrency-mode", parse_member(_opts.case_declaration));
+  parsers.emplace("offline", parse_member(_opts.offline));
+  parsers.emplace("single-thread", parse_member(_opts.single_thread));
 
   for (const auto& kvp : opts) {
     if (!parsers.count(kvp.first)) {
@@ -75,7 +55,16 @@ bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
     }
     parsers.at(kvp.first)(kvp.second);
   }
+  return configure_impl();
+}
 
+bool ClientImpl::configure(const ClientOptions& options) {
+  _opts.parse_error.clear();
+  _opts = options;
+  return configure_impl();
+}
+
+bool ClientImpl::configure_impl() {
   // apply environment variables. the implementation below ensures
   // that the environment variables take precedence over the specified
   // configuration parameters.
@@ -139,7 +128,7 @@ bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
   // if `api_key` and `api_url` are not provided, assume user does
   // not intend to submit results in which case we are done.
 
-  if (!_opts.handshake) {
+  if (_opts.offline) {
     _configured = true;
     return true;
   }
@@ -208,9 +197,8 @@ bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
 
   // parse configuration parameters whose value may be specified as string
 
-  const auto& strKeys = {"api-key",         "api-url", "team",
-                         "suite",           "version", "handshake",
-                         "concurrency-mode"};
+  const auto& strKeys = {"api-key", "api-url", "team",         "suite",
+                         "version", "offline", "single-thread"};
 
   const auto& config = parsed["touca"];
   for (const auto& key : strKeys) {
@@ -402,7 +390,7 @@ bool ClientImpl::hasLastTestcase() const {
   // If client is configured, check whether testcase declaration is set as
   // "shared" in which case report the most recently declared testcase.
 
-  if (_opts.case_declaration == touca::ConcurrencyMode::AllThreads) {
+  if (!_opts.single_thread) {
     return !_mostRecentTestcase.empty();
   }
 
@@ -424,7 +412,7 @@ std::string ClientImpl::getLastTestcase() const {
   // "shared" in which case report the name of the most recently declared
   // testcase.
 
-  if (_opts.case_declaration == touca::ConcurrencyMode::AllThreads) {
+  if (!_opts.single_thread) {
     return _mostRecentTestcase;
   }
 

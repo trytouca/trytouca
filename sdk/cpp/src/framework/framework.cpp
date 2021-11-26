@@ -33,15 +33,13 @@ bool Workflow::parse_options(int argc, char* argv[]) {
 }
 
 bool Workflow::skip(const Testcase& testcase) const {
-  touca::filesystem::path outputDirCase = _options.at("output-dir");
-  outputDirCase /= _options.at("suite");
-  outputDirCase /= _options.at("revision");
+  touca::filesystem::path outputDirCase = _options.output_dir;
+  outputDirCase /= _options.suite;
+  outputDirCase /= _options.revision;
   outputDirCase /= testcase;
-  if (_options.count("save-as-binary") &&
-      _options.at("save-as-binary") == "true") {
+  if (_options.save_binary) {
     outputDirCase /= "touca.bin";
-  } else if (_options.count("save-as-json") &&
-             _options.at("save-as-json") == "true") {
+  } else if (_options.save_json) {
     outputDirCase /= "touca.json";
   } else {
     return false;
@@ -49,8 +47,8 @@ bool Workflow::skip(const Testcase& testcase) const {
   return touca::filesystem::exists(outputDirCase.string());
 }
 
-void Workflow::add_options(const Options& options) {
-  _options.insert(options.begin(), options.end());
+void Workflow::set_options(const FrameworkOptions& options) {
+  _options = options;
 }
 
 void Suite::push(const Testcase& testcase) {
@@ -61,63 +59,79 @@ void Suite::push(const Testcase& testcase) {
 }
 
 cxxopts::Options cli_options() {
-  cxxopts::Options options("touca-framework", "Command Line Options");
+  cxxopts::Options options("./app", "Command Line Options");
 
   // clang-format off
-        options.add_options("main")
-            ("h,help", "displays this help message")
-            ("v,version", "prints version of this executable")
-            ("r,revision",
-                "version to associate with testresults",
-                cxxopts::value<std::string>())
-            ("c,config-file",
-                "path to configuration file",
-                cxxopts::value<std::string>())
-            ("o,output-dir",
-                "path to output directory",
-                cxxopts::value<std::string>()->default_value("./results"))
-            ("api-key",
-                "Touca server api key",
-                cxxopts::value<std::string>())
-            ("api-url",
-                "Touca server api url",
-                cxxopts::value<std::string>())
-            ("suite",
-                "slug of suite to which testresults belong",
-                cxxopts::value<std::string>())
-            ("team",
-                "slug of team to which testresults belong",
-                cxxopts::value<std::string>())
-            ("testcase",
-                "single testcase to feed to the workflow",
-                cxxopts::value<std::string>())
-            ("testcase-file",
-                "single file listing testcases to feed to the workflow",
-                cxxopts::value<std::string>())
-            ("skip-logs",
-                "do not generate log files",
-                cxxopts::value<std::string>()->implicit_value("true"))
-            ("offline",
-                "do not submit results to Touca server",
-                cxxopts::value<std::string>()->implicit_value("true"))
-            ("save-as-json",
-                "save a copy of test results on local disk in json format",
-                cxxopts::value<std::string>()->implicit_value("true")->default_value("false"))
-            ("save-as-binary",
-                "save a copy of test results on local disk in binary format",
-                cxxopts::value<std::string>()->implicit_value("true")->default_value("true"))
-            ("stream-redirection",
-                "redirect content printed to standard streams to files",
-                cxxopts::value<std::string>()->default_value("true"))
-            ("log-level",
-                "level of detail with which events are logged",
-                cxxopts::value<std::string>()->default_value("info"))
-            ("overwrite",
-                "overwrite result directory for testcase if it already exists",
-                cxxopts::value<std::string>()->implicit_value("true"));
+  options.add_options("main")
+      ("h,help", "displays this help message")
+      ("v,version", "prints version of this executable")
+      ("c,config-file",
+          "path to configuration file",
+          cxxopts::value<std::string>())
+      ("api-key",
+          "Touca server api key",
+          cxxopts::value<std::string>())
+      ("api-url",
+          "Touca server api url",
+          cxxopts::value<std::string>())
+      ("team",
+          "slug of team to which testresults belong",
+          cxxopts::value<std::string>())
+      ("suite",
+          "slug of suite to which testresults belong",
+          cxxopts::value<std::string>())
+      ("r,revision",
+          "version to associate with testresults",
+          cxxopts::value<std::string>())
+      ("testcase",
+          "one or more testcases to feed to the workflow",
+          cxxopts::value<std::vector<std::string>>())
+      ("testcase-file",
+          "single file listing testcases to feed to the workflow",
+          cxxopts::value<std::string>())
+      ("o,output-dir",
+          "path to output directory",
+          cxxopts::value<std::string>()->default_value("./results"))
+      ("log-level",
+          "level of detail with which events are logged",
+          cxxopts::value<std::string>()->default_value("info"))
+      ("save-as-binary",
+          "save a copy of test results on local disk in binary format",
+          cxxopts::value<bool>()->implicit_value("true")->default_value("true"))
+      ("save-as-json",
+          "save a copy of test results on local disk in json format",
+          cxxopts::value<bool>()->implicit_value("true")->default_value("false"))
+      ("skip-logs",
+          "do not generate log files",
+          cxxopts::value<bool>()->implicit_value("true"))
+      ("redirect-output",
+          "redirect content printed to standard streams to files",
+          cxxopts::value<bool>()->default_value("true"))
+      ("offline",
+          "do not submit results to Touca server",
+          cxxopts::value<bool>()->implicit_value("true"))
+      ("overwrite",
+          "overwrite result directory for testcase if it already exists",
+          cxxopts::value<bool>()->implicit_value("true"));
   // clang-format on
 
   return options;
+}
+
+template <typename T>
+void parse_cli_option(const cxxopts::ParseResult& result,
+                      const std::string& key, T& field) {
+  if (result[key].count()) {
+    field = result[key].as<T>();
+  }
+}
+
+template <typename T>
+void parse_file_option(const nlohmann::json& result, const std::string& key,
+                       T& field) {
+  if (result.contains(key)) {
+    field = result[key];
+  }
 }
 
 /**
@@ -125,25 +139,35 @@ cxxopts::Options cli_options() {
  * @param argv list of arguments provided to the application
  * @param options application configuration parameters
  */
-bool parse_cli_options(int argc, char* argv[], Options& options) {
+bool parse_cli_options(int argc, char* argv[], FrameworkOptions& options) {
   auto opts = cli_options();
   opts.allow_unrecognised_options();
   try {
     const auto& result = opts.parse(argc, argv);
-    for (const auto& key : {"log-level", "output-dir", "save-as-binary",
-                            "save-as-json", "stream-redirection"}) {
-      options[key] = result[key].as<std::string>();
+    if (result.count("help")) {
+      options.has_help = true;
     }
-    for (const auto& opt : opts.group_help("main").options) {
-      if (!result.count(opt.l)) {
-        continue;
-      }
-      if (opt.l == "help" || opt.l == "version") {
-        options[opt.l] = "true";
-        continue;
-      }
-      options[opt.l] = result[opt.l].as<std::string>();
+    if (result.count("version")) {
+      options.has_version = true;
     }
+    if (result.count("testcase")) {
+      options.testcases = result["testcase"].as<std::vector<std::string>>();
+    }
+    options.output_dir = result["output-dir"].as<std::string>();
+    options.log_level = result["log-level"].as<std::string>();
+    options.save_binary = result["save-as-binary"].as<bool>();
+    options.save_json = result["save-as-json"].as<bool>();
+    options.redirect = result["redirect-output"].as<bool>();
+    parse_cli_option(result, "api-key", options.api_key);
+    parse_cli_option(result, "api-url", options.api_url);
+    parse_cli_option(result, "config-file", options.config_file);
+    parse_cli_option(result, "testcase-file", options.testcase_file);
+    parse_cli_option(result, "team", options.team);
+    parse_cli_option(result, "suite", options.suite);
+    parse_cli_option(result, "revision", options.revision);
+    parse_cli_option(result, "skip-logs", options.skip_logs);
+    parse_cli_option(result, "offline", options.offline);
+    parse_cli_option(result, "overwrite", options.overwrite);
   } catch (const cxxopts::OptionParseException& ex) {
     touca::print_error("failed to parse command line arguments: {}\n",
                        ex.what());
@@ -153,36 +177,35 @@ bool parse_cli_options(int argc, char* argv[], Options& options) {
   return true;
 }
 
-bool parse_file_options(Options& options) {
+bool parse_file_options(FrameworkOptions& options) {
   // if user is asking for help description or framework version,
   // do not parse the configuration file even if it is specified.
 
-  if (options.count("help") || options.count("version")) {
+  if (options.has_help || options.has_version) {
     return true;
   }
 
   // if configuration file is not specified yet a file config.json
   // exists in current directory, attempt to use that file.
 
-  if (!options.count("config-file")) {
+  if (options.config_file.empty()) {
     if (!touca::filesystem::is_regular_file("./config.json")) {
       return true;
     }
-    options.emplace("config-file", "./config.json");
+    options.config_file = "./config.json";
   }
-
-  const auto& configFile = options.at("config-file");
 
   // configuration file must exist if it is specified
 
-  if (!touca::filesystem::is_regular_file(configFile)) {
-    touca::print_error("configuration file not found: {}\n", configFile);
+  if (!touca::filesystem::is_regular_file(options.config_file)) {
+    touca::print_error("configuration file not found: {}\n",
+                       options.config_file);
     return false;
   }
 
   // load configuration file in memory
 
-  const auto& content = touca::detail::load_string_file(configFile);
+  const auto& content = touca::detail::load_string_file(options.config_file);
 
   // parse configuration file
 
@@ -199,69 +222,76 @@ bool parse_file_options(Options& options) {
     return false;
   }
 
-  for (const auto& topLevelKey : {"framework", "touca", "workflow"}) {
-    if (!parsed.contains(topLevelKey)) {
-      continue;
-    }
-    if (!parsed[topLevelKey].is_object()) {
-      touca::print_error("field {} in configuration file has unexpected type\n",
-                         topLevelKey);
-      return false;
-    }
-    for (const auto& field :
-         parsed[topLevelKey].get<nlohmann::json::object_t>()) {
-      if (field.second.is_boolean()) {
-        options[field.first] = field.second.get<bool>() ? "true" : "false";
-        continue;
+  for (const auto& kvp : parsed.items()) {
+    const auto& result = kvp.value();
+    if (kvp.key() == "touca") {
+      if (!result.is_object()) {
+        touca::print_error(
+            "field \"touca\" in configuration file has unexpected type\n");
+        return false;
       }
-      if (!field.second.is_string()) {
-        touca::print_warning(
-            "Ignoring option \"{}\":\"{}\" in configuration file.\n");
-        touca::print_warning("Expected value to be of type string.\n",
-                             topLevelKey, field.first);
-        continue;
+      parse_file_option(result, "api-key", options.api_key);
+      parse_file_option(result, "api-url", options.api_url);
+      parse_file_option(result, "team", options.team);
+      parse_file_option(result, "suite", options.suite);
+      parse_file_option(result, "revision", options.revision);
+      parse_file_option(result, "config-file", options.config_file);
+      parse_file_option(result, "output-dir", options.output_dir);
+      parse_file_option(result, "log-level", options.log_level);
+      parse_file_option(result, "save-as-binary", options.save_binary);
+      parse_file_option(result, "save-as-json", options.save_json);
+      parse_file_option(result, "single-thread", options.single_thread);
+      parse_file_option(result, "skip-logs", options.skip_logs);
+      parse_file_option(result, "redirect-output", options.redirect);
+      parse_file_option(result, "offline", options.offline);
+      parse_file_option(result, "overwrite", options.overwrite);
+      parse_file_option(result, "testcase-file", options.testcase_file);
+    } else {
+      if (result.is_string()) {
+        options.extra.emplace(kvp.key(), result.get<std::string>());
+      } else if (result.is_boolean()) {
+        options.extra.emplace(kvp.key(), result.get<bool>() ? "true" : "false");
       }
-      options[field.first] = field.second.get<std::string>();
     }
   }
 
   return true;
 }
 
-bool parse_env_variables(Options& options) {
-  const std::unordered_map<std::string, std::string> env_table = {
-      {"TOUCA_API_KEY", "api-key"},
-      {"TOUCA_API_URL", "api-url"},
-      {"TOUCA_TEST_VERSION", "revision"},
+bool parse_env_variables(FrameworkOptions& options) {
+  const std::unordered_map<std::string, std::string&> env_table = {
+      {"TOUCA_API_KEY", options.api_key},
+      {"TOUCA_API_URL", options.api_url},
+      {"TOUCA_TEST_VERSION", options.revision},
   };
   for (const auto& kvp : env_table) {
     const auto env_value = std::getenv(kvp.first.c_str());
     if (env_value != nullptr) {
-      options[kvp.second] = env_value;
+      kvp.second = env_value;
     }
   }
   return true;
 }
 
-bool parse_api_url(Options& options) {
+bool parse_api_url(FrameworkOptions& options) {
   // it is okay if configuration option `--api-url` is not specified
-  if (!options.count("api-url")) {
+  if (options.api_url.empty()) {
     return true;
   }
-  touca::ApiUrl api(options.at("api-url"));
-  if (!options.count("team") && !api._team.empty()) {
-    options["team"] = api._team;
+  touca::ApiUrl api(options.api_url);
+  if (options.team.empty() && !api._team.empty()) {
+    options.team = api._team;
   }
-  if (!options.count("suite") && !api._suite.empty()) {
-    options["suite"] = api._suite;
+  if (options.suite.empty() && !api._suite.empty()) {
+    options.suite = api._suite;
   }
-  if (!options.count("revision") && !api._revision.empty()) {
-    options["revision"] = api._revision;
+  if (options.revision.empty() && !api._revision.empty()) {
+    options.revision = api._revision;
   }
   return true;
 }
 
-bool parse_options(int argc, char* argv[], Options& options) {
+bool parse_options(int argc, char* argv[], FrameworkOptions& options) {
   auto ret = true;
   ret &= parse_cli_options(argc, argv, options);
   ret &= parse_file_options(options);
@@ -270,60 +300,56 @@ bool parse_options(int argc, char* argv[], Options& options) {
   return ret;
 }
 
-bool expect_options(const Options& options,
-                    const std::vector<std::string>& keys) {
-  const auto isMissing = [&options](const std::string& key) {
-    return !options.count(key);
+bool expect_options(const std::map<std::string, std::string>& options) {
+  const auto& is_missing = [](const std::pair<std::string, std::string>& kvp) {
+    return kvp.second.empty();
   };
-  const auto hasMissing = std::any_of(keys.begin(), keys.end(), isMissing);
-  if (!hasMissing) {
+  if (!std::any_of(options.begin(), options.end(), is_missing)) {
     return true;
   }
   fmt::print(std::cerr, "expected configuration options:\n");
-  for (const auto& key : keys) {
-    if (!options.count(key)) {
-      fmt::print(std::cerr, " - {}\n", key);
+  for (const auto& kvp : options) {
+    if (kvp.second.empty()) {
+      fmt::print(std::cerr, " - {}\n", kvp.first);
     }
   }
   return false;
 }
 
-bool validate_api_url(const Options& options) {
-  touca::ApiUrl api(options.at("api-url"));
-  if (!api.confirm(options.at("team"), options.at("suite"),
-                   options.at("revision"))) {
+bool validate_api_url(const FrameworkOptions& options) {
+  touca::ApiUrl api(options.api_url);
+  if (!api.confirm(options.team, options.suite, options.revision)) {
     fmt::print(std::cerr, "{}\n", api._error);
     return false;
   }
   return true;
 }
 
-bool validate_options(const Options& options) {
+bool validate_options(const FrameworkOptions& options) {
   // we always expect a value for options `--revision` and `output-dir`.
-
-  if (!expect_options(options, {"output-dir", "revision", "suite", "team"})) {
+  if (!expect_options({{"team", options.team},
+                       {"suite", options.suite},
+                       {"revision", options.revision},
+                       {"output-dir", options.output_dir}})) {
     return false;
   }
 
   // unless command line option `--offline` is specified,
   // we expect a value for option `--api-url`.
-
-  if (!options.count("offline") && !expect_options(options, {"api-url"})) {
+  if (!options.offline && !expect_options({{"api-url", options.api_url}})) {
     return false;
   }
 
   // values of options `--api-url`, `--suite`, `--revision` and `team`
   // must be consistent.
-
-  if (options.count("api-url") && !validate_api_url(options)) {
+  if (!options.api_url.empty() && !validate_api_url(options)) {
     return false;
   }
 
   // unless option `--skip-logs` is specified, check that
   // value of `--log-level` is one of `debug`, `info` or `warning`.
-
-  if (!options.count("skip-logs")) {
-    const auto& level = options.at("log-level");
+  if (!options.skip_logs) {
+    const auto& level = options.log_level;
     const auto& levels = {"debug", "info", "warning"};
     const auto isValid =
         std::find(levels.begin(), levels.end(), level) != levels.end();
@@ -419,6 +445,11 @@ LogLevel find_log_level(const std::string& name) {
 
 struct SingleCaseSuite final : public Suite {
   SingleCaseSuite(const Testcase& testcase) { push(testcase); }
+  SingleCaseSuite(const std::vector<Testcase>& cases) {
+    for (const auto& tc : cases) {
+      push(tc);
+    }
+  }
 };
 
 enum ExecutionOutcome : unsigned char { Pass, Fail, Skip };
@@ -471,49 +502,9 @@ class Printer {
   }
 };
 
-/**
- * @brief Notifies the server that all the test cases are executed and
- *        no further test results will be submitted for this version.
- *
- * @todo Currently, sealing the test results is an opt-in feature.
- *       Test framework should be explicitly configured to seal the
- *       version after execution of all the test cases. In v1.3, we
- *       would like to make this the default behavior.
- */
-bool seal_version(const Options& options, const LogFrontend& logger) {
-  // skip if framework is configured to run offline.
-
-  if (options.count("offline") && options.at("offline") == "true") {
-    logger.log(LogLevel::Debug,
-               "skipped sealing: test framework is configured to run offline");
-    return true;
-  }
-
-  // skip if framework is configured not to seal version.
-  // see todo item above.
-
-  if (!options.count("seal") || options.at("seal") != "true") {
-    logger.log(LogLevel::Debug,
-               "skipped sealing: test framework is not configured to perform "
-               "this operation");
-    return true;
-  }
-
-  // submit request to seal this version and await server response
-
-  logger.log(LogLevel::Debug, "attempting to seal this version");
-  if (!touca::seal()) {
-    logger.log(LogLevel::Error, "failed to seal this version");
-    return false;
-  }
-
-  logger.log(LogLevel::Info, "sealed this version");
-  return true;
-}
-
 int main_impl(int argc, char* argv[], Workflow& workflow) {
   using lg = LogLevel;
-  Options options;
+  FrameworkOptions options;
 
   // parse configuration options provided as command line arguments
   // or specified in the configuration file.
@@ -524,8 +515,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   }
 
   // if user asks for help, print help message and exit
-
-  if (options.count("help")) {
+  if (options.has_help) {
     fmt::print(std::cout, "{}\n", cli_options().help());
     const auto& desc = workflow.describe_options();
     if (!desc.empty()) {
@@ -535,15 +525,13 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   }
 
   // if user asks for version, print version of this executable and exit
-
-  if (options.count("version")) {
+  if (options.has_version) {
     fmt::print(std::cout, "{}.{}.{}\n", TOUCA_VERSION_MAJOR,
                TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
     return EXIT_SUCCESS;
   }
 
   // validate all configuration options
-
   if (!validate_options(options)) {
     touca::print_error("failed to validate configuration options.\n");
     return EXIT_FAILURE;
@@ -560,25 +548,24 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   // establish output directory for this revision
 
-  touca::filesystem::path outputDirRevision = options.at("output-dir");
-  outputDirRevision /= options.at("suite");
-  outputDirRevision /= options.at("revision");
-
+  touca::filesystem::path outputDirRevision = options.output_dir;
+  outputDirRevision /= options.suite;
+  outputDirRevision /= options.revision;
   touca::filesystem::create_directories(outputDirRevision);
 
   // unless explicitly instructed not to do so, register a separate
   // file logger to write our events to a file in the output directory.
 
-  if (!options.count("skip-logs")) {
+  if (!options.skip_logs) {
     const auto& fileLogger = std::make_shared<FileLogger>(outputDirRevision);
-    const auto& level = find_log_level(options.at("log-level"));
+    const auto& level = find_log_level(options.log_level);
     logger.add_subscriber(fileLogger, level);
     logger.log(lg::Debug, "registered cpp framework file logger");
   }
 
   // propagate parsed options to the workflow class
 
-  workflow.add_options(options);
+  workflow.set_options(options);
 
   // parse extra workflow-specific options, if any
 
@@ -593,7 +580,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   // workflow if validation fails. It is risky and less meaningful to
   // perform this operation any sooner.
 
-  for (const auto& opt : options) {
+  for (const auto& opt : options.extra) {
     logger.log(lg::Debug, "{0:<16}: {1}", opt.first, opt.second);
   }
 
@@ -610,7 +597,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   const auto& workflowLogger = workflow.log_subscriber();
   if (workflowLogger) {
-    const auto& level = find_log_level(options.at("log-level"));
+    const auto& level = find_log_level(options.log_level);
     logger.add_subscriber(workflowLogger, level);
     logger.log(lg::Debug, "registered workflow logger");
   }
@@ -636,35 +623,11 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   // which may take a noticeable time.
 
   printer.print("\nTouca Test Framework\nSuite: {}\nRevision: {}\n\n",
-                options.at("suite"), options.at("revision"));
-
-  // initialize the client
-
-  Options opts;
-  const auto copyOption = [&options, &opts](const std::string& src,
-                                            const std::string& dst) {
-    if (options.count(src)) {
-      opts.emplace(dst, options.at(src));
-    }
-  };
-  copyOption("team", "team");
-  copyOption("suite", "suite");
-  copyOption("revision", "version");
-
-  // if we are asked not to submit results, we configure the client
-  // without passing api-related options so that we can still store
-  // testcases in memory and later save them in file.
-
-  if (!options.count("offline")) {
-    copyOption("api-key", "api-key");
-    copyOption("api-url", "api-url");
-  } else {
-    opts.emplace("handshake", "false");
-  }
+                options.suite, options.revision);
 
   // configure the client library
 
-  touca::configure(opts);
+  touca::configure(options);
 
   // check that the client is properly configured
 
@@ -691,10 +654,10 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   // if test is run for single testcase, overwrite suite with our own.
 
-  if (options.count("testcase")) {
-    suite = std::make_shared<SingleCaseSuite>(options.at("testcase"));
-  } else if (options.count("testcase-file")) {
-    suite = std::make_shared<FileSuite>(options.at("testcase-file"));
+  if (!options.testcases.empty()) {
+    suite = std::make_shared<SingleCaseSuite>(options.testcases);
+  } else if (!options.testcase_file.empty()) {
+    suite = std::make_shared<FileSuite>(options.testcase_file);
     suite->initialize();
   }
 
@@ -726,8 +689,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
     // unless option `overwrite` is specified, check if this
     // testcase should be skipped.
 
-    if ((!options.count("overwrite") || options.at("overwrite") != "true") &&
-        workflow.skip(testcase)) {
+    if (!options.overwrite && workflow.skip(testcase)) {
       logger.log(lg::Info, "skipping already processed testcase: {}", testcase);
       stats.inc(ExecutionOutcome::Skip);
       printer.print(" ({:>3} of {:<3}) {:<32} (skip)\n", i, suite->size(),
@@ -762,7 +724,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
     timer.tic(testcase);
     Errors errors;
     OutputCapturer capturer;
-    if (options.at("stream-redirection") == "true") {
+    if (options.redirect) {
       capturer.start_capture();
     }
 
@@ -774,7 +736,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
       errors = {"unknown exception"};
     }
 
-    if (options.at("stream-redirection") == "true") {
+    if (options.redirect) {
       capturer.stop_capture();
     }
     timer.toc(testcase);
@@ -797,23 +759,21 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
     // save testresults in binary format if configured to do so
 
-    if (errors.empty() && options.count("save-as-binary") &&
-        options.at("save-as-binary") == "true") {
+    if (errors.empty() && options.save_binary) {
       const auto resultFile = outputDirCase / "touca.bin";
       touca::save_binary(resultFile.string(), {testcase});
     }
 
     // save testresults in json format if configured to do so
 
-    if (errors.empty() && options.count("save-as-json") &&
-        options.at("save-as-json") == "true") {
+    if (errors.empty() && options.save_json) {
       const auto resultFile = outputDirCase / "touca.json";
       touca::save_json(resultFile.string(), {testcase});
     }
 
     // submit testresults to Touca server
 
-    if (!options.count("offline") && !touca::post()) {
+    if (!options.offline && !touca::post()) {
       logger.log(lg::Error, "failed to submit results to Touca server");
     }
 
@@ -848,7 +808,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   // seal this version if configured to do so.
 
-  if (!seal_version(options, logger)) {
+  if (!options.offline && !touca::seal()) {
     touca::print_warning("failed to seal this version\n");
   }
 

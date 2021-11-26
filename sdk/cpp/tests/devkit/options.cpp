@@ -20,7 +20,7 @@ TEST_CASE("configure") {
     CHECK(opts.api_url.empty());
   }
   SECTION("missing-api-params") {
-    input.emplace("handshake", "false");
+    input.emplace("offline", "true");
     input.emplace("team", "some-team");
     CHECK(client.configure(input) == false);
     CHECK_THAT(opts.parse_error, Catch::Contains("suite"));
@@ -35,7 +35,7 @@ TEST_CASE("configure") {
     CHECK(opts.revision == "some-version");
     CHECK(opts.api_key.empty());
     CHECK(opts.api_url.empty());
-    CHECK(opts.handshake == false);
+    CHECK(opts.offline == true);
   }
   SECTION("missing-api-url") {
     input.emplace("api-key", "some-api-key");
@@ -48,7 +48,7 @@ TEST_CASE("configure") {
     CHECK(opts.revision.empty());
     CHECK(opts.api_key == "some-api-key");
     CHECK(opts.api_url.empty());
-    CHECK(opts.handshake == true);
+    CHECK(opts.offline == false);
   }
   SECTION("missing-api-key-1") {
     input.emplace("api-url", "some-api-url");
@@ -60,7 +60,7 @@ TEST_CASE("configure") {
     CHECK(opts.revision.empty());
     CHECK(opts.api_key.empty());
     CHECK(opts.api_url == "some-api-url");
-    CHECK(opts.handshake == true);
+    CHECK(opts.offline == false);
   }
   SECTION("missing-api-key-2") {
     input.emplace("api-url",
@@ -73,12 +73,12 @@ TEST_CASE("configure") {
     CHECK(opts.api_key.empty());
     CHECK(opts.api_url ==
           "http://example.com/api/@/some-team/some-suite/some-version");
-    CHECK(opts.handshake == true);
+    CHECK(opts.offline == false);
   }
   SECTION("missing-version-info") {
     input.emplace("api-key", "some-api-key");
     input.emplace("api-url", "some-api-url");
-    input.emplace("handshake", "false");
+    input.emplace("offline", "true");
     CHECK(client.configure(input) == false);
     REQUIRE(opts.parse_error.empty() == false);
     CHECK_THAT(opts.parse_error, Catch::Contains("team"));
@@ -87,7 +87,7 @@ TEST_CASE("configure") {
     CHECK(opts.revision.empty());
     CHECK(opts.api_key == "some-api-key");
     CHECK(opts.api_url == "some-api-url");
-    CHECK(opts.handshake == false);
+    CHECK(opts.offline == true);
   }
   SECTION("basic-usecase") {
     REQUIRE_NOTHROW(client.configure({{"team", "some-team"},
@@ -95,7 +95,7 @@ TEST_CASE("configure") {
                                       {"version", "some-version"},
                                       {"api-key", "some-api-key"},
                                       {"api-url", "some-api-url"},
-                                      {"handshake", "false"}}));
+                                      {"offline", "true"}}));
     CHECK(client.configure(input) == true);
     REQUIRE(opts.parse_error.empty() == true);
     CHECK(opts.team == "some-team");
@@ -103,14 +103,14 @@ TEST_CASE("configure") {
     CHECK(opts.revision == "some-version");
     CHECK(opts.api_key == "some-api-key");
     CHECK(opts.api_url == "some-api-url");
-    CHECK(opts.handshake == false);
+    CHECK(opts.offline == true);
   }
   SECTION("long-api-url") {
     input.emplace(
         "api-url",
         "https://api.example.com/@/some-team/some-suite/some-version");
     input.emplace("api-key", "some-api-key");
-    input.emplace("handshake", "false");
+    input.emplace("offline", "true");
     CHECK(client.configure(input) == true);
     CHECK(opts.parse_error.empty() == true);
     CHECK(opts.api_url ==
@@ -122,10 +122,10 @@ TEST_CASE("configure") {
   SECTION("override-defaults") {
     CHECK(client.configure(input) == true);
     CHECK(opts.parse_error.empty() == true);
-    CHECK(opts.case_declaration == touca::ConcurrencyMode::AllThreads);
-    input.emplace("concurrency-mode", "per-thread");
+    CHECK(!opts.single_thread);
+    input.emplace("single-thread", "true");
     CHECK(client.configure(input) == true);
-    CHECK(opts.case_declaration == touca::ConcurrencyMode::PerThread);
+    CHECK(opts.single_thread);
   }
 }
 

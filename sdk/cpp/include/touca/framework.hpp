@@ -18,6 +18,7 @@
 #include <unordered_set>
 #include <vector>
 
+#include "touca/client/detail/client.hpp"
 #include "touca/lib_api.hpp"
 
 /**
@@ -29,6 +30,14 @@
  *          its results to the Touca server.
  */
 namespace touca {
+
+/**
+ * @brief Configures the client based on a given set of configuration options
+ *
+ * @param options object holding configuration options
+ */
+void configure(const ClientOptions& options);
+
 namespace framework {
 
 /**
@@ -65,18 +74,23 @@ using Testcase = std::string;
 using Errors = std::vector<std::string>;
 
 /**
- * @brief A simple container for the configuration parameters used by
- *        the application, the Touca Test Framework and the workflow
- *        under test.
- *
- * @details For simplicity, the configuration parameters are always
- *          stored in string format. While these options are accessible
- *          from the Workflow instance, the user can choose whether to
- *          use them or not.
- *
- * @since v1.2.0
+ * Test framework configuration options
  */
-using Options = std::unordered_map<std::string, std::string>;
+struct FrameworkOptions : public ClientOptions {
+  std::vector<std::string> testcases;
+  std::map<std::string, std::string> extra;
+  std::string testcase_file;
+  std::string config_file;
+  std::string output_dir = "./results";
+  std::string log_level = "info";
+  bool has_help = false;
+  bool has_version = false;
+  bool save_binary = true;
+  bool save_json = false;
+  bool skip_logs = false;
+  bool redirect = true;
+  bool overwrite = false;
+};
 
 /**
  * @brief Different levels of detail with which framework log events
@@ -86,15 +100,7 @@ using Options = std::unordered_map<std::string, std::string>;
  *
  * @since v1.2.0
  */
-enum LogLevel : unsigned char {
-  Debug,   /**< Captures order of framework function calls. */
-  Info,    /**< Captures outcome of the workflow execution for each
-              framework::Testcase. */
-  Warning, /**< Captures warnings about potentially incorrect behavior of the
-              test application. */
-  Error    /**< Captures failed framework::Testcase instances and their error
-              messages. */
-};
+enum LogLevel : unsigned char { Debug, Info, Warning, Error };
 
 /**
  * @brief Allows extraction of log events produced by the Touca Test
@@ -229,22 +235,16 @@ class TOUCA_CLIENT_API Workflow {
   virtual std::string describe_options() const { return ""; };
 
   /**
-   * @brief Merges configuration options `options` into the set of
-   *        configuration options of the Workflow `_options`.
+   * @brief Makes Touca configuration options available for use in
+   *        `Workflow::execute` and `Workflow::skip` functions.
    *
-   * @details This function is used by the Touca Test Framework to
-   *          make framework's own configuration parameters accessible
-   *          from `Workflow::execute` and `Workflow::skip` functions,
-   *          just in case developers want to use them.
+   * @details For internal use, only.
    *
    *          This function is already implemented.
    *
-   * @param options configuration options to be added to `_options`.
-   *
-   * @see `Workflow::execute` for a full list of configuration options
-   *      populated by the Touca Test Framework.
+   * @param options framework configuration options.
    */
-  void add_options(const Options& options);
+  void set_options(const FrameworkOptions& options);
 
   /**
    * @brief Enables parsing of additional command line arguments.
@@ -393,13 +393,7 @@ class TOUCA_CLIENT_API Workflow {
   virtual Errors execute(const Testcase& testcase) const = 0;
 
  protected:
-  /**
-   * Container for the configuration parameters of the application,
-   * the Test Framework and the workflow under test.
-   *
-   * @see `framework::Options`
-   */
-  Options _options;
+  FrameworkOptions _options;
 };
 
 /**
