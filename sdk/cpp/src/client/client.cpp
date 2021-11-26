@@ -35,21 +35,21 @@ func_t parse_member(bool& member) {
 }
 
 bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
-  _opts.parse_error.clear();
+  _config_error.clear();
 
   std::unordered_map<std::string, std::function<void(const std::string&)>>
       parsers;
-  parsers.emplace("team", parse_member(_opts.team));
-  parsers.emplace("suite", parse_member(_opts.suite));
-  parsers.emplace("version", parse_member(_opts.revision));
-  parsers.emplace("api-key", parse_member(_opts.api_key));
-  parsers.emplace("api-url", parse_member(_opts.api_url));
-  parsers.emplace("offline", parse_member(_opts.offline));
-  parsers.emplace("single-thread", parse_member(_opts.single_thread));
+  parsers.emplace("team", parse_member(_options.team));
+  parsers.emplace("suite", parse_member(_options.suite));
+  parsers.emplace("version", parse_member(_options.revision));
+  parsers.emplace("api-key", parse_member(_options.api_key));
+  parsers.emplace("api-url", parse_member(_options.api_url));
+  parsers.emplace("offline", parse_member(_options.offline));
+  parsers.emplace("single-thread", parse_member(_options.single_thread));
 
   for (const auto& kvp : opts) {
     if (!parsers.count(kvp.first)) {
-      _opts.parse_error =
+      _config_error =
           touca::detail::format("unknown parameter \"{}\"", kvp.first);
       return false;
     }
@@ -59,8 +59,8 @@ bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
 }
 
 bool ClientImpl::configure(const ClientOptions& options) {
-  _opts.parse_error.clear();
-  _opts = options;
+  _config_error.clear();
+  _options = options;
   return configure_impl();
 }
 
@@ -70,9 +70,9 @@ bool ClientImpl::configure_impl() {
   // configuration parameters.
 
   const std::unordered_map<std::string, std::string&> env_table = {
-      {"TOUCA_API_KEY", _opts.api_key},
-      {"TOUCA_API_URL", _opts.api_url},
-      {"TOUCA_TEST_VERSION", _opts.revision},
+      {"TOUCA_API_KEY", _options.api_key},
+      {"TOUCA_API_URL", _options.api_url},
+      {"TOUCA_TEST_VERSION", _options.revision},
   };
   for (const auto& kvp : env_table) {
     const auto env_value = std::getenv(kvp.first.c_str());
@@ -84,23 +84,23 @@ bool ClientImpl::configure_impl() {
   // associate a name to each string-based configuration parameter
 
   const std::unordered_map<std::string, std::string&> params = {
-      {"team", _opts.team},
-      {"suite", _opts.suite},
-      {"version", _opts.revision},
-      {"api-key", _opts.api_key},
-      {"api-url", _opts.api_url}};
+      {"team", _options.team},
+      {"suite", _options.suite},
+      {"version", _options.revision},
+      {"api-key", _options.api_key},
+      {"api-url", _options.api_url}};
 
   // if `api-url` is given in long format, parse `team`, `suite`, and
   // `version` from its path.
 
-  ApiUrl api_url(_opts.api_url);
-  if (!api_url.confirm(_opts.team, _opts.suite, _opts.revision)) {
-    _opts.parse_error = api_url._error;
+  ApiUrl api_url(_options.api_url);
+  if (!api_url.confirm(_options.team, _options.suite, _options.revision)) {
+    _config_error = api_url._error;
     return false;
   }
-  _opts.team = api_url._team;
-  _opts.suite = api_url._suite;
-  _opts.revision = api_url._revision;
+  _options.team = api_url._team;
+  _options.suite = api_url._suite;
+  _options.revision = api_url._revision;
 
   // if required parameters are not set, maybe user is just experimenting.
 
@@ -119,7 +119,7 @@ bool ClientImpl::configure_impl() {
 
   for (const auto& param : {"team", "suite", "version"}) {
     if (params.at(param).empty()) {
-      _opts.parse_error = fmt::format(
+      _config_error = fmt::format(
           "required configuration parameter \"{}\" is missing", param);
       return false;
     }
@@ -128,7 +128,7 @@ bool ClientImpl::configure_impl() {
   // if `api_key` and `api_url` are not provided, assume user does
   // not intend to submit results in which case we are done.
 
-  if (_opts.offline) {
+  if (_options.offline) {
     _configured = true;
     return true;
   }
@@ -137,7 +137,7 @@ bool ClientImpl::configure_impl() {
 
   for (const auto& param : {"api-key", "api-url"}) {
     if (params.at(param).empty()) {
-      _opts.parse_error = fmt::format(
+      _config_error = fmt::format(
           "required configuration parameter \"{}\" is missing", param);
       return false;
     }
@@ -147,8 +147,8 @@ bool ClientImpl::configure_impl() {
   // API key and obtain API token for posting results.
 
   _platform = std::unique_ptr<Platform>(new Platform(api_url));
-  if (!_platform->auth(_opts.api_key)) {
-    _opts.parse_error = _platform->get_error();
+  if (!_platform->auth(_options.api_key)) {
+    _config_error = _platform->get_error();
     return false;
   }
 
@@ -156,7 +156,7 @@ bool ClientImpl::configure_impl() {
 
   _elements = _platform->elements();
   if (_elements.empty()) {
-    _opts.parse_error = _platform->get_error();
+    _config_error = _platform->get_error();
     return false;
   }
 
@@ -168,7 +168,7 @@ bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
   // check that specified path leads to an existing regular file on disk
 
   if (!touca::filesystem::is_regular_file(path)) {
-    _opts.parse_error = "configuration file is missing";
+    _config_error = "configuration file is missing";
     return false;
   }
 
@@ -186,7 +186,7 @@ bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
 
   if (!parsed.is_object() || !parsed.contains("touca") ||
       !parsed["touca"].is_object()) {
-    _opts.parse_error = "configuration file is not valid";
+    _config_error = "configuration file is not valid";
     return false;
   }
 
@@ -222,8 +222,8 @@ std::shared_ptr<touca::Testcase> ClientImpl::declare_testcase(
     return nullptr;
   }
   if (!_testcases.count(name)) {
-    const auto& tc = std::make_shared<Testcase>(_opts.team, _opts.suite,
-                                                _opts.revision, name);
+    const auto& tc = std::make_shared<Testcase>(_options.team, _options.suite,
+                                                _options.revision, name);
     _testcases.emplace(name, tc);
   }
   _threadMap[std::this_thread::get_id()] = name;
@@ -243,46 +243,46 @@ void ClientImpl::forget_testcase(const std::string& name) {
 
 void ClientImpl::check(const std::string& key,
                        const std::shared_ptr<IType>& value) {
-  if (hasLastTestcase()) {
-    _testcases.at(getLastTestcase())->check(key, value);
+  if (has_last_testcase()) {
+    _testcases.at(get_last_testcase())->check(key, value);
   }
 }
 
 void ClientImpl::assume(const std::string& key,
                         const std::shared_ptr<IType>& value) {
-  if (hasLastTestcase()) {
-    _testcases.at(getLastTestcase())->assume(key, value);
+  if (has_last_testcase()) {
+    _testcases.at(get_last_testcase())->assume(key, value);
   }
 }
 
 void ClientImpl::add_array_element(const std::string& key,
                                    const std::shared_ptr<IType>& value) {
-  if (hasLastTestcase()) {
-    _testcases.at(getLastTestcase())->add_array_element(key, value);
+  if (has_last_testcase()) {
+    _testcases.at(get_last_testcase())->add_array_element(key, value);
   }
 }
 
 void ClientImpl::add_hit_count(const std::string& key) {
-  if (hasLastTestcase()) {
-    _testcases.at(getLastTestcase())->add_hit_count(key);
+  if (has_last_testcase()) {
+    _testcases.at(get_last_testcase())->add_hit_count(key);
   }
 }
 
 void ClientImpl::add_metric(const std::string& key, const unsigned duration) {
-  if (hasLastTestcase()) {
-    _testcases.at(getLastTestcase())->add_metric(key, duration);
+  if (has_last_testcase()) {
+    _testcases.at(get_last_testcase())->add_metric(key, duration);
   }
 }
 
 void ClientImpl::start_timer(const std::string& key) {
-  if (hasLastTestcase()) {
-    _testcases.at(getLastTestcase())->tic(key);
+  if (has_last_testcase()) {
+    _testcases.at(get_last_testcase())->tic(key);
   }
 }
 
 void ClientImpl::stop_timer(const std::string& key) {
-  if (hasLastTestcase()) {
-    _testcases.at(getLastTestcase())->toc(key);
+  if (has_last_testcase()) {
+    _testcases.at(get_last_testcase())->toc(key);
   }
 }
 
@@ -377,7 +377,7 @@ bool ClientImpl::seal() const {
   return true;
 }
 
-bool ClientImpl::hasLastTestcase() const {
+bool ClientImpl::has_last_testcase() const {
   // if client is not configured, report that no testcase has been
   // declared. this behavior renders calls to other data capturing
   // functions as no-op which is helpful in production environments
@@ -390,7 +390,7 @@ bool ClientImpl::hasLastTestcase() const {
   // If client is configured, check whether testcase declaration is set as
   // "shared" in which case report the most recently declared testcase.
 
-  if (!_opts.single_thread) {
+  if (!_options.single_thread) {
     return !_mostRecentTestcase.empty();
   }
 
@@ -400,11 +400,11 @@ bool ClientImpl::hasLastTestcase() const {
   return _threadMap.count(std::this_thread::get_id());
 }
 
-std::string ClientImpl::getLastTestcase() const {
+std::string ClientImpl::get_last_testcase() const {
   // We do not expect this function to be called without calling
-  // `hasLastTestcase` first.
+  // `has_last_testcase` first.
 
-  if (!hasLastTestcase()) {
+  if (!has_last_testcase()) {
     throw std::logic_error("testcase not declared");
   }
 
@@ -412,7 +412,7 @@ std::string ClientImpl::getLastTestcase() const {
   // "shared" in which case report the name of the most recently declared
   // testcase.
 
-  if (!_opts.single_thread) {
+  if (!_options.single_thread) {
     return _mostRecentTestcase;
   }
 

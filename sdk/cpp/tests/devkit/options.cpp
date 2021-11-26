@@ -12,7 +12,7 @@ TEST_CASE("configure") {
   SECTION("empty") {
     REQUIRE_NOTHROW(client.configure(input));
     CHECK(client.configure(input) == true);
-    REQUIRE(opts.parse_error.empty() == true);
+    REQUIRE(client.configuration_error().empty() == true);
     CHECK(opts.team.empty());
     CHECK(opts.suite.empty());
     CHECK(opts.revision.empty());
@@ -23,13 +23,13 @@ TEST_CASE("configure") {
     input.emplace("offline", "true");
     input.emplace("team", "some-team");
     CHECK(client.configure(input) == false);
-    CHECK_THAT(opts.parse_error, Catch::Contains("suite"));
+    CHECK_THAT(client.configuration_error(), Catch::Contains("suite"));
     input.emplace("suite", "some-suite");
     CHECK(client.configure(input) == false);
-    CHECK_THAT(opts.parse_error, Catch::Contains("version"));
+    CHECK_THAT(client.configuration_error(), Catch::Contains("version"));
     input.emplace("version", "some-version");
     CHECK(client.configure(input) == true);
-    REQUIRE(opts.parse_error.empty() == true);
+    REQUIRE(client.configuration_error().empty() == true);
     CHECK(opts.team == "some-team");
     CHECK(opts.suite == "some-suite");
     CHECK(opts.revision == "some-version");
@@ -41,8 +41,8 @@ TEST_CASE("configure") {
     input.emplace("api-key", "some-api-key");
     REQUIRE_NOTHROW(client.configure(input));
     CHECK(client.configure(input) == false);
-    REQUIRE(opts.parse_error.empty() == false);
-    CHECK_THAT(opts.parse_error, Catch::Contains("team"));
+    REQUIRE(client.configuration_error().empty() == false);
+    CHECK_THAT(client.configuration_error(), Catch::Contains("team"));
     CHECK(opts.team.empty());
     CHECK(opts.suite.empty());
     CHECK(opts.revision.empty());
@@ -54,7 +54,7 @@ TEST_CASE("configure") {
     input.emplace("api-url", "some-api-url");
     REQUIRE_NOTHROW(client.configure(input));
     CHECK(client.configure(input) == false);
-    CHECK_THAT(opts.parse_error, Catch::Contains("team"));
+    CHECK_THAT(client.configuration_error(), Catch::Contains("team"));
     CHECK(opts.team.empty());
     CHECK(opts.suite.empty());
     CHECK(opts.revision.empty());
@@ -66,7 +66,7 @@ TEST_CASE("configure") {
     input.emplace("api-url",
                   "http://example.com/api/@/some-team/some-suite/some-version");
     CHECK(client.configure(input) == false);
-    CHECK_THAT(opts.parse_error, Catch::Contains("api-key"));
+    CHECK_THAT(client.configuration_error(), Catch::Contains("api-key"));
     CHECK(opts.team == "some-team");
     CHECK(opts.suite == "some-suite");
     CHECK(opts.revision == "some-version");
@@ -80,8 +80,8 @@ TEST_CASE("configure") {
     input.emplace("api-url", "some-api-url");
     input.emplace("offline", "true");
     CHECK(client.configure(input) == false);
-    REQUIRE(opts.parse_error.empty() == false);
-    CHECK_THAT(opts.parse_error, Catch::Contains("team"));
+    REQUIRE(client.configuration_error().empty() == false);
+    CHECK_THAT(client.configuration_error(), Catch::Contains("team"));
     CHECK(opts.team.empty());
     CHECK(opts.suite.empty());
     CHECK(opts.revision.empty());
@@ -97,7 +97,7 @@ TEST_CASE("configure") {
                                       {"api-url", "some-api-url"},
                                       {"offline", "true"}}));
     CHECK(client.configure(input) == true);
-    REQUIRE(opts.parse_error.empty() == true);
+    REQUIRE(client.configuration_error().empty() == true);
     CHECK(opts.team == "some-team");
     CHECK(opts.suite == "some-suite");
     CHECK(opts.revision == "some-version");
@@ -112,7 +112,7 @@ TEST_CASE("configure") {
     input.emplace("api-key", "some-api-key");
     input.emplace("offline", "true");
     CHECK(client.configure(input) == true);
-    CHECK(opts.parse_error.empty() == true);
+    CHECK(client.configuration_error().empty() == true);
     CHECK(opts.api_url ==
           "https://api.example.com/@/some-team/some-suite/some-version");
     CHECK(opts.team == "some-team");
@@ -121,7 +121,7 @@ TEST_CASE("configure") {
   }
   SECTION("override-defaults") {
     CHECK(client.configure(input) == true);
-    CHECK(opts.parse_error.empty() == true);
+    CHECK(client.configuration_error().empty() == true);
     CHECK(!opts.single_thread);
     input.emplace("single-thread", "true");
     CHECK(client.configure(input) == true);
@@ -137,14 +137,14 @@ TEST_CASE("configure-by-file") {
   SECTION("missing-file") {
     REQUIRE_NOTHROW(client.configure_by_file(file.path));
     REQUIRE(client.configure_by_file(file.path) == false);
-    REQUIRE(opts.parse_error == "configuration file is missing");
+    REQUIRE(client.configuration_error() == "configuration file is missing");
   }
 
   SECTION("invalid-file") {
     file.write("");
     REQUIRE_NOTHROW(client.configure_by_file(file.path));
     REQUIRE(client.configure_by_file(file.path) == false);
-    REQUIRE(opts.parse_error == "configuration file is not valid");
+    REQUIRE(client.configuration_error() == "configuration file is not valid");
   }
 
   SECTION("valid-file") {

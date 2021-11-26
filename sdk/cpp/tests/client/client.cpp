@@ -9,13 +9,13 @@
 
 using namespace touca;
 
-std::string saveAndReadBack(const touca::ClientImpl& client) {
+std::string save_and_read_back(const touca::ClientImpl& client) {
   TmpFile file;
   CHECK_NOTHROW(client.save(file.path, {}, DataFormat::JSON, true));
   return detail::load_string_file(file.path.string());
 }
 
-ElementsMap saveAndLoadBack(const touca::ClientImpl& client) {
+ElementsMap save_and_load_back(const touca::ClientImpl& client) {
   TmpFile file;
   CHECK_NOTHROW(client.save(file.path, {}, DataFormat::FBS, true));
   ResultFile resultFile(file.path);
@@ -42,7 +42,7 @@ TEST_CASE("empty client") {
   }
 
   SECTION("save") {
-    const auto& output = saveAndReadBack(client);
+    const auto& output = save_and_read_back(client);
     CHECK(output == "[]");
   }
 }
@@ -83,7 +83,7 @@ TEST_CASE("using a configured client") {
     CHECK_NOTHROW(client.add_hit_count("some-other-key"));
     CHECK(client.declare_testcase("some-case"));
     CHECK_NOTHROW(client.add_hit_count("some-other-key"));
-    const auto& content = saveAndLoadBack(client);
+    const auto& content = save_and_load_back(client);
     REQUIRE(content.count("some-case"));
     REQUIRE(content.count("some-other-case"));
     CHECK(content.at("some-case")->overview().keysCount == 2);
@@ -96,7 +96,7 @@ TEST_CASE("using a configured client") {
     CHECK_NOTHROW(client.check("some-value", v1));
     CHECK_NOTHROW(client.add_hit_count("some-other-value"));
     CHECK_NOTHROW(client.add_array_element("some-array-value", v1));
-    const auto& content = saveAndReadBack(client);
+    const auto& content = save_and_read_back(client);
     const auto& expected =
         R"("results":[{"key":"some-array-value","value":"[true]"},{"key":"some-other-value","value":"1"},{"key":"some-value","value":"true"}])";
     CHECK_THAT(content, Catch::Contains(expected));
@@ -109,7 +109,7 @@ TEST_CASE("using a configured client") {
     client.declare_testcase("some-case");
     const auto& v1 = std::make_shared<BooleanType>(true);
     CHECK_NOTHROW(client.assume("some-value", v1));
-    const auto& content = saveAndReadBack(client);
+    const auto& content = save_and_read_back(client);
     const auto& expected = R"([])";
     CHECK_THAT(content, Catch::Contains(expected));
   }
@@ -125,7 +125,7 @@ TEST_CASE("using a configured client") {
     CHECK_NOTHROW(client.stop_timer("b"));
     CHECK(tc->metrics().size() == 1);
     CHECK(tc->metrics().count("b"));
-    const auto& content = saveAndReadBack(client);
+    const auto& content = save_and_read_back(client);
     const auto& expected =
         R"("results":[],"assertion":[],"metrics":[{"key":"b","value":"0"}])";
     CHECK_THAT(content, Catch::Contains(expected));
@@ -139,7 +139,7 @@ TEST_CASE("using a configured client") {
     client.start_timer("some-metric");
     client.stop_timer("some-metric");
     client.forget_testcase("some-case");
-    const auto& content = saveAndReadBack(client);
+    const auto& content = save_and_read_back(client);
     CHECK_THAT(content, Catch::Contains(R"([])"));
   }
 

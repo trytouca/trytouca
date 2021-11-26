@@ -31,12 +31,6 @@ struct ClientOptions {
   std::string revision; /**< Team to which this suite belongs */
   bool offline = false; /**< Perform server handshake during configuration */
   bool single_thread = false; /**< Isolates testcase scope to calling thread */
-
-  /* Internal variables purposely not documented: */
-
-  std::string api_token; /**< API Token issued upon authentication. */
-  std::string api_root;  /**< API URL in short format. */
-  std::string parse_error;
 };
 
 /**
@@ -54,9 +48,9 @@ class TOUCA_CLIENT_API ClientImpl {
 
   inline bool is_configured() const { return _configured; }
 
-  inline std::string configuration_error() const { return _opts.parse_error; }
+  inline std::string configuration_error() const { return _config_error; }
 
-  inline const ClientOptions& options() const { return _opts; }
+  inline const ClientOptions& options() const { return _options; }
 
   void add_logger(std::shared_ptr<touca::logger> logger);
 
@@ -92,9 +86,9 @@ class TOUCA_CLIENT_API ClientImpl {
  private:
   bool configure_impl();
 
-  std::string getLastTestcase() const;
+  std::string get_last_testcase() const;
 
-  bool hasLastTestcase() const;
+  bool has_last_testcase() const;
 
   std::vector<Testcase> find_testcases(
       const std::vector<std::string>& names) const;
@@ -113,7 +107,8 @@ class TOUCA_CLIENT_API ClientImpl {
   bool is_platform_ready() const;
 
   bool _configured = false;
-  ClientOptions _opts;
+  std::string _config_error;
+  ClientOptions _options;
   ElementsMap _testcases;
   std::string _mostRecentTestcase;
   std::vector<std::string> _elements;
