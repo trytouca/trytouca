@@ -16,7 +16,7 @@
 
 @media (min-width: 1536px) {
   .wsl-min-h-screen-3 {
-    min-height: calc(100vh - 15rem);
+    min-height: calc(100vh - 20rem);
   }
 }
 

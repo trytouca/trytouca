@@ -194,12 +194,17 @@ export default function Home() {
                 </div>
               </div>
               <div className="items-center hidden w-full h-full p-8 mx-auto select-none xl:col-span-3 sm:flex sm:p-0">
-                <img
-                  className="shadow-md rounded-xl"
-                  alt="Touca Continuous Regression Testing"
-                  src={make_path('/images/touca-atf-visual.png')}
-                  loading="lazy"
-                />
+                <a
+                  href="https://cdn.loom.com/images/originals/0a7847957cc64699ac02b167013d241d.jpg"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <img
+                    className="shadow-md rounded-xl"
+                    alt="Touca Continuous Regression Testing"
+                    src={make_path('/images/touca-atf-visual.jpg')}
+                    loading="lazy"
+                  />
+                </a>
               </div>
             </div>
           </div>
