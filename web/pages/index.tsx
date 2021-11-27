@@ -195,7 +195,7 @@ export default function Home() {
               </div>
               <div className="items-center hidden w-full h-full p-8 mx-auto select-none xl:col-span-3 sm:flex sm:p-0">
                 <a
-                  href="https://cdn.loom.com/images/originals/0a7847957cc64699ac02b167013d241d.jpg"
+                  href="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-screenshot-suite-page-closed.jpg"
                   target="_blank"
                   rel="noopener noreferrer">
                   <img
