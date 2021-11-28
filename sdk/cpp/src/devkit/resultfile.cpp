@@ -83,7 +83,7 @@ void ResultFile::save(const std::vector<Testcase>& testcases) {
   load();
 }
 
-std::string ResultFile::readFileInJson() const {
+std::string ResultFile::read_file_in_json() const {
   nlohmann::ordered_json out;
   for (const auto& item : _testcases.empty() ? parse() : _testcases) {
     out.push_back(item.second->json());

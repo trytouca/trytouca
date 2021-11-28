@@ -12,10 +12,10 @@
 #include "touca/impl/schema.hpp"
 
 /** maximum number of attempts to re-submit failed http requests */
-constexpr unsigned long post_max_retries = 2;
+constexpr unsigned post_max_retries = 2;
 
 /** maximum number of cases to be posted in a single http request */
-constexpr unsigned long post_max_cases = 10;
+constexpr unsigned post_max_cases = 10;
 
 namespace touca {
 
@@ -241,22 +241,20 @@ void ClientImpl::forget_testcase(const std::string& name) {
   _testcases.erase(name);
 }
 
-void ClientImpl::check(const std::string& key,
-                       const std::shared_ptr<IType>& value) {
+void ClientImpl::check(const std::string& key, const data_point& value) {
   if (has_last_testcase()) {
     _testcases.at(get_last_testcase())->check(key, value);
   }
 }
 
-void ClientImpl::assume(const std::string& key,
-                        const std::shared_ptr<IType>& value) {
+void ClientImpl::assume(const std::string& key, const data_point& value) {
   if (has_last_testcase()) {
     _testcases.at(get_last_testcase())->assume(key, value);
   }
 }
 
 void ClientImpl::add_array_element(const std::string& key,
-                                   const std::shared_ptr<IType>& value) {
+                                   const data_point& value) {
   if (has_last_testcase()) {
     _testcases.at(get_last_testcase())->add_array_element(key, value);
   }

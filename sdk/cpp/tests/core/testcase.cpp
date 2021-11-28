@@ -6,6 +6,9 @@
 #include "nlohmann/json.hpp"
 #include "touca/devkit/comparison.hpp"
 
+using touca::data_point;
+using touca::detail::internal_type;
+
 TEST_CASE("Testcase") {
   touca::Testcase testcase =
       touca::Testcase("some-team", "some-suite", "some-version", "some-case");
@@ -21,7 +24,7 @@ TEST_CASE("Testcase") {
   }
 
   SECTION("assume") {
-    const auto value = std::make_shared<touca::BooleanType>(true);
+    const auto value = data_point::boolean(true);
     testcase.assume("some-key", value);
     testcase.assume("some-other-key", value);
     CHECK_NOTHROW(testcase.assume("some-key", value));
@@ -38,7 +41,7 @@ TEST_CASE("Testcase") {
     }
 
     SECTION("unexpected-use: key is already used to store boolean") {
-      const auto value = std::make_shared<touca::BooleanType>(true);
+      const auto value = data_point::boolean(true);
       testcase.check("some-key", value);
       CHECK_THROWS_AS(testcase.add_hit_count("some-key"),
                       std::invalid_argument);
@@ -48,7 +51,7 @@ TEST_CASE("Testcase") {
     }
 
     SECTION("unexpected-use: key is already used to store float") {
-      const auto value = std::make_shared<touca::NumberType<float>>(1.0f);
+      const auto value = data_point::number_float(1.0f);
       testcase.check("some-key", value);
       CHECK_THROWS_AS(testcase.add_hit_count("some-key"),
                       std::invalid_argument);
@@ -61,7 +64,7 @@ TEST_CASE("Testcase") {
   SECTION("add_array_element") {
     SECTION("expected-use") {
       for (auto i = 0; i < 3; ++i) {
-        const auto value = std::make_shared<touca::NumberType<uint64_t>>(i);
+        const auto value = data_point::number_unsigned(i);
         testcase.add_array_element("some-key", value);
       }
       const auto expected =
@@ -69,8 +72,8 @@ TEST_CASE("Testcase") {
       REQUIRE_THAT(testcase.json().dump(), Catch::Contains(expected));
     }
     SECTION("unexpected-use") {
-      const auto someBool = std::make_shared<touca::BooleanType>(true);
-      const auto someNumber = std::make_shared<touca::NumberType<uint64_t>>(1);
+      const auto someBool = data_point::boolean(true);
+      const auto someNumber = data_point::number_unsigned(1);
       testcase.check("some-key", someBool);
       CHECK_THROWS_AS(testcase.add_array_element("some-key", someNumber),
                       std::invalid_argument);
@@ -86,7 +89,7 @@ TEST_CASE("Testcase") {
    * metrics associated with it.
    */
   SECTION("clear") {
-    const auto value = std::make_shared<touca::BooleanType>(true);
+    const auto value = data_point::boolean(true);
     testcase.check("some-key", value);
     testcase.assume("some-other-key", value);
     testcase.tic("some-metric");
@@ -111,7 +114,7 @@ TEST_CASE("Testcase") {
   }
 
   SECTION("overview") {
-    const auto value = std::make_shared<touca::BooleanType>(true);
+    const auto value = data_point::boolean(true);
     const auto check_counters =
         [&testcase](const std::array<int32_t, 3>& counters) {
           CHECK(testcase.overview().keysCount == counters[0]);
@@ -141,8 +144,8 @@ TEST_CASE("Testcase") {
       CHECK(testcase.metrics().size() == 1);
       REQUIRE(testcase.metrics().count("some-key"));
       const auto metric = testcase.metrics().at("some-key");
-      CHECK(touca::internal_type::number_signed == metric.value->type());
-      CHECK(metric.value->string() == "1000");
+      CHECK(internal_type::number_signed == metric.value.type());
+      CHECK(metric.value.to_string() == "1000");
     }
 
     SECTION("unexpected-use: tic without toc") {
@@ -171,7 +174,7 @@ TEST_CASE("Testcase") {
       CHECK(testcase.metrics().size() == 1);
       CHECK(testcase.metrics().count("b"));
       const auto metric = testcase.metrics().at("b");
-      CHECK(touca::internal_type::number_signed == metric.value->type());
+      CHECK(internal_type::number_signed == metric.value.type());
     }
   }
 
@@ -195,10 +198,10 @@ TEST_CASE("Testcase") {
     auto dst =
         std::make_shared<touca::Testcase>("team", "suite", "version", "case");
 
-    const auto value1 = std::make_shared<touca::StringType>("leo-ferre");
-    const auto value2 = std::make_shared<touca::StringType>("jean-ferrat");
-    const auto value3 = std::make_shared<touca::BooleanType>(true);
-    const auto value4 = std::make_shared<touca::BooleanType>(true);
+    const auto value1 = data_point::string("leo-ferre");
+    const auto value2 = data_point::string("jean-ferrat");
+    const auto value3 = data_point::boolean(true);
+    const auto value4 = data_point::boolean(true);
 
     // common result
     testcase.add_array_element("chanteur", value1);

@@ -15,7 +15,6 @@ target_sources(
         devkit/platform.cpp
         devkit/resultfile.cpp
         devkit/utils.cpp
-        devkit/tmpfile.hpp
 )
 
 if (TOUCA_BUILD_FRAMEWORK)
@@ -23,7 +22,6 @@ if (TOUCA_BUILD_FRAMEWORK)
             ${TOUCA_TARGET_TEST}
         PRIVATE
             framework/framework.cpp
-            framework/ostream.hpp
     )
 endif()
 

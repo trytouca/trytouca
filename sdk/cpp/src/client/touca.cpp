@@ -35,16 +35,15 @@ void forget_testcase(const std::string& name) {
 
 namespace detail {
 
-void check(const std::string& key, const std::shared_ptr<IType>& value) {
+void check(const std::string& key, const data_point& value) {
   instance.check(key, value);
 }
 
-void assume(const std::string& key, const std::shared_ptr<IType>& value) {
+void assume(const std::string& key, const data_point& value) {
   instance.assume(key, value);
 }
 
-void add_array_element(const std::string& key,
-                       const std::shared_ptr<IType>& value) {
+void add_array_element(const std::string& key, const data_point& value) {
   instance.add_array_element(key, value);
 }
 

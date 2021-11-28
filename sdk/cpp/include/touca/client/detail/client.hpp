@@ -60,12 +60,11 @@ class TOUCA_CLIENT_API ClientImpl {
 
   void forget_testcase(const std::string& name);
 
-  void check(const std::string& key, const std::shared_ptr<IType>& value);
+  void check(const std::string& key, const data_point& value);
 
-  void assume(const std::string& key, const std::shared_ptr<IType>& value);
+  void assume(const std::string& key, const data_point& value);
 
-  void add_array_element(const std::string& key,
-                         const std::shared_ptr<IType>& value);
+  void add_array_element(const std::string& key, const data_point& value);
 
   void add_hit_count(const std::string& key);
 

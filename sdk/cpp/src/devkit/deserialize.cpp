@@ -18,47 +18,51 @@ static const std::unordered_map<fbs::ResultType, ResultCategory>
         {fbs::ResultType::Assert, ResultCategory::Assert},
 };
 
-template <typename T, typename U>
-std::shared_ptr<touca::IType> deserialize(const touca::fbs::TypeWrapper* ptr) {
-  const auto& castptr = static_cast<const T*>(ptr->value());
-  return std::shared_ptr<touca::IType>(new U(castptr->value()));
-}
-
 }  // namespace detail
 
-std::shared_ptr<IType> deserialize_value(const fbs::TypeWrapper* ptr) {
+data_point deserialize_value(const fbs::TypeWrapper* ptr) {
   const auto& value = ptr->value();
   const auto& type = ptr->value_type();
   switch (type) {
-    case fbs::Type::Bool:
-      return detail::deserialize<fbs::Bool, BooleanType>(ptr);
-    case fbs::Type::Int:
-      return detail::deserialize<fbs::Int, NumberType<int64_t>>(ptr);
-    case fbs::Type::UInt:
-      return detail::deserialize<fbs::UInt, NumberType<uint64_t>>(ptr);
-    case fbs::Type::Float:
-      return detail::deserialize<fbs::Float, NumberType<float>>(ptr);
-    case fbs::Type::Double:
-      return detail::deserialize<fbs::Double, NumberType<double>>(ptr);
+    case fbs::Type::Bool: {
+      const auto& castptr = static_cast<const fbs::Bool*>(ptr->value());
+      return data_point::boolean(castptr->value());
+    }
+    case fbs::Type::Double: {
+      const auto& castptr = static_cast<const fbs::Double*>(ptr->value());
+      return data_point::number_double(castptr->value());
+    }
+    case fbs::Type::Float: {
+      const auto& castptr = static_cast<const fbs::Float*>(ptr->value());
+      return data_point::number_float(castptr->value());
+    }
+    case fbs::Type::Int: {
+      const auto& castptr = static_cast<const fbs::Int*>(ptr->value());
+      return data_point::number_signed(castptr->value());
+    }
+    case fbs::Type::UInt: {
+      const auto& castptr = static_cast<const fbs::UInt*>(ptr->value());
+      return data_point::number_unsigned(castptr->value());
+    }
     case fbs::Type::String: {
       const auto& str = static_cast<const fbs::String*>(value);
-      return std::make_shared<StringType>(str->value()->data());
-    }
-    case fbs::Type::Object: {
-      auto fbsObj = static_cast<const fbs::Object*>(value);
-      KeyMap keyMap;
-      for (const auto&& item : *fbsObj->values()) {
-        keyMap.emplace(item->name()->data(), deserialize_value(item->value()));
-      }
-      return std::make_shared<ObjectType>(fbsObj->key()->data(), keyMap);
+      return data_point::string(str->value()->data());
     }
     case fbs::Type::Array: {
-      auto fbsArr = static_cast<const fbs::Array*>(value);
-      auto arr = std::make_shared<ArrayType>();
-      for (const auto&& item : *fbsArr->values()) {
-        arr->add(deserialize_value(item));
+      const auto& fbsArr = static_cast<const fbs::Array*>(value);
+      array out;
+      for (const auto&& element : *fbsArr->values()) {
+        out.add(deserialize_value(element));
       }
-      return arr;
+      return out;
+    }
+    case fbs::Type::Object: {
+      const auto& fbsObj = static_cast<const fbs::Object*>(value);
+      touca::object out(fbsObj->key()->data());
+      for (const auto&& member : *fbsObj->values()) {
+        out.add(member->name()->data(), deserialize_value(member->value()));
+      }
+      return out;
     }
     default:
       throw std::runtime_error("encountered unexpected type");
@@ -84,7 +88,7 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
   for (const auto&& result : *results) {
     const auto& key = result->key()->data();
     const auto& value = deserialize_value(result->value());
-    if (!value) {
+    if (value.type() == detail::internal_type::unknown) {
       throw std::runtime_error("failed to parse results map entry");
     }
     resultsMap.emplace(
@@ -92,16 +96,15 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
         ResultEntry{value, detail::result_types_reverse.at(result->typ())});
   }
 
-  std::unordered_map<std::string, unsigned long> metricsMap;
+  std::unordered_map<std::string, detail::number_unsigned_t> metricsMap;
   const auto& metrics = message->metrics()->entries();
   for (const auto&& metric : *metrics) {
     const auto& key = metric->key()->data();
-    const auto& ivalue = deserialize_value(metric->value());
-    const auto& value = std::dynamic_pointer_cast<NumberType<int64_t>>(ivalue);
-    if (!value) {
+    const auto& value = deserialize_value(metric->value());
+    if (value.type() != detail::internal_type::number_signed) {
       throw std::runtime_error("failed to parse metrics map entry");
     }
-    metricsMap.emplace(key, static_cast<unsigned long>(value->value()));
+    metricsMap.emplace(key, value.as_metric());
   }
 
   return Testcase(metadata, resultsMap, metricsMap);

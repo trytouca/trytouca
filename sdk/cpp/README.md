@@ -10,7 +10,7 @@
 Touca helps you understand the true impact of your day to day code changes on
 the behavior and performance of your overall software, as you write code.
 
-[![Touca Server](https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-screenshot-suite-page.png)](https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-screenshot-suite-page.png)
+[![Touca Server](https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-screenshot-suite-page.jpg)](https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-screenshot-suite-page.jpg)
 
 Touca SDKs let you describe the behavior and performance of your code by
 capturing values of interesting variables and runtime of important functions. We

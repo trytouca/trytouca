@@ -43,7 +43,7 @@ Testcase::Testcase(const std::string& teamslug, const std::string& testsuite,
 
 Testcase::Testcase(
     const Metadata& meta, const ResultsMap& results,
-    const std::unordered_map<std::string, unsigned long>& metrics)
+    const std::unordered_map<std::string, detail::number_unsigned_t>& metrics)
     : _posted(true), _metadata(meta), _resultsMap(results) {
   for (const auto& metric : metrics) {
     namespace chr = std::chrono;
@@ -93,59 +93,42 @@ void Testcase::toc(const std::string& key) {
   _posted = false;
 }
 
-void Testcase::check(const std::string& key,
-                     const std::shared_ptr<IType>& value) {
+void Testcase::check(const std::string& key, const data_point& value) {
   _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Check});
   _posted = false;
 }
 
-void Testcase::assume(const std::string& key,
-                      const std::shared_ptr<IType>& value) {
+void Testcase::assume(const std::string& key, const data_point& value) {
   _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Assert});
   _posted = false;
 }
 
 void Testcase::add_array_element(const std::string& key,
-                                 const std::shared_ptr<IType>& element) {
-  using touca::ArrayType;
+                                 const data_point& element) {
   if (!_resultsMap.count(key)) {
-    const auto value = std::make_shared<ArrayType>();
-    value->add(element);
-    _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Check});
+    _resultsMap.emplace(
+        key, ResultEntry{array().add(element), ResultCategory::Check});
     return;
   }
-  const auto ivalue = _resultsMap.at(key);
-  if (ivalue.val->type() != touca::internal_type::array) {
-    throw std::invalid_argument(
-        "specified key is associated with a "
-        "result of a different type");
+  auto& ivalue = _resultsMap.at(key);
+  if (ivalue.val.type() != detail::internal_type::array) {
+    throw std::invalid_argument("specified key has a different type");
   }
-  const auto value = std::dynamic_pointer_cast<ArrayType>(ivalue.val);
-  value->add(element);
-  _resultsMap[key].val = value;
+  ivalue.val.as_array()->push_back(element);
   _posted = false;
 }
 
 void Testcase::add_hit_count(const std::string& key) {
-  using number_t = touca::NumberType<uint64_t>;
   if (!_resultsMap.count(key)) {
-    const auto value = std::make_shared<number_t>(1u);
-    _resultsMap.emplace(key, ResultEntry{value, ResultCategory::Check});
+    _resultsMap.emplace(key, ResultEntry{data_point::number_unsigned(1u),
+                                         ResultCategory::Check});
     return;
   }
-  const auto ivalue = _resultsMap.at(key).val;
-  if (ivalue->type() != touca::internal_type::number_signed) {
-    throw std::invalid_argument(
-        "specified key is associated with a "
-        "result of a different type");
+  auto& ivalue = _resultsMap.at(key);
+  if (ivalue.val.type() != detail::internal_type::number_unsigned) {
+    throw std::invalid_argument("specified key has a different type");
   }
-  const auto value = std::dynamic_pointer_cast<number_t>(ivalue);
-  if (!value) {
-    throw std::invalid_argument(
-        "specified key is associated with a "
-        "result of a different type");
-  }
-  _resultsMap[key].val = std::make_shared<number_t>(value->value() + 1);
+  ivalue.val.increment();
   _posted = false;
 }
 
@@ -168,8 +151,8 @@ MetricsMap Testcase::metrics() const {
     const auto& diff = _tocs.at(key) - _tics.at(key);
     const auto& duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(diff);
-    const auto& value = std::make_shared<NumberType<int64_t>>(duration.count());
-    metrics.emplace(key, MetricsMapValue{value});
+    metrics.emplace(
+        key, MetricsMapValue{data_point::number_signed(duration.count())});
   }
   return metrics;
 }
@@ -181,7 +164,7 @@ nlohmann::ordered_json Testcase::json() const {
       continue;
     }
     results.push_back(
-        {{"key", entry.first}, {"value", entry.second.val->string()}});
+        {{"key", entry.first}, {"value", entry.second.val.to_string()}});
   }
 
   auto assumptions = nlohmann::json::array();
@@ -190,13 +173,13 @@ nlohmann::ordered_json Testcase::json() const {
       continue;
     }
     assumptions.push_back(
-        {{"key", entry.first}, {"value", entry.second.val->string()}});
+        {{"key", entry.first}, {"value", entry.second.val.to_string()}});
   }
 
   auto json_metrics = nlohmann::json::array();
   for (const auto& entry : metrics()) {
     json_metrics.push_back(
-        {{"key", entry.first}, {"value", entry.second.value->string()}});
+        {{"key", entry.first}, {"value", entry.second.value.to_string()}});
   }
 
   return nlohmann::ordered_json({{"metadata", {_metadata.json()}},
@@ -227,7 +210,7 @@ std::vector<uint8_t> Testcase::flatbuffers() const {
   std::vector<flatbuffers::Offset<fbs::Result>> fbsResultEntries_vector;
   for (const auto& result : _resultsMap) {
     const auto& fbsKey = builder.CreateString(result.first);
-    const auto& fbsValue = result.second.val->serialize(builder);
+    const auto& fbsValue = result.second.val.serialize(builder);
     fbs::ResultBuilder fbsResult_builder(builder);
     fbsResult_builder.add_key(fbsKey);
     fbsResult_builder.add_value(fbsValue);
@@ -246,7 +229,7 @@ std::vector<uint8_t> Testcase::flatbuffers() const {
   std::vector<flatbuffers::Offset<fbs::Metric>> fbsMetricEntries_vector;
   for (const auto& metric : metrics()) {
     const auto& fbsKey = builder.CreateString(metric.first);
-    const auto& fbsValue = metric.second.value->serialize(builder);
+    const auto& fbsValue = metric.second.value.serialize(builder);
     fbs::MetricBuilder fbsMetric_builder(builder);
     fbsMetric_builder.add_key(fbsKey);
     fbsMetric_builder.add_value(fbsValue);

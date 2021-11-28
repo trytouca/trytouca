@@ -1,15 +1,17 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+#include "touca/core/types.hpp"
+
 #include "catch2/catch.hpp"
 #include "touca/core/serializer.hpp"
 #include "touca/devkit/comparison.hpp"
 #include "touca/devkit/deserialize.hpp"
 #include "touca/impl/schema.hpp"
 
-namespace creature {
+using touca::detail::internal_type;
 
 class Head {
-  friend struct touca::serializer<creature::Head>;
+  friend struct touca::serializer<Head>;
 
  public:
   explicit Head(const uint64_t eyes) : _eyes(eyes) {}
@@ -18,26 +20,22 @@ class Head {
   uint64_t _eyes;
 };
 
-}  // namespace creature
-
 template <>
-struct touca::serializer<creature::Head> {
-  std::shared_ptr<IType> serialize(const creature::Head& value) {
-    auto out = std::make_shared<ObjectType>("head");
-    out->add("eyes", value._eyes);
-    return out;
+struct touca::serializer<Head> {
+  data_point serialize(const Head& value) {
+    return object("head").add("eyes", value._eyes);
   }
 };
 
-std::string serialize(const std::shared_ptr<touca::IType>& value) {
+std::string serialize(const touca::data_point& value) {
   flatbuffers::FlatBufferBuilder builder;
-  const auto& wrapper = value->serialize(builder);
+  const auto& wrapper = value.serialize(builder);
   builder.Finish(wrapper);
   const auto& ptr = builder.GetBufferPointer();
   return {ptr, ptr + builder.GetSize()};
 }
 
-std::shared_ptr<touca::IType> deserialize(const std::string& buffer) {
+touca::data_point deserialize(const std::string& buffer) {
   using namespace touca;
   using namespace flatbuffers;
   Verifier verifier((const uint8_t*)buffer.data(), buffer.size());
@@ -50,26 +48,24 @@ TEST_CASE("Simple Data Types") {
   using namespace touca;
 
   SECTION("type: null") {
-    const auto& value = std::make_shared<NoneType>();
+    auto value = data_point::null();
     SECTION("initialize") {
-      CHECK(value->flatten().empty());
-      CHECK(value->string() == "{}");
-      CHECK(internal_type::null == value->type());
+      CHECK(value.to_string() == "null");
+      CHECK(internal_type::null == value.type());
     }
   }
 
   SECTION("type: bool") {
-    const auto& value = std::make_shared<BooleanType>(true);
+    const auto& value = data_point::boolean(true);
 
     SECTION("initialize") {
-      CHECK(value->flatten().empty());
-      CHECK(value->string() == "true");
-      CHECK(internal_type::boolean == value->type());
+      CHECK(value.to_string() == "true");
+      CHECK(internal_type::boolean == value.type());
     }
 
     SECTION("compare: match") {
-      const auto& right = std::make_shared<BooleanType>(true);
-      const auto& cmp = value->compare(right);
+      const auto& right = data_point::boolean(true);
+      const auto& cmp = compare(value, right);
       CHECK(internal_type::boolean == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "true");
@@ -80,8 +76,8 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch value") {
-      const auto& right = std::make_shared<BooleanType>(false);
-      const auto& cmp = value->compare(right);
+      const auto& right = data_point::boolean(false);
+      const auto& cmp = compare(value, right);
       CHECK(internal_type::boolean == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "true");
@@ -92,8 +88,8 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch type") {
-      const auto& right = std::make_shared<StringType>("true");
-      const auto& cmp = value->compare(right);
+      const auto& right = data_point::string("true");
+      const auto& cmp = compare(value, right);
       CHECK(internal_type::boolean == cmp.srcType);
       CHECK(internal_type::string == cmp.dstType);
       CHECK(cmp.srcValue == "true");
@@ -106,10 +102,10 @@ TEST_CASE("Simple Data Types") {
 
     SECTION("serialize") {
       const auto& buffer = serialize(value);
-      const auto& itype = deserialize(buffer);
-      const auto& cmp = value->compare(itype);
-      CHECK(internal_type::boolean == itype->type());
-      CHECK(itype->string() == "true");
+      const auto& deserialized = deserialize(buffer);
+      const auto& cmp = compare(value, deserialized);
+      CHECK(internal_type::boolean == deserialized.type());
+      CHECK(deserialized.to_string() == "true");
       CHECK(internal_type::boolean == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "true");
@@ -122,16 +118,15 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: number integer") {
     SECTION("initialize") {
-      NumberType<int> value(42);
-      CHECK(value.flatten().empty());
-      CHECK(value.string() == "42");
+      const auto& value = data_point::number_signed(42);
+      CHECK(value.to_string() == "42");
       CHECK(internal_type::number_signed == value.type());
     }
 
     SECTION("compare: match") {
-      NumberType<int> value(42);
-      const auto& right = std::make_shared<NumberType<int>>(42);
-      const auto& cmp = value.compare(right);
+      const auto& value = data_point::number_signed(42);
+      const auto& right = data_point::number_signed(42);
+      const auto& cmp = compare(value, right);
       CHECK(internal_type::number_signed == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "42");
@@ -142,9 +137,9 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch: smaller") {
-      NumberType<int> value(5);
-      const auto& right = std::make_shared<NumberType<int>>(10);
-      const auto& cmp = value.compare(right);
+      const auto& value = data_point::number_signed(5);
+      const auto& right = data_point::number_signed(10);
+      const auto& cmp = compare(value, right);
       CHECK(internal_type::number_signed == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "5");
@@ -156,9 +151,9 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch: percent") {
-      NumberType<int> value(12);
-      const auto& right = std::make_shared<NumberType<int>>(10);
-      const auto& cmp = value.compare(right);
+      const auto& value = data_point::number_signed(12);
+      const auto& right = data_point::number_signed(10);
+      const auto& cmp = compare(value, right);
       CHECK(internal_type::number_signed == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "12");
@@ -170,9 +165,9 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch type") {
-      NumberType<int> value(42);
-      const auto& right = std::make_shared<BooleanType>(false);
-      const auto& cmp = value.compare(right);
+      const auto& value = data_point::number_signed(42);
+      const auto& right = data_point::boolean(false);
+      const auto& cmp = compare(value, right);
       CHECK(internal_type::number_signed == cmp.srcType);
       CHECK(internal_type::boolean == cmp.dstType);
       CHECK(cmp.srcValue == "42");
@@ -184,12 +179,12 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("serialize") {
-      const auto& value = std::make_shared<NumberType<int64_t>>(42);
+      const auto& value = data_point::number_signed(42);
       const auto& buffer = serialize(value);
-      const auto& itype = deserialize(buffer);
-      const auto& cmp = value->compare(itype);
-      CHECK(internal_type::number_signed == itype->type());
-      CHECK(itype->string() == "42");
+      const auto& deserialized = deserialize(buffer);
+      const auto& cmp = compare(value, deserialized);
+      CHECK(internal_type::number_signed == deserialized.type());
+      CHECK(deserialized.to_string() == "42");
       CHECK(internal_type::number_signed == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "42");
@@ -202,17 +197,16 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: double") {
     SECTION("initialize") {
-      NumberType<double> value(0.0);
-      CHECK(value.flatten().empty());
-      CHECK(value.string() == "0.0");
-      CHECK(internal_type::number_signed == value.type());
+      const auto& value = data_point::number_double(0.0);
+      CHECK(value.to_string() == "0.0");
+      CHECK(internal_type::number_double == value.type());
     }
 
     SECTION("match") {
-      NumberType<double> value(1.0);
-      const auto& right = std::make_shared<NumberType<double>>(1.0);
-      const auto& cmp = value.compare(right);
-      CHECK(internal_type::number_signed == cmp.srcType);
+      const auto& value = data_point::number_double(1.0);
+      const auto& right = data_point::number_double(1.0);
+      const auto& cmp = compare(value, right);
+      CHECK(internal_type::number_double == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "1.0");
       CHECK(cmp.dstValue == "");
@@ -222,10 +216,10 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch value") {
-      NumberType<double> value(0.0);
-      const auto& right = std::make_shared<NumberType<double>>(1.0);
-      const auto& cmp = value.compare(right);
-      CHECK(internal_type::number_signed == cmp.srcType);
+      const auto& value = data_point::number_double(0.0);
+      const auto& right = data_point::number_double(1.0);
+      const auto& cmp = compare(value, right);
+      CHECK(internal_type::number_double == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "0.0");
       CHECK(cmp.dstValue == "1.0");
@@ -236,10 +230,10 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch value: percent") {
-      NumberType<double> value(1.1);
-      const auto& right = std::make_shared<NumberType<double>>(1.0);
-      const auto& cmp = value.compare(right);
-      CHECK(internal_type::number_signed == cmp.srcType);
+      const auto& value = data_point::number_double(1.1);
+      const auto& right = data_point::number_double(1.0);
+      const auto& cmp = compare(value, right);
+      CHECK(internal_type::number_double == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "1.1");
       CHECK(cmp.dstValue == "1.0");
@@ -250,10 +244,10 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch type") {
-      NumberType<double> value(1.0);
-      const auto& right = std::make_shared<BooleanType>(false);
-      const auto& cmp = value.compare(right);
-      CHECK(internal_type::number_signed == cmp.srcType);
+      const auto& value = data_point::number_double(1.0);
+      const auto& right = data_point::boolean(false);
+      const auto& cmp = compare(value, right);
+      CHECK(internal_type::number_double == cmp.srcType);
       CHECK(internal_type::boolean == cmp.dstType);
       CHECK(cmp.srcValue == "1.0");
       CHECK(cmp.dstValue == "false");
@@ -264,13 +258,13 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("serialize") {
-      const auto& value = std::make_shared<NumberType<double>>(1.0);
+      const auto& value = data_point::number_double(1.0);
       const auto& buffer = serialize(value);
-      const auto& itype = deserialize(buffer);
-      const auto& cmp = value->compare(itype);
-      CHECK(internal_type::number_signed == itype->type());
-      CHECK(itype->string() == "1.0");
-      CHECK(internal_type::number_signed == cmp.srcType);
+      const auto& deserialized = deserialize(buffer);
+      const auto& cmp = compare(value, deserialized);
+      CHECK(internal_type::number_double == deserialized.type());
+      CHECK(deserialized.to_string() == "1.0");
+      CHECK(internal_type::number_double == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "1.0");
       CHECK(cmp.dstValue == "");
@@ -282,16 +276,15 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: string") {
     SECTION("initialize") {
-      StringType value("some_value");
-      CHECK(value.flatten().empty());
-      CHECK(value.string() == "some_value");
+      const auto& value = data_point::string("some_value");
+      CHECK(value.to_string() == "some_value");
       CHECK(internal_type::string == value.type());
     }
 
     SECTION("compare: match") {
-      StringType value("some_value");
-      const auto& right = std::make_shared<StringType>("some_value");
-      const auto& cmp = value.compare(right);
+      const auto& value = data_point::string("some_value");
+      const auto& right = data_point::string("some_value");
+      const auto& cmp = compare(value, right);
       CHECK(internal_type::string == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
@@ -302,9 +295,9 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch value") {
-      StringType value("some_value");
-      const auto& right = std::make_shared<StringType>("other_value");
-      const auto& cmp = value.compare(right);
+      const auto& value = data_point::string("some_value");
+      const auto& right = data_point::string("other_value");
+      const auto& cmp = compare(value, right);
       CHECK(internal_type::string == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
@@ -315,9 +308,9 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch type") {
-      StringType value("some_value");
-      const auto& right = std::make_shared<BooleanType>(false);
-      const auto& cmp = value.compare(right);
+      const auto& value = data_point::string("some_value");
+      const auto& right = data_point::boolean(false);
+      const auto& cmp = compare(value, right);
       CHECK(internal_type::string == cmp.srcType);
       CHECK(internal_type::boolean == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
@@ -328,12 +321,12 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("serialize") {
-      const auto& value = std::make_shared<StringType>("some_value");
+      const auto& value = data_point::string("some_value");
       const auto& buffer = serialize(value);
-      const auto& itype = deserialize(buffer);
-      const auto& cmp = value->compare(itype);
-      CHECK(internal_type::string == itype->type());
-      CHECK(itype->string() == "some_value");
+      const auto& deserialized = deserialize(buffer);
+      const auto& cmp = compare(value, deserialized);
+      CHECK(internal_type::string == deserialized.type());
+      CHECK(deserialized.to_string() == "some_value");
       CHECK(internal_type::string == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "some_value");
@@ -346,33 +339,30 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: array") {
     SECTION("initialize") {
-      const auto& element1 = std::make_shared<BooleanType>(false);
-      ArrayType value;
-      CHECK(value.flatten().empty());
-      CHECK(value.string() == "[]");
-      CHECK_NOTHROW(value.add(element1));
-      CHECK(value.flatten().count("[0]"));
-      CHECK(value.string() == "[false]");
+      const auto& value = data_point(array());
+      CHECK(value.to_string() == "[]");
+      CHECK_NOTHROW(value.as_array()->push_back(data_point::boolean(false)));
+      CHECK(value.to_string() == "[false]");
       CHECK(internal_type::array == value.type());
     }
 
     SECTION("compare: match: value of type bool") {
-      const auto& makeArray = [](const std::vector<bool>& vec) {
-        const auto& ret = std::make_shared<ArrayType>();
+      const auto& makeArray = [](const std::vector<bool>& vec) -> data_point {
+        touca::array ret;
         for (const auto&& v : vec) {
-          ret->add(std::make_shared<BooleanType>(v));
+          ret.add(data_point::boolean(v));
         }
         return ret;
       };
       const auto& left = makeArray({true, true, true, true});
       const auto& right = makeArray({true, true, true, true});
-      const auto& cmp = left->compare(right);
+      const auto& cmp = compare(left, right);
 
-      CHECK(left->flatten().size() == 4ul);
-      CHECK(left->string() == "[true,true,true,true]");
-      CHECK(right->string() == "[true,true,true,true]");
-      CHECK(internal_type::array == left->type());
-      CHECK(internal_type::array == right->type());
+      CHECK(flatten(left).size() == 4ul);
+      CHECK(left.to_string() == "[true,true,true,true]");
+      CHECK(right.to_string() == "[true,true,true,true]");
+      CHECK(internal_type::array == left.type());
+      CHECK(internal_type::array == right.type());
       CHECK(internal_type::array == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "[true,true,true,true]");
@@ -383,20 +373,20 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: match value of type int") {
-      const auto& makeArray = [](const std::vector<int>& vec) {
-        const auto& ret = std::make_shared<ArrayType>();
+      const auto& makeArray = [](const std::vector<int>& vec) -> data_point {
+        touca::array ret;
         for (const auto& v : vec) {
-          ret->add(std::make_shared<NumberType<int64_t>>(v));
+          ret.add(v);
         }
         return ret;
       };
       const auto& value = makeArray({41, 42, 43, 44});
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
-      const auto& cmp = value->compare(itype);
+      const auto& cmp = compare(value, itype);
 
-      CHECK(internal_type::array == itype->type());
-      CHECK(itype->string() == R"([41,42,43,44])");
+      CHECK(internal_type::array == itype.type());
+      CHECK(itype.to_string() == R"([41,42,43,44])");
       CHECK(internal_type::array == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == R"([41,42,43,44])");
@@ -407,21 +397,21 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: match value of type float") {
-      const auto& makeArray = [](const std::vector<float>& vec) {
-        const auto& ret = std::make_shared<ArrayType>();
+      const auto& makeArray = [](const std::vector<float>& vec) -> data_point {
+        touca::array ret;
         for (const auto& v : vec) {
-          ret->add(std::make_shared<NumberType<float>>(v));
+          ret.add(v);
         }
         return ret;
       };
       const auto& value = makeArray({1.1f, 1.2f, 1.3f, 1.4f});
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
-      const auto& cmp = value->compare(itype);
+      const auto& cmp = compare(value, itype);
 
-      CHECK(internal_type::array == itype->type());
+      CHECK(internal_type::array == itype.type());
       CHECK(
-          itype->string() ==
+          itype.to_string() ==
           R"([1.100000023841858,1.2000000476837158,1.2999999523162842,1.399999976158142])");
       CHECK(internal_type::array == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
@@ -435,10 +425,11 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: match value of type string") {
-      const auto& makeArray = [](const std::vector<std::string>& vec) {
-        const auto& ret = std::make_shared<ArrayType>();
+      const auto& makeArray =
+          [](const std::vector<std::string>& vec) -> data_point {
+        touca::array ret;
         for (const auto& v : vec) {
-          ret->add(std::make_shared<StringType>(v));
+          ret.add(v);
         }
         return ret;
       };
@@ -446,9 +437,9 @@ TEST_CASE("Simple Data Types") {
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
 
-      CHECK(internal_type::array == itype->type());
-      CHECK(itype->string() == R"(["a","b","c","d"])");
-      const auto& cmp = value->compare(itype);
+      CHECK(internal_type::array == itype.type());
+      CHECK(itype.to_string() == R"(["a","b","c","d"])");
+      const auto& cmp = compare(value, itype);
       CHECK(internal_type::array == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == R"(["a","b","c","d"])");
@@ -459,22 +450,22 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch value of type bool") {
-      const auto& makeArray = [](const std::vector<bool>& vec) {
-        const auto& ret = std::make_shared<ArrayType>();
+      const auto& makeArray = [](const std::vector<bool>& vec) -> data_point {
+        touca::array ret;
         for (const auto&& v : vec) {
-          ret->add(std::make_shared<BooleanType>(v));
+          ret.add(serializer<bool>().serialize(v));
         }
         return ret;
       };
       const auto& left = makeArray({false, true, false, true});
       const auto& right = makeArray({true, false, false, true});
-      const auto& cmp = left->compare(right);
+      const auto& cmp = compare(left, right);
 
-      CHECK(left->flatten().size() == 4ul);
-      CHECK(left->string() == "[false,true,false,true]");
-      CHECK(right->string() == "[true,false,false,true]");
-      CHECK(internal_type::array == left->type());
-      CHECK(internal_type::array == right->type());
+      CHECK(flatten(left).size() == 4ul);
+      CHECK(left.to_string() == "[false,true,false,true]");
+      CHECK(right.to_string() == "[true,false,false,true]");
+      CHECK(internal_type::array == left.type());
+      CHECK(internal_type::array == right.type());
       CHECK(internal_type::array == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == "[false,true,false,true]");
@@ -485,10 +476,10 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch value of type int") {
-      const auto& makeArray = [](const std::vector<int>& vec) {
-        const auto& ret = std::make_shared<ArrayType>();
+      const auto& makeArray = [](const std::vector<int>& vec) -> data_point {
+        touca::array ret;
         for (const auto& v : vec) {
-          ret->add(std::make_shared<NumberType<int>>(v));
+          ret.add(v);
         }
         return ret;
       };
@@ -497,10 +488,10 @@ TEST_CASE("Simple Data Types") {
       const auto& left = makeArray(elements);
       elements[14] = 0;
       const auto& right = makeArray(elements);
-      const auto& cmp = left->compare(right);
+      const auto& cmp = compare(left, right);
 
-      CHECK(left->flatten().size() == 20ul);
-      CHECK(right->flatten().size() == 20ul);
+      CHECK(flatten(left).size() == 20ul);
+      CHECK(flatten(right).size() == 20ul);
       CHECK(internal_type::array == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(MatchType::None == cmp.match);
@@ -510,22 +501,22 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch size") {
-      const auto& makeArray = [](const size_t length) {
-        const auto& ret = std::make_shared<ArrayType>();
+      const auto& makeArray = [](const size_t length) -> data_point {
+        touca::array ret;
         for (auto i = 0u; i < length; i++) {
-          ret->add(std::make_shared<NumberType<int>>(1));
+          ret.add(1);
         }
         return ret;
       };
       const auto& left = makeArray(4);
       const auto& right = makeArray(6);
 
-      CHECK(left->flatten().size() == 4ul);
-      CHECK(right->flatten().size() == 6ul);
-      CHECK(left->string() == "[1,1,1,1]");
-      CHECK(right->string() == "[1,1,1,1,1,1]");
+      CHECK(flatten(left).size() == 4ul);
+      CHECK(flatten(right).size() == 6ul);
+      CHECK(left.to_string() == "[1,1,1,1]");
+      CHECK(right.to_string() == "[1,1,1,1,1,1]");
 
-      const auto& cmp1 = left->compare(right);
+      const auto& cmp1 = compare(left, right);
       CHECK(internal_type::array == cmp1.srcType);
       CHECK(internal_type::unknown == cmp1.dstType);
       CHECK(cmp1.srcValue == "[1,1,1,1]");
@@ -535,7 +526,7 @@ TEST_CASE("Simple Data Types") {
       CHECK(cmp1.desc.size() == 1u);
       CHECK(cmp1.desc.count("array size shrunk by 2 elements"));
 
-      const auto& cmp2 = right->compare(left);
+      const auto& cmp2 = compare(right, left);
       CHECK(internal_type::array == cmp2.srcType);
       CHECK(internal_type::unknown == cmp2.dstType);
       CHECK(cmp2.srcValue == "[1,1,1,1,1,1]");
@@ -547,20 +538,20 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("serialize") {
-      const auto& makeArray = [](const std::vector<bool>& vec) {
-        const auto& ret = std::make_shared<ArrayType>();
+      const auto& makeArray = [](const std::vector<bool>& vec) -> data_point {
+        touca::array ret;
         for (const auto&& v : vec) {
-          ret->add(std::make_shared<BooleanType>(v));
+          ret.add(serializer<bool>().serialize(v));
         }
         return ret;
       };
       const auto& value = makeArray({false, true, false, true});
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
-      const auto& cmp = value->compare(itype);
+      const auto& cmp = compare(value, itype);
 
-      CHECK(internal_type::array == itype->type());
-      CHECK(itype->string() == R"([false,true,false,true])");
+      CHECK(internal_type::array == itype.type());
+      CHECK(itype.to_string() == R"([false,true,false,true])");
       CHECK(internal_type::array == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == R"([false,true,false,true])");
@@ -573,34 +564,36 @@ TEST_CASE("Simple Data Types") {
 
   SECTION("type: object") {
     SECTION("initialize: add number to object") {
-      ObjectType value("creature");
-      CHECK(value.flatten().empty());
-      CHECK(value.string() == R"({"creature":{}})");
+      touca::object value("creature");
+      CHECK_NOTHROW(data_point(value));
+      CHECK(flatten(value).empty());
+      CHECK(data_point(value).to_string() == R"({"creature":{}})");
       value.add("number of heads", 1);
-      CHECK(value.flatten().count("number of heads"));
-      CHECK(value.string() == R"({"creature":{"number of heads":1}})");
+      CHECK(flatten(value).count("number of heads"));
+      CHECK(data_point(value).to_string() ==
+            R"({"creature":{"number of heads":1}})");
       value.add("number of tails", 0);
-      CHECK(value.flatten().count("number of tails"));
-      CHECK(value.string() ==
+      CHECK(flatten(value).count("number of tails"));
+      CHECK(data_point(value).to_string() ==
             R"({"creature":{"number of heads":1,"number of tails":0}})");
     }
 
     SECTION("initialize: add object to object") {
-      ObjectType value("creature");
-      CHECK(value.flatten().empty());
-      creature::Head head1(2);
+      touca::object value("creature");
+      CHECK(flatten(value).empty());
+      Head head1(2);
       value.add("first_head", head1);
-      CHECK(value.flatten().count("first_head.eyes"));
-      CHECK(value.string() ==
+      CHECK(flatten(value).count("first_head.eyes"));
+      CHECK(data_point(value).to_string() ==
             R"({"creature":{"first_head":{"head":{"eyes":2}}}})");
     }
 
     SECTION("compare: match") {
-      ObjectType value("creature");
-      value.add("first_head", creature::Head(2));
-      auto right = std::make_shared<ObjectType>("some_other_creature");
-      right->add("first_head", creature::Head(2));
-      const auto& cmp = value.compare(right);
+      touca::object value("creature");
+      value.add("first_head", Head(2));
+      touca::object right("some_other_creature");
+      right.add("first_head", Head(2));
+      const auto& cmp = compare(value, right);
 
       CHECK(internal_type::object == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
@@ -613,11 +606,11 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("compare: mismatch value") {
-      ObjectType value("creature");
-      value.add("first_head", creature::Head(2));
-      auto right = std::make_shared<ObjectType>("some_other_creature");
-      right->add("first_head", creature::Head(3));
-      const auto& cmp = value.compare(right);
+      touca::object value("creature");
+      value.add("first_head", Head(2));
+      touca::object right("some_other_creature");
+      right.add("first_head", Head(3));
+      const auto& cmp = compare(value, right);
 
       CHECK(internal_type::object == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
@@ -632,16 +625,16 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("serialize") {
-      const auto& value = std::make_shared<ObjectType>("creature");
-      value->add("first_head", creature::Head(2));
+      touca::object value("creature");
+      value.add("first_head", Head(2));
       const auto& buffer = serialize(value);
       const auto& itype = deserialize(buffer);
       const auto& expected =
           R"({"creature":{"first_head":{"head":{"eyes":2}}}})";
-      const auto& cmp = value->compare(itype);
+      const auto& cmp = compare(value, itype);
 
-      CHECK(internal_type::object == itype->type());
-      CHECK(itype->string() == expected);
+      CHECK(internal_type::object == itype.type());
+      CHECK(itype.to_string() == expected);
       CHECK(internal_type::object == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
       CHECK(cmp.srcValue == expected);
@@ -652,7 +645,7 @@ TEST_CASE("Simple Data Types") {
     }
 
     SECTION("initialize: array of objects") {
-      using type_t = std::vector<creature::Head>;
+      using type_t = std::vector<Head>;
       const auto& make = [](const std::vector<int>& vec) {
         type_t inputs;
         for (const auto& v : vec) {
@@ -662,14 +655,14 @@ TEST_CASE("Simple Data Types") {
       };
       const auto& left = make({1, 3, 4, 1, 0});
       const auto& right = make({1, 3, 4, 0, 1});
-      const auto& cmp = left->compare(right);
+      const auto& cmp = compare(left, right);
 
       CHECK(
-          left->string() ==
+          left.to_string() ==
           R"([{"head":{"eyes":1}},{"head":{"eyes":3}},{"head":{"eyes":4}},{"head":{"eyes":1}},{"head":{"eyes":0}}])");
-      CHECK(left->flatten().size() == 5ul);
-      CHECK(left->flatten().count("[2]eyes"));
-      CHECK(left->flatten().at("[2]eyes")->string() == R"(4)");
+      CHECK(flatten(left).size() == 5ul);
+      CHECK(flatten(left).count("[2]eyes"));
+      CHECK(flatten(left).at("[2]eyes").to_string() == R"(4)");
       CHECK(MatchType::None == cmp.match);
       CHECK(cmp.score == 0.6);
     }
@@ -683,11 +676,11 @@ TEST_CASE("Simple Data Types") {
 
       SECTION("initialize") {
         const auto& itype = serializer<type_t>().serialize(value);
-        CHECK(internal_type::object == itype->type());
-        CHECK(itype->string() == expected);
-        CHECK_FALSE(itype->flatten().empty());
-        CHECK(itype->flatten().count("first"));
-        CHECK(itype->flatten().at("first")->string() == R"(true)");
+        CHECK(internal_type::object == itype.type());
+        CHECK(itype.to_string() == expected);
+        CHECK_FALSE(flatten(itype).empty());
+        CHECK(flatten(itype).count("first"));
+        CHECK(flatten(itype).at("first").to_string() == R"(true)");
       }
 
       SECTION("compare") {
@@ -695,7 +688,7 @@ TEST_CASE("Simple Data Types") {
         const type_t rightValue(false, false);
         const auto& left = serializer<type_t>().serialize(leftValue);
         const auto& right = serializer<type_t>().serialize(rightValue);
-        const auto& cmp = left->compare(right);
+        const auto& cmp = compare(left, right);
         CHECK(internal_type::object == cmp.srcType);
         CHECK(internal_type::unknown == cmp.dstType);
         CHECK(cmp.srcValue == expected);
@@ -713,7 +706,7 @@ TEST_CASE("Simple Data Types") {
       const type_t rightValue{{L"k1", L"v1"}, {L"k2", L"v2"}};
       const auto& left = serializer<type_t>().serialize(leftValue);
       const auto& right = serializer<type_t>().serialize(rightValue);
-      const auto& cmp = left->compare(right);
+      const auto& cmp = compare(left, right);
 
       CHECK(internal_type::array == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
@@ -731,19 +724,19 @@ TEST_CASE("Simple Data Types") {
       SECTION("initialize") {
         const auto& value = std::make_shared<bool>(true);
         const auto& itype = serializer<type_t>().serialize(value);
-        CHECK(internal_type::object == itype->type());
-        CHECK(itype->string() == R"({"std::shared_ptr":{"v":true}})");
-        CHECK_FALSE(itype->flatten().empty());
-        CHECK(itype->flatten().count("v"));
-        CHECK(itype->flatten().at("v")->string() == R"(true)");
+        CHECK(internal_type::object == itype.type());
+        CHECK(itype.to_string() == R"({"std::shared_ptr":{"v":true}})");
+        CHECK_FALSE(flatten(itype).empty());
+        CHECK(flatten(itype).count("v"));
+        CHECK(flatten(itype).at("v").to_string() == R"(true)");
       }
 
       SECTION("initialize: null") {
         const type_t value;
         const auto& itype = serializer<type_t>().serialize(value);
-        CHECK(internal_type::object == itype->type());
-        CHECK(itype->string() == R"({"std::shared_ptr":{}})");
-        CHECK(itype->flatten().empty());
+        CHECK(internal_type::object == itype.type());
+        CHECK(itype.to_string() == R"({"std::shared_ptr":{}})");
+        CHECK(flatten(itype).empty());
       }
 
       SECTION("compare: mismatch") {
@@ -751,7 +744,7 @@ TEST_CASE("Simple Data Types") {
         const auto& rightValue = std::make_shared<bool>(false);
         const auto& left = serializer<type_t>().serialize(leftValue);
         const auto& right = serializer<type_t>().serialize(rightValue);
-        const auto& cmp = left->compare(right);
+        const auto& cmp = compare(left, right);
 
         CHECK(MatchType::None == cmp.match);
         CHECK(cmp.score == 0.0);
@@ -768,19 +761,19 @@ TEST_CASE("Simple Data Types") {
       type_t value = {{1u, true}, {2u, false}};
       const auto& itype = serializer<type_t>().serialize(value);
 
-      CHECK(internal_type::array == itype->type());
+      CHECK(internal_type::array == itype.type());
       CHECK(
-          itype->string() ==
+          itype.to_string() ==
           R"([{"std::pair":{"first":1,"second":true}},{"std::pair":{"first":2,"second":false}}])");
-      CHECK(itype->flatten().size() == 4u);
-      CHECK(itype->flatten().count("[0]first"));
-      CHECK(itype->flatten().count("[0]second"));
-      CHECK(itype->flatten().count("[1]first"));
-      CHECK(itype->flatten().count("[1]second"));
-      CHECK(itype->flatten().at("[0]first")->string() == R"(1)");
-      CHECK(itype->flatten().at("[0]second")->string() == R"(true)");
-      CHECK(itype->flatten().at("[1]first")->string() == R"(2)");
-      CHECK(itype->flatten().at("[1]second")->string() == R"(false)");
+      CHECK(flatten(itype).size() == 4u);
+      CHECK(flatten(itype).count("[0]first"));
+      CHECK(flatten(itype).count("[0]second"));
+      CHECK(flatten(itype).count("[1]first"));
+      CHECK(flatten(itype).count("[1]second"));
+      CHECK(flatten(itype).at("[0]first").to_string() == R"(1)");
+      CHECK(flatten(itype).at("[0]second").to_string() == R"(true)");
+      CHECK(flatten(itype).at("[1]first").to_string() == R"(2)");
+      CHECK(flatten(itype).at("[1]second").to_string() == R"(false)");
     }
   }
 }

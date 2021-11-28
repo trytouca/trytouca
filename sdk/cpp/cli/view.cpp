@@ -30,7 +30,7 @@ bool ViewOperation::parse_impl(int argc, char* argv[]) {
 bool ViewOperation::run_impl() const {
   touca::ResultFile file(_src);
   try {
-    fmt::print(stdout, "{}\n", file.readFileInJson());
+    fmt::print(stdout, "{}\n", file.read_file_in_json());
     return true;
   } catch (const std::exception& ex) {
     touca::print_error("failed to read file {}: {}\n", _src, ex.what());

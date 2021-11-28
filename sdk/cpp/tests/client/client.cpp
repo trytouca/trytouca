@@ -92,7 +92,7 @@ TEST_CASE("using a configured client") {
 
   SECTION("results") {
     client.declare_testcase("some-case");
-    const auto& v1 = std::make_shared<BooleanType>(true);
+    const auto& v1 = data_point::boolean(true);
     CHECK_NOTHROW(client.check("some-value", v1));
     CHECK_NOTHROW(client.add_hit_count("some-other-value"));
     CHECK_NOTHROW(client.add_array_element("some-array-value", v1));
@@ -107,7 +107,7 @@ TEST_CASE("using a configured client") {
    */
   SECTION("assumptions") {
     client.declare_testcase("some-case");
-    const auto& v1 = std::make_shared<BooleanType>(true);
+    const auto& v1 = data_point::boolean(true);
     CHECK_NOTHROW(client.assume("some-value", v1));
     const auto& content = save_and_read_back(client);
     const auto& expected = R"([])";
@@ -133,7 +133,7 @@ TEST_CASE("using a configured client") {
 
   SECTION("forget_testcase") {
     client.declare_testcase("some-case");
-    const auto& v1 = std::make_shared<BooleanType>(true);
+    const auto& v1 = data_point::boolean(true);
     client.check("some-value", v1);
     client.assume("some-assertion", v1);
     client.start_timer("some-metric");

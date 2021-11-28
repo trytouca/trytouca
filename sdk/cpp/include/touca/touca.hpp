@@ -258,14 +258,12 @@ TOUCA_CLIENT_API void forget_testcase(const std::string& name);
  */
 namespace detail {
 
-TOUCA_CLIENT_API void check(const std::string& key,
-                            const std::shared_ptr<touca::IType>& value);
+TOUCA_CLIENT_API void check(const std::string& key, const data_point& value);
 
-TOUCA_CLIENT_API void assume(const std::string& key,
-                             const std::shared_ptr<touca::IType>& value);
+TOUCA_CLIENT_API void assume(const std::string& key, const data_point& value);
 
-TOUCA_CLIENT_API void add_array_element(
-    const std::string& key, const std::shared_ptr<touca::IType>& value);
+TOUCA_CLIENT_API void add_array_element(const std::string& key,
+                                        const data_point& value);
 
 }  // namespace detail
 

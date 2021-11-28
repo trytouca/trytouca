@@ -67,7 +67,7 @@ class TOUCA_CLIENT_API ResultFile {
    * file on disk associated with this object.
    *
    * Calling other member functions such as `validate`, `parse`,
-   * `readFileInJson` or `compare` does **not** require loading
+   * `read_file_in_json` or `compare` does **not** require loading
    * the file first. This operation is only helpful to speed-up
    * other operations if they are to be called several times.
    *
@@ -128,7 +128,7 @@ class TOUCA_CLIENT_API ResultFile {
    * @return string representation of test results stored in the
    *         specified file in json format
    */
-  std::string readFileInJson() const;
+  std::string read_file_in_json() const;
 
   /**
    * Parses and includes all testcases stored in a given binary

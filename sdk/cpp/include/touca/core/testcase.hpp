@@ -17,11 +17,11 @@ class TestcaseComparison;
 enum class ResultCategory { Check = 1, Assert };
 
 struct MetricsMapValue {
-  std::shared_ptr<IType> value;
+  data_point value;
 };
 
 struct ResultEntry {
-  std::shared_ptr<IType> val;
+  data_point val;
   ResultCategory typ;
 };
 
@@ -59,7 +59,8 @@ class TOUCA_CLIENT_API Testcase {
   };
 
   Testcase(const Metadata& meta, const ResultsMap& results,
-           const std::unordered_map<std::string, unsigned long>& metrics);
+           const std::unordered_map<std::string, detail::number_unsigned_t>&
+               metrics);
 
   Testcase(const std::string& teamslug, const std::string& testsuite,
            const std::string& version, const std::string& name);
@@ -68,12 +69,11 @@ class TOUCA_CLIENT_API Testcase {
 
   void toc(const std::string& key);
 
-  void check(const std::string& key, const std::shared_ptr<IType>& value);
+  void check(const std::string& key, const data_point& value);
 
-  void assume(const std::string& key, const std::shared_ptr<IType>& value);
+  void assume(const std::string& key, const data_point& value);
 
-  void add_array_element(const std::string& key,
-                         const std::shared_ptr<IType>& value);
+  void add_array_element(const std::string& key, const data_point& value);
 
   void add_hit_count(const std::string& key);
 

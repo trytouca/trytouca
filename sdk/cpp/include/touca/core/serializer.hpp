@@ -127,55 +127,63 @@ enable_if_t<std::is_convertible<T, std::wstring>::value, std::string> to_string(
   return conv.to_bytes(value);
 }
 
-template <typename T, typename = void>
-struct is_touca_number : std::false_type {};
-
-template <typename T>
-struct is_touca_number<T, enable_if_t<std::is_floating_point<T>::value>>
-    : std::true_type {};
-
-template <typename T>
-struct is_touca_number<
-    T, enable_if_t<std::is_integral<T>::value && !is_touca_boolean<T>::value>>
-    : std::true_type {};
-
 }  // namespace detail
 
 template <typename T>
 struct serializer<T, detail::enable_if_t<detail::is_touca_null<T>::value>> {
-  std::shared_ptr<IType> serialize(const T& value) {
-    std::ignore = value;
-    return std::make_shared<NoneType>();
-  }
+  data_point serialize(const T&) { return data_point::null(); }
 };
 
 template <typename T>
 struct serializer<T, detail::enable_if_t<detail::is_touca_boolean<T>::value>> {
-  std::shared_ptr<IType> serialize(const T& value) {
-    return std::make_shared<BooleanType>(value);
+  data_point serialize(const T& value) { return data_point::boolean(value); }
+};
+
+template <typename T>
+struct serializer<
+    T, detail::enable_if_t<detail::is_touca_number_signed<T>::value>> {
+  data_point serialize(const T& value) {
+    return data_point::number_signed(value);
   }
 };
 
 template <typename T>
-struct serializer<T, detail::enable_if_t<detail::is_touca_number<T>::value>> {
-  std::shared_ptr<IType> serialize(const T& value) {
-    return std::make_shared<NumberType<T>>(value);
+struct serializer<
+    T, detail::enable_if_t<detail::is_touca_number_unsigned<T>::value>> {
+  data_point serialize(const T& value) {
+    return data_point::number_unsigned(value);
+  }
+};
+
+template <typename T>
+struct serializer<
+    T, detail::enable_if_t<detail::is_touca_number_float<T>::value>> {
+  data_point serialize(const T& value) {
+    return data_point::number_float(value);
+  }
+};
+
+template <typename T>
+struct serializer<
+    T, detail::enable_if_t<detail::is_touca_number_double<T>::value>> {
+  data_point serialize(const T& value) {
+    return data_point::number_double(value);
   }
 };
 
 template <typename T>
 struct serializer<T, detail::enable_if_t<detail::is_touca_string<T>::value>> {
-  std::shared_ptr<IType> serialize(const T& value) {
-    return std::make_shared<StringType>(detail::to_string<T>(value));
+  data_point serialize(const T& value) {
+    return data_point::string(detail::to_string<T>(value));
   }
 };
 
 template <typename T>
 struct serializer<T, detail::enable_if_t<detail::is_touca_array<T>::value>> {
-  std::shared_ptr<IType> serialize(const T& value) {
-    auto out = std::make_shared<ArrayType>();
-    for (const auto& v : value) {
-      out->add(serializer<typename T::value_type>().serialize(v));
+  data_point serialize(const T& values) {
+    array out;
+    for (const auto& v : values) {
+      out.add(v);
     }
     return out;
   }
@@ -184,11 +192,10 @@ struct serializer<T, detail::enable_if_t<detail::is_touca_array<T>::value>> {
 template <typename T>
 struct serializer<
     T, detail::enable_if_t<detail::is_specialization<T, std::pair>::value>> {
-  std::shared_ptr<IType> serialize(const T& value) {
-    auto out = std::make_shared<ObjectType>("std::pair");
-    out->add("first", value.first);
-    out->add("second", value.second);
-    return out;
+  data_point serialize(const T& value) {
+    return object("std::pair")
+        .add("first", value.first)
+        .add("second", value.second);
   }
 };
 
@@ -196,12 +203,9 @@ template <typename T>
 struct serializer<
     T,
     detail::enable_if_t<detail::is_specialization<T, std::shared_ptr>::value>> {
-  std::shared_ptr<IType> serialize(const T& value) {
-    auto out = std::make_shared<ObjectType>("std::shared_ptr");
-    if (value) {
-      out->add("v", *value);
-    }
-    return out;
+  data_point serialize(const T& value) {
+    touca::object out("std::shared_ptr");
+    return value ? out.add("v", *value) : out;
   }
 };
 

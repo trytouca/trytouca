@@ -34,8 +34,8 @@ TEST_CASE("Result File Operations") {
 
   SECTION("stored result file") {
     touca::Testcase tc("acme", "students", "1.0", "aanderson");
-    tc.check("firstname", std::make_shared<touca::StringType>("alice"));
-    tc.check("lastname", std::make_shared<touca::StringType>("anderson"));
+    tc.check("firstname", touca::data_point::string("alice"));
+    tc.check("lastname", touca::data_point::string("anderson"));
     REQUIRE_NOTHROW(resultFile.save({tc}));
 
     /*
@@ -59,16 +59,16 @@ TEST_CASE("Result File Operations") {
     /**
      * Parse the result file into string in json format
      */
-    SECTION("calling readFileInJson on loaded file will not re-parse file") {
-      const auto tmpJson = resultFile.readFileInJson();
+    SECTION("calling read_file_in_json on loaded file will not re-parse file") {
+      const auto tmpJson = resultFile.read_file_in_json();
       const auto expected =
           R"~("results":[{"key":"firstname","value":"alice"},{"key":"lastname","value":"anderson"}],"assertion":[],"metrics":[])~";
       REQUIRE_THAT(tmpJson, Catch::Contains(expected));
     }
 
-    SECTION("calling readFileInJson without load should implicitly parse") {
+    SECTION("calling read_file_in_json without load should implicitly parse") {
       touca::ResultFile newResultFile(tmpFile.path);
-      const auto tmpJson = newResultFile.readFileInJson();
+      const auto tmpJson = newResultFile.read_file_in_json();
       const auto expected =
           R"~("results":[{"key":"firstname","value":"alice"},{"key":"lastname","value":"anderson"}],"assertion":[],"metrics":[])~";
       REQUIRE_THAT(tmpJson, Catch::Contains(expected));
@@ -133,8 +133,8 @@ TEST_CASE("Result File Operations") {
 
       touca::ResultFile newResultFile(newTmpFile.path);
       touca::Testcase tc_dst("acme", "students", "1.0", "bbrown");
-      tc_dst.check("firstname", std::make_shared<touca::StringType>("bob"));
-      tc_dst.check("lastname", std::make_shared<touca::StringType>("brown"));
+      tc_dst.check("firstname", touca::data_point::string("bob"));
+      tc_dst.check("lastname", touca::data_point::string("brown"));
       REQUIRE_NOTHROW(newResultFile.save({tc_dst}));
 
       touca::ResultFile newResultFile2(newTmpFile.path);

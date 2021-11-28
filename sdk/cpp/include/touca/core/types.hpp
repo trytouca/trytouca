@@ -2,8 +2,12 @@
 
 #pragma once
 
+#include <cstdint>
 #include <map>
-#include <set>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include "nlohmann/json_fwd.hpp"
 #include "touca/lib_api.hpp"
@@ -13,16 +17,16 @@ class FlatBufferBuilder;
 template <typename Type>
 struct Offset;
 }  // namespace flatbuffers
+
 namespace touca {
-class IType;
+class data_point;
+class object;
+struct array;
 struct TypeComparison;
 namespace fbs {
-struct Array;
-struct Object;
 struct TypeWrapper;
 }  // namespace fbs
-
-using KeyMap = std::map<std::string, std::shared_ptr<IType>>;
+namespace detail {
 
 enum class TOUCA_CLIENT_API internal_type : std::uint8_t {
   null,
@@ -34,119 +38,89 @@ enum class TOUCA_CLIENT_API internal_type : std::uint8_t {
   number_unsigned,
   number_float,
   number_double,
-  binary,
   unknown
 };
 
-class TOUCA_CLIENT_API IType {
- public:
-  IType(const IType&) = delete;
+template <typename T, typename... Args>
+static T* create(Args&&... args) {
+  std::allocator<T> alloc;
+  using AllocatorTraits = std::allocator_traits<std::allocator<T>>;
 
-  IType& operator=(const IType&) = delete;
+  auto deleter = [&](T* obj) { AllocatorTraits::deallocate(alloc, obj, 1); };
+  std::unique_ptr<T, decltype(deleter)> obj(AllocatorTraits::allocate(alloc, 1),
+                                            deleter);
+  AllocatorTraits::construct(alloc, obj.get(), std::forward<Args>(args)...);
+  return obj.release();
+}
 
-  virtual ~IType() = default;
+using object_t = std::map<std::string, data_point>;
+using array_t = std::vector<data_point>;
+using string_t = std::string;
+using boolean_t = bool;
+using number_signed_t = int64_t;
+using number_unsigned_t = uint64_t;
+using number_float_t = float;
+using number_double_t = double;
 
-  internal_type type() const;
+union internal_value {
+  object_t* object;
+  array_t* array;
+  string_t* string;
+  boolean_t boolean;
+  number_signed_t number_signed;
+  number_unsigned_t number_unsigned;
+  number_float_t number_float;
+  number_double_t number_double;
 
-  std::string string() const;
-
-  virtual nlohmann::ordered_json json() const = 0;
-
-  virtual flatbuffers::Offset<fbs::TypeWrapper> serialize(
-      flatbuffers::FlatBufferBuilder& fbb) const = 0;
-
-  virtual TypeComparison compare(const std::shared_ptr<IType>& itype) const = 0;
-
-  /**
-   * This function flattens all of the object's nested ITypes into
-   * one flat map. Only ObjectType and ArrayType can have nested
-   * values, so they are the only ones to override this default
-   */
-  virtual KeyMap flatten() const { return {}; }
-
- protected:
-  IType(const internal_type type_t) : _type_t(type_t){};
-
-  const internal_type _type_t;
+  internal_value();
+  internal_value(const boolean_t v) noexcept;
+  internal_value(const number_signed_t v) noexcept;
+  internal_value(const number_unsigned_t v) noexcept;
+  internal_value(const number_float_t v) noexcept;
+  internal_value(const number_double_t v) noexcept;
+  internal_value(const string_t& v) noexcept;
+  static internal_value as_array();
+  static internal_value as_object();
 };
 
-class TOUCA_CLIENT_API NoneType : public IType {
- public:
-  explicit NoneType();
+}  // namespace detail
 
-  nlohmann::ordered_json json() const override;
+class TOUCA_CLIENT_API data_point {
+  friend TOUCA_CLIENT_API TypeComparison compare(const data_point& src,
+                                                 const data_point& dst);
+  friend TOUCA_CLIENT_API std::map<std::string, data_point> flatten(
+      const data_point& input);
+  friend void to_json(nlohmann::json& out, const data_point& value);
+
+ public:
+  data_point(const array& value);
+  data_point(const object& value);
+
+  static data_point null();
+  static data_point boolean(const detail::boolean_t value);
+  static data_point number_signed(const detail::number_signed_t value);
+  static data_point number_unsigned(const detail::number_unsigned_t value);
+  static data_point number_double(const detail::number_double_t value);
+  static data_point number_float(const detail::number_float_t value);
+  static data_point string(const detail::string_t& value);
+
+  void increment();
+  detail::array_t* as_array() const;
+  detail::number_unsigned_t as_metric() const;
+  detail::internal_type type() const;
+  std::string to_string() const;
 
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
-      flatbuffers::FlatBufferBuilder& fbb) const override;
-
-  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
-};
-
-class TOUCA_CLIENT_API BooleanType : public IType {
- public:
-  explicit BooleanType(bool value);
-
-  nlohmann::ordered_json json() const override;
-
-  flatbuffers::Offset<fbs::TypeWrapper> serialize(
-      flatbuffers::FlatBufferBuilder& fbb) const override;
-
-  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
+      flatbuffers::FlatBufferBuilder& builder) const;
 
  private:
-  bool _value;
-};
+  explicit data_point(detail::internal_type type);
+  explicit data_point(detail::internal_type type,
+                      const detail::internal_value& value);
 
-template <class T>
-class TOUCA_CLIENT_API NumberType : public IType {
- public:
-  explicit NumberType(const T value);
-
-  nlohmann::ordered_json json() const override;
-
-  T value() const;
-
-  flatbuffers::Offset<fbs::TypeWrapper> serialize(
-      flatbuffers::FlatBufferBuilder& fbb) const override;
-
-  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
-
- private:
-  T _value;
-};
-
-class TOUCA_CLIENT_API StringType : public IType {
- public:
-  explicit StringType(const std::string& value);
-
-  nlohmann::ordered_json json() const override;
-
-  flatbuffers::Offset<fbs::TypeWrapper> serialize(
-      flatbuffers::FlatBufferBuilder& fbb) const override;
-
-  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
-
- private:
-  std::string _value;
-};
-
-class TOUCA_CLIENT_API ArrayType : public IType {
- public:
-  ArrayType();
-
-  void add(const std::shared_ptr<IType>& value);
-
-  nlohmann::ordered_json json() const override;
-
-  flatbuffers::Offset<fbs::TypeWrapper> serialize(
-      flatbuffers::FlatBufferBuilder& fbb) const override;
-
-  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
-
-  KeyMap flatten() const override;
-
- private:
-  std::vector<std::shared_ptr<IType>> _values;
+  detail::internal_type _type = detail::internal_type::null;
+  detail::internal_value _value;
+  std::string _name;
 };
 
 /**
@@ -174,12 +148,11 @@ class TOUCA_CLIENT_API ArrayType : public IType {
  *
  *      template <>
  *      struct touca::serializer<Date> {
- *        std::shared_ptr<IType> serialize(const Date& value) {
- *          auto out = std::make_shared<ObjectType>("Date");
- *          out->add("year", value.year);
- *          out->add("month", value.month);
- *          out->add("day", value.day);
- *          return out;
+ *        data_point serialize(const Date& value) {
+ *          return object("Date")
+ *            .add("year", value.year)
+ *            .add("month", value.month)
+ *            .add("day", value.day);
  *        }
  *      };
  *
@@ -202,17 +175,16 @@ class TOUCA_CLIENT_API ArrayType : public IType {
  * @code{.cpp}
  *
  *      struct Person {
- *        const std::string _name;
- *        const Date _birthday;
+ *        const std::string name;
+ *        const Date birthday;
  *      };
  *
  *      template <>
  *      struct touca::serializer<Person> {
- *        std::shared_ptr<IType> serialize(const Person& value) {
- *          auto out = std::make_shared<ObjectType>("Person");
- *          out->add("name", val._name);
- *          out->add("birthday", val._birthday);
- *          return out;
+ *        data_point serialize(const Person& value) {
+ *          return object("Person")
+ *            .add("name", val.name)
+ *            .add("birthday", val.birthday);
  *        }
  *      };
  *
@@ -233,59 +205,47 @@ struct serializer {
    * @return shared pointer to a generic type that the Touca SDK for C++
    *         knows how to handle.
    */
-  std::shared_ptr<IType> serialize(const T& value) {
-    static_assert(std::is_same<std::shared_ptr<IType>, T>::value,
-                  "did not find any partial specialization of serializer "
-                  "function to convert your value to a Touca type");
+  data_point serialize(const T& value) {
+    static_assert(std::is_same<data_point, T>::value,
+                  "did not find any specialization of serializer "
+                  "to serialize your value to a Touca type");
     return static_cast<T>(value);
   }
 };
 
-class TOUCA_CLIENT_API ObjectType : public IType {
+struct TOUCA_CLIENT_API array {
+  friend class data_point;
+
  public:
-  ObjectType();
-
-  explicit ObjectType(const std::string& name);
-
-  ObjectType(const std::string& name, const KeyMap& values);
-
-  nlohmann::ordered_json json() const override;
+  array() : _v(detail::create<detail::array_t>()) {}
 
   template <typename T>
-  void add(const std::string& key, T value) {
-    _values.emplace(key, serializer<T>().serialize(value));
+  array& add(const T& value) {
+    _v->push_back(serializer<T>().serialize(value));
+    return *this;
   }
 
-  flatbuffers::Offset<fbs::TypeWrapper> serialize(
-      flatbuffers::FlatBufferBuilder& builder) const override;
-
-  TypeComparison compare(const std::shared_ptr<IType>& itype) const override;
-
-  KeyMap flatten() const override;
-
  private:
-  std::string _name;
-  KeyMap _values;
-
-};  // class touca::ObjectType
-
-/**
- * @enum MatchType
- * @brief describes overall result of comparing two testcases
- */
-enum class MatchType : unsigned char {
-  Perfect, /**< Indicates that compared objects were identical */
-  None     /**< Indicates that compared objects were different */
+  detail::array_t* _v;
 };
 
-struct TOUCA_CLIENT_API TypeComparison {
-  std::string srcValue;
-  std::string dstValue;
-  internal_type srcType = internal_type::unknown;
-  internal_type dstType = internal_type::unknown;
-  double score = 0.0;
-  std::set<std::string> desc;
-  MatchType match = MatchType::None;
+class TOUCA_CLIENT_API object {
+  friend class data_point;
+  friend void to_json(nlohmann::json& out, const data_point& value);
+
+ public:
+  object(const std::string& name = "")
+      : name(name), _v(detail::create<detail::object_t>()) {}
+
+  template <typename T>
+  object& add(const std::string& key, const T& value) {
+    _v->emplace(key, serializer<T>().serialize(value));
+    return *this;
+  }
+
+ private:
+  std::string name;
+  detail::object_t* _v;
 };
 
 }  // namespace touca
