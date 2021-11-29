@@ -15,7 +15,9 @@ export default function Header() {
                 className="h-10"
                 src={make_path('/logo/touca-logo-transparent.svg')}
                 alt="Touca Logo"
-                loading="eager"
+                loading="lazy"
+                width="40px"
+                height="40px"
               />
               <h1 className="text-2xl font-bold leading-10 tracking-tight text-white">
                 touca<span className="text-sky-300">.io</span>
