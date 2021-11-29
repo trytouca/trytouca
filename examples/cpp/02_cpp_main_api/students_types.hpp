@@ -7,33 +7,28 @@
 
 template <>
 struct touca::serializer<Date> {
-  std::shared_ptr<IType> serialize(const Date& value) {
-    auto out = std::make_shared<ObjectType>("Date");
-    out->add("year", value.year);
-    out->add("month", value.month);
-    out->add("day", value.day);
-    return out;
+  data_point serialize(const Date& value) {
+    return object("Date")
+        .add("year", value.year)
+        .add("month", value.month)
+        .add("day", value.day);
   }
 };
 
 template <>
 struct touca::serializer<Course> {
-  std::shared_ptr<IType> serialize(const Course& value) {
-    auto out = std::make_shared<ObjectType>("Course");
-    out->add("name", value.name);
-    out->add("grade", value.grade);
-    return out;
+  data_point serialize(const Course& value) {
+    return object("Course").add("name", value.name).add("grade", value.grade);
   }
 };
 
 template <>
 struct touca::serializer<Student> {
-  std::shared_ptr<IType> serialize(const Student& value) {
-    auto out = std::make_shared<ObjectType>("Student");
-    out->add("username", value.username);
-    out->add("fullname", value.fullname);
-    out->add("birth_date", value.dob);
-    out->add("gpa", value.gpa);
-    return out;
+  data_point serialize(const Student& value) {
+    return object("Student")
+        .add("username", value.username)
+        .add("fullname", value.fullname)
+        .add("birth_date", value.dob)
+        .add("gpa", value.gpa);
   }
 };
