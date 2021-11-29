@@ -188,6 +188,8 @@ export default function Home() {
                         src={make_path('/images/touca-customer-logo-vital.svg')}
                         alt="Canon Medical Informatics"
                         loading="lazy"
+                        width="250px"
+                        height="20px"
                       />
                     </a>
                   </div>

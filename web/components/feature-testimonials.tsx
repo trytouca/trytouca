@@ -53,6 +53,8 @@ const Testimonial = (props: { input: TestimonialInput }) => {
           src={props.input.image}
           alt={`${props.input.name}, ${props.input.role} at ${props.input.company}`}
           loading="lazy"
+          width="80px"
+          height="80px"
         />
         <div className="font-medium">
           <div className="text-lg text-white">{props.input.name}</div>
