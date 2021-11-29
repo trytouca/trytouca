@@ -245,15 +245,15 @@ Now that things are set up with AWS, we can login to the container registry via
 Docker.
 
 ```bash
-aws ecr get-login-password --region <TOUCA_AWS_REGION> | docker login --username AWS --password-stdin <TOUCA_AWS_REPO>
+aws ecr get-login-password --region <TOUCA_AWS_REGION> | docker login <TOUCA_AWS_REPO> --username AWS --password-stdin
 ```
 
 Now we can pull our images from the new registry.
 
 ```bash
-docker pull <TOUCA_AWS_REPO>/touca-api:1.3
-docker pull <TOUCA_AWS_REPO>/touca-app:1.3
-docker pull <TOUCA_AWS_REPO>/touca-cmp:1.3
+docker pull <TOUCA_AWS_REPO>/touca-api:1.4.0
+docker pull <TOUCA_AWS_REPO>/touca-app:1.4.0
+docker pull <TOUCA_AWS_REPO>/touca-cmp:1.4.0
 ```
 
 ## Deploy Docker Containers
@@ -263,7 +263,7 @@ production machine and install it in the appropriate path.
 
 ```bash
 ssh touca@your-machine
-mkdir touca; cd touca;
+mkdir -p touca; cd touca;
 scp devops.tar.gz touca@your-machine:~/
 tar -zxf ../devops.tar.gz
 rm ../devops.tar.gz
