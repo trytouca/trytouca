@@ -162,9 +162,8 @@ server visualizes possible differences in these values based on their types.
 
 ### Customizing Data Serialization
 
-Touca SDK type system has built-in support for many commonly-used types of the
-C++ standard library and can easily be extended to support custom data types,
-such as `Date`.
+Touca C++ SDK has built-in support for many commonly-used types of the standard
+library and can be extended to support custom data types.
 
 Consider the following definition for a user-defined type `Date`.
 
@@ -179,39 +178,34 @@ struct Date {
 Using the natively supported types, we can add a value of type `Date` as three
 separate test results that each cover individual member variables. But this
 practice is cumbersome and impractical for real-world complex data types. To
-solve this, we can extend Touca type system to support type `Date` by defining a
-partial template specialization function for it.
+solve this, we can extend Touca type system to support type `Date` using partial
+template specialization.
 
 ```cpp
 #include "touca/touca.hpp"
 
 template <>
-struct touca::convert::Conversion<Date> {
-    std::shared_ptr<types::IType> operator()(const Date& value)
-    {
-        auto out = std::make_shared<types::Object>("Date");
-        out->add("year", value.year);
-        out->add("month", value.month);
-        out->add("day", value.day);
-        return out;
-    }
+struct touca::serializer<Date> {
+  data_point serialize(const Date& value) {
+    return object("Date")
+        .add("year", value.year)
+        .add("month", value.month)
+        .add("day", value.day);
+  }
 };
 ```
 
 Once the client library learns how to handle a custom type, it automatically
 supports handling it as sub-component of other types. As an example, with the
-above-mentioned partial template specialization function for type `Date`, we can
-start adding test results of `type std::vector<Date>` or
-`type std::map<string, Date>`. Additionally, supporting type `Date` enables
-objects of this type to be used as smaller components of even more complex
-types.
+above-mentioned partial template specialization for type `Date`, we can start
+adding test results of type `std::vector<Date>` or `std::map<string, Date>`.
 
 ```cpp
 touca::check("birth_date", student.dob);
 ```
 
-Consult with the Touca Type System section in Reference API documentation for
-more explanation and examples for supporting custom types.
+Consult with the Reference API documentation for more information and examples
+for supporting custom types.
 
 ## Submitting Test Results
 
