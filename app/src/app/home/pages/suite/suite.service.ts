@@ -111,6 +111,10 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         ? of(0)
         : this.apiService.get<unknown>(url[index].join('/'));
     });
+    // ensure that we always periodically poll list of versions
+    if (args.currentTab == SuitePageTabType.Versions) {
+      requests[3] = this.apiService.get<unknown>(url[3].join('/'));
+    }
     forkJoin(requests).subscribe({
       next: (doc) => {
         elements.forEach((key, index) => update(key, doc[index]));
