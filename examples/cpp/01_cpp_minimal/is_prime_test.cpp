@@ -2,8 +2,6 @@
 
 #include "is_prime.hpp"
 
-#include <string>
-
 #include "touca/touca.hpp"
 
 int main(int argc, char* argv[]) {

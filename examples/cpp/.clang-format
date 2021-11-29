@@ -1,5 +1,4 @@
 ---
 Language: Cpp
-BasedOnStyle: WebKit
-CompactNamespaces: true
+BasedOnStyle: Google
 ...
