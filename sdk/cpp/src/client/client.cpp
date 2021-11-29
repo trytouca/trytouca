@@ -154,10 +154,12 @@ bool ClientImpl::configure_impl() {
 
   // retrieve list of known test cases for this suite
 
-  _elements = _platform->elements();
-  if (_elements.empty()) {
-    _config_error = _platform->get_error();
-    return false;
+  if (_options.testcases.empty()) {
+    _options.testcases = _platform->elements();
+    if (_options.testcases.empty()) {
+      _config_error = _platform->get_error();
+      return false;
+    }
   }
 
   _configured = true;
@@ -214,7 +216,9 @@ void ClientImpl::add_logger(std::shared_ptr<logger> logger) {
   _loggers.push_back(logger);
 }
 
-std::vector<std::string> ClientImpl::get_testcases() const { return _elements; }
+std::vector<std::string> ClientImpl::get_testcases() const {
+  return _options.testcases;
+}
 
 std::shared_ptr<touca::Testcase> ClientImpl::declare_testcase(
     const std::string& name) {

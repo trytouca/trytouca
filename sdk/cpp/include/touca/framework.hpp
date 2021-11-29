@@ -77,7 +77,6 @@ using Errors = std::vector<std::string>;
  * Test framework configuration options
  */
 struct FrameworkOptions : public ClientOptions {
-  std::vector<std::string> testcases;
   std::map<std::string, std::string> extra;
   std::string testcase_file;
   std::string config_file;

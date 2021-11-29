@@ -24,6 +24,8 @@ enum class DataFormat : unsigned char {
 };
 
 struct ClientOptions {
+  explicit ClientOptions() = default;
+  std::vector<std::string> testcases;
   std::string api_key;  /**< API Key to authenticate to the Touca server */
   std::string api_url;  /**< URL to Touca server API */
   std::string team;     /**< version of code under test */
@@ -42,7 +44,7 @@ class TOUCA_CLIENT_API ClientImpl {
 
   bool configure(const ClientImpl::OptionsMap& options);
 
-  bool configure(const ClientOptions& options = {});
+  bool configure(const ClientOptions& options = ClientOptions());
 
   bool configure_by_file(const touca::filesystem::path& path);
 
@@ -110,7 +112,6 @@ class TOUCA_CLIENT_API ClientImpl {
   ClientOptions _options;
   ElementsMap _testcases;
   std::string _mostRecentTestcase;
-  std::vector<std::string> _elements;
   std::unique_ptr<Platform> _platform;
   std::unordered_map<std::thread::id, std::string> _threadMap;
   std::vector<std::shared_ptr<touca::logger>> _loggers;
