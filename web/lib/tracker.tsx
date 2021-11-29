@@ -9,12 +9,12 @@ type GTagEvent = {
   value?: number;
 };
 
-export const GA_TRACKING_ID = process.env.NEXT_PUBLIC_ANALYTICS_ID;
+export const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID;
 const MIXPANEL_TOKEN = process.env.NEXT_PUBLIC_MIXPANEL_TOKEN;
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 const gtag_pageview = (url: string) => {
-  window.gtag('config', GA_TRACKING_ID, {
+  window.gtag('config', GTM_ID, {
     page_path: url
   });
 };
@@ -35,18 +35,18 @@ class Tracker {
     }
   }
   enabled() {
-    return !!MIXPANEL_TOKEN && !!GA_TRACKING_ID;
+    return !!MIXPANEL_TOKEN && !!GTM_ID;
   }
   track(event: { action: string }, data?: Record<string, unknown>): void {
     if (MIXPANEL_TOKEN) {
       mixpanel.track(event.action, data);
     }
-    if (GA_TRACKING_ID) {
+    if (GTM_ID) {
       gtag_event(event);
     }
   }
   view(url: string): void {
-    if (GA_TRACKING_ID) {
+    if (GTM_ID) {
       gtag_pageview(url);
     }
   }
