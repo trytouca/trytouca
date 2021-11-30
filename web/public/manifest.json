@@ -4,7 +4,7 @@
   "display": "standalone",
   "theme_color": "#0d0d2b",
   "background_color": "#0d0d2b",
-  "description": "Continuous regression testing for critical software workflows.",
+  "description": "See the side effects of your changes, as you write code.",
   "scope": "/",
   "start_url": "/",
   "icons": [

@@ -1,6 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import Head from 'next/head';
+import Script from 'next/script';
 import {
   HiArrowNarrowRight,
   HiOutlineLightBulb,
@@ -128,6 +129,13 @@ const content: PageContent = {
   ]
 };
 
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  url: 'https://touca.io',
+  logo: 'https://touca.io/icons/icon-192x192.png'
+};
+
 export default function Home() {
   return (
     <>
@@ -136,6 +144,10 @@ export default function Home() {
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <Script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </Head>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
