@@ -6,13 +6,15 @@ learned how to test a `find_student` software using the Touca test framework:
 ```cpp
 #include "students.hpp"
 #include "students_types.hpp"
-#include "touca/touca_main.hpp"
+#include "touca/touca.hpp"
 
-void touca::main(const std::string& username)
-{
+int main(int argc, char* argv[]) {
+  touca::workflow("find_student", [](const std::string& username) {
     const auto& student = find_student(username);
     // insert code here to describe the behavior
     // and performance of the workflow under test
+  });
+  touca::run(argc, argv);
 }
 ```
 
@@ -32,8 +34,7 @@ frameworks.
 #include "touca/touca.hpp"
 #include "students_test.hpp"
 
-int main()
-{
+int main() {
   touca::configure({
     { "api-key", "<TOUCA_API_KEY>" },
     { "api-url", "<TOUCA_API_URL>" },
@@ -169,9 +170,9 @@ Consider the following definition for a user-defined type `Date`.
 
 ```cpp
 struct Date {
-    unsigned short year;
-    unsigned short month;
-    unsigned short day;
+  unsigned short year;
+  unsigned short month;
+  unsigned short day;
 };
 ```
 

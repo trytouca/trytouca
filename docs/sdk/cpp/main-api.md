@@ -15,10 +15,10 @@ where `Student` has the following members:
 
 ```cpp
 struct Student {
-    std::string username;
-    std::string fullname;
-    Date dob;
-    float gpa;
+  std::string username;
+  std::string fullname;
+  Date dob;
+  float gpa;
 };
 ```
 
@@ -30,17 +30,18 @@ Here's a Touca test we can write for our code under test:
 ```cpp
 #include "students.hpp"
 #include "students_types.hpp"
-#include "touca/touca_main.hpp"
+#include "touca/touca.hpp"
 
-void touca::main(const std::string& username)
-{
-    touca::scoped_timer timer("find_student");
+int main(int argc, char* argv[]) {
+  touca::workflow("find_student", [](const std::string& username) {
     const auto& student = find_student(username);
     touca::assume("username", student.username);
     touca::check("fullname", student.fullname);
     touca::check("birth_date", student.dob);
     touca::check("gpa", student.gpa);
     touca::add_metric("external_source", 1500);
+  });
+  touca::run(argc, argv);
 }
 ```
 
@@ -94,14 +95,13 @@ enrolled by a student are not expected to change, we can track them without
 redesigning our API:
 
 ```cpp
-float calculate_gpa(const std::vector<Course>& courses)
-{
-    touca::check("courses", courses);
-    const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
-        [](const float sum, const Course& course) {
-            return sum + course.grade;
-        });
-    return courses.empty() ? 0.0f : sum / courses.size();
+float calculate_gpa(const std::vector<Course>& courses) {
+  touca::check("courses", courses);
+  const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
+      [](const float sum, const Course& course) {
+        return sum + course.grade;
+      });
+  return courses.empty() ? 0.0f : sum / courses.size();
 }
 ```
 
@@ -128,10 +128,9 @@ for runtime measurement. If they feel too verbose, we can opt to use
 `scoped_timer` as an alternatives:
 
 ```cpp
-Student find_student(const std::string& username)
-{
-    TOUCA_SCOPED_TIMER;
-    // implementation
+Student find_student(const std::string& username) {
+  TOUCA_SCOPED_TIMER;
+  // implementation
 }
 ```
 

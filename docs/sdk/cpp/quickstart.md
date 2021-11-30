@@ -16,7 +16,7 @@ Clone our examples repository to a local directory of your choice. Build our C++
 playground Docker image and run it from the command line.
 
 ```bash
-git clone git@github.com/trytouca/examples.git "<YOUR_LOCAL_DIRECTORY>"
+git clone git@github.com:trytouca/examples.git "<YOUR_LOCAL_DIRECTORY>"
 cd "<YOUR_LOCAL_DIRECTORY>"
 docker build -t touca-examples-cpp -f cpp/Dockerfile cpp
 docker run -it touca-examples-cpp /bin/bash
@@ -32,14 +32,13 @@ whether a given number is prime. You can find a possible first implementation in
 ```cpp
 #include <cmath>
 
-bool is_prime(const unsigned long number)
-{
-    for (auto i = 2u; i < number; i++) {
-        if (number % i == 0) {
-            return false;
-        }
+bool is_prime(const unsigned long number) {
+  for (auto i = 2u; i < number; i++) {
+    if (number % i == 0) {
+      return false;
     }
-    return 1 < number;
+  }
+  return 1 < number;
 }
 ```
 
@@ -57,10 +56,12 @@ for C++.
 #include "is_prime.hpp"
 #include "touca/touca_main.hpp"
 
-void touca::main(const std::string& testcase)
-{
+int main(int argc, char* argv[]) {
+  touca::workflow("is_prime", [](const std::string& testcase) {
     const auto number = std::stoul(testcase);
-    touca::check("is_prime", is_prime(number));
+    touca::check("output", is_prime(number));
+  });
+  touca::run(argc, argv);
 }
 ```
 
@@ -124,8 +125,7 @@ shows an API Key and an API URL that you can use to submit test results.
 ```bash
 export TOUCA_API_KEY="8073c34f-a48c-4e69-af9f-405b9943f8cc"
 export TOUCA_API_URL="https://api.touca.io/@/tutorial/prime-test"
-echo -e "19\n51\n97" > testcases.txt
-example_cpp_minimal --testcase-file testcases.txt --revision 1.0
+example_cpp_minimal --testcase 19,51,97 --revision 1.0
 ```
 
 ```text
@@ -174,5 +174,5 @@ of each stage without publicly exposing its API. If the behavior of that stage
 changes in a future version of our code, we can leverage the captured output to
 find the root cause more easily.
 
-In the next documents, we will learn how to use Touca SDK for C++ to test
+In the next document, we will learn how to use Touca SDK for C++ to test
 real-world software workflows.
