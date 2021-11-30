@@ -9,10 +9,10 @@ import {
 } from 'react-syntax-highlighter/dist/cjs/languages/hljs';
 import { nightOwl } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
-SyntaxHighlighter.registerLanguage('cpp', cpp);
-SyntaxHighlighter.registerLanguage('java', java);
-SyntaxHighlighter.registerLanguage('python', python);
-SyntaxHighlighter.registerLanguage('typescript', typescript);
+SyntaxHighlighter.registerLanguage('C++', cpp);
+SyntaxHighlighter.registerLanguage('Java', java);
+SyntaxHighlighter.registerLanguage('Python', python);
+SyntaxHighlighter.registerLanguage('JavaScript', typescript);
 
 export default function CodeSnippet(props: {
   input: { code: string; language: string };
