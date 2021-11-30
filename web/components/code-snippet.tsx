@@ -9,14 +9,22 @@ import {
 } from 'react-syntax-highlighter/dist/cjs/languages/hljs';
 import { nightOwl } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 
-SyntaxHighlighter.registerLanguage('C++', cpp);
-SyntaxHighlighter.registerLanguage('Java', java);
-SyntaxHighlighter.registerLanguage('Python', python);
-SyntaxHighlighter.registerLanguage('JavaScript', typescript);
+SyntaxHighlighter.registerLanguage('cpp', cpp);
+SyntaxHighlighter.registerLanguage('java', java);
+SyntaxHighlighter.registerLanguage('python', python);
+SyntaxHighlighter.registerLanguage('typescript', typescript);
 
 export default function CodeSnippet(props: {
   input: { code: string; language: string };
 }) {
+  const languages: [string, string][] = [
+    ['cpp', 'C++'],
+    ['java', 'Java'],
+    ['python', 'Python'],
+    ['typescript', 'JavaScript']
+  ];
+  const language = languages.find((v) => v[1] == props.input.language);
+  const slug = language ? language[0] : 'cpp';
   const customStyling = {
     backgroundColor: 'transparent',
     color: 'white',
@@ -25,7 +33,7 @@ export default function CodeSnippet(props: {
   return (
     <div className="w-full p-2 text-sm md:text-base md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
       <SyntaxHighlighter
-        language={props.input.language}
+        language={slug}
         style={nightOwl}
         customStyle={customStyling}
         wrapLongLines={true}>
