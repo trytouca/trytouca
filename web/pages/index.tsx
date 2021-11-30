@@ -16,6 +16,7 @@ import FeatureTestimonials, {
   TestimonialInput
 } from '@/components/feature-testimonials';
 import FooterCta from '@/components/footer-cta';
+import OneLinerPitch from '@/components/pitch';
 import { make_path } from '@/lib/api';
 import { FeatureInput } from '@/lib/feature';
 
@@ -56,9 +57,9 @@ const content: PageContent = {
         variables and runtime of functions, for any number of test cases,
         from anywhere within your code.`,
       button: {
-        link: 'https://docs.touca.io/basics/submit',
+        link: 'https://docs.touca.io/basics/quickstart',
         text: 'Learn More',
-        title: 'Learn how Touca helps you write regression test tools.'
+        title: ''
       }
     },
     {
@@ -240,22 +241,7 @@ export default function Home() {
           </p>
         )}
       </section>
-      <section className="flex items-center wsl-min-h-screen-3 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
-        <div className="container mx-auto">
-          <div className="max-w-5xl px-8 mx-auto text-white">
-            <p className="py-4 text-3xl text-left lg:text-4xl">
-              It takes{' '}
-              <span className="font-medium text-yellow-500">23 days</span> for
-              software engineers to gain confidence that a given code change
-              works as they expect.
-            </p>
-            <p className="py-4 text-2xl text-right">
-              Touca reduces this to{' '}
-              <span className="text-yellow-500">minutes</span>.
-            </p>
-          </div>
-        </div>
-      </section>
+      <OneLinerPitch></OneLinerPitch>
       <FeatureSubmit input={content.features[0]}></FeatureSubmit>
       <FeatureCompare input={content.features[1]}></FeatureCompare>
       <FeatureCollaborate input={content.features[2]}></FeatureCollaborate>
