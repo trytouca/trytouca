@@ -73,7 +73,6 @@
               "extractLicenses": false,
               "namedChunks": true,
               "optimization": false,
-              "outputHashing": "all",
               "sourceMap": true,
               "vendorChunk": true
             }
