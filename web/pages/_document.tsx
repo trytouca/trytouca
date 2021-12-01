@@ -5,7 +5,6 @@ import Document, { Head, Html, Main, NextScript } from 'next/document';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import { make_path } from '@/lib/api';
-import { GTM_ID, tracker } from '@/lib/tracker';
 
 export default class MyDocument extends Document {
   render() {
@@ -40,7 +39,6 @@ export default class MyDocument extends Document {
           <meta name="twitter:site" content="@trytouca" />
           <meta name="twitter:creator" content="@heypejman" />
           <link rel="manifest" href="/manifest.json" />
-          <link rel="canonical" href="https://touca.io" />
           <link rel="icon" type="image/x-icon" href="favicon.ico" />
           <link
             rel="apple-touch-icon"
@@ -48,13 +46,6 @@ export default class MyDocument extends Document {
           />
         </Head>
         <body className="min-h-screen font-sans antialiased bg-dark-blue-900">
-          {tracker.enabled() && (
-            <noscript
-              dangerouslySetInnerHTML={{
-                __html: `<iframe src="https://www.googletagmanager.com/ns.html?id=${GTM_ID}" height="0" width="0" style="display:none;visibility:hidden"></iframe>`
-              }}
-            />
-          )}
           <Header></Header>
           <Main />
           <Footer></Footer>

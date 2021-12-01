@@ -191,6 +191,7 @@ export default function PricingPage() {
     <>
       <Head>
         <title>Touca Pricing</title>
+        <link rel="canonical" href="https://touca.io/pricing" />
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
