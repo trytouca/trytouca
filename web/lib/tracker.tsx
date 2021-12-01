@@ -14,18 +14,22 @@ const MIXPANEL_TOKEN = process.env.NEXT_PUBLIC_MIXPANEL_TOKEN;
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 const gtag_pageview = (url: string) => {
-  window.gtag('config', GTM_ID, {
-    page_path: url
-  });
+  if (window.gtag && !!GTM_ID) {
+    window.gtag('config', GTM_ID, {
+      page_path: url
+    });
+  }
 };
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
 const gtag_event = ({ action, category, label, value }: GTagEvent) => {
-  window.gtag('event', action, {
-    event_category: category,
-    event_label: label,
-    value: value
-  });
+  if (window.gtag && !!GTM_ID) {
+    window.gtag('event', action, {
+      event_category: category,
+      event_label: label,
+      value: value
+    });
+  }
 };
 
 class Tracker {
@@ -41,14 +45,10 @@ class Tracker {
     if (MIXPANEL_TOKEN) {
       mixpanel.track(event.action, data);
     }
-    if (GTM_ID) {
-      gtag_event(event);
-    }
+    gtag_event(event);
   }
   view(url: string): void {
-    if (GTM_ID) {
-      gtag_pageview(url);
-    }
+    gtag_pageview(url);
   }
 }
 
