@@ -8,12 +8,14 @@
       </a>
     </div>
     <nav class="flex items-center space-x-4">
-      <a class="wsl-header-btn-secondary" href="https://docs.touca.io"
-        target="_blank" rel="noopener">Docs</a>
-      <a class="wsl-header-btn-primary" routerLinkActive="active"
-        routerLink="/account" [hidden]="isLoggedIn()">Get Started</a>
-      <a class="wsl-header-btn-primary" routerLinkActive="active"
-        [routerLink]="homeLink()" [hidden]="!isLoggedIn()">Dashboard</a>
+      <a class="px-4 py-2 text-sm font-semibold leading-6 bg-transparent rounded-lg text-sky-600 hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400"
+        href="https://docs.touca.io" target="_blank" rel="noopener">Docs</a>
+      <a class="px-4 py-2 text-sm font-semibold leading-6 text-white duration-150 ease-in-out rounded-lg shadow-md bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400"
+        routerLinkActive="active" routerLink="/account"
+        [hidden]="isLoggedIn()">Get Started</a>
+      <a class="px-4 py-2 text-sm font-semibold leading-6 text-white duration-150 ease-in-out rounded-lg shadow-md bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400"
+        routerLinkActive="active" [routerLink]="homeLink()"
+        [hidden]="!isLoggedIn()">Dashboard</a>
     </nav>
   </div>
 </header>

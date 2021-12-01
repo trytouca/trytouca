@@ -6,22 +6,25 @@ import { environment } from 'src/environments/environment';
 import { UserLookupResponse } from '@/core/models/commontypes';
 
 class IntercomClient {
+  public get enabled() {
+    return environment.production;
+  }
   public load() {
-    if (!environment.production) {
+    if (!this.enabled) {
       return;
     }
     (window as any).HubSpotConversations?.widget.load();
     (window as any).HubSpotConversations?.widget.open();
   }
   public remove() {
-    if (!environment.production) {
+    if (!this.enabled) {
       return;
     }
     (window as any).HubSpotConversations?.widget.close();
     (window as any).HubSpotConversations?.widget.remove();
   }
   public setUser(user: UserLookupResponse) {
-    if (!environment.production) {
+    if (!this.enabled) {
       return;
     }
     (window as any).hsConversationsSettings = {

@@ -16,8 +16,8 @@ ul {
 }
 
 #wsl-help-dropdown {
-  @apply absolute flex items-center justify-center w-12 h-12 text-lg font-semibold text-gray-500 duration-150 ease-in-out bg-white border border-gray-300 rounded-full cursor-pointer select-none bottom-4 right-4 hover:border-gray-300;
+  @apply fixed flex items-center justify-center w-12 h-12 text-lg font-semibold text-gray-500 duration-150 ease-in-out bg-white border border-gray-300 rounded-full cursor-pointer select-none bottom-4 right-4 hover:border-gray-300;
 }
 .wsl-help-dropdown-menu {
-  @apply w-48 bottom-16 right-4;
+  @apply fixed w-48 bottom-16 right-4;
 }

@@ -136,7 +136,7 @@ ngneat-dialog {
 #chat-box {
   height: 530px;
   width: 376px;
-  @apply absolute md:right-4 bottom-16;
+  @apply fixed z-40 md:right-4 bottom-16;
   #hubspot-conversations-inline-parent {
     @apply h-full;
   }

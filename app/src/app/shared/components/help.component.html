@@ -6,7 +6,7 @@
   </div>
   <ul class="hidden wsl-dropdown-menu wsl-help-dropdown-menu"
     aria-labelledby="wsl-help-dropdown">
-    <li class="wsl-dropdown-item" *ngIf="isCloudHosted()"
+    <li class="wsl-dropdown-item" *ngIf="hasIntercom()"
       (click)="openChatWidget()"
       title="We use HubSpot for messaging.&#013;Make sure it's not blocked by your browser.">
       <ng-icon name="hero-chat-alt2" size="1rem">

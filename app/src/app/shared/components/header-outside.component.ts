@@ -7,8 +7,7 @@ import { AuthService } from '@/core/services';
 
 @Component({
   selector: 'app-header-outside',
-  templateUrl: './header-outside.component.html',
-  styleUrls: ['./header.components.scss']
+  templateUrl: './header-outside.component.html'
 })
 export class HeaderOutsideComponent {
   constructor(private authService: AuthService) {}

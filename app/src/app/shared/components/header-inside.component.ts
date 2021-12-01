@@ -17,8 +17,7 @@ import { intercomClient } from '@/shared/utils/intercom';
 
 @Component({
   selector: 'app-header-inside',
-  templateUrl: './header-inside.component.html',
-  styleUrls: ['./header.components.scss']
+  templateUrl: './header-inside.component.html'
 })
 export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
   currentUser: UserLookupResponse;

@@ -1,7 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { intercomClient } from '@/shared/utils/intercom';
 
 @Component({
@@ -11,8 +10,8 @@ import { intercomClient } from '@/shared/utils/intercom';
 })
 export class HelpComponent {
   isChatWidgetOpen = false;
-  isCloudHosted() {
-    return environment.production;
+  hasIntercom() {
+    return intercomClient.enabled;
   }
   openChatWidget() {
     intercomClient.load();
