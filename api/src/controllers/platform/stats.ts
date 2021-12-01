@@ -31,7 +31,11 @@ export async function platformStats(
   }
 
   const space = (await df())
-    .filter((v) => v.mountpoint === '/')
+    .filter(
+      (v) =>
+        v.mountpoint === '/' ||
+        (v.mountpoint === '' && v.filesystem === 'overlay')
+    )
     .map((v) => ({
       spaceFree: Math.floor((v.available / 1024 / 1024 / 1024) * 100) / 100,
       spaceSize: Math.floor((v.size / 1024 / 1024 / 1024) * 100) / 100,
