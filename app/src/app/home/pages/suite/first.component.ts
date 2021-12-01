@@ -11,9 +11,10 @@ import { NotificationService, UserService } from '@/core/services';
 import { AlertType } from '@/shared/components/alert.component';
 
 import { SuitePageService } from './suite.service';
+import { ApiKey } from '@/core/models/api-key';
 
 type Fields = Partial<{
-  apiKey: string;
+  apiKey: ApiKey;
   apiUrl: string;
 }>;
 
@@ -34,11 +35,12 @@ export class SuiteFirstBatchComponent implements OnDestroy {
     suitePageService: SuitePageService,
     userService: UserService
   ) {
-    if (userService?.currentUser?.apiKeys?.length !== 0) {
-      this.fields.apiKey = userService?.currentUser?.apiKeys[0];
+    const keys = userService.currentUser?.apiKeys;
+    if (keys?.length) {
+      this.fields.apiKey = new ApiKey(keys[0]);
     }
     this._subUser = userService.currentUser$.subscribe((v) => {
-      this.fields.apiKey = v.apiKeys[0];
+      this.fields.apiKey = new ApiKey(v.apiKeys[0]);
     });
     this._subSuite = suitePageService.data.suite$.subscribe((v) => {
       this.fields.apiUrl = [getBackendUrl(), '@', v.teamSlug, v.suiteSlug].join(

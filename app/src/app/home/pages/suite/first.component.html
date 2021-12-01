@@ -1,7 +1,7 @@
 <div class="flex items-center mx-auto wsl-box wsl-min-h-screen-3">
   <div class="wsl-batches-first-head">
     <div class="wsl-batches-first-left">
-      <div *ngIf="fields" class="wsl-batches-first-form">
+      <div *ngIf="fields?.apiKey" class="wsl-batches-first-form">
         <h2 class="mb-2 text-3xl font-medium">Submit Your First Version</h2>
         <div>
           <p class="mb-4">
@@ -13,9 +13,10 @@
         </div>
         <div class="wsl-input-group">
           <div class="wsl-input-group-prepend">API Key</div>
-          <div class="wsl-input-group-text">{{ fields.apiKey }}</div>
+          <div class="cursor-pointer wsl-input-group-text"
+            (click)="fields.apiKey.toggle()">{{ fields.apiKey.value }}</div>
           <div class="wsl-input-group-append" ngxClipboard
-            [cbContent]="fields.apiKey"
+            [cbContent]="fields.apiKey.plain"
             (cbOnSuccess)="onCopy($event, 'API Key')">
             <ng-icon title="Copy API Key to clipboard"
               name="hero-clipboard-copy" size="1rem"></ng-icon>

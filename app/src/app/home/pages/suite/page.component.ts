@@ -38,6 +38,7 @@ import {
   SuitePageService,
   SuitePageTabType
 } from './suite.service';
+import { ApiKey } from '@/core/models/api-key';
 
 type NotFound = Partial<{
   teamSlug: string;
@@ -45,7 +46,7 @@ type NotFound = Partial<{
 }>;
 
 type Fields = Partial<{
-  apiKey: string;
+  apiKey: ApiKey;
   apiUrl: string;
   subscribe: {
     action: 'subscribe' | 'unsubscribe';
@@ -145,11 +146,12 @@ export class SuitePageComponent
         this.updateTitle(v);
       }),
       user: userService.currentUser$.subscribe((v) => {
-        this.fields.apiKey = v.apiKeys[0];
+        this.fields.apiKey = new ApiKey(v.apiKeys[0]);
       })
     };
-    if (userService.currentUser?.apiKeys?.length !== 0) {
-      this.fields.apiKey = userService?.currentUser?.apiKeys[0];
+    const keys = userService.currentUser?.apiKeys;
+    if (keys?.length) {
+      this.fields.apiKey = new ApiKey(keys[0]);
     }
   }
 

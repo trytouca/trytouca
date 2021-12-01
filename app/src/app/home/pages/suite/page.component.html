@@ -12,8 +12,9 @@
             <a routerLink="..">{{ suite?.teamName }}</a>
           </li>
           <li aria-current="page" wslDropdown>
-            <span class="wsl-dropdown-toggle" id="wsl-suites-dropdown"
-              aria-haspopup="true" aria-expanded="false">
+            <span class="cursor-pointer wsl-dropdown-toggle"
+              id="wsl-suites-dropdown" aria-haspopup="true"
+              aria-expanded="false">
               {{ suite?.suiteName }}&thinsp;<fa-icon icon="chevron-down"
                 size="xs"></fa-icon>
             </span>
@@ -50,9 +51,11 @@
             <div class="wsl-input-group">
               <div class="wsl-input-group-label">API Key</div>
               <div class="wsl-input-group-param">
-                <div class="wsl-input-group-text">{{ fields.apiKey }}</div>
+                <div class="cursor-pointer wsl-input-group-text"
+                  (click)="fields.apiKey.toggle()">{{ fields.apiKey.value }}
+                </div>
                 <div class="wsl-input-group-append" ngxClipboard
-                  [cbContent]="fields.apiKey"
+                  [cbContent]="fields.apiKey.plain"
                   (cbOnSuccess)="onCopy($event, 'API Key')">
                   <ng-icon title="Copy API Key to clipboard"
                     name="hero-clipboard-copy" size="1rem"></ng-icon>
