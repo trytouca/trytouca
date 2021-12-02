@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "options.hpp"
+#include "touca/cmp/options.hpp"
 
 void initialize_loggers(const Options& options);
 

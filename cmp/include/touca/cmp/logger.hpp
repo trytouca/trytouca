@@ -5,18 +5,17 @@
 #include <string>
 
 #include "fmt/format.h"
-#include "touca/lib_api.hpp"
 
 namespace touca {
 
 enum class log_level { debug = 1, info, warn, error };
 
-TOUCA_CLIENT_API void setup_console_logger(const std::string& log_level);
+void setup_console_logger(const std::string& log_level);
 
-TOUCA_CLIENT_API void setup_file_logger(const std::string& log_dir);
+void setup_file_logger(const std::string& log_dir);
 
-TOUCA_CLIENT_API void vlog(const log_level level, fmt::string_view format,
-                           fmt::format_args args);
+void vlog(const log_level level, fmt::string_view format,
+          fmt::format_args args);
 
 template <typename Format, typename... Args>
 static void log_debug(const Format& format, Args&&... args) {

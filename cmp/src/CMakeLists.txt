@@ -13,16 +13,10 @@ add_executable(
     logger.cpp
     object_store.cpp
     options.cpp
-    options.hpp
     platform.cpp
-    platform.hpp
-    queue.hpp
     startup.cpp
-    startup.hpp
     stats.cpp
-    stats.hpp
     worker.cpp
-    worker.hpp
 )
 
 target_link_libraries(

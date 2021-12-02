@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "options.hpp"
-#include "stats.hpp"
+#include "touca/cmp/options.hpp"
+#include "touca/cmp/stats.hpp"
 
 namespace touca {
 struct ComparisonJob;

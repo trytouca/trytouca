@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "options.hpp"
+#include "touca/cmp/options.hpp"
 
 #include "cxxopts.hpp"
 #include "fmt/format.h"

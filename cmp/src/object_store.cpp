@@ -1,13 +1,13 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "object_store.hpp"
+#include "touca/cmp/object_store.hpp"
 
 #include "aws/core/Aws.h"
 #include "aws/core/auth/AWSCredentialsProvider.h"
 #include "aws/s3/S3Client.h"
 #include "aws/s3/model/GetObjectRequest.h"
 #include "fmt/core.h"
-#include "logger.hpp"
+#include "touca/cmp/logger.hpp"
 #include "touca/devkit/testcase.hpp"
 
 MinioClient::MinioClient(const Options& options) {

@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "stats.hpp"
+#include "touca/cmp/stats.hpp"
 
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"

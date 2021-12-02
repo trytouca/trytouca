@@ -1,11 +1,11 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "worker.hpp"
+#include "touca/cmp/worker.hpp"
 
 #include <thread>
 
-#include "logger.hpp"
-#include "platform.hpp"
+#include "touca/cmp/logger.hpp"
+#include "touca/cmp/platform.hpp"
 #include "touca/devkit/platform.hpp"
 
 void collector(const Options& options, Resources& resources) {

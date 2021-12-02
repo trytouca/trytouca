@@ -2,10 +2,10 @@
 
 #include <thread>
 
-#include "logger.hpp"
-#include "options.hpp"
-#include "startup.hpp"
-#include "worker.hpp"
+#include "touca/cmp/logger.hpp"
+#include "touca/cmp/options.hpp"
+#include "touca/cmp/startup.hpp"
+#include "touca/cmp/worker.hpp"
 
 int main(int argc, char* argv[]) {
   Options options;

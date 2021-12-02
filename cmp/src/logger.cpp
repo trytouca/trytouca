@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "logger.hpp"
+#include "touca/cmp/logger.hpp"
 
 #include "spdlog/async.h"
 #include "spdlog/sinks/basic_file_sink.h"

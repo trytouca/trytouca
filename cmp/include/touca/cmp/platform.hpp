@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "options.hpp"
+#include "touca/cmp/options.hpp"
 
 struct Job {
   virtual bool process(const Options& options) const = 0;

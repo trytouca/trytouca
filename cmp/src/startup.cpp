@@ -1,12 +1,12 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "startup.hpp"
+#include "touca/cmp/startup.hpp"
 
 #include <chrono>
 #include <thread>
 
-#include "logger.hpp"
-#include "object_store.hpp"
+#include "touca/cmp/logger.hpp"
+#include "touca/cmp/object_store.hpp"
 #include "touca/devkit/platform.hpp"
 
 void initialize_loggers(const Options& options) {

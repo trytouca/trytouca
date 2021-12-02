@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 
-#include "options.hpp"
+#include "touca/cmp/options.hpp"
 
 namespace Aws {
 class SDKOptions;

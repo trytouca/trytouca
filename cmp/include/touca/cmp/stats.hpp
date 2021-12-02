@@ -4,8 +4,8 @@
 
 #include <string>
 
-#include "platform.hpp"
-#include "queue.hpp"
+#include "touca/cmp/platform.hpp"
+#include "touca/cmp/queue.hpp"
 
 struct Statistics {
   unsigned long job_count_collect = 0ul;
