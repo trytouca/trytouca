@@ -1,5 +1,20 @@
 # Changelog
 
+## v1.5.0
+
+Change of versioning strategy to use same major and minor version numbers across
+all compatible SDKs. See our
+[November product updates](https://blog.touca.io/product-updates-november-2021/)
+for details.
+
+Improvements:
+
+- Remove calling arguments from help output (#43)
+
+Other:
+
+- Remove empty comment blocks (#42)
+
 ## v0.0.9
 
 Breaking Changes:
