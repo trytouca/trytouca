@@ -101,16 +101,16 @@ large, `touca_cli` may decide to generate more than one "merged" file.
 
 ## High-Level CLI
 
-Touca Utility CLI is a high-level command-line application available as
-open-source on GitHub that facilitates management of Touca archive files. It is
-used by Touca enterprise customers who choose to keep a local copy of their test
-results when running Touca tests on a dedicated test server.
+Touca CLI is a high-level command-line application available as open-source on
+GitHub that facilitates management of Touca archive files. It is used by Touca
+enterprise customers who choose to keep a local copy of their test results when
+running Touca tests on a dedicated test server.
 
 You can install this utility application using
-[pip](https://pypi.org/project/touca-wrench):
+[pip](https://pypi.org/project/touca):
 
 ```bash
-pip install touca-wrench
+pip install touca
 ```
 
 The following, is a list of operations supported by this tool.
@@ -121,7 +121,7 @@ Touca archive files are stored in binary format. You can still compress them for
 optimum storage.
 
 ```bash
-wrench zip --src=./raw/acme/suite --out=./zipped/acme/suite
+touca zip --src=./raw/acme/suite --out=./zipped/acme/suite
 ```
 
 ### Extracting Archive Files
@@ -129,7 +129,7 @@ wrench zip --src=./raw/acme/suite --out=./zipped/acme/suite
 You can extract compressed archive files by running using the `unzip` operation.
 
 ```bash
-wrench unzip --src=./zipped/acme/suite --out=./unzipped/acme/suite
+touca unzip --src=./zipped/acme/suite --out=./unzipped/acme/suite
 ```
 
 ### Merging Archive Files
@@ -139,7 +139,7 @@ it is executed. For convenience, you can use the `merge` operation to merge
 these binary files into one or more archive files of up to 10MB in size.
 
 ```bash
-wrench merge --src=./unzipped/acme/suite --out=./merged/acme/suite --cli=./path/to/touca_cli --logdir=./logs
+touca merge --src=./unzipped/acme/suite --out=./merged/acme/suite --cli=./path/to/touca_cli --logdir=./logs
 ```
 
 Where `touca_cli` is the low-level utility executable that is shipped with the
@@ -151,7 +151,7 @@ This operation is useful when back-filling a new instance of Touca server with
 binary test results from previous versions of your workflows.
 
 ```bash
-wrench post --src=./merged/acme/suite --api-key <your-api-key> --api-url <your-api-url>
+touca post --src=./merged/acme/suite --api-key <your-api-key> --api-url <your-api-url>
 ```
 
 This command scans the archive directory for sub-directories that contain the
@@ -169,7 +169,7 @@ to modify the metadata fields to submit test results that were originally
 created for one suite to a different suite.
 
 ```bash
-wrench update --src ./merged/acme/unknown --out ./updated/acme/unknown --cli ./path/to/touca_cli --logdir ./logs --team acme-2 --suite suite-2 --revision 2.0
+touca update --src ./merged/acme/unknown --out ./updated/acme/unknown --cli ./path/to/touca_cli --logdir ./logs --team acme-2 --suite suite-2 --revision 2.0
 ```
 
 Where `touca_cli` is the low-level utility executable that is shipped with the
