@@ -87,18 +87,17 @@ Our objective is to setup a testing pipeline that periodically checks
 Artifactory for newer versions of this installer, pulls new versions, install
 them, executes the Touca tests, and manages their generated test results.
 
-We start by installing the Touca Utility CLI:
+We start by installing the Touca CLI:
 
 ```bash
-pip install touca-wrench
+pip install touca
 ```
 
-This package provides a command-line tool `wrench` that is primarily developed
-to facilitate management of Touca archive files. Wrench includes a test runner
-that we can use via `wrench run`.
+This CLI is primarily developed to facilitate the management of archive files
+but it also includes a test runner that we can use via `touca run`.
 
 ```bash
-wrench run --profile ./sample.json
+touca run --profile ./sample.json
 ```
 
 Where `sample.json` is a test profile that describes our test setup:
@@ -127,11 +126,11 @@ Where `sample.json` is a test profile that describes our test setup:
 {% endcode %}
 
 Check out our
-[JSON schema](https://github.com/trytouca/touca-wrench/blob/main/config/profile.schema.json)
+[JSON schema](https://github.com/trytouca/touca-python/blob/main/touca/cli/config/profile.schema.json)
 file for a full list of supported fields and scenarios.
 
-As a last step, we can automate the execution of `wrench` using Windows Task
+As a last step, we can automate the execution of our test using Windows Task
 Scheduler or Linux Cron Jobs. If we intend to run Touca test for every version
-of our code, we can use a short polling interval such as 5 minutes. Wrench
+of our code, we can use a short polling interval such as 5 minutes. The CLI
 gracefully exits if there are no new versions of our software available in
 Artifactory.
