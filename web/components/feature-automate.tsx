@@ -41,15 +41,15 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
             <p className="text-2xl text-gray-300">{props.input.description}</p>
             <div className="flex items-center space-x-2 group">
               <a
-                href={'https://github.com/trytouca/touca-wrench'}
+                href={'https://github.com/trytouca/touca'}
                 target="_blank"
                 rel="noopener noreferrer">
                 <div className="p-4 font-mono bg-opacity-50 text-sky-300 bg-dark-blue-800 rounded-xl">
-                  pip install touca-wrench
+                  pip install touca
                 </div>
               </a>
               <a
-                href={'https://github.com/trytouca/touca-wrench'}
+                href={'https://github.com/trytouca/touca'}
                 target="_blank"
                 rel="noopener noreferrer">
                 <div className="p-3 text-gray-400 bg-opacity-50 group-hover:text-gray-300 bg-dark-blue-800 rounded-xl">
