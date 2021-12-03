@@ -14,7 +14,7 @@ target_sources(
 target_link_libraries(
         example_cpp_minimal
     PRIVATE
-        touca
+        ${TOUCA_TARGET_MAIN}
 )
 
 target_include_directories(

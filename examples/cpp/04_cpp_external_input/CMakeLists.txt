@@ -18,7 +18,7 @@ target_sources(
 target_link_libraries(
         example_cpp_external_input
     PRIVATE
-        touca
+        ${TOUCA_TARGET_MAIN}
         cxxopts::cxxopts
 )
 
