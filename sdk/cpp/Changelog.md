@@ -1,5 +1,36 @@
 # Changelog
 
+## v1.5.0
+
+Breaking Changes:
+
+- Simplify interface to add serializers for user-defined types (#77, #92, #97)
+- Remove configuration options for test results submission (#94, #96, #98)
+- Restructure internal headers for object serialization (#88, #89, #90, #91)
+- Restructure utility header files (#86)
+- Remove nested namespaces (#84, #85)
+- Move deserialization logic to separate file (#80)
+- Switch dependency on `RapidJSON` to `nlohmann/json` (#79)
+- Rename high-level data capturing API (#76, #78)
+- Rename `utils` directory to `cli` (#75)
+
+Features:
+
+- Add support for null values (#83)
+
+Improvements:
+
+- Improve handling of configuration parameters (#95)
+- Remove C++ SDK dependency on `spdlog` (#93)
+- Improve logic for storing captured data to files (#81)
+
+Other:
+
+- Rename `parse_profile` to `find_student` in example projects (#87)
+- Miscellaneous coding style improvements (#82)
+- Remove binary schema files (#74)
+- Include README and LICENSE files in Conan package (#72)
+
 ## v1.4.2
 
 Improvements:
