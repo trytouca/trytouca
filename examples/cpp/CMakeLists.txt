@@ -1,7 +1,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 cmake_minimum_required(VERSION 3.14...3.21 FATAL_ERROR)
-project(touca_cpp_tutorials VERSION 1.4.2 LANGUAGES CXX)
+project(touca_cpp_tutorials VERSION 1.5.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -21,6 +21,7 @@ endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
 include(cmake/external.cmake)
 touca_find_touca()
+set(TOUCA_TARGET_MAIN touca)
 
 add_subdirectory(01_cpp_minimal)
 add_subdirectory(02_cpp_main_api)
