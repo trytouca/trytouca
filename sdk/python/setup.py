@@ -29,7 +29,14 @@ setup(
     license="Apache-2.0",
     description="Touca SDK for Python",
     packages=["touca"],
-    package_data={"touca": ["py.typed", "plugins/*.py"]},
+    package_data={
+        "touca": [
+            "py.typed",
+            "cli/config/profile.schema.json",
+            "cli/*.py",
+            "plugins/*.py",
+        ]
+    },
     keywords=["touca", "snapshot testing", "regression testing"],
     long_description=get_file_content("README.md"),
     long_description_content_type="text/markdown",
@@ -43,6 +50,7 @@ setup(
         "Source": repo_url,
         "Twitter": "https://twitter.com/trytouca",
     },
+    entry_points={"console_scripts": ["touca=touca.cli.__main__:main"]},
     python_requires=">=3.6",
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -69,6 +77,10 @@ setup(
         # dependency to allow users to run getting started examples that
         # may be using dataclasses.
         'dataclasses; python_version<"3.7"',
+        "jsonschema",
+        "loguru",
+        "py7zr",
+        "requests",
     ],
     extras_require={
         "dev": [
