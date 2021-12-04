@@ -1,0 +1,47 @@
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+
+name: touca-examples-sync
+
+on:
+  workflow_dispatch:
+
+jobs:
+  touca-examples-sync:
+    name: touca-examples-sync
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: 'trytouca/examples'
+          path: 'clients/examples'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'trytouca/touca-cpp'
+          path: 'clients/cpp'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'trytouca/touca-python'
+          path: 'clients/python'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'trytouca/touca-js'
+          path: 'clients/js'
+      - uses: actions/checkout@v2
+        with:
+          repository: 'trytouca/touca-java'
+          path: 'clients/java'
+      - run: ./clients/examples/scripts/sync.sh
+      - name: check for local changes
+        id: changes
+        run: echo ::set-output name=changed::$([[ -z $(git -C clients/examples status --porcelain) ]] && echo "0" || echo "1")
+      - name: push changes
+        if: steps.changes.outputs.changed == 1
+        run: |
+          git -C clients/examples config --local user.name github-actions
+          git -C clients/examples config --local user.email github-actions@github.com
+          git -C clients/examples branch -D next
+          git -C clients/examples checkout -b next
+          git -C clients/examples add .
+          git -C clients/examples commit -m "Updates examples to latest version"
+          git -C clients/examples push origin next --force
