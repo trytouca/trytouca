@@ -70,12 +70,11 @@ def test_is_prime():
 #include "catch2/catch.hpp"
 #include "code_under_test.hpp"
 
-TEST_CASE("is_prime")
-{
-    CHECK(is_prime(-1) == false);
-    CHECK(is_prime(1) == false);
-    CHECK(is_prime(2) == true);
-    CHECK(is_prime(13) == true);
+TEST_CASE("is_prime") {
+  CHECK(is_prime(-1) == false);
+  CHECK(is_prime(1) == false);
+  CHECK(is_prime(2) == true);
+  CHECK(is_prime(13) == true);
 }
 ```
 
@@ -167,13 +166,14 @@ if __name__ == "__main__":
 
 ```cpp
 #include "touca/touca.hpp"
-#include "touca/touca_main.hpp"
 #include "code_under_test.hpp"
 
-void touca::main(const std::string& testcase)
-{
+int main(int argc, char* argv[]) {
+  touca::workflow("is_prime", [](const std::string& username) {
     const auto number = std::stoul(testcase);
     touca::check("output", is_prime(number));
+  });
+  touca::run(argc, argv);
 }
 ```
 
@@ -253,7 +253,7 @@ python3 prime_app_test.py
   --api-key <TOUCA_API_KEY>
   --api-url <TOUCA_API_URL>
   --revision v1.0
-  --testcase 13 17 51
+  --testcase 13,17,51
 ```
 
 {% endtab %}
