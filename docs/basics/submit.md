@@ -93,10 +93,10 @@ class Student:
 
 ```cpp
 struct Student {
-    std::string username;
-    std::string fullname;
-    Date dob;
-    float gpa;
+  std::string username;
+  std::string fullname;
+  Date dob;
+  float gpa;
 };
 ```
 
@@ -191,18 +191,17 @@ def find_student(username: str) -> Student:
 {% code title="cpp/02_cpp_main_api/students.cpp" %}
 
 ```cpp
-Student find_student(const std::string& username)
-{
+Student find_student(const std::string& username) {
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
   if (!students.count(username)) {
-      throw std::invalid_argument("no student found for username: " + username);
+    throw std::invalid_argument("no student found for username: " + username);
   }
   const auto& student = students.at(username);
   return {
-      student.username,
-      student.fullname,
-      student.dob,
-      calculate_gpa(student.courses)
+    student.username,
+    student.fullname,
+    student.dob,
+    calculate_gpa(student.courses)
   };
 }
 ```
@@ -311,15 +310,17 @@ if __name__ == "__main__":
 ```cpp
 #include "students.hpp"
 #include "students_types.hpp"
-#include "touca/touca_main.hpp"
+#include "touca/touca.hpp"
 
-void touca::main(const std::string& username)
-{
+int main(int argc, char* argv[]) {
+  touca::workflow("find_student", [](const std::string& username) {
     const auto& student = find_student(username);
     touca::assume("username", student.username);
     touca::check("fullname", student.fullname);
     touca::check("birth_date", student.dob);
     touca::check("gpa", student.gpa);
+  });
+  touca::run(argc, argv);
 }
 ```
 
@@ -417,14 +418,13 @@ def calculate_gpa(courses: List[Course]):
 {% code title="cpp/02_cpp_main_api/students.cpp" %}
 
 ```cpp
-float calculate_gpa(const std::vector<Course>& courses)
-{
-    touca::check("courses", courses);
-    const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
-        [](const float sum, const Course& course) {
-            return sum + course.grade;
-        });
-    return courses.empty() ? 0.0f : sum / courses.size();
+float calculate_gpa(const std::vector<Course>& courses) {
+  touca::check("courses", courses);
+  const auto& sum = std::accumulate(courses.begin(), courses.end(), 0.0f,
+    [](const float sum, const Course& course) {
+      return sum + course.grade;
+    });
+  return courses.empty() ? 0.0f : sum / courses.size();
 }
 ```
 
@@ -514,16 +514,18 @@ if __name__ == "__main__":
 ```cpp
 #include "students.hpp"
 #include "students_types.hpp"
-#include "touca/touca_main.hpp"
+#include "touca/touca.hpp"
 
-void touca::main(const std::string& username)
-{
+int main(int argc, char* argv[]) {
+  touca::workflow("find_student", [](const std::string& username) {
     const auto& student = find_student(username);
     touca::assume("username", student.username);
     touca::check("fullname", student.fullname);
     touca::check("birth_date", student.dob);
     touca::check("gpa", student.gpa);
     touca::add_metric("external_source", 1500);
+  });
+  touca::run(argc, argv);
 }
 ```
 
@@ -722,7 +724,7 @@ python3 02_python_main_api/students_test.py
   --api-key <TOUCA_API_KEY>
   --api-url <TOUCA_API_URL>
   --revision v1.0
-  --testcase-file testcases.txt
+  --testcase alice,bob,charlie
 ```
 
 {% endcode %}
