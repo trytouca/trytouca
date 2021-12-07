@@ -96,7 +96,16 @@ Extending Touca Type System
 Test Framework
 ++++++++++++++
 
-`touca/framework.hpp` is the main entry-point to the Touca Test Framework
+.. doxygenfunction:: touca::run
+   :project: touca
+
+.. doxygenfunction:: touca::workflow
+   :project: touca
+
+Legacy Test Framework
++++++++++++++++++++++
+
+`touca/framework.hpp` is the main entry-point to the Touca test framework
 for C++. In typical test tools, it is the main header file used in the
 regression test tool. The Test Framework performs Touca client configuration,
 testcase declaration, and saving and submitting the test results. As a result,
@@ -112,7 +121,7 @@ Basic Types
 .. doxygentypedef:: touca::framework::Errors
    :project: touca
 
-.. doxygentypedef:: touca::framework::Options
+.. doxygenstruct:: touca::framework::FrameworkOptions
    :project: touca
 
 Main Function

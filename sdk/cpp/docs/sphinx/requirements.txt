@@ -3,3 +3,4 @@ docutils
 m2r2
 sphinx
 sphinx-rtd-theme
+mistune==0.8.4
