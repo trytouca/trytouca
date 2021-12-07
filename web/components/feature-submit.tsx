@@ -44,7 +44,7 @@ if __name__ == "__main__":
   },
   {
     language: 'JavaScript',
-    install: 'npm install @node/touca',
+    install: 'npm install @touca/node',
     packageRepoLink: 'https://npmjs.com/package/@touca/node',
     packageRepoName: 'NPM',
     repository: 'https://github.com/trytouca/touca-js',
