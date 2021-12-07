@@ -175,16 +175,6 @@ We want Touca to work well for you. If you need help, have any questions, or
 like to provide feedback, send us a note through the Intercom at
 [app.touca.io](https://app.touca.io) or email us at <hello@touca.io>.
 
-## 🚀 What's Next
-
-Touca client libraries are free and open-source. Our cloud-hosted Touca server
-at [app.touca.io](https://app.touca.io) has a free plan. You can create an
-account and explore Touca on your own. We are also happy to
-[chat 1:1](https://calendly.com/ghorbanzade/30min) to help you get on-boarded
-and answer any questions you may have in the process. We'd love to learn more
-about you, understand your software and its requirements, and help you decide if
-Touca would be useful to you and your team.
-
 ## License
 
 This repository is released under the Apache-2.0 License. See
