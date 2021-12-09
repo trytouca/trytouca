@@ -8,6 +8,7 @@ import {
   HiOutlineUserGroup
 } from 'react-icons/hi';
 
+import Announcement, { AnnouncementInput } from '@/components/announcement';
 import FeatureAutomate from '@/components/feature-automate';
 import FeatureCollaborate from '@/components/feature-collaborate';
 import FeatureCompare from '@/components/feature-compare';
@@ -21,16 +22,10 @@ import { make_path } from '@/lib/api';
 import { FeatureInput } from '@/lib/feature';
 
 type PageContent = {
-  announcement: {
-    action: string;
-    hidden: boolean;
-    link: string;
-    text: string;
-  };
+  announcement: AnnouncementInput;
   pitch: {
     title: string;
     subtitle: string;
-    elevator: string;
   };
   features: FeatureInput[];
   testimonials: TestimonialInput[];
@@ -41,14 +36,13 @@ const content: PageContent = {
     action: '',
     hidden: true,
     link: '',
-    text: ''
-  },
-  pitch: {
-    title: 'See the side effects of your changes, as you write code.',
-    subtitle: `Continuously test your software workflows to find
-      the true impact of any code change during development.`,
+    text: '',
     elevator:
       "Fixing silly mistakes shouldn't need a round-trip with your QA team."
+  },
+  pitch: {
+    title: 'Regression Testing, Reimagined.',
+    subtitle: 'See the side effects of your changes, as you write code.'
   },
   features: [
     {
@@ -226,22 +220,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className="bg-gradient-to-r from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
-        {(content.announcement.hidden && (
-          <p className="container p-8 mx-auto text-xl font-semibold text-center text-white">
-            {content.pitch.elevator}
-          </p>
-        )) || (
-          <p className="container p-8 mx-auto space-x-2 text-lg font-medium text-center text-white">
-            <span>{content.announcement.text}</span>
-            <a
-              className="font-bold underline hover:text-gray-200 "
-              href={content.announcement.link}>
-              {content.announcement.action}
-            </a>
-          </p>
-        )}
-      </section>
+      <Announcement input={content.announcement}></Announcement>
       <OneLinerPitch></OneLinerPitch>
       <FeatureSubmit input={content.features[0]}></FeatureSubmit>
       <FeatureCompare input={content.features[1]}></FeatureCompare>

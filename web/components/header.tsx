@@ -1,6 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import Link from 'next/link';
+import { FaGithub } from 'react-icons/fa';
 
 import { make_path } from '@/lib/api';
 
@@ -46,6 +47,15 @@ export default function Header() {
             href="https://app.touca.io"
             rel="noopener">
             Login
+          </a>
+          <a
+            href="https://github.com/trytouca"
+            title="Check us out on GitHub"
+            target="_blank"
+            rel="noopener noreferrer">
+            <div className="text-gray-400 md:px-3 hover:text-gray-300">
+              <FaGithub size="2rem" />
+            </div>
           </a>
         </nav>
       </div>

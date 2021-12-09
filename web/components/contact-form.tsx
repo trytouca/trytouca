@@ -120,7 +120,7 @@ const ContactForm = () => (
         </div>
         <div className="flex items-center justify-between">
           <button
-            className="px-4 py-2 overflow-hidden border border-transparent rounded-md wsl-btn-green"
+            className="px-4 py-2 overflow-hidden font-medium text-white duration-150 ease-in-out rounded-md shadow-md bg-sky-800 hover:bg-sky-900 focus:border-gray-200 focus:outline-none focus:ring-0"
             type="submit">
             Submit
           </button>
