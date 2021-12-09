@@ -39,7 +39,7 @@ class Case:
     """ """
 
     def __init__(self, **kwargs):
-        """ """
+
         self._meta = kwargs
         self._results: Dict[str, ResultEntry] = dict()
         self._tics: Dict[str, datetime] = dict()
@@ -203,7 +203,7 @@ class Case:
             self._tocs[key] = datetime.now()
 
     def _metrics(self) -> Tuple[str, ToucaType]:
-        """ """
+
         for key, tic in self._tics.items():
             if key not in self._tocs:
                 continue
@@ -211,7 +211,7 @@ class Case:
             yield key, IntegerType(int(diff))
 
     def _metadata(self) -> Dict[str, str]:
-        """ """
+
         return {
             "teamslug": self._meta.get("team") or "unknown",
             "testsuite": self._meta.get("suite") or "unknown",
@@ -221,7 +221,7 @@ class Case:
         }
 
     def json(self):
-        """ """
+
         return {
             "metadata": self._metadata(),
             "results": [
@@ -238,7 +238,7 @@ class Case:
         }
 
     def serialize(self) -> bytearray:
-        """ """
+
         from flatbuffers import Builder
         import touca._schema as schema
 

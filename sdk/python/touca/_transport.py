@@ -4,7 +4,7 @@
 
 import certifi
 import json
-from ._version import __version__ as client_version
+from .__init__ import __version__ as client_version
 from typing import List
 from urllib3.poolmanager import PoolManager
 
@@ -13,14 +13,14 @@ class Transport:
     """ """
 
     def __init__(self, options: dict):
-        """ """
+
         self._options = options
         self._token = None
         self._pool = PoolManager(cert_reqs="CERT_REQUIRED", ca_certs=certifi.where())
         self._handshake()
 
     def _handshake(self):
-        """ """
+
         response = self._send_request("GET", "/platform")
         if response.status != 200:
             raise RuntimeError("could not communicate with touca server")
@@ -29,7 +29,7 @@ class Transport:
             raise RuntimeError("touca server is not ready")
 
     def _send_request(self, method, path, body=None, content_type="application/json"):
-        """ """
+
         if body and content_type == "application/json":
             body = json.dumps(body).encode("utf-8")
         headers = {
@@ -48,7 +48,7 @@ class Transport:
         )
 
     def update_options(self, options: dict):
-        """ """
+
         if any(k in options for k in ["api_key", "api_url"]):
             self._token = None
             self._handshake()
@@ -73,7 +73,7 @@ class Transport:
         self._token = body["token"]
 
     def get_testcases(self) -> List[str]:
-        """ """
+
         team = self._options.get("team")
         suite = self._options.get("suite")
         response = self._send_request(method="GET", path=f"/element/{team}/{suite}")
@@ -83,7 +83,7 @@ class Transport:
         return [k["name"] for k in body]
 
     def post(self, content):
-        """ """
+
         response = self._send_request(
             method="POST",
             path=f"/client/submit",
@@ -94,7 +94,7 @@ class Transport:
             raise RuntimeError("failed to submit test results")
 
     def seal(self):
-        """ """
+
         slugs = "/".join(self._options.get(k) for k in ["team", "suite", "version"])
         response = self._send_request(method="POST", path=f"/batch/{slugs}/seal2")
         if response.status != 204:

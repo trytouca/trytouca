@@ -21,9 +21,13 @@ extra = ["--save-as-binary", "true", "--save-as-json", "true", "--offline", "tru
 
 def check_stats(checks: dict, captured: CaptureResult):
     for key, values in checks.items():
+        import re
+
         line = next(x for x in captured.out.splitlines() if key in x)
+        # remove ANSI escape sequences
+        text = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])").sub("", line)
         for value in values:
-            assert value in line
+            assert value in text
 
 
 @pytest.fixture
@@ -52,13 +56,13 @@ def test_run_twice(single_workflow, capsys: pytest.CaptureFixture):
         args.extend(["--output-directory", tempdir])
         _run(args)
         captured = capsys.readouterr()
-        checks = {"alice": ["(  1 of 2  )", "pass"], "bob": ["(  2 of 2  )", "pass"]}
+        checks = {"alice": ["(1/2)", "PASS"], "bob": ["(2/2)", "PASS"]}
         check_stats(checks, captured)
         assert captured.err == ""
         # rerun test
         _run(args)
         captured = capsys.readouterr()
-        checks = {"alice": ["(  1 of 2  )", "skip"], "bob": ["(  2 of 2  )", "skip"]}
+        checks = {"alice": ["(1/2)", "SKIP"], "bob": ["(2/2)", "SKIP"]}
         assert captured.err == ""
 
 

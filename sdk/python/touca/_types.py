@@ -43,7 +43,7 @@ class BoolType(ToucaType):
 
 class DecimalType(ToucaType):
     def __init__(self, value: float):
-        """ """
+
         self._value = value
 
     def json(self):
@@ -61,7 +61,7 @@ class DecimalType(ToucaType):
 
 class IntegerType(ToucaType):
     def __init__(self, value: int):
-        """ """
+
         self._value = value
 
     def json(self):
@@ -79,7 +79,7 @@ class IntegerType(ToucaType):
 
 class StringType(ToucaType):
     def __init__(self, value: str):
-        """ """
+
         self._value = value
 
     def json(self):
@@ -98,7 +98,7 @@ class StringType(ToucaType):
 
 class VectorType(ToucaType):
     def __init__(self):
-        """ """
+
         self._values = []
 
     def add(self, value: ToucaType):
@@ -124,7 +124,7 @@ class VectorType(ToucaType):
 
 class ObjectType(ToucaType):
     def __init__(self, key: str):
-        """ """
+
         self._name = key
         self._values = {}
 
@@ -160,7 +160,7 @@ class ObjectType(ToucaType):
 
 class TypeHandler:
     def __init__(self):
-        """ """
+
         from datetime import date
 
         self._primitives: Dict[Type, Callable[[Any], ToucaType]] = {

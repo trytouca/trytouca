@@ -22,7 +22,8 @@ from typing import Any, Callable, Dict, List, Type
 from ._client import Client
 from ._workflow import Workflow, run
 from ._utils import scoped_timer
-from ._version import __version__
+
+__version__ = "1.5.1"
 
 
 def clientmethod(f):

@@ -13,7 +13,7 @@ def get_file_content(file_name):
 
 
 def get_version():
-    for line in get_file_content("touca/_version.py").splitlines():
+    for line in get_file_content("touca/__init__.py").splitlines():
         if line.startswith("__version__"):
             delimeter = '"' if '"' in line else "'"
             return line.split(delimeter)[1]
@@ -77,6 +77,7 @@ setup(
         # dependency to allow users to run getting started examples that
         # may be using dataclasses.
         'dataclasses; python_version<"3.7"',
+        "colorama",
         "jsonschema",
         "loguru",
         "py7zr",

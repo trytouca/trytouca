@@ -12,7 +12,7 @@
 #
 import os
 import sys
-from touca._version import __version__
+from touca.__init__ import __version__
 
 sys.path.insert(0, os.path.abspath(".."))
 

@@ -29,14 +29,18 @@ suite. However, the pattern above allows introducing multiple workflows by
 defining functions with ``@touca.Workflow`` decorators.
 """
 
+import math
 import os
 import shutil
 import sys
 import textwrap
+from colorama import Style, Fore, Back, init
 from datetime import datetime, timedelta
 from enum import IntEnum
 from typing import Any, Dict, List
 from ._client import Client
+
+init()
 
 
 def _parse_cli_options(args) -> Dict[str, Any]:
@@ -75,7 +79,7 @@ def _parse_cli_options(args) -> Dict[str, Any]:
     parser.add_argument("--log-level",
         choices=["debug", "info", "warn"], default="info",
         help="Level of detail with which events are logged")
-    parser.add_argument("--save-as-binary", const=True, default=True, nargs="?",
+    parser.add_argument("--save-as-binary", const=True, default=False, nargs="?",
         help="Save a copy of test results on local filesystem in binary format")
     parser.add_argument("--save-as-json", const=True, default=False, nargs="?",
         help="Save a copy of test results on local filesystem in JSON format")
@@ -202,7 +206,6 @@ def _skip(options: dict, testcase: str):
 
 class _Statistics:
     def __init__(self):
-        """ """
         from collections import defaultdict
 
         self._v = defaultdict(int)
@@ -216,7 +219,6 @@ class _Statistics:
 
 class _Timer:
     def __init__(self):
-        """ """
         self._tics = {}
         self._times: Dict[str, timedelta] = {}
 
@@ -249,7 +251,6 @@ class Workflow:
     """
 
     def __init__(self, func):
-        """ """
         from functools import update_wrapper
 
         update_wrapper(self, func)
@@ -262,22 +263,86 @@ class Workflow:
         return self.__func(testcase)
 
 
+def segment_progress(index, count_testcases):
+    return "{dim}({reset}{number:>{width}d}{dim}/{count}){reset}".format(
+        dim=Style.DIM,
+        reset=Style.NORMAL,
+        number=index + 1,
+        count=len(count_testcases),
+        width=int(math.log10(len(count_testcases))) + 1,
+    )
+
+
+class Printer:
+    def __init__(self, options):
+        self.options = options
+
+    def print_header(self):
+        print("\nTouca Test Framework\n")
+        print("{:<12s} {:s}".format("Suite: ", self.options.get("suite")))
+        print("{:<12s} {:s}\n".format("Revision: ", self.options.get("version")))
+
+    def print_progress(self, timer: _Timer, testcase, idx, status):
+        states = {
+            "pass": ("PASS", Back.GREEN),
+            "skip": ("SKIP", Back.YELLOW),
+            "fail": ("FAIL", Back.RED),
+        }
+        performance = (
+            ""
+            if status == "skip"
+            else " {dim}({timer:d} ms){reset}".format(
+                dim=Style.DIM,
+                timer=timer.count(testcase),
+                reset=Style.NORMAL,
+            )
+        )
+        print(
+            "{badge} {progress}  {name:<{name_width}s}{performance}".format(
+                badge="{} {} {}".format(
+                    states.get(status)[1], states.get(status)[0], Back.RESET
+                ),
+                progress=segment_progress(idx, self.options.get("testcases")),
+                name=testcase,
+                name_width=max(
+                    max([len(k) for k in self.options.get("testcases")]) + 3, 5
+                ),
+                performance=performance,
+            )
+        )
+
+    def print_footer(self, stats, timer):
+        messages = []
+        for status in [
+            ("pass", "passed", Fore.GREEN),
+            ("skip", "skipped", Fore.YELLOW),
+            ("fail", "failed", Fore.RED),
+        ]:
+            if not stats.count(status[0]):
+                continue
+            message = "{}{} {}{}".format(
+                status[2], stats.count(status[0]), status[1], Fore.RESET
+            )
+            messages.append(message)
+        messages.append("{} total".format(len(self.options.get("testcases"))))
+        print("\n{:<12} {:s}".format("Tests:", ", ".join(messages)))
+        print("{:<12} {:.2f} s".format("Time:", timer.count("__workflow__") / 1000))
+        print("\n✨   Ran all test suites.\n")
+
+
 def _run(args):
     if not hasattr(Workflow, "_workflows") or not Workflow._workflows:
         raise _ToucaError(_ToucaErrorCode.MissingWorkflow)
     options = _parse_cli_options(args)
     _initialize(options)
-    print(
-        "\nTouca Test Framework\n"
-        f"Suite: {options.get('suite')}\n"
-        f"Revision: {options.get('version')}\n"
-    )
 
     offline = options.get("offline") or any(
         k not in options for k in ["api_key", "api_url"]
     )
     timer = _Timer()
     stats = _Statistics()
+    printer = Printer(options)
+    printer.print_header()
     timer.tic("__workflow__")
 
     for idx, testcase in enumerate(options.get("testcases")):
@@ -285,11 +350,7 @@ def _run(args):
         casedir = os.path.join(*map(options.get, elements), testcase)
 
         if not options.get("overwrite") and _skip(options, testcase):
-            print(
-                " ({:>3} of {:<3}) {:<32} (skip)".format(
-                    idx + 1, len(options.get("testcases")), testcase
-                )
-            )
+            printer.print_progress(timer, testcase, idx, "skip")
             stats.inc("skip")
             continue
 
@@ -307,10 +368,11 @@ def _run(args):
         except BaseException as err:
             errors.append(": ".join([err.__class__.__name__, str(err)]))
         except:
-            errors.append("unknown error")
+            errors.append("Unknown Error")
 
         timer.toc(testcase)
-        stats.inc("pass" if not errors else "fail")
+        status = "pass" if not errors else "fail"
+        stats.inc(status)
 
         if not errors and options.get("save_as_binary"):
             Client.instance().save_binary(
@@ -323,31 +385,19 @@ def _run(args):
         if not errors and not offline:
             Client.instance().post()
 
-        print(
-            " ({:>3} of {:<3}) {:<32} ({}, {:d} ms)".format(
-                idx + 1,
-                len(options.get("testcases")),
-                testcase,
-                "pass" if not errors else "fail",
-                timer.count(testcase),
-            )
-        )
+        printer.print_progress(timer, testcase, idx, status)
+
+        if errors:
+            print("\n   {}Exception Raised:{}".format(Style.DIM, Style.NORMAL))
         for error in errors:
-            print("{:>13} {}".format("-", error))
+            print(f"      - {error}")
         if len(errors):
             print()
 
         Client.instance().forget_testcase(testcase)
 
     timer.toc("__workflow__")
-    print(
-        "\nProcessed {} of {} testcases\n"
-        "Test completed in {} ms\n".format(
-            stats.count("pass"),
-            len(options.get("testcases")),
-            timer.count("__workflow__"),
-        )
-    )
+    printer.print_footer(stats, timer)
 
     if not offline:
         Client.instance().seal()
