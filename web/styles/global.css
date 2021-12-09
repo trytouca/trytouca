@@ -21,10 +21,6 @@
 }
 
 @layer components {
-  .wsl-btn-green {
-    @apply font-semibold text-white duration-150 ease-in-out bg-green-600 shadow-md hover:bg-green-700 focus:border-gray-200 focus:outline-none focus:ring-0;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
-  }
   .wsl-header-btn-secondary {
     @apply px-1 py-2 text-sm font-semibold leading-6 text-gray-300 duration-150 ease-in-out bg-transparent rounded-lg hover:text-white lg:px-4 focus:ring-0;
   }

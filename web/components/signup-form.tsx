@@ -59,7 +59,7 @@ const SignupForm = () => (
             placeholder="Email address"
           />
           <button
-            className="px-4 overflow-hidden border border-transparent rounded-md wsl-btn-green"
+            className="px-4 overflow-hidden font-semibold text-white duration-150 ease-in-out bg-green-600 border border-transparent rounded-md shadow-md hover:bg-green-700 focus:border-gray-200 focus:outline-none focus:ring-0"
             type="submit">
             <span className="hidden lg:block">Signup for Free</span>
             <span className="lg:hidden">Sign up</span>
