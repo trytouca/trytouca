@@ -2,13 +2,10 @@
 
 import Head from 'next/head';
 import Script from 'next/script';
-import {
-  HiArrowNarrowRight,
-  HiOutlineLightBulb,
-  HiOutlineUserGroup
-} from 'react-icons/hi';
+import { HiOutlineLightBulb, HiOutlineUserGroup } from 'react-icons/hi';
 
 import Announcement, { AnnouncementInput } from '@/components/announcement';
+import AboveTheFold from '@/components/atf';
 import FeatureAutomate from '@/components/feature-automate';
 import FeatureCollaborate from '@/components/feature-collaborate';
 import FeatureCompare from '@/components/feature-compare';
@@ -16,17 +13,12 @@ import FeatureSubmit from '@/components/feature-submit';
 import FeatureTestimonials, {
   TestimonialInput
 } from '@/components/feature-testimonials';
-import FooterCta from '@/components/footer-cta';
 import OneLinerPitch from '@/components/pitch';
 import { make_path } from '@/lib/api';
 import { FeatureInput } from '@/lib/feature';
 
 type PageContent = {
   announcement: AnnouncementInput;
-  pitch: {
-    title: string;
-    subtitle: string;
-  };
   features: FeatureInput[];
   testimonials: TestimonialInput[];
 };
@@ -39,10 +31,6 @@ const content: PageContent = {
     text: '',
     elevator:
       "Fixing silly mistakes shouldn't need a round-trip with your QA team."
-  },
-  pitch: {
-    title: 'Regression Testing, Reimagined.',
-    subtitle: 'See the side effects of your changes, as you write code.'
   },
   features: [
     {
@@ -146,80 +134,7 @@ export default function Home() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </Head>
-      <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
-        <div className="grid wsl-min-h-screen-1 lg:items-center">
-          <div className="container flex items-center mx-auto">
-            <div className="grid gap-8 p-8 xl:grid-cols-5 lg:items-center">
-              <div className="flex flex-col justify-around h-full py-12 mx-auto space-y-8 xl:col-span-2 lg:py-4 xl:py-0">
-                <h2 className="max-w-xl text-4xl font-bold text-white wsl-text-gradient wsl-text-shadow xl:text-5xl">
-                  {content.pitch.title}
-                </h2>
-                <p className="max-w-xl text-2xl text-white">
-                  {content.pitch.subtitle}
-                </p>
-                <div className="space-x-4">
-                  <a
-                    className="text-lg"
-                    href="https://app.touca.io"
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    <button
-                      style={{ boxShadow: '0 0 5px #7dd3fc' }}
-                      className="p-3 space-x-2 font-medium text-white duration-150 ease-in-out bg-opacity-25 box-shadow rounded-xl focus:outline-none bg-dark-blue-700 hover:bg-opacity-50 group"
-                      type="button"
-                      role="button">
-                      <span>Get Started for Free</span>
-                      <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
-                    </button>
-                  </a>
-                  <a
-                    className="text-md"
-                    href="https://calendly.com/ghorbanzade/30min"
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    <button
-                      className="p-3 space-x-2 font-medium text-gray-300 duration-150 ease-in-out bg-opacity-50 hover:text-white rounded-xl focus:outline-none group"
-                      type="button"
-                      role="button">
-                      <span>or Get a Live Demo</span>
-                    </button>
-                  </a>
-                </div>
-                <div className="container mx-auto space-y-4">
-                  <p className="text-white uppercase">Trusted By</p>
-                  <div className="flex items-center justify-between space-x-2">
-                    <a
-                      href="https://vitalimages.com"
-                      target="_blank"
-                      rel="noopener noreferrer">
-                      <img
-                        src={make_path('/images/touca-customer-logo-vital.svg')}
-                        alt="Canon Medical Informatics"
-                        loading="lazy"
-                        width="250px"
-                        height="20px"
-                      />
-                    </a>
-                  </div>
-                </div>
-              </div>
-              <div className="items-center hidden w-full h-full p-8 mx-auto select-none xl:col-span-3 sm:flex sm:p-0">
-                <a
-                  href="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-screenshot-suite-page-closed.jpg"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <img
-                    className="shadow-md rounded-xl"
-                    alt="Touca Continuous Regression Testing"
-                    src={make_path('/images/touca-atf-visual.jpg')}
-                    loading="lazy"
-                  />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <AboveTheFold></AboveTheFold>
       <Announcement input={content.announcement}></Announcement>
       <OneLinerPitch></OneLinerPitch>
       <FeatureSubmit input={content.features[0]}></FeatureSubmit>
@@ -227,11 +142,6 @@ export default function Home() {
       <FeatureCollaborate input={content.features[2]}></FeatureCollaborate>
       <FeatureAutomate input={content.features[3]}></FeatureAutomate>
       <FeatureTestimonials input={content.testimonials}></FeatureTestimonials>
-      <section className="py-32 lg:pt-8 min-h-[25vh] flex items-center bg-dark-blue-800">
-        <div className="container px-8 mx-auto md:px-24 lg:px-8">
-          <FooterCta></FooterCta>
-        </div>
-      </section>
     </>
   );
 }

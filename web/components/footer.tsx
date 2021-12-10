@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { IconType } from 'react-icons';
 import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
-import { HiOutlineMail } from 'react-icons/hi';
+import { HiArrowNarrowRight, HiOutlineMail } from 'react-icons/hi';
 
 const social: {
   link: string;
@@ -54,7 +54,40 @@ const social: {
   }
 ];
 
-export default function Footer() {
+const FooterCta = () => {
+  return (
+    <section className="py-32 lg:pt-8 min-h-[25vh] flex items-center bg-gradient-to-b from-dark-blue-900 via-dark-blue-900 to-dark-blue-800">
+      <div className="container px-8 mx-auto md:px-24 lg:px-8">
+        <div className="grid lg:p-8 gap-y-20 lg:grid-cols-2">
+          <div className="space-y-4 text-white">
+            <h3 className="text-2xl font-bold wsl-text-shadow xl:text-3xl">
+              See our product for yourself
+            </h3>
+            <p className="text-xl">It could change how you build software.</p>
+            <div>
+              <a
+                className="text-lg"
+                href="https://app.touca.io"
+                target="_blank"
+                rel="noopener noreferrer">
+                <button
+                  style={{ boxShadow: '0 0 5px #7dd3fc' }}
+                  className="p-3 space-x-2 font-medium text-white duration-150 ease-in-out bg-opacity-25 box-shadow rounded-xl focus:outline-none bg-dark-blue-700 hover:bg-opacity-50 group"
+                  type="button"
+                  role="button">
+                  <span>Get Started for Free</span>
+                  <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
+                </button>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const FooterRow = () => {
   return (
     <footer className="border-t bg-gradient-to-r from-dark-blue-800 via-dark-blue-800 to-dark-blue-900 border-dark-blue-800">
       <div className="container flex items-center justify-between h-20 px-12 mx-auto">
@@ -109,5 +142,14 @@ export default function Footer() {
         </ul>
       </div>
     </footer>
+  );
+};
+
+export default function Footer() {
+  return (
+    <>
+      <FooterCta></FooterCta>
+      <FooterRow></FooterRow>
+    </>
   );
 }

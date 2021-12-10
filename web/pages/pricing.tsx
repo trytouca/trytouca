@@ -4,7 +4,6 @@ import Head from 'next/head';
 import React from 'react';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
-import FooterCta from '@/components/footer-cta';
 import PricingPlan, { Input } from '@/components/pricing-plan';
 
 interface PageContent {
@@ -222,11 +221,6 @@ export default function PricingPage() {
       </section>
       <section className="bg-dark-blue-900">
         <CommonQuestions></CommonQuestions>
-      </section>
-      <section className="py-8 min-h-[25vh] flex items-center bg-dark-blue-800">
-        <div className="container px-8 mx-auto md:px-24 lg:px-8">
-          <FooterCta></FooterCta>
-        </div>
       </section>
     </>
   );

@@ -3,7 +3,6 @@
 import Head from 'next/head';
 import React from 'react';
 
-import FooterCta from '@/components/footer-cta';
 import {
   Article,
   BlogPostArchive,
@@ -65,11 +64,6 @@ export default function BlogPage(props: StaticProps) {
           <BlogPostArchive articles={props.archived_articles}></BlogPostArchive>
         </section>
       )}
-      <section className="py-8 min-h-[25vh] flex items-center bg-dark-blue-800">
-        <div className="container px-8 mx-auto md:px-24 lg:px-8">
-          <FooterCta></FooterCta>
-        </div>
-      </section>
     </>
   );
 }
