@@ -5,7 +5,6 @@ import { HiOutlineCalendar, HiOutlineClock } from 'react-icons/hi';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 
-import FooterCta from '@/components/footer-cta';
 import { Article, BlogPostArchive, getArticle, getArticles } from '@/lib/blog';
 
 type StaticProps = {
@@ -77,11 +76,6 @@ export default function BlogPage(props: StaticProps) {
           <BlogPostArchive articles={props.archived_articles}></BlogPostArchive>
         </section>
       )}
-      <section className="py-8 min-h-[25vh] flex items-center bg-dark-blue-800">
-        <div className="container px-8 mx-auto md:px-24 lg:px-8">
-          <FooterCta></FooterCta>
-        </div>
-      </section>
     </>
   );
 }
