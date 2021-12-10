@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 from json import dumps
@@ -79,7 +77,6 @@ class IntegerType(ToucaType):
 
 class StringType(ToucaType):
     def __init__(self, value: str):
-
         self._value = value
 
     def json(self):
@@ -98,7 +95,6 @@ class StringType(ToucaType):
 
 class VectorType(ToucaType):
     def __init__(self):
-
         self._values = []
 
     def add(self, value: ToucaType):
@@ -124,7 +120,6 @@ class VectorType(ToucaType):
 
 class ObjectType(ToucaType):
     def __init__(self, key: str):
-
         self._name = key
         self._values = {}
 
@@ -160,7 +155,6 @@ class ObjectType(ToucaType):
 
 class TypeHandler:
     def __init__(self):
-
         from datetime import date
 
         self._primitives: Dict[Type, Callable[[Any], ToucaType]] = {

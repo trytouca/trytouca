@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import os
@@ -56,13 +54,12 @@ def test_run_twice(single_workflow, capsys: pytest.CaptureFixture):
         args.extend(["--output-directory", tempdir])
         _run(args)
         captured = capsys.readouterr()
-        checks = {"alice": ["(1/2)", "PASS"], "bob": ["(2/2)", "PASS"]}
+        checks = {"alice": ["1.", "PASS"], "bob": ["2.", "PASS"]}
         check_stats(checks, captured)
         assert captured.err == ""
-        # rerun test
-        _run(args)
+        _run(args)  # rerun test
         captured = capsys.readouterr()
-        checks = {"alice": ["(1/2)", "SKIP"], "bob": ["(2/2)", "SKIP"]}
+        checks = {"alice": ["1.", "SKIP"], "bob": ["2.", "SKIP"]}
         assert captured.err == ""
 
 
