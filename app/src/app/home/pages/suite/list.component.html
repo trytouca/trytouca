@@ -5,7 +5,7 @@
       <app-home-list-filter [manager]="filterManager" [params]="filterParams()"
         [stats]="filterStats()" (updateList)="updateList($event)">
       </app-home-list-filter>
-      <div class="wsl-list" *ngIf="countShownRows(ItemType.Batch)">
+      <div *ngIf="countShownRows(ItemType.Batch)">
         <div class="wsl-list-head">
           <p
             *ngIf="countShownRows(ItemType.Batch) !== countRows(ItemType.Batch)">
@@ -18,7 +18,7 @@
           <li class="wsl-list-item-outer"
             *ngFor="let item of getShownRows(ItemType.Batch); let i = index;"
             (click)="selectedRow = i;"
-            [ngClass]="{'bg-sky-50 dark:bg-gray-900': selectedRow === i}">
+            [ngClass]="{'bg-sky-50 dark:bg-gray-700': selectedRow === i}">
             <app-suite-item-batch *ngIf="item.type === ItemType.Batch"
               [item]="item.asBatch()" [chosenTopics]="chosenTopic"
               (updateChosenTopics)="updateChosenTopics($event)">

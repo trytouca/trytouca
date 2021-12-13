@@ -11,7 +11,7 @@
       </button>
     </div>
   </div>
-  <div class="wsl-list" *ngIf="countRows(ItemType.Member)">
+  <div *ngIf="countRows(ItemType.Member)">
     <div class="wsl-list-head">
       <h3 class="text-black dark:text-gray-300">Active Members</h3>
       <p>
@@ -34,7 +34,7 @@
       </li>
     </ul>
   </div>
-  <div class="wsl-list" *ngIf="countRows(ItemType.Invitee)">
+  <div *ngIf="countRows(ItemType.Invitee)">
     <div class="wsl-list-head">
       <h3 class="text-black dark:text-gray-300">Invited Members</h3>
       <p>
@@ -55,7 +55,7 @@
       </li>
     </ul>
   </div>
-  <div class="wsl-list" *ngIf="countRows(ItemType.Applicant)">
+  <div *ngIf="countRows(ItemType.Applicant)">
     <div class="wsl-list-head">
       <h3 class="text-black dark:text-gray-300">Pending Members</h3>
       <p>

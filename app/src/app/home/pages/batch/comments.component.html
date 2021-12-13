@@ -37,7 +37,8 @@
       (ngSubmit)="onSubmit(form.value)" novalidate>
       <div [hidden]="!fields.previewShow">
         <blockquote class="p-2 border-l-2 border-gray-200 dark:border-gray-500">
-          <markdown class="prose-sm prose" [data]="form.controls.body.value">
+          <markdown class="prose-sm prose prose-zinc dark:prose-invert"
+            [data]="form.controls.body.value">
           </markdown>
         </blockquote>
       </div>

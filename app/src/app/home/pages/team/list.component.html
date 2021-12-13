@@ -16,7 +16,7 @@
     <app-home-list-filter [manager]="filterManager" [params]="filterParams()"
       [stats]="filterStats()" (updateList)="updateList($event)">
     </app-home-list-filter>
-    <div class="wsl-list" *ngIf="countShownRows(ItemType.Suite)">
+    <div *ngIf="countShownRows(ItemType.Suite)">
       <div class="wsl-list-head">
         <p *ngIf="countShownRows(ItemType.Suite) !== countRows(ItemType.Suite)">
           You are viewing
@@ -28,7 +28,7 @@
         <li class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Suite); let i = index;"
           (click)="selectedRow = i;"
-          [ngClass]="{'bg-sky-50 dark:bg-gray-900': selectedRow === i}">
+          [ngClass]="{'bg-sky-50 dark:bg-gray-700': selectedRow === i}">
           <app-team-item-suite [item]="item.data" [chosenTopics]="chosenTopic"
             (updateChosenTopics)="updateChosenTopics($event)">
           </app-team-item-suite>

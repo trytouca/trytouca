@@ -9,7 +9,8 @@
   </p>
   <blockquote *ngIf="item.for && item.for !== 'N/A'"
     class="px-2 text-sm border-l-2">
-    <markdown [data]="item.for" class="prose-sm prose">
+    <markdown [data]="item.for"
+      class="prose-sm prose prose-zinc dark:prose-invert">
     </markdown>
   </blockquote>
   <div class="flex justify-end">

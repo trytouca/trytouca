@@ -3,9 +3,9 @@
     <app-home-list-filter [manager]="filterManager" [params]="filterParams()"
       [stats]="filterStats()" (updateList)="updateList($event)">
     </app-home-list-filter>
-    <div class="wsl-list" *ngIf="countShownRows(ItemType.Common)">
+    <div *ngIf="countShownRows(ItemType.Common)">
       <div class="wsl-list-head">
-        <h2>Common Testcases</h2>
+        <h3>Common Testcases</h3>
         <p>
           Testcases that are both in version
           {{ params.srcBatchName }}
@@ -24,7 +24,7 @@
         <li class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Common); let i = index;"
           (click)="selectedRow = i"
-          [ngClass]="{'bg-sky-50 dark:bg-gray-900': selectedRow === i}">
+          [ngClass]="{'bg-sky-50 dark:bg-gray-700': selectedRow === i}">
           <app-batch-item-element [item]="item" [params]="params"
             [chosenTopics]="chosenTopic"
             (updateChosenTopics)="updateChosenTopics($event)">
@@ -32,9 +32,9 @@
         </li>
       </ul>
     </div>
-    <div class="wsl-list" *ngIf="countShownRows(ItemType.Fresh)">
+    <div *ngIf="countShownRows(ItemType.Fresh)">
       <div class="wsl-list-head">
-        <h2>New Testcases</h2>
+        <h3>New Testcases</h3>
         <p>
           Testcases that are submitted in version
           {{ params.srcBatchName }}
@@ -52,7 +52,7 @@
         <li class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Fresh); let i = index;"
           (click)="selectedRow = i + countShownRows(ItemType.Common)"
-          [ngClass]="{'bg-sky-50 dark:bg-gray-900': selectedRow === i + countShownRows(ItemType.Common)}">
+          [ngClass]="{'bg-sky-50 dark:bg-gray-700': selectedRow === i + countShownRows(ItemType.Common)}">
           <app-batch-item-element [item]="item" [params]="params"
             [chosenTopics]="chosenTopic"
             (updateChosenTopics)="updateChosenTopics($event)">
@@ -60,9 +60,9 @@
         </li>
       </ul>
     </div>
-    <div class="wsl-list" *ngIf="countShownRows(ItemType.Missing)">
+    <div *ngIf="countShownRows(ItemType.Missing)">
       <div class="wsl-list-head">
-        <h2>Missing Testcases</h2>
+        <h3>Missing Testcases</h3>
         <p>
           Testcases that were included in version
           {{ params.dstBatchName }}
@@ -81,7 +81,7 @@
         <li class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Missing); let i = index;"
           (click)="selectedRow = i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)"
-          [ngClass]="{'bg-sky-50 dark:bg-gray-900': selectedRow === i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)}">
+          [ngClass]="{'bg-sky-50 dark:bg-gray-700': selectedRow === i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)}">
           <app-batch-item-element [item]="item" [params]="params"
             [chosenTopics]="chosenTopic"
             (updateChosenTopics)="updateChosenTopics($event)">
