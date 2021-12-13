@@ -1,40 +1,37 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 .wsl-item-topic-type-simple {
-  @apply px-3 py-1 bg-gray-100 text-gray-500 rounded-sm;
+  @apply px-3 py-1 bg-gray-100 text-gray-500 rounded-sm dark:bg-gray-700 dark:text-gray-400;
 }
 .wsl-item-topic-type-complex {
-  @apply px-3 py-1 bg-blue-100 text-blue-500 rounded-sm cursor-pointer;
+  @apply px-3 py-1 bg-blue-100 text-blue-500 rounded-sm cursor-pointer dark:bg-gray-700 dark:text-sky-400;
 }
-.wsl-complex {
-  @apply pb-4;
-  .wsl-complex-block {
-    .wsl-complex-block-head {
-      @apply flex px-4 justify-between text-gray-500;
-      .wsl-complex-block-desc {
-        @apply text-center;
-        span {
-          @apply text-sm;
-        }
-      }
-      .wsl-complex-block-icons {
-        visibility: hidden;
-        .wsl-complex-block-icon {
-          @apply opacity-25 hover:opacity-100 text-blue-500;
-        }
-      }
+.wsl-complex-block {
+  .wsl-complex-block-head {
+    @apply flex px-4 justify-between text-gray-500;
+  }
+  .wsl-complex-block-desc {
+    @apply text-center;
+    span {
+      @apply text-sm;
     }
-    pre {
-      @apply p-4 bg-white text-xs;
+  }
+  .wsl-complex-block-icons {
+    @apply invisible;
+    .wsl-complex-block-icon {
+      @apply opacity-25 hover:opacity-100 text-blue-500;
     }
-    &:hover .wsl-complex-block-icons {
-      visibility: visible !important;
-    }
+  }
+  pre {
+    @apply p-4 bg-white text-xs text-black dark:bg-gray-800 dark:text-gray-300;
+  }
+  &:hover .wsl-complex-block-icons {
+    @apply visible;
   }
 }
 .wsl-complex-single {
-  @apply md:w-3/4 md:mx-auto;
+  @apply pb-4 md:w-3/4 md:mx-auto;
 }
 .wsl-complex-double {
-  @apply md:grid md:grid-cols-2 md:gap-4;
+  @apply pb-4 md:grid md:grid-cols-2 md:gap-4;
 }

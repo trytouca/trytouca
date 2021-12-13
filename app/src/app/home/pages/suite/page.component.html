@@ -4,7 +4,7 @@
   </app-missing>
 </ng-container>
 <div class="max-w-screen-xl py-8 mx-auto" *ngIf="!notFound()" [hidden]="!suite">
-  <main class="wsl-min-h-screen-2">
+  <main class="container px-4 mx-auto space-y-4 wsl-min-h-screen-2 xl:px-8">
     <div class="wsl-page-head wsl-box">
       <nav aria-label="breadcrumb">
         <ol>
@@ -18,12 +18,13 @@
               {{ suite?.suiteName }}&thinsp;<fa-icon icon="chevron-down"
                 size="xs"></fa-icon>
             </span>
-            <ul class="hidden w-48 px-2 space-y-2 wsl-dropdown-menu"
+            <ul
+              class="hidden w-48 divide-y divide-gray-100 wsl-dropdown-menu dark:divide-gray-700"
               aria-labelledby="wsl-suites-dropdown">
               <li *ngFor="let suiteItem of suites"
                 (click)="switchPage(suiteItem.suiteSlug)"
                 class="wsl-dropdown-item"
-                [ngClass]="{'bg-sky-100': suite?.suiteSlug === suiteItem.suiteSlug}">
+                [ngClass]="{'bg-sky-100 dark:bg-gray-800': suite?.suiteSlug === suiteItem.suiteSlug}">
                 {{ suiteItem.suiteName }}
               </li>
             </ul>
@@ -34,7 +35,7 @@
         *ngIf="currentTab === TabType.Versions && hasData() && hasItems()">
         <div wslDropdown>
           <button
-            class="flex items-center space-x-1 wsl-dropdown-toggle wsl-btn-sm wsl-btn-dark"
+            class="flex items-center space-x-1 wsl-dropdown-toggle wsl-btn-sm wsl-btn-primary"
             id="wsl-suite-quick-settings" aria-haspopup="true"
             aria-expanded="false">
             <ng-icon class="h-4" name="hero-upload" size="1rem">
@@ -43,19 +44,24 @@
           </button>
           <div class="hidden px-2 space-y-2 wsl-dropdown-menu w-80"
             aria-labelledby="wsl-suite-quick-settings">
-            <div class="wsl-quick-settings-header">
+            <div
+              class="flex items-center space-x-1 font-medium text-black dark:text-gray-300">
               <ng-icon class="h-4" name="hero-terminal" size="1rem">
               </ng-icon>
-              <span class="font-medium">Using Client Libraries</span>
+              <span>Using Client Libraries</span>
             </div>
             <div class="wsl-input-group">
-              <div class="wsl-input-group-label">API Key</div>
-              <div class="wsl-input-group-param">
-                <div class="cursor-pointer wsl-input-group-text"
+              <div class="text-xs font-medium text-black dark:text-gray-400">
+                API Key
+              </div>
+              <div class="flex w-full">
+                <div
+                  class="flex items-center flex-grow px-2 overflow-x-hidden font-mono text-xs text-gray-500 bg-white border border-gray-300 rounded-l cursor-pointer whitespace-nowrap dark:bg-gray-900 dark:border-gray-600 dark:text-gray-400"
                   (click)="fields.apiKey.toggle()">{{ fields.apiKey.value }}
                 </div>
-                <div class="wsl-input-group-append" ngxClipboard
-                  [cbContent]="fields.apiKey.plain"
+                <div
+                  class="flex justify-center p-2 text-xs font-medium bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700"
+                  ngxClipboard [cbContent]="fields.apiKey.plain"
                   (cbOnSuccess)="onCopy($event, 'API Key')">
                   <ng-icon title="Copy API Key to clipboard"
                     name="hero-clipboard-copy" size="1rem"></ng-icon>
@@ -63,11 +69,16 @@
               </div>
             </div>
             <div class="wsl-input-group">
-              <div class="wsl-input-group-label">API URL</div>
-              <div class="wsl-input-group-param">
-                <div class="wsl-input-group-text">{{ fields.apiUrl }}</div>
-                <div class="wsl-input-group-append" ngxClipboard
-                  [cbContent]="fields.apiUrl"
+              <div class="text-xs font-medium text-black dark:text-gray-400">
+                API URL
+              </div>
+              <div class="flex w-full">
+                <div
+                  class="flex items-center flex-grow px-2 overflow-x-hidden font-mono text-xs text-gray-500 bg-white border border-gray-300 rounded-l whitespace-nowrap dark:bg-gray-900 dark:border-gray-600 dark:text-gray-400">
+                  {{ fields.apiUrl }}</div>
+                <div
+                  class="flex justify-center p-2 text-xs font-medium bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700"
+                  ngxClipboard [cbContent]="fields.apiUrl"
                   (cbOnSuccess)="onCopy($event, 'API URL')">
                   <ng-icon title="Copy API URL to clipboard"
                     name="hero-clipboard-copy" size="1rem"></ng-icon>

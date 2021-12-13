@@ -1,6 +1,6 @@
 <section class="wsl-page-tab" id="wsl-suite-tab-batches">
   <div
-    class="grid lg:grid-cols-2 xl:grid-cols-3 gap-x-4 wsl-min-h-screen-3 place-items-stretch">
+    class="grid space-y-4 lg:grid-cols-2 xl:grid-cols-3 gap-x-4 wsl-min-h-screen-3 place-items-stretch md:space-y-0">
     <div class="col-span-1 p-4 space-y-4 wsl-box xl:col-span-2">
       <app-home-list-filter [manager]="filterManager" [params]="filterParams()"
         [stats]="filterStats()" (updateList)="updateList($event)">
@@ -18,7 +18,7 @@
           <li class="wsl-list-item-outer"
             *ngFor="let item of getShownRows(ItemType.Batch); let i = index;"
             (click)="selectedRow = i;"
-            [ngClass]="{'bg-sky-50': selectedRow === i}">
+            [ngClass]="{'bg-sky-50 dark:bg-gray-900': selectedRow === i}">
             <app-suite-item-batch *ngIf="item.type === ItemType.Batch"
               [item]="item.asBatch()" [chosenTopics]="chosenTopic"
               (updateChosenTopics)="updateChosenTopics($event)">
@@ -31,7 +31,7 @@
       </app-home-list-pager>
     </div>
     <div class="flex flex-col space-y-4">
-      <app-suite-trends-runtime class="hidden lg:block wsl-box">
+      <app-suite-trends-runtime class="wsl-box">
       </app-suite-trends-runtime>
       <app-suite-tab-comments class="flex-grow wsl-box">
       </app-suite-tab-comments>

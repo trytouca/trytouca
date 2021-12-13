@@ -3,29 +3,22 @@
 const colors = require('tailwindcss/colors');
 
 module.exports = {
-  mode: process.env.TAILWIND_MODE ? 'jit' : 'aot',
-  purge: {
-    enabled: true,
-    content: ['./src/**/*.{html,scss,ts}']
-  },
+  mode: 'jit',
+  content: ['./src/**/*.{html,scss,ts}'],
   theme: {
     extend: {
       colors: {
-        dark: {
+        brand: {
           900: '#0d0d2b'
-        },
-        sky: colors.sky
+        }
       },
-      screens: {
-        print: { raw: 'print' }
-      },
-      typography: (theme) => ({
+      typography: {
         DEFAULT: {
           css: {
             code: {
-              backgroundColor: theme('colors.gray.100'),
+              backgroundColor: colors.gray[100],
               borderRadius: '0.25rem',
-              color: theme('colors.gray.700'),
+              color: colors.gray[700],
               fontWeight: '500',
               padding: '0.25rem'
             },
@@ -37,11 +30,8 @@ module.exports = {
             }
           }
         }
-      })
+      }
     }
-  },
-  variants: {
-    extend: {}
   },
   plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')]
 };

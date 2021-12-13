@@ -45,8 +45,8 @@
 <ng-container
   *ngIf="stats.totalUnpaginatedRows !== stats.totalRows || (stats.totalUnpaginatedRows === 0 && stats.totalRows === 0)">
   <div *ngIf="stats.totalUnpaginatedRows !== 0"
-    class="flex items-center justify-between mt-4 text-sm">
-    <p>
+    class="flex items-center justify-between mt-4">
+    <p class="text-sm text-black dark:text-gray-300">
       <b>{{ stats.totalUnpaginatedRows }}</b> of <b>{{ stats.totalRows }}</b>
       rows match this filter.
     </p>
@@ -55,14 +55,15 @@
     </button>
   </div>
   <div *ngIf="stats.totalUnpaginatedRows === 0"
-    class="flex items-center justify-center p-2 mt-4 bg-gray-100 border"
+    class="flex items-center justify-center p-2 mt-4 bg-gray-100 border border-gray-200 dark:border-gray-700 dark:bg-gray-800"
     style="min-height: 20vh;">
-    <div class="flex flex-col space-y-4 text-sm text-center">
+    <div
+      class="flex flex-col space-y-4 text-sm text-center text-black dark:text-gray-300">
       <p>
         {{ stats.totalRows | i18nPlural: { '=0': 'This page appears to have no result.', '=1': 'The row in this list does not match the specified filter.', 'other': 'None of the # rows in this list matches the specified filter.' } }}
       </p>
       <div *ngIf="stats.totalRows !== 0">
-        <button (click)="clearFilters()" class="wsl-btn-sm wsl-btn-dark">
+        <button (click)="clearFilters()" class="wsl-btn-sm wsl-btn-primary">
           <span>Clear Filters</span>
         </button>
       </div>

@@ -52,7 +52,7 @@ export class ConfirmComponent extends ModalComponent {
         return null;
       }
       if (control.value === '') {
-        return { error: 'Please feel in the form below.' };
+        return { error: 'Please complete the form below.' };
       }
       return { error: 'Your input does not match the expected text.' };
     };
@@ -109,7 +109,7 @@ export class ConfirmComponent extends ModalComponent {
   lookupButtonClass() {
     return this.elements?.severity === AlertType.Danger
       ? 'wsl-btn-danger'
-      : 'wsl-btn-dark';
+      : 'wsl-btn-primary';
   }
 
   @HostListener('keydown', ['$event'])

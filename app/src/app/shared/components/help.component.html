@@ -1,7 +1,9 @@
 <div id="chat-box" [ngClass]="{'hidden': !isChatWidgetOpen}"></div>
-<div class="relative" wslDropdown>
-  <div class="wsl-dropdown-toggle" id="wsl-help-dropdown" aria-haspopup="true"
-    aria-expanded="false" title="Need Help?" (click)="closeChatWidgetIfOpen()">
+<div class="relative print:hidden" wslDropdown>
+  <div
+    class="fixed flex items-center justify-center w-12 h-12 text-lg font-semibold text-gray-500 duration-150 ease-in-out bg-white border border-gray-300 rounded-full cursor-pointer select-none wsl-dropdown-toggle bottom-4 right-4 hover:border-gray-400 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600"
+    id="wsl-help-dropdown" aria-haspopup="true" aria-expanded="false"
+    title="Need Help?" (click)="closeChatWidgetIfOpen()">
     <span>?</span>
   </div>
   <ul class="hidden wsl-dropdown-menu wsl-help-dropdown-menu"
@@ -18,9 +20,9 @@
       title="Let us know how we can improve your experience.">
       <ng-icon name="hero-mail" size="1rem">
       </ng-icon>
-      <span class="text-gray-600">Feedback</span>
+      <span class="text-gray-600 dark:text-gray-300">Feedback</span>
     </li>
-    <hr class="my-1">
+    <hr class="my-1 border-gray-200 dark:border-gray-700">
     <li>
       <a href="https://github.com/trytouca" target="_blank"
         rel="noopener noreferrer" title="Give us a Star on GitHub">

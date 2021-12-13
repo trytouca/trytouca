@@ -1,6 +1,6 @@
-<div class="px-4 py-2 divide-y divide-gray-200">
+<div class="px-4 py-2 divide-y divide-gray-200 dark:divide-gray-700">
   <div class="flex items-center h-8 space-x-2">
-    <h3 class="font-semibold">Recent Events</h3>
+    <h3 class="font-semibold text-black dark:text-gray-300">Recent Events</h3>
   </div>
   <div *ngIf="promotions.length else noData">
     <app-suite-item-promotion *ngFor="let promotion of promotions"
@@ -8,7 +8,8 @@
     </app-suite-item-promotion>
   </div>
   <ng-template #noData>
-    <p class="pt-4 text-sm">This section will be populated with information
+    <p class="pt-4 text-sm text-black dark:text-gray-300">This section will be
+      populated with information
       that might be interesting to your team.
     </p>
   </ng-template>

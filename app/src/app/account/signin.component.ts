@@ -4,7 +4,6 @@ import { Component, NgZone, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { PlatformStatus } from '@/core/models/commontypes';
 import { formFields } from '@/core/models/form-hint';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { ApiService, AuthService, UserService } from '@/core/services';

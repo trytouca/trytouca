@@ -5,8 +5,7 @@
       </fa-icon>
     </div>
     <div class="wsl-item-title">
-      <p class="max-w-xs text-gray-700 truncate xl:max-w-lg"
-        [title]="result.name">
+      <p [title]="result.name">
         {{ result.name }}
       </p>
     </div>
@@ -116,7 +115,7 @@
 </div>
 <div [hidden]="hideComplexValue">
   <div [ngSwitch]="meta.rowType">
-    <div class="wsl-complex wsl-complex-double"
+    <div class="wsl-complex-double"
       *ngSwitchCase="rowType.Common_Imperfect_Complex">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
@@ -151,7 +150,7 @@
           *ngIf="result.srcValue">{{ parseComplexValue(result.srcValue) | json }}</pre>
       </div>
     </div>
-    <div class="wsl-complex wsl-complex-single"
+    <div class="wsl-complex-single"
       *ngSwitchCase="rowType.Common_Perfect_Complex">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
@@ -170,7 +169,7 @@
           *ngIf="result.srcValue">{{ parseComplexValue(result.srcValue) | json }}</pre>
       </div>
     </div>
-    <div class="wsl-complex wsl-complex-double"
+    <div class="wsl-complex-double"
       *ngSwitchCase="rowType.Common_Different_Complex">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
@@ -207,8 +206,7 @@
           *ngIf="result.srcValue">{{ parseComplexValue(result.srcValue) | json }}</pre>
       </div>
     </div>
-    <div class="wsl-complex wsl-complex-single"
-      *ngSwitchCase="rowType.Missing_Complex">
+    <div class="wsl-complex-single" *ngSwitchCase="rowType.Missing_Complex">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
           <div></div>
@@ -226,8 +224,7 @@
           *ngIf="result.dstValue">{{ parseComplexValue(result.dstValue) | json }}</pre>
       </div>
     </div>
-    <div class="wsl-complex wsl-complex-single"
-      *ngSwitchCase="rowType.Fresh_Complex">
+    <div class="wsl-complex-single" *ngSwitchCase="rowType.Fresh_Complex">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
           <div></div>

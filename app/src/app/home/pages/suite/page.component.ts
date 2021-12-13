@@ -17,6 +17,7 @@ import {
 import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription, timer } from 'rxjs';
 
+import { ApiKey } from '@/core/models/api-key';
 import type {
   SuiteItem,
   SuiteLookupResponse,
@@ -38,7 +39,6 @@ import {
   SuitePageService,
   SuitePageTabType
 } from './suite.service';
-import { ApiKey } from '@/core/models/api-key';
 
 type NotFound = Partial<{
   teamSlug: string;
@@ -60,7 +60,7 @@ type Fields = Partial<{
 @Component({
   selector: 'app-suite-page',
   templateUrl: './page.component.html',
-  styleUrls: ['../../styles/page.component.scss', './page.component.scss'],
+  styleUrls: ['../../styles/page.component.scss'],
   providers: [SuitePageService]
 })
 export class SuitePageComponent

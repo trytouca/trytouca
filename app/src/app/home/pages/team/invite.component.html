@@ -7,7 +7,7 @@
     class="wsl-form">
     <div>
       <label for="wsl-name" class="wsl-input-label">Full Name</label>
-      <input type="text" id="wsl-name" tabindex="1" required autocomplete="off"
+      <input type="text" id="wsl-name" required autocomplete="off"
         aria-describedby="wsl-name-help" formControlName="name" name="name"
         class="wsl-input-field" wslAutofocus>
       <small id="wsl-slug-help" [hidden]="shouldHideAriaDescription('name')"
@@ -17,9 +17,9 @@
     </div>
     <div>
       <label for="wsl-email" class="wsl-input-label">Email Address</label>
-      <input type="email" id="wsl-email" tabindex="2" required
-        autocomplete="off" aria-describedby="wsl-email-help"
-        formControlName="email" name="email" class="wsl-input-field">
+      <input type="email" id="wsl-email" required autocomplete="off"
+        aria-describedby="wsl-email-help" formControlName="email" name="email"
+        class="wsl-input-field">
       <small id="wsl-email-help" [hidden]="shouldHideAriaDescription('email')"
         class="wsl-text-muted">
         Should be a valid email address.
@@ -27,7 +27,7 @@
     </div>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
-        <button type="submit" tabindex="3" class="wsl-btn-lg wsl-btn-dark">
+        <button type="submit" class="wsl-btn-lg wsl-btn-primary">
           Invite
         </button>
       </div>

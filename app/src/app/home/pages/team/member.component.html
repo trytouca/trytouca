@@ -1,7 +1,8 @@
 <div class="wsl-list-item">
   <div class="wsl-item-heading">
     <div class="wsl-item-status">
-      <fa-icon [icon]="icon.type" class="text-sky-600"></fa-icon>
+      <fa-icon [icon]="icon.type" class="text-sky-600 dark:text-sky-800">
+      </fa-icon>
     </div>
     <div class="wsl-item-title">
       <p>{{ data.fullname }}<span *ngIf="isSelf"> (You)</span></p>

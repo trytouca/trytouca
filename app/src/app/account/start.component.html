@@ -1,29 +1,11 @@
-<div class="bg-white sm:bg-transparent">
-  <app-header-outside></app-header-outside>
-</div>
-<div
-  class="grid bg-transparent wsl-min-h-screen-2 sm:p-4 sm:place-content-center">
-  <div class="w-full max-w-5xl mx-auto shadow-lg sm:rounded-lg">
-    <div class="grid md:grid-cols-2">
-      <div
-        class="grid-cols-1 px-6 pt-8 pb-4 bg-white sm:rounded-t-lg md:rounded-t-none md:rounded-l-lg">
-        <app-account-signup *ngIf="currentPage === PageType.Signup">
-        </app-account-signup>
-        <app-account-signin *ngIf="currentPage === PageType.Signin">
-        </app-account-signin>
-        <app-account-reset *ngIf="currentPage === PageType.Reset">
-        </app-account-reset>
-      </div>
-      <div
-        class="grid-cols-1 px-6 pt-8 pb-4 border-t border-gray-200 bg-sky-700 sm:rounded-b-lg md:rounded-b-none md:rounded-r-lg md:border-t-0 md:border-l">
-        <app-account-privacy *ngIf="currentPage === PageType.Signup">
-        </app-account-privacy>
-        <app-account-feature *ngIf="currentPage !== PageType.Signup">
-        </app-account-feature>
-      </div>
-    </div>
+<div class="flex items-center min-h-screen sm:p-4">
+  <div class="w-full max-w-sm mx-auto">
+    <app-account-signup *ngIf="currentPage === PageType.Signup">
+    </app-account-signup>
+    <app-account-signin *ngIf="currentPage === PageType.Signin">
+    </app-account-signin>
+    <app-account-reset *ngIf="currentPage === PageType.Reset">
+    </app-account-reset>
   </div>
 </div>
-<div class="bg-transparent">
-  <app-footer></app-footer>
-</div>
+<app-help></app-help>

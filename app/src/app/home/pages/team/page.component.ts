@@ -181,6 +181,9 @@ export class TeamPageComponent
   accept(item: TeamItem) {
     const url = ['team', item.slug, 'invite', 'accept'].join('/');
     this.apiService.post(url).subscribe(() => {
+      const index = this.teams.invitations.findIndex((v) => v === item);
+      this.teams.invitations.splice(index, 1);
+      this.teamPageService.refreshTeams();
       this.teamPageService.fetchItems({
         teamSlug: this.route.snapshot.paramMap.get('team')
       });
@@ -190,6 +193,8 @@ export class TeamPageComponent
   private decline(item: TeamItem) {
     const url = ['team', item.slug, 'invite', 'decline'].join('/');
     this.apiService.post(url).subscribe(() => {
+      const index = this.teams.invitations.findIndex((v) => v === item);
+      this.teams.invitations.splice(index, 1);
       this.teamPageService.fetchItems({
         teamSlug: this.route.snapshot.paramMap.get('team')
       });
@@ -199,6 +204,8 @@ export class TeamPageComponent
   private rescind(item: TeamItem) {
     const url = ['team', item.slug, 'join'].join('/');
     this.apiService.delete(url).subscribe(() => {
+      const index = this.teams.requests.findIndex((v) => v === item);
+      this.teams.requests.splice(index, 1);
       this.teamPageService.fetchItems({
         teamSlug: this.route.snapshot.paramMap.get('team')
       });

@@ -1,9 +1,9 @@
 <div class="flex items-center justify-between">
   <div class="space-x-1">
-    <span class="mb-1 text-sm font-medium text-gray-700">
+    <span class="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
       {{ data.title }}</span>
-    <span class="text-sm text-gray-500" *ngIf="data.experimental">(Beta
-      feature)</span>
+    <span class="text-sm text-gray-500 dark:text-gray-400"
+      *ngIf="data.experimental">(Beta feature)</span>
   </div>
   <div class="flex items-center space-x-1">
     <span class="text-xs text-green-600" *ngIf="data.saved">Saved</span>
@@ -11,14 +11,16 @@
       <div class="relative cursor-pointer">
         <input class="sr-only" type="checkbox" [id]="data.slug"
           [checked]="data.value || data.default" (change)="toggle.emit(data)">
-        <div class="block w-8 h-5 bg-gray-200 rounded-full wsl-checkbox-line">
+        <div
+          class="block w-8 h-5 bg-gray-200 rounded-full wsl-checkbox-line dark:bg-gray-600">
         </div>
         <div
-          class="absolute w-3 h-3 transition bg-white rounded-full wsl-checkbox-dot left-1 top-1">
+          class="absolute w-3 h-3 transition bg-white rounded-full wsl-checkbox-dot left-1 top-1 dark:bg-gray-800">
         </div>
       </div>
     </label>
   </div>
 </div>
-<small class="wsl-text-muted"
-  id="wsl-beta-color-help">{{ data.description }}</small>
+<small class="wsl-text-muted" id="wsl-beta-color-help">
+  {{ data.description }}
+</small>

@@ -9,7 +9,7 @@ import { Component } from '@angular/core';
       <div
         class="container flex items-center justify-center h-16 mx-auto text-center"
       >
-        <p class="text-sm leading-4 text-sky-800">
+        <p class="text-sm leading-4 text-sky-800 dark:text-gray-400">
           &copy; {{ today | date: 'yyyy' }} Touca, Inc.
         </p>
       </div>

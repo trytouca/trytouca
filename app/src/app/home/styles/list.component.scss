@@ -4,29 +4,14 @@ img {
   @apply md:max-w-screen-sm mx-auto px-8 py-4;
 }
 .wsl-list-body {
-  @apply divide-y border-t border-b;
-  li {
-    @apply hover:bg-gray-50;
-  }
+  @apply divide-y divide-gray-200 border-t border-b border-gray-200 dark:divide-gray-700 dark:border-gray-700;
 }
 .wsl-list-head {
   h2,
   h3 {
-    @apply pb-1 text-xl font-medium;
+    @apply pb-1 text-xl font-medium text-black dark:text-gray-300;
   }
   p {
-    @apply pb-2 text-gray-500 text-xs;
-  }
-}
-.wsl2-list-body {
-  @apply divide-y;
-  li {
-    @apply hover:bg-gray-50;
-  }
-  li:first-of-type {
-    @apply rounded-t-md;
-  }
-  li:last-of-type {
-    @apply rounded-b-md;
+    @apply pb-2 text-gray-500 text-xs dark:text-gray-400;
   }
 }

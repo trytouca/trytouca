@@ -1,11 +1,11 @@
 <section class="wsl-page-tab" id="wsl-team-tab-suites">
   <div class="flex items-center h-16 px-4 py-2 text-xl font-medium wsl-box">
     <div class="flex-grow">
-      <a>Suites</a>
+      <a class="text-black dark:text-gray-300">Suites</a>
     </div>
     <div class="flex items-center print:hidden">
       <button type="button" (click)="openCreateModal()"
-        class="flex items-center space-x-1 wsl-btn-sm wsl-btn-dark group">
+        class="flex items-center space-x-1 wsl-btn-sm wsl-btn-primary group">
         <ng-icon class="inline h-4 opacity-75 group-hover:opacity-100"
           name="hero-plus-solid"></ng-icon>
         <span>New Suite</span>
@@ -28,7 +28,7 @@
         <li class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Suite); let i = index;"
           (click)="selectedRow = i;"
-          [ngClass]="{'bg-sky-50': selectedRow === i}">
+          [ngClass]="{'bg-sky-50 dark:bg-gray-900': selectedRow === i}">
           <app-team-item-suite [item]="item.data" [chosenTopics]="chosenTopic"
             (updateChosenTopics)="updateChosenTopics($event)">
           </app-team-item-suite>

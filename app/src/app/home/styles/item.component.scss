@@ -10,31 +10,30 @@
   @apply leading-8;
 }
 .wsl-item-title {
-  a {
-    @apply text-blue-500;
-  }
   p {
-    @apply text-base font-medium leading-8 max-w-xs truncate xl:max-w-lg;
+    @apply text-base font-medium leading-8 truncate max-w-xs xl:max-w-lg text-gray-700 dark:text-gray-300;
   }
-}
-.wsl-item-subtitle {
-  @apply text-xs text-gray-500 leading-8;
+  a p {
+    @apply text-blue-500 dark:text-sky-500;
+  }
 }
 .wsl-item-topics {
-  @apply flex flex-row text-xs space-x-4 md:leading-8;
+  @apply flex flex-row text-sm space-x-8 md:leading-8;
 }
 .wsl-item-topic {
-  @apply text-gray-500 select-none;
+  @apply text-gray-500 select-none dark:text-gray-400 text-right;
+  min-width: 4rem;
 }
 .wsl-item-ctrl-box {
   @apply flex flex-row-reverse text-sm leading-8 print:hidden;
+  min-width: 5rem;
   .wsl-item-ctrl {
     @apply px-2 cursor-pointer;
     fa-icon {
-      @apply text-blue-100 text-lg;
+      @apply text-gray-200 text-lg dark:text-sky-700;
     }
     &:hover fa-icon {
-      @apply text-blue-400;
+      @apply text-gray-300 dark:text-sky-600;
     }
   }
 }
@@ -42,5 +41,5 @@
   @apply hidden sm:flex flex-row space-x-1 overflow-hidden text-xs leading-6 sm:leading-8 lg:whitespace-nowrap;
 }
 .wsl-item-pill {
-  @apply flex items-center px-1 lg:px-2 space-x-1 overflow-hidden text-gray-500 duration-75 ease-in-out bg-white border rounded-full cursor-pointer select-none hover:border-gray-300 hover:text-black xl:px-3 whitespace-nowrap;
+  @apply flex items-center px-1 lg:px-2 space-x-1 overflow-hidden text-gray-500 duration-75 ease-in-out bg-white border border-gray-200 rounded-full cursor-pointer select-none hover:border-gray-300 hover:text-gray-700 xl:px-3 whitespace-nowrap dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200;
 }

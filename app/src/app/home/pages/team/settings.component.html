@@ -1,5 +1,7 @@
 <section class="wsl-page-tab" id="wsl-team-tab-settings" *ngIf="team">
-  <h2 class="text-2xl font-semibold">Team Settings</h2>
+  <h2 class="text-2xl font-semibold text-black dark:text-gray-300">
+    Team Settings
+  </h2>
   <div class="grid gap-4 lg:grid-cols-2">
     <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
       <h3 for="wsl-team-name">Team Name</h3>
@@ -14,7 +16,7 @@
         <input class="wsl-input-field" type="text" id="wsl-team-name" required
           autocomplete="off" aria-describedby="wsl-team-name-help"
           formControlName="name" name="name">
-        <button class="font-normal wsl-btn-sm wsl-btn-dark" type="submit">
+        <button class="font-normal wsl-btn-sm wsl-btn-primary" type="submit">
           Update
         </button>
       </form>
@@ -37,7 +39,7 @@
         <input class="wsl-input-field" type="text" id="wsl-team-slug" required
           autocomplete="off" aria-describedby="wsl-team-slug-help"
           formControlName="slug" name="slug">
-        <button class="font-normal wsl-btn-sm wsl-btn-dark" type="submit">
+        <button class="font-normal wsl-btn-sm wsl-btn-primary" type="submit">
           Update
         </button>
       </form>

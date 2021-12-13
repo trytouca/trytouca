@@ -1,46 +1,24 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-.wsl-batches-first-head {
-  @apply md:grid md:grid-cols-7;
+.wsl-input-group-prepend {
+  min-width: 5rem;
+  @apply p-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l text-xs text-center text-black font-medium whitespace-nowrap dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300;
 }
-.wsl-batches-first-left {
-  @apply p-8 md:col-span-4;
+.wsl-input-group-text {
+  @apply px-2 max-w-sm flex flex-grow items-center bg-white border border-gray-300 text-red-600 text-xs font-mono overflow-x-auto whitespace-nowrap dark:bg-gray-900 dark:border-gray-600 dark:text-gray-300;
+}
+.wsl-input-group-append {
+  @apply p-2 flex justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r text-xs text-black font-medium cursor-pointer hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:text-sky-500 dark:hover:bg-gray-700;
+}
+.wsl-client-libraries {
   & > div {
-    @apply mb-4;
-  }
-  .wsl-batches-first-form {
-    .wsl-input-group {
-      @apply mb-3 flex w-full;
-      .wsl-input-group-prepend {
-        @apply p-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l text-xs font-medium whitespace-nowrap;
-      }
-      .wsl-input-group-text {
-        @apply px-2 flex flex-grow items-center bg-white border border-gray-300 text-red-600 text-xs font-mono overflow-x-auto;
-      }
-      .wsl-input-group-append {
-        @apply p-2 flex justify-center bg-gray-100 border border-l-0 border-gray-300 rounded-r text-xs font-medium cursor-pointer hover:bg-gray-200;
-      }
-    }
-  }
-  .wsl-client-libraries {
-    & > div {
-      @apply grid gap-4;
-      grid-template-columns: repeat(4, minmax(auto, 100px));
-    }
-    .wsl-client-library {
-      @apply p-4 bg-gray-50 border border-gray-200 rounded-md;
-      img {
-        @apply w-full;
-      }
-      &:hover {
-        @apply bg-gray-100;
-      }
-    }
+    @apply grid gap-4;
+    grid-template-columns: repeat(4, minmax(auto, 100px));
   }
 }
-.wsl-batches-first-right {
-  @apply hidden md:col-span-3 md:flex md:items-center md:justify-center;
+.wsl-client-library {
+  @apply p-4 bg-gray-50 border border-gray-200 rounded-md hover:bg-gray-100 dark:bg-gray-900 dark:border-gray-700 dark:hover:bg-gray-800;
   img {
-    @apply md:w-3/4 md:mx-auto;
+    @apply w-full;
   }
 }

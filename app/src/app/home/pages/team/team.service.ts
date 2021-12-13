@@ -16,9 +16,10 @@ import {
 } from '@/core/models/commontypes';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
+import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
-import { PageTab } from '@/home/components';
+
 import {
   TeamPageMember,
   TeamPageMemberType,

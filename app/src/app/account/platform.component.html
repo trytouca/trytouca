@@ -1,20 +1,24 @@
 <app-notification></app-notification>
 <app-header-inside></app-header-inside>
-<div class="flex flex-col space-y-4 border-t wsl-min-h-screen-1">
-  <div class="bg-white border-b">
+<div
+  class="flex flex-col space-y-4 border-t border-gray-200 wsl-min-h-screen-1 dark:border-gray-700">
+  <div>
     <div
       class="container flex items-center justify-between h-16 px-4 py-2 mx-auto">
-      <div class="text-lg font-medium">Platform Settings</div>
+      <div class="text-xl font-medium text-black dark:text-gray-300">
+        Platform Settings
+      </div>
       <div class="print:hidden">
-        <button class="wsl-btn-sm wsl-btn-dark group" type="button"
+        <button class="wsl-btn-sm wsl-btn-primary group" type="button"
           routerLink="/~">Back to Dashboard</button>
       </div>
     </div>
   </div>
   <div>
     <div *ngIf="stats"
-      class="container grid gap-4 px-4 mx-auto text-sm sm:grid-cols-2 lg:grid-cols-3">
-      <div class="p-4 border wsl-box lg:col-span-1">
+      class="container grid gap-4 px-4 mx-auto text-sm text-black sm:grid-cols-2 lg:grid-cols-3 dark:text-gray-300">
+      <div
+        class="p-4 border border-gray-200 wsl-box lg:col-span-1 dark:border-gray-700">
         <h4 class="font-medium">Database</h4>
         <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
@@ -31,7 +35,8 @@
           </li>
         </ul>
       </div>
-      <div class="p-4 border wsl-box lg:col-span-1">
+      <div
+        class="p-4 border border-gray-200 wsl-box lg:col-span-1 dark:border-gray-700">
         <h4 class="font-medium">Disk Space</h4>
         <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
@@ -48,7 +53,8 @@
           </li>
         </ul>
       </div>
-      <div class="p-4 border wsl-box lg:col-span-1">
+      <div
+        class="p-4 border border-gray-200 wsl-box lg:col-span-1 dark:border-gray-700">
         <h4 class="font-medium">Comparator</h4>
         <ul class="px-4 py-2 leading-6">
           <li class="flex justify-between">
@@ -70,11 +76,13 @@
     </div>
   </div>
   <div class="container gap-4 px-4 mx-auto md:grid md:grid-cols-3">
-    <div class="border md:col-span-1 md:order-2 wsl-box">
-      <h3 class="p-4 text-xl font-medium">Recent Events</h3>
+    <div
+      class="border border-gray-200 md:col-span-1 md:order-2 wsl-box dark:border-gray-700">
+      <h3 class="p-4 text-xl font-medium text-black dark:text-gray-300">Recent
+        Events</h3>
       <div class="p-4 space-y-4">
         <div
-          class="p-4 space-y-2 text-sm border border-gray-100 rounded-md bg-gray-50"
+          class="p-4 space-y-2 text-sm text-black border border-gray-100 rounded-md bg-gray-50 dark:text-gray-300 dark:border-gray-800 dark:bg-gray-900"
           *ngFor="let event of events">
           <div class="flex-grow">
             <span class="font-medium text-sky-600"
@@ -87,14 +95,14 @@
             </div>
             <div class="flex space-x-1">
               <div
-                class="flex justify-center p-2 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200"
+                class="flex justify-center p-2 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
                 title="Copy email to clipboard" ngxClipboard
                 [cbContent]="event.email"
                 (cbOnSuccess)="onCopy($event, 'email address')">
                 <ng-icon name="hero-mail" size="1rem"></ng-icon>
               </div>
               <div
-                class="flex justify-center p-2 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200"
+                class="flex justify-center p-2 text-xs font-medium text-gray-500 bg-gray-100 border border-gray-300 rounded cursor-pointer hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
                 *ngIf="event.copyLink" title="Copy link to clipboard"
                 ngxClipboard [cbContent]="event.copyLink"
                 (cbOnSuccess)="onCopy($event, 'link')">
@@ -113,29 +121,33 @@
         </div>
       </div>
     </div>
-    <div class="p-4 border md:col-span-2 wsl-box">
-      <h3 class="text-xl font-medium">Users</h3>
+    <div
+      class="p-4 border border-gray-200 md:col-span-2 wsl-box dark:border-gray-700">
+      <h3 class="text-xl font-medium text-black dark:text-gray-300">Users</h3>
       <ul class="px-4 py-2" *ngIf="user && accounts">
         <li
-          class="flex items-center h-8 transition duration-100 rounded-md hover:bg-gray-100 group"
+          class="flex items-center h-8 transition duration-500 rounded-md hover:bg-gray-100 group dark:hover:bg-gray-900"
           *ngFor="let account of accounts; let rowNumber = index">
-          <div class="w-8 text-sm font-medium">{{rowNumber + 1}}</div>
+          <div
+            class="w-8 px-2 text-sm font-medium text-black dark:text-gray-300">
+            {{rowNumber + 1}}</div>
           <div class="flex items-center justify-between flex-grow space-x-4">
-            <div class="w-40 font-medium truncate whitespace-nowrap"
-              [ngClass]="{ 'text-gray-300 line-through': account.suspended }">
+            <div
+              class="w-40 font-medium text-black truncate whitespace-nowrap dark:text-gray-300"
+              [ngClass]="{ 'text-gray-300 line-through dark:text-gray-600': account.suspended }">
               {{ account.fullname ?? 'Unknown' }}
-              <span class="text-sm text-gray-500"
+              <span class="text-sm text-gray-500 dark:text-gray-300"
                 *ngIf="user.username === account.username">(You)</span>
             </div>
             <div class="w-24 whitespace-nowrap">
               <span
-                class="px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded-md group-hover:bg-gray-200">
+                class="px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded-md group-hover:bg-gray-200 dark:text-gray-200 dark:bg-gray-800 dark:group-hover:bg-gray-700">
                 {{ account.username }}
               </span>
             </div>
             <div class="w-24">
               <span
-                class="px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded-md group-hover:bg-gray-200">
+                class="px-2 py-1 text-sm text-gray-700 bg-gray-100 rounded-md group-hover:bg-gray-200 dark:text-gray-200 dark:bg-gray-800 dark:group-hover:bg-gray-700">
                 {{ account.role }}
               </span>
             </div>
@@ -168,4 +180,5 @@
     </div>
   </div>
 </div>
+<app-help></app-help>
 <app-footer></app-footer>

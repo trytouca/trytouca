@@ -6,13 +6,13 @@
   </div>
   <div class="hidden w-48 wsl-dropdown-menu">
     <span class="px-2 wsl-text-muted">Choose a {{ side }} version</span>
-    <hr class="my-2">
+    <hr class="my-2 border dark:border-gray-700">
     <form class="px-2" id="wsl-version-search-{{ side }}">
       <input class="wsl-input-field" type="search" id="versionFilter-{{ side }}"
         name="versionFilter" placeholder="Find a version..." autocomplete="off"
         maxlength="16" (keyup)="onKeyupVersionFilter($event)">
     </form>
-    <hr class="my-2">
+    <hr class="my-2 border dark:border-gray-700">
     <div class="wsl-dropdown-item" *ngFor="let version of relevantVersions"
       (click)="updateVersion(version.slug)">
       {{ version.name }}

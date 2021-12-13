@@ -4,14 +4,14 @@ app-alert {
   @apply mb-4 block;
 }
 .wsl-settings-section {
-  @apply p-4 bg-white rounded-md shadow-sm;
+  @apply p-4 bg-white rounded-md shadow-sm dark:bg-gray-800;
   h3 {
-    @apply mb-2 pb-2 text-lg font-medium border-b;
+    @apply mb-2 pb-2 text-lg font-medium border-b border-gray-200 text-black dark:border-gray-700 dark:text-gray-300;
   }
   b {
     @apply font-medium;
   }
   p {
-    @apply mb-4 text-sm;
+    @apply mb-4 text-sm text-black dark:text-gray-300;
   }
 }

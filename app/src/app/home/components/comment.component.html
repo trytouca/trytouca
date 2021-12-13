@@ -1,6 +1,6 @@
 <article>
   <div class="flex items-center space-x-2">
-    <div class="font-medium leading-8 text-blue-500">
+    <div class="font-medium leading-8 text-blue-500 dark:text-sky-600">
       {{ meta.commentAuthor }}
     </div>
     <div class="space-x-4 wsl-text-muted">
@@ -18,11 +18,14 @@
     </markdown>
   </blockquote>
   <div class="space-x-4">
-    <a class="text-sm text-blue-500" role="button" *ngIf="meta.showButtonReply"
+    <a class="text-sm text-blue-500 dark:text-sky-600" role="button"
+      *ngIf="meta.showButtonReply"
       (click)="performAction(ActionType.Reply)">Reply</a>
-    <a class="text-sm text-blue-500" role="button" *ngIf="meta.showButtonUpdate"
+    <a class="text-sm text-blue-500 dark:text-sky-600" role="button"
+      *ngIf="meta.showButtonUpdate"
       (click)="performAction(ActionType.Update)">Edit</a>
-    <a class="text-sm text-blue-500" role="button" *ngIf="meta.showButtonRemove"
+    <a class="text-sm text-blue-500 dark:text-sky-600" role="button"
+      *ngIf="meta.showButtonRemove"
       (click)="performAction(ActionType.Remove)">Delete</a>
   </div>
 </article>

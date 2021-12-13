@@ -1,20 +1,27 @@
-<header class="h-16 bg-gray-50">
-  <div class="container flex justify-between px-4 mx-auto select-none">
-    <div class="flex items-center h-16 focus:outline-none">
+<header class="h-16 bg-gray-50 dark:bg-gray-900">
+  <div class="container flex justify-between h-16 px-4 mx-auto">
+    <div class="flex items-center select-none">
       <img class="h-12" src="./assets/logo/touca-logo-transparent.svg"
         alt="Touca Logo" />
-      <h1 class="text-2xl font-light tracking-tight text-sky-600">Touca
+      <h1
+        class="text-xl font-semibold tracking-tight text-sky-600 dark:text-white">
+        Touca
       </h1>
     </div>
   </div>
 </header>
 <div
-  class="grid grid-cols-1 wsl-min-h-screen-1 sm:p-4 sm:place-content-center bg-gray-50">
-  <div class="w-full max-w-lg col-span-1 p-4 mx-auto space-y-2">
-    <h2 class="text-2xl font-semibold text-center">Welcome Aboard!</h2>
-    <p class="text-sm text-center">Before we get started, we'd like to know a
-      little more about you.</p>
-    <hr class="border-2 border-sky-100" />
+  class="grid grid-cols-1 wsl-min-h-screen-1 sm:p-4 sm:place-content-center bg-gray-50 dark:bg-gray-900">
+  <div
+    class="w-full max-w-lg col-span-1 p-4 mx-auto space-y-2 rounded-lg dark:bg-gray-800">
+    <h2
+      class="text-2xl font-semibold text-center text-black dark:text-gray-300">
+      Welcome Aboard!
+    </h2>
+    <p class="text-sm text-center text-black dark:text-gray-300">
+      Before we get started, we'd like to know a little more about you.
+    </p>
+    <hr class="border-2 border-sky-100 dark:border-gray-700" />
     <form class="flex-grow px-2 py-4 wsl-form" [formGroup]="onboardForm"
       (ngSubmit)="onSubmit(onboardForm.value)" novalidate>
       <app-alert [alert]="alert" *ngIf="alert"></app-alert>
@@ -22,7 +29,7 @@
         <label class="wsl-input-label" for="wsl-fname">Full Name</label>
         <input class="wsl-input-field" type="text" id="wsl-fname" name="fname"
           formControlName="fname" aria-describedby="wsl-fname-help" required
-          autocomplete="name" data-lpignore="true" tabindex="1">
+          autocomplete="name" data-lpignore="true">
         <small id="wsl-fname-help" [ngClass]="hints.get('fname').type"
           [innerHTML]="hints.get('fname').text"></small>
       </div>
@@ -30,7 +37,7 @@
         <label class="wsl-input-label" for="wsl-uname">Username</label>
         <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
           formControlName="uname" aria-describedby="wsl-uname-help" required
-          autocomplete="username" tabindex="2">
+          autocomplete="username">
         <small id="wsl-uname-help" [ngClass]="hints.get('uname').type"
           [innerHTML]="hints.get('uname').text"></small>
       </div>
@@ -38,13 +45,13 @@
         <label class="wsl-input-label" for="wsl-upass">Password</label>
         <input class="wsl-input-field" type="password" id="wsl-upass"
           name="upass" formControlName="upass" aria-describedby="wsl-upass-help"
-          required autocomplete="new-password" tabindex="3">
+          required autocomplete="new-password">
         <small id="wsl-upass-help" [ngClass]="hints.get('upass').type"
           [innerHTML]="hints.get('upass').text"></small>
       </div>
       <div class="wsl-form-footer">
         <div class="wsl-form-submit">
-          <button class="wsl-btn-lg wsl-btn-dark" type="submit" tabindex="4">
+          <button class="wsl-btn-lg wsl-btn-primary" type="submit">
             Submit
           </button>
         </div>

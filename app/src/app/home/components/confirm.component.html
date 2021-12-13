@@ -4,25 +4,27 @@
 <div class="wsl-modal-body">
   <app-alert [alert]="alert" *ngIf="alert"></app-alert>
   <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-    <p class="text-sm" [innerHTML]="elements.message"></p>
-    <p class="text-sm" *ngIf="elements.confirmText">
+    <p class="text-sm text-black dark:text-gray-300"
+      [innerHTML]="elements.message"></p>
+    <p class="text-sm text-black dark:text-gray-300"
+      *ngIf="elements.confirmText">
       Please enter <b>{{ elements.confirmText }}</b> in the form below to
       confirm your intention.
     </p>
     <div *ngIf="elements.confirmText">
-      <input class="wsl-input-field" name="confirmText" type="text" tabindex="1"
+      <input class="wsl-input-field" name="confirmText" type="text"
         autocomplete="off" formControlName="confirmText" wslAutofocus>
     </div>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
-        <button class="wsl-btn-lg" type="submit" tabindex="2"
+        <button class="wsl-btn-lg" type="submit"
           [ngClass]="lookupButtonClass()">
           {{ elements.button }}
         </button>
       </div>
       <div class="wsl-form-links">
-        <button type="button" (click)="closeModal()" tabindex="3"
-          class="wsl-btn-lg wsl-btn-light">
+        <button type="button" (click)="closeModal()"
+          class="wsl-btn-lg wsl-btn-secondary">
           Cancel
         </button>
       </div>

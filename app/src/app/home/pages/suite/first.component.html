@@ -1,17 +1,18 @@
 <div class="flex items-center mx-auto wsl-box wsl-min-h-screen-3">
-  <div class="wsl-batches-first-head">
-    <div class="wsl-batches-first-left">
-      <div *ngIf="fields?.apiKey" class="wsl-batches-first-form">
-        <h2 class="mb-2 text-3xl font-medium">Submit Your First Version</h2>
+  <div class="md:grid md:grid-cols-7">
+    <div class="p-8 md:col-span-4">
+      <div class="mb-4" *ngIf="fields?.apiKey">
+        <h2 class="mb-2 text-3xl font-medium text-black dark:text-gray-300">
+          Submit Your First Version</h2>
         <div>
-          <p class="mb-4">
+          <p class="mb-4 text-black dark:text-gray-300">
             Use our open-source SDKs to
             describe the behavior and performance of your code by capturing
             values of interesting variables and runtime of important functions
             from anywhere within your code. If you have done this before:
           </p>
         </div>
-        <div class="wsl-input-group">
+        <div class="flex w-full mb-3">
           <div class="wsl-input-group-prepend">API Key</div>
           <div class="cursor-pointer wsl-input-group-text"
             (click)="fields.apiKey.toggle()">{{ fields.apiKey.value }}</div>
@@ -22,7 +23,7 @@
               name="hero-clipboard-copy" size="1rem"></ng-icon>
           </div>
         </div>
-        <div class="wsl-input-group">
+        <div class="flex w-full mb-3">
           <div class="wsl-input-group-prepend">API URL</div>
           <div class="wsl-input-group-text">{{ fields.apiUrl }}</div>
           <div class="wsl-input-group-append" ngxClipboard
@@ -34,7 +35,7 @@
         </div>
       </div>
       <div class="wsl-client-libraries">
-        <p class="mb-4">
+        <p class="mb-4 text-black dark:text-gray-300">
           If this is your first time, select your preferred programming language
           for documentation and examples to help you get started with Touca.
         </p>
@@ -66,8 +67,9 @@
         </div>
       </div>
     </div>
-    <div class="wsl-batches-first-right">
-      <img src="./assets/undraw/undraw_blank_canvas_3rbb.svg" />
+    <div class="hidden md:col-span-3 md:flex md:items-center md:justify-center">
+      <img class="md:w-3/4 md:mx-auto"
+        src="./assets/undraw/undraw_blank_canvas_3rbb.svg" />
     </div>
   </div>
 </div>

@@ -1,42 +1,39 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer components {
-  .wsl-btn {
-    @apply text-sm leading-6 focus:outline-none;
-  }
   .wsl-btn-sm {
-    @apply wsl-btn py-1 px-2 rounded;
+    @apply text-sm leading-6 focus:outline-none py-1 px-2 rounded;
   }
   .wsl-btn-lg {
-    @apply wsl-btn py-2 px-4 rounded-lg font-semibold;
+    @apply text-sm leading-6 focus:outline-none py-2 px-4 rounded-lg font-semibold;
   }
-  .wsl-btn-dark {
-    @apply bg-sky-600 text-white font-medium shadow-md hover:bg-sky-700 duration-150 ease-in-out focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400;
+  .wsl-btn-primary {
+    @apply bg-sky-600 duration-150 ease-in-out text-white font-medium shadow-md hover:bg-sky-900 focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400 dark:bg-sky-800 dark:shadow-none;
+  }
+  .wsl-btn-secondary {
+    @apply bg-sky-100 duration-150 ease-in-out text-sky-700 shadow-sm hover:bg-sky-200 focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400 dark:shadow-none dark:hover:bg-gray-600 dark:text-gray-300 dark:bg-gray-700;
   }
   .wsl-btn-danger {
-    @apply bg-red-600 text-white font-medium shadow-md hover:bg-red-700 duration-150 ease-in-out focus:ring-2 focus:ring-opacity-50 focus:ring-red-400;
-  }
-  .wsl-btn-light {
-    @apply bg-sky-100 text-sky-700 shadow-sm hover:bg-sky-200 focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400;
+    @apply bg-red-600 duration-150 ease-in-out text-white font-medium shadow-md hover:bg-red-700 focus:ring-2 focus:ring-opacity-50 focus:ring-red-400 dark:hover:bg-red-900 dark:bg-red-800 dark:shadow-none;
   }
   .wsl-btn-muted {
-    @apply bg-gray-50 border hover:bg-gray-100 focus:ring-1 focus:ring-opacity-50 focus:ring-gray-400 disabled:text-gray-300;
+    @apply bg-gray-50 duration-150 ease-in-out text-black border border-gray-200 hover:bg-gray-100 focus:ring-1 focus:ring-opacity-50 focus:ring-gray-400 disabled:text-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-500 dark:disabled:text-gray-600;
   }
   .wsl-input-field {
-    @apply block w-full rounded-md shadow-sm text-sm border-gray-300 focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50;
+    @apply block w-full rounded-md shadow-sm text-sm text-black border-gray-300 focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50 bg-white dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-0;
   }
   .wsl-input-label {
-    @apply mb-1 block text-sm font-medium text-gray-700;
+    @apply mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300;
   }
   .wsl-text-danger {
-    @apply text-red-600;
+    @apply text-red-600 dark:text-red-500;
   }
   .wsl-text-muted {
-    @apply text-gray-500;
+    @apply text-gray-500 dark:text-gray-400;
   }
   .wsl-text-success {
     @apply text-green-600;
@@ -69,19 +66,19 @@
     @apply space-x-4;
   }
   .wsl-modal-header {
-    @apply p-3 bg-gray-100 border-b;
+    @apply p-3 bg-gray-100 border-b border-gray-200 text-black dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300;
   }
   .wsl-modal-title {
     @apply font-medium;
   }
   .wsl-modal-body {
-    @apply p-4 space-y-4;
+    @apply p-4 space-y-4 dark:bg-gray-800;
   }
   .wsl-page-auth {
     @apply mx-auto container grid grid-cols-1 place-content-center;
   }
   .wsl-page-auth-title {
-    @apply mx-auto mb-6 text-3xl font-semibold;
+    @apply mx-auto mb-6 text-3xl font-semibold text-black dark:text-gray-300;
   }
   .wsl-page-auth-body {
     @apply w-full mx-auto max-w-lg;
@@ -90,7 +87,7 @@
     @apply space-y-4;
   }
   .wsl-page-banner {
-    @apply wsl-page-auth md:max-w-screen-sm text-center;
+    @apply wsl-page-auth md:max-w-md text-center space-y-4 text-black dark:text-gray-300;
     h2 {
       @apply text-3xl font-medium;
     }
@@ -101,13 +98,13 @@
       @apply p-4 mx-auto w-3/5;
     }
     p {
-      @apply p-4 text-left md:text-justify font-light;
+      @apply p-4 font-light text-left dark:rounded-lg dark:bg-gray-800 dark:text-gray-200;
     }
     a {
-      @apply text-sky-700;
+      @apply text-sky-700 font-medium dark:text-sky-600;
     }
     button {
-      @apply wsl-btn-lg wsl-btn-light;
+      @apply wsl-btn-lg wsl-btn-primary;
     }
   }
   .wsl-spinner {
@@ -117,13 +114,13 @@
     }
   }
   .wsl-dropdown-menu {
-    @apply absolute z-10 right-0 py-2 mt-2 bg-white text-sm font-normal border rounded-md shadow-xl;
+    @apply absolute z-10 right-0 py-2 mt-2 bg-white text-sm font-normal border border-gray-200 rounded-md shadow-md print:hidden dark:bg-gray-800 dark:border-gray-700;
   }
   .wsl-dropdown-item {
-    @apply p-2 cursor-pointer select-none hover:bg-gray-100;
+    @apply p-2 cursor-pointer select-none hover:bg-gray-100 text-black dark:text-gray-300 dark:hover:bg-gray-900;
   }
   .wsl-box {
-    @apply bg-white rounded-md shadow-sm;
+    @apply bg-white rounded-md shadow-sm print:shadow-none print:border print:border-gray-200 dark:bg-gray-800;
   }
 }
 

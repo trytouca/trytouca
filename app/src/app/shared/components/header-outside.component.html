@@ -4,16 +4,19 @@
       <a class="flex items-center h-8 focus:outline-none" [routerLink]="'/'">
         <img class="h-12" src="./assets/logo/touca-logo-transparent.svg"
           alt="Touca Logo" />
-        <h1 class="text-xl font-semibold tracking-tight text-sky-600">Touca</h1>
+        <h1
+          class="text-xl font-semibold tracking-tight text-sky-600 dark:text-white">
+          Touca
+        </h1>
       </a>
     </div>
     <nav class="flex items-center space-x-4">
-      <a class="px-4 py-2 text-sm font-semibold leading-6 bg-transparent rounded-lg text-sky-600 hover:bg-sky-100 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400"
+      <a class="px-4 py-2 text-sm font-semibold leading-6 duration-150 ease-in-out rounded-lg text-sky-600 hover:bg-sky-100 dark:text-gray-300 dark:hover:bg-gray-800"
         href="https://docs.touca.io" target="_blank" rel="noopener">Docs</a>
-      <a class="px-4 py-2 text-sm font-semibold leading-6 text-white duration-150 ease-in-out rounded-lg shadow-md bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400"
+      <a class="px-4 py-2 text-sm font-semibold leading-6 duration-150 ease-in-out rounded-lg text-sky-600 hover:bg-sky-100 dark:text-gray-300 dark:hover:bg-gray-800"
         routerLinkActive="active" routerLink="/account"
         [hidden]="isLoggedIn()">Get Started</a>
-      <a class="px-4 py-2 text-sm font-semibold leading-6 text-white duration-150 ease-in-out rounded-lg shadow-md bg-sky-600 hover:bg-sky-700 focus:outline-none focus:ring-2 focus:ring-opacity-50 focus:ring-sky-400"
+      <a class="px-4 py-2 text-sm font-semibold leading-6 duration-150 ease-in-out rounded-lg text-sky-600 hover:bg-sky-100 dark:text-gray-300 dark:hover:bg-gray-800"
         routerLinkActive="active" [routerLink]="homeLink()"
         [hidden]="!isLoggedIn()">Dashboard</a>
     </nav>

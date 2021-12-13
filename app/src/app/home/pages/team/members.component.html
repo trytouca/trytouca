@@ -1,9 +1,10 @@
 <section class="wsl-page-tab" id="wsl-team-tab-members">
   <div class="flex">
-    <h2 class="flex-grow text-2xl font-semibold">Team Members</h2>
+    <h2 class="flex-grow text-2xl font-semibold text-black dark:text-gray-300">
+      Team Members</h2>
     <div class="print:hidden">
       <button type="button" (click)="invite()"
-        class="flex items-center space-x-1 wsl-btn-sm wsl-btn-dark group">
+        class="flex items-center space-x-1 wsl-btn-sm wsl-btn-primary group">
         <ng-icon class="inline h-4 opacity-75 group-hover:opacity-100"
           name="feather-user-plus"></ng-icon>
         <span>Invite Member</span>
@@ -12,17 +13,19 @@
   </div>
   <div class="wsl-list" *ngIf="countRows(ItemType.Member)">
     <div class="wsl-list-head">
-      <h3>Active Members</h3>
+      <h3 class="text-black dark:text-gray-300">Active Members</h3>
       <p>
         You have
         {{ countShownRows(ItemType.Member) | i18nPlural: { '=0': 'no members', '=1': 'one member', 'other': '# members' } }}
         in your team.
       </p>
     </div>
-    <ul class="wsl2-list-body wsl-box">
-      <li class="wsl-list-item-outer"
+    <ul class="divide-y divide-gray-200 dark:divide-gray-700 wsl-box">
+      <li
+        class="wsl-list-item-outer first-of-type:rounded-t-md last-of-type:rounded-b-md hover:bg-gray-50 dark:hover:bg-gray-800"
         *ngFor="let item of getShownRows(ItemType.Member); let i = index;"
-        (click)="selectedRow = i;" [ngClass]="{'bg-sky-50': selectedRow === i}">
+        (click)="selectedRow = i;"
+        [ngClass]="{'bg-sky-50 dark:bg-gray-700': selectedRow === i}">
         <app-team-item-member [item]="item.asMember()"
           [isTeamAdmin]="isTeamAdmin" [isSelf]="isSelf(item.asMember())"
           (confirmEdit)="confirmEdit($event)"
@@ -33,18 +36,19 @@
   </div>
   <div class="wsl-list" *ngIf="countRows(ItemType.Invitee)">
     <div class="wsl-list-head">
-      <h3>Invited Members</h3>
+      <h3 class="text-black dark:text-gray-300">Invited Members</h3>
       <p>
         You have invited
         {{ countShownRows(ItemType.Invitee) | i18nPlural: { '=1': 'one user', 'other': '# users' } }}
         to your team.
       </p>
     </div>
-    <ul class="wsl2-list-body wsl-box">
-      <li class="wsl-list-item-outer"
+    <ul class="divide-y divide-gray-200 dark:divide-gray-700 wsl-box">
+      <li
+        class="wsl-list-item-outer first-of-type:rounded-t-md last-of-type:rounded-b-md hover:bg-gray-50 dark:hover:bg-gray-800"
         *ngFor="let item of getShownRows(ItemType.Invitee); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Member);"
-        [ngClass]="{'bg-sky-50': selectedRow === i + countShownRows(ItemType.Member)}">
+        [ngClass]="{'bg-sky-50 dark:bg-gray-700': selectedRow === i + countShownRows(ItemType.Member)}">
         <app-team-item-invitee [item]="item.asInvitee()"
           [isTeamAdmin]="isTeamAdmin" (confirmRescind)="confirmRescind($event)">
         </app-team-item-invitee>
@@ -53,17 +57,18 @@
   </div>
   <div class="wsl-list" *ngIf="countRows(ItemType.Applicant)">
     <div class="wsl-list-head">
-      <h3>Pending Members</h3>
+      <h3 class="text-black dark:text-gray-300">Pending Members</h3>
       <p>
         {{ countShownRows(ItemType.Applicant) | i18nPlural: { '=1': 'One user wants', 'other': '# users want' } }}
         to join your team.
       </p>
     </div>
-    <ul class="wsl2-list-body wsl-box">
-      <li class="wsl-list-item-outer"
+    <ul class="divide-y divide-gray-200 dark:divide-gray-700 wsl-box">
+      <li
+        class="wsl-list-item-outer first-of-type:rounded-t-md last-of-type:rounded-b-md hover:bg-gray-50 dark:hover:bg-gray-800"
         *ngFor="let item of getShownRows(ItemType.Applicant); let i = index;"
         (click)="selectedRow = i + countShownRows(ItemType.Member) + countShownRows(ItemType.Invitee);"
-        [ngClass]="{'bg-sky-50': selectedRow === i + countShownRows(ItemType.Member) + countShownRows(ItemType.Invitee)}">
+        [ngClass]="{'bg-sky-50 dark:bg-gray-700': selectedRow === i + countShownRows(ItemType.Member) + countShownRows(ItemType.Invitee)}">
         <app-team-item-applicant [item]="item.asApplicant()"
           [isTeamAdmin]="isTeamAdmin" (confirmAccept)="confirmAccept($event)"
           (confirmDecline)="confirmDecline($event)">

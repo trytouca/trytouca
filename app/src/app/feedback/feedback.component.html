@@ -2,7 +2,8 @@
 <div class="wsl-min-h-screen-1 wsl-page-auth">
   <h2 class="wsl-page-auth-title">Tell us what you think</h2>
   <div class="wsl-page-auth-body">
-    <div class="w-full p-8 mx-auto bg-white rounded-md shadow-lg">
+    <div
+      class="w-full p-8 mx-auto bg-white rounded-md shadow-lg dark:bg-gray-800">
       <form class="wsl-form" [formGroup]="feedbackForm"
         (ngSubmit)="onSubmit(feedbackForm.value)" novalidate>
         <app-alert [alert]="alert" *ngIf="alert"></app-alert>
@@ -29,7 +30,7 @@
         </div>
         <div class="wsl-form-footer">
           <div class="wsl-form-submit">
-            <button class="wsl-btn-lg wsl-btn-dark" type="submit">
+            <button class="wsl-btn-lg wsl-btn-primary" type="submit">
               Submit
             </button>
           </div>
@@ -38,3 +39,4 @@
     </div>
   </div>
 </div>
+<app-help></app-help>

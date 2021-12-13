@@ -1,21 +1,25 @@
-<div class="flex flex-col h-full pb-4">
-  <h2 class="text-2xl font-semibold">Reset Your Password</h2>
-  <div class="flex items-center flex-grow">
+<div class="p-4 space-y-8">
+  <h2 class="text-3xl font-bold text-center text-black dark:text-gray-300">
+    Reset Your Password
+  </h2>
+  <div>
+    <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+  </div>
+  <div class="space-y-4">
     <form class="flex-grow py-4 space-y-4" [formGroup]="formReset"
       (ngSubmit)="onSubmit(formReset.value)" novalidate>
-      <app-alert [alert]="alert" *ngIf="alert"></app-alert>
       <div>
         <label class="wsl-input-label" for="wsl-uname">Username</label>
         <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
           formControlName="uname" aria-describedby="wsl-uname-help"
-          autocomplete="username" tabindex="1">
+          autocomplete="username">
       </div>
       <div>
         <label class="wsl-input-label" for="wsl-upass1">New Password</label>
         <input class="wsl-input-field" type="password" id="wsl-upass1"
           name="upass1" formControlName="upass1"
           aria-describedby="wsl-upass1-help" required
-          autocomplete="new-password" tabindex="2">
+          autocomplete="new-password">
         <small class="wsl-text-danger" id="wsl-upass1-help"
           [hidden]="shouldHideAriaDescriptionForUpass1()">
           Your password must be at least eight characters.
@@ -27,27 +31,24 @@
         <input class="wsl-input-field" type="password" id="wsl-upass2"
           name="upass2" formControlName="upass2"
           aria-describedby="wsl-upass2-help" required
-          autocomplete="new-password" tabindex="3">
+          autocomplete="new-password">
         <small class="wsl-text-danger" id="wsl-upass2-help"
           [hidden]="shouldHideAriaDescriptionForUpass2()">
-          Your password must match the password you entered above.
+          Type the same password as above.
         </small>
       </div>
-      <div
-        class="space-y-4 md:space-y-0 md:flex md:space-x-4 md:items-center md:justify-between">
-        <div>
-          <button class="wsl-btn-lg wsl-btn-dark" type="submit" tabindex="4">
-            Reset
-          </button>
-        </div>
-        <div class="space-y-4 md:space-y-0 md:flex md:space-x-4">
-          <div>
-            <button class="wsl-btn-lg wsl-btn-light" type="button"
-              routerLink="/account/signin" tabindex="5">
-              Remember Your Password?
-            </button>
-          </div>
-        </div>
+      <button
+        class="flex items-center justify-center w-full p-2 space-x-2 text-sm font-medium text-white transition duration-300 border rounded-full cursor-pointer focus:outline-none border-sky-600 bg-sky-700 hover:bg-sky-800 hover:border-sky-700 focus:border-sky-700 dark:text-gray-300 dark:bg-sky-900 dark:border-sky-800 dark:hover:bg-sky-800 dark:hover:border-sky-700 dark:focus:border-sky-600"
+        type="submit">
+        Send instructions
+      </button>
+      <div class="flex justify-between">
+        <button
+          class="w-full pt-4 text-sm text-center text-gray-600 cursor-pointer focus:outline-none hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 dark:font-medium group"
+          routerLink="/account/signin">
+          Remember it? <a
+            class="text-sky-600 dark:group-hover:text-sky-500">Sign in</a>
+        </button>
       </div>
     </form>
   </div>

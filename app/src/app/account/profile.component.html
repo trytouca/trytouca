@@ -1,23 +1,22 @@
 <app-notification></app-notification>
 <app-header-inside></app-header-inside>
-<div class="flex flex-col border-t wsl-min-h-screen-1">
-  <div class="border-b wsl-box">
-    <div
-      class="container flex items-center justify-between h-16 px-4 py-2 mx-auto">
-      <div class="text-lg font-medium">Account Settings</div>
-      <div class="print:hidden">
-        <button class="wsl-btn-sm wsl-btn-dark group" type="button"
-          routerLink="/~">Back to Dashboard</button>
-      </div>
-    </div>
-  </div>
+<div class="flex flex-col wsl-min-h-screen-1">
   <div class="container mx-auto lg:grid lg:grid-cols-4 lg:gap-4">
     <div class="lg:col-span-1">
     </div>
     <div class="p-4 space-y-4 lg:col-span-2">
+      <div class="flex items-center justify-between h-16 py-2 mx-auto">
+        <div class="text-xl font-medium text-black dark:text-gray-300">Account
+          Settings</div>
+        <div class="print:hidden">
+          <button class="wsl-btn-sm wsl-btn-primary group" type="button"
+            routerLink="/~">Back to Dashboard</button>
+        </div>
+      </div>
       <form class="p-4 space-y-4 wsl-box" [formGroup]="accountSettingsForm"
         (ngSubmit)="onSubmit(accountSettingsForm.value)" novalidate>
-        <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
+        <h2
+          class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
           Your Information
         </h2>
         <app-alert class="block" *ngIf="alert[EModalType.ChangePersonal]"
@@ -27,7 +26,7 @@
           <label class="wsl-input-label" for="wsl-fname">Name</label>
           <input class="wsl-input-field" type="text" id="wsl-fname" name="fname"
             formControlName="fname" aria-describedby="wsl-fname-help" required
-            autocomplete="name" data-lpignore="true" tabindex="11">
+            autocomplete="name" data-lpignore="true">
           <small id="wsl-fname-help" [ngClass]="hints.get('fname').type"
             [innerHTML]="hints.get('fname').text"></small>
         </div>
@@ -35,35 +34,36 @@
           <label class="wsl-input-label" for="wsl-uname">Username</label>
           <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
             formControlName="uname" aria-describedby="wsl-uname-help" required
-            autocomplete="off" data-lpignore="true" tabindex="12">
+            autocomplete="off" data-lpignore="true">
           <small id="wsl-uname-help" [ngClass]="hints.get('uname').type"
             [innerHTML]="hints.get('uname').text"></small>
         </div>
         <div>
           <label class="wsl-input-label" for="wsl-email">Email Address</label>
           <input
-            class="wsl-input-field disabled:text-gray-500 disabled:bg-transparent"
+            class="wsl-input-field disabled:text-gray-500 disabled:bg-transparent dark:disabled:text-gray-400"
             type="text" id="wsl-email" name="email" formControlName="email"
             aria-describedby="wsl-email-help">
           <small id="wsl-email-help" [ngClass]="hints.get('email').type"
             [innerHTML]="hints.get('email').text"></small>
         </div>
-        <button class="font-normal wsl-btn-sm wsl-btn-dark" type="submit"
-          tabindex="13">
+        <button class="font-normal wsl-btn-sm wsl-btn-primary" type="submit">
           Update
         </button>
       </form>
       <div class="p-4 space-y-2 wsl-box" *ngIf="apiKeys">
-        <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
+        <h2
+          class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
           API Keys
         </h2>
         <div *ngFor="let key of apiKeys; let i = index">
-          <label class="block mb-1 text-sm font-medium text-gray-700">Key
+          <label class="block mb-1 text-sm font-medium wsl-text-muted">Key
             {{i + 1}}</label>
           <div
-            class="flex items-center p-2 bg-white border border-gray-300 rounded-md shadow-sm">
+            class="flex items-center p-2 bg-white border border-gray-300 rounded-md shadow-sm dark:bg-gray-800 dark:border-gray-600">
             <div class="flex-grow">
-              <span class="font-mono text-sm text-gray-700 cursor-pointer"
+              <span
+                class="font-mono text-sm text-gray-700 cursor-pointer dark:text-gray-400"
                 ngxClipboard [cbContent]="key.plain"
                 (cbOnSuccess)="onCopy($event)">
                 {{key.value}}</span>
@@ -87,7 +87,8 @@
         </div>
       </div>
       <div class="p-4 space-y-2 wsl-box">
-        <h2 class="pb-1 text-xl font-medium border-b border-gray-200">
+        <h2
+          class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
           Preferences
         </h2>
         <div>
@@ -97,14 +98,13 @@
       </div>
       <div class="p-4 space-y-2 wsl-box">
         <h2
-          class="pb-1 text-xl font-medium border-b border-gray-200 wsl-text-danger">
+          class="pb-1 text-xl font-medium border-b border-gray-200 wsl-text-danger dark:border-gray-700">
           Danger Zone</h2>
-        <p class="text-sm text-gray-600">
+        <p class="text-sm text-gray-600 dark:text-gray-300">
           Remove your user account and all its associated data.
         </p>
         <button class="wsl-btn-sm wsl-btn-danger"
-          (click)="openConfirmModal(EModalType.DeleteAccount)" type="button"
-          tabindex="15">
+          (click)="openConfirmModal(EModalType.DeleteAccount)" type="button">
           Delete Account
         </button>
       </div>

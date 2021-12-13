@@ -1,57 +1,43 @@
-<div class="flex flex-col h-full pb-4">
-  <ng-container *ngIf="isFormShown">
-    <h2 class="text-2xl font-semibold">Reset Your Password</h2>
-    <div class="flex items-center flex-grow">
-      <form class="flex-grow py-4 space-y-4" [formGroup]="formReset"
-        (ngSubmit)="onSubmit(formReset.value)" novalidate>
-        <app-alert [alert]="alert || input" *ngIf="alert || input"></app-alert>
-        <div>
-          <label class="wsl-input-label" for="wsl-mail">Email Address</label>
-          <input class="wsl-input-field" type="email" id="wsl-email"
-            name="email" formControlName="email"
-            aria-describedby="wsl-email-help" required autocomplete="email"
-            data-lpignore="true" tabindex="1">
-          <div class="flex items-center py-1 space-x-1 wsl-text-danger"
-            id="wsl-email-help" [hidden]="isFormValid()">
-            <ng-icon class="h-4" name="hero-exclamation-circle">
-            </ng-icon>
-            <small>Please use a valid email address.</small>
-          </div>
+<div class="p-4 space-y-8">
+  <h2 class="text-3xl font-bold text-center text-black dark:text-gray-300">
+    Reset Your Password
+  </h2>
+  <div>
+    <app-alert [alert]="alert || input" *ngIf="alert || input"></app-alert>
+  </div>
+  <div class="space-y-4" *ngIf="isFormShown">
+    <form class="space-y-4" [formGroup]="formReset"
+      (ngSubmit)="onSubmit(formReset.value)" novalidate>
+      <div>
+        <label class="wsl-input-label" for="wsl-mail">Email Address</label>
+        <input class="wsl-input-field" type="email" id="wsl-email" name="email"
+          formControlName="email" aria-describedby="wsl-email-help" required
+          autocomplete="email" data-lpignore="true">
+        <div class="flex items-center py-1 space-x-1 wsl-text-danger"
+          id="wsl-email-help" *ngIf="!isFormValid()">
+          <ng-icon class="h-4" name="hero-exclamation-circle">
+          </ng-icon>
+          <small>Please use a valid email address.</small>
         </div>
-        <div
-          class="space-y-4 md:space-y-0 md:flex md:space-x-2 md:items-center md:justify-between">
-          <div>
-            <button
-              class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-dark"
-              type="submit" tabindex="2">
-              Reset
-            </button>
-          </div>
-          <div class="space-y-4 md:space-y-0 md:flex md:space-x-2">
-            <div>
-              <button
-                class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-light"
-                type="button" routerLink="/account/signin" tabindex="3">
-                Sign in
-              </button>
-            </div>
-            <div>
-              <button
-                class="overflow-hidden whitespace-nowrap wsl-btn-lg wsl-btn-light"
-                type="button" routerLink="/account/signup" tabindex="4">
-                Sign up
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </ng-container>
-  <ng-container *ngIf="!isFormShown">
-    <div class="grid flex-grow place-content-center">
-      <app-account-mailbox [input]="mailboxInput"
-        (action)="mailboxAction($event)">
-      </app-account-mailbox>
-    </div>
-  </ng-container>
+      </div>
+      <button
+        class="flex items-center justify-center w-full p-2 space-x-2 text-sm font-medium text-white transition duration-300 border rounded-full cursor-pointer focus:outline-none border-sky-600 bg-sky-700 hover:bg-sky-800 hover:border-sky-700 focus:border-sky-700 dark:text-gray-300 dark:bg-sky-900 dark:border-sky-800 dark:hover:bg-sky-800 dark:hover:border-sky-700 dark:focus:border-sky-600"
+        type="submit">
+        Send instructions
+      </button>
+      <div class="flex justify-between">
+        <button
+          class="w-full pt-4 text-sm text-center text-gray-600 cursor-pointer focus:outline-none hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 dark:font-medium group"
+          routerLink="/account/signin">
+          Remember it? <a
+            class="text-sky-600 dark:group-hover:text-sky-500">Sign in</a>
+        </button>
+      </div>
+    </form>
+  </div>
+  <div>
+    <app-account-mailbox *ngIf="!isFormShown" [input]="mailboxInput"
+      (action)="mailboxAction($event)">
+    </app-account-mailbox>
+  </div>
 </div>

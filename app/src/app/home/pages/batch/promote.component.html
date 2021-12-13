@@ -6,7 +6,7 @@
   <app-alert [alert]="alert" *ngIf="alert"></app-alert>
   <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)"
     novalidate>
-    <p class="text-sm">
+    <p class="text-sm text-black dark:text-gray-300">
       You are about to promote version
       <strong>{{ elements.batch.batchSlug }}</strong>
       to baseline of suite <strong>{{ elements.batch.suiteName }}</strong>. This
@@ -16,7 +16,7 @@
     <div>
       <label class="wsl-input-label" for="wsl-reason">Promotion Reason
         (Optional)</label>
-      <textarea class="wsl-input-field" id="wsl-reason" rows="5" tabindex="1"
+      <textarea class="wsl-input-field" id="wsl-reason" rows="5"
         aria-describedby="wsl-body-help" formControlName="reason" name="reason"
         placeholder="Let others know why you are promoting this version."
         wslAutofocus>
@@ -32,13 +32,13 @@
     </div>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
-        <button type="submit" tabindex="2" class="wsl-btn-lg wsl-btn-dark">
+        <button type="submit" class="wsl-btn-lg wsl-btn-primary">
           Promote
         </button>
       </div>
       <div class="wsl-form-links">
-        <button type="button" (click)="closeModal()" tabindex="3"
-          class="wsl-btn-lg wsl-btn-light">
+        <button type="button" (click)="closeModal()"
+          class="wsl-btn-lg wsl-btn-secondary">
           Cancel
         </button>
       </div>

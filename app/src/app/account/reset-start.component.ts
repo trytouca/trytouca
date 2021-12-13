@@ -1,5 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
@@ -28,7 +29,7 @@ export class ResetStartComponent {
     textAfterSuccess: 'Did not receive the email? We can send you a new one.',
     textAfterFailure: 'Still not in your inbox? Maybe try one more time?',
     textFailure: 'We sent you another email. Maybe check your spam folder?',
-    textSuccess: 'We sent you an email to complete your password reset.'
+    textSuccess: 'Check your email to complete your password reset.'
   };
 
   alert: Alert;
@@ -49,7 +50,7 @@ export class ResetStartComponent {
         this.alert = undefined;
         this.isFormShown = false;
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
           [

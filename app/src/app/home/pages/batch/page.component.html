@@ -4,7 +4,7 @@
   </app-missing>
 </ng-container>
 <div class="max-w-screen-xl py-8 mx-auto" *ngIf="!notFound()" [hidden]="!batch">
-  <main class="wsl-min-h-screen-2">
+  <main class="container px-4 mx-auto space-y-4 wsl-min-h-screen-2 xl:px-8">
     <div class="wsl-page-head wsl-box">
       <nav aria-label="breadcrumb">
         <ol>
@@ -16,8 +16,9 @@
         </ol>
       </nav>
       <div class="flex space-x-2 print:hidden whitespace-nowrap">
-        <button class="wsl-btn-sm wsl-btn-dark" *ngFor="let button of buttons"
-          type="button" (click)="button.click()" [title]="button.title">
+        <button class="wsl-btn-sm wsl-btn-primary"
+          *ngFor="let button of buttons" type="button" (click)="button.click()"
+          [title]="button.title">
           {{ button.text }}
         </button>
         <div *ngIf="subButtons.length !== 0" wslDropdown>

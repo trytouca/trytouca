@@ -1,44 +1,42 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-main {
-  @apply px-4 container xl:px-8 mx-auto space-y-4;
-}
 .wsl-page-head {
-  @apply h-16 px-4 py-2 mx-auto flex items-center text-lg font-medium;
+  @apply h-16 px-4 py-2 mx-auto flex items-center text-lg font-medium select-none;
   nav {
     @apply flex-grow whitespace-nowrap;
-    ol {
-      @apply flex;
-      & > li:not(:last-child):after {
-        content: '\2002/\2002';
-      }
-      a {
-        @apply text-blue-500;
-      }
-    }
+  }
+  nav ol {
+    @apply text-blue-500 dark:text-sky-600 flex;
+  }
+  nav ol > li:last-child {
+    @apply text-black dark:text-gray-300;
+  }
+  nav ol > li:not(:last-child):after {
+    content: '\2002/\2002';
+    @apply text-black dark:text-gray-300;
   }
 }
-li.wsl-page-nav-item {
-  @apply flex items-center px-4 py-2 space-x-2 rounded-md cursor-pointer ease-in-out duration-300 hover:bg-gray-200 hover:bg-opacity-50;
+.wsl-page-nav-item {
+  @apply flex items-center px-4 py-2 space-x-2 rounded-md select-none cursor-pointer ease-in-out duration-300 hover:bg-gray-200 hover:bg-opacity-50 dark:hover:bg-gray-700;
   ng-icon {
     @apply text-gray-500;
   }
   p {
-    @apply flex-grow font-medium text-sm text-gray-800;
+    @apply flex-grow font-medium text-sm text-black dark:text-gray-100;
   }
   span {
-    @apply hidden sm:block w-6 h-6 p-1 text-xs font-medium text-center bg-gray-200 rounded-full select-none group-hover:bg-gray-100;
+    @apply hidden sm:block w-6 h-6 p-1 text-xs font-medium text-center bg-gray-200 rounded-full group-hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-900;
   }
-  &.wsl-tab-active {
-    @apply bg-gray-200;
-    ng-icon {
-      @apply text-gray-600;
-    }
-    p {
-      @apply text-dark-900;
-    }
-    span {
-      @apply bg-gray-100;
-    }
+}
+.wsl-tab-active {
+  @apply bg-gray-200 dark:bg-gray-700;
+  ng-icon {
+    @apply text-gray-600 dark:text-gray-300;
+  }
+  p {
+    @apply text-black dark:text-gray-100;
+  }
+  span {
+    @apply bg-gray-100 text-black dark:bg-gray-800 dark:text-gray-200;
   }
 }

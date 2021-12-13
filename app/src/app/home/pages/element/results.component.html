@@ -23,7 +23,7 @@
         <li class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Common); let i = index;"
           (click)="selectedRow = i"
-          [ngClass]="{'bg-sky-50': selectedRow === i}">
+          [ngClass]="{'bg-sky-50 dark:bg-gray-900': selectedRow === i}">
           <app-element-item-result [key]="item" [params]="params">
           </app-element-item-result>
         </li>
@@ -48,7 +48,7 @@
         <li class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Fresh); let i = index;"
           (click)="selectedRow = i + countShownRows(ItemType.Common)"
-          [ngClass]="{'bg-sky-50': selectedRow === i + countShownRows(ItemType.Common)}">
+          [ngClass]="{'bg-sky-50 dark:bg-gray-900': selectedRow === i + countShownRows(ItemType.Common)}">
           <app-element-item-result [key]="item" [params]="params">
           </app-element-item-result>
         </li>
@@ -74,7 +74,7 @@
         <li class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Missing); let i = index;"
           (click)="selectedRow = i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh);"
-          [ngClass]="{'bg-sky-50': selectedRow === i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)}">
+          [ngClass]="{'bg-sky-50 dark:bg-gray-900': selectedRow === i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)}">
           <app-element-item-result [key]="item" [params]="params">
           </app-element-item-result>
         </li>

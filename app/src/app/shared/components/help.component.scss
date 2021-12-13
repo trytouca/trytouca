@@ -2,21 +2,17 @@
 
 ul {
   li:not(:last-child) {
-    @apply flex items-center px-2 space-x-2;
+    @apply flex items-center px-2 space-x-2 duration-300 ease-in-out;
   }
   li:last-child {
     @apply flex items-center justify-center px-4 space-x-2;
     a {
-      @apply flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100;
+      @apply flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 duration-300 ease-in-out dark:hover:bg-gray-700;
     }
   }
   ng-icon {
-    @apply text-gray-500;
+    @apply text-gray-500 dark:text-gray-400;
   }
-}
-
-#wsl-help-dropdown {
-  @apply fixed flex items-center justify-center w-12 h-12 text-lg font-semibold text-gray-500 duration-150 ease-in-out bg-white border border-gray-300 rounded-full cursor-pointer select-none bottom-4 right-4 hover:border-gray-300;
 }
 .wsl-help-dropdown-menu {
   @apply fixed w-48 bottom-16 right-4;

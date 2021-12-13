@@ -4,7 +4,7 @@
   </app-missing>
 </ng-container>
 <div class="max-w-screen-xl py-8 mx-auto" *ngIf="!banner">
-  <div class="flex lg:divide-gray-200 lg:divide-x-2">
+  <div class="flex lg:divide-gray-200 lg:divide-x-2 dark:lg:divide-gray-700">
     <aside class="sticky flex-col hidden w-64 px-2 lg:px-4 lg:flex top-24">
       <nav class="flex-grow">
         <ul class="space-y-1">
@@ -21,27 +21,28 @@
       </nav>
       <div aria-current="page" wslDropdown *ngIf="team?.name">
         <div
-          class="flex items-center p-2 rounded-md cursor-pointer wsl-dropdown-toggle hover:bg-gray-200 hover:bg-opacity-50"
+          class="flex items-center p-2 rounded-md cursor-pointer wsl-dropdown-toggle hover:bg-gray-200 hover:bg-opacity-50 dark:hover:bg-gray-800"
           id="wsl-teams-dropdown" aria-haspopup="true" aria-expanded="false">
           <div class="flex items-center flex-grow space-x-2">
             <div
-              class="flex items-center justify-center w-10 h-10 text-2xl text-center text-white bg-gray-200 rounded-full">
+              class="flex items-center justify-center w-10 h-10 text-2xl text-center text-white bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-400">
               {{team.name[0].toLocaleUpperCase()}}
             </div>
-            <div>
+            <div class="text-black dark:text-gray-300">
               <p class="font-light">Team</p>
               <p class="font-medium">{{team.name}}</p>
             </div>
           </div>
           <div>
-            <ng-icon name="hero-chevron-down"></ng-icon>
+            <ng-icon name="hero-chevron-down"
+              class="text-black dark:text-gray-300"></ng-icon>
           </div>
         </div>
-        <ul class="hidden w-full wsl-dropdown-menu" style="top: -10rem;"
+        <ul class="hidden w-full wsl-dropdown-menu bottom-16"
           aria-labelledby="wsl-teams-dropdown">
           <li *ngFor="let teamItem of teams.active"
             (click)="switchPage(teamItem.slug)" class="wsl-dropdown-item"
-            [ngClass]="{'bg-sky-100': team?.slug === teamItem.slug}">
+            [ngClass]="{'bg-sky-100 dark:bg-gray-800': team?.slug === teamItem.slug}">
             {{ teamItem.name }}
           </li>
           <li class="flex items-center wsl-dropdown-item"
@@ -51,7 +52,7 @@
         </ul>
       </div>
     </aside>
-    <main class="wsl-min-h-screen-2">
+    <main class="container px-4 mx-auto space-y-4 wsl-min-h-screen-2 xl:px-8">
       <div [hidden]="currentTab !== TabType.Suites || !hasData() || hasItems()">
         <app-team-first-suite>
         </app-team-first-suite>
@@ -75,19 +76,20 @@
       </div>
       <div [hidden]="currentTab !== TabType.Invitations"
         *ngIf="teams?.invitations">
-        <h2 class="pb-1 text-2xl font-semibold">Your Invitations</h2>
+        <h2 class="pb-1 text-2xl font-semibold text-black dark:text-gray-300">
+          Your Invitations</h2>
         <div class="p-4">
           <ul class="space-y-4">
             <li class="flex items-center justify-between p-4 wsl-box"
               *ngFor="let item of teams.invitations">
-              <p class="text-sm">
+              <p class="text-sm text-black dark:text-gray-300">
                 Team <b>{{ item.name }}</b> wants you to join their team.
                 Would you like to?
               </p>
               <div class="space-x-2">
-                <button class="wsl-btn-sm wsl-btn-light"
+                <button class="wsl-btn-sm wsl-btn-primary"
                   (click)="accept(item)">Accept</button>
-                <button class="wsl-btn-sm wsl-btn-muted"
+                <button class="wsl-btn-sm wsl-btn-secondary"
                   (click)="confirmDecline(item)">Decline</button>
               </div>
             </li>
@@ -95,12 +97,13 @@
         </div>
       </div>
       <div [hidden]="currentTab !== TabType.Requests" *ngIf="teams?.requests">
-        <h2 class="pb-1 text-2xl font-semibold">Your Requests</h2>
+        <h2 class="pb-1 text-2xl font-semibold text-black dark:text-gray-300">
+          Your Requests</h2>
         <div class="p-4">
           <ul class="space-y-4">
             <li class="flex items-center justify-between p-4 wsl-box"
               *ngFor="let item of teams.requests">
-              <p class="text-sm">
+              <p class="text-sm text-black dark:text-gray-300">
                 You have asked to join team <b>{{ item.name }}</b>.
                 Now we wait for them to accept your request.
               </p>

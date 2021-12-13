@@ -1,8 +1,11 @@
 <div class="p-4 wsl-box">
   <div>
-    <h2 class="pb-1 text-xl font-medium">Comments</h2>
-    <article class="flex items-center justify-center p-2 text-sm text-gray-500"
-      *ngIf="comments.length === 0">
+    <h2 class="pb-1 text-xl font-medium text-black dark:text-gray-300">
+      Comments
+    </h2>
+    <article
+      class="flex items-center justify-center p-2 text-sm text-gray-500 dark:text-gray-400"
+      *ngIf="comments.length === 0 && !isCommentFormShown">
       This version has no comments yet.
     </article>
     <div class="py-2" *ngFor="let item of comments">
@@ -17,26 +20,29 @@
       </div>
     </div>
   </div>
-  <div class="py-4" [hidden]="isCommentFormShown">
-    <button class="w-full wsl-btn-sm wsl-btn-muted" (click)="showCommentForm()">
+  <div class="flex justify-center py-4" *ngIf="!isCommentFormShown">
+    <button class="wsl-btn-sm wsl-btn-muted" (click)="showCommentForm()">
       Write a Comment
     </button>
   </div>
-  <div class="py-4" [hidden]="!isCommentFormShown">
-    <h2 class="pb-1 font-medium text-md"><label
-        for="wsl-body">{{ fields.editorTitle }}</label></h2>
-    <p class="text-sm">{{ fields.editorSubtitle }}</p>
+  <div class="max-w-screen-sm py-4 mx-auto" *ngIf="isCommentFormShown">
+    <h2 class="pb-1 font-medium text-black text-md dark:text-gray-300">
+      <label for="wsl-body">{{ fields.editorTitle }}</label>
+    </h2>
+    <p class="text-sm text-black dark:text-gray-300">
+      {{ fields.editorSubtitle }}
+    </p>
     <app-alert [alert]="alert"></app-alert>
     <form class="pt-4 wsl-form" [formGroup]="form"
       (ngSubmit)="onSubmit(form.value)" novalidate>
       <div [hidden]="!fields.previewShow">
-        <blockquote class="p-2 border-l-2 border-gray-200">
+        <blockquote class="p-2 border-l-2 border-gray-200 dark:border-gray-500">
           <markdown class="prose-sm prose" [data]="form.controls.body.value">
           </markdown>
         </blockquote>
       </div>
       <div [hidden]="fields.previewShow">
-        <textarea class="wsl-input-field" id="wsl-body" rows="5" tabindex="1"
+        <textarea class="wsl-input-field" id="wsl-body" rows="5"
           aria-describedby="wsl-body-help" formControlName="body" name="body">
         </textarea>
         <small class="wsl-text-danger" id="wsl-body-help"
@@ -50,19 +56,18 @@
       </div>
       <div class="wsl-form-footer">
         <div class="wsl-form-submit">
-          <button class="wsl-btn-sm wsl-btn-dark" type="submit" tabindex="2">
+          <button class="wsl-btn-sm wsl-btn-primary" type="submit">
             {{ fields.buttonSubmitText }}
           </button>
         </div>
         <div class="wsl-form-links">
           <button class="wsl-btn-sm wsl-btn-muted" type="button"
-            (click)="togglePreview()" tabindex="3"
+            (click)="togglePreview()"
             [hidden]="!fields.buttonPreviewShow || !form.controls.body.valid || form.controls.body.pristine">
             {{ fields.buttonPreviewText }}
           </button>
           <button class="wsl-btn-sm wsl-btn-muted" type="button"
-            (click)="cancelForm()" tabindex="4"
-            [hidden]="!fields.buttonCancelShow">
+            (click)="cancelForm()" [hidden]="!fields.buttonCancelShow">
             Cancel
           </button>
         </div>

@@ -1,5 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, NgZone } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -26,10 +27,10 @@ export class SignupComponent {
   });
 
   mailboxInput: MailboxInput = {
-    textAfterSuccess: 'Did not receive the email? We can send you a new one.',
+    textAfterSuccess: 'Did not receive the email? We can send a new one.',
     textAfterFailure: 'Still not in your inbox? Maybe try one more time?',
     textFailure: 'We sent you another email. Maybe check your spam folder?',
-    textSuccess: 'We sent you an email to complete your account registration.'
+    textSuccess: 'We sent you an email to complete your registration.'
   };
 
   alert: Alert;
@@ -57,13 +58,13 @@ export class SignupComponent {
         this.alert = undefined;
         this.isFormShown = false;
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [400, 'email is invalid', 'Your email address appears invalid.'],
           [
             400,
             'email already registered',
-            'There is already an account associated with this email address.'
+            'There is an account with this email address.'
           ],
           [
             403,
@@ -112,7 +113,7 @@ export class SignupComponent {
           this.router.navigate([this.authService.redirectUrl ?? '/~']);
         });
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [
             403,

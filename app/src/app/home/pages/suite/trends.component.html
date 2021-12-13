@@ -1,12 +1,14 @@
-<div class="px-4 py-2 divide-y divide-gray-200">
+<div class="px-4 py-2 divide-y divide-gray-200 dark:divide-gray-700">
   <div class="flex items-center h-8 space-x-2">
-    <h3 class="font-semibold">Runtime Trend</h3>
-    <fa-icon class="text-blue-100 cursor-pointer hover:text-blue-400"
+    <h3 class="font-semibold text-black dark:text-gray-300">Runtime Trend</h3>
+    <fa-icon
+      class="text-blue-100 cursor-pointer hover:text-blue-300 dark:text-gray-700 dark:hover:text-gray-600"
       [icon]="faInfoCircle" (click)="isTooltipActive = !isTooltipActive"
       [hidden]="fields.perfs.length === 0">
     </fa-icon>
   </div>
-  <p class="pt-4 text-sm" *ngIf="isTooltipActive">This chart plots the overall
+  <p class="pt-4 text-sm text-black dark:text-gray-300" *ngIf="isTooltipActive">
+    This chart plots the overall
     execution time of recent versions. It shows how the overall performance of
     your workflow has changed over time.</p>
   <div class="pt-4" *ngIf="!isTooltipActive">
