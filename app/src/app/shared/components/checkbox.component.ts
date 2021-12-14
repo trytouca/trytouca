@@ -10,6 +10,7 @@ export interface Checkbox {
   slug: string;
   title: string;
   value?: boolean;
+  visible: boolean;
 }
 
 @Component({

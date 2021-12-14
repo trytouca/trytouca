@@ -1,5 +1,10 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+export enum EFeatureFlag {
+  NewsletterProduct = 'newsletter_product',
+  TestcasesTab = 'testcases_tab'
+}
+
 export enum EPlatformRole {
   User = 'user',
   Admin = 'admin',
@@ -195,7 +200,7 @@ export type BatchComparisonResponse = {
   overview?: BatchCompareOverview;
 };
 
-type ElementListResponseItem = {
+export type ElementListResponseItem = {
   metricsDuration: number;
   name: string;
   slug: string;

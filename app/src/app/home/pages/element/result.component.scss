@@ -7,8 +7,9 @@
   @apply px-3 py-1 bg-blue-100 text-blue-500 rounded-sm cursor-pointer dark:bg-gray-700 dark:text-sky-400;
 }
 .wsl-complex-block {
+  @apply px-4;
   .wsl-complex-block-head {
-    @apply flex px-4 justify-between text-gray-500;
+    @apply flex px-4 justify-between text-gray-500 dark:text-gray-300;
   }
   .wsl-complex-block-desc {
     @apply text-center;
@@ -19,7 +20,7 @@
   .wsl-complex-block-icons {
     @apply invisible;
     .wsl-complex-block-icon {
-      @apply opacity-25 hover:opacity-100 text-blue-500;
+      @apply opacity-50 hover:opacity-100 text-sky-600;
     }
   }
   pre {

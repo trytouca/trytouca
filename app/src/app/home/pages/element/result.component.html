@@ -159,10 +159,10 @@
             <span>value in both versions</span>
           </div>
           <div class="wsl-complex-block-icons">
-            <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"
+            <ng-icon class="wsl-complex-block-icon"
               title="Copy value to clipboard" ngxClipboard
-              [cbContent]="result.srcValue" (cbOnSuccess)="onCopy($event)">
-            </fa-icon>
+              [cbContent]="result.srcValue" (cbOnSuccess)="onCopy($event)"
+              name="hero-clipboard-copy" size="1.25rem"></ng-icon>
           </div>
         </div>
         <pre

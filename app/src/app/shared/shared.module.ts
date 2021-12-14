@@ -6,9 +6,26 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { DialogModule } from '@ngneat/dialog';
-import { ClipboardModule } from 'ngx-clipboard';
 import { NgIconsModule } from '@ng-icons/core';
+import {
+  FeatherBell,
+  FeatherBellOff,
+  FeatherChevronDown,
+  FeatherCircle,
+  FeatherFileText,
+  FeatherGift,
+  FeatherGithub,
+  FeatherLinkedin,
+  FeatherList,
+  FeatherPlusCircle,
+  FeatherSend,
+  FeatherSettings,
+  FeatherTwitter,
+  FeatherUser,
+  FeatherUserMinus,
+  FeatherUserPlus,
+  FeatherUsers
+} from '@ng-icons/feather-icons';
 import {
   HeroBadgeCheck,
   HeroCalendar,
@@ -32,25 +49,9 @@ import {
   HeroTerminal,
   HeroUpload
 } from '@ng-icons/heroicons';
-import {
-  FeatherBell,
-  FeatherBellOff,
-  FeatherChevronDown,
-  FeatherFileText,
-  FeatherGift,
-  FeatherGithub,
-  FeatherLinkedin,
-  FeatherList,
-  FeatherPlusCircle,
-  FeatherSend,
-  FeatherSettings,
-  FeatherTwitter,
-  FeatherUser,
-  FeatherUserMinus,
-  FeatherUserPlus,
-  FeatherUsers
-} from '@ng-icons/feather-icons';
 import { OctDiff } from '@ng-icons/octicons';
+import { DialogModule } from '@ngneat/dialog';
+import { ClipboardModule } from 'ngx-clipboard';
 
 import {
   AlertComponent,
@@ -77,6 +78,7 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
       FeatherBell,
       FeatherBellOff,
       FeatherChevronDown,
+      FeatherCircle,
       FeatherFileText,
       FeatherGift,
       FeatherGithub,

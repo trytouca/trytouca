@@ -1,17 +1,25 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 
 import type {
   BatchListResponse,
+  ElementListResponse,
   SuiteItem,
   SuiteLookupResponse,
   TeamLookupResponse
 } from '@/core/models/commontypes';
+import { EFeatureFlag } from '@/core/models/commontypes';
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
-import { AlertKind, AlertService, ApiService } from '@/core/services';
+import {
+  AlertKind,
+  AlertService,
+  ApiService,
+  UserService
+} from '@/core/services';
 import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
@@ -20,6 +28,7 @@ import { SuitePageItem, SuitePageItemType } from './suite.model';
 
 export enum SuitePageTabType {
   Versions = 'versions',
+  Testcases = 'testcases',
   Settings = 'settings'
 }
 
@@ -39,6 +48,13 @@ const availableTabs: Record<SuitePageTabType, PageTab<SuitePageTabType>> = {
     name: 'Versions',
     link: 'versions',
     icon: 'feather-list',
+    shown: true
+  },
+  [SuitePageTabType.Testcases]: {
+    type: SuitePageTabType.Testcases,
+    name: 'Test Cases',
+    link: 'testcases',
+    icon: 'feather-file-text',
     shown: true
   },
   [SuitePageTabType.Settings]: {
@@ -61,12 +77,14 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     suites: SuiteItem[];
     suite: SuiteLookupResponse;
     batches: BatchListResponse;
+    elements: ElementListResponse;
   } = {
     tabs: undefined,
     team: undefined,
     suites: undefined,
     suite: undefined,
-    batches: undefined
+    batches: undefined,
+    elements: undefined
   };
 
   private _subjects = {
@@ -74,7 +92,8 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     team: new Subject<TeamLookupResponse>(),
     suites: new Subject<SuiteItem[]>(),
     suite: new Subject<SuiteLookupResponse>(),
-    batches: new Subject<BatchListResponse>()
+    batches: new Subject<BatchListResponse>(),
+    elements: new Subject<ElementListResponse>()
   };
 
   data = {
@@ -82,12 +101,14 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     team$: this._subjects.team.asObservable(),
     suites$: this._subjects.suites.asObservable(),
     suite$: this._subjects.suite.asObservable(),
-    batches$: this._subjects.batches.asObservable()
+    batches$: this._subjects.batches.asObservable(),
+    elements$: this._subjects.elements.asObservable()
   };
 
   constructor(
     private alertService: AlertService,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private userService: UserService
   ) {
     super();
   }
@@ -97,15 +118,16 @@ export class SuitePageService extends IPageService<SuitePageItem> {
       ['team', args.teamSlug],
       ['suite', args.teamSlug],
       ['suite', args.teamSlug, args.suiteSlug],
-      ['batch', args.teamSlug, args.suiteSlug]
+      ['batch', args.teamSlug, args.suiteSlug],
+      ['element', 'v2', args.teamSlug, args.suiteSlug]
     ];
-    const elements = ['team', 'suites', 'suite', 'batches'];
     const update = (key: string, response: unknown) => {
       if (response && !isEqual(response, this._cache[key])) {
         this._cache[key] = response;
         this._subjects[key].next(response);
       }
     };
+    const elements = ['team', 'suites', 'suite', 'batches', 'elements'];
     const requests = elements.map((key, index) => {
       return this._cache[key]
         ? of(0)
@@ -118,9 +140,23 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     forkJoin(requests).subscribe({
       next: (doc) => {
         elements.forEach((key, index) => update(key, doc[index]));
-        const tabs = [availableTabs.versions, availableTabs.settings];
-        tabs.find((v) => v.type === SuitePageTabType.Versions).counter =
-          this._cache.batches.length;
+        const tabs: PageTab<SuitePageTabType>[] = [
+          {
+            ...availableTabs.versions,
+            counter: this._cache.batches.length
+          }
+        ];
+        if (
+          this.userService.currentUser?.feature_flags.includes(
+            EFeatureFlag.TestcasesTab
+          )
+        ) {
+          tabs.push({
+            ...availableTabs.testcases,
+            counter: this._cache.elements.length
+          });
+        }
+        tabs.push(availableTabs.settings);
         update('tabs', tabs);
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
@@ -142,7 +178,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         this._items = items;
         this._itemsSubject.next(this._items);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items
@@ -176,6 +212,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     this._cache.suites = null;
     this._cache.suite = null;
     this._cache.batches = null;
+    this._cache.elements = null;
     this.fetchItems({ currentTab, teamSlug, suiteSlug });
   }
 

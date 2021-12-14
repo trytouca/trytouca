@@ -4,19 +4,13 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import {
-  faClipboard,
-  faEye,
-  faEyeSlash,
-  faSyncAlt
-} from '@fortawesome/free-solid-svg-icons';
 import { DialogService } from '@ngneat/dialog';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription, timer } from 'rxjs';
 
-import { UserLookupResponse } from '@/core/models/commontypes';
 import { ApiKey } from '@/core/models/api-key';
+import { UserLookupResponse } from '@/core/models/commontypes';
+import { EFeatureFlag } from '@/core/models/commontypes';
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
 import {
   ApiService,
@@ -50,18 +44,29 @@ export class ProfileComponent implements OnDestroy {
   private _subHints: Subscription;
   alert: Partial<Record<EModalType, Alert>> = {};
   user: UserLookupResponse;
+  EFeatureFlag = EFeatureFlag;
   EModalType = EModalType;
   apiKeys: ApiKey[];
 
-  preferences: Record<string, Checkbox> = {
-    newsletter_product: {
+  _preferences: Record<string, Checkbox> = {
+    [EFeatureFlag.NewsletterProduct]: {
       default: false,
       description:
         'Receive monthly updates about newly released features and improvements',
       experimental: false,
       saved: false,
-      slug: 'newsletter_product',
-      title: 'Subscribe to Product Updates Newsletter'
+      slug: EFeatureFlag.NewsletterProduct,
+      title: 'Subscribe to Product Updates Newsletter',
+      visible: true
+    },
+    [EFeatureFlag.TestcasesTab]: {
+      default: false,
+      description: 'Show separate tab to report insights about test cases',
+      experimental: true,
+      saved: false,
+      slug: EFeatureFlag.TestcasesTab,
+      title: 'Test Cases Tab',
+      visible: false
     }
   };
 
@@ -95,17 +100,15 @@ export class ProfileComponent implements OnDestroy {
     private dialogService: DialogService,
     private notificationService: NotificationService,
     private router: Router,
-    private userService: UserService,
-    private faIconLibrary: FaIconLibrary
+    private userService: UserService
   ) {
-    faIconLibrary.addIcons(faClipboard, faEye, faEyeSlash, faSyncAlt);
     this._subHints = this.hints.subscribe(this.accountSettingsForm, [
       'fname',
       'uname'
     ]);
     this._subUser = this.userService.currentUser$.subscribe((user) => {
       user.feature_flags.forEach((v) => {
-        this.preferences[v].value = true;
+        this._preferences[v].value = true;
       });
       this.user = user;
       this.accountSettingsForm.get('email').setValue(user.email);
@@ -147,7 +150,7 @@ export class ProfileComponent implements OnDestroy {
         this.userService.reset();
         this.userService.populate();
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const error = this.apiService.extractError(err, [
           [409, 'username already registered', 'This username is taken']
         ]);
@@ -212,7 +215,7 @@ export class ProfileComponent implements OnDestroy {
   }
 
   toggleFeatureFlag(flag: Checkbox) {
-    const node = this.preferences[flag.slug];
+    const node = this._preferences[flag.slug];
     node.value = !(node.value ?? false);
     this.userService.updateFeatureFlag(flag.slug, node.value).subscribe({
       next: () => {
@@ -231,5 +234,11 @@ export class ProfileComponent implements OnDestroy {
 
   regenerateApiKey(index: number): void {
     this.userService.updateApiKey(this.user.apiKeys[index]);
+  }
+
+  getPreferences(experimental: boolean): Checkbox[] {
+    return Object.values(this._preferences).filter(
+      (v) => v.experimental === experimental && v.visible
+    );
   }
 }

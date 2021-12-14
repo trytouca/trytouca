@@ -13,8 +13,8 @@ import {
 import { format } from 'date-fns';
 
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
-import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import { PillContainerComponent } from '@/home/components';
+import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import {
   Data,
   Icon,

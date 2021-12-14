@@ -11,9 +11,22 @@ import { promisable } from '@/utils/routing'
 const router = e.Router()
 
 /**
+ * Deprecated in favor of `/client/element/:team/:suite`.
+ * Kept for backward compatibility.
+ */
+router.get(
+  '/:team/:suite',
+  middleware.isClientAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  middleware.hasSuite,
+  promisable(elementList, 'list suite elements')
+)
+
+/**
  * List test cases in baseline version of a given suite.
  *
- * @api [get] /element/:team/:suite
+ * @api [get] /element/v2/:team/:suite
  *    tags:
  *      - Element
  *    summary: List Elements
@@ -45,8 +58,8 @@ const router = e.Router()
  *              $ref: '#/components/schemas/Errors'
  */
 router.get(
-  '/:team/:suite',
-  middleware.isClientAuthenticated,
+  '/v2/:team/:suite',
+  middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
   middleware.hasSuite,

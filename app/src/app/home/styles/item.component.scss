@@ -7,7 +7,7 @@
   @apply flex space-x-4;
 }
 .wsl-item-status {
-  @apply leading-8;
+  @apply leading-8 flex items-center;
 }
 .wsl-item-title {
   p {

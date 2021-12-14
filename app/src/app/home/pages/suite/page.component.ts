@@ -4,16 +4,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import {
-  faBell,
-  faChartLine,
-  faCog,
-  faComments,
-  faRecycle,
-  faRobot,
-  faTasks
-} from '@fortawesome/free-solid-svg-icons';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription, timer } from 'rxjs';
 
@@ -91,19 +81,9 @@ export class SuitePageComponent
     private titleService: Title,
     private notificationService: NotificationService,
     alertService: AlertService,
-    faIconLibrary: FaIconLibrary,
     userService: UserService
   ) {
     super(suitePageService);
-    faIconLibrary.addIcons(
-      faBell,
-      faChartLine,
-      faCog,
-      faComments,
-      faRecycle,
-      faRobot,
-      faTasks
-    );
     this._sub = {
       alert: alertService.alerts$.subscribe((v) => {
         if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {

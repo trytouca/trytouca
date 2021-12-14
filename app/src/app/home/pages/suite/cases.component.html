@@ -1,0 +1,10 @@
+<section class="wsl-page-tab" id="wsl-suite-tab-cases">
+  <div class="p-4 space-y-4 wsl-box wsl-min-h-screen-3">
+    <ul class="wsl-list-body">
+      <li class="wsl-list-item-outer" *ngFor="let item of elements">
+        <app-suite-item-case [item]="item">
+        </app-suite-item-case>
+      </li>
+    </ul>
+  </div>
+</section>

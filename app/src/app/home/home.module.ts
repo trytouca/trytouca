@@ -39,10 +39,12 @@ import {
   SuiteChartRuntimeComponent,
   SuiteFirstBatchComponent,
   SuiteItemBatchComponent,
+  SuiteItemCaseComponent,
   SuiteItemPromotionComponent,
   SuiteListBatchesComponent,
   SuiteListCommentsComponent,
   SuitePageComponent,
+  SuiteTabCasesComponent,
   SuiteTabSettingsComponent,
   SuiteTrendsRuntimeComponent
 } from './pages/suite';
@@ -102,10 +104,12 @@ import {
     SuitePageComponent,
     SuiteFirstBatchComponent,
     SuiteItemBatchComponent,
+    SuiteItemCaseComponent,
     SuiteItemPromotionComponent,
     SuiteListBatchesComponent,
     SuiteListCommentsComponent,
     SuiteChartRuntimeComponent,
+    SuiteTabCasesComponent,
     SuiteTabSettingsComponent,
     SuiteTrendsRuntimeComponent,
     // batch page components

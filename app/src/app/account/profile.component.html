@@ -86,14 +86,28 @@
           </div>
         </div>
       </div>
-      <div class="p-4 space-y-2 wsl-box">
+      <div class="p-4 space-y-2 wsl-box"
+        *ngIf="getPreferences(false).length !== 0">
         <h2
           class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
           Preferences
         </h2>
-        <div>
-          <app-settings-checkbox [data]="preferences.newsletter_product"
-            (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
+        <div *ngFor="let preference of getPreferences(false)">
+          <app-settings-checkbox [data]="preference"
+            (toggle)="toggleFeatureFlag($event)">
+          </app-settings-checkbox>
+        </div>
+      </div>
+      <div class="p-4 space-y-2 wsl-box"
+        *ngIf="getPreferences(true).length !== 0">
+        <h2
+          class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
+          Experimental Features
+        </h2>
+        <div *ngFor="let preference of getPreferences(true)">
+          <app-settings-checkbox [data]="preference"
+            (toggle)="toggleFeatureFlag($event)">
+          </app-settings-checkbox>
         </div>
       </div>
       <div class="p-4 space-y-2 wsl-box">

@@ -36,14 +36,14 @@
         <div wslDropdown>
           <button
             class="flex items-center space-x-1 wsl-dropdown-toggle wsl-btn-sm wsl-btn-primary"
-            id="wsl-suite-quick-settings" aria-haspopup="true"
+            id="wsl-suite-submit-results" aria-haspopup="true"
             aria-expanded="false">
             <ng-icon class="h-4" name="hero-upload" size="1rem">
             </ng-icon>
             <span>Submit</span>
           </button>
           <div class="hidden px-2 space-y-2 wsl-dropdown-menu w-80"
-            aria-labelledby="wsl-suite-quick-settings">
+            aria-labelledby="wsl-suite-submit-results">
             <div
               class="flex items-center space-x-1 font-medium text-black dark:text-gray-300">
               <ng-icon class="h-4" name="hero-terminal" size="1rem">
@@ -117,6 +117,10 @@
       [hidden]="currentTab !== TabType.Versions || !hasData() || !hasItems()">
       <app-suite-tab-batches>
       </app-suite-tab-batches>
+    </div>
+    <div [hidden]="currentTab !== TabType.Testcases">
+      <app-suite-tab-cases>
+      </app-suite-tab-cases>
     </div>
     <div [hidden]=" currentTab !==TabType.Settings">
       <app-suite-tab-settings>

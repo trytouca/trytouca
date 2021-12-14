@@ -5,6 +5,7 @@ import * as ev from 'express-validator'
 
 import { clientSessionCreate } from '@/controllers/client/sessionCreate'
 import { clientSubmit } from '@/controllers/client/submit'
+import { elementList } from '@/controllers/element'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
@@ -71,6 +72,49 @@ router.post(
 )
 
 /**
+ * List test cases in baseline version of a given suite.
+ *
+ * @api [get] /client/element/:team/:suite
+ *    tags:
+ *      - Client
+ *    summary: List Elements
+ *    operationId: client_elements
+ *    description:
+ *      List all test suites in baseline version of a given suite.
+ *      User performing the query must be authenticated.
+ *      User performing the query must be a member of the team.
+ *      Output may have been cached in the server.
+ *    parameters:
+ *      - $ref: '#/components/parameters/team'
+ *      - $ref: '#/components/parameters/suite'
+ *    responses:
+ *      200:
+ *        description: 'List of Test Cases'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/CT_ElementListResponse'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ *      404:
+ *        description: 'Team or Suite Not Found'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
+router.get(
+  '/element/:team/:suite',
+  middleware.isClientAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  middleware.hasSuite,
+  promisable(elementList, 'list suite elements')
+)
+
+/**
  * Handles regression test results submitted by endpoints.
  *
  * @api [post] /client/submit
@@ -79,8 +123,7 @@ router.post(
  *    summary: 'Submit Results'
  *    operationId: 'client_submit'
  *    description:
- *      Allows regression test tools to submit new test results to the
- *      platform.
+ *      Handles test results submitted via Touca SDKs.
  *      Client initiating the request must be authenticated.
  *    requestBody:
  *      description:

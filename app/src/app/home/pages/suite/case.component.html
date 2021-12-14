@@ -1,0 +1,16 @@
+<div class="wsl-list-item md:space-x-4">
+  <div class="wsl-item-heading">
+    <div class="wsl-item-status">
+      <ng-icon class="text-gray-600 dark:text-gray-300" name="feather-circle">
+      </ng-icon>
+    </div>
+    <div class="wsl-item-title">
+      <p>{{ data.name }}</p>
+    </div>
+  </div>
+  <div class="wsl-item-pills">
+    <div class="wsl-item-pill" *ngFor="let tag of tags">
+      <span>{{ tag.title }}</span>
+    </div>
+  </div>
+</div>
