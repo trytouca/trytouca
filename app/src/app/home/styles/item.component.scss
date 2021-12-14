@@ -41,5 +41,5 @@
   @apply hidden sm:flex flex-row space-x-1 overflow-hidden text-xs leading-6 sm:leading-8 lg:whitespace-nowrap;
 }
 .wsl-item-pill {
-  @apply flex items-center px-1 lg:px-2 space-x-1 overflow-hidden text-gray-500 duration-75 ease-in-out bg-white border border-gray-200 rounded-full cursor-pointer select-none hover:border-gray-300 hover:text-gray-700 xl:px-3 whitespace-nowrap dark:bg-gray-700 dark:border-gray-600 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200;
+  @apply flex items-center px-1 lg:px-2 space-x-1 overflow-hidden text-gray-500 duration-75 ease-in-out bg-white border border-gray-200 rounded-full cursor-pointer select-none hover:border-gray-300 hover:text-gray-700 xl:px-3 whitespace-nowrap dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200;
 }
