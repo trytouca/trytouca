@@ -38,7 +38,7 @@ Touca SDK for C++ has five main components.
 | Core Library                 |                    |
 | Test Framework               | `--with-framework` |
 | Sample Regression Test Tools | `--with-examples`  |
-| Utility Command Line Tool    | `--with-utils`     |
+| Utility Command Line Tool    | `--with-cli`       |
 | Unit Tests                   | `--with-tests`     |
 
 We provide build scripts `build.sh` and `build.bat` for Unix and Windows
@@ -50,7 +50,7 @@ As an example, the command below builds all the components except the unit
 tests.
 
 ```bash
-./build.sh --with-utils --with-examples
+./build.sh --with-cli --with-examples
 ```
 
 You can build all of the components using the `--all` argument.
@@ -80,7 +80,7 @@ below.
 | Component Name           | CMake Option            | Default |
 | ------------------------ | ----------------------- | ------- |
 | Test Framework           | `TOUCA_BUILD_FRAMEWORK` | ON      |
-| Command-Line Application | `TOUCA_BUILD_UTILS`     | OFF     |
+| Command-Line Application | `TOUCA_BUILD_CLI`       | OFF     |
 | Sample Test Tools        | `TOUCA_BUILD_EXAMPLES`  | OFF     |
 | Unit-Tests               | `TOUCA_BUILD_TESTS`     | OFF     |
 
