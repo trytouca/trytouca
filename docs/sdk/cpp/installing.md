@@ -16,7 +16,7 @@ module.
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/touca-cpp.git
-    GIT_TAG        v1.4.1
+    GIT_TAG        v1.5.0
 )
 FetchContent_MakeAvailable(touca)
 ```
@@ -34,13 +34,13 @@ application and example projects or to exclude building the test framework:
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/touca-cpp.git
-    GIT_TAG        v1.4.1
+    GIT_TAG        v1.5.0
 )
 
 FetchContent_GetProperties(touca)
 if(NOT touca_POPULATED)
     FetchContent_Populate(touca)
-    set(TOUCA_BUILD_UTILS ON)
+    set(TOUCA_BUILD_CLI ON)
     set(TOUCA_BUILD_EXAMPLES ON)
     add_subdirectory(${touca_SOURCE_DIR})
 endif()

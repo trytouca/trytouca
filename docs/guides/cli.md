@@ -14,12 +14,12 @@ applications that make dealing with Touca result files more convenient.
 Touca CLI is part of our SDK for C++ and can only be obtained through building
 from source. To build the CLI, clone its repository to a directory of your
 choice. Navigate to that directory and invoke its top-level `build.sh` script
-with option `--with-utils`.
+with option `--with-cli`.
 
 ```bash
 git clone git@github.com:trytouca/touca-cpp.git
 cd touca-cpp
-./build.sh --with-utils
+./build.sh --with-cli
 ```
 
 The build script generates a `touca_cli` executable in the `./local/dist/bin`
