@@ -174,7 +174,7 @@ public final class Transport {
    */
   public List<String> getTestcases() {
     final Response response = getRequest(
-        String.format("/element/%s/%s", options.team, options.suite));
+        String.format("/client/element/%s/%s", options.team, options.suite));
     if (response.code != HttpURLConnection.HTTP_OK) {
       throw new ServerException("failed to obtain list of test cases");
     }
