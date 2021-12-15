@@ -143,7 +143,7 @@ You can install Touca with CMake 3.11 or higher:
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/touca-cpp.git
-    GIT_TAG        v1.4.1
+    GIT_TAG        v1.5.0
 )
 FetchContent_MakeAvailable(touca)
 ```

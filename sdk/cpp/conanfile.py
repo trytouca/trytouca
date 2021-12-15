@@ -15,6 +15,7 @@ class ToucaConan(ConanFile):
     author = "Touca, Inc. <hello@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     options = {
+        "fPIC": [True, False],
         "shared": [True, False],
         "with_tests": [True, False],
         "with_cli": [True, False],
@@ -23,6 +24,7 @@ class ToucaConan(ConanFile):
         "with_openssl": [True, False],
     }
     default_options = {
+        "fPIC": True,
         "shared": False,
         "with_tests": False,
         "with_cli": False,
