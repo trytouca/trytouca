@@ -77,7 +77,7 @@ describe('check failure errors', () => {
   });
 
   test('get testcases', async () => {
-    scope.get('/v1/element/some-team/some-suite').reply(200, [
+    scope.get('/v1/client/element/some-team/some-suite').reply(200, [
       {
         metricsDuration: 10,
         name: 'Some Case',
@@ -128,7 +128,7 @@ describe('check failure errors', () => {
   });
 
   test('when get_testcases fails', async () => {
-    scope.get('/v1/element/some-team/some-suite').reply(404, {
+    scope.get('/v1/client/element/some-team/some-suite').reply(404, {
       errors: ['suite not found'],
       status: 404
     });

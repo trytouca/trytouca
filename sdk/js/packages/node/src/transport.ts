@@ -143,7 +143,7 @@ export class Transport {
     const suite = this._options.suite;
     const response = await this._send_request({
       method: 'GET',
-      path: `/element/${team}/${suite}`
+      path: `/client/element/${team}/${suite}`
     });
     if (response.status !== 200) {
       throw new Error('Failed to obtain list of test cases');
