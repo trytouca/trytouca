@@ -64,7 +64,7 @@ async function elementListImpl(
  *
  * Caches returned output.
  */
-export async function elementList(
+export async function clientElementList(
   req: Request,
   res: Response,
   next: NextFunction

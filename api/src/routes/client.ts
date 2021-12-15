@@ -3,9 +3,9 @@
 import express from 'express'
 import * as ev from 'express-validator'
 
+import { clientElementList } from '@/controllers/client/elementList'
 import { clientSessionCreate } from '@/controllers/client/sessionCreate'
 import { clientSubmit } from '@/controllers/client/submit'
-import { elementList } from '@/controllers/element'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
@@ -111,7 +111,7 @@ router.get(
   middleware.hasTeam,
   middleware.isTeamMember,
   middleware.hasSuite,
-  promisable(elementList, 'list suite elements')
+  promisable(clientElementList, 'list suite elements')
 )
 
 /**
