@@ -10,7 +10,7 @@ export type AnnouncementInput = {
 
 export default function Announcement(props: { input: AnnouncementInput }) {
   return (
-    <section className="bg-gradient-to-r from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
+    <section className="bg-gradient-to-r from-dark-blue-900 to-dark-blue-800">
       {(props.input.hidden && (
         <p className="container p-8 mx-auto text-xl font-semibold text-center text-white">
           {props.input.elevator}
