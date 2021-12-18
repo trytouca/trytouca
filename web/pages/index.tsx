@@ -137,11 +137,11 @@ export default function Home() {
       <AboveTheFold></AboveTheFold>
       <Announcement input={content.announcement}></Announcement>
       <OneLinerPitch></OneLinerPitch>
+      <FeatureTestimonials input={content.testimonials}></FeatureTestimonials>
       <FeatureSubmit input={content.features[0]}></FeatureSubmit>
       <FeatureCompare input={content.features[1]}></FeatureCompare>
       <FeatureCollaborate input={content.features[2]}></FeatureCollaborate>
       <FeatureAutomate input={content.features[3]}></FeatureAutomate>
-      <FeatureTestimonials input={content.testimonials}></FeatureTestimonials>
     </>
   );
 }
