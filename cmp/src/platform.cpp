@@ -70,9 +70,9 @@ bool ComparisonJob::process(const Options& options) const {
     return false;
   }
 
-  const auto& dstName = src->metadata().describe();
-  const auto& srcName = dst->metadata().describe();
-  const auto& tuple = touca::format("{}_{}", dstName, srcName);
+  const auto& srcName = src->metadata().describe();
+  const auto& dstName = dst->metadata().describe();
+  const auto& tuple = touca::format("{}_{}", srcName, dstName);
   touca::log_debug("{}: processing comparison job", tuple);
 
   // perform comparison

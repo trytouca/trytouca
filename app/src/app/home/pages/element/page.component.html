@@ -12,14 +12,10 @@
         <ol>
           <li><a routerLink="../../..">{{ element?.teamName }}</a></li>
           <li><a routerLink="../..">{{ element?.suiteName }}</a></li>
-          <li>
-            <a routerLink=".." [queryParams]="findPreviousPageQueryParams()">
-              {{ batch?.batchSlug.split('@')[0] }}
-            </a>
+          <li><a routerLink=".."
+              [queryParams]="findPreviousPageQueryParams()">{{ batch?.batchSlug.split('@')[0] }}</a>
           </li>
-          <li class="active" aria-current="page">
-            {{ element?.elementName }}
-          </li>
+          <li class="active" aria-current="page">{{ element?.elementName }}</li>
         </ol>
       </nav>
     </div>

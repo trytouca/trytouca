@@ -12,8 +12,8 @@
     @apply text-black dark:text-gray-300;
   }
   nav ol > li:not(:last-child):after {
-    content: '\2002/\2002';
-    @apply text-black dark:text-gray-300;
+    content: '\2004/\2004';
+    @apply text-gray-400 dark:text-gray-500;
   }
 }
 .wsl-page-nav-item {
