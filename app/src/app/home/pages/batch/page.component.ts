@@ -68,7 +68,7 @@ type PageButton = {
   click: () => void;
   title: string;
   text: string;
-  icons?: [IconPrefix, IconName];
+  icon?: string;
 };
 
 @Component({
@@ -312,7 +312,14 @@ export class BatchPageComponent
       return [];
     }
     const buttons: PageButton[] = [];
-
+    if (this.batch?.isSealed) {
+      buttons.push({
+        click: () => this.exportVersion(),
+        icon: 'feather-download-cloud',
+        text: 'Export Version',
+        title: 'Export test results submitted for this version.'
+      });
+    }
     if (
       this._isTeamAdmin &&
       this.batch?.isSealed &&
@@ -320,7 +327,7 @@ export class BatchPageComponent
     ) {
       buttons.push({
         click: () => this.removeVersion(),
-        icons: ['far', 'trash-alt'],
+        icon: 'feather-trash2',
         text: 'Remove Version',
         title: 'Remove all test results submitted for this version.'
       });
@@ -391,6 +398,34 @@ export class BatchPageComponent
       closeButton: false,
       data,
       minHeight: '10vh'
+    });
+  }
+
+  private exportVersion() {
+    const url = [
+      'batch',
+      this.batch.teamSlug,
+      this.batch.suiteSlug,
+      this.batch.batchSlug,
+      'export',
+      'zip'
+    ].join('/');
+    this.apiService.getBinary(url).subscribe((blob) => {
+      const name = `${this.batch.suiteSlug}_${this.batch.batchSlug}.zip`;
+      const link = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      link.download = name;
+      link.href = objectUrl;
+      link.style.visibility = 'hidden';
+      link.target = '_blank';
+      link.dispatchEvent(
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          view: window
+        })
+      );
+      setTimeout(() => URL.revokeObjectURL(objectUrl));
     });
   }
 

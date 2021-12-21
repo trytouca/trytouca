@@ -37,7 +37,7 @@ export class UserService {
       this.subject.next(this.currentUser);
       return;
     }
-    this.apiService.get<UserLookupResponse>('user').subscribe({
+    this.apiService.get<UserLookupResponse>('/user').subscribe({
       next: (doc) => {
         this.alertService.unset(
           AlertKind.ApiConnectionDown,

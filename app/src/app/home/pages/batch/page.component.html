@@ -30,10 +30,10 @@
           <ul class="hidden w-48 wsl-dropdown-menu"
             aria-labelledby="wsl-batch-settings">
             <li *ngFor="let button of subButtons"
-              class="space-x-4 wsl-dropdown-item" (click)="button.click()"
-              [title]="button.title">
-              <fa-icon class="wsl-text-muted" [icon]="button.icons">
-              </fa-icon>
+              class="flex items-center space-x-2 wsl-dropdown-item"
+              (click)="button.click()" [title]="button.title">
+              <ng-icon class="wsl-text-muted" [name]="button.icon">
+              </ng-icon>
               <span class="text-sm">{{ button.text }}</span>
             </li>
           </ul>

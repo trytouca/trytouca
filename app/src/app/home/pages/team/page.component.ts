@@ -14,13 +14,14 @@ import {
   PageComponent,
   PageTab
 } from '@/home/components';
+
 import { TeamCreateTeamComponent } from './create-team.component';
 import { TeamPageSuite } from './team.model';
 import {
-  TeamPageService,
-  TeamPageTabType,
+  RefinedTeamList,
   TeamBannerType,
-  RefinedTeamList
+  TeamPageService,
+  TeamPageTabType
 } from './team.service';
 
 type NotFound = Partial<{

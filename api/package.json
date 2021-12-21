@@ -35,6 +35,7 @@
   "dependencies": {
     "@hubspot/api-client": "^5.0.0",
     "@sindresorhus/df": "^3.1.1",
+    "archiver": "^5.3.0",
     "bcrypt": "^5.0.1",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.5",
@@ -62,6 +63,7 @@
     "winston": "^3.2.1"
   },
   "devDependencies": {
+    "@types/archiver": "^5.1.1",
     "@types/bcrypt": "^5.0.0",
     "@types/chai": "^4.2.22",
     "@types/cookie-parser": "^1.4.2",

@@ -3,6 +3,7 @@
 import express from 'express'
 
 import { batchCompare } from '@/controllers/batch/compare'
+import { ctrlBatchExport } from '@/controllers/batch/export'
 import { ctrlBatchList } from '@/controllers/batch/list'
 import { ctrlBatchLookup } from '@/controllers/batch/lookup'
 import { ctrlBatchPromote } from '@/controllers/batch/promote'
@@ -325,6 +326,53 @@ router.get(
   middleware.hasSuite,
   middleware.hasBatch,
   promisable(batchCompare, 'compare a batch')
+)
+
+/**
+ * Export test results submitted for this version.
+ *
+ * @api [get] /batch/:team/:suite/:batch/export/zip
+ *    tags:
+ *      - Batch
+ *    summary: Export Batch
+ *    operationId: batch_export
+ *    description:
+ *      Export test results submitted to this batch.
+ *      User performing the query must be authenticated.
+ *      User performing the query must be member of the team.
+ *    parameters:
+ *      - $ref: '#/components/parameters/team'
+ *      - $ref: '#/components/parameters/suite'
+ *      - $ref: '#/components/parameters/batch'
+ *    responses:
+ *      200:
+ *        description: Generate Results
+ *        content:
+ *          application/zip:
+ *            schema:
+ *              type: string
+ *              format: binary
+ *      400:
+ *        $ref: '#/components/responses/RequestInvalid'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ *      404:
+ *        description: 'Team or Suite or Batch Not Found'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
+router.get(
+  '/:team/:suite/:batch/export/zip',
+  middleware.isAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  middleware.hasSuite,
+  middleware.hasBatch,
+  promisable(ctrlBatchExport, 'export batch results')
 )
 
 export const batchRouter = router

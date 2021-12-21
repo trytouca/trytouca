@@ -1,10 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpParams
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -26,12 +22,12 @@ export class ApiService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    return throwError(error);
+    return throwError(() => error);
   }
 
-  get<T>(path: string, params: HttpParams = new HttpParams()): Observable<T> {
+  get<T>(path: string): Observable<T> {
     const url = this.makeUrl(path);
-    const opts = { params, withCredentials: true };
+    const opts = { withCredentials: true };
 
     return this.http.get<T>(url, opts).pipe(catchError(this.handleError));
   }
@@ -40,21 +36,36 @@ export class ApiService {
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
 
-    return this.http.patch(url, body, opts).pipe(catchError(this.handleError));
+    return this.http
+      .patch(url, body, opts)
+      .pipe(catchError<Record<string, any>, any>(this.handleError));
   }
 
   post(path: string, body: Record<string, unknown> = {}): Observable<any> {
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
 
-    return this.http.post(url, body, opts).pipe(catchError(this.handleError));
+    return this.http
+      .post(url, body, opts)
+      .pipe(catchError<Record<string, any>, any>(this.handleError));
   }
 
   delete(path: string): Observable<any> {
     const url = this.makeUrl(path);
     const opts = { withCredentials: true };
 
-    return this.http.delete(url, opts).pipe(catchError(this.handleError));
+    return this.http
+      .delete(url, opts)
+      .pipe(catchError<Record<string, any>, any>(this.handleError));
+  }
+
+  getBinary(path: string): Observable<Blob> {
+    return this.http
+      .get(this.makeUrl(path), {
+        withCredentials: true,
+        responseType: 'blob'
+      })
+      .pipe(catchError(this.handleError));
   }
 
   status(): Observable<PlatformStatus> {

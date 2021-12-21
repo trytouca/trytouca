@@ -94,42 +94,50 @@ function streamToString(stream): Promise<string> {
   })
 }
 
-export async function getComparison(comparisonId: string): Promise<string> {
-  const readable = await minioClient.getObject(
-    bucketNames.comparisons,
-    comparisonId
+function streamToBuffer(stream): Promise<Buffer> {
+  const chunks = []
+  return new Promise((resolve, reject) => {
+    stream.on('data', (chunk) => chunks.push(Buffer.from(chunk)))
+    stream.on('error', (err) => reject(err))
+    stream.on('end', () => resolve(Buffer.concat(chunks)))
+  })
+}
+
+async function removeDocument(
+  bucketName: string,
+  documentId: string
+): Promise<boolean> {
+  try {
+    await minioClient.removeObject(bucketName, documentId)
+    return true
+  } catch (err) {
+    logger.warn('failed to remove document: %o', err)
+    return false
+  }
+}
+
+export async function getComparison(documentId: string): Promise<string> {
+  return streamToString(
+    await minioClient.getObject(bucketNames.comparisons, documentId)
   )
-  return await streamToString(readable)
+}
+
+export async function getMessage(documentId: string): Promise<Buffer> {
+  return streamToBuffer(
+    await minioClient.getObject(bucketNames.messages, documentId)
+  )
 }
 
 export async function removeComparison(comparisonId: string): Promise<boolean> {
-  try {
-    await minioClient.removeObject(bucketNames.comparisons, comparisonId)
-    return true
-  } catch (err) {
-    logger.warn('failed to remove message: %o', err)
-    return false
-  }
+  return removeDocument(bucketNames.comparisons, comparisonId)
 }
 
 export async function removeMessage(messageId: string): Promise<boolean> {
-  try {
-    await minioClient.removeObject(bucketNames.messages, messageId)
-    return true
-  } catch (err) {
-    logger.warn('failed to remove message: %o', err)
-    return false
-  }
+  return removeDocument(bucketNames.messages, messageId)
 }
 
-export async function removeResult(messageId: string): Promise<boolean> {
-  try {
-    await minioClient.removeObject(bucketNames.results, messageId)
-    return true
-  } catch (err) {
-    logger.warn('failed to remove result: %o', err)
-    return false
-  }
+export async function removeResult(resultId: string): Promise<boolean> {
+  return removeDocument(bucketNames.results, resultId)
 }
 
 /**
