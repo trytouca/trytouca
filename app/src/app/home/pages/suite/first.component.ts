@@ -6,12 +6,12 @@ import { faClipboard } from '@fortawesome/free-solid-svg-icons';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription } from 'rxjs';
 
+import { ApiKey } from '@/core/models/api-key';
 import { getBackendUrl } from '@/core/models/environment';
 import { NotificationService, UserService } from '@/core/services';
 import { AlertType } from '@/shared/components/alert.component';
 
 import { SuitePageService } from './suite.service';
-import { ApiKey } from '@/core/models/api-key';
 
 type Fields = Partial<{
   apiKey: ApiKey;
@@ -20,8 +20,7 @@ type Fields = Partial<{
 
 @Component({
   selector: 'app-suite-first-batch',
-  templateUrl: './first.component.html',
-  styleUrls: ['./first.component.scss']
+  templateUrl: './first.component.html'
 })
 export class SuiteFirstBatchComponent implements OnDestroy {
   fields: Fields = {};

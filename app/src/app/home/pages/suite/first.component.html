@@ -9,58 +9,71 @@
             Use our open-source SDKs to
             describe the behavior and performance of your code by capturing
             values of interesting variables and runtime of important functions
-            from anywhere within your code. If you have done this before:
+            from anywhere within your code.
           </p>
         </div>
-        <div class="flex w-full mb-3">
-          <div class="wsl-input-group-prepend">API Key</div>
-          <div class="cursor-pointer wsl-input-group-text"
+        <div class="flex w-full mb-3 ">
+          <div
+            class="min-w-[5rem] p-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l text-xs text-center text-black font-medium whitespace-nowrap dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300">
+            API Key</div>
+          <div
+            class="flex items-center flex-grow max-w-sm px-2 overflow-x-auto font-mono text-xs text-gray-500 bg-white border border-gray-300 cursor-pointer dark:text-gray-400 whitespace-nowrap dark:bg-gray-800 dark:border-gray-600"
             (click)="fields.apiKey.toggle()">{{ fields.apiKey.value }}</div>
-          <div class="wsl-input-group-append" ngxClipboard
-            [cbContent]="fields.apiKey.plain"
+          <div
+            class="flex justify-center p-2 text-xs font-medium duration-300 ease-in-out bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-900"
+            ngxClipboard [cbContent]="fields.apiKey.plain"
             (cbOnSuccess)="onCopy($event, 'API Key')">
             <ng-icon title="Copy API Key to clipboard"
               name="hero-clipboard-copy" size="1rem"></ng-icon>
           </div>
         </div>
         <div class="flex w-full mb-3">
-          <div class="wsl-input-group-prepend">API URL</div>
-          <div class="wsl-input-group-text">{{ fields.apiUrl }}</div>
-          <div class="wsl-input-group-append" ngxClipboard
-            [cbContent]="fields.apiUrl"
+          <div
+            class="min-w-[5rem] p-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l text-xs text-center text-black font-medium whitespace-nowrap dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300">
+            API URL</div>
+          <div
+            class="flex items-center flex-grow max-w-sm px-2 overflow-x-auto font-mono text-xs text-gray-500 bg-white border border-gray-300 dark:text-gray-400 whitespace-nowrap dark:bg-gray-800 dark:border-gray-600">
+            {{ fields.apiUrl }}</div>
+          <div
+            class="flex justify-center p-2 text-xs font-medium duration-300 ease-in-out bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-900"
+            ngxClipboard [cbContent]="fields.apiUrl"
             (cbOnSuccess)="onCopy($event, 'API URL')">
             <ng-icon title="Copy API URL to clipboard"
               name="hero-clipboard-copy" size="1rem"></ng-icon>
           </div>
         </div>
       </div>
-      <div class="wsl-client-libraries">
+      <div>
         <p class="mb-4 text-black dark:text-gray-300">
           If this is your first time, select your preferred programming language
           for documentation and examples to help you get started with Touca.
         </p>
-        <div>
+        <div class="grid gap-4 grid-cols-[repeat(4,_minmax(auto,_100px))]">
           <a href="https://docs.touca.io/sdk/cpp" target="_blank">
-            <div class="wsl-client-library">
-              <img src="./assets/exticons/client-cpp.svg"
+            <div
+              class="p-4 duration-300 ease-in-out border border-gray-200 rounded-md bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900">
+              <img class="w-full" src="./assets/exticons/client-cpp.svg"
                 alt="Logo of C++ Language" />
             </div>
           </a>
           <a href="https://docs.touca.io/sdk/python" target="_blank">
-            <div class="wsl-client-library">
-              <img src="./assets/exticons/client-python.svg"
+            <div
+              class="p-4 duration-300 ease-in-out border border-gray-200 rounded-md bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900">
+              <img class="w-full" src="./assets/exticons/client-python.svg"
                 alg="Logo of Python Language" />
             </div>
           </a>
           <a href="https://docs.touca.io/sdk/javascript" target="_blank">
-            <div class="wsl-client-library">
-              <img src="./assets/exticons/client-js.svg"
+            <div
+              class="p-4 duration-300 ease-in-out border border-gray-200 rounded-md bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900">
+              <img class="w-full" src="./assets/exticons/client-js.svg"
                 alt="Logo of JavaScript Language" />
             </div>
           </a>
           <a href="https://docs.touca.io/sdk/java" target="_blank">
-            <div class="wsl-client-library">
-              <img src="./assets/exticons/client-java.svg"
+            <div
+              class="p-4 duration-300 ease-in-out border border-gray-200 rounded-md bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900">
+              <img class="w-full" src="./assets/exticons/client-java.svg"
                 alt="Logo of Java Language" />
             </div>
           </a>

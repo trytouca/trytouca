@@ -58,7 +58,7 @@
                   (click)="fields.apiKey.toggle()">{{ fields.apiKey.value }}
                 </div>
                 <div
-                  class="flex justify-center p-2 text-xs font-medium bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700"
+                  class="flex justify-center p-2 text-xs font-medium duration-300 ease-in-out bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700"
                   ngxClipboard [cbContent]="fields.apiKey.plain"
                   (cbOnSuccess)="onCopy($event, 'API Key')">
                   <ng-icon title="Copy API Key to clipboard"
@@ -75,7 +75,7 @@
                   class="flex items-center flex-grow px-2 overflow-x-hidden font-mono text-xs text-gray-500 bg-white border border-gray-300 rounded-l whitespace-nowrap dark:bg-gray-900 dark:border-gray-600 dark:text-gray-400">
                   {{ fields.apiUrl }}</div>
                 <div
-                  class="flex justify-center p-2 text-xs font-medium bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700"
+                  class="flex justify-center p-2 text-xs font-medium duration-300 ease-in-out bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700"
                   ngxClipboard [cbContent]="fields.apiUrl"
                   (cbOnSuccess)="onCopy($event, 'API URL')">
                   <ng-icon title="Copy API URL to clipboard"

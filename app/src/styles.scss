@@ -66,10 +66,10 @@
     @apply space-x-4;
   }
   .wsl-modal-header {
-    @apply p-3 bg-gray-100 border-b border-gray-200 text-black dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300;
+    @apply p-3 bg-gray-100 border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700;
   }
   .wsl-modal-title {
-    @apply font-medium;
+    @apply font-medium text-black dark:text-gray-300;
   }
   .wsl-modal-body {
     @apply p-4 space-y-4 dark:bg-gray-800;
