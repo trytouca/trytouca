@@ -142,8 +142,7 @@ const filterInput: FilterInput<TeamPageSuite> = {
 
 @Component({
   selector: 'app-team-tab-suites',
-  templateUrl: './list.component.html',
-  styleUrls: ['../../styles/list.component.scss']
+  templateUrl: './list.component.html'
 })
 export class TeamTabSuitesComponent
   extends PageListComponent<TeamPageSuite>

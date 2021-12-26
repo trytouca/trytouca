@@ -74,8 +74,7 @@ const filterInput: FilterInput<ElementPageResult> = {
 
 @Component({
   selector: 'app-element-tab-results',
-  templateUrl: './results.component.html',
-  styleUrls: ['../../styles/list.component.scss']
+  templateUrl: './results.component.html'
 })
 export class ElementListResultsComponent
   extends PageListComponent<ElementPageResult>

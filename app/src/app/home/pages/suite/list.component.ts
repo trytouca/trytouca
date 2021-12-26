@@ -57,8 +57,7 @@ const filterInput: FilterInput<SuitePageItem> = {
 
 @Component({
   selector: 'app-suite-tab-batches',
-  templateUrl: './list.component.html',
-  styleUrls: ['../../styles/list.component.scss']
+  templateUrl: './list.component.html'
 })
 export class SuiteListBatchesComponent
   extends PageListComponent<SuitePageItem>

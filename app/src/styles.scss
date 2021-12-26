@@ -122,6 +122,152 @@
   .wsl-box {
     @apply bg-white rounded-md shadow-sm print:shadow-none print:border print:border-gray-200 dark:bg-gray-800;
   }
+  /* settings.scss */
+  .wsl-settings-section {
+    @apply p-4 bg-white rounded-md shadow-sm dark:bg-gray-800;
+    app-alert {
+      @apply mb-4 block;
+    }
+    h3 {
+      @apply mb-2 pb-2 text-lg font-medium border-b border-gray-200 text-black dark:border-gray-700 dark:text-gray-300;
+    }
+    b {
+      @apply font-medium;
+    }
+    p {
+      @apply mb-4 text-sm text-black dark:text-gray-300;
+    }
+  }
+  /* page.scss */
+  .wsl-page-head {
+    @apply h-16 px-4 py-2 mx-auto flex items-center text-lg font-medium select-none;
+    nav {
+      @apply flex-grow whitespace-nowrap;
+    }
+    nav ol {
+      @apply text-blue-500 dark:text-sky-600 flex;
+    }
+    nav ol > li:last-child {
+      @apply text-black dark:text-gray-300;
+    }
+    nav ol > li:not(:last-child):after {
+      content: '\2004/\2004';
+      @apply text-gray-400 dark:text-gray-500;
+    }
+  }
+  .wsl-page-nav-item {
+    @apply flex items-center px-4 py-2 space-x-2 rounded-md select-none cursor-pointer ease-in-out duration-300 hover:bg-gray-200 hover:bg-opacity-50 dark:hover:bg-gray-800;
+    ng-icon {
+      @apply text-gray-500 dark:text-gray-400;
+    }
+    p {
+      @apply flex-grow font-medium text-sm text-black dark:text-gray-200;
+    }
+    span {
+      @apply hidden sm:block w-6 h-6 p-1 text-xs font-medium text-center bg-gray-200 rounded-full group-hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-900;
+    }
+  }
+  .wsl-tab-active {
+    @apply bg-gray-200 dark:bg-gray-800;
+    ng-icon {
+      @apply text-gray-600 dark:text-gray-300;
+    }
+    span {
+      @apply bg-gray-100 text-black dark:bg-gray-700 dark:text-gray-200;
+    }
+  }
+  /* list.scss */
+  .wsl-list-body {
+    @apply divide-y divide-gray-200 border-t border-b border-gray-200 dark:divide-gray-700 dark:border-gray-700;
+  }
+  .wsl-list-head {
+    h3 {
+      @apply pb-1 text-xl font-medium text-black dark:text-gray-300;
+    }
+    p {
+      @apply pb-2 text-gray-500 text-xs dark:text-gray-400;
+    }
+  }
+  /* item.scss */
+  .wsl-list-item {
+    @apply py-4 px-2 md:px-6 md:flex md:justify-between;
+  }
+  .wsl-item-heading {
+    @apply flex space-x-4;
+  }
+  .wsl-item-status {
+    @apply leading-8 flex items-center;
+  }
+  .wsl-item-title {
+    p {
+      @apply text-base font-medium leading-8 truncate max-w-xs xl:max-w-lg text-gray-700 dark:text-gray-300;
+    }
+    a p {
+      @apply text-blue-500 dark:text-sky-500;
+    }
+  }
+  .wsl-item-topics {
+    @apply flex flex-row text-sm space-x-8 md:leading-8;
+  }
+  .wsl-item-topic {
+    @apply text-gray-500 select-none dark:text-gray-400 text-right;
+    min-width: 4rem;
+  }
+  .wsl-item-ctrl-box {
+    @apply flex flex-row-reverse text-sm leading-8 print:hidden min-w-[5rem];
+    .wsl-item-ctrl {
+      @apply px-2 cursor-pointer;
+      fa-icon {
+        @apply text-gray-200 text-lg dark:text-sky-700;
+      }
+      &:hover fa-icon {
+        @apply text-gray-300 dark:text-sky-600;
+      }
+    }
+  }
+  .wsl-item-pills {
+    @apply hidden sm:flex flex-row space-x-1 overflow-hidden text-xs leading-6 sm:leading-8 lg:whitespace-nowrap;
+  }
+  .wsl-item-pill {
+    @apply flex items-center px-1 lg:px-2 space-x-1 overflow-hidden text-gray-500 duration-75 ease-in-out bg-white border border-gray-200 rounded-full cursor-pointer select-none hover:border-gray-300 hover:text-gray-700 xl:px-3 whitespace-nowrap dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200;
+  }
+  /* result.scss */
+  .wsl-item-topic-type-simple {
+    @apply px-3 py-1 bg-gray-100 text-gray-500 rounded-sm dark:bg-gray-700 dark:text-gray-400;
+  }
+  .wsl-item-topic-type-complex {
+    @apply px-3 py-1 bg-blue-100 text-blue-500 rounded-sm cursor-pointer dark:bg-gray-700 dark:text-sky-400;
+  }
+  .wsl-complex-block {
+    @apply px-4;
+    .wsl-complex-block-head {
+      @apply flex px-4 justify-between text-gray-500 dark:text-gray-300;
+    }
+    .wsl-complex-block-desc {
+      @apply text-center;
+      span {
+        @apply text-sm;
+      }
+    }
+    .wsl-complex-block-icons {
+      @apply invisible;
+      .wsl-complex-block-icon {
+        @apply opacity-50 hover:opacity-100 text-sky-600;
+      }
+    }
+    pre {
+      @apply p-4 bg-white text-xs text-black dark:bg-gray-800 dark:text-gray-300;
+    }
+    &:hover .wsl-complex-block-icons {
+      @apply visible;
+    }
+  }
+  .wsl-complex-single {
+    @apply pb-4 md:w-3/4 md:mx-auto;
+  }
+  .wsl-complex-double {
+    @apply pb-4 md:grid md:grid-cols-2 md:gap-4;
+  }
 }
 
 ngneat-dialog {
@@ -131,9 +277,7 @@ ngneat-dialog {
 }
 
 #chat-box {
-  height: 530px;
-  width: 376px;
-  @apply fixed z-40 md:right-4 bottom-16;
+  @apply fixed z-40 md:right-4 bottom-16 h-[530px] w-[376px];
   #hubspot-conversations-inline-parent {
     @apply h-full;
   }

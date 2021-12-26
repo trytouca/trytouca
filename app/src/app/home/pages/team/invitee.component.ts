@@ -8,8 +8,7 @@ import { TeamInvitee } from '@/core/models/commontypes';
 
 @Component({
   selector: 'app-team-item-invitee',
-  templateUrl: './invitee.component.html',
-  styleUrls: ['../../styles/item.component.scss']
+  templateUrl: './invitee.component.html'
 })
 export class TeamItemInviteeComponent {
   @Input() item: TeamInvitee;

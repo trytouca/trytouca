@@ -65,7 +65,6 @@ type NotFound = Partial<{
 @Component({
   selector: 'app-element-page',
   templateUrl: './page.component.html',
-  styleUrls: ['../../styles/page.component.scss'],
   providers: [ElementPageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
 })
 export class ElementPageComponent

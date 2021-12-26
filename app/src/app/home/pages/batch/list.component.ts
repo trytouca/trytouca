@@ -191,8 +191,7 @@ const filterInput: FilterInput<BatchPageItem> = {
 
 @Component({
   selector: 'app-batch-list-elements',
-  templateUrl: './list.component.html',
-  styleUrls: ['../../styles/list.component.scss']
+  templateUrl: './list.component.html'
 })
 export class BatchListElementsComponent
   extends PageListComponent<BatchPageItem>

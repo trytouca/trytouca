@@ -42,7 +42,6 @@ type Meta = Partial<{
 @Component({
   selector: 'app-team-item-suite',
   templateUrl: './item.component.html',
-  styleUrls: ['../../styles/item.component.scss'],
   providers: [DateAgoPipe, DateTimePipe, I18nPluralPipe, PercentPipe]
 })
 export class TeamItemSuiteComponent extends PillContainerComponent {

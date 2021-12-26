@@ -15,8 +15,8 @@ import {
 import { format } from 'date-fns';
 
 import { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
-import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import { PillContainerComponent } from '@/home/components';
+import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import {
   Data,
   Icon,
@@ -48,7 +48,6 @@ type Metadata = Partial<{
 @Component({
   selector: 'app-batch-item-element',
   templateUrl: './item.component.html',
-  styleUrls: ['../../styles/item.component.scss'],
   providers: [DateAgoPipe, DateTimePipe, I18nPluralPipe, PercentPipe]
 })
 export class BatchItemElementComponent extends PillContainerComponent {

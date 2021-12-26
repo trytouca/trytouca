@@ -1,12 +1,19 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component } from '@angular/core';
+
 import { intercomClient } from '@/shared/utils/intercom';
 
 @Component({
   selector: 'app-help',
   templateUrl: './help.component.html',
-  styleUrls: ['./help.component.scss']
+  styles: [
+    `
+      .wsl-help-dropdown-menu {
+        @apply fixed;
+      }
+    `
+  ]
 })
 export class HelpComponent {
   isChatWidgetOpen = false;

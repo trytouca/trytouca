@@ -37,8 +37,7 @@ export function isElementParams(
 
 @Component({
   selector: 'app-home-version-list',
-  templateUrl: './version-list.component.html',
-  styleUrls: ['./version-list.component.scss']
+  templateUrl: './version-list.component.html'
 })
 export class VersionListComponent implements OnChanges {
   @Input() suite: SuiteLookupResponse;

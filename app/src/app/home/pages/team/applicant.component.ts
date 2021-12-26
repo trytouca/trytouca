@@ -8,8 +8,7 @@ import { TeamApplicant } from '@/core/models/commontypes';
 
 @Component({
   selector: 'app-team-item-applicant',
-  templateUrl: './applicant.component.html',
-  styleUrls: ['../../styles/item.component.scss']
+  templateUrl: './applicant.component.html'
 })
 export class TeamItemApplicantComponent {
   @Input() item: TeamApplicant;

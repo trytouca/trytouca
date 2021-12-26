@@ -59,8 +59,7 @@ const filterInput: FilterInput<TeamPageMember> = {
 
 @Component({
   selector: 'app-team-tab-members',
-  templateUrl: './members.component.html',
-  styleUrls: ['../../styles/list.component.scss']
+  templateUrl: './members.component.html'
 })
 export class TeamTabMembersComponent
   extends PageListComponent<TeamPageMember>

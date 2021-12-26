@@ -71,8 +71,7 @@ const filterInput: FilterInput<ElementPageMetric> = {
 
 @Component({
   selector: 'app-element-tab-metrics',
-  templateUrl: './metrics.component.html',
-  styleUrls: ['../../styles/list.component.scss']
+  templateUrl: './metrics.component.html'
 })
 export class ElementListMetricsComponent
   extends PageListComponent<ElementPageMetric>

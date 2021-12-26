@@ -74,7 +74,6 @@ type PageButton = {
 @Component({
   selector: 'app-batch-page',
   templateUrl: './page.component.html',
-  styleUrls: ['../../styles/page.component.scss'],
   providers: [BatchPageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
 })
 export class BatchPageComponent

@@ -50,7 +50,6 @@ type Fields = Partial<{
 @Component({
   selector: 'app-suite-page',
   templateUrl: './page.component.html',
-  styleUrls: ['../../styles/page.component.scss'],
   providers: [SuitePageService]
 })
 export class SuitePageComponent

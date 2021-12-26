@@ -12,7 +12,6 @@ type Data = {
 @Component({
   selector: 'app-suite-item-case',
   templateUrl: './case.component.html',
-  styleUrls: ['../../styles/item.component.scss'],
   providers: [DateTimePipe]
 })
 export class SuiteItemCaseComponent {

@@ -31,7 +31,6 @@ type NotFound = Partial<{
 @Component({
   selector: 'app-team-page',
   templateUrl: './page.component.html',
-  styleUrls: ['../../styles/page.component.scss'],
   providers: [TeamPageService]
 })
 export class TeamPageComponent

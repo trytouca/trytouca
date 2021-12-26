@@ -9,8 +9,7 @@ import { SuitePageService } from './suite.service';
 
 @Component({
   selector: 'app-suite-tab-cases',
-  templateUrl: './cases.component.html',
-  styleUrls: ['../../styles/list.component.scss']
+  templateUrl: './cases.component.html'
 })
 export class SuiteTabCasesComponent implements OnDestroy {
   private _subElements: Subscription;

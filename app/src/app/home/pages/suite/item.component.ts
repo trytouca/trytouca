@@ -41,7 +41,6 @@ type Meta = Partial<{
 @Component({
   selector: 'app-suite-item-batch',
   templateUrl: './item.component.html',
-  styleUrls: ['../../styles/item.component.scss'],
   providers: [DateAgoPipe, DateTimePipe, I18nPluralPipe, PercentPipe]
 })
 export class SuiteItemBatchComponent extends PillContainerComponent {

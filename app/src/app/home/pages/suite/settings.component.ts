@@ -39,8 +39,7 @@ enum EModalType {
 
 @Component({
   selector: 'app-suite-tab-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['../../styles/settings.component.scss']
+  templateUrl: './settings.component.html'
 })
 export class SuiteTabSettingsComponent implements OnDestroy {
   protected submitted: boolean;

@@ -33,8 +33,7 @@ enum EModalType {
 
 @Component({
   selector: 'app-team-tab-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['../../styles/settings.component.scss']
+  templateUrl: './settings.component.html'
 })
 export class TeamTabSettingsComponent implements OnDestroy {
   alert: Partial<Record<EModalType, Alert>> = {};
