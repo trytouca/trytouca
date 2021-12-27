@@ -20,7 +20,7 @@
   "main": "dist/server.js",
   "scripts": {
     "build": "yarn run build:mails && yarn run build:ts",
-    "build:mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/",
+    "build:mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/; cp -r templates/reports dist/templates",
     "build:ts": "tsc",
     "clean": "rimraf dist",
     "docs:external": "mkdir -p local/docs/external; swagger-inline src/routes/*.ts src/types/commontypes.ts --base docs/swagger.base.yaml --format yaml > local/docs/external/swagger.yaml; redoc-cli bundle local/docs/external/swagger.yaml --options.hideDownloadButton=true --output=local/docs/external/index.html --title=\"Touca Server API Reference\"",
@@ -59,6 +59,7 @@
     "mustache": "^4.2.0",
     "nocache": "^3.0.1",
     "nodemailer": "^6.7.0",
+    "puppeteer": "^13.0.1",
     "uuid": "^8.3.2",
     "winston": "^3.2.1"
   },

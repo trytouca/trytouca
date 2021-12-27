@@ -67,6 +67,16 @@ export class ProfileComponent implements OnDestroy {
       slug: EFeatureFlag.TestcasesTab,
       title: 'Test Cases Tab',
       visible: false
+    },
+    [EFeatureFlag.ExportPDF]: {
+      default: false,
+      description:
+        'Generate PDF report for test results submitted for a given version',
+      experimental: true,
+      saved: false,
+      slug: EFeatureFlag.ExportPDF,
+      title: 'Export as PDF',
+      visible: true
     }
   };
 

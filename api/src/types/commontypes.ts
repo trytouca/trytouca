@@ -2,7 +2,8 @@
 
 export enum EFeatureFlag {
   NewsletterProduct = 'newsletter_product',
-  TestcasesTab = 'testcases_tab'
+  TestcasesTab = 'testcases_tab',
+  ExportPDF = 'export_pdf'
 }
 
 /**

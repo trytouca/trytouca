@@ -23,9 +23,10 @@ import { DialogRef, DialogService } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
 
-import type {
+import {
   BatchItem,
   BatchLookupResponse,
+  EFeatureFlag,
   SuiteLookupResponse
 } from '@/core/models/commontypes';
 import type {
@@ -71,7 +72,6 @@ type PageButton = {
 };
 
 enum ExportFormat {
-  CSV = 'csv',
   PDF = 'pdf',
   ZIP = 'zip'
 }
@@ -325,6 +325,19 @@ export class BatchPageComponent
       });
     }
     if (
+      this.batch?.isSealed &&
+      this.userService.currentUser?.feature_flags.includes(
+        EFeatureFlag.ExportPDF
+      )
+    ) {
+      buttons.push({
+        click: () => this.export(ExportFormat.PDF),
+        icon: 'feather-download-cloud',
+        text: 'PDF Report',
+        title: 'Export test results submitted for this version.'
+      });
+    }
+    if (
       this._isTeamAdmin &&
       this.batch?.isSealed &&
       this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug
@@ -405,7 +418,7 @@ export class BatchPageComponent
     });
   }
 
-  private export(format: string) {
+  private export(format: ExportFormat) {
     const url = [
       'batch',
       this.batch.teamSlug,

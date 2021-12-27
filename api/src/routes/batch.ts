@@ -3,6 +3,7 @@
 import express from 'express'
 
 import { batchCompare } from '@/controllers/batch/compare'
+import { ctrlBatchExportPDF } from '@/controllers/batch/export_pdf'
 import { ctrlBatchExportZIP } from '@/controllers/batch/export_zip'
 import { ctrlBatchList } from '@/controllers/batch/list'
 import { ctrlBatchLookup } from '@/controllers/batch/lookup'
@@ -326,6 +327,53 @@ router.get(
   middleware.hasSuite,
   middleware.hasBatch,
   promisable(batchCompare, 'compare a batch')
+)
+
+/**
+ * Generate PDF report for test results submitted to this batch.
+ *
+ * @api [get] /batch/:team/:suite/:batch/export/pdf
+ *    tags:
+ *      - Batch
+ *    summary: Generate PDF Report
+ *    operationId: batch_export_pdf
+ *    description:
+ *      Generate PDF report for test results submitted to this batch.
+ *      User performing the query must be authenticated.
+ *      User performing the query must be member of the team.
+ *    parameters:
+ *      - $ref: '#/components/parameters/team'
+ *      - $ref: '#/components/parameters/suite'
+ *      - $ref: '#/components/parameters/batch'
+ *    responses:
+ *      200:
+ *        description: PDF Report
+ *        content:
+ *          application/pdf:
+ *            schema:
+ *              type: string
+ *              format: binary
+ *      400:
+ *        $ref: '#/components/responses/RequestInvalid'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ *      404:
+ *        description: 'Team or Suite or Batch Not Found'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
+router.get(
+  '/:team/:suite/:batch/export/pdf',
+  middleware.isAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  middleware.hasSuite,
+  middleware.hasBatch,
+  promisable(ctrlBatchExportPDF, 'export batch results')
 )
 
 /**
