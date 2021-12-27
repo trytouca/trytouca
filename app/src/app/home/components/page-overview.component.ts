@@ -17,7 +17,7 @@ type Ring = {
 };
 
 enum RingColor {
-  Gray = 'lightgray',
+  Gray = '#d1d5db',
   Green = '#28a745',
   Red = '#cc3c3c'
 }

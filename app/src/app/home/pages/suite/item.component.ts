@@ -193,7 +193,7 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
       const score = this.percentPipe.transform(meta.score, '1.0-0');
       topics.push({
         color: ['text-sky-600'],
-        icon: 'oct-diff',
+        icon: 'feather-file-plus',
         text: score,
         title: 'Match Score',
         type: TopicType.MatchRate

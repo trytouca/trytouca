@@ -8,11 +8,13 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgIconsModule } from '@ng-icons/core';
 import {
+  FeatherArchive,
   FeatherBell,
   FeatherBellOff,
   FeatherChevronDown,
   FeatherCircle,
   FeatherDownloadCloud,
+  FeatherFilePlus,
   FeatherFileText,
   FeatherGift,
   FeatherGithub,
@@ -51,7 +53,6 @@ import {
   HeroTerminal,
   HeroUpload
 } from '@ng-icons/heroicons';
-import { OctDiff } from '@ng-icons/octicons';
 import { DialogModule } from '@ngneat/dialog';
 import { ClipboardModule } from 'ngx-clipboard';
 
@@ -63,7 +64,8 @@ import {
   HeaderOutsideComponent,
   HelpComponent,
   NotificationComponent,
-  ServerDownComponent
+  ServerDownComponent,
+  SpinnerComponent
 } from './components';
 import { AutofocusDirective, DropdownDirective } from './directives';
 import { DateAgoPipe, DateTimePipe } from './pipes';
@@ -77,11 +79,13 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     FormsModule,
     HttpClientModule,
     NgIconsModule.withIcons({
+      FeatherArchive,
       FeatherBell,
       FeatherBellOff,
       FeatherChevronDown,
       FeatherCircle,
       FeatherDownloadCloud,
+      FeatherFilePlus,
       FeatherFileText,
       FeatherGift,
       FeatherGithub,
@@ -116,8 +120,7 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
       HeroSpeakerphone,
       HeroStar,
       HeroTerminal,
-      HeroUpload,
-      OctDiff
+      HeroUpload
     }),
     ReactiveFormsModule,
     RouterModule
@@ -134,7 +137,8 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     HeaderOutsideComponent,
     HelpComponent,
     NotificationComponent,
-    ServerDownComponent
+    ServerDownComponent,
+    SpinnerComponent
   ],
   exports: [
     AlertComponent,
@@ -156,7 +160,8 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     NgIconsModule,
     NotificationComponent,
     ReactiveFormsModule,
-    ServerDownComponent
+    ServerDownComponent,
+    SpinnerComponent
   ]
 })
 export class SharedModule {}

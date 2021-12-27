@@ -61,7 +61,7 @@ function toChunkFiles(messages: Buffer[]): ArrayBuffer[] {
  *  - `hasSuite` to yield `suite`
  *  - `hasBatch` to yield `batch`
  */
-export async function ctrlBatchExport(
+export async function ctrlBatchExportZIP(
   req: Request,
   res: Response,
   next: NextFunction
@@ -72,15 +72,10 @@ export async function ctrlBatchExport(
   const batch = res.locals.batch as IBatchDocument
   const tuple = [team.slug, suite.slug, batch.slug].join('/')
   const filename = ['touca', suite.slug, batch.slug].join('_') + '.zip'
-  logger.debug('%s: %s: exporting', user.username, tuple)
-
-  // check that batch is sealed
+  logger.debug('%s: %s: exporting as zip', user.username, tuple)
 
   if (!batch.sealedAt) {
-    return next({
-      errors: ['batch is not sealed'],
-      status: 400
-    })
+    return next({ errors: ['batch is not sealed'], status: 400 })
   }
 
   const elements = await MessageModel.find({ batchId: batch._id }, { _id: 1 })
@@ -105,5 +100,5 @@ export async function ctrlBatchExport(
   })
 
   await archive.finalize()
-  logger.info('%s: %s: exported', user.username, tuple)
+  logger.info('%s: %s: exported as zip', user.username, tuple)
 }

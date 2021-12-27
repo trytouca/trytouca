@@ -3,7 +3,7 @@
 import express from 'express'
 
 import { batchCompare } from '@/controllers/batch/compare'
-import { ctrlBatchExport } from '@/controllers/batch/export'
+import { ctrlBatchExportZIP } from '@/controllers/batch/export_zip'
 import { ctrlBatchList } from '@/controllers/batch/list'
 import { ctrlBatchLookup } from '@/controllers/batch/lookup'
 import { ctrlBatchPromote } from '@/controllers/batch/promote'
@@ -329,15 +329,15 @@ router.get(
 )
 
 /**
- * Export test results submitted for this version.
+ * Export test results submitted for this version as a compressed archive.
  *
  * @api [get] /batch/:team/:suite/:batch/export/zip
  *    tags:
  *      - Batch
- *    summary: Export Batch
- *    operationId: batch_export
+ *    summary: Export Batch as Zip
+ *    operationId: batch_export_zip
  *    description:
- *      Export test results submitted to this batch.
+ *      Export test results submitted to this batch as a compressed archive.
  *      User performing the query must be authenticated.
  *      User performing the query must be member of the team.
  *    parameters:
@@ -372,7 +372,7 @@ router.get(
   middleware.isTeamMember,
   middleware.hasSuite,
   middleware.hasBatch,
-  promisable(ctrlBatchExport, 'export batch results')
+  promisable(ctrlBatchExportZIP, 'export batch results')
 )
 
 export const batchRouter = router

@@ -65,9 +65,7 @@
     </div>
     <div class="grid wsl-min-h-screen-4 place-content-center"
       *ngIf="currentTab === TabType.Elements && (!hasData() || !hasItems())">
-      <div class="wsl-spinner">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      </div>
+      <app-spinner></app-spinner>
     </div>
     <div
       [hidden]="currentTab !== TabType.Elements || !hasData() || !hasItems()">

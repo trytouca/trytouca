@@ -42,9 +42,7 @@
     </div>
     <div class="grid wsl-min-h-screen-4 place-content-center"
       *ngIf="!hasData()">
-      <div class="wsl-spinner">
-        <fa-icon [icon]="['fas', 'spinner']" [spin]="true"></fa-icon>
-      </div>
+      <app-spinner></app-spinner>
     </div>
     <div [hidden]="currentTab !== TabType.Results || !hasData()">
       <app-element-tab-results>

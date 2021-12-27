@@ -12,7 +12,6 @@ import {
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import {
   faCog,
@@ -70,6 +69,12 @@ type PageButton = {
   text: string;
   icon?: string;
 };
+
+enum ExportFormat {
+  CSV = 'csv',
+  PDF = 'pdf',
+  ZIP = 'zip'
+}
 
 @Component({
   selector: 'app-batch-page',
@@ -313,9 +318,9 @@ export class BatchPageComponent
     const buttons: PageButton[] = [];
     if (this.batch?.isSealed) {
       buttons.push({
-        click: () => this.exportVersion(),
-        icon: 'feather-download-cloud',
-        text: 'Export Version',
+        click: () => this.export(ExportFormat.ZIP),
+        icon: 'feather-archive',
+        text: 'Export Test Results',
         title: 'Export test results submitted for this version.'
       });
     }
@@ -400,17 +405,17 @@ export class BatchPageComponent
     });
   }
 
-  private exportVersion() {
+  private export(format: string) {
     const url = [
       'batch',
       this.batch.teamSlug,
       this.batch.suiteSlug,
       this.batch.batchSlug,
       'export',
-      'zip'
+      format
     ].join('/');
     this.apiService.getBinary(url).subscribe((blob) => {
-      const name = `${this.batch.suiteSlug}_${this.batch.batchSlug}.zip`;
+      const name = `${this.batch.suiteSlug}_${this.batch.batchSlug}.${format}`;
       const link = document.createElement('a');
       const objectUrl = URL.createObjectURL(blob);
       link.download = name;

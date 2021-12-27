@@ -8,3 +8,4 @@ export { HeaderOutsideComponent } from './header-outside.component';
 export { HelpComponent } from './help.component';
 export { NotificationComponent } from './notification.component';
 export { ServerDownComponent } from './server-down.component';
+export { SpinnerComponent } from './spinner.component';

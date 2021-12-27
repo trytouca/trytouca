@@ -1352,13 +1352,6 @@
   dependencies:
     tslib "^2.2.0"
 
-"@ng-icons/octicons@^13.1.2":
-  version "13.1.2"
-  resolved "https://registry.yarnpkg.com/@ng-icons/octicons/-/octicons-13.1.2.tgz#f17d239b549f66dc09f98680f17a5b3de06eef47"
-  integrity sha512-As6MW599IuW536MK4S8+ns2yNgIUcoZMzwd4xMHY6JwXQew0InL+dsnYzdv4Fi0UnKanq9rKF80UhPlyAWLYLg==
-  dependencies:
-    tslib "^2.2.0"
-
 "@ngneat/dialog@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@ngneat/dialog/-/dialog-2.0.0.tgz#7db48e256319a0faecf0d918c68c7f9ef2491d1a"
@@ -4986,12 +4979,12 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-ngx-clipboard@^14.0.2:
-  version "14.0.2"
-  resolved "https://registry.yarnpkg.com/ngx-clipboard/-/ngx-clipboard-14.0.2.tgz#4098b32499a75a41f8c05991f36d30d2a8ec8122"
-  integrity sha512-zJaFi09D2bq9X1RYvFixE0AfYOI7E8mUO8S0GXcq76HisuE816HRl+8A46G+NML5GPA3Lr5qaGnQJN533So+8g==
+ngx-clipboard@^15.0.1:
+  version "15.0.1"
+  resolved "https://registry.yarnpkg.com/ngx-clipboard/-/ngx-clipboard-15.0.1.tgz#fdd8e17dae3c2f3f25b80189e4c190f9d47b9b27"
+  integrity sha512-Bx0MvAvcYmLL/6TxScltzvYlRKu7JOVnrstzI+r4yXMTWP/0nUiEZ83UzjYbjf8FRlSuXDWeEYGhw5SNh/swSg==
   dependencies:
-    ngx-window-token ">=4.0.0 <6.0.0"
+    ngx-window-token ">=6.0.0"
     tslib "^2.0.0"
 
 ngx-markdown@13.0.0:
@@ -5006,10 +4999,10 @@ ngx-markdown@13.0.0:
     prismjs "^1.25.0"
     tslib "^2.3.0"
 
-"ngx-window-token@>=4.0.0 <6.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/ngx-window-token/-/ngx-window-token-5.0.0.tgz#ca63a25038c9fdd73159857276ff67ec7f5b730b"
-  integrity sha512-DhigCrm9QO8R29lqJYzBC9aaTU0KiWgdnt8RNcTN/DvMaS7shfzAqyvUtxSIm/+JR4gW5JKqR/JODU8760nJMw==
+ngx-window-token@>=6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/ngx-window-token/-/ngx-window-token-6.0.0.tgz#8b4704242df93a302422a23163359c09d6bb34a0"
+  integrity sha512-IeLKO1jzfzSvZ6vlAt4QSY/B5XcHEhdOwTjqvWEPt6/esWV9T3mA2ln10kj6SCc9pUSx4NybxE10gcyyYroImg==
   dependencies:
     tslib "^2.0.0"
 

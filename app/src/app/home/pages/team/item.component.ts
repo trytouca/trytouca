@@ -209,7 +209,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
     if (this._meta.score) {
       topics.push({
         color: ['text-sky-600'],
-        icon: 'oct-diff',
+        icon: 'feather-file-plus',
         text: this.percentPipe.transform(this._meta.score, '1.0-0'),
         title: 'Match Score',
         type: TopicType.MatchRate

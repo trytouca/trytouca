@@ -107,12 +107,6 @@
       @apply wsl-btn-lg wsl-btn-primary;
     }
   }
-  .wsl-spinner {
-    @apply grid place-content-center;
-    fa-icon {
-      @apply text-2xl text-sky-600;
-    }
-  }
   .wsl-dropdown-menu {
     @apply absolute z-10 right-0 py-2 mt-2 bg-white text-sm font-normal border border-gray-200 rounded-md shadow-md print:hidden dark:bg-gray-800 dark:border-gray-700;
   }
