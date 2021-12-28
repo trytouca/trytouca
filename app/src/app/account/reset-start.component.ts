@@ -6,7 +6,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 
 import { MailboxAction, MailboxInput } from '@/account/mailbox.component';
 import { formFields } from '@/core/models/form-hint';
-import { ApiService } from '@/core/services';
+import { ApiRequestType, ApiService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';
 
 interface FormContent {
@@ -45,25 +45,19 @@ export class ResetStartComponent {
     if (!this.formReset.valid) {
       return;
     }
-    this.apiService.post('/auth/reset', { email: model.email }).subscribe({
-      next: () => {
-        this.alert = undefined;
-        this.isFormShown = false;
-      },
-      error: (err: HttpErrorResponse) => {
-        const msg = this.apiService.extractError(err, [
-          [400, 'request invalid', 'Your request was rejected by the server.'],
-          [
-            404,
-            'account not found',
-            'This email is not associated with any account.'
-          ],
-          [423, 'account suspended', 'Your account is currently suspended.'],
-          [423, 'account locked', 'Your account is temporarily locked.']
-        ]);
-        this.alert = { type: AlertType.Danger, text: msg };
-      }
-    });
+    this.apiService
+      .post(ApiRequestType.ResetStart, { email: model.email })
+      .subscribe({
+        next: () => {
+          this.alert = undefined;
+          this.isFormShown = false;
+        },
+        error: (err: HttpErrorResponse) => {
+          const el = this.apiService.findErrorList(ApiRequestType.ResetStart);
+          const msg = this.apiService.extractError(err, el);
+          this.alert = { type: AlertType.Danger, text: msg };
+        }
+      });
   }
 
   /**
@@ -72,7 +66,10 @@ export class ResetStartComponent {
    */
   onResend() {
     this.apiService
-      .post('/auth/reset/resend', this.formReset.value)
+      .post(
+        '/auth/reset/resend',
+        this.formReset.value as Record<string, unknown>
+      )
       .subscribe();
   }
 

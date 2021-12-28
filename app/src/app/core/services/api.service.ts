@@ -8,6 +8,10 @@ import { catchError, map } from 'rxjs/operators';
 import { PlatformStatus } from '@/core/models/commontypes';
 import { getBackendUrl } from '@/core/models/environment';
 
+export enum ApiRequestType {
+  ResetStart = '/auth/reset'
+}
+
 @Injectable()
 export class ApiService {
   _status: PlatformStatus;
@@ -110,5 +114,21 @@ export class ApiService {
       return defaultMsg;
     }
     return msg[2];
+  }
+
+  findErrorList(type: ApiRequestType) {
+    const errors: Record<ApiRequestType, [number, string, string][]> = {
+      [ApiRequestType.ResetStart]: [
+        [400, 'request invalid', 'Your request was rejected by the server.'],
+        [
+          404,
+          'account not found',
+          'This email is not associated with any account.'
+        ],
+        [423, 'account suspended', 'Your account is currently suspended.'],
+        [423, 'account locked', 'Your account is temporarily locked.']
+      ]
+    };
+    return errors[type];
   }
 }

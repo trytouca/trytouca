@@ -13,6 +13,7 @@ import { UserLookupResponse } from '@/core/models/commontypes';
 import { EFeatureFlag } from '@/core/models/commontypes';
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
 import {
+  ApiRequestType,
   ApiService,
   AuthService,
   NotificationService,
@@ -103,6 +104,15 @@ export class ProfileComponent implements OnDestroy {
     fname: new FormHint('', formFields.fname.validationErrors),
     uname: new FormHint('', formFields.uname.validationErrors)
   });
+
+  resetPassword: {
+    click: () => void;
+    failed: boolean;
+    message?: string;
+  } = {
+    click: () => this.resetPasswordAction(),
+    failed: false
+  };
 
   constructor(
     private apiService: ApiService,
@@ -240,6 +250,29 @@ export class ProfileComponent implements OnDestroy {
       AlertType.Success,
       'Copied API Key to clipboard.'
     );
+  }
+
+  resetPasswordAction(): void {
+    this.apiService
+      .post(ApiRequestType.ResetStart, { email: this.user.email })
+      .subscribe({
+        next: () => {
+          this.resetPassword.message = 'Done. Check your inbox!';
+          timer(10000).subscribe(() => {
+            this.resetPassword.message = undefined;
+          });
+        },
+        error: (err: HttpErrorResponse) => {
+          const el = this.apiService.findErrorList(ApiRequestType.ResetStart);
+          const msg = this.apiService.extractError(err, el);
+          this.resetPassword.message = msg;
+          this.resetPassword.failed = true;
+          timer(10000).subscribe(() => {
+            this.resetPassword.message = undefined;
+            this.resetPassword.failed = false;
+          });
+        }
+      });
   }
 
   regenerateApiKey(index: number): void {

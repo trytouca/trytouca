@@ -112,6 +112,26 @@
       </div>
       <div class="p-4 space-y-2 wsl-box">
         <h2
+          class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
+          Password Reset</h2>
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          Click below and we send you an email to reset your password.
+        </p>
+        <div class="flex items-center space-x-2">
+          <button class="font-normal wsl-btn-sm wsl-btn-muted" type="button"
+            role="button" (click)="resetPassword.click()"
+            [hidden]="resetPassword.message">
+            Reset Password
+          </button>
+          <small
+            [class]="resetPassword.failed ? 'wsl-text-danger' : 'wsl-text-success'"
+            [hidden]="!resetPassword.message">
+            {{ resetPassword.message }}
+          </small>
+        </div>
+      </div>
+      <div class="p-4 space-y-2 wsl-box">
+        <h2
           class="pb-1 text-xl font-medium border-b border-gray-200 wsl-text-danger dark:border-gray-700">
           Danger Zone</h2>
         <p class="text-sm text-gray-600 dark:text-gray-300">
