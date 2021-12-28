@@ -1,9 +1,96 @@
-<!DOCTYPE html>
-<html>
+<html lang="en">
 
-<body>
-  <h1>My First Heading</h1>
-  <p>{{ content }}</p>
+<head>
+  <base href="/" />
+  <meta charset="utf-8" />
+  <meta name="theme-color" content="#0284C7" />
+  <title>Touca</title>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link rel="icon" type="image/x-icon"
+    href="https://app.touca.io/favicon.ico" />
+  <link rel="apple-touch-icon"
+    href="https://app.touca.io/assets/icons/apple-touch-icon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body
+  class="font-sans text-base antialiased text-gray-800 bg-white dark:bg-gray-900 dark:text-gray-300">
+  <div class="container p-8 mx-auto space-y-8">
+    <div class="flex items-center select-none">
+      <img class="h-12"
+        src="https://app.touca.io/assets/logo/touca-logo-transparent.svg"
+        alt="Touca Logo" />
+      <h1 class="text-xl font-semibold tracking-tight">Touca</h1>
+    </div>
+    <div>
+      <ul class="flex text-lg tracking-tight">
+        <li class="after:content-[',\2004']">{{content.suite.name}}</li>
+        <li>{{content.srcBatch.name}}</li>
+      </ul>
+      <p class="text-xs">Comparing against version
+        {{content.dstBatch.name}}.</p>
+    </div>
+    <div class="space-y-2 text-xs">
+      <h2 class="text-lg font-semibold">Overview</h2>
+      <p>Submitted by <b>{{content.srcBatch.submittedBy.name}}</b> at
+        <b>{{content.srcBatch.submittedAt}}</b>
+      </p>
+      <p><b>{{content.srcBatch.missing.length}}</b> testcases are missing:</p>
+      <ol class="pl-8 list-decimal">
+        {{#content.srcBatch.missing}}
+        <li class="font-mono">{{name}}</li>
+        {{/content.srcBatch.missing}}
+      </ol>
+      <p><b>{{content.srcBatch.fresh.length}}</b> testcases are new:</p>
+      <ol class="pl-8 list-decimal">
+        {{#content.srcBatch.fresh}}
+        <li class="font-mono">{{name}}</li>
+        {{/content.srcBatch.fresh}}
+      </ol>
+    </div>
+    <div class="space-y-2 text-xs">
+      <h2 class="text-lg font-semibold">Changes in Behavior</h2>
+      <p>
+        <b>{{content.srcBatch.behavior.cases.length}}</b> of
+        <b>{{content.srcBatch.duration.cases.length}}</b> common testcases
+        performed differently:
+      </p>
+      <table class="text-xs table-auto">
+        <tr class="text-left">
+          <th>Testcase</th>
+          <th>Match Rate</th>
+        </tr>
+        {{#content.srcBatch.behavior.cases}}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{matchRate}}</td>
+        </tr>
+        {{/content.srcBatch.behavior.cases}}
+      </table>
+    </div>
+    <div class="space-y-2 text-xs">
+      <h2 class="text-lg font-semibold">Changes in Performance</h2>
+      <p>
+        Version {{content.srcBatch.name}} ran in
+        {{content.srcBatch.duration.value}},
+        {{content.srcBatch.duration.change}} in version
+        {{content.dstBatch.name}}.
+      </p>
+      <table class="text-xs table-auto">
+        <tr class="text-left">
+          <th>Testcase</th>
+          <th>Runtime</th>
+        </tr>
+        {{#content.srcBatch.duration.cases}}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{value}} {{change}}</td>
+        </tr>
+        {{/content.srcBatch.duration.cases}}
+      </table>
+    </div>
+  </div>
 </body>
 
 </html>

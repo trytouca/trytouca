@@ -7,7 +7,7 @@ import mustache from 'mustache'
 import nodemailer from 'nodemailer'
 import path from 'path'
 
-import { wslFindByRole, wslGetSuperUser } from '@/models/user'
+import { wslGetSuperUser } from '@/models/user'
 import { MailModel } from '@/schemas/mail'
 import { IUser, UserModel } from '@/schemas/user'
 import { EPlatformRole } from '@/types/commontypes'
@@ -32,10 +32,8 @@ async function mailUserImpl(
 ) {
   const filePath = path.join(config.mail.templatesDirectory, filename + '.html')
   const fileContent = fs.readFileSync(filePath, 'utf8')
-
   const bodyHtml = mustache.render(fileContent, view)
   const bodyPlain = htmlToText.fromString(bodyHtml, { wordwrap: 80 })
-
   const superuser = await wslGetSuperUser()
 
   // storing mail into database
@@ -46,7 +44,6 @@ async function mailUserImpl(
   })
 
   // send mail to user
-
   const result = await transporter.sendMail({
     from: `"${superuser.fullname}" <${superuser.email}>`,
     html: bodyHtml,
@@ -56,7 +53,6 @@ async function mailUserImpl(
   })
 
   // we expect nodemailer output to include a messageId
-
   if (!lodashHas(result, 'messageId')) {
     throw Error('failed to send mail')
   }
@@ -97,16 +93,6 @@ export async function mailUsers(
   const jobs = users.map((user) => mailUser(user, subject, filename, params))
   const results = await Promise.all(jobs)
   return results.every(Boolean)
-}
-
-async function mailUsersByRole(
-  role: EPlatformRole,
-  subject: string,
-  filename: string,
-  params?: Record<string, string>
-): Promise<boolean> {
-  const users = await wslFindByRole(role)
-  return await mailUsers(users, subject, filename, params)
 }
 
 export async function mailAdmins(params: { title: string; body: string }) {
