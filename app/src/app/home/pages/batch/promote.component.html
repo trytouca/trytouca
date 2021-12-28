@@ -16,19 +16,27 @@
     <div>
       <label class="wsl-input-label" for="wsl-reason">Promotion Reason
         (Optional)</label>
-      <textarea class="wsl-input-field" id="wsl-reason" rows="5"
-        aria-describedby="wsl-body-help" formControlName="reason" name="reason"
-        placeholder="Let others know why you are promoting this version."
-        wslAutofocus>
-      </textarea>
-      <small class="wsl-text-danger" id="wsl-reason-help"
-        [hidden]="shouldHideAriaDescription('reason')">
-        Please provide more information in your message.
-      </small>
-      <small class="wsl-text-muted"
-        [hidden]="!form.controls.reason.pristine && !form.controls.reason.valid">
-        This field supports markdown format.
-      </small>
+      <div [hidden]="preview.showText">
+        <textarea class="wsl-input-field" id="wsl-reason" rows="5"
+          aria-describedby="wsl-body-help" formControlName="reason"
+          name="reason"
+          placeholder="Let others know why you are promoting this version."
+          wslAutofocus></textarea>
+        <small class="wsl-text-danger" id="wsl-reason-help"
+          [hidden]="shouldHideAriaDescription('reason')">
+          Please provide more information in your message.
+        </small>
+        <small class="wsl-text-muted"
+          [hidden]="!form.controls.reason.pristine && !form.controls.reason.valid">
+          This field supports markdown format.
+        </small>
+      </div>
+      <blockquote class="p-2 border-l-2 border-gray-200 dark:border-gray-500"
+        [hidden]="!preview.showText">
+        <markdown class="prose-sm prose prose-zinc dark:prose-invert"
+          [data]="form.controls.reason.value">
+        </markdown>
+      </blockquote>
     </div>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
@@ -37,6 +45,10 @@
         </button>
       </div>
       <div class="wsl-form-links">
+        <button type="button" (click)="togglePreview()"
+          class="wsl-btn-lg wsl-btn-secondary">
+          {{ preview.buttonText }}
+        </button>
         <button type="button" (click)="closeModal()"
           class="wsl-btn-lg wsl-btn-secondary">
           Cancel

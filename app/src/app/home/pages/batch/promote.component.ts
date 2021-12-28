@@ -1,8 +1,10 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Component, HostListener } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, HostListener, SecurityContext } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
+import { MarkdownService, SECURITY_CONTEXT } from 'ngx-markdown';
 
 import { BatchLookupResponse } from '@/core/models/commontypes';
 import { ApiService } from '@/core/services';
@@ -14,10 +16,18 @@ interface IFormContent {
 }
 
 @Component({
-  templateUrl: './promote.component.html'
+  templateUrl: './promote.component.html',
+  providers: [
+    MarkdownService,
+    { provide: SECURITY_CONTEXT, useValue: SecurityContext.HTML }
+  ]
 })
 export class BatchPromoteComponent extends ModalComponent {
   elements: { batch: BatchLookupResponse };
+  preview = {
+    showText: false,
+    buttonText: 'Preview'
+  };
 
   constructor(private apiService: ApiService, public dialogRef: DialogRef) {
     super();
@@ -49,13 +59,18 @@ export class BatchPromoteComponent extends ModalComponent {
         this.submitted = false;
         this.dialogRef.close(true);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
         this.alert = { type: AlertType.Danger, text: msg };
       }
     });
+  }
+
+  public togglePreview() {
+    this.preview.showText = !this.preview.showText;
+    this.preview.buttonText = this.preview.showText ? 'Edit' : 'Preview';
   }
 
   public closeModal() {
