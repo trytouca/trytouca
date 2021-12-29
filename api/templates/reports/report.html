@@ -17,40 +17,49 @@
 <body
   class="font-sans text-base antialiased text-gray-800 bg-white dark:bg-gray-900 dark:text-gray-300">
   <div class="container p-8 mx-auto space-y-8">
-    <div class="flex items-center select-none">
-      <img class="h-12"
-        src="https://app.touca.io/assets/logo/touca-logo-transparent.svg"
-        alt="Touca Logo" />
-      <h1 class="text-xl font-semibold tracking-tight">Touca</h1>
-    </div>
-    <div>
-      <ul class="flex text-lg tracking-tight">
-        <li class="after:content-[',\2004']">{{content.suite.name}}</li>
-        <li>{{content.srcBatch.name}}</li>
-      </ul>
-      <p class="text-xs">Comparing against version
-        {{content.dstBatch.name}}.</p>
+    <div class="flex items-center space-x-2">
+      <div class="flex items-center select-none">
+        <img class="h-12"
+          src="https://app.touca.io/assets/logo/touca-logo-transparent.svg"
+          alt="Touca Logo" />
+        <h1 class="hidden text-xl font-semibold tracking-tight text-sky-600">
+          Touca</h1>
+      </div>
+      <div>
+        <ul class="flex text-lg tracking-tight">
+          <li class="after:content-[',\2004']">{{content.suite.name}}</li>
+          <li>{{content.srcBatch.name}}</li>
+        </ul>
+        <p class="text-xs">Comparing against version
+          {{content.dstBatch.name}}.</p>
+      </div>
     </div>
     <div class="space-y-2 text-xs">
       <h2 class="text-lg font-semibold">Overview</h2>
       <p>Submitted by <b>{{content.srcBatch.submittedBy.name}}</b> at
-        <b>{{content.srcBatch.submittedAt}}</b>
+        {{content.srcBatch.submittedAt}}.
       </p>
-      <p><b>{{content.srcBatch.missing.length}}</b> testcases are missing:</p>
+      {{#content.srcBatch.missing.hasCases}}
+      <p><b>{{content.srcBatch.missing.cases.length}}</b> testcases are missing:
+      </p>
       <ol class="pl-8 list-decimal">
-        {{#content.srcBatch.missing}}
+        {{#content.srcBatch.missing.cases}}
         <li class="font-mono">{{name}}</li>
-        {{/content.srcBatch.missing}}
+        {{/content.srcBatch.missing.cases}}
       </ol>
-      <p><b>{{content.srcBatch.fresh.length}}</b> testcases are new:</p>
+      {{/content.srcBatch.missing.hasCases}}
+      {{#content.srcBatch.fresh.hasCases}}
+      <p><b>{{content.srcBatch.fresh.cases.length}}</b> testcases are new:</p>
       <ol class="pl-8 list-decimal">
-        {{#content.srcBatch.fresh}}
+        {{#content.srcBatch.fresh.cases}}
         <li class="font-mono">{{name}}</li>
-        {{/content.srcBatch.fresh}}
+        {{/content.srcBatch.fresh.cases}}
       </ol>
+      {{/content.srcBatch.fresh.hasCases}}
     </div>
     <div class="space-y-2 text-xs">
       <h2 class="text-lg font-semibold">Changes in Behavior</h2>
+      {{#content.srcBatch.behavior.hasCases}}
       <p>
         <b>{{content.srcBatch.behavior.cases.length}}</b> of
         <b>{{content.srcBatch.duration.cases.length}}</b> common testcases
@@ -68,6 +77,13 @@
         </tr>
         {{/content.srcBatch.behavior.cases}}
       </table>
+      {{/content.srcBatch.behavior.hasCases}}
+      {{^content.srcBatch.behavior.hasCases}}
+      <p>
+        <b>{{content.srcBatch.name}}</b> behaves the same as in version
+        {{content.dstBatch.name}}.
+      </p>
+      {{/content.srcBatch.behavior.hasCases}}
     </div>
     <div class="space-y-2 text-xs">
       <h2 class="text-lg font-semibold">Changes in Performance</h2>
@@ -77,6 +93,7 @@
         {{content.srcBatch.duration.change}} in version
         {{content.dstBatch.name}}.
       </p>
+      {{#content.srcBatch.duration.hasCases}}
       <table class="text-xs table-auto">
         <tr class="text-left">
           <th>Testcase</th>
@@ -85,10 +102,11 @@
         {{#content.srcBatch.duration.cases}}
         <tr>
           <td>{{name}}</td>
-          <td>{{value}} {{change}}</td>
+          <td>{{value}} ({{change}})</td>
         </tr>
         {{/content.srcBatch.duration.cases}}
       </table>
+      {{/content.srcBatch.duration.hasCases}}
     </div>
   </div>
 </body>
