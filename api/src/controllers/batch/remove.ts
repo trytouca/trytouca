@@ -9,6 +9,7 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
+import { tracker } from '@/utils/tracker'
 
 /**
  * @summary
@@ -87,6 +88,7 @@ export async function ctrlBatchRemove(
   if (!(await batchRemove(batch))) {
     logger.info('%s: %s: scheduled for removal', user.username, tuple)
   }
+  tracker.track(user, 'batch_remove', { batch: tuple })
 
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', tuple, toc.toFixed(0))

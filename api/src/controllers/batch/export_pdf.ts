@@ -14,6 +14,7 @@ import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
+import { tracker } from '@/utils/tracker'
 
 interface PageData {
   suite: {
@@ -201,4 +202,5 @@ export async function ctrlBatchExportPDF(
   res.writeHead(200)
   res.end(responseBuffer)
   logger.info('%s: exported %s', user.username, filename)
+  tracker.track(user, 'export_pdf', { filename })
 }

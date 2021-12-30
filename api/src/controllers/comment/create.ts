@@ -14,6 +14,7 @@ import { ECommentType } from '@/types/backendtypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
+import { tracker } from '@/utils/tracker'
 
 export async function ctrlCommentCreate(
   req: Request,
@@ -75,6 +76,7 @@ export async function ctrlCommentCreate(
   }
 
   notifySubscribers(inputs, locals)
+  tracker.track(user, 'comment_create')
 
   return res.status(204).send()
 }

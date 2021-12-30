@@ -6,6 +6,7 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
+import { tracker } from '@/utils/tracker'
 
 /**
  * unsubscribe user from a given suite
@@ -34,6 +35,7 @@ export async function suiteUnsubscribe(
     { _id: suite._id },
     { $pull: { subscribers: user._id } }
   )
+  tracker.track(user, 'unsubscribe', { suite: tuple })
   logger.info('%s: unsubscribed from %s', user.username, tuple)
 
   return res.status(204).send()

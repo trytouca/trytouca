@@ -8,6 +8,7 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
+import { tracker } from '@/utils/tracker'
 
 /**
  * @summary
@@ -37,15 +38,13 @@ export async function ctrlBatchSeal(
   logger.debug('%s: %s: sealing', user.username, tuple)
 
   // we are done if batch is already sealed
-
   if (batch.sealedAt) {
     logger.info('%s: %s: already sealed', user.username, tuple)
     return res.status(204).send()
   }
 
-  // perform sealing of the batch
-
   await batchSeal(team, suite, batch)
+  tracker.track(user, 'batch_sealed')
   logger.info('%s: %s: sealed', user.username, tuple)
 
   return res.status(204).send()

@@ -12,6 +12,7 @@ import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 import { MessageBuffer, Messages } from '@/utils/schema'
+import { tracker } from '@/utils/tracker'
 
 function toChunkFiles(messages: Buffer[]): ArrayBuffer[] {
   const chunks = []
@@ -70,9 +71,8 @@ export async function ctrlBatchExportZIP(
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
   const batch = res.locals.batch as IBatchDocument
-  const tuple = [team.slug, suite.slug, batch.slug].join('/')
-  const filename = ['touca', suite.slug, batch.slug].join('_') + '.zip'
-  logger.debug('%s: %s: exporting as zip', user.username, tuple)
+  const filename = [team.slug, suite.slug, batch.slug].join('_') + '.zip'
+  logger.debug('%s: exporting %s', user.username, filename)
 
   if (!batch.sealedAt) {
     return next({ errors: ['batch is not sealed'], status: 400 })
@@ -100,5 +100,6 @@ export async function ctrlBatchExportZIP(
   })
 
   await archive.finalize()
-  logger.info('%s: %s: exported as zip', user.username, tuple)
+  logger.info('%s: exported %s', user.username, filename)
+  tracker.track(user, 'export_zip', { filename })
 }

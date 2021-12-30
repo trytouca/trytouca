@@ -7,6 +7,7 @@ import { CommentModel, ICommentDocument } from '@/schemas/comment'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
+import { tracker } from '@/utils/tracker'
 
 export async function ctrlCommentUpdate(
   req: Request,
@@ -37,5 +38,6 @@ export async function ctrlCommentUpdate(
   await rclient.removeCached(`route_commentList_${tuple}`)
 
   logger.info('%s: %s: edited comment', user.username, tuple)
+  tracker.track(user, 'comment_edit')
   return res.status(204).send()
 }

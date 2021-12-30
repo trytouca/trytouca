@@ -6,6 +6,7 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
+import { tracker } from '@/utils/tracker'
 
 /**
  * subscribe user to a given suite.
@@ -34,6 +35,7 @@ export async function suiteSubscribe(
     { _id: suite._id },
     { $push: { subscribers: user._id } }
   )
+  tracker.track(user, 'subscribe', { suite: tuple })
   logger.info('%s: subscribed to %s', user.username, tuple)
 
   return res.status(204).send()

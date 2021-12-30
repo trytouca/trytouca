@@ -14,6 +14,7 @@ import { ECommentType } from '@/types/backendtypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
+import { tracker } from '@/utils/tracker'
 
 export async function ctrlCommentReply(
   req: Request,
@@ -84,6 +85,6 @@ export async function ctrlCommentReply(
   }
 
   notifySubscribers(inputs, locals)
-
+  tracker.track(user, 'comment_reply')
   return res.status(204).send()
 }
