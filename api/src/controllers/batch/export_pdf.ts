@@ -1,10 +1,10 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import Lambda from 'aws-sdk/clients/lambda'
 import { NextFunction, Request, Response } from 'express'
 import { readFileSync } from 'fs'
 import mustache from 'mustache'
 import path from 'path'
-import Puppeteer from 'puppeteer'
 
 import { ComparisonFunctions } from '@/controllers/comparison'
 import { UserMap } from '@/models/usermap'
@@ -146,11 +146,22 @@ export async function ctrlBatchExportPDF(
   const team = res.locals.team as ITeam
   const suite = res.locals.suite as ISuiteDocument
   const batch = res.locals.batch as IBatchDocument
-  const filename = ['touca', suite.slug, batch.slug].join('_') + '.pdf'
+  const filename = [team.slug, suite.slug, batch.slug].join('_') + '.pdf'
   logger.debug('%s: exporting %s', user.username, filename)
 
   if (!batch.sealedAt) {
     return next({ errors: ['batch is not sealed'], status: 400 })
+  }
+
+  if (
+    !config.aws.accessKeyId ||
+    !config.aws.secretAccessKey ||
+    !config.aws.lambdaPdf
+  ) {
+    return next({
+      errors: ['not configured to perform this operation'],
+      status: 426
+    })
   }
 
   const content = await buildPageData(suite, batch)
@@ -160,17 +171,34 @@ export async function ctrlBatchExportPDF(
     'report.html'
   )
   const template = readFileSync(template_file, 'utf-8')
-  const bodyHtml = mustache.render(template, { content })
+  const html = mustache.render(template, { content })
 
-  const browser = await Puppeteer.launch({ headless: true })
-  const page = await browser.newPage()
-  await page.setContent(bodyHtml)
-  const buffer = await page.pdf()
-  await browser.close()
+  const params = {
+    FunctionName: config.aws.lambdaPdf,
+    Payload: JSON.stringify({ html })
+  }
+  const lambda = new Lambda({
+    credentials: {
+      accessKeyId: config.aws.accessKeyId,
+      secretAccessKey: config.aws.secretAccessKey
+    },
+    region: config.aws.region
+  })
+  const response = await lambda.invoke(params).promise()
+
+  if (response.StatusCode !== 200) {
+    return next({
+      errors: ['unexpected response from cloud service'],
+      status: 500
+    })
+  }
+
+  const responseBody = JSON.parse(response.Payload.toString()).body
+  const responseBuffer = Buffer.from(responseBody, 'base64')
 
   res.setHeader('Content-Disposition', `attachment; filename=${filename}`)
   res.setHeader('Content-Type', 'application/pdf')
   res.writeHead(200)
-  res.end(buffer)
-  logger.info('%s: %s: exported %s', user.username, filename)
+  res.end(responseBuffer)
+  logger.info('%s: exported %s', user.username, filename)
 }

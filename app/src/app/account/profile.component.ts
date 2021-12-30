@@ -72,7 +72,7 @@ export class ProfileComponent implements OnDestroy {
     [EFeatureFlag.ExportPDF]: {
       default: false,
       description:
-        'Generate PDF report for test results submitted for a given version',
+        'Allow generating PDF report for test results submitted for a given version',
       experimental: true,
       saved: false,
       slug: EFeatureFlag.ExportPDF,

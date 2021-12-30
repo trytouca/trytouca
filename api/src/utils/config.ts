@@ -15,6 +15,12 @@ interface IConfig {
     maxLoginAttempts: number
     maxResetKeyLifetime: number // in minutes
   }
+  aws: {
+    region: string
+    accessKeyId: string
+    secretAccessKey: string
+    lambdaPdf: string
+  }
   isCloudHosted: boolean
   env: string
   express: {
@@ -105,6 +111,12 @@ export const config: IConfig = {
     jwtSecret: env.AUTH_JWT_SECRET,
     maxLoginAttempts: 3,
     maxResetKeyLifetime: 30
+  },
+  aws: {
+    region: env.AWS_REGION || 'us-east-2',
+    accessKeyId: env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.AWS_ACCESS_KEY_SECRET,
+    lambdaPdf: env.AWS_LAMBDA_PDF_GENERATOR
   },
   isCloudHosted: env.DEPLOY_MODE === 'cloud_hosted',
   env: env.NODE_ENV,

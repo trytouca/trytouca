@@ -36,6 +36,7 @@
     "@hubspot/api-client": "^5.0.0",
     "@sindresorhus/df": "^3.1.1",
     "archiver": "^5.3.0",
+    "aws-sdk": "^2.1048.0",
     "bcrypt": "^5.0.1",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.5",
@@ -59,7 +60,6 @@
     "mustache": "^4.2.0",
     "nocache": "^3.0.1",
     "nodemailer": "^6.7.0",
-    "puppeteer": "^13.0.1",
     "uuid": "^8.3.2",
     "winston": "^3.2.1"
   },

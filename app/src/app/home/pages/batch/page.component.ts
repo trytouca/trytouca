@@ -321,7 +321,7 @@ export class BatchPageComponent
         click: () => this.export(ExportFormat.ZIP),
         icon: 'feather-archive',
         text: 'Export Test Results',
-        title: 'Export test results submitted for this version.'
+        title: 'Export test results archive for this version.'
       });
     }
     if (
@@ -333,8 +333,8 @@ export class BatchPageComponent
       buttons.push({
         click: () => this.export(ExportFormat.PDF),
         icon: 'feather-download-cloud',
-        text: 'PDF Report',
-        title: 'Export test results submitted for this version.'
+        text: 'Download PDF Report',
+        title: 'Create a PDF report for this version.'
       });
     }
     if (
