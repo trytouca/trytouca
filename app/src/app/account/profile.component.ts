@@ -122,6 +122,9 @@ export class ProfileComponent implements OnDestroy {
     private router: Router,
     private userService: UserService
   ) {
+    this.apiService.status().subscribe((response) => {
+      this._preferences[EFeatureFlag.ExportPDF].visible = !response.self_hosted;
+    });
     this._subHints = this.hints.subscribe(this.accountSettingsForm, [
       'fname',
       'uname'
