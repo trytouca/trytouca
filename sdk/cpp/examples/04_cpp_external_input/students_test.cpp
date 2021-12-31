@@ -8,7 +8,7 @@
 #include "cxxopts.hpp"
 #include "students.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/framework/suites.hpp"
+#include "touca/runner/suites.hpp"
 #include "touca/touca.hpp"
 
 int main(int argc, char* argv[]) {

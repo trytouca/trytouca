@@ -30,6 +30,7 @@ namespace filesystem = ghc::filesystem;
 #endif
 
 #include <ios>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -50,6 +51,15 @@ template <typename FormatString, typename... Args>
 std::string format(const FormatString& msg, Args&&... args) {
   return fmt::format(msg, std::forward<Args>(args)...);
 }
+
+#ifdef TOUCA_HAS_CPP14
+using std::make_unique;
+#else
+template <typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&&... args) {
+  return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
+#endif
 
 /**
  * Utility function to load content of a file with given path.

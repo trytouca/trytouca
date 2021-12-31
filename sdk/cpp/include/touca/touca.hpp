@@ -25,7 +25,7 @@
 #include "touca/extra/scoped_timer.hpp"
 
 #ifdef TOUCA_INCLUDE_FRAMEWORK
-#include "touca/framework/runner.hpp"
+#include "touca/runner/runner.hpp"
 #endif
 
 /**

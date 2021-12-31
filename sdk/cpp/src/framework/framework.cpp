@@ -1,7 +1,5 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/framework.hpp"
-
 #include <fstream>
 #include <iostream>
 #include <thread>
@@ -15,8 +13,9 @@
 #include "touca/core/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
-#include "touca/framework/detail/ostream.hpp"
-#include "touca/framework/suites.hpp"
+#include "touca/runner.hpp"
+#include "touca/runner/detail/ostream.hpp"
+#include "touca/runner/suites.hpp"
 #include "touca/touca.hpp"
 
 #ifdef _WIN32

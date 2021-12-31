@@ -10,9 +10,7 @@ target_sources(
         example_cpp_external_input
     PRIVATE
         students.cpp
-        students.hpp
         students_test.cpp
-        students_test.hpp
 )
 
 target_link_libraries(

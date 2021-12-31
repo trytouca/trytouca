@@ -1,12 +1,12 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/framework/runner.hpp"
+#include "touca/runner/runner.hpp"
 
 #include <memory>
 #include <string>
 
-#include "touca/framework.hpp"
-#include "touca/framework/suites.hpp"
+#include "touca/runner.hpp"
+#include "touca/runner/suites.hpp"
 
 namespace touca {
 std::vector<std::pair<std::string, std::function<void(const std::string&)>>>

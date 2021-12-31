@@ -105,7 +105,7 @@ Test Framework
 Legacy Test Framework
 +++++++++++++++++++++
 
-`touca/framework.hpp` is the main entry-point to the Touca test framework
+`touca/runner.hpp` is the main entry-point to the Touca test framework
 for C++. In typical test tools, it is the main header file used in the
 regression test tool. The Test Framework performs Touca client configuration,
 testcase declaration, and saving and submitting the test results. As a result,
@@ -147,7 +147,7 @@ Suite Class
 Available Implementations
 *************************
 
-`touca/framework/suites.hpp` provides the following implementations of the
+`touca/runner/suites.hpp` provides the following implementations of the
 abstract class `Suite`.
 
 .. doxygenclass:: touca::framework::FileSuite

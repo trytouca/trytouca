@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "touca/framework.hpp"
+#include "touca/runner.hpp"
 
 class MyWorkflow : public touca::framework::Workflow {
  public:

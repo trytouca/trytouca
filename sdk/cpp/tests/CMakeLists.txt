@@ -21,7 +21,7 @@ if (TOUCA_BUILD_FRAMEWORK)
     target_sources(
             ${TOUCA_TARGET_TEST}
         PRIVATE
-            framework/framework.cpp
+            runner/runner.cpp
     )
 endif()
 

@@ -3,11 +3,11 @@
 #pragma once
 
 /**
- * @file framework.hpp
+ * @file runner.hpp
  *
  * @brief Entry-point to the Touca Test Framework for C++.
  *
- * @details `touca/framework.hpp` provides the functions necessary to
+ * @details `touca/runner.hpp` provides the functions necessary to
  *          write a Touca test tool that can submit its results to the
  *          Touca server.
  */
@@ -326,7 +326,7 @@ class TOUCA_CLIENT_API Workflow {
    *
    *          Implementing this function is **required**.
    *
-   * @see `touca/framework/suites.hpp` to learn about the set of
+   * @see `touca/runner/suites.hpp` to learn about the set of
    *      ready to use subclasses of `Suite`.
    *
    * @return An instance of a `Suite` that contains the set of testcases

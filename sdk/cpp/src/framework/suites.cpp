@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/framework/suites.hpp"
+#include "touca/runner/suites.hpp"
 
 #include <algorithm>
 #include <fstream>

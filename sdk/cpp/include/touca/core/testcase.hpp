@@ -28,11 +28,6 @@ struct ResultEntry {
 using MetricsMap = std::map<std::string, MetricsMapValue>;
 using ResultsMap = std::map<std::string, ResultEntry>;
 
-/**
- * Assumptions map has the same characteristics as the results map,
- * however, the information stored in an assumptions map is handled
- * slightly differently by the Touca server.
- */
 class TOUCA_CLIENT_API Testcase {
   friend class ClientImpl;
   friend class TestcaseComparison;
