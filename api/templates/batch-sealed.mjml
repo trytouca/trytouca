@@ -46,7 +46,9 @@
     <mj-include path="./layout/comparison-table.mjml" />
     <mj-section mj-class="wsl-border-b">
       <mj-column>
-        <mj-button href="{{ batchLink }}">View Results</mj-button>
+        <mj-button mj-class="wsl-bg-color" href="{{ batchLink }}">
+          View Results
+        </mj-button>
       </mj-column>
     </mj-section>
     <mj-include path="./layout/footer-subscribers.mjml" />

@@ -5,6 +5,7 @@ import htmlToText from 'html-to-text'
 import { has as lodashHas } from 'lodash'
 import mustache from 'mustache'
 import nodemailer from 'nodemailer'
+import { Attachment } from 'nodemailer/lib/mailer'
 import path from 'path'
 
 import { wslGetSuperUser } from '@/models/user'
@@ -28,7 +29,8 @@ async function mailUserImpl(
   recipient: IUser,
   subject: string,
   filename: string,
-  view?: any
+  view?: any,
+  attachments: Attachment[] = []
 ) {
   const filePath = path.join(config.mail.templatesDirectory, filename + '.html')
   const fileContent = fs.readFileSync(filePath, 'utf8')
@@ -49,7 +51,8 @@ async function mailUserImpl(
     html: bodyHtml,
     subject,
     text: bodyPlain,
-    to: recipient.email
+    to: recipient.email,
+    attachments
   })
 
   // we expect nodemailer output to include a messageId
@@ -62,7 +65,8 @@ export async function mailUser(
   recipient: IUser,
   subject: string,
   filename: string,
-  params?: Record<string, unknown>
+  params?: Record<string, unknown>,
+  attachments: Attachment[] = []
 ) {
   if (!configMgr.hasMailTransport()) {
     const level = config.env === 'production' ? 'warn' : 'debug'
@@ -71,7 +75,7 @@ export async function mailUser(
   }
   try {
     logger.silly('%s: %s: sending mail', filename, recipient.username)
-    await mailUserImpl(recipient, subject, filename, params)
+    await mailUserImpl(recipient, subject, filename, params, attachments)
     logger.info('%s: %s: sent mail', filename, recipient.username)
   } catch (ex) {
     logger.warn(

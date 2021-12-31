@@ -292,7 +292,7 @@ async function reportSealed(
     dstBatchSlug: dstInfo.batch.slug,
     srcBatchSlug: srcInfo.batch.slug,
     subject,
-    headerColor: compareInputs.hasComparisonTable ? 'firebrick' : 'forestgreen',
+    headerColor: compareInputs.hasComparisonTable ? '#7f1d1d' : '#166534',
     batchLink,
     teamName: srcInfo.team.name,
     suiteName: srcInfo.suite.name,
@@ -301,7 +301,7 @@ async function reportSealed(
     ...compareInputs
   }
 
-  // notify all subscribers that this batch has been promoted
+  // notify all subscribers that this batch has been sealed
   // since there may be many subscribers, we prefer send emails in chunks
 
   const chunkSize = 5
@@ -309,8 +309,8 @@ async function reportSealed(
     const jobs = suiteInfo.subscribers
       .slice(i, i + chunkSize)
       .map(async (subscriber) => {
-        ;(inputs.username = subscriber.fullname),
-          await mailUser(subscriber, subject, 'batch-sealed', inputs)
+        inputs.username = subscriber.fullname
+        await mailUser(subscriber, subject, 'batch-sealed', inputs)
       })
     await Promise.all(jobs)
   }
