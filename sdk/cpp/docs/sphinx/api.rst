@@ -105,7 +105,7 @@ Test Framework
 Legacy Test Framework
 +++++++++++++++++++++
 
-`touca/runner.hpp` is the main entry-point to the Touca test framework
+`touca/runner/runner.hpp` is the main entry-point to the Touca test framework
 for C++. In typical test tools, it is the main header file used in the
 regression test tool. The Test Framework performs Touca client configuration,
 testcase declaration, and saving and submitting the test results. As a result,
@@ -115,32 +115,29 @@ happens from within the code under test and outside the regression test tool.
 Basic Types
 -----------
 
-.. doxygentypedef:: touca::framework::Testcase
+.. doxygentypedef:: touca::Errors
    :project: touca
 
-.. doxygentypedef:: touca::framework::Errors
-   :project: touca
-
-.. doxygenstruct:: touca::framework::FrameworkOptions
+.. doxygenstruct:: touca::FrameworkOptions
    :project: touca
 
 Main Function
 -------------
 
-.. doxygenfunction:: touca::framework::main
+.. doxygenfunction:: touca::main
    :project: touca
 
 Workflow Class
 --------------
 
-.. doxygenclass:: touca::framework::Workflow
+.. doxygenclass:: touca::Workflow
    :project: touca
    :members:
 
 Suite Class
 -----------
 
-.. doxygenclass:: touca::framework::Suite
+.. doxygenclass:: touca::Suite
    :project: touca
    :members:
 
@@ -150,18 +147,18 @@ Available Implementations
 `touca/runner/suites.hpp` provides the following implementations of the
 abstract class `Suite`.
 
-.. doxygenclass:: touca::framework::FileSuite
+.. doxygenclass:: touca::FileSuite
    :project: touca
 
-.. doxygenclass:: touca::framework::RemoteSuite
+.. doxygenclass:: touca::RemoteSuite
    :project: touca
 
 Logging
 -------
 
-.. doxygenenum:: touca::framework::LogLevel
+.. doxygenenum:: touca::LogLevel
    :project: touca
 
-.. doxygenstruct:: touca::framework::LogSubscriber
+.. doxygenstruct:: touca::LogSubscriber
    :project: touca
    :members:

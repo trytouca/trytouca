@@ -1,7 +1,11 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+#include "touca/runner/runner.hpp"
+
 #include <fstream>
 #include <iostream>
+#include <memory>
+#include <string>
 #include <thread>
 #include <unordered_map>
 
@@ -13,7 +17,6 @@
 #include "touca/core/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
-#include "touca/runner.hpp"
 #include "touca/runner/detail/ostream.hpp"
 #include "touca/runner/suites.hpp"
 #include "touca/touca.hpp"
@@ -23,7 +26,35 @@
 #endif
 
 namespace touca {
-namespace framework {
+
+std::vector<std::pair<std::string, std::function<void(const std::string&)>>>
+    _workflows;
+
+void workflow(const std::string& name,
+              const std::function<void(const std::string&)> workflow) {
+  _workflows.push_back(std::make_pair(name, workflow));
+}
+
+void run(int argc, char* argv[]) {
+  for (const auto& workflow : _workflows) {
+    struct Runner : public touca::Workflow {
+     public:
+      Runner(const std::function<void(const std::string&)> workflow)
+          : _workflow(workflow){};
+      std::shared_ptr<touca::Suite> suite() const override {
+        return std::make_shared<touca::RemoteSuite>(_options);
+      }
+      touca::Errors execute(const std::string& testcase) const override {
+        _workflow(testcase);
+        return {};
+      }
+
+     private:
+      std::function<void(const std::string&)> _workflow;
+    } runner(workflow.second);
+    touca::main(argc, argv, runner);
+  }
+}
 
 bool Workflow::parse_options(int argc, char* argv[]) {
   std::ignore = argc;
@@ -31,7 +62,7 @@ bool Workflow::parse_options(int argc, char* argv[]) {
   return true;
 }
 
-bool Workflow::skip(const Testcase& testcase) const {
+bool Workflow::skip(const std::string& testcase) const {
   touca::filesystem::path outputDirCase = _options.output_dir;
   outputDirCase /= _options.suite;
   outputDirCase /= _options.revision;
@@ -50,7 +81,7 @@ void Workflow::set_options(const FrameworkOptions& options) {
   _options = options;
 }
 
-void Suite::push(const Testcase& testcase) {
+void Suite::push(const std::string& testcase) {
   if (!_set.count(testcase)) {
     _set.insert(testcase);
     _vec.push_back(testcase);
@@ -443,8 +474,8 @@ LogLevel find_log_level(const std::string& name) {
 }
 
 struct SingleCaseSuite final : public Suite {
-  SingleCaseSuite(const Testcase& testcase) { push(testcase); }
-  SingleCaseSuite(const std::vector<Testcase>& cases) {
+  SingleCaseSuite(const std::string& testcase) { push(testcase); }
+  SingleCaseSuite(const std::vector<std::string>& cases) {
     for (const auto& tc : cases) {
       push(tc);
     }
@@ -827,5 +858,4 @@ int main(int argc, char* argv[], Workflow& workflow) {
   }
 }
 
-}  // namespace framework
 }  // namespace touca

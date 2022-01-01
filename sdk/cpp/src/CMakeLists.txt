@@ -33,10 +33,9 @@ if (TOUCA_BUILD_FRAMEWORK)
     target_sources(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
-        framework/framework.cpp
-        framework/ostream.cpp
-        framework/runner.cpp
-        framework/suites.cpp
+        runner/ostream.cpp
+        runner/runner.cpp
+        runner/suites.cpp
     )
 endif()
 

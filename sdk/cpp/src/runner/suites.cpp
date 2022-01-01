@@ -8,7 +8,6 @@
 #include "touca/devkit/platform.hpp"
 
 namespace touca {
-namespace framework {
 
 RemoteSuite::RemoteSuite(const FrameworkOptions& options)
     : Suite(), _options(options) {}
@@ -59,5 +58,4 @@ void FileSuite::initialize() {
   }
 }
 
-}  // namespace framework
 }  // namespace touca

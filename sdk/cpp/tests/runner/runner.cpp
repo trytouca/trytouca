@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/runner.hpp"
+#include "touca/runner/runner.hpp"
 
 #include <iostream>
 
@@ -11,10 +11,10 @@
 #include "touca/runner/detail/ostream.hpp"
 #include "touca/touca.hpp"
 
-struct DummySuite final : public touca::framework::Suite {};
+struct DummySuite final : public touca::Suite {};
 
-struct SimpleSuite final : public touca::framework::Suite {
-  using Inputs = std::vector<touca::framework::Testcase>;
+struct SimpleSuite final : public touca::Suite {
+  using Inputs = std::vector<std::string>;
   SimpleSuite(const Inputs& inputs) : Suite(), _inputs(inputs) {}
   void initialize() {
     std::for_each(_inputs.begin(), _inputs.end(),
@@ -23,16 +23,15 @@ struct SimpleSuite final : public touca::framework::Suite {
   Inputs _inputs;
 };
 
-struct DummyWorkflow : public touca::framework::Workflow {
-  std::shared_ptr<touca::framework::Suite> suite() const override {
+struct DummyWorkflow : public touca::Workflow {
+  std::shared_ptr<touca::Suite> suite() const override {
     return std::make_shared<DummySuite>();
   }
-  touca::framework::Errors execute(
-      const touca::framework::Testcase& testcase) const override {
+  touca::Errors execute(const std::string& testcase) const override {
     std::ignore = testcase;
     return {};
   }
-  bool skip(const touca::framework::Testcase& testcase) const override {
+  bool skip(const std::string& testcase) const override {
     return testcase == "case-to-exclude";
   }
   std::string describe_options() const override {
@@ -40,14 +39,13 @@ struct DummyWorkflow : public touca::framework::Workflow {
   }
 };
 
-struct SimpleWorkflow : public touca::framework::Workflow {
+struct SimpleWorkflow : public touca::Workflow {
   SimpleWorkflow() : Workflow() {}
-  std::shared_ptr<touca::framework::Suite> suite() const override {
+  std::shared_ptr<touca::Suite> suite() const override {
     SimpleSuite::Inputs inputs = {"4", "8", "15", "16", "23", "42"};
     return std::make_shared<SimpleSuite>(inputs);
   }
-  touca::framework::Errors execute(
-      const touca::framework::Testcase& testcase) const override {
+  touca::Errors execute(const std::string& testcase) const override {
     if (testcase == "8") {
       std::cout << "simple message in output stream" << std::endl;
       std::cerr << "simple message in error stream" << std::endl;
@@ -76,8 +74,7 @@ class MainCaller {
     argv.push_back(nullptr);
 
     capturer.start_capture();
-    exit_status =
-        touca::framework::main(argv.size() - 1, argv.data(), workflow);
+    exit_status = touca::main(argv.size() - 1, argv.data(), workflow);
     capturer.stop_capture();
   }
 

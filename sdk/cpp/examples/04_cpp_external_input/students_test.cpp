@@ -13,7 +13,7 @@
 
 int main(int argc, char* argv[]) {
   MyWorkflow workflow;
-  return touca::framework::main(argc, argv, workflow);
+  return touca::main(argc, argv, workflow);
 }
 
 MySuite::MySuite(const std::string& datasetDir) : _dir(datasetDir) {}
@@ -38,7 +38,7 @@ cxxopts::Options application_options() {
   return options;
 }
 
-MyWorkflow::MyWorkflow() : touca::framework::Workflow() {}
+MyWorkflow::MyWorkflow() : touca::Workflow() {}
 
 std::string MyWorkflow::describe_options() const {
   return application_options().help();
@@ -90,7 +90,7 @@ bool MyWorkflow::validate_options() const {
   return true;
 }
 
-std::shared_ptr<touca::framework::Suite> MyWorkflow::suite() const {
+std::shared_ptr<touca::Suite> MyWorkflow::suite() const {
   // if option `testsuite-file` is specified, use the testcases listed
   // in that file. For this purpose, we use the `FileSuite` helper class
   // that is provided by the Touca test framework. It expects that the
@@ -98,7 +98,7 @@ std::shared_ptr<touca::framework::Suite> MyWorkflow::suite() const {
   // and lines that start with `##`.
 
   if (_options.extra.count("testsuite-file")) {
-    return std::make_shared<touca::framework::FileSuite>(
+    return std::make_shared<touca::FileSuite>(
         _options.extra.at("testsuite-file"));
   }
 
@@ -109,7 +109,7 @@ std::shared_ptr<touca::framework::Suite> MyWorkflow::suite() const {
 
   if (_options.extra.count("testsuite-remote") &&
       _options.extra.at("testsuite-remote") == "true") {
-    return std::make_shared<touca::framework::RemoteSuite>(_options);
+    return std::make_shared<touca::RemoteSuite>(_options);
   }
 
   // if neither options are provided, use all the profiles that exist in
@@ -118,8 +118,7 @@ std::shared_ptr<touca::framework::Suite> MyWorkflow::suite() const {
   return std::make_shared<MySuite>(_options.extra.at("datasets-dir"));
 }
 
-touca::framework::Errors MyWorkflow::execute(
-    const touca::framework::Testcase& testcase) const {
+touca::Errors MyWorkflow::execute(const std::string& testcase) const {
   touca::filesystem::path caseFile = _options.extra.at("datasets-dir");
   caseFile /= testcase + ".json";
   const auto& student = find_student(caseFile.string());

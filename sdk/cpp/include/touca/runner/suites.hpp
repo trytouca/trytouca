@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include "touca/runner.hpp"
+#include "touca/runner/runner.hpp"
 
 namespace touca {
-namespace framework {
 
 /**
  * @brief Provides testcases that were used in the baseline version of
@@ -46,5 +45,4 @@ class TOUCA_CLIENT_API FileSuite final : public Suite {
   std::string _path;
 };
 
-}  // namespace framework
 }  // namespace touca

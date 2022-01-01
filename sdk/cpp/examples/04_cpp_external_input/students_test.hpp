@@ -2,20 +2,19 @@
 
 #pragma once
 
-#include "touca/runner.hpp"
+#include "touca/runner/runner.hpp"
 
-class MyWorkflow : public touca::framework::Workflow {
+class MyWorkflow : public touca::Workflow {
  public:
   MyWorkflow();
   std::string describe_options() const override;
   bool parse_options(int argc, char* argv[]) override;
   bool validate_options() const override;
-  std::shared_ptr<touca::framework::Suite> suite() const override;
-  touca::framework::Errors execute(
-      const touca::framework::Testcase& testcase) const override;
+  std::shared_ptr<touca::Suite> suite() const override;
+  touca::Errors execute(const std::string& testcase) const override;
 };
 
-class MySuite final : public touca::framework::Suite {
+class MySuite final : public touca::Suite {
  public:
   MySuite(const std::string& datasetDir);
   void initialize() override;

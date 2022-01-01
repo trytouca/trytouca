@@ -156,8 +156,8 @@ captured data so that the Touca server can compare them in their original type.
 ```
 
 In the example above, `touca::check` stores value of properties `username` and
-`fullname` as `std::string` while property `gpa` is stored as `float`. The
-server visualizes possible differences in these values based on their types.
+`fullname` as testcase while property `gpa` is stored as `float`. The server
+visualizes possible differences in these values based on their types.
 
 ### Customizing Data Serialization
 
