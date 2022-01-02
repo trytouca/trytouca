@@ -88,6 +88,7 @@ struct FrameworkOptions : public ClientOptions {
   std::string log_level = "info";
   bool has_help = false;
   bool has_version = false;
+  bool colored_output = true;
   bool save_binary = true;
   bool save_json = false;
   bool skip_logs = false;

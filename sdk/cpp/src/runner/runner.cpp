@@ -10,6 +10,7 @@
 #include <unordered_map>
 
 #include "cxxopts.hpp"
+#include "fmt/color.h"
 #include "fmt/ostream.h"
 #include "fmt/printf.h"
 #include "nlohmann/json.hpp"
@@ -142,7 +143,10 @@ cxxopts::Options cli_options() {
           cxxopts::value<bool>()->implicit_value("true"))
       ("overwrite",
           "overwrite result directory for testcase if it already exists",
-          cxxopts::value<bool>()->implicit_value("true"));
+          cxxopts::value<bool>()->implicit_value("true"))
+      ("colored-output",
+          "colored output",
+          cxxopts::value<bool>()->default_value("true"));
   // clang-format on
 
   return options;
@@ -188,6 +192,7 @@ bool parse_cli_options(int argc, char* argv[], FrameworkOptions& options) {
     options.save_binary = result["save-as-binary"].as<bool>();
     options.save_json = result["save-as-json"].as<bool>();
     options.redirect = result["redirect-output"].as<bool>();
+    options.colored_output = result["colored-output"].as<bool>();
     parse_cli_option(result, "api-key", options.api_key);
     parse_cli_option(result, "api-url", options.api_url);
     parse_cli_option(result, "config-file", options.config_file);
@@ -510,25 +515,99 @@ class Timer {
   void toc(const std::string& key) {
     _tocs[key] = std::chrono::system_clock::now();
   }
-  long long count(const std::string& key) {
+  bool contains(const std::string& key) const {
+    return _tocs.count(key) && _tics.count(key);
+  }
+  long long count(const std::string& key) const {
     const auto& dur = _tocs.at(key) - _tics.at(key);
     return std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
   }
 };
 
 class Printer {
+  bool _color;
   std::ofstream _fout;
+  const std::unordered_map<
+      ExecutionOutcome,
+      std::tuple<std::string, std::string, fmt::terminal_color>>
+      states = {
+          {ExecutionOutcome::Pass,
+           std::make_tuple("PASS", "passed", fmt::terminal_color::green)},
+          {ExecutionOutcome::Skip,
+           std::make_tuple("SKIP", "skipped", fmt::terminal_color::yellow)},
+          {ExecutionOutcome::Fail,
+           std::make_tuple("FAIL", "failed", fmt::terminal_color::red)}};
 
- public:
-  Printer(const touca::filesystem::path& path)
-      : _fout(path.string(), std::ios::trunc) {}
   template <typename... Args>
   void print(const std::string& fmtstr, Args&&... args) {
-    const auto content = fmt::format(fmtstr, std::forward<Args>(args)...);
+    const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
     fmt::print(_fout, content);
     fmt::print(std::cout, content);
     _fout.flush();
     std::cout.flush();
+  }
+
+  template <typename... Args>
+  void print(const fmt::text_style& style, const std::string& fmtstr,
+             Args&&... args) {
+    const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
+    fmt::print(_fout, content);
+    fmt::print(std::cout, _color ? fmt::format(style, content) : content);
+    _fout.flush();
+    std::cout.flush();
+  }
+
+ public:
+  Printer(const touca::filesystem::path& path, const bool colored_output)
+      : _color(colored_output), _fout(path.string(), std::ios::trunc) {}
+
+  void print_header(const FrameworkOptions& options) {
+    print("\nTouca Test Framework\nSuite: {}/{}\n\n", options.suite,
+          options.revision);
+  }
+  void print_progress(const std::string& testcase, const unsigned index,
+                      const unsigned testcase_width, const Timer& timer,
+                      const Errors& errors) {
+    const auto status =
+        timer.contains(testcase)
+            ? errors.empty() ? ExecutionOutcome::Pass : ExecutionOutcome::Fail
+            : ExecutionOutcome::Skip;
+    print(" {}", index);
+    print(fmt::fg(fmt::terminal_color::bright_black), ". ");
+    print(fmt::bg(std::get<2>(states.at(status))) |
+              fmt::fg(fmt::terminal_color::bright_white),
+          " {} ", std::get<0>(states.at(status)));
+    print("  {:<{}} ", testcase, testcase_width + 3);
+    if (timer.contains(testcase)) {
+      print(fmt::fg(fmt::terminal_color::bright_black), "({:d} ms)",
+            timer.count(testcase));
+    }
+    print("\n");
+    if (errors.empty()) {
+      return;
+    }
+    print(fmt::fg(fmt::terminal_color::bright_black),
+          "\n   Exception Raised:\n");
+    for (const auto& err : errors) {
+      print("      - {}\n", err);
+    }
+    print("\n");
+  }
+  void print_footer(const Statistics& stats, Timer& timer,
+                    const unsigned suiteSize) {
+    const auto report = [stats, this](const ExecutionOutcome status) {
+      if (stats.count(status)) {
+        print(fmt::fg(std::get<2>(states.at(status))), "{} {}, ",
+              stats.count(status), std::get<1>(states.at(status)));
+      }
+    };
+    print("\nTests:      ");
+    report(ExecutionOutcome::Pass);
+    report(ExecutionOutcome::Skip);
+    report(ExecutionOutcome::Fail);
+    print("{} total\n", suiteSize);
+    print("Time:       {:.2f} s\n", timer.count("__workflow__") / 1000.0);
+    print("\n✨   Ran all test suites.\n\n");
   }
 };
 
@@ -538,7 +617,6 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   // parse configuration options provided as command line arguments
   // or specified in the configuration file.
-
   if (!parse_options(argc, argv, options)) {
     fmt::print(std::cerr, "{}\n", cli_options().help());
     return EXIT_FAILURE;
@@ -573,7 +651,6 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   LogFrontend logger;
 
   // always print warning and errors log events to console
-
   logger.add_subscriber(std::make_shared<ConsoleLogger>(), LogLevel::Warning);
 
   // establish output directory for this revision
@@ -585,7 +662,6 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   // unless explicitly instructed not to do so, register a separate
   // file logger to write our events to a file in the output directory.
-
   if (!options.skip_logs) {
     const auto& fileLogger = std::make_shared<FileLogger>(outputDirRevision);
     const auto& level = find_log_level(options.log_level);
@@ -594,11 +670,9 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   }
 
   // propagate parsed options to the workflow class
-
   workflow.set_options(options);
 
   // parse extra workflow-specific options, if any
-
   if (!workflow.parse_options(argc, argv)) {
     logger.log(lg::Error, "failed to parse workflow-specific options");
     fmt::print(std::cout, "Workflow Options:\n{}\n",
@@ -609,14 +683,12 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   // log all parsed configuration options to help users debug their
   // workflow if validation fails. It is risky and less meaningful to
   // perform this operation any sooner.
-
   for (const auto& opt : options.extra) {
     logger.log(lg::Debug, "{0:<16}: {1}", opt.first, opt.second);
   }
 
   // parse and validate extra workflow-specific options, using custom
   // logic provided by workflow author.
-
   if (!workflow.validate_options()) {
     logger.log(lg::Error, "failed to validate workflow-specific options");
     return EXIT_FAILURE;
@@ -624,7 +696,6 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   // if workflow provides a separate logger, register it to consume
   // our events.
-
   const auto& workflowLogger = workflow.log_subscriber();
   if (workflowLogger) {
     const auto& level = find_log_level(options.log_level);
@@ -635,7 +706,6 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   // allow workflow authors to initialize their resources, if any,
   // such as external loggers or run tasks that need to be done
   // prior to execution of testcases.
-
   if (!workflow.initialize()) {
     logger.log(lg::Error, "failed to initialize workflow");
     return EXIT_FAILURE;
@@ -646,21 +716,16 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   // information printed on console to a file `Console.log` in
   // output directory for this revision.
 
-  Printer printer(outputDirRevision / "Console.log");
+  Printer printer(outputDirRevision / "Console.log", options.colored_output);
 
   // Provide feedback to user that regression test is starting.
   // We perform this operation prior to configuring Touca client,
   // which may take a noticeable time.
-
-  printer.print("\nTouca Test Framework\nSuite: {}\nRevision: {}\n\n",
-                options.suite, options.revision);
-
-  // configure the client library
+  printer.print_header(options);
 
   touca::configure(options);
 
   // check that the client is properly configured
-
   if (!touca::is_configured()) {
     logger.log(lg::Error, "failed to configure touca client: {}",
                touca::configuration_error());
@@ -683,7 +748,6 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   }
 
   // if test is run for single testcase, overwrite suite with our own.
-
   if (!options.testcases.empty()) {
     suite = std::make_shared<SingleCaseSuite>(options.testcases);
   } else if (!options.testcase_file.empty()) {
@@ -692,18 +756,24 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   }
 
   // if workflow does not provide a suite, we choose not to proceed
-
   if (!suite) {
     logger.log(lg::Error, "workflow does not provide a suite");
     return EXIT_FAILURE;
   }
 
   // validate suite
-
   if (suite->size() == 0) {
     logger.log(lg::Error, "unable to proceed with empty list of testcases");
     return EXIT_FAILURE;
   }
+
+  // find maximum number of characters to reserve for printing the testcase
+  // name.
+  const auto testcase_width =
+      std::accumulate((*suite).begin(), (*suite).end(), 0ul,
+                      [](const size_t sum, const std::string& testcase) {
+                        return std::max(sum, testcase.length());
+                      });
 
   // iterate over testcases and execute the workflow for each testcase.
 
@@ -714,25 +784,21 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   for (const auto& testcase : *suite) {
     ++i;
+    Errors errors;
     auto outputDirCase = outputDirRevision / testcase;
 
     // unless option `overwrite` is specified, check if this
     // testcase should be skipped.
-
     if (!options.overwrite && workflow.skip(testcase)) {
       logger.log(lg::Info, "skipping already processed testcase: {}", testcase);
       stats.inc(ExecutionOutcome::Skip);
-      printer.print(" ({:>3} of {:<3}) {:<32} (skip)\n", i, suite->size(),
-                    testcase);
+      printer.print_progress(testcase, i, testcase_width, timer, errors);
       continue;
     }
-
-    // declare testcase to the client
 
     touca::declare_testcase(testcase);
 
     // remove result directory for this testcase if it already exists.
-
     if (touca::filesystem::exists(outputDirCase.string())) {
       touca::filesystem::remove_all(outputDirCase);
       logger.log(lg::Debug, "removed existing result directory for {}",
@@ -745,14 +811,11 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
     }
 
     // create result directory for this testcase
-
     touca::filesystem::create_directories(outputDirCase);
 
     // execute workflow for this testcase
-
     logger.log(lg::Info, "processing testcase: {}", testcase);
     timer.tic(testcase);
-    Errors errors;
     OutputCapturer capturer;
     if (options.redirect) {
       capturer.start_capture();
@@ -774,70 +837,47 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
     logger.log(lg::Info, "processed testcase: {}", testcase);
 
     // pipe stderr of code under test for this testcase into a file
-
     if (!capturer.cerr().empty()) {
       const auto resultFile = outputDirCase / "stderr.txt";
       touca::detail::save_string_file(resultFile.string(), capturer.cerr());
     }
 
     // pipe stdout of code under test for this testcase into a file
-
     if (!capturer.cout().empty()) {
       const auto resultFile = outputDirCase / "stdout.txt";
       touca::detail::save_string_file(resultFile.string(), capturer.cout());
     }
 
     // save testresults in binary format if configured to do so
-
     if (errors.empty() && options.save_binary) {
       const auto resultFile = outputDirCase / "touca.bin";
       touca::save_binary(resultFile.string(), {testcase});
     }
 
     // save testresults in json format if configured to do so
-
     if (errors.empty() && options.save_json) {
       const auto resultFile = outputDirCase / "touca.json";
       touca::save_json(resultFile.string(), {testcase});
     }
 
     // submit testresults to Touca server
-
     if (!options.offline && !touca::post()) {
       logger.log(lg::Error, "failed to submit results to Touca server");
     }
 
-    // report testcase statistics
-
-    printer.print(" ({:>3} of {:<3}) {:<32} ({}, {:d} ms)\n", i, suite->size(),
-                  testcase, errors.empty() ? "pass" : "fail",
-                  timer.count(testcase));
-    for (const auto& err : errors) {
-      printer.print("{:>13} {}\n\n", "-", err);
-    }
-    if (!errors.empty()) {
-      printer.print("\n");
-    }
+    printer.print_progress(testcase, i, testcase_width, timer, errors);
 
     // now that we are done with this testcase, remove all results
     // associated with itfrom process memory.
-
     touca::forget_testcase(testcase);
   }
 
   // write test execution statistics as footer to the user report
 
   timer.toc("__workflow__");
-  if (stats.count(ExecutionOutcome::Skip)) {
-    printer.print("\nskipped {} of {} testcases\n",
-                  stats.count(ExecutionOutcome::Skip), suite->size());
-  }
-  printer.print("\nProcessed {} of {} testcases\nTest completed in {:d} ms\n\n",
-                stats.count(ExecutionOutcome::Pass), suite->size(),
-                timer.count("__workflow__"));
+  printer.print_footer(stats, timer, suite->size());
 
   // seal this version if configured to do so.
-
   if (!options.offline && !touca::seal()) {
     touca::print_warning("failed to seal this version\n");
   }

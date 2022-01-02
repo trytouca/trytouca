@@ -203,8 +203,7 @@ TEST_CASE("framework-dummy-workflow") {
                       "--team", "some-team", "--suite", "some-suite"});
     CHECK(caller.exit_code() == EXIT_FAILURE);
     CHECK_THAT(caller.cout(), Catch::Contains("Touca Test Framework"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
     CHECK_THAT(
         caller.cout(),
         Catch::Contains("unable to proceed with empty list of testcases"));
@@ -214,25 +213,26 @@ TEST_CASE("framework-dummy-workflow") {
   SECTION("single-testcase") {
     caller.call_with({"--offline", "-r", "1.0", "-o", tmpFile.path.string(),
                       "--team", "some-team", "--suite", "some-suite",
-                      "--testcase", "some-case", "--save-as-binary", "false"});
+                      "--testcase", "some-case", "--save-as-binary", "false",
+                      "--colored-output=false"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
-    CHECK_THAT(caller.cout(), Catch::Contains("1 of 1"));
-    CHECK_THAT(caller.cout(), Catch::Contains("some-case"));
-    CHECK_THAT(caller.cout(), Catch::Contains("(pass,"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Processed 1 of 1 testcases"));
+    CHECK_THAT(caller.cout(),
+               Catch::Contains("1.  PASS   some-case    (0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("1 passed, 1 total"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
 
   SECTION("api-url") {
-    caller.call_with({"--offline", "-r", "1.0", "-o", tmpFile.path.string(),
-                      "--api-url",
-                      "http://localhost/api/@/some-team/some-suite",
-                      "--testcase", "some-case", "--save-as-binary", "false"});
+    caller.call_with(
+        {"--offline", "-r", "1.0", "-o", tmpFile.path.string(), "--api-url",
+         "http://localhost/api/@/some-team/some-suite", "--testcase",
+         "some-case", "--save-as-binary", "false", "--colored-output=false"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
-    CHECK_THAT(caller.cout(), Catch::Contains("1 of 1"));
-    CHECK_THAT(caller.cout(), Catch::Contains("some-case"));
-    CHECK_THAT(caller.cout(), Catch::Contains("(pass,"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Processed 1 of 1 testcases"));
+    CHECK_THAT(caller.cout(),
+               Catch::Contains("1.  PASS   some-case    (0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("1 passed, 1 total"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
 
@@ -255,14 +255,13 @@ TEST_CASE("framework-dummy-workflow") {
         R"({ "framework": { "save-as-binary": false, "save-as-json": false, "skip-logs": true, "log-level": "error", "overwrite": false }, "touca": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://api.touca.io/@/some-team/some-suite" }, "custom-key": "custom-value" })");
     caller.call_with({"--offline", "-r", "1.0", "-o", tmpFile.path.string(),
                       "--config-file", configFile.path.string(), "--testcase",
-                      "some-case"});
+                      "some-case", "--colored-output=false"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
-    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
-    CHECK_THAT(caller.cout(), Catch::Contains("1 of 1"));
-    CHECK_THAT(caller.cout(), Catch::Contains("some-case"));
-    CHECK_THAT(caller.cout(), Catch::Contains("(pass,"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Processed 1 of 1 testcases"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
+    CHECK_THAT(caller.cout(),
+               Catch::Contains("1.  PASS   some-case    (0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("1 passed, 1 total"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
 }
@@ -278,67 +277,47 @@ TEST_CASE("framework-simple-workflow-valid-use") {
 
   caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
                     "--config-file", configFile.path.string(), "--save-as-json",
-                    "true"});
+                    "true", "--colored-output=false"});
 
   SECTION("first-run") {
     CHECK(caller.exit_code() == EXIT_SUCCESS);
-    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
-    CHECK_THAT(
-        caller.cout(),
-        Catch::Contains(
-            "(  5 of 6  ) 23                               (pass, 0 ms)"));
-    CHECK_THAT(
-        caller.cout(),
-        Catch::Contains(
-            "(  6 of 6  ) 42                               (fail, 0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
+    CHECK_THAT(caller.cout(), Catch::Contains("5.  PASS   23    (0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("6.  FAIL   42    (0 ms)"));
     CHECK_THAT(caller.cout(), Catch::Contains("- some-error"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Processed 5 of 6 testcases"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Test completed in"));
+    CHECK_THAT(caller.cout(), Catch::Contains("5 passed, 1 failed, 6 total"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
 
   SECTION("second-run-without-overwrite") {
     caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
                       "--config-file", configFile.path.string(),
-                      "--save-as-json", "true"});
+                      "--save-as-json", "true", "--colored-output=false"});
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
-    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
-    CHECK_THAT(caller.cout(),
-               Catch::Contains(
-                   "(  5 of 6  ) 23                               (skip)"));
-    CHECK_THAT(
-        caller.cout(),
-        Catch::Contains(
-            "(  6 of 6  ) 42                               (fail, 0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
+    CHECK_THAT(caller.cout(), Catch::Contains("5.  SKIP   23"));
+    CHECK_THAT(caller.cout(), Catch::Contains("6.  FAIL   42    (0 ms)"));
     CHECK_THAT(caller.cout(), Catch::Contains("- some-error"));
-    CHECK_THAT(caller.cout(), Catch::Contains("skipped 5 of 6 testcases"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Processed 0 of 6 testcases"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Test completed in"));
+    CHECK_THAT(caller.cout(), Catch::Contains("5 skipped, 1 failed, 6 total"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
 
   SECTION("second-run-with-overwrite") {
     caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
                       "--config-file", configFile.path.string(),
-                      "--save-as-json", "true", "--overwrite"});
+                      "--save-as-json", "true", "--overwrite",
+                      "--colored-output=false"});
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
-    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Revision: 1.0"));
-    CHECK_THAT(
-        caller.cout(),
-        Catch::Contains(
-            "(  5 of 6  ) 23                               (pass, 0 ms)"));
-    CHECK_THAT(
-        caller.cout(),
-        Catch::Contains(
-            "(  6 of 6  ) 42                               (fail, 0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
+    CHECK_THAT(caller.cout(), Catch::Contains("5.  PASS   23    (0 ms)"));
+    CHECK_THAT(caller.cout(), Catch::Contains("6.  FAIL   42    (0 ms)"));
     CHECK_THAT(caller.cout(), Catch::Contains("- some-error"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Processed 5 of 6 testcases"));
-    CHECK_THAT(caller.cout(), Catch::Contains("Test completed in"));
+    CHECK_THAT(caller.cout(), Catch::Contains("5 passed, 1 failed, 6 total"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
 
