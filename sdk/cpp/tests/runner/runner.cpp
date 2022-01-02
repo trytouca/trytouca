@@ -27,7 +27,7 @@ struct DummyWorkflow : public touca::Workflow {
   std::shared_ptr<touca::Suite> suite() const override {
     return std::make_shared<DummySuite>();
   }
-  touca::Errors execute(const std::string& testcase) const override {
+  std::vector<std::string> execute(const std::string& testcase) const override {
     std::ignore = testcase;
     return {};
   }
@@ -45,7 +45,7 @@ struct SimpleWorkflow : public touca::Workflow {
     SimpleSuite::Inputs inputs = {"4", "8", "15", "16", "23", "42"};
     return std::make_shared<SimpleSuite>(inputs);
   }
-  touca::Errors execute(const std::string& testcase) const override {
+  std::vector<std::string> execute(const std::string& testcase) const override {
     if (testcase == "8") {
       std::cout << "simple message in output stream" << std::endl;
       std::cerr << "simple message in error stream" << std::endl;

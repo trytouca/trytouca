@@ -8,7 +8,7 @@
 #include "cxxopts.hpp"
 #include "students.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/runner/suites.hpp"
+#include "touca/runner/runner.hpp"
 #include "touca/touca.hpp"
 
 int main(int argc, char* argv[]) {
@@ -16,10 +16,30 @@ int main(int argc, char* argv[]) {
   return touca::main(argc, argv, workflow);
 }
 
-MySuite::MySuite(const std::string& datasetDir) : _dir(datasetDir) {}
+MySuite::MySuite(const touca::FrameworkOptions& options) : _options(options) {}
 
 void MySuite::initialize() {
-  for (const auto& it : touca::filesystem::directory_iterator(_dir)) {
+  // if option `testsuite-file` is specified, use the testcases listed
+  // in that file.
+  if (_options.extra.count("testsuite-file")) {
+    for (const auto& testcase :
+         touca::get_testsuite_local(_options.extra.at("testsuite-file"))) {
+      push(testcase);
+    }
+  }
+  // if option `testsuite-remote` is specified, use the testcases that are
+  // part of the version submitted to the Touca server that is currently
+  // the suite baseline.
+  if (_options.extra.count("testsuite-remote") &&
+      _options.extra.at("testsuite-remote") == "true") {
+    for (const auto& testcase : touca::get_testsuite_remote(_options)) {
+      push(testcase);
+    }
+  }
+  // if neither options are provided, use all the profiles that exist in
+  // the datasets directory as testcases.
+  for (const auto& it : touca::filesystem::directory_iterator(
+           _options.extra.at("datasets-dir"))) {
     if (!touca::filesystem::is_regular_file(it.path().string())) {
       continue;
     }
@@ -91,34 +111,11 @@ bool MyWorkflow::validate_options() const {
 }
 
 std::shared_ptr<touca::Suite> MyWorkflow::suite() const {
-  // if option `testsuite-file` is specified, use the testcases listed
-  // in that file. For this purpose, we use the `FileSuite` helper class
-  // that is provided by the Touca test framework. It expects that the
-  // testsuite file has one testcase per line, while skipping empty lines
-  // and lines that start with `##`.
-
-  if (_options.extra.count("testsuite-file")) {
-    return std::make_shared<touca::FileSuite>(
-        _options.extra.at("testsuite-file"));
-  }
-
-  // if option `testsuite-remote` is specified, use the testcases that are
-  // part of the version submitted to the Touca server that is currently
-  // the suite baseline. For this purpose, we use the `RemoteSuite` helper
-  // class that is provided by the Touca test framework.
-
-  if (_options.extra.count("testsuite-remote") &&
-      _options.extra.at("testsuite-remote") == "true") {
-    return std::make_shared<touca::RemoteSuite>(_options);
-  }
-
-  // if neither options are provided, use all the profiles that exist in
-  // the datasets directory as testcases.
-
-  return std::make_shared<MySuite>(_options.extra.at("datasets-dir"));
+  return std::make_shared<MySuite>(_options);
 }
 
-touca::Errors MyWorkflow::execute(const std::string& testcase) const {
+std::vector<std::string> MyWorkflow::execute(
+    const std::string& testcase) const {
   touca::filesystem::path caseFile = _options.extra.at("datasets-dir");
   caseFile /= testcase + ".json";
   const auto& student = find_student(caseFile.string());

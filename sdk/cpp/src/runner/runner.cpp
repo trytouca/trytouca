@@ -19,7 +19,7 @@
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/runner/detail/ostream.hpp"
-#include "touca/runner/suites.hpp"
+#include "touca/runner/runner.hpp"
 #include "touca/touca.hpp"
 
 #ifdef _WIN32
@@ -27,6 +27,14 @@
 #endif
 
 namespace touca {
+
+struct DummySuite final : public touca::Suite {
+  DummySuite(const std::vector<std::string>& testcases) {
+    for (const auto& testcase : testcases) {
+      push(testcase);
+    }
+  }
+};
 
 std::vector<std::pair<std::string, std::function<void(const std::string&)>>>
     _workflows;
@@ -36,16 +44,18 @@ void workflow(const std::string& name,
   _workflows.push_back(std::make_pair(name, workflow));
 }
 
-void run(int argc, char* argv[]) {
+int run(int argc, char* argv[]) {
   for (const auto& workflow : _workflows) {
     struct Runner : public touca::Workflow {
      public:
       Runner(const std::function<void(const std::string&)> workflow)
           : _workflow(workflow){};
       std::shared_ptr<touca::Suite> suite() const override {
-        return std::make_shared<touca::RemoteSuite>(_options);
+        return std::make_shared<DummySuite>(
+            touca::get_testsuite_remote(_options));
       }
-      touca::Errors execute(const std::string& testcase) const override {
+      std::vector<std::string> execute(
+          const std::string& testcase) const override {
         _workflow(testcase);
         return {};
       }
@@ -55,6 +65,7 @@ void run(int argc, char* argv[]) {
     } runner(workflow.second);
     touca::main(argc, argv, runner);
   }
+  return EXIT_SUCCESS;
 }
 
 bool Workflow::parse_options(int argc, char* argv[]) {
@@ -567,7 +578,7 @@ class Printer {
   }
   void print_progress(const std::string& testcase, const unsigned index,
                       const unsigned testcase_width, const Timer& timer,
-                      const Errors& errors) {
+                      const std::vector<std::string>& errors) {
     const auto status =
         timer.contains(testcase)
             ? errors.empty() ? ExecutionOutcome::Pass : ExecutionOutcome::Fail
@@ -751,7 +762,8 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   if (!options.testcases.empty()) {
     suite = std::make_shared<SingleCaseSuite>(options.testcases);
   } else if (!options.testcase_file.empty()) {
-    suite = std::make_shared<FileSuite>(options.testcase_file);
+    suite = std::make_shared<DummySuite>(
+        touca::get_testsuite_local(options.testcase_file));
     suite->initialize();
   }
 
@@ -784,7 +796,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   for (const auto& testcase : *suite) {
     ++i;
-    Errors errors;
+    std::vector<std::string> errors;
     auto outputDirCase = outputDirRevision / testcase;
 
     // unless option `overwrite` is specified, check if this

@@ -11,14 +11,14 @@ class MyWorkflow : public touca::Workflow {
   bool parse_options(int argc, char* argv[]) override;
   bool validate_options() const override;
   std::shared_ptr<touca::Suite> suite() const override;
-  touca::Errors execute(const std::string& testcase) const override;
+  std::vector<std::string> execute(const std::string& testcase) const override;
 };
 
 class MySuite final : public touca::Suite {
  public:
-  MySuite(const std::string& datasetDir);
+  MySuite(const touca::FrameworkOptions& options);
   void initialize() override;
 
  private:
-  std::string _dir;
+  const touca::FrameworkOptions& _options;
 };

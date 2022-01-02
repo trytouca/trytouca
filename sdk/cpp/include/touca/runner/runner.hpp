@@ -5,15 +5,13 @@
 /**
  * @file runner.hpp
  *
- * @brief Entry-point to the C++ test framework.
+ * @brief Entry-point to the built-in test framework.
  *
  * @details Test framework designed to abstract away many of the common features
  * expected of a regression test tool, such as parsing of command line arguments
  * and configuration files, logging, error handling, managing test results on
- * filesystem and submitting them to the Touca server.
- *
- * In most typical regression test tools, this function is meant to be called
- * from the application's `main` function, using the pattern shown below.
+ * filesystem and submitting them to the Touca server. An example implementation
+ * invokes `touca::run` after registering one or more workflows.
  *
  * @code
  *  int main(int argc, char* argv[]) {
@@ -21,19 +19,9 @@
  *      const auto number = std::stoul(testcase);
  *      touca::check("output", is_prime(number));
  *    });
- *    touca::run(argc, argv);
+ *    return touca::run(argc, argv);
  *  }
  * @endcode
- */
-
-/**
- * @file runner.hpp
- *
- * @brief Entry-point to the Touca Test Framework for C++.
- *
- * @details `touca/runner/runner.hpp` provides the functions necessary to
- *          write a Touca test tool that can submit its results to the
- *          Touca server.
  */
 
 #include <functional>
@@ -46,14 +34,6 @@
 #include "touca/client/detail/client.hpp"
 #include "touca/lib_api.hpp"
 
-/**
- * @namespace touca::framework
- *
- * @brief Provides API of Touca Test Framework for C++.
- *
- * @details Helps engineers develop a regression test tool that can submit
- *          its results to the Touca server.
- */
 namespace touca {
 
 /**
@@ -62,20 +42,6 @@ namespace touca {
  * @param options object holding configuration options
  */
 void configure(const ClientOptions& options);
-
-/**
- * @brief A list of errors encountered during execution of the workflow
- *        under test with a given input.
- *
- * @details If the list of errors is empty, the workflow execution is
- *          determined to have been successful. Otherwise, the framework
- *          marks the testcase as failed and prints the
- *          errors, in the error that they were received, to the standard
- *          output stream and the application log files.
- *
- * @since v1.2.0
- */
-using Errors = std::vector<std::string>;
 
 /**
  * Test framework configuration options
@@ -95,6 +61,12 @@ struct FrameworkOptions : public ClientOptions {
   bool redirect = true;
   bool overwrite = false;
 };
+
+TOUCA_CLIENT_API std::vector<std::string> get_testsuite_remote(
+    const FrameworkOptions& options);
+
+TOUCA_CLIENT_API std::vector<std::string> get_testsuite_local(
+    const touca::filesystem::path& path);
 
 /**
  * @brief Different levels of detail with which framework log events
@@ -331,7 +303,7 @@ class TOUCA_CLIENT_API Workflow {
    *
    *          Implementing this function is **required**.
    *
-   * @see `touca/runner/suites.hpp` to learn about the set of
+   * @see `touca/runner/runner.hpp` to learn about the set of
    *      ready to use subclasses of `Suite`.
    *
    * @return An instance of a `Suite` that contains the set of testcases
@@ -394,70 +366,48 @@ class TOUCA_CLIENT_API Workflow {
    *      order of different functions within this class, by the Test
    *      Framework.
    */
-  virtual Errors execute(const std::string& testcase) const = 0;
+  virtual std::vector<std::string> execute(
+      const std::string& testcase) const = 0;
 
  protected:
   FrameworkOptions _options;
 };
 
-/**
- * @brief Takes over running your regression test application.
- *
- * @details Designed to abstract away many of the common features expected
- *          of a regression test tool, such as parsing of command line
- *          arguments and configuration files, logging, error handling,
- *          managing test results on filesystem and submitting them to
- *          the Touca server.
- *
- *          In most typical regression test tools, this function is meant
- *          to be called from the application's `main` function, using the
- *          pattern shown below.
- *
- *          @code
- *              int main(int argc, char* argv[])
- *              {
- *                  MyWorkflow workflow;
- *                  return touca::main(argc, argv, workflow);
- *              }
- *          @endcode
- *
- *          Where `MyWorkflow` would be a custom class derived from
- *          Workflow and implemented by the test author.
- *
- *          `framework::main` calls various methods of the provided
- *          `Workflow` instance in the order shown below.
- *
- *            - `Workflow::describe_options`
- *            - `Workflow::add_options`
- *            - `Workflow::parse_options`
- *            - `Workflow::validate_options`
- *            - `Workflow::log_subscriber`
- *            - `Workflow::initialize`
- *            - `Workflow::suite`
- *            - `Workflow::skip`
- *            - `Workflow::execute`
- *
- * @param argc number of arguments provided to your application's `main`
- *             function.
- *
- * @param argv arguments provided to your applications `main` function.
- *
- * @param workflow instance of a class derived from `Workflow` that
- *                 describes what the test tool should do for each
- *                 testcase.
- *
- * @return zero on success and non-zero on failure
- *
- * @see Workflow
- *
- * @since v1.2.0
- */
 TOUCA_CLIENT_API int main(int argc, char* argv[], Workflow& workflow);
 
 TOUCA_CLIENT_API void workflow(
     const std::string& name,
     const std::function<void(const std::string&)> workflow);
 
-TOUCA_CLIENT_API void run(int argc, char* argv[]);
+TOUCA_CLIENT_API int run(int argc, char* argv[]);
+
+/**
+ * @brief Allows extraction of log events produced by the test framework
+ */
+struct TOUCA_CLIENT_API Sink {
+  /**
+   * @brief Levels of detail of published log events.
+   */
+  enum class Level : uint8_t { Debug, Info, Warning, Error };
+
+  /**
+   * @brief Called by the test framework when a log event is published.
+   *
+   * @param level minimum level of detail to subscribe to
+   * @param event log message published by the framework
+   */
+  virtual void log(const Level level, const std::string& event) = 0;
+
+  virtual ~Sink() = default;
+};
+
+/**
+ * @brief Registers a sink to subscribe to the test framework log events.
+ *
+ * @param sink sink instance to be called when a log event is published
+ * @param level minimum level of detail to subscribe to
+ */
+TOUCA_CLIENT_API void add_sink(std::unique_ptr<Sink> sink,
+                               const Sink::Level level = Sink::Level::Info);
 
 }  // namespace touca

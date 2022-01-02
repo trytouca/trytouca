@@ -115,9 +115,6 @@ happens from within the code under test and outside the regression test tool.
 Basic Types
 -----------
 
-.. doxygentypedef:: touca::Errors
-   :project: touca
-
 .. doxygenstruct:: touca::FrameworkOptions
    :project: touca
 
@@ -140,18 +137,6 @@ Suite Class
 .. doxygenclass:: touca::Suite
    :project: touca
    :members:
-
-Available Implementations
-*************************
-
-`touca/runner/suites.hpp` provides the following implementations of the
-abstract class `Suite`.
-
-.. doxygenclass:: touca::FileSuite
-   :project: touca
-
-.. doxygenclass:: touca::RemoteSuite
-   :project: touca
 
 Logging
 -------

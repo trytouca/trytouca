@@ -35,7 +35,7 @@ if (TOUCA_BUILD_FRAMEWORK)
     PRIVATE
         runner/ostream.cpp
         runner/runner.cpp
-        runner/suites.cpp
+        runner/options.cpp
     )
 endif()
 
