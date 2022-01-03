@@ -67,16 +67,6 @@ export class ProfileComponent implements OnDestroy {
       saved: false,
       slug: EFeatureFlag.TestcasesTab,
       title: 'Test Cases Tab',
-      visible: false
-    },
-    [EFeatureFlag.ExportPDF]: {
-      default: false,
-      description:
-        'Allow generating PDF report for test results submitted for a given version',
-      experimental: true,
-      saved: false,
-      slug: EFeatureFlag.ExportPDF,
-      title: 'Export as PDF',
       visible: true
     }
   };
@@ -122,9 +112,6 @@ export class ProfileComponent implements OnDestroy {
     private router: Router,
     private userService: UserService
   ) {
-    this.apiService.status().subscribe((response) => {
-      this._preferences[EFeatureFlag.ExportPDF].visible = !response.self_hosted;
-    });
     this._subHints = this.hints.subscribe(this.accountSettingsForm, [
       'fname',
       'uname'

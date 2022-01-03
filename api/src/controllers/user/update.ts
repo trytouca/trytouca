@@ -43,8 +43,7 @@ export async function userUpdate(
 
   const flags = pick(req.body.flags, [
     EFeatureFlag.NewsletterProduct,
-    EFeatureFlag.TestcasesTab,
-    EFeatureFlag.ExportPDF
+    EFeatureFlag.TestcasesTab
   ])
   if (Object.keys(flags).length !== 0) {
     updateFeatureFlags(user, flags)

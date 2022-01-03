@@ -26,7 +26,7 @@ import { Subscription } from 'rxjs';
 import {
   BatchItem,
   BatchLookupResponse,
-  EFeatureFlag,
+  PlatformStatus,
   SuiteLookupResponse
 } from '@/core/models/commontypes';
 import type {
@@ -96,6 +96,7 @@ export class BatchPageComponent
   TabType = BatchPageTabType;
   tabs = pageTabs;
   private _isTeamAdmin = false;
+  private _platformStatus: PlatformStatus;
 
   private _subTeam: Subscription;
   private _subSuite: Subscription;
@@ -189,6 +190,9 @@ export class BatchPageComponent
         params.dstBatchSlug = getQuery('cv');
         this.batchPageService.updateRequestParams(params);
       }
+    });
+    this.apiService.status().subscribe((response) => {
+      this._platformStatus = response;
     });
   }
 
@@ -326,9 +330,8 @@ export class BatchPageComponent
     }
     if (
       this.batch?.isSealed &&
-      this.userService.currentUser?.feature_flags.includes(
-        EFeatureFlag.ExportPDF
-      )
+      this._platformStatus &&
+      this._platformStatus.self_hosted === false
     ) {
       buttons.push({
         click: () => this.export(ExportFormat.PDF),

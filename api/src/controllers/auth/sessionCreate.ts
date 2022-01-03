@@ -21,9 +21,8 @@ export async function authSessionCreate(
   const askedIpAddress = req.ip
   logger.debug('%s: received request to login user', askedUsername)
 
-  // check if username is associated with any account
-  // instead of 404, we return 401 for extra security
-
+  // Bail if username does not match an account.
+  // We return 401 instead of 404 for extra security
   const user = await UserModel.findOne({ username: askedUsername })
   if (!user) {
     logger.debug('rejecting login due to invalid username')
@@ -34,7 +33,6 @@ export async function authSessionCreate(
   }
 
   // return 423 if user is indefinitely suspended
-
   if (user.suspended) {
     logger.debug('%s: rejecting login of suspended user', user.username)
     return next({
@@ -44,7 +42,6 @@ export async function authSessionCreate(
   }
 
   // return 423 if user is temporarily locked
-
   if (user.lockedAt) {
     const lockedUntil = user.lockedAt
     lockedUntil.setMinutes(lockedUntil.getMinutes() + 30)
@@ -65,9 +62,7 @@ export async function authSessionCreate(
   if (!isPasswordValid) {
     logger.debug('%s: failed login attempt for user account', askedUsername)
 
-    // temporarily lock account if user exceeded maximum number of failed
-    // login attempts.
-
+    // lock account if user exceeded maximum number of failed login attempts.
     if (config.auth.maxLoginAttempts <= user.loginAttempts) {
       logger.info('%s: temporarily locking user account', askedUsername)
       await UserModel.findByIdAndUpdate(user._id, {
@@ -78,7 +73,6 @@ export async function authSessionCreate(
       })
 
       // notify user that their account was temporarily locked
-
       mailer.mailUser(
         user,
         'Account Temporarily Locked',
@@ -94,24 +88,18 @@ export async function authSessionCreate(
       })
     }
 
-    // return 401 if password was wrong
-
     return next({
       errors: ['invalid login credentials'],
       status: 401
     })
   }
 
-  // at this point, we recognize user attempt as legitimate and acquire
-  // a user session.
-
+  // now we recognize user attempt as legitimate.
   logger.debug('%s: signin request validated', user.username)
   const session = await createUserSession(user, {
     askedAgent,
     askedIpAddress
   })
-
-  // add event to tracking system
 
   tracker.create(user, { ip_address: askedIpAddress }).then(() => {
     tracker.track(user, 'logged_in')
