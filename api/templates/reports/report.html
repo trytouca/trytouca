@@ -12,6 +12,7 @@
   <link rel="apple-touch-icon"
     href="https://app.touca.io/assets/icons/apple-touch-icon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
 </head>
 
 <body
@@ -61,54 +62,79 @@
       <h2 class="text-lg font-semibold">Changes in Behavior</h2>
       {{#content.srcBatch.behavior.hasCases}}
       <p>
-        <b>{{content.srcBatch.behavior.cases.length}}</b> of
-        <b>{{content.srcBatch.duration.cases.length}}</b> common testcases
-        behaved differently:
+        <b class="font-semibold">{{content.srcBatch.behavior.cases.length}}</b>
+        of
+        <b class="font-semibold">{{content.srcBatch.duration.cases.length}}</b>
+        common testcases behaved differently:
       </p>
-      <table class="text-xs table-auto">
+      <table
+        class="text-xs border border-gray-300 table-auto dark:border-gray-700">
         <tr class="text-left">
-          <th>Testcase</th>
-          <th>Match Rate</th>
+          <th class="py-4"></th>
+          <th class="px-2 min-w-[8rem] text-left">Testcase</th>
+          <th class="px-2 min-w-[6rem]">Match Rate</th>
         </tr>
         {{#content.srcBatch.behavior.cases}}
-        <tr>
-          <td>{{name}}</td>
-          <td>{{matchRate}}</td>
+        <tr class="even:bg-gray-50 dark:even:bg-gray-800">
+          <td class="px-2 py-2 font-medium text-right">{{row}}</td>
+          <td class="px-2 font-medium">{{name}}</td>
+          <td class="px-2 {{matchRate.color}}">{{matchRate.text}}</td>
         </tr>
         {{/content.srcBatch.behavior.cases}}
       </table>
       {{/content.srcBatch.behavior.hasCases}}
       {{^content.srcBatch.behavior.hasCases}}
       <p>
-        <b>{{content.srcBatch.name}}</b> behaves the same as in version
-        {{content.dstBatch.name}}.
+        <b class="font-semibold">{{content.srcBatch.name}}</b> behaves the same
+        as in version {{content.dstBatch.name}}.
       </p>
       {{/content.srcBatch.behavior.hasCases}}
     </div>
     <div class="space-y-2 text-xs">
       <h2 class="text-lg font-semibold">Changes in Performance</h2>
-      <p>
-        Version {{content.srcBatch.name}} ran in
-        {{content.srcBatch.duration.value}},
-        {{content.srcBatch.duration.change}} in version
-        {{content.dstBatch.name}}.
-      </p>
+      <div class="flex items-center py-1 space-x-1">
+        <span
+          class="w-5 h-5 p-1 rounded-full dark:bg-gray-700 {{content.srcBatch.duration.change.color}}"
+          data-feather="{{ content.srcBatch.duration.change.icon }}"></span>
+        <p>
+          Version {{content.srcBatch.name}} ran in
+          <b class="font-semibold">{{content.srcBatch.duration.value}}</b> which
+          is
+          <b class="font-semibold">{{content.srcBatch.duration.change.text}}</b>
+          {{content.srcBatch.duration.change.suffix}} than version
+          {{content.dstBatch.name}}.
+        </p>
+      </div>
       {{#content.srcBatch.duration.hasCases}}
-      <table class="text-xs table-auto">
-        <tr class="text-left">
-          <th>Testcase</th>
-          <th>Runtime</th>
+      <table
+        class="text-xs border border-gray-300 table-auto dark:border-gray-700">
+        <tr>
+          <th class="py-4"></th>
+          <th class="px-2 min-w-[8rem] text-left">Testcase</th>
+          <th class="px-2 min-w-[6rem] text-left">Runtime</th>
+          <th class="px-2 min-w-[4rem] text-left">Trend</th>
         </tr>
         {{#content.srcBatch.duration.cases}}
-        <tr>
-          <td>{{name}}</td>
-          <td>{{value}} ({{change}})</td>
+        <tr class="even:bg-gray-50 dark:even:bg-gray-800">
+          <td class="px-2 py-2 font-medium text-right">{{row}}</td>
+          <td class="px-2 font-medium">{{name}}</td>
+          <td class="px-2">{{value}}</td>
+          <td class="px-2">
+            <div class="flex items-center justify-between py-1 space-x-1">
+              <span>{{ change.text }}</span><span
+                class="w-5 h-5 px-1 {{change.color}} rounded-full dark:bg-gray-700"
+                data-feather="{{change.icon}}"></span>
+            </div>
+          </td>
         </tr>
         {{/content.srcBatch.duration.cases}}
       </table>
       {{/content.srcBatch.duration.hasCases}}
     </div>
   </div>
+  <script>
+    feather.replace()
+  </script>
 </body>
 
 </html>

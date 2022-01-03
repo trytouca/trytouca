@@ -39,18 +39,31 @@ interface PdfContent {
     behavior: {
       hasCases: boolean
       cases: {
+        row: number
         name: string
-        matchRate: string
+        matchRate: {
+          color: string
+          text: string
+        }
       }[]
     }
     duration: {
       value: string
-      change: string
+      change: {
+        icon: string
+        color: string
+        text: string
+      }
       hasCases: boolean
       cases: {
+        row: number
         name: string
         value: string
-        change: string
+        change: {
+          icon: string
+          color: string
+          text: string
+        }
       }[]
     }
   }
@@ -90,26 +103,43 @@ async function buildPdfContent(
     srcBatch._id
   )
   const differentCases = cmpOutput.common.filter((v) => v.meta.keysScore !== 1)
+  const toSeconds = (duration: number) => (duration / 1000).toFixed(1) + ' s'
+  const toDurationChange = (change: number) => {
+    const value = Math.abs(change).toFixed()
+    return {
+      icon: change > 0 ? 'trending-up' : 'trending-down',
+      color:
+        change > 0
+          ? 'dark:text-red-500 text-red-600 bg-red-100'
+          : 'dark:text-green-500 text-green-600 bg-green-100',
+      suffix: change > 0 ? 'slower' : 'faster',
+      text: `${value}%`
+    }
+  }
   const behavior = {
     hasCases: differentCases.length !== 0,
-    cases: differentCases.map((v) => ({
+    cases: differentCases.map((v, index) => ({
+      row: index + 1,
       name: v.src.elementName,
-      matchRate: Math.floor(v.meta.keysScore * 100).toString() + '%'
+      matchRate: {
+        color: v.meta.keysScore > 0.8 ? 'text-yellow-600' : 'text-red-600',
+        text: Math.floor(v.meta.keysScore * 100).toString() + '%'
+      }
     }))
   }
   const duration = {
-    value: cmpOutput.overview.metricsDurationHead.toString(),
-    change: cmpOutput.overview.metricsDurationChange.toString(),
+    value: toSeconds(cmpOutput.overview.metricsDurationHead),
+    change: toDurationChange(cmpOutput.overview.metricsDurationChange),
     hasCases: cmpOutput.common.length !== 0,
-    cases: cmpOutput.common.map((v) => ({
+    cases: cmpOutput.common.map((v, index) => ({
+      row: index + 1,
       name: v.src.elementName,
-      value: v.meta.metricsDurationCommonSrc.toString(),
-      change:
-        (
-          ((v.meta.metricsDurationCommonSrc - v.meta.metricsDurationCommonDst) /
-            v.meta.metricsDurationCommonDst) *
+      value: toSeconds(v.meta.metricsDurationCommonSrc),
+      change: toDurationChange(
+        ((v.meta.metricsDurationCommonSrc - v.meta.metricsDurationCommonDst) /
+          v.meta.metricsDurationCommonDst) *
           100
-        ).toFixed(2) + '%'
+      )
     }))
   }
   const fresh = {
