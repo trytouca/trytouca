@@ -118,7 +118,9 @@ export class ProfileComponent implements OnDestroy {
     ]);
     this._subUser = this.userService.currentUser$.subscribe((user) => {
       user.feature_flags.forEach((v) => {
-        this._preferences[v].value = true;
+        if (this._preferences[v]) {
+          this._preferences[v].value = true;
+        }
       });
       this.user = user;
       this.accountSettingsForm.get('email').setValue(user.email);
