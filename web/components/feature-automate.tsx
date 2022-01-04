@@ -3,26 +3,46 @@
 import React from 'react';
 import { FaGithub } from 'react-icons/fa';
 
-import CodeSnippet from '@/components/code-snippet';
 import { DimButton } from '@/components/dim-button';
 import { FeatureInput } from '@/lib/feature';
 
-const snippet = `
-Touca Test Framework
-Suite: acme/tax-calculator
-Version: 6.0
-
- (  1 of 5  ) Joseph Buquet      (pass, 118 ms)
- (  2 of 5  ) Christine Daaé     (pass, 97  ms)
- (  3 of 5  ) Raoul de Chagny    (pass, 132 ms)
- (  4 of 5  ) Marius Pontmercy   (pass, 50  ms)
- (  5 of 5  ) Jean Valjean       (pass, 640 ms)
-
-Processed 5 of 5 testcases
-Test completed in 1062 ms
-`;
-
 export default function FeatureAutomate(props: { input: FeatureInput }) {
+  const lines: ProgressLineInput[] = [
+    {
+      status: 'PASS',
+      statusBackground: 'bg-green-900 py-1',
+      row: 1,
+      testcaseName: 'Joseph Buquet',
+      duration: 222
+    },
+    {
+      status: 'PASS',
+      statusBackground: 'bg-green-900 py-1',
+      row: 2,
+      testcaseName: 'Christine Daaé',
+      duration: 235
+    },
+    {
+      status: 'PASS',
+      statusBackground: 'bg-green-900 py-1',
+      row: 3,
+      testcaseName: 'Raoul de Chagny',
+      duration: 253
+    },
+    {
+      status: 'SKIP',
+      statusBackground: 'bg-yellow-700 py-1',
+      row: 4,
+      testcaseName: 'Marius Pontmercy'
+    },
+    {
+      status: 'PASS',
+      statusBackground: 'bg-green-900 py-1',
+      row: 5,
+      testcaseName: 'Jean Valjean',
+      duration: 249
+    }
+  ];
   return (
     <section className="flex items-center wsl-min-h-screen-3 bg-dark-blue-900">
       <div className="container mx-auto">
@@ -58,12 +78,37 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
               </a>
             </div>
           </div>
-          <div className="grid lg:col-span-1">
-            <CodeSnippet
-              input={{
-                code: snippet.trim(),
-                language: 'python'
-              }}></CodeSnippet>
+          <div className="grid font-mono font-medium text-gray-100 lg:col-span-1">
+            <div className="w-full p-4 text-sm select-none sm:text-base md:text-lg md:p-6 xl:p-8 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
+              <p>Touca Test Framework</p>
+              <p>Suite: sample/1.0</p>
+              <p>
+                <br></br>
+              </p>
+              <ProgressLine input={lines[0]}></ProgressLine>
+              <ProgressLine input={lines[1]}></ProgressLine>
+              <ProgressLine input={lines[2]}></ProgressLine>
+              <ProgressLine input={lines[3]}></ProgressLine>
+              <ProgressLine input={lines[4]}></ProgressLine>
+              <p>
+                <br></br>
+              </p>
+              <p>
+                <span className="inline-block min-w-[7rem]">Tests:</span>
+                <span className="text-green-600">5 passed</span>
+                <span>, </span>
+                <span className="text-yellow-500">1 skipped</span>
+                <span>, 5 total</span>
+              </p>
+              <p>
+                <span className="inline-block min-w-[7rem]">Time:</span>
+                <span>1.01 s</span>
+              </p>
+              <p>
+                <br></br>
+              </p>
+              <p>✨ Ran all test suites.</p>
+            </div>
           </div>
         </div>
         <div className="px-8 py-8 text-right lg:py-0">
@@ -76,3 +121,30 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
     </section>
   );
 }
+
+interface ProgressLineInput {
+  row: number;
+  status: string;
+  statusBackground: string;
+  testcaseName: string;
+  duration?: number;
+}
+
+const ProgressLine = (props: { input: ProgressLineInput }) => {
+  return (
+    <p className="space-x-3">
+      <span>
+        <span className="text-gray-400">{props.input.row}.</span>
+      </span>
+      <span className={props.input.statusBackground + ' px-2'}>
+        {props.input.status}
+      </span>
+      <span className="inline-block min-w-[12rem]">
+        {props.input.testcaseName}
+      </span>
+      {props.input.duration && (
+        <span className="text-gray-400">({props.input.duration} ms)</span>
+      )}
+    </p>
+  );
+};
