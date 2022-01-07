@@ -128,24 +128,6 @@ struct ResultChecker {
   touca::filesystem::path _path;
 };
 
-TEST_CASE("suite") {
-  SECTION("dummy suite") {
-    DummySuite suite;
-    CHECK(suite.size() == 0);
-    suite.initialize();
-    CHECK(suite.size() == 0);
-  }
-
-  SECTION("simple suite") {
-    SimpleSuite::Inputs inputs = {"4", "8", "15", "16", "23", "42"};
-    SimpleSuite suite(inputs);
-    CHECK(suite.size() == 0);
-    suite.initialize();
-    CHECK(suite.size() == 6);
-    CHECK(std::equal(suite.begin(), suite.end(), inputs.begin()));
-  }
-}
-
 TEST_CASE("workflow") {
   SECTION("dummy workflow") {
     DummyWorkflow workflow;

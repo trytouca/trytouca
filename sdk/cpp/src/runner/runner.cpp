@@ -372,7 +372,7 @@ bool validate_api_url(const FrameworkOptions& options) {
 }
 
 bool validate_options(const FrameworkOptions& options) {
-  // we always expect a value for options `--revision` and `output-dir`.
+  // we always expect a value for the following options.
   if (!expect_options({{"team", options.team},
                        {"suite", options.suite},
                        {"revision", options.revision},
@@ -380,38 +380,32 @@ bool validate_options(const FrameworkOptions& options) {
     return false;
   }
 
-  // unless command line option `--offline` is specified,
-  // we expect a value for option `--api-url`.
+  // expect `api-url` unless `offline` is specified.
   if (!options.offline && !expect_options({{"api-url", options.api_url}})) {
     return false;
   }
 
-  // values of options `--api-url`, `--suite`, `--revision` and `team`
-  // must be consistent.
+  // options `api-url`, `suite`, `revision` and `team` must be consistent.
   if (!options.api_url.empty() && !validate_api_url(options)) {
     return false;
   }
 
-  // unless option `--skip-logs` is specified, check that
-  // value of `--log-level` is one of `debug`, `info` or `warning`.
-  if (!options.skip_logs) {
-    const auto& level = options.log_level;
-    const auto& levels = {"debug", "info", "warning"};
-    const auto isValid =
-        std::find(levels.begin(), levels.end(), level) != levels.end();
-    if (!isValid) {
-      touca::print_error(
-          "value of option \"--log-level\" must be one of \"debug\", \"info\" "
-          "or \"warning\".\n");
-      return false;
-    }
+  // expect `log-level` to be one of `debug`, `info`, or `warning`.
+  const auto& level = options.log_level;
+  const auto& levels = {"debug", "info", "warning"};
+  const auto isValid =
+      std::find(levels.begin(), levels.end(), level) != levels.end();
+  if (!isValid) {
+    touca::print_error(
+        "value of option \"--log-level\" must be one of \"debug\", \"info\" "
+        "or \"warning\".\n");
+    return false;
   }
 
   return true;
 }
 
-class Logger {
- public:
+struct Logger {
   template <typename... Args>
   inline void log(const Sink::Level level, const std::string& fmtstr,
                   Args&&... args) const {
@@ -444,15 +438,13 @@ std::string stringify(const Sink::Level& log_level) {
   return names.at(log_level);
 }
 
-class ConsoleSink : public Sink {
- public:
+struct ConsoleSink : public Sink {
   void log(const Sink::Level level, const std::string& msg) override {
     fmt::print(std::cout, "{0:<8}{1:}\n", stringify(level), msg);
   }
 };
 
-class FileSink : public Sink {
- public:
+struct FileSink : public Sink {
   FileSink(const touca::filesystem::path& logDir) : Sink() {
     const auto logFilePath = logDir / "touca.log";
     _ofs = std::ofstream(logFilePath.string(), std::ios::trunc);
@@ -495,7 +487,7 @@ struct SingleCaseSuite final : public Suite {
   }
 };
 
-enum ExecutionOutcome : unsigned char { Pass, Fail, Skip };
+enum ExecutionOutcome : uint8_t { Pass, Fail, Skip };
 
 class Statistics {
   std::map<ExecutionOutcome, unsigned long> _v;
@@ -532,40 +524,7 @@ class Timer {
   }
 };
 
-class Printer {
-  bool _color;
-  std::ofstream _file;
-  const std::unordered_map<
-      ExecutionOutcome,
-      std::tuple<std::string, std::string, fmt::terminal_color>>
-      states = {
-          {ExecutionOutcome::Pass,
-           std::make_tuple("PASS", "passed", fmt::terminal_color::green)},
-          {ExecutionOutcome::Skip,
-           std::make_tuple("SKIP", "skipped", fmt::terminal_color::yellow)},
-          {ExecutionOutcome::Fail,
-           std::make_tuple("FAIL", "failed", fmt::terminal_color::red)}};
-
-  template <typename... Args>
-  void print(const std::string& fmtstr, Args&&... args) {
-    const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
-    fmt::print(_file, content);
-    fmt::print(std::cout, content);
-    _file.flush();
-    std::cout.flush();
-  }
-
-  template <typename... Args>
-  void print(const fmt::text_style& style, const std::string& fmtstr,
-             Args&&... args) {
-    const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
-    fmt::print(_file, content);
-    fmt::print(std::cout, _color ? fmt::format(style, content) : content);
-    _file.flush();
-    std::cout.flush();
-  }
-
- public:
+struct Printer {
   Printer(const touca::filesystem::path& path, const bool colored_output)
       : _color(colored_output), _file(path.string(), std::ios::trunc) {}
 
@@ -617,6 +576,39 @@ class Printer {
     print("Time:       {:.2f} s\n", timer.count("__workflow__") / 1000.0);
     print("\n✨   Ran all test suites.\n\n");
   }
+
+ private:
+  template <typename... Args>
+  void print(const std::string& fmtstr, Args&&... args) {
+    const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
+    fmt::print(_file, content);
+    fmt::print(std::cout, content);
+    _file.flush();
+    std::cout.flush();
+  }
+
+  template <typename... Args>
+  void print(const fmt::text_style& style, const std::string& fmtstr,
+             Args&&... args) {
+    const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
+    fmt::print(_file, content);
+    fmt::print(std::cout, _color ? fmt::format(style, content) : content);
+    _file.flush();
+    std::cout.flush();
+  }
+
+  bool _color;
+  std::ofstream _file;
+  const std::unordered_map<
+      ExecutionOutcome,
+      std::tuple<std::string, std::string, fmt::terminal_color>>
+      states = {
+          {ExecutionOutcome::Pass,
+           std::make_tuple("PASS", "passed", fmt::terminal_color::green)},
+          {ExecutionOutcome::Skip,
+           std::make_tuple("SKIP", "skipped", fmt::terminal_color::yellow)},
+          {ExecutionOutcome::Fail,
+           std::make_tuple("FAIL", "failed", fmt::terminal_color::red)}};
 };
 
 int main_impl(int argc, char* argv[], Workflow& workflow) {

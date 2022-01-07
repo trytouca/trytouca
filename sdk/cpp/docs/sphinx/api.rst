@@ -101,39 +101,3 @@ Test Framework
 
 .. doxygenfunction:: touca::workflow
    :project: touca
-
-Legacy Test Framework
-+++++++++++++++++++++
-
-`touca/runner/runner.hpp` is the main entry-point to the Touca test framework
-for C++. In typical test tools, it is the main header file used in the
-regression test tool. The Test Framework performs Touca client configuration,
-testcase declaration, and saving and submitting the test results. As a result,
-users may not need to include `touca/touca.hpp` if capturing test results
-happens from within the code under test and outside the regression test tool.
-
-Basic Types
------------
-
-.. doxygenstruct:: touca::FrameworkOptions
-   :project: touca
-
-Main Function
--------------
-
-.. doxygenfunction:: touca::main
-   :project: touca
-
-Workflow Class
---------------
-
-.. doxygenclass:: touca::Workflow
-   :project: touca
-   :members:
-
-Suite Class
------------
-
-.. doxygenclass:: touca::Suite
-   :project: touca
-   :members:
