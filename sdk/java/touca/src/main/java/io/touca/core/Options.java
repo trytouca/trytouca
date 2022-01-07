@@ -243,8 +243,8 @@ public class Options {
       final URL url = new URL(existing.apiUrl);
       segments = url.getPath().split("/@/");
       final String urlPath =
-          String.join("/", Arrays.asList(segments[0].split("/")).stream()
-              .filter(x -> !x.isEmpty()).collect(Collectors.toList()));
+              Arrays.stream(segments[0].split("/"))
+                  .filter(x -> !x.isEmpty()).collect(Collectors.joining("/"));
       final URI uri = new URI(url.getProtocol(), url.getAuthority(),
           urlPath.isEmpty() ? urlPath : "/" + urlPath, null, null);
       existing.apiUrl = uri.toURL().toString();
@@ -259,7 +259,7 @@ public class Options {
   }
 
   private static void reformatSlugs(final Options existing, final String path) {
-    final String[] givenSlugs = Arrays.asList(path.split("/")).stream()
+    final String[] givenSlugs = Arrays.stream(path.split("/"))
         .filter(x -> !x.isEmpty()).toArray(String[]::new);
     final SlugEntry[] slugs =
         {new SlugEntry("team", o -> o.team, (o, k) -> o.team = k),

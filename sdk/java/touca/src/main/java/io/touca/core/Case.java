@@ -34,7 +34,7 @@ public class Case {
         }
       };
 
-  private static enum ResultCategory {
+  private enum ResultCategory {
     Check, Assert
   }
 
@@ -126,7 +126,7 @@ public class Case {
    */
   public void addHitCount(final String key) {
     if (!this.results.containsKey(key)) {
-      final IntegerType value = new IntegerType(1l);
+      final IntegerType value = new IntegerType(1L);
       this.results.put(key, new ResultEntry(value, ResultCategory.Check));
       return;
     }
@@ -157,7 +157,7 @@ public class Case {
   /**
    * Starts timing an event with the specified name.
    *
-   * Measurement of the event is only complete when function {@link stopTimer}
+   * Measurement of the event is only complete when function {@link #stopTimer(String) stopTimer}
    * is later called for the specified name.
    *
    * @param key name to be associated with the performance metric
@@ -169,7 +169,7 @@ public class Case {
   /**
    * Stops timing an event with the specified name.
    * 
-   * Expects function {@link startTimer} to have been called previously with the
+   * Expects function {@link #startTimer(String) startTimer} to have been called previously with the
    * specified name.
    * 
    * @param key name to be associated with the performance metric
@@ -200,13 +200,10 @@ public class Case {
       final JsonObject obj = new JsonObject();
       obj.addProperty("key", result.getKey());
       obj.add("value", value.value.json());
-      switch (value.type) {
-        case Assert:
-          jsonAssertions.add(obj);
-          break;
-        default:
-          jsonResults.add(obj);
-          break;
+      if (value.type == ResultCategory.Assert) {
+        jsonAssertions.add(obj);
+      } else {
+        jsonResults.add(obj);
       }
     }
 

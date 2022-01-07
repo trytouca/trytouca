@@ -59,6 +59,54 @@ public class Runner {
     }
   }
 
+  private static final class Printer {
+    private final RunnerOptions options;
+
+    public Printer(RunnerOptions options) {
+      this.options = options;
+    }
+
+    public void printHeader() {
+      System.out.printf("%nTouca Test Framework%nSuite: %s/v%s%n%n",
+          options.suite, options.version);
+    }
+
+    public void printProgress(Timer timer, String testcase, int index, List<String> errors, boolean shouldSkip) {
+      String status;
+      System.out.printf("%3s. ", index + 1);
+      if (shouldSkip) {
+        System.out.print(Color.YELLOW_BACKGROUND);
+        status = " SKIP ";
+      } else if (errors.isEmpty()) {
+        status = " PASS ";
+        System.out.print(Color.GREEN_BACKGROUND);
+      } else {
+        status = " FAIL ";
+        System.out.print(Color.RED_BACKGROUND);
+      }
+      System.out.print(status);
+      System.out.print(Color.RESET);
+      System.out.printf(" %-18s (%d ms)%n", testcase, timer.count(testcase));
+      for (final String error : errors) {
+        System.out.printf("%13s %s%n", "-", error);
+      }
+    }
+
+    public void printFooter(Statistics stats, Timer timer) {
+      System.out.printf("%nTests:      ");
+      if (stats.count("pass") != 0) {
+        System.out.print(Color.GREEN + stats.count("pass").toString() + " passed, " + Color.RESET);
+      } else if (stats.count("skip") != 0) {
+        System.out.print(Color.YELLOW + stats.count("skip").toString() + " skipped, " + Color.RESET);
+      } else if (stats.count("fail") != 0) {
+        System.out.print(Color.RED + stats.count("fail").toString() + " failed, " + Color.RESET);
+      }
+      System.out.printf("%d total%nTime:       %d ms %n%nRan all test suites",
+          options.testcases.length, timer.count("__workflow__"));
+    }
+
+  }
+
   private static final class Statistics {
     private final Map<String, Long> values = new HashMap<>();
 
@@ -95,11 +143,10 @@ public class Runner {
     try {
       final CommandLine cmd = parser.parse(buildOptions(), mainArgs);
 
-      final BiFunction<String, Boolean, Boolean> parseBoolean =
-          (String a, Boolean b) -> {
-            return (cmd.hasOption(a) && cmd.getOptionValue(a) == null)
-                || Boolean.parseBoolean(cmd.getOptionValue(a, b.toString()));
-          };
+      final BiFunction<String, Boolean, Boolean> parseBoolean = (String a, Boolean b) -> {
+        return (cmd.hasOption(a) && cmd.getOptionValue(a) == null)
+            || Boolean.parseBoolean(cmd.getOptionValue(a, b.toString()));
+      };
 
       options.apply(new RunnerOptions(x -> {
         x.apiKey = cmd.getOptionValue("api-key");
@@ -126,15 +173,14 @@ public class Runner {
 
   /**
    * Discovers all methods annotated with `Touca.Workflow` to be later executed
-   * via the {@link run} function.
+   * via the {@link #run(Client)} run} function.
    *
    * @param mainClass class that includes the main method of test application
    * @return this instance
    */
   public Runner findWorkflows(final Class<?> mainClass) {
     final String className = mainClass.getCanonicalName();
-    final String packageName =
-        className.substring(0, className.lastIndexOf('.'));
+    final String packageName = className.substring(0, className.lastIndexOf('.'));
     final Iterable<Class<?>> classes = findClasses(packageName);
     for (final Class<?> clazz : classes) {
       for (final Method method : clazz.getMethods()) {
@@ -234,15 +280,15 @@ public class Runner {
   /**
    * Runs a given workflow with multiple test cases.
    *
-   * @param client Touca client instance to use when running workflows.
+   * @param client   Touca client instance to use when running workflows.
    * @param workflow workflow to be executed
    */
   private void runWorkflow(final Client client, final ClassMethod workflow) {
     final boolean isOffline = (options.offline != null && options.offline)
         || options.apiKey == null || options.apiUrl == null;
 
-    System.out.printf("%nTouca Test Framework%nSuite: %s%nRevision: %s%n%n",
-        options.suite, options.version);
+    Printer printer = new Printer(options);
+    printer.printHeader();
     timer.tic("__workflow__");
 
     for (int index = 0; index < options.testcases.length; index++) {
@@ -253,8 +299,7 @@ public class Runner {
           .resolve(options.suite).resolve(options.version).resolve(testcase);
 
       if (!options.overwrite && this.shouldSkip(testcase)) {
-        System.out.printf(" (%d of %d) %s (skip)%n", index + 1,
-            options.testcases.length, testcase);
+        printer.printProgress(timer, testcase, index, errors, true);
         stats.increment("skip");
         continue;
       }
@@ -290,7 +335,7 @@ public class Runner {
       if (errors.isEmpty() && options.saveAsBinary) {
         final Path path = testcaseDirectory.resolve("touca.bin");
         try {
-          client.saveBinary(path, new String[] {testcase});
+          client.saveBinary(path, new String[] { testcase });
         } catch (final IOException ex) {
           errors.add(String.format("failed to create file %s: %s%n",
               path.toString(), ex.getMessage()));
@@ -299,7 +344,7 @@ public class Runner {
       if (errors.isEmpty() && options.saveAsJson) {
         final Path path = testcaseDirectory.resolve("touca.json");
         try {
-          client.saveJson(path, new String[] {testcase});
+          client.saveJson(path, new String[] { testcase });
         } catch (final IOException ex) {
           errors.add(String.format("failed to create file %s: %s%n",
               path.toString(), ex.getMessage()));
@@ -309,21 +354,13 @@ public class Runner {
         client.post();
       }
 
-      System.out.printf(" (%3d of %-3d) %-32s (%s, %d ms)%n", index + 1,
-          options.testcases.length, testcase,
-          errors.isEmpty() ? "pass" : "fail", timer.count(testcase));
-      for (final String error : errors) {
-        System.out.printf("%13s %s%n", "-", error);
-      }
+      printer.printProgress(timer, testcase, index, errors, false);
 
       client.forgetTestcase(testcase);
     }
 
     timer.toc("__workflow__");
-    System.out.printf(
-        "%nProcessed %d of %d testcases%nTest completed in %d ms%n%n",
-        stats.count("pass"), options.testcases.length,
-        timer.count("__workflow__"));
+    printer.printFooter(stats, timer);
 
     if (!isOffline) {
       client.seal();
@@ -332,7 +369,7 @@ public class Runner {
 
   /**
    * Checks whether the test framework should skip running a given test case.
-   * 
+   *
    * @param testcase name of the test case
    * @return true if running the specified test case should be skipped.
    */
@@ -394,8 +431,7 @@ public class Runner {
    */
   private static List<Class<?>> findClasses(final String packageName) {
     final List<Class<?>> classes = new ArrayList<>();
-    final ClassLoader classLoader =
-        Thread.currentThread().getContextClassLoader();
+    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     final String path = packageName.replace('.', '/');
     try {
       final Enumeration<URL> resources = classLoader.getResources(path);
@@ -416,8 +452,8 @@ public class Runner {
 
   /**
    * Finds all classes in a given directory and its subdirectories.
-   * 
-   * @param directory The base directory
+   *
+   * @param directory   The base directory
    * @param packageName The package name for classes found in the base directory
    * @return list of classes found in the given directory
    */

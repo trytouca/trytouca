@@ -65,7 +65,7 @@ public final class Touca {
    * filesystem but it will not be able to post them to the Touca server.
    *
    * @return true if client is ready to capture data
-   * @see configure(Consumer)
+   * @see #configure(Consumer) configure
    */
   public static boolean configure() {
     return instance.configure((options) -> {
@@ -99,7 +99,7 @@ public final class Touca {
    * configuration parameters are not sufficient to perform this operation.
    *
    * @return true if the client is properly configured
-   * @see configure
+   * @see #configure() configure
    */
   public static boolean isConfigured() {
     return instance.isConfigured();
@@ -110,7 +110,7 @@ public final class Touca {
    * configuration.
    *
    * @return short description of the most recent configuration error
-   * @see configure
+   * @see #configure() configure
    */
   public static String configurationError() {
     return instance.configurationError();

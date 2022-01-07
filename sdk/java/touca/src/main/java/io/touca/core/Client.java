@@ -6,12 +6,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -101,7 +97,7 @@ public class Client {
    * captured test results to the server.
    *
    * @return true if the client is properly configured
-   * @see configure
+   * @see #configure(Options) configure
    */
   public boolean isConfigured() {
     return this.configured;
@@ -367,13 +363,11 @@ public class Client {
       // TODO: log that directory was created
     }
     if (cases == null || cases.length == 0) {
-      return this.cases.values().stream().collect(Collectors.toSet())
+      return new HashSet<>(this.cases.values())
           .toArray(new Case[0]);
     }
     return this.cases.entrySet().stream()
-        .filter(x -> Arrays.asList(cases).contains(x.getKey()))
-        .map(x -> x.getValue()).collect(Collectors.toSet())
-        .toArray(new Case[0]);
+            .filter(x -> Arrays.asList(cases).contains(x.getKey()))
+            .map(Map.Entry::getValue).distinct().toArray(Case[]::new);
   }
-
 }
