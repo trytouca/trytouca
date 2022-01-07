@@ -137,13 +137,3 @@ Suite Class
 .. doxygenclass:: touca::Suite
    :project: touca
    :members:
-
-Logging
--------
-
-.. doxygenenum:: touca::LogLevel
-   :project: touca
-
-.. doxygenstruct:: touca::LogSubscriber
-   :project: touca
-   :members:

@@ -410,60 +410,57 @@ bool validate_options(const FrameworkOptions& options) {
   return true;
 }
 
-class LogFrontend {
+class Logger {
  public:
   template <typename... Args>
-  inline void log(const LogLevel level, const std::string& fmtstr,
+  inline void log(const Sink::Level level, const std::string& fmtstr,
                   Args&&... args) const {
     publish(level, fmt::format(fmtstr, std::forward<Args>(args)...));
   }
 
-  void add_subscriber(const std::shared_ptr<LogSubscriber> logger,
-                      const LogLevel level = LogLevel::Info) {
-    _subscribers.emplace_back(logger, level);
+  void add_subscriber(std::unique_ptr<Sink> sink, const Sink::Level level) {
+    _sinks.push_back(std::make_pair(std::move(sink), level));
   }
 
  private:
-  void publish(const LogLevel level, const std::string& msg) const {
-    for (const auto& kvp : _subscribers) {
-      if (level < kvp.second) {
-        continue;
+  void publish(const Sink::Level level, const std::string& msg) const {
+    for (const auto& kvp : _sinks) {
+      if (kvp.second <= level) {
+        kvp.first->log(level, msg);
       }
-      kvp.first->log(level, msg);
     }
   }
 
-  std::vector<std::pair<const std::shared_ptr<LogSubscriber>, LogLevel>>
-      _subscribers;
+  std::vector<std::pair<std::unique_ptr<Sink>, Sink::Level>> _sinks;
 };
 
-std::string stringify(const LogLevel& log_level) {
-  static const std::map<LogLevel, std::string> names = {
-      {LogLevel::Debug, "debug"},
-      {LogLevel::Info, "info"},
-      {LogLevel::Warning, "warning"},
-      {LogLevel::Error, "error"},
+std::string stringify(const Sink::Level& log_level) {
+  static const std::map<Sink::Level, std::string> names = {
+      {Sink::Level::Debug, "debug"},
+      {Sink::Level::Info, "info"},
+      {Sink::Level::Warning, "warning"},
+      {Sink::Level::Error, "error"},
   };
   return names.at(log_level);
 }
 
-class ConsoleLogger : public LogSubscriber {
+class ConsoleSink : public Sink {
  public:
-  void log(const LogLevel level, const std::string& msg) override {
+  void log(const Sink::Level level, const std::string& msg) override {
     fmt::print(std::cout, "{0:<8}{1:}\n", stringify(level), msg);
   }
 };
 
-class FileLogger : public LogSubscriber {
+class FileSink : public Sink {
  public:
-  FileLogger(const touca::filesystem::path& logDir) : LogSubscriber() {
+  FileSink(const touca::filesystem::path& logDir) : Sink() {
     const auto logFilePath = logDir / "touca.log";
     _ofs = std::ofstream(logFilePath.string(), std::ios::trunc);
   }
 
-  ~FileLogger() { _ofs.close(); }
+  ~FileSink() { _ofs.close(); }
 
-  void log(const LogLevel level, const std::string& msg) override {
+  void log(const Sink::Level level, const std::string& msg) override {
     char timestamp[32];
     std::time_t point_t = std::time(nullptr);
     std::strftime(timestamp, sizeof(timestamp), "%FT%TZ",
@@ -480,12 +477,12 @@ class FileLogger : public LogSubscriber {
   std::ofstream _ofs;
 };
 
-LogLevel find_log_level(const std::string& name) {
-  static const std::unordered_map<std::string, LogLevel> values = {
-      {"debug", LogLevel::Debug},
-      {"info", LogLevel::Info},
-      {"warning", LogLevel::Warning},
-      {"error", LogLevel::Error}};
+Sink::Level find_log_level(const std::string& name) {
+  static const std::unordered_map<std::string, Sink::Level> values = {
+      {"debug", Sink::Level::Debug},
+      {"info", Sink::Level::Info},
+      {"warning", Sink::Level::Warning},
+      {"error", Sink::Level::Error}};
   return values.at(name);
 }
 
@@ -537,7 +534,7 @@ class Timer {
 
 class Printer {
   bool _color;
-  std::ofstream _fout;
+  std::ofstream _file;
   const std::unordered_map<
       ExecutionOutcome,
       std::tuple<std::string, std::string, fmt::terminal_color>>
@@ -552,9 +549,9 @@ class Printer {
   template <typename... Args>
   void print(const std::string& fmtstr, Args&&... args) {
     const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
-    fmt::print(_fout, content);
+    fmt::print(_file, content);
     fmt::print(std::cout, content);
-    _fout.flush();
+    _file.flush();
     std::cout.flush();
   }
 
@@ -562,15 +559,15 @@ class Printer {
   void print(const fmt::text_style& style, const std::string& fmtstr,
              Args&&... args) {
     const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
-    fmt::print(_fout, content);
+    fmt::print(_file, content);
     fmt::print(std::cout, _color ? fmt::format(style, content) : content);
-    _fout.flush();
+    _file.flush();
     std::cout.flush();
   }
 
  public:
   Printer(const touca::filesystem::path& path, const bool colored_output)
-      : _color(colored_output), _fout(path.string(), std::ios::trunc) {}
+      : _color(colored_output), _file(path.string(), std::ios::trunc) {}
 
   void print_header(const FrameworkOptions& options) {
     print("\nTouca Test Framework\nSuite: {}/{}\n\n", options.suite,
@@ -623,7 +620,6 @@ class Printer {
 };
 
 int main_impl(int argc, char* argv[], Workflow& workflow) {
-  using lg = LogLevel;
   FrameworkOptions options;
 
   // parse configuration options provided as command line arguments
@@ -659,10 +655,11 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   // now that configuration options are validated, this is our earliest
   // chance to setup our logging system and register basic loggers.
 
-  LogFrontend logger;
+  Logger logger;
 
   // always print warning and errors log events to console
-  logger.add_subscriber(std::make_shared<ConsoleLogger>(), LogLevel::Warning);
+  logger.add_subscriber(touca::detail::make_unique<ConsoleSink>(),
+                        Sink::Level::Warning);
 
   // establish output directory for this revision
 
@@ -674,10 +671,10 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   // unless explicitly instructed not to do so, register a separate
   // file logger to write our events to a file in the output directory.
   if (!options.skip_logs) {
-    const auto& fileLogger = std::make_shared<FileLogger>(outputDirRevision);
-    const auto& level = find_log_level(options.log_level);
-    logger.add_subscriber(fileLogger, level);
-    logger.log(lg::Debug, "registered cpp framework file logger");
+    logger.add_subscriber(
+        touca::detail::make_unique<FileSink>(outputDirRevision),
+        find_log_level(options.log_level));
+    logger.log(Sink::Level::Debug, "registered cpp framework file logger");
   }
 
   // propagate parsed options to the workflow class
@@ -685,7 +682,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   // parse extra workflow-specific options, if any
   if (!workflow.parse_options(argc, argv)) {
-    logger.log(lg::Error, "failed to parse workflow-specific options");
+    logger.log(Sink::Level::Error, "failed to parse workflow-specific options");
     fmt::print(std::cout, "Workflow Options:\n{}\n",
                workflow.describe_options());
     return EXIT_FAILURE;
@@ -695,33 +692,34 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   // workflow if validation fails. It is risky and less meaningful to
   // perform this operation any sooner.
   for (const auto& opt : options.extra) {
-    logger.log(lg::Debug, "{0:<16}: {1}", opt.first, opt.second);
+    logger.log(Sink::Level::Debug, "{0:<16}: {1}", opt.first, opt.second);
   }
 
   // parse and validate extra workflow-specific options, using custom
   // logic provided by workflow author.
   if (!workflow.validate_options()) {
-    logger.log(lg::Error, "failed to validate workflow-specific options");
+    logger.log(Sink::Level::Error,
+               "failed to validate workflow-specific options");
     return EXIT_FAILURE;
   }
 
   // if workflow provides a separate logger, register it to consume
   // our events.
-  const auto& workflowLogger = workflow.log_subscriber();
+  auto workflowLogger = workflow.log_subscriber();
   if (workflowLogger) {
     const auto& level = find_log_level(options.log_level);
-    logger.add_subscriber(workflowLogger, level);
-    logger.log(lg::Debug, "registered workflow logger");
+    logger.add_subscriber(std::move(workflowLogger), level);
+    logger.log(Sink::Level::Debug, "registered workflow logger");
   }
 
   // allow workflow authors to initialize their resources, if any,
   // such as external loggers or run tasks that need to be done
   // prior to execution of testcases.
   if (!workflow.initialize()) {
-    logger.log(lg::Error, "failed to initialize workflow");
+    logger.log(Sink::Level::Error, "failed to initialize workflow");
     return EXIT_FAILURE;
   }
-  logger.log(lg::Debug, "initialized workflow");
+  logger.log(Sink::Level::Debug, "initialized workflow");
 
   // Create a stream that simultaneously writes certain output
   // information printed on console to a file `Console.log` in
@@ -738,11 +736,11 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   // check that the client is properly configured
   if (!touca::is_configured()) {
-    logger.log(lg::Error, "failed to configure touca client: {}",
+    logger.log(Sink::Level::Error, "failed to configure touca client: {}",
                touca::configuration_error());
     return EXIT_FAILURE;
   }
-  logger.log(lg::Info, "configured touca client");
+  logger.log(Sink::Level::Info, "configured touca client");
 
   // initialize suite if workflow is providing one.
 
@@ -750,9 +748,9 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
   if (suite) {
     try {
       suite->initialize();
-      logger.log(lg::Debug, "initialized suite");
+      logger.log(Sink::Level::Debug, "initialized suite");
     } catch (const std::exception& ex) {
-      logger.log(lg::Error, "failed to initialize workflow suite: {}",
+      logger.log(Sink::Level::Error, "failed to initialize workflow suite: {}",
                  ex.what());
       return EXIT_FAILURE;
     }
@@ -769,13 +767,14 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
   // if workflow does not provide a suite, we choose not to proceed
   if (!suite) {
-    logger.log(lg::Error, "workflow does not provide a suite");
+    logger.log(Sink::Level::Error, "workflow does not provide a suite");
     return EXIT_FAILURE;
   }
 
   // validate suite
   if (suite->size() == 0) {
-    logger.log(lg::Error, "unable to proceed with empty list of testcases");
+    logger.log(Sink::Level::Error,
+               "unable to proceed with empty list of testcases");
     return EXIT_FAILURE;
   }
 
@@ -802,7 +801,8 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
     // unless option `overwrite` is specified, check if this
     // testcase should be skipped.
     if (!options.overwrite && workflow.skip(testcase)) {
-      logger.log(lg::Info, "skipping already processed testcase: {}", testcase);
+      logger.log(Sink::Level::Info, "skipping already processed testcase: {}",
+                 testcase);
       stats.inc(ExecutionOutcome::Skip);
       printer.print_progress(testcase, i, testcase_width, timer, errors);
       continue;
@@ -813,7 +813,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
     // remove result directory for this testcase if it already exists.
     if (touca::filesystem::exists(outputDirCase.string())) {
       touca::filesystem::remove_all(outputDirCase);
-      logger.log(lg::Debug, "removed existing result directory for {}",
+      logger.log(Sink::Level::Debug, "removed existing result directory for {}",
                  testcase);
 
       // since subsequent operations may expect to write into
@@ -826,7 +826,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
     touca::filesystem::create_directories(outputDirCase);
 
     // execute workflow for this testcase
-    logger.log(lg::Info, "processing testcase: {}", testcase);
+    logger.log(Sink::Level::Info, "processing testcase: {}", testcase);
     timer.tic(testcase);
     OutputCapturer capturer;
     if (options.redirect) {
@@ -846,7 +846,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
     }
     timer.toc(testcase);
     stats.inc(errors.empty() ? ExecutionOutcome::Pass : ExecutionOutcome::Fail);
-    logger.log(lg::Info, "processed testcase: {}", testcase);
+    logger.log(Sink::Level::Info, "processed testcase: {}", testcase);
 
     // pipe stderr of code under test for this testcase into a file
     if (!capturer.cerr().empty()) {
@@ -874,7 +874,8 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
 
     // submit testresults to Touca server
     if (!options.offline && !touca::post()) {
-      logger.log(lg::Error, "failed to submit results to Touca server");
+      logger.log(Sink::Level::Error,
+                 "failed to submit results to Touca server");
     }
 
     printer.print_progress(testcase, i, testcase_width, timer, errors);
@@ -894,7 +895,7 @@ int main_impl(int argc, char* argv[], Workflow& workflow) {
     touca::print_warning("failed to seal this version\n");
   }
 
-  logger.log(lg::Info, "application completed execution");
+  logger.log(Sink::Level::Info, "application completed execution");
   return EXIT_SUCCESS;
 }
 

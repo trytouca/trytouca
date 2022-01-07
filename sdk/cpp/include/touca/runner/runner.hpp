@@ -69,44 +69,23 @@ TOUCA_CLIENT_API std::vector<std::string> get_testsuite_local(
     const touca::filesystem::path& path);
 
 /**
- * @brief Different levels of detail with which framework log events
- *        may be reported.
- *
- * @see LogSubscriber
- *
- * @since v1.2.0
+ * @brief Allows extraction of log events produced by the test framework
  */
-enum LogLevel : unsigned char { Debug, Info, Warning, Error };
-
-/**
- * @brief Allows extraction of log events produced by the Touca Test
- *        Framework in a controlled level of detail.
- *
- * @details Registering an instance of `LogSubscriber` to subscribe to
- *          the log events of the framework is optional and can be done
- *          through overriding and implementing `Workflow::log_subscriber`.
- *
- * @see Workflow::log_subscriber
- *
- * @since v1.2.0
- */
-struct TOUCA_CLIENT_API LogSubscriber {
+struct TOUCA_CLIENT_API Sink {
   /**
-   * @brief Function called by the Touca Test Framework every time
-   *        it publishes a log event.
+   * @brief Levels of detail of published log events.
+   */
+  enum class Level : uint8_t { Debug, Info, Warning, Error };
+
+  /**
+   * @brief Called by the test framework when a log event is published.
    *
-   * @details Since Workflow allows registering only one LogSubscriber,
-   *          this function will be called for all events, regardless
-   *          of their level of detail. We leave it to the test author
-   *          to decide whether and how to handle log events with higher
-   *          levels of detail.
-   *
-   * @param level verbosity of the log event published by the framework
+   * @param level minimum level of detail to subscribe to
    * @param event log message published by the framework
    */
-  virtual void log(const LogLevel level, const std::string& event) = 0;
+  virtual void log(const Level level, const std::string& event) = 0;
 
-  virtual ~LogSubscriber() = default;
+  virtual ~Sink() = default;
 };
 
 /**
@@ -258,7 +237,7 @@ class TOUCA_CLIENT_API Workflow {
   virtual bool validate_options() const { return true; }
 
   /**
-   * @brief Registers an instance of LogSubscriber to subscribe to
+   * @brief Registers an instance of Sink to subscribe to
    *        the log events produced by the Touca Test Framework.
    *
    * @details Useful for Test Authors who use their own loggers to
@@ -267,19 +246,17 @@ class TOUCA_CLIENT_API Workflow {
    *          events produced by the framework to any custom logger.
    *
    *          While this function allows registration of a single
-   *          derived instance of LogSubscriber, developers have control
+   *          derived instance of Sink, developers have control
    *          over how that derived class is implemented and may consume
    *          any log event by multiple external loggers with different
    *          filtering of levels of detail.
    *
    *          Implementing this function is *optional*.
    *
-   * @see LogSubscriber for an example of how to extract log events
+   * @see Sink for an example of how to extract log events
    *      produced by the Test Framework.
    */
-  virtual std::shared_ptr<LogSubscriber> log_subscriber() const {
-    return nullptr;
-  }
+  virtual std::unique_ptr<Sink> log_subscriber() const { return nullptr; }
 
   /**
    * @brief Enables test authors to perform any one-time initialization,
@@ -380,26 +357,6 @@ TOUCA_CLIENT_API void workflow(
     const std::function<void(const std::string&)> workflow);
 
 TOUCA_CLIENT_API int run(int argc, char* argv[]);
-
-/**
- * @brief Allows extraction of log events produced by the test framework
- */
-struct TOUCA_CLIENT_API Sink {
-  /**
-   * @brief Levels of detail of published log events.
-   */
-  enum class Level : uint8_t { Debug, Info, Warning, Error };
-
-  /**
-   * @brief Called by the test framework when a log event is published.
-   *
-   * @param level minimum level of detail to subscribe to
-   * @param event log message published by the framework
-   */
-  virtual void log(const Level level, const std::string& event) = 0;
-
-  virtual ~Sink() = default;
-};
 
 /**
  * @brief Registers a sink to subscribe to the test framework log events.
