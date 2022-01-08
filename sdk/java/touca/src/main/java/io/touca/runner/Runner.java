@@ -14,6 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -60,49 +61,65 @@ public class Runner {
   }
 
   private static final class Printer {
-    private final RunnerOptions options;
+    private int testcaseWidth;
+    private int testcaseCount;
 
     public Printer(RunnerOptions options) {
-      this.options = options;
+      this.testcaseWidth =
+          Arrays.stream(options.testcases).map(item -> item.length()).reduce(0,
+              (sum, item) -> Math.max(sum, item));
+      this.testcaseCount = options.testcases.length;
     }
 
-    public void printHeader() {
-      System.out.printf("%nTouca Test Framework%nSuite: %s/v%s%n%n",
-          options.suite, options.version);
+    private void print(final String fmt, Object... args) {
+      System.out.printf(fmt, args);
     }
 
-    public void printProgress(Timer timer, String testcase, int index, List<String> errors, boolean shouldSkip) {
+    public void printHeader(final String suite, final String version) {
+      this.print("%nTouca Test Framework%nSuite: %s/%s%n%n", suite, version);
+    }
+
+    public void printProgress(Timer timer, String testcase, int index,
+        List<String> errors, boolean shouldSkip) {
+      final int pad = (int) Math.floor(Math.log10(this.testcaseCount)) + 1;
+      this.print(" %" + pad + "s%s.%s ", index + 1, Color.BLACK_BRIGHT,
+          Color.RESET);
       String status;
-      System.out.printf("%3s. ", index + 1);
       if (shouldSkip) {
-        System.out.print(Color.YELLOW_BACKGROUND);
-        status = " SKIP ";
+        status = Color.YELLOW_BACKGROUND + " SKIP " + Color.RESET;
       } else if (errors.isEmpty()) {
-        status = " PASS ";
-        System.out.print(Color.GREEN_BACKGROUND);
+        status = Color.GREEN_BACKGROUND + " PASS " + Color.RESET;
       } else {
-        status = " FAIL ";
-        System.out.print(Color.RED_BACKGROUND);
+        status = Color.RED_BACKGROUND + " FAIL " + Color.RESET;
       }
       System.out.print(status);
-      System.out.print(Color.RESET);
-      System.out.printf(" %-18s (%d ms)%n", testcase, timer.count(testcase));
-      for (final String error : errors) {
-        System.out.printf("%13s %s%n", "-", error);
+      this.print(" %-" + Integer.toString(this.testcaseWidth) + "s", testcase);
+      System.out.printf("   %s(%d ms)%s%n", Color.BLACK_BRIGHT,
+          timer.count(testcase), Color.RESET);
+      if (!errors.isEmpty()) {
+        this.print("%n   %sException Thrown:%s%n", Color.BLACK_BRIGHT,
+            Color.RESET);
+        for (final String error : errors) {
+          this.print("      - %s", error);
+        }
       }
     }
 
     public void printFooter(Statistics stats, Timer timer) {
       System.out.printf("%nTests:      ");
       if (stats.count("pass") != 0) {
-        System.out.print(Color.GREEN + stats.count("pass").toString() + " passed, " + Color.RESET);
+        this.print("%s%d passed%s, ", Color.GREEN, stats.count("pass"),
+            Color.RESET);
       } else if (stats.count("skip") != 0) {
-        System.out.print(Color.YELLOW + stats.count("skip").toString() + " skipped, " + Color.RESET);
+        this.print("%s%d skipped%s, ", Color.YELLOW, stats.count("skip"),
+            Color.RESET);
       } else if (stats.count("fail") != 0) {
-        System.out.print(Color.RED + stats.count("fail").toString() + " failed, " + Color.RESET);
+        this.print("%s%d failed%s, ", Color.RED, stats.count("fail"),
+            Color.RESET);
       }
-      System.out.printf("%d total%nTime:       %d ms %n%nRan all test suites",
-          options.testcases.length, timer.count("__workflow__"));
+      this.print("%d total%n", this.testcaseCount);
+      this.print("Time:       %.2f s%n", timer.count("__workflow__") / 1000.0);
+      this.print("%n✨   Ran all test suites.%n%n");
     }
 
   }
@@ -143,10 +160,11 @@ public class Runner {
     try {
       final CommandLine cmd = parser.parse(buildOptions(), mainArgs);
 
-      final BiFunction<String, Boolean, Boolean> parseBoolean = (String a, Boolean b) -> {
-        return (cmd.hasOption(a) && cmd.getOptionValue(a) == null)
-            || Boolean.parseBoolean(cmd.getOptionValue(a, b.toString()));
-      };
+      final BiFunction<String, Boolean, Boolean> parseBoolean =
+          (String a, Boolean b) -> {
+            return (cmd.hasOption(a) && cmd.getOptionValue(a) == null)
+                || Boolean.parseBoolean(cmd.getOptionValue(a, b.toString()));
+          };
 
       options.apply(new RunnerOptions(x -> {
         x.apiKey = cmd.getOptionValue("api-key");
@@ -180,7 +198,8 @@ public class Runner {
    */
   public Runner findWorkflows(final Class<?> mainClass) {
     final String className = mainClass.getCanonicalName();
-    final String packageName = className.substring(0, className.lastIndexOf('.'));
+    final String packageName =
+        className.substring(0, className.lastIndexOf('.'));
     final Iterable<Class<?>> classes = findClasses(packageName);
     for (final Class<?> clazz : classes) {
       for (final Method method : clazz.getMethods()) {
@@ -280,7 +299,7 @@ public class Runner {
   /**
    * Runs a given workflow with multiple test cases.
    *
-   * @param client   Touca client instance to use when running workflows.
+   * @param client Touca client instance to use when running workflows.
    * @param workflow workflow to be executed
    */
   private void runWorkflow(final Client client, final ClassMethod workflow) {
@@ -288,7 +307,7 @@ public class Runner {
         || options.apiKey == null || options.apiUrl == null;
 
     Printer printer = new Printer(options);
-    printer.printHeader();
+    printer.printHeader(options.suite, options.version);
     timer.tic("__workflow__");
 
     for (int index = 0; index < options.testcases.length; index++) {
@@ -335,7 +354,7 @@ public class Runner {
       if (errors.isEmpty() && options.saveAsBinary) {
         final Path path = testcaseDirectory.resolve("touca.bin");
         try {
-          client.saveBinary(path, new String[] { testcase });
+          client.saveBinary(path, new String[] {testcase});
         } catch (final IOException ex) {
           errors.add(String.format("failed to create file %s: %s%n",
               path.toString(), ex.getMessage()));
@@ -344,7 +363,7 @@ public class Runner {
       if (errors.isEmpty() && options.saveAsJson) {
         final Path path = testcaseDirectory.resolve("touca.json");
         try {
-          client.saveJson(path, new String[] { testcase });
+          client.saveJson(path, new String[] {testcase});
         } catch (final IOException ex) {
           errors.add(String.format("failed to create file %s: %s%n",
               path.toString(), ex.getMessage()));
@@ -431,7 +450,8 @@ public class Runner {
    */
   private static List<Class<?>> findClasses(final String packageName) {
     final List<Class<?>> classes = new ArrayList<>();
-    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    final ClassLoader classLoader =
+        Thread.currentThread().getContextClassLoader();
     final String path = packageName.replace('.', '/');
     try {
       final Enumeration<URL> resources = classLoader.getResources(path);
@@ -453,7 +473,7 @@ public class Runner {
   /**
    * Finds all classes in a given directory and its subdirectories.
    *
-   * @param directory   The base directory
+   * @param directory The base directory
    * @param packageName The package name for classes found in the base directory
    * @return list of classes found in the given directory
    */
