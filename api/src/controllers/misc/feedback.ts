@@ -2,7 +2,9 @@
 
 import { NextFunction, Request, Response } from 'express'
 
+import { relay } from '@/models/relay'
 import { wslFindByUname } from '@/models/user'
+import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 
@@ -11,7 +13,7 @@ export async function feedback(
   res: Response,
   next: NextFunction
 ) {
-  const feedback = req.body as {
+  const content = req.body as {
     body: string
     name: string
     page: string
@@ -21,15 +23,18 @@ export async function feedback(
   logger.info('received request to relay user message')
 
   // we are intentionally not awaiting on this operation
+  if (config.isCloudHosted) {
+    const superuser = await wslFindByUname('touca')
+    mailer.mailUser(superuser, 'New User Feedback', 'user-feedback', {
+      body: content.body,
+      name: content.name,
+      page: content.page,
+      email: content.email || 'noreply@touca.io',
+      cname: content.cname || 'N/A'
+    })
+    return res.status(204).send()
+  }
 
-  const superuser = await wslFindByUname('touca')
-  mailer.mailUser(superuser, 'New User Feedback', 'user-feedback', {
-    body: feedback.body,
-    name: feedback.name,
-    page: feedback.page,
-    email: feedback.email || 'noreply@touca.io',
-    cname: feedback.cname || 'N/A'
-  })
-
-  return res.status(204).send()
+  const response = await relay('/feedback', JSON.stringify(content))
+  return res.status(response.status).send()
 }
