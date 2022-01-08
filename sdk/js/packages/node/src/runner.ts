@@ -29,6 +29,7 @@
  * workflows using the {@link touca.workflow} function.
  */
 
+import * as chalk from 'chalk';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as util from 'util';
@@ -108,17 +109,23 @@ class ToucaError extends Error {
   }
 }
 
+enum Status {
+  Pass = 'Pass',
+  Skip = 'Skip',
+  Fail = 'Fail'
+}
+
 class Statistics {
   private _values: Record<string, number> = {};
 
-  public inc(name: string): void {
+  public inc(name: Status): void {
     if (!(name in this._values)) {
       this._values[name] = 0;
     }
     this._values[name] += 1;
   }
 
-  public count(name: string) {
+  public count(name: Status) {
     return this._values[name] ?? 0;
   }
 }
@@ -137,6 +144,73 @@ class Timer {
 
   public count(name: string) {
     return this._times[name];
+  }
+}
+
+class Printer {
+  private _testcase_width: number;
+  private _testcase_count: number;
+
+  constructor(options: RunnerOptions) {
+    this._testcase_width = options.testcases.reduce(
+      (sum: number, testcase: string) => Math.max(testcase.length, sum),
+      0
+    );
+    this._testcase_count = options.testcases.length;
+  }
+
+  private print(fmt: string, ...args: unknown[]) {
+    process.stdout.write(util.format(fmt, ...args));
+  }
+
+  public print_header(suite: string, version: string) {
+    this.print('\nTouca Test Framework\nSuite: %s/%s\n\n', suite, version);
+  }
+
+  public print_progress(
+    index: number,
+    status: Status,
+    testcase: string,
+    timer: Timer,
+    errors: string[] = []
+  ) {
+    const badge = {
+      [Status.Pass]: chalk.bgGreen(' PASS '),
+      [Status.Skip]: chalk.bgYellow(' SKIP '),
+      [Status.Fail]: chalk.bgRed(' FAIL ')
+    }[status];
+    const pad = Math.floor(Math.log10(this._testcase_count)) + 1;
+    const row = String(index + 1).padStart(pad);
+    const dot = chalk.blackBright('.');
+    const name = testcase.padEnd(this._testcase_width);
+    const perf =
+      status === Status.Skip
+        ? ''
+        : chalk.blackBright(util.format('   (%d ms)', timer.count(testcase)));
+    this.print(' %s%s %s %s%s\n', row, dot, badge, name, perf);
+    if (errors.length) {
+      const head = chalk.blackBright('Exception Raised:');
+      const list = errors.map((v) => util.format('      - %s', v)).join('\n');
+      this.print('\n   %s\n%s\n\n', head, list);
+    }
+  }
+
+  public print_footer(stats: Statistics, suiteSize: number, timer: Timer) {
+    const duration = (timer.count('__workflow__') / 1000.0).toFixed(2);
+    const report = (status: Status, text: string, color: chalk.Chalk) => {
+      if (stats.count(status)) {
+        this.print(color(util.format('%d %s', stats.count(status), text)));
+        this.print(', ');
+      }
+    };
+
+    this.print('\n%s', 'Tests:'.padEnd(11));
+    report(Status.Pass, 'passed', chalk.green);
+    report(Status.Skip, 'skipped', chalk.yellow);
+    report(Status.Fail, 'failed', chalk.red);
+    this.print('%d total\n', suiteSize);
+    this.print('%s%f s\n', 'Time:'.padEnd(11), duration);
+    this.print('\n✨   Ran all test suites.\n\n');
   }
 }
 
@@ -270,9 +344,8 @@ export class Runner {
     }
     const options = _parse_cli_options(args);
     await this._initialize(options);
-    process.stdout.write(
-      `\nTouca Test Framework\nSuite: ${options.suite}\nRevision: ${options.version}\n\n`
-    );
+    const printer = new Printer(options);
+    printer.print_header(options.suite as string, options.version as string);
 
     const offline = options.offline || !options.api_key || !options.api_url;
     const timer = new Timer();
@@ -288,15 +361,8 @@ export class Runner {
       );
 
       if (!options.overwrite && this._skip(options, testcase)) {
-        process.stdout.write(
-          util.format(
-            ' (%d of %d) %s (skip)\n',
-            index + 1,
-            options.testcases.length,
-            testcase
-          )
-        );
-        stats.inc('skip');
+        printer.print_progress(index, Status.Skip, testcase, timer);
+        stats.inc(Status.Skip);
         continue;
       }
 
@@ -319,7 +385,7 @@ export class Runner {
       }
 
       timer.toc(testcase);
-      stats.inc(errors.length === 0 ? 'pass' : 'fail');
+      stats.inc(errors.length ? Status.Fail : Status.Pass);
 
       if (errors.length === 0 && options.save_binary) {
         const filepath = path.join(testcase_directory, 'touca.bin');
@@ -333,29 +399,14 @@ export class Runner {
         await this._client.post();
       }
 
-      process.stdout.write(
-        util.format(
-          ' (%s of %s) %s (%s, %d ms)\n',
-          String(index + 1).padStart(3),
-          String(options.testcases.length).padEnd(3),
-          testcase.padEnd(32),
-          errors.length === 0 ? 'pass' : 'fail',
-          timer.count(testcase)
-        )
-      );
+      const status = errors.length ? Status.Fail : Status.Pass;
+      printer.print_progress(index, status, testcase, timer, errors);
 
       this._client.forget_testcase(testcase);
     }
 
     timer.toc('__workflow__');
-    process.stdout.write(
-      util.format(
-        '\nProcessed %d of %d testcases\nTest completed in %d ms\n\n',
-        stats.count('pass'),
-        options.testcases.length,
-        timer.count('__workflow__')
-      )
-    );
+    printer.print_footer(stats, options.testcases.length, timer);
 
     if (!offline) {
       await this._client.seal();

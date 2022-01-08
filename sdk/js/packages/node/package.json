@@ -30,8 +30,13 @@
     "test:watch": "jest --watch"
   },
   "dependencies": {
+    "chalk": "4.1.2",
     "flatbuffers": "^2.0.3",
     "yargs": "^17.2.1"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/trytouca"
   },
   "keywords": [
     "regression-testing",
