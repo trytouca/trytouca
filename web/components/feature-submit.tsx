@@ -19,12 +19,14 @@ const snippets: {
     language: 'C++',
     repository: 'https://github.com/trytouca/touca-cpp',
     snippet: `#include "touca/touca.hpp"
-#include "touca/touca_main.hpp"
 #include "code_under_test.hpp"
 
-void touca::main(const std::string& testcase) {
-  const auto number = std::stoul(testcase);
-  touca::check("output", is_prime(number));
+int main(int argc, char* argv[]) {
+  touca::workflow("is_prime", [](const std::string& testcase) {
+    const auto number = std::stoul(testcase);
+    touca::check("output", is_prime(number));
+  });
+  touca::run(argc, argv);
 }`
   },
   {
