@@ -75,7 +75,7 @@ struct TOUCA_CLIENT_API Sink {
   /**
    * @brief Levels of detail of published log events.
    */
-  enum class Level : uint8_t { Debug, Info, Warning, Error };
+  enum class Level : uint8_t { Debug, Info, Warn, Error };
 
   /**
    * @brief Called by the test framework when a log event is published.
@@ -178,6 +178,8 @@ class TOUCA_CLIENT_API Suite {
  */
 class TOUCA_CLIENT_API Workflow {
  public:
+  virtual ~Workflow() = default;
+
   /**
    * @brief Describes extra command line arguments supported by this
    *        test tool.

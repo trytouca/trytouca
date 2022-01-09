@@ -101,3 +101,6 @@ Test Framework
 
 .. doxygenfunction:: touca::workflow
    :project: touca
+
+.. doxygenstruct:: touca::FrameworkOptions
+   :project: touca
