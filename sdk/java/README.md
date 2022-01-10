@@ -102,16 +102,19 @@ at [app.touca.io](https://app.touca.io). This command produces the following
 output:
 
 ```text
+
 Touca Test Framework
-Suite: isPrime
-Revision: v1.0
+Suite: isPrime/v1.0
 
-(  1 of 3  ) 13                   (pass, 127 ms)
-(  2 of 3  ) 17                   (pass, 123 ms)
-(  3 of 3  ) 51                   (pass, 159 ms)
+ 1.  PASS   13    (109 ms)
+ 2.  PASS   17    (152 ms)
+ 3.  PASS   51    (127 ms)
 
-Processed 3 of 3 testcases
-Test completed in 565 ms
+Tests:      3 passed, 3 total
+Time:       0.91 s
+
+✨   Ran all test suites.
+
 ```
 
 ## ✨ Features
