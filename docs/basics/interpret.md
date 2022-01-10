@@ -107,16 +107,19 @@ Notice that we are not specifying the list of test cases anymore. When they are
 not explicitly provided, the SDK fetches this list from the Touca server.
 
 ```text
+
 Touca Test Framework
-Suite: main-api
-Revision: 2.0
+Suite: main-api/v2.0
 
- (  1 of 3  ) alice                            (pass, 233 ms)
- (  2 of 3  ) bob                              (pass, 236 ms)
- (  3 of 3  ) charlie                          (pass, 228 ms)
+ 1.  PASS   alice      (233 ms)
+ 2.  PASS   bob        (236 ms)
+ 3.  PASS   charlie    (228 ms)
 
-Processed 3 of 3 testcases
-Test completed in 1223 ms
+Tests:      3 passed, 3 total
+Time:       1.22 s
+
+✨   Ran all test suites.
+
 ```
 
 As test cases are executed, the server compares their captured test results and

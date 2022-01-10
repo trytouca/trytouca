@@ -237,11 +237,9 @@ We can run Touca tests with any number of inputs from the command line:
 {% tab title="Python" %}
 
 ```bash
-python3 prime_app_test.py
-  --api-key <TOUCA_API_KEY>
-  --api-url <TOUCA_API_URL>
-  --revision v1.0
-  --testcase 13 17 51
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+python3 prime_app_test.py --revision v1.0 --testcase 13 17 51
 ```
 
 {% endtab %}
@@ -249,11 +247,9 @@ python3 prime_app_test.py
 {% tab title="C++" %}
 
 ```bash
-./prime_app_test
-  --api-key <TOUCA_API_KEY>
-  --api-url <TOUCA_API_URL>
-  --revision v1.0
-  --testcase 13,17,51
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+./prime_app_test --revision v1.0 --testcase 13,17,51
 ```
 
 {% endtab %}
@@ -261,11 +257,9 @@ python3 prime_app_test.py
 {% tab title="TypeScript" %}
 
 ```bash
-node dist/is_prime_test.js
-  --api-key <TOUCA_API_KEY>
-  --api-url <TOUCA_API_URL>
-  --revision v1.0
-  --testcase 13 17 51
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+node dist/is_prime_test.js --revision v1.0 --testcase 13 17 51
 ```
 
 {% endtab %}
@@ -273,7 +267,9 @@ node dist/is_prime_test.js
 {% tab title="Java" %}
 
 ```bash
-gradle runExampleMinimal --args='--api-key <TOUCA_API_KEY> --api-url <TOUCA_API_URL> --revision v1.0 --testcase 13 17 51'
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+gradle runExampleMinimal --args='--revision v1.0 --testcase 13 17 51'
 ```
 
 {% endtab %}
@@ -285,16 +281,19 @@ at [app.touca.io](https://app.touca.io). This command produces the following
 output:
 
 ```text
+
 Touca Test Framework
-Suite: is_prime_test
-Revision: v1.0
+Suite: is_prime_test/v1.0
 
- (  1 of 3  ) 13                   (pass, 127 ms)
- (  2 of 3  ) 17                   (pass, 123 ms)
- (  3 of 3  ) 51                   (pass, 159 ms)
+ 1.  PASS   13    (127 ms)
+ 2.  PASS   17    (123 ms)
+ 3.  PASS   51    (159 ms)
 
-Processed 3 of 3 testcases
-Test completed in 565 ms
+Tests:      3 passed, 3 total
+Time:       0.57 s
+
+✨   Ran all test suites.
+
 ```
 
 If and when we change the implementation of `is_prime`, we can rerun the test

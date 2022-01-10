@@ -130,20 +130,23 @@ gradle runExampleMinimal --args='--api-key <TOUCA_API_KEY> --api-url <TOUCA_API_
 This command produces the following output.
 
 ```text
+
 Touca Test Framework
-Suite: is_prime
-Revision: 1.0
+Suite: is_prime/1.0
 
- (  1 of 1  ) 13                               (pass, 1 ms)
+ 1.  PASS   13    (1 ms)
 
-Processed 1 of 1 testcases
-Test completed in 5 ms
+Tests:      1 passed, 1 total
+Time:       0.12 s
+
+✨   Ran all test suites.
+
 ```
 
-The Touca test framework passes `13` as the `testcase` parameter to our test
-workflow. We convert this `testcase` to a number and pass it to our code under
-test. We capture the actual value returned by our software as a Touca test
-result. This value is stored in its original data type, in a binary file
+The test framework passes `13` as the `testcase` parameter to our test workflow.
+We convert this `testcase` to a number and pass it to our code under test. We
+capture the actual value returned by our software as a Touca test result. This
+value is stored in its original data type, in a binary file
 `./results/is_prime/1.0/13/touca.bin`.
 
 Every time we make changes to our code under test, we can repeat this process
@@ -170,20 +173,23 @@ shows an API Key and an API URL that you can use to submit test results.
 export TOUCA_API_KEY="8073c34f-a48c-4e69-af9f-405b9943f8cc"
 export TOUCA_API_URL="https://api.touca.io/@/tutorial/prime-test"
 echo -e "19\n51\n97" > testcases.txt
-gradle runExampleMinimal --args='--revision 1.0 --testcase-file testcases.txt'
+gradle runExampleMinimal --args='--revision 1.0 --testcase testcases.txt'
 ```
 
 ```text
+
 Touca Test Framework
-Suite: prime-test
-Revision: 1.0
+Suite: prime-test/1.0
 
- (  1 of 3  ) 19                               (pass, 1 ms)
- (  2 of 3  ) 51                               (pass, 0 ms)
- (  3 of 3  ) 97                               (pass, 0 ms)
+ 1.  PASS   19    (109 ms)
+ 2.  PASS   51    (152 ms)
+ 3.  PASS   97    (127 ms)
 
-Processed 3 of 3 testcases
-Test completed in 574 ms
+Tests:      3 passed, 3 total
+Time:       0.57 s
+
+✨   Ran all test suites.
+
 ```
 
 ![Touca server after submitting results for v1.0](../../.gitbook/assets/touca-sdk-quickstart-1.png)
@@ -197,16 +203,19 @@ gradle runExampleMinimal --args='--revision 2.0'
 ```
 
 ```text
+
 Touca Test Framework
-Suite: prime-test
-Revision: 2.0
+Suite: prime-test/2.0
 
- (  1 of 3  ) 19                               (pass, 1 ms)
- (  2 of 3  ) 51                               (pass, 0 ms)
- (  3 of 3  ) 97                               (pass, 0 ms)
+ 1.  PASS   19    (109 ms)
+ 2.  PASS   51    (152 ms)
+ 3.  PASS   97    (127 ms)
 
-Processed 3 of 3 testcases
-Test completed in 546 ms
+Tests:      3 passed, 3 total
+Time:       0.55 s
+
+✨   Ran all test suites.
+
 ```
 
 ![Touca server after submitting results for v2.0](../../.gitbook/assets/touca-sdk-quickstart-2.png)
