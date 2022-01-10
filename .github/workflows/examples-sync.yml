@@ -40,8 +40,7 @@ jobs:
         run: |
           git -C clients/examples config --local user.name github-actions
           git -C clients/examples config --local user.email github-actions@github.com
-          git -C clients/examples branch -D next
           git -C clients/examples checkout -b next
           git -C clients/examples add .
           git -C clients/examples commit -m "Updates examples to latest version"
-          git -C clients/examples push origin next --force
+          git -C clients/examples push origin next
