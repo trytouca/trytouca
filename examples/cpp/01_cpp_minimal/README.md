@@ -76,11 +76,9 @@ decoupling the test cases from our test logic, we can test our software with any
 number of test cases, without changing our test code:
 
 ```bash
-./example_cpp_minimal
-  --api-key <TOUCA_API_KEY>
-  --api-url <TOUCA_API_URL>
-  --revision v1.0
-  --testcase 13 17 51
+export TOUCA_API_KEY=<YOUR_API_KEY>
+export TOUCA_API_URL=<YOUR_API_URL>
+./example_cpp_minimal --revision v1.0 --testcase 13,17,51
 ```
 
 Where `TOUCA_API_KEY` and `TOUCA_API_URL` can be obtained from the
@@ -91,16 +89,19 @@ captures the return values of our `is_prime` function. The test tool submits our
 captured data to the Touca server and associates them with version `v1.0`.
 
 ```text
+
 Touca Test Framework
-Suite: is_prime_test
-Revision: v1.0
+Suite: is_prime/v1.0
 
- (1 of 3) 13 (pass, 0 ms)
- (2 of 3) 17 (pass, 0 ms)
- (3 of 3) 51 (pass, 0 ms)
+ 1.  PASS   13    (109 ms)
+ 2.  PASS   17    (152 ms)
+ 3.  PASS   51    (127 ms)
 
-Processed 3 of 3 test cases
-Test completed in 1 ms
+Tests:      3 passed, 3 total
+Time:       0.91 s
+
+✨   Ran all test suites.
+
 ```
 
 Now if we change the implementation of our `is_prime` function in the future, we

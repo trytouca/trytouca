@@ -169,9 +169,9 @@ benchmarking tools.
 Touca.addMetric("external_source", 1500);
 ```
 
-In addition to these data capturing functions, Touca test framework
-automatically tracks the wall-clock runtime of every test case and reports it to
-the Touca server.
+In addition to these data capturing functions, the test framework automatically
+tracks the wall-clock runtime of every test case and reports it to the Touca
+server.
 
 Like other data capturing functions, we can use Touca performance logging
 functions in production code, to track runtime of internal functions for

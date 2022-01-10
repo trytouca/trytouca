@@ -1,7 +1,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import touca
 from students import find_student
+import touca
 
 
 @touca.Workflow

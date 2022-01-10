@@ -106,10 +106,10 @@ parameter to the `configure` function.
   }
 ```
 
-The Touca test framework expects test cases to be specified via the Touca server
-UI or via command line arguments. With the Client API, you can obtain the list
-of test cases from any source and pass them, one by one, to your code under test
-using a simple for loop.
+The test framework expects test cases to be specified via the Touca server UI or
+via command line arguments. With the Client API, you can obtain the list of test
+cases from any source and pass them, one by one, to your code under test using a
+simple for loop.
 
 You can still use the function `get_testcases` to obtain the list of test cases
 from the Touca server, as our high-level API does. This function should be
@@ -156,8 +156,8 @@ captured data so that the Touca server can compare them in their original type.
 ```
 
 In the example above, `touca::check` stores value of properties `username` and
-`fullname` as `std::string` while property `gpa` is stored as `float`. The
-server visualizes possible differences in these values based on their types.
+`fullname` as testcase while property `gpa` is stored as `float`. The server
+visualizes possible differences in these values based on their types.
 
 ### Customizing Data Serialization
 

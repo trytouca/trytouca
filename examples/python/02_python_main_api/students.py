@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from time import sleep
 from typing import List
 from datetime import date
+from random import random
 import touca
 
 
@@ -49,8 +50,8 @@ def calculate_gpa(courses: List[Course]):
 
 
 def find_student(username: str) -> Student:
-    sleep(0.2)
+    sleep(0.2 + random() * 0.05)
     data = next((k for k in students if k[0] == username), None)
     if not data:
-        raise ValueError(f"no student found for username: ${username}")
+        raise ValueError(f"no student found for username: {username}")
     return Student(data[0], data[1], data[2], calculate_gpa(data[3]))
