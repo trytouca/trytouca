@@ -74,11 +74,9 @@ Touca tests have two main differences compared to typical unit tests:
 We can run Touca tests with any number of inputs from the command line:
 
 ```bash
-./prime_app_test
-  --api-key <TOUCA_API_KEY>
-  --api-url <TOUCA_API_URL>
-  --revision v1.0
-  --testcase 13 17 51
+export TOUCA_API_KEY=<YOUR_API_KEY>
+export TOUCA_API_URL=<YOUR_API_URL>
+./prime_app_test --revision v1.0 --testcase 13,17,51
 ```
 
 Where `TOUCA_API_KEY` and `TOUCA_API_URL` can be obtained from the Touca server
@@ -86,16 +84,19 @@ at [app.touca.io](https://app.touca.io). This command produces the following
 output:
 
 ```text
+
 Touca Test Framework
-Suite: is_prime_test
-Revision: v1.0
+Suite: is_prime/v1.0
 
- (  1 of 3  ) 13                   (pass, 127 ms)
- (  2 of 3  ) 17                   (pass, 123 ms)
- (  3 of 3  ) 51                   (pass, 159 ms)
+ 1.  PASS   13    (109 ms)
+ 2.  PASS   17    (152 ms)
+ 3.  PASS   51    (127 ms)
 
-Processed 3 of 3 testcases
-Test completed in 565 ms
+Tests:      3 passed, 3 total
+Time:       0.91 s
+
+✨   Ran all test suites.
+
 ```
 
 ## ✨ Features

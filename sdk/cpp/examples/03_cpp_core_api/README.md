@@ -106,10 +106,10 @@ parameter to the `configure` function.
   }
 ```
 
-The Touca test framework expects test cases to be specified via the Touca server
-UI or via command line arguments. With the Client API, you can obtain the list
-of test cases from any source and pass them, one by one, to your code under test
-using a simple for loop.
+The test framework expects test cases to be specified via the Touca server UI or
+via command line arguments. With the Client API, you can obtain the list of test
+cases from any source and pass them, one by one, to your code under test using a
+simple for loop.
 
 You can still use the function `get_testcases` to obtain the list of test cases
 from the Touca server, as our high-level API does. This function should be
