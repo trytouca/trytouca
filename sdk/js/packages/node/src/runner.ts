@@ -204,12 +204,12 @@ class Printer {
       }
     };
 
-    this.print('\n%s', 'Tests:'.padEnd(11));
+    this.print('\nTests:     ');
     report(Status.Pass, 'passed', chalk.green);
     report(Status.Skip, 'skipped', chalk.yellow);
     report(Status.Fail, 'failed', chalk.red);
     this.print('%d total\n', suiteSize);
-    this.print('%s%f s\n', 'Time:'.padEnd(11), duration);
+    this.print('Time:      %f s\n', duration);
     this.print('\n✨   Ran all test suites.\n\n');
   }
 }
