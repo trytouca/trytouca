@@ -1,7 +1,8 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "touca/runner/detail/ostream.hpp"
+#include "touca/runner/detail/helpers.hpp"
 
+namespace touca {
 OutputCapturer::OutputCapturer() {}
 
 OutputCapturer::~OutputCapturer() {
@@ -31,3 +32,4 @@ void OutputCapturer::stop_capture() {
 std::string OutputCapturer::cerr() const { return _buferr.str(); }
 
 std::string OutputCapturer::cout() const { return _bufout.str(); }
+}  // namespace touca

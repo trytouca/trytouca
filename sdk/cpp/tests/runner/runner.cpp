@@ -5,66 +5,32 @@
 #include <iostream>
 
 #include "catch2/catch.hpp"
+#include "fmt/ostream.h"
+#include "fmt/printf.h"
 #include "tests/devkit/tmpfile.hpp"
 #include "touca/core/config.hpp"
 #include "touca/devkit/utils.hpp"
-#include "touca/runner/detail/ostream.hpp"
+#include "touca/runner/detail/helpers.hpp"
 #include "touca/touca.hpp"
 
-struct DummySuite final : public touca::Suite {};
+const auto dummy_workflow = [](const std::string& testcase) {};
 
-struct SimpleSuite final : public touca::Suite {
-  using Inputs = std::vector<std::string>;
-  SimpleSuite(const Inputs& inputs) : Suite(), _inputs(inputs) {}
-  void initialize() {
-    std::for_each(_inputs.begin(), _inputs.end(),
-                  [this](const Inputs::value_type& i) { push(i); });
+const auto simple_workflow = [](const std::string& testcase) {
+  if (testcase == "8") {
+    std::cout << "simple message in output stream" << std::endl;
+    std::cerr << "simple message in error stream" << std::endl;
   }
-  Inputs _inputs;
-};
-
-struct DummyWorkflow : public touca::Workflow {
-  std::shared_ptr<touca::Suite> suite() const override {
-    return std::make_shared<DummySuite>();
+  if (testcase == "42") {
+    throw std::runtime_error("some-error");
   }
-  std::vector<std::string> execute(const std::string& testcase) const override {
-    std::ignore = testcase;
-    return {};
-  }
-  bool skip(const std::string& testcase) const override {
-    return testcase == "case-to-exclude";
-  }
-  std::string describe_options() const override {
-    return "Workflow specific help message";
+  if (testcase == "4") {
+    touca::check("some-number", 1024);
+    touca::check("some-string", "foo");
+    touca::add_array_element("some-array", "bar");
   }
 };
 
-struct SimpleWorkflow : public touca::Workflow {
-  SimpleWorkflow() : Workflow() {}
-  std::shared_ptr<touca::Suite> suite() const override {
-    SimpleSuite::Inputs inputs = {"4", "8", "15", "16", "23", "42"};
-    return std::make_shared<SimpleSuite>(inputs);
-  }
-  std::vector<std::string> execute(const std::string& testcase) const override {
-    if (testcase == "8") {
-      std::cout << "simple message in output stream" << std::endl;
-      std::cerr << "simple message in error stream" << std::endl;
-    }
-    if (testcase == "42") {
-      return {"some-error"};
-    }
-    if (testcase == "4") {
-      touca::check("some-number", 1024);
-      touca::check("some-string", "foo");
-      touca::add_array_element("some-array", "bar");
-    }
-    return {};
-  }
-};
-
-template <class Workflow>
-class MainCaller {
- public:
+struct MainCaller {
   void call_with(const std::vector<std::string>& args) {
     std::vector<char*> argv;
     argv.push_back((char*)"myapp");
@@ -74,7 +40,7 @@ class MainCaller {
     argv.push_back(nullptr);
 
     capturer.start_capture();
-    exit_status = touca::main(argv.size() - 1, argv.data(), workflow);
+    exit_status = touca::run(argv.size() - 1, argv.data());
     capturer.stop_capture();
   }
 
@@ -84,8 +50,7 @@ class MainCaller {
 
  private:
   int exit_status = 0;
-  Workflow workflow;
-  OutputCapturer capturer;
+  touca::OutputCapturer capturer;
 };
 
 struct ResultChecker {
@@ -128,34 +93,15 @@ struct ResultChecker {
   touca::filesystem::path _path;
 };
 
-TEST_CASE("workflow") {
-  SECTION("dummy workflow") {
-    DummyWorkflow workflow;
-    CHECK(workflow.suite());
-    CHECK(workflow.suite()->size() == 0);
-    CHECK(workflow.describe_options() == "Workflow specific help message");
-    CHECK(workflow.validate_options());
-    CHECK(workflow.initialize());
-    CHECK(!workflow.skip("1"));
-    CHECK(workflow.skip("case-to-exclude"));
-    CHECK(!workflow.log_subscriber());
-  }
-
-  SECTION("simple workflow") {
-    CHECK(SimpleWorkflow().describe_options().empty());
-  }
-}
-
 TEST_CASE("framework-dummy-workflow") {
-  MainCaller<DummyWorkflow> caller;
+  touca::workflow("dummy_workflow", dummy_workflow);
+  MainCaller caller;
   TmpFile tmpFile;
 
   SECTION("help") {
     caller.call_with({"--help"});
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Command Line Options"));
-    CHECK_THAT(caller.cout(),
-               Catch::Contains("Workflow specific help message"));
     CHECK(caller.cerr().empty());
   }
 
@@ -234,7 +180,7 @@ TEST_CASE("framework-dummy-workflow") {
   SECTION("valid-config-file") {
     TmpFile configFile;
     configFile.write(
-        R"({ "framework": { "save-as-binary": false, "save-as-json": false, "skip-logs": true, "log-level": "error", "overwrite": false }, "touca": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://api.touca.io/@/some-team/some-suite" }, "custom-key": "custom-value" })");
+        R"({ "touca": { "api-key": "03dda763-62ea-436f-8395-f45296e56e4b", "api-url": "https://api.touca.io/@/some-team/some-suite", "save-as-binary": false, "save-as-json": false, "skip-logs": true, "log-level": "warning", "overwrite": false }, "custom-key": "custom-value" })");
     caller.call_with({"--offline", "-r", "1.0", "-o", tmpFile.path.string(),
                       "--config-file", configFile.path.string(), "--testcase",
                       "some-case", "--colored-output=false"});
@@ -246,20 +192,22 @@ TEST_CASE("framework-dummy-workflow") {
     CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
     CHECK(caller.cerr().empty());
   }
+  touca::reset_test_runner();
 }
 
 TEST_CASE("framework-simple-workflow-valid-use") {
   using fnames = std::vector<touca::filesystem::path>;
-
-  MainCaller<SimpleWorkflow> caller;
+  touca::workflow("simple_workflow", simple_workflow);
+  MainCaller caller;
   TmpFile outputDir;
   TmpFile configFile;
   configFile.write(
       R"({ "touca": { "api-url": "https://api.touca.io/@/some-team/some-suite" }, "custom-key": "custom-value" })");
 
   caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
-                    "--config-file", configFile.path.string(), "--save-as-json",
-                    "true", "--colored-output=false"});
+                    "--config-file", configFile.path.string(), "--testcase",
+                    "4,8,15,16,23,42", "--save-as-binary", "true",
+                    "--save-as-json", "true", "--colored-output=false"});
 
   SECTION("first-run") {
     CHECK(caller.exit_code() == EXIT_SUCCESS);
@@ -274,7 +222,8 @@ TEST_CASE("framework-simple-workflow-valid-use") {
 
   SECTION("second-run-without-overwrite") {
     caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
-                      "--config-file", configFile.path.string(),
+                      "--config-file", configFile.path.string(), "--testcase",
+                      "4,8,15,16,23,42", "--save-as-binary", "true",
                       "--save-as-json", "true", "--colored-output=false"});
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
@@ -289,9 +238,9 @@ TEST_CASE("framework-simple-workflow-valid-use") {
 
   SECTION("second-run-with-overwrite") {
     caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
-                      "--config-file", configFile.path.string(),
-                      "--save-as-json", "true", "--overwrite",
-                      "--colored-output=false"});
+                      "--config-file", configFile.path.string(), "--testcase",
+                      "4,8,15,16,23,42", "--save-as-json", "true",
+                      "--overwrite", "--colored-output=false"});
 
     CHECK(caller.exit_code() == EXIT_SUCCESS);
     CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
@@ -369,20 +318,21 @@ TEST_CASE("framework-simple-workflow-valid-use") {
     CHECK_THAT(fileJson, Catch::Contains(R"("assertion":[])"));
     CHECK_THAT(fileJson, Catch::Contains(R"("metrics":[])"));
   }
+  touca::reset_test_runner();
 }
 
 TEST_CASE("framework-redirect-output-disabled") {
   using fnames = std::vector<touca::filesystem::path>;
-
-  MainCaller<SimpleWorkflow> caller;
+  touca::workflow("simple_workflow", simple_workflow);
+  MainCaller caller;
   TmpFile outputDir;
   TmpFile configFile;
   configFile.write(
       R"({ "touca": { "api-url": "https://api.touca.io/@/some-team/some-suite" }, "workflow": { "custom-key": "custom-value" } })");
 
   caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
-                    "--config-file", configFile.path.string(),
-                    "--redirect-output=false"});
+                    "--config-file", configFile.path.string(), "--testcase",
+                    "4,8,15,16,23,42", "--redirect-output=false"});
 
   SECTION("directory-content-streams") {
     fnames caseFiles =
@@ -390,4 +340,5 @@ TEST_CASE("framework-redirect-output-disabled") {
             .get_regular_files("8");
     REQUIRE_THAT(caseFiles, Catch::UnorderedEquals(fnames({"touca.bin"})));
   }
+  touca::reset_test_runner();
 }
