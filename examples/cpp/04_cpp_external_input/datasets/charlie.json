@@ -6,7 +6,8 @@
     "d": 19
   },
   "courses": [
-    { "name": "math",
+    {
+      "name": "math",
       "grade": 2.9
     },
     {

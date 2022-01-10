@@ -1,126 +1,51 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-#include "students_test.hpp"
+#include "students.hpp"
 
 #include <iostream>
 #include <thread>
 
 #include "cxxopts.hpp"
-#include "students.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/framework/suites.hpp"
 #include "touca/touca.hpp"
 
-int main(int argc, char* argv[]) {
-  MyWorkflow workflow;
-  return touca::framework::main(argc, argv, workflow);
-}
+struct Runner {
+  void parse(int argc, char* argv[]);
+  void execute(const std::string& testcase) const;
 
-MySuite::MySuite(const std::string& datasetDir) : _dir(datasetDir) {}
+ private:
+  std::string _datasets_dir;
+};
 
-void MySuite::initialize() {
-  for (const auto& it : touca::filesystem::directory_iterator(_dir)) {
+void Runner::parse(int argc, char* argv[]) {
+  cxxopts::Options opts{""};
+  opts.add_options()("datasets-dir", "path to datasets directory",
+                     cxxopts::value<std::string>());
+  opts.allow_unrecognised_options();
+  const auto& result = opts.parse(argc, argv);
+  if (!result.count("datasets-dir")) {
+    throw std::invalid_argument(
+        "required configuration option \"datasets-dir\" is missing");
+  }
+  _datasets_dir = result["datasets-dir"].as<std::string>();
+  if (!touca::filesystem::is_directory(_datasets_dir)) {
+    throw std::invalid_argument("datasets directory \"" + _datasets_dir +
+                                "\" does not exist");
+  }
+  std::vector<std::string> testcases;
+  for (const auto& it : touca::filesystem::directory_iterator(_datasets_dir)) {
     if (!touca::filesystem::is_regular_file(it.path().string())) {
       continue;
     }
-    push(it.path().stem().string());
+    testcases.push_back(it.path().stem().string());
   }
+  touca::configure([testcases](touca::FrameworkOptions& options) {
+    options.testcases = testcases;
+  });
 }
 
-cxxopts::Options application_options() {
-  cxxopts::Options options{""};
-  // clang-format off
-    options.add_options()
-        ("datasets-dir", "path to datasets directory", cxxopts::value<std::string>())
-        ("testsuite-file", "path to testsuite file", cxxopts::value<std::string>())
-        ("testsuite-remote", "reuse testcases of baseline\n", cxxopts::value<std::string>()->implicit_value("true"));
-  // clang-format on
-  return options;
-}
-
-MyWorkflow::MyWorkflow() : touca::framework::Workflow() {}
-
-std::string MyWorkflow::describe_options() const {
-  return application_options().help();
-}
-
-bool MyWorkflow::parse_options(int argc, char* argv[]) {
-  auto options = application_options();
-  options.allow_unrecognised_options();
-  const auto& result = options.parse(argc, argv);
-  for (const auto& key :
-       {"datasets-dir", "testsuite-file", "testsuite-remote"}) {
-    if (result.count(key)) {
-      _options.extra[key] = result[key].as<std::string>();
-    }
-  }
-  return true;
-}
-
-bool MyWorkflow::validate_options() const {
-  // check that option `datasets-dir` is provided.
-
-  if (!_options.extra.count("datasets-dir")) {
-    std::cerr << "required configuration option \"datasets-dir\" is missing"
-              << std::endl;
-    return false;
-  }
-
-  // check that directory pointed by option `datasets-dir` exists.
-
-  const auto& datasetsDir = _options.extra.at("datasets-dir");
-  if (!touca::filesystem::is_directory(datasetsDir)) {
-    std::cerr << "datasets directory \"" << datasetsDir << "\" does not exist"
-              << std::endl;
-    return false;
-  }
-
-  // if option `testsuite-file` is provided, check that it points to a valid
-  // file.
-
-  if (_options.extra.count("testsuite-file")) {
-    const auto& file = _options.extra.at("testsuite-file");
-    if (!touca::filesystem::is_regular_file(file)) {
-      std::cerr << "testsuite file \"" << file << "\" does not exist"
-                << std::endl;
-      return false;
-    }
-  }
-
-  return true;
-}
-
-std::shared_ptr<touca::framework::Suite> MyWorkflow::suite() const {
-  // if option `testsuite-file` is specified, use the testcases listed
-  // in that file. For this purpose, we use the `FileSuite` helper class
-  // that is provided by the Touca test framework. It expects that the
-  // testsuite file has one testcase per line, while skipping empty lines
-  // and lines that start with `##`.
-
-  if (_options.extra.count("testsuite-file")) {
-    return std::make_shared<touca::framework::FileSuite>(
-        _options.extra.at("testsuite-file"));
-  }
-
-  // if option `testsuite-remote` is specified, use the testcases that are
-  // part of the version submitted to the Touca server that is currently
-  // the suite baseline. For this purpose, we use the `RemoteSuite` helper
-  // class that is provided by the Touca test framework.
-
-  if (_options.extra.count("testsuite-remote") &&
-      _options.extra.at("testsuite-remote") == "true") {
-    return std::make_shared<touca::framework::RemoteSuite>(_options);
-  }
-
-  // if neither options are provided, use all the profiles that exist in
-  // the datasets directory as testcases.
-
-  return std::make_shared<MySuite>(_options.extra.at("datasets-dir"));
-}
-
-touca::framework::Errors MyWorkflow::execute(
-    const touca::framework::Testcase& testcase) const {
-  touca::filesystem::path caseFile = _options.extra.at("datasets-dir");
+void Runner::execute(const std::string& testcase) const {
+  touca::filesystem::path caseFile = _datasets_dir;
   caseFile /= testcase + ".json";
   const auto& student = find_student(caseFile.string());
 
@@ -139,7 +64,20 @@ touca::framework::Errors MyWorkflow::execute(
   touca::stop_timer("func3");
 
   touca::add_metric("external", 10);
-  return {};
+}
+
+int main(int argc, char* argv[]) {
+  Runner runner;
+  try {
+    runner.parse(argc, argv);
+  } catch (const std::invalid_argument& ex) {
+    std::cerr << ex.what() << std::endl;
+    return EXIT_FAILURE;
+  }
+  touca::workflow("external_input", [&runner](const std::string& testcase) {
+    runner.execute(testcase);
+  });
+  return touca::run(argc, argv);
 }
 
 template <>
