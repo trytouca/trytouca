@@ -106,7 +106,7 @@ float calculate_gpa(const std::vector<Course>& courses) {
 ```
 
 Touca data capturing functions remain no-op in production environments. They are
-only activated when running in the context of a `touca::main` function call.
+only activated when running in the context of the `touca::run` function call.
 
 ## Describing Performance
 
