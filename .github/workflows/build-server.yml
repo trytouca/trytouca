@@ -4,6 +4,8 @@ name: Platform
 
 on:
   push:
+    paths-ignore:
+      - "docs/internal/**"
 
 jobs:
   api-build-native:
