@@ -266,7 +266,7 @@ class Workflow:
 class _Printer:
     def __init__(self, options):
         self.options = options
-        self.testcase_width = max(max(len(k) for k in options.get("testcases")) + 3, 5)
+        self.testcase_width = max(len(k) for k in options.get("testcases"))
         self.testcase_count = len(options.get("testcases"))
 
     def print_line(self, fmt: str, *args, **kwargs):
@@ -282,8 +282,7 @@ class _Printer:
 
     def print_header(self):
         revision = "/".join([self.options.get(k) for k in ["suite", "version"]])
-        self.print_line("\nTouca Test Framework")
-        self.print_line("Suite: {:s}\n", revision)
+        self.print_line("\nTouca Test Framework\nSuite: {:s}\n", revision)
 
     def print_progress(self, timer: _Timer, testcase, idx, status, errors=[]):
         states = {
@@ -317,7 +316,7 @@ class _Printer:
             badge=badge,
             progress=progress,
             testcase=testcase,
-            testcase_width=self.testcase_width,
+            testcase_width=self.testcase_width + 3,
             performance=performance,
         )
         if errors:
