@@ -704,11 +704,9 @@ code under test, without ever changing our test logic.
 {% code %}
 
 ```bash
-python3 02_python_main_api/students_test.py
-  --api-key <TOUCA_API_KEY>
-  --api-url <TOUCA_API_URL>
-  --revision v1.0
-  --testcase alice bob charlie
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+python 02_python_main_api/students_test.py --revision v1.0 --testcase alice bob charlie
 ```
 
 {% endcode %}
@@ -720,11 +718,9 @@ python3 02_python_main_api/students_test.py
 {% code %}
 
 ```bash
-./local/dist/bin/example_cpp_main_api
-  --api-key <TOUCA_API_KEY>
-  --api-url <TOUCA_API_URL>
-  --revision v1.0
-  --testcase alice,bob,charlie
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+./local/dist/bin/example_cpp_main_api --revision v1.0 --testcase alice,bob,charlie
 ```
 
 {% endcode %}
@@ -736,11 +732,9 @@ python3 02_python_main_api/students_test.py
 {% code %}
 
 ```bash
-node 02_node_main_api/dist/students_test.js
-  --api-key <TOUCA_API_KEY>
-  --api-url <TOUCA_API_URL>
-  --revision v1.0
-  --testcase alice bob charlie
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+node 02_node_main_api/dist/students_test.js --revision v1.0 --testcase alice bob charlie
 ```
 
 {% endcode %}
@@ -752,7 +746,9 @@ node 02_node_main_api/dist/students_test.js
 {% code %}
 
 ```bash
-gradle runExampleMain --args='--api-key <TOUCA_API_KEY> --api-url <TOUCA_API_URL> --revision v1.0 --testcase alice bob charlie'
+export TOUCA_API_KEY=<TOUCA_API_KEY>
+export TOUCA_API_URL=<TOUCA_API_URL>
+gradle runExampleMain --args='--revision v1.0 --testcase alice bob charlie'
 ```
 
 {% endcode %}
@@ -771,16 +767,19 @@ from the Touca server.
 The above command produces the following output.
 
 ```text
+
 Touca Test Framework
-Suite: students_test
-Revision: 1.0
+Suite: students_test/v1.0
 
- (  1 of 3  ) alice                (pass, 127 ms)
- (  2 of 3  ) bob                  (pass, 123 ms)
- (  3 of 3  ) charlie              (pass, 159 ms)
+ 1.  PASS   alice      (127 ms)
+ 2.  PASS   bob        (123 ms)
+ 3.  PASS   charlie    (159 ms)
 
-Processed 3 of 3 testcases
-Test completed in 565 ms
+Tests:      3 passed, 3 total
+Time:       0.57 s
+
+✨   Ran all test suites.
+
 ```
 
 At this point, we should see the results of our test on the Touca server. This

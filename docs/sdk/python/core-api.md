@@ -53,10 +53,10 @@ if __name__ == "__main__":
     main()
 ```
 
-The above code uses the low-level Touca API to perform the same operations as
-the Touca test framework, without handling errors, reporting progress, and
-handling command line arguments. In this section, we will review the functions
-used in this code and explain what they do.
+The above code uses the low-level Touca Client API to perform the same
+operations as the Touca test framework, without handling errors, reporting
+progress, and handling command line arguments. In this section, we will review
+the functions used in this code and explain what they do.
 
 ## Configuring the Client
 
@@ -103,10 +103,10 @@ for username in touca.get_testcases():
     # insert the code to run for each test case
 ```
 
-The Touca test framework expects test cases to be specified via the Touca server
-UI or via command line arguments. With the Client API, you can obtain the list
-of test cases from any source and pass them, one by one, to your code under test
-using a simple for loop.
+The test framework expects test cases to be specified via the Touca server UI or
+via command line arguments. With the Client API, you can obtain the list of test
+cases from any source and pass them, one by one, to your code under test using a
+simple for loop.
 
 You can still use the function `get_testcases` to obtain the list of test cases
 from the Touca server, as our high-level API does. This function should be
