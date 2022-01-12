@@ -35,9 +35,19 @@ class Merge(Operation):
 
     def parser(self) -> ArgumentParser:
         parser = ArgumentParser()
-        parser.add_argument("--src", help="src help")
-        parser.add_argument("--out", help="out help")
-        parser.add_argument("--cli", help="full path to touca_cli")
+        parser.add_argument(
+            "--src",
+            required=True,
+            help="path to directory with original Touca archives directories",
+        )
+        parser.add_argument(
+            "--out",
+            required=True,
+            help="path to directory where the merged archives should be created",
+        )
+        parser.add_argument(
+            "--cli", required=True, help='path to "touca_cli" C++ executable'
+        )
         parser.add_argument("--logdir", help="full path to log directory")
         return parser
 

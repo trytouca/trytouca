@@ -48,11 +48,21 @@ class Update(Operation):
 
     def parser(self) -> ArgumentParser:
         parser = ArgumentParser()
-        parser.add_argument("--src", help="src help")
-        parser.add_argument("--out", help="out help")
-        parser.add_argument("--team", help="team help")
-        parser.add_argument("--suite", help="suite help")
-        parser.add_argument("--cli", help="full path to touca_cli")
+        parser.add_argument(
+            "--src",
+            required=True,
+            help="path to directory with original Touca binary archives",
+        )
+        parser.add_argument(
+            "--out",
+            required=True,
+            help="path to directory with updated Touca binary archives",
+        )
+        parser.add_argument("--team", help="new value for the team slug")
+        parser.add_argument("--suite", help="new value for the suite slug")
+        parser.add_argument(
+            "--cli", required=True, help='path to "touca_cli" C++ executable'
+        )
         parser.add_argument("--logdir", help="full path to a directory")
         return parser
 

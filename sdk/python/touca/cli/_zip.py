@@ -9,7 +9,6 @@ from touca.cli._operation import Operation
 
 
 def compress7z(srcDir, outputDir):
-    """ """
     dstFile = os.path.join(outputDir, os.path.basename(srcDir)) + ".7z"
     if os.path.exists(dstFile):
         logger.warning(f"compressed file {dstFile} already exists")
@@ -33,8 +32,16 @@ class Zip(Operation):
 
     def parser(self) -> ArgumentParser:
         parser = ArgumentParser()
-        parser.add_argument("--src", help="src help")
-        parser.add_argument("--out", help="out help")
+        parser.add_argument(
+            "--src",
+            required=True,
+            help="path to directory with original Touca binary archives",
+        )
+        parser.add_argument(
+            "--out",
+            required=True,
+            help="path to directory with compressed Touca binary archives",
+        )
         return parser
 
     def parse(self, args):

@@ -9,7 +9,6 @@ from touca.cli._operation import Operation
 
 
 def extract7z(srcFile, dstDir):
-    """ """
     try:
         logger.info(f"extracting file {srcFile} into {dstDir}")
         with py7zr.SevenZipFile(srcFile, "r") as archive:
@@ -29,8 +28,16 @@ class Unzip(Operation):
 
     def parser(self) -> ArgumentParser:
         parser = ArgumentParser()
-        parser.add_argument("--src", help="src help")
-        parser.add_argument("--out", help="out help")
+        parser.add_argument(
+            "--src",
+            required=True,
+            help="path to directory with compressed Touca binary archives",
+        )
+        parser.add_argument(
+            "--out",
+            required=True,
+            help="path to directory with extracted Touca binary archives",
+        )
         return parser
 
     def parse(self, args):
