@@ -12,17 +12,15 @@ export default function AboveTheFold() {
           <div className="grid gap-8 p-8 xl:grid-cols-5 lg:items-center">
             <div className="flex flex-col justify-around h-full py-12 mx-auto space-y-12 xl:col-span-2 lg:py-4 xl:py-0">
               <div className="space-y-4">
-                <h2 className="max-w-xl text-3xl font-bold text-white sm:text-4xl wsl-text-gradient wsl-text-shadow xl:text-3xl">
-                  Automated Regression Testing
-                  <br />
-                  for Critical Software Workflows
+                <h2 className="max-w-xl text-3xl font-bold text-white sm:text-4xl wsl-text-gradient xl:text-3xl">
+                  Automated Regression Testing for Critical Software Workflows
                 </h2>
                 <p className="max-w-xl text-lg text-white sm:text-xl">
                   See the true impact of code changes on the behavior and
                   performance of your software.
                 </p>
               </div>
-              <div className="flex items-center space-x-4">
+              <div className="items-center space-x-4 text-center md:text-left md:flex">
                 <a
                   className="text-lg"
                   href="https://app.touca.io"

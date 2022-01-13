@@ -3,6 +3,8 @@
 import Head from 'next/head';
 import Link from 'next/link';
 
+import Header from '@/components/header';
+
 const content = {
   title: 'Page Not Found',
   subtitle: 'Did you make a typo?',
@@ -22,6 +24,7 @@ export default function NotFoundPage() {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
+      <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
         <div className="container grid px-4 mx-auto space-y-12 wsl-min-h-screen-1 place-content-center">
           <div className="space-y-2 text-center">

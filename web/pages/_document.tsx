@@ -3,7 +3,6 @@
 import Document, { Head, Html, Main, NextScript } from 'next/document';
 
 import Footer from '@/components/footer';
-import Header from '@/components/header';
 import { make_path } from '@/lib/api';
 
 export default class MyDocument extends Document {
@@ -46,7 +45,6 @@ export default class MyDocument extends Document {
           />
         </Head>
         <body className="min-h-screen font-sans antialiased bg-dark-blue-900">
-          <Header></Header>
           <Main />
           <Footer></Footer>
           <NextScript />
