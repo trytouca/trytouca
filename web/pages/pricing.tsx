@@ -4,6 +4,7 @@ import Head from 'next/head';
 import React from 'react';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
+import Header from '@/components/header';
 import PricingPlan, { Input } from '@/components/pricing-plan';
 
 interface PageContent {
@@ -196,6 +197,7 @@ export default function PricingPage() {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
+      <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
         <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
           <div className="p-8 space-y-2 text-center">

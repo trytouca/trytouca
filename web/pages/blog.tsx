@@ -3,6 +3,7 @@
 import Head from 'next/head';
 import React from 'react';
 
+import Header from '@/components/header';
 import {
   Article,
   BlogPostArchive,
@@ -38,6 +39,7 @@ export default function BlogPage(props: StaticProps) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
+      <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
         <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
           <div className="grid grid-cols-1 gap-4 p-8 space-y-8 lg:grid-cols-2 lg:space-y-0">

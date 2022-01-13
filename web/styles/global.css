@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.wsl-text-shadow {
-  text-shadow: 1px 3px 4px rgba(0, 0, 0, 0.25);
-}
-
 .wsl-min-h-screen-1 {
   min-height: calc(100vh - 5rem);
 }
@@ -17,11 +13,5 @@
 @media (min-width: 1536px) {
   .wsl-min-h-screen-3 {
     min-height: calc(100vh - 20rem);
-  }
-}
-
-@layer components {
-  .wsl-header-btn-secondary {
-    @apply px-1 py-2 text-sm font-semibold leading-6 text-gray-300 duration-150 ease-in-out bg-transparent rounded-lg hover:text-white lg:px-4 focus:ring-0;
   }
 }

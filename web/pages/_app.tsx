@@ -40,11 +40,13 @@ export default function App({ Component, pageProps }: AppProps) {
           />
         </>
       )}
-      <Script
-        id="hs-script-loader"
-        src="//js.hs-scripts.com/14530326.js"
-        strategy="lazyOnload"
-      />
+      {!!GA_TRACKING_ID && (
+        <Script
+          id="hs-script-loader"
+          src="//js.hs-scripts.com/14530326.js"
+          strategy="lazyOnload"
+        />
+      )}
       <Component {...pageProps} />
     </>
   );

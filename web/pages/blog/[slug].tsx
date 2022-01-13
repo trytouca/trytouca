@@ -5,6 +5,7 @@ import { HiOutlineCalendar, HiOutlineClock } from 'react-icons/hi';
 import { remark } from 'remark';
 import remarkHtml from 'remark-html';
 
+import Header from '@/components/header';
 import { Article, BlogPostArchive, getArticle, getArticles } from '@/lib/blog';
 
 type StaticProps = {
@@ -28,6 +29,7 @@ export default function BlogPage(props: StaticProps) {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
+      <Header></Header>
       <section className="bg-white">
         <div className="min-h-[15vh]"></div>
         <div className="container flex flex-col justify-center p-16 mx-auto space-y-8 wsl-min-h-screen-1">

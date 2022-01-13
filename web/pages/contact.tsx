@@ -5,6 +5,7 @@ import Head from 'next/head';
 import React from 'react';
 import * as Yup from 'yup';
 
+import Header from '@/components/header';
 import { extract_error, post_json } from '@/lib/api';
 import { tracker } from '@/lib/tracker';
 
@@ -29,6 +30,7 @@ export default function ContactPage() {
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
       </Head>
+      <Header></Header>
       <section className="bg-dark-blue-900">
         <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
           <div className="p-4 space-y-2 text-center">

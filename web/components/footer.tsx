@@ -60,7 +60,7 @@ const FooterCta = () => {
       <div className="container px-8 mx-auto md:px-24 lg:px-8">
         <div className="grid lg:p-8 gap-y-20 lg:grid-cols-2">
           <div className="space-y-4 text-white">
-            <h3 className="text-2xl font-bold wsl-text-shadow xl:text-3xl">
+            <h3 className="text-2xl font-bold xl:text-3xl">
               Build Better Software, Faster.
             </h3>
             <p className="text-xl">

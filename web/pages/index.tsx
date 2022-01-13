@@ -13,6 +13,7 @@ import FeatureSubmit from '@/components/feature-submit';
 import FeatureTestimonials, {
   TestimonialInput
 } from '@/components/feature-testimonials';
+import Header from '@/components/header';
 import OneLinerPitch from '@/components/pitch';
 import { make_path } from '@/lib/api';
 import { FeatureInput } from '@/lib/feature';
@@ -134,6 +135,7 @@ export default function Home() {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </Head>
+      <Header></Header>
       <AboveTheFold></AboveTheFold>
       <Announcement input={content.announcement}></Announcement>
       <OneLinerPitch></OneLinerPitch>
