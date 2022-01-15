@@ -12,7 +12,7 @@ export default class MyDocument extends Document {
         <Head>
           <base href="/" />
           <meta charSet="utf-8" />
-          <meta name="theme-color" content="#0d0d2b" />
+          <meta name="theme-color" content="#1f2937" />
           <meta property="og:locale" content="en_US" />
           <meta property="og:type" content="website" />
           <meta property="og:site_name" content="Touca" />
