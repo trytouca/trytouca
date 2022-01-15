@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import mongoose from 'mongoose'
 
@@ -9,6 +9,7 @@ import { EReportType, IReportDocument, ReportModel } from '@/schemas/report'
 import { SuiteModel } from '@/schemas/suite'
 import { IUser } from '@/schemas/user'
 import type { BackendBatchComparisonResponse } from '@/types/backendtypes'
+import { ENotificationType } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { mailUser } from '@/utils/mailer'
@@ -73,7 +74,7 @@ type SuiteInfo = {
   promotedBy: IUser
   promotedFor: string
   promotedTo: string
-  subscribers: IUser[]
+  subscriptions: { user: IUser; level: ENotificationType }[]
 }
 
 async function getSuiteInfo(suiteId: BatchInfo['suite']['_id']) {
@@ -81,25 +82,47 @@ async function getSuiteInfo(suiteId: BatchInfo['suite']['_id']) {
     { $match: { _id: suiteId } },
     {
       $lookup: {
-        as: 'subscriberDocs',
+        as: 'subscriptionUsers',
         foreignField: '_id',
         from: 'users',
-        localField: 'subscribers'
+        localField: 'subscriptions.user'
       }
     },
     {
       $project: {
         _id: 0,
         baseline: { $arrayElemAt: ['$promotions', -1] },
-        subscribers: {
+        subscriptions: {
           $map: {
-            input: '$subscriberDocs',
-            as: 'sub',
+            input: '$subscriptions',
+            as: 'item',
             in: {
-              _id: '$$sub._id',
-              email: '$$sub.email',
-              username: '$$sub.username',
-              fullname: '$$sub.fullname'
+              user: {
+                $arrayElemAt: [
+                  {
+                    $map: {
+                      input: {
+                        $filter: {
+                          input: '$subscriptionUsers',
+                          as: 'usr',
+                          cond: {
+                            $eq: ['$$usr._id', '$$item.user']
+                          }
+                        }
+                      },
+                      as: 'sub',
+                      in: {
+                        _id: '$$sub._id',
+                        email: '$$sub.email',
+                        username: '$$sub.username',
+                        fullname: '$$sub.fullname'
+                      }
+                    }
+                  },
+                  0
+                ]
+              },
+              level: '$$item.level'
             }
           }
         }
@@ -134,7 +157,7 @@ async function getSuiteInfo(suiteId: BatchInfo['suite']['_id']) {
         },
         promotedFor: '$baseline.for',
         promotedTo: '$promotedToDoc.slug',
-        subscribers: 1
+        subscriptions: 1
       }
     }
   ])
@@ -260,12 +283,12 @@ async function reportPromotion(
   // since there may be many subscribers, we prefer to send emails in chunks.
 
   const chunkSize = 5
-  for (let i = 0; i < suiteInfo.subscribers.length; i = i + chunkSize) {
-    const jobs = suiteInfo.subscribers
+  for (let i = 0; i < suiteInfo.subscriptions.length; i = i + chunkSize) {
+    const jobs = suiteInfo.subscriptions
       .slice(i, i + chunkSize)
-      .map(async (subscriber) => {
-        ;(inputs.username = subscriber.fullname),
-          await mailUser(subscriber, subject, 'batch-promoted', inputs)
+      .map(async (subscription) => {
+        inputs.username = subscription.user.fullname
+        await mailUser(subscription.user, subject, 'batch-promoted', inputs)
       })
     await Promise.all(jobs)
   }
@@ -302,15 +325,20 @@ async function reportSealed(
   }
 
   // notify all subscribers that this batch has been sealed
-  // since there may be many subscribers, we prefer send emails in chunks
+  // since there may be many subscribers, we prefer to send emails in chunks
 
   const chunkSize = 5
-  for (let i = 0; i < suiteInfo.subscribers.length; i = i + chunkSize) {
-    const jobs = suiteInfo.subscribers
+  for (let i = 0; i < suiteInfo.subscriptions.length; i = i + chunkSize) {
+    const jobs = suiteInfo.subscriptions
       .slice(i, i + chunkSize)
-      .map(async (subscriber) => {
-        inputs.username = subscriber.fullname
-        await mailUser(subscriber, subject, 'batch-sealed', inputs)
+      .filter(
+        (subscription) =>
+          subscription.level == ENotificationType.All ||
+          compareInputs.hasComparisonTable
+      )
+      .map(async (subscription) => {
+        inputs.username = subscription.user.fullname
+        await mailUser(subscription.user, subject, 'batch-sealed', inputs)
       })
     await Promise.all(jobs)
   }
@@ -366,7 +394,7 @@ async function processReportJob(job: IReportDocument) {
 
   const compareInputs = await extractComparisonInputs(cmp)
 
-  // send report to all subscribers of the suite
+  // send report to all subscribers of this suite
 
   switch (job.reportType) {
     case EReportType.Promote:

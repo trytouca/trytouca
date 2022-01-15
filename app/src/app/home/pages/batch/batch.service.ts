@@ -1,5 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { isEqual } from 'lodash-es';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
@@ -241,7 +242,7 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         };
         this._overviewSubject.next(this._overview);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items
@@ -301,7 +302,7 @@ export class BatchPageService extends IPageService<BatchPageItem> {
           this.fetchItems(params);
         }
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
           this.alertService.set(
             !this._items

@@ -1,5 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
@@ -243,7 +244,7 @@ export class BatchCommentsComponent implements OnDestroy {
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.']
         ]);
@@ -267,7 +268,7 @@ export class BatchCommentsComponent implements OnDestroy {
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         this.notificationService.notify(
           AlertType.Danger,
           'Something went wrong. Please try this operation again later.'
@@ -292,7 +293,7 @@ export class BatchCommentsComponent implements OnDestroy {
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
           [
@@ -321,7 +322,7 @@ export class BatchCommentsComponent implements OnDestroy {
         this.batchPageService.refetchComments();
         this.batchPageService.refetchBatch();
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.']
         ]);

@@ -1,10 +1,11 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
+import { ENotificationType } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { tracker } from '@/utils/tracker'
 
@@ -20,23 +21,21 @@ export async function suiteSubscribe(
   const team = res.locals.team as ITeam
   const user = res.locals.user as IUser
   const tuple = [team.slug, suite.slug].join('/')
-  logger.debug('%s: subscribing to %s', user.username, tuple)
+  const level: ENotificationType = req.body.level
+  logger.debug('%s: subscribing to %s (%s)', user.username, tuple, level)
 
-  // we are done if user is already subscribed
+  await SuiteModel.findByIdAndUpdate(suite._id, {
+    $pull: { subscriptions: { user: user._id } }
+  })
 
-  if (suite.subscribers.includes(user._id)) {
-    logger.info('%s: already subscribed to %s', user.username, tuple)
-    return res.status(204).send()
+  if (level !== ENotificationType.None) {
+    await SuiteModel.findByIdAndUpdate(suite._id, {
+      $push: { subscriptions: { user: user._id, level } }
+    })
   }
 
-  // otherwise subscribe the user
-
-  await SuiteModel.findByIdAndUpdate(
-    { _id: suite._id },
-    { $push: { subscribers: user._id } }
-  )
-  tracker.track(user, 'subscribe', { suite: tuple })
-  logger.info('%s: subscribed to %s', user.username, tuple)
+  tracker.track(user, 'subscribe', { suite: tuple, level: level })
+  logger.info('%s: subscribed to %s (%s)', user.username, tuple, level)
 
   return res.status(204).send()
 }

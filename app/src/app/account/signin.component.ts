@@ -1,5 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -89,7 +90,7 @@ export class SigninComponent implements OnInit {
         }
         this.router.navigate([this.authService.redirectUrl ?? '/~']);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [400, 'request invalid', 'Your request was rejected by the server.'],
           [401, 'invalid login credentials', 'Incorrect username or password.'],
@@ -116,7 +117,7 @@ export class SigninComponent implements OnInit {
           this.router.navigate([this.authService.redirectUrl ?? '/~']);
         });
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const msg = this.apiService.extractError(err, [
           [
             403,

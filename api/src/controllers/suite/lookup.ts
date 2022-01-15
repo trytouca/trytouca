@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash'
@@ -9,9 +9,9 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import type { BatchItemQueryOutput } from '@/types/backendtypes'
-import type { SuiteLookupResponse } from '@/types/commontypes'
+import { ENotificationType, SuiteLookupResponse } from '@/types/commontypes'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
 
 /**
  * Provides information about a given suite.
@@ -56,7 +56,7 @@ async function suiteLookup(
     }
   ])
 
-  // prepare a draft of our response with fields that depend on existance of
+  // prepare a draft of our response with fields that depend on existence of
   // batches, set to undefined or empty array.
 
   const output: SuiteLookupResponse = {
@@ -70,6 +70,9 @@ async function suiteLookup(
     retainFor: suite.retainFor,
     sealAfter: suite.sealAfter,
     subscriberCount: suite.subscribers.length,
+    subscription:
+      suite.subscriptions.find((v) => v.user._id.equals(user._id))?.level ||
+      ENotificationType.None,
     suiteName: suite.name,
     suiteSlug: suite.slug,
     teamName: team.name,
@@ -77,7 +80,7 @@ async function suiteLookup(
   }
 
   // in the special case when suite has no batch, return output without
-  // fields that depend on existance of batches.
+  // fields that depend on existence of batches.
 
   if (queryOutput.length === 0) {
     return output
@@ -85,7 +88,7 @@ async function suiteLookup(
 
   // in another special case when suite has no baseline, assume that suite
   // is in the process of being removed and return output without fields
-  // that depend on existance of batches. when we are asked to remove a
+  // that depend on existence of batches. when we are asked to remove a
   // suite, we clear its `promotions` field to enable removal of all of
   // its batches.
 
@@ -162,9 +165,9 @@ export async function ctrlSuiteLookup(
 
   // return result from cache in case it is available
 
-  if (await rclient.isCached(cacheKey)) {
+  if (await redis.isCached(cacheKey)) {
     logger.debug('%s: from cache', cacheKey)
-    const cached = await rclient.getCached(cacheKey)
+    const cached = await redis.getCached(cacheKey)
     return res.status(200).json(cached)
   }
 
@@ -174,7 +177,7 @@ export async function ctrlSuiteLookup(
 
   // cache lookup result
 
-  rclient.cache(cacheKey, output)
+  redis.cache(cacheKey, output)
 
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))

@@ -24,7 +24,7 @@
     @apply bg-gray-50 duration-150 ease-in-out text-black border border-gray-200 hover:bg-gray-100 focus:ring-1 focus:ring-opacity-50 focus:ring-gray-400 disabled:text-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600 dark:focus:ring-gray-500 dark:disabled:text-gray-600;
   }
   .wsl-input-field {
-    @apply block w-full rounded-md shadow-sm text-sm text-black border-gray-300 focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50 bg-white dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-0;
+    @apply block w-full rounded-md shadow-sm text-sm text-black border-gray-300 focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50 bg-white dark:text-white dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-0  dark:placeholder:text-gray-300;
   }
   .wsl-input-label {
     @apply mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300;

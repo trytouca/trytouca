@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
 import os
@@ -246,16 +246,12 @@ class ApiClient:
         response = self.client.delete(f"suite/{team_slug}/{suite_slug}")
         self.expect_status(response, 202, f"remove suite {team_slug}/{suite_slug}")
 
-    def suite_subscribe(self, team_slug: str, suite_slug: str):
-        response = self.client.post_json(f"suite/{team_slug}/{suite_slug}/subscribe")
+    def suite_subscribe(self, team_slug: str, suite_slug: str, level: str):
+        response = self.client.patch_json(
+            f"suite/{team_slug}/{suite_slug}/subscribe", {"level": level}
+        )
         self.expect_status(
             response, 204, f"subscribed to suite {team_slug}/{suite_slug}"
-        )
-
-    def suite_unsubscribe(self, team_slug: str, suite_slug: str):
-        response = self.client.post_json(f"suite/{team_slug}/{suite_slug}/unsubscribe")
-        self.expect_status(
-            response, 204, f"unsubscribed to suite {team_slug}/{suite_slug}"
         )
 
     def comment_create(self, batch_path: str, comment_body: str):

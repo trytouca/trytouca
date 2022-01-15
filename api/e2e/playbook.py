@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import csv
 from dataclasses import dataclass
@@ -159,11 +159,6 @@ class Playbook:
             api_client.suite_remove(team_slug, suite_slug)
 
     def suite_subscribe(self, user: User, args):
-        team_slug, suite_slug = args
+        team_slug, suite_slug, level = args
         with ApiClient(user) as api_client:
-            api_client.suite_subscribe(team_slug, suite_slug)
-
-    def suite_unsubscribe(self, user: User, args):
-        team_slug, suite_slug = args
-        with ApiClient(user) as api_client:
-            api_client.suite_unsubscribe(team_slug, suite_slug)
+            api_client.suite_subscribe(team_slug, suite_slug, level)

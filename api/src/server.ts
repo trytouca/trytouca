@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
@@ -34,7 +34,7 @@ import {
   reportingService,
   retentionService
 } from './services'
-import { setupSuperuser } from './startup'
+import { setupSuperuser, upgradeDatabase } from './startup'
 
 const app = express()
 
@@ -65,24 +65,23 @@ app.use((err, req, res, next) => {
 
 let server
 async function launch(application) {
-  // make sure we can connect to object storage
-  if (!(await connectToServer(makeConnectionMinio, 'object storage'))) {
-    process.exit(1)
-  }
-
-  // make sure we can connect to database
-  if (!(await connectToServer(makeConnectionMongo, 'database'))) {
-    process.exit(1)
-  }
-
-  // make sure we can connect to cache server
-  if (!(await connectToServer(makeConnectionRedis, 'cache server'))) {
-    process.exit(1)
+  for (const { service, name } of [
+    { service: makeConnectionMinio, name: 'object storage' },
+    { service: makeConnectionMongo, name: 'database' },
+    { service: makeConnectionRedis, name: 'cache server' }
+  ]) {
+    if (!(await connectToServer(service, name))) {
+      process.exit(1)
+    }
   }
 
   if ((await MetaModel.countDocuments()) === 0) {
     await MetaModel.create({})
     logger.info('created meta document with default values')
+  }
+
+  if (!(await upgradeDatabase())) {
+    logger.warn('failed to perform database migration')
   }
 
   if (config.isCloudHosted) {

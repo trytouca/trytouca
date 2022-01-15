@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 export enum EFeatureFlag {
   NewsletterProduct = 'newsletter_product',
@@ -15,6 +15,17 @@ export enum EPlatformRole {
   Admin = 'admin',
   Owner = 'owner',
   Super = 'super'
+}
+
+/**
+ * @schema CT_ENotificationType
+ *  type: string
+ *  enum: ['none', 'different', 'all']
+ */
+export enum ENotificationType {
+  None = 'none',
+  Different = 'different',
+  All = 'all'
 }
 
 /**
@@ -530,11 +541,10 @@ export type SuiteItem = {
  *      additionalProperties: false
  *      required:
  *        - batches
- *        - isSubscribed
  *        - promotions
  *        - retainFor
  *        - sealAfter
- *        - subscriberCount
+ *        - subscription
  *        - teamName
  *        - teamSlug
  *      properties:
@@ -542,8 +552,6 @@ export type SuiteItem = {
  *          type: array
  *          items:
  *            type: string
- *        isSubscribed:
- *          type: boolean
  *        promotions:
  *          type: array
  *          items:
@@ -552,6 +560,8 @@ export type SuiteItem = {
  *          type: number
  *        sealAfter:
  *          type: number
+ *        subscription:
+ *          $ref: '#/components/schemas/CT_ENotificationType'
  *        teamName:
  *          type: string
  *        teamSlug:
@@ -559,11 +569,14 @@ export type SuiteItem = {
  */
 export type SuiteLookupResponse = SuiteItem & {
   batches: string[]
-  isSubscribed: boolean
+  /** @deprecated (remove in 22/03) */
+  isSubscribed?: boolean
   promotions: Promotion[]
   retainFor: number
   sealAfter: number
-  subscriberCount: number
+  /** @deprecated (remove in 22/03) */
+  subscriberCount?: number
+  subscription: string
   teamName: string
   teamSlug: string
 }

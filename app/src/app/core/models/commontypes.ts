@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 export enum EFeatureFlag {
   NewsletterProduct = 'newsletter_product',
@@ -10,6 +10,12 @@ export enum EPlatformRole {
   Admin = 'admin',
   Owner = 'owner',
   Super = 'super'
+}
+
+export enum ENotificationType {
+  None = 'none',
+  Different = 'different',
+  All = 'all'
 }
 
 export type Userinfo = {
@@ -149,11 +155,14 @@ export type SuiteItem = {
 
 export type SuiteLookupResponse = SuiteItem & {
   batches: string[];
-  isSubscribed: boolean;
+  /** @deprecated (remove in 22/03) */
+  isSubscribed?: boolean;
   promotions: Promotion[];
   retainFor: number;
   sealAfter: number;
-  subscriberCount: number;
+  /** @deprecated (remove in 22/03) */
+  subscriberCount?: number;
+  subscription: ENotificationType;
   teamName: string;
   teamSlug: string;
 };

@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Pipe, PipeTransform } from '@angular/core';
 import {
@@ -82,6 +82,9 @@ export class DateTimePipe implements PipeTransform {
     type: 'format' | 'distance' | 'interval' | 'duration',
     ...args: string[]
   ): string {
+    if (!input) {
+      return '';
+    }
     if (type === 'format') {
       return format(new Date(input), 'PPpp');
     }

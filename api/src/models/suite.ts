@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { batchRemove } from '@/models/batch'
 import { BatchModel } from '@/schemas/batch'
@@ -6,6 +6,7 @@ import { CommentModel } from '@/schemas/comment'
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
+import { ENotificationType } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
@@ -26,7 +27,7 @@ export async function suiteCreate(
     createdBy: user._id,
     name: suite.name,
     slug: suite.slug,
-    subscribers: [user._id],
+    subscriptions: [{ user: user._id, level: ENotificationType.All }],
     team: team._id
   })
   return newSuite

@@ -1,5 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -86,7 +87,7 @@ export class OnboardComponent implements OnDestroy {
         this.userService.populate();
         this.router.navigate(['/~']);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const error = this.apiService.extractError(err, [
           [409, 'username already registered', 'This username is taken'],
           [401, 'invalid login credentials', 'Incorrect username or password.']

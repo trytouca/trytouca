@@ -50,10 +50,10 @@ aanderson,suite-update,acme,students,,students,"Find Students"
 bbrown,team-join-accept,acme,,,iingram
 bbrown,team-join-decline,acme,,,jjohnson
 jjohnson,team-join-add,acme,,,
-bbrown,suite-subscribe,acme,students,,
-cclark,suite-subscribe,acme,students,,
-ddavis,suite-subscribe,acme,students,,
-ddavis,suite-unsubscribe,acme,students,,
+bbrown,suite-subscribe,acme,students,,"all"
+cclark,suite-subscribe,acme,students,,"different"
+ddavis,suite-subscribe,acme,students,,"all"
+ddavis,suite-subscribe,acme,students,,"none"
 cclark,suite-create,acme,empty-suite,,"Empty Suite"
 bbrown,suite-remove,acme,empty-suite,,
 aanderson,client-submit,acme,students,v1.0,

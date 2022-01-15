@@ -1,8 +1,11 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import mongoose from 'mongoose'
 
-import type { PromotionQueryOutput } from '@/types/backendtypes'
+import type {
+  PromotionQueryOutput,
+  SubscriptionQueryOutput
+} from '@/types/backendtypes'
 import { config } from '@/utils/config'
 
 const suiteSchema = new mongoose.Schema(
@@ -70,6 +73,20 @@ const suiteSchema = new mongoose.Schema(
         type: mongoose.Schema.Types.ObjectId
       }
     ],
+    subscriptions: [
+      {
+        _id: false,
+        user: {
+          ref: 'User',
+          required: false,
+          type: mongoose.Schema.Types.ObjectId
+        },
+        level: {
+          required: false,
+          type: String
+        }
+      }
+    ],
     team: {
       ref: 'Team',
       required: true,
@@ -91,6 +108,7 @@ export interface ISuiteDocument extends mongoose.Document {
   sealAfter: number
   slug: string
   subscribers: mongoose.Types.ObjectId[]
+  subscriptions: SubscriptionQueryOutput[]
   team: mongoose.Types.ObjectId
 }
 

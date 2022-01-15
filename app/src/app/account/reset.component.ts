@@ -1,5 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
@@ -30,7 +31,7 @@ export class ResetComponent {
         next: (doc) => {
           this.accountInfo = { ...doc, resetKey };
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           const msg = this.apiService.extractError(err, [
             [
               400,

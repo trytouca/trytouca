@@ -67,9 +67,8 @@
               </div>
             </div>
             <div class="wsl-input-group">
-              <div class="text-xs font-medium text-black dark:text-gray-400">
-                API URL
-              </div>
+              <div class="text-xs font-medium text-black dark:text-gray-400">API
+                URL</div>
               <div class="flex w-full">
                 <div
                   class="flex items-center flex-grow px-2 overflow-x-hidden font-mono text-xs text-gray-500 bg-white border border-gray-300 rounded-l whitespace-nowrap dark:bg-gray-900 dark:border-gray-600 dark:text-gray-400">
@@ -85,12 +84,35 @@
             </div>
           </div>
         </div>
-        <button class="flex items-center wsl-btn-sm wsl-btn-muted"
-          (click)="toggleSubscription()">
-          <ng-icon class="wsl-text-muted" size="1.05rem"
-            [name]="fields.subscribe.action === 'subscribe' ? 'feather-bell' : 'feather-bell-off'">
-          </ng-icon>
-        </button>
+        <div wslDropdown>
+          <button
+            class="flex items-center h-full space-x-1 delay-200 wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle"
+            id="dropdown-button-subscribe" aria-haspopup="true"
+            aria-expanded="false">
+            <ng-icon class="wsl-text-muted" size="1.05rem" name="feather-bell"
+              [ngClass]="{'rotate-12': suite.subscription === NotificationType.None}">
+            </ng-icon>
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
+              {{ suite.subscription === NotificationType.None ? 'Subscribe' : 'Subscribed' }}
+            </span>
+          </button>
+          <ul class="hidden w-max wsl-dropdown-menu"
+            aria-labelledby="dropdown-button-subscribe">
+            <ng-container *ngFor="let level of levels">
+              <li class="flex items-center space-x-2 wsl-dropdown-item"
+                [ngClass]="{'bg-gray-200 dark:bg-gray-700': suite.subscription === level.type}"
+                (click)="subscription = level.type">
+                <ng-icon [name]="level.icon" class="wsl-text-muted"
+                  size="1.05rem">
+                </ng-icon>
+                <span class="font-medium"
+                  [ngClass]="suite.subscription === level.type ? 'text-gray-800 dark:text-gray-100' : 'text-gray-600 dark:text-gray-300'">
+                  {{ level.text }}
+                </span>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
       </div>
     </div>
     <nav>

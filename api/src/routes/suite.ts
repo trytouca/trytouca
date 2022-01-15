@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import express from 'express'
 import * as ev from 'express-validator'
@@ -8,7 +8,6 @@ import { ctrlSuiteList } from '@/controllers/suite/list'
 import { ctrlSuiteLookup } from '@/controllers/suite/lookup'
 import { ctrlSuiteRemove } from '@/controllers/suite/remove'
 import { suiteSubscribe } from '@/controllers/suite/subscribe'
-import { suiteUnsubscribe } from '@/controllers/suite/unsubscribe'
 import { suiteUpdate } from '@/controllers/suite/update'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
@@ -286,7 +285,7 @@ router.delete(
 /**
  * Subscribe to a suite in a given team.
  *
- * @api [post] /suite/:team/:suite/subscribe
+ * @api [patch] /suite/:team/:suite/subscribe
  *    tags:
  *      - Suite
  *    summary: 'Subscribe to Suite'
@@ -298,6 +297,15 @@ router.delete(
  *    parameters:
  *      - $ref: '#/components/parameters/team'
  *      - $ref: '#/components/parameters/suite'
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              level:
+ *                $ref: '#/components/schemas/CT_ENotificationType'
+ *      required: true
  *    responses:
  *      204:
  *        description: 'User Subscribed to Suite'
@@ -314,53 +322,14 @@ router.delete(
  *            schema:
  *              $ref: '#/components/schemas/Errors'
  */
-router.post(
+router.patch(
   '/:team/:suite/subscribe',
   middleware.isAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
   middleware.hasSuite,
+  express.json(),
   promisable(suiteSubscribe, 'subscribe suite')
-)
-
-/**
- * Unsubscribe from a suite in a given team.
- *
- * @api [post] /suite/:team/:suite/unsubscribe
- *    tags:
- *      - Suite
- *    summary: 'Unsubscribe from Suite'
- *    operationId: 'suite_unsubscribe'
- *    description:
- *      Unsubscribe from a suite in a given team.
- *      User initiating the request must be authenticated.
- *      User initiating the request must be member of the team.
- *    parameters:
- *      - $ref: '#/components/parameters/team'
- *      - $ref: '#/components/parameters/suite'
- *    responses:
- *      204:
- *        description: 'User Unsubscribed from Suite'
- *      400:
- *        $ref: '#/components/responses/RequestInvalid'
- *      401:
- *        $ref: '#/components/responses/Unauthorized'
- *      403:
- *        $ref: '#/components/responses/Forbidden'
- *      404:
- *        description: 'Team Not Found or Suite Not Found'
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/Errors'
- */
-router.post(
-  '/:team/:suite/unsubscribe',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  promisable(suiteUnsubscribe, 'unsubscribe suite')
 )
 
 export const suiteRouter = router

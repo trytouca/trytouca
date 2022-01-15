@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { Types } from 'mongoose'
 
@@ -8,6 +8,7 @@ import type {
   BatchItem,
   CppTestcaseComparisonOverview,
   CppTestcaseOverview,
+  ENotificationType,
   SuiteItem,
   Userinfo
 } from './commontypes'
@@ -18,6 +19,11 @@ export type PromotionQueryOutput = {
   for: string
   from: Types.ObjectId
   to: Types.ObjectId
+}
+
+export type SubscriptionQueryOutput = {
+  user: Types.ObjectId
+  level: ENotificationType
 }
 
 export type BatchItemQueryOutput = Exclude<BatchItem, 'submittedBy'> & {

@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -8,6 +8,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgIconsModule } from '@ng-icons/core';
 import {
+  FeatherAlertCircle,
   FeatherArchive,
   FeatherBell,
   FeatherBellOff,
@@ -21,6 +22,7 @@ import {
   FeatherLinkedin,
   FeatherList,
   FeatherPlusCircle,
+  FeatherRss,
   FeatherSend,
   FeatherSettings,
   FeatherTrash2,
@@ -79,6 +81,7 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     FormsModule,
     HttpClientModule,
     NgIconsModule.withIcons({
+      FeatherAlertCircle,
       FeatherArchive,
       FeatherBell,
       FeatherBellOff,
@@ -92,6 +95,7 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
       FeatherLinkedin,
       FeatherList,
       FeatherPlusCircle,
+      FeatherRss,
       FeatherSend,
       FeatherSettings,
       FeatherTrash2,

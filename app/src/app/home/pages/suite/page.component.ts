@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
@@ -13,6 +13,7 @@ import type {
   SuiteLookupResponse,
   TeamItem
 } from '@/core/models/commontypes';
+import { ENotificationType } from '@/core/models/commontypes';
 import { getBackendUrl } from '@/core/models/environment';
 import {
   AlertKind,
@@ -38,13 +39,6 @@ type NotFound = Partial<{
 type Fields = Partial<{
   apiKey: ApiKey;
   apiUrl: string;
-  subscribe: {
-    action: 'subscribe' | 'unsubscribe';
-    count: number;
-    message: string;
-    name: string;
-    title: string;
-  };
 }>;
 
 @Component({
@@ -60,6 +54,23 @@ export class SuitePageComponent
   suites: SuiteItem[];
   suite: SuiteLookupResponse;
   fields: Fields = {};
+  levels = [
+    {
+      icon: 'feather-rss',
+      type: ENotificationType.All,
+      text: 'Get notified of all new versions.'
+    },
+    {
+      icon: 'feather-alert-circle',
+      type: ENotificationType.Different,
+      text: 'Get notified of versions with differences.'
+    },
+    {
+      icon: 'feather-bell-off',
+      type: ENotificationType.None,
+      text: 'Stop all notifications about this suite.'
+    }
+  ];
 
   tabs: PageTab<SuitePageTabType>[];
   currentTab: SuitePageTabType;
@@ -67,6 +78,7 @@ export class SuitePageComponent
 
   banner: SuiteBannerType;
   BannerType = SuiteBannerType;
+  NotificationType = ENotificationType;
 
   private _sub: Record<
     'alert' | 'banner' | 'tabs' | 'team' | 'suites' | 'suite' | 'user',
@@ -121,7 +133,6 @@ export class SuitePageComponent
           v.teamSlug,
           v.suiteSlug
         ].join('/');
-        this.updateFields();
         this.updateTitle(v);
       }),
       user: userService.currentUser$.subscribe((v) => {
@@ -185,47 +196,17 @@ export class SuitePageComponent
     this.titleService.setTitle(title);
   }
 
-  private updateFields() {
-    this.fields.subscribe = {
-      action: this.suite.isSubscribed ? 'unsubscribe' : 'subscribe',
-      count: this.suite.subscriberCount,
-      message: this.suite.isSubscribed
-        ? 'You will no longer receive notifications for this testsuite.'
-        : 'You are now subscribed to this suite. You will receive notifications for this testsuite.',
-      name: this.suite.isSubscribed ? 'Unsubscribe' : 'Subscribe',
-      title: this.suite.isSubscribed
-        ? 'Unsubscribe from this Suite.'
-        : 'Subscribe to this suite.'
-    };
-  }
-
-  public toggleSubscription(): void {
-    const action = this.fields.subscribe.action;
-    const successMessage = this.fields.subscribe.message;
-    this.suitePageService.updateSubscription(action).subscribe(
-      () => {
-        this.suite.isSubscribed = action === 'subscribe';
-        this.suite.subscriberCount += action === 'subscribe' ? 1 : -1;
-        this.updateFields();
-        this.notificationService.notify(AlertType.Success, successMessage);
+  set subscription(type: ENotificationType) {
+    this.suitePageService.updateSubscription(type).subscribe({
+      next: () => {
+        this.suite.subscription = type;
       },
-      (error: HttpErrorResponse) => {
-        if (error.status === 401) {
-          this.notificationService.notify(
-            AlertType.Danger,
-            'Your user session has expired. Please login again.'
-          );
-          timer(2000).subscribe(() => {
-            this.router.navigate(['/']);
-          });
-          return;
-        }
+      error: (err: HttpErrorResponse) => {
         this.notificationService.notify(
           AlertType.Danger,
-          'We are sorry, something went wrong. ' +
-            'Please try this operation at a later time.'
+          'We are sorry, something went wrong. Please try this operation at a later time.'
         );
       }
-    );
+    });
   }
 }

@@ -1,14 +1,14 @@
 <div class="flex items-stretch space-x-2 whitespace-nowrap">
   <form class="flex-grow">
-    <input type="search" placeholder="{{ filterQueryPlaceholder }}&hellip;"
-      autocomplete="off" name="rowFilter" id="rowFilter"
-      (keyup)="onKeyupRowFilter($event)" [value]="filterQueryValue"
-      class="wsl-input-field">
+    <input class="wsl-input-field" type="search"
+      placeholder="{{ filterQueryPlaceholder }}&hellip;" autocomplete="off"
+      name="rowFilter" id="rowFilter" (keyup)="onKeyupRowFilter($event)"
+      [value]="filterQueryValue">
   </form>
   <div wslDropdown>
-    <button type="button" id="dropdown-button-filter" aria-haspopup="true"
-      aria-expanded="false"
-      class="h-full wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle">
+    <button class="h-full wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle"
+      type="button" id="dropdown-button-filter" aria-haspopup="true"
+      aria-expanded="false">
       Filter: <b class="font-medium">{{ filterName }}</b>&nbsp;<fa-icon
         icon="chevron-down" size="xs" class="opacity-50"></fa-icon>
     </button>
@@ -21,9 +21,9 @@
     </ul>
   </div>
   <div wslDropdown>
-    <button type="button" id="dropdown-button-sort" aria-haspopup="true"
-      aria-expanded="false" [disabled]="isSearchActive()"
-      class="h-full wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle">
+    <button class="h-full wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle"
+      type="button" id="dropdown-button-sort" aria-haspopup="true"
+      aria-expanded="false" [disabled]="isSearchActive()">
       Sort: <b class="font-medium">{{ sorterName }}</b>&nbsp;<fa-icon
         icon="chevron-down" size="xs" class="opacity-50"></fa-icon>
     </button>

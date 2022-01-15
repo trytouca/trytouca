@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -8,6 +8,7 @@ import { forkJoin, Observable, of, Subject } from 'rxjs';
 import type {
   BatchListResponse,
   ElementListResponse,
+  ENotificationType,
   SuiteItem,
   SuiteLookupResponse,
   TeamLookupResponse
@@ -216,15 +217,13 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     this.fetchItems({ currentTab, teamSlug, suiteSlug });
   }
 
-  public updateSubscription(
-    action: 'subscribe' | 'unsubscribe'
-  ): Observable<void> {
+  public updateSubscription(level: ENotificationType): Observable<void> {
     const url = [
       'suite',
       this._cache.suite.teamSlug,
       this._cache.suite.suiteSlug,
-      action
+      'subscribe'
     ].join('/');
-    return this.apiService.post(url);
+    return this.apiService.patch(url, { level });
   }
 }

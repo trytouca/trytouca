@@ -1,5 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -36,7 +37,7 @@ export class ActivateComponent implements OnDestroy {
         localStorage.setItem(ELocalStorageKey.TokenExpiresAt, doc.expiresAt);
         router.navigate(['/account/welcome']);
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         const error = apiService.extractError(err, [
           [400, 'invalid activation key', 'This activation key is invalid.'],
           [404, 'activation key not found', 'This activation key has expired.']
