@@ -4,6 +4,7 @@
 
 #include "cxxopts.hpp"
 #include "nlohmann/json.hpp"
+#include "touca/client/detail/options.hpp"
 #include "touca/core/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
@@ -161,7 +162,6 @@ bool parse_file_options(FrameworkOptions& options) {
   }
 
   // load configuration file in memory
-
   const auto& content = touca::detail::load_string_file(options.config_file);
 
   // parse configuration file
@@ -187,20 +187,21 @@ bool parse_file_options(FrameworkOptions& options) {
             "field \"touca\" in configuration file has unexpected type\n");
         return false;
       }
-      parse_file_option(result, "api-key", options.api_key);
-      parse_file_option(result, "api-url", options.api_url);
       parse_file_option(result, "team", options.team);
       parse_file_option(result, "suite", options.suite);
       parse_file_option(result, "revision", options.revision);
+      parse_file_option(result, "api-key", options.api_key);
+      parse_file_option(result, "api-url", options.api_url);
+      parse_file_option(result, "offline", options.offline);
+      parse_file_option(result, "single-thread", options.single_thread);
+
       parse_file_option(result, "config-file", options.config_file);
       parse_file_option(result, "output-dir", options.output_dir);
       parse_file_option(result, "log-level", options.log_level);
       parse_file_option(result, "save-as-binary", options.save_binary);
       parse_file_option(result, "save-as-json", options.save_json);
-      parse_file_option(result, "single-thread", options.single_thread);
       parse_file_option(result, "skip-logs", options.skip_logs);
       parse_file_option(result, "redirect-output", options.redirect);
-      parse_file_option(result, "offline", options.offline);
       parse_file_option(result, "overwrite", options.overwrite);
       parse_file_option(result, "testcase-file", options.testcase_file);
     } else {
@@ -212,21 +213,6 @@ bool parse_file_options(FrameworkOptions& options) {
     }
   }
 
-  return true;
-}
-
-bool parse_env_variables(FrameworkOptions& options) {
-  const std::unordered_map<std::string, std::string&> env_table = {
-      {"TOUCA_API_KEY", options.api_key},
-      {"TOUCA_API_URL", options.api_url},
-      {"TOUCA_TEST_VERSION", options.revision},
-  };
-  for (const auto& kvp : env_table) {
-    const auto env_value = std::getenv(kvp.first.c_str());
-    if (env_value != nullptr) {
-      kvp.second = env_value;
-    }
-  }
   return true;
 }
 
@@ -256,7 +242,7 @@ bool parse_options(int argc, char* argv[], FrameworkOptions& options) {
   auto ret = true;
   ret &= detail::parse_cli_options(argc, argv, options);
   ret &= detail::parse_file_options(options);
-  ret &= detail::parse_env_variables(options);
+  parse_env_variables(options);
   ret &= detail::parse_api_url(options);
   return ret;
 }

@@ -24,14 +24,15 @@ func_t parse_member(bool& member) {
 }
 }  // namespace detail
 
-bool reformat_options(ClientOptions& existing) {
-  // apply environment variables. the implementation below ensures
-  // that the environment variables take precedence over the specified
-  // configuration parameters.
+/**
+ * the implementation below ensures that the environment variables take
+ * precedence over the specified configuration parameters.
+ */
+void parse_env_variables(ClientOptions& options) {
   const std::unordered_map<std::string, std::string&> env_table = {
-      {"TOUCA_API_KEY", existing.api_key},
-      {"TOUCA_API_URL", existing.api_url},
-      {"TOUCA_TEST_VERSION", existing.revision},
+      {"TOUCA_API_KEY", options.api_key},
+      {"TOUCA_API_URL", options.api_url},
+      {"TOUCA_TEST_VERSION", options.revision},
   };
   for (const auto& kvp : env_table) {
     const auto env_value = std::getenv(kvp.first.c_str());
@@ -39,6 +40,10 @@ bool reformat_options(ClientOptions& existing) {
       kvp.second = env_value;
     }
   }
+}
+
+bool reformat_options(ClientOptions& existing) {
+  parse_env_variables(existing);
 
   // associate a name to each string-based configuration parameter
   const std::unordered_map<std::string, std::string&> params = {

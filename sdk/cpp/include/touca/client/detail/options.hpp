@@ -19,6 +19,8 @@ struct ClientOptions {
   bool single_thread = false; /**< Isolates testcase scope to calling thread */
 };
 
+void parse_env_variables(ClientOptions& options);
+
 bool reformat_options(ClientOptions& existing);
 
 void parse_options(const std::unordered_map<std::string, std::string>& options,
