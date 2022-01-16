@@ -6,6 +6,7 @@
 #include <sstream>
 
 #include "nlohmann/json.hpp"
+#include "touca/client/detail/options.hpp"
 #include "touca/core/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
 #include "touca/devkit/utils.hpp"
@@ -19,133 +20,33 @@ constexpr unsigned post_max_cases = 10;
 
 namespace touca {
 
-using func_t = std::function<void(const std::string&)>;
-
-template <typename T>
-func_t parse_member(T& member);
-
-template <>
-func_t parse_member(std::string& member) {
-  return [&member](const std::string& value) { member = value; };
-}
-
-template <>
-func_t parse_member(bool& member) {
-  return [&member](const std::string& value) { member = value != "false"; };
-}
-
 bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
   _config_error.clear();
-
-  std::unordered_map<std::string, std::function<void(const std::string&)>>
-      parsers;
-  parsers.emplace("team", parse_member(_options.team));
-  parsers.emplace("suite", parse_member(_options.suite));
-  parsers.emplace("version", parse_member(_options.revision));
-  parsers.emplace("api-key", parse_member(_options.api_key));
-  parsers.emplace("api-url", parse_member(_options.api_url));
-  parsers.emplace("offline", parse_member(_options.offline));
-  parsers.emplace("single-thread", parse_member(_options.single_thread));
-
-  for (const auto& kvp : opts) {
-    if (!parsers.count(kvp.first)) {
-      _config_error =
-          touca::detail::format("unknown parameter \"{}\"", kvp.first);
-      return false;
-    }
-    parsers.at(kvp.first)(kvp.second);
-  }
-  return configure_impl();
+  parse_options(opts, _options);
+  return apply_options();
 }
 
 bool ClientImpl::configure(const ClientOptions& options) {
   _config_error.clear();
   _options = options;
-  return configure_impl();
+  return apply_options();
 }
 
-bool ClientImpl::configure_impl() {
-  // apply environment variables. the implementation below ensures
-  // that the environment variables take precedence over the specified
-  // configuration parameters.
-
-  const std::unordered_map<std::string, std::string&> env_table = {
-      {"TOUCA_API_KEY", _options.api_key},
-      {"TOUCA_API_URL", _options.api_url},
-      {"TOUCA_TEST_VERSION", _options.revision},
-  };
-  for (const auto& kvp : env_table) {
-    const auto env_value = std::getenv(kvp.first.c_str());
-    if (env_value != nullptr) {
-      kvp.second = env_value;
+bool ClientImpl::apply_options() {
+  try {
+    if (reformat_options(_options)) {
+      _configured = true;
+      return true;
     }
-  }
-
-  // associate a name to each string-based configuration parameter
-
-  const std::unordered_map<std::string, std::string&> params = {
-      {"team", _options.team},
-      {"suite", _options.suite},
-      {"version", _options.revision},
-      {"api-key", _options.api_key},
-      {"api-url", _options.api_url}};
-
-  // if `api-url` is given in long format, parse `team`, `suite`, and
-  // `version` from its path.
-
-  ApiUrl api_url(_options.api_url);
-  if (!api_url.confirm(_options.team, _options.suite, _options.revision)) {
-    _config_error = api_url._error;
+  } catch (const std::exception& ex) {
+    _config_error = ex.what();
+    _configured = false;
     return false;
-  }
-  _options.team = api_url._team;
-  _options.suite = api_url._suite;
-  _options.revision = api_url._revision;
-
-  // if required parameters are not set, maybe user is just experimenting.
-
-  const auto is_pristine = [&params](const std::vector<std::string>& keys) {
-    return std::all_of(
-        keys.begin(), keys.end(),
-        [&params](const std::string& key) { return params.at(key).empty(); });
-  };
-  if (is_pristine({"team", "suite", "version", "api-key", "api-url"})) {
-    _configured = true;
-    return true;
-  }
-
-  // check that the set of available configuration parameters includes
-  // the bare minimum required parameters.
-
-  for (const auto& param : {"team", "suite", "version"}) {
-    if (params.at(param).empty()) {
-      _config_error = fmt::format(
-          "required configuration parameter \"{}\" is missing", param);
-      return false;
-    }
-  }
-
-  // if `api_key` and `api_url` are not provided, assume user does
-  // not intend to submit results in which case we are done.
-
-  if (_options.offline) {
-    _configured = true;
-    return true;
-  }
-
-  // otherwise, check that all necessary config params are provided.
-
-  for (const auto& param : {"api-key", "api-url"}) {
-    if (params.at(param).empty()) {
-      _config_error = fmt::format(
-          "required configuration parameter \"{}\" is missing", param);
-      return false;
-    }
   }
 
   // perform authentication to server using the provided
   // API key and obtain API token for posting results.
-
+  ApiUrl api_url(_options.api_url);
   _platform = std::unique_ptr<Platform>(new Platform(api_url));
   if (!_platform->auth(_options.api_key)) {
     _config_error = _platform->get_error();
@@ -153,7 +54,6 @@ bool ClientImpl::configure_impl() {
   }
 
   // retrieve list of known test cases for this suite
-
   if (_options.testcases.empty()) {
     _options.testcases = _platform->elements();
     if (_options.testcases.empty()) {
@@ -167,49 +67,13 @@ bool ClientImpl::configure_impl() {
 }
 
 bool ClientImpl::configure_by_file(const touca::filesystem::path& path) {
-  // check that specified path leads to an existing regular file on disk
-
-  if (!touca::filesystem::is_regular_file(path)) {
-    _config_error = "configuration file is missing";
+  try {
+    return configure(load_options(path.string()));
+  } catch (const std::exception& ex) {
+    _config_error = ex.what();
+    _configured = false;
     return false;
   }
-
-  // load content of configuration file into memory
-
-  std::ifstream ifs(path.string());
-  std::stringstream ss;
-  ss << ifs.rdbuf();
-
-  // attempt to parse content of configuration file
-
-  const auto& parsed = nlohmann::json::parse(ss.str(), nullptr, false);
-
-  // check that configuration file has a top-level `touca` section
-
-  if (!parsed.is_object() || !parsed.contains("touca") ||
-      !parsed["touca"].is_object()) {
-    _config_error = "configuration file is not valid";
-    return false;
-  }
-
-  // populate an OptionsMap with the value of configuration parameters
-  // specified in the JSON file.
-
-  OptionsMap opts;
-
-  // parse configuration parameters whose value may be specified as string
-
-  const auto& strKeys = {"api-key", "api-url", "team",         "suite",
-                         "version", "offline", "single-thread"};
-
-  const auto& config = parsed["touca"];
-  for (const auto& key : strKeys) {
-    if (config.contains(key) && config[key].is_string()) {
-      opts.emplace(key, config[key].get<std::string>());
-    }
-  }
-
-  return configure(opts);
 }
 
 void ClientImpl::add_logger(std::shared_ptr<logger> logger) {

@@ -18,6 +18,7 @@ target_sources(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
         client/client.cpp
+        client/options.cpp
         client/touca.cpp
         core/filesystem.cpp
         core/testcase.cpp
@@ -33,9 +34,10 @@ if (TOUCA_BUILD_FRAMEWORK)
     target_sources(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
+        runner/options.cpp
         runner/ostream.cpp
         runner/runner.cpp
-        runner/options.cpp
+        runner/suites.cpp
     )
 endif()
 

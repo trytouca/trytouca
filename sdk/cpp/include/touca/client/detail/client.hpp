@@ -5,6 +5,7 @@
 #include <thread>
 #include <unordered_map>
 
+#include "touca/client/detail/options.hpp"
 #include "touca/core/filesystem.hpp"
 #include "touca/core/testcase.hpp"
 #include "touca/devkit/platform.hpp"
@@ -21,18 +22,6 @@ using path = std::string;
 enum class DataFormat : unsigned char {
   FBS, /**< flatbuffers */
   JSON /**< json */
-};
-
-struct ClientOptions {
-  explicit ClientOptions() = default;
-  std::vector<std::string> testcases;
-  std::string api_key;  /**< API Key to authenticate to the Touca server */
-  std::string api_url;  /**< URL to Touca server API */
-  std::string team;     /**< version of code under test */
-  std::string suite;    /**< Suite to which results should be submitted */
-  std::string revision; /**< Team to which this suite belongs */
-  bool offline = false; /**< Perform server handshake during configuration */
-  bool single_thread = false; /**< Isolates testcase scope to calling thread */
 };
 
 /**
@@ -85,7 +74,7 @@ class TOUCA_CLIENT_API ClientImpl {
   bool seal() const;
 
  private:
-  bool configure_impl();
+  bool apply_options();
 
   std::string get_last_testcase() const;
 

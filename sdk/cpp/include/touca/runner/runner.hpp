@@ -33,27 +33,9 @@
 
 #include "touca/client/detail/client.hpp"
 #include "touca/lib_api.hpp"
+#include "touca/runner/detail/options.hpp"
 
 namespace touca {
-
-/**
- * Test framework configuration options
- */
-struct FrameworkOptions : public ClientOptions {
-  std::map<std::string, std::string> extra;
-  std::string testcase_file;
-  std::string config_file;
-  std::string output_dir = "./results";
-  std::string log_level = "info";
-  bool has_help = false;
-  bool has_version = false;
-  bool colored_output = true;
-  bool save_binary = true;
-  bool save_json = false;
-  bool skip_logs = false;
-  bool redirect = true;
-  bool overwrite = false;
-};
 
 TOUCA_CLIENT_API std::vector<std::string> get_testsuite_remote(
     const FrameworkOptions& options);
