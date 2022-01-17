@@ -122,8 +122,7 @@ shows an API Key and an API URL that you can use to submit test results.
 ```bash
 export TOUCA_API_KEY="8073c34f-a48c-4e69-af9f-405b9943f8cc"
 export TOUCA_API_URL="https://api.touca.io/@/tutorial/prime-test"
-echo -e "19\n51\n97" > testcases.txt
-python 01_python_minimal/is_prime_test.py --testcase-file testcases.txt --revision 1.0
+python 01_python_minimal/is_prime_test.py --revision 1.0 --testcase 19 51 97
 ```
 
 ```text
