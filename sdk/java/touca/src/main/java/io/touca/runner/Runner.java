@@ -29,6 +29,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
+import org.fusesource.jansi.Ansi;
 
 /**
  * Entry-point to the Touca test framework.
@@ -39,6 +40,10 @@ public class Runner {
   private final RunnerOptions options = new RunnerOptions();
   private final Statistics stats = new Statistics();
   private final Timer timer = new Timer();
+
+  private enum Status {
+    Pass, Skip, Fail
+  }
 
   private static final class Timer {
     private final Map<String, Long> tics = new HashMap<>();
@@ -63,60 +68,68 @@ public class Runner {
   private static final class Printer {
     private int testcaseWidth;
     private int testcaseCount;
+    private boolean coloredOutput;
 
     public Printer(RunnerOptions options) {
       this.testcaseWidth =
           Arrays.stream(options.testcases).map(item -> item.length()).reduce(0,
               (sum, item) -> Math.max(sum, item));
       this.testcaseCount = options.testcases.length;
+      this.coloredOutput = options.coloredOutput;
     }
 
     private void print(final String fmt, Object... args) {
       System.out.printf(fmt, args);
     }
 
+    private void print(final Ansi ansi, final String fmt, Object... args) {
+      if (!this.coloredOutput) {
+        System.out.printf(fmt, args);
+        return;
+      }
+      System.out.printf(ansi.a(String.format(fmt, args)).reset().toString());
+    }
+
     public void printHeader(final String suite, final String version) {
       this.print("%nTouca Test Framework%nSuite: %s/%s%n%n", suite, version);
     }
 
-    public void printProgress(Timer timer, String testcase, int index,
-        List<String> errors, boolean shouldSkip) {
+    public void printProgress(int index, Status status, String testcase,
+        Timer timer, List<String> errors) {
       final int pad = (int) Math.floor(Math.log10(this.testcaseCount)) + 1;
-      this.print(" %" + pad + "s%s.%s ", index + 1, Color.BLACK_BRIGHT,
-          Color.RESET);
-      String status;
-      if (shouldSkip) {
-        status = Color.YELLOW_BACKGROUND + " SKIP " + Color.RESET;
-      } else if (errors.isEmpty()) {
-        status = Color.GREEN_BACKGROUND + " PASS " + Color.RESET;
-      } else {
-        status = Color.RED_BACKGROUND + " FAIL " + Color.RESET;
+      this.print(" %" + pad + "s", index + 1);
+      this.print(Ansi.ansi().fgBrightBlack(), ". ");
+      if (status == Status.Skip) {
+        this.print(Ansi.ansi().bg(Ansi.Color.YELLOW), " SKIP ");
+      } else if (status == Status.Pass) {
+        this.print(Ansi.ansi().bg(Ansi.Color.GREEN), " PASS ");
+      } else if (status == Status.Fail) {
+        this.print(Ansi.ansi().bg(Ansi.Color.RED), " FAIL ");
       }
-      System.out.print(status);
       this.print(" %-" + Integer.toString(this.testcaseWidth) + "s", testcase);
-      System.out.printf("   %s(%d ms)%s%n", Color.BLACK_BRIGHT,
-          timer.count(testcase), Color.RESET);
+      this.print(Ansi.ansi().fgBrightBlack(), "   (%d ms)%n",
+          timer.count(testcase));
       if (!errors.isEmpty()) {
-        this.print("%n   %sException Thrown:%s%n", Color.BLACK_BRIGHT,
-            Color.RESET);
+        this.print(Ansi.ansi().fgBrightBlack(), "%n   Exception Thrown:%n");
         for (final String error : errors) {
           this.print("      - %s", error);
         }
       }
     }
 
-    public void printFooter(Statistics stats, Timer timer) {
-      System.out.printf("%nTests:      ");
-      if (stats.count("pass") != 0) {
-        this.print("%s%d passed%s, ", Color.GREEN, stats.count("pass"),
-            Color.RESET);
-      } else if (stats.count("skip") != 0) {
-        this.print("%s%d skipped%s, ", Color.YELLOW, stats.count("skip"),
-            Color.RESET);
-      } else if (stats.count("fail") != 0) {
-        this.print("%s%d failed%s, ", Color.RED, stats.count("fail"),
-            Color.RESET);
+    private void printFooterSegment(Statistics stats, Status status,
+        String text, Ansi.Color color) {
+      if (stats.count(status) != 0) {
+        this.print(Ansi.ansi().fg(color), "%d %s", stats.count(status), text);
+        this.print(", ");
       }
+    }
+
+    public void printFooter(Statistics stats, Timer timer) {
+      this.print("%nTests:      ");
+      printFooterSegment(stats, Status.Pass, "passed", Ansi.Color.GREEN);
+      printFooterSegment(stats, Status.Skip, "skipped", Ansi.Color.YELLOW);
+      printFooterSegment(stats, Status.Fail, "failed", Ansi.Color.RED);
       this.print("%d total%n", this.testcaseCount);
       this.print("Time:       %.2f s%n", timer.count("__workflow__") / 1000.0);
       this.print("%n✨   Ran all test suites.%n%n");
@@ -125,15 +138,15 @@ public class Runner {
   }
 
   private static final class Statistics {
-    private final Map<String, Long> values = new HashMap<>();
+    private final Map<Status, Long> values = new HashMap<>();
 
-    public void increment(final String key) {
+    public void increment(final Status key) {
       if (values.computeIfPresent(key, (k, v) -> v + 1) == null) {
         values.put(key, 1L);
       }
     }
 
-    public Long count(final String key) {
+    public Long count(final Status key) {
       return values.getOrDefault(key, 0L);
     }
   }
@@ -181,6 +194,7 @@ public class Runner {
         x.saveAsJson = parseBoolean.apply("save-as-json", false);
         x.overwrite = parseBoolean.apply("overwrite", false);
         x.outputDirectory = cmd.getOptionValue("outputDirectory", "./results");
+        x.coloredOutput = parseBoolean.apply("colored-output", true);
       }));
 
     } catch (final ParseException ex) {
@@ -318,8 +332,8 @@ public class Runner {
           .resolve(options.suite).resolve(options.version).resolve(testcase);
 
       if (!options.overwrite && this.shouldSkip(testcase)) {
-        printer.printProgress(timer, testcase, index, errors, true);
-        stats.increment("skip");
+        printer.printProgress(index, Status.Skip, testcase, timer, errors);
+        stats.increment(Status.Skip);
         continue;
       }
 
@@ -349,7 +363,7 @@ public class Runner {
       }
 
       timer.toc(testcase);
-      stats.increment(errors.isEmpty() ? "pass" : "fail");
+      stats.increment(errors.isEmpty() ? Status.Pass : Status.Fail);
 
       if (errors.isEmpty() && options.saveAsBinary) {
         final Path path = testcaseDirectory.resolve("touca.bin");
@@ -373,7 +387,8 @@ public class Runner {
         client.post();
       }
 
-      printer.printProgress(timer, testcase, index, errors, false);
+      printer.printProgress(index, errors.isEmpty() ? Status.Pass : Status.Skip,
+          testcase, timer, errors);
 
       client.forgetTestcase(testcase);
     }
@@ -439,6 +454,9 @@ public class Runner {
     options.addOption(Option.builder().longOpt("offline").type(Boolean.class)
         .optionalArg(true).numberOfArgs(1)
         .desc("Disables all communications with the Touca server").build());
+    options.addOption(Option.builder().longOpt("colored-output")
+        .type(Boolean.class).optionalArg(true).numberOfArgs(1)
+        .desc("Use color in standard output").build());
     return options;
   }
 

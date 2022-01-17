@@ -15,6 +15,7 @@ public final class RunnerOptions extends Options {
   public Boolean saveAsJson;
   public Boolean overwrite;
   public String outputDirectory;
+  public Boolean coloredOutput;
 
   /**
    * Creates an instance without setting any configuration option.
@@ -47,6 +48,7 @@ public final class RunnerOptions extends Options {
     saveAsJson = incoming.saveAsJson;
     overwrite = incoming.overwrite;
     outputDirectory = incoming.outputDirectory;
+    coloredOutput = incoming.coloredOutput;
   }
 
 }

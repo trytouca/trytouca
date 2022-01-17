@@ -10,6 +10,7 @@ plugins {
 }
 
 dependencies {
+    implementation("org.fusesource.jansi:jansi:2.4.0")
     implementation("com.google.code.gson:gson:2.8.9")
     implementation("com.google.flatbuffers:flatbuffers-java:2.0.3")
     implementation("commons-cli:commons-cli:1.5.0")
