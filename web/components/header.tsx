@@ -2,9 +2,9 @@
 
 import { Menu, Transition } from '@headlessui/react';
 import Link from 'next/link';
-import { Fragment } from 'react';
+import { Fragment, useCallback, useEffect, useState } from 'react';
 import { FaGithub } from 'react-icons/fa';
-import { HiMenu } from 'react-icons/hi';
+import { HiMenu, HiOutlineNewspaper } from 'react-icons/hi';
 
 import { make_path } from '@/lib/api';
 
@@ -20,21 +20,7 @@ export default function Header() {
     <header className="sticky top-0 z-10 h-20 bg-dark-blue-900 bg-opacity-90 backdrop-filter backdrop-blur">
       <div className="container flex items-center justify-between px-4 mx-auto">
         <div className="flex items-center select-none">
-          <Link href="/">
-            <a className="flex items-center h-20 focus:outline-none">
-              <img
-                className="h-10"
-                src={make_path('/logo/touca-logo-transparent.svg')}
-                alt="Touca Logo"
-                loading="lazy"
-                width="40px"
-                height="40px"
-              />
-              <h1 className="text-2xl font-bold leading-10 tracking-tight text-white">
-                touca<span className="text-sky-300">.io</span>
-              </h1>
-            </a>
-          </Link>
+          <LogoKit></LogoKit>
         </div>
         <nav className="items-center hidden space-x-2 md:flex">
           {items
@@ -120,3 +106,69 @@ const DropdownMenu = () => {
     </Menu>
   );
 };
+
+function LogoKit() {
+  const [anchorPoint, setAnchorPoint] = useState({ x: 0, y: 0 });
+  const [show, setShow] = useState(false);
+
+  const handleContextMenu = useCallback(
+    (event) => {
+      event.preventDefault();
+      setAnchorPoint({ x: event.pageX, y: event.pageY });
+      setShow(true);
+    },
+    [setAnchorPoint]
+  );
+
+  const handleClick = useCallback(() => {
+    show && setShow(false);
+  }, [show]);
+
+  useEffect(() => {
+    document.addEventListener('click', handleClick);
+    document
+      .querySelector('#hello')
+      .addEventListener('contextmenu', handleContextMenu);
+    return () => {
+      document.removeEventListener('click', handleClick);
+      document.removeEventListener('contextmenu', handleContextMenu);
+    };
+  });
+
+  return (
+    <>
+      <Link href="/">
+        <a className="flex items-center h-20 focus:outline-none" id="hello">
+          <img
+            className="h-10"
+            src={make_path('/logo/touca-logo-transparent.svg')}
+            alt="Touca Logo"
+            loading="lazy"
+            width="40px"
+            height="40px"
+          />
+          <h1 className="text-2xl font-bold leading-10 tracking-tight text-white">
+            touca<span className="text-sky-300">.io</span>
+          </h1>
+        </a>
+      </Link>
+      {show && (
+        <div
+          className="absolute p-1 border rounded-md bg-dark-blue-800 border-dark-blue-700"
+          style={{
+            top: anchorPoint.y,
+            left: anchorPoint.x
+          }}>
+          <a
+            className="flex items-center p-2 space-x-2 font-medium text-gray-300 transition duration-300 ease-in-out rounded-md hover:text-white group"
+            href="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-press-kit.zip"
+            target="_blank"
+            rel="noopener noreferrer">
+            <HiOutlineNewspaper size="1.2rem"></HiOutlineNewspaper>
+            <span>Download Press Kit</span>
+          </a>
+        </div>
+      )}
+    </>
+  );
+}
