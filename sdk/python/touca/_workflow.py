@@ -85,8 +85,8 @@ def _parse_cli_options(args) -> Dict[str, Any]:
         help="Disables all communications with the Touca server")
     parser.add_argument("--overwrite", const=True, default=False, nargs="?",
         help="Overwrite result directory for testcase if it already exists")
-    parser.add_argument("--color", const=True, default=True, nargs="?",
-        help="Disable colored output")
+    parser.add_argument("--colored-output", const=True, default=True, nargs="?",
+        help="Use color in standard output")
     # fmt: on
 
     parsed = vars(parser.parse_known_args(args)[0]).items()
@@ -94,7 +94,13 @@ def _parse_cli_options(args) -> Dict[str, Any]:
     # remove entries with value None from the map
     parsed = dict(filter(lambda x: x[1] is not None, parsed))
     # fix options with boolean values
-    for k in ["save_as_binary", "save_as_json", "offline", "overwrite", "color"]:
+    for k in [
+        "save_as_binary",
+        "save_as_json",
+        "offline",
+        "overwrite",
+        "colored_output",
+    ]:
         parsed[k] = True if parsed.get(k) in [True, "True", "true"] else False
 
     return parsed
@@ -271,7 +277,7 @@ class _Printer:
 
     def print_line(self, fmt: str, *args, **kwargs):
         msg = fmt.format(*args, **kwargs) if args or kwargs else fmt
-        if self.options.get("color"):
+        if self.options.get("colored_output"):
             print(msg)
             return
 
