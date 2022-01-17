@@ -47,6 +47,7 @@ interface RunnerOptions extends NodeOptions {
   testcases: string[];
   testcase_file: string;
   output_directory: string;
+  colored_output: boolean;
   // log_level: 'debug' | 'info' | 'warn';
 }
 
@@ -150,6 +151,7 @@ class Timer {
 class Printer {
   private _testcase_width: number;
   private _testcase_count: number;
+  private _colored_output: boolean;
 
   constructor(options: RunnerOptions) {
     this._testcase_width = options.testcases.reduce(
@@ -157,10 +159,16 @@ class Printer {
       0
     );
     this._testcase_count = options.testcases.length;
+    this._colored_output = options.colored_output;
   }
 
   private print(fmt: string, ...args: unknown[]) {
     process.stdout.write(util.format(fmt, ...args));
+  }
+
+  private print_color(color: chalk.Chalk, fmt: string, ...args: unknown[]) {
+    const msg = util.format(fmt, ...args);
+    process.stdout.write(this._colored_output ? color(msg) : msg);
   }
 
   public print_header(suite: string, version: string) {
@@ -175,23 +183,23 @@ class Printer {
     errors: string[] = []
   ) {
     const badge = {
-      [Status.Pass]: chalk.bgGreen(' PASS '),
-      [Status.Skip]: chalk.bgYellow(' SKIP '),
-      [Status.Fail]: chalk.bgRed(' FAIL ')
+      [Status.Pass]: { color: chalk.bgGreen, text: ' PASS ' },
+      [Status.Skip]: { color: chalk.bgYellow, text: ' SKIP ' },
+      [Status.Fail]: { color: chalk.bgRed, text: ' FAIL ' }
     }[status];
     const pad = Math.floor(Math.log10(this._testcase_count)) + 1;
-    const row = String(index + 1).padStart(pad);
-    const dot = chalk.blackBright('.');
-    const name = testcase.padEnd(this._testcase_width);
-    const perf =
-      status === Status.Skip
-        ? ''
-        : chalk.blackBright(util.format('   (%d ms)', timer.count(testcase)));
-    this.print(' %s%s %s %s%s\n', row, dot, badge, name, perf);
+    this.print(' %s', String(index + 1).padStart(pad));
+    this.print_color(chalk.blackBright, '. ');
+    this.print_color(badge.color, badge.text);
+    this.print(' %s', testcase.padEnd(this._testcase_width));
+    if (status !== Status.Skip) {
+      this.print_color(chalk.blackBright, '   (%d ms)', timer.count(testcase));
+    }
+    this.print('\n');
     if (errors.length) {
-      const head = chalk.blackBright('Exception Raised:');
       const list = errors.map((v) => util.format('      - %s', v)).join('\n');
-      this.print('\n   %s\n%s\n\n', head, list);
+      this.print_color(chalk.blackBright, '\n   Exception Raised:');
+      this.print('\n%s\n\n', list);
     }
   }
 
@@ -199,7 +207,7 @@ class Printer {
     const duration = (timer.count('__workflow__') / 1000.0).toFixed(2);
     const report = (status: Status, text: string, color: chalk.Chalk) => {
       if (stats.count(status)) {
-        this.print(color(util.format('%d %s', stats.count(status), text)));
+        this.print_color(color, '%d %s', stats.count(status), text);
         this.print(', ');
       }
     };
@@ -291,6 +299,12 @@ function _parse_cli_options(args: string[]): RunnerOptions {
         desc: 'Disables all communications with the Touca server',
         boolean: true,
         default: false
+      },
+      'colored-output': {
+        type: 'boolean',
+        desc: 'Use color in standard output',
+        boolean: true,
+        default: true
       }
     }).argv;
   return {
@@ -307,7 +321,8 @@ function _parse_cli_options(args: string[]): RunnerOptions {
     // log_level: argv['log-level'] as 'debug' | 'info' | 'warn',
     overwrite: argv['overwrite'],
     testcases: (argv['testcase'] || []).map(String),
-    testcase_file: argv['testcase-file'] as string
+    testcase_file: argv['testcase-file'] as string,
+    colored_output: argv['colored-output']
   };
 }
 
