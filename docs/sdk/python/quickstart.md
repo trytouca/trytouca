@@ -74,7 +74,7 @@ our test cases are executed.
 Let us run our Touca test, passing `13` as a sample input:
 
 ```bash
-python 01_python_minimal/is_prime_test.js --team tutorial --suite is_prime --revision 1.0 --offline --testcase 13
+python 01_python_minimal/is_prime_test.py --team tutorial --suite is_prime --revision 1.0 --offline --testcase 13
 ```
 
 This command produces the following output.
@@ -148,7 +148,7 @@ rely on Touca to check if our changes affected the behavior or performance of
 our software.
 
 ```bash
-python 01_python_minimal/is_prime_test.js --revision 2.0
+python 01_python_minimal/is_prime_test.py --revision 2.0
 ```
 
 ```text
