@@ -68,7 +68,7 @@ cxxopts::Options cli_options() {
           "overwrite result directory for testcase if it already exists",
           cxxopts::value<bool>()->implicit_value("true"))
       ("colored-output",
-          "colored output",
+          "use color in standard output",
           cxxopts::value<bool>()->default_value("true"));
   // clang-format on
 

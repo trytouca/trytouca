@@ -60,15 +60,7 @@ We can run our test from the command line:
 ```bash
 export TOUCA_API_KEY="your-api-key"
 export TOUCA_API_URL="your-api-url"
-./local/dist/bin/example_cpp_main_api --revision v1.0 --testcase-file ./testcases.txt
-```
-
-Where `./testcases.txt` has the following content:
-
-```text
-alice
-bob
-charlie
+./local/dist/bin/example_cpp_main_api --revision v1.0 --testcase alice,bob,charlie
 ```
 
 the Touca SDK captures the `Student` object with all its properties and submits
