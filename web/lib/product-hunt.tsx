@@ -9,7 +9,7 @@ export const ProductHunt = () => {
         rel="noopener noreferrer">
         <img
           src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=296653&theme=dark"
-          alt="Touca - Automated Regression Testing for Critical Software Workflows | Product Hunt"
+          alt="Touca - Continuous Regression Testing for Critical Software Workflows | Product Hunt"
           width="250"
           height="54"
         />
