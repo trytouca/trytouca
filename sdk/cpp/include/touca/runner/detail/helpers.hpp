@@ -76,8 +76,8 @@ struct Printer {
   template <typename... Args>
   void print(const std::string& fmtstr, Args&&... args) {
     const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
-    fmt::print(_file, content);
-    fmt::print(std::cout, content);
+    fmt::print(_file, "{}", content);
+    fmt::print(std::cout, "{}", content);
     _file.flush();
     std::cout.flush();
   }
@@ -86,8 +86,8 @@ struct Printer {
   void print(const fmt::text_style& style, const std::string& fmtstr,
              Args&&... args) {
     const auto& content = fmt::format(fmtstr, std::forward<Args>(args)...);
-    fmt::print(_file, content);
-    fmt::print(std::cout, _color ? fmt::format(style, content) : content);
+    fmt::print(_file, "{}", content);
+    fmt::print(std::cout, "{}", _color ? fmt::format(style, content) : content);
     _file.flush();
     std::cout.flush();
   }

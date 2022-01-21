@@ -252,6 +252,31 @@ TEST_CASE("framework-simple-workflow-valid-use") {
     CHECK(caller.cerr().empty());
   }
 
+  SECTION("run-with-strange-names") {
+    caller.call_with({"--offline", "-r", "1.0", "-o", outputDir.path.string(),
+                      "--config-file", configFile.path.string(), "--testcase",
+                      R"(he%lOo,w{}rld,こんにちは,0,🙋🏽‍♀️)",
+                      "--save-as-json", "--overwrite",
+                      "--colored-output=false"});
+
+    CHECK(caller.exit_code() == EXIT_SUCCESS);
+    CHECK_THAT(caller.cout(), Catch::Contains("Suite: some-suite/1.0"));
+    CHECK_THAT(caller.cout(),
+               Catch::Contains(R"(1.  PASS   he%lOo               (0 ms)"));
+    CHECK_THAT(caller.cout(),
+               Catch::Contains(R"(2.  PASS   w{}rld               (0 ms)"));
+    CHECK_THAT(caller.cout(),
+               Catch::Contains(R"(3.  PASS   こんにちは           (0 ms))"));
+    CHECK_THAT(caller.cout(),
+               Catch::Contains(R"(4.  PASS   0                    (0 ms))"));
+    CHECK_THAT(
+        caller.cout(),
+        Catch::Contains(R"(5.  PASS   🙋🏽‍♀️              (0 ms))"));
+    CHECK_THAT(caller.cout(), Catch::Contains("5 passed, 5 total"));
+    CHECK_THAT(caller.cout(), Catch::Contains("Ran all test suites."));
+    CHECK(caller.cerr().empty());
+  }
+
   SECTION("directory-structure") {
     fnames suiteFiles =
         ResultChecker(fnames({outputDir.path})).get_regular_files("some-suite");

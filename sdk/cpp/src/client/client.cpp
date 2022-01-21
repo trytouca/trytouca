@@ -235,8 +235,10 @@ bool ClientImpl::seal() const {
     notify_loggers(logger::Level::Error,
                    "client is not authenticated to the server");
     return false;
-  }
-  if (!_platform->seal()) {
+  };
+  if (!_platform->set_params(_options.team, _options.suite,
+                             _options.revision) ||
+      !_platform->seal()) {
     notify_loggers(logger::Level::Warning, _platform->get_error());
     return false;
   }
