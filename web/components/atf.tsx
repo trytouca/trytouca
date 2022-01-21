@@ -13,7 +13,7 @@ export default function AboveTheFold() {
             <div className="flex flex-col justify-around h-full py-12 mx-auto space-y-12 xl:col-span-2 lg:py-4 xl:py-0">
               <div className="space-y-4">
                 <h2 className="max-w-xl text-3xl font-bold text-white sm:text-4xl wsl-text-gradient xl:text-3xl">
-                  Automated Regression Testing for Critical Software Workflows
+                  Continuous Regression Testing for Critical Software Workflows
                 </h2>
                 <p className="max-w-xl text-lg text-white sm:text-xl">
                   See the true impact of code changes on the behavior and
