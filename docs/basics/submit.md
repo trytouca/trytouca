@@ -2,8 +2,8 @@ You've made it this far. Great! 👍🏼
 
 We assume you have followed our [Setup Your Account](./account-setup.md)
 tutorial to create an account on Touca. In this document, we will show you how
-to write and run a simple Touca test to submit your first test results to the
-Touca server.
+to write and run a simple regression test to submit your first test results to
+the Touca server.
 
 ![You will need your API Key and API URL to submit test results.](../.gitbook/assets/touca-submit-first-version.png)
 
@@ -143,7 +143,7 @@ public final class Student {
 {% endtabs %}
 
 We have created an [examples](https://github.com/trytouca/examples) repository
-that includes a possible implementation for this software.
+that includes a sample implementation.
 
 ![trytouca/examples repository on GitHub](../.gitbook/assets/touca-github-repo-examples.png)
 
@@ -647,8 +647,6 @@ This command produces executables in a `./local/dist/bin` directory.
 
 This example uses CMake's `FetchContent` to pull Touca SDK as a dependency. See
 our SDK documentation for instructions to use Conan, instead.
-
-{% endcode %}
 
 {% endtab %}
 
