@@ -6,7 +6,7 @@
     <div
       class="container flex items-center justify-between h-16 px-4 py-2 mx-auto">
       <div class="text-xl font-medium text-black dark:text-gray-300">
-        Platform Settings
+        Server Settings
       </div>
       <div class="print:hidden">
         <button class="wsl-btn-sm wsl-btn-primary group" type="button"
@@ -85,7 +85,7 @@
           class="p-4 space-y-2 text-sm text-black border border-gray-100 rounded-md bg-gray-50 dark:text-gray-300 dark:border-gray-700 dark:bg-gray-800"
           *ngFor="let event of events">
           <div class="flex-grow">
-            <span class="font-medium text-sky-600"
+            <span class="font-medium text-sky-600 dark:text-sky-400"
               [title]="event.username">{{ event.fullname}}</span>
             <span> {{ event.copyText }}</span>
           </div>
@@ -161,17 +161,17 @@
               <div class="wsl-dropdown-item" ngxClipboard
                 [cbContent]="account.email"
                 (cbOnSuccess)="onCopy($event, 'email address')">
-                <a class="text-sky-700">Copy Email</a>
+                <a class="text-sky-600 dark:text-sky-400">Copy Email</a>
               </div>
               <div class="wsl-dropdown-item"
                 *ngIf="account.username !== user.username && !account.suspended"
                 (click)="suspendAccount(account)">
-                <a class="text-sky-700">Suspend</a>
+                <a class="text-sky-600 dark:text-sky-400">Suspend</a>
               </div>
               <div class="wsl-dropdown-item"
                 *ngIf="account.username !== user.username && account.suspended && account.activationLink"
                 (click)="deleteAccount(account)">
-                <a class="text-sky-700">Delete</a>
+                <a class="text-sky-600 dark:text-sky-400">Delete</a>
               </div>
             </div>
           </div>
