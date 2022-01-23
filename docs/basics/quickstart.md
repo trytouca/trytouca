@@ -169,7 +169,7 @@ if __name__ == "__main__":
 #include "code_under_test.hpp"
 
 int main(int argc, char* argv[]) {
-  touca::workflow("is_prime", [](const std::string& username) {
+  touca::workflow("is_prime", [](const std::string& testcase) {
     const auto number = std::stoul(testcase);
     touca::check("output", is_prime(number));
   });
