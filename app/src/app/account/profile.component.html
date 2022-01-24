@@ -1,150 +1,197 @@
 <app-notification></app-notification>
 <app-header-inside></app-header-inside>
-<div class="flex flex-col wsl-min-h-screen-1">
+<div class="wsl-min-h-screen-1 flex flex-col">
   <div class="container mx-auto lg:grid lg:grid-cols-4 lg:gap-4">
-    <div class="lg:col-span-1">
-    </div>
-    <div class="p-4 space-y-4 lg:col-span-2">
-      <div class="flex items-center justify-between h-16 py-2 mx-auto">
-        <div class="text-xl font-medium text-black dark:text-gray-300">Account
-          Settings</div>
+    <div class="lg:col-span-1"></div>
+    <div class="space-y-4 p-4 lg:col-span-2">
+      <div class="mx-auto flex h-16 items-center justify-between py-2">
+        <div class="text-xl font-medium text-black dark:text-gray-300">
+          Account Settings
+        </div>
         <div class="print:hidden">
-          <button class="wsl-btn-sm wsl-btn-primary group" type="button"
-            routerLink="/~">Back to Dashboard</button>
+          <button
+            class="wsl-btn-sm wsl-btn-primary group"
+            type="button"
+            routerLink="/~">
+            Back to Dashboard
+          </button>
         </div>
       </div>
-      <form class="p-4 space-y-4 wsl-box" [formGroup]="accountSettingsForm"
-        (ngSubmit)="onSubmit(accountSettingsForm.value)" novalidate>
+      <form
+        class="wsl-box space-y-4 p-4"
+        [formGroup]="accountSettingsForm"
+        (ngSubmit)="onSubmit(accountSettingsForm.value)"
+        novalidate>
         <h2
-          class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
+          class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
           Your Information
         </h2>
-        <app-alert class="block" *ngIf="alert[EModalType.ChangePersonal]"
-          [alert]="alert[EModalType.ChangePersonal]">
-        </app-alert>
+        <app-alert
+          class="block"
+          *ngIf="alert[EModalType.ChangePersonal]"
+          [alert]="alert[EModalType.ChangePersonal]"></app-alert>
         <div>
           <label class="wsl-input-label" for="wsl-fname">Name</label>
-          <input class="wsl-input-field" type="text" id="wsl-fname" name="fname"
-            formControlName="fname" aria-describedby="wsl-fname-help" required
-            autocomplete="name" data-lpignore="true">
-          <small id="wsl-fname-help" [ngClass]="hints.get('fname').type"
+          <input
+            class="wsl-input-field"
+            type="text"
+            id="wsl-fname"
+            name="fname"
+            formControlName="fname"
+            aria-describedby="wsl-fname-help"
+            required
+            autocomplete="name"
+            data-lpignore="true" />
+          <small
+            id="wsl-fname-help"
+            [ngClass]="hints.get('fname').type"
             [innerHTML]="hints.get('fname').text"></small>
         </div>
         <div>
           <label class="wsl-input-label" for="wsl-uname">Username</label>
-          <input class="wsl-input-field" type="text" id="wsl-uname" name="uname"
-            formControlName="uname" aria-describedby="wsl-uname-help" required
-            autocomplete="off" data-lpignore="true">
-          <small id="wsl-uname-help" [ngClass]="hints.get('uname').type"
+          <input
+            class="wsl-input-field"
+            type="text"
+            id="wsl-uname"
+            name="uname"
+            formControlName="uname"
+            aria-describedby="wsl-uname-help"
+            required
+            autocomplete="off"
+            data-lpignore="true" />
+          <small
+            id="wsl-uname-help"
+            [ngClass]="hints.get('uname').type"
             [innerHTML]="hints.get('uname').text"></small>
         </div>
         <div>
           <label class="wsl-input-label" for="wsl-email">Email Address</label>
           <input
-            class="wsl-input-field disabled:text-gray-500 disabled:bg-transparent dark:disabled:text-gray-400"
-            type="text" id="wsl-email" name="email" formControlName="email"
-            aria-describedby="wsl-email-help">
-          <small id="wsl-email-help" [ngClass]="hints.get('email').type"
+            class="wsl-input-field disabled:bg-transparent disabled:text-gray-500 dark:disabled:text-gray-400"
+            type="text"
+            id="wsl-email"
+            name="email"
+            formControlName="email"
+            aria-describedby="wsl-email-help" />
+          <small
+            id="wsl-email-help"
+            [ngClass]="hints.get('email').type"
             [innerHTML]="hints.get('email').text"></small>
         </div>
-        <button class="font-normal wsl-btn-sm wsl-btn-primary" type="submit">
+        <button class="wsl-btn-sm wsl-btn-primary font-normal" type="submit">
           Update
         </button>
       </form>
-      <div class="p-4 space-y-2 wsl-box" *ngIf="apiKeys">
+      <div class="wsl-box space-y-2 p-4" *ngIf="apiKeys">
         <h2
-          class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
+          class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
           API Keys
         </h2>
         <div *ngFor="let key of apiKeys; let i = index">
-          <label class="block mb-1 text-sm font-medium wsl-text-muted">Key
-            {{i + 1}}</label>
+          <label class="wsl-text-muted mb-1 block text-sm font-medium">
+            Key {{ i + 1 }}
+          </label>
           <div
-            class="flex items-center p-2 bg-white border border-gray-300 rounded-md shadow-sm dark:bg-gray-800 dark:border-gray-600">
+            class="flex items-center rounded-md border border-gray-300 bg-white p-2 shadow-sm dark:border-gray-600 dark:bg-gray-800">
             <div class="flex-grow">
               <span
-                class="font-mono text-sm text-gray-700 cursor-pointer dark:text-gray-400"
-                ngxClipboard [cbContent]="key.plain"
+                class="cursor-pointer font-mono text-sm text-gray-700 dark:text-gray-400"
+                ngxClipboard
+                [cbContent]="key.plain"
                 (cbOnSuccess)="onCopy($event)">
-                {{key.value}}</span>
+                {{ key.value }}
+              </span>
             </div>
             <div class="flex items-center space-x-2">
               <button
                 class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
                 (click)="key.toggle()">
-                <ng-icon class="wsl-text-muted"
+                <ng-icon
+                  class="wsl-text-muted"
                   [name]="key.shown ? 'hero-eye-off' : 'hero-eye'"
                   size="1.1rem"></ng-icon>
               </button>
               <button
                 class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
                 (click)="regenerateApiKey(i)">
-                <ng-icon class="wsl-text-muted" name="hero-refresh"
+                <ng-icon
+                  class="wsl-text-muted"
+                  name="hero-refresh"
                   size="1.1rem"></ng-icon>
               </button>
             </div>
           </div>
         </div>
       </div>
-      <div class="p-4 space-y-4 wsl-box"
+      <div
+        class="wsl-box space-y-4 p-4"
         *ngIf="getPreferences(false).length !== 0">
         <h2
-          class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
+          class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
           Preferences
         </h2>
         <div *ngFor="let preference of getPreferences(false)">
-          <app-settings-checkbox [data]="preference"
-            (toggle)="toggleFeatureFlag($event)">
-          </app-settings-checkbox>
+          <app-settings-checkbox
+            [data]="preference"
+            (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
         </div>
       </div>
-      <div class="p-4 space-y-4 wsl-box"
+      <div
+        class="wsl-box space-y-4 p-4"
         *ngIf="getPreferences(true).length !== 0">
         <h2
-          class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
+          class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
           Experimental Features
         </h2>
         <div *ngFor="let preference of getPreferences(true)">
-          <app-settings-checkbox [data]="preference"
-            (toggle)="toggleFeatureFlag($event)">
-          </app-settings-checkbox>
+          <app-settings-checkbox
+            [data]="preference"
+            (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
         </div>
       </div>
-      <div class="p-4 space-y-2 wsl-box">
+      <div class="wsl-box space-y-2 p-4">
         <h2
-          class="pb-1 text-xl font-medium text-black border-b border-gray-200 dark:text-gray-300 dark:border-gray-700">
-          Password Reset</h2>
+          class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+          Password Reset
+        </h2>
         <p class="text-sm text-gray-600 dark:text-gray-300">
           Click below and we send you an email to reset your password.
         </p>
         <div class="flex items-center space-x-2">
-          <button class="font-normal wsl-btn-sm wsl-btn-muted" type="button"
-            role="button" (click)="resetPassword.click()"
+          <button
+            class="wsl-btn-sm wsl-btn-muted font-normal"
+            type="button"
+            role="button"
+            (click)="resetPassword.click()"
             [hidden]="resetPassword.message">
             Reset Password
           </button>
           <small
-            [class]="resetPassword.failed ? 'wsl-text-danger' : 'wsl-text-success'"
+            [class]="
+              resetPassword.failed ? 'wsl-text-danger' : 'wsl-text-success'
+            "
             [hidden]="!resetPassword.message">
             {{ resetPassword.message }}
           </small>
         </div>
       </div>
-      <div class="p-4 space-y-2 wsl-box">
+      <div class="wsl-box space-y-2 p-4">
         <h2
-          class="pb-1 text-xl font-medium border-b border-gray-200 wsl-text-danger dark:border-gray-700">
-          Danger Zone</h2>
+          class="wsl-text-danger border-b border-gray-200 pb-1 text-xl font-medium dark:border-gray-700">
+          Danger Zone
+        </h2>
         <p class="text-sm text-gray-600 dark:text-gray-300">
           Remove your user account and all its associated data.
         </p>
-        <button class="wsl-btn-sm wsl-btn-danger"
-          (click)="openConfirmModal(EModalType.DeleteAccount)" type="button">
+        <button
+          class="wsl-btn-sm wsl-btn-danger"
+          (click)="openConfirmModal(EModalType.DeleteAccount)"
+          type="button">
           Delete Account
         </button>
       </div>
     </div>
-    <div class="lg:col-span-1">
-    </div>
+    <div class="lg:col-span-1"></div>
   </div>
 </div>
 <app-footer></app-footer>

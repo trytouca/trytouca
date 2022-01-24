@@ -1,36 +1,47 @@
 <header class="sticky top-0 z-40 bg-gray-900">
-  <div class="container flex justify-between p-4 mx-auto">
-    <div class="flex items-center select-none">
-      <a class="flex items-center h-8 focus:outline-none" [routerLink]="'/'">
-        <img class="h-12" src="./assets/logo/touca-logo-transparent.svg"
+  <div class="container mx-auto flex justify-between p-4">
+    <div class="flex select-none items-center">
+      <a class="flex h-8 items-center focus:outline-none" [routerLink]="'/'">
+        <img
+          class="h-12"
+          src="./assets/logo/touca-logo-transparent.svg"
           alt="Touca Logo" />
         <h1 class="text-xl font-semibold tracking-tight text-white">Touca</h1>
       </a>
     </div>
     <nav class="flex items-center space-x-8">
       <div>
-        <a class="px-4 py-2 text-sm font-semibold leading-6 text-white bg-transparent rounded-lg rounded-6 hover:bg-sky-100 hover:bg-opacity-25"
-          href="https://docs.touca.io" target="_blank">Docs</a>
+        <a
+          class="rounded-6 rounded-lg bg-transparent px-4 py-2 text-sm font-semibold leading-6 text-white hover:bg-sky-100 hover:bg-opacity-25"
+          href="https://docs.touca.io"
+          target="_blank">
+          Docs
+        </a>
       </div>
       <div wslDropdown>
-        <a class="cursor-pointer select-none wsl-dropdown-toggle"
-          id="wsl-user-dropdown" aria-haspopup="true" aria-expanded="false">
+        <a
+          class="wsl-dropdown-toggle cursor-pointer select-none"
+          id="wsl-user-dropdown"
+          aria-haspopup="true"
+          aria-expanded="false">
           <p class="flex items-center font-medium text-white">
             {{ currentUser?.fullname }}
-            <ng-icon class="opacity-50" name="feather-chevron-down">
-            </ng-icon>
+            <ng-icon class="opacity-50" name="feather-chevron-down"></ng-icon>
           </p>
         </a>
-        <div class="hidden w-48 wsl-dropdown-menu"
+        <div
+          class="wsl-dropdown-menu hidden w-48"
           aria-labelledby="wsl-user-dropdown">
           <div class="wsl-dropdown-item" routerLink="/account/profile">
             <a class="text-sky-700 dark:text-gray-300">My Account</a>
           </div>
-          <div class="wsl-dropdown-item" *ngIf="isPlatformAdmin"
+          <div
+            class="wsl-dropdown-item"
+            *ngIf="isPlatformAdmin"
             routerLink="/account/admin">
             <a class="text-sky-700 dark:text-gray-300">Server Settings</a>
           </div>
-          <hr class="my-1 border-gray-200 dark:border-gray-700">
+          <hr class="my-1 border-gray-200 dark:border-gray-700" />
           <div class="wsl-dropdown-item" (click)="logout()">
             <a class="text-sky-700 dark:text-gray-300">Sign out</a>
           </div>

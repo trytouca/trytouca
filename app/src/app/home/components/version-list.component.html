@@ -1,28 +1,40 @@
 <div *ngIf="countVersions() !== 0" wslDropdown>
-  <div class="wsl-dropdown-toggle" id="version-dropdown-{{ side }}"
-    aria-haspopup="true" aria-expanded="false">
-    <span class="font-semibold">{{ currentVersion }}</span>&nbsp;
+  <div
+    class="wsl-dropdown-toggle"
+    id="version-dropdown-{{ side }}"
+    aria-haspopup="true"
+    aria-expanded="false">
+    <span class="font-semibold">{{ currentVersion }}</span>
+    &nbsp;
     <fa-icon icon="chevron-down" size="xs"></fa-icon>
   </div>
-  <div class="hidden w-48 wsl-dropdown-menu">
-    <span class="px-2 wsl-text-muted">Choose a {{ side }} version</span>
-    <hr class="my-2 border dark:border-gray-700">
+  <div class="wsl-dropdown-menu hidden w-48">
+    <span class="wsl-text-muted px-2">Choose a {{ side }} version</span>
+    <hr class="my-2 border dark:border-gray-700" />
     <form class="px-2" id="wsl-version-search-{{ side }}">
-      <input class="wsl-input-field" type="search" id="versionFilter-{{ side }}"
-        name="versionFilter" placeholder="Find a version..." autocomplete="off"
-        maxlength="16" (keyup)="onKeyupVersionFilter($event)">
+      <input
+        class="wsl-input-field"
+        type="search"
+        id="versionFilter-{{ side }}"
+        name="versionFilter"
+        placeholder="Find a version..."
+        autocomplete="off"
+        maxlength="16"
+        (keyup)="onKeyupVersionFilter($event)" />
     </form>
-    <hr class="my-2 border dark:border-gray-700">
-    <div class="wsl-dropdown-item" *ngFor="let version of relevantVersions"
+    <hr class="my-2 border dark:border-gray-700" />
+    <div
+      class="wsl-dropdown-item"
+      *ngFor="let version of relevantVersions"
       (click)="updateVersion(version.slug)">
       {{ version.name }}
       <ng-container *ngFor="let tag of version.tags">
-        <span> ({{ tag }})</span>
+        <span>({{ tag }})</span>
       </ng-container>
     </div>
     <span *ngIf="countVersionsNotShown()">
-      <hr class="my-2">
-      <div class="px-2 wsl-text-muted">
+      <hr class="my-2" />
+      <div class="wsl-text-muted px-2">
         <span>{{ countVersionsNotShown() }} versions not shown.</span>
       </div>
     </span>

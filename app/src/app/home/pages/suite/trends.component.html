@@ -1,22 +1,23 @@
-<div class="px-4 py-2 divide-y divide-gray-200 dark:divide-gray-700">
-  <div class="flex items-center h-8 space-x-2">
+<div class="divide-y divide-gray-200 px-4 py-2 dark:divide-gray-700">
+  <div class="flex h-8 items-center space-x-2">
     <h3 class="font-semibold text-black dark:text-gray-300">Runtime Trend</h3>
     <fa-icon
-      class="text-blue-100 cursor-pointer hover:text-blue-300 dark:text-gray-700 dark:hover:text-gray-600"
-      [icon]="faInfoCircle" (click)="isTooltipActive = !isTooltipActive"
-      [hidden]="fields.perfs.length === 0">
-    </fa-icon>
+      class="cursor-pointer text-blue-100 hover:text-blue-300 dark:text-gray-700 dark:hover:text-gray-600"
+      [icon]="faInfoCircle"
+      (click)="isTooltipActive = !isTooltipActive"
+      [hidden]="fields.perfs.length === 0"></fa-icon>
   </div>
   <p class="pt-4 text-sm text-black dark:text-gray-300" *ngIf="isTooltipActive">
-    This chart plots the overall
-    execution time of recent versions. It shows how the overall performance of
-    your workflow has changed over time.</p>
+    This chart plots the overall execution time of recent versions. It shows how
+    the overall performance of your workflow has changed over time.
+  </p>
   <div class="pt-4" *ngIf="!isTooltipActive">
-    <app-suite-chart-runtime *ngIf="fields.perfs.length !== 0; else noData"
-      [perfs]="fields.perfs">
-    </app-suite-chart-runtime>
+    <app-suite-chart-runtime
+      *ngIf="fields.perfs.length !== 0; else noData"
+      [perfs]="fields.perfs"></app-suite-chart-runtime>
     <ng-template #noData>
-      <img class="py-2 mx-auto"
+      <img
+        class="mx-auto py-2"
         src="./assets/undraw/undraw_setup_analytics_8qkl_edited_2.svg" />
       <div class="text-center">
         <p class="text-sm">This suite has no performance data, yet.</p>

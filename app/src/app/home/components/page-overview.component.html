@@ -1,14 +1,29 @@
 <div class="wsl-page-overview">
-  <div class="grid gap-4" style="grid-template-columns:  1fr auto 1fr;">
-    <div class="p-4 text-center wsl-box" [hidden]="!resultsRing">
-      <small
-        class="font-medium text-black dark:text-gray-300">{{ resultsRing?.header }}</small>
+  <div class="grid gap-4" style="grid-template-columns: 1fr auto 1fr">
+    <div class="wsl-box p-4 text-center" [hidden]="!resultsRing">
+      <small class="font-medium text-black dark:text-gray-300">
+        {{ resultsRing?.header }}
+      </small>
       <svg class="mx-auto" width="80" height="80">
-        <circle fill="transparent" r="34" cx="40" cy="40" stroke-width="6"
+        <circle
+          fill="transparent"
+          r="34"
+          cx="40"
+          cy="40"
+          stroke-width="6"
           [attr.stroke]="resultsRing?.backColor" />
-        <circle fill="transparent" r="34" cx="40" cy="40" stroke-width="6"
+        <circle
+          fill="transparent"
+          r="34"
+          cx="40"
+          cy="40"
+          stroke-width="6"
           [attr.stroke]="resultsRing?.frontColor" />
-        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+        <text
+          x="50%"
+          y="50%"
+          dominant-baseline="middle"
+          text-anchor="middle"
           [attr.fill]="resultsRing?.frontColor">
           {{ resultsRing?.title }}
         </text>
@@ -17,26 +32,43 @@
         <small class="text-black dark:text-gray-300">{{ footer }}</small>
       </div>
     </div>
-    <div class="flex flex-col justify-center p-4 wsl-box">
-      <p class="text-sm leading-6 text-black dark:text-gray-300"
+    <div class="wsl-box flex flex-col justify-center p-4">
+      <p
+        class="text-sm leading-6 text-black dark:text-gray-300"
         *ngFor="let statement of statements">
         <span [innerHTML]="statement"></span>
       </p>
     </div>
-    <div class="p-4 text-center wsl-box" [hidden]="!metricsRing">
-      <small
-        class="font-medium text-black dark:text-gray-300">{{ metricsRing?.header }}</small>
+    <div class="wsl-box p-4 text-center" [hidden]="!metricsRing">
+      <small class="font-medium text-black dark:text-gray-300">
+        {{ metricsRing?.header }}
+      </small>
       <svg class="mx-auto" width="80" height="80">
-        <circle fill="transparent" r="34" cx="40" cy="40" stroke-width="6"
+        <circle
+          fill="transparent"
+          r="34"
+          cx="40"
+          cy="40"
+          stroke-width="6"
           [attr.stroke]="metricsRing?.backColor" />
-        <circle fill="transparent" r="34" cx="40" cy="40" stroke-width="6"
+        <circle
+          fill="transparent"
+          r="34"
+          cx="40"
+          cy="40"
+          stroke-width="6"
           [attr.stroke]="metricsRing?.frontColor" />
-        <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+        <text
+          x="50%"
+          y="50%"
+          dominant-baseline="middle"
+          text-anchor="middle"
           [attr.fill]="metricsRing?.frontColor">
           {{ metricsRing?.title }}
         </text>
       </svg>
-      <div class="text-black dark:text-gray-300"
+      <div
+        class="text-black dark:text-gray-300"
         *ngFor="let footer of metricsRing?.footer">
         <small>{{ footer }}</small>
       </div>

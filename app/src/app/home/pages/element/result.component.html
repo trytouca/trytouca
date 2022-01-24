@@ -1,8 +1,9 @@
 <div class="wsl-list-item md:space-x-4">
   <div class="wsl-item-heading">
     <div class="wsl-item-status">
-      <fa-icon [icon]="meta.icon.type" [ngStyle]="{color: meta.icon.color}">
-      </fa-icon>
+      <fa-icon
+        [icon]="meta.icon.type"
+        [ngStyle]="{ color: meta.icon.color }"></fa-icon>
     </div>
     <div class="wsl-item-title">
       <p [title]="result.name">
@@ -26,27 +27,33 @@
         </span>
       </div>
     </div>
-    <div class="wsl-item-topics"
+    <div
+      class="wsl-item-topics"
       *ngSwitchCase="rowType.Common_Imperfect_Simple">
       <div class="wsl-item-topic">
-        <span>value in version {{ params.srcBatchName }}:
-          <b>{{ result.srcValue }}</b></span>
+        <span>
+          value in version {{ params.srcBatchName }}:
+          <b>{{ result.srcValue }}</b>
+        </span>
       </div>
       <div class="wsl-item-topic">
-        <span>value in version {{ params.dstBatchName }}:
-          <b>{{ result.dstValue }}</b></span>
+        <span>
+          value in version {{ params.dstBatchName }}:
+          <b>{{ result.dstValue }}</b>
+        </span>
       </div>
       <div class="wsl-item-topic">
-        <span>{{ result.score | percent:'1.0-0' }}</span>
+        <span>{{ result.score | percent: '1.0-0' }}</span>
       </div>
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-simple">{{ result.srcType }}</span>
       </div>
     </div>
-    <div class="wsl-item-topics"
+    <div
+      class="wsl-item-topics"
       *ngSwitchCase="rowType.Common_Imperfect_Complex">
       <div class="wsl-item-topic">
-        <span>{{ result.score | percent:'1.0-0' }}</span>
+        <span>{{ result.score | percent: '1.0-0' }}</span>
       </div>
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
@@ -54,26 +61,36 @@
         </span>
       </div>
     </div>
-    <div class="wsl-item-topics"
+    <div
+      class="wsl-item-topics"
       *ngSwitchCase="rowType.Common_Different_Simple">
       <div class="wsl-item-topic">
-        <span>value in version {{ params.srcBatchName }}:
-          <b>{{ result.srcValue }}</b> ({{ result.srcType }})</span>
+        <span>
+          value in version {{ params.srcBatchName }}:
+          <b>{{ result.srcValue }}</b>
+          ({{ result.srcType }})
+        </span>
       </div>
       <div class="wsl-item-topic">
-        <span>value in version {{ params.dstBatchName }}:
-          <b>{{ result.dstValue }}</b> ({{ result.dstType }})</span>
+        <span>
+          value in version {{ params.dstBatchName }}:
+          <b>{{ result.dstValue }}</b>
+          ({{ result.dstType }})
+        </span>
       </div>
     </div>
-    <div class="wsl-item-topics"
+    <div
+      class="wsl-item-topics"
       *ngSwitchCase="rowType.Common_Different_Complex">
       <div class="wsl-item-topic">
-        <span>value in version {{ params.srcBatchName }}:
-          ({{ result.srcType }})</span>
+        <span>
+          value in version {{ params.srcBatchName }}: ({{ result.srcType }})
+        </span>
       </div>
       <div class="wsl-item-topic">
-        <span>value in version {{ params.dstBatchName }}:
-          ({{ result.dstType }})</span>
+        <span>
+          value in version {{ params.dstBatchName }}: ({{ result.dstType }})
+        </span>
       </div>
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
@@ -115,7 +132,8 @@
 </div>
 <div [hidden]="hideComplexValue">
   <div [ngSwitch]="meta.rowType">
-    <div class="wsl-complex-double"
+    <div
+      class="wsl-complex-double"
       *ngSwitchCase="rowType.Common_Imperfect_Complex">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
@@ -124,14 +142,18 @@
             <span>value in version {{ params.dstBatchName }}</span>
           </div>
           <div class="wsl-complex-block-icons">
-            <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"
-              title="Copy value to clipboard" ngxClipboard
-              [cbContent]="result.dstValue" (cbOnSuccess)="onCopy($event)">
-            </fa-icon>
+            <fa-icon
+              class="wsl-complex-block-icon"
+              [icon]="faClipboard"
+              title="Copy value to clipboard"
+              ngxClipboard
+              [cbContent]="result.dstValue"
+              (cbOnSuccess)="onCopy($event)"></fa-icon>
           </div>
         </div>
-        <pre
-          *ngIf="result.dstValue">{{ parseComplexValue(result.dstValue) | json }}</pre>
+        <pre *ngIf="result.dstValue">{{
+          parseComplexValue(result.dstValue) | json
+        }}</pre>
       </div>
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
@@ -140,17 +162,22 @@
             <span>value in version {{ params.srcBatchName }}</span>
           </div>
           <div class="wsl-complex-block-icons">
-            <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"
-              title="Copy value to clipboard" ngxClipboard
-              [cbContent]="result.srcValue" (cbOnSuccess)="onCopy($event)">
-            </fa-icon>
+            <fa-icon
+              class="wsl-complex-block-icon"
+              [icon]="faClipboard"
+              title="Copy value to clipboard"
+              ngxClipboard
+              [cbContent]="result.srcValue"
+              (cbOnSuccess)="onCopy($event)"></fa-icon>
           </div>
         </div>
-        <pre
-          *ngIf="result.srcValue">{{ parseComplexValue(result.srcValue) | json }}</pre>
+        <pre *ngIf="result.srcValue">{{
+          parseComplexValue(result.srcValue) | json
+        }}</pre>
       </div>
     </div>
-    <div class="wsl-complex-single"
+    <div
+      class="wsl-complex-single"
       *ngSwitchCase="rowType.Common_Perfect_Complex">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
@@ -159,51 +186,67 @@
             <span>value in both versions</span>
           </div>
           <div class="wsl-complex-block-icons">
-            <ng-icon class="wsl-complex-block-icon"
-              title="Copy value to clipboard" ngxClipboard
-              [cbContent]="result.srcValue" (cbOnSuccess)="onCopy($event)"
-              name="hero-clipboard-copy" size="1.25rem"></ng-icon>
+            <ng-icon
+              class="wsl-complex-block-icon"
+              title="Copy value to clipboard"
+              ngxClipboard
+              [cbContent]="result.srcValue"
+              (cbOnSuccess)="onCopy($event)"
+              name="hero-clipboard-copy"
+              size="1.25rem"></ng-icon>
           </div>
         </div>
-        <pre
-          *ngIf="result.srcValue">{{ parseComplexValue(result.srcValue) | json }}</pre>
+        <pre *ngIf="result.srcValue">{{
+          parseComplexValue(result.srcValue) | json
+        }}</pre>
       </div>
     </div>
-    <div class="wsl-complex-double"
+    <div
+      class="wsl-complex-double"
       *ngSwitchCase="rowType.Common_Different_Complex">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
           <div></div>
           <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.dstBatchName }}
-              ({{ result.dstType }})</span>
+            <span>
+              value in version {{ params.dstBatchName }} ({{ result.dstType }})
+            </span>
           </div>
           <div class="wsl-complex-block-icons">
-            <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"
-              title="Copy value to clipboard" ngxClipboard
-              [cbContent]="result.dstValue" (cbOnSuccess)="onCopy($event)">
-            </fa-icon>
+            <fa-icon
+              class="wsl-complex-block-icon"
+              [icon]="faClipboard"
+              title="Copy value to clipboard"
+              ngxClipboard
+              [cbContent]="result.dstValue"
+              (cbOnSuccess)="onCopy($event)"></fa-icon>
           </div>
         </div>
-        <pre
-          *ngIf="result.dstValue">{{ parseComplexValue(result.dstValue) | json }}</pre>
+        <pre *ngIf="result.dstValue">{{
+          parseComplexValue(result.dstValue) | json
+        }}</pre>
       </div>
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
           <div></div>
           <div class="wsl-complex-block-desc">
-            <span>value in version {{ params.srcBatchName }}
-              ({{ result.srcType }})</span>
+            <span>
+              value in version {{ params.srcBatchName }} ({{ result.srcType }})
+            </span>
           </div>
           <div class="wsl-complex-block-icons">
-            <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"
-              title="Copy value to clipboard" ngxClipboard
-              [cbContent]="result.srcValue" (cbOnSuccess)="onCopy($event)">
-            </fa-icon>
+            <fa-icon
+              class="wsl-complex-block-icon"
+              [icon]="faClipboard"
+              title="Copy value to clipboard"
+              ngxClipboard
+              [cbContent]="result.srcValue"
+              (cbOnSuccess)="onCopy($event)"></fa-icon>
           </div>
         </div>
-        <pre
-          *ngIf="result.srcValue">{{ parseComplexValue(result.srcValue) | json }}</pre>
+        <pre *ngIf="result.srcValue">{{
+          parseComplexValue(result.srcValue) | json
+        }}</pre>
       </div>
     </div>
     <div class="wsl-complex-single" *ngSwitchCase="rowType.Missing_Complex">
@@ -214,14 +257,18 @@
             <span>value in version {{ params.dstBatchName }}</span>
           </div>
           <div class="wsl-complex-block-icons">
-            <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"
-              title="Copy value to clipboard" ngxClipboard
-              [cbContent]="result.dstValue" (cbOnSuccess)="onCopy($event)">
-            </fa-icon>
+            <fa-icon
+              class="wsl-complex-block-icon"
+              [icon]="faClipboard"
+              title="Copy value to clipboard"
+              ngxClipboard
+              [cbContent]="result.dstValue"
+              (cbOnSuccess)="onCopy($event)"></fa-icon>
           </div>
         </div>
-        <pre
-          *ngIf="result.dstValue">{{ parseComplexValue(result.dstValue) | json }}</pre>
+        <pre *ngIf="result.dstValue">{{
+          parseComplexValue(result.dstValue) | json
+        }}</pre>
       </div>
     </div>
     <div class="wsl-complex-single" *ngSwitchCase="rowType.Fresh_Complex">
@@ -232,14 +279,18 @@
             <span>value in version {{ params.srcBatchName }}</span>
           </div>
           <div class="wsl-complex-block-icons">
-            <fa-icon class="wsl-complex-block-icon" [icon]="faClipboard"
-              title="Copy value to clipboard" ngxClipboard
-              [cbContent]="result.dstValue" (cbOnSuccess)="onCopy($event)">
-            </fa-icon>
+            <fa-icon
+              class="wsl-complex-block-icon"
+              [icon]="faClipboard"
+              title="Copy value to clipboard"
+              ngxClipboard
+              [cbContent]="result.dstValue"
+              (cbOnSuccess)="onCopy($event)"></fa-icon>
           </div>
         </div>
-        <pre
-          *ngIf="result.srcValue">{{ parseComplexValue(result.srcValue) | json }}</pre>
+        <pre *ngIf="result.srcValue">{{
+          parseComplexValue(result.srcValue) | json
+        }}</pre>
       </div>
     </div>
   </div>

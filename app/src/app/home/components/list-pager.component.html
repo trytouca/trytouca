@@ -1,31 +1,45 @@
-<div class="container px-4 py-2 mx-auto text-sm"
+<div
+  class="container mx-auto px-4 py-2 text-sm"
   *ngIf="!(isFirstPage() && isLastPage() && pageLengths.length === 1)">
   <div class="grid grid-cols-3 text-sm">
-    <div class="text-left"
+    <div
+      class="text-left"
       [style.visibility]="isFirstPage() ? 'hidden' : 'visible'"
       (click)="previousPage()">
       Previous Page
     </div>
     <div
       [style.visibility]="isFirstPage() && isLastPage() ? 'hidden' : 'visible'"
-      class="text-center whitespace-nowrap">
+      class="whitespace-nowrap text-center">
       Page&nbsp;
       <div class="inline-block" wslDropdown>
-        <div class="wsl-dropdown-toggle" id="pagen-dropdown"
-          aria-haspopup="true" aria-expanded="false">
-          <span class="font-medium">{{ pageNumber }}</span>&nbsp;<fa-icon
-            icon="chevron-down" size="xs"></fa-icon>
+        <div
+          class="wsl-dropdown-toggle"
+          id="pagen-dropdown"
+          aria-haspopup="true"
+          aria-expanded="false">
+          <span class="font-medium">{{ pageNumber }}</span>
+          &nbsp;
+          <fa-icon icon="chevron-down" size="xs"></fa-icon>
         </div>
-        <div class="hidden w-48 wsl-dropdown-menu bottom-4">
+        <div class="wsl-dropdown-menu bottom-4 hidden w-48">
           <form id="wsl-pagen-form">
-            <input class="wsl-input-field" type="number"
-              placeholder="Go to page..." autocomplete="off" min="1"
-              max="{{ lastPageNumber }}" name="pageNumber" id="pageNumber"
-              (keyup)="onKeyupPageNumber($event)">
+            <input
+              class="wsl-input-field"
+              type="number"
+              placeholder="Go to page..."
+              autocomplete="off"
+              min="1"
+              max="{{ lastPageNumber }}"
+              name="pageNumber"
+              id="pageNumber"
+              (keyup)="onKeyupPageNumber($event)" />
           </form>
-          <hr class="my-2">
-          <div class="wsl-dropdown-item" *ngFor="let number of pageNumbers"
-            (click)="pageNumber=number.slug">
+          <hr class="my-2" />
+          <div
+            class="wsl-dropdown-item"
+            *ngFor="let number of pageNumbers"
+            (click)="pageNumber = number.slug">
             {{ number.slug }}
             <ng-container *ngFor="let tag of number.tags">
               <span>&thinsp;({{ tag }})</span>
@@ -33,26 +47,38 @@
           </div>
         </div>
       </div>
-      &nbsp;of&nbsp;<span class="font-medium">{{ lastPageNumber }}</span>
+      &nbsp;of&nbsp;
+      <span class="font-medium">{{ lastPageNumber }}</span>
     </div>
-    <div class="text-right"
+    <div
+      class="text-right"
       [style.visibility]="isLastPage() ? 'hidden' : 'visible'"
       (click)="nextPage()">
       Next Page
     </div>
   </div>
 </div>
-<div class="container px-4 py-2 mx-auto text-sm text-center"
-  *ngIf="pageLengths.length && !(isFirstPage() && isLastPage() && pageLengths.length === 1)">
+<div
+  class="container mx-auto px-4 py-2 text-center text-sm"
+  *ngIf="
+    pageLengths.length &&
+    !(isFirstPage() && isLastPage() && pageLengths.length === 1)
+  ">
   <div class="inline-block" *ngIf="1 < pageLengths.length" wslDropdown>
-    <div class="wsl-dropdown-toggle" id="pagel-dropdown" aria-haspopup="true"
+    <div
+      class="wsl-dropdown-toggle"
+      id="pagel-dropdown"
+      aria-haspopup="true"
       aria-expanded="false">
-      <span class="font-medium">{{ pageLength }}</span>&nbsp;<fa-icon
-        icon="chevron-down" size="xs"></fa-icon>
+      <span class="font-medium">{{ pageLength }}</span>
+      &nbsp;
+      <fa-icon icon="chevron-down" size="xs"></fa-icon>
     </div>
-    <div class="hidden w-48 text-left wsl-dropdown-menu bottom-4">
-      <div class="wsl-dropdown-item" *ngFor="let length of pageLengths"
-        (click)="pageLength=length">
+    <div class="wsl-dropdown-menu bottom-4 hidden w-48 text-left">
+      <div
+        class="wsl-dropdown-item"
+        *ngFor="let length of pageLengths"
+        (click)="pageLength = length">
         {{ length }}
       </div>
     </div>

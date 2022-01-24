@@ -1,5 +1,6 @@
 <div class="space-y-4">
-  <img class="mx-auto max-h-48"
+  <img
+    class="mx-auto max-h-48"
     src="./assets/undraw/undraw_Mailbox_re_dvds.svg" />
   <div class="flex items-center space-x-1">
     <ng-container *ngIf="isBackButtonShown">
@@ -8,22 +9,32 @@
       </span>
     </ng-container>
     <ng-container *ngIf="!isBackButtonShown">
-      <ng-icon class="text-green-500" name="hero-check-circle" size="1.5rem">
-      </ng-icon>
+      <ng-icon
+        class="text-green-500"
+        name="hero-check-circle"
+        size="1.5rem"></ng-icon>
       <span class="text-sm text-black dark:text-gray-300">
         {{ isRetry ? input.textFailure : input.textSuccess }}
       </span>
     </ng-container>
   </div>
   <div class="flex justify-between" *ngIf="isBackButtonShown">
-    <button class="flex items-center space-x-1 wsl-btn-lg wsl-btn-secondary"
-      type="button" role="button" (click)="back()">
-      <ng-icon class="h-4" name="hero-chevron-double-left" size="1.25rem">
-      </ng-icon>
+    <button
+      class="wsl-btn-lg wsl-btn-secondary flex items-center space-x-1"
+      type="button"
+      role="button"
+      (click)="back()">
+      <ng-icon
+        class="h-4"
+        name="hero-chevron-double-left"
+        size="1.25rem"></ng-icon>
       <span>Back</span>
     </button>
-    <button class="flex items-center space-x-1 wsl-btn-lg wsl-btn-secondary"
-      type="button" role="button" (click)="resend()">
+    <button
+      class="wsl-btn-lg wsl-btn-secondary flex items-center space-x-1"
+      type="button"
+      role="button"
+      (click)="resend()">
       <ng-icon class="h-4" name="hero-mail" size="1.25rem"></ng-icon>
       <span>Resend</span>
     </button>

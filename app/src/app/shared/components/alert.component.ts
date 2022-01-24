@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 
@@ -18,7 +18,7 @@ export interface Alert {
   selector: 'app-alert',
   template: `
     <div *ngIf="alert" role="alert" class="border" [ngClass]="lookupClasses()">
-      <small [innerHTML]="alert.text" class="font-normal text-sm"></small>
+      <small [innerHTML]="alert.text" class="text-sm font-normal"></small>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush

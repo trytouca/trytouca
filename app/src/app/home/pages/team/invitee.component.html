@@ -11,12 +11,15 @@
     </div>
   </div>
   <div class="wsl-item-topics">
-    <div class="wsl-item-topic"
-      title="{{ item.invitedAt | datetime:'format' }}">
-      {{ item.invitedAt | datetime:'distance' }}
+    <div
+      class="wsl-item-topic"
+      title="{{ item.invitedAt | datetime: 'format' }}">
+      {{ item.invitedAt | datetime: 'distance' }}
     </div>
     <div *ngIf="isTeamAdmin" class="wsl-item-ctrl-box">
-      <div title="Rescind Invitation to Team" (click)="rescind()"
+      <div
+        title="Rescind Invitation to Team"
+        (click)="rescind()"
         class="wsl-item-ctrl">
         <fa-icon icon="user-minus"></fa-icon>
       </div>

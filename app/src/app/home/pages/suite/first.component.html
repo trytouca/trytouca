@@ -1,45 +1,56 @@
-<div class="flex items-center mx-auto wsl-box wsl-min-h-screen-3">
+<div class="wsl-box wsl-min-h-screen-3 mx-auto flex items-center">
   <div class="md:grid md:grid-cols-7">
     <div class="p-8 md:col-span-4">
       <div class="mb-4" *ngIf="fields?.apiKey">
         <h2 class="mb-2 text-3xl font-medium text-black dark:text-gray-300">
-          Submit Your First Version</h2>
+          Submit Your First Version
+        </h2>
         <div>
           <p class="mb-4 text-black dark:text-gray-300">
-            Use our open-source SDKs to
-            describe the behavior and performance of your code by capturing
-            values of interesting variables and runtime of important functions
-            from anywhere within your code.
+            Use our open-source SDKs to describe the behavior and performance of
+            your code by capturing values of interesting variables and runtime
+            of important functions from anywhere within your code.
           </p>
         </div>
-        <div class="flex w-full mb-3 ">
+        <div class="mb-3 flex w-full">
           <div
-            class="min-w-[5rem] p-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l text-xs text-center text-black font-medium whitespace-nowrap dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300">
-            API Key</div>
+            class="min-w-[5rem] whitespace-nowrap rounded-l border border-r-0 border-gray-300 bg-gray-100 p-2 text-center text-xs font-medium text-black dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300">
+            API Key
+          </div>
           <div
-            class="flex items-center flex-grow max-w-sm px-2 overflow-x-auto font-mono text-xs text-gray-500 bg-white border border-gray-300 cursor-pointer dark:text-gray-400 whitespace-nowrap dark:bg-gray-800 dark:border-gray-600"
-            (click)="fields.apiKey.toggle()">{{ fields.apiKey.value }}</div>
+            class="flex max-w-sm flex-grow cursor-pointer items-center overflow-x-auto whitespace-nowrap border border-gray-300 bg-white px-2 font-mono text-xs text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400"
+            (click)="fields.apiKey.toggle()">
+            {{ fields.apiKey.value }}
+          </div>
           <div
-            class="flex justify-center p-2 text-xs font-medium duration-300 ease-in-out bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-900"
-            ngxClipboard [cbContent]="fields.apiKey.plain"
+            class="flex cursor-pointer justify-center rounded-r border border-l-0 border-gray-300 bg-gray-100 p-2 text-xs font-medium text-sky-600 duration-300 ease-in-out hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-900"
+            ngxClipboard
+            [cbContent]="fields.apiKey.plain"
             (cbOnSuccess)="onCopy($event, 'API Key')">
-            <ng-icon title="Copy API Key to clipboard"
-              name="hero-clipboard-copy" size="1rem"></ng-icon>
+            <ng-icon
+              title="Copy API Key to clipboard"
+              name="hero-clipboard-copy"
+              size="1rem"></ng-icon>
           </div>
         </div>
-        <div class="flex w-full mb-3">
+        <div class="mb-3 flex w-full">
           <div
-            class="min-w-[5rem] p-2 bg-gray-100 border border-r-0 border-gray-300 rounded-l text-xs text-center text-black font-medium whitespace-nowrap dark:bg-gray-800 dark:border-gray-600 dark:text-gray-300">
-            API URL</div>
+            class="min-w-[5rem] whitespace-nowrap rounded-l border border-r-0 border-gray-300 bg-gray-100 p-2 text-center text-xs font-medium text-black dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300">
+            API URL
+          </div>
           <div
-            class="flex items-center flex-grow max-w-sm px-2 overflow-x-auto font-mono text-xs text-gray-500 bg-white border border-gray-300 dark:text-gray-400 whitespace-nowrap dark:bg-gray-800 dark:border-gray-600">
-            {{ fields.apiUrl }}</div>
+            class="flex max-w-sm flex-grow items-center overflow-x-auto whitespace-nowrap border border-gray-300 bg-white px-2 font-mono text-xs text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400">
+            {{ fields.apiUrl }}
+          </div>
           <div
-            class="flex justify-center p-2 text-xs font-medium duration-300 ease-in-out bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-900"
-            ngxClipboard [cbContent]="fields.apiUrl"
+            class="flex cursor-pointer justify-center rounded-r border border-l-0 border-gray-300 bg-gray-100 p-2 text-xs font-medium text-sky-600 duration-300 ease-in-out hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-900"
+            ngxClipboard
+            [cbContent]="fields.apiUrl"
             (cbOnSuccess)="onCopy($event, 'API URL')">
-            <ng-icon title="Copy API URL to clipboard"
-              name="hero-clipboard-copy" size="1rem"></ng-icon>
+            <ng-icon
+              title="Copy API URL to clipboard"
+              name="hero-clipboard-copy"
+              size="1rem"></ng-icon>
           </div>
         </div>
       </div>
@@ -48,32 +59,40 @@
           If this is your first time, select your preferred programming language
           for documentation and examples to help you get started with Touca.
         </p>
-        <div class="grid gap-4 grid-cols-[repeat(4,_minmax(auto,_100px))]">
+        <div class="grid grid-cols-[repeat(4,_minmax(auto,_100px))] gap-4">
           <a href="https://docs.touca.io/sdk/cpp" target="_blank">
             <div
-              class="p-4 duration-300 ease-in-out border border-gray-200 rounded-md bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900">
-              <img class="w-full" src="./assets/exticons/client-cpp.svg"
+              class="rounded-md border border-gray-200 bg-gray-50 p-4 duration-300 ease-in-out hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-900">
+              <img
+                class="w-full"
+                src="./assets/exticons/client-cpp.svg"
                 alt="Logo of C++ Language" />
             </div>
           </a>
           <a href="https://docs.touca.io/sdk/python" target="_blank">
             <div
-              class="p-4 duration-300 ease-in-out border border-gray-200 rounded-md bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900">
-              <img class="w-full" src="./assets/exticons/client-python.svg"
+              class="rounded-md border border-gray-200 bg-gray-50 p-4 duration-300 ease-in-out hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-900">
+              <img
+                class="w-full"
+                src="./assets/exticons/client-python.svg"
                 alg="Logo of Python Language" />
             </div>
           </a>
           <a href="https://docs.touca.io/sdk/javascript" target="_blank">
             <div
-              class="p-4 duration-300 ease-in-out border border-gray-200 rounded-md bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900">
-              <img class="w-full" src="./assets/exticons/client-js.svg"
+              class="rounded-md border border-gray-200 bg-gray-50 p-4 duration-300 ease-in-out hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-900">
+              <img
+                class="w-full"
+                src="./assets/exticons/client-js.svg"
                 alt="Logo of JavaScript Language" />
             </div>
           </a>
           <a href="https://docs.touca.io/sdk/java" target="_blank">
             <div
-              class="p-4 duration-300 ease-in-out border border-gray-200 rounded-md bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900">
-              <img class="w-full" src="./assets/exticons/client-java.svg"
+              class="rounded-md border border-gray-200 bg-gray-50 p-4 duration-300 ease-in-out hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-900">
+              <img
+                class="w-full"
+                src="./assets/exticons/client-java.svg"
                 alt="Logo of Java Language" />
             </div>
           </a>
@@ -81,7 +100,8 @@
       </div>
     </div>
     <div class="hidden md:col-span-3 md:flex md:items-center md:justify-center">
-      <img class="md:w-3/4 md:mx-auto"
+      <img
+        class="md:mx-auto md:w-3/4"
         src="./assets/undraw/undraw_blank_canvas_3rbb.svg" />
     </div>
   </div>

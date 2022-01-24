@@ -3,33 +3,51 @@
 </div>
 <div class="wsl-modal-body">
   <app-alert [alert]="alert" *ngIf="alert"></app-alert>
-  <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" novalidate
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit(form.value)"
+    novalidate
     class="wsl-form">
     <div>
       <label for="wsl-name" class="wsl-input-label">Full Name</label>
-      <input type="text" id="wsl-name" required autocomplete="off"
-        aria-describedby="wsl-name-help" formControlName="name" name="name"
-        class="wsl-input-field" wslAutofocus>
-      <small id="wsl-slug-help" [hidden]="shouldHideAriaDescription('name')"
+      <input
+        type="text"
+        id="wsl-name"
+        required
+        autocomplete="off"
+        aria-describedby="wsl-name-help"
+        formControlName="name"
+        name="name"
+        class="wsl-input-field"
+        wslAutofocus />
+      <small
+        id="wsl-slug-help"
+        [hidden]="shouldHideAriaDescription('name')"
         class="wsl-text-muted">
         Should contain 3 to 32 alphanumeric characters.
       </small>
     </div>
     <div>
       <label for="wsl-email" class="wsl-input-label">Email Address</label>
-      <input type="email" id="wsl-email" required autocomplete="off"
-        aria-describedby="wsl-email-help" formControlName="email" name="email"
-        class="wsl-input-field">
-      <small id="wsl-email-help" [hidden]="shouldHideAriaDescription('email')"
+      <input
+        type="email"
+        id="wsl-email"
+        required
+        autocomplete="off"
+        aria-describedby="wsl-email-help"
+        formControlName="email"
+        name="email"
+        class="wsl-input-field" />
+      <small
+        id="wsl-email-help"
+        [hidden]="shouldHideAriaDescription('email')"
         class="wsl-text-muted">
         Should be a valid email address.
       </small>
     </div>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
-        <button type="submit" class="wsl-btn-lg wsl-btn-primary">
-          Invite
-        </button>
+        <button type="submit" class="wsl-btn-lg wsl-btn-primary">Invite</button>
       </div>
     </div>
   </form>

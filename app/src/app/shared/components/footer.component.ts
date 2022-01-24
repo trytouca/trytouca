@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component } from '@angular/core';
 
@@ -7,8 +7,7 @@ import { Component } from '@angular/core';
   template: `
     <footer class="bg-transparent">
       <div
-        class="container flex items-center justify-center h-16 mx-auto text-center"
-      >
+        class="container mx-auto flex h-16 items-center justify-center text-center">
         <p class="text-sm leading-4 text-sky-800 dark:text-gray-400">
           &copy; {{ today | date: 'yyyy' }} Touca, Inc.
         </p>

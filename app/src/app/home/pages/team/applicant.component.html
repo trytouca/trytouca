@@ -15,11 +15,15 @@
       {{ item.username }}
     </div>
     <div *ngIf="isTeamAdmin" class="wsl-item-ctrl-box">
-      <div title="Accept Request to Join this Team" (click)="accept()"
+      <div
+        title="Accept Request to Join this Team"
+        (click)="accept()"
         class="wsl-item-ctrl">
         <fa-icon icon="user-plus"></fa-icon>
       </div>
-      <div title="Decline Request to Join this Team" (click)="decline()"
+      <div
+        title="Decline Request to Join this Team"
+        (click)="decline()"
         class="wsl-item-ctrl">
         <fa-icon icon="user-minus"></fa-icon>
       </div>

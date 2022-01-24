@@ -1,41 +1,57 @@
 <div class="wsl-modal-header">
-  <h4 class="wsl-modal-title">Promote Version {{ elements.batch.batchSlug }}
+  <h4 class="wsl-modal-title">
+    Promote Version {{ elements.batch.batchSlug }}
   </h4>
 </div>
 <div class="wsl-modal-body">
   <app-alert [alert]="alert" *ngIf="alert"></app-alert>
-  <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit(form.value)"
+  <form
+    class="wsl-form"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit(form.value)"
     novalidate>
     <p class="text-sm text-black dark:text-gray-300">
       You are about to promote version
       <strong>{{ elements.batch.batchSlug }}</strong>
-      to baseline of suite <strong>{{ elements.batch.suiteName }}</strong>. This
-      action makes test results of any future version of this Suite to be
+      to baseline of suite
+      <strong>{{ elements.batch.suiteName }}</strong>
+      . This action makes test results of any future version of this Suite to be
       compared with test results of version {{ elements.batch.batchSlug }}.
     </p>
     <div>
-      <label class="wsl-input-label" for="wsl-reason">Promotion Reason
-        (Optional)</label>
+      <label class="wsl-input-label" for="wsl-reason">
+        Promotion Reason (Optional)
+      </label>
       <div [hidden]="preview.showText">
-        <textarea class="wsl-input-field" id="wsl-reason" rows="5"
-          aria-describedby="wsl-body-help" formControlName="reason"
+        <textarea
+          class="wsl-input-field"
+          id="wsl-reason"
+          rows="5"
+          aria-describedby="wsl-body-help"
+          formControlName="reason"
           name="reason"
           placeholder="Let others know why you are promoting this version."
           wslAutofocus></textarea>
-        <small class="wsl-text-danger" id="wsl-reason-help"
+        <small
+          class="wsl-text-danger"
+          id="wsl-reason-help"
           [hidden]="shouldHideAriaDescription('reason')">
           Please provide more information in your message.
         </small>
-        <small class="wsl-text-muted"
-          [hidden]="!form.controls.reason.pristine && !form.controls.reason.valid">
+        <small
+          class="wsl-text-muted"
+          [hidden]="
+            !form.controls.reason.pristine && !form.controls.reason.valid
+          ">
           This field supports markdown format.
         </small>
       </div>
-      <blockquote class="p-2 border-l-2 border-gray-200 dark:border-gray-500"
+      <blockquote
+        class="border-l-2 border-gray-200 p-2 dark:border-gray-500"
         [hidden]="!preview.showText">
-        <markdown class="prose-sm prose prose-zinc dark:prose-invert"
-          [data]="form.controls.reason.value">
-        </markdown>
+        <markdown
+          class="prose prose-sm prose-zinc dark:prose-invert"
+          [data]="form.controls.reason.value"></markdown>
       </blockquote>
     </div>
     <div class="wsl-form-footer">
@@ -45,11 +61,15 @@
         </button>
       </div>
       <div class="wsl-form-links">
-        <button type="button" (click)="togglePreview()"
+        <button
+          type="button"
+          (click)="togglePreview()"
           class="wsl-btn-lg wsl-btn-secondary">
           {{ preview.buttonText }}
         </button>
-        <button type="button" (click)="closeModal()"
+        <button
+          type="button"
+          (click)="closeModal()"
           class="wsl-btn-lg wsl-btn-secondary">
           Cancel
         </button>

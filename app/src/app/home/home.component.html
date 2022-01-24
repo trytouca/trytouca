@@ -6,10 +6,11 @@
 <div *ngIf="!isApiConnectionDown">
   <app-header-inside></app-header-inside>
   <div class="wsl-min-h-screen-1">
-    <app-alert *ngFor="let alert of alerts" [alert]="alert" class="text-center">
-    </app-alert>
-    <router-outlet>
-    </router-outlet>
+    <app-alert
+      *ngFor="let alert of alerts"
+      [alert]="alert"
+      class="text-center"></app-alert>
+    <router-outlet></router-outlet>
   </div>
   <app-help></app-help>
 </div>
