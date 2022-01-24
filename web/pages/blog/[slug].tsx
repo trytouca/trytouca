@@ -32,14 +32,14 @@ export default function BlogPage(props: StaticProps) {
       <Header></Header>
       <section className="bg-white">
         <div className="min-h-[15vh]"></div>
-        <div className="container flex flex-col justify-center p-16 mx-auto space-y-8 wsl-min-h-screen-1">
+        <div className="wsl-min-h-screen-1 container mx-auto flex flex-col justify-center space-y-8 p-16">
           <div className="mx-auto space-y-8">
             <h3 className="max-w-4xl text-5xl font-bold text-dark-blue-900">
               {props.main_article.title}
             </h3>
             <figcaption className="flex items-center space-x-4">
               <img
-                className="w-16 h-16 rounded-2xl"
+                className="h-16 w-16 rounded-2xl"
                 width="64px"
                 height="64px"
                 src={props.main_article.authorPhoto}
@@ -68,7 +68,7 @@ export default function BlogPage(props: StaticProps) {
             </figcaption>
           </div>
           <article
-            className="mx-auto prose lg:prose-xl"
+            className="prose mx-auto lg:prose-xl"
             dangerouslySetInnerHTML={{ __html: props.main_article.content }}
           />
         </div>

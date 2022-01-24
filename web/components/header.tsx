@@ -17,12 +17,12 @@ const items = [
 
 export default function Header() {
   return (
-    <header className="sticky top-0 z-10 h-20 bg-dark-blue-900 bg-opacity-90 backdrop-filter backdrop-blur">
-      <div className="container flex items-center justify-between px-4 mx-auto">
-        <div className="flex items-center select-none">
+    <header className="sticky top-0 z-10 h-20 bg-dark-blue-900 bg-opacity-90 backdrop-blur backdrop-filter">
+      <div className="container mx-auto flex items-center justify-between px-4">
+        <div className="flex select-none items-center">
           <LogoKit></LogoKit>
         </div>
-        <nav className="items-center hidden space-x-2 md:flex">
+        <nav className="hidden items-center space-x-2 md:flex">
           {items
             .slice()
             .reverse()
@@ -30,7 +30,7 @@ export default function Header() {
               return (
                 <a
                   key={index}
-                  className="px-4 py-2 text-sm font-semibold leading-6 text-gray-300 duration-150 ease-in-out bg-transparent rounded-lg hover:text-white focus:ring-0"
+                  className="rounded-lg bg-transparent px-4 py-2 text-sm font-semibold leading-6 text-gray-300 duration-150 ease-in-out hover:text-white focus:ring-0"
                   href={value.link}
                   rel="noopener">
                   {value.title}
@@ -42,7 +42,7 @@ export default function Header() {
             title="Check us out on GitHub"
             target="_blank"
             rel="noopener noreferrer">
-            <div className="text-gray-400 md:px-3 hover:text-gray-300">
+            <div className="text-gray-400 hover:text-gray-300 md:px-3">
               <FaGithub size="2rem" />
             </div>
           </a>
@@ -64,7 +64,7 @@ function DropdownMenuItem(props: { input: { title: string; link: string } }) {
             active
               ? 'bg-dark-blue-800 bg-opacity-70 text-white'
               : 'text-gray-200'
-          }  font-medium flex rounded-md items-center w-full px-2 py-2 text-sm`}
+          }  flex w-full items-center rounded-md px-2 py-2 text-sm font-medium`}
           href={props.input.link}
           rel="noopener">
           {props.input.title}
@@ -79,7 +79,7 @@ const DropdownMenu = () => {
     <Menu as="div" className="relative">
       <Menu.Button
         type="button"
-        className="text-gray-400 md:px-3 hover:text-gray-300">
+        className="text-gray-400 hover:text-gray-300 md:px-3">
         <span className="sr-only">Open website menu</span>
         <HiMenu size="2rem"></HiMenu>
       </Menu.Button>
@@ -93,7 +93,7 @@ const DropdownMenu = () => {
         leaveTo="transform opacity-0 scale-95">
         <Menu.Items
           role="menu"
-          className="absolute right-0 w-40 p-1 origin-top-right border border-gray-700 divide-y divide-gray-100 rounded-md shadow-lg bg-dark-blue-900 ring-1 ring-gray-700 ring-opacity-5 focus:outline-none">
+          className="absolute right-0 w-40 origin-top-right divide-y divide-gray-100 rounded-md border border-gray-700 bg-dark-blue-900 p-1 shadow-lg ring-1 ring-gray-700 ring-opacity-5 focus:outline-none">
           <div className="p-1">
             {items.map((input, index) => {
               return (
@@ -138,7 +138,7 @@ function LogoKit() {
   return (
     <>
       <Link href="/">
-        <a className="flex items-center h-20 focus:outline-none" id="hello">
+        <a className="flex h-20 items-center focus:outline-none" id="hello">
           <img
             className="h-10"
             src={make_path('/logo/touca-logo-transparent.svg')}
@@ -154,13 +154,13 @@ function LogoKit() {
       </Link>
       {show && (
         <div
-          className="absolute p-1 border rounded-md bg-dark-blue-800 border-dark-blue-700"
+          className="absolute rounded-md border border-dark-blue-700 bg-dark-blue-800 p-1"
           style={{
             top: anchorPoint.y,
             left: anchorPoint.x
           }}>
           <a
-            className="flex items-center p-2 space-x-2 font-medium text-gray-300 transition duration-300 ease-in-out rounded-md hover:text-white group"
+            className="group flex items-center space-x-2 rounded-md p-2 font-medium text-gray-300 transition duration-300 ease-in-out hover:text-white"
             href="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-press-kit.zip"
             target="_blank"
             rel="noopener noreferrer">

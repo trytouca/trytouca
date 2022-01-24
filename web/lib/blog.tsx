@@ -61,10 +61,10 @@ export class BlogPostArticle extends React.Component<
   render() {
     const articleLink = '/blog/' + this.props.article.slug;
     return (
-      <div className="flex flex-col justify-between w-full p-8 space-y-4 rounded-lg shadow-xl bg-dark-blue-800">
+      <div className="flex w-full flex-col justify-between space-y-4 rounded-lg bg-dark-blue-800 p-8 shadow-xl">
         {this.props.featured && (
           <div className="flex items-center justify-between">
-            <div className="px-4 py-2 font-medium text-gray-300 bg-opacity-25 rounded-full bg-dark-blue-700">
+            <div className="rounded-full bg-dark-blue-700 bg-opacity-25 px-4 py-2 font-medium text-gray-300">
               Featured Blog Post
             </div>
           </div>
@@ -100,7 +100,7 @@ export class BlogPostArticle extends React.Component<
             <Link href={articleLink}>
               <a title="Read this article">
                 <button
-                  className="px-4 py-2 space-x-1 text-gray-300 bg-opacity-25 rounded-full bg-dark-blue-700 hover:text-white focus:underline focus:outline-none group"
+                  className="group space-x-1 rounded-full bg-dark-blue-700 bg-opacity-25 px-4 py-2 text-gray-300 hover:text-white focus:underline focus:outline-none"
                   type="button"
                   role="button">
                   <span className="text-sm font-medium leading-6">
@@ -124,14 +124,14 @@ export class BlogPostArchive extends React.Component<
   render() {
     return (
       <>
-        <div className="container px-4 py-32 mx-auto lg:px-8">
+        <div className="container mx-auto px-4 py-32 lg:px-8">
           <h2 className="pb-16 text-4xl font-bold text-white">
             Other Articles
           </h2>
           <div className="grid gap-8 lg:grid-cols-2 xl:gap-16">
             {this.props.articles.map((article, index) => {
               return (
-                <div key={index} className="flex items-stretch grid-cols-1">
+                <div key={index} className="flex grid-cols-1 items-stretch">
                   <BlogPostArticle article={article} featured={false} />
                 </div>
               );

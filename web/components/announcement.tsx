@@ -12,11 +12,11 @@ export default function Announcement(props: { input: AnnouncementInput }) {
   return (
     <section className="bg-gradient-to-r from-dark-blue-900 to-dark-blue-800">
       {(props.input.hidden && (
-        <p className="container p-8 mx-auto text-xl font-semibold text-center text-white">
+        <p className="container mx-auto p-8 text-center text-xl font-semibold text-white">
           {props.input.elevator}
         </p>
       )) || (
-        <p className="container p-8 mx-auto space-x-2 text-lg font-medium text-center text-white">
+        <p className="container mx-auto space-x-2 p-8 text-center text-lg font-medium text-white">
           <span>{props.input.text}</span>
           <a
             className="font-bold underline hover:text-gray-200 "

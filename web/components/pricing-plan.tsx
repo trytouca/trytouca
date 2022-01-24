@@ -19,11 +19,11 @@ export default class PricingPlan extends React.Component<
 > {
   render() {
     return (
-      <div className="h-full p-8 space-y-8 border shadow-xl rounded-xl bg-opacity-90 bg-dark-blue-800 border-dark-blue-700">
-        <h4 className="text-xl font-medium text-center text-white">
+      <div className="h-full space-y-8 rounded-xl border border-dark-blue-700 bg-dark-blue-800 bg-opacity-90 p-8 shadow-xl">
+        <h4 className="text-center text-xl font-medium text-white">
           {this.props.plan.title}
         </h4>
-        <div className="flex items-center justify-center px-4 pb-8 space-x-4 border-b md:px-8 border-dark-blue-700">
+        <div className="flex items-center justify-center space-x-4 border-b border-dark-blue-700 px-4 pb-8 md:px-8">
           <p className={`px-1 font-bold ${this.props.plan.fee.class}`}>
             {this.props.plan.fee.text}
           </p>
@@ -39,7 +39,7 @@ export default class PricingPlan extends React.Component<
             </div>
           )}
         </div>
-        <div className="flex flex-col justify-between flex-grow px-4 rounded-b-lg md:px-8">
+        <div className="flex flex-grow flex-col justify-between rounded-b-lg px-4 md:px-8">
           <div className="space-y-2">
             {this.props.plan.features.map((feature, index) => {
               return (

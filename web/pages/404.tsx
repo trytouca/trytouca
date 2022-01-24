@@ -26,12 +26,12 @@ export default function NotFoundPage() {
       </Head>
       <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
-        <div className="container grid px-4 mx-auto space-y-12 wsl-min-h-screen-1 place-content-center">
+        <div className="wsl-min-h-screen-1 container mx-auto grid place-content-center space-y-12 px-4">
           <div className="space-y-2 text-center">
             <h2 className="text-4xl font-light text-white">{content.title}</h2>
             <p className="text-xl text-white">{content.subtitle}</p>
           </div>
-          <div className="max-w-xl p-8 mx-auto space-y-8 bg-opacity-50 border bg-dark-blue-800 border-dark-blue-700 rounded-xl">
+          <div className="mx-auto max-w-xl space-y-8 rounded-xl border border-dark-blue-700 bg-dark-blue-800 bg-opacity-50 p-8">
             <div className="">
               <p className="text-lg font-light text-white md:text-xl">
                 {content.description}
@@ -39,7 +39,7 @@ export default function NotFoundPage() {
             </div>
             <div className="text-center">
               <Link href="/">
-                <a className="p-4 text-sm leading-6 text-gray-300 bg-opacity-50 border border-transparent hover:text-white bg-sky-900 rounded-xl hover:border-sky-900">
+                <a className="rounded-xl border border-transparent bg-sky-900 bg-opacity-50 p-4 text-sm leading-6 text-gray-300 hover:border-sky-900 hover:text-white">
                   Back to Main Page
                 </a>
               </Link>

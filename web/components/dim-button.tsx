@@ -10,7 +10,7 @@ export const DimButton = (props: Record<'link' | 'text' | 'title', string>) => {
       target="_blank"
       rel="noopener noreferrer">
       <button
-        className="px-4 py-2 space-x-1 text-gray-300 bg-opacity-25 rounded-full bg-dark-blue-700 hover:text-white focus:underline focus:outline-none group"
+        className="group space-x-1 rounded-full bg-dark-blue-700 bg-opacity-25 px-4 py-2 text-gray-300 hover:text-white focus:underline focus:outline-none"
         type="button"
         role="button">
         <span className="text-sm font-medium leading-6">{props.text}</span>

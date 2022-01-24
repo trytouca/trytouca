@@ -44,10 +44,10 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
     }
   ];
   return (
-    <section className="flex items-center wsl-min-h-screen-3 bg-dark-blue-900">
+    <section className="wsl-min-h-screen-3 flex items-center bg-dark-blue-900">
       <div className="container mx-auto">
         <div className="grid gap-16 px-8 lg:grid-cols-2">
-          <div className="grid mx-auto space-y-6 md:px-0 lg:px-8 xl:px-0 lg:col-span-1 place-content-center">
+          <div className="mx-auto grid place-content-center space-y-6 md:px-0 lg:col-span-1 lg:px-8 xl:px-0">
             <div className="flex items-center space-x-2">
               <h3>
                 <span className="pr-2 text-4xl font-bold text-yellow-500 xl:text-5xl">
@@ -59,12 +59,12 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
               </h3>
             </div>
             <p className="text-2xl text-gray-300">{props.input.description}</p>
-            <div className="flex items-center space-x-2 group">
+            <div className="group flex items-center space-x-2">
               <a
                 href={'https://github.com/trytouca/touca-python'}
                 target="_blank"
                 rel="noopener noreferrer">
-                <div className="p-4 font-mono bg-opacity-50 text-sky-300 bg-dark-blue-800 rounded-xl">
+                <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-4 font-mono text-sky-300">
                   pip install touca
                 </div>
               </a>
@@ -72,14 +72,14 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
                 href={'https://github.com/trytouca/touca-python'}
                 target="_blank"
                 rel="noopener noreferrer">
-                <div className="p-3 text-gray-400 bg-opacity-50 group-hover:text-gray-300 bg-dark-blue-800 rounded-xl">
+                <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 group-hover:text-gray-300">
                   <FaGithub size="2rem" />
                 </div>
               </a>
             </div>
           </div>
           <div className="grid font-mono font-medium text-gray-100 lg:col-span-1">
-            <div className="w-full p-4 text-sm select-none sm:text-base md:text-lg md:p-6 xl:p-8 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
+            <div className="w-full select-none rounded-xl bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 p-4 text-sm sm:text-base md:p-6 md:text-lg xl:p-8">
               <p>Touca Test Framework</p>
               <p>Suite: sample/1.0</p>
               <p>

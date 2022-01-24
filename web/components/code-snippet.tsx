@@ -31,7 +31,7 @@ export default function CodeSnippet(props: {
     padding: '0.5rem'
   };
   return (
-    <div className="w-full p-2 text-sm md:text-base md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
+    <div className="w-full rounded-xl bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 p-2 text-sm md:p-4 md:text-base xl:p-6">
       <SyntaxHighlighter
         language={slug}
         style={nightOwl}
