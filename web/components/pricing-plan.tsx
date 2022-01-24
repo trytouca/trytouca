@@ -1,20 +1,15 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import React from 'react';
 import { HiOutlineBadgeCheck } from 'react-icons/hi';
 
 export type Input = {
   title: string;
-  description: string;
   features: string[];
-  fee?: {
-    prefix?: string;
-    highlight: string;
-    suffix?: string;
-  };
-  button: {
-    title: string;
-    link: string;
+  fee: {
+    class: string;
+    suffix: string[];
+    text: string;
   };
 };
 
@@ -24,35 +19,27 @@ export default class PricingPlan extends React.Component<
 > {
   render() {
     return (
-      <div className="flex flex-col h-full shadow-xl">
-        <div className="p-4 space-y-2 bg-opacity-75 rounded-t-lg bg-sky-900">
-          <div className="flex justify-between">
+      <div className="h-full p-8 space-y-8 border shadow-xl rounded-xl bg-opacity-90 bg-dark-blue-800 border-dark-blue-700">
+        <h4 className="text-xl font-medium text-center text-white">
+          {this.props.plan.title}
+        </h4>
+        <div className="flex items-center justify-center px-4 pb-8 space-x-4 border-b md:px-8 border-dark-blue-700">
+          <p className={`px-1 font-bold ${this.props.plan.fee.class}`}>
+            {this.props.plan.fee.text}
+          </p>
+          {this.props.plan.fee.suffix && (
             <div>
-              <h4 className="text-xl font-medium text-white">
-                {this.props.plan.title}
-              </h4>
+              {this.props.plan.fee.suffix.map((suffix, index) => {
+                return (
+                  <p key={index} className="text-lg font-medium text-white">
+                    {suffix}
+                  </p>
+                );
+              })}
             </div>
-            {this.props.plan.fee && (
-              <div className="flex items-center justify-center">
-                <p className="text-xl font-medium text-white">
-                  {this.props.plan.fee.prefix && (
-                    <span className="text-sm opacity-75">
-                      {this.props.plan.fee.prefix}
-                    </span>
-                  )}
-                  <span className="px-1">${this.props.plan.fee.highlight}</span>
-                  {this.props.plan.fee.suffix && (
-                    <span className="text-sm opacity-75">
-                      {this.props.plan.fee.suffix}
-                    </span>
-                  )}
-                </p>
-              </div>
-            )}
-          </div>
-          <p className="text-sm text-white">{this.props.plan.description}</p>
+          )}
         </div>
-        <div className="flex flex-col justify-between flex-grow p-4 space-y-8 rounded-b-lg bg-sky-900 bg-opacity-40">
+        <div className="flex flex-col justify-between flex-grow px-4 rounded-b-lg md:px-8">
           <div className="space-y-2">
             {this.props.plan.features.map((feature, index) => {
               return (
@@ -60,7 +47,9 @@ export default class PricingPlan extends React.Component<
                   <HiOutlineBadgeCheck
                     className="text-sky-600"
                     size="1.5rem"></HiOutlineBadgeCheck>
-                  <p className="font-medium leading-6 text-white">{feature}</p>
+                  <p className="text-lg font-medium leading-6 text-white">
+                    {feature}
+                  </p>
                 </div>
               );
             })}
