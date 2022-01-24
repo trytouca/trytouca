@@ -44,7 +44,7 @@ export default class MyDocument extends Document {
             href={make_path('/icons/apple-touch-icon.png')}
           />
         </Head>
-        <body className="min-h-screen font-sans antialiased bg-dark-blue-900">
+        <body className="min-h-screen bg-dark-blue-900 font-sans antialiased">
           <Main />
           <Footer></Footer>
           <NextScript />

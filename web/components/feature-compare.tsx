@@ -8,10 +8,10 @@ import { FeatureInput } from '@/lib/feature';
 
 export default function FeatureCompare(props: { input: FeatureInput }) {
   return (
-    <section className="flex items-center wsl-min-h-screen-3 bg-dark-blue-900">
+    <section className="wsl-min-h-screen-3 flex items-center bg-dark-blue-900">
       <div className="container mx-auto">
         <div className="grid gap-16 px-8 lg:grid-cols-2">
-          <div className="grid mx-auto space-y-6 lg:px-8 xl:px-0 lg:col-span-1 md:px-0 place-content-center">
+          <div className="mx-auto grid place-content-center space-y-6 md:px-0 lg:col-span-1 lg:px-8 xl:px-0">
             <div className="flex items-center space-x-2">
               <h3>
                 <span className="pr-2 text-4xl font-bold text-yellow-500 xl:text-5xl">
@@ -25,16 +25,16 @@ export default function FeatureCompare(props: { input: FeatureInput }) {
             <p className="text-2xl text-gray-300">{props.input.description}</p>
           </div>
           <div className="grid lg:col-span-1">
-            <div className="w-full p-2 md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
+            <div className="w-full rounded-xl bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 p-2 md:p-4 xl:p-6">
               <div className="space-y-4">
-                <div className="flex items-center pb-4 space-x-1 font-medium text-white border-b-2 border-green-500">
+                <div className="flex items-center space-x-1 border-b-2 border-green-500 pb-4 font-medium text-white">
                   <span>Acme</span>
                   <HiChevronRight />
                   <span>Tax Calculator</span>
                   <HiChevronRight />
                   <span>2.0</span>
                 </div>
-                <div className="p-1 space-y-2 text-white">
+                <div className="space-y-2 p-1 text-white">
                   <p>Hi Bob,</p>
                   <p>
                     A new version <span className="font-bold">v2.0</span> was
@@ -47,7 +47,7 @@ export default function FeatureCompare(props: { input: FeatureInput }) {
                     or missing test cases.
                   </p>
                 </div>
-                <div className="pt-4 mx-auto font-medium text-gray-300 border-t-2 border-green-500">
+                <div className="mx-auto border-t-2 border-green-500 pt-4 font-medium text-gray-300">
                   View Results
                 </div>
               </div>

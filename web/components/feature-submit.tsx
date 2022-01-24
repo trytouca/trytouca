@@ -99,10 +99,10 @@ export default class FeatureSubmit extends React.Component<
 
   render() {
     return (
-      <section className="flex items-center wsl-min-h-screen-3 bg-dark-blue-900">
+      <section className="wsl-min-h-screen-3 flex items-center bg-dark-blue-900">
         <div className="container mx-auto">
           <div className="grid gap-16 px-8 lg:grid-cols-2">
-            <div className="grid mx-auto space-y-6 md:px-0 lg:px-8 xl:px-0 lg:col-span-1 place-content-center">
+            <div className="mx-auto grid place-content-center space-y-6 md:px-0 lg:col-span-1 lg:px-8 xl:px-0">
               <div className="flex items-center space-x-2">
                 <h3>
                   <span className="pr-2 text-4xl font-bold text-yellow-500 xl:text-5xl">
@@ -172,7 +172,7 @@ export default class FeatureSubmit extends React.Component<
                     }`}
                     target="_blank"
                     rel="noopener noreferrer">
-                    <div className="p-4 font-mono bg-opacity-50 text-sky-300 bg-dark-blue-800 rounded-xl">
+                    <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-4 font-mono text-sky-300">
                       {snippets[this.state.activeIndex].install}
                     </div>
                   </a>
@@ -187,7 +187,7 @@ export default class FeatureSubmit extends React.Component<
                     } SDK on GitHub`}
                     target="_blank"
                     rel="noopener noreferrer">
-                    <div className="p-3 text-gray-400 bg-opacity-50 hover:text-gray-300 bg-dark-blue-800 rounded-xl">
+                    <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 hover:text-gray-300">
                       <FaGithub size="2rem" />
                     </div>
                   </a>
@@ -196,7 +196,7 @@ export default class FeatureSubmit extends React.Component<
                     title="Read our SDK Documentation"
                     target="_blank"
                     rel="noopener noreferrer">
-                    <div className="p-3 text-gray-400 bg-opacity-50 hover:text-gray-300 bg-dark-blue-800 rounded-xl">
+                    <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 hover:text-gray-300">
                       <FaBook size="2rem" />
                     </div>
                   </a>

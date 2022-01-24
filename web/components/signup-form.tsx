@@ -52,14 +52,14 @@ const SignupForm = () => (
         </label>
         <div className="flex h-10 space-x-2">
           <Field
-            className="flex-grow text-black bg-white border border-gray-300 rounded-md shadow-md focus:outline-none focus:border-gray-500 focus:ring-0"
+            className="flex-grow rounded-md border border-gray-300 bg-white text-black shadow-md focus:border-gray-500 focus:outline-none focus:ring-0"
             type="email"
             id="umail"
             name="umail"
             placeholder="Email address"
           />
           <button
-            className="px-4 overflow-hidden font-semibold text-white duration-150 ease-in-out bg-green-600 border border-transparent rounded-md shadow-md hover:bg-green-700 focus:border-gray-200 focus:outline-none focus:ring-0"
+            className="overflow-hidden rounded-md border border-transparent bg-green-600 px-4 font-semibold text-white shadow-md duration-150 ease-in-out hover:bg-green-700 focus:border-gray-200 focus:outline-none focus:ring-0"
             type="submit">
             <span className="hidden lg:block">Signup for Free</span>
             <span className="lg:hidden">Sign up</span>

@@ -41,14 +41,14 @@ export default function BlogPage(props: StaticProps) {
       </Head>
       <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
-        <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
-          <div className="grid grid-cols-1 gap-4 p-8 space-y-8 lg:grid-cols-2 lg:space-y-0">
-            <div className="grid col-span-1 place-content-center">
+        <div className="wsl-min-h-screen-1 container mx-auto flex flex-col justify-center">
+          <div className="grid grid-cols-1 gap-4 space-y-8 p-8 lg:grid-cols-2 lg:space-y-0">
+            <div className="col-span-1 grid place-content-center">
               <div className="max-w-lg space-y-4 text-white">
                 <h3 className="text-4xl font-bold lg:text-5xl">
                   {content.title}
                 </h3>
-                <p className="text-xl font-light lg:text-2xl text-sky-200">
+                <p className="text-xl font-light text-sky-200 lg:text-2xl">
                   {content.subtitle}
                 </p>
               </div>

@@ -9,10 +9,10 @@ import { FeatureInput } from '@/lib/feature';
 
 export default function FeatureCollaborate(props: { input: FeatureInput }) {
   return (
-    <section className="flex items-center wsl-min-h-screen-3 bg-dark-blue-900">
+    <section className="wsl-min-h-screen-3 flex items-center bg-dark-blue-900">
       <div className="container mx-auto">
         <div className="grid gap-16 px-8 lg:grid-cols-2">
-          <div className="grid mx-auto space-y-6 md:px-0 lg:px-8 xl:px-0 lg:col-span-1 place-content-center">
+          <div className="mx-auto grid place-content-center space-y-6 md:px-0 lg:col-span-1 lg:px-8 xl:px-0">
             <div className="flex items-center space-x-2">
               <h3>
                 <span className="pr-2 text-4xl font-bold text-yellow-500 xl:text-5xl">
@@ -29,7 +29,7 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
                 href={'https://docs.touca.io/basics/integrate'}
                 target="_blank"
                 rel="noopener noreferrer">
-                <div className="p-3 text-gray-400 bg-opacity-50 hover:text-gray-300 bg-dark-blue-800 rounded-xl">
+                <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 hover:text-gray-300">
                   <HiOutlineMail size="2rem" />
                 </div>
               </a>
@@ -37,23 +37,23 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
                 href={'https://docs.touca.io/basics/integrate'}
                 target="_blank"
                 rel="noopener noreferrer">
-                <div className="p-3 text-gray-400 bg-opacity-50 hover:text-gray-300 bg-dark-blue-800 rounded-xl">
+                <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 hover:text-gray-300">
                   <FaSlack size="2rem" />
                 </div>
               </a>
             </div>
           </div>
           <div className="grid lg:col-span-1">
-            <div className="w-full p-2 md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
+            <div className="w-full rounded-xl bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 p-2 md:p-4 xl:p-6">
               <div className="space-y-4">
-                <div className="flex items-center pb-4 space-x-1 font-medium text-white border-b-2 border-blue-500">
+                <div className="flex items-center space-x-1 border-b-2 border-blue-500 pb-4 font-medium text-white">
                   <span>Acme</span>
                   <HiChevronRight />
                   <span>Tax Calculator</span>
                   <HiChevronRight />
                   <span>5.0</span>
                 </div>
-                <div className="p-1 space-y-2 text-white">
+                <div className="space-y-2 p-1 text-white">
                   <p>Hi Bob,</p>
                   <p>
                     <span className="font-medium" title="aanderson">
@@ -65,13 +65,13 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
                     <span className="font-medium">v5.0</span>. They provided the
                     following reason for this change.
                   </p>
-                  <p className="p-3 text-gray-200 rounded-lg bg-dark-blue-800">
+                  <p className="rounded-lg bg-dark-blue-800 p-3 text-gray-200">
                     Changed the logic to include child tax credit. Differences
                     for test case <span className="font-mono text-sm">bob</span>{' '}
                     are expected.
                   </p>
                 </div>
-                <div className="pt-4 mx-auto font-medium text-gray-300 border-t-2 border-blue-500">
+                <div className="mx-auto border-t-2 border-blue-500 pt-4 font-medium text-gray-300">
                   View Results
                 </div>
               </div>

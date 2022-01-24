@@ -32,15 +32,15 @@ export default function ContactPage() {
       </Head>
       <Header></Header>
       <section className="bg-dark-blue-900">
-        <div className="container flex flex-col justify-center mx-auto wsl-min-h-screen-1">
-          <div className="p-4 space-y-2 text-center">
+        <div className="wsl-min-h-screen-1 container mx-auto flex flex-col justify-center">
+          <div className="space-y-2 p-4 text-center">
             <h2 className="text-4xl font-extrabold text-white">
               {content.title}
             </h2>
             <p className="text-xl text-white">{content.subtitle}</p>
           </div>
-          <section className="p-4 min-h-[25vh] flex items-center">
-            <div className="w-full max-w-lg p-8 mx-auto bg-white rounded-xl">
+          <section className="flex min-h-[25vh] items-center p-4">
+            <div className="mx-auto w-full max-w-lg rounded-xl bg-white p-8">
               <ContactForm></ContactForm>
             </div>
           </section>
@@ -103,12 +103,12 @@ const ContactForm = () => (
       }>
     ) => (
       <Form className="space-y-4" noValidate={true}>
-        <div className="flex flex-col w-full space-y-1">
+        <div className="flex w-full flex-col space-y-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="name">
             Full Name<span className="text-indigo-500">*</span>
           </label>
           <Field
-            className="text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:border-indigo-300 focus:ring-0"
+            className="rounded-md border border-gray-300 bg-white text-black focus:border-indigo-300 focus:outline-none focus:ring-0"
             type="text"
             name="name"
             id="name"
@@ -117,12 +117,12 @@ const ContactForm = () => (
             {(msg) => <small className="text-red-600">{msg}</small>}
           </ErrorMessage>
         </div>
-        <div className="flex flex-col w-full space-y-1">
+        <div className="flex w-full flex-col space-y-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="email">
             Email Address<span className="text-indigo-500">*</span>
           </label>
           <Field
-            className="text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:border-indigo-300 focus:ring-0"
+            className="rounded-md border border-gray-300 bg-white text-black focus:border-indigo-300 focus:outline-none focus:ring-0"
             type="email"
             name="email"
             id="email"
@@ -131,12 +131,12 @@ const ContactForm = () => (
             {(msg) => <small className="text-red-600">{msg}</small>}
           </ErrorMessage>
         </div>
-        <div className="flex flex-col w-full space-y-1">
+        <div className="flex w-full flex-col space-y-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="cname">
             Company Name<span className="text-indigo-500">*</span>
           </label>
           <Field
-            className="text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:border-indigo-300 focus:ring-0"
+            className="rounded-md border border-gray-300 bg-white text-black focus:border-indigo-300 focus:outline-none focus:ring-0"
             type="text"
             name="cname"
             id="cname"
@@ -145,12 +145,12 @@ const ContactForm = () => (
             {(msg) => <small className="text-red-600">{msg}</small>}
           </ErrorMessage>
         </div>
-        <div className="flex flex-col w-full space-y-1">
+        <div className="flex w-full flex-col space-y-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="body">
             How can we help?<span className="text-indigo-500">*</span>
           </label>
           <Field
-            className="text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:border-indigo-300 focus:ring-0"
+            className="rounded-md border border-gray-300 bg-white text-black focus:border-indigo-300 focus:outline-none focus:ring-0"
             component="textarea"
             name="body"
             id="body"
@@ -163,7 +163,7 @@ const ContactForm = () => (
         </div>
         <div className="flex items-center justify-between">
           <button
-            className="px-4 py-2 overflow-hidden font-medium text-white duration-150 ease-in-out rounded-md shadow-md bg-sky-800 hover:bg-sky-900 focus:border-gray-200 focus:outline-none focus:ring-0"
+            className="overflow-hidden rounded-md bg-sky-800 px-4 py-2 font-medium text-white shadow-md duration-150 ease-in-out hover:bg-sky-900 focus:border-gray-200 focus:outline-none focus:ring-0"
             type="submit">
             Submit
           </button>
@@ -171,7 +171,7 @@ const ContactForm = () => (
             <small
               className={
                 props.status.type === 'success'
-                  ? 'text-green-600 font-medium'
+                  ? 'font-medium text-green-600'
                   : 'text-red-600'
               }>
               {props.status.message}

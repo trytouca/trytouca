@@ -7,12 +7,12 @@ import { make_path } from '@/lib/api';
 export default function AboveTheFold() {
   return (
     <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
-      <div className="grid wsl-min-h-screen-1 lg:items-center">
-        <div className="container flex items-center mx-auto">
-          <div className="grid gap-8 p-8 xl:grid-cols-5 lg:items-center">
-            <div className="flex flex-col justify-around h-full py-12 mx-auto space-y-12 xl:col-span-2 lg:py-4 xl:py-0">
+      <div className="wsl-min-h-screen-1 grid lg:items-center">
+        <div className="container mx-auto flex items-center">
+          <div className="grid gap-8 p-8 lg:items-center xl:grid-cols-5">
+            <div className="mx-auto flex h-full flex-col justify-around space-y-12 py-12 lg:py-4 xl:col-span-2 xl:py-0">
               <div className="space-y-4">
-                <h2 className="max-w-xl text-3xl font-bold text-white sm:text-4xl wsl-text-gradient xl:text-3xl">
+                <h2 className="wsl-text-gradient max-w-xl text-3xl font-bold text-white sm:text-4xl xl:text-3xl">
                   Continuous Regression Testing for Critical Software Workflows
                 </h2>
                 <p className="max-w-xl text-lg text-white sm:text-xl">
@@ -20,7 +20,7 @@ export default function AboveTheFold() {
                   performance of your software.
                 </p>
               </div>
-              <div className="items-center space-x-4 text-center md:text-left md:flex">
+              <div className="items-center space-x-4 text-center md:flex md:text-left">
                 <a
                   className="text-lg"
                   href="https://app.touca.io"
@@ -28,7 +28,7 @@ export default function AboveTheFold() {
                   rel="noopener noreferrer">
                   <button
                     style={{ boxShadow: '0 0 5px #7dd3fc' }}
-                    className="p-3 space-x-2 font-medium text-white duration-150 ease-in-out bg-opacity-25 box-shadow rounded-xl focus:outline-none bg-dark-blue-700 hover:bg-opacity-50 group"
+                    className="box-shadow group space-x-2 rounded-xl bg-dark-blue-700 bg-opacity-25 p-3 font-medium text-white duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
                     type="button"
                     role="button">
                     <span>Get Started for Free</span>
@@ -41,7 +41,7 @@ export default function AboveTheFold() {
                   target="_blank"
                   rel="noopener noreferrer">
                   <button
-                    className="p-3 space-x-2 font-medium text-gray-300 duration-150 ease-in-out bg-opacity-50 hover:text-white rounded-xl focus:outline-none group"
+                    className="group space-x-2 rounded-xl bg-opacity-50 p-3 font-medium text-gray-300 duration-150 ease-in-out hover:text-white focus:outline-none"
                     type="button"
                     role="button">
                     <span>or Get a Live Demo</span>
@@ -49,7 +49,7 @@ export default function AboveTheFold() {
                 </a>
               </div>
               <div className="container mx-auto space-y-4">
-                <p className="text-white uppercase">Trusted By</p>
+                <p className="uppercase text-white">Trusted By</p>
                 <div className="flex items-center justify-between space-x-2">
                   <a
                     href="https://vitalimages.com"
@@ -66,13 +66,13 @@ export default function AboveTheFold() {
                 </div>
               </div>
             </div>
-            <div className="items-center hidden w-full h-full p-8 mx-auto select-none xl:col-span-3 sm:flex sm:p-0">
+            <div className="mx-auto hidden h-full w-full select-none items-center p-8 sm:flex sm:p-0 xl:col-span-3">
               <a
                 href="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-screenshot-suite-page-closed.jpg"
                 target="_blank"
                 rel="noopener noreferrer">
                 <img
-                  className="shadow-md rounded-xl"
+                  className="rounded-xl shadow-md"
                   alt="Touca Continuous Regression Testing"
                   src={make_path('/images/touca-atf-visual.jpg')}
                   loading="lazy"

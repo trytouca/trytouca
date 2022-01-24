@@ -20,9 +20,9 @@ export type FeatureInput = {
 export const FeatureHero = (props: { input: FeatureInput }) => {
   return (
     <div className="flex items-center justify-center">
-      <div className="w-full md:p-4 xl:p-6 bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 rounded-xl">
+      <div className="w-full rounded-xl bg-gradient-to-b from-dark-blue-800 to-dark-blue-900 md:p-4 xl:p-6">
         <img
-          className="w-full mx-auto rounded-md md:rounded-xl"
+          className="mx-auto w-full rounded-md md:rounded-xl"
           src={props.input.image.link}
           alt={props.input.image.alt}
           loading="lazy"

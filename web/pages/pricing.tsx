@@ -107,7 +107,7 @@ class CommonQuestions extends React.Component<
 
   render() {
     return (
-      <div className="container flex flex-col justify-center px-4 py-32 mx-auto lg:px-8 wsl-min-h-screen-1">
+      <div className="container flex flex-col justify-center px-4 py-32 mx-auto wsl-min-h-screen-1 lg:px-8">
         <h2 className="pb-16 text-4xl font-bold text-white">
           {content.faq.title}
         </h2>
@@ -123,12 +123,12 @@ class CommonQuestions extends React.Component<
                 <div
                   key={index}
                   onClick={() => this.activate(index)}
-                  className={`p-4 flex items-center justify-between rounded-lg cursor-pointer duration-300 ease-in-out ${left}`}>
-                  <h3 className="text-xl text-white lg:text-2xl text-medium">
+                  className={`flex cursor-pointer items-center justify-between rounded-lg p-4 duration-300 ease-in-out ${left}`}>
+                  <h3 className="text-xl text-white text-medium lg:text-2xl">
                     {block.question}
                   </h3>
                   <HiArrowNarrowRight
-                    className={`text-yellow-500 text-2xl ${right}`}
+                    className={`text-2xl text-yellow-500 ${right}`}
                   />
                 </div>
               );
@@ -154,7 +154,7 @@ class CommonQuestions extends React.Component<
 function FreePlan() {
   return (
     <div className="w-full max-w-screen-lg px-8 mx-auto">
-      <div className="p-8 space-y-8 border rounded-lg shadow-xl md:space-y-0 md:flex md:items-center md:justify-between bg-opacity-90 bg-dark-blue-800 border-dark-blue-700">
+      <div className="p-8 space-y-8 border rounded-lg shadow-xl border-dark-blue-700 bg-dark-blue-800 bg-opacity-90 md:flex md:items-center md:justify-between md:space-y-0">
         <div className="space-y-2 text-white">
           <p className="text-2xl font-bold">Just you?</p>
           <p className="text-xl font-medium">
@@ -168,7 +168,7 @@ function FreePlan() {
           target="_blank"
           rel="noopener noreferrer">
           <button
-            className="shadow-[0_0_5px_#7dd3fc] p-3 space-x-2 font-medium text-white duration-150 ease-in-out bg-opacity-25 box-shadow rounded-xl focus:outline-none bg-dark-blue-700 hover:bg-opacity-50 group"
+            className="box-shadow group space-x-2 rounded-xl bg-dark-blue-700 bg-opacity-25 p-3 font-medium text-white shadow-[0_0_5px_#7dd3fc] duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
             type="button"
             role="button">
             <span>Get Started for Free</span>
@@ -194,7 +194,7 @@ export default function PricingPage() {
       <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
         <div className="container flex flex-col justify-center w-full max-w-screen-lg py-16 mx-auto wsl-min-h-screen-1">
-          <div className="flex items-center min-h-[25vh] p-8 space-y-2 text-center">
+          <div className="flex min-h-[25vh] items-center space-y-2 p-8 text-center">
             <h2 className="max-w-2xl mx-auto text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
               <span className="text-yellow-500">Pays for itself</span> in
               happier, more productive engineers
