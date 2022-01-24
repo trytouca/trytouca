@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { floor } from 'lodash'
 import mongoose from 'mongoose'
@@ -77,7 +77,7 @@ async function compareCommonElement(
   )
 
   // for better user experience, report the score rounded down to four
-  // digits after decimal. we choose four digits on platform API to allow
+  // digits after decimal. we choose four digits on Touca Server API to allow
   // clients report the score as 99.99% if they so choose. we are also
   // intentionally choosing to report 0.99999 as 0.9999 to distinguish
   // between perfect and partial matching scores.

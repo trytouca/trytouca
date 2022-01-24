@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 """
 This script provides an example on how to authenticate and interact
@@ -20,7 +20,7 @@ ClientPassword = "Touca$123"
 
 def main():
     """
-    clients are expected to authenticate with Platform API
+    clients are expected to authenticate with the Touca Server API
     before they can make requests to access or modify information.
     """
 
@@ -67,8 +67,8 @@ def main():
 
     # Finally, note that the response to some API routes varies depending
     # on the permissions of the user account used during authentication.
-    # Consult with Platform API documentation to learn more about the
-    # expected Platform and/or Team roles for each route.
+    # Consult with the Touca Server API documentation to learn more about
+    # the expected Platform and/or Team roles for each route.
 
 
 if __name__ == "__main__":

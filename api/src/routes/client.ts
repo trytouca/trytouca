@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import express from 'express'
 import * as ev from 'express-validator'
@@ -20,7 +20,7 @@ const router = express.Router()
  *    summary: 'Create Client Session'
  *    operationId: 'client_signin'
  *    description:
- *      Authenticate to Platform API.
+ *      Authenticate to Touca Server API.
  *      Creates a temporary client session.
  *    requestBody:
  *      content:

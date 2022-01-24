@@ -1,6 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
-
-#!/usr/bin/env python
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import sys
 from dataclasses import dataclass
@@ -77,8 +75,8 @@ def setup_databases():
 @logger.catch
 def test_main():
     """
-    Integration Test for the Platform API service. This test requires a running
-    platform server, minio, mongo, and redis databases.
+    Integration Test for the Touca Server API service. This test requires a
+    running platform server, minio, mongo, and redis databases.
     """
 
     # configure logger
