@@ -88,7 +88,7 @@ export class ListFilterComponent {
   }
 
   onKeyupRowFilter(event) {
-    this._searchSubject.next(event.target.value);
+    this._searchSubject.next(event.target.value as string);
   }
 
   public isSearchActive(): boolean {

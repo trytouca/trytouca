@@ -1,6 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+
 import { Topic, TopicType } from '../models/page-item.model';
 
 @Component({

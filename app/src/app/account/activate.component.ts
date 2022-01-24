@@ -34,7 +34,10 @@ export class ActivateComponent implements OnDestroy {
     const key = route.snapshot.queryParamMap.get('key');
     this._sub.activate = apiService.post(`/auth/activate/${key}`).subscribe({
       next: (doc) => {
-        localStorage.setItem(ELocalStorageKey.TokenExpiresAt, doc.expiresAt);
+        localStorage.setItem(
+          ELocalStorageKey.TokenExpiresAt,
+          doc.expiresAt as string
+        );
         router.navigate(['/account/welcome']);
       },
       error: (err: HttpErrorResponse) => {

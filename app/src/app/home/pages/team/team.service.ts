@@ -136,7 +136,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   private update(key: string, response: unknown) {
     if (response && !isEqual(response, this._cache[key])) {
       this._cache[key] = response;
-      this._subjects[key].next(response);
+      (this._subjects[key] as Subject<unknown>).next(response);
     }
   }
 
@@ -183,7 +183,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     try {
       localStorage.setItem(ELocalStorageKey.LastVisitedTeam, doc.slug);
     } catch (err) {
-      errorLogger.notify(err);
+      errorLogger.notify(err as Error);
     }
   }
 
@@ -237,7 +237,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     const requests = elements.map((key) => {
       return this._cache[key]
         ? of(0)
-        : this.apiService.get<unknown>(url[key].join('/'));
+        : this.apiService.get<unknown>((url[key] as string[]).join('/'));
     });
     forkJoin(requests).subscribe({
       next: (doc) => {

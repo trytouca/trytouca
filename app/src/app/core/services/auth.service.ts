@@ -21,7 +21,7 @@ export class AuthService {
 
   public login(username: string, password: string) {
     return this.apiService.post('auth/signin', { username, password }).pipe(
-      map((doc) => {
+      map((doc: { expiresAt: string }) => {
         localStorage.setItem(ELocalStorageKey.TokenExpiresAt, doc.expiresAt);
       })
     );
@@ -71,7 +71,7 @@ export class AuthService {
   }
 
   google_login(): Observable<void> {
-    const set_expiration_date = (doc) => {
+    const set_expiration_date = (doc: { expiresAt: string }) => {
       localStorage.setItem(ELocalStorageKey.TokenExpiresAt, doc.expiresAt);
     };
     return this.google_authenticate().pipe(

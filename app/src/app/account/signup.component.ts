@@ -83,7 +83,10 @@ export class SignupComponent {
    */
   onResend() {
     this.apiService
-      .post('/auth/signup/resend', this.formSignup.value)
+      .post(
+        '/auth/signup/resend',
+        this.formSignup.value as Record<string, unknown>
+      )
       .subscribe();
   }
 

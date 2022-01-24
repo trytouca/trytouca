@@ -1,8 +1,9 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-// eslint-disable @typescript-eslint/no-unsafe-call
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 import { environment } from 'src/environments/environment';
+
 import { UserLookupResponse } from '@/core/models/commontypes';
 
 class IntercomClient {

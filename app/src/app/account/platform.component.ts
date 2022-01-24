@@ -128,7 +128,7 @@ export class PlatformComponent implements OnDestroy {
           'resetKeyCreatedAt'
         ].forEach((k) => {
           if (k in user) {
-            user[k] = new Date(user[k]);
+            user[k] = new Date(user[k] as Date);
           }
         });
         return user;

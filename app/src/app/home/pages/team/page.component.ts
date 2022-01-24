@@ -132,16 +132,18 @@ export class TeamPageComponent
       closeButton: false,
       minHeight: '10vh'
     });
-    this._sub.dialog = this._dialogRef.afterClosed$.subscribe((state) => {
-      if (state) {
-        if (state.action === 'create') {
-          this.router.navigate(['~', state.slug]);
-          this.teamPageService.refreshTeams(state.slug);
-        } else {
-          this.teamPageService.refreshTeams();
+    this._sub.dialog = this._dialogRef.afterClosed$.subscribe(
+      (state: { action: string; slug: string }) => {
+        if (state) {
+          if (state.action === 'create') {
+            this.router.navigate(['~', state.slug]);
+            this.teamPageService.refreshTeams(state.slug);
+          } else {
+            this.teamPageService.refreshTeams();
+          }
         }
       }
-    });
+    );
   }
 
   confirmDecline(item: TeamItem): void {

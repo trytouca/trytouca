@@ -29,7 +29,7 @@ export class GuestGuard implements CanActivate, CanActivateChild {
     return this.router.parseUrl('/~');
   }
 
-  canActivateChild(route, state) {
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
     return this.canActivate(route, state);
   }
 }

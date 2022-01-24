@@ -95,7 +95,7 @@ export class VersionListComponent implements OnChanges {
       });
     this._versionQueryChanged
       .pipe(
-        map((event: any) => event.target.value),
+        map((event) => (event.target as any).value),
         map((res) => (res.length < 2 ? '' : res)),
         debounceTime(500),
         distinctUntilChanged()

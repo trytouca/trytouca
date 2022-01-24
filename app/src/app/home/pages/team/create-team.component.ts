@@ -46,7 +46,7 @@ export class TeamCreateTeamComponent
       buttonText: 'Create',
       slugDesc:
         'Unique url-friendly identifier. Used in the links to your test suites and test results.',
-      onSubmit: (model) => this.onCreate(model)
+      onSubmit: (model: IFormContent) => this.onCreate(model)
     },
     {
       mode: Mode.Join,
@@ -54,7 +54,7 @@ export class TeamCreateTeamComponent
       linkText: 'Create a New Team',
       buttonText: 'Join',
       slugDesc: 'URL-friendly identifier of the team you wish to join.',
-      onSubmit: (model) => this.onJoin(model)
+      onSubmit: (model: IFormContent) => this.onJoin(model)
     }
   ];
   content: Content = this.contents.find((v) => v.mode === Mode.Create);

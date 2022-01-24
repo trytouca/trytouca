@@ -37,7 +37,7 @@ export function nextPageQueryParams(
   type: BatchPageItemType
 ): BatchNextPageQueryParams {
   const qmap = queryParamMap;
-  const tryGet = (key) => (qmap.has(key) ? qmap.get(key) : undefined);
+  const tryGet = (key: string) => (qmap.has(key) ? qmap.get(key) : undefined);
   const queries = {
     cv: tryGet('cv'),
     v: tryGet('v')

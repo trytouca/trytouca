@@ -132,6 +132,7 @@ jobs:
         run: |
           yarn --cwd=app install --frozen-lockfile
           yarn --cwd=app build
+          yarn --cwd=app lint
           tar -zcf app.tar.gz app/dist
 
       - name: push app to aws
@@ -189,8 +190,8 @@ jobs:
           NEXT_TELEMETRY_DISABLED: 1
         run: |
           yarn --cwd=web install
-          yarn --cwd=web lint
           yarn --cwd=web build
+          yarn --cwd=web lint
           yarn --cwd=web export
           tar -zcf web.tar.gz web/out
 

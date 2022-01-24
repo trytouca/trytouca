@@ -125,7 +125,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     const update = (key: string, response: unknown) => {
       if (response && !isEqual(response, this._cache[key])) {
         this._cache[key] = response;
-        this._subjects[key].next(response);
+        (this._subjects[key] as Subject<any>).next(response);
       }
     };
     const elements = ['team', 'suites', 'suite', 'batches', 'elements'];

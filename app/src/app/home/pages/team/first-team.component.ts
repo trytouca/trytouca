@@ -34,7 +34,8 @@ export class TeamFirstTeamComponent implements OnDestroy {
     });
     this._dialogSub = this._dialogRef.afterClosed$.subscribe((state) => {
       if (state) {
-        const teamSlug = state.action === 'create' ? state.slug : null;
+        const teamSlug: string | null =
+          state.action === 'create' ? state.slug : null;
         this.teamPageService.refreshTeams(teamSlug);
       }
     });
