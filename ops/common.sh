@@ -17,14 +17,6 @@ log_info  () { __log 'info' '34' "$@"; }
 log_warning () { __log 'warn' '33' "$@"; }
 log_error () { __log 'error' '31' "$@"; return 1; }
 
-# this script expects bash v4.4 or higher
-
-if [ "${BASH_VERSINFO[0]}" -lt 4 ] || { [ "${BASH_VERSINFO[0]}" -eq 4 ] && \
-    [ "${BASH_VERSINFO[1]}" -lt 4 ]; }; then
-    log_warning "you are using bash version ${BASH_VERSION}"
-    log_error "this script requires bash version 4.4 or higher"
-fi
-
 # basic helper funcitons
 
 require_env_var () {

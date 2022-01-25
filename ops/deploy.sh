@@ -130,6 +130,16 @@ run_compose () {
     return 0
 }
 
+# publish news that deploy has succeeded
+announce_deploy () {
+curl --silent \
+  -H "Authorization: Bot OTI3NjAyODIyNDk5OTM0Mjg5.YdMncg.afeJQiupi7cyXVrUd9r6Q0rklwE" \
+  -H "User-Agent: touca_bot.sh (https://touca.io, v0.1)" \
+  -H "Content-Type: application/json" \
+  -d '{"content":"Deployed to touca.io"}' \
+  "https://discordapp.com/api/v6/channels/807670553708199956/messages"
+}
+
 # run deployment process
 
 log_info "stopping running containers"
@@ -145,7 +155,6 @@ fi
 log_info "pruned docker resources"
 
 log_debug "authenticating to docker package registry"
-
 if ! aws ecr get-login-password --region "${PKG_REGION}" | docker login "${PKG_REGISTRY}" -u "${PKG_USERNAME}" --password-stdin  >/dev/null; then
     log_error "failed to authenticate to docker package registry"
 fi
@@ -162,5 +171,9 @@ if ! run_compose "up -d" >/dev/null; then
     log_error "failed to start new containers"
 fi
 log_info "started new docker containers"
+
+log_debug "sending notification on discord"
+announce_deploy
+log_info "sent notification on discord"
 
 log_info "deployment is complete"
