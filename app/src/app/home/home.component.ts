@@ -29,13 +29,11 @@ export class HomeComponent {
   ) {
     this.alertService.alerts$.subscribe((v) => {
       if (v.some((k) => k.kind === AlertKind.InvalidAuthToken)) {
-        timer(2000).subscribe(() => {
-          this.authService.logout().subscribe(() => {
-            this.alertService.reset();
-            this.userService.reset();
-            this.router.navigate(['/account/signin'], {
-              queryParams: { e: '401' }
-            });
+        this.authService.logout().subscribe(() => {
+          this.alertService.reset();
+          this.userService.reset();
+          this.router.navigate(['/account/signin'], {
+            queryParams: { e: '401' }
           });
         });
       }

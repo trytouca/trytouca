@@ -42,11 +42,7 @@ export class AlertService {
         'Some of our services are not available at this time. ' +
         'Please allow some time for these services to be restored.'
     },
-    {
-      kind: AlertKind.InvalidAuthToken,
-      type: AlertType.Danger,
-      text: 'Your session has expired. Please login once again.'
-    },
+    { kind: AlertKind.InvalidAuthToken, type: AlertType.Danger, text: '' },
     { kind: AlertKind.TeamNotFound, type: AlertType.Danger, text: '' },
     { kind: AlertKind.SuiteNotFound, type: AlertType.Danger, text: '' },
     { kind: AlertKind.BatchNotFound, type: AlertType.Danger, text: '' },

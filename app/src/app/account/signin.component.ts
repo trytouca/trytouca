@@ -54,7 +54,7 @@ export class SigninComponent implements OnInit {
     if (queryMap.has('e') && queryMap.get('e') === '401') {
       this.alert = {
         type: AlertType.Info,
-        text: 'It looks like you were signed out.'
+        text: 'Your session expired. Please login once again.'
       };
     } else if (queryMap.has('n') && queryMap.get('n') === 'join') {
       this.alert = {
