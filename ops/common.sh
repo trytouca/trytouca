@@ -108,3 +108,73 @@ remove_docker_image_if_exists () {
         log_info "removed docker image $1"
     fi
 }
+
+run_compose () {
+    if [ $# -eq 0 ]; then return 1; fi
+    if [ ! -f "${FILE_COMPOSE}" ]; then
+        log_warning "docker-compose file does not exist: ${FILE_COMPOSE}"
+        return 1
+    fi
+    for arg in "$@"; do
+        local cmd="docker-compose -f \"${FILE_COMPOSE}\" -p touca --project-directory \"${DIR_PROJECT_ROOT}\" $arg"
+        if ! eval "$cmd"; then
+            log_warning "failed to run $cmd"
+            return 1
+        fi
+    done
+    return 0
+}
+
+extract_secret () {
+    if [ $# -ne 1 ]; then return 1; fi
+    if [ ! -f "${FILE_COMPOSE}" ]; then
+        log_warning "docker-compose file does not exist: ${FILE_COMPOSE}"
+        return 1
+    fi
+    local value=$(grep $1 ${FILE_COMPOSE} | awk '{print $2}')
+    echo $value
+}
+
+discord_notify () {
+    if [ $# -ne 1 ]; then return 1; fi
+    if [ ! -f "${FILE_COMPOSE}" ]; then
+        log_warning "docker-compose file does not exist: ${FILE_COMPOSE}"
+        return 1
+    fi
+    local discord_channel=$(extract_secret "DISCORD_CHANNEL")
+    local discord_token=$(extract_secret "DISCORD_TOKEN")
+    curl --silent \
+        -H "Authorization: Bot ${discord_token}" \
+        -H "User-Agent: touca_bot.sh (https://touca.io, v0.1)" \
+        -H "Content-Type: application/json" \
+        -d "{\"content\":\"${1}\"}" \
+        "${discord_channel}"
+}
+
+redeploy () {
+    log_info "stopping running containers"
+    run_compose "stop" >/dev/null
+
+    log_info "removing previous containers"
+    run_compose "down" >/dev/null
+
+    log_debug "pruning docker resources"
+    if ! docker system prune --force >/dev/null; then
+        log_error "failed to prune docker resources"
+    fi
+    log_info "pruned docker resources"
+
+    log_debug "pulling new docker images"
+    if ! run_compose "pull" >/dev/null; then
+        log_error "failed to pull new docker images"
+    fi
+    log_info "pulled new docker images"
+
+    log_debug "starting new docker containers"
+    if ! run_compose "up -d" >/dev/null; then
+        log_error "failed to start new containers"
+    fi
+    log_info "started new docker containers"
+
+    log_info "deployment is complete"
+}
