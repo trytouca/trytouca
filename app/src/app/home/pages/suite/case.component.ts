@@ -1,6 +1,13 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { timer } from 'rxjs';
 
@@ -9,6 +16,11 @@ import { Topic, TopicType } from '@/home/models/page-item.model';
 import { DateTimePipe } from '@/shared/pipes';
 
 import { SuitePageElement } from './suite.model';
+
+enum NoteType {
+  ViewMode,
+  EditMode
+}
 
 @Component({
   selector: 'app-suite-item-case',
@@ -19,6 +31,13 @@ export class SuiteItemCaseComponent {
   data: ElementListResponseItem;
   shownTopics: Topic[] = [];
   copyClass = [];
+
+  Math = Math;
+  noteType = NoteType.ViewMode;
+  NoteType = NoteType;
+  formNote = new FormGroup({
+    note: new FormControl('', { updateOn: 'change' })
+  });
 
   constructor(private dateTimePipe: DateTimePipe) {}
 
@@ -58,13 +77,31 @@ export class SuiteItemCaseComponent {
     timer(1000).subscribe(() => (this.copyClass = []));
   }
 
-  showForm() {
-    this.data.note = 'some text';
+  switchToEditMode() {
+    this.noteType = NoteType.EditMode;
+    this.formNote.setValue({ note: this.data.note ?? '' });
+  }
+
+  updateEditable() {
+    this.noteType = NoteType.ViewMode;
+    this.data.note = this.formNote.value.note;
     this.updateMetadata.emit(this.data);
   }
 
+  cancelEditable() {
+    this.noteType = NoteType.ViewMode;
+  }
+
   removeNote() {
-    this.data.note = undefined;
-    this.updateMetadata.emit(this.data);
+    this.formNote.reset({ note: '' });
+    this.updateEditable();
+  }
+
+  @HostListener('keydown', ['$event'])
+  onKeydown(event: KeyboardEvent) {
+    if ('Escape' === event.key) {
+      this.cancelEditable();
+    }
+    event.stopImmediatePropagation();
   }
 }

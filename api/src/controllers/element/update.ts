@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
+import { pick } from 'lodash'
 
 import { ElementModel, IElementDocument } from '@/schemas/element'
 import { ISuiteDocument } from '@/schemas/suite'
@@ -21,14 +22,24 @@ export async function elementUpdate(
   const suite = res.locals.suite as ISuiteDocument
   const element = res.locals.element as IElementDocument
   const tuple = [team.slug, suite.slug, element.slug].join('/')
-  const proposed = req.body as {
-    note: string
-    tags: string[]
+
+  const allowed = ['note', 'tags']
+  const setProps = pick(req.body, allowed)
+  const missingKeys = allowed.filter((v) => !Object.keys(setProps).includes(v))
+  const action = {
+    set: setProps,
+    unset: Object.fromEntries(missingKeys.map((v) => [v, '']))
   }
-  logger.debug('%s: updating element %s: %j', user.username, tuple, proposed)
 
-  await ElementModel.findOneAndUpdate({ _id: element._id }, { $set: proposed })
+  await ElementModel.findOneAndUpdate(
+    { _id: element._id },
+    { $set: action.set }
+  )
+  await ElementModel.findOneAndUpdate(
+    { _id: element._id },
+    { $unset: action.unset }
+  )
 
-  logger.info('%s: updated element %s: %j', user.username, tuple, proposed)
+  logger.info('%s: updated element %s: %j', user.username, tuple, action)
   return res.status(204).json()
 }

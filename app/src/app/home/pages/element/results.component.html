@@ -37,7 +37,7 @@
           (click)="selectedRow = i"
           [ngClass]="
             selectedRow === i
-              ? 'border-l-sky-500 dark:border-l-sky-800'
+              ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">
           <app-element-item-result
@@ -75,7 +75,7 @@
           (click)="selectedRow = i + countShownRows(ItemType.Common)"
           [ngClass]="
             selectedRow === i + countShownRows(ItemType.Common)
-              ? 'border-l-sky-500 dark:border-l-sky-800'
+              ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">
           <app-element-item-result
@@ -122,7 +122,7 @@
           [ngClass]="
             selectedRow ===
             i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)
-              ? 'border-l-sky-500 dark:border-l-sky-800'
+              ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">
           <app-element-item-result
