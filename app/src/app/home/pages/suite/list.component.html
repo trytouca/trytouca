@@ -1,6 +1,6 @@
 <section class="wsl-page-tab" id="wsl-suite-tab-batches">
   <div
-    class="wsl-min-h-screen-3 grid place-items-stretch gap-x-4 space-y-4 md:space-y-0 lg:grid-cols-2 xl:grid-cols-3">
+    class="wsl-min-h-screen-3 grid place-items-stretch gap-4 space-y-4 md:space-y-0 lg:grid-cols-2 xl:grid-cols-3">
     <div class="wsl-box col-span-1 space-y-4 p-4 xl:col-span-2">
       <app-home-list-filter
         [manager]="filterManager"
@@ -28,7 +28,11 @@
             class="wsl-list-item-outer"
             *ngFor="let item of getShownRows(ItemType.Batch); let i = index"
             (click)="selectedRow = i"
-            [ngClass]="{ 'bg-sky-50 dark:bg-gray-700': selectedRow === i }">
+            [ngClass]="
+              selectedRow === i
+                ? 'border-l-sky-500 dark:border-l-sky-800'
+                : 'border-l-transparent'
+            ">
             <app-suite-item-batch
               *ngIf="item.type === ItemType.Batch"
               [item]="item.asBatch()"

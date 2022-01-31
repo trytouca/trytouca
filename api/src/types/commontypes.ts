@@ -1,8 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 export enum EFeatureFlag {
-  NewsletterProduct = 'newsletter_product',
-  TestcasesTab = 'testcases_tab'
+  NewsletterProduct = 'newsletter_product'
 }
 
 /**
@@ -743,18 +742,43 @@ export type BatchComparisonResponse = {
  *  required:
  *    - metricsDuration
  *    - name
+ *    - slug
  *  properties:
  *    metricsDuration:
  *      type: number
  *    name:
  *      type: string
+ *    note:
+ *      type: string
  *    slug:
  *      type: string
+ *    tags:
+ *      type: array
+ *      items:
+ *        type: string
+ *    versions:
+ *      type: array
+ *      items:
+ *        type: object
+ *        properties:
+ *          match:
+ *            type: number
+ *          name:
+ *            type: string
+ *          time:
+ *            type: number
  */
 type ElementListResponseItem = {
   metricsDuration: number
   name: string
+  note: string
   slug: string
+  tags: string[]
+  versions: {
+    match: number
+    name: string
+    time: number
+  }[]
 }
 
 /**

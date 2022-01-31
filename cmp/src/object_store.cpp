@@ -58,10 +58,11 @@ void MinioClient::get_object(const std::string& bucket_name,
   Aws::S3::Model::GetObjectRequest object_request;
   object_request.SetBucket(bucket_name);
   object_request.SetKey(object_key);
+
   auto outcome = _aws_client->GetObject(object_request);
   if (!outcome.IsSuccess()) {
-    touca::log_warn("{}: failed to retrieve object: {}", object_key,
-                    outcome.GetError().GetMessage());
+    touca::log_warn("{}: {}", object_key, outcome.GetError().GetMessage());
+    return;
   }
 
   auto&& result = outcome.GetResultWithOwnership();

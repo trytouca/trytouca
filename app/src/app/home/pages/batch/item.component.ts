@@ -80,7 +80,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
     private route: ActivatedRoute,
     private i18pluralPipe: I18nPluralPipe,
     private dateAgoPipe: DateAgoPipe,
-    private datetimePipe: DateTimePipe,
+    private dateTimePipe: DateTimePipe,
     private percentPipe: PercentPipe,
     private faIconLibrary: FaIconLibrary
   ) {
@@ -282,7 +282,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
     }
 
     const changeType = metric.changeType();
-    const durationStr = this.datetimePipe.transform(duration, 'duration');
+    const durationStr = this.dateTimePipe.transform(duration, 'duration');
     if (
       changeType === MetricChangeType.Same ||
       changeType === MetricChangeType.Fresh ||

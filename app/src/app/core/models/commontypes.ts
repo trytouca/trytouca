@@ -1,8 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 export enum EFeatureFlag {
-  NewsletterProduct = 'newsletter_product',
-  TestcasesTab = 'testcases_tab'
+  NewsletterProduct = 'newsletter_product'
 }
 
 export enum EPlatformRole {
@@ -212,7 +211,14 @@ export type BatchComparisonResponse = {
 export type ElementListResponseItem = {
   metricsDuration: number;
   name: string;
+  note: string;
   slug: string;
+  tags: string[];
+  versions: {
+    name: string;
+    match: number;
+    time: number;
+  }[];
 };
 
 export type ElementListResponse = ElementListResponseItem[];

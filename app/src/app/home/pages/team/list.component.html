@@ -39,7 +39,11 @@
           class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Suite); let i = index"
           (click)="selectedRow = i"
-          [ngClass]="{ 'bg-sky-50 dark:bg-gray-700': selectedRow === i }">
+          [ngClass]="
+            selectedRow === i
+              ? 'border-l-sky-500 dark:border-l-sky-800'
+              : 'border-l-transparent'
+          ">
           <app-team-item-suite
             [item]="item.data"
             [chosenTopics]="chosenTopic"

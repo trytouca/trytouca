@@ -1,14 +1,16 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import e from 'express'
+import express from 'express'
+import * as ev from 'express-validator'
 
 import { elementCompare } from '@/controllers/element/compare'
 import { elementList } from '@/controllers/element/list'
 import { elementLookup } from '@/controllers/element/lookup'
+import { elementUpdate } from '@/controllers/element/update'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
-const router = e.Router()
+const router = express.Router()
 
 /**
  * Deprecated in favor of `/client/element/:team/:suite`.
@@ -111,6 +113,73 @@ router.get(
   middleware.hasSuite,
   middleware.hasElement,
   promisable(elementLookup, 'lookup an element')
+)
+
+/**
+ * Update metadata of a test case in a given suite.
+ *
+ * @api [patch] /element/:team/:suite/:element
+ *    tags:
+ *      - Element
+ *    summary: Lookup Element
+ *    operationId: element_update
+ *    description:
+ *      Update test case information in a given suite.
+ *      User initiating the request must be authenticated.
+ *      User initiation the request must be member of the team.
+ *    parameters:
+ *      - $ref: '#/components/parameters/team'
+ *      - $ref: '#/components/parameters/suite'
+ *      - $ref: '#/components/parameters/element'
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              note:
+ *                type: string
+ *      required: true
+ *    responses:
+ *      204:
+ *        description:
+ *          Metadata of the suite was updated.
+ *      400:
+ *        $ref: '#/components/responses/RequestInvalid'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ *      404:
+ *        description: 'Team or Suite or Element Not Found'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
+router.patch(
+  '/:team/:suite/:element',
+  middleware.isAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  middleware.hasSuite,
+  middleware.hasElement,
+  express.json(),
+  middleware.inputs([
+    ev
+      .body('note')
+      .isString()
+      .withMessage('not a string')
+      .withMessage('invalid')
+      .optional(),
+    ev
+      .body('tags')
+      .isArray()
+      .withMessage('not an array')
+      .withMessage('invalid')
+      .optional()
+  ]),
+  promisable(elementUpdate, 'update a test case')
 )
 
 /**

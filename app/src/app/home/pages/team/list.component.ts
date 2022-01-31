@@ -162,11 +162,11 @@ export class TeamTabSuitesComponent
     router: Router
   ) {
     super(filterInput, Object.values(TeamPageSuiteType), route, router);
-    this._subTeam = this.teamPageService.data.team$.subscribe((v) => {
+    this._subTeam = teamPageService.data.team$.subscribe((v) => {
       this._team = v;
     });
-    this._subAllItems = this.teamPageService.items$.subscribe((allItems) => {
-      this.initCollections(allItems);
+    this._subAllItems = teamPageService.items$.subscribe((v) => {
+      this.initCollections(v);
     });
   }
 

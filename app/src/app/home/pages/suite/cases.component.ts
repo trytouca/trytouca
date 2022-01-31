@@ -1,27 +1,124 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Component, OnDestroy } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, HostListener, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { ElementListResponse } from '@/core/models/commontypes';
+import {
+  ElementListResponseItem,
+  SuiteLookupResponse
+} from '@/core/models/commontypes';
+import { ApiService, NotificationService } from '@/core/services';
+import { PageListComponent } from '@/home/components';
+import { FilterInput } from '@/home/models/filter.model';
+import { AlertType } from '@/shared/components/alert.component';
 
+import { SuitePageElement, SuitePageElementType } from './suite.model';
 import { SuitePageService } from './suite.service';
+
+const filterInput: FilterInput<SuitePageElement> = {
+  filters: [
+    {
+      key: 'none',
+      name: 'None',
+      func: () => true
+    }
+  ],
+  sorters: [
+    {
+      key: 'name',
+      name: 'Name',
+      func: (a, b) => b.data.name.localeCompare(a.data.name)
+    },
+    {
+      key: 'runtime',
+      name: 'Runtime',
+      func: (a, b) => b.data.metricsDuration - a.data.metricsDuration
+    }
+  ],
+  searchBy: ['data.name'],
+  defaults: {
+    filter: 'none',
+    search: '',
+    sorter: 'name',
+    order: 'dsc',
+    pagen: 1,
+    pagel: 100
+  },
+  queryKeys: {
+    filter: 'tf',
+    search: 'tq',
+    sorter: 'ts',
+    order: 'to',
+    pagen: 'tn',
+    pagel: 'tl'
+  },
+  placeholder: 'Find a test case'
+};
 
 @Component({
   selector: 'app-suite-tab-cases',
   templateUrl: './cases.component.html'
 })
-export class SuiteTabCasesComponent implements OnDestroy {
-  private _subElements: Subscription;
-  elements: ElementListResponse;
+export class SuiteTabCasesComponent
+  extends PageListComponent<SuitePageElement>
+  implements OnDestroy
+{
+  suite: SuiteLookupResponse;
+  ItemType = SuitePageElementType;
 
-  constructor(private suitePageService: SuitePageService) {
-    this._subElements = suitePageService.data.elements$.subscribe((v) => {
-      this.elements = v;
+  private _subSuite: Subscription;
+
+  constructor(
+    private apiService: ApiService,
+    private notificationService: NotificationService,
+    suitePageService: SuitePageService,
+    route: ActivatedRoute,
+    router: Router
+  ) {
+    super(filterInput, Object.values(SuitePageElementType), route, router);
+    this._subAllItems = suitePageService.data.elements$.subscribe((v) => {
+      this.initCollections(v);
+    });
+    this._subSuite = suitePageService.data.suite$.subscribe((v) => {
+      this.suite = v;
     });
   }
 
   ngOnDestroy() {
-    this._subElements.unsubscribe();
+    this._subSuite.unsubscribe();
+    super.ngOnDestroy();
+  }
+
+  updateMetadata(event: ElementListResponseItem) {
+    const url = [
+      'element',
+      this.suite.teamSlug,
+      this.suite.suiteSlug,
+      event.slug
+    ].join('/');
+    this.apiService.patch(url, event).subscribe({
+      error: () => {
+        this.notificationService.notify(
+          AlertType.Danger,
+          'Something went wrong. Please try this operation again later.'
+        );
+      }
+    });
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  onKeydown(event: KeyboardEvent) {
+    // pressing keys 'j' and 'k' should navigate through items on the list
+    if (['j', 'k'].includes(event.key)) {
+      super.keyboardNavigateList(event, '#wsl-suite-tab-cases');
+      return;
+    }
+    const row = this.selectedRow;
+    // pressing 'escape' when an item is selected should unselect it
+    if ('Escape' === event.key && row !== -1) {
+      this.selectedRow = -1;
+    }
   }
 }

@@ -82,15 +82,13 @@ export class TeamTabMembersComponent
     router: Router
   ) {
     super(filterInput, Object.values(TeamPageMemberType), route, router);
-    this._subTeam = this.teamPageService.data.team$.subscribe((v) => {
+    this._subTeam = teamPageService.data.team$.subscribe((v) => {
       this._team = v;
       this.isTeamAdmin = this.userService.isTeamAdmin(v.role);
     });
-    this._subAllItems = this.teamPageService.data.members$.subscribe(
-      (allItems) => {
-        this.initCollections(allItems);
-      }
-    );
+    this._subAllItems = teamPageService.data.members$.subscribe((v) => {
+      this.initCollections(v);
+    });
   }
 
   ngOnDestroy() {

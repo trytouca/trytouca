@@ -12,15 +12,14 @@
   </form>
   <div wslDropdown>
     <button
-      class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle h-full"
+      class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle flex h-full items-center space-x-1"
       type="button"
       id="dropdown-button-filter"
       aria-haspopup="true"
       aria-expanded="false">
-      Filter:
+      <span>Filter:</span>
       <b class="font-medium">{{ filterName }}</b>
-      &nbsp;
-      <fa-icon icon="chevron-down" size="xs" class="opacity-50"></fa-icon>
+      <ng-icon name="hero-chevron-down" class="opacity-50"></ng-icon>
     </button>
     <ul
       class="wsl-dropdown-menu hidden w-48"
@@ -35,16 +34,15 @@
   </div>
   <div wslDropdown>
     <button
-      class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle h-full"
+      class="wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle flex h-full items-center space-x-1"
       type="button"
       id="dropdown-button-sort"
       aria-haspopup="true"
       aria-expanded="false"
       [disabled]="isSearchActive()">
-      Sort:
+      <span>Sort:</span>
       <b class="font-medium">{{ sorterName }}</b>
-      &nbsp;
-      <fa-icon icon="chevron-down" size="xs" class="opacity-50"></fa-icon>
+      <ng-icon name="hero-chevron-down" class="opacity-50"></ng-icon>
     </button>
     <ul
       class="wsl-dropdown-menu hidden w-48"

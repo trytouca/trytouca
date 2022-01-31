@@ -35,7 +35,11 @@
           class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Common); let i = index"
           (click)="selectedRow = i"
-          [ngClass]="{ 'bg-sky-50 dark:bg-gray-700': selectedRow === i }">
+          [ngClass]="
+            selectedRow === i
+              ? 'border-l-sky-500 dark:border-l-sky-800'
+              : 'border-l-transparent'
+          ">
           <app-element-item-metric
             [key]="item"
             [params]="params"></app-element-item-metric>
@@ -69,10 +73,11 @@
           class="wsl-list-item-outer"
           *ngFor="let item of getShownRows(ItemType.Fresh); let i = index"
           (click)="selectedRow = i + countShownRows(ItemType.Common)"
-          [ngClass]="{
-            'bg-sky-50 dark:bg-gray-700':
-              selectedRow === i + countShownRows(ItemType.Common)
-          }">
+          [ngClass]="
+            selectedRow === i + countShownRows(ItemType.Common)
+              ? 'border-l-sky-500 dark:border-l-sky-800'
+              : 'border-l-transparent'
+          ">
           <app-element-item-metric
             [key]="item"
             [params]="params"></app-element-item-metric>
@@ -115,13 +120,12 @@
               countShownRows(ItemType.Common) +
               countShownRows(ItemType.Fresh)
           "
-          [ngClass]="{
-            'bg-sky-50 dark:bg-gray-700':
-              selectedRow ===
-              i +
-                countShownRows(ItemType.Common) +
-                countShownRows(ItemType.Fresh)
-          }">
+          [ngClass]="
+            selectedRow ===
+            i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)
+              ? 'border-l-sky-500 dark:border-l-sky-800'
+              : 'border-l-transparent'
+          ">
           <app-element-item-metric
             [key]="item"
             [params]="params"></app-element-item-metric>

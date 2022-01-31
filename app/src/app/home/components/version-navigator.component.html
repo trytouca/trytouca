@@ -24,11 +24,11 @@
     [params]="params"
     [side]="'base'"></app-home-version-list>
   .
-  <fa-icon
-    [icon]="faLink"
+  <ng-icon
+    name="feather-link"
     class="invisible text-sky-500 opacity-50 hover:opacity-100 group-hover:visible dark:text-sky-400"
     title="Copy a link to this page to share with your team members"
     ngxClipboard
     [cbContent]="link"
-    (cbOnSuccess)="onCopy($event)"></fa-icon>
+    (cbOnSuccess)="onCopy($event)"></ng-icon>
 </div>

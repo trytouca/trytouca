@@ -10,12 +10,12 @@
         <ol>
           <li><a routerLink="..">{{ suite?.teamName }}</a></li>
           <li aria-current="page" wslDropdown>
-            <span class="cursor-pointer wsl-dropdown-toggle"
+            <div class="cursor-pointer wsl-dropdown-toggle flex items-center"
               id="wsl-suites-dropdown" aria-haspopup="true"
               aria-expanded="false">
-              {{ suite?.suiteName }}&thinsp;<fa-icon icon="chevron-down"
-                size="xs"></fa-icon>
-            </span>
+              <span>{{ suite?.suiteName }}</span>
+              <ng-icon name="hero-chevron-down"></ng-icon>
+            </div>
             <ul
               class="hidden w-48 divide-y divide-gray-100 wsl-dropdown-menu dark:divide-gray-700"
               aria-labelledby="wsl-suites-dropdown">

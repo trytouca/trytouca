@@ -57,7 +57,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
 
   constructor(
     private dateAgoPipe: DateAgoPipe,
-    private datetimePipe: DateTimePipe,
+    private dateTimePipe: DateTimePipe,
     private i18pluralPipe: I18nPluralPipe,
     private percentPipe: PercentPipe,
     private faIconLibrary: FaIconLibrary
@@ -186,7 +186,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
     }
 
     const changeType = metric.changeType();
-    const durationStr = this.datetimePipe.transform(duration, 'duration');
+    const durationStr = this.dateTimePipe.transform(duration, 'duration');
     if (
       changeType === MetricChangeType.Same ||
       changeType === MetricChangeType.Fresh ||

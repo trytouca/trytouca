@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
@@ -41,10 +41,7 @@ export async function userUpdate(
   const user = res.locals.user as IUser
   const tuple = user.username
 
-  const flags = pick(req.body.flags, [
-    EFeatureFlag.NewsletterProduct,
-    EFeatureFlag.TestcasesTab
-  ])
+  const flags = pick(req.body.flags, [EFeatureFlag.NewsletterProduct])
   if (Object.keys(flags).length !== 0) {
     updateFeatureFlags(user, flags)
     return res.status(204).send()

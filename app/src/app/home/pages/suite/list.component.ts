@@ -67,13 +67,13 @@ export class SuiteListBatchesComponent
   chosenTopic: TopicType;
 
   constructor(
-    private suitePageService: SuitePageService,
+    suitePageService: SuitePageService,
     route: ActivatedRoute,
     router: Router
   ) {
     super(filterInput, Object.values(SuitePageItemType), route, router);
-    this._subAllItems = this.suitePageService.items$.subscribe((allItems) => {
-      this.initCollections(allItems);
+    this._subAllItems = suitePageService.items$.subscribe((v) => {
+      this.initCollections(v);
     });
   }
 

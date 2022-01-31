@@ -92,18 +92,18 @@ export class ElementListResultsComponent
   resultRows: QueryList<ElementItemResultComponent>;
 
   constructor(
-    private elementPageService: ElementPageService,
+    elementPageService: ElementPageService,
     route: ActivatedRoute,
     router: Router
   ) {
     super(filterInput, Object.values(ElementPageItemType), route, router);
-    this._subAllItems = this.elementPageService.items$.subscribe((allItems) => {
-      this.initCollections(allItems);
+    this._subAllItems = elementPageService.items$.subscribe((v) => {
+      this.initCollections(v);
     });
-    this._subSuite = this.elementPageService.suite$.subscribe((v) => {
+    this._subSuite = elementPageService.suite$.subscribe((v) => {
       this.suite = v;
     });
-    this._subParams = this.elementPageService.params$.subscribe((v) => {
+    this._subParams = elementPageService.params$.subscribe((v) => {
       this.params = v;
     });
   }

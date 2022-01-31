@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -28,7 +28,7 @@ async function elementListImpl(
   const baselineInfo = suite.promotions[suite.promotions.length - 1]
 
   // find list of batches in which this element was submitted
-  return await MessageModel.aggregate([
+  const items: ElementListResponse = await MessageModel.aggregate([
     { $match: { batchId: baselineInfo.to } },
     { $sort: { submittedAt: 1 } },
     {
@@ -45,10 +45,14 @@ async function elementListImpl(
         _id: 0,
         metricsDuration: '$meta.metricsDuration',
         name: '$elementDoc.name',
-        slug: '$elementDoc.slug'
+        note: '$elementDoc.note',
+        slug: '$elementDoc.slug',
+        tags: '$elementDoc.tags',
+        versions: []
       }
     }
   ])
+  return items
 }
 
 /**
@@ -56,7 +60,7 @@ async function elementListImpl(
  * List all elements submitted to the baseline version of a given suite.
  *
  * @description
- * This function is designed to be called after the following middlewares:
+ * This function is designed to be called after the following middleware:
  *  - `isAuthenticated` to yield `user`
  *  - `hasTeam` to yield `team`
  *  - `isTeamMember`

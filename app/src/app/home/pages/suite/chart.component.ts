@@ -32,7 +32,7 @@ Chart.register(
 export class SuiteChartRuntimeComponent implements OnDestroy {
   private chart: Chart;
 
-  constructor(private datetimePipe: DateTimePipe) {}
+  constructor(private dateTimePipe: DateTimePipe) {}
 
   ngOnDestroy() {
     if (this.chart) {
@@ -89,7 +89,7 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
             callbacks: {
               label: (context) => {
                 const point = context.parsed.y;
-                return this.datetimePipe?.transform(point, 'duration') ?? '';
+                return this.dateTimePipe?.transform(point, 'duration') ?? '';
               }
             }
           }
@@ -103,7 +103,7 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
             display: true,
             ticks: {
               callback: (value: number) => {
-                return this.datetimePipe.transform(value, 'duration');
+                return this.dateTimePipe.transform(value, 'duration');
               },
               maxTicksLimit: 5
             },

@@ -1,15 +1,21 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { ElementListResponseItem } from '@/core/models/commontypes';
 import type { FrontendBatchItem } from '@/core/models/frontendtypes';
 import { PageListItem } from '@/home/models/page-list-item.model';
-
-type DataType = FrontendBatchItem;
 
 export enum SuitePageItemType {
   Batch = 'batch'
 }
 
-export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
+export enum SuitePageElementType {
+  Element = 'element'
+}
+
+export class SuitePageItem extends PageListItem<
+  FrontendBatchItem,
+  SuitePageItemType
+> {
   /**
    * to be removed
    */
@@ -17,7 +23,7 @@ export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
     return +new Date(b.eventDate()) - +new Date(a.eventDate());
   }
 
-  public constructor(data: DataType, type: SuitePageItemType) {
+  public constructor(data: FrontendBatchItem, type: SuitePageItemType) {
     super(data, type);
   }
 
@@ -37,5 +43,17 @@ export class SuitePageItem extends PageListItem<DataType, SuitePageItemType> {
       case SuitePageItemType.Batch:
         return this.asBatch().batchSlug;
     }
+  }
+}
+
+export class SuitePageElement extends PageListItem<
+  ElementListResponseItem,
+  SuitePageElementType
+> {
+  public constructor(
+    data: ElementListResponseItem,
+    type: SuitePageElementType
+  ) {
+    super(data, type);
   }
 }

@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
@@ -8,9 +8,9 @@ import { Topic, TopicType } from '../models/page-item.model';
   template: ''
 })
 export class PillContainerComponent {
-  toggleState: TopicType | null;
-  protected topics: Topic[];
   shownTopics: Topic[];
+  toggleState: TopicType | null;
+  topics: Topic[];
 
   @Input()
   set chosenTopics(type: TopicType) {
@@ -23,7 +23,7 @@ export class PillContainerComponent {
     this.updateChosenTopics.emit(this.toggleState === type ? null : type);
   }
 
-  protected applyChosenTopics(type?: TopicType) {
+  applyChosenTopics(type?: TopicType) {
     this.toggleState = type;
     this.shownTopics = type
       ? this.topics.filter((v) => type === v.type)

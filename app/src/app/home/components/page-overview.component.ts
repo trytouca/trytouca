@@ -42,7 +42,7 @@ export class PageOverviewComponent {
   statements: string[];
 
   constructor(
-    private datetimePipe: DateTimePipe,
+    private dateTimePipe: DateTimePipe,
     private percentPipe: PercentPipe
   ) {}
 
@@ -96,8 +96,8 @@ export class PageOverviewComponent {
       };
     }
 
-    const headDesc = this.datetimePipe.transform(metric.src, 'duration');
-    const changeDesc = this.datetimePipe.transform(
+    const headDesc = this.dateTimePipe.transform(metric.src, 'duration');
+    const changeDesc = this.dateTimePipe.transform(
       metric.absoluteDifference(),
       'duration'
     );

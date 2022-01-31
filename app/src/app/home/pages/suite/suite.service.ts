@@ -13,7 +13,6 @@ import type {
   SuiteLookupResponse,
   TeamLookupResponse
 } from '@/core/models/commontypes';
-import { EFeatureFlag } from '@/core/models/commontypes';
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
 import {
   AlertKind,
@@ -25,7 +24,12 @@ import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
 
-import { SuitePageItem, SuitePageItemType } from './suite.model';
+import {
+  SuitePageElement,
+  SuitePageElementType,
+  SuitePageItem,
+  SuitePageItemType
+} from './suite.model';
 
 export enum SuitePageTabType {
   Versions = 'versions',
@@ -94,7 +98,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     suites: new Subject<SuiteItem[]>(),
     suite: new Subject<SuiteLookupResponse>(),
     batches: new Subject<BatchListResponse>(),
-    elements: new Subject<ElementListResponse>()
+    elements: new Subject<SuitePageElement[]>()
   };
 
   data = {
@@ -114,6 +118,57 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     super();
   }
 
+  private update = (key: string, response: unknown) => {
+    if (response && !isEqual(response, this._cache[key])) {
+      this._cache[key] = response;
+      (this._subjects[key] as Subject<unknown>).next(response);
+    }
+  };
+
+  private prepareTabs() {
+    const tabs: PageTab<SuitePageTabType>[] = [
+      {
+        ...availableTabs.versions,
+        counter: this._cache.batches.length
+      },
+      {
+        ...availableTabs.testcases,
+        counter: this._cache.elements.length
+      },
+      availableTabs.settings
+    ];
+    this.update('tabs', tabs);
+  }
+
+  private prepareBatches(doc: BatchListResponse) {
+    if (!doc) {
+      return;
+    }
+    this.update('batches', doc);
+    const items = doc
+      .map((v) => {
+        const batch = v as FrontendBatchItem;
+        batch.isBaseline =
+          batch.batchSlug === this._cache.suite.baseline?.batchSlug;
+        return new SuitePageItem(batch, SuitePageItemType.Batch);
+      })
+      .sort(SuitePageItem.compareByDate);
+    if (items && !isEqual(items, this._items)) {
+      this._items = items;
+      this._itemsSubject.next(this._items);
+    }
+  }
+
+  private prepareElements(doc: ElementListResponse) {
+    if (!doc) {
+      return;
+    }
+    const items = doc.map(
+      (v) => new SuitePageElement(v, SuitePageElementType.Element)
+    );
+    this.update('elements', items);
+  }
+
   public fetchItems(args: FetchInput): void {
     const url = [
       ['team', args.teamSlug],
@@ -122,12 +177,6 @@ export class SuitePageService extends IPageService<SuitePageItem> {
       ['batch', args.teamSlug, args.suiteSlug],
       ['element', 'v2', args.teamSlug, args.suiteSlug]
     ];
-    const update = (key: string, response: unknown) => {
-      if (response && !isEqual(response, this._cache[key])) {
-        this._cache[key] = response;
-        (this._subjects[key] as Subject<any>).next(response);
-      }
-    };
     const elements = ['team', 'suites', 'suite', 'batches', 'elements'];
     const requests = elements.map((key, index) => {
       return this._cache[key]
@@ -140,44 +189,18 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     }
     forkJoin(requests).subscribe({
       next: (doc) => {
-        elements.forEach((key, index) => update(key, doc[index]));
-        const tabs: PageTab<SuitePageTabType>[] = [
-          {
-            ...availableTabs.versions,
-            counter: this._cache.batches.length
-          }
-        ];
-        if (
-          this.userService.currentUser?.feature_flags.includes(
-            EFeatureFlag.TestcasesTab
-          )
-        ) {
-          tabs.push({
-            ...availableTabs.testcases,
-            counter: this._cache.elements.length
-          });
-        }
-        tabs.push(availableTabs.settings);
-        update('tabs', tabs);
+        this.update('team', doc[0]);
+        this.update('suites', doc[1]);
+        this.update('suite', doc[2]);
+        this.prepareBatches(doc[3] as BatchListResponse);
+        this.prepareElements(doc[4] as ElementListResponse);
+        this.prepareTabs();
         this.alertService.unset(
           AlertKind.ApiConnectionDown,
           AlertKind.ApiConnectionLost,
           AlertKind.TeamNotFound,
           AlertKind.SuiteNotFound
         );
-        const items = this._cache.batches
-          .map((v) => {
-            const batch = v as FrontendBatchItem;
-            batch.isBaseline =
-              batch.batchSlug === this._cache.suite.baseline?.batchSlug;
-            return new SuitePageItem(batch, SuitePageItemType.Batch);
-          })
-          .sort(SuitePageItem.compareByDate);
-        if (isEqual(this._items, items)) {
-          return;
-        }
-        this._items = items;
-        this._itemsSubject.next(this._items);
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 0) {

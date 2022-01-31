@@ -206,18 +206,18 @@ export class BatchListElementsComponent
   private _subParams: Subscription;
 
   constructor(
-    private batchPageService: BatchPageService,
+    batchPageService: BatchPageService,
     route: ActivatedRoute,
     router: Router
   ) {
     super(filterInput, Object.values(BatchPageItemType), route, router);
-    this._subAllItems = this.batchPageService.items$.subscribe((allItems) => {
-      this.initCollections(allItems);
+    this._subAllItems = batchPageService.items$.subscribe((v) => {
+      this.initCollections(v);
     });
-    this._subSuite = this.batchPageService.suite$.subscribe((v) => {
+    this._subSuite = batchPageService.suite$.subscribe((v) => {
       this.suite = v;
     });
-    this._subParams = this.batchPageService.params$.subscribe((v) => {
+    this._subParams = batchPageService.params$.subscribe((v) => {
       this.params = v;
     });
   }

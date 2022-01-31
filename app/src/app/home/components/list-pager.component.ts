@@ -25,24 +25,44 @@ export class ListPagerComponent {
   private _pagelSubject = new Subject<number>();
   private _pagenSubject = new Subject<number>();
   private _pagenQueryChanged = new Subject<KeyboardEvent>();
+  private _parameters: FilterParams;
+  private _statistics: FilterStats;
 
-  @Input() params: FilterParams;
-  @Input() stats: FilterStats;
+  data: {
+    pageNumbers: PageNumber[];
+  } = {
+    pageNumbers: []
+  };
+
+  @Input()
+  set params(input: FilterParams) {
+    this._parameters = input;
+  }
+
+  @Input()
+  set stats(input: FilterStats) {
+    this._statistics = input;
+  }
+
   @Output() updateList = new EventEmitter<FilterParams>();
 
   constructor() {
-    const update = () =>
+    const update = () => {
       this.updateList.emit({
-        pagel: this.params.pagel,
-        pagen: this.params.pagen
+        pagel: this._parameters.pagel,
+        pagen: this._parameters.pagen
       });
+      this.data = {
+        pageNumbers: this.findPageNumberList()
+      };
+    };
     this._pagelSubject.pipe(distinctUntilChanged()).subscribe((pagel) => {
-      this.params.pagel = pagel;
-      this.params.pagen = 1;
+      this._parameters.pagel = pagel;
+      this._parameters.pagen = 1;
       update();
     });
     this._pagenSubject.pipe(distinctUntilChanged()).subscribe((pagen) => {
-      this.params.pagen = pagen;
+      this._parameters.pagen = pagen;
       update();
     });
     this._pagenQueryChanged
@@ -55,13 +75,13 @@ export class ListPagerComponent {
         if (!pagen || pagen < 1 || this.lastPageNumber < pagen) {
           return;
         }
-        this.params.pagen = pagen;
+        this._parameters.pagen = pagen;
         update();
       });
   }
 
   isFirstPage(): boolean {
-    return this.params.pagen === 1;
+    return this._parameters.pagen === 1;
   }
 
   /**
@@ -70,35 +90,38 @@ export class ListPagerComponent {
    * list can appear when a filter is applied that matches no row.
    */
   isLastPage(): boolean {
-    return this.lastPageNumber <= this.params.pagen;
+    return this.lastPageNumber <= this._parameters.pagen;
   }
 
   previousPage(): void {
     if (!this.isFirstPage()) {
-      this._pagenSubject.next(this.params.pagen - 1);
+      this._pagenSubject.next(this._parameters.pagen - 1);
     }
   }
 
   nextPage(): void {
     if (!this.isLastPage()) {
-      this._pagenSubject.next(this.params.pagen + 1);
+      this._pagenSubject.next(this._parameters.pagen + 1);
     }
   }
 
   get pageNumber(): number {
-    return this.params.pagen;
+    return this._parameters.pagen;
   }
 
   set pageNumber(pageNumber: number) {
     this._pagenSubject.next(pageNumber);
   }
 
-  get pageNumbers(): PageNumber[] {
+  private findPageNumberList(): PageNumber[] {
+    if (!this._statistics) {
+      return;
+    }
     const count = Math.min(
       5,
-      Math.floor(this.stats.totalUnpaginatedRows / this.params.pagel)
+      Math.floor(this._statistics.totalUnpaginatedRows / this._parameters.pagel)
     );
-    const cur = this.params.pagen;
+    const cur = this._parameters.pagen;
     const last = this.lastPageNumber;
     if (!cur || !last) {
       return [];
@@ -127,11 +150,13 @@ export class ListPagerComponent {
   }
 
   get lastPageNumber(): number {
-    return Math.ceil(this.stats.totalUnpaginatedRows / this.params.pagel);
+    return Math.ceil(
+      this._statistics.totalUnpaginatedRows / this._parameters.pagel
+    );
   }
 
   get pageLength(): number {
-    return this.params.pagel;
+    return this._parameters.pagel;
   }
 
   set pageLength(pageLength: number) {
@@ -140,7 +165,7 @@ export class ListPagerComponent {
 
   get pageLengths(): number[] {
     return [10, 20, 50, 100, 200, 500].filter(
-      (v) => v < this.stats.totalUnpaginatedRows && v !== this.pageLength
+      (v) => v < this._statistics.totalUnpaginatedRows && v !== this.pageLength
     );
   }
 

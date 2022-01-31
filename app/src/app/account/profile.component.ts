@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
@@ -58,15 +58,6 @@ export class ProfileComponent implements OnDestroy {
       saved: false,
       slug: EFeatureFlag.NewsletterProduct,
       title: 'Subscribe to Product Updates Newsletter',
-      visible: true
-    },
-    [EFeatureFlag.TestcasesTab]: {
-      default: false,
-      description: 'Show separate tab to report insights about test cases',
-      experimental: true,
-      saved: false,
-      slug: EFeatureFlag.TestcasesTab,
-      title: 'Test Cases Tab',
       visible: true
     }
   };
