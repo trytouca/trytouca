@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import Head from 'next/head';
+import { NextSeo } from 'next-seo';
 import React from 'react';
 
 import Header from '@/components/header';
@@ -32,13 +32,7 @@ type StaticProps = {
 export default function BlogPage(props: StaticProps) {
   return (
     <>
-      <Head>
-        <title>Touca Blog</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
-      </Head>
+      <NextSeo title="Blog" canonical="https://touca.io/blog" />
       <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
         <div className="wsl-min-h-screen-1 container mx-auto flex flex-col justify-center">

@@ -1,7 +1,11 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import Head from 'next/head';
-import Script from 'next/script';
+import {
+  LogoJsonLd,
+  NextSeo,
+  OrganizationJsonLd,
+  SocialProfileJsonLd
+} from 'next-seo';
 import { HiOutlineLightBulb, HiOutlineUserGroup } from 'react-icons/hi';
 
 import Announcement, { AnnouncementInput } from '@/components/announcement';
@@ -113,28 +117,38 @@ const content: PageContent = {
   ]
 };
 
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  url: 'https://touca.io',
-  logo: 'https://touca.io/icons/icon-192x192.png'
-};
-
 export default function Home() {
   return (
     <>
-      <Head>
-        <title>Touca</title>
-        <link rel="canonical" href="https://touca.io/" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
-        <Script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-      </Head>
+      <NextSeo canonical="https://touca.io/" />
+      <LogoJsonLd
+        logo="https://touca.io/icons/icon-192x192.png"
+        url="https://touca.io"
+      />
+      <OrganizationJsonLd
+        type="Corporation"
+        legalName="Touca, Inc."
+        name="Touca"
+        logo="https://touca.io/icons/icon-192x192.png"
+        address={{
+          streetAddress: '548 Market Street PMB 93767',
+          addressLocality: 'San Francisco',
+          addressRegion: 'CA',
+          postalCode: '94104',
+          addressCountry: 'US'
+        }}
+        url="https://touca.io/"
+      />
+      <SocialProfileJsonLd
+        type="Organization"
+        name="Touca.io"
+        url="https://touca.io"
+        sameAs={[
+          'https://youtube.com/channel/UCAGugoQDJY3wdMuqETTOvIA',
+          'https://twitter.com/trytouca',
+          'https://linkedin.com/company/touca'
+        ]}
+      />
       <Header></Header>
       <AboveTheFold></AboveTheFold>
       <Announcement input={content.announcement}></Announcement>

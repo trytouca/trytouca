@@ -1,7 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { ErrorMessage, Field, Form, Formik, FormikProps } from 'formik';
-import Head from 'next/head';
+import { NextSeo } from 'next-seo';
 import React from 'react';
 import * as Yup from 'yup';
 
@@ -9,35 +9,16 @@ import Header from '@/components/header';
 import { extract_error, post_json } from '@/lib/api';
 import { tracker } from '@/lib/tracker';
 
-interface PageContent {
-  title: string;
-  subtitle: string;
-}
-
-const content: PageContent = {
-  title: 'Contact Us',
-  subtitle: 'Let us know how we can help.'
-};
-
 export default function ContactPage() {
   return (
     <>
-      <Head>
-        <title>Touca - Contact Us</title>
-        <link rel="canonical" href="https://touca.io/contact" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
-      </Head>
+      <NextSeo title="Contact Us" canonical="https://touca.io/contact" />
       <Header></Header>
       <section className="bg-dark-blue-900">
         <div className="wsl-min-h-screen-1 container mx-auto flex flex-col justify-center">
           <div className="space-y-2 p-4 text-center">
-            <h2 className="text-4xl font-extrabold text-white">
-              {content.title}
-            </h2>
-            <p className="text-xl text-white">{content.subtitle}</p>
+            <h2 className="text-4xl font-extrabold text-white">Contact Us</h2>
+            <p className="text-xl text-white">Let us know how we can help.</p>
           </div>
           <section className="flex min-h-[25vh] items-center p-4">
             <div className="mx-auto w-full max-w-lg rounded-xl bg-white p-8">

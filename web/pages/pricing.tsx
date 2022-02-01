@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import Head from 'next/head';
+import { NextSeo } from 'next-seo';
 import React from 'react';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
@@ -107,7 +107,7 @@ class CommonQuestions extends React.Component<
 
   render() {
     return (
-      <div className="container flex flex-col justify-center px-4 py-32 mx-auto wsl-min-h-screen-1 lg:px-8">
+      <div className="wsl-min-h-screen-1 container mx-auto flex flex-col justify-center px-4 py-32 lg:px-8">
         <h2 className="pb-16 text-4xl font-bold text-white">
           {content.faq.title}
         </h2>
@@ -124,7 +124,7 @@ class CommonQuestions extends React.Component<
                   key={index}
                   onClick={() => this.activate(index)}
                   className={`flex cursor-pointer items-center justify-between rounded-lg p-4 duration-300 ease-in-out ${left}`}>
-                  <h3 className="text-xl text-white text-medium lg:text-2xl">
+                  <h3 className="text-medium text-xl text-white lg:text-2xl">
                     {block.question}
                   </h3>
                   <HiArrowNarrowRight
@@ -135,7 +135,7 @@ class CommonQuestions extends React.Component<
             })}
           </div>
           <div className="grid-cols-1">
-            <div className="p-8 space-y-4 rounded-lg bg-dark-blue-700 bg-opacity-20">
+            <div className="space-y-4 rounded-lg bg-dark-blue-700 bg-opacity-20 p-8">
               {content.faq.blocks[this.state.activeIndex].answer.map(
                 (text, index) => (
                   <p key={index} className="text-xl text-gray-300">
@@ -153,8 +153,8 @@ class CommonQuestions extends React.Component<
 
 function FreePlan() {
   return (
-    <div className="w-full max-w-screen-lg px-8 mx-auto">
-      <div className="p-8 space-y-8 border rounded-lg shadow-xl border-dark-blue-700 bg-dark-blue-800 bg-opacity-90 md:flex md:items-center md:justify-between md:space-y-0">
+    <div className="mx-auto w-full max-w-screen-lg px-8">
+      <div className="space-y-8 rounded-lg border border-dark-blue-700 bg-dark-blue-800 bg-opacity-90 p-8 shadow-xl md:flex md:items-center md:justify-between md:space-y-0">
         <div className="space-y-2 text-white">
           <p className="text-2xl font-bold">Just you?</p>
           <p className="text-xl font-medium">
@@ -183,24 +183,17 @@ function FreePlan() {
 export default function PricingPage() {
   return (
     <>
-      <Head>
-        <title>Touca Pricing</title>
-        <link rel="canonical" href="https://touca.io/pricing" />
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
-      </Head>
+      <NextSeo title="Pricing" canonical="https://touca.io/pricing" />
       <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
-        <div className="container flex flex-col justify-center w-full max-w-screen-lg py-16 mx-auto wsl-min-h-screen-1">
+        <div className="wsl-min-h-screen-1 container mx-auto flex w-full max-w-screen-lg flex-col justify-center py-16">
           <div className="flex min-h-[25vh] items-center space-y-2 p-8 text-center">
-            <h2 className="max-w-2xl mx-auto text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
+            <h2 className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
               <span className="text-yellow-500">Pays for itself</span> in
               happier, more productive engineers
             </h2>
           </div>
-          <div className="p-8 auto-cols-fr">
+          <div className="auto-cols-fr p-8">
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
               <div className="col-span-1">
                 <PricingPlan plan={content.plans[0]}></PricingPlan>
