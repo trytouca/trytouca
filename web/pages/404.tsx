@@ -1,7 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import Head from 'next/head';
 import Link from 'next/link';
+import { NextSeo } from 'next-seo';
 
 import Header from '@/components/header';
 
@@ -17,13 +17,7 @@ const content = {
 export default function NotFoundPage() {
   return (
     <>
-      <Head>
-        <title>Touca - Page Not Found</title>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, shrink-to-fit=no"
-        />
-      </Head>
+      <NextSeo title="Page Not Found" />
       <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
         <div className="wsl-min-h-screen-1 container mx-auto grid place-content-center space-y-12 px-4">
