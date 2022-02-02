@@ -30,6 +30,7 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
                 target="_blank"
                 rel="noopener noreferrer">
                 <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 hover:text-gray-300">
+                  <span className="sr-only">Email</span>
                   <HiOutlineMail size="2rem" />
                 </div>
               </a>
@@ -38,6 +39,7 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
                 target="_blank"
                 rel="noopener noreferrer">
                 <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 hover:text-gray-300">
+                  <span className="sr-only">Slack</span>
                   <FaSlack size="2rem" />
                 </div>
               </a>

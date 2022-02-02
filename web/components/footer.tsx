@@ -158,6 +158,7 @@ const FooterRow = () => {
                   className="rounded-full bg-dark-blue-700 bg-opacity-50 p-2 text-xl text-gray-300 hover:text-white"
                   title={item.title}>
                   <a href={item.link} target="_blank" rel="noopener noreferrer">
+                    <span className="sr-only">{item.text}</span>
                     <Icon></Icon>
                   </a>
                 </li>

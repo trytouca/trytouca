@@ -50,6 +50,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <DefaultSeo
         defaultTitle="Touca"
         titleTemplate="Touca - %s"
+        description="See the side-effects of your changes, as you write code."
         openGraph={{
           type: 'website',
           locale: 'en_US',
