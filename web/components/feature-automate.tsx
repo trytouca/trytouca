@@ -31,7 +31,7 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
     },
     {
       status: 'SKIP',
-      statusBackground: 'bg-yellow-700 py-1',
+      statusBackground: 'bg-yellow-800 py-1',
       row: 4,
       testcaseName: 'Marius Pontmercy'
     },
@@ -73,6 +73,7 @@ export default function FeatureAutomate(props: { input: FeatureInput }) {
                 target="_blank"
                 rel="noopener noreferrer">
                 <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 group-hover:text-gray-300">
+                  <span className="sr-only">GitHub</span>
                   <FaGithub size="2rem" />
                 </div>
               </a>
