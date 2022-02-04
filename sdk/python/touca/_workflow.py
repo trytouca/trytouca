@@ -58,6 +58,10 @@ def _parse_cli_options(args) -> Dict[str, Any]:
         help="Version of the code under test")
     parser.add_argument("--suite", metavar='',
         help="Slug of suite to which test results belong")
+    parser.add_argument("--workflow", metavar='',
+        help="Name of the workflow to run"
+    )
+
     parser.add_argument("--team", metavar='',
         help="Slug of team to which test results belong")
 
@@ -74,6 +78,7 @@ def _parse_cli_options(args) -> Dict[str, Any]:
     parser.add_argument("--output-directory", metavar='',
         default=os.path.abspath("./results"),
         help="Path to a local directory to store result files")
+
     parser.add_argument("--log-level",
         choices=["debug", "info", "warn"], default="info",
         help="Level of detail with which events are logged")
@@ -87,6 +92,7 @@ def _parse_cli_options(args) -> Dict[str, Any]:
         help="Overwrite result directory for testcase if it already exists")
     parser.add_argument("--colored-output", const=True, default=True, nargs="?",
         help="Use color in standard output")
+
     # fmt: on
 
     parsed = vars(parser.parse_known_args(args)[0]).items()
@@ -165,6 +171,7 @@ def _update_testcase_list(options: dict):
     if "testcase_file" in options:
         with open(options["testcase_file"], "rt") as file:
             keep = lambda x: x and not x.startswith("#")
+
             entries = list(filter(keep, file.read().splitlines()))
             options["testcases"] = entries
             return
@@ -369,6 +376,14 @@ def _run(args):
     printer.print_header()
     timer.tic("__workflow__")
 
+    filtered_workflows = Workflow._workflows
+    if options.get("workflow"):
+        filtered_workflows = [
+            x for x in Workflow._workflows if options["workflow"] == x
+        ]
+    if len(filtered_workflows) == 0:
+        raise Exception("workflow: " + options["workflow"] + " does not exist")
+
     for idx, testcase in enumerate(options.get("testcases")):
         elements = ["output_directory", "suite", "version"]
         casedir = os.path.join(*map(options.get, elements), testcase)
@@ -387,8 +402,9 @@ def _run(args):
 
         errors = []
         try:
-            for workflow in Workflow._workflows:
+            for workflow in filtered_workflows:
                 workflow.__call__(testcase)
+
         except BaseException as err:
             errors.append(": ".join([err.__class__.__name__, str(err)]))
         except:
