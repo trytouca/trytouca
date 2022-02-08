@@ -27,8 +27,7 @@ export default function AboveTheFold() {
                   target="_blank"
                   rel="noopener noreferrer">
                   <button
-                    style={{ boxShadow: '0 0 5px #7dd3fc' }}
-                    className="box-shadow group space-x-2 rounded-xl bg-dark-blue-700 bg-opacity-25 p-3 font-medium text-white duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
+                    className="box-shadow group space-x-2 rounded-xl bg-dark-blue-700 bg-opacity-25 p-3 font-medium text-white shadow-[0_0_5px_#7dd3fc] duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
                     type="button"
                     role="button">
                     <span>Get Started for Free</span>
