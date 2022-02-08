@@ -40,11 +40,6 @@ export default function App({ Component, pageProps }: AppProps) {
             }}
             strategy="afterInteractive"
           />
-          <Script
-            id="hs-script-loader"
-            src="//js.hs-scripts.com/14530326.js"
-            strategy="lazyOnload"
-          />
         </>
       )}
       <DefaultSeo
@@ -56,15 +51,15 @@ export default function App({ Component, pageProps }: AppProps) {
           locale: 'en_US',
           site_name: 'Touca',
           url: 'https://touca.io/',
-          title: 'Developer-focused Continuous Regression Testing',
+          title: 'Developer-friendly Continuous Regression Testing',
           description:
-            'See the side-effects of your changes, as you write code.',
+            'Touca is a continuous regression testing solution that helps software engineers verify that new versions of their software work as expected.',
           images: [
             {
               url: 'https://touca.io/images/touca_open_graph_image.png',
               width: 453,
               height: 906,
-              alt: 'Developer-focused Continuous Regression Testing',
+              alt: 'Developer-friendly Continuous Regression Testing',
               type: 'image/png'
             }
           ]
