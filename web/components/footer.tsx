@@ -9,7 +9,7 @@ import {
   FaTwitter,
   FaYoutube
 } from 'react-icons/fa';
-import { HiArrowNarrowRight, HiOutlineMail } from 'react-icons/hi';
+import { HiArrowNarrowRight } from 'react-icons/hi';
 
 const social: {
   link: string;
@@ -46,12 +46,6 @@ const social: {
     title: 'Live-code with us on Twitch',
     text: 'Twitch',
     icon: FaTwitch
-  },
-  {
-    link: 'mailto:pejman@touca.io',
-    title: 'Reach out via email',
-    text: 'Email',
-    icon: HiOutlineMail
   }
 ];
 
