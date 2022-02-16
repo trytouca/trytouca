@@ -13,12 +13,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.BiFunction;
 import io.touca.Touca.Workflow;
 import io.touca.core.Client;
@@ -69,6 +72,8 @@ public class Runner {
     private int testcaseWidth;
     private int testcaseCount;
     private boolean coloredOutput;
+    private Path consoleLogFile;
+    private Set<String> errors = new HashSet<String>();
 
     public Printer(RunnerOptions options) {
       this.testcaseWidth =
@@ -76,18 +81,38 @@ public class Runner {
               (sum, item) -> Math.max(sum, item));
       this.testcaseCount = options.testcases.length;
       this.coloredOutput = options.coloredOutput;
+      this.consoleLogFile =
+          Paths.get(options.outputDirectory).resolve(options.suite)
+              .resolve(options.version).resolve("Console.log");
+      try {
+        Files.createDirectories(this.consoleLogFile.getParent());
+        Files.write(this.consoleLogFile, new byte[0], StandardOpenOption.CREATE,
+            StandardOpenOption.TRUNCATE_EXISTING);
+      } catch (final IOException ex) {
+        this.errors.add("Failed to create Console.log");
+      }
+    }
+
+    private void printToFile(final String text) {
+      try {
+        Files.write(this.consoleLogFile, text.getBytes(),
+            StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+      } catch (final IOException ex) {
+        this.errors.add("Failed to write into Console.log");
+      }
     }
 
     private void print(final String fmt, Object... args) {
-      System.out.printf(fmt, args);
+      final String text = String.format(fmt, args);
+      this.printToFile(text);
+      System.out.print(text);
     }
 
     private void print(final Ansi ansi, final String fmt, Object... args) {
-      if (!this.coloredOutput) {
-        System.out.printf(fmt, args);
-        return;
-      }
-      System.out.printf(ansi.a(String.format(fmt, args)).reset().toString());
+      final String text = String.format(fmt, args);
+      this.printToFile(text);
+      System.out
+          .print(this.coloredOutput ? ansi.a(text).reset().toString() : text);
     }
 
     public void printHeader(final String suite, final String version) {
@@ -133,6 +158,13 @@ public class Runner {
       this.print("%d total%n", this.testcaseCount);
       this.print("Time:       %.2f s%n", timer.count("__workflow__") / 1000.0);
       this.print("%n✨   Ran all test suites.%n%n");
+
+      if (!this.errors.isEmpty()) {
+        this.print("Warnings:\n");
+      }
+      for (final String error : this.errors) {
+        this.print(Ansi.ansi().fg(Ansi.Color.YELLOW), "   - %s\n", error);
+      }
     }
 
   }
