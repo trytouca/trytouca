@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
 public final class StringType extends ToucaType {
-  final private String value;
+  private final String value;
 
   public StringType(final String value) {
     super();

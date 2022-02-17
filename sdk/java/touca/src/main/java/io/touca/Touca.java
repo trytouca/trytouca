@@ -2,6 +2,10 @@
 
 package io.touca;
 
+import io.touca.core.Client;
+import io.touca.core.Options;
+import io.touca.exceptions.StateException;
+import io.touca.runner.Runner;
 import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,10 +13,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.file.Paths;
 import java.util.function.Consumer;
-import io.touca.core.Client;
-import io.touca.core.Options;
-import io.touca.exceptions.StateException;
-import io.touca.runner.Runner;
 
 /**
  * Entry-point to the Touca SDK for Java.

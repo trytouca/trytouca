@@ -2,30 +2,34 @@
 
 package io.touca.core;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.Map.Entry;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.touca.core.Schema.ResultType;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+/**
+ * Represents Testcase as input to a given workflow.
+ */
 public class Case {
 
-  final private String testCase;
-  final private String teamSlug;
-  final private String testSuite;
-  final private String version;
-  final private String builtAt;
-  final private Map<String, ResultEntry> results = new HashMap<>();
-  final private Map<String, Long> tics = new HashMap<>();
-  final private Map<String, Long> tocs = new HashMap<>();
+  private final String testCase;
+  private final String teamSlug;
+  private final String testSuite;
+  private final String version;
+  private final String builtAt;
+  private final Map<String, ResultEntry> results = new HashMap<>();
+  private final Map<String, Long> tics = new HashMap<>();
+  private final Map<String, Long> tocs = new HashMap<>();
+
   private static Map<ResultCategory, Integer> resultTypes =
       new HashMap<ResultCategory, Integer>() {
         {
@@ -75,7 +79,7 @@ public class Case {
   /**
    * Logs a given value as a test result for the declared test case and
    * associates it with the specified key.
-   * 
+   *
    * @param key name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
@@ -86,7 +90,7 @@ public class Case {
   /**
    * Logs a given value as an assertion for the declared test case and
    * associates it with the specified key.
-   * 
+   *
    * @param key name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
@@ -157,8 +161,9 @@ public class Case {
   /**
    * Starts timing an event with the specified name.
    *
-   * Measurement of the event is only complete when function {@link #stopTimer(String) stopTimer}
-   * is later called for the specified name.
+   * Measurement of the event is only complete when function
+   * {@link #stopTimer(String) stopTimer} is later called for the specified
+   * name.
    *
    * @param key name to be associated with the performance metric
    */
@@ -169,9 +174,9 @@ public class Case {
   /**
    * Stops timing an event with the specified name.
    * 
-   * Expects function {@link #startTimer(String) startTimer} to have been called previously with the
-   * specified name.
-   * 
+   * Expects function {@link #startTimer(String) startTimer} to have been called
+   * previously with the specified name.
+   *
    * @param key name to be associated with the performance metric
    */
   public void stopTimer(final String key) {
@@ -181,7 +186,7 @@ public class Case {
   }
 
   /**
-   * Reports stored content for JSON serialization
+   * Reports stored content for JSON serialization.
    *
    * @return a json element that to be serialized by the caller
    */
@@ -224,8 +229,8 @@ public class Case {
   }
 
   /**
-   * Serialize this instance using Touca's FlatBuffers schema
-   * 
+   * Serialize this instance using Touca's FlatBuffers schema.
+   *
    * @return binary representation of this test case
    */
   public byte[] serialize() {

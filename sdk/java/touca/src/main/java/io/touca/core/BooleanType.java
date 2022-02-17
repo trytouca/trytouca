@@ -7,7 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
 public final class BooleanType extends ToucaType {
-  final private Boolean value;
+  private final Boolean value;
 
   public BooleanType(final Boolean value) {
     super();

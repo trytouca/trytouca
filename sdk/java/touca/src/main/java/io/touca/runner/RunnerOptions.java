@@ -2,8 +2,8 @@
 
 package io.touca.runner;
 
-import java.util.function.Consumer;
 import io.touca.core.Options;
+import java.util.function.Consumer;
 
 /**
  * Configuration options for the Touca test framework.

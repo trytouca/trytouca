@@ -2,6 +2,12 @@
 
 package io.touca.core;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import io.touca.exceptions.ConfigException;
+import io.touca.exceptions.ServerException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,18 +19,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import io.touca.exceptions.ConfigException;
-import io.touca.exceptions.ServerException;
 
 /**
  * Contains logic for communicating with the Touca server.
  */
 public final class Transport {
-  final private Options options;
+  private final Options options;
   private String token;
 
   private static final class Response {
@@ -47,8 +47,8 @@ public final class Transport {
 
   /**
    * Reports whether we are already authenticated with the Touca server.
-   * 
-   * @return true if we are authenticated with the Touca server.
+   *
+   * @return true if we are authenticated with the Touca server
    */
   public boolean hasToken() {
     return !this.token.isEmpty();
@@ -146,6 +146,9 @@ public final class Transport {
     }
   }
 
+  /**
+   * Attempt to authenticate with the Touca server.
+   */
   public void authenticate() {
     if (this.token != null) {
       return;
@@ -169,8 +172,8 @@ public final class Transport {
   /**
    * Queries the Touca server for the list of test cases submitted for the
    * baseline version of this suite.
-   * 
-   * @return list of test cases for this suite.
+   *
+   * @return list of test cases for this suite
    */
   public List<String> getTestcases() {
     final Response response = getRequest(

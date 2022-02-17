@@ -3,6 +3,7 @@
 plugins {
     `java-library`
     `maven-publish`
+    checkstyle
     jacoco
     pmd
     signing
@@ -77,6 +78,18 @@ tasks {
         ignoreFailures.set(true)
         showProgress.set(false)
         showStackTraces.set(false)
+    }
+
+    checkstyle {
+        isShowViolations = false
+        isIgnoreFailures = true
+    }
+
+    withType<Checkstyle>().configureEach {
+        reports {
+            xml.required.set(false)
+            html.required.set(true)
+        }
     }
 
     withType<com.github.spotbugs.snom.SpotBugsTask> {

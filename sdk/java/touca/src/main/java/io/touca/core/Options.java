@@ -2,6 +2,14 @@
 
 package io.touca.core;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import io.touca.exceptions.ConfigException;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -19,15 +27,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import io.touca.exceptions.ConfigException;
 
 /**
  * Configuration options for the Touca core library.
@@ -107,7 +106,7 @@ public class Options {
   /**
    * Compares the set of configuration options stored in a given instance with
    * the set of configuration options stored in this instance.
-   * 
+   *
    * @param incoming configuration options to compare
    * @return list of configuration options that are available in the given
    *         instance but are not set in this instance.
@@ -117,7 +116,7 @@ public class Options {
     final Map<String, String> base = this.entrySet();
     final Map<String, String> head = incoming.entrySet();
     final String[] fields = {"apiUrl", "apiKey", "team", "suite", "version",
-        "file", "concurrency", "offline",};
+        "file", "concurrency", "offline"};
     for (final String field : fields) {
       if (!head.containsKey(field)) {
         continue;
@@ -242,9 +241,8 @@ public class Options {
       }
       final URL url = new URL(existing.apiUrl);
       segments = url.getPath().split("/@/");
-      final String urlPath =
-              Arrays.stream(segments[0].split("/"))
-                  .filter(x -> !x.isEmpty()).collect(Collectors.joining("/"));
+      final String urlPath = Arrays.stream(segments[0].split("/"))
+          .filter(x -> !x.isEmpty()).collect(Collectors.joining("/"));
       final URI uri = new URI(url.getProtocol(), url.getAuthority(),
           urlPath.isEmpty() ? urlPath : "/" + urlPath, null, null);
       existing.apiUrl = uri.toURL().toString();
@@ -318,9 +316,14 @@ public class Options {
     }).collect(Collectors.toList());
   }
 
+  /**
+   * Parser for configuration file.
+   */
   public static class Deserializer implements JsonDeserializer<Options> {
 
     /**
+     * Parses configuration options from a given string.
+     *
      * @param json json element to be deserialized
      * @param type type of the json string
      * @param context context for deserialization

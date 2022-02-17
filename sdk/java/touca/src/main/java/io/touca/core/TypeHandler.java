@@ -2,24 +2,29 @@
 
 package io.touca.core;
 
+import io.touca.TypeAdapter;
+import io.touca.TypeAdapterContext;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Iterator;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.function.Function;
 
-import io.touca.TypeAdapter;
-import io.touca.TypeAdapterContext;
-
+/**
+ * Interprets objects of arbitrary types to a supported Touca type.
+ */
 public final class TypeHandler {
-  final private Map<Class<?>, Function<Object, ToucaType>> primitives =
+  private final Map<Class<?>, Function<Object, ToucaType>> primitives =
       new HashMap<>();
-  final private Map<Class<?>, TypeAdapter<? super Object>> adapters =
+  private final Map<Class<?>, TypeAdapter<? super Object>> adapters =
       new HashMap<>();
 
+  /**
+   * Creates a handler that already supports common primitive types.
+   */
   public TypeHandler() {
     this.primitives.put(Boolean.class, x -> new BooleanType((Boolean) x));
     this.primitives.put(String.class, x -> new StringType((String) x));
@@ -29,6 +34,12 @@ public final class TypeHandler {
     this.primitives.put(Float.class, x -> new DecimalType((Float) x));
   }
 
+  /**
+   * Converts a given object of arbitrary type to a supported Touca Type.
+   *
+   * @param value object of arbitrary type
+   * @return Supported Touca type
+   */
   public ToucaType transform(final Object value) {
     if (value instanceof ToucaType) {
       return (ToucaType) value;

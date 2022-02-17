@@ -2,10 +2,13 @@
 
 package io.touca.runner;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import io.touca.Touca.Workflow;
+import io.touca.core.Client;
+import io.touca.exceptions.ConfigException;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -23,9 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.BiFunction;
-import io.touca.Touca.Workflow;
-import io.touca.core.Client;
-import io.touca.exceptions.ConfigException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;

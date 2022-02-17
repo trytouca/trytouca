@@ -2,15 +2,18 @@
 
 package io.touca.core;
 
-import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.List;
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ *
+ */
 public final class ObjectType extends ToucaType {
-  final private List<SimpleEntry<String, ToucaType>> members =
+  private final List<SimpleEntry<String, ToucaType>> members =
       new ArrayList<>();
 
   public void add(final String key, final ToucaType value) {

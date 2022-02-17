@@ -8,7 +8,7 @@ import com.google.gson.JsonPrimitive;
 
 public final class DecimalType extends ToucaType {
 
-  final private Double value;
+  private final Double value;
 
   public DecimalType(final Double value) {
     super();

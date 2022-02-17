@@ -2,12 +2,6 @@
 
 package io.touca.core;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.function.Consumer;
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -15,18 +9,31 @@ import com.google.gson.JsonArray;
 import io.touca.TypeAdapter;
 import io.touca.exceptions.ConfigException;
 import io.touca.exceptions.StateException;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
+/**
+ * The Touca client.
+ */
 @SuppressWarnings("PMD.TooManyMethods")
 public class Client {
 
-  final private Map<String, Case> cases = new HashMap<>();
+  private final Map<String, Case> cases = new HashMap<>();
   private boolean configured;
   private String configError;
-  final private Options options = new Options();
+  private final Options options = new Options();
   private String activeCase;
   private Transport transport;
-  final private TypeHandler typeHandler = new TypeHandler();
-  final private Map<Long, String> threadMap = new HashMap<>();
+  private final TypeHandler typeHandler = new TypeHandler();
+  private final Map<Long, String> threadMap = new HashMap<>();
 
   /**
    * Configures the touca client based on configuration options set via the
@@ -178,6 +185,12 @@ public class Client {
     this.cases.remove(name);
   }
 
+  /**
+   * Helper function that performs a given operation on the most recent test
+   * case.
+   *
+   * @param callback operation to perform on the most recent test case.
+   */
   public void perform(final Consumer<Case> callback) {
     final String testcase = getLastTestcase();
     if (testcase != null) {
@@ -363,11 +376,10 @@ public class Client {
       // TODO: log that directory was created
     }
     if (cases == null || cases.length == 0) {
-      return new HashSet<>(this.cases.values())
-          .toArray(new Case[0]);
+      return new HashSet<>(this.cases.values()).toArray(new Case[0]);
     }
     return this.cases.entrySet().stream()
-            .filter(x -> Arrays.asList(cases).contains(x.getKey()))
-            .map(Map.Entry::getValue).distinct().toArray(Case[]::new);
+        .filter(x -> Arrays.asList(cases).contains(x.getKey()))
+        .map(Map.Entry::getValue).distinct().toArray(Case[]::new);
   }
 }

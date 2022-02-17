@@ -1,9 +1,9 @@
 package io.touca;
 
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.AbstractMap.SimpleEntry;
 
 /**
  * Utility class to help consumers convert types to custom objects.
@@ -11,7 +11,7 @@ import java.util.AbstractMap.SimpleEntry;
  * @see TypeAdapter
  */
 public final class TypeAdapterContext {
-  /** list of data points within a given object */
+  /** list of data points within a given object. */
   private final List<SimpleEntry<String, Object>> members = new ArrayList<>();
 
   /**
