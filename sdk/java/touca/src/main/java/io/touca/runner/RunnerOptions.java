@@ -16,6 +16,8 @@ public final class RunnerOptions extends Options {
   public Boolean overwrite;
   public String outputDirectory;
   public Boolean coloredOutput;
+  public Boolean printHelp;
+  public Boolean printVersion;
 
   /**
    * Creates an instance without setting any configuration option.
@@ -42,6 +44,8 @@ public final class RunnerOptions extends Options {
    */
   public void apply(final RunnerOptions incoming) {
     super.apply(incoming);
+    printHelp = incoming.printHelp;
+    printVersion = incoming.printVersion;
     testcases = incoming.testcases;
     testcaseFile = incoming.testcaseFile;
     saveAsBinary = incoming.saveAsBinary;

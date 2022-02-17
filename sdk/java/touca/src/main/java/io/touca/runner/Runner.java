@@ -29,6 +29,7 @@ import java.util.function.BiFunction;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
@@ -213,6 +214,8 @@ public class Runner {
           };
 
       options.apply(new RunnerOptions(x -> {
+        x.printHelp = cmd.hasOption("help");
+        x.printVersion = cmd.hasOption("version");
         x.apiKey = cmd.getOptionValue("api-key");
         x.apiUrl = cmd.getOptionValue("api-url");
         x.team = cmd.getOptionValue("team");
@@ -234,6 +237,15 @@ public class Runner {
     } catch (final ParseException ex) {
       throw new ConfigException(ex.getMessage());
     }
+    if (options.printVersion) {
+      System.out.println("Touca Java SDK - v1.5.1");
+    }
+    if (options.printHelp) {
+      HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp(mainArgs[0], "\nTouca Test Framework\n\n",
+          buildOptions(),
+          "\nVisit https://docs.touca.io for more information\n", true);
+    }
     return this;
   }
 
@@ -245,6 +257,9 @@ public class Runner {
    * @return this instance
    */
   public Runner findWorkflows(final Class<?> mainClass) {
+    if (options.printVersion || options.printHelp) {
+      return this;
+    }
     final String className = mainClass.getCanonicalName();
     final String packageName =
         className.substring(0, className.lastIndexOf('.'));
@@ -266,6 +281,9 @@ public class Runner {
    * @param client Touca client instance to use when running workflows.
    */
   public void run(final Client client) {
+    if (options.printVersion || options.printHelp) {
+      return;
+    }
     initialize(client);
     for (final ClassMethod workflow : workflows) {
       try {
@@ -453,6 +471,9 @@ public class Runner {
     return false;
   }
 
+  /**
+   *
+   */
   private Options buildOptions() {
     final Options options = new Options();
     options.addOption(null, "api-key", true,
@@ -494,6 +515,10 @@ public class Runner {
     options.addOption(Option.builder().longOpt("no-reflection")
         .type(Boolean.class).optionalArg(true).numberOfArgs(1)
         .desc("Requires custom serializers for custom data types").build());
+    options.addOption(Option.builder().longOpt("version")
+        .desc("Print Touca SDK version").build());
+    options.addOption(Option.builder().longOpt("help")
+        .desc("Print this help message").build());
     return options;
   }
 
