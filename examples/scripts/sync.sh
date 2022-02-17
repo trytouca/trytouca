@@ -80,7 +80,7 @@ sync_java () {
         git -C "${dir_examples}" checkout "${dir_dst}/${filename}"
     done
     for project in "01_java_minimal" "02_java_main_api" "03_java_core_api"; do
-        run_sed "${dir_dst}/${project}/build.gradle.kts" 's/implementation.*/implementation("io.touca:touca:1.5.0")/g'
+        run_sed "${dir_dst}/${project}/build.gradle.kts" 's/implementation.*/implementation("io.touca:touca:1.5.1")/g'
     done
 }
 
