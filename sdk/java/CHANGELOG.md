@@ -1,5 +1,24 @@
 # Changelog
 
+## v1.5.1
+
+Features:
+
+- Improve test framework standard output (#40, #41, #42)
+- Allow user to disable colorized output (#43)
+- Write a copy of test framework output into a file (#44)
+- Allow user to disable reflection for unknown types (#46)
+- Add CLI options for help and version (#47)
+
+Improvements:
+
+- Update API endpoint to obtain list of test cases (#39)
+- Fix CheckStyle warnings (#45)
+
+Other Changes:
+
+- Remove next steps section from readme (#38)
+
 ## v1.5.0
 
 Change of versioning strategy to use same major and minor version numbers across
