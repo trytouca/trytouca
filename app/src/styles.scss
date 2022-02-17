@@ -4,6 +4,10 @@
 @tailwind components;
 @tailwind utilities;
 
+@import '~tippy.js/dist/tippy.css';
+@import '~tippy.js/themes/light.css';
+@import '~tippy.js/animations/scale.css';
+
 @layer components {
   .wsl-btn-sm {
     @apply rounded py-1 px-2 text-sm leading-6 focus:outline-none;

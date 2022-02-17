@@ -1359,6 +1359,21 @@
   dependencies:
     tslib "2.3.1"
 
+"@ngneat/helipopper@^5.1.4":
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/@ngneat/helipopper/-/helipopper-5.1.4.tgz#9bee78806988d27d10731d9f4129374c7799373a"
+  integrity sha512-2O9YrL90T/AUjPdqTek2GoTNq0B9seHDPMWZWFnD08YnbZhAY0uap185zppLKquQOPsxAtDxlI61MLoOMwGM5Q==
+  dependencies:
+    tippy.js "6.3.7"
+    tslib "2.3.1"
+
+"@ngneat/overview@^3.0.4":
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/@ngneat/overview/-/overview-3.0.4.tgz#bd8be61510cb83ca494db0a9c699104540c790f8"
+  integrity sha512-w5cyli3goDBegN1G/v9dCGDOQIecDN78C83nUs1STuarS/ry9kjgAp/W9IJSQhqrcVhvHhOVPIkhZ4Pj3Yw9Xg==
+  dependencies:
+    tslib "^2.0.0"
+
 "@ngtools/webpack@13.1.1":
   version "13.1.1"
   resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-13.1.1.tgz#736988cda569b9b1eb925908ebe9ccf3faa095eb"
@@ -1504,6 +1519,11 @@
     tmp "~0.2.1"
     tslib "^2.3.0"
     yargs-parser "20.0.0"
+
+"@popperjs/core@^2.9.0":
+  version "2.11.2"
+  resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.2.tgz#830beaec4b4091a9e9398ac50f865ddea52186b9"
+  integrity sha512-92FRmppjjqz29VMJ2dn+xdyXZBrMlE42AV6Kq6BwjWV7CNUW1hs2FtxSNLQE+gJhaZ6AAmYuO9y8dshhcBl7vA==
 
 "@schematics/angular@13.1.1":
   version "13.1.1"
@@ -6809,6 +6829,13 @@ thunky@^1.0.2:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/thunky/-/thunky-1.1.0.tgz#5abaf714a9405db0504732bbccd2cedd9ef9537d"
   integrity sha512-eHY7nBftgThBqOyHGVN+l8gF0BucP09fMo0oO/Lb0w1OF80dJv+lDVpXG60WMQvkcxAkNybKsrEIE3ZtKGmPrA==
+
+tippy.js@6.3.7:
+  version "6.3.7"
+  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-6.3.7.tgz#8ccfb651d642010ed9a32ff29b0e9e19c5b8c61c"
+  integrity sha512-E1d3oP2emgJ9dRQZdf3Kkn0qJgI6ZLpyS5z6ZkY1DF3kaQaBsGZsndEpHwx+eC+tYM41HaSNvNtLx8tU57FzTQ==
+  dependencies:
+    "@popperjs/core" "^2.9.0"
 
 tmp@0.2.1, tmp@^0.2.1, tmp@~0.2.1:
   version "0.2.1"

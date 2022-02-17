@@ -44,6 +44,8 @@
     "@ng-icons/feather-icons": "^13.1.2",
     "@ng-icons/heroicons": "^13.1.2",
     "@ngneat/dialog": "^2.0.0",
+    "@ngneat/helipopper": "^5.1.4",
+    "@ngneat/overview": "^3.0.4",
     "chart.js": "^3.6.2",
     "core-js": "^3.19.1",
     "date-fns": "^2.27.0",

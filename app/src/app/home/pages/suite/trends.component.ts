@@ -28,7 +28,6 @@ export class SuiteTrendsRuntimeComponent implements OnDestroy {
 
   private _subItems: Subscription;
   faInfoCircle = faInfoCircle;
-  isTooltipActive = false;
 
   constructor(
     private suitePageService: SuitePageService,

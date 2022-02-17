@@ -59,6 +59,7 @@ import {
   HeroUpload
 } from '@ng-icons/heroicons';
 import { DialogModule } from '@ngneat/dialog';
+import { TippyModule, tooltipVariation } from '@ngneat/helipopper';
 import { ClipboardModule } from 'ngx-clipboard';
 
 import {
@@ -133,7 +134,13 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
       HeroUpload
     }),
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    TippyModule.forRoot({
+      defaultVariation: 'tooltip',
+      variations: {
+        tooltip: tooltipVariation
+      }
+    })
   ],
   declarations: [
     AlertComponent,
@@ -171,7 +178,8 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     NotificationComponent,
     ReactiveFormsModule,
     ServerDownComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    TippyModule
   ]
 })
 export class SharedModule {}
