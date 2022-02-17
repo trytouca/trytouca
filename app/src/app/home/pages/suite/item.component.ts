@@ -105,7 +105,8 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
       return {
         color: meta.score === 1 ? IconColor.Green : IconColor.Orange,
         type: IconType.Spinner,
-        spin: true
+        spin: true,
+        tooltip: 'Being Compared'
       };
     }
 
@@ -114,7 +115,7 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
       return {
         color: IconColor.Gold,
         type: IconType.Star,
-        spin: false
+        tooltip: 'Baseline Version'
       };
     }
 
@@ -123,7 +124,7 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
       return {
         color: IconColor.Red,
         type: IconType.TimesCircle,
-        spin: false
+        tooltip: 'Completely Different'
       };
     }
 
@@ -132,7 +133,7 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
       return {
         color: IconColor.Orange,
         type: IconType.TimesCircle,
-        spin: false
+        tooltip: 'Missing'
       };
     }
 
@@ -141,7 +142,7 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
       return {
         color: IconColor.Orange,
         type: IconType.TimesCircle,
-        spin: false
+        tooltip: 'Has Differences'
       };
     }
 
@@ -149,7 +150,7 @@ export class SuiteItemBatchComponent extends PillContainerComponent {
     return {
       color: IconColor.Green,
       type: IconType.CheckCircle,
-      spin: false
+      tooltip: 'No Difference'
     };
   }
 

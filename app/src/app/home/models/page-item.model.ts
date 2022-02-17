@@ -10,6 +10,8 @@ export enum IconColor {
 }
 
 export enum IconType {
+  ChevronCircleDown = 'chevron-circle-down',
+  ChevronCircleUp = 'chevron-circle-up',
   PlusCircle = 'plus-circle',
   MinusCircle = 'minus-circle',
   Spinner = 'spinner',
@@ -22,7 +24,8 @@ export enum IconType {
 export type Icon = {
   color: IconColor;
   type: IconType;
-  spin: boolean;
+  spin?: boolean;
+  tooltip?: string;
 };
 
 export type Data = {

@@ -2,7 +2,6 @@
 
 import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faClipboard } from '@fortawesome/free-regular-svg-icons';
 import {
   faCheckCircle,
@@ -15,6 +14,7 @@ import { IClipboardResponse } from 'ngx-clipboard';
 
 import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { NotificationService } from '@/core/services';
+import { Icon, IconColor, IconType } from '@/home/models/page-item.model';
 import { Result } from '@/home/models/result.model';
 import { AlertType } from '@/shared/components/alert.component';
 
@@ -39,11 +39,6 @@ enum RowType {
   Missing_Complex,
   Fresh_Simple,
   Fresh_Complex
-}
-
-interface Icon {
-  color: string;
-  type: IconProp;
 }
 
 interface IMetadata {
@@ -126,21 +121,41 @@ export class ElementItemResultComponent {
   private icon(): Icon {
     const matchType = this.findMatchType();
     if (matchType === MatchType.Perfect) {
-      return { color: 'mediumseagreen', type: 'check-circle' };
+      return {
+        color: IconColor.Green,
+        type: IconType.CheckCircle,
+        tooltip: 'Identical'
+      };
     }
     if (matchType === MatchType.Imperfect) {
-      return { color: 'darkorange', type: 'times-circle' };
+      return {
+        color: IconColor.Orange,
+        type: IconType.TimesCircle,
+        tooltip: 'Different'
+      };
     }
     if (matchType === MatchType.Different) {
-      return { color: 'mediumvioletred', type: 'times-circle' };
+      return {
+        color: IconColor.Red,
+        type: IconType.TimesCircle,
+        tooltip: 'Different'
+      };
     }
     if (this.category === ElementPageItemType.Fresh) {
-      return { color: 'mediumseagreen', type: 'plus-circle' };
+      return {
+        color: IconColor.Green,
+        type: IconType.PlusCircle,
+        tooltip: 'New Key'
+      };
     }
     if (this.category === ElementPageItemType.Missing) {
-      return { color: 'mediumvioletred', type: 'minus-circle' };
+      return {
+        color: IconColor.Red,
+        type: IconType.MinusCircle,
+        tooltip: 'Missing Key'
+      };
     }
-    return { color: 'lightgray', type: 'circle' };
+    return { color: IconColor.Gray, type: IconType.Circle };
   }
 
   private findMatchType(): MatchType {

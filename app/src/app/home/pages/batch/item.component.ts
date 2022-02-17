@@ -183,7 +183,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
       return {
         color: IconColor.Green,
         type: IconType.PlusCircle,
-        spin: false
+        tooltip: 'New Testcase'
       };
     }
 
@@ -192,7 +192,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
       return {
         color: IconColor.Red,
         type: IconType.MinusCircle,
-        spin: false
+        tooltip: 'Missing Testcase'
       };
     }
 
@@ -201,7 +201,8 @@ export class BatchItemElementComponent extends PillContainerComponent {
       return {
         color: IconColor.Blue,
         type: IconType.Spinner,
-        spin: true
+        spin: true,
+        tooltip: 'Being Compared'
       };
     }
 
@@ -212,7 +213,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
       return {
         color: IconColor.Green,
         type: IconType.CheckCircle,
-        spin: false
+        tooltip: 'No Difference'
       };
     }
 
@@ -221,7 +222,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
       return {
         color: IconColor.Orange,
         type: IconType.Circle,
-        spin: false
+        tooltip: 'Empty Testcase'
       };
     }
 
@@ -230,7 +231,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
       return {
         color: IconColor.Orange,
         type: IconType.TimesCircle,
-        spin: false
+        tooltip: 'Different Content'
       };
     }
 
@@ -239,7 +240,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
       return {
         color: IconColor.Orange,
         type: IconType.TimesCircle,
-        spin: false
+        tooltip: 'Has Differences'
       };
     }
 
@@ -248,7 +249,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
       return {
         color: IconColor.Red,
         type: IconType.TimesCircle,
-        spin: false
+        tooltip: 'Missing Keys'
       };
     }
 
@@ -257,7 +258,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
       return {
         color: IconColor.Red,
         type: IconType.TimesCircle,
-        spin: false
+        tooltip: 'Completely Different'
       };
     }
   }

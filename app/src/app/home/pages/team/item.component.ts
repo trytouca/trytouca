@@ -109,7 +109,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
       return {
         color: IconColor.Gray,
         type: IconType.Circle,
-        spin: false
+        tooltip: 'Empty Suite'
       };
     }
 
@@ -118,7 +118,8 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
       return {
         color: this._meta.score === 1 ? IconColor.Green : IconColor.Orange,
         type: IconType.Spinner,
-        spin: true
+        spin: true,
+        tooltip: 'Being Compared'
       };
     }
 
@@ -127,7 +128,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
       return {
         color: IconColor.Red,
         type: IconType.TimesCircle,
-        spin: false
+        tooltip: 'Completely Different'
       };
     }
 
@@ -136,7 +137,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
       return {
         color: IconColor.Red,
         type: IconType.TimesCircle,
-        spin: false
+        tooltip: 'Completely Different'
       };
     }
 
@@ -144,8 +145,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
     if (this._meta.countMissing && this._meta.countMissing !== 0) {
       return {
         color: IconColor.Orange,
-        type: IconType.TimesCircle,
-        spin: false
+        type: IconType.TimesCircle
       };
     }
 
@@ -154,7 +154,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
       return {
         color: IconColor.Orange,
         type: IconType.TimesCircle,
-        spin: false
+        tooltip: 'Has Differences'
       };
     }
 
@@ -162,7 +162,7 @@ export class TeamItemSuiteComponent extends PillContainerComponent {
     return {
       color: IconColor.Green,
       type: IconType.CheckCircle,
-      spin: false
+      tooltip: 'No Difference'
     };
   }
 

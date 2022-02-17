@@ -15,13 +15,9 @@ import {
 
 import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
+import { Icon, IconColor, IconType } from '@/home/models/page-item.model';
 
 import { ElementPageItemType, ElementPageMetric } from './element.model';
-
-interface Icon {
-  color: string;
-  type: IconProp;
-}
 
 interface IMetadata {
   changeType: MetricChangeType;
@@ -76,17 +72,29 @@ export class ElementItemMetricComponent {
   private initIcon(): Icon {
     switch (this.meta.changeType) {
       case MetricChangeType.Faster:
-        return { color: 'mediumseagreen', type: 'chevron-circle-down' };
+        return {
+          color: IconColor.Green,
+          type: IconType.ChevronCircleDown,
+          tooltip: 'Faster'
+        };
       case MetricChangeType.Fresh:
-        return { color: 'mediumseagreen', type: 'plus-circle' };
+        return { color: IconColor.Green, type: IconType.PlusCircle };
       case MetricChangeType.Same:
-        return { color: 'mediumseagreen', type: 'minus-circle' };
+        return {
+          color: IconColor.Green,
+          type: IconType.MinusCircle,
+          tooltip: 'Similar'
+        };
       case MetricChangeType.Missing:
-        return { color: 'mediumvioletred', type: 'minus-circle' };
+        return { color: IconColor.Red, type: IconType.MinusCircle };
       case MetricChangeType.Slower:
-        return { color: 'darkorange', type: 'chevron-circle-up' };
+        return {
+          color: IconColor.Orange,
+          type: IconType.ChevronCircleUp,
+          tooltip: 'Slower'
+        };
       default:
-        return { color: 'lightgray', type: 'circle' };
+        return { color: IconColor.Gray, type: IconType.Circle };
     }
   }
 }

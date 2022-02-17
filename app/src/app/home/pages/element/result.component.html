@@ -1,6 +1,10 @@
 <div class="wsl-list-item md:space-x-4">
   <div class="wsl-item-heading">
-    <div class="wsl-item-status">
+    <div
+      class="wsl-item-status"
+      [tippy]="meta.icon.tooltip"
+      placement="left"
+      [delay]="[500, 100]">
       <fa-icon
         [icon]="meta.icon.type"
         [ngStyle]="{ color: meta.icon.color }"></fa-icon>

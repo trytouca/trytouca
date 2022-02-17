@@ -138,7 +138,11 @@ import { DateAgoPipe, DateTimePipe } from './pipes';
     TippyModule.forRoot({
       defaultVariation: 'tooltip',
       variations: {
-        tooltip: tooltipVariation
+        tooltip: {
+          ...tooltipVariation,
+          delay: [100, 300],
+          hideOnClick: true
+        }
       }
     })
   ],
