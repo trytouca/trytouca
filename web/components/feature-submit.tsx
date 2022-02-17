@@ -62,7 +62,7 @@ touca.run();`
   },
   {
     language: 'Java',
-    install: 'implementation("io.touca:touca:1.5.0")',
+    install: 'implementation("io.touca:touca:1.5.1")',
     packageRepoLink: 'https://search.maven.org/artifact/io.touca/touca',
     packageRepoName: 'Maven',
     repository: 'https://github.com/trytouca/touca-java',
