@@ -3,6 +3,9 @@
 package io.touca;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.lang.RuntimeException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -81,10 +84,23 @@ public class TypeHandlerTest {
   @Test
   public void checkSimpleAdapter() {
     TypeHandler handler = new TypeHandler();
+    handler.disableReflection();
     handler.addTypeAdapter(Foo.class, (foo) -> foo.a);
     ToucaType transformed = handler.transform(new Foo());
     assertEquals(ToucaType.Types.Boolean, transformed.type());
     assertEquals("true", transformed.json().toString());
+  }
+
+  @Test
+  public void checkSimpleAdapterWithoutReflection() {
+    TypeHandler handler = new TypeHandler();
+    handler.disableReflection();
+    RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
+      handler.transform(new Foo());
+    });
+    assertTrue(
+        thrown.getMessage().contains("No serializer is registered for type"));
+    assertTrue(thrown.getMessage().contains("io.touca.TypeHandlerTest$Foo"));
   }
 
   @Test

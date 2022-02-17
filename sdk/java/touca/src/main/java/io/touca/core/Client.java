@@ -67,6 +67,9 @@ public class Client {
           String.format("Configuration failed: %s", ex.getMessage());
       return false;
     }
+    if (this.options.noReflection) {
+      this.typeHandler.disableReflection();
+    }
     this.configured = true;
     return true;
   }

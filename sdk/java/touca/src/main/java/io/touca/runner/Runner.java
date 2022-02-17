@@ -139,6 +139,7 @@ public class Runner {
         for (final String error : errors) {
           this.print("      - %s", error);
         }
+        this.print("\n");
       }
     }
 
@@ -227,6 +228,7 @@ public class Runner {
         x.overwrite = parseBoolean.apply("overwrite", false);
         x.outputDirectory = cmd.getOptionValue("outputDirectory", "./results");
         x.coloredOutput = parseBoolean.apply("colored-output", true);
+        x.noReflection = parseBoolean.apply("no-reflection", false);
       }));
 
     } catch (final ParseException ex) {
@@ -419,7 +421,7 @@ public class Runner {
         client.post();
       }
 
-      printer.printProgress(index, errors.isEmpty() ? Status.Pass : Status.Skip,
+      printer.printProgress(index, errors.isEmpty() ? Status.Pass : Status.Fail,
           testcase, timer, errors);
 
       client.forgetTestcase(testcase);
@@ -489,6 +491,9 @@ public class Runner {
     options.addOption(Option.builder().longOpt("colored-output")
         .type(Boolean.class).optionalArg(true).numberOfArgs(1)
         .desc("Use color in standard output").build());
+    options.addOption(Option.builder().longOpt("no-reflection")
+        .type(Boolean.class).optionalArg(true).numberOfArgs(1)
+        .desc("Requires custom serializers for custom data types").build());
     return options;
   }
 

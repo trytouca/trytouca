@@ -40,6 +40,7 @@ public class Options {
   public String file;
   public Boolean offline;
   public Boolean concurrency;
+  public Boolean noReflection;
 
   /**
    * Creates an Options instance with no configuration options which, when
@@ -100,6 +101,7 @@ public class Options {
     insertString.accept("file", this.file);
     insertBoolean.accept("concurrency", this.concurrency);
     insertBoolean.accept("offline", this.offline);
+    insertBoolean.accept("noReflection", this.noReflection);
     return entries;
   }
 
@@ -154,6 +156,9 @@ public class Options {
     if (incoming.concurrency != null) {
       this.concurrency = incoming.concurrency;
     }
+    if (incoming.noReflection != null) {
+      this.noReflection = incoming.noReflection;
+    }
   }
 
   /**
@@ -183,6 +188,9 @@ public class Options {
     }
     if (incoming.containsKey("concurrency")) {
       this.concurrency = Boolean.parseBoolean(incoming.get("concurrency"));
+    }
+    if (incoming.containsKey("noReflection")) {
+      this.noReflection = Boolean.parseBoolean(incoming.get("noReflection"));
     }
   }
 
@@ -229,6 +237,9 @@ public class Options {
     final Options existing = this;
     if (existing.concurrency == null) {
       existing.concurrency = true;
+    }
+    if (existing.noReflection == null) {
+      existing.noReflection = false;
     }
     if (existing.apiUrl == null) {
       return;
@@ -347,6 +358,8 @@ public class Options {
         updateBooleanField(fileOptions, "offline", k -> options.offline = k);
         updateBooleanField(fileOptions, "concurrency",
             k -> options.concurrency = k);
+        updateBooleanField(fileOptions, "noReflection",
+            k -> options.noReflection = k);
       });
     }
 

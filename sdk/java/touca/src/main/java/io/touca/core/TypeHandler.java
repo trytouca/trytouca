@@ -4,6 +4,7 @@ package io.touca.core;
 
 import io.touca.TypeAdapter;
 import io.touca.TypeAdapterContext;
+import java.lang.RuntimeException;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -17,6 +18,7 @@ import java.util.function.Function;
  * Interprets objects of arbitrary types to a supported Touca type.
  */
 public final class TypeHandler {
+  private boolean noReflection = false;
   private final Map<Class<?>, Function<Object, ToucaType>> primitives =
       new HashMap<>();
   private final Map<Class<?>, TypeAdapter<? super Object>> adapters =
@@ -32,6 +34,13 @@ public final class TypeHandler {
     this.primitives.put(Long.class, x -> new IntegerType((Long) x));
     this.primitives.put(Double.class, x -> new DecimalType((Double) x));
     this.primitives.put(Float.class, x -> new DecimalType((Float) x));
+  }
+
+  /**
+   *
+   */
+  public void disableReflection() {
+    this.noReflection = true;
   }
 
   /**
@@ -74,6 +83,10 @@ public final class TypeHandler {
         arr.add(transform(Array.get(value, i)));
       }
       return arr;
+    }
+    if (noReflection) {
+      throw new RuntimeException(
+          "No serializer is registered for type " + value.getClass().getName());
     }
     return reflect(clazz, value);
   }
