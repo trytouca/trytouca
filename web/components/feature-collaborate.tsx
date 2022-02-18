@@ -61,9 +61,9 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
                     <span className="font-medium" title="aanderson">
                       Alice Anderson
                     </span>{' '}
-                    promoted version <span className="font-medium">v5.0</span>{' '}
-                    of suite Tax Calculator as the new baseline. All subsequent
-                    versions will now be compared against version{' '}
+                    promoted <span className="font-medium">v5.0</span> of suite
+                    Tax Calculator as the new baseline. All subsequent versions
+                    will now be compared against
                     <span className="font-medium">v5.0</span>. They provided the
                     following reason for this change.
                   </p>
