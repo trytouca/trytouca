@@ -45,7 +45,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <DefaultSeo
         defaultTitle="Touca"
         titleTemplate="Touca - %s"
-        description="See the side-effects of your changes, as you write code."
+        description="Touca is a continuous regression testing solution that helps software engineering teams gain confidence in their daily code changes."
         openGraph={{
           type: 'website',
           locale: 'en_US',
@@ -53,7 +53,7 @@ export default function App({ Component, pageProps }: AppProps) {
           url: 'https://touca.io/',
           title: 'Developer-friendly Continuous Regression Testing',
           description:
-            'Touca is a continuous regression testing solution that helps software engineers verify that new versions of their software work as expected.',
+            'Touca is a continuous regression testing solution that helps software engineering teams gain confidence in their daily code changes.',
           images: [
             {
               url: 'https://touca.io/images/touca_open_graph_image.png',
