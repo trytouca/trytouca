@@ -198,7 +198,8 @@ jobs:
       - name: push web to aws
         if: steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
         run: |
-          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}
+          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*.html" --cache-control public,max-age=31536000,immutable
+          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*" --include "*.html" --cache-control no-cache
           aws s3 cp web.tar.gz ${{ steps.params.outputs.buckets }}/
 
       - name: pull web from aws
