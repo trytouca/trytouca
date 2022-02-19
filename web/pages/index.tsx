@@ -60,7 +60,7 @@ const content: PageContent = {
         of your software and report differences in near real-time.`,
       button: {
         link: 'https://docs.touca.io/basics/interpret',
-        text: 'Learn More',
+        text: 'Read about our insights engine',
         title: 'Learn how Touca processes your results and reports regressions.'
       }
     },
@@ -76,7 +76,7 @@ const content: PageContent = {
         of how your software works and is supposed to work.`,
       button: {
         link: 'https://docs.touca.io/basics/integrate',
-        text: 'Learn More',
+        text: 'Read about our integrations',
         title: 'Learn how to work as a team to deal with regressions.'
       }
     },
@@ -87,7 +87,7 @@ const content: PageContent = {
         whenever you like. We give you real-time feedback, when you need it.`,
       button: {
         link: 'https://docs.touca.io/basics/automate',
-        text: 'Learn More',
+        text: 'Read about our automation features',
         title: 'Learn how to automate the execution of your tests tools.'
       }
     }
