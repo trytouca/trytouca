@@ -273,8 +273,8 @@ Before running the docker containers, create the local directories \(volumes\)
 to which they bind.
 
 ```bash
-mkdir -p local/logs/backend local/logs/comparator
-sudo chown 8002:touca local/logs/backend local/logs/comparator
+mkdir -p local/logs/backend local/logs/cmp
+sudo chown 8002:touca local/logs/backend local/logs/cmp
 mkdir -p local/data/minio local/data/mongo local/data/redis
 ```
 
