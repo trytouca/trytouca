@@ -6,7 +6,7 @@ import { make_path } from '@/lib/api';
 
 export default function AboveTheFold() {
   return (
-    <section className="bg-gradient-to-br from-dark-blue-900 to-dark-blue-700">
+    <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
       <div className="wsl-min-h-screen-1 grid lg:items-center">
         <div className="container mx-auto flex items-center">
           <div className="grid gap-8 p-8 lg:items-center xl:grid-cols-5">
