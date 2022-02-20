@@ -1,9 +1,5 @@
 #!/usr/bin/env bash
 
-# configure bash environment
-
-set -o errexit -o pipefail -o noclobber -o nounset
-
 # declare project structure
 
 ARG_VERBOSE=0

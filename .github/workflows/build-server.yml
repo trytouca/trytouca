@@ -407,7 +407,7 @@ jobs:
         if: steps.params.outputs.release == 'true'
         uses: appleboy/ssh-action@master
         with:
-          host: touca.dev
+          host: app.trytouca.com
           username: ec2-user
           key: ${{ secrets.DEPLOY_STAGING_SERVER_SSH_KEY }}
           script: |

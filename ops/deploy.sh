@@ -7,6 +7,10 @@ ARG_REGION="us-east-2"
 DIR_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DIR_PROJECT_ROOT="$(dirname "$DIR_SCRIPT")"
 
+# shellcheck source=./common.sh
+# shellcheck disable=SC1091
+source "${DIR_PROJECT_ROOT}/devops/common.sh"
+
 # show usage
 
 show_usage () {

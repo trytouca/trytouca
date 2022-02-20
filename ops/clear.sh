@@ -30,6 +30,14 @@ DIR_PROJECT_ROOT="$(dirname "${DIR_SCRIPT}")"
 # shellcheck disable=SC1091
 source "${DIR_PROJECT_ROOT}/devops/common.sh"
 
+# this script expects bash v4.4 or higher
+
+if [ "${BASH_VERSINFO[0]}" -lt 4 ] || { [ "${BASH_VERSINFO[0]}" -eq 4 ] && \
+    [ "${BASH_VERSINFO[1]}" -lt 4 ]; }; then
+    log_warning "you are using bash version ${BASH_VERSION}"
+    log_error "this script requires bash version 4.4 or higher"
+fi
+
 # main helper functions
 
 build_components () {
