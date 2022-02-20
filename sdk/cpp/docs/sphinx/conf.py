@@ -28,7 +28,7 @@ copyright = "2021, Touca, Inc."
 author = "Touca, Inc."
 
 # The full version, including alpha/beta/rc tags
-release = "v1.5.0"
+release = "v1.5.1"
 
 # -- General configuration ---------------------------------------------------
 

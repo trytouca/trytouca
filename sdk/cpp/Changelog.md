@@ -1,5 +1,35 @@
 # Changelog
 
+## v1.5.1
+
+Breaking Changes:
+
+- Remove suites header file (#103)
+- Remove legacy test framework (#110)
+
+Bug Fixes:
+
+- Rename framework to runner (#104)
+- Remove nested framework namespace (#105)
+- Remove LogLevel enum from the test framework (#107)
+- Remove deprecated functions from api reference (#108)
+- Move test case execution logic to separate function (#109)
+- Fix handling of test cases with curly braces in name (#115)
+
+Improvements:
+
+- Update API endpoint to obtain list of test cases (#102)
+- Improve formatting of the test framework output (#106)
+
+Other:
+
+- Remove next steps section from readme (#100)
+- Add documentation for the runner file (#101)
+- Update sample CLI output (#111)
+- Reorganize code for handling configuration options (#112)
+- Reuse function for parsing environment variables (#113)
+- Simplify command in documentation for running main example (#114)
+
 ## v1.5.0
 
 Breaking Changes:
