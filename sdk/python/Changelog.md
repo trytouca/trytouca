@@ -1,5 +1,23 @@
 # Changelog
 
+## v1.5.1
+
+Features:
+
+- Python SDK should allow running test by workflow name (#60)
+- Allow user to disable colorized output (#53, #54, #59)
+
+Improvements:
+
+- Update API endpoint to obtain list of test cases (#55)
+- Update description for CLI options (#58)
+
+Other Changes:
+
+- Remove next steps section from readme (#52)
+- Randomize sleep duration in example app (#56)
+- Update sample CLI output (#57)
+
 ## v1.5.0
 
 Change of versioning strategy to use same major and minor version numbers across

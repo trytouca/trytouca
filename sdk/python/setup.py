@@ -45,7 +45,7 @@ setup(
     url=repo_url,
     download_url="{}/archive/{}.tar.gz".format(repo_url, version),
     project_urls={
-        "Changelog": "{}/blob/master/CHANGELOG.md".format(repo_url),
+        "Changelog": "{}/blob/master/Changelog.md".format(repo_url),
         "Documentation": "https://trytouca.readthedocs.io/en/stable/index.html",
         "Source": repo_url,
         "Twitter": "https://twitter.com/trytouca",
