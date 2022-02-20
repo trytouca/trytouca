@@ -24,7 +24,7 @@ progress, handling errors, parsing command line arguments, and many more. We
 intentionally designed this API to abstract away these common features to let
 developers focus on their workflow under test.
 
-Touca SDK for Node.js provides a separate lower-level Client API that offers
+Touca SDK for JavaScript provides a separate lower-level Client API that offers
 more flexibility and control over how tests are executed and how their results
 are handled. This API is most useful when integrating Touca with other existing
 test frameworks.

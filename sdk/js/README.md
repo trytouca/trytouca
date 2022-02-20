@@ -28,8 +28,8 @@ We formally support Node.js v12 and newer on Windows, Linux and macOS platforms.
 
 ## 👀 Sneak Peak
 
-> For a more thorough guide of how to use Touca SDK for Node.js, check out the
-> `examples` directory or visit our documentation website at
+> For a more thorough guide of how to use Touca SDK for JavaScript, check out
+> the `examples` directory or visit our documentation website at
 > [docs.touca.io](https://docs.touca.io).
 
 Let us imagine that we want to test a software workflow that reports whether a

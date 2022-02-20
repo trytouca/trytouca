@@ -113,6 +113,7 @@ function _apply_arguments(existing: NodeOptions, incoming: NodeOptions): void {
       if (!input.validate(value)) {
         throw new Error(`parameter "${param}" has unexpected type`);
       }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       existing[param] = value as any;
     }
   }

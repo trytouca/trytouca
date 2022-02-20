@@ -1,6 +1,6 @@
-# Examples using Touca SDK for Node.js
+# Examples using Touca SDK for JavaScript
 
-This directory includes sample projects that use Touca SDK for Node.js. All
+This directory includes sample projects that use Touca SDK for JavaScript. All
 examples are documented to serve as hands-on tutorials to help you get stated
 with Touca.
 

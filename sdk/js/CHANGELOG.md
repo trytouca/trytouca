@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.5.1
+
+Features:
+
+- Improve test framework standard output (#47)
+- Allow user to disable colorized output (#49)
+
+Improvements:
+
+- Update API endpoint to obtain list of test cases (#46)
+
+Other Changes:
+
+- Remove next steps section from readme (#45)
+- Update sample CLI output (#48)
+
 ## v1.5.0
 
 Change of versioning strategy to use same major and minor version numbers across

@@ -1,7 +1,7 @@
 {
   "name": "@touca/node",
-  "version": "1.5.0",
-  "description": "Touca SDK for Node.js",
+  "version": "1.5.1",
+  "description": "Touca SDK for JavaScript",
   "license": "Apache-2.0",
   "homepage": "https://touca.io",
   "main": "dist/src/index.js",
