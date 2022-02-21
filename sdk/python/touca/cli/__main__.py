@@ -5,7 +5,6 @@ import configparser
 import os
 import sys
 
-from colorama import Fore
 from loguru import logger
 from touca import __version__
 from touca.cli._merge import Merge
@@ -14,9 +13,32 @@ from touca.cli._run import Run
 from touca.cli._unzip import Unzip
 from touca.cli._update import Update
 from touca.cli._zip import Zip
+from touca.helpers._printer import Printer
 
 config = configparser.ConfigParser()
 options = {}
+
+
+def find_latest_pypi_version():
+    from json import loads
+    from urllib.request import urlopen
+
+    with urlopen("https://pypi.org/pypi/touca/json") as response:
+        data = loads(response.read())
+        return data["info"]["version"]
+
+
+def warn_outdated_version():
+    from packaging import version
+
+    latest_version = find_latest_pypi_version()
+    if version.parse(latest_version) <= version.parse(__version__):
+        return
+    fmt = (
+        "You are using touca version {}; however, version {} is available."
+        + "\nConsider upgrading by running 'pip install --upgrade touca'."
+    )
+    Printer.print_warning(fmt, __version__, latest_version)
 
 
 @logger.catch
@@ -30,9 +52,7 @@ def main(args=None):
         "zip": lambda opt: Zip(opt),
     }
     parser = argparse.ArgumentParser(
-        description="Work seamlessly with Touca from the command line.".format(
-            Fore.YELLOW, Fore.RESET
-        ),
+        description="Work seamlessly with Touca from the command line.",
         add_help=True,
         formatter_class=argparse.RawTextHelpFormatter,
         epilog="See https://docs.touca.io for more information.",
@@ -49,9 +69,11 @@ def main(args=None):
     )
     parsed, remaining = parser.parse_known_args(sys.argv[1:] if args is None else args)
     options = vars(parsed)
+
     if "command" not in options.keys() or options.get("command") is None:
         parser.print_help()
-        return False
+        warn_outdated_version()
+        return True
 
     operation_name = options.get("command")
     if operation_name not in operations:
@@ -93,6 +115,7 @@ def main(args=None):
         logger.error(f"failed to perform operation {operation_name}")
         return False
 
+    warn_outdated_version()
     return True
 
 

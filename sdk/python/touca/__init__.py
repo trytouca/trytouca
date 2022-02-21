@@ -21,7 +21,7 @@ from ._client import Client
 from ._workflow import Workflow, run
 from ._utils import scoped_timer
 
-__version__ = "1.5.1"
+__version__ = "1.5.2"
 
 
 def clientmethod(f):
