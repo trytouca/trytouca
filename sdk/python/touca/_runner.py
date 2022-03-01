@@ -73,7 +73,6 @@ def _parse_cli_options(args) -> Dict[str, Any]:
         dest='file',
         help="Path to a configuration file")
     parser.add_argument("--output-directory", metavar='',
-        default=os.path.abspath("./results"),
         help="Path to a local directory to store result files")
 
     parser.add_argument("--log-level",
@@ -172,7 +171,17 @@ def _update_testcase_list(options: dict):
             entries = list(filter(keep, file.read().splitlines()))
             options["testcases"] = entries
             return
-    if options.get("offline") or any(k not in options for k in ["api_key", "api_url"]):
+    if options.get("offline"):
+        elements = ["output_directory", "suite", "version"]
+        version_dir = os.path.join(*map(options.get, elements))
+        if not os.path.exists(version_dir):
+            raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
+        entries = os.listdir(version_dir)
+        if not entries:
+            raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
+        options["testcases"] = entries
+        return
+    if any(k not in options for k in ["api_key", "api_url"]):
         raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
     options["testcases"] = Client.instance().get_testcases()
     if not options.get("testcases"):
@@ -180,27 +189,28 @@ def _update_testcase_list(options: dict):
 
 
 def _initialize(options: dict):
-    from ._options import update_options
+    from ._options import find_config_dir, update_options
 
     # Let the lower-level library consolidate the provided config options
     # including applying environment variables and processing long-format
     # api_url.
     update_options(options, options)
 
-    # Check that team, suite and version are provided.
+    # Check that team and suite are provided.
     missing = [k for k in ["team", "suite", "version"] if k not in options]
     if missing:
         raise _ToucaError(_ToucaErrorCode.MissingSlugs, ", ".join(missing))
 
     # Create directory to write logs and test results into
-    keys = ["output_directory", "suite", "version"]
-    os.makedirs(os.path.join(*map(options.get, keys)), exist_ok=True)
+    options["output_directory"] = options.get(
+        "output_directory", os.path.join(find_config_dir(mkdir=True), "results")
+    )
+    os.makedirs(options.get("output_directory"), exist_ok=True)
 
     # Configure the lower-level Touca library
     if not Client.instance().configure(**options):
         raise RuntimeError(Client.instance().configuration_error())
 
-    # Update list of test cases
     _update_testcase_list(options)
 
 
@@ -267,18 +277,22 @@ class Workflow:
         self.__func = func
         if not hasattr(Workflow, "_workflows"):
             Workflow._workflows = []
-        Workflow._workflows.append(self)
+        Workflow._workflows.append((func.__name__, self))
 
     def __call__(self, testcase: str):
         return self.__func(testcase)
 
 
-def _run(args):
-    if not hasattr(Workflow, "_workflows") or not Workflow._workflows:
-        raise _ToucaError(_ToucaErrorCode.MissingWorkflow)
-    options = _parse_cli_options(args)
-    _initialize(options)
+def _filter_selected_workflow(options, workflows):
+    if "workflow" not in options:
+        return workflows
+    filtered = [(k, v) for k, v in workflows if options["workflow"] == k]
+    if not filtered:
+        raise Exception("workflow: " + options["workflow"] + " does not exist")
+    return filtered
 
+
+def _run_workflow(options, workflow):
     offline = options.get("offline") or any(
         k not in options for k in ["api_key", "api_url"]
     )
@@ -287,14 +301,6 @@ def _run(args):
     printer = Printer(options)
     printer.print_header()
     timer.tic("__workflow__")
-
-    filtered_workflows = Workflow._workflows
-    if options.get("workflow"):
-        filtered_workflows = [
-            x for x in Workflow._workflows if options["workflow"] == x
-        ]
-    if len(filtered_workflows) == 0:
-        raise Exception("workflow: " + options["workflow"] + " does not exist")
 
     for idx, testcase in enumerate(options.get("testcases")):
         elements = ["output_directory", "suite", "version"]
@@ -314,8 +320,7 @@ def _run(args):
 
         errors = []
         try:
-            for workflow in filtered_workflows:
-                workflow.__call__(testcase)
+            workflow.__call__(testcase)
 
         except BaseException as err:
             errors.append(": ".join([err.__class__.__name__, str(err)]))
@@ -348,6 +353,23 @@ def _run(args):
         Client.instance().seal()
 
 
+def run_workflows(args, workflows):
+    from copy import deepcopy
+
+    cli_options = _parse_cli_options(args)
+    workflows = _filter_selected_workflow(cli_options, workflows)
+    Printer.print_app_header()
+    for name, workflow in workflows:
+        options = deepcopy(cli_options)
+        options["suite"] = name
+        try:
+            _initialize(options)
+            _run_workflow(options, workflow)
+        except RuntimeError as error:
+            Printer.print_warning("Error when running workflow {}: {}", name, error)
+    Printer.print_app_footer()
+
+
 def run():
     """
     Runs registered workflows, one by one, for available the test cases.
@@ -364,8 +386,10 @@ def run():
         values or are in conflict with each other. Capturing this exception
         is not required.
     """
+    if not hasattr(Workflow, "_workflows") or not Workflow._workflows:
+        raise _ToucaError(_ToucaErrorCode.MissingWorkflow)
     try:
-        _run(sys.argv[1:])
+        run_workflows(sys.argv[1:], Workflow._workflows)
     except _ToucaError as err:
         sys.exit(err)
     except Exception as err:

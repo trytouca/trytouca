@@ -4,10 +4,9 @@ import os
 import pytest
 from _pytest.capture import CaptureResult
 from tempfile import TemporaryDirectory
-from touca._workflow import (
+from touca._runner import (
     run,
-    Workflow,
-    _run,
+    run_workflows,
     _update_testcase_list,
     _ToucaError,
     _ToucaErrorCode,
@@ -28,36 +27,33 @@ def check_stats(checks: dict, captured: CaptureResult):
             assert value in text
 
 
-@pytest.fixture
-def single_workflow():
-    Workflow._workflows = []
-    Workflow._workflows.append(lambda x: None)
-
-
 def test_empty_workflow():
-    with pytest.raises(SystemExit, match="No workflow is registered."):
+    with pytest.raises(_ToucaError, match="No workflow is registered."):
         run()
 
 
-def test_no_case_missing_remote(single_workflow):
+def test_no_case_missing_remote():
     with pytest.raises(_ToucaError) as err:
-        _run(["--team", "acme", "--suite", "students", "--revision", "1.0"])
+        run_workflows(
+            ["--team", "acme", "--suite", "students", "--revision", "1.0"],
+            [("sample", lambda x: None)],
+        )
     assert err.value._code == _ToucaErrorCode.NoCaseMissingRemote
 
 
-def test_run_twice(single_workflow, capsys: pytest.CaptureFixture):
+def test_run_twice(capsys: pytest.CaptureFixture):
     args = []
     args.extend(slugs)
     args.extend(extra)
     args.extend(["--testcase", "alice", "--testcase", "bob"])
     with TemporaryDirectory(prefix="touca-python-test") as tempdir:
         args.extend(["--output-directory", tempdir])
-        _run(args)
+        run_workflows(args, [("sample", lambda x: None)])
         captured = capsys.readouterr()
         checks = {"alice": ["1.", "PASS"], "bob": ["2.", "PASS"]}
         check_stats(checks, captured)
         assert captured.err == ""
-        _run(args)  # rerun test
+        run_workflows(args, [("sample", lambda x: None)])  # rerun test
         captured = capsys.readouterr()
         checks = {"alice": ["1.", "SKIP"], "bob": ["2.", "SKIP"]}
         assert captured.err == ""

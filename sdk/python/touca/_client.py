@@ -33,13 +33,11 @@ class Client:
 
     @classmethod
     def instance(cls):
-
         if not hasattr(cls, "_instance"):
             cls._instance = cls()
         return cls._instance
 
     def __init__(self):
-
         from ._types import TypeHandler
 
         self._cases: Dict[str, Case] = dict()
@@ -52,7 +50,6 @@ class Client:
         self._type_handler = TypeHandler()
 
     def _active_testcase_name(self) -> str:
-
         if not self._configured:
             return None
         if self._options.get("concurrency"):
@@ -60,7 +57,6 @@ class Client:
         return self._threads_cases.get(get_ident())
 
     def _make_transport(self) -> bool:
-
         from ._transport import Transport
 
         keys = ["api_key", "api_url", "team", "suite", "version"]
@@ -77,7 +73,6 @@ class Client:
         return True
 
     def _serialize(self, cases: ValuesView[Case]) -> bytearray:
-
         from sys import version_info
         from flatbuffers import Builder
         import touca._schema as schema

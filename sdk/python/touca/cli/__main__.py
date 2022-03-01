@@ -1,12 +1,13 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import argparse
-import configparser
 import os
 import sys
 
 from loguru import logger
 from touca import __version__
+from touca._options import find_config_dir
+from touca.cli._execute import Execute
 from touca.cli._merge import Merge
 from touca.cli._post import Post
 from touca.cli._run import Run
@@ -15,11 +16,8 @@ from touca.cli._update import Update
 from touca.cli._zip import Zip
 from touca.helpers._printer import Printer
 
-config = configparser.ConfigParser()
-options = {}
 
-
-def find_latest_pypi_version():
+def _find_latest_pypi_version():
     from json import loads
     from urllib.request import urlopen
 
@@ -28,10 +26,10 @@ def find_latest_pypi_version():
         return data["info"]["version"]
 
 
-def warn_outdated_version():
+def _warn_outdated_version():
     from packaging import version
 
-    latest_version = find_latest_pypi_version()
+    latest_version = _find_latest_pypi_version()
     if version.parse(latest_version) <= version.parse(__version__):
         return
     fmt = (
@@ -41,12 +39,12 @@ def warn_outdated_version():
     Printer.print_warning(fmt, __version__, latest_version)
 
 
-@logger.catch
 def main(args=None):
     operations = {
         "merge": lambda opt: Merge(opt),
         "post": lambda opt: Post(opt),
         "run": lambda opt: Run(opt),
+        "test": lambda opt: Execute(opt),
         "unzip": lambda opt: Unzip(opt),
         "update": lambda opt: Update(opt),
         "zip": lambda opt: Zip(opt),
@@ -66,14 +64,10 @@ def main(args=None):
         choices=operations.keys(),
         help="one of " + ", ".join([f'"{k}"' for k in operations.keys()]),
         metavar="command",
+        default="test",
     )
     parsed, remaining = parser.parse_known_args(sys.argv[1:] if args is None else args)
     options = vars(parsed)
-
-    if "command" not in options.keys() or options.get("command") is None:
-        parser.print_help()
-        warn_outdated_version()
-        return True
 
     operation_name = options.get("command")
     if operation_name not in operations:
@@ -83,10 +77,8 @@ def main(args=None):
 
     try:
         operation.parse(remaining)
-    except ValueError as err:
-        print(err, file=sys.stderr)
-        return False
-    except:
+    except Exception as err:
+        Printer.print_error(str(err))
         operation.parser().print_help()
         return False
 
@@ -94,6 +86,8 @@ def main(args=None):
         if not os.path.exists(options.get("touca-utils")):
             logger.error(f"touca utils application does not exist")
             return False
+
+    config_dir = find_config_dir(mkdir=True)
 
     # configure logger
 
@@ -105,7 +99,7 @@ def main(args=None):
         format="<green>{time:HH:mm:ss!UTC}</green> | <cyan>{level: <7}</cyan> | <lvl>{message}</lvl>",
     )
     logger.add(
-        "logs/runner_{time:YYMMDD!UTC}.log",
+        os.path.join(config_dir, "logs", "runner_{time:YYMMDD!UTC}.log"),
         level="DEBUG",
         rotation="1 day",
         compression="zip",
@@ -115,7 +109,7 @@ def main(args=None):
         logger.error(f"failed to perform operation {operation_name}")
         return False
 
-    warn_outdated_version()
+    _warn_outdated_version()
     return True
 
 

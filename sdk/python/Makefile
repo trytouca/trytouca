@@ -20,6 +20,6 @@ schema:
 	@sed -i .bak '/# automatically/d' $(FBS_OUTPUT_FILE)
 	@sed -i .bak '/# namespace/d' $(FBS_OUTPUT_FILE)
 	@sed -i .bak '/import flatbuffers/d' $(FBS_OUTPUT_FILE)
-	@sed -i .bak '/from .* import /d' touca/_schema.py
+	@sed -i .bak '/from .* import /d' $(FBS_OUTPUT_FILE)
 	@sed -i .bak '1s/^/import flatbuffers\'$$'\n/' $(FBS_OUTPUT_FILE)
 	@black -q $(FBS_OUTPUT_FILE)

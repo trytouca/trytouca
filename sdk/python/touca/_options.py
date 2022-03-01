@@ -97,3 +97,20 @@ def update_options(existing: dict, incoming: dict) -> None:
     _apply_environment_variables(existing)
     _reformat_parameters(existing)
     _validate_options(existing)
+
+
+def find_config_dir(mkdir=False):
+    import os
+    from pathlib import Path
+    from touca.helpers._printer import Printer
+
+    for candidate in [os.getcwd(), Path.home()]:
+        app_dir = os.path.join(candidate, ".touca")
+        if os.path.exists(app_dir):
+            return app_dir
+    if not mkdir:
+        return
+    app_dir = os.path.join(Path.home(), ".touca")
+    os.makedirs(app_dir, exist_ok=False)
+    Printer.print_warning("creating directory {}", app_dir)
+    return app_dir

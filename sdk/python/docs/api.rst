@@ -12,5 +12,5 @@ Client Library
 Test Framework
 ++++++++++++++
 
-.. automodule:: touca._workflow
+.. automodule:: touca._runner
     :members:

@@ -10,6 +10,17 @@ class Printer:
     def print_warning(fmt: str, *args, **kwargs):
         print(f"{Fore.YELLOW}{fmt.format(*args, **kwargs)}{Fore.RESET}")
 
+    def print_error(fmt: str, *args, **kwargs):
+        from sys import stderr
+
+        print(f"{Fore.RED}{fmt.format(*args, **kwargs)}{Fore.RESET}", file=stderr)
+
+    def print_app_header():
+        print("\nTouca Test Framework")
+
+    def print_app_footer():
+        print("\n✨   Ran all test suites.\n")
+
     def __init__(self, options):
         self.options = options
         self.testcase_width = max(len(k) for k in options.get("testcases"))
@@ -28,7 +39,7 @@ class Printer:
 
     def print_header(self):
         revision = "/".join([self.options.get(k) for k in ["suite", "version"]])
-        self.print_line("\nTouca Test Framework\nSuite: {:s}\n", revision)
+        self.print_line("\nSuite: {:s}\n", revision)
 
     def print_progress(self, timer, testcase, idx, status, errors=[]):
         states = {
@@ -91,4 +102,3 @@ class Printer:
             "Time:".ljust(int(math.log10(self.testcase_count)) + 11),
             timer.count("__workflow__") / 1000,
         )
-        self.print_line("\n✨   Ran all test suites.\n")

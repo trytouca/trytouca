@@ -18,7 +18,7 @@ install the SDK as a development-only dependency.
 
 from typing import Any, Callable, Dict, List, Type
 from ._client import Client
-from ._workflow import Workflow, run
+from ._runner import Workflow, run
 from ._utils import scoped_timer
 
 __version__ = "1.5.2"

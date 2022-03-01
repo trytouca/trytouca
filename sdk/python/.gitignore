@@ -1,6 +1,7 @@
 .env
 .coverage
 .python-version
+.touca
 .tox
 build
 dist

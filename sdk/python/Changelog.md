@@ -4,7 +4,7 @@
 
 Features:
 
-- Python SDK should allow running test by workflow name (#60)
+- Allow running test by workflow name (#60)
 - Allow user to disable colorized output (#53, #54, #59)
 
 Improvements:
