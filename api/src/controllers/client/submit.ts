@@ -5,6 +5,7 @@ import { ByteBuffer } from 'flatbuffers'
 import { minBy } from 'lodash'
 import mongoose from 'mongoose'
 
+import { suiteCreate } from '@/models/suite'
 import { BatchModel, IBatchDocument } from '@/schemas/batch'
 import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import { ElementModel, IElementDocument } from '@/schemas/element'
@@ -17,6 +18,7 @@ import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
 import { Message, Messages } from '@/utils/schema'
+import { tracker } from '@/utils/tracker'
 
 type TeamSlug = string
 type SuiteSlug = string
@@ -439,11 +441,17 @@ async function processSuite(
 ): Promise<Job<ISuiteDocument>> {
   const tuple = [team.slug, suiteSlug].join('/')
   try {
-    // we expect that the suite is already registered
-
-    const suite = await SuiteModel.findOne({ team: team._id, slug: suiteSlug })
+    let suite: ISuiteDocument = await SuiteModel.findOne({
+      team: team._id,
+      slug: suiteSlug
+    })
     if (!suite) {
-      return makeError(suiteSlug, 'suite not found')
+      suite = await suiteCreate(user, team, {
+        slug: suiteSlug,
+        name: suiteSlug
+      })
+      // add event to tracking system
+      tracker.track(user, 'created_suite')
     }
 
     // concurrently process submitted messages that belong to batches of this suite

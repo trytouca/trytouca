@@ -16,7 +16,6 @@ export async function suiteCreate(
   suite: { slug: string; name: string }
 ): Promise<ISuiteDocument> {
   // check that suite slug is available
-
   if (await SuiteModel.countDocuments({ team: team._id, slug: suite.slug })) {
     return
   }
@@ -30,6 +29,13 @@ export async function suiteCreate(
     subscriptions: [{ user: user._id, level: ENotificationType.All }],
     team: team._id
   })
+
+  logger.info('%s: created suite %s/%s', user.username, team.slug, suite.slug)
+
+  // remove information about the list of known suites from cache.
+  // we intentionally wait for this operation to avoid race conditions
+  await rclient.removeCached(`route_suiteList_${team.slug}_${user.username}`)
+
   return newSuite
 }
 

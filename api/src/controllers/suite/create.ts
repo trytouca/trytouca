@@ -7,7 +7,6 @@ import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
 import { tracker } from '@/utils/tracker'
 
 /**
@@ -38,12 +37,6 @@ export async function ctrlSuiteCreate(
       status: 409
     })
   }
-  logger.info('%s: created suite %s', user.username, tuple)
-
-  // remove information about the list of known suites from cache.
-  // we intentionally wait for this operation to avoid race conditions
-
-  await rclient.removeCached(`route_suiteList_${team.slug}_${user.username}`)
 
   // add event to tracking system
 

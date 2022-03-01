@@ -149,14 +149,14 @@ export const formFields: Record<
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(32),
-      Validators.pattern('[a-zA-Z][a-zA-Z0-9-]+')
+      Validators.pattern('[a-zA-Z][a-zA-Z0-9-_]+')
     ],
     validationErrors: {
       required: 'This field is required.',
       minlength: 'Slug must be at least 3 characters.',
       maxlength: 'Slug must be at most 32 characters.',
       pattern:
-        'Only numbers and characters allowed, possibly separated by single hyphens.'
+        'Only numbers and characters allowed, possibly separated by single hyphens or underscores.'
     }
   }
 };
