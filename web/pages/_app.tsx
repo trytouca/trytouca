@@ -40,6 +40,11 @@ export default function App({ Component, pageProps }: AppProps) {
             }}
             strategy="afterInteractive"
           />
+          <Script
+            defer
+            data-domain="touca.io"
+            src="https://plausible.io/js/plausible.js"
+          />
         </>
       )}
       <DefaultSeo
