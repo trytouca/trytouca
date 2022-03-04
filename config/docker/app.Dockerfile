@@ -15,4 +15,3 @@ COPY clients/cpp/local/docs/html                /www/data/docs/clients/cpp
 COPY clients/java/touca/build/docs/javadoc      /www/data/docs/clients/java
 COPY clients/js/local/docs                      /www/data/docs/clients/js
 COPY clients/python/local/docs                  /www/data/docs/clients/python
-COPY web/out                                    /www/data/web

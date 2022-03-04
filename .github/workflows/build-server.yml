@@ -205,16 +205,6 @@ jobs:
           aws s3 mv ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/pricing.html ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/pricing
           aws s3 cp web.tar.gz ${{ steps.params.outputs.buckets }}/
 
-      - name: pull web from aws
-        if: steps.changes.outputs.web == 'false'
-        run: aws s3 cp ${{ steps.params.outputs.buckets }}/web.tar.gz .
-
-      - uses: actions/upload-artifact@v2
-        with:
-          name: web-bundle
-          path: ${{ github.workspace }}/web.tar.gz
-          retention-days: 1
-
   cmp-build-native:
     name: cmp-build-native
     runs-on: ubuntu-20.04
@@ -313,11 +303,6 @@ jobs:
           name: app-bundle
           path: ${{ github.workspace }}
       - uses: actions/download-artifact@v2
-        if: steps.changes.outputs.app == 'true'
-        with:
-          name: web-bundle
-          path: ${{ github.workspace }}
-      - uses: actions/download-artifact@v2
         if: steps.changes.outputs.cmp == 'true'
         with:
           name: cmp-bundle
@@ -383,7 +368,6 @@ jobs:
         run: |
           mkdir -p ./stage
           tar -xf app.tar.gz -C ./stage
-          tar -xf web.tar.gz -C ./stage
           tar -xf api-docs-external.tar.gz -C ./stage
           mkdir -p ./stage/app && cp ./app/nginx.conf ./stage/app/
           docker build -f config/docker/app.Dockerfile -t touca-app stage

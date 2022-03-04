@@ -8,7 +8,6 @@ app:
   - ".github/workflows/build.yml"
   - "config/docker/app.Dockerfile"
   - "app/**"
-  - "web/**"
 
 cmp:
   - ".github/workflows/build.yml"
