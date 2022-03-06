@@ -6,16 +6,46 @@ on:
   push:
     branches:
       - main
-      - next
       - "feature/**"
 
 jobs:
-  check-markdown-links:
-    name: check-markdown-links
+  doc-build-native:
+    name: doc-build-native
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2
-      - uses: gaurav-nelson/github-action-markdown-link-check@v1
+      - name: authenticate to aws
+        if: steps.params.outputs.release == 'true'
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          config-file: ".markdown.json"
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-region: us-east-2
+      - name: get version number
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
+          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+
+      - uses: actions/setup-node@v2
+      - uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+
+      - name: build doc
+        run: |
+          yarn install
+          yarn build
+
+      - name: push doc to aws
+        if: steps.params.outputs.release == 'true'
+        run: |
+          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_DOC }} --exclude "*.html" --cache-control public,max-age=31536000,immutable
+          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_DOC }} --exclude "*" --include "*.html" --cache-control no-cache
