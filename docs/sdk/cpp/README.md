@@ -1,1 +1,0 @@
-# Touca SDK for C++
