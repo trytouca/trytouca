@@ -7,12 +7,13 @@
   --ifm-color-primary-light: #0ea5e9;
   --ifm-color-primary-lighter: #38bdf8;
   --ifm-color-primary-lightest: #7dd3fc;
-  --ifm-code-font-size: 95%;
+  --ifm-code-font-size: 90%;
   --ifm-navbar-item-padding-horizontal: 0.5rem;
   --ifm-navbar-item-padding-vertical: 0.5rem;
   --ifm-navbar-height: 4rem;
   --ifm-navbar-padding-vertical: 0.5rem;
   --ifm-navbar-background-color: var(--ifm-footer-background-color);
+  --ifm-footer-padding-vertical: var(--ifm-spacing-vertical);
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
@@ -28,6 +29,10 @@
 
 .navbar__logo {
   height: 2.5rem;
+}
+
+.footer__copyright {
+  font-size: 0.875rem;
 }
 
 .header-github-link:hover,

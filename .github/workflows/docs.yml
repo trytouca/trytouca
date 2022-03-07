@@ -16,7 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: authenticate to aws
-        if: steps.params.outputs.release == 'true'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
@@ -47,5 +46,5 @@ jobs:
       - name: push doc to aws
         if: steps.params.outputs.release == 'true'
         run: |
-          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_DOC }} --exclude "*.html" --cache-control public,max-age=31536000,immutable
-          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_DOC }} --exclude "*" --include "*.html" --cache-control no-cache
+          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*.html" --cache-control public,max-age=31536000,immutable
+          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --cache-control no-cache
