@@ -10,7 +10,7 @@ import { make_path } from '@/lib/api';
 
 const items = [
   { title: 'Login', link: 'https://app.touca.io' },
-  { title: 'Docs', link: 'https://docs.touca.io' },
+  { title: 'Docs', link: 'https://touca.io/docs' },
   { title: 'Blog', link: 'https://blog.touca.io' },
   { title: 'Pricing', link: '/pricing' }
 ];
