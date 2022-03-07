@@ -54,7 +54,7 @@ const config = {
           content:
             "Touca is a continuous regression testing solution that helps software engineering teams gain confidence in their daily code changes."
         },
-        { name: "og:url", content: "https://docs.touca.io" },
+        { name: "og:url", content: "https://touca.io/docs" },
         { name: "og:type", content: "website" },
         {
           name: "og:image",
