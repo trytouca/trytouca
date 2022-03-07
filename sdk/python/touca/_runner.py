@@ -44,7 +44,7 @@ def _parse_cli_options(args) -> Dict[str, Any]:
     # fmt: off
     parser = ArgumentParser(
         description="Touca Regression Test",
-        epilog="Visit https://docs.touca.io for more information")
+        epilog="Visit https://touca.io/docs for more information")
     parser.add_argument("--api-key", metavar='',
         help="API Key issued by the Touca Server")
     parser.add_argument("--api-url", metavar='',

@@ -32,8 +32,8 @@ platforms.
 ## 👀 Sneak Peak
 
 > For a more thorough guide of how to use Touca SDK for Python, check out the
-> `examples` directory or visit our documentation website at
-> [docs.touca.io](https://docs.touca.io).
+> `examples` directory or visit our
+> [documentation website](https://touca.io/docs).
 
 Let us imagine that we want to test a software workflow that reports whether a
 given number is prime.
@@ -140,10 +140,10 @@ test these workflows at any scale.
 ## 📖 Documentation
 
 - If you are new to Touca, the best place to start is the
-  [Quickstart Guide](https://docs.touca.io/basics/quickstart) on our
+  [Quickstart Guide](https://touca.io/docs/basics/quickstart) on our
   documentation website.
 - For information on how to use this SDK, see our
-  [Python SDK Documentation](https://docs.touca.io/sdk/python).
+  [Python SDK Documentation](https://touca.io/docs/sdk/python/quickstart).
 - If you cannot wait to start writing your first test with Touca, see our
   [Python API Reference](https://app.touca.io/docs/clients/python/api.html).
 

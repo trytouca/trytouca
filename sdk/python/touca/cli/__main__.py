@@ -53,7 +53,7 @@ def main(args=None):
         description="Work seamlessly with Touca from the command line.",
         add_help=True,
         formatter_class=argparse.RawTextHelpFormatter,
-        epilog="See https://docs.touca.io for more information.",
+        epilog="See https://touca.io/docs for more information.",
     )
     parser.add_argument(
         "-v", "--version", action="version", version=f"%(prog)s v{__version__}"
