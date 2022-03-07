@@ -11,7 +11,7 @@ hands-on tutorials that show you how to write tests with different Touca SDKs.
 
 If this is your first time submitting test results to Touca, we highly encourage
 you to read this short
-[Getting Started](https://docs.touca.io/basics/quickstart) guide, first.
+[Getting Started](https://touca.io/docs/basics/quickstart) guide, first.
 
 ## Links
 
@@ -19,5 +19,5 @@ you to read this short
 - [Touca SDK for Python](https://github.com/trytouca/touca-python)
 - [Touca SDK for JavaScript](https://github.com/trytouca/touca-js)
 - [Touca SDK for Java](https://github.com/trytouca/touca-java)
-- [Touca Documentation Website](https://docs.touca.io)
+- [Touca Documentation Website](https://touca.io/docs)
 - [Touca Cloud-Hosted Instance](https://app.touca.io)
