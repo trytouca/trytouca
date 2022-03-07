@@ -18,11 +18,6 @@ module.exports = withPWA({
   async redirects() {
     return [
       {
-        source: '/docs',
-        destination: 'https://docs.touca.io/',
-        permanent: true
-      },
-      {
         source: '/terms',
         destination: 'https://docs.touca.io/legal/terms',
         permanent: true
