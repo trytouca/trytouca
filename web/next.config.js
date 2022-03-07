@@ -19,12 +19,12 @@ module.exports = withPWA({
     return [
       {
         source: '/terms',
-        destination: 'https://docs.touca.io/legal/terms',
+        destination: 'https://touca.io/docs/legal/terms',
         permanent: true
       },
       {
         source: '/privacy',
-        destination: 'https://docs.touca.io/legal/privacy',
+        destination: 'https://touca.io/docs/legal/privacy',
         permanent: true
       }
     ];

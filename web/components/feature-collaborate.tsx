@@ -26,7 +26,7 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
             <p className="text-2xl text-gray-300">{props.input.description}</p>
             <div className="flex items-center space-x-2">
               <a
-                href={'https://docs.touca.io/basics/integrate'}
+                href={'https://touca.io/docs/basics/integrate'}
                 target="_blank"
                 rel="noopener noreferrer">
                 <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 hover:text-gray-300">
@@ -35,7 +35,7 @@ export default function FeatureCollaborate(props: { input: FeatureInput }) {
                 </div>
               </a>
               <a
-                href={'https://docs.touca.io/basics/integrate'}
+                href={'https://touca.io/docs/basics/integrate'}
                 target="_blank"
                 rel="noopener noreferrer">
                 <div className="rounded-xl bg-dark-blue-800 bg-opacity-50 p-3 text-gray-400 hover:text-gray-300">
