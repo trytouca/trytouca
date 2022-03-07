@@ -3,18 +3,19 @@
 const config = {
   title: "Touca Docs",
   tagline: "Developer-friendly Continuous Regression Testing",
-  url: "https://docs.touca.io",
-  baseUrl: "/",
+  url: "https://touca.io",
+  baseUrl: "/docs/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "trytouca",
   projectName: "touca-docs",
+  trailingSlash: false,
   scripts: [
     {
       src: "https://plausible.io/js/script.js",
       defer: true,
-      "data-domain": "docs.touca.io"
+      "data-domain": "touca.io"
     }
   ],
   presets: [
@@ -79,7 +80,8 @@ const config = {
         title: "Touca Docs",
         logo: {
           alt: "Touca Logo",
-          src: "img/logo.svg"
+          src: "img/logo.svg",
+          href: "https://touca.io"
         },
         items: [
           {
