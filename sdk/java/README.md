@@ -34,8 +34,8 @@ We formally support Java 8 and newer on Linux, macOS, and Windows platforms.
 ## 👀 Sneak Peak
 
 > For a more thorough guide of how to use Touca SDK for Python, check out the
-> `examples` directory or visit our documentation website at
-> [docs.touca.io](https://docs.touca.io).
+> `examples` directory or visit our
+> [documentation website](https://touca.io/docs).
 
 Let us imagine that we want to test a software workflow that reports whether a
 given number is prime.
@@ -147,9 +147,9 @@ test these workflows at any scale.
 ## 📖 Documentation
 
 - If you are new to Touca, the best place to start is our
-  [Quickstart Guide](https://docs.touca.io/basics/quickstart).
+  [Quickstart Guide](https://touca.io/docs/basics/quickstart).
 - To learn how to use our Java SDK, see our
-  [Java SDK Documentation](https://docs.touca.io/sdk/java).
+  [Java SDK Documentation](https://touca.io/docs/sdk/java/quickstart).
 - If you cannot wait to start writing your first test with Touca, see our
   [Java API Reference](https://app.touca.io/docs/clients/java/api.html).
 

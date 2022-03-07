@@ -5,7 +5,7 @@ examples are documented to serve as hands-on tutorials to help you get stated
 with Touca.
 
 If this is your first time submitting test results to Touca, we recommend
-reading our [Getting Started](https://docs.touca.io) guide, first.
+reading our [Getting Started](https://touca.io/docs) guide, first.
 
 ## Outline
 

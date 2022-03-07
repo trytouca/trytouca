@@ -244,7 +244,7 @@ public class Runner {
       HelpFormatter formatter = new HelpFormatter();
       formatter.printHelp(mainArgs[0], "\nTouca Test Framework\n\n",
           buildOptions(),
-          "\nVisit https://docs.touca.io for more information\n", true);
+          "\nVisit https://touca.io/docs for more information\n", true);
     }
     return this;
   }
