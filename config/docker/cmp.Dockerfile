@@ -4,7 +4,7 @@ LABEL maintainer="hello@touca.io"
 LABEL org.opencontainers.image.title="touca-cmp"
 LABEL org.opencontainers.image.description="Touca Comparator"
 LABEL org.opencontainers.image.url="https://touca.io/"
-LABEL org.opencontainers.image.documentation="https://docs.touca.io"
+LABEL org.opencontainers.image.documentation="https://touca.io/docs"
 LABEL org.opencontainers.image.vendor="Touca, Inc."
 LABEL org.opencontainers.image.authors="hello@touca.io"
 

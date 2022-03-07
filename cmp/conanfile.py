@@ -14,7 +14,7 @@ class ToucaConan(ConanFile):
         "test-framework",
         "test-automation",
     )
-    url = "https://docs.touca.io"
+    url = "https://touca.io/docs"
     license = "Private"
     version = "1.4.0"
     author = "Pejman Ghorbanzade <pejman@touca.io>"

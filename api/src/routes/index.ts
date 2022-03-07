@@ -66,7 +66,7 @@ router.get('/', (req, res) => {
  *            $ref: '#/components/headers/Location'
  */
 router.get('/@/:team/:suite', (req, res) => {
-  res.redirect(308, 'https://docs.touca.io')
+  res.redirect(308, 'https://touca.io/docs')
 })
 
 router.use('/auth', authRouter)
