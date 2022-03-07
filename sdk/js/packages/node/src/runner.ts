@@ -228,7 +228,7 @@ function _parse_cli_options(args: string[]): RunnerOptions {
     .help('help')
     .version(VERSION)
     .showHelpOnFail(false, 'Specify --help for available options')
-    .epilog('Visit https://docs.touca.io for more information.')
+    .epilog('Visit https://touca.io/docs for more information.')
     .wrap(y.terminalWidth())
     .options({
       'api-key': {

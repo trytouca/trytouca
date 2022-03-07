@@ -29,8 +29,7 @@ We formally support Node.js v12 and newer on Windows, Linux and macOS platforms.
 ## 👀 Sneak Peak
 
 > For a more thorough guide of how to use Touca SDK for JavaScript, check out
-> the `examples` directory or visit our documentation website at
-> [docs.touca.io](https://docs.touca.io).
+> the `examples` directory or visit our [documentation website](https://touca.io/docs).
 
 Let us imagine that we want to test a software workflow that reports whether a
 given number is prime.
@@ -165,6 +164,6 @@ This repository is released under the Apache-2.0 License. See
 [calendly]: https://calendly.com/ghorbanzade/30min
 [license]: https://github.com/trytouca/touca-js/blob/main/LICENSE
 [npm]: https://npmjs.com/package/@touca/node
-[docs-quickstart]: https://docs.touca.io/basics/quickstart
-[docs-js]: https://docs.touca.io/sdk/javascript
+[docs-quickstart]: https://touca.io/docs/basics/quickstart
+[docs-js]: https://touca.io/docs/sdk/javascript/quickstart
 [docs-js-api]: https://app.touca.io/docs/clients/js/api.html
