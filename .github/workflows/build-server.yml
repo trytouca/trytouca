@@ -200,9 +200,6 @@ jobs:
         run: |
           aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*.html" --cache-control public,max-age=31536000,immutable
           aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*" --include "*.html" --cache-control no-cache
-          aws s3 mv ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/blog.html ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/blog
-          aws s3 mv ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/contact.html ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/contact
-          aws s3 mv ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/pricing.html ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/pricing
           aws s3 cp web.tar.gz ${{ steps.params.outputs.buckets }}/
 
   cmp-build-native:
