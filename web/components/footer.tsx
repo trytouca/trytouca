@@ -74,11 +74,11 @@ const links: {
     text: 'Status'
   },
   {
-    link: 'https://docs.touca.io/legal/terms',
+    link: 'https://touca.io/docs/legal/terms',
     text: 'Terms of Service'
   },
   {
-    link: 'https://docs.touca.io/legal/privacy',
+    link: 'https://touca.io/docs/legal/privacy',
     text: 'Privacy Policy'
   }
 ];

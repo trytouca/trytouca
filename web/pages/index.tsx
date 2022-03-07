@@ -44,7 +44,7 @@ const content: PageContent = {
         variables and runtime of functions, for any number of test cases,
         from anywhere within your code.`,
       button: {
-        link: 'https://docs.touca.io/basics/quickstart',
+        link: 'https://touca.io/docs/basics/quickstart',
         text: 'Learn More',
         title: ''
       }
@@ -59,7 +59,7 @@ const content: PageContent = {
       description: `We remotely compare your description against a previous trusted version
         of your software and report differences in near real-time.`,
       button: {
-        link: 'https://docs.touca.io/basics/interpret',
+        link: 'https://touca.io/docs/basics/interpret',
         text: 'Read about our insights engine',
         title: 'Learn how Touca processes your results and reports regressions.'
       }
@@ -75,7 +75,7 @@ const content: PageContent = {
         together to resolve or justify them. Maintain a shared understanding
         of how your software works and is supposed to work.`,
       button: {
-        link: 'https://docs.touca.io/basics/integrate',
+        link: 'https://touca.io/docs/basics/integrate',
         text: 'Read about our integrations',
         title: 'Learn how to work as a team to deal with regressions.'
       }
@@ -86,7 +86,7 @@ const content: PageContent = {
         your build pipeline, or on a dedicated test server; however you like,
         whenever you like. We give you real-time feedback, when you need it.`,
       button: {
-        link: 'https://docs.touca.io/basics/automate',
+        link: 'https://touca.io/docs/basics/automate',
         text: 'Read about our automation features',
         title: 'Learn how to automate the execution of your tests tools.'
       }
@@ -110,7 +110,7 @@ const content: PageContent = {
       learnMore: {
         title: `Learn how Canon Medical Informatics uses Touca`,
         text: "Read Canon Medical's Story",
-        link: 'https://docs.touca.io/stories/vital',
+        link: 'https://touca.io/docs/stories/vital',
         hidden: true
       }
     }
