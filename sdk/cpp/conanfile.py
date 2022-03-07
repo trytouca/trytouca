@@ -9,7 +9,7 @@ class ToucaConan(ConanFile):
     homepage = "https://github.com/trytouca/touca-cpp"
     description = "Touca SDK for C++"
     topics = ("regression-testing", "test-framework", "test-automation")
-    url = "https://docs.touca.io"
+    url = "https://touca.io/docs"
     license = "Apache-2.0"
     version = "1.5.1"
     author = "Touca, Inc. <hello@touca.io>"

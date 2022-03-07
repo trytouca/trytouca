@@ -120,7 +120,7 @@ else()
     message(WARNING
         " Failed to find OpenSSL."
         " Touca will be built without HTTPS support.\n"
-        " See https://docs.touca.io/sdk/cpp/installing#enabling-https")
+        " See https://touca.io/docs/sdk/cpp/installing#enabling-https")
 endif()
 
 generate_export_header(

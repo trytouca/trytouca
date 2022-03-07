@@ -20,8 +20,8 @@ visualize all differences, and report them in near real-time.
 ## 👀 Sneak Peak
 
 > For a more thorough guide of how to use Touca SDK for C++, check out the
-> examples directory or visit our documentation website at
-> [docs.touca.io](https://docs.touca.io).
+> examples directory or visit our
+> [documentation website](https://touca.io/docs).
 
 Let us imagine that we want to test a software workflow that reports whether a
 given number is prime.
@@ -129,10 +129,10 @@ test these workflows at any scale.
 ## 📖 Documentation
 
 - If you are new to Touca, the best place to start is the
-  [Quickstart Guide](https://docs.touca.io/basics/quickstart) on our
+  [Quickstart Guide](https://touca.io/docs/basics/quickstart) on our
   documentation website.
 - For information on how to use this SDK, see our
-  [C++ SDK Documentation](https://docs.touca.io/sdk/cpp).
+  [C++ SDK Documentation](https://touca.io/docs/sdk/cpp/quickstart).
 - If you cannot wait to start writing your first test with Touca, see our
   [C++ API Reference](https://app.touca.io/docs/clients/cpp/api.html).
 
@@ -156,7 +156,7 @@ conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touc
 conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.4.1@_/_"
 ```
 
-See the [Integration](https://docs.touca.io/sdk/cpp/installing) section on our
+See the [Integration](https://touca.io/docs/sdk/cpp/installing) section on our
 documentation website to learn more.
 
 ## 🕵️ Requirements

@@ -1,8 +1,9 @@
 # Source Files for API Reference Docs
 
 > Looking for the SDK documentation? Check out our
-> [documentation website](https://docs.touca.io/sdk/cpp) for quick start guides,
-> tutorials, examples, and instructions to build and integrate with the library.
+> [documentation website](https://touca.io/docs/sdk/cpp/quickstart) for quick
+> start guides, tutorials, examples, and instructions to build and integrate
+> with the library.
 
 This directory includes config files for Generating API Reference documentation.
 You can find the generated output
