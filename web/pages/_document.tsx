@@ -10,7 +10,6 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <base href="/" />
-          <meta charSet="utf-8" />
         </Head>
         <body className="min-h-screen bg-dark-blue-900 font-sans antialiased">
           <Main />
