@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.4.0",
-    "@types/gtag.js": "^0.0.8",
     "@types/mixpanel-browser": "^2.35.7",
     "@types/react": "^17.0.34",
     "@types/react-syntax-highlighter": "^13.5.2",

@@ -3,50 +3,29 @@
 import '@/styles/global.css';
 
 import { AppProps } from 'next/app';
-import { useRouter } from 'next/router';
 import Script from 'next/script';
 import { DefaultSeo } from 'next-seo';
-import { useEffect } from 'react';
 
 import { make_path } from '@/lib/api';
-import { GA_TRACKING_ID, tracker } from '@/lib/tracker';
+
+const devEnv = process && process.env.NODE_ENV === 'development';
 
 export default function App({ Component, pageProps }: AppProps) {
-  const router = useRouter();
-  useEffect(() => {
-    const handleRouteChange = (url: string) => {
-      tracker.view(url);
-    };
-    router.events.on('routeChangeComplete', handleRouteChange);
-    return () => {
-      router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, [router.events]);
-
-  return (
+  return devEnv ? (
+    <Component {...pageProps} />
+  ) : (
     <>
-      {!!GA_TRACKING_ID && (
-        <>
-          <Script
-            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-            strategy="afterInteractive"
-          />
-          <Script
-            dangerouslySetInnerHTML={{
-              __html: `window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${GA_TRACKING_ID}', { page_path: window.location.pathname });`
-            }}
-            strategy="afterInteractive"
-          />
-          <Script
-            defer
-            data-domain="touca.io"
-            src="https://plausible.io/js/plausible.js"
-          />
-        </>
-      )}
+      <Script
+        defer
+        data-domain="touca.io"
+        src="https://plausible.io/js/plausible.js"
+      />
+      <Script
+        dangerouslySetInnerHTML={{
+          __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`
+        }}
+        strategy="afterInteractive"
+      />
       <DefaultSeo
         defaultTitle="Touca"
         titleTemplate="Touca - %s"
