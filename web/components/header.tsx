@@ -161,7 +161,7 @@ function LogoKit() {
           }}>
           <a
             className="group flex items-center space-x-2 rounded-md p-2 font-medium text-gray-300 transition duration-300 ease-in-out hover:text-white"
-            href="https://touca-public-assets.s3.us-east-2.amazonaws.com/touca-press-kit.zip"
+            href="/assets/touca-press-kit.zip"
             target="_blank"
             rel="noopener noreferrer">
             <HiOutlineNewspaper size="1.2rem"></HiOutlineNewspaper>
