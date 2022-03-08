@@ -1,6 +1,6 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-from ._client import Client
+from touca._client import Client
 
 
 class scoped_timer:

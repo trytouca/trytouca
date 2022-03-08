@@ -102,7 +102,7 @@ def update_options(existing: dict, incoming: dict) -> None:
 def find_config_dir(mkdir=False):
     import os
     from pathlib import Path
-    from touca.helpers._printer import Printer
+    from touca._printer import Printer
 
     for candidate in [os.getcwd(), Path.home()]:
         app_dir = os.path.join(candidate, ".touca")

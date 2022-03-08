@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath(".."))
 # -- Project information -----------------------------------------------------
 
 project = "Touca SDK for Python"
-copyright = "2021, Touca, Inc."
+copyright = "2022, Touca, Inc."
 author = "Touca, Inc."
 
 # The full version, including alpha/beta/rc tags

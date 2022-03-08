@@ -2,7 +2,7 @@
 
 import certifi
 import json
-from .__init__ import __version__ as client_version
+from touca.__init__ import __version__ as client_version
 from typing import List
 from urllib3.poolmanager import PoolManager
 from urllib3.response import HTTPResponse

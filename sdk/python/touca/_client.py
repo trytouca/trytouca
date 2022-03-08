@@ -2,7 +2,7 @@
 
 from typing import Any, Callable, Dict, List, ValuesView, Type
 from threading import get_ident
-from ._case import Case
+from touca._case import Case
 
 
 def casemethod(func):
@@ -38,7 +38,7 @@ class Client:
         return cls._instance
 
     def __init__(self):
-        from ._types import TypeHandler
+        from touca._types import TypeHandler
 
         self._cases: Dict[str, Case] = dict()
         self._configured = False
@@ -57,7 +57,7 @@ class Client:
         return self._threads_cases.get(get_ident())
 
     def _make_transport(self) -> bool:
-        from ._transport import Transport
+        from touca._transport import Transport
 
         keys = ["api_key", "api_url", "team", "suite", "version"]
         if self._options.get("offline") is True:

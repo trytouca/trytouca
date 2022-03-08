@@ -7,6 +7,7 @@ import sys
 from loguru import logger
 from touca import __version__
 from touca._options import find_config_dir
+from touca._printer import Printer
 from touca.cli._execute import Execute
 from touca.cli._merge import Merge
 from touca.cli._post import Post
@@ -14,7 +15,6 @@ from touca.cli._run import Run
 from touca.cli._unzip import Unzip
 from touca.cli._update import Update
 from touca.cli._zip import Zip
-from touca.helpers._printer import Printer
 
 
 def _find_latest_pypi_version():

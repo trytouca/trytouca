@@ -1,6 +1,6 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-from ._types import IntegerType, VectorType, ToucaType
+from touca._types import IntegerType, VectorType, ToucaType
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Dict, Tuple

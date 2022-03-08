@@ -34,8 +34,8 @@ import textwrap
 from datetime import datetime, timedelta
 from enum import IntEnum
 from typing import Any, Dict, List
-from ._client import Client
-from .helpers._printer import Printer
+from touca._client import Client
+from touca._printer import Printer
 
 
 def _parse_cli_options(args) -> Dict[str, Any]:
@@ -189,7 +189,7 @@ def _update_testcase_list(options: dict):
 
 
 def _initialize(options: dict):
-    from ._options import find_config_dir, update_options
+    from touca._options import find_config_dir, update_options
 
     # Let the lower-level library consolidate the provided config options
     # including applying environment variables and processing long-format
