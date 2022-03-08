@@ -263,7 +263,6 @@ jobs:
       - api-build-native
       - app-build-native
       - cmp-build-native
-      - web-build-native
     steps:
       - uses: actions/checkout@v2
       - name: authenticate to aws
