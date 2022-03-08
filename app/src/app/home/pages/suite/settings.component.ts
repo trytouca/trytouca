@@ -176,7 +176,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
             ' Are you sure you want to delete this suite?</p>',
           button: 'Delete',
           severity: AlertType.Danger,
-          confirmText: `${this.suite.teamSlug}/${this.suite.suiteSlug}`,
+          confirmText: `${this.suite.suiteSlug}`,
           confirmAction: () => {
             const url = [
               'suite',

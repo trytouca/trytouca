@@ -99,6 +99,11 @@ export class SuiteChartRuntimeComponent implements OnDestroy {
           intersect: false
         },
         scales: {
+          x: {
+            ticks: {
+              maxTicksLimit: 10
+            }
+          },
           y: {
             display: true,
             ticks: {

@@ -39,7 +39,7 @@ export class SuiteTrendsRuntimeComponent implements OnDestroy {
         .filter((v) => v.type === SuitePageItemType.Batch)
         .map((v) => v.asBatch())
         .filter((v) => v.meta.metricsDurationHead)
-        .slice(-50)
+        .slice(0, 50)
         .map((v) => ({
           slug: v.batchSlug,
           name: v.batchSlug.split('@')[0],

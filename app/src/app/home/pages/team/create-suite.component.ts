@@ -59,7 +59,10 @@ export class TeamCreateSuiteComponent
       return;
     }
     this.submitted = true;
-    const body = { name: model.name, slug: model.slug.toLocaleLowerCase() };
+    const body = {
+      name: model.name.trim(),
+      slug: model.slug.trim().toLocaleLowerCase()
+    };
     const url = ['suite', this.elements.teamSlug].join('/');
     this.apiService.post(url, body).subscribe({
       next: () => {

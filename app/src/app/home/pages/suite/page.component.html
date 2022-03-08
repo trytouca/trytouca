@@ -90,7 +90,7 @@
             id="dropdown-button-subscribe" aria-haspopup="true"
             aria-expanded="false">
             <ng-icon class="wsl-text-muted" size="1.05rem" name="feather-bell"
-              [ngClass]="{'rotate-12': suite.subscription === NotificationType.None}">
+              [ngClass]="{'rotate-12': suite.subscription !== NotificationType.None}">
             </ng-icon>
             <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
               {{ suite.subscription === NotificationType.None ? 'Subscribe' : 'Subscribed' }}

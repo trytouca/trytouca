@@ -399,7 +399,7 @@ export class BatchPageComponent
         ' associated with this version.</p>',
       button: 'Remove',
       severity: AlertType.Danger,
-      confirmText: `${this.batch.suiteSlug}/${this.batch.batchSlug}`,
+      confirmText: `${this.batch.batchSlug}`,
       confirmAction: () => {
         const url = [
           'batch',
