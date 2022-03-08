@@ -6,7 +6,7 @@ const MIXPANEL_TOKEN = process.env.NEXT_PUBLIC_MIXPANEL_TOKEN;
 
 declare global {
   interface Window {
-    plausible: any;
+    plausible: (action: string, props: Record<string, unknown>) => void;
   }
 }
 

@@ -16,9 +16,11 @@ export default function App({ Component, pageProps }: AppProps) {
   ) : (
     <>
       <Script
+        async
         defer
         data-domain="touca.io"
-        src="https://plausible.io/js/plausible.js"
+        data-api="/api/event"
+        src="/js/script.outbound-links.js"
       />
       <Script
         dangerouslySetInnerHTML={{
