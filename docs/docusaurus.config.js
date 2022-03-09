@@ -10,10 +10,10 @@ const config = {
   favicon: "img/favicon.ico",
   organizationName: "trytouca",
   projectName: "touca-docs",
-  trailingSlash: false,
+  trailingSlash: true,
   scripts: [
     {
-      src: "https://plausible.io/js/script.js",
+      src: "/js/script.js",
       defer: true,
       "data-domain": "touca.io"
     }
