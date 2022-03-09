@@ -19,7 +19,6 @@ import FeatureTestimonials, {
 } from '@/components/feature-testimonials';
 import Header from '@/components/header';
 import OneLinerPitch from '@/components/pitch';
-import { make_path } from '@/lib/api';
 import { FeatureInput } from '@/lib/feature';
 
 type PageContent = {
@@ -51,10 +50,6 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineLightBulb,
-      image: {
-        link: make_path('/images/touca_landing_feature_2.png'),
-        alt: 'Get notified when Touca finds regressions in your product.'
-      },
       title: 'See how your description compares against your baseline',
       description: `We remotely compare your description against a previous trusted version
         of your software and report differences in near real-time.`,
@@ -66,10 +61,6 @@ const content: PageContent = {
     },
     {
       icon: HiOutlineUserGroup,
-      image: {
-        link: make_path('/images/touca_landing_feature_3.png'),
-        alt: 'Get notified when your team members promote the baseline version.'
-      },
       title: 'Work as a team to fix discovered regressions',
       description: `Receive notifications when differences are found. Work
         together to resolve or justify them. Maintain a shared understanding
@@ -94,7 +85,7 @@ const content: PageContent = {
   ],
   testimonials: [
     {
-      image: make_path('/images/touca-customer-testimonial-vital-profile.jpg'),
+      image: '/images/touca-customer-testimonial-vital-profile.jpg',
       name: 'Ben Jackson',
       role: 'Principal Software Engineer',
       company: 'Canon Medical Informatics',

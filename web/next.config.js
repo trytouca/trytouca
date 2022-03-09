@@ -15,19 +15,5 @@ module.exports = withPWA({
       config.resolve.fallback.fs = false;
     }
     return config;
-  },
-  async redirects() {
-    return [
-      {
-        source: '/terms',
-        destination: 'https://touca.io/docs/legal/terms',
-        permanent: true
-      },
-      {
-        source: '/privacy',
-        destination: 'https://touca.io/docs/legal/privacy',
-        permanent: true
-      }
-    ];
   }
 });

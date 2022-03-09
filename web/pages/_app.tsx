@@ -6,8 +6,6 @@ import { AppProps } from 'next/app';
 import Script from 'next/script';
 import { DefaultSeo } from 'next-seo';
 
-import { make_path } from '@/lib/api';
-
 const devEnv = process && process.env.NODE_ENV === 'development';
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -23,6 +21,7 @@ export default function App({ Component, pageProps }: AppProps) {
         src="/js/script.outbound-links.js"
       />
       <Script
+        id="analytics-event-script"
         dangerouslySetInnerHTML={{
           __html: `window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }`
         }}
@@ -73,7 +72,7 @@ export default function App({ Component, pageProps }: AppProps) {
           },
           {
             rel: 'apple-touch-icon',
-            href: make_path('/icons/apple-touch-icon.png')
+            href: '/icons/apple-touch-icon.png'
           },
           {
             rel: 'manifest',

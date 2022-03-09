@@ -33,7 +33,7 @@ const Testimonial = (props: { input: TestimonialInput }) => {
     <div className="container mx-auto space-y-8">
       <div className="mx-auto grid max-w-screen-lg space-y-8 px-8 lg:grid-cols-7 lg:space-y-0 lg:space-x-4">
         <div className="order-last grid rounded-lg bg-opacity-75 px-8 lg:order-first lg:col-span-2 lg:place-content-center lg:bg-gradient-to-b lg:from-dark-blue-800 lg:to-dark-blue-900 lg:px-0">
-          <figcaption className="space-y-4 sm:flex sm:items-center sm:space-x-4 sm:space-y-0 lg:block lg:space-y-4 lg:space-x-0">
+          <figcaption className="space-y-4 text-center sm:flex sm:items-center sm:space-x-4 sm:space-y-0 lg:block lg:space-y-4 lg:space-x-0">
             <img
               className="mx-auto h-28 w-28 rounded-full lg:h-40 lg:w-40 lg:rounded-lg"
               src={props.input.image}

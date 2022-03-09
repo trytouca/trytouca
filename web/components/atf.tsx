@@ -2,8 +2,6 @@
 
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
-import { make_path } from '@/lib/api';
-
 export default function AboveTheFold() {
   return (
     <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-700">
@@ -55,7 +53,7 @@ export default function AboveTheFold() {
                     target="_blank"
                     rel="noopener noreferrer">
                     <img
-                      src={make_path('/images/touca-customer-logo-vital.svg')}
+                      src="/images/touca-customer-logo-vital.svg"
                       alt="Canon Medical Informatics"
                       loading="lazy"
                       width="250px"
@@ -67,13 +65,13 @@ export default function AboveTheFold() {
             </div>
             <div className="mx-auto hidden h-full w-full select-none items-center p-8 sm:flex sm:p-0 xl:col-span-3">
               <a
-                href={make_path('/images/touca-atf-visual.jpg')}
+                href="/images/touca-atf-visual.jpg"
                 target="_blank"
                 rel="noopener noreferrer">
                 <img
                   className="rounded-xl shadow-md"
                   alt="Touca Continuous Regression Testing"
-                  src={make_path('/images/touca-atf-visual.jpg')}
+                  src="/images/touca-atf-visual.jpg"
                   loading="lazy"
                 />
               </a>
