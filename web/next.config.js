@@ -9,6 +9,7 @@ module.exports = withPWA({
   },
   poweredByHeader: false,
   reactStrictMode: true,
+  trailingSlash: true,
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback.fs = false;
