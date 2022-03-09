@@ -280,7 +280,7 @@ jobs:
         run: |
           git fetch --prune --unshallow --tags
           echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' || steps.changes.outputs.cmp == 'true') }}"
           echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v$(git describe --tags --abbrev=0 | cut -c 2-)"
 
       - uses: actions/download-artifact@v2
