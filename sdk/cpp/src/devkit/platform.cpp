@@ -27,7 +27,7 @@ class Http : public Transport {
 Http::Http(const std::string& root) : _cli(root.c_str()) {
   _cli.set_default_headers({{"Accept-Charset", "utf-8"},
                             {"Accept", "application/json"},
-                            {"User-Agent", "touca-client-cpp/1.5.1"}});
+                            {"User-Agent", "touca-client-cpp/1.5.2"}});
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
   _cli.enable_server_certificate_verification(false);
 #endif
