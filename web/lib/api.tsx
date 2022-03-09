@@ -6,11 +6,6 @@ import {
 } from 'react-icons/hi';
 
 const API_URL = process.env.NEXT_PUBLIC_TOUCA_API_URL;
-const BASE_URL = process.env.basePath || '';
-
-export function make_path(input: string): string {
-  return `${BASE_URL}${input}`;
-}
 
 export async function post_json(path: string, body: Record<string, unknown>) {
   return fetch(`${API_URL}/${path}`, {

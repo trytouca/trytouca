@@ -21,11 +21,13 @@
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
+    "next",
     "prettier"
   ],
   "rules": {
     "react/react-in-jsx-scope": 0,
     "@typescript-eslint/explicit-module-boundary-types": 0,
-    "simple-import-sort/imports": "error"
+    "simple-import-sort/imports": "error",
+    "@next/next/no-img-element": 0
   }
 }

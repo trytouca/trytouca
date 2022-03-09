@@ -6,8 +6,6 @@ import { Fragment, useCallback, useEffect, useState } from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { HiMenu, HiOutlineNewspaper } from 'react-icons/hi';
 
-import { make_path } from '@/lib/api';
-
 const items = [
   { title: 'Login', link: 'https://app.touca.io' },
   { title: 'Docs', link: 'https://touca.io/docs' },
@@ -141,7 +139,7 @@ function LogoKit() {
         <a className="flex h-20 items-center focus:outline-none" id="hello">
           <img
             className="h-10"
-            src={make_path('/logo/touca-logo-transparent.svg')}
+            src="/logo/touca-logo-transparent.svg"
             alt="Touca Logo"
             loading="lazy"
             width="40px"
