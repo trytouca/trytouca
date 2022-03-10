@@ -238,7 +238,7 @@ public class Runner {
       throw new ConfigException(ex.getMessage());
     }
     if (options.printVersion) {
-      System.out.println("Touca Java SDK - v1.5.1");
+      System.out.println("Touca Java SDK - v1.5.2");
     }
     if (options.printHelp) {
       HelpFormatter formatter = new HelpFormatter();

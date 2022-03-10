@@ -107,7 +107,7 @@ public final class Transport {
     con.setRequestProperty("Accept", "application/json");
     con.setRequestProperty("Accept-Charset", "utf-8");
     con.setRequestProperty("User-Agent",
-        String.format("touca-client-java/%s", "1.5.1"));
+        String.format("touca-client-java/%s", "1.5.2"));
     if (token != null) {
       con.setRequestProperty("Authorization",
           String.format("Bearer %s", token));
