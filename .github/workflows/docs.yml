@@ -46,5 +46,5 @@ jobs:
       - name: push doc to aws
         if: steps.params.outputs.release == 'true'
         run: |
-          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*.html" --cache-control public,max-age=31536000,immutable
-          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --cache-control no-cache
+          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
+          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
