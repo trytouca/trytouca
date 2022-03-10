@@ -3,40 +3,45 @@ import TabItem from "@theme/TabItem";
 
 # Self-Hosting
 
-Customers on our Enterprise Plan have the option to deploy an instance of the
-Touca server on their own infrastructure. The instructions in this section are
-intended for DevOps engineers and system administrators who may want to perform
-this deployment.
+You could deploy Touca on your own infrastructure. This page shows you how.
 
-:::tip
+We've made the process straightforward and self-serve. But we are here to help
+if you ever needed help or had any questions. You could
+[join our Community Discord server](https://discord.gg/pTXKTVzPpA),
+[send us an email](mailto:support@touca.io), or
+[schedule a free 1:1 pairing session](https://calendly.com/ghorbanzade/30min).
 
-Our Enterprise Plan includes dedicated support and professional services for
-deploying and upgrading self-hosted instances of the Touca server. Please feel
-free to contact us if you had any question or needed any help during this
-process.
+:::info
+
+Most of our paid plans include dedicated support and professional services for
+deploying and upgrading self-hosted instances of Touca.
 
 :::
 
 ## Prerequisites
 
-We provide a dedicated _access token_ to our enterprise customers. You will need
-this token to download any stable release of the on-premise version of the Touca
-server.
+Touca server has a few components and services. In the most common scenario, you
+could deploy them as Docker containers on a single machine and make adjustments
+based on your scalability and fault-tolerance requirements.
 
-We recommend that you deploy Touca on a machine with at least 2 GB of memory.
+The instructions below help you get started with this common scenario. To run
+this script, you need a UNIX machine with at least 2GB of RAM, with Docker and
+Docker Compose, and AWS CLI installed. You need our deployment scripts that
+include a Docker Compose file that pulls docker images from our private Elastic
+Container Registry. You also need our AWS Credentials to authenticate to our
+ECR.
 
 There is no restriction for the choice of Unix distribution. However, the
-instructions that follow are written for and tested on Ubuntu 18.04 LTS
-distribution.
+instructions below are written for and tested on Ubuntu 20.04 LTS distribution.
 
-## Prepare your server
+## Prepare your machine
 
 <Tabs
   groupId="preparation-steps"
   defaultValue="overview"
   values={[
     { label: "Overview", value: "overview" },
-    { label: "Initial Server Setup", value: "setup" },
+    { label: "Initial Setup", value: "setup" },
     { label: "Install Docker", value: "docker" },
     { label: "Install docker-compose", value: "docker-compose" },
     { label: "Install AWS CLI", value: "aws-cli" }
@@ -44,43 +49,39 @@ distribution.
 >
   <TabItem value="overview">
 
-Self-hosting Touca involves downloading Touca Docker images from our AWS
-Container Registry and running them via docker-compose on your machine.
+:::info
 
-The tabs in this section provide instructions for installing these required
-tools on your machine. You can skip this section, if you already have Docker,
-docker-compose, and AWS CLI installed.
+This section helps you install Docker, Docker Compose, or AWS CLI if you do not
+have them installed. They are provided for completeness.
+
+:::
 
   </TabItem>
   <TabItem value="setup">
 
-:::info
+If you have just provisioned a virtual machine, here are a few general best
+practices to secure it for production use.
 
-This section provides general best practices for setting up a virtual machine.
-They are not specific to self-hosting Touca and are presented for completeness.
-
-:::
-
-Create a New User
+Create a new user
 
 ```bash
 sudo adduser touca
 sudo usermod -aG sudo touca
 ```
 
-Add Public Key Authentication
+Add public key authentication
 
 ```bash
 rsync --archive --chown=touca:touca ~/.ssh /home/touca
 ```
 
-Disable Password Authentication
+Disable password authentication
 
 ```bash
 sudo vim /etc/ssh/sshd_config
 ```
 
-And set `PasswordAuthentication` to no. Finally, reload SSH daemon for your
+Set `PasswordAuthentication` in `sshd_config` to no. Reload SSH daemon for your
 changes to take effect.
 
 ```bash
@@ -107,10 +108,10 @@ OpenSSH                    ALLOW       Anywhere
 OpenSSH (v6)               ALLOW       Anywhere (v6)
 ```
 
-  </TabItem>
-  <TabItem value="docker">
+</TabItem>
+<TabItem value="docker">
 
-Update the apt package index:
+Update the apt package index
 
 ```bash
 sudo apt-get update
@@ -122,7 +123,7 @@ Install packages to allow apt to use a repository over HTTPS:
 sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
 ```
 
-Add Docker’s official GPG key:
+Add Docker's official GPG key:
 
 ```bash
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -169,7 +170,7 @@ docker run hello-world
   </TabItem>
   <TabItem value="docker-compose">
 
-Download `docker-compose` executable from artifacts of their latest GitHub
+Download Docker Compose executable from artifacts of their latest GitHub
 release:
 
 ```bash
@@ -192,12 +193,6 @@ cd ~
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 unzip awscliv2.zip
 sudo ./install
-```
-
-Once you verify that AWS CLI is installed, you can remove the downloaded
-archive.
-
-```bash
 aws --version
 rm awscliv2.zip
 ```
@@ -205,12 +200,11 @@ rm awscliv2.zip
   </TabItem>
 </Tabs>
 
-## Obtain Docker Images
+## Pulling Docker Images
 
-Assuming you have installed Docker, docker-compose, and AWS CLI on your machine,
-we can start with obtaining Touca docker images from Touca container registry on
-AWS. The commands in this section reference the following parameters that should
-be replaced with credentials that we provide to you upon your purchase.
+We can use AWS CLI to obtain Touca docker images from the AWS Elastic Container
+Registry. The commands in this section reference the following parameters that
+should be replaced with credentials that we provide to you.
 
 - `TOUCA_AWS_ACCESS_KEY_ID`
 - `TOUCA_AWS_SECRET_ACCESS_KEY`
@@ -253,7 +247,7 @@ Docker.
 aws ecr get-login-password --region <TOUCA_AWS_REGION> | docker login <TOUCA_AWS_REPO> --username AWS --password-stdin
 ```
 
-Now we can pull our images from the new registry.
+Now we can pull our images from the registry.
 
 ```bash
 docker pull <TOUCA_AWS_REPO>/touca-api:1.4.0
@@ -263,8 +257,7 @@ docker pull <TOUCA_AWS_REPO>/touca-cmp:1.4.0
 
 ## Deploy Docker Containers
 
-Download Touca deployment scripts from Touca admin dashboard, move it to the
-production machine and install it in the appropriate path.
+Extract the deployment scripts archive and install it in the appropriate path.
 
 ```bash
 ssh touca@your-machine
@@ -298,9 +291,9 @@ double quotations.
 - `WEBAPP_ROOT`
 
   Root URL of the Touca server. Can be of the form
-  `https://touca.your-company.com` or `http://172.129.29.29`.
+  `https://touca.your-company.com` or `http://172.142.42.42`.
 
-Now run `devops/deploy.sh` to deploy Touca via `docker-compose`.
+Now run `devops/deploy.sh` to deploy Touca via Docker Compose.
 
 ```bash
 ~/touca/devops/deploy.sh -r <TOUCA_AWS_REPO> -u AWS
