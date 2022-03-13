@@ -54,6 +54,19 @@ jobs:
           aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
           aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
 
+  lint-main-links:
+    name: lint-main-links
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - uses: gaurav-nelson/github-action-markdown-link-check@v1
+        if: steps.changes.outputs.links == 'true'
+
   build-sdk-cpp-local:
     name: build-sdk-cpp-local
     runs-on: ubuntu-20.04
@@ -425,3 +438,166 @@ jobs:
           files: ./local/tests/coverage.xml
           env_vars: OS,PYTHON
           fail_ci_if_error: true
+
+  build-examples-cpp:
+    name: build-examples-cpp
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./examples/cpp
+    strategy:
+      matrix:
+        cxx: [g++-9]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - name: get version number
+        if: steps.changes.outputs.examples_cpp == 'true'
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+      - name: build cpp examples
+        if: steps.changes.outputs.examples_cpp == 'true'
+        run: ./build.sh
+      - name: run example cpp application
+        if: steps.changes.outputs.examples_cpp == 'true' && github.ref == 'refs/heads/main'
+        env:
+          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+          TOUCA_API_URL: https://api.touca.io/@/examples/cpp
+          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
+        run: |
+          mkdir -p ./local/results
+          ./local/dist/bin/example_cpp_main_api
+
+  build-examples-java:
+    name: build-examples-java
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./examples/java
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - uses: actions/setup-java@v2
+        if: steps.changes.outputs.examples_java == 'true'
+        with:
+          distribution: 'adopt'
+          java-version: '8'
+      - name: get version number
+        if: steps.changes.outputs.examples_java == 'true'
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+      - uses: actions/cache@v2
+        if: steps.changes.outputs.examples_java == 'true'
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ env.cache-name }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - run: ./gradlew build
+        if: steps.changes.outputs.examples_java == 'true'
+      - name: run example java application
+        if: steps.changes.outputs.examples_java == 'true' && github.ref == 'refs/heads/main'
+        env:
+          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+          TOUCA_API_URL: https://api.touca.io/@/examples/java
+          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
+        run: ./gradlew runExampleMain
+      - name: cleanup gradle cache
+        if: steps.changes.outputs.examples_java == 'true'
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties
+
+  build-examples-js:
+    name: build-examples-js
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./examples/javascript
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - uses: actions/setup-node@v2
+        if: steps.changes.outputs.examples_js == 'true'
+        with:
+          node-version: 14
+      - name: get version number
+        if: steps.changes.outputs.examples_js == 'true'
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+      - uses: actions/cache@v2
+        if: steps.changes.outputs.examples_js == 'true'
+        with:
+          path: |
+            ${{ github.workspace }}/js/node_modules
+            ${{ github.workspace }}/js/packages/**/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      - name: build javascript examples
+        if: steps.changes.outputs.examples_js == 'true'
+        run: |
+          yarn install
+          yarn build
+      - name: run javascript example application
+        if: steps.changes.outputs.examples_js == 'true' && github.ref == 'refs/heads/main'
+        env:
+          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+          TOUCA_API_URL: https://api.touca.io/@/examples/javascript
+          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
+        run: |
+          yarn --cwd=02_node_main_api test:touca
+
+  build-examples-python:
+    name: build-examples-python
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./examples/python
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - uses: actions/setup-python@v2
+        if: steps.changes.outputs.examples_python == 'true'
+        with:
+          python-version: 3.9
+      - name: get version number
+        if: steps.changes.outputs.examples_python == 'true'
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+      - name: run example python application
+        if: steps.changes.outputs.examples_python == 'true' && github.ref == 'refs/heads/main'
+        env:
+          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+          TOUCA_API_URL: https://api.touca.io/@/examples/python
+          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
+        run: |
+          pip install -r 02_python_main_api/requirements.txt
+          cd 02_python_main_api && python students_test.py

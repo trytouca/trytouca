@@ -1,0 +1,27 @@
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+
+name: touca-sync-examples
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-examples-sync:
+    name: build-examples-sync
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./examples/scripts/sync.sh
+      - name: check for local changes
+        id: changes
+        run: echo ::set-output name=changed::$([[ -z $(git -C examples status --porcelain) ]] && echo "0" || echo "1")
+      - name: push changes
+        if: steps.changes.outputs.changed == 1
+        run: |
+          git config --local user.name github-actions
+          git config --local user.email github-actions@github.com
+          git checkout -b next
+          git add .
+          git commit -m "Updates examples to latest version"
+          git push origin next
