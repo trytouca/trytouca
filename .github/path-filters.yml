@@ -1,0 +1,19 @@
+docs:
+  - ".github/workflows/build.yml"
+  - "docs/**"
+
+sdk_cpp:
+  - ".github/workflows/build.yml"
+  - "clients/cpp/**"
+
+sdk_java:
+  - ".github/workflows/build.yml"
+  - "clients/java/**"
+
+sdk_js:
+  - ".github/workflows/build.yml"
+  - "clients/js/**"
+
+sdk_python:
+  - ".github/workflows/build.yml"
+  - "clients/python/**"
