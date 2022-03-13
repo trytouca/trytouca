@@ -11,9 +11,9 @@ log_warning () { __log 'warn' '33' "$@"; }
 log_error () { __log 'error' '31' "$@"; return 1; }
 
 DIR_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DIR_PROJECT_ROOT="$(dirname $(dirname $(dirname "${DIR_SCRIPT}")))"
+DIR_PROJECT_ROOT="$(dirname $(dirname "${DIR_SCRIPT}"))"
 DIR_CLIENTS="${DIR_PROJECT_ROOT}/clients"
-DIR_EXAMPLES="${DIR_PROJECT_ROOT}/clients/examples"
+DIR_EXAMPLES="${DIR_PROJECT_ROOT}/examples"
 
 run_sed () {
     if [ $# -ne 2 ]; then return 1; fi
