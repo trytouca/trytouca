@@ -2,6 +2,9 @@ docs:
   - ".github/workflows/build.yml"
   - "docs/**"
 
+links:
+  - "**/*.md"
+
 sdk_cpp:
   - ".github/workflows/build.yml"
   - "clients/cpp/**"
@@ -17,3 +20,19 @@ sdk_js:
 sdk_python:
   - ".github/workflows/build.yml"
   - "clients/python/**"
+
+examples_cpp:
+  - ".github/workflows/build.yml"
+  - "examples/cpp/**"
+
+examples_java:
+  - ".github/workflows/build.yml"
+  - "examples/java/**"
+
+examples_js:
+  - ".github/workflows/build.yml"
+  - "examples/js/**"
+
+examples_python:
+  - ".github/workflows/build.yml"
+  - "examples/python/**"
