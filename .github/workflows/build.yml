@@ -70,6 +70,10 @@ jobs:
   build-sdk-cpp-local:
     name: build-sdk-cpp-local
     runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./clients/cpp
     strategy:
       matrix:
         cxx: [g++-9, clang++-9]
@@ -87,6 +91,10 @@ jobs:
   build-sdk-cpp-conan:
     name: build-sdk-cpp-conan
     runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./clients/cpp
     strategy:
       matrix:
         cxx: [g++-9, clang++-9]
@@ -137,6 +145,9 @@ jobs:
     name: build-sdk-cpp-docs
     runs-on: ubuntu-20.04
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./clients/cpp
     needs:
       - build-sdk-cpp-local
       - build-sdk-cpp-conan
@@ -176,6 +187,9 @@ jobs:
     name: build-sdk-cpp-coverage
     runs-on: ubuntu-20.04
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./clients/cpp
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - build-sdk-cpp-local
@@ -218,6 +232,10 @@ jobs:
   build-sdk-java-local:
     name: build-sdk-java-local
     runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./clients/java
     steps:
       - uses: actions/checkout@v2
       - uses: dorny/paths-filter@v2
@@ -260,9 +278,9 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.SONATYPE_USERNAME }}
           ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.SONATYPE_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.SIGNING_KEY_ID }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GRADLE_SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.GRADLE_SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GRADLE_SIGNING_PASSWORD }}
       - name: push docs to aws
         if: steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
@@ -293,6 +311,9 @@ jobs:
     name: build-sdk-js-local
     runs-on: ubuntu-20.04
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./clients/js
     strategy:
       matrix:
         node-version: [12, 14, 16]
@@ -363,6 +384,9 @@ jobs:
     name: build-sdk-python-local
     runs-on: ubuntu-20.04
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./clients/python
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9, '3.10']
