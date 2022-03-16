@@ -84,11 +84,6 @@ const sidebars = {
               type: "link",
               label: "API Reference",
               href: "https://app.touca.io/docs/clients/python/api.html"
-            },
-            {
-              type: "link",
-              label: "GitHub Repository",
-              href: "https://github.com/trytouca/touca-python"
             }
           ]
         },
@@ -125,11 +120,6 @@ const sidebars = {
               type: "link",
               label: "API Reference",
               href: "https://app.touca.io/docs/clients/cpp/api.html"
-            },
-            {
-              type: "link",
-              label: "GitHub Repository",
-              href: "https://github.com/trytouca/touca-cpp"
             }
           ]
         },
@@ -156,11 +146,6 @@ const sidebars = {
               type: "link",
               label: "API Reference",
               href: "https://app.touca.io/docs/clients/js/index.html"
-            },
-            {
-              type: "link",
-              label: "GitHub Repository",
-              href: "https://github.com/trytouca/touca-js"
             }
           ]
         },
@@ -187,11 +172,6 @@ const sidebars = {
               type: "link",
               label: "API Reference",
               href: "https://app.touca.io/docs/clients/java/index.html"
-            },
-            {
-              type: "link",
-              label: "GitHub Repository",
-              href: "https://github.com/trytouca/touca-java"
             }
           ]
         },
@@ -242,7 +222,7 @@ const sidebars = {
         {
           type: "link",
           label: "Touca on GitHub",
-          href: "https://github.com/trytouca"
+          href: "https://github.com/trytouca/trytouca"
         },
         {
           type: "link",
