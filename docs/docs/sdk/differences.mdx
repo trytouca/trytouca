@@ -1,0 +1,54 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# Differences
+
+This section lists notable user-facing differences between our SDKs for
+different languages.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="cpp"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+<TabItem value="python">
+
+Python test framework does not support:
+
+- Generating log files and does not integrate with external loggers.
+- Stream redirection: Any content written by the workflow to the standard output
+  or standard error will show up in the standard output during the test
+  execution.
+
+</TabItem>
+<TabItem value="cpp">
+
+This SDK is feature-complete.
+
+</TabItem>
+<TabItem value="js">
+
+JavaScript test framework does not support:
+
+- Generating log files and does not integrate with external loggers.
+- Stream redirection: Any content written by the workflow to the standard output
+  or standard error will show up in the standard output during the test
+  execution.
+
+</TabItem>
+<TabItem value="java">
+
+Java test framework does not support:
+
+- Generating log files and does not integrate with external loggers.
+- Stream redirection: Any content written by the workflow to the standard output
+  or standard error will show up in the standard output during the test
+  execution.
+
+</TabItem>
+</Tabs>

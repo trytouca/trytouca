@@ -1,0 +1,50 @@
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+
+name: touca-docs-public
+
+on:
+  push:
+    branches:
+      - main
+      - "feature/**"
+
+jobs:
+  doc-build-native:
+    name: doc-build-native
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - name: authenticate to aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-region: us-east-2
+      - name: get version number
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
+          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+
+      - uses: actions/setup-node@v2
+      - uses: actions/cache@v2
+        with:
+          path: ${{ github.workspace }}/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+
+      - name: build doc
+        run: |
+          yarn install
+          yarn build
+
+      - name: push doc to aws
+        if: steps.params.outputs.release == 'true'
+        run: |
+          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
+          aws s3 sync ./build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
