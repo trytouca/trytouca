@@ -73,7 +73,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: ./clients/cpp
+        working-directory: ./sdk/cpp
     strategy:
       matrix:
         cxx: [g++-9, clang++-9]
@@ -94,7 +94,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: ./clients/cpp
+        working-directory: ./sdk/cpp
     strategy:
       matrix:
         cxx: [g++-9, clang++-9]
@@ -147,7 +147,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: ./clients/cpp
+        working-directory: ./sdk/cpp
     needs:
       - build-sdk-cpp-local
       - build-sdk-cpp-conan
@@ -189,7 +189,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: ./clients/cpp
+        working-directory: ./sdk/cpp
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - build-sdk-cpp-local
@@ -236,7 +236,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: ./clients/java
+        working-directory: ./sdk/java
     steps:
       - uses: actions/checkout@v2
       - uses: dorny/paths-filter@v2
@@ -315,7 +315,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: ./clients/js
+        working-directory: ./sdk/js
     strategy:
       matrix:
         node-version: [12, 14, 16]
@@ -389,7 +389,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: ./clients/python
+        working-directory: ./sdk/python
     strategy:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9, '3.10']
@@ -556,7 +556,7 @@ jobs:
     timeout-minutes: 15
     defaults:
       run:
-        working-directory: ./examples/javascript
+        working-directory: ./examples/js
     steps:
       - uses: actions/checkout@v2
       - uses: dorny/paths-filter@v2

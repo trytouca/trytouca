@@ -20,14 +20,14 @@ examples.
 
 ```bash
 git clone git@github.com/trytouca/examples.git "<YOUR_LOCAL_DIRECTORY>"
-cd "<YOUR_LOCAL_DIRECTORY>/javascript"
+cd "<YOUR_LOCAL_DIRECTORY>/js"
 yarn install
 yarn build
 ```
 
 For our first example, let us write a Touca test for a software that checks
 whether a given number is prime. You can find a possible first implementation in
-`./javascript/01_node_minimal/is_prime.ts` of the examples repository.
+`./js/01_node_minimal/is_prime.ts` of the examples repository.
 
 ```typescript
 export function is_prime(input: number): boolean {

@@ -1,6 +1,6 @@
 # Main API
 
-[So far](/sdk/javascript/quickstart), we learned how to write and run a simple
+[So far](/sdk/js/quickstart), we learned how to write and run a simple
 Touca test using the Touca SDK for JavaScript. But our previous `is_prime`
 example was too minimal to show how Touca can help us describe the behavior and
 performance of real-world software workflows. Let us use a Profile Lookup
