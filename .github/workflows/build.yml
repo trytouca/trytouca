@@ -226,6 +226,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./local/coverage/coverage.xml
+          flags: sdk-cpp
           env_vars: OS
           fail_ci_if_error: true
 
@@ -298,12 +299,13 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/gc.properties
       - name: upload coverage to codecov
         if: steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         env:
           OS: ${{ runner.os }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./touca/build/reports/jacoco/test/jacocoTestReport.xml
+          flags: sdk-java
           env_vars: OS
           fail_ci_if_error: true
 
@@ -377,6 +379,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./packages/node/coverage/clover.xml
+          flags: sdk-js
           env_vars: OS,NODE
           fail_ci_if_error: true
 
@@ -453,13 +456,14 @@ jobs:
           twine check dist/*
       - name: upload coverage to codecov
         if: steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         env:
           OS: ${{ runner.os }}
           PYTHON: ${{ matrix.python-version }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./local/tests/coverage.xml
+          flags: sdk-python
           env_vars: OS,PYTHON
           fail_ci_if_error: true
 
