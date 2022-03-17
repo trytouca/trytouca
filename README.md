@@ -1,14 +1,13 @@
 # Touca
 
-Touca helps you understand the side-effects of your day to day code changes on
-the behavior and performance of your overall software.
+Touca helps you see the side-effects of your changes, as you write code.
 
 [![Touca Server](https://touca.io/images/touca-screenshot-suite-page.jpg)](https://touca.io/images/touca-screenshot-suite-page.jpg)
 
-Touca SDKs let you describe the behavior and performance of your code by
-capturing values of interesting variables and runtime of important functions. We
-remotely compare your description against a trusted version of your software,
-visualize all differences, and report them in near real-time.
+Touca SDKs let you describe the behavior and performance of your software
+workflows by capturing values of interesting variables and runtime of important
+functions. We remotely compare your description against a trusted version of
+your software, visualize all differences, and report them in near real-time.
 
 [![C++ SDK](https://img.shields.io/github/v/release/trytouca/touca-cpp?label=C%2B%2B)](https://github.com/trytouca/touca-cpp/releases)
 [![Python SDK](https://img.shields.io/pypi/v/touca?label=Python&color=blue)](https://pypi.org/project/touca/)
