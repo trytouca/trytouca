@@ -66,6 +66,8 @@ jobs:
           filters: .github/path-filters.yml
       - uses: gaurav-nelson/github-action-markdown-link-check@v1
         if: steps.changes.outputs.links == 'true'
+        with:
+          folder-path: examples,sdk
 
   build-sdk-cpp-local:
     name: build-sdk-cpp-local
@@ -488,6 +490,7 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
+          git describe
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - name: build cpp examples
         if: steps.changes.outputs.examples_cpp == 'true'
@@ -525,6 +528,7 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
+          git describe
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - uses: actions/cache@v2
         if: steps.changes.outputs.examples_java == 'true'
@@ -572,6 +576,7 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
+          git describe
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - uses: actions/cache@v2
         if: steps.changes.outputs.examples_js == 'true'
@@ -619,6 +624,7 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
+          git describe
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - name: run example python application
         if: steps.changes.outputs.examples_python == 'true' && github.ref == 'refs/heads/main'

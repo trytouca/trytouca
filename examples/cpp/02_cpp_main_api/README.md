@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     const auto& student = find_student(username);
     // more to write here
   });
-  touca::run(argc, argv);
+  return touca::run(argc, argv);
 }
 ```
 

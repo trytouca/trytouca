@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     touca::check("gpa", student.gpa);
     touca::add_metric("external_source", 1500);
   });
-  touca::run(argc, argv);
+  return touca::run(argc, argv);
 }
 ```
 
