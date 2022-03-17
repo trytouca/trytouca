@@ -225,7 +225,7 @@ jobs:
           OS: ${{ runner.os }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./local/coverage/coverage.xml
+          files: ./sdk/cpp/local/coverage/coverage.xml
           flags: sdk-cpp
           env_vars: OS
           fail_ci_if_error: true
@@ -304,7 +304,7 @@ jobs:
           OS: ${{ runner.os }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./touca/build/reports/jacoco/test/jacocoTestReport.xml
+          files: ./sdk/java/touca/build/reports/jacoco/test/jacocoTestReport.xml
           flags: sdk-java
           env_vars: OS
           fail_ci_if_error: true
@@ -378,7 +378,7 @@ jobs:
           NODE: ${{ matrix.node-version }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./packages/node/coverage/clover.xml
+          files: ./sdk/js/packages/node/coverage/clover.xml
           flags: sdk-js
           env_vars: OS,NODE
           fail_ci_if_error: true
@@ -462,7 +462,7 @@ jobs:
           PYTHON: ${{ matrix.python-version }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./local/tests/coverage.xml
+          files: ./sdk/python/local/tests/coverage.xml
           flags: sdk-python
           env_vars: OS,PYTHON
           fail_ci_if_error: true
