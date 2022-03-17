@@ -7,19 +7,19 @@ links:
 
 sdk_cpp:
   - ".github/workflows/build.yml"
-  - "clients/cpp/**"
+  - "sdk/cpp/**"
 
 sdk_java:
   - ".github/workflows/build.yml"
-  - "clients/java/**"
+  - "sdk/java/**"
 
 sdk_js:
   - ".github/workflows/build.yml"
-  - "clients/js/**"
+  - "sdk/js/**"
 
 sdk_python:
   - ".github/workflows/build.yml"
-  - "clients/python/**"
+  - "sdk/python/**"
 
 examples_cpp:
   - ".github/workflows/build.yml"

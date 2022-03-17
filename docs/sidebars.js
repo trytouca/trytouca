@@ -83,7 +83,7 @@ const sidebars = {
             {
               type: "link",
               label: "API Reference",
-              href: "https://app.touca.io/docs/clients/python/api.html"
+              href: "https://app.touca.io/docs/sdk/python/api.html"
             }
           ]
         },
@@ -119,7 +119,7 @@ const sidebars = {
             {
               type: "link",
               label: "API Reference",
-              href: "https://app.touca.io/docs/clients/cpp/api.html"
+              href: "https://app.touca.io/docs/sdk/cpp/api.html"
             }
           ]
         },
@@ -129,23 +129,23 @@ const sidebars = {
           items: [
             {
               type: "doc",
-              id: "sdk/javascript/quickstart",
+              id: "sdk/js/quickstart",
               label: "Getting Started"
             },
             {
               type: "doc",
-              id: "sdk/javascript/main-api",
+              id: "sdk/js/main-api",
               label: "Main API"
             },
             {
               type: "doc",
-              id: "sdk/javascript/core-api",
+              id: "sdk/js/core-api",
               label: "Core API"
             },
             {
               type: "link",
               label: "API Reference",
-              href: "https://app.touca.io/docs/clients/js/index.html"
+              href: "https://app.touca.io/docs/sdk/js/index.html"
             }
           ]
         },
@@ -171,7 +171,7 @@ const sidebars = {
             {
               type: "link",
               label: "API Reference",
-              href: "https://app.touca.io/docs/clients/java/index.html"
+              href: "https://app.touca.io/docs/sdk/java/index.html"
             }
           ]
         },

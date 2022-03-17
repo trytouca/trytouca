@@ -12,7 +12,7 @@ log_error () { __log 'error' '31' "$@"; return 1; }
 
 DIR_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DIR_PROJECT_ROOT="$(dirname $(dirname "${DIR_SCRIPT}"))"
-DIR_CLIENTS="${DIR_PROJECT_ROOT}/clients"
+DIR_CLIENTS="${DIR_PROJECT_ROOT}/sdk"
 DIR_EXAMPLES="${DIR_PROJECT_ROOT}/examples"
 
 run_sed () {
@@ -50,10 +50,10 @@ sync_python () {
     done
 }
 
-sync_javascript () {
+sync_js () {
     local dir_examples="${DIR_EXAMPLES}"
     local dir_src="${DIR_CLIENTS}/js/examples"
-    local dir_dst="${dir_examples}/javascript"
+    local dir_dst="${dir_examples}/js"
     local version="1.5.0"
     rm -rf "${dir_dst}"
     cp -r "${dir_src}" "${dir_dst}"
@@ -86,5 +86,5 @@ sync_java () {
 
 sync_cpp
 sync_python
-sync_javascript
+sync_js
 sync_java

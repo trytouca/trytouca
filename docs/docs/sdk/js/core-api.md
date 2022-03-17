@@ -1,6 +1,6 @@
 # Core API
 
-[Previously](/sdk/javascript/main-api), we covered the high-level API of our
+[Previously](/sdk/js/main-api), we covered the high-level API of our
 Node.js SDK and learned how to test a `find_student` software using the Touca
 test framework:
 
