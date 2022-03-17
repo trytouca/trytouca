@@ -36,3 +36,7 @@ examples_js:
 examples_python:
   - ".github/workflows/build.yml"
   - "examples/python/**"
+
+web:
+  - ".github/workflows/build.yml"
+  - "web/**"

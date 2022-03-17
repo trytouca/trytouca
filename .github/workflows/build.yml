@@ -250,8 +250,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: gradle/wrapper-validation-action@v1
         if: steps.changes.outputs.sdk_java == 'true'
@@ -267,9 +266,7 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key:
-            ${{ runner.os }}-gradle-${{ env.cache-name }}-${{
-            hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-gradle-${{ env.cache-name }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: build java sdk
@@ -394,7 +391,7 @@ jobs:
         working-directory: ./sdk/python
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, '3.10']
+        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
     steps:
       - uses: actions/checkout@v2
       - uses: dorny/paths-filter@v2
@@ -521,8 +518,8 @@ jobs:
       - uses: actions/setup-java@v2
         if: steps.changes.outputs.examples_java == 'true'
         with:
-          distribution: 'adopt'
-          java-version: '8'
+          distribution: "adopt"
+          java-version: "8"
       - name: get version number
         if: steps.changes.outputs.examples_java == 'true'
         id: params
@@ -635,3 +632,52 @@ jobs:
         run: |
           pip install -r 02_python_main_api/requirements.txt
           cd 02_python_main_api && python students_test.py
+
+  build-web:
+    name: build-web
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v2
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          git fetch --prune --unshallow --tags
+          echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
+          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+      - name: authenticate to aws
+        if: steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-region: us-east-2
+      - uses: actions/setup-node@v2
+        if: steps.changes.outputs.web == 'true'
+      - uses: actions/cache@v2
+        if: steps.changes.outputs.web == 'true'
+        with:
+          path: ${{ github.workspace }}/web/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('web/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      - name: build web
+        if: steps.changes.outputs.web == 'true'
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+        run: |
+          yarn --cwd=web install
+          yarn --cwd=web build
+          yarn --cwd=web lint
+          yarn --cwd=web export
+      - name: push web to aws
+        if: steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
+        run: |
+          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
+          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
