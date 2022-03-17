@@ -18,3 +18,7 @@ visualize all differences, and report them in near real-time.
 ## Links
 
 - [Documentation Website](https://touca.io/docs)
+
+## Contributors
+
+![Contributors](https://touca.io/docs/misc/contributors.svg)
