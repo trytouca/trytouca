@@ -191,7 +191,7 @@ Student find_student(const std::string& username) {
   </TabItem>
   <TabItem value="js">
 
-```typescript title="javascript/02_node_main_api/students.ts"
+```typescript title="js/02_node_main_api/students.ts"
 export async function find_student(username: string): Promise<Student> {
   await new Promise((v) => setTimeout(v, 200));
   const data = students.find((v) => v.username === username);
@@ -297,7 +297,7 @@ int main(int argc, char* argv[]) {
   </TabItem>
   <TabItem value="js">
 
-```typescript title="javascript/02_node_main_api/students_test.ts"
+```typescript title="js/02_node_main_api/students_test.ts"
 import { touca } from "@touca/node";
 import { find_student } from "./students";
 
@@ -389,7 +389,7 @@ float calculate_gpa(const std::vector<Course>& courses) {
   </TabItem>
   <TabItem value="js">
 
-```typescript title="javascript/02_node_main_api/students.ts"
+```typescript title="js/02_node_main_api/students.ts"
 function calculate_gpa(courses: Course[]): number {
   touca.check("courses", courses);
   return courses.length
@@ -480,7 +480,7 @@ int main(int argc, char* argv[]) {
   </TabItem>
   <TabItem value="js">
 
-```typescript title="javascript/02_node_main_api/students_test.ts"
+```typescript title="js/02_node_main_api/students_test.ts"
 import { touca } from "@touca/node";
 import { find_student } from "./students";
 
@@ -581,8 +581,8 @@ our SDK documentation for instructions to use Conan, instead.
   </TabItem>
   <TabItem value="js">
 
-Navigate to directory `javascript/02_node_main_api` in the `examples` repository
-and use either of `yarn` or `npm` to build examples using Node v12 or newer.
+Navigate to directory `js/02_node_main_api` in the `examples` repository and use
+either of `yarn` or `npm` to build examples using Node v12 or newer.
 
 ```bash
 npm install
