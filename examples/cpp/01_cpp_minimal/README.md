@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
     const auto number = std::stoul(testcase);
     touca::check("output", is_prime(number));
   });
-  touca::run(argc, argv);
+  return touca::run(argc, argv);
 }
 ```
 
@@ -123,7 +123,7 @@ int main(int argc, char* argv[]) {
   touca::workflow("workflow_name", [](const std::string& testcase) {
   // your code goes here
   });
-  touca::run(argc, argv);
+  return touca::run(argc, argv);
 }
 ```
 
