@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     // insert code here to describe the behavior
     // and performance of the workflow under test
   });
-  touca::run(argc, argv);
+  return touca::run(argc, argv);
 }
 ```
 
