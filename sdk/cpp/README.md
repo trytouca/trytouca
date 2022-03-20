@@ -53,7 +53,7 @@ int main(int argc, char* argv[]) {
     const auto number = std::stoul(testcase);
     touca::check("output", is_prime(number));
   });
-  touca::run(argc, argv);
+  return touca::run(argc, argv);
 }
 ```
 
