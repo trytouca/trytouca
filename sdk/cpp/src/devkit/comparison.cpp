@@ -12,8 +12,8 @@ namespace touca {
 std::map<std::string, data_point> flatten(const data_point& input) {
   std::map<std::string, data_point> entries;
   if (input._type == detail::internal_type::array) {
-    for (unsigned i = 0; i < (*input._value.array).size(); ++i) {
-      const auto& value = (*input._value.array).at(i);
+    for (unsigned i = 0; i < (*input._array).size(); ++i) {
+      const auto& value = (*input._array).at(i);
       const auto& name = '[' + std::to_string(i) + ']';
       const auto& nestedMembers = flatten(value);
       if (nestedMembers.empty()) {
@@ -26,7 +26,7 @@ std::map<std::string, data_point> flatten(const data_point& input) {
       }
     }
   } else if (input._type == detail::internal_type::object) {
-    for (const auto& value : *input._value.object) {
+    for (const auto& value : *input._object) {
       const auto& name = value.first;
       const auto& nestedMembers = flatten(value.second);
       if (nestedMembers.empty()) {
@@ -216,38 +216,38 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
 
   if (src._type == detail::internal_type::boolean) {
     // two Bool objects are equal if they have identical values.
-    if (src._value.boolean == dst._value.boolean) {
+    if (src._boolean == dst._boolean) {
       cmp.match = MatchType::Perfect;
       cmp.score = 1.0;
       return cmp;
     }
     cmp.dstValue = dst.to_string();
   } else if (src._type == detail::internal_type::number_double) {
-    compare_number<detail::number_double_t>(src._value.number_double,
-                                            dst._value.number_double, cmp);
+    compare_number<detail::number_double_t>(src._number_double,
+                                            dst._number_double, cmp);
     if (cmp.match != MatchType::Perfect) {
       cmp.dstValue = dst.to_string();
     }
   } else if (src._type == detail::internal_type::number_float) {
-    compare_number<detail::number_float_t>(src._value.number_float,
-                                           dst._value.number_float, cmp);
+    compare_number<detail::number_float_t>(src._number_float, dst._number_float,
+                                           cmp);
     if (cmp.match != MatchType::Perfect) {
       cmp.dstValue = dst.to_string();
     }
   } else if (src._type == detail::internal_type::number_signed) {
-    compare_number<detail::number_signed_t>(src._value.number_signed,
-                                            dst._value.number_signed, cmp);
+    compare_number<detail::number_signed_t>(src._number_signed,
+                                            dst._number_signed, cmp);
     if (cmp.match != MatchType::Perfect) {
       cmp.dstValue = dst.to_string();
     }
   } else if (src._type == detail::internal_type::number_unsigned) {
-    compare_number<detail::number_unsigned_t>(src._value.number_unsigned,
-                                              dst._value.number_unsigned, cmp);
+    compare_number<detail::number_unsigned_t>(src._number_unsigned,
+                                              dst._number_unsigned, cmp);
     if (cmp.match != MatchType::Perfect) {
       cmp.dstValue = dst.to_string();
     }
   } else if (src._type == detail::internal_type::string) {
-    if (0 == src._value.string->compare(*dst._value.string)) {
+    if (0 == src._string->compare(*dst._string)) {
       cmp.match = MatchType::Perfect;
       cmp.score = 1.0;
     } else {

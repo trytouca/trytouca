@@ -2,10 +2,13 @@
 
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -20,8 +23,8 @@ struct Offset;
 
 namespace touca {
 class data_point;
-class object;
-struct array;
+template <typename, typename = void>
+struct serializer;
 struct TypeComparison;
 namespace fbs {
 struct TypeWrapper;
@@ -53,6 +56,24 @@ static T* create(Args&&... args) {
   return obj.release();
 }
 
+template <typename T>
+static void destroy(T* ptr) {
+  if (!ptr) return;
+
+  std::allocator<T> alloc;
+  using AllocatorTraits = std::allocator_traits<std::allocator<T>>;
+
+  AllocatorTraits::destroy(alloc, ptr);
+  AllocatorTraits::deallocate(alloc, ptr, 1);
+}
+
+template <typename T, typename U = T>
+static T exchange(T& lhs, U&& rhs) {
+  T ret = std::move(lhs);
+  lhs = std::forward<U>(rhs);
+  return ret;
+}
+
 using object_t = std::map<std::string, data_point>;
 using array_t = std::vector<data_point>;
 using string_t = std::string;
@@ -62,30 +83,109 @@ using number_unsigned_t = uint64_t;
 using number_float_t = float;
 using number_double_t = double;
 
-union internal_value {
-  object_t* object;
-  array_t* array;
-  string_t* string;
-  boolean_t boolean;
-  number_signed_t number_signed;
-  number_unsigned_t number_unsigned;
-  number_float_t number_float;
-  number_double_t number_double;
-
-  internal_value();
-  internal_value(const boolean_t v) noexcept;
-  internal_value(const number_signed_t v) noexcept;
-  internal_value(const number_unsigned_t v) noexcept;
-  internal_value(const number_float_t v) noexcept;
-  internal_value(const number_double_t v) noexcept;
-  internal_value(const string_t& v) noexcept;
-  static internal_value as_array();
-  static internal_value as_object();
-};
-
 }  // namespace detail
 
-class TOUCA_CLIENT_API data_point {
+struct TOUCA_CLIENT_API array final {
+  friend class data_point;
+
+ public:
+  array() : _v(detail::create<detail::array_t>()) {}
+
+  array(const array& other) : _v(detail::create<detail::array_t>(*other._v)) {}
+
+  array(array&& other) noexcept : _v(detail::exchange(other._v, nullptr)) {}
+
+  array& operator=(const array& other) {
+    detail::destroy<detail::array_t>(_v);
+    _v = detail::create<detail::array_t>(*other._v);
+    return *this;
+  }
+
+  array& operator=(array&& other) noexcept {
+    std::swap(_v, other._v);
+    return *this;
+  }
+
+  ~array() { detail::destroy<detail::array_t>(_v); }
+
+  template <typename T>
+  array& add(T&& value) {
+    using type =
+        typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+    _v->push_back(serializer<type>().serialize(std::forward<T>(value)));
+    return *this;
+  }
+
+  detail::array_t::iterator begin() { return _v->begin(); }
+  detail::array_t::iterator end() { return _v->end(); }
+
+  detail::array_t::const_iterator cbegin() const { return _v->cbegin(); }
+  detail::array_t::const_iterator cend() const { return _v->cend(); }
+
+ private:
+  detail::array_t* _v;
+};
+
+class TOUCA_CLIENT_API object final {
+  friend class data_point;
+  friend void to_json(nlohmann::json& out, const data_point& value);
+
+ public:
+  object() : name(), _v(detail::create<detail::object_t>()) {}
+
+  object(std::string name)
+      : name(std::move(name)), _v(detail::create<detail::object_t>()) {}
+
+  object(const object& other)
+      : name(other.name), _v(detail::create<detail::object_t>(*other._v)) {}
+
+  object(object&& other) noexcept
+      : name(std::move(other.name)), _v(detail::exchange(other._v, nullptr)) {}
+
+  object& operator=(const object& other) {
+    name = other.name;
+    detail::destroy<detail::object_t>(_v);
+    _v = detail::create<detail::object_t>(*other._v);
+    return *this;
+  }
+
+  object& operator=(object&& other) noexcept {
+    name = std::move(other.name);
+    std::swap(_v, other._v);
+    return *this;
+  }
+
+  ~object() { detail::destroy<detail::object_t>(_v); }
+
+  template <typename T>
+  object& add(const std::string& key, T&& value) {
+    using type =
+        typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+    _v->emplace(key, serializer<type>().serialize(std::forward<T>(value)));
+    return *this;
+  }
+
+  template <typename T>
+  object& add(std::string&& key, T&& value) {
+    using type =
+        typename std::remove_cv<typename std::remove_reference<T>::type>::type;
+    _v->emplace(std::move(key),
+                serializer<type>().serialize(std::forward<T>(value)));
+    return *this;
+  }
+
+  detail::object_t::iterator begin() { return _v->begin(); }
+  detail::object_t::iterator end() { return _v->end(); }
+
+  detail::object_t::const_iterator cbegin() const { return _v->cbegin(); }
+  detail::object_t::const_iterator cend() const { return _v->cend(); }
+
+ private:
+  std::string name;
+  detail::object_t* _v;
+};
+
+class TOUCA_CLIENT_API data_point final {
   friend TOUCA_CLIENT_API TypeComparison compare(const data_point& src,
                                                  const data_point& dst);
   friend TOUCA_CLIENT_API std::map<std::string, data_point> flatten(
@@ -93,34 +193,133 @@ class TOUCA_CLIENT_API data_point {
   friend void to_json(nlohmann::json& out, const data_point& value);
 
  public:
-  data_point(const array& value);
-  data_point(const object& value);
+  data_point(const array& value)
+      : _type(detail::internal_type::array),
+        _array(detail::create<detail::array_t>(*value._v)) {}
 
-  static data_point null();
-  static data_point boolean(const detail::boolean_t value);
-  static data_point number_signed(const detail::number_signed_t value);
-  static data_point number_unsigned(const detail::number_unsigned_t value);
-  static data_point number_double(const detail::number_double_t value);
-  static data_point number_float(const detail::number_float_t value);
-  static data_point string(const detail::string_t& value);
+  data_point(array&& value) noexcept
+      : _type(detail::internal_type::array),
+        _array(detail::exchange(value._v, nullptr)) {}
 
-  void increment();
-  detail::array_t* as_array() const;
-  detail::number_unsigned_t as_metric() const;
-  detail::internal_type type() const;
+  data_point(const object& value)
+      : _type(detail::internal_type::object),
+        _object(detail::create<detail::object_t>(*value._v)),
+        _name(value.name) {}
+
+  data_point(object&& value) noexcept
+      : _type(detail::internal_type::object),
+        _object(detail::exchange(value._v, nullptr)),
+        _name(std::move(value.name)) {}
+
+  data_point(const data_point& other) { init_from_other(other, false); }
+  data_point(data_point&& other) noexcept {
+    init_from_other(std::move(other), false);
+  }
+
+  data_point& operator=(const data_point& other) {
+    destroy();
+    init_from_other(other, true);
+    return *this;
+  }
+
+  data_point& operator=(data_point&& other) noexcept {
+    init_from_other(std::move(other), true);
+    return *this;
+  }
+
+  ~data_point() { destroy(); };
+
+  static data_point null() noexcept { return data_point(nullptr); }
+
+  static data_point boolean(const detail::boolean_t value) noexcept {
+    return data_point(value);
+  }
+
+  static data_point number_signed(
+      const detail::number_signed_t value) noexcept {
+    return data_point(value);
+  }
+
+  static data_point number_unsigned(
+      const detail::number_unsigned_t value) noexcept {
+    return data_point(value);
+  }
+
+  static data_point number_double(
+      const detail::number_double_t value) noexcept {
+    return data_point(value);
+  }
+
+  static data_point number_float(const detail::number_float_t value) noexcept {
+    return data_point(value);
+  }
+
+  static data_point string(detail::string_t value) {
+    return data_point(detail::create<std::string>(std::move(value)));
+  }
+
+  detail::internal_type type() const noexcept { return _type; }
+
+  detail::array_t* as_array() const noexcept { return _array; }
+
+  void increment() noexcept;
   std::string to_string() const;
+
+  detail::number_unsigned_t as_metric() const noexcept {
+    return _number_unsigned;
+  }
 
   flatbuffers::Offset<fbs::TypeWrapper> serialize(
       flatbuffers::FlatBufferBuilder& builder) const;
 
  private:
-  explicit data_point(detail::internal_type type);
-  explicit data_point(detail::internal_type type,
-                      const detail::internal_value& value);
+  // default, null
+  explicit data_point(std::nullptr_t) noexcept
+      : _type(detail::internal_type::null), _object(nullptr) {}
+
+  // overloads for different types
+  explicit data_point(detail::object_t* obj) noexcept
+      : _type(detail::internal_type::object), _object(obj) {}
+
+  explicit data_point(detail::array_t* arr) noexcept
+      : _type(detail::internal_type::array), _array(arr) {}
+
+  explicit data_point(detail::string_t* str) noexcept
+      : _type(detail::internal_type::string), _string(str) {}
+
+  explicit data_point(detail::boolean_t boolean) noexcept
+      : _type(detail::internal_type::boolean), _boolean(boolean) {}
+
+  explicit data_point(detail::number_signed_t number) noexcept
+      : _type(detail::internal_type::number_signed), _number_signed(number) {}
+
+  explicit data_point(detail::number_unsigned_t number) noexcept
+      : _type(detail::internal_type::number_unsigned),
+        _number_unsigned(number) {}
+
+  explicit data_point(detail::number_float_t number) noexcept
+      : _type(detail::internal_type::number_float), _number_float(number) {}
+
+  explicit data_point(detail::number_double_t number) noexcept
+      : _type(detail::internal_type::number_double), _number_double(number) {}
+
+  // assign parameter won't be used for copy.
+  void init_from_other(const data_point& other, bool assign);
+  void init_from_other(data_point&& other, bool assign) noexcept;
+  void destroy();
 
   detail::internal_type _type = detail::internal_type::null;
-  detail::internal_value _value;
-  std::string _name;
+  union {
+    detail::object_t* _object;
+    detail::array_t* _array;
+    detail::string_t* _string;
+    detail::boolean_t _boolean;
+    detail::number_signed_t _number_signed;
+    detail::number_unsigned_t _number_unsigned;
+    detail::number_float_t _number_float;
+    detail::number_double_t _number_double;
+  };
+  std::string _name{};
 };
 
 /**
@@ -193,7 +392,7 @@ class TOUCA_CLIENT_API data_point {
  *
  * @endcode
  */
-template <typename T, typename = void>
+template <typename T, typename>  // typename=void, forward-declared on top
 struct serializer {
   /**
    * @brief describes logic for handling objects of custom types.
@@ -211,41 +410,6 @@ struct serializer {
                   "to serialize your value to a Touca type");
     return static_cast<T>(value);
   }
-};
-
-struct TOUCA_CLIENT_API array {
-  friend class data_point;
-
- public:
-  array() : _v(detail::create<detail::array_t>()) {}
-
-  template <typename T>
-  array& add(const T& value) {
-    _v->push_back(serializer<T>().serialize(value));
-    return *this;
-  }
-
- private:
-  detail::array_t* _v;
-};
-
-class TOUCA_CLIENT_API object {
-  friend class data_point;
-  friend void to_json(nlohmann::json& out, const data_point& value);
-
- public:
-  object(const std::string& name = "")
-      : name(name), _v(detail::create<detail::object_t>()) {}
-
-  template <typename T>
-  object& add(const std::string& key, const T& value) {
-    _v->emplace(key, serializer<T>().serialize(value));
-    return *this;
-  }
-
- private:
-  std::string name;
-  detail::object_t* _v;
 };
 
 }  // namespace touca

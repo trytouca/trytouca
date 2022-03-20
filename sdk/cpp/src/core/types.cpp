@@ -2,6 +2,8 @@
 
 #include "touca/core/types.hpp"
 
+#include <utility>
+
 #include "flatbuffers/flatbuffers.h"
 #include "nlohmann/json.hpp"
 #include "touca/impl/schema.hpp"
@@ -137,149 +139,175 @@ flatbuffers::Offset<fbs::TypeWrapper> serialize(
   return typeWrapper_builder.Finish();
 }
 
-internal_value::internal_value() {}
-internal_value::internal_value(const boolean_t v) noexcept : boolean(v) {}
-internal_value::internal_value(const number_double_t v) noexcept
-    : number_double(v) {}
-internal_value::internal_value(const number_float_t v) noexcept
-    : number_float(v) {}
-internal_value::internal_value(const number_signed_t v) noexcept
-    : number_signed(v) {}
-internal_value::internal_value(const number_unsigned_t v) noexcept
-    : number_unsigned(v) {}
-internal_value::internal_value(const string_t& v) noexcept
-    : string(create<string_t>(v)) {}
-internal_value internal_value::as_array() {
-  internal_value v;
-  v = create<array_t>();
-  return v;
-}
-internal_value internal_value::as_object() {
-  internal_value v;
-  v = create<object_t>();
-  return v;
-}
-
 }  // namespace detail
 
-data_point::data_point(const array& value)
-    : _type(detail::internal_type::array),
-      _value(detail::internal_value::as_array()) {
-  _value.array = value._v;
+void data_point::init_from_other(const data_point& src, bool) {
+  _name = src._name;
+  _type = src._type;
+
+  switch (_type) {
+    case detail::internal_type::null:
+    case detail::internal_type::unknown:
+      break;
+
+    case detail::internal_type::boolean:
+      _boolean = src._boolean;
+      break;
+
+    case detail::internal_type::number_double:
+      _number_double = src._number_double;
+      break;
+
+    case detail::internal_type::number_float:
+      _number_float = src._number_float;
+      break;
+
+    case detail::internal_type::number_signed:
+      _number_signed = src._number_signed;
+      break;
+
+    case detail::internal_type::number_unsigned:
+      _number_unsigned = src._number_unsigned;
+      break;
+
+    case detail::internal_type::string:
+      _string = detail::create<detail::string_t>(*src._string);
+      break;
+
+    case detail::internal_type::array:
+      _array = detail::create<detail::array_t>(*src._array);
+      break;
+
+    case detail::internal_type::object:
+      _object = detail::create<detail::object_t>(*src._object);
+      break;
+  }
 }
 
-data_point::data_point(const object& value)
-    : _type(detail::internal_type::object),
-      _value(detail::internal_value::as_object()) {
-  _name = value.name;
-  _value.object = value._v;
+void data_point::init_from_other(data_point&& src, bool assign) noexcept {
+  _name = std::move(src._name);
+  _type = src._type;
+
+  switch (_type) {
+    case detail::internal_type::null:
+    case detail::internal_type::unknown:
+      break;
+
+    case detail::internal_type::boolean:
+      _boolean = src._boolean;
+      break;
+
+    case detail::internal_type::number_double:
+      _number_double = src._number_double;
+      break;
+
+    case detail::internal_type::number_float:
+      _number_float = src._number_float;
+      break;
+
+    case detail::internal_type::number_signed:
+      _number_signed = src._number_signed;
+      break;
+
+    case detail::internal_type::number_unsigned:
+      _number_unsigned = src._number_unsigned;
+      break;
+
+    case detail::internal_type::string:
+      _string = detail::exchange(src._string, (assign ? _string : nullptr));
+      break;
+
+    case detail::internal_type::array:
+      _array = detail::exchange(src._array, (assign ? _array : nullptr));
+      break;
+
+    case detail::internal_type::object:
+      _object = detail::exchange(src._object, (assign ? _object : nullptr));
+      break;
+  }
 }
 
-data_point data_point::null() {
-  return data_point(detail::internal_type::null);
+void data_point::destroy() {
+  switch (_type) {
+    case detail::internal_type::string:
+      detail::destroy<detail::string_t>(_string);
+      break;
+
+    case detail::internal_type::array:
+      detail::destroy<detail::array_t>(_array);
+      break;
+
+    case detail::internal_type::object:
+      detail::destroy<detail::object_t>(_object);
+      break;
+
+    default:
+      return;  // primary types
+  }
 }
 
-data_point data_point::boolean(const detail::boolean_t value) {
-  return data_point(detail::internal_type::boolean, value);
-}
-
-data_point data_point::number_signed(const detail::number_signed_t value) {
-  return data_point(detail::internal_type::number_signed, value);
-}
-
-data_point data_point::number_unsigned(const detail::number_unsigned_t value) {
-  return data_point(detail::internal_type::number_unsigned, value);
-}
-
-data_point data_point::number_double(const detail::number_double_t value) {
-  return data_point(detail::internal_type::number_double, value);
-}
-
-data_point data_point::number_float(const detail::number_float_t value) {
-  return data_point(detail::internal_type::number_float, value);
-}
-
-data_point data_point::string(const detail::string_t& value) {
-  return data_point(detail::internal_type::string, value);
-}
-
-void data_point::increment() { _value.number_unsigned += 1; }
-
-detail::array_t* data_point::as_array() const { return _value.array; }
-
-detail::number_unsigned_t data_point::as_metric() const {
-  return _value.number_unsigned;
-}
-
-detail::internal_type data_point::type() const { return _type; }
+void data_point::increment() noexcept { ++_number_unsigned; }
 
 flatbuffers::Offset<fbs::TypeWrapper> data_point::serialize(
     flatbuffers::FlatBufferBuilder& builder) const {
   switch (_type) {
     case detail::internal_type::boolean:
-      return detail::serialize(builder, _value.boolean);
+      return detail::serialize(builder, _boolean);
     case detail::internal_type::number_double:
-      return detail::serialize(builder, _value.number_double);
+      return detail::serialize(builder, _number_double);
     case detail::internal_type::number_float:
-      return detail::serialize(builder, _value.number_float);
+      return detail::serialize(builder, _number_float);
     case detail::internal_type::number_signed:
-      return detail::serialize(builder, _value.number_signed);
+      return detail::serialize(builder, _number_signed);
     case detail::internal_type::number_unsigned:
-      return detail::serialize(builder, _value.number_unsigned);
+      return detail::serialize(builder, _number_unsigned);
     case detail::internal_type::string:
-      return detail::serialize(builder, *_value.string);
+      return detail::serialize(builder, *_string);
     case detail::internal_type::array:
-      return detail::serialize(builder, *_value.array);
+      return detail::serialize(builder, *_array);
     case detail::internal_type::object:
-      return detail::serialize(builder, *_value.object, _name);
+      return detail::serialize(builder, *_object, _name);
     default:
       return detail::serialize(builder, false);
   }
 }
 
-data_point::data_point(detail::internal_type type) : _type(type) {}
-
-data_point::data_point(detail::internal_type type,
-                       const detail::internal_value& value)
-    : _type(type), _value(value) {}
-
 std::string data_point::to_string() const {
-  if (_type == detail::internal_type::string) {
-    return *_value.string;
-  }
+  if (_type == detail::internal_type::string) return *_string;
+
   return nlohmann::json(*this).dump();
 }
 
 void to_json(nlohmann::json& out, const data_point& value) {
   switch (value._type) {
     case detail::internal_type::boolean:
-      out = nlohmann::json(value._value.boolean);
+      out = nlohmann::json(value._boolean);
       break;
     case detail::internal_type::number_double:
-      out = nlohmann::json(value._value.number_double);
+      out = nlohmann::json(value._number_double);
       break;
     case detail::internal_type::number_float:
-      out = nlohmann::json(value._value.number_float);
+      out = nlohmann::json(value._number_float);
       break;
     case detail::internal_type::number_signed:
-      out = nlohmann::json(value._value.number_signed);
+      out = nlohmann::json(value._number_signed);
       break;
     case detail::internal_type::number_unsigned:
-      out = nlohmann::json(value._value.number_unsigned);
+      out = nlohmann::json(value._number_unsigned);
       break;
     case detail::internal_type::string:
-      out = nlohmann::json(*value._value.string);
+      out = nlohmann::json(*value._string);
       break;
     case detail::internal_type::array: {
       out = nlohmann::json::array();
-      for (const auto& element : *value._value.array) {
+      for (const auto& element : *value._array) {
         out.push_back(nlohmann::json(element));
       }
       break;
     }
     case detail::internal_type::object: {
       auto items = nlohmann::ordered_json::object();
-      for (const auto& member : *value._value.object) {
+      for (const auto& member : *value._object) {
         items.emplace(member.first, nlohmann::json(member.second));
       }
       out = nlohmann::ordered_json::object();
