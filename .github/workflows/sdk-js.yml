@@ -10,8 +10,8 @@ on:
       - 'feature/**'
 
 jobs:
-  test-native:
-    name: unittest-native
+  build-sdk-js-local:
+    name: build-sdk-js-local
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     strategy:
@@ -40,9 +40,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-      - run: yarn install
-      - run: yarn build
-      - run: yarn test
+      - name: build js components
+        run: |
+          yarn install
+          yarn build
+          yarn test
       - name: lint source code
         if: matrix.node-version == 14 && github.event_name == 'push'
         run: yarn lint
