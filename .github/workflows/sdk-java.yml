@@ -10,9 +10,10 @@ on:
       - "feature/**"
 
 jobs:
-  test-native:
-    name: unittest-native
+  build-sdk-java-local:
+    name: build-sdk-java-local
     runs-on: ubuntu-20.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v2
       - name: authenticate to aws
@@ -39,7 +40,8 @@ jobs:
             hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - run: ./gradlew build
+      - name: build java sdk
+        run: ./gradlew build
       - name: publish sdk to maven
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: ./gradlew publish
@@ -65,7 +67,7 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/gc.properties
       - name: upload coverage to codecov
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v2
         env:
           OS: ${{ runner.os }}
         with:
