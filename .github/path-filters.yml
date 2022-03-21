@@ -5,22 +5,6 @@ docs:
 links:
   - "**/*.md"
 
-sdk_cpp:
-  - ".github/workflows/build.yml"
-  - "sdk/cpp/**"
-
-sdk_java:
-  - ".github/workflows/build.yml"
-  - "sdk/java/**"
-
-sdk_js:
-  - ".github/workflows/build.yml"
-  - "sdk/js/**"
-
-sdk_python:
-  - ".github/workflows/build.yml"
-  - "sdk/python/**"
-
 examples_cpp:
   - ".github/workflows/build.yml"
   - "examples/cpp/**"
