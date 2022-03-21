@@ -149,59 +149,6 @@ jobs:
           path: ${{ github.workspace }}/app.tar.gz
           retention-days: 1
 
-  web-build-native:
-    name: web-build-native
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v2
-      - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_PROD_ACCESS_KEY_SECRET }}
-          aws-region: us-east-2
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: get version number
-        id: params
-        run: |
-          git fetch --prune --unshallow --tags
-          echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v$(git describe --tags --abbrev=0 | cut -c 2-)"
-
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.web == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.web == 'true'
-        with:
-          path: ${{ github.workspace }}/web/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('web/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-
-      - name: build web
-        if: steps.changes.outputs.web == 'true'
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
-        run: |
-          yarn --cwd=web install
-          yarn --cwd=web build
-          yarn --cwd=web lint
-          yarn --cwd=web export
-          tar -zcf web.tar.gz web/out
-
-      - name: push web to aws
-        if: steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
-        run: |
-          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
-          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
-          aws s3 cp web.tar.gz ${{ steps.params.outputs.buckets }}/
-
   cmp-build-native:
     name: cmp-build-native
     runs-on: ubuntu-20.04
