@@ -10,13 +10,13 @@ on:
       - "feature/**"
 
 jobs:
-  test-native:
-    name: unittest-native
+  build-sdk-python-local:
+    name: build-sdk-python-local
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, '3.10']
+        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
     steps:
       - uses: actions/checkout@v2
       - name: authenticate to aws
@@ -70,8 +70,10 @@ jobs:
           python setup.py sdist bdist_wheel
           twine check dist/*
       - name: upload coverage to codecov
-        if: github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
-        uses: codecov/codecov-action@v1
+        if:
+          github.ref == 'refs/heads/main' && matrix.python-version == 3.9 &&
+          github.event_name == 'push'
+        uses: codecov/codecov-action@v2
         env:
           OS: ${{ runner.os }}
           PYTHON: ${{ matrix.python-version }}
