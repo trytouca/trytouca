@@ -12,9 +12,10 @@ on:
       - "appveyor.yml"
 
 jobs:
-  test-native:
-    name: unittest-native
+  build-sdk-cpp-local:
+    name: build-sdk-cpp-local
     runs-on: ubuntu-20.04
+    timeout-minutes: 15
     strategy:
       matrix:
         cxx: [g++-9, clang++-9]
@@ -23,9 +24,10 @@ jobs:
       - run: ./build.sh --with-tests --with-cli --with-examples
       - run: ./build.sh --test
 
-  test-conan:
-    name: unittest-conan
+  build-sdk-cpp-conan:
+    name: build-sdk-cpp-conan
     runs-on: ubuntu-20.04
+    timeout-minutes: 15
     strategy:
       matrix:
         cxx: [g++-9, clang++-9]
@@ -49,11 +51,12 @@ jobs:
           pip install conan --no-cache-dir --upgrade
           conan profile new default --detect --force
           conan profile update settings.compiler.libcxx=libstdc++11 default
-
-      - run: ./build.sh --with-tests --with-cli --with-examples
-      - run: ./build.sh --test
-      - run: ./build.sh --package
-
+      - name: build components
+        run: ./build.sh --with-tests --with-cli --with-examples
+      - name: run unit tests
+        run: ./build.sh --test
+      - name: create conan package
+        run: ./build.sh --package
       - name: push conan package
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
@@ -61,13 +64,13 @@ jobs:
           conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
           conan upload "touca/1.5.2" --confirm --parallel -r touca-cpp --all
 
-  docs-client-cpp:
-    name: docs-client-cpp
+  build-sdk-cpp-docs:
+    name: build-sdk-cpp-docs
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     needs:
-      - test-native
-      - test-conan
+      - build-sdk-cpp-local
+      - build-sdk-cpp-conan
     steps:
       - uses: actions/checkout@v2
       - name: authenticate to aws
@@ -85,24 +88,22 @@ jobs:
           sudo apt-get install doxygen
           python -m pip install --upgrade pip
           pip install --no-cache-dir --upgrade -r docs/sphinx/requirements.txt
-
       - name: generate docs
         run: ./build.sh --docs
-
       - name: push docs to aws
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf cpp-api-reference.tar.gz local/docs/html
           aws s3 cp cpp-api-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
 
-  coverage-client-cpp:
-    name: coverage-client-cpp
+  build-sdk-cpp-coverage:
+    name: build-sdk-cpp-coverage
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
-      - test-native
-      - test-conan
+      - build-sdk-cpp-local
+      - build-sdk-cpp-conan
     steps:
       - uses: actions/checkout@v2
       - name: authenticate to aws
