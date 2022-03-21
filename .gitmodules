@@ -1,0 +1,12 @@
+[submodule "sdk/cpp"]
+	path = sdk/cpp
+	url = git@github.com:trytouca/touca-cpp.git
+[submodule "sdk/js"]
+	path = sdk/js
+	url = git@github.com:trytouca/touca-js.git
+[submodule "sdk/java"]
+	path = sdk/java
+	url = git@github.com:trytouca/touca-java.git
+[submodule "sdk/python"]
+	path = sdk/python
+	url = git@github.com:trytouca/touca-python.git
