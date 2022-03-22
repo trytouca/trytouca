@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Builder, Long, Offset } from 'flatbuffers';
+import { Builder, Offset } from 'flatbuffers';
 
 export enum Type {
   NONE = 0,
@@ -58,8 +58,8 @@ export class Int {
     builder.startObject(1);
   }
 
-  static addValue(builder: Builder, value: Long): void {
-    builder.addFieldInt64(0, value, builder.createLong(0, 0));
+  static addValue(builder: Builder, value: bigint): void {
+    builder.addFieldInt64(0, value, BigInt(0));
   }
 
   static endInt(builder: Builder): Offset {

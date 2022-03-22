@@ -73,7 +73,7 @@ export class IntegerType implements ToucaType {
 
   public serialize(builder: Builder): number {
     schema.Int.startInt(builder);
-    schema.Int.addValue(builder, builder.createLong(this._value, 0));
+    schema.Int.addValue(builder, BigInt(this._value));
     const value = schema.Int.endInt(builder);
     schema.TypeWrapper.startTypeWrapper(builder);
     schema.TypeWrapper.addValue(builder, value);

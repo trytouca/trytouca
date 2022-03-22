@@ -31,8 +31,9 @@
   },
   "dependencies": {
     "chalk": "4.1.2",
-    "flatbuffers": "^2.0.3",
-    "yargs": "^17.2.1"
+    "flatbuffers": "2.0.6",
+    "semver": "7.3.5",
+    "yargs": "17.4.0"
   },
   "funding": {
     "type": "github",
@@ -46,5 +47,8 @@
   ],
   "publishConfig": {
     "access": "public"
+  },
+  "devDependencies": {
+    "@types/semver": "^7.3.9"
   }
 }

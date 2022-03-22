@@ -3,6 +3,7 @@
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
+import { gte } from 'semver';
 
 import { NodeClient } from '../src/client';
 
@@ -96,7 +97,8 @@ describe('check saving file', () => {
   });
 
   afterAll(() => {
-    fs.rmdirSync(dir, { recursive: true });
+    const func = gte(process.version, '15.0.0') ? fs.rmSync : fs.rmdirSync;
+    func(dir, { recursive: true });
   });
 
   test('without calling configure', async () => {

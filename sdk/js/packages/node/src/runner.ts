@@ -32,6 +32,7 @@
 import * as chalk from 'chalk';
 import * as fs from 'fs';
 import * as path from 'path';
+import { gte } from 'semver';
 import * as util from 'util';
 import yargs = require('yargs/yargs'); // cannot be partially imported
 import { hideBin } from 'yargs/helpers';
@@ -382,7 +383,8 @@ export class Runner {
       }
 
       if (fs.existsSync(testcase_directory)) {
-        fs.rmdirSync(testcase_directory, { recursive: true });
+        const func = gte(process.version, '15.0.0') ? fs.rmSync : fs.rmdirSync;
+        func(testcase_directory, { recursive: true });
         fs.mkdirSync(testcase_directory);
       }
 
