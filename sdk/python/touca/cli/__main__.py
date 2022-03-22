@@ -6,8 +6,9 @@ import sys
 
 from loguru import logger
 from touca import __version__
-from touca._options import find_config_dir
+from touca._options import config_file_home
 from touca._printer import Printer
+from touca.cli._config import Config
 from touca.cli._execute import Execute
 from touca.cli._merge import Merge
 from touca.cli._post import Post
@@ -41,6 +42,7 @@ def _warn_outdated_version():
 
 def main(args=None):
     operations = {
+        "config": lambda opt: Config(opt),
         "merge": lambda opt: Merge(opt),
         "post": lambda opt: Post(opt),
         "run": lambda opt: Run(opt),
@@ -87,7 +89,8 @@ def main(args=None):
             logger.error(f"touca utils application does not exist")
             return False
 
-    config_dir = find_config_dir(mkdir=True)
+    config_dir = config_file_home()
+    os.makedirs(config_dir, exist_ok=True)
 
     # configure logger
 

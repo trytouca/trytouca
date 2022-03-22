@@ -1,15 +1,17 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import os
+from pathlib import Path
+from configparser import ConfigParser
+
 
 def _apply_config_file(incoming: dict) -> None:
-    """ """
     from json import loads
-    from os.path import isfile
 
     path = incoming.get("file")
     if not path:
         return
-    if not isfile(path):
+    if not os.path.isfile(path):
         raise ValueError("file not found")
     with open(path, "rt") as file:
         content = file.read()
@@ -25,7 +27,6 @@ def _apply_config_file(incoming: dict) -> None:
 
 
 def _apply_arguments(existing, incoming: dict) -> None:
-    """ """
     for params, validate in [
         (
             ["team", "suite", "version", "api_key", "api_url"],
@@ -43,20 +44,16 @@ def _apply_arguments(existing, incoming: dict) -> None:
 
 
 def _apply_environment_variables(existing) -> None:
-    """ """
-    from os import environ
-
     for env, opt in [
         ("TOUCA_API_KEY", "api_key"),
         ("TOUCA_API_URL", "api_url"),
         ("TOUCA_TEST_VERSION", "version"),
     ]:
-        if environ.get(env):
-            existing[opt] = environ.get(env)
+        if os.environ.get(env):
+            existing[opt] = os.environ.get(env)
 
 
 def _reformat_parameters(existing: dict) -> None:
-    """ """
     from urllib.parse import urlparse
 
     existing.setdefault("concurrency", True)
@@ -79,7 +76,6 @@ def _reformat_parameters(existing: dict) -> None:
 
 
 def _validate_options(existing: dict) -> None:
-    """ """
     expected_keys = ["team", "suite", "version"]
     has_handshake = not existing.get("offline")
     if has_handshake and any(x in existing for x in ["api_key", "api_url"]):
@@ -91,7 +87,6 @@ def _validate_options(existing: dict) -> None:
 
 
 def update_options(existing: dict, incoming: dict) -> None:
-    """ """
     _apply_config_file(incoming)
     _apply_arguments(existing, incoming)
     _apply_environment_variables(existing)
@@ -99,18 +94,46 @@ def update_options(existing: dict, incoming: dict) -> None:
     _validate_options(existing)
 
 
-def find_config_dir(mkdir=False):
-    import os
-    from pathlib import Path
-    from touca._printer import Printer
+def config_file_home() -> str:
+    app_dir = os.path.join(os.getcwd(), ".touca")
+    if os.path.exists(app_dir):
+        return app_dir
+    return os.path.join(Path.home(), ".touca")
 
-    for candidate in [os.getcwd(), Path.home()]:
-        app_dir = os.path.join(candidate, ".touca")
-        if os.path.exists(app_dir):
-            return app_dir
-    if not mkdir:
+
+def config_file_load() -> str:
+    config_file_path = os.path.join(config_file_home(), "profiles", "default")
+    if not os.path.exists(config_file_path):
+        return ""
+    with open(config_file_path, "rt") as config_file:
+        return config_file.read()
+
+
+def config_file_parse():
+    file_content = config_file_load()
+    if not file_content:
         return
-    app_dir = os.path.join(Path.home(), ".touca")
-    os.makedirs(app_dir, exist_ok=False)
-    Printer.print_warning("creating directory {}", app_dir)
-    return app_dir
+    config = ConfigParser()
+    config.read_string(file_content)
+    return config
+
+
+def config_file_get(key: str) -> str:
+    config = config_file_parse()
+    if config and config.has_option("settings", key):
+        return config.get("settings", key)
+
+
+def config_file_set(key: str, value: str, section="settings") -> None:
+    home_dir = config_file_home()
+    config_file_path = Path(home_dir, "profiles", "default")
+    os.makedirs(config_file_path.parent, exist_ok=True)
+    config = ConfigParser()
+    if os.path.exists(config_file_path):
+        with open(config_file_path, "rt") as config_file:
+            config.read_string(config_file.read())
+    if not config.has_section(section):
+        config.add_section(section)
+    config.set(section, key, value)
+    with open(config_file_path, "wt") as config_file:
+        config.write(config_file)

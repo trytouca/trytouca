@@ -4,7 +4,7 @@ import os
 from argparse import ArgumentParser
 from pathlib import Path
 
-from touca._options import find_config_dir
+from touca._options import config_file_parse
 from touca._runner import run_workflows
 from touca._runner import Workflow
 from touca.cli._operation import Operation
@@ -98,16 +98,10 @@ class Execute(Operation):
             self.__options["testcase_file"] = parsed.get("testcase_file")
 
     def _find_arguments(self):
-        from configparser import ConfigParser
-
         args = []
-        config_file_path = os.path.join(find_config_dir(), "profiles", "default")
-        if os.path.exists(config_file_path):
-            with open(config_file_path, "rt") as config_file:
-                file_content = config_file.read()
-            config = ConfigParser()
-            config.read_string(file_content)
-            for k, v in config["default"].items():
+        config_content = config_file_parse()
+        if config_content:
+            for k, v in config_content.items("settings"):
                 args.append(f"--{k}")
                 args.append(v)
 
