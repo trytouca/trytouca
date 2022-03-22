@@ -1,197 +1,520 @@
 <app-notification></app-notification>
 <app-header-inside></app-header-inside>
-<div class="wsl-min-h-screen-1 flex flex-col">
-  <div class="container mx-auto lg:grid lg:grid-cols-4 lg:gap-4">
-    <div class="lg:col-span-1"></div>
-    <div class="space-y-4 p-4 lg:col-span-2">
-      <div class="mx-auto flex h-16 items-center justify-between py-2">
-        <div class="text-xl font-medium text-black dark:text-gray-300">
-          Account Settings
+<div class="wsl-min-h-screen-1 mx-auto max-w-screen-lg space-y-4">
+  <div class="container mx-auto flex h-16 items-center justify-between px-4">
+    <div class="text-2xl font-medium text-black dark:text-gray-200">
+      Settings
+    </div>
+    <div class="flex space-x-2 print:hidden">
+      <div class="lg:hidden" wslDropdown>
+        <button
+          class="wsl-btn-sm wsl-btn-primary group wsl-dropdown-toggle flex h-full items-center space-x-1"
+          type="button"
+          id="dropdown-button-tabs"
+          aria-haspopup="true"
+          aria-expanded="false">
+          <ng-icon [name]="currentTab.icon" size="1.1rem"></ng-icon>
+          <b class="font-medium">{{ currentTab.name }}</b>
+          <ng-icon name="hero-chevron-down" class="opacity-50"></ng-icon>
+        </button>
+        <ul
+          class="wsl-dropdown-menu hidden w-48"
+          aria-labelledby="dropdown-button-tabs">
+          <ng-container *ngFor="let tab of tabs">
+            <li
+              *ngIf="!tab.hidden"
+              [ngClass]="{
+                'bg-gray-200 dark:bg-gray-700': currentTab.type === tab.type
+              }"
+              (click)="currentTab = tab"
+              class="wsl-dropdown-item flex items-center space-x-2">
+              <ng-icon
+                class="wsl-text-muted"
+                [name]="tab.icon"
+                size="1.1rem"></ng-icon>
+              <span>{{ tab.name }}</span>
+            </li>
+          </ng-container>
+          <div *ngIf="isPlatformAdmin">
+            <hr class="my-2 border border-gray-200 dark:border-gray-700" />
+            <div
+              class="py-1 px-1 text-xs uppercase text-gray-500 dark:text-gray-400">
+              Server Settings
+            </div>
+            <ng-container *ngFor="let tab of adminTabs">
+              <li
+                *ngIf="!tab.hidden"
+                [ngClass]="{
+                  'bg-gray-200 dark:bg-gray-700': currentTab.type === tab.type
+                }"
+                (click)="currentTab = tab"
+                class="wsl-dropdown-item flex items-center space-x-2">
+                <ng-icon
+                  class="wsl-text-muted"
+                  [name]="tab.icon"
+                  size="1.1rem"></ng-icon>
+                <span>{{ tab.name }}</span>
+              </li>
+            </ng-container>
+          </div>
+        </ul>
+      </div>
+      <button
+        class="wsl-btn-sm wsl-btn-primary hidden lg:block"
+        type="button"
+        routerLink="/~">
+        Back to Dashboard
+      </button>
+      <button
+        class="wsl-btn-sm wsl-btn-muted lg:hidden"
+        type="button"
+        routerLink="/~">
+        Dashboard
+      </button>
+    </div>
+  </div>
+  <div
+    class="mx-auto flex max-w-screen-lg lg:divide-x-2 lg:divide-gray-200 dark:lg:divide-gray-700">
+    <aside class="sticky top-24 hidden w-80 flex-col px-2 lg:flex lg:px-4">
+      <nav class="flex-grow space-y-2">
+        <ul class="space-y-1">
+          <ng-container *ngFor="let tab of tabs">
+            <li
+              class="wsl-page-nav-item"
+              [ngClass]="{ 'wsl-tab-active': tab.type === currentTab.type }"
+              *ngIf="!tab.hidden"
+              (click)="switchTab(tab)">
+              <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+              <p>{{ tab.name }}</p>
+            </li>
+          </ng-container>
+        </ul>
+        <div class="py-2" *ngIf="isPlatformAdmin">
+          <h3
+            class="border-t border-gray-200 py-2 text-xs font-semibold uppercase text-gray-500 dark:border-gray-700 dark:text-gray-400">
+            Server Settings
+          </h3>
+          <ul class="space-y-1">
+            <ng-container *ngFor="let tab of adminTabs">
+              <li
+                class="wsl-page-nav-item"
+                [ngClass]="{ 'wsl-tab-active': tab.type === currentTab.type }"
+                *ngIf="!tab.hidden"
+                (click)="switchTab(tab)">
+                <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+                <p>{{ tab.name }}</p>
+              </li>
+            </ng-container>
+          </ul>
         </div>
-        <div class="print:hidden">
+      </nav>
+    </aside>
+    <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-2 xl:px-4">
+      <div class="space-y-4" *ngIf="currentTab.type === TabType.Profile">
+        <form
+          class="wsl-box space-y-4 p-4"
+          [formGroup]="accountSettingsForm"
+          (ngSubmit)="onSubmit(accountSettingsForm.value)"
+          novalidate>
+          <h2
+            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+            Your Information
+          </h2>
+          <app-alert
+            class="block"
+            *ngIf="alert[EModalType.ChangePersonal]"
+            [alert]="alert[EModalType.ChangePersonal]"></app-alert>
+          <div>
+            <label class="wsl-input-label" for="wsl-fname">Name</label>
+            <input
+              class="wsl-input-field"
+              type="text"
+              id="wsl-fname"
+              name="fname"
+              formControlName="fname"
+              aria-describedby="wsl-fname-help"
+              required
+              autocomplete="name"
+              data-lpignore="true" />
+            <small
+              id="wsl-fname-help"
+              [ngClass]="hints.get('fname').type"
+              [innerHTML]="hints.get('fname').text"></small>
+          </div>
+          <div>
+            <label class="wsl-input-label" for="wsl-uname">Username</label>
+            <input
+              class="wsl-input-field"
+              type="text"
+              id="wsl-uname"
+              name="uname"
+              formControlName="uname"
+              aria-describedby="wsl-uname-help"
+              required
+              autocomplete="off"
+              data-lpignore="true" />
+            <small
+              id="wsl-uname-help"
+              [ngClass]="hints.get('uname').type"
+              [innerHTML]="hints.get('uname').text"></small>
+          </div>
+          <div>
+            <label class="wsl-input-label" for="wsl-email">Email Address</label>
+            <input
+              class="wsl-input-field disabled:bg-transparent disabled:text-gray-500 dark:disabled:text-gray-400"
+              type="text"
+              id="wsl-email"
+              name="email"
+              formControlName="email"
+              aria-describedby="wsl-email-help" />
+            <small
+              id="wsl-email-help"
+              [ngClass]="hints.get('email').type"
+              [innerHTML]="hints.get('email').text"></small>
+          </div>
+          <button class="wsl-btn-sm wsl-btn-primary font-normal" type="submit">
+            Update
+          </button>
+        </form>
+        <div class="wsl-box space-y-2 p-4">
+          <h2
+            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+            Password Reset
+          </h2>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            Click below and we send you an email to reset your password.
+          </p>
+          <div class="flex items-center space-x-2">
+            <button
+              class="wsl-btn-sm wsl-btn-muted font-normal"
+              type="button"
+              role="button"
+              (click)="resetPassword.click()"
+              [hidden]="resetPassword.message">
+              Reset Password
+            </button>
+            <small
+              [class]="
+                resetPassword.failed ? 'wsl-text-danger' : 'wsl-text-success'
+              "
+              [hidden]="!resetPassword.message">
+              {{ resetPassword.message }}
+            </small>
+          </div>
+        </div>
+        <div class="wsl-box space-y-2 p-4">
+          <h2
+            class="wsl-text-danger border-b border-gray-200 pb-1 text-xl font-medium dark:border-gray-700">
+            Danger Zone
+          </h2>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            Remove your user account and all its associated data.
+          </p>
           <button
-            class="wsl-btn-sm wsl-btn-primary group"
-            type="button"
-            routerLink="/~">
-            Back to Dashboard
+            class="wsl-btn-sm wsl-btn-danger"
+            (click)="openConfirmModal(EModalType.DeleteAccount)"
+            type="button">
+            Delete Account
           </button>
         </div>
       </div>
-      <form
-        class="wsl-box space-y-4 p-4"
-        [formGroup]="accountSettingsForm"
-        (ngSubmit)="onSubmit(accountSettingsForm.value)"
-        novalidate>
-        <h2
-          class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-          Your Information
-        </h2>
-        <app-alert
-          class="block"
-          *ngIf="alert[EModalType.ChangePersonal]"
-          [alert]="alert[EModalType.ChangePersonal]"></app-alert>
-        <div>
-          <label class="wsl-input-label" for="wsl-fname">Name</label>
-          <input
-            class="wsl-input-field"
-            type="text"
-            id="wsl-fname"
-            name="fname"
-            formControlName="fname"
-            aria-describedby="wsl-fname-help"
-            required
-            autocomplete="name"
-            data-lpignore="true" />
-          <small
-            id="wsl-fname-help"
-            [ngClass]="hints.get('fname').type"
-            [innerHTML]="hints.get('fname').text"></small>
-        </div>
-        <div>
-          <label class="wsl-input-label" for="wsl-uname">Username</label>
-          <input
-            class="wsl-input-field"
-            type="text"
-            id="wsl-uname"
-            name="uname"
-            formControlName="uname"
-            aria-describedby="wsl-uname-help"
-            required
-            autocomplete="off"
-            data-lpignore="true" />
-          <small
-            id="wsl-uname-help"
-            [ngClass]="hints.get('uname').type"
-            [innerHTML]="hints.get('uname').text"></small>
-        </div>
-        <div>
-          <label class="wsl-input-label" for="wsl-email">Email Address</label>
-          <input
-            class="wsl-input-field disabled:bg-transparent disabled:text-gray-500 dark:disabled:text-gray-400"
-            type="text"
-            id="wsl-email"
-            name="email"
-            formControlName="email"
-            aria-describedby="wsl-email-help" />
-          <small
-            id="wsl-email-help"
-            [ngClass]="hints.get('email').type"
-            [innerHTML]="hints.get('email').text"></small>
-        </div>
-        <button class="wsl-btn-sm wsl-btn-primary font-normal" type="submit">
-          Update
-        </button>
-      </form>
-      <div class="wsl-box space-y-2 p-4" *ngIf="apiKeys">
-        <h2
-          class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-          API Keys
-        </h2>
-        <div *ngFor="let key of apiKeys; let i = index">
-          <label class="wsl-text-muted mb-1 block text-sm font-medium">
-            Key {{ i + 1 }}
-          </label>
-          <div
-            class="flex items-center rounded-md border border-gray-300 bg-white p-2 shadow-sm dark:border-gray-600 dark:bg-gray-800">
-            <div class="flex-grow">
-              <span
-                class="cursor-pointer font-mono text-sm text-gray-700 dark:text-gray-400"
-                ngxClipboard
-                [cbContent]="key.plain"
-                (cbOnSuccess)="onCopy($event)">
-                {{ key.value }}
-              </span>
-            </div>
-            <div class="flex items-center space-x-2">
-              <button
-                class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
-                (click)="key.toggle()">
-                <ng-icon
-                  class="wsl-text-muted"
-                  [name]="key.shown ? 'hero-eye-off' : 'hero-eye'"
-                  size="1.1rem"></ng-icon>
-              </button>
-              <button
-                class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
-                (click)="regenerateApiKey(i)">
-                <ng-icon
-                  class="wsl-text-muted"
-                  name="hero-refresh"
-                  size="1.1rem"></ng-icon>
-              </button>
+      <div *ngIf="currentTab.type === TabType.ApiKeys">
+        <div class="wsl-box space-y-2 p-4" *ngIf="apiKeys">
+          <h2
+            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+            API Keys
+          </h2>
+          <div *ngFor="let key of apiKeys; let i = index">
+            <label class="wsl-text-muted mb-1 block text-sm font-medium">
+              Key {{ i + 1 }}
+            </label>
+            <div
+              class="flex items-center rounded-md border border-gray-300 bg-white p-2 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+              <div class="flex-grow">
+                <span
+                  class="cursor-pointer font-mono text-sm text-gray-700 dark:text-gray-400"
+                  ngxClipboard
+                  [cbContent]="key.plain"
+                  (cbOnSuccess)="onCopy($event, 'API Key')">
+                  {{ key.value }}
+                </span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button
+                  class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
+                  (click)="key.toggle()">
+                  <ng-icon
+                    class="wsl-text-muted"
+                    [name]="key.shown ? 'hero-eye-off' : 'hero-eye'"
+                    size="1.1rem"></ng-icon>
+                </button>
+                <button
+                  class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
+                  (click)="regenerateApiKey(i)">
+                  <ng-icon
+                    class="wsl-text-muted"
+                    name="hero-refresh"
+                    size="1.1rem"></ng-icon>
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div
-        class="wsl-box space-y-4 p-4"
-        *ngIf="getPreferences(false).length !== 0">
-        <h2
-          class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-          Preferences
-        </h2>
-        <div *ngFor="let preference of getPreferences(false)">
-          <app-settings-checkbox
-            [data]="preference"
-            (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
+      <div *ngIf="currentTab.type === TabType.Preferences">
+        <div
+          class="wsl-box space-y-4 p-4"
+          *ngIf="getPreferences(false).length !== 0">
+          <h2
+            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+            Subscriptions
+          </h2>
+          <div *ngFor="let preference of getPreferences(false)">
+            <app-settings-checkbox
+              [data]="preference"
+              (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
+          </div>
+        </div>
+        <div
+          class="wsl-box space-y-4 p-4"
+          *ngIf="getPreferences(true).length !== 0">
+          <h2
+            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+            Experimental Features
+          </h2>
+          <div *ngFor="let preference of getPreferences(true)">
+            <app-settings-checkbox
+              [data]="preference"
+              (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="serverSettings?.stats && currentTab.type === TabType.Metrics">
+        <h3 class="py-4 text-xl font-medium text-black dark:text-gray-300">
+          Health Metrics
+        </h3>
+        <div
+          class="grid grid-cols-1 gap-2 text-black dark:text-gray-300 md:grid-cols-2">
+          <div
+            class="wsl-box border border-gray-200 p-4 dark:border-gray-700 md:col-span-1">
+            <div class="flex items-center space-x-2">
+              <ng-icon
+                class="wsl-text-muted"
+                size="1.1rem"
+                name="feather-database"></ng-icon>
+              <h4 class="font-medium">Database</h4>
+            </div>
+            <ul class="py-2 text-sm leading-6">
+              <li class="flex justify-between">
+                <span>Versions:</span>
+                <span>{{ serverSettings.stats.countBatches }}</span>
+              </li>
+              <li class="flex justify-between">
+                <span>Test Cases:</span>
+                <span>{{ serverSettings.stats.countElements }}</span>
+              </li>
+              <li class="flex justify-between">
+                <span>Submissions:</span>
+                <span>{{ serverSettings.stats.countMessages }}</span>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="wsl-box border border-gray-200 p-4 dark:border-gray-700 md:col-span-1">
+            <div class="flex items-center space-x-2">
+              <ng-icon
+                class="wsl-text-muted"
+                size="1.1rem"
+                name="feather-hard-drive"></ng-icon>
+              <h4 class="font-medium">Disk Space</h4>
+            </div>
+            <ul class="py-2 text-sm leading-6">
+              <li class="flex justify-between">
+                <span>Free:</span>
+                <span>
+                  {{ serverSettings.stats.spaceFree | number: '1.0-0' }} GB
+                </span>
+              </li>
+              <li class="flex justify-between">
+                <span>Size:</span>
+                <span>
+                  {{ serverSettings.stats.spaceSize | number: '1.0-0' }} GB
+                </span>
+              </li>
+              <li class="flex justify-between">
+                <span>Used:</span>
+                <span>
+                  {{ serverSettings.stats.spaceUsed | percent: '1.0-0' }}
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div
+            class="wsl-box border border-gray-200 p-4 dark:border-gray-700 md:col-span-1">
+            <h4 class="font-medium">Comparator</h4>
+            <ul class="py-2 text-sm leading-6">
+              <li class="flex justify-between">
+                <span>Comparisons:</span>
+                <span>{{ serverSettings.stats.countComparisons }}</span>
+              </li>
+              <li class="flex justify-between">
+                <span>Average Process Time:</span>
+                <span>
+                  {{
+                    serverSettings.stats.cmpAvgProcessingTime | number: '1.0-0'
+                  }}
+                  ms/job
+                </span>
+              </li>
+              <li class="flex justify-between">
+                <span>Average Collection Time:</span>
+                <span>
+                  {{
+                    serverSettings.stats.cmpAvgCollectionTime | number: '1.0-0'
+                  }}
+                  ms/job
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="serverSettings?.events && currentTab.type === TabType.Audit">
+        <h3 class="py-4 text-xl font-medium text-black dark:text-gray-300">
+          Audit Log
+        </h3>
+        <div
+          class="wsl-box divide-y divide-gray-200 border border-gray-200 p-4 dark:divide-gray-700 dark:border-gray-700">
+          <div
+            class="space-y-2 p-2 text-sm text-black dark:text-gray-300"
+            *ngFor="let event of serverSettings?.events">
+            <div class="flex-grow">
+              <span
+                class="font-medium text-sky-600 dark:text-sky-400"
+                [title]="event.username">
+                {{ event.fullname }}
+              </span>
+              <span>{{ event.copyText }}</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div>
+                {{ describeEventDate(event.eventDate) }}
+              </div>
+              <div class="flex space-x-1">
+                <div
+                  class="flex cursor-pointer justify-center rounded border border-gray-300 bg-gray-100 p-2 text-xs font-medium text-gray-500 hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
+                  title="Copy email to clipboard"
+                  ngxClipboard
+                  [cbContent]="event.email"
+                  (cbOnSuccess)="onCopy($event, 'email address')">
+                  <ng-icon name="hero-mail" size="1rem"></ng-icon>
+                </div>
+                <div
+                  class="flex cursor-pointer justify-center rounded border border-gray-300 bg-gray-100 p-2 text-xs font-medium text-gray-500 hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
+                  *ngIf="event.copyLink"
+                  title="Copy link to clipboard"
+                  ngxClipboard
+                  [cbContent]="event.copyLink"
+                  (cbOnSuccess)="onCopy($event, 'link')">
+                  <ng-icon name="hero-clipboard-copy" size="1rem"></ng-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="p-2 text-sm leading-6 text-black dark:text-gray-300"
+            *ngIf="serverSettings.events.length === 0">
+            This section lists noteworthy user events that may need your
+            attention as a server administrator. These events include account
+            creation, password reset, and consecutive failed login attempts that
+            are not automatically resolved by your users.
+          </div>
         </div>
       </div>
       <div
-        class="wsl-box space-y-4 p-4"
-        *ngIf="getPreferences(true).length !== 0">
-        <h2
-          class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-          Experimental Features
-        </h2>
-        <div *ngFor="let preference of getPreferences(true)">
-          <app-settings-checkbox
-            [data]="preference"
-            (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
-        </div>
+        *ngIf="serverSettings?.accounts && currentTab.type === TabType.Users">
+        <h3 class="py-4 text-xl font-medium text-black dark:text-gray-300">
+          User Accounts
+        </h3>
+        <ul class="wsl-box border border-gray-200 p-4 dark:border-gray-700">
+          <li
+            class="group flex h-8 items-center rounded-md transition duration-500 hover:bg-gray-100 dark:hover:bg-gray-900"
+            *ngFor="
+              let account of serverSettings.accounts;
+              let rowNumber = index
+            ">
+            <div
+              class="w-8 px-2 text-sm font-medium text-black dark:text-gray-300">
+              {{ rowNumber + 1 }}
+            </div>
+            <div class="flex flex-grow items-center justify-between space-x-4">
+              <div
+                class="w-40 truncate whitespace-nowrap font-medium text-black dark:text-gray-300"
+                [ngClass]="{
+                  'text-gray-300 line-through dark:text-gray-600':
+                    account.suspended
+                }">
+                {{ account.fullname ?? 'Unknown' }}
+                <span
+                  class="text-sm text-gray-500 dark:text-gray-300"
+                  *ngIf="user.username === account.username">
+                  (You)
+                </span>
+              </div>
+              <div class="w-24 whitespace-nowrap">
+                <span
+                  class="rounded-md bg-gray-100 px-2 py-1 text-sm text-gray-700 group-hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:group-hover:bg-gray-700">
+                  {{ account.username }}
+                </span>
+              </div>
+              <div class="w-24">
+                <span
+                  class="rounded-md bg-gray-100 px-2 py-1 text-sm text-gray-700 group-hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:group-hover:bg-gray-700">
+                  {{ account.role }}
+                </span>
+              </div>
+            </div>
+            <div
+              wslDropdown
+              class="flex cursor-pointer select-none items-center p-1 text-gray-300 hover:text-gray-700">
+              <ng-icon
+                class="wsl-dropdown-toggle h-full w-4"
+                name="hero-dots-vertical"></ng-icon>
+              <div
+                class="wsl-dropdown-menu hidden w-48 text-sm"
+                aria-labelledby="wsl-user-dropdown">
+                <div
+                  class="wsl-dropdown-item"
+                  ngxClipboard
+                  [cbContent]="account.email"
+                  (cbOnSuccess)="onCopy($event, 'email address')">
+                  <a class="text-sky-600 dark:text-sky-400">Copy Email</a>
+                </div>
+                <div
+                  class="wsl-dropdown-item"
+                  *ngIf="
+                    account.username !== user.username && !account.suspended
+                  "
+                  (click)="suspendAccount(account)">
+                  <a class="text-sky-600 dark:text-sky-400">Suspend</a>
+                </div>
+                <div
+                  class="wsl-dropdown-item"
+                  *ngIf="
+                    account.username !== user.username &&
+                    account.suspended &&
+                    account.activationLink
+                  "
+                  (click)="deleteAccount(account)">
+                  <a class="text-sky-600 dark:text-sky-400">Delete</a>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
-      <div class="wsl-box space-y-2 p-4">
-        <h2
-          class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-          Password Reset
-        </h2>
-        <p class="text-sm text-gray-600 dark:text-gray-300">
-          Click below and we send you an email to reset your password.
-        </p>
-        <div class="flex items-center space-x-2">
-          <button
-            class="wsl-btn-sm wsl-btn-muted font-normal"
-            type="button"
-            role="button"
-            (click)="resetPassword.click()"
-            [hidden]="resetPassword.message">
-            Reset Password
-          </button>
-          <small
-            [class]="
-              resetPassword.failed ? 'wsl-text-danger' : 'wsl-text-success'
-            "
-            [hidden]="!resetPassword.message">
-            {{ resetPassword.message }}
-          </small>
-        </div>
-      </div>
-      <div class="wsl-box space-y-2 p-4">
-        <h2
-          class="wsl-text-danger border-b border-gray-200 pb-1 text-xl font-medium dark:border-gray-700">
-          Danger Zone
-        </h2>
-        <p class="text-sm text-gray-600 dark:text-gray-300">
-          Remove your user account and all its associated data.
-        </p>
-        <button
-          class="wsl-btn-sm wsl-btn-danger"
-          (click)="openConfirmModal(EModalType.DeleteAccount)"
-          type="button">
-          Delete Account
-        </button>
-      </div>
-    </div>
-    <div class="lg:col-span-1"></div>
+    </main>
   </div>
 </div>
+<app-help></app-help>
 <app-footer></app-footer>

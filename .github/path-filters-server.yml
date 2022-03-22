@@ -19,7 +19,3 @@ cmp:
 ops:
   - ".github/workflows/build.yml"
   - "devops/**"
-
-web:
-  - ".github/workflows/build.yml"
-  - "web/**"

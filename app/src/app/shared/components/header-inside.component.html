@@ -33,17 +33,23 @@
           class="wsl-dropdown-menu hidden w-48"
           aria-labelledby="wsl-user-dropdown">
           <div class="wsl-dropdown-item" routerLink="/account/profile">
-            <a class="text-sky-700 dark:text-gray-300">My Account</a>
-          </div>
-          <div
-            class="wsl-dropdown-item"
-            *ngIf="isPlatformAdmin"
-            routerLink="/account/admin">
-            <a class="text-sky-700 dark:text-gray-300">Server Settings</a>
+            <div class="flex items-center space-x-2">
+              <ng-icon
+                class="wsl-text-muted"
+                size="1.1rem"
+                name="feather-settings"></ng-icon>
+              <a class="text-sky-700 dark:text-gray-300">Settings</a>
+            </div>
           </div>
           <hr class="my-1 border-gray-200 dark:border-gray-700" />
           <div class="wsl-dropdown-item" (click)="logout()">
-            <a class="text-sky-700 dark:text-gray-300">Sign out</a>
+            <div class="flex items-center space-x-2">
+              <ng-icon
+                class="wsl-text-muted"
+                size="1.1rem"
+                name="feather-log-out"></ng-icon>
+              <a class="text-sky-700 dark:text-gray-300">Sign out</a>
+            </div>
           </div>
         </div>
       </div>

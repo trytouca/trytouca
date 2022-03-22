@@ -5,11 +5,17 @@ import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
+import { formatDistanceToNow } from 'date-fns/esm';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription, timer } from 'rxjs';
 
 import { ApiKey } from '@/core/models/api-key';
-import { UserLookupResponse } from '@/core/models/commontypes';
+import {
+  EPlatformRole,
+  PlatformStatsResponse,
+  PlatformStatsUser,
+  UserLookupResponse
+} from '@/core/models/commontypes';
 import { EFeatureFlag } from '@/core/models/commontypes';
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
 import {
@@ -36,28 +42,116 @@ interface FormContent {
   uname: string;
 }
 
+enum SettingsPageTabType {
+  Profile = 'profile',
+  ApiKeys = 'apiKeys',
+  Preferences = 'preferences',
+  Mail = 'mail',
+  Metrics = 'metrics',
+  Users = 'users',
+  Audit = 'audit',
+  Billing = 'billing'
+}
+
+interface RecentEvent {
+  copyLink?: string;
+  copyText: string;
+  email: string;
+  eventDate: Date;
+  expiresAt?: Date;
+  fullname: string;
+  username: string;
+}
+
+interface SettingsPageTab {
+  type: SettingsPageTabType;
+  name: string;
+  icon: string;
+  hidden?: boolean;
+}
+
 @Component({
   selector: 'app-account-profile',
   templateUrl: './profile.component.html'
 })
 export class ProfileComponent implements OnDestroy {
-  private _subUser: Subscription;
-  private _subHints: Subscription;
+  private _subs: Subscription[] = [];
+  private _subStats: Subscription;
   alert: Partial<Record<EModalType, Alert>> = {};
   user: UserLookupResponse;
   EFeatureFlag = EFeatureFlag;
   EModalType = EModalType;
   apiKeys: ApiKey[];
+  isPlatformAdmin: boolean;
+
+  tabs: SettingsPageTab[] = [
+    {
+      type: SettingsPageTabType.Profile,
+      name: 'Profile',
+      icon: 'feather-user'
+    },
+    {
+      type: SettingsPageTabType.ApiKeys,
+      name: 'Api Keys',
+      icon: 'feather-key'
+    },
+    {
+      type: SettingsPageTabType.Preferences,
+      name: 'Preferences',
+      icon: 'feather-sliders'
+    }
+  ];
+  adminTabs: SettingsPageTab[] = [
+    {
+      type: SettingsPageTabType.Metrics,
+      name: 'Health Metrics',
+      icon: 'feather-activity'
+    },
+    {
+      type: SettingsPageTabType.Users,
+      name: 'User Accounts',
+      icon: 'feather-users'
+    },
+    {
+      type: SettingsPageTabType.Audit,
+      name: 'Audit Logs',
+      icon: 'feather-file-text'
+    },
+    {
+      type: SettingsPageTabType.Mail,
+      name: 'Mail Transport',
+      icon: 'feather-mail',
+      hidden: true
+    },
+    {
+      type: SettingsPageTabType.Billing,
+      name: 'Billing',
+      icon: 'feather-credit-card',
+      hidden: true
+    }
+  ];
+  currentTab = this.tabs[0];
+  TabType = SettingsPageTabType;
 
   _preferences: Record<string, Checkbox> = {
     [EFeatureFlag.NewsletterProduct]: {
-      default: false,
+      default: true,
       description:
-        'Receive monthly updates about newly released features and improvements',
+        'Receive monthly emails about major features and important product updates',
       experimental: false,
       saved: false,
       slug: EFeatureFlag.NewsletterProduct,
-      title: 'Subscribe to Product Updates Newsletter',
+      title: 'Monthly Product Updates',
+      visible: true
+    },
+    [EFeatureFlag.NewsletterChangelog]: {
+      default: false,
+      description:
+        'Receive weekly emails about newly released features and improvements',
+      experimental: false,
+      saved: false,
+      slug: EFeatureFlag.NewsletterChangelog,
+      title: 'Weekly Changelog',
       visible: true
     }
   };
@@ -95,6 +189,12 @@ export class ProfileComponent implements OnDestroy {
     failed: false
   };
 
+  serverSettings: {
+    accounts: PlatformStatsUser[];
+    events: RecentEvent[];
+    stats: Omit<PlatformStatsResponse, 'users'>;
+  };
+
   constructor(
     private apiService: ApiService,
     private authService: AuthService,
@@ -103,29 +203,128 @@ export class ProfileComponent implements OnDestroy {
     private router: Router,
     private userService: UserService
   ) {
-    this._subHints = this.hints.subscribe(this.accountSettingsForm, [
-      'fname',
-      'uname'
-    ]);
-    this._subUser = this.userService.currentUser$.subscribe((user) => {
+    this._subs.push(
+      this.hints.subscribe(this.accountSettingsForm, ['fname', 'uname']),
+      this.fetchUser()
+    );
+    this.userService.populate();
+  }
+
+  ngOnDestroy() {
+    this._subs.filter(Boolean).forEach((v) => v.unsubscribe());
+    if (this._subStats) {
+      this._subStats.unsubscribe();
+    }
+  }
+
+  private fetchUser() {
+    return this.userService.currentUser$.subscribe((user) => {
       user.feature_flags.forEach((v) => {
         if (this._preferences[v]) {
           this._preferences[v].value = true;
         }
       });
+      this.isPlatformAdmin = [
+        EPlatformRole.Owner,
+        EPlatformRole.Admin
+      ].includes(user.platformRole);
       this.user = user;
       this.accountSettingsForm.get('email').setValue(user.email);
       this.accountSettingsForm.get('email').disable();
       this.accountSettingsForm.get('fname').setValue(user.fullname);
       this.accountSettingsForm.get('uname').setValue(user.username);
       this.apiKeys = user.apiKeys.map((v) => new ApiKey(v));
+      if (this.isPlatformAdmin) {
+        this._subStats = this.fetchStats();
+      }
     });
-    this.userService.populate();
   }
 
-  ngOnDestroy() {
-    this._subHints.unsubscribe();
-    this._subUser.unsubscribe();
+  private fetchStats() {
+    return this.apiService
+      .get<PlatformStatsResponse>('/platform/stats')
+      .subscribe((response) => {
+        const { users, ...stats } = response;
+        const actions: [
+          (arg: PlatformStatsUser) => boolean,
+          (arg: PlatformStatsUser) => RecentEvent
+        ][] = [
+          [(v) => !!v.activationLink, this.build_signup_event],
+          [(v) => !!v.resetKeyLink, this.build_reset_event],
+          [(v) => !!v.lockedAt, this.build_lock_event]
+        ];
+        this.serverSettings = {
+          accounts: this.build_account_list(users),
+          stats: stats,
+          events: actions
+            .map(([k, v]) => response.users.filter(k).map(v))
+            .flat()
+            .sort((a, b) => b.eventDate.getTime() - a.eventDate.getTime())
+            .slice(0, 6)
+        };
+      });
+  }
+
+  private build_lock_event(v: PlatformStatsUser): RecentEvent {
+    return {
+      eventDate: v.lockedAt,
+      email: v.email,
+      fullname: v.fullname ?? 'Someone',
+      username: v.username,
+      copyText: `had several failed login attempts. Their account is temporarily locked.`
+    };
+  }
+
+  private build_signup_event(v: PlatformStatsUser): RecentEvent {
+    return {
+      eventDate: v.createdAt,
+      email: v.email,
+      fullname: 'Someone',
+      username: v.username,
+      copyLink: v.activationLink,
+      copyText: `created an account. They have not logged in yet.`
+    };
+  }
+
+  private build_reset_event(v: PlatformStatsUser): RecentEvent {
+    let copyText = 'requested a password reset.';
+    if (v.resetKeyExpiresAt.getTime() < new Date().getTime()) {
+      copyText = copyText.concat(' Their link is now expired.');
+    }
+    return {
+      eventDate: v.resetKeyCreatedAt,
+      email: v.email,
+      fullname: v.fullname ?? 'Someone',
+      username: v.username,
+      copyLink: v.resetKeyLink,
+      copyText
+    };
+  }
+
+  private build_account_list(users: PlatformStatsUser[]) {
+    return users
+      .filter(
+        (user) =>
+          !(
+            user.suspended &&
+            user.fullname === 'Anonymous User' &&
+            user.email.startsWith('noreply+') &&
+            user.email.endsWith('@touca.io')
+          )
+      )
+      .map((user) => {
+        [
+          'createdAt',
+          'lockedAt',
+          'resetKeyExpiresAt',
+          'resetKeyCreatedAt'
+        ].forEach((k) => {
+          if (k in user) {
+            user[k] = new Date(user[k] as Date);
+          }
+        });
+        return user;
+      });
   }
 
   onSubmit(model: FormContent) {
@@ -228,11 +427,8 @@ export class ProfileComponent implements OnDestroy {
     });
   }
 
-  onCopy(event: IClipboardResponse) {
-    this.notificationService.notify(
-      AlertType.Success,
-      'Copied API Key to clipboard.'
-    );
+  switchTab(tab: SettingsPageTab) {
+    this.currentTab = tab;
   }
 
   resetPasswordAction(): void {
@@ -266,5 +462,37 @@ export class ProfileComponent implements OnDestroy {
     return Object.values(this._preferences).filter(
       (v) => v.experimental === experimental && v.visible
     );
+  }
+
+  onCopy(event: IClipboardResponse, name: string) {
+    this.notificationService.notify(
+      AlertType.Success,
+      `Copied ${name} to clipboard.`
+    );
+  }
+
+  suspendAccount(user: PlatformStatsUser) {
+    this.updateAccount(
+      `/platform/account/${user.username}/suspend`,
+      `Account for ${user.fullname || user.username} was suspended.`
+    );
+  }
+
+  deleteAccount(user: PlatformStatsUser) {
+    this.updateAccount(
+      `/platform/account/${user.username}/delete`,
+      `Account for ${user.fullname || user.username} was deleted.`
+    );
+  }
+
+  private updateAccount(url: string, successMessage: string) {
+    this.apiService.post(url).subscribe(() => {
+      this.notificationService.notify(AlertType.Success, successMessage);
+      this.fetchStats();
+    });
+  }
+
+  describeEventDate(eventDate: Date) {
+    return formatDistanceToNow(eventDate, { addSuffix: true });
   }
 }

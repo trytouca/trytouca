@@ -2,16 +2,9 @@
 
 import { AfterContentInit, Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
-import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import {
-  faChevronDown,
-  faInbox,
-  faUser
-} from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
 import type { UserLookupResponse } from '@/core/models/commontypes';
-import { EPlatformRole } from '@/core/models/commontypes';
 import { AuthService, UserService } from '@/core/services';
 import { intercomClient } from '@/shared/utils/intercom';
 
@@ -26,14 +19,12 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private userService: UserService,
-    faIconLibrary: FaIconLibrary
+    private userService: UserService
   ) {
     this._subUser = this.userService.currentUser$.subscribe((user) => {
       this.currentUser = user;
       intercomClient.setUser(user);
     });
-    faIconLibrary.addIcons(faChevronDown, faInbox, faUser);
   }
 
   ngAfterContentInit() {
@@ -53,11 +44,5 @@ export class HeaderInsideComponent implements AfterContentInit, OnDestroy {
       this.userService.reset();
       this.router.navigate(['/account/signin']);
     });
-  }
-
-  get isPlatformAdmin() {
-    return [EPlatformRole.Owner, EPlatformRole.Admin].includes(
-      this.currentUser?.platformRole
-    );
   }
 }

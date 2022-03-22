@@ -7,7 +7,6 @@ import { AdminGuard, AuthGuard, GuestGuard } from '@/core/services';
 
 import { ActivateComponent } from './activate.component';
 import { OnboardComponent } from './onboard.component';
-import { PlatformComponent } from './platform.component';
 import { ProfileComponent } from './profile.component';
 import { StartComponent, StartPageType } from './start.component';
 
@@ -49,11 +48,6 @@ const routes: Routes = [
           { path: 'profile', component: ProfileComponent },
           { path: 'welcome', component: OnboardComponent }
         ]
-      },
-      {
-        path: '',
-        canActivateChild: [AuthGuard, AdminGuard],
-        children: [{ path: 'admin', component: PlatformComponent }]
       }
     ]
   }
