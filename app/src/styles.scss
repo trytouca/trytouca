@@ -234,10 +234,10 @@
   }
   /* result.scss */
   .wsl-item-topic-type-simple {
-    @apply rounded-sm bg-gray-100 px-3 py-1 text-gray-500 dark:bg-gray-700 dark:text-gray-400;
+    @apply flex min-w-[5rem] justify-center rounded bg-gray-100 px-3 py-1 leading-5 text-gray-500 dark:bg-gray-700 dark:text-gray-400;
   }
   .wsl-item-topic-type-complex {
-    @apply cursor-pointer rounded-sm bg-blue-100 px-3 py-1 text-blue-500 dark:bg-gray-700 dark:text-sky-400;
+    @apply flex min-w-[5rem] cursor-pointer items-center justify-center rounded border border-blue-200 bg-blue-100 px-3 py-1 leading-5 text-blue-500 delay-150 ease-in-out hover:bg-blue-200 dark:border-gray-600 dark:bg-gray-700 dark:text-sky-400 dark:hover:bg-gray-600;
   }
   .wsl-complex-block {
     @apply px-4;

@@ -27,7 +27,13 @@
     <div class="wsl-item-topics" *ngSwitchCase="rowType.Common_Perfect_Complex">
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
-          {{ result.srcType }}
+          <span>{{ result.srcType }}</span>
+          <ng-icon
+            [name]="
+              hideComplexValue
+                ? 'feather-chevron-right'
+                : 'feather-chevron-down'
+            "></ng-icon>
         </span>
       </div>
     </div>
@@ -61,7 +67,13 @@
       </div>
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
-          {{ result.srcType }}
+          <span>{{ result.srcType }}</span>
+          <ng-icon
+            [name]="
+              hideComplexValue
+                ? 'feather-chevron-right'
+                : 'feather-chevron-down'
+            "></ng-icon>
         </span>
       </div>
     </div>
@@ -98,7 +110,13 @@
       </div>
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
-          show values
+          <span>Show Values</span>
+          <ng-icon
+            [name]="
+              hideComplexValue
+                ? 'feather-chevron-right'
+                : 'feather-chevron-down'
+            "></ng-icon>
         </span>
       </div>
     </div>
@@ -113,7 +131,13 @@
     <div class="wsl-item-topics" *ngSwitchCase="rowType.Missing_Complex">
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
-          {{ result.dstType }}
+          <span>{{ result.dstType }}</span>
+          <ng-icon
+            [name]="
+              hideComplexValue
+                ? 'feather-chevron-right'
+                : 'feather-chevron-down'
+            "></ng-icon>
         </span>
       </div>
     </div>
@@ -128,7 +152,13 @@
     <div class="wsl-item-topics" *ngSwitchCase="rowType.Fresh_Complex">
       <div class="wsl-item-topic">
         <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
-          {{ result.srcType }}
+          <span>{{ result.srcType }}</span>
+          <ng-icon
+            [name]="
+              hideComplexValue
+                ? 'feather-chevron-right'
+                : 'feather-chevron-down'
+            "></ng-icon>
         </span>
       </div>
     </div>

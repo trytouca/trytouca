@@ -4,9 +4,10 @@
     id="version-dropdown-{{ side }}"
     aria-haspopup="true"
     aria-expanded="false">
-    <span class="font-semibold">{{ currentVersion }}</span>
-    &nbsp;
-    <fa-icon icon="chevron-down" size="xs"></fa-icon>
+    <div class="flex items-center">
+      <span class="font-semibold">{{ currentVersion }}</span>
+      <ng-icon class="opacity-50" name="feather-chevron-down"></ng-icon>
+    </div>
   </div>
   <div class="wsl-dropdown-menu hidden w-48">
     <span class="wsl-text-muted px-2">Choose a {{ side }} version</span>
