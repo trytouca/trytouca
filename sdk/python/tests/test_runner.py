@@ -12,9 +12,6 @@ from touca._runner import (
     _ToucaErrorCode,
 )
 
-slugs = ["--team", "acme", "--suite", "students", "--revision", "1.0"]
-extra = ["--save-as-binary", "true", "--save-as-json", "true", "--offline", "true"]
-
 
 def check_stats(checks: dict, captured: CaptureResult):
     for key, values in checks.items():
@@ -35,19 +32,24 @@ def test_empty_workflow():
 def test_no_case_missing_remote():
     with pytest.raises(_ToucaError) as err:
         run_workflows(
-            ["--team", "acme", "--suite", "students", "--revision", "1.0"],
+            {"team": "acme", "suite": "students", "version": "1.0"},
             [("sample", lambda x: None)],
         )
     assert err.value._code == _ToucaErrorCode.NoCaseMissingRemote
 
 
 def test_run_twice(capsys: pytest.CaptureFixture):
-    args = []
-    args.extend(slugs)
-    args.extend(extra)
-    args.extend(["--testcase", "alice", "--testcase", "bob"])
+    args = {
+        "team": "acme",
+        "suite": "students",
+        "version": "1.0",
+        "save-as-binary": True,
+        "save-as-json": True,
+        "offline": True,
+        "testcases": ["alice", "bob"],
+    }
     with TemporaryDirectory(prefix="touca-python-test") as tempdir:
-        args.extend(["--output-directory", tempdir])
+        args.update({"output-directory": tempdir})
         run_workflows(args, [("sample", lambda x: None)])
         captured = capsys.readouterr()
         checks = {"alice": ["1.", "PASS"], "bob": ["2.", "PASS"]}
@@ -64,7 +66,7 @@ def test_testcase_list():
         tempfile = os.path.join(tempdir, "list.txt")
         with open(tempfile, "wt") as file:
             file.write("alice\nbob\ncharlie\n\n#david\n")
-        options = {"testcase_file": tempfile, "testcases": []}
+        options = {"testcase-file": tempfile, "testcases": []}
         _update_testcase_list(options)
         testcases = options.get("testcases")
         assert testcases == ["alice", "bob", "charlie"]

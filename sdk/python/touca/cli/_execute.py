@@ -94,27 +94,28 @@ class Execute(Operation):
             self.__options["testcases"] = [
                 i for k in parsed.get("testcases") for i in k
             ]
-        if parsed.get("testcase_file"):
-            self.__options["testcase_file"] = parsed.get("testcase_file")
+        if parsed.get("testcase-file"):
+            self.__options["testcase-file"] = parsed.get("testcase-file")
 
     def _find_arguments(self):
-        args = []
+        args = {
+            "api-url": "https://api.touca.io",
+            "log-level": "info",
+            "save-as-binary": False,
+            "save-as-json": False,
+            "offline": False,
+            "overwrite": False,
+            "colored-output": True,
+        }
         config_content = config_file_parse()
         if config_content:
-            for k, v in config_content.items("settings"):
-                args.append(f"--{k}")
-                args.append(v)
-
+            args.update(config_content.items("settings"))
         if "testcases" in self.__options:
-            args.append("--testcases")
-            args.extend(self.__options.get("testcases"))
-        if "testcase_file" in self.__options:
-            args.append("--testcase-file")
-            args.append(self.__options.get("testcase_file"))
+            args.update({"testcases", self.__options.get("testcases")})
+        if "testcase-file" in self.__options:
+            args.update({"testcase-file": self.__options.get("testcase-file")})
         if "version" in self.__options:
-            args.append("--revision")
-            args.append(self.__options.get("version"))
-
+            args.update({"version": self.__options.get("version")})
         return args
 
     def run(self) -> bool:

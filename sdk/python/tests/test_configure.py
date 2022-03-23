@@ -66,8 +66,8 @@ def test_configure_by_file_full(monkeypatch):
                 json.dumps(
                     {
                         "touca": {
-                            "api_key": "to be overwritten",
-                            "api_url": "https://api.touca.io/v1/@/acme/students",
+                            "api-key": "to be overwritten",
+                            "api-url": "https://api.touca.io/v1/@/acme/students",
                             "offline": True,
                         }
                     }
@@ -78,8 +78,8 @@ def test_configure_by_file_full(monkeypatch):
         assert not client.configuration_error()
         for key, value in dict(
             {
-                "api_url": "https://api.touca.io/v1",
-                "api_key": "sample_touca_key",
+                "api-url": "https://api.touca.io/v1",
+                "api-key": "sample_touca_key",
                 "offline": True,
                 "team": "acme",
                 "suite": "students",

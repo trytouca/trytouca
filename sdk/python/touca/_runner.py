@@ -45,9 +45,11 @@ def _parse_cli_options(args) -> Dict[str, Any]:
     parser = ArgumentParser(
         description="Touca Regression Test",
         epilog="Visit https://touca.io/docs for more information")
-    parser.add_argument("--api-key", metavar='',
+    parser.add_argument("--api-key", dest="api-key",
+        metavar='',
         help="API Key issued by the Touca Server")
-    parser.add_argument("--api-url", metavar='',
+    parser.add_argument("--api-url", dest="api-url",
+        metavar='',
         help="API URL issued by the Touca Server")
 
     parser.add_argument("--revision", metavar='',
@@ -56,37 +58,43 @@ def _parse_cli_options(args) -> Dict[str, Any]:
     parser.add_argument("--suite", metavar='',
         help="Slug of suite to which test results belong")
     parser.add_argument("--workflow", metavar='',
-        help="Name of the workflow to run"
-    )
+        help="Name of the workflow to run")
 
     parser.add_argument("--team", metavar='',
         help="Slug of team to which test results belong")
 
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("--testcase", "--testcases", metavar="",
-        dest='testcases', action="append", nargs="+",
+    group.add_argument("--testcase", "--testcases", dest='testcases',
+        metavar="", action="append", nargs="+",
         help="One or more testcases to feed to the workflow")
-    group.add_argument("--testcase-file", metavar="",
+    group.add_argument("--testcase-file", dest="testcase-file",
+        metavar="",
         help="Single file listing testcases to feed to the workflows")
 
-    parser.add_argument("--config-file", metavar='',
-        dest='file',
+    parser.add_argument("--config-file", dest='file',
+        metavar='',
         help="Path to a configuration file")
-    parser.add_argument("--output-directory", metavar='',
+    parser.add_argument("--output-directory", dest="output-directory",
+        metavar='',
         help="Path to a local directory to store result files")
 
-    parser.add_argument("--log-level",
+    parser.add_argument("--log-level", dest="log-level",
         choices=["debug", "info", "warn"], default="info",
         help="Level of detail with which events are logged")
-    parser.add_argument("--save-as-binary", const=True, default=False, nargs="?",
+    parser.add_argument("--save-as-binary", dest="save-as-binary",
+        const=True, default=False, nargs="?",
         help="Save a copy of test results on local filesystem in binary format")
-    parser.add_argument("--save-as-json", const=True, default=False, nargs="?",
+    parser.add_argument("--save-as-json", dest="save-as-json",
+        const=True, default=False, nargs="?",
         help="Save a copy of test results on local filesystem in JSON format")
-    parser.add_argument("--offline", const=True, default=False, nargs="?",
+    parser.add_argument("--offline",
+        const=True, default=False, nargs="?",
         help="Disables all communications with the Touca server")
-    parser.add_argument("--overwrite", const=True, default=False, nargs="?",
+    parser.add_argument("--overwrite",
+        const=True, default=False, nargs="?",
         help="Overwrite result directory for testcase if it already exists")
-    parser.add_argument("--colored-output", const=True, default=True, nargs="?",
+    parser.add_argument("--colored-output", dest="colored-output",
+        const=True, default=True, nargs="?",
         help="Use color in standard output")
 
     # fmt: on
@@ -97,11 +105,11 @@ def _parse_cli_options(args) -> Dict[str, Any]:
     parsed = dict(filter(lambda x: x[1] is not None, parsed))
     # fix options with boolean values
     for k in [
-        "save_as_binary",
-        "save_as_json",
+        "save-as-binary",
+        "save-as-json",
         "offline",
         "overwrite",
-        "colored_output",
+        "colored-output",
     ]:
         parsed[k] = True if parsed.get(k) in [True, "True", "true"] else False
 
@@ -162,17 +170,16 @@ def _update_testcase_list(options: dict):
     `--testcases` and `--testcase-file` are mutually exclusive.
     """
     if options.get("testcases"):
-        options["testcases"] = [i for k in options.get("testcases") for i in k]
         return
-    if "testcase_file" in options:
-        with open(options["testcase_file"], "rt") as file:
+    if "testcase-file" in options:
+        with open(options["testcase-file"], "rt") as file:
             keep = lambda x: x and not x.startswith("#")
 
             entries = list(filter(keep, file.read().splitlines()))
             options["testcases"] = entries
             return
     if options.get("offline"):
-        elements = ["output_directory", "suite", "version"]
+        elements = ["output-directory", "suite", "version"]
         version_dir = os.path.join(*map(options.get, elements))
         if not os.path.exists(version_dir):
             raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
@@ -181,7 +188,7 @@ def _update_testcase_list(options: dict):
             raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
         options["testcases"] = entries
         return
-    if any(k not in options for k in ["api_key", "api_url"]):
+    if any(k not in options for k in ["api-key", "api-url"]):
         raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
     options["testcases"] = Client.instance().get_testcases()
     if not options.get("testcases"):
@@ -202,10 +209,10 @@ def _initialize(options: dict):
         raise _ToucaError(_ToucaErrorCode.MissingSlugs, ", ".join(missing))
 
     # Create directory to write logs and test results into
-    options["output_directory"] = options.get(
-        "output_directory", os.path.join(config_file_home(), "results")
+    options["output-directory"] = options.get(
+        "output-directory", os.path.join(config_file_home(), "results")
     )
-    os.makedirs(options.get("output_directory"), exist_ok=True)
+    os.makedirs(options.get("output-directory"), exist_ok=True)
 
     # Configure the lower-level Touca library
     if not Client.instance().configure(**options):
@@ -215,11 +222,11 @@ def _initialize(options: dict):
 
 
 def _skip(options: dict, testcase: str):
-    elements = ["output_directory", "suite", "version"]
+    elements = ["output-directory", "suite", "version"]
     casedir = os.path.join(*map(options.get, elements), testcase)
-    if options.get("save_as_binary"):
+    if options.get("save-as-binary"):
         return os.path.exists(os.path.join(casedir, "touca.bin"))
-    if options.get("save_as_json"):
+    if options.get("save-as-json"):
         return os.path.exists(os.path.join(casedir, "touca.json"))
     return False
 
@@ -294,7 +301,7 @@ def _filter_selected_workflow(options, workflows):
 
 def _run_workflow(options, workflow):
     offline = options.get("offline") or any(
-        k not in options for k in ["api_key", "api_url"]
+        k not in options for k in ["api-key", "api-url"]
     )
     timer = _Timer()
     stats = _Statistics()
@@ -303,7 +310,7 @@ def _run_workflow(options, workflow):
     timer.tic("__workflow__")
 
     for idx, testcase in enumerate(options.get("testcases")):
-        elements = ["output_directory", "suite", "version"]
+        elements = ["output-directory", "suite", "version"]
         casedir = os.path.join(*map(options.get, elements), testcase)
 
         if not options.get("overwrite") and _skip(options, testcase):
@@ -331,12 +338,12 @@ def _run_workflow(options, workflow):
         status = "pass" if not errors else "fail"
         stats.inc(status)
 
-        if not errors and options.get("save_as_binary"):
+        if not errors and options.get("save-as-binary"):
             Client.instance().save_binary(
                 os.path.join(casedir, "touca.bin"), [testcase]
             )
 
-        if not errors and options.get("save_as_json"):
+        if not errors and options.get("save-as-json"):
             Client.instance().save_json(os.path.join(casedir, "touca.json"), [testcase])
 
         if not errors and not offline:
@@ -356,11 +363,10 @@ def _run_workflow(options, workflow):
 def run_workflows(args, workflows):
     from copy import deepcopy
 
-    cli_options = _parse_cli_options(args)
-    workflows = _filter_selected_workflow(cli_options, workflows)
+    workflows = _filter_selected_workflow(args, workflows)
     Printer.print_app_header()
     for name, workflow in workflows:
-        options = deepcopy(cli_options)
+        options = deepcopy(args)
         options["suite"] = name
         try:
             _initialize(options)
@@ -389,7 +395,8 @@ def run():
     if not hasattr(Workflow, "_workflows") or not Workflow._workflows:
         raise _ToucaError(_ToucaErrorCode.MissingWorkflow)
     try:
-        run_workflows(sys.argv[1:], Workflow._workflows)
+        cli_options = _parse_cli_options(sys.argv[1:])
+        run_workflows(cli_options, Workflow._workflows)
     except _ToucaError as err:
         sys.exit(err)
     except Exception as err:

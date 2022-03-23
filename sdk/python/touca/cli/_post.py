@@ -26,7 +26,7 @@ def utils_post(src_dir, api_key, api_url):
         logger.warning(f"{src_dir} has no result files")
         return False
     logger.debug(f"posting files in {src_dir}")
-    transport = Transport({"api_key": api_key, "api_url": api_url})
+    transport = Transport({"api-key": api_key, "api-url": api_url})
     transport.authenticate()
     for binary in binaries:
         logger.debug(f"posting {binary}")
@@ -63,7 +63,7 @@ class Post(Operation):
 
     def parse(self, args):
         parsed, _ = self.parser().parse_known_args(args)
-        for key in ["src", "api_key", "api_url"]:
+        for key in ["src", "api-key", "api-url"]:
             if key not in vars(parsed).keys() or vars(parsed).get(key) is None:
                 raise ValueError(f"missing key: {key}")
         self.__options = {**self.__options, **vars(parsed)}
@@ -73,8 +73,8 @@ class Post(Operation):
 
     def run(self) -> bool:
         src_dir = os.path.abspath(os.path.expanduser(self.__options.get("src")))
-        api_key = self.__options.get("api_key")
-        api_url = self.__options.get("api_url")
+        api_key = self.__options.get("api-key")
+        api_url = self.__options.get("api-url")
 
         if not os.path.exists(src_dir):
             logger.error(f"directory {src_dir} does not exist")

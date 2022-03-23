@@ -10,6 +10,7 @@ from touca._options import (
     config_file_set,
     config_file_home,
     config_file_load,
+    config_file_remove,
 )
 
 
@@ -18,6 +19,7 @@ class Action(Enum):
     set = 2
     home = 3
     show = 4
+    rm = 5
 
 
 class Config(Operation):
@@ -32,7 +34,7 @@ class Config(Operation):
         parser.add_argument(
             "action",
             nargs=1,
-            choices={"set", "get", "home", "show"},
+            choices={"set", "get", "home", "show", "rm"},
             help="path to directory with original Touca archives directories",
         )
         parser.add_argument(
@@ -50,9 +52,7 @@ class Config(Operation):
         action = Action[self.__options["action"][0]]
         if action == Action.get:
             key = self.__options["args"][0]
-            value = config_file_get(key)
-            if value:
-                print(value)
+            print(config_file_get(key))
         if action == Action.set:
             error = """
 Argument \"{}\" has invalid format.
@@ -73,5 +73,8 @@ For example, to set Touca API Key in the configuration file you could write:
         if action == Action.home:
             print(config_file_home())
         if action == Action.show:
-            print(config_file_load().strip())
+            print(config_file_load())
+        if action == Action.rm:
+            key = self.__options["args"][0]
+            config_file_remove(key)
         return True

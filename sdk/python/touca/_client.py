@@ -59,7 +59,7 @@ class Client:
     def _make_transport(self) -> bool:
         from touca._transport import Transport
 
-        keys = ["api_key", "api_url", "team", "suite", "version"]
+        keys = ["api-key", "api-url", "team", "suite", "version"]
         if self._options.get("offline") is True:
             return False
         if not all(k in self._options for k in keys):

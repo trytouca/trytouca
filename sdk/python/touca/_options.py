@@ -29,7 +29,7 @@ def _apply_config_file(incoming: dict) -> None:
 def _apply_arguments(existing, incoming: dict) -> None:
     for params, validate in [
         (
-            ["team", "suite", "version", "api_key", "api_url"],
+            ["team", "suite", "version", "api-key", "api-url"],
             lambda x: isinstance(x, str),
         ),
         (["offline", "concurrency"], lambda x: isinstance(x, bool)),
@@ -45,8 +45,8 @@ def _apply_arguments(existing, incoming: dict) -> None:
 
 def _apply_environment_variables(existing) -> None:
     for env, opt in [
-        ("TOUCA_API_KEY", "api_key"),
-        ("TOUCA_API_URL", "api_url"),
+        ("TOUCA_API_KEY", "api-key"),
+        ("TOUCA_API_URL", "api-url"),
         ("TOUCA_TEST_VERSION", "version"),
     ]:
         if os.environ.get(env):
@@ -58,12 +58,12 @@ def _reformat_parameters(existing: dict) -> None:
 
     existing.setdefault("concurrency", True)
 
-    api_url = existing.get("api_url")
+    api_url = existing.get("api-url")
     if not api_url:
         return
     url = urlparse(api_url)
     urlpath = [k.strip("/") for k in url.path.split("/@/")]
-    existing["api_url"] = f"{url.scheme}://{url.netloc}/{urlpath[0]}".rstrip("/")
+    existing["api-url"] = f"{url.scheme}://{url.netloc}/{urlpath[0]}".rstrip("/")
 
     if len(urlpath) == 1:
         return
@@ -78,8 +78,8 @@ def _reformat_parameters(existing: dict) -> None:
 def _validate_options(existing: dict) -> None:
     expected_keys = ["team", "suite", "version"]
     has_handshake = not existing.get("offline")
-    if has_handshake and any(x in existing for x in ["api_key", "api_url"]):
-        expected_keys.extend(["api_key", "api_url"])
+    if has_handshake and any(x in existing for x in ["api-key", "api-url"]):
+        expected_keys.extend(["api-key", "api-url"])
     key_status = {k: k in existing for k in expected_keys}
     if any(key_status.values()) and not all(key_status.values()):
         keys = list(filter(lambda x: not key_status[x], key_status))
@@ -106,7 +106,7 @@ def config_file_load() -> str:
     if not os.path.exists(config_file_path):
         return ""
     with open(config_file_path, "rt") as config_file:
-        return config_file.read()
+        return config_file.read().strip()
 
 
 def config_file_parse():
@@ -122,11 +122,11 @@ def config_file_get(key: str) -> str:
     config = config_file_parse()
     if config and config.has_option("settings", key):
         return config.get("settings", key)
+    return ""
 
 
 def config_file_set(key: str, value: str, section="settings") -> None:
-    home_dir = config_file_home()
-    config_file_path = Path(home_dir, "profiles", "default")
+    config_file_path = Path(config_file_home(), "profiles", "default")
     os.makedirs(config_file_path.parent, exist_ok=True)
     config = ConfigParser()
     if os.path.exists(config_file_path):
@@ -135,5 +135,14 @@ def config_file_set(key: str, value: str, section="settings") -> None:
     if not config.has_section(section):
         config.add_section(section)
     config.set(section, key, value)
+    with open(config_file_path, "wt") as config_file:
+        config.write(config_file)
+
+
+def config_file_remove(key: str) -> None:
+    config_file_path = Path(config_file_home(), "profiles", "default")
+    config = config_file_parse()
+    if config and config.has_option("settings", key):
+        config.remove_option("settings", key)
     with open(config_file_path, "wt") as config_file:
         config.write(config_file)

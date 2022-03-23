@@ -59,8 +59,8 @@ class Runner(DiscoverRunner):
 
         super().__init__(**kwargs)
         self.touca_options = {
-            "api_key": environ.get("TOUCA_API_KEY", api_key),
-            "api_url": environ.get("TOUCA_API_URL", api_url),
+            "api-key": environ.get("TOUCA_API_KEY", api_key),
+            "api-url": environ.get("TOUCA_API_URL", api_url),
             "version": environ.get("TOUCA_TEST_VERSION", revision),
             "offline": True if offline in [True, "True", "true"] else False,
         }
@@ -87,8 +87,8 @@ class Runner(DiscoverRunner):
         framework to allow for changing Touca behavior from the command-line.
         """
         DiscoverRunner.add_arguments(parser)
-        parser.add_argument("--api-key", dest="api_key", help="Touca API Key")
-        parser.add_argument("--api-url", dest="api_url", help="Touca API URL")
+        parser.add_argument("--api-key", dest="api-key", help="Touca API Key")
+        parser.add_argument("--api-url", dest="api-url", help="Touca API URL")
         parser.add_argument("--revision", dest="revision", help="Touca Test Version")
         parser.add_argument(
             "--offline",

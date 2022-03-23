@@ -41,13 +41,13 @@ class Transport:
             headers.update({"Authorization": f"Bearer {self._token}"})
         return self._pool.request(
             method=method,
-            url=f"{self._options.get('api_url')}{path}",
+            url=f"{self._options.get('api-url')}{path}",
             body=body,
             headers=headers,
         )
 
     def update_options(self, options: dict):
-        if any(k in options for k in ["api_key", "api_url"]):
+        if any(k in options for k in ["api-key", "api-url"]):
             self._token = None
             self._handshake()
         self._options.update(options)
@@ -61,7 +61,7 @@ class Transport:
         response = self._send_request(
             method="POST",
             path="/client/signin",
-            body={"key": self._options.get("api_key")},
+            body={"key": self._options.get("api-key")},
         )
         if response.status == 401:
             raise ValueError("Authentication failed: API Key Invalid")

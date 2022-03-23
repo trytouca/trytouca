@@ -28,7 +28,7 @@ class Printer:
 
     def print_line(self, fmt: str, *args, **kwargs):
         msg = fmt.format(*args, **kwargs) if args or kwargs else fmt
-        if self.options.get("colored_output"):
+        if self.options.get("colored-output"):
             print(msg)
             return
 
