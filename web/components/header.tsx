@@ -9,7 +9,7 @@ import { HiMenu, HiOutlineNewspaper } from 'react-icons/hi';
 const items = [
   { title: 'Login', link: 'https://app.touca.io' },
   { title: 'Docs', link: 'https://touca.io/docs' },
-  { title: 'Blog', link: 'https://blog.touca.io' },
+  { title: 'Blog', link: '/blog' },
   { title: 'Pricing', link: '/pricing' }
 ];
 

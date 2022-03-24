@@ -70,10 +70,7 @@ export default function BlogPage(props: StaticProps) {
             </figcaption>
           </div>
           <hr className="border-b-2 border-gray-200" />
-          <article
-            className="prose mx-auto lg:prose-lg"
-            dangerouslySetInnerHTML={{ __html: props.main_article.html }}
-          />
+          <BlogPostContent article={props.main_article}></BlogPostContent>
         </div>
       </section>
       {props.archived_articles.length !== 0 && (
@@ -81,6 +78,32 @@ export default function BlogPage(props: StaticProps) {
           <BlogPostArchive articles={props.archived_articles}></BlogPostArchive>
         </section>
       )}
+    </>
+  );
+}
+
+function BlogPostContent(props: { article: PostOrPage }) {
+  return (
+    <>
+      <article
+        className="prose mx-auto lg:prose-lg"
+        dangerouslySetInnerHTML={{ __html: props.article.html }}
+      />
+      <style jsx global>
+        {`
+          .kg-bookmark-content {
+            display: none;
+          }
+          .kg-callout-card {
+            display: flex;
+            border-radius: 0.25rem;
+            padding: 1rem;
+          }
+          .kg-callout-card-grey {
+            background-color: lightgray;
+          }
+        `}
+      </style>
     </>
   );
 }

@@ -2,18 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.kg-bookmark-content {
-  @apply hidden;
-}
-
-.kg-callout-card {
-  @apply flex space-x-4 rounded p-4;
-}
-
-.kg-callout-card-grey {
-  @apply bg-gray-200;
-}
-
 .wsl-min-h-screen-1 {
   min-height: calc(100vh - 5rem);
 }
