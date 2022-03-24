@@ -55,12 +55,8 @@ const links: {
   internal?: boolean;
 }[] = [
   {
-    link: 'https://blog.touca.io',
-    text: 'Blog'
-  },
-  {
-    link: '/changelog',
-    text: 'Changelog',
+    link: '/blog',
+    text: 'Blog',
     internal: true
   },
   {

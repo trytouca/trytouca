@@ -17,7 +17,7 @@ export async function getArticles(): Promise<PostsOrPages> {
   });
   const articles = await api.posts.browse({
     limit: 'all',
-    filter: 'tags:changelog',
+    filter: 'visibility:-paid',
     include: ['tags', 'authors'],
     order: 'published_at DESC'
   });

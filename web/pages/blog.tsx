@@ -22,12 +22,10 @@ export default function BlogPage(props: StaticProps) {
           <div className="grid grid-cols-1 gap-4 space-y-8 p-8 lg:grid-cols-2 lg:space-y-0">
             <div className="col-span-1 grid place-content-center">
               <div className="max-w-lg space-y-4 text-white">
-                <h3 className="text-4xl font-bold lg:text-5xl">
-                  The Touca Times
-                </h3>
-                <p className="text-xl font-light text-sky-200 lg:text-2xl">
-                  Notes on our journey towards making software easier to
-                  maintain and safer to release.
+                <h3 className="text-4xl font-bold lg:text-5xl">Touca Blog</h3>
+                <p className="text-xl font-light text-white lg:text-2xl">
+                  Towards making software easier to maintain and safer to
+                  release.
                 </p>
               </div>
             </div>
