@@ -7,7 +7,7 @@ import * as Yup from 'yup';
 import { extract_error, Feedback, post_json } from '@/lib/api';
 import { tracker } from '@/lib/tracker';
 
-const SignupForm = () => (
+const SubscriptionForm = () => (
   <Formik
     initialValues={{ umail: '' }}
     onSubmit={async (values, { setStatus, setSubmitting }) => {
@@ -47,22 +47,24 @@ const SignupForm = () => (
     validateOnBlur={true}>
     {(props: FormikProps<{ umail: string }>) => (
       <Form noValidate={true}>
+        <p className="py-2 text-white">
+          {`Subscribe to our important updates`}
+        </p>
         <label className="sr-only" htmlFor="umail">
-          Email Address
+          Your email Address
         </label>
         <div className="flex h-10 space-x-2">
           <Field
-            className="flex-grow rounded-md border border-gray-300 bg-white text-black shadow-md focus:border-gray-500 focus:outline-none focus:ring-0"
+            className="flex-grow rounded-md border border-gray-400 bg-gray-300 text-black placeholder-gray-600 shadow-md focus:border-gray-500 focus:outline-none focus:ring-0"
             type="email"
             id="umail"
             name="umail"
             placeholder="Email address"
           />
           <button
-            className="overflow-hidden rounded-md border border-transparent bg-green-600 px-4 font-semibold text-white shadow-md duration-150 ease-in-out hover:bg-green-700 focus:border-gray-200 focus:outline-none focus:ring-0"
+            className="overflow-hidden rounded-md border border-transparent bg-green-700 px-4 font-semibold text-white shadow-md duration-150 ease-in-out hover:bg-green-800 focus:border-gray-200 focus:outline-none focus:ring-0"
             type="submit">
-            <span className="hidden lg:block">Signup for Free</span>
-            <span className="lg:hidden">Sign up</span>
+            <span>Subscribe</span>
           </button>
         </div>
         <ErrorMessage name="umail">
@@ -73,10 +75,6 @@ const SignupForm = () => (
             message={props.status.message}
             type={props.status.type}></Feedback>
         )}
-        <p className="mt-2 text-white">
-          You can explore Touca in action using the test results in our
-          playground.
-        </p>
         <span className="text-green-400"></span>
         <span className="text-yellow-400"></span>
         <span className="text-red-400"></span>
@@ -85,4 +83,4 @@ const SignupForm = () => (
   </Formik>
 );
 
-export default SignupForm;
+export default SubscriptionForm;

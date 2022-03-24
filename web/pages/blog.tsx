@@ -1,32 +1,15 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { PostOrPage } from '@tryghost/content-api';
 import { NextSeo } from 'next-seo';
 import React from 'react';
 
 import Header from '@/components/header';
-import {
-  Article,
-  BlogPostArchive,
-  BlogPostArticle,
-  getArticles
-} from '@/lib/blog';
-
-interface PageContent {
-  title: string;
-  subtitle: string;
-  featured: string;
-}
-
-const content: PageContent = {
-  title: 'The Touca Times',
-  subtitle:
-    'Notes on our journey towards making software easier to maintain and safer to release.',
-  featured: 'launch-vision'
-};
+import { BlogPostArchive, BlogPostArticle, getArticles } from '@/lib/blog';
 
 type StaticProps = {
-  archived_articles: Article[];
-  main_article: Article;
+  archived_articles: PostOrPage[];
+  main_article: PostOrPage;
 };
 
 export default function BlogPage(props: StaticProps) {
@@ -39,11 +22,10 @@ export default function BlogPage(props: StaticProps) {
           <div className="grid grid-cols-1 gap-4 space-y-8 p-8 lg:grid-cols-2 lg:space-y-0">
             <div className="col-span-1 grid place-content-center">
               <div className="max-w-lg space-y-4 text-white">
-                <h3 className="text-4xl font-bold lg:text-5xl">
-                  {content.title}
-                </h3>
-                <p className="text-xl font-light text-sky-200 lg:text-2xl">
-                  {content.subtitle}
+                <h3 className="text-4xl font-bold lg:text-5xl">Touca Blog</h3>
+                <p className="text-xl font-light text-white lg:text-2xl">
+                  Towards making software easier to maintain and safer to
+                  release.
                 </p>
               </div>
             </div>
@@ -65,9 +47,9 @@ export default function BlogPage(props: StaticProps) {
 }
 
 export async function getStaticProps() {
-  const articles = getArticles();
-  const main_article = articles.find((v) => v.slug === content.featured);
-  const archived_articles = articles.filter((v) => v.slug !== content.featured);
+  const articles = await getArticles();
+  const main_article = articles[0];
+  const archived_articles = articles.slice(1);
   return {
     props: {
       archived_articles,
