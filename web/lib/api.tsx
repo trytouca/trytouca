@@ -5,9 +5,8 @@ import {
   HiOutlineExclamationCircle
 } from 'react-icons/hi';
 
-const API_URL = process.env.NEXT_PUBLIC_TOUCA_API_URL;
-
 export async function post_json(path: string, body: Record<string, unknown>) {
+  const API_URL = process.env.NEXT_PUBLIC_TOUCA_API_URL;
   return fetch(`${API_URL}/${path}`, {
     body: JSON.stringify(body),
     headers: { 'Content-Type': 'application/json' },
