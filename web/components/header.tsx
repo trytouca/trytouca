@@ -9,7 +9,7 @@ import { HiMenu, HiOutlineNewspaper } from 'react-icons/hi';
 const items = [
   { title: 'Login', link: 'https://app.touca.io' },
   { title: 'Docs', link: 'https://touca.io/docs' },
-  { title: 'Blog', link: 'https://blog.touca.io' },
+  { title: 'Blog', link: '/blog' },
   { title: 'Pricing', link: '/pricing' }
 ];
 
@@ -28,7 +28,7 @@ export default function Header() {
               return (
                 <a
                   key={index}
-                  className="rounded-lg bg-transparent px-4 py-2 text-sm font-semibold leading-6 text-gray-300 duration-150 ease-in-out hover:text-white focus:ring-0"
+                  className="rounded-lg bg-transparent px-4 py-2 text-base font-semibold leading-6 text-gray-300 duration-150 ease-in-out hover:text-white focus:ring-0"
                   href={value.link}
                   rel="noopener">
                   {value.title}

@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { NextSeo } from 'next-seo';
+import { FAQPageJsonLd, NextSeo } from 'next-seo';
 import React from 'react';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
@@ -181,9 +181,21 @@ function FreePlan() {
 }
 
 export default function PricingPage() {
+  const mainEntity = content.faq.blocks.map((v) => ({
+    questionName: v.question,
+    acceptedAnswerText: v.answer
+      .map((k) =>
+        k
+          .split('\n')
+          .map((u) => u.trim())
+          .join(' ')
+      )
+      .join(' ')
+  }));
   return (
     <>
       <NextSeo title="Pricing" canonical="https://touca.io/pricing" />
+      <FAQPageJsonLd mainEntity={mainEntity} />
       <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
         <div className="wsl-min-h-screen-1 container mx-auto flex w-full max-w-screen-lg flex-col justify-center py-16">

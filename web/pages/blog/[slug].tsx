@@ -2,6 +2,7 @@
 
 import { PostOrPage } from '@tryghost/content-api';
 import Head from 'next/head';
+import { ArticleJsonLd, NextSeo } from 'next-seo';
 import { HiOutlineCalendar, HiOutlineClock } from 'react-icons/hi';
 
 import Header from '@/components/header';
@@ -15,6 +16,38 @@ type StaticProps = {
 export default function BlogPage(props: StaticProps) {
   return (
     <>
+      <NextSeo
+        title={props.main_article.title}
+        canonical={'https://touca.io/blog/' + props.main_article.slug}
+        description={
+          props.main_article.og_description ?? props.main_article.excerpt
+        }
+        openGraph={{
+          url: 'https://touca.io/blog/' + props.main_article.slug,
+          title: props.main_article.og_title ?? props.main_article.title,
+          description:
+            props.main_article.og_description ?? props.main_article.excerpt,
+          images: [
+            {
+              url:
+                props.main_article.og_image ?? props.main_article.feature_image,
+              width: 453,
+              height: 906,
+              alt: props.main_article.feature_image_alt
+            }
+          ]
+        }}
+      />
+      <ArticleJsonLd
+        type="Blog"
+        url="https://touca.io/blog"
+        title="Touca Blog"
+        images={[props.main_article.feature_image]}
+        datePublished={props.main_article.published_at}
+        dateModified={props.main_article.updated_at}
+        authorName={props.main_article.primary_author.name}
+        description={props.main_article.excerpt}
+      />
       <Head>
         <title>Touca Blog - {props.main_article.title}</title>
         <meta
