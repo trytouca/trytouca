@@ -80,6 +80,11 @@ const links: {
   {
     link: 'https://touca.io/docs/legal/privacy',
     text: 'Privacy Policy'
+  },
+  {
+    link: '/discord',
+    text: 'Discord',
+    internal: true
   }
 ];
 
