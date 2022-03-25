@@ -92,7 +92,7 @@ ApiUrl::ApiUrl(const std::string& url) {
   }
   const auto index = path.find_last_of('@');
   _prefix = path.substr(0, index);
-  if (_prefix.back() == '/') {
+  if (!_prefix.empty() && _prefix.back() == '/') {
     _prefix.pop_back();
   }
   if (index == std::string::npos) {
