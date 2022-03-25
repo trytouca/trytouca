@@ -4,7 +4,6 @@ import GhostContentAPI, {
   PostOrPage,
   PostsOrPages
 } from '@tryghost/content-api';
-import { format, parseISO } from 'date-fns';
 import Link from 'next/link';
 import React from 'react';
 import { HiArrowNarrowRight, HiOutlineCalendar } from 'react-icons/hi';
@@ -21,9 +20,13 @@ export async function getArticles(): Promise<PostsOrPages> {
     include: ['tags', 'authors'],
     order: 'published_at DESC'
   });
-  articles.forEach(
-    (v) => (v.published_at = format(parseISO(v.published_at), 'LLLL d, yyyy'))
-  );
+  articles.forEach((v) => {
+    v.published_at = new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(new Date(v.published_at));
+  });
   return articles;
 }
 
