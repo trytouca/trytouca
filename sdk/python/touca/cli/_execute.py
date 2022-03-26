@@ -89,7 +89,8 @@ class Execute(Operation):
             if Path.is_absolute(Path(test_dir))
             else os.path.join(os.getcwd(), test_dir)
         )
-        self.__options["version"] = parsed.get("version")
+        if parsed.get("version"):
+            self.__options["version"] = parsed.get("version")
         if parsed.get("testcases"):
             self.__options["testcases"] = [
                 i for k in parsed.get("testcases") for i in k
@@ -111,7 +112,7 @@ class Execute(Operation):
         if config_content:
             args.update(config_content.items("settings"))
         if "testcases" in self.__options:
-            args.update({"testcases", self.__options.get("testcases")})
+            args.update({"testcases": self.__options.get("testcases")})
         if "testcase-file" in self.__options:
             args.update({"testcase-file": self.__options.get("testcase-file")})
         if "version" in self.__options:
