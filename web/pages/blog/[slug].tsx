@@ -31,8 +31,8 @@ export default function BlogPage(props: StaticProps) {
             {
               url:
                 props.main_article.og_image ?? props.main_article.feature_image,
-              width: 453,
-              height: 906,
+              width: 1200,
+              height: 675,
               alt: props.main_article.feature_image_alt
             }
           ]
@@ -135,6 +135,11 @@ function BlogPostContent(props: { article: PostOrPage }) {
           .kg-callout-card-grey {
             background-color: lightgray;
           }
+          .kg-card.kg-embed-card > iframe {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+          }
         `}
       </style>
     </>
@@ -146,7 +151,9 @@ export async function getStaticProps({ params }: { params: { slug: string } }) {
   return {
     props: {
       main_article: articles.filter((v) => v.slug === params.slug)[0],
-      archived_articles: articles.filter((v) => v.slug !== params.slug)
+      archived_articles: articles
+        .filter((v) => v.slug !== params.slug)
+        .slice(0, 4)
     }
   };
 }
