@@ -24,8 +24,8 @@ export default function BlogPage(props: StaticProps) {
               <div className="max-w-lg space-y-4 text-white">
                 <h3 className="text-4xl font-bold lg:text-5xl">Touca Blog</h3>
                 <p className="text-xl font-light text-white lg:text-2xl">
-                  Towards making software easier to maintain and safer to
-                  release.
+                  Towards making software easier to change, cheaper to maintain,
+                  and safer to release.
                 </p>
               </div>
             </div>
