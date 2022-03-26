@@ -10,12 +10,6 @@
 
 namespace touca {
 
-static const std::unordered_map<ResultCategory, fbs::ResultType> result_types =
-    {
-        {ResultCategory::Check, fbs::ResultType::Check},
-        {ResultCategory::Assert, fbs::ResultType::Assert},
-};
-
 Testcase::Testcase(const std::string& teamslug, const std::string& testsuite,
                    const std::string& version, const std::string& name)
     : _posted(false) {
@@ -214,7 +208,9 @@ std::vector<uint8_t> Testcase::flatbuffers() const {
     fbs::ResultBuilder fbsResult_builder(builder);
     fbsResult_builder.add_key(fbsKey);
     fbsResult_builder.add_value(fbsValue);
-    fbsResult_builder.add_typ(result_types.at(result.second.typ));
+    fbsResult_builder.add_typ(result.second.typ == ResultCategory::Assert
+                                  ? fbs::ResultType::Assert
+                                  : fbs::ResultType::Check);
     const auto& fbsEntry = fbsResult_builder.Finish();
     fbsResultEntries_vector.push_back(fbsEntry);
   }

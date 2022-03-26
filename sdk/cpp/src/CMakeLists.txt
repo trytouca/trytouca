@@ -91,7 +91,6 @@ target_compile_features(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
         cxx_variadic_templates
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:cxx_aggregate_default_initializers>
         cxx_defaulted_functions
         cxx_lambdas
         cxx_long_long_type

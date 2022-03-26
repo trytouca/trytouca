@@ -265,19 +265,23 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
 }
 
 std::string Cellar::stringify(const detail::internal_type type) const {
-  const std::unordered_map<detail::internal_type, std::string> store = {
-      {detail::internal_type::boolean, "bool"},
-      {detail::internal_type::number_signed, "number"},
-      {detail::internal_type::number_unsigned, "number"},
-      {detail::internal_type::number_float, "number"},
-      {detail::internal_type::number_double, "number"},
-      {detail::internal_type::string, "string"},
-      {detail::internal_type::array, "array"},
-      {detail::internal_type::object, "object"}};
-  if (store.count(type)) {
-    return store.at(type);
+  switch (type) {
+    case detail::internal_type::boolean:
+      return "bool";
+    case detail::internal_type::number_signed:
+    case detail::internal_type::number_unsigned:
+    case detail::internal_type::number_float:
+    case detail::internal_type::number_double:
+      return "number";
+    case detail::internal_type::string:
+      return "string";
+    case detail::internal_type::array:
+      return "array";
+    case detail::internal_type::object:
+      return "object";
+    default:
+      return "unknown";
   }
-  return "unknown";
 }
 
 nlohmann::ordered_json Cellar::json() const {

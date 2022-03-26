@@ -10,15 +10,6 @@
 #include "touca/impl/schema.hpp"
 
 namespace touca {
-namespace detail {
-
-static const std::unordered_map<fbs::ResultType, ResultCategory>
-    result_types_reverse = {
-        {fbs::ResultType::Check, ResultCategory::Check},
-        {fbs::ResultType::Assert, ResultCategory::Assert},
-};
-
-}  // namespace detail
 
 data_point deserialize_value(const fbs::TypeWrapper* ptr) {
   const auto& value = ptr->value();
@@ -92,8 +83,9 @@ Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
       throw std::runtime_error("failed to parse results map entry");
     }
     resultsMap.emplace(
-        key,
-        ResultEntry{value, detail::result_types_reverse.at(result->typ())});
+        key, ResultEntry{value, result->typ() == fbs::ResultType::Assert
+                                    ? ResultCategory::Assert
+                                    : ResultCategory::Check});
   }
 
   std::unordered_map<std::string, detail::number_unsigned_t> metricsMap;

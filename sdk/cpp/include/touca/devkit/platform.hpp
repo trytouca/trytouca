@@ -11,6 +11,8 @@
 namespace touca {
 
 struct Response {
+  Response(const int status, const std::string body)
+      : status(status), body(body) {}
   const int status = -1;
   const std::string body;
 };
