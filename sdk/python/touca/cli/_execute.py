@@ -1,7 +1,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import os
-from argparse import ArgumentParser
+from argparse import Action, ArgumentParser
 from pathlib import Path
 
 from touca._options import config_file_parse
@@ -50,7 +50,14 @@ class Execute(Operation):
         return "execute"
 
     def parser(self) -> ArgumentParser:
+        class ExtendAction(Action):
+            def __call__(self, parser, namespace, values, option_string=None):
+                items = getattr(namespace, self.dest) or []
+                items.extend(values)
+                setattr(namespace, self.dest, items)
+
         parser = ArgumentParser()
+        parser.register("action", "extend", ExtendAction)
         parser.add_argument(
             "--testdir",
             default=[""],
@@ -69,7 +76,7 @@ class Execute(Operation):
             "--testcases",
             metavar="",
             dest="testcases",
-            action="append",
+            action="extend",
             nargs="+",
             help="One or more testcases to feed to the workflow",
         )
@@ -92,9 +99,7 @@ class Execute(Operation):
         if parsed.get("version"):
             self.__options["version"] = parsed.get("version")
         if parsed.get("testcases"):
-            self.__options["testcases"] = [
-                i for k in parsed.get("testcases") for i in k
-            ]
+            self.__options["testcases"] = parsed.get("testcases")
         if parsed.get("testcase-file"):
             self.__options["testcase-file"] = parsed.get("testcase-file")
 

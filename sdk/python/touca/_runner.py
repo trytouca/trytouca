@@ -39,12 +39,19 @@ from touca._printer import Printer
 
 
 def _parse_cli_options(args) -> Dict[str, Any]:
-    from argparse import ArgumentParser
+    from argparse import Action, ArgumentParser
+
+    class ExtendAction(Action):
+        def __call__(self, parser, namespace, values, option_string=None):
+            items = getattr(namespace, self.dest) or []
+            items.extend(values)
+            setattr(namespace, self.dest, items)
 
     # fmt: off
     parser = ArgumentParser(
         description="Touca Regression Test",
         epilog="Visit https://touca.io/docs for more information")
+    parser.register('action', 'extend', ExtendAction)
     parser.add_argument("--api-key", dest="api-key",
         metavar='',
         help="API Key issued by the Touca Server")
@@ -65,7 +72,7 @@ def _parse_cli_options(args) -> Dict[str, Any]:
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--testcase", "--testcases", dest='testcases',
-        metavar="", action="append", nargs="+",
+        metavar="", action="extend", nargs="+",
         help="One or more testcases to feed to the workflow")
     group.add_argument("--testcase-file", dest="testcase-file",
         metavar="",
