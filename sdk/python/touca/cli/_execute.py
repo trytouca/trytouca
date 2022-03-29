@@ -113,9 +113,18 @@ class Execute(Operation):
             "overwrite": False,
             "colored-output": True,
         }
+        flags = [
+            "save-as-binary",
+            "save-as-json",
+            "offline",
+            "overwrite",
+            "colored-output",
+        ]
         config_content = config_file_parse()
         if config_content:
-            args.update(config_content.items("settings"))
+            for key in config_content.options("settings"):
+                func = config_content.getboolean if key in flags else config_content.get
+                args.update({key: func("settings", key)})
         if "testcases" in self.__options:
             args.update({"testcases": self.__options.get("testcases")})
         if "testcase-file" in self.__options:
