@@ -314,3 +314,10 @@ export type PlatformStatsResponse = {
   spaceUsed: number;
   users: PlatformStatsUser[];
 };
+
+export interface UserSessionsResponseItem {
+  _id: string;
+  agent: string;
+  expiresAt: Date;
+  ipAddr: string;
+}

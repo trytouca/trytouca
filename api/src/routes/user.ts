@@ -1,9 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import express from 'express'
 
 import { ctrlUserDelete } from '@/controllers/user/delete'
 import { userLookup } from '@/controllers/user/lookup'
+import { userSessions } from '@/controllers/user/sessions'
 import { userUpdate } from '@/controllers/user/update'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
@@ -111,6 +112,33 @@ router.delete(
   '/',
   middleware.isAuthenticated,
   promisable(ctrlUserDelete, 'delete own account')
+)
+
+/**
+ * Provides list of active sessions of this user.
+ *
+ * @api [get] /user/sessions
+ *    tags:
+ *      - User
+ *    summary: List Active User Sessions
+ *    operationId: user_sessions
+ *    description:
+ *      Provides list of active sessions of this user.
+ *      User performing the query must be authenticated.
+ *    responses:
+ *      200:
+ *        description: 'Active User Sessions'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/CT_UserSessionsResponseItem'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ */
+router.get(
+  '/sessions',
+  middleware.isAuthenticated,
+  promisable(userSessions, 'list active sessions')
 )
 
 export const userRouter = router

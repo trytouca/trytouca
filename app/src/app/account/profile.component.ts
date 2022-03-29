@@ -14,7 +14,8 @@ import {
   EPlatformRole,
   PlatformStatsResponse,
   PlatformStatsUser,
-  UserLookupResponse
+  UserLookupResponse,
+  UserSessionsResponseItem
 } from '@/core/models/commontypes';
 import { EFeatureFlag } from '@/core/models/commontypes';
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
@@ -77,7 +78,9 @@ interface SettingsPageTab {
 export class ProfileComponent implements OnDestroy {
   private _subs: Subscription[] = [];
   private _subStats: Subscription;
+  private _subSessions: Subscription;
   alert: Partial<Record<EModalType, Alert>> = {};
+  sessions: UserSessionsResponseItem[];
   user: UserLookupResponse;
   EFeatureFlag = EFeatureFlag;
   EModalType = EModalType;
@@ -215,6 +218,9 @@ export class ProfileComponent implements OnDestroy {
     if (this._subStats) {
       this._subStats.unsubscribe();
     }
+    if (this._subSessions) {
+      this._subSessions.unsubscribe();
+    }
   }
 
   private fetchUser() {
@@ -237,7 +243,16 @@ export class ProfileComponent implements OnDestroy {
       if (this.isPlatformAdmin) {
         this._subStats = this.fetchStats();
       }
+      this._subSessions = this.fetchSessions();
     });
+  }
+
+  private fetchSessions() {
+    return this.apiService
+      .get<UserSessionsResponseItem[]>('/user/sessions')
+      .subscribe((response) => {
+        this.sessions = response;
+      });
   }
 
   private fetchStats() {

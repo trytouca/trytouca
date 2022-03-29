@@ -1141,3 +1141,30 @@ export type PlatformStatsResponse = {
   spaceUsed: number
   users: PlatformStatsUser[]
 }
+
+/**
+ * @schema CT_UserSessionsResponseItem
+ *  type: object
+ *  additionalProperties: false
+ *  required:
+ *    - _id
+ *    - agent
+ *    - expiresAt
+ *    - ipAddr
+ *  properties:
+ *    _id:
+ *      type: string
+ *    agent:
+ *      type: string
+ *    expiresAt:
+ *      type: string
+ *      format: date-time
+ *    ipAddr:
+ *      type: string
+ */
+export interface UserSessionsResponseItem {
+  _id: string
+  agent: string
+  expiresAt: Date
+  ipAddr: string
+}

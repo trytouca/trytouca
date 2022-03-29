@@ -218,7 +218,7 @@
           </button>
         </div>
       </div>
-      <div *ngIf="currentTab.type === TabType.ApiKeys">
+      <div class="space-y-4" *ngIf="currentTab.type === TabType.ApiKeys">
         <div class="wsl-box space-y-2 p-4" *ngIf="apiKeys">
           <h2
             class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
@@ -259,6 +259,43 @@
               </div>
             </div>
           </div>
+          <div>
+            <a
+              class="wsl-text-muted flex cursor-pointer items-center space-x-1 hover:text-gray-700 hover:dark:text-gray-200">
+              <ng-icon name="feather-plus-circle"></ng-icon>
+              <span class="text-xs">New Key</span>
+            </a>
+          </div>
+        </div>
+        <div class="wsl-box space-y-2 p-4">
+          <h2
+            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+            Active Sessions
+          </h2>
+          <table class="w-full table-fixed">
+            <thead>
+              <tr class="font-medium dark:text-white">
+                <th>Agent</th>
+                <th>IP Address</th>
+                <th>Expires At</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                class="wsl-text-muted w-full py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-700"
+                *ngFor="let session of sessions; let i = index">
+                <td class="overflow-clip whitespace-nowrap p-2">
+                  {{ session.agent }}
+                </td>
+                <td class="overflow-clip whitespace-nowrap p-2 text-center">
+                  {{ session.ipAddr }}
+                </td>
+                <td class="overflow-clip whitespace-nowrap p-2 text-center">
+                  {{ session.expiresAt | datetime: 'format' }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
       <div *ngIf="currentTab.type === TabType.Preferences">
