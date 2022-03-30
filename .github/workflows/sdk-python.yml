@@ -56,6 +56,7 @@ jobs:
         run: |
           tar -zcf python-docs-external.tar.gz local/docs
           aws s3 cp python-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 sync ./local/docs/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }}/docs/sdk/python/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
         run: |
