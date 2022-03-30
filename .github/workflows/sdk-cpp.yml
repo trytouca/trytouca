@@ -95,6 +95,7 @@ jobs:
         run: |
           tar -zcf cpp-api-reference.tar.gz local/docs/html
           aws s3 cp cpp-api-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 sync ./local/docs/html/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }}/docs/sdk/cpp/ --include "*" --cache-control no-cache
 
   build-sdk-cpp-coverage:
     name: build-sdk-cpp-coverage
