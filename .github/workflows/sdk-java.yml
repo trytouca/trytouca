@@ -56,6 +56,7 @@ jobs:
         run: |
           tar -zcf java-docs-external.tar.gz touca/build/docs/javadoc
           aws s3 cp java-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 sync ./touca/build/docs/javadoc/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }}/docs/sdk/java/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
