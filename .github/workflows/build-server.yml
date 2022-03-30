@@ -63,34 +63,17 @@ jobs:
           aws s3 cp api-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp api-docs-internal.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp api-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 sync ./api/local/docs/external/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }}/docs/api/ --include "*" --cache-control no-cache
 
       - name: pull api from aws
         if: steps.changes.outputs.api == 'false'
         run: |
           aws s3 cp ${{ steps.params.outputs.buckets }}/api.tar.gz .
-          aws s3 cp ${{ steps.params.outputs.buckets }}/api-docs-external.tar.gz .
-          aws s3 cp ${{ steps.params.outputs.buckets }}/api-docs-internal.tar.gz .
-          aws s3 cp ${{ steps.params.outputs.buckets }}/api-test-coverage.tar.gz .
 
       - uses: actions/upload-artifact@v2
         with:
           name: api-bundle
           path: ${{ github.workspace }}/api.tar.gz
-          retention-days: 1
-      - uses: actions/upload-artifact@v2
-        with:
-          name: docs-external-api
-          path: ${{ github.workspace }}/api-docs-external.tar.gz
-          retention-days: 1
-      - uses: actions/upload-artifact@v2
-        with:
-          name: docs-internal-api
-          path: ${{ github.workspace }}/api-docs-internal.tar.gz
-          retention-days: 1
-      - uses: actions/upload-artifact@v2
-        with:
-          name: tests-internal-api
-          path: ${{ github.workspace }}/api-test-coverage.tar.gz
           retention-days: 1
 
   app-build-native:
@@ -240,11 +223,6 @@ jobs:
       - uses: actions/download-artifact@v2
         if: steps.changes.outputs.app == 'true'
         with:
-          name: docs-external-api
-          path: ${{ github.workspace }}
-      - uses: actions/download-artifact@v2
-        if: steps.changes.outputs.app == 'true'
-        with:
           name: app-bundle
           path: ${{ github.workspace }}
       - uses: actions/download-artifact@v2
@@ -252,21 +230,6 @@ jobs:
         with:
           name: cmp-bundle
           path: ${{ github.workspace }}
-      - name: pull client docs from aws
-        if: steps.changes.outputs.app == 'true'
-        run: |
-          aws s3 cp ${{ steps.params.outputs.buckets }}/cpp-docs-external.tar.gz .
-          aws s3 cp ${{ steps.params.outputs.buckets }}/java-docs-external.tar.gz .
-          aws s3 cp ${{ steps.params.outputs.buckets }}/js-node-docs-external.tar.gz .
-          aws s3 cp ${{ steps.params.outputs.buckets }}/python-docs-external.tar.gz .
-          mkdir -p ./stage/clients/cpp
-          mkdir -p ./stage/clients/java
-          mkdir -p ./stage/clients/js
-          mkdir -p ./stage/clients/python
-          tar -xf cpp-docs-external.tar.gz -C ./stage/clients/cpp
-          tar -xf java-docs-external.tar.gz -C ./stage/clients/java
-          tar -xf js-node-docs-external.tar.gz -C ./stage/clients/js
-          tar -xf python-docs-external.tar.gz -C ./stage/clients/python
 
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.api == 'true'
@@ -313,7 +276,6 @@ jobs:
         run: |
           mkdir -p ./stage
           tar -xf app.tar.gz -C ./stage
-          tar -xf api-docs-external.tar.gz -C ./stage
           mkdir -p ./stage/app && cp ./app/nginx.conf ./stage/app/
           docker build -f config/docker/app.Dockerfile -t touca-app stage
       - name: push app to container registry
