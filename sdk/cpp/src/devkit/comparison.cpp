@@ -6,14 +6,15 @@
 
 #include "nlohmann/json.hpp"
 #include "touca/core/filesystem.hpp"
+#include "touca/core/types.hpp"
 
 namespace touca {
 
 std::map<std::string, data_point> flatten(const data_point& input) {
   std::map<std::string, data_point> entries;
   if (input._type == detail::internal_type::array) {
-    for (unsigned i = 0; i < (*input._array).size(); ++i) {
-      const auto& value = (*input._array).at(i);
+    for (unsigned i = 0; i < (*input.as_array()).size(); ++i) {
+      const auto& value = (*input.as_array()).at(i);
       const auto& name = '[' + std::to_string(i) + ']';
       const auto& nestedMembers = flatten(value);
       if (nestedMembers.empty()) {
@@ -26,7 +27,7 @@ std::map<std::string, data_point> flatten(const data_point& input) {
       }
     }
   } else if (input._type == detail::internal_type::object) {
-    for (const auto& value : *input._object) {
+    for (const auto& value : *input.as_object()) {
       const auto& name = value.first;
       const auto& nestedMembers = flatten(value.second);
       if (nestedMembers.empty()) {
@@ -214,53 +215,73 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
     return cmp;
   }
 
-  if (src._type == detail::internal_type::boolean) {
-    // two Bool objects are equal if they have identical values.
-    if (src._boolean == dst._boolean) {
-      cmp.match = MatchType::Perfect;
-      cmp.score = 1.0;
-      return cmp;
-    }
-    cmp.dstValue = dst.to_string();
-  } else if (src._type == detail::internal_type::number_double) {
-    compare_number<detail::number_double_t>(src._number_double,
-                                            dst._number_double, cmp);
-    if (cmp.match != MatchType::Perfect) {
+  switch (src._type) {
+    case detail::internal_type::boolean:
+      // two Bool objects are equal if they have identical values.
+      if (src.as_boolean() == dst.as_boolean()) {
+        cmp.match = MatchType::Perfect;
+        cmp.score = 1.0;
+        return cmp;
+      }
       cmp.dstValue = dst.to_string();
-    }
-  } else if (src._type == detail::internal_type::number_float) {
-    compare_number<detail::number_float_t>(src._number_float, dst._number_float,
-                                           cmp);
-    if (cmp.match != MatchType::Perfect) {
-      cmp.dstValue = dst.to_string();
-    }
-  } else if (src._type == detail::internal_type::number_signed) {
-    compare_number<detail::number_signed_t>(src._number_signed,
-                                            dst._number_signed, cmp);
-    if (cmp.match != MatchType::Perfect) {
-      cmp.dstValue = dst.to_string();
-    }
-  } else if (src._type == detail::internal_type::number_unsigned) {
-    compare_number<detail::number_unsigned_t>(src._number_unsigned,
-                                              dst._number_unsigned, cmp);
-    if (cmp.match != MatchType::Perfect) {
-      cmp.dstValue = dst.to_string();
-    }
-  } else if (src._type == detail::internal_type::string) {
-    if (0 == src._string->compare(*dst._string)) {
-      cmp.match = MatchType::Perfect;
-      cmp.score = 1.0;
-    } else {
-      cmp.dstValue = dst.to_string();
-    }
-  } else if (src._type == detail::internal_type::array) {
-    compare_arrays(src, dst, cmp);
-  } else if (src._type == detail::internal_type::object) {
-    compare_objects(src, dst, cmp);
-    if (cmp.match != MatchType::Perfect) {
-      cmp.dstValue = dst.to_string();
-    }
+      break;
+
+    case detail::internal_type::number_double:
+      compare_number<detail::number_double_t>(src.as_number_double(),
+                                              dst.as_number_double(), cmp);
+      if (cmp.match != MatchType::Perfect) {
+        cmp.dstValue = dst.to_string();
+      }
+      break;
+
+    case detail::internal_type::number_float:
+      compare_number<detail::number_float_t>(src.as_number_float(),
+                                             dst.as_number_float(), cmp);
+      if (cmp.match != MatchType::Perfect) {
+        cmp.dstValue = dst.to_string();
+      }
+      break;
+
+    case detail::internal_type::number_signed:
+      compare_number<detail::number_signed_t>(src.as_number_signed(),
+                                              dst.as_number_signed(), cmp);
+      if (cmp.match != MatchType::Perfect) {
+        cmp.dstValue = dst.to_string();
+      }
+      break;
+
+    case detail::internal_type::number_unsigned:
+      compare_number<detail::number_unsigned_t>(src.as_number_unsigned(),
+                                                dst.as_number_unsigned(), cmp);
+      if (cmp.match != MatchType::Perfect) {
+        cmp.dstValue = dst.to_string();
+      }
+      break;
+
+    case detail::internal_type::string:
+      if (0 == src.as_string()->compare(*dst.as_string())) {
+        cmp.match = MatchType::Perfect;
+        cmp.score = 1.0;
+      } else {
+        cmp.dstValue = dst.to_string();
+      }
+      break;
+
+    case detail::internal_type::array:
+      compare_arrays(src, dst, cmp);
+      break;
+
+    case detail::internal_type::object:
+      compare_objects(src, dst, cmp);
+      if (cmp.match != MatchType::Perfect) {
+        cmp.dstValue = dst.to_string();
+      }
+      break;
+
+    default:
+      break;
   }
+
   return cmp;
 }
 
