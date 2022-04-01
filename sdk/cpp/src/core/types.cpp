@@ -8,8 +8,8 @@
 
 #include "flatbuffers/flatbuffers.h"
 #include "nlohmann/json.hpp"
-#include "touca/impl/schema.hpp"
 #include "touca/core/variant.hpp"
+#include "touca/impl/schema.hpp"
 
 namespace touca {
 namespace detail {

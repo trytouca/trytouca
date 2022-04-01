@@ -3,9 +3,9 @@
 include(GenerateExportHeader)
 include(GNUInstallDirs)
 
-touca_find_package("flatbuffers" "Flatbuffers")
+touca_find_package("flatbuffers" "FlatBuffers")
 touca_find_package("fmt")
-touca_find_package("ghcFilesystem")
+touca_find_package("ghcFilesystem" "ghc_filesystem")
 touca_find_package("httplib")
 touca_find_package("nlohmann_json")
 touca_find_package("mpark_variant")

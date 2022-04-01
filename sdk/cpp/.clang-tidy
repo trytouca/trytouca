@@ -1,15 +1,21 @@
 ---
 Checks: "*,\
--fuchsia-default-arguments,\
--google-readability-namespace-comments,\
--llvm-header-guard,\
--llvm-include-order,\
--llvm-namespace-comment,\
--readability-implicit-bool-conversion,\
--readability-simplify-boolean-exp,\
--cppcoreguidelines-pro-bounds-array-to-pointer-decay,\
--misc-unused-alias-decls,\
-"
-HeaderFilterRegex: ''
-...
+  -altera-unroll-loops, \
+  -fuchsia-default-arguments,\
+  -fuchsia-default-arguments-calls,\
+  -google-readability-namespace-comments,\
+  -llvm-header-guard,\
+  -llvm-include-order,\
+  -llvm-namespace-comment,\
+  -llvmlibc-callee-namespace, \
+  -llvmlibc-implementation-in-namespace, \
+  -llvmlibc-restrict-system-libc-headers, \
+  -modernize-use-trailing-return-type, \
+  -readability-implicit-bool-conversion,\
+  -readability-simplify-boolean-exp,\
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,\
+  -misc-unused-alias-decls,\
+  "
+HeaderFilterRegex: ""
+---
 

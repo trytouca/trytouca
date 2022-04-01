@@ -165,10 +165,7 @@ class deep_copy_ptr {
 
   ~deep_copy_ptr() = default;
 
-  void swap(deep_copy_ptr& other) noexcept(noexcept(std::swap(_ptr,
-                                                              other._ptr))) {
-    std::swap(_ptr, other._ptr);
-  }
+  void swap(deep_copy_ptr& other) noexcept { std::swap(_ptr, other._ptr); }
 
   friend bool operator==(const deep_copy_ptr<T>& lhs, const T& rhs) noexcept {
     return *lhs == rhs;

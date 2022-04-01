@@ -4,10 +4,6 @@ name: touca-cpp-main
 
 on:
   push:
-    branches:
-      - main
-      - next
-      - "feature/**"
     paths-ignore:
       - "appveyor.yml"
 
@@ -40,7 +36,9 @@ jobs:
           cache-name: cache-conan-packages
         with:
           path: ~/.conan
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{ hashFiles('**/conanfile.py') }}
+          key:
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{
+            hashFiles('**/conanfile.py') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -78,7 +76,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: actions/setup-python@v2
         with:
@@ -111,7 +110,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - name: install dependencies
         run: pip install gcovr
