@@ -13,6 +13,7 @@ from touca.cli._execute import Execute
 from touca.cli._merge import Merge
 from touca.cli._post import Post
 from touca.cli._run import Run
+from touca.cli._solve import Solve
 from touca.cli._unzip import Unzip
 from touca.cli._update import Update
 from touca.cli._zip import Zip
@@ -50,6 +51,7 @@ def main(args=None):
         "unzip": lambda opt: Unzip(opt),
         "update": lambda opt: Update(opt),
         "zip": lambda opt: Zip(opt),
+        "solve": lambda opt: Solve(opt),
     }
     parser = argparse.ArgumentParser(
         description="Work seamlessly with Touca from the command line.",
