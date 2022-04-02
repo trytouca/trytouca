@@ -2,6 +2,8 @@
 
 Touca helps you see the side-effects of your changes, as you write code.
 
+[![Discord](https://img.shields.io/discord/807669589294317598)](https://touca.io/discord)
+
 [![Touca Server](https://touca.io/images/touca-screenshot-suite-page.jpg)](https://touca.io/images/touca-screenshot-suite-page.jpg)
 
 Touca SDKs let you describe the behavior and performance of your software
