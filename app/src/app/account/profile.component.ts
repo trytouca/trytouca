@@ -2,13 +2,11 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
-import { formatDistanceToNow } from 'date-fns/esm';
-import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription, timer } from 'rxjs';
 
+import { RecentEvent } from '@/account/settings/audit.component';
 import { ApiKey } from '@/core/models/api-key';
 import {
   EPlatformRole,
@@ -18,9 +16,7 @@ import {
   UserSessionsResponseItem
 } from '@/core/models/commontypes';
 import { EFeatureFlag } from '@/core/models/commontypes';
-import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
 import {
-  ApiRequestType,
   ApiService,
   AuthService,
   NotificationService,
@@ -30,18 +26,8 @@ import {
   ConfirmComponent,
   ConfirmElements
 } from '@/home/components/confirm.component';
-import { Alert, AlertType } from '@/shared/components/alert.component';
+import { AlertType } from '@/shared/components/alert.component';
 import { Checkbox } from '@/shared/components/checkbox.component';
-
-enum EModalType {
-  ChangePersonal = 'changePersonal',
-  DeleteAccount = 'deleteAccount'
-}
-
-interface FormContent {
-  fname: string;
-  uname: string;
-}
 
 enum SettingsPageTabType {
   Profile = 'profile',
@@ -52,16 +38,6 @@ enum SettingsPageTabType {
   Users = 'users',
   Audit = 'audit',
   Billing = 'billing'
-}
-
-interface RecentEvent {
-  copyLink?: string;
-  copyText: string;
-  email: string;
-  eventDate: Date;
-  expiresAt?: Date;
-  fullname: string;
-  username: string;
 }
 
 interface SettingsPageTab {
@@ -78,12 +54,9 @@ interface SettingsPageTab {
 export class ProfileComponent implements OnDestroy {
   private _subs: Subscription[] = [];
   private _subStats: Subscription;
-  private _subSessions: Subscription;
-  alert: Partial<Record<EModalType, Alert>> = {};
   sessions: UserSessionsResponseItem[];
   user: UserLookupResponse;
   EFeatureFlag = EFeatureFlag;
-  EModalType = EModalType;
   apiKeys: ApiKey[];
   isPlatformAdmin: boolean;
 
@@ -159,39 +132,6 @@ export class ProfileComponent implements OnDestroy {
     }
   };
 
-  accountSettingsForm = new FormGroup({
-    email: new FormControl('', {
-      validators: formFields.email.validators,
-      updateOn: 'blur'
-    }),
-    fname: new FormControl('', {
-      validators: formFields.fname.validators,
-      updateOn: 'blur'
-    }),
-    uname: new FormControl('', {
-      validators: formFields.uname.validators,
-      updateOn: 'blur'
-    })
-  });
-
-  hints = new FormHints({
-    email: new FormHint(
-      'Contact us if you like to change your email address',
-      formFields.email.validationErrors
-    ),
-    fname: new FormHint('', formFields.fname.validationErrors),
-    uname: new FormHint('', formFields.uname.validationErrors)
-  });
-
-  resetPassword: {
-    click: () => void;
-    failed: boolean;
-    message?: string;
-  } = {
-    click: () => this.resetPasswordAction(),
-    failed: false
-  };
-
   serverSettings: {
     accounts: PlatformStatsUser[];
     events: RecentEvent[];
@@ -206,10 +146,7 @@ export class ProfileComponent implements OnDestroy {
     private router: Router,
     private userService: UserService
   ) {
-    this._subs.push(
-      this.hints.subscribe(this.accountSettingsForm, ['fname', 'uname']),
-      this.fetchUser()
-    );
+    this._subs.push(this.fetchUser());
     this.userService.populate();
   }
 
@@ -217,9 +154,6 @@ export class ProfileComponent implements OnDestroy {
     this._subs.filter(Boolean).forEach((v) => v.unsubscribe());
     if (this._subStats) {
       this._subStats.unsubscribe();
-    }
-    if (this._subSessions) {
-      this._subSessions.unsubscribe();
     }
   }
 
@@ -235,15 +169,11 @@ export class ProfileComponent implements OnDestroy {
         EPlatformRole.Admin
       ].includes(user.platformRole);
       this.user = user;
-      this.accountSettingsForm.get('email').setValue(user.email);
-      this.accountSettingsForm.get('email').disable();
-      this.accountSettingsForm.get('fname').setValue(user.fullname);
-      this.accountSettingsForm.get('uname').setValue(user.username);
       this.apiKeys = user.apiKeys.map((v) => new ApiKey(v));
       if (this.isPlatformAdmin) {
         this._subStats = this.fetchStats();
       }
-      this._subSessions = this.fetchSessions();
+      this.fetchSessions();
     });
   }
 
@@ -342,91 +272,46 @@ export class ProfileComponent implements OnDestroy {
       });
   }
 
-  onSubmit(model: FormContent) {
-    if (!this.accountSettingsForm.valid) {
-      return;
-    }
-    const info: Partial<Record<'fullname' | 'username', string>> = {};
-    if (this.user.fullname !== model.fname) {
-      info.fullname = model.fname;
-    }
-    if (this.user.username !== model.uname) {
-      info.username = model.uname;
-    }
-    if (Object.keys(info).length === 0) {
-      return;
-    }
-    this.apiService.patch('/user', info).subscribe({
-      next: () => {
-        this.alert.changePersonal = {
-          type: AlertType.Success,
-          text: 'Your account information was updated.'
-        };
-        timer(5000).subscribe(() => (this.alert.changePersonal = undefined));
-        this.hints.reset();
-        this.userService.reset();
-        this.userService.populate();
+  confirmAccountDelete() {
+    this.openConfirmModal({
+      title: 'Delete Account',
+      message: `<p>You are about to delete your account which removes your
+        personal information and lets others claim <b>${this.user.username}</b>
+        as their username. Information submitted to teams created by other
+        users will not be deleted. This action is irreversible.</p>`,
+      button: 'Delete My Account',
+      severity: AlertType.Danger,
+      confirmText: this.user.username,
+      confirmAction: () => {
+        return this.apiService.delete('/user');
       },
-      error: (err: HttpErrorResponse) => {
-        const error = this.apiService.extractError(err, [
-          [409, 'username already registered', 'This username is taken']
-        ]);
-        timer(2000).subscribe(() => {
-          this.alert.changePersonal = undefined;
-          this.hints.reset();
+      onActionSuccess: () => {
+        this.authService.logout().subscribe(() => {
           this.userService.reset();
-          this.userService.populate();
+          this.router.navigate(['/account/signin']);
         });
-        this.alert.changePersonal = { text: error, type: AlertType.Danger };
+      },
+      onActionFailure: (err: HttpErrorResponse) => {
+        return this.apiService.extractError(err, [
+          [
+            403,
+            'refusing to delete account: platform owner',
+            'Your account owns this platform. It cannot be deleted.'
+          ],
+          [
+            403,
+            'refusing to delete account: owns team',
+            'You own one or more teams. You cannot delete your account before you delete them or transfer their ownership to someone else.'
+          ]
+        ]);
       }
     });
   }
 
-  openConfirmModal(type: EModalType) {
-    const elements = new Map<EModalType, ConfirmElements>([
-      [
-        EModalType.DeleteAccount,
-        {
-          title: 'Delete Account',
-          message: `<p>You are about to delete your account which removes your
-            personal information and lets others claim <b>${this.user.username}</b>
-            as their username. Information submitted to teams created by other
-            users will not be deleted. This action is irreversible.</p>`,
-          button: 'Delete My Account',
-          severity: AlertType.Danger,
-          confirmText: this.user.username,
-          confirmAction: () => {
-            return this.apiService.delete('/user');
-          },
-          onActionSuccess: () => {
-            this.authService.logout().subscribe(() => {
-              this.userService.reset();
-              this.router.navigate(['/account/signin']);
-            });
-          },
-          onActionFailure: (err: HttpErrorResponse) => {
-            return this.apiService.extractError(err, [
-              [
-                403,
-                'refusing to delete account: platform owner',
-                'Your account owns this platform. It cannot be deleted.'
-              ],
-              [
-                403,
-                'refusing to delete account: owns team',
-                'You own one or more teams. You cannot delete your account before you delete them or transfer their ownership to someone else.'
-              ]
-            ]);
-          }
-        }
-      ]
-    ]);
-    if (!elements.has(type)) {
-      return;
-    }
+  private openConfirmModal(elements: ConfirmElements) {
     this.dialogService.open(ConfirmComponent, {
       closeButton: false,
-      data: elements.get(type),
+      data: elements,
       minHeight: '10vh'
     });
   }
@@ -446,29 +331,6 @@ export class ProfileComponent implements OnDestroy {
     this.currentTab = tab;
   }
 
-  resetPasswordAction(): void {
-    this.apiService
-      .post(ApiRequestType.ResetStart, { email: this.user.email })
-      .subscribe({
-        next: () => {
-          this.resetPassword.message = 'Done. Check your inbox!';
-          timer(10000).subscribe(() => {
-            this.resetPassword.message = undefined;
-          });
-        },
-        error: (err: HttpErrorResponse) => {
-          const el = this.apiService.findErrorList(ApiRequestType.ResetStart);
-          const msg = this.apiService.extractError(err, el);
-          this.resetPassword.message = msg;
-          this.resetPassword.failed = true;
-          timer(10000).subscribe(() => {
-            this.resetPassword.message = undefined;
-            this.resetPassword.failed = false;
-          });
-        }
-      });
-  }
-
   regenerateApiKey(index: number): void {
     this.userService.updateApiKey(this.user.apiKeys[index]);
   }
@@ -479,35 +341,23 @@ export class ProfileComponent implements OnDestroy {
     );
   }
 
-  onCopy(event: IClipboardResponse, name: string) {
+  onCopy(name: string) {
     this.notificationService.notify(
       AlertType.Success,
       `Copied ${name} to clipboard.`
     );
   }
 
-  suspendAccount(user: PlatformStatsUser) {
-    this.updateAccount(
-      `/platform/account/${user.username}/suspend`,
-      `Account for ${user.fullname || user.username} was suspended.`
-    );
-  }
-
-  deleteAccount(user: PlatformStatsUser) {
-    this.updateAccount(
-      `/platform/account/${user.username}/delete`,
-      `Account for ${user.fullname || user.username} was deleted.`
-    );
-  }
-
-  private updateAccount(url: string, successMessage: string) {
-    this.apiService.post(url).subscribe(() => {
-      this.notificationService.notify(AlertType.Success, successMessage);
+  updateAccount(event: { message: string; url: string }) {
+    this.apiService.post(event.url).subscribe(() => {
+      this.notificationService.notify(AlertType.Success, event.message);
       this.fetchStats();
     });
   }
 
-  describeEventDate(eventDate: Date) {
-    return formatDistanceToNow(eventDate, { addSuffix: true });
+  removeSessions(session: string) {
+    this.apiService.delete(`/user/sessions/${session}`).subscribe(() => {
+      this.fetchSessions();
+    });
   }
 }

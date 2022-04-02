@@ -1,0 +1,44 @@
+<div class="wsl-box space-y-2 p-4">
+  <h2
+    class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+    Active Sessions
+  </h2>
+  <ul class="space-y-2">
+    <li class="flex font-medium dark:text-white">
+      <div class="w-2/5 px-2">Agent</div>
+      <div class="w-[30%] px-2 text-center">IP Address</div>
+      <div class="w-1/5 px-2 text-center">Expires At</div>
+      <div class="w-[10%]"></div>
+    </li>
+    <li
+      class="wsl-text-muted flex w-full rounded-md py-2 text-center text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+      *ngFor="let session of sessions; let i = index">
+      <div class="w-2/5 overflow-clip whitespace-nowrap px-2">
+        {{ session.agent }}
+      </div>
+      <div class="w-[30%] overflow-clip whitespace-nowrap px-2 text-center">
+        {{ session.ipAddr }}
+      </div>
+      <div class="w-1/5 overflow-clip whitespace-nowrap px-2 text-center">
+        {{ session.expiresAt | datetime: 'format' }}
+      </div>
+      <div class="flex w-[10%] justify-end px-2">
+        <div
+          wslDropdown
+          *ngIf="i !== 0"
+          class="flex cursor-pointer select-none items-center rounded-md p-1 text-black hover:bg-gray-200 dark:text-gray-300 hover:dark:bg-gray-800">
+          <ng-icon
+            class="wsl-dropdown-toggle h-full w-4"
+            name="hero-dots-vertical"></ng-icon>
+          <div
+            class="wsl-dropdown-menu hidden w-48 text-sm"
+            aria-labelledby="wsl-user-dropdown">
+            <div class="wsl-dropdown-item" (click)="remove.emit(session._id)">
+              <a class="text-sky-600 dark:text-sky-400">Log out</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,50 @@
+<h3 class="py-4 text-xl font-medium text-black dark:text-gray-300">
+  Audit Log
+</h3>
+<div
+  class="wsl-box divide-y divide-gray-200 border border-gray-200 p-4 dark:divide-gray-700 dark:border-gray-700">
+  <div
+    class="space-y-2 p-2 text-sm text-black dark:text-gray-300"
+    *ngFor="let event of events">
+    <div class="flex-grow">
+      <span
+        class="font-medium text-sky-600 dark:text-sky-400"
+        [title]="event.username">
+        {{ event.fullname }}
+      </span>
+      <span>{{ event.copyText }}</span>
+    </div>
+    <div class="flex items-center justify-between">
+      <div>
+        {{ describeEventDate(event.eventDate) }}
+      </div>
+      <div class="flex space-x-1">
+        <div
+          class="flex cursor-pointer justify-center rounded border border-gray-300 bg-gray-100 p-2 text-xs font-medium text-gray-500 hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
+          title="Copy email to clipboard"
+          ngxClipboard
+          [cbContent]="event.email"
+          (cbOnSuccess)="copyToClipboard.emit('email address')">
+          <ng-icon name="hero-mail" size="1rem"></ng-icon>
+        </div>
+        <div
+          class="flex cursor-pointer justify-center rounded border border-gray-300 bg-gray-100 p-2 text-xs font-medium text-gray-500 hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
+          *ngIf="event.copyLink"
+          title="Copy link to clipboard"
+          ngxClipboard
+          [cbContent]="event.copyLink"
+          (cbOnSuccess)="copyToClipboard.emit('link')">
+          <ng-icon name="hero-clipboard-copy" size="1rem"></ng-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    class="p-2 text-sm leading-6 text-black dark:text-gray-300"
+    *ngIf="events.length === 0">
+    This section lists noteworthy user events that may need your attention as a
+    server administrator. These events include account creation, password reset,
+    and consecutive failed login attempts that are not automatically resolved by
+    your users.
+  </div>
+</div>

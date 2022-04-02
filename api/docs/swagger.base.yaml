@@ -116,6 +116,13 @@ components:
       description: 'unique identifier for this comparison job'
       schema:
         $ref: '#/components/schemas/ObjectId'
+    session_id:
+      name: session_id
+      in: path
+      required: true
+      description: 'unique id of this session'
+      schema:
+        type: string
 
   schemas:
     Errors:

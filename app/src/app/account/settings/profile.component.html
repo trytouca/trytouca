@@ -1,0 +1,106 @@
+<div class="space-y-4">
+  <form
+    class="wsl-box space-y-4 p-4"
+    [formGroup]="accountSettingsForm"
+    (ngSubmit)="onSubmit(accountSettingsForm.value)"
+    novalidate>
+    <h2
+      class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+      Your Information
+    </h2>
+    <app-alert
+      class="block"
+      *ngIf="alert[EModalType.ChangePersonal]"
+      [alert]="alert[EModalType.ChangePersonal]"></app-alert>
+    <div>
+      <label class="wsl-input-label" for="wsl-fname">Name</label>
+      <input
+        class="wsl-input-field"
+        type="text"
+        id="wsl-fname"
+        name="fname"
+        formControlName="fname"
+        aria-describedby="wsl-fname-help"
+        required
+        autocomplete="name"
+        data-lpignore="true" />
+      <small
+        id="wsl-fname-help"
+        [ngClass]="hints.get('fname').type"
+        [innerHTML]="hints.get('fname').text"></small>
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-uname">Username</label>
+      <input
+        class="wsl-input-field"
+        type="text"
+        id="wsl-uname"
+        name="uname"
+        formControlName="uname"
+        aria-describedby="wsl-uname-help"
+        required
+        autocomplete="off"
+        data-lpignore="true" />
+      <small
+        id="wsl-uname-help"
+        [ngClass]="hints.get('uname').type"
+        [innerHTML]="hints.get('uname').text"></small>
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-email">Email Address</label>
+      <input
+        class="wsl-input-field disabled:bg-transparent disabled:text-gray-500 dark:disabled:text-gray-400"
+        type="text"
+        id="wsl-email"
+        name="email"
+        formControlName="email"
+        aria-describedby="wsl-email-help" />
+      <small
+        id="wsl-email-help"
+        [ngClass]="hints.get('email').type"
+        [innerHTML]="hints.get('email').text"></small>
+    </div>
+    <button class="wsl-btn-sm wsl-btn-primary font-normal" type="submit">
+      Update
+    </button>
+  </form>
+  <div class="wsl-box space-y-2 p-4">
+    <h2
+      class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+      Password Reset
+    </h2>
+    <p class="text-sm text-gray-600 dark:text-gray-300">
+      Click below and we send you an email to reset your password.
+    </p>
+    <div class="flex items-center space-x-2">
+      <button
+        class="wsl-btn-sm wsl-btn-muted font-normal"
+        type="button"
+        role="button"
+        (click)="resetPassword.click()"
+        [hidden]="resetPassword.message">
+        Reset Password
+      </button>
+      <small
+        [class]="resetPassword.failed ? 'wsl-text-danger' : 'wsl-text-success'"
+        [hidden]="!resetPassword.message">
+        {{ resetPassword.message }}
+      </small>
+    </div>
+  </div>
+  <div class="wsl-box space-y-2 p-4">
+    <h2
+      class="wsl-text-danger border-b border-gray-200 pb-1 text-xl font-medium dark:border-gray-700">
+      Danger Zone
+    </h2>
+    <p class="text-sm text-gray-600 dark:text-gray-300">
+      Remove your user account and all its associated data.
+    </p>
+    <button
+      class="wsl-btn-sm wsl-btn-danger"
+      (click)="confirmAccountDelete.emit()"
+      type="button">
+      Delete Account
+    </button>
+  </div>
+</div>

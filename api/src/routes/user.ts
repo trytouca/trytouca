@@ -4,6 +4,7 @@ import express from 'express'
 
 import { ctrlUserDelete } from '@/controllers/user/delete'
 import { userLookup } from '@/controllers/user/lookup'
+import { userSessionDelete } from '@/controllers/user/sessionDelete'
 import { userSessions } from '@/controllers/user/sessions'
 import { userUpdate } from '@/controllers/user/update'
 import * as middleware from '@/middlewares'
@@ -139,6 +140,39 @@ router.get(
   '/sessions',
   middleware.isAuthenticated,
   promisable(userSessions, 'list active sessions')
+)
+
+/**
+ * Expires a given user session for this user.
+ *
+ * @api [delete] /user/sessions/:id
+ *    tags:
+ *      - User
+ *    summary: Remove Active User Session
+ *    operationId: user_sessionsDelete
+ *    description:
+ *      Expires a given user session for this user.
+ *      User performing the query must be authenticated.
+ *    parameters:
+ *      - $ref: '#/components/parameters/session_id'
+ *    responses:
+ *      204:
+ *        description: 'Expired active session'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ *      404:
+ *        description: 'Session Not Found'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
+router.delete(
+  '/sessions/:id',
+  middleware.isAuthenticated,
+  promisable(userSessionDelete, 'expire active session')
 )
 
 export const userRouter = router

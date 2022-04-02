@@ -110,113 +110,12 @@
       </nav>
     </aside>
     <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-2 xl:px-4">
-      <div class="space-y-4" *ngIf="currentTab.type === TabType.Profile">
-        <form
-          class="wsl-box space-y-4 p-4"
-          [formGroup]="accountSettingsForm"
-          (ngSubmit)="onSubmit(accountSettingsForm.value)"
-          novalidate>
-          <h2
-            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-            Your Information
-          </h2>
-          <app-alert
-            class="block"
-            *ngIf="alert[EModalType.ChangePersonal]"
-            [alert]="alert[EModalType.ChangePersonal]"></app-alert>
-          <div>
-            <label class="wsl-input-label" for="wsl-fname">Name</label>
-            <input
-              class="wsl-input-field"
-              type="text"
-              id="wsl-fname"
-              name="fname"
-              formControlName="fname"
-              aria-describedby="wsl-fname-help"
-              required
-              autocomplete="name"
-              data-lpignore="true" />
-            <small
-              id="wsl-fname-help"
-              [ngClass]="hints.get('fname').type"
-              [innerHTML]="hints.get('fname').text"></small>
-          </div>
-          <div>
-            <label class="wsl-input-label" for="wsl-uname">Username</label>
-            <input
-              class="wsl-input-field"
-              type="text"
-              id="wsl-uname"
-              name="uname"
-              formControlName="uname"
-              aria-describedby="wsl-uname-help"
-              required
-              autocomplete="off"
-              data-lpignore="true" />
-            <small
-              id="wsl-uname-help"
-              [ngClass]="hints.get('uname').type"
-              [innerHTML]="hints.get('uname').text"></small>
-          </div>
-          <div>
-            <label class="wsl-input-label" for="wsl-email">Email Address</label>
-            <input
-              class="wsl-input-field disabled:bg-transparent disabled:text-gray-500 dark:disabled:text-gray-400"
-              type="text"
-              id="wsl-email"
-              name="email"
-              formControlName="email"
-              aria-describedby="wsl-email-help" />
-            <small
-              id="wsl-email-help"
-              [ngClass]="hints.get('email').type"
-              [innerHTML]="hints.get('email').text"></small>
-          </div>
-          <button class="wsl-btn-sm wsl-btn-primary font-normal" type="submit">
-            Update
-          </button>
-        </form>
-        <div class="wsl-box space-y-2 p-4">
-          <h2
-            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-            Password Reset
-          </h2>
-          <p class="text-sm text-gray-600 dark:text-gray-300">
-            Click below and we send you an email to reset your password.
-          </p>
-          <div class="flex items-center space-x-2">
-            <button
-              class="wsl-btn-sm wsl-btn-muted font-normal"
-              type="button"
-              role="button"
-              (click)="resetPassword.click()"
-              [hidden]="resetPassword.message">
-              Reset Password
-            </button>
-            <small
-              [class]="
-                resetPassword.failed ? 'wsl-text-danger' : 'wsl-text-success'
-              "
-              [hidden]="!resetPassword.message">
-              {{ resetPassword.message }}
-            </small>
-          </div>
-        </div>
-        <div class="wsl-box space-y-2 p-4">
-          <h2
-            class="wsl-text-danger border-b border-gray-200 pb-1 text-xl font-medium dark:border-gray-700">
-            Danger Zone
-          </h2>
-          <p class="text-sm text-gray-600 dark:text-gray-300">
-            Remove your user account and all its associated data.
-          </p>
-          <button
-            class="wsl-btn-sm wsl-btn-danger"
-            (click)="openConfirmModal(EModalType.DeleteAccount)"
-            type="button">
-            Delete Account
-          </button>
-        </div>
+      <div *ngIf="user && currentTab.type === TabType.Profile">
+        <app-settings-tab-profile
+          [userInfo]="user"
+          (confirmAccountDelete)="
+            confirmAccountDelete()
+          "></app-settings-tab-profile>
       </div>
       <div class="space-y-4" *ngIf="currentTab.type === TabType.ApiKeys">
         <div class="wsl-box space-y-2 p-4" *ngIf="apiKeys">
@@ -235,7 +134,7 @@
                   class="cursor-pointer font-mono text-sm text-gray-700 dark:text-gray-400"
                   ngxClipboard
                   [cbContent]="key.plain"
-                  (cbOnSuccess)="onCopy($event, 'API Key')">
+                  (cbOnSuccess)="onCopy('API Key')">
                   {{ key.value }}
                 </span>
               </div>
@@ -267,35 +166,10 @@
             </a>
           </div>
         </div>
-        <div class="wsl-box space-y-2 p-4">
-          <h2
-            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-            Active Sessions
-          </h2>
-          <table class="w-full table-fixed">
-            <thead>
-              <tr class="font-medium dark:text-white">
-                <th>Agent</th>
-                <th>IP Address</th>
-                <th>Expires At</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                class="wsl-text-muted w-full py-2 text-sm hover:bg-gray-200 dark:hover:bg-gray-700"
-                *ngFor="let session of sessions; let i = index">
-                <td class="overflow-clip whitespace-nowrap p-2">
-                  {{ session.agent }}
-                </td>
-                <td class="overflow-clip whitespace-nowrap p-2 text-center">
-                  {{ session.ipAddr }}
-                </td>
-                <td class="overflow-clip whitespace-nowrap p-2 text-center">
-                  {{ session.expiresAt | datetime: 'format' }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+        <div>
+          <app-settings-tab-sessions
+            [sessions]="sessions"
+            (remove)="removeSessions($event)"></app-settings-tab-sessions>
         </div>
       </div>
       <div *ngIf="currentTab.type === TabType.Preferences">
@@ -327,228 +201,21 @@
         </div>
       </div>
       <div *ngIf="serverSettings?.stats && currentTab.type === TabType.Metrics">
-        <h3 class="py-4 text-xl font-medium text-black dark:text-gray-300">
-          Health Metrics
-        </h3>
-        <div
-          class="grid grid-cols-1 gap-2 text-black dark:text-gray-300 md:grid-cols-2">
-          <div
-            class="wsl-box border border-gray-200 p-4 dark:border-gray-700 md:col-span-1">
-            <div class="flex items-center space-x-2">
-              <ng-icon
-                class="wsl-text-muted"
-                size="1.1rem"
-                name="feather-database"></ng-icon>
-              <h4 class="font-medium">Database</h4>
-            </div>
-            <ul class="py-2 text-sm leading-6">
-              <li class="flex justify-between">
-                <span>Versions:</span>
-                <span>{{ serverSettings.stats.countBatches }}</span>
-              </li>
-              <li class="flex justify-between">
-                <span>Test Cases:</span>
-                <span>{{ serverSettings.stats.countElements }}</span>
-              </li>
-              <li class="flex justify-between">
-                <span>Submissions:</span>
-                <span>{{ serverSettings.stats.countMessages }}</span>
-              </li>
-            </ul>
-          </div>
-          <div
-            class="wsl-box border border-gray-200 p-4 dark:border-gray-700 md:col-span-1">
-            <div class="flex items-center space-x-2">
-              <ng-icon
-                class="wsl-text-muted"
-                size="1.1rem"
-                name="feather-hard-drive"></ng-icon>
-              <h4 class="font-medium">Disk Space</h4>
-            </div>
-            <ul class="py-2 text-sm leading-6">
-              <li class="flex justify-between">
-                <span>Free:</span>
-                <span>
-                  {{ serverSettings.stats.spaceFree | number: '1.0-0' }} GB
-                </span>
-              </li>
-              <li class="flex justify-between">
-                <span>Size:</span>
-                <span>
-                  {{ serverSettings.stats.spaceSize | number: '1.0-0' }} GB
-                </span>
-              </li>
-              <li class="flex justify-between">
-                <span>Used:</span>
-                <span>
-                  {{ serverSettings.stats.spaceUsed | percent: '1.0-0' }}
-                </span>
-              </li>
-            </ul>
-          </div>
-          <div
-            class="wsl-box border border-gray-200 p-4 dark:border-gray-700 md:col-span-1">
-            <h4 class="font-medium">Comparator</h4>
-            <ul class="py-2 text-sm leading-6">
-              <li class="flex justify-between">
-                <span>Comparisons:</span>
-                <span>{{ serverSettings.stats.countComparisons }}</span>
-              </li>
-              <li class="flex justify-between">
-                <span>Average Process Time:</span>
-                <span>
-                  {{
-                    serverSettings.stats.cmpAvgProcessingTime | number: '1.0-0'
-                  }}
-                  ms/job
-                </span>
-              </li>
-              <li class="flex justify-between">
-                <span>Average Collection Time:</span>
-                <span>
-                  {{
-                    serverSettings.stats.cmpAvgCollectionTime | number: '1.0-0'
-                  }}
-                  ms/job
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
+        <app-settings-tab-server
+          [stats]="serverSettings.stats"></app-settings-tab-server>
       </div>
       <div *ngIf="serverSettings?.events && currentTab.type === TabType.Audit">
-        <h3 class="py-4 text-xl font-medium text-black dark:text-gray-300">
-          Audit Log
-        </h3>
-        <div
-          class="wsl-box divide-y divide-gray-200 border border-gray-200 p-4 dark:divide-gray-700 dark:border-gray-700">
-          <div
-            class="space-y-2 p-2 text-sm text-black dark:text-gray-300"
-            *ngFor="let event of serverSettings?.events">
-            <div class="flex-grow">
-              <span
-                class="font-medium text-sky-600 dark:text-sky-400"
-                [title]="event.username">
-                {{ event.fullname }}
-              </span>
-              <span>{{ event.copyText }}</span>
-            </div>
-            <div class="flex items-center justify-between">
-              <div>
-                {{ describeEventDate(event.eventDate) }}
-              </div>
-              <div class="flex space-x-1">
-                <div
-                  class="flex cursor-pointer justify-center rounded border border-gray-300 bg-gray-100 p-2 text-xs font-medium text-gray-500 hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
-                  title="Copy email to clipboard"
-                  ngxClipboard
-                  [cbContent]="event.email"
-                  (cbOnSuccess)="onCopy($event, 'email address')">
-                  <ng-icon name="hero-mail" size="1rem"></ng-icon>
-                </div>
-                <div
-                  class="flex cursor-pointer justify-center rounded border border-gray-300 bg-gray-100 p-2 text-xs font-medium text-gray-500 hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700"
-                  *ngIf="event.copyLink"
-                  title="Copy link to clipboard"
-                  ngxClipboard
-                  [cbContent]="event.copyLink"
-                  (cbOnSuccess)="onCopy($event, 'link')">
-                  <ng-icon name="hero-clipboard-copy" size="1rem"></ng-icon>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="p-2 text-sm leading-6 text-black dark:text-gray-300"
-            *ngIf="serverSettings.events.length === 0">
-            This section lists noteworthy user events that may need your
-            attention as a server administrator. These events include account
-            creation, password reset, and consecutive failed login attempts that
-            are not automatically resolved by your users.
-          </div>
-        </div>
+        <app-settings-tab-audit
+          [events]="serverSettings.events"
+          (copyToClipboard)="onCopy($event)"></app-settings-tab-audit>
       </div>
       <div
         *ngIf="serverSettings?.accounts && currentTab.type === TabType.Users">
-        <h3 class="py-4 text-xl font-medium text-black dark:text-gray-300">
-          User Accounts
-        </h3>
-        <ul class="wsl-box border border-gray-200 p-4 dark:border-gray-700">
-          <li
-            class="group flex h-8 items-center rounded-md transition duration-500 hover:bg-gray-100 dark:hover:bg-gray-900"
-            *ngFor="
-              let account of serverSettings.accounts;
-              let rowNumber = index
-            ">
-            <div
-              class="w-8 px-2 text-sm font-medium text-black dark:text-gray-300">
-              {{ rowNumber + 1 }}
-            </div>
-            <div class="flex flex-grow items-center justify-between space-x-4">
-              <div
-                class="w-40 truncate whitespace-nowrap font-medium text-black dark:text-gray-300"
-                [ngClass]="{
-                  'text-gray-300 line-through dark:text-gray-600':
-                    account.suspended
-                }">
-                {{ account.fullname ?? 'Unknown' }}
-                <span
-                  class="text-sm text-gray-500 dark:text-gray-300"
-                  *ngIf="user.username === account.username">
-                  (You)
-                </span>
-              </div>
-              <div class="w-24 whitespace-nowrap">
-                <span
-                  class="rounded-md bg-gray-100 px-2 py-1 text-sm text-gray-700 group-hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:group-hover:bg-gray-700">
-                  {{ account.username }}
-                </span>
-              </div>
-              <div class="w-24">
-                <span
-                  class="rounded-md bg-gray-100 px-2 py-1 text-sm text-gray-700 group-hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:group-hover:bg-gray-700">
-                  {{ account.role }}
-                </span>
-              </div>
-            </div>
-            <div
-              wslDropdown
-              class="flex cursor-pointer select-none items-center p-1 text-gray-300 hover:text-gray-700">
-              <ng-icon
-                class="wsl-dropdown-toggle h-full w-4"
-                name="hero-dots-vertical"></ng-icon>
-              <div
-                class="wsl-dropdown-menu hidden w-48 text-sm"
-                aria-labelledby="wsl-user-dropdown">
-                <div
-                  class="wsl-dropdown-item"
-                  ngxClipboard
-                  [cbContent]="account.email"
-                  (cbOnSuccess)="onCopy($event, 'email address')">
-                  <a class="text-sky-600 dark:text-sky-400">Copy Email</a>
-                </div>
-                <div
-                  class="wsl-dropdown-item"
-                  *ngIf="
-                    account.username !== user.username && !account.suspended
-                  "
-                  (click)="suspendAccount(account)">
-                  <a class="text-sky-600 dark:text-sky-400">Suspend</a>
-                </div>
-                <div
-                  class="wsl-dropdown-item"
-                  *ngIf="
-                    account.username !== user.username &&
-                    account.suspended &&
-                    account.activationLink
-                  "
-                  (click)="deleteAccount(account)">
-                  <a class="text-sky-600 dark:text-sky-400">Delete</a>
-                </div>
-              </div>
-            </div>
-          </li>
-        </ul>
+        <app-settings-tab-users
+          [accounts]="serverSettings.accounts"
+          [user]="user"
+          (copyToClipboard)="onCopy($event)"
+          (updateAccount)="updateAccount($event)"></app-settings-tab-users>
       </div>
     </main>
   </div>

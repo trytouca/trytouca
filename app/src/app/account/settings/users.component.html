@@ -1,0 +1,72 @@
+<h3 class="py-4 text-xl font-medium text-black dark:text-gray-300">
+  User Accounts
+</h3>
+<ul class="wsl-box border border-gray-200 p-4 dark:border-gray-700">
+  <li
+    class="group flex h-8 items-center rounded-md transition duration-500 hover:bg-gray-100 dark:hover:bg-gray-900"
+    *ngFor="let account of accounts; let rowNumber = index">
+    <div class="w-8 px-2 text-sm font-medium text-black dark:text-gray-300">
+      {{ rowNumber + 1 }}
+    </div>
+    <div class="flex flex-grow items-center justify-between space-x-4">
+      <div
+        class="w-40 truncate whitespace-nowrap font-medium text-black dark:text-gray-300"
+        [ngClass]="{
+          'text-gray-300 line-through dark:text-gray-600': account.suspended
+        }">
+        {{ account.fullname ?? 'Unknown' }}
+        <span
+          class="text-sm text-gray-500 dark:text-gray-300"
+          *ngIf="user.username === account.username">
+          (You)
+        </span>
+      </div>
+      <div class="w-24 whitespace-nowrap">
+        <span
+          class="rounded-md bg-gray-100 px-2 py-1 text-sm text-gray-700 group-hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:group-hover:bg-gray-700">
+          {{ account.username }}
+        </span>
+      </div>
+      <div class="w-24">
+        <span
+          class="rounded-md bg-gray-100 px-2 py-1 text-sm text-gray-700 group-hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:group-hover:bg-gray-700">
+          {{ account.role }}
+        </span>
+      </div>
+    </div>
+    <div
+      wslDropdown
+      class="flex cursor-pointer select-none items-center p-1 text-gray-300 hover:text-gray-700">
+      <ng-icon
+        class="wsl-dropdown-toggle h-full w-4"
+        name="hero-dots-vertical"></ng-icon>
+      <div
+        class="wsl-dropdown-menu hidden w-48 text-sm"
+        aria-labelledby="wsl-user-dropdown">
+        <div
+          class="wsl-dropdown-item"
+          ngxClipboard
+          [cbContent]="account.email"
+          (cbOnSuccess)="copyToClipboard.emit('email address')">
+          <a class="text-sky-600 dark:text-sky-400">Copy Email</a>
+        </div>
+        <div
+          class="wsl-dropdown-item"
+          *ngIf="account.username !== user.username && !account.suspended"
+          (click)="suspendAccount(account)">
+          <a class="text-sky-600 dark:text-sky-400">Suspend</a>
+        </div>
+        <div
+          class="wsl-dropdown-item"
+          *ngIf="
+            account.username !== user.username &&
+            account.suspended &&
+            account.activationLink
+          "
+          (click)="deleteAccount(account)">
+          <a class="text-sky-600 dark:text-sky-400">Delete</a>
+        </div>
+      </div>
+    </div>
+  </li>
+</ul>
