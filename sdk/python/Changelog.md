@@ -1,5 +1,28 @@
 # Changelog
 
+## v1.5.2
+
+Features:
+
+- CLI should support removing key from config file (#68)
+- Add config command to CLI (#67)
+- Allow CLI to find and run all workflows (#63)
+- Check PyPI for new SDK versions and suggest package upgrade (#62)
+
+Improvements:
+
+- Parse config flags stored in file as boolean (#71)
+- Use custom extend action when parsing arguments (#70)
+- CLI should support setting test version as environment variable (#69)
+- Use full path when importing package modules (#65)
+
+Other Changes:
+
+- April Fool's Day: Add universal problem solver to Python CLI (#73)
+- CI workflow should sync Reference API docs (#72)
+- Update CI workflow (#66)
+- Update links to documentation website (#64)
+
 ## v1.5.1
 
 Features:
