@@ -14,7 +14,7 @@
         [ngClass]="{
           'text-gray-300 line-through dark:text-gray-600': account.suspended
         }">
-        {{ account.fullname ?? 'Unknown' }}
+        {{ account.fullname ?? account.email }}
         <span
           class="text-sm text-gray-500 dark:text-gray-300"
           *ngIf="user.username === account.username">

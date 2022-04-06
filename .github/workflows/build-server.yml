@@ -122,8 +122,8 @@ jobs:
         run: |
           aws s3 cp app.tar.gz ${{ steps.params.outputs.buckets }}/
           yarn --cwd=app build --configuration=cloud --delete-output-path
-          aws s3 sync ./app/dist/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }} --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
-          aws s3 sync ./app/dist/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }} --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
+          aws s3 sync ./app/dist/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }} --exclude "*" --include "*.*.js" --include "*.*.css" --cache-control public,max-age=31536000,immutable
+          aws s3 sync ./app/dist/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }} --exclude "*.*.js" --exclude "*.*.css" --cache-control no-cache
       - name: pull app from aws
         if: steps.changes.outputs.app == 'false'
         run: aws s3 cp ${{ steps.params.outputs.buckets }}/app.tar.gz .
