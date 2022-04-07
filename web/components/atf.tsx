@@ -1,5 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import Link from 'next/link';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
 export default function AboveTheFold() {
@@ -32,18 +33,11 @@ export default function AboveTheFold() {
                     <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
                   </button>
                 </a>
-                <a
-                  className="text-md"
-                  href="https://calendly.com/ghorbanzade/30min"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <button
-                    className="group space-x-2 rounded-xl bg-opacity-50 p-3 font-medium text-gray-300 duration-150 ease-in-out hover:text-white focus:outline-none"
-                    type="button"
-                    role="button">
-                    <span>or Get a Live Demo</span>
-                  </button>
-                </a>
+                <Link href="/demo">
+                  <a className="text-md group space-x-2 rounded-xl bg-opacity-50 p-3 font-medium text-gray-300 duration-150 ease-in-out hover:text-white focus:outline-none">
+                    <span>or Schedule a 1:1 Chat</span>
+                  </a>
+                </Link>
               </div>
               <div className="container mx-auto space-y-4">
                 <p className="uppercase text-white">Trusted By</p>
