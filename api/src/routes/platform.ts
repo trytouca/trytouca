@@ -9,6 +9,7 @@ import { platformAccountSuspend } from '@/controllers/platform/accountSuspend'
 import { platformAccountUpdate } from '@/controllers/platform/accountUpdate'
 import { platformHealth } from '@/controllers/platform/health'
 import { platformStats } from '@/controllers/platform/stats'
+import { platformUpdate } from '@/controllers/platform/update'
 import * as middleware from '@/middlewares'
 import { EPlatformRole } from '@/types/commontypes'
 import { promisable } from '@/utils/routing'
@@ -33,6 +34,33 @@ const router = express.Router()
  *              $ref: '#/components/schemas/CT_PlatformStatus'
  */
 router.get('/', promisable(platformHealth, 'check platform health'))
+
+/**
+ * @api [patch] /platform
+ *    tags:
+ *      - Platform
+ *    summary: 'Update Server Settings'
+ *    operationId: platform_update
+ *    description:
+ *      Updates server settings.
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              telemetry:
+ *                type: boolean
+ *      required: true
+ *    responses:
+ *      204:
+ *        description: 'Server settings was updated.'
+ */
+router.patch(
+  '/',
+  express.json(),
+  promisable(platformUpdate, 'update platform settings')
+)
 
 /**
  * @api [get] /platform/stats

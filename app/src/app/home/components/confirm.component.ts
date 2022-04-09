@@ -45,7 +45,10 @@ export class ConfirmComponent extends ModalComponent {
 
   validator(): ValidatorFn {
     return (control: AbstractControl) => {
-      if (!this.elements?.confirmText || !control.value) {
+      if (this.elements && !this.elements.confirmText) {
+        return null;
+      }
+      if (!control.value) {
         return { error: 'Please complete the form below.' };
       }
       if ((control.value as string).trim() !== this.elements?.confirmText) {

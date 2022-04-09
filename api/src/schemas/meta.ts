@@ -23,6 +23,10 @@ const metaSchema = new mongoose.Schema(
       default: 0,
       required: false,
       type: Number
+    },
+    telemetry: {
+      required: false,
+      type: Boolean
     }
   },
   {
@@ -36,6 +40,7 @@ export interface IMetaDocument extends mongoose.Document {
   cmpAvgProcessingTime: number
   cmpNumCollectionJobs: number
   cmpNumProcessingJobs: number
+  telemetry: boolean
 }
 
 interface IMetaModel extends mongoose.Model<IMetaDocument> {}

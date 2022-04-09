@@ -7,6 +7,7 @@ import { SharedModule } from '@/shared';
 
 import { AccountRoutingModule } from './account-routing.module';
 import { ActivateComponent } from './activate.component';
+import { InstallComponent } from './install.component';
 import { MailboxComponent } from './mailbox.component';
 import { OnboardComponent } from './onboard.component';
 import { ProfileComponent } from './profile.component';
@@ -25,6 +26,7 @@ import { StartComponent } from './start.component';
 @NgModule({
   declarations: [
     ActivateComponent,
+    InstallComponent,
     MailboxComponent,
     OnboardComponent,
     ProfileComponent,

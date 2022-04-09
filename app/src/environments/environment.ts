@@ -5,5 +5,6 @@ export const environment = {
   appVersion: '1.4.0',
   dataRefreshInterval: 10000,
   google_api_client_id: '',
+  self_hosted: true,
   production: false
 };

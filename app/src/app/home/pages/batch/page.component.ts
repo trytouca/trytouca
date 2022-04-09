@@ -22,6 +22,7 @@ import {
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 import {
   BatchItem,
@@ -328,11 +329,7 @@ export class BatchPageComponent
         title: 'Export test results archive for this version.'
       });
     }
-    if (
-      this.batch?.isSealed &&
-      this._platformStatus &&
-      this._platformStatus.self_hosted === false
-    ) {
+    if (!environment.self_hosted && this.batch?.isSealed) {
       buttons.push({
         click: () => this.export(ExportFormat.PDF),
         icon: 'feather-download-cloud',

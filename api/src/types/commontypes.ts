@@ -1014,21 +1014,21 @@ export type ElementComparisonResponse = {
  *  additionalProperties: false
  *  type: object
  *  required:
- *    - ready
+ *    - configured
  *    - mail
- *    - self_hosted
+ *    - ready
  *  properties:
- *    ready:
+ *    configured:
  *      type: boolean
  *    mail:
  *      type: boolean
- *    self_hosted:
+ *    ready:
  *      type: boolean
  */
 export type PlatformStatus = {
+  configured: boolean
   mail: boolean
   ready: boolean
-  self_hosted: boolean
 }
 
 /**

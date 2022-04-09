@@ -283,9 +283,9 @@ export type ElementComparisonResponse = {
 };
 
 export type PlatformStatus = {
+  configured: boolean;
   mail: boolean;
   ready: boolean;
-  self_hosted: boolean;
 };
 
 export type PlatformStatsUser = {

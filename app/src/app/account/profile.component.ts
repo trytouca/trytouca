@@ -37,7 +37,8 @@ enum SettingsPageTabType {
   Metrics = 'metrics',
   Users = 'users',
   Audit = 'audit',
-  Billing = 'billing'
+  Billing = 'billing',
+  Telemetry = 'telemetry'
 }
 
 interface SettingsPageTab {
@@ -104,6 +105,11 @@ export class ProfileComponent implements OnDestroy {
       name: 'Billing',
       icon: 'feather-credit-card',
       hidden: true
+    },
+    {
+      type: SettingsPageTabType.Telemetry,
+      name: 'Telemetry',
+      icon: 'feather-upload-cloud'
     }
   ];
   currentTab = this.tabs[0];
@@ -131,6 +137,18 @@ export class ProfileComponent implements OnDestroy {
       visible: true
     }
   };
+
+  _telemetryPreferences = [
+    {
+      default: true,
+      description: 'Anonymized daily usage statistics',
+      experimental: false,
+      saved: false,
+      slug: 'aggregate-usage',
+      title: 'Aggregate Usage Data',
+      visible: true
+    }
+  ];
 
   serverSettings: {
     accounts: PlatformStatsUser[];
@@ -325,6 +343,15 @@ export class ProfileComponent implements OnDestroy {
         timer(3000).subscribe(() => (node.saved = false));
       }
     });
+  }
+
+  toggleTelemetryFeatureFlag(flag: Checkbox) {
+    const node = this._preferences[flag.slug];
+    node.value = !(node.value ?? false);
+  }
+
+  getTelemetryPreferences(): Checkbox[] {
+    return this._telemetryPreferences;
   }
 
   switchTab(tab: SettingsPageTab) {

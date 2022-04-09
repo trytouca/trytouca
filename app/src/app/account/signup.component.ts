@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, NgZone } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 import { MailboxAction, MailboxInput } from '@/account/mailbox.component';
 import { formFields } from '@/core/models/form-hint';
@@ -35,7 +36,7 @@ export class SignupComponent {
 
   alert: Alert;
   isFormShown = true;
-  showForm: boolean;
+  selfHosted = environment.self_hosted;
 
   constructor(
     private router: Router,
@@ -44,9 +45,13 @@ export class SignupComponent {
     private userService: UserService,
     private zone: NgZone
   ) {
-    this.apiService.status().subscribe((response) => {
-      this.showForm = response.self_hosted;
-    });
+    if (environment.self_hosted) {
+      this.apiService.status().subscribe((response) => {
+        if (!response.configured) {
+          this.router.navigate(['/account/install']);
+        }
+      });
+    }
   }
 
   onSubmit(model: FormContent) {

@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 import { formFields } from '@/core/models/form-hint';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
@@ -34,7 +35,7 @@ export class SigninComponent implements OnInit {
   alert: Alert;
   submitted: boolean;
   prev: FormContent;
-  showForm: boolean;
+  selfHosted = environment.self_hosted;
 
   constructor(
     private route: ActivatedRoute,
@@ -44,9 +45,13 @@ export class SigninComponent implements OnInit {
     private userService: UserService,
     private zone: NgZone
   ) {
-    this.apiService.status().subscribe((response) => {
-      this.showForm = response.self_hosted;
-    });
+    if (environment.self_hosted) {
+      this.apiService.status().subscribe((response) => {
+        if (!response.configured) {
+          this.router.navigate(['/account/install']);
+        }
+      });
+    }
   }
 
   ngOnInit() {

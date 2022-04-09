@@ -3,7 +3,8 @@
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
-import { config, configMgr } from '@/utils/config'
+import { MetaModel } from '@/schemas/meta'
+import { configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
@@ -30,7 +31,9 @@ export async function platformHealth(
   const response = {
     mail: configMgr.hasMailTransport(),
     ready: minioConnection && mongodbConnection,
-    self_hosted: config.auth.googleClientId === undefined
+    configured: !!(await MetaModel.countDocuments({
+      telemetry: { $exists: true }
+    }))
   }
 
   // cache platform health information in redis database
