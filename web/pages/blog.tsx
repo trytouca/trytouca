@@ -1,18 +1,13 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { PostOrPage } from '@tryghost/content-api';
 import { NextSeo } from 'next-seo';
 import React from 'react';
 
+import { BlogPostArchive, BlogPostArticle } from '@/components/blog';
 import Header from '@/components/header';
-import { BlogPostArchive, BlogPostArticle, getArticles } from '@/lib/blog';
+import { BlogPostStaticProps, getBlogPostsStaticProps } from '@/lib/blog';
 
-type StaticProps = {
-  archived_articles: PostOrPage[];
-  main_article: PostOrPage;
-};
-
-export default function BlogPage(props: StaticProps) {
+export default function BlogPage(props: BlogPostStaticProps) {
   return (
     <>
       <NextSeo title="Blog" canonical="https://touca.io/blog" />
@@ -47,13 +42,5 @@ export default function BlogPage(props: StaticProps) {
 }
 
 export async function getStaticProps() {
-  const articles = await getArticles();
-  const main_article = articles[0];
-  const archived_articles = articles.slice(1);
-  return {
-    props: {
-      archived_articles,
-      main_article
-    }
-  };
+  return getBlogPostsStaticProps();
 }
