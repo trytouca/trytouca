@@ -31,7 +31,7 @@ function updatePublishDate(v: PostOrPage) {
 async function getArticles(): Promise<PostsOrPages> {
   const posts = await makeContentApi().posts.browse({
     limit: 'all',
-    filter: 'tag:-food+visibility:-paid',
+    filter: 'visibility:-paid',
     include: ['tags', 'authors'],
     order: 'published_at DESC'
   });
