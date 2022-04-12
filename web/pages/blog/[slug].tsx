@@ -1,19 +1,20 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { PostOrPage } from '@tryghost/content-api';
+import { GetStaticPropsContext } from 'next';
 import Head from 'next/head';
 import { ArticleJsonLd, NextSeo } from 'next-seo';
 import { HiOutlineCalendar, HiOutlineClock } from 'react-icons/hi';
 
+import { BlogPostArchive } from '@/components/blog';
 import Header from '@/components/header';
-import { BlogPostArchive, getArticles } from '@/lib/blog';
+import {
+  BlogPostStaticProps,
+  getBlogPostStaticPaths,
+  getBlogPostStaticProps
+} from '@/lib/blog';
 
-type StaticProps = {
-  main_article: PostOrPage;
-  archived_articles: PostOrPage[];
-};
-
-export default function BlogPage(props: StaticProps) {
+export default function BlogPage(props: BlogPostStaticProps) {
   return (
     <>
       <NextSeo
@@ -146,22 +147,10 @@ function BlogPostContent(props: { article: PostOrPage }) {
   );
 }
 
-export async function getStaticProps({ params }: { params: { slug: string } }) {
-  const articles = await getArticles();
-  return {
-    props: {
-      main_article: articles.filter((v) => v.slug === params.slug)[0],
-      archived_articles: articles
-        .filter((v) => v.slug !== params.slug)
-        .slice(0, 4)
-    }
-  };
+export async function getStaticProps(context: GetStaticPropsContext) {
+  return await getBlogPostStaticProps(context);
 }
 
 export async function getStaticPaths() {
-  const articles = await getArticles();
-  return {
-    paths: articles.map((v) => ({ params: { slug: v.slug } })),
-    fallback: false
-  };
+  return await getBlogPostStaticPaths();
 }
