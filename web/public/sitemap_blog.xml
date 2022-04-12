@@ -5,19 +5,11 @@
     xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
     xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     <url>
-        <loc>https://touca.io/blog/starting-vision/</loc>
-        <lastmod>2022-03-24T03:00:29.000Z</lastmod>
+        <loc>https://touca.io/blog/stereotype/</loc>
+        <lastmod>2022-04-12T18:00:00.000Z</lastmod>
         <image:image>
-            <image:loc>https://blog.touca.io/content/images/2021/08/touca-thumbnail-210520-landing-page.png</image:loc>
-            <image:caption>touca-thumbnail-210520-landing-page.png</image:caption>
-        </image:image>
-    </url>
-    <url>
-        <loc>https://touca.io/blog/touca-wrench-1/</loc>
-        <lastmod>2022-03-24T02:59:45.000Z</lastmod>
-        <image:image>
-            <image:loc>https://blog.touca.io/content/images/2021/09/twitter-feature-touca-wrench--1-.png</image:loc>
-            <image:caption>twitter-feature-touca-wrench--1-.png</image:caption>
+            <image:loc>https://blog.touca.io/content/images/2022/04/touca-blog-post-220412-stereotype.png</image:loc>
+            <image:caption>touca-blog-post-220412-stereotype.png</image:caption>
         </image:image>
     </url>
     <url>
@@ -138,6 +130,22 @@
         <image:image>
             <image:loc>https://blog.touca.io/content/images/2021/09/twitter-tcsw-post-image.png</image:loc>
             <image:caption>twitter-tcsw-post-image.png</image:caption>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://touca.io/blog/touca-wrench-1/</loc>
+        <lastmod>2022-03-24T02:59:45.000Z</lastmod>
+        <image:image>
+            <image:loc>https://blog.touca.io/content/images/2021/09/twitter-feature-touca-wrench--1-.png</image:loc>
+            <image:caption>twitter-feature-touca-wrench--1-.png</image:caption>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://touca.io/blog/starting-vision/</loc>
+        <lastmod>2022-03-24T03:00:29.000Z</lastmod>
+        <image:image>
+            <image:loc>https://blog.touca.io/content/images/2021/08/touca-thumbnail-210520-landing-page.png</image:loc>
+            <image:caption>touca-thumbnail-210520-landing-page.png</image:caption>
         </image:image>
     </url>
 </urlset>
