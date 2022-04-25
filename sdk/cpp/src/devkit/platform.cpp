@@ -14,17 +14,20 @@ namespace touca {
 class Http : public Transport {
  public:
   explicit Http(const std::string& root);
-  void set_token(const std::string& token);
-  Response get(const std::string& route) const;
-  Response patch(const std::string& route, const std::string& body = "") const;
-  Response post(const std::string& route, const std::string& body = "") const;
-  Response binary(const std::string& route, const std::string& content) const;
+  void set_token(const std::string& token) override;
+  Response get(const std::string& route) const override;
+  Response patch(const std::string& route,
+                 const std::string& body = "") const override;
+  Response post(const std::string& route,
+                const std::string& body = "") const override;
+  Response binary(const std::string& route,
+                  const std::string& content) const override;
 
  private:
   mutable httplib::Client _cli;
 };
 
-Http::Http(const std::string& root) : _cli(root.c_str()) {
+Http::Http(const std::string& root) : _cli(root) {
   _cli.set_default_headers({{"Accept-Charset", "utf-8"},
                             {"Accept", "application/json"},
                             {"User-Agent", "touca-client-cpp/1.5.2"}});
@@ -215,7 +218,7 @@ bool Platform::handshake() const {
  */
 bool Platform::auth(const std::string& apiKey) {
   _error.clear();
-  const auto content = touca::detail::format("{{\"key\": \"{}\"}}", apiKey);
+  const auto content = touca::detail::format(R"({{"key": "{}"}})", apiKey);
   const auto response = _http->post(_api.route("/client/signin"), content);
   if (response.status == -1) {
     _error = response.body;
@@ -275,7 +278,7 @@ std::vector<std::string> Platform::elements() const {
 std::vector<std::string> Platform::submit(const std::string& content,
                                           const unsigned max_retries) const {
   std::vector<std::string> errors;
-  for (auto i = 0ul; i < max_retries; ++i) {
+  for (auto i = 0UL; i < max_retries; ++i) {
     const auto response = _http->binary(_api.route("/client/submit"), content);
     if (response.status == 204) {
       return {};

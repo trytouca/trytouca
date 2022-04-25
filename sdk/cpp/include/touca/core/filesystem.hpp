@@ -76,7 +76,7 @@ std::unique_ptr<T> make_unique(Args&&... args) {
  * @return content of the file with given path
  */
 TOUCA_CLIENT_API std::string load_string_file(
-    const std::string& path, const std::ios_base::openmode mode = std::ios::in);
+    const std::string& path, std::ios_base::openmode mode = std::ios::in);
 
 TOUCA_CLIENT_API void save_string_file(const std::string& path,
                                        const std::string& content);

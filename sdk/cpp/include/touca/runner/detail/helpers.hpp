@@ -29,16 +29,16 @@ void configure(const ClientOptions& options);
 
 struct Statistics {
   void inc(Status value);
-  unsigned long count(Status value) const;
+  std::uint64_t count(Status value) const;
 
  private:
-  std::map<Status, unsigned long> _v;
+  std::map<Status, std::uint64_t> _v;
 };
 
 struct Timer {
   void tic(const std::string& key);
   void toc(const std::string& key);
-  long long count(const std::string& key) const;
+  std::int64_t count(const std::string& key) const;
 
  private:
   std::unordered_map<std::string, std::chrono::system_clock::time_point> _tics;
@@ -104,7 +104,7 @@ struct Printer {
  * @brief Captures content printed to standard output and error streams.
  */
 struct TOUCA_CLIENT_API OutputCapturer {
-  OutputCapturer();
+  OutputCapturer() = default;
   ~OutputCapturer();
 
   void start_capture();
@@ -125,10 +125,10 @@ struct TOUCA_CLIENT_API Runner {
   using Workflow = std::function<void(const std::string&)>;
 
   Runner(int argc, char* argv[]);
-  int run(const Workflow workflow);
+  int run(const Workflow& workflow);
 
  private:
-  void run_testcase(const Workflow workflow, const std::string& testcase,
+  void run_testcase(const Workflow& workflow, const std::string& testcase,
                     const unsigned index);
 
   Timer timer;
