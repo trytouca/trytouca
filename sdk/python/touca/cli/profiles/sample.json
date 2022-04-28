@@ -1,0 +1,8 @@
+{
+  "extends": "./sample.template.json",
+  "execution": {
+    "executable": "Sample_Touca_Test.exe",
+    "config": "sample.config.json",
+    "suite": "sample"
+  }
+}

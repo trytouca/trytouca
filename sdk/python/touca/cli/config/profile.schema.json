@@ -1,0 +1,54 @@
+{
+  "definitions": {
+    "artifactory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "base-url",
+        "installer-msi-url",
+        "installer-msi-location",
+        "repo",
+        "group",
+        "name"
+      ],
+      "properties": {
+        "base-url": { "type": "string" },
+        "installer-msi-url": { "type": "string" },
+        "installer-msi-location": { "type": "string" },
+        "repo": { "type": "string" },
+        "group": { "type": "string" },
+        "name": { "type": "string" },
+        "version-filter": { "type": "string" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "archive-dir",
+        "executable",
+        "config"
+      ],
+      "properties": {
+        "archive-dir": { "type": "string" },
+        "executable": { "type": "string" },
+        "config": { "type": "string" },
+        "suite": { "type": "string" }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifactory",
+    "execution"
+  ],
+  "properties": {
+    "artifactory": {
+      "$ref": "#/definitions/artifactory"
+    },
+    "execution": {
+      "$ref": "#/definitions/execution"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+.env
+.coverage
+.python-version
+.touca
+.tox
+build
+dist
+local
+*.egg-info/
+__pycache__
