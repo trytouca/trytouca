@@ -1,0 +1,75 @@
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+
+name: touca-js-main
+
+on:
+  push:
+    branches:
+      - main
+      - next
+      - 'feature/**'
+
+jobs:
+  build-sdk-js-local:
+    name: build-sdk-js-local
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node-version: [12, 14, 16]
+    steps:
+      - uses: actions/checkout@v2
+      - name: authenticate to aws
+        if: github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-region: us-east-2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - uses: actions/cache@v2
+        env:
+          CACHED_DEPENDENCY_PATHS: |
+            ${{ github.workspace }}/node_modules
+            ${{ github.workspace }}/packages/**/node_modules
+        with:
+          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            ${{ runner.os }}-
+      - name: build js components
+        run: |
+          yarn install
+          yarn build
+          yarn test
+      - name: lint source code
+        if: matrix.node-version == 14 && github.event_name == 'push'
+        run: yarn lint
+      - name: generate docs
+        if: matrix.node-version == 14 && github.event_name == 'push'
+        run: yarn docs
+      - name: push docs to aws
+        if: github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+        run: |
+          tar -zcf js-node-docs-external.tar.gz local/docs
+          aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 sync ./local/docs/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }}/docs/sdk/js/ --include "*" --cache-control no-cache
+      - name: push coverage to aws
+        if: github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+        run: |
+          tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
+          aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+      - name: upload coverage to codecov
+        if: github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+        uses: codecov/codecov-action@v2
+        env:
+          OS: ${{ runner.os }}
+          NODE: ${{ matrix.node-version }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./packages/node/coverage/clover.xml
+          env_vars: OS,NODE
+          fail_ci_if_error: true

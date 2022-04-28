@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "alwaysStrict": true,
+    "declaration": true,
+    "declarationMap": true,
+    "downlevelIteration": true,
+    "lib": ["es6", "dom"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "paths": {
+      "@touca/node/*": ["packages/node/src/*"]
+    },
+    "sourceMap": true,
+    "strict": true,
+    "target": "es5",
+    "types": ["node", "jest"]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "name": "@touca/node",
+  "version": "1.5.3",
+  "description": "Touca SDK for JavaScript",
+  "license": "Apache-2.0",
+  "homepage": "https://touca.io",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "author": {
+    "name": "Pejman Ghorbanzade",
+    "email": "pejman@touca.io"
+  },
+  "bugs": {
+    "url": "https://github.com/trytouca/touca-js/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trytouca/touca-js",
+    "directory": "packages/node"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:prod": "tsc -p tsconfig.prod.json",
+    "clean": "rimraf dist",
+    "lint": "eslint . --ext .ts",
+    "test": "jest",
+    "test:watch": "jest --watch"
+  },
+  "dependencies": {
+    "chalk": "4.1.2",
+    "flatbuffers": "2.0.6",
+    "semver": "7.3.5",
+    "yargs": "17.4.0"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/trytouca"
+  },
+  "keywords": [
+    "regression-testing",
+    "snapshot-testing",
+    "test-framework",
+    "client-library"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/semver": "^7.3.9"
+  }
+}

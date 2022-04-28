@@ -1,0 +1,37 @@
+{
+  "private": true,
+  "name": "@touca/sdk",
+  "version": "0.0.0",
+  "scripts": {
+    "build": "lerna run --stream --concurrency 1 --sort build",
+    "build:prod": "lerna run --stream --concurrency 1 --sort build:prod",
+    "clean": "lerna run --parallel clean && lerna clean --yes",
+    "docs": "typedoc",
+    "lint": "lerna run --parallel lint",
+    "test": "lerna run --stream --concurrency 1 --sort test",
+    "test:watch": "lerna run --stream --concurrency 1 --sort test:watch"
+  },
+  "workspaces": [
+    "packages/node",
+    "examples/01_node_minimal",
+    "examples/02_node_main_api",
+    "examples/03_node_core_api"
+  ],
+  "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@typescript-eslint/eslint-plugin": "^5.16.0",
+    "@typescript-eslint/parser": "^5.16.0",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "jest": "^27.5.1",
+    "lerna": "^4.0.0",
+    "nock": "^13.2.4",
+    "prettier": "^2.6.0",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^27.1.3",
+    "typedoc": "^0.22.13",
+    "typescript": "^4.6.2"
+  }
+}

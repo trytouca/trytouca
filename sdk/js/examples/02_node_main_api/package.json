@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "@touca/example-node-basic-api",
+  "version": "1.5.3",
+  "description": "Touca Example Introducing Basic API of Node.js SDK",
+  "main": "dist/students_test.js",
+  "types": "dist/students_test.js.d",
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "@touca/node": "^1.5.3"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf dist",
+    "test:touca": "yarn build && node dist/students_test.js --testcase alice bob charlie"
+  }
+}
