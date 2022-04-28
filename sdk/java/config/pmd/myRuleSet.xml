@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<ruleset xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Default Maven PMD Plugin Ruleset" xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description> The default ruleset used by the Maven PMD Plugin, when no other ruleset is specified. It contains the rules of the old (pre PMD 6.0.0) rulesets java-basic, java-empty, java-imports, java-unnecessary, java-unusedcode. This ruleset might be used as a starting point for an own customized ruleset [0]. [0] https://pmd.github.io/latest/pmd_userdocs_making_rulesets.html </description>
+    <rule ref="category/java/bestpractices.xml"/>
+    <rule ref="category/java/codestyle.xml">
+        <!-- This isn't always the easiest way to read a method. -->
+        <exclude name="OnlyOneReturn" />
+        <exclude name="AtLeastOneConstructor" />
+        <exclude name="CommentDefaultAccessModifier" />
+    </rule>
+    <rule ref="category/java/design.xml">
+        <exclude name="LawOfDemeter" />
+        <!-- We don't define any packages to use with this rule. -->
+        <exclude name="LoosePackageCoupling" />
+    </rule>
+    <rule ref="category/java/documentation.xml">
+    </rule>
+    <rule ref="category/java/documentation.xml/CommentSize">
+        <properties>
+            <property name="maxLines" value="20" />
+            <property name="maxLineLength" value="80" />
+        </properties>
+    </rule>
+    <rule ref="category/java/errorprone.xml">
+        <!-- We don't use beans. -->
+        <exclude name="BeanMembersShouldSerialize"/>
+    </rule>
+    <rule ref="category/java/multithreading.xml">
+        <exclude name="UseConcurrentHashMap" />
+    </rule>
+    <rule ref="category/java/performance.xml"/>
+    <rule ref="category/java/security.xml"/>
+</ruleset>
