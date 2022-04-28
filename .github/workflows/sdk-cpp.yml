@@ -1,0 +1,132 @@
+# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+
+name: touca-cpp-main
+
+on:
+  push:
+    paths-ignore:
+      - "appveyor.yml"
+
+jobs:
+  build-sdk-cpp-local:
+    name: build-sdk-cpp-local
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        cxx: [g++-9, clang++-9]
+    steps:
+      - uses: actions/checkout@v2
+      - run: ./build.sh --with-tests --with-cli --with-examples
+      - run: ./build.sh --test
+
+  build-sdk-cpp-conan:
+    name: build-sdk-cpp-conan
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        cxx: [g++-9, clang++-9]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v1
+      - name: cache conan
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-conan-packages
+        with:
+          path: ~/.conan
+          key:
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{
+            hashFiles('**/conanfile.py') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: install conan
+        run: |
+          pip install conan --no-cache-dir --upgrade
+          conan profile new default --detect --force
+          conan profile update settings.compiler.libcxx=libstdc++11 default
+      - name: build components
+        run: ./build.sh --with-tests --with-cli --with-examples
+      - name: run unit tests
+        run: ./build.sh --test
+      - name: create conan package
+        run: ./build.sh --package
+      - name: push conan package
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
+          conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
+          conan upload "touca/1.5.2" --confirm --parallel -r touca-cpp --all
+
+  build-sdk-cpp-docs:
+    name: build-sdk-cpp-docs
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    needs:
+      - build-sdk-cpp-local
+      - build-sdk-cpp-conan
+    steps:
+      - uses: actions/checkout@v2
+      - name: authenticate to aws
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-region: us-east-2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: install dependencies
+        run: |
+          sudo apt-get install doxygen
+          python -m pip install --upgrade pip
+          pip install --no-cache-dir --upgrade -r docs/sphinx/requirements.txt
+      - name: generate docs
+        run: ./build.sh --docs
+      - name: push docs to aws
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          tar -zcf cpp-api-reference.tar.gz local/docs/html
+          aws s3 cp cpp-api-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 sync ./local/docs/html/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }}/docs/sdk/cpp/ --include "*" --cache-control no-cache
+
+  build-sdk-cpp-coverage:
+    name: build-sdk-cpp-coverage
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - build-sdk-cpp-local
+      - build-sdk-cpp-conan
+    steps:
+      - uses: actions/checkout@v2
+      - name: authenticate to aws
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-region: us-east-2
+      - name: install dependencies
+        run: pip install gcovr
+      - name: generate coverage
+        run: ./build.sh --coverage
+      - name: push coverage to aws
+        run: |
+          tar -zcf cpp-test-coverage.tar.gz ./local/coverage/html
+          aws s3 cp cpp-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+      - name: upload coverage to codecov
+        uses: codecov/codecov-action@v2
+        env:
+          OS: ${{ runner.os }}
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./local/coverage/coverage.xml
+          env_vars: OS
+          fail_ci_if_error: true
