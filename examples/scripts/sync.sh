@@ -33,7 +33,7 @@ sync_cpp () {
 
     run_sed "${dir_dst}/04_cpp_external_input/config.json" 's/\("datasets-dir":\).*/\1 ".\/examples\/cpp\/04_cpp_external_input\/datasets"/g'
     for filename in ".clang-format" ".dockerignore" "build.sh" "CMakeLists.txt" "Dockerfile" "cmake/external.cmake"; do
-        git -C "${dir_examples}" checkout "${dir_dst}/${filename}"
+        git checkout "${dir_dst}/${filename}"
     done
 }
 
@@ -46,7 +46,7 @@ sync_python () {
 
     rm "${dir_dst}/02_python_main_api/unit_test.py"
     for filename in "01_python_minimal/requirements.txt" "02_python_main_api/requirements.txt" "03_python_core_api/requirements.txt" "04_python_external_files"; do
-        git -C "${dir_examples}" checkout "${dir_dst}/${filename}"
+        git checkout "${dir_dst}/${filename}"
     done
 }
 
@@ -54,17 +54,17 @@ sync_js () {
     local dir_examples="${DIR_EXAMPLES}"
     local dir_src="${DIR_CLIENTS}/js/examples"
     local dir_dst="${dir_examples}/js"
-    local version="1.5.0"
+    local version="1.5.2"
     rm -rf "${dir_dst}"
     cp -r "${dir_src}" "${dir_dst}"
 
     for filename in "lerna.json" "package.json" "tsconfig.json" "yarn.lock"; do
-        git -C "${dir_examples}" checkout "${dir_dst}/${filename}"
+        git checkout "${dir_dst}/${filename}"
     done
     for project in "01_node_minimal" "02_node_main_api" "03_node_core_api"; do
         run_sed "${dir_dst}/${project}/tsconfig.json" 's/\("extends":\).*/\1 "..\/tsconfig.json",/g'
-        run_sed "${dir_dst}/${project}/package.json"  's/\("version":\).*/\1 "1.5.0",/g'
-        run_sed "${dir_dst}/${project}/package.json"  's/\("@touca\/node":\).*/\1 "^1.5.0"/g'
+        run_sed "${dir_dst}/${project}/package.json"  's/\("version":\).*/\1 "1.5.2",/g'
+        run_sed "${dir_dst}/${project}/package.json"  's/\("@touca\/node":\).*/\1 "^1.5.2"/g'
     done
 }
 
@@ -72,12 +72,12 @@ sync_java () {
     local dir_examples="${DIR_EXAMPLES}"
     local dir_src="${DIR_CLIENTS}/java/examples"
     local dir_dst="${dir_examples}/java"
-    local version="1.5.0"
+    local version="1.5.1"
     rm -rf "${dir_dst}"
     cp -r "${dir_src}" "${dir_dst}"
 
     for filename in "gradlew" "gradlew.bat" "build.gradle.kts" "gradle" "settings.gradle.kts"; do
-        git -C "${dir_examples}" checkout "${dir_dst}/${filename}"
+        git checkout "${dir_dst}/${filename}"
     done
     for project in "01_java_minimal" "02_java_main_api" "03_java_core_api"; do
         run_sed "${dir_dst}/${project}/build.gradle.kts" 's/implementation.*/implementation("io.touca:touca:1.5.1")/g'
