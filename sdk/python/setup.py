@@ -21,7 +21,7 @@ def get_version():
 
 
 version = get_version()
-repo_url = "https://github.com/trytouca/touca-python"
+repo_url = "https://github.com/trytouca/trytouca/tree/main/sdk/python"
 
 setup(
     name="touca",

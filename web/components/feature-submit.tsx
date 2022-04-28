@@ -17,7 +17,7 @@ const snippets: {
 }[] = [
   {
     language: 'C++',
-    repository: 'https://github.com/trytouca/touca-cpp',
+    repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/cpp',
     snippet: `#include "touca/touca.hpp"
 #include "code_under_test.hpp"
 
@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     install: 'pip install touca',
     packageRepoLink: 'https://pypi.org/project/touca',
     packageRepoName: 'PyPI',
-    repository: 'https://github.com/trytouca/touca-python',
+    repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/python',
     snippet: `import touca
 
 @touca.Workflow
@@ -49,7 +49,7 @@ if __name__ == "__main__":
     install: 'npm install @touca/node',
     packageRepoLink: 'https://npmjs.com/package/@touca/node',
     packageRepoName: 'NPM',
-    repository: 'https://github.com/trytouca/touca-js',
+    repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/js',
     snippet: `import { touca } from "@touca/node";
 import { is_prime } from "./code_under_test";
 
@@ -65,7 +65,7 @@ touca.run();`
     install: 'implementation("io.touca:touca:1.5.1")',
     packageRepoLink: 'https://search.maven.org/artifact/io.touca/touca',
     packageRepoName: 'Maven',
-    repository: 'https://github.com/trytouca/touca-java',
+    repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/java',
     snippet: `import io.touca.Touca;
 
 public final class PrimeTest {

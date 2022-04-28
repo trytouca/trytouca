@@ -31,7 +31,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.docs == 'true'
@@ -49,7 +50,9 @@ jobs:
           yarn --cwd=docs install
           yarn --cwd=docs build
       - name: push doc to aws
-        if: steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
+        if:
+          steps.changes.outputs.docs == 'true' && steps.params.outputs.release
+          == 'true'
         run: |
           aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
           aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
@@ -115,7 +118,9 @@ jobs:
           cache-name: cache-conan-packages
         with:
           path: ~/.conan
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{ hashFiles('**/conanfile.py') }}
+          key:
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{
+            hashFiles('**/conanfile.py') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -137,7 +142,9 @@ jobs:
         if: steps.changes.outputs.sdk_cpp == 'true'
         run: ./build.sh --package
       - name: push conan package
-        if: steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if:
+          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
+          && github.ref == 'refs/heads/main'
         run: |
           conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
           conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
@@ -160,11 +167,14 @@ jobs:
         with:
           filters: .github/path-filters.yml
       - name: authenticate to aws
-        if: steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if:
+          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
+          && github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: actions/setup-python@v2
         if: steps.changes.outputs.sdk_cpp == 'true'
@@ -180,7 +190,9 @@ jobs:
         if: steps.changes.outputs.sdk_cpp == 'true'
         run: ./build.sh --docs
       - name: push docs to aws
-        if: steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        if:
+          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
+          && github.ref == 'refs/heads/main'
         run: |
           tar -zcf cpp-api-reference.tar.gz local/docs/html
           aws s3 cp cpp-api-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
@@ -207,7 +219,8 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - name: install dependencies
         if: steps.changes.outputs.sdk_cpp == 'true'
@@ -246,11 +259,14 @@ jobs:
         with:
           filters: .github/path-filters.yml
       - name: authenticate to aws
-        if: steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_java == 'true' && github.ref ==
+          'refs/heads/main' && github.event_name == 'push'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: gradle/wrapper-validation-action@v1
         if: steps.changes.outputs.sdk_java == 'true'
@@ -266,28 +282,37 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ env.cache-name }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key:
+            ${{ runner.os }}-gradle-${{ env.cache-name }}-${{
+            hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
       - name: build java sdk
         if: steps.changes.outputs.sdk_java == 'true'
         run: ./gradlew build
       - name: publish sdk to maven
-        if: steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_java == 'true' && github.ref ==
+          'refs/heads/main' && github.event_name == 'push'
         run: ./gradlew publish
         env:
           ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.SONATYPE_USERNAME }}
           ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.SONATYPE_PASSWORD }}
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GRADLE_SIGNING_KEY }}
           ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.GRADLE_SIGNING_KEY_ID }}
-          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.GRADLE_SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingPassword:
+            ${{ secrets.GRADLE_SIGNING_PASSWORD }}
       - name: push docs to aws
-        if: steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_java == 'true' && github.ref ==
+          'refs/heads/main' && github.event_name == 'push'
         run: |
           tar -zcf java-docs-external.tar.gz touca/build/docs/javadoc
           aws s3 cp java-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
       - name: push coverage to aws
-        if: steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_java == 'true' && github.ref ==
+          'refs/heads/main' && github.event_name == 'push'
         run: |
           tar -zcf java-test-coverage.tar.gz touca/build/reports/jacoco/test/html
           aws s3 cp java-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
@@ -297,7 +322,9 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
       - name: upload coverage to codecov
-        if: steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_java == 'true' && github.ref ==
+          'refs/heads/main' && github.event_name == 'push'
         uses: codecov/codecov-action@v2
         env:
           OS: ${{ runner.os }}
@@ -325,11 +352,15 @@ jobs:
         with:
           filters: .github/path-filters.yml
       - name: authenticate to aws
-        if: steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_js == 'true' && github.ref ==
+          'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
+          'push'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.sdk_js == 'true'
@@ -354,23 +385,36 @@ jobs:
           yarn build
           yarn test
       - name: lint source code
-        if: steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 &&
+          github.event_name == 'push'
         run: yarn lint
       - name: generate docs
-        if: steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 &&
+          github.event_name == 'push'
         run: yarn docs
       - name: push docs to aws
-        if: steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_js == 'true' && github.ref ==
+          'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
+          'push'
         run: |
           tar -zcf js-node-docs-external.tar.gz local/docs
           aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
       - name: push coverage to aws
-        if: steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_js == 'true' && github.ref ==
+          'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
+          'push'
         run: |
           tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
           aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
       - name: upload coverage to codecov
-        if: steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_js == 'true' && github.ref ==
+          'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
+          'push'
         uses: codecov/codecov-action@v2
         env:
           OS: ${{ runner.os }}
@@ -399,11 +443,15 @@ jobs:
         with:
           filters: .github/path-filters.yml
       - name: authenticate to aws
-        if: steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_python == 'true' && github.ref ==
+          'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
+          == 'push'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key: ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: actions/setup-python@v2
         if: steps.changes.outputs.sdk_python == 'true'
@@ -416,7 +464,9 @@ jobs:
           cache-name: cache-pip-dependencies
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.python-version }}-${{ hashFiles('requirements.txt') }}
+          key:
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{
+            matrix.python-version }}-${{ hashFiles('requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.python-version }}-
             ${{ runner.os }}-build-${{ env.cache-name }}-
@@ -436,17 +486,25 @@ jobs:
         run: |
           make docs
       - name: push docs to aws
-        if: steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_python == 'true' && github.ref ==
+          'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
+          == 'push'
         run: |
           tar -zcf python-docs-external.tar.gz local/docs
           aws s3 cp python-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
       - name: push coverage to aws
-        if: steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_python == 'true' && github.ref ==
+          'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
+          == 'push'
         run: |
           tar -zcf python-test-coverage.tar.gz local/tests
           aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
       - name: build package distributable
-        if: steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9
+        if:
+          steps.changes.outputs.sdk_python == 'true' && github.ref ==
+          'refs/heads/main' && matrix.python-version == 3.9
         env:
           TWINE_NON_INTERACTIVE: true
         run: |
@@ -454,7 +512,10 @@ jobs:
           python setup.py sdist bdist_wheel
           twine check dist/*
       - name: upload coverage to codecov
-        if: steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
+        if:
+          steps.changes.outputs.sdk_python == 'true' && github.ref ==
+          'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
+          == 'push'
         uses: codecov/codecov-action@v2
         env:
           OS: ${{ runner.os }}
@@ -493,7 +554,9 @@ jobs:
         if: steps.changes.outputs.examples_cpp == 'true'
         run: ./build.sh
       - name: run example cpp application
-        if: steps.changes.outputs.examples_cpp == 'true' && github.ref == 'refs/heads/main'
+        if:
+          steps.changes.outputs.examples_cpp == 'true' && github.ref ==
+          'refs/heads/main'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
           TOUCA_API_URL: https://api.touca.io/@/examples/cpp
@@ -533,13 +596,17 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ env.cache-name }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key:
+            ${{ runner.os }}-gradle-${{ env.cache-name }}-${{
+            hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
       - run: ./gradlew build
         if: steps.changes.outputs.examples_java == 'true'
       - name: run example java application
-        if: steps.changes.outputs.examples_java == 'true' && github.ref == 'refs/heads/main'
+        if:
+          steps.changes.outputs.examples_java == 'true' && github.ref ==
+          'refs/heads/main'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
           TOUCA_API_URL: https://api.touca.io/@/examples/java
@@ -591,7 +658,9 @@ jobs:
           yarn install
           yarn build
       - name: run javascript example application
-        if: steps.changes.outputs.examples_js == 'true' && github.ref == 'refs/heads/main'
+        if:
+          steps.changes.outputs.examples_js == 'true' && github.ref ==
+          'refs/heads/main'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
           TOUCA_API_URL: https://api.touca.io/@/examples/javascript
@@ -624,7 +693,9 @@ jobs:
           git describe --tags
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - name: run example python application
-        if: steps.changes.outputs.examples_python == 'true' && github.ref == 'refs/heads/main'
+        if:
+          steps.changes.outputs.examples_python == 'true' && github.ref ==
+          'refs/heads/main'
         env:
           TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
           TOUCA_API_URL: https://api.touca.io/@/examples/python
@@ -650,7 +721,9 @@ jobs:
           echo "::set-output name=version::$(git describe --tags --abbrev=0 | cut -c 2-)"
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
       - name: authenticate to aws
-        if: steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
+        if:
+          steps.changes.outputs.web == 'true' && steps.params.outputs.release ==
+          'true'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
@@ -677,7 +750,9 @@ jobs:
           yarn --cwd=web lint
           yarn --cwd=web export
       - name: push web to aws
-        if: steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
+        if:
+          steps.changes.outputs.web == 'true' && steps.params.outputs.release ==
+          'true'
         run: |
           aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
           aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache

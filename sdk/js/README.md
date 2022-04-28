@@ -1,22 +1,12 @@
 # Touca SDK for JavaScript
 
 [![npm version](https://img.shields.io/npm/v/@touca/node?color=blue)](https://www.npmjs.com/package/@touca/node)
-[![License](https://img.shields.io/github/license/trytouca/touca-js?color=blue)](https://github.com/trytouca/touca-js/blob/main/LICENSE)
-[![Build Status](https://img.shields.io/github/workflow/status/trytouca/touca-js/touca-js-main)](https://github.com/trytouca/touca-js/actions)
+[![License](https://img.shields.io/static/v1?label=license&message=Apache-2.0&color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/java/LICENSE)
+[![Build Status](https://img.shields.io/github/workflow/status/trytouca/trytouca/touca-build)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
 [![Code Quality](https://img.shields.io/codacy/grade/dca09feb49f142468bdd864a8015a53f)](https://app.codacy.com/gh/trytouca/touca-js)
 [![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/touca-js)](https://app.codecov.io/gh/trytouca/touca-js)
 
-Touca helps you understand the true impact of your day to day code changes on
-the behavior and performance of your overall software, as you write code.
-
-[![Touca Server](https://touca.io/images/touca-screenshot-suite-page.jpg)](https://touca.io/images/touca-screenshot-suite-page.jpg)
-
-Touca SDKs let you describe the behavior and performance of your code by
-capturing values of interesting variables and runtime of important functions. We
-remotely compare your description against a trusted version of your software,
-visualize all differences, and report them in near real-time.
-
-## 🧑‍🔧 Install
+## Install
 
 You can install Touca with [NPM][npm]:
 
@@ -26,7 +16,7 @@ npm install @touca/node
 
 We formally support Node.js v12 and newer on Windows, Linux and macOS platforms.
 
-## 👀 Sneak Peak
+## Sneak Peak
 
 > For a more thorough guide of how to use Touca SDK for JavaScript, check out
 > the `examples` directory or visit our [documentation website](https://touca.io/docs).
@@ -109,7 +99,7 @@ Time:       0.91 s
 
 ```
 
-## ✨ Features
+## Features
 
 Touca is very effective in addressing common problems in the following
 situations:
@@ -139,7 +129,7 @@ test these workflows at any scale.
   members of our team. It allows us to audit how our software evolves over time
   and provides high-level information about our tests.
 
-## 📖 Documentation
+## Documentation
 
 - If you are new to Touca, the best place to start is our [Quickstart
   Guide][docs-quickstart] on our documentation website.
@@ -150,7 +140,7 @@ test these workflows at any scale.
 - If you cannot wait to start writing your first test with Touca, see our
   [JavaScript API Reference][docs-js-api].
 
-## 🙋 Ask for Help
+## Ask for Help
 
 We want Touca to work well for you. If you need help, have any questions, or
 like to provide feedback, send us a note through the Intercom at
@@ -162,7 +152,7 @@ This repository is released under the Apache-2.0 License. See
 [`LICENSE`][license].
 
 [calendly]: https://calendly.com/ghorbanzade/30min
-[license]: https://github.com/trytouca/touca-js/blob/main/LICENSE
+[license]: https://github.com/trytouca/trytouca/blob/main/sdk/js/LICENSE
 [npm]: https://npmjs.com/package/@touca/node
 [docs-quickstart]: https://touca.io/docs/basics/quickstart
 [docs-js]: https://touca.io/docs/sdk/javascript/quickstart
