@@ -5,9 +5,10 @@ are new to Touca, consider reading our
 [general quickstart guide](/basics/quickstart) first.
 
 Touca SDK for Python is available as open-source
-[on GitHub](https://github.com/trytouca/touca-python) under the Apache-2.0
-License. It is publicly available [on PyPI](https://pypi.org/project/touca/) and
-can be pulled as a dependency using `pip`.
+[on GitHub](https://github.com/trytouca/trytouca/blob/main/sdk/python/LICENSE)
+under the Apache-2.0 License. It is publicly available
+[on PyPI](https://pypi.org/project/touca/) and can be pulled as a dependency
+using `pip`.
 
 ```bash
 pip install touca

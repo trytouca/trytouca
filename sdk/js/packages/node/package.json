@@ -11,12 +11,12 @@
     "email": "pejman@touca.io"
   },
   "bugs": {
-    "url": "https://github.com/trytouca/touca-js/issues"
+    "url": "https://github.com/trytouca/trytouca/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/trytouca/touca-js",
-    "directory": "packages/node"
+    "url": "https://github.com/trytouca/trytouca",
+    "directory": "sdk/js/packages/node"
   },
   "files": [
     "dist/**/*"

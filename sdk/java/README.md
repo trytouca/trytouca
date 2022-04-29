@@ -1,22 +1,12 @@
 # Touca SDK for Java
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.touca/touca?color=blue)](https://search.maven.org/artifact/io.touca/touca)
-[![License](https://img.shields.io/github/license/trytouca/touca-java?color=blue)](https://github.com/trytouca/touca-java/blob/main/LICENSE)
-[![Build Status](https://img.shields.io/github/workflow/status/trytouca/touca-java/touca-java-main)](https://github.com/trytouca/touca-java/actions)
+[![License](https://img.shields.io/static/v1?label=license&message=Apache-2.0&color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/java/LICENSE)
+[![Build Status](https://img.shields.io/github/workflow/status/trytouca/trytouca/touca-build?logo=github)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
 [![Code Quality](https://img.shields.io/codacy/grade/a98ce7c10db1482da22c6922c334959f)](https://app.codacy.com/gh/trytouca/touca-java)
 [![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/touca-java)](https://app.codecov.io/gh/trytouca/touca-java)
 
-Touca helps you understand the true impact of your day to day code changes on
-the behavior and performance of your overall software, as you write code.
-
-[![Touca Server](https://touca.io/images/touca-screenshot-suite-page.jpg)](https://touca.io/images/touca-screenshot-suite-page.jpg)
-
-Touca SDKs let you describe the behavior and performance of your code by
-capturing values of interesting variables and runtime of important functions. We
-remotely compare your description against a trusted version of your software,
-visualize all differences, and report them in near real-time.
-
-## 🧑‍🔧 Install
+## Install
 
 You can install Touca from
 [Maven Central](https://search.maven.org/artifact/io.touca/touca):
@@ -31,7 +21,7 @@ You can install Touca from
 
 We formally support Java 8 and newer on Linux, macOS, and Windows platforms.
 
-## 👀 Sneak Peak
+## Sneak Peak
 
 > For a more thorough guide of how to use Touca SDK for Python, check out the
 > `examples` directory or visit our
@@ -117,7 +107,7 @@ Time:       0.91 s
 
 ```
 
-## ✨ Features
+## Features
 
 Touca is very effective in addressing common problems in the following
 situations:
@@ -144,7 +134,7 @@ test these workflows at any scale.
   members of our team. It allows us to audit how our software evolves over time
   and provides high-level information about our tests.
 
-## 📖 Documentation
+## Documentation
 
 - If you are new to Touca, the best place to start is our
   [Quickstart Guide](https://touca.io/docs/basics/quickstart).
@@ -153,7 +143,7 @@ test these workflows at any scale.
 - If you cannot wait to start writing your first test with Touca, see our
   [Java API Reference](https://app.touca.io/docs/clients/java/api.html).
 
-## 🙋 Ask for Help
+## Ask for Help
 
 We want Touca to work well for you. If you need help, have any questions, or
 like to provide feedback, send us a note through the Intercom at
@@ -162,4 +152,4 @@ like to provide feedback, send us a note through the Intercom at
 ## License
 
 This repository is released under the Apache-2.0 License. See
-[LICENSE](https://github.com/trytouca/touca-java/blob/main/LICENSE).
+[LICENSE](https://github.com/trytouca/trytouca/blob/main/sdk/java/LICENSE).

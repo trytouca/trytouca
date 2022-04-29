@@ -74,7 +74,7 @@ LABEL org.opencontainers.image.url="https://touca.io/"
 LABEL org.opencontainers.image.documentation="https://touca.io/docs"
 LABEL org.opencontainers.image.vendor="Touca, Inc."
 LABEL org.opencontainers.image.authors="hello@touca.io"
-LABEL org.opencontainers.image.licenses="https://github.com/trytouca/touca-cpp/blob/master/LICENSE"
+LABEL org.opencontainers.image.licenses="https://github.com/trytouca/trytouca/blob/main/sdk/cpp/LICENSE"
 
 COPY --from=client_cpp_build    /opt/local/dist       /opt/dist
 COPY --from=client_cpp_docs     /opt/local/docs/html  /opt/docs

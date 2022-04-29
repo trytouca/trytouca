@@ -21,12 +21,13 @@ following compilers:
 ## Obtaining the Source Code
 
 Touca SDK for C++ is available
-[on GitHub](https://github.com/trytouca/touca-cpp) under the Apache-2.0 license.
-Clone this repository to a directory of your choice. We refer to this directory
-as `<project_directory>`.
+[on GitHub](https://github.com/trytouca/trytouca/tree/main/sdk/cpp) under the
+Apache-2.0 license. Clone this repository to a directory of your choice. We
+refer to this directory as `<project_directory>`.
 
 ```bash
-git clone git@github.com:trytouca/touca-cpp.git <project_directory>
+git clone git@github.com:trytouca/trytouca.git
+cd sdk/cpp
 ```
 
 ## Using Our Helper Script
