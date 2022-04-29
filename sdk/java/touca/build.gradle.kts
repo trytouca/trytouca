@@ -107,7 +107,7 @@ configure<PublishingExtension> {
                 pom {
                     name.set("${groupId}:${artifactId}")
                     description.set("Touca SDK for Java")
-                    url.set("https://github.com/trytouca/touca-java.git")
+                    url.set("https://github.com/trytouca/trytouca/tree/main/sdk/java")
                     licenses {
                         license {
                             name.set("Apache License 2.0")
@@ -129,9 +129,9 @@ configure<PublishingExtension> {
                         }
                     }
                     scm {
-                        url.set("https://github.com/trytouca/touca-java")
-                        connection.set("scm:git:https://github.com/trytouca/touca-java.git")
-                        developerConnection.set("scm:git:ssh://git@github.com:trytouca/touca-java.git")
+                        url.set("https://github.com/trytouca/trytouca")
+                        connection.set("scm:git:https://github.com/trytouca/trytouca.git")
+                        developerConnection.set("scm:git:ssh://git@github.com:trytouca/trytouca.git")
                     }
                 }
             }

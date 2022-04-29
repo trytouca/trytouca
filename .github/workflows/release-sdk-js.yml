@@ -1,6 +1,6 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-name: touca-js-release
+name: touca-release-sdk-js
 
 on:
   release:
@@ -12,12 +12,16 @@ jobs:
   publish-npm:
     name: release-publish-npm
     runs-on: ubuntu-20.04
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: ./sdk/js
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
           node-version: 14
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
       - run: yarn install
       - run: yarn build:prod
       - name: build package distributable

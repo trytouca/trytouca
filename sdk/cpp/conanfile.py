@@ -6,10 +6,9 @@ from conans import ConanFile, CMake
 class ToucaConan(ConanFile):
 
     name = "touca"
-    homepage = "https://github.com/trytouca/touca-cpp"
+    homepage = "https://github.com/trytouca/trytouca/tree/main/sdk/cpp"
     description = "Touca SDK for C++"
     topics = ("regression-testing", "test-framework", "test-automation")
-    url = "https://touca.io/docs"
     license = "Apache-2.0"
     version = "1.5.2"
     author = "Touca, Inc. <hello@touca.io>"

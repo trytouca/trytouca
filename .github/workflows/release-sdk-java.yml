@@ -1,6 +1,6 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-name: touca-java-release
+name: touca-release-sdk-java
 
 on:
   release:
@@ -12,6 +12,10 @@ jobs:
   publish-maven:
     name: release-publish-maven
     runs-on: ubuntu-20.04
+    timeout-minutes: 5
+    defaults:
+      run:
+        working-directory: ./sdk/java
     steps:
       - uses: actions/checkout@v2
       - uses: gradle/wrapper-validation-action@v1

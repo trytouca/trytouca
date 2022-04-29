@@ -17,13 +17,13 @@ choice. Navigate to that directory and invoke its top-level `build.sh` script
 with option `--with-cli`.
 
 ```bash
-git clone git@github.com:trytouca/touca-cpp.git
-cd touca-cpp
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/sdk/cpp
 ./build.sh --with-cli
 ```
 
 The build script generates a `touca_cli` executable in the `./local/dist/bin`
-directory relative to the `touca-cpp` directory. You can install this executable
+directory relative to the `sdk/cpp` directory. You can install this executable
 for easier access to the CLI from any working directory.
 
 ```bash

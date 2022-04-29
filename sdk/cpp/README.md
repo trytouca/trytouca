@@ -1,23 +1,14 @@
 # Touca SDK for C++
 
 ![Supported Platforms](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20Windows-blue.svg)
-[![Latest version](https://img.shields.io/github/v/release/trytouca/touca-cpp)](https://github.com/trytouca/touca-cpp/releases)
-[![License](https://img.shields.io/github/license/trytouca/touca-cpp?color=blue)](https://github.com/trytouca/touca-cpp/blob/main/LICENSE)
-[![Build Status](https://img.shields.io/github/workflow/status/trytouca/touca-cpp/touca-cpp-main)](https://github.com/trytouca/touca-cpp/actions/workflows/main.yml?query=branch:main+event:push)
+[![Latest version](https://img.shields.io/static/v1?label=release&message=v1.5.1&color=blue)](https://github.com/trytouca/trytouca/tree/main/sdk/cpp)
+[![License](https://img.shields.io/static/v1?label=license&message=Apache-2.0&color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/cpp/LICENSE)
+[![Build Status](https://img.shields.io/github/workflow/status/trytouca/trytouca/touca-build?logo=github)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
+[![Build Status on Appveyor](https://img.shields.io/appveyor/build/PejmanGhorbanzade/touca-cpp?logo=appveyor)](https://ci.appveyor.com/project/PejmanGhorbanzade/touca-cpp)
 [![Documentation Status](https://readthedocs.org/projects/touca-cpp/badge/?version=latest)](https://touca-cpp.readthedocs.io)
 [![Codecov](https://img.shields.io/codecov/c/github/trytouca/touca-cpp)](https://app.codecov.io/gh/trytouca/touca-cpp)
 
-Touca helps you understand the true impact of your day to day code changes on
-the behavior and performance of your overall software, as you write code.
-
-[![Touca Server](https://touca.io/images/touca-screenshot-suite-page.jpg)](https://touca.io/images/touca-screenshot-suite-page.jpg)
-
-Touca SDKs let you describe the behavior and performance of your code by
-capturing values of interesting variables and runtime of important functions. We
-remotely compare your description against a trusted version of your software,
-visualize all differences, and report them in near real-time.
-
-## 👀 Sneak Peak
+## Sneak Peak
 
 > For a more thorough guide of how to use Touca SDK for C++, check out the
 > examples directory or visit our
@@ -99,7 +90,7 @@ Time:       0.91 s
 
 ```
 
-## ✨ Features
+## Features
 
 Touca is very effective in addressing common problems in the following
 situations:
@@ -126,7 +117,7 @@ test these workflows at any scale.
   members of our team. It allows us to audit how our software evolves over time
   and provides high-level information about our tests.
 
-## 📖 Documentation
+## Documentation
 
 - If you are new to Touca, the best place to start is the
   [Quickstart Guide](https://touca.io/docs/basics/quickstart) on our
@@ -136,15 +127,16 @@ test these workflows at any scale.
 - If you cannot wait to start writing your first test with Touca, see our
   [C++ API Reference](https://app.touca.io/docs/clients/cpp/api.html).
 
-## 🧑‍🔧 Integration
+## Integration
 
 You can install Touca with CMake 3.11 or higher:
 
 ```cmake
 FetchContent_Declare(
     touca
-    GIT_REPOSITORY https://github.com/trytouca/touca-cpp.git
+    GIT_REPOSITORY https://github.com/trytouca/trytouca
     GIT_TAG        v1.5.1
+    SOURCE_SUBDIR  sdk/cpp
 )
 FetchContent_MakeAvailable(touca)
 ```
@@ -159,7 +151,7 @@ conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.4.1@_
 See the [Integration](https://touca.io/docs/sdk/cpp/installing) section on our
 documentation website to learn more.
 
-## 🕵️ Requirements
+## Requirements
 
 We formally support C++11 and higher standards on Windows, Linux and macOS
 platforms. We test our library against the following compilers:
@@ -170,7 +162,7 @@ platforms. We test our library against the following compilers:
 | x86-64 clang | 7.0.0       |
 | x64 MSVC     | 1900        |
 
-## 🙋 Ask for Help
+## Ask for Help
 
 We want Touca to work well for you. If you need help, have any questions, or
 like to provide feedback, send us a note through the Intercom at
@@ -178,5 +170,5 @@ like to provide feedback, send us a note through the Intercom at
 
 ## License
 
-This repository is released under the Apache-2.0 License. See
-[`LICENSE`](https://github.com/trytouca/touca-cpp/blob/main/LICENSE).
+Touca SDK for C++ is released under the Apache-2.0 License. See
+[`LICENSE`](https://github.com/trytouca/trytouca/blob/main/sdk/cpp/LICENSE).

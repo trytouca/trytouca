@@ -5,7 +5,7 @@ new to Touca, consider reading our
 [general quickstart guide](/basics/quickstart) first.
 
 Touca SDK for C++ is available as open-source
-[on GitHub](https://github.com/trytouca/touca-cpp) under the Apache-2.0 License.
+[on GitHub](https://github.com/trytouca/trytouca) under the Apache-2.0 License.
 You can [build it from source](./building.md) or
 [pull it as third-party dependency](./installing.md). We are going to assume
 that you are not sure whether it is worth building or integrating our C++ SDK.

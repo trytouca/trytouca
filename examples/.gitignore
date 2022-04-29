@@ -7,7 +7,6 @@ python/**/__pycache__
 java/**/build
 java/**/.classpath
 java/**/org.eclipse.buildship.core.prefs
-#java
 .project
 .gradle
 .settings

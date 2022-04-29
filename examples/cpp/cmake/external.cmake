@@ -16,8 +16,9 @@ function(touca_find_touca)
     # annotated tag when integrating Touca as a third-party dependency.
     FetchContent_Declare(
         touca
-        GIT_REPOSITORY https://github.com/trytouca/touca-cpp.git
+        GIT_REPOSITORY https://github.com/trytouca/trytouca
         GIT_TAG        origin/main
+        SOURCE_SUBDIR  sdk/cpp
     )
     FetchContent_MakeAvailable(touca)
 endfunction()
