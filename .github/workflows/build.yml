@@ -527,8 +527,8 @@ jobs:
           env_vars: OS,PYTHON
           fail_ci_if_error: true
 
-  build-examples-cpp:
-    name: build-examples-cpp
+  run-examples-cpp:
+    name: run-examples-cpp
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     defaults:
@@ -548,7 +548,6 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          git describe --tags
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - name: build cpp examples
         if: steps.changes.outputs.examples_cpp == 'true'
@@ -565,8 +564,8 @@ jobs:
           mkdir -p ./local/results
           ./local/dist/bin/example_cpp_main_api
 
-  build-examples-java:
-    name: build-examples-java
+  run-examples-java:
+    name: run-examples-java
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     defaults:
@@ -588,7 +587,6 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          git describe --tags
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - uses: actions/cache@v2
         if: steps.changes.outputs.examples_java == 'true'
@@ -601,8 +599,9 @@ jobs:
             hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
-      - run: ./gradlew build
+      - name: build java examples
         if: steps.changes.outputs.examples_java == 'true'
+        run: ./gradlew build
       - name: run example java application
         if:
           steps.changes.outputs.examples_java == 'true' && github.ref ==
@@ -618,8 +617,8 @@ jobs:
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
           rm -f ~/.gradle/caches/modules-2/gc.properties
 
-  build-examples-js:
-    name: build-examples-js
+  run-examples-js:
+    name: run-examples-js
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     defaults:
@@ -640,7 +639,6 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          git describe --tags
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - uses: actions/cache@v2
         if: steps.changes.outputs.examples_js == 'true'
@@ -652,12 +650,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
             ${{ runner.os }}-
-      - name: build javascript examples
+      - name: build js examples
         if: steps.changes.outputs.examples_js == 'true'
         run: |
           yarn install
           yarn build
-      - name: run javascript example application
+      - name: run example js application
         if:
           steps.changes.outputs.examples_js == 'true' && github.ref ==
           'refs/heads/main'
@@ -668,8 +666,8 @@ jobs:
         run: |
           yarn --cwd=02_node_main_api test:touca
 
-  build-examples-python:
-    name: build-examples-python
+  run-examples-python:
+    name: run-examples-python
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     defaults:
@@ -690,7 +688,6 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          git describe --tags
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
       - name: run example python application
         if:
