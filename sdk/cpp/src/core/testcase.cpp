@@ -98,23 +98,23 @@ void Testcase::assume(const std::string& key, const data_point& value) {
 }
 
 void Testcase::add_array_element(const std::string& key,
-                                 const data_point& value) {
+                                 const data_point& element) {
   if (!_resultsMap.count(key)) {
-    _resultsMap.emplace(key,
-                        ResultEntry{array().add(value), ResultCategory::Check});
+    _resultsMap.emplace(
+        key, ResultEntry{array().add(element), ResultCategory::Check});
     return;
   }
   auto& ivalue = _resultsMap.at(key);
   if (ivalue.val.type() != detail::internal_type::array) {
     throw std::invalid_argument("specified key has a different type");
   }
-  ivalue.val.as_array()->push_back(value);
+  ivalue.val.as_array()->push_back(element);
   _posted = false;
 }
 
 void Testcase::add_hit_count(const std::string& key) {
   if (!_resultsMap.count(key)) {
-    _resultsMap.emplace(key, ResultEntry{data_point::number_unsigned(1U),
+    _resultsMap.emplace(key, ResultEntry{data_point::number_unsigned(1u),
                                          ResultCategory::Check});
     return;
   }

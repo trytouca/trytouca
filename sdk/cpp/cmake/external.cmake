@@ -57,7 +57,7 @@ function(touca_find_ghcfilesystem)
         GIT_TAG         v1.5.10
     )
     FetchContent_GetProperties(ghcFilesystem)
-    if (NOT ghcfilesystem_POPULATED)
+    if(NOT ghcfilesystem_POPULATED)
         FetchContent_Populate(ghcFilesystem)
         add_library(ghcFilesystem INTERFACE)
         add_library(ghcFilesystem::ghcFilesystem ALIAS ghcFilesystem)

@@ -1,30 +1,20 @@
 ---
 Checks: "*,\
-  -altera-unroll-loops,\
-  -bugprone-easily-swappable-parameters,\
-  -cppcoreguidelines-avoid-magic-numbers,\
-  -cppcoreguidelines-avoid-non-const-global-variables,\
-  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,\
-  -cppcoreguidelines-pro-type-reinterpret-cast,\
+  -altera-unroll-loops, \
   -fuchsia-default-arguments,\
   -fuchsia-default-arguments-calls,\
-  -fuchsia-default-arguments-declarations,\
-  -fuchsia-overloaded-operator,\
-  -fuchsia-statically-constructed-objects,\
-  -google-default-arguments,\
   -google-readability-namespace-comments,\
   -llvm-header-guard,\
   -llvm-include-order,\
   -llvm-namespace-comment,\
-  -llvmlibc-callee-namespace,\
-  -llvmlibc-implementation-in-namespace,\
-  -llvmlibc-restrict-system-libc-headers,\
-  -misc-no-recursion,\
-  -misc-unused-alias-decls,\
-  -modernize-use-trailing-return-type,\
+  -llvmlibc-callee-namespace, \
+  -llvmlibc-implementation-in-namespace, \
+  -llvmlibc-restrict-system-libc-headers, \
+  -modernize-use-trailing-return-type, \
   -readability-implicit-bool-conversion,\
   -readability-simplify-boolean-exp,\
-  -readability-magic-numbers,\
+  -cppcoreguidelines-pro-bounds-array-to-pointer-decay,\
+  -misc-unused-alias-decls,\
   "
 HeaderFilterRegex: ""
 ---

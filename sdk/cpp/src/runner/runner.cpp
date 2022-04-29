@@ -27,22 +27,22 @@
 
 namespace touca {
 
-static struct {
+struct {
   std::function<void(FrameworkOptions&)> config;
-  std::map<std::string, Runner::Workflow> workflows;
   std::vector<std::pair<std::unique_ptr<Sink>, Sink::Level>> sinks;
+  std::map<std::string, Runner::Workflow> workflows;
 } _meta;
 
-void configure(const std::function<void(FrameworkOptions&)>& func) {
+void configure(const std::function<void(FrameworkOptions&)> func) {
   _meta.config = func;
 }
 
-void workflow(const std::string& name, const Runner::Workflow& workflow) {
+void workflow(const std::string& name, const Runner::Workflow workflow) {
   _meta.workflows.emplace(name, workflow);
 }
 
 void add_sink(std::unique_ptr<Sink> sink, const Sink::Level level) {
-  _meta.sinks.emplace_back(std::move(sink), level);
+  _meta.sinks.push_back(std::make_pair(std::move(sink), level));
 }
 
 void reset_test_runner() {
@@ -52,7 +52,7 @@ void reset_test_runner() {
 }
 
 int run(int argc, char* argv[]) {
-  auto status = 0U;
+  auto status = 0u;
   for (const auto& workflow : _meta.workflows) {
     try {
       status += touca::Runner(argc, argv).run(workflow.second);
@@ -152,7 +152,7 @@ void Logger::error(const std::string& msg) const {
 }
 
 void Logger::add_sink(std::unique_ptr<Sink> sink, const Sink::Level level) {
-  _sinks.emplace_back(std::move(sink), level);
+  _sinks.push_back(std::make_pair(std::move(sink), level));
 }
 
 void Logger::publish(const Sink::Level level, const std::string& msg) const {
@@ -173,19 +173,19 @@ std::string stringify(const Sink::Level& log_level) {
   return names.at(log_level);
 }
 
-struct ConsoleSink final : public Sink {
+struct ConsoleSink : public Sink {
   void log(const Sink::Level level, const std::string& msg) override {
     fmt::print(std::cout, "{0:<8}{1:}\n", stringify(level), msg);
   }
 };
 
-struct FileSink final : public Sink {
-  explicit FileSink(const touca::filesystem::path& logDir) : Sink() {
+struct FileSink : public Sink {
+  FileSink(const touca::filesystem::path& logDir) : Sink() {
     const auto logFilePath = logDir / "touca.log";
     _ofs = std::ofstream(logFilePath.string(), std::ios::trunc);
   }
 
-  ~FileSink() final { _ofs.close(); }
+  ~FileSink() { _ofs.close(); }
 
   void log(const Sink::Level level, const std::string& msg) override {
     char timestamp[32];
@@ -215,13 +215,13 @@ Sink::Level find_log_level(const std::string& name) {
 
 void Statistics::inc(Status value) {
   if (!_v.count(value)) {
-    _v[value] = 0U;
+    _v[value] = 0u;
   }
-  _v[value] += 1U;
+  _v[value] += 1u;
 }
 
-std::uint64_t Statistics::count(Status value) const {
-  return _v.count(value) ? _v.at(value) : 0U;
+unsigned long Statistics::count(Status value) const {
+  return _v.count(value) ? _v.at(value) : 0u;
 }
 
 void Timer::tic(const std::string& key) {
@@ -232,7 +232,7 @@ void Timer::toc(const std::string& key) {
   _tocs[key] = std::chrono::system_clock::now();
 }
 
-std::int64_t Timer::count(const std::string& key) const {
+long long Timer::count(const std::string& key) const {
   const auto& dur = _tocs.at(key) - _tics.at(key);
   return std::chrono::duration_cast<std::chrono::milliseconds>(dur).count();
 }
@@ -307,7 +307,7 @@ Runner::Runner(int argc, char* argv[]) {
   }
 }
 
-int Runner::run(const Runner::Workflow& workflow) {
+int Runner::run(const Runner::Workflow workflow) {
   // if user asks for help, print help message and exit
   if (options.has_help) {
     fmt::print(std::cout, "{}\n", cli_help_description());
@@ -382,14 +382,14 @@ int Runner::run(const Runner::Workflow& workflow) {
 
   printer.testcase_count = options.testcases.size();
   printer.testcase_width =
-      std::accumulate(options.testcases.begin(), options.testcases.end(), 0UL,
+      std::accumulate(options.testcases.begin(), options.testcases.end(), 0ul,
                       [](const size_t sum, const std::string& testcase) {
                         return std::max(sum, testcase.length());
                       });
 
   // iterate over testcases and execute the workflow for each testcase.
   timer.tic("__workflow__");
-  auto index = 0U;
+  auto index = 0u;
   for (const auto& testcase : options.testcases) {
     run_testcase(workflow, testcase, index++);
   }
@@ -405,7 +405,7 @@ int Runner::run(const Runner::Workflow& workflow) {
   return EXIT_SUCCESS;
 }
 
-void Runner::run_testcase(const Runner::Workflow& workflow,
+void Runner::run_testcase(const Runner::Workflow workflow,
                           const std::string& testcase, const unsigned index) {
   std::vector<std::string> errors;
   auto output_dir_case = touca::filesystem::path(options.output_dir) /

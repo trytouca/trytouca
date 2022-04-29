@@ -60,11 +60,11 @@ void save_string_file(const std::string& path, const std::string& content) {
 }
 
 void save_binary_file(const std::string& path,
-                      const std::vector<uint8_t>& content) {
+                      const std::vector<uint8_t>& data) {
   create_parent_directory(path);
   try {
     std::ofstream out(path, std::ios::binary);
-    out.write(reinterpret_cast<const char*>(content.data()), content.size());
+    out.write((const char*)data.data(), data.size());
     out.close();
   } catch (const std::exception& ex) {
     throw std::invalid_argument(

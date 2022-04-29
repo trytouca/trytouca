@@ -2,30 +2,10 @@
 
 #pragma once
 
-#include "touca/core/config.hpp"
-
 #ifdef TOUCA_HAS_CPP17
 #include <variant>
-namespace touca {
-namespace detail {
-using std::get;
-using std::holds_alternative;
-using std::monostate;
-using std::variant;
-using std::visit;
-}  // namespace detail
-}  // namespace touca
 #else
 #include "mpark/variant.hpp"
-namespace touca {
-namespace detail {
-using mpark::get;
-using mpark::holds_alternative;
-using mpark::monostate;
-using mpark::variant;
-using mpark::visit;
-}  // namespace detail
-}  // namespace touca
 #endif
 
 #include <type_traits>
@@ -36,8 +16,25 @@ using mpark::visit;
 namespace touca {
 namespace detail {
 
-/**
- * Combines multiple callable types into one overloaded of them.
+#ifdef TOUCA_HAS_CPP17
+
+using std::get;
+using std::holds_alternative;
+using std::monostate;
+using std::variant;
+using std::visit;
+
+#else  // vvvv c++11/14 || c++17/20 ^^^
+
+using mpark::get;
+using mpark::holds_alternative;
+using mpark::monostate;
+using mpark::variant;
+using mpark::visit;
+
+#endif  // different variant implementations for different standards
+
+/** a type that combines multiple callable types into one overloaded of them.
  *
  * it's an implementation of famous overloaded but in c++11:
  *  https://www.cppstories.com/2019/02/2lines3featuresoverload.html/
@@ -69,37 +66,39 @@ struct overloaded<F1, F2, Rest...> : F1, overloaded<F2, Rest...> {
   using overloaded<F2, Rest...>::operator();
 };
 
-/**
- * Makes an `overloaded` by given callables. (it's a helper to deduce types)
+/** makes an `overloaded` by given callables. (it's a helper to deduce types)
  */
 template <typename... Fs>
 constexpr overloaded<Fs...> make_overloaded(Fs&&... fs) {
   return overloaded<Fs...>{std::forward<Fs>(fs)...};
 }
 
-/**
- * Used instead of `auto` when a given type or value is not needed.
+/** a type to use instead of `auto` when you don't need given type or value.
  *
- * Implicitly constructible type that doesn't hold any value, useful for sinking
- * an argument.
+ * it is implicitly constructible (useful or sinking argument)
+ * and doesn't hold any value.
  */
 struct sink {
   template <typename... Args>
   constexpr sink(Args&&...) noexcept {}
 };
 
-/**
- * A generic templated callable to forward an argument to a given callable.
+/** a generic (templated) callable to forward a single argument
+ * to given callable.
  *
- * Useful for visiting a variant.
+ * useful when sinking the argument, since `auto` argument doesn't exist in
+ * c++11, specially combined with sink or another implicitly constructible
+ * type.
  *
- * @code
- *  visit(make_overloaded(
+ * NOTE: single argument since it's designed for visiting a variant.
+ *
+ * usage example:
+ * visit(
+ *  make_overloaded(
  *    [](int) { return "numeric"; },
  *    [](const std::string&) { return "string"; },
  *    make_generic_overload([](sink) { return "unknown"; })
  *  ), my_variant);
- * @endcode
  */
 template <typename F>
 struct generic_overload {
@@ -118,17 +117,16 @@ struct generic_overload {
   }
 };
 
-/**
- * Helper function to deduce type of given callable.
+/** makes a `generic_overload` by given callables.
+ *
+ * it's a helper function to deduce type of given callable.
  */
 template <typename F>
 generic_overload<F> make_generic_overload(F&& callable) {
   return generic_overload<F>{std::forward<F>(callable)};
 }
 
-/**
- * Pointer to heap allocated object, perserving RAII and rule of 5, deep
- * copying on copy.
+/** pointer to heap allocated object, perserving RAII and rule of 5, deep copying on copy.
  */
 template <typename T>
 class deep_copy_ptr {

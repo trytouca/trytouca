@@ -45,6 +45,12 @@ struct Cellar {
 
  private:
   std::string stringify(const detail::internal_type type) const;
+
+  nlohmann::ordered_json build_json_solo(const KeyMap& elements,
+                                         const Category category) const;
+
+  nlohmann::ordered_json build_json_common(const std::string& key,
+                                           const TypeComparison& second) const;
 };
 
 class TOUCA_CLIENT_API TestcaseComparison {

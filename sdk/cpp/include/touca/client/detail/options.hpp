@@ -23,7 +23,7 @@ void parse_env_variables(ClientOptions& options);
 
 bool reformat_options(ClientOptions& existing);
 
-void parse_options(const std::unordered_map<std::string, std::string>& incoming,
+void parse_options(const std::unordered_map<std::string, std::string>& options,
                    ClientOptions& existing);
 
 std::unordered_map<std::string, std::string> load_options(
