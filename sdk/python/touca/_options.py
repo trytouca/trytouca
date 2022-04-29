@@ -70,8 +70,6 @@ def _reformat_parameters(existing: dict) -> None:
 
     slugs = [k for k in urlpath[1].split("/") if k]
     for k, v in list(zip(["team", "suite", "version"], slugs)):
-        if k in existing and existing.get(k) != v:
-            raise ValueError(f"option {k} is in conflict with provided api_url")
         existing[k] = v
 
 

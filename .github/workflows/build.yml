@@ -698,8 +698,9 @@ jobs:
           TOUCA_API_URL: https://api.touca.io/@/examples/python
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         run: |
-          pip install -r 02_python_main_api/requirements.txt
-          cd 02_python_main_api && python students_test.py
+          cd 02_python_main_api
+          pip install -r requirements.txt
+          touca
 
   build-web:
     name: build-web
