@@ -79,6 +79,7 @@ setup(
         "colorama",
         "jsonschema",
         "loguru",
+        "packaging",
         "py7zr",
         "requests",
     ],
