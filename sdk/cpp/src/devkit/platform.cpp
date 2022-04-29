@@ -275,7 +275,7 @@ std::vector<std::string> Platform::elements() const {
 std::vector<std::string> Platform::submit(const std::string& content,
                                           const unsigned max_retries) const {
   std::vector<std::string> errors;
-  for (auto i = 0ul; i < max_retries; ++i) {
+  for (auto i = 0UL; i < max_retries; ++i) {
     const auto response = _http->binary(_api.route("/client/submit"), content);
     if (response.status == 204) {
       return {};

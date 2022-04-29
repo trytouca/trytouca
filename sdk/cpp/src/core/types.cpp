@@ -211,9 +211,9 @@ flatbuffers::Offset<fbs::TypeWrapper> data_point::serialize(
 }
 
 std::string data_point::to_string() const {
-  if (_type == detail::internal_type::string)
+  if (_type == detail::internal_type::string) {
     return *detail::get<detail::deep_copy_ptr<detail::string_t>>(_value);
-
+  }
   return nlohmann::json(*this).dump();
 }
 

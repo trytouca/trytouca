@@ -52,7 +52,7 @@ void reset_test_runner() {
 }
 
 int run(int argc, char* argv[]) {
-  auto status = 0u;
+  auto status = 0U;
   for (const auto& workflow : _meta.workflows) {
     try {
       status += touca::Runner(argc, argv).run(workflow.second);
@@ -215,9 +215,9 @@ Sink::Level find_log_level(const std::string& name) {
 
 void Statistics::inc(Status value) {
   if (!_v.count(value)) {
-    _v[value] = 0u;
+    _v[value] = 0U;
   }
-  _v[value] += 1u;
+  _v[value] += 1U;
 }
 
 unsigned long Statistics::count(Status value) const {
@@ -382,14 +382,14 @@ int Runner::run(const Runner::Workflow workflow) {
 
   printer.testcase_count = options.testcases.size();
   printer.testcase_width =
-      std::accumulate(options.testcases.begin(), options.testcases.end(), 0ul,
+      std::accumulate(options.testcases.begin(), options.testcases.end(), 0UL,
                       [](const size_t sum, const std::string& testcase) {
                         return std::max(sum, testcase.length());
                       });
 
   // iterate over testcases and execute the workflow for each testcase.
   timer.tic("__workflow__");
-  auto index = 0u;
+  auto index = 0U;
   for (const auto& testcase : options.testcases) {
     run_testcase(workflow, testcase, index++);
   }

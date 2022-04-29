@@ -56,7 +56,7 @@ class TOUCA_CLIENT_API ApiUrl {
 
 class TOUCA_CLIENT_API Platform {
  public:
-  explicit Platform(const ApiUrl& api_url);
+  explicit Platform(const ApiUrl& apiUrl);
 
   bool set_params(const std::string& team, const std::string& suite,
                   const std::string& revision);
@@ -71,12 +71,11 @@ class TOUCA_CLIENT_API Platform {
   /**
    * Authenticates with the server using the provided API Key.
    *
-   * @param api_key API Key to be used for authentication.
-   *                Can be retrieved from server and is unique for
-   *                each user account.
+   * @param apiKey API Key to be used for authentication. Can be retrieved from
+   *               server and is unique for each user account.
    * @return true if authentication was successful.
    */
-  bool auth(const std::string& api_key);
+  bool auth(const std::string& apiKey);
 
   /**
    * Submits test results in binary format for one or multiple testcases

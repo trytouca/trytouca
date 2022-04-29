@@ -87,7 +87,7 @@ void compare_arrays(const data_point& src, const data_point& dst,
   // identical. we choose to handle this special case to prevent
   // divide by zero.
 
-  if (0u == minmax.second) {
+  if (0U == minmax.second) {
     cmp.match = MatchType::Perfect;
     cmp.score = 1.0;
     return;
@@ -120,7 +120,7 @@ void compare_arrays(const data_point& src, const data_point& dst,
   auto scoreEarned = 0.0;
   std::unordered_map<unsigned, std::set<std::string>> differences;
 
-  for (auto i = 0u; i < minmax.first; i++) {
+  for (auto i = 0U; i < minmax.first; i++) {
     const auto tmp = compare(src_members.at(i), dst_members.at(i));
     scoreEarned += tmp.score;
     if (MatchType::None == tmp.match) {
@@ -132,7 +132,7 @@ void compare_arrays(const data_point& src, const data_point& dst,
   // different elements does not exceed our threshold that determines
   // if this information is helpful to user.
   const auto diffRatioThreshold = 0.2;
-  const auto diffSizeThreshold = 10u;
+  const auto diffSizeThreshold = 10U;
   const auto diffRatio =
       differences.size() / static_cast<double>(src_members.size());
   if (diffRatio < diffRatioThreshold ||
@@ -159,7 +159,7 @@ void compare_objects(const data_point& src, const data_point& dst,
   const auto& dst_members = flatten(dst);
 
   auto scoreEarned = 0.0;
-  auto scoreTotal = 0u;
+  auto scoreTotal = 0U;
   for (const auto& src_member : src_members) {
     ++scoreTotal;
     // compare common members
@@ -428,7 +428,7 @@ TestcaseComparison::Overview TestcaseComparison::overview() const {
 
   const auto getTotalCommonDuration = [this](const Testcase& tc) {
     namespace chr = std::chrono;
-    std::int32_t duration = 0u;
+    std::int32_t duration = 0U;
     for (const auto& kvp : _metrics.common) {
       const auto& diff = tc._tocs.at(kvp.first) - tc._tics.at(kvp.first);
       duration += static_cast<std::int32_t>(

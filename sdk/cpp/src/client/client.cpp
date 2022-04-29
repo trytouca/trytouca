@@ -13,10 +13,10 @@
 #include "touca/impl/schema.hpp"
 
 /** maximum number of attempts to re-submit failed http requests */
-constexpr unsigned post_max_retries = 2;
+constexpr unsigned post_max_retries = 2U;
 
 /** maximum number of cases to be posted in a single http request */
-constexpr unsigned post_max_cases = 10;
+constexpr unsigned post_max_cases = 10U;
 
 namespace touca {
 
