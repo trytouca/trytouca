@@ -98,7 +98,8 @@ The test framework passes `13` as the `testcase` parameter to our test workflow.
 We convert this `testcase` to a number and pass it to our code under test. We
 capture the actual value returned by our software as a Touca test result. This
 value is stored in its original data type, in a binary file
-`./results/is_prime/1.0/13/touca.bin`.
+`is_prime/1.0/13/touca.bin` stored in the `<output_directory>` which is
+`~/.touca` by default or any directory specified by `--output-directory`.
 
 Every time we make changes to our code under test, we can repeat this process
 with the same set of test cases. We could compare the generated binary files to
@@ -106,7 +107,7 @@ check whether our code changes impact the overall behavior and performance of
 our software.
 
 ```bash
-touca_cli compare --src=./results/is_prime/1.0/13/touca.bin --dst=./results/is_prime/1.0/13/touca.bin
+touca_cli compare --src=<output_directory>/is_prime/1.0/13/touca.bin --dst=<output_directory>/is_prime/1.0/13/touca.bin
 ```
 
 But this method is only useful if we test our workflow under test with hundreds
