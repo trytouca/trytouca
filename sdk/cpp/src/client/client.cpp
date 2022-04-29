@@ -19,25 +19,10 @@ constexpr unsigned post_max_retries = 2U;
 constexpr unsigned post_max_cases = 10U;
 
 namespace touca {
-namespace detail {
-void save_json(const touca::filesystem::path& path,
-               const std::vector<Testcase>& testcases) {
-  nlohmann::ordered_json doc = nlohmann::json::array();
-  for (const auto& testcase : testcases) {
-    doc.push_back(testcase.json());
-  }
-  detail::save_string_file(path.string(), doc.dump());
-}
 
-void save_flatbuffers(const touca::filesystem::path& path,
-                      const std::vector<Testcase>& testcases) {
-  detail::save_binary_file(path.string(), Testcase::serialize(testcases));
-}
-}  // namespace detail
-
-bool ClientImpl::configure(const ClientImpl::OptionsMap& options) {
+bool ClientImpl::configure(const ClientImpl::OptionsMap& opts) {
   _config_error.clear();
-  parse_options(options, _options);
+  parse_options(opts, _options);
   return apply_options();
 }
 
@@ -183,10 +168,10 @@ void ClientImpl::save(const touca::filesystem::path& path,
 
   switch (format) {
     case DataFormat::JSON:
-      detail::save_json(path, find_testcases(tcs));
+      save_json(path, find_testcases(tcs));
       break;
     case DataFormat::FBS:
-      detail::save_flatbuffers(path, find_testcases(tcs));
+      save_flatbuffers(path, find_testcases(tcs));
       break;
     default:
       throw std::invalid_argument("saving in given format not supported");
@@ -315,11 +300,25 @@ std::vector<Testcase> ClientImpl::find_testcases(
   return testcases;
 }
 
+void ClientImpl::save_json(const touca::filesystem::path& path,
+                           const std::vector<Testcase>& testcases) const {
+  nlohmann::ordered_json doc = nlohmann::json::array();
+  for (const auto& testcase : testcases) {
+    doc.push_back(testcase.json());
+  }
+  detail::save_string_file(path.string(), doc.dump());
+}
+
+void ClientImpl::save_flatbuffers(
+    const touca::filesystem::path& path,
+    const std::vector<Testcase>& testcases) const {
+  detail::save_binary_file(path.string(), Testcase::serialize(testcases));
+}
+
 bool ClientImpl::post_flatbuffers(
     const std::vector<Testcase>& testcases) const {
   const auto& buffer = Testcase::serialize(testcases);
-  std::string content(
-      reinterpret_cast<const char*>(buffer.data(), buffer.size()));
+  std::string content((const char*)buffer.data(), buffer.size());
   const auto& errors = _platform->submit(content, post_max_retries);
   for (const auto& err : errors) {
     notify_loggers(logger::Level::Warning, err);

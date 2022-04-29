@@ -24,6 +24,7 @@ sdk_python:
 examples_cpp:
   - ".github/workflows/build.yml"
   - "examples/cpp/**"
+  - "sdk/cpp/**"
 
 examples_java:
   - ".github/workflows/build.yml"

@@ -9,61 +9,6 @@
 #include "touca/core/types.hpp"
 
 namespace touca {
-namespace detail {
-std::string stringify_type(const detail::internal_type type) {
-  switch (type) {
-    case detail::internal_type::boolean:
-      return "bool";
-    case detail::internal_type::number_signed:
-    case detail::internal_type::number_unsigned:
-    case detail::internal_type::number_float:
-    case detail::internal_type::number_double:
-      return "number";
-    case detail::internal_type::string:
-      return "string";
-    case detail::internal_type::array:
-      return "array";
-    case detail::internal_type::object:
-      return "object";
-    default:
-      return "unknown";
-  }
-}
-
-nlohmann::ordered_json build_json_solo(const Cellar::KeyMap& keyMap,
-                                       const Cellar::Category category) {
-  nlohmann::ordered_json elements = nlohmann::json::array();
-  for (const auto& kv : keyMap) {
-    const auto& type = detail::stringify_type(kv.second.type());
-    elements.push_back(nlohmann::ordered_json(
-        {{"name", kv.first},
-         {category == Cellar::Category::Fresh ? "srcType" : "dstType", type},
-         {category == Cellar::Category::Fresh ? "srcValue" : "dstValue",
-          kv.second.to_string()}}));
-  }
-  return elements;
-}
-
-nlohmann::ordered_json build_json_common(const std::string& key,
-                                         const TypeComparison& second) {
-  nlohmann::ordered_json item({
-      {"name", key},
-      {"score", second.score},
-      {"srcType", detail::stringify_type(second.srcType)},
-      {"srcValue", second.srcValue},
-  });
-  if (detail::internal_type::unknown != second.dstType) {
-    item["dstType"] = detail::stringify_type(second.dstType);
-  }
-  if (MatchType::Perfect != second.match) {
-    item["dstValue"] = second.dstValue;
-  }
-  if (!second.desc.empty()) {
-    item["desc"] = second.desc;
-  }
-  return item;
-}
-}  // namespace detail
 
 std::map<std::string, data_point> flatten(const data_point& input) {
   std::map<std::string, data_point> entries;
@@ -314,7 +259,7 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
       break;
 
     case detail::internal_type::string:
-      if (*src.as_string() == *dst.as_string()) {
+      if (0 == src.as_string()->compare(*dst.as_string())) {
         cmp.match = MatchType::Perfect;
         cmp.score = 1.0;
       } else {
@@ -340,18 +285,72 @@ TypeComparison compare(const data_point& src, const data_point& dst) {
   return cmp;
 }
 
+std::string Cellar::stringify(const detail::internal_type type) const {
+  switch (type) {
+    case detail::internal_type::boolean:
+      return "bool";
+    case detail::internal_type::number_signed:
+    case detail::internal_type::number_unsigned:
+    case detail::internal_type::number_float:
+    case detail::internal_type::number_double:
+      return "number";
+    case detail::internal_type::string:
+      return "string";
+    case detail::internal_type::array:
+      return "array";
+    case detail::internal_type::object:
+      return "object";
+    default:
+      return "unknown";
+  }
+}
+
 nlohmann::ordered_json Cellar::json() const {
   nlohmann::ordered_json rjCommon = nlohmann::json::array();
   for (const auto& kv : common) {
-    rjCommon.push_back(detail::build_json_common(kv.first, kv.second));
+    rjCommon.push_back(build_json_common(kv.first, kv.second));
   }
-  auto rjMissing = detail::build_json_solo(missing, Cellar::Category::Missing);
-  auto rjFresh = detail::build_json_solo(fresh, Cellar::Category::Fresh);
+  auto rjMissing = build_json_solo(missing, Cellar::Category::Missing);
+  auto rjFresh = build_json_solo(fresh, Cellar::Category::Fresh);
   return nlohmann::ordered_json({
       {"commonKeys", rjCommon},
       {"missingKeys", rjMissing},
       {"newKeys", rjFresh},
   });
+}
+
+nlohmann::ordered_json Cellar::build_json_solo(
+    const Cellar::KeyMap& keyMap, const Cellar::Category category) const {
+  nlohmann::ordered_json elements = nlohmann::json::array();
+  for (const auto& kv : keyMap) {
+    const auto& type = stringify(kv.second.type());
+    elements.push_back(nlohmann::ordered_json(
+        {{"name", kv.first},
+         {category == Cellar::Category::Fresh ? "srcType" : "dstType", type},
+         {category == Cellar::Category::Fresh ? "srcValue" : "dstValue",
+          kv.second.to_string()}}));
+  }
+  return elements;
+}
+
+nlohmann::ordered_json Cellar::build_json_common(
+    const std::string& key, const TypeComparison& second) const {
+  nlohmann::ordered_json item({
+      {"name", key},
+      {"score", second.score},
+      {"srcType", stringify(second.srcType)},
+      {"srcValue", second.srcValue},
+  });
+  if (detail::internal_type::unknown != second.dstType) {
+    item["dstType"] = stringify(second.dstType);
+  }
+  if (MatchType::Perfect != second.match) {
+    item["dstValue"] = second.dstValue;
+  }
+  if (!second.desc.empty()) {
+    item["desc"] = second.desc;
+  }
+  return item;
 }
 
 TestcaseComparison::TestcaseComparison(const Testcase& src, const Testcase& dst)
@@ -412,7 +411,7 @@ double TestcaseComparison::score_results() const {
 }
 
 TestcaseComparison::Overview TestcaseComparison::overview() const {
-  Overview output{};
+  Overview output;
 
   const auto count = [](const size_t size) {
     return static_cast<std::int32_t>(size);

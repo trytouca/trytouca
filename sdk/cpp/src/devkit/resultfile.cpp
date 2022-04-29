@@ -12,23 +12,6 @@
 
 namespace touca {
 
-namespace detail {
-/**
- * @brief Checks if a given string describes valid test results in
- *        well-structured flatbuffers binary format.
- *
- * @details Used by `parse` and `validate` functions.
- *
- * @return true if the given string describes valid test results
- */
-bool validate_content(const std::string& content) {
-  const auto& buffer = reinterpret_cast<const uint8_t*>(content.data());
-  const auto& length = content.size();
-  flatbuffers::Verifier verifier(buffer, length);
-  return verifier.VerifyBuffer<touca::fbs::Messages>();
-}
-}  // namespace detail
-
 ResultFile::ResultFile(const touca::filesystem::path& path) : _path(path) {}
 
 bool ResultFile::validate() const {
@@ -43,7 +26,14 @@ bool ResultFile::validate() const {
   }
   const auto& content =
       detail::load_string_file(_path.string(), std::ios::in | std::ios::binary);
-  return detail::validate_content(content);
+  return validate(content);
+}
+
+bool ResultFile::validate(const std::string& content) const {
+  const auto& buffer = (const uint8_t*)content.data();
+  const auto& length = content.size();
+  flatbuffers::Verifier verifier(buffer, length);
+  return verifier.VerifyBuffer<touca::fbs::Messages>();
 }
 
 ElementsMap ResultFile::parse() const {
@@ -56,7 +46,7 @@ ElementsMap ResultFile::parse() const {
       detail::load_string_file(_path.string(), std::ios::in | std::ios::binary);
 
   // verify that given content represents valid flatbuffers data
-  if (!detail::validate_content(content)) {
+  if (!validate(content)) {
     throw std::runtime_error("result file invalid: " + _path.string());
   }
 

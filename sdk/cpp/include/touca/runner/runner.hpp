@@ -64,11 +64,11 @@ struct TOUCA_CLIENT_API Sink {
 };
 
 TOUCA_CLIENT_API void configure(
-    const std::function<void(FrameworkOptions&)>& func);
+    const std::function<void(FrameworkOptions&)> func);
 
 TOUCA_CLIENT_API void workflow(
     const std::string& name,
-    const std::function<void(const std::string&)>& workflow);
+    const std::function<void(const std::string&)> workflow);
 
 TOUCA_CLIENT_API int run(int argc, char* argv[]);
 
@@ -79,7 +79,7 @@ TOUCA_CLIENT_API int run(int argc, char* argv[]);
  * @param level minimum level of detail to subscribe to
  */
 TOUCA_CLIENT_API void add_sink(std::unique_ptr<Sink> sink,
-                               Sink::Level level = Sink::Level::Info);
+                               const Sink::Level level = Sink::Level::Info);
 
 void TOUCA_CLIENT_API reset_test_runner();
 
