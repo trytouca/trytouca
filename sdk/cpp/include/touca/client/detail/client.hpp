@@ -83,6 +83,12 @@ class TOUCA_CLIENT_API ClientImpl {
   std::vector<Testcase> find_testcases(
       const std::vector<std::string>& names) const;
 
+  void save_json(const touca::filesystem::path& path,
+                 const std::vector<Testcase>& testcases) const;
+
+  void save_flatbuffers(const touca::filesystem::path& path,
+                        const std::vector<Testcase>& testcases) const;
+
   bool post_flatbuffers(const std::vector<Testcase>& testcases) const;
 
   void notify_loggers(const touca::logger::Level severity,

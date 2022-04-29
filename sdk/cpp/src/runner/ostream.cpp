@@ -3,6 +3,7 @@
 #include "touca/runner/detail/helpers.hpp"
 
 namespace touca {
+OutputCapturer::OutputCapturer() {}
 
 OutputCapturer::~OutputCapturer() {
   if (_capturing) {

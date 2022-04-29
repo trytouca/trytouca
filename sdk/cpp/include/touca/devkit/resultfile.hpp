@@ -151,6 +151,16 @@ class TOUCA_CLIENT_API ResultFile {
   ResultFile::ComparisonResult compare(const ResultFile& other) const;
 
  private:
+  /**
+   * @brief Checks if a given string describes valid test results in
+   *        well-structured flatbuffers binary format.
+   *
+   * @details Used by `parse` and `validate` functions.
+   *
+   * @return true if the given string describes valid test results
+   */
+  bool validate(const std::string& content) const;
+
   ElementsMap _testcases;
   touca::filesystem::path _path;
 };
