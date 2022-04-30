@@ -65,8 +65,8 @@ const config = {
           content: "Developer-friendly Continuous Regression Testing"
         },
         { name: "og:image:type", content: "image/png" },
-        { name: "og:image:width", content: "453" },
-        { name: "og:image:height", content: "906" },
+        { name: "og:image:width", content: "906" },
+        { name: "og:image:height", content: "453" },
         { name: "og:locale", content: "en_US" },
         { name: "og:site_name", content: "Touca Docs" },
         { name: "twitter:card", content: "summary_large_image" },
