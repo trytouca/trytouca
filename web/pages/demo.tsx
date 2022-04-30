@@ -18,7 +18,7 @@ export default function CalendlyPage() {
         <div className="wsl-min-h-screen-1 container mx-auto flex flex-col justify-center">
           <div className="space-y-2 p-4 text-center">
             <h2 className="text-5xl font-extrabold text-white">
-              Schedule a 1:1 Chat
+              Schedule a Demo
             </h2>
             <p className="text-3xl text-white">
               Redirecting you to our Calendly page...
