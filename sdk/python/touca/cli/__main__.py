@@ -6,7 +6,7 @@ import sys
 
 from loguru import logger
 from touca import __version__
-from touca._options import config_file_home
+from touca._options import find_home_path
 from touca._printer import Printer
 from touca.cli._config import Config
 from touca.cli._execute import Execute
@@ -65,7 +65,7 @@ def main(args=None):
     command = next((x for x in operations if x.name == options.get("command")), None)
     if not command and any(arg in remaining for arg in ["-h", "--help"]):
         parser.print_help()
-        return True
+        return False
     operation = command(options) if command else Execute(options)
 
     try:
@@ -73,15 +73,15 @@ def main(args=None):
     except Exception as err:
         Printer.print_error(str(err))
         operation.parser().print_help()
-        return False
+        return True
 
     if "touca-utils" in options.keys():
         if not os.path.exists(options.get("touca-utils")):
             logger.error(f"touca utils application does not exist")
-            return False
+            return True
 
-    config_dir = config_file_home()
-    os.makedirs(config_dir, exist_ok=True)
+    home_dir = find_home_path()
+    os.makedirs(home_dir, exist_ok=True)
 
     # configure logger
 
@@ -93,7 +93,7 @@ def main(args=None):
         format="<green>{time:HH:mm:ss!UTC}</green> | <cyan>{level: <7}</cyan> | <lvl>{message}</lvl>",
     )
     logger.add(
-        os.path.join(config_dir, "logs", "runner_{time:YYMMDD!UTC}.log"),
+        os.path.join(home_dir, "logs", "runner_{time:YYMMDD!UTC}.log"),
         level="DEBUG",
         rotation="1 day",
         compression="zip",
@@ -101,10 +101,10 @@ def main(args=None):
 
     if not operation.run():
         logger.error(f"failed to perform operation {operation.name}")
-        return False
+        return True
 
     _warn_outdated_version()
-    return True
+    return False
 
 
 if __name__ == "__main__":

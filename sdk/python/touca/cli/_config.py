@@ -8,8 +8,8 @@ from touca.cli._operation import Operation
 from touca._options import (
     config_file_get,
     config_file_set,
-    config_file_home,
-    config_file_load,
+    find_home_path,
+    find_profile_path,
     config_file_remove,
 )
 
@@ -70,9 +70,10 @@ For example, to set Touca API Key in the configuration file you could write:
             for key, value in pairs:
                 config_file_set(key, value)
         if action == Action.home:
-            print(config_file_home())
+            print(find_home_path())
         if action == Action.show:
-            print(config_file_load())
+            path = find_profile_path()
+            print(path.read_text().strip() if path.exists() else "")
         if action == Action.rm:
             key = self.__options["args"][0]
             config_file_remove(key)

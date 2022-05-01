@@ -203,7 +203,7 @@ def _update_testcase_list(options: dict):
 
 
 def _initialize(options: dict):
-    from touca._options import config_file_home, update_options
+    from touca._options import find_home_path, update_options
 
     # Let the lower-level library consolidate the provided config options
     # including applying environment variables and processing long-format
@@ -217,7 +217,7 @@ def _initialize(options: dict):
 
     # Create directory to write logs and test results into
     options["output-directory"] = options.get(
-        "output-directory", os.path.join(config_file_home(), "results")
+        "output-directory", os.path.join(find_home_path(), "results")
     )
     os.makedirs(options.get("output-directory"), exist_ok=True)
 
