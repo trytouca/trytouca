@@ -1,13 +1,13 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import os
-from argparse import Action, ArgumentParser
+from configparser import ConfigParser
 from pathlib import Path
+from argparse import ArgumentParser
+from sys import stderr
+from typing import List
 
-from touca._options import config_file_parse
-from touca._runner import run_workflows
-from touca._runner import Workflow
 from touca.cli._operation import Operation
+from touca._options import find_home_path, find_profile_path
 
 
 class Profile(Operation):
@@ -22,35 +22,99 @@ class Profile(Operation):
         parser = ArgumentParser(
             prog="touca profile", description=Profile.help, add_help=True
         )
-        subparsers = parser.add_subparsers(dest="subcommand")
-        subparsers.add_parser(
+        parsers = parser.add_subparsers(dest="subcommand")
+        parsers.add_parser(
             "list",
             description="List available profiles",
             help="List available profiles",
         )
-        parser_set = subparsers.add_parser(
+        set = parsers.add_parser(
             "set", description="Change active profile", help="Change active profile"
         )
-        parser_set.add_argument("name", help="name of the profile")
-        parser_delete = subparsers.add_parser(
+        set.add_argument("name", help="name of the profile")
+        delete = parsers.add_parser(
             "delete",
             description="Delete profile with specified name",
             help="Delete profile with specified name",
         )
-        parser_delete.add_argument("name", help="name of the profile")
-        parser_copy = subparsers.add_parser(
+        delete.add_argument("name", help="name of the profile")
+        copy = parsers.add_parser(
             "copy",
             description="Copy content of a given profile to a new or existing profile",
             help="Copy content of a profile to a new or existing profile",
         )
-        parser_copy.add_argument("src", help="name of the profile to copy from")
-        parser_copy.add_argument("dst", help="name of the new profile")
+        copy.add_argument("src", help="name of the profile to copy from")
+        copy.add_argument("dst", help="name of the new profile")
         return parser
 
     def parse(self, args):
         parsed, _ = self.parser().parse_known_args(args)
         self.__options = {**self.__options, **vars(parsed)}
 
-    def run(self):
-        print(self.__options)
+    def _profile_names(self) -> List[str]:
+        profiles = Path(find_home_path(), "profiles").glob("*")
+        return [p.name for p in profiles if p.is_file()]
+
+    def _update_profile_in_settings_file(self, profile_name: str):
+        settings_path = Path(find_home_path(), "settings")
+        config = ConfigParser()
+        if settings_path.exists():
+            config.read_string(settings_path.read_text())
+        if not config.has_section("settings"):
+            config.add_section("settings")
+        config.set("settings", "profile", profile_name)
+        with open(settings_path, "wt") as settings_file:
+            config.write(settings_file)
+
+    def _command_list(self):
+        for profile in self._profile_names():
+            print(profile)
         return True
+
+    def _command_set(self):
+        profile_name = self.__options.get("name")
+        if profile_name not in self._profile_names():
+            profile_path = Path(find_home_path(), "profiles", profile_name)
+            config = ConfigParser()
+            config.add_section("settings")
+            with open(profile_path, "wt") as config_file:
+                config.write(config_file)
+        self._update_profile_in_settings_file(profile_name)
+        return True
+
+    def _command_delete(self):
+        profile_name = self.__options.get("name")
+        profile_path = Path(find_home_path(), "profiles", profile_name)
+        if profile_name == "default":
+            print("refusing to remove default configuration file", file=stderr)
+            return False
+        if not profile_path.exists():
+            print("profile does not exist", file=stderr)
+            return False
+        if profile_path == find_profile_path():
+            self._update_profile_in_settings_file("default")
+        profile_path.unlink()
+        return True
+
+    def _command_copy(self):
+        from shutil import copyfile
+
+        profiles_dir = Path(find_home_path(), "profiles")
+        src = self.__options.get("src")
+        dst = self.__options.get("dst")
+        profile_path = Path(profiles_dir, src)
+        if not profile_path.exists():
+            print(f'profile "{src}" does not exist', file=stderr)
+            return False
+        copyfile(profile_path, Path(profiles_dir, dst))
+        return True
+
+    def run(self):
+        commands = {
+            "list": self._command_list,
+            "set": self._command_set,
+            "delete": self._command_delete,
+            "copy": self._command_copy,
+        }
+        command = self.__options.get("subcommand")
+        return commands.get(command)() if command in commands else False
