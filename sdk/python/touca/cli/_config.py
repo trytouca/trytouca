@@ -23,11 +23,10 @@ class Action(Enum):
 
 
 class Config(Operation):
+    name = "config"
+
     def __init__(self, options: dict):
         self.__options = options
-
-    def name(self) -> str:
-        return "config"
 
     def parser(self) -> argparse.ArgumentParser:
         parser = argparse.ArgumentParser(prog="touca config")

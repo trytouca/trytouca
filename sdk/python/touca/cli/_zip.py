@@ -24,11 +24,10 @@ def compress7z(srcDir, outputDir):
 
 
 class Zip(Operation):
+    name = "zip"
+
     def __init__(self, options: dict):
         self.__options = options
-
-    def name(self) -> str:
-        return "zip"
 
     def parser(self) -> ArgumentParser:
         parser = ArgumentParser()

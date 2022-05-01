@@ -40,11 +40,10 @@ def utils_update(touca_cli, srcDir, outDir, teamslug, testsuite, logdir):
 
 
 class Update(Operation):
+    name = "update"
+
     def __init__(self, options: dict):
         self.__options = options
-
-    def name(self) -> str:
-        return "update"
 
     def parser(self) -> ArgumentParser:
         parser = ArgumentParser()

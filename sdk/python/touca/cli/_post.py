@@ -44,11 +44,10 @@ def utils_post(src_dir, api_key, api_url):
 
 
 class Post(Operation):
+    name = "post"
+
     def __init__(self, options: dict):
         self.__options = options
-
-    def name(self) -> str:
-        return "post"
 
     def parser(self) -> ArgumentParser:
         parser = ArgumentParser()

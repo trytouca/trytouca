@@ -175,11 +175,10 @@ def archive_results(config: dict, artifact_version: str):
 
 
 class Run(Operation):
+    name = "run"
+
     def __init__(self, options: dict):
         self.__options = options
-
-    def name(self) -> str:
-        return "run"
 
     def parser(self) -> ArgumentParser:
         parser = ArgumentParser()

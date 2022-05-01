@@ -27,11 +27,10 @@ def utils_merge(touca_cli, logdir, srcDir, dstDir):
 
 
 class Merge(Operation):
+    name = "merge"
+
     def __init__(self, options: dict):
         self.__options = options
-
-    def name(self) -> str:
-        return "merge"
 
     def parser(self) -> ArgumentParser:
         parser = ArgumentParser()

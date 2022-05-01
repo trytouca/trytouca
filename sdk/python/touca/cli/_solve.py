@@ -6,15 +6,13 @@ from touca.cli._operation import Operation
 
 
 class Solve(Operation):
+    name = "solve"
+
     def __init__(self, options: dict):
         pass
 
-    def name(self) -> str:
-        return "solve"
-
-    def parser(self) -> ArgumentParser:
-        parser = ArgumentParser()
-        return parser
+    def parser(self):
+        return ArgumentParser()
 
     def parse(self, args):
         parsed, _ = self.parser().parse_known_args(args)

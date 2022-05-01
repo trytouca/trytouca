@@ -11,6 +11,7 @@ from touca._printer import Printer
 from touca.cli._config import Config
 from touca.cli._execute import Execute
 from touca.cli._merge import Merge
+from touca.cli._profile import Profile
 from touca.cli._post import Post
 from touca.cli._run import Run
 from touca.cli._solve import Solve
@@ -42,21 +43,10 @@ def _warn_outdated_version():
 
 
 def main(args=None):
-    operations = {
-        "config": lambda opt: Config(opt),
-        "merge": lambda opt: Merge(opt),
-        "post": lambda opt: Post(opt),
-        "run": lambda opt: Run(opt),
-        "test": lambda opt: Execute(opt),
-        "unzip": lambda opt: Unzip(opt),
-        "update": lambda opt: Update(opt),
-        "zip": lambda opt: Zip(opt),
-        "solve": lambda opt: Solve(opt),
-    }
+    operations = [Config, Execute, Merge, Post, Profile, Run, Solve, Unzip, Update, Zip]
     parser = argparse.ArgumentParser(
+        add_help=False,
         description="Work seamlessly with Touca from the command line.",
-        add_help=True,
-        formatter_class=argparse.RawTextHelpFormatter,
         epilog="See https://touca.io/docs for more information.",
     )
     parser.add_argument(
@@ -65,19 +55,18 @@ def main(args=None):
     parser.add_argument(
         "command",
         nargs="?",
-        choices=operations.keys(),
-        help="one of " + ", ".join([f'"{k}"' for k in operations.keys()]),
+        choices=[x.name for x in operations],
+        help="one of " + ", ".join([x.name for x in operations]),
         metavar="command",
-        default="test",
     )
     parsed, remaining = parser.parse_known_args(sys.argv[1:] if args is None else args)
     options = vars(parsed)
 
-    operation_name = options.get("command")
-    if operation_name not in operations:
-        logger.error(f"invalid command: {operation_name}")
-        return False
-    operation = operations.get(operation_name)(options)
+    command = next((x for x in operations if x.name == options.get("command")), None)
+    if not command and any(arg in remaining for arg in ["-h", "--help"]):
+        parser.print_help()
+        return True
+    operation = command(options) if command else Execute(options)
 
     try:
         operation.parse(remaining)
@@ -111,7 +100,7 @@ def main(args=None):
     )
 
     if not operation.run():
-        logger.error(f"failed to perform operation {operation_name}")
+        logger.error(f"failed to perform operation {operation.name}")
         return False
 
     _warn_outdated_version()

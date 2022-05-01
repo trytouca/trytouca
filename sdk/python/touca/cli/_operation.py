@@ -6,10 +6,6 @@ from argparse import ArgumentParser
 
 class Operation(ABC):
     @abstractmethod
-    def name(self) -> str:
-        pass
-
-    @abstractmethod
     def parser(self) -> ArgumentParser:
         pass
 

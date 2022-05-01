@@ -20,11 +20,10 @@ def extract7z(srcFile, dstDir):
 
 
 class Unzip(Operation):
+    name = "unzip"
+
     def __init__(self, options: dict):
         self.__options = options
-
-    def name(self) -> str:
-        return "unzip"
 
     def parser(self) -> ArgumentParser:
         parser = ArgumentParser()

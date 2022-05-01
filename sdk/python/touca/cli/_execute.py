@@ -42,12 +42,11 @@ def extract_workflows(modules: list):
 
 
 class Execute(Operation):
+    name = "test"
+
     def __init__(self, options: dict):
         self.__options = options
         pass
-
-    def name(self) -> str:
-        return "execute"
 
     def parser(self) -> ArgumentParser:
         class ExtendAction(Action):
