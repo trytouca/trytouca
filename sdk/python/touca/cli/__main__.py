@@ -1,6 +1,6 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import argparse
+from argparse import ArgumentParser
 import os
 import sys
 
@@ -43,8 +43,9 @@ def _warn_outdated_version():
 
 
 def main(args=None):
-    operations = [Config, Execute, Merge, Post, Profile, Run, Solve, Unzip, Update, Zip]
-    parser = argparse.ArgumentParser(
+    operations = [Config, Merge, Post, Profile, Run, Solve, Execute, Unzip, Update, Zip]
+    parser = ArgumentParser(
+        prog="touca",
         add_help=False,
         description="Work seamlessly with Touca from the command line.",
         epilog="See https://touca.io/docs for more information.",
@@ -52,13 +53,16 @@ def main(args=None):
     parser.add_argument(
         "-v", "--version", action="version", version=f"%(prog)s v{__version__}"
     )
-    parser.add_argument(
-        "command",
-        nargs="?",
-        choices=[x.name for x in operations],
-        help="one of " + ", ".join([x.name for x in operations]),
-        metavar="command",
-    )
+    parsers = parser.add_subparsers(dest="command")
+    for operation in operations:
+        subparser = parsers.add_parser(
+            name=operation.name,
+            prog=f"touca {operation.name}",
+            description=operation.help,
+            help=operation.help,
+            add_help=True,
+        )
+        operation.parser(subparser)
     parsed, remaining = parser.parse_known_args(sys.argv[1:] if args is None else args)
     options = vars(parsed)
 
@@ -67,13 +71,6 @@ def main(args=None):
         parser.print_help()
         return False
     operation = command(options) if command else Execute(options)
-
-    try:
-        operation.parse(remaining)
-    except Exception as err:
-        Printer.print_error(str(err))
-        operation.parser().print_help()
-        return True
 
     if "touca-utils" in options.keys():
         if not os.path.exists(options.get("touca-utils")):
@@ -100,7 +97,6 @@ def main(args=None):
     )
 
     if not operation.run():
-        logger.error(f"failed to perform operation {operation.name}")
         return True
 
     _warn_outdated_version()

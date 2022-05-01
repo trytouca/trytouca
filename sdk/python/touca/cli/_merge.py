@@ -1,11 +1,10 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import os
-from argparse import ArgumentParser, ArgumentTypeError
-
+from argparse import ArgumentParser
 from loguru import logger
 from touca.cli._common import run_cmd
-from touca.cli._operation import Operation
+from touca.cli._common import Operation
 
 
 def utils_merge(touca_cli, logdir, srcDir, dstDir):
@@ -28,12 +27,13 @@ def utils_merge(touca_cli, logdir, srcDir, dstDir):
 
 class Merge(Operation):
     name = "merge"
+    help = "Merge binary archive files"
 
     def __init__(self, options: dict):
         self.__options = options
 
-    def parser(self) -> ArgumentParser:
-        parser = ArgumentParser()
+    @classmethod
+    def parser(self, parser: ArgumentParser):
         parser.add_argument(
             "--src",
             required=True,
@@ -48,16 +48,8 @@ class Merge(Operation):
             "--cli", required=True, help='path to "touca_cli" C++ executable'
         )
         parser.add_argument("--logdir", help="full path to log directory")
-        return parser
 
-    def parse(self, args):
-        parsed, _ = self.parser().parse_known_args(args)
-        for key in ["src", "out"]:
-            if key not in vars(parsed).keys() or vars(parsed).get(key) is None:
-                raise ArgumentTypeError(f"missing key: {key}")
-        self.__options = {**self.__options, **vars(parsed)}
-
-    def run(self) -> bool:
+    def run(self):
         inDir = os.path.expanduser(self.__options.get("src"))
         outDir = os.path.expanduser(self.__options.get("out"))
 

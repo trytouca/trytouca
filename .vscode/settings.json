@@ -16,6 +16,7 @@
     "mkdir",
     "nlohmann",
     "ossrh",
+    "Popen",
     "sdist",
     "setuptools",
     "sonatype",

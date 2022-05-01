@@ -2,22 +2,20 @@
 
 from argparse import ArgumentParser
 
-from touca.cli._operation import Operation
+from touca.cli._common import Operation
 
 
 class Solve(Operation):
     name = "solve"
+    help = "Solve every problem (April 1st, 2022)"
 
     def __init__(self, options: dict):
         pass
 
-    def parser(self):
-        return ArgumentParser()
+    @classmethod
+    def parser(self, parser: ArgumentParser):
+        parser.add_argument("args", nargs="+", help="any problem")
 
-    def parse(self, args):
-        parsed, _ = self.parser().parse_known_args(args)
-        parsed = vars(parsed)
-
-    def run(self) -> bool:
+    def run(self):
         print("Solved!")
         return True

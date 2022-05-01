@@ -1,11 +1,10 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import os
-from argparse import ArgumentParser, ArgumentTypeError
-
+from argparse import ArgumentParser
 import py7zr
 from loguru import logger
-from touca.cli._operation import Operation
+from touca.cli._common import Operation
 
 
 def extract7z(srcFile, dstDir):
@@ -21,12 +20,13 @@ def extract7z(srcFile, dstDir):
 
 class Unzip(Operation):
     name = "unzip"
+    help = "Extract compressed binary archive files"
 
     def __init__(self, options: dict):
         self.__options = options
 
-    def parser(self) -> ArgumentParser:
-        parser = ArgumentParser()
+    @classmethod
+    def parser(self, parser: ArgumentParser):
         parser.add_argument(
             "--src",
             required=True,
@@ -39,32 +39,27 @@ class Unzip(Operation):
         )
         return parser
 
-    def parse(self, args):
-        parsed, _ = self.parser().parse_known_args(args)
-        for key in ["src", "out"]:
-            if key not in vars(parsed).keys() or vars(parsed).get(key) is None:
-                raise ArgumentTypeError(f"missing key: {key}")
-        self.__options = {**self.__options, **vars(parsed)}
-
-    def run(self) -> bool:
+    def run(self):
         srcDir = os.path.abspath(os.path.expanduser(self.__options.get("src")))
         outDir = os.path.abspath(os.path.expanduser(self.__options.get("out")))
         if not os.path.exists(srcDir):
             logger.error(f"directory {srcDir} does not exist")
             return False
-        for fselement in os.listdir(srcDir):
-            fspath = os.path.join(srcDir, fselement)
-            if not py7zr.is_7zfile(fspath):
-                logger.debug(f"{fspath} is not an archive file")
+        for fs_element in os.listdir(srcDir):
+            fs_path = os.path.join(srcDir, fs_element)
+            if not py7zr.is_7zfile(fs_path):
+                logger.debug(f"{fs_path} is not an archive file")
                 continue
-            dstDir = os.path.join(outDir, os.path.splitext(os.path.basename(fspath))[0])
+            dstDir = os.path.join(
+                outDir, os.path.splitext(os.path.basename(fs_path))[0]
+            )
             if os.path.exists(dstDir):
                 logger.debug(f"unzipped directory already exists: {dstDir}")
                 continue
             if not os.path.exists(outDir):
                 os.makedirs(outDir)
-            if not extract7z(fspath, outDir):
+            if not extract7z(fs_path, outDir):
                 return False
-            logger.info(f"extracted {fspath}")
+            logger.info(f"extracted {fs_path}")
         logger.info("extracted all archives")
         return True

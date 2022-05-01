@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
 import os
@@ -10,7 +10,7 @@ from argparse import ArgumentParser, ArgumentTypeError
 import requests
 from jsonschema import Draft3Validator
 from loguru import logger
-from touca.cli._operation import Operation
+from touca.cli._common import Operation
 
 
 def merge_dict(source: dict, destination: dict):
@@ -176,12 +176,13 @@ def archive_results(config: dict, artifact_version: str):
 
 class Run(Operation):
     name = "run"
+    help = "Run regression test on a dedicated test server"
 
     def __init__(self, options: dict):
         self.__options = options
 
-    def parser(self) -> ArgumentParser:
-        parser = ArgumentParser()
+    @classmethod
+    def parser(self, parser: ArgumentParser):
         parser.add_argument(
             "-p",
             "--profile",
@@ -202,14 +203,7 @@ class Run(Operation):
         )
         return parser
 
-    def parse(self, args):
-        parsed, _ = self.parser().parse_known_args(args)
-        for key in ["profile", "revision"]:
-            if key not in vars(parsed).keys() or vars(parsed).get(key) is None:
-                raise ArgumentTypeError(f"missing key: {key}")
-        self.__options = {**self.__options, **vars(parsed)}
-
-    def run(self) -> bool:
+    def run(self):
         profile_path = self.__options.get("profile")
 
         # parse profile_name

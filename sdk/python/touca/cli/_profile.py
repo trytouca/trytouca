@@ -1,12 +1,11 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 from configparser import ConfigParser
 from pathlib import Path
 from argparse import ArgumentParser
 from sys import stderr
 from typing import List
-
-from touca.cli._operation import Operation
+from touca.cli._common import Operation, invalid_subcommand
 from touca._options import find_home_path, find_profile_path
 
 
@@ -14,42 +13,34 @@ class Profile(Operation):
     name = "profile"
     help = "Create and manage configuration files"
 
-    def __init__(self, options: dict):
-        self.__options = options
-        pass
-
-    def parser(self):
-        parser = ArgumentParser(
-            prog="touca profile", description=Profile.help, add_help=True
-        )
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         parsers = parser.add_subparsers(dest="subcommand")
         parsers.add_parser(
             "list",
             description="List available profiles",
             help="List available profiles",
         )
-        set = parsers.add_parser(
+        parsers_1 = parsers.add_parser(
             "set", description="Change active profile", help="Change active profile"
         )
-        set.add_argument("name", help="name of the profile")
-        delete = parsers.add_parser(
+        parsers_1.add_argument("name", help="name of the profile")
+        parsers_2 = parsers.add_parser(
             "delete",
             description="Delete profile with specified name",
             help="Delete profile with specified name",
         )
-        delete.add_argument("name", help="name of the profile")
-        copy = parsers.add_parser(
+        parsers_2.add_argument("name", help="name of the profile")
+        parsers_3 = parsers.add_parser(
             "copy",
             description="Copy content of a given profile to a new or existing profile",
             help="Copy content of a profile to a new or existing profile",
         )
-        copy.add_argument("src", help="name of the profile to copy from")
-        copy.add_argument("dst", help="name of the new profile")
-        return parser
+        parsers_3.add_argument("src", help="name of the profile to copy from")
+        parsers_3.add_argument("dst", help="name of the new profile")
 
-    def parse(self, args):
-        parsed, _ = self.parser().parse_known_args(args)
-        self.__options = {**self.__options, **vars(parsed)}
+    def __init__(self, options: dict):
+        self.__options = options
 
     def _profile_names(self) -> List[str]:
         profiles = Path(find_home_path(), "profiles").glob("*")
@@ -117,4 +108,8 @@ class Profile(Operation):
             "copy": self._command_copy,
         }
         command = self.__options.get("subcommand")
-        return commands.get(command)() if command in commands else False
+        if not command:
+            return invalid_subcommand(Profile)
+        if command in commands:
+            return commands.get(command)()
+        return False

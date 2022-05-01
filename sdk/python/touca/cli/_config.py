@@ -1,9 +1,8 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from argparse import ArgumentParser
 import sys
 from typing import List
-from touca.cli._operation import Operation
+from touca.cli._common import Operation, invalid_subcommand
 from touca._options import (
     config_file_parse,
     find_home_path,
@@ -15,13 +14,8 @@ class Config(Operation):
     name = "config"
     help = "Manage active configuration file"
 
-    def __init__(self, options: dict):
-        self.__options = options
-
-    def parser(self):
-        parser = ArgumentParser(
-            prog="touca config", description=Config.help, add_help=True
-        )
+    @classmethod
+    def parser(cls, parser):
         parsers = parser.add_subparsers(dest="subcommand")
         parsers.add_parser(
             "home",
@@ -53,11 +47,9 @@ class Config(Operation):
             help="Remove a configuration option",
         )
         parsers_3.add_argument("key", help="name of the option to be removed")
-        return parser
 
-    def parse(self, args):
-        parsed, _ = self.parser().parse_known_args(args)
-        self.__options = {**self.__options, **vars(parsed)}
+    def __init__(self, options: dict):
+        self.__options = options
 
     def _config_file_set(self, key: str, value: str, section="settings") -> None:
         import os
@@ -130,4 +122,8 @@ touca config set api-key=3c335732-bf44-4b28-9be8-f30c00e7960f
             "rm": self._command_rm,
         }
         command = self.__options.get("subcommand")
-        return commands.get(command)() if command in commands else False
+        if not command:
+            return invalid_subcommand(Config)
+        if command in commands:
+            return commands.get(command)()
+        return False

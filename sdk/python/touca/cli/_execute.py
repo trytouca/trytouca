@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import os
 from argparse import Action, ArgumentParser
@@ -7,7 +7,7 @@ from pathlib import Path
 from touca._options import config_file_parse
 from touca._runner import run_workflows
 from touca._runner import Workflow
-from touca.cli._operation import Operation
+from touca.cli._common import Operation
 
 # TODO: write comment block and explain why reading file content is bad
 def is_test_module(module: str):
@@ -43,19 +43,16 @@ def extract_workflows(modules: list):
 
 class Execute(Operation):
     name = "test"
+    help = "Execute available regression tests"
 
-    def __init__(self, options: dict):
-        self.__options = options
-        pass
-
-    def parser(self) -> ArgumentParser:
+    @classmethod
+    def parser(cls, parser: ArgumentParser):
         class ExtendAction(Action):
             def __call__(self, parser, namespace, values, option_string=None):
                 items = getattr(namespace, self.dest) or []
                 items.extend(values)
                 setattr(namespace, self.dest, items)
 
-        parser = ArgumentParser()
         parser.register("action", "extend", ExtendAction)
         parser.add_argument(
             "--testdir",
@@ -84,23 +81,23 @@ class Execute(Operation):
             metavar="",
             help="Single file listing testcases to feed to the workflows",
         )
-        return parser
 
-    def parse(self, args):
-        parsed, _ = self.parser().parse_known_args(args)
-        parsed = vars(parsed)
-        test_dir = parsed.get("testdir")[0]
+    def __init__(self, options: dict):
+        self.__options = options
+
+    def _parse(self):
+        test_dir = self.__options.get("testdir")[0]
         self.__options["testdir"] = (
             test_dir
             if Path.is_absolute(Path(test_dir))
             else os.path.join(os.getcwd(), test_dir)
         )
-        if parsed.get("version"):
-            self.__options["version"] = parsed.get("version")
-        if parsed.get("testcases"):
-            self.__options["testcases"] = parsed.get("testcases")
-        if parsed.get("testcase-file"):
-            self.__options["testcase-file"] = parsed.get("testcase-file")
+        if self.__options.get("version"):
+            self.__options["version"] = self.__options.get("version")
+        if self.__options.get("testcases"):
+            self.__options["testcases"] = self.__options.get("testcases")
+        if self.__options.get("testcase-file"):
+            self.__options["testcase-file"] = self.__options.get("testcase-file")
 
     def _find_arguments(self):
         args = {
@@ -133,6 +130,7 @@ class Execute(Operation):
         return args
 
     def run(self) -> bool:
+        self._parse()
         args = self._find_arguments()
         modules = find_test_modules(self.__options.get("testdir"))
         workflows = list(extract_workflows(modules))

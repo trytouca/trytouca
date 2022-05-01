@@ -1,13 +1,13 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import os
 import time
-from argparse import ArgumentError, ArgumentParser
+from argparse import ArgumentParser
 from distutils.version import LooseVersion
 
 from loguru import logger
 from touca._transport import Transport
-from touca.cli._operation import Operation
+from touca.cli._common import Operation
 
 
 def utils_post(src_dir, api_key, api_url):
@@ -45,33 +45,25 @@ def utils_post(src_dir, api_key, api_url):
 
 class Post(Operation):
     name = "post"
+    help = "Submit binary archive files to remote server"
 
     def __init__(self, options: dict):
         self.__options = options
 
-    def parser(self) -> ArgumentParser:
-        parser = ArgumentParser()
+    @classmethod
+    def parser(self, parser: ArgumentParser):
         parser.add_argument(
             "--src",
             required=True,
-            help="path to directory with Touca binary archives",
+            help="path to directory with binary archive files",
         )
-        parser.add_argument("--api-key", help="API Key provided by the Touca server")
-        parser.add_argument("--api-url", help="API URL provided by the Touca server")
-        return parser
+        parser.add_argument("--api-key", help="Touca API Key")
+        parser.add_argument("--api-url", help="Touca API URL")
 
-    def parse(self, args):
-        parsed, _ = self.parser().parse_known_args(args)
-        for key in ["src", "api-key", "api-url"]:
-            if key not in vars(parsed).keys() or vars(parsed).get(key) is None:
-                raise ValueError(f"missing key: {key}")
-        self.__options = {**self.__options, **vars(parsed)}
-        src_dir = self.__options.get("src")
+    def run(self):
+        src_dir = os.path.abspath(os.path.expanduser(self.__options.get("src")))
         if not os.path.exists(src_dir):
             raise ValueError(f"directory {src_dir} does not exist")
-
-    def run(self) -> bool:
-        src_dir = os.path.abspath(os.path.expanduser(self.__options.get("src")))
         api_key = self.__options.get("api-key")
         api_url = self.__options.get("api-url")
 
