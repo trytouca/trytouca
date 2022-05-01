@@ -114,32 +114,3 @@ def config_file_parse() -> ConfigParser:
         config = ConfigParser()
         config.read_string(path.read_text())
         return config
-
-
-def config_file_get(key: str) -> str:
-    config = config_file_parse()
-    if config and config.has_option("settings", key):
-        return config.get("settings", key)
-    return ""
-
-
-def config_file_set(key: str, value: str, section="settings") -> None:
-    path = find_profile_path()
-    os.makedirs(path.parent, exist_ok=True)
-    config = ConfigParser()
-    if path.exists():
-        config.read_string(path.read_text())
-    if not config.has_section(section):
-        config.add_section(section)
-    config.set(section, key, value)
-    with open(path, "wt") as file:
-        config.write(file)
-
-
-def config_file_remove(key: str) -> None:
-    config_file_path = find_profile_path()
-    config = config_file_parse()
-    if config and config.has_option("settings", key):
-        config.remove_option("settings", key)
-    with open(config_file_path, "wt") as config_file:
-        config.write(config_file)
