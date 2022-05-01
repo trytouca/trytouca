@@ -31,6 +31,7 @@ import os
 import shutil
 import sys
 import textwrap
+from argparse import Action, ArgumentParser
 from datetime import datetime, timedelta
 from enum import IntEnum
 from typing import Any, Dict, List
@@ -38,73 +39,110 @@ from touca._client import Client
 from touca._printer import Printer
 
 
-def _parse_cli_options(args) -> Dict[str, Any]:
-    from argparse import Action, ArgumentParser
-
+def prepare_parser(parser: ArgumentParser):
     class ExtendAction(Action):
         def __call__(self, parser, namespace, values, option_string=None):
             items = getattr(namespace, self.dest) or []
             items.extend(values)
             setattr(namespace, self.dest, items)
 
-    # fmt: off
-    parser = ArgumentParser(
-        description="Touca Regression Test",
-        epilog="Visit https://touca.io/docs for more information")
-    parser.register('action', 'extend', ExtendAction)
-    parser.add_argument("--api-key", dest="api-key",
-        metavar='',
-        help="API Key issued by the Touca Server")
-    parser.add_argument("--api-url", dest="api-url",
-        metavar='',
-        help="API URL issued by the Touca Server")
+    parser.register("action", "extend", ExtendAction)
+    parser.add_argument(
+        "--api-key",
+        dest="api-key",
+        help="API Key issued by the Touca Server",
+    )
+    parser.add_argument(
+        "--api-url",
+        dest="api-url",
+        help="API URL issued by the Touca Server",
+    )
 
-    parser.add_argument("--revision", metavar='',
-        dest='version',
-        help="Version of the code under test")
-    parser.add_argument("--suite", metavar='',
-        help="Slug of suite to which test results belong")
-    parser.add_argument("--workflow", metavar='',
-        help="Name of the workflow to run")
+    parser.add_argument(
+        "--revision", dest="version", help="Version of the code under test"
+    )
+    parser.add_argument("--suite", help="Slug of suite to which test results belong")
+    parser.add_argument("--workflow", help="Name of the workflow to run")
 
-    parser.add_argument("--team", metavar='',
-        help="Slug of team to which test results belong")
+    parser.add_argument("--team", help="Slug of team to which test results belong")
 
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("--testcase", "--testcases", dest='testcases',
-        metavar="", action="extend", nargs="+",
-        help="One or more testcases to feed to the workflow")
-    group.add_argument("--testcase-file", dest="testcase-file",
-        metavar="",
-        help="Single file listing testcases to feed to the workflows")
+    group.add_argument(
+        "--testcase",
+        "--testcases",
+        dest="testcases",
+        action="extend",
+        nargs="+",
+        help="One or more testcases to feed to the workflow",
+    )
+    group.add_argument(
+        "--testcase-file",
+        dest="testcase-file",
+        help="Single file listing testcases to feed to the workflows",
+    )
 
-    parser.add_argument("--config-file", dest='file',
-        metavar='',
-        help="Path to a configuration file")
-    parser.add_argument("--output-directory", dest="output-directory",
-        metavar='',
-        help="Path to a local directory to store result files")
+    parser.add_argument(
+        "--config-file", dest="file", help="Path to a configuration file"
+    )
+    parser.add_argument(
+        "--output-directory",
+        dest="output-directory",
+        help="Path to a local directory to store result files",
+    )
 
-    parser.add_argument("--log-level", dest="log-level",
-        choices=["debug", "info", "warn"], default="info",
-        help="Level of detail with which events are logged")
-    parser.add_argument("--save-as-binary", dest="save-as-binary",
-        const=True, default=False, nargs="?",
-        help="Save a copy of test results on local filesystem in binary format")
-    parser.add_argument("--save-as-json", dest="save-as-json",
-        const=True, default=False, nargs="?",
-        help="Save a copy of test results on local filesystem in JSON format")
-    parser.add_argument("--offline",
-        const=True, default=False, nargs="?",
-        help="Disables all communications with the Touca server")
-    parser.add_argument("--overwrite",
-        const=True, default=False, nargs="?",
-        help="Overwrite result directory for testcase if it already exists")
-    parser.add_argument("--colored-output", dest="colored-output",
-        const=True, default=True, nargs="?",
-        help="Use color in standard output")
+    parser.add_argument(
+        "--log-level",
+        dest="log-level",
+        choices=["debug", "info", "warn"],
+        default="info",
+        help="Level of detail with which events are logged",
+    )
+    parser.add_argument(
+        "--save-as-binary",
+        dest="save-as-binary",
+        const=True,
+        default=False,
+        nargs="?",
+        help="Save a copy of test results on local filesystem in binary format",
+    )
+    parser.add_argument(
+        "--save-as-json",
+        dest="save-as-json",
+        const=True,
+        default=False,
+        nargs="?",
+        help="Save a copy of test results on local filesystem in JSON format",
+    )
+    parser.add_argument(
+        "--offline",
+        const=True,
+        default=False,
+        nargs="?",
+        help="Disables all communications with the Touca server",
+    )
+    parser.add_argument(
+        "--overwrite",
+        const=True,
+        default=False,
+        nargs="?",
+        help="Overwrite result directory for testcase if it already exists",
+    )
+    parser.add_argument(
+        "--colored-output",
+        dest="colored-output",
+        const=True,
+        default=True,
+        nargs="?",
+        help="Use color in standard output",
+    )
 
-    # fmt: on
+
+def _parse_cli_options(args) -> Dict[str, Any]:
+    parser = ArgumentParser(
+        description="Touca Regression Test",
+        epilog="Visit https://touca.io/docs for more information",
+    )
+    prepare_parser(parser)
 
     parsed = vars(parser.parse_known_args(args)[0]).items()
 
