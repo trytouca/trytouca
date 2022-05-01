@@ -58,15 +58,7 @@ class Execute(Operation):
         self.__options = {k: v for k, v in options.items() if v is not None}
 
     def _find_arguments(self):
-        args = {
-            "api-url": "https://api.touca.io",
-            "log-level": "info",
-            "save-as-binary": False,
-            "save-as-json": False,
-            "offline": False,
-            "overwrite": False,
-            "colored-output": True,
-        }
+        args = self.__options
         flags = [
             "save-as-binary",
             "save-as-json",
@@ -79,12 +71,6 @@ class Execute(Operation):
             for key in config_content.options("settings"):
                 func = config_content.getboolean if key in flags else config_content.get
                 args.update({key: func("settings", key)})
-        if "testcases" in self.__options:
-            args.update({"testcases": self.__options.get("testcases")})
-        if "testcase-file" in self.__options:
-            args.update({"testcase-file": self.__options.get("testcase-file")})
-        if "version" in self.__options:
-            args.update({"version": self.__options.get("version")})
         return args
 
     def run(self):

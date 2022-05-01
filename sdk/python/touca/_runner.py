@@ -48,23 +48,31 @@ def prepare_parser(parser: ArgumentParser):
 
     parser.register("action", "extend", ExtendAction)
     parser.add_argument(
-        "--api-key",
-        dest="api-key",
-        help="API Key issued by the Touca Server",
+        "--api-key", help="API Key issued by the Touca Server", dest="api-key"
     )
     parser.add_argument(
         "--api-url",
-        dest="api-url",
         help="API URL issued by the Touca Server",
+        dest="api-url",
+        default="https://api.touca.io",
     )
-
     parser.add_argument(
-        "--revision", dest="version", help="Version of the code under test"
+        "--revision",
+        help="Version of the code under test",
+        dest="version",
     )
-    parser.add_argument("--suite", help="Slug of suite to which test results belong")
-    parser.add_argument("--workflow", help="Name of the workflow to run")
-
-    parser.add_argument("--team", help="Slug of team to which test results belong")
+    parser.add_argument(
+        "--suite",
+        help="Slug of suite to which test results belong",
+    )
+    parser.add_argument(
+        "--team",
+        help="Slug of team to which test results belong",
+    )
+    parser.add_argument(
+        "--workflow",
+        help="Name of the workflow to run",
+    )
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
@@ -82,12 +90,14 @@ def prepare_parser(parser: ArgumentParser):
     )
 
     parser.add_argument(
-        "--config-file", dest="file", help="Path to a configuration file"
+        "--config-file",
+        help="Path to a configuration file",
+        dest="file",
     )
     parser.add_argument(
         "--output-directory",
-        dest="output-directory",
         help="Path to a local directory to store result files",
+        dest="output-directory",
     )
 
     parser.add_argument(
@@ -143,10 +153,7 @@ def _parse_cli_options(args) -> Dict[str, Any]:
         epilog="Visit https://touca.io/docs for more information",
     )
     prepare_parser(parser)
-
     parsed = vars(parser.parse_known_args(args)[0]).items()
-
-    # remove entries with value None from the map
     parsed = dict(filter(lambda x: x[1] is not None, parsed))
     # fix options with boolean values
     for k in [
