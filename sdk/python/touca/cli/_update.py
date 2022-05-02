@@ -1,95 +1,86 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-
-import os
-from argparse import ArgumentParser, ArgumentTypeError
+from subprocess import Popen
+from sys import stderr, stdout
+from pathlib import Path
+from argparse import ArgumentParser
 from distutils.version import LooseVersion
-
 from loguru import logger
-from touca.cli._common import run_cmd
-from touca.cli._operation import Operation
+from touca.cli._common import Operation
 
 
-def utils_update(touca_cli, srcDir, outDir, teamslug, testsuite, logdir):
-    srcDir += "-merged"
-    if not os.path.exists(srcDir):
+def _update(cli, srcDir: Path, outDir: Path, teamslug, testsuite):
+    print(srcDir)
+    srcDir = srcDir.with_name(srcDir.name + "-merged")
+    if not srcDir.exists():
         logger.error(f"expected directory {srcDir} to exist")
         return False
-    if not os.path.exists(outDir):
-        os.makedirs(outDir)
+    outDir.mkdir(parents=True, exist_ok=True)
     logger.info(f"updating result directory {srcDir}")
-    runCmd = [
-        touca_cli,
+    cmd = [
+        cli,
         "update",
         f"--src={srcDir}",
         f"--out={outDir}",
         f"--team={teamslug}",
         f"--suite={testsuite}",
     ]
-    logger.info("running {}", " ".join(runCmd))
-    dstDirName = os.path.basename(srcDir)
-    file_out = os.path.join(logdir, dstDirName) + "-update.log"
-    exit_status = run_cmd(runCmd, file_out=file_out, file_err=file_out)
+    proc = Popen(cmd, universal_newlines=True, stdout=stdout, stderr=stderr)
+    exit_status = proc.wait()
     if 0 != exit_status:
         logger.warning(f"failed to update {srcDir}")
         if exit_status is not None:
             logger.warning(f"program Touca Utils returned code {exit_status}")
         return False
-    logger.info(f"updateed {srcDir}")
+    logger.info(f"updated {srcDir}")
     return True
 
 
 class Update(Operation):
+    name = "update"
+    help = "Update metdata of binary archive files"
+
     def __init__(self, options: dict):
         self.__options = options
 
-    def name(self) -> str:
-        return "update"
-
-    def parser(self) -> ArgumentParser:
-        parser = ArgumentParser()
+    @classmethod
+    def parser(self, parser: ArgumentParser):
         parser.add_argument(
             "--src",
-            required=True,
             help="path to directory with original Touca binary archives",
+            required=True,
         )
         parser.add_argument(
             "--out",
-            required=True,
             help="path to directory with updated Touca binary archives",
+            required=True,
+        )
+        parser.add_argument(
+            "--cli",
+            help='path to "touca_cli" C++ executable',
+            required=True,
         )
         parser.add_argument("--team", help="new value for the team slug")
         parser.add_argument("--suite", help="new value for the suite slug")
-        parser.add_argument(
-            "--cli", required=True, help='path to "touca_cli" C++ executable'
-        )
-        parser.add_argument("--logdir", help="full path to a directory")
-        return parser
 
-    def parse(self, args):
-        parsed, _ = self.parser().parse_known_args(args)
-        for key in ["src", "out", "team", "suite", "cli", "logdir"]:
-            if key not in vars(parsed).keys() or vars(parsed).get(key) is None:
-                raise ArgumentTypeError(f"missing key: {key}")
-        self.__options = {**self.__options, **vars(parsed)}
-
-    def run(self) -> bool:
-        srcDir = os.path.abspath(os.path.expanduser(self.__options.get("src")))
-        outDir = os.path.abspath(os.path.expanduser(self.__options.get("out")))
+    def run(self):
+        src = Path(self.__options.get("src")).expanduser().resolve()
+        out = Path(self.__options.get("out")).expanduser().resolve()
+        cli = Path(self.__options.get("cli")).expanduser().resolve()
         teamslug = self.__options.get("team")
         testsuite = self.__options.get("suite")
 
-        if not os.path.exists(srcDir):
-            logger.error(f"directory {srcDir} does not exist")
+        if not src.exists():
+            logger.error(f"directory {src} does not exist")
             return False
         batchNames = []
-        for batchName in os.listdir(srcDir):
-            batchDir = os.path.join(srcDir, batchName)
-            if not os.path.isdir(batchDir):
+        for batchDir in src.glob("*"):
+            print(batchDir)
+            if not batchDir.is_dir():
                 continue
-            if not batchDir.endswith("-merged"):
+            if not batchDir.name.endswith("-merged"):
                 continue
-            batchNames.append(batchName[:-7])
+            batchNames.append(batchDir.name[:-7])
 
         if not batchNames:
             logger.info(f"found no valid result directory to update")
@@ -98,18 +89,14 @@ class Update(Operation):
         # sort list of versions lexicographically
         batchNames.sort(key=LooseVersion)
 
-        logger.info(f"updateing batches one by one")
+        logger.info(f"updating batches one by one")
         for batchName in batchNames:
-            batchDir = os.path.join(srcDir, batchName)
-            logger.info(f"updateing {batchDir}")
-            if not utils_update(
-                self.__options.get("cli"),
-                batchDir,
-                os.path.join(outDir, batchName),
-                teamslug,
-                testsuite,
-                self.__options.get("logdir"),
-            ):
+            batchDir = src.joinpath(batchName)
+            logger.info(f"updating {batchDir}")
+            updated = _update(
+                cli, batchDir, out.joinpath(batchName), teamslug, testsuite
+            )
+            if not updated:
                 logger.error(f"failed to update {batchDir}")
                 return False
         logger.info("updated all result directories")

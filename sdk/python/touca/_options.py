@@ -92,55 +92,25 @@ def update_options(existing: dict, incoming: dict) -> None:
     _validate_options(existing)
 
 
-def config_file_home() -> str:
-    app_dir = os.path.join(os.getcwd(), ".touca")
-    if os.path.exists(app_dir):
-        return app_dir
-    return os.path.join(Path.home(), ".touca")
+def find_home_path() -> Path:
+    path = Path(os.getcwd(), ".touca")
+    return path if path.exists() else Path(Path.home(), ".touca")
 
 
-def config_file_load() -> str:
-    config_file_path = os.path.join(config_file_home(), "profiles", "default")
-    if not os.path.exists(config_file_path):
-        return ""
-    with open(config_file_path, "rt") as config_file:
-        return config_file.read().strip()
+def find_profile_path() -> Path:
+    home_path = find_home_path()
+    settings_path = Path(home_path, "settings")
+    name = "default"
+    if settings_path.exists():
+        config = ConfigParser()
+        config.read_string(settings_path.read_text())
+        name = config.get("settings", "profile")
+    return home_path.joinpath("profiles", name)
 
 
-def config_file_parse():
-    file_content = config_file_load()
-    if not file_content:
-        return
-    config = ConfigParser()
-    config.read_string(file_content)
-    return config
-
-
-def config_file_get(key: str) -> str:
-    config = config_file_parse()
-    if config and config.has_option("settings", key):
-        return config.get("settings", key)
-    return ""
-
-
-def config_file_set(key: str, value: str, section="settings") -> None:
-    config_file_path = Path(config_file_home(), "profiles", "default")
-    os.makedirs(config_file_path.parent, exist_ok=True)
-    config = ConfigParser()
-    if os.path.exists(config_file_path):
-        with open(config_file_path, "rt") as config_file:
-            config.read_string(config_file.read())
-    if not config.has_section(section):
-        config.add_section(section)
-    config.set(section, key, value)
-    with open(config_file_path, "wt") as config_file:
-        config.write(config_file)
-
-
-def config_file_remove(key: str) -> None:
-    config_file_path = Path(config_file_home(), "profiles", "default")
-    config = config_file_parse()
-    if config and config.has_option("settings", key):
-        config.remove_option("settings", key)
-    with open(config_file_path, "wt") as config_file:
-        config.write(config_file)
+def config_file_parse() -> ConfigParser:
+    path = find_profile_path()
+    if path.exists():
+        config = ConfigParser()
+        config.read_string(path.read_text())
+        return config
