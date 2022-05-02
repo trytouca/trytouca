@@ -11,11 +11,11 @@ class Operation(ABC):
 
 def invalid_subcommand(cls):
     from argparse import ArgumentParser
-    from sys import stderr
+    import sys
 
     parser = ArgumentParser(prog=f"touca {cls.name}", description=cls.help)
     cls.parser(parser)
-    parser.print_help(file=stderr)
+    parser.print_help(file=sys.stderr)
     return False
 
 

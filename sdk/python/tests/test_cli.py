@@ -1,0 +1,45 @@
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+
+from pathlib import Path
+import pytest
+from touca.cli.__main__ import main
+
+
+def test_cli_basic(capsys: pytest.CaptureFixture):
+    main(["--help"])
+    captured = capsys.readouterr()
+    assert "Work seamlessly with Touca from the command line." in captured.out
+
+
+def test_cli_solve(capsys: pytest.CaptureFixture):
+    assert main(["solve", "any", "problem"]) == False
+    captured = capsys.readouterr()
+    assert captured.out == "Solved!\n"
+    assert not captured.err
+
+
+def test_cli_profile_list(capsys: pytest.CaptureFixture):
+    assert main(["profile", "list"]) == False
+    captured = capsys.readouterr()
+    assert "default" in captured.out
+    assert not captured.err
+
+
+def test_cli_profile_set(capsys: pytest.CaptureFixture):
+    assert main(["profile", "set", "unit_test"]) == False
+    captured = capsys.readouterr()
+    assert not captured.out
+    assert not captured.err
+    home_dir = Path.home().joinpath(".touca")
+    settings_path = home_dir.joinpath("settings")
+    assert settings_path.exists()
+    assert "[settings]\nprofile = unit_test\n\n" == settings_path.read_text()
+
+    assert main(["profile", "copy", "unit_test", "new_unit_test"]) == False
+    assert main(["profile", "delete", "new_unit_test"]) == False
+    assert main(["profile", "delete", "unit_test"]) == False
+    assert "[settings]\nprofile = default\n\n" == settings_path.read_text()
+    assert main(["profile", "delete", "default"]) == True
+    captured = capsys.readouterr()
+    assert not captured.out
+    assert captured.err == "refusing to remove default configuration file\n"

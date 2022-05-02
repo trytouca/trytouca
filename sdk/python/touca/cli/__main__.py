@@ -72,15 +72,8 @@ def main(args=None):
         return False
     operation = command(options) if command else Execute(options)
 
-    if "touca-utils" in options.keys():
-        if not os.path.exists(options.get("touca-utils")):
-            logger.error(f"touca utils application does not exist")
-            return True
-
     home_dir = find_home_path()
     os.makedirs(home_dir, exist_ok=True)
-
-    # configure logger
 
     logger.remove()
     logger.add(

@@ -3,7 +3,7 @@
 from configparser import ConfigParser
 from pathlib import Path
 from argparse import ArgumentParser
-from sys import stderr
+import sys
 from typing import List
 from touca.cli._common import Operation, invalid_subcommand
 from touca._options import find_home_path, find_profile_path
@@ -66,6 +66,7 @@ class Profile(Operation):
         profile_name = self.__options.get("name")
         if profile_name not in self._profile_names():
             profile_path = Path(find_home_path(), "profiles", profile_name)
+            profile_path.parent.mkdir(parents=True, exist_ok=True)
             config = ConfigParser()
             config.add_section("settings")
             with open(profile_path, "wt") as config_file:
@@ -77,10 +78,10 @@ class Profile(Operation):
         profile_name = self.__options.get("name")
         profile_path = Path(find_home_path(), "profiles", profile_name)
         if profile_name == "default":
-            print("refusing to remove default configuration file", file=stderr)
+            print("refusing to remove default configuration file", file=sys.stderr)
             return False
         if not profile_path.exists():
-            print("profile does not exist", file=stderr)
+            print("profile does not exist", file=sys.stderr)
             return False
         if profile_path == find_profile_path():
             self._update_profile_in_settings_file("default")
@@ -95,7 +96,7 @@ class Profile(Operation):
         dst = self.__options.get("dst")
         profile_path = Path(profiles_dir, src)
         if not profile_path.exists():
-            print(f'profile "{src}" does not exist', file=stderr)
+            print(f'profile "{src}" does not exist', file=sys.stderr)
             return False
         copyfile(profile_path, Path(profiles_dir, dst))
         return True
