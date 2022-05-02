@@ -111,7 +111,7 @@ router.get('/', promisable(comparisonList, 'list comparison jobs'))
 router.patch(
   '/job/:job',
   middleware.inputs([vparam('job').isMongoId().withMessage('job invalid')]),
-  express.json({ limit: '5mb' }),
+  express.json({ limit: '10mb' }),
   promisable(comparisonProcess, 'process comparison job')
 )
 
@@ -172,7 +172,7 @@ router.patch(
 router.patch(
   '/message/:message',
   middleware.inputs([vparam('message').isMongoId().withMessage('job invalid')]),
-  express.json({ limit: '5mb' }),
+  express.json({ limit: '10mb' }),
   promisable(messageProcess, 'process message')
 )
 
