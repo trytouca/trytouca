@@ -3,15 +3,15 @@
 </div>
 <div class="wsl-modal-body">
   <app-alert [alert]="alert"></app-alert>
-  <p class="mb-2 text-sm">
-    You are about to seal version
-    <strong>{{ elements.batch.batchSlug }}</strong>
-    of testsuite
-    <strong>{{ elements.batch.suiteName }}</strong>
-    . This action prohibits any further submission of testresults for this
-    version.
-  </p>
   <form class="wsl-form" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+    <p class="text-sm text-black dark:text-gray-300">
+      You are about to seal version
+      <strong>{{ elements.batch.batchSlug }}</strong>
+      of test suite
+      <strong>{{ elements.batch.suiteName }}</strong>
+      . This action prohibits any further submission of test results for this
+      version.
+    </p>
     <div class="wsl-form-footer">
       <div class="wsl-form-submit">
         <button type="submit" class="wsl-btn-lg wsl-btn-primary">Seal</button>
