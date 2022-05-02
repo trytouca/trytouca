@@ -47,12 +47,10 @@ def prepare_parser(parser: ArgumentParser):
             setattr(namespace, self.dest, items)
 
     parser.register("action", "extend", ExtendAction)
-    parser.add_argument(
-        "--api-key", help="API Key issued by the Touca Server", dest="api-key"
-    )
+    parser.add_argument("--api-key", help="Touca API Key", dest="api-key")
     parser.add_argument(
         "--api-url",
-        help="API URL issued by the Touca Server",
+        help="Touca API URL",
         dest="api-url",
         default="https://api.touca.io",
     )

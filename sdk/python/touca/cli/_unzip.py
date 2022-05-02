@@ -1,19 +1,19 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import os
 from argparse import ArgumentParser
+from pathlib import Path
 import py7zr
 from loguru import logger
 from touca.cli._common import Operation
 
 
-def extract7z(srcFile, dstDir):
+def _extract(src, dst):
     try:
-        logger.info(f"extracting file {srcFile} into {dstDir}")
-        with py7zr.SevenZipFile(srcFile, "r") as archive:
-            archive.extractall(path=dstDir + "/")
+        logger.info(f"extracting file {src} into {dst}")
+        with py7zr.SevenZipFile(src, "r") as archive:
+            archive.extractall(path=dst)
     except Exception:
-        logger.warning(f"failed to extract {srcFile}")
+        logger.warning(f"failed to extract {src}")
         return False
     return True
 
@@ -27,39 +27,27 @@ class Unzip(Operation):
 
     @classmethod
     def parser(self, parser: ArgumentParser):
-        parser.add_argument(
-            "--src",
-            required=True,
-            help="path to directory with compressed Touca binary archives",
-        )
-        parser.add_argument(
-            "--out",
-            required=True,
-            help="path to directory with extracted Touca binary archives",
-        )
-        return parser
+        parser.add_argument("src", help="directory with compressed files")
+        parser.add_argument("out", help="directory to extract binary files into")
 
     def run(self):
-        srcDir = os.path.abspath(os.path.expanduser(self.__options.get("src")))
-        outDir = os.path.abspath(os.path.expanduser(self.__options.get("out")))
-        if not os.path.exists(srcDir):
-            logger.error(f"directory {srcDir} does not exist")
+        src = Path(self.__options.get("src")).expanduser().resolve()
+        out = Path(self.__options.get("out")).expanduser().resolve()
+
+        if not src.exists():
+            logger.error(f"directory {src} does not exist")
             return False
-        for fs_element in os.listdir(srcDir):
-            fs_path = os.path.join(srcDir, fs_element)
-            if not py7zr.is_7zfile(fs_path):
-                logger.debug(f"{fs_path} is not an archive file")
+        for src_dir in src.glob("*"):
+            if not py7zr.is_7zfile(src_dir):
+                logger.debug(f"{src_dir} is not an archive file")
                 continue
-            dstDir = os.path.join(
-                outDir, os.path.splitext(os.path.basename(fs_path))[0]
-            )
-            if os.path.exists(dstDir):
+            dstDir = out.joinpath(src_dir.stem)
+            if dstDir.exists():
                 logger.debug(f"unzipped directory already exists: {dstDir}")
                 continue
-            if not os.path.exists(outDir):
-                os.makedirs(outDir)
-            if not extract7z(fs_path, outDir):
+            out.mkdir(parents=True, exist_ok=True)
+            if not _extract(src_dir, out):
                 return False
-            logger.info(f"extracted {fs_path}")
+            logger.info(f"extracted {src_dir}")
         logger.info("extracted all archives")
         return True
