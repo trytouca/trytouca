@@ -1,9 +1,8 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import os
 from argparse import ArgumentParser
 from pathlib import Path
-from sys import stderr
+import sys
 from touca._options import config_file_parse
 from touca._runner import prepare_parser, run_workflows, Workflow
 from touca.cli._common import Operation
@@ -15,12 +14,7 @@ def is_test_module(module: str):
 
 
 def find_test_modules(testdir: str):
-    return [
-        os.path.join(root, file)
-        for root, _, files in os.walk(testdir)
-        for file in files
-        if file.lower().endswith(".py") and is_test_module(os.path.join(root, file))
-    ]
+    return [p for p in Path(testdir).glob("**/*.py") if is_test_module(p)]
 
 
 def extract_workflows(modules: list):
@@ -29,15 +23,14 @@ def extract_workflows(modules: list):
     import inspect
 
     for module in modules:
-        relpath = Path(module).relative_to(os.getcwd())
-        syspath = os.path.join(Path(relpath.parent).absolute(), "")
-        sys.path.append(syspath)
-        basepath = os.path.splitext(os.path.basename(relpath))[0]
-        mod = importlib.import_module(basepath)
+        relpath = Path(module).relative_to(Path.cwd())
+        syspath = Path(relpath.parent).absolute()
+        sys.path.append(f"{syspath}/")
+        mod = importlib.import_module(relpath.stem)
         for (name, member) in inspect.getmembers(mod):
             if isinstance(member, Workflow):
                 yield name, member
-        sys.path.remove(syspath)
+        sys.path.remove(f"{syspath}/")
 
 
 class Execute(Operation):
@@ -74,13 +67,13 @@ class Execute(Operation):
         return args
 
     def run(self):
-        self.__options["testdir"] = Path(self.__options.get("testdir")[0]).resolve()
+        dir_test = Path(self.__options.get("testdir")[0]).resolve()
         args = self._find_arguments()
-        modules = find_test_modules(self.__options.get("testdir"))
+        modules = find_test_modules(dir_test)
         workflows = list(extract_workflows(modules))
         try:
             run_workflows(args, workflows)
         except Exception as err:
-            print(f"test failed: {err}", file=stderr)
+            print(f"test failed: {err}", file=sys.stderr)
             return False
         return True

@@ -1,6 +1,7 @@
 {
   "cSpell.words": [
     "bdist",
+    "capsys",
     "codecov",
     "conanfile",
     "dorny",
@@ -17,6 +18,7 @@
     "nlohmann",
     "ossrh",
     "Popen",
+    "rglob",
     "sdist",
     "setuptools",
     "sonatype",
