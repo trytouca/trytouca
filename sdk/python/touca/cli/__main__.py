@@ -1,16 +1,17 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import argparse
+from argparse import ArgumentParser
 import os
 import sys
 
 from loguru import logger
 from touca import __version__
-from touca._options import config_file_home
+from touca._options import find_home_path
 from touca._printer import Printer
 from touca.cli._config import Config
 from touca.cli._execute import Execute
 from touca.cli._merge import Merge
+from touca.cli._profile import Profile
 from touca.cli._post import Post
 from touca.cli._run import Run
 from touca.cli._solve import Solve
@@ -42,57 +43,42 @@ def _warn_outdated_version():
 
 
 def main(args=None):
-    operations = {
-        "config": lambda opt: Config(opt),
-        "merge": lambda opt: Merge(opt),
-        "post": lambda opt: Post(opt),
-        "run": lambda opt: Run(opt),
-        "test": lambda opt: Execute(opt),
-        "unzip": lambda opt: Unzip(opt),
-        "update": lambda opt: Update(opt),
-        "zip": lambda opt: Zip(opt),
-        "solve": lambda opt: Solve(opt),
-    }
-    parser = argparse.ArgumentParser(
+    operations = [Config, Merge, Post, Profile, Run, Solve, Execute, Unzip, Update, Zip]
+    parser = ArgumentParser(
+        prog="touca",
+        add_help=False,
         description="Work seamlessly with Touca from the command line.",
-        add_help=True,
-        formatter_class=argparse.RawTextHelpFormatter,
         epilog="See https://touca.io/docs for more information.",
     )
     parser.add_argument(
         "-v", "--version", action="version", version=f"%(prog)s v{__version__}"
     )
-    parser.add_argument(
-        "command",
-        nargs="?",
-        choices=operations.keys(),
-        help="one of " + ", ".join([f'"{k}"' for k in operations.keys()]),
-        metavar="command",
-        default="test",
-    )
+    parsers = parser.add_subparsers(dest="command")
+    for operation in operations:
+        subparser = parsers.add_parser(
+            name=operation.name,
+            prog=f"touca {operation.name}",
+            description=operation.help,
+            help=operation.help,
+            add_help=True,
+        )
+        operation.parser(subparser)
     parsed, remaining = parser.parse_known_args(sys.argv[1:] if args is None else args)
     options = vars(parsed)
 
-    operation_name = options.get("command")
-    if operation_name not in operations:
-        logger.error(f"invalid command: {operation_name}")
+    command = next((x for x in operations if x.name == options.get("command")), None)
+    if not command and any(arg in remaining for arg in ["-h", "--help"]):
+        parser.print_help()
         return False
-    operation = operations.get(operation_name)(options)
-
-    try:
-        operation.parse(remaining)
-    except Exception as err:
-        Printer.print_error(str(err))
-        operation.parser().print_help()
-        return False
+    operation = command(options) if command else Execute(options)
 
     if "touca-utils" in options.keys():
         if not os.path.exists(options.get("touca-utils")):
             logger.error(f"touca utils application does not exist")
-            return False
+            return True
 
-    config_dir = config_file_home()
-    os.makedirs(config_dir, exist_ok=True)
+    home_dir = find_home_path()
+    os.makedirs(home_dir, exist_ok=True)
 
     # configure logger
 
@@ -104,18 +90,17 @@ def main(args=None):
         format="<green>{time:HH:mm:ss!UTC}</green> | <cyan>{level: <7}</cyan> | <lvl>{message}</lvl>",
     )
     logger.add(
-        os.path.join(config_dir, "logs", "runner_{time:YYMMDD!UTC}.log"),
+        os.path.join(home_dir, "logs", "runner_{time:YYMMDD!UTC}.log"),
         level="DEBUG",
         rotation="1 day",
         compression="zip",
     )
 
     if not operation.run():
-        logger.error(f"failed to perform operation {operation_name}")
-        return False
+        return True
 
     _warn_outdated_version()
-    return True
+    return False
 
 
 if __name__ == "__main__":

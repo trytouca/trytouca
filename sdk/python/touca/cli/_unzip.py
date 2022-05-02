@@ -1,71 +1,53 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import os
-from argparse import ArgumentParser, ArgumentTypeError
-
+from argparse import ArgumentParser
+from pathlib import Path
 import py7zr
 from loguru import logger
-from touca.cli._operation import Operation
+from touca.cli._common import Operation
 
 
-def extract7z(srcFile, dstDir):
+def _extract(src, dst):
     try:
-        logger.info(f"extracting file {srcFile} into {dstDir}")
-        with py7zr.SevenZipFile(srcFile, "r") as archive:
-            archive.extractall(path=dstDir + "/")
+        logger.info(f"extracting file {src} into {dst}")
+        with py7zr.SevenZipFile(src, "r") as archive:
+            archive.extractall(path=dst)
     except Exception:
-        logger.warning(f"failed to extract {srcFile}")
+        logger.warning(f"failed to extract {src}")
         return False
     return True
 
 
 class Unzip(Operation):
+    name = "unzip"
+    help = "Extract compressed binary archive files"
+
     def __init__(self, options: dict):
         self.__options = options
 
-    def name(self) -> str:
-        return "unzip"
+    @classmethod
+    def parser(self, parser: ArgumentParser):
+        parser.add_argument("src", help="directory with compressed files")
+        parser.add_argument("out", help="directory to extract binary files into")
 
-    def parser(self) -> ArgumentParser:
-        parser = ArgumentParser()
-        parser.add_argument(
-            "--src",
-            required=True,
-            help="path to directory with compressed Touca binary archives",
-        )
-        parser.add_argument(
-            "--out",
-            required=True,
-            help="path to directory with extracted Touca binary archives",
-        )
-        return parser
+    def run(self):
+        src = Path(self.__options.get("src")).expanduser().resolve()
+        out = Path(self.__options.get("out")).expanduser().resolve()
 
-    def parse(self, args):
-        parsed, _ = self.parser().parse_known_args(args)
-        for key in ["src", "out"]:
-            if key not in vars(parsed).keys() or vars(parsed).get(key) is None:
-                raise ArgumentTypeError(f"missing key: {key}")
-        self.__options = {**self.__options, **vars(parsed)}
-
-    def run(self) -> bool:
-        srcDir = os.path.abspath(os.path.expanduser(self.__options.get("src")))
-        outDir = os.path.abspath(os.path.expanduser(self.__options.get("out")))
-        if not os.path.exists(srcDir):
-            logger.error(f"directory {srcDir} does not exist")
+        if not src.exists():
+            logger.error(f"directory {src} does not exist")
             return False
-        for fselement in os.listdir(srcDir):
-            fspath = os.path.join(srcDir, fselement)
-            if not py7zr.is_7zfile(fspath):
-                logger.debug(f"{fspath} is not an archive file")
+        for src_dir in src.glob("*"):
+            if not py7zr.is_7zfile(src_dir):
+                logger.debug(f"{src_dir} is not an archive file")
                 continue
-            dstDir = os.path.join(outDir, os.path.splitext(os.path.basename(fspath))[0])
-            if os.path.exists(dstDir):
+            dstDir = out.joinpath(src_dir.stem)
+            if dstDir.exists():
                 logger.debug(f"unzipped directory already exists: {dstDir}")
                 continue
-            if not os.path.exists(outDir):
-                os.makedirs(outDir)
-            if not extract7z(fspath, outDir):
+            out.mkdir(parents=True, exist_ok=True)
+            if not _extract(src_dir, out):
                 return False
-            logger.info(f"extracted {fspath}")
+            logger.info(f"extracted {src_dir}")
         logger.info("extracted all archives")
         return True

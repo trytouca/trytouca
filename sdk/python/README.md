@@ -135,7 +135,7 @@ test these workflows at any scale.
 - For information on how to use this SDK, see our
   [Python SDK Documentation](https://touca.io/docs/sdk/python/quickstart).
 - If you cannot wait to start writing your first test with Touca, see our
-  [Python API Reference](https://app.touca.io/docs/clients/python/api.html).
+  [Python API Reference](https://app.touca.io/docs/sdk/python/api.html).
 
 ## Ask for Help
 
