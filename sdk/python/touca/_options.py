@@ -1,29 +1,36 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import os
 from pathlib import Path
 from configparser import ConfigParser
 
 
-def _apply_config_file(incoming: dict) -> None:
+def _apply_legacy_config_file(incoming: dict) -> None:
     from json import loads
 
-    path = incoming.get("file")
-    if not path:
+    if "file" not in incoming:
         return
-    if not os.path.isfile(path):
-        raise ValueError("file not found")
-    with open(path, "rt") as file:
-        content = file.read()
-        try:
-            parsed = loads(content)
-        except ValueError:
-            raise ValueError("file has unexpected format")
+    path = Path(incoming.get("file"))
+    if not path.is_file():
+        raise ValueError("configuration file not found")
+    content = path.read_text()
+    try:
+        parsed = loads(content)
+    except ValueError:
+        raise ValueError("configuration file has unexpected format")
     if "touca" not in parsed:
-        raise ValueError('file is missing JSON field: "touca"')
+        raise ValueError('configuration file is missing JSON field: "touca"')
     for k in parsed["touca"]:
         if k not in incoming:
             incoming[k] = parsed["touca"][k]
+
+
+def _apply_config_file(incoming: dict) -> None:
+    config = config_file_parse()
+    if not config or not config.has_section("settings"):
+        return
+    for key in config.options("settings"):
+        if key not in incoming:
+            incoming[key] = config.get("settings", key)
 
 
 def _apply_arguments(existing, incoming: dict) -> None:
@@ -44,13 +51,15 @@ def _apply_arguments(existing, incoming: dict) -> None:
 
 
 def _apply_environment_variables(existing) -> None:
+    from os import environ
+
     for env, opt in [
         ("TOUCA_API_KEY", "api-key"),
         ("TOUCA_API_URL", "api-url"),
         ("TOUCA_TEST_VERSION", "version"),
     ]:
-        if os.environ.get(env):
-            existing[opt] = os.environ.get(env)
+        if environ.get(env):
+            existing[opt] = environ.get(env)
 
 
 def _reformat_parameters(existing: dict) -> None:
@@ -60,6 +69,7 @@ def _reformat_parameters(existing: dict) -> None:
 
     api_url = existing.get("api-url")
     if not api_url:
+        # existing["api-url"] = "https://api.touca.io"
         return
     url = urlparse(api_url)
     urlpath = [k.strip("/") for k in url.path.split("/@/")]
@@ -73,7 +83,7 @@ def _reformat_parameters(existing: dict) -> None:
         existing[k] = v
 
 
-def _validate_options(existing: dict) -> None:
+def _validate_options(existing: dict):
     expected_keys = ["team", "suite", "version"]
     has_handshake = not existing.get("offline")
     if has_handshake and any(x in existing for x in ["api-key", "api-url"]):
@@ -84,7 +94,8 @@ def _validate_options(existing: dict) -> None:
         raise ValueError(f"missing required option(s) {','.join(keys)}")
 
 
-def update_options(existing: dict, incoming: dict) -> None:
+def update_options(existing: dict, incoming: dict):
+    _apply_legacy_config_file(incoming)
     _apply_config_file(incoming)
     _apply_arguments(existing, incoming)
     _apply_environment_variables(existing)
@@ -92,12 +103,12 @@ def update_options(existing: dict, incoming: dict) -> None:
     _validate_options(existing)
 
 
-def find_home_path() -> Path:
-    path = Path(os.getcwd(), ".touca")
-    return path if path.exists() else Path(Path.home(), ".touca")
+def find_home_path():
+    path = Path.cwd().joinpath(".touca")
+    return path if path.exists() else Path.home().joinpath(".touca")
 
 
-def find_profile_path() -> Path:
+def find_profile_path():
     home_path = find_home_path()
     settings_path = Path(home_path, "settings")
     name = "default"

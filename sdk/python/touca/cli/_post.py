@@ -1,5 +1,6 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import sys
 from pathlib import Path
 from argparse import ArgumentParser
 from distutils.version import LooseVersion
@@ -41,20 +42,29 @@ class Post(Operation):
 
     @classmethod
     def parser(self, parser: ArgumentParser):
-        parser.add_argument("src", help="path to directory with binary archive files")
+        parser.add_argument("src", help="path to directory with binary files")
         parser.add_argument("--api-key", help="Touca API Key", dest="api-key")
-        parser.add_argument(
-            "--api-url",
-            help="Touca API URL",
-            dest="api-url",
-            default="https://api.touca.io",
-        )
+        parser.add_argument("--api-url", help="Touca API URL", dest="api-url")
 
     def run(self):
-        src_dir = Path(self.__options.get("src")).expanduser().resolve()
-        api_key = self.__options.get("api-key")
-        api_url = self.__options.get("api-url")
+        from touca._options import update_options
 
+        options = {
+            k: self.__options.get(k)
+            for k in ["api-key", "api-url"]
+            if self.__options.get(k) is not None
+        }
+        options.update({"suite": "", "team": "", "version": ""})
+        try:
+            update_options(options, options)
+        except ValueError as err:
+            print(err, file=sys.stderr)
+            return False
+
+        api_key = options.get("api-key")
+        api_url = options.get("api-url")
+
+        src_dir = Path(self.__options.get("src")).expanduser().resolve()
         if not src_dir.exists():
             logger.error(f"directory {src_dir} does not exist")
             return False
@@ -75,7 +85,11 @@ class Post(Operation):
         batchNames.sort(key=LooseVersion)
 
         transport = Transport({"api-key": api_key, "api-url": api_url})
-        transport.authenticate()
+        try:
+            transport.authenticate()
+        except ValueError as err:
+            print(err, file=sys.stderr)
+            return False
 
         logger.info(f"posting batches one by one")
         for batchName in batchNames:
