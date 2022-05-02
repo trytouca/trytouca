@@ -1,7 +1,6 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 from argparse import ArgumentParser
-import os
 import sys
 
 from loguru import logger
@@ -73,7 +72,7 @@ def main(args=None):
     operation = command(options) if command else Execute(options)
 
     home_dir = find_home_path()
-    os.makedirs(home_dir, exist_ok=True)
+    home_dir.mkdir(parents=True, exist_ok=True)
 
     logger.remove()
     logger.add(
@@ -83,7 +82,7 @@ def main(args=None):
         format="<green>{time:HH:mm:ss!UTC}</green> | <cyan>{level: <7}</cyan> | <lvl>{message}</lvl>",
     )
     logger.add(
-        os.path.join(home_dir, "logs", "runner_{time:YYMMDD!UTC}.log"),
+        home_dir.joinpath("logs", "runner_{time:YYMMDD!UTC}.log"),
         level="DEBUG",
         rotation="1 day",
         compression="zip",

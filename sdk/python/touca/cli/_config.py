@@ -52,11 +52,10 @@ class Config(Operation):
         self.__options = options
 
     def _config_file_set(self, key: str, value: str, section="settings") -> None:
-        import os
         from configparser import ConfigParser
 
         path = find_profile_path()
-        os.makedirs(path.parent, exist_ok=True)
+        path.mkdir(path.parent, parents=True, exist_ok=True)
         config = ConfigParser()
         if path.exists():
             config.read_string(path.read_text())

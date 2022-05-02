@@ -42,9 +42,14 @@ class Profile(Operation):
     def __init__(self, options: dict):
         self.__options = options
 
-    def _profile_names(self) -> List[str]:
-        profiles = Path(find_home_path(), "profiles").glob("*")
-        return [p.name for p in profiles if p.is_file()]
+    def _make_profile(self, profile: Path):
+        if profile.exists():
+            return
+        profile.parent.mkdir(parents=True, exist_ok=True)
+        config = ConfigParser()
+        config.add_section("settings")
+        with open(profile, "wt") as config_file:
+            config.write(config_file)
 
     def _update_profile_in_settings_file(self, profile_name: str):
         settings_path = Path(find_home_path(), "settings")
@@ -58,19 +63,19 @@ class Profile(Operation):
             config.write(settings_file)
 
     def _command_list(self):
-        for profile in self._profile_names():
-            print(profile)
+        profiles_dir = Path(find_home_path(), "profiles")
+        profile_names = [p.name for p in profiles_dir.glob("*") if p.is_file()]
+        if "default" not in profile_names:
+            self._make_profile(profiles_dir.joinpath("default"))
+            profile_names.append("default")
+        for name in profile_names:
+            print(name)
         return True
 
     def _command_set(self):
         profile_name = self.__options.get("name")
-        if profile_name not in self._profile_names():
-            profile_path = Path(find_home_path(), "profiles", profile_name)
-            profile_path.parent.mkdir(parents=True, exist_ok=True)
-            config = ConfigParser()
-            config.add_section("settings")
-            with open(profile_path, "wt") as config_file:
-                config.write(config_file)
+        profile_path = Path(find_home_path(), "profiles", profile_name)
+        self._make_profile(profile_path)
         self._update_profile_in_settings_file(profile_name)
         return True
 
