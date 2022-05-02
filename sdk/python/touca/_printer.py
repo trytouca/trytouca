@@ -11,9 +11,9 @@ class Printer:
         print(f"{Fore.YELLOW}{fmt.format(*args, **kwargs)}{Fore.RESET}")
 
     def print_error(fmt: str, *args, **kwargs):
-        from sys import stderr
+        import sys
 
-        print(f"{Fore.RED}{fmt.format(*args, **kwargs)}{Fore.RESET}", file=stderr)
+        print(f"{Fore.RED}{fmt.format(*args, **kwargs)}{Fore.RESET}", file=sys.stderr)
 
     def print_app_header():
         print("\nTouca Test Framework")
