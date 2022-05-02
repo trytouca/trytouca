@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.5.3
+
+Features:
+
+- CLI should support multiple configuration profiles (#25)
+
+Improvements:
+
+- CLI subcommand `post` should respect configuration profile (#27)
+- CLI `--help` should describe individual subcommands
+- CLI subcommands should support `--help`
+
+Other Changes:
+
+- Add basic unit tests for CLI (#26)
+- Add new python example for image comparison
+
 ## v1.5.2
 
 Features:
