@@ -281,19 +281,17 @@ export class Int {
     )
   }
 
-  value(): flatbuffers.Long {
+  value(): bigint {
     const offset = this.bb!.__offset(this.bb_pos, 4)
-    return offset
-      ? this.bb!.readInt64(this.bb_pos + offset)
-      : this.bb!.createLong(0, 0)
+    return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt(0)
   }
 
   static startInt(builder: flatbuffers.Builder) {
     builder.startObject(1)
   }
 
-  static addValue(builder: flatbuffers.Builder, value: flatbuffers.Long) {
-    builder.addFieldInt64(0, value, builder.createLong(0, 0))
+  static addValue(builder: flatbuffers.Builder, value: bigint) {
+    builder.addFieldInt64(0, value, BigInt(0))
   }
 
   static endInt(builder: flatbuffers.Builder): flatbuffers.Offset {
@@ -303,7 +301,7 @@ export class Int {
 
   static createInt(
     builder: flatbuffers.Builder,
-    value: flatbuffers.Long
+    value: bigint
   ): flatbuffers.Offset {
     Int.startInt(builder)
     Int.addValue(builder, value)
@@ -338,19 +336,17 @@ export class UInt {
     )
   }
 
-  value(): flatbuffers.Long {
+  value(): bigint {
     const offset = this.bb!.__offset(this.bb_pos, 4)
-    return offset
-      ? this.bb!.readUint64(this.bb_pos + offset)
-      : this.bb!.createLong(0, 0)
+    return offset ? this.bb!.readUint64(this.bb_pos + offset) : BigInt(0)
   }
 
   static startUInt(builder: flatbuffers.Builder) {
     builder.startObject(1)
   }
 
-  static addValue(builder: flatbuffers.Builder, value: flatbuffers.Long) {
-    builder.addFieldInt64(0, value, builder.createLong(0, 0))
+  static addValue(builder: flatbuffers.Builder, value: bigint) {
+    builder.addFieldInt64(0, value, BigInt(0))
   }
 
   static endUInt(builder: flatbuffers.Builder): flatbuffers.Offset {
@@ -360,7 +356,7 @@ export class UInt {
 
   static createUInt(
     builder: flatbuffers.Builder,
-    value: flatbuffers.Long
+    value: bigint
   ): flatbuffers.Offset {
     UInt.startUInt(builder)
     UInt.addValue(builder, value)

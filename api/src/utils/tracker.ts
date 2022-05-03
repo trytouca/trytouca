@@ -21,7 +21,7 @@ export async function getChatToken(user: IUser): Promise<string> {
   const hub = new HubspotClient({ apiKey: config.tracking.hubspot_key })
   const api = hub.conversations.visitorIdentification.generateApi
   const response = await api.generateToken({ email: user.email })
-  const token = response.body.token
+  const token = response.token
   redis.cache(cacheKey, token, 36000) // store this key for 10 hours
   return token
 }
