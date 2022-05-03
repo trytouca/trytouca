@@ -99,8 +99,7 @@ export class ApiService {
     errorList?: [number, string, string][]
   ): string {
     const defaultMsg =
-      'Something went wrong. ' +
-      'Please try this operation again at a later time.';
+      'Something went wrong. Please try this operation again at a later time.';
     const errors = httpError.error?.errors as string[] | undefined;
     if (!Array.isArray(errors) || errors.length === 0) {
       return defaultMsg;
