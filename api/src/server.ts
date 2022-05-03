@@ -38,7 +38,7 @@ import { setupSuperuser, upgradeDatabase } from './startup'
 
 const app = express()
 
-app.use(cors({ credentials: true }))
+app.use(cors({ origin: true, credentials: true }))
 app.use(cookieParser(config.auth.cookieSecret))
 app.use(nocache())
 app.use(hidePoweredBy())

@@ -3,18 +3,32 @@ services:
   touca_api:
     image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/touca-api:1.4.0
     environment:
-      ENV_FILE: prod
-      AUTH_JWT_SECRET: <SECRET>
       AUTH_COOKIE_SECRET: <SECRET>
+      AUTH_GOOGLE_CLIENT_ID: <SECRET>
+      AUTH_JWT_SECRET: <SECRET>
+      AWS_REGION: <SECRET>
+      AWS_ACCESS_KEY_ID: <SECRET>
+      AWS_ACCESS_KEY_SECRET: <SECRET>
+      AWS_LAMBDA_PDF_GENERATOR: <SECRET>
+      DEPLOY_MODE: cloud_hosted
+      DISCORD_CHANNEL: <SECRET>
+      DISCORD_TOKEN: <SECRET>
+      ENV_FILE: prod
+      HUBSPOT_ACCESS_TOKEN: <SECRET>
+      HUBSPOT_API_KEY: <SECRET>
+      INTERCOM_ACCESS_TOKEN: <SECRET>
+      INTERCOM_IDENTITY_SECRET: <SECRET>
       MAIL_TRANSPORT_HOST: <SECRET>
       MAIL_TRANSPORT_USER: <SECRET>
       MAIL_TRANSPORT_PASS: <SECRET>
       MAIL_TRANSPORT_PORT: 587
       MINIO_USER: toucauser
       MINIO_PASS: toucapass
+      MIXPANEL_PROJECT_TOKEN: <SECRET>
       MONGO_USER: toucauser
       MONGO_PASS: toucapass
-      WEBAPP_ROOT: http://localhost
+      WEBAPP_ROOT: https://app.touca.io
+
     volumes:
       - ./local/logs/api:/opt/local/logs/api
     depends_on:
@@ -30,7 +44,7 @@ services:
     depends_on:
       - touca_api
     ports:
-      - 80:80
+      - 8090:80
     restart: always
 
   touca_cmp:
@@ -82,7 +96,7 @@ services:
   touca_blog:
     image: ghost:4-alpine
     environment:
-      url: <SECRET>
+      url: https://blog.touca.io
       mail__transport: SMTP
       mail__options__host: <SECRET>
       mail__options__port: 465
