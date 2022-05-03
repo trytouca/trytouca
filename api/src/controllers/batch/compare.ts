@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -69,14 +69,16 @@ export async function batchCompare(
   const batch = res.locals.batch as IBatchDocument
   const tic = process.hrtime()
 
-  // construct a unique identifier from comparison parameters
-  // to be used as cache key
+  // construct a unique identifier from comparison parameters to be used as
+  // cache key. Note that the order really matters here. We want the cacheKey
+  // to start with src suite and batch so we can remove all cached results
+  // when src suite or batch is removed.
 
   const names: { [k: string]: string } = {
-    dstBatch: req.params.dstBatch,
-    dstSuite: req.params.dstSuite,
+    srcSuite: suite.slug,
     srcBatch: batch.slug,
-    srcSuite: suite.slug
+    dstSuite: req.params.dstSuite,
+    dstBatch: req.params.dstBatch
   }
   const cacheKey =
     `route_batchCompare_${team.slug}_` + Object.values(names).join('_')

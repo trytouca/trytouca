@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import Redis from 'ioredis'
 
@@ -88,9 +88,9 @@ async function removeCached(cacheKey: string): Promise<boolean> {
     })
 }
 
-function removeCachedByPrefix(prefix: string): void {
+function removeCachedByPrefix(prefix: string, suffix = ''): void {
   client
-    .scanStream({ match: `${prefix}*` })
+    .scanStream({ match: `${prefix}*${suffix}` })
     .on('data', (keys: string[]) => {
       if (keys.length) {
         const pipeline = client.pipeline()

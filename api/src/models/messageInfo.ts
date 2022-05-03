@@ -1,8 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import mongoose from 'mongoose'
 
 export class MessageInfo {
+  public teamSlug: string
   public batchId: mongoose.Types.ObjectId
   public batchName: string
   public contentId: string
@@ -17,6 +18,11 @@ export class MessageInfo {
   }
 
   public name(): string {
-    return [this.suiteName, this.batchName, this.elementName].join('/')
+    return [
+      this.teamSlug,
+      this.suiteName,
+      this.batchName,
+      this.elementName
+    ].join('/')
   }
 }

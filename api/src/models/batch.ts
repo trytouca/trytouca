@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { ComparisonFunctions } from '@/controllers/comparison'
 import { messageRemove } from '@/models/message'
@@ -208,7 +208,8 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
           elementName: { $arrayElemAt: ['$elementDoc.name', 0] },
           messageId: '$_id',
           suiteId: { $arrayElemAt: ['$suiteDoc._id', 0] },
-          suiteName: { $arrayElemAt: ['$suiteDoc.slug', 0] }
+          suiteName: { $arrayElemAt: ['$suiteDoc.slug', 0] },
+          teamSlug: suite.team
         }
       }
     ])
@@ -251,11 +252,6 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
   await BatchModel.findByIdAndRemove(batch._id)
   logger.info('%s: removed batch', tuple)
 
-  rclient.removeCached(
-    `route_batchLookup_${team.slug}_${suite.slug}_${batch.slug}`
-  )
-  rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
-
   // by removing this batch, we may have removed all batches of the suite
   // it belonged to in which case we proceed with removing the suite.
 
@@ -263,9 +259,29 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
     await CommentModel.deleteMany({ suiteId: suite._id })
     await SuiteModel.findByIdAndRemove(suite._id)
     logger.info('%s: removed suite', suite.slug)
+  }
 
-    rclient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
-    rclient.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
+  for (const key of [
+    `route_suiteLookup_${team.slug}_${suite.slug}`,
+    `route_batchLookup_${team.slug}_${suite.slug}_${batch.slug}`,
+    `route_commentList_${team.slug}_${suite.slug}_${batch.slug}`
+  ]) {
+    rclient.removeCached(key)
+  }
+  for (const key of [
+    `route_suiteList_${team.slug}_`,
+    `route_batchList_${team.slug}_${suite.slug}_`,
+    `route_batchCompare_${team.slug}_${suite.slug}_${batch.slug}_`,
+    `route_elementCompare_${team.slug}_${suite.slug}_${batch.slug}_`,
+    `route_elementLookup_${team.slug}_${suite.slug}_`
+  ]) {
+    rclient.removeCachedByPrefix(key)
+  }
+  for (const [prefix, suffix] of [
+    [`route_batchCompare_${team.slug}_${suite.slug}_`, `_${batch.slug}`],
+    [`route_elementCompare_${team.slug}_${suite.slug}_`, `_${batch.slug}`]
+  ]) {
+    rclient.removeCachedByPrefix(prefix, suffix)
   }
 
   return true
