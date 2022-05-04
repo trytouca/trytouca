@@ -1,14 +1,13 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { expect } from 'chai'
-import { describe } from 'mocha'
+import { afterEach, beforeEach, describe, expect } from '@jest/globals'
 import { Types } from 'mongoose'
 import sinon from 'sinon'
 
 import { UserMap } from '../../src/models/usermap'
 import { UserModel } from '../../src/schemas/user'
 
-describe('model-usermap', function () {
+describe('model-usermap', () => {
   let mockObj = null
   const idA = new Types.ObjectId()
   const idB = new Types.ObjectId()
@@ -18,31 +17,31 @@ describe('model-usermap', function () {
     { _id: idB, fullname: 'User B', username: 'userB' },
     { _id: idC, fullname: 'User C', username: 'userC' }
   ]
-  before(() => {
+  beforeEach(() => {
     mockObj = sinon.stub(UserModel, 'aggregate')
     mockObj.returns(Promise.resolve(expectedOut as any))
   })
-  after(() => {
+  afterEach(() => {
     mockObj.restore()
   })
   const groupA = [idA]
   const groupB = [idB, idC]
   const groupC = [idA, idB, idC]
-  it('basic usage', async () => {
+  test('basic usage', async () => {
     const userMap = await new UserMap()
       .addGroup('group-A', groupA)
       .addGroup('group-B', groupB)
       .addGroup('group-C', groupC)
       .populate()
-    expect(userMap.getGroup('group-B')).to.eql([
+    expect(userMap.getGroup('group-B')).toEqual([
       { fullname: 'User B', username: 'userB' },
       { fullname: 'User C', username: 'userC' }
     ])
-    expect(userMap.lookup(idA)).to.eql({
+    expect(userMap.lookup(idA)).toEqual({
       fullname: 'User A',
       username: 'userA'
     })
-    expect(userMap.allUsers()).to.eql(
+    expect(userMap.allUsers()).toEqual(
       expectedOut.map((v) => {
         const { _id, ...rest } = v
         return rest
