@@ -43,6 +43,7 @@ async function getPlatformOwner(): Promise<EPlatformRole> {
 export async function createUserAccount(
   payload: Partial<TrackerInfo>
 ): Promise<IUserDocument> {
+  const isGoogleSignin = !!payload.name
   const makePass = (length: number) =>
     [...Array(length)].map(() => Math.random().toString(36)[2]).join('')
 
@@ -70,7 +71,8 @@ export async function createUserAccount(
   // register user in database
 
   const newUser = await UserModel.create({
-    activationKey,
+    activationKey: isGoogleSignin ? undefined : activationKey,
+    activatedAt: isGoogleSignin ? new Date() : undefined,
     createdAt: new Date(),
     email: payload.email,
     fullname: payload.name,
@@ -83,15 +85,20 @@ export async function createUserAccount(
   // notify user that their user account is created
   // we are intentionally not awaiting on this operation
 
-  const link = `${config.webapp.root}/account/activate?key=${activationKey}`
-  mailer.mailUser(newUser, 'Welcome to Touca 👋🏼', 'auth-signup-user', {
-    firstName: payload.name ? `, ${payload.name}` : '',
-    hasVerificationLink: !payload.name,
-    previewMessage: payload.name
-      ? "We're excited to have you!"
-      : 'Here is your email verification link.',
-    verificationLink: link
-  })
+  const mailData = isGoogleSignin
+    ? {
+        firstName: `, ${payload.name}`,
+        hasVerificationLink: false,
+        previewMessage: "We're excited to have you!",
+        verificationLink: ''
+      }
+    : {
+        firstName: '',
+        hasVerificationLink: true,
+        previewMessage: 'Here is your email verification link.',
+        verificationLink: `${config.webapp.root}/account/activate?key=${activationKey}`
+      }
+  mailer.mailUser(newUser, 'Welcome to Touca 👋🏼', 'auth-signup-user', mailData)
 
   // notify platform admins that a new user account was verified.
 
