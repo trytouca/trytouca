@@ -5,24 +5,26 @@
   </h2>
   <ul class="space-y-2">
     <li class="flex font-medium dark:text-white">
-      <div class="w-2/5 px-2">Agent</div>
-      <div class="w-[30%] px-2 text-center">IP Address</div>
-      <div class="w-1/5 px-2 text-center">Expires At</div>
+      <div class="w-[50%] px-2">Agent</div>
+      <div class="w-[20%] px-2 text-center">IP Address</div>
+      <div class="w-[20%] px-2 text-center">Expires At</div>
       <div class="w-[10%]"></div>
     </li>
     <li
-      class="wsl-text-muted flex w-full rounded-md py-2 text-center text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
+      class="wsl-text-muted flex w-full rounded-md py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-700"
       *ngFor="let session of sessions; let i = index">
-      <div class="w-2/5 overflow-clip whitespace-nowrap px-2">
+      <div class="flex w-[50%] items-center justify-start px-2">
         {{ session.agent }}
       </div>
-      <div class="w-[30%] overflow-clip whitespace-nowrap px-2 text-center">
+      <div class="flex w-[20%] items-center justify-center px-2">
         {{ session.ipAddr }}
       </div>
-      <div class="w-1/5 overflow-clip whitespace-nowrap px-2 text-center">
-        {{ session.expiresAt | datetime: 'format' }}
+      <div
+        class="flex w-[20%] items-center justify-center px-2"
+        title="{{ session.expiresAt | date: 'long' }}">
+        {{ session.expiresAt | date: 'MMMM d, HH:mm' }}
       </div>
-      <div class="flex w-[10%] justify-end px-2">
+      <div class="flex w-[10%] items-center justify-end px-2">
         <div
           wslDropdown
           *ngIf="i !== 0"
