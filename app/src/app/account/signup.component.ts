@@ -44,15 +44,7 @@ export class SignupComponent {
     private authService: AuthService,
     private userService: UserService,
     private zone: NgZone
-  ) {
-    if (environment.self_hosted) {
-      this.apiService.status().subscribe((response) => {
-        if (!response.configured) {
-          this.router.navigate(['/account/install']);
-        }
-      });
-    }
-  }
+  ) {}
 
   onSubmit(model: FormContent) {
     if (!this.formSignup.valid) {

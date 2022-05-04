@@ -44,15 +44,7 @@ export class SigninComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private zone: NgZone
-  ) {
-    if (environment.self_hosted) {
-      this.apiService.status().subscribe((response) => {
-        if (!response.configured) {
-          this.router.navigate(['/account/install']);
-        }
-      });
-    }
-  }
+  ) {}
 
   ngOnInit() {
     const queryMap = this.route.snapshot.queryParamMap;

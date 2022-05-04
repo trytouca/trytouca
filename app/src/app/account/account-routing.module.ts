@@ -2,11 +2,11 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { environment } from 'src/environments/environment';
 
 import { AuthGuard, GuestGuard } from '@/core/services';
 
 import { ActivateComponent } from './activate.component';
-import { InstallComponent } from './install.component';
 import { OnboardComponent } from './onboard.component';
 import { ProfileComponent } from './profile.component';
 import { StartComponent, StartPageType } from './start.component';
@@ -17,7 +17,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'signup',
+        redirectTo: environment.self_hosted ? 'signin' : 'signup',
         pathMatch: 'full'
       },
       {
@@ -25,7 +25,6 @@ const routes: Routes = [
         canActivateChild: [GuestGuard],
         children: [
           { path: 'activate', component: ActivateComponent },
-          { path: 'install', component: InstallComponent },
           {
             path: 'signin',
             component: StartComponent,
