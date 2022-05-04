@@ -55,7 +55,7 @@ class Config(Operation):
         from configparser import ConfigParser
 
         path = find_profile_path()
-        path.mkdir(path.parent, parents=True, exist_ok=True)
+        path.parent.mkdir(parents=True, exist_ok=True)
         config = ConfigParser()
         if path.exists():
             config.read_string(path.read_text())
