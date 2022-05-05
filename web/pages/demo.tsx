@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import Script from 'next/script';
-import { NextSeo } from 'next-seo';
+import { BreadcrumbJsonLd, NextSeo } from 'next-seo';
 import React from 'react';
 
 import Header from '@/components/header';
@@ -9,6 +9,9 @@ import Header from '@/components/header';
 export default function CalendlyPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        itemListElements={[{ position: 1, name: 'Touca Product Demo' }]}
+      />
       <NextSeo title="Touca Product Demo" canonical="https://touca.io/demo" />
       <Script id="redirect" strategy="afterInteractive">
         {`setTimeout(() => window.location.replace("https://calendly.com/ghorbanzade/30min"), 2000);`}
