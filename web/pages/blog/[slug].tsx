@@ -3,7 +3,7 @@
 import { PostOrPage } from '@tryghost/content-api';
 import { GetStaticPropsContext } from 'next';
 import Head from 'next/head';
-import { ArticleJsonLd, NextSeo } from 'next-seo';
+import { ArticleJsonLd, BreadcrumbJsonLd, NextSeo } from 'next-seo';
 import { HiOutlineCalendar, HiOutlineClock } from 'react-icons/hi';
 
 import { BlogPostArchive } from '@/components/blog';
@@ -39,10 +39,16 @@ export default function BlogPage(props: BlogPostStaticProps) {
           ]
         }}
       />
+      <BreadcrumbJsonLd
+        itemListElements={[
+          { position: 1, name: 'Touca Blog', item: 'https://touca.io/blog' },
+          { position: 2, name: props.main_article.title }
+        ]}
+      />
       <ArticleJsonLd
         type="Blog"
-        url="https://touca.io/blog"
-        title="Touca Blog"
+        url={'https://touca.io/blog/' + props.main_article.slug}
+        title={props.main_article.title}
         images={[props.main_article.feature_image]}
         datePublished={props.main_article.published_at}
         dateModified={props.main_article.updated_at}

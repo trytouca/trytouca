@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { FAQPageJsonLd, NextSeo } from 'next-seo';
+import { BreadcrumbJsonLd, FAQPageJsonLd, NextSeo } from 'next-seo';
 import React from 'react';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
@@ -194,6 +194,9 @@ export default function PricingPage() {
   }));
   return (
     <>
+      <BreadcrumbJsonLd
+        itemListElements={[{ position: 1, name: 'Touca Pricing' }]}
+      />
       <NextSeo title="Pricing" canonical="https://touca.io/pricing" />
       <FAQPageJsonLd mainEntity={mainEntity} />
       <Header></Header>

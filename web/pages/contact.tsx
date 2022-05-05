@@ -1,7 +1,7 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { ErrorMessage, Field, Form, Formik, FormikProps } from 'formik';
-import { NextSeo } from 'next-seo';
+import { BreadcrumbJsonLd, NextSeo } from 'next-seo';
 import React from 'react';
 import * as Yup from 'yup';
 
@@ -12,6 +12,9 @@ import { tracker } from '@/lib/tracker';
 export default function ContactPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        itemListElements={[{ position: 1, name: 'Touca Contact Page' }]}
+      />
       <NextSeo title="Contact Us" canonical="https://touca.io/contact" />
       <Header></Header>
       <section className="bg-dark-blue-900">

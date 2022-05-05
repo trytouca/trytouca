@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import Script from 'next/script';
-import { NextSeo } from 'next-seo';
+import { BreadcrumbJsonLd, NextSeo } from 'next-seo';
 import React from 'react';
 
 import Header from '@/components/header';
@@ -9,9 +9,30 @@ import Header from '@/components/header';
 export default function DiscordPage() {
   return (
     <>
+      <BreadcrumbJsonLd
+        itemListElements={[{ position: 1, name: 'Touca Discord Community' }]}
+      />
       <NextSeo
-        title="Touca Community on Discord"
+        title="Touca Discord Community"
         canonical="https://touca.io/discord"
+        openGraph={{
+          type: 'website',
+          locale: 'en_US',
+          site_name: 'Touca',
+          url: 'https://touca.io/',
+          title: 'Touca Discord Community',
+          description:
+            'Community Discord server to get support, collaborate with contributors, and make friends with fellow software engineers.',
+          images: [
+            {
+              url: 'https://touca.io/images/touca_banner_discord.png',
+              width: 906,
+              height: 453,
+              alt: 'Touca Discord Community',
+              type: 'image/png'
+            }
+          ]
+        }}
       />
       <Script id="redirect" strategy="afterInteractive">
         {`setTimeout(() => window.location.replace("https://discord.com/invite/pTXKTVzPpA"), 2000);`}

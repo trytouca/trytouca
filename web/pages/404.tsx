@@ -1,8 +1,8 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { NextSeo } from 'next-seo';
+import { BreadcrumbJsonLd, NextSeo } from 'next-seo';
 import React from 'react';
 
 import Header from '@/components/header';
@@ -22,6 +22,9 @@ export default function NotFoundPage() {
   tracker.track({ action: '404' }, { path: router.asPath });
   return (
     <>
+      <BreadcrumbJsonLd
+        itemListElements={[{ position: 1, name: content.title }]}
+      />
       <NextSeo title="Page Not Found" />
       <Header></Header>
       <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
