@@ -68,7 +68,7 @@ setup(
         "Programming Language :: Python :: 3 :: Only",
     ],
     install_requires=[
-        "urllib3",
+        "urllib3>=1.26.9",
         "certifi>=2021.5.30",
         "flatbuffers>=2.0",
         # The core library has no dependency on dataclasses at the moment.
@@ -76,12 +76,12 @@ setup(
         # dependency to allow users to run getting started examples that
         # may be using dataclasses.
         'dataclasses; python_version<"3.7"',
-        "colorama",
+        "colorama>=0.4.4",
         "jsonschema",
-        "loguru",
-        "packaging",
-        "py7zr",
-        "requests",
+        "loguru>=0.6.0",
+        "packaging>=21.3",
+        "py7zr>=0.18.5",
+        "requests>=2.27.1",
     ],
     extras_require={
         "dev": [

@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.5.4
+
+Fixes:
+
+- CLI sub-command `test` should use default for `--testdir` (#40)
+- Fix wrong path in CLI sub-command `config` (#30)
+
 ## v1.5.3
 
 Features:
