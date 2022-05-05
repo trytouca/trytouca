@@ -41,7 +41,7 @@ class Execute(Operation):
     def parser(cls, parser: ArgumentParser):
         parser.add_argument(
             "--testdir",
-            default=[""],
+            default=[Path.cwd()],
             nargs=1,
             help="path to regression tests directory",
         )
