@@ -26,7 +26,7 @@ const config = {
         docs: {
           routeBasePath: "/",
           sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/trytouca/touca-docs/tree/main/"
+          editUrl: "https://github.com/trytouca/trytouca/tree/main/docs"
         },
         blog: false,
         theme: {
