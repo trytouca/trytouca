@@ -35,7 +35,7 @@ export default function AboveTheFold() {
                 </a>
                 <Link href="/demo">
                   <a className="text-md group space-x-2 rounded-xl bg-opacity-50 p-3 font-medium text-gray-300 duration-150 ease-in-out hover:text-white focus:outline-none">
-                    <span>or Schedule a Demo</span>
+                    <span>or Get a Demo</span>
                   </a>
                 </Link>
               </div>
