@@ -1,4 +1,4 @@
-# Getting Started
+# Quick Start
 
 This document introduces Touca SDK for Python
 ([GitHub](https://github.com/trytouca/trytouca/tree/main/sdk/python),
@@ -9,9 +9,9 @@ available as open-source under the Apache-2.0 License.
 pip install touca
 ```
 
-In this tutorial, let's use the examples available in the
-[Touca repository](https://github.com/trytouca/trytouca/tree/main/examples/python).
-Clone the repository to a directory of your choice and create a virtual
+Let's use the examples available in the
+[Touca repository on GitHub](https://github.com/trytouca/trytouca/tree/main/examples/python).
+Clone this repository to a directory of your choice and create a virtual
 environment.
 
 ```bash
@@ -83,7 +83,7 @@ We convert this `testcase` to a number and pass it to our code under test. We
 capture the actual value returned by our software as a Touca test result and
 associate it with version `1.0` of our code.
 
-Unlike snapshot testing which write a snapshot of your software output in local
+Unlike snapshot testing which writes a snapshot of your software output in local
 files, Touca tests store captured test results on a remote Touca server. That
 server compares our results against a previous trusted version and reports
 differences as test cases are executed.
@@ -126,7 +126,7 @@ rely on Touca to check if our changes affected the behavior or performance of
 our software.
 
 ```bash
-touca test --revision 2.0
+touca test --revision=2.0
 ```
 
 ```text
@@ -147,15 +147,14 @@ Time:       0.55 s
 
 ![Touca server after submitting results for v2.0](/img/assets/touca-sdk-quickstart-2.png)
 
-In our example, we captured the output of our workflow using `touca.check`. But
-unlike integration tests, we are not bound to the output of our workflow. We can
+Unlike integration tests, we are not bound to the output of our workflow. We can
 capture any number of data points and from anywhere within our code. This is
 specially useful if our workflow has multiple stages. We can capture the output
-of each stage without publicly exposing its API. If the behavior of that stage
-changes in a future version of our code, we can leverage the captured output to
-find the root cause more easily.
+of each stage without publicly exposing its API. When any stage changes behavior
+in a future version of our software, our captured data points will help find the
+root cause more easily.
 
-This was an easy example with trivial implementation. Real-world software
-workflows are complex and may involve many nested function calls, interacting
-with systems and services. In the next documents, we will see how Touca helps us
+This was an easy example with a trivial implementation. Real-world software
+workflows are complex. They may involve many nested function calls and interact
+with systems and services. In the next document, we will see how Touca helps us
 test real-world software.

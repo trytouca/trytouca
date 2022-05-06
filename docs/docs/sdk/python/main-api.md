@@ -1,58 +1,48 @@
 # Main API
 
-[So far](/sdk/python/quickstart), we learned how to write and run a simple Touca
-test using the Touca SDK for Python. But our previous `is_prime` example was too
-minimal to show how Touca can help us describe the behavior and performance of
-real-world software workflows. Let us use a Profile Lookup software as another
-example that takes the username of a student and returns basic information about
-them, such as their name, date of birth, and GPA.
+Our previous `is_prime` example was too minimal to show how Touca can help us
+track regressions in the behavior and performance of real-world software
+workflows. Let's use a Profile Lookup software that takes the username of a
+student and returns basic information about them including their name, date of
+birth, and GPA.
 
-```py
-def find_student(username: str) -> Student:
-```
-
-where `Student` has the following properties:
-
-```py
+```py title="02_python_main_api/students.py"
 @dataclass
 class Student:
     username: str
     fullname: str
     dob: datetime.date
     gpa: float
+
+def find_student(username: str) -> Student:
+    # ...
 ```
 
 Here's a Touca test we can write for our code under test:
 
-```py
+```py title="02_python_main_api/students_test.py"
 import touca
 from students import find_student
 
 @touca.Workflow
 def students_test(username: str):
-    touca.start_timer("find_student")
-    student = find_student(username)
-    touca.stop_timer("find_student")
+    with touca.scoped_timer("find_student"):
+        student = find_student(username)
     touca.assume("username", student.username)
     touca.check("fullname", student.fullname)
     touca.check("birth_date", student.dob)
     touca.check("gpa", student.gpa)
-    touca.add_metric("external_source", 1500)
-
-if __name__ == "__main__":
-    touca.run()
 ```
 
-While we are using the same test framework as before, we are tracking more data
+We are using the same test framework as before but we are tracking more data
 about the behavior and performance of our software using various data capturing
-functions. In this tutorial, we will learn how these functions work and how they
-can help us detect regressions in future versions of our software.
+functions. Let's see how these functions work.
 
-## Describing Behavior
+## Describing the Behavior
 
 For any given username, we can call our `find_student` function and capture the
-properties of its output that are expected to remain the same in future versions
-of our software.
+important properties of its output that we expect to remain the same in future
+versions of our software.
 
 We can start small and capture the entire returned object as a Touca result:
 
@@ -60,12 +50,10 @@ We can start small and capture the entire returned object as a Touca result:
 touca.check("student", student)
 ```
 
-Adding the output object as a single entity works. But what if we decided to add
-a field to the return value of `find_student` that reported whether the profile
-was fetched from the cache?
-
-Since this information may change every time we run our tests, we can choose to
-capture different fields as separate entities.
+But what if we decided to add a field to the return value of `find_student` that
+reported whether the profile was fetched from the cache? Since this information
+may change every time we run our tests, we can choose to capture different
+fields as separate entities.
 
 ```py
 touca.assume("username", student.username)
@@ -85,10 +73,9 @@ not visualize the values captured as assertion unless they are different.
 
 We can capture the value of any number of variables, including the ones that are
 not exposed by the interface of our code under test. In our example, let us
-imagine that our software calculates GPA of students based on their courses.
-
-If we are just relying on the output of our function, it may be difficult to
-trace a reported difference in GPA to its root cause. Assuming that the courses
+imagine that our software calculates GPA of students based on their courses. If
+we are just relying on the output of our function, it may be difficult to trace
+a reported difference in GPA to its root cause. Assuming that the courses
 enrolled by a student are not expected to change, we can track them without
 redesigning our API:
 
@@ -99,16 +86,14 @@ def calculate_gpa(courses: List[Course]):
 ```
 
 Touca data capturing functions remain no-op in production environments. They are
-only activated when running in the context of a `touca.workflow` function call.
+only activated when running in the context of a `@touca.Workflow` test function.
 
-## Describing Performance
+## Describing the Performance
 
 Just as we can capture values of variables to describe the behavior of different
 parts of our software, we can capture the runtime of different functions to
-describe their performance.
-
-Touca can notify us when future changes to our implementation result in
-significantly changes in the measured runtime values.
+describe their performance. Touca can notify us when future changes to our
+implementation result in significant changes in the measured runtime values.
 
 ```py
 touca.start_timer("find_student")
@@ -118,7 +103,7 @@ touca.stop_timer("find_student")
 
 The two functions `start_timer` and `stop_timer` provide fine-grained control
 for runtime measurement. If they feel too verbose, we can opt to use
-`scoped_timer` as an alternatives:
+`scoped_timer` instead:
 
 ```py
 with touca.scoped_timer("find_student"):

@@ -68,7 +68,7 @@ const sidebars = {
             {
               type: "doc",
               id: "sdk/python/quickstart",
-              label: "Getting Started"
+              label: "Quick Start"
             },
             {
               type: "doc",

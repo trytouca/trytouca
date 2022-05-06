@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 from students import find_student
 import touca
@@ -13,7 +13,3 @@ def students_test(username: str):
     touca.check("birth_date", student.dob)
     touca.check("gpa", student.gpa)
     touca.add_metric("external_source", 1500)
-
-
-if __name__ == "__main__":
-    touca.run()
