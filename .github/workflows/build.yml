@@ -699,7 +699,7 @@ jobs:
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         run: |
           cd 02_python_main_api
-          pip install -r requirements.txt
+          pip install touca
           touca
 
   build-web:
