@@ -41,7 +41,6 @@ class Execute(Operation):
     def parser(cls, parser: ArgumentParser):
         parser.add_argument(
             "--testdir",
-            default=[Path.cwd()],
             nargs=1,
             help="path to regression tests directory",
         )
@@ -67,7 +66,7 @@ class Execute(Operation):
         return args
 
     def run(self):
-        dir_test = Path(self.__options.get("testdir")[0]).resolve()
+        dir_test = Path(self.__options.get("testdir", [Path.cwd()])[0]).resolve()
         args = self._find_arguments()
         modules = find_test_modules(dir_test)
         workflows = list(extract_workflows(modules))
