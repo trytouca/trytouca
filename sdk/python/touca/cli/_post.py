@@ -45,10 +45,14 @@ class Post(Operation):
         parser.add_argument("src", help="path to directory with binary files")
         parser.add_argument("--api-key", help="Touca API Key", dest="api-key")
         parser.add_argument("--api-url", help="Touca API URL", dest="api-url")
+        parser.add_argument(
+            "--dry-run", 
+            action="store_true", 
+            help="See what files would be posted",
+            dest="dry-run" )
 
     def run(self):
         from touca._options import update_options
-
         options = {
             k: self.__options.get(k)
             for k in ["api-key", "api-url"]
@@ -63,7 +67,7 @@ class Post(Operation):
 
         api_key = options.get("api-key")
         api_url = options.get("api-url")
-
+        dry_run = self.__options.get("dry-run")
         src_dir = Path(self.__options.get("src")).expanduser().resolve()
         if not src_dir.exists():
             logger.error(f"directory {src_dir} does not exist")
@@ -90,13 +94,30 @@ class Post(Operation):
         except ValueError as err:
             print(err, file=sys.stderr)
             return False
-
-        logger.info(f"posting batches one by one")
-        for batchName in batchNames:
-            batchDir = src_dir.joinpath(batchName)
-            logger.info(f"posting {batchDir}")
-            if not _post(batchDir, transport):
-                logger.error(f"failed to post {batchDir}")
-                return False
-        logger.info("posted all result directories")
+ 
+        if (dry_run):
+            logger.info(f"the following batches would be posted")
+            for batchName in batchNames:
+                batchDir = src_dir.joinpath(batchName)
+                logger.info(f"{batchDir}")
+                batch_dir = batch_dir.with_name(batch_dir.name + "-merged")
+                if not batch_dir.exists():
+                    logger.error(f"expected directory {batch_dir} to exist")
+                    return False
+                binaries = list(batch_dir.rglob("**/*.bin"))
+                if not binaries:
+                    logger.warning(f"{batch_dir} has no result files")
+                    return False
+                logger.debug(f"the following files in {batch_dir} would be posted")
+                for binary in binaries:
+                    logger.debug(f"{binary}")
+        else:
+            logger.info(f"posting batches one by one")
+            for batchName in batchNames:
+                batchDir = src_dir.joinpath(batchName)
+                logger.info(f"posting {batchDir}")
+                if not _post(batchDir, transport):
+                    logger.error(f"failed to post {batchDir}")
+                    return False
+            logger.info("posted all result directories")
         return True
