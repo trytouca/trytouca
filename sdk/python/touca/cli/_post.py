@@ -32,17 +32,21 @@ def _post(src_dir: Path, transport: Transport):
     logger.info(f"posted {src_dir}")
     return True
 
-def dry_run_post(src_dir: Path):
-    src_dir = src_dir.with_name(src_dir.name + "-merged")
-    if not src_dir.exists():
-        logger.error(f"expected directory {src_dir} to exist")
-        return False
-    binaries = list(src_dir.rglob("**/*.bin"))
-    if not binaries:
-        logger.warning(f"{src_dir} has no result files")
-        return False
-    for binary in binaries:
-        logger.debug(f"{binary}")
+def dry_run_post(src_dir: Path, batchNames: Path):
+    logger.info(f"dry run is enabled")
+    for batchName in batchNames:
+        batchDir = src_dir.joinpath(batchName)
+        batchDir = batchDir.with_name(batchDir.name + "-merged")
+        if not batchDir.exists():
+            logger.error(f"expected directory {batchDir} to exist")
+            return False
+        binaries = list(batchDir.rglob("**/*.bin"))
+        if not binaries:
+            logger.warning(f"{batchDir} has no result files")
+            logger.error(f"failed to post {batchDir}")
+            return False
+        for binary in binaries:
+            logger.debug(f"{binary}")
     return True
 
 
@@ -59,11 +63,11 @@ class Post(Operation):
         parser.add_argument("--api-key", help="Touca API Key", dest="api-key")
         parser.add_argument("--api-url", help="Touca API URL", dest="api-url")
         parser.add_argument(
-            "--dry-run", 
-            action="store_true", 
-            help="See what files would be posted",
-            dest="dry-run" 
-        )
+        "--dry-run", 
+        action="store_true", 
+        help="See what files would be posted",
+        dest="dry-run" 
+    )
 
     def run(self):
         from touca._options import update_options
@@ -108,15 +112,9 @@ class Post(Operation):
         except ValueError as err:
             print(err, file=sys.stderr)
             return False
-            
+        
         if dry_run:
-            logger.info(f"dry run is enabled")
-            for batchName in batchNames:
-                batchDir = src_dir.joinpath(batchName)
-                if not dry_run_post(batchDir):
-                    logger.error(f"unable to post {batchDir}")
-                    return False
-            return True
+            return dry_run_post(src_dir, batchNames)
 
         logger.info(f"posting batches one by one")
         for batchName in batchNames:
