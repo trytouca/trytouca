@@ -32,6 +32,19 @@ def _post(src_dir: Path, transport: Transport):
     logger.info(f"posted {src_dir}")
     return True
 
+def dry_run_post(src_dir: Path):
+    src_dir = src_dir.with_name(src_dir.name + "-merged")
+    if not src_dir.exists():
+        logger.error(f"expected directory {src_dir} to exist")
+        return False
+    binaries = list(src_dir.rglob("**/*.bin"))
+    if not binaries:
+        logger.warning(f"{src_dir} has no result files")
+        return False
+    for binary in binaries:
+        logger.debug(f"{binary}")
+    return True
+
 
 class Post(Operation):
     name = "post"
@@ -49,13 +62,14 @@ class Post(Operation):
             "--dry-run", 
             action="store_true", 
             help="See what files would be posted",
-            dest="dry-run" )
+            dest="dry-run" 
+        )
 
     def run(self):
         from touca._options import update_options
         options = {
             k: self.__options.get(k)
-            for k in ["api-key", "api-url"]
+            for k in ["api-key", "api-url", "dry-run"]
             if self.__options.get(k) is not None
         }
         options.update({"suite": "", "team": "", "version": ""})
@@ -67,7 +81,7 @@ class Post(Operation):
 
         api_key = options.get("api-key")
         api_url = options.get("api-url")
-        dry_run = self.__options.get("dry-run")
+        dry_run = options.get("dry-run")
         src_dir = Path(self.__options.get("src")).expanduser().resolve()
         if not src_dir.exists():
             logger.error(f"directory {src_dir} does not exist")
@@ -94,30 +108,23 @@ class Post(Operation):
         except ValueError as err:
             print(err, file=sys.stderr)
             return False
- 
-        if (dry_run):
-            logger.info(f"the following batches would be posted")
+            
+        if dry_run:
+            logger.info(f"dry run is enabled")
             for batchName in batchNames:
                 batchDir = src_dir.joinpath(batchName)
-                logger.info(f"{batchDir}")
-                batch_dir = batch_dir.with_name(batch_dir.name + "-merged")
-                if not batch_dir.exists():
-                    logger.error(f"expected directory {batch_dir} to exist")
+                if not dry_run_post(batchDir):
+                    logger.error(f"unable to post {batchDir}")
                     return False
-                binaries = list(batch_dir.rglob("**/*.bin"))
-                if not binaries:
-                    logger.warning(f"{batch_dir} has no result files")
-                    return False
-                logger.debug(f"the following files in {batch_dir} would be posted")
-                for binary in binaries:
-                    logger.debug(f"{binary}")
-        else:
-            logger.info(f"posting batches one by one")
-            for batchName in batchNames:
-                batchDir = src_dir.joinpath(batchName)
-                logger.info(f"posting {batchDir}")
-                if not _post(batchDir, transport):
-                    logger.error(f"failed to post {batchDir}")
-                    return False
-            logger.info("posted all result directories")
+            return True
+
+        logger.info(f"posting batches one by one")
+        for batchName in batchNames:
+            batchDir = src_dir.joinpath(batchName)
+            logger.info(f"posting {batchDir}")
+            if not _post(batchDir, transport):
+                logger.error(f"failed to post {batchDir}")
+                return False
+        logger.info("posted all result directories")
+
         return True
