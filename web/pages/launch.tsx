@@ -39,7 +39,7 @@ export default function LaunchPage() {
           icon: FaComments
         },
         {
-          title: 'Live Coding: Touca vs Snapshot Testing',
+          title: 'Twitch: Touca vs Snapshot Testing',
           date: Date.parse('2022-05-16T15:00:00.000-05:00'),
           icon: FaTwitch
         }
@@ -70,7 +70,7 @@ export default function LaunchPage() {
           icon: FaComments
         },
         {
-          title: 'Live Coding: Continuous Regression Testing in Action',
+          title: 'Twitch: Continuous Regression Testing in Action',
           date: Date.parse('2022-05-17T15:00:00.000-05:00'),
           icon: FaTwitch
         }
@@ -101,7 +101,7 @@ export default function LaunchPage() {
           icon: FaComments
         },
         {
-          title: 'Live Coding: Touca Source Code Walk-Through',
+          title: 'Twitch: Touca Source Code Walk-Through',
           date: Date.parse('2022-05-17T15:00:00.000-05:00'),
           icon: FaTwitch
         }
@@ -127,7 +127,7 @@ export default function LaunchPage() {
           icon: FaTwitter
         },
         {
-          title: 'Live Coding: Extending Touca Python CLI',
+          title: 'Twitch: Extending Touca Python CLI',
           date: Date.parse('2022-05-19T15:00:00.000-05:00'),
           icon: FaTwitch
         }
@@ -138,17 +138,22 @@ export default function LaunchPage() {
       title: 'Build With Us: Shaping the Future of Software Development',
       events: [
         {
-          title: 'Blog Post: Touca Open-Source Contributors Program',
+          title: 'Blog Post: Open-Source Contributors Program',
           date: Date.parse('2022-05-20T09:00:00.000-05:00'),
           icon: FaBookOpen
         },
         {
-          title: 'Twitter Spaces: AMA with Pejman Ghorbanzade',
+          title: "Webinar: What's next for Touca?",
+          date: Date.parse('2022-05-20T11:00:00.000-05:00'),
+          icon: FaYoutube
+        },
+        {
+          title: 'Twitter Spaces: AMA with Touca Founder',
           date: Date.parse('2022-05-20T12:00:00.000-05:00'),
           icon: FaTwitter
         },
         {
-          title: 'Integrating Touca with your development workflow',
+          title: 'Twitch: Integrating Touca with your Development Workflow',
           date: Date.parse('2022-05-20T15:00:00.000-05:00'),
           icon: FaTwitch
         }
