@@ -43,7 +43,6 @@ def dry_run_post(src_dir: Path, batchNames: Path):
         binaries = list(batchDir.rglob("**/*.bin"))
         if not binaries:
             logger.warning(f"{batchDir} has no result files")
-            logger.error(f"failed to post {batchDir}")
             return False
         for binary in binaries:
             logger.debug(f"{binary}")
