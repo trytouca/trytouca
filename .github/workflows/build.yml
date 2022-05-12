@@ -764,8 +764,9 @@ jobs:
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_PROD_ACCESS_KEY_SECRET }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: dorny/paths-filter@v2
         id: changes
@@ -834,8 +835,9 @@ jobs:
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_PROD_ACCESS_KEY_SECRET }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: dorny/paths-filter@v2
         id: changes
@@ -894,8 +896,9 @@ jobs:
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_PROD_ACCESS_KEY_SECRET }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: dorny/paths-filter@v2
         id: changes
@@ -953,8 +956,9 @@ jobs:
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_PROD_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_PROD_ACCESS_KEY_SECRET }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
       - uses: dorny/paths-filter@v2
         id: changes

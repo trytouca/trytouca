@@ -262,9 +262,9 @@ Extract the deployment scripts archive and install it in the appropriate path.
 ```bash
 ssh touca@your-machine
 mkdir -p touca; cd touca;
-scp devops.tar.gz touca@your-machine:~/
-tar -zxf ../devops.tar.gz
-rm ../devops.tar.gz
+scp ops.tar.gz touca@your-machine:~/
+tar -zxf ../ops.tar.gz
+rm ../ops.tar.gz
 ```
 
 Before running the docker containers, create the local directories \(volumes\)
@@ -277,8 +277,8 @@ mkdir -p local/data/minio local/data/mongo local/data/redis
 ```
 
 Modify values of the following environment variables in
-`devops/docker-compose.prod.yaml` file. Do not wrap the values in single or
-double quotations.
+`ops/docker-compose.prod.yaml` file. Do not wrap the values in single or double
+quotations.
 
 - `AUTH_JWT_SECRET`, `AUTH_COOKIE_SECRET`
 
@@ -293,17 +293,17 @@ double quotations.
   Root URL of the Touca server. Can be of the form
   `https://touca.your-company.com` or `http://172.142.42.42`.
 
-Now run `devops/deploy.sh` to deploy Touca via Docker Compose.
+Now run `ops/deploy.sh` to deploy Touca via Docker Compose.
 
 ```bash
-~/touca/devops/deploy.sh -r <TOUCA_AWS_REPO> -u AWS
+~/touca/ops/deploy.sh -r <TOUCA_AWS_REPO> -u AWS
 ```
 
 Monitor standard output of docker containers to check that everything is running
 as expected:
 
 ```bash
-docker-compose -f ~/touca/devops/docker-compose.prod.yml --project-directory ~/touca logs --follow
+docker-compose -f ~/touca/ops/docker-compose.prod.yml --project-directory ~/touca logs --follow
 ```
 
 At this time, you should be able to verify that Touca is up and running by
