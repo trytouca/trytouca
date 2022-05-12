@@ -1,0 +1,11 @@
+<div class="flex min-h-screen items-center sm:p-4">
+  <div class="mx-auto w-full max-w-sm">
+    <app-account-signup
+      *ngIf="currentPage === PageType.Signup"></app-account-signup>
+    <app-account-signin
+      *ngIf="currentPage === PageType.Signin"></app-account-signin>
+    <app-account-reset
+      *ngIf="currentPage === PageType.Reset"></app-account-reset>
+  </div>
+</div>
+<app-help></app-help>

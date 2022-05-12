@@ -1,0 +1,50 @@
+<mjml>
+  <mj-head>
+    <mj-title>Welcome to Touca 👋🏼</mj-title>
+    <mj-preview>{{ previewMessage }}</mj-preview>
+    <mj-include path="./layout/attributes.mjml" />
+  </mj-head>
+  <mj-body>
+    <mj-include path="./layout/header.mjml" />
+    <mj-section mj-class="wsl-border">
+      <mj-column>
+        <mj-text><h3>Welcome to Touca{{ firstName }}! 🎉</h3></mj-text>
+        <mj-text>
+          We help software engineers see the side-effects of their changes as
+          they write code.
+        </mj-text>
+        <mj-text>
+          My name is Pejman and I'm here to help you get started and to make
+          sure that you will have a great onboarding experience.
+        </mj-text>
+        <mj-text>
+          Please reach out
+          <a href="mailto:pejman@touca.io">via email</a>
+          or via the Intercom if you have any questions or need help with
+          anything. Also, if you're open to having a short chat, I'd love to
+          learn more about you and your work. You can find my schedule
+          <a href="https://calendly.com/ghorbanzade/30min">here</a>
+          .
+        </mj-text>
+        <mj-raw>
+          <!-- htmlmin:ignore -->
+          {{#hasVerificationLink}}
+          <!-- htmlmin:ignore -->
+        </mj-raw>
+        <mj-divider border-color="#E2E8F0" border-width="2px"></mj-divider>
+        <mj-text>
+          To get started, click the link below to verify your email address.
+        </mj-text>
+        <mj-button href="{{ verificationLink }}">
+          Verify Email Address
+        </mj-button>
+        <mj-raw>
+          <!-- htmlmin:ignore -->
+          {{/hasVerificationLink}}
+          <!-- htmlmin:ignore -->
+        </mj-raw>
+      </mj-column>
+    </mj-section>
+    <mj-include path="./layout/footer.mjml" />
+  </mj-body>
+</mjml>

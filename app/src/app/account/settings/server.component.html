@@ -1,0 +1,80 @@
+<h3 class="py-4 text-xl font-medium text-black dark:text-gray-300">
+  Health Metrics
+</h3>
+<div
+  class="grid grid-cols-1 gap-2 text-black dark:text-gray-300 md:grid-cols-2">
+  <div
+    class="wsl-box border border-gray-200 p-4 dark:border-gray-700 md:col-span-1">
+    <div class="flex items-center space-x-2">
+      <ng-icon
+        class="wsl-text-muted"
+        size="1.1rem"
+        name="feather-database"></ng-icon>
+      <h4 class="font-medium">Database</h4>
+    </div>
+    <ul class="py-2 text-sm leading-6">
+      <li class="flex justify-between">
+        <span>Versions:</span>
+        <span>{{ stats.countBatches }}</span>
+      </li>
+      <li class="flex justify-between">
+        <span>Test Cases:</span>
+        <span>{{ stats.countElements }}</span>
+      </li>
+      <li class="flex justify-between">
+        <span>Submissions:</span>
+        <span>{{ stats.countMessages }}</span>
+      </li>
+    </ul>
+  </div>
+  <div
+    class="wsl-box border border-gray-200 p-4 dark:border-gray-700 md:col-span-1">
+    <div class="flex items-center space-x-2">
+      <ng-icon
+        class="wsl-text-muted"
+        size="1.1rem"
+        name="feather-hard-drive"></ng-icon>
+      <h4 class="font-medium">Disk Space</h4>
+    </div>
+    <ul class="py-2 text-sm leading-6">
+      <li class="flex justify-between">
+        <span>Free:</span>
+        <span>{{ stats.spaceFree | number: '1.0-0' }} GB</span>
+      </li>
+      <li class="flex justify-between">
+        <span>Size:</span>
+        <span>{{ stats.spaceSize | number: '1.0-0' }} GB</span>
+      </li>
+      <li class="flex justify-between">
+        <span>Used:</span>
+        <span>
+          {{ stats.spaceUsed | percent: '1.0-0' }}
+        </span>
+      </li>
+    </ul>
+  </div>
+  <div
+    class="wsl-box border border-gray-200 p-4 dark:border-gray-700 md:col-span-1">
+    <h4 class="font-medium">Comparator</h4>
+    <ul class="py-2 text-sm leading-6">
+      <li class="flex justify-between">
+        <span>Comparisons:</span>
+        <span>{{ stats.countComparisons }}</span>
+      </li>
+      <li class="flex justify-between">
+        <span>Average Process Time:</span>
+        <span>
+          {{ stats.cmpAvgProcessingTime | number: '1.0-0' }}
+          ms/job
+        </span>
+      </li>
+      <li class="flex justify-between">
+        <span>Average Collection Time:</span>
+        <span>
+          {{ stats.cmpAvgCollectionTime | number: '1.0-0' }}
+          ms/job
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,32 @@
+{
+  "root": true,
+  "ignorePatterns": ["projects/**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "env": {
+        "es2020": true,
+        "node": true
+      },
+      "parserOptions": {
+        "project": "./tsconfig.eslint.json",
+        "ecmaVersion": 2020,
+        "sourceType": "module"
+      },
+      "plugins": ["simple-import-sort"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/eslint-recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-empty-interface": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "simple-import-sort/imports": "error"
+      }
+    }
+  ]
+}

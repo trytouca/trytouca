@@ -1,0 +1,8 @@
+{
+  "api-url": "localhost:8081",
+  "log-dir": "/Users/pejman/Projects/touca/local/logs/cmp",
+  "log-level": "debug",
+  "minio-url": "localhost:9000",
+  "minio-pass": "toucapass",
+  "minio-user": "toucauser"
+}

@@ -1,0 +1,154 @@
+<section class="wsl-page-tab" id="wsl-batch-tab-elements">
+  <div class="wsl-box space-y-4 p-4">
+    <app-home-list-filter
+      [manager]="filterManager"
+      [params]="filterParams()"
+      [stats]="filterStats()"
+      (updateList)="updateList($event)"></app-home-list-filter>
+    <div *ngIf="countShownRows(ItemType.Common)">
+      <div class="wsl-list-head">
+        <h3>Common Testcases</h3>
+        <p>
+          Testcases that are both in version
+          {{ params.srcBatchName }}
+          {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
+          and in version {{ params.dstBatchName }}
+          {{
+            suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : ''
+          }}
+        </p>
+        <p
+          *ngIf="
+            countShownRows(ItemType.Common) !== countRows(ItemType.Common)
+          ">
+          You are viewing
+          <b>
+            {{
+              countShownRows(ItemType.Common)
+                | i18nPlural: { '=1': 'one', other: '#' }
+            }}
+          </b>
+          of {{ countRows(ItemType.Common) }} common cases.
+        </p>
+      </div>
+      <ul class="wsl-list-body">
+        <li
+          class="wsl-list-item-outer"
+          *ngFor="let item of getShownRows(ItemType.Common); let i = index"
+          (click)="selectedRow = i"
+          [ngClass]="
+            selectedRow === i
+              ? 'border-l-sky-200 dark:border-l-sky-700'
+              : 'border-l-transparent'
+          ">
+          <app-batch-item-element
+            [item]="item"
+            [params]="params"
+            [chosenTopics]="chosenTopic"
+            (updateChosenTopics)="
+              updateChosenTopics($event)
+            "></app-batch-item-element>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="countShownRows(ItemType.Fresh)">
+      <div class="wsl-list-head">
+        <h3>New Testcases</h3>
+        <p>
+          Testcases that are submitted in version
+          {{ params.srcBatchName }}
+          {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
+          but were not included in version {{ params.dstBatchName }}
+          {{
+            suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : ''
+          }}
+        </p>
+        <p *ngIf="countShownRows(ItemType.Fresh) !== countRows(ItemType.Fresh)">
+          You are viewing
+          <b>
+            {{
+              countShownRows(ItemType.Fresh)
+                | i18nPlural: { '=1': 'one', other: '#' }
+            }}
+          </b>
+          of {{ countRows(ItemType.Fresh) }} new cases.
+        </p>
+      </div>
+      <ul class="wsl-list-body">
+        <li
+          class="wsl-list-item-outer"
+          *ngFor="let item of getShownRows(ItemType.Fresh); let i = index"
+          (click)="selectedRow = i + countShownRows(ItemType.Common)"
+          [ngClass]="
+            selectedRow === i + countShownRows(ItemType.Common)
+              ? 'border-l-sky-200 dark:border-l-sky-700'
+              : 'border-l-transparent'
+          ">
+          <app-batch-item-element
+            [item]="item"
+            [params]="params"
+            [chosenTopics]="chosenTopic"
+            (updateChosenTopics)="
+              updateChosenTopics($event)
+            "></app-batch-item-element>
+        </li>
+      </ul>
+    </div>
+    <div *ngIf="countShownRows(ItemType.Missing)">
+      <div class="wsl-list-head">
+        <h3>Missing Testcases</h3>
+        <p>
+          Testcases that were included in version
+          {{ params.dstBatchName }}
+          {{
+            suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : ''
+          }}
+          but are not submitted in version {{ params.srcBatchName }}
+          {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
+        </p>
+        <p
+          *ngIf="
+            countShownRows(ItemType.Missing) !== countRows(ItemType.Missing)
+          ">
+          You are viewing
+          <b>
+            {{
+              countShownRows(ItemType.Missing)
+                | i18nPlural: { '=1': 'one', other: '#' }
+            }}
+          </b>
+          of {{ countRows(ItemType.Missing) }} missing cases.
+        </p>
+      </div>
+      <ul class="wsl-list-body">
+        <li
+          class="wsl-list-item-outer"
+          *ngFor="let item of getShownRows(ItemType.Missing); let i = index"
+          (click)="
+            selectedRow =
+              i +
+              countShownRows(ItemType.Common) +
+              countShownRows(ItemType.Fresh)
+          "
+          [ngClass]="
+            selectedRow ===
+            i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)
+              ? 'border-l-sky-200 dark:border-l-sky-700'
+              : 'border-l-transparent'
+          ">
+          <app-batch-item-element
+            [item]="item"
+            [params]="params"
+            [chosenTopics]="chosenTopic"
+            (updateChosenTopics)="
+              updateChosenTopics($event)
+            "></app-batch-item-element>
+        </li>
+      </ul>
+    </div>
+    <app-home-list-pager
+      [params]="pagerParams()"
+      [stats]="filterStats()"
+      (updateList)="updateList($event)"></app-home-list-pager>
+  </div>
+</section>

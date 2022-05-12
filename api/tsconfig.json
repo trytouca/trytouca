@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@/controllers/*": ["controllers/*"],
+      "@/middlewares": ["middlewares"],
+      "@/models/*": ["models/*"],
+      "@/routes/*": ["routes/*"],
+      "@/schemas/*": ["schemas/*"],
+      "@/types/*": ["types/*"],
+      "@/utils/*": ["utils/*"]
+    },
+    "alwaysStrict": true,
+    "outDir": "dist",
+    "sourceMap": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es2020",
+    "lib": ["es2020", "DOM"],
+    "esModuleInterop": true,
+    "noImplicitAny": false
+  },
+  "include": ["src/**/*"]
+}

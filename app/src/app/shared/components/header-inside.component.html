@@ -1,0 +1,58 @@
+<header class="sticky top-0 z-40 bg-gray-900">
+  <div class="container mx-auto flex justify-between p-4">
+    <div class="flex select-none items-center">
+      <a class="flex h-8 items-center focus:outline-none" [routerLink]="'/'">
+        <img
+          class="h-12"
+          src="./assets/logo/touca-logo-transparent.svg"
+          alt="Touca Logo" />
+        <h1 class="text-xl font-semibold tracking-tight text-white">Touca</h1>
+      </a>
+    </div>
+    <nav class="flex items-center space-x-8">
+      <div>
+        <a
+          class="rounded-6 rounded-lg bg-transparent px-4 py-2 text-sm font-semibold leading-6 text-white hover:bg-sky-100 hover:bg-opacity-25"
+          href="https://touca.io/docs"
+          target="_blank">
+          Docs
+        </a>
+      </div>
+      <div wslDropdown>
+        <a
+          class="wsl-dropdown-toggle cursor-pointer select-none"
+          id="wsl-user-dropdown"
+          aria-haspopup="true"
+          aria-expanded="false">
+          <p class="flex items-center font-medium text-white">
+            {{ currentUser?.fullname }}
+            <ng-icon class="opacity-50" name="feather-chevron-down"></ng-icon>
+          </p>
+        </a>
+        <div
+          class="wsl-dropdown-menu hidden w-48"
+          aria-labelledby="wsl-user-dropdown">
+          <div class="wsl-dropdown-item" routerLink="/account/profile">
+            <div class="flex items-center space-x-2">
+              <ng-icon
+                class="wsl-text-muted"
+                size="1.1rem"
+                name="feather-settings"></ng-icon>
+              <a class="text-sky-700 dark:text-gray-300">Settings</a>
+            </div>
+          </div>
+          <hr class="my-1 border-gray-200 dark:border-gray-700" />
+          <div class="wsl-dropdown-item" (click)="logout()">
+            <div class="flex items-center space-x-2">
+              <ng-icon
+                class="wsl-text-muted"
+                size="1.1rem"
+                name="feather-log-out"></ng-icon>
+              <a class="text-sky-700 dark:text-gray-300">Sign out</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

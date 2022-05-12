@@ -1,0 +1,69 @@
+<div class="space-y-8 p-4">
+  <h2 class="text-center text-3xl font-bold text-black dark:text-gray-300">
+    Sign up for Touca
+  </h2>
+  <div>
+    <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+  </div>
+  <div class="space-y-4" *ngIf="isFormShown">
+    <button
+      class="flex w-full cursor-pointer items-center justify-center space-x-2 rounded-full border border-gray-300 bg-white p-2 font-medium text-black transition duration-300 hover:border-gray-300 hover:bg-gray-50 focus:border-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-700 dark:focus:border-gray-500"
+      *ngIf="!selfHosted"
+      (click)="signupGoogle()">
+      <img width="18px" height="18px" src="assets/exticons/google.svg" />
+      <span class="text-sm">Sign up with Google</span>
+    </button>
+    <div class="flex w-full items-center" *ngIf="!selfHosted">
+      <span
+        class="flex-grow border-t border-gray-200 dark:border-gray-700"></span>
+      <span class="select-none px-2 text-sm font-semibold text-gray-400">
+        or
+      </span>
+      <span
+        class="flex-grow border-t border-gray-200 dark:border-gray-700"></span>
+    </div>
+    <form
+      class="space-y-4"
+      [formGroup]="formSignup"
+      (ngSubmit)="onSubmit(formSignup.value)"
+      novalidate>
+      <div>
+        <label class="wsl-input-label" for="wsl-email">Email Address</label>
+        <input
+          class="wsl-input-field"
+          type="email"
+          id="wsl-email"
+          name="email"
+          formControlName="email"
+          aria-describedby="wsl-email-help"
+          required
+          autocomplete="email"
+          data-lpignore="true" />
+        <div
+          class="wsl-text-danger flex items-center space-x-1 py-1"
+          id="wsl-email-help"
+          *ngIf="!isFormValid()">
+          <ng-icon class="h-4" name="hero-exclamation-circle"></ng-icon>
+          <small>Please use a valid email address.</small>
+        </div>
+      </div>
+      <button
+        class="flex w-full cursor-pointer items-center justify-center space-x-2 rounded-full border border-sky-600 bg-sky-700 p-2 text-sm font-medium text-white transition duration-300 hover:border-sky-700 hover:bg-sky-800 focus:border-sky-700 focus:outline-none dark:border-sky-800 dark:bg-sky-900 dark:text-gray-300 dark:hover:border-sky-700 dark:hover:bg-sky-800 dark:focus:border-sky-600"
+        type="submit">
+        Sign up
+      </button>
+    </form>
+    <button
+      class="group w-full cursor-pointer pt-4 text-center text-sm text-gray-600 hover:text-gray-700 focus:outline-none dark:font-medium dark:text-gray-400 dark:hover:text-gray-300"
+      routerLink="/account/signin">
+      Already have an account?
+      <a class="text-sky-600 dark:group-hover:text-sky-500">Sign in</a>
+    </button>
+  </div>
+  <div>
+    <app-account-mailbox
+      *ngIf="!isFormShown"
+      [input]="mailboxInput"
+      (action)="mailboxAction($event)"></app-account-mailbox>
+  </div>
+</div>

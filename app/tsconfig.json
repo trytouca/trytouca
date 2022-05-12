@@ -1,0 +1,25 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/app/*"]
+    },
+    "outDir": "./dist/out-tsc",
+    "sourceMap": true,
+    "module": "es2020",
+    "moduleResolution": "node",
+    "target": "es2017",
+    "lib": ["es2020", "dom"],
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "declaration": false,
+    "downlevelIteration": true,
+    "experimentalDecorators": true
+  },
+  "angularCompilerOptions": {
+    "strictTemplates": true,
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true
+  }
+}

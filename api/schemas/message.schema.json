@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://touca.io/schemas/touca/testresults.json",
+  "definitions": {
+    "metadata": {
+      "type": "object",
+      "required": ["testsuite", "version", "testcase", "builtAt"],
+      "properties": {
+        "testsuite": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "testcase": {
+          "type": "string"
+        },
+        "builtAt": {
+          "type": "string"
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "required": ["key", "value"],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "required": ["key", "value"],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "required": ["metadata", "results", "assertion", "metrics"],
+  "properties": {
+    "metadata": {
+      "$ref": "#/definitions/metadata"
+    },
+    "results": {
+      "type": "array",
+      "entries": {
+        "$ref": "#/definitions/entry"
+      }
+    },
+    "assertion": {
+      "type": "array",
+      "entries": {
+        "$ref": "#/definitions/entry"
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "metrics": {
+        "$ref": "#/definitions/metric"
+      }
+    }
+  }
+}

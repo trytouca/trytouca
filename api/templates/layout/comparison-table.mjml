@@ -1,0 +1,46 @@
+<mj-raw>
+  <!-- htmlmin:ignore -->
+  {{#hasComparisonTable}}
+  <!-- htmlmin:ignore -->
+</mj-raw>
+<mj-section mj-class="wsl-border-x">
+  <mj-column>
+    <mj-text>
+      Here is a
+      <b>{{ listType }}</b>
+      list of testcases with differences between version {{ srcBatchSlug }} and
+      {{ dstBatchSlug }}:
+    </mj-text>
+  </mj-column>
+</mj-section>
+<mj-section mj-class="wsl-border-x">
+  <mj-column>
+    <mj-table padding="0 10%">
+      <tr>
+        <th align="left">Testcase</th>
+        <th align="right">Match Rate</th>
+      </tr>
+      {{#elementsMissing}}
+      <tr>
+        <td align="left">{{ elementName }}</td>
+        <td align="right">Missing</td>
+      </tr>
+      {{/elementsMissing}} {{#elementsDifferent}}
+      <tr>
+        <td align="left">{{ elementName }}</td>
+        <td align="right">{{ elementScore }}&#37;</td>
+      </tr>
+      {{/elementsDifferent}} {{#elementsFresh}}
+      <tr>
+        <td align="left">{{ elementName }}</td>
+        <td align="right">New</td>
+      </tr>
+      {{/elementsFresh}}
+    </mj-table>
+  </mj-column>
+</mj-section>
+<mj-raw>
+  <!-- htmlmin:ignore -->
+  {{/hasComparisonTable}}
+  <!-- htmlmin:ignore -->
+</mj-raw>

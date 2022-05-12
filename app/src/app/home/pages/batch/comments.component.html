@@ -1,0 +1,98 @@
+<div class="wsl-box p-4">
+  <div>
+    <h2 class="pb-1 text-xl font-medium text-black dark:text-gray-300">
+      Comments
+    </h2>
+    <article
+      class="flex items-center justify-center p-2 text-sm text-gray-500 dark:text-gray-400"
+      *ngIf="comments.length === 0 && !isCommentFormShown">
+      This version has no comments yet.
+    </article>
+    <div class="py-2" *ngFor="let item of comments">
+      <app-home-comment
+        [meta]="item"
+        (commentAction)="commentAction($event)"></app-home-comment>
+      <div class="space-y-2 py-2">
+        <div class="ml-8" *ngFor="let reply of item.replies">
+          <app-home-comment
+            [meta]="reply"
+            (commentAction)="commentAction($event)"></app-home-comment>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="flex justify-center py-4" *ngIf="!isCommentFormShown">
+    <button class="wsl-btn-sm wsl-btn-muted" (click)="showCommentForm()">
+      Write a Comment
+    </button>
+  </div>
+  <div class="mx-auto max-w-screen-sm py-4" *ngIf="isCommentFormShown">
+    <h2 class="text-md pb-1 font-medium text-black dark:text-gray-300">
+      <label for="wsl-body">{{ fields.editorTitle }}</label>
+    </h2>
+    <p class="text-sm text-black dark:text-gray-300">
+      {{ fields.editorSubtitle }}
+    </p>
+    <app-alert [alert]="alert"></app-alert>
+    <form
+      class="wsl-form pt-4"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit(form.value)"
+      novalidate>
+      <div [hidden]="!fields.previewShow">
+        <blockquote class="border-l-2 border-gray-200 p-2 dark:border-gray-500">
+          <markdown
+            class="prose prose-sm prose-zinc dark:prose-invert"
+            [data]="form.controls.body.value"></markdown>
+        </blockquote>
+      </div>
+      <div [hidden]="fields.previewShow">
+        <textarea
+          class="wsl-input-field"
+          id="wsl-body"
+          rows="5"
+          aria-describedby="wsl-body-help"
+          formControlName="body"
+          name="body"></textarea>
+        <small
+          class="wsl-text-danger"
+          id="wsl-body-help"
+          [hidden]="form.controls.body.pristine || form.controls.body.valid">
+          Please provide more information in your comment.
+        </small>
+        <small
+          class="wsl-text-muted"
+          [hidden]="!form.controls.body.pristine && !form.controls.body.valid">
+          This field supports markdown format.
+        </small>
+      </div>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button class="wsl-btn-sm wsl-btn-primary" type="submit">
+            {{ fields.buttonSubmitText }}
+          </button>
+        </div>
+        <div class="wsl-form-links">
+          <button
+            class="wsl-btn-sm wsl-btn-muted"
+            type="button"
+            (click)="togglePreview()"
+            [hidden]="
+              !fields.buttonPreviewShow ||
+              !form.controls.body.valid ||
+              form.controls.body.pristine
+            ">
+            {{ fields.buttonPreviewText }}
+          </button>
+          <button
+            class="wsl-btn-sm wsl-btn-muted"
+            type="button"
+            (click)="cancelForm()"
+            [hidden]="!fields.buttonCancelShow">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

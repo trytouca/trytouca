@@ -1,0 +1,242 @@
+<app-notification></app-notification>
+<app-header-inside></app-header-inside>
+<div class="wsl-min-h-screen-1 mx-auto max-w-screen-lg space-y-4">
+  <div class="container mx-auto flex h-16 items-center justify-between px-4">
+    <div class="text-2xl font-medium text-black dark:text-gray-200">
+      Settings
+    </div>
+    <div class="flex space-x-2 print:hidden">
+      <div class="lg:hidden" wslDropdown>
+        <button
+          class="wsl-btn-sm wsl-btn-primary group wsl-dropdown-toggle flex h-full items-center space-x-1"
+          type="button"
+          id="dropdown-button-tabs"
+          aria-haspopup="true"
+          aria-expanded="false">
+          <ng-icon [name]="currentTab.icon" size="1.1rem"></ng-icon>
+          <b class="font-medium">{{ currentTab.name }}</b>
+          <ng-icon name="hero-chevron-down" class="opacity-50"></ng-icon>
+        </button>
+        <ul
+          class="wsl-dropdown-menu hidden w-48"
+          aria-labelledby="dropdown-button-tabs">
+          <ng-container *ngFor="let tab of tabs">
+            <li
+              *ngIf="!tab.hidden"
+              [ngClass]="{
+                'bg-gray-200 dark:bg-gray-700': currentTab.type === tab.type
+              }"
+              (click)="currentTab = tab"
+              class="wsl-dropdown-item flex items-center space-x-2">
+              <ng-icon
+                class="wsl-text-muted"
+                [name]="tab.icon"
+                size="1.1rem"></ng-icon>
+              <span>{{ tab.name }}</span>
+            </li>
+          </ng-container>
+          <div *ngIf="isPlatformAdmin">
+            <hr class="my-2 border border-gray-200 dark:border-gray-700" />
+            <div
+              class="py-1 px-1 text-xs uppercase text-gray-500 dark:text-gray-400">
+              Server Settings
+            </div>
+            <ng-container *ngFor="let tab of adminTabs">
+              <li
+                *ngIf="!tab.hidden"
+                [ngClass]="{
+                  'bg-gray-200 dark:bg-gray-700': currentTab.type === tab.type
+                }"
+                (click)="currentTab = tab"
+                class="wsl-dropdown-item flex items-center space-x-2">
+                <ng-icon
+                  class="wsl-text-muted"
+                  [name]="tab.icon"
+                  size="1.1rem"></ng-icon>
+                <span>{{ tab.name }}</span>
+              </li>
+            </ng-container>
+          </div>
+        </ul>
+      </div>
+      <button
+        class="wsl-btn-sm wsl-btn-primary hidden lg:block"
+        type="button"
+        routerLink="/~">
+        Back to Dashboard
+      </button>
+      <button
+        class="wsl-btn-sm wsl-btn-muted lg:hidden"
+        type="button"
+        routerLink="/~">
+        Dashboard
+      </button>
+    </div>
+  </div>
+  <div
+    class="mx-auto flex max-w-screen-lg lg:divide-x-2 lg:divide-gray-200 dark:lg:divide-gray-700">
+    <aside class="sticky top-24 hidden w-80 flex-col px-2 lg:flex lg:px-4">
+      <nav class="flex-grow space-y-2">
+        <ul class="space-y-1">
+          <ng-container *ngFor="let tab of tabs">
+            <li
+              class="wsl-page-nav-item"
+              [ngClass]="{ 'wsl-tab-active': tab.type === currentTab.type }"
+              *ngIf="!tab.hidden"
+              (click)="switchTab(tab)">
+              <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+              <p>{{ tab.name }}</p>
+            </li>
+          </ng-container>
+        </ul>
+        <div class="py-2" *ngIf="isPlatformAdmin">
+          <h3
+            class="border-t border-gray-200 py-2 text-xs font-semibold uppercase text-gray-500 dark:border-gray-700 dark:text-gray-400">
+            Server Settings
+          </h3>
+          <ul class="space-y-1">
+            <ng-container *ngFor="let tab of adminTabs">
+              <li
+                class="wsl-page-nav-item"
+                [ngClass]="{ 'wsl-tab-active': tab.type === currentTab.type }"
+                *ngIf="!tab.hidden"
+                (click)="switchTab(tab)">
+                <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+                <p>{{ tab.name }}</p>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+      </nav>
+    </aside>
+    <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-2 xl:px-4">
+      <div *ngIf="user && currentTab.type === TabType.Profile">
+        <app-settings-tab-profile
+          [userInfo]="user"
+          (confirmAccountDelete)="
+            confirmAccountDelete()
+          "></app-settings-tab-profile>
+      </div>
+      <div class="space-y-4" *ngIf="currentTab.type === TabType.ApiKeys">
+        <div class="wsl-box space-y-2 p-4" *ngIf="apiKeys">
+          <h2
+            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+            API Keys
+          </h2>
+          <div *ngFor="let key of apiKeys; let i = index">
+            <label class="wsl-text-muted mb-1 block text-sm font-medium">
+              Key {{ i + 1 }}
+            </label>
+            <div
+              class="flex items-center rounded-md border border-gray-300 bg-white p-2 shadow-sm dark:border-gray-600 dark:bg-gray-800">
+              <div class="flex-grow">
+                <span
+                  class="cursor-pointer font-mono text-sm text-gray-700 dark:text-gray-400"
+                  ngxClipboard
+                  [cbContent]="key.plain"
+                  (cbOnSuccess)="onCopy('API Key')">
+                  {{ key.value }}
+                </span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <button
+                  class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
+                  (click)="key.toggle()">
+                  <ng-icon
+                    class="wsl-text-muted"
+                    [name]="key.shown ? 'hero-eye-off' : 'hero-eye'"
+                    size="1.1rem"></ng-icon>
+                </button>
+                <button
+                  class="flex text-xs opacity-50 hover:opacity-100 focus:outline-none"
+                  (click)="regenerateApiKey(i)">
+                  <ng-icon
+                    class="wsl-text-muted"
+                    name="hero-refresh"
+                    size="1.1rem"></ng-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div>
+            <a
+              class="wsl-text-muted flex cursor-pointer items-center space-x-1 hover:text-gray-700 hover:dark:text-gray-200">
+              <ng-icon name="feather-plus-circle"></ng-icon>
+              <span class="text-xs">New Key</span>
+            </a>
+          </div>
+        </div>
+        <div>
+          <app-settings-tab-sessions
+            [sessions]="sessions"
+            (remove)="removeSessions($event)"></app-settings-tab-sessions>
+        </div>
+      </div>
+      <div *ngIf="currentTab.type === TabType.Preferences">
+        <div
+          class="wsl-box space-y-4 p-4"
+          *ngIf="getPreferences(false).length !== 0">
+          <h2
+            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+            Subscriptions
+          </h2>
+          <div *ngFor="let preference of getPreferences(false)">
+            <app-settings-checkbox
+              [data]="preference"
+              (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
+          </div>
+        </div>
+        <div
+          class="wsl-box space-y-4 p-4"
+          *ngIf="getPreferences(true).length !== 0">
+          <h2
+            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+            Experimental Features
+          </h2>
+          <div *ngFor="let preference of getPreferences(true)">
+            <app-settings-checkbox
+              [data]="preference"
+              (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="serverSettings?.stats && currentTab.type === TabType.Metrics">
+        <app-settings-tab-server
+          [stats]="serverSettings.stats"></app-settings-tab-server>
+      </div>
+      <div *ngIf="serverSettings?.events && currentTab.type === TabType.Audit">
+        <app-settings-tab-audit
+          [events]="serverSettings.events"
+          (copyToClipboard)="onCopy($event)"></app-settings-tab-audit>
+      </div>
+      <div
+        *ngIf="serverSettings?.accounts && currentTab.type === TabType.Users">
+        <app-settings-tab-users
+          [accounts]="serverSettings.accounts"
+          [user]="user"
+          (copyToClipboard)="onCopy($event)"
+          (updateAccount)="updateAccount($event)"></app-settings-tab-users>
+      </div>
+      <div
+        *ngIf="serverSettings?.stats && currentTab.type === TabType.Telemetry">
+        <div
+          class="wsl-box space-y-4 p-4"
+          *ngIf="getTelemetryPreferences().length !== 0">
+          <h2
+            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+            Telemetry
+          </h2>
+          <div *ngFor="let preference of getTelemetryPreferences()">
+            <app-settings-checkbox
+              [data]="preference"
+              (toggle)="
+                toggleTelemetryFeatureFlag($event)
+              "></app-settings-checkbox>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+<app-help></app-help>
+<app-footer></app-footer>
