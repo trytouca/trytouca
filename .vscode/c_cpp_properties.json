@@ -25,6 +25,19 @@
       "cStandard": "c11",
       "cppStandard": "c++17",
       "intelliSenseMode": "macos-clang-x64"
+    },
+    {
+      "name": "comparator",
+      "includePath": [],
+      "compileCommands": "${workspaceFolder}/cmp/local/build/compile_commands.json",
+      "defines": [],
+      "macFrameworkPath": [
+        "/Library/Developer/CommandLineTools/SDKs/MacOSX11.3.sdk/System/Library/Frameworks"
+      ],
+      "compilerPath": "/usr/bin/clang",
+      "cStandard": "c11",
+      "cppStandard": "c++17",
+      "intelliSenseMode": "macos-clang-x64"
     }
   ],
   "version": 4

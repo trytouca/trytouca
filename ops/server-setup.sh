@@ -12,7 +12,7 @@ FILE_COMPOSE="${DIR_PROJECT_ROOT}/config/docker/docker-compose.dev.yml"
 
 # shellcheck source=./common.sh
 # shellcheck disable=SC1091
-source "${DIR_PROJECT_ROOT}/devops/common.sh"
+source "${DIR_PROJECT_ROOT}/ops/common.sh"
 
 for dir in "backend" "cmp"; do
     mkdir -p "${DIR_LOGS}/${dir}"

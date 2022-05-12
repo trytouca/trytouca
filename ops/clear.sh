@@ -28,7 +28,7 @@ DIR_PROJECT_ROOT="$(dirname "${DIR_SCRIPT}")"
 
 # shellcheck source=./common.sh
 # shellcheck disable=SC1091
-source "${DIR_PROJECT_ROOT}/devops/common.sh"
+source "${DIR_PROJECT_ROOT}/ops/common.sh"
 
 # this script expects bash v4.4 or higher
 

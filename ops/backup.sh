@@ -6,13 +6,13 @@ ARG_VERBOSE=0
 DIR_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DIR_PROJECT_ROOT="$(dirname "${DIR_SCRIPT}")"
 DIR_BACKUP="${DIR_PROJECT_ROOT}/backup"
-FILE_COMPOSE="${DIR_PROJECT_ROOT}/devops/docker-compose.cloud.yml"
+FILE_COMPOSE="${DIR_PROJECT_ROOT}/ops/docker-compose.cloud.yml"
 
 # include common helper functions
 
 # shellcheck source=./common.sh
 # shellcheck disable=SC1091
-source "${DIR_PROJECT_ROOT}/devops/common.sh"
+source "${DIR_PROJECT_ROOT}/ops/common.sh"
 
 MONGO_USER=$(extract_secret "MONGO_USER")
 MONGO_PASS=$(extract_secret "MONGO_PASS")

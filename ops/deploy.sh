@@ -9,7 +9,7 @@ DIR_PROJECT_ROOT="$(dirname "$DIR_SCRIPT")"
 
 # shellcheck source=./common.sh
 # shellcheck disable=SC1091
-source "${DIR_PROJECT_ROOT}/devops/common.sh"
+source "${DIR_PROJECT_ROOT}/ops/common.sh"
 
 # show usage
 
@@ -96,7 +96,7 @@ fi
 
 # define deployment variables
 
-FILE_COMPOSE="${DIR_PROJECT_ROOT}/devops/docker-compose.prod.yml"
+FILE_COMPOSE="${DIR_PROJECT_ROOT}/ops/docker-compose.prod.yml"
 PKG_REGISTRY="${ARG_REGISTRY}"
 PKG_USERNAME="${ARG_USERNAME}"
 PKG_REGION="${ARG_REGION}"
