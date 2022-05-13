@@ -1,7 +1,7 @@
 version: "3"
 services:
   touca_api:
-    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/touca-api:1.4.0
+    image: touca/touca-api:1.4.0
     environment:
       ENV_FILE: prod
       AUTH_JWT_SECRET: <SECRET>
@@ -16,7 +16,7 @@ services:
       MONGO_PASS: toucapass
       WEBAPP_ROOT: http://localhost
     volumes:
-      - ./local/logs/api:/opt/local/logs/api
+      - ./logs/api:/opt/local/logs/api
     depends_on:
       - touca_minio
       - touca_mongo
@@ -26,7 +26,7 @@ services:
     restart: always
 
   touca_app:
-    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/touca-app:1.4.0
+    image: touca/touca-app:1.4.0
     depends_on:
       - touca_api
     ports:
@@ -34,12 +34,12 @@ services:
     restart: always
 
   touca_cmp:
-    image: 727591621296.dkr.ecr.us-east-2.amazonaws.com/touca-cmp:1.4.0
+    image: touca/touca-cmp:1.4.0
     environment:
       MINIO_USER: toucauser
       MINIO_PASS: toucapass
     volumes:
-      - ./local/logs/cmp:/opt/local/logs/cmp
+      - ./logs/cmp:/opt/local/logs/cmp
     depends_on:
       - touca_api
       - touca_minio
@@ -48,7 +48,7 @@ services:
   touca_redis:
     image: redis:6-alpine
     volumes:
-      - ./local/data/redis:/data
+      - ./data/redis:/data
     # ports:
     #  - 6379:6379
     restart: always
@@ -59,7 +59,7 @@ services:
       MINIO_ROOT_USER: toucauser
       MINIO_ROOT_PASSWORD: toucapass
     volumes:
-      - ./local/data/minio:/data
+      - ./data/minio:/data
     # ports:
     #   - 9000:9000
     command: server /data
@@ -71,9 +71,9 @@ services:
       MONGO_INITDB_ROOT_USERNAME: toucauser
       MONGO_INITDB_ROOT_PASSWORD: toucapass
     volumes:
-      - ./local/data/mongo:/data/db
-      - ./ops/mongo/mongod.conf:/etc/mongod.conf
-      - ./ops/mongo/entrypoint/:/docker-entrypoint-initdb.d/
+      - ./data/mongo:/data/db
+      - ./repo/ops/mongo/mongod.conf:/etc/mongod.conf
+      - ./repo/ops/mongo/entrypoint/:/docker-entrypoint-initdb.d/
     # ports:
     #   - 27017:27017
     command: --config /etc/mongod.conf
