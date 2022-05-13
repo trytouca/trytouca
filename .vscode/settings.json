@@ -1,5 +1,16 @@
 {
+  "cmake.configureOnOpen": false,
   "css.customData": [".vscode/css_custom_data.json"],
+  "java.completion.importOrder": ["java"],
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.checkstyle.configuration": "${workspaceFolder}/sdk/java/config/checkstyle/checkstyle.xml",
+  "java.checkstyle.version": "9.3",
+  "java.format.settings.url": "${workspaceFolder}/sdk/java/config/eclipse-java-google-style.xml",
+  "python.analysis.extraPaths": [
+    "${workspaceFolder}/api/e2e",
+    "${workspaceFolder}/sdk/python/examples/02_python_main_api",
+    "${workspaceFolder}/examples/python"
+  ],
   "cSpell.words": [
     "bdist",
     "capsys",
