@@ -17,16 +17,12 @@ log_info  () { __log 'info' '34' "$@"; }
 log_warning () { __log 'warn' '33' "$@"; }
 log_error () { __log 'error' '31' "$@"; return 1; }
 
-# basic helper funcitons
+question () { printf "\e[1;36m#\e[m $@\\n"; }
+answer () { printf "\e[1;33m\$\e[m "; }
+info () { printf "\e[1;32m-\e[m $@\\n"; }
+error () { printf "\e[1;31m-\e[m $@\\n"; return 1; }
 
-require_env_var () {
-    if [ $# -lt 1 ]; then return 1; fi
-    for env in "$@"; do
-        if [ -z "${!env}" ]; then
-            log_error "environment variable $env is not set"
-        fi
-    done
-}
+# basic helper funcitons
 
 has_function () {
   [ "$(type -t "$1")" == "function" ]
@@ -42,13 +38,6 @@ count_keys_if_set () {
         fi
     done
     echo $sum
-}
-
-docker_image_exists () {
-    if [ $# -ne 1 ]; then return 1; fi
-    local out
-    out=$(docker image inspect "$1" >/dev/null 2>&1 && echo "0" || echo "1")
-    [ "$out" == "0" ]
 }
 
 is_port_open () {
@@ -100,14 +89,6 @@ remove_file_if_exists () {
     fi
 }
 
-remove_docker_image_if_exists () {
-    if [ $# -ne 1 ]; then return 1; fi
-    if docker_image_exists "$1"; then
-        log_info "removing docker image $1"
-        docker rmi "$1"
-        log_info "removed docker image $1"
-    fi
-}
 
 run_compose () {
     if [ $# -eq 0 ]; then return 1; fi
@@ -125,64 +106,24 @@ run_compose () {
     return 0
 }
 
-extract_secret () {
-    if [ $# -ne 1 ]; then return 1; fi
-    if [ ! -f "${FILE_COMPOSE}" ]; then
-        log_warning "docker-compose file does not exist: ${FILE_COMPOSE}"
-        return 1
-    fi
-    local value=$(grep $1 ${FILE_COMPOSE} | awk '{print $2}')
-    echo $value
-}
-
-discord_notify () {
-    if [ $# -ne 1 ]; then return 1; fi
-    if [ ! -f "${FILE_COMPOSE}" ]; then
-        log_warning "docker-compose file does not exist: ${FILE_COMPOSE}"
-        return 1
-    fi
-    local discord_channel=$(extract_secret "DISCORD_CHANNEL")
-    local discord_token=$(extract_secret "DISCORD_TOKEN")
-    curl --silent \
-        -H "Authorization: Bot ${discord_token}" \
-        -H "User-Agent: touca_bot.sh (https://touca.io, v0.1)" \
-        -H "Content-Type: application/json" \
-        -d "{\"content\":\"${1}\"}" \
-        "${discord_channel}"
-}
-
 redeploy () {
-    log_info "stopping running containers"
-    run_compose "stop" >/dev/null
+    info "Stopping running containers"
+    run_compose stop >/dev/null 2>&1
 
-    log_info "removing previous containers"
-    run_compose "down" >/dev/null
+    info "Removing previous containers"
+    run_compose down >/dev/null 2>&1
 
-    log_debug "pruning docker resources"
-    if ! docker system prune --force >/dev/null; then
-        log_error "failed to prune docker resources"
+    info "Pruning docker resources"
+    if ! docker system prune --force >/dev/null 2>&1; then
+        error "Failed to prune docker resources"
     fi
-    log_info "pruned docker resources"
 
-    log_debug "pulling new docker images"
-    if ! run_compose "pull" >/dev/null; then
-        log_error "failed to pull new docker images"
-    fi
-    log_info "pulled new docker images"
+    info "Pulling new docker images"
+    run_compose pull >/dev/null 2>&1
 
-    log_debug "starting new docker containers"
-    if ! run_compose "up -d" >/dev/null; then
-        log_error "failed to start new containers"
-    fi
-    log_info "started new docker containers"
-
-    log_info "deployment is complete"
+    info "Starting new docker containers"
+    run_compose "up -d" >/dev/null 2>&1
 }
-
-question () { printf "\e[1;36m#\e[m $@\\n"; }
-answer () { printf "\e[1;33m\$\e[m "; }
-info () { printf "\e[1;32m-\e[m $@\\n"; }
-error () { printf "\e[1;31m-\e[m $@\\n"; return 1; }
 
 ask_name() {
     local default="stranger"
@@ -208,7 +149,6 @@ answer_is_yes () {
     local response
     read -r response
     response=${response:=y}
-    response=${response,,}
     [ "${response:0:1}" == 'y' ]
 }
 
