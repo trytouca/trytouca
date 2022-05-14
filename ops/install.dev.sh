@@ -9,7 +9,7 @@ ask_install_dir
 DIR_INSTALL=$OUTPUT
 
 # run_compose makes use of the following variables
-FILE_COMPOSE="$DIR_INSTALL/repo/ops/docker-compose.prod.yml"
+FILE_COMPOSE="$DIR_INSTALL/repo/ops/docker-compose.dev.yml"
 DIR_PROJECT_ROOT="$DIR_INSTALL"
 
 confirm_data_removal
@@ -19,8 +19,7 @@ mkdir -p "$DIR_INSTALL"
 git clone --single-branch --branch main https://github.com/trytouca/trytouca.git "$DIR_INSTALL/repo" &> /dev/null || true
 source "$DIR_INSTALL/repo/ops/common.sh"
 
-install_docker
-install_docker_compose
+check_prerequisite_commands "docker" "docker-compose"
 
 info "Stopping running containers"
 run_compose stop >/dev/null 2>&1
@@ -38,5 +37,4 @@ run_compose pull >/dev/null 2>&1
 info "Starting new docker containers"
 run_compose "up -d" >/dev/null 2>&1
 
-server_status_check
 info "Have a good day, $HUMAN_NAME!"

@@ -6,10 +6,6 @@ services:
       ENV_FILE: prod
       AUTH_JWT_SECRET: <SECRET>
       AUTH_COOKIE_SECRET: <SECRET>
-      MAIL_TRANSPORT_HOST: <SECRET>
-      MAIL_TRANSPORT_USER: <SECRET>
-      MAIL_TRANSPORT_PASS: <SECRET>
-      MAIL_TRANSPORT_PORT: 587
       MINIO_USER: toucauser
       MINIO_PASS: toucapass
       MONGO_USER: toucauser
