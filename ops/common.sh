@@ -178,3 +178,97 @@ redeploy () {
 
     log_info "deployment is complete"
 }
+
+question () { printf "\e[1;36m#\e[m $@\\n"; }
+answer () { printf "\e[1;33m\$\e[m "; }
+info () { printf "\e[1;32m-\e[m $@\\n"; }
+error () { printf "\e[1;31m-\e[m $@\\n"; return 1; }
+
+ask_name() {
+    local default="stranger"
+    info "Hi, Thank you for trying Touca!"
+    question "What is your first name?"
+    answer
+    read -r OUTPUT
+    OUTPUT=${OUTPUT:=$default}
+    info "Nice to meet you, $OUTPUT!"
+}
+
+ask_install_dir() {
+    local default="$HOME/.touca/server"
+    question "Where should we install Touca? (default is \e[1;36m$default\e[m)"
+    answer
+    read -r OUTPUT
+    OUTPUT=${OUTPUT:=$default}
+    info "Installing into ${OUTPUT}"
+}
+
+answer_is_yes () {
+    answer
+    local response
+    read -r response
+    response=${response:=y}
+    response=${response,,}
+    [ "${response:0:1}" == 'y' ]
+}
+
+confirm_data_removal() {
+    if [ ! -d "$DIR_INSTALL/data" ]; then return 0; fi
+    info "We found a previous install of Touca."
+    question "Should we remove it? [y/n] (default is yes)"
+    if answer_is_yes; then return 0; fi
+    info "This script only supports a fresh install."
+    info "Use upgrade.sh if you like to keep your current data."
+    info "bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/trytouca/trytouca/main/ops/upgrade.sh)\""
+    error "Have a good day, $HUMAN_NAME!"
+}
+
+install_docker() {
+    if is_command_installed "docker"; then return 0; fi
+    info "We use Docker to install Touca server. We could not find it on your system."
+    question "Would you like us to install it?"
+    if ! answer_is_yes; then
+        info "Welp, we cannot go ahead without Docker."
+        error "Have a good day, $HUMAN_NAME!"
+    fi
+    info "Setting up Docker"
+    sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo -E apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+    sudo apt update
+    sudo apt-cache policy docker-ce
+    sudo apt install -y docker-ce
+    sudo usermod -aG docker "${USER}"
+}
+
+install_docker_compose() {
+    if is_command_installed "docker-compose"; then return 0; fi
+    info "We use docker-compose to install Touca server. We could not find it on your system."
+    question "Would you like us to install it?"
+    if ! answer_is_yes; then
+        info "Welp, we cannot go ahead without docker-compose."
+        error "Have a good day, $HUMAN_NAME!"
+    fi
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose || true
+    sudo chmod +x /usr/local/bin/docker-compose
+}
+
+server_status_check() {
+    info "Checking if containers are up"
+    local connected=false
+    for num in {1..10}; do
+        sleep 5
+        if [[ $(curl -s -X GET "http://localhost/api/platform") == *"\"ready\":true"* ]]; then
+            connected=true
+            break
+        fi
+        info "Checking... (attempt $num/10)"
+    done
+    if [ $connected = false ]; then
+        info "Touca server did not pass our health checks in time."
+        info "Feel free to rerun this script to make sure everything is fine."
+        error "Have a good day, $HUMAN_NAME!"
+    fi
+    info "Touca server is up and running."
+    info "Browse to http://localhost/ to complete the installation."
+}

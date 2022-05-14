@@ -1,6 +1,6 @@
 # ---- builder stage ----
 
-FROM node:16-alpine AS builder_dev
+FROM node:18-alpine AS builder_dev
 
 COPY api /home
 
@@ -12,7 +12,7 @@ RUN apk add --no-cache yarn \
 
 # ---- builder stage ----
 
-FROM node:16-alpine AS builder
+FROM node:18-alpine AS builder
 
 
 COPY --from=builder_dev /home/dist              /home/dist
@@ -26,7 +26,7 @@ RUN apk add --no-cache yarn \
 
 # ---- production image ----
 
-FROM node:16-alpine
+FROM node:18-alpine
 
 COPY --from=builder /home/dist          /opt/touca/dist
 COPY --from=builder /home/env           /opt/touca/env

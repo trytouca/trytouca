@@ -1,4 +1,4 @@
-FROM nginx:1.18-alpine
+FROM nginx:1.21-alpine
 
 LABEL maintainer="hello@touca.io"
 LABEL org.opencontainers.image.title="touca-app"
