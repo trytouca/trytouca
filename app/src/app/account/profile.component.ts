@@ -313,8 +313,8 @@ export class ProfileComponent implements OnDestroy {
         return this.apiService.extractError(err, [
           [
             403,
-            'refusing to delete account: platform owner',
-            'Your account owns this platform. It cannot be deleted.'
+            'refusing to delete account: server owner',
+            'Your account owns this server. It cannot be deleted.'
           ],
           [
             403,
