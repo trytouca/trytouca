@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 cmake_minimum_required(VERSION 3.14...3.21 FATAL_ERROR)
 
@@ -129,6 +129,7 @@ if (TOUCA_INSTALL)
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 COMPONENT Touca_Development
     )
+    install(FILES ${TOUCA_CLIENT_ROOT_DIR}/LICENSE DESTINATION licenses)
     install(DIRECTORY "${TOUCA_CLIENT_ROOT_DIR}/include/touca"
             DESTINATION include MESSAGE_NEVER FILES_MATCHING PATTERN "*.h*")
     install(DIRECTORY "${CMAKE_BINARY_DIR}/generated/touca"
