@@ -1,10 +1,13 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/devkit/comparison.hpp"
 
 #include <chrono>
 
-#include "nlohmann/json.hpp"
+#include "rapidjson/document.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
 #include "touca/core/filesystem.hpp"
 #include "touca/core/types.hpp"
 
@@ -305,52 +308,83 @@ std::string Cellar::stringify(const detail::internal_type type) const {
   }
 }
 
-nlohmann::ordered_json Cellar::json() const {
-  nlohmann::ordered_json rjCommon = nlohmann::json::array();
-  for (const auto& kv : common) {
-    rjCommon.push_back(build_json_common(kv.first, kv.second));
-  }
-  auto rjMissing = build_json_solo(missing, Cellar::Category::Missing);
-  auto rjFresh = build_json_solo(fresh, Cellar::Category::Fresh);
-  return nlohmann::ordered_json({
-      {"commonKeys", rjCommon},
-      {"missingKeys", rjMissing},
-      {"newKeys", rjFresh},
-  });
+rapidjson::Value Cellar::json(
+    rapidjson::Document::AllocatorType& allocator) const {
+  auto rj_common = build_json_common(common, allocator);
+  auto rj_missing = build_json_solo(missing, Category::Missing, allocator);
+  auto rj_fresh = build_json_solo(fresh, Category::Fresh, allocator);
+  rapidjson::Value result(rapidjson::kObjectType);
+  result.AddMember("commonKeys", rj_common, allocator);
+  result.AddMember("missingKeys", rj_missing, allocator);
+  result.AddMember("newKeys", rj_fresh, allocator);
+  return result;
 }
 
-nlohmann::ordered_json Cellar::build_json_solo(
-    const Cellar::KeyMap& keyMap, const Cellar::Category category) const {
-  nlohmann::ordered_json elements = nlohmann::json::array();
+rapidjson::Value Cellar::build_json_solo(const Cellar::KeyMap& keyMap,
+                                         const Cellar::Category category,
+                                         RJAllocator& allocator) const {
+  rapidjson::Value elements(rapidjson::kArrayType);
   for (const auto& kv : keyMap) {
-    const auto& type = stringify(kv.second.type());
-    elements.push_back(nlohmann::ordered_json(
-        {{"name", kv.first},
-         {category == Cellar::Category::Fresh ? "srcType" : "dstType", type},
-         {category == Cellar::Category::Fresh ? "srcValue" : "dstValue",
-          kv.second.to_string()}}));
+    rapidjson::Value item(rapidjson::kObjectType);
+    item.AddMember("name", kv.first, allocator);
+    if (category == Category::Fresh) {
+      item.AddMember("srcType", stringify(kv.second.type()), allocator);
+      item.AddMember("srcValue", kv.second.to_string(), allocator);
+    } else {
+      item.AddMember("dstType", stringify(kv.second.type()), allocator);
+      item.AddMember("dstValue", kv.second.to_string(), allocator);
+    }
+    elements.PushBack(item, allocator);
   }
   return elements;
 }
 
-nlohmann::ordered_json Cellar::build_json_common(
-    const std::string& key, const TypeComparison& second) const {
-  nlohmann::ordered_json item({
-      {"name", key},
-      {"score", second.score},
-      {"srcType", stringify(second.srcType)},
-      {"srcValue", second.srcValue},
-  });
-  if (detail::internal_type::unknown != second.dstType) {
-    item["dstType"] = stringify(second.dstType);
+rapidjson::Value Cellar::build_json_common(
+    const ComparisonMap& elements,
+    rapidjson::Document::AllocatorType& allocator) const {
+  rapidjson::Value items(rapidjson::kArrayType);
+  for (const auto& kv : elements) {
+    const auto& key = kv.first;
+    const auto& second = kv.second;
+    rapidjson::Value rjDstType;
+    rapidjson::Value rjDstValue;
+    rapidjson::Value rjDesc(rapidjson::kArrayType);
+
+    rapidjson::Value rjName{key, allocator};
+    rapidjson::Value rjScore{second.score};
+    rapidjson::Value rjSrcType{stringify(second.srcType), allocator};
+    rapidjson::Value rjSrcValue{second.srcValue, allocator};
+    if (detail::internal_type::unknown != second.dstType) {
+      rjDstType.Set(stringify(second.dstType), allocator);
+    }
+    if (MatchType::Perfect != second.match) {
+      rjDstValue.Set(second.dstValue, allocator);
+    }
+    if (!second.desc.empty()) {
+      for (const auto& entry : second.desc) {
+        rapidjson::Value rjEntry(rapidjson::kStringType);
+        rjEntry.SetString(entry, allocator);
+        rjDesc.PushBack(rjEntry, allocator);
+      }
+    }
+
+    rapidjson::Value item(rapidjson::kObjectType);
+    item.AddMember("name", rjName, allocator);
+    item.AddMember("score", rjScore, allocator);
+    item.AddMember("srcType", rjSrcType, allocator);
+    item.AddMember("srcValue", rjSrcValue, allocator);
+    if (detail::internal_type::unknown != second.dstType) {
+      item.AddMember("dstType", rjDstType, allocator);
+    }
+    if (MatchType::Perfect != second.match) {
+      item.AddMember("dstValue", rjDstValue, allocator);
+    }
+    if (!second.desc.empty()) {
+      item.AddMember("desc", rjDesc, allocator);
+    }
+    items.PushBack(item, allocator);
   }
-  if (MatchType::Perfect != second.match) {
-    item["dstValue"] = second.dstValue;
-  }
-  if (!second.desc.empty()) {
-    item["desc"] = second.desc;
-  }
-  return item;
+  return items;
 }
 
 TestcaseComparison::TestcaseComparison(const Testcase& src, const Testcase& dst)
@@ -369,26 +403,32 @@ TestcaseComparison compare(const Testcase& src, const Testcase& dst) {
   return TestcaseComparison(src, dst);
 }
 
-nlohmann::ordered_json TestcaseComparison::Overview::json() const {
-  return nlohmann::ordered_json({
-      {"keysCountCommon", keysCountCommon},
-      {"keysCountFresh", keysCountFresh},
-      {"keysCountMissing", keysCountMissing},
-      {"keysScore", keysScore},
-      {"metricsCountCommon", metricsCountCommon},
-      {"metricsCountFresh", metricsCountFresh},
-      {"metricsCountMissing", metricsCountMissing},
-      {"metricsDurationCommonDst", metricsDurationCommonDst},
-      {"metricsDurationCommonSrc", metricsDurationCommonSrc},
-  });
+rapidjson::Value TestcaseComparison::Overview::json(
+    rapidjson::Document::AllocatorType& allocator) const {
+  rapidjson::Value out(rapidjson::kObjectType);
+  out.AddMember("keysCountCommon", keysCountCommon, allocator);
+  out.AddMember("keysCountFresh", keysCountFresh, allocator);
+  out.AddMember("keysCountMissing", keysCountMissing, allocator);
+  out.AddMember("keysScore", keysScore, allocator);
+  out.AddMember("metricsCountCommon", metricsCountCommon, allocator);
+  out.AddMember("metricsCountFresh", metricsCountFresh, allocator);
+  out.AddMember("metricsCountMissing", metricsCountMissing, allocator);
+  out.AddMember("metricsDurationCommonDst", metricsDurationCommonDst,
+                allocator);
+  out.AddMember("metricsDurationCommonSrc", metricsDurationCommonSrc,
+                allocator);
+  return out;
 }
 
-nlohmann::ordered_json TestcaseComparison::json() const {
-  return nlohmann::ordered_json({{"src", _srcMeta.json()},
-                                 {"dst", _dstMeta.json()},
-                                 {"assertions", _assumptions.json()},
-                                 {"results", _results.json()},
-                                 {"metrics", _metrics.json()}});
+rapidjson::Value TestcaseComparison::json(
+    rapidjson::Document::AllocatorType& allocator) const {
+  rapidjson::Value out(rapidjson::kObjectType);
+  out.AddMember("src", _srcMeta.json(allocator), allocator);
+  out.AddMember("dst", _dstMeta.json(allocator), allocator);
+  out.AddMember("assertions", _assumptions.json(allocator), allocator);
+  out.AddMember("results", _results.json(allocator), allocator);
+  out.AddMember("metrics", _metrics.json(allocator), allocator);
+  return out;
 }
 
 double TestcaseComparison::score_results() const {

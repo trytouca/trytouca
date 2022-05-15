@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/core/types.hpp"
 
@@ -410,14 +410,10 @@ TEST_CASE("Simple Data Types") {
       const auto& cmp = compare(value, itype);
 
       CHECK(internal_type::array == itype.type());
-      CHECK(
-          itype.to_string() ==
-          R"([1.100000023841858,1.2000000476837158,1.2999999523162842,1.399999976158142])");
+      CHECK(itype.to_string() == R"([1.1,1.2,1.299,1.399])");
       CHECK(internal_type::array == cmp.srcType);
       CHECK(internal_type::unknown == cmp.dstType);
-      CHECK(
-          cmp.srcValue ==
-          R"([1.100000023841858,1.2000000476837158,1.2999999523162842,1.399999976158142])");
+      CHECK(cmp.srcValue == R"([1.1,1.2,1.299,1.399])");
       CHECK(cmp.dstValue == "");
       CHECK(MatchType::Perfect == cmp.match);
       CHECK(cmp.score == 1.0);
