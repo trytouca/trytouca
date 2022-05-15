@@ -1,11 +1,12 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 include(GNUInstallDirs)
 
+touca_find_package("AWSSDK")
 touca_find_package("cxxopts")
 touca_find_package("fmt")
+touca_find_package("spdlog")
 touca_find_package("touca")
-touca_find_package("AWSSDK")
 
 add_executable(
     touca_cmp

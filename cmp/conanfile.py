@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 from conans import ConanFile, CMake
 
@@ -6,18 +6,12 @@ from conans import ConanFile, CMake
 class ToucaConan(ConanFile):
 
     name = "touca_cmp"
-    homepage = "https://touca.io"
-    description = "Touca server component for comparing submitted test results"
-    topics = (
-        "regression-testing",
-        "snapshot-testing",
-        "test-framework",
-        "test-automation",
-    )
-    url = "https://touca.io/docs"
-    license = "Private"
-    version = "1.4.0"
-    author = "Pejman Ghorbanzade <pejman@touca.io>"
+    homepage = "https://github.com/trytouca/trytouca/tree/main/cmp"
+    description = "Touca Comparator"
+    topics = ("regression-testing", "test-framework", "test-automation")
+    license = "Apache-2.0"
+    version = "1.5.2"
+    author = "Touca, Inc. <hello@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_find_package"
 
@@ -27,7 +21,7 @@ class ToucaConan(ConanFile):
         self.requires("fmt/8.0.1")
         self.requires("openssl/1.1.1j")
         self.requires("spdlog/1.9.2")
-        self.requires("touca/1.4.2")
+        self.requires("touca/1.5.2")
 
     def source(self):
         self.run("git clone https://github.com/trytouca/touca.git")
@@ -35,9 +29,9 @@ class ToucaConan(ConanFile):
     def configure(self):
         self.options["aws-sdk-cpp"].s3 = True
         self.options["spdlog"].header_only = True
-        self.options["touca"].shared = True
+        self.options["touca"].shared = False
         self.options["touca"].with_tests = False
-        self.options["touca"].with_utils = False
+        self.options["touca"].with_cli = False
         self.options["touca"].with_framework = False
 
     def _configure_cmake(self):
