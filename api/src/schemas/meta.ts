@@ -1,6 +1,7 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import mongoose from 'mongoose'
+import { v4 as uuidv4 } from 'uuid'
 
 const metaSchema = new mongoose.Schema(
   {
@@ -24,9 +25,51 @@ const metaSchema = new mongoose.Schema(
       required: false,
       type: Number
     },
+    contact: {
+      required: false,
+      type: {
+        company: {
+          required: false,
+          type: String
+        },
+        email: {
+          required: true,
+          type: String
+        },
+        name: {
+          required: true,
+          type: String
+        }
+      }
+    },
+    mail: {
+      required: false,
+      type: {
+        host: {
+          required: false,
+          type: String
+        },
+        pass: {
+          required: false,
+          type: String
+        },
+        port: {
+          required: false,
+          type: Number
+        },
+        user: {
+          required: false,
+          type: String
+        }
+      }
+    },
     telemetry: {
       required: false,
       type: Boolean
+    },
+    uuid: {
+      default: () => uuidv4(),
+      type: String
     }
   },
   {
@@ -40,7 +83,19 @@ export interface IMetaDocument extends mongoose.Document {
   cmpAvgProcessingTime: number
   cmpNumCollectionJobs: number
   cmpNumProcessingJobs: number
+  contact: {
+    company: string
+    email: string
+    name: string
+  }
+  mail: {
+    host: string
+    pass: string
+    port: number
+    user: string
+  }
   telemetry: boolean
+  uuid: string
 }
 
 interface IMetaModel extends mongoose.Model<IMetaDocument> {}

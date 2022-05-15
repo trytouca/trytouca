@@ -7,13 +7,13 @@
       Touca is ready!
     </h2>
     <p class="text-center text-sm text-black dark:text-gray-300">
-      Take a moment to configure your self-hosted Touca instance.
+      Take a moment to configure your self-hosted instance.
     </p>
     <hr class="border-2 border-gray-100 dark:border-gray-700" />
     <form
       class="wsl-form flex-grow px-2 py-4"
       [formGroup]="installForm"
-      (ngSubmit)="onSubmit(installForm.value)"
+      (ngSubmit)="submitContactInfo(installForm.value)"
       *ngIf="tabType === TabType.UserInfo"
       novalidate>
       <app-alert [alert]="alert" *ngIf="alert"></app-alert>

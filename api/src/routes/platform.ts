@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import express from 'express'
 import * as ev from 'express-validator'
@@ -7,7 +7,9 @@ import { platformAccountDelete } from '@/controllers/platform/accountDelete'
 import { platformAccountPopulate } from '@/controllers/platform/accountPopulate'
 import { platformAccountSuspend } from '@/controllers/platform/accountSuspend'
 import { platformAccountUpdate } from '@/controllers/platform/accountUpdate'
+import { platformConfig } from '@/controllers/platform/config'
 import { platformHealth } from '@/controllers/platform/health'
+import { platformInstall } from '@/controllers/platform/install'
 import { platformStats } from '@/controllers/platform/stats'
 import { platformUpdate } from '@/controllers/platform/update'
 import * as middleware from '@/middlewares'
@@ -36,13 +38,79 @@ const router = express.Router()
 router.get('/', promisable(platformHealth, 'check platform health'))
 
 /**
- * @api [patch] /platform
+ * @api [post] /platform/install
+ *    tags:
+ *      - Platform
+ *    summary: 'Register Server'
+ *    operationId: platform_install
+ *    description:
+ *      Adds contact information to this server instance.
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - email
+ *              - name
+ *            properties:
+ *              company:
+ *                type: string
+ *              email:
+ *                type: string
+ *              name:
+ *                type: string
+ *      required: true
+ *    responses:
+ *      204:
+ *        description: 'Server registered'
+ *      400:
+ *        $ref: '#/components/responses/RequestInvalid'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
+ */
+router.post(
+  '/install',
+  express.json(),
+  promisable(platformInstall, 'register server')
+)
+
+/**
+ * @api [get] /platform/config
+ *    tags:
+ *      - Platform
+ *    summary: 'Get Server Settings'
+ *    operationId: 'platform_config'
+ *    description:
+ *      Reports server settings.
+ *      User initiating the request must be authenticated.
+ *      User initiating the request must be a platform admin.
+ *    responses:
+ *      200:
+ *        description:
+ *          Server settings
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/CT_PlatformConfig'
+ */
+router.get(
+  '/config',
+  middleware.isAuthenticated,
+  middleware.isPlatformAdmin,
+  promisable(platformConfig, 'get platform configuration')
+)
+
+/**
+ * @api [patch] /platform/config
  *    tags:
  *      - Platform
  *    summary: 'Update Server Settings'
  *    operationId: platform_update
  *    description:
  *      Updates server settings.
+ *      User initiating the request must be authenticated.
+ *      User initiating the request must be a platform admin.
  *    requestBody:
  *      content:
  *        application/json:
@@ -55,10 +123,18 @@ router.get('/', promisable(platformHealth, 'check platform health'))
  *    responses:
  *      204:
  *        description: 'Server settings was updated.'
+ *      400:
+ *        $ref: '#/components/responses/RequestInvalid'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
  */
 router.patch(
-  '/',
+  '/config',
   express.json(),
+  middleware.isAuthenticated,
+  middleware.isPlatformAdmin,
   promisable(platformUpdate, 'update platform settings')
 )
 
@@ -80,6 +156,10 @@ router.patch(
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/CT_PlatformStatsResponse'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      403:
+ *        $ref: '#/components/responses/Forbidden'
  */
 router.get(
   '/stats',

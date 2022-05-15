@@ -1010,6 +1010,48 @@ export type ElementComparisonResponse = {
 }
 
 /**
+ * @schema CT_PlatformConfig
+ *  additionalProperties: false
+ *  type: object
+ *  properties:
+ *    contact:
+ *      additionalProperties: false
+ *      type: object
+ *      properties:
+ *        company:
+ *          type: string
+ *        email:
+ *          type: string
+ *        name:
+ *          type: string
+ *    mail:
+ *      additionalProperties: false
+ *      type: object
+ *      properties:
+ *        host:
+ *          type: string
+ *        pass:
+ *          type: string
+ *        port:
+ *          type: string
+ *        user:
+ *          type: string
+ */
+export type PlatformConfig = {
+  contact?: {
+    company: string
+    email: string
+    name: string
+  }
+  mail?: {
+    host: string
+    pass: string
+    port: number
+    user: string
+  }
+}
+
+/**
  * @schema CT_PlatformStatus
  *  additionalProperties: false
  *  type: object

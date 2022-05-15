@@ -1,0 +1,74 @@
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+
+import { NextFunction, Request, Response } from 'express'
+import { v4 as uuidv4 } from 'uuid'
+
+import { relay } from '@/models/relay'
+import { wslFindByRole } from '@/models/user'
+import { MetaModel } from '@/schemas/meta'
+import { NodeModel } from '@/schemas/node'
+import { EPlatformRole } from '@/types/commontypes'
+import { config } from '@/utils/config'
+import logger from '@/utils/logger'
+import { mailUser } from '@/utils/mailer'
+import { rclient } from '@/utils/redis'
+import { tracker } from '@/utils/tracker'
+
+export async function platformInstall(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const contact = {
+    company: req.body.company,
+    email: req.body.email,
+    name: req.body.name,
+    uuid: uuidv4()
+  }
+  if (['company', 'email', 'name', 'uuid'].every((key) => !contact[key])) {
+    return next({
+      status: 400,
+      errors: ['invalid request']
+    })
+  }
+
+  if ((await MetaModel.countDocuments()) === 0) {
+    await MetaModel.create({})
+    logger.info('created meta document')
+  }
+
+  if (config.isCloudHosted) {
+    logger.info('new self-hosted install')
+    const owners = await wslFindByRole(EPlatformRole.Owner)
+    const user = {
+      _id: contact.uuid,
+      email: contact.email,
+      fullname: contact.name,
+      platformRole: EPlatformRole.User,
+      username: contact.uuid
+    }
+    await NodeModel.create(contact)
+    tracker
+      .create(user, { name: user.fullname })
+      .then(() =>
+        tracker.track(user, 'self-hosted install', { company: contact.company })
+      )
+    mailUser(owners[0], 'New Self-Hosted Instance', 'user-install', contact)
+    return res.status(204).send()
+  }
+
+  if (await MetaModel.countDocuments({ $exists: { contact: true } })) {
+    return next({
+      status: 403,
+      errors: ['server is registered']
+    })
+  }
+
+  await MetaModel.updateOne({}, { $set: { contact } })
+  const response = await relay('/install', JSON.stringify(contact))
+  logger.info('registered server')
+  rclient.removeCached('platform-config')
+  rclient.removeCached('platform-health')
+
+  return res.status(response.status).send()
+}

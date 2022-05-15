@@ -282,6 +282,20 @@ export type ElementComparisonResponse = {
   src: ElementComparisonItem;
 };
 
+export type PlatformConfig = {
+  contact?: {
+    company: string;
+    email: string;
+    name: string;
+  };
+  mail?: {
+    host: string;
+    pass: string;
+    port: number;
+    user: string;
+  };
+};
+
 export type PlatformStatus = {
   configured: boolean;
   mail: boolean;
