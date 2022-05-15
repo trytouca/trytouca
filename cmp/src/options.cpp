@@ -1,11 +1,11 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/cmp/options.hpp"
 
 #include "cxxopts.hpp"
 #include "fmt/format.h"
 #include "rapidjson/document.h"
-#include "touca/devkit/filesystem.hpp"
+#include "touca/core/filesystem.hpp"
 #include "touca/devkit/utils.hpp"
 
 cxxopts::Options config_options_cmd() {
@@ -74,19 +74,20 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options) {
 
   // load configuration file in memory
 
-  const auto& config_file_content = touca::load_string_file(config_file_path);
+  const auto& config_file_content =
+      touca::detail::load_string_file(config_file_path);
 
   // attempt to parse config-file
 
-  rapidjson::Document document;
-  if (document.Parse<0>(config_file_content.c_str()).HasParseError()) {
+  rapidjson::Document parsed;
+  if (parsed.Parse<0>(config_file_content.c_str()).HasParseError()) {
     touca::print_error("failed to parse configuration file\n");
     return false;
   }
 
   // we expect content to be a json object
 
-  if (!document.IsObject()) {
+  if (!parsed.IsObject()) {
     touca::print_error("expected configuration file to be a json object\n");
     return false;
   }
@@ -96,7 +97,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options) {
   std::vector<char*> copts_args;
   copts_args.emplace_back(argv[0]);
 
-  for (const auto& rjMember : document.GetObject()) {
+  for (const auto& rjMember : parsed.GetObject()) {
     const auto& key = rjMember.name.GetString();
     if (!rjMember.value.IsString()) {
       touca::print_warning("ignoring option \"{}\" in configuration file.\n",

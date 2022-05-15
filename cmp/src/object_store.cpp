@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/cmp/object_store.hpp"
 
@@ -8,7 +8,8 @@
 #include "aws/s3/model/GetObjectRequest.h"
 #include "fmt/core.h"
 #include "touca/cmp/logger.hpp"
-#include "touca/devkit/testcase.hpp"
+#include "touca/core/testcase.hpp"
+#include "touca/devkit/deserialize.hpp"
 
 MinioClient::MinioClient(const Options& options) {
   setenv("AWS_REGION", options.minio_region.c_str(), true);
@@ -33,9 +34,9 @@ MinioClient::MinioClient(const Options& options) {
 
   Aws::Auth::AWSCredentials aws_credentials(options.minio_user,
                                             options.minio_pass);
-  const auto policy = Aws::Client::AWSAuthV4Signer::PayloadSigningPolicy::Never;
-  _aws_client = std::make_unique<Aws::S3::S3Client>(aws_credentials, aws_config,
-                                                    policy, false);
+  _aws_client = std::make_unique<Aws::S3::S3Client>(
+      aws_credentials, aws_config,
+      Aws::Client::AWSAuthV4Signer::PayloadSigningPolicy::Never, false);
 }
 
 MinioClient::~MinioClient() { Aws::ShutdownAPI(*_aws_sdk_options); }
@@ -93,7 +94,8 @@ std::shared_ptr<touca::Testcase> ObjectStore::get_message(
   }
 
   try {
-    return std::make_shared<touca::Testcase>(buffer);
+    return std::make_shared<touca::Testcase>(
+        touca::deserialize_testcase(buffer));
   } catch (const std::exception& ex) {
     touca::log_warn("{}: failed to parse object: {}", key, ex.what());
   }

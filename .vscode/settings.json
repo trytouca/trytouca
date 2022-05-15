@@ -8,6 +8,7 @@
   "java.format.settings.url": "${workspaceFolder}/sdk/java/config/eclipse-java-google-style.xml",
   "python.analysis.extraPaths": [
     "${workspaceFolder}/api/e2e",
+    "${workspaceFolder}/sdk/python/examples/01_python_minimal",
     "${workspaceFolder}/sdk/python/examples/02_python_main_api",
     "${workspaceFolder}/examples/python"
   ],
@@ -28,9 +29,9 @@
     "libcxx",
     "libstdc",
     "mkdir",
-    "nlohmann",
     "ossrh",
     "Popen",
+    "rapidjson",
     "rglob",
     "sdist",
     "setuptools",

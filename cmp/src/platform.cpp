@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/cmp/platform.hpp"
 
@@ -6,15 +6,15 @@
 #include "rapidjson/writer.h"
 #include "touca/cmp/logger.hpp"
 #include "touca/cmp/object_store.hpp"
+#include "touca/core/filesystem.hpp"
 #include "touca/devkit/comparison.hpp"
 #include "touca/devkit/platform.hpp"
-#include "touca/devkit/utils.hpp"
 
 MessageJob::MessageJob(const std::string& batchId, const std::string& messageId)
     : Job(), _batchId(batchId), _messageId(messageId) {}
 
 std::string MessageJob::desc() const {
-  return touca::format("m:{}", _messageId);
+  return touca::detail::format("m:{}", _messageId);
 }
 
 bool MessageJob::process(const Options& options) const {
@@ -46,7 +46,7 @@ bool MessageJob::process(const Options& options) const {
   touca::ApiUrl api(options.api_url);
   touca::Platform platform(api);
 
-  const auto url = touca::format("/cmp/message/{}", _messageId);
+  const auto url = touca::detail::format("/cmp/message/{}", _messageId);
   if (!platform.cmp_submit(url, output)) {
     touca::log_warn("{}: failed to submit message: {}", name,
                     platform.get_error());
@@ -57,7 +57,7 @@ bool MessageJob::process(const Options& options) const {
 }
 
 std::string ComparisonJob::desc() const {
-  return touca::format("c:{}", _jobId);
+  return touca::detail::format("c:{}", _jobId);
 }
 
 bool ComparisonJob::process(const Options& options) const {
@@ -72,12 +72,12 @@ bool ComparisonJob::process(const Options& options) const {
 
   const auto& srcName = src->metadata().describe();
   const auto& dstName = dst->metadata().describe();
-  const auto& tuple = touca::format("{}_{}", srcName, dstName);
+  const auto& tuple = touca::detail::format("{}_{}", srcName, dstName);
   touca::log_debug("{}: processing comparison job", tuple);
 
   // perform comparison
 
-  const auto& result = src->compare(dst);
+  touca::TestcaseComparison result(*src, *dst);
 
   // create json output to be posted to backend
 
@@ -98,7 +98,7 @@ bool ComparisonJob::process(const Options& options) const {
   touca::ApiUrl api(options.api_url);
   touca::Platform platform(api);
 
-  const auto url = touca::format("/cmp/job/{}", _jobId);
+  const auto url = touca::detail::format("/cmp/job/{}", _jobId);
   if (!platform.cmp_submit(url, output)) {
     touca::log_warn("{}: failed to submit comparison result: {}", tuple,
                     platform.get_error());
@@ -118,30 +118,30 @@ std::vector<std::unique_ptr<Job>> retrieveJobs(const std::string& api_url) {
     return {};
   }
 
-  rapidjson::Document doc;
-  if (doc.Parse<0>(body.c_str()).HasParseError()) {
+  rapidjson::Document parsed;
+  if (parsed.Parse<0>(body.c_str()).HasParseError()) {
     touca::log_error("backend response for list of jobs is ill-formed");
     return {};
   }
 
-  if (!doc.HasMember("messages") || !doc["messages"].IsArray()) {
+  if (!parsed.HasMember("messages") || !parsed["messages"].IsArray()) {
     touca::log_error("backend response has no field `messages`");
     return {};
   }
 
-  if (!doc.HasMember("comparisons") || !doc["comparisons"].IsArray()) {
+  if (!parsed.HasMember("comparisons") || !parsed["comparisons"].IsArray()) {
     touca::log_error("backend response has no field `comparisons`");
     return {};
   }
 
   std::vector<std::unique_ptr<Job>> jobs;
 
-  for (const auto& item : doc["messages"].GetArray()) {
+  for (const auto& item : parsed["messages"].GetArray()) {
     jobs.push_back(std::make_unique<MessageJob>(item["batchId"].GetString(),
                                                 item["messageId"].GetString()));
   }
 
-  for (const auto& item : doc["comparisons"].GetArray()) {
+  for (const auto& item : parsed["comparisons"].GetArray()) {
     jobs.push_back(std::make_unique<ComparisonJob>(
         item["jobId"].GetString(), item["dstBatchId"].GetString(),
         item["dstMessageId"].GetString(), item["srcBatchId"].GetString(),
