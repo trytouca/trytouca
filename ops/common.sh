@@ -18,7 +18,7 @@ log_warning () { __log 'warn' '33' "$@"; }
 log_error () { __log 'error' '31' "$@"; return 1; }
 
 question () { printf "\e[1;36m#\e[m $@\\n"; }
-answer () { printf "\e[1;33m\$\e[m "; }
+answer () { printf "\e[1;33m>\e[m "; }
 info () { printf "\e[1;32m-\e[m $@\\n"; }
 error () { printf "\e[1;31m-\e[m $@\\n"; return 1; }
 
@@ -50,7 +50,7 @@ is_port_open () {
 is_command_installed () {
     if [ $# -eq 0 ]; then return 1; fi
     for cmd in "$@"; do
-        if ! hash "$cmd" 2>/dev/null; then
+        if ! command -v "$cmd" 2>/dev/null; then
             log_warning "command $cmd is not installed"
             return 1
         fi
@@ -108,21 +108,21 @@ run_compose () {
 
 redeploy () {
     info "Stopping running containers"
-    run_compose stop >/dev/null 2>&1
+    run_compose stop
 
     info "Removing previous containers"
-    run_compose down >/dev/null 2>&1
+    run_compose down
 
     info "Pruning docker resources"
-    if ! docker system prune --force >/dev/null 2>&1; then
+    if ! docker system prune --force; then
         error "Failed to prune docker resources"
     fi
 
     info "Pulling new docker images"
-    run_compose pull >/dev/null 2>&1
+    run_compose pull
 
     info "Starting new docker containers"
-    run_compose "up -d" >/dev/null 2>&1
+    run_compose "up -d"
 }
 
 ask_name() {
@@ -166,31 +166,17 @@ confirm_data_removal() {
 install_docker() {
     if is_command_installed "docker"; then return 0; fi
     info "We use Docker to install Touca server. We could not find it on your system."
-    question "Would you like us to install it?"
-    if ! answer_is_yes; then
-        info "Welp, we cannot go ahead without Docker."
-        error "Have a good day, $HUMAN_NAME!"
-    fi
-    info "Setting up Docker"
-    sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo -E apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
-    sudo apt update
-    sudo apt-cache policy docker-ce
-    sudo apt install -y docker-ce
-    sudo usermod -aG docker "${USER}"
+    info "Please install docker and try this script again."
+    info "See https://docs.docker.com/get-docker/ for instructions."
+    error "Talk to you later, $HUMAN_NAME!"
 }
 
 install_docker_compose() {
     if is_command_installed "docker-compose"; then return 0; fi
     info "We use docker-compose to install Touca server. We could not find it on your system."
-    question "Would you like us to install it?"
-    if ! answer_is_yes; then
-        info "Welp, we cannot go ahead without docker-compose."
-        error "Have a good day, $HUMAN_NAME!"
-    fi
-    sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose || true
-    sudo chmod +x /usr/local/bin/docker-compose
+    info "Please install docker-compose and try this script again."
+    info "See https://docs.docker.com/compose/install/ for instructions."
+    error "Talk to you later, $HUMAN_NAME!"
 }
 
 server_status_check() {

@@ -18,7 +18,8 @@ rm -rf "$DIR_INSTALL/repo"
 mkdir -p "$DIR_INSTALL"
 git clone --single-branch --branch main https://github.com/trytouca/trytouca.git "$DIR_INSTALL/repo" &> /dev/null || true
 
-check_prerequisite_commands "docker" "docker-compose"
+install_docker
+install_docker_compose
 
 rm -rf "$DIR_INSTALL"/{data,logs}
 mkdir -p "$DIR_INSTALL"/logs/{backend,cmp} "$DIR_INSTALL"/data/{minio,mongo,redis}
