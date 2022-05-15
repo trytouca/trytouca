@@ -1,11 +1,13 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/client/detail/client.hpp"
 
 #include <fstream>
 #include <sstream>
 
-#include "nlohmann/json.hpp"
+#include "rapidjson/document.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
 #include "touca/client/detail/options.hpp"
 #include "touca/core/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
@@ -302,11 +304,19 @@ std::vector<Testcase> ClientImpl::find_testcases(
 
 void ClientImpl::save_json(const touca::filesystem::path& path,
                            const std::vector<Testcase>& testcases) const {
-  nlohmann::ordered_json doc = nlohmann::json::array();
+  rapidjson::Document doc(rapidjson::kArrayType);
+  rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+
   for (const auto& testcase : testcases) {
-    doc.push_back(testcase.json());
+    doc.PushBack(testcase.json(allocator), allocator);
   }
-  detail::save_string_file(path.string(), doc.dump());
+
+  rapidjson::StringBuffer strbuf;
+  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+  writer.SetMaxDecimalPlaces(3);
+  doc.Accept(writer);
+
+  detail::save_string_file(path.string(), strbuf.GetString());
 }
 
 void ClientImpl::save_flatbuffers(

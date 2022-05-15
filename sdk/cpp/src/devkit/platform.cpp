@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/devkit/platform.hpp"
 
@@ -6,7 +6,7 @@
 #include <sstream>
 
 #include "httplib.h"
-#include "nlohmann/json.hpp"
+#include "rapidjson/document.h"
 #include "touca/core/filesystem.hpp"
 
 namespace touca {
@@ -193,16 +193,16 @@ bool Platform::handshake() const {
     _error = "unexpected server response";
     return false;
   }
-  const auto& parsed = nlohmann::json::parse(response.body, nullptr, false);
-  if (parsed.is_discarded()) {
+  rapidjson::Document parsed;
+  if (parsed.Parse<0>(response.body.c_str()).HasParseError()) {
     _error = "failed to parse server response";
     return false;
   }
-  if (!parsed.contains("ready") || !parsed.at("ready").is_boolean()) {
+  if (!parsed.HasMember("ready") || !parsed["ready"].IsBool()) {
     _error = "unexpected server response";
     return false;
   }
-  if (!parsed.at("ready").get<bool>()) {
+  if (!parsed["ready"].GetBool()) {
     _error = "server is not ready";
     return false;
   }
@@ -226,16 +226,16 @@ bool Platform::auth(const std::string& apiKey) {
         touca::detail::format("authentication failed: {}", response.status);
     return false;
   }
-  const auto& parsed = nlohmann::json::parse(response.body, nullptr, false);
-  if (parsed.is_discarded()) {
+  rapidjson::Document parsed;
+  if (parsed.Parse<0>(response.body.c_str()).HasParseError()) {
     _error = "failed to parse server response";
     return false;
   }
-  if (!parsed.contains("token") || !parsed["token"].is_string()) {
+  if (!parsed.HasMember("token") || !parsed["token"].IsString()) {
     _error = "unexpected server response";
     return false;
   }
-  _http->set_token(parsed["token"].get<std::string>());
+  _http->set_token(parsed["token"].GetString());
   _is_auth = true;
   return true;
 }
@@ -253,18 +253,18 @@ std::vector<std::string> Platform::elements() const {
     _error = "unexpected server response";
     return {};
   }
-  const auto& parsed = nlohmann::json::parse(response.body, nullptr, false);
-  if (parsed.is_discarded()) {
+  rapidjson::Document parsed;
+  if (parsed.Parse<0>(response.body.c_str()).HasParseError()) {
     _error = "failed to parse server response";
     return {};
   }
-  if (!parsed.is_array()) {
+  if (!parsed.IsArray()) {
     _error = "unexpected server response";
     return {};
   }
   std::vector<std::string> elements;
-  for (const auto& rjElement : parsed) {
-    elements.emplace_back(rjElement["name"].get<std::string>());
+  for (const auto& rjElement : parsed.GetArray()) {
+    elements.emplace_back(rjElement["name"].GetString());
   }
   if (elements.empty()) {
     _error = "suite has no test case";

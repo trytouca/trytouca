@@ -1,13 +1,33 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/core/testcase.hpp"
 
+#include <array>
+
 #include "catch2/catch.hpp"
-#include "nlohmann/json.hpp"
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
 #include "touca/devkit/comparison.hpp"
 
 using touca::data_point;
 using touca::detail::internal_type;
+
+/**
+ * Helper function to provide `Testcase`, `TestcaseComparison`
+ * and `TestcaseComparison::Overview` as json string.
+ */
+std::string make_json(
+    const std::function<rapidjson::Value(touca::RJAllocator&)> func) {
+  rapidjson::Document doc(rapidjson::kObjectType);
+  rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+  const auto& value = func(allocator);
+
+  rapidjson::StringBuffer strbuf;
+  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+  writer.SetMaxDecimalPlaces(3);
+  value.Accept(writer);
+  return strbuf.GetString();
+}
 
 TEST_CASE("Testcase") {
   touca::Testcase testcase =
@@ -37,7 +57,10 @@ TEST_CASE("Testcase") {
       testcase.add_hit_count("some-key");
       const auto expected =
           R"("results":[{"key":"some-key","value":"2"},{"key":"some-other-key","value":"1"}])";
-      REQUIRE_THAT(testcase.json().dump(), Catch::Contains(expected));
+      const auto output = make_json([&testcase](touca::RJAllocator& allocator) {
+        return testcase.json(allocator);
+      });
+      REQUIRE_THAT(output, Catch::Contains(expected));
     }
 
     SECTION("unexpected-use: key is already used to store boolean") {
@@ -69,7 +92,10 @@ TEST_CASE("Testcase") {
       }
       const auto expected =
           R"("results":[{"key":"some-key","value":"[0,1,2]"}])";
-      REQUIRE_THAT(testcase.json().dump(), Catch::Contains(expected));
+      const auto output = make_json([&testcase](touca::RJAllocator& allocator) {
+        return testcase.json(allocator);
+      });
+      REQUIRE_THAT(output, Catch::Contains(expected));
     }
     SECTION("unexpected-use") {
       const auto someBool = data_point::boolean(true);
@@ -97,9 +123,13 @@ TEST_CASE("Testcase") {
     testcase.toc("some-metric");
     testcase.add_array_element("some-array", value);
 
-    const auto before = testcase.json().dump();
+    const auto before = make_json([&testcase](touca::RJAllocator& allocator) {
+      return testcase.json(allocator);
+    });
     testcase.clear();
-    const auto after = testcase.json().dump();
+    const auto after = make_json([&testcase](touca::RJAllocator& allocator) {
+      return testcase.json(allocator);
+    });
 
     const auto check1 =
         R"("results":[{"key":"some-array","value":"[true]"},{"key":"some-key","value":"true"},{"key":"some-new-key","value":"1"}])";
@@ -182,7 +212,8 @@ TEST_CASE("Testcase") {
     const auto& dst =
         std::make_shared<touca::Testcase>("team", "suite", "version", "case");
     touca::TestcaseComparison cmp(testcase, *dst);
-    const auto& output = cmp.json().dump();
+    const auto& output = make_json(
+        [&cmp](touca::RJAllocator& allocator) { return cmp.json(allocator); });
     const auto& check1 =
         R"("assertions":{"commonKeys":[],"missingKeys":[],"newKeys":[]})";
     const auto& check2 =
@@ -228,7 +259,8 @@ TEST_CASE("Testcase") {
     CHECK(cmp.overview().keysCountFresh == 1);
     CHECK(cmp.overview().keysCountMissing == 1);
 
-    const auto& comparison = cmp.json().dump();
+    const auto& comparison = make_json(
+        [&cmp](touca::RJAllocator& allocator) { return cmp.json(allocator); });
     const auto& check1 =
         R"("assertions":{"commonKeys":[],"missingKeys":[],"newKeys":[]})";
     const auto& check2 =
@@ -239,7 +271,9 @@ TEST_CASE("Testcase") {
     CHECK_THAT(comparison, Catch::Contains(check2));
     CHECK_THAT(comparison, Catch::Contains(check3));
 
-    const auto& overview = cmp.overview().json().dump();
+    const auto& overview = make_json([&cmp](touca::RJAllocator& allocator) {
+      return cmp.overview().json(allocator);
+    });
     const auto& check4 =
         R"({"keysCountCommon":1,"keysCountFresh":1,"keysCountMissing":1,"keysScore":0.0,"metricsCountCommon":1,"metricsCountFresh":1,"metricsCountMissing":1,"metricsDurationCommonDst":0,"metricsDurationCommonSrc":0})";
     CHECK_THAT(overview, Catch::Contains(check4));

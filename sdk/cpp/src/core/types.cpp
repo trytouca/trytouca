@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/core/types.hpp"
 
@@ -7,7 +7,10 @@
 #include <utility>
 
 #include "flatbuffers/flatbuffers.h"
-#include "nlohmann/json.hpp"
+#include "rapidjson/document.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
 #include "touca/core/variant.hpp"
 #include "touca/impl/schema.hpp"
 
@@ -166,37 +169,69 @@ class data_point_serializer_visitor {
 };
 
 class data_point_to_json_visitor {
-  nlohmann::json& _out;
+  rapidjson::Document::AllocatorType& _allocator;
 
  public:
-  explicit data_point_to_json_visitor(nlohmann::json& out) : _out(out) {}
+  explicit data_point_to_json_visitor(
+      rapidjson::Document::AllocatorType& allocator)
+      : _allocator(allocator) {}
 
-  template <typename T>
-  void operator()(const T& value) {
-    _out = nlohmann::json(value);
+  rapidjson::Value operator()(const detail::deep_copy_ptr<std::string>& value) {
+    return rapidjson::Value(*value, _allocator);
   }
 
-  void operator()(const detail::deep_copy_ptr<std::string>& value) {
-    _out = nlohmann::json(*value);
-  }
-
-  void operator()(const detail::deep_copy_ptr<array>& arr) {
-    _out = nlohmann::json::array();
+  rapidjson::Value operator()(const detail::deep_copy_ptr<array>& arr) {
+    rapidjson::Value out(rapidjson::kArrayType);
     for (const auto& element : *arr) {
-      _out.push_back(nlohmann::json(element));
+      out.PushBack(to_json(element, _allocator), _allocator);
     }
+    return out;
   }
 
-  void operator()(const detail::deep_copy_ptr<object>& obj) {
-    auto items = nlohmann::ordered_json::object();
+  rapidjson::Value operator()(const detail::deep_copy_ptr<object>& obj) {
+    rapidjson::Value rjMembers(rapidjson::kObjectType);
     for (const auto& member : *obj) {
-      items.emplace(member.first, nlohmann::json(member.second));
+      rapidjson::Value rjKey{member.first, _allocator};
+      rjMembers.AddMember(rjKey, to_json(member.second, _allocator),
+                          _allocator);
     }
-    _out = nlohmann::ordered_json::object();
-    _out[obj->get_name()] = items;
+    rapidjson::Value out(rapidjson::kObjectType);
+    rapidjson::Value rjName{obj->get_name(), _allocator};
+    out.AddMember(rjName, rjMembers, _allocator);
+    return out;
   }
 
-  void operator()(std::nullptr_t) {}
+  rapidjson::Value operator()(const detail::number_signed_t value) {
+    rapidjson::Value out(rapidjson::kNumberType);
+    out.SetInt64(value);
+    return out;
+  }
+
+  rapidjson::Value operator()(const detail::number_unsigned_t value) {
+    rapidjson::Value out(rapidjson::kNumberType);
+    out.SetUint64(value);
+    return out;
+  }
+
+  rapidjson::Value operator()(const detail::number_double_t value) {
+    rapidjson::Value out(rapidjson::kNumberType);
+    out.SetDouble(value);
+    return out;
+  }
+
+  rapidjson::Value operator()(const detail::number_float_t value) {
+    rapidjson::Value out(rapidjson::kNumberType);
+    out.SetFloat(value);
+    return out;
+  }
+
+  rapidjson::Value operator()(const detail::boolean_t value) {
+    return rapidjson::Value(value);
+  }
+
+  rapidjson::Value operator()(std::nullptr_t) {
+    return rapidjson::Value(rapidjson::kNullType);
+  }
 };
 
 }  // namespace detail
@@ -211,14 +246,22 @@ flatbuffers::Offset<fbs::TypeWrapper> data_point::serialize(
 }
 
 std::string data_point::to_string() const {
-  if (_type == detail::internal_type::string) {
-    return *detail::get<detail::deep_copy_ptr<detail::string_t>>(_value);
+  rapidjson::Document doc;
+  auto& allocator = doc.GetAllocator();
+  const auto& value = to_json(*this, allocator);
+  if (value.IsString()) {
+    return value.GetString();
   }
-  return nlohmann::json(*this).dump();
+  rapidjson::StringBuffer strbuf;
+  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+  writer.SetMaxDecimalPlaces(3);
+  value.Accept(writer);
+  return strbuf.GetString();
 }
 
-void to_json(nlohmann::json& out, const data_point& value) {
-  detail::visit(detail::data_point_to_json_visitor(out), value._value);
+rapidjson::Value to_json(const data_point& value, RJAllocator& allocator) {
+  return detail::visit(detail::data_point_to_json_visitor(allocator),
+                       value._value);
 }
 
 }  // namespace touca

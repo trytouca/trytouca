@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 include(GenerateExportHeader)
 include(GNUInstallDirs)
@@ -7,7 +7,7 @@ touca_find_package("flatbuffers" "FlatBuffers")
 touca_find_package("fmt")
 touca_find_package("ghcFilesystem" "ghc_filesystem")
 touca_find_package("httplib")
-touca_find_package("nlohmann_json")
+touca_find_package("RapidJSON")
 touca_find_package("mpark_variant")
 if (TOUCA_BUILD_FRAMEWORK)
     touca_find_package("cxxopts")
@@ -51,7 +51,7 @@ target_link_libraries(
         ghcFilesystem::ghcFilesystem
         flatbuffers::flatbuffers
         fmt::fmt
-        nlohmann_json::nlohmann_json
+        RapidJSON::RapidJSON
         mpark_variant::mpark_variant
         $<$<PLATFORM_ID:Linux>:pthread>
 )
@@ -71,6 +71,7 @@ target_include_directories(
 target_compile_definitions(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
+        RAPIDJSON_HAS_STDSTRING
         $<$<CXX_COMPILER_ID:MSVC>:NOMINMAX>
         $<$<CXX_COMPILER_ID:MSVC>:_CRT_SECURE_NO_WARNINGS>
 )

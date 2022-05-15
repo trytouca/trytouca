@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
@@ -13,7 +13,7 @@
 #include <utility>
 #include <vector>
 
-#include "nlohmann/json_fwd.hpp"
+#include "rapidjson/fwd.h"
 #include "touca/core/variant.hpp"
 #include "touca/lib_api.hpp"
 
@@ -33,6 +33,9 @@ struct TypeComparison;
 namespace fbs {
 struct TypeWrapper;
 }  // namespace fbs
+
+using RJAllocator = rapidjson::MemoryPoolAllocator<rapidjson::CrtAllocator>;
+
 namespace detail {
 
 enum class TOUCA_CLIENT_API internal_type : std::uint8_t {
@@ -88,7 +91,6 @@ struct TOUCA_CLIENT_API array final {
 
 class TOUCA_CLIENT_API object final {
   friend class data_point;
-  friend void to_json(nlohmann::json& out, const data_point& value);
 
  public:
   object() : _v() {}
@@ -132,7 +134,8 @@ class TOUCA_CLIENT_API data_point {
                                                  const data_point& dst);
   friend TOUCA_CLIENT_API std::map<std::string, data_point> flatten(
       const data_point& input);
-  friend void to_json(nlohmann::json& out, const data_point& value);
+  friend rapidjson::Value to_json(const data_point& value,
+                                  RJAllocator& allocator);
 
  public:
   data_point(const array& value)
@@ -219,6 +222,7 @@ class TOUCA_CLIENT_API data_point {
   }
 
   void increment() noexcept;
+
   std::string to_string() const;
 
   detail::number_unsigned_t as_metric() const noexcept {
