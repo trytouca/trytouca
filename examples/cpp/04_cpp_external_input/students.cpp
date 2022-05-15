@@ -6,7 +6,7 @@
 #include <numeric>
 #include <thread>
 
-#include "nlohmann/json.hpp"
+#include "rapidjson/document.h"
 #include "touca/core/filesystem.hpp"
 #include "touca/extra/scoped_timer.hpp"
 #include "touca/touca.hpp"
@@ -23,25 +23,25 @@ Student find_student(const std::string& path) {
   Student student;
   student.username = touca::filesystem::path(path).stem().string();
 
-  const auto& parsed = nlohmann::json::parse(content, nullptr, false);
-  if (parsed.is_discarded()) {
+  rapidjson::Document parsed;
+  if (parsed.Parse<0>(content.c_str()).HasParseError()) {
     throw std::runtime_error("failed to parse profile");
   }
 
-  if (parsed.contains("name") && parsed["name"].is_string()) {
-    student.fullname = parsed["name"].get<std::string>();
+  if (parsed.HasMember("name") && parsed["name"].IsString()) {
+    student.fullname = parsed["name"].GetString();
   }
-  if (parsed.contains("dob") && parsed.is_object()) {
-    const auto y = static_cast<unsigned short>(parsed["dob"]["y"].get<int>());
-    const auto m = static_cast<unsigned short>(parsed["dob"]["m"].get<int>());
-    const auto d = static_cast<unsigned short>(parsed["dob"]["d"].get<int>());
+  if (parsed.HasMember("dob") && parsed["dob"].IsObject()) {
+    const auto y = static_cast<unsigned short>(parsed["dob"]["y"].GetInt());
+    const auto m = static_cast<unsigned short>(parsed["dob"]["m"].GetInt());
+    const auto d = static_cast<unsigned short>(parsed["dob"]["d"].GetInt());
     student.dob = {y, m, d};
   }
-  if (parsed.contains("courses") && parsed.is_array()) {
+  if (parsed.HasMember("courses") && parsed["courses"].IsArray()) {
     std::vector<Course> courses;
-    for (const auto& course : parsed["courses"]) {
-      courses.emplace_back(Course{course["name"].get<std::string>(),
-                                  course["grade"].get<float>()});
+    for (const auto& course : parsed["courses"].GetArray()) {
+      courses.emplace_back(
+          Course{course["name"].GetString(), course["grade"].GetFloat()});
     }
     student.courses = courses;
   }

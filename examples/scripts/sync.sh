@@ -31,8 +31,7 @@ sync_cpp () {
     rm -rf "${dir_dst}"
     cp -r "${dir_src}" "${dir_dst}"
 
-    run_sed "${dir_dst}/04_cpp_external_input/config.json" 's/\("datasets-dir":\).*/\1 ".\/examples\/cpp\/04_cpp_external_input\/datasets"/g'
-    for filename in ".clang-format" ".dockerignore" "build.sh" "CMakeLists.txt" "Dockerfile" "cmake/external.cmake"; do
+    for filename in ".clang-format" ".dockerignore" "build.sh" "CMakeLists.txt" "Dockerfile" "cmake/external.cmake" "04_cpp_external_input"; do
         git checkout "${dir_dst}/${filename}"
     done
 }
@@ -45,7 +44,7 @@ sync_python () {
     cp -r "${dir_src}" "${dir_dst}"
 
     rm "${dir_dst}/02_python_main_api/unit_test.py"
-    for filename in "01_python_minimal/requirements.txt" "02_python_main_api/requirements.txt" "03_python_core_api/requirements.txt" "04_python_external_files"; do
+    for filename in "01_python_minimal/requirements.txt" "03_python_core_api/requirements.txt" "04_python_external_files"; do
         git checkout "${dir_dst}/${filename}"
     done
 }
@@ -54,7 +53,6 @@ sync_js () {
     local dir_examples="${DIR_EXAMPLES}"
     local dir_src="${DIR_CLIENTS}/js/examples"
     local dir_dst="${dir_examples}/js"
-    local version="1.5.2"
     rm -rf "${dir_dst}"
     cp -r "${dir_src}" "${dir_dst}"
 
@@ -72,7 +70,6 @@ sync_java () {
     local dir_examples="${DIR_EXAMPLES}"
     local dir_src="${DIR_CLIENTS}/java/examples"
     local dir_dst="${dir_examples}/java"
-    local version="1.5.1"
     rm -rf "${dir_dst}"
     cp -r "${dir_src}" "${dir_dst}"
 
