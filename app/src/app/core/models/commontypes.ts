@@ -6,6 +6,7 @@ export enum EFeatureFlag {
 }
 
 export enum EPlatformRole {
+  Guest = 'guest',
   User = 'user',
   Admin = 'admin',
   Owner = 'owner',

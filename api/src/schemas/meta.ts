@@ -26,6 +26,7 @@ const metaSchema = new mongoose.Schema(
       type: Number
     },
     contact: {
+      _id: false,
       required: false,
       type: {
         company: {
@@ -43,6 +44,7 @@ const metaSchema = new mongoose.Schema(
       }
     },
     mail: {
+      _id: false,
       required: false,
       type: {
         host: {

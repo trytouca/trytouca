@@ -8,9 +8,10 @@ export enum EFeatureFlag {
 /**
  * @schema CT_EPlatformRole
  *  type: string
- *  enum: ['user', 'admin', 'owner']
+ *  enum: ['guest', 'user', 'admin', 'owner']
  */
 export enum EPlatformRole {
+  Guest = 'guest',
   User = 'user',
   Admin = 'admin',
   Owner = 'owner',

@@ -83,8 +83,8 @@ router.post(
  *    operationId: 'platform_config'
  *    description:
  *      Reports server settings.
- *      User initiating the request must be authenticated.
- *      User initiating the request must be a platform admin.
+ *      If server is already configured, user initiating the request must be authenticated
+ *      and a server admin.
  *    responses:
  *      200:
  *        description:
@@ -94,12 +94,7 @@ router.post(
  *            schema:
  *              $ref: '#/components/schemas/CT_PlatformConfig'
  */
-router.get(
-  '/config',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
-  promisable(platformConfig, 'get platform configuration')
-)
+router.get('/config', promisable(platformConfig, 'get platform configuration'))
 
 /**
  * @api [patch] /platform/config
@@ -109,8 +104,8 @@ router.get(
  *    operationId: platform_update
  *    description:
  *      Updates server settings.
- *      User initiating the request must be authenticated.
- *      User initiating the request must be a platform admin.
+ *      If server is already configured, user initiating the request must be authenticated
+ *      and a server admin.
  *    requestBody:
  *      content:
  *        application/json:
@@ -133,8 +128,6 @@ router.get(
 router.patch(
   '/config',
   express.json(),
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
   promisable(platformUpdate, 'update platform settings')
 )
 

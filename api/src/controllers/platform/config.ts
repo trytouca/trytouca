@@ -1,9 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
+import { findPlatformRole } from 'middlewares/user'
 
 import { MetaModel } from '@/schemas/meta'
-import { PlatformConfig } from '@/types/commontypes'
+import { EPlatformRole, PlatformConfig } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
@@ -13,6 +14,19 @@ export async function platformConfig(
   res: Response,
   next: NextFunction
 ) {
+  const isAdmin = [EPlatformRole.Admin, EPlatformRole.Owner].includes(
+    await findPlatformRole(req)
+  )
+  const isConfigured = !!(await MetaModel.countDocuments({
+    telemetry: { $exists: true }
+  }))
+  if (isConfigured && !isAdmin) {
+    return next({
+      errors: ['insufficient privileges'],
+      status: 403
+    })
+  }
+
   const cacheKey = 'platform-config'
   logger.debug('received request to show platform config')
 
@@ -32,11 +46,11 @@ export async function platformConfig(
   }
   if (meta.mail) {
     response.mail = meta.mail
-  } else {
+  } else if (config.mail.host) {
     response.mail = {
       host: config.mail.host,
       pass: config.mail.pass,
-      port: config.mail.port ?? 587,
+      port: config.mail.port,
       user: config.mail.user
     }
   }

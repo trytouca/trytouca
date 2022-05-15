@@ -7,6 +7,7 @@ import { relay } from '@/models/relay'
 import { wslFindByRole } from '@/models/user'
 import { MetaModel } from '@/schemas/meta'
 import { NodeModel } from '@/schemas/node'
+import { IUser } from '@/schemas/user'
 import { EPlatformRole } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
@@ -39,25 +40,30 @@ export async function platformInstall(
 
   if (config.isCloudHosted) {
     logger.info('new self-hosted install')
-    const owners = await wslFindByRole(EPlatformRole.Owner)
-    const user = {
+    await NodeModel.create({
+      company: contact.company,
+      email: contact.email,
+      name: contact.name,
+      uuid: contact.uuid
+    })
+    const user: IUser = {
       _id: contact.uuid,
       email: contact.email,
       fullname: contact.name,
       platformRole: EPlatformRole.User,
       username: contact.uuid
     }
-    await NodeModel.create(contact)
     tracker
       .create(user, { name: user.fullname })
       .then(() =>
         tracker.track(user, 'self-hosted install', { company: contact.company })
       )
+    const owners = await wslFindByRole(EPlatformRole.Owner)
     mailUser(owners[0], 'New Self-Hosted Instance', 'user-install', contact)
     return res.status(204).send()
   }
 
-  if (await MetaModel.countDocuments({ $exists: { contact: true } })) {
+  if (await MetaModel.countDocuments({ contact: { $exists: true } })) {
     return next({
       status: 403,
       errors: ['server is registered']

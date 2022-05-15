@@ -6,6 +6,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+import { PlatformConfig } from '@/core/models/commontypes';
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
 import { ApiService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';
@@ -29,6 +30,7 @@ interface FormContent {
 })
 export class InstallComponent implements OnDestroy {
   private _subHints: Subscription;
+  private installed = false;
   TabType = InstallPageTabType;
   tabType = InstallPageTabType.UserInfo;
   alert: Alert;
@@ -75,6 +77,7 @@ export class InstallComponent implements OnDestroy {
       'email',
       'company'
     ]);
+    this.switchTab(InstallPageTabType.UserInfo);
   }
 
   ngOnDestroy() {
@@ -85,29 +88,27 @@ export class InstallComponent implements OnDestroy {
     if (!this.installForm.valid) {
       return;
     }
-    this.apiService
-      .post('/platform/install', {
-        company: model.company,
-        email: model.email,
-        name: model.fname
-      })
-      .subscribe({
-        next: () => {
-          this.hints.reset();
-          this.installForm.reset({}, { emitEvent: false });
-          this.tabType = InstallPageTabType.Telemetry;
-        },
-        error: (err: HttpErrorResponse) => {
-          const error = this.apiService.extractError(err, [
-            [
-              401,
-              'invalid login credentials',
-              'Incorrect username or password.'
-            ]
-          ]);
-          this.alert = { text: error, type: AlertType.Danger };
-        }
-      });
+    const contact = {
+      company: model.company,
+      email: model.email,
+      name: model.fname
+    };
+    const route = this.installed
+      ? this.apiService.patch('/platform/config', { contact })
+      : this.apiService.post('/platform/install', contact);
+    route.subscribe({
+      next: () => {
+        this.hints.reset();
+        this.installForm.reset({}, { emitEvent: false });
+        this.tabType = InstallPageTabType.Telemetry;
+      },
+      error: (err: HttpErrorResponse) => {
+        const error = this.apiService.extractError(err, [
+          [401, 'invalid login credentials', 'Incorrect username or password.']
+        ]);
+        this.alert = { text: error, type: AlertType.Danger };
+      }
+    });
   }
 
   toggleFeatureFlag(flag: Checkbox) {
@@ -117,10 +118,33 @@ export class InstallComponent implements OnDestroy {
   submitTelemetry() {
     this.apiService
       .patch('/platform/config', { telemetry: this.telemetry })
-      .subscribe(() => {
+      .subscribe((doc) => {
         this.tabType = InstallPageTabType.Thanks;
         this.apiService._status = undefined;
+        if (doc.url) {
+          this.router.navigate(['/account/activate'], {
+            queryParams: { key: doc.url }
+          });
+        }
       });
+  }
+
+  switchTab(tabType: InstallPageTabType) {
+    this.tabType = tabType;
+    if (this.tabType == InstallPageTabType.UserInfo) {
+      this.apiService
+        .get<PlatformConfig>('/platform/config')
+        .subscribe((doc) => {
+          if (doc.contact) {
+            this.installForm.setValue({
+              company: doc.contact.company,
+              email: doc.contact.email,
+              fname: doc.contact.name
+            });
+          }
+          this.installed = true;
+        });
+    }
   }
 
   navigateToSignup() {

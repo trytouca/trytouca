@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
@@ -214,4 +214,13 @@ export async function hasSuspendedAccount(
   logger.silly('%s: suspended account exists', username)
   res.locals.account = account
   return next()
+}
+
+export async function findPlatformRole(req: Request) {
+  const user = await isAuthenticatedImpl({
+    agent: req.headers['user-agent'],
+    ipAddr: req.ip,
+    token: req.signedCookies.authToken
+  })
+  return user?.platformRole || EPlatformRole.Guest
 }
