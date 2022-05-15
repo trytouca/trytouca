@@ -6,6 +6,7 @@ export enum EFeatureFlag {
 }
 
 export enum EPlatformRole {
+  Guest = 'guest',
   User = 'user',
   Admin = 'admin',
   Owner = 'owner',
@@ -280,6 +281,20 @@ export type ElementComparisonResponse = {
   dst: ElementComparisonItem;
   meta?: CppTestcaseComparisonOverview;
   src: ElementComparisonItem;
+};
+
+export type PlatformConfig = {
+  contact?: {
+    company: string;
+    email: string;
+    name: string;
+  };
+  mail?: {
+    host: string;
+    pass: string;
+    port: number;
+    user: string;
+  };
 };
 
 export type PlatformStatus = {

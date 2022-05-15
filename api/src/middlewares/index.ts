@@ -19,6 +19,7 @@ export {
   isAuthenticated,
   isClientAuthenticated,
   isPlatformAdmin,
+  findPlatformRole,
   hasAccount,
   hasSuspendedAccount
 } from './user'

@@ -1,29 +1,48 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
+import { pick } from 'lodash'
 
+import { findPlatformRole } from '@/middlewares'
+import { createUserAccount } from '@/models/auth'
 import { MetaModel } from '@/schemas/meta'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
+import { EPlatformRole } from '@/types/commontypes'
 import { rclient } from '@/utils/redis'
 
 /**
- * Updates server configuration.
+ * Update settings of this server instance.
  */
 export async function platformUpdate(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  if ((await MetaModel.countDocuments()) === 0) {
-    await MetaModel.create({})
-    logger.info('created meta document with default values')
+  const isAdmin = [EPlatformRole.Admin, EPlatformRole.Owner].includes(
+    await findPlatformRole(req)
+  )
+  const isConfigured = !!(await MetaModel.countDocuments({
+    telemetry: { $exists: true }
+  }))
+  if (isConfigured && !isAdmin) {
+    return next({
+      errors: ['insufficient privileges'],
+      status: 403
+    })
   }
 
-  if (!config.isCloudHosted) {
-    await MetaModel.updateOne({}, { $set: { telemetry: req.body.telemetry } })
-    rclient.removeCached('platform-health')
+  const payload = pick(req.body, ['telemetry', 'contact'])
+  const before = await MetaModel.findOneAndUpdate({}, { $set: payload })
+
+  const after = await MetaModel.findOne({}, { contact: true, telemetry: true })
+  if (payload.telemetry && before.telemetry === undefined && after.contact) {
+    const user = await createUserAccount({
+      email: after.contact.email,
+      ip_address: '127.0.0.1'
+    })
+    return res.status(200).json({ url: user.activationKey })
   }
 
+  rclient.removeCached('platform-config')
+  rclient.removeCached('platform-health')
   return res.status(204).send()
 }

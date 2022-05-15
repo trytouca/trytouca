@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import dotenv from 'dotenv'
 import path from 'path'
@@ -206,10 +206,7 @@ class ConfigManager {
     return `redis://${redis.host}:${redis.port}/${redis.database}`
   }
   public hasMailTransport(): boolean {
-    const keys = ['user', 'host', 'port']
-    return keys.every(
-      (key) => config.mail[key] && config.mail[key] !== '<SECRET>'
-    )
+    return ['user', 'host', 'port'].every((key) => config.mail[key])
   }
 }
 

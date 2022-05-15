@@ -1,12 +1,13 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { environment } from 'src/environments/environment';
 
-import { AuthGuard, GuestGuard } from '@/core/services';
+import { AuthGuard, GuestGuard, InstallGuard } from '@/core/services';
 
 import { ActivateComponent } from './activate.component';
+import { InstallComponent } from './install.component';
 import { OnboardComponent } from './onboard.component';
 import { ProfileComponent } from './profile.component';
 import { StartComponent, StartPageType } from './start.component';
@@ -19,6 +20,16 @@ const routes: Routes = [
         path: '',
         redirectTo: environment.self_hosted ? 'signin' : 'signup',
         pathMatch: 'full'
+      },
+      {
+        path: '',
+        canActivateChild: [InstallGuard],
+        children: [
+          {
+            path: 'install',
+            component: InstallComponent
+          }
+        ]
       },
       {
         path: '',
