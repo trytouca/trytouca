@@ -20,7 +20,7 @@ export async function platformAccountDelete(
   if (account.platformRole === EPlatformRole.Owner) {
     return next({
       status: 403,
-      errors: ['refusing to delete account: platform owner']
+      errors: ['refusing to delete account: server owner']
     })
   }
 

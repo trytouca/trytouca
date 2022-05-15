@@ -16,7 +16,7 @@ confirm_data_removal
 
 rm -rf "$DIR_INSTALL/repo"
 mkdir -p "$DIR_INSTALL"
-git clone --single-branch --branch main https://github.com/trytouca/trytouca.git "$DIR_INSTALL/repo" &> /dev/null || true
+git clone --single-branch --branch main https://github.com/trytouca/trytouca.git --depth=1 "$DIR_INSTALL/repo" &> /dev/null || true
 
 install_docker
 install_docker_compose
