@@ -22,6 +22,7 @@ type LaunchEventInput = {
   description?: string[];
   date: number;
   icon: IconType;
+  image?: string;
 };
 type PageInput = {
   date: number;
@@ -38,7 +39,6 @@ export default function LaunchPage() {
         {
           title: 'Blog Post: Open Sourcing Touca',
           date: Date.parse('2022-05-16T09:00:00.000-05:00'),
-          link: 'https://touca.io/blog/',
           icon: FaBookOpen
         },
         {
@@ -51,10 +51,11 @@ export default function LaunchPage() {
           ]
         },
         {
-          title: 'Webinar: Announcement and Product Demo',
+          title: 'Webinar: Touca Open-Source Announcement',
           date: Date.parse('2022-05-16T11:00:00.000-05:00'),
           link: 'https://zoom.us/webinar/register/WN_o1KSs0KwTEejGs3ZLBNEJg',
           icon: FaYoutube,
+          image: '/images/touca_event_webinar_220516.png',
           description: [
             'We are announcing full open-sourcing of Touca to enable every software engineer use our product for free to get real-time feedback when they write code that could break their software.',
             'Join Pejman Ghorbanzade to learn more about this change and other important changes to our business, from our pricing to product roadmap.'
@@ -76,7 +77,8 @@ export default function LaunchPage() {
           title: 'Twitch: Touca vs Snapshot Testing',
           date: Date.parse('2022-05-16T15:00:00.000-05:00'),
           link: 'https://www.twitch.tv/trytouca/schedule?seriesID=afd5ae15-fd54-4bd4-8547-8d4da4672b2c',
-          icon: FaTwitch
+          icon: FaTwitch,
+          image: '/images/touca_event_twitch_220516.png'
         }
       ]
     },
@@ -87,7 +89,6 @@ export default function LaunchPage() {
         {
           title: 'Blog Post: How Canon Uses Touca',
           date: Date.parse('2022-05-17T09:00:00.000-05:00'),
-          link: 'https://touca.io/blog/',
           icon: FaBookOpen
         },
         {
@@ -96,7 +97,7 @@ export default function LaunchPage() {
           link: 'https://zoom.us/webinar/register/WN_gxbJlUU9ScW498PRH7bk7Q',
           icon: FaYoutube,
           description: [
-            'A conversation with Zach Obermiller, Software Engineer at Canon Medical Informatics.',
+            'Join us for a conversation with Zach Obermiller, Software Engineer at Canon Medical Informatics.',
             'Zach will explain the software development process at Canon Medical Informatics, and how his team uses Touca to help with testing their flagship Vitrea Advanced Visualization product.'
           ]
         },
@@ -114,7 +115,8 @@ export default function LaunchPage() {
           title: 'Twitch: Continuous Regression Testing in Action',
           date: Date.parse('2022-05-17T15:00:00.000-05:00'),
           link: 'https://www.twitch.tv/trytouca/schedule?seriesID=a1a0ec57-95d5-473b-9301-2f753475e1b1',
-          icon: FaTwitch
+          icon: FaTwitch,
+          image: '/images/touca_event_twitch_220517.png'
         }
       ]
     },
@@ -125,14 +127,15 @@ export default function LaunchPage() {
         {
           title: 'Blog Post: Touca Software Architecture',
           date: Date.parse('2022-05-17T09:00:00.000-05:00'),
-          link: 'https://touca.io/blog/',
+
           icon: FaBookOpen
         },
         {
           title: 'Webinar: Touca Product Demo',
           date: Date.parse('2022-05-17T11:00:00.000-05:00'),
           link: 'https://zoom.us/webinar/register/WN_OKvLvnOlQV2kje3RdPI4Ew',
-          icon: FaYoutube
+          icon: FaYoutube,
+          image: '/images/touca_event_webinar_220518.png'
         },
         {
           title: 'Twitter Spaces: How Touca Works',
@@ -148,7 +151,8 @@ export default function LaunchPage() {
           title: 'Twitch: Touca Source Code Walk-Through',
           date: Date.parse('2022-05-17T15:00:00.000-05:00'),
           link: 'https://www.twitch.tv/trytouca/schedule?seriesID=ea955f29-979c-4f42-ad24-f37bf8adfd0c',
-          icon: FaTwitch
+          icon: FaTwitch,
+          image: '/images/touca_event_twitch_220518.png'
         }
       ]
     },
@@ -162,27 +166,33 @@ export default function LaunchPage() {
           icon: FaProductHunt
         },
         {
-          title: 'Blog Post: Building with Empathy',
+          title: 'Blog Post: Building Software with Empathy',
           date: Date.parse('2022-05-19T09:00:00.000-05:00'),
-          link: 'https://touca.io/blog/',
+
           icon: FaBookOpen
         },
         {
-          title: 'Webinar: Reflecting on our Startup Journey',
+          title: 'Webinar: Building Software with Empathy',
           date: Date.parse('2022-05-19T11:00:00.000-05:00'),
           link: 'https://zoom.us/webinar/register/WN_40_ofqeMRh62nlQXz9vNHQ',
-          icon: FaYoutube
+          icon: FaYoutube,
+          image: '/images/touca_event_webinar_220519.png'
         },
         {
           title: 'Twitter Spaces: Mistakes were Made (Farsi)',
           date: Date.parse('2022-05-19T12:00:00.000-05:00'),
-          icon: FaTwitter
+          icon: FaTwitter,
+          description: [
+            'Join us for a conversation with @Loc0m0, founder of an EdTech startup based in San Francisco, CA. ' +
+              'We will reflect on our startup journey and share some of the lessons that we have learned the hard way.'
+          ]
         },
         {
           title: 'Twitch: Extending Touca Python CLI',
           date: Date.parse('2022-05-19T15:00:00.000-05:00'),
           link: 'https://www.twitch.tv/trytouca/schedule?seriesID=e05706c3-c8a2-486d-9ff1-bf7bb36c2a0d',
-          icon: FaTwitch
+          icon: FaTwitch,
+          image: '/images/touca_event_twitch_220519.png'
         },
         {
           title: 'VIP Event: Touca Launch Party with Friends and Supporters',
@@ -198,7 +208,7 @@ export default function LaunchPage() {
         {
           title: 'Blog Post: Open-Source Contributors Program',
           date: Date.parse('2022-05-20T09:00:00.000-05:00'),
-          link: 'https://touca.io/blog/',
+
           icon: FaBookOpen
         },
         {
@@ -211,7 +221,8 @@ export default function LaunchPage() {
           title: "Webinar: What's next for Touca?",
           date: Date.parse('2022-05-20T11:00:00.000-05:00'),
           link: 'https://zoom.us/webinar/register/WN_Ho-ncaLyQq2gnl_tDJxedQ',
-          icon: FaYoutube
+          icon: FaYoutube,
+          image: '/images/touca_event_webinar_220520.png'
         },
         {
           title: 'Twitter Spaces: AMA with Touca Founder',
@@ -228,7 +239,8 @@ export default function LaunchPage() {
           title: 'Twitch: Integrating Touca with your Development Workflow',
           date: Date.parse('2022-05-20T15:00:00.000-05:00'),
           link: 'https://www.twitch.tv/trytouca/schedule?seriesID=cb2ebdd8-6738-4dc2-8c92-9fa5061534d5',
-          icon: FaTwitch
+          icon: FaTwitch,
+          image: '/images/touca_event_twitch_220520.png'
         }
       ]
     }
@@ -276,8 +288,8 @@ export default function LaunchPage() {
               key={index}
               className="wsl-min-h-screen-3 container mx-auto flex flex-col justify-center">
               <div className="space-y-2 p-4 text-center">
-                <div className="space-y-4 p-16">
-                  <h3 className="text-5xl font-extrabold text-white">
+                <div className="space-y-4 p-8 lg:p-16">
+                  <h3 className="text-3xl font-extrabold text-white lg:text-5xl">
                     {new Intl.DateTimeFormat('en-US', {
                       weekday: 'long',
                       year: 'numeric',
@@ -290,17 +302,7 @@ export default function LaunchPage() {
                 </div>
                 <ul className="space-y-6 text-xl text-gray-300">
                   {day.events.map((event, index) => {
-                    return event.link ? (
-                      <li key={index}>
-                        <a
-                          href={event.link}
-                          target="_blank"
-                          rel="noreferrer noopener"
-                          className="flex justify-center">
-                          <LaunchEvent input={event}></LaunchEvent>
-                        </a>
-                      </li>
-                    ) : (
+                    return (
                       <li key={index} className="flex justify-center">
                         <LaunchEvent input={event}></LaunchEvent>
                       </li>
@@ -318,36 +320,60 @@ export default function LaunchPage() {
 
 const LaunchEvent = (props: { input: LaunchEventInput }) => {
   const Icon = props.input.icon;
-  const textColor = props.input.link ? 'text-sky-400' : 'text-white';
+  const rounded = props.input.image ? 'rounded-b-lg' : 'rounded-lg';
   return (
-    <div className="min-h-[4rem] min-w-[50%] max-w-[60%] rounded-lg bg-opacity-50 bg-gradient-to-br from-dark-blue-800 to-dark-blue-900 p-4">
-      <div className="flex">
-        <div className="rounded-full p-2 text-3xl text-gray-500 hover:text-white">
-          <Icon></Icon>
+    <div className="min-h-[4rem] rounded-lg lg:min-w-[50%] lg:max-w-[50%]">
+      {props.input.image && (
+        <div className="flex">
+          <img
+            className="w-full rounded-t-lg"
+            src={props.input.image}
+            alt="Touca Launch Week Banner"
+          />
         </div>
-        <div className={`flex-grow p-2 text-left font-medium ${textColor}`}>
-          {props.input.title}
-        </div>
-        <div className=" p-2">
-          <div className="text-base">
-            {new Intl.DateTimeFormat('en-US', {
-              hour: 'numeric',
-              minute: 'numeric',
-              timeZone: 'America/Chicago',
-              timeZoneName: 'short'
-            }).format(props.input.date)}
+      )}
+      <div
+        className={`space-y-4 bg-opacity-50 bg-gradient-to-br from-dark-blue-800 to-dark-blue-900 p-4 ${rounded}`}>
+        <div className="flex">
+          <div className="rounded-full p-2 text-3xl text-gray-500 hover:text-white">
+            <Icon></Icon>
+          </div>
+          <div className="flex-grow p-2 text-left font-medium">
+            {props.input.title}
+          </div>
+          <div className="p-2">
+            <div className="text-base">
+              {new Intl.DateTimeFormat('en-US', {
+                hour: 'numeric',
+                minute: 'numeric',
+                timeZone: 'America/Chicago',
+                timeZoneName: 'short'
+              }).format(props.input.date)}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="flex">
-        <div className="flex-grow px-2 text-left">
-          {props.input.description &&
-            props.input.description.map((paragraph, index) => (
+        {props.input.description && (
+          <div className="space-y-2 px-2 text-left">
+            {props.input.description.map((paragraph, index) => (
               <p className="text-base" key={index}>
                 {paragraph}
               </p>
             ))}
-        </div>
+          </div>
+        )}
+        {props.input.link && (
+          <div className="flex justify-end">
+            <a
+              href={props.input.link}
+              target="_blank"
+              rel="noreferrer noopener">
+              <div className="flex space-x-2 rounded-full bg-sky-900 bg-opacity-25 px-4 py-2 hover:opacity-100">
+                <FaLink></FaLink>
+                <span className="text-sm font-semibold">Join</span>
+              </div>
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );
