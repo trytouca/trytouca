@@ -10,7 +10,7 @@ def test_find_student():
 
     bob = find_student("bob")
     assert bob.fullname == "Bob Brown"
-    assert bob.dob == date(1996, 6, 31)
+    assert bob.dob == date(1996, 6, 30)
     assert bob.gpa == 3.8
 
     charlie = find_student("charlie")
