@@ -20,15 +20,18 @@ platforms.
 
 ## Sneak Peak
 
-> For a more thorough guide of how to use Touca SDK for Python, check out the
-> `examples` directory or visit our
-> [documentation website](https://touca.io/docs).
+> For a more thorough guide of how to use Touca SDK for Python, check out our
+> [documentation website](https://touca.io/docs/sdk/python/quickstart/).
 
 Let us imagine that we want to test a software workflow that reports whether a
 given number is prime.
 
 ```python
 def is_prime(number: int):
+    for i in range(2, number):
+        if number % i == 0:
+            return False
+    return 1 < number
 ```
 
 We can use unit testing in which we hard-code a set of input numbers and list
@@ -47,100 +50,62 @@ any number of test cases.
 
 ```python
 import touca
-from code_under_test import is_prime
+from is_prime import is_prime
 
 @touca.Workflow
-def test_is_prime(testcase: str):
-    touca.check("is_prime", is_prime(int(testcase)))
-
-if __name__ == "__main__":
-    touca.run()
+def is_prime_test(testcase: str):
+    touca.check("is_prime_output", is_prime(int(testcase)))
 ```
 
-Touca tests have two main differences compared to typical unit tests:
+This is slightly different from a typical unit test:
 
-- We have fully decoupled our test inputs from our test logic. We refer to these
-  inputs as "test cases". The SDK retrieves the test cases from the command
-  line, or a file, or a remote Touca server and feeds them one by one to our
-  code under test.
-- We have removed the concept of _expected values_. With Touca, we only describe
-  the _actual_ behavior and performance of our code under test by capturing
-  values of interesting variables and runtime of important functions, anywhere
-  within our code. For each test case, the SDK submits this description to a
-  remote server which compares it against the description for a trusted version
-  of our code. The server visualizes any differences and reports them in near
-  real-time.
+- Touca tests do not use expected values.
+- Touca tests do not hard-code input values.
+
+With Touca, we can define how to run our code under test for any given test
+case. We can capture values of interesting variables and runtime of important
+functions to describe the behavior and performance of our workflow for that test
+case.
 
 We can run Touca tests with any number of inputs from the command line:
 
 ```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
-python is_prime_test.py --revision v1.0 --testcase 13 17 51
+touca config set api-key="<your_key>"
+touca config set api-url="https://api.touca.io/@/tutorial"
+touca test --revision=1.0 --testcase 19 51 97
 ```
 
-Where `TOUCA_API_KEY` and `TOUCA_API_URL` can be obtained from the Touca server
-at [app.touca.io](https://app.touca.io). This command produces the following
+Where `TOUCA_API_KEY` can be obtained from the Touca server at
+[app.touca.io](https://app.touca.io). This command produces the following
 output:
 
 ```text
 
 Touca Test Framework
-Suite: is_prime/v1.0
 
- 1.  PASS   13    (109 ms)
- 2.  PASS   17    (152 ms)
- 3.  PASS   51    (127 ms)
+Suite: is_prime_test/1.0
+
+ 1.  PASS   19    (0 ms)
+ 2.  PASS   51    (0 ms)
+ 3.  PASS   97    (0 ms)
 
 Tests:      3 passed, 3 total
-Time:       0.91 s
+Time:       0.39 s
 
 ✨   Ran all test suites.
 
 ```
 
-## Features
+Now if we make changes to our workflow under test, we can rerun this test and
+rely on Touca to check if our changes affected the behavior or performance of
+our software.
 
-Touca is very effective in addressing common problems in the following
-situations:
-
-- When we need to test our workflow with a large number of inputs.
-- When the output of our workflow is too complex, or too difficult to describe
-  in our unit tests.
-- When interesting information to check for regression is not exposed through
-  the interface of our workflow.
-
-The fundamental design features of Touca that we highlighted earlier can help us
-test these workflows at any scale.
-
-- Decoupling our test input from our test logic, can help us manage our long
-  list of inputs without modifying the test logic. Managing that list on a
-  remote server accessible to all members of our team, can help us add notes to
-  each test case, explain why they are needed and track how their performance
-  changes over time.
-- Submitting our test results to a remote server, instead of storing them in
-  files, can help us avoid the mundane tasks of managing and processing of those
-  results. The Touca server retains test results and makes them accessible to
-  all members of the team. It compares test results using their original data
-  types and reports discovered differences in real-time to all interested
-  members of our team. It allows us to audit how our software evolves over time
-  and provides high-level information about our tests.
-
-## Documentation
-
-- If you are new to Touca, the best place to start is the
-  [Quickstart Guide](https://touca.io/docs/basics/quickstart) on our
-  documentation website.
-- For information on how to use this SDK, see our
-  [Python SDK Documentation](https://touca.io/docs/sdk/python/quickstart).
-- If you cannot wait to start writing your first test with Touca, see our
-  [Python API Reference](https://app.touca.io/docs/sdk/python/api.html).
-
-## Ask for Help
-
-We want Touca to work well for you. If you need help, have any questions, or
-like to provide feedback, send us a note through the Intercom at
-[touca.io](https://touca.io) or email us at <hello@touca.io>.
+Unlike integration tests, we are not bound to the output of our workflow. We can
+capture any number of data points and from anywhere within our code. This is
+specially useful if our workflow has multiple stages. We can capture the output
+of each stage without publicly exposing its API. When any stage changes behavior
+in a future version of our software, our captured data points will help find the
+root cause more easily.
 
 ## License
 
