@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import Link from 'next/link';
 import { IconType } from 'react-icons';
@@ -42,7 +42,7 @@ const social: {
     icon: FaYoutube
   },
   {
-    link: 'https://www.twitch.tv/touca_io',
+    link: 'https://www.twitch.tv/trytouca',
     title: 'Live-code with us on Twitch',
     text: 'Twitch',
     icon: FaTwitch
