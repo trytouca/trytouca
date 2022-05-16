@@ -22,7 +22,7 @@ install_docker
 install_docker_compose
 
 rm -rf "$DIR_INSTALL"/{data,logs}
-mkdir -p "$DIR_INSTALL"/logs/{backend,cmp} "$DIR_INSTALL"/data/{minio,mongo,redis}
+mkdir -p "$DIR_INSTALL"/logs/{api,cmp} "$DIR_INSTALL"/data/{minio,mongo,redis}
 
 redeploy
 server_status_check
