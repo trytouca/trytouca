@@ -1,5 +1,9 @@
 # Touca
 
+> This week is _Touca Launch Week_! Check out our
+> [Launch page](https://touca.io/launch) for upcoming blog-posts, webinars,
+> conversations, and live-coding streams.
+
 [![License](https://img.shields.io/github/license/trytouca/trytouca?color=blue)](https://github.com/trytouca/trytouca/blob/main/LICENSE)
 [![Documentation Website](https://img.shields.io/static/v1?label=docs&message=touca.io/docs&color=blue)](https://touca.io/docs)
 [![Product Demo](https://img.shields.io/static/v1?label=demo&message=touca.io/demo&color=blue)](https://touca.io/demo)
@@ -10,9 +14,11 @@ Touca is an open-source regression testing solution, built for engineers.
 - Track regressions between different software versions
 - Understand how your software evolves in behavior and performance
 
-[![Touca Server](https://touca.io/images/touca-screenshot-suite-page.jpg)](https://touca.io/images/touca-screenshot-suite-page.jpg)
+[![Touca Server](https://i.vimeocdn.com/filter/overlay?src0=https%3A%2F%2Fi.vimeocdn.com%2Fvideo%2F1420276355-a2760e21742b267f63e7e1599eefc02329dcc22c2f155f125ff8692c99161e9c-d_1920x1080&src1=http%3A%2F%2Ff.vimeocdn.com%2Fp%2Fimages%2Fcrawler_play.png)](https://vimeo.com/703039452 "Touca Quick Product Demo")
 
 ## Start for free
+
+[![Server](https://img.shields.io/static/v1?label=Server&message=v1.4.0&color=blue)](https://hub.docker.com/repository/docker/touca)
 
 ### Option 1: Self-host locally
 
@@ -30,8 +36,7 @@ Sign up for free at https://app.touca.io.
 
 > Touca offer SDKs in Python, C++, Java, and JavaScript.
 
-[![Server](https://img.shields.io/static/v1?label=Server&message=v1.4.0&color=blue)](https://hub.docker.com/repository/docker/touca)
-[![C++ SDK](https://img.shields.io/static/v1?label=C%2B%2B&message=v1.5.1&color=blue)](https://github.com/trytouca/trytouca/tree/main/sdk/cpp)
+[![C++ SDK](https://img.shields.io/static/v1?label=C%2B%2B&message=v1.5.2&color=blue)](https://github.com/trytouca/trytouca/tree/main/sdk/cpp)
 [![Python SDK](https://img.shields.io/pypi/v/touca?label=Python&color=blue)](https://pypi.org/project/touca/)
 [![JavaScript SDK](https://img.shields.io/npm/v/@touca/node?label=JavaScript&color=blue)](https://www.npmjs.com/package/@touca/node)
 [![Java SDK](https://img.shields.io/maven-central/v/io.touca/touca?label=Java&color=blue)](https://search.maven.org/artifact/io.touca/touca)
