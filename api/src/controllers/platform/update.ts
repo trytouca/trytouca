@@ -34,7 +34,11 @@ export async function platformUpdate(
   const before = await MetaModel.findOneAndUpdate({}, { $set: payload })
 
   const after = await MetaModel.findOne({}, { contact: true, telemetry: true })
-  if (payload.telemetry && before.telemetry === undefined && after.contact) {
+  if (
+    'telemetry' in payload &&
+    before.telemetry === undefined &&
+    after.contact
+  ) {
     const user = await createUserAccount({
       email: after.contact.email,
       ip_address: '127.0.0.1'
