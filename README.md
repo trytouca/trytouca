@@ -10,6 +10,8 @@ Touca is an open-source regression testing solution, built for engineers.
 - Track regressions between different software versions
 - Understand how your software evolves in behavior and performance
 
+[![Touca Server](https://touca.io/images/touca-screenshot-suite-page.jpg)](https://touca.io/images/touca-screenshot-suite-page.jpg)
+
 ## Start for free
 
 ### Option 1: Self-host locally
@@ -24,17 +26,46 @@ Run the following command to locally self-host our server.
 
 Sign up for free at https://app.touca.io.
 
-## Features
+## Value Proposition
 
-[![Touca Server](https://touca.io/images/touca-screenshot-suite-page.jpg)](https://touca.io/images/touca-screenshot-suite-page.jpg)
+Touca is very effective in addressing common problems in the following
+situations:
 
-[![Server](https://img.shields.io/static/v1?label=Server&message=v1.4.0&color=blue)](https://hub.docker.com/repository/docker/touca)
-[![C++ SDK](https://img.shields.io/static/v1?label=C%2B%2B&message=v1.5.1&color=blue)](https://github.com/trytouca/trytouca/tree/main/sdk/cpp)
-[![Python SDK](https://img.shields.io/pypi/v/touca?label=Python&color=blue)](https://pypi.org/project/touca/)
-[![JavaScript SDK](https://img.shields.io/npm/v/@touca/node?label=JavaScript&color=blue)](https://www.npmjs.com/package/@touca/node)
-[![Java SDK](https://img.shields.io/maven-central/v/io.touca/touca?label=Java&color=blue)](https://search.maven.org/artifact/io.touca/touca)
+- When we need to test our workflow with a large number of inputs.
+- When the output of our workflow is too complex, or too difficult to describe
+  in our unit tests.
+- When interesting information to check for regression is not exposed through
+  the interface of our workflow.
 
-Touca SDKs let you describe the behavior and performance of your code by
-capturing values of interesting variables and runtime of important functions. We
-remotely compare your description against a trusted version of your software,
-visualize all differences, and report them in near real-time.
+The highlighted design features of Touca can help us test these workflows at any
+scale.
+
+- Decoupling our test input from our test logic, can help us manage our long
+  list of inputs without modifying the test logic. Managing that list on a
+  remote server accessible to all members of our team, can help us add notes to
+  each test case, explain why they are needed and track how their performance
+  changes over time.
+- Submitting our test results to a remote server, instead of storing them in
+  files, can help us avoid the mundane tasks of managing and processing of those
+  results. The Touca server retains test results and makes them accessible to
+  all members of the team. It compares test results using their original data
+  types and reports discovered differences in real-time to all interested
+  members of our team. It allows us to audit how our software evolves over time
+  and provides high-level information about our tests.
+
+## Documentation
+
+If you are new to Touca, the best place to start is the
+[Quickstart Guide](https://touca.io/docs/basics/quickstart) on our documentation
+website.
+
+## Community
+
+We hang on [Discord](https://touca.io/discord). Come say hi! We love making new
+friends. If you need help, have any questions, or like to contribute or provide
+feedback, that's the best place to be.
+
+## License
+
+This repository is released under the Apache-2.0 License. See
+[`LICENSE`](https://github.com/trytouca/trytouca/blob/main/LICENSE).
