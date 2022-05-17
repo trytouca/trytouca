@@ -39,7 +39,11 @@ export default function LaunchPage() {
         {
           title: 'Blog Post: Open Sourcing Touca',
           date: Date.parse('2022-05-16T09:00:00.000-05:00'),
-          icon: FaBookOpen
+          link: 'https://touca.io/blog/open-source-announcement/',
+          icon: FaBookOpen,
+          description: [
+            'Today is the first day of a new chapter of Touca! We are open-sourcing our entire product. This change allows software engineers to self-host our technology and make changes to it as they see fit, without ever having to pay us.'
+          ]
         },
         {
           title: 'Discord: What is Touca',
@@ -65,7 +69,10 @@ export default function LaunchPage() {
           title: 'Twitter Spaces: Open Sourcing Touca',
           date: Date.parse('2022-05-16T12:00:00.000-05:00'),
           link: 'https://twitter.com/i/spaces/1ynJOZOjYMEGR',
-          icon: FaTwitter
+          icon: FaTwitter,
+          description: [
+            "Let's chat about open-sourcing of Touca and other changes to our business model, how we made these decisions, and what we are trying to get from them."
+          ]
         },
         {
           title: 'Clubhouse: Open Sourcing Touca (Farsi)',
@@ -78,7 +85,10 @@ export default function LaunchPage() {
           date: Date.parse('2022-05-16T15:00:00.000-05:00'),
           link: 'https://www.twitch.tv/trytouca/schedule?seriesID=afd5ae15-fd54-4bd4-8547-8d4da4672b2c',
           icon: FaTwitch,
-          image: '/images/touca_event_twitch_220516.png'
+          image: '/images/touca_event_twitch_220516.png',
+          description: [
+            'Watch a hands-on demo of Touca and a review of its differences compared to snapshot testing tools.'
+          ]
         }
       ]
     },
@@ -87,7 +97,7 @@ export default function LaunchPage() {
       title: 'The Business Case: Customer Success Stories',
       events: [
         {
-          title: 'Blog Post: How Canon Uses Touca',
+          title: 'Blog Post: Touca Origin Story',
           date: Date.parse('2022-05-17T09:00:00.000-05:00'),
           icon: FaBookOpen
         },
@@ -96,9 +106,9 @@ export default function LaunchPage() {
           date: Date.parse('2022-05-17T11:00:00.000-05:00'),
           link: 'https://zoom.us/webinar/register/WN_gxbJlUU9ScW498PRH7bk7Q',
           icon: FaYoutube,
+          image: '/images/touca_event_webinar_220517.png',
           description: [
-            'Join us for a conversation with Zach Obermiller, Software Engineer at Canon Medical Informatics.',
-            'Zach will explain the software development process at Canon Medical Informatics, and how his team uses Touca to help with testing their flagship Vitrea Advanced Visualization product.'
+            'Join us for a conversation with Zach Obermiller, software engineer at Canon Medical Informatics, as he shares about their software development process, what makes Canon a great place to work at, and how they use Touca to help with testing their flagship Vitrea Advanced Visualization software product.'
           ]
         },
         {
@@ -109,6 +119,7 @@ export default function LaunchPage() {
         {
           title: 'Clubhouse: Touca Origin Story (Farsi)',
           date: Date.parse('2022-05-17T13:30:00.000-05:00'),
+          link: 'https://www.clubhouse.com/event/MRlVn87z',
           icon: FaComments
         },
         {
@@ -127,7 +138,6 @@ export default function LaunchPage() {
         {
           title: 'Blog Post: Touca Software Architecture',
           date: Date.parse('2022-05-17T09:00:00.000-05:00'),
-
           icon: FaBookOpen
         },
         {
@@ -161,14 +171,8 @@ export default function LaunchPage() {
       title: 'Mistakes were Made: Reflecting on our Startup Journey',
       events: [
         {
-          title: 'Touca Product Hunt Launch',
-          date: Date.parse('2022-05-19T08:00:00.000-05:00'),
-          icon: FaProductHunt
-        },
-        {
           title: 'Blog Post: Building Software with Empathy',
           date: Date.parse('2022-05-19T09:00:00.000-05:00'),
-
           icon: FaBookOpen
         },
         {
@@ -208,7 +212,6 @@ export default function LaunchPage() {
         {
           title: 'Blog Post: Open-Source Contributors Program',
           date: Date.parse('2022-05-20T09:00:00.000-05:00'),
-
           icon: FaBookOpen
         },
         {
