@@ -8,7 +8,6 @@ import {
   FaComments,
   FaDiscord,
   FaLink,
-  FaProductHunt,
   FaTwitch,
   FaTwitter,
   FaYoutube
@@ -97,11 +96,6 @@ export default function LaunchPage() {
       title: 'The Business Case: Customer Success Stories',
       events: [
         {
-          title: 'Blog Post: Touca Origin Story',
-          date: Date.parse('2022-05-17T09:00:00.000-05:00'),
-          icon: FaBookOpen
-        },
-        {
           title: 'Webinar: Conversation with Touca users',
           date: Date.parse('2022-05-17T11:00:00.000-05:00'),
           link: 'https://zoom.us/webinar/register/WN_gxbJlUU9ScW498PRH7bk7Q',
@@ -118,7 +112,7 @@ export default function LaunchPage() {
         },
         {
           title: 'Clubhouse: Touca Origin Story (Farsi)',
-          date: Date.parse('2022-05-17T13:30:00.000-05:00'),
+          date: Date.parse('2022-05-17T13:00:00.000-05:00'),
           link: 'https://www.clubhouse.com/event/MRlVn87z',
           icon: FaComments
         },
@@ -200,7 +194,7 @@ export default function LaunchPage() {
         },
         {
           title: 'VIP Event: Touca Launch Party with Friends and Supporters',
-          date: Date.parse('2022-05-19T19:30:00.000-05:00'),
+          date: Date.parse('2022-05-19T19:00:00.000-05:00'),
           icon: FaComments
         }
       ]
@@ -233,7 +227,7 @@ export default function LaunchPage() {
           icon: FaTwitter
         },
         {
-          title: 'Discord: Good First Issues for New Contributors',
+          title: 'Discord: Good first issues for new contributors',
           date: Date.parse('2022-05-20T14:00:00.000-05:00'),
           link: 'https://discord.gg/PKCF6qMY?event=975546507522605096',
           icon: FaDiscord
