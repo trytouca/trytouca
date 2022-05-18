@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import React from 'react';
 import { FaBook, FaGithub } from 'react-icons/fa';
@@ -40,9 +40,7 @@ int main(int argc, char* argv[]) {
 @touca.Workflow
 def is_prime(testcase: str):
   touca.check("output", is_prime(int(testcase)))
-
-if __name__ == "__main__":
-  touca.run()`
+`
   },
   {
     language: 'JavaScript',
