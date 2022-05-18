@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import {
   LogoJsonLd,
@@ -29,10 +29,10 @@ type PageContent = {
 
 const content: PageContent = {
   announcement: {
-    action: '',
-    hidden: true,
-    link: '',
-    text: '',
+    action: 'Give us a star on GitHub',
+    hidden: false,
+    link: 'https://touca.io/github',
+    text: 'Touca is now open-source under Apache-2.0 license.',
     elevator:
       "Fixing silly mistakes shouldn't need a round-trip with your QA team."
   },
