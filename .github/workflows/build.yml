@@ -203,7 +203,8 @@ jobs:
     defaults:
       run:
         working-directory: ./sdk/cpp
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: |
+      github.repository_owner == 'trytouca' && github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs:
       - build-sdk-cpp-local
       - build-sdk-cpp-conan
@@ -223,7 +224,7 @@ jobs:
           aws-region: us-east-2
       - name: install dependencies
         if: steps.changes.outputs.sdk_cpp == 'true'
-        run: pip install gcovr
+        run: pip install gcovr==5.0
       - name: generate coverage
         if: steps.changes.outputs.sdk_cpp == 'true'
         run: ./build.sh --coverage
