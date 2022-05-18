@@ -71,7 +71,7 @@ export async function platformInstall(
   }
 
   await MetaModel.updateOne({}, { $set: { contact } })
-  const response = await relay('/install', JSON.stringify(contact))
+  const response = await relay('/platform/install', JSON.stringify(contact))
   logger.info('registered server')
   rclient.removeCached('platform-config')
   rclient.removeCached('platform-health')

@@ -6,7 +6,6 @@
 
 [![License](https://img.shields.io/github/license/trytouca/trytouca?color=blue)](https://github.com/trytouca/trytouca/blob/main/LICENSE)
 [![Documentation Website](https://img.shields.io/static/v1?label=docs&message=touca.io/docs&color=blue)](https://touca.io/docs)
-[![Product Demo](https://img.shields.io/static/v1?label=demo&message=touca.io/demo&color=blue)](https://touca.io/demo)
 [![Community](https://img.shields.io/static/v1?label=community&message=touca.io/discord&color=blue)](https://touca.io/discord)
 
 Touca is an open-source regression testing solution, built for engineers.

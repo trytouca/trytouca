@@ -37,6 +37,7 @@
     "setuptools",
     "sonatype",
     "Touca",
+    "trytouca",
     "unshallow",
     "uuidv"
   ]

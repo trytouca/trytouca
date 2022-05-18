@@ -23,7 +23,6 @@ const nodeSchema = new mongoose.Schema(
     }
   },
   {
-    collection: 'node',
     timestamps: true
   }
 )

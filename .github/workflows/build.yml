@@ -24,9 +24,10 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
       - name: authenticate to aws
-        if: steps.changes.outputs.docs == 'true'
+        if: |
+          steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
@@ -49,9 +50,8 @@ jobs:
           yarn --cwd=docs install
           yarn --cwd=docs build
       - name: push doc to aws
-        if:
-          steps.changes.outputs.docs == 'true' && steps.params.outputs.release
-          == 'true'
+        if: |
+          steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
         run: |
           aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
           aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
@@ -944,13 +944,6 @@ jobs:
       - build-cmp
     steps:
       - uses: actions/checkout@v2
-      - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -960,9 +953,8 @@ jobs:
         run: |
           git fetch --prune --unshallow --tags
           echo "::set-output name=version::1.4.0"
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' || steps.changes.outputs.cmp == 'true') }}"
+          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' || steps.changes.outputs.cmp == 'true') }}"
           echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
-
       - uses: actions/download-artifact@v2
         if: steps.changes.outputs.api == 'true'
         with:
@@ -978,7 +970,6 @@ jobs:
         with:
           name: cmp-bundle
           path: ${{ github.workspace }}
-
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.api == 'true'
       - uses: actions/cache@v2
@@ -993,6 +984,15 @@ jobs:
         if: steps.changes.outputs.api == 'true'
         run: yarn --cwd=api install --frozen-lockfile --production
 
+      - name: authenticate to aws
+        uses: aws-actions/configure-aws-credentials@v1
+        if: |
+          steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+          aws-secret-access-key:
+            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+          aws-region: us-east-2
       - name: authenticate to container registry
         if: steps.params.outputs.release == 'true'
         run: |
@@ -1000,9 +1000,8 @@ jobs:
           aws ecr get-login-password --region us-east-2 | docker --config ~/.docker-credentials-aws login --username AWS --password-stdin ${{ secrets.AWS_PROD_ECR_REPO }}
 
       - name: push ops to aws
-        if:
-          steps.changes.outputs.ops == 'true' && steps.params.outputs.release ==
-          'true'
+        if: |
+          steps.changes.outputs.ops == 'true' && steps.params.outputs.release == 'true'
         run: |
           tar -zcf deployment-scripts.tar.gz ops
           aws s3 cp deployment-scripts.tar.gz ${{ steps.params.outputs.buckets }}/
@@ -1016,11 +1015,9 @@ jobs:
           cp -r ./api/samples ./stage/api/samples
           cp -r ./api/node_modules ./stage/api/node_modules
           docker build -f config/docker/api.Dockerfile -t touca-api stage
-
       - name: push api to container registry
-        if:
-          steps.changes.outputs.api == 'true' && steps.params.outputs.release ==
-          'true'
+        if: |
+          steps.changes.outputs.api == 'true' && steps.params.outputs.release == 'true'
         run: |
           docker tag touca-api ${{ secrets.AWS_PROD_ECR_REPO }}/touca-api:${{ steps.params.outputs.version }}
           docker --config ~/.docker-credentials-aws push ${{ secrets.AWS_PROD_ECR_REPO }}/touca-api:${{ steps.params.outputs.version }}
@@ -1035,9 +1032,8 @@ jobs:
           mkdir -p ./stage/app && cp ./app/nginx.conf ./stage/app/
           docker build -f config/docker/app.Dockerfile -t touca-app stage
       - name: push app to container registry
-        if:
-          steps.changes.outputs.app == 'true' && steps.params.outputs.release ==
-          'true'
+        if: |
+          steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
         run: |
           docker tag touca-app ${{ secrets.AWS_PROD_ECR_REPO }}/touca-app:${{ steps.params.outputs.version }}
           docker --config ~/.docker-credentials-aws push ${{ secrets.AWS_PROD_ECR_REPO }}/touca-app:${{ steps.params.outputs.version }}
@@ -1052,9 +1048,8 @@ jobs:
           mkdir -p ./stage/cmp/config && cp ./cmp/config/config.prod.json ./stage/cmp/config/
           docker build -f config/docker/cmp.Dockerfile -t touca-cmp stage
       - name: push cmp to container registry
-        if:
-          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release ==
-          'true'
+        if: |
+          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
         run: |
           docker tag touca-cmp ${{ secrets.AWS_PROD_ECR_REPO }}/touca-cmp:${{ steps.params.outputs.version }}
           docker --config ~/.docker-credentials-aws push ${{ secrets.AWS_PROD_ECR_REPO }}/touca-cmp:${{ steps.params.outputs.version }}
