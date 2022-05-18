@@ -6,10 +6,10 @@
     xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     <url>
         <loc>https://touca.io/blog/open-source-announcement/</loc>
-        <lastmod>2022-05-16T00:09:00.000Z</lastmod>
+        <lastmod>2022-05-18T00:09:00.000Z</lastmod>
         <image:image>
-            <image:loc>https://blog.touca.io/content/images/2022/05/touca-blog-220516-1.png</image:loc>
-            <image:caption>touca-blog-220516-1.png</image:caption>
+            <image:loc>https://blog.touca.io/content/images/2022/05/touca-blog-220516-2.png</image:loc>
+            <image:caption>touca-blog-220516-2.png</image:caption>
         </image:image>
     </url>
     <url>
