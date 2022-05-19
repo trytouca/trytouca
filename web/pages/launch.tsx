@@ -130,11 +130,6 @@ export default function LaunchPage() {
       title: 'Under The Hood: Engineering Deep Dive',
       events: [
         {
-          title: 'Blog Post: Touca Software Architecture',
-          date: Date.parse('2022-05-17T09:00:00.000-05:00'),
-          icon: FaBookOpen
-        },
-        {
           title: 'Webinar: Touca Product Demo',
           date: Date.parse('2022-05-17T11:00:00.000-05:00'),
           link: 'https://zoom.us/webinar/register/WN_OKvLvnOlQV2kje3RdPI4Ew',
@@ -162,23 +157,18 @@ export default function LaunchPage() {
     },
     {
       date: Date.parse('2022-05-19T09:00:00.000-05:00'),
-      title: 'Mistakes were Made: Reflecting on our Startup Journey',
+      title: 'New Touca Features and Improvements',
       events: [
         {
-          title: 'Blog Post: Building Software with Empathy',
-          date: Date.parse('2022-05-19T09:00:00.000-05:00'),
-          icon: FaBookOpen
-        },
-        {
-          title: 'Webinar: Building Software with Empathy',
-          date: Date.parse('2022-05-19T11:00:00.000-05:00'),
+          title: 'Webinar: Touca Product Updates and Roadmap',
+          date: Date.parse('2022-05-19T10:00:00.000-05:00'),
           link: 'https://zoom.us/webinar/register/WN_40_ofqeMRh62nlQXz9vNHQ',
           icon: FaYoutube,
           image: '/images/touca_event_webinar_220519.png'
         },
         {
           title: 'Twitter Spaces: Mistakes were Made (Farsi)',
-          date: Date.parse('2022-05-19T12:00:00.000-05:00'),
+          date: Date.parse('2022-05-19T11:30:00.000-05:00'),
           icon: FaTwitter,
           description: [
             'Join us for a conversation with @Loc0m0, founder of an EdTech startup based in San Francisco, CA. ' +
@@ -191,11 +181,6 @@ export default function LaunchPage() {
           link: 'https://www.twitch.tv/trytouca/schedule?seriesID=e05706c3-c8a2-486d-9ff1-bf7bb36c2a0d',
           icon: FaTwitch,
           image: '/images/touca_event_twitch_220519.png'
-        },
-        {
-          title: 'VIP Event: Touca Launch Party with Friends and Supporters',
-          date: Date.parse('2022-05-19T19:00:00.000-05:00'),
-          icon: FaComments
         }
       ]
     },
@@ -220,11 +205,6 @@ export default function LaunchPage() {
           link: 'https://zoom.us/webinar/register/WN_Ho-ncaLyQq2gnl_tDJxedQ',
           icon: FaYoutube,
           image: '/images/touca_event_webinar_220520.png'
-        },
-        {
-          title: 'Twitter Spaces: AMA with Touca Founder',
-          date: Date.parse('2022-05-20T12:00:00.000-05:00'),
-          icon: FaTwitter
         },
         {
           title: 'Discord: Good first issues for new contributors',
