@@ -142,8 +142,8 @@ export default function LaunchPage() {
           icon: FaTwitter
         },
         {
-          title: 'Clubhouse: AMA with Pejman Ghorbanzade (Farsi)',
-          date: Date.parse('2022-05-17T13:30:00.000-05:00'),
+          title: 'Clubhouse: How Touca Works (Farsi)',
+          date: Date.parse('2022-05-17T13:00:00.000-05:00'),
           icon: FaComments
         },
         {
@@ -189,17 +189,6 @@ export default function LaunchPage() {
       title: 'Build With Us: Shaping the Future of Software Development',
       events: [
         {
-          title: 'Blog Post: Open-Source Contributors Program',
-          date: Date.parse('2022-05-20T09:00:00.000-05:00'),
-          icon: FaBookOpen
-        },
-        {
-          title:
-            'Big Blue Button: Open Source Software Business Models (Farsi)',
-          date: Date.parse('2022-05-19T10:00:00.000-05:00'),
-          icon: FaComments
-        },
-        {
           title: "Webinar: What's next for Touca?",
           date: Date.parse('2022-05-20T11:00:00.000-05:00'),
           link: 'https://zoom.us/webinar/register/WN_Ho-ncaLyQq2gnl_tDJxedQ',
@@ -208,7 +197,7 @@ export default function LaunchPage() {
         },
         {
           title: 'Discord: Good first issues for new contributors',
-          date: Date.parse('2022-05-20T14:00:00.000-05:00'),
+          date: Date.parse('2022-05-20T12:00:00.000-05:00'),
           link: 'https://discord.gg/PKCF6qMY?event=975546507522605096',
           icon: FaDiscord
         },
