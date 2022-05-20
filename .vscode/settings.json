@@ -38,6 +38,7 @@
     "sdist",
     "setuptools",
     "sonatype",
+    "syspath",
     "Touca",
     "trytouca",
     "unshallow",

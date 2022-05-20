@@ -10,6 +10,7 @@ from touca._printer import Printer
 from touca.cli._config import Config
 from touca.cli._execute import Execute
 from touca.cli._merge import Merge
+from touca.cli._plugin import Plugin
 from touca.cli._profile import Profile
 from touca.cli._post import Post
 from touca.cli._run import Run
@@ -42,7 +43,19 @@ def _warn_outdated_version():
 
 
 def main(args=None):
-    operations = [Config, Merge, Post, Profile, Run, Solve, Execute, Unzip, Update, Zip]
+    operations = [
+        Config,
+        Merge,
+        Plugin,
+        Post,
+        Profile,
+        Run,
+        Solve,
+        Execute,
+        Unzip,
+        Update,
+        Zip,
+    ]
     parser = ArgumentParser(
         prog="touca",
         add_help=False,
