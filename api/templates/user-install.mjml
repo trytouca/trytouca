@@ -10,7 +10,7 @@
       <mj-column>
         <mj-text><h3>New Server Install</h3></mj-text>
         <mj-text>
-          <a href="mailto:{{ email }}">{{ fullname }}</a>
+          <a href="mailto:{{ email }}">{{ name }}</a>
           from {{ company }} just installed a new self-hosted instance of Touca.
         </mj-text>
       </mj-column>
