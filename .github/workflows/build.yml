@@ -987,8 +987,7 @@ jobs:
 
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
-        if: |
-          steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
+        if: steps.params.outputs.release == 'true'
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
           aws-secret-access-key:
