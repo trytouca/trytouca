@@ -39,12 +39,13 @@ export async function platformConfig(
   }
 
   // prepare response
+
   const meta = await MetaModel.findOne({}, { contact: 1, mail: 1 })
   const response: PlatformConfig = {}
-  if (meta.contact) {
+  if (meta?.contact) {
     response.contact = meta.contact
   }
-  if (meta.mail) {
+  if (meta?.mail) {
     response.mail = meta.mail
   } else if (config.mail.host) {
     response.mail = {
