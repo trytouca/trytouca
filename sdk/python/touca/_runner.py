@@ -145,6 +145,7 @@ def prepare_parser(parser: ArgumentParser):
     )
 
 
+
 def _parse_cli_options(args) -> Dict[str, Any]:
     parser = ArgumentParser(
         description="Touca Regression Test",
@@ -389,12 +390,14 @@ def _run_workflow(options, workflow):
         stats.inc(status)
 
         if not errors and options.get("save-as-binary"):
-            Client.instance().save_binary(
-                os.path.join(casedir, "touca.bin"), [testcase]
-            )
+            full_path = os.path.join(casedir, "touca.bin")
+            Client.instance().save_binary(full_path, [testcase])
+            print(f"binary saved in {full_path}")
 
         if not errors and options.get("save-as-json"):
-            Client.instance().save_json(os.path.join(casedir, "touca.json"), [testcase])
+            full_path = os.path.join(casedir, "touca.json")
+            Client.instance().save_json(full_path, [testcase])
+            print(f"json saved in {full_path}")
 
         if not errors and not offline:
             Client.instance().post()
