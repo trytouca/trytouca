@@ -1,0 +1,95 @@
+<mjml>
+  <mj-head>
+    <mj-title>{{ subject }}</mj-title>
+    <mj-preview>
+      Version {{ promotedTo }} was promoted to baseline of suite {{ suiteName
+      }}.
+    </mj-preview>
+    <mj-include path="./layout/attributes.mjml" />
+  </mj-head>
+  <mj-body>
+    <mj-include path="./layout/header.mjml" />
+    <mj-section background-color="#0C4A6E" padding="0px">
+      <mj-column>
+        <mj-text color="#F0F9FF" padding-top="0px">
+          <h3 href="{{ batchLink }}">
+            {{ teamName }} > {{ suiteName }} > {{ batchName }}
+          </h3>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section mj-class="wsl-border-x">
+      <mj-column>
+        <mj-text>Hi {{ username }},</mj-text>
+        <mj-text>
+          <b>{{ promotedBy.fullname }}</b>
+          ({{ promotedBy.username }}) promoted version
+          <b>{{ promotedTo }}</b>
+          of suite
+          <b>{{ suiteName }}</b>
+          to baseline. All subsequent versions will now be compared against
+          results of version {{ promotedTo }}. They provided the following
+          reason for this change.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section mj-class="wsl-border-x">
+      <mj-column background-color="#eee" width="90%">
+        <mj-text>{{{ promotedFor }}}</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-raw>
+      <!-- htmlmin:ignore -->
+      {{#hasComparison}}
+      <!-- htmlmin:ignore -->
+    </mj-raw>
+    <mj-section mj-class="wsl-border-x">
+      <mj-column>
+        <mj-text>
+          We compared the latest version {{ srcBatchSlug }} with the new
+          baseline. {{#hasDifferentCases}} We found differences in {{
+          elementsCountDifferent }} of {{ elementsCountHead }} testcases.
+          {{/hasDifferentCases}} {{^hasDifferentCases}} We found no differences
+          between common testcases. {{/hasDifferentCases}} {{#hasFreshCases}}
+          {{#hasMissingCases}} There are {{ elementsCountFresh }} new testcases
+          and {{ elementsCountMissing }} missing testcases. {{/hasMissingCases}}
+          {{^hasMissingCases}} There are {{ elementsCountFresh }} new testcases.
+          {{/hasMissingCases}} {{/hasFreshCases}} {{^hasFreshCases}}
+          {{#hasMissingCases}} There are {{ elementsCountMissing }} missing
+          testcases. {{/hasMissingCases}} {{^hasMissingCases}} There are no new
+          or missing testcases. {{/hasMissingCases}} {{/hasFreshCases}}
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-include path="./layout/comparison-table.mjml" />
+    <mj-raw>
+      <!-- htmlmin:ignore -->
+      {{/hasComparison}}
+      <!-- htmlmin:ignore -->
+    </mj-raw>
+    <mj-raw>
+      <!-- htmlmin:ignore -->
+      {{^hasComparison}}
+      <!-- htmlmin:ignore -->
+    </mj-raw>
+    <mj-section mj-class="wsl-border-x">
+      <mj-column>
+        <mj-text>
+          Version {{ promotedTo }} is the latest submitted version of suite {{
+          suiteName }}.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-raw>
+      <!-- htmlmin:ignore -->
+      {{/hasComparison}}
+      <!-- htmlmin:ignore -->
+    </mj-raw>
+    <mj-section mj-class="wsl-border-b">
+      <mj-column>
+        <mj-button href="{{ batchLink }}">View Results</mj-button>
+      </mj-column>
+    </mj-section>
+    <mj-include path="./layout/footer-subscribers.mjml" />
+  </mj-body>
+</mjml>

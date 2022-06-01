@@ -1,0 +1,187 @@
+openapi: '3.0.0'
+info:
+  description: Touca Server API Specification
+  version: 1.4.0
+  title: Touca Server API
+  contact:
+    email: support@touca.io
+servers:
+  - url: https://api.touca.io
+
+components:
+  headers:
+    Location:
+      description: the url to redirect a page to
+      schema:
+        type: string
+        format: url
+
+  parameters:
+    user:
+      name: user
+      in: path
+      required: true
+      description: username of account to be updated
+      schema:
+        type: string
+        example: alice
+    member:
+      name: member
+      in: path
+      required: true
+      description: username of member to be updated
+      schema:
+        type: string
+        example: alice
+    account:
+      name: account
+      in: path
+      required: true
+      description: username of account to be updated
+      schema:
+        type: string
+        example: alice
+    team:
+      name: team
+      in: path
+      required: true
+      description: 'slug of this team'
+      schema:
+        type: string
+        example: acme
+    suite:
+      name: suite
+      in: path
+      required: true
+      description: 'slug of this suite'
+      schema:
+        type: string
+        example: potions-101
+    batch:
+      name: batch
+      in: path
+      required: true
+      description: 'version of the workflow'
+      schema:
+        type: string
+        example: 7.12.149
+    element:
+      name: element
+      in: path
+      required: true
+      description: 'testcase to be given as input to the workflow under test'
+      schema:
+        type: string
+    dstSuite:
+      name: dstSuite
+      in: path
+      required: true
+      description: 'slug of the suite to compare against'
+      schema:
+        type: string
+    dstBatch:
+      name: dstBatch
+      in: path
+      required: true
+      description: 'version to compare against'
+      schema:
+        type: string
+    dstElement:
+      name: dstElementName
+      in: path
+      required: true
+      description: 'slug of the element in the suite to compare against'
+      schema:
+        type: string
+    comment:
+      name: comment
+      in: path
+      required: true
+      description: 'unique id of this comment'
+      schema:
+        type: string
+        example: 123456
+    resetKey:
+      name: key
+      in: path
+      required: true
+      description: 'reset key provided by the platform'
+      schema:
+        type: string
+        format: uuid
+    job:
+      name: job
+      in: path
+      required: true
+      description: 'unique identifier for this comparison job'
+      schema:
+        $ref: '#/components/schemas/ObjectId'
+    session_id:
+      name: session_id
+      in: path
+      required: true
+      description: 'unique id of this session'
+      schema:
+        type: string
+
+  schemas:
+    Errors:
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          example: ['error message']
+    ObjectId:
+      additionalProperties: false
+      type: string
+      example: '5ed4609a6fc689752b000000'
+    Unknown:
+      additionalProperties: true
+      type: object
+
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    RequestInvalid:
+      description: Request Invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    UserNotFound:
+      description: User Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    TeamNotFound:
+      description: Team Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    MemberNotFound:
+      description: Member Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    SuiteNotFound:
+      description: Suite Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'

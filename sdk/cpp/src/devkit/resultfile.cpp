@@ -4,7 +4,10 @@
 
 #include <fstream>
 
-#include "nlohmann/json.hpp"
+#include "rapidjson/document.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
 #include "touca/core/testcase.hpp"
 #include "touca/devkit/deserialize.hpp"
 #include "touca/devkit/utils.hpp"
@@ -84,11 +87,17 @@ void ResultFile::save(const std::vector<Testcase>& testcases) {
 }
 
 std::string ResultFile::read_file_in_json() const {
-  nlohmann::ordered_json out;
-  for (const auto& item : _testcases.empty() ? parse() : _testcases) {
-    out.push_back(item.second->json());
+  const auto testcases = _testcases.empty() ? parse() : _testcases;
+  rapidjson::Document doc(rapidjson::kArrayType);
+  rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+  for (const auto& item : testcases) {
+    doc.PushBack(item.second->json(allocator), allocator);
   }
-  return out.dump();
+  rapidjson::StringBuffer strbuf;
+  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+  writer.SetMaxDecimalPlaces(3);
+  doc.Accept(writer);
+  return strbuf.GetString();
 }
 
 void ResultFile::merge(const ResultFile& other) {
@@ -120,27 +129,35 @@ ResultFile::ComparisonResult ResultFile::compare(
 }
 
 std::string ResultFile::ComparisonResult::json() const {
-  nlohmann::ordered_json items_fresh = nlohmann::json::array();
+  rapidjson::Document doc(rapidjson::kObjectType);
+  auto& allocator = doc.GetAllocator();
+
+  rapidjson::Value rjFresh(rapidjson::kArrayType);
   for (const auto& item : fresh) {
-    auto val = item.second->metadata().json();
-    items_fresh.push_back(val);
+    auto val = item.second->metadata().json(allocator);
+    rjFresh.PushBack(val, allocator);
   }
 
-  nlohmann::ordered_json items_missing = nlohmann::json::array();
+  rapidjson::Value rjMissing(rapidjson::kArrayType);
   for (const auto& item : missing) {
-    auto val = item.second->metadata().json();
-    items_missing.push_back(val);
+    auto val = item.second->metadata().json(allocator);
+    rjMissing.PushBack(val, allocator);
   }
 
-  nlohmann::ordered_json items_common = nlohmann::json::array();
+  rapidjson::Value rjCommon(rapidjson::kArrayType);
   for (const auto& item : common) {
-    items_common.push_back(item.second.json());
+    rjCommon.PushBack(item.second.json(allocator), allocator);
   }
 
-  return nlohmann::ordered_json({{"newCases", items_fresh},
-                                 {"missingCases", items_missing},
-                                 {"commonCases", items_common}})
-      .dump();
+  doc.AddMember("newCases", rjFresh, allocator);
+  doc.AddMember("missingCases", rjMissing, allocator);
+  doc.AddMember("commonCases", rjCommon, allocator);
+
+  rapidjson::StringBuffer strbuf;
+  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+  writer.SetMaxDecimalPlaces(3);
+  doc.Accept(writer);
+  return strbuf.GetString();
 }
 
 }  // namespace touca

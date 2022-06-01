@@ -1,3 +1,23 @@
+api:
+  - ".github/workflows/build.yml"
+  - "config/docker/api.Dockerfile"
+  - "config/flatbuffers/**"
+  - "api/**"
+
+app:
+  - ".github/workflows/build.yml"
+  - "config/docker/app.Dockerfile"
+  - "app/**"
+
+cmp:
+  - ".github/workflows/build.yml"
+  - "config/docker/cmp.Dockerfile"
+  - "cmp/**"
+
+ops:
+  - ".github/workflows/build.yml"
+  - "devops/**"
+
 docs:
   - ".github/workflows/build.yml"
   - "docs/**"

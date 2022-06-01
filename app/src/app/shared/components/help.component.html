@@ -1,0 +1,74 @@
+<div id="chat-box" [ngClass]="{ hidden: !isChatWidgetOpen }"></div>
+<div class="relative print:hidden" wslDropdown>
+  <div
+    class="wsl-dropdown-toggle fixed bottom-4 right-4 flex h-12 w-12 cursor-pointer select-none items-center justify-center rounded-full border border-gray-300 bg-white text-lg font-semibold text-gray-500 duration-150 ease-in-out hover:border-gray-400 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600"
+    id="wsl-help-dropdown"
+    aria-haspopup="true"
+    aria-expanded="false"
+    title="Need Help?"
+    (click)="closeChatWidgetIfOpen()">
+    <span>?</span>
+  </div>
+  <ul
+    class="wsl-dropdown-menu wsl-help-dropdown-menu bottom-16 right-4 hidden w-48"
+    aria-labelledby="wsl-help-dropdown">
+    <li
+      class="wsl-dropdown-item flex items-center space-x-2 px-2 duration-300 ease-in-out"
+      *ngIf="hasIntercom()"
+      (click)="openChatWidget()"
+      title="We use HubSpot for messaging.&#013;Make sure it's not blocked by your browser.">
+      <ng-icon
+        class="text-gray-500 dark:text-gray-400"
+        name="hero-chat-alt2"
+        size="1rem"></ng-icon>
+      <span class="text-gray-600 dark:text-gray-300">Send us a message</span>
+    </li>
+    <li
+      class="wsl-dropdown-item flex items-center space-x-2 px-2 duration-300 ease-in-out"
+      [routerLink]="['/feedback']"
+      [queryParams]="{ page: 'team' }"
+      title="Let us know how we can improve your experience.">
+      <ng-icon
+        class="text-gray-500 dark:text-gray-400"
+        name="hero-mail"
+        size="1rem"></ng-icon>
+      <span class="text-gray-600 dark:text-gray-300">Feedback</span>
+    </li>
+    <hr class="my-1 border-gray-200 dark:border-gray-700" />
+    <li class="flex items-center justify-center space-x-2 px-4">
+      <a
+        class="flex h-8 w-8 items-center justify-center rounded-full duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-gray-700"
+        href="https://github.com/trytouca"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Give us a Star on GitHub">
+        <ng-icon
+          class="text-gray-500 dark:text-gray-400"
+          name="feather-github"
+          size="1rem"></ng-icon>
+      </a>
+      <a
+        class="flex h-8 w-8 items-center justify-center rounded-full duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-gray-700"
+        href="https://twitter.com/trytouca"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Let's be friends on Twitter">
+        <ng-icon
+          class="text-gray-500 dark:text-gray-400"
+          name="feather-twitter"
+          size="1rem"></ng-icon>
+      </a>
+      <a
+        class="flex h-8 w-8 items-center justify-center rounded-full duration-300 ease-in-out hover:bg-gray-100 dark:hover:bg-gray-700"
+        href="https://linkedin.com/company/touca"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="Follow us on LinkedIn">
+        <ng-icon
+          class="text-gray-500 dark:text-gray-400"
+          name="feather-linkedin"
+          size="1rem"></ng-icon>
+      </a>
+    </li>
+  </ul>
+</div>

@@ -1,0 +1,180 @@
+<section class="wsl-page-tab" id="wsl-suite-tab-settings" *ngIf="suite && team">
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div
+      class="wsl-settings-section"
+      *ngIf="team.role === ETeamRole.Admin || team.role === ETeamRole.Owner">
+      <h3 for="wsl-suite-name">Suite Name</h3>
+      <app-alert
+        *ngIf="alert[EModalType.ChangeName]"
+        [alert]="alert[EModalType.ChangeName]"></app-alert>
+      <p>Short user-friendly name for this suite.</p>
+      <form
+        class="flex space-x-2"
+        [formGroup]="formName"
+        (ngSubmit)="onSubmit(EModalType.ChangeName, formName.value)"
+        novalidate>
+        <input
+          class="wsl-input-field"
+          type="text"
+          id="wsl-suite-name"
+          required
+          autocomplete="off"
+          aria-describedby="wsl-suite-name-help"
+          formControlName="name"
+          name="name" />
+        <button class="wsl-btn-sm wsl-btn-muted font-normal" type="submit">
+          Update
+        </button>
+      </form>
+      <small
+        class="wsl-text-muted"
+        id="wsl-suite-name-help"
+        [hidden]="
+          formName.controls.name.pristine || formName.controls.name.valid
+        ">
+        Should contain 3 to 32 characters.
+      </small>
+    </div>
+    <div
+      class="wsl-settings-section"
+      *ngIf="team.role === ETeamRole.Admin || team.role === ETeamRole.Owner">
+      <h3 for="wsl-suite-slug">Suite Slug</h3>
+      <app-alert
+        *ngIf="alert[EModalType.ChangeSlug]"
+        [alert]="alert[EModalType.ChangeSlug]"></app-alert>
+      <p>Unique url-friendly identifier for this suite.</p>
+      <form
+        class="flex space-x-2"
+        [formGroup]="formSlug"
+        (ngSubmit)="onSubmit(EModalType.ChangeSlug, formSlug.value)"
+        novalidate>
+        <input
+          class="wsl-input-field"
+          type="text"
+          id="wsl-suite-slug"
+          required
+          autocomplete="off"
+          aria-describedby="wsl-suite-slug-help"
+          formControlName="slug"
+          name="slug" />
+        <button class="wsl-btn-sm wsl-btn-muted font-normal" type="submit">
+          Update
+        </button>
+      </form>
+      <small
+        class="wsl-text-muted"
+        id="wsl-suite-slug-help"
+        [hidden]="
+          formSlug.controls.slug.pristine || formSlug.controls.slug.valid
+        ">
+        Should contain 3 to 16 alphanumeric characters and may not start with a
+        number.
+      </small>
+    </div>
+    <div class="wsl-settings-section">
+      <h3>Data Retention</h3>
+      <app-alert
+        *ngIf="alert[EModalType.ChangeRetainFor]"
+        [alert]="alert[EModalType.ChangeRetainFor]"></app-alert>
+      <p>
+        All testresults for this suite are retained for
+        <b>{{ suite.retainFor | datetime: 'interval':'seconds' }}</b>
+        . You may adjust this duration to up to
+        <span>two years</span>
+        . This change will not affect previously submitted results.
+      </p>
+      <small class="wsl-text-muted">Duration in months.</small>
+      <form
+        class="flex space-x-2"
+        [formGroup]="formRetainFor"
+        (ngSubmit)="onSubmit(EModalType.ChangeRetainFor, formRetainFor.value)"
+        novalidate>
+        <input
+          class="wsl-input-field"
+          type="number"
+          id="wsl-suite-retainFor"
+          required
+          autocomplete="off"
+          aria-describedby="wsl-suite-retainFor-help"
+          formControlName="retainFor"
+          name="retainFor" />
+        <button class="wsl-btn-sm wsl-btn-muted font-normal" type="submit">
+          Update
+        </button>
+      </form>
+      <small
+        class="wsl-text-muted"
+        id="wsl-suite-retainFor-help"
+        [hidden]="
+          formRetainFor.controls.retainFor.pristine ||
+          formRetainFor.controls.retainFor.valid
+        ">
+        Please enter a value in months no longer than 60 months.
+      </small>
+    </div>
+    <div class="wsl-settings-section">
+      <h3>Auto Seal Duration</h3>
+      <app-alert
+        *ngIf="alert[EModalType.ChangeSealAfter]"
+        [alert]="alert[EModalType.ChangeSealAfter]"></app-alert>
+      <p>
+        Newly submitted versions are set to be sealed after
+        <b>{{ suite.sealAfter | datetime: 'interval':'seconds' }}</b>
+        from the time the last test case was submitted. Sealing a version
+        prevents further submission of results to it. You may adjust this
+        duration to up to {{ 30 | datetime: 'interval':'minutes' }}.
+      </p>
+      <small class="wsl-text-muted">Duration in minutes.</small>
+      <form
+        class="flex space-x-2"
+        [formGroup]="formSealAfter"
+        (ngSubmit)="onSubmit(EModalType.ChangeSealAfter, formSealAfter.value)"
+        novalidate>
+        <input
+          class="wsl-input-field"
+          type="number"
+          id="wsl-suite-sealAfter"
+          required
+          autocomplete="off"
+          aria-describedby="wsl-suite-sealAfter-help"
+          formControlName="sealAfter"
+          name="sealAfter" />
+        <button class="wsl-btn-sm wsl-btn-muted font-normal" type="submit">
+          Update
+        </button>
+      </form>
+      <small
+        class="wsl-text-muted"
+        id="wsl-suite-sealAfter-help"
+        [hidden]="
+          formSealAfter.controls.sealAfter.pristine ||
+          formSealAfter.controls.sealAfter.valid
+        ">
+        Please enter a value no longer than 30 minutes.
+      </small>
+    </div>
+    <div
+      class="wsl-settings-section"
+      *ngIf="team.role === ETeamRole.Admin || team.role === ETeamRole.Owner">
+      <h3 class="wsl-text-danger">Danger Zone</h3>
+      <app-alert
+        *ngIf="alert[EModalType.DeleteSuite]"
+        [alert]="alert[EModalType.DeleteSuite]"></app-alert>
+      <p>
+        You are an administrator of team
+        <b>{{ suite.teamName }}</b>
+        . You may delete this suite if you so choose. This action permanently
+        removes all data associated with suite
+        <b>{{ suite.suiteName }}</b>
+        , including submitted test results for all versions, comments and
+        promotions.
+      </p>
+      <button
+        class="wsl-btn-sm wsl-btn-danger"
+        (click)="openConfirmModal(EModalType.DeleteSuite)"
+        type="button">
+        Delete Suite
+      </button>
+    </div>
+  </div>
+</section>

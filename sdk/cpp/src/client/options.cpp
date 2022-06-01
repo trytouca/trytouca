@@ -1,8 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/client/detail/options.hpp"
 
-#include "nlohmann/json.hpp"
+#include <functional>
+
+#include "rapidjson/document.h"
 #include "touca/core/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
 
@@ -130,22 +132,23 @@ std::unordered_map<std::string, std::string> load_options(
   const auto& content = touca::detail::load_string_file(path);
 
   // parse configuration file
-  const auto& parsed = nlohmann::json::parse(content, nullptr, false);
+  rapidjson::Document parsed;
+  parsed.Parse(content);
 
   // check that configuration file has a top-level `touca` section
-  if (parsed.is_discarded() || !parsed.is_object() ||
-      !parsed.contains("touca") || !parsed["touca"].is_object()) {
+  if (parsed.HasParseError() || !parsed.IsObject() ||
+      !parsed.HasMember("touca") || !parsed["touca"].IsObject()) {
     throw std::runtime_error("configuration file is not valid");
   }
 
   // parse configuration parameters from the JSON content.
   std::unordered_map<std::string, std::string> options;
   const auto& config = parsed["touca"];
-  for (const auto& key : {"team", "suite", "version", "api-key", "api-url",
-                          "offline", "single-thread"}) {
-    if (config.contains(key) && config[key].is_string()) {
-      options.emplace(key, config[key].get<std::string>());
+  for (auto&& it = config.MemberBegin(); it != config.MemberEnd(); ++it) {
+    if (!it->name.IsString() || !it->value.IsString()) {
+      continue;
     }
+    options.emplace(it->name.GetString(), it->value.GetString());
   }
   return options;
 }

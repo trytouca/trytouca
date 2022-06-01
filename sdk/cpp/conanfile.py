@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 from conans import ConanFile, CMake
 
@@ -48,8 +48,8 @@ class ToucaConan(ConanFile):
         self.requires("flatbuffers/2.0.0")
         self.requires("fmt/8.0.1")
         self.requires("ghc-filesystem/1.5.8")
-        self.requires("nlohmann_json/3.10.3")
         self.requires("mpark-variant/1.4.0")
+        self.requires("rapidjson/1.1.0")
         if (
             self.options.with_examples
             or self.options.with_framework
@@ -93,8 +93,8 @@ class ToucaConan(ConanFile):
             "fmt::fmt",
             "flatbuffers::flatbuffers",
             "ghc-filesystem::ghc-filesystem",
-            "mpark_variant::mpark_variant",
-            "nlohmann_json::nlohmann_json",
+            "mpark-variant::mpark-variant",
+            "rapidjson::rapidjson",
         ]
         if (
             self.options.with_examples

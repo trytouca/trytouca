@@ -1,0 +1,91 @@
+<header class="h-16 bg-gray-50 dark:bg-gray-900">
+  <div class="container mx-auto flex h-16 justify-between px-4">
+    <div class="flex select-none items-center">
+      <img
+        class="h-12"
+        src="./assets/logo/touca-logo-transparent.svg"
+        alt="Touca Logo" />
+      <h1
+        class="text-xl font-semibold tracking-tight text-sky-600 dark:text-white">
+        Touca
+      </h1>
+    </div>
+  </div>
+</header>
+<div
+  class="wsl-min-h-screen-1 grid grid-cols-1 bg-gray-50 dark:bg-gray-900 sm:place-content-center sm:p-4">
+  <div
+    class="col-span-1 mx-auto w-full max-w-lg space-y-2 rounded-lg p-4 dark:bg-gray-800">
+    <h2
+      class="text-center text-2xl font-semibold text-black dark:text-gray-300">
+      Welcome Aboard!
+    </h2>
+    <p class="text-center text-sm text-black dark:text-gray-300">
+      Before we get started, we'd like to know a little more about you.
+    </p>
+    <hr class="border-2 border-sky-100 dark:border-gray-700" />
+    <form
+      class="wsl-form flex-grow px-2 py-4"
+      [formGroup]="onboardForm"
+      (ngSubmit)="onSubmit(onboardForm.value)"
+      novalidate>
+      <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+      <div>
+        <label class="wsl-input-label" for="wsl-fname">Full Name</label>
+        <input
+          class="wsl-input-field"
+          type="text"
+          id="wsl-fname"
+          name="fname"
+          formControlName="fname"
+          aria-describedby="wsl-fname-help"
+          required
+          autocomplete="name"
+          data-lpignore="true" />
+        <small
+          id="wsl-fname-help"
+          [ngClass]="hints.get('fname').type"
+          [innerHTML]="hints.get('fname').text"></small>
+      </div>
+      <div>
+        <label class="wsl-input-label" for="wsl-uname">Username</label>
+        <input
+          class="wsl-input-field"
+          type="text"
+          id="wsl-uname"
+          name="uname"
+          formControlName="uname"
+          aria-describedby="wsl-uname-help"
+          required
+          autocomplete="username" />
+        <small
+          id="wsl-uname-help"
+          [ngClass]="hints.get('uname').type"
+          [innerHTML]="hints.get('uname').text"></small>
+      </div>
+      <div>
+        <label class="wsl-input-label" for="wsl-upass">Password</label>
+        <input
+          class="wsl-input-field"
+          type="password"
+          id="wsl-upass"
+          name="upass"
+          formControlName="upass"
+          aria-describedby="wsl-upass-help"
+          required
+          autocomplete="new-password" />
+        <small
+          id="wsl-upass-help"
+          [ngClass]="hints.get('upass').type"
+          [innerHTML]="hints.get('upass').text"></small>
+      </div>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit">
+          <button class="wsl-btn-lg wsl-btn-primary" type="submit">
+            Submit
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

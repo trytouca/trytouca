@@ -1,0 +1,150 @@
+<app-notification></app-notification>
+<ng-container *ngIf="notFound()">
+  <app-missing [args]="notFound()">
+  </app-missing>
+</ng-container>
+<div class="max-w-screen-xl py-8 mx-auto" *ngIf="!notFound()" [hidden]="!suite">
+  <main class="container px-4 mx-auto space-y-4 wsl-min-h-screen-2 xl:px-8">
+    <div class="wsl-page-head wsl-box">
+      <nav aria-label="breadcrumb">
+        <ol>
+          <li><a routerLink="..">{{ suite?.teamName }}</a></li>
+          <li aria-current="page" wslDropdown>
+            <div class="cursor-pointer wsl-dropdown-toggle flex items-center"
+              id="wsl-suites-dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              <span>{{ suite?.suiteName }}</span>
+              <ng-icon name="hero-chevron-down"></ng-icon>
+            </div>
+            <ul
+              class="hidden w-48 divide-y divide-gray-100 wsl-dropdown-menu dark:divide-gray-700"
+              aria-labelledby="wsl-suites-dropdown">
+              <li *ngFor="let suiteItem of suites"
+                (click)="switchPage(suiteItem.suiteSlug)"
+                class="wsl-dropdown-item"
+                [ngClass]="{'bg-sky-100 dark:bg-gray-800': suite?.suiteSlug === suiteItem.suiteSlug}">
+                {{ suiteItem.suiteName }}
+              </li>
+            </ul>
+          </li>
+        </ol>
+      </nav>
+      <div class="flex space-x-2 print:hidden"
+        *ngIf="currentTab === TabType.Versions && hasData() && hasItems()">
+        <div wslDropdown>
+          <button
+            class="flex items-center space-x-1 wsl-dropdown-toggle wsl-btn-sm wsl-btn-primary"
+            id="wsl-suite-submit-results" aria-haspopup="true"
+            aria-expanded="false">
+            <ng-icon class="h-4" name="hero-upload" size="1rem">
+            </ng-icon>
+            <span>Submit</span>
+          </button>
+          <div class="hidden px-2 space-y-2 wsl-dropdown-menu w-80"
+            aria-labelledby="wsl-suite-submit-results">
+            <div
+              class="flex items-center space-x-1 font-medium text-black dark:text-gray-300">
+              <ng-icon class="h-4" name="hero-terminal" size="1rem">
+              </ng-icon>
+              <span>Using Client Libraries</span>
+            </div>
+            <div class="wsl-input-group">
+              <div class="text-xs font-medium text-black dark:text-gray-400">
+                API Key
+              </div>
+              <div class="flex w-full">
+                <div
+                  class="flex items-center flex-grow px-2 overflow-x-hidden font-mono text-xs text-gray-500 bg-white border border-gray-300 rounded-l cursor-pointer whitespace-nowrap dark:bg-gray-900 dark:border-gray-600 dark:text-gray-400"
+                  (click)="fields.apiKey.toggle()">{{ fields.apiKey.value }}
+                </div>
+                <div
+                  class="flex justify-center p-2 text-xs font-medium duration-300 ease-in-out bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700"
+                  ngxClipboard [cbContent]="fields.apiKey.plain"
+                  (cbOnSuccess)="onCopy($event, 'API Key')">
+                  <ng-icon title="Copy API Key to clipboard"
+                    name="hero-clipboard-copy" size="1rem"></ng-icon>
+                </div>
+              </div>
+            </div>
+            <div class="wsl-input-group">
+              <div class="text-xs font-medium text-black dark:text-gray-400">API
+                URL</div>
+              <div class="flex w-full">
+                <div
+                  class="flex items-center flex-grow px-2 overflow-x-hidden font-mono text-xs text-gray-500 bg-white border border-gray-300 rounded-l whitespace-nowrap dark:bg-gray-900 dark:border-gray-600 dark:text-gray-400">
+                  {{ fields.apiUrl }}</div>
+                <div
+                  class="flex justify-center p-2 text-xs font-medium duration-300 ease-in-out bg-gray-100 border border-l-0 border-gray-300 rounded-r cursor-pointer text-sky-600 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-600 dark:hover:bg-gray-700"
+                  ngxClipboard [cbContent]="fields.apiUrl"
+                  (cbOnSuccess)="onCopy($event, 'API URL')">
+                  <ng-icon title="Copy API URL to clipboard"
+                    name="hero-clipboard-copy" size="1rem"></ng-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div wslDropdown>
+          <button
+            class="flex items-center h-full space-x-1 delay-200 wsl-btn-sm wsl-btn-muted wsl-dropdown-toggle"
+            id="dropdown-button-subscribe" aria-haspopup="true"
+            aria-expanded="false">
+            <ng-icon class="wsl-text-muted" size="1.05rem" name="feather-bell"
+              [ngClass]="{'rotate-12': suite.subscription !== NotificationType.None}">
+            </ng-icon>
+            <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
+              {{ suite.subscription === NotificationType.None ? 'Subscribe' : 'Subscribed' }}
+            </span>
+          </button>
+          <ul class="hidden w-max wsl-dropdown-menu"
+            aria-labelledby="dropdown-button-subscribe">
+            <ng-container *ngFor="let level of levels">
+              <li class="flex items-center space-x-2 wsl-dropdown-item"
+                [ngClass]="{'bg-gray-200 dark:bg-gray-700': suite.subscription === level.type}"
+                (click)="subscription = level.type">
+                <ng-icon [name]="level.icon" class="wsl-text-muted"
+                  size="1.05rem">
+                </ng-icon>
+                <span class="font-medium"
+                  [ngClass]="suite.subscription === level.type ? 'text-gray-800 dark:text-gray-100' : 'text-gray-600 dark:text-gray-300'">
+                  {{ level.text }}
+                </span>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <nav>
+      <ul class="flex space-x-4">
+        <ng-container *ngFor="let tab of tabs">
+          <li class="wsl-page-nav-item"
+            [ngClass]="{'wsl-tab-active': tab.type === currentTab }"
+            *ngIf="tab.shown" (click)="switchTab(tab.type)">
+            <ng-icon [name]="tab.icon" size="1.25rem">
+            </ng-icon>
+            <p>{{ tab.name }}</p>
+            <span *ngIf="tab.counter">{{ tab.counter }}</span>
+          </li>
+        </ng-container>
+      </ul>
+    </nav>
+    <div [hidden]="currentTab !== TabType.Versions || !hasData() || hasItems()">
+      <app-suite-first-batch>
+      </app-suite-first-batch>
+    </div>
+    <div
+      [hidden]="currentTab !== TabType.Versions || !hasData() || !hasItems()">
+      <app-suite-tab-batches>
+      </app-suite-tab-batches>
+    </div>
+    <div [hidden]="currentTab !== TabType.Testcases">
+      <app-suite-tab-cases>
+      </app-suite-tab-cases>
+    </div>
+    <div [hidden]=" currentTab !==TabType.Settings">
+      <app-suite-tab-settings>
+      </app-suite-tab-settings>
+    </div>
+  </main>
+</div>

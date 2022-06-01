@@ -9,12 +9,12 @@ class Solve(Operation):
     name = "solve"
     help = "Solve every problem (April 1st, 2022)"
 
-    def __init__(self, options: dict):
-        pass
-
     @classmethod
     def parser(self, parser: ArgumentParser):
         parser.add_argument("args", nargs="+", help="any problem")
+
+    def __init__(self, options: dict):
+        pass
 
     def run(self):
         print("Solved!")

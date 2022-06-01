@@ -1,0 +1,288 @@
+// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '~tippy.js/dist/tippy.css';
+@import '~tippy.js/themes/light.css';
+@import '~tippy.js/animations/scale.css';
+
+@layer components {
+  .wsl-btn-sm {
+    @apply rounded py-1 px-2 text-sm leading-6 focus:outline-none;
+  }
+  .wsl-btn-lg {
+    @apply rounded-lg py-2 px-4 text-sm font-semibold leading-6 focus:outline-none;
+  }
+  .wsl-btn-primary {
+    @apply bg-sky-600 font-medium text-white shadow-md duration-150 ease-in-out hover:bg-sky-900 focus:ring-2 focus:ring-sky-400 focus:ring-opacity-50 dark:bg-sky-800 dark:shadow-none;
+  }
+  .wsl-btn-secondary {
+    @apply bg-sky-100 text-sky-700 shadow-sm duration-150 ease-in-out hover:bg-sky-200 focus:ring-2 focus:ring-sky-400 focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:shadow-none dark:hover:bg-gray-600;
+  }
+  .wsl-btn-danger {
+    @apply bg-red-600 font-medium text-white shadow-md duration-150 ease-in-out hover:bg-red-700 focus:ring-2 focus:ring-red-400 focus:ring-opacity-50 dark:bg-red-800 dark:shadow-none dark:hover:bg-red-900;
+  }
+  .wsl-btn-muted {
+    @apply border border-gray-200 bg-gray-50 text-black duration-150 ease-in-out hover:bg-gray-100 focus:ring-1 focus:ring-gray-400 focus:ring-opacity-50 disabled:text-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-gray-500 dark:disabled:text-gray-600;
+  }
+  .wsl-input-field {
+    @apply block w-full rounded-md border-gray-300 bg-white text-sm text-black shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-300 dark:focus:ring-0;
+  }
+  .wsl-input-label {
+    @apply mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300;
+  }
+  .wsl-text-danger {
+    @apply text-red-600 dark:text-red-500;
+  }
+  .wsl-text-muted {
+    @apply text-gray-500 dark:text-gray-400;
+  }
+  .wsl-text-success {
+    @apply text-green-600;
+  }
+}
+
+@layer utilities {
+  .wsl-min-h-screen-1 {
+    min-height: calc(100vh - 4rem);
+  }
+  .wsl-min-h-screen-2 {
+    min-height: calc(100vh - 8rem);
+  }
+  .wsl-min-h-screen-3 {
+    min-height: calc(100vh - 17rem);
+  }
+  .wsl-min-h-screen-4 {
+    min-height: calc(100vh - 21rem);
+  }
+  .wsl-form {
+    @apply space-y-4;
+  }
+  .wsl-form-footer {
+    @apply mt-4 flex;
+  }
+  .wsl-form-submit {
+    @apply flex-grow;
+  }
+  .wsl-form-links {
+    @apply space-x-4;
+  }
+  .wsl-modal-header {
+    @apply border-b border-gray-200 bg-gray-100 p-3 dark:border-gray-700 dark:bg-gray-800;
+  }
+  .wsl-modal-title {
+    @apply font-medium text-black dark:text-gray-300;
+  }
+  .wsl-modal-body {
+    @apply space-y-4 p-4 dark:bg-gray-800;
+  }
+  .wsl-page-auth {
+    @apply container mx-auto grid grid-cols-1 place-content-center;
+  }
+  .wsl-page-auth-title {
+    @apply mx-auto mb-6 text-3xl font-semibold text-black dark:text-gray-300;
+  }
+  .wsl-page-auth-body {
+    @apply mx-auto w-full max-w-lg;
+  }
+  .wsl-page-tab {
+    @apply space-y-4;
+  }
+  .wsl-page-banner {
+    @apply wsl-page-auth space-y-4 text-center text-black dark:text-gray-300 md:max-w-md;
+    h2 {
+      @apply text-3xl font-medium;
+    }
+    h3 {
+      @apply wsl-text-muted text-xl;
+    }
+    img {
+      @apply mx-auto w-3/5 p-4;
+    }
+    p {
+      @apply p-4 text-left font-light dark:rounded-lg dark:bg-gray-800 dark:text-gray-200;
+    }
+    a {
+      @apply font-medium text-sky-700 dark:text-sky-600;
+    }
+    button {
+      @apply wsl-btn-lg wsl-btn-primary;
+    }
+  }
+  .wsl-dropdown-menu {
+    @apply absolute right-0 z-10 mt-2 rounded-md border border-gray-200 bg-white py-2 text-sm font-normal shadow-md dark:border-gray-700 dark:bg-gray-800 print:hidden;
+  }
+  .wsl-dropdown-item {
+    @apply cursor-pointer select-none p-2 text-black hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-900;
+  }
+  .wsl-box {
+    @apply rounded-md bg-white shadow-sm dark:bg-gray-800 print:border print:border-gray-200 print:shadow-none;
+  }
+  /* settings.scss */
+  .wsl-settings-section {
+    @apply rounded-md bg-white p-4 shadow-sm dark:bg-gray-800;
+    app-alert {
+      @apply mb-4 block;
+    }
+    h3 {
+      @apply mb-2 border-b border-gray-200 pb-2 text-lg font-medium text-black dark:border-gray-700 dark:text-gray-300;
+    }
+    b {
+      @apply font-medium;
+    }
+    p {
+      @apply mb-4 text-sm text-black dark:text-gray-300;
+    }
+  }
+  /* page.scss */
+  .wsl-page-head {
+    @apply mx-auto flex h-16 select-none items-center px-4 py-2 text-lg font-medium;
+    nav {
+      @apply flex-grow whitespace-nowrap;
+    }
+    nav ol {
+      @apply flex text-blue-500 dark:text-sky-600;
+    }
+    nav ol > li:last-child {
+      @apply text-black dark:text-gray-300;
+    }
+    nav ol > li:not(:last-child):after {
+      content: '\2004/\2004';
+      @apply text-gray-400 dark:text-gray-500;
+    }
+  }
+  .wsl-page-nav-item {
+    @apply flex cursor-pointer select-none items-center space-x-2 rounded-md px-4 py-2 duration-300 ease-in-out hover:bg-gray-200 hover:bg-opacity-50 dark:hover:bg-gray-800;
+    ng-icon {
+      @apply text-gray-500 dark:text-gray-400;
+    }
+    p {
+      @apply flex-grow text-sm font-medium text-black dark:text-gray-200;
+    }
+    span {
+      @apply hidden h-6 w-6 rounded-full bg-gray-200 p-1 text-center text-xs font-medium group-hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:group-hover:bg-gray-900 sm:block;
+    }
+  }
+  .wsl-tab-active {
+    @apply bg-gray-200 dark:bg-gray-800;
+    ng-icon {
+      @apply text-gray-600 dark:text-gray-300;
+    }
+    span {
+      @apply bg-gray-100 text-black dark:bg-gray-700 dark:text-gray-200;
+    }
+  }
+  /* list.scss */
+  .wsl-list-body {
+    @apply border-t border-t-gray-200 dark:border-t-gray-700;
+    li {
+      @apply border-b border-l-4 border-b-gray-200 dark:border-b-gray-700;
+    }
+  }
+  .wsl-list-head {
+    h3 {
+      @apply pb-1 text-xl font-medium text-black dark:text-gray-300;
+    }
+    p {
+      @apply pb-2 text-xs text-gray-500 dark:text-gray-400;
+    }
+  }
+  /* item.scss */
+  .wsl-list-item {
+    @apply py-4 px-2 md:flex md:justify-between md:px-4;
+  }
+  .wsl-item-heading {
+    @apply flex space-x-4;
+  }
+  .wsl-item-status {
+    @apply flex items-center leading-8;
+  }
+  .wsl-item-title {
+    p {
+      @apply max-w-xs truncate text-base font-medium leading-8 text-gray-700 dark:text-gray-300 xl:max-w-lg;
+    }
+    a p {
+      @apply text-blue-500 dark:text-sky-500;
+    }
+  }
+  .wsl-item-topics {
+    @apply flex flex-row space-x-8 text-sm md:leading-8;
+  }
+  .wsl-item-topic {
+    @apply select-none text-right text-gray-500 dark:text-gray-400;
+    min-width: 4rem;
+  }
+  .wsl-item-ctrl-box {
+    @apply flex min-w-[5rem] flex-row-reverse text-sm leading-8 print:hidden;
+    .wsl-item-ctrl {
+      @apply cursor-pointer px-2;
+      fa-icon {
+        @apply text-lg text-gray-200 dark:text-sky-700;
+      }
+      &:hover fa-icon {
+        @apply text-gray-300 dark:text-sky-600;
+      }
+    }
+  }
+  .wsl-item-pills {
+    @apply hidden flex-row space-x-1 overflow-hidden text-xs leading-6 sm:flex sm:leading-8 lg:whitespace-nowrap;
+  }
+  .wsl-item-pill {
+    @apply flex cursor-pointer select-none items-center space-x-1 overflow-hidden whitespace-nowrap rounded-full border border-gray-200 bg-white px-1 text-gray-500 duration-75 ease-in-out hover:border-gray-300 hover:text-gray-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:text-gray-200 lg:px-2 xl:px-3;
+  }
+  /* result.scss */
+  .wsl-item-topic-type-simple {
+    @apply flex min-w-[5rem] justify-center rounded bg-gray-100 px-3 py-1 leading-5 text-gray-500 dark:bg-gray-700 dark:text-gray-400;
+  }
+  .wsl-item-topic-type-complex {
+    @apply flex min-w-[5rem] cursor-pointer items-center justify-center rounded border border-blue-200 bg-blue-100 px-3 py-1 leading-5 text-blue-500 delay-150 ease-in-out hover:bg-blue-200 dark:border-gray-600 dark:bg-gray-700 dark:text-sky-400 dark:hover:bg-gray-600;
+  }
+  .wsl-complex-block {
+    @apply px-4;
+    .wsl-complex-block-head {
+      @apply flex justify-between px-4 text-gray-500 dark:text-gray-300;
+    }
+    .wsl-complex-block-desc {
+      @apply text-center;
+      span {
+        @apply text-sm;
+      }
+    }
+    .wsl-complex-block-icons {
+      @apply invisible;
+      .wsl-complex-block-icon {
+        @apply text-sky-600 opacity-50 hover:opacity-100;
+      }
+    }
+    pre {
+      @apply bg-white p-4 text-xs text-black dark:bg-gray-800 dark:text-gray-300;
+    }
+    &:hover .wsl-complex-block-icons {
+      @apply visible;
+    }
+  }
+  .wsl-complex-single {
+    @apply pb-4 md:mx-auto md:w-3/4;
+  }
+  .wsl-complex-double {
+    @apply pb-4 md:grid md:grid-cols-2 md:gap-4;
+  }
+}
+
+ngneat-dialog {
+  .ngneat-dialog-content {
+    border-radius: 0.5rem;
+  }
+}
+
+#chat-box {
+  @apply fixed bottom-16 z-40 h-[530px] w-[376px] md:right-4;
+  #hubspot-conversations-inline-parent {
+    @apply h-full;
+  }
+  iframe {
+    @apply h-full w-full rounded-lg border border-gray-200 shadow-lg;
+  }
+}

@@ -4,6 +4,30 @@
 
 Breaking Changes:
 
+- Switch from `nlohmann/json` to `RapidJSON` (#69)
+
+Bug Fixes:
+
+- Fix incorrect iterator access
+
+Improvements:
+
+- Refactor data_point, array and object classes
+- Translation units should compile with `-std=c++11` by default
+- Fix unnecessary pass by value in Response constructor
+- Use variant to store captured values in data point
+
+Other:
+
+- Examples should promote using return value of run function
+- Simplify swap function to fix broken build for older compilers
+- Move example `external_input` to `examples` directory
+- Reduce clang-tidy warnings
+
+## v1.5.1
+
+Breaking Changes:
+
 - Remove suites header file (#103)
 - Remove legacy test framework (#110)
 

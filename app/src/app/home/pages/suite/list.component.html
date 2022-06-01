@@ -1,0 +1,57 @@
+<section class="wsl-page-tab" id="wsl-suite-tab-batches">
+  <div
+    class="wsl-min-h-screen-3 grid place-items-stretch gap-4 space-y-4 md:space-y-0 lg:grid-cols-2 xl:grid-cols-3">
+    <div class="wsl-box col-span-1 space-y-4 p-4 xl:col-span-2">
+      <app-home-list-filter
+        [manager]="filterManager"
+        [params]="filterParams()"
+        [stats]="filterStats()"
+        (updateList)="updateList($event)"></app-home-list-filter>
+      <div *ngIf="countShownRows(ItemType.Batch)">
+        <div class="wsl-list-head">
+          <p
+            *ngIf="
+              countShownRows(ItemType.Batch) !== countRows(ItemType.Batch)
+            ">
+            You are viewing
+            <b>
+              {{
+                countShownRows(ItemType.Batch)
+                  | i18nPlural: { '=0': 'none', '=1': 'one', other: '#' }
+              }}
+            </b>
+            of {{ countRows(ItemType.Batch) }} versions.
+          </p>
+        </div>
+        <ul class="wsl-list-body">
+          <li
+            class="wsl-list-item-outer"
+            *ngFor="let item of getShownRows(ItemType.Batch); let i = index"
+            (click)="selectedRow = i"
+            [ngClass]="
+              selectedRow === i
+                ? 'border-l-sky-200 dark:border-l-sky-700'
+                : 'border-l-transparent'
+            ">
+            <app-suite-item-batch
+              *ngIf="item.type === ItemType.Batch"
+              [item]="item.asBatch()"
+              [chosenTopics]="chosenTopic"
+              (updateChosenTopics)="
+                updateChosenTopics($event)
+              "></app-suite-item-batch>
+          </li>
+        </ul>
+      </div>
+      <app-home-list-pager
+        [params]="pagerParams()"
+        [stats]="filterStats()"
+        (updateList)="updateList($event)"></app-home-list-pager>
+    </div>
+    <div class="flex flex-col space-y-4">
+      <app-suite-trends-runtime class="wsl-box"></app-suite-trends-runtime>
+      <app-suite-tab-comments
+        class="wsl-box flex-grow"></app-suite-tab-comments>
+    </div>
+  </div>
+</section>

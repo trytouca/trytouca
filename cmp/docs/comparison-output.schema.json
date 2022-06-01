@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://touca.io/schemas/touca/comparator-standalone.json",
+  "definitions": {
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "builtAt": {
+      "type": "string",
+      "format": "date-time",
+      "minLength": 1
+    },
+    "testcaseName": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "testsuiteName": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 100
+    },
+    "reportedKey": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reportedResultScore": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "exclusiveMaximum": false,
+      "exclusiveMinimum": false
+    },
+    "reportedResultType": {
+      "type": "string",
+      "enum": ["bool", "number", "string", "array", "object"]
+    },
+    "reportedResultValue": {
+      "type": "string",
+      "minLength": 0
+    },
+    "reportedMetricValue": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMinimum": false
+    },
+    "reportedMetricDiff": {
+      "type": "number"
+    },
+    "testcaseMeta": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["version", "builtAt"],
+      "properties": {
+        "version": {
+          "$ref": "#/definitions/version"
+        },
+        "builtAt": {
+          "$ref": "#/definitions/builtAt"
+        }
+      }
+    },
+    "testcaseResults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["newKeys", "missingKeys", "commonKeys"],
+      "properties": {
+        "commonKeys": {
+          "type": "array",
+          "additionalItems": false,
+          "uniqueItems": true,
+          "minItems": 0,
+          "items": {
+            "$ref": "#/definitions/resultEntity1"
+          }
+        },
+        "newKeys": {
+          "type": "array",
+          "additionalItems": false,
+          "uniqueItems": true,
+          "minItems": 0,
+          "items": {
+            "$ref": "#/definitions/resultEntity2"
+          }
+        },
+        "missingKeys": {
+          "type": "array",
+          "additionalItems": false,
+          "uniqueItems": true,
+          "minItems": 0,
+          "items": {
+            "$ref": "#/definitions/resultEntity2"
+          }
+        }
+      }
+    },
+    "resultEntity1": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "src", "dst", "score", "desc"],
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/reportedKey"
+        },
+        "type": {
+          "$ref": "#/definitions/reportedResultType"
+        },
+        "score": {
+          "$ref": "#/definitions/reportedResultScore"
+        },
+        "src": {
+          "$ref": "#/definitions/reportedResultValue"
+        },
+        "dst": {
+          "$ref": "#/definitions/reportedResultValue"
+        },
+        "desc": {
+          "type": "array",
+          "additionalItems": false,
+          "uniqueItems": true,
+          "minItems": 0,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "resultEntity2": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "value"],
+      "properties": {
+        "name": {
+          "$ref": "#/definitions/reportedKey"
+        },
+        "type": {
+          "$ref": "#/definitions/reportedResultType"
+        },
+        "value": {
+          "$ref": "#/definitions/reportedResultValue"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "testsuite",
+    "testcase",
+    "src",
+    "dst",
+    "assertions",
+    "results",
+    "metrics"
+  ],
+  "properties": {
+    "testsuite": {
+      "$ref": "#/definitions/testsuiteName"
+    },
+    "testcase": {
+      "$ref": "#/definitions/testcaseName"
+    },
+    "src": {
+      "$ref": "#/definitions/testcaseMeta"
+    },
+    "dst": {
+      "$ref": "#/definitions/testcaseMeta"
+    },
+    "assertions": {
+      "$ref": "#/definitions/testcaseResults"
+    },
+    "results": {
+      "$ref": "#/definitions/testcaseResults"
+    },
+    "metrics": {
+      "$ref": "#/definitions/testcaseResults"
+    }
+  }
+}

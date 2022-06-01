@@ -3,13 +3,12 @@ import TabItem from "@theme/TabItem";
 
 # Self-Hosting
 
-You could deploy Touca on your own infrastructure. This page shows you how.
-
-We've made the process straightforward and self-serve. But we are here to help
-if you ever needed help or had any questions. You could
-[join our Community Discord server](https://discord.gg/pTXKTVzPpA),
-[send us an email](mailto:support@touca.io), or
-[schedule a free 1:1 pairing session](https://calendly.com/ghorbanzade/30min).
+Touca Server and Touca SDKs are all open-source with a permissive Apache-2
+license. You can deploy Touca Server locally or to your own cloud
+infrastructure. We've made the process straightforward and self-serve. If you
+ever needed help or had any questions, you are welcome to
+[join our Community Discord server](https://touca.io/discord), or
+[send us an email](mailto:support@touca.io).
 
 :::info
 
@@ -20,19 +19,15 @@ deploying and upgrading self-hosted instances of Touca.
 
 ## Prerequisites
 
-Touca server has a few components and services. In the most common scenario, you
-could deploy them as Docker containers on a single machine and make adjustments
-based on your scalability and fault-tolerance requirements.
+Touca server has a few components and services. In the most basic deployment
+scenario, you could run them as Docker containers on a single machine.
 
 The instructions below help you get started with this common scenario. To run
 this script, you need a UNIX machine with at least 2GB of RAM, with Docker and
-Docker Compose, and AWS CLI installed. You need our deployment scripts that
-include a Docker Compose file that pulls docker images from our private Elastic
-Container Registry. You also need our AWS Credentials to authenticate to our
-ECR.
+Docker Compose.
 
-There is no restriction for the choice of Unix distribution. However, the
-instructions below are written for and tested on Ubuntu 20.04 LTS distribution.
+There is no restriction for the choice of Unix distribution. The instructions
+below are written for and tested on Ubuntu 20.04 LTS distribution.
 
 ## Prepare your machine
 
@@ -44,15 +39,14 @@ instructions below are written for and tested on Ubuntu 20.04 LTS distribution.
     { label: "Initial Setup", value: "setup" },
     { label: "Install Docker", value: "docker" },
     { label: "Install docker-compose", value: "docker-compose" },
-    { label: "Install AWS CLI", value: "aws-cli" }
   ]}
 >
   <TabItem value="overview">
 
 :::info
 
-This section helps you install Docker, Docker Compose, or AWS CLI if you do not
-have them installed. They are provided for completeness.
+This section helps you install Docker and Docker Compose if you do not have them
+installed locally. They are provided for completeness.
 
 :::
 
@@ -184,130 +178,24 @@ sudo chmod +x /usr/local/bin/docker-compose
 ```
 
   </TabItem>
-  <TabItem value="aws-cli">
-
-Download and install official AWS command line tools.
-
-```bash
-cd ~
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-sudo ./install
-aws --version
-rm awscliv2.zip
-```
-
-  </TabItem>
 </Tabs>
 
-## Pulling Docker Images
+## Run Install Script
 
-We can use AWS CLI to obtain Touca docker images from the AWS Elastic Container
-Registry. The commands in this section reference the following parameters that
-should be replaced with credentials that we provide to you.
-
-- `TOUCA_AWS_ACCESS_KEY_ID`
-- `TOUCA_AWS_SECRET_ACCESS_KEY`
-- `TOUCA_AWS_REGION`
-- `TOUCA_AWS_REPO`
-
-### Authenticate to AWS Container Registry
-
-Run the following command to create an AWS profile.
+We offer a one-liner bash script to help with locally installing Touca Server.
+Simply run the following command in the terminal to have the script download
+public Touca docker images and run them.
 
 ```bash
-aws configure
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/trytouca/trytouca/main/ops/install.sh)"
 ```
 
-This command opens an interactive prompt to let you provide credentials for
-Access Key, Secret, Region, and Output Format.
+This script interactively asks you the server installation path, among other
+things. Once it runs to complition, it will redirect you to the locally
+installed server to perform basic server configurations and create your first
+user account.
 
-```bash
-<TOUCA_AWS_ACCESS_KEY_ID>
-<TOUCA_AWS_SECRET_ACCESS_KEY>
-<TOUCA_AWS_REGION>
-json
-```
-
-Now that your profile is set up, run the following to authenticate to the AWS
-Container Registry.
-
-```bash
-mkdir ~/touca
-aws ecr get-login-password --region <TOUCA_AWS_REGION>
-```
-
-The expected output of this command is a long text. We do not need to store it
-anywhere.
-
-Now that things are set up with AWS, we can login to the container registry via
-Docker.
-
-```bash
-aws ecr get-login-password --region <TOUCA_AWS_REGION> | docker login <TOUCA_AWS_REPO> --username AWS --password-stdin
-```
-
-Now we can pull our images from the registry.
-
-```bash
-docker pull <TOUCA_AWS_REPO>/touca-api:1.4.0
-docker pull <TOUCA_AWS_REPO>/touca-app:1.4.0
-docker pull <TOUCA_AWS_REPO>/touca-cmp:1.4.0
-```
-
-## Deploy Docker Containers
-
-Extract the deployment scripts archive and install it in the appropriate path.
-
-```bash
-ssh touca@your-machine
-mkdir -p touca; cd touca;
-scp devops.tar.gz touca@your-machine:~/
-tar -zxf ../devops.tar.gz
-rm ../devops.tar.gz
-```
-
-Before running the docker containers, create the local directories \(volumes\)
-to which they bind.
-
-```bash
-mkdir -p local/logs/backend local/logs/cmp
-sudo chown 8002:touca local/logs/backend local/logs/cmp
-mkdir -p local/data/minio local/data/mongo local/data/redis
-```
-
-Modify values of the following environment variables in
-`devops/docker-compose.prod.yaml` file. Do not wrap the values in single or
-double quotations.
-
-- `AUTH_JWT_SECRET`, `AUTH_COOKIE_SECRET`
-
-  We recommend a randomly generated string of 32 characters length.
-
-- `MAIL_TRANSPORT_HOST`, `MAIL_TRANSPORT_USER`, `MAIL_TRANSPORT_PASS`
-
-  Set these values based on your mail server configurations.
-
-- `WEBAPP_ROOT`
-
-  Root URL of the Touca server. Can be of the form
-  `https://touca.your-company.com` or `http://172.142.42.42`.
-
-Now run `devops/deploy.sh` to deploy Touca via Docker Compose.
-
-```bash
-~/touca/devops/deploy.sh -r <TOUCA_AWS_REPO> -u AWS
-```
-
-Monitor standard output of docker containers to check that everything is running
-as expected:
-
-```bash
-docker-compose -f ~/touca/devops/docker-compose.prod.yml --project-directory ~/touca logs --follow
-```
-
-At this time, you should be able to verify that Touca is up and running by
-navigating to your machine address on a browser.
+## Give Feedback
 
 :::note
 

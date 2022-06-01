@@ -1,0 +1,116 @@
+<app-header-outside></app-header-outside>
+<div
+  class="wsl-min-h-screen-1 mx-auto grid max-w-screen-lg place-content-center space-y-4">
+  <main class="space-y-4 rounded-md bg-white p-4 shadow-md dark:bg-gray-800">
+    <h2
+      class="text-center text-2xl font-semibold text-black dark:text-gray-300">
+      Touca is ready!
+    </h2>
+    <p class="text-center text-sm text-black dark:text-gray-300">
+      Take a moment to configure your self-hosted instance.
+    </p>
+    <hr class="border-2 border-gray-100 dark:border-gray-700" />
+    <form
+      class="wsl-form flex-grow px-2 py-4"
+      [formGroup]="installForm"
+      (ngSubmit)="submitContactInfo(installForm.value)"
+      *ngIf="tabType === TabType.UserInfo"
+      novalidate>
+      <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+      <div>
+        <label class="wsl-input-label" for="wsl-fname">Full Name</label>
+        <input
+          class="wsl-input-field"
+          type="text"
+          id="wsl-fname"
+          name="fname"
+          formControlName="fname"
+          aria-describedby="wsl-fname-help"
+          required
+          autocomplete="name"
+          data-lpignore="true" />
+        <small
+          id="wsl-fname-help"
+          [ngClass]="hints.get('fname').type"
+          [innerHTML]="hints.get('fname').text"></small>
+      </div>
+      <div>
+        <label class="wsl-input-label" for="wsl-email">Email Address</label>
+        <input
+          class="wsl-input-field"
+          type="email"
+          id="wsl-email"
+          name="email"
+          formControlName="email"
+          aria-describedby="wsl-email-help"
+          required
+          autocomplete="email" />
+        <small
+          id="wsl-uname-help"
+          [ngClass]="hints.get('email').type"
+          [innerHTML]="hints.get('email').text"></small>
+      </div>
+      <div>
+        <label class="wsl-input-label" for="wsl-company">
+          Company Name
+          <span class="text-sm font-thin text-gray-400">(optional)</span>
+        </label>
+        <input
+          class="wsl-input-field"
+          type="text"
+          id="wsl-company"
+          name="company"
+          formControlName="company"
+          aria-describedby="wsl-company-help"
+          autocomplete="new-password" />
+        <small id="wsl-company-help"></small>
+      </div>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit flex justify-end">
+          <button class="wsl-btn-lg wsl-btn-primary" type="submit">
+            Continue
+          </button>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="tabType === TabType.Telemetry">
+      <app-settings-checkbox
+        [data]="preference"
+        (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit flex justify-between">
+          <button
+            class="wsl-btn-lg wsl-btn-muted"
+            (click)="switchTab(TabType.UserInfo)">
+            Previous
+          </button>
+          <button
+            class="wsl-btn-lg wsl-btn-primary"
+            (click)="submitTelemetry()">
+            Continue
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="tabType === TabType.Thanks" class="space-y-4 text-left">
+      <p class="text-sm text-black dark:text-gray-300">
+        All set! Enjoy using Touca!
+        <br />
+        <a class="text-sky-600" href="https://touca.io/discord" target="_blank">
+          Join us on Discord
+        </a>
+        if you had questions or needed any help.
+      </p>
+      <div class="wsl-form-footer">
+        <div class="wsl-form-submit flex justify-end">
+          <button
+            class="wsl-btn-lg wsl-btn-primary"
+            (click)="navigateToSignup()">
+            Create Account
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<app-help></app-help>

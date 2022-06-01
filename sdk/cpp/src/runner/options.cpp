@@ -1,9 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/runner/detail/options.hpp"
 
 #include "cxxopts.hpp"
-#include "nlohmann/json.hpp"
+#include "rapidjson/document.h"
 #include "touca/client/detail/options.hpp"
 #include "touca/core/filesystem.hpp"
 #include "touca/devkit/platform.hpp"
@@ -83,11 +83,17 @@ void parse_cli_option(const cxxopts::ParseResult& result,
   }
 }
 
-template <typename T>
-void parse_file_option(const nlohmann::json& result, const std::string& key,
-                       T& field) {
-  if (result.contains(key)) {
-    field = result[key];
+void parse_file_option(const rapidjson::Value& result, const std::string& key,
+                       std::string& field) {
+  if (result.HasMember(key) && result[key].IsString()) {
+    field = result[key].GetString();
+  }
+}
+
+void parse_file_option(const rapidjson::Value& result, const std::string& key,
+                       bool& field) {
+  if (result.HasMember(key) && result[key].IsBool()) {
+    field = result[key].GetBool();
   }
 }
 
@@ -166,23 +172,27 @@ bool parse_file_options(FrameworkOptions& options) {
 
   // parse configuration file
 
-  const auto& parsed = nlohmann::json::parse(content, nullptr, false);
-  if (parsed.is_discarded()) {
+  rapidjson::Document parsed;
+  if (parsed.Parse<0>(content.c_str()).HasParseError()) {
     touca::print_error("failed to parse configuration file\n");
     return false;
   }
 
   // we expect content to be a json object
 
-  if (!parsed.is_object()) {
+  if (!parsed.IsObject()) {
     touca::print_error("expected configuration file to be a json object\n");
     return false;
   }
 
-  for (const auto& kvp : parsed.items()) {
-    const auto& result = kvp.value();
-    if (kvp.key() == "touca") {
-      if (!result.is_object()) {
+  for (auto it = parsed.MemberBegin(); it != parsed.MemberEnd(); ++it) {
+    if (!it->name.IsString()) {
+      continue;
+    }
+    const std::string key = it->name.GetString();
+    const auto& result = it->value;
+    if (key == "touca") {
+      if (!result.IsObject()) {
         touca::print_error(
             "field \"touca\" in configuration file has unexpected type\n");
         return false;
@@ -204,12 +214,15 @@ bool parse_file_options(FrameworkOptions& options) {
       parse_file_option(result, "redirect-output", options.redirect);
       parse_file_option(result, "overwrite", options.overwrite);
       parse_file_option(result, "testcase-file", options.testcase_file);
-    } else {
-      if (result.is_string()) {
-        options.extra.emplace(kvp.key(), result.get<std::string>());
-      } else if (result.is_boolean()) {
-        options.extra.emplace(kvp.key(), result.get<bool>() ? "true" : "false");
-      }
+      continue;
+    }
+    if (result.IsString()) {
+      options.extra.emplace(key, result.GetString());
+      continue;
+    }
+    if (result.IsBool()) {
+      options.extra.emplace(key, result.GetBool() ? "true" : "false");
+      continue;
     }
   }
 

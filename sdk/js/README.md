@@ -155,5 +155,5 @@ This repository is released under the Apache-2.0 License. See
 [license]: https://github.com/trytouca/trytouca/blob/main/sdk/js/LICENSE
 [npm]: https://npmjs.com/package/@touca/node
 [docs-quickstart]: https://touca.io/docs/basics/quickstart
-[docs-js]: https://touca.io/docs/sdk/javascript/quickstart
+[docs-js]: https://touca.io/docs/sdk/js/quickstart
 [docs-js-api]: https://app.touca.io/docs/clients/js/api.html

@@ -4,7 +4,6 @@ from configparser import ConfigParser
 from pathlib import Path
 from argparse import ArgumentParser
 import sys
-from typing import List
 from touca.cli._common import Operation, invalid_subcommand
 from touca._options import find_home_path, find_profile_path
 

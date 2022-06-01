@@ -1,0 +1,34 @@
+<div
+  class="group container mx-auto h-12 p-4 pb-4 text-sm text-black dark:text-gray-300">
+  Comparing
+  <em *ngIf="params.srcBatchSlug === suite?.latest?.batchSlug">latest</em>
+  version
+  <app-home-version-list
+    class="inline-block"
+    [suite]="suite"
+    [params]="params"
+    [side]="'head'"></app-home-version-list>
+  against
+  <em *ngIf="params.dstBatchSlug === baseline.to">baseline</em>
+  <em
+    *ngIf="
+      params.dstBatchSlug === baseline.from &&
+      params.dstBatchSlug !== baseline.to
+    ">
+    former baseline
+  </em>
+  version
+  <app-home-version-list
+    class="inline-block"
+    [suite]="suite"
+    [params]="params"
+    [side]="'base'"></app-home-version-list>
+  .
+  <ng-icon
+    name="feather-link"
+    class="invisible text-sky-500 opacity-50 hover:opacity-100 group-hover:visible dark:text-sky-400"
+    title="Copy a link to this page to share with your team members"
+    ngxClipboard
+    [cbContent]="link"
+    (cbOnSuccess)="onCopy($event)"></ng-icon>
+</div>

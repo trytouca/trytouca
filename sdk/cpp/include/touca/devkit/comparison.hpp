@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
@@ -7,7 +7,7 @@
 #include <set>
 #include <unordered_map>
 
-#include "nlohmann/json_fwd.hpp"
+#include "rapidjson/fwd.h"
 #include "touca/core/testcase.hpp"
 #include "touca/core/types.hpp"
 
@@ -41,16 +41,17 @@ struct Cellar {
   KeyMap missing;
   KeyMap fresh;
 
-  nlohmann::ordered_json json() const;
+  rapidjson::Value json(RJAllocator& allocator) const;
 
  private:
   std::string stringify(const detail::internal_type type) const;
 
-  nlohmann::ordered_json build_json_solo(const KeyMap& elements,
-                                         const Category category) const;
+  rapidjson::Value build_json_solo(const KeyMap& elements,
+                                   const Category category,
+                                   RJAllocator& allocator) const;
 
-  nlohmann::ordered_json build_json_common(const std::string& key,
-                                           const TypeComparison& second) const;
+  rapidjson::Value build_json_common(const ComparisonMap& elements,
+                                     RJAllocator& allocator) const;
 };
 
 class TOUCA_CLIENT_API TestcaseComparison {
@@ -66,12 +67,12 @@ class TOUCA_CLIENT_API TestcaseComparison {
     std::int32_t metricsDurationCommonDst;
     std::int32_t metricsDurationCommonSrc;
 
-    nlohmann::ordered_json json() const;
+    rapidjson::Value json(RJAllocator& allocator) const;
   };
 
   explicit TestcaseComparison(const Testcase& src, const Testcase& dst);
 
-  nlohmann::ordered_json json() const;
+  rapidjson::Value json(RJAllocator& allocator) const;
 
   Overview overview() const;
 

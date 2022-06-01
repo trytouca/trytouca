@@ -1,9 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/core/testcase.hpp"
 
 #include "flatbuffers/flatbuffers.h"
-#include "nlohmann/json.hpp"
+#include "rapidjson/document.h"
 #include "touca/core/filesystem.hpp"
 #include "touca/core/types.hpp"
 #include "touca/impl/schema.hpp"
@@ -49,10 +49,13 @@ Testcase::Testcase(
   }
 }
 
-nlohmann::ordered_json Testcase::Overview::json() const {
-  return nlohmann::ordered_json({{"keysCount", keysCount},
-                                 {"metricsCount", metricsCount},
-                                 {"metricsDuration", metricsDuration}});
+rapidjson::Value Testcase::Overview::json(
+    rapidjson::Document::AllocatorType& allocator) const {
+  rapidjson::Value out(rapidjson::kObjectType);
+  out.AddMember("keysCount", keysCount, allocator);
+  out.AddMember("metricsCount", metricsCount, allocator);
+  out.AddMember("metricsDuration", metricsDuration, allocator);
+  return out;
 }
 
 Testcase::Metadata Testcase::metadata() const { return _metadata; }
@@ -64,14 +67,15 @@ std::string Testcase::Metadata::describe() const {
                                testcase);
 }
 
-nlohmann::ordered_json Testcase::Metadata::json() const {
-  return nlohmann::ordered_json({
-      {"teamslug", teamslug},
-      {"testsuite", testsuite},
-      {"version", version},
-      {"testcase", testcase},
-      {"builtAt", builtAt},
-  });
+rapidjson::Value Testcase::Metadata::json(
+    rapidjson::Document::AllocatorType& allocator) const {
+  rapidjson::Value out(rapidjson::kObjectType);
+  out.AddMember("teamslug", teamslug, allocator);
+  out.AddMember("testsuite", testsuite, allocator);
+  out.AddMember("version", version, allocator);
+  out.AddMember("testcase", testcase, allocator);
+  out.AddMember("builtAt", builtAt, allocator);
+  return out;
 }
 
 void Testcase::tic(const std::string& key) {
@@ -151,35 +155,45 @@ MetricsMap Testcase::metrics() const {
   return metrics;
 }
 
-nlohmann::ordered_json Testcase::json() const {
-  auto results = nlohmann::json::array();
+rapidjson::Value Testcase::json(
+    rapidjson::Document::AllocatorType& allocator) const {
+  rapidjson::Value out(rapidjson::kObjectType);
+  out.AddMember("metadata", _metadata.json(allocator), allocator);
+
+  rapidjson::Value rjResults(rapidjson::kArrayType);
   for (const auto& entry : _resultsMap) {
     if (entry.second.typ != ResultCategory::Check) {
       continue;
     }
-    results.push_back(
-        {{"key", entry.first}, {"value", entry.second.val.to_string()}});
+    rapidjson::Value rjEntry(rapidjson::kObjectType);
+    rjEntry.AddMember("key", entry.first, allocator);
+    rjEntry.AddMember("value", entry.second.val.to_string(), allocator);
+    rjResults.PushBack(rjEntry, allocator);
   }
+  out.AddMember("results", rjResults, allocator);
 
-  auto assumptions = nlohmann::json::array();
+  rapidjson::Value rjAssertions(rapidjson::kArrayType);
   for (const auto& entry : _resultsMap) {
     if (entry.second.typ != ResultCategory::Assert) {
       continue;
     }
-    assumptions.push_back(
-        {{"key", entry.first}, {"value", entry.second.val.to_string()}});
+    rapidjson::Value rjEntry(rapidjson::kObjectType);
+    rjEntry.AddMember("key", entry.first, allocator);
+    rjEntry.AddMember("value", entry.second.val.to_string(), allocator);
+    rjAssertions.PushBack(rjEntry, allocator);
   }
+  out.AddMember("assertion", rjAssertions, allocator);
 
-  auto json_metrics = nlohmann::json::array();
+  rapidjson::Value rjMetrics(rapidjson::kArrayType);
   for (const auto& entry : metrics()) {
-    json_metrics.push_back(
-        {{"key", entry.first}, {"value", entry.second.value.to_string()}});
+    rapidjson::Value rjEntry(rapidjson::kObjectType);
+    rjEntry.AddMember("key", entry.first, allocator);
+    rjEntry.AddMember("value", entry.second.value.to_string(), allocator);
+    rjMetrics.PushBack(rjEntry, allocator);
   }
+  out.AddMember("metrics", rjMetrics, allocator);
 
-  return nlohmann::ordered_json({{"metadata", {_metadata.json()}},
-                                 {"results", results},
-                                 {"assertion", assumptions},
-                                 {"metrics", json_metrics}});
+  return out;
 }
 
 std::vector<uint8_t> Testcase::flatbuffers() const {

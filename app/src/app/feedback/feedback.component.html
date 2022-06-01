@@ -1,0 +1,63 @@
+<app-header-outside></app-header-outside>
+<div class="wsl-min-h-screen-1 wsl-page-auth">
+  <h2 class="wsl-page-auth-title">Tell us what you think</h2>
+  <div class="wsl-page-auth-body">
+    <div
+      class="mx-auto w-full rounded-md bg-white p-8 shadow-lg dark:bg-gray-800">
+      <form
+        class="wsl-form"
+        [formGroup]="feedbackForm"
+        (ngSubmit)="onSubmit(feedbackForm.value)"
+        novalidate>
+        <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+        <div>
+          <label for="wsl-body" class="wsl-input-label">Your Feedback</label>
+          <textarea
+            class="wsl-input-field"
+            id="wsl-body"
+            name="body"
+            formControlName="body"
+            aria-describedby="wsl-body-help"
+            required
+            rows="5"
+            minlength="20"
+            maxlength="1000"></textarea>
+          <small
+            id="wsl-body-help"
+            [hidden]="shouldHideAriaDescription('body')"
+            class="wsl-text-danger">
+            Please provide more information in your message.
+          </small>
+          <small
+            [hidden]="
+              (submitted || !feedbackForm.controls.body.pristine) &&
+              !feedbackForm.controls.body.valid
+            "
+            class="wsl-text-muted">
+            This field supports markdown format.
+          </small>
+        </div>
+        <div>
+          <label for="wsl-name" class="wsl-input-label">Your Name</label>
+          <input
+            class="wsl-input-field"
+            type="text"
+            id="wsl-name"
+            name="name"
+            formControlName="name"
+            placeholder="optional"
+            minlength="1"
+            maxlength="100" />
+        </div>
+        <div class="wsl-form-footer">
+          <div class="wsl-form-submit">
+            <button class="wsl-btn-lg wsl-btn-primary" type="submit">
+              Submit
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<app-help></app-help>

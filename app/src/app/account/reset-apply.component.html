@@ -1,0 +1,78 @@
+<div class="space-y-8 p-4">
+  <h2 class="text-center text-3xl font-bold text-black dark:text-gray-300">
+    Reset Your Password
+  </h2>
+  <div>
+    <app-alert [alert]="alert" *ngIf="alert"></app-alert>
+  </div>
+  <div class="space-y-4">
+    <form
+      class="flex-grow space-y-4 py-4"
+      [formGroup]="formReset"
+      (ngSubmit)="onSubmit(formReset.value)"
+      novalidate>
+      <div>
+        <label class="wsl-input-label" for="wsl-uname">Username</label>
+        <input
+          class="wsl-input-field"
+          type="text"
+          id="wsl-uname"
+          name="uname"
+          formControlName="uname"
+          aria-describedby="wsl-uname-help"
+          autocomplete="username" />
+      </div>
+      <div>
+        <label class="wsl-input-label" for="wsl-upass1">New Password</label>
+        <input
+          class="wsl-input-field"
+          type="password"
+          id="wsl-upass1"
+          name="upass1"
+          formControlName="upass1"
+          aria-describedby="wsl-upass1-help"
+          required
+          autocomplete="new-password" />
+        <small
+          class="wsl-text-danger"
+          id="wsl-upass1-help"
+          [hidden]="shouldHideAriaDescriptionForUpass1()">
+          Your password must be at least eight characters.
+        </small>
+      </div>
+      <div>
+        <label class="wsl-input-label" for="wsl-upass2">
+          Confirm New Password
+        </label>
+        <input
+          class="wsl-input-field"
+          type="password"
+          id="wsl-upass2"
+          name="upass2"
+          formControlName="upass2"
+          aria-describedby="wsl-upass2-help"
+          required
+          autocomplete="new-password" />
+        <small
+          class="wsl-text-danger"
+          id="wsl-upass2-help"
+          [hidden]="shouldHideAriaDescriptionForUpass2()">
+          Type the same password as above.
+        </small>
+      </div>
+      <button
+        class="flex w-full cursor-pointer items-center justify-center space-x-2 rounded-full border border-sky-600 bg-sky-700 p-2 text-sm font-medium text-white transition duration-300 hover:border-sky-700 hover:bg-sky-800 focus:border-sky-700 focus:outline-none dark:border-sky-800 dark:bg-sky-900 dark:text-gray-300 dark:hover:border-sky-700 dark:hover:bg-sky-800 dark:focus:border-sky-600"
+        type="submit">
+        Reset Password
+      </button>
+      <div class="flex justify-between">
+        <button
+          class="group w-full cursor-pointer pt-4 text-center text-sm text-gray-600 hover:text-gray-700 focus:outline-none dark:font-medium dark:text-gray-400 dark:hover:text-gray-300"
+          routerLink="/account/signin">
+          Remember it?
+          <a class="text-sky-600 dark:group-hover:text-sky-500">Sign in</a>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+version: "3"
+services:
+  touca_api:
+    image: touca/touca-api:1.4.0
+    environment:
+      ENV_FILE: prod
+      AUTH_JWT_SECRET: <SECRET>
+      AUTH_COOKIE_SECRET: <SECRET>
+      MINIO_USER: toucauser
+      MINIO_PASS: toucapass
+      MONGO_USER: toucauser
+      MONGO_PASS: toucapass
+      WEBAPP_ROOT: http://localhost
+    volumes:
+      - ./logs/api:/opt/local/logs/api
+    depends_on:
+      - touca_minio
+      - touca_mongo
+      - touca_redis
+    # ports:
+    #   - 8081:8081
+    restart: always
+
+  touca_app:
+    image: touca/touca-app:1.4.0
+    depends_on:
+      - touca_api
+    ports:
+      - 80:80
+    restart: always
+
+  touca_cmp:
+    image: touca/touca-cmp:1.4.0
+    environment:
+      MINIO_USER: toucauser
+      MINIO_PASS: toucapass
+    volumes:
+      - ./logs/cmp:/opt/local/logs/cmp
+    depends_on:
+      - touca_api
+      - touca_minio
+    restart: always
+
+  touca_redis:
+    image: redis:6-alpine
+    volumes:
+      - ./data/redis:/data
+    # ports:
+    #  - 6379:6379
+    restart: always
+
+  touca_minio:
+    image: minio/minio:RELEASE.2021-03-17T02-33-02Z
+    environment:
+      MINIO_ROOT_USER: toucauser
+      MINIO_ROOT_PASSWORD: toucapass
+    volumes:
+      - ./data/minio:/data
+    # ports:
+    #   - 9000:9000
+    command: server /data
+    restart: always
+
+  touca_mongo:
+    image: mongo:4-bionic
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: toucauser
+      MONGO_INITDB_ROOT_PASSWORD: toucapass
+    volumes:
+      - ./data/mongo:/data/db
+      - ./repo/ops/mongo/mongod.conf:/etc/mongod.conf
+      - ./repo/ops/mongo/entrypoint/:/docker-entrypoint-initdb.d/
+    # ports:
+    #   - 27017:27017
+    command: --config /etc/mongod.conf
+    restart: always

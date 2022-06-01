@@ -1,9 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Menu, Transition } from '@headlessui/react';
 import Link from 'next/link';
 import { Fragment, useCallback, useEffect, useState } from 'react';
-import { FaGithub } from 'react-icons/fa';
+import { FaDiscord, FaGithub } from 'react-icons/fa';
 import { HiMenu, HiOutlineNewspaper } from 'react-icons/hi';
 
 const items = [
@@ -35,15 +35,20 @@ export default function Header() {
                 </a>
               );
             })}
-          <a
-            href="https://github.com/trytouca"
-            title="Check us out on GitHub"
-            target="_blank"
-            rel="noopener noreferrer">
-            <div className="text-gray-400 hover:text-gray-300 md:px-3">
-              <FaGithub size="2rem" />
-            </div>
-          </a>
+          <Link href="/discord">
+            <a title="Join our Discord Community">
+              <div className="text-gray-400 hover:text-gray-300 md:px-3">
+                <FaDiscord size="2rem" />
+              </div>
+            </a>
+          </Link>
+          <Link href="/github">
+            <a title="Give us a star on GitHub">
+              <div className="text-gray-400 hover:text-gray-300 md:px-3">
+                <FaGithub size="2rem" />
+              </div>
+            </a>
+          </Link>
         </nav>
         <div className="flex items-center md:hidden">
           <DropdownMenu></DropdownMenu>

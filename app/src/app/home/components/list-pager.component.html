@@ -1,0 +1,86 @@
+<div
+  class="container mx-auto px-4 py-2 text-sm text-black dark:text-gray-300"
+  *ngIf="!(isFirstPage() && isLastPage() && pageLengths.length === 1)">
+  <div class="grid grid-cols-3 text-sm">
+    <div
+      class="cursor-pointer text-left"
+      [style.visibility]="isFirstPage() ? 'hidden' : 'visible'"
+      (click)="previousPage()">
+      Previous Page
+    </div>
+    <div
+      [style.visibility]="isFirstPage() && isLastPage() ? 'hidden' : 'visible'"
+      class="whitespace-nowrap text-center">
+      Page&nbsp;
+      <div class="inline-block" wslDropdown>
+        <div
+          class="wsl-dropdown-toggle flex cursor-pointer items-center"
+          id="pagen-dropdown"
+          aria-haspopup="true"
+          aria-expanded="false">
+          <span class="font-medium">{{ pageNumber }}</span>
+          <ng-icon name="hero-chevron-down"></ng-icon>
+        </div>
+        <div class="wsl-dropdown-menu bottom-4 hidden w-48">
+          <form id="wsl-pagen-form">
+            <input
+              class="wsl-input-field"
+              type="number"
+              placeholder="Go to page..."
+              autocomplete="off"
+              min="1"
+              max="{{ lastPageNumber }}"
+              name="pageNumber"
+              id="pageNumber"
+              (keyup)="onKeyupPageNumber($event)" />
+          </form>
+          <hr class="my-2 border-gray-200 dark:border-gray-700" />
+          <div
+            class="wsl-dropdown-item"
+            *ngFor="let number of data.pageNumbers"
+            (click)="pageNumber = number.slug">
+            {{ number.slug }}
+            <ng-container *ngFor="let tag of number.tags">
+              <span>&thinsp;({{ tag }})</span>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+      &nbsp;of&nbsp;
+      <span class="font-medium">{{ lastPageNumber }}</span>
+    </div>
+    <div
+      class="cursor-pointer text-right"
+      [style.visibility]="isLastPage() ? 'hidden' : 'visible'"
+      (click)="nextPage()">
+      Next Page
+    </div>
+  </div>
+</div>
+<div
+  class="container mx-auto px-4 py-2 text-center text-sm text-black dark:text-gray-300"
+  *ngIf="
+    pageLengths.length &&
+    !(isFirstPage() && isLastPage() && pageLengths.length === 1)
+  ">
+  <div class="inline-block" *ngIf="1 < pageLengths.length" wslDropdown>
+    <div
+      class="wsl-dropdown-toggle flex cursor-pointer items-center"
+      id="pagel-dropdown"
+      aria-haspopup="true"
+      aria-expanded="false">
+      <span class="font-medium">{{ pageLength }}</span>
+      <ng-icon name="hero-chevron-down"></ng-icon>
+    </div>
+    <div class="wsl-dropdown-menu bottom-4 hidden w-48 text-left">
+      <div
+        class="wsl-dropdown-item"
+        *ngFor="let length of pageLengths"
+        (click)="pageLength = length">
+        {{ length }}
+      </div>
+    </div>
+  </div>
+  <span *ngIf="pageLengths.length < 2">{{ pageLength }}</span>
+  rows per page
+</div>

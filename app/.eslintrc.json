@@ -1,0 +1,56 @@
+{
+  "root": true,
+  "ignorePatterns": ["src/polyfills.ts", "src/test.ts"],
+  "overrides": [
+    {
+      "files": ["*.ts"],
+      "env": {
+        "es2020": true,
+        "browser": true
+      },
+      "parserOptions": {
+        "project": "./tsconfig.json",
+        "ecmaVersion": 2020,
+        "createDefaultProgram": true
+      },
+      "plugins": ["simple-import-sort"],
+      "extends": [
+        "plugin:@angular-eslint/recommended",
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "plugin:prettier/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/explicit-module-boundary-types": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+        "@typescript-eslint/unbound-method": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
+        "simple-import-sort/imports": "error"
+      }
+    },
+    {
+      "files": ["*.html"],
+      "extends": ["plugin:@angular-eslint/template/recommended"],
+      "rules": {}
+    },
+    {
+      "files": ["*.html"],
+      "excludedFiles": ["*inline-template-*.component.html"],
+      "extends": ["plugin:prettier/recommended"],
+      "rules": {
+        "prettier/prettier": [
+          "error",
+          {
+            "parser": "angular"
+          }
+        ]
+      }
+    }
+  ]
+}

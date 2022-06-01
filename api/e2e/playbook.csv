@@ -1,0 +1,74 @@
+Username,Action,Team,Suite,Batch,Argument
+aanderson,account-create,,,,
+bbrown,account-create,,,,
+cclark,account-create,,,,
+ddavis,account-create,,,,
+eevans,account-create,,,,
+ffisher,account-create,,,,
+ggreen,account-create,,,,
+hharris,account-create,,,,
+iingram,account-create,,,,
+jjohnson,account-create,,,,
+kkelly,account-create,,,,
+llewis,account-create,,,,
+aanderson,account-onboard,,,,"Alice Anderson"
+bbrown,account-onboard,,,,"Bob Brown"
+cclark,account-onboard,,,,"Charlie Clark"
+ddavis,account-onboard,,,,"David Davis"
+eevans,account-onboard,,,,"Eve Evans"
+ffisher,account-onboard,,,,"Frank Fisher"
+ggreen,account-onboard,,,,"Grace Green"
+hharris,account-onboard,,,,"Heidi Harris"
+iingram,account-onboard,,,,"Ivan Ingram"
+jjohnson,account-onboard,,,,"Judy Johnson"
+kkelly,account-onboard,,,,"Kris Kelly"
+iingram,account-reset-request,,,,
+iingram,account-reset-apply,,,,
+jjohnson,account-reset-request,,,,
+kkelly,account-fail-login,,,,
+kkelly,account-fail-login,,,,
+kkelly,account-fail-login,,,,
+kkelly,account-fail-login,,,,
+aanderson,team-create,acme,,,"Old Acme"
+aanderson,team-update,acme,,,acme,"Acme"
+aanderson,team-invite-add,acme,,,bbrown,cclark,ddavis,eevans,ffisher,ggreen,hharris,iingram
+aanderson,team-invite-rescind,acme,,,iingram
+bbrown,team-invite-accept,acme,,,
+cclark,team-invite-accept,acme,,,
+ddavis,team-invite-accept,acme,,,
+eevans,team-invite-accept,acme,,,
+ggreen,team-invite-decline,acme,,,
+hharris,team-invite-accept,acme,,,
+hharris,team-leave,acme,,,
+iingram,team-join-add,acme,,,
+jjohnson,team-join-add,acme,,,
+jjohnson,team-join-rescind,acme,,,
+jjohnson,team-join-add,acme,,,
+aanderson,team-member-update,acme,,bbrown,admin
+aanderson,suite-create,acme,students,,"Old Find Students"
+aanderson,suite-update,acme,students,,students,"Find Students"
+bbrown,team-join-accept,acme,,,iingram
+bbrown,team-join-decline,acme,,,jjohnson
+jjohnson,team-join-add,acme,,,
+bbrown,suite-subscribe,acme,students,,"all"
+cclark,suite-subscribe,acme,students,,"different"
+ddavis,suite-subscribe,acme,students,,"all"
+ddavis,suite-subscribe,acme,students,,"none"
+cclark,suite-create,acme,empty-suite,,"Empty Suite"
+bbrown,suite-remove,acme,empty-suite,,
+aanderson,client-submit,acme,students,v1.0,
+bbrown,client-submit,acme,students,v2.0,
+bbrown,comment-create,acme,students,v2.0,"This version fixes a *typo* in the username of student **Charlie Clark**. I changed their username to `charlie`."
+aanderson,comment-create,acme,students,v2.0,"Thanks for your explanation, Bob! Do we know why test case **alice** has differences?"
+bbrown,comment-create,acme,students,v2.0,"I don't know. Charlie may know more. I remember he made some changes to the code yesterday."
+cclark,comment-create,acme,students,v2.0,"Yes! We had a meeting yesterday and decided that our software should consider students with gpa `>3.0` as *pass*."
+aanderson,comment-create,acme,students,v2.0,"Great. Now that we know the reason behind the differences, I propose that we promote `v2.0` as the new baseline."
+bbrown,batch-seal,acme,students,v2.0,
+bbrown,batch-promote,acme,students,v2.0,"These differences are expected. I fixed a typo in the testcase name `charlie` and Charlie updated the `pass` criteria in function `calculate_gpa`."
+cclark,client-submit,acme,students,v3.0,
+aanderson,client-submit,acme,students,v4.0,
+cclark,client-submit,acme,students,v5.0,
+cclark,batch-seal,acme,students,v1.0,
+cclark,batch-seal,acme,students,v3.0,
+cclark,batch-seal,acme,students,v4.0,
+cclark,batch-seal,acme,students,v5.0,

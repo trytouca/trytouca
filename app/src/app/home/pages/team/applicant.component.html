@@ -1,0 +1,32 @@
+<div class="wsl-list-item">
+  <div class="wsl-item-heading">
+    <div class="wsl-item-status">
+      <fa-icon icon="user" class="text-sky-600"></fa-icon>
+    </div>
+    <div class="wsl-item-title">
+      <p>{{ item.fullname }}</p>
+    </div>
+    <div class="text-xs leading-8 text-gray-500 dark:text-gray-400">
+      {{ item.email }}
+    </div>
+  </div>
+  <div class="wsl-item-topics">
+    <div class="wsl-item-topic">
+      {{ item.username }}
+    </div>
+    <div *ngIf="isTeamAdmin" class="wsl-item-ctrl-box">
+      <div
+        title="Accept Request to Join this Team"
+        (click)="accept()"
+        class="wsl-item-ctrl">
+        <fa-icon icon="user-plus"></fa-icon>
+      </div>
+      <div
+        title="Decline Request to Join this Team"
+        (click)="decline()"
+        class="wsl-item-ctrl">
+        <fa-icon icon="user-minus"></fa-icon>
+      </div>
+    </div>
+  </div>
+</div>

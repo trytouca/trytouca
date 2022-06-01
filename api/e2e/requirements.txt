@@ -1,0 +1,6 @@
+loguru
+minio
+pylint
+pymongo
+pytest
+requests

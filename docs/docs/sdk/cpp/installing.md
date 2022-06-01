@@ -16,7 +16,7 @@ module.
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/trytouca
-    GIT_TAG        v1.5.1
+    GIT_TAG        v1.5.2
     SOURCE_SUBDIR  sdk/cpp
 )
 FetchContent_MakeAvailable(touca)
@@ -35,7 +35,7 @@ application and example projects or to exclude building the test framework:
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/trytouca
-    GIT_TAG        v1.5.1
+    GIT_TAG        v1.5.2
     SOURCE_SUBDIR  sdk/cpp
 )
 

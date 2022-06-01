@@ -1,0 +1,29 @@
+<div class="divide-y divide-gray-200 px-4 py-2 dark:divide-gray-700">
+  <div class="flex h-8 items-center space-x-1">
+    <h3 class="font-semibold text-black dark:text-gray-300">Runtime Trend</h3>
+    <div class="flex items-center">
+      <button
+        [hidden]="fields.perfs.length === 0"
+        class="flex items-center"
+        tippy="This chart plots the overall execution time of recent versions. It shows how the overall performance of your workflow has changed over time.">
+        <ng-icon
+          class="text-sky-200 transition hover:text-sky-600 hover:opacity-100 dark:text-gray-500 dark:hover:text-gray-400"
+          name="hero-information-circle-solid"
+          size="1.25rem"></ng-icon>
+      </button>
+    </div>
+  </div>
+  <div class="py-4">
+    <app-suite-chart-runtime
+      *ngIf="fields.perfs.length !== 0; else noData"
+      [perfs]="fields.perfs"></app-suite-chart-runtime>
+    <ng-template #noData>
+      <img
+        class="mx-auto py-2"
+        src="./assets/undraw/undraw_setup_analytics_8qkl_edited_2.svg" />
+      <div class="text-center">
+        <p class="text-sm">This suite has no performance data, yet.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

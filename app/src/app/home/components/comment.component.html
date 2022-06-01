@@ -1,0 +1,45 @@
+<article>
+  <div class="flex items-center space-x-2">
+    <div class="font-medium leading-8 text-blue-500 dark:text-sky-600">
+      {{ meta.commentAuthor }}
+    </div>
+    <div class="wsl-text-muted space-x-4">
+      <small title="{{ meta.commentTime | datetime: 'format' }}">
+        {{ meta.commentTime | dateAgo }}
+      </small>
+      <small
+        *ngIf="meta.commentEditTime"
+        title="{{ meta.commentEditTime | datetime: 'format' }}">
+        (edited {{ meta.commentEditTime | dateAgo }})
+      </small>
+    </div>
+  </div>
+  <blockquote>
+    <markdown
+      [data]="meta.commentBody"
+      class="prose prose-sm prose-zinc dark:prose-invert"></markdown>
+  </blockquote>
+  <div class="space-x-4">
+    <a
+      class="text-sm text-blue-500 dark:text-sky-600"
+      role="button"
+      *ngIf="meta.showButtonReply"
+      (click)="performAction(ActionType.Reply)">
+      Reply
+    </a>
+    <a
+      class="text-sm text-blue-500 dark:text-sky-600"
+      role="button"
+      *ngIf="meta.showButtonUpdate"
+      (click)="performAction(ActionType.Update)">
+      Edit
+    </a>
+    <a
+      class="text-sm text-blue-500 dark:text-sky-600"
+      role="button"
+      *ngIf="meta.showButtonRemove"
+      (click)="performAction(ActionType.Remove)">
+      Delete
+    </a>
+  </div>
+</article>

@@ -1,0 +1,26 @@
+<div class="space-y-2 px-2 py-4">
+  <p class="text-sm text-black dark:text-gray-300">
+    <b *ngIf="item.bySelf" class="font-medium">
+      <span [title]="item.by.fullname" class="sr-only">You</span>
+      <span class="not-sr-only">{{ item.by.fullname }}</span>
+    </b>
+    <b *ngIf="!item.bySelf" class="font-medium">{{ item.by.fullname }}</b>
+    promoted
+    <b class="font-medium">{{ item.to }}</b>
+    as baseline.
+  </p>
+  <blockquote
+    *ngIf="item.for && item.for !== 'N/A'"
+    class="border-l-2 px-2 text-sm">
+    <markdown
+      [data]="item.for"
+      class="prose prose-sm prose-zinc dark:prose-invert"></markdown>
+  </blockquote>
+  <div class="flex justify-end">
+    <div
+      class="wsl-text-muted px-4 text-xs"
+      title="{{ item.at | datetime: 'format' }}">
+      {{ item.at | datetime: 'distance' }}
+    </div>
+  </div>
+</div>

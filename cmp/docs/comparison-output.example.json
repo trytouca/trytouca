@@ -1,0 +1,90 @@
+{
+  "testsuite": "sample_suite",
+  "testcase": "sample_case",
+  "src": {
+    "builtAt": "2018-09-10T18:50:04",
+    "version": "1.0"
+  },
+  "dst": {
+    "builtAt": "2018-09-10T18:50:04",
+    "version": "2.0"
+  },
+  "assertions": {
+    "newKeys": [
+      {
+        "name": "some_assertion1",
+        "type": "bool",
+        "value": "true"
+      }
+    ],
+    "missingKeys": [
+      {
+        "name": "some_assertion2",
+        "type": "bool",
+        "value": "true"
+      }
+    ],
+    "commonKeys": [
+      {
+        "name": "some_assertion3",
+        "type": "bool",
+        "src": "true",
+        "dst": "false",
+        "score": 0,
+        "desc": []
+      }
+    ]
+  },
+  "results": {
+    "newKeys": [
+      {
+        "name": "some_result1",
+        "type": "bool",
+        "value": "true"
+      }
+    ],
+    "missingKeys": [
+      {
+        "name": "some_result2",
+        "type": "bool",
+        "value": "true"
+      }
+    ],
+    "commonKeys": [
+      {
+        "name": "some_result3",
+        "type": "bool",
+        "src": "true",
+        "dst": "false",
+        "score": 0,
+        "desc": []
+      }
+    ]
+  },
+  "metrics": {
+    "newKeys": [
+      {
+        "name": "some_func1",
+        "type": "number",
+        "value": "0"
+      }
+    ],
+    "missingKeys": [
+      {
+        "name": "some_func2",
+        "type": "number",
+        "value": "0"
+      }
+    ],
+    "commonKeys": [
+      {
+        "name": "some_func3",
+        "type": "number",
+        "src": "0",
+        "dst": "0",
+        "score": 1.0,
+        "desc": []
+      }
+    ]
+  }
+}

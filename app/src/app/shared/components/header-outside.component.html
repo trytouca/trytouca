@@ -1,0 +1,39 @@
+<header>
+  <div class="container mx-auto flex h-16 justify-between px-4">
+    <div class="flex select-none items-center">
+      <a class="flex h-8 items-center focus:outline-none" [routerLink]="'/'">
+        <img
+          class="h-12"
+          src="./assets/logo/touca-logo-transparent.svg"
+          alt="Touca Logo" />
+        <h1
+          class="text-xl font-semibold tracking-tight text-sky-600 dark:text-white">
+          Touca
+        </h1>
+      </a>
+    </div>
+    <nav class="flex items-center space-x-4">
+      <a
+        class="rounded-lg px-4 py-2 text-sm font-semibold leading-6 text-sky-600 duration-150 ease-in-out hover:bg-sky-100 dark:text-gray-300 dark:hover:bg-gray-800"
+        href="https://touca.io/docs"
+        target="_blank"
+        rel="noopener">
+        Docs
+      </a>
+      <a
+        class="rounded-lg px-4 py-2 text-sm font-semibold leading-6 text-sky-600 duration-150 ease-in-out hover:bg-sky-100 dark:text-gray-300 dark:hover:bg-gray-800"
+        routerLinkActive="active"
+        routerLink="/account"
+        [hidden]="isLoggedIn()">
+        Get Started
+      </a>
+      <a
+        class="rounded-lg px-4 py-2 text-sm font-semibold leading-6 text-sky-600 duration-150 ease-in-out hover:bg-sky-100 dark:text-gray-300 dark:hover:bg-gray-800"
+        routerLinkActive="active"
+        [routerLink]="homeLink()"
+        [hidden]="!isLoggedIn()">
+        Dashboard
+      </a>
+    </nav>
+  </div>
+</header>

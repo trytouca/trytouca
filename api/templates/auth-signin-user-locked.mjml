@@ -1,0 +1,33 @@
+<mjml>
+  <mj-head>
+    <mj-title>Account Locked</mj-title>
+    <mj-preview>
+      After multiple failed login attempts, we are temporarily locking your
+      account for protection.
+    </mj-preview>
+    <mj-include path="./layout/attributes.mjml" />
+  </mj-head>
+  <mj-body>
+    <mj-include path="./layout/header.mjml" />
+    <mj-section mj-class="wsl-border">
+      <mj-column>
+        <mj-text>{{ greetings }},</mj-text>
+        <mj-text>
+          We have received multiple failed attempts to log into your Touca
+          account.
+        </mj-text>
+        <mj-text>
+          To protect against potential breach of your information, we have
+          temporarily locked your account. It will be unlocked automatically
+          after a short period of time. You will be able to continue using your
+          account with your password.
+        </mj-text>
+        <mj-text>
+          If you are having trouble remembering your password, please consider
+          resetting it by providing your email address.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-include path="./layout/footer.mjml" />
+  </mj-body>
+</mjml>

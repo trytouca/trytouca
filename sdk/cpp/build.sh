@@ -308,13 +308,12 @@ build_clear () {
 build_docs () {
     if [ $# -ne 1 ]; then return 1; fi
     local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
-    local config_dir_doxygen="${dir_source}/docs/doxygen"
     local config_dir_sphinx="${dir_source}/docs/sphinx"
     local dir_dst="${dir_source}/local/docs"
     local dir_out="${dir_dst}/html"
     remove_dir_if_exists "$dir_dst"
     log_info "building cpp client library documentation using local toolchain"
-    check_prerequisite_commands "doxygen" "sphinx-build"
+    check_prerequisite_commands "doxygen" "sphinx-build" "breathe-apidoc" "m2r2"
     sphinx-build -b html -c "${config_dir_sphinx}" "${config_dir_sphinx}" "${dir_out}"
     if [ -d "$dir_dst" ]; then
         log_info "built cpp client library documentation using local toolchain"

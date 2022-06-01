@@ -1,0 +1,27 @@
+<div class="flex items-center justify-between">
+  <div class="space-x-1">
+    <span class="mb-1 text-sm font-medium text-gray-700 dark:text-gray-200">
+      {{ data.title }}
+    </span>
+  </div>
+  <div class="flex items-center space-x-1">
+    <span class="text-xs text-green-600" *ngIf="data.saved">Saved</span>
+    <label [for]="data.slug">
+      <div class="relative cursor-pointer">
+        <input
+          class="sr-only"
+          type="checkbox"
+          [id]="data.slug"
+          [checked]="data.value || data.default"
+          (change)="toggle.emit(data)" />
+        <div
+          class="wsl-checkbox-line block h-5 w-8 rounded-full bg-gray-200 dark:bg-gray-600"></div>
+        <div
+          class="wsl-checkbox-dot absolute left-1 top-1 h-3 w-3 rounded-full bg-white transition dark:bg-gray-800"></div>
+      </div>
+    </label>
+  </div>
+</div>
+<small class="wsl-text-muted" id="wsl-beta-color-help">
+  {{ data.description }}
+</small>

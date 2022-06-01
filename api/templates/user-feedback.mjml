@@ -1,0 +1,21 @@
+<mjml>
+  <mj-head>
+    <mj-title>New Feedback Notice</mj-title>
+    <mj-preview>We received a new customer feedback.</mj-preview>
+    <mj-include path="./layout/attributes.mjml" />
+  </mj-head>
+  <mj-body>
+    <mj-include path="./layout/header.mjml" />
+    <mj-section mj-class="wsl-border">
+      <mj-column>
+        <mj-text><h3>New User Feedback</h3></mj-text>
+        <mj-text>
+          <a href="mailto:{{ email }}">{{ name }}</a>
+          from {{ cname }} submitted the following message for page {{ page }}.
+        </mj-text>
+        <mj-text padding-left="40px" color="#64748B">{{{ body }}}</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-include path="./layout/footer-admin.mjml" />
+  </mj-body>
+</mjml>

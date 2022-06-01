@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
@@ -6,7 +6,7 @@
 #include <map>
 #include <unordered_map>
 
-#include "nlohmann/json_fwd.hpp"
+#include "rapidjson/fwd.h"
 #include "touca/core/types.hpp"
 #include "touca/lib_api.hpp"
 
@@ -38,7 +38,7 @@ class TOUCA_CLIENT_API Testcase {
     std::int32_t metricsCount = 0;
     std::int32_t metricsDuration = 0;
 
-    nlohmann::ordered_json json() const;
+    rapidjson::Value json(RJAllocator& allocator) const;
   };
 
   struct TOUCA_CLIENT_API Metadata {
@@ -50,7 +50,7 @@ class TOUCA_CLIENT_API Testcase {
 
     std::string describe() const;
 
-    nlohmann::ordered_json json() const;
+    rapidjson::Value json(RJAllocator& allocator) const;
   };
 
   Testcase(const Metadata& meta, const ResultsMap& results,
@@ -82,7 +82,7 @@ class TOUCA_CLIENT_API Testcase {
 
   MetricsMap metrics() const;
 
-  nlohmann::ordered_json json() const;
+  rapidjson::Value json(RJAllocator& allocator) const;
 
   std::vector<uint8_t> flatbuffers() const;
 

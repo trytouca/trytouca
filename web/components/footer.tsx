@@ -1,8 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import Link from 'next/link';
 import { IconType } from 'react-icons';
 import {
+  FaDiscord,
   FaGithub,
   FaLinkedin,
   FaTwitch,
@@ -18,10 +19,16 @@ const social: {
   icon: IconType;
 }[] = [
   {
-    link: 'https://github.com/trytouca',
+    link: 'https://touca.io/github',
     title: 'Check us out on GitHub',
     text: 'GitHub',
     icon: FaGithub
+  },
+  {
+    link: 'https://touca.io/discord',
+    title: 'Join our Discord Community',
+    text: 'Discord',
+    icon: FaDiscord
   },
   {
     link: 'https://twitter.com/trytouca',
@@ -42,7 +49,7 @@ const social: {
     icon: FaYoutube
   },
   {
-    link: 'https://www.twitch.tv/touca_io',
+    link: 'https://www.twitch.tv/trytouca',
     title: 'Live-code with us on Twitch',
     text: 'Twitch',
     icon: FaTwitch
@@ -84,6 +91,11 @@ const links: {
   {
     link: '/discord',
     text: 'Discord',
+    internal: true
+  },
+  {
+    link: '/github',
+    text: 'GitHub',
     internal: true
   }
 ];

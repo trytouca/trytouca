@@ -1,0 +1,11 @@
+<mj-wrapper padding="0px">
+  <mj-section>
+    <mj-column width="100%">
+      <mj-image
+        src="https://touca.io/logo/touca-logo-w-text.png"
+        href="https://app.touca.io"
+        width="120px"
+      ></mj-image>
+    </mj-column>
+  </mj-section>
+</mj-wrapper>

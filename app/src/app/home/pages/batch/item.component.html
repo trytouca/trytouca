@@ -1,0 +1,35 @@
+<div class="wsl-list-item md:space-x-4">
+  <div class="wsl-item-heading">
+    <div
+      *ngIf="icon"
+      class="wsl-item-status"
+      [tippy]="icon.tooltip"
+      placement="left"
+      [delay]="[500, 100]">
+      <fa-icon
+        [icon]="icon.type"
+        [spin]="icon.spin"
+        [ngStyle]="{ color: icon.color }"></fa-icon>
+    </div>
+    <div class="wsl-item-title">
+      <a [routerLink]="data?.link" [queryParams]="data?.query">
+        <p>{{ data.name }}</p>
+      </a>
+    </div>
+  </div>
+  <div class="wsl-item-pills">
+    <div
+      class="wsl-item-pill"
+      *ngFor="let topic of shownTopics"
+      (click)="toggleChosenTopics(topic.type)">
+      <span class="hidden lg:flex">
+        <ng-icon
+          [ngClass]="topic.color"
+          [name]="topic.icon"
+          size="0.875rem"
+          *ngIf="topic.icon"></ng-icon>
+      </span>
+      <span [attr.title]="topic.title || null">{{ topic.text }}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<mjml>
+  <mj-head>
+    <mj-title>New Server Install</mj-title>
+    <mj-preview>A new self-hosted instance of Touca was registered.</mj-preview>
+    <mj-include path="./layout/attributes.mjml" />
+  </mj-head>
+  <mj-body>
+    <mj-include path="./layout/header.mjml" />
+    <mj-section mj-class="wsl-border">
+      <mj-column>
+        <mj-text><h3>New Server Install</h3></mj-text>
+        <mj-text>
+          <a href="mailto:{{ email }}">{{ name }}</a>
+          from {{ company }} just installed a new self-hosted instance of Touca.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-include path="./layout/footer-admin.mjml" />
+  </mj-body>
+</mjml>

@@ -1,0 +1,28 @@
+<div class="wsl-list-item">
+  <div class="wsl-item-heading">
+    <div class="wsl-item-status">
+      <fa-icon icon="user" class="text-sky-600"></fa-icon>
+    </div>
+    <div class="wsl-item-title">
+      <p>{{ item.fullname }}</p>
+    </div>
+    <div class="text-xs leading-8 text-gray-500 dark:text-gray-400">
+      {{ item.email }}
+    </div>
+  </div>
+  <div class="wsl-item-topics">
+    <div
+      class="wsl-item-topic"
+      title="{{ item.invitedAt | datetime: 'format' }}">
+      {{ item.invitedAt | datetime: 'distance' }}
+    </div>
+    <div *ngIf="isTeamAdmin" class="wsl-item-ctrl-box">
+      <div
+        title="Rescind Invitation to Team"
+        (click)="rescind()"
+        class="wsl-item-ctrl">
+        <fa-icon icon="user-minus"></fa-icon>
+      </div>
+    </div>
+  </div>
+</div>

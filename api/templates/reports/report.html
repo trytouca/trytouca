@@ -1,0 +1,140 @@
+<html lang="en">
+
+<head>
+  <base href="/" />
+  <meta charset="utf-8" />
+  <meta name="theme-color" content="#0284C7" />
+  <title>Touca</title>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link rel="icon" type="image/x-icon"
+    href="https://app.touca.io/favicon.ico" />
+  <link rel="apple-touch-icon"
+    href="https://app.touca.io/assets/icons/apple-touch-icon.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+
+<body
+  class="font-sans text-base antialiased text-gray-800 bg-white dark:bg-gray-900 dark:text-gray-300">
+  <div class="container p-8 mx-auto space-y-8">
+    <div class="flex items-center space-x-2">
+      <div class="flex items-center select-none">
+        <img class="h-12"
+          src="https://app.touca.io/assets/logo/touca-logo-transparent.svg"
+          alt="Touca Logo" />
+        <h1 class="hidden text-xl font-semibold tracking-tight text-sky-600">
+          Touca</h1>
+      </div>
+      <div>
+        <ul class="flex text-lg tracking-tight">
+          <li class="after:content-[',\2004']">{{content.suite.name}}</li>
+          <li>{{content.srcBatch.name}}</li>
+        </ul>
+        <p class="text-xs">Comparing against version
+          {{content.dstBatch.name}}.</p>
+      </div>
+    </div>
+    <div class="space-y-2 text-xs">
+      <h2 class="text-lg font-semibold">Overview</h2>
+      <p>Submitted by <b>{{content.srcBatch.submittedBy.name}}</b> at
+        {{content.srcBatch.submittedAt}}.
+      </p>
+      {{#content.srcBatch.missing.hasCases}}
+      <p><b>{{content.srcBatch.missing.cases.length}}</b> testcases are missing:
+      </p>
+      <ol class="pl-8 list-decimal">
+        {{#content.srcBatch.missing.cases}}
+        <li class="font-mono">{{name}}</li>
+        {{/content.srcBatch.missing.cases}}
+      </ol>
+      {{/content.srcBatch.missing.hasCases}}
+      {{#content.srcBatch.fresh.hasCases}}
+      <p><b>{{content.srcBatch.fresh.cases.length}}</b> testcases are new:</p>
+      <ol class="pl-8 list-decimal">
+        {{#content.srcBatch.fresh.cases}}
+        <li class="font-mono">{{name}}</li>
+        {{/content.srcBatch.fresh.cases}}
+      </ol>
+      {{/content.srcBatch.fresh.hasCases}}
+    </div>
+    <div class="space-y-2 text-xs">
+      <h2 class="text-lg font-semibold">Changes in Behavior</h2>
+      {{#content.srcBatch.behavior.hasCases}}
+      <p>
+        <b class="font-semibold">{{content.srcBatch.behavior.cases.length}}</b>
+        of
+        <b class="font-semibold">{{content.srcBatch.duration.cases.length}}</b>
+        common testcases behaved differently:
+      </p>
+      <table
+        class="text-xs border border-gray-300 table-auto dark:border-gray-700">
+        <tr class="text-left">
+          <th class="py-4"></th>
+          <th class="px-2 min-w-[8rem] text-left">Testcase</th>
+          <th class="px-2 min-w-[6rem]">Match Rate</th>
+        </tr>
+        {{#content.srcBatch.behavior.cases}}
+        <tr class="even:bg-gray-50 dark:even:bg-gray-800">
+          <td class="px-2 py-2 font-medium text-right">{{row}}</td>
+          <td class="px-2 font-medium">{{name}}</td>
+          <td class="px-2 {{matchRate.color}}">{{matchRate.text}}</td>
+        </tr>
+        {{/content.srcBatch.behavior.cases}}
+      </table>
+      {{/content.srcBatch.behavior.hasCases}}
+      {{^content.srcBatch.behavior.hasCases}}
+      <p>
+        <b class="font-semibold">{{content.srcBatch.name}}</b> behaves the same
+        as in version {{content.dstBatch.name}}.
+      </p>
+      {{/content.srcBatch.behavior.hasCases}}
+    </div>
+    <div class="space-y-2 text-xs">
+      <h2 class="text-lg font-semibold">Changes in Performance</h2>
+      <div class="flex items-center py-1 space-x-1">
+        <span
+          class="w-5 h-5 p-1 rounded-full dark:bg-gray-700 {{content.srcBatch.duration.change.color}}"
+          data-feather="{{ content.srcBatch.duration.change.icon }}"></span>
+        <p>
+          Version {{content.srcBatch.name}} ran in
+          <b class="font-semibold">{{content.srcBatch.duration.value}}</b> which
+          is
+          <b class="font-semibold">{{content.srcBatch.duration.change.text}}</b>
+          {{content.srcBatch.duration.change.suffix}} than version
+          {{content.dstBatch.name}}.
+        </p>
+      </div>
+      {{#content.srcBatch.duration.hasCases}}
+      <table
+        class="text-xs border border-gray-300 table-auto dark:border-gray-700">
+        <tr>
+          <th class="py-4"></th>
+          <th class="px-2 min-w-[8rem] text-left">Testcase</th>
+          <th class="px-2 min-w-[6rem] text-left">Runtime</th>
+          <th class="px-2 min-w-[4rem] text-left">Trend</th>
+        </tr>
+        {{#content.srcBatch.duration.cases}}
+        <tr class="even:bg-gray-50 dark:even:bg-gray-800">
+          <td class="px-2 py-2 font-medium text-right">{{row}}</td>
+          <td class="px-2 font-medium">{{name}}</td>
+          <td class="px-2">{{value}}</td>
+          <td class="px-2">
+            <div class="flex items-center justify-between py-1 space-x-1">
+              <span>{{ change.text }}</span><span
+                class="w-5 h-5 px-1 {{change.color}} rounded-full dark:bg-gray-700"
+                data-feather="{{change.icon}}"></span>
+            </div>
+          </td>
+        </tr>
+        {{/content.srcBatch.duration.cases}}
+      </table>
+      {{/content.srcBatch.duration.hasCases}}
+    </div>
+  </div>
+  <script>
+    feather.replace()
+  </script>
+</body>
+
+</html>

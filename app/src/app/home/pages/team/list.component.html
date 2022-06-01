@@ -1,0 +1,61 @@
+<section class="wsl-page-tab" id="wsl-team-tab-suites">
+  <div class="wsl-box flex h-16 items-center px-4 py-2 text-xl font-medium">
+    <div class="flex-grow">
+      <a class="text-black dark:text-gray-300">Suites</a>
+    </div>
+    <div class="flex items-center print:hidden">
+      <button
+        type="button"
+        (click)="openCreateModal()"
+        class="wsl-btn-sm wsl-btn-primary group flex items-center space-x-1">
+        <ng-icon
+          class="inline h-4 opacity-75 group-hover:opacity-100"
+          name="hero-plus-solid"></ng-icon>
+        <span>New Suite</span>
+      </button>
+    </div>
+  </div>
+  <div class="wsl-box space-y-4 p-4" style="min-height: calc(100vh - 13rem)">
+    <app-home-list-filter
+      [manager]="filterManager"
+      [params]="filterParams()"
+      [stats]="filterStats()"
+      (updateList)="updateList($event)"></app-home-list-filter>
+    <div *ngIf="countShownRows(ItemType.Suite)">
+      <div class="wsl-list-head">
+        <p *ngIf="countShownRows(ItemType.Suite) !== countRows(ItemType.Suite)">
+          You are viewing
+          <b>
+            {{
+              countShownRows(ItemType.Suite)
+                | i18nPlural: { '=1': 'one', other: '#' }
+            }}
+          </b>
+          of {{ countRows(ItemType.Suite) }} suites.
+        </p>
+      </div>
+      <ul class="wsl-list-body">
+        <li
+          class="wsl-list-item-outer"
+          *ngFor="let item of getShownRows(ItemType.Suite); let i = index"
+          (click)="selectedRow = i"
+          [ngClass]="
+            selectedRow === i
+              ? 'border-l-sky-200 dark:border-l-sky-700'
+              : 'border-l-transparent'
+          ">
+          <app-team-item-suite
+            [item]="item.data"
+            [chosenTopics]="chosenTopic"
+            (updateChosenTopics)="
+              updateChosenTopics($event)
+            "></app-team-item-suite>
+        </li>
+      </ul>
+    </div>
+    <app-home-list-pager
+      [params]="pagerParams()"
+      [stats]="filterStats()"
+      (updateList)="updateList($event)"></app-home-list-pager>
+  </div>
+</section>
