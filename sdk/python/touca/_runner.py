@@ -27,13 +27,13 @@ suite. However, the pattern above allows introducing multiple workflows by
 defining functions with ``@touca.Workflow`` decorators.
 """
 
-import os
 import shutil
 import sys
 import textwrap
 from argparse import Action, ArgumentParser
 from datetime import datetime, timedelta
 from enum import IntEnum
+from pathlib import Path
 from typing import Any, Dict, List
 from touca._client import Client
 from touca._printer import Printer
@@ -145,7 +145,6 @@ def prepare_parser(parser: ArgumentParser):
     )
 
 
-
 def _parse_cli_options(args) -> Dict[str, Any]:
     parser = ArgumentParser(
         description="Touca Regression Test",
@@ -231,10 +230,10 @@ def _update_testcase_list(options: dict):
             return
     if options.get("offline"):
         elements = ["output-directory", "suite", "version"]
-        version_dir = os.path.join(*map(options.get, elements))
-        if not os.path.exists(version_dir):
+        version_dir = Path(*map(options.get, elements))
+        if not version_dir.exists():
             raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
-        entries = os.listdir(version_dir)
+        entries = [x.name for x in version_dir.glob("*")]
         if not entries:
             raise _ToucaError(_ToucaErrorCode.NoCaseMissingRemote)
         options["testcases"] = entries
@@ -261,9 +260,9 @@ def _initialize(options: dict):
 
     # Create directory to write logs and test results into
     options["output-directory"] = options.get(
-        "output-directory", os.path.join(find_home_path(), "results")
+        "output-directory", find_home_path().joinpath("results")
     )
-    os.makedirs(options.get("output-directory"), exist_ok=True)
+    Path(options.get("output-directory")).mkdir(parents=True, exist_ok=True)
 
     # Configure the lower-level Touca library
     if not Client.instance().configure(**options):
@@ -274,11 +273,11 @@ def _initialize(options: dict):
 
 def _skip(options: dict, testcase: str):
     elements = ["output-directory", "suite", "version"]
-    casedir = os.path.join(*map(options.get, elements), testcase)
+    case_dir = Path(*map(options.get, elements), testcase)
     if options.get("save-as-binary"):
-        return os.path.exists(os.path.join(casedir, "touca.bin"))
+        return case_dir.joinpath("touca.bin").exists()
     if options.get("save-as-json"):
-        return os.path.exists(os.path.join(casedir, "touca.json"))
+        return case_dir.joinpath("touca.json").exists()
     return False
 
 
@@ -362,16 +361,16 @@ def _run_workflow(options, workflow):
 
     for idx, testcase in enumerate(options.get("testcases")):
         elements = ["output-directory", "suite", "version"]
-        casedir = os.path.join(*map(options.get, elements), testcase)
+        case_dir = Path(*map(options.get, elements), testcase)
 
         if not options.get("overwrite") and _skip(options, testcase):
             printer.print_progress(timer, testcase, idx, "skip")
             stats.inc("skip")
             continue
 
-        if os.path.exists(casedir):
-            shutil.rmtree(casedir)
-            os.makedirs(casedir)
+        if case_dir.exists():
+            shutil.rmtree(case_dir)
+            case_dir.mkdir()
 
         Client.instance().declare_testcase(testcase)
         timer.tic(testcase)
@@ -390,14 +389,10 @@ def _run_workflow(options, workflow):
         stats.inc(status)
 
         if not errors and options.get("save-as-binary"):
-            full_path = os.path.join(casedir, "touca.bin")
-            Client.instance().save_binary(full_path, [testcase])
-            print(f"binary saved in {full_path}")
+            Client.instance().save_binary(case_dir.joinpath("touca.bin"), [testcase])
 
         if not errors and options.get("save-as-json"):
-            full_path = os.path.join(casedir, "touca.json")
-            Client.instance().save_json(full_path, [testcase])
-            print(f"json saved in {full_path}")
+            Client.instance().save_json(case_dir.joinpath("touca.json"), [testcase])
 
         if not errors and not offline:
             Client.instance().post()
@@ -407,7 +402,7 @@ def _run_workflow(options, workflow):
         Client.instance().forget_testcase(testcase)
 
     timer.toc("__workflow__")
-    printer.print_footer(stats, timer)
+    printer.print_footer(stats, timer, options)
 
     if not offline:
         Client.instance().seal()

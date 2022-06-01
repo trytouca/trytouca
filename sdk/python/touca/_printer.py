@@ -1,6 +1,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import math
+from pathlib import Path
 from colorama import Style, Fore, Back, init
 
 init()
@@ -80,7 +81,7 @@ class Printer:
             self.print_line("\n   {}Exception Raised:{}", Style.DIM, Style.NORMAL)
             self.print_line("\n".join(f"      - {error}\n" for error in errors))
 
-    def print_footer(self, stats, timer):
+    def print_footer(self, stats, timer, options):
         states = [
             ("pass", "passed", Fore.GREEN),
             ("skip", "skipped", Fore.YELLOW),
@@ -92,13 +93,13 @@ class Printer:
                 continue
             messages.append(f"{state[2]}{stats.count(state[0])} {state[1]}{Fore.RESET}")
         messages.append(f"{self.testcase_count} total")
+        left_pad = int(math.log10(self.testcase_count)) + 11
+        self.print_line("\n{:s} {:s}", "Tests:".ljust(left_pad), ", ".join(messages))
         self.print_line(
-            "\n{:s} {:s}",
-            "Tests:".ljust(int(math.log10(self.testcase_count)) + 11),
-            ", ".join(messages),
+            "{:s} {:.2f} s", "Time:".ljust(left_pad), timer.count("__workflow__") / 1000
         )
-        self.print_line(
-            "{:s} {:.2f} s",
-            "Time:".ljust(int(math.log10(self.testcase_count)) + 11),
-            timer.count("__workflow__") / 1000,
-        )
+        if any(map(options.get, ["save-as-binary", "save-as-json"])):
+            results_dir = Path(
+                *map(options.get, ["output-directory", "suite", "version"])
+            )
+            self.print_line("{:s} {}", "Results:".ljust(left_pad), results_dir)
