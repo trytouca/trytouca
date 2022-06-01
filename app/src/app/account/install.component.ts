@@ -117,11 +117,11 @@ export class InstallComponent implements OnDestroy {
 
   submitTelemetry() {
     this.apiService
-      .patch('/platform/config', { telemetry: this.telemetry })
+      .patch('/platform/config', { telemetry: !!this.telemetry })
       .subscribe((doc) => {
         this.tabType = InstallPageTabType.Thanks;
         this.apiService._status = undefined;
-        if (doc.url) {
+        if (doc?.url) {
           this.router.navigate(['/account/activate'], {
             queryParams: { key: doc.url }
           });
