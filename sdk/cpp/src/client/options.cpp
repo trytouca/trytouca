@@ -2,6 +2,7 @@
 
 #include "touca/client/detail/options.hpp"
 
+#include <algorithm>
 #include <functional>
 
 #include "rapidjson/document.h"
