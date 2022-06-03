@@ -2,7 +2,9 @@
 
 #include "touca/devkit/comparison.hpp"
 
+#include <algorithm>
 #include <chrono>
+#include <cmath>
 
 #include "rapidjson/document.h"
 #include "rapidjson/rapidjson.h"
