@@ -141,8 +141,8 @@ export class InstallComponent implements OnDestroy {
               email: doc.contact.email,
               fname: doc.contact.name
             });
+            this.installed = true;
           }
-          this.installed = true;
         });
     }
   }

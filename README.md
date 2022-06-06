@@ -21,8 +21,9 @@ Touca is an open-source regression testing solution, built for engineers.
 
 ### Option 1: Self-host locally
 
-You could locally self-host Touca Server by running the following command on a
-UNIX machine with at least 2GB of RAM, with Docker and Docker Compose installed.
+You could locally self-host the Touca Server by running the following command on
+a UNIX machine with at least 2GB of RAM, with Docker and Docker Compose
+installed.
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/trytouca/trytouca/main/ops/install.sh)"
@@ -30,9 +31,9 @@ UNIX machine with at least 2GB of RAM, with Docker and Docker Compose installed.
 
 ### Option 2: Use our cloud instance
 
-Or you could sign up on https://app.touca.io that with additional features
-suitable for large teams. We have a generous free-tier plan and use usage-based
-pricing for storage and service.
+Or you could use https://app.touca.io that has a few more features suitable for
+large teams. We have a generous free-tier plan and leverage usage-based pricing
+to charge for storage and service.
 
 ## Sneak Peak
 
