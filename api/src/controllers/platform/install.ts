@@ -20,13 +20,14 @@ export async function platformInstall(
   res: Response,
   next: NextFunction
 ) {
+  logger.info('received server install request')
   const contact = {
     company: req.body.company,
     email: req.body.email,
     name: req.body.name,
     uuid: uuidv4()
   }
-  if (['company', 'email', 'name', 'uuid'].every((key) => !contact[key])) {
+  if (['company', 'email', 'name', 'uuid'].every((key) => !(key in contact))) {
     return next({
       status: 400,
       errors: ['invalid request']
@@ -72,7 +73,7 @@ export async function platformInstall(
 
   await MetaModel.updateOne({}, { $set: { contact } })
   const response = await relay('/platform/install', JSON.stringify(contact))
-  logger.info('registered server')
+  logger.info('server registered')
   rclient.removeCached('platform-config')
   rclient.removeCached('platform-health')
 
