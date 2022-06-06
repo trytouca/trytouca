@@ -145,7 +145,7 @@ Or you can use Conan:
 
 ```bash
 conan remote add touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
-conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.4.1@_/_"
+conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.5.2@_/_"
 ```
 
 See the [Integration](https://touca.io/docs/sdk/cpp/installing) section on our
