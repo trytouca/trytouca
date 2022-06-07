@@ -84,16 +84,14 @@ static void parse_cli_option(const cxxopts::ParseResult& result,
 }
 
 static void parse_file_option(const rapidjson::Value& result,
-                              const std::string& key,
-                              std::string& field) {
+                              const std::string& key, std::string& field) {
   if (result.HasMember(key) && result[key].IsString()) {
     field = result[key].GetString();
   }
 }
 
 static void parse_file_option(const rapidjson::Value& result,
-                              const std::string& key,
-                              bool& field) {
+                              const std::string& key, bool& field) {
   if (result.HasMember(key) && result[key].IsBool()) {
     field = result[key].GetBool();
   }

@@ -68,7 +68,7 @@ int run(int argc, char* argv[]) {
 }
 
 static bool skip_testcase(const FrameworkOptions& options,
-                   const std::string& testcase) {
+                          const std::string& testcase) {
   auto output_dir_case = touca::filesystem::path(options.output_dir) /
                          options.suite / options.revision / testcase;
   if (options.save_binary) {
@@ -165,10 +165,14 @@ void Logger::publish(const Sink::Level level, const std::string& msg) const {
 
 static std::string stringify(const Sink::Level& log_level) {
   switch (log_level) {
-    case Sink::Level::Debug: return "debug";
-    case Sink::Level::Info:  return "info";
-    case Sink::Level::Warn:  return "warning";
-    case Sink::Level::Error: return "error";
+    case Sink::Level::Debug:
+      return "debug";
+    case Sink::Level::Info:
+      return "info";
+    case Sink::Level::Warn:
+      return "warning";
+    case Sink::Level::Error:
+      return "error";
   }
   return "";
 }

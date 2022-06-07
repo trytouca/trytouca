@@ -107,8 +107,7 @@ template <typename F>
 struct GenericOverload {
   F _callable;
 
-  constexpr explicit GenericOverload(const F& callable)
-      : _callable(callable) {}
+  constexpr explicit GenericOverload(const F& callable) : _callable(callable) {}
 
   constexpr explicit GenericOverload(F&& callable)
       : _callable(std::move(callable)) {}
