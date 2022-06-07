@@ -32,14 +32,15 @@ func_t parse_member(bool& member) {
  * precedence over the specified configuration parameters.
  */
 void parse_env_variables(ClientOptions& options) {
-  if (const auto env_value = std::getenv("TOUCA_API_KEY"))
-    options.api_key = env_value;
-
-  if (const auto env_value = std::getenv("TOUCA_API_URL"))
-    options.api_url = env_value;
-
-  if (const auto env_value = std::getenv("TOUCA_TEST_VERSION"))
-    options.revision = env_value;
+  if (const auto value = std::getenv("TOUCA_API_KEY")) {
+    options.api_key = value;
+  }
+  if (const auto value = std::getenv("TOUCA_API_URL")) {
+    options.api_url = value;
+  }
+  if (const auto value = std::getenv("TOUCA_TEST_VERSION")) {
+    options.revision = value;
+  }
 }
 
 bool reformat_options(ClientOptions& existing) {
