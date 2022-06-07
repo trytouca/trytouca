@@ -12,7 +12,7 @@
 namespace touca {
 namespace detail {
 
-cxxopts::Options cli_options() {
+static cxxopts::Options cli_options() {
   cxxopts::Options options("./app", "Command Line Options");
 
   // clang-format off
@@ -76,22 +76,24 @@ cxxopts::Options cli_options() {
 }
 
 template <typename T>
-void parse_cli_option(const cxxopts::ParseResult& result,
-                      const std::string& key, T& field) {
+static void parse_cli_option(const cxxopts::ParseResult& result,
+                             const std::string& key, T& field) {
   if (result[key].count()) {
     field = result[key].as<T>();
   }
 }
 
-void parse_file_option(const rapidjson::Value& result, const std::string& key,
-                       std::string& field) {
+static void parse_file_option(const rapidjson::Value& result,
+                              const std::string& key,
+                              std::string& field) {
   if (result.HasMember(key) && result[key].IsString()) {
     field = result[key].GetString();
   }
 }
 
-void parse_file_option(const rapidjson::Value& result, const std::string& key,
-                       bool& field) {
+static void parse_file_option(const rapidjson::Value& result,
+                              const std::string& key,
+                              bool& field) {
   if (result.HasMember(key) && result[key].IsBool()) {
     field = result[key].GetBool();
   }
@@ -102,7 +104,8 @@ void parse_file_option(const rapidjson::Value& result, const std::string& key,
  * @param argv list of arguments provided to the application
  * @param options application configuration parameters
  */
-bool parse_cli_options(int argc, char* argv[], FrameworkOptions& options) {
+static bool parse_cli_options(int argc, char* argv[],
+                              FrameworkOptions& options) {
   auto opts = cli_options();
   opts.allow_unrecognised_options();
   try {
@@ -141,7 +144,7 @@ bool parse_cli_options(int argc, char* argv[], FrameworkOptions& options) {
   return true;
 }
 
-bool parse_file_options(FrameworkOptions& options) {
+static bool parse_file_options(FrameworkOptions& options) {
   // if user is asking for help description or framework version,
   // do not parse the configuration file even if it is specified.
 
@@ -229,7 +232,7 @@ bool parse_file_options(FrameworkOptions& options) {
   return true;
 }
 
-bool parse_api_url(FrameworkOptions& options) {
+static bool parse_api_url(FrameworkOptions& options) {
   // it is okay if configuration option `--api-url` is not specified
   if (options.api_url.empty()) {
     return true;
