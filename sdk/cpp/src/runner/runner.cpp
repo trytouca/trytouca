@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <numeric>
+#include <stdexcept>
 #include <string>
 #include <thread>
 #include <unordered_map>
@@ -174,7 +175,8 @@ static std::string stringify(const Sink::Level& log_level) {
     case Sink::Level::Error:
       return "error";
   }
-  return "";
+
+  throw std::invalid_argument("given log_level contains unknown value.");
 }
 
 struct ConsoleSink : public Sink {
