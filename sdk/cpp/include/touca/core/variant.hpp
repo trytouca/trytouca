@@ -83,9 +83,11 @@ constexpr overloaded<Fs...> make_overloaded(Fs&&... fs) {
  * Implicitly constructible type that doesn't hold any value, useful for sinking
  * an argument.
  */
-struct sink {
+struct Discarder {
   template <typename... Args>
-  constexpr sink(Args&&...) noexcept {}
+  constexpr Discarder(Args&&...) noexcept {}
+
+  Discarder& operator=(const Discarder&) = delete;
 };
 
 /**
@@ -97,18 +99,18 @@ struct sink {
  *  visit(make_overloaded(
  *    [](int) { return "numeric"; },
  *    [](const std::string&) { return "string"; },
- *    make_generic_overload([](sink) { return "unknown"; })
+ *    make_generic_overload([](Discarder) { return "unknown"; })
  *  ), my_variant);
  * @endcode
  */
 template <typename F>
-struct generic_overload {
+struct GenericOverload {
   F _callable;
 
-  constexpr explicit generic_overload(const F& callable)
+  constexpr explicit GenericOverload(const F& callable)
       : _callable(callable) {}
 
-  constexpr explicit generic_overload(F&& callable)
+  constexpr explicit GenericOverload(F&& callable)
       : _callable(std::move(callable)) {}
 
   template <typename Arg>
@@ -122,8 +124,8 @@ struct generic_overload {
  * Helper function to deduce type of given callable.
  */
 template <typename F>
-generic_overload<F> make_generic_overload(F&& callable) {
-  return generic_overload<F>{std::forward<F>(callable)};
+GenericOverload<F> make_generic_overload(F&& callable) {
+  return GenericOverload<F>{std::forward<F>(callable)};
 }
 
 /**
