@@ -18,9 +18,9 @@ add_library(${TOUCA_TARGET_MAIN} "")
 target_sources(
         ${TOUCA_TARGET_MAIN}
     PRIVATE
+        touca.cpp
         client/client.cpp
         client/options.cpp
-        client/touca.cpp
         core/filesystem.cpp
         core/testcase.cpp
         core/types.cpp
