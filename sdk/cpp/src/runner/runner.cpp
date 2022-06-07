@@ -176,7 +176,7 @@ static std::string stringify(const Sink::Level& log_level) {
       return "error";
   }
 
-  throw std::invalid_argument("given log_level contains unknown value.");
+  throw std::invalid_argument("log level invalid");
 }
 
 struct ConsoleSink : public Sink {
