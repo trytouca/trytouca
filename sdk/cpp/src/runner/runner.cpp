@@ -6,6 +6,7 @@
 #include <iostream>
 #include <memory>
 #include <numeric>
+#include <stdexcept>
 #include <string>
 #include <thread>
 #include <unordered_map>
@@ -67,8 +68,8 @@ int run(int argc, char* argv[]) {
   return status ? EXIT_FAILURE : EXIT_SUCCESS;
 }
 
-bool skip_testcase(const FrameworkOptions& options,
-                   const std::string& testcase) {
+static bool skip_testcase(const FrameworkOptions& options,
+                          const std::string& testcase) {
   auto output_dir_case = touca::filesystem::path(options.output_dir) /
                          options.suite / options.revision / testcase;
   if (options.save_binary) {
@@ -81,7 +82,7 @@ bool skip_testcase(const FrameworkOptions& options,
   return touca::filesystem::exists(output_dir_case.string());
 }
 
-bool expect_options(const std::map<std::string, std::string>& options) {
+static bool expect_options(const std::map<std::string, std::string>& options) {
   const auto& is_missing = [](const std::pair<std::string, std::string>& kvp) {
     return kvp.second.empty();
   };
@@ -97,7 +98,7 @@ bool expect_options(const std::map<std::string, std::string>& options) {
   return false;
 }
 
-bool validate_api_url(const FrameworkOptions& options) {
+static bool validate_api_url(const FrameworkOptions& options) {
   touca::ApiUrl api(options.api_url);
   if (!api.confirm(options.team, options.suite, options.revision)) {
     fmt::print(std::cerr, "{}\n", api._error);
@@ -106,7 +107,7 @@ bool validate_api_url(const FrameworkOptions& options) {
   return true;
 }
 
-bool validate_options(const FrameworkOptions& options) {
+static bool validate_options(const FrameworkOptions& options) {
   // we always expect a value for the following options.
   if (!expect_options({{"team", options.team},
                        {"suite", options.suite},
@@ -163,14 +164,19 @@ void Logger::publish(const Sink::Level level, const std::string& msg) const {
   }
 }
 
-std::string stringify(const Sink::Level& log_level) {
-  static const std::map<Sink::Level, std::string> names = {
-      {Sink::Level::Debug, "debug"},
-      {Sink::Level::Info, "info"},
-      {Sink::Level::Warn, "warning"},
-      {Sink::Level::Error, "error"},
-  };
-  return names.at(log_level);
+static std::string stringify(const Sink::Level& log_level) {
+  switch (log_level) {
+    case Sink::Level::Debug:
+      return "debug";
+    case Sink::Level::Info:
+      return "info";
+    case Sink::Level::Warn:
+      return "warning";
+    case Sink::Level::Error:
+      return "error";
+  }
+
+  throw std::invalid_argument("log level invalid");
 }
 
 struct ConsoleSink : public Sink {
