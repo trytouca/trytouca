@@ -1013,7 +1013,7 @@ jobs:
           aws s3 cp ops/install.sh ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/install.sh
           aws s3 cp ops/install.dev.sh ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/install.dev.sh
 
-      - name: build api docker image
+      - name: prepare resources for building api docker image
         if: steps.changes.outputs.api == 'true'
         run: |
           mkdir -p ./stage
@@ -1021,44 +1021,47 @@ jobs:
           cp -r ./api/env ./stage/api/env
           cp -r ./api/samples ./stage/api/samples
           cp -r ./api/node_modules ./stage/api/node_modules
-          docker build -f config/docker/api.Dockerfile -t touca-api stage
-      - name: push api to container registry
-        if: |
-          steps.changes.outputs.api == 'true' && steps.params.outputs.release == 'true'
-        run: |
-          docker tag touca-api ${{ secrets.AWS_PROD_ECR_REPO }}/touca-api:${{ steps.params.outputs.version }}
-          docker --config ~/.docker-credentials-aws push ${{ secrets.AWS_PROD_ECR_REPO }}/touca-api:${{ steps.params.outputs.version }}
-          docker tag touca-api touca/touca-api:${{ steps.params.outputs.version }}
-          docker --config ~/.docker-credentials-hub push touca/touca-api:${{ steps.params.outputs.version }}
+      - name: build api docker image
+        uses: docker/build-push-action@v3
+        if: steps.changes.outputs.api == 'true'
+        with:
+          context: stage
+          file: ./config/docker/api.Dockerfile
+          push: ${{ steps.params.outputs.release == 'true' }}
+          tags: |
+            touca/touca-api:${{ steps.params.outputs.version }}
+            ${{ secrets.AWS_PROD_ECR_REPO }}/touca-api:${{ steps.params.outputs.version }}
 
-      - name: build app docker image
+      - name: prepare resources for building app docker image
         if: steps.changes.outputs.app == 'true'
         run: |
           mkdir -p ./stage
           tar -xf app.tar.gz -C ./stage
           mkdir -p ./stage/app && cp ./app/nginx.conf ./stage/app/
-          docker build -f config/docker/app.Dockerfile -t touca-app stage
-      - name: push app to container registry
-        if: |
-          steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
-        run: |
-          docker tag touca-app ${{ secrets.AWS_PROD_ECR_REPO }}/touca-app:${{ steps.params.outputs.version }}
-          docker --config ~/.docker-credentials-aws push ${{ secrets.AWS_PROD_ECR_REPO }}/touca-app:${{ steps.params.outputs.version }}
-          docker tag touca-app touca/touca-app:${{ steps.params.outputs.version }}
-          docker --config ~/.docker-credentials-hub push touca/touca-app:${{ steps.params.outputs.version }}
+      - name: build app docker image
+        uses: docker/build-push-action@v3
+        if: steps.changes.outputs.app == 'true'
+        with:
+          context: stage
+          file: ./config/docker/app.Dockerfile
+          push: ${{ steps.params.outputs.release == 'true' }}
+          tags: |
+            touca/touca-app:${{ steps.params.outputs.version }}
+            ${{ secrets.AWS_PROD_ECR_REPO }}/touca-app:${{ steps.params.outputs.version }}
 
-      - name: build cmp docker image
+      - name: prepare resources for building cmp docker image
         if: steps.changes.outputs.cmp == 'true'
         run: |
           mkdir -p ./stage
           tar -xf cmp.tar.gz -C ./stage
           mkdir -p ./stage/cmp/config && cp ./cmp/config/config.prod.json ./stage/cmp/config/
-          docker build -f config/docker/cmp.Dockerfile -t touca-cmp stage
-      - name: push cmp to container registry
-        if: |
-          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
-        run: |
-          docker tag touca-cmp ${{ secrets.AWS_PROD_ECR_REPO }}/touca-cmp:${{ steps.params.outputs.version }}
-          docker --config ~/.docker-credentials-aws push ${{ secrets.AWS_PROD_ECR_REPO }}/touca-cmp:${{ steps.params.outputs.version }}
-          docker tag touca-cmp touca/touca-cmp:${{ steps.params.outputs.version }}
-          docker --config ~/.docker-credentials-hub push touca/touca-cmp:${{ steps.params.outputs.version }}
+      - name: build cmp docker image
+        uses: docker/build-push-action@v3
+        if: steps.changes.outputs.cmp == 'true'
+        with:
+          context: stage
+          file: ./config/docker/cmp.Dockerfile
+          push: ${{ steps.params.outputs.release == 'true' }}
+          tags: |
+            touca/touca-cmp:${{ steps.params.outputs.version }}
+            ${{ secrets.AWS_PROD_ECR_REPO }}/touca-cmp:${{ steps.params.outputs.version }}
