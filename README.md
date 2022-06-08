@@ -26,14 +26,14 @@ a UNIX machine with at least 2GB of RAM, with Docker and Docker Compose
 installed.
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/trytouca/trytouca/main/ops/install.sh)"
+/bin/bash -c "$(curl -fsSL https://touca.io/install.sh)"
 ```
 
 ### Option 2: Use our cloud instance
 
 Or you could use https://app.touca.io that has a few more features suitable for
-large teams. We have a generous free-tier plan and leverage usage-based pricing
-to charge for storage and service.
+large teams. We have a generous free plan and leverage usage-based pricing to
+charge for storage and service.
 
 ## Sneak Peak
 

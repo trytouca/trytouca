@@ -993,18 +993,25 @@ jobs:
           aws-secret-access-key:
             ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
           aws-region: us-east-2
-      - name: authenticate to container registry
+      - name: login to docker container registry
+        uses: docker/login-action@v2
         if: steps.params.outputs.release == 'true'
-        run: |
-          echo "${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}" | docker --config ~/.docker-credentials-hub login --username ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
-          aws ecr get-login-password --region us-east-2 | docker --config ~/.docker-credentials-aws login --username AWS --password-stdin ${{ secrets.AWS_PROD_ECR_REPO }}
-
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: login to aws container registry
+        uses: docker/login-action@v2
+        if: steps.params.outputs.release == 'true'
+        with:
+          registry: ${{ secrets.AWS_PROD_ECR_REPO }}
       - name: push ops to aws
         if: |
           steps.changes.outputs.ops == 'true' && steps.params.outputs.release == 'true'
         run: |
           tar -zcf deployment-scripts.tar.gz ops
           aws s3 cp deployment-scripts.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 cp ops/install.sh ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/install.sh
+          aws s3 cp ops/install.dev.sh ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/install.dev.sh
 
       - name: build api docker image
         if: steps.changes.outputs.api == 'true'
