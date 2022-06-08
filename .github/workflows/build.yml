@@ -1031,6 +1031,15 @@ jobs:
           tags: |
             touca/touca-api:${{ steps.params.outputs.version }}
             ${{ secrets.AWS_PROD_ECR_REPO }}/touca-api:${{ steps.params.outputs.version }}
+      - name: update docker hub description
+        uses: peter-evans/dockerhub-description@v3
+        if: |
+          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          repository: touca/touca-api
+          readme-filepath: ./README.md
 
       - name: prepare resources for building app docker image
         if: steps.changes.outputs.app == 'true'
@@ -1048,6 +1057,15 @@ jobs:
           tags: |
             touca/touca-app:${{ steps.params.outputs.version }}
             ${{ secrets.AWS_PROD_ECR_REPO }}/touca-app:${{ steps.params.outputs.version }}
+      - name: update docker hub description
+        uses: peter-evans/dockerhub-description@v3
+        if: |
+          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          repository: touca/touca-app
+          readme-filepath: ./README.md
 
       - name: prepare resources for building cmp docker image
         if: steps.changes.outputs.cmp == 'true'
@@ -1065,3 +1083,12 @@ jobs:
           tags: |
             touca/touca-cmp:${{ steps.params.outputs.version }}
             ${{ secrets.AWS_PROD_ECR_REPO }}/touca-cmp:${{ steps.params.outputs.version }}
+      - name: update docker hub description
+        uses: peter-evans/dockerhub-description@v3
+        if: |
+          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+          repository: touca/touca-cmp
+          readme-filepath: ./README.md
