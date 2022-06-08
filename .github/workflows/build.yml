@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -82,7 +82,7 @@ jobs:
       matrix:
         cxx: [g++-9, clang++-9]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -103,7 +103,7 @@ jobs:
       matrix:
         cxx: [g++-9, clang++-9]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -160,7 +160,7 @@ jobs:
       - build-sdk-cpp-local
       - build-sdk-cpp-conan
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -209,7 +209,7 @@ jobs:
       - build-sdk-cpp-local
       - build-sdk-cpp-conan
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -253,7 +253,7 @@ jobs:
       run:
         working-directory: ./sdk/java
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -346,7 +346,7 @@ jobs:
       matrix:
         node-version: [12, 14, 16]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -437,7 +437,7 @@ jobs:
       matrix:
         python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -538,7 +538,7 @@ jobs:
       matrix:
         cxx: [g++-9]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -572,7 +572,7 @@ jobs:
       run:
         working-directory: ./examples/java
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -625,7 +625,7 @@ jobs:
       run:
         working-directory: ./examples/js
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -674,7 +674,7 @@ jobs:
       run:
         working-directory: ./examples/python
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -707,7 +707,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
@@ -758,7 +758,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -827,7 +827,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -886,7 +886,7 @@ jobs:
     runs-on: ubuntu-20.04
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -944,11 +944,12 @@ jobs:
       - build-app
       - build-cmp
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
         id: changes
         with:
           filters: .github/path-filters.yml
+      - uses: docker/setup-buildx-action@v2
       - name: get version number
         id: params
         run: |
@@ -1031,6 +1032,17 @@ jobs:
           tags: |
             touca/touca-api:${{ steps.params.outputs.version }}
             ${{ secrets.AWS_PROD_ECR_REPO }}/touca-api:${{ steps.params.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: update docker hub description
+        uses: peter-evans/dockerhub-description@v3
+        if: |
+          steps.changes.outputs.api == 'true' && steps.params.outputs.release == 'true'
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          repository: touca/touca-api
+          readme-filepath: ./README.md
 
       - name: prepare resources for building app docker image
         if: steps.changes.outputs.app == 'true'
@@ -1048,6 +1060,17 @@ jobs:
           tags: |
             touca/touca-app:${{ steps.params.outputs.version }}
             ${{ secrets.AWS_PROD_ECR_REPO }}/touca-app:${{ steps.params.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: update docker hub description
+        uses: peter-evans/dockerhub-description@v3
+        if: |
+          steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          repository: touca/touca-app
+          readme-filepath: ./README.md
 
       - name: prepare resources for building cmp docker image
         if: steps.changes.outputs.cmp == 'true'
@@ -1065,3 +1088,14 @@ jobs:
           tags: |
             touca/touca-cmp:${{ steps.params.outputs.version }}
             ${{ secrets.AWS_PROD_ECR_REPO }}/touca-cmp:${{ steps.params.outputs.version }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      - name: update docker hub description
+        uses: peter-evans/dockerhub-description@v3
+        if: |
+          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+          repository: touca/touca-cmp
+          readme-filepath: ./README.md
