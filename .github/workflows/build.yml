@@ -1037,7 +1037,7 @@ jobs:
       - name: update docker hub description
         uses: peter-evans/dockerhub-description@v3
         if: |
-          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
+          steps.changes.outputs.api == 'true' && steps.params.outputs.release == 'true'
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
@@ -1065,7 +1065,7 @@ jobs:
       - name: update docker hub description
         uses: peter-evans/dockerhub-description@v3
         if: |
-          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
+          steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
