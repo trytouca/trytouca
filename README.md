@@ -1,9 +1,5 @@
 # Touca
 
-> This week is _Touca Launch Week_! Check out our
-> [Launch page](https://touca.io/launch) for upcoming blog-posts, webinars,
-> conversations, and live-coding streams.
-
 [![License](https://img.shields.io/github/license/trytouca/trytouca?color=blue)](https://github.com/trytouca/trytouca/blob/main/LICENSE)
 [![Documentation Website](https://img.shields.io/static/v1?label=docs&message=touca.io/docs&color=blue)](https://touca.io/docs)
 [![Community](https://img.shields.io/static/v1?label=community&message=touca.io/discord&color=blue)](https://touca.io/discord)
@@ -21,9 +17,8 @@ Touca is an open-source regression testing solution, built for engineers.
 
 ### Option 1: Self-host locally
 
-You could locally self-host the Touca Server by running the following command on
-a UNIX machine with at least 2GB of RAM, with Docker and Docker Compose
-installed.
+You can self-host Touca by running the following command on a UNIX machine with
+at least 2GB of RAM, with Docker and Docker Compose installed.
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://touca.io/install.sh)"
@@ -31,11 +26,11 @@ installed.
 
 ### Option 2: Use our cloud instance
 
-Or you could use https://app.touca.io that has a few more features suitable for
-large teams. We have a generous free plan and leverage usage-based pricing to
-charge for storage and service.
+Or you can use https://app.touca.io with additional enterprise-ready features
+that we manage and maintain. We offer a generous free plan and leverage
+usage-based pricing to charge larger teams for storage and service.
 
-## Sneak Peak
+## Sneak Peek
 
 > Touca offer SDKs in Python, C++, Java, and JavaScript.
 
@@ -44,20 +39,24 @@ charge for storage and service.
 [![JavaScript SDK](https://img.shields.io/npm/v/@touca/node?label=JavaScript&color=blue)](https://www.npmjs.com/package/@touca/node)
 [![Java SDK](https://img.shields.io/maven-central/v/io.touca/touca?label=Java&color=blue)](https://search.maven.org/artifact/io.touca/touca)
 
-Let us imagine that we want to test a software workflow that reports whether a
-given number is prime.
+Let us imagine that we want to test a software workflow that takes the username
+of a student and provides basic information about them.
 
 ```python
-def is_prime(number: int):
-    for i in range(2, number):
-        if number % i == 0:
-            return False
-    return 1 < number
+@dataclass
+class Student:
+    username: str
+    fullname: str
+    dob: datetime.date
+    gpa: float
+
+def find_student(username: str) -> Student:
+    # ...
 ```
 
-We can use unit testing in which we hard-code a set of input numbers and list
-our expected return value for each input. In this example, the input and output
-of our code under test are a number and a boolean. If we were testing a video
+We can use unit testing in which we hard-code a set of usernames and list our
+expected return value for each input. In this example, the input and output of
+our code under test are `username` and `Student`. If we were testing a video
 compression algorithm, they may have been video files. In that case:
 
 - Describing the expected output for a given video file would be difficult.
@@ -71,11 +70,15 @@ any number of test cases.
 
 ```python
 import touca
-from is_prime import is_prime
+from students import find_student
 
 @touca.Workflow
-def is_prime_test(testcase: str):
-    touca.check("is_prime_output", is_prime(int(testcase)))
+def students_test(username: str):
+    student = find_student(username)
+    touca.check("username", student.username)
+    touca.check("fullname", student.fullname)
+    touca.check("birth_date", student.dob)
+    touca.check("gpa", student.gpa)
 ```
 
 This is slightly different from a typical unit test:
@@ -83,32 +86,30 @@ This is slightly different from a typical unit test:
 - Touca tests do not use expected values.
 - Touca tests do not hard-code input values.
 
-With Touca, we can define how to run our code under test for any given test
-case. We can capture values of interesting variables and runtime of important
+With Touca, we describe how we run our code under test for any given test case.
+We can capture values of interesting variables and runtime of important
 functions to describe the behavior and performance of our workflow for that test
 case.
 
 We can run Touca tests with any number of inputs from the command line:
 
 ```bash
-touca config set api-key="<your_key>"
+touca config set api-key="<your_api_key>"
 touca config set api-url="https://api.touca.io/@/tutorial"
-touca test --revision=1.0 --testcase 19 51 97
+touca test --revision=1.0 --testcase alice bob charlie
 ```
 
-Where `TOUCA_API_KEY` can be obtained from the Touca server at
-[app.touca.io](https://app.touca.io). This command produces the following
-output:
+This command produces the following output:
 
 ```text
 
 Touca Test Framework
 
-Suite: is_prime_test/1.0
+Suite: students_test/1.0
 
- 1.  PASS   19    (0 ms)
- 2.  PASS   51    (0 ms)
- 3.  PASS   97    (0 ms)
+ 1.  PASS   alice    (0 ms)
+ 2.  PASS   bob      (0 ms)
+ 3.  PASS   charlie  (0 ms)
 
 Tests:      3 passed, 3 total
 Time:       0.39 s
@@ -118,8 +119,8 @@ Time:       0.39 s
 ```
 
 Now if we make changes to our workflow under test, we can rerun this test and
-rely on Touca to check if our changes affected the behavior or performance of
-our software.
+rely on Touca to check if our changes affect the behavior or performance of our
+software.
 
 Unlike integration tests, we are not bound to the output of our workflow. We can
 capture any number of data points and from anywhere within our code. This is
@@ -142,24 +143,23 @@ situations:
 The highlighted design features of Touca can help us test these workflows at any
 scale.
 
-- Decoupling our test input from our test logic, can help us manage our long
-  list of inputs without modifying the test logic. Managing that list on a
-  remote server accessible to all members of our team, can help us add notes to
-  each test case, explain why they are needed and track how their performance
-  changes over time.
+- Decoupling our test input from our test logic helps us manage our long list of
+  inputs without modifying the test logic. Managing that list on a remote server
+  accessible to all members of our team helps us add notes to each test case,
+  explain why they are needed and track their stability and performance changes
+  over time.
 - Submitting our test results to a remote server, instead of storing them in
-  files, can help us avoid the mundane tasks of managing and processing of those
-  results. The Touca server retains test results and makes them accessible to
+  files, helps us avoid the mundane tasks of managing and processing of test
+  results. Touca server retains all test results and makes them accessible to
   all members of the team. It compares test results using their original data
   types and reports discovered differences in real-time to all interested
-  members of our team. It allows us to audit how our software evolves over time
-  and provides high-level information about our tests.
+  members of our team. It helps us audit how our software evolves over time and
+  provides high-level information about our tests.
 
 ## Documentation
 
-If you are new to Touca, the best place to start is the
-[Quickstart Guide](https://touca.io/docs/basics/quickstart) on our documentation
-website.
+If you are new to Touca, the best place to start is our
+[documentation website](https://touca.io/docs).
 
 ## Community
 
