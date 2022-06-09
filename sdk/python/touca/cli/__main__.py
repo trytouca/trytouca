@@ -10,7 +10,7 @@ from touca._printer import Printer
 from touca.cli._config import Config
 from touca.cli._execute import Execute
 from touca.cli._merge import Merge
-from touca.cli._plugin import Plugin
+from touca.cli._plugin import Plugin, user_plugins
 from touca.cli._profile import Profile
 from touca.cli._post import Post
 from touca.cli._run import Run
@@ -43,7 +43,7 @@ def _warn_outdated_version():
 
 
 def main(args=None):
-    operations = [
+    subcommands = [
         Config,
         Merge,
         Plugin,
@@ -55,6 +55,7 @@ def main(args=None):
         Unzip,
         Update,
         Zip,
+        *user_plugins(),
     ]
     parser = ArgumentParser(
         prog="touca",
@@ -66,7 +67,7 @@ def main(args=None):
         "-v", "--version", action="version", version=f"%(prog)s v{__version__}"
     )
     parsers = parser.add_subparsers(dest="command")
-    for operation in operations:
+    for operation in subcommands:
         subparser = parsers.add_parser(
             name=operation.name,
             prog=f"touca {operation.name}",
@@ -78,7 +79,7 @@ def main(args=None):
     parsed, remaining = parser.parse_known_args(sys.argv[1:] if args is None else args)
     options = vars(parsed)
 
-    command = next((x for x in operations if x.name == options.get("command")), None)
+    command = next((x for x in subcommands if x.name == options.get("command")), None)
     if not command and any(arg in remaining for arg in ["-h", "--help"]):
         parser.print_help()
         return False
