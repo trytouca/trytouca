@@ -5,7 +5,8 @@ import os
 import shutil
 import subprocess
 import tempfile
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser
+from pathlib import Path
 
 import requests
 from jsonschema import Draft3Validator
@@ -116,9 +117,9 @@ def build_artifact_download_url(config: dict, version: str) -> str:
     return f"{cfg['base-url']}/{path}"
 
 
-def download_artifact(config: dict, tmpdir, artifact_version) -> str:
+def download_artifact(config: dict, tmpdir: Path, artifact_version) -> str:
     download_url = build_artifact_download_url(config, artifact_version)
-    msi_path = os.path.join(tmpdir, download_url.split("/")[-1])
+    msi_path = tmpdir.joinpath(download_url.split("/")[-1])
     with open(msi_path, "wb") as tmpfile:
         logger.info("downloading artifact: {}", artifact_version)
         logger.debug("downloading: {}", download_url)
@@ -143,10 +144,9 @@ def install_artifact(config: dict, msi_path: str) -> bool:
 
 
 def run_test(config: dict, artifact_version: str):
-    install_location = config["artifactory"]["installer-msi-location"]
-    cfg = config["execution"]
-    test_config_path = os.path.join(install_location, cfg["config"])
-    test_executable = os.path.join(install_location, cfg["executable"])
+    install_location = Path(config["artifactory"]["installer-msi-location"])
+    test_config_path = install_location.joinpath(config["execution"]["config"])
+    test_executable = install_location.joinpath(config["execution"]["executable"])
     cmd = [
         test_executable,
         "-c",
@@ -154,20 +154,23 @@ def run_test(config: dict, artifact_version: str):
         "-r",
         artifact_version,
         "--suite",
-        cfg["suite"],
+        config["execution"]["suite"],
     ]
     subprocess.run(cmd)
     return True
 
 
 def archive_results(config: dict, artifact_version: str):
-    install_location = config["artifactory"]["installer-msi-location"]
-    cfg = config["execution"]
-    test_config_path = os.path.join(install_location, cfg["config"])
+    install_location = Path(config["artifactory"]["installer-msi-location"])
+    test_config_path = install_location.joinpath(config["execution"]["config"])
     test_config = parse_json_file(test_config_path)
-    output_dir = test_config["framework"]["output-dir"]
-    src_dir = os.path.join(output_dir, cfg["suite"], artifact_version)
-    dst_file = os.path.join(cfg["archive-dir"], cfg["suite"], artifact_version) + ".7z"
+    output_dir = Path(test_config["framework"]["output-dir"])
+    src_dir = output_dir.joinpath(config["execution"]["suite"], artifact_version)
+    dst_file = (
+        Path(config["execution"]["archive-dir"])
+        .joinpath(config["execution"]["suite"], artifact_version)
+        .with_suffix(".7z")
+    )
     cmd = ["C:\\Program Files\\7-Zip\\7z.exe", "a", dst_file, src_dir + "\\*"]
     subprocess.run(cmd)
     shutil.rmtree(src_dir)
@@ -251,7 +254,7 @@ class Run(Operation):
         # download and install the test artifact
 
         with tempfile.TemporaryDirectory(prefix="touca_runner_artifact") as tmpdir:
-            msi_path = download_artifact(config, tmpdir, artifact_version)
+            msi_path = download_artifact(config, Path(tmpdir), artifact_version)
             if not msi_path:
                 logger.error("failed to download artifact: {}", artifact_version)
                 return False

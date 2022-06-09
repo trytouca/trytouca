@@ -8,7 +8,7 @@ from touca.cli._common import Operation, invalid_subcommand
 from touca._options import find_home_path
 
 
-def import_plugin_modules():
+def user_plugins():
     import sys
     import importlib
     import inspect
@@ -58,7 +58,7 @@ class Plugin(Operation):
         self.__options = options
 
     def _command_list(self):
-        for member in import_plugin_modules():
+        for member in user_plugins():
             print("{}: {}".format(member.name, member.help))
         return True
 
