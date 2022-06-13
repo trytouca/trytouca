@@ -1,11 +1,12 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
-import os
 import shutil
 import subprocess
 import tempfile
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser
+from pathlib import Path
+from urllib.parse import urlencode
 
 import requests
 from jsonschema import Draft3Validator
@@ -22,29 +23,27 @@ def merge_dict(source: dict, destination: dict):
             destination[key] = value
 
 
-def make_absolute_path(path: str, base: str = None) -> str:
-    if os.path.isabs(path):
+def make_absolute_path(path: Path, base: Path = None) -> Path:
+    if path.is_absolute():
         return path
     if not base:
-        base = os.path.dirname(os.path.realpath(__file__))
-    if os.path.isfile(base):
-        base = os.path.dirname(base)
-    return os.path.abspath(os.path.join(base, path))
+        base = Path(__file__).resolve().parent
+    if base.is_file():
+        base = base.parent
+    return base.joinpath(path).absolute()
 
 
-def parse_json_file(path: str) -> dict:
+def parse_json_file(path: Path) -> dict:
     logger.debug("parsing json file: {}", path)
 
     # check that the file exists
-    if not os.path.exists(path):
+    if not path.exists():
         logger.warning("failed to find file: {}", path)
         return False
 
     # load file into memory, validate its format and parse its content
     try:
-        with open(path, "rt") as file:
-            data = file.read()
-        return json.loads(data)
+        return json.loads(path.read_text())
     except OSError as err:
         logger.warning("failed to read file: {}: {}", path, err)
     except ValueError as err:
@@ -53,18 +52,18 @@ def parse_json_file(path: str) -> dict:
     return {}
 
 
-def profile_parse(profile_path: str) -> dict:
-    logger.debug("parsing profile: {}", profile_path)
+def profile_parse(profile: Path) -> dict:
+    logger.debug("parsing profile: {}", profile)
 
     # parse profile
-    config = parse_json_file(profile_path)
+    config = parse_json_file(profile)
     if not config:
-        logger.warning("failed to parse profile: {}", profile_path)
+        logger.warning("failed to parse profile: {}", profile)
         return {}
 
     # if file extends a template, parse that template
     if "extends" in config:
-        parent_file = make_absolute_path(config["extends"], profile_path)
+        parent_file = make_absolute_path(Path(config["extends"]), profile)
         parent_config = profile_parse(parent_file)
         if not parent_config:
             logger.debug("failed to parse template: {}", parent_file)
@@ -76,8 +75,7 @@ def profile_parse(profile_path: str) -> dict:
 
 
 def profile_validate(config: dict) -> list:
-    schema_path = make_absolute_path("./config/profile.schema.json")
-
+    schema_path = make_absolute_path(Path("./config/profile.schema.json"))
     schema = parse_json_file(schema_path)
     if not schema:
         logger.warning("failed to profile schema: {}", schema_path)
@@ -96,12 +94,14 @@ def profile_validate(config: dict) -> list:
 
 def find_artifact_version(config: dict) -> str:
     cfg = config["artifactory"]
-    fmt = "{base_url}/api/search/latestVersion?g={group}&a={name}&repos={repo}"
-    query_url = fmt.format(
-        base_url=cfg["base-url"], group=cfg["group"], name=cfg["name"], repo=cfg["repo"]
-    )
+    params = {
+        "g": cfg["group"],
+        "a": cfg["name"],
+        "repos": cfg["repo"],
+    }
     if "version-filter" in cfg:
-        query_url += "&v=" + cfg["version-filter"]
+        params.update("v", cfg["version-filter"])
+    query_url = cfg["base-url"] + "/api/search/latestVersion?" + urlencode(params)
     logger.debug("finding latest version: {}", query_url)
     artifact_version = requests.get(query_url).text
     logger.info("choosing version {}", artifact_version)
@@ -116,9 +116,9 @@ def build_artifact_download_url(config: dict, version: str) -> str:
     return f"{cfg['base-url']}/{path}"
 
 
-def download_artifact(config: dict, tmpdir, artifact_version) -> str:
+def download_artifact(config: dict, tmpdir: Path, artifact_version) -> str:
     download_url = build_artifact_download_url(config, artifact_version)
-    msi_path = os.path.join(tmpdir, download_url.split("/")[-1])
+    msi_path = tmpdir.joinpath(download_url.split("/")[-1])
     with open(msi_path, "wb") as tmpfile:
         logger.info("downloading artifact: {}", artifact_version)
         logger.debug("downloading: {}", download_url)
@@ -143,10 +143,9 @@ def install_artifact(config: dict, msi_path: str) -> bool:
 
 
 def run_test(config: dict, artifact_version: str):
-    install_location = config["artifactory"]["installer-msi-location"]
-    cfg = config["execution"]
-    test_config_path = os.path.join(install_location, cfg["config"])
-    test_executable = os.path.join(install_location, cfg["executable"])
+    install_location = Path(config["artifactory"]["installer-msi-location"])
+    test_config_path = install_location.joinpath(config["execution"]["config"])
+    test_executable = install_location.joinpath(config["execution"]["executable"])
     cmd = [
         test_executable,
         "-c",
@@ -154,20 +153,23 @@ def run_test(config: dict, artifact_version: str):
         "-r",
         artifact_version,
         "--suite",
-        cfg["suite"],
+        config["execution"]["suite"],
     ]
     subprocess.run(cmd)
     return True
 
 
 def archive_results(config: dict, artifact_version: str):
-    install_location = config["artifactory"]["installer-msi-location"]
-    cfg = config["execution"]
-    test_config_path = os.path.join(install_location, cfg["config"])
+    install_location = Path(config["artifactory"]["installer-msi-location"])
+    test_config_path = install_location.joinpath(config["execution"]["config"])
     test_config = parse_json_file(test_config_path)
-    output_dir = test_config["framework"]["output-dir"]
-    src_dir = os.path.join(output_dir, cfg["suite"], artifact_version)
-    dst_file = os.path.join(cfg["archive-dir"], cfg["suite"], artifact_version) + ".7z"
+    output_dir = Path(test_config["framework"]["output-dir"])
+    src_dir = output_dir.joinpath(config["execution"]["suite"], artifact_version)
+    dst_file = (
+        Path(config["execution"]["archive-dir"])
+        .joinpath(config["execution"]["suite"], artifact_version)
+        .with_suffix(".7z")
+    )
     cmd = ["C:\\Program Files\\7-Zip\\7z.exe", "a", dst_file, src_dir + "\\*"]
     subprocess.run(cmd)
     shutil.rmtree(src_dir)
@@ -204,18 +206,16 @@ class Run(Operation):
         return parser
 
     def run(self):
-        profile_path = self.__options.get("profile")
+        profile_path = Path(self.__options.get("profile"))
 
         # parse profile_name
 
-        profile_name = os.path.splitext(
-            os.path.basename(os.path.abspath(profile_path))
-        )[0]
+        profile_name = profile_path.absolute().stem
         logger.debug("running profile: {}", profile_name)
 
         # check that profile is a valid json file
 
-        config = profile_parse(os.path.abspath(profile_path))
+        config = profile_parse(profile_path.absolute())
         if not config:
             logger.error("failed to parse profile: {}", profile_path)
             return False
@@ -240,10 +240,12 @@ class Run(Operation):
         # check if version is already executed
 
         archive_root = make_absolute_path(
-            config["execution"]["archive-dir"], profile_path
+            Path(config["execution"]["archive-dir"]), profile_path
         )
-        if os.path.exists(
-            os.path.join(archive_root, profile_name, artifact_version) + ".7z"
+        if (
+            archive_root.joinpath(profile_name, artifact_version)
+            .with_suffix(".7z")
+            .exist()
         ):
             logger.info("{}/{} is already executed", artifact_version, profile_name)
             return True
@@ -251,7 +253,7 @@ class Run(Operation):
         # download and install the test artifact
 
         with tempfile.TemporaryDirectory(prefix="touca_runner_artifact") as tmpdir:
-            msi_path = download_artifact(config, tmpdir, artifact_version)
+            msi_path = download_artifact(config, Path(tmpdir), artifact_version)
             if not msi_path:
                 logger.error("failed to download artifact: {}", artifact_version)
                 return False
