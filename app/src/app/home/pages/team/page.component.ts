@@ -67,6 +67,7 @@ export class TeamPageComponent
         if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
           this.banner = TeamBannerType.TeamNotFound;
           this._notFound.teamSlug = route.snapshot.paramMap.get('team');
+          localStorage.removeItem(ELocalStorageKey.LastVisitedTeam);
         }
       }),
       banner: teamPageService.banner$.subscribe((v) => {
