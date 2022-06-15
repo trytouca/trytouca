@@ -179,7 +179,7 @@ export const config: IConfig = {
     retention: {
       checkInterval: Number(env.SERVICE_RETENTION_CHECK_INTERVAL) || 30 * 60,
       defaultDuration:
-        Number(env.SERVICE_RETENTION_DEFAULT_DURATION) || 2 * 365 * 86400,
+        Number(env.SERVICE_RETENTION_DEFAULT_DURATION) || 63072000,
       // comparison result lifetime
       resultLifetime:
         Number(env.SERVICE_RETENTION_DEFAULT_RESULT_LIFETIME) || 30 * 86400
