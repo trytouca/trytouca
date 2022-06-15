@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { formatDate } from '@angular/common';
 import {
@@ -12,13 +12,7 @@ import {
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
-import {
-  faCog,
-  faComments,
-  faSpinner,
-  faTasks
-} from '@fortawesome/free-solid-svg-icons';
+import { faSpinner, faTasks } from '@fortawesome/free-solid-svg-icons';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
@@ -135,7 +129,7 @@ export class BatchPageComponent
       queryMap.has(key) ? queryMap.get(key) : null;
     const tab = this.tabs.find((v) => v.link === getQuery('t')) || this.tabs[0];
     this.currentTab = tab.type;
-    faIconLibrary.addIcons(faCog, faComments, faSpinner, faTasks, faTrashAlt);
+    faIconLibrary.addIcons(faSpinner, faTasks);
     this._subAlert = this.alertService.alerts$.subscribe((v) => {
       if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
         this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');

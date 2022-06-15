@@ -49,6 +49,7 @@
     "chart.js": "^3.6.2",
     "core-js": "^3.19.1",
     "date-fns": "^2.27.0",
+    "duration-fns": "^3.0.1",
     "flat": "^5.0.2",
     "fuse.js": "^6.4.6",
     "lodash-es": "^4.17.21",

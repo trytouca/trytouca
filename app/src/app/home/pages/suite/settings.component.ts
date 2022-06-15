@@ -1,10 +1,18 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
+import * as duration from 'duration-fns';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 
@@ -25,7 +33,7 @@ import { SuitePageService, SuitePageTabType } from './suite.service';
 interface IFormContent {
   name: string;
   slug: string;
-  retainFor: number;
+  retainFor: string;
   sealAfter: number;
 }
 
@@ -70,7 +78,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
       this.formName.setValue({ name: suite.suiteName });
       this.formSlug.setValue({ slug: suite.suiteSlug });
       this.formRetainFor.setValue({
-        retainFor: (suite.retainFor / 86400 / 30).toFixed(2)
+        retainFor: this.fromSeconds(suite.retainFor)
       });
       this.formSealAfter.setValue({ sealAfter: suite.sealAfter / 60 });
     });
@@ -97,12 +105,8 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     });
     this.formRetainFor = new FormGroup({
       retainFor: new FormControl('', {
-        validators: [
-          Validators.required,
-          Validators.max(60),
-          Validators.min(0.1)
-        ],
-        updateOn: 'blur'
+        validators: [Validators.required, this.retainForValidator()],
+        updateOn: 'change'
       })
     });
     this.formSealAfter = new FormGroup({
@@ -147,10 +151,10 @@ export class SuiteTabSettingsComponent implements OnDestroy {
         if (!this.formRetainFor.valid) {
           break;
         }
-        if (isEqual(this.suite.retainFor / 86400 / 30, model.retainFor)) {
+        if (isEqual(this.fromSeconds(this.suite.retainFor), model.retainFor)) {
           break;
         }
-        this.updateSuiteRetainFor(model.retainFor * 86400 * 30);
+        this.updateSuiteRetainFor(this.toSeconds(model.retainFor));
         break;
       case EModalType.ChangeSealAfter:
         if (!this.formSealAfter.valid) {
@@ -205,6 +209,30 @@ export class SuiteTabSettingsComponent implements OnDestroy {
   @HostListener('keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     event.stopImmediatePropagation();
+  }
+
+  fromSeconds(seconds: number): string {
+    const input = duration.normalize(duration.parse({ seconds }), new Date());
+    return Object.entries(input)
+      .filter((kvp) => kvp[1] > 0)
+      .map((kvp: [string, number]) => `${kvp[1]} ${kvp[0]}`)
+      .join(', ');
+  }
+
+  toSeconds(text: string): number {
+    const input: duration.DurationInput = Object.fromEntries(
+      text
+        .toLowerCase()
+        .split(',')
+        .map((v) => v.trim().split(' '))
+        .filter((v) => v.length === 2)
+        .map((v) => [v[1].endsWith('s') ? v[1] : v[1] + 's', Number(v[0])])
+    );
+    const units = duration.UNITS as readonly string[];
+    if (!Object.keys(input).every((v) => units.includes(v))) {
+      return 0;
+    }
+    return duration.toSeconds(duration.normalize(input, new Date()));
   }
 
   private extractError(err: HttpErrorResponse) {
@@ -321,5 +349,21 @@ export class SuiteTabSettingsComponent implements OnDestroy {
         };
       }
     });
+  }
+
+  private retainForValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = this.toSeconds(control.value as string);
+      if (value === 0) {
+        return { invalid: { value: control.value } };
+      }
+      if (value < 86400 /* 1 day */) {
+        return { too_short: { value: control.value } };
+      }
+      if (value > 63072000 /* 2 years */) {
+        return { too_long: { value: control.value } };
+      }
+      return null;
+    };
   }
 }
