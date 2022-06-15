@@ -77,21 +77,24 @@
         *ngIf="alert[EModalType.ChangeRetainFor]"
         [alert]="alert[EModalType.ChangeRetainFor]"></app-alert>
       <p>
-        All testresults for this suite are retained for
-        <b>{{ suite.retainFor | datetime: 'interval':'seconds' }}</b>
+        All test results for this suite are retained for
+        <b>{{ fromSeconds(suite.retainFor) }}</b>
         . You may adjust this duration to up to
         <span>two years</span>
         . This change will not affect previously submitted results.
       </p>
-      <small class="wsl-text-muted">Duration in months.</small>
+      <small class="wsl-text-muted">Duration (e.g. "3 months, 2 weeks")</small>
       <form
         class="flex space-x-2"
         [formGroup]="formRetainFor"
         (ngSubmit)="onSubmit(EModalType.ChangeRetainFor, formRetainFor.value)"
+        (keyup.enter)="
+          onSubmit(EModalType.ChangeRetainFor, formRetainFor.value)
+        "
         novalidate>
         <input
           class="wsl-input-field"
-          type="number"
+          type="text"
           id="wsl-suite-retainFor"
           required
           autocomplete="off"
@@ -109,7 +112,15 @@
           formRetainFor.controls.retainFor.pristine ||
           formRetainFor.controls.retainFor.valid
         ">
-        Please enter a value in months no longer than 60 months.
+        <span *ngIf="formRetainFor.controls.retainFor.errors?.too_short">
+          Value must be no less than 1 day.
+        </span>
+        <span *ngIf="formRetainFor.controls.retainFor.errors?.too_long">
+          Value must be no more than 2 years.
+        </span>
+        <span *ngIf="formRetainFor.controls.retainFor.errors?.invalid">
+          Value format invalid.
+        </span>
       </small>
     </div>
     <div class="wsl-settings-section">
@@ -124,7 +135,7 @@
         prevents further submission of results to it. You may adjust this
         duration to up to {{ 30 | datetime: 'interval':'minutes' }}.
       </p>
-      <small class="wsl-text-muted">Duration in minutes.</small>
+      <small class="wsl-text-muted">Duration in minutes</small>
       <form
         class="flex space-x-2"
         [formGroup]="formSealAfter"

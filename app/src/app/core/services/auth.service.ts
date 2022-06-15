@@ -1,7 +1,7 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Injectable, NgZone } from '@angular/core';
-import { bindCallback, from, Observable, Observer, of } from 'rxjs';
+import { bindCallback, from, Observable, of } from 'rxjs';
 import { catchError, finalize, map, mergeMap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
