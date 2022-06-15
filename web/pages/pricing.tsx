@@ -21,21 +21,25 @@ interface PageContent {
 const content: PageContent = {
   plans: [
     {
+      title: 'Self-Hosted',
+      features: ['Apache-2.0 License', 'Community Support', 'No Usage Limits'],
+      fee: {
+        class: 'text-4xl md:text-5xl text-gray-200',
+        suffix: [],
+        text: '$0'
+      }
+    },
+    {
       title: 'Cloud-Hosted',
-      features: ['Unlimited test results', '2-year data retention'],
+      features: [
+        'Enterprise-Ready',
+        'Dedicated Support',
+        'Professional Services'
+      ],
       fee: {
         class: 'text-7xl text-sky-200',
         suffix: ['per user', 'per month'],
         text: '$25'
-      }
-    },
-    {
-      title: 'Self-Hosted',
-      features: ['Custom contracts', 'Professional services'],
-      fee: {
-        class: 'text-4xl md:text-5xl text-gray-200',
-        suffix: ['per year'],
-        text: '$10,000'
       }
     }
   ],
@@ -158,25 +162,32 @@ function FreePlan() {
         <div className="space-y-2 text-white">
           <p className="text-2xl font-bold">Just you?</p>
           <p className="text-xl font-medium">
-            Touca is <span className="font-semibold text-yellow-500">free</span>{' '}
-            forever for individual use.
+            Touca Cloud is{' '}
+            <span className="font-semibold text-yellow-500">free</span> forever
+            for individual use.
           </p>
         </div>
-        <a
-          className="block text-lg"
-          href="https://app.touca.io"
-          target="_blank"
-          rel="noopener noreferrer">
-          <button
-            className="box-shadow group space-x-2 rounded-xl bg-dark-blue-700 bg-opacity-25 p-3 font-medium text-white shadow-[0_0_5px_#7dd3fc] duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
-            type="button"
-            role="button">
-            <span>Get Started for Free</span>
-            <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
-          </button>
-        </a>
+        <PlanButton></PlanButton>
       </div>
     </div>
+  );
+}
+
+function PlanButton() {
+  return (
+    <a
+      className="block text-lg"
+      href="https://app.touca.io"
+      target="_blank"
+      rel="noopener noreferrer">
+      <button
+        className="box-shadow group space-x-2 rounded-xl bg-dark-blue-700 bg-opacity-25 p-3 font-medium text-white shadow-[0_0_5px_#7dd3fc] duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
+        type="button"
+        role="button">
+        <span>Get Started for Free</span>
+        <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
+      </button>
+    </a>
   );
 }
 
@@ -203,17 +214,18 @@ export default function PricingPage() {
       <section className="bg-gradient-to-b from-dark-blue-900 via-dark-blue-800 to-dark-blue-800">
         <div className="wsl-min-h-screen-1 container mx-auto flex w-full max-w-screen-lg flex-col justify-center py-16">
           <div className="flex min-h-[25vh] items-center space-y-2 p-8 text-center">
-            <h2 className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
-              <span className="text-yellow-500">Pays for itself</span> in
-              happier, more productive engineers
-            </h2>
+            <p className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
+              Use Touca for <span className="text-yellow-500">Free</span>.
+              <br />
+              Pay when it made sense to.
+            </p>
           </div>
           <div className="auto-cols-fr p-8">
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-              <div className="col-span-1">
+              <div className="col-span-1 py-2">
                 <PricingPlan plan={content.plans[0]}></PricingPlan>
               </div>
-              <div className="col-span-1 py-2">
+              <div className="col-span-1">
                 <PricingPlan plan={content.plans[1]}></PricingPlan>
               </div>
             </div>
