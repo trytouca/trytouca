@@ -83,12 +83,6 @@ router.get(
  *    responses:
  *      201:
  *        description: Suite Created
- *        headers:
- *          Location:
- *            schema:
- *              type: string
- *              format: url
- *            description: Link to newly created suite
  *      400:
  *        $ref: '#/components/responses/RequestInvalid'
  *      401:
