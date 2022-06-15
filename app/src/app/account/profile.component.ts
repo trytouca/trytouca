@@ -138,18 +138,6 @@ export class ProfileComponent implements OnDestroy {
     }
   };
 
-  _telemetryPreferences = [
-    {
-      default: true,
-      description: 'Anonymized daily usage statistics',
-      experimental: false,
-      saved: false,
-      slug: 'aggregate-usage',
-      title: 'Aggregate Usage Data',
-      visible: true
-    }
-  ];
-
   serverSettings: {
     accounts: PlatformStatsUser[];
     events: RecentEvent[];
@@ -343,15 +331,6 @@ export class ProfileComponent implements OnDestroy {
         timer(3000).subscribe(() => (node.saved = false));
       }
     });
-  }
-
-  toggleTelemetryFeatureFlag(flag: Checkbox) {
-    const node = this._preferences[flag.slug];
-    node.value = !(node.value ?? false);
-  }
-
-  getTelemetryPreferences(): Checkbox[] {
-    return this._telemetryPreferences;
   }
 
   switchTab(tab: SettingsPageTab) {

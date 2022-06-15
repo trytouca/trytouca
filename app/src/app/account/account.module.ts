@@ -18,6 +18,7 @@ import { SettingsTabAuditComponent } from './settings/audit.component';
 import { SettingsTabProfileComponent } from './settings/profile.component';
 import { SettingsTabServerComponent } from './settings/server.component';
 import { SettingsTabSessionsComponent } from './settings/sessions.component';
+import { TelemetryComponent } from './settings/telemetry.component';
 import { SettingsTabUsersComponent } from './settings/users.component';
 import { SigninComponent } from './signin.component';
 import { SignupComponent } from './signup.component';
@@ -40,7 +41,8 @@ import { StartComponent } from './start.component';
     SettingsTabProfileComponent,
     SettingsTabServerComponent,
     SettingsTabSessionsComponent,
-    SettingsTabUsersComponent
+    SettingsTabUsersComponent,
+    TelemetryComponent
   ],
   imports: [AccountRoutingModule, CommonModule, SharedModule]
 })

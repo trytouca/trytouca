@@ -219,21 +219,7 @@
       </div>
       <div
         *ngIf="serverSettings?.stats && currentTab.type === TabType.Telemetry">
-        <div
-          class="wsl-box space-y-4 p-4"
-          *ngIf="getTelemetryPreferences().length !== 0">
-          <h2
-            class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
-            Telemetry
-          </h2>
-          <div *ngFor="let preference of getTelemetryPreferences()">
-            <app-settings-checkbox
-              [data]="preference"
-              (toggle)="
-                toggleTelemetryFeatureFlag($event)
-              "></app-settings-checkbox>
-          </div>
-        </div>
+        <app-settings-tab-telemetry></app-settings-tab-telemetry>
       </div>
     </main>
   </div>
