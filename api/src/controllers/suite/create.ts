@@ -1,11 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
 import { suiteCreate } from '@/models/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { tracker } from '@/utils/tracker'
 
@@ -30,7 +29,6 @@ export async function ctrlSuiteCreate(
   logger.debug('%s: creating suite %s', user.username, tuple)
 
   // return 409 if suite slug is taken
-
   if (!(await suiteCreate(user, team, proposed))) {
     return next({
       errors: ['suite already registered'],
@@ -39,11 +37,7 @@ export async function ctrlSuiteCreate(
   }
 
   // add event to tracking system
-
   tracker.track(user, 'created_suite')
 
-  // redirect to lookup route for this newly created suite
-
-  const redirectPath = [config.express.root, 'suite', team.slug, proposed.slug]
-  return res.status(201).redirect(redirectPath.join('/').replace(/\/+/g, '/'))
+  return res.status(201).send()
 }
