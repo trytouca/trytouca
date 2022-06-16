@@ -4,9 +4,9 @@
   </app-missing>
 </ng-container>
 <div class="max-w-screen-xl py-8 mx-auto" *ngIf="!banner">
-  <div class="flex lg:divide-gray-200 lg:divide-x-2 dark:lg:divide-gray-700">
-    <aside class="sticky flex-col hidden w-64 px-2 lg:px-4 lg:flex top-24">
-      <nav class="flex-grow">
+  <div class="lg:flex lg:divide-gray-200 lg:divide-x-2 dark:lg:divide-gray-700">
+    <aside class="lg:sticky hidden lg:w-64 lg:px-4 lg:flex lg:top-24 lg:flex-col lg:justify-between lg:h-[calc(100vh-8rem)]">
+      <nav>
         <ul class="space-y-1">
           <ng-container *ngFor="let tab of tabs">
             <li class="wsl-page-nav-item"
