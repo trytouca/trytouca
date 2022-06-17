@@ -9,192 +9,192 @@ on:
       - "feature/**"
 
 jobs:
-  build-docs:
-    name: build-docs
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: get version number
-        if: steps.changes.outputs.docs == 'true'
-        id: params
-        run: |
-          git fetch --prune --unshallow --tags
-          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-      - name: authenticate to aws
-        if: |
-          steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.docs == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.docs == 'true'
-        with:
-          path: ${{ github.workspace }}/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: build doc
-        if: steps.changes.outputs.docs == 'true'
-        run: |
-          yarn --cwd=docs install
-          yarn --cwd=docs build
-      - name: push doc to aws
-        if: |
-          steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
-        run: |
-          aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
-          aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
+  # build-docs:
+  #   name: build-docs
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - name: get version number
+  #       if: steps.changes.outputs.docs == 'true'
+  #       id: params
+  #       run: |
+  #         git fetch --prune --unshallow --tags
+  #         echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+  #     - name: authenticate to aws
+  #       if: |
+  #         steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+  #         aws-secret-access-key:
+  #           ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+  #         aws-region: us-east-2
+  #     - uses: actions/setup-node@v2
+  #       if: steps.changes.outputs.docs == 'true'
+  #     - uses: actions/cache@v2
+  #       if: steps.changes.outputs.docs == 'true'
+  #       with:
+  #         path: ${{ github.workspace }}/node_modules
+  #         key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-
+  #           ${{ runner.os }}-
+  #     - name: build doc
+  #       if: steps.changes.outputs.docs == 'true'
+  #       run: |
+  #         yarn --cwd=docs install
+  #         yarn --cwd=docs build
+  #     - name: push doc to aws
+  #       if: |
+  #         steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
+  #       run: |
+  #         aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
+  #         aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
 
-  lint-links:
-    name: lint-links
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - uses: gaurav-nelson/github-action-markdown-link-check@v1
-        if: steps.changes.outputs.links == 'true'
-        with:
-          folder-path: examples,sdk
+  # lint-links:
+  #   name: lint-links
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - uses: gaurav-nelson/github-action-markdown-link-check@v1
+  #       if: steps.changes.outputs.links == 'true'
+  #       with:
+  #         folder-path: examples,sdk
 
-  build-sdk-cpp-local:
-    name: build-sdk-cpp-local
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./sdk/cpp
-    strategy:
-      matrix:
-        cxx: [g++-9, clang++-9]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - run: ./build.sh --with-tests --with-cli --with-examples
-        if: steps.changes.outputs.sdk_cpp == 'true'
-      - run: ./build.sh --test
-        if: steps.changes.outputs.sdk_cpp == 'true'
+  # build-sdk-cpp-local:
+  #   name: build-sdk-cpp-local
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   defaults:
+  #     run:
+  #       working-directory: ./sdk/cpp
+  #   strategy:
+  #     matrix:
+  #       cxx: [g++-9, clang++-9]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - run: ./build.sh --with-tests --with-cli --with-examples
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
+  #     - run: ./build.sh --test
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
 
-  build-sdk-cpp-conan:
-    name: build-sdk-cpp-conan
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./sdk/cpp
-    strategy:
-      matrix:
-        cxx: [g++-9, clang++-9]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - uses: actions/setup-python@v1
-        if: steps.changes.outputs.sdk_cpp == 'true'
-      - name: cache conan
-        if: steps.changes.outputs.sdk_cpp == 'true'
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-conan-packages
-        with:
-          path: ~/.conan
-          key:
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{
-            hashFiles('**/conanfile.py') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - name: install conan
-        if: steps.changes.outputs.sdk_cpp == 'true'
-        run: |
-          pip install conan --no-cache-dir --upgrade
-          conan profile new default --detect --force
-          conan profile update settings.compiler.libcxx=libstdc++11 default
-      - name: build components
-        if: steps.changes.outputs.sdk_cpp == 'true'
-        run: ./build.sh --with-tests --with-cli --with-examples
-      - name: run unit tests
-        if: steps.changes.outputs.sdk_cpp == 'true'
-        run: ./build.sh --test
-      - name: create conan package
-        if: steps.changes.outputs.sdk_cpp == 'true'
-        run: ./build.sh --package
-      - name: push conan package
-        if:
-          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
-          && github.ref == 'refs/heads/main'
-        run: |
-          conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
-          conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
-          conan upload "touca/1.5.2" --confirm --parallel -r touca-cpp --all
+  # build-sdk-cpp-conan:
+  #   name: build-sdk-cpp-conan
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   defaults:
+  #     run:
+  #       working-directory: ./sdk/cpp
+  #   strategy:
+  #     matrix:
+  #       cxx: [g++-9, clang++-9]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - uses: actions/setup-python@v1
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
+  #     - name: cache conan
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
+  #       uses: actions/cache@v2
+  #       env:
+  #         cache-name: cache-conan-packages
+  #       with:
+  #         path: ~/.conan
+  #         key:
+  #           ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-${{
+  #           hashFiles('**/conanfile.py') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.cxx }}-
+  #           ${{ runner.os }}-build-${{ env.cache-name }}-
+  #           ${{ runner.os }}-build-
+  #           ${{ runner.os }}-
+  #     - name: install conan
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
+  #       run: |
+  #         pip install conan --no-cache-dir --upgrade
+  #         conan profile new default --detect --force
+  #         conan profile update settings.compiler.libcxx=libstdc++11 default
+  #     - name: build components
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
+  #       run: ./build.sh --with-tests --with-cli --with-examples
+  #     - name: run unit tests
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
+  #       run: ./build.sh --test
+  #     - name: create conan package
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
+  #       run: ./build.sh --package
+  #     - name: push conan package
+  #       if:
+  #         steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
+  #         && github.ref == 'refs/heads/main'
+  #       run: |
+  #         conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
+  #         conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
+  #         conan upload "touca/1.5.2" --confirm --parallel -r touca-cpp --all
 
-  build-sdk-cpp-docs:
-    name: build-sdk-cpp-docs
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./sdk/cpp
-    needs:
-      - build-sdk-cpp-local
-      - build-sdk-cpp-conan
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: authenticate to aws
-        if:
-          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
-          && github.ref == 'refs/heads/main'
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
-      - uses: actions/setup-python@v2
-        if: steps.changes.outputs.sdk_cpp == 'true'
-        with:
-          python-version: 3.9
-      - name: install dependencies
-        if: steps.changes.outputs.sdk_cpp == 'true'
-        run: |
-          sudo apt-get install doxygen
-          python -m pip install --upgrade pip
-          pip install --no-cache-dir --upgrade -r docs/sphinx/requirements.txt
-      - name: generate docs
-        if: steps.changes.outputs.sdk_cpp == 'true'
-        run: ./build.sh --docs
-      - name: push docs to aws
-        if:
-          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
-          && github.ref == 'refs/heads/main'
-        run: |
-          tar -zcf cpp-docs-reference.tar.gz local/docs/html
-          aws s3 cp cpp-docs-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+  # build-sdk-cpp-docs:
+  #   name: build-sdk-cpp-docs
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   defaults:
+  #     run:
+  #       working-directory: ./sdk/cpp
+  #   needs:
+  #     - build-sdk-cpp-local
+  #     - build-sdk-cpp-conan
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - name: authenticate to aws
+  #       if:
+  #         steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
+  #         && github.ref == 'refs/heads/main'
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+  #         aws-secret-access-key:
+  #           ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+  #         aws-region: us-east-2
+  #     - uses: actions/setup-python@v2
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
+  #       with:
+  #         python-version: 3.9
+  #     - name: install dependencies
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
+  #       run: |
+  #         sudo apt-get install doxygen
+  #         python -m pip install --upgrade pip
+  #         pip install --no-cache-dir --upgrade -r docs/sphinx/requirements.txt
+  #     - name: generate docs
+  #       if: steps.changes.outputs.sdk_cpp == 'true'
+  #       run: ./build.sh --docs
+  #     - name: push docs to aws
+  #       if:
+  #         steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
+  #         && github.ref == 'refs/heads/main'
+  #       run: |
+  #         tar -zcf cpp-docs-reference.tar.gz local/docs/html
+  #         aws s3 cp cpp-docs-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
 
   build-sdk-cpp-coverage:
     name: build-sdk-cpp-coverage
@@ -204,10 +204,10 @@ jobs:
       run:
         working-directory: ./sdk/cpp
     if: |
-      github.repository_owner == 'trytouca' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs:
-      - build-sdk-cpp-local
-      - build-sdk-cpp-conan
+      github.repository_owner == 'trytouca' && github.event_name == 'push'
+    # needs:
+    #   - build-sdk-cpp-local
+    #   - build-sdk-cpp-conan
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -224,7 +224,7 @@ jobs:
           aws-region: us-east-2
       - name: install dependencies
         if: steps.changes.outputs.sdk_cpp == 'true'
-        run: pip install gcovr==5.0
+        run: pip install gcovr
       - name: generate coverage
         if: steps.changes.outputs.sdk_cpp == 'true'
         run: ./build.sh --coverage
@@ -245,857 +245,857 @@ jobs:
           env_vars: OS
           fail_ci_if_error: true
 
-  build-sdk-java-local:
-    name: build-sdk-java-local
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./sdk/java
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: authenticate to aws
-        if:
-          steps.changes.outputs.sdk_java == 'true' && github.ref ==
-          'refs/heads/main' && github.event_name == 'push'
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
-      - uses: gradle/wrapper-validation-action@v1
-        if: steps.changes.outputs.sdk_java == 'true'
-      - uses: actions/setup-java@v2
-        if: steps.changes.outputs.sdk_java == 'true'
-        with:
-          distribution: "adopt"
-          java-version: "8"
-      - name: cache gradle dependencies
-        if: steps.changes.outputs.sdk_java == 'true'
-        uses: actions/cache@v2
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key:
-            ${{ runner.os }}-gradle-${{ env.cache-name }}-${{
-            hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: build java sdk
-        if: steps.changes.outputs.sdk_java == 'true'
-        run: ./gradlew build
-      - name: publish sdk to maven
-        if:
-          steps.changes.outputs.sdk_java == 'true' && github.ref ==
-          'refs/heads/main' && github.event_name == 'push'
-        run: ./gradlew publish
-        env:
-          ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.SONATYPE_USERNAME }}
-          ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.SONATYPE_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GRADLE_SIGNING_KEY }}
-          ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.GRADLE_SIGNING_KEY_ID }}
-          ORG_GRADLE_PROJECT_signingPassword:
-            ${{ secrets.GRADLE_SIGNING_PASSWORD }}
-      - name: push docs to aws
-        if:
-          steps.changes.outputs.sdk_java == 'true' && github.ref ==
-          'refs/heads/main' && github.event_name == 'push'
-        run: |
-          tar -zcf java-docs-external.tar.gz touca/build/docs/javadoc
-          aws s3 cp java-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
-      - name: push coverage to aws
-        if:
-          steps.changes.outputs.sdk_java == 'true' && github.ref ==
-          'refs/heads/main' && github.event_name == 'push'
-        run: |
-          tar -zcf java-test-coverage.tar.gz touca/build/reports/jacoco/test/html
-          aws s3 cp java-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
-      - name: cleanup gradle cache
-        if: steps.changes.outputs.sdk_java == 'true'
-        run: |
-          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-          rm -f ~/.gradle/caches/modules-2/gc.properties
-      - name: upload coverage to codecov
-        if:
-          steps.changes.outputs.sdk_java == 'true' && github.ref ==
-          'refs/heads/main' && github.event_name == 'push'
-        uses: codecov/codecov-action@v2
-        env:
-          OS: ${{ runner.os }}
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./sdk/java/touca/build/reports/jacoco/test/jacocoTestReport.xml
-          flags: sdk-java
-          env_vars: OS
-          fail_ci_if_error: true
+  # build-sdk-java-local:
+  #   name: build-sdk-java-local
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   defaults:
+  #     run:
+  #       working-directory: ./sdk/java
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - name: authenticate to aws
+  #       if:
+  #         steps.changes.outputs.sdk_java == 'true' && github.ref ==
+  #         'refs/heads/main' && github.event_name == 'push'
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+  #         aws-secret-access-key:
+  #           ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+  #         aws-region: us-east-2
+  #     - uses: gradle/wrapper-validation-action@v1
+  #       if: steps.changes.outputs.sdk_java == 'true'
+  #     - uses: actions/setup-java@v2
+  #       if: steps.changes.outputs.sdk_java == 'true'
+  #       with:
+  #         distribution: "adopt"
+  #         java-version: "8"
+  #     - name: cache gradle dependencies
+  #       if: steps.changes.outputs.sdk_java == 'true'
+  #       uses: actions/cache@v2
+  #       with:
+  #         path: |
+  #           ~/.gradle/caches
+  #           ~/.gradle/wrapper
+  #         key:
+  #           ${{ runner.os }}-gradle-${{ env.cache-name }}-${{
+  #           hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-gradle-
+  #     - name: build java sdk
+  #       if: steps.changes.outputs.sdk_java == 'true'
+  #       run: ./gradlew build
+  #     - name: publish sdk to maven
+  #       if:
+  #         steps.changes.outputs.sdk_java == 'true' && github.ref ==
+  #         'refs/heads/main' && github.event_name == 'push'
+  #       run: ./gradlew publish
+  #       env:
+  #         ORG_GRADLE_PROJECT_ossrhUsername: ${{ secrets.SONATYPE_USERNAME }}
+  #         ORG_GRADLE_PROJECT_ossrhPassword: ${{ secrets.SONATYPE_PASSWORD }}
+  #         ORG_GRADLE_PROJECT_signingKey: ${{ secrets.GRADLE_SIGNING_KEY }}
+  #         ORG_GRADLE_PROJECT_signingKeyId: ${{ secrets.GRADLE_SIGNING_KEY_ID }}
+  #         ORG_GRADLE_PROJECT_signingPassword:
+  #           ${{ secrets.GRADLE_SIGNING_PASSWORD }}
+  #     - name: push docs to aws
+  #       if:
+  #         steps.changes.outputs.sdk_java == 'true' && github.ref ==
+  #         'refs/heads/main' && github.event_name == 'push'
+  #       run: |
+  #         tar -zcf java-docs-external.tar.gz touca/build/docs/javadoc
+  #         aws s3 cp java-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+  #     - name: push coverage to aws
+  #       if:
+  #         steps.changes.outputs.sdk_java == 'true' && github.ref ==
+  #         'refs/heads/main' && github.event_name == 'push'
+  #       run: |
+  #         tar -zcf java-test-coverage.tar.gz touca/build/reports/jacoco/test/html
+  #         aws s3 cp java-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+  #     - name: cleanup gradle cache
+  #       if: steps.changes.outputs.sdk_java == 'true'
+  #       run: |
+  #         rm -f ~/.gradle/caches/modules-2/modules-2.lock
+  #         rm -f ~/.gradle/caches/modules-2/gc.properties
+  #     - name: upload coverage to codecov
+  #       if:
+  #         steps.changes.outputs.sdk_java == 'true' && github.ref ==
+  #         'refs/heads/main' && github.event_name == 'push'
+  #       uses: codecov/codecov-action@v2
+  #       env:
+  #         OS: ${{ runner.os }}
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         files: ./sdk/java/touca/build/reports/jacoco/test/jacocoTestReport.xml
+  #         flags: sdk-java
+  #         env_vars: OS
+  #         fail_ci_if_error: true
 
-  build-sdk-js-local:
-    name: build-sdk-js-local
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./sdk/js
-    strategy:
-      matrix:
-        node-version: [12, 14, 16]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: authenticate to aws
-        if:
-          steps.changes.outputs.sdk_js == 'true' && github.ref ==
-          'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
-          'push'
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.sdk_js == 'true'
-        with:
-          node-version: ${{ matrix.node-version }}
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.sdk_js == 'true'
-        env:
-          CACHED_DEPENDENCY_PATHS: |
-            ${{ github.workspace }}/node_modules
-            ${{ github.workspace }}/packages/**/node_modules
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: build js components
-        if: steps.changes.outputs.sdk_js == 'true'
-        run: |
-          yarn install
-          yarn build
-          yarn test
-      - name: lint source code
-        if:
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 &&
-          github.event_name == 'push'
-        run: yarn lint
-      - name: generate docs
-        if:
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 &&
-          github.event_name == 'push'
-        run: yarn docs
-      - name: push docs to aws
-        if:
-          steps.changes.outputs.sdk_js == 'true' && github.ref ==
-          'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
-          'push'
-        run: |
-          tar -zcf js-node-docs-external.tar.gz local/docs
-          aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
-      - name: push coverage to aws
-        if:
-          steps.changes.outputs.sdk_js == 'true' && github.ref ==
-          'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
-          'push'
-        run: |
-          tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
-          aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
-      - name: upload coverage to codecov
-        if:
-          steps.changes.outputs.sdk_js == 'true' && github.ref ==
-          'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
-          'push'
-        uses: codecov/codecov-action@v2
-        env:
-          OS: ${{ runner.os }}
-          NODE: ${{ matrix.node-version }}
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./sdk/js/packages/node/coverage/clover.xml
-          flags: sdk-js
-          env_vars: OS,NODE
-          fail_ci_if_error: true
+  # build-sdk-js-local:
+  #   name: build-sdk-js-local
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   defaults:
+  #     run:
+  #       working-directory: ./sdk/js
+  #   strategy:
+  #     matrix:
+  #       node-version: [12, 14, 16]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - name: authenticate to aws
+  #       if:
+  #         steps.changes.outputs.sdk_js == 'true' && github.ref ==
+  #         'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
+  #         'push'
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+  #         aws-secret-access-key:
+  #           ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+  #         aws-region: us-east-2
+  #     - uses: actions/setup-node@v2
+  #       if: steps.changes.outputs.sdk_js == 'true'
+  #       with:
+  #         node-version: ${{ matrix.node-version }}
+  #     - uses: actions/cache@v2
+  #       if: steps.changes.outputs.sdk_js == 'true'
+  #       env:
+  #         CACHED_DEPENDENCY_PATHS: |
+  #           ${{ github.workspace }}/node_modules
+  #           ${{ github.workspace }}/packages/**/node_modules
+  #       with:
+  #         path: ${{ env.CACHED_DEPENDENCY_PATHS }}
+  #         key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-
+  #           ${{ runner.os }}-
+  #     - name: build js components
+  #       if: steps.changes.outputs.sdk_js == 'true'
+  #       run: |
+  #         yarn install
+  #         yarn build
+  #         yarn test
+  #     - name: lint source code
+  #       if:
+  #         steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 &&
+  #         github.event_name == 'push'
+  #       run: yarn lint
+  #     - name: generate docs
+  #       if:
+  #         steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 &&
+  #         github.event_name == 'push'
+  #       run: yarn docs
+  #     - name: push docs to aws
+  #       if:
+  #         steps.changes.outputs.sdk_js == 'true' && github.ref ==
+  #         'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
+  #         'push'
+  #       run: |
+  #         tar -zcf js-node-docs-external.tar.gz local/docs
+  #         aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+  #     - name: push coverage to aws
+  #       if:
+  #         steps.changes.outputs.sdk_js == 'true' && github.ref ==
+  #         'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
+  #         'push'
+  #       run: |
+  #         tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
+  #         aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+  #     - name: upload coverage to codecov
+  #       if:
+  #         steps.changes.outputs.sdk_js == 'true' && github.ref ==
+  #         'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
+  #         'push'
+  #       uses: codecov/codecov-action@v2
+  #       env:
+  #         OS: ${{ runner.os }}
+  #         NODE: ${{ matrix.node-version }}
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         files: ./sdk/js/packages/node/coverage/clover.xml
+  #         flags: sdk-js
+  #         env_vars: OS,NODE
+  #         fail_ci_if_error: true
 
-  build-sdk-python-local:
-    name: build-sdk-python-local
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./sdk/python
-    strategy:
-      matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: authenticate to aws
-        if:
-          steps.changes.outputs.sdk_python == 'true' && github.ref ==
-          'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
-          == 'push'
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
-      - uses: actions/setup-python@v2
-        if: steps.changes.outputs.sdk_python == 'true'
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: cache pip dependencies
-        if: steps.changes.outputs.sdk_python == 'true'
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pip-dependencies
-        with:
-          path: ~/.cache/pip
-          key:
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{
-            matrix.python-version }}-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.python-version }}-
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build
-            ${{ runner.os }}-
-      - name: install pip dependencies
-        if: steps.changes.outputs.sdk_python == 'true'
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e .[dev]
-      - name: run unit tests
-        if: steps.changes.outputs.sdk_python == 'true'
-        run: |
-          make test
-      - name: generate docs
-        if: steps.changes.outputs.sdk_python == 'true'
-        run: |
-          make docs
-      - name: push docs to aws
-        if:
-          steps.changes.outputs.sdk_python == 'true' && github.ref ==
-          'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
-          == 'push'
-        run: |
-          tar -zcf python-docs-external.tar.gz local/docs
-          aws s3 cp python-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
-      - name: push coverage to aws
-        if:
-          steps.changes.outputs.sdk_python == 'true' && github.ref ==
-          'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
-          == 'push'
-        run: |
-          tar -zcf python-test-coverage.tar.gz local/tests
-          aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
-      - name: build package distributable
-        if:
-          steps.changes.outputs.sdk_python == 'true' && github.ref ==
-          'refs/heads/main' && matrix.python-version == 3.9
-        env:
-          TWINE_NON_INTERACTIVE: true
-        run: |
-          pip install setuptools twine wheel
-          python setup.py sdist bdist_wheel
-          twine check dist/*
-      - name: upload coverage to codecov
-        if:
-          steps.changes.outputs.sdk_python == 'true' && github.ref ==
-          'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
-          == 'push'
-        uses: codecov/codecov-action@v2
-        env:
-          OS: ${{ runner.os }}
-          PYTHON: ${{ matrix.python-version }}
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./sdk/python/local/tests/coverage.xml
-          flags: sdk-python
-          env_vars: OS,PYTHON
-          fail_ci_if_error: true
+  # build-sdk-python-local:
+  #   name: build-sdk-python-local
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   defaults:
+  #     run:
+  #       working-directory: ./sdk/python
+  #   strategy:
+  #     matrix:
+  #       python-version: [3.6, 3.7, 3.8, 3.9, "3.10"]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - name: authenticate to aws
+  #       if:
+  #         steps.changes.outputs.sdk_python == 'true' && github.ref ==
+  #         'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
+  #         == 'push'
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+  #         aws-secret-access-key:
+  #           ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+  #         aws-region: us-east-2
+  #     - uses: actions/setup-python@v2
+  #       if: steps.changes.outputs.sdk_python == 'true'
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
+  #     - name: cache pip dependencies
+  #       if: steps.changes.outputs.sdk_python == 'true'
+  #       uses: actions/cache@v2
+  #       env:
+  #         cache-name: cache-pip-dependencies
+  #       with:
+  #         path: ~/.cache/pip
+  #         key:
+  #           ${{ runner.os }}-build-${{ env.cache-name }}-${{
+  #           matrix.python-version }}-${{ hashFiles('requirements.txt') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.python-version }}-
+  #           ${{ runner.os }}-build-${{ env.cache-name }}-
+  #           ${{ runner.os }}-build
+  #           ${{ runner.os }}-
+  #     - name: install pip dependencies
+  #       if: steps.changes.outputs.sdk_python == 'true'
+  #       run: |
+  #         python -m pip install --upgrade pip
+  #         pip install -e .[dev]
+  #     - name: run unit tests
+  #       if: steps.changes.outputs.sdk_python == 'true'
+  #       run: |
+  #         make test
+  #     - name: generate docs
+  #       if: steps.changes.outputs.sdk_python == 'true'
+  #       run: |
+  #         make docs
+  #     - name: push docs to aws
+  #       if:
+  #         steps.changes.outputs.sdk_python == 'true' && github.ref ==
+  #         'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
+  #         == 'push'
+  #       run: |
+  #         tar -zcf python-docs-external.tar.gz local/docs
+  #         aws s3 cp python-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+  #     - name: push coverage to aws
+  #       if:
+  #         steps.changes.outputs.sdk_python == 'true' && github.ref ==
+  #         'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
+  #         == 'push'
+  #       run: |
+  #         tar -zcf python-test-coverage.tar.gz local/tests
+  #         aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+  #     - name: build package distributable
+  #       if:
+  #         steps.changes.outputs.sdk_python == 'true' && github.ref ==
+  #         'refs/heads/main' && matrix.python-version == 3.9
+  #       env:
+  #         TWINE_NON_INTERACTIVE: true
+  #       run: |
+  #         pip install setuptools twine wheel
+  #         python setup.py sdist bdist_wheel
+  #         twine check dist/*
+  #     - name: upload coverage to codecov
+  #       if:
+  #         steps.changes.outputs.sdk_python == 'true' && github.ref ==
+  #         'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
+  #         == 'push'
+  #       uses: codecov/codecov-action@v2
+  #       env:
+  #         OS: ${{ runner.os }}
+  #         PYTHON: ${{ matrix.python-version }}
+  #       with:
+  #         token: ${{ secrets.CODECOV_TOKEN }}
+  #         files: ./sdk/python/local/tests/coverage.xml
+  #         flags: sdk-python
+  #         env_vars: OS,PYTHON
+  #         fail_ci_if_error: true
 
-  run-examples-cpp:
-    name: run-examples-cpp
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./examples/cpp
-    strategy:
-      matrix:
-        cxx: [g++-9]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: get version number
-        if: steps.changes.outputs.examples_cpp == 'true'
-        id: params
-        run: |
-          git fetch --prune --unshallow --tags
-          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
-      - name: build cpp examples
-        if: steps.changes.outputs.examples_cpp == 'true'
-        run: ./build.sh
-      - name: run example cpp application
-        if:
-          steps.changes.outputs.examples_cpp == 'true' && github.ref ==
-          'refs/heads/main'
-        env:
-          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
-          TOUCA_API_URL: https://api.touca.io/@/examples/cpp
-          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
-        run: |
-          mkdir -p ./local/results
-          ./local/dist/bin/example_cpp_main_api
+  # run-examples-cpp:
+  #   name: run-examples-cpp
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   defaults:
+  #     run:
+  #       working-directory: ./examples/cpp
+  #   strategy:
+  #     matrix:
+  #       cxx: [g++-9]
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - name: get version number
+  #       if: steps.changes.outputs.examples_cpp == 'true'
+  #       id: params
+  #       run: |
+  #         git fetch --prune --unshallow --tags
+  #         echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+  #     - name: build cpp examples
+  #       if: steps.changes.outputs.examples_cpp == 'true'
+  #       run: ./build.sh
+  #     - name: run example cpp application
+  #       if:
+  #         steps.changes.outputs.examples_cpp == 'true' && github.ref ==
+  #         'refs/heads/main'
+  #       env:
+  #         TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+  #         TOUCA_API_URL: https://api.touca.io/@/examples/cpp
+  #         TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
+  #       run: |
+  #         mkdir -p ./local/results
+  #         ./local/dist/bin/example_cpp_main_api
 
-  run-examples-java:
-    name: run-examples-java
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./examples/java
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - uses: actions/setup-java@v2
-        if: steps.changes.outputs.examples_java == 'true'
-        with:
-          distribution: "adopt"
-          java-version: "8"
-      - name: get version number
-        if: steps.changes.outputs.examples_java == 'true'
-        id: params
-        run: |
-          git fetch --prune --unshallow --tags
-          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.examples_java == 'true'
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key:
-            ${{ runner.os }}-gradle-${{ env.cache-name }}-${{
-            hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: build java examples
-        if: steps.changes.outputs.examples_java == 'true'
-        run: ./gradlew build
-      - name: run example java application
-        if:
-          steps.changes.outputs.examples_java == 'true' && github.ref ==
-          'refs/heads/main'
-        env:
-          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
-          TOUCA_API_URL: https://api.touca.io/@/examples/java
-          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
-        run: ./gradlew runExampleMain
-      - name: cleanup gradle cache
-        if: steps.changes.outputs.examples_java == 'true'
-        run: |
-          rm -f ~/.gradle/caches/modules-2/modules-2.lock
-          rm -f ~/.gradle/caches/modules-2/gc.properties
+  # run-examples-java:
+  #   name: run-examples-java
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   defaults:
+  #     run:
+  #       working-directory: ./examples/java
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - uses: actions/setup-java@v2
+  #       if: steps.changes.outputs.examples_java == 'true'
+  #       with:
+  #         distribution: "adopt"
+  #         java-version: "8"
+  #     - name: get version number
+  #       if: steps.changes.outputs.examples_java == 'true'
+  #       id: params
+  #       run: |
+  #         git fetch --prune --unshallow --tags
+  #         echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+  #     - uses: actions/cache@v2
+  #       if: steps.changes.outputs.examples_java == 'true'
+  #       with:
+  #         path: |
+  #           ~/.gradle/caches
+  #           ~/.gradle/wrapper
+  #         key:
+  #           ${{ runner.os }}-gradle-${{ env.cache-name }}-${{
+  #           hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-gradle-
+  #     - name: build java examples
+  #       if: steps.changes.outputs.examples_java == 'true'
+  #       run: ./gradlew build
+  #     - name: run example java application
+  #       if:
+  #         steps.changes.outputs.examples_java == 'true' && github.ref ==
+  #         'refs/heads/main'
+  #       env:
+  #         TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+  #         TOUCA_API_URL: https://api.touca.io/@/examples/java
+  #         TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
+  #       run: ./gradlew runExampleMain
+  #     - name: cleanup gradle cache
+  #       if: steps.changes.outputs.examples_java == 'true'
+  #       run: |
+  #         rm -f ~/.gradle/caches/modules-2/modules-2.lock
+  #         rm -f ~/.gradle/caches/modules-2/gc.properties
 
-  run-examples-js:
-    name: run-examples-js
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./examples/js
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.examples_js == 'true'
-        with:
-          node-version: 14
-      - name: get version number
-        if: steps.changes.outputs.examples_js == 'true'
-        id: params
-        run: |
-          git fetch --prune --unshallow --tags
-          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.examples_js == 'true'
-        with:
-          path: |
-            ${{ github.workspace }}/js/node_modules
-            ${{ github.workspace }}/js/packages/**/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: build js examples
-        if: steps.changes.outputs.examples_js == 'true'
-        run: |
-          yarn install
-          yarn build
-      - name: run example js application
-        if:
-          steps.changes.outputs.examples_js == 'true' && github.ref ==
-          'refs/heads/main'
-        env:
-          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
-          TOUCA_API_URL: https://api.touca.io/@/examples/javascript
-          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
-        run: |
-          yarn --cwd=02_node_main_api test:touca
+  # run-examples-js:
+  #   name: run-examples-js
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   defaults:
+  #     run:
+  #       working-directory: ./examples/js
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - uses: actions/setup-node@v2
+  #       if: steps.changes.outputs.examples_js == 'true'
+  #       with:
+  #         node-version: 14
+  #     - name: get version number
+  #       if: steps.changes.outputs.examples_js == 'true'
+  #       id: params
+  #       run: |
+  #         git fetch --prune --unshallow --tags
+  #         echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+  #     - uses: actions/cache@v2
+  #       if: steps.changes.outputs.examples_js == 'true'
+  #       with:
+  #         path: |
+  #           ${{ github.workspace }}/js/node_modules
+  #           ${{ github.workspace }}/js/packages/**/node_modules
+  #         key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-
+  #           ${{ runner.os }}-
+  #     - name: build js examples
+  #       if: steps.changes.outputs.examples_js == 'true'
+  #       run: |
+  #         yarn install
+  #         yarn build
+  #     - name: run example js application
+  #       if:
+  #         steps.changes.outputs.examples_js == 'true' && github.ref ==
+  #         'refs/heads/main'
+  #       env:
+  #         TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+  #         TOUCA_API_URL: https://api.touca.io/@/examples/javascript
+  #         TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
+  #       run: |
+  #         yarn --cwd=02_node_main_api test:touca
 
-  run-examples-python:
-    name: run-examples-python
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./examples/python
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - uses: actions/setup-python@v2
-        if: steps.changes.outputs.examples_python == 'true'
-        with:
-          python-version: 3.9
-      - name: get version number
-        if: steps.changes.outputs.examples_python == 'true'
-        id: params
-        run: |
-          git fetch --prune --unshallow --tags
-          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
-      - name: run example python application
-        if:
-          steps.changes.outputs.examples_python == 'true' && github.ref ==
-          'refs/heads/main'
-        env:
-          TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
-          TOUCA_API_URL: https://api.touca.io/@/examples/python
-          TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
-        run: |
-          cd 02_python_main_api
-          pip install touca
-          touca
+  # run-examples-python:
+  #   name: run-examples-python
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   defaults:
+  #     run:
+  #       working-directory: ./examples/python
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - uses: actions/setup-python@v2
+  #       if: steps.changes.outputs.examples_python == 'true'
+  #       with:
+  #         python-version: 3.9
+  #     - name: get version number
+  #       if: steps.changes.outputs.examples_python == 'true'
+  #       id: params
+  #       run: |
+  #         git fetch --prune --unshallow --tags
+  #         echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+  #     - name: run example python application
+  #       if:
+  #         steps.changes.outputs.examples_python == 'true' && github.ref ==
+  #         'refs/heads/main'
+  #       env:
+  #         TOUCA_API_KEY: ${{ secrets.TOUCA_API_KEY }}
+  #         TOUCA_API_URL: https://api.touca.io/@/examples/python
+  #         TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
+  #       run: |
+  #         cd 02_python_main_api
+  #         pip install touca
+  #         touca
 
-  build-web:
-    name: build-web
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: get version number
-        id: params
-        run: |
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-      - name: authenticate to aws
-        if:
-          steps.changes.outputs.web == 'true' && steps.params.outputs.release ==
-          'true'
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.web == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.web == 'true'
-        with:
-          path: ${{ github.workspace }}/web/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('web/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: build web
-        if: steps.changes.outputs.web == 'true'
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
-        run: |
-          yarn --cwd=web install
-          yarn --cwd=web build
-          yarn --cwd=web lint
-          yarn --cwd=web export
-      - name: push web to aws
-        if:
-          steps.changes.outputs.web == 'true' && steps.params.outputs.release ==
-          'true'
-        run: |
-          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
-          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
+  # build-web:
+  #   name: build-web
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - name: get version number
+  #       id: params
+  #       run: |
+  #         echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+  #     - name: authenticate to aws
+  #       if:
+  #         steps.changes.outputs.web == 'true' && steps.params.outputs.release ==
+  #         'true'
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+  #         aws-secret-access-key:
+  #           ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+  #         aws-region: us-east-2
+  #     - uses: actions/setup-node@v2
+  #       if: steps.changes.outputs.web == 'true'
+  #     - uses: actions/cache@v2
+  #       if: steps.changes.outputs.web == 'true'
+  #       with:
+  #         path: ${{ github.workspace }}/web/node_modules
+  #         key: ${{ runner.os }}-node-${{ hashFiles('web/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-
+  #           ${{ runner.os }}-
+  #     - name: build web
+  #       if: steps.changes.outputs.web == 'true'
+  #       env:
+  #         NEXT_TELEMETRY_DISABLED: 1
+  #       run: |
+  #         yarn --cwd=web install
+  #         yarn --cwd=web build
+  #         yarn --cwd=web lint
+  #         yarn --cwd=web export
+  #     - name: push web to aws
+  #       if:
+  #         steps.changes.outputs.web == 'true' && steps.params.outputs.release ==
+  #         'true'
+  #       run: |
+  #         aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
+  #         aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
 
-  build-api:
-    name: build-api
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v3
-      - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: get version number
-        id: params
-        run: |
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
+  # build-api:
+  #   name: build-api
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: authenticate to aws
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+  #         aws-secret-access-key:
+  #           ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+  #         aws-region: us-east-2
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - name: get version number
+  #       id: params
+  #       run: |
+  #         echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+  #         echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
 
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.api == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.api == 'true'
-        with:
-          path: ${{ github.workspace }}/api/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('api/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+  #     - uses: actions/setup-node@v2
+  #       if: steps.changes.outputs.api == 'true'
+  #     - uses: actions/cache@v2
+  #       if: steps.changes.outputs.api == 'true'
+  #       with:
+  #         path: ${{ github.workspace }}/api/node_modules
+  #         key: ${{ runner.os }}-node-${{ hashFiles('api/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-
+  #           ${{ runner.os }}-
 
-      - name: build api
-        if: steps.changes.outputs.api == 'true'
-        run: |
-          yarn --cwd=api install
-          yarn --cwd=api build
-          yarn --cwd=api lint
-          yarn --cwd=api test
-          yarn --cwd=api docs
-          tar -zcf api.tar.gz api/dist
-          tar -zcf api-docs-external.tar.gz api/local/docs/external
-          tar -zcf api-docs-internal.tar.gz api/local/docs/internal
-          tar -zcf api-test-coverage.tar.gz api/local/tests
+  #     - name: build api
+  #       if: steps.changes.outputs.api == 'true'
+  #       run: |
+  #         yarn --cwd=api install
+  #         yarn --cwd=api build
+  #         yarn --cwd=api lint
+  #         yarn --cwd=api test
+  #         yarn --cwd=api docs
+  #         tar -zcf api.tar.gz api/dist
+  #         tar -zcf api-docs-external.tar.gz api/local/docs/external
+  #         tar -zcf api-docs-internal.tar.gz api/local/docs/internal
+  #         tar -zcf api-test-coverage.tar.gz api/local/tests
 
-      - name: push api to aws
-        if:
-          steps.changes.outputs.api == 'true' && steps.params.outputs.release ==
-          'true'
-        run: |
-          aws s3 cp api.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 cp api-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 cp api-docs-internal.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 cp api-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 sync ./api/local/docs/external/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }}/docs/api/ --include "*" --cache-control no-cache
+  #     - name: push api to aws
+  #       if:
+  #         steps.changes.outputs.api == 'true' && steps.params.outputs.release ==
+  #         'true'
+  #       run: |
+  #         aws s3 cp api.tar.gz ${{ steps.params.outputs.buckets }}/
+  #         aws s3 cp api-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
+  #         aws s3 cp api-docs-internal.tar.gz ${{ steps.params.outputs.buckets }}/
+  #         aws s3 cp api-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
+  #         aws s3 sync ./api/local/docs/external/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }}/docs/api/ --include "*" --cache-control no-cache
 
-      - name: pull api from aws
-        if: steps.changes.outputs.api == 'false'
-        run: |
-          aws s3 cp ${{ steps.params.outputs.buckets }}/api.tar.gz .
+  #     - name: pull api from aws
+  #       if: steps.changes.outputs.api == 'false'
+  #       run: |
+  #         aws s3 cp ${{ steps.params.outputs.buckets }}/api.tar.gz .
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: api-bundle
-          path: ${{ github.workspace }}/api.tar.gz
-          retention-days: 1
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: api-bundle
+  #         path: ${{ github.workspace }}/api.tar.gz
+  #         retention-days: 1
 
-  build-app:
-    name: build-app
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v3
-      - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: get version number
-        id: params
-        run: |
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
+  # build-app:
+  #   name: build-app
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: authenticate to aws
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+  #         aws-secret-access-key:
+  #           ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+  #         aws-region: us-east-2
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - name: get version number
+  #       id: params
+  #       run: |
+  #         echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+  #         echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
 
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.app == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.app == 'true'
-        with:
-          path: ${{ github.workspace }}/app/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('app/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: build app
-        if: steps.changes.outputs.app == 'true'
-        run: |
-          yarn --cwd=app install --frozen-lockfile
-          yarn --cwd=app build
-          yarn --cwd=app lint
-          tar -zcf app.tar.gz app/dist
-      - name: push app to app.touca.io
-        if:
-          steps.changes.outputs.app == 'true' && steps.params.outputs.release ==
-          'true'
-        run: |
-          aws s3 cp app.tar.gz ${{ steps.params.outputs.buckets }}/
-          yarn --cwd=app build --configuration=cloud --delete-output-path
-          aws s3 sync ./app/dist/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }} --exclude "*" --include "*.*.js" --include "*.*.css" --cache-control public,max-age=31536000,immutable
-          aws s3 sync ./app/dist/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }} --exclude "*.*.js" --exclude "*.*.css" --cache-control no-cache
-      - name: pull app from aws
-        if: steps.changes.outputs.app == 'false'
-        run: aws s3 cp ${{ steps.params.outputs.buckets }}/app.tar.gz .
+  #     - uses: actions/setup-node@v2
+  #       if: steps.changes.outputs.app == 'true'
+  #     - uses: actions/cache@v2
+  #       if: steps.changes.outputs.app == 'true'
+  #       with:
+  #         path: ${{ github.workspace }}/app/node_modules
+  #         key: ${{ runner.os }}-node-${{ hashFiles('app/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-
+  #           ${{ runner.os }}-
+  #     - name: build app
+  #       if: steps.changes.outputs.app == 'true'
+  #       run: |
+  #         yarn --cwd=app install --frozen-lockfile
+  #         yarn --cwd=app build
+  #         yarn --cwd=app lint
+  #         tar -zcf app.tar.gz app/dist
+  #     - name: push app to app.touca.io
+  #       if:
+  #         steps.changes.outputs.app == 'true' && steps.params.outputs.release ==
+  #         'true'
+  #       run: |
+  #         aws s3 cp app.tar.gz ${{ steps.params.outputs.buckets }}/
+  #         yarn --cwd=app build --configuration=cloud --delete-output-path
+  #         aws s3 sync ./app/dist/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }} --exclude "*" --include "*.*.js" --include "*.*.css" --cache-control public,max-age=31536000,immutable
+  #         aws s3 sync ./app/dist/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }} --exclude "*.*.js" --exclude "*.*.css" --cache-control no-cache
+  #     - name: pull app from aws
+  #       if: steps.changes.outputs.app == 'false'
+  #       run: aws s3 cp ${{ steps.params.outputs.buckets }}/app.tar.gz .
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: app-bundle
-          path: ${{ github.workspace }}/app.tar.gz
-          retention-days: 1
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: app-bundle
+  #         path: ${{ github.workspace }}/app.tar.gz
+  #         retention-days: 1
 
-  build-cmp:
-    name: build-cmp
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v3
-      - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - name: get version number
-        id: params
-        run: |
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
+  # build-cmp:
+  #   name: build-cmp
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: authenticate to aws
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+  #         aws-secret-access-key:
+  #           ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+  #         aws-region: us-east-2
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - name: get version number
+  #       id: params
+  #       run: |
+  #         echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+  #         echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
 
-      - uses: actions/setup-python@v1
-        if: steps.changes.outputs.cmp == 'true'
-      - name: install conan
-        if: steps.changes.outputs.cmp == 'true'
-        run: |
-          pip install --no-cache-dir --upgrade conan
-          conan profile new default --detect --force
-          conan profile update settings.compiler.libcxx=libstdc++11 default
-          conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
-      - name: build cmp
-        if: steps.changes.outputs.cmp == 'true'
-        run: |
-          CONAN_SYSREQUIRES_MODE=enabled cmp/build.sh
-          tar -zcf cmp.tar.gz cmp/local/dist
+  #     - uses: actions/setup-python@v1
+  #       if: steps.changes.outputs.cmp == 'true'
+  #     - name: install conan
+  #       if: steps.changes.outputs.cmp == 'true'
+  #       run: |
+  #         pip install --no-cache-dir --upgrade conan
+  #         conan profile new default --detect --force
+  #         conan profile update settings.compiler.libcxx=libstdc++11 default
+  #         conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp
+  #     - name: build cmp
+  #       if: steps.changes.outputs.cmp == 'true'
+  #       run: |
+  #         CONAN_SYSREQUIRES_MODE=enabled cmp/build.sh
+  #         tar -zcf cmp.tar.gz cmp/local/dist
 
-      - name: push cmp to aws
-        if:
-          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release ==
-          'true'
-        run: aws s3 cp cmp.tar.gz ${{ steps.params.outputs.buckets }}/
+  #     - name: push cmp to aws
+  #       if:
+  #         steps.changes.outputs.cmp == 'true' && steps.params.outputs.release ==
+  #         'true'
+  #       run: aws s3 cp cmp.tar.gz ${{ steps.params.outputs.buckets }}/
 
-      - name: pull cmp from aws
-        if: steps.changes.outputs.cmp == 'false'
-        run: aws s3 cp ${{ steps.params.outputs.buckets }}/cmp.tar.gz .
+  #     - name: pull cmp from aws
+  #       if: steps.changes.outputs.cmp == 'false'
+  #       run: aws s3 cp ${{ steps.params.outputs.buckets }}/cmp.tar.gz .
 
-      - uses: actions/upload-artifact@v2
-        with:
-          name: cmp-bundle
-          path: ${{ github.workspace }}/cmp.tar.gz
-          retention-days: 1
+  #     - uses: actions/upload-artifact@v2
+  #       with:
+  #         name: cmp-bundle
+  #         path: ${{ github.workspace }}/cmp.tar.gz
+  #         retention-days: 1
 
-  build-server:
-    name: build-server
-    runs-on: ubuntu-20.04
-    timeout-minutes: 15
-    needs:
-      - build-api
-      - build-app
-      - build-cmp
-    steps:
-      - uses: actions/checkout@v3
-      - uses: dorny/paths-filter@v2
-        id: changes
-        with:
-          filters: .github/path-filters.yml
-      - uses: docker/setup-buildx-action@v2
-      - name: get version number
-        id: params
-        run: |
-          git fetch --prune --unshallow --tags
-          echo "::set-output name=version::1.4.0"
-          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' || steps.changes.outputs.cmp == 'true') }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
-      - uses: actions/download-artifact@v2
-        if: steps.changes.outputs.api == 'true'
-        with:
-          name: api-bundle
-          path: ${{ github.workspace }}
-      - uses: actions/download-artifact@v2
-        if: steps.changes.outputs.app == 'true'
-        with:
-          name: app-bundle
-          path: ${{ github.workspace }}
-      - uses: actions/download-artifact@v2
-        if: steps.changes.outputs.cmp == 'true'
-        with:
-          name: cmp-bundle
-          path: ${{ github.workspace }}
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.api == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.api == 'true'
-        with:
-          path: ${{ github.workspace }}/api/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('api/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-      - name: install api dependencies
-        if: steps.changes.outputs.api == 'true'
-        run: yarn --cwd=api install --frozen-lockfile --production
+  # build-server:
+  #   name: build-server
+  #   runs-on: ubuntu-20.04
+  #   timeout-minutes: 15
+  #   needs:
+  #     - build-api
+  #     - build-app
+  #     - build-cmp
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: dorny/paths-filter@v2
+  #       id: changes
+  #       with:
+  #         filters: .github/path-filters.yml
+  #     - uses: docker/setup-buildx-action@v2
+  #     - name: get version number
+  #       id: params
+  #       run: |
+  #         git fetch --prune --unshallow --tags
+  #         echo "::set-output name=version::1.4.0"
+  #         echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' || steps.changes.outputs.cmp == 'true') }}"
+  #         echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
+  #     - uses: actions/download-artifact@v2
+  #       if: steps.changes.outputs.api == 'true'
+  #       with:
+  #         name: api-bundle
+  #         path: ${{ github.workspace }}
+  #     - uses: actions/download-artifact@v2
+  #       if: steps.changes.outputs.app == 'true'
+  #       with:
+  #         name: app-bundle
+  #         path: ${{ github.workspace }}
+  #     - uses: actions/download-artifact@v2
+  #       if: steps.changes.outputs.cmp == 'true'
+  #       with:
+  #         name: cmp-bundle
+  #         path: ${{ github.workspace }}
+  #     - uses: actions/setup-node@v2
+  #       if: steps.changes.outputs.api == 'true'
+  #     - uses: actions/cache@v2
+  #       if: steps.changes.outputs.api == 'true'
+  #       with:
+  #         path: ${{ github.workspace }}/api/node_modules
+  #         key: ${{ runner.os }}-node-${{ hashFiles('api/yarn.lock') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-
+  #           ${{ runner.os }}-
+  #     - name: install api dependencies
+  #       if: steps.changes.outputs.api == 'true'
+  #       run: yarn --cwd=api install --frozen-lockfile --production
 
-      - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1
-        if: steps.params.outputs.release == 'true'
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
-          aws-secret-access-key:
-            ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
-          aws-region: us-east-2
-      - name: login to docker container registry
-        uses: docker/login-action@v2
-        if: steps.params.outputs.release == 'true'
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      - name: login to aws container registry
-        uses: docker/login-action@v2
-        if: steps.params.outputs.release == 'true'
-        with:
-          registry: ${{ secrets.AWS_PROD_ECR_REPO }}
-      - name: push ops to aws
-        if: |
-          steps.changes.outputs.ops == 'true' && steps.params.outputs.release == 'true'
-        run: |
-          tar -zcf deployment-scripts.tar.gz ops
-          aws s3 cp deployment-scripts.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 cp ops/install.sh ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/install.sh
-          aws s3 cp ops/install.dev.sh ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/install.dev.sh
+  #     - name: authenticate to aws
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       if: steps.params.outputs.release == 'true'
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_ACTIONS_PUBLIC }}
+  #         aws-secret-access-key:
+  #           ${{ secrets.AWS_ACCESS_KEY_SECRET_ACTIONS_PUBLIC }}
+  #         aws-region: us-east-2
+  #     - name: login to docker container registry
+  #       uses: docker/login-action@v2
+  #       if: steps.params.outputs.release == 'true'
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+  #     - name: login to aws container registry
+  #       uses: docker/login-action@v2
+  #       if: steps.params.outputs.release == 'true'
+  #       with:
+  #         registry: ${{ secrets.AWS_PROD_ECR_REPO }}
+  #     - name: push ops to aws
+  #       if: |
+  #         steps.changes.outputs.ops == 'true' && steps.params.outputs.release == 'true'
+  #       run: |
+  #         tar -zcf deployment-scripts.tar.gz ops
+  #         aws s3 cp deployment-scripts.tar.gz ${{ steps.params.outputs.buckets }}/
+  #         aws s3 cp ops/install.sh ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/install.sh
+  #         aws s3 cp ops/install.dev.sh ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/install.dev.sh
 
-      - name: prepare resources for building api docker image
-        if: steps.changes.outputs.api == 'true'
-        run: |
-          mkdir -p ./stage
-          tar -xf api.tar.gz -C ./stage
-          cp -r ./api/env ./stage/api/env
-          cp -r ./api/samples ./stage/api/samples
-          cp -r ./api/node_modules ./stage/api/node_modules
-      - name: build api docker image
-        uses: docker/build-push-action@v3
-        if: steps.changes.outputs.api == 'true'
-        with:
-          context: stage
-          file: ./config/docker/api.Dockerfile
-          push: ${{ steps.params.outputs.release == 'true' }}
-          tags: |
-            touca/touca-api:${{ steps.params.outputs.version }}
-            ${{ secrets.AWS_PROD_ECR_REPO }}/touca-api:${{ steps.params.outputs.version }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: update docker hub description
-        uses: peter-evans/dockerhub-description@v3
-        if: |
-          steps.changes.outputs.api == 'true' && steps.params.outputs.release == 'true'
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: touca/touca-api
-          readme-filepath: ./README.md
+  #     - name: prepare resources for building api docker image
+  #       if: steps.changes.outputs.api == 'true'
+  #       run: |
+  #         mkdir -p ./stage
+  #         tar -xf api.tar.gz -C ./stage
+  #         cp -r ./api/env ./stage/api/env
+  #         cp -r ./api/samples ./stage/api/samples
+  #         cp -r ./api/node_modules ./stage/api/node_modules
+  #     - name: build api docker image
+  #       uses: docker/build-push-action@v3
+  #       if: steps.changes.outputs.api == 'true'
+  #       with:
+  #         context: stage
+  #         file: ./config/docker/api.Dockerfile
+  #         push: ${{ steps.params.outputs.release == 'true' }}
+  #         tags: |
+  #           touca/touca-api:${{ steps.params.outputs.version }}
+  #           ${{ secrets.AWS_PROD_ECR_REPO }}/touca-api:${{ steps.params.outputs.version }}
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
+  #     - name: update docker hub description
+  #       uses: peter-evans/dockerhub-description@v3
+  #       if: |
+  #         steps.changes.outputs.api == 'true' && steps.params.outputs.release == 'true'
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+  #         repository: touca/touca-api
+  #         readme-filepath: ./README.md
 
-      - name: prepare resources for building app docker image
-        if: steps.changes.outputs.app == 'true'
-        run: |
-          mkdir -p ./stage
-          tar -xf app.tar.gz -C ./stage
-          mkdir -p ./stage/app && cp ./app/nginx.conf ./stage/app/
-      - name: build app docker image
-        uses: docker/build-push-action@v3
-        if: steps.changes.outputs.app == 'true'
-        with:
-          context: stage
-          file: ./config/docker/app.Dockerfile
-          push: ${{ steps.params.outputs.release == 'true' }}
-          tags: |
-            touca/touca-app:${{ steps.params.outputs.version }}
-            ${{ secrets.AWS_PROD_ECR_REPO }}/touca-app:${{ steps.params.outputs.version }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: update docker hub description
-        uses: peter-evans/dockerhub-description@v3
-        if: |
-          steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: touca/touca-app
-          readme-filepath: ./README.md
+  #     - name: prepare resources for building app docker image
+  #       if: steps.changes.outputs.app == 'true'
+  #       run: |
+  #         mkdir -p ./stage
+  #         tar -xf app.tar.gz -C ./stage
+  #         mkdir -p ./stage/app && cp ./app/nginx.conf ./stage/app/
+  #     - name: build app docker image
+  #       uses: docker/build-push-action@v3
+  #       if: steps.changes.outputs.app == 'true'
+  #       with:
+  #         context: stage
+  #         file: ./config/docker/app.Dockerfile
+  #         push: ${{ steps.params.outputs.release == 'true' }}
+  #         tags: |
+  #           touca/touca-app:${{ steps.params.outputs.version }}
+  #           ${{ secrets.AWS_PROD_ECR_REPO }}/touca-app:${{ steps.params.outputs.version }}
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
+  #     - name: update docker hub description
+  #       uses: peter-evans/dockerhub-description@v3
+  #       if: |
+  #         steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+  #         repository: touca/touca-app
+  #         readme-filepath: ./README.md
 
-      - name: prepare resources for building cmp docker image
-        if: steps.changes.outputs.cmp == 'true'
-        run: |
-          mkdir -p ./stage
-          tar -xf cmp.tar.gz -C ./stage
-          mkdir -p ./stage/cmp/config && cp ./cmp/config/config.prod.json ./stage/cmp/config/
-      - name: build cmp docker image
-        uses: docker/build-push-action@v3
-        if: steps.changes.outputs.cmp == 'true'
-        with:
-          context: stage
-          file: ./config/docker/cmp.Dockerfile
-          push: ${{ steps.params.outputs.release == 'true' }}
-          tags: |
-            touca/touca-cmp:${{ steps.params.outputs.version }}
-            ${{ secrets.AWS_PROD_ECR_REPO }}/touca-cmp:${{ steps.params.outputs.version }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: update docker hub description
-        uses: peter-evans/dockerhub-description@v3
-        if: |
-          steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: touca/touca-cmp
-          readme-filepath: ./README.md
+  #     - name: prepare resources for building cmp docker image
+  #       if: steps.changes.outputs.cmp == 'true'
+  #       run: |
+  #         mkdir -p ./stage
+  #         tar -xf cmp.tar.gz -C ./stage
+  #         mkdir -p ./stage/cmp/config && cp ./cmp/config/config.prod.json ./stage/cmp/config/
+  #     - name: build cmp docker image
+  #       uses: docker/build-push-action@v3
+  #       if: steps.changes.outputs.cmp == 'true'
+  #       with:
+  #         context: stage
+  #         file: ./config/docker/cmp.Dockerfile
+  #         push: ${{ steps.params.outputs.release == 'true' }}
+  #         tags: |
+  #           touca/touca-cmp:${{ steps.params.outputs.version }}
+  #           ${{ secrets.AWS_PROD_ECR_REPO }}/touca-cmp:${{ steps.params.outputs.version }}
+  #         cache-from: type=gha
+  #         cache-to: type=gha,mode=max
+  #     - name: update docker hub description
+  #       uses: peter-evans/dockerhub-description@v3
+  #       if: |
+  #         steps.changes.outputs.cmp == 'true' && steps.params.outputs.release == 'true'
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USERNAME }}
+  #         password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+  #         repository: touca/touca-cmp
+  #         readme-filepath: ./README.md
