@@ -3,53 +3,62 @@
   <app-missing [args]="notFound()">
   </app-missing>
 </ng-container>
-<div class="max-w-screen-xl py-8 mx-auto" *ngIf="!banner">
-  <div class="lg:flex lg:divide-gray-200 lg:divide-x-2 dark:lg:divide-gray-700">
-    <aside class="lg:sticky hidden lg:w-64 lg:px-4 lg:flex lg:top-24 lg:flex-col lg:justify-between lg:h-[calc(100vh-8rem)]">
-      <nav>
-        <ul class="space-y-1">
-          <ng-container *ngFor="let tab of tabs">
-            <li class="wsl-page-nav-item"
-              [ngClass]="{'wsl-tab-active': tab.type === currentTab }"
-              *ngIf="tab.shown" (click)="switchTab(tab.type)">
-              <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
-              <p>{{ tab.name }}</p>
-              <span *ngIf="tab.counter">{{ tab.counter }}</span>
+<div class="max-w-screen-xl pb-8 lg:pt-8 mx-auto" *ngIf="!banner">
+  <div class="lg:flex lg:divide-gray-200 lg:divide-x-2 dark:lg:divide-gray-700 space-y-4 lg:space-y-0">
+    <aside>
+      <div class="container mx-auto px-4 pt-4 lg:py-0 lg:sticky flex lg:flex-col justify-between lg:h-[calc(100vh-8rem)] lg:top-24 items-center lg:items-stretch lg:w-64">
+        <nav class="order-2 lg:order-1">
+          <ul class="space-x-1 flex lg:space-y-1 lg:flex-col lg:space-x-0">
+            <ng-container *ngFor="let tab of tabs">
+              <li class="wsl-page-nav-item"
+                [ngClass]="{'wsl-tab-active': tab.type === currentTab }"
+                *ngIf="tab.shown" (click)="switchTab(tab.type)">
+                <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
+                <p>{{ tab.name }}</p>
+                <span *ngIf="tab.counter">{{ tab.counter }}</span>
+              </li>
+            </ng-container>
+          </ul>
+        </nav>
+        <div class="order-1 lg:order-2" aria-current="page" wslDropdown *ngIf="team?.name">
+          <button
+            class="cursor-pointer wsl-dropdown-toggle lg:w-full"
+            type="button"
+            id="wsl-teams-dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="lg:hidden flex items-center bg-white shadow-sm border-gray-100 dark:bg-gray-800 p-2 rounded-md">
+              <span>Team: <b class="font-medium">{{team?.name}}</b></span>
+              <ng-icon name="hero-chevron-down" class="opacity-50"></ng-icon>
+            </div>
+            <div class="hidden lg:flex items-center p-2 w-full rounded-md hover:bg-gray-200 hover:bg-opacity-50 dark:hover:bg-gray-800">
+              <div class="flex items-center flex-grow space-x-2">
+                <div
+                  class="items-center justify-center w-10 h-10 text-2xl text-center text-white bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-400">
+                  {{team.name[0].toLocaleUpperCase()}}
+                </div>
+                <div class="text-black dark:text-gray-300">
+                  <p class="font-light">Team</p>
+                  <p class="font-medium">{{team.name}}</p>
+                </div>
+              </div>
+              <div>
+                <ng-icon name="hero-chevron-down"
+                  class="text-black dark:text-gray-300"></ng-icon>
+              </div>
+            </div>
+          </button>
+          <ul class="hidden w-full wsl-dropdown-menu lg:bottom-16"
+            aria-labelledby="wsl-teams-dropdown">
+            <li *ngFor="let teamItem of teams.active"
+              (click)="switchPage(teamItem.slug)" class="wsl-dropdown-item"
+              [ngClass]="{'bg-sky-100 dark:bg-gray-800': team?.slug === teamItem.slug}">
+              {{ teamItem.name }}
             </li>
-          </ng-container>
-        </ul>
-      </nav>
-      <div aria-current="page" wslDropdown *ngIf="team?.name">
-        <div
-          class="flex items-center p-2 rounded-md cursor-pointer wsl-dropdown-toggle hover:bg-gray-200 hover:bg-opacity-50 dark:hover:bg-gray-800"
-          id="wsl-teams-dropdown" aria-haspopup="true" aria-expanded="false">
-          <div class="flex items-center flex-grow space-x-2">
-            <div
-              class="flex items-center justify-center w-10 h-10 text-2xl text-center text-white bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-400">
-              {{team.name[0].toLocaleUpperCase()}}
-            </div>
-            <div class="text-black dark:text-gray-300">
-              <p class="font-light">Team</p>
-              <p class="font-medium">{{team.name}}</p>
-            </div>
-          </div>
-          <div>
-            <ng-icon name="hero-chevron-down"
-              class="text-black dark:text-gray-300"></ng-icon>
-          </div>
+            <li class="flex items-center wsl-dropdown-item"
+              (click)="openCreateTeamModel()">
+              <span class="flex-grow">New Team</span>
+            </li>
+          </ul>
         </div>
-        <ul class="hidden w-full wsl-dropdown-menu bottom-16"
-          aria-labelledby="wsl-teams-dropdown">
-          <li *ngFor="let teamItem of teams.active"
-            (click)="switchPage(teamItem.slug)" class="wsl-dropdown-item"
-            [ngClass]="{'bg-sky-100 dark:bg-gray-800': team?.slug === teamItem.slug}">
-            {{ teamItem.name }}
-          </li>
-          <li class="flex items-center wsl-dropdown-item"
-            (click)="openCreateTeamModel()">
-            <span class="flex-grow">New Team</span>
-          </li>
-        </ul>
       </div>
     </aside>
     <main class="container px-4 mx-auto space-y-4 wsl-min-h-screen-2 xl:px-8">
