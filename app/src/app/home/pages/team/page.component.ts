@@ -41,7 +41,7 @@ export class TeamPageComponent
   team: TeamItem;
 
   tabs: PageTab<TeamPageTabType>[];
-  currentTab: TeamPageTabType;
+  currentTab: PageTab<TeamPageTabType>;
   TabType = TeamPageTabType;
 
   banner: TeamBannerType;
@@ -83,7 +83,7 @@ export class TeamPageComponent
         const getQuery = (key: string) =>
           queryMap.has(key) ? queryMap.get(key) : null;
         const tab = this.tabs.find((v) => v.link === getQuery('t')) || v[0];
-        this.currentTab = tab.type;
+        this.currentTab = tab;
       }),
       teams: teamPageService.data.teams$.subscribe((v) => {
         if (v.active.length && !this.route.snapshot.params.team) {
@@ -117,7 +117,7 @@ export class TeamPageComponent
     });
   }
 
-  switchTab(type: TeamPageTabType) {
+  switchTab(type: PageTab<TeamPageTabType>) {
     this.currentTab = type;
   }
 
