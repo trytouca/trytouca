@@ -16,7 +16,7 @@ class ToucaConan(ConanFile):
     generators = "cmake_find_package"
 
     def requirements(self):
-        self.requires("aws-sdk-cpp/1.8.130")
+        self.requires("aws-sdk-cpp/1.9.234")
         self.requires("cxxopts/2.2.1")
         self.requires("fmt/8.0.1")
         self.requires("openssl/1.1.1j")
