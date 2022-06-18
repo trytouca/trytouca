@@ -13,6 +13,7 @@
     "${workspaceFolder}/examples/python"
   ],
   "cSpell.words": [
+    "Anonymized",
     "bdist",
     "capsys",
     "codecov",
@@ -37,6 +38,7 @@
     "Roadmap",
     "sdist",
     "setuptools",
+    "signin",
     "sonatype",
     "syspath",
     "Touca",

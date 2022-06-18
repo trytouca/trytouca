@@ -4,6 +4,7 @@ export const environment = {
   apiUrl: 'http://localhost:8081',
   appVersion: '1.4.0',
   dataRefreshInterval: 10000,
+  github_client_id: '',
   google_api_client_id: '',
   self_hosted: true,
   production: false

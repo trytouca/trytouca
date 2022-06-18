@@ -210,13 +210,63 @@ router.post(
 )
 
 /**
+ *
+ * @api [post] /auth/signin/github
+ *    tags:
+ *      - Account
+ *    summary: 'Create User Session with GitHub'
+ *    operationId: 'account_signin_github'
+ *    description:
+ *      Log into a user account with GitHub.
+ *      Creates a user session.
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - github_token
+ *            properties:
+ *              github_token:
+ *                type: string
+ *      required: true
+ *    responses:
+ *      200:
+ *        description: 'Session Created'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              additionalProperties: false
+ *              properties:
+ *                expiresAt:
+ *                  type: string
+ *                  format: date-time
+ *      400:
+ *        $ref: '#/components/responses/RequestInvalid'
+ *      401:
+ *        $ref: '#/components/responses/Unauthorized'
+ *      423:
+ *        description: 'Account Locked or Suspended'
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/Errors'
+ */
+// router.post(
+//   '/signin/github',
+//   express.json(),
+//   promisable(authGithubSignin, 'create github session')
+// )
+
+/**
  * Login using Google account.
  *
  * @api [post] /auth/signin/google
  *    tags:
  *      - Account
- *    summary: 'Create User Session'
- *    operationId: 'account_signin'
+ *    summary: 'Create User Session with Google'
+ *    operationId: 'account_signin_google'
  *    description:
  *      Log into a user account.
  *      Creates a user session.

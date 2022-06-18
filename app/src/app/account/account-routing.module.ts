@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { AuthGuard, GuestGuard, InstallGuard } from '@/core/services';
 
 import { ActivateComponent } from './activate.component';
+import { SigninGithubComponent } from './github.component';
 import { InstallComponent } from './install.component';
 import { OnboardComponent } from './onboard.component';
 import { ProfileComponent } from './profile.component';
@@ -38,8 +39,17 @@ const routes: Routes = [
           { path: 'activate', component: ActivateComponent },
           {
             path: 'signin',
-            component: StartComponent,
-            data: { page: StartPageType.Signin }
+            children: [
+              {
+                path: '',
+                component: StartComponent,
+                data: { page: StartPageType.Signin }
+              },
+              {
+                path: 'github',
+                component: SigninGithubComponent
+              }
+            ]
           },
           {
             path: 'signup',
