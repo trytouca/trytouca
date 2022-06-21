@@ -5,6 +5,14 @@
     xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
     xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     <url>
+        <loc>https://touca.io/blog/becoming-an-oss-company/</loc>
+        <lastmod>2022-06-20T00:02:00.000Z</lastmod>
+        <image:image>
+            <image:loc>https://blog.touca.io/content/images/2022/06/touca-blog-220620.png</image:loc>
+            <image:caption>touca-blog-220620.png</image:caption>
+        </image:image>
+    </url>
+    <url>
         <loc>https://touca.io/blog/changelog-220617/</loc>
         <lastmod>2022-06-18T00:01:20.000Z</lastmod>
         <image:image>
