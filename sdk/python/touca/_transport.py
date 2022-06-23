@@ -101,3 +101,10 @@ class Transport:
         response = self._send_request(method="POST", path=f"/batch/{slugs}/seal2")
         if response.status != 204:
             raise RuntimeError("Failed to seal this version")
+
+    def get_plugins(self, path):
+        print(path+"------------------------------------------------")
+        response = self.pool.request("GET", path)
+        if response.status != 200:
+            raise RuntimeError("Failed to obtain plugin")
+        return True
