@@ -29,6 +29,7 @@
     "lcov",
     "libcxx",
     "libstdc",
+    "livestream",
     "mkdir",
     "ossrh",
     "Popen",
