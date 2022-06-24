@@ -3,7 +3,6 @@
 from argparse import ArgumentParser
 from pathlib import Path
 import sys
-import os
 from touca.cli._common import Operation, invalid_subcommand
 from touca._options import find_home_path
 import requests
