@@ -101,4 +101,3 @@ class Transport:
         response = self._send_request(method="POST", path=f"/batch/{slugs}/seal2")
         if response.status != 204:
             raise RuntimeError("Failed to seal this version")
-
