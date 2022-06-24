@@ -11,7 +11,7 @@
       "compilerPath": "/usr/bin/clang",
       "cStandard": "c11",
       "cppStandard": "c++11",
-      "intelliSenseMode": "macos-clang-x64"
+      "intelliSenseMode": "macos-clang-arm64"
     },
     {
       "name": "examples-cpp",
@@ -24,7 +24,7 @@
       "compilerPath": "/usr/bin/clang",
       "cStandard": "c11",
       "cppStandard": "c++17",
-      "intelliSenseMode": "macos-clang-x64"
+      "intelliSenseMode": "macos-clang-arm64"
     },
     {
       "name": "comparator",
@@ -37,7 +37,7 @@
       "compilerPath": "/usr/bin/clang",
       "cStandard": "c11",
       "cppStandard": "c++17",
-      "intelliSenseMode": "macos-clang-x64"
+      "intelliSenseMode": "macos-clang-arm64"
     }
   ],
   "version": 4

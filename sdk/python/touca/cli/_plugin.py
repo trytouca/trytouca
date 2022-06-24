@@ -48,12 +48,15 @@ class Plugin(Operation):
             help="Install a CLI plugin",
         )
         parsers_add.add_argument("name", help="name of the plugin")
-        parsers_add = parsers.add_parser(
+        parsers_remove = parsers.add_parser(
             "remove",
             description="Uninstall a CLI plugin",
             help="Uninstall a CLI plugin",
         )
-        parsers_add.add_argument("name", help="name of the plugin")
+        parsers_remove.add_argument("name", help="name of the plugin")
+        parsers.add_parser(
+            "template", description="Create a new plugin", help="create a new plugin"
+        )
 
     def __init__(self, options: dict):
         self.__options = options
@@ -102,11 +105,35 @@ class Plugin(Operation):
         Path.unlink(plugin_path_dst)
         return True
 
+    def _command_template(self):
+        Path.cwd().joinpath("example.py").write_text(
+            """
+from argparse import ArgumentParser
+
+from touca.cli._common import Operation
+
+
+class Example(Operation):
+    name = "example"
+    help = "Example"
+
+    @classmethod
+    def parser(self, parser: ArgumentParser):
+        parser.add_argument("args", nargs="+", help="any problem")
+
+    def run(self):
+        print("Example!")
+        return True
+        """
+        )
+        return True
+
     def run(self):
         commands = {
             "add": self._command_add,
             "list": self._command_list,
             "remove": self._command_remove,
+            "template": self._command_template,
         }
         command = self.__options.get("subcommand")
         if not command:

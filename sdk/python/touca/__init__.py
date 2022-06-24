@@ -21,7 +21,7 @@ from touca._client import Client
 from touca._runner import Workflow, run
 from touca._utils import scoped_timer
 
-__version__ = "1.5.5"
+__version__ = "1.5.6"
 
 
 def clientmethod(f):

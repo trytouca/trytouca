@@ -217,7 +217,7 @@ export default function PricingPage() {
             <p className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
               Use Touca for <span className="text-yellow-500">Free</span>.
               <br />
-              Pay when it made sense to.
+              Pay when it makes sense to.
             </p>
           </div>
           <div className="auto-cols-fr p-8">
