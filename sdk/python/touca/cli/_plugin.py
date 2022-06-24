@@ -3,9 +3,9 @@
 from argparse import ArgumentParser
 from pathlib import Path
 import sys
-
 from touca.cli._common import Operation, invalid_subcommand
 from touca._options import find_home_path
+import requests
 
 
 def user_plugins():
@@ -67,21 +67,29 @@ class Plugin(Operation):
 
     def _command_add(self):
         from shutil import copyfile
+        from urllib.parse import urlparse
 
-        plugin_name = self.__options.get("name")
-        plugin_path_src = Path.cwd().joinpath(plugin_name).with_suffix(".py")
-        if not plugin_path_src.exists():
-            print(f'did not find a plugin with name "{plugin_name}"', file=sys.stderr)
-            return False
+        plugin_arg: str = self.__options.get("name")
+        plugin_name = plugin_arg
+        if plugin_arg.startswith("https://"):
+            plugin_name = Path(urlparse(plugin_arg).path).stem
         plugin_path_dst = Path(find_home_path(), "plugins", plugin_name).with_suffix(
             ".py"
         )
+        plugin_path_dst.parent.mkdir(exist_ok=True)
         if plugin_path_dst.exists():
             print(f'plugin "{plugin_name}" is already installed', file=sys.stderr)
             return False
-        plugin_path_dst.parent.mkdir(exist_ok=True)
-        copyfile(plugin_path_src, plugin_path_dst)
-        return True
+        plugin_path_src = Path.cwd().joinpath(plugin_name).with_suffix(".py")
+        if plugin_path_src.exists():
+            copyfile(plugin_path_src, plugin_path_dst)
+            return True
+        res = requests.get(plugin_arg)
+        if res.status_code == 200:
+            plugin_path_dst.write_bytes(res.content)
+            return True
+        print(f'did not find a plugin at "{plugin_arg}"', file=sys.stderr)
+        return False
 
     def _command_remove(self):
         plugin_name = self.__options.get("name")
