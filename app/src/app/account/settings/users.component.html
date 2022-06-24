@@ -11,6 +11,7 @@
     <div class="flex flex-grow items-center justify-between space-x-4">
       <div
         class="w-40 truncate whitespace-nowrap font-medium text-black dark:text-gray-300"
+        [title]="account.fullname ?? account.email"
         [ngClass]="{
           'text-gray-300 line-through dark:text-gray-600': account.suspended
         }">

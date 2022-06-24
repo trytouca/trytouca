@@ -49,8 +49,8 @@ const social: {
     icon: FaYoutube
   },
   {
-    link: 'https://www.twitch.tv/trytouca',
-    title: 'Live-code with us on Twitch',
+    link: 'https://touca.io/twitch',
+    title: 'Hangout with us on Twitch',
     text: 'Twitch',
     icon: FaTwitch
   }
