@@ -3,10 +3,10 @@
 from argparse import ArgumentParser
 from pathlib import Path
 import sys
-# import os
+import os
 from touca.cli._common import Operation, invalid_subcommand
 from touca._options import find_home_path
-# import requests
+import requests
 
 
 def user_plugins():
@@ -66,23 +66,21 @@ class Plugin(Operation):
     def _command_add(self):
         from shutil import copyfile
         plugin_name = self.__options.get("name")
-        print(plugin_name)
         plugin_path_src = Path.cwd().joinpath(plugin_name).with_suffix(".py")
         if not plugin_path_src.exists():
-            #check if path us a url
-            res = requests.get(plugin_name)
-            print(type(res))
-            print(type(res.text))
-            #if url is valid && has valid python file
-            if (True):
-                plugin_path_dst = Path(find_home_path(), "plugins", os.path.basename(plugin_name)).with_suffix(
-                ".py"
-                )
+            try:
+                res = requests.get(plugin_name)
+                plugin_path_dst = Path(find_home_path(), "plugins", os.path.basename(plugin_name)).with_suffix(".py")
+                if plugin_path_dst.exists():
+                    print(f'plugin "{plugin_name}" is already installed', file=sys.stderr)
+                    return False
                 with open(plugin_path_dst, 'wb') as f:
                     f.write(res.content)
                 return True
-            print(f'did not find a plugin with name "{plugin_name}"', file=sys.stderr)
-            return False
+            #request threw error beacause plugin does not exist
+            except:
+                print(f'did not find a plugin with name "{plugin_name}"', file=sys.stderr)
+                return False
         plugin_path_dst = Path(find_home_path(), "plugins", plugin_name).with_suffix(
             ".py"
         )
