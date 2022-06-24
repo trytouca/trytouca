@@ -63,7 +63,7 @@ class Plugin(Operation):
 
     def _command_list(self):
         for member in user_plugins():
-            print("{}: {}".format(member.name, member.help))   
+            print("{}: {}".format(member.name, member.help))
         return True
 
     def _command_add(self):
