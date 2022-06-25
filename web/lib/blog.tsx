@@ -16,7 +16,7 @@ function makeContentApi() {
   return new GhostContentAPI({
     url: process.env.NEXT_PUBLIC_GHOST_CONTENT_URL,
     key: process.env.NEXT_PUBLIC_GHOST_CONTENT_API,
-    version: 'v3'
+    version: 'v5.0'
   });
 }
 

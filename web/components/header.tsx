@@ -7,7 +7,7 @@ import { FaDiscord, FaGithub } from 'react-icons/fa';
 import { HiMenu, HiOutlineNewspaper } from 'react-icons/hi';
 
 const items = [
-  { title: 'Login', link: 'https://app.touca.io' },
+  { title: 'Get Started', link: 'https://app.touca.io' },
   { title: 'Docs', link: 'https://touca.io/docs' },
   { title: 'Blog', link: '/blog' },
   { title: 'Pricing', link: '/pricing' }
