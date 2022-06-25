@@ -3,8 +3,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.touca/touca?color=blue)](https://search.maven.org/artifact/io.touca/touca)
 [![License](https://img.shields.io/static/v1?label=license&message=Apache-2.0&color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/java/LICENSE)
 [![Build Status](https://img.shields.io/github/workflow/status/trytouca/trytouca/touca-build?logo=github)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
-[![Code Quality](https://img.shields.io/codacy/grade/a98ce7c10db1482da22c6922c334959f)](https://app.codacy.com/gh/trytouca/touca-java)
-[![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/touca-java)](https://app.codecov.io/gh/trytouca/touca-java)
+[![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/trytouca)](https://app.codecov.io/gh/trytouca/trytouca)
 
 ## Install
 
