@@ -30,9 +30,9 @@ at least 2GB of RAM, with Docker and Docker Compose installed.
 
 ### Option 2: Use Touca Cloud
 
-Or you can use https://app.touca.io, managed and maintained by Touca, Inc. with
-additional enterprise-ready features. We offer a free plan and leverage
-usage-based pricing to charge larger teams for storage and compute.
+Or you can use https://app.touca.io that we manage and maintain, with additional
+features suitable for large teams. We offer a free plan and leverage usage-based
+pricing to charge larger teams for storage and compute.
 
 ## Sneak Peek
 

@@ -92,8 +92,9 @@ interface IConfig {
   tracking: {
     hubspot_key: string
     hubspot_token: string
-    mixpanel: string
     orbit_key: string
+    posthog_host: string
+    posthog_token: string
   }
   webapp: {
     root: string
@@ -201,8 +202,9 @@ export const config: IConfig = {
   tracking: {
     hubspot_key: env.HUBSPOT_API_KEY,
     hubspot_token: env.HUBSPOT_ACCESS_TOKEN,
-    mixpanel: env.MIXPANEL_PROJECT_TOKEN,
-    orbit_key: env.ORBIT_API_KEY
+    orbit_key: env.ORBIT_API_KEY,
+    posthog_host: env.POSTHOG_HOST,
+    posthog_token: env.POSTHOG_TOKEN
   },
   webapp: {
     root: env.WEBAPP_ROOT

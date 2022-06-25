@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Client as HubspotClient } from '@hubspot/api-client'
-import Mixpanel from 'mixpanel'
+import PostHog from 'posthog-node'
 
 import { relay } from '@/models/relay'
 import { IUser } from '@/schemas/user'
@@ -126,39 +126,45 @@ class OrbitTracker {
 }
 
 class Analytics {
-  private mixpanel: Mixpanel.Mixpanel
-  private orbit_tracker: OrbitTracker
+  private orbit: OrbitTracker
+  private posthog: PostHog
 
   constructor() {
-    if (config.tracking.mixpanel) {
-      this.mixpanel = Mixpanel.init(config.tracking.mixpanel)
+    if (config.tracking.posthog_host && config.tracking.posthog_token) {
+      this.posthog = new PostHog(config.tracking.posthog_token, {
+        host: config.tracking.posthog_host
+      })
     }
     if (config.tracking.orbit_key) {
-      this.orbit_tracker = new OrbitTracker()
+      this.orbit = new OrbitTracker()
     }
   }
 
   async add_member(user: IUser, data: Partial<TrackerInfo>) {
-    this.mixpanel?.people.set(user._id, {
-      $avatar: data.avatar,
-      $created: data.created_at?.toISOString(),
-      $email: data.email,
-      $name: data.name,
-      $first_name: data.first_name,
-      $last_name: data.last_name,
-      $ip: data.ip_address,
-      username: data.username
+    this.posthog?.identify({
+      distinctId: user._id,
+      properties: {
+        $avatar: data.avatar,
+        $created: data.created_at?.toISOString(),
+        $email: data.email,
+        $name: data.name,
+        $first_name: data.first_name,
+        $last_name: data.last_name,
+        $ip: data.ip_address,
+        username: data.username
+      }
     })
-    this.orbit_tracker?.add_member(user, data)
+    this.orbit?.add_member(user, data)
     return Promise.resolve()
   }
 
-  add_activity(type: EActivity, user: IUser, data?: Mixpanel.PropertyDict) {
-    this.mixpanel?.track(type, {
-      distinct_id: user._id,
-      ...data
+  add_activity(type: EActivity, user: IUser, data?: Record<string, any>) {
+    this.posthog?.capture({
+      distinctId: user._id,
+      event: type,
+      properties: data
     })
-    this.orbit_tracker?.add_activity(type, user, data)
+    this.orbit?.add_activity(type, user, data)
   }
 }
 
