@@ -1017,12 +1017,12 @@ jobs:
       - name: prepare resources for building api docker image
         if: steps.changes.outputs.api == 'true'
         run: |
-          mkdir -p ./stage/certs
+          mkdir -p ./stage/api/certs
           tar -xf api.tar.gz -C ./stage
           cp -r ./api/env ./stage/api/env
           cp -r ./api/samples ./stage/api/samples
           cp -r ./api/node_modules ./stage/api/node_modules
-          curl -o /stage/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
+          curl -o ./stage/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
       - name: build api docker image
         uses: docker/build-push-action@v3
         if: steps.changes.outputs.api == 'true'
