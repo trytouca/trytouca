@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import dotenv from 'dotenv'
+import mongoose from 'mongoose'
 import path from 'path'
 
 interface IConfig {
@@ -51,6 +52,7 @@ interface IConfig {
     host: string
     pass: string
     port: number
+    tlsCertificateFile?: string
     user: string
   }
   redis: {
@@ -148,6 +150,7 @@ export const config: IConfig = {
     host: env.MONGO_HOST,
     pass: env.MONGO_PASS,
     port: Number(env.MONGO_PORT),
+    tlsCertificateFile: env.MONGO_TLS_CERT_FILE,
     user: env.MONGO_USER
   },
   redis: {
@@ -200,6 +203,16 @@ class ConfigManager {
   public getMongoUri(): string {
     const m = this.data.mongo
     return `mongodb://${m.user}:${m.pass}@${m.host}:${m.port}/${m.database}`
+  }
+  public getMongoConnectionOptions() {
+    const file = this.data.mongo.tlsCertificateFile
+    const tlsOptions: mongoose.ConnectOptions = file
+      ? {
+          tls: true,
+          tlsCertificateFile: file
+        }
+      : {}
+    return { ...{ autoIndex: false }, ...tlsOptions }
   }
   public getRedisUri(): string {
     const redis = this.data.redis
