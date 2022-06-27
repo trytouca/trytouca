@@ -40,53 +40,51 @@ export type TrackerInfo = {
 }
 
 class OrbitTracker {
-  create(user: IUser, data: Partial<TrackerInfo>) {
-    relay({
+  async create(user: IUser, data: Partial<TrackerInfo>) {
+    await relay({
       host: 'https://app.orbit.love',
       path: '/api/v1/touca/members',
       authorization: `Bearer ${config.tracking.orbit_key}`,
-      data: {
+      data: JSON.stringify({
         member: {
-          email: user.email,
-          name: user.fullname,
-          slug: user.username
+          email: data.email,
+          name: data.name,
+          slug: data.username
         },
         identity: {
+          uid: user._id,
           email: data.email,
           name: data.name,
           username: data.username,
           source: 'touca',
           source_host: config.express.root
         }
-      }
+      })
     })
   }
 
-  track(name: string, user: IUser, data: Partial<TrackerInfo>) {
+  async activity(name: string, user: IUser, data: Partial<TrackerInfo>) {
     if (
       !['batch_sealed', 'account:created', 'self_host:install'].includes(name)
     ) {
       return
     }
-    relay({
+    await relay({
       host: 'https://app.orbit.love',
       path: '/api/v1/touca/activities',
       authorization: `Bearer ${config.tracking.orbit_key}`,
-      data: {
+      data: JSON.stringify({
         activity: {
           activity_type_key: name,
           occurred_at: new Date().toISOString(),
           properties: data
         },
         identity: {
-          email: user.email,
-          name: user.fullname,
           uid: user._id,
-          username: user.username,
           source: 'touca',
           source_host: config.express.root
         }
-      }
+      })
     })
   }
 }
@@ -124,7 +122,7 @@ class Tracker {
       distinct_id: user._id,
       ...data
     })
-    this.orbit_tracker?.track(name, user, data)
+    this.orbit_tracker?.activity(name, user, data)
   }
 }
 
