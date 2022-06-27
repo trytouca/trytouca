@@ -61,6 +61,7 @@ interface IConfig {
     durationShort: number
     host: string
     port: number
+    tlsCertificateFile?: string
   }
   samples: {
     directory: string
@@ -158,7 +159,8 @@ export const config: IConfig = {
     durationLong: Number(env.CACHE_DURATION_LONG),
     durationShort: Number(env.CACHE_DURATION_SHORT),
     host: env.REDIS_HOST,
-    port: Number(env.REDIS_PORT)
+    port: Number(env.REDIS_PORT),
+    tlsCertificateFile: env.REDIS_TLS_CERT_FILE
   },
   samples: {
     directory: path.normalize(`${__dirname}/../../` + env.SAMPLES_DIR),
@@ -204,15 +206,17 @@ class ConfigManager {
     const m = this.data.mongo
     return `mongodb://${m.user}:${m.pass}@${m.host}:${m.port}/${m.database}`
   }
-  public getMongoConnectionOptions() {
+  public getMongoConnectionOptions(): mongoose.ConnectOptions {
     const file = this.data.mongo.tlsCertificateFile
-    const tlsOptions: mongoose.ConnectOptions = file
+    return file
       ? {
+          autoIndex: false,
+          retryWrites: false,
+          sslValidate: false,
           tls: true,
-          tlsCertificateFile: file
+          tlsCAFile: file
         }
-      : {}
-    return { ...{ autoIndex: false }, ...tlsOptions }
+      : { autoIndex: false }
   }
   public getRedisUri(): string {
     const redis = this.data.redis
