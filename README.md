@@ -167,6 +167,21 @@ We hang on [Discord](https://touca.io/discord). Come say hi! We love making new
 friends. If you need help, have any questions, or like to contribute or provide
 feedback, that's the best place to be.
 
+## Contributors
+
+<a href="https://github.com/ghorbanzade"><img src="https://avatars.githubusercontent.com/u/11810467?v=4" title="ghorbanzade" width="50" height="50"></a>
+<a href="https://github.com/rmarrcode"><img src="https://avatars.githubusercontent.com/u/13802466?v=4" title="rmarrcode" width="50" height="50"></a>
+<a href="https://github.com/cthulhu-irl"><img src="https://avatars.githubusercontent.com/u/23152417?v=4" title="cthulhu-irl" width="50" height="50"></a>
+<a href="https://github.com/mdkhaki"><img src="https://avatars.githubusercontent.com/u/62190332?v=4" title="mdkhaki" width="50" height="50"></a>
+<a href="https://github.com/afshinm"><img src="https://avatars.githubusercontent.com/u/314326?v=4" title="afshinm" width="50" height="50"></a>
+<a href="https://github.com/mapron"><img src="https://avatars.githubusercontent.com/u/7624327?v=4" title="mapron" width="50" height="50"></a>
+<a href="https://github.com/duncanspumpkin"><img src="https://avatars.githubusercontent.com/u/1277401?v=4" title="duncanspumpkin" width="50" height="50"></a>
+
+## Sponsors
+
+<a href="https://github.com/pykello"><img src="https://avatars.githubusercontent.com/u/628106?v=4" title="pykello" width="50" height="50"></a>
+<a href="https://github.com/fffaraz"><img src="https://avatars.githubusercontent.com/u/895678?v=4" title="fffaraz" width="50" height="50"></a>
+
 ## License
 
 This repository is released under the Apache-2.0 License. See
