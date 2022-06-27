@@ -57,7 +57,7 @@ export async function platformInstall(
     tracker
       .create(user, { name: user.fullname })
       .then(() =>
-        tracker.track(user, 'self-hosted install', { company: contact.company })
+        tracker.track(user, 'self_host', { company: contact.company })
       )
     const owners = await wslFindByRole(EPlatformRole.Owner)
     mailUser(owners[0], 'New Self-Hosted Instance', 'user-install', contact)
@@ -72,7 +72,10 @@ export async function platformInstall(
   }
 
   await MetaModel.updateOne({}, { $set: { contact } })
-  const response = await relay('/platform/install', JSON.stringify(contact))
+  const response = await relay({
+    path: '/platform/install',
+    data: JSON.stringify(contact)
+  })
   logger.info('server registered')
   rclient.removeCached('platform-config')
   rclient.removeCached('platform-health')

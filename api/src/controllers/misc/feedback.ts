@@ -36,6 +36,9 @@ export async function feedback(
     return res.status(204).send()
   }
 
-  const response = await relay('/feedback', JSON.stringify(content))
+  const response = await relay({
+    path: '/feedback',
+    data: JSON.stringify(content)
+  })
   return res.status(response.status).send()
 }
