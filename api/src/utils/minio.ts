@@ -11,13 +11,15 @@ const minioClient = new Client(
         accessKey: config.minio.user,
         secretKey: config.minio.pass,
         endPoint: config.minio.host,
+        region: config.minio.region,
+        port: config.minio.port,
         useSSL: false
       }
     : {
         accessKey: config.minio.user,
         secretKey: config.minio.pass,
-        endPoint: 's3.us-east-2.amazonaws.com',
-        region: 'us-east-2',
+        endPoint: `s3.${config.minio.region}.amazonaws.com`,
+        region: config.minio.region,
         useSSL: true
       }
 )

@@ -3,6 +3,7 @@
 import { Client as HubspotClient } from '@hubspot/api-client'
 import Mixpanel from 'mixpanel'
 
+import { relay } from '@/models/relay'
 import { IUser } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
@@ -38,12 +39,66 @@ export type TrackerInfo = {
   username: string
 }
 
+class OrbitTracker {
+  create(user: IUser, data: Partial<TrackerInfo>) {
+    relay({
+      host: 'https://app.orbit.love',
+      path: '/api/v1/touca/members',
+      authorization: `Bearer ${config.tracking.orbit_key}`,
+      data: {
+        member: {
+          email: user.email,
+          name: user.fullname,
+          slug: user.username
+        },
+        identity: {
+          email: data.email,
+          name: data.name,
+          username: data.username,
+          source: 'touca',
+          source_host: config.express.root
+        }
+      }
+    })
+  }
+
+  track(name: string, user: IUser, data: Partial<TrackerInfo>) {
+    if (!['batch_sealed', 'created_account', 'self_host'].includes(name)) {
+      return
+    }
+    relay({
+      host: 'https://app.orbit.love',
+      path: '/api/v1/touca/activities',
+      authorization: `Bearer ${config.tracking.orbit_key}`,
+      data: {
+        activity: {
+          activity_type_key: `touca:${name}`,
+          occurred_at: new Date().toISOString(),
+          properties: data
+        },
+        identity: {
+          email: user.email,
+          name: user.fullname,
+          uid: user._id,
+          username: user.username,
+          source: 'touca',
+          source_host: config.express.root
+        }
+      }
+    })
+  }
+}
+
 class Tracker {
   private mixpanel: Mixpanel.Mixpanel
+  private orbit_tracker: OrbitTracker
 
   constructor() {
     if (config.tracking.mixpanel) {
       this.mixpanel = Mixpanel.init(config.tracking.mixpanel)
+    }
+    if (config.tracking.orbit_key) {
+      this.orbit_tracker = new OrbitTracker()
     }
   }
 
@@ -58,6 +113,7 @@ class Tracker {
       $ip: data.ip_address,
       username: data.username
     })
+    this.orbit_tracker?.create(user, data)
     return Promise.resolve()
   }
 

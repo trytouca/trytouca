@@ -2,17 +2,19 @@
 
 import * as https from 'https'
 
-export async function relay(
-  path: string,
-  data = ''
-): Promise<{ status: number }> {
-  const url = new URL('https://api.touca.io')
+export async function relay(opts: {
+  path: string
+  host?: string
+  data?: unknown
+  authorization?: string
+}): Promise<{ status: number }> {
+  const url = new URL(opts.host ?? 'https://api.touca.io')
   const options: https.RequestOptions = {
     protocol: url.protocol,
     host: url.host,
     port: url.port,
     hostname: url.hostname,
-    path,
+    path: opts.path,
     method: 'POST',
     headers: {
       Accept: 'application/json',
@@ -20,12 +22,15 @@ export async function relay(
       'Content-Type': 'application/json'
     }
   }
+  if (opts.authorization) {
+    options.headers.Authorization = opts.authorization
+  }
   return new Promise((resolve, reject) => {
     const req = https.request(options, (remoteResponse) => {
       return resolve({ status: remoteResponse.statusCode })
     })
     req.on('error', reject)
-    req.write(data)
+    req.write(opts.data ?? '')
     req.end()
   })
 }
