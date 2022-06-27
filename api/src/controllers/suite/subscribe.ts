@@ -7,7 +7,7 @@ import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import { ENotificationType } from '@/types/commontypes'
 import logger from '@/utils/logger'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * subscribe user to a given suite.
@@ -34,7 +34,10 @@ export async function suiteSubscribe(
     })
   }
 
-  tracker.track(user, 'subscribe', { suite: tuple, level: level })
+  analytics.add_activity(EActivity.SuiteSubscribed, user, {
+    suite: tuple,
+    level: level
+  })
   logger.info('%s: subscribed to %s (%s)', user.username, tuple, level)
 
   return res.status(204).send()

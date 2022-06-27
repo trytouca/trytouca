@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
@@ -7,7 +7,7 @@ import { UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function authResetKeyCreate(
   req: Request,
@@ -90,9 +90,7 @@ export async function authResetKeyCreate(
     resetLink: `${config.webapp.root}/account/reset?key=${resetKey}`
   })
 
-  // add event to tracking system
-
-  tracker.track(user, 'password_initiated')
+  analytics.add_activity(EActivity.AccountPasswordRemind, user)
 
   return res.status(204).send()
 }

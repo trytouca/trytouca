@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 import { ByteBuffer } from 'flatbuffers'
@@ -18,7 +18,7 @@ import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
 import { Message, Messages } from '@/utils/schema'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 type TeamSlug = string
 type SuiteSlug = string
@@ -450,8 +450,7 @@ async function processSuite(
         slug: suiteSlug,
         name: suiteSlug
       })
-      // add event to tracking system
-      tracker.track(user, 'created_suite')
+      analytics.add_activity(EActivity.SuiteCreated, user)
     }
 
     // concurrently process submitted messages that belong to batches of this suite

@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -8,7 +8,7 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * @summary
@@ -92,9 +92,7 @@ export async function ctrlBatchPromote(
   await batchPromote(team, suite, batch, user, reason)
   logger.info('%s: %s: promoted', user.username, tuple)
 
-  // add event to tracking system
-
-  tracker.track(user, 'promoted_batch')
+  analytics.add_activity(EActivity.BatchPromoted, user)
 
   return res.status(204).send()
 }

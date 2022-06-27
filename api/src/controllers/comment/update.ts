@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -7,7 +7,7 @@ import { CommentModel, ICommentDocument } from '@/schemas/comment'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function ctrlCommentUpdate(
   req: Request,
@@ -38,6 +38,6 @@ export async function ctrlCommentUpdate(
   await rclient.removeCached(`route_commentList_${tuple}`)
 
   logger.info('%s: %s: edited comment', user.username, tuple)
-  tracker.track(user, 'comment_edit')
+  analytics.add_activity(EActivity.CommentEdited, user)
   return res.status(204).send()
 }

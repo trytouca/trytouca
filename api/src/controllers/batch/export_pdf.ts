@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -9,7 +9,7 @@ import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function ctrlBatchExportPDF(
   req: Request,
@@ -51,5 +51,5 @@ export async function ctrlBatchExportPDF(
   res.writeHead(200)
   res.end(pdfReport.content)
   logger.info('%s: exported %s', user.username, filename)
-  tracker.track(user, 'export_pdf', { filename })
+  analytics.add_activity(EActivity.BatchPDFExported, user, { filename })
 }

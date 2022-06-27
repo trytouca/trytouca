@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -8,7 +8,7 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * @summary
@@ -44,7 +44,7 @@ export async function ctrlBatchSeal(
   }
 
   await batchSeal(team, suite, batch)
-  tracker.track(user, 'batch_sealed')
+  analytics.add_activity(EActivity.BatchSealed, user)
   logger.info('%s: %s: sealed', user.username, tuple)
 
   return res.status(204).send()

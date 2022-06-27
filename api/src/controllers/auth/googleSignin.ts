@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 import { OAuth2Client } from 'google-auth-library'
@@ -7,7 +7,7 @@ import { createUserAccount, createUserSession } from '@/models/auth'
 import { IUserDocument, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function authGoogleSignin(
   req: Request,
@@ -96,15 +96,15 @@ export async function authGoogleSignin(
 
   // add event to tracking system
 
-  tracker
-    .create(user, {
+  analytics
+    .add_member(user, {
       avatar: payload.picture,
       name: user.fullname ?? payload.name,
       first_name: payload.given_name,
       last_name: payload.family_name,
       ip_address: askedIpAddress
     })
-    .then(() => tracker.track(user, 'logged_in'))
+    .then(() => analytics.add_activity(EActivity.AccountLoggedIn, user))
 
   // return session token to the user
   // @todo consider setting path and secure attributes

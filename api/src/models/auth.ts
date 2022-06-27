@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as bcrypt from 'bcrypt'
 import { once } from 'lodash'
@@ -11,7 +11,7 @@ import { config } from '@/utils/config'
 import * as jwt from '@/utils/jwt'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { tracker, TrackerInfo } from '@/utils/tracker'
+import { analytics, EActivity, TrackerInfo } from '@/utils/tracker'
 
 /**
  * Find a username that is not already registered.
@@ -121,8 +121,8 @@ export async function createUserAccount(
 
   // add event to tracking system
 
-  tracker
-    .create(newUser, {
+  analytics
+    .add_member(newUser, {
       avatar: payload.avatar,
       created_at: newUser.createdAt,
       email: payload.email,
@@ -133,7 +133,7 @@ export async function createUserAccount(
       user_id: payload.user_id,
       username: payload.username
     })
-    .then(() => tracker.track(newUser, 'account:created'))
+    .then(() => analytics.add_activity(EActivity.AccountCreated, newUser))
 
   return newUser
 }

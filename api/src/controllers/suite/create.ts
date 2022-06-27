@@ -6,7 +6,7 @@ import { suiteCreate } from '@/models/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * Register a new suite.
@@ -36,8 +36,7 @@ export async function ctrlSuiteCreate(
     })
   }
 
-  // add event to tracking system
-  tracker.track(user, 'created_suite')
+  analytics.add_activity(EActivity.SuiteCreated, user)
 
   return res.status(201).send()
 }

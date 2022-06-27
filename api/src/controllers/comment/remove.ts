@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -9,7 +9,7 @@ import { IUser } from '@/schemas/user'
 import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function ctrlCommentRemove(
   req: Request,
@@ -44,6 +44,6 @@ export async function ctrlCommentRemove(
   await rclient.removeCached(`route_commentList_${tuple}`)
 
   logger.info('%s: %s: removed comment', user.username, tuple)
-  tracker.track(user, 'comment_remove')
+  analytics.add_activity(EActivity.CommentDeleted, user)
   return res.status(204).send()
 }
