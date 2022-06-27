@@ -3,8 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@touca/node?color=blue)](https://www.npmjs.com/package/@touca/node)
 [![License](https://img.shields.io/static/v1?label=license&message=Apache-2.0&color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/java/LICENSE)
 [![Build Status](https://img.shields.io/github/workflow/status/trytouca/trytouca/touca-build)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
-[![Code Quality](https://img.shields.io/codacy/grade/dca09feb49f142468bdd864a8015a53f)](https://app.codacy.com/gh/trytouca/touca-js)
-[![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/touca-js)](https://app.codecov.io/gh/trytouca/touca-js)
+[![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/trytouca)](https://app.codecov.io/gh/trytouca/trytouca)
 
 ## Install
 
@@ -19,7 +18,8 @@ We formally support Node.js v12 and newer on Windows, Linux and macOS platforms.
 ## Sneak Peak
 
 > For a more thorough guide of how to use Touca SDK for JavaScript, check out
-> the `examples` directory or visit our [documentation website](https://touca.io/docs).
+> the `examples` directory or visit our
+> [documentation website](https://touca.io/docs).
 
 Let us imagine that we want to test a software workflow that reports whether a
 given number is prime.
