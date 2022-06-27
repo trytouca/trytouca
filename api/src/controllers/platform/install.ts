@@ -57,7 +57,7 @@ export async function platformInstall(
     tracker
       .create(user, { name: user.fullname })
       .then(() =>
-        tracker.track(user, 'self_host', { company: contact.company })
+        tracker.track(user, 'self_host:install', { company: contact.company })
       )
     const owners = await wslFindByRole(EPlatformRole.Owner)
     mailUser(owners[0], 'New Self-Hosted Instance', 'user-install', contact)

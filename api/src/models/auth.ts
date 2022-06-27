@@ -133,7 +133,7 @@ export async function createUserAccount(
       user_id: payload.user_id,
       username: payload.username
     })
-    .then(() => tracker.track(newUser, 'created_account'))
+    .then(() => tracker.track(newUser, 'account:created'))
 
   return newUser
 }
