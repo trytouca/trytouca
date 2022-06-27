@@ -1029,6 +1029,7 @@ jobs:
         with:
           context: stage
           file: ./config/docker/api.Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: ${{ steps.params.outputs.release == 'true' }}
           tags: |
             touca/touca-api:${{ steps.params.outputs.version }}
@@ -1057,6 +1058,7 @@ jobs:
         with:
           context: stage
           file: ./config/docker/app.Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: ${{ steps.params.outputs.release == 'true' }}
           tags: |
             touca/touca-app:${{ steps.params.outputs.version }}
@@ -1085,6 +1087,7 @@ jobs:
         with:
           context: stage
           file: ./config/docker/cmp.Dockerfile
+          platforms: linux/amd64,linux/arm64
           push: ${{ steps.params.outputs.release == 'true' }}
           tags: |
             touca/touca-cmp:${{ steps.params.outputs.version }}
