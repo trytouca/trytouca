@@ -63,7 +63,9 @@ class OrbitTracker {
   }
 
   track(name: string, user: IUser, data: Partial<TrackerInfo>) {
-    if (!['batch_sealed', 'created_account', 'self_host'].includes(name)) {
+    if (
+      !['batch_sealed', 'account:created', 'self_host:install'].includes(name)
+    ) {
       return
     }
     relay({
@@ -72,7 +74,7 @@ class OrbitTracker {
       authorization: `Bearer ${config.tracking.orbit_key}`,
       data: {
         activity: {
-          activity_type_key: `touca:${name}`,
+          activity_type_key: name,
           occurred_at: new Date().toISOString(),
           properties: data
         },
@@ -122,6 +124,7 @@ class Tracker {
       distinct_id: user._id,
       ...data
     })
+    this.orbit_tracker?.track(name, user, data)
   }
 }
 
