@@ -1,17 +1,26 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Client } from 'minio'
 
 import { config } from './config'
 import logger from './logger'
 
-const minioClient = new Client({
-  endPoint: config.minio.host,
-  port: config.minio.port,
-  useSSL: false,
-  accessKey: config.minio.user,
-  secretKey: config.minio.pass
-})
+const minioClient = new Client(
+  config.minio.host
+    ? {
+        accessKey: config.minio.user,
+        secretKey: config.minio.pass,
+        endPoint: config.minio.host,
+        useSSL: false
+      }
+    : {
+        accessKey: config.minio.user,
+        secretKey: config.minio.pass,
+        endPoint: 's3.us-east-2.amazonaws.com',
+        region: 'us-east-2',
+        useSSL: true
+      }
+)
 
 const bucketNames = {
   comparisons: 'touca-comparisons',

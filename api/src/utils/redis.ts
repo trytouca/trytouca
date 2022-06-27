@@ -5,11 +5,20 @@ import Redis from 'ioredis'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 
+const cloudOptions = config.redis.tlsCertificateFile
+  ? {
+      tls: {
+        checkServerIdentity: () => undefined
+      }
+    }
+  : {}
+
 export const client = new Redis({
   host: config.redis.host,
   lazyConnect: true,
   port: config.redis.port,
-  showFriendlyErrorStack: config.env !== 'production'
+  showFriendlyErrorStack: config.env !== 'production',
+  ...cloudOptions
 })
 
 client.on('error', (err) => {

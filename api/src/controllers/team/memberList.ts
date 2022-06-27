@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -139,7 +139,7 @@ async function teamMemberListImpl(
         }
       }
     },
-    { $project: { _id: 0 } }
+    { $unset: ['_id'] }
   ])
 
   const output: TeamMemberListResponse = {
