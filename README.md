@@ -1,8 +1,12 @@
-# Touca
+<a href="https://touca.io">
+  <img src="https://touca.io/logo/touca-logo-w-text-bg.png" alt="touca.io" width="200px" />
+</a>
 
 [![License](https://img.shields.io/github/license/trytouca/trytouca?color=blue)](https://github.com/trytouca/trytouca/blob/main/LICENSE)
 [![Documentation Website](https://img.shields.io/static/v1?label=docs&message=touca.io/docs&color=blue)](https://touca.io/docs)
 [![Community](https://img.shields.io/static/v1?label=community&message=touca.io/discord&color=blue)](https://touca.io/discord)
+
+## Continuous Regression Testing for Engineering Teams
 
 Touca is an open-source regression testing solution, built for engineers.
 
