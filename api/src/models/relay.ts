@@ -18,12 +18,10 @@ export async function relay(opts: {
     method: 'POST',
     headers: {
       Accept: 'application/json',
+      Authorization: opts.authorization,
       'Accept-Charset': 'utf-8',
       'Content-Type': 'application/json'
     }
-  }
-  if (opts.authorization) {
-    options.headers.Authorization = opts.authorization
   }
   return new Promise((resolve, reject) => {
     const req = https.request(options, (remoteResponse) => {
