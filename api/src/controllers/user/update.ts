@@ -10,7 +10,7 @@ import { EFeatureFlag } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 async function updateFeatureFlags(user: IUser, flags: Record<string, boolean>) {
   logger.debug('%s: updating feature flag: %j', user.username, flags)
@@ -27,7 +27,7 @@ async function updateFeatureFlags(user: IUser, flags: Record<string, boolean>) {
     })
   }
   logger.info('%s: updated feature flag: %j', user.username, flags)
-  tracker.track(user, 'updated_feature_flag', flags)
+  analytics.add_activity(EActivity.FeatureFlagUpdated, user, flags)
 }
 
 /**
@@ -114,11 +114,11 @@ export async function userUpdate(
   // add event to tracking system. since user is already registered,
   // we can perform the two operations independently.
 
-  tracker.create(user, {
+  analytics.add_member(user, {
     name: proposed.fullname,
     username: proposed.username
   })
-  tracker.track(user, 'updated_profile')
+  analytics.add_activity(EActivity.ProfileUpdated, user)
 
   return res.status(204).send()
 }

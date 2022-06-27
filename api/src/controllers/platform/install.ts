@@ -13,7 +13,7 @@ import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { mailUser } from '@/utils/mailer'
 import { rclient } from '@/utils/redis'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function platformInstall(
   req: Request,
@@ -54,11 +54,11 @@ export async function platformInstall(
       platformRole: EPlatformRole.User,
       username: contact.uuid
     }
-    tracker
-      .create(user, { name: user.fullname })
-      .then(() =>
-        tracker.track(user, 'self_host:install', { company: contact.company })
-      )
+    analytics.add_member(user, { name: user.fullname }).then(() =>
+      analytics.add_activity(EActivity.SelfHostedInstall, user, {
+        company: contact.company
+      })
+    )
     const owners = await wslFindByRole(EPlatformRole.Owner)
     mailUser(owners[0], 'New Self-Hosted Instance', 'user-install', contact)
     return res.status(204).send()

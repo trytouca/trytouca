@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -6,7 +6,7 @@ import { UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function authVerifyResend(
   req: Request,
@@ -43,9 +43,7 @@ export async function authVerifyResend(
     verificationLink: link
   })
 
-  // add event to tracking system
-
-  tracker.track(user, 'resend_activation_link')
+  analytics.add_activity(EActivity.AccountActivationResent, user)
 
   return res.status(204).send()
 }

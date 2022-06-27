@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
@@ -8,7 +8,7 @@ import { config } from '@/utils/config'
 import { notifyPlatformAdmins } from '@/utils/inbox'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function authResetKeyApply(
   req: Request,
@@ -64,10 +64,7 @@ export async function authResetKeyApply(
   )
 
   notifyPlatformAdmins('%s reset their password.', user.username)
-
-  // add event to tracking system
-
-  tracker.track(user, 'password_reset')
+  analytics.add_activity(EActivity.AccountPasswordReset, user)
 
   return res.status(204).send()
 }

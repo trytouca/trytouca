@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import archiver from 'archiver'
 import { NextFunction, Request, Response } from 'express'
@@ -12,7 +12,7 @@ import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 import * as minio from '@/utils/minio'
 import { MessageBuffer, Messages } from '@/utils/schema'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 function toChunkFiles(messages: Buffer[]): ArrayBuffer[] {
   const chunks = []
@@ -101,5 +101,5 @@ export async function ctrlBatchExportZIP(
 
   await archive.finalize()
   logger.info('%s: exported %s', user.username, filename)
-  tracker.track(user, 'export_zip', { filename })
+  analytics.add_activity(EActivity.BatchZipExported, user, { filename })
 }

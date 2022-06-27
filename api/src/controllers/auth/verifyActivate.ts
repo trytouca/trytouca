@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -6,7 +6,7 @@ import { createUserSession } from '@/models/auth'
 import { UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function authVerifyActivate(
   req: Request,
@@ -49,9 +49,7 @@ export async function authVerifyActivate(
   logger.info('%s: verified account', user.username)
   const session = await createUserSession(user, { askedAgent, askedIpAddress })
 
-  // add event to tracking system
-
-  tracker.track(user, 'activated_account')
+  analytics.add_activity(EActivity.AccountActivated, user)
 
   // return session token to the user
   // @todo consider setting path and secure attributes

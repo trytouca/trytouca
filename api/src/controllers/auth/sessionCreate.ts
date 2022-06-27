@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
@@ -8,7 +8,7 @@ import { UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function authSessionCreate(
   req: Request,
@@ -101,8 +101,8 @@ export async function authSessionCreate(
     askedIpAddress
   })
 
-  tracker.create(user, { ip_address: askedIpAddress }).then(() => {
-    tracker.track(user, 'logged_in')
+  analytics.add_member(user, { ip_address: askedIpAddress }).then(() => {
+    analytics.add_activity(EActivity.AccountLoggedIn, user)
   })
 
   // return session token to the user

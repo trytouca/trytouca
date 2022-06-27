@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import cuid from 'cuid'
 
@@ -9,7 +9,7 @@ import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 import { rclient } from '@/utils/redis'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function wslFindByRole(role: EPlatformRole): Promise<IUser[]> {
   return await UserModel.find(
@@ -84,9 +84,6 @@ export async function userDelete(account: IUser) {
     body: `User <b>${account.fullname}</b> (<a href="mailto:${account.email}">${account.username}</a>) removed their account.`
   })
 
-  // add event to tracking system
-  tracker.track(account, 'account_deleted')
-
-  // remove cache
+  analytics.add_activity(EActivity.AccountDeleted, account)
   rclient.removeCached('platform-stats')
 }

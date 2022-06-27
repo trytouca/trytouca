@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -8,7 +8,7 @@ import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 import { rclient } from '@/utils/redis'
-import { tracker } from '@/utils/tracker'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * @summary
@@ -50,12 +50,9 @@ export async function ctrlTeamCreate(
 
   await rclient.removeCached(`route_teamList_${user.username}`)
 
-  // add event to tracking system
-
-  tracker.track(user, 'created_team')
+  analytics.add_activity(EActivity.TeamCreated, user)
 
   // redirect to lookup route for this newly created team
-
   const redirectPath = [config.express.root, 'team', proposed.slug].join('/')
   return res.status(201).redirect(redirectPath.replace(/\/+/g, '/'))
 }
