@@ -47,9 +47,6 @@ from is_prime import is_prime
 @touca.Workflow
 def is_prime_test(testcase: str):
     touca.check("is_prime_output", is_prime(int(testcase)))
-
-if __name__ == "__main__":
-    touca.run()
 ```
 
 Where `touca` is the name of our Python SDK on PyPI.
@@ -67,7 +64,7 @@ number of test cases, without changing our test code:
 ```bash
 export TOUCA_API_KEY=<TOUCA_API_KEY>
 export TOUCA_API_URL=<TOUCA_API_URL>
-python is_prime_test.py --revision v1.0 --testcase 13 17 51
+touca test --revision v1.0 --testcase 13 17 51
 ```
 
 Where `TOUCA_API_KEY` and `TOUCA_API_URL` can be obtained from the
@@ -110,9 +107,6 @@ import touca
 @touca.Workflow
 def name_of_suite(testcase: str):
     # your code goes here
-
-if __name__ == "__main__":
-    touca.run()
 ```
 
 The code we insert as our workflow under test generally performs the following
