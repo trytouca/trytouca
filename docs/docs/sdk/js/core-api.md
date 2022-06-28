@@ -1,8 +1,8 @@
 # Core API
 
-[Previously](/sdk/js/main-api), we covered the high-level API of our
-Node.js SDK and learned how to test a `find_student` software using the Touca
-test framework:
+[Previously](/sdk/js/main-api), we covered the high-level API of our Node.js SDK
+and learned how to test a `find_student` software using the Touca test
+framework:
 
 ```typescript
 import { touca } from "@touca/node";
@@ -239,10 +239,7 @@ time.
 
 ## Forgetting Test Cases
 
-If you are submitted thousands of test cases for each version of your workflow
-and capture significant amount of information for each test case, you can use
-`touca.forget_testcase` to release all the captured information from process
-memory, when you are done with a given test case.
+You can use `touca.forget_testcase` to free up memory for a given testcase.
 
 ```typescript
 await touca.forget_testcase();

@@ -51,7 +51,7 @@ const sidebars = {
         {
           type: "doc",
           id: "basics/faq",
-          label: "Common Questions"
+          label: "FAQ"
         }
       ]
     },

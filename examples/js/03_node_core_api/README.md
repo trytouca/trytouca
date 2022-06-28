@@ -5,10 +5,10 @@ of our Node.js SDK and learned how to test a `find_student` function using the
 Touca test framework:
 
 ```ts
-import { touca } from '@touca/node';
-import { find_student } from './students';
+import { touca } from "@touca/node";
+import { find_student } from "./students";
 
-touca.workflow('students_test', async (username: string) => {
+touca.workflow("students_test", async (username: string) => {
   const student = await find_student(username);
   // insert code here to describe the behavior
   // and performance of the workflow under test
@@ -30,8 +30,8 @@ are handled. This API is most useful when integrating Touca with other existing
 test frameworks.
 
 ```ts
-import { touca } from '@touca/node';
-import { find_student } from './students';
+import { touca } from "@touca/node";
+import { find_student } from "./students";
 
 (async () => {
   await touca.configure();
@@ -73,9 +73,9 @@ for the full list of acceptable configuration parameters and their impact.
 
 ```ts
 await touca.configure({
-  api_key: '<TOUCA_API_KEY>',
-  api_url: '<TOUCA_API_URL>',
-  revision: '<TOUCA_TEST_VERSION>'
+  api_key: "<TOUCA_API_KEY>",
+  api_url: "<TOUCA_API_URL>",
+  revision: "<TOUCA_TEST_VERSION>"
 });
 ```
 
@@ -147,10 +147,10 @@ Touca data capturing functions such as `touca.check`, preserve the types of all
 captured data so that the Touca server can compare them in their original type.
 
 ```ts
-touca.check('username', student.username);
-touca.check('fullname', student.fullname);
-touca.check('birth_date', student.dob);
-touca.check('gpa', student.gpa);
+touca.check("username", student.username);
+touca.check("fullname", student.fullname);
+touca.check("birth_date", student.dob);
+touca.check("gpa", student.gpa);
 ```
 
 In the example above, `touca.check` stores value of properties `username` and
@@ -185,8 +185,8 @@ results in the same object to be serialized as `['math', 3.9]`:
 ```ts
 touca.add_serializer(Course.name, (x: Course) => [x.name, x.grade]);
 for (const course of student.courses) {
-  touca.add_array_element('courses', course);
-  touca.add_hit_count('number of courses');
+  touca.add_array_element("courses", course);
+  touca.add_hit_count("number of courses");
 }
 ```
 
@@ -240,10 +240,7 @@ time.
 
 ## Forgetting Test Cases
 
-If you are submitted thousands of test cases for each version of your workflow
-and capture significant amount of information for each test case, you can use
-`touca.forget_testcase` to release all the captured information from process
-memory, when you are done with a given test case.
+You can use `touca.forget_testcase` to free up memory for a given testcase.
 
 ```ts
 await touca.forget_testcase();
