@@ -1,6 +1,6 @@
 <div class="divide-y divide-gray-200 px-4 py-2 dark:divide-gray-700">
   <div class="flex h-8 items-center space-x-1">
-    <h3 class="font-semibold text-black dark:text-gray-300">Runtime Trend</h3>
+    <h3 class="font-semibold text-black dark:text-gray-200">Runtime Trend</h3>
     <div class="flex items-center">
       <button
         [hidden]="fields.perfs.length === 0"
@@ -22,7 +22,9 @@
         class="mx-auto py-2"
         src="./assets/undraw/undraw_setup_analytics_8qkl_edited_2.svg" />
       <div class="text-center">
-        <p class="text-sm">This suite has no performance data, yet.</p>
+        <p class="text-sm text-black dark:text-gray-200">
+          This suite has no performance data, yet.
+        </p>
       </div>
     </ng-template>
   </div>
