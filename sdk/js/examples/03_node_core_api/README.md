@@ -240,10 +240,7 @@ time.
 
 ## Forgetting Test Cases
 
-If you are submitted thousands of test cases for each version of your workflow
-and capture significant amount of information for each test case, you can use
-`touca.forget_testcase` to release all the captured information from process
-memory, when you are done with a given test case.
+You can use `touca.forget_testcase` to free up memory for a given testcase.
 
 ```ts
 await touca.forget_testcase();

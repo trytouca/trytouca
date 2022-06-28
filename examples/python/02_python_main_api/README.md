@@ -1,1 +1,1 @@
-../../../docs/docs/sdk/python/main-api.md
+../../../sdk/python/examples/02_python_main_api/README.md
