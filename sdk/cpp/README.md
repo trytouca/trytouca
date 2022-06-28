@@ -6,7 +6,7 @@
 [![Build Status](https://img.shields.io/github/workflow/status/trytouca/trytouca/touca-build?logo=github)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
 [![Build Status on Appveyor](https://img.shields.io/appveyor/build/PejmanGhorbanzade/touca-cpp?logo=appveyor)](https://ci.appveyor.com/project/PejmanGhorbanzade/touca-cpp)
 [![Documentation Status](https://readthedocs.org/projects/touca-cpp/badge/?version=latest)](https://touca-cpp.readthedocs.io)
-[![Codecov](https://img.shields.io/codecov/c/github/trytouca/touca-cpp)](https://app.codecov.io/gh/trytouca/touca-cpp)
+[![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/trytouca)](https://app.codecov.io/gh/trytouca/trytouca)
 
 ## Sneak Peak
 
