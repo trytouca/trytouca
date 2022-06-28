@@ -1,8 +1,13 @@
-# Touca
+<p align="center">
+<a href="https://touca.io"><img src="https://touca.io/logo/touca-logo-w-text-bg.png" alt="touca.io" width="300px" /></a>
+</p>
+<p align="center">
+<a href="https://github.com/trytouca/trytouca/blob/main/LICENSE"><img src="https://img.shields.io/github/license/trytouca/trytouca?color=blue" /></a>
+<a href="https://touca.io/docs"><img src="https://img.shields.io/static/v1?label=docs&message=touca.io/docs&color=blue" /></a>
+<a href="https://touca.io/discord"><img src="https://img.shields.io/static/v1?label=community&message=touca.io/discord&color=blue" /></a>
+</p>
 
-[![License](https://img.shields.io/github/license/trytouca/trytouca?color=blue)](https://github.com/trytouca/trytouca/blob/main/LICENSE)
-[![Documentation Website](https://img.shields.io/static/v1?label=docs&message=touca.io/docs&color=blue)](https://touca.io/docs)
-[![Community](https://img.shields.io/static/v1?label=community&message=touca.io/discord&color=blue)](https://touca.io/discord)
+## Continuous Regression Testing for Engineering Teams
 
 Touca is an open-source regression testing solution, built for engineers.
 
@@ -24,11 +29,11 @@ at least 2GB of RAM, with Docker and Docker Compose installed.
 /bin/bash -c "$(curl -fsSL https://touca.io/install.sh)"
 ```
 
-### Option 2: Use our cloud instance
+### Option 2: Use Touca Cloud
 
-Or you can use https://app.touca.io with additional enterprise-ready features
-that we manage and maintain. We offer a free plan and leverage usage-based
-pricing to charge larger teams for storage and service.
+Or you can use https://app.touca.io, managed and maintained by Touca, Inc. with
+additional enterprise-ready features. We offer a free plan and leverage
+usage-based pricing to charge larger teams for storage and compute.
 
 ## Sneak Peek
 
