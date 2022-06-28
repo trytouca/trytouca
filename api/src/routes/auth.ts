@@ -216,7 +216,7 @@ router.post(
  *    tags:
  *      - Account
  *    summary: 'Create User Session'
- *    operationId: 'account_signin'
+ *    operationId: 'account_signin_google'
  *    description:
  *      Log into a user account.
  *      Creates a user session.

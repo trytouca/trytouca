@@ -102,9 +102,11 @@ export type UserLookupResponse = {
  *    - text
  *  properties:
  *    createdAt:
- *      type: Date
+ *      type: string
+ *      format: date-time
  *    seenAt:
- *      type: Date
+ *      type: string
+ *      format: date-time
  *    text:
  *      type: string
  */
@@ -482,7 +484,7 @@ export type BatchListResponse = BatchItem[]
  *    replies:
  *      type: array
  *      items:
- *        - $ref: '#/components/schemas/CT_CommentItem'
+ *        $ref: '#/components/schemas/CT_CommentItem'
  *    text:
  *      type: string
  */
@@ -812,9 +814,11 @@ export type ElementListResponse = ElementListResponseItem[]
  *          slug:
  *            type: string
  *          submittedAt:
- *            type: Date
+ *            type: string
+ *            format: date-time
  *          updatedAt:
- *            type: Date
+ *            type: string
+ *            format: date-time
  *    elementName:
  *      type: string
  *    elementSlug:
@@ -909,15 +913,15 @@ export type CppTypeComparison = {
  *    commonKeys:
  *      type: array
  *      items:
- *        - $ref: '#/components/schemas/CT_CppTypeComparison'
+ *        $ref: '#/components/schemas/CT_CppTypeComparison'
  *    missingKeys:
  *      type: array
  *      items:
- *        - $ref: '#/components/schemas/CT_CppTypeComparison'
+ *        $ref: '#/components/schemas/CT_CppTypeComparison'
  *    newKeys:
  *      type: array
  *      items:
- *        - $ref: '#/components/schemas/CT_CppTypeComparison'
+ *        $ref: '#/components/schemas/CT_CppTypeComparison'
  */
 type CppCellar = {
   commonKeys: CppTypeComparison[]
@@ -1096,13 +1100,15 @@ export type PlatformStatus = {
  *      type: string
  *    lockedAt:
  *      type: string
- *      date: date-time
+ *      format: date-time
  *    resetKeyLink:
  *      type: string
  *    resetKeyCreatedAt:
- *      type: Date
+ *      type: string
+ *      format: date-time
  *    resetKeyExpiresAt:
- *      type: Date
+ *      type: string
+ *      format: date-time
  *    role:
  *      $ref: '#/components/schemas/CT_ETeamRole'
  *    suspended:
@@ -1170,7 +1176,7 @@ export type PlatformStatsUser = {
  *    users:
  *      type: array
  *      items:
- *        - $ref: '#/components/schemas/CT_PlatformStatsUser'
+ *        $ref: '#/components/schemas/CT_PlatformStatsUser'
  */
 export type PlatformStatsResponse = {
   cmpAvgCollectionTime: number

@@ -118,7 +118,7 @@ router.patch(
 /**
  * Submit parsed json representation of a message.
  *
- * @api [patch] /cmp/message/:message
+ * @api [patch] /cmp/message/{message}
  *    tags:
  *      - Comparison
  *    summary: Submit Message Result
