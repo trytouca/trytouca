@@ -441,17 +441,13 @@ from students import find_student
 
 @touca.Workflow
 def students_test(username: str):
-    touca.start_timer("find_student")
-    student = find_student(username)
-    touca.stop_timer("find_student")
+    with touca.scoped_timer("find_student"):
+        student = find_student(username)
     touca.assume("username", student.username)
     touca.check("fullname", student.fullname)
     touca.check("birth_date", student.dob)
     touca.check("gpa", student.gpa)
     touca.add_metric("external_source", 1500)
-
-if __name__ == "__main__":
-    touca.run()
 ```
 
   </TabItem>
@@ -627,9 +623,9 @@ code under test, without ever changing our test logic.
   <TabItem value="python">
 
 ```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
-python 02_python_main_api/students_test.py --revision v1.0 --testcase alice bob charlie
+touca config set api-key=<TOUCA_API_KEY>
+touca config set api-url=<TOUCA_API_URL>
+touca test --revision v1.0 --testcase alice bob charlie
 ```
 
   </TabItem>

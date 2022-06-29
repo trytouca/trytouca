@@ -174,9 +174,6 @@ import touca
 @touca.Workflow
 def is_prime_test(testcase: str):
     touca.check("output", is_prime(int(testcase)))
-
-if __name__ == "__main__":
-    touca.run()
 ```
 
   </TabItem>
@@ -260,9 +257,9 @@ We can run Touca tests with any number of inputs from the command line:
   <TabItem value="python">
 
 ```bash
-export TOUCA_API_KEY=<TOUCA_API_KEY>
-export TOUCA_API_URL=<TOUCA_API_URL>
-python3 prime_app_test.py --revision v1.0 --testcase 13 17 51
+touca config set api-key=<TOUCA_API_KEY>
+touca config set api-url=<TOUCA_API_URL>
+touca test --revision v1.0 --testcase 13 17 51
 ```
 
   </TabItem>
@@ -295,9 +292,9 @@ gradle runExampleMinimal --args='--revision v1.0 --testcase 13 17 51'
   </TabItem>
 </Tabs>
 
-Where `TOUCA_API_KEY` and `TOUCA_API_URL` can be obtained from the Touca server
-at [app.touca.io](https://app.touca.io). This command produces the following
-output:
+Where API Key and URL can be obtained from the Touca server at
+[app.touca.io](https://app.touca.io) or your own self-hosted instance. This
+command produces the following output:
 
 ```text
 
@@ -327,7 +324,7 @@ be compared against it. If, for any reason, requirements of our software change
 and we decide to change this baseline, we can do so by clicking a button right
 from the Touca server UI.
 
-![Touca Server](/img/assets/touca-suite-page.png)
+[![Touca Server](/img/assets/touca-suite-page.png)](https://app.touca.io)
 
 ## Value Proposition
 

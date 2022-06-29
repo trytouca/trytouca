@@ -8,6 +8,7 @@ const config = {
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
+  onDuplicateRoutes: "warn",
   organizationName: "trytouca",
   projectName: "touca-docs",
   trailingSlash: true,
@@ -35,7 +36,6 @@ const config = {
       })
     ]
   ],
-
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -91,7 +91,7 @@ const config = {
             "aria-label": "Touca on Twitter"
           },
           {
-            href: "https://github.com/trytouca",
+            href: "https://github.com/trytouca/trytouca",
             position: "right",
             className: "header-github-link",
             "aria-label": "Touca on GitHub"
@@ -101,7 +101,8 @@ const config = {
       footer: {
         style: "light",
         links: [],
-        copyright: `Copyright ${new Date().getFullYear()} Touca, Inc.`
+        copyright:
+          "Made with ❤️ in California ☀️ with contributions from around the 🌏"
       },
       prism: {
         additionalLanguages: ["java"],

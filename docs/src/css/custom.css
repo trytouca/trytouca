@@ -84,6 +84,9 @@
   border-radius: 0.5rem;
   margin-bottom: 1rem;
 }
+.tabs-container ul + div {
+  padding-bottom: 1rem;
+}
 
 .tabs {
   border-bottom: 1px solid var(--ifm-color-emphasis-200);
