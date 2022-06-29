@@ -19,6 +19,8 @@ jobs:
         with:
           python-version: 3.9
       - name: run integration tests
+        env:
+          SAMPLES_ENABLED: false
         run: |
           rm -rf {data,logs}
           mkdir -p logs/{backend,cmp} data/{minio,mongo,redis}
