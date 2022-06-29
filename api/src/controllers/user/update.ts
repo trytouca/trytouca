@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import * as bcrypt from 'bcryptjs'
+import * as bcrypt from 'bcrypt'
 import { NextFunction, Request, Response } from 'express'
 import { identity, omit, pick, pickBy } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
