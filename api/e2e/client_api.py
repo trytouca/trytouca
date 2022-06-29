@@ -228,7 +228,7 @@ class ApiClient:
             f"suite/{team_slug}", {"name": suite_name, "slug": suite_slug}
         )
         self.expect_status(
-            response, 200, f"create suite {suite_slug} in team {team_slug}"
+            response, 201, f"create suite {suite_slug} in team {team_slug}"
         )
 
     def suite_update(
