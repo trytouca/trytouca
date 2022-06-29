@@ -10,18 +10,17 @@ jobs:
     name: touca-self-host-install
     runs-on: ubuntu-20.04
     timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: ./api/e2e
     steps:
-      - uses: actions/checkout@v2
-      - run: docker-compose -f ../../ops/docker-compose.prod.yml up -d
+      - uses: actions/checkout@v3
+      - run: docker-compose -f ops/docker-compose.prod.yml up -d
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: run example python application
+      - name: run integration tests
         run: |
+          sleep 5
+          cd api/e2e
           pip install -r requirements.txt
           python .
       - if: always()
-        run: docker-compose -f ../../ops/docker-compose.prod.yml down
+        run: docker-compose -f ops/docker-compose.prod.yml down
