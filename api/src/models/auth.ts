@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcryptjs'
 import { once } from 'lodash'
 
 import { addSampleData } from '@/models/sampleData'
