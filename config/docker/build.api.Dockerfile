@@ -4,7 +4,7 @@ FROM node:18-alpine AS builder_dev
 
 COPY api /home
 
-RUN apk add --no-cache curl make g++ python3 yarn \
+RUN apk add --no-cache curl yarn \
     && mkdir /home/certs \
     && curl -o /home/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem \
     && yarn --cwd=/home install \
