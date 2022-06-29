@@ -4,6 +4,8 @@ name: touca-self-host-install
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
   push:
     paths:
       - "api/e2e"
