@@ -144,10 +144,6 @@ class ApiClient:
         self.expect_status(response, 204, f"make user {user} admin of platform")
 
     def team_create(self, team_slug: str, team_name: str) -> None:
-        """
-        Creates an empty team `team_name`.
-        Requires Auth Token.
-        """
         response = self.client.post_json("team", {"name": team_name, "slug": team_slug})
         self.expect_status(response, 200, f"create team {team_slug}")
 
