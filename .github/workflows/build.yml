@@ -1021,6 +1021,7 @@ jobs:
         run: |
           mkdir -p ./stage/api/certs
           tar -xf api.tar.gz -C ./stage
+          cp -r ./api ./stage/api/api
           cp -r ./api/env ./stage/api/env
           cp -r ./api/samples ./stage/api/samples
           cp -r ./api/node_modules ./stage/api/node_modules

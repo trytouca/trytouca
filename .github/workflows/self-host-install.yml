@@ -20,6 +20,7 @@ jobs:
           python-version: 3.9
       - name: run integration tests
         run: |
+          rm -rf {data,logs}
           mkdir -p logs/{backend,cmp} data/{minio,mongo,redis}
           docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca up -d
           sleep 15

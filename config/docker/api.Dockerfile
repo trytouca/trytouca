@@ -1,3 +1,15 @@
+# ---- builder stage ----
+
+FROM node:18-alpine AS builder
+
+COPY api/api /home
+
+RUN apk add --no-cache yarn \
+    && yarn --cwd=/home install --frozen-lockfile --production \
+    && yarn --cwd=/home cache clean
+
+# ---- builder stage ----
+
 FROM node:18-alpine
 
 LABEL maintainer="hello@touca.io"
@@ -12,7 +24,7 @@ COPY api/certs                      /opt/touca/certs
 COPY api/dist                       /opt/touca/dist
 COPY api/env                        /opt/touca/env
 COPY api/samples                    /opt/touca/samples
-COPY api/node_modules               /opt/touca/node_modules
+COPY --from=builder /home/node_modules  /opt/touca/node_modules
 
 EXPOSE 8081
 
