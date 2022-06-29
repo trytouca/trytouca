@@ -1,7 +1,13 @@
 <mj-wrapper full-width="full-width" padding="0px">
   <mj-section padding="0px">
     <mj-column width="100%">
-      <mj-text font-size="12px" align="center">&copy; Touca, Inc.</mj-text>
+      <mj-text font-size="12px" align="center">
+      <a href="https://touca.io/discord">Discord</a>
+      <span>-</span>
+      <a href="https://touca.io/github">GitHub</a>
+      <span>-</span>
+      <a href="https://twitter.com/trytouca">Twitter</a>
+      </mj-text>
     </mj-column>
   </mj-section>
 </mj-wrapper>
