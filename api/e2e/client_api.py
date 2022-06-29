@@ -1,17 +1,14 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import json
-import os
-import tarfile
-import tempfile
-from loguru import logger
 import requests
+import tempfile
 from client_mongo import MongoClient
+from loguru import logger
+from pathlib import Path
 from utilities import User, pathify
 
 TOUCA_API_ROOT = "http://localhost:8081"
 TOUCA_RESULTS_ARCHIVE = pathify("../samples")
-
 
 class HttpClient:
     def __init__(self, root_url: str):
@@ -277,7 +274,7 @@ class ApiClient:
         slugs = [team_slug, suite_slug, batch_slug]
         with tempfile.TemporaryDirectory() as tmpdir:
             logger.debug("created tmp directory: {}", tmpdir)
-        binary = os.path.join(TOUCA_RESULTS_ARCHIVE, f"{batch_slug}.bin")
+        binary = Path(TOUCA_RESULTS_ARCHIVE).joinpath(f"{batch_slug}.bin")
         response = self.client.post_binary(binary)
         self.expect_status(response, 204, f"submit {binary}")
         logger.success("{} submitted {}", self.user, "/".join(slugs[0:3]))

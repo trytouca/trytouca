@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
-      - run: docker-compose -f ops/docker-compose.prod.yml up -d
+      - run: docker-compose -f ops/docker-compose.test.yml up -d
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
@@ -23,4 +23,4 @@ jobs:
           pip install -r requirements.txt
           python .
       - if: always()
-        run: docker-compose -f ops/docker-compose.prod.yml down
+        run: docker-compose -f ops/docker-compose.test.yml down
