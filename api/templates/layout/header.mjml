@@ -2,9 +2,9 @@
   <mj-section>
     <mj-column width="100%">
       <mj-image
-        src="https://touca.io/logo/touca-logo-w-text.png"
+        src="https://touca.io/logo/touca-logo-w-text-bg.png"
         href="https://app.touca.io"
-        width="120px"
+        width="200px"
       ></mj-image>
     </mj-column>
   </mj-section>
