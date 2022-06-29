@@ -11,6 +11,7 @@ services:
       MINIO_PASS: toucapass
       MONGO_USER: toucauser
       MONGO_PASS: toucapass
+      EXPRESS_ROOT: ""
       SAMPLES_ENABLED: "false"
       WEBAPP_ROOT: http://localhost
     volumes:
