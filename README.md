@@ -9,10 +9,9 @@
 
 ## Continuous Regression Testing for Engineering Teams
 
-Touca is an open-source regression testing solution, built for engineers.
-
-- Track regressions between different software versions
-- Understand how your software evolves in behavior and performance
+Touca provides feedback when you write code that could break your software. It
+remotely compares the behavior and performance of your software against a
+previous trusted version and visualizes differences in near real-time.
 
 [![Touca Server](https://i.vimeocdn.com/filter/overlay?src0=https%3A%2F%2Fi.vimeocdn.com%2Fvideo%2F1420276355-a2760e21742b267f63e7e1599eefc02329dcc22c2f155f125ff8692c99161e9c-d_1920x1080&src1=http%3A%2F%2Ff.vimeocdn.com%2Fp%2Fimages%2Fcrawler_play.png)](https://vimeo.com/703039452 "Touca Quick Product Demo")
 
@@ -37,7 +36,7 @@ usage-based pricing to charge larger teams for storage and compute.
 
 ## Sneak Peek
 
-> Touca offer SDKs in Python, C++, Java, and JavaScript.
+> Touca has SDKs in Python, C++, Java, and JavaScript.
 
 [![C++ SDK](https://img.shields.io/static/v1?label=C%2B%2B&message=v1.5.2&color=blue)](https://github.com/trytouca/trytouca/tree/main/sdk/cpp)
 [![Python SDK](https://img.shields.io/pypi/v/touca?label=Python&color=blue)](https://pypi.org/project/touca/)
