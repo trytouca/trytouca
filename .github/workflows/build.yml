@@ -4,6 +4,8 @@ name: touca-build
 
 on:
   push:
+    paths-ignore:
+      - ".github/workflows/self-host-install.yml"
     branches:
       - main
       - "feature/**"

@@ -4,6 +4,13 @@ name: touca-self-host-install
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * *"
+  push:
+    paths:
+      - "api/e2e"
+      - "ops/docker-compose.test.yml"
+      - ".github/workflows/self-host-install.yml"
 
 jobs:
   touca-self-host-install:
@@ -12,15 +19,25 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
-      - run: docker-compose -f ops/docker-compose.test.yml up -d
       - uses: actions/setup-python@v2
         with:
           python-version: 3.9
+      - name: setup containers
+        run: |
+          mkdir -p logs/{backend,cmp} data/{minio,mongo,redis}
+          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca up -d
+          sleep 15
+          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca logs touca_api
       - name: run integration tests
         run: |
-          sleep 5
           cd api/e2e
           pip install -r requirements.txt
           python .
-      - if: always()
-        run: docker-compose -f ops/docker-compose.test.yml down
+      - name: show container logs
+        if: failure()
+        run: |
+          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca logs touca_api
+      - name: shutdown containers
+        if: always()
+        run: |
+          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca down

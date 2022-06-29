@@ -72,7 +72,6 @@ def setup_databases():
     logger.success("setup databases")
 
 
-@logger.catch
 def test_main():
     """
     Integration Test for the Touca Server API service. This test requires a

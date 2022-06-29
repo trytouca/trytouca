@@ -4,7 +4,9 @@ FROM node:18-alpine AS builder_dev
 
 COPY api /home
 
-RUN apk add --no-cache yarn \
+RUN apk add --no-cache curl yarn \
+    && mkdir /home/certs \
+    && curl -o /home/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem \
     && yarn --cwd=/home install \
     && yarn --cwd=/home build \
     && yarn --cwd=/home lint \
@@ -14,7 +16,7 @@ RUN apk add --no-cache yarn \
 
 FROM node:18-alpine AS builder
 
-
+COPY --from=builder_dev /home/certs             /home/certs
 COPY --from=builder_dev /home/dist              /home/dist
 COPY --from=builder_dev /home/env               /home/env
 COPY --from=builder_dev /home/package.json      /home/package.json
@@ -28,6 +30,7 @@ RUN apk add --no-cache yarn \
 
 FROM node:18-alpine
 
+COPY --from=builder /home/certs         /opt/touca/certs
 COPY --from=builder /home/dist          /opt/touca/dist
 COPY --from=builder /home/env           /opt/touca/env
 COPY --from=builder /home/samples       /opt/touca/samples
