@@ -28,6 +28,7 @@ jobs:
           cd api/e2e
           pip install -r requirements.txt
           python .
+          cd ../..
           docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca logs touca_api
       - if: always()
         run: |
