@@ -424,9 +424,9 @@ def run_workflows(args, workflows):
     Printer.print_app_footer()
 
 
-def run():
+def run(**kwargs):
     """
-    Runs registered workflows, one by one, for available the test cases.
+    Runs registered workflows, one by one, for available test cases.
 
     This function is intended to be called once from the main module as
     shown in the example below::
@@ -443,8 +443,12 @@ def run():
     if not hasattr(Workflow, "_workflows") or not Workflow._workflows:
         raise _ToucaError(_ToucaErrorCode.MissingWorkflow)
     try:
+        kwargs = {k.replace('_', '-'): v for k, v in kwargs.items()}
+        if "revision" in kwargs:
+            kwargs["version"] = kwargs.pop("revision")
         cli_options = _parse_cli_options(sys.argv[1:])
-        run_workflows(cli_options, Workflow._workflows)
+        options = {**cli_options, **kwargs}
+        run_workflows(options, Workflow._workflows)
     except _ToucaError as err:
         sys.exit(err)
     except Exception as err:
