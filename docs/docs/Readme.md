@@ -25,6 +25,4 @@ near real-time to help engineers fix regressions before they become costly.
 Touca offloads most of the work to a remote server to make regression testing
 with Touca an easier and cheaper alternative to maintaining in-house solutions.
 
----
-
 [![Touca Server](https://i.vimeocdn.com/filter/overlay?src0=https%3A%2F%2Fi.vimeocdn.com%2Fvideo%2F1420276355-a2760e21742b267f63e7e1599eefc02329dcc22c2f155f125ff8692c99161e9c-d_1920x1080&src1=http%3A%2F%2Ff.vimeocdn.com%2Fp%2Fimages%2Fcrawler_play.png)](https://vimeo.com/703039452 "Touca Quick Product Demo")

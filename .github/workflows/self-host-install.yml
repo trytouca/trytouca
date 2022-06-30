@@ -30,9 +30,8 @@ jobs:
           docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca logs touca_api
       - name: run integration tests
         run: |
-          cd api/e2e
-          pip install -r requirements.txt
-          python .
+          pip install -r api/e2e/requirements.txt
+          python api/e2e
       - name: show container logs
         if: failure()
         run: |
