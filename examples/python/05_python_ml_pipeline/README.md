@@ -1,7 +1,7 @@
 # How to track changes in the behavior of machine learning models using Touca
 
-> This example was originally published as a [blog post](https://touca.io/blog)
-> on June 30th, 2022.
+> This example was originally published as a
+> [blog post](https://touca.io/blog/blog-220630) on June 30th, 2022.
 
 Like any other software component, machine learning models evolve over time.
 Data teams frequently make changes to their models to adjust and improve their
@@ -69,6 +69,12 @@ the number of features `n_features` including the number of redundant
 spread of classes and hence the easiness of classification, with larger values
 making the task easier.
 
+> Side Note: We are ignoring potential class imbalance issues here for
+> simplicity: In the real-world, the number of stage-3 cases would be much
+> smaller than other cases. Achieving a distribution similar to real-world
+> datasets would require a few extra steps that are beyond the scope of this
+> blog post.
+
 ## Model 1: A Logistic Regression with Four Labels
 
 Our first idea is to fit a logistic regression model to classify the records
@@ -80,7 +86,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
-
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, random_state=0)
 pipeline = Pipeline([('scaler', StandardScaler()), ('LR', LogisticRegression())])
@@ -134,11 +139,7 @@ testcases.sort()
 data_dir.joinpath("testcases.txt").write_text("\n".join(testcases))
 ```
 
-You can run all the steps above via running the following command:
-
-```bash
-python src/model_v1.py
-```
+> You can run all the steps above via `python src/model_v1.py`.
 
 But how do we capture how our current model performs on these cases? How could
 we detect and describe how future versions perform in comparison with our
@@ -162,12 +163,16 @@ import touca
 import joblib
 import numpy as np
 
+# Load machine learning model from file
 pipeline = joblib.load("data/pipeline.bin")
 
 @touca.Workflow
 def pipeline_test(testcase: str):
+    # for each test case, load input data from a corresponding binary file
     testcase_input = np.fromfile(f"data/testcases/{testcase}.bin", dtype=float)
+    # perform prediction on the input data
     outcome = pipeline.predict([testcase_input])[0]
+    # submit the predicted classification to the Touca server
     touca.check("stage", outcome.item())
 ```
 
@@ -183,9 +188,17 @@ self-hosted locally or deployed in the [Cloud](https://app.touca.io), `revision`
 is any string representation of the version of our code under test, and
 `testcase_file` points to a list of our testcases.
 
-> Refer to
-> [our Documentation website](https://touca.io/docs/basics/account-setup) for
-> instructions on how to create an account and obtain your API credentials.
+> Click [here](https://touca.io/docs/basics/account-setup) for step-by-step
+> instructions to create an account and obtain your API credentials.
+
+The Touca test above, takes a list of testcase names as input, and passes each
+testcase name to our `pipeline_test` function. For each test case, we load our
+input data from a corresponding binary file, run our machine learning model
+against it, and submit the predicted classification to the Touca server.
+
+Unlike unit tests and integration tests, Touca tests do not use any assertion or
+expected values. The submitted test results are compared remotely against the
+submitted test results for a previous trusted version.
 
 ## Model 2: A Logistic Regression with Two Labels: Stage-3 vs. Other
 
@@ -202,8 +215,8 @@ than our previous 4-label classification model.
 ```python
 import numpy as np
 
-y_train_binary_class = np.array([_ if _ == 3 else -1 for _ in y_train])
-y_test_binary_class = np.array([_ if _ == 3 else -1 for _ in y_test])
+y_train_binary_class = np.array([c if c == 3 else -1 for c in y_train])
+y_test_binary_class = np.array([c if c == 3 else -1 for c in y_test])
 
 pipeline = Pipeline([('scaler', StandardScaler()), ('LR', LogisticRegression())])
 pipeline.fit(x_train, y_train_binary_class)
@@ -218,11 +231,7 @@ deploying this new version to production.
 joblib.dump(pipeline, "data/pipeline.bin")
 ```
 
-You can run the steps above using the following command:
-
-```bash
-python src/model_v2.py
-```
+> You can run all the steps above via `python src/model_v2.py`.
 
 ## Comparing against baseline
 
@@ -239,6 +248,13 @@ it can help data teams better understand the implications of deploying it to
 production, especially if there are business requirements such as policies and
 regulation that dictate that the model should behave a certain way for our list
 of testcases.
+
+> Side Note: It may be surprising to see that a binary classification model is
+> performing worse than our original model. This behavior could be attributed to
+> the large number of stage-3 cases in our dataset which could be mitigated via
+> adding a balancing step that is beyond the scope of this post. Since we now
+> have an established baseline, Touca could be very effective in investigating
+> and evaluating these future changes.
 
 We submitted a single data-point here which was sufficient for our use-case. In
 real-world where software workflows are more complex, we can submit a large
