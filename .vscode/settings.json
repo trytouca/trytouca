@@ -10,6 +10,7 @@
     "${workspaceFolder}/api/e2e",
     "${workspaceFolder}/sdk/python/examples/01_python_minimal",
     "${workspaceFolder}/sdk/python/examples/02_python_main_api",
+    "${workspaceFolder}/sdk/python/examples/05_python_ml_pipeline",
     "${workspaceFolder}/examples/python"
   ],
   "cSpell.words": [
@@ -26,6 +27,7 @@
     "gradlew",
     "jacoco",
     "javadoc",
+    "joblib",
     "lcov",
     "libcxx",
     "libstdc",
@@ -38,8 +40,11 @@
     "Roadmap",
     "sdist",
     "setuptools",
+    "sklearn",
     "sonatype",
     "syspath",
+    "testcase",
+    "testcases",
     "Touca",
     "trytouca",
     "unshallow",
