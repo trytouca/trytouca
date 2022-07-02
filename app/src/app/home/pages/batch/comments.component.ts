@@ -31,7 +31,7 @@ type PageViewFields = {
   previewShow: boolean;
 };
 
-type IFormContent = {
+type FormContent = {
   body: string;
 };
 
@@ -128,7 +128,7 @@ export class BatchCommentsComponent implements OnDestroy {
       .sort((a, b) => +new Date(a.commentTime) - +new Date(b.commentTime));
   }
 
-  onSubmit(model: IFormContent) {
+  onSubmit(model: FormContent) {
     if (
       this._commentAction.actionType !== FrontendCommentActionType.Remove &&
       !this.form.valid
@@ -230,7 +230,7 @@ export class BatchCommentsComponent implements OnDestroy {
     }
   }
 
-  private commentPost(model: IFormContent) {
+  private commentPost(model: FormContent) {
     const url = [
       'comment',
       this._batch.teamSlug,
@@ -277,7 +277,7 @@ export class BatchCommentsComponent implements OnDestroy {
     });
   }
 
-  private commentReply(model: IFormContent, commentId: string) {
+  private commentReply(model: FormContent, commentId: string) {
     const url = [
       'comment',
       this._batch.teamSlug,
@@ -307,7 +307,7 @@ export class BatchCommentsComponent implements OnDestroy {
     });
   }
 
-  private commentUpdate(model: IFormContent, commentId: string) {
+  private commentUpdate(model: FormContent, commentId: string) {
     const url = [
       'comment',
       this._batch.teamSlug,

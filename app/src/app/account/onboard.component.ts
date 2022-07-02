@@ -70,7 +70,7 @@ export class OnboardComponent implements OnDestroy {
     this._subHints.unsubscribe();
   }
 
-  onSubmit(model: FormContent) {
+  onSubmit(model: Partial<FormContent>) {
     if (!this.onboardForm.valid) {
       return;
     }

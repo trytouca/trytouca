@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy } from '@angular/core';
@@ -19,7 +19,7 @@ import { Alert, AlertType } from '@/shared/components/alert.component';
 
 import { TeamPageService } from './team.service';
 
-interface IFormContent {
+interface FormContent {
   name: string;
   slug: string;
 }
@@ -88,7 +88,7 @@ export class TeamTabSettingsComponent implements OnDestroy {
     this._subTeam.unsubscribe();
   }
 
-  onSubmit(type: EModalType, model: IFormContent) {
+  onSubmit(type: EModalType, model: FormContent) {
     switch (type) {
       case EModalType.ChangeName:
         if (!this.formName.valid) {

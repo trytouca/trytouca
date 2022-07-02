@@ -34,7 +34,7 @@ export class SigninComponent implements OnInit {
 
   alert: Alert;
   submitted: boolean;
-  prev: FormContent;
+  prev: Partial<FormContent>;
   selfHosted = environment.self_hosted;
 
   constructor(
@@ -61,7 +61,7 @@ export class SigninComponent implements OnInit {
     }
   }
 
-  onSubmit(model: FormContent) {
+  onSubmit(model: Partial<FormContent>) {
     if (this.formSignin.pristine) {
       return;
     }

@@ -84,7 +84,7 @@ export class InstallComponent implements OnDestroy {
     this._subHints.unsubscribe();
   }
 
-  submitContactInfo(model: FormContent) {
+  submitContactInfo(model: Partial<FormContent>) {
     if (!this.installForm.valid) {
       return;
     }

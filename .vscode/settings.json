@@ -14,6 +14,7 @@
     "${workspaceFolder}/examples/python"
   ],
   "cSpell.words": [
+    "autoseal",
     "bdist",
     "capsys",
     "codecov",
@@ -25,6 +26,7 @@
     "gaurav",
     "gcovr",
     "gradlew",
+    "heroicons",
     "jacoco",
     "javadoc",
     "joblib",
@@ -32,6 +34,8 @@
     "libcxx",
     "libstdc",
     "livestream",
+    "middlewares",
+    "Minio",
     "mkdir",
     "ossrh",
     "Popen",
@@ -40,6 +44,7 @@
     "Roadmap",
     "sdist",
     "setuptools",
+    "signin",
     "sklearn",
     "sonatype",
     "syspath",

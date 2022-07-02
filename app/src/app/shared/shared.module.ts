@@ -58,16 +58,18 @@ import {
   HeroExclamationCircle,
   HeroEye,
   HeroEyeOff,
-  HeroInformationCircleSolid,
   HeroLightningBolt,
   HeroMail,
-  HeroPlusSolid,
   HeroRefresh,
   HeroSpeakerphone,
   HeroStar,
   HeroTerminal,
   HeroUpload
-} from '@ng-icons/heroicons';
+} from '@ng-icons/heroicons/outline';
+import {
+  HeroInformationCircleSolid,
+  HeroPlusSolid
+} from '@ng-icons/heroicons/solid';
 import { DialogModule } from '@ngneat/dialog';
 import { TippyModule, tooltipVariation } from '@ngneat/helipopper';
 import { ClipboardModule } from 'ngx-clipboard';

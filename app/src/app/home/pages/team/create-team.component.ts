@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy } from '@angular/core';
@@ -10,7 +10,7 @@ import { ApiService } from '@/core/services';
 import { ModalComponent } from '@/home/components';
 import { AlertType } from '@/shared/components/alert.component';
 
-interface IFormContent {
+interface FormContent {
   name: string;
   slug: string;
 }
@@ -26,7 +26,7 @@ type Content = {
   linkText: string;
   buttonText: string;
   slugDesc: string;
-  onSubmit: (IFormContent) => void;
+  onSubmit: (FormContent) => void;
 };
 
 @Component({
@@ -46,7 +46,7 @@ export class TeamCreateTeamComponent
       buttonText: 'Create',
       slugDesc:
         'Unique url-friendly identifier. Used in the links to your test suites and test results.',
-      onSubmit: (model: IFormContent) => this.onCreate(model)
+      onSubmit: (model: FormContent) => this.onCreate(model)
     },
     {
       mode: Mode.Join,
@@ -54,7 +54,7 @@ export class TeamCreateTeamComponent
       linkText: 'Create a New Team',
       buttonText: 'Join',
       slugDesc: 'URL-friendly identifier of the team you wish to join.',
-      onSubmit: (model: IFormContent) => this.onJoin(model)
+      onSubmit: (model: FormContent) => this.onJoin(model)
     }
   ];
   content: Content = this.contents.find((v) => v.mode === Mode.Create);
@@ -99,7 +99,7 @@ export class TeamCreateTeamComponent
     this.content = this.contents.find((v) => v.mode === newMode);
   }
 
-  onCreate(model: IFormContent) {
+  onCreate(model: FormContent) {
     if (!this.form.valid) {
       return;
     }
@@ -133,7 +133,7 @@ export class TeamCreateTeamComponent
     });
   }
 
-  onJoin(model: IFormContent) {
+  onJoin(model: FormContent) {
     if (!this.form.valid) {
       return;
     }

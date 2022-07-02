@@ -209,7 +209,7 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
           messageId: '$_id',
           suiteId: { $arrayElemAt: ['$suiteDoc._id', 0] },
           suiteName: { $arrayElemAt: ['$suiteDoc.slug', 0] },
-          teamSlug: suite.team
+          teamSlug: suite.team.toString()
         }
       }
     ])
