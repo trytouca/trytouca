@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, SecurityContext } from '@angular/core';
@@ -11,7 +11,7 @@ import { ApiService } from '@/core/services';
 import { ModalComponent } from '@/home/components';
 import { AlertType } from '@/shared/components/alert.component';
 
-interface IFormContent {
+interface FormContent {
   reason: string;
 }
 
@@ -40,7 +40,7 @@ export class BatchPromoteComponent extends ModalComponent {
     this.elements = dialogRef.data as { batch: BatchLookupResponse };
   }
 
-  onSubmit(model: IFormContent) {
+  onSubmit(model: FormContent) {
     if (!this.form.valid) {
       return;
     }

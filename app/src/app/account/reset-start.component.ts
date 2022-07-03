@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
@@ -38,7 +38,7 @@ export class ResetStartComponent {
 
   constructor(private apiService: ApiService) {}
 
-  onSubmit(model: FormContent) {
+  onSubmit(model: Partial<FormContent>) {
     if (this.formReset.pristine) {
       return;
     }

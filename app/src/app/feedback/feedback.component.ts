@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
@@ -8,7 +8,7 @@ import { ApiService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';
 import { errorLogger } from '@/shared/utils/errorLogger';
 
-type IFormContent = {
+type FormContent = {
   body: string;
   name: string;
   page: string;
@@ -35,7 +35,7 @@ export class FeedbackComponent {
   });
   alert: Alert;
   submitted: boolean;
-  prev: IFormContent;
+  prev: Partial<FormContent>;
 
   constructor(private apiService: ApiService) {}
 
@@ -46,7 +46,7 @@ export class FeedbackComponent {
     );
   }
 
-  onSubmit(model: IFormContent) {
+  onSubmit(model: Partial<FormContent>) {
     if (!this.feedbackForm.valid) {
       this.alert = { type: AlertType.Danger, text: 'Your message is invalid.' };
       return;

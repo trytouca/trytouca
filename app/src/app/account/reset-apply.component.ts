@@ -58,7 +58,7 @@ export class ResetApplyComponent {
 
   constructor(private router: Router, private apiService: ApiService) {}
 
-  onSubmit(model: FormContent) {
+  onSubmit(model: Partial<FormContent>) {
     if (!this.formReset.valid) {
       return;
     }

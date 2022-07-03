@@ -30,7 +30,7 @@ import { Alert, AlertType } from '@/shared/components/alert.component';
 
 import { SuitePageService, SuitePageTabType } from './suite.service';
 
-interface IFormContent {
+interface FormContent {
   name: string;
   slug: string;
   retainFor: string;
@@ -126,7 +126,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
     this._subSuite.unsubscribe();
   }
 
-  onSubmit(type: EModalType, model: IFormContent) {
+  onSubmit(type: EModalType, model: FormContent) {
     switch (type) {
       case EModalType.ChangeName:
         if (!this.formName.valid) {

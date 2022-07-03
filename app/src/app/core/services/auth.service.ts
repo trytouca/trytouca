@@ -46,7 +46,7 @@ export class AuthService {
     return expiresAt && new Date() < new Date(expiresAt);
   }
 
-  private google_initialize(): Observable<gapi.auth2.GoogleAuth> {
+  private google_initialize(): Observable<gapi.auth2.GoogleAuthBase> {
     if (this.authInstance !== undefined) {
       return of(this.authInstance);
     }

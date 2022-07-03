@@ -9,7 +9,7 @@ import { ApiService } from '@/core/services';
 import { ModalComponent } from '@/home/components';
 import { AlertType } from '@/shared/components/alert.component';
 
-type IFormContent = {
+type FormContent = {
   name: string;
   email: string;
 };
@@ -39,7 +39,7 @@ export class TeamInviteComponent extends ModalComponent {
     this.elements = dialogRef.data as { teamSlug: string };
   }
 
-  onSubmit(model: IFormContent) {
+  onSubmit(model: FormContent) {
     if (!this.form.valid) {
       return;
     }

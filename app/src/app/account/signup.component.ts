@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, NgZone } from '@angular/core';
@@ -46,7 +46,7 @@ export class SignupComponent {
     private zone: NgZone
   ) {}
 
-  onSubmit(model: FormContent) {
+  onSubmit(model: Partial<FormContent>) {
     if (!this.formSignup.valid) {
       return;
     }

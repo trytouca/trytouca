@@ -96,7 +96,7 @@ export class SettingsTabProfileComponent implements OnDestroy {
     }
   }
 
-  onSubmit(model: FormContent) {
+  onSubmit(model: Partial<FormContent>) {
     if (!this.accountSettingsForm.valid) {
       return;
     }
