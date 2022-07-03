@@ -56,8 +56,8 @@ jobs:
         if: |
           steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
         run: |
-          aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
-          aws s3 sync ./docs/build/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
+          aws s3 sync ./docs/build/ ${{ secrets.AWS_BUCKET_WEB }}/docs/ --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
+          aws s3 sync ./docs/build/ ${{ secrets.AWS_BUCKET_WEB }}/docs/ --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
 
   lint-links:
     name: lint-links
@@ -198,7 +198,7 @@ jobs:
           && github.ref == 'refs/heads/main'
         run: |
           tar -zcf cpp-docs-reference.tar.gz local/docs/html
-          aws s3 cp cpp-docs-reference.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp cpp-docs-reference.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
 
   build-sdk-cpp-coverage:
     name: build-sdk-cpp-coverage
@@ -237,7 +237,7 @@ jobs:
         if: steps.changes.outputs.sdk_cpp == 'true'
         run: |
           tar -zcf cpp-test-coverage.tar.gz ./local/coverage/html
-          aws s3 cp cpp-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp cpp-test-coverage.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: upload coverage to codecov
         if: steps.changes.outputs.sdk_cpp == 'true'
         uses: codecov/codecov-action@v2
@@ -310,13 +310,13 @@ jobs:
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           tar -zcf java-docs-external.tar.gz touca/build/docs/javadoc
-          aws s3 cp java-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp java-docs-external.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           tar -zcf java-test-coverage.tar.gz touca/build/reports/jacoco/test/html
-          aws s3 cp java-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp java-test-coverage.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: cleanup gradle cache
         if: steps.changes.outputs.sdk_java == 'true'
         run: |
@@ -398,13 +398,13 @@ jobs:
           'push'
         run: |
           tar -zcf js-node-docs-external.tar.gz local/docs
-          aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
         run: |
           tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
-          aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: upload coverage to codecov
         if: |
           steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
@@ -483,13 +483,13 @@ jobs:
           == 'push'
         run: |
           tar -zcf python-docs-external.tar.gz local/docs
-          aws s3 cp python-docs-external.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp python-docs-external.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
         run: |
           tar -zcf python-test-coverage.tar.gz local/tests
-          aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: build package distributable
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9
@@ -730,8 +730,8 @@ jobs:
         if: |
           steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
         run: |
-          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
-          aws s3 sync ./web/out/ ${{ secrets.AWS_PROD_S3_BUCKET_WEB }} --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
+          aws s3 sync ./web/out/ ${{ secrets.AWS_BUCKET_WEB }} --exclude "*.html" --exclude "*.xml" --cache-control public,max-age=31536000,immutable
+          aws s3 sync ./web/out/ ${{ secrets.AWS_BUCKET_WEB }} --exclude "*" --include "*.html" --include "*.xml" --cache-control no-cache
 
   build-api:
     name: build-api
@@ -755,7 +755,7 @@ jobs:
         id: params
         run: |
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
 
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.api == 'true'
@@ -789,7 +789,7 @@ jobs:
           aws s3 cp api-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp api-docs-internal.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp api-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 sync ./api/local/docs/external/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }}/docs/api/ --include "*" --cache-control no-cache
+          aws s3 sync ./api/local/docs/external/ ${{ secrets.AWS_BUCKET_APP }}/docs/api/ --include "*" --cache-control no-cache
 
       - name: pull api from aws
         if: steps.changes.outputs.api == 'false'
@@ -824,7 +824,7 @@ jobs:
         id: params
         run: |
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
 
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.app == 'true'
@@ -849,8 +849,8 @@ jobs:
         run: |
           aws s3 cp app.tar.gz ${{ steps.params.outputs.buckets }}/
           yarn --cwd=app build --configuration=cloud --delete-output-path
-          aws s3 sync ./app/dist/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }} --exclude "*" --include "*.*.js" --include "*.*.css" --cache-control public,max-age=31536000,immutable
-          aws s3 sync ./app/dist/ ${{ secrets.AWS_PROD_S3_BUCKET_APP }} --exclude "*.*.js" --exclude "*.*.css" --cache-control no-cache
+          aws s3 sync ./app/dist/ ${{ secrets.AWS_BUCKET_APP }} --exclude "*" --include "*.*.js" --include "*.*.css" --cache-control public,max-age=31536000,immutable
+          aws s3 sync ./app/dist/ ${{ secrets.AWS_BUCKET_APP }} --exclude "*.*.js" --exclude "*.*.css" --cache-control no-cache
       - name: pull app from aws
         if: steps.changes.outputs.app == 'false'
         run: aws s3 cp ${{ steps.params.outputs.buckets }}/app.tar.gz .
@@ -883,7 +883,7 @@ jobs:
         id: params
         run: |
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
 
       - uses: actions/setup-python@v1
         if: steps.changes.outputs.cmp == 'true'
@@ -940,7 +940,7 @@ jobs:
           git fetch --prune --unshallow --tags
           echo "::set-output name=version::1.4.0"
           echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' || steps.changes.outputs.cmp == 'true') }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_DEV_S3_BUCKET_BUILD }}/v1.4.0"
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
       - uses: actions/download-artifact@v2
         if: steps.changes.outputs.api == 'true'
         with:
@@ -986,15 +986,15 @@ jobs:
         uses: docker/login-action@v2
         if: steps.params.outputs.release == 'true'
         with:
-          registry: ${{ secrets.AWS_PROD_ECR_REPO }}
+          registry: ${{ secrets.AWS_ECR }}
       - name: push ops to aws
         if: |
           steps.changes.outputs.ops == 'true' && steps.params.outputs.release == 'true'
         run: |
           tar -zcf deployment-scripts.tar.gz ops
           aws s3 cp deployment-scripts.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 cp ops/install.sh ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/install.sh
-          aws s3 cp ops/install.dev.sh ${{ secrets.AWS_PROD_S3_BUCKET_WEB }}/install.dev.sh
+          aws s3 cp ops/install.sh ${{ secrets.AWS_BUCKET_WEB }}/install.sh
+          aws s3 cp ops/install.dev.sh ${{ secrets.AWS_BUCKET_WEB }}/install.dev.sh
 
       - name: prepare resources for building api docker image
         if: steps.changes.outputs.api == 'true'
@@ -1012,7 +1012,7 @@ jobs:
         with:
           images: |
             touca/touca-api
-            ${{ secrets.AWS_PROD_ECR_REPO }}/touca-api
+            ${{ secrets.AWS_ECR }}/touca-api
           tags: |
             type=semver,pattern={{version}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
@@ -1051,7 +1051,7 @@ jobs:
         with:
           images: |
             touca/touca-app
-            ${{ secrets.AWS_PROD_ECR_REPO }}/touca-app
+            ${{ secrets.AWS_ECR }}/touca-app
           tags: |
             type=semver,pattern={{version}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
@@ -1090,7 +1090,7 @@ jobs:
         with:
           images: |
             touca/touca-cmp
-            ${{ secrets.AWS_PROD_ECR_REPO }}/touca-cmp
+            ${{ secrets.AWS_ECR }}/touca-cmp
           tags: |
             type=semver,pattern={{version}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
