@@ -6,6 +6,7 @@ on:
   push:
     paths-ignore:
       - ".github/workflows/self-host-install.yml"
+      - ".github/workflows/test.yml"
     branches:
       - main
       - "feature/**"
