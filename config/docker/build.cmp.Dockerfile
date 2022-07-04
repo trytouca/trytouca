@@ -28,12 +28,20 @@ USER touca
 
 RUN conan profile new default --detect \
   && conan profile update settings.compiler.libcxx=libstdc++11 default \
-  && conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp \
+  && conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp --insert=0 \
   && cd /opt/cmp && ./build.sh
 
 # ---- production image ----
 
 FROM ubuntu:focal
+
+LABEL maintainer="hello@touca.io"
+LABEL org.opencontainers.image.title="touca-cmp"
+LABEL org.opencontainers.image.description="Touca Comparator"
+LABEL org.opencontainers.image.url="https://touca.io/"
+LABEL org.opencontainers.image.documentation="https://touca.io/docs"
+LABEL org.opencontainers.image.vendor="Touca, Inc."
+LABEL org.opencontainers.image.authors="hello@touca.io"
 
 COPY --from=builder /opt/cmp/local/dist                 /usr/local
 COPY --from=builder /opt/cmp/config/config.prod.json    /usr/local/etc/config.json

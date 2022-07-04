@@ -951,11 +951,6 @@ jobs:
         with:
           name: app-bundle
           path: ${{ github.workspace }}
-      - uses: actions/download-artifact@v2
-        if: steps.changes.outputs.cmp == 'true'
-        with:
-          name: cmp-bundle
-          path: ${{ github.workspace }}
       - uses: actions/setup-node@v2
         if: steps.changes.outputs.api == 'true'
       - uses: actions/cache@v2
@@ -1077,12 +1072,6 @@ jobs:
           repository: touca/touca-app
           readme-filepath: ./README.md
 
-      - name: prepare resources for building cmp docker image
-        if: steps.changes.outputs.cmp == 'true'
-        run: |
-          mkdir -p ./stage
-          tar -xf cmp.tar.gz -C ./stage
-          mkdir -p ./stage/cmp/config && cp ./cmp/config/config.prod.json ./stage/cmp/config/
       - name: extract metadata for cmp docker image
         uses: docker/metadata-action@v4
         if: steps.changes.outputs.cmp == 'true'
@@ -1099,8 +1088,8 @@ jobs:
         uses: docker/build-push-action@v3
         if: steps.changes.outputs.cmp == 'true'
         with:
-          context: stage
-          file: ./config/docker/cmp.Dockerfile
+          context: .
+          file: ./config/docker/build.cmp.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ steps.params.outputs.release == 'true' }}
           tags: ${{ steps.meta-cmp.outputs.tags }}
