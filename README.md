@@ -164,7 +164,6 @@ scale.
 
 If you are new to Touca, the best place to start is our
 [documentation website](https://touca.io/docs).
-[![Verified on Openbase](https://badges.openbase.com/python/verified/touca.svg?token=yaH5lg5HEMuyNyoksrFf8yMW8qyW1hfQc97CAioBhbU=)](https://openbase.com/python/touca?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge)
 
 ## Community
 

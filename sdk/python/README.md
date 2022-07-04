@@ -1,4 +1,6 @@
-# Touca SDK For Python
+# Touca Python SDK
+
+Write regression tests, the easy way.
 
 [![PyPI](https://img.shields.io/pypi/v/touca?color=blue)](https://pypi.org/project/touca/)
 [![License](https://img.shields.io/pypi/l/touca?color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/python/LICENSE)
@@ -6,6 +8,30 @@
 [![Build Status](https://img.shields.io/github/workflow/status/trytouca/trytouca/touca-build)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
 [![Documentation Status](https://readthedocs.org/projects/touca-python/badge/?version=latest)](https://touca-python.readthedocs.io)
 [![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/trytouca)](https://app.codecov.io/gh/trytouca/trytouca)
+
+```python
+import touca
+from code_under_test import important_workflow
+
+@touca.Workflow
+def test_important_workflow(testcase: str):
+    touca.check("output", important_workflow(testcase))
+```
+
+## Table of Contents
+
+- [Requirements](#requirements)
+- [Install](#install)
+- [Usage](#usage)
+- [Documentation](#documentation)
+- [Community](#community)
+- [Contributing](#contributing)
+- [FAQ](#faq)
+- [License](#license)
+
+## Requirements
+
+- Python v3.6 or newer
 
 ## Install
 
@@ -15,16 +41,9 @@ You can install Touca with [pip](https://pypi.org/project/touca):
 pip install touca
 ```
 
-We formally support Python v3.6 and newer on Linux, macOS, and Windows
-platforms.
+## Usage
 
-## Sneak Peak
-
-> For a more thorough guide of how to use Touca SDK for Python, check out our
-> [documentation website](https://touca.io/docs/sdk/python/quickstart/).
-
-Let us imagine that we want to test a software workflow that reports whether a
-given number is prime.
+Suppose we want to test a software that checks whether a given number is prime.
 
 ```python
 def is_prime(number: int):
@@ -34,19 +53,19 @@ def is_prime(number: int):
     return 1 < number
 ```
 
-We can use unit testing in which we hard-code a set of input numbers and list
-our expected return value for each input. In this example, the input and output
-of our code under test are a number and a boolean. If we were testing a video
-compression algorithm, they may have been video files. In that case:
+We can use unit testing in which we verify that the _actual_ output of our
+function matches our _expected_ output, for a small set of possible inputs.
 
-- Describing the expected output for a given video file would be difficult.
-- When we make changes to our compression algorithm, accurately reflecting those
-  changes in our expected values would be time-consuming.
-- We would need a large number of input video files to gain confidence that our
-  algorithm works correctly.
+```python
+def test_is_prime():
+    assert is_prime(2) == True
+    assert is_prime(4) == False
+```
 
-Touca makes it easier to continuously test workflows of any complexity and with
-any number of test cases.
+Touca is different from unit testing:
+
+- Touca tests do not hard-code input values.
+- Touca tests do not hard-code expected outcome.
 
 ```python
 import touca
@@ -54,30 +73,37 @@ from is_prime import is_prime
 
 @touca.Workflow
 def is_prime_test(testcase: str):
-    touca.check("is_prime_output", is_prime(int(testcase)))
+    touca.check("output", is_prime(int(testcase)))
 ```
 
-This is slightly different from a typical unit test:
+With Touca, instead of verifying that the actual behavior of our software
+matches our expected behavior, we compare it against the actual behavior of a
+previous _baseline_ version. This approach has two benefits:
 
-- Touca tests do not use expected values.
-- Touca tests do not hard-code input values.
+- We can test our software with a much larger set of possible inputs.
+- We won't need to change our test code when the expected behavior of our
+  software changes.
 
-With Touca, we can define how to run our code under test for any given test
-case. We can capture values of interesting variables and runtime of important
-functions to describe the behavior and performance of our workflow for that test
-case.
+Touca allows capturing values of any number of variables and runtime of any
+number of functions to describe the actual behavior and performance of our
+software.
+
+This approach is similar to snapshot testing where, for each test case, we store
+the actual output of our software in a _snapshot file_, to compare outputs of
+future versions against them. But unlike snapshot tests, Touca tests submit our
+captured data to a remote server that automatically compares it against our
+baseline and visualizes any differences.
 
 We can run Touca tests with any number of inputs from the command line:
 
 ```bash
-touca config set api-key="<your_key>"
-touca config set api-url="https://api.touca.io/@/tutorial"
+touca config set api-key="<your_api_key>"
+touca config set api-url="<your_api_url>"
 touca test --revision=1.0 --testcase 19 51 97
 ```
 
-Where `TOUCA_API_KEY` can be obtained from the Touca server at
-[app.touca.io](https://app.touca.io). This command produces the following
-output:
+Where API Key and URL can be obtained from [app.touca.io](https://app.touca.io)
+or your self-hosted server. This command produces the following output:
 
 ```text
 
@@ -106,6 +132,47 @@ specially useful if our workflow has multiple stages. We can capture the output
 of each stage without publicly exposing its API. When any stage changes behavior
 in a future version of our software, our captured data points will help find the
 root cause more easily.
+
+## Documentation
+
+- [Documentation Website](https://touca.io/docs): Exhaustive source of
+  information about Touca and its various components. If you are new to Touca,
+  our _[Getting Started](https://touca.io/docs/basics/quickstart/)_ guide is the
+  best place to start.
+- [Python SDK API Reference](https://app.touca.io/docs/sdk/python/api.html):
+  Auto-generated source code documentation for Touca Python SDK with explanation
+  about individual API functions and examples for how to use them.
+- [Python Examples](https://github.com/trytouca/trytouca/tree/main/examples/python):
+  Sample Python projects [on GitHub](https://touca.io/github) that serve as
+  examples for how to use Touca to track regressions in real-world software.
+
+## Community
+
+We hang on [Discord](https://touca.io/discord). Come say hi! We love making new
+friends. If you need help, have any questions, or like to contribute or provide
+feedback, that's the best place to be.
+
+## Contributing
+
+We welcome all forms of contributions, from adding new features to improving
+documentation and sharing feedback.
+
+## FAQ
+
+- Should I install Touca as a development dependency?
+
+  Yes, unless you like to capture data-points that are not accessible through
+  your software's public API. Touca data capturing functions (e.g. `touca.check`
+  and `touca.scoped_timer`) are no-op in production environments. They only work
+  when called from a `@touca.Workflow` context.
+
+- How is Touca making money?
+
+  Touca is open-source software that you can self-host for free. Touca, Inc.
+  operates [Touca Cloud](https://app.touca.io): a managed cloud instance of
+  Touca with additional enterprise-ready features. We have a free plan and
+  leverage usage-based pricing to charge for storage and service. Visit our
+  [pricing page](https://touca.io/pricing) to learn more.
 
 ## License
 
