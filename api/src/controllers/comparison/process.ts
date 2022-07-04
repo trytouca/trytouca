@@ -1,10 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
 import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import logger from '@/utils/logger'
-import * as minio from '@/utils/minio'
+import { objectStore } from '@/utils/store'
 
 /**
  * @todo validate incoming json data against a json schema
@@ -41,7 +41,7 @@ export async function comparisonProcess(
 
   // insert comparison result in json format into object storage database
 
-  const doc = await minio.addComparison(
+  const doc = await objectStore.addComparison(
     comparison._id.toHexString(),
     JSON.stringify(input.body, null)
   )

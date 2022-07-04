@@ -1,8 +1,8 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import logger from '@/utils/logger'
-import * as minio from '@/utils/minio'
+import { objectStore } from '@/utils/store'
 
 export async function comparisonRemove(
   jobs: IComparisonDocument[]
@@ -10,7 +10,9 @@ export async function comparisonRemove(
   try {
     // remove comparison results from object storage
 
-    const removal = jobs.map((job) => minio.removeComparison(job.contentId))
+    const removal = jobs.map((job) =>
+      objectStore.removeComparison(job.contentId)
+    )
     await Promise.all(removal)
     logger.debug('removed %d comparison results', jobs.length)
 

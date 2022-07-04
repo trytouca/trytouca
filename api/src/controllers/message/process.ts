@@ -1,10 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
 import { IMessageDocument, MessageModel } from '@/schemas/message'
 import logger from '@/utils/logger'
-import * as minio from '@/utils/minio'
+import { objectStore } from '@/utils/store'
 
 /**
  * @todo validate incoming json data against a json schema
@@ -35,12 +35,12 @@ export async function messageProcess(
 
   if (message.contentId) {
     logger.warn('%s: message already processed', messageId)
-    await minio.removeResult(message._id.toHexString())
+    await objectStore.removeResult(message._id.toHexString())
   }
 
   // insert message in json format into object storage
 
-  const doc = await minio.addResult(
+  const doc = await objectStore.addResult(
     message._id.toHexString(),
     JSON.stringify(input.body, null)
   )

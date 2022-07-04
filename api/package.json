@@ -33,6 +33,7 @@
     "dev:debug": "nodemon --inspect ./src/server.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.121.0",
     "@hubspot/api-client": "^7.0.1",
     "@sindresorhus/df": "^3.1.1",
     "archiver": "^5.3.1",
@@ -53,7 +54,6 @@
     "jws": "^4.0.0",
     "lodash": "^4.17.21",
     "marked": "^4.0.17",
-    "minio": "^7.0.28",
     "mixpanel": "^0.16.0",
     "module-alias": "^2.2.2",
     "mongoose": "^6.4.2",

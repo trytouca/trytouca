@@ -12,8 +12,8 @@ import { IUser } from '@/schemas/user'
 import type { BackendBatchComparisonItemCommon } from '@/types/backendtypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
+import { objectStore } from '@/utils/store'
 
 type ICompareParamsElement = {
   dstSuite?: ISuiteDocument
@@ -222,7 +222,9 @@ export async function elementCompare(
     .then(async () => {
       const isProcessed = output.contentId
       if (isProcessed) {
-        output.cmp = JSON.parse(await minio.getComparison(output.contentId))
+        output.cmp = JSON.parse(
+          await objectStore.getComparison(output.contentId)
+        )
         logger.info(
           '%s: compared %s with %s',
           user.username,

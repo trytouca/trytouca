@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { comparisonRemove } from '@/models/comparison'
 import { MessageInfo } from '@/models/messageInfo'
@@ -7,7 +7,7 @@ import { ComparisonModel } from '@/schemas/comparison'
 import { ElementModel } from '@/schemas/element'
 import { MessageModel } from '@/schemas/message'
 import logger from '@/utils/logger'
-import * as minio from '@/utils/minio'
+import { objectStore } from '@/utils/store'
 
 export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
   const tuple = msgInfo.name()
@@ -58,7 +58,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
 
     // remove JSON representation of message from object storage
 
-    await minio.removeResult(msgInfo.messageId.toHexString())
+    await objectStore.removeResult(msgInfo.messageId.toHexString())
 
     // remove message from database
 
@@ -86,7 +86,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
 
     // remove binary representation of message from object storage
 
-    await minio.removeMessage(msgInfo.messageId.toHexString())
+    await objectStore.removeMessage(msgInfo.messageId.toHexString())
 
     logger.info('%s: removed message', tuple)
     return true
