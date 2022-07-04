@@ -188,10 +188,6 @@ export async function buildPdfReport(
     Payload: JSON.stringify({ html })
   }
   const lambda = new Lambda({
-    credentials: {
-      accessKeyId: config.aws.accessKeyId,
-      secretAccessKey: config.aws.secretAccessKey
-    },
     region: config.aws.region
   })
   const response = await lambda.invoke(params).promise()

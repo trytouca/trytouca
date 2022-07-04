@@ -27,11 +27,7 @@ export async function ctrlBatchExportPDF(
     return next({ errors: ['batch is not sealed'], status: 400 })
   }
 
-  if (
-    !config.aws.accessKeyId ||
-    !config.aws.secretAccessKey ||
-    !config.aws.lambdaPdf
-  ) {
+  if (!config.aws.lambdaPdf) {
     return next({
       errors: ['not configured to perform this operation'],
       status: 426
