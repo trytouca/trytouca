@@ -10,8 +10,8 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import * as minio from '@/utils/minio'
 import { MessageBuffer, Messages } from '@/utils/schema'
+import { objectStore } from '@/utils/store'
 import { analytics, EActivity } from '@/utils/tracker'
 
 function toChunkFiles(messages: Buffer[]): ArrayBuffer[] {
@@ -80,7 +80,7 @@ export async function ctrlBatchExportZIP(
 
   const elements = await MessageModel.find({ batchId: batch._id }, { _id: 1 })
   const messages: Buffer[] = await Promise.all(
-    elements.map(async (v) => minio.getMessage(v.id))
+    elements.map(async (v) => objectStore.getMessage(v.id))
   )
   const chunks = toChunkFiles(messages)
 

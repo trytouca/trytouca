@@ -15,9 +15,9 @@ import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
-import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
 import { Message, Messages } from '@/utils/schema'
+import { objectStore } from '@/utils/store'
 import { analytics, EActivity } from '@/utils/tracker'
 
 type TeamSlug = string
@@ -188,7 +188,7 @@ async function processElement(
 
     // store message in binary format in object storage
 
-    await minio.addMessage(message._id.toHexString(), submission.raw)
+    await objectStore.addMessage(message._id.toHexString(), submission.raw)
 
     // update submission metadata with id of its parent nodes.
     // this is not an ideal design pattern but it removes the need
@@ -667,12 +667,12 @@ async function ensureMessage(
     .cursor()
     .eachAsync(
       (job: IComparisonDocument) =>
-        minio.removeComparison(job._id.toHexString()),
+        objectStore.removeComparison(job._id.toHexString()),
       { parallel: 10 }
     )
 
   if (message.contentId) {
-    minio.removeResult(message._id.toHexString())
+    objectStore.removeResult(message._id.toHexString())
   }
 
   await ComparisonModel.deleteOne({ $or: query })

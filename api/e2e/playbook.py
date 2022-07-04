@@ -44,6 +44,9 @@ class Playbook:
     def account_reset_request(self, user: User, args):
         ApiClient().account_reset_request(user)
 
+    def server_install(self, user: User, args):
+        ApiClient().server_install(user)
+
     def team_create(self, user: User, args):
         team_slug, team_name = args
         with ApiClient(user) as api_client:

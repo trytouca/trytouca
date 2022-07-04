@@ -22,10 +22,10 @@ moduleAlias.addAliases({
 import { MetaModel } from '@/schemas/meta'
 import { config, configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
-import { makeConnectionMinio } from '@/utils/minio'
 import { makeConnectionMongo, shutdownMongo } from '@/utils/mongo'
 import { makeConnectionRedis, shutdownRedis } from '@/utils/redis'
 import { connectToServer } from '@/utils/routing'
+import { objectStore } from '@/utils/store'
 
 import router from './routes'
 import {
@@ -65,8 +65,9 @@ app.use((err, req, res, next) => {
 
 let server
 async function launch(application) {
+  const makeConnectionStore = () => objectStore.makeConnection()
   for (const { service, name } of [
-    { service: makeConnectionMinio, name: 'object storage' },
+    { service: makeConnectionStore, name: 'object store' },
     { service: makeConnectionMongo, name: 'database' },
     { service: makeConnectionRedis, name: 'cache server' }
   ]) {

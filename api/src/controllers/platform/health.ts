@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
@@ -6,8 +6,8 @@ import mongoose from 'mongoose'
 import { MetaModel } from '@/schemas/meta'
 import { configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
-import * as minio from '@/utils/minio'
 import { rclient } from '@/utils/redis'
+import { objectStore } from '@/utils/store'
 
 export async function platformHealth(
   req: Request,
@@ -26,7 +26,7 @@ export async function platformHealth(
   }
 
   // check that minio and mongodb are up and running
-  const minioConnection = await minio.status()
+  const minioConnection = await objectStore.status()
   const mongodbConnection = mongoose.connection.readyState === 1
   const response = {
     mail: configMgr.hasMailTransport(),

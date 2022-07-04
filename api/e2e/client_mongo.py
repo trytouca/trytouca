@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import bson
 import pymongo
@@ -83,3 +83,13 @@ class MongoClient:
             {"email": user.email}, {"_id": 0, "resetKey": 1}
         )
         return result.get("resetKey")
+
+    def install_server(self, user: User) -> None:
+        self.client.get_collection('meta').insert_one({
+            "contact": {
+                "company": "Touca, Inc.",
+                "email": user.email,
+                "name": user.fullname
+            },
+            "telemetry": False
+        })

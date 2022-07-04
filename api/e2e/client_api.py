@@ -143,6 +143,9 @@ class ApiClient:
         )
         self.expect_status(response, 204, f"make user {user} admin of platform")
 
+    def server_install(self, user: User) -> None:
+        MongoClient().install_server(user)
+
     def team_create(self, team_slug: str, team_name: str) -> None:
         response = self.client.post_json("team", {"name": team_name, "slug": team_slug})
         self.expect_status(response, 200, f"create team {team_slug}")
