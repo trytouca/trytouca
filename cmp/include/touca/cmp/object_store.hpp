@@ -21,7 +21,7 @@ class Testcase;
 struct MinioClient {
   MinioClient(const Options& options);
   ~MinioClient();
-  std::vector<std::string> list_buckets() const;
+  bool status_check() const;
   void get_object(const std::string& bucket_name, const std::string& object_key,
                   std::vector<uint8_t>& buffer) const;
 
