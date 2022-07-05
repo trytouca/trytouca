@@ -157,19 +157,20 @@ class S3ObjectStore extends ObjectStore {
   }
 }
 
-export const objectStore = config.isCloudHosted
-  ? new S3ObjectStore({ region: config.minio.region })
-  : new S3ObjectStore({
-      credentials: {
-        accessKeyId: config.minio.user,
-        secretAccessKey: config.minio.pass
-      },
-      endpoint: {
-        protocol: 'http',
-        hostname: config.minio.host,
-        port: config.minio.port,
-        path: '/'
-      },
-      forcePathStyle: true,
-      region: config.minio.region
-    })
+export const objectStore =
+  config.minio.host === 's3.amazonaws.com'
+    ? new S3ObjectStore({ region: config.minio.region })
+    : new S3ObjectStore({
+        credentials: {
+          accessKeyId: config.minio.user,
+          secretAccessKey: config.minio.pass
+        },
+        endpoint: {
+          protocol: 'http',
+          hostname: config.minio.host,
+          port: config.minio.port,
+          path: '/'
+        },
+        forcePathStyle: true,
+        region: config.minio.region
+      })

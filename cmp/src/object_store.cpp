@@ -13,9 +13,6 @@
 #include "touca/devkit/deserialize.hpp"
 
 MinioClient::MinioClient(const Options& options) {
-  setenv("AWS_REGION", options.minio_region.c_str(), true);
-  setenv("AWS_EC2_METADATA_DISABLED", "TRUE", true);
-
   _aws_sdk_options = std::make_unique<Aws::SDKOptions>();
   if (options.log_level == "debug") {
     _aws_sdk_options->loggingOptions.logLevel =
@@ -30,6 +27,9 @@ MinioClient::MinioClient(const Options& options) {
     _aws_client = std::make_unique<Aws::S3::S3Client>(aws_config);
     return;
   }
+
+  setenv("AWS_REGION", options.minio_region.c_str(), true);
+  setenv("AWS_EC2_METADATA_DISABLED", "TRUE", true);
 
   if (!options.minio_proxy_host.empty()) {
     aws_config.proxyHost = options.minio_proxy_host;
