@@ -6,6 +6,7 @@
 #include "aws/core/auth/AWSCredentialsProvider.h"
 #include "aws/s3/S3Client.h"
 #include "aws/s3/model/GetObjectRequest.h"
+#include "aws/s3/model/HeadBucketRequest.h"
 #include "fmt/core.h"
 #include "touca/cmp/logger.hpp"
 #include "touca/core/testcase.hpp"
@@ -47,16 +48,17 @@ MinioClient::MinioClient(const Options& options) {
 
 MinioClient::~MinioClient() { Aws::ShutdownAPI(*_aws_sdk_options); }
 
-std::vector<std::string> MinioClient::list_buckets() const {
-  std::vector<std::string> bucket_names;
-  const auto& outcome = _aws_client->ListBuckets();
-  if (outcome.IsSuccess()) {
-    const auto& buckets = outcome.GetResult().GetBuckets();
-    for (const auto& bucket : buckets) {
-      bucket_names.push_back(bucket.GetName());
+bool MinioClient::status_check() const {
+  for (const std::string& name :
+       {"touca-comparisons", "touca-messages", "touca-results"}) {
+    Aws::S3::Model::HeadBucketRequest request;
+    request.WithBucket(name);
+    const auto& outcome = _aws_client->HeadBucket(request);
+    if (!outcome.IsSuccess()) {
+      return false;
     }
   }
-  return bucket_names;
+  return true;
 }
 
 void MinioClient::get_object(const std::string& bucket_name,
@@ -81,13 +83,7 @@ void MinioClient::get_object(const std::string& bucket_name,
 ObjectStore::ObjectStore(const Options& options)
     : _minio(MinioClient(options)) {}
 
-bool ObjectStore::status_check() const {
-  const auto& buckets = _minio.list_buckets();
-  for (const auto& bucket : buckets) {
-    touca::log_debug("accessed bucket: {}", bucket);
-  }
-  return buckets.size() == 3;
-}
+bool ObjectStore::status_check() const { return _minio.status_check(); }
 
 std::shared_ptr<touca::Testcase> ObjectStore::get_message(
     const std::string& key) const {
