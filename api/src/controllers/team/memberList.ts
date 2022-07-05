@@ -139,7 +139,7 @@ async function teamMemberListImpl(
         }
       }
     },
-    { $unset: ['_id'] }
+    { $project: { _id: 0 } }
   ])
 
   const output: TeamMemberListResponse = {
