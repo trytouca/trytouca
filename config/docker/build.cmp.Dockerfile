@@ -28,7 +28,7 @@ USER touca
 
 RUN conan profile new default --detect \
   && conan profile update settings.compiler.libcxx=libstdc++11 default \
-  && conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp --insert=0 \
+  && conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp \
   && cd /opt/cmp && ./build.sh
 
 # ---- production image ----

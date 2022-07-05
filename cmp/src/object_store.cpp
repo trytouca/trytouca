@@ -26,12 +26,6 @@ MinioClient::MinioClient(const Options& options) {
   Aws::Client::ClientConfiguration aws_config;
   aws_config.region = options.minio_region;
 
-  if (options.minio_url == "https://s3.amazonaws.com") {
-    _aws_client =
-        std::make_unique<Aws::S3::S3Client>(aws_credentials, aws_config);
-    return;
-  }
-
   setenv("AWS_REGION", options.minio_region.c_str(), true);
   setenv("AWS_EC2_METADATA_DISABLED", "TRUE", true);
 
@@ -40,6 +34,15 @@ MinioClient::MinioClient(const Options& options) {
     aws_config.proxyPort = options.minio_proxy_port;
   }
   aws_config.endpointOverride = options.minio_url;
+
+  if (options.minio_url == "s3.amazonaws.com") {
+    aws_config.scheme = Aws::Http::Scheme::HTTPS;
+    aws_config.verifySSL = true;
+    _aws_client =
+        std::make_unique<Aws::S3::S3Client>(aws_credentials, aws_config);
+    return;
+  }
+
   aws_config.scheme = Aws::Http::Scheme::HTTP;
   aws_config.verifySSL = false;
 

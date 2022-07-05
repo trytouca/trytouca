@@ -138,8 +138,7 @@ async function teamMemberListImpl(
           }
         }
       }
-    },
-    { $unset: ['_id'] }
+    }
   ])
 
   const output: TeamMemberListResponse = {
