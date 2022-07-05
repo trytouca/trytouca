@@ -173,9 +173,11 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options) {
   options.status_report_interval =
       result_file["status-report-interval"].as<unsigned>();
 
-  // override minio username and password if they are provided
-  // as environment variables
+  // override options with environment variables
 
+  if (const auto url = std::getenv("API_URL")) {
+    options.api_url = url;
+  }
   if (const auto host = std::getenv("MINIO_PROXY_HOST")) {
     options.minio_proxy_host = host;
   }
