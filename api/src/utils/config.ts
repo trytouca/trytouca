@@ -139,7 +139,7 @@ export const config: IConfig = {
   minio: {
     host: env.MINIO_HOST,
     pass: env.MINIO_PASS,
-    port: Number(env.MINIO_PORT),
+    port: Number(env.MINIO_PORT || 9000),
     user: env.MINIO_USER,
     region: env.MINIO_REGION || 'us-east-2'
   },
@@ -147,7 +147,7 @@ export const config: IConfig = {
     database: env.MONGO_BASE,
     host: env.MONGO_HOST,
     pass: env.MONGO_PASS,
-    port: Number(env.MONGO_PORT),
+    port: Number(env.MONGO_PORT || 27017),
     tlsCertificateFile: env.MONGO_TLS_CERT_FILE,
     user: env.MONGO_USER
   },
@@ -156,7 +156,7 @@ export const config: IConfig = {
     durationLong: Number(env.CACHE_DURATION_LONG),
     durationShort: Number(env.CACHE_DURATION_SHORT),
     host: env.REDIS_HOST,
-    port: Number(env.REDIS_PORT),
+    port: Number(env.REDIS_PORT || 6379),
     tlsCertificateFile: env.REDIS_TLS_CERT_FILE
   },
   samples: {

@@ -182,6 +182,9 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options) {
   if (const auto port = std::getenv("MINIO_PROXY_PORT")) {
     options.minio_proxy_port = std::stoul(port);
   }
+  if (const auto url = std::getenv("MINIO_HOST")) {
+    options.minio_url = url;
+  }
   if (const auto user = std::getenv("MINIO_USER")) {
     options.minio_user = user;
   }

@@ -166,8 +166,8 @@ export const objectStore = config.isCloudHosted
       },
       endpoint: {
         protocol: 'http',
-        hostname: '127.0.0.1',
-        port: 9000,
+        hostname: config.minio.host,
+        port: config.minio.port,
         path: '/'
       },
       forcePathStyle: true,
