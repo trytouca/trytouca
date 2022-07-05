@@ -132,7 +132,7 @@ export const config: IConfig = {
   mail: {
     host: env.MAIL_TRANSPORT_HOST,
     pass: env.MAIL_TRANSPORT_PASS || '',
-    port: Number(env.MAIL_TRANSPORT_PORT),
+    port: Number(env.MAIL_TRANSPORT_PORT || 587),
     templatesDirectory: env.MAIL_TEMPLATE_DIR,
     user: env.MAIL_TRANSPORT_USER
   },
@@ -221,7 +221,7 @@ class ConfigManager {
     return `redis://${redis.host}:${redis.port}/${redis.database}`
   }
   public hasMailTransport(): boolean {
-    return ['user', 'host', 'port'].every((key) => config.mail[key])
+    return ['user', 'host'].every((key) => config.mail[key])
   }
 }
 

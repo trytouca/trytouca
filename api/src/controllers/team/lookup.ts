@@ -27,15 +27,9 @@ async function teamLookup(
         _id: 0,
         name: 1,
         slug: 1,
-        userCount: {
-          $let: {
-            vars: {
-              membersCount: { $size: '$members' },
-              adminsCount: { $size: '$admins' }
-            },
-            in: { $sum: ['$$membersCount', '$$adminsCount', 1] }
-          }
-        }
+        membersCount: { $size: '$members' },
+        adminsCount: { $size: '$admins' },
+        userCount: { $size: '$members' }
       }
     }
   ])
