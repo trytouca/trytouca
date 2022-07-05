@@ -20,11 +20,15 @@ MinioClient::MinioClient(const Options& options) {
   }
   Aws::InitAPI(*_aws_sdk_options);
 
+  Aws::Auth::AWSCredentials aws_credentials(options.minio_user,
+                                            options.minio_pass);
+
   Aws::Client::ClientConfiguration aws_config;
   aws_config.region = options.minio_region;
 
   if (options.minio_url == "https://s3.amazonaws.com") {
-    _aws_client = std::make_unique<Aws::S3::S3Client>(aws_config);
+    _aws_client =
+        std::make_unique<Aws::S3::S3Client>(aws_credentials, aws_config);
     return;
   }
 
@@ -39,8 +43,6 @@ MinioClient::MinioClient(const Options& options) {
   aws_config.scheme = Aws::Http::Scheme::HTTP;
   aws_config.verifySSL = false;
 
-  Aws::Auth::AWSCredentials aws_credentials(options.minio_user,
-                                            options.minio_pass);
   _aws_client = std::make_unique<Aws::S3::S3Client>(
       aws_credentials, aws_config,
       Aws::Client::AWSAuthV4Signer::PayloadSigningPolicy::Never, false);
@@ -57,6 +59,7 @@ bool MinioClient::status_check() const {
     if (!outcome.IsSuccess()) {
       return false;
     }
+    touca::log_debug("bucket exists {}", name);
   }
   return true;
 }
