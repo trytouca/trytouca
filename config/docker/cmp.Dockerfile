@@ -8,6 +8,11 @@ LABEL org.opencontainers.image.documentation="https://touca.io/docs"
 LABEL org.opencontainers.image.vendor="Touca, Inc."
 LABEL org.opencontainers.image.authors="hello@touca.io"
 
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends \
+    apt-transport-https ca-certificates \
+  && rm -rf /var/lib/apt/lists/*
+
 COPY cmp/local/dist                 /usr/local
 COPY cmp/config/config.prod.json    /usr/local/etc/config.json
 
