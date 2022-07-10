@@ -7,8 +7,7 @@ you are new to Touca, consider reading our
 Touca SDK for JavaScript is available as open-source
 [on GitHub](https://github.com/trytouca/trytouca/tree/main/sdk/js) under the
 Apache-2.0 License. It is publicly available
-[on NPM](https://npmjs.com/package/@touca/node) and can be pulled as a
-dependency using `yarn` or `npm`.
+[on NPM](https://npmjs.com/package/@touca/node).
 
 ```bash
 npm install @touca/node
@@ -22,8 +21,8 @@ examples.
 ```bash
 git clone git@github.com:trytouca/trytouca.git
 cd trytouca/examples/js
-yarn install
-yarn build
+npm install
+npm run build
 ```
 
 For our first example, let us write a Touca test for a software that checks

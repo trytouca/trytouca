@@ -356,58 +356,47 @@ jobs:
           filters: .github/path-filters.yml
       - name: authenticate to aws
         if: |
-          steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         if: steps.changes.outputs.sdk_js == 'true'
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.sdk_js == 'true'
-        env:
-          CACHED_DEPENDENCY_PATHS: |
-            ${{ github.workspace }}/node_modules
-            ${{ github.workspace }}/packages/**/node_modules
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          cache: 'npm'
+          cache-dependency-path: ${{ github.workspace }}/sdk/js/package-lock.json
       - name: build js components
         if: steps.changes.outputs.sdk_js == 'true'
         run: |
-          yarn install
-          yarn build
-          yarn test
+          npm i -g npm@latest
+          npm ci
+          npm run build
+          npm run test
       - name: lint source code
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 && github.event_name == 'push'
-        run: yarn lint
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push'
+        run: npm run lint
       - name: generate docs
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 && github.event_name == 'push'
-        run: yarn docs
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push'
+        run: npm run docs
       - name: push docs to aws
-        if:
-          steps.changes.outputs.sdk_js == 'true' && github.ref ==
-          'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
-          'push'
+        if: |
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf js-node-docs-external.tar.gz local/docs
           aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: push coverage to aws
         if: |
-          steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
           aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: upload coverage to codecov
         if: |
-          steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: codecov/codecov-action@v2
         env:
           OS: ${{ runner.os }}

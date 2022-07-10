@@ -16,6 +16,7 @@
   "cSpell.words": [
     "autoseal",
     "bdist",
+    "cacheable",
     "capsys",
     "codecov",
     "conanfile",
@@ -37,6 +38,7 @@
     "middlewares",
     "Minio",
     "mkdir",
+    "nrwl",
     "ossrh",
     "Popen",
     "rapidjson",

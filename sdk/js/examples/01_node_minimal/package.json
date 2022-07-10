@@ -14,6 +14,6 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf dist",
-    "test:touca": "yarn build && node dist/is_prime_test.js --testcase 13 17 51"
+    "test:touca": "tsc && node dist/is_prime_test.js --testcase 13 17 51"
   }
 }
