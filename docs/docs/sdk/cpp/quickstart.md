@@ -16,8 +16,8 @@ Clone our examples repository to a local directory of your choice. Build our C++
 playground Docker image and run it from the command line.
 
 ```bash
-git clone git@github.com:trytouca/examples.git "<YOUR_LOCAL_DIRECTORY>"
-cd "<YOUR_LOCAL_DIRECTORY>"
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca
 docker build -t touca-examples-cpp -f cpp/Dockerfile cpp
 docker run -it touca-examples-cpp /bin/bash
 ```

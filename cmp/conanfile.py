@@ -24,7 +24,7 @@ class ToucaConan(ConanFile):
         self.requires("touca/1.5.2")
 
     def source(self):
-        self.run("git clone https://github.com/trytouca/touca.git")
+        self.run("git clone https://github.com/trytouca/trytouca.git")
 
     def configure(self):
         self.options["aws-sdk-cpp"].s3 = True
