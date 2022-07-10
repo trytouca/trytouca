@@ -20,8 +20,8 @@ local directory of your choice and proceed with building its JavaScript
 examples.
 
 ```bash
-git clone git@github.com/trytouca/examples.git "<YOUR_LOCAL_DIRECTORY>"
-cd "<YOUR_LOCAL_DIRECTORY>/js"
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/examples/js
 yarn install
 yarn build
 ```

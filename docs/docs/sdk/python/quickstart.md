@@ -15,8 +15,8 @@ Clone this repository to a directory of your choice and create a virtual
 environment.
 
 ```bash
-git clone git@github.com/trytouca/trytouca.git "<root_directory>"
-cd "<root_directory>/examples/python"
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/examples/python
 python -m venv .env
 source .env/bin/activate
 pip install touca
