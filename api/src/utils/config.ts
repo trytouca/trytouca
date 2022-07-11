@@ -121,42 +121,42 @@ export const config: IConfig = {
   isCloudHosted: env.DEPLOY_MODE === 'cloud_hosted',
   env: env.NODE_ENV,
   express: {
-    port: Number(env.EXPRESS_PORT),
+    port: Number(env.EXPRESS_PORT) || 8081,
     root: env.EXPRESS_ROOT
   },
   logging: {
     directory: path.normalize(`${__dirname}/../../` + env.LOG_DIR),
     filename: env.LOG_FILENAME,
-    level: env.LOG_LEVEL
+    level: env.LOG_LEVEL || 'info'
   },
   mail: {
     host: env.MAIL_TRANSPORT_HOST,
     pass: env.MAIL_TRANSPORT_PASS || '',
-    port: Number(env.MAIL_TRANSPORT_PORT || 587),
+    port: Number(env.MAIL_TRANSPORT_PORT) || 587,
     templatesDirectory: env.MAIL_TEMPLATE_DIR,
     user: env.MAIL_TRANSPORT_USER
   },
   minio: {
     host: env.MINIO_HOST,
-    pass: env.MINIO_PASS,
-    port: Number(env.MINIO_PORT || 9000),
-    user: env.MINIO_USER,
+    pass: env.MINIO_PASS || 'toucapass',
+    port: Number(env.MINIO_PORT) || 9000,
+    user: env.MINIO_USER || 'toucauser',
     region: env.MINIO_REGION || 'us-east-2'
   },
   mongo: {
-    database: env.MONGO_BASE,
+    database: env.MONGO_BASE || 'touca',
     host: env.MONGO_HOST,
-    pass: env.MONGO_PASS,
-    port: Number(env.MONGO_PORT || 27017),
+    pass: env.MONGO_PASS || 'toucapass',
+    port: Number(env.MONGO_PORT) || 27017,
     tlsCertificateFile: env.MONGO_TLS_CERT_FILE,
-    user: env.MONGO_USER
+    user: env.MONGO_USER || 'toucauser'
   },
   redis: {
     database: env.REDIS_BASE,
     durationLong: Number(env.CACHE_DURATION_LONG),
     durationShort: Number(env.CACHE_DURATION_SHORT),
     host: env.REDIS_HOST,
-    port: Number(env.REDIS_PORT || 6379),
+    port: Number(env.REDIS_PORT) || 6379,
     tlsCertificateFile: env.REDIS_TLS_CERT_FILE
   },
   samples: {
