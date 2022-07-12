@@ -56,7 +56,7 @@ sync_js () {
     rm -rf "${dir_dst}"
     cp -r "${dir_src}" "${dir_dst}"
 
-    for filename in "lerna.json" "package.json" "tsconfig.json" "yarn.lock"; do
+    for filename in "lerna.json" "package.json" "tsconfig.json" "package-lock.json"; do
         git checkout "${dir_dst}/${filename}"
     done
     for project in "01_node_minimal" "02_node_main_api" "03_node_core_api"; do

@@ -1,10 +1,5 @@
 {
-  "packages": [
-    "01_node_minimal",
-    "02_node_main_api",
-    "03_node_core_api"
-  ],
+  "packages": ["01_node_minimal", "02_node_main_api", "03_node_core_api"],
   "version": "0.0.6",
-  "npmClient": "yarn",
   "useWorkspaces": true
 }
