@@ -45,7 +45,7 @@ jobs:
         with:
           node-version: 16
           cache: "pnpm"
-          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.json
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build doc
         if: steps.changes.outputs.docs == 'true'
         run: |
