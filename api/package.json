@@ -23,14 +23,14 @@
     "build:mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/; cp -r templates/reports dist/templates",
     "build:ts": "tsc",
     "clean": "rimraf dist",
+    "dev": "nodemon ./src/server.ts",
+    "dev:debug": "nodemon --inspect ./src/server.ts",
+    "docs": "npm run docs:external && npm run docs:internal",
     "docs:external": "mkdir -p local/docs/external; swagger-inline src/routes/*.ts src/types/commontypes.ts --base docs/swagger.base.yaml --format yaml > local/docs/external/swagger.yaml; redoc-cli build local/docs/external/swagger.yaml --options.hideDownloadButton=true --output=local/docs/external/index.html --title=\"Touca Server API Reference\"",
     "docs:internal": "typedoc",
-    "docs": "npm run docs:external && npm run docs:internal",
-    "start": "node .",
-    "test": "cross-env ENV_FILE=test jest",
     "lint": "eslint src test --ext .ts",
-    "dev": "nodemon ./src/server.ts",
-    "dev:debug": "nodemon --inspect ./src/server.ts"
+    "start": "node .",
+    "test": "cross-env ENV_FILE=test jest"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.127.0",
@@ -64,6 +64,7 @@
     "winston": "^3.8.1"
   },
   "devDependencies": {
+    "@jest/globals": "^28.1.2",
     "@types/archiver": "^5.3.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.3",
