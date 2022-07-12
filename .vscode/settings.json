@@ -40,6 +40,7 @@
     "mkdir",
     "nrwl",
     "ossrh",
+    "pnpm",
     "Popen",
     "rapidjson",
     "rglob",

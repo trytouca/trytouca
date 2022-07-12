@@ -18,11 +18,12 @@
     "email": "pejman@touca.io"
   },
   "scripts": {
-    "ng": "ng",
-    "dev": "ng serve",
     "build": "ng build",
-    "test": "ng test",
-    "lint": "ng lint"
+    "dev": "ng serve",
+    "lint": "ng lint",
+    "preinstall": "npx only-allow pnpm",
+    "ng": "ng",
+    "test": "ng test"
   },
   "dependencies": {
     "@angular/animations": "^14.0.5",
@@ -55,6 +56,7 @@
     "ngx-clipboard": "^15.1.0",
     "ngx-markdown": "14.0.1",
     "rxjs": "~7.5.0",
+    "tippy.js": "^6.3.7",
     "tslib": "^2.3.1",
     "zone.js": "~0.11.4"
   },

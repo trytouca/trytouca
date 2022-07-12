@@ -37,17 +37,20 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.docs == 'true'
         with:
           node-version: 16
-          cache: "npm"
-          cache-dependency-path: ${{ github.workspace }}/docs/package-lock.json
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.json
       - name: build doc
         if: steps.changes.outputs.docs == 'true'
         run: |
-          npm --prefix=docs ci
-          npm --prefix=docs run build
+          pnpm --dir=docs install --frozen-lockfile
+          pnpm --dir=docs run build
       - name: push doc to aws
         if: |
           steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
@@ -686,21 +689,24 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.web == 'true'
         with:
           node-version: 16
-          cache: "npm"
-          cache-dependency-path: ${{ github.workspace }}/web/package-lock.json
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build web
         if: steps.changes.outputs.web == 'true'
         env:
           NEXT_TELEMETRY_DISABLED: 1
         run: |
-          npm --prefix=web ci
-          npm --prefix=web run build
-          npm --prefix=web run lint
-          npm --prefix=web run export
+          pnpm --dir=web install --frozen-lockfile
+          pnpm --dir=web run build
+          pnpm --dir=web run lint
+          pnpm --dir=web run export
       - name: push web to aws
         if: |
           steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
@@ -731,21 +737,23 @@ jobs:
         run: |
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
           echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
-
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.api == 'true'
         with:
           node-version: 16
-          cache: "npm"
-          cache-dependency-path: ${{ github.workspace }}/api/package-lock.json
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build api
         if: steps.changes.outputs.api == 'true'
         run: |
-          npm --prefix=api ci
-          npm --prefix=api run build
-          npm --prefix=api run lint
-          npm --prefix=api run test
-          npm --prefix=api run docs
+          pnpm --dir=api install --frozen-lockfile
+          pnpm --dir=api run build
+          pnpm --dir=api run lint
+          pnpm --dir=api run test
+          pnpm --dir=api run docs
           tar -zcf api.tar.gz api/dist
           tar -zcf api-docs-external.tar.gz api/local/docs/external
           tar -zcf api-docs-internal.tar.gz api/local/docs/internal
@@ -795,26 +803,28 @@ jobs:
         run: |
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
           echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
-
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.app == 'true'
         with:
           node-version: 16
-          cache: "npm"
-          cache-dependency-path: ${{ github.workspace }}/app/package-lock.json
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build app
         if: steps.changes.outputs.app == 'true'
         run: |
-          npm --prefix=app ci
-          npm --prefix=app run build
-          npm --prefix=app run lint
+          pnpm --dir=app install --frozen-lockfile
+          pnpm --dir=app run build
+          pnpm --dir=app run lint
           tar -zcf app.tar.gz app/dist
       - name: push app to app.touca.io
         if: |
           steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
         run: |
           aws s3 cp app.tar.gz ${{ steps.params.outputs.buckets }}/
-          npm --prefix=app run build --configuration=cloud --delete-output-path
+          pnpm --dir=app run build --configuration=cloud --delete-output-path
           aws s3 sync ./app/dist/ ${{ secrets.AWS_BUCKET_APP }} --exclude "*" --include "*.*.js" --include "*.*.css" --cache-control public,max-age=31536000,immutable
           aws s3 sync ./app/dist/ ${{ secrets.AWS_BUCKET_APP }} --exclude "*.*.js" --exclude "*.*.css" --cache-control no-cache
       - name: pull app from aws
@@ -922,16 +932,19 @@ jobs:
         with:
           name: cmp-bundle
           path: ${{ github.workspace }}
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.api == 'true'
         with:
           node-version: 16
-          cache: "npm"
-          cache-dependency-path: ${{ github.workspace }}/app/package-lock.json
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: install api dependencies
         if: steps.changes.outputs.api == 'true'
-        run: npm --prefix=api ci --omit=dev
-
+        run: |
+          pnpm --dir=api install --frozen-lockfile --production
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         if: steps.params.outputs.release == 'true'
