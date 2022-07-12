@@ -8,7 +8,6 @@
     "deploy": "docusaurus deploy",
     "dev": "docusaurus start",
     "docusaurus": "docusaurus",
-    "preinstall": "npx only-allow pnpm",
     "serve": "docusaurus serve",
     "swizzle": "docusaurus swizzle",
     "typecheck": "tsc",

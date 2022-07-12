@@ -21,7 +21,6 @@
     "build": "ng build",
     "dev": "ng serve",
     "lint": "ng lint",
-    "preinstall": "npx only-allow pnpm",
     "ng": "ng",
     "test": "ng test"
   },

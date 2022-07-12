@@ -7,7 +7,6 @@
     "dev": "next dev",
     "export": "next export",
     "lint": "next lint",
-    "preinstall": "npx only-allow pnpm",
     "start": "next start"
   },
   "dependencies": {
