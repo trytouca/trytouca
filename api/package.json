@@ -19,13 +19,13 @@
   },
   "main": "dist/server.js",
   "scripts": {
-    "build": "yarn run build:mails && yarn run build:ts",
+    "build": "npm run build:mails && npm run build:ts",
     "build:mails": "mkdir -p dist/templates; mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/; cp -r templates/reports dist/templates",
     "build:ts": "tsc",
     "clean": "rimraf dist",
     "docs:external": "mkdir -p local/docs/external; swagger-inline src/routes/*.ts src/types/commontypes.ts --base docs/swagger.base.yaml --format yaml > local/docs/external/swagger.yaml; redoc-cli build local/docs/external/swagger.yaml --options.hideDownloadButton=true --output=local/docs/external/index.html --title=\"Touca Server API Reference\"",
     "docs:internal": "typedoc",
-    "docs": "yarn run docs:external && yarn run docs:internal",
+    "docs": "npm run docs:external && npm run docs:internal",
     "start": "node .",
     "test": "cross-env ENV_FILE=test jest",
     "lint": "eslint src test --ext .ts",
@@ -33,11 +33,11 @@
     "dev:debug": "nodemon --inspect ./src/server.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.121.0",
+    "@aws-sdk/client-lambda": "^3.127.0",
+    "@aws-sdk/client-s3": "^3.127.0",
     "@hubspot/api-client": "^7.0.1",
     "@sindresorhus/df": "^3.1.1",
     "archiver": "^5.3.1",
-    "aws-sdk": "^2.1167.0",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.6",
@@ -80,8 +80,8 @@
     "@types/nodemailer": "^6.4.4",
     "@types/sinon": "^10.0.12",
     "@types/uuid": "^8.3.4",
-    "@typescript-eslint/eslint-plugin": "^5.30.3",
-    "@typescript-eslint/parser": "^5.30.3",
+    "@typescript-eslint/eslint-plugin": "^5.30.6",
+    "@typescript-eslint/parser": "^5.30.6",
     "cross-env": "^7.0.3",
     "eslint": "^8.19.0",
     "eslint-config-prettier": "^8.5.0",
@@ -89,7 +89,7 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "jest": "^28.1.2",
     "mjml": "^4.12.0",
-    "nodemon": "^2.0.18",
+    "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
     "redoc-cli": "^0.13.16",
     "rimraf": "^3.0.2",
@@ -99,7 +99,7 @@
     "ts-jest": "^28.0.5",
     "ts-node": "^10.8.1",
     "tsconfig-paths": "^4.0.0",
-    "typedoc": "^0.23.4",
+    "typedoc": "^0.23.7",
     "typescript": "^4.6.4"
   }
 }

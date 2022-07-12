@@ -39,19 +39,15 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE }}
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.docs == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.docs == 'true'
         with:
-          path: ${{ github.workspace }}/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: ${{ github.workspace }}/docs/package-lock.json
       - name: build doc
         if: steps.changes.outputs.docs == 'true'
         run: |
-          yarn --cwd=docs install
-          yarn --cwd=docs build
+          npm --prefix=docs ci
+          npm --prefix=docs run build
       - name: push doc to aws
         if: |
           steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
@@ -619,8 +615,8 @@ jobs:
       - name: build js examples
         if: steps.changes.outputs.examples_js == 'true'
         run: |
-          yarn install
-          yarn build
+          npm ci
+          npm run build
       - name: run example js application
         if: |
           steps.changes.outputs.examples_js == 'true' && github.ref == 'refs/heads/main'
@@ -629,7 +625,7 @@ jobs:
           TOUCA_API_URL: https://api.touca.io/@/examples/javascript
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         run: |
-          yarn --cwd=02_node_main_api test:touca
+          npm --prefix=02_node_main_api run test:touca
 
   run-examples-python:
     name: run-examples-python
@@ -692,23 +688,19 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE }}
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.web == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.web == 'true'
         with:
-          path: ${{ github.workspace }}/web/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('web/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: ${{ github.workspace }}/web/package-lock.json
       - name: build web
         if: steps.changes.outputs.web == 'true'
         env:
           NEXT_TELEMETRY_DISABLED: 1
         run: |
-          yarn --cwd=web install
-          yarn --cwd=web build
-          yarn --cwd=web lint
-          yarn --cwd=web export
+          npm --prefix=web ci
+          npm --prefix=web run build
+          npm --prefix=web run lint
+          npm --prefix=web run export
       - name: push web to aws
         if: |
           steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
@@ -742,23 +734,18 @@ jobs:
 
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.api == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.api == 'true'
         with:
-          path: ${{ github.workspace }}/api/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('api/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: ${{ github.workspace }}/api/package-lock.json
       - name: build api
         if: steps.changes.outputs.api == 'true'
         run: |
-          yarn --cwd=api install
-          yarn --cwd=api build
-          yarn --cwd=api lint
-          yarn --cwd=api test
-          yarn --cwd=api docs
+          npm --prefix=api ci
+          npm --prefix=api run build
+          npm --prefix=api run lint
+          npm --prefix=api run test
+          npm --prefix=api run docs
           tar -zcf api.tar.gz api/dist
           tar -zcf api-docs-external.tar.gz api/local/docs/external
           tar -zcf api-docs-internal.tar.gz api/local/docs/internal
@@ -811,27 +798,23 @@ jobs:
 
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.app == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.app == 'true'
         with:
-          path: ${{ github.workspace }}/app/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('app/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: ${{ github.workspace }}/app/package-lock.json
       - name: build app
         if: steps.changes.outputs.app == 'true'
         run: |
-          yarn --cwd=app install --frozen-lockfile
-          yarn --cwd=app build
-          yarn --cwd=app lint
+          npm --prefix=app ci
+          npm --prefix=app run build
+          npm --prefix=app run lint
           tar -zcf app.tar.gz app/dist
       - name: push app to app.touca.io
         if: |
           steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
         run: |
           aws s3 cp app.tar.gz ${{ steps.params.outputs.buckets }}/
-          yarn --cwd=app build --configuration=cloud --delete-output-path
+          npm --prefix=app run build --configuration=cloud --delete-output-path
           aws s3 sync ./app/dist/ ${{ secrets.AWS_BUCKET_APP }} --exclude "*" --include "*.*.js" --include "*.*.css" --cache-control public,max-age=31536000,immutable
           aws s3 sync ./app/dist/ ${{ secrets.AWS_BUCKET_APP }} --exclude "*.*.js" --exclude "*.*.css" --cache-control no-cache
       - name: pull app from aws
@@ -941,17 +924,13 @@ jobs:
           path: ${{ github.workspace }}
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.api == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.api == 'true'
         with:
-          path: ${{ github.workspace }}/api/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('api/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: ${{ github.workspace }}/app/package-lock.json
       - name: install api dependencies
         if: steps.changes.outputs.api == 'true'
-        run: yarn --cwd=api install --frozen-lockfile --production
+        run: npm --prefix=api ci --omit=dev
 
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
