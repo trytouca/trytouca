@@ -47,7 +47,7 @@ jobs:
         if: steps.changes.outputs.docs == 'true'
         run: |
           npm --prefix=docs ci
-          npm --prefix=docs build
+          npm --prefix=docs run build
       - name: push doc to aws
         if: |
           steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
@@ -615,8 +615,8 @@ jobs:
       - name: build js examples
         if: steps.changes.outputs.examples_js == 'true'
         run: |
-          npm --prefix=examples/js ci
-          npm --prefix=examples/js run build
+          npm ci
+          npm run build
       - name: run example js application
         if: |
           steps.changes.outputs.examples_js == 'true' && github.ref == 'refs/heads/main'
@@ -625,7 +625,7 @@ jobs:
           TOUCA_API_URL: https://api.touca.io/@/examples/javascript
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         run: |
-          npm --prefix=examples/js/02_node_main_api test:touca
+          npm --prefix=02_node_main_api test:touca
 
   run-examples-python:
     name: run-examples-python
@@ -806,15 +806,15 @@ jobs:
         if: steps.changes.outputs.app == 'true'
         run: |
           npm --prefix=app ci
-          npm --prefix=app build
-          npm --prefix=app lint
+          npm --prefix=app run build
+          npm --prefix=app run lint
           tar -zcf app.tar.gz app/dist
       - name: push app to app.touca.io
         if: |
           steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
         run: |
           aws s3 cp app.tar.gz ${{ steps.params.outputs.buckets }}/
-          npm --prefix=app build --configuration=cloud --delete-output-path
+          npm --prefix=app run build --configuration=cloud --delete-output-path
           aws s3 sync ./app/dist/ ${{ secrets.AWS_BUCKET_APP }} --exclude "*" --include "*.*.js" --include "*.*.css" --cache-control public,max-age=31536000,immutable
           aws s3 sync ./app/dist/ ${{ secrets.AWS_BUCKET_APP }} --exclude "*.*.js" --exclude "*.*.css" --cache-control no-cache
       - name: pull app from aws
