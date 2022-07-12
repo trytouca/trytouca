@@ -39,19 +39,15 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE }}
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.docs == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.docs == 'true'
         with:
-          path: ${{ github.workspace }}/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: ${{ github.workspace }}/docs/package-lock.json
       - name: build doc
         if: steps.changes.outputs.docs == 'true'
         run: |
-          yarn --cwd=docs install
-          yarn --cwd=docs build
+          npm --prefix=docs ci
+          npm --prefix=docs build
       - name: push doc to aws
         if: |
           steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
@@ -619,8 +615,8 @@ jobs:
       - name: build js examples
         if: steps.changes.outputs.examples_js == 'true'
         run: |
-          yarn install
-          yarn build
+          npm --prefix=examples/js ci
+          npm --prefix=examples/js run build
       - name: run example js application
         if: |
           steps.changes.outputs.examples_js == 'true' && github.ref == 'refs/heads/main'
@@ -629,7 +625,7 @@ jobs:
           TOUCA_API_URL: https://api.touca.io/@/examples/javascript
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         run: |
-          yarn --cwd=02_node_main_api test:touca
+          npm --prefix=examples/js/02_node_main_api test:touca
 
   run-examples-python:
     name: run-examples-python
@@ -692,23 +688,19 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE }}
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.web == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.web == 'true'
         with:
-          path: ${{ github.workspace }}/web/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('web/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path: ${{ github.workspace }}/web/package-lock.json
       - name: build web
         if: steps.changes.outputs.web == 'true'
         env:
           NEXT_TELEMETRY_DISABLED: 1
         run: |
-          yarn --cwd=web install
-          yarn --cwd=web build
-          yarn --cwd=web lint
-          yarn --cwd=web export
+          npm --prefix=web ci
+          npm --prefix=web run build
+          npm --prefix=web run lint
+          npm --prefix=web run export
       - name: push web to aws
         if: |
           steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
@@ -805,6 +797,8 @@ jobs:
 
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.app == 'true'
+        with:
+          node-version: 16
       - uses: actions/cache@v2
         if: steps.changes.outputs.app == 'true'
         with:
