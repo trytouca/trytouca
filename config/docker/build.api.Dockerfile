@@ -1,20 +1,20 @@
 # ---- builder stage ----
 
-FROM node:18-alpine AS builder_dev
+FROM node:16-alpine AS builder_dev
 
 COPY api /home
 
-RUN apk add --no-cache curl yarn \
+RUN apk add --no-cache curl \
     && mkdir /home/certs \
     && curl -o /home/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem \
-    && yarn --cwd=/home install \
-    && yarn --cwd=/home build \
-    && yarn --cwd=/home lint \
-    && yarn --cwd=/home test
+    && npm --prefix=/home install \
+    && npm --prefix=/home run build \
+    && npm --prefix=/home run lint \
+    && npm --prefix=/home run test
 
 # ---- builder stage ----
 
-FROM node:18-alpine AS builder
+FROM node:16-alpine AS builder
 
 COPY --from=builder_dev /home/certs             /home/certs
 COPY --from=builder_dev /home/dist              /home/dist
@@ -22,13 +22,12 @@ COPY --from=builder_dev /home/env               /home/env
 COPY --from=builder_dev /home/package.json      /home/package.json
 COPY --from=builder_dev /home/samples           /home/samples
 
-RUN apk add --no-cache yarn \
-    && yarn --cwd=/home install --frozen-lockfile --production \
-    && yarn --cwd=/home cache clean
+RUN npm --prefix=/home ci --omit=dev \
+    && npm --prefix=/home cache clean
 
 # ---- production image ----
 
-FROM node:18-alpine
+FROM node:16-alpine
 
 COPY --from=builder /home/certs         /opt/touca/certs
 COPY --from=builder /home/dist          /opt/touca/dist
