@@ -34,6 +34,8 @@ sync_cpp () {
     for filename in ".clang-format" ".dockerignore" "build.sh" "CMakeLists.txt" "Dockerfile" "cmake/external.cmake" "04_cpp_external_input"; do
         git checkout "${dir_dst}/${filename}"
     done
+    git checkout "${dir_dst}/README.md"
+    git checkout "${dir_dst}/**/README.md"
 }
 
 sync_python () {
@@ -44,9 +46,11 @@ sync_python () {
     cp -r "${dir_src}" "${dir_dst}"
 
     rm "${dir_dst}/02_python_main_api/unit_test.py"
-    for filename in "01_python_minimal/requirements.txt" "03_python_core_api/requirements.txt" "04_python_external_files"; do
+    for filename in "01_python_minimal/requirements.txt" "03_python_core_api/requirements.txt" "04_python_external_files" "05_python_ml_pipeline"; do
         git checkout "${dir_dst}/${filename}"
     done
+    git checkout "${dir_dst}/README.md"
+    git checkout "${dir_dst}/**/README.md"
 }
 
 sync_js () {
@@ -64,6 +68,8 @@ sync_js () {
         run_sed "${dir_dst}/${project}/package.json"  's/\("version":\).*/\1 "1.5.2",/g'
         run_sed "${dir_dst}/${project}/package.json"  's/\("@touca\/node":\).*/\1 "^1.5.2"/g'
     done
+    git checkout "${dir_dst}/README.md"
+    git checkout "${dir_dst}/**/README.md"
 }
 
 sync_java () {
@@ -79,6 +85,8 @@ sync_java () {
     for project in "01_java_minimal" "02_java_main_api" "03_java_core_api"; do
         run_sed "${dir_dst}/${project}/build.gradle.kts" 's/implementation.*/implementation("io.touca:touca:1.5.1")/g'
     done
+    git checkout "${dir_dst}/README.md"
+    git checkout "${dir_dst}/**/README.md"
 }
 
 sync_cpp

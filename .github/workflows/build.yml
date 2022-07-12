@@ -742,23 +742,17 @@ jobs:
 
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.api == 'true'
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.api == 'true'
         with:
-          path: ${{ github.workspace }}/api/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('api/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-
+          cache: "npm"
+          cache-dependency-path: ${{ github.workspace }}/api/package-lock.json
       - name: build api
         if: steps.changes.outputs.api == 'true'
         run: |
-          yarn --cwd=api install
-          yarn --cwd=api build
-          yarn --cwd=api lint
-          yarn --cwd=api test
-          yarn --cwd=api docs
+          npm --prefix=api ci
+          npm --prefix=api run build
+          npm --prefix=api run lint
+          npm --prefix=api run test
+          npm --prefix=api run docs
           tar -zcf api.tar.gz api/dist
           tar -zcf api-docs-external.tar.gz api/local/docs/external
           tar -zcf api-docs-internal.tar.gz api/local/docs/internal
@@ -951,7 +945,7 @@ jobs:
             ${{ runner.os }}-
       - name: install api dependencies
         if: steps.changes.outputs.api == 'true'
-        run: yarn --cwd=api install --frozen-lockfile --production
+        run: npm --prefix=api ci --omit=dev
 
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
