@@ -1,17 +1,35 @@
 // @ts-check
 /** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
-  tutorialSidebar: [
+  mainSidebar: [
     {
-      type: "doc",
-      id: "Readme",
-      label: "About Touca"
+      type: "category",
+      label: "Concepts",
+      collapsed: false,
+      collapsible: true,
+      items: [
+        {
+          type: "doc",
+          id: "Readme",
+          label: "What is Touca"
+        },
+        {
+          type: "doc",
+          id: "concepts/vs-snapshot",
+          label: "Touca vs. Snapshot Testing"
+        },
+        {
+          type: "doc",
+          id: "basics/faq",
+          label: "FAQ"
+        }
+      ]
     },
     {
       type: "category",
       label: "Getting Started",
       collapsed: false,
-      collapsible: false,
+      collapsible: true,
       items: [
         {
           type: "doc",
@@ -47,138 +65,185 @@ const sidebars = {
           type: "doc",
           id: "basics/manage-team",
           label: "Manage Your Team"
-        },
-        {
-          type: "doc",
-          id: "basics/faq",
-          label: "FAQ"
         }
       ]
     },
     {
       type: "category",
-      label: "SDKs",
+      label: "Product",
       collapsed: false,
-      collapsible: false,
+      collapsible: true,
       items: [
         {
           type: "category",
-          label: "Python",
+          label: "CLI",
+          collapsed: true,
+          collapsible: true,
           items: [
             {
               type: "doc",
-              id: "sdk/python/quickstart",
-              label: "Quick Start"
-            },
-            {
-              type: "doc",
-              id: "sdk/python/main-api",
-              label: "Main API"
-            },
-            {
-              type: "doc",
-              id: "sdk/python/core-api",
-              label: "Core API"
-            },
-            {
-              type: "link",
-              label: "API Reference",
-              href: "https://app.touca.io/docs/sdk/python/api.html"
+              id: "cli/Readme",
+              label: "Overview"
             }
           ]
         },
         {
           type: "category",
-          label: "C++",
+          label: "SDKs",
+          collapsed: true,
+          collapsible: true,
           items: [
             {
-              type: "doc",
-              id: "sdk/cpp/building",
-              label: "Building"
+              type: "category",
+              label: "Python",
+              items: [
+                {
+                  type: "doc",
+                  id: "sdk/python/quickstart",
+                  label: "Quick Start"
+                },
+                {
+                  type: "doc",
+                  id: "sdk/python/main-api",
+                  label: "Main API"
+                },
+                {
+                  type: "doc",
+                  id: "sdk/python/core-api",
+                  label: "Core API"
+                },
+                {
+                  type: "link",
+                  label: "API Reference",
+                  href: "https://app.touca.io/docs/sdk/python/api.html"
+                }
+              ]
+            },
+            {
+              type: "category",
+              label: "C++",
+              items: [
+                {
+                  type: "doc",
+                  id: "sdk/cpp/building",
+                  label: "Building"
+                },
+                {
+                  type: "doc",
+                  id: "sdk/cpp/installing",
+                  label: "Installing"
+                },
+                {
+                  type: "doc",
+                  id: "sdk/cpp/quickstart",
+                  label: "Getting Started"
+                },
+                {
+                  type: "doc",
+                  id: "sdk/cpp/main-api",
+                  label: "Main API"
+                },
+                {
+                  type: "doc",
+                  id: "sdk/cpp/core-api",
+                  label: "Core API"
+                },
+                {
+                  type: "link",
+                  label: "API Reference",
+                  href: "https://app.touca.io/docs/sdk/cpp/api.html"
+                }
+              ]
+            },
+            {
+              type: "category",
+              label: "JavaScript",
+              items: [
+                {
+                  type: "doc",
+                  id: "sdk/js/quickstart",
+                  label: "Getting Started"
+                },
+                {
+                  type: "doc",
+                  id: "sdk/js/main-api",
+                  label: "Main API"
+                },
+                {
+                  type: "doc",
+                  id: "sdk/js/core-api",
+                  label: "Core API"
+                },
+                {
+                  type: "link",
+                  label: "API Reference",
+                  href: "https://app.touca.io/docs/sdk/js/index.html"
+                }
+              ]
+            },
+            {
+              type: "category",
+              label: "Java",
+              items: [
+                {
+                  type: "doc",
+                  id: "sdk/java/quickstart",
+                  label: "Getting Started"
+                },
+                {
+                  type: "doc",
+                  id: "sdk/java/main-api",
+                  label: "Main API"
+                },
+                {
+                  type: "doc",
+                  id: "sdk/java/core-api",
+                  label: "Core API"
+                },
+                {
+                  type: "link",
+                  label: "API Reference",
+                  href: "https://app.touca.io/docs/sdk/java/index.html"
+                }
+              ]
             },
             {
               type: "doc",
-              id: "sdk/cpp/installing",
-              label: "Installing"
-            },
-            {
-              type: "doc",
-              id: "sdk/cpp/quickstart",
-              label: "Getting Started"
-            },
-            {
-              type: "doc",
-              id: "sdk/cpp/main-api",
-              label: "Main API"
-            },
-            {
-              type: "doc",
-              id: "sdk/cpp/core-api",
-              label: "Core API"
-            },
-            {
-              type: "link",
-              label: "API Reference",
-              href: "https://app.touca.io/docs/sdk/cpp/api.html"
+              id: "sdk/differences",
+              label: "Differences"
             }
           ]
         },
         {
           type: "category",
-          label: "JavaScript",
+          label: "Server",
+          collapsed: true,
+          collapsible: true,
           items: [
             {
               type: "doc",
-              id: "sdk/js/quickstart",
-              label: "Getting Started"
-            },
-            {
-              type: "doc",
-              id: "sdk/js/main-api",
-              label: "Main API"
-            },
-            {
-              type: "doc",
-              id: "sdk/js/core-api",
-              label: "Core API"
+              id: "server/keyboard-shortcuts",
+              label: "Keyboard Shortcuts"
             },
             {
               type: "link",
-              label: "API Reference",
-              href: "https://app.touca.io/docs/sdk/js/index.html"
+              label: "REST API",
+              href: "https://app.touca.io/docs/api/index.html"
             }
           ]
-        },
-        {
-          type: "category",
-          label: "Java",
-          items: [
-            {
-              type: "doc",
-              id: "sdk/java/quickstart",
-              label: "Getting Started"
-            },
-            {
-              type: "doc",
-              id: "sdk/java/main-api",
-              label: "Main API"
-            },
-            {
-              type: "doc",
-              id: "sdk/java/core-api",
-              label: "Core API"
-            },
-            {
-              type: "link",
-              label: "API Reference",
-              href: "https://app.touca.io/docs/sdk/java/index.html"
-            }
-          ]
-        },
+        }
+      ]
+    },
+    {
+      type: "category",
+      label: "Contributing",
+      collapsed: false,
+      collapsible: true,
+      items: [
         {
           type: "doc",
-          id: "sdk/differences",
-          label: "Differences"
+          id: "contributing/conduct",
+          label: "Code of Conduct"
         }
       ]
     },
@@ -186,7 +251,7 @@ const sidebars = {
       type: "category",
       label: "Guides",
       collapsed: false,
-      collapsible: false,
+      collapsible: true,
       items: [
         {
           type: "doc",
@@ -195,65 +260,37 @@ const sidebars = {
         },
         {
           type: "doc",
-          id: "guides/cli",
-          label: "Command Line Tools"
-        },
-        {
-          type: "doc",
           id: "guides/best-practices",
           label: "Best Practices"
-        },
+        }
+      ]
+    },
+    {
+      type: "category",
+      label: "Touca Cloud",
+      collapsed: false,
+      collapsible: true,
+      items: [
         {
           type: "doc",
-          id: "guides/keyboard",
-          label: "Keyboard Shortcuts"
-        },
-        {
-          type: "doc",
-          id: "guides/pricing",
+          id: "cloud/pricing",
           label: "Pricing"
-        }
-      ]
-    },
-    {
-      type: "category",
-      label: "Other Resources",
-      items: [
-        {
-          type: "link",
-          label: "Touca on GitHub",
-          href: "https://github.com/trytouca/trytouca"
         },
         {
-          type: "link",
-          label: "Touca on Twitter",
-          href: "https://twitter.com/trytouca"
-        },
-        {
-          type: "link",
-          label: "Touca on LinkedIn",
-          href: "https://linkedin.com/company/touca"
-        },
-        {
-          type: "link",
-          label: "Server API",
-          href: "https://app.touca.io/docs/api/index.html"
-        }
-      ]
-    },
-    {
-      type: "category",
-      label: "Legal",
-      items: [
-        {
-          type: "doc",
-          id: "legal/terms",
-          label: "Terms of Service"
-        },
-        {
-          type: "doc",
-          id: "legal/privacy",
-          label: "Privacy Policy"
+          type: "category",
+          label: "Legal",
+          items: [
+            {
+              type: "doc",
+              id: "legal/terms",
+              label: "Terms of Service"
+            },
+            {
+              type: "doc",
+              id: "legal/privacy",
+              label: "Privacy Policy"
+            }
+          ]
         }
       ]
     }

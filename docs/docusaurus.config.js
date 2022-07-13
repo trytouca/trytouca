@@ -2,7 +2,7 @@
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Touca Docs",
-  tagline: "Developer-friendly Continuous Regression Testing",
+  tagline: "Open Source Continuous Regression Testing for Engineering Teams",
   url: "https://touca.io",
   baseUrl: "/docs/",
   onBrokenLinks: "throw",
@@ -10,7 +10,7 @@ const config = {
   favicon: "img/favicon.ico",
   onDuplicateRoutes: "warn",
   organizationName: "trytouca",
-  projectName: "touca-docs",
+  projectName: "@touca/docs",
   trailingSlash: true,
   scripts: [
     {
@@ -34,6 +34,27 @@ const config = {
           customCss: require.resolve("./src/css/custom.css")
         }
       })
+    ]
+  ],
+  plugins: [
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects: [
+          {
+            from: "/guides/cli",
+            to: "/cli"
+          },
+          {
+            from: "/guides/keyboard",
+            to: "/server/keyboard-shortcuts"
+          },
+          {
+            from: "/guides/pricing",
+            to: "/cloud/pricing"
+          }
+        ]
+      }
     ]
   ],
   themeConfig:
@@ -62,7 +83,8 @@ const config = {
         },
         {
           name: "og:image:alt",
-          content: "Developer-friendly Continuous Regression Testing"
+          content:
+            "Open Source Continuous Regression Testing for Engineering Teams"
         },
         { name: "og:image:type", content: "image/png" },
         { name: "og:image:width", content: "906" },
