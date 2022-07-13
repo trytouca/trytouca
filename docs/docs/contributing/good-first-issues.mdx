@@ -1,0 +1,245 @@
+# Good First Issues
+
+Are you thinking about contributing to Touca but don't really know where to
+start? This page lists a few good first projects that are relatively small in
+scope, have clear requirements, and don't need a deep understanding of how Touca
+works. We hope that you find at least one of them interesting enough to start
+contributing to Touca. If that's not the case, come say hi on
+[Discord](https://touca.io/discord) and ask us for a few more suggestions.
+
+## Touca Server
+
+### 1. Improve UX in self-hosting install wizard
+
+When users self-host the Touca Server, the web app displays an install wizard
+that includes a form asking for the fullname and email of the user. When the
+user completes the install wizard, the web app automatically creates an account
+for the provided email and redirects the user to their profile page. But since
+the account does not have a password yet, we show another _account activation_
+form asking for the user to enter their fullname, username, and password. The
+user is left to wonder why we show yet another form after reassuring them that
+the install wizard is complete.
+
+We would like to simplify the onboarding workflow by adding a step to the
+install wizard that asks for the username and password of the master account,
+letting us skip the second form altogether and provide a more intuitive
+experience for the user.
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/196)
+
+### 2. Share types between Touca Server components
+
+Currently we have two separate files `api/src/types/commontypes.ts` and
+`app/src/app/core/models/commontypes.ts` with duplicate content that allow Touca
+frontend understand API response from the backend.
+
+We'd like to create a private npm package `@touca/server-types` so that we can
+share these TypeScript types without duplicating them.
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/195)
+
+### 3. Allow user to manually toggle dark mode
+
+Touca Web App, written in Angular, supports two light and dark modes. Currently,
+the web app follows the system preference to determine whether to use the dark
+mode. We would like to let users manually override this behavior and set
+preference through their profile page. The Web App should query this user
+preference and adjust the display mode accordingly.
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/35)
+
+## JavaScript SDK
+
+### 4. Split the SDK into separate packages
+
+Currently, our JavaScript SDK comes in one single package `@touca/node` with
+dependencies on `fs`, `path`, `http`, `https`, and `url` node modules. This
+prohibits using the SDK in environments where node is not available. In
+addition, the SDK comes includes a test framework that is responsible for taking
+command line arguments and reporting the outcome of the test through the
+standard output. We rely on dependencies such as `yargs` and `chalk` to perform
+these operations.
+
+We'd like to split `@touca/node` into packages `@touca/core` and `@touca/cli`
+and move the test framework and other extra SDK functionalities into the
+`@touca/cli` package, making `@touca/core` suitable for a variety of
+environments.
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/194)
+
+### 5. Migrate away from Lerna
+
+We use Lerna to manage packages in our JavaScript SDK
+([see here](https://github.com/trytouca/trytouca/tree/main/sdk/js)). Lerna is
+now in a weird state (learn more
+[here](https://blog.nrwl.io/lerna-is-dead-long-live-lerna-61259f97dbd9)) and we
+like to remove it in favor of Nx or npm workspaces.
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/193)
+
+### 6. Add support for configuration profiles
+
+We recently introduced configuration profiles to make it easy for users to store
+their configuration options (like API credentials) in a Touca home directory
+(which is in `~/.touca` by default). Currently, only our Python SDK is capable
+of reading these configuration profiles and loading them at configure time.
+
+We like to extend this support to our JavaScript SDK. When the test framework
+starts to run, it should check if a configuration profile exists. If so, it
+should load and parse its content and treat its configuration parameters as if
+they were provided via the command line. Now if a user sets configuration
+parameters in their profile, they won't need to specify them on the command
+line:
+
+```bash
+node examples/01_node_minimal/dist/is_prime_test.js --api-key="<your-api-key>" --api-url="<your-api-url>" --revision=1.0 --testcase alice bob charlie
+pip install touca
+touca config set api-key="<your-api-key>"
+touca config set api-url="<your-api-url>"
+cd ~/trytouca/sdk/js
+npm i && npm run build
+node examples/01_node_minimal/dist/is_prime_test.js --revision=2.0
+touca config set revision=3.0
+node examples/01_node_minimal/dist/is_prime_test.js
+```
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/192)
+
+## DevOps
+
+### 7. Create a Unified Docker image for Touca Server
+
+Touca server is currently split into three containers:
+
+- [touca-api](https://hub.docker.com/r/touca/touca-api): A Node-based conatiner
+  that runs Touca Backend ExpressJS service.
+- [touca-app](https://hub.docker.com/r/touca/touca-app): An Nginx-based
+  conatiner that serves Touca Frontend static files and reverse proxies requests
+  to `/api` to the Backend service.
+- [touca-cmp](https://hub.docker.com/r/touca/touca-app): An Ubuntu-based
+  container that runs Toua Comparator service which is a standalone binary
+  executable.
+
+We like to combine these services and create a single Alpine-based `touca`
+docker image that runs all the three processes.
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/191)
+- [Feature Branch](https://github.com/trytouca/trytouca/tree/feature/arm)
+
+### 8. Add Terraform configuration for AWS
+
+Generally, we'd like to make it easier for people to self-host Touca wherever
+they like. Instead of giving free OSS users a half-broken experience and forcing
+them to upgrade to our paid enterprise edition as a fix, we like to make their
+self-hosting experience as pleasant as possible.
+
+We'd like to add a Terraform configuration that enables deploying Touca OSS to
+AWS, hosting the Touca server on EKS and using DocumentDB, ElastiCache and S3 as
+backend services.
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/190)
+- Relevant:
+  [Docker compose file](https://github.com/trytouca/trytouca/blob/main/ops/docker-compose.prod.yml)
+- Relevant:
+  [Self-Hosting Install Script](https://github.com/trytouca/trytouca/blob/main/ops/install.sh)
+
+## Python CLI
+
+### 9. Add new subcommand `result`
+
+We'd like to add a `result` subcommand to the Touca Python CLI to make it easier
+for users to manage local and remote test results. Initially, we'd only support
+local files (reading content of `~/.touca` directory. But we'd like to let users
+control the data on the server too at some point.
+
+- `touca result list [<suite>[/<version>]]` should show a summary of test
+  results in a given version of a given suite or the list of versions in a suite
+  if a specific version is not provided.
+- `touca result remove <suite>[/<version>]` should remove test results.
+
+These are the only two supported operations we have good user feedback on. But
+we may add more in the future. The keyword `result` is not perfect. We are open
+to other suggestions.
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/112)
+
+## C++ SDK
+
+### 10. Create package recipe for ConanCenter
+
+Most engineering teams using Touca for serious C++ projects simply clone a
+stable version of our C++ SDK and repackage it internally. This is, in part,
+because the C++ ecosystem does not have a universally adopted package manager,
+like npm or PyPI. Teams that have the luxury to be ahead of the curve use
+[Conan](https://conan.io) or [vcpkg](https://vcpkg.io). These are battle-tested
+package managers suitable for large complex codebases but also very relevant and
+convenient for smaller projects.
+
+We like to make Touca available on [Conan Center](https://conan.io/center)
+public package registry to make it easier for Conan users to try Touca. To do
+so, we'd need to add a recipe for Touca to the `conan-center-index` repository.
+The instructions to do so are well documented
+[here](https://github.com/conan-io/conan-center-index/blob/master/docs/how_to_add_packages.md).
+But we may also have to make changes to our own `conanfile.py` (which is
+[here](https://github.com/trytouca/trytouca/blob/main/sdk/cpp/conanfile.py)). In
+particular, we may need to improve how our CMake logic installs the libraries
+and links to its third-party dependencies.
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/33)
+- Relevant: [Github Issue](https://github.com/trytouca/trytouca/issues/32) for
+  CMake improvements
+
+### 11. Improve CMake logic for packaging
+
+We are not using the standard CMake logic for packaging, exporting, installing,
+and finding the C++ library. This makes it difficult to package the library for
+publication to conan-center, vcpkg and other dependency management repositories.
+The goal of this ticket is to improve this CMake logic.
+
+- We should be able to export all CMake targets and install them in a `touca::`
+  CMake namespace.
+- We should write a CMake config file that allows us to find the library using
+  CMake's `find_*` function.
+- We should be able to use CPack to package the C++ SDK.
+
+Relevant Links:
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/32)
+
+## Java SDK
+
+### 12. Better way to run example
+
+Our Java Examples in `examples/java` and `sdk/java` directories are defined as
+standalone applications. Unlike JUnit tests that are in often placed in the
+`src/test`directory of a given library/package, Touca tests live outside the
+library in a separate `examples` directory. This is unintuitive. But we are no
+Java or Gradle experts and simply didn't know any better. If you have ideas on
+how to fix this, please have at it.
+
+Because of this directory layout, we reference these Java examples in
+`settings.gradle.kts` and have separate `build.gradle.kts` files for each
+example. Each build file has a `JavaExec` task like below:
+
+```kotlin
+task<JavaExec>("runExampleMinimal") {
+    main = "io.touca.examples.minimal.PrimeTest"
+    classpath = sourceSets["main"].runtimeClasspath
+}
+```
+
+This way, we can run the example application using the following command:
+
+```bash
+gradle runExampleMinimal --args='--api-key <TOUCA_API_KEY> --api-url <TOUCA_API_URL> --revision 1.0 --testcase 13'
+```
+
+Note that we are using `gradle` here instead of `gradlew` so we can run the task
+and pass the appropriate command line arguments. Very ugly. Yuck! There must be
+a better way. We don't know it yet, but maybe you do. The first task for this
+issue is to figure out how to improve this setup. The second task is to actually
+implement it and convert the existing examples to the new pattern accordingly.
+We should also update all getting started documents and markdown files in
+`examples` directory as part of this work.
+
+- [GitHub Issue](https://github.com/trytouca/trytouca/issues/189)

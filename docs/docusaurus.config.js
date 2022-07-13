@@ -52,6 +52,10 @@ const config = {
           {
             from: "/guides/pricing",
             to: "/cloud/pricing"
+          },
+          {
+            from: "/sdk/differences",
+            to: "/sdk"
           }
         ]
       }
