@@ -94,6 +94,11 @@ const sidebars = {
           collapsible: true,
           items: [
             {
+              type: "doc",
+              id: "sdk/Readme",
+              label: "Overview"
+            },
+            {
               type: "category",
               label: "Python",
               items: [
@@ -206,11 +211,6 @@ const sidebars = {
                   href: "https://app.touca.io/docs/sdk/java/index.html"
                 }
               ]
-            },
-            {
-              type: "doc",
-              id: "sdk/differences",
-              label: "Differences"
             }
           ]
         },
@@ -244,6 +244,16 @@ const sidebars = {
           type: "doc",
           id: "contributing/conduct",
           label: "Code of Conduct"
+        },
+        {
+          type: "doc",
+          id: "contributing/Readme",
+          label: "Contributing Guide"
+        },
+        {
+          type: "doc",
+          id: "contributing/good-first-issues",
+          label: "Good First Issues"
         }
       ]
     },
