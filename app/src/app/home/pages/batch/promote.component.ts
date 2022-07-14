@@ -6,7 +6,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 import { MarkdownService, SECURITY_CONTEXT } from 'ngx-markdown';
 
-import { BatchLookupResponse } from '@/core/models/commontypes';
+import { BatchLookupResponse } from '@touca/api-types';
 import { ApiService } from '@/core/services';
 import { ModalComponent } from '@/home/components';
 import { AlertType } from '@/shared/components/alert.component';

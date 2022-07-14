@@ -9,7 +9,7 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import type { BatchItemQueryOutput } from '@/types/backendtypes'
-import { ENotificationType, SuiteLookupResponse } from '@/types/commontypes'
+import { ENotificationType, SuiteLookupResponse } from '@touca/api-types'
 import logger from '@/utils/logger'
 import { rclient as redis } from '@/utils/redis'
 

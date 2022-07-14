@@ -5,7 +5,7 @@ import { Types } from 'mongoose'
 
 import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
-import { ETeamRole, TeamItem, TeamListResponse } from '@/types/commontypes'
+import { ETeamRole, TeamItem, TeamListResponse } from '@touca/api-types'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'

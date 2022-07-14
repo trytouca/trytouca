@@ -11,7 +11,7 @@ import type {
   ENotificationType,
   SuiteItem,
   Userinfo
-} from './commontypes'
+} from '@touca/api-types'
 
 export type PromotionQueryOutput = {
   at: Date

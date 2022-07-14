@@ -4,7 +4,7 @@
 
 import { environment } from 'src/environments/environment';
 
-import { UserLookupResponse } from '@/core/models/commontypes';
+import { UserLookupResponse } from '@touca/api-types';
 
 class IntercomClient {
   public get enabled() {

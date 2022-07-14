@@ -11,7 +11,7 @@ import type {
   ElementComparisonResponse,
   ElementLookupResponse,
   SuiteLookupResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-types';
 import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
 import { IPageService } from '@/home/models/pages.model';

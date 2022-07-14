@@ -3,7 +3,7 @@
 import { Types } from 'mongoose'
 
 import { UserModel } from '@/schemas/user'
-import type { Userinfo } from '@/types/commontypes'
+import type { Userinfo } from '@touca/api-types'
 
 export class UserMap {
   private data: (Userinfo & { _id: Types.ObjectId })[] = []

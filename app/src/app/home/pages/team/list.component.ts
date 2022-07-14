@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 
-import { TeamLookupResponse } from '@/core/models/commontypes';
+import { TeamLookupResponse } from '@touca/api-types';
 import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
 import { TopicType } from '@/home/models/page-item.model';

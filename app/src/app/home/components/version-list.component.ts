@@ -13,7 +13,7 @@ import { isEqual } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, skip } from 'rxjs/operators';
 
-import { SuiteLookupResponse } from '@/core/models/commontypes';
+import { SuiteLookupResponse } from '@touca/api-types';
 import {
   FrontendBatchCompareParams,
   FrontendElementCompareParams

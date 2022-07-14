@@ -2,7 +2,7 @@
 
 import { Component, Input } from '@angular/core';
 
-import { PlatformStatsResponse } from '@/core/models/commontypes';
+import { PlatformStatsResponse } from '@touca/api-types';
 
 @Component({
   selector: 'app-settings-tab-server',

@@ -7,7 +7,7 @@ import { MessageModel } from '@/schemas/message'
 import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import type { ElementLookupResponse } from '@/types/commontypes'
+import type { ElementLookupResponse } from '@touca/api-types'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

@@ -5,7 +5,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   PlatformStatsUser,
   UserLookupResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-types';
 
 @Component({
   selector: 'app-settings-tab-users',

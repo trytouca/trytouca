@@ -23,7 +23,7 @@ import type {
   BatchLookupResponse,
   ElementLookupResponse,
   SuiteLookupResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-types';
 import type {
   FrontendElementCompareParams,
   FrontendOverviewSection

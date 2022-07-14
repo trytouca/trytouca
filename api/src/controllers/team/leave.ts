@@ -8,7 +8,7 @@ import {
 } from '@/controllers/team/common'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
-import { ETeamRole } from '@/types/commontypes'
+import { ETeamRole } from '@touca/api-types'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 import { rclient } from '@/utils/redis'

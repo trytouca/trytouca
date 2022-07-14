@@ -10,7 +10,7 @@ import {
 } from '@angular/router';
 import { map } from 'rxjs/operators';
 
-import { EPlatformRole, UserLookupResponse } from '../models/commontypes';
+import { EPlatformRole, UserLookupResponse } from '@touca/api-types';
 import { ApiService } from './api.service';
 
 @Injectable({

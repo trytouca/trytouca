@@ -9,6 +9,7 @@ importers:
       '@hubspot/api-client': ^7.0.1
       '@jest/globals': ^28.1.2
       '@sindresorhus/df': ^3.1.1
+      '@touca/api-types': workspace:*
       '@types/archiver': ^5.3.1
       '@types/bcryptjs': ^2.4.2
       '@types/cookie-parser': ^1.4.3
@@ -76,6 +77,7 @@ importers:
       '@aws-sdk/client-s3': 3.127.0
       '@hubspot/api-client': 7.0.1
       '@sindresorhus/df': 3.1.1
+      '@touca/api-types': link:../api-types
       archiver: 5.3.1
       bcryptjs: 2.4.3
       compression: 1.7.4
@@ -141,6 +143,9 @@ importers:
       typedoc: 0.23.7_typescript@4.7.4
       typescript: 4.7.4
 
+  api-types:
+    specifiers: {}
+
   app:
     specifiers:
       '@angular-devkit/build-angular': ^14.0.5
@@ -175,6 +180,7 @@ importers:
       '@ngneat/overview': ^3.0.4
       '@tailwindcss/forms': ^0.5.2
       '@tailwindcss/typography': ^0.5.3
+      '@touca/api-types': workspace:*
       '@types/gapi': ^0.0.42
       '@types/gapi.auth2': ^0.0.56
       '@types/lodash-es': ^4.17.6
@@ -227,6 +233,7 @@ importers:
       '@ngneat/dialog': 2.1.1_@angular+core@14.0.5
       '@ngneat/helipopper': 5.1.4_pd26sq2jytawfqcq73asxk4otu
       '@ngneat/overview': 3.0.4_@angular+core@14.0.5
+      '@touca/api-types': link:../api-types
       chart.js: 3.8.0
       date-fns: 2.28.0
       duration-fns: 3.0.1

@@ -4,7 +4,7 @@ import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import type { SuiteLookupResponse } from '@/core/models/commontypes';
+import type { SuiteLookupResponse } from '@touca/api-types';
 import type { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';

@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { IUser, UserModel } from '@/schemas/user'
-import type { UserLookupResponse } from '@/types/commontypes'
+import type { UserLookupResponse } from '@touca/api-types'
 import logger from '@/utils/logger'
 import { getChatToken } from '@/utils/tracker'
 

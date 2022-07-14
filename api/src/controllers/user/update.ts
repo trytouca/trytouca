@@ -6,7 +6,7 @@ import { identity, omit, pick, pickBy } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 
 import { IUser, UserModel } from '@/schemas/user'
-import { EFeatureFlag } from '@/types/commontypes'
+import { EFeatureFlag } from '@touca/api-types'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'

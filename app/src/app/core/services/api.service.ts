@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { PlatformStatus } from '@/core/models/commontypes';
+import { PlatformStatus } from '@touca/api-types';
 import { getBackendUrl } from '@/core/models/environment';
 
 export enum ApiRequestType {

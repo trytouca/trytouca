@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import { Subscription } from 'rxjs';
 
-import type { TeamItem } from '@/core/models/commontypes';
+import type { TeamItem } from '@touca/api-types';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
 import {

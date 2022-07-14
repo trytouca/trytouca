@@ -2,7 +2,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { UserSessionsResponseItem } from '@/core/models/commontypes';
+import { UserSessionsResponseItem } from '@touca/api-types';
 
 @Component({
   selector: 'app-settings-tab-sessions',

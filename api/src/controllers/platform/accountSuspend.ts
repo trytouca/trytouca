@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { SessionModel } from '@/schemas/session'
 import { IUser, UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
+import { EPlatformRole } from '@touca/api-types'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

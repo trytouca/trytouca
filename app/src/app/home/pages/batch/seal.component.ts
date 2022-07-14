@@ -5,7 +5,7 @@ import { Component, HostListener } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
 
-import { BatchLookupResponse } from '@/core/models/commontypes';
+import { BatchLookupResponse } from '@touca/api-types';
 import { ApiService } from '@/core/services';
 import { ModalComponent } from '@/home/components';
 import { AlertType } from '@/shared/components/alert.component';

@@ -6,7 +6,7 @@ import { MessageModel } from '@/schemas/message'
 import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import type { ElementListResponse } from '@/types/commontypes'
+import type { ElementListResponse } from '@touca/api-types'
 import logger from '@/utils/logger'
 import { rclient as redis } from '@/utils/redis'
 

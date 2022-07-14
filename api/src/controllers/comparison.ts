@@ -13,7 +13,7 @@ import type {
 import type {
   BatchCompareOverview,
   CppTestcaseComparisonOverview
-} from '@/types/commontypes'
+} from '@touca/api-types'
 import logger from '@/utils/logger'
 
 type ObjectId = mongoose.Types.ObjectId

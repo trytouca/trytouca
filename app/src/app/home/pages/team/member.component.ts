@@ -11,7 +11,7 @@ import {
   faUserTie
 } from '@fortawesome/free-solid-svg-icons';
 
-import { ETeamRole, TeamMember } from '@/core/models/commontypes';
+import { ETeamRole, TeamMember } from '@touca/api-types';
 
 type Icon = {
   type: IconProp;

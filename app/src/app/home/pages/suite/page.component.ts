@@ -12,8 +12,8 @@ import type {
   SuiteItem,
   SuiteLookupResponse,
   TeamItem
-} from '@/core/models/commontypes';
-import { ENotificationType } from '@/core/models/commontypes';
+} from '@touca/api-types';
+import { ENotificationType } from '@touca/api-types';
 import { getBackendUrl } from '@/core/models/environment';
 import {
   AlertKind,

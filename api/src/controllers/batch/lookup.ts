@@ -10,7 +10,7 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import { ECommentType } from '@/types/backendtypes'
-import type { BatchLookupResponse } from '@/types/commontypes'
+import type { BatchLookupResponse } from '@touca/api-types'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

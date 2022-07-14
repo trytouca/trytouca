@@ -8,7 +8,7 @@ import { DialogService } from '@ngneat/dialog';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 
-import { ETeamRole, TeamLookupResponse } from '@/core/models/commontypes';
+import { ETeamRole, TeamLookupResponse } from '@touca/api-types';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { ApiService } from '@/core/services';
 import {

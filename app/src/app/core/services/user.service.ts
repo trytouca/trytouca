@@ -8,7 +8,7 @@ import {
   EPlatformRole,
   ETeamRole,
   UserLookupResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-types';
 import { errorLogger } from '@/shared/utils/errorLogger';
 
 import { AlertKind, AlertService } from './alert.service';

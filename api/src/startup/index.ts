@@ -3,7 +3,7 @@
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
 import { SuiteModel } from '@/schemas/suite'
 import { UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
+import { EPlatformRole } from '@touca/api-types'
 import logger from '@/utils/logger'
 
 /**

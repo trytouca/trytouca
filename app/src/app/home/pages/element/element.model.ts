@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import type { CppTypeComparison, Userinfo } from '@/core/models/commontypes';
+import type { CppTypeComparison, Userinfo } from '@touca/api-types';
 import { Metric } from '@/home/models/metric.model';
 import { PageListItem } from '@/home/models/page-list-item.model';
 import { Result } from '@/home/models/result.model';

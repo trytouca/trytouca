@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { IUser, UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
+import { EPlatformRole } from '@touca/api-types'
 import logger from '@/utils/logger'
 
 export async function platformAccountUpdate(

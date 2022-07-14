@@ -9,13 +9,13 @@ import { Subscription, timer } from 'rxjs';
 import { RecentEvent } from '@/account/settings/audit.component';
 import { ApiKey } from '@/core/models/api-key';
 import {
+  EFeatureFlag,
   EPlatformRole,
   PlatformStatsResponse,
   PlatformStatsUser,
   UserLookupResponse,
   UserSessionsResponseItem
-} from '@/core/models/commontypes';
-import { EFeatureFlag } from '@/core/models/commontypes';
+} from '@touca/api-types';
 import {
   ApiService,
   AuthService,

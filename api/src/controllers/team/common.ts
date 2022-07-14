@@ -2,7 +2,7 @@
 
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { ETeamRole } from '@/types/commontypes'
+import { ETeamRole } from '@touca/api-types'
 
 /**
  * @summary provides a list of members and admins of a given team.

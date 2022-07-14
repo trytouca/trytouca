@@ -23,7 +23,7 @@ import {
   BatchLookupResponse,
   PlatformStatus,
   SuiteLookupResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-types';
 import type {
   FrontendBatchCompareParams,
   FrontendOverviewSection

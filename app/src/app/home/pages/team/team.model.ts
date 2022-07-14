@@ -5,7 +5,7 @@ import type {
   TeamApplicant,
   TeamInvitee,
   TeamMember
-} from '@/core/models/commontypes';
+} from '@touca/api-types';
 import { PageListItem } from '@/home/models/page-list-item.model';
 
 type DataType = TeamMember | TeamInvitee | TeamApplicant;

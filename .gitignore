@@ -1,3 +1,4 @@
 data/
 local
 logs
+node_modules/
