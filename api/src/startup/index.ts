@@ -1,9 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
+
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
 import { SuiteModel } from '@/schemas/suite'
 import { UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@touca/api-schema'
 import logger from '@/utils/logger'
 
 /**

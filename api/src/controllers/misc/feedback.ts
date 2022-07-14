@@ -1,10 +1,10 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { relay } from '@/models/relay'
 import { wslFindByRole } from '@/models/user'
-import { EPlatformRole } from '@touca/api-schema'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'

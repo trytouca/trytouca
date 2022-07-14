@@ -2,9 +2,6 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { isEqual } from 'lodash-es';
-import { forkJoin, of, Subject } from 'rxjs';
-
 import {
   ETeamRole,
   SuiteLookupResponse,
@@ -15,6 +12,9 @@ import {
   TeamMember,
   TeamMemberListResponse
 } from '@touca/api-schema';
+import { isEqual } from 'lodash-es';
+import { forkJoin, of, Subject } from 'rxjs';
+
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
 import { PageTab } from '@/home/components';

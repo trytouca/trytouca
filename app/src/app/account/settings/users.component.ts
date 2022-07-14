@@ -1,7 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-
 import { PlatformStatsUser, UserLookupResponse } from '@touca/api-schema';
 
 @Component({

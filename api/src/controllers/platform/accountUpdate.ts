@@ -1,9 +1,9 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { IUser, UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@touca/api-schema'
 import logger from '@/utils/logger'
 
 export async function platformAccountUpdate(

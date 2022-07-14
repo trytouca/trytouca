@@ -3,7 +3,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faUser, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-
 import { TeamApplicant } from '@touca/api-schema';
 
 @Component({

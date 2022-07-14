@@ -1,12 +1,12 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
 import * as bcrypt from 'bcryptjs'
 import { once } from 'lodash'
 
 import { addSampleData } from '@/models/sampleData'
 import { SessionModel } from '@/schemas/session'
 import { IUserDocument, UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@touca/api-schema'
 import { config } from '@/utils/config'
 import * as jwt from '@/utils/jwt'
 import logger from '@/utils/logger'

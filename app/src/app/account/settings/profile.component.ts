@@ -9,9 +9,9 @@ import {
   Output
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { UserLookupResponse } from '@touca/api-schema';
 import { Subscription, timer } from 'rxjs';
 
-import { UserLookupResponse } from '@touca/api-schema';
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
 import { ApiRequestType, ApiService, UserService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';

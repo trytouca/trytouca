@@ -1,5 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { ETeamRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import {
@@ -8,7 +9,6 @@ import {
 } from '@/controllers/team/common'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
-import { ETeamRole } from '@touca/api-schema'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 import { rclient } from '@/utils/redis'

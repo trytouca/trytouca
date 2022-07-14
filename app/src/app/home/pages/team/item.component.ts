@@ -9,9 +9,9 @@ import {
   faSpinner,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
+import { SuiteLookupResponse } from '@touca/api-schema';
 import { format } from 'date-fns';
 
-import { SuiteLookupResponse } from '@touca/api-schema';
 import { PillContainerComponent } from '@/home/components';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import {

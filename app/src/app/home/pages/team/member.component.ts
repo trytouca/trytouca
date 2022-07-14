@@ -10,7 +10,6 @@ import {
   faUserNinja,
   faUserTie
 } from '@fortawesome/free-solid-svg-icons';
-
 import { ETeamRole, TeamMember } from '@touca/api-schema';
 
 type Icon = {

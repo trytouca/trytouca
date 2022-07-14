@@ -1,13 +1,13 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import { ParamMap } from '@angular/router';
-
 import type {
   BatchCompareOverview,
   BatchComparisonItemCommon,
   BatchComparisonItemSolo,
   Userinfo
 } from '@touca/api-schema';
+
 import { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 
 type DataType = BatchComparisonItemCommon | BatchComparisonItemSolo;

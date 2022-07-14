@@ -17,13 +17,13 @@ import {
   faStopwatch,
   faTasks
 } from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
-
 import type {
   BatchLookupResponse,
   ElementLookupResponse,
   SuiteLookupResponse
 } from '@touca/api-schema';
+import { Subscription } from 'rxjs';
+
 import type {
   FrontendElementCompareParams,
   FrontendOverviewSection

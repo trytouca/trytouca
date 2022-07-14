@@ -1,5 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { SuiteListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { Types } from 'mongoose'
 
@@ -12,7 +13,6 @@ import type {
   BatchItemQueryOutput,
   SuiteItemQueryOutput
 } from '@/types/backendtypes'
-import type { SuiteListResponse } from '@touca/api-schema'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

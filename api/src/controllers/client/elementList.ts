@@ -1,12 +1,12 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { ElementListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { MessageModel } from '@/schemas/message'
 import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import type { ElementListResponse } from '@touca/api-schema'
 import logger from '@/utils/logger'
 import { rclient as redis } from '@/utils/redis'
 

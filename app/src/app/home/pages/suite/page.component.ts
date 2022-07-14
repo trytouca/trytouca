@@ -4,16 +4,16 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IClipboardResponse } from 'ngx-clipboard';
-import { Subscription, timer } from 'rxjs';
-
-import { ApiKey } from '@/core/models/api-key';
 import type {
   SuiteItem,
   SuiteLookupResponse,
   TeamItem
 } from '@touca/api-schema';
 import { ENotificationType } from '@touca/api-schema';
+import { IClipboardResponse } from 'ngx-clipboard';
+import { Subscription, timer } from 'rxjs';
+
+import { ApiKey } from '@/core/models/api-key';
 import { getBackendUrl } from '@/core/models/environment';
 import {
   AlertKind,

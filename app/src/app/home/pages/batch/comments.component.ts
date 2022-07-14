@@ -3,14 +3,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-
 import type {
   BatchLookupResponse,
   CommentItem,
   TeamLookupResponse
 } from '@touca/api-schema';
 import { EPlatformRole, ETeamRole } from '@touca/api-schema';
+import { Subscription } from 'rxjs';
+
 import {
   FrontendCommentAction,
   FrontendCommentActionType,

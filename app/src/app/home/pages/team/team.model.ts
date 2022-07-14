@@ -6,6 +6,7 @@ import type {
   TeamInvitee,
   TeamMember
 } from '@touca/api-schema';
+
 import { PageListItem } from '@/home/models/page-list-item.model';
 
 type DataType = TeamMember | TeamInvitee | TeamApplicant;

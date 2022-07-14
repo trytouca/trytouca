@@ -1,10 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { ETeamRole, TeamMemberListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { ETeamRole, TeamMemberListResponse } from '@touca/api-schema'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

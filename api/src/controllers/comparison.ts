@@ -1,5 +1,9 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import type {
+  BatchCompareOverview,
+  CppTestcaseComparisonOverview
+} from '@touca/api-schema'
 import { floor } from 'lodash'
 import mongoose from 'mongoose'
 
@@ -10,10 +14,6 @@ import type {
   BackendBatchComparisonItemSolo,
   BackendBatchComparisonResponse
 } from '@/types/backendtypes'
-import type {
-  BatchCompareOverview,
-  CppTestcaseComparisonOverview
-} from '@touca/api-schema'
 import logger from '@/utils/logger'
 
 type ObjectId = mongoose.Types.ObjectId

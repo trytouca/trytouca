@@ -2,9 +2,6 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { isEqual } from 'lodash-es';
-import { forkJoin, Observable, of, Subject } from 'rxjs';
-
 import type {
   BatchListResponse,
   ElementListResponse,
@@ -13,6 +10,9 @@ import type {
   SuiteLookupResponse,
   TeamLookupResponse
 } from '@touca/api-schema';
+import { isEqual } from 'lodash-es';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
+
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
 import {
   AlertKind,

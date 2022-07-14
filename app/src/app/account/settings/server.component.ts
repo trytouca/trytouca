@@ -1,7 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, Input } from '@angular/core';
-
 import { PlatformStatsResponse } from '@touca/api-schema';
 
 @Component({

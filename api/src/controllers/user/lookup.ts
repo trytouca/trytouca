@@ -1,9 +1,9 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { UserLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { IUser, UserModel } from '@/schemas/user'
-import type { UserLookupResponse } from '@touca/api-schema'
 import logger from '@/utils/logger'
 import { getChatToken } from '@/utils/tracker'
 
