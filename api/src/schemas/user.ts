@@ -1,9 +1,8 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
 import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid'
-
-import { EPlatformRole } from '@/types/commontypes'
 
 const userSchema = new mongoose.Schema({
   activatedAt: {

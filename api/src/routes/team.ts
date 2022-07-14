@@ -1,5 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { ETeamRole } from '@touca/api-schema'
 import express from 'express'
 import * as ev from 'express-validator'
 
@@ -22,7 +23,6 @@ import { teamMemberUpdate } from '@/controllers/team/memberUpdate'
 import { ctrlTeamRemove } from '@/controllers/team/remove'
 import { teamUpdate } from '@/controllers/team/update'
 import * as middleware from '@/middlewares'
-import { ETeamRole } from '@/types/commontypes'
 import { promisable } from '@/utils/routing'
 
 const router = express.Router()

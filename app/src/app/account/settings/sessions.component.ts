@@ -1,8 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-
-import { UserSessionsResponseItem } from '@/core/models/commontypes';
+import { UserSessionsResponseItem } from '@touca/api-schema';
 
 @Component({
   selector: 'app-settings-tab-sessions',

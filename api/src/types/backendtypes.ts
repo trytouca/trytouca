@@ -1,7 +1,5 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import type { Types } from 'mongoose'
-
 import type {
   BatchCompareOverview,
   BatchComparisonItem,
@@ -11,7 +9,8 @@ import type {
   ENotificationType,
   SuiteItem,
   Userinfo
-} from './commontypes'
+} from '@touca/api-schema'
+import type { Types } from 'mongoose'
 
 export type PromotionQueryOutput = {
   at: Date

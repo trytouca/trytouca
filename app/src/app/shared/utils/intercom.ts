@@ -2,9 +2,8 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
+import { UserLookupResponse } from '@touca/api-schema';
 import { environment } from 'src/environments/environment';
-
-import { UserLookupResponse } from '@/core/models/commontypes';
 
 class IntercomClient {
   public get enabled() {

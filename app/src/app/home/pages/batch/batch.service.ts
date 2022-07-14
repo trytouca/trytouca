@@ -2,10 +2,6 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { isEqual } from 'lodash-es';
-import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import type {
   BatchComparisonResponse,
   BatchListResponse,
@@ -14,7 +10,11 @@ import type {
   CommentListResponse,
   SuiteLookupResponse,
   TeamLookupResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-schema';
+import { isEqual } from 'lodash-es';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import type { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
 import { IPageService } from '@/home/models/pages.model';

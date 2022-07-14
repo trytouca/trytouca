@@ -1,5 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { ENotificationType, SuiteLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash'
 
@@ -9,7 +10,6 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import type { BatchItemQueryOutput } from '@/types/backendtypes'
-import { ENotificationType, SuiteLookupResponse } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient as redis } from '@/utils/redis'
 

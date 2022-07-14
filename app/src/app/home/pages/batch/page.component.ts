@@ -14,16 +14,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSpinner, faTasks } from '@fortawesome/free-solid-svg-icons';
 import { DialogRef, DialogService } from '@ngneat/dialog';
-import { isEqual } from 'lodash-es';
-import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
-
 import {
   BatchItem,
   BatchLookupResponse,
   PlatformStatus,
   SuiteLookupResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-schema';
+import { isEqual } from 'lodash-es';
+import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
 import type {
   FrontendBatchCompareParams,
   FrontendOverviewSection

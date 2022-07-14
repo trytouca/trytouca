@@ -1,5 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
 import fs from 'fs'
 import htmlToText from 'html-to-text'
 import { has as lodashHas } from 'lodash'
@@ -11,7 +12,6 @@ import path from 'path'
 import { wslGetSuperUser } from '@/models/user'
 import { MailModel } from '@/schemas/mail'
 import { IUser, UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
 import { config, configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
 

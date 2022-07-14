@@ -8,12 +8,12 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SuiteLookupResponse } from '@touca/api-schema';
 import Fuse from 'fuse.js';
 import { isEqual } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, skip } from 'rxjs/operators';
 
-import { SuiteLookupResponse } from '@/core/models/commontypes';
 import {
   FrontendBatchCompareParams,
   FrontendElementCompareParams

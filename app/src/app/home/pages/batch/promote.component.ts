@@ -4,9 +4,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, SecurityContext } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
+import { BatchLookupResponse } from '@touca/api-schema';
 import { MarkdownService, SECURITY_CONTEXT } from 'ngx-markdown';
 
-import { BatchLookupResponse } from '@/core/models/commontypes';
 import { ApiService } from '@/core/services';
 import { ModalComponent } from '@/home/components';
 import { AlertType } from '@/shared/components/alert.component';

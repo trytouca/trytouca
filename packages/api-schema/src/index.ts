@@ -1,5 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+/**
+ * @schema CT_EFeatureFlag
+ *  type: string
+ *  enum: ['newsletter_product', 'newsletter_changelog']
+ */
 export enum EFeatureFlag {
   NewsletterProduct = 'newsletter_product',
   NewsletterChangelog = 'newsletter_changelog'
@@ -200,7 +205,7 @@ export type TeamListResponse = TeamItem[]
  *    role:
  *      $ref: '#/components/schemas/CT_ETeamRole'
  */
-type TeamMember = {
+export type TeamMember = {
   fullname: string
   role: ETeamRole
   username: string
@@ -223,7 +228,7 @@ type TeamMember = {
  *      type: string
  *      format: date-time
  */
-type TeamInvitee = {
+export type TeamInvitee = {
   email: string
   fullname: string
   invitedAt: Date
@@ -246,7 +251,7 @@ type TeamInvitee = {
  *    username:
  *      type: string
  */
-type TeamApplicant = {
+export type TeamApplicant = {
   email: string
   fullname: string
   username: string
@@ -689,7 +694,7 @@ export type BatchComparisonItem = {
  *    src:
  *      $ref: '#/components/schemas/CT_BatchComparisonItem'
  */
-type BatchComparisonItemCommon = {
+export type BatchComparisonItemCommon = {
   dst: BatchComparisonItem
   meta?: CppTestcaseComparisonOverview
   src: BatchComparisonItem
@@ -704,7 +709,7 @@ type BatchComparisonItemCommon = {
  *        meta:
  *          $ref: '#/components/schemas/CT_CppTestcaseOverview'
  */
-type BatchComparisonItemSolo = BatchComparisonItem & {
+export type BatchComparisonItemSolo = BatchComparisonItem & {
   meta?: CppTestcaseOverview
 }
 
@@ -772,7 +777,7 @@ export type BatchComparisonResponse = {
  *          time:
  *            type: number
  */
-type ElementListResponseItem = {
+export type ElementListResponseItem = {
   metricsDuration: number
   name: string
   note: string
@@ -861,7 +866,7 @@ export type ElementLookupResponse = {
  *        submittedBy:
  *          $ref: '#/components/schemas/CT_Userinfo'
  */
-type ElementComparisonItem = BatchComparisonItem & {
+export type ElementComparisonItem = BatchComparisonItem & {
   submittedAt: Date
   submittedBy: Userinfo
 }
@@ -923,7 +928,7 @@ export type CppTypeComparison = {
  *      items:
  *        $ref: '#/components/schemas/CT_CppTypeComparison'
  */
-type CppCellar = {
+export type CppCellar = {
   commonKeys: CppTypeComparison[]
   missingKeys: CppTypeComparison[]
   newKeys: CppTypeComparison[]
@@ -952,7 +957,7 @@ type CppCellar = {
  *    version:
  *      type: string
  */
-type CppTestcaseMetadata = {
+export type CppTestcaseMetadata = {
   builtAt: Date
   teamslug: string
   testcase: string
@@ -982,7 +987,7 @@ type CppTestcaseMetadata = {
  *    src:
  *      $ref: '#/components/schemas/CT_CppTestcaseMetadata'
  */
-type CppTestcaseComparison = {
+export type CppTestcaseComparison = {
   assertions: CppCellar
   dst: CppTestcaseMetadata
   metrics: CppCellar

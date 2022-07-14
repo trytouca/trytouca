@@ -1,11 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { ENotificationType } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { ENotificationType } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { analytics, EActivity } from '@/utils/tracker'
 

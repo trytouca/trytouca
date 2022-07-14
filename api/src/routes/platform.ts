@@ -1,5 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
 import express from 'express'
 import * as ev from 'express-validator'
 
@@ -13,7 +14,6 @@ import { platformInstall } from '@/controllers/platform/install'
 import { platformStats } from '@/controllers/platform/stats'
 import { platformUpdate } from '@/controllers/platform/update'
 import * as middleware from '@/middlewares'
-import { EPlatformRole } from '@/types/commontypes'
 import { promisable } from '@/utils/routing'
 
 const router = express.Router()

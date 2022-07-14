@@ -1,6 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ElementListResponseItem } from '@/core/models/commontypes';
+import { ElementListResponseItem } from '@touca/api-schema';
+
 import type { FrontendBatchItem } from '@/core/models/frontendtypes';
 import { PageListItem } from '@/home/models/page-list-item.model';
 

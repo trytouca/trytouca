@@ -12,15 +12,15 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
+import type {
+  SuiteLookupResponse,
+  TeamLookupResponse
+} from '@touca/api-schema';
+import { ETeamRole } from '@touca/api-schema';
 import * as duration from 'duration-fns';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 
-import type {
-  SuiteLookupResponse,
-  TeamLookupResponse
-} from '@/core/models/commontypes';
-import { ETeamRole } from '@/core/models/commontypes';
 import { ApiService } from '@/core/services';
 import {
   ConfirmComponent,

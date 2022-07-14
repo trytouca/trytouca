@@ -5,10 +5,10 @@ import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
+import { ETeamRole, TeamLookupResponse } from '@touca/api-schema';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 
-import { ETeamRole, TeamLookupResponse } from '@/core/models/commontypes';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { ApiService } from '@/core/services';
 import {

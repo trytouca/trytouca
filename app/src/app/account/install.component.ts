@@ -4,9 +4,9 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PlatformConfig } from '@touca/api-schema';
 import { Subscription } from 'rxjs';
 
-import { PlatformConfig } from '@/core/models/commontypes';
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
 import { ApiService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';

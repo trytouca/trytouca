@@ -1,11 +1,11 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { userDelete } from '@/models/user'
 import { TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 
 export async function platformAccountDelete(

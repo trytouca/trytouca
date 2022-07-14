@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { BatchItem, Promotion } from './commontypes';
+import { BatchItem, Promotion } from '@touca/api-schema';
 
 export type PromotionItem = Promotion & {
   bySelf: boolean;

@@ -1,11 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
 import cuid from 'cuid'
 
 import { SessionModel } from '@/schemas/session'
 import { TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 import { rclient } from '@/utils/redis'

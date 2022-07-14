@@ -2,13 +2,13 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-
 import {
   EPlatformRole,
   ETeamRole,
   UserLookupResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-schema';
+import { Observable, Subject } from 'rxjs';
+
 import { errorLogger } from '@/shared/utils/errorLogger';
 
 import { AlertKind, AlertService } from './alert.service';

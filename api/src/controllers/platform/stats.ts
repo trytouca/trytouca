@@ -1,6 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import df from '@sindresorhus/df'
+import { EPlatformRole, PlatformStatsResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { BatchModel } from '@/schemas/batch'
@@ -9,7 +10,6 @@ import { ElementModel } from '@/schemas/element'
 import { MessageModel } from '@/schemas/message'
 import { MetaModel } from '@/schemas/meta'
 import { UserModel } from '@/schemas/user'
-import { EPlatformRole, PlatformStatsResponse } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'

@@ -4,18 +4,18 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
-import { Subscription, timer } from 'rxjs';
-
-import { RecentEvent } from '@/account/settings/audit.component';
-import { ApiKey } from '@/core/models/api-key';
 import {
+  EFeatureFlag,
   EPlatformRole,
   PlatformStatsResponse,
   PlatformStatsUser,
   UserLookupResponse,
   UserSessionsResponseItem
-} from '@/core/models/commontypes';
-import { EFeatureFlag } from '@/core/models/commontypes';
+} from '@touca/api-schema';
+import { Subscription, timer } from 'rxjs';
+
+import { RecentEvent } from '@/account/settings/audit.component';
+import { ApiKey } from '@/core/models/api-key';
 import {
   ApiService,
   AuthService,

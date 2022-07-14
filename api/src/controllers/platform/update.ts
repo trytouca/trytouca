@@ -1,12 +1,12 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash'
 
 import { findPlatformRole } from '@/middlewares'
 import { createUserAccount } from '@/models/auth'
 import { MetaModel } from '@/schemas/meta'
-import { EPlatformRole } from '@/types/commontypes'
 import { rclient } from '@/utils/redis'
 
 /**

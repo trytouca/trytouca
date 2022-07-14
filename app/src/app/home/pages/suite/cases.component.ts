@@ -3,12 +3,12 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-
 import {
   ElementListResponseItem,
   SuiteLookupResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-schema';
+import { Subscription } from 'rxjs';
+
 import { ApiService, NotificationService } from '@/core/services';
 import { PageListComponent } from '@/home/components';
 import { FilterInput } from '@/home/models/filter.model';

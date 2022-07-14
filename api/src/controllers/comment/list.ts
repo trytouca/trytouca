@@ -1,12 +1,12 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { CommentItem, CommentListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { extractCommentTuple, extractCommentType } from '@/models/comment'
 import { CommentModel } from '@/schemas/comment'
 import { IUser } from '@/schemas/user'
 import { CommentListQueryOutput, ECommentType } from '@/types/backendtypes'
-import type { CommentItem, CommentListResponse } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

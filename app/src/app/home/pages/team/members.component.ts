@@ -3,15 +3,15 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
-import { Subscription } from 'rxjs';
-
 import {
   ETeamRole,
   TeamApplicant,
   TeamInvitee,
   TeamLookupResponse,
   TeamMember
-} from '@/core/models/commontypes';
+} from '@touca/api-schema';
+import { Subscription } from 'rxjs';
+
 import { ApiService, NotificationService, UserService } from '@/core/services';
 import { ConfirmComponent } from '@/home/components/confirm.component';
 import { PageListComponent } from '@/home/components/page-list.component';
