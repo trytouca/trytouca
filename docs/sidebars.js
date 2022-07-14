@@ -33,7 +33,7 @@ const sidebars = {
       items: [
         {
           type: "doc",
-          id: "basics/quickstart",
+          id: "basics/Readme",
           label: "Quick Start"
         },
         {

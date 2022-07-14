@@ -25,7 +25,9 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          breadcrumbs: true,
           routeBasePath: "/",
+          showLastUpdateTime: true,
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/trytouca/trytouca/tree/main/docs"
         },
@@ -41,6 +43,10 @@ const config = {
       "@docusaurus/plugin-client-redirects",
       {
         redirects: [
+          {
+            from: "/basics/quickstart",
+            to: "/basics"
+          },
           {
             from: "/guides/cli",
             to: "/cli"
@@ -59,7 +65,8 @@ const config = {
           }
         ]
       }
-    ]
+    ],
+    ["@docusaurus/plugin-ideal-image", {}]
   ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
