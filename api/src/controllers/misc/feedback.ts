@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { relay } from '@/models/relay'
 import { wslFindByRole } from '@/models/user'
-import { EPlatformRole } from '@touca/api-types'
+import { EPlatformRole } from '@touca/api-schema'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'

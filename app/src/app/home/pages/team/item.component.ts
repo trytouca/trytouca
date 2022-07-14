@@ -11,7 +11,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { format } from 'date-fns';
 
-import { SuiteLookupResponse } from '@touca/api-types';
+import { SuiteLookupResponse } from '@touca/api-schema';
 import { PillContainerComponent } from '@/home/components';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import {

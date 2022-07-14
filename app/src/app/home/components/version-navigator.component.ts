@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { IClipboardResponse } from 'ngx-clipboard';
 
-import type { Promotion, SuiteLookupResponse } from '@touca/api-types';
+import type { Promotion, SuiteLookupResponse } from '@touca/api-schema';
 import { NotificationService } from '@/core/services';
 import {
   FrontendVersionListParamsType,

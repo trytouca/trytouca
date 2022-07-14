@@ -14,7 +14,7 @@ import {
   TeamLookupResponse,
   TeamMember,
   TeamMemberListResponse
-} from '@touca/api-types';
+} from '@touca/api-schema';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
 import { PageTab } from '@/home/components';

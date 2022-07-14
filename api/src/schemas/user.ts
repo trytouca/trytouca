@@ -3,7 +3,7 @@
 import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid'
 
-import { EPlatformRole } from '@touca/api-types'
+import { EPlatformRole } from '@touca/api-schema'
 
 const userSchema = new mongoose.Schema({
   activatedAt: {

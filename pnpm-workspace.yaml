@@ -1,6 +1,6 @@
 packages:
   - 'api'
-  - 'api-types'
   - 'app'
   - 'docs'
   - 'web'
+  - 'packages/*'

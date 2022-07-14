@@ -15,7 +15,7 @@ import {
   PlatformStatsUser,
   UserLookupResponse,
   UserSessionsResponseItem
-} from '@touca/api-types';
+} from '@touca/api-schema';
 import {
   ApiService,
   AuthService,

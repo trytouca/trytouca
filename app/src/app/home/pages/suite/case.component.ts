@@ -11,7 +11,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { timer } from 'rxjs';
 
-import { ElementListResponseItem } from '@touca/api-types';
+import { ElementListResponseItem } from '@touca/api-schema';
 import { Topic, TopicType } from '@/home/models/page-item.model';
 import { DateTimePipe } from '@/shared/pipes';
 

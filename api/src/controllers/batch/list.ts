@@ -8,7 +8,7 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import type { BatchItemQueryOutput } from '@/types/backendtypes'
-import type { BatchListResponse } from '@touca/api-types'
+import type { BatchListResponse } from '@touca/api-schema'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

@@ -6,7 +6,7 @@ import { CommentModel } from '@/schemas/comment'
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { ENotificationType } from '@touca/api-types'
+import { ENotificationType } from '@touca/api-schema'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

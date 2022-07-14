@@ -11,7 +11,7 @@ import {
   TeamInvitee,
   TeamLookupResponse,
   TeamMember
-} from '@touca/api-types';
+} from '@touca/api-schema';
 import { ApiService, NotificationService, UserService } from '@/core/services';
 import { ConfirmComponent } from '@/home/components/confirm.component';
 import { PageListComponent } from '@/home/components/page-list.component';

@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { findPlatformRole } from '@/middlewares'
 import { MetaModel } from '@/schemas/meta'
-import { EPlatformRole, PlatformConfig } from '@touca/api-types'
+import { EPlatformRole, PlatformConfig } from '@touca/api-schema'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'

@@ -4,7 +4,7 @@ import { AfterContentInit, Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import type { UserLookupResponse } from '@touca/api-types';
+import type { UserLookupResponse } from '@touca/api-schema';
 import { AuthService, UserService } from '@/core/services';
 import { intercomClient } from '@/shared/utils/intercom';
 

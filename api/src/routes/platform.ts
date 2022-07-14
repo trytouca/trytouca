@@ -13,7 +13,7 @@ import { platformInstall } from '@/controllers/platform/install'
 import { platformStats } from '@/controllers/platform/stats'
 import { platformUpdate } from '@/controllers/platform/update'
 import * as middleware from '@/middlewares'
-import { EPlatformRole } from '@touca/api-types'
+import { EPlatformRole } from '@touca/api-schema'
 import { promisable } from '@/utils/routing'
 
 const router = express.Router()

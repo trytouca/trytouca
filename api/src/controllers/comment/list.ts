@@ -6,7 +6,7 @@ import { extractCommentTuple, extractCommentType } from '@/models/comment'
 import { CommentModel } from '@/schemas/comment'
 import { IUser } from '@/schemas/user'
 import { CommentListQueryOutput, ECommentType } from '@/types/backendtypes'
-import type { CommentItem, CommentListResponse } from '@touca/api-types'
+import type { CommentItem, CommentListResponse } from '@touca/api-schema'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

@@ -14,7 +14,7 @@ import type {
   CommentListResponse,
   SuiteLookupResponse,
   TeamLookupResponse
-} from '@touca/api-types';
+} from '@touca/api-schema';
 import type { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
 import { IPageService } from '@/home/models/pages.model';

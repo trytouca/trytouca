@@ -6,7 +6,7 @@ import mongoose from 'mongoose'
 import { wslFindByUname } from '@/models/user'
 import { SessionModel } from '@/schemas/session'
 import { IUser, UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@touca/api-types'
+import { EPlatformRole } from '@touca/api-schema'
 import * as jwt from '@/utils/jwt'
 import logger from '@/utils/logger'
 

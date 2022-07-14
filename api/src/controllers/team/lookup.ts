@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 import { findTeamRoleOfUser } from '@/controllers/team/common'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import type { TeamLookupResponse } from '@touca/api-types'
+import type { TeamLookupResponse } from '@touca/api-schema'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

@@ -22,7 +22,7 @@ import { teamMemberUpdate } from '@/controllers/team/memberUpdate'
 import { ctrlTeamRemove } from '@/controllers/team/remove'
 import { teamUpdate } from '@/controllers/team/update'
 import * as middleware from '@/middlewares'
-import { ETeamRole } from '@touca/api-types'
+import { ETeamRole } from '@touca/api-schema'
 import { promisable } from '@/utils/routing'
 
 const router = express.Router()

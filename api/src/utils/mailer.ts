@@ -11,7 +11,7 @@ import path from 'path'
 import { wslGetSuperUser } from '@/models/user'
 import { MailModel } from '@/schemas/mail'
 import { IUser, UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@touca/api-types'
+import { EPlatformRole } from '@touca/api-schema'
 import { config, configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
 

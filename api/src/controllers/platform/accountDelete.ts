@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 import { userDelete } from '@/models/user'
 import { TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { EPlatformRole } from '@touca/api-types'
+import { EPlatformRole } from '@touca/api-schema'
 import logger from '@/utils/logger'
 
 export async function platformAccountDelete(

@@ -7,7 +7,7 @@ import type {
   BatchComparisonItemCommon,
   BatchComparisonItemSolo,
   Userinfo
-} from '@touca/api-types';
+} from '@touca/api-schema';
 import { FrontendBatchCompareParams } from '@/core/models/frontendtypes';
 
 type DataType = BatchComparisonItemCommon | BatchComparisonItemSolo;

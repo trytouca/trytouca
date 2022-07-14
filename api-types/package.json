@@ -1,6 +1,0 @@
-{
-  "name": "@touca/api-types",
-  "version": "0.0.0",
-  "description": "TypeScript contract between the app and the server",
-  "main": "src/index.ts"
-}

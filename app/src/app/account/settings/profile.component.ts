@@ -11,7 +11,7 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription, timer } from 'rxjs';
 
-import { UserLookupResponse } from '@touca/api-types';
+import { UserLookupResponse } from '@touca/api-schema';
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
 import { ApiRequestType, ApiService, UserService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';

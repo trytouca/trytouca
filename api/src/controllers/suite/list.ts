@@ -12,7 +12,7 @@ import type {
   BatchItemQueryOutput,
   SuiteItemQueryOutput
 } from '@/types/backendtypes'
-import type { SuiteListResponse } from '@touca/api-types'
+import type { SuiteListResponse } from '@touca/api-schema'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 

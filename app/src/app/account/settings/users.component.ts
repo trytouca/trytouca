@@ -2,10 +2,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import {
-  PlatformStatsUser,
-  UserLookupResponse
-} from '@touca/api-types';
+import { PlatformStatsUser, UserLookupResponse } from '@touca/api-schema';
 
 @Component({
   selector: 'app-settings-tab-users',

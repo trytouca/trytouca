@@ -1,0 +1,7 @@
+{
+  "name": "@touca/api-schema",
+  "version": "0.0.0",
+  "description": "Touca API schema",
+  "private": true,
+  "main": "src/index.ts"
+}

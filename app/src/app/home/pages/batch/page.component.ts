@@ -23,7 +23,7 @@ import {
   BatchLookupResponse,
   PlatformStatus,
   SuiteLookupResponse
-} from '@touca/api-types';
+} from '@touca/api-schema';
 import type {
   FrontendBatchCompareParams,
   FrontendOverviewSection

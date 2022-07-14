@@ -9,8 +9,8 @@ import type {
   BatchLookupResponse,
   CommentItem,
   TeamLookupResponse
-} from '@touca/api-types';
-import { EPlatformRole, ETeamRole } from '@touca/api-types';
+} from '@touca/api-schema';
+import { EPlatformRole, ETeamRole } from '@touca/api-schema';
 import {
   FrontendCommentAction,
   FrontendCommentActionType,

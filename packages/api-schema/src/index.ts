@@ -1,5 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+/**
+ * @schema CT_EFeatureFlag
+ *  type: string
+ *  enum: ['newsletter_product', 'newsletter_changelog']
+ */
 export enum EFeatureFlag {
   NewsletterProduct = 'newsletter_product',
   NewsletterChangelog = 'newsletter_changelog'

@@ -5,7 +5,7 @@ import { format as utilFormat } from 'util'
 import { wslFindByRole } from '@/models/user'
 import { NotificationModel } from '@/schemas/notification'
 import { IUser } from '@/schemas/user'
-import { EPlatformRole } from '@touca/api-types'
+import { EPlatformRole } from '@touca/api-schema'
 
 async function notifyUser(recipient: IUser, message: string) {
   await NotificationModel.create({

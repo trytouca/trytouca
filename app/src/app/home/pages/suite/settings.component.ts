@@ -19,8 +19,8 @@ import { Subscription, timer } from 'rxjs';
 import type {
   SuiteLookupResponse,
   TeamLookupResponse
-} from '@touca/api-types';
-import { ETeamRole } from '@touca/api-types';
+} from '@touca/api-schema';
+import { ETeamRole } from '@touca/api-schema';
 import { ApiService } from '@/core/services';
 import {
   ConfirmComponent,

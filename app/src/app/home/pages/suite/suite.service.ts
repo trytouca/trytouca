@@ -12,7 +12,7 @@ import type {
   SuiteItem,
   SuiteLookupResponse,
   TeamLookupResponse
-} from '@touca/api-types';
+} from '@touca/api-schema';
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
 import {
   AlertKind,

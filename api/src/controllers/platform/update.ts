@@ -6,7 +6,7 @@ import { pick } from 'lodash'
 import { findPlatformRole } from '@/middlewares'
 import { createUserAccount } from '@/models/auth'
 import { MetaModel } from '@/schemas/meta'
-import { EPlatformRole } from '@touca/api-types'
+import { EPlatformRole } from '@touca/api-schema'
 import { rclient } from '@/utils/redis'
 
 /**

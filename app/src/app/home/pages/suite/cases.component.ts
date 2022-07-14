@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 import {
   ElementListResponseItem,
   SuiteLookupResponse
-} from '@touca/api-types';
+} from '@touca/api-schema';
 import { ApiService, NotificationService } from '@/core/services';
 import { PageListComponent } from '@/home/components';
 import { FilterInput } from '@/home/models/filter.model';

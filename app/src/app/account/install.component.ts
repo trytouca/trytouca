@@ -6,7 +6,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { PlatformConfig } from '@touca/api-types';
+import { PlatformConfig } from '@touca/api-schema';
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';
 import { ApiService } from '@/core/services';
 import { Alert, AlertType } from '@/shared/components/alert.component';
