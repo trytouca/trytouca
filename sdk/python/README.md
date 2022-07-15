@@ -157,6 +157,10 @@ feedback, that's the best place to be.
 We welcome all forms of contributions, from adding new features to improving
 documentation and sharing feedback.
 
+- [Code of Conduct](https://touca.io/docs/contributing/conduct/)
+- [Contributing Guide](https://touca.io/docs/contributing/)
+- [Good First Issues](https://touca.io/docs/contributing/good-first-issues/)
+
 ## FAQ
 
 - Should I install Touca as a development dependency?
