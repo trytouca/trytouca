@@ -8,12 +8,14 @@ LABEL org.opencontainers.image.documentation="https://touca.io/docs"
 LABEL org.opencontainers.image.vendor="Touca, Inc."
 LABEL org.opencontainers.image.authors="hello@touca.io"
 
-COPY api/certs                      /opt/touca/certs
-COPY api/dist                       /opt/touca/dist
-COPY api/env                        /opt/touca/env
-COPY api/samples                    /opt/touca/samples
-COPY api/node_modules               /opt/touca/node_modules
+COPY api/certs                      /opt/touca/api/certs
+COPY api/dist                       /opt/touca/api/dist
+COPY api/env                        /opt/touca/api/env
+COPY api/samples                    /opt/touca/api/samples
+COPY api/node_modules               /opt/touca/api/node_modules
+COPY node_modules                   /opt/touca/node_modules
+COPY packages                       /opt/touca/packages
 
 EXPOSE 8081
 
-CMD ["node", "/opt/touca/dist/server.js"]
+CMD ["node", "/opt/touca/api/dist/server.js"]
