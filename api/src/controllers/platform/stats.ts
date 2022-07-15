@@ -1,7 +1,7 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import df from '@sindresorhus/df'
-import { EPlatformRole, PlatformStatsResponse } from '@touca/api-schema'
+import type { EPlatformRole, PlatformStatsResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { BatchModel } from '@/schemas/batch'
@@ -43,9 +43,10 @@ export async function platformStats(
     }))
     .shift()
 
+  const platformRoleSuper: EPlatformRole = 'super'
   const users = await UserModel.find(
     {
-      platformRole: { $not: { $eq: EPlatformRole.Super } }
+      platformRole: { $not: { $eq: platformRoleSuper } }
     },
     {
       _id: 0,
@@ -97,6 +98,7 @@ export async function platformStats(
     countElements: await ElementModel.countDocuments(),
     countMessages: await MessageModel.countDocuments(),
     ...space,
+    // @ts-ignore
     users: users.map((v) => ({
       activationLink: find.activationLink(v.activationKey),
       createdAt: v.createdAt,

@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSpinner, faTasks } from '@fortawesome/free-solid-svg-icons';
 import { DialogRef, DialogService } from '@ngneat/dialog';
-import {
+import type {
   BatchItem,
   BatchLookupResponse,
   PlatformStatus,

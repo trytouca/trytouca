@@ -13,10 +13,10 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
 import type {
+  ETeamRole,
   SuiteLookupResponse,
   TeamLookupResponse
 } from '@touca/api-schema';
-import { ETeamRole } from '@touca/api-schema';
 import * as duration from 'duration-fns';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
@@ -60,7 +60,6 @@ export class SuiteTabSettingsComponent implements OnDestroy {
   alert: Partial<Record<EModalType, Alert>> = {};
   team: TeamLookupResponse;
   suite: SuiteLookupResponse;
-  ETeamRole = ETeamRole;
   EModalType = EModalType;
 
   constructor(

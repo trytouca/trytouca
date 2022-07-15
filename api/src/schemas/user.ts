@@ -4,6 +4,14 @@ import { EPlatformRole } from '@touca/api-schema'
 import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid'
 
+const platformRoles: EPlatformRole[] = [
+  'guest',
+  'user',
+  'admin',
+  'owner',
+  'super'
+]
+
 const userSchema = new mongoose.Schema({
   activatedAt: {
     required: false,
@@ -48,7 +56,7 @@ const userSchema = new mongoose.Schema({
     type: String
   },
   platformRole: {
-    enum: Object.values(EPlatformRole),
+    enum: platformRoles,
     default: 'user',
     required: true,
     type: String

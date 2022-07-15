@@ -309,8 +309,12 @@ importers:
 
   packages/api-schema:
     specifiers:
+      openapi-typescript: ^5.4.1
+      prettier: ^2.7.1
       typescript: ^4.7.4
     devDependencies:
+      openapi-typescript: 5.4.1
+      prettier: 2.7.1
       typescript: 4.7.4
 
   web:
@@ -11601,6 +11605,10 @@ packages:
       define-properties: 1.1.4
     dev: true
 
+  /globalyzer/0.1.0:
+    resolution: {integrity: sha512-40oNTM9UfG6aBmuKxk/giHn5nQ8RVz/SS4Ir6zgzOv9/qC3kKZ9v4etGTcJbEl/NyVQH7FGU7d+X1egr57Md2Q==}
+    dev: true
+
   /globby/11.1.0:
     resolution: {integrity: sha512-jhIXaOzy1sb8IyocaruWSn1TjmnBVs8Ayhcy83rmxNJ8q2uWKCAj3CnJY+KpGSXCueAPc0i05kVvVKtP1t9S3g==}
     engines: {node: '>=10'}
@@ -11645,6 +11653,10 @@ packages:
       pify: 2.3.0
       pinkie-promise: 2.0.1
     dev: false
+
+  /globrex/0.1.2:
+    resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
+    dev: true
 
   /good-listener/1.2.2:
     resolution: {integrity: sha512-goW1b+d9q/HIwbVYZzZ6SsTr4IgE+WA44A0GmPIQstuOrgsFcT7VEJ48nmr9GaRtNu0XTKacFLGnBPAM6Afouw==}
@@ -13897,6 +13909,12 @@ packages:
     hasBin: true
     dev: true
 
+  /mime/3.0.0:
+    resolution: {integrity: sha512-jSCU7/VB1loIWBZe14aEYHU/+1UMEHoaO7qxCOVJOw9GgH72VAWppxNcjU+x9a2k3GSIBXNKxXQFqRvvZ7vr3A==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+    dev: true
+
   /mimic-fn/2.1.0:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}
     engines: {node: '>=6'}
@@ -15258,6 +15276,19 @@ packages:
     dependencies:
       '@types/json-schema': 7.0.11
       json-pointer: 0.6.2
+    dev: true
+
+  /openapi-typescript/5.4.1:
+    resolution: {integrity: sha512-AGB2QiZPz4rE7zIwV3dRHtoUC/CWHhUjuzGXvtmMQN2AFV8xCTLKcZUHLcdPQmt/83i22nRE7+TxXOXkK+gf4Q==}
+    engines: {node: '>= 14.0.0'}
+    hasBin: true
+    dependencies:
+      js-yaml: 4.1.0
+      mime: 3.0.0
+      prettier: 2.7.1
+      tiny-glob: 0.2.9
+      undici: 5.7.0
+      yargs-parser: 21.0.1
     dev: true
 
   /opener/1.5.2:
@@ -18744,6 +18775,13 @@ packages:
     resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
     dev: false
 
+  /tiny-glob/0.2.9:
+    resolution: {integrity: sha512-g/55ssRPUjShh+xkfx9UPDXqhckHEsHr4Vd9zX55oSdGZc/MD0m3sferOkwWtp98bv+kcVfEHtRJgBVJzelrzg==}
+    dependencies:
+      globalyzer: 0.1.0
+      globrex: 0.1.2
+    dev: true
+
   /tiny-invariant/1.2.0:
     resolution: {integrity: sha512-1Uhn/aqw5C6RI4KejVeTg6mIS7IqxnLJ8Mv2tV5rTc0qWobay7pDUz6Wi392Cnc8ak1H0F2cjoRzb2/AW4+Fvg==}
     dev: false
@@ -19041,6 +19079,11 @@ packages:
 
   /undefsafe/2.0.5:
     resolution: {integrity: sha512-WxONCrssBM8TSPRqN5EmsjVrsv4A8X12J4ArBiiayv3DyyG3ZlIg6yysuuSYdZsVz3TKcTg2fd//Ujd4CHV1iA==}
+    dev: true
+
+  /undici/5.7.0:
+    resolution: {integrity: sha512-ORgxwDkiPS+gK2VxE7iyVeR7JliVn5DqhZ4LgQqYLBXsuK+lwOEmnJ66dhvlpLM0tC3fC7eYF1Bti2frbw2eAA==}
+    engines: {node: '>=12.18'}
     dev: true
 
   /unherit/1.1.3:

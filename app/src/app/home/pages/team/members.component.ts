@@ -3,7 +3,7 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
-import {
+import type {
   ETeamRole,
   TeamApplicant,
   TeamInvitee,
@@ -135,7 +135,7 @@ export class TeamTabMembersComponent
 
   confirmEdit(member: TeamMember): void {
     const newRoleName =
-      member.role === ETeamRole.Member ? 'an Administrator' : 'a Member';
+      member.role === 'member' ? 'an Administrator' : 'a Member';
     this._dialogRef = this.dialogService.open(ConfirmComponent, {
       closeButton: false,
       data: {
@@ -236,8 +236,8 @@ export class TeamTabMembersComponent
   }
 
   private edit(member: TeamMember): void {
-    const newRoleType =
-      member.role === ETeamRole.Member ? ETeamRole.Admin : ETeamRole.Member;
+    const newRoleType: ETeamRole =
+      member.role === 'member' ? 'admin' : 'member';
     const url = ['team', this._team.slug, 'member', member.username].join('/');
     this.apiService.patch(url, { role: newRoleType }).subscribe({
       next: () => {

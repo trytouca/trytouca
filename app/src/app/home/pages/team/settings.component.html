@@ -3,7 +3,7 @@
     Team Settings
   </h2>
   <div class="grid gap-4 lg:grid-cols-2">
-    <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
+    <div class="wsl-settings-section" *ngIf="team.role === 'owner'">
       <h3 for="wsl-team-name">Team Name</h3>
       <app-alert
         *ngIf="alert[EModalType.ChangeName]"
@@ -35,7 +35,7 @@
         Should contain 3 to 32 characters.
       </small>
     </div>
-    <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
+    <div class="wsl-settings-section" *ngIf="team.role === 'owner'">
       <h3 for="wsl-team-slug">Team Slug</h3>
       <app-alert
         *ngIf="alert[EModalType.ChangeSlug]"
@@ -71,7 +71,7 @@
         number.
       </small>
     </div>
-    <div class="wsl-settings-section" *ngIf="team.role !== ETeamRole.Owner">
+    <div class="wsl-settings-section" *ngIf="team.role !== 'owner'">
       <h3 class="wsl-text-danger">Danger Zone</h3>
       <app-alert
         *ngIf="alert[EModalType.LeaveTeam]"
@@ -89,7 +89,7 @@
         Leave Team
       </button>
     </div>
-    <div class="wsl-settings-section" *ngIf="team.role === ETeamRole.Owner">
+    <div class="wsl-settings-section" *ngIf="team.role === 'owner'">
       <h3 class="wsl-text-danger">Danger Zone</h3>
       <app-alert
         *ngIf="alert[EModalType.DeleteTeam]"

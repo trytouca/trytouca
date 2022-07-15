@@ -2,7 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
-import { UserLookupResponse } from '@touca/api-schema';
+import type { UserLookupResponse } from '@touca/api-schema';
 import { environment } from 'src/environments/environment';
 
 class IntercomClient {

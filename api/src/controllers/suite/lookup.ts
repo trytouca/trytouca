@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ENotificationType, SuiteLookupResponse } from '@touca/api-schema'
+import type { SuiteLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash'
 
@@ -59,7 +59,10 @@ async function suiteLookup(
   // prepare a draft of our response with fields that depend on existence of
   // batches, set to undefined or empty array.
 
-  const output: SuiteLookupResponse = {
+  const output: SuiteLookupResponse & {
+    isSubscribed: boolean
+    subscriberCount: number
+  } = {
     baseline: undefined,
     batches: [],
     batchCount: queryOutput.length,
@@ -72,7 +75,7 @@ async function suiteLookup(
     subscriberCount: suite.subscribers.length,
     subscription:
       suite.subscriptions.find((v) => v.user._id.equals(user._id))?.level ||
-      ENotificationType.None,
+      'none',
     suiteName: suite.name,
     suiteSlug: suite.slug,
     teamName: team.name,

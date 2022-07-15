@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole, PlatformConfig } from '@touca/api-schema'
+import type { PlatformConfig } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { findPlatformRole } from '@/middlewares'
@@ -14,9 +14,8 @@ export async function platformConfig(
   res: Response,
   next: NextFunction
 ) {
-  const isAdmin = [EPlatformRole.Admin, EPlatformRole.Owner].includes(
-    await findPlatformRole(req)
-  )
+  const platformRole = await findPlatformRole(req)
+  const isAdmin = platformRole === 'admin' || platformRole === 'owner'
   const isConfigured = !!(await MetaModel.countDocuments({
     telemetry: { $exists: true }
   }))
@@ -46,12 +45,12 @@ export async function platformConfig(
     response.contact = meta.contact
   }
   if (meta?.mail) {
-    response.mail = meta.mail
+    response.mail = { ...meta.mail, port: String(meta.mail.port) }
   } else if (config.mail.host) {
     response.mail = {
       host: config.mail.host,
       pass: config.mail.pass,
-      port: config.mail.port,
+      port: String(config.mail.port),
       user: config.mail.user
     }
   }

@@ -26,7 +26,7 @@
     "dev": "nodemon ./src/server.ts",
     "dev:debug": "nodemon --inspect ./src/server.ts",
     "docs": "run-p docs:external docs:internal",
-    "docs:external": "shx mkdir -p local/docs/external && swagger-inline src/routes/*.ts ../packages/api-schema/src/*.ts --base docs/swagger.base.yaml --format yaml > local/docs/external/swagger.yaml && redoc-cli build local/docs/external/swagger.yaml --options.hideDownloadButton=true --output=local/docs/external/index.html --title=\"Touca Server API Reference\"",
+    "docs:external": "shx mkdir -p local/docs/external && redoc-cli build ../packages/api-schema/src/schema.yaml --options.hideDownloadButton=true --output=local/docs/external/index.html --title=\"Touca Server API Reference\"",
     "docs:internal": "typedoc",
     "lint": "eslint src test --ext .ts",
     "start": "node .",

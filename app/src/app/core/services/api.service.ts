@@ -2,7 +2,7 @@
 
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { PlatformStatus } from '@touca/api-schema';
+import type { PlatformStatus } from '@touca/api-schema';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 

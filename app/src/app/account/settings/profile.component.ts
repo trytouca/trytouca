@@ -9,7 +9,7 @@ import {
   Output
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { UserLookupResponse } from '@touca/api-schema';
+import type { UserLookupResponse } from '@touca/api-schema';
 import { Subscription, timer } from 'rxjs';
 
 import { formFields, FormHint, FormHints } from '@/core/models/form-hint';

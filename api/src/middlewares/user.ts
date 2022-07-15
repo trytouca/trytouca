@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
+import type { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
@@ -156,7 +156,7 @@ export async function isPlatformAdmin(
 
   // return 403 if user does not have admin role
 
-  if (![EPlatformRole.Owner, EPlatformRole.Admin].includes(user.platformRole)) {
+  if (user.platformRole !== 'owner' && user.platformRole !== 'admin') {
     return next({
       errors: ['insufficient privileges'],
       status: 403
@@ -216,11 +216,11 @@ export async function hasSuspendedAccount(
   return next()
 }
 
-export async function findPlatformRole(req: Request) {
+export async function findPlatformRole(req: Request): Promise<EPlatformRole> {
   const user = await isAuthenticatedImpl({
     agent: req.headers['user-agent'],
     ipAddr: req.ip,
     token: req.signedCookies.authToken
   })
-  return user?.platformRole || EPlatformRole.Guest
+  return user?.platformRole ?? 'guest'
 }

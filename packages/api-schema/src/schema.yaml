@@ -1,0 +1,3398 @@
+openapi: 3.0.0
+info:
+  description: Touca Server API Specification
+  version: 1.4.0
+  title: Touca Server API
+  contact:
+    email: support@touca.io
+servers:
+  - url: https://api.touca.io
+components:
+  headers:
+    Location:
+      description: the url to redirect a page to
+      schema:
+        type: string
+        format: url
+  parameters:
+    user:
+      name: user
+      in: path
+      required: true
+      description: username of account to be updated
+      schema:
+        type: string
+        example: alice
+    member:
+      name: member
+      in: path
+      required: true
+      description: username of member to be updated
+      schema:
+        type: string
+        example: alice
+    account:
+      name: account
+      in: path
+      required: true
+      description: username of account to be updated
+      schema:
+        type: string
+        example: alice
+    team:
+      name: team
+      in: path
+      required: true
+      description: slug of this team
+      schema:
+        type: string
+        example: acme
+    suite:
+      name: suite
+      in: path
+      required: true
+      description: slug of this suite
+      schema:
+        type: string
+        example: potions-101
+    batch:
+      name: batch
+      in: path
+      required: true
+      description: version of the workflow
+      schema:
+        type: string
+        example: 7.12.149
+    element:
+      name: element
+      in: path
+      required: true
+      description: testcase to be given as input to the workflow under test
+      schema:
+        type: string
+    dstSuite:
+      name: dstSuite
+      in: path
+      required: true
+      description: slug of the suite to compare against
+      schema:
+        type: string
+    dstBatch:
+      name: dstBatch
+      in: path
+      required: true
+      description: version to compare against
+      schema:
+        type: string
+    dstElement:
+      name: dstElementName
+      in: path
+      required: true
+      description: slug of the element in the suite to compare against
+      schema:
+        type: string
+    comment:
+      name: comment
+      in: path
+      required: true
+      description: unique id of this comment
+      schema:
+        type: string
+        example: 123456
+    resetKey:
+      name: key
+      in: path
+      required: true
+      description: reset key provided by the platform
+      schema:
+        type: string
+        format: uuid
+    job:
+      name: job
+      in: path
+      required: true
+      description: unique identifier for this comparison job
+      schema:
+        $ref: '#/components/schemas/ObjectId'
+    session_id:
+      name: session_id
+      in: path
+      required: true
+      description: unique id of this session
+      schema:
+        type: string
+  schemas:
+    CT_BatchCompareOverview:
+      type: object
+      properties:
+        elementsCountDifferent:
+          type: integer
+          format: int32
+        elementsCountFresh:
+          type: integer
+          format: int32
+        elementsCountHead:
+          type: integer
+          format: int32
+        elementsCountMissing:
+          type: integer
+          format: int32
+        elementsCountPending:
+          type: integer
+          format: int32
+        elementsScoreAbsolute:
+          type: number
+          format: float
+        elementsScoreAggregate:
+          type: number
+          format: float
+        metricsDurationChange:
+          type: integer
+          format: int32
+        metricsDurationHead:
+          type: integer
+          format: int32
+        metricsDurationSign:
+          type: integer
+          format: int32
+    CT_BatchComparisonItem:
+      additionalProperties: false
+      type: object
+      required:
+        - builtAt
+        - elementName
+      properties:
+        builtAt:
+          type: string
+          format: date-time
+        elementName:
+          type: string
+    CT_BatchComparisonItemCommon:
+      additionalProperties: false
+      type: object
+      required:
+        - dst
+        - src
+      properties:
+        dst:
+          $ref: '#/components/schemas/CT_BatchComparisonItem'
+        meta:
+          $ref: '#/components/schemas/CT_CppTestcaseComparisonOverview'
+        src:
+          $ref: '#/components/schemas/CT_BatchComparisonItem'
+    CT_BatchComparisonItemSolo:
+      allOf:
+        - $ref: '#/components/schemas/CT_BatchComparisonItem'
+        - type: object
+          properties:
+            meta:
+              $ref: '#/components/schemas/CT_CppTestcaseOverview'
+    CT_BatchComparisonResponse:
+      additionalProperties: false
+      type: object
+      required:
+        - common
+        - fresh
+        - missing
+      properties:
+        common:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_BatchComparisonItemCommon'
+        fresh:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_BatchComparisonItemSolo'
+        missing:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_BatchComparisonItemSolo'
+        overview:
+          $ref: '#/components/schemas/CT_BatchCompareOverview'
+    CT_BatchItem:
+      allOf:
+        - $ref: '#/components/schemas/CT_BatchItemRaw'
+        - type: object
+          required:
+            - meta
+          properties:
+            meta:
+              $ref: '#/components/schemas/CT_BatchCompareOverview'
+    CT_BatchItemRaw:
+      type: object
+      additionalProperties: false
+      required:
+        - batchSlug
+        - comparedAgainst
+        - expirable
+        - isSealed
+        - messageCount
+        - submittedAt
+        - submittedBy
+        - updatedAt
+      properties:
+        batchSlug:
+          type: string
+        comparedAgainst:
+          type: string
+        expirable:
+          type: boolean
+        isSealed:
+          type: boolean
+        messageCount:
+          type: number
+        submittedAt:
+          type: string
+          format: date-time
+        submittedBy:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_Userinfo'
+        updatedAt:
+          type: string
+          format: date-time
+    CT_BatchListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/CT_BatchItem'
+    CT_BatchLookupResponse:
+      allOf:
+        - $ref: '#/components/schemas/CT_BatchItem'
+        - type: object
+          additionalProperties: false
+          required:
+            - commentCount
+            - meta
+            - suiteName
+            - suiteSlug
+            - teamName
+            - teamSlug
+          properties:
+            commentCount:
+              type: number
+            suiteName:
+              type: string
+            suiteSlug:
+              type: string
+            teamName:
+              type: string
+            teamSlug:
+              type: string
+    CT_CommentItem:
+      type: object
+      additionalProperties: false
+      required:
+        - at
+        - by
+        - id
+        - replies
+        - text
+      properties:
+        at:
+          type: string
+          format: date-time
+        by:
+          $ref: '#/components/schemas/CT_Userinfo'
+        editedAt:
+          type: string
+          format: date-time
+        id:
+          type: string
+        replies:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_CommentItem'
+        text:
+          type: string
+    CT_CommentListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/CT_CommentItem'
+    CT_CppCellar:
+      additionalProperties: false
+      type: object
+      required:
+        - commonKeys
+        - missingKeys
+        - newKeys
+      properties:
+        commonKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_CppTypeComparison'
+        missingKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_CppTypeComparison'
+        newKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_CppTypeComparison'
+    CT_CppTestcaseComparison:
+      additionalProperties: false
+      type: object
+      required:
+        - assertions
+        - dst
+        - metrics
+        - results
+        - src
+      properties:
+        assertions:
+          $ref: '#/components/schemas/CT_CppCellar'
+        dst:
+          $ref: '#/components/schemas/CT_CppTestcaseMetadata'
+        metrics:
+          $ref: '#/components/schemas/CT_CppCellar'
+        results:
+          $ref: '#/components/schemas/CT_CppCellar'
+        src:
+          $ref: '#/components/schemas/CT_CppTestcaseMetadata'
+    CT_CppTestcaseComparisonOverview:
+      additionalProperties: false
+      type: object
+      properties:
+        keysCountCommon:
+          type: number
+          format: int32
+        keysCountFresh:
+          type: number
+          format: int32
+        keysCountMissing:
+          type: number
+          format: int32
+        keysScore:
+          type: number
+          format: float
+        metricsCountCommon:
+          type: number
+          format: int32
+        metricsCountFresh:
+          type: number
+          format: int32
+        metricsCountMissing:
+          type: number
+          format: int32
+        metricsDurationCommonDst:
+          type: number
+          format: int32
+        metricsDurationCommonSrc:
+          type: number
+          format: int32
+    CT_CppTestcaseMetadata:
+      additionalProperties: false
+      type: object
+      required:
+        - builtAt
+        - teamSlug
+        - testcase
+        - testsuite
+        - version
+      properties:
+        builtAt:
+          type: string
+          format: date-time
+        teamSlug:
+          type: string
+        testcase:
+          type: string
+        testsuite:
+          type: string
+        version:
+          type: string
+    CT_CppTestcaseOverview:
+      additionalProperties: false
+      type: object
+      properties:
+        keysCount:
+          type: number
+        metricsCount:
+          type: number
+        metricsDuration:
+          type: number
+    CT_CppTypeComparison:
+      additionalProperties: false
+      type: object
+      required:
+        - name
+      properties:
+        desc:
+          type: array
+          items:
+            type: string
+        dstType:
+          type: string
+        dstValue:
+          type: string
+        name:
+          type: string
+        score:
+          type: number
+          format: float
+        srcType:
+          type: string
+        srcValue:
+          type: string
+    CT_EFeatureFlag:
+      type: string
+      enum:
+        - newsletter_product
+        - newsletter_changelog
+    CT_ENotificationType:
+      type: string
+      enum:
+        - none
+        - different
+        - all
+    CT_EPlatformRole:
+      type: string
+      enum:
+        - guest
+        - user
+        - admin
+        - owner
+        - super
+    CT_ETeamRole:
+      type: string
+      enum:
+        - unknown
+        - applicant
+        - invited
+        - member
+        - admin
+        - owner
+    CT_ElementComparisonItem:
+      allOf:
+        - $ref: '#/components/schemas/CT_BatchComparisonItem'
+        - type: object
+          required:
+            - submittedAt
+            - submittedBy
+          properties:
+            submittedAt:
+              type: string
+              format: date-time
+            submittedBy:
+              $ref: '#/components/schemas/CT_Userinfo'
+    CT_ElementComparisonResponse:
+      additionalProperties: false
+      type: object
+      required:
+        - dst
+        - src
+      properties:
+        cmp:
+          $ref: '#/components/schemas/CT_CppTestcaseComparison'
+        dst:
+          $ref: '#/components/schemas/CT_ElementComparisonItem'
+        meta:
+          $ref: '#/components/schemas/CT_CppTestcaseComparisonOverview'
+        src:
+          $ref: '#/components/schemas/CT_ElementComparisonItem'
+    CT_ElementListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/CT_ElementListResponseItem'
+    CT_ElementListResponseItem:
+      additionalProperties: false
+      type: object
+      required:
+        - metricsDuration
+        - name
+        - slug
+      properties:
+        metricsDuration:
+          type: number
+        name:
+          type: string
+        note:
+          type: string
+        slug:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        versions:
+          type: array
+          items:
+            type: object
+            properties:
+              match:
+                type: number
+              name:
+                type: string
+              time:
+                type: number
+    CT_ElementLookupResponse:
+      additionalProperties: false
+      type: object
+      required:
+        - batches
+        - elementName
+        - elementSlug
+        - suiteName
+        - suiteSlug
+        - teamName
+        - teamSlug
+      properties:
+        batches:
+          type: array
+          items:
+            type: object
+            properties:
+              slug:
+                type: string
+              submittedAt:
+                type: string
+                format: date-time
+              updatedAt:
+                type: string
+                format: date-time
+        elementName:
+          type: string
+        elementSlug:
+          type: string
+        suiteName:
+          type: string
+        suiteSlug:
+          type: string
+        teamName:
+          type: string
+        teamSlug:
+          type: string
+    CT_NotificationItem:
+      type: object
+      additionalProperties: false
+      required:
+        - createdAt
+        - text
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        seenAt:
+          type: string
+          format: date-time
+        text:
+          type: string
+    CT_NotificationListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/CT_NotificationItem'
+    CT_PlatformConfig:
+      additionalProperties: false
+      type: object
+      properties:
+        contact:
+          additionalProperties: false
+          type: object
+          properties:
+            company:
+              type: string
+            email:
+              type: string
+            name:
+              type: string
+        mail:
+          additionalProperties: false
+          type: object
+          properties:
+            host:
+              type: string
+            pass:
+              type: string
+            port:
+              type: string
+            user:
+              type: string
+    CT_PlatformStatsResponse:
+      additionalProperties: false
+      type: object
+      required:
+        - cmpAvgCollectionTime
+        - cmpAvgProcessingTime
+        - countBatches
+        - countComparisons
+        - countElements
+        - countMessages
+        - spaceFree
+        - spaceSize
+        - spaceUsed
+        - users
+      properties:
+        cmpAvgCollectionTime:
+          type: number
+          format: float
+        cmpAvgProcessingTime:
+          type: number
+          format: float
+        countBatches:
+          type: number
+          format: int32
+        countComparisons:
+          type: number
+          format: int32
+        countElements:
+          type: number
+          format: int32
+        countMessages:
+          type: number
+          format: int32
+        spaceFree:
+          type: number
+          format: int32
+        spaceSize:
+          type: number
+          format: int32
+        spaceUsed:
+          type: number
+          format: float
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_PlatformStatsUser'
+    CT_PlatformStatsUser:
+      additionalProperties: false
+      type: object
+      required:
+        - createdAt
+        - role
+        - teams
+        - username
+      properties:
+        activationLink:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        email:
+          type: string
+          format: email
+        fullname:
+          type: string
+        lockedAt:
+          type: string
+          format: date-time
+        resetKeyLink:
+          type: string
+        resetKeyCreatedAt:
+          type: string
+          format: date-time
+        resetKeyExpiresAt:
+          type: string
+          format: date-time
+        role:
+          $ref: '#/components/schemas/CT_ETeamRole'
+        suspended:
+          type: boolean
+        username:
+          type: string
+    CT_PlatformStatus:
+      additionalProperties: false
+      type: object
+      required:
+        - configured
+        - mail
+        - ready
+      properties:
+        configured:
+          type: boolean
+        mail:
+          type: boolean
+        ready:
+          type: boolean
+    CT_Promotion:
+      type: object
+      additionalProperties: false
+      required:
+        - at
+        - by
+        - for
+        - from
+        - to
+      properties:
+        at:
+          type: string
+          format: date-time
+        by:
+          $ref: '#/components/schemas/CT_Userinfo'
+        for:
+          type: string
+        from:
+          type: string
+        to:
+          type: string
+    CT_SuiteItem:
+      type: object
+      additionalProperties: false
+      required:
+        - batchCount
+        - suiteName
+        - suiteSlug
+      properties:
+        baseline:
+          $ref: '#/components/schemas/CT_BatchItemRaw'
+        batchCount:
+          type: number
+        latest:
+          $ref: '#/components/schemas/CT_BatchItemRaw'
+        overview:
+          $ref: '#/components/schemas/CT_BatchCompareOverview'
+        suiteName:
+          type: string
+        suiteSlug:
+          type: string
+    CT_SuiteListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/CT_SuiteItem'
+    CT_SuiteLookupResponse:
+      allOf:
+        - $ref: '#/components/schemas/CT_SuiteItem'
+        - type: object
+          additionalProperties: false
+          required:
+            - batches
+            - promotions
+            - retainFor
+            - sealAfter
+            - subscription
+            - teamName
+            - teamSlug
+          properties:
+            batches:
+              type: array
+              items:
+                type: string
+            promotions:
+              type: array
+              items:
+                $ref: '#/components/schemas/CT_Promotion'
+            retainFor:
+              type: number
+            sealAfter:
+              type: number
+            subscription:
+              $ref: '#/components/schemas/CT_ENotificationType'
+            teamName:
+              type: string
+            teamSlug:
+              type: string
+    CT_TeamApplicant:
+      type: object
+      additionalProperties: false
+      required:
+        - email
+        - fullname
+        - username
+      properties:
+        email:
+          type: string
+          format: email
+        fullname:
+          type: string
+        username:
+          type: string
+    CT_TeamInvitee:
+      type: object
+      additionalProperties: false
+      required:
+        - email
+        - invitedAt
+      properties:
+        email:
+          type: string
+          format: email
+        fullname:
+          type: string
+        invitedAt:
+          type: string
+          format: date-time
+    CT_TeamItem:
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - role
+        - slug
+      properties:
+        name:
+          type: string
+        role:
+          $ref: '#/components/schemas/CT_ETeamRole'
+        slug:
+          type: string
+    CT_TeamListResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/CT_TeamItem'
+    CT_TeamLookupResponse:
+      allOf:
+        - $ref: '#/components/schemas/CT_TeamItem'
+        - type: object
+          additionalProperties: false
+          required:
+            - userCount
+          properties:
+            userCount:
+              type: number
+    CT_TeamMember:
+      type: object
+      additionalProperties: false
+      required:
+        - username
+        - fullname
+        - role
+      properties:
+        username:
+          type: string
+        fullname:
+          type: string
+        role:
+          $ref: '#/components/schemas/CT_ETeamRole'
+    CT_TeamMemberListResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - invitees
+        - members
+      properties:
+        applicants:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_TeamApplicant'
+        invitees:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_TeamInvitee'
+        members:
+          type: array
+          items:
+            $ref: '#/components/schemas/CT_TeamMember'
+    CT_UserLookupResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - apiKeys
+        - email
+        - feature_flags
+        - fullname
+        - platformRole
+        - username
+      properties:
+        apiKeys:
+          type: array
+          items:
+            type: string
+            format: uuid
+        email:
+          type: string
+          format: email
+        feature_flags:
+          type: array
+          items:
+            type: string
+        fullname:
+          type: string
+        platformRole:
+          $ref: '#/components/schemas/CT_EPlatformRole'
+        user_hash:
+          type: string
+        user_id:
+          type: string
+        username:
+          type: string
+    CT_UserSessionsResponseItem:
+      type: object
+      additionalProperties: false
+      required:
+        - _id
+        - agent
+        - expiresAt
+        - ipAddr
+      properties:
+        _id:
+          type: string
+        agent:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+        ipAddr:
+          type: string
+    CT_Userinfo:
+      type: object
+      additionalProperties: false
+      required:
+        - fullname
+        - username
+      properties:
+        fullname:
+          type: string
+        username:
+          type: string
+    Errors:
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          example:
+            - error message
+    ObjectId:
+      additionalProperties: false
+      type: string
+      example: 5ed4609a6fc689752b000000
+    Unknown:
+      additionalProperties: true
+      type: object
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    RequestInvalid:
+      description: Request Invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    UserNotFound:
+      description: User Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    TeamNotFound:
+      description: Team Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    MemberNotFound:
+      description: Member Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+    SuiteNotFound:
+      description: Suite Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
+paths:
+  /:
+    get:
+      tags:
+        - Other
+      summary: Entry-point
+      operationId: misc_index
+      description: >-
+        Reassures curious engineers who browse to the Backend URL that the
+        server is up and running.
+      responses:
+        '302':
+          description: Path to route that provides server health status
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+  /@/:team/:suite:
+    get:
+      tags:
+        - Other
+      summary: API URL Placeholder
+      operationId: misc_placeholder
+      description: >-
+        Reassures curious engineers who browse to the API URL provided for
+        submitting results that the platform is up and running.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+      responses:
+        '308':
+          description: Path to the Documentations Page served by Web App
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+  /auth/activate/:key:
+    post:
+      tags:
+        - Account
+      summary: Activate Account
+      operationId: account_verifyActivate
+      description: Activate a user account.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - key
+              properties:
+                key:
+                  type: string
+                  minLength: 8
+        required: true
+      responses:
+        '200':
+          description: Account Activated
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  expiresAt:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '404':
+          description: Activation Key Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /auth/extend:
+    post:
+      tags:
+        - Account
+      summary: Extend User Session
+      operationId: account_sessionExtend
+      description: Extend this user session.
+      responses:
+        '200':
+          description: User Session Extended
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  expiresAt:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /auth/reset:
+    post:
+      tags:
+        - Account
+      summary: Create Password Reset Key
+      operationId: account_resetKeyCreate
+      description: Initiate the process to reset account password.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+        required: true
+      responses:
+        '204':
+          description: Password Reset Key Generated
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '404':
+          description: Account Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '423':
+          description: Account Locked or Suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /auth/reset/:key:
+    get:
+      tags:
+        - Account
+      summary: Reset Account Password
+      operationId: account_resetKeyCheck
+      description: >-
+        Provides basic information for an account associated with a given reset
+        key.
+      parameters:
+        - $ref: '#/components/parameters/resetKey'
+      responses:
+        '200':
+          description: Basic Account Information
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                type: object
+                required:
+                  - email
+                  - fullname
+                  - username
+                properties:
+                  email:
+                    type: string
+                  fullname:
+                    type: string
+                  username:
+                    type: string
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+    post:
+      tags:
+        - Account
+      summary: Reset Account Password
+      operationId: account_resetKeyApply
+      description: >-
+        Set a new password for a user account using a previously issued reset
+        key.
+      parameters:
+        - $ref: '#/components/parameters/resetKey'
+      responses:
+        '204':
+          description: Account Password was Reset
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '404':
+          description: Reset Key Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /auth/reset/resend:
+    post:
+      tags:
+        - Account
+      summary: Resend Password Reset Key
+      operationId: account_resetKeyResend
+      description: Resend password reset key.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+        required: true
+      responses:
+        '204':
+          description: Password Reset Key Resent
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '404':
+          description: Account Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /auth/signin:
+    post:
+      tags:
+        - Account
+      summary: Create User Session
+      operationId: account_signin
+      description: Log into a user account. Creates a user session.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - password
+                - username
+              properties:
+                password:
+                  type: string
+                  minLength: 8
+                username:
+                  type: string
+                  minLength: 3
+                  maxLength: 32
+        required: true
+      responses:
+        '200':
+          description: Session Created
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  expiresAt:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '423':
+          description: Account Locked or Suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /auth/signin/google:
+    post:
+      tags:
+        - Account
+      summary: Create User Session
+      operationId: account_signin_google
+      description: Log into a user account. Creates a user session.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - google_token
+              properties:
+                google_token:
+                  type: string
+        required: true
+      responses:
+        '200':
+          description: Session Created
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  expiresAt:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '423':
+          description: Account Locked or Suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /auth/signout:
+    post:
+      tags:
+        - Account
+      summary: Remove User Session
+      operationId: account_signout
+      description: Log out of a user account. Removes a user session.
+      responses:
+        '204':
+          description: User Session Removed
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '404':
+          description: Session Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /auth/signup:
+    post:
+      tags:
+        - Account
+      summary: Create Account
+      operationId: account_signup
+      description: Create a user account.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+        required: true
+      responses:
+        '201':
+          description: Account Created
+          headers:
+            Location:
+              schema:
+                type: string
+                format: url
+              description: Link to signin route
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+  /auth/signup/resend:
+    post:
+      tags:
+        - Account
+      summary: Resend Activation Link
+      operationId: account_verifyResend
+      description: Resend account activation key.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+        required: true
+      responses:
+        '204':
+          description: Activation Link Resent
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '404':
+          description: Account Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /batch/:team/:suite:
+    get:
+      tags:
+        - Batch
+      summary: List Batches
+      operationId: batch_list
+      description: >-
+        List all batches in a given suite. User performing the query must be
+        authenticated. User performing the query must be a member of the team.
+        Output may have been cached in the server.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+      responses:
+        '200':
+          description: List of Batches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CT_BatchListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /batch/:team/:suite/:batch:
+    get:
+      tags:
+        - Batch
+      summary: Lookup Batch
+      operationId: batch_lookup
+      description: >-
+        Learn more about a batch in a given suite. User performing the query
+        must be authenticated. User performing the query must be member of the
+        team. Output may have been cached in the server.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+      responses:
+        '200':
+          description: Detailed information about this batch.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_BatchLookupResponse'
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    delete:
+      tags:
+        - Batch
+      summary: Remove Batch
+      operationId: batch_remove
+      description: >-
+        Remove a batch and all data associated with it. User initiating the
+        request must be authenticated. User initiating the request must be
+        administrator of the team. Batch must be sealed. Batch must not be
+        baseline of the suite it belongs to.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+      responses:
+        '202':
+          description: Batch Scheduled for Removal
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /batch/:team/:suite/:batch/compare/:dstBatch/:dstSuite:
+    get:
+      tags:
+        - Batch
+      summary: Compare Batch
+      operationId: batch_compare
+      description: >-
+        Compare a batch with another batch. Compare results submitted for a
+        batch to results submitted for another batch. User performing the query
+        must be authenticated. User performing the query must be member of the
+        team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+        - $ref: '#/components/parameters/dstBatch'
+        - $ref: '#/components/parameters/dstSuite'
+      responses:
+        '200':
+          description: Comparison Results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_BatchComparisonResponse'
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '503':
+          description: Failed to perform comparison
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /batch/:team/:suite/:batch/export/pdf:
+    get:
+      tags:
+        - Batch
+      summary: Generate PDF Report
+      operationId: batch_export_pdf
+      description: >-
+        Generate PDF report for test results submitted to this batch. User
+        performing the query must be authenticated. User performing the query
+        must be member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+      responses:
+        '200':
+          description: PDF Report
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /batch/:team/:suite/:batch/export/zip:
+    get:
+      tags:
+        - Batch
+      summary: Export Batch as Zip
+      operationId: batch_export_zip
+      description: >-
+        Export test results submitted to this batch as a compressed archive.
+        User performing the query must be authenticated. User performing the
+        query must be member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+      responses:
+        '200':
+          description: Generate Results
+          content:
+            application/zip:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /batch/:team/:suite/:batch/promote:
+    post:
+      tags:
+        - Batch
+      summary: Promote a Batch
+      operationId: batch_promote
+      description: >-
+        Promote a batch to baseline of the suite it belongs to. User initiating
+        the request must be authenticated. User initiating the request must be
+        member of the team. Batch to be promoted should be sealed. Batch to be
+        promoted should not be empty. We support empty promotion reason only for
+        the first submitted batch whose workflow does not include calling this
+        route. hence, we choose to reject empty reasons for all subsequent
+        promotions that happened through this route. We think a valid promotion
+        reason should be no longer than a single paragraph. Assuming a normal
+        paragraph includes 200 words with average length of 5, we allow at most
+        1500 characters to be entered for promotion reason.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reason
+              properties:
+                reason:
+                  type: string
+                  minLength: 0
+                  maxLength: 1500
+        required: true
+      responses:
+        '204':
+          description: Batch Promoted
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /batch/:team/:suite/:batch/seal:
+    post:
+      tags:
+        - Batch
+      summary: Seal a Batch
+      operationId: batch_seal
+      description: >-
+        Seals a version of the specified suite to prevent additional results to
+        be submitted for that version. This is rarely necessary given that
+        batches are automatically sealed by the backend after a period of time
+        after their submission. User initiating the request must be
+        authenticated. User initiating the request must be member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+      responses:
+        '204':
+          description: Batch Sealed
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /client/element/:team/:suite:
+    get:
+      tags:
+        - Client
+      summary: List Elements
+      operationId: client_elements
+      description: >-
+        List all test suites in baseline version of a given suite. User
+        performing the query must be authenticated. User performing the query
+        must be a member of the team. Output may have been cached in the server.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+      responses:
+        '200':
+          description: List of Test Cases
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_ElementListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /client/signin:
+    post:
+      tags:
+        - Client
+      summary: Create Client Session
+      operationId: client_signin
+      description: Authenticate to Touca Server API. Creates a temporary client session.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - key
+              properties:
+                key:
+                  type: string
+                  format: uuid
+        required: true
+      responses:
+        '200':
+          description: Client Session Created
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                properties:
+                  expiresAt:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '423':
+          description: Account Locked or Suspended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /client/submit:
+    post:
+      tags:
+        - Client
+      summary: Submit Results
+      operationId: client_submit
+      description: >-
+        Handles test results submitted via Touca SDKs. Client initiating the
+        request must be authenticated.
+      requestBody:
+        description: >-
+          Valid binary data that conforms to Touca flatbuffers schema.
+          Submission file cannot be larger than 50 MB in size.
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+        required: true
+      responses:
+        '204':
+          description: Results Submitted
+        '400':
+          description: >-
+            Results do not conform to Touca flatbuffers Schema. Or platform
+            rejects processing the results for other reasons.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /cmp:
+    get:
+      tags:
+        - Comparison
+      summary: List Comparison Jobs
+      operationId: comparison_list
+      description: >-
+        List pending comparison jobs. Designed for use by the comparator
+        service.
+      responses:
+        '200':
+          description: List of comparison jobs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: false
+                  required:
+                    - _id
+                    - dstBatch
+                    - dstMessage
+                    - dstProcessed
+                    - srcBatch
+                    - srcMessage
+                    - srcProcessed
+                  properties:
+                    _id:
+                      $ref: '#/components/schemas/ObjectId'
+                    dstBatch:
+                      $ref: '#/components/schemas/ObjectId'
+                    dstMessage:
+                      $ref: '#/components/schemas/ObjectId'
+                    dstProcessed:
+                      type: boolean
+                    srcBatch:
+                      $ref: '#/components/schemas/ObjectId'
+                    srcMessage:
+                      $ref: '#/components/schemas/ObjectId'
+                    srcProcessed:
+                      type: boolean
+  /cmp/job/:job:
+    patch:
+      tags:
+        - Comparison
+      summary: Submit Comparison Result
+      operationId: comparison_process
+      description: >-
+        Submit results for a comparison job. Designed for use by the comparator
+        service.
+      parameters:
+        - $ref: '#/components/parameters/job'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - overview
+                - body
+              properties:
+                overview:
+                  $ref: '#/components/schemas/CT_CppTestcaseOverview'
+                body:
+                  $ref: '#/components/schemas/Unknown'
+      responses:
+        '204':
+          description: Comparison Result Submitted
+        '404':
+          description: Job Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: Job Already Processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '413':
+          description: Comparison Result Too Large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /cmp/message/{message}:
+    patch:
+      tags:
+        - Comparison
+      summary: Submit Message Result
+      operationId: message_process
+      description: >-
+        Submit parsed json representation of a message. Designed for use by the
+        comparator service.
+      parameters:
+        - name: message
+          in: path
+          required: true
+          description: unique identifier for this message
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+                - overview
+                - body
+              properties:
+                overview:
+                  $ref: '#/components/schemas/CT_CppTestcaseComparisonOverview'
+                body:
+                  $ref: '#/components/schemas/Unknown'
+      responses:
+        '204':
+          description: Message Result Submitted
+        '404':
+          description: Message Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: Message Already Processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '413':
+          description: Message Result Too Large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /cmp/stats:
+    post:
+      tags:
+        - Comparison
+      summary: Submit Comparator Statistics
+      operationId: comparison_stats
+      description: >-
+        Submit comparator statistics. Designed for use by the comparator
+        service.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                avgCollectionTime:
+                  type: number
+                avgProcessingTime:
+                  type: number
+                numCollectionJobs:
+                  type: number
+                numProcessingJobs:
+                  type: number
+      responses:
+        '204':
+          description: Comparator Statistics Submitted
+  /comment/:team/:suite/:batch/c:
+    get:
+      tags:
+        - Comment
+      summary: List Comments
+      operationId: comment_list
+      description: >-
+        List comments submitted for a given page. User performing the query must
+        be authenticated. User performing the query must be member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+      responses:
+        '200':
+          description: List of Comments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_CommentListResponse'
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    post:
+      tags:
+        - Comment
+      summary: Create Comment
+      operationId: comment_create
+      description: >-
+        Creates a new comment. User performing the query must be authenticated.
+        User performing the query must be member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - body
+              properties:
+                body:
+                  type: string
+                  minLength: 10
+                  maxLength: 1500
+        required: true
+      responses:
+        '204':
+          description: Comment created
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /comment/:team/:suite/:batch/c/:comment:
+    patch:
+      tags:
+        - Comment
+      summary: Update Comment
+      operationId: comment_update
+      description: >-
+        Updates an existing comment. User performing the request must be
+        authenticated. User performing the request must be member of the team.
+        User performing the request must own the comment.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+        - $ref: '#/components/parameters/comment'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - body
+              properties:
+                body:
+                  type: string
+                  minLength: 10
+                  maxLength: 1500
+        required: true
+      responses:
+        '204':
+          description: Comment updated
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    delete:
+      tags:
+        - Comment
+      summary: Remove Comment
+      operationId: comment_remove
+      description: >-
+        Removes an existing comment. User performing the request must be
+        authenticated. User performing the request must be member of the team.
+        User performing the request must be owner of the comment or admin of the
+        team or admin of the platform.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+        - $ref: '#/components/parameters/comment'
+      responses:
+        '204':
+          description: Comment removed
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /comment/:team/:suite/:batch/c/:comment/reply:
+    post:
+      tags:
+        - Comment
+      summary: Reply to Comment
+      operationId: comment_reply
+      description: >-
+        Replies to an existing comment. User performing the request must be
+        authenticated. User performing the request must be member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/batch'
+        - $ref: '#/components/parameters/comment'
+      responses:
+        '204':
+          description: Comment reply submitted
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /element/:team/:suite/:element:
+    get:
+      tags:
+        - Element
+      summary: Lookup Element
+      operationId: element_lookup
+      description: >-
+        Learn more about an element in a given suite. User performing the query
+        must be authenticated. User performing the query must be member of the
+        team. Output may have been cached in the server.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/element'
+      responses:
+        '200':
+          description: Detailed information about this element.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_ElementLookupResponse'
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Element Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    patch:
+      tags:
+        - Element
+      summary: Lookup Element
+      operationId: element_update
+      description: >-
+        Update test case information in a given suite. User initiating the
+        request must be authenticated. User initiation the request must be
+        member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/element'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                note:
+                  type: string
+        required: true
+      responses:
+        '204':
+          description: Metadata of the suite was updated.
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Element Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /element/:team/:suite/:element/compare/:batch/:dstBatch/:dstElement/:dstSuite:
+    get:
+      tags:
+        - Element
+      summary: Compare Elements
+      operationId: element_compare
+      description: >-
+        Compare results submitted for the same element between two batches. User
+        performing the query must be authenticated. User performing the query
+        must be member of the team. Output may have been cached in the server.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+        - $ref: '#/components/parameters/element'
+        - $ref: '#/components/parameters/batch'
+        - $ref: '#/components/parameters/dstBatch'
+        - $ref: '#/components/parameters/dstElement'
+        - $ref: '#/components/parameters/dstSuite'
+      responses:
+        '200':
+          description: Comparison Results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_ElementComparisonResponse'
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite or Element or Batch Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '503':
+          description: Failed to Perform Comparison
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /element/v2/:team/:suite:
+    get:
+      tags:
+        - Element
+      summary: List Elements
+      operationId: element_list
+      description: >-
+        List all test suites in baseline version of a given suite. User
+        performing the query must be authenticated. User performing the query
+        must be a member of the team. Output may have been cached in the server.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+      responses:
+        '200':
+          description: List of Test Cases
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_ElementListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /feedback:
+    post:
+      tags:
+        - Other
+      summary: Provide Feedback
+      operationId: other_feedback
+      description: Submits user feedback to Touca Engineering Team.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - body
+                - page
+              properties:
+                body:
+                  type: string
+                  minLength: 20
+                  maxLength: 1000
+                name:
+                  type: string
+                  maxLength: 100
+                page:
+                  type: string
+                  maxLength: 16
+                email:
+                  type: string
+                  maxLength: 100
+                cname:
+                  type: string
+                  maxLength: 100
+        required: true
+      responses:
+        '204':
+          description: Feedback Delivered
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+  /platform:
+    get:
+      tags:
+        - Platform
+      summary: Check Platform Health
+      operationId: platform_health
+      description: Provides health status of the Touca server
+      responses:
+        '200':
+          description: Indicates whether the platform is ready to accept submissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_PlatformStatus'
+  /platform/account/:account:
+    patch:
+      tags:
+        - Platform
+      summary: Update Account Information
+      operationId: platform_accountUpdate
+      description: >-
+        Updates profile of an existing account on the platform. User initiating
+        the request must be authenticated. User initiating the request must be a
+        platform admin.
+      parameters:
+        - $ref: '#/components/parameters/account'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              required:
+                - role
+              properties:
+                role:
+                  type: string
+                  enum:
+                    - user
+                    - admin
+      responses:
+        '204':
+          description: Account Profile Updated
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /platform/account/:account/delete:
+    post:
+      tags:
+        - Platform
+      summary: Delete a given account
+      operationId: platform_accountDelete
+      description: >-
+        Deletes a given account and all data associated with it. User initiating
+        the request must be authenticated. User initiating the request must be a
+        platform admin. User being removed must not have any active team
+        membership. User being removed must not have any pending team
+        invitation. User being removed must not have any pending join request.
+      responses:
+        '204':
+          description: Account Deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Account cannot be deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /platform/account/:account/populate:
+    post:
+      tags:
+        - Platform
+      summary: Populate account with sample data
+      operationId: platform_accountPopulate
+      description: >-
+        Populates an existing account with sample test results. User initiating
+        the request must be authenticated. User initiating the request must be a
+        platform admin.
+      parameters:
+        - $ref: '#/components/parameters/account'
+      responses:
+        '204':
+          description: Sample data added
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /platform/account/:account/suspend:
+    post:
+      tags:
+        - Platform
+      summary: Suspend a given account
+      operationId: platform_accountSuspend
+      description: >-
+        Suspends a given account and removes all its active sessions. User
+        initiating the request must be authenticated. User initiating the
+        request must be a platform admin.
+      parameters:
+        - $ref: '#/components/parameters/account'
+      responses:
+        '204':
+          description: Account suspended.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /platform/config:
+    get:
+      tags:
+        - Platform
+      summary: Get Server Settings
+      operationId: platform_config
+      description: >-
+        Reports server settings. If server is already configured, user
+        initiating the request must be authenticated and a server admin.
+      responses:
+        '200':
+          description: Server settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_PlatformConfig'
+    patch:
+      tags:
+        - Platform
+      summary: Update Server Settings
+      operationId: platform_update
+      description: >-
+        Updates server settings. If server is already configured, user
+        initiating the request must be authenticated and a server admin.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                telemetry:
+                  type: boolean
+        required: true
+      responses:
+        '204':
+          description: Server settings was updated.
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /platform/install:
+    post:
+      tags:
+        - Platform
+      summary: Register Server
+      operationId: platform_install
+      description: Adds contact information to this server instance.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - name
+              properties:
+                company:
+                  type: string
+                email:
+                  type: string
+                name:
+                  type: string
+        required: true
+      responses:
+        '204':
+          description: Server registered
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /platform/stats:
+    get:
+      tags:
+        - Platform
+      summary: Get Platform Statistics
+      operationId: platform_stats
+      description: >-
+        Provides statistics about this Touca server instance. User initiating
+        the request must be authenticated. User initiating the request must be a
+        platform admin.
+      responses:
+        '200':
+          description: Statistics about this platform instance.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_PlatformStatsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /suite/:team:
+    get:
+      tags:
+        - Suite
+      summary: List Suites
+      operationId: suite_list
+      description: >-
+        Lists all the suites registered for a given team. User performing the
+        query must be authenticated. User performing the query must be a member
+        of the team. Output may have been cached in the server.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      responses:
+        '200':
+          description: List of Suites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CT_SuiteListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+    post:
+      tags:
+        - Suite
+      summary: Create Suite
+      operationId: suite_create
+      description: >-
+        Create a new suite in a given team. User initiating the request must be
+        authenticated. User initiating the request must be a member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - slug
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+      responses:
+        '201':
+          description: Suite Created
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+        '409':
+          description: Suite Already Registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /suite/:team/:suite:
+    get:
+      tags:
+        - Suite
+      summary: Lookup Suite
+      operationId: suite_lookup
+      description: >-
+        Learn more about a suite in a given team. User performing the query must
+        be authenticated. User performing the query must be member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+      responses:
+        '200':
+          description: Detailed information about this suite
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_SuiteLookupResponse'
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+    patch:
+      tags:
+        - Suite
+      summary: Update Suite
+      operationId: team_suite
+      description: >-
+        Update suite information in a given team. User initiating the request
+        must be authenticated. User initiation the request must be member of the
+        team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+                retainFor:
+                  type: number
+                  minimum: 86400
+                  maximum: 157680000
+                  multipleOf: 1
+        required: true
+      responses:
+        '201':
+          description: Metadata of the suite was updated. Suite is now known by a new slug.
+          headers:
+            Location:
+              schema:
+                type: string
+                format: url
+              description: Link to the team with its new slug
+        '204':
+          description: Metadata of the suite was updated. Suite slug has not changed.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team Not Found or Suite Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    delete:
+      tags:
+        - Suite
+      summary: Remove Suite
+      operationId: suite_remove
+      description: >-
+        Removes a suite and all data associated with it. User initiating the
+        request must be authenticated. User initiating the request must be
+        administrator of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+      responses:
+        '202':
+          description: Suite Scheduled for Removal
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Suite Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /suite/:team/:suite/subscribe:
+    patch:
+      tags:
+        - Suite
+      summary: Subscribe to Suite
+      operationId: suite_subscribe
+      description: >-
+        Subscribe to a suite in a given team. User initiating the request must
+        be authenticated. User initiating the request must be member of the
+        team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/suite'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                level:
+                  $ref: '#/components/schemas/CT_ENotificationType'
+        required: true
+      responses:
+        '204':
+          description: User Subscribed to Suite
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team Not Found or Suite Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /team:
+    get:
+      tags:
+        - Team
+      summary: List Teams
+      operationId: team_list
+      description: >-
+        Lists all the teams of which user is a member. User performing the query
+        must be authenticated.
+      responses:
+        '200':
+          description: List of Teams
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_TeamListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+        - Team
+      summary: Create Team
+      operationId: team_create
+      description: >-
+        Create a new team owned by this user. User initiating the request must
+        be authenticated.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              required:
+                - name
+                - slug
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+      responses:
+        '201':
+          description: Team Created
+          headers:
+            Location:
+              schema:
+                type: string
+                format: url
+              description: Link to new team
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Team Already Registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /team/:team:
+    get:
+      tags:
+        - Team
+      summary: Lookup Team
+      operationId: team_lookup
+      description: >-
+        Learn more about a team. User performing the query must be
+        authenticated. User performing the query must be member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      responses:
+        '200':
+          description: >-
+            Detailed information about this team, excluding the list of members
+            and their roles within this team.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_TeamLookupResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+    patch:
+      tags:
+        - Team
+      summary: Update Team
+      operationId: team_update
+      description: >-
+        Update team information. User initiating the request must be
+        authenticated. User initiation the request must be owner of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+      responses:
+        '201':
+          description: Metadata of the team was updated. Team is now known by a new slug.
+          headers:
+            Location:
+              schema:
+                type: string
+                format: url
+              description: Link to the team with its new slug
+        '204':
+          description: Metadata of the team was updated. Team slug has not changed.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+        '409':
+          description: Message Already Processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    delete:
+      tags:
+        - Team
+      summary: Remove Team
+      operationId: team_remove
+      description: >-
+        Removes a team and all data associated with it. User initiating the
+        request must be authenticated. User initiating the request must be owner
+        of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      responses:
+        '204':
+          description: Team Removed
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+  /team/:team/invite:
+    post:
+      tags:
+        - Team
+      summary: Invite to Team
+      operationId: team_inviteAdd
+      description: >-
+        Invite someone to join a team. User initiating the request must be
+        authenticated. User initiating the request must be administrator of the
+        team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - fullname
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: alice@example.com
+                fullname:
+                  type: string
+                  example: Alice Anderson
+        required: true
+      responses:
+        '204':
+          description: User Invited to Team
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+        '409':
+          description: User is already a member
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '429':
+          description: User was last invited less than 10 minutes ago
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /team/:team/invite/accept:
+    post:
+      tags:
+        - Team
+      summary: Accept Team Invitation
+      operationId: team_inviteAccept
+      description: >-
+        Adds user to the team they are invited to. User initiating the request
+        must be authenticated. User initiating the request must be invited to
+        the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      responses:
+        '204':
+          description: User was added as a member.
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+  /team/:team/invite/decline:
+    post:
+      tags:
+        - Team
+      summary: Decline Team Invitation
+      operationId: team_inviteDecline
+      description: >-
+        Removes team membership invitation for this user. User initiating the
+        request must be authenticated. User initiating the request must be
+        invited to the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      responses:
+        '204':
+          description: Team Invitation was Declined.
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+  /team/:team/invite/rescind:
+    post:
+      tags:
+        - Team
+      summary: Rescind Team Invitation
+      operationId: team_inviteRescind
+      description: >-
+        Rescind invitation to a team. User initiating the request must be
+        authenticated. User initiating the request must be administrator of the
+        team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: alice@example.com
+        required: true
+      responses:
+        '204':
+          description: User Invited to Team
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team Not Found or user was not on invitation list.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /team/:team/join:
+    post:
+      tags:
+        - Team
+      summary: Request to Join a Team
+      operationId: team_joinAdd
+      description: >-
+        Request to join a team. User initiating the request must be
+        authenticated. User initiating the request must not be a member of the
+        team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      responses:
+        '204':
+          description: Request was submitted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+        '409':
+          description: User is already a member or has a pending request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    delete:
+      tags:
+        - Team
+      summary: Rescind Team Join Request
+      operationId: team_joinRescind
+      description: >-
+        Rescind request to join a team. User initiating the request must be
+        authenticated. User initiating the request must not be a member of the
+        team. User initiating the request must have a pending join request.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      responses:
+        '204':
+          description: User rescinded request to join the team.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team Not Found or user did not have a pending join request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: User is already a member or has a pending request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /team/:team/join/:account:
+    post:
+      tags:
+        - Team
+      summary: Accept Team Join Request
+      operationId: team_joinAccept
+      description: >-
+        Accept user request to join the team. User initiating the request must
+        be authenticated. User initiating the request must be administrator of
+        the team. User holding the account must have a pending join request.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/account'
+      responses:
+        '204':
+          description: User request to join the team was accepted.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+        '409':
+          description: User is already a member or has no pending request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /team/:team/join/decline:
+    post:
+      tags:
+        - Team
+      summary: Decline Team Join Request
+      operationId: team_joinDecline
+      description: >-
+        Decline user request to join the team. User initiating the request must
+        be authenticated. User initiating the request must be administrator of
+        the team. User holding the account must have a pending join request.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/account'
+      responses:
+        '204':
+          description: User request to join the team was declined.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+        '409':
+          description: User is already a member or has no pending request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /team/:team/leave:
+    post:
+      tags:
+        - Team
+      summary: Leave a Team
+      operationId: team_leave
+      description: >-
+        Cancel membership of a given team. User initiating the request must be
+        authenticated. User initiating the request must be member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      responses:
+        '204':
+          description: Membership Cancelled
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+  /team/:team/member:
+    get:
+      tags:
+        - Team
+      summary: List Team Members
+      operationId: team_memberList
+      description: >-
+        Lists all members of a team. Information provided for each member
+        includes their roles within this team. Also provides list of users
+        currently invited to join this team. User performing the query must be
+        authenticated. User performing the query must be member of the team.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      responses:
+        '200':
+          description: List of Team Members
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_TeamMemberListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/TeamNotFound'
+  /team/:team/member/:account:
+    post:
+      tags:
+        - Team
+      summary: Add User to Team
+      operationId: team_memberAdd
+      description: >-
+        Adds an existing user to a team. User initiating the request must be
+        authenticated. User initiating the request must be administrator of the
+        platform.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/account'
+      responses:
+        '201':
+          description: User Added to Team
+          headers:
+            Location:
+              schema:
+                type: string
+                format: url
+              description: Link to the list of team members
+        '400':
+          $ref: '#/components/responses/RequestInvalid'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or User Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /team/:team/member/:member:
+    patch:
+      tags:
+        - Team
+      summary: Update Member Role
+      operationId: team_memberUpdate
+      description: >-
+        Updates role of an existing member in a team. User initiating the
+        request must be authenticated. User initiating the request must be a
+        team administrator. User to be updated must be a team member.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/member'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              additionalProperties: false
+              type: object
+              required:
+                - role
+              properties:
+                role:
+                  type: string
+                  enum:
+                    - member
+                    - admin
+      responses:
+        '204':
+          description: Member Role Updated
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Member Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+    delete:
+      tags:
+        - Team
+      summary: Remove Team Member
+      operationId: team_memberRemove
+      description: >-
+        Removes an existing member from a team. User initiating the request must
+        be authenticated. User initiating the request must be a team
+        administrator. User to be updated must be a team member.
+      parameters:
+        - $ref: '#/components/parameters/team'
+        - $ref: '#/components/parameters/member'
+      responses:
+        '204':
+          description: Member Removed
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team or Member Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /user:
+    get:
+      tags:
+        - User
+      summary: Lookup Current User
+      operationId: user_lookup
+      description: >-
+        Provides non-sensitive account information about the user performing
+        this query. User performing the query must be authenticated.
+      responses:
+        '200':
+          description: Basic Account Information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_UserLookupResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    patch:
+      tags:
+        - User
+      summary: Update Account Information
+      operationId: user_update
+      description: >-
+        Updates user information. User initiating the request must be
+        authenticated.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullname:
+                  type: string
+                username:
+                  type: string
+                password:
+                  type: string
+        required: true
+      responses:
+        '204':
+          description: User information was updated.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    delete:
+      tags:
+        - User
+      summary: Delete User Account
+      operationId: user_delete
+      description: >-
+        Removes user's account and all data associated with it. User initiating
+        the request must be authenticated. User initiating the request must not
+        be the platform owner. User must not have any active team membership.
+        User must not have any pending team invitation. User must not have any
+        pending join request.
+      responses:
+        '204':
+          description: Account Deleted
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Account cannot be deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /user/inbox:
+    get:
+      tags:
+        - User
+      summary: List Notifications
+      operationId: user_inboxList
+      description: >-
+        Lists recent notifications for this user. User initiating the request
+        must be authenticated.
+      responses:
+        '200':
+          description: Notifications Marked as Seen
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_NotificationListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /user/inbox/seen:
+    post:
+      tags:
+        - User
+      summary: Mark Notifications as Seen
+      operationId: user_inboxSeen
+      description: >-
+        Marks all notifications for this user as seen. User initiating the
+        request must be authenticated.
+      responses:
+        '204':
+          description: Notifications Marked as Seen
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /user/sessions:
+    get:
+      tags:
+        - User
+      summary: List Active User Sessions
+      operationId: user_sessions
+      description: >-
+        Provides list of active sessions of this user. User performing the query
+        must be authenticated.
+      responses:
+        '200':
+          description: Active User Sessions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CT_UserSessionsResponseItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /user/sessions/:id:
+    delete:
+      tags:
+        - User
+      summary: Remove Active User Session
+      operationId: user_sessionsDelete
+      description: >-
+        Expires a given user session for this user. User performing the query
+        must be authenticated.
+      parameters:
+        - $ref: '#/components/parameters/session_id'
+      responses:
+        '204':
+          description: Expired active session
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Session Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'

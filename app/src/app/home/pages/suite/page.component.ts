@@ -5,11 +5,11 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import type {
+  ENotificationType,
   SuiteItem,
   SuiteLookupResponse,
   TeamItem
 } from '@touca/api-schema';
-import { ENotificationType } from '@touca/api-schema';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { Subscription, timer } from 'rxjs';
 
@@ -54,20 +54,20 @@ export class SuitePageComponent
   suites: SuiteItem[];
   suite: SuiteLookupResponse;
   fields: Fields = {};
-  levels = [
+  levels: { icon: string; type: ENotificationType; text: string }[] = [
     {
       icon: 'feather-rss',
-      type: ENotificationType.All,
+      type: 'all',
       text: 'Get notified of all new versions.'
     },
     {
       icon: 'feather-alert-circle',
-      type: ENotificationType.Different,
+      type: 'different',
       text: 'Get notified of versions with differences.'
     },
     {
       icon: 'feather-bell-off',
-      type: ENotificationType.None,
+      type: 'none',
       text: 'Stop all notifications about this suite.'
     }
   ];
@@ -78,7 +78,6 @@ export class SuitePageComponent
 
   banner: SuiteBannerType;
   BannerType = SuiteBannerType;
-  NotificationType = ENotificationType;
 
   private _sub: Record<
     'alert' | 'banner' | 'tabs' | 'team' | 'suites' | 'suite' | 'user',

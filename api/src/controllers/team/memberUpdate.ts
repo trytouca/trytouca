@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ETeamRole } from '@touca/api-schema'
+import type { ETeamRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { findTeamRoleOfUser } from '@/controllers/team/common'
@@ -70,7 +70,7 @@ export async function teamMemberUpdate(
 
   // define a helper function to determine seniority of roles
 
-  const orders = [ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner]
+  const orders: ETeamRole[] = ['member', 'admin', 'owner']
   const getOrder = (role: ETeamRole) => orders.findIndex((v) => v === role)
 
   // disallow admins to update members with a role higher than their own
@@ -101,8 +101,8 @@ export async function teamMemberUpdate(
   // update role of member in this team
 
   const groups = new Map<ETeamRole, string>([
-    [ETeamRole.Admin, 'admins'],
-    [ETeamRole.Member, 'members']
+    ['admin', 'admins'],
+    ['member', 'members']
   ])
 
   await TeamModel.findByIdAndUpdate(team._id, {

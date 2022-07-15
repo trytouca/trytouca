@@ -112,11 +112,11 @@
               size="1.05rem"
               name="feather-bell"
               [ngClass]="{
-                'rotate-12': suite.subscription !== NotificationType.None
+                'rotate-12': suite.subscription !== 'none'
               }"></ng-icon>
             <span class="text-sm font-medium text-gray-600 dark:text-gray-300">
               {{
-                suite.subscription === NotificationType.None
+                suite.subscription === 'none'
                   ? 'Subscribe'
                   : 'Subscribed'
               }}

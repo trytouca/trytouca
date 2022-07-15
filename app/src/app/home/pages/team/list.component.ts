@@ -3,7 +3,7 @@
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
-import { TeamLookupResponse } from '@touca/api-schema';
+import type { TeamLookupResponse } from '@touca/api-schema';
 import { Subscription } from 'rxjs';
 
 import { PageListComponent } from '@/home/components/page-list.component';

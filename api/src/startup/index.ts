@@ -1,7 +1,5 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
-
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
 import { SuiteModel } from '@/schemas/suite'
 import { UserModel } from '@/schemas/user'
@@ -26,7 +24,7 @@ export async function setupSuperuser() {
     email: 'noreply@touca.io',
     fullname: 'Touca',
     password: 'supersafehash',
-    platformRole: EPlatformRole.Super,
+    platformRole: 'super',
     username: 'touca'
   })
 
@@ -53,7 +51,7 @@ export async function setupAnonymousUser() {
     email: 'anonymous@touca.io',
     fullname: 'Former User',
     password: 'supersafehash',
-    platformRole: EPlatformRole.User,
+    platformRole: 'user',
     username: 'anonymous'
   })
 

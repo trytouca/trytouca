@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
-import {
+import type {
   EFeatureFlag,
   EPlatformRole,
   PlatformStatsResponse,
@@ -57,7 +57,6 @@ export class ProfileComponent implements OnDestroy {
   private _subStats: Subscription;
   sessions: UserSessionsResponseItem[];
   user: UserLookupResponse;
-  EFeatureFlag = EFeatureFlag;
   apiKeys: ApiKey[];
   isPlatformAdmin: boolean;
 
@@ -115,24 +114,24 @@ export class ProfileComponent implements OnDestroy {
   currentTab = this.tabs[0];
   TabType = SettingsPageTabType;
 
-  _preferences: Record<string, Checkbox> = {
-    [EFeatureFlag.NewsletterProduct]: {
+  _preferences: Record<EFeatureFlag, Checkbox & { slug: EFeatureFlag }> = {
+    newsletter_product: {
       default: true,
       description:
         'Receive monthly emails about major features and important product updates',
       experimental: false,
       saved: false,
-      slug: EFeatureFlag.NewsletterProduct,
+      slug: 'newsletter_product',
       title: 'Monthly Product Updates',
       visible: true
     },
-    [EFeatureFlag.NewsletterChangelog]: {
+    newsletter_changelog: {
       default: false,
       description:
         'Receive weekly emails about newly released features and improvements',
       experimental: false,
       saved: false,
-      slug: EFeatureFlag.NewsletterChangelog,
+      slug: 'newsletter_changelog',
       title: 'Weekly Changelog',
       visible: true
     }
@@ -170,10 +169,8 @@ export class ProfileComponent implements OnDestroy {
           this._preferences[v].value = true;
         }
       });
-      this.isPlatformAdmin = [
-        EPlatformRole.Owner,
-        EPlatformRole.Admin
-      ].includes(user.platformRole);
+      this.isPlatformAdmin =
+        user.platformRole === 'owner' || user.platformRole === 'admin';
       this.user = user;
       this.apiKeys = user.apiKeys.map((v) => new ApiKey(v));
       if (this.isPlatformAdmin) {
@@ -325,12 +322,14 @@ export class ProfileComponent implements OnDestroy {
   toggleFeatureFlag(flag: Checkbox) {
     const node = this._preferences[flag.slug];
     node.value = !(node.value ?? false);
-    this.userService.updateFeatureFlag(flag.slug, node.value).subscribe({
-      next: () => {
-        node.saved = true;
-        timer(3000).subscribe(() => (node.saved = false));
-      }
-    });
+    this.userService
+      .updateFeatureFlag(flag.slug, node.value as boolean)
+      .subscribe({
+        next: () => {
+          node.saved = true;
+          timer(3000).subscribe(() => (node.saved = false));
+        }
+      });
   }
 
   switchTab(tab: SettingsPageTab) {

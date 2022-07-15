@@ -6,9 +6,10 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import type {
   BatchLookupResponse,
   CommentItem,
+  EPlatformRole,
+  ETeamRole,
   TeamLookupResponse
 } from '@touca/api-schema';
-import { EPlatformRole, ETeamRole } from '@touca/api-schema';
 import { Subscription } from 'rxjs';
 
 import {
@@ -104,12 +105,11 @@ export class BatchCommentsComponent implements OnDestroy {
 
   private processComments(comments: CommentItem[]): FrontendCommentItem[] {
     const myRolePlatform = this.userService.currentUser.platformRole;
-    const myRoleTeam = this._team?.role || ETeamRole.Member;
+    const myRoleTeam = this._team?.role || 'member';
     const myUsername = this.userService.currentUser.username;
-    const isPlatformAdmin = [EPlatformRole.Admin, EPlatformRole.Owner].includes(
-      myRolePlatform
-    );
-    const isTeamAdmin = [ETeamRole.Admin, ETeamRole.Owner].includes(myRoleTeam);
+    const isPlatformAdmin =
+      myRolePlatform === 'admin' || myRolePlatform === 'owner';
+    const isTeamAdmin = myRoleTeam === 'admin' || myRoleTeam === 'owner';
     const process = (v: CommentItem, isReply = false): FrontendCommentItem => ({
       commentAuthor: v.by.fullname,
       commentBody: v.text,

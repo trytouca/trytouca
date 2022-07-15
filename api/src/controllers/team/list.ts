@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ETeamRole, TeamItem, TeamListResponse } from '@touca/api-schema'
+import type { ETeamRole, TeamItem, TeamListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { Types } from 'mongoose'
 
@@ -54,15 +54,15 @@ async function teamList(user: IUser): Promise<TeamListResponse> {
 
   const getRole = (v: DatabaseOutput): ETeamRole => {
     if (v.owner.equals(user._id)) {
-      return ETeamRole.Owner
+      return 'owner'
     }
     if (v.admins.some((v) => v.equals(user._id))) {
-      return ETeamRole.Admin
+      return 'admin'
     }
     if (v.members.some((v) => v.equals(user._id))) {
-      return ETeamRole.Member
+      return 'member'
     }
-    return ETeamRole.Invalid
+    return 'unknown'
   }
 
   return result.map(
@@ -114,9 +114,9 @@ async function prospectiveTeamList(user: IUser): Promise<TeamListResponse> {
 
   const getRole = (v: DatabaseOutput): ETeamRole => {
     if (v.applicants.some((v) => v.equals(user._id))) {
-      return ETeamRole.Applicant
+      return 'applicant'
     }
-    return ETeamRole.Invalid
+    return 'unknown'
   }
 
   return result.map(
@@ -166,7 +166,7 @@ export async function ctrlTeamList(
   const invited = teams.map((v: ITeamDocument) => ({
     name: v.name,
     slug: v.slug,
-    role: ETeamRole.Invited
+    role: 'unknown'
   }))
   const output = [...active, ...prospective, ...invited]
 
