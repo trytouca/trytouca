@@ -1,7 +1,14 @@
 {
   "name": "@touca/api-schema",
   "version": "0.0.0",
-  "description": "Touca API schema",
+  "description": "Touca Server API Schema",
   "private": true,
-  "main": "src/index.ts"
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.4"
+  }
 }
