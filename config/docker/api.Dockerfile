@@ -13,6 +13,7 @@ COPY api/dist                       /opt/touca/dist
 COPY api/env                        /opt/touca/env
 COPY api/samples                    /opt/touca/samples
 COPY api/node_modules               /opt/touca/node_modules
+COPY node_modules                   /opt/node_modules
 
 EXPOSE 8081
 

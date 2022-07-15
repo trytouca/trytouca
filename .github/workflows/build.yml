@@ -944,7 +944,7 @@ jobs:
       - name: install api dependencies
         if: steps.changes.outputs.api == 'true'
         run: |
-          pnpm --dir=api install --frozen-lockfile --production
+          pnpm --dir=api --filter=@touca/api --frozen-lockfile --production install
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         if: steps.params.outputs.release == 'true'
@@ -979,6 +979,7 @@ jobs:
           cp -r ./api/env ./stage/api/env
           cp -r ./api/samples ./stage/api/samples
           cp -r ./api/node_modules ./stage/api/node_modules
+          cp -r ./node_modules ./stage/node_modules
           curl -o ./stage/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
       - name: extract metadata for api docker image
         uses: docker/metadata-action@v4
