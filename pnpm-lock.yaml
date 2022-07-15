@@ -308,7 +308,10 @@ importers:
       typescript: 4.7.4
 
   packages/api-schema:
-    specifiers: {}
+    specifiers:
+      typescript: ^4.7.4
+    devDependencies:
+      typescript: 4.7.4
 
   web:
     specifiers:

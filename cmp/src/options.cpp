@@ -148,8 +148,7 @@ bool parse_arguments_impl(int argc, char* argv[], Options& options) {
   if (result_file.count("log-dir")) {
     options.log_dir = result_file["log-dir"].as<std::string>();
     if (!touca::filesystem::is_directory(*options.log_dir)) {
-      touca::print_error("option `log-dir` points to nonexistent directory\n");
-      return false;
+      touca::filesystem::create_directories(*options.log_dir);
     }
   }
 
