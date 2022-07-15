@@ -8,10 +8,11 @@ opportunities to help, regardless of your domain of expertise.
 ## Finding Inspiration
 
 If you like to contribute but don't know where to start, check out our
-[Good First Issues](./good-first-issues) document for a list of small
-well-defined tasks that do no need background knowledge. If none of those
-projects interests you or matches your expertise, come say hi on
-[Discord](https://touca.io/discord), introduce yourself, and ask for more ideas.
+[Good First Issues](https://touca.io/docs/contributing/good-first-issues)
+document for a list of small well-defined tasks that do no need background
+knowledge. If none of those projects interests you or matches your expertise,
+come say hi on [Discord](https://touca.io/discord), introduce yourself, and ask
+for more ideas.
 
 ## Creating GitHub Issues
 
