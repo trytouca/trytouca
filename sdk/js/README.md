@@ -63,11 +63,9 @@ function matches our _expected_ output, for a small set of possible inputs.
 ```ts
 import { is_prime } from './is_prime';
 
-describe('unit_test', () => {
-  test('is_prime_test', () => {
-    expect(is_prime(2)).toEqual(true);
-    expect(is_prime(4)).toEqual(false);
-  });
+test('is_prime_test', () => {
+  expect(is_prime(2)).toEqual(true);
+  expect(is_prime(4)).toEqual(false);
 });
 ```
 
