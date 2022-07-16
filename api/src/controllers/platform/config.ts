@@ -45,12 +45,12 @@ export async function platformConfig(
     response.contact = meta.contact
   }
   if (meta?.mail) {
-    response.mail = { ...meta.mail, port: String(meta.mail.port) }
+    response.mail = meta.mail
   } else if (config.mail.host) {
     response.mail = {
       host: config.mail.host,
       pass: config.mail.pass,
-      port: String(config.mail.port),
+      port: config.mail.port,
       user: config.mail.user
     }
   }

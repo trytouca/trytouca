@@ -51,16 +51,8 @@ router.patch(
     ev
       .body('role')
       .custom((v) => {
-        const platformRoles: EPlatformRole[] = [
-          'guest',
-          'user',
-          'admin',
-          'owner',
-          'super'
-        ]
-        return platformRoles
-          .filter((e: EPlatformRole) => e !== 'owner' && e !== 'super')
-          .includes(v)
+        const roles: EPlatformRole[] = ['guest', 'user', 'admin']
+        return roles
       })
       .withMessage('invalid')
   ]),

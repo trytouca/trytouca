@@ -603,7 +603,8 @@ components:
             pass:
               type: string
             port:
-              type: string
+              type: number
+              format: int32
             user:
               type: string
     PlatformStatsResponse:
@@ -754,9 +755,12 @@ components:
           additionalProperties: false
           required:
             - batches
+            - batchCount
+            - isSubscribed
             - promotions
             - retainFor
             - sealAfter
+            - subscriberCount
             - subscription
             - teamName
             - teamSlug
@@ -765,6 +769,11 @@ components:
               type: array
               items:
                 type: string
+            batchCount:
+              type: number
+              format: int32
+            isSubscribed:
+              type: boolean
             promotions:
               type: array
               items:
@@ -773,6 +782,9 @@ components:
               type: number
             sealAfter:
               type: number
+            subscriberCount:
+              type: number
+              format: int32
             subscription:
               $ref: '#/components/schemas/ENotificationType'
             teamName:

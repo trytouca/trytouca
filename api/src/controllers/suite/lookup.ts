@@ -59,10 +59,7 @@ async function suiteLookup(
   // prepare a draft of our response with fields that depend on existence of
   // batches, set to undefined or empty array.
 
-  const output: SuiteLookupResponse & {
-    isSubscribed: boolean
-    subscriberCount: number
-  } = {
+  const output: SuiteLookupResponse = {
     baseline: undefined,
     batches: [],
     batchCount: queryOutput.length,

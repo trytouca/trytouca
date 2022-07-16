@@ -98,7 +98,6 @@
     "shx": "^0.3.4",
     "sinon": "^14.0.0",
     "source-map-support": "^0.5.21",
-    "swagger-inline": "^6.0.0",
     "ts-jest": "^28.0.5",
     "ts-node": "^10.8.1",
     "tsconfig-paths": "^4.0.0",

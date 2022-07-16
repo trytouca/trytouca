@@ -6,8 +6,8 @@
   "types": "dist/index.ts",
   "scripts": {
     "build": "openapi -i src/schema.yaml -o dist/ --useUnionTypes true --exportCore false --exportServices false",
-    "postinstall": "npm run build",
-    "lint": "prettier --write src/"
+    "lint": "prettier --write src/",
+    "postinstall": "npm run build && prettier --write dist/ --loglevel silent"
   },
   "devDependencies": {
     "openapi-typescript-codegen": "^0.23.0",
