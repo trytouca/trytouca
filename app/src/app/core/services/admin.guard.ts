@@ -20,10 +20,10 @@ export class AdminGuard implements CanActivate, CanActivateChild {
   constructor(private apiService: ApiService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const roles: EPlatformRole[] = ['admin', 'owner'];
+    const allowedRoles: EPlatformRole[] = ['admin', 'owner'];
     return this.apiService.get<UserLookupResponse>('/user').pipe(
       map((v) => {
-        if (roles.includes(v.platformRole)) {
+        if (allowedRoles.includes(v.platformRole)) {
           return true;
         }
         return this.router.parseUrl('/account');

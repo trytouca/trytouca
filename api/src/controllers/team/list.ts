@@ -166,7 +166,7 @@ export async function ctrlTeamList(
   const invited = teams.map((v: ITeamDocument) => ({
     name: v.name,
     slug: v.slug,
-    role: 'unknown'
+    role: 'invited'
   }))
   const output = [...active, ...prospective, ...invited]
 

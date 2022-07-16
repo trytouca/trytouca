@@ -147,7 +147,10 @@ async function teamMemberListImpl(
 
   const output: TeamMemberListResponse = {
     applicants: result[0].applicants.filter((v) => Object.keys(v).length),
-    invitees: result[0].invitees,
+    invitees: result[0].invitees.map((v) => ({
+      ...v,
+      invitedAt: v.invitedAt as unknown as string
+    })),
     members: result[0].members
       .filter((v) => Object.keys(v).length)
       .map((el) => ({ ...el, role: 'member' } as TeamMember))

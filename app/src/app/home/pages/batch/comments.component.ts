@@ -6,8 +6,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import type {
   BatchLookupResponse,
   CommentItem,
-  EPlatformRole,
-  ETeamRole,
   TeamLookupResponse
 } from '@touca/api-schema';
 import { Subscription } from 'rxjs';
@@ -114,8 +112,8 @@ export class BatchCommentsComponent implements OnDestroy {
       commentAuthor: v.by.fullname,
       commentBody: v.text,
       commentId: v.id,
-      commentTime: v.at,
-      commentEditTime: v.editedAt,
+      commentTime: v.at as unknown as Date,
+      commentEditTime: v.editedAt as unknown as Date,
       replies: v.replies ? v.replies.map((k) => process(k, true)) : [],
       showButtonReply: isReply === false,
       showButtonUpdate: myUsername === v.by.username,

@@ -122,7 +122,7 @@ components:
       schema:
         type: string
   schemas:
-    CT_BatchCompareOverview:
+    BatchCompareOverview:
       type: object
       properties:
         elementsCountDifferent:
@@ -155,7 +155,7 @@ components:
         metricsDurationSign:
           type: integer
           format: int32
-    CT_BatchComparisonItem:
+    BatchComparisonItem:
       additionalProperties: false
       type: object
       required:
@@ -167,7 +167,7 @@ components:
           format: date-time
         elementName:
           type: string
-    CT_BatchComparisonItemCommon:
+    BatchComparisonItemCommon:
       additionalProperties: false
       type: object
       required:
@@ -175,19 +175,19 @@ components:
         - src
       properties:
         dst:
-          $ref: '#/components/schemas/CT_BatchComparisonItem'
+          $ref: '#/components/schemas/BatchComparisonItem'
         meta:
-          $ref: '#/components/schemas/CT_CppTestcaseComparisonOverview'
+          $ref: '#/components/schemas/CppTestcaseComparisonOverview'
         src:
-          $ref: '#/components/schemas/CT_BatchComparisonItem'
-    CT_BatchComparisonItemSolo:
+          $ref: '#/components/schemas/BatchComparisonItem'
+    BatchComparisonItemSolo:
       allOf:
-        - $ref: '#/components/schemas/CT_BatchComparisonItem'
+        - $ref: '#/components/schemas/BatchComparisonItem'
         - type: object
           properties:
             meta:
-              $ref: '#/components/schemas/CT_CppTestcaseOverview'
-    CT_BatchComparisonResponse:
+              $ref: '#/components/schemas/CppTestcaseOverview'
+    BatchComparisonResponse:
       additionalProperties: false
       type: object
       required:
@@ -198,27 +198,27 @@ components:
         common:
           type: array
           items:
-            $ref: '#/components/schemas/CT_BatchComparisonItemCommon'
+            $ref: '#/components/schemas/BatchComparisonItemCommon'
         fresh:
           type: array
           items:
-            $ref: '#/components/schemas/CT_BatchComparisonItemSolo'
+            $ref: '#/components/schemas/BatchComparisonItemSolo'
         missing:
           type: array
           items:
-            $ref: '#/components/schemas/CT_BatchComparisonItemSolo'
+            $ref: '#/components/schemas/BatchComparisonItemSolo'
         overview:
-          $ref: '#/components/schemas/CT_BatchCompareOverview'
-    CT_BatchItem:
+          $ref: '#/components/schemas/BatchCompareOverview'
+    BatchItem:
       allOf:
-        - $ref: '#/components/schemas/CT_BatchItemRaw'
+        - $ref: '#/components/schemas/BatchItemRaw'
         - type: object
           required:
             - meta
           properties:
             meta:
-              $ref: '#/components/schemas/CT_BatchCompareOverview'
-    CT_BatchItemRaw:
+              $ref: '#/components/schemas/BatchCompareOverview'
+    BatchItemRaw:
       type: object
       additionalProperties: false
       required:
@@ -247,17 +247,17 @@ components:
         submittedBy:
           type: array
           items:
-            $ref: '#/components/schemas/CT_Userinfo'
+            $ref: '#/components/schemas/Userinfo'
         updatedAt:
           type: string
           format: date-time
-    CT_BatchListResponse:
+    BatchListResponse:
       type: array
       items:
-        $ref: '#/components/schemas/CT_BatchItem'
-    CT_BatchLookupResponse:
+        $ref: '#/components/schemas/BatchItem'
+    BatchLookupResponse:
       allOf:
-        - $ref: '#/components/schemas/CT_BatchItem'
+        - $ref: '#/components/schemas/BatchItem'
         - type: object
           additionalProperties: false
           required:
@@ -278,7 +278,7 @@ components:
               type: string
             teamSlug:
               type: string
-    CT_CommentItem:
+    CommentItem:
       type: object
       additionalProperties: false
       required:
@@ -292,7 +292,7 @@ components:
           type: string
           format: date-time
         by:
-          $ref: '#/components/schemas/CT_Userinfo'
+          $ref: '#/components/schemas/Userinfo'
         editedAt:
           type: string
           format: date-time
@@ -301,14 +301,14 @@ components:
         replies:
           type: array
           items:
-            $ref: '#/components/schemas/CT_CommentItem'
+            $ref: '#/components/schemas/CommentItem'
         text:
           type: string
-    CT_CommentListResponse:
+    CommentListResponse:
       type: array
       items:
-        $ref: '#/components/schemas/CT_CommentItem'
-    CT_CppCellar:
+        $ref: '#/components/schemas/CommentItem'
+    CppCellar:
       additionalProperties: false
       type: object
       required:
@@ -319,16 +319,16 @@ components:
         commonKeys:
           type: array
           items:
-            $ref: '#/components/schemas/CT_CppTypeComparison'
+            $ref: '#/components/schemas/CppTypeComparison'
         missingKeys:
           type: array
           items:
-            $ref: '#/components/schemas/CT_CppTypeComparison'
+            $ref: '#/components/schemas/CppTypeComparison'
         newKeys:
           type: array
           items:
-            $ref: '#/components/schemas/CT_CppTypeComparison'
-    CT_CppTestcaseComparison:
+            $ref: '#/components/schemas/CppTypeComparison'
+    CppTestcaseComparison:
       additionalProperties: false
       type: object
       required:
@@ -339,16 +339,16 @@ components:
         - src
       properties:
         assertions:
-          $ref: '#/components/schemas/CT_CppCellar'
+          $ref: '#/components/schemas/CppCellar'
         dst:
-          $ref: '#/components/schemas/CT_CppTestcaseMetadata'
+          $ref: '#/components/schemas/CppTestcaseMetadata'
         metrics:
-          $ref: '#/components/schemas/CT_CppCellar'
+          $ref: '#/components/schemas/CppCellar'
         results:
-          $ref: '#/components/schemas/CT_CppCellar'
+          $ref: '#/components/schemas/CppCellar'
         src:
-          $ref: '#/components/schemas/CT_CppTestcaseMetadata'
-    CT_CppTestcaseComparisonOverview:
+          $ref: '#/components/schemas/CppTestcaseMetadata'
+    CppTestcaseComparisonOverview:
       additionalProperties: false
       type: object
       properties:
@@ -379,7 +379,7 @@ components:
         metricsDurationCommonSrc:
           type: number
           format: int32
-    CT_CppTestcaseMetadata:
+    CppTestcaseMetadata:
       additionalProperties: false
       type: object
       required:
@@ -400,7 +400,7 @@ components:
           type: string
         version:
           type: string
-    CT_CppTestcaseOverview:
+    CppTestcaseOverview:
       additionalProperties: false
       type: object
       properties:
@@ -410,7 +410,7 @@ components:
           type: number
         metricsDuration:
           type: number
-    CT_CppTypeComparison:
+    CppTypeComparison:
       additionalProperties: false
       type: object
       required:
@@ -433,18 +433,18 @@ components:
           type: string
         srcValue:
           type: string
-    CT_EFeatureFlag:
+    EFeatureFlag:
       type: string
       enum:
         - newsletter_product
         - newsletter_changelog
-    CT_ENotificationType:
+    ENotificationType:
       type: string
       enum:
         - none
         - different
         - all
-    CT_EPlatformRole:
+    EPlatformRole:
       type: string
       enum:
         - guest
@@ -452,7 +452,7 @@ components:
         - admin
         - owner
         - super
-    CT_ETeamRole:
+    ETeamRole:
       type: string
       enum:
         - unknown
@@ -461,9 +461,9 @@ components:
         - member
         - admin
         - owner
-    CT_ElementComparisonItem:
+    ElementComparisonItem:
       allOf:
-        - $ref: '#/components/schemas/CT_BatchComparisonItem'
+        - $ref: '#/components/schemas/BatchComparisonItem'
         - type: object
           required:
             - submittedAt
@@ -473,8 +473,8 @@ components:
               type: string
               format: date-time
             submittedBy:
-              $ref: '#/components/schemas/CT_Userinfo'
-    CT_ElementComparisonResponse:
+              $ref: '#/components/schemas/Userinfo'
+    ElementComparisonResponse:
       additionalProperties: false
       type: object
       required:
@@ -482,18 +482,18 @@ components:
         - src
       properties:
         cmp:
-          $ref: '#/components/schemas/CT_CppTestcaseComparison'
+          $ref: '#/components/schemas/CppTestcaseComparison'
         dst:
-          $ref: '#/components/schemas/CT_ElementComparisonItem'
+          $ref: '#/components/schemas/ElementComparisonItem'
         meta:
-          $ref: '#/components/schemas/CT_CppTestcaseComparisonOverview'
+          $ref: '#/components/schemas/CppTestcaseComparisonOverview'
         src:
-          $ref: '#/components/schemas/CT_ElementComparisonItem'
-    CT_ElementListResponse:
+          $ref: '#/components/schemas/ElementComparisonItem'
+    ElementListResponse:
       type: array
       items:
-        $ref: '#/components/schemas/CT_ElementListResponseItem'
-    CT_ElementListResponseItem:
+        $ref: '#/components/schemas/ElementListResponseItem'
+    ElementListResponseItem:
       additionalProperties: false
       type: object
       required:
@@ -524,7 +524,7 @@ components:
                 type: string
               time:
                 type: number
-    CT_ElementLookupResponse:
+    ElementLookupResponse:
       additionalProperties: false
       type: object
       required:
@@ -561,7 +561,7 @@ components:
           type: string
         teamSlug:
           type: string
-    CT_NotificationItem:
+    NotificationItem:
       type: object
       additionalProperties: false
       required:
@@ -576,11 +576,11 @@ components:
           format: date-time
         text:
           type: string
-    CT_NotificationListResponse:
+    NotificationListResponse:
       type: array
       items:
-        $ref: '#/components/schemas/CT_NotificationItem'
-    CT_PlatformConfig:
+        $ref: '#/components/schemas/NotificationItem'
+    PlatformConfig:
       additionalProperties: false
       type: object
       properties:
@@ -606,7 +606,7 @@ components:
               type: string
             user:
               type: string
-    CT_PlatformStatsResponse:
+    PlatformStatsResponse:
       additionalProperties: false
       type: object
       required:
@@ -651,8 +651,8 @@ components:
         users:
           type: array
           items:
-            $ref: '#/components/schemas/CT_PlatformStatsUser'
-    CT_PlatformStatsUser:
+            $ref: '#/components/schemas/PlatformStatsUser'
+    PlatformStatsUser:
       additionalProperties: false
       type: object
       required:
@@ -683,12 +683,12 @@ components:
           type: string
           format: date-time
         role:
-          $ref: '#/components/schemas/CT_ETeamRole'
+          $ref: '#/components/schemas/ETeamRole'
         suspended:
           type: boolean
         username:
           type: string
-    CT_PlatformStatus:
+    PlatformStatus:
       additionalProperties: false
       type: object
       required:
@@ -702,7 +702,7 @@ components:
           type: boolean
         ready:
           type: boolean
-    CT_Promotion:
+    Promotion:
       type: object
       additionalProperties: false
       required:
@@ -716,14 +716,14 @@ components:
           type: string
           format: date-time
         by:
-          $ref: '#/components/schemas/CT_Userinfo'
+          $ref: '#/components/schemas/Userinfo'
         for:
           type: string
         from:
           type: string
         to:
           type: string
-    CT_SuiteItem:
+    SuiteItem:
       type: object
       additionalProperties: false
       required:
@@ -732,24 +732,24 @@ components:
         - suiteSlug
       properties:
         baseline:
-          $ref: '#/components/schemas/CT_BatchItemRaw'
+          $ref: '#/components/schemas/BatchItemRaw'
         batchCount:
           type: number
         latest:
-          $ref: '#/components/schemas/CT_BatchItemRaw'
+          $ref: '#/components/schemas/BatchItemRaw'
         overview:
-          $ref: '#/components/schemas/CT_BatchCompareOverview'
+          $ref: '#/components/schemas/BatchCompareOverview'
         suiteName:
           type: string
         suiteSlug:
           type: string
-    CT_SuiteListResponse:
+    SuiteListResponse:
       type: array
       items:
-        $ref: '#/components/schemas/CT_SuiteItem'
-    CT_SuiteLookupResponse:
+        $ref: '#/components/schemas/SuiteItem'
+    SuiteLookupResponse:
       allOf:
-        - $ref: '#/components/schemas/CT_SuiteItem'
+        - $ref: '#/components/schemas/SuiteItem'
         - type: object
           additionalProperties: false
           required:
@@ -768,18 +768,18 @@ components:
             promotions:
               type: array
               items:
-                $ref: '#/components/schemas/CT_Promotion'
+                $ref: '#/components/schemas/Promotion'
             retainFor:
               type: number
             sealAfter:
               type: number
             subscription:
-              $ref: '#/components/schemas/CT_ENotificationType'
+              $ref: '#/components/schemas/ENotificationType'
             teamName:
               type: string
             teamSlug:
               type: string
-    CT_TeamApplicant:
+    TeamApplicant:
       type: object
       additionalProperties: false
       required:
@@ -794,7 +794,7 @@ components:
           type: string
         username:
           type: string
-    CT_TeamInvitee:
+    TeamInvitee:
       type: object
       additionalProperties: false
       required:
@@ -809,7 +809,7 @@ components:
         invitedAt:
           type: string
           format: date-time
-    CT_TeamItem:
+    TeamItem:
       type: object
       additionalProperties: false
       required:
@@ -820,16 +820,16 @@ components:
         name:
           type: string
         role:
-          $ref: '#/components/schemas/CT_ETeamRole'
+          $ref: '#/components/schemas/ETeamRole'
         slug:
           type: string
-    CT_TeamListResponse:
+    TeamListResponse:
       type: array
       items:
-        $ref: '#/components/schemas/CT_TeamItem'
-    CT_TeamLookupResponse:
+        $ref: '#/components/schemas/TeamItem'
+    TeamLookupResponse:
       allOf:
-        - $ref: '#/components/schemas/CT_TeamItem'
+        - $ref: '#/components/schemas/TeamItem'
         - type: object
           additionalProperties: false
           required:
@@ -837,7 +837,7 @@ components:
           properties:
             userCount:
               type: number
-    CT_TeamMember:
+    TeamMember:
       type: object
       additionalProperties: false
       required:
@@ -850,8 +850,8 @@ components:
         fullname:
           type: string
         role:
-          $ref: '#/components/schemas/CT_ETeamRole'
-    CT_TeamMemberListResponse:
+          $ref: '#/components/schemas/ETeamRole'
+    TeamMemberListResponse:
       type: object
       additionalProperties: false
       required:
@@ -861,16 +861,16 @@ components:
         applicants:
           type: array
           items:
-            $ref: '#/components/schemas/CT_TeamApplicant'
+            $ref: '#/components/schemas/TeamApplicant'
         invitees:
           type: array
           items:
-            $ref: '#/components/schemas/CT_TeamInvitee'
+            $ref: '#/components/schemas/TeamInvitee'
         members:
           type: array
           items:
-            $ref: '#/components/schemas/CT_TeamMember'
-    CT_UserLookupResponse:
+            $ref: '#/components/schemas/TeamMember'
+    UserLookupResponse:
       type: object
       additionalProperties: false
       required:
@@ -896,14 +896,14 @@ components:
         fullname:
           type: string
         platformRole:
-          $ref: '#/components/schemas/CT_EPlatformRole'
+          $ref: '#/components/schemas/EPlatformRole'
         user_hash:
           type: string
         user_id:
           type: string
         username:
           type: string
-    CT_UserSessionsResponseItem:
+    UserSessionsResponseItem:
       type: object
       additionalProperties: false
       required:
@@ -921,7 +921,7 @@ components:
           format: date-time
         ipAddr:
           type: string
-    CT_Userinfo:
+    Userinfo:
       type: object
       additionalProperties: false
       required:
@@ -1392,7 +1392,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CT_BatchListResponse'
+                  $ref: '#/components/schemas/BatchListResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1423,7 +1423,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_BatchLookupResponse'
+                $ref: '#/components/schemas/BatchLookupResponse'
         '400':
           $ref: '#/components/responses/RequestInvalid'
         '401':
@@ -1488,7 +1488,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_BatchComparisonResponse'
+                $ref: '#/components/schemas/BatchComparisonResponse'
         '400':
           $ref: '#/components/responses/RequestInvalid'
         '401':
@@ -1672,7 +1672,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_ElementListResponse'
+                $ref: '#/components/schemas/ElementListResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1828,7 +1828,7 @@ paths:
                 - body
               properties:
                 overview:
-                  $ref: '#/components/schemas/CT_CppTestcaseOverview'
+                  $ref: '#/components/schemas/CppTestcaseOverview'
                 body:
                   $ref: '#/components/schemas/Unknown'
       responses:
@@ -1879,7 +1879,7 @@ paths:
                 - body
               properties:
                 overview:
-                  $ref: '#/components/schemas/CT_CppTestcaseComparisonOverview'
+                  $ref: '#/components/schemas/CppTestcaseComparisonOverview'
                 body:
                   $ref: '#/components/schemas/Unknown'
       responses:
@@ -1949,7 +1949,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_CommentListResponse'
+                $ref: '#/components/schemas/CommentListResponse'
         '400':
           $ref: '#/components/responses/RequestInvalid'
         '401':
@@ -2124,7 +2124,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_ElementLookupResponse'
+                $ref: '#/components/schemas/ElementLookupResponse'
         '400':
           $ref: '#/components/responses/RequestInvalid'
         '401':
@@ -2198,7 +2198,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_ElementComparisonResponse'
+                $ref: '#/components/schemas/ElementComparisonResponse'
         '400':
           $ref: '#/components/responses/RequestInvalid'
         '401':
@@ -2236,7 +2236,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_ElementListResponse'
+                $ref: '#/components/schemas/ElementListResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -2298,7 +2298,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_PlatformStatus'
+                $ref: '#/components/schemas/PlatformStatus'
   /platform/account/:account:
     patch:
       tags:
@@ -2426,7 +2426,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_PlatformConfig'
+                $ref: '#/components/schemas/PlatformConfig'
     patch:
       tags:
         - Platform
@@ -2499,7 +2499,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_PlatformStatsResponse'
+                $ref: '#/components/schemas/PlatformStatsResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -2524,7 +2524,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CT_SuiteListResponse'
+                  $ref: '#/components/schemas/SuiteListResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -2589,7 +2589,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_SuiteLookupResponse'
+                $ref: '#/components/schemas/SuiteLookupResponse'
         '400':
           $ref: '#/components/responses/RequestInvalid'
         '401':
@@ -2692,7 +2692,7 @@ paths:
               type: object
               properties:
                 level:
-                  $ref: '#/components/schemas/CT_ENotificationType'
+                  $ref: '#/components/schemas/ENotificationType'
         required: true
       responses:
         '204':
@@ -2724,7 +2724,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_TeamListResponse'
+                $ref: '#/components/schemas/TeamListResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
     post:
@@ -2787,7 +2787,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_TeamLookupResponse'
+                $ref: '#/components/schemas/TeamLookupResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -3150,7 +3150,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_TeamMemberListResponse'
+                $ref: '#/components/schemas/TeamMemberListResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -3271,7 +3271,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_UserLookupResponse'
+                $ref: '#/components/schemas/UserLookupResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
     patch:
@@ -3337,7 +3337,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_NotificationListResponse'
+                $ref: '#/components/schemas/NotificationListResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
   /user/inbox/seen:
@@ -3369,7 +3369,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CT_UserSessionsResponseItem'
+                $ref: '#/components/schemas/UserSessionsResponseItem'
         '401':
           $ref: '#/components/responses/Unauthorized'
   /user/sessions/:id:

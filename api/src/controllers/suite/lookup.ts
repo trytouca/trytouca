@@ -128,7 +128,7 @@ async function suiteLookup(
   // prevent crashes. The right approach is to fix data retention logic.
   output.promotions = suite.promotions
     .map((raw) => ({
-      at: raw.at,
+      at: raw.at as unknown as string,
       by: pick(
         promoters.find((v) => v._id.equals(raw.by)),
         ['username', 'fullname']

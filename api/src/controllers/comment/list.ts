@@ -58,10 +58,10 @@ async function commentList(res: Response): Promise<CommentListResponse> {
     parentId: CommentListQueryOutput['parentId']
   }
   const transform = (v: CommentListQueryOutput): Transformed => ({
-    at: v.at,
+    at: v.at as unknown as string,
     by: v.by,
     id: v._id.toHexString(),
-    editedAt: v.editedAt,
+    editedAt: v.editedAt as unknown as string,
     parentId: v.parentId,
     replies: [],
     text: v.text

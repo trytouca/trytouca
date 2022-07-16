@@ -50,11 +50,18 @@ router.patch(
   middleware.inputs([
     ev
       .body('role')
-      .custom((v) =>
-        ['guest', 'user', 'admin', 'owner', 'super']
+      .custom((v) => {
+        const platformRoles: EPlatformRole[] = [
+          'guest',
+          'user',
+          'admin',
+          'owner',
+          'super'
+        ]
+        return platformRoles
           .filter((e: EPlatformRole) => e !== 'owner' && e !== 'super')
           .includes(v)
-      )
+      })
       .withMessage('invalid')
   ]),
   promisable(platformAccountUpdate, 'update account profile on platform')

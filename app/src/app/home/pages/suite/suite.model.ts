@@ -35,7 +35,7 @@ export class SuitePageItem extends PageListItem<
   public eventDate(): Date {
     switch (this.type) {
       case SuitePageItemType.Batch:
-        return this.asBatch().submittedAt;
+        return this.asBatch().submittedAt as unknown as Date;
     }
   }
 

@@ -215,7 +215,7 @@ export class ProfileComponent implements OnDestroy {
 
   private build_lock_event(v: PlatformStatsUser): RecentEvent {
     return {
-      eventDate: v.lockedAt,
+      eventDate: v.lockedAt as unknown as Date,
       email: v.email,
       fullname: v.fullname ?? 'Someone',
       username: v.username,
@@ -225,7 +225,7 @@ export class ProfileComponent implements OnDestroy {
 
   private build_signup_event(v: PlatformStatsUser): RecentEvent {
     return {
-      eventDate: v.createdAt,
+      eventDate: v.createdAt as unknown as Date,
       email: v.email,
       fullname: 'Someone',
       username: v.username,
@@ -236,11 +236,13 @@ export class ProfileComponent implements OnDestroy {
 
   private build_reset_event(v: PlatformStatsUser): RecentEvent {
     let copyText = 'requested a password reset.';
-    if (v.resetKeyExpiresAt.getTime() < new Date().getTime()) {
+    if (
+      (v.resetKeyExpiresAt as unknown as Date).getTime() < new Date().getTime()
+    ) {
       copyText = copyText.concat(' Their link is now expired.');
     }
     return {
-      eventDate: v.resetKeyCreatedAt,
+      eventDate: v.resetKeyCreatedAt as unknown as Date,
       email: v.email,
       fullname: v.fullname ?? 'Someone',
       username: v.username,
