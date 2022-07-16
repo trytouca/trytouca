@@ -1,6 +1,0 @@
-.env
-.vscode
-local
-
-.cache
-compile_commands.json
