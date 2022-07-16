@@ -3,12 +3,14 @@
   "version": "0.0.0",
   "description": "Touca Server API Schema",
   "private": true,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "openapi -i src/schema.yaml -o dist/ --useUnionTypes true --exportCore false --exportServices false",
+    "lint": "prettier --write src/",
+    "postinstall": "npm run build && prettier --write dist/ --loglevel silent"
   },
   "devDependencies": {
-    "typescript": "^4.7.4"
+    "openapi-typescript-codegen": "^0.23.0",
+    "prettier": "^2.7.1"
   }
 }

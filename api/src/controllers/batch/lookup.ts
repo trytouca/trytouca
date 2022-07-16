@@ -48,13 +48,13 @@ async function batchLookup(
     isSealed: batch.sealedAt ? true : false,
     messageCount: batch.elements.length,
     meta: overview,
-    submittedAt: batch.submittedAt,
+    submittedAt: batch.submittedAt as unknown as string,
     submittedBy: userMap.getGroup('submittedBy'),
     suiteName: suite.name,
     suiteSlug: suite.slug,
     teamName: team.name,
     teamSlug: team.slug,
-    updatedAt: batch.updatedAt
+    updatedAt: batch.updatedAt as unknown as string
   }
 }
 

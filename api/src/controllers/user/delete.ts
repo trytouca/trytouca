@@ -1,6 +1,5 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { userDelete } from '@/models/user'
@@ -17,7 +16,7 @@ export async function ctrlUserDelete(
   logger.info('%s: attempting to delete account', account.username)
 
   // reject request if account is owner of the platform
-  if (account.platformRole === EPlatformRole.Owner) {
+  if (account.platformRole === 'owner') {
     return next({
       status: 403,
       errors: ['refusing to delete account: server owner']

@@ -237,7 +237,7 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         this._overview = {
           ...doc.overview,
           batchIsSealed: this._batch.isSealed,
-          batchSubmittedAt: this._batch.submittedAt,
+          batchSubmittedAt: this._batch.submittedAt as unknown as Date,
           batchSubmittedBy: this._batch.submittedBy
         };
         this._overviewSubject.next(this._overview);

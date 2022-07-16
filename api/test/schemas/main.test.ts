@@ -1,7 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { describe, expect, test } from '@jest/globals'
-import { EPlatformRole } from '@touca/api-schema'
 import mongoose from 'mongoose'
 
 import { BatchModel } from '../../src/schemas/batch'
@@ -31,7 +30,7 @@ describe('model-user', () => {
       email: 'some_email',
       fullname: 'Full Name',
       password: 'some_hash',
-      platformRole: EPlatformRole.User,
+      platformRole: 'user',
       username: 'some_username'
     })
     expect(userModel.validateSync()).toBeUndefined()

@@ -1,6 +1,5 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { SessionModel } from '@/schemas/session'
@@ -17,7 +16,7 @@ export async function platformAccountSuspend(
   const user = res.locals.user as IUser
   logger.debug('%s: suspending account %s', user.username, account.username)
 
-  if (account.platformRole !== EPlatformRole.User) {
+  if (account.platformRole !== 'user') {
     return next({
       errors: ['cannot suspend admin accounts'],
       status: 409

@@ -9,7 +9,7 @@ import {
   faSpinner,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
-import { SuiteLookupResponse } from '@touca/api-schema';
+import type { SuiteLookupResponse } from '@touca/api-schema';
 import { format } from 'date-fns';
 
 import { PillContainerComponent } from '@/home/components';

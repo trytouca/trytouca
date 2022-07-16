@@ -3,7 +3,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-import { TeamInvitee } from '@touca/api-schema';
+import type { TeamInvitee } from '@touca/api-schema';
 
 @Component({
   selector: 'app-team-item-invitee',

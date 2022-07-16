@@ -4,7 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, SecurityContext } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DialogRef } from '@ngneat/dialog';
-import { BatchLookupResponse } from '@touca/api-schema';
+import type { BatchLookupResponse } from '@touca/api-schema';
 import { MarkdownService, SECURITY_CONTEXT } from 'ngx-markdown';
 
 import { ApiService } from '@/core/services';

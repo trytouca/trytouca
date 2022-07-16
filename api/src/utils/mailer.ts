@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
+import type { EPlatformRole } from '@touca/api-schema'
 import fs from 'fs'
 import htmlToText from 'html-to-text'
 import { has as lodashHas } from 'lodash'
@@ -101,8 +101,9 @@ export async function mailUsers(
 
 export async function mailAdmins(params: { title: string; body: string }) {
   if (config.isCloudHosted) {
+    const roles: EPlatformRole[] = ['owner', 'admin']
     const users = await UserModel.find({
-      platformRole: { $in: [EPlatformRole.Owner, EPlatformRole.Admin] }
+      platformRole: { $in: roles }
     })
     return mailUsers(users, 'Admin Alert', 'mail-admin-notify', params)
   }

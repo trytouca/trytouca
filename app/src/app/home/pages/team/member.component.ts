@@ -10,7 +10,7 @@ import {
   faUserNinja,
   faUserTie
 } from '@fortawesome/free-solid-svg-icons';
-import { ETeamRole, TeamMember } from '@touca/api-schema';
+import type { TeamMember } from '@touca/api-schema';
 
 type Icon = {
   type: IconProp;
@@ -26,7 +26,6 @@ export class TeamItemMemberComponent {
   data: TeamMember;
   icon: Icon;
   topics: Topic[];
-  ETeamRole = ETeamRole;
 
   @Input()
   set item(item: TeamMember) {
@@ -50,11 +49,11 @@ export class TeamItemMemberComponent {
 
   private initIcon(): Icon {
     switch (this.data.role) {
-      case ETeamRole.Owner:
+      case 'owner':
         return { type: 'user-tie' };
-      case ETeamRole.Admin:
+      case 'admin':
         return { type: 'user-ninja' };
-      case ETeamRole.Member:
+      case 'member':
         return { type: 'user' };
     }
   }

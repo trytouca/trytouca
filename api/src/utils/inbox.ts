@@ -1,6 +1,5 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
 import { format as utilFormat } from 'util'
 
 import { wslFindByRole } from '@/models/user'
@@ -23,8 +22,8 @@ async function notifyUsers(users: IUser[], message: string) {
 
 export async function notifyPlatformAdmins(fmtstr: string, ...args) {
   const message = utilFormat(fmtstr, ...args)
-  const platformAdmins = await wslFindByRole(EPlatformRole.Admin)
-  const platformOwner = await wslFindByRole(EPlatformRole.Owner)
+  const platformAdmins = await wslFindByRole('admin')
+  const platformOwner = await wslFindByRole('owner')
   const users = [...platformAdmins, ...platformOwner]
   return notifyUsers(users, message)
 }

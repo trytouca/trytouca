@@ -1,7 +1,11 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
 import df from '@sindresorhus/df'
-import { EPlatformRole, PlatformStatsResponse } from '@touca/api-schema'
+import type {
+  EPlatformRole,
+  ETeamRole,
+  PlatformStatsResponse
+} from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { BatchModel } from '@/schemas/batch'
@@ -43,9 +47,10 @@ export async function platformStats(
     }))
     .shift()
 
+  const platformRoleSuper: EPlatformRole = 'super'
   const users = await UserModel.find(
     {
-      platformRole: { $not: { $eq: EPlatformRole.Super } }
+      platformRole: { $not: { $eq: platformRoleSuper } }
     },
     {
       _id: 0,
@@ -99,14 +104,16 @@ export async function platformStats(
     ...space,
     users: users.map((v) => ({
       activationLink: find.activationLink(v.activationKey),
-      createdAt: v.createdAt,
+      createdAt: v.createdAt as unknown as string,
       email: v.email,
       fullname: v.fullname,
-      lockedAt: v.lockedAt,
+      lockedAt: v.lockedAt as unknown as string,
       resetKeyLink: find.resetKeyLink(v.resetKey),
-      resetKeyCreatedAt: find.resetKeyCreatedAt(v.resetKeyExpiresAt),
-      resetKeyExpiresAt: v.resetKeyExpiresAt,
-      role: v.platformRole,
+      resetKeyCreatedAt: find.resetKeyCreatedAt(
+        v.resetKeyExpiresAt
+      ) as unknown as string,
+      resetKeyExpiresAt: v.resetKeyExpiresAt as unknown as string,
+      role: v.platformRole as unknown as ETeamRole,
       suspended: v.suspended || undefined,
       username: v.username
     }))

@@ -1,6 +1,5 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 
@@ -51,7 +50,7 @@ export async function platformInstall(
       _id: contact.uuid,
       email: contact.email,
       fullname: contact.name,
-      platformRole: EPlatformRole.User,
+      platformRole: 'user',
       username: contact.uuid
     }
     analytics.add_member(user, { name: user.fullname }).then(() =>
@@ -59,7 +58,7 @@ export async function platformInstall(
         company: contact.company
       })
     )
-    const owners = await wslFindByRole(EPlatformRole.Owner)
+    const owners = await wslFindByRole('owner')
     mailUser(owners[0], 'New Self-Hosted Instance', 'user-install', contact)
     return res.status(204).send()
   }

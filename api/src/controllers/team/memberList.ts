@@ -1,6 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ETeamRole, TeamMemberListResponse } from '@touca/api-schema'
+import type {
+  ETeamRole,
+  TeamMember,
+  TeamMemberListResponse
+} from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { ITeam, TeamModel } from '@/schemas/team'
@@ -143,18 +147,21 @@ async function teamMemberListImpl(
 
   const output: TeamMemberListResponse = {
     applicants: result[0].applicants.filter((v) => Object.keys(v).length),
-    invitees: result[0].invitees,
+    invitees: result[0].invitees.map((v) => ({
+      ...v,
+      invitedAt: v.invitedAt as unknown as string
+    })),
     members: result[0].members
       .filter((v) => Object.keys(v).length)
-      .map((el) => ({ ...el, role: ETeamRole.Member }))
+      .map((el) => ({ ...el, role: 'member' } as TeamMember))
       .concat(
         result[0].admins
           .filter((v) => Object.keys(v).length)
-          .map((el) => ({ ...el, role: ETeamRole.Admin }))
+          .map((el) => ({ ...el, role: 'admin' } as TeamMember))
       )
-      .concat([{ ...result[0].owner, role: ETeamRole.Owner }])
-      .sort((a, b) => {
-        const orders = [ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner]
+      .concat([{ ...result[0].owner, role: 'owner' } as TeamMember])
+      .sort((a: TeamMember, b: TeamMember) => {
+        const orders: ETeamRole[] = ['member', 'admin', 'owner']
         return orders.indexOf(a.role) - orders.indexOf(b.role)
       })
   }

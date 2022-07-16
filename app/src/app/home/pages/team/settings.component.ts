@@ -5,7 +5,7 @@ import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
-import { ETeamRole, TeamLookupResponse } from '@touca/api-schema';
+import type { ETeamRole, TeamLookupResponse } from '@touca/api-schema';
 import { isEqual } from 'lodash-es';
 import { Subscription, timer } from 'rxjs';
 
@@ -46,7 +46,6 @@ export class TeamTabSettingsComponent implements OnDestroy {
 
   private _subTeam: Subscription;
 
-  ETeamRole = ETeamRole;
   EModalType = EModalType;
 
   constructor(

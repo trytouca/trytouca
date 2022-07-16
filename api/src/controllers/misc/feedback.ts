@@ -1,6 +1,5 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { relay } from '@/models/relay'
@@ -25,7 +24,7 @@ export async function feedback(
 
   // we are intentionally not awaiting on this operation
   if (config.isCloudHosted) {
-    const owners = await wslFindByRole(EPlatformRole.Owner)
+    const owners = await wslFindByRole('owner')
     mailer.mailUser(owners[0], 'New User Feedback', 'user-feedback', {
       body: content.body,
       name: content.name,

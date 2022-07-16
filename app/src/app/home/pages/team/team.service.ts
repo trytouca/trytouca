@@ -2,7 +2,7 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
+import type {
   ETeamRole,
   SuiteLookupResponse,
   TeamInvitee,
@@ -147,9 +147,9 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     const byRole = (...roles: ETeamRole[]) =>
       doc.filter((v) => roles.includes(v.role));
     const teams: RefinedTeamList = {
-      requests: byRole(ETeamRole.Applicant),
-      invitations: byRole(ETeamRole.Invited),
-      active: byRole(ETeamRole.Owner, ETeamRole.Admin, ETeamRole.Member)
+      requests: byRole('applicant'),
+      invitations: byRole('invited'),
+      active: byRole('owner', 'admin', 'member')
     };
     this.update('teams', teams);
   }

@@ -1,6 +1,5 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ETeamRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import {
@@ -40,7 +39,7 @@ export async function teamLeave(
   const roleUser = await findTeamRoleOfUser(team, user)
   logger.silly('%s: has role %s in team %s', user.username, roleUser, team.slug)
 
-  if (roleUser === ETeamRole.Owner) {
+  if (roleUser === 'owner') {
     return next({
       status: 403,
       errors: ['owner cannot leave their team']
@@ -70,10 +69,7 @@ export async function teamLeave(
 
   // send email to admins and owner of this team
 
-  const users = await findTeamUsersByRole(team, [
-    ETeamRole.Owner,
-    ETeamRole.Admin
-  ])
+  const users = await findTeamUsersByRole(team, ['owner', 'admin'])
   const subject = 'A Member Left Your Team'
   mailer.mailUsers(users, subject, 'team-leave-admin', {
     userName: user.fullname,

@@ -1,6 +1,5 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { ByteBuffer } from 'flatbuffers'
 import { minBy } from 'lodash'
@@ -281,10 +280,8 @@ async function processTeam(
 
   // we expect that the user is allowed to submit to this team
 
-  const isUserPlatformAdmin = [
-    EPlatformRole.Owner,
-    EPlatformRole.Admin
-  ].includes(user.platformRole)
+  const isUserPlatformAdmin =
+    user.platformRole === 'owner' || user.platformRole === 'admin'
 
   const isUserTeamMember =
     team.members.includes(user._id) ||

@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ENotificationType, SuiteLookupResponse } from '@touca/api-schema'
+import type { SuiteLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash'
 
@@ -72,7 +72,7 @@ async function suiteLookup(
     subscriberCount: suite.subscribers.length,
     subscription:
       suite.subscriptions.find((v) => v.user._id.equals(user._id))?.level ||
-      ENotificationType.None,
+      'none',
     suiteName: suite.name,
     suiteSlug: suite.slug,
     teamName: team.name,
@@ -125,7 +125,7 @@ async function suiteLookup(
   // prevent crashes. The right approach is to fix data retention logic.
   output.promotions = suite.promotions
     .map((raw) => ({
-      at: raw.at,
+      at: raw.at as unknown as string,
       by: pick(
         promoters.find((v) => v._id.equals(raw.by)),
         ['username', 'fullname']

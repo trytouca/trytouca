@@ -1,6 +1,5 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { extractCommentTuple } from '@/models/comment'
@@ -23,9 +22,8 @@ export async function ctrlCommentRemove(
   logger.debug('%s: %s: removing comment', user.username, tuple)
 
   const isCommentOwner = comment.by.equals(user._id)
-  const isPlatformAdmin = [EPlatformRole.Owner, EPlatformRole.Admin].includes(
-    user.platformRole
-  )
+  const isPlatformAdmin =
+    user.platformRole === 'owner' || user.platformRole === 'admin'
   const isTeamAdmin = await TeamModel.countDocuments({
     _id: team._id,
     $or: [{ admins: { $in: user._id } }, { owner: user._id }]

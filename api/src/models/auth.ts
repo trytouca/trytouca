@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
+import type { EPlatformRole } from '@touca/api-schema'
 import * as bcrypt from 'bcryptjs'
 import { once } from 'lodash'
 
@@ -27,14 +27,13 @@ async function makeUsername(): Promise<string> {
 }
 
 async function getPlatformOwner(): Promise<EPlatformRole> {
-  const hasOwner = await UserModel.countDocuments({
-    platformRole: EPlatformRole.Owner
-  })
+  const platformRole: EPlatformRole = 'owner'
+  const hasOwner = await UserModel.countDocuments({ platformRole })
   if (!hasOwner) {
     logger.debug('user will be owner of the platform')
-    return EPlatformRole.Owner
+    return 'owner'
   }
-  return EPlatformRole.User
+  return 'user'
 }
 
 /**

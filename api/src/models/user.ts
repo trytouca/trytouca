@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { EPlatformRole } from '@touca/api-schema'
+import type { EPlatformRole } from '@touca/api-schema'
 import cuid from 'cuid'
 
 import { SessionModel } from '@/schemas/session'
@@ -29,7 +29,7 @@ export async function wslFindByUname(uname: string): Promise<IUser> {
  * Provides information about the already registered super user.
  */
 export async function wslGetSuperUser(): Promise<IUser> {
-  const users = await wslFindByRole(EPlatformRole.Super)
+  const users = await wslFindByRole('super')
   return users.length === 0 ? null : users[0]
 }
 
@@ -51,13 +51,14 @@ export async function userDelete(account: IUser) {
 
   // remove important info from user account
   const newUsername = cuid()
+  const userRole: EPlatformRole = 'user'
   await UserModel.findByIdAndUpdate(account._id, {
     $set: {
       apiKeys: [],
       email: `noreply+${newUsername}@touca.io`,
       fullname: 'Anonymous User',
       password: 'supersafehash',
-      platformRole: EPlatformRole.User,
+      platformRole: userRole,
       prospectiveTeams: [],
       suspended: true,
       teams: [],

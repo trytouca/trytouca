@@ -227,9 +227,9 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         const durationSrc = durationCommonSrc + durationFresh;
 
         this._overview = {
-          messageSubmittedAt: doc.src.submittedAt,
+          messageSubmittedAt: doc.src.submittedAt as unknown as Date,
           messageSubmittedBy: doc.src.submittedBy,
-          messageBuiltAt: doc.src.builtAt,
+          messageBuiltAt: doc.src.builtAt as unknown as Date,
           resultsCountHead: commonResults.length + freshResults.length,
           resultsCountFresh: freshResults.length,
           resultsCountMissing: missingResults.length,

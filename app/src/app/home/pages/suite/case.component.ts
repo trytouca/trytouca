@@ -8,7 +8,7 @@ import {
   Output
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ElementListResponseItem } from '@touca/api-schema';
+import type { ElementListResponseItem } from '@touca/api-schema';
 import { IClipboardResponse } from 'ngx-clipboard';
 import { timer } from 'rxjs';
 

@@ -1,6 +1,5 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ETeamRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { findTeamUsersByRole } from '@/controllers/team/common'
@@ -67,10 +66,7 @@ export async function teamJoinAdd(
   // send email to team admins.
 
   const subject = `${user.fullname} asks to join team ${team.name}`
-  const users = await findTeamUsersByRole(team, [
-    ETeamRole.Owner,
-    ETeamRole.Admin
-  ])
+  const users = await findTeamUsersByRole(team, ['owner', 'admin'])
   mailer.mailUsers(users, subject, 'team-join-add', {
     subject,
     teamName: team.name,

@@ -1,6 +1,5 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ETeamRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { isEqual } from 'lodash'
 
@@ -74,10 +73,7 @@ export async function teamUpdate(
 
   // email all members and admins of this team that the team slug has changed.
 
-  const members = await findTeamUsersByRole(team, [
-    ETeamRole.Member,
-    ETeamRole.Admin
-  ])
+  const members = await findTeamUsersByRole(team, ['member', 'admin'])
   const teamLink = `${config.webapp.root}/~/${proposed.slug}`
 
   members

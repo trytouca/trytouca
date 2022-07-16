@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ENotificationType } from '@touca/api-schema'
+import type { ENotificationType } from '@touca/api-schema'
 import mongoose from 'mongoose'
 
 import { ComparisonFunctions } from '@/controllers/comparison'
@@ -333,8 +333,7 @@ async function reportSealed(
       .slice(i, i + chunkSize)
       .filter(
         (subscription) =>
-          subscription.level == ENotificationType.All ||
-          compareInputs.hasComparisonTable
+          subscription.level === 'all' || compareInputs.hasComparisonTable
       )
       .map(async (subscription) => {
         inputs.username = subscription.user.fullname

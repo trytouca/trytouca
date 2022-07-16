@@ -1,7 +1,5 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ENotificationType } from '@touca/api-schema'
-
 import { batchRemove } from '@/models/batch'
 import { BatchModel } from '@/schemas/batch'
 import { CommentModel } from '@/schemas/comment'
@@ -27,7 +25,7 @@ export async function suiteCreate(
     createdBy: user._id,
     name: suite.name,
     slug: suite.slug,
-    subscriptions: [{ user: user._id, level: ENotificationType.All }],
+    subscriptions: [{ user: user._id, level: 'all' }],
     team: team._id
   })
 
