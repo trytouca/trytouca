@@ -153,10 +153,13 @@ router.patch(
   middleware.inputs([
     ev
       .body('role')
-      .custom((v) => {
-        const roles: ETeamRole[] = ['applicant', 'invited', 'member', 'admin']
-        return roles
-      })
+      .custom(
+        (v: ETeamRole) =>
+          v === 'applicant' ||
+          v === 'invited' ||
+          v === 'member' ||
+          v === 'admin'
+      )
       .withMessage('invalid')
   ]),
   promisable(teamMemberUpdate, 'update member role in team')
