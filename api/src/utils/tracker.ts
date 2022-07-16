@@ -94,8 +94,12 @@ class OrbitTracker {
     if (
       ![
         EActivity.AccountCreated,
+        EActivity.BatchPromoted,
         EActivity.BatchSealed,
-        EActivity.SelfHostedInstall
+        EActivity.SelfHostedInstall,
+        EActivity.SuiteCreated,
+        EActivity.ProfileUpdated,
+        EActivity.TeamCreated
       ].includes(type)
     ) {
       return
