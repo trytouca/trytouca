@@ -35,7 +35,7 @@ services:
       MINIO_USER: toucauser
       MINIO_PASS: toucapass
     volumes:
-      - ./logs/cmp:/opt/local/logs/cmp
+      - ./logs/cmp:/var/log/cmp
     depends_on:
       - touca_api
       - touca_minio
@@ -68,8 +68,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: toucapass
     volumes:
       - ./data/mongo:/data/db
-      - ./repo/ops/mongo/mongod.conf:/etc/mongod.conf
-      - ./repo/ops/mongo/entrypoint/:/docker-entrypoint-initdb.d/
+      - ./ops/mongo/mongod.conf:/etc/mongod.conf
+      - ./ops/mongo/entrypoint/:/docker-entrypoint-initdb.d/
     # ports:
     #   - 27017:27017
     command: --config /etc/mongod.conf

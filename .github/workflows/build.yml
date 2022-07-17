@@ -1076,6 +1076,11 @@ jobs:
         uses: docker/build-push-action@v3
         if: steps.changes.outputs.cmp == 'true'
         with:
+          # we'd love to build this image for arm64 as well but GH doesn't have
+          # a runner image for arm and building cmp from source takes too long.
+          # context: .
+          # file: ./config/docker/build.cmp.Dockerfile
+          # platforms: linux/amd64,linux/arm64
           context: stage
           file: ./config/docker/cmp.Dockerfile
           platforms: linux/amd64
