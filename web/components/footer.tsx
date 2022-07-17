@@ -62,6 +62,11 @@ const links: {
   internal?: boolean;
 }[] = [
   {
+    link: '/changelog',
+    text: 'Changelog',
+    internal: true
+  },
+  {
     link: '/blog',
     text: 'Blog',
     internal: true

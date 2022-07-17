@@ -80,10 +80,10 @@ def main(args=None):
     options = vars(parsed)
 
     command = next((x for x in subcommands if x.name == options.get("command")), None)
-    if not command and any(arg in remaining for arg in ["-h", "--help"]):
+    if not command or any(arg in remaining for arg in ["-h", "--help"]):
         parser.print_help()
         return False
-    operation = command(options) if command else Execute(options)
+    operation = command(options)
 
     home_dir = find_home_path()
     home_dir.mkdir(parents=True, exist_ok=True)

@@ -5,7 +5,6 @@ import React from 'react';
 import * as Yup from 'yup';
 
 import { extract_error, Feedback, post_json } from '@/lib/api';
-import { tracker } from '@/lib/tracker';
 
 const SubscriptionForm = () => (
   <Formik
@@ -36,7 +35,7 @@ const SubscriptionForm = () => (
           ])
         });
       }
-      tracker.track({ action: 'sign_up' });
+      // tracker.add_activity({ action: 'sign_up' });
     }}
     validationSchema={Yup.object({
       umail: Yup.string()

@@ -360,28 +360,29 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.sdk_js == 'true'
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-          cache-dependency-path:
-            ${{ github.workspace }}/sdk/js/package-lock.json
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/sdk/js/pnpm-lock.yaml
       - name: build js components
         if: steps.changes.outputs.sdk_js == 'true'
         run: |
-          npm i -g npm@latest
-          npm ci
-          npm run build
-          npm run test
+          pnpm install --frozen-lockfile
+          pnpm run build
+          pnpm run test
       - name: lint source code
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push'
-        run: npm run lint
+        run: pnpm run lint
       - name: generate docs
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push'
-        run: npm run docs
+        run: pnpm run docs
       - name: push docs to aws
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -602,13 +603,16 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
       - uses: actions/setup-node@v3
         if: steps.changes.outputs.examples_js == 'true'
         with:
           node-version: 16
-          cache: "npm"
+          cache: "pnpm"
           cache-dependency-path:
-            ${{ github.workspace }}/examples/js/package-lock.json
+            ${{ github.workspace }}/examples/js/pnpm-lock.yaml
       - name: get version number
         if: steps.changes.outputs.examples_js == 'true'
         id: params
@@ -618,8 +622,8 @@ jobs:
       - name: build js examples
         if: steps.changes.outputs.examples_js == 'true'
         run: |
-          npm ci
-          npm run build
+          pnpm install --frozen-lockfile
+          pnpm run build
       - name: run example js application
         if: |
           steps.changes.outputs.examples_js == 'true' && github.ref == 'refs/heads/main'
@@ -628,7 +632,7 @@ jobs:
           TOUCA_API_URL: https://api.touca.io/@/examples/javascript
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         run: |
-          npm --prefix=02_node_main_api run test:touca
+          pnpm --dir=02_node_main_api run test:touca
 
   run-examples-python:
     name: run-examples-python
