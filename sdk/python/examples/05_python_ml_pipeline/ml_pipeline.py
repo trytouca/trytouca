@@ -12,40 +12,26 @@ from sklearn.preprocessing import Normalizer, StandardScaler, MinMaxScaler, Powe
 from sklearn.model_selection import GridSearchCV      # For optimization
 from pathlib import Path
 import joblib
+import os
 
-# Read ecoli dataset from the UCI ML Repository and store in
-# dataframe df
+
+# Obtain and process training and test data
+# This data comes from the ecoli dataset from the UCI ML Repository
 df = read_csv(
     'https://archive.ics.uci.edu/ml/machine-learning-databases/ecoli/ecoli.data',
     sep = '\s+',
     header=None)
-print(df.head())
-
-# The data matrix X
 X = df.iloc[:,1:-1]
-# The labels
 y = (df.iloc[:,-1:])
-
-# Encode the labels into unique integers
 encoder = LabelEncoder()
 y = encoder.fit_transform(ravel(y))
-
-# Split the data into test and train
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
     test_size=1/3,
     random_state=0)
 
-print(X_train.shape)
-print(y_train.shape)
-print(X_test.shape)
-print(y_test.shape)
-
-# knn = KNeighborsClassifier().fit(X_train, y_train)
-# print('Training set score: ' + str(knn.score(X_train,y_train)))
-# print('Test set score: ' + str(knn.score(X_test,y_test)))
-
+# Constructs a simple ml pipeline
 pipe = Pipeline([
 ('scaler', StandardScaler()),
 ('selector', VarianceThreshold()),
@@ -54,50 +40,19 @@ pipe = Pipeline([
 
 pipe.fit(X_train, y_train)
 
-print('Training set score: ' + str(pipe.score(X_train,y_train)))
+# Test results of pipeline
 print('Test set score: ' + str(pipe.score(X_test,y_test)))
 
 data_dir = Path("data")
 data_dir.mkdir(exist_ok=True)
+
+# Store pipeline as binary file in data/pipeline.bin
 joblib.dump(pipe, data_dir.joinpath("pipeline.bin"))
 
-joblib.dump(X_test, data_dir.joinpath("test_cases.bin"))
+# Store test data in data/testcases.txt so that it can be used by Touca
+os.remove("data/testcases.txt")
+with data_dir.joinpath("testcases.txt").open("a") as f:
+    for ind, data in X_test.iterrows():
+        test_case = " ".join([str(x) for x in data.array])
+        f.write(test_case + "\n")
 
-# parameters = {'scaler': [StandardScaler(), MinMaxScaler(),
-# 	Normalizer(), MaxAbsScaler()],
-# 	'selector__threshold': [0, 0.001, 0.01],
-# 	'classifier__n_neighbors': [1, 3, 5, 7, 10],
-# 	'classifier__p': [1, 2],
-# 	'classifier__leaf_size': [1, 5, 10, 15]
-# }
-
-# grid = GridSearchCV(pipe, parameters, cv=2).fit(X_train, y_train)
-
-# print('Training set score: ' + str(grid.score(X_train, y_train)))
-# print('Test set score: ' + str(grid.score(X_test, y_test)))
-
-# # Access the best set of parameters
-# best_params = grid.best_params_
-# print(best_params)
-# # Stores the optimum model in best_pipe
-# best_pipe = grid.best_estimator_
-# print(best_pipe)
-
-# result_df = DataFrame.from_dict(grid.cv_results_, orient='columns')
-# print(result_df.columns)
-
-# sns.relplot(data=result_df,
-# 	kind='line',
-# 	x='param_classifier__n_neighbors',
-# 	y='mean_test_score',
-# 	hue='param_scaler',
-# 	col='param_classifier__p')
-# plt.show()
-
-# sns.relplot(data=result_df,
-#             kind='line',
-#             x='param_classifier__n_neighbors',
-#             y='mean_test_score',
-#             hue='param_scaler',
-#             col='param_classifier__leaf_size')
-# plt.show()
