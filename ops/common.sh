@@ -17,12 +17,16 @@ log_info  () { __log 'info' '34' "$@"; }
 log_warning () { __log 'warn' '33' "$@"; }
 log_error () { __log 'error' '31' "$@"; return 1; }
 
-question () { printf "\e[1;36m#\e[m $@\\n"; }
-answer () { printf "\e[1;33m>\e[m "; }
-info () { printf "\e[1;32m-\e[m $@\\n"; }
-error () { printf "\e[1;31m-\e[m $@\\n"; return 1; }
-
 # basic helper funcitons
+
+require_env_var () {
+    if [ $# -lt 1 ]; then return 1; fi
+    for env in "$@"; do
+        if [ -z "${!env}" ]; then
+            log_error "environment variable $env is not set"
+        fi
+    done
+}
 
 has_function () {
   [ "$(type -t "$1")" == "function" ]
@@ -40,6 +44,13 @@ count_keys_if_set () {
     echo $sum
 }
 
+docker_image_exists () {
+    if [ $# -ne 1 ]; then return 1; fi
+    local out
+    out=$(docker image inspect "$1" >/dev/null 2>&1 && echo "0" || echo "1")
+    [ "$out" == "0" ]
+}
+
 is_port_open () {
     if [ $# -ne 1 ]; then return 1; fi
     local out
@@ -50,7 +61,7 @@ is_port_open () {
 is_command_installed () {
     if [ $# -eq 0 ]; then return 1; fi
     for cmd in "$@"; do
-        if ! command -v "$cmd" 2>/dev/null; then
+        if ! hash "$cmd" 2>/dev/null; then
             log_warning "command $cmd is not installed"
             return 1
         fi
@@ -89,6 +100,14 @@ remove_file_if_exists () {
     fi
 }
 
+remove_docker_image_if_exists () {
+    if [ $# -ne 1 ]; then return 1; fi
+    if docker_image_exists "$1"; then
+        log_info "removing docker image $1"
+        docker rmi "$1"
+        log_info "removed docker image $1"
+    fi
+}
 
 run_compose () {
     if [ $# -eq 0 ]; then return 1; fi
@@ -106,95 +125,53 @@ run_compose () {
     return 0
 }
 
+extract_secret () {
+    if [ $# -ne 1 ]; then return 1; fi
+    if [ ! -f "${FILE_COMPOSE}" ]; then
+        log_warning "docker-compose file does not exist: ${FILE_COMPOSE}"
+        return 1
+    fi
+    local value=$(grep $1 ${FILE_COMPOSE} | awk '{print $2}')
+    echo $value
+}
+
+discord_notify () {
+    if [ $# -ne 1 ]; then return 1; fi
+    if [ ! -f "${FILE_COMPOSE}" ]; then
+        log_warning "docker-compose file does not exist: ${FILE_COMPOSE}"
+        return 1
+    fi
+    local discord_channel=$(extract_secret "DISCORD_CHANNEL")
+    local discord_token=$(extract_secret "DISCORD_TOKEN")
+    curl --silent \
+        -H "Authorization: Bot ${discord_token}" \
+        -H "User-Agent: touca_bot.sh (https://touca.io, v0.1)" \
+        -H "Content-Type: application/json" \
+        -d "{\"content\":\"${1}\"}" \
+        "${discord_channel}"
+}
+
 redeploy () {
-    info "Stopping running containers"
-    run_compose stop
-
-    info "Removing previous containers"
-    run_compose down
-
-    info "Pruning docker resources"
-    if ! docker system prune --force; then
-        error "Failed to prune docker resources"
+    log_info "pulling new docker images"
+    if ! run_compose "pull" >/dev/null; then
+        log_error "failed to pull new docker images"
     fi
 
-    info "Pulling new docker images"
-    run_compose pull
+    log_info "stopping running containers"
+    run_compose "stop" >/dev/null
 
-    info "Starting new docker containers"
-    run_compose "up -d"
-}
+    log_info "removing previous containers"
+    run_compose "down" >/dev/null
 
-ask_name() {
-    local default="stranger"
-    info "Hi, Thank you for trying Touca!"
-    question "What is your first name?"
-    answer
-    read -r OUTPUT
-    OUTPUT=${OUTPUT:=$default}
-    info "Nice to meet you, $OUTPUT!"
-}
-
-ask_install_dir() {
-    local default="$HOME/.touca/server"
-    question "Where should we install Touca? (default is \e[1;36m$default\e[m)"
-    answer
-    read -r OUTPUT
-    OUTPUT=${OUTPUT:=$default}
-    info "Installing into ${OUTPUT}"
-}
-
-answer_is_yes () {
-    answer
-    local response
-    read -r response
-    response=${response:=y}
-    [ "${response:0:1}" == 'y' ]
-}
-
-confirm_data_removal() {
-    if [ ! -d "$DIR_INSTALL/data" ]; then return 0; fi
-    info "We found a previous install of Touca."
-    question "Should we remove it? [y/n] (default is yes)"
-    if answer_is_yes; then return 0; fi
-    info "This script only supports a fresh install."
-    info "Use upgrade.sh if you like to keep your current data."
-    info "bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/trytouca/trytouca/main/ops/upgrade.sh)\""
-    error "Have a good day, $HUMAN_NAME!"
-}
-
-install_docker() {
-    if is_command_installed "docker"; then return 0; fi
-    info "We use Docker to install Touca server. We could not find it on your system."
-    info "Please install docker and try this script again."
-    info "See https://docs.docker.com/get-docker/ for instructions."
-    error "Talk to you later, $HUMAN_NAME!"
-}
-
-install_docker_compose() {
-    if is_command_installed "docker-compose"; then return 0; fi
-    info "We use docker-compose to install Touca server. We could not find it on your system."
-    info "Please install docker-compose and try this script again."
-    info "See https://docs.docker.com/compose/install/ for instructions."
-    error "Talk to you later, $HUMAN_NAME!"
-}
-
-server_status_check() {
-    info "Checking if containers are up"
-    local connected=false
-    for num in {1..10}; do
-        sleep 5
-        if [[ $(curl -s -X GET "http://localhost/api/platform") == *"\"ready\":true"* ]]; then
-            connected=true
-            break
-        fi
-        info "Checking... (attempt $num/10)"
-    done
-    if [ $connected = false ]; then
-        info "Touca server did not pass our health checks in time."
-        info "Feel free to rerun this script to make sure everything is fine."
-        error "Have a good day, $HUMAN_NAME!"
+    log_info "pruning docker resources"
+    if ! docker system prune --force >/dev/null; then
+        log_error "failed to prune docker resources"
     fi
-    info "Touca server is up and running."
-    info "Browse to http://localhost/ to complete the installation."
+
+    log_info "starting new docker containers"
+    if ! run_compose "up -d" >/dev/null; then
+        log_error "failed to start new containers"
+    fi
+
+    log_info "deployment is complete"
 }

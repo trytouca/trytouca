@@ -28,15 +28,35 @@ function updatePublishDate(v: PostOrPage) {
   }).format(new Date(v.published_at));
 }
 
-async function getArticles(): Promise<PostsOrPages> {
+async function getArticles(filter?: string): Promise<PostsOrPages> {
   const posts = await makeContentApi().posts.browse({
     limit: 'all',
-    filter: 'visibility:-paid',
+    filter: `visibility:-paid${filter}`,
     include: ['tags', 'authors'],
     order: 'published_at DESC'
   });
   posts.forEach(updatePublishDate);
   return posts;
+}
+
+async function getArticleStaticProps(slug: string, filter?: string) {
+  const params: Params = {
+    limit: 'all',
+    filter: `visibility:-paid${filter}`,
+    include: ['tags', 'authors'],
+    order: 'published_at DESC'
+  };
+  const data = { slug: slug as string };
+  const post = await makeContentApi().posts.read(data, params);
+  updatePublishDate(post);
+  return {
+    props: {
+      main_article: post,
+      archived_articles: (await getArticles())
+        .filter((v) => v.id !== post.id)
+        .slice(0, 4)
+    }
+  };
 }
 
 export async function getBlogPostStaticPaths() {
@@ -52,27 +72,30 @@ export async function getBlogPostStaticPaths() {
 }
 
 export async function getBlogPostStaticProps(context: GetStaticPropsContext) {
-  const params: Params = {
-    limit: 'all',
-    filter: 'visibility:-paid',
-    include: ['tags', 'authors'],
-    order: 'published_at DESC'
-  };
-  const data = { slug: context.params.slug as string };
-  const post = await makeContentApi().posts.read(data, params);
-  updatePublishDate(post);
+  return getArticleStaticProps(
+    context.params.slug as string,
+    '+tag:-changelog'
+  );
+}
+
+export async function getChangelogPostStaticProps(
+  context: GetStaticPropsContext
+) {
+  return getArticleStaticProps(context.params.slug as string, '+tag:changelog');
+}
+
+export async function getBlogPostsStaticProps() {
+  const posts = await getArticles('+tag:-changelog');
   return {
     props: {
-      main_article: post,
-      archived_articles: (await getArticles())
-        .filter((v) => v.id !== post.id)
-        .slice(0, 4)
+      archived_articles: posts.slice(1),
+      main_article: posts[0]
     }
   };
 }
 
-export async function getBlogPostsStaticProps() {
-  const posts = await getArticles();
+export async function getChangelogPostsStaticProps() {
+  const posts = await getArticles('+tag:changelog');
   return {
     props: {
       archived_articles: posts.slice(1),

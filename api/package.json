@@ -2,6 +2,7 @@
   "name": "@touca/api",
   "version": "1.4.0",
   "description": "Continuous regression testing for critical software workflows.",
+  "packageManager": "pnpm@7.5.1",
   "private": true,
   "license": "UNLICENSED",
   "repository": "https://github.com/trytouca/touca.git",
