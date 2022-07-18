@@ -56,10 +56,6 @@ const config = {
             to: "/server/keyboard-shortcuts"
           },
           {
-            from: "/guides/pricing",
-            to: "/cloud/pricing"
-          },
-          {
             from: "/sdk/differences",
             to: "/sdk"
           }

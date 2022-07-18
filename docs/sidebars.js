@@ -282,11 +282,6 @@ const sidebars = {
       collapsible: true,
       items: [
         {
-          type: "doc",
-          id: "cloud/pricing",
-          label: "Pricing"
-        },
-        {
           type: "category",
           label: "Legal",
           items: [
