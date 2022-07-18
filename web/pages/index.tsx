@@ -146,7 +146,7 @@ export default function Home() {
       />
       <BreakingNews
         input={{
-          link: '/blog/techstars-2022',
+          link: '/blog/techstars',
           text: 'Touca is now backed by Techstars.'
         }}
       />
