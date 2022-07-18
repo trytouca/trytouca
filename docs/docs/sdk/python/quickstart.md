@@ -9,10 +9,9 @@ available as open-source under the Apache-2.0 License.
 pip install touca
 ```
 
-Let's use the examples available in the
-[Touca repository on GitHub](https://github.com/trytouca/trytouca/tree/main/examples/python).
-Clone this repository to a directory of your choice and create a virtual
-environment.
+Clone the Touca repository to a directory of your choice, navigate to the
+`examples/python` subdirectory, create and activate a virtual environment, and
+use `pip` to install `touca` as their dependency.
 
 ```bash
 git clone git@github.com:trytouca/trytouca.git

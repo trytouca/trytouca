@@ -30,8 +30,8 @@ whether they are intended, and take action based on our investigation.
 
 ## Changing the Code
 
-We are going to keep using the same "Parse Profile" software as in the previous
-document. Let us start with making a small change to our code under test.
+We'll keep using the same "Parse Profile" software as in the previous document.
+Let's make a small change to our code under test.
 
 <Tabs
   groupId="sdks"
@@ -59,11 +59,6 @@ touca test --revision 2.0
   </TabItem>
   <TabItem value="cpp">
 
-If you are using the Docker image provided in the
-[examples repository](https://github.com/trytouca/examples), you have sudo
-privileges to install your preferred editor, e.g.
-`sudo apt update && sudo apt install vim`.
-
 While we can make any changes to our code under test, for now we are going to
 replicate a change in behavior by changing one of Alice's courses from
 `Course {"math", 4.0}` to `Course {"english", 3.6}`.
@@ -73,7 +68,7 @@ test again, this time for version 2.0 of our code.
 
 ```bash
 ./build.sh
-sudo cmake --install local/build
+cmake --install local/build
 example_cpp_main_api --revision 2.0
 ```
 

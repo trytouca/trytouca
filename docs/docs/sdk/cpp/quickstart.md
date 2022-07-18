@@ -7,13 +7,11 @@ new to Touca, consider reading our
 Touca SDK for C++ is available as open-source
 [on GitHub](https://github.com/trytouca/trytouca) under the Apache-2.0 License.
 You can [build it from source](./building.md) or
-[pull it as third-party dependency](./installing.md). We are going to assume
-that you are not sure whether it is worth building or integrating our C++ SDK.
-For this scenario, we have included a Dockerfile in our examples repository that
-allows you to build and run Touca tests in an isolated environment.
+[pull it as third-party dependency](./installing.md).
 
-Clone our examples repository to a local directory of your choice. Build our C++
-playground Docker image and run it from the command line.
+Clone the Touca repository to a directory of your choice, navigate to the
+`examples/cpp` subdirectory, and use either of our `build.sh` script or our
+Dockerfile to build the examples.
 
 ```bash
 git clone git@github.com:trytouca/trytouca.git
@@ -21,9 +19,6 @@ cd trytouca
 docker build -t touca-examples-cpp -f cpp/Dockerfile cpp
 docker run -it touca-examples-cpp /bin/bash
 ```
-
-This container includes multiple example projects that you can experiment with
-as you read through the tutorials in this section.
 
 For our first example, let us write a Touca test for a software that checks
 whether a given number is prime. You can find a possible first implementation in
