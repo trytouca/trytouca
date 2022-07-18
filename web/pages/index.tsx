@@ -8,7 +8,11 @@ import {
 } from 'next-seo';
 import { HiOutlineLightBulb, HiOutlineUserGroup } from 'react-icons/hi';
 
-import Announcement, { AnnouncementInput } from '@/components/announcement';
+import {
+  Announcement,
+  AnnouncementInput,
+  BreakingNews
+} from '@/components/announcement';
 import AboveTheFold from '@/components/atf';
 import FeatureAutomate from '@/components/feature-automate';
 import FeatureCollaborate from '@/components/feature-collaborate';
@@ -29,7 +33,7 @@ type PageContent = {
 
 const content: PageContent = {
   announcement: {
-    action: 'Give us a star on GitHub',
+    action: 'Check us out on GitHub',
     hidden: false,
     link: 'https://touca.io/github',
     text: 'Touca is now open-source under Apache-2.0 license.',
@@ -140,15 +144,21 @@ export default function Home() {
           'https://linkedin.com/company/touca'
         ]}
       />
-      <Header></Header>
-      <AboveTheFold></AboveTheFold>
-      <Announcement input={content.announcement}></Announcement>
-      <OneLinerPitch></OneLinerPitch>
-      <FeatureTestimonials input={content.testimonials}></FeatureTestimonials>
-      <FeatureSubmit input={content.features[0]}></FeatureSubmit>
-      <FeatureCompare input={content.features[1]}></FeatureCompare>
-      <FeatureCollaborate input={content.features[2]}></FeatureCollaborate>
-      <FeatureAutomate input={content.features[3]}></FeatureAutomate>
+      <BreakingNews
+        input={{
+          link: '/blog/techstars',
+          text: 'Touca is now backed by Techstars.'
+        }}
+      />
+      <Header />
+      <AboveTheFold />
+      <Announcement input={content.announcement} />
+      <OneLinerPitch />
+      <FeatureTestimonials input={content.testimonials} />
+      <FeatureSubmit input={content.features[0]} />
+      <FeatureCompare input={content.features[1]} />
+      <FeatureCollaborate input={content.features[2]} />
+      <FeatureAutomate input={content.features[3]} />
     </>
   );
 }

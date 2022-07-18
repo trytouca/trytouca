@@ -10,13 +10,11 @@ Apache-2.0 License. It is publicly available
 [on NPM](https://npmjs.com/package/@touca/node).
 
 ```bash
-npm install @touca/node
+npm install --save @touca/node
 ```
 
-In this tutorial, we will use Touca examples repository whose JavaScript
-examples already list this package as a dependency. Clone this repository to a
-local directory of your choice and proceed with building its JavaScript
-examples.
+Clone the Touca repository to a directory of your choice, navigate to the
+`examples/js` subdirectory, and use `npm` to build the examples.
 
 ```bash
 git clone git@github.com:trytouca/trytouca.git
@@ -27,7 +25,7 @@ npm run build
 
 For our first example, let us write a Touca test for a software that checks
 whether a given number is prime. You can find a possible first implementation in
-`./js/01_node_minimal/is_prime.ts` of the examples repository.
+`examples/js/01_node_minimal/is_prime.ts`.
 
 ```typescript
 export function is_prime(input: number): boolean {

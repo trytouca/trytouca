@@ -7,7 +7,7 @@ import { FaDiscord, FaGithub } from 'react-icons/fa';
 import { HiMenu, HiOutlineNewspaper } from 'react-icons/hi';
 
 const items = [
-  { title: 'Get Started', link: 'https://app.touca.io' },
+  { title: 'Try Now', link: 'https://app.touca.io' },
   { title: 'Docs', link: 'https://touca.io/docs' },
   { title: 'Blog', link: '/blog' },
   { title: 'Pricing', link: '/pricing' }
@@ -150,9 +150,16 @@ function LogoKit() {
             width="40px"
             height="40px"
           />
-          <h1 className="text-2xl font-bold leading-10 tracking-tight text-white">
+          <h1 className="sr-only text-2xl font-bold leading-10 tracking-tight text-white">
             touca<span className="text-sky-300">.io</span>
           </h1>
+          <img
+            className="no-sr-only"
+            src="/images/touca_logo_io_text_white.svg"
+            alt="Touca.io"
+            loading="lazy"
+            width="100px"
+          />
         </a>
       </Link>
       {show && (

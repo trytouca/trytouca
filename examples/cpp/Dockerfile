@@ -9,7 +9,7 @@ LABEL org.opencontainers.image.url="https://touca.io/"
 LABEL org.opencontainers.image.documentation="https://touca.io/docs"
 LABEL org.opencontainers.image.vendor="Touca, Inc."
 LABEL org.opencontainers.image.authors="hello@touca.io"
-LABEL org.opencontainers.image.licenses="https://github.com/trytouca/examples/blob/main/LICENSE"
+LABEL org.opencontainers.image.licenses="https://github.com/trytouca/trytouca/blob/main/sdk/cpp/LICENSE"
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
@@ -28,7 +28,7 @@ RUN apt-get update \
   && echo '[ ! -z "$TERM" -a -r /etc/motd ] && cat /etc/motd' >> /etc/bash.bashrc \
   && echo "\n" \
     "This container serves as a development environment and playground  \n" \
-    "for the C++ examples in our \"trytouca/examples\" repository.      \n" \
+    "for the C++ SDK examples.                                          \n" \
     "The test tools are built and installed in \"/opt/local/dist/bin\"  \n" \
     "and \"/usr/bin/local\". The following is an example of how to run  \n" \
     "one of these test tools:                                           \n" \
