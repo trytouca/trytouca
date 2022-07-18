@@ -12,6 +12,8 @@ import {
 } from 'react-icons/fa';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
+import { ATFBackedBy } from '@/components/social-proof';
+
 const social: {
   link: string;
   title: string;
@@ -135,8 +137,8 @@ const FooterCta = () => {
 const FooterRow = () => {
   return (
     <footer className="divide-y divide-dark-blue-700 border-t border-dark-blue-800 bg-dark-blue-900 px-8 text-white">
-      <div className="mx-auto max-w-screen-lg space-y-4 py-16">
-        <ul className="columns-2 space-y-4 font-medium md:columns-3 lg:columns-5">
+      <div className="mx-auto max-w-screen-lg py-16 space-y-16 md:space-y-0 md:flex">
+        <ul className="columns-2 space-y-4 font-medium md:columns-3 lg:columns-4 md:flex-grow">
           {links.map((item) => {
             return (
               <li
@@ -155,9 +157,17 @@ const FooterRow = () => {
             );
           })}
         </ul>
+        <ATFBackedBy />
       </div>
-      <div className="mx-auto flex max-w-screen-lg items-center justify-between py-8">
-        <p className="text-sm font-medium text-white">&copy; Touca, Inc.</p>
+      <div className="mx-auto flex flex-col md:flex-row max-w-screen-lg items-center justify-between py-8">
+        <div className="flex items-center space-x-4 order-last md:order-first pt-8 md:pt-0">
+          <img
+            src="/images/touca_logo_io_text_white.svg"
+            alt="Touca.io"
+            loading="lazy"
+            width="100px"
+          />
+        </div>
         <ul className="flex items-center space-x-2">
           {social
             .filter((v) => v.icon)

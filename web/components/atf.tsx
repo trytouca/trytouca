@@ -3,7 +3,9 @@
 import Link from 'next/link';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
-function Screenshot() {
+import { ATFBackedBy, ATFTrustedBy } from './social-proof';
+
+function ATFScreenshot() {
   return (
     <div className="mx-auto hidden h-full w-full select-none items-center p-8 sm:flex sm:p-0 xl:col-span-3">
       <a
@@ -30,7 +32,8 @@ export default function AboveTheFold() {
             <div className="mx-auto flex h-full flex-col justify-around space-y-12 py-12 lg:py-4 xl:col-span-2 xl:py-0">
               <div className="space-y-4">
                 <h2 className="wsl-text-gradient max-w-xl text-3xl font-bold text-white sm:text-4xl xl:text-3xl">
-                  Open source regression testing system that you can self-host
+                  Open source continuous regression testing for engineering
+                  teams
                 </h2>
                 <p className="max-w-xl text-lg text-white sm:text-2xl">
                   Get feedback when you write code that could break your
@@ -57,25 +60,12 @@ export default function AboveTheFold() {
                   </a>
                 </Link>
               </div>
-              <div className="container mx-auto space-y-4">
-                <p className="uppercase text-white">Trusted By</p>
-                <div className="flex items-center justify-between space-x-2">
-                  <a
-                    href="https://vitalimages.com"
-                    target="_blank"
-                    rel="noopener noreferrer">
-                    <img
-                      src="/images/touca-customer-logo-vital.svg"
-                      alt="Canon Medical Informatics"
-                      loading="lazy"
-                      width="250px"
-                      height="20px"
-                    />
-                  </a>
-                </div>
+              <div className="sm:flex sm:justify-between sm:px-4 space-y-8 sm:space-y-0">
+                <ATFTrustedBy />
+                <ATFBackedBy />
               </div>
             </div>
-            <Screenshot></Screenshot>
+            <ATFScreenshot />
           </div>
         </div>
       </div>
