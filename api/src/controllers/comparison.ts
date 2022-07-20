@@ -1,5 +1,9 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import type {
+  BatchCompareOverview,
+  CppTestcaseComparisonOverview
+} from '@touca/api-schema'
 import { floor } from 'lodash'
 import mongoose from 'mongoose'
 
@@ -10,10 +14,6 @@ import type {
   BackendBatchComparisonItemSolo,
   BackendBatchComparisonResponse
 } from '@/types/backendtypes'
-import type {
-  BatchCompareOverview,
-  CppTestcaseComparisonOverview
-} from '@/types/commontypes'
 import logger from '@/utils/logger'
 
 type ObjectId = mongoose.Types.ObjectId
@@ -154,12 +154,12 @@ function doFindBatchComparisonOverview(
     return Math.round((diff * dates.length) / (dates.length - 1))
   }
   const srcDuration = getDuration([
-    ...output.common.map((e) => e.src.builtAt),
-    ...output.fresh.map((e) => e.builtAt)
+    ...output.common.map((e) => e.src.builtAt as unknown as Date),
+    ...output.fresh.map((e) => e.builtAt as unknown as Date)
   ])
   const dstDuration = getDuration([
-    ...output.common.map((e) => e.dst.builtAt),
-    ...output.missing.map((e) => e.builtAt)
+    ...output.common.map((e) => e.dst.builtAt as unknown as Date),
+    ...output.missing.map((e) => e.builtAt as unknown as Date)
   ])
 
   return {

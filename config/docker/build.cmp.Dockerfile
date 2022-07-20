@@ -29,7 +29,7 @@ USER touca
 RUN conan profile new default --detect \
   && conan profile update settings.compiler.libcxx=libstdc++11 default \
   && conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp \
-  && cd /opt/cmp && ./build.sh
+  && /opt/cmp/build.sh
 
 # ---- production image ----
 
@@ -46,7 +46,8 @@ LABEL org.opencontainers.image.authors="hello@touca.io"
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
     apt-transport-https ca-certificates \
-  && rm -rf /var/lib/apt/lists/*
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir /var/log/cmp
 
 COPY --from=builder /opt/cmp/local/dist                 /usr/local
 COPY --from=builder /opt/cmp/config/config.prod.json    /usr/local/etc/config.json

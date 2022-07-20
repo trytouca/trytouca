@@ -2,9 +2,9 @@
 
 import { AfterContentInit, Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import type { UserLookupResponse } from '@touca/api-schema';
 import { Subscription } from 'rxjs';
 
-import type { UserLookupResponse } from '@/core/models/commontypes';
 import { AuthService, UserService } from '@/core/services';
 import { intercomClient } from '@/shared/utils/intercom';
 

@@ -1,11 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { ENotificationType } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { ENotificationType } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { analytics, EActivity } from '@/utils/tracker'
 
@@ -28,7 +28,7 @@ export async function suiteSubscribe(
     $pull: { subscriptions: { user: user._id } }
   })
 
-  if (level !== ENotificationType.None) {
+  if (level !== 'none') {
     await SuiteModel.findByIdAndUpdate(suite._id, {
       $push: { subscriptions: { user: user._id, level } }
     })

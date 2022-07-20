@@ -4,7 +4,6 @@ import { NextFunction, Request, Response } from 'express'
 
 import { SessionModel } from '@/schemas/session'
 import { IUser, UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
@@ -17,7 +16,7 @@ export async function platformAccountSuspend(
   const user = res.locals.user as IUser
   logger.debug('%s: suspending account %s', user.username, account.username)
 
-  if (account.platformRole !== EPlatformRole.User) {
+  if (account.platformRole !== 'user') {
     return next({
       errors: ['cannot suspend admin accounts'],
       status: 409

@@ -1,5 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { ENotificationType } from '@touca/api-schema'
 import mongoose from 'mongoose'
 
 import { ComparisonFunctions } from '@/controllers/comparison'
@@ -9,7 +10,6 @@ import { EReportType, IReportDocument, ReportModel } from '@/schemas/report'
 import { SuiteModel } from '@/schemas/suite'
 import { IUser } from '@/schemas/user'
 import type { BackendBatchComparisonResponse } from '@/types/backendtypes'
-import { ENotificationType } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { mailUser } from '@/utils/mailer'
@@ -333,8 +333,7 @@ async function reportSealed(
       .slice(i, i + chunkSize)
       .filter(
         (subscription) =>
-          subscription.level == ENotificationType.All ||
-          compareInputs.hasComparisonTable
+          subscription.level === 'all' || compareInputs.hasComparisonTable
       )
       .map(async (subscription) => {
         inputs.username = subscription.user.fullname

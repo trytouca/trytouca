@@ -6,7 +6,6 @@ import { pick } from 'lodash'
 import { findPlatformRole } from '@/middlewares'
 import { createUserAccount } from '@/models/auth'
 import { MetaModel } from '@/schemas/meta'
-import { EPlatformRole } from '@/types/commontypes'
 import { rclient } from '@/utils/redis'
 
 /**
@@ -17,9 +16,8 @@ export async function platformUpdate(
   res: Response,
   next: NextFunction
 ) {
-  const isAdmin = [EPlatformRole.Admin, EPlatformRole.Owner].includes(
-    await findPlatformRole(req)
-  )
+  const platformRole = await findPlatformRole(req)
+  const isAdmin = platformRole === 'admin' || platformRole === 'owner'
   const isConfigured = !!(await MetaModel.countDocuments({
     telemetry: { $exists: true }
   }))

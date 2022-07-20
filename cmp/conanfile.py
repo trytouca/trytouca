@@ -10,7 +10,7 @@ class ToucaConan(ConanFile):
     description = "Touca Comparator"
     topics = ("regression-testing", "test-framework", "test-automation")
     license = "Apache-2.0"
-    version = "1.5.2"
+    version = "1.4.0"
     author = "Touca, Inc. <hello@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_find_package"
@@ -24,7 +24,7 @@ class ToucaConan(ConanFile):
         self.requires("touca/1.5.2")
 
     def source(self):
-        self.run("git clone https://github.com/trytouca/touca.git")
+        self.run("git clone https://github.com/trytouca/trytouca.git")
 
     def configure(self):
         self.options["aws-sdk-cpp"].s3 = True

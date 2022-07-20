@@ -37,21 +37,20 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.docs == 'true'
-      - uses: actions/cache@v2
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
         if: steps.changes.outputs.docs == 'true'
         with:
-          path: ${{ github.workspace }}/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: 16
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build doc
         if: steps.changes.outputs.docs == 'true'
         run: |
-          yarn --cwd=docs install
-          yarn --cwd=docs build
+          pnpm --dir=docs install --frozen-lockfile
+          pnpm --dir=docs run build
       - name: push doc to aws
         if: |
           steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
@@ -356,58 +355,48 @@ jobs:
           filters: .github/path-filters.yml
       - name: authenticate to aws
         if: |
-          steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         if: steps.changes.outputs.sdk_js == 'true'
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.sdk_js == 'true'
-        env:
-          CACHED_DEPENDENCY_PATHS: |
-            ${{ github.workspace }}/node_modules
-            ${{ github.workspace }}/packages/**/node_modules
-        with:
-          path: ${{ env.CACHED_DEPENDENCY_PATHS }}
-          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          cache: "npm"
+          cache-dependency-path:
+            ${{ github.workspace }}/sdk/js/package-lock.json
       - name: build js components
         if: steps.changes.outputs.sdk_js == 'true'
         run: |
-          yarn install
-          yarn build
-          yarn test
+          npm i -g npm@latest
+          npm ci
+          npm run build
+          npm run test
       - name: lint source code
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 && github.event_name == 'push'
-        run: yarn lint
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push'
+        run: npm run lint
       - name: generate docs
         if: |
-          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 14 && github.event_name == 'push'
-        run: yarn docs
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push'
+        run: npm run docs
       - name: push docs to aws
-        if:
-          steps.changes.outputs.sdk_js == 'true' && github.ref ==
-          'refs/heads/main' && matrix.node-version == 14 && github.event_name ==
-          'push'
+        if: |
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf js-node-docs-external.tar.gz local/docs
           aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: push coverage to aws
         if: |
-          steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
           aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
       - name: upload coverage to codecov
         if: |
-          steps.changes.outputs.sdk_js == 'true' && github.ref == 'refs/heads/main' && matrix.node-version == 14 && github.event_name == 'push'
+          steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: codecov/codecov-action@v2
         env:
           OS: ${{ runner.os }}
@@ -613,31 +602,24 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         if: steps.changes.outputs.examples_js == 'true'
         with:
-          node-version: 14
+          node-version: 16
+          cache: "npm"
+          cache-dependency-path:
+            ${{ github.workspace }}/examples/js/package-lock.json
       - name: get version number
         if: steps.changes.outputs.examples_js == 'true'
         id: params
         run: |
           git fetch --prune --unshallow --tags
           echo "::set-output name=version::$(git describe --tags --abbrev=4)"
-      - uses: actions/cache@v2
-        if: steps.changes.outputs.examples_js == 'true'
-        with:
-          path: |
-            ${{ github.workspace }}/js/node_modules
-            ${{ github.workspace }}/js/packages/**/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
       - name: build js examples
         if: steps.changes.outputs.examples_js == 'true'
         run: |
-          yarn install
-          yarn build
+          npm ci
+          npm run build
       - name: run example js application
         if: |
           steps.changes.outputs.examples_js == 'true' && github.ref == 'refs/heads/main'
@@ -646,7 +628,7 @@ jobs:
           TOUCA_API_URL: https://api.touca.io/@/examples/javascript
           TOUCA_TEST_VERSION: ${{ steps.params.outputs.version }}
         run: |
-          yarn --cwd=02_node_main_api test:touca
+          npm --prefix=02_node_main_api run test:touca
 
   run-examples-python:
     name: run-examples-python
@@ -707,25 +689,24 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.web == 'true'
-      - uses: actions/cache@v2
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
         if: steps.changes.outputs.web == 'true'
         with:
-          path: ${{ github.workspace }}/web/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('web/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: 16
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build web
         if: steps.changes.outputs.web == 'true'
         env:
           NEXT_TELEMETRY_DISABLED: 1
         run: |
-          yarn --cwd=web install
-          yarn --cwd=web build
-          yarn --cwd=web lint
-          yarn --cwd=web export
+          pnpm --dir=web install --frozen-lockfile
+          pnpm --dir=web run build
+          pnpm --dir=web run lint
+          pnpm --dir=web run export
       - name: push web to aws
         if: |
           steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
@@ -756,26 +737,23 @@ jobs:
         run: |
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
           echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
-
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.api == 'true'
-      - uses: actions/cache@v2
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
         if: steps.changes.outputs.api == 'true'
         with:
-          path: ${{ github.workspace }}/api/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('api/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
-
+          node-version: 16
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build api
         if: steps.changes.outputs.api == 'true'
         run: |
-          yarn --cwd=api install
-          yarn --cwd=api build
-          yarn --cwd=api lint
-          yarn --cwd=api test
-          yarn --cwd=api docs
+          pnpm --dir=api install --frozen-lockfile
+          pnpm --dir=api run build
+          pnpm --dir=api run lint
+          pnpm --dir=api run test
+          pnpm --dir=api run docs
           tar -zcf api.tar.gz api/dist
           tar -zcf api-docs-external.tar.gz api/local/docs/external
           tar -zcf api-docs-internal.tar.gz api/local/docs/internal
@@ -825,30 +803,28 @@ jobs:
         run: |
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
           echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
-
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.app == 'true'
-      - uses: actions/cache@v2
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
         if: steps.changes.outputs.app == 'true'
         with:
-          path: ${{ github.workspace }}/app/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('app/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: 16
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: build app
         if: steps.changes.outputs.app == 'true'
         run: |
-          yarn --cwd=app install --frozen-lockfile
-          yarn --cwd=app build
-          yarn --cwd=app lint
+          pnpm --dir=app install --frozen-lockfile
+          pnpm --dir=app run build
+          pnpm --dir=app run lint
           tar -zcf app.tar.gz app/dist
       - name: push app to app.touca.io
         if: |
           steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
         run: |
           aws s3 cp app.tar.gz ${{ steps.params.outputs.buckets }}/
-          yarn --cwd=app build --configuration=cloud --delete-output-path
+          pnpm --dir=app run build --configuration=cloud --delete-output-path
           aws s3 sync ./app/dist/ ${{ secrets.AWS_BUCKET_APP }} --exclude "*" --include "*.*.js" --include "*.*.css" --cache-control public,max-age=31536000,immutable
           aws s3 sync ./app/dist/ ${{ secrets.AWS_BUCKET_APP }} --exclude "*.*.js" --exclude "*.*.css" --cache-control no-cache
       - name: pull app from aws
@@ -956,20 +932,19 @@ jobs:
         with:
           name: cmp-bundle
           path: ${{ github.workspace }}
-      - uses: actions/setup-node@v2
-        if: steps.changes.outputs.api == 'true'
-      - uses: actions/cache@v2
+      - uses: pnpm/action-setup@v2.2.2
+        with:
+          version: 7
+      - uses: actions/setup-node@v3
         if: steps.changes.outputs.api == 'true'
         with:
-          path: ${{ github.workspace }}/api/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('api/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-            ${{ runner.os }}-
+          node-version: 16
+          cache: "pnpm"
+          cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: install api dependencies
         if: steps.changes.outputs.api == 'true'
-        run: yarn --cwd=api install --frozen-lockfile --production
-
+        run: |
+          pnpm --dir=api --filter=@touca/api --frozen-lockfile --production install
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         if: steps.params.outputs.release == 'true'
@@ -1004,6 +979,8 @@ jobs:
           cp -r ./api/env ./stage/api/env
           cp -r ./api/samples ./stage/api/samples
           cp -r ./api/node_modules ./stage/api/node_modules
+          cp -r ./node_modules ./stage/node_modules
+          cp -r ./packages ./stage/packages
           curl -o ./stage/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
       - name: extract metadata for api docker image
         uses: docker/metadata-action@v4
@@ -1099,6 +1076,11 @@ jobs:
         uses: docker/build-push-action@v3
         if: steps.changes.outputs.cmp == 'true'
         with:
+          # we'd love to build this image for arm64 as well but GH doesn't have
+          # a runner image for arm and building cmp from source takes too long.
+          # context: .
+          # file: ./config/docker/build.cmp.Dockerfile
+          # platforms: linux/amd64,linux/arm64
           context: stage
           file: ./config/docker/cmp.Dockerfile
           platforms: linux/amd64

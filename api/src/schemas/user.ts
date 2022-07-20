@@ -1,9 +1,16 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import { EPlatformRole } from '@touca/api-schema'
 import mongoose from 'mongoose'
 import { v4 as uuidv4 } from 'uuid'
 
-import { EPlatformRole } from '@/types/commontypes'
+const platformRoles: EPlatformRole[] = [
+  'guest',
+  'user',
+  'admin',
+  'owner',
+  'super'
+]
 
 const userSchema = new mongoose.Schema({
   activatedAt: {
@@ -49,7 +56,7 @@ const userSchema = new mongoose.Schema({
     type: String
   },
   platformRole: {
-    enum: Object.values(EPlatformRole),
+    enum: platformRoles,
     default: 'user',
     required: true,
     type: String

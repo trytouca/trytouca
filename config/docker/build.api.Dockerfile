@@ -1,41 +1,35 @@
 # ---- builder stage ----
 
-FROM node:18-alpine AS builder_dev
+FROM node:16-alpine AS builder
 
-COPY api /home
+COPY api                    /opt/touca/api
+COPY packages               /opt/touca/packages
+COPY pnpm-lock.yaml         /opt/touca/pnpm-lock.yaml
+COPY pnpm-workspace.yaml    /opt/touca/pnpm-workspace.yaml
 
-RUN apk add --no-cache curl yarn \
-    && mkdir /home/certs \
-    && curl -o /home/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem \
-    && yarn --cwd=/home install \
-    && yarn --cwd=/home build \
-    && yarn --cwd=/home lint \
-    && yarn --cwd=/home test
-
-# ---- builder stage ----
-
-FROM node:18-alpine AS builder
-
-COPY --from=builder_dev /home/certs             /home/certs
-COPY --from=builder_dev /home/dist              /home/dist
-COPY --from=builder_dev /home/env               /home/env
-COPY --from=builder_dev /home/package.json      /home/package.json
-COPY --from=builder_dev /home/samples           /home/samples
-
-RUN apk add --no-cache yarn \
-    && yarn --cwd=/home install --frozen-lockfile --production \
-    && yarn --cwd=/home cache clean
+RUN apk add --no-cache curl \
+    && npm i -g pnpm \
+    && mkdir /opt/touca/api/certs \
+    && curl -o /opt/touca/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem \
+    && pnpm --dir=/opt/touca/api --filter=@touca/api --no-strict-peer-dependencies install \
+    && pnpm --dir=/opt/touca/api run build \
+    && pnpm --dir=/opt/touca/api run lint \
+    && pnpm --dir=/opt/touca/api run test \
+    && rm -rf /opt/touca/api/node_modules \
+    && pnpm --dir=/opt/touca/api --filter=@touca/api --frozen-lockfile --production install
 
 # ---- production image ----
 
-FROM node:18-alpine
+FROM node:16-alpine
 
-COPY --from=builder /home/certs         /opt/touca/certs
-COPY --from=builder /home/dist          /opt/touca/dist
-COPY --from=builder /home/env           /opt/touca/env
-COPY --from=builder /home/samples       /opt/touca/samples
-COPY --from=builder /home/node_modules  /opt/touca/node_modules
+COPY --from=builder /opt/touca/api/certs         /opt/touca/api/certs
+COPY --from=builder /opt/touca/api/dist          /opt/touca/api/dist
+COPY --from=builder /opt/touca/api/env           /opt/touca/api/env
+COPY --from=builder /opt/touca/api/samples       /opt/touca/api/samples
+COPY --from=builder /opt/touca/api/node_modules  /opt/touca/api/node_modules
+COPY --from=builder /opt/touca/node_modules      /opt/touca/node_modules
+COPY --from=builder /opt/touca/packages          /opt/touca/packages
 
 EXPOSE 8081
 
-CMD ["node", "/opt/touca/dist/server.js"]
+CMD ["node", "/opt/touca/api/dist/server.js"]

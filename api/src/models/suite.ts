@@ -6,7 +6,6 @@ import { CommentModel } from '@/schemas/comment'
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { ENotificationType } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
@@ -26,7 +25,7 @@ export async function suiteCreate(
     createdBy: user._id,
     name: suite.name,
     slug: suite.slug,
-    subscriptions: [{ user: user._id, level: ENotificationType.All }],
+    subscriptions: [{ user: user._id, level: 'all' }],
     team: team._id
   })
 

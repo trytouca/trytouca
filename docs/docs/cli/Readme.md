@@ -1,4 +1,4 @@
-# Command Line Tools
+# Touca CLI
 
 Touca result files are generated in binary format and may contain test results
 captured for any number of test cases. Typical Touca test tools do not need

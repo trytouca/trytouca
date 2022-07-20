@@ -8,7 +8,6 @@ import { wslFindByRole } from '@/models/user'
 import { MetaModel } from '@/schemas/meta'
 import { NodeModel } from '@/schemas/node'
 import { IUser } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { mailUser } from '@/utils/mailer'
@@ -51,7 +50,7 @@ export async function platformInstall(
       _id: contact.uuid,
       email: contact.email,
       fullname: contact.name,
-      platformRole: EPlatformRole.User,
+      platformRole: 'user',
       username: contact.uuid
     }
     analytics.add_member(user, { name: user.fullname }).then(() =>
@@ -59,7 +58,7 @@ export async function platformInstall(
         company: contact.company
       })
     )
-    const owners = await wslFindByRole(EPlatformRole.Owner)
+    const owners = await wslFindByRole('owner')
     mailUser(owners[0], 'New Self-Hosted Instance', 'user-install', contact)
     return res.status(204).send()
   }

@@ -1,5 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { BatchLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { ComparisonFunctions } from '@/controllers/comparison'
@@ -10,7 +11,6 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import { ECommentType } from '@/types/backendtypes'
-import type { BatchLookupResponse } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
@@ -48,13 +48,13 @@ async function batchLookup(
     isSealed: batch.sealedAt ? true : false,
     messageCount: batch.elements.length,
     meta: overview,
-    submittedAt: batch.submittedAt,
+    submittedAt: batch.submittedAt as unknown as string,
     submittedBy: userMap.getGroup('submittedBy'),
     suiteName: suite.name,
     suiteSlug: suite.slug,
     teamName: team.name,
     teamSlug: team.slug,
-    updatedAt: batch.updatedAt
+    updatedAt: batch.updatedAt as unknown as string
   }
 }
 

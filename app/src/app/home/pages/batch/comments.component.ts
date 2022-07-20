@@ -3,14 +3,13 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-
 import type {
   BatchLookupResponse,
   CommentItem,
   TeamLookupResponse
-} from '@/core/models/commontypes';
-import { EPlatformRole, ETeamRole } from '@/core/models/commontypes';
+} from '@touca/api-schema';
+import { Subscription } from 'rxjs';
+
 import {
   FrontendCommentAction,
   FrontendCommentActionType,
@@ -104,18 +103,17 @@ export class BatchCommentsComponent implements OnDestroy {
 
   private processComments(comments: CommentItem[]): FrontendCommentItem[] {
     const myRolePlatform = this.userService.currentUser.platformRole;
-    const myRoleTeam = this._team?.role || ETeamRole.Member;
+    const myRoleTeam = this._team?.role || 'member';
     const myUsername = this.userService.currentUser.username;
-    const isPlatformAdmin = [EPlatformRole.Admin, EPlatformRole.Owner].includes(
-      myRolePlatform
-    );
-    const isTeamAdmin = [ETeamRole.Admin, ETeamRole.Owner].includes(myRoleTeam);
+    const isPlatformAdmin =
+      myRolePlatform === 'admin' || myRolePlatform === 'owner';
+    const isTeamAdmin = myRoleTeam === 'admin' || myRoleTeam === 'owner';
     const process = (v: CommentItem, isReply = false): FrontendCommentItem => ({
       commentAuthor: v.by.fullname,
       commentBody: v.text,
       commentId: v.id,
-      commentTime: v.at,
-      commentEditTime: v.editedAt,
+      commentTime: v.at as unknown as Date,
+      commentEditTime: v.editedAt as unknown as Date,
       replies: v.replies ? v.replies.map((k) => process(k, true)) : [],
       showButtonReply: isReply === false,
       showButtonUpdate: myUsername === v.by.username,

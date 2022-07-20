@@ -8,9 +8,9 @@ import {
   Router,
   RouterStateSnapshot
 } from '@angular/router';
+import type { EPlatformRole, UserLookupResponse } from '@touca/api-schema';
 import { map } from 'rxjs/operators';
 
-import { EPlatformRole, UserLookupResponse } from '../models/commontypes';
 import { ApiService } from './api.service';
 
 @Injectable({
@@ -20,10 +20,10 @@ export class AdminGuard implements CanActivate, CanActivateChild {
   constructor(private apiService: ApiService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const roles = [EPlatformRole.Admin, EPlatformRole.Owner];
+    const allowedRoles: EPlatformRole[] = ['admin', 'owner'];
     return this.apiService.get<UserLookupResponse>('/user').pipe(
       map((v) => {
-        if (roles.includes(v.platformRole)) {
+        if (allowedRoles.includes(v.platformRole)) {
           return true;
         }
         return this.router.parseUrl('/account');

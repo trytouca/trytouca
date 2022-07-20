@@ -7,7 +7,6 @@ import { findTeamUsersByRole } from '@/controllers/team/common'
 import { ITeam } from '@/schemas/team'
 import { TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { ETeamRole } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
@@ -74,10 +73,7 @@ export async function teamUpdate(
 
   // email all members and admins of this team that the team slug has changed.
 
-  const members = await findTeamUsersByRole(team, [
-    ETeamRole.Member,
-    ETeamRole.Admin
-  ])
+  const members = await findTeamUsersByRole(team, ['member', 'admin'])
   const teamLink = `${config.webapp.root}/~/${proposed.slug}`
 
   members

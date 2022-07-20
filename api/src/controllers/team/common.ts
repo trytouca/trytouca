@@ -1,8 +1,9 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { ETeamRole } from '@touca/api-schema'
+
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { ETeamRole } from '@/types/commontypes'
 
 /**
  * @summary provides a list of members and admins of a given team.
@@ -19,13 +20,13 @@ export async function findTeamUsersByRole(
   roles: ETeamRole[]
 ): Promise<IUser[]> {
   const fields = []
-  if (roles.includes(ETeamRole.Owner)) {
+  if (roles.includes('owner')) {
     fields.push(['$owner'])
   }
-  if (roles.includes(ETeamRole.Admin)) {
+  if (roles.includes('admin')) {
     fields.push('$admins')
   }
-  if (roles.includes(ETeamRole.Member)) {
+  if (roles.includes('member')) {
     fields.push('$members')
   }
 

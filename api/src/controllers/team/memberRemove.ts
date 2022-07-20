@@ -1,11 +1,11 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { ETeamRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { findTeamRoleOfUser } from '@/controllers/team/common'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
-import { ETeamRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
 import { rclient } from '@/utils/redis'
@@ -62,7 +62,7 @@ export async function teamMemberRemove(
 
   // define a helper function to determine seniority of roles
 
-  const orders = [ETeamRole.Member, ETeamRole.Admin, ETeamRole.Owner]
+  const orders: ETeamRole[] = ['member', 'admin', 'owner']
   const getOrder = (role: ETeamRole) => orders.findIndex((v) => v === role)
 
   // disallow admins to remove members with a role higher or equal their own

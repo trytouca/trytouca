@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -e
 
-source /dev/stdin <<<"$( curl -fsSL https://raw.githubusercontent.com/trytouca/trytouca/main/ops/common.sh )"
+DIR_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$DIR_SCRIPT/common.sh"
 
 ask_name
 HUMAN_NAME=$OUTPUT
@@ -9,20 +10,17 @@ ask_install_dir
 DIR_INSTALL=$OUTPUT
 
 # run_compose makes use of the following variables
-FILE_COMPOSE="$DIR_INSTALL/repo/ops/docker-compose.dev.yml"
+FILE_COMPOSE="$DIR_SCRIPT/docker-compose.dev.yml"
 DIR_PROJECT_ROOT="$DIR_INSTALL"
 
 confirm_data_removal
 
-rm -rf "$DIR_INSTALL/repo"
-mkdir -p "$DIR_INSTALL"
-git clone --single-branch --branch main https://github.com/trytouca/trytouca.git "$DIR_INSTALL/repo" &> /dev/null || true
-
 install_docker
 install_docker_compose
 
-rm -rf "$DIR_INSTALL"/{data,logs}
-mkdir -p "$DIR_INSTALL"/logs/{backend,cmp} "$DIR_INSTALL"/data/{minio,mongo,redis}
+rm -rf "$DIR_INSTALL"/{data,logs,ops}
+mkdir -p "$DIR_INSTALL"/logs/{api,cmp} "$DIR_INSTALL"/data/{minio,mongo,redis} "$DIR_INSTALL"/ops
+cp -r "$(dirname "${DIR_SCRIPT}")"/ops/mongo "$DIR_INSTALL"/ops
 
 redeploy
 info "Have a good day, $HUMAN_NAME!"

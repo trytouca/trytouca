@@ -2,10 +2,7 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { isEqual } from 'lodash-es';
-import { forkJoin, of, Subject } from 'rxjs';
-
-import {
+import type {
   ETeamRole,
   SuiteLookupResponse,
   TeamInvitee,
@@ -14,7 +11,10 @@ import {
   TeamLookupResponse,
   TeamMember,
   TeamMemberListResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-schema';
+import { isEqual } from 'lodash-es';
+import { forkJoin, of, Subject } from 'rxjs';
+
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
 import { PageTab } from '@/home/components';
@@ -147,9 +147,9 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     const byRole = (...roles: ETeamRole[]) =>
       doc.filter((v) => roles.includes(v.role));
     const teams: RefinedTeamList = {
-      requests: byRole(ETeamRole.Applicant),
-      invitations: byRole(ETeamRole.Invited),
-      active: byRole(ETeamRole.Owner, ETeamRole.Admin, ETeamRole.Member)
+      requests: byRole('applicant'),
+      invitations: byRole('invited'),
+      active: byRole('owner', 'admin', 'member')
     };
     this.update('teams', teams);
   }

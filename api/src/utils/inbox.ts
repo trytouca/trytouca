@@ -5,7 +5,6 @@ import { format as utilFormat } from 'util'
 import { wslFindByRole } from '@/models/user'
 import { NotificationModel } from '@/schemas/notification'
 import { IUser } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
 
 async function notifyUser(recipient: IUser, message: string) {
   await NotificationModel.create({
@@ -23,8 +22,8 @@ async function notifyUsers(users: IUser[], message: string) {
 
 export async function notifyPlatformAdmins(fmtstr: string, ...args) {
   const message = utilFormat(fmtstr, ...args)
-  const platformAdmins = await wslFindByRole(EPlatformRole.Admin)
-  const platformOwner = await wslFindByRole(EPlatformRole.Owner)
+  const platformAdmins = await wslFindByRole('admin')
+  const platformOwner = await wslFindByRole('owner')
   const users = [...platformAdmins, ...platformOwner]
   return notifyUsers(users, message)
 }

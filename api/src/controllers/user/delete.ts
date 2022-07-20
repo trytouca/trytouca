@@ -5,7 +5,6 @@ import { NextFunction, Request, Response } from 'express'
 import { userDelete } from '@/models/user'
 import { TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 
 export async function ctrlUserDelete(
@@ -17,7 +16,7 @@ export async function ctrlUserDelete(
   logger.info('%s: attempting to delete account', account.username)
 
   // reject request if account is owner of the platform
-  if (account.platformRole === EPlatformRole.Owner) {
+  if (account.platformRole === 'owner') {
     return next({
       status: 403,
       errors: ['refusing to delete account: server owner']

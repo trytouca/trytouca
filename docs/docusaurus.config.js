@@ -2,7 +2,7 @@
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Touca Docs",
-  tagline: "Developer-friendly Continuous Regression Testing",
+  tagline: "Open Source Continuous Regression Testing for Engineering Teams",
   url: "https://touca.io",
   baseUrl: "/docs/",
   onBrokenLinks: "throw",
@@ -10,7 +10,7 @@ const config = {
   favicon: "img/favicon.ico",
   onDuplicateRoutes: "warn",
   organizationName: "trytouca",
-  projectName: "touca-docs",
+  projectName: "@touca/docs",
   trailingSlash: true,
   scripts: [
     {
@@ -25,7 +25,9 @@ const config = {
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
         docs: {
+          breadcrumbs: true,
           routeBasePath: "/",
+          showLastUpdateTime: true,
           sidebarPath: require.resolve("./sidebars.js"),
           editUrl: "https://github.com/trytouca/trytouca/tree/main/docs"
         },
@@ -35,6 +37,32 @@ const config = {
         }
       })
     ]
+  ],
+  plugins: [
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        redirects: [
+          {
+            from: "/basics/quickstart",
+            to: "/basics"
+          },
+          {
+            from: "/guides/cli",
+            to: "/cli"
+          },
+          {
+            from: "/guides/keyboard",
+            to: "/server/keyboard-shortcuts"
+          },
+          {
+            from: "/sdk/differences",
+            to: "/sdk"
+          }
+        ]
+      }
+    ],
+    ["@docusaurus/plugin-ideal-image", {}]
   ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
@@ -62,7 +90,8 @@ const config = {
         },
         {
           name: "og:image:alt",
-          content: "Developer-friendly Continuous Regression Testing"
+          content:
+            "Open Source Continuous Regression Testing for Engineering Teams"
         },
         { name: "og:image:type", content: "image/png" },
         { name: "og:image:width", content: "906" },

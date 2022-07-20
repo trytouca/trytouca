@@ -99,7 +99,7 @@ def test_main():
     api_client = ApiClient()
     if not api_client.is_up():
         logger.error("platform is not ready for this test")
-        return
+        sys.exit(1)
 
     setup_databases()
 

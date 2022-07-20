@@ -2,7 +2,7 @@
   <div class="grid gap-4 lg:grid-cols-2">
     <div
       class="wsl-settings-section"
-      *ngIf="team.role === ETeamRole.Admin || team.role === ETeamRole.Owner">
+      *ngIf="team.role === 'admin' || team.role === 'owner'">
       <h3 for="wsl-suite-name">Suite Name</h3>
       <app-alert
         *ngIf="alert[EModalType.ChangeName]"
@@ -37,7 +37,7 @@
     </div>
     <div
       class="wsl-settings-section"
-      *ngIf="team.role === ETeamRole.Admin || team.role === ETeamRole.Owner">
+      *ngIf="team.role === 'admin' || team.role === 'owner'">
       <h3 for="wsl-suite-slug">Suite Slug</h3>
       <app-alert
         *ngIf="alert[EModalType.ChangeSlug]"
@@ -166,7 +166,7 @@
     </div>
     <div
       class="wsl-settings-section"
-      *ngIf="team.role === ETeamRole.Admin || team.role === ETeamRole.Owner">
+      *ngIf="team.role === 'admin' || team.role === 'owner'">
       <h3 class="wsl-text-danger">Danger Zone</h3>
       <app-alert
         *ngIf="alert[EModalType.DeleteSuite]"

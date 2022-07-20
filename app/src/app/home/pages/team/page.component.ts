@@ -3,9 +3,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
+import type { TeamItem } from '@touca/api-schema';
 import { Subscription } from 'rxjs';
 
-import type { TeamItem } from '@/core/models/commontypes';
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
 import {

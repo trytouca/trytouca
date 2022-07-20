@@ -3,7 +3,6 @@
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
 import { SuiteModel } from '@/schemas/suite'
 import { UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 
 /**
@@ -25,7 +24,7 @@ export async function setupSuperuser() {
     email: 'noreply@touca.io',
     fullname: 'Touca',
     password: 'supersafehash',
-    platformRole: EPlatformRole.Super,
+    platformRole: 'super',
     username: 'touca'
   })
 
@@ -52,7 +51,7 @@ export async function setupAnonymousUser() {
     email: 'anonymous@touca.io',
     fullname: 'Former User',
     password: 'supersafehash',
-    platformRole: EPlatformRole.User,
+    platformRole: 'user',
     username: 'anonymous'
   })
 

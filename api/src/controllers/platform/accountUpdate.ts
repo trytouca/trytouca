@@ -1,9 +1,9 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { IUser, UserModel } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 
 export async function platformAccountUpdate(
@@ -38,7 +38,7 @@ export async function platformAccountUpdate(
 
   // define a helper function to determine seniority of roles
 
-  const orders = [EPlatformRole.User, EPlatformRole.Admin, EPlatformRole.Owner]
+  const orders: EPlatformRole[] = ['user', 'admin', 'owner']
   const getOrder = (role: EPlatformRole) => orders.findIndex((v) => v === role)
 
   // disallow admins to update accounts with a role higher than their own

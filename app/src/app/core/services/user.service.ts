@@ -2,13 +2,9 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import type { ETeamRole, UserLookupResponse } from '@touca/api-schema';
 import { Observable, Subject } from 'rxjs';
 
-import {
-  EPlatformRole,
-  ETeamRole,
-  UserLookupResponse
-} from '@/core/models/commontypes';
 import { errorLogger } from '@/shared/utils/errorLogger';
 
 import { AlertKind, AlertService } from './alert.service';
@@ -65,11 +61,11 @@ export class UserService {
   isTeamAdmin(role: ETeamRole): boolean {
     if (this.currentUser) {
       const role = this.currentUser.platformRole;
-      if ([EPlatformRole.Owner, EPlatformRole.Admin].includes(role)) {
+      if (role === 'owner' || role === 'admin') {
         return true;
       }
     }
-    if ([ETeamRole.Owner, ETeamRole.Admin].includes(role)) {
+    if (role === 'owner' || role === 'admin') {
       return true;
     }
     return false;

@@ -1,10 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { PlatformConfig } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { findPlatformRole } from '@/middlewares'
 import { MetaModel } from '@/schemas/meta'
-import { EPlatformRole, PlatformConfig } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
@@ -14,9 +14,8 @@ export async function platformConfig(
   res: Response,
   next: NextFunction
 ) {
-  const isAdmin = [EPlatformRole.Admin, EPlatformRole.Owner].includes(
-    await findPlatformRole(req)
-  )
+  const platformRole = await findPlatformRole(req)
+  const isAdmin = platformRole === 'admin' || platformRole === 'owner'
   const isConfigured = !!(await MetaModel.countDocuments({
     telemetry: { $exists: true }
   }))

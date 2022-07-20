@@ -1,6 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import Lambda from 'aws-sdk/clients/lambda'
+import { InvokeCommand, Lambda } from '@aws-sdk/client-lambda'
 import { readFileSync } from 'fs'
 import mustache from 'mustache'
 import path from 'path'
@@ -183,14 +183,15 @@ export async function buildPdfReport(
   const template = readFileSync(template_file, 'utf-8')
   const html = mustache.render(template, { content })
 
-  const params = {
-    FunctionName: config.aws.lambdaPdf,
-    Payload: JSON.stringify({ html })
-  }
   const lambda = new Lambda({
     region: config.aws.region
   })
-  const response = await lambda.invoke(params).promise()
+  const response = await lambda.send(
+    new InvokeCommand({
+      FunctionName: config.aws.lambdaPdf,
+      Payload: Buffer.from(JSON.stringify({ html }))
+    })
+  )
 
   if (response.StatusCode !== 200) {
     return

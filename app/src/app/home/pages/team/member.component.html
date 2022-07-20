@@ -20,7 +20,7 @@
       {{ data.role }}
     </div>
     <div
-      *ngIf="isTeamAdmin && !isSelf && data.role !== ETeamRole.Owner"
+      *ngIf="isTeamAdmin && !isSelf && data.role !== 'owner'"
       class="wsl-item-ctrl-box">
       <div title="Edit User Information" (click)="edit()" class="wsl-item-ctrl">
         <fa-icon icon="user-edit"></fa-icon>

@@ -2,16 +2,16 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { isEqual } from 'lodash-es';
-import { forkJoin, Observable, of, Subject } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 import type {
   BatchLookupResponse,
   ElementComparisonResponse,
   ElementLookupResponse,
   SuiteLookupResponse
-} from '@/core/models/commontypes';
+} from '@touca/api-schema';
+import { isEqual } from 'lodash-es';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
 import { IPageService } from '@/home/models/pages.model';
@@ -227,9 +227,9 @@ export class ElementPageService extends IPageService<ElementPageResult> {
         const durationSrc = durationCommonSrc + durationFresh;
 
         this._overview = {
-          messageSubmittedAt: doc.src.submittedAt,
+          messageSubmittedAt: doc.src.submittedAt as unknown as Date,
           messageSubmittedBy: doc.src.submittedBy,
-          messageBuiltAt: doc.src.builtAt,
+          messageBuiltAt: doc.src.builtAt as unknown as Date,
           resultsCountHead: commonResults.length + freshResults.length,
           resultsCountFresh: freshResults.length,
           resultsCountMissing: missingResults.length,

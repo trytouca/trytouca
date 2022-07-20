@@ -30,7 +30,7 @@ services:
       MINIO_USER: toucauser
       MINIO_PASS: toucapass
     volumes:
-      - ./logs/cmp:/opt/local/logs/cmp
+      - ./logs/cmp:/var/log/cmp
     depends_on:
       - touca_api
       - touca_minio

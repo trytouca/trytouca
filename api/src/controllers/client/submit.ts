@@ -13,7 +13,6 @@ import { MessageModel } from '@/schemas/message'
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { EPlatformRole } from '@/types/commontypes'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 import { Message, Messages } from '@/utils/schema'
@@ -281,10 +280,8 @@ async function processTeam(
 
   // we expect that the user is allowed to submit to this team
 
-  const isUserPlatformAdmin = [
-    EPlatformRole.Owner,
-    EPlatformRole.Admin
-  ].includes(user.platformRole)
+  const isUserPlatformAdmin =
+    user.platformRole === 'owner' || user.platformRole === 'admin'
 
   const isUserTeamMember =
     team.members.includes(user._id) ||

@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.5.3
+
+Other Changes:
+
+- Switch to using npm (#185)
+- CI workflow should sync Reference API docs
+
+## v1.5.2
+
+Improvements:
+
+- Update package dependencies
+
 ## v1.5.1
 
 Features:

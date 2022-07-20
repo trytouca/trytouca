@@ -4,7 +4,6 @@ import { NextFunction, Request, Response } from 'express'
 
 import { relay } from '@/models/relay'
 import { wslFindByRole } from '@/models/user'
-import { EPlatformRole } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
@@ -25,7 +24,7 @@ export async function feedback(
 
   // we are intentionally not awaiting on this operation
   if (config.isCloudHosted) {
-    const owners = await wslFindByRole(EPlatformRole.Owner)
+    const owners = await wslFindByRole('owner')
     mailer.mailUser(owners[0], 'New User Feedback', 'user-feedback', {
       body: content.body,
       name: content.name,

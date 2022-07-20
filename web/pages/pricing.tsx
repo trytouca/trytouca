@@ -47,34 +47,36 @@ const content: PageContent = {
     title: 'Common Questions',
     blocks: [
       {
-        question: 'What professional services do you offer?',
+        question: 'How does self-hosting work?',
         answer: [
-          `At no extra charge, we offer teams on our paid plans online and
-          on-site engineering support for tasks ranging from integrating our
-          SDK libraries to deploying and upgrading their self-hosted
-          Touca server.`,
-          `We reserve time every month to work with your team, to make sure
-          you are getting the most value from our product.`
+          `Touca Server is available on GitHub under Apache-2.0 license.
+          You can install and run it locally, on-premise or in your own
+          private cloud account.`,
+          `So what's the catch? None. You'd just need to do the hosting,
+          maintaining, and upgrading your instance. If you had questions
+          or needed help, our Discord Community is still there to help you.`
         ]
       },
       {
         question: 'What languages do you support?',
         answer: [
-          `Touca server is language agnostic. But you'd need to integrate one
-          of our SDKs with your code to describe the behavior and performance
-          of your code by capturing actual values of variables and runtime of
-          functions.`,
-          `At the moment, we provide SDKs for C++, Python, Java, and JavaScript
+          `Touca Server is language agnostic. You can submit test results
+          using our CLI.`,
+          `For more complex workflows, you can integrate one of our SDks to
+          allow capturing more information about the behavior and performance
+          of your code. We provide SDKs for C++, Python, Java, and JavaScript
           programming languages.`
         ]
       },
       {
-        question: 'How does self-hosting work?',
+        question: 'What professional services do you offer?',
         answer: [
-          `Teams on our Enterprise plan have the option to deploy and
-          run Touca on-premise or on their private cloud network, if they
-          prefer to do so. Self-hosting allows organizations to create as
-          many teams as they require at no extra cost.`
+          `We can provide online and on-site engineering support for tasks
+          ranging from deploying, maintaining, and upgrading self-hosted
+          instances to integrating our SDK libraries and setting up
+          customized test infrastructure to match your needs.`,
+          `For all paying customers, we reserve time every month to work with
+          your team to make sure you are getting the most value from our product.`
         ]
       },
       {
@@ -88,7 +90,8 @@ const content: PageContent = {
       {
         question: 'How can I get in touch with Touca?',
         answer: [
-          `You can always email us at hello@touca.io or use our Contact Us page.`
+          `Join our community on Discord or email us at hello@touca.io or
+          drop us a note from the Contact Us page.`
         ]
       }
     ]

@@ -1,12 +1,12 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import type { EFeatureFlag } from '@touca/api-schema'
 import * as bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
 import { identity, omit, pick, pickBy } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 
 import { IUser, UserModel } from '@/schemas/user'
-import { EFeatureFlag } from '@/types/commontypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
@@ -41,10 +41,8 @@ export async function userUpdate(
   const user = res.locals.user as IUser
   const tuple = user.username
 
-  const flags = pick(req.body.flags, [
-    EFeatureFlag.NewsletterProduct,
-    EFeatureFlag.NewsletterChangelog
-  ])
+  const picks: EFeatureFlag[] = ['newsletter_product', 'newsletter_changelog']
+  const flags = pick(req.body.flags, picks)
   if (Object.keys(flags).length !== 0) {
     updateFeatureFlags(user, flags)
     return res.status(204).send()

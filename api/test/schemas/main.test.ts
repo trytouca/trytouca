@@ -15,7 +15,6 @@ import { SuiteModel } from '../../src/schemas/suite'
 import { TeamModel } from '../../src/schemas/team'
 import { UserModel } from '../../src/schemas/user'
 import { ECommentType } from '../../src/types/backendtypes'
-import { EPlatformRole } from '../../src/types/commontypes'
 import { config } from '../../src/utils/config'
 
 describe('model-user', () => {
@@ -31,7 +30,7 @@ describe('model-user', () => {
       email: 'some_email',
       fullname: 'Full Name',
       password: 'some_hash',
-      platformRole: EPlatformRole.User,
+      platformRole: 'user',
       username: 'some_username'
     })
     expect(userModel.validateSync()).toBeUndefined()
