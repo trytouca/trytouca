@@ -21,6 +21,9 @@ df = read_csv(
     'https://archive.ics.uci.edu/ml/machine-learning-databases/ecoli/ecoli.data',
     sep = '\s+',
     header=None)
+
+print(df)
+
 X = df.iloc[:,1:-1]
 y = (df.iloc[:,-1:])
 encoder = LabelEncoder()
@@ -50,7 +53,11 @@ data_dir.mkdir(exist_ok=True)
 joblib.dump(pipe, data_dir.joinpath("pipeline.bin"))
 
 # Store test data in data/testcases.txt so that it can be used by Touca
-os.remove("data/testcases.txt")
+try:
+    os.remove("data/testcases.txt")
+except:
+    pass
+
 with data_dir.joinpath("testcases.txt").open("a") as f:
     for ind, data in X_test.iterrows():
         test_case = " ".join([str(x) for x in data.array])
