@@ -26,7 +26,7 @@ function ATFScreenshot() {
 export default function AboveTheFold() {
   return (
     <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
-      <div className="wsl-min-h-screen-1 grid lg:items-center">
+      <div className="min-h-[calc(100vh-5rem)] grid lg:items-center">
         <div className="container mx-auto flex items-center">
           <div className="grid gap-8 p-8 lg:items-center xl:grid-cols-5">
             <div className="mx-auto flex h-full flex-col justify-around space-y-12 py-12 lg:py-4 xl:col-span-2 xl:py-0">

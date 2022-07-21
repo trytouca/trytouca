@@ -144,12 +144,6 @@ export default function Home() {
           'https://linkedin.com/company/touca'
         ]}
       />
-      <BreakingNews
-        input={{
-          link: '/blog/techstars',
-          text: 'Touca is now backed by Techstars.'
-        }}
-      />
       <Header />
       <AboveTheFold />
       <Announcement input={content.announcement} />
