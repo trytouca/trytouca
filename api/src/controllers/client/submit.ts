@@ -370,7 +370,7 @@ async function insertComparisonJob(
     // batch in which case we compare the message with itself. This is
     // un-intuitive but necessary as long as we rely on the comparator
     // to parse flatbuffers data of the message and submit its content
-    // to the MinIO object storage.
+    // to the object storage.
 
     let dstBatchId = msg.batchId
     let dstMessageId = srcMessageId
@@ -649,11 +649,12 @@ async function ensureMessage(
     return await MessageModel.create(doc)
   }
 
-  // If message is already known, overwrite it and extend its expiration
-  // time. Given that the message may be different, all previously generated
+  // If message is already known, overwrite it and extend its expiration time.
+  // Given that the message may be different, all previously generated
   // comparison results may be invalid. So we opt to remove those comparison
-  // jobs both from MinIO and Mongo. For faster submission processing, we
-  // choose not to wait for these removals to complete.
+  // jobs both from the object store and from the database. For faster
+  // submission processing, we choose not to wait for these removals to
+  // complete.
 
   const query = [{ dstMessageId: message._id }, { srcMessageId: message._id }]
 

@@ -15,15 +15,17 @@ export async function authSessionCreate(
   res: Response,
   next: NextFunction
 ) {
-  const askedPassword = req.body.password
-  const askedUsername = req.body.username
-  const askedAgent = req.headers['user-agent']
-  const askedIpAddress = req.ip
-  logger.debug('%s: received request to login user', askedUsername)
+  const asked = {
+    agent: req.headers['user-agent'],
+    ipAddress: req.ip,
+    password: req.body.password,
+    username: req.body.username
+  }
+  logger.debug('%s: received request to login user', asked.username)
 
   // Bail if username does not match an account.
   // We return 401 instead of 404 for extra security
-  const user = await UserModel.findOne({ username: askedUsername })
+  const user = await UserModel.findOne({ username: asked.username })
   if (!user) {
     logger.debug('rejecting login due to invalid username')
     return next({
@@ -58,13 +60,13 @@ export async function authSessionCreate(
   // we perform this operation after checking if user is registered
   // to avoid paying the cost of hash generation in case they are
 
-  const isPasswordValid = await bcrypt.compare(askedPassword, user.password)
+  const isPasswordValid = await bcrypt.compare(asked.password, user.password)
   if (!isPasswordValid) {
-    logger.debug('%s: failed login attempt for user account', askedUsername)
+    logger.debug('%s: failed login attempt for user account', asked.username)
 
     // lock account if user exceeded maximum number of failed login attempts.
     if (config.auth.maxLoginAttempts <= user.loginAttempts) {
-      logger.info('%s: temporarily locking user account', askedUsername)
+      logger.info('%s: temporarily locking user account', asked.username)
       await UserModel.findByIdAndUpdate(user._id, {
         $set: {
           lockedAt: new Date(),
@@ -97,11 +99,11 @@ export async function authSessionCreate(
   // now we recognize user attempt as legitimate.
   logger.debug('%s: signin request validated', user.username)
   const session = await createUserSession(user, {
-    askedAgent,
-    askedIpAddress
+    askedAgent: asked.agent,
+    askedIpAddress: asked.ipAddress
   })
 
-  analytics.add_member(user, { ip_address: askedIpAddress }).then(() => {
+  analytics.add_member(user, { ip_address: asked.ipAddress }).then(() => {
     analytics.add_activity(EActivity.AccountLoggedIn, user)
   })
 

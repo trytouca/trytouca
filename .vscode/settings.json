@@ -23,6 +23,7 @@
     "dataclass",
     "dorny",
     "doxygen",
+    "FlatBuffers",
     "fullname",
     "gaurav",
     "gcovr",
