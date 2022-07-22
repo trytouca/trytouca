@@ -3,16 +3,29 @@
     <div class="flex select-none items-center">
       <a class="flex h-8 items-center focus:outline-none" [routerLink]="'/'">
         <img
-          class="h-12"
+          class="h-10"
           src="./assets/logo/touca-logo-transparent.svg"
-          alt="Touca Logo" />
-        <h1 class="text-xl font-semibold tracking-tight text-white">Touca</h1>
+          alt="Touca Logo"
+          loading="lazy"
+          width="40px"
+          height="40px" />
+        <h1
+          class="sr-only text-2xl font-bold leading-10 tracking-tight text-white">
+          touca
+          <span class="text-sky-300">.io</span>
+        </h1>
+        <img
+          class="no-sr-only"
+          src="./assets/logo/touca_logo_io_text_white.svg"
+          alt="Touca.io"
+          loading="lazy"
+          width="90px" />
       </a>
     </div>
     <nav class="flex items-center space-x-8">
       <div>
         <a
-          class="rounded-6 rounded-lg bg-transparent px-4 py-2 text-sm font-semibold leading-6 text-white hover:bg-sky-100 hover:bg-opacity-25"
+          class="rounded-6 rounded-lg bg-transparent px-4 py-2 text-md font-semibold leading-6 text-white hover:bg-sky-100 hover:bg-opacity-25"
           href="https://touca.io/docs"
           target="_blank">
           Docs
@@ -24,7 +37,7 @@
           id="wsl-user-dropdown"
           aria-haspopup="true"
           aria-expanded="false">
-          <p class="flex items-center font-medium text-white">
+          <p class="flex items-center font-semibold text-white text-md">
             {{ currentUser?.fullname }}
             <ng-icon class="opacity-50" name="feather-chevron-down"></ng-icon>
           </p>

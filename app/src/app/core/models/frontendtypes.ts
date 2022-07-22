@@ -7,6 +7,7 @@ export type PromotionItem = Promotion & {
 };
 
 export enum ELocalStorageKey {
+  ActivationKey = 'activationKey',
   Callback = 'callback',
   LastVisitedTeam = 'lvt',
   TokenExpiresAt = 'expiresAt'
@@ -64,3 +65,5 @@ export type FrontendCommentAction = {
   actionType: FrontendCommentActionType;
   commentId?: string;
 };
+
+export type InstallPageTabType = 'userInfo' | 'telemetry' | 'thanks';
