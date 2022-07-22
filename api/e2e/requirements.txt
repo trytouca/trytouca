@@ -1,6 +1,7 @@
 loguru
 minio
-pylint
+black
 pymongo
 pytest
 requests
+python-dotenv

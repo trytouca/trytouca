@@ -1,14 +1,12 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+from time import sleep
 import requests
 import tempfile
 from client_mongo import MongoClient
 from loguru import logger
-from pathlib import Path
-from utilities import User, pathify
+from utilities import User, config, build_path
 
-TOUCA_API_ROOT = "http://localhost:8081"
-TOUCA_RESULTS_ARCHIVE = pathify("../samples")
 
 class HttpClient:
     def __init__(self, root_url: str):
@@ -48,7 +46,7 @@ class HttpClient:
 
 class ApiClient:
     def __init__(self, user=None):
-        self.client = HttpClient(TOUCA_API_ROOT)
+        self.client = HttpClient(config.get("TOUCA_API_ROOT"))
         self.user = user
 
     def __enter__(self):
@@ -67,25 +65,36 @@ class ApiClient:
         if response.status_code != 204:
             raise RuntimeError(f"failed to sign out for user {self.user}")
 
-    def is_up(self) -> bool:
+    def _is_up_check(self) -> bool:
         """
-        Checks if platform is running and is properly configured.
+        Checks if server is running and is properly configured.
         """
         try:
             response = self.client.get_json("platform")
             if response.status_code != 200:
-                logger.warning("platform is down")
+                logger.warning("server is down")
                 return False
             if not response.json().get("ready"):
-                logger.warning("platform is not ready")
+                logger.warning("server is not ready")
                 return False
             if response.json().get("mail"):
-                logger.warning("platform has mail transport")
+                logger.warning("server has mail transport")
                 return False
             return True
         except requests.ConnectionError:
-            logger.warning("failed to perform handshake with platform")
+            logger.debug("server appears to be down")
             return False
+
+    def is_up(self) -> bool:
+        max_attempts = 15
+        for attempt in range(1, max_attempts + 1):
+            if self._is_up_check():
+                return True
+            logger.warning(
+                f"failed to perform handshake with server (attempt {attempt}/{max_attempts})"
+            )
+            sleep(1)
+        return False
 
     def expect_status(
         self, response: requests.Response, code: int, message: str
@@ -273,7 +282,9 @@ class ApiClient:
         slugs = [team_slug, suite_slug, batch_slug]
         with tempfile.TemporaryDirectory() as tmpdir:
             logger.debug("created tmp directory: {}", tmpdir)
-        binary = Path(TOUCA_RESULTS_ARCHIVE).joinpath(f"{batch_slug}.bin")
+        binary = build_path(config.get("TOUCA_RESULTS_ARCHIVE")).joinpath(
+            f"{batch_slug}.bin"
+        )
         response = self.client.post_binary(binary)
         self.expect_status(response, 204, f"submit {binary}")
         logger.success("{} submitted {}", self.user, "/".join(slugs[0:3]))

@@ -1,8 +1,12 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import os
 from dataclasses import dataclass
 from typing import List
+from pathlib import Path
+from dotenv import dotenv_values
+
+config = {**dotenv_values(Path(__file__).resolve().with_name("e2e.env")), **os.environ}
 
 
 @dataclass
@@ -39,6 +43,5 @@ class Team:
     suites: List[str]
 
 
-def pathify(rel_path: str) -> str:
-    start = os.path.dirname(__file__)
-    return os.path.abspath(os.path.join(start, rel_path))
+def build_path(rel_path: str) -> str:
+    return Path(__file__).resolve().parent.joinpath(rel_path)
