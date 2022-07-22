@@ -1,5 +1,6 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+from time import sleep
 import requests
 import tempfile
 from client_mongo import MongoClient
@@ -65,25 +66,35 @@ class ApiClient:
         if response.status_code != 204:
             raise RuntimeError(f"failed to sign out for user {self.user}")
 
-    def is_up(self) -> bool:
+    def _is_up_check(self) -> bool:
         """
-        Checks if platform is running and is properly configured.
+        Checks if server is running and is properly configured.
         """
         try:
             response = self.client.get_json("platform")
             if response.status_code != 200:
-                logger.warning("platform is down")
+                logger.warning("server is down")
                 return False
             if not response.json().get("ready"):
-                logger.warning("platform is not ready")
+                logger.warning("server is not ready")
                 return False
             if response.json().get("mail"):
-                logger.warning("platform has mail transport")
+                logger.warning("server has mail transport")
                 return False
             return True
         except requests.ConnectionError:
-            logger.warning("failed to perform handshake with platform")
+            logger.debug("server appears to be down")
             return False
+
+    def is_up(self) -> bool:
+        for attempt in range(1, 16):
+            if self._is_up_check():
+                return True
+            logger.warning(
+                f"failed to perform handshake with server (attempt {attempt}/{10})"
+            )
+            sleep(1)
+        return False
 
     def expect_status(
         self, response: requests.Response, code: int, message: str

@@ -47,10 +47,12 @@ class DatabaseCounters:
         logger.debug("{}: {}", msg, self.get_counters())
 
 
-def setup_databases(minio_client: MinioClient, mongo_client: MongoClient):
+def setup_databases():
     """
     Resets databases and test result directories.
     """
+    minio_client = MinioClient()
+    mongo_client = MongoClient()
     counters = DatabaseCounters(minio_client, mongo_client)
     counters.log_counters("before database cleanup")
     for result in mongo_client.list_results():
@@ -91,9 +93,7 @@ def main():
         logger.error("platform is not ready for this test")
         sys.exit(1)
 
-    minio_client = MinioClient()
-    mongo_client = MongoClient()
-    setup_databases(minio_client, mongo_client)
+    setup_databases()
 
     for action in Playbook.reader(config.get("TOUCA_PLAYBOOK_FILE")):
         action()
