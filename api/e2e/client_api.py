@@ -5,10 +5,8 @@ import tempfile
 from client_mongo import MongoClient
 from loguru import logger
 from pathlib import Path
-from utilities import User, pathify
+from utilities import User, config
 
-TOUCA_API_ROOT = "http://localhost:8081"
-TOUCA_RESULTS_ARCHIVE = pathify("../samples")
 
 class HttpClient:
     def __init__(self, root_url: str):
@@ -48,7 +46,7 @@ class HttpClient:
 
 class ApiClient:
     def __init__(self, user=None):
-        self.client = HttpClient(TOUCA_API_ROOT)
+        self.client = HttpClient(config.get("TOUCA_API_ROOT"))
         self.user = user
 
     def __enter__(self):
@@ -273,7 +271,7 @@ class ApiClient:
         slugs = [team_slug, suite_slug, batch_slug]
         with tempfile.TemporaryDirectory() as tmpdir:
             logger.debug("created tmp directory: {}", tmpdir)
-        binary = Path(TOUCA_RESULTS_ARCHIVE).joinpath(f"{batch_slug}.bin")
+        binary = Path(config.get("TOUCA_RESULTS_ARCHIVE")).joinpath(f"{batch_slug}.bin")
         response = self.client.post_binary(binary)
         self.expect_status(response, 204, f"submit {binary}")
         logger.success("{} submitted {}", self.user, "/".join(slugs[0:3]))

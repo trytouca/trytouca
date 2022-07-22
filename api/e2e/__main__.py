@@ -7,17 +7,13 @@ from minio import Minio
 from playbook import Playbook
 from client_api import ApiClient
 from client_mongo import MongoClient
-from utilities import pathify
-
-TOUCA_MINIO_URL = "localhost:9000"
-TOUCA_USERS_FILE = pathify("users.txt")
-TOUCA_PLAYBOOK_FILE = pathify("playbook.csv")
+from utilities import config
 
 
 class MinioClient:
     def __init__(self):
         self.client = Minio(
-            TOUCA_MINIO_URL,
+            config.get("TOUCA_MINIO_URL"),
             access_key="toucauser",
             secret_key="toucapass",
             secure=False,
@@ -51,28 +47,22 @@ class DatabaseCounters:
         logger.debug("{}: {}", msg, self.get_counters())
 
 
-def setup_databases():
+def setup_databases(minio_client: MinioClient, mongo_client: MongoClient):
     """
     Resets databases and test result directories.
     """
-
-    minio_client = MinioClient()
-    mongo_client = MongoClient()
     counters = DatabaseCounters(minio_client, mongo_client)
     counters.log_counters("before database cleanup")
-
     for result in mongo_client.list_results():
         mongo_client.remove_result(result.get("message_id"))
     counters.log_counters("after database cleanup")
-
     minio_client.clear_buckets()
     mongo_client.clear_collections()
     counters.log_counters("after database hard reset")
-
     logger.success("setup databases")
 
 
-def test_main():
+def main():
     """
     Integration Test for the Touca Server API service. This test requires a
     running platform server, minio, mongo, and redis databases.
@@ -101,11 +91,13 @@ def test_main():
         logger.error("platform is not ready for this test")
         sys.exit(1)
 
-    setup_databases()
+    minio_client = MinioClient()
+    mongo_client = MongoClient()
+    setup_databases(minio_client, mongo_client)
 
-    for action in Playbook.reader(TOUCA_PLAYBOOK_FILE):
+    for action in Playbook.reader(config.get("TOUCA_PLAYBOOK_FILE")):
         action()
 
 
 if __name__ == "__main__":
-    test_main()
+    main()

@@ -22,6 +22,7 @@
     "conanfile",
     "dataclass",
     "dorny",
+    "dotenv",
     "doxygen",
     "fullname",
     "gaurav",

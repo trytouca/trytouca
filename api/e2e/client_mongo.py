@@ -3,14 +3,13 @@
 import bson
 import pymongo
 from loguru import logger
-from utilities import User
-
-TOUCA_MONGO_URL = "mongodb://toucauser:toucapass@localhost:27017/"
+from utilities import User, config
 
 
 class MongoClient:
     def __init__(self):
-        self.client = pymongo.MongoClient(TOUCA_MONGO_URL).get_database("touca")
+        url = config.get("TOUCA_MONGO_URL")
+        self.client = pymongo.MongoClient(url).get_database("touca")
 
     def count_docs(self) -> dict:
         counter = {}
@@ -85,11 +84,13 @@ class MongoClient:
         return result.get("resetKey")
 
     def install_server(self, user: User) -> None:
-        self.client.get_collection('meta').insert_one({
-            "contact": {
-                "company": "Touca, Inc.",
-                "email": user.email,
-                "name": user.fullname
-            },
-            "telemetry": False
-        })
+        self.client.get_collection("meta").insert_one(
+            {
+                "contact": {
+                    "company": "Touca, Inc.",
+                    "email": user.email,
+                    "name": user.fullname,
+                },
+                "telemetry": False,
+            }
+        )
