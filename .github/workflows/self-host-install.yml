@@ -19,18 +19,18 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: 3.9
+          cache: "pip"
       - name: setup containers
         run: |
           mkdir -p logs/{backend,cmp} data/{minio,mongo,redis}
           docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca up -d
-          sleep 15
+          pip install -r api/e2e/requirements.txt
           docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca logs touca_api
       - name: run integration tests
         run: |
-          pip install -r api/e2e/requirements.txt
           python api/e2e
       - name: show container logs
         if: failure()
