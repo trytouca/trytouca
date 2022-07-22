@@ -7,7 +7,7 @@ from minio import Minio
 from playbook import Playbook
 from client_api import ApiClient
 from client_mongo import MongoClient
-from utilities import config
+from utilities import config, build_path
 
 
 class MinioClient:
@@ -80,7 +80,7 @@ def main():
         format="<green>{time:HH:mm:ss!UTC}</green> | <cyan>{level: <7}</cyan> | <lvl>{message}</lvl>",
     )
     logger.add(
-        "logs/touca_{time:YYMMDD!UTC}.log",
+        build_path("logs/touca_{time:YYMMDD!UTC}.log"),
         level="DEBUG",
         rotation="1 day",
         compression="zip",
@@ -95,7 +95,7 @@ def main():
 
     setup_databases()
 
-    for action in Playbook.reader(config.get("TOUCA_PLAYBOOK_FILE")):
+    for action in Playbook.reader(build_path(config.get("TOUCA_PLAYBOOK_FILE"))):
         action()
 
 

@@ -5,8 +5,7 @@ import requests
 import tempfile
 from client_mongo import MongoClient
 from loguru import logger
-from pathlib import Path
-from utilities import User, config
+from utilities import User, config, build_path
 
 
 class HttpClient:
@@ -87,11 +86,12 @@ class ApiClient:
             return False
 
     def is_up(self) -> bool:
-        for attempt in range(1, 16):
+        max_attempts = 15
+        for attempt in range(1, max_attempts + 1):
             if self._is_up_check():
                 return True
             logger.warning(
-                f"failed to perform handshake with server (attempt {attempt}/{10})"
+                f"failed to perform handshake with server (attempt {attempt}/{max_attempts})"
             )
             sleep(1)
         return False
@@ -282,7 +282,9 @@ class ApiClient:
         slugs = [team_slug, suite_slug, batch_slug]
         with tempfile.TemporaryDirectory() as tmpdir:
             logger.debug("created tmp directory: {}", tmpdir)
-        binary = Path(config.get("TOUCA_RESULTS_ARCHIVE")).joinpath(f"{batch_slug}.bin")
+        binary = build_path(config.get("TOUCA_RESULTS_ARCHIVE")).joinpath(
+            f"{batch_slug}.bin"
+        )
         response = self.client.post_binary(binary)
         self.expect_status(response, 204, f"submit {binary}")
         logger.success("{} submitted {}", self.user, "/".join(slugs[0:3]))

@@ -43,5 +43,5 @@ class Team:
     suites: List[str]
 
 
-def pathify(rel_path: str) -> str:
+def build_path(rel_path: str) -> str:
     return Path(__file__).resolve().parent.joinpath(rel_path)
