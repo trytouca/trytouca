@@ -5,68 +5,67 @@ import { HiArrowNarrowRight } from 'react-icons/hi';
 
 import { ATFBackedBy, ATFTrustedBy } from './social-proof';
 
-function ATFScreenshot() {
+function ATFButtonDemo() {
   return (
-    <div className="mx-auto hidden h-full w-full select-none items-center p-8 sm:flex sm:p-0 xl:col-span-3">
-      <a
-        href="/images/touca-atf-visual.jpg"
-        target="_blank"
-        rel="noopener noreferrer">
+    <Link href="/demo">
+      <a className="text-md flex items-center shadow-[0_0_2px_#7dd3fc] hover:shadow-[0_0_3px_#7dd3fc] box-shadow group space-x-2 rounded-xl bg-opacity-50 p-3 font-medium text-gray-300 duration-150 ease-in-out hover:text-white focus:outline-none">
+        <span>Schedule a Demo</span>
+      </a>
+    </Link>
+  );
+}
+
+function ATFButtonStart() {
+  return (
+    <a href="https://app.touca.io" target="_blank" rel="noopener noreferrer">
+      <button
+        className="box-shadow text-lg group space-x-2 rounded-xl bg-dark-blue-700 bg-opacity-25 p-3 font-medium text-white shadow-[0_0_5px_#7dd3fc] duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
+        type="button"
+        role="button">
+        <span>Start for Free</span>
+        <HiArrowNarrowRight className="sm:inline hidden h-6 opacity-50 group-hover:opacity-100" />
+      </button>
+    </a>
+  );
+}
+
+function ATFTagline() {
+  return (
+    <h2 className="max-w-3xl lg:max-w-4xl sm:text-center text-white font-bold text-3xl md:text-4xl lg:text-5xl">
+      The easiest way to make sure your software{' '}
+      <span className="font-bold text-yellow-500">keeps</span> working as you
+      expect
+    </h2>
+  );
+}
+
+export function ATFScreenshot() {
+  return (
+    <section className="bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
+      <div className="hidden sm:block max-w-2xl md:max-w-4xl lg:max-w-5xl pt-8 pb-16 px-8 mx-auto w-full">
         <img
-          className="rounded-xl shadow-md"
+          className="sm:rounded-xl"
           alt="Touca Continuous Regression Testing"
           src="/images/touca-atf-visual.jpg"
           loading="lazy"
         />
-      </a>
-    </div>
+      </div>
+    </section>
   );
 }
 
-export default function AboveTheFold() {
+export function AboveTheFold() {
   return (
     <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
-      <div className="min-h-[calc(100vh-5rem)] grid lg:items-center">
-        <div className="container mx-auto flex items-center">
-          <div className="grid gap-8 p-8 lg:items-center xl:grid-cols-5">
-            <div className="mx-auto flex h-full flex-col justify-around space-y-12 py-12 lg:py-4 xl:col-span-2 xl:py-0">
-              <div className="space-y-4">
-                <h2 className="wsl-text-gradient max-w-xl text-3xl font-bold text-white sm:text-4xl xl:text-3xl">
-                  Open source continuous regression testing for engineering
-                  teams
-                </h2>
-                <p className="max-w-xl text-lg text-white sm:text-2xl">
-                  Get feedback when you write code that could break your
-                  software.
-                </p>
-              </div>
-              <div className="items-center space-x-4 text-center md:flex md:text-left">
-                <a
-                  className="text-lg"
-                  href="https://app.touca.io"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  <button
-                    className="box-shadow group space-x-2 rounded-xl bg-dark-blue-700 bg-opacity-25 p-3 font-medium text-white shadow-[0_0_5px_#7dd3fc] duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
-                    type="button"
-                    role="button">
-                    <span>Get Started for Free</span>
-                    <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
-                  </button>
-                </a>
-                <Link href="/demo">
-                  <a className="text-md group space-x-2 rounded-xl bg-opacity-50 p-3 font-medium text-gray-300 duration-150 ease-in-out hover:text-white focus:outline-none">
-                    <span>or Get a Demo</span>
-                  </a>
-                </Link>
-              </div>
-              <div className="sm:flex sm:justify-between sm:px-4 space-y-8 sm:space-y-0">
-                <ATFTrustedBy />
-                <ATFBackedBy />
-              </div>
-            </div>
-            <ATFScreenshot />
-          </div>
+      <div className="grid place-content-center min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-5rem-15vh)] space-y-16 px-4 sm:px-8">
+        <ATFTagline />
+        <div className="flex justify-center space-x-4">
+          <ATFButtonStart />
+          <ATFButtonDemo />
+        </div>
+        <div className="max-w-md mx-auto w-full flex justify-between">
+          <ATFTrustedBy />
+          <ATFBackedBy />
         </div>
       </div>
     </section>
