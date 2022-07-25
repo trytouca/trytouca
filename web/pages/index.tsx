@@ -8,12 +8,8 @@ import {
 } from 'next-seo';
 import { HiOutlineLightBulb, HiOutlineUserGroup } from 'react-icons/hi';
 
-import {
-  Announcement,
-  AnnouncementInput,
-  BreakingNews
-} from '@/components/announcement';
-import AboveTheFold from '@/components/atf';
+import { Announcement, AnnouncementInput } from '@/components/announcement';
+import { AboveTheFold, ATFScreenshot } from '@/components/atf';
 import FeatureAutomate from '@/components/feature-automate';
 import FeatureCollaborate from '@/components/feature-collaborate';
 import FeatureCompare from '@/components/feature-compare';
@@ -146,6 +142,7 @@ export default function Home() {
       />
       <Header />
       <AboveTheFold />
+      <ATFScreenshot />
       <Announcement input={content.announcement} />
       <OneLinerPitch />
       <FeatureTestimonials input={content.testimonials} />
