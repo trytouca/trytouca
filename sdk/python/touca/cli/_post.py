@@ -10,7 +10,10 @@ from touca.cli._common import Operation
 
 
 def _post(src_dir: Path, transport: Transport):
-    src_dir = src_dir.with_name(src_dir.name + "-merged")
+    src_dir = src_dir.with_name(src_dir.name)
+    src_dir = (
+        src_dir if src_dir.exists() else src_dir.with_name(src_dir.name + "-merged")
+    )
     if not src_dir.exists():
         logger.error(f"expected directory {src_dir} to exist")
         return False
@@ -32,11 +35,17 @@ def _post(src_dir: Path, transport: Transport):
     logger.info(f"posted {src_dir}")
     return True
 
+
 def dry_run_post(src_dir: Path, batchNames: Path):
     logger.info(f"dry run is enabled")
     for batchName in batchNames:
         batchDir = src_dir.joinpath(batchName)
-        batchDir = batchDir.with_name(batchDir.name + "-merged")
+        batchDir = batchDir.with_name(batchDir.name)
+        batchDir = (
+            batchDir
+            if batchDir.exists()
+            else batchDir.with_name(batchDir.name + "-merged")
+        )
         if not batchDir.exists():
             logger.error(f"expected directory {batchDir} to exist")
             return False
@@ -62,14 +71,15 @@ class Post(Operation):
         parser.add_argument("--api-key", help="Touca API Key", dest="api-key")
         parser.add_argument("--api-url", help="Touca API URL", dest="api-url")
         parser.add_argument(
-        "--dry-run", 
-        action="store_true", 
-        help="See what files would be posted",
-        dest="dry-run" 
-    )
+            "--dry-run",
+            action="store_true",
+            help="See what files would be posted",
+            dest="dry-run",
+        )
 
     def run(self):
         from touca._options import update_options
+
         options = {
             k: self.__options.get(k)
             for k in ["api-key", "api-url", "dry-run"]
@@ -94,8 +104,6 @@ class Post(Operation):
         for batch_dir in src_dir.glob("*"):
             if not batch_dir.is_dir():
                 continue
-            if not batch_dir.name.endswith("-merged"):
-                continue
             batchNames.append(batch_dir.name[:-7])
 
         if not batchNames:
@@ -111,7 +119,7 @@ class Post(Operation):
         except ValueError as err:
             print(err, file=sys.stderr)
             return False
-        
+
         if dry_run:
             return dry_run_post(src_dir, batchNames)
 

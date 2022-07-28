@@ -443,7 +443,7 @@ def run(**kwargs):
     if not hasattr(Workflow, "_workflows") or not Workflow._workflows:
         raise _ToucaError(_ToucaErrorCode.MissingWorkflow)
     try:
-        kwargs = {k.replace('_', '-'): v for k, v in kwargs.items()}
+        kwargs = {k.replace("_", "-"): v for k, v in kwargs.items()}
         if "revision" in kwargs:
             kwargs["version"] = kwargs.pop("revision")
         cli_options = _parse_cli_options(sys.argv[1:])
