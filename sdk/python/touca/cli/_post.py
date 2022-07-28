@@ -104,7 +104,11 @@ class Post(Operation):
         for batch_dir in src_dir.glob("*"):
             if not batch_dir.is_dir():
                 continue
-            batchNames.append(batch_dir.name[:-7])
+            batchNames.append(
+                batch_dir.name[:-7]
+                if batch_dir.name.endswith("-merged")
+                else batch_dir.name
+            )
 
         if not batchNames:
             logger.info(f"found no valid result directory to post")
