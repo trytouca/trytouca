@@ -181,6 +181,7 @@ feedback, that's the best place to be.
 <a href="https://github.com/mapron"><img src="https://avatars.githubusercontent.com/u/7624327?v=4" title="mapron" width="50" height="50"></a>
 <a href="https://github.com/duncanspumpkin"><img src="https://avatars.githubusercontent.com/u/1277401?v=4" title="duncanspumpkin" width="50" height="50"></a>
 <a href="https://github.com/committomaster"><img src="https://avatars.githubusercontent.com/u/20593344?v=4" title="committomaster" width="50" height="50"></a>
+<a href="https://github.com/mmdbalkhi"><img src="https://avatars.githubusercontent.com/u/65954744?v=4" title="mmdbalkhi" width="50" height="50"></a>
 
 ## Sponsors
 
