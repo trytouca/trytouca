@@ -68,8 +68,12 @@ class Post(Operation):
     @classmethod
     def parser(self, parser: ArgumentParser):
         parser.add_argument("src", help="path to directory with binary files")
-        parser.add_argument("--api-key", help="Touca API Key", dest="api-key")
-        parser.add_argument("--api-url", help="Touca API URL", dest="api-url")
+        parser.add_argument(
+            "--api-key", help="Touca API Key", dest="api-key", required=False
+        )
+        parser.add_argument(
+            "--api-url", help="Touca API URL", dest="api-url", required=False
+        )
         parser.add_argument(
             "--dry-run",
             action="store_true",
@@ -86,6 +90,7 @@ class Post(Operation):
             if self.__options.get(k) is not None
         }
         options.update({"suite": "", "team": "", "version": ""})
+
         try:
             update_options(options, options)
         except ValueError as err:
