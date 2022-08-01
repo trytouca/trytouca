@@ -1,0 +1,59 @@
+<form
+  class="wsl-form p-4"
+  [formGroup]="installForm"
+  (ngSubmit)="submitContactInfo(installForm.value)"
+  novalidate>
+  <div>
+    <label class="wsl-input-label" for="wsl-fname">Full Name</label>
+    <input
+      class="wsl-input-field"
+      type="text"
+      id="wsl-fname"
+      name="fname"
+      formControlName="fname"
+      aria-describedby="wsl-fname-help"
+      required
+      autocomplete="name"
+      data-lpignore="true" />
+    <small
+      id="wsl-fname-help"
+      [ngClass]="hints.get('fname').type"
+      [innerHTML]="hints.get('fname').text"></small>
+  </div>
+  <div>
+    <label class="wsl-input-label" for="wsl-email">Email Address</label>
+    <input
+      class="wsl-input-field"
+      type="email"
+      id="wsl-email"
+      name="email"
+      formControlName="email"
+      aria-describedby="wsl-email-help"
+      required
+      autocomplete="email" />
+    <small
+      id="wsl-uname-help"
+      [ngClass]="hints.get('email').type"
+      [innerHTML]="hints.get('email').text"></small>
+  </div>
+  <div>
+    <label class="wsl-input-label" for="wsl-company">
+      Company Name
+      <span class="text-sm font-thin text-gray-400">(optional)</span>
+    </label>
+    <input
+      class="wsl-input-field"
+      type="text"
+      id="wsl-company"
+      name="company"
+      formControlName="company"
+      aria-describedby="wsl-company-help"
+      autocomplete="new-password" />
+    <small id="wsl-company-help"></small>
+  </div>
+  <div class="wsl-form-footer">
+    <div class="wsl-form-submit flex justify-end">
+      <button class="wsl-btn-lg wsl-btn-primary" type="submit">Continue</button>
+    </div>
+  </div>
+</form>

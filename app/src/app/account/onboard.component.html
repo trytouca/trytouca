@@ -1,21 +1,7 @@
-<header class="h-16 bg-gray-50 dark:bg-gray-900">
-  <div class="container mx-auto flex h-16 justify-between px-4">
-    <div class="flex select-none items-center">
-      <img
-        class="h-12"
-        src="./assets/logo/touca-logo-transparent.svg"
-        alt="Touca Logo" />
-      <h1
-        class="text-xl font-semibold tracking-tight text-sky-600 dark:text-white">
-        Touca
-      </h1>
-    </div>
-  </div>
-</header>
-<div
-  class="wsl-min-h-screen-1 grid grid-cols-1 bg-gray-50 dark:bg-gray-900 sm:place-content-center sm:p-4">
+<app-header-outside></app-header-outside>
+<main class="wsl-min-h-screen-1 grid">
   <div
-    class="col-span-1 mx-auto w-full max-w-lg space-y-2 rounded-lg p-4 dark:bg-gray-800">
+    class="max-w-screen-sm w-full self-center bg-white mx-auto p-8 rounded-md shadow-md dark:bg-gray-800 space-y-4">
     <h2
       class="text-center text-2xl font-semibold text-black dark:text-gray-300">
       Welcome Aboard!
@@ -23,7 +9,7 @@
     <p class="text-center text-sm text-black dark:text-gray-300">
       Before we get started, we'd like to know a little more about you.
     </p>
-    <hr class="border-2 border-sky-100 dark:border-gray-700" />
+    <hr class="border-2 border-gray-100 dark:border-gray-700" />
     <form
       class="wsl-form flex-grow px-2 py-4"
       [formGroup]="onboardForm"
@@ -88,4 +74,4 @@
       </div>
     </form>
   </div>
-</div>
+</main>

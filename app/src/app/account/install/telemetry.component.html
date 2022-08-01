@@ -1,0 +1,17 @@
+<div class="p-4">
+  <app-settings-checkbox
+    [data]="preference"
+    (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
+  <div class="wsl-form-footer">
+    <div class="wsl-form-submit flex justify-between">
+      <button
+        class="wsl-btn-lg wsl-btn-muted"
+        (click)="switchTab.emit({ next: 'userInfo' })">
+        Previous
+      </button>
+      <button class="wsl-btn-lg wsl-btn-primary" (click)="submitTelemetry()">
+        Continue
+      </button>
+    </div>
+  </div>
+</div>
