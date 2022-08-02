@@ -9,7 +9,7 @@ from touca._transport import Transport
 from touca.cli._common import Operation
 
 
-def _post(src_dir: Path, transport: Transport):
+def _post(src_dir: Path, transport: Transport = None, dry_run=False):
     src_dir = src_dir.with_name(src_dir.name)
     src_dir = (
         src_dir if src_dir.exists() else src_dir.with_name(src_dir.name + "-merged")
@@ -21,9 +21,12 @@ def _post(src_dir: Path, transport: Transport):
     if not binaries:
         logger.warning(f"{src_dir} has no result files")
         return False
-    logger.debug(f"posting files in {src_dir}")
+    logger.debug(f"posting {src_dir}")
     for binary in binaries:
-        logger.debug(f"posting {binary}")
+        if dry_run:
+            logger.debug(f"would post {binary.relative_to(src_dir)}")
+            continue
+        logger.debug(f"posting {binary.relative_to(src_dir)}")
         content = binary.read_bytes()
         transport._send_request(
             method="POST",
@@ -31,30 +34,7 @@ def _post(src_dir: Path, transport: Transport):
             body=content,
             content_type="application/octet-stream",
         )
-        logger.debug(f"posted {binary}")
     logger.info(f"posted {src_dir}")
-    return True
-
-
-def dry_run_post(src_dir: Path, batchNames: Path):
-    logger.info(f"dry run is enabled")
-    for batchName in batchNames:
-        batchDir = src_dir.joinpath(batchName)
-        batchDir = batchDir.with_name(batchDir.name)
-        batchDir = (
-            batchDir
-            if batchDir.exists()
-            else batchDir.with_name(batchDir.name + "-merged")
-        )
-        if not batchDir.exists():
-            logger.error(f"expected directory {batchDir} to exist")
-            return False
-        binaries = list(batchDir.rglob("**/*.bin"))
-        if not binaries:
-            logger.warning(f"{batchDir} has no result files")
-            return False
-        for binary in binaries:
-            logger.debug(f"{binary}")
     return True
 
 
@@ -68,17 +48,22 @@ class Post(Operation):
     @classmethod
     def parser(self, parser: ArgumentParser):
         parser.add_argument("src", help="path to directory with binary files")
-        parser.add_argument(
-            "--api-key", help="Touca API Key", dest="api-key", required=False
+        group_credentials = parser.add_argument_group(
+            "Credentials",
+            'Server API Key and URL. Not required when specified in the active configuration profile. Ignored when "--dry-run" is specified.',
         )
-        parser.add_argument(
-            "--api-url", help="Touca API URL", dest="api-url", required=False
+        group_credentials.add_argument(
+            "--api-key", dest="api-key", help="Touca API Key", required=False
         )
-        parser.add_argument(
+        group_credentials.add_argument(
+            "--api-url", dest="api-url", help="Touca API URL", required=False
+        )
+        group_misc = parser.add_argument_group("Miscellaneous")
+        group_misc.add_argument(
             "--dry-run",
             action="store_true",
-            help="See what files would be posted",
             dest="dry-run",
+            help="Check what your command would do when run without this option",
         )
 
     def run(self):
@@ -101,9 +86,6 @@ class Post(Operation):
             print(err, file=sys.stderr)
             return False
 
-        api_key = options.get("api-key")
-        api_url = options.get("api-url")
-        dry_run = options.get("dry-run")
         src_dir = Path(self.__options.get("src")).expanduser().resolve()
         if not src_dir.exists():
             logger.error(f"directory {src_dir} does not exist")
@@ -126,23 +108,23 @@ class Post(Operation):
         # sort list of versions lexicographically
         batchNames.sort(key=LooseVersion)
 
-        transport = Transport({"api-key": api_key, "api-url": api_url})
+        transport = Transport(
+            {"api-key": options.get("api-key"), "api-url": options.get("api-url")}
+        )
         try:
             transport.authenticate()
         except ValueError as err:
             print(err, file=sys.stderr)
             return False
 
-        if dry_run:
-            return dry_run_post(src_dir, batchNames)
-
-        logger.info(f"posting batches one by one")
+        logger.info(f"preparing to submit {len(batchNames)} versions")
         for batchName in batchNames:
             batchDir = src_dir.joinpath(batchName)
-            logger.info(f"posting {batchDir}")
-            if not _post(batchDir, transport):
+            if options.get("dry-run"):
+                _post(batchDir, dry_run=True)
+            elif not _post(batchDir, transport):
                 logger.error(f"failed to post {batchDir}")
                 return False
-        logger.info("posted all result directories")
+        logger.info("all test results submitted successfully")
 
         return True
