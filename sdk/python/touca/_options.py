@@ -1,7 +1,7 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-from pathlib import Path
 from configparser import ConfigParser
+from pathlib import Path
 
 
 def _apply_legacy_config_file(incoming: dict) -> None:
@@ -69,8 +69,9 @@ def _reformat_parameters(existing: dict) -> None:
 
     api_url = existing.get("api-url")
     if not api_url:
-        # existing["api-url"] = "https://api.touca.io"
+        existing["api-url"] = "https://api.touca.io"
         return
+
     url = urlparse(api_url)
     urlpath = [k.strip("/") for k in url.path.split("/@/")]
     existing["api-url"] = f"{url.scheme}://{url.netloc}/{urlpath[0]}".rstrip("/")
@@ -86,7 +87,7 @@ def _reformat_parameters(existing: dict) -> None:
 def _validate_options(existing: dict):
     expected_keys = ["team", "suite", "version"]
     has_handshake = not existing.get("offline")
-    if has_handshake and any(x in existing for x in ["api-key", "api-url"]):
+    if has_handshake:
         expected_keys.extend(["api-key", "api-url"])
     key_status = {k: k in existing for k in expected_keys}
     if any(key_status.values()) and not all(key_status.values()):

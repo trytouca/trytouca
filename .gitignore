@@ -31,3 +31,4 @@ sdk/python/touca.egg-info/
 web/.next/
 web/public/workbox-*.js*
 web/public/sw.js*
+sdk/python/**/__pycache__/
