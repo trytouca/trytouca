@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.5.6
+
+- CLI sub-command `post` should respect config profile (#222)
+
 ## v1.5.4
 
 Fixes:
