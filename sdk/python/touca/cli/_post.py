@@ -82,14 +82,18 @@ class Post(Operation):
         )
 
     def run(self):
-        from touca._options import update_options
+        from touca._options import _apply_config_file, update_options
 
         options = {
             k: self.__options.get(k)
             for k in ["api-key", "api-url", "dry-run"]
             if self.__options.get(k) is not None
         }
-        options.update({"suite": "", "team": "", "version": ""})
+        options.update({"suite": "", "version": ""})
+
+        _apply_config_file(options)
+        if "team" in options and "api-url" not in options:
+            options["api-url"] = "https://api.touca.io"
 
         try:
             update_options(options, options)
