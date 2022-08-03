@@ -55,11 +55,16 @@ export async function clientSessionCreate(
 
   // edge case:
   // if user has an active unexpired session with matching metadata
-  // provide the same token that we had provided before.
+  // provide the same token that we had provided before. We use a buffer
+  // here to ensure that the time remaining for the token to be expired is long enough
+  // for the test to finish.
+
+  const buffer = new Date()
+  buffer.setHours(buffer.getHours() + (config.auth.jwtLifetimeClient * 24) / 4)
 
   const prevSession = await SessionModel.findOne({
     agent: askedAgent,
-    expiresAt: { $gt: new Date() },
+    expiresAt: { $gt: buffer },
     ipAddr: askedIpAddress,
     userId: user._id
   })
