@@ -1,5 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { Message, Messages } from '@touca/fbs-schema'
 import { NextFunction, Request, Response } from 'express'
 import { ByteBuffer } from 'flatbuffers'
 import { minBy } from 'lodash'
@@ -15,7 +16,6 @@ import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
-import { Message, Messages } from '@/utils/schema'
 import { objectStore } from '@/utils/store'
 import { analytics, EActivity } from '@/utils/tracker'
 
