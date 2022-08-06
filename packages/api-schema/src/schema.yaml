@@ -1701,7 +1701,8 @@ paths:
         - Client
       summary: Create Client Session
       operationId: client_signin
-      description: Authenticate to Touca Server API. Creates a temporary client session.
+      description:
+        Authenticate to Touca Server API. Creates a temporary client session.
       requestBody:
         content:
           application/json:
@@ -2306,7 +2307,8 @@ paths:
       description: Provides health status of the Touca server
       responses:
         '200':
-          description: Indicates whether the platform is ready to accept submissions.
+          description:
+            Indicates whether the platform is ready to accept submissions.
           content:
             application/json:
               schema:
@@ -2640,7 +2642,8 @@ paths:
         required: true
       responses:
         '201':
-          description: Metadata of the suite was updated. Suite is now known by a new slug.
+          description:
+            Metadata of the suite was updated. Suite is now known by a new slug.
           headers:
             Location:
               schema:
@@ -2648,7 +2651,8 @@ paths:
                 format: url
               description: Link to the team with its new slug
         '204':
-          description: Metadata of the suite was updated. Suite slug has not changed.
+          description:
+            Metadata of the suite was updated. Suite slug has not changed.
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -2829,7 +2833,8 @@ paths:
                   type: string
       responses:
         '201':
-          description: Metadata of the team was updated. Team is now known by a new slug.
+          description:
+            Metadata of the team was updated. Team is now known by a new slug.
           headers:
             Location:
               schema:
@@ -2837,7 +2842,8 @@ paths:
                 format: url
               description: Link to the team with its new slug
         '204':
-          description: Metadata of the team was updated. Team slug has not changed.
+          description:
+            Metadata of the team was updated. Team slug has not changed.
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -3054,7 +3060,8 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
-          description: Team Not Found or user did not have a pending join request.
+          description:
+            Team Not Found or user did not have a pending join request.
           content:
             application/json:
               schema:
