@@ -228,7 +228,7 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE }}
       - name: install dependencies
         if: steps.changes.outputs.sdk_cpp == 'true'
-        run: pip install gcovr==5.0
+        run: pip install gcovr
       - name: generate coverage
         if: steps.changes.outputs.sdk_cpp == 'true'
         run: ./build.sh --coverage
