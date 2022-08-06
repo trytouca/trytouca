@@ -38,6 +38,7 @@
     "@hubspot/api-client": "^7.0.1",
     "@sindresorhus/df": "^3.1.1",
     "@touca/api-schema": "workspace:*",
+    "@touca/fbs-schema": "workspace:*",
     "archiver": "^5.3.1",
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.3",
