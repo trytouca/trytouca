@@ -23,10 +23,9 @@ def _post(src_dir: Path, transport: Transport = None, dry_run=False):
         return False
     logger.debug(f"posting {src_dir}")
     for binary in binaries:
-        if dry_run:
-            logger.debug(f"would post {binary.relative_to(src_dir)}")
-            continue
         logger.debug(f"posting {binary.relative_to(src_dir)}")
+        if dry_run:
+            continue
         content = binary.read_bytes()
         transport._send_request(
             method="POST",
@@ -116,6 +115,9 @@ class Post(Operation):
         except ValueError as err:
             print(err, file=sys.stderr)
             return False
+
+        if options.get("dry-run"):
+            logger.warning("running command in dry-run mode")
 
         logger.info(f"preparing to submit {len(batchNames)} versions")
         for batchName in batchNames:
