@@ -1,12 +1,15 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import logging
 import sys
-from pathlib import Path
 from argparse import ArgumentParser
 from distutils.version import LooseVersion
-from loguru import logger
+from pathlib import Path
+
 from touca._transport import Transport
 from touca.cli._common import Operation
+
+logger = logging.getLogger("touca.cli.post")
 
 
 def _post(src_dir: Path, transport: Transport = None, dry_run=False):
@@ -103,28 +106,28 @@ class Post(Operation):
         if not batchNames:
             logger.info(f"found no valid result directory to post")
             return True
+        logger.info(f"preparing to submit {len(batchNames)} versions")
 
         # sort list of versions lexicographically
         batchNames.sort(key=LooseVersion)
 
-        transport = Transport(
-            {"api-key": options.get("api-key"), "api-url": options.get("api-url")}
-        )
+        if options.get("dry-run"):
+            logger.warning("dry-run mode is enabled")
+            for batchName in batchNames:
+                batchDir = src_dir.joinpath(batchName)
+                _post(batchDir, dry_run=True)
+            return True
+
+        transport = Transport({k: options.get(k) for k in ["api-key", "api-url"]})
         try:
             transport.authenticate()
         except ValueError as err:
             print(err, file=sys.stderr)
             return False
 
-        if options.get("dry-run"):
-            logger.warning("running command in dry-run mode")
-
-        logger.info(f"preparing to submit {len(batchNames)} versions")
         for batchName in batchNames:
             batchDir = src_dir.joinpath(batchName)
-            if options.get("dry-run"):
-                _post(batchDir, dry_run=True)
-            elif not _post(batchDir, transport):
+            if not _post(batchDir, transport):
                 logger.error(f"failed to post {batchDir}")
                 return False
         logger.info("all test results submitted successfully")

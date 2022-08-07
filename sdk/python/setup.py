@@ -78,7 +78,6 @@ setup(
         'dataclasses; python_version<"3.7"',
         "colorama>=0.4.4",
         "jsonschema",
-        "loguru>=0.6.0",
         "packaging>=21.3",
         "py7zr>=0.18.5",
         "requests>=2.27.1",
@@ -86,6 +85,7 @@ setup(
     extras_require={
         "dev": [
             "black>=21.6b0",
+            "isort>=5.10.1",
             "pytest>=6.2.4",
             "pytest-cov>=2.12.1",
             "Sphinx>=4.0.2",

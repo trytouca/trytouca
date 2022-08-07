@@ -1,10 +1,13 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import logging
 from argparse import ArgumentParser
 from pathlib import Path
+
 import py7zr
-from loguru import logger
 from touca.cli._common import Operation
+
+logger = logging.getLogger("touca.cli.zip")
 
 
 def _compress(srcDir, outputDir):

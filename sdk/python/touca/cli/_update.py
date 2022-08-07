@@ -1,12 +1,15 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from subprocess import Popen
-from sys import stderr, stdout
-from pathlib import Path
+import logging
 from argparse import ArgumentParser
 from distutils.version import LooseVersion
-from loguru import logger
+from pathlib import Path
+from subprocess import Popen
+from sys import stderr, stdout
+
 from touca.cli._common import Operation
+
+logger = logging.getLogger("touca.cli.update")
 
 
 def _update(cli, srcDir: Path, outDir: Path, teamslug, testsuite):
