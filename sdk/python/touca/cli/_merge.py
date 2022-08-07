@@ -1,10 +1,13 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from sys import stderr, stdout
-from pathlib import Path
+import logging
 from argparse import ArgumentParser
-from loguru import logger
+from pathlib import Path
+from sys import stderr, stdout
+
 from touca.cli._common import Operation
+
+logger = logging.getLogger("touca.cli.merge")
 
 
 def _merge(touca_cli: Path, dir_src: Path, dir_dst: Path):

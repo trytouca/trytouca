@@ -1,6 +1,7 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
+import logging
 import os
 import shutil
 import subprocess
@@ -9,8 +10,9 @@ from argparse import ArgumentParser, ArgumentTypeError
 
 import requests
 from jsonschema import Draft3Validator
-from loguru import logger
 from touca.cli._common import Operation
+
+logger = logging.getLogger("touca.cli.run")
 
 
 def merge_dict(source: dict, destination: dict):

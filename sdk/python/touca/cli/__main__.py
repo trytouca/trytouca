@@ -1,9 +1,10 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from argparse import ArgumentParser
+import logging
 import sys
+from argparse import ArgumentParser
 
-from loguru import logger
+from colorama import Fore
 from touca import __version__
 from touca._options import find_home_path
 from touca._printer import Printer
@@ -11,8 +12,8 @@ from touca.cli._config import Config
 from touca.cli._execute import Execute
 from touca.cli._merge import Merge
 from touca.cli._plugin import Plugin, user_plugins
-from touca.cli._profile import Profile
 from touca.cli._post import Post
+from touca.cli._profile import Profile
 from touca.cli._run import Run
 from touca.cli._solve import Solve
 from touca.cli._unzip import Unzip
@@ -80,26 +81,18 @@ def main(args=None):
     options = vars(parsed)
 
     command = next((x for x in subcommands if x.name == options.get("command")), None)
-    if not command and any(arg in remaining for arg in ["-h", "--help"]):
+    if not command or any(arg in remaining for arg in ["-h", "--help"]):
         parser.print_help()
         return False
-    operation = command(options) if command else Execute(options)
+    operation = command(options)
 
     home_dir = find_home_path()
     home_dir.mkdir(parents=True, exist_ok=True)
 
-    logger.remove()
-    logger.add(
-        sys.stdout,
-        level="DEBUG",
-        colorize=True,
-        format="<green>{time:HH:mm:ss!UTC}</green> | <cyan>{level: <7}</cyan> | <lvl>{message}</lvl>",
-    )
-    logger.add(
-        home_dir.joinpath("logs", "runner_{time:YYMMDD!UTC}.log"),
-        level="DEBUG",
-        rotation="1 day",
-        compression="zip",
+    logging.basicConfig(
+        format=f"{Fore.GREEN}%(asctime)s{Fore.RESET} | {Fore.CYAN}%(name)s{Fore.RESET} | {Fore.BLUE}%(levelname)s{Fore.RESET} | %(message)s",
+        datefmt="%I:%M:%S",
+        level=logging.DEBUG,
     )
 
     if not operation.run():
