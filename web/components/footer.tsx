@@ -58,47 +58,81 @@ const social: {
   }
 ];
 
-const links: {
-  link: string;
-  text: string;
-  internal?: boolean;
+const groups: {
+  name: string;
+  links: {
+    link: string;
+    text: string;
+    desc?: string;
+  }[];
 }[] = [
   {
-    link: '/blog',
-    text: 'Blog',
-    internal: true
+    name: 'Product',
+    links: [
+      {
+        link: 'https://app.touca.io',
+        text: 'Start Now'
+      },
+      {
+        link: '/changelog',
+        text: 'Changelog'
+      },
+      {
+        link: 'https://status.touca.io',
+        text: 'Status'
+      }
+    ]
   },
   {
-    link: '/contact',
-    text: 'Contact',
-    internal: true
+    name: 'Resources',
+    links: [
+      {
+        link: 'https://touca.io/docs',
+        text: 'Documentation'
+      },
+      {
+        link: '/pricing',
+        text: 'Pricing'
+      },
+      {
+        link: '/blog',
+        text: 'Blog'
+      }
+    ]
   },
   {
-    link: '/pricing',
-    text: 'Pricing',
-    internal: true
+    name: 'Community',
+    links: [
+      {
+        link: 'https://touca.io/docs/contributing',
+        text: 'Contribute'
+      },
+      {
+        link: '/github',
+        text: 'GitHub'
+      },
+      {
+        link: '/discord',
+        text: 'Discord'
+      }
+    ]
   },
   {
-    link: 'https://status.touca.io',
-    text: 'Status'
-  },
-  {
-    link: 'https://touca.io/docs/legal/terms',
-    text: 'Terms of Service'
-  },
-  {
-    link: 'https://touca.io/docs/legal/privacy',
-    text: 'Privacy Policy'
-  },
-  {
-    link: '/discord',
-    text: 'Discord',
-    internal: true
-  },
-  {
-    link: '/github',
-    text: 'GitHub',
-    internal: true
+    name: 'Company',
+    links: [
+      {
+        link: '/contact',
+        text: 'Contact'
+      },
+      {
+        link: 'https://touca.io/docs/legal/terms',
+        text: 'Terms'
+      },
+      {
+        link: 'https://touca.io/docs/legal/privacy',
+        text: 'Privacy'
+      }
+    ]
   }
 ];
 
@@ -138,26 +172,40 @@ const FooterRow = () => {
   return (
     <footer className="divide-y divide-dark-blue-700 border-t border-dark-blue-800 bg-dark-blue-900 px-8 text-white">
       <div className="mx-auto max-w-screen-lg py-16 space-y-16 md:space-y-0 md:flex">
-        <ul className="columns-2 space-y-4 font-medium md:columns-3 lg:columns-4 md:flex-grow">
-          {links.map((item) => {
+        <div className="grid grid-cols-2 font-medium gap-8 lg:grid-cols-4 md:flex-grow items-start">
+          {groups.map((group) => {
             return (
-              <li
-                className="font-medium text-gray-200 hover:text-white"
-                key={item.link}>
-                {item.internal ? (
-                  <Link href={item.link}>
-                    <a>{item.text}</a>
-                  </Link>
-                ) : (
-                  <a href={item.link} target="_blank" rel="noopener noreferrer">
-                    {item.text}
-                  </a>
-                )}
-              </li>
+              <ul className="flex flex-col space-y-2" key={group.name}>
+                <span className="text-xs uppercase font-medium text-gray-400">
+                  {group.name}
+                </span>
+                <>
+                  {group.links.map((child) => {
+                    return child.link.startsWith('/') ? (
+                      <li className="font-medium text-gray-200 hover:text-white">
+                        <Link href={child.link}>
+                          <a>{child.text}</a>
+                        </Link>
+                      </li>
+                    ) : (
+                      <li className="font-medium text-gray-200 hover:text-white">
+                        <a
+                          href={child.link}
+                          target="_blank"
+                          rel="noopener noreferrer">
+                          {child.text}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </>
+              </ul>
             );
           })}
-        </ul>
-        <ATFBackedBy />
+        </div>
+        <div>
+          <ATFBackedBy />
+        </div>
       </div>
       <div className="mx-auto flex flex-col md:flex-row max-w-screen-lg items-center justify-between py-8">
         <div className="flex items-center space-x-4 order-last md:order-first pt-8 md:pt-0">
