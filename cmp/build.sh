@@ -174,7 +174,9 @@ build_build () {
     log_info "fetching dependencies for cpp components"
     if [ ! -f "${dir_build}/conaninfo.txt" ]; then
         conan install --install-folder "${dir_build}" \
-            "${dir_source}/conanfile.py" --build=missing
+            "${dir_source}/conanfile.py" --build=missing \
+            --conf tools.system.package_manager:mode=install \
+            --conf tools.system.package_manager:sudo=True
     fi
 
     log_info "building cpp components using local toolchain"
