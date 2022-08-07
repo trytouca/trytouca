@@ -31,11 +31,18 @@ function ATFButtonStart() {
 
 function ATFTagline() {
   return (
-    <h2 className="max-w-3xl lg:max-w-4xl sm:text-center text-white font-bold text-3xl md:text-4xl lg:text-5xl">
-      The easiest way to make sure your software{' '}
-      <span className="font-bold text-yellow-500">keeps</span> working as you
-      expect
-    </h2>
+    <div className="space-y-4">
+      <h2 className="max-w-3xl lg:max-w-4xl sm:text-center text-white font-extrabold text-3xl md:text-4xl lg:text-7xl ">
+        Find regressions in{' '}
+        <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-600 to-yellow-300">
+          minutes
+        </span>
+        , not days
+      </h2>
+      <p className="max-w-3xl lg:max-w-4xl sm:text-center font-medium text-lg text-white sm:text-2xl">
+        Get feedback when you write code that could break your software
+      </p>
+    </div>
   );
 }
 
