@@ -5,6 +5,7 @@ import { timer } from 'rxjs';
 
 import { ApiService } from '@/core/services';
 import { Checkbox } from '@/shared/components/checkbox.component';
+import { PlatformConfig } from '@touca/api-schema';
 
 export const telemetry_sample_data = {
   created_at: '2022-08-08T15:29:24.325Z',
@@ -23,36 +24,33 @@ export const telemetry_sample_data = {
   styles: []
 })
 export class TelemetryComponent {
-  private _preferences: Checkbox[] = [
-    {
-      default: true,
-      description:
-        'Touca is open source software. You may disable this feature if you need to.',
-      experimental: false,
-      saved: false,
-      slug: 'aggregate-usage',
-      title: 'Collect Aggregate Usage Data',
-      visible: true
-    }
-  ];
+  preference: Checkbox = {
+    default: true,
+    description:
+      'Touca is open source software. You may disable this feature if you need to.',
+    experimental: false,
+    saved: false,
+    slug: 'aggregate-usage',
+    title: 'Collect Aggregate Usage Data',
+    visible: true
+  };
   sample_data = JSON.stringify(telemetry_sample_data, null, 2);
 
-  constructor(private apiService: ApiService) {}
-
-  toggleCheckbox(flag: Checkbox) {
-    const node = this._preferences.find((v) => v.slug === flag.slug);
-    node.value = !(node.value ?? false);
-    this.apiService
-      .patch('/platform/config', { telemetry: node.value })
-      .subscribe({
-        next: () => {
-          node.saved = true;
-          timer(3000).subscribe(() => (node.saved = false));
-        }
-      });
+  constructor(private apiService: ApiService) {
+    this.apiService.get<PlatformConfig>('/platform/config').subscribe((doc) => {
+      this.preference.value = doc.telemetry;
+    });
   }
 
-  getTelemetryPreferences(): Checkbox[] {
-    return this._preferences;
+  toggleCheckbox(flag: Checkbox) {
+    this.preference.value = !this.preference.value;
+    this.apiService
+      .patch('/platform/config', { telemetry: this.preference.value })
+      .subscribe({
+        next: () => {
+          this.preference.saved = true;
+          timer(3000).subscribe(() => (this.preference.saved = false));
+        }
+      });
   }
 }

@@ -12,7 +12,7 @@
           class="sr-only"
           type="checkbox"
           [id]="data.slug"
-          [checked]="data.value || data.default"
+          [checked]="data.value ?? data.default"
           (change)="toggle.emit(data)" />
         <div
           class="wsl-checkbox-line block h-5 w-8 rounded-full bg-gray-200 dark:bg-gray-600"></div>
