@@ -6,11 +6,15 @@ import React from 'react';
 import { HiArrowNarrowRight, HiOutlineCalendar } from 'react-icons/hi';
 
 export class BlogPostArticle extends React.Component<
-  { article: PostOrPage; featured: boolean },
+  {
+    article: PostOrPage;
+    featured: boolean;
+    parent: 'blog' | 'changelog';
+  },
   Record<string, never>
 > {
   render() {
-    const articleLink = '/blog/' + this.props.article.slug;
+    const articleLink = `/${this.props.parent}/${this.props.article.slug}`;
     return (
       <div className="flex w-full flex-col justify-between space-y-4 rounded-lg bg-dark-blue-800 shadow-xl">
         <img
@@ -65,7 +69,7 @@ export class BlogPostArticle extends React.Component<
 }
 
 export class BlogPostArchive extends React.Component<
-  { articles: PostOrPage[] },
+  { articles: PostOrPage[]; parent: 'blog' | 'changelog' },
   Record<string, never>
 > {
   render() {
@@ -79,7 +83,11 @@ export class BlogPostArchive extends React.Component<
             {this.props.articles.map((article, index) => {
               return (
                 <div key={index} className="flex grid-cols-1 items-stretch">
-                  <BlogPostArticle article={article} featured={false} />
+                  <BlogPostArticle
+                    article={article}
+                    featured={false}
+                    parent={this.props.parent}
+                  />
                 </div>
               );
             })}
@@ -88,4 +96,35 @@ export class BlogPostArchive extends React.Component<
       </>
     );
   }
+}
+
+export function BlogPostContent(props: { article: PostOrPage }) {
+  return (
+    <>
+      <article
+        className="prose mx-auto lg:prose-lg"
+        dangerouslySetInnerHTML={{ __html: props.article.html }}
+      />
+      <style jsx global>
+        {`
+          .kg-bookmark-content {
+            display: none;
+          }
+          .kg-callout-card {
+            display: flex;
+            border-radius: 0.25rem;
+            padding: 1rem;
+          }
+          .kg-callout-card-grey {
+            background-color: lightgray;
+          }
+          .kg-card.kg-embed-card > iframe {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+          }
+        `}
+      </style>
+    </>
+  );
 }

@@ -14,17 +14,17 @@ import {
   getArticleStaticProps
 } from '@/lib/blog';
 
-export default function BlogPage(props: BlogPostStaticProps) {
+export default function ChangelogPage(props: BlogPostStaticProps) {
   return (
     <>
       <NextSeo
         title={props.main_article.title}
-        canonical={'https://touca.io/blog/' + props.main_article.slug}
+        canonical={'https://touca.io/changelog/' + props.main_article.slug}
         description={
           props.main_article.og_description ?? props.main_article.excerpt
         }
         openGraph={{
-          url: 'https://touca.io/blog/' + props.main_article.slug,
+          url: 'https://touca.io/changelog/' + props.main_article.slug,
           title: props.main_article.og_title ?? props.main_article.title,
           description:
             props.main_article.og_description ?? props.main_article.excerpt,
@@ -41,13 +41,17 @@ export default function BlogPage(props: BlogPostStaticProps) {
       />
       <BreadcrumbJsonLd
         itemListElements={[
-          { position: 1, name: 'Touca Blog', item: 'https://touca.io/blog' },
+          {
+            position: 1,
+            name: 'Touca Changelog',
+            item: 'https://touca.io/changelog'
+          },
           { position: 2, name: props.main_article.title }
         ]}
       />
       <ArticleJsonLd
         type="Blog"
-        url={'https://touca.io/blog/' + props.main_article.slug}
+        url={'https://touca.io/changelog/' + props.main_article.slug}
         title={props.main_article.title}
         images={[props.main_article.feature_image]}
         datePublished={props.main_article.published_at}
@@ -56,7 +60,7 @@ export default function BlogPage(props: BlogPostStaticProps) {
         description={props.main_article.excerpt}
       />
       <Head>
-        <title>{`Touca Blog - ${props.main_article.title}`}</title>
+        <title>{`Touca Changelog - ${props.main_article.title}`}</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -119,7 +123,10 @@ export default function BlogPage(props: BlogPostStaticProps) {
       </section>
       {props.archived_articles.length !== 0 && (
         <section className="bg-dark-blue-900">
-          <BlogPostArchive articles={props.archived_articles} parent="blog" />
+          <BlogPostArchive
+            articles={props.archived_articles}
+            parent="changelog"
+          />
         </section>
       )}
       <Script
@@ -135,9 +142,12 @@ export default function BlogPage(props: BlogPostStaticProps) {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-  return await getArticleStaticProps('blog', context.params.slug as string);
+  return await getArticleStaticProps(
+    'changelog',
+    context.params.slug as string
+  );
 }
 
 export async function getStaticPaths() {
-  return await getArticleStaticPaths('blog');
+  return await getArticleStaticPaths('changelog');
 }

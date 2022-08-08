@@ -21,7 +21,12 @@
     </url>
     <url>
         <loc>https://touca.io/blog</loc>
-        <lastmod>2022-03-24T03:00:29.000Z</lastmod>
+        <lastmod>2022-08-07T18:00:00+00:00</lastmod>
+        <priority>0.80</priority>
+    </url>
+    <url>
+        <loc>https://touca.io/changelog</loc>
+        <lastmod>2022-08-07T18:00:00+00:00</lastmod>
         <priority>0.80</priority>
     </url>
     <url>

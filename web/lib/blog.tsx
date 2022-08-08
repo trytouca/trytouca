@@ -39,7 +39,7 @@ async function getArticles(filter?: string): Promise<PostsOrPages> {
 }
 
 export async function getArticleStaticPaths(page: 'blog' | 'changelog') {
-  const filter = page === 'blog' ? '' : '+tag:changelog';
+  const filter = page === 'blog' ? '+tag:-changelog' : '+tag:changelog';
   const posts = await makeContentApi().posts.browse({
     limit: 'all',
     filter: `visibility:-paid${filter}`,
@@ -55,7 +55,7 @@ export async function getArticleStaticProps(
   page: 'blog' | 'changelog',
   slug: string
 ) {
-  const filter = page === 'blog' ? '' : '+tag:changelog';
+  const filter = page === 'blog' ? '+tag:-changelog' : '+tag:changelog';
   const params: Params = {
     limit: 'all',
     filter: `visibility:-paid${filter}`,
@@ -75,7 +75,7 @@ export async function getArticleStaticProps(
 }
 
 export async function getArticlesStaticProps(page: 'blog' | 'changelog') {
-  const filter = page === 'blog' ? '' : '+tag:changelog';
+  const filter = page === 'blog' ? '+tag:-changelog' : '+tag:changelog';
   const posts = await getArticles(filter);
   return {
     props: {
