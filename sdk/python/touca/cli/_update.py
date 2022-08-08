@@ -13,8 +13,6 @@ logger = logging.getLogger("touca.cli.update")
 
 
 def _update(cli, srcDir: Path, outDir: Path, teamslug, testsuite):
-    print(srcDir)
-    srcDir = srcDir.with_name(srcDir.name + "-merged")
     if not srcDir.exists():
         logger.error(f"expected directory {srcDir} to exist")
         return False
@@ -78,12 +76,13 @@ class Update(Operation):
             return False
         batchNames = []
         for batchDir in src.glob("*"):
-            print(batchDir)
             if not batchDir.is_dir():
                 continue
-            if not batchDir.name.endswith("-merged"):
-                continue
-            batchNames.append(batchDir.name[:-7])
+            batchNames.append(
+                batchDir.name[:-7]
+                if batchDir.name.endswith("-merged")
+                else batchDir.name
+            )
 
         if not batchNames:
             logger.info(f"found no valid result directory to update")
