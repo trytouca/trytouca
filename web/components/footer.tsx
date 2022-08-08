@@ -182,13 +182,17 @@ const FooterRow = () => {
                 <>
                   {group.links.map((child) => {
                     return child.link.startsWith('/') ? (
-                      <li className="font-medium text-gray-200 hover:text-white">
+                      <li
+                        className="font-medium text-gray-200 hover:text-white"
+                        key={child.link}>
                         <Link href={child.link}>
                           <a>{child.text}</a>
                         </Link>
                       </li>
                     ) : (
-                      <li className="font-medium text-gray-200 hover:text-white">
+                      <li
+                        className="font-medium text-gray-200 hover:text-white"
+                        key={child.link}>
                         <a
                           href={child.link}
                           target="_blank"

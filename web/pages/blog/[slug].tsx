@@ -11,8 +11,8 @@ import { BlogPostArchive } from '@/components/blog';
 import Header from '@/components/header';
 import {
   BlogPostStaticProps,
-  getBlogPostStaticPaths,
-  getBlogPostStaticProps
+  getArticleStaticPaths,
+  getArticleStaticProps
 } from '@/lib/blog';
 
 export default function BlogPage(props: BlogPostStaticProps) {
@@ -167,9 +167,9 @@ function BlogPostContent(props: { article: PostOrPage }) {
 }
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-  return await getBlogPostStaticProps(context);
+  return await getArticleStaticProps('blog', context.params.slug as string);
 }
 
 export async function getStaticPaths() {
-  return await getBlogPostStaticPaths();
+  return await getArticleStaticPaths('blog');
 }
