@@ -5,7 +5,7 @@ import React from 'react';
 
 import { BlogPostArchive, BlogPostArticle } from '@/components/blog';
 import Header from '@/components/header';
-import { BlogPostStaticProps, getBlogPostsStaticProps } from '@/lib/blog';
+import { BlogPostStaticProps, getArticlesStaticProps } from '@/lib/blog';
 
 export default function BlogPage(props: BlogPostStaticProps) {
   return (
@@ -45,5 +45,5 @@ export default function BlogPage(props: BlogPostStaticProps) {
 }
 
 export async function getStaticProps() {
-  return getBlogPostsStaticProps();
+  return getArticlesStaticProps('blog');
 }
