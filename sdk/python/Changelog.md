@@ -2,7 +2,23 @@
 
 ## v1.5.6
 
+Improvements:
+
 - CLI sub-command `post` should respect config profile (#222)
+- Remove CLI dependency on `loguru` (#229)
+- Improve `dry-run` in CLI `post` sub-command (#224)
+- Remove CLI sub-command `solve` (#231)
+- Add CLI sub-command `server` (#231)
+
+## v1.5.5
+
+Fixes:
+
+- Fix default value for CLI `test` sub-command (#45)
+
+Improvements:
+
+- Update docs for main API example (#42)
 
 ## v1.5.4
 
