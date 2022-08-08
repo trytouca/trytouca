@@ -171,12 +171,12 @@ const FooterCta = () => {
 const FooterRow = () => {
   return (
     <footer className="divide-y divide-dark-blue-700 border-t border-dark-blue-800 bg-dark-blue-900 px-8 text-white">
-      <div className="mx-auto max-w-screen-lg py-16 space-y-16 md:space-y-0 md:flex">
-        <div className="grid grid-cols-2 font-medium gap-8 lg:grid-cols-4 md:flex-grow items-start">
+      <div className="mx-auto max-w-screen-lg space-y-16 py-16 md:flex md:space-y-0">
+        <div className="grid grid-cols-2 items-start gap-8 font-medium md:flex-grow lg:grid-cols-4">
           {groups.map((group) => {
             return (
               <ul className="flex flex-col space-y-2" key={group.name}>
-                <span className="text-xs uppercase font-medium text-gray-400">
+                <span className="text-xs font-medium uppercase text-gray-400">
                   {group.name}
                 </span>
                 <>
@@ -211,8 +211,8 @@ const FooterRow = () => {
           <ATFBackedBy />
         </div>
       </div>
-      <div className="mx-auto flex flex-col md:flex-row max-w-screen-lg items-center justify-between py-8">
-        <div className="flex items-center space-x-4 order-last md:order-first pt-8 md:pt-0">
+      <div className="mx-auto flex max-w-screen-lg flex-col items-center justify-between py-8 md:flex-row">
+        <div className="order-last flex items-center space-x-4 pt-8 md:order-first md:pt-0">
           <img
             src="/images/touca_logo_io_text_white.svg"
             alt="Touca.io"

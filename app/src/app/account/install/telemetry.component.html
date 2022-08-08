@@ -1,7 +1,25 @@
-<div class="p-4">
-  <app-settings-checkbox
-    [data]="preference"
-    (toggle)="toggleFeatureFlag($event)"></app-settings-checkbox>
+<div class="space-y-4 p-4">
+  <div class="space-y-2 text-sm text-black dark:text-gray-300">
+    <p>
+      This server collects aggregate usage data and reports it to us every day.
+      Knowing how you use Touca motivates us to improve it day by day.
+    </p>
+    <div>
+      <small class="font-semibold text-gray-600 dark:text-gray-400">
+        Sample Payload
+      </small>
+      <pre
+        class="max-h-36 overflow-auto rounded-lg border border-gray-100 bg-gray-50 p-4 text-xs text-gray-800 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400"><code>{{ sample_data }}</code></pre>
+    </div>
+    <p>
+      Touca is open source software. If you absolutely need to disable usage
+      data collection, visit
+      <a class="text-sky-600" href="https://touca.io/docs" target="_blank">
+        our documentation website
+      </a>
+      for instructions to do so.
+    </p>
+  </div>
   <div class="wsl-form-footer">
     <div class="wsl-form-submit flex justify-between">
       <button
@@ -9,7 +27,7 @@
         (click)="switchTab.emit({ next: 'userInfo' })">
         Previous
       </button>
-      <button class="wsl-btn-lg wsl-btn-primary" (click)="submitTelemetry()">
+      <button class="wsl-btn-lg wsl-btn-primary" (click)="proceed()">
         Continue
       </button>
     </div>

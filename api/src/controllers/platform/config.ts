@@ -39,7 +39,10 @@ export async function platformConfig(
 
   // prepare response
 
-  const meta = await MetaModel.findOne({}, { contact: 1, mail: 1 })
+  const meta = await MetaModel.findOne(
+    {},
+    { contact: 1, mail: 1, telemetry: 1 }
+  )
   const response: PlatformConfig = {}
   if (meta?.contact) {
     response.contact = meta.contact
@@ -53,6 +56,9 @@ export async function platformConfig(
       port: config.mail.port,
       user: config.mail.user
     }
+  }
+  if (meta.telemetry !== undefined) {
+    response.telemetry = meta.telemetry
   }
 
   // cache response

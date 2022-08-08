@@ -1,11 +1,23 @@
-<div
-  class="wsl-box space-y-4 p-4"
-  *ngIf="getTelemetryPreferences().length !== 0">
+<div class="wsl-box space-y-4 p-4">
   <h2
     class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
     Telemetry
   </h2>
-  <div *ngFor="let preference of getTelemetryPreferences()">
+  <div class="space-y-4 text-sm text-black dark:text-gray-300">
+    <p>
+      We'd like to collect privacy-friendly aggregate usage data, once every
+      day. Knowing how your team uses Touca motivates us to improve it day by
+      day.
+    </p>
+    <div>
+      <small class="font-semibold text-gray-600 dark:text-gray-400">
+        Sample Payload
+      </small>
+      <pre
+        class="max-h-80 overflow-auto rounded-lg border border-gray-100 bg-gray-50 p-4 text-xs text-gray-800 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400"><code>{{ sample_data }}</code></pre>
+    </div>
+  </div>
+  <div>
     <app-settings-checkbox
       [data]="preference"
       (toggle)="toggleCheckbox($event)"></app-settings-checkbox>
