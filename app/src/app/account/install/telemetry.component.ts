@@ -8,22 +8,14 @@ import {
   InstallPageTabType
 } from '@/core/models/frontendtypes';
 import { ApiService } from '@/core/services';
+import { telemetry_sample_data } from '../settings/telemetry.component';
 
 @Component({
   selector: 'app-account-install-telemetry',
   templateUrl: './telemetry.component.html'
 })
 export class InstallTelemetryComponent {
-  sample_data = `{
-  "createdAt": "2022-08-08T15:29:24.325Z",
-  "messages_new": 5814,
-  "node_id": "a7cea1d8-851a-4e2a-b20b-a98a68dab943",
-  "reports_new": 7,
-  "runtime_new": 657,
-  "sessions_new": 14,
-  "users_active": 2,
-  "versions_new": 6
-}`;
+  sample_data = JSON.stringify(telemetry_sample_data, null, 2);
 
   @Output() switchTab = new EventEmitter<{
     error?: string;
