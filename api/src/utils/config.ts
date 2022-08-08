@@ -81,6 +81,10 @@ interface IConfig {
       defaultDuration: number
       resultLifetime: number
     }
+    telemetry: {
+      checkInterval: number
+      defaultDuration: number
+    }
   }
   tracking: {
     hubspot_key: string
@@ -185,6 +189,10 @@ export const config: IConfig = {
       // comparison result lifetime
       resultLifetime:
         Number(env.SERVICE_RETENTION_DEFAULT_RESULT_LIFETIME) || 30 * 86400
+    },
+    telemetry: {
+      checkInterval: Number(env.SERVICE_TELEMETRY_CHECK_INTERVAL) || 30 * 60,
+      defaultDuration: Number(env.SERVICE_TELEMETRY_DEFAULT_DURATION) || 86400
     }
   },
   tracking: {
