@@ -8,6 +8,7 @@ import {
   InstallPageTabType
 } from '@/core/models/frontendtypes';
 import { ApiService } from '@/core/services';
+
 import { telemetry_sample_data } from '../settings/telemetry.component';
 
 @Component({

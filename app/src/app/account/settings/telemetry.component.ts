@@ -1,11 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component } from '@angular/core';
+import { PlatformConfig } from '@touca/api-schema';
 import { timer } from 'rxjs';
 
 import { ApiService } from '@/core/services';
 import { Checkbox } from '@/shared/components/checkbox.component';
-import { PlatformConfig } from '@touca/api-schema';
 
 export const telemetry_sample_data = {
   created_at: '2022-08-08T15:29:24.325Z',
