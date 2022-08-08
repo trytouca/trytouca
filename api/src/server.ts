@@ -32,7 +32,8 @@ import {
   analyticsService,
   autosealService,
   reportingService,
-  retentionService
+  retentionService,
+  telemetryService
 } from './services'
 import { setupSuperuser, upgradeDatabase } from './startup'
 
@@ -120,6 +121,9 @@ async function launch(application) {
   // identifies new batch comparison results and reports them
   // to subscribed users.
   setInterval(reportingService, config.services.reporting.checkInterval * 1000)
+
+  // setup service to collect privacy-friendly aggregate usage data
+  setInterval(telemetryService, config.services.telemetry.checkInterval * 1000)
 
   // create a superuser if this platform was just setup
   await setupSuperuser()

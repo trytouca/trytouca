@@ -69,6 +69,10 @@ const metaSchema = new mongoose.Schema(
       required: false,
       type: Boolean
     },
+    telemetryReportedAt: {
+      required: false,
+      type: Date
+    },
     uuid: {
       default: () => uuidv4(),
       type: String
@@ -97,6 +101,7 @@ export interface IMetaDocument extends mongoose.Document {
     user: string
   }
   telemetry: boolean
+  telemetryReportedAt: Date
   uuid: string
 }
 

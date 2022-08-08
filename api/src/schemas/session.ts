@@ -1,26 +1,31 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import mongoose from 'mongoose'
 
-const sessionSchema = new mongoose.Schema({
-  agent: {
-    required: true,
-    type: String
+const sessionSchema = new mongoose.Schema(
+  {
+    agent: {
+      required: true,
+      type: String
+    },
+    expiresAt: {
+      required: true,
+      type: Date
+    },
+    ipAddr: {
+      required: true,
+      type: String
+    },
+    userId: {
+      ref: 'User',
+      required: true,
+      type: mongoose.Schema.Types.ObjectId
+    }
   },
-  expiresAt: {
-    required: true,
-    type: Date
-  },
-  ipAddr: {
-    required: true,
-    type: String
-  },
-  userId: {
-    ref: 'User',
-    required: true,
-    type: mongoose.Schema.Types.ObjectId
+  {
+    timestamps: true
   }
-})
+)
 
 export interface ISessionDocument extends mongoose.Document {
   agent: string
