@@ -1,8 +1,9 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { relay } from '@/models/relay'
 import { BatchModel } from '@/schemas/batch'
 import { MessageModel } from '@/schemas/message'
-import { MetaModel } from '@/schemas/meta'
+import { IMetaDocument, MetaModel } from '@/schemas/meta'
 import { ReportModel } from '@/schemas/report'
 import { SessionModel } from '@/schemas/session'
 import { config } from '@/utils/config'
@@ -25,12 +26,11 @@ function lastReportedAt() {
   return date
 }
 
-async function reportTelemetry(
-  node_id: string,
-  since: Date = lastReportedAt()
-) {
+async function reportTelemetry(meta: IMetaDocument) {
+  const serviceName = 'service telemetry'
+  logger.info('%s: collecting aggregate usage data', serviceName)
   const filter = {
-    createdAt: { $gt: since }
+    createdAt: { $gt: meta.telemetryReportedAt ?? lastReportedAt() }
   }
   const sessionsCount = await SessionModel.aggregate([
     { $match: filter },
@@ -49,7 +49,7 @@ async function reportTelemetry(
   const report: TelemetryPayload = {
     created_at: new Date(),
     messages_new: await MessageModel.countDocuments(filter),
-    node_id: node_id,
+    node_id: meta.uuid,
     reports_new: await ReportModel.countDocuments(filter),
     runtime_new: batchesCount.reduce(
       (acc, v) => acc + (v.runtime ?? 0) / 1000,
@@ -59,7 +59,17 @@ async function reportTelemetry(
     users_active: sessionsCount.length,
     versions_new: batchesCount.length
   }
-  logger.info('%j', report)
+  await relay({
+    path: '/feedback',
+    data: JSON.stringify({
+      body: JSON.stringify(report),
+      cname: meta.contact.company,
+      email: meta.contact.email,
+      name: meta.contact.name,
+      page: 'usage-data'
+    })
+  })
+  logger.info('%s: reported aggregate usage data', serviceName)
 }
 
 export async function telemetryService(): Promise<void> {
@@ -72,11 +82,11 @@ export async function telemetryService(): Promise<void> {
         { telemetryReportedAt: { $lt: lastReportedAt() } }
       ]
     },
-    { _id: 0, telemetryReportedAt: 1, uuid: 1 }
+    { _id: 0, contact: 1, telemetryReportedAt: 1, uuid: 1 }
   )
   if (!meta) {
     return
   }
-  await reportTelemetry(meta.uuid, meta.telemetryReportedAt)
+  await reportTelemetry(meta)
   await MetaModel.updateOne({}, { $set: { telemetryReportedAt: new Date() } })
 }
