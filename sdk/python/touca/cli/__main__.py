@@ -1,8 +1,8 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import argparse
 import logging
 import sys
-from argparse import ArgumentParser
 
 from colorama import Fore
 from touca import __version__
@@ -58,14 +58,18 @@ def main(args=None):
         Zip,
         *user_plugins(),
     ]
-    parser = ArgumentParser(
+    parser = argparse.ArgumentParser(
         prog="touca",
         add_help=False,
         description="Work seamlessly with Touca from the command line.",
         epilog="See https://touca.io/docs for more information.",
     )
     parser.add_argument(
-        "-v", "--version", action="version", version=f"%(prog)s v{__version__}"
+        "-v",
+        "--version",
+        action="version",
+        version=f"%(prog)s v{__version__}",
+        help=argparse.SUPPRESS,
     )
     parsers = parser.add_subparsers(dest="command")
     for operation in subcommands:

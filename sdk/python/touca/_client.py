@@ -1,7 +1,8 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from typing import Any, Callable, Dict, List, ValuesView, Type
 from threading import get_ident
+from typing import Any, Callable, Dict, List, Type, ValuesView
+
 from touca._case import Case
 
 
@@ -74,8 +75,9 @@ class Client:
 
     def _serialize(self, cases: ValuesView[Case]) -> bytearray:
         from sys import version_info
-        from flatbuffers import Builder
+
         import touca._schema as schema
+        from flatbuffers import Builder
 
         builder = Builder(1024)
 

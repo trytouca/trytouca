@@ -1,9 +1,10 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import certifi
 import json
-from touca.__init__ import __version__ as client_version
 from typing import List
+
+import certifi
+from touca.__init__ import __version__ as client_version
 from urllib3.poolmanager import PoolManager
 from urllib3.response import HTTPResponse
 

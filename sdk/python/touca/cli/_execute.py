@@ -1,10 +1,11 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import sys
 from argparse import ArgumentParser
 from pathlib import Path
-import sys
+
 from touca._options import config_file_parse
-from touca._runner import prepare_parser, run_workflows, Workflow
+from touca._runner import Workflow, prepare_parser, run_workflows
 from touca.cli._common import Operation
 
 
@@ -18,9 +19,9 @@ def find_test_modules(testdir: str):
 
 
 def extract_workflows(modules: list):
-    import sys
     import importlib
     import inspect
+    import sys
 
     for module in modules:
         relpath = Path(module).relative_to(Path.cwd())

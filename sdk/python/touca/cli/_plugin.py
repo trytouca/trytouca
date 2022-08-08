@@ -1,17 +1,18 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import sys
 from argparse import ArgumentParser
 from pathlib import Path
-import sys
-from touca.cli._common import Operation, invalid_subcommand
-from touca._options import find_home_path
+
 import requests
+from touca._options import find_home_path
+from touca.cli._common import Operation, invalid_subcommand
 
 
 def user_plugins():
-    import sys
     import importlib
     import inspect
+    import sys
 
     plugins_dir = Path(find_home_path(), "plugins")
     modules = [p.absolute() for p in plugins_dir.glob("*") if p.is_file()]

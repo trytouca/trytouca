@@ -2,9 +2,10 @@
 
 """Touca plugin for Django test framework."""
 
-from django.test.runner import DiscoverRunner
-from unittest import TestSuite, TestCase, TextTestRunner
+from unittest import TestCase, TestSuite, TextTestRunner
+
 import touca
+from django.test.runner import DiscoverRunner
 
 
 class _TestCase(TestCase):

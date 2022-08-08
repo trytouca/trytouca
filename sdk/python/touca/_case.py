@@ -1,9 +1,10 @@
 # Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-from touca._types import IntegerType, VectorType, ToucaType
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Dict, Tuple
+
+from touca._types import IntegerType, ToucaType, VectorType
 
 
 class ResultCategory(Enum):
@@ -233,8 +234,8 @@ class Case:
         }
 
     def serialize(self) -> bytearray:
-        from flatbuffers import Builder
         import touca._schema as schema
+        from flatbuffers import Builder
 
         dicts = {
             ResultCategory.Check: schema.ResultType.Check,

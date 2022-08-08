@@ -2,7 +2,8 @@
 
 import math
 from pathlib import Path
-from colorama import Style, Fore, Back, init
+
+from colorama import Back, Fore, Style, init
 
 init()
 

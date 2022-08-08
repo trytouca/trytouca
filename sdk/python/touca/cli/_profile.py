@@ -1,11 +1,12 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import sys
+from argparse import ArgumentParser
 from configparser import ConfigParser
 from pathlib import Path
-from argparse import ArgumentParser
-import sys
-from touca.cli._common import Operation, invalid_subcommand
+
 from touca._options import find_home_path, find_profile_path
+from touca.cli._common import Operation, invalid_subcommand
 
 
 class Profile(Operation):

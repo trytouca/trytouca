@@ -35,6 +35,7 @@ from datetime import datetime, timedelta
 from enum import IntEnum
 from pathlib import Path
 from typing import Any, Dict, List
+
 from touca._client import Client
 from touca._printer import Printer
 

@@ -17,6 +17,7 @@ install the SDK as a development-only dependency.
 """
 
 from typing import Any, Callable, Dict, List, Type
+
 from touca._client import Client
 from touca._runner import Workflow, run
 from touca._utils import scoped_timer
