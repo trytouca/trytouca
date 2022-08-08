@@ -2,14 +2,18 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
     <loc>https://touca.io/sitemap_web.xml</loc>
-    <lastmod>2022-03-07T18:00:00+00:00</lastmod>
+    <lastmod>2022-08-07T18:00:00+00:00</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://touca.io/sitemap_blog.xml</loc>
-    <lastmod>2022-03-24T03:00:29.000Z</lastmod>
+    <lastmod>2022-08-07T18:00:00+00:00</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>https://touca.io/sitemap_changelog.xml</loc>
+    <lastmod>2022-08-07T18:00:00+00:00</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://touca.io/docs/sitemap.xml</loc>
-    <lastmod>2022-03-07T18:00:00+00:00</lastmod>
+    <lastmod>2022-08-07T18:00:00+00:00</lastmod>
   </sitemap>
 </sitemapindex>

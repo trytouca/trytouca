@@ -89,3 +89,34 @@ export class BlogPostArchive extends React.Component<
     );
   }
 }
+
+export function BlogPostContent(props: { article: PostOrPage }) {
+  return (
+    <>
+      <article
+        className="prose mx-auto lg:prose-lg"
+        dangerouslySetInnerHTML={{ __html: props.article.html }}
+      />
+      <style jsx global>
+        {`
+          .kg-bookmark-content {
+            display: none;
+          }
+          .kg-callout-card {
+            display: flex;
+            border-radius: 0.25rem;
+            padding: 1rem;
+          }
+          .kg-callout-card-grey {
+            background-color: lightgray;
+          }
+          .kg-card.kg-embed-card > iframe {
+            width: 100%;
+            height: auto;
+            aspect-ratio: 16 / 9;
+          }
+        `}
+      </style>
+    </>
+  );
+}
