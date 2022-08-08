@@ -60,7 +60,7 @@ export default function ChangelogPage(props: BlogPostStaticProps) {
         description={props.main_article.excerpt}
       />
       <Head>
-        <title>Touca Changelog - {props.main_article.title}</title>
+        <title>{`Touca Changelog - ${props.main_article.title}`}</title>
         <meta
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
@@ -118,12 +118,15 @@ export default function ChangelogPage(props: BlogPostStaticProps) {
             </figcaption>
           </div>
           <hr className="border-b-2 border-gray-200" />
-          <BlogPostContent article={props.main_article}></BlogPostContent>
+          <BlogPostContent article={props.main_article} />
         </div>
       </section>
       {props.archived_articles.length !== 0 && (
         <section className="bg-dark-blue-900">
-          <BlogPostArchive articles={props.archived_articles}></BlogPostArchive>
+          <BlogPostArchive
+            articles={props.archived_articles}
+            parent="changelog"
+          />
         </section>
       )}
       <Script

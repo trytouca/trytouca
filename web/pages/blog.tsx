@@ -30,14 +30,16 @@ export default function BlogPage(props: BlogPostStaticProps) {
             <div className="col-span-1">
               <BlogPostArticle
                 article={props.main_article}
-                featured={true}></BlogPostArticle>
+                featured={true}
+                parent="blog"
+              />
             </div>
           </div>
         </div>
       </section>
       {props.archived_articles.length !== 0 && (
         <section className="wsl-min-h-screen-1 bg-dark-blue-900">
-          <BlogPostArchive articles={props.archived_articles}></BlogPostArchive>
+          <BlogPostArchive articles={props.archived_articles} parent="blog" />
         </section>
       )}
     </>
