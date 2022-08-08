@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 """
 Touca Test Framework for Python is designed to make writing regression test
@@ -35,6 +35,7 @@ from datetime import datetime, timedelta
 from enum import IntEnum
 from pathlib import Path
 from typing import Any, Dict, List
+
 from touca._client import Client
 from touca._printer import Printer
 

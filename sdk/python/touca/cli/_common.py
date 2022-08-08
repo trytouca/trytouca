@@ -10,8 +10,8 @@ class Operation(ABC):
 
 
 def invalid_subcommand(cls):
-    from argparse import ArgumentParser
     import sys
+    from argparse import ArgumentParser
 
     parser = ArgumentParser(prog=f"touca {cls.name}", description=cls.help)
     cls.parser(parser)

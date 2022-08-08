@@ -1,8 +1,9 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import math
 from pathlib import Path
-from colorama import Style, Fore, Back, init
+
+from colorama import Back, Fore, Style, init
 
 init()
 

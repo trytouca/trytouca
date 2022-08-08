@@ -2,12 +2,9 @@
 
 import sys
 from typing import List
+
+from touca._options import config_file_parse, find_home_path, find_profile_path
 from touca.cli._common import Operation, invalid_subcommand
-from touca._options import (
-    config_file_parse,
-    find_home_path,
-    find_profile_path,
-)
 
 
 class Config(Operation):

@@ -3,6 +3,7 @@
 from pathlib import Path
 import pytest
 from touca.cli.__main__ import main
+from touca import __version__
 
 
 def test_cli_basic(capsys: pytest.CaptureFixture):
@@ -11,10 +12,10 @@ def test_cli_basic(capsys: pytest.CaptureFixture):
     assert "Work seamlessly with Touca from the command line." in captured.out
 
 
-def test_cli_solve(capsys: pytest.CaptureFixture):
-    assert main(["solve", "any", "problem"]) == False
+def test_cli_version(capsys: pytest.CaptureFixture):
+    assert main(["version"]) == True
     captured = capsys.readouterr()
-    assert captured.out == "Solved!\n"
+    assert __version__ in captured.out
     assert not captured.err
 
 

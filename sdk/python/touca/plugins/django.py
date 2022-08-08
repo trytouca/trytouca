@@ -1,10 +1,11 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 """Touca plugin for Django test framework."""
 
-from django.test.runner import DiscoverRunner
-from unittest import TestSuite, TestCase, TextTestRunner
+from unittest import TestCase, TestSuite, TextTestRunner
+
 import touca
+from django.test.runner import DiscoverRunner
 
 
 class _TestCase(TestCase):

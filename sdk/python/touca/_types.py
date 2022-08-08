@@ -1,11 +1,12 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from json import dumps
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
-from flatbuffers import Builder
+from json import dumps
 from typing import Any, Callable, Dict, Type
+
 import touca._schema as schema
+from flatbuffers import Builder
 
 
 class ToucaType(ABC):

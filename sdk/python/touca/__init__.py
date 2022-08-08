@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 """
 Entry-point to the Touca SDK for Python.
@@ -17,6 +17,7 @@ install the SDK as a development-only dependency.
 """
 
 from typing import Any, Callable, Dict, List, Type
+
 from touca._client import Client
 from touca._runner import Workflow, run
 from touca._utils import scoped_timer

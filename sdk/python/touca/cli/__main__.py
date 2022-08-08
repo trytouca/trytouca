@@ -1,13 +1,14 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import argparse
 import logging
 import sys
-from argparse import ArgumentParser
 
 from colorama import Fore
 from touca import __version__
 from touca._options import find_home_path
 from touca._printer import Printer
+from touca.cli._common import Operation
 from touca.cli._config import Config
 from touca.cli._execute import Execute
 from touca.cli._merge import Merge
@@ -15,10 +16,10 @@ from touca.cli._plugin import Plugin, user_plugins
 from touca.cli._post import Post
 from touca.cli._profile import Profile
 from touca.cli._run import Run
-from touca.cli._solve import Solve
 from touca.cli._unzip import Unzip
 from touca.cli._update import Update
 from touca.cli._zip import Zip
+from touca.cli.server import Server
 
 
 def _find_latest_pypi_version():
@@ -43,6 +44,17 @@ def _warn_outdated_version():
     Printer.print_warning(fmt, __version__, latest_version)
 
 
+class Version(Operation):
+    name = "version"
+    help = "show program's version number and exit"
+
+    def __init__(self, options):
+        pass
+
+    def run(self) -> bool:
+        print(f"v{__version__}")
+
+
 def main(args=None):
     subcommands = [
         Config,
@@ -51,21 +63,26 @@ def main(args=None):
         Post,
         Profile,
         Run,
-        Solve,
+        Server,
         Execute,
         Unzip,
         Update,
+        Version,
         Zip,
         *user_plugins(),
     ]
-    parser = ArgumentParser(
+    parser = argparse.ArgumentParser(
         prog="touca",
         add_help=False,
         description="Work seamlessly with Touca from the command line.",
         epilog="See https://touca.io/docs for more information.",
     )
     parser.add_argument(
-        "-v", "--version", action="version", version=f"%(prog)s v{__version__}"
+        "-v",
+        "--version",
+        action="version",
+        version=f"%(prog)s v{__version__}",
+        help=argparse.SUPPRESS,
     )
     parsers = parser.add_subparsers(dest="command")
     for operation in subcommands:
@@ -76,7 +93,8 @@ def main(args=None):
             help=operation.help,
             add_help=True,
         )
-        operation.parser(subparser)
+        if callable(getattr(operation, "parser", None)):
+            operation.parser(subparser)
     parsed, remaining = parser.parse_known_args(sys.argv[1:] if args is None else args)
     options = vars(parsed)
 
