@@ -1,7 +1,0 @@
-{
-  "singleQuote": true,
-  "trailingComma": "none",
-  "htmlWhitespaceSensitivity": "ignore",
-  "jsxBracketSameLine": true,
-  "proseWrap": "always"
-}
