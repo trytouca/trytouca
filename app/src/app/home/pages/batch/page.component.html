@@ -2,7 +2,10 @@
 <ng-container *ngIf="notFound()">
   <app-missing [args]="notFound()"></app-missing>
 </ng-container>
-<div class="mx-auto max-w-screen-xl py-8" *ngIf="!notFound()" [hidden]="!batch">
+<div
+  class="mx-auto max-w-screen-xl py-8 2xl:max-w-screen-2xl"
+  *ngIf="!notFound()"
+  [hidden]="!batch">
   <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-4 xl:px-8">
     <div class="wsl-page-head wsl-box">
       <nav aria-label="breadcrumb">

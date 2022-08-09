@@ -2,14 +2,16 @@
 <ng-container *ngIf="banner === BannerType.TeamNotFound">
   <app-missing [args]="notFound()"></app-missing>
 </ng-container>
-<div class="max-w-screen-xl pb-8 lg:pt-8 mx-auto" *ngIf="!banner">
+<div
+  class="mx-auto max-w-screen-xl pb-8 lg:pt-8 2xl:max-w-screen-2xl"
+  *ngIf="!banner">
   <div
-    class="lg:flex lg:divide-gray-200 lg:divide-x-2 dark:lg:divide-gray-700 space-y-4 lg:space-y-0">
+    class="space-y-4 lg:flex lg:space-y-0 lg:divide-x-2 lg:divide-gray-200 dark:lg:divide-gray-700">
     <aside>
       <div
-        class="container mx-auto px-4 pt-4 lg:py-0 lg:sticky flex lg:flex-col justify-between lg:h-[calc(100vh-8rem)] lg:top-24 items-center lg:items-stretch lg:w-64">
+        class="container mx-auto flex items-center justify-between px-4 pt-4 lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)] lg:w-64 lg:flex-col lg:items-stretch lg:py-0">
         <nav class="hidden lg:block">
-          <ul class="space-x-1 flex lg:space-y-1 lg:flex-col lg:space-x-0">
+          <ul class="flex space-x-1 lg:flex-col lg:space-y-1 lg:space-x-0">
             <ng-container *ngFor="let tab of tabs">
               <li
                 class="wsl-page-nav-item"
@@ -24,18 +26,18 @@
           </ul>
         </nav>
         <div
-          class="order-1 lg:order-2 text-sm"
+          class="order-1 text-sm lg:order-2"
           aria-current="page"
           wslDropdown
           *ngIf="team?.name">
           <button
-            class="cursor-pointer wsl-dropdown-toggle lg:w-full dark:text-gray-300"
+            class="wsl-dropdown-toggle cursor-pointer dark:text-gray-300 lg:w-full"
             type="button"
             id="wsl-teams-dropdown"
             aria-haspopup="true"
             aria-expanded="false">
             <div
-              class="lg:hidden flex items-center bg-white shadow-sm border-gray-100 dark:bg-gray-800 p-2 rounded-md">
+              class="flex items-center rounded-md border-gray-100 bg-white p-2 shadow-sm dark:bg-gray-800 lg:hidden">
               <span>
                 Team:
                 <b class="font-medium">{{ team?.name }}</b>
@@ -43,13 +45,13 @@
               <ng-icon name="hero-chevron-down" class="opacity-50"></ng-icon>
             </div>
             <div
-              class="hidden lg:flex items-center p-2 w-full rounded-md hover:bg-gray-200 hover:bg-opacity-50 dark:hover:bg-gray-800">
-              <div class="flex items-center flex-grow space-x-2">
+              class="hidden w-full items-center rounded-md p-2 hover:bg-gray-200 hover:bg-opacity-50 dark:hover:bg-gray-800 lg:flex">
+              <div class="flex flex-grow items-center space-x-2">
                 <div
-                  class="items-center justify-center w-10 h-10 text-2xl text-center text-white bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-400">
+                  class="h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-center text-2xl text-white dark:bg-gray-700 dark:text-gray-400">
                   {{ team.name[0].toLocaleUpperCase() }}
                 </div>
-                <div class="text-black lg:text-left dark:text-gray-300">
+                <div class="text-black dark:text-gray-300 lg:text-left">
                   <p class="font-light">Team</p>
                   <p class="font-medium">{{ team.name }}</p>
                 </div>
@@ -62,7 +64,7 @@
             </div>
           </button>
           <ul
-            class="hidden w-full wsl-dropdown-menu lg:bottom-16"
+            class="wsl-dropdown-menu hidden w-full lg:bottom-16"
             aria-labelledby="wsl-teams-dropdown">
             <li
               *ngFor="let teamItem of teams.active"
@@ -74,7 +76,7 @@
               {{ teamItem.name }}
             </li>
             <li
-              class="flex items-center wsl-dropdown-item"
+              class="wsl-dropdown-item flex items-center"
               (click)="openCreateTeamModel()">
               <span class="flex-grow">New Team</span>
             </li>
@@ -82,7 +84,7 @@
         </div>
         <div class="lg:hidden" wslDropdown>
           <button
-            class="wsl-btn-sm dark:text-gray-300 bg-white shadow-sm p-2 rounded-md dark:bg-gray-800 group wsl-dropdown-toggle flex h-full items-center space-x-1"
+            class="wsl-btn-sm wsl-dropdown-toggle group flex h-full items-center space-x-1 rounded-md bg-white p-2 shadow-sm dark:bg-gray-800 dark:text-gray-300"
             type="button"
             id="dropdown-button-tabs"
             aria-haspopup="true"
@@ -117,7 +119,7 @@
         </div>
       </div>
     </aside>
-    <main class="container px-4 mx-auto space-y-4 wsl-min-h-screen-2 xl:px-8">
+    <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-4 xl:px-8">
       <div
         [hidden]="
           currentTab?.type !== TabType.Suites || !hasData() || hasItems()
@@ -148,7 +150,7 @@
         <div class="p-4">
           <ul class="space-y-4">
             <li
-              class="flex items-center justify-between p-4 wsl-box"
+              class="wsl-box flex items-center justify-between p-4"
               *ngFor="let item of teams.invitations">
               <p class="text-sm text-black dark:text-gray-300">
                 Team
@@ -180,7 +182,7 @@
         <div class="p-4">
           <ul class="space-y-4">
             <li
-              class="flex items-center justify-between p-4 wsl-box"
+              class="wsl-box flex items-center justify-between p-4"
               *ngFor="let item of teams.requests">
               <p class="text-sm text-black dark:text-gray-300">
                 You have asked to join team
