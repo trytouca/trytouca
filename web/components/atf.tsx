@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import Link from 'next/link';
+import { FiCheckCircle } from 'react-icons/fi';
 import { HiArrowNarrowRight } from 'react-icons/hi';
 
 import { ATFBackedBy, ATFTrustedBy } from './social-proof';
@@ -46,6 +47,27 @@ function ATFTagline() {
   );
 }
 
+function ATFFears() {
+  return (
+    <div className="mx-auto flex justify-center space-x-16">
+      <div className="flex items-center space-x-2">
+        <FiCheckCircle className="text-3xl text-green-600" />
+        <span className="text-xl font-medium text-gray-400">Open-Source</span>
+      </div>
+      <div className="flex items-center space-x-2">
+        <FiCheckCircle className="text-3xl text-green-600" />
+        <span className="text-xl font-medium text-gray-400">
+          Developer-Friendly
+        </span>
+      </div>
+      <div className="flex items-center space-x-2">
+        <FiCheckCircle className="text-3xl text-green-600" />
+        <span className="text-xl font-medium text-gray-400">Battle-Tested</span>
+      </div>
+    </div>
+  );
+}
+
 export function ATFScreenshot() {
   return (
     <section className="bg-gradient-to-b from-dark-blue-800 to-dark-blue-900">
@@ -66,6 +88,7 @@ export function AboveTheFold() {
     <section className="bg-gradient-to-b from-dark-blue-900 to-dark-blue-800">
       <div className="grid min-h-[calc(100vh-5rem)] place-content-center space-y-16 px-4 sm:min-h-[calc(100vh-5rem-15vh)] sm:px-8">
         <ATFTagline />
+        <ATFFears />
         <div className="flex flex-col items-center sm:flex-row sm:justify-center sm:space-x-2">
           <ATFButtonStart />
           <ATFButtonDemo />
