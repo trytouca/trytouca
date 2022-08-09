@@ -84,6 +84,11 @@ const sidebars = {
               type: "doc",
               id: "cli/Readme",
               label: "Overview"
+            },
+            {
+              type: "doc",
+              id: "cli/commands",
+              label: "Commands"
             }
           ]
         },
@@ -259,6 +264,21 @@ const sidebars = {
           type: "doc",
           id: "contributing/good-first-issues",
           label: "Good First Issues"
+        },
+        {
+          type: "doc",
+          id: "contributing/project-structure",
+          label: "Project Structure"
+        },
+        {
+          type: "doc",
+          id: "contributing/development-setup",
+          label: "Development Setup"
+        },
+        {
+          type: "doc",
+          id: "contributing/non-code-contributions",
+          label: "Non-Code Contributions"
         }
       ]
     },
@@ -286,6 +306,21 @@ const sidebars = {
       collapsed: false,
       collapsible: true,
       items: [
+        {
+          type: "doc",
+          id: "cloud/Readme",
+          label: "Features "
+        },
+        {
+          type: "doc",
+          id: "cloud/differences",
+          label: "Differences "
+        },
+        {
+          type: "doc",
+          id: "cloud/pricing",
+          label: "Pricing"
+        },
         {
           type: "category",
           label: "Legal",
