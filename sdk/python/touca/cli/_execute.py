@@ -7,6 +7,9 @@ from pathlib import Path
 from touca._options import config_file_parse
 from touca._runner import Workflow, prepare_parser, run_workflows
 from touca.cli._common import Operation
+import logging
+
+logging.disable(logging.CRITICAL)
 
 
 def is_test_module(module: str):

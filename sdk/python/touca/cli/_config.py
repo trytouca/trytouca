@@ -24,26 +24,26 @@ class Config(Operation):
             description="Print content of active configuration file",
             help="Print content of active configuration file",
         )
-        parsers_1 = parsers.add_parser(
+        parsers_set = parsers.add_parser(
             "set",
             description="Set a value for a configuration option",
             help="Set a value for a configuration option",
         )
-        parsers_1.add_argument(
+        parsers_set.add_argument(
             "key", nargs="+", help="option to be added to the config file"
         )
-        parsers_2 = parsers.add_parser(
+        parsers_get = parsers.add_parser(
             "get",
             description="Get value of a configuration option",
             help="Get value of a configuration option",
         )
-        parsers_2.add_argument("key", help="name of the option to print")
-        parsers_3 = parsers.add_parser(
+        parsers_get.add_argument("key", help="name of the option to print")
+        parsers_rm = parsers.add_parser(
             "rm",
             description="Remove a configuration option",
             help="Remove a configuration option",
         )
-        parsers_3.add_argument("key", help="name of the option to be removed")
+        parsers_rm.add_argument("key", help="name of the option to be removed")
 
     def __init__(self, options: dict):
         self.__options = options

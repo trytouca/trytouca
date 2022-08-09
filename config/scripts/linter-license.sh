@@ -25,16 +25,16 @@ fi
 # content of the desired license
 
 read -r -d '' LICENSE_CONTENT1 << EOM
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 EOM
 
 read -r -d '' LICENSE_CONTENT2 << EOM
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 EOM
 
 read -r -d '' LICENSE_CONTENT3 << EOM
-% Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+% Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 EOM
 
 declare -A PREFIX_MAP=(

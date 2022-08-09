@@ -17,27 +17,27 @@ class Profile(Operation):
     def parser(cls, parser: ArgumentParser):
         parsers = parser.add_subparsers(dest="subcommand")
         parsers.add_parser(
-            "list",
+            "ls",
             description="List available profiles",
             help="List available profiles",
         )
-        parsers_1 = parsers.add_parser(
+        parsers_set = parsers.add_parser(
             "set", description="Change active profile", help="Change active profile"
         )
-        parsers_1.add_argument("name", help="name of the profile")
-        parsers_2 = parsers.add_parser(
-            "delete",
+        parsers_set.add_argument("name", help="name of the profile")
+        parsers_rm = parsers.add_parser(
+            "rm",
             description="Delete profile with specified name",
             help="Delete profile with specified name",
         )
-        parsers_2.add_argument("name", help="name of the profile")
-        parsers_3 = parsers.add_parser(
-            "copy",
+        parsers_rm.add_argument("name", help="name of the profile")
+        parsers_cp = parsers.add_parser(
+            "cp",
             description="Copy content of a given profile to a new or existing profile",
             help="Copy content of a profile to a new or existing profile",
         )
-        parsers_3.add_argument("src", help="name of the profile to copy from")
-        parsers_3.add_argument("dst", help="name of the new profile")
+        parsers_cp.add_argument("src", help="name of the profile to copy from")
+        parsers_cp.add_argument("dst", help="name of the new profile")
 
     def __init__(self, options: dict):
         self.__options = options
@@ -108,10 +108,10 @@ class Profile(Operation):
 
     def run(self):
         commands = {
-            "list": self._command_list,
+            "ls": self._command_list,
             "set": self._command_set,
-            "delete": self._command_delete,
-            "copy": self._command_copy,
+            "rm": self._command_delete,
+            "cp": self._command_copy,
         }
         command = self.__options.get("subcommand")
         if not command:
