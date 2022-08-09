@@ -20,7 +20,7 @@ def test_cli_version(capsys: pytest.CaptureFixture):
 
 
 def test_cli_profile_list(capsys: pytest.CaptureFixture):
-    assert main(["profile", "list"]) == False
+    assert main(["profile", "ls"]) == False
     captured = capsys.readouterr()
     assert "default" in captured.out
     assert not captured.err
@@ -36,11 +36,11 @@ def test_cli_profile_set(capsys: pytest.CaptureFixture):
     assert settings_path.exists()
     assert "[settings]\nprofile = unit_test\n\n" == settings_path.read_text()
 
-    assert main(["profile", "copy", "unit_test", "new_unit_test"]) == False
-    assert main(["profile", "delete", "new_unit_test"]) == False
-    assert main(["profile", "delete", "unit_test"]) == False
+    assert main(["profile", "cp", "unit_test", "new_unit_test"]) == False
+    assert main(["profile", "rm", "new_unit_test"]) == False
+    assert main(["profile", "rm", "unit_test"]) == False
     assert "[settings]\nprofile = default\n\n" == settings_path.read_text()
-    assert main(["profile", "delete", "default"]) == True
+    assert main(["profile", "rm", "default"]) == True
     captured = capsys.readouterr()
     assert not captured.out
     assert captured.err == "refusing to remove default configuration file\n"
