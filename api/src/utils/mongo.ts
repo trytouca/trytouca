@@ -7,10 +7,10 @@ import logger from '@/utils/logger'
 
 export async function makeConnectionMongo(): Promise<boolean> {
   mongoose.Promise = Promise
-  await mongoose.connect(
-    configMgr.getMongoUri(),
-    configMgr.getMongoConnectionOptions()
-  )
+  const mongo_uri = configMgr.getMongoUri()
+  const mongo_options = configMgr.getMongoConnectionOptions()
+  logger.silly('connecting to %s with options %j', mongo_uri, mongo_options)
+  await mongoose.connect(mongo_uri, mongo_options)
   mongoose.connection.on('disconnected', () => {
     logger.debug('closed database connection')
   })
