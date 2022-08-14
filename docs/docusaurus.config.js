@@ -67,6 +67,11 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      algolia: {
+        appId: "MSEUIQLYS3",
+        apiKey: "c52beaf0ac5121aa8460e53430098f12",
+        indexName: "touca"
+      },
       metadata: [
         {
           name: "description",
