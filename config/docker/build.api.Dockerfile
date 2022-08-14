@@ -9,14 +9,14 @@ COPY pnpm-workspace.yaml    /opt/touca/pnpm-workspace.yaml
 
 RUN apk add --no-cache curl \
     && npm i -g pnpm \
-    && mkdir /opt/touca/api/certs \
+    && mkdir -p /opt/touca/api/certs \
     && curl -o /opt/touca/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem \
     && pnpm --dir=/opt/touca/api --filter=@touca/api --filter=@touca/api-schema --filter=@touca/fbs-schema --no-strict-peer-dependencies install \
     && pnpm --dir=/opt/touca/api run build \
     && pnpm --dir=/opt/touca/api run lint \
     && pnpm --dir=/opt/touca/api run test \
     && rm -rf /opt/touca/api/node_modules \
-    && pnpm --dir=/opt/touca/api --filter=@touca/api --frozen-lockfile --omit=dev install
+    && pnpm --dir=/opt/touca/api --filter=@touca/api --frozen-lockfile install
 
 # ---- production image ----
 

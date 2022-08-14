@@ -17,7 +17,7 @@ previous trusted version and visualizes differences in near real-time.
 
 ## Start for free
 
-[![Server](https://img.shields.io/static/v1?label=Server&message=v1.4.0&color=blue)](https://hub.docker.com/repository/docker/touca)
+[![Server](https://img.shields.io/docker/v/touca/touca-api)](https://hub.docker.com/r/touca/touca-api)
 
 ### Option 1: Self-host locally
 
@@ -182,6 +182,7 @@ feedback, that's the best place to be.
 <a href="https://github.com/duncanspumpkin"><img src="https://avatars.githubusercontent.com/u/1277401?v=4" title="duncanspumpkin" width="50" height="50"></a>
 <a href="https://github.com/committomaster"><img src="https://avatars.githubusercontent.com/u/20593344?v=4" title="committomaster" width="50" height="50"></a>
 <a href="https://github.com/mmdbalkhi"><img src="https://avatars.githubusercontent.com/u/65954744?v=4" title="mmdbalkhi" width="50" height="50"></a>
+<a href="https://github.com/depthdeluxe"><img src="https://avatars.githubusercontent.com/u/4984331?v=4" title="depthdeluxe" width="50" height="50"></a>
 
 ## Sponsors
 
