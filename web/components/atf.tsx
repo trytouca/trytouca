@@ -33,14 +33,14 @@ function ATFButtonStart() {
 function ATFTagline() {
   return (
     <div className="space-y-4">
-      <h2 className="max-w-3xl text-3xl font-extrabold text-white sm:text-center md:text-4xl lg:max-w-4xl lg:text-7xl">
+      <h2 className="max-w-3xl text-3xl font-extrabold text-white sm:text-center md:max-w-3xl md:text-4xl lg:max-w-4xl lg:text-7xl">
         Find regressions in{' '}
         <span className="bg-gradient-to-r from-yellow-600 to-yellow-300 bg-clip-text font-extrabold text-transparent">
           minutes
         </span>
         , not days
       </h2>
-      <p className="max-w-3xl text-lg font-medium text-white sm:text-center sm:text-2xl lg:max-w-4xl">
+      <p className="max-w-3xl text-lg font-medium text-white sm:text-center sm:text-2xl md:max-w-3xl lg:max-w-4xl">
         Get feedback when you write code that could break your software
       </p>
     </div>
@@ -49,7 +49,7 @@ function ATFTagline() {
 
 function ATFFears() {
   return (
-    <div className="mx-auto flex justify-center space-x-16">
+    <div className="mx-auto flex max-w-3xl justify-center space-x-2 md:space-x-16">
       <div className="flex items-center space-x-2">
         <FiCheckCircle className="text-3xl text-green-600" />
         <span className="text-xl font-medium text-gray-400">Open-Source</span>
@@ -93,7 +93,7 @@ export function AboveTheFold() {
           <ATFButtonStart />
           <ATFButtonDemo />
         </div>
-        <div className="mx-auto flex w-full max-w-md justify-between">
+        <div className="mx-auto flex w-full max-w-xs justify-between md:max-w-md">
           <ATFTrustedBy />
           <ATFBackedBy />
         </div>
