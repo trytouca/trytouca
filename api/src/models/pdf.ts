@@ -197,7 +197,7 @@ export async function buildPdfReport(
     return
   }
 
-  const responseBody = JSON.parse(response.Payload.toString()).body
+  const responseBody = JSON.parse(Buffer.from(response.Payload).toString()).body
   return {
     content: Buffer.from(responseBody, 'base64'),
     contentType: 'application/pdf',
