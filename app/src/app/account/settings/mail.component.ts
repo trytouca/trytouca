@@ -29,6 +29,7 @@ export class SettingsTabMailComponent {
       updateOn: 'blur'
     })
   });
+  view: 'form' | 'panel';
 
   constructor(private apiService: ApiService) {
     this.apiService.get<PlatformConfig>('/platform/config').subscribe((doc) => {
@@ -39,6 +40,7 @@ export class SettingsTabMailComponent {
         user: doc.mail?.user ?? ''
       };
       this.mailSettingsForm.setValue(mail);
+      this.view = doc.mail?.host.length ? 'form' : 'panel';
       if (doc.mail && !doc.mail.configurable) {
         this.mailSettingsForm.disable();
         this.alert = {
@@ -66,5 +68,11 @@ export class SettingsTabMailComponent {
         this.alert = { text: error, type: AlertType.Danger };
       }
     });
+  }
+
+  resetForm() {
+    const model = { host: '', pass: '', port: 537, user: '' };
+    this.onSubmit(model);
+    this.mailSettingsForm.setValue(model);
   }
 }
