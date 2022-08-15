@@ -20,6 +20,6 @@ describe('config-manager', () => {
     expect(configMgr.getRedisUri()).toEqual('redis://localhost:6379/test')
   })
   test('has-mail-transport', () => {
-    expect(configMgr.hasMailTransport()).toEqual(false)
+    expect(configMgr.hasMailTransportEnvironmentVariables()).toEqual(false)
   })
 })

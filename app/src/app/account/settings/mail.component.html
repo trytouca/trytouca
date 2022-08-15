@@ -1,0 +1,68 @@
+<div class="space-y-4">
+  <form
+    class="wsl-box space-y-4 p-4"
+    [formGroup]="mailSettingsForm"
+    (ngSubmit)="onSubmit(mailSettingsForm.value)"
+    novalidate>
+    <h2
+      class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
+      Mail Transport
+    </h2>
+    <app-alert class="block" [alert]="alert" *ngIf="alert"></app-alert>
+    <div>
+      <label class="wsl-input-label" for="wsl-host">Host</label>
+      <input
+        class="wsl-input-field"
+        type="text"
+        id="wsl-host"
+        name="host"
+        formControlName="host"
+        aria-describedby="wsl-help-host"
+        data-lpignore="true" />
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-port">Port</label>
+      <input
+        class="wsl-input-field"
+        type="number"
+        id="wsl-port"
+        name="port"
+        formControlName="port"
+        aria-describedby="wsl-help-port"
+        data-lpignore="true" />
+      <small id="wsl-help-port" class="wsl-text-muted"></small>
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-user">Username</label>
+      <input
+        class="wsl-input-field"
+        type="text"
+        id="wsl-user"
+        name="user"
+        formControlName="user"
+        aria-describedby="wsl-help-user"
+        data-lpignore="true" />
+      <small id="wsl-help-user" class="wsl-text-muted"></small>
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-pass">Password</label>
+      <input
+        class="wsl-input-field disabled:bg-transparent disabled:text-gray-500 dark:disabled:text-gray-400"
+        type="password"
+        id="wsl-pass"
+        name="pass"
+        formControlName="pass"
+        aria-describedby="wsl-help-pass"
+        data-lpignore="true" />
+      <small id="wsl-help-pass" class="wsl-text-muted"></small>
+    </div>
+    <div class="flex justify-between space-x-2">
+      <button
+        class="wsl-btn-sm wsl-btn-primary font-normal"
+        type="submit"
+        [disabled]="mailSettingsForm.disabled">
+        Update
+      </button>
+    </div>
+  </form>
+</div>

@@ -28,7 +28,7 @@ export async function platformUpdate(
     })
   }
 
-  const payload = pick(req.body, ['telemetry', 'contact'])
+  const payload = pick(req.body, ['telemetry', 'contact', 'mail'])
   const before = await MetaModel.findOneAndUpdate({}, { $set: payload })
 
   const after = await MetaModel.findOne({}, { contact: true, telemetry: true })

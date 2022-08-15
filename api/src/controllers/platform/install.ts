@@ -33,11 +33,6 @@ export async function platformInstall(
     })
   }
 
-  if ((await MetaModel.countDocuments()) === 0) {
-    await MetaModel.create({})
-    logger.info('created meta document')
-  }
-
   if (config.isCloudHosted) {
     logger.info('new self-hosted install')
     await NodeModel.create({

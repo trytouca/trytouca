@@ -8,7 +8,7 @@
     <div class="flex space-x-2 print:hidden">
       <div class="lg:hidden" wslDropdown>
         <button
-          class="wsl-btn-sm wsl-btn-primary group wsl-dropdown-toggle flex h-full items-center space-x-1"
+          class="wsl-btn-sm wsl-btn-primary wsl-dropdown-toggle group flex h-full items-center space-x-1"
           type="button"
           id="dropdown-button-tabs"
           aria-haspopup="true"
@@ -208,6 +208,9 @@
         <app-settings-tab-audit
           [events]="serverSettings.events"
           (copyToClipboard)="onCopy($event)"></app-settings-tab-audit>
+      </div>
+      <div *ngIf="currentTab.type === TabType.Mail">
+        <app-settings-tab-mail></app-settings-tab-mail>
       </div>
       <div
         *ngIf="serverSettings?.accounts && currentTab.type === TabType.Users">

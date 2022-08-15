@@ -90,7 +90,7 @@ async function launch(application) {
     logger.info('running in cloud-hosted mode')
   }
 
-  if (!configMgr.hasMailTransport()) {
+  if (await MetaModel.countDocuments({ 'mail.host': { $exists: false } })) {
     logger.warn('mail server not configured')
   }
 

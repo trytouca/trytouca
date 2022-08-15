@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { findPlatformRole } from '@/middlewares'
 import { MetaModel } from '@/schemas/meta'
-import { config } from '@/utils/config'
+import { configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
@@ -48,16 +48,15 @@ export async function platformConfig(
     response.contact = meta.contact
   }
   if (meta?.mail) {
-    response.mail = meta.mail
-  } else if (config.mail.host) {
     response.mail = {
-      host: config.mail.host,
-      pass: config.mail.pass,
-      port: config.mail.port,
-      user: config.mail.user
+      configurable: !configMgr.hasMailTransportEnvironmentVariables(),
+      host: meta.mail.host,
+      pass: meta.mail.pass,
+      port: meta.mail.port,
+      user: meta.mail.user
     }
   }
-  if (meta.telemetry !== undefined) {
+  if (meta?.telemetry !== undefined) {
     response.telemetry = meta.telemetry
   }
 
