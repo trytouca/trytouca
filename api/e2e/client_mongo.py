@@ -40,6 +40,10 @@ class MongoClient:
             self.client.drop_collection(col_name)
             logger.debug("removed collection {}", col_name)
 
+    def disable_mail_server(self):
+        col_meta = self.client.get_collection("meta")
+        col_meta.update_one({}, {"$unset": {"mail": True}})
+
     def list_results(self):
         col_messages = self.client.get_collection("messages")
         query = col_messages.find(

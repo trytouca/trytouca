@@ -79,7 +79,9 @@ class ApiClient:
                 return False
             if response.json().get("mail"):
                 logger.warning("server has mail transport")
-                return False
+                MongoClient().disable_mail_server()
+                if self.client.get_json("platform").json().get("mail"):
+                    return False
             return True
         except requests.ConnectionError:
             logger.debug("server appears to be down")

@@ -13,9 +13,9 @@ from utilities import config, build_path
 class MinioClient:
     def __init__(self):
         self.client = Minio(
-            config.get("TOUCA_MINIO_URL"),
-            access_key="toucauser",
-            secret_key="toucapass",
+            endpoint=f'{config.get("MINIO_HOST")}:{config.get("MINIO_PORT")}',
+            access_key=config.get("MINIO_USER"),
+            secret_key=config.get("MINIO_PASS"),
             secure=False,
         )
 
