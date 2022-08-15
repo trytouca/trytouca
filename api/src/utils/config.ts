@@ -1,8 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import dotenv from 'dotenv'
+import { pick } from 'lodash'
 import mongoose from 'mongoose'
 import path from 'path'
+
+import { MetaModel } from '@/schemas/meta'
 
 interface IConfig {
   auth: {
@@ -228,8 +231,15 @@ class ConfigManager {
     const redis = this.data.redis
     return `redis://${redis.host}:${redis.port}/${redis.database}`
   }
-  public hasMailTransport(): boolean {
-    return ['user', 'host'].every((key) => config.mail[key])
+  public async hasMailTransport(): Promise<boolean> {
+    return !!(await MetaModel.countDocuments({
+      'mail.host': { $exists: true, $ne: '' }
+    }))
+  }
+  public hasMailTransportEnvironmentVariables() {
+    return Object.values(
+      pick(config.mail, ['host', 'pass', 'port', 'user'])
+    ).every((v) => v)
   }
 }
 

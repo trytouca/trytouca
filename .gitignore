@@ -1,6 +1,7 @@
 api/dist/
 api/e2e/.env/
 api/e2e/logs/
+api/local/tests/
 api/node_modules/
 app/.angular/
 app/dist/

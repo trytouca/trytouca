@@ -6,7 +6,6 @@ import { Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
 import type {
   EFeatureFlag,
-  EPlatformRole,
   PlatformStatsResponse,
   PlatformStatsUser,
   UserLookupResponse,
@@ -96,8 +95,7 @@ export class ProfileComponent implements OnDestroy {
     {
       type: SettingsPageTabType.Mail,
       name: 'Mail Transport',
-      icon: 'feather-mail',
-      hidden: true
+      icon: 'feather-mail'
     },
     {
       type: SettingsPageTabType.Billing,

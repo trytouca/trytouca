@@ -597,7 +597,11 @@ components:
         mail:
           additionalProperties: false
           type: object
+          required:
+            - configurable
           properties:
+            configurable:
+              type: boolean
             host:
               type: string
             pass:

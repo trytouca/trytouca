@@ -1,8 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { pick } from 'lodash'
+
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
-import { SuiteModel } from '@/schemas/suite'
+import { MetaModel } from '@/schemas/meta'
 import { UserModel } from '@/schemas/user'
+import { config, configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
 
 /**
@@ -59,35 +62,22 @@ export async function setupAnonymousUser() {
   return anonymousUser._id
 }
 
-// In January 2022, we allowed users to control level of notification when
-// subscribing to suites. The original `subscribers` field in the `Suite`
-// collection, defined as an array of user IDs is no longer relevant and is
-// now replaced with `subscriptions`.
-async function upgradeSuiteSubscriptions() {
-  const suites = await SuiteModel.find(
-    { subscribers: { $exists: true, $type: 'array', $ne: [] } },
-    { subscribers: 1 }
-  )
-  if (suites.length === 0) {
+// In August 2022, we added support for setting up a mail server through the
+// web app. We plan to phase out support for the environment variables. Until
+// then, for an intuitive user experience, we apply the environment variables
+// to the database so that they always take precedence.
+async function applyMailTransportEnvironmentVariables() {
+  if (!configMgr.hasMailTransportEnvironmentVariables()) {
     return
   }
-  for (const suite of suites) {
-    await SuiteModel.findByIdAndUpdate(suite._id, {
-      $set: {
-        subscriptions: suite.subscribers.map((k) => ({
-          user: k,
-          level: 'all'
-        }))
-      },
-      $unset: { subscribers: true }
-    })
-  }
-  logger.info('upgraded subscribers fields in %d suites', suites.length)
+  const mail = pick(config.mail, ['host', 'pass', 'port', 'user'])
+  await MetaModel.findOneAndUpdate({}, { $set: { mail } })
+  logger.info('updated mail server based on environment variables')
 }
 
 export async function upgradeDatabase() {
   logger.info('database migration: performing checks')
-  await upgradeSuiteSubscriptions()
+  await applyMailTransportEnvironmentVariables()
   logger.info('database migration: checks completed')
   return true
 }

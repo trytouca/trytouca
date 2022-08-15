@@ -16,7 +16,7 @@
     @apply rounded-lg py-2 px-4 text-sm font-semibold leading-6 focus:outline-none;
   }
   .wsl-btn-primary {
-    @apply bg-sky-600 font-medium text-white shadow-md duration-150 ease-in-out hover:bg-sky-900 focus:ring-2 focus:ring-sky-400 focus:ring-opacity-50 dark:bg-sky-800 dark:shadow-none;
+    @apply bg-sky-600 font-medium text-white shadow-md duration-150 ease-in-out hover:bg-sky-900 focus:ring-2 focus:ring-sky-400 focus:ring-opacity-50 disabled:bg-sky-200 disabled:shadow-none dark:bg-sky-800 dark:shadow-none dark:disabled:bg-sky-900 dark:disabled:text-gray-400;
   }
   .wsl-btn-secondary {
     @apply bg-sky-100 text-sky-700 shadow-sm duration-150 ease-in-out hover:bg-sky-200 focus:ring-2 focus:ring-sky-400 focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-300 dark:shadow-none dark:hover:bg-gray-600;
@@ -28,7 +28,7 @@
     @apply border border-gray-200 bg-gray-50 text-black duration-150 ease-in-out hover:bg-gray-100 focus:ring-1 focus:ring-gray-400 focus:ring-opacity-50 disabled:text-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:focus:ring-gray-500 dark:disabled:text-gray-600;
   }
   .wsl-input-field {
-    @apply block w-full rounded-md border-gray-300 bg-white text-sm text-black shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-300 dark:focus:ring-0;
+    @apply disabled:wsl-text-muted block w-full rounded-md border-gray-300 bg-white text-sm text-black shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-300 dark:focus:ring-0;
   }
   .wsl-input-label {
     @apply mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300;

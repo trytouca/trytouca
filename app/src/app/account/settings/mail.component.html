@@ -1,0 +1,105 @@
+<h3 class="py-4 text-xl font-medium text-black dark:text-gray-300">
+  Mail Transport
+</h3>
+<div class="space-y-4" *ngIf="view === 'form'">
+  <form
+    class="wsl-box space-y-4 p-4"
+    [formGroup]="mailSettingsForm"
+    (ngSubmit)="onSubmit(mailSettingsForm.value)"
+    novalidate>
+    <app-alert class="block" [alert]="alert" *ngIf="alert"></app-alert>
+    <div>
+      <label class="wsl-input-label" for="wsl-host">Host</label>
+      <input
+        class="wsl-input-field"
+        type="text"
+        id="wsl-host"
+        name="host"
+        formControlName="host"
+        aria-describedby="wsl-help-host"
+        required />
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-port">Port</label>
+      <input
+        class="wsl-input-field"
+        type="number"
+        id="wsl-port"
+        name="port"
+        formControlName="port"
+        aria-describedby="wsl-help-port"
+        required />
+      <small id="wsl-help-port" class="wsl-text-muted"></small>
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-user">Username</label>
+      <input
+        class="wsl-input-field"
+        type="text"
+        id="wsl-user"
+        name="user"
+        formControlName="user"
+        autocomplete="off"
+        aria-describedby="wsl-help-user"
+        data-lpignore="true"
+        required />
+      <small id="wsl-help-user" class="wsl-text-muted"></small>
+    </div>
+    <div>
+      <label class="wsl-input-label" for="wsl-pass">Password</label>
+      <input
+        class="wsl-input-field"
+        type="password"
+        id="wsl-pass"
+        name="pass"
+        formControlName="pass"
+        autocomplete="off"
+        aria-describedby="wsl-help-pass"
+        data-lpignore="true"
+        required />
+      <small id="wsl-help-pass" class="wsl-text-muted"></small>
+    </div>
+    <div class="flex justify-between">
+      <button
+        class="wsl-btn-lg wsl-btn-primary font-normal"
+        type="submit"
+        [disabled]="mailSettingsForm.disabled">
+        Update
+      </button>
+      <div class="flex justify-end space-x-2">
+        <button
+          class="wsl-btn-sm wsl-btn-muted"
+          type="button"
+          [disabled]="mailSettingsForm.disabled"
+          (click)="resetForm()">
+          Reset Configuration
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<div
+  class="wsl-box p-4 lg:flex lg:items-center lg:space-x-8"
+  *ngIf="view === 'panel'">
+  <div class="space-y-4 lg:flex-grow">
+    <h4
+      class="border-b border-gray-200 pb-2 text-xl font-semibold text-gray-700 dark:border-gray-500 dark:text-gray-200">
+      Setup a Mail Server
+    </h4>
+    <p class="text-justify text-gray-700 dark:text-gray-200">
+      Touca server uses emails for managing user accounts, password resets, team
+      memberships, as well as for reporting insights and analytics about the
+      submitted test results. We strongly recommend that you setup a mail server
+      to enable these emails.
+    </p>
+    <button class="wsl-btn-lg wsl-btn-muted" (click)="view = 'form'">
+      Configure
+    </button>
+  </div>
+  <div>
+    <div
+      class="hidden h-32 w-32 place-content-center rounded-lg border border-gray-200 bg-gray-50 p-4 text-gray-400 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-500 lg:grid">
+      <ng-icon name="feather-send" size="3rem"></ng-icon>
+    </div>
+  </div>
+</div>

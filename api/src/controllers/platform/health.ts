@@ -29,7 +29,7 @@ export async function platformHealth(
   const minioConnection = await objectStore.status()
   const mongodbConnection = mongoose.connection.readyState === 1
   const response = {
-    mail: configMgr.hasMailTransport(),
+    mail: await configMgr.hasMailTransport(),
     ready: minioConnection && mongodbConnection,
     configured: !!(await MetaModel.countDocuments({
       telemetry: { $exists: true }
