@@ -5,6 +5,8 @@ import { pick } from 'lodash'
 import mongoose from 'mongoose'
 import path from 'path'
 
+import { MetaModel } from '@/schemas/meta'
+
 interface IConfig {
   auth: {
     activationKeyLength: number
@@ -228,6 +230,11 @@ class ConfigManager {
   public getRedisUri(): string {
     const redis = this.data.redis
     return `redis://${redis.host}:${redis.port}/${redis.database}`
+  }
+  public async hasMailTransport(): Promise<boolean> {
+    return !!(await MetaModel.countDocuments({
+      'mail.host': { $exists: true, $ne: '' }
+    }))
   }
   public hasMailTransportEnvironmentVariables() {
     return Object.values(

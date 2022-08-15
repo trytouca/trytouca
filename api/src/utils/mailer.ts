@@ -29,18 +29,17 @@ class EMail {
       return EMail.transport
     }
     const meta = await MetaModel.findOne({}, { mail: 1 })
-    if (!meta || !meta.mail) {
-      return EMail.transport
+    if (meta?.mail) {
+      EMail.transport = nodemailer.createTransport({
+        auth: {
+          pass: meta.mail.pass,
+          user: meta.mail.user
+        },
+        host: meta.mail.host,
+        port: meta.mail.port,
+        secure: false
+      })
     }
-    EMail.transport = nodemailer.createTransport({
-      auth: {
-        pass: meta.mail.pass,
-        user: meta.mail.user
-      },
-      host: meta.mail.host,
-      port: meta.mail.port,
-      secure: false
-    })
     return EMail.transport
   }
 
