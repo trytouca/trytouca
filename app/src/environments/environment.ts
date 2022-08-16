@@ -2,7 +2,8 @@
 
 export const environment = {
   apiUrl: 'http://localhost:8081',
-  appVersion: require('../../package.json').version + '-dev',
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  appVersion: `${require('../../package.json').version as string}-dev`,
   dataRefreshInterval: 10000,
   google_api_client_id: '',
   self_hosted: true,
