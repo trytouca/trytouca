@@ -113,11 +113,11 @@ export const config: IConfig = {
   auth: {
     activationKeyLength: 8,
     bcryptSaltRound: 10,
-    cookieSecret: env.AUTH_COOKIE_SECRET,
+    cookieSecret: env.AUTH_COOKIE_SECRET || 'cookiesecret',
     googleClientId: env.AUTH_GOOGLE_CLIENT_ID,
     jwtLifetime: 30,
     jwtLifetimeClient: 1,
-    jwtSecret: env.AUTH_JWT_SECRET,
+    jwtSecret: env.AUTH_JWT_SECRET || 'jwtsecret',
     maxLoginAttempts: 3,
     maxResetKeyLifetime: 30
   },
@@ -159,9 +159,9 @@ export const config: IConfig = {
     user: env.MONGO_USER || 'toucauser'
   },
   redis: {
-    database: env.REDIS_BASE,
-    durationLong: Number(env.CACHE_DURATION_LONG),
-    durationShort: Number(env.CACHE_DURATION_SHORT),
+    database: env.REDIS_BASE || 'touca',
+    durationLong: Number(env.CACHE_DURATION_LONG) || 1800,
+    durationShort: Number(env.CACHE_DURATION_SHORT) || 60,
     host: env.REDIS_HOST,
     port: Number(env.REDIS_PORT) || 6379,
     tlsCertificateFile: env.REDIS_TLS_CERT_FILE

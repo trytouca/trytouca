@@ -19,7 +19,7 @@ export class SettingsTabMailComponent {
     host: new FormControl('', {
       updateOn: 'blur'
     }),
-    port: new FormControl<number>(537, {
+    port: new FormControl<number>(587, {
       updateOn: 'blur'
     }),
     user: new FormControl('', {
@@ -36,7 +36,7 @@ export class SettingsTabMailComponent {
       const mail = {
         host: doc.mail?.host ?? '',
         pass: doc.mail?.pass ?? '',
-        port: doc.mail?.port ?? 537,
+        port: doc.mail?.port ?? 587,
         user: doc.mail?.user ?? ''
       };
       this.mailSettingsForm.setValue(mail);
@@ -71,7 +71,7 @@ export class SettingsTabMailComponent {
   }
 
   resetForm() {
-    const model = { host: '', pass: '', port: 537, user: '' };
+    const model = { host: '', pass: '', port: 587, user: '' };
     this.onSubmit(model);
     this.mailSettingsForm.setValue(model);
   }
