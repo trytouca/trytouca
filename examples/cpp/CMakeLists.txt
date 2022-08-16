@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 cmake_minimum_required(VERSION 3.14...3.21 FATAL_ERROR)
 project(touca_cpp_tutorials VERSION 1.5.0 LANGUAGES CXX)
