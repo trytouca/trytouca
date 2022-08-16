@@ -171,6 +171,10 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -197,7 +201,7 @@ jobs:
           && github.ref == 'refs/heads/main'
         run: |
           tar -zcf cpp-docs-reference.tar.gz local/docs/html
-          aws s3 cp cpp-docs-reference.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp cpp-docs-reference.tar.gz ${{ steps.params.outputs.buckets }}/
 
   build-sdk-cpp-coverage:
     name: build-sdk-cpp-coverage
@@ -220,6 +224,10 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
       - name: authenticate to aws
         if: steps.changes.outputs.sdk_cpp == 'true'
         uses: aws-actions/configure-aws-credentials@v1
@@ -236,7 +244,7 @@ jobs:
         if: steps.changes.outputs.sdk_cpp == 'true'
         run: |
           tar -zcf cpp-test-coverage.tar.gz ./local/coverage/html
-          aws s3 cp cpp-test-coverage.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp cpp-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: upload coverage to codecov
         if: steps.changes.outputs.sdk_cpp == 'true'
         uses: codecov/codecov-action@v2
@@ -265,6 +273,10 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -309,13 +321,13 @@ jobs:
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           tar -zcf java-docs-external.tar.gz touca/build/docs/javadoc
-          aws s3 cp java-docs-external.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp java-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           tar -zcf java-test-coverage.tar.gz touca/build/reports/jacoco/test/html
-          aws s3 cp java-test-coverage.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp java-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: cleanup gradle cache
         if: steps.changes.outputs.sdk_java == 'true'
         run: |
@@ -353,6 +365,10 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -387,13 +403,13 @@ jobs:
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf js-node-docs-external.tar.gz local/docs
-          aws s3 cp js-node-docs-external.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp js-node-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
-          aws s3 cp js-node-test-coverage.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp js-node-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: upload coverage to codecov
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -427,6 +443,10 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
@@ -472,13 +492,13 @@ jobs:
           == 'push'
         run: |
           tar -zcf python-docs-external.tar.gz local/docs
-          aws s3 cp python-docs-external.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp python-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
         run: |
           tar -zcf python-test-coverage.tar.gz local/tests
-          aws s3 cp python-test-coverage.tar.gz ${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0/
+          aws s3 cp python-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: build package distributable
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9
@@ -736,7 +756,7 @@ jobs:
         id: params
         run: |
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: 7
@@ -802,7 +822,7 @@ jobs:
         id: params
         run: |
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: 7
@@ -859,7 +879,7 @@ jobs:
         id: params
         run: |
           echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
 
       - uses: actions/setup-python@v1
         if: steps.changes.outputs.cmp == 'true'
@@ -914,9 +934,9 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          echo "::set-output name=version::1.4.0"
+          echo "::set-output name=version::$(npm --prefix=api pkg get version | sed 's/"//g')"
           echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' || steps.changes.outputs.cmp == 'true') }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.4.0"
+          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
       - uses: actions/download-artifact@v2
         if: steps.changes.outputs.api == 'true'
         with:
