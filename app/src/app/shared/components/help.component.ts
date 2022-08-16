@@ -5,6 +5,7 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faDiscord } from '@fortawesome/free-brands-svg-icons';
 
 import { intercomClient } from '@/shared/utils/intercom';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-help',
@@ -19,10 +20,12 @@ import { intercomClient } from '@/shared/utils/intercom';
 })
 export class HelpComponent {
   faDiscord = faDiscord;
+  version = environment.appVersion;
+  isChatWidgetOpen = false;
+
   constructor(faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(faDiscord);
   }
-  isChatWidgetOpen = false;
   hasIntercom() {
     return intercomClient.enabled;
   }
