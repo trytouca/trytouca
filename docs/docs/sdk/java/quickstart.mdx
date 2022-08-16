@@ -1,3 +1,4 @@
+import Image from "@theme/IdealImage";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
@@ -157,7 +158,7 @@ of test cases which would make dealing with result files very inconvenient.
 Fortunately, Touca has a server instance that can be self-hosted or cloud-hosted
 to manage and compare test results and report their differences.
 
-![You will need API Key and API URL to submit test results.](/img/assets/touca-submit-first-version.png)
+<Image img={require("/img/assets/touca-submit-first-version.png")} />
 
 If you have not already, create an account at
 [app.touca.io](https://app.touca.io). Once you make a new suite, the server
@@ -185,7 +186,7 @@ Time:       0.57 s
 
 ```
 
-![Touca server after submitting results for v1.0](/img/assets/touca-sdk-quickstart-1.png)
+<Image img={require("/img/assets/touca-sdk-quickstart-1.png")} />
 
 Now if we make changes to our workflow under test, we can rerun this test and
 rely on Touca to check if our changes affected the behavior or performance of
@@ -211,7 +212,7 @@ Time:       0.55 s
 
 ```
 
-![Touca server after submitting results for v2.0](/img/assets/touca-sdk-quickstart-2.png)
+<Image img={require("/img/assets/touca-sdk-quickstart-2.png")} />
 
 In our example, we captured the output of our workflow using `Touca.check`. But
 unlike integration tests, we are not bound to the output of our workflow. We can

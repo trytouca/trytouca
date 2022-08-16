@@ -1,3 +1,4 @@
+import Image from "@theme/IdealImage";
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 
@@ -6,17 +7,17 @@ import TabItem from "@theme/TabItem";
 In the previous document, we learned how to write a simple Touca test and run it
 to submit data for the _current_ version of our software workflow.
 
-![Touca Suite Overview page](/img/assets/touca-suite-page-single-version.png)
+<Image img={require("/img/assets/touca-suite-page-single-version.png")} />
 
 This page provides an overview of how our workflow changes over time in behavior
 and performance. We can click on each version to inspect the test results
 submitted for each test case in that version.
 
-![Touca Version Overview page](/img/assets/touca-version-page-first.png)
+<Image img={require("/img/assets/touca-version-page-first.png")} />
 
 We can also review the captured data for any one of the test cases.
 
-![Touca Test Case Overview page](/img/assets/touca-case-page-first.png)
+<Image img={require("/img/assets/touca-case-page-first.png")} />
 
 But submitting results to a remote Touca server makes more sense when we have
 large amounts of data that is difficult to compare across versions and
@@ -128,12 +129,12 @@ As test cases are executed, the server compares their captured test results and
 performance benchmarks against the previous "baseline" version `v1.0` and
 visualizes the differences.
 
-![Comparison results for v2.0](/img/assets/touca-version-page-second.png)
+<Image img={require("/img/assets/touca-version-page-second.png")} />
 
 We can inspect the differences reported for test case `alice` to understand the
 impact of our recent code change.
 
-![Comparison results for test case alice in v2.0](/img/assets/touca-case-page-second.png)
+<Image img={require("/img/assets/touca-case-page-second.png")} />
 
 ## Promoting Baseline
 
@@ -149,7 +150,7 @@ our workflow. We can use the Touca server to promote any given version of our
 workflow as the new _baseline_, using the "Promote Version" button in the
 version overview page.
 
-![You can set any version as Baseline for your Suite](/img/assets/touca-version-page-promote.png)
+<Image img={require("/img/assets/touca-version-page-promote.png")} />
 
 Promoting a version as "Baseline" makes the Touca server automatically compare
 future versions of our workflow against that version. Since this may be an
