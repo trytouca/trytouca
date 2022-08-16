@@ -1,8 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faDiscord } from '@fortawesome/free-brands-svg-icons';
+import { environment } from 'src/environments/environment';
 
 import { intercomClient } from '@/shared/utils/intercom';
 
@@ -19,10 +20,12 @@ import { intercomClient } from '@/shared/utils/intercom';
 })
 export class HelpComponent {
   faDiscord = faDiscord;
+  version = environment.appVersion;
+  isChatWidgetOpen = false;
+
   constructor(faIconLibrary: FaIconLibrary) {
     faIconLibrary.addIcons(faDiscord);
   }
-  isChatWidgetOpen = false;
   hasIntercom() {
     return intercomClient.enabled;
   }

@@ -2,7 +2,8 @@
 
 export const environment = {
   apiUrl: 'https://api.touca.io',
-  appVersion: '1.4.0',
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  appVersion: require('../../package.json').version,
   dataRefreshInterval: 10000,
   google_api_client_id:
     '232474004917-li0ioanjkoi6lj6vq2intei2kv7op5li.apps.googleusercontent.com',
