@@ -226,6 +226,11 @@ const sidebars = {
               label: "Keyboard Shortcuts"
             },
             {
+              type: "doc",
+              id: "server/environment-variables",
+              label: "Environment Variables"
+            },
+            {
               type: "link",
               label: "REST API",
               href: "https://app.touca.io/docs/api/index.html"
