@@ -11,7 +11,7 @@ from touca.cli._common import Operation, invalid_subcommand
 
 class Profile(Operation):
     name = "profile"
-    help = "Create and manage configuration files"
+    help = "Create and manage configuration profiles"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):

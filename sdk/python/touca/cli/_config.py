@@ -9,7 +9,7 @@ from touca.cli._common import Operation, invalid_subcommand
 
 class Config(Operation):
     name = "config"
-    help = "Manage active configuration file"
+    help = "Manage your active configuration profile"
 
     @classmethod
     def parser(cls, parser):

@@ -58,6 +58,14 @@ const config = {
           {
             from: "/sdk/differences",
             to: "/sdk"
+          },
+          {
+            from: "/basics/faq",
+            to: "/guides/faq"
+          },
+          {
+            from: "/concepts/vs-snapshot",
+            to: "/sdk"
           }
         ]
       }

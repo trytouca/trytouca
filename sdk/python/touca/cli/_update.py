@@ -39,7 +39,7 @@ def _update(cli, srcDir: Path, outDir: Path, teamslug, testsuite):
 
 class Update(Operation):
     name = "update"
-    help = "Update metdata of binary archive files"
+    help = "Update metadata of binary archives"
 
     def __init__(self, options: dict):
         self.__options = options

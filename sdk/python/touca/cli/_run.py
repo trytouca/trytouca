@@ -178,7 +178,7 @@ def archive_results(config: dict, artifact_version: str):
 
 class Run(Operation):
     name = "run"
-    help = "Run regression test on a dedicated test server"
+    help = "Run tests on a dedicated test server"
 
     def __init__(self, options: dict):
         self.__options = options
