@@ -14,7 +14,7 @@ const config = {
   trailingSlash: true,
   scripts: [
     {
-      src: "/js/script.js",
+      src: "/js/script.outbound-links.js",
       defer: true,
       "data-domain": "touca.io"
     }
