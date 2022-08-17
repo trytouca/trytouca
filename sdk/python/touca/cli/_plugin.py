@@ -32,7 +32,7 @@ def user_plugins():
 
 class Plugin(Operation):
     name = "plugin"
-    help = "Manage custom CLI plugins"
+    help = "Install and manage custom CLI plugins"
 
     @classmethod
     def parser(self, parser: ArgumentParser):

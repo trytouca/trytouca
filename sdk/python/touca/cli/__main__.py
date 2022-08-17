@@ -46,7 +46,7 @@ def _warn_outdated_version():
 
 class Version(Operation):
     name = "version"
-    help = "show program's version number and exit"
+    help = "Check your Touca CLI version"
 
     def __init__(self, options):
         pass

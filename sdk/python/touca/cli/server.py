@@ -12,7 +12,7 @@ logger = logging.getLogger("touca.cli.server")
 
 class Server(Operation):
     name = "server"
-    help = "Manage local instance of touca server."
+    help = "Install and manage your Touca Server"
 
     @classmethod
     def parser(self, parser: ArgumentParser):

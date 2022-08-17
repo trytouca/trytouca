@@ -23,7 +23,7 @@ def _extract(src, dst):
 
 class Unzip(Operation):
     name = "unzip"
-    help = "Extract compressed binary archive files"
+    help = "Extract compressed binary archives"
 
     def __init__(self, options: dict):
         self.__options = options

@@ -124,6 +124,11 @@ const sidebars = {
                   label: "Core API"
                 },
                 {
+                  type: "doc",
+                  id: "sdk/cpp/cli",
+                  label: "Utility CLI"
+                },
+                {
                   type: "link",
                   label: "API Reference",
                   href: "https://app.touca.io/docs/sdk/cpp/api.html"

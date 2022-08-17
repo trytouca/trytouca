@@ -42,7 +42,7 @@ def _post(src_dir: Path, transport: Transport = None, dry_run=False):
 
 class Post(Operation):
     name = "post"
-    help = "Submit binary archive files to remote server"
+    help = "Submit binary archives to a Touca server"
 
     def __init__(self, options: dict):
         self.__options = options

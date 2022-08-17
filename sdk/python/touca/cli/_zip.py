@@ -27,7 +27,7 @@ def _compress(srcDir, outputDir):
 
 class Zip(Operation):
     name = "zip"
-    help = "Compress binary archive files"
+    help = "Compress binary archives"
 
     def __init__(self, options: dict):
         self.__options = options

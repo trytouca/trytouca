@@ -39,7 +39,7 @@ def extract_workflows(modules: list):
 
 class Execute(Operation):
     name = "test"
-    help = "Execute available regression tests"
+    help = "Run your Touca tests"
 
     @classmethod
     def parser(cls, parser: ArgumentParser):

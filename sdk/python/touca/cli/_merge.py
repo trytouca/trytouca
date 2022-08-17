@@ -31,7 +31,7 @@ def _merge(touca_cli: Path, dir_src: Path, dir_dst: Path):
 
 class Merge(Operation):
     name = "merge"
-    help = "Merge binary archive files"
+    help = "Merge binary archives"
 
     def __init__(self, options: dict):
         self.__options = options
