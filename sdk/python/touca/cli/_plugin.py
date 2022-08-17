@@ -38,24 +38,24 @@ class Plugin(Operation):
     def parser(self, parser: ArgumentParser):
         parsers = parser.add_subparsers(dest="subcommand")
         parsers.add_parser(
-            "list",
+            "ls",
             description="List available plugins",
             help="List available plugins",
         )
         parsers_add = parsers.add_parser(
             "add",
-            description="Install a CLI plugin",
-            help="Install a CLI plugin",
+            description="Install a plugin",
+            help="Install a plugin",
         )
         parsers_add.add_argument("name", help="name of the plugin")
         parsers_remove = parsers.add_parser(
-            "remove",
-            description="Uninstall a CLI plugin",
-            help="Uninstall a CLI plugin",
+            "rm",
+            description="Uninstall a plugin",
+            help="Uninstall a plugin",
         )
         parsers_remove.add_argument("name", help="name of the plugin")
         parsers.add_parser(
-            "template", description="Create a new plugin", help="create a new plugin"
+            "new", description="Create a new plugin", help="Create a new plugin"
         )
 
     def __init__(self, options: dict):
@@ -122,16 +122,16 @@ class Example(Operation):
     def run(self):
         print("Example!")
         return True
-        """
+"""
         )
         return True
 
     def run(self):
         commands = {
             "add": self._command_add,
-            "list": self._command_list,
-            "remove": self._command_remove,
-            "template": self._command_template,
+            "ls": self._command_list,
+            "rm": self._command_remove,
+            "new": self._command_template,
         }
         command = self.__options.get("subcommand")
         if not command:
