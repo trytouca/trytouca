@@ -2,7 +2,7 @@
 slug: /
 ---
 
-# Introduction
+# What is Touca
 
 Testing is the bottleneck in the software development lifecycle. It is estimated
 that 85% of enterprise software is still tested manually. Manual testing results

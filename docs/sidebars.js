@@ -4,33 +4,15 @@ const sidebars = {
   mainSidebar: [
     {
       type: "category",
-      label: "Concepts",
+      label: "Getting Started",
       collapsed: false,
-      collapsible: true,
+      collapsible: false,
       items: [
         {
           type: "doc",
           id: "Readme",
-          label: "What is Touca"
+          label: "Welcome"
         },
-        {
-          type: "doc",
-          id: "concepts/vs-snapshot",
-          label: "Touca vs. Snapshot Testing"
-        },
-        {
-          type: "doc",
-          id: "basics/faq",
-          label: "FAQ"
-        }
-      ]
-    },
-    {
-      type: "category",
-      label: "Getting Started",
-      collapsed: false,
-      collapsible: true,
-      items: [
         {
           type: "doc",
           id: "basics/Readme",
@@ -72,32 +54,20 @@ const sidebars = {
       type: "category",
       label: "Product",
       collapsed: false,
-      collapsible: true,
+      collapsible: false,
       items: [
         {
-          type: "category",
-          label: "CLI",
-          collapsed: true,
-          collapsible: true,
-          items: [
-            {
-              type: "doc",
-              id: "cli/Readme",
-              label: "Overview"
-            }
-          ]
+          type: "doc",
+          id: "cli/Readme",
+          label: "CLI"
         },
         {
           type: "category",
           label: "SDKs",
           collapsed: true,
           collapsible: true,
+          link: { type: "doc", id: "sdk/Readme" },
           items: [
-            {
-              type: "doc",
-              id: "sdk/Readme",
-              label: "Overview"
-            },
             {
               type: "category",
               label: "Python",
@@ -241,9 +211,37 @@ const sidebars = {
     },
     {
       type: "category",
+      label: "Guides",
+      collapsed: false,
+      collapsible: false,
+      items: [
+        {
+          type: "doc",
+          id: "guides/self-hosting",
+          label: "Self Hosting"
+        },
+        {
+          type: "doc",
+          id: "guides/best-practices",
+          label: "Best Practices"
+        },
+        {
+          type: "doc",
+          id: "guides/vs-snapshot",
+          label: "Touca vs. Snapshot Testing"
+        },
+        {
+          type: "doc",
+          id: "guides/faq",
+          label: "FAQ"
+        }
+      ]
+    },
+    {
+      type: "category",
       label: "Contributing",
       collapsed: false,
-      collapsible: true,
+      collapsible: false,
       items: [
         {
           type: "doc",
@@ -264,43 +262,19 @@ const sidebars = {
     },
     {
       type: "category",
-      label: "Guides",
+      label: "Legal",
       collapsed: false,
-      collapsible: true,
+      collapsible: false,
       items: [
         {
           type: "doc",
-          id: "guides/self-hosting",
-          label: "Self Hosting"
+          id: "legal/terms",
+          label: "Terms of Service"
         },
         {
           type: "doc",
-          id: "guides/best-practices",
-          label: "Best Practices"
-        }
-      ]
-    },
-    {
-      type: "category",
-      label: "Touca Cloud",
-      collapsed: false,
-      collapsible: true,
-      items: [
-        {
-          type: "category",
-          label: "Legal",
-          items: [
-            {
-              type: "doc",
-              id: "legal/terms",
-              label: "Terms of Service"
-            },
-            {
-              type: "doc",
-              id: "legal/privacy",
-              label: "Privacy Policy"
-            }
-          ]
+          id: "legal/privacy",
+          label: "Privacy Policy"
         }
       ]
     }

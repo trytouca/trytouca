@@ -1,3 +1,5 @@
+import ToucaImage from "@site/src/components/ToucaImage";
+
 # Manage Notifications
 
 You can subscribe to a given suite to get notified of important events about it.
@@ -10,21 +12,33 @@ These events include:
 You can also configure your subscription to include notifications about new
 versions that match the behavior and performance of baseline version.
 
-![Touca Test Case Overview page](/img/assets/touca-suite-subscribe.png)
+<ToucaImage
+  src="touca-suite-subscribe.png"
+  alt="Touca Test Case Overview page"
+/>
 
 When a new version has differences compared to the baseline, the notification
 will include a summary of those differences. You can always click on "View
 Results" to inspect the differences on the Touca server.
 
-![Sample email when version has differences](/img/assets/touca-email-difference.png)
+<ToucaImage
+  src="touca-email-difference.png"
+  alt="Sample email when version has differences"
+/>
 
 When someone on your team promotes a new version to baseline, the notification
 will include any note they may have written as justification.
 
-![Sample email when new version is promoted](/img/assets/touca-email-promotion.png)
+<ToucaImage
+  src="touca-email-promotion.png"
+  title="Sample email when new version is promoted"
+/>
 
 Lastly, if you choose to receive notifications about all new versions, you may
 rely on emails from Touca as confirmation that a new version matches the
 baseline.
 
-![Sample email when version matches baseline](/img/assets/touca-email-match.png)
+<ToucaImage
+  src="touca-email-match.png"
+  title="Sample email when version matches baseline"
+/>
