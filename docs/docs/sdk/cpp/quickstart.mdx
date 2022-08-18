@@ -1,40 +1,41 @@
+import ToucaImage from "@site/src/components/ToucaImage";
+
 # Getting Started
 
-This document introduces Touca SDK for JavaScript through a simple example. If
-you are new to Touca, consider reading our
+This document introduces Touca SDK for C++ through a simple example. If you are
+new to Touca, consider reading our
 [general quickstart guide](/basics/quickstart) first.
 
-Touca SDK for JavaScript is available as open-source
-[on GitHub](https://github.com/trytouca/trytouca/tree/main/sdk/js) under the
-Apache-2.0 License. It is publicly available
-[on NPM](https://npmjs.com/package/@touca/node).
-
-```bash
-npm install --save @touca/node
-```
+Touca SDK for C++ is available as open-source
+[on GitHub](https://github.com/trytouca/trytouca) under the Apache-2.0 License.
+You can [build it from source](./building.md) or
+[pull it as third-party dependency](./installing.md).
 
 Clone the Touca repository to a directory of your choice, navigate to the
-`examples/js` subdirectory, and use `npm` to build the examples.
+`examples/cpp` subdirectory, and use either of our `build.sh` script or our
+Dockerfile to build the examples.
 
 ```bash
 git clone git@github.com:trytouca/trytouca.git
-cd trytouca/examples/js
-npm install
-npm run build
+cd trytouca
+docker build -t touca-examples-cpp -f cpp/Dockerfile cpp
+docker run -it touca-examples-cpp /bin/bash
 ```
 
 For our first example, let us write a Touca test for a software that checks
 whether a given number is prime. You can find a possible first implementation in
-`examples/js/01_node_minimal/is_prime.ts`.
+`/opt/01_cpp_minimal/is_prime.hpp` of the Docker container.
 
-```typescript
-export function is_prime(input: number): boolean {
-  for (let i = 2; i < input; i++) {
-    if (input % i === 0) {
+```cpp
+#include <cmath>
+
+bool is_prime(const unsigned long number) {
+  for (auto i = 2u; i < number; i++) {
+    if (number % i == 0) {
       return false;
     }
   }
-  return 1 < input;
+  return 1 < number;
 }
 ```
 
@@ -46,18 +47,19 @@ our software.
 
 With Touca, we can test our software workflows regardless of their complexity.
 Here is an example Touca test for our `is_prime` software using the Touca SDK
-for JavaScript.
+for C++.
 
-```typescript
-import { touca } from "@touca/node";
-import { is_prime } from "./is_prime";
+```cpp
+#include "is_prime.hpp"
+#include "touca/touca_main.hpp"
 
-touca.workflow("is_prime_test", (testcase: string) => {
-  const number = Number.parseInt(testcase);
-  touca.check("is_prime_output", is_prime(number));
-});
-
-touca.run();
+int main(int argc, char* argv[]) {
+  touca::workflow("is_prime", [](const std::string& testcase) {
+    const auto number = std::stoul(testcase);
+    touca::check("output", is_prime(number));
+  });
+  return touca::run(argc, argv);
+}
 ```
 
 Typical Touca tests do not list the inputs that we use to test our workflow. We
@@ -75,7 +77,7 @@ our test cases are executed.
 Let us run our Touca test, passing `13` as a sample input:
 
 ```bash
-node 01_node_minimal/dist/is_prime_test.js --team tutorial --suite is_prime --revision 1.0 --offline --testcase 13
+example_cpp_minimal --team tutorial --suite is_prime --revision 1.0 --offline --testcase 13
 ```
 
 This command produces the following output.
@@ -114,7 +116,11 @@ of test cases which would make dealing with result files very inconvenient.
 Fortunately, Touca has a server instance that can be self-hosted or cloud-hosted
 to manage and compare test results and report their differences.
 
-![You will need API Key and API URL to submit test results.](/img/assets/touca-submit-first-version.png)
+<ToucaImage
+  src="touca-submit-first-version.png"
+  dark="touca-submit-first-version-dark.png"
+  caption="You will need API Key and API URL to submit test results."
+/>
 
 If you have not already, create an account at
 [app.touca.io](https://app.touca.io). Once you make a new suite, the server
@@ -123,7 +129,7 @@ shows an API Key and an API URL that you can use to submit test results.
 ```bash
 export TOUCA_API_KEY="8073c34f-a48c-4e69-af9f-405b9943f8cc"
 export TOUCA_API_URL="https://api.touca.io/@/tutorial/prime-test"
-node 01_node_minimal/dist/is_prime_test.js --revision 1.0 --testcase 19 51 97
+example_cpp_minimal --testcase 19,51,97 --revision 1.0
 ```
 
 ```text
@@ -142,14 +148,18 @@ Time:       0.57 s
 
 ```
 
-![Touca server after submitting results for v1.0](/img/assets/touca-sdk-quickstart-1.png)
+<ToucaImage
+  src="touca-sdk-quickstart-1.png"
+  dark="touca-sdk-quickstart-1-dark.png"
+  alt="Touca server after submitting results for v1.0"
+/>
 
 Now if we make changes to our workflow under test, we can rerun this test and
 rely on Touca to check if our changes affected the behavior or performance of
 our software.
 
 ```bash
-node 01_node_minimal/dist/is_prime_test.js --revision 2.0
+example_cpp_minimal --revision 2.0
 ```
 
 ```text
@@ -168,9 +178,13 @@ Time:       0.55 s
 
 ```
 
-![Touca server after submitting results for v2.0](/img/assets/touca-sdk-quickstart-2.png)
+<ToucaImage
+  src="touca-sdk-quickstart-2.png"
+  dark="touca-sdk-quickstart-2-dark.png"
+  alt="Touca server after submitting results for v2.0"
+/>
 
-In our example, we captured the output of our workflow using `touca.check`. But
+In our example, we captured the output of our workflow using `touca::check`. But
 unlike integration tests, we are not bound to the output of our workflow. We can
 capture any number of data points and from anywhere within our code. This is
 specially useful if our workflow has multiple stages. We can capture the output
@@ -178,5 +192,5 @@ of each stage without publicly exposing its API. If the behavior of that stage
 changes in a future version of our code, we can leverage the captured output to
 find the root cause more easily.
 
-In the next documents, we will learn how to use Touca SDK for JavaScript to test
+In the next document, we will learn how to use Touca SDK for C++ to test
 real-world software workflows.

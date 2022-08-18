@@ -1,3 +1,5 @@
+import ToucaImage from "@site/src/components/ToucaImage";
+
 # Quick Start
 
 This document introduces Touca SDK for Python
@@ -90,7 +92,11 @@ differences as test cases are executed.
 Let's create an account on [app.touca.io](https://app.touca.io) to submit our
 results to it.
 
-![You will need API Key and API URL to submit test results.](/img/assets/touca-submit-first-version.png)
+<ToucaImage
+  src="touca-submit-first-version.png"
+  dark="touca-submit-first-version-dark.png"
+  caption="You will need API Key and API URL to submit test results."
+/>
 
 Create a new suite `is_prime_test` and copy the API Key and API URL that we need
 to submit test results.
@@ -118,7 +124,11 @@ Time:       0.39 s
 
 ```
 
-![Touca server after submitting results for v1.0](/img/assets/touca-sdk-quickstart-1.png)
+<ToucaImage
+  src="touca-sdk-quickstart-1.png"
+  dark="touca-sdk-quickstart-1-dark.png"
+  alt="Touca server after submitting results for v1.0"
+/>
 
 Now if we make changes to our workflow under test, we can rerun this test and
 rely on Touca to check if our changes affected the behavior or performance of
@@ -144,7 +154,11 @@ Time:       0.55 s
 
 ```
 
-![Touca server after submitting results for v2.0](/img/assets/touca-sdk-quickstart-2.png)
+<ToucaImage
+  src="touca-sdk-quickstart-2.png"
+  dark="touca-sdk-quickstart-2-dark.png"
+  alt="Touca server after submitting results for v2.0"
+/>
 
 Unlike integration tests, we are not bound to the output of our workflow. We can
 capture any number of data points and from anywhere within our code. This is

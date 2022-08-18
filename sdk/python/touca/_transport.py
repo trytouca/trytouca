@@ -83,6 +83,7 @@ class Transport:
         return [k["name"] for k in body]
 
     def post(self, content):
+        reason = ""
         response = self._send_request(
             method="POST",
             path=f"/client/submit",
@@ -91,10 +92,12 @@ class Transport:
         )
         if response.status == 204:
             return
-        if response.status == 400 and "batch is sealed" in response.data.decode(
-            "utf-8"
-        ):
-            reason = " This version is already submitted and sealed."
+        if response.status == 400:
+            error = response.data.decode("utf-8")
+            if "batch is sealed" in error:
+                reason = " This version is already submitted and sealed."
+            if "team not found" in error:
+                reason = " This team does not exist."
         raise RuntimeError(f"Failed to submit test results.{reason}")
 
     def seal(self):
