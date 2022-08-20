@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   description: Touca Server API Specification
-  version: 1.5.0
+  version: 1.6.0
   title: Touca Server API
   contact:
     email: support@touca.io

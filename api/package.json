@@ -1,6 +1,6 @@
 {
   "name": "@touca/api",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Continuous regression testing for critical software workflows.",
   "private": true,
   "license": "UNLICENSED",
