@@ -1,7 +1,7 @@
 version: "3"
 services:
   touca_api:
-    image: touca/touca-api:1.5.0
+    image: touca/touca-api:1.6.0
     environment:
       ENV_FILE: prod
       AUTH_JWT_SECRET: <SECRET>
@@ -25,7 +25,7 @@ services:
     restart: always
 
   touca_cmp:
-    image: touca/touca-cmp:1.5.0
+    image: touca/touca-cmp:1.6.0
     environment:
       MINIO_USER: toucauser
       MINIO_PASS: toucapass

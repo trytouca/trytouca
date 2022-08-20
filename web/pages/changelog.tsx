@@ -27,7 +27,7 @@ export default function ChangelogPage(props: BlogPostStaticProps) {
                   Touca Changelog
                 </h3>
                 <p className="text-xl font-light text-white lg:text-2xl">
-                  Monthly product updates, summarizing the new features,
+                  Weekly product updates, summarizing the new features,
                   improvements, and bugfixes
                 </p>
               </div>

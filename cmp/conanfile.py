@@ -10,7 +10,7 @@ class ToucaConan(ConanFile):
     description = "Touca Comparator"
     topics = ("regression-testing", "test-framework", "test-automation")
     license = "Apache-2.0"
-    version = "1.5.0"
+    version = "1.6.0"
     author = "Touca, Inc. <hello@touca.io>"
     settings = "os", "compiler", "build_type", "arch"
     generators = "cmake_find_package"
