@@ -1,14 +1,33 @@
 # Changelog
 
-## v1.5.6
+## v1.5.7
 
 Improvements:
 
-- CLI sub-command `post` should respect config profile (#222)
+- Update supported options for CLI sub-command `profile` (#239)
+- Replace CLI sub-command `solve` with `server` (#231)
 - Remove CLI dependency on `loguru` (#229)
-- Improve `dry-run` in CLI `post` sub-command (#224)
-- Remove CLI sub-command `solve` (#231)
-- Add CLI sub-command `server` (#231)
+- Improve `dry-run` in CLI sub-command `post` (#224)
+- Remove default API URL (#223)
+- CLI sub-command `post` should respect config profile (#222)
+- CLI sub-command `post` should not expect merged files (#217)
+- Update `Readme` file (#173)
+- Add example for evaluating machine learning models (#161)
+- Allow passing arguments to high-level function `run` (#160)
+
+## v1.5.6
+
+Features:
+
+- Add CLI sub-command `plugin` (#98)
+
+Improvements:
+
+- CLI sub-command `plugin` should support installing via url (#140)
+- CLI sub-command `plugin` should support `template` (#133)
+- Switch to using `pathlib` in test framework (#104)
+- Test framework should print path to local test results (#102)
+- CLI sub-command `post` should support `--dry-run` (#47)
 
 ## v1.5.5
 
