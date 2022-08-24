@@ -31,6 +31,7 @@ import router from './routes'
 import {
   analyticsService,
   autosealService,
+  comparisonService,
   reportingService,
   retentionService,
   telemetryService
@@ -124,6 +125,12 @@ async function launch(application) {
 
   // setup service to collect privacy-friendly aggregate usage data
   setInterval(telemetryService, config.services.telemetry.checkInterval * 1000)
+
+  // setup service to process and compare submitted results
+  setInterval(
+    comparisonService,
+    config.services.comparison.checkInterval * 1000
+  )
 
   // create a superuser if this platform was just setup
   await setupSuperuser()

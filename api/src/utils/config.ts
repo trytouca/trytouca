@@ -76,6 +76,9 @@ interface IConfig {
       checkInterval: number
       defaultDuration: number
     }
+    comparison: {
+      checkInterval: number
+    }
     reporting: {
       checkInterval: number
     }
@@ -179,6 +182,10 @@ export const config: IConfig = {
     autoseal: {
       checkInterval: Number(env.SERVICE_AUTOSEAL_CHECK_INTERVAL) || 60,
       defaultDuration: Number(env.SERVICE_AUTOSEAL_DEFAULT_DURATION) || 10 * 60
+    },
+    // comparison service
+    comparison: {
+      checkInterval: Number(env.SERVICE_COMPARISON_CHECK_INTERVAL) || 5
     },
     // reporting service
     reporting: {

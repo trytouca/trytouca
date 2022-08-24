@@ -2,6 +2,7 @@
 
 export { analyticsService } from './analytics'
 export { autosealService } from './autoseal'
+export { comparisonService } from './comparison'
 export { reportingService } from './reporting'
 export { retentionService } from './retention'
 export { telemetryService } from './telemetry'
