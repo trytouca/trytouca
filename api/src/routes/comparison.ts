@@ -4,9 +4,9 @@ import express from 'express'
 import { body as vbody, param as vparam } from 'express-validator'
 
 import { comparisonList } from '@/controllers/comparison/list'
-import { comparisonProcess } from '@/controllers/comparison/process'
+import { comparisonProcessCtrl } from '@/controllers/comparison/process'
 import { comparisonStats } from '@/controllers/comparison/stats'
-import { messageProcess } from '@/controllers/message/process'
+import { messageProcessCtrl } from '@/controllers/message/process'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
@@ -18,14 +18,14 @@ router.patch(
   '/job/:job',
   middleware.inputs([vparam('job').isMongoId().withMessage('job invalid')]),
   express.json({ limit: '10mb' }),
-  promisable(comparisonProcess, 'process comparison job')
+  promisable(comparisonProcessCtrl, 'process comparison job')
 )
 
 router.patch(
   '/message/:message',
   middleware.inputs([vparam('message').isMongoId().withMessage('job invalid')]),
   express.json({ limit: '10mb' }),
-  promisable(messageProcess, 'process message')
+  promisable(messageProcessCtrl, 'process message')
 )
 
 router.post(

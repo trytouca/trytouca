@@ -5,7 +5,7 @@ import { MessageInfo } from '@/models/messageInfo'
 import { BatchModel } from '@/schemas/batch'
 import { ComparisonModel } from '@/schemas/comparison'
 import { ElementModel } from '@/schemas/element'
-import { MessageModel } from '@/schemas/message'
+import { IMessageDocument, MessageModel } from '@/schemas/message'
 import logger from '@/utils/logger'
 import { objectStore } from '@/utils/store'
 
@@ -94,4 +94,44 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
     logger.warn('%s: failed to remove message: %O', tuple, err)
     return false
   }
+}
+
+export type MessageProcessInput = {
+  overview: IMessageDocument['meta']
+  body: Record<string, unknown>
+}
+
+export async function messageProcess(
+  messageId: string,
+  input: MessageProcessInput
+) {
+  const message = await MessageModel.findById(messageId)
+  // we expect that message is registered
+  if (!message) {
+    throw new Error('message not found')
+  }
+  // if message is already processed, remove its previous content from
+  // object storage.
+  if (message.contentId) {
+    logger.warn('%s: message already processed', messageId)
+    await objectStore.removeResult(message._id.toHexString())
+  }
+  // insert message in json format into object storage
+  const doc = await objectStore.addResult(
+    message._id.toHexString(),
+    JSON.stringify(input.body, null)
+  )
+  if (!doc) {
+    throw new Error('failed to handle message body')
+  }
+  // mark message as processed
+  await MessageModel.findByIdAndUpdate(messageId, {
+    $set: {
+      processedAt: new Date(),
+      contentId: message._id,
+      meta: input.overview
+    },
+    $unset: { reservedAt: true }
+  })
+  logger.silly('%s: processed message', messageId)
 }
