@@ -1,11 +1,13 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { MessageProcessInput } from '@touca/fbs-schema'
+
 import { comparisonRemove } from '@/models/comparison'
 import { MessageInfo } from '@/models/messageInfo'
 import { BatchModel } from '@/schemas/batch'
 import { ComparisonModel } from '@/schemas/comparison'
 import { ElementModel } from '@/schemas/element'
-import { IMessageDocument, MessageModel } from '@/schemas/message'
+import { MessageModel } from '@/schemas/message'
 import logger from '@/utils/logger'
 import { objectStore } from '@/utils/store'
 
@@ -94,11 +96,6 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
     logger.warn('%s: failed to remove message: %O', tuple, err)
     return false
   }
-}
-
-export type MessageProcessInput = {
-  overview: IMessageDocument['meta']
-  body: Record<string, unknown>
 }
 
 export async function messageProcess(
