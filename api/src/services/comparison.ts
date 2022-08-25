@@ -31,9 +31,9 @@ async function processMessageJob(job: MessageJob) {
 async function processComparisonJob(job: ComparisonJob) {
   logger.debug('c:%s: processing', job.jobId)
   const tic = Date.now()
-  const dst = await objectStore.getMessage(job.dstMessageId.toString())
-  const src = await objectStore.getMessage(job.srcMessageId.toString())
-  const output = await parseComparison(src, dst)
+  const dstMessage = await objectStore.getMessage(job.dstMessageId.toString())
+  const srcMessage = await objectStore.getMessage(job.srcMessageId.toString())
+  const output = await parseComparison(srcMessage, dstMessage)
   const { error } = await comparisonProcess(job.jobId.toString(), output)
   if (error) {
     logger.warn('c:%s: failed to process job: %s', job.jobId, error)
@@ -47,7 +47,6 @@ async function processComparisonJob(job: ComparisonJob) {
 export async function comparisonService(): Promise<void> {
   const serviceName = 'service comparison'
   logger.silly('%s: running', serviceName)
-
   const tic = Date.now()
   const jobs = await getComparisonJobs()
   const tasks = [
@@ -60,7 +59,6 @@ export async function comparisonService(): Promise<void> {
   logger.info('%s: received %d comparison jobs', serviceName, tasks.length)
   const numCollectionJobs = tasks.length
   const avgCollectionTime = (Date.now() - tic) / tasks.length
-
   const output = await Promise.allSettled(tasks.map(async (v) => await v()))
   const resolved = output
     .filter((v) => v.status === 'fulfilled')
