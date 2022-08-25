@@ -130,6 +130,5 @@ export async function messageProcess(
     },
     $unset: { reservedAt: true }
   })
-  logger.silly('%s: processed message', messageId)
   return { status: 204 }
 }

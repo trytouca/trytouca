@@ -10,6 +10,6 @@ export async function messageProcessCtrl(
   res: Response,
   next: NextFunction
 ) {
-  const { status, error } = await messageProcess(req.params.job, req.body)
+  const { status, error } = await messageProcess(req.params.message, req.body)
   return error ? next({ status, errors: [error] }) : res.status(status).send()
 }
