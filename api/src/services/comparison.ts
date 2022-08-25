@@ -6,7 +6,8 @@ import {
   ComparisonJob,
   comparisonProcess,
   getComparisonJobs,
-  MessageJob
+  MessageJob,
+  updateComparisonStats
 } from '@/models/comparison'
 import { messageProcess } from '@/models/message'
 import logger from '@/utils/logger'
@@ -18,7 +19,9 @@ async function processMessageJob(job: MessageJob) {
   const message = await objectStore.getMessage(job.messageId.toString())
   const output = await parseMessage(message)
   await messageProcess(job.messageId.toString(), output)
-  logger.info('m:%s: processed (%d ms)', job.messageId, Date.now() - tic)
+  const duration = Date.now() - tic
+  logger.info('m:%s: processed (%d ms)', job.messageId, duration)
+  return duration
 }
 
 async function processComparisonJob(job: ComparisonJob) {
@@ -28,21 +31,39 @@ async function processComparisonJob(job: ComparisonJob) {
   const src = await objectStore.getMessage(job.srcMessageId.toString())
   const output = await parseComparison(src, dst)
   await comparisonProcess(job.jobId.toString(), output)
-  logger.info('c:%s: processed (%d ms)', job.jobId, Date.now() - tic)
+  const duration = Date.now() - tic
+  logger.info('c:%s: processed (%d ms)', job.jobId, duration)
+  return duration
 }
 
 export async function comparisonService(): Promise<void> {
   const serviceName = 'service comparison'
   logger.silly('%s: running', serviceName)
+
+  const tic = Date.now()
   const jobs = await getComparisonJobs()
-  const jobsCount = jobs.comparisons.length + jobs.messages.length
-  if (!jobsCount) {
-    return
-  }
-  logger.info('%s: received %d comparison jobs', serviceName, jobsCount)
   const tasks = [
     ...jobs.messages.map((v) => () => processMessageJob(v)),
     ...jobs.comparisons.map((v) => () => processComparisonJob(v))
   ]
-  await Promise.allSettled(tasks.map(async (v) => await v()))
+  if (!tasks.length) {
+    return
+  }
+  logger.info('%s: received %d comparison jobs', serviceName, tasks.length)
+  const numCollectionJobs = tasks.length
+  const avgCollectionTime = (Date.now() - tic) / tasks.length
+
+  const output = await Promise.allSettled(tasks.map(async (v) => await v()))
+  const resolved = output
+    .filter((v) => v.status === 'fulfilled')
+    .map((v: any) => v.value)
+  const avgProcessingTime =
+    resolved.reduce((sum, cur) => sum + cur, 0) / tasks.length
+  const numProcessingJobs = resolved.length
+  await updateComparisonStats({
+    numCollectionJobs,
+    avgCollectionTime,
+    avgProcessingTime,
+    numProcessingJobs
+  })
 }
