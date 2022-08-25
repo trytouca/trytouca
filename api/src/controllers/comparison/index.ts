@@ -1,4 +1,5 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// to be removed as part of "Synchronized Comparison" project
 
 export { comparisonList } from './list'
-export { comparisonProcess } from './process'
+export { comparisonProcessCtrl } from './process'

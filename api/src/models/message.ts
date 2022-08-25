@@ -1,5 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { MessageProcessInput } from '@touca/fbs-schema'
+
 import { comparisonRemove } from '@/models/comparison'
 import { MessageInfo } from '@/models/messageInfo'
 import { BatchModel } from '@/schemas/batch'
@@ -94,4 +96,39 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
     logger.warn('%s: failed to remove message: %O', tuple, err)
     return false
   }
+}
+
+export async function messageProcess(
+  messageId: string,
+  input: MessageProcessInput
+): Promise<{ status: number; error?: string }> {
+  const message = await MessageModel.findById(messageId)
+  // we expect that message job exists
+  if (!message) {
+    return { status: 404, error: 'message not found' }
+  }
+  // if message is already processed, remove its previous content from
+  // object storage.
+  if (message.contentId) {
+    logger.warn('%s: message already processed', messageId)
+    await objectStore.removeResult(message._id.toHexString())
+  }
+  // insert message result in json format into object storage
+  const doc = await objectStore.addResult(
+    message._id.toHexString(),
+    JSON.stringify(input.body, null)
+  )
+  if (!doc) {
+    return { status: 500, error: 'failed to handle message result' }
+  }
+  // mark message job as processed
+  await MessageModel.findByIdAndUpdate(messageId, {
+    $set: {
+      processedAt: new Date(),
+      contentId: message._id,
+      meta: input.overview
+    },
+    $unset: { reservedAt: true }
+  })
+  return { status: 204 }
 }
