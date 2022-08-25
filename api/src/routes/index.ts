@@ -9,7 +9,6 @@ import { authRouter } from '@/routes/auth'
 import { batchRouter } from '@/routes/batch'
 import { clientRouter } from '@/routes/client'
 import { commentRouter } from '@/routes/comment'
-import { comparisonRouter } from '@/routes/comparison'
 import { elementRouter } from '@/routes/element'
 import { inboxRouter } from '@/routes/inbox'
 import { platformRouter } from '@/routes/platform'
@@ -31,7 +30,6 @@ router.get('/@/:team/:suite', (req, res) => {
 router.use('/auth', authRouter)
 router.use('/batch', batchRouter)
 router.use('/client', clientRouter)
-router.use('/cmp', comparisonRouter)
 router.use('/comment', commentRouter)
 router.use('/element', elementRouter)
 router.use('/inbox', inboxRouter)
