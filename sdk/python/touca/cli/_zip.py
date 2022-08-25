@@ -10,7 +10,7 @@ from touca.cli._common import Operation
 logger = logging.getLogger("touca.cli.zip")
 
 
-def _compress(srcDir, outputDir):
+def _compress_batch(srcDir, outputDir):
     dstFile = Path(outputDir, srcDir.name + ".7z")
     if dstFile.exists():
         logger.warning(f"compressed file {dstFile} already exists")
@@ -22,6 +22,27 @@ def _compress(srcDir, outputDir):
     except py7zr.ArchiveError:
         logger.warning(f"failed to compress {srcDir}")
         return False
+    return True
+
+
+def _compress_batches(src, out):
+    src = Path(src).expanduser().resolve()
+    out = Path(src).expanduser().resolve()
+
+    if not src.exists():
+        logger.error(f"directory {src} does not exist")
+        return False
+    for src_dir in src.glob("*"):
+        if not src_dir.is_dir():
+            continue
+        logger.debug(f"compressing {src_dir}")
+        if not out.exists():
+            out.mkdir(parents=True, exist_ok=True)
+        if not _compress_batch(src_dir, out):
+            logger.error(f"failed to compress {src_dir}")
+            return False
+        logger.info(f"compressed {src_dir}")
+    logger.info("compressed all sub-directories")
     return True
 
 
@@ -38,21 +59,6 @@ class Zip(Operation):
         parser.add_argument("out", help="directory to store compressed files")
 
     def run(self):
-        src = Path(self.__options.get("src")).expanduser().resolve()
-        out = Path(self.__options.get("out")).expanduser().resolve()
-
-        if not src.exists():
-            logger.error(f"directory {src} does not exist")
-            return False
-        for src_dir in src.glob("*"):
-            if not src_dir.is_dir():
-                continue
-            logger.debug(f"compressing {src_dir}")
-            if not out.exists():
-                out.mkdir(parents=True, exist_ok=True)
-            if not _compress(src_dir, out):
-                logger.error(f"failed to compress {src_dir}")
-                return False
-            logger.info(f"compressed {src_dir}")
-        logger.info("compressed all sub-directories")
-        return True
+        return _compress_batches(
+            src=self.__options.get("src"), out=self.__options.get("out")
+        )
