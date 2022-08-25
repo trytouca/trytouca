@@ -80,19 +80,16 @@ node examples/01_node_minimal/dist/is_prime_test.js
 
 ### 5. Create a Unified Docker image for Touca Server
 
-Touca server is currently split into three containers:
+Touca server is currently split into two containers:
 
 - [touca-api](https://hub.docker.com/r/touca/touca-api): A Node-based conatiner
   that runs Touca Backend ExpressJS service.
 - [touca-app](https://hub.docker.com/r/touca/touca-app): An Nginx-based
   conatiner that serves Touca Frontend static files and reverse proxies requests
   to `/api` to the Backend service.
-- [touca-cmp](https://hub.docker.com/r/touca/touca-app): An Ubuntu-based
-  container that runs Toua Comparator service which is a standalone binary
-  executable.
 
 We like to combine these services and create a single Alpine-based `touca`
-docker image that runs all the three processes.
+docker image that runs both `nginx` and `node` processes.
 
 - [GitHub Issue](https://github.com/trytouca/trytouca/issues/191)
 - [Feature Branch](https://github.com/trytouca/trytouca/tree/feature/arm)

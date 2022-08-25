@@ -24,18 +24,6 @@ services:
       - 8081:8081
     restart: always
 
-  touca_cmp:
-    image: touca/touca-cmp:1.7.0
-    environment:
-      MINIO_USER: toucauser
-      MINIO_PASS: toucapass
-    volumes:
-      - ./logs/cmp:/var/log/cmp
-    depends_on:
-      - touca_api
-      - touca_minio
-    restart: always
-
   touca_redis:
     image: redis:6-alpine
     volumes:

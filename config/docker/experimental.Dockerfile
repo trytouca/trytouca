@@ -35,29 +35,6 @@ RUN pnpm --dir=/opt/touca install --filter=@touca/app \
     --lockfile-dir /opt/touca --frozen-lockfile --no-optional \
   && pnpm --dir=/opt/touca/app run build
 
-# ---- builder stage (cmp) ----
-
-FROM alpine:3.16 AS builder_cpp
-
-RUN apk add --update --no-cache \
-    bash build-base cmake make gcc g++ \
-    libfontenc-dev libice-dev libsm-dev libstdc++ libx11-dev libxaw-dev \
-    libxcomposite-dev libxcursor-dev libxdamage-dev linux-headers \
-    libxi-dev libxinerama-dev libxkbfile-dev libxrandr-dev libxres-dev \
-    libxscrnsaver-dev libxtst-dev libxv-dev libxvmc-dev libxxf86vm-dev \
-    openssl openssl-dev perl py3-pip python3 \
-    xcb-util-image-dev xcb-util-wm-dev xcb-util-keysyms-dev \
-    xcb-util-renderutil-dev xkeyboard-config \
-  && rm -rf /var/cache/apk/*
-
-COPY cmp /opt/touca/cmp
-
-RUN python3 -m pip install conan \
-  && conan profile new default --detect \
-  && conan profile update settings.compiler.libcxx=libstdc++11 default \
-  && conan remote add --force touca-cpp https://getweasel.jfrog.io/artifactory/api/conan/touca-cpp \
-  && /opt/touca/cmp/build.sh
-
 # ---- production image ----
 
 FROM node:16-alpine
@@ -74,7 +51,6 @@ LABEL com.docker.desktop.extension.icon="https://touca.io/logo/touca-logo-w-text
 RUN apk add --no-cache --update \
     bash ca-certificates curl libstdc++ nginx \
   && rm -rf /var/cache/apk/* \
-  && mkdir /var/log/cmp \
   && mkdir -p /opt/touca/api/certs \
   && curl -o /opt/touca/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
 
@@ -90,8 +66,6 @@ COPY --from=builder_api /opt/touca/api/samples                  /opt/touca/api/s
 COPY --from=builder_api /opt/touca/api/node_modules             /opt/touca/api/node_modules
 COPY --from=builder_app /opt/touca/app/dist                     /www/data/app
 COPY --from=builder_app /opt/touca/app/nginx.conf               /etc/nginx/conf.d/default.conf
-COPY --from=builder_cpp /opt/touca/cmp/local/dist               /opt/touca/cmp/local/dist
-COPY --from=builder_cpp /opt/touca/cmp/config/config.prod.json  /opt/touca/cmp/config/config.json
 COPY config/docker/experimental-init.sh                         /opt/touca/config/docker/experimental-init.sh
 
 EXPOSE 80

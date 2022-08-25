@@ -12,11 +12,6 @@ app:
   - "config/docker/app.Dockerfile"
   - "app/**"
 
-cmp:
-  - ".github/workflows/build.yml"
-  - "config/docker/cmp.Dockerfile"
-  - "cmp/**"
-
 ops:
   - ".github/workflows/build.yml"
   - "ops/**"

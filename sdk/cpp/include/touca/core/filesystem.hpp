@@ -63,7 +63,7 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 
 /**
  * Utility function to load content of a file with given path.
- * For consumption by Comparator and Utils applications.
+ * For consumption by CLI.
  *
  * @param path path to the file whose content should be loaded
  *
