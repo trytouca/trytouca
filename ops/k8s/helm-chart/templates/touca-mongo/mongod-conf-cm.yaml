@@ -1,0 +1,17 @@
+apiVersion: v1
+data:
+  mongod.conf: |
+    systemLog:
+        quiet: true
+
+    net:
+        port: 27017
+        bindIp: 0.0.0.0
+
+    security:
+       authorization: enabled
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: mongod-conf
+  namespace: {{ .Release.Name }}-touca

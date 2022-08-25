@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    cmp: {{ .Release.Name }}-touca-cmp
+  name: {{ .Release.Name }}-touca-cmp
+  namespace: {{ .Release.Name }}-touca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      cmp: {{ .Release.Name }}-touca-cmp
+  template:
+    metadata:
+      labels:
+        cmp: {{ .Release.Name }}-touca-cmp
+    spec:
+      containers:
+      - image: {{ .Values.toucaCmp.dockerRepoName | default "touca" | lower }}/touca-cmp:{{ .Values.toucaCmp.dockerImageTag }}
+        name: {{ .Release.Name }}-touca-cmp
+        env:
+        - name: MINIO_USER
+          value: toucauser
+        - name: MINIO_PASS
+          value: toucapass
+        - name: API_URL
+          value: "http://{{ .Release.Name }}-touca-api:8081"
+        - name: MINIO_HOST
+          value: "http://{{ .Release.Name }}-touca-minio:9000"
+        - name: MINIO_PROXY_HOST
+          value: {{ .Release.Name }}-touca-minio
+        volumeMounts:
+        - mountPath: /var/log/cmp
+          name: cmp-volume
+      volumes:
+      - name: cmp-volume
+        persistentVolumeClaim:
+          claimName: touca-ebs

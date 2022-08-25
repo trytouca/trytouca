@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Release.Name }}-touca-app
+  name: {{ .Release.Name }}-touca-app
+  namespace: {{ .Release.Name }}-touca
+spec:
+  type: {{ if not .Values.ingress.enabled }}NodePort{{ end }}
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+{{- include "svcIngress" . | indent 4 }}
+  selector:
+    app: {{ .Release.Name }}-touca-app

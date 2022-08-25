@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1                             
+kind: ClusterIssuer                             
+metadata:                               
+  name: letsencrypt-production                             
+spec:                            
+  acme:                                 
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: ehsan@touca.io
+    privateKeySecretRef:                                                                   
+      name: touca-tls-cert
+    solvers:
+    - http01:
+        ingress:
+          class: nginx

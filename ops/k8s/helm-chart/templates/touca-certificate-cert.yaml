@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Release.Name }}-touca-cert
+  namespace: {{ .Release.Name }}-touca
+spec:
+  dnsNames:
+    - {{ .Release.Name }}.trytouca.com
+  secretName: touca-tls-cert
+  issuerRef:
+    name: letsencrypt-production
+    kind: ClusterIssuer

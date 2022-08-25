@@ -1,0 +1,22 @@
+apiVersion: v2
+appVersion: 1.4.0
+description: The touca helm-chart
+home: https://github.com/trytouca/trytouca
+icon: https://camo.githubusercontent.com/14af379bcd732aa6ff2ebeea6344366b8b70d10f1688857d2a99164e1bc0d449/68747470733a2f2f746f7563612e696f2f6c6f676f2f746f7563612d6c6f676f2d772d746578742d62672e706e67
+keywords:
+- touca
+- regressions
+- testing
+- software development lifecycle
+- real-time feedback
+- development
+maintainers:
+- email: ehsan@touca.io
+  name: touca.io
+  url: https://github.com/trytouca/trytouca
+name: toucaChart
+sources:
+- https://www.touca.io
+- https://github.com/trytouca/trytouca/tree/main/ops
+type: application
+version: 1.0.0

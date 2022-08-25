@@ -1,0 +1,14 @@
+toucaApp:
+  dockerRepoName: "touca"
+  dockerImageTag: "1.6"
+
+toucaApi:
+  dockerRepoName: "touca"
+  dockerImageTag: "1.6"
+
+toucaCmp:
+  dockerRepoName: "touca"
+  dockerImageTag: "1.6"
+
+ingress:
+  enabled: true

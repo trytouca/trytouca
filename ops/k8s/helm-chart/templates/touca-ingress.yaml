@@ -1,0 +1,26 @@
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-touca-ingress
+  namespace: {{ .Release.Name }}-touca
+  annotations:
+    external-dns.alpha.kubernetes.io/hostname: {{ .Release.Name }}.trytouca.com
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - {{ .Release.Name }}.trytouca.com
+    secretName: touca-tls-cert
+  rules:
+  - host: {{ .Release.Name }}.trytouca.com
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: {{ .Release.Name }}-touca-app
+            port:
+              number: 80
+{{- end }}

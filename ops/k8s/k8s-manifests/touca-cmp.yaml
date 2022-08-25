@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    cmp: touca-cmp
+  name: touca-cmp
+  namespace: touca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      cmp: touca-cmp
+  template:
+    metadata:
+      labels:
+        cmp: touca-cmp
+    spec:
+      containers:
+      - image: touca/touca-cmp:1.4.0
+        name: touca-cmp
+        env:
+        - name: MINIO_USER
+          value: toucauser
+        - name: MINIO_PASS
+          value: toucapass
+        - name: API_URL
+          value: "http://touca-api:8081"
+        - name: MINIO_HOST
+          value: "http://touca-minio:9000"
+        - name: MINIO_PROXY_HOST
+          value: touca-minio
+        volumeMounts:
+        - mountPath: /var/log/cmp
+          name: cmp-volume
+      volumes:
+      - name: cmp-volume
+        persistentVolumeClaim:
+          claimName: touca-ebs
