@@ -10,10 +10,6 @@ export async function comparisonProcessCtrl(
   res: Response,
   next: NextFunction
 ) {
-  try {
-    await comparisonProcess(req.params.job, req.body)
-  } catch (err) {
-    return res.status(500).json({ errors: [err.message] })
-  }
-  return res.status(204).send()
+  const { status, error } = await comparisonProcess(req.params.job, req.body)
+  return error ? next({ status, errors: [error] }) : res.status(status).send()
 }

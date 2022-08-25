@@ -18,7 +18,11 @@ async function processMessageJob(job: MessageJob) {
   const tic = Date.now()
   const message = await objectStore.getMessage(job.messageId.toString())
   const output = await parseMessage(message)
-  await messageProcess(job.messageId.toString(), output)
+  const { error } = await messageProcess(job.messageId.toString(), output)
+  if (error) {
+    logger.warn('m:%s: failed to process job: %s', job.messageId, error)
+    return Promise.reject(error)
+  }
   const duration = Date.now() - tic
   logger.info('m:%s: processed (%d ms)', job.messageId, duration)
   return duration
@@ -30,7 +34,11 @@ async function processComparisonJob(job: ComparisonJob) {
   const dst = await objectStore.getMessage(job.dstMessageId.toString())
   const src = await objectStore.getMessage(job.srcMessageId.toString())
   const output = await parseComparison(src, dst)
-  await comparisonProcess(job.jobId.toString(), output)
+  const { error } = await comparisonProcess(job.jobId.toString(), output)
+  if (error) {
+    logger.warn('c:%s: failed to process job: %s', job.jobId, error)
+    return Promise.reject(error)
+  }
   const duration = Date.now() - tic
   logger.info('c:%s: processed (%d ms)', job.jobId, duration)
   return duration

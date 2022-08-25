@@ -141,32 +141,28 @@ export async function comparisonRemove(
   }
 }
 
-export async function comparisonProcess(jobId, input) {
+export async function comparisonProcess(
+  jobId,
+  input
+): Promise<{ status: number; error?: string }> {
   // we expect that comparison job exists
-
   const comparison = await ComparisonModel.findById(jobId)
   if (!comparison) {
-    throw new Error('comparison job not found')
+    return { status: 404, error: 'comparison job not found' }
   }
-
   // we expect that comparison job is not already processed
-
   if (comparison.contentId) {
-    throw new Error('comparison job already processed')
+    return { status: 409, error: 'comparison job already processed' }
   }
-
-  // insert comparison result in json format into object storage database
-
+  // insert comparison result in json format into object storage
   const doc = await objectStore.addComparison(
     comparison._id.toHexString(),
     JSON.stringify(input.body, null)
   )
   if (!doc) {
-    throw new Error('failed to handle comparison result')
+    return { status: 500, error: 'failed to handle comparison result' }
   }
-
   // mark comparison job as processed
-
   await ComparisonModel.findByIdAndUpdate(jobId, {
     $set: {
       processedAt: new Date(),
@@ -175,6 +171,7 @@ export async function comparisonProcess(jobId, input) {
     },
     $unset: { reservedAt: true }
   })
+  return { status: 204 }
 }
 
 export async function updateComparisonStats(input: {

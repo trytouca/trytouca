@@ -101,11 +101,11 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
 export async function messageProcess(
   messageId: string,
   input: MessageProcessInput
-) {
+): Promise<{ status: number; error?: string }> {
   const message = await MessageModel.findById(messageId)
-  // we expect that message is registered
+  // we expect that message job exists
   if (!message) {
-    throw new Error('message not found')
+    return { status: 404, error: 'message not found' }
   }
   // if message is already processed, remove its previous content from
   // object storage.
@@ -113,15 +113,15 @@ export async function messageProcess(
     logger.warn('%s: message already processed', messageId)
     await objectStore.removeResult(message._id.toHexString())
   }
-  // insert message in json format into object storage
+  // insert message result in json format into object storage
   const doc = await objectStore.addResult(
     message._id.toHexString(),
     JSON.stringify(input.body, null)
   )
   if (!doc) {
-    throw new Error('failed to handle message body')
+    return { status: 500, error: 'failed to handle message result' }
   }
-  // mark message as processed
+  // mark message job as processed
   await MessageModel.findByIdAndUpdate(messageId, {
     $set: {
       processedAt: new Date(),
@@ -131,4 +131,5 @@ export async function messageProcess(
     $unset: { reservedAt: true }
   })
   logger.silly('%s: processed message', messageId)
+  return { status: 204 }
 }

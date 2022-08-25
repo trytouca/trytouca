@@ -1,4 +1,5 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// to be removed as part of "Synchronized Comparison" project
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -9,10 +10,6 @@ export async function messageProcessCtrl(
   res: Response,
   next: NextFunction
 ) {
-  try {
-    await messageProcess(req.params.message, req.body)
-  } catch (err) {
-    return next({ status: 500, errors: [err.message] })
-  }
-  return res.status(204).send()
+  const { status, error } = await messageProcess(req.params.job, req.body)
+  return error ? next({ status, errors: [error] }) : res.status(status).send()
 }
