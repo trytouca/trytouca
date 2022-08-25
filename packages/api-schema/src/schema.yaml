@@ -1782,6 +1782,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
+  # to be removed as part of "Synchronized Comparison" project
   /cmp:
     get:
       tags:
@@ -1824,6 +1825,7 @@ paths:
                       $ref: '#/components/schemas/ObjectId'
                     srcProcessed:
                       type: boolean
+  # to be removed as part of "Synchronized Comparison" project
   /cmp/job/:job:
     patch:
       tags:
@@ -1870,6 +1872,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
+  # to be removed as part of "Synchronized Comparison" project
   /cmp/message/{message}:
     patch:
       tags:
@@ -1921,6 +1924,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
+  # to be removed as part of "Synchronized Comparison" project
   /cmp/stats:
     post:
       tags:

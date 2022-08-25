@@ -44,5 +44,5 @@ export async function comparisonService(): Promise<void> {
     ...jobs.messages.map((v) => () => processMessageJob(v)),
     ...jobs.comparisons.map((v) => () => processComparisonJob(v))
   ]
-  await Promise.all(tasks.map(async (v) => await v()))
+  await Promise.allSettled(tasks.map(async (v) => await v()))
 }

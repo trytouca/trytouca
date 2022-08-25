@@ -1,4 +1,5 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+// to be removed as part of "Synchronized Comparison" project
 
 import express from 'express'
 import { body as vbody, param as vparam } from 'express-validator'

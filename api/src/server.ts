@@ -127,10 +127,13 @@ async function launch(application) {
   setInterval(telemetryService, config.services.telemetry.checkInterval * 1000)
 
   // setup service to process and compare submitted results
-  setInterval(
-    comparisonService,
-    config.services.comparison.checkInterval * 1000
-  )
+  if (config.services.comparison.enabled) {
+    logger.warn('registering experimental comparison service')
+    setInterval(
+      comparisonService,
+      config.services.comparison.checkInterval * 1000
+    )
+  }
 
   // create a superuser if this platform was just setup
   await setupSuperuser()
