@@ -16,7 +16,7 @@ cmp:
 
 ops:
   - ".github/workflows/build.yml"
-  - "devops/**"
+  - "ops/**"
 
 docs:
   - ".github/workflows/build.yml"

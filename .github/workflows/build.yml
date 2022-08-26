@@ -911,6 +911,47 @@ jobs:
           path: ${{ github.workspace }}/cmp.tar.gz
           retention-days: 1
 
+  build-ops:
+    name: build-ops
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && steps.changes.outputs.ops == 'true' }}"
+      - name: authenticate to aws
+        uses: aws-actions/configure-aws-credentials@v1
+        if: steps.params.outputs.release == 'true'
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+      - name: install helm
+        if: steps.changes.outputs.ops == 'true'
+        uses: azure/setup-helm@v3
+      - name: lint helm chart
+        if: steps.changes.outputs.ops == 'true'
+        run: helm lint ops/k8s/helm-chart
+      - name: generate helm chart template
+        if: steps.changes.outputs.ops == 'true'
+        run: helm template ops/k8s/helm-chart > ops/k8s/touca.yaml
+      - name: push ops to aws
+        if: steps.params.outputs.release == 'true'
+        run: |
+          tar -zcf deployment-scripts.tar.gz ops
+          aws s3 cp deployment-scripts.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 cp ops/install.sh ${{ secrets.AWS_BUCKET_WEB }}/install.sh
+          aws s3 cp ops/install.dev.sh ${{ secrets.AWS_BUCKET_WEB }}/install.dev.sh
+          aws s3 cp ops/k8s/touca.yaml ${{ secrets.AWS_BUCKET_WEB }}/install/touca.yaml
+
   build-server:
     name: build-server
     runs-on: ubuntu-20.04
@@ -982,14 +1023,6 @@ jobs:
         if: steps.params.outputs.release == 'true'
         with:
           registry: ${{ secrets.AWS_ECR }}
-      - name: push ops to aws
-        if: |
-          steps.changes.outputs.ops == 'true' && steps.params.outputs.release == 'true'
-        run: |
-          tar -zcf deployment-scripts.tar.gz ops
-          aws s3 cp deployment-scripts.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 cp ops/install.sh ${{ secrets.AWS_BUCKET_WEB }}/install.sh
-          aws s3 cp ops/install.dev.sh ${{ secrets.AWS_BUCKET_WEB }}/install.dev.sh
 
       - name: prepare resources for building api docker image
         if: steps.changes.outputs.api == 'true'
