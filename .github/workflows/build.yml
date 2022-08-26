@@ -946,8 +946,6 @@ jobs:
       - name: push ops to aws
         if: steps.params.outputs.release == 'true'
         run: |
-          tar -zcf deployment-scripts.tar.gz ops
-          aws s3 cp deployment-scripts.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp ops/install.sh ${{ secrets.AWS_BUCKET_WEB }}/install.sh
           aws s3 cp ops/install.dev.sh ${{ secrets.AWS_BUCKET_WEB }}/install.dev.sh
           aws s3 cp ops/k8s/touca.yaml ${{ secrets.AWS_BUCKET_WEB }}/install/touca.yaml
