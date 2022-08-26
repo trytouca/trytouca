@@ -90,7 +90,7 @@ const sidebars = {
                 {
                   type: "link",
                   label: "API Reference",
-                  href: "https://app.touca.io/docs/sdk/python/api.html"
+                  href: "https://touca.io/docs/external/sdk/python/api.html"
                 }
               ]
             },
@@ -131,7 +131,7 @@ const sidebars = {
                 {
                   type: "link",
                   label: "API Reference",
-                  href: "https://app.touca.io/docs/sdk/cpp/api.html"
+                  href: "https://touca.io/docs/external/sdk/cpp/api.html"
                 }
               ]
             },
@@ -157,7 +157,7 @@ const sidebars = {
                 {
                   type: "link",
                   label: "API Reference",
-                  href: "https://app.touca.io/docs/sdk/js/index.html"
+                  href: "https://touca.io/docs/external/sdk/js/index.html"
                 }
               ]
             },
@@ -183,7 +183,7 @@ const sidebars = {
                 {
                   type: "link",
                   label: "API Reference",
-                  href: "https://app.touca.io/docs/sdk/java/index.html"
+                  href: "https://touca.io/docs/external/sdk/java/index.html"
                 }
               ]
             }
@@ -208,7 +208,7 @@ const sidebars = {
             {
               type: "link",
               label: "REST API",
-              href: "https://app.touca.io/docs/api/index.html"
+              href: "https://touca.io/docs/external/api/index.html"
             }
           ]
         }
