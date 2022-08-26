@@ -66,6 +66,7 @@ def _reformat_parameters(existing: dict) -> None:
     from urllib.parse import urlparse
 
     existing.setdefault("concurrency", True)
+    existing.setdefault("version", "unknown")
 
     api_url = existing.get("api-url")
     if not api_url:
@@ -85,7 +86,7 @@ def _reformat_parameters(existing: dict) -> None:
 
 
 def _validate_options(existing: dict):
-    expected_keys = ["team", "suite", "version"]
+    expected_keys = ["team", "suite"]
     has_handshake = not existing.get("offline")
     if has_handshake and any(x in existing for x in ["api-key", "api-url"]):
         expected_keys.extend(["api-key", "api-url"])

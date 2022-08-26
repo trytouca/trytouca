@@ -264,6 +264,12 @@ class Client:
             raise RuntimeError("client not configured to perform this operation")
         return self._transport.get_testcases()
 
+    def get_next_batch(self) -> str:
+        if not self._transport:
+            raise RuntimeError("client not configured to perform this operation")
+        self._options["version"] = self._transport.get_next_batch()
+        return self._options.get("version")
+
     def declare_testcase(self, name: str):
         """
         Declares name of the test case to which all subsequent results will be

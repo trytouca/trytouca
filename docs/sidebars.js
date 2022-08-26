@@ -90,7 +90,7 @@ const sidebars = {
                 {
                   type: "link",
                   label: "API Reference",
-                  href: "https://touca.io/docs/external/sdk/python/api.html"
+                  href: "https://touca.io/docs/external/sdk/python/index.html"
                 }
               ]
             },
@@ -131,7 +131,7 @@ const sidebars = {
                 {
                   type: "link",
                   label: "API Reference",
-                  href: "https://touca.io/docs/external/sdk/cpp/api.html"
+                  href: "https://touca.io/docs/external/sdk/cpp/index.html"
                 }
               ]
             },
