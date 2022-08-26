@@ -1,7 +1,7 @@
 apiVersion: v2
 appVersion: 1.6.0
 name: touca
-description: The Touca Helm Chart
+description: Continuous regression testing for critical software workflows
 home: https://github.com/trytouca/trytouca
 icon: https://touca.io/logo/touca-logo-w-text-bg.pn
 keywords:
