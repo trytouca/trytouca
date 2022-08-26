@@ -1,22 +1,20 @@
 apiVersion: v2
-appVersion: 1.4.0
-description: The touca helm-chart
+appVersion: 1.6.0
+name: touca
+description: Continuous regression testing for critical software workflows
 home: https://github.com/trytouca/trytouca
-icon: https://camo.githubusercontent.com/14af379bcd732aa6ff2ebeea6344366b8b70d10f1688857d2a99164e1bc0d449/68747470733a2f2f746f7563612e696f2f6c6f676f2f746f7563612d6c6f676f2d772d746578742d62672e706e67
+icon: https://touca.io/logo/touca-logo-w-text-bg.pn
 keywords:
-- touca
-- regressions
-- testing
-- software development lifecycle
-- real-time feedback
-- development
+  - regression testing
+  - test automation
+  - snapshot testing
+  - software development lifecycle
 maintainers:
-- email: ehsan@touca.io
-  name: touca.io
-  url: https://github.com/trytouca/trytouca
-name: toucaChart
+  - email: ehsan@touca.io
+    name: Ehsan Ahangari
+    url: https://github.com/trytouca/trytouca
 sources:
-- https://www.touca.io
-- https://github.com/trytouca/trytouca/tree/main/ops
+  - https://touca.io
+  - https://github.com/trytouca/trytouca/tree/main/ops/k8s
 type: application
 version: 1.0.0
