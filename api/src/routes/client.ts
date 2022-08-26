@@ -3,6 +3,7 @@
 import express from 'express'
 import * as ev from 'express-validator'
 
+import { clientBatchNext } from '@/controllers/client/batchNext'
 import { clientElementList } from '@/controllers/client/elementList'
 import { clientSessionCreate } from '@/controllers/client/sessionCreate'
 import { clientSubmit } from '@/controllers/client/submit'
@@ -32,6 +33,15 @@ router.get(
   middleware.isTeamMember,
   middleware.hasSuite,
   promisable(clientElementList, 'list suite elements')
+)
+
+router.get(
+  '/batch/:team/:suite/next',
+  middleware.isClientAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  middleware.hasSuite,
+  promisable(clientBatchNext, 'show next batch')
 )
 
 router.post(
