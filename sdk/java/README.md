@@ -140,7 +140,7 @@ test these workflows at any scale.
 - To learn how to use our Java SDK, see our
   [Java SDK Documentation](https://touca.io/docs/sdk/java/quickstart).
 - If you cannot wait to start writing your first test with Touca, see our
-  [Java API Reference](https://app.touca.io/docs/clients/java/api.html).
+  [Java API Reference](https://touca.io/docs/external/sdk/java/index.html).
 
 ## Ask for Help
 

@@ -7,7 +7,7 @@
 
 This directory includes config files for Generating API Reference documentation.
 You can find the generated output
-[here](https://app.touca.io/docs/clients/cpp/api.html).
+[here](https://touca.io/docs/external/sdk/cpp/index.html).
 
 ## Have Questions?
 

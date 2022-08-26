@@ -7,7 +7,7 @@ Source Files for API Reference Docs
     with the library.
 
 This directory includes config files for Generating API Reference documentation.
-You can find the generated output `here <https://app.touca.io/docs/clients/python/api.html>`__.
+You can find the generated output `here <https://touca.io/docs/external/sdk/python/index.html>`__.
 
 Have Questions?
 ---------------

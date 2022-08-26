@@ -139,7 +139,7 @@ root cause more easily.
   information about Touca and its various components. If you are new to Touca,
   our _[Getting Started](https://touca.io/docs/basics/quickstart/)_ guide is the
   best place to start.
-- [Python SDK API Reference](https://app.touca.io/docs/sdk/python/api.html):
+- [Python SDK API Reference](https://touca.io/docs/external/sdk/python/index.html):
   Auto-generated source code documentation for Touca Python SDK with explanation
   about individual API functions and examples for how to use them.
 - [Python Examples](https://github.com/trytouca/trytouca/tree/main/examples/python):
