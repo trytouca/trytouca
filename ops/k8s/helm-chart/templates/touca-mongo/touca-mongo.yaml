@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-touca-mongo
+  name: {{ .Release.Name }}-touca-mongo
+  namespace: {{ .Release.Name }}-touca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-touca-mongo
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-touca-mongo
+    spec:
+      containers:
+      - image: mongo:5.0.10
+        name: {{ .Release.Name }}-touca-mongo
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: toucauser
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: toucapass
+        args: [ "--config", "/etc/mongod.conf"]
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongo-volume
+        - mountPath: /etc/mongod.conf
+          subPath: mongod.conf
+          name: mongod-conf
+          readOnly: true
+        - mountPath: /docker-entrypoint-initdb.d/
+          name: mongo-initdb
+          readOnly: true
+      volumes:
+      - name: mongo-volume
+        persistentVolumeClaim:
+          claimName: touca-ebs
+      - name: mongod-conf
+        configMap:
+          name: mongod-conf
+      - name: mongo-initdb
+        configMap:
+          name: mongo-entrypoint

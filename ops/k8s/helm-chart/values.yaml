@@ -1,0 +1,17 @@
+toucaApp:
+  dockerRepoName: "touca"
+  dockerImageTag: "1.6"
+
+toucaApi:
+  dockerRepoName: "touca"
+  dockerImageTag: "1.6"
+
+toucaCmp:
+  dockerRepoName: "touca"
+  dockerImageTag: "1.6"
+
+volume:
+  scName: "ebs-sc"
+
+ingress:
+  enabled: true

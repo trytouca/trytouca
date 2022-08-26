@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: touca-app
+  name: touca-app
+  namespace: touca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: touca-app
+  template:
+    metadata:
+      labels:
+        app: touca-app
+    spec:
+      containers:
+      - image: touca/touca-app:1.4.0
+        name: touca-app
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+          name: default-conf
+          readOnly: true
+        ports:
+        - containerPort: 80
+      volumes:
+      - name: default-conf
+        configMap:
+          name: nginx-conf

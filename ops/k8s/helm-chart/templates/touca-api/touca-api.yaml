@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-touca-api
+  name: {{ .Release.Name }}-touca-api
+  namespace: {{ .Release.Name }}-touca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-touca-api
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-touca-api
+    spec:
+      containers:
+      - image: {{ .Values.toucaApi.dockerRepoName | default "touca" | lower }}/touca-api:{{ .Values.toucaApi.dockerImageTag }}
+        name: {{ .Release.Name }}-touca-api
+        env:
+        - name: ENV_FILE
+          value: prod
+        - name: WEBAPP_ROOT
+          value: "http://{{ .Release.Name }}-touca-app"
+        - name: MINIO_HOST
+          value: {{ .Release.Name }}-touca-minio
+        - name: MONGO_HOST
+          value: {{ .Release.Name }}-touca-mongo
+        - name: REDIS_HOST
+          value: {{ .Release.Name }}-touca-redis
+        - name: MINIO_USER
+          value: toucauser
+        - name: MINIO_PASS
+          value: toucapass
+        - name: MONGO_USER
+          value: toucauser
+        - name: MONGO_PASS
+          value: toucapass
+        - name: LOG_LEVEL
+          value: silly
+        volumeMounts:
+        - mountPath: /opt/local/logs/api
+          name: api-volume
+      volumes:
+      - name: api-volume
+        persistentVolumeClaim:
+          claimName: touca-ebs
