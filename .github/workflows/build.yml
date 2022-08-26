@@ -196,12 +196,12 @@ jobs:
         if: steps.changes.outputs.sdk_cpp == 'true'
         run: ./build.sh --docs
       - name: push docs to aws
-        if:
-          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
-          && github.ref == 'refs/heads/main'
+        if: |
+          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf cpp-docs-reference.tar.gz local/docs/html
           aws s3 cp cpp-docs-reference.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 sync local/docs/html/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/cpp/ --include "*" --cache-control no-cache
 
   build-sdk-cpp-coverage:
     name: build-sdk-cpp-coverage
@@ -322,6 +322,7 @@ jobs:
         run: |
           tar -zcf java-docs-external.tar.gz touca/build/docs/javadoc
           aws s3 cp java-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 sync touca/build/docs/javadoc/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/java/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -404,6 +405,7 @@ jobs:
         run: |
           tar -zcf js-node-docs-external.tar.gz local/docs
           aws s3 cp js-node-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 sync local/docs/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/js/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -486,13 +488,12 @@ jobs:
         run: |
           make docs
       - name: push docs to aws
-        if:
-          steps.changes.outputs.sdk_python == 'true' && github.ref ==
-          'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
-          == 'push'
+        if: |
+          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
         run: |
           tar -zcf python-docs-external.tar.gz local/docs
           aws s3 cp python-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 sync local/docs/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/python/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
@@ -787,7 +788,7 @@ jobs:
           aws s3 cp api-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp api-docs-internal.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp api-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 sync ./api/local/docs/external/ ${{ secrets.AWS_BUCKET_APP }}/docs/api/ --include "*" --cache-control no-cache
+          aws s3 sync ./api/local/docs/external/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/api/ --include "*" --cache-control no-cache
 
       - name: pull api from aws
         if: steps.changes.outputs.api == 'false'
