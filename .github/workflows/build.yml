@@ -937,6 +937,8 @@ jobs:
       - name: install helm
         if: steps.changes.outputs.ops == 'true'
         uses: azure/setup-helm@v3
+        with:
+          version: v3.9.0
       - name: lint helm chart
         if: steps.changes.outputs.ops == 'true'
         run: helm lint ops/k8s/helm-chart
