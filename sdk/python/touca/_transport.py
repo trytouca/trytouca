@@ -82,6 +82,17 @@ class Transport:
         body = json.loads(response.data.decode("utf-8"))
         return [k["name"] for k in body]
 
+    def get_next_batch(self) -> str:
+        team = self._options.get("team")
+        suite = self._options.get("suite")
+        response = self._send_request(
+            method="GET", path=f"/client/batch/{team}/{suite}/next"
+        )
+        if response.status != 200:
+            raise RuntimeError("Failed to find next version")
+        body = json.loads(response.data.decode("utf-8"))
+        return body["batch"]
+
     def post(self, content):
         reason = ""
         response = self._send_request(
