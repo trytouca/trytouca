@@ -23,7 +23,7 @@ function ATFButtonStart() {
         className="box-shadow group space-x-2 rounded-full bg-dark-blue-700 bg-opacity-25 py-3 px-8 text-lg font-medium text-white shadow-[0_0_7px_#7dd3fc] duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
         type="button"
         role="button">
-        <span>Start with $100 Credits</span>
+        <span>Start for Free</span>
         <HiArrowNarrowRight className="hidden h-6 opacity-50 group-hover:opacity-100 sm:inline" />
       </button>
     </a>
