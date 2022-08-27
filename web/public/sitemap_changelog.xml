@@ -5,16 +5,24 @@
     xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
     xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     <url>
-        <loc>https://touca.io/changelog/220819/</loc>
-        <lastmod>2022-08-019T18:00:00+00:00</lastmod>
+        <loc>https://touca.io/changelog/220826/</loc>
+        <lastmod>2022-08-26T18:00:00+00:00</lastmod>
         <image:image>
-            <image:loc>https://blog.touca.io/content/images/size/w2000/2022/08/weekly-changelog-220819.png</image:loc>
+            <image:loc>https://blog.touca.io/content/images/2022/08/touca-changelog-220826.png</image:loc>
+            <image:caption>touca-changelog-220826.png</image:caption>
+        </image:image>
+    </url>
+    <url>
+        <loc>https://touca.io/changelog/220819/</loc>
+        <lastmod>2022-08-19T18:00:00+00:00</lastmod>
+        <image:image>
+            <image:loc>https://blog.touca.io/content/images/2022/08/weekly-changelog-220819.png</image:loc>
             <image:caption>weekly-changelog-220819.png</image:caption>
         </image:image>
     </url>
     <url>
         <loc>https://touca.io/changelog/220812/</loc>
-        <lastmod>2022-08-012T18:00:00+00:00</lastmod>
+        <lastmod>2022-08-12T18:00:00+00:00</lastmod>
         <image:image>
             <image:loc>https://blog.touca.io/content/images/2022/08/touca-product-updates-220812-1.png</image:loc>
             <image:caption>touca-product-updates-220812.png</image:caption>
