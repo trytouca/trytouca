@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Client as HubspotClient } from '@hubspot/api-client'
+import { TrackClient as CustomerClient } from 'customerio-node'
 import Mixpanel from 'mixpanel'
 
 import { relay } from '@/models/relay'
@@ -66,6 +67,27 @@ export type TrackerInfo = {
   username: string
 }
 
+class CustomerTracker {
+  private tracker: CustomerClient
+  constructor() {
+    this.tracker = new CustomerClient(
+      config.tracking.customer_site,
+      config.tracking.customer_key
+    )
+  }
+  async add_member(user: IUser, data: Partial<TrackerInfo>) {
+    this.tracker.identify(user._id, {
+      email: data.email,
+      created_at: data.created_at?.toString(),
+      first_name: data.first_name,
+      plan: 'free'
+    })
+  }
+  async add_activity(type: EActivity, user: IUser, data: Partial<TrackerInfo>) {
+    this.tracker.track(user._id, { name: type, data })
+  }
+}
+
 class OrbitTracker {
   async add_member(user: IUser, data: Partial<TrackerInfo>) {
     await relay({
@@ -126,6 +148,7 @@ class OrbitTracker {
 }
 
 class Analytics {
+  private customer_tracker: CustomerTracker
   private mixpanel: Mixpanel.Mixpanel
   private orbit_tracker: OrbitTracker
 
@@ -136,9 +159,13 @@ class Analytics {
     if (config.tracking.orbit_key) {
       this.orbit_tracker = new OrbitTracker()
     }
+    if (config.tracking.customer_key) {
+      this.customer_tracker = new CustomerTracker()
+    }
   }
 
   async add_member(user: IUser, data: Partial<TrackerInfo>) {
+    const track_c = this.customer_tracker?.add_member(user, data)
     this.mixpanel?.people.set(user._id, {
       $avatar: data.avatar,
       $created: data.created_at?.toISOString(),
@@ -150,10 +177,11 @@ class Analytics {
       username: data.username
     })
     this.orbit_tracker?.add_member(user, data)
-    return Promise.resolve()
+    return Promise.all([track_c])
   }
 
   add_activity(type: EActivity, user: IUser, data?: Mixpanel.PropertyDict) {
+    this.customer_tracker?.add_activity(type, user, data)
     this.mixpanel?.track(type, {
       distinct_id: user._id,
       ...data
