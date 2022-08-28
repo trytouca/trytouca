@@ -53,7 +53,6 @@ class Version(Operation):
 
     def run(self):
         print(f"v{__version__}")
-        return True
 
 
 def main(args=None):

@@ -4,7 +4,6 @@ import sys
 from argparse import ArgumentParser
 from pathlib import Path
 
-import requests
 from touca._options import find_home_path
 from touca.cli._common import Operation, invalid_subcommand
 
@@ -62,25 +61,25 @@ class Plugin(Operation):
         self.__options = options
 
     def _command_list(self):
-        from rich.console import Console
-        from rich.table import Table
+        from touca._printer import print_table
 
-        table = Table(show_header=True, header_style="bold magenta")
-        table.add_column("Name")
-        table.add_column("Description")
-        for member in user_plugins():
-            table.add_row(member.name, member.help)
-        Console().print(table)
+        plugins = list(user_plugins())
+        if not plugins:
+            print("No user-defined plugins are registered.")
+            return True
+        table_header = ["", "Name", "Description"]
+        table_body = [
+            [f"{idx + 1}", member.name, member.help]
+            for idx, member in enumerate(plugins)
+        ]
+        print_table(table_header, table_body)
         return True
 
     def _command_add(self):
         from shutil import copyfile
-        from urllib.parse import urlparse
 
         plugin_arg: str = self.__options.get("name")
         plugin_name = plugin_arg
-        if plugin_arg.startswith("https://"):
-            plugin_name = Path(urlparse(plugin_arg).path).stem
         plugin_path_dst = Path(find_home_path(), "plugins", plugin_name).with_suffix(
             ".py"
         )
@@ -91,10 +90,6 @@ class Plugin(Operation):
         plugin_path_src = Path.cwd().joinpath(plugin_name).with_suffix(".py")
         if plugin_path_src.exists():
             copyfile(plugin_path_src, plugin_path_dst)
-            return True
-        res = requests.get(plugin_arg)
-        if res.status_code == 200:
-            plugin_path_dst.write_bytes(res.content)
             return True
         print(f'did not find a plugin at "{plugin_arg}"', file=sys.stderr)
         return False
@@ -111,8 +106,7 @@ class Plugin(Operation):
         return True
 
     def _command_template(self):
-        Path.cwd().joinpath("example.py").write_text(
-            """
+        content = """
 from argparse import ArgumentParser
 
 from touca.cli._common import Operation
@@ -130,6 +124,12 @@ class Example(Operation):
         print("Example!")
         return True
 """
+        dir = Path.cwd()
+        file = "example.py"
+        dir.joinpath(file).write_text(content)
+        print(
+            f'Created plugin "{file}" in "{dir}" for you to implement.\n'
+            f'Run "touca plugin add {file}" when you are ready to register it.'
         )
         return True
 
