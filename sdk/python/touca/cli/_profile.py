@@ -63,13 +63,28 @@ class Profile(Operation):
             config.write(settings_file)
 
     def _command_list(self):
+        from rich.console import Console
+        from rich.table import Table
+
         profiles_dir = Path(find_home_path(), "profiles")
         profile_names = [p.name for p in profiles_dir.glob("*") if p.is_file()]
         if "default" not in profile_names:
             self._make_profile(profiles_dir.joinpath("default"))
             profile_names.append("default")
+        settings_path = Path(find_home_path(), "settings")
+        config = ConfigParser()
+        config.read_string(settings_path.read_text())
+        active = (
+            config.get("settings", "profile")
+            if config.has_section("settings")
+            else "default"
+        )
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Active", justify="right")
+        table.add_column("Profile")
         for name in profile_names:
-            print(name)
+            table.add_row("*" if name == active else "", name)
+        Console().print(table)
         return True
 
     def _command_set(self):

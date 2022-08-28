@@ -62,8 +62,15 @@ class Plugin(Operation):
         self.__options = options
 
     def _command_list(self):
+        from rich.console import Console
+        from rich.table import Table
+
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Name")
+        table.add_column("Description")
         for member in user_plugins():
-            print("{}: {}".format(member.name, member.help))
+            table.add_row(member.name, member.help)
+        Console().print(table)
         return True
 
     def _command_add(self):

@@ -67,9 +67,18 @@ class Config(Operation):
         return True
 
     def _command_show(self):
-        path = find_profile_path()
-        if path.exists():
-            print(path.read_text().strip())
+        from rich.console import Console
+        from rich.table import Table
+
+        config = config_file_parse()
+        if not config.has_section("settings"):
+            return False
+        table = Table(show_header=True, header_style="bold magenta")
+        table.add_column("Option")
+        table.add_column("Value")
+        for k, v in config.items("settings"):
+            table.add_row(k, v)
+        Console().print(table)
         return True
 
     def _command_get(self):

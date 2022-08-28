@@ -51,8 +51,9 @@ class Version(Operation):
     def __init__(self, options):
         pass
 
-    def run(self) -> bool:
+    def run(self):
         print(f"v{__version__}")
+        return True
 
 
 def main(args=None):
