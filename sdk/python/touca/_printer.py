@@ -104,3 +104,17 @@ class Printer:
                 *map(options.get, ["output-directory", "suite", "version"])
             )
             self.print_line("{:s} {}", "Results:".ljust(left_pad), results_dir)
+
+
+def print_table(table_header, table_body):
+    from rich import box
+    from rich.console import Console
+    from rich.table import Table
+
+    console = Console()
+    table = Table(show_header=True, header_style="cyan", box=box.SIMPLE)
+    for k in table_header:
+        table.add_column(k)
+    for k in table_body:
+        table.add_row(*k)
+    console.print(table)

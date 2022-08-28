@@ -67,9 +67,16 @@ class Config(Operation):
         return True
 
     def _command_show(self):
-        path = find_profile_path()
-        if path.exists():
-            print(path.read_text().strip())
+        from touca._printer import print_table
+
+        config = config_file_parse()
+        if not config.has_section("settings"):
+            return False
+        table_header = ["", "Option", "Value"]
+        table_body = [
+            [f"{idx + 1}", k, v] for idx, [k, v] in enumerate(config.items("settings"))
+        ]
+        print_table(table_header, table_body)
         return True
 
     def _command_get(self):
