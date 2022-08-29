@@ -5,10 +5,8 @@ import '@/styles/global.css';
 import { AppProps } from 'next/app';
 import Script from 'next/script';
 import { DefaultSeo } from 'next-seo';
-import { IntercomProvider } from 'react-use-intercom';
 
 const devEnv = process && process.env.NODE_ENV === 'development';
-const INTERCOM_APP_ID = process.env.NEXT_PUBLIC_INTERCOM_ID;
 
 export default function App({ Component, pageProps }: AppProps) {
   return devEnv ? (
@@ -82,9 +80,7 @@ export default function App({ Component, pageProps }: AppProps) {
           }
         ]}
       />
-      <IntercomProvider appId={INTERCOM_APP_ID} autoBoot>
-        <Component {...pageProps} />
-      </IntercomProvider>
+      <Component {...pageProps} />
     </>
   );
 }
