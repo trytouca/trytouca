@@ -91,17 +91,16 @@ class OrbitTracker {
   }
 
   async add_activity(type: EActivity, user: IUser, data: Partial<TrackerInfo>) {
-    if (
-      ![
-        EActivity.AccountCreated,
-        EActivity.BatchPromoted,
-        EActivity.BatchSealed,
-        EActivity.SelfHostedInstall,
-        EActivity.SuiteCreated,
-        EActivity.ProfileUpdated,
-        EActivity.TeamCreated
-      ].includes(type)
-    ) {
+    const allowlist = [
+      EActivity.AccountCreated,
+      EActivity.BatchPromoted,
+      EActivity.BatchSealed,
+      EActivity.SelfHostedInstall,
+      EActivity.SuiteCreated,
+      EActivity.ProfileUpdated,
+      EActivity.TeamCreated
+    ]
+    if (!allowlist.includes(type)) {
       return
     }
     await relay({
@@ -125,44 +124,66 @@ class OrbitTracker {
   }
 }
 
-class Analytics {
-  private orbit_tracker: OrbitTracker
+class SegmentTracker {
   private segment: SegmentClient
-
   constructor() {
     if (config.tracking.segment_key) {
       this.segment = new SegmentClient(config.tracking.segment_key)
     }
-    if (config.tracking.orbit_key) {
-      this.orbit_tracker = new OrbitTracker()
-    }
   }
-
   async add_member(user: IUser, data: Partial<TrackerInfo>) {
     this.segment?.identify({
-      userId: user._id,
+      userId: user._id.toString(),
       traits: {
         avatar: data.avatar,
         createdAt: data.created_at?.toISOString(),
         email: data.email,
         firstName: data.first_name,
-        id: user._id,
+        id: data.user_id?.toString(),
         lastName: data.last_name,
         name: data.name,
         username: data.username
       }
     })
-    this.orbit_tracker?.add_member(user, data)
-    return Promise.resolve()
   }
-
-  add_activity(type: EActivity, user: IUser, data?: Record<string, unknown>) {
+  async add_activity(type: EActivity, user: IUser, data: Partial<TrackerInfo>) {
     this.segment?.track({
-      userId: user._id,
+      userId: user._id.toString(),
       event: type,
       properties: data
     })
-    this.orbit_tracker?.add_activity(type, user, data)
+  }
+}
+
+class Analytics {
+  private orbit_tracker = new OrbitTracker()
+  private segment_tracker = new SegmentTracker()
+
+  constructor() {
+    if (config.tracking.orbit_key) {
+      this.orbit_tracker = new OrbitTracker()
+    }
+    if (config.tracking.segment_key) {
+      this.segment_tracker = new SegmentTracker()
+    }
+  }
+
+  async add_member(user: IUser, data: Partial<TrackerInfo>): Promise<void> {
+    await Promise.allSettled([
+      this.orbit_tracker?.add_member(user, data),
+      this.segment_tracker?.add_member(user, data)
+    ])
+  }
+
+  async add_activity(
+    type: EActivity,
+    user: IUser,
+    data?: Record<string, unknown>
+  ) {
+    await Promise.allSettled([
+      this.orbit_tracker?.add_activity(type, user, data),
+      this.segment_tracker?.add_activity(type, user, data)
+    ])
   }
 }
 
