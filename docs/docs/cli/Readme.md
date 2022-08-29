@@ -17,6 +17,7 @@ We support the following operations:
 
 | Subcommand                                 | Description                              |
 | ------------------------------------------ | ---------------------------------------- |
+| [`touca help`](#getting-help)              | Get help on different subcommands        |
 | [`touca test`](#running-your-tests)        | Run your Touca tests                     |
 | [`touca config`](#configuration-options)   | Manage your active configuration profile |
 | [`touca profile`](#configuration-profiles) | Create and manage configuration profiles |
@@ -34,6 +35,27 @@ You can run `touca --help` to get this list. You can also use `--help` with any
 subcommand to learn about its supported options and arguments.
 
 ## Common operations
+
+### Getting Help
+
+<details>
+<summary>`touca help --help`</summary>
+
+```plaintext
+usage: touca help [-h] [subcommand]
+
+Shows this help message
+
+positional arguments:
+  subcommand  subcommand to get help about
+```
+
+</details>
+
+Your best friend when using `touca` is `touca help`. You can list `touca help`
+similar to `touca --help` to list supported subcommands and a brief description
+for each. You can also use `touca help <subcommand>` to get detailed help about
+a specific subcommand.
 
 ### Configuration options
 
@@ -76,9 +98,12 @@ configuration file:
 
 ```plaintext
 $ touca config show
-[settings]
-api-key = a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
-api-url = https://api.touca.io/@/tutorial-509512
+
+      Option    Value
+ ─────────────────────────────────────────────────────
+  1   api-key   a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
+  2   api-url   https://api.touca.io/@/tutorial-509512
+
 ```
 
 You can also check the value of any given option:
@@ -194,8 +219,13 @@ You can use `touca profile ls` to list your profiles:
 
 ```plaintext
 $ touca profile ls
-personal
-default
+
+      Name
+ ──────────────────────────
+  1   default
+  2   development (active)
+  3   staging
+
 ```
 
 And if you no longer need a profile, you can simply remove it:
@@ -394,7 +424,11 @@ installed user plugins:
 
 ```plaintext
 $ touca plugin ls
-example: Example
+
+      Name      Description
+ ───────────────────────────
+  1   example   Example
+
 ```
 
 If you no longer need a plugin, you can simply remove it from the plugins

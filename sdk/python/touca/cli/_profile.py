@@ -70,6 +70,7 @@ class Profile(Operation):
 
         profiles_dir = home_path.joinpath("profiles")
         profile_names = [p.name for p in profiles_dir.glob("*") if p.is_file()]
+        profile_names.sort()
         config = ConfigParser()
         config.read_string(settings_path.read_text())
         profile_active = (
