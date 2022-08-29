@@ -7,9 +7,10 @@ Touca SDK for C++
    `Documentation Website <https://touca.io/docs/sdk/cpp/quickstart>`_ for
    information about how to use this SDK, including getting started guides,
    tutorials, examples, as well as instructions for building and integrating
-   the client library.
+   the SDK.
 
 .. toctree::
    :maxdepth: 1
+   :caption: Contents
 
    Reference API <api>
