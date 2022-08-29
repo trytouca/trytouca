@@ -1,8 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Client as HubspotClient } from '@hubspot/api-client'
-import { TrackClient as CustomerClient } from 'customerio-node'
-import Mixpanel from 'mixpanel'
+import SegmentClient from 'analytics-node'
 
 import { relay } from '@/models/relay'
 import { IUser } from '@/schemas/user'
@@ -67,27 +66,6 @@ export type TrackerInfo = {
   username: string
 }
 
-class CustomerTracker {
-  private tracker: CustomerClient
-  constructor() {
-    this.tracker = new CustomerClient(
-      config.tracking.customer_site,
-      config.tracking.customer_key
-    )
-  }
-  async add_member(user: IUser, data: Partial<TrackerInfo>) {
-    this.tracker.identify(user._id, {
-      email: data.email,
-      created_at: data.created_at?.toString(),
-      first_name: data.first_name,
-      plan: 'free'
-    })
-  }
-  async add_activity(type: EActivity, user: IUser, data: Partial<TrackerInfo>) {
-    this.tracker.track(user._id, { name: type, data })
-  }
-}
-
 class OrbitTracker {
   async add_member(user: IUser, data: Partial<TrackerInfo>) {
     await relay({
@@ -148,43 +126,41 @@ class OrbitTracker {
 }
 
 class Analytics {
-  private customer_tracker: CustomerTracker
-  private mixpanel: Mixpanel.Mixpanel
   private orbit_tracker: OrbitTracker
+  private segment: SegmentClient
 
   constructor() {
-    if (config.tracking.mixpanel) {
-      this.mixpanel = Mixpanel.init(config.tracking.mixpanel)
+    if (config.tracking.segment_key) {
+      this.segment = new SegmentClient(config.tracking.segment_key)
     }
     if (config.tracking.orbit_key) {
       this.orbit_tracker = new OrbitTracker()
     }
-    if (config.tracking.customer_key) {
-      this.customer_tracker = new CustomerTracker()
-    }
   }
 
   async add_member(user: IUser, data: Partial<TrackerInfo>) {
-    const track_c = this.customer_tracker?.add_member(user, data)
-    this.mixpanel?.people.set(user._id, {
-      $avatar: data.avatar,
-      $created: data.created_at?.toISOString(),
-      $email: data.email,
-      $name: data.name,
-      $first_name: data.first_name,
-      $last_name: data.last_name,
-      $ip: data.ip_address,
-      username: data.username
+    this.segment?.identify({
+      userId: user._id,
+      traits: {
+        avatar: data.avatar,
+        createdAt: data.created_at?.toISOString(),
+        email: data.email,
+        firstName: data.first_name,
+        id: user._id,
+        lastName: data.last_name,
+        name: data.name,
+        username: data.username
+      }
     })
     this.orbit_tracker?.add_member(user, data)
-    return Promise.all([track_c])
+    return Promise.resolve()
   }
 
-  add_activity(type: EActivity, user: IUser, data?: Mixpanel.PropertyDict) {
-    this.customer_tracker?.add_activity(type, user, data)
-    this.mixpanel?.track(type, {
-      distinct_id: user._id,
-      ...data
+  add_activity(type: EActivity, user: IUser, data?: Record<string, unknown>) {
+    this.segment?.track({
+      userId: user._id,
+      event: type,
+      properties: data
     })
     this.orbit_tracker?.add_activity(type, user, data)
   }

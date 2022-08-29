@@ -94,12 +94,10 @@ interface IConfig {
     }
   }
   tracking: {
-    customer_key: string
-    customer_site: string
     hubspot_key: string
     hubspot_token: string
-    mixpanel: string
     orbit_key: string
+    segment_key: string
   }
   webapp: {
     root: string
@@ -211,12 +209,10 @@ export const config: IConfig = {
     }
   },
   tracking: {
-    customer_key: env.CUSTOMERIO_API_KEY,
-    customer_site: env.CUSTOMERIO_SITE_ID,
     hubspot_key: env.HUBSPOT_API_KEY,
     hubspot_token: env.HUBSPOT_ACCESS_TOKEN,
-    mixpanel: env.MIXPANEL_PROJECT_TOKEN,
-    orbit_key: env.ORBIT_API_KEY
+    orbit_key: env.ORBIT_API_KEY,
+    segment_key: env.SEGMENT_API_KEY
   },
   webapp: {
     root: env.WEBAPP_ROOT
