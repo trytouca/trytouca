@@ -24,7 +24,7 @@ subprocess.call("cd ../..; doxygen docs/doxygen/Doxyfile", shell=True)
 # -- Project information -----------------------------------------------------
 
 project = "Touca SDK for C++"
-copyright = "2021, Touca, Inc."
+copyright = "2022, Touca, Inc."
 author = "Touca, Inc."
 
 # The full version, including alpha/beta/rc tags
@@ -49,7 +49,6 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-#
 html_theme = "sphinx_rtd_theme"
 
 # These paths are either relative to html_static_path
@@ -73,7 +72,6 @@ html_show_sourcelink = False
 html_show_sphinx = False
 
 # enable rendering markdown files using m2r extension
-
 source_suffix = [".rst", ".md"]
 
 # Breathe Configuration

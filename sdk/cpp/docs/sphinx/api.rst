@@ -3,8 +3,8 @@
 API Reference
 =============
 
-Client Library
-++++++++++++++
+Core Library
+++++++++++++
 
 `touca/touca.hpp` is the main entry-point to the Touca SDK for C++.
 In most cases, it is the only header-file that users should include in their
