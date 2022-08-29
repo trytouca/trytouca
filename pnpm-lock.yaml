@@ -366,7 +366,6 @@ importers:
       react-dom: ^18.2.0
       react-icons: ^4.4.0
       react-syntax-highlighter: ^15.5.0
-      react-use-intercom: ^2.0.0
       tailwindcss: ^3.1.8
       typescript: ^4.7.4
       yup: ^0.32.11
@@ -382,7 +381,6 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-icons: 4.4.0_react@18.2.0
       react-syntax-highlighter: 15.5.0_react@18.2.0
-      react-use-intercom: 2.0.0_biqbaboplfbrettd7655fr4n2y
       yup: 0.32.11
     devDependencies:
       '@tailwindcss/forms': 0.5.2_tailwindcss@3.1.8
@@ -18670,17 +18668,6 @@ packages:
       - '@types/react'
     dev: false
 
-  /react-use-intercom/2.0.0_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-DSm79RtGHAQyZ4WfBFuNMWtmpyLjWt6jhrhFwfMmy/eIvvCeJ+5wMdPMGXBn2+qzLDyhV0fqo3vNsqR4EvFqHw==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: '>=16.8.0'
-      react-dom: '>=16.8.0'
-    dependencies:
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-    dev: false
-
   /react-waypoint/10.3.0_react@17.0.2:
     resolution: {integrity: sha512-iF1y2c1BsoXuEGz08NoahaLFIGI9gTUAAOKip96HUmylRT6DUtpgoBPjk/Y8dfcFVmfVDvUzWjNXpZyKTOV0SQ==}
     peerDependencies:
@@ -20366,7 +20353,7 @@ packages:
       jest-worker: 27.5.1
       schema-utils: 3.1.1
       serialize-javascript: 6.0.0
-      terser: 5.14.1
+      terser: 5.14.2
       webpack: 5.72.1_esbuild@0.14.38
     dev: true
 
