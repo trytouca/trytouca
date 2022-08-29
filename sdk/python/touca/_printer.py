@@ -45,7 +45,7 @@ class Printer:
 
     def print_progress(self, timer, testcase, idx, status, errors=[]):
         states = {
-            "pass": ("PASS", Back.GREEN),
+            "pass": ("SENT", Back.GREEN),
             "skip": ("SKIP", Back.YELLOW),
             "fail": ("FAIL", Back.RED),
         }

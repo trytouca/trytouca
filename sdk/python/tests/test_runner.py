@@ -52,7 +52,7 @@ def test_run_twice(capsys: pytest.CaptureFixture):
         args.update({"output-directory": tempdir})
         run_workflows(args, [("sample", lambda x: None)])
         captured = capsys.readouterr()
-        checks = {"alice": ["1.", "PASS"], "bob": ["2.", "PASS"]}
+        checks = {"alice": ["1.", "SENT"], "bob": ["2.", "SENT"]}
         check_stats(checks, captured)
         assert captured.err == ""
         run_workflows(args, [("sample", lambda x: None)])  # rerun test
