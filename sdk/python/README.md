@@ -111,9 +111,9 @@ Touca Test Framework
 
 Suite: is_prime_test/1.0
 
- 1.  PASS   19    (0 ms)
- 2.  PASS   51    (0 ms)
- 3.  PASS   97    (0 ms)
+ 1.  SENT   19    (0 ms)
+ 2.  SENT   51    (0 ms)
+ 3.  SENT   97    (0 ms)
 
 Tests:      3 passed, 3 total
 Time:       0.39 s
