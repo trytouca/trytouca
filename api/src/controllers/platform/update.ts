@@ -1,12 +1,15 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import * as bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash'
 
 import { findPlatformRole } from '@/middlewares'
 import { createUserAccount } from '@/models/auth'
 import { MetaModel } from '@/schemas/meta'
-import { rclient } from '@/utils/redis'
+import { UserModel } from '@/schemas/user'
+import { config } from '@/utils/config'
+import { rclient as redis } from '@/utils/redis'
 
 /**
  * Update settings of this server instance.
@@ -16,10 +19,13 @@ export async function platformUpdate(
   res: Response,
   next: NextFunction
 ) {
+  // Prohibit non-admin users to change server settings unless they are in the
+  // process of setting up their self-hosted instance. The identify the latter
+  // case, we check whether there is a user account with role `owner`.
   const platformRole = await findPlatformRole(req)
   const isAdmin = platformRole === 'admin' || platformRole === 'owner'
-  const isConfigured = !!(await MetaModel.countDocuments({
-    telemetry: { $exists: true }
+  const isConfigured = !!(await UserModel.countDocuments({
+    platformRole: 'owner'
   }))
   if (isConfigured && !isAdmin) {
     return next({
@@ -31,20 +37,25 @@ export async function platformUpdate(
   const payload = pick(req.body, ['telemetry', 'contact', 'mail'])
   const before = await MetaModel.findOneAndUpdate({}, { $set: payload })
 
-  const after = await MetaModel.findOne({}, { contact: true, telemetry: true })
-  if (
-    'telemetry' in payload &&
-    before?.telemetry === undefined &&
-    after?.contact
-  ) {
+  const credentials = pick(req.body.credentials, ['username', 'password'])
+  if (!isConfigured && credentials.username && credentials.password) {
     const user = await createUserAccount({
-      email: after.contact.email,
+      email: before.contact.email,
+      name: before.contact.name,
       ip_address: '127.0.0.1'
     })
-    return res.status(200).json({ url: user.activationKey })
+    await UserModel.findByIdAndUpdate(user._id, {
+      $set: {
+        username: credentials.username,
+        password: await bcrypt.hash(
+          credentials.password,
+          config.auth.bcryptSaltRound
+        )
+      }
+    })
   }
 
-  rclient.removeCached('platform-config')
-  rclient.removeCached('platform-health')
+  redis.removeCached('platform-config')
+  redis.removeCached('platform-health')
   return res.status(204).send()
 }
