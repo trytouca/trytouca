@@ -8,6 +8,7 @@ import { SharedModule } from '@/shared';
 import { AccountRoutingModule } from './account-routing.module';
 import { ActivateComponent } from './activate.component';
 import { InstallComponent } from './install.component';
+import { InstallAccountComponent } from './install/account.component';
 import { InstallNameComponent } from './install/name.component';
 import { InstallTelemetryComponent } from './install/telemetry.component';
 import { InstallThanksComponent } from './install/thanks.component';
@@ -31,6 +32,7 @@ import { StartComponent } from './start.component';
 @NgModule({
   declarations: [
     ActivateComponent,
+    InstallAccountComponent,
     InstallComponent,
     InstallNameComponent,
     InstallTelemetryComponent,

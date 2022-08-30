@@ -48,11 +48,13 @@ export async function platformInstall(
       platformRole: 'user',
       username: contact.uuid
     }
-    analytics.add_member(user, { name: user.fullname }).then(() =>
-      analytics.add_activity(EActivity.SelfHostedInstall, user, {
-        company: contact.company
-      })
-    )
+    analytics
+      .add_member(user, { name: user.fullname, email: user.email })
+      .then(() =>
+        analytics.add_activity(EActivity.SelfHostedInstall, user, {
+          company: contact.company
+        })
+      )
     const owners = await wslFindByRole('owner')
     mailUser(owners[0], 'New Self-Hosted Instance', 'user-install', contact)
     return res.status(204).send()
@@ -65,7 +67,10 @@ export async function platformInstall(
     })
   }
 
-  await MetaModel.updateOne({}, { $set: { contact } })
+  // Note the use of upsert here. Normally, the Meta document is created
+  // during startup. But during development, sometimes we clear the database,
+  // that removes this document.
+  await MetaModel.updateOne({}, { $set: { contact } }, { upsert: true })
   const response = await relay({
     path: '/platform/install',
     data: JSON.stringify(contact)

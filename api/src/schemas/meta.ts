@@ -66,6 +66,7 @@ const metaSchema = new mongoose.Schema(
       }
     },
     telemetry: {
+      default: true,
       required: false,
       type: Boolean
     },

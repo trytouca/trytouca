@@ -17,6 +17,10 @@
       <app-account-install-name
         (switchTab)="switchTab($event)"></app-account-install-name>
     </ng-container>
+    <ng-container *ngIf="tabType === 'userAccount'">
+      <app-account-install-account
+        (switchTab)="switchTab($event)"></app-account-install-account>
+    </ng-container>
     <ng-container *ngIf="tabType === 'telemetry'">
       <app-account-install-telemetry
         (switchTab)="switchTab($event)"></app-account-install-telemetry>
