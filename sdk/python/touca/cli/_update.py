@@ -12,14 +12,14 @@ from touca.cli._common import Operation
 logger = logging.getLogger("touca.cli.update")
 
 
-def _update(cli, srcDir: Path, outDir: Path, teamslug, testsuite):
+def _update(cli: Path, srcDir: Path, outDir: Path, teamslug, testsuite):
     if not srcDir.exists():
         logger.error(f"expected directory {srcDir} to exist")
         return False
     outDir.mkdir(parents=True, exist_ok=True)
     logger.info(f"updating result directory {srcDir}")
     cmd = [
-        cli,
+        str(cli),
         "update",
         f"--src={srcDir}",
         f"--out={outDir}",
