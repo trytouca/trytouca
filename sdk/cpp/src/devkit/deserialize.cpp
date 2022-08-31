@@ -62,7 +62,9 @@ data_point deserialize_value(const fbs::TypeWrapper* ptr) {
 
 Testcase deserialize_testcase(const std::vector<uint8_t>& buffer) {
   const auto message = flatbuffers::GetRoot<touca::fbs::Message>(buffer.data());
-  Testcase::Metadata metadata = {message->metadata()->teamslug()->data(),
+  Testcase::Metadata metadata = {message->metadata()->teamslug()
+                                     ? message->metadata()->teamslug()->data()
+                                     : "unknown",
                                  message->metadata()->testsuite()->data(),
                                  message->metadata()->version()->data(),
                                  message->metadata()->testcase()->data(),
