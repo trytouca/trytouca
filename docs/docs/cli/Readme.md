@@ -242,14 +242,15 @@ $ touca profile rm personal
 <summary>`touca post --help`</summary>
 
 ```plaintext
-usage: touca post [-h] [--api-key API-KEY] [--api-url API-URL] [--dry-run] src
+usage: touca post [--api-key API-KEY] [--api-url API-URL] [--dry-run] [src]
 
 positional arguments:
-  src                path to directory with binary files
+  src                Path to directory with binary files. Defaults to ~/.touca/results.
 
 options:
-  --api-key API-KEY  your API Key
-  --api-url API-URL  your API URL
+  --api-key API-KEY  Your API Key
+  --api-url API-URL  Your API URL
+  --dry-run          Check what your command would do when run without this option
 ```
 
 </details>

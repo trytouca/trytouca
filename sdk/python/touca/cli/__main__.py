@@ -143,9 +143,8 @@ def main(args=None):
     home_dir.mkdir(parents=True, exist_ok=True)
 
     logging.basicConfig(
-        datefmt="[%X]",
         format="%(message)s",
-        handlers=[RichHandler()],
+        handlers=[RichHandler(show_path=False, show_time=False)],
         level=logging.INFO,
     )
 
