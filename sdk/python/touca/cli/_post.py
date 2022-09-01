@@ -11,6 +11,7 @@ from typing import Dict, List
 from rich.progress import Progress, TaskID
 from touca._transport import Transport
 from touca.cli._common import Operation
+from touca._options import find_home_path
 
 logger = logging.getLogger("touca.cli.post")
 
@@ -73,7 +74,13 @@ class Post(Operation):
 
     @classmethod
     def parser(self, parser: ArgumentParser):
-        parser.add_argument("src", help="path to directory with binary files")
+        results_dir = find_home_path().joinpath("results")
+        parser.add_argument(
+            "src",
+            help=f"path to directory with binary files. defaults to {results_dir}",
+            nargs="?",
+            default=results_dir,
+        )
         group_credentials = parser.add_argument_group(
             "Credentials",
             'Server API Key and URL. Not required when specified in the active configuration profile. Ignored when "--dry-run" is specified.',
@@ -154,7 +161,7 @@ class Post(Operation):
             body=content,
             content_type="application/octet-stream",
         )
-        if response.status != 200:
+        if response.status != 200 and response.data:
             body = json.loads(response.data.decode("utf-8"))
             return body["errors"][0]
 
