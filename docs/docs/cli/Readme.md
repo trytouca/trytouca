@@ -242,7 +242,7 @@ $ touca profile rm personal
 <summary>`touca post --help`</summary>
 
 ```plaintext
-usage: touca post [--api-key API-KEY] [--api-url API-URL] [--dry-run] [src]
+usage: touca post [-h] [--api-key API-KEY] [--api-url API-URL] [--dry-run] [src]
 
 positional arguments:
   src                Path to directory with binary files. Defaults to ~/.touca/results.
@@ -301,11 +301,11 @@ shipped with our C++ SDK.
 <summary>`touca zip --help`</summary>
 
 ```plaintext
-usage: touca zip [-h] src out
+usage: touca zip [-h] [src] [out]
 
 positional arguments:
-  src         directory with binary files
-  out         directory to store compressed files
+  src  Directory with binary files. Defaults to ~/.touca/results
+  out  Directory to store compressed files. Defaults to ~/.touca/zip
 ```
 
 </details>
