@@ -1,6 +1,5 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from dataclasses import dataclass
 import json
 import logging
 from argparse import ArgumentParser
@@ -8,60 +7,12 @@ from distutils.version import LooseVersion
 from pathlib import Path
 from typing import Dict, List
 
-from rich.progress import Progress, TaskID
+from rich.progress import Progress
 from touca._transport import Transport
-from touca.cli._common import Operation
+from touca.cli._common import Operation, ResultsTree
 from touca._options import find_home_path
 
 logger = logging.getLogger("touca.cli.post")
-
-
-class ResultsTree:
-    suites = {}
-
-    def __init__(self, src: Path):
-        if not src.exists():
-            return
-        if src.is_file():
-            self._process(src)
-            return
-        for binary_file in src.rglob("*.bin"):
-            self._process(binary_file)
-
-    def process(self, operation):
-        errors = {}
-        with Progress() as progress:
-            for suite_name, batches in self.suites.items():
-                for batch_name, binary_files in batches.items():
-                    task_name = f"[magenta]{suite_name}/{batch_name}[/magenta]"
-                    task_batch = progress.add_task(task_name, total=len(binary_files))
-                    for binary_file in binary_files:
-                        error = operation(binary_file)
-                        logger.debug(f"processed {binary_file}")
-                        progress.update(task_batch, advance=1)
-                        if not error:
-                            continue
-                        if error not in errors:
-                            errors[error] = []
-                        errors[error].append(binary_file)
-        return errors
-
-    def _process(self, binary_file: Path):
-        batch_dir = binary_file.parent
-        suite_dir = batch_dir.parent
-        batch_name = batch_dir.name
-        suite_name = suite_dir.name
-        if suite_name not in self.suites:
-            self.suites[suite_name] = {}
-        if batch_name not in self.suites[suite_name]:
-            self.suites[suite_name][batch_name] = []
-        self.suites[suite_name][batch_name].append(binary_file)
-
-    def is_empty(self):
-        return len(self) == 0
-
-    def __len__(self):
-        return sum(sum(len(x) for x in bs.values()) for bs in self.suites.values())
 
 
 class Post(Operation):
@@ -100,7 +51,6 @@ class Post(Operation):
         )
 
     def run(self):
-        logging.disable(logging.INFO)
         self._update_options()
 
         if not self._setup_transport():
@@ -112,7 +62,7 @@ class Post(Operation):
             logger.error(f"Did not find any binary file in {src}")
             return False
 
-        errors = results_tree.process(self._post)
+        errors = self._process(results_tree)
         self._print_errors(errors)
         return not errors
 
@@ -150,6 +100,24 @@ class Post(Operation):
             logger.error(err)
             return False
         return True
+
+    def _process(self, results_tree: ResultsTree):
+        errors = {}
+        with Progress() as progress:
+            for suite_name, batches in results_tree.suites.items():
+                for batch_name, binary_files in batches.items():
+                    task_name = f"[magenta]{suite_name}/{batch_name}[/magenta]"
+                    task_batch = progress.add_task(task_name, total=len(binary_files))
+                    for binary_file in binary_files:
+                        error = self._post(binary_file)
+                        logger.debug(f"processed {binary_file}")
+                        progress.update(task_batch, advance=1)
+                        if not error:
+                            continue
+                        if error not in errors:
+                            errors[error] = []
+                        errors[error].append(binary_file)
+        return errors
 
     def _post(self, binary_file: Path):
         if not self._transport:
