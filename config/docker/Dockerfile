@@ -49,25 +49,19 @@ LABEL com.docker.extension.publisher-url="https://touca.io"
 LABEL com.docker.desktop.extension.icon="https://touca.io/logo/touca-logo-w-text-bg.png"
 
 RUN apk add --no-cache --update \
-    bash ca-certificates curl libstdc++ nginx \
+    ca-certificates curl \
   && rm -rf /var/cache/apk/* \
   && mkdir -p /opt/touca/api/certs \
   && curl -o /opt/touca/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
 
-RUN sed -i \
-  -e 's/#access_log  logs\/access.log  main;/access_log \/dev\/stdout;/' \
-  -e 's/#error_log  logs\/error.log  notice;/error_log stderr notice;/' \
-  /etc/nginx/nginx.conf
-
 COPY --from=builder_api /opt/touca/node_modules                 /opt/touca/node_modules
+COPY --from=builder_api /opt/touca/packages                     /opt/touca/packages
 COPY --from=builder_api /opt/touca/api/dist                     /opt/touca/api/dist
 COPY --from=builder_api /opt/touca/api/env                      /opt/touca/api/env
 COPY --from=builder_api /opt/touca/api/samples                  /opt/touca/api/samples
 COPY --from=builder_api /opt/touca/api/node_modules             /opt/touca/api/node_modules
-COPY --from=builder_app /opt/touca/app/dist                     /www/data/app
-COPY --from=builder_app /opt/touca/app/nginx.conf               /etc/nginx/conf.d/default.conf
-COPY config/docker/experimental-init.sh                         /opt/touca/config/docker/experimental-init.sh
+COPY --from=builder_app /opt/touca/app/dist                     /opt/touca/app/dist
 
 EXPOSE 80
 
-CMD ["/bin/bash", "/opt/touca/config/docker/experimental-init.sh"]
+CMD ["node", "/opt/touca/api/dist/server.js"]

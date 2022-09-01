@@ -97,6 +97,7 @@ interface IConfig {
     segment_key: string
   }
   webapp: {
+    distDirectory: string
     root: string
   }
 }
@@ -206,6 +207,7 @@ export const config: IConfig = {
     segment_key: env.SEGMENT_API_KEY
   },
   webapp: {
+    distDirectory: path.resolve(`${__dirname}/../`, env.WEBAPP_DIST_DIRECTORY),
     root: env.WEBAPP_ROOT
   }
 }

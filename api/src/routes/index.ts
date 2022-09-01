@@ -20,7 +20,7 @@ import { promisable } from '@/utils/routing'
 const router = express.Router()
 
 router.get('/', (req, res) => {
-  res.redirect(302, '/platform')
+  res.redirect(302, '/api/platform')
 })
 
 router.get('/@/:team/:suite', (req, res) => {

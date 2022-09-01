@@ -52,11 +52,22 @@ if (config.isCloudHosted) {
   app.set('trust proxy', ['loopback', 'uniquelocal'])
 }
 
-app.use('/', router)
+app.use('/api', router)
 
 app.use((req, res, next) => {
-  logger.warn('invalid route %s', req.originalUrl)
-  return res.status(404).json({ errors: ['invalid route'] })
+  if (req.url.startsWith('/api')) {
+    logger.warn('invalid route %s', req.originalUrl)
+    return res.status(404).json({ errors: ['invalid route'] })
+  }
+  const pattern = new RegExp(
+    '(.css|.js|.json|.ico|.jpg|.jpeg|.png|.svg|.txt|.webmanifest|.xml)+$',
+    'gi'
+  )
+  return pattern.test(req.url)
+    ? res
+        .setHeader('Cache-Control', 'public, max-age=31536000, immutable')
+        .sendFile(`${config.webapp.distDirectory}${req.url}`)
+    : res.sendFile(`${config.webapp.distDirectory}/index.html`)
 })
 
 app.use((err, req, res, next) => {

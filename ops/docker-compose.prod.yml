@@ -1,7 +1,7 @@
 version: "3"
 services:
   touca_api:
-    image: touca/touca-api:1.6.0
+    image: touca/touca:1.6.0
     environment:
       ENV_FILE: prod
       AUTH_JWT_SECRET: <SECRET>
@@ -17,14 +17,6 @@ services:
       - touca_minio
       - touca_mongo
       - touca_redis
-    # ports:
-    #   - 8081:8081
-    restart: always
-
-  touca_app:
-    image: touca/touca-app:1.6.0
-    depends_on:
-      - touca_api
     ports:
       - 80:80
     restart: always
