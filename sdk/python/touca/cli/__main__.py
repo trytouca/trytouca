@@ -5,7 +5,6 @@ import logging
 import sys
 from typing import List
 
-from colorama import Fore
 from touca import __version__
 from touca._options import find_home_path
 from touca._printer import Printer
@@ -21,6 +20,7 @@ from touca.cli._unzip import Unzip
 from touca.cli._update import Update
 from touca.cli._zip import Zip
 from touca.cli.server import Server
+from rich.logging import RichHandler
 
 
 def _find_latest_pypi_version():
@@ -83,6 +83,7 @@ class Version(Operation):
 
     def run(self):
         print(f"v{__version__}")
+        return True
 
 
 def main(args=None):
@@ -142,9 +143,10 @@ def main(args=None):
     home_dir.mkdir(parents=True, exist_ok=True)
 
     logging.basicConfig(
-        format=f"{Fore.GREEN}%(asctime)s{Fore.RESET} | {Fore.CYAN}%(name)s{Fore.RESET} | {Fore.BLUE}%(levelname)s{Fore.RESET} | %(message)s",
-        datefmt="%I:%M:%S",
-        level=logging.DEBUG,
+        datefmt="[%X]",
+        format="%(message)s",
+        handlers=[RichHandler()],
+        level=logging.INFO,
     )
 
     if not operation.run():
