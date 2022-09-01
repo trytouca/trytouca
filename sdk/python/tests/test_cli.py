@@ -13,7 +13,7 @@ def test_cli_basic(capsys: pytest.CaptureFixture):
 
 
 def test_cli_version(capsys: pytest.CaptureFixture):
-    assert main(["version"]) == True
+    assert main(["version"]) == False
     captured = capsys.readouterr()
     assert __version__ in captured.out
     assert not captured.err

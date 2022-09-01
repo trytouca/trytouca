@@ -1,43 +1,66 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+from dataclasses import dataclass
+import json
 import logging
-import sys
 from argparse import ArgumentParser
 from distutils.version import LooseVersion
 from pathlib import Path
+from typing import Dict, List
 
+from rich.progress import Progress, TaskID
 from touca._transport import Transport
 from touca.cli._common import Operation
 
 logger = logging.getLogger("touca.cli.post")
 
 
-def _post(src_dir: Path, transport: Transport = None, dry_run=False):
-    src_dir = src_dir.with_name(src_dir.name)
-    src_dir = (
-        src_dir if src_dir.exists() else src_dir.with_name(src_dir.name + "-merged")
-    )
-    if not src_dir.exists():
-        logger.error(f"expected directory {src_dir} to exist")
-        return False
-    binaries = list(src_dir.rglob("**/*.bin"))
-    if not binaries:
-        logger.warning(f"{src_dir} has no result files")
-        return False
-    logger.debug(f"posting {src_dir}")
-    for binary in binaries:
-        logger.debug(f"posting {binary.relative_to(src_dir)}")
-        if dry_run:
-            continue
-        content = binary.read_bytes()
-        transport._send_request(
-            method="POST",
-            path=f"/client/submit",
-            body=content,
-            content_type="application/octet-stream",
-        )
-    logger.info(f"posted {src_dir}")
-    return True
+class ResultsTree:
+    suites = {}
+
+    def __init__(self, src: Path):
+        if not src.exists():
+            return
+        if src.is_file():
+            self._process(src)
+            return
+        for binary_file in src.rglob("*.bin"):
+            self._process(binary_file)
+
+    def process(self, operation):
+        errors = {}
+        with Progress() as progress:
+            for suite_name, batches in self.suites.items():
+                for batch_name, binary_files in batches.items():
+                    task_name = f"[magenta]{suite_name}/{batch_name}[/magenta]"
+                    task_batch = progress.add_task(task_name, total=len(binary_files))
+                    for binary_file in binary_files:
+                        error = operation(binary_file)
+                        logger.debug(f"processed {binary_file}")
+                        progress.update(task_batch, advance=1)
+                        if not error:
+                            continue
+                        if error not in errors:
+                            errors[error] = []
+                        errors[error].append(binary_file)
+        return errors
+
+    def _process(self, binary_file: Path):
+        batch_dir = binary_file.parent
+        suite_dir = batch_dir.parent
+        batch_name = batch_dir.name
+        suite_name = suite_dir.name
+        if suite_name not in self.suites:
+            self.suites[suite_name] = {}
+        if batch_name not in self.suites[suite_name]:
+            self.suites[suite_name][batch_name] = []
+        self.suites[suite_name][batch_name].append(binary_file)
+
+    def is_empty(self):
+        return len(self) == 0
+
+    def __len__(self):
+        return sum(sum(len(x) for x in bs.values()) for bs in self.suites.values())
 
 
 class Post(Operation):
@@ -46,6 +69,7 @@ class Post(Operation):
 
     def __init__(self, options: dict):
         self.__options = options
+        self._transport: Transport = None
 
     @classmethod
     def parser(self, parser: ArgumentParser):
@@ -69,6 +93,23 @@ class Post(Operation):
         )
 
     def run(self):
+        logging.disable(logging.INFO)
+        self._update_options()
+
+        if not self._setup_transport():
+            return False
+
+        src = Path(self.__options.get("src")).expanduser().resolve()
+        results_tree = ResultsTree(src)
+        if results_tree.is_empty():
+            logger.error(f"Did not find any binary file in {src}")
+            return False
+
+        errors = results_tree.process(self._post)
+        self._print_errors(errors)
+        return not errors
+
+    def _update_options(self):
         from touca._options import _apply_config_file, update_options
 
         options = {
@@ -85,51 +126,44 @@ class Post(Operation):
         try:
             update_options(options, options)
         except ValueError as err:
-            print(err, file=sys.stderr)
+            logger.error(err)
             return False
+        self.__options.update(options)
 
-        src_dir = Path(self.__options.get("src")).expanduser().resolve()
-        if not src_dir.exists():
-            logger.error(f"directory {src_dir} does not exist")
-            return False
-
-        batchNames = []
-        for batch_dir in src_dir.glob("*"):
-            if not batch_dir.is_dir():
-                continue
-            batchNames.append(
-                batch_dir.name[:-7]
-                if batch_dir.name.endswith("-merged")
-                else batch_dir.name
-            )
-
-        if not batchNames:
-            logger.info(f"found no valid result directory to post")
+    def _setup_transport(self):
+        if self.__options.get("dry-run"):
+            logger.warning("Running in dry-run mode")
             return True
-        logger.info(f"preparing to submit {len(batchNames)} versions")
-
-        # sort list of versions lexicographically
-        batchNames.sort(key=LooseVersion)
-
-        if options.get("dry-run"):
-            logger.warning("dry-run mode is enabled")
-            for batchName in batchNames:
-                batchDir = src_dir.joinpath(batchName)
-                _post(batchDir, dry_run=True)
-            return True
-
-        transport = Transport({k: options.get(k) for k in ["api-key", "api-url"]})
         try:
-            transport.authenticate()
+            self._transport = Transport(
+                {k: self.__options.get(k) for k in ["api-key", "api-url"]}
+            )
+            self._transport.authenticate()
         except ValueError as err:
-            print(err, file=sys.stderr)
+            logger.error(err)
             return False
-
-        for batchName in batchNames:
-            batchDir = src_dir.joinpath(batchName)
-            if not _post(batchDir, transport):
-                logger.error(f"failed to post {batchDir}")
-                return False
-        logger.info("all test results submitted successfully")
-
         return True
+
+    def _post(self, binary_file: Path):
+        if not self._transport:
+            return None
+        content = binary_file.read_bytes()
+        response = self._transport._send_request(
+            method="POST",
+            path=f"/client/submit",
+            body=content,
+            content_type="application/octet-stream",
+        )
+        if response.status != 200:
+            body = json.loads(response.data.decode("utf-8"))
+            return body["errors"][0]
+
+    def _print_errors(self, errors: Dict[str, List[str]]):
+        if not errors:
+            return
+        logger.error(f"Failed to post some binary files")
+        for error, binary_files in errors.items():
+            binary_files.sort()
+            logger.error(f" {error}")
+            for binary_file in binary_files:
+                logger.error(f"  {binary_file}")
