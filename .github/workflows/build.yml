@@ -920,7 +920,7 @@ jobs:
         id: params
         run: |
           echo "::set-output name=version::$(npm --prefix=api pkg get version | sed 's/"//g')"
-          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true') }}"
+          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && steps.changes.outputs.api == 'true' }}"
           echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
       - uses: actions/download-artifact@v2
         if: steps.changes.outputs.api == 'true'
@@ -962,12 +962,12 @@ jobs:
         if: steps.params.outputs.release == 'true'
         with:
           registry: ${{ secrets.AWS_ECR }}
-
       - name: prepare resources for building api docker image
         if: steps.changes.outputs.api == 'true'
         run: |
           mkdir -p ./stage/api/certs
           tar -xf api.tar.gz -C ./stage
+          tar -xf app.tar.gz -C ./stage
           cp -r ./api/env ./stage/api/env
           cp -r ./api/samples ./stage/api/samples
           cp -r ./api/node_modules ./stage/api/node_modules
@@ -1005,43 +1005,4 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
           repository: touca/touca-api
-          readme-filepath: ./README.md
-
-      - name: prepare resources for building app docker image
-        if: steps.changes.outputs.app == 'true'
-        run: |
-          mkdir -p ./stage
-          tar -xf app.tar.gz -C ./stage
-          mkdir -p ./stage/app && cp ./app/nginx.conf ./stage/app/
-      - name: extract metadata for app docker image
-        uses: docker/metadata-action@v4
-        if: steps.changes.outputs.app == 'true'
-        id: meta-app
-        with:
-          images: |
-            touca/touca-app
-            ${{ secrets.AWS_ECR }}/touca-app
-          tags: |
-            type=semver,pattern={{version}},value=${{ steps.params.outputs.version }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
-            type=semver,pattern={{major}},value=${{ steps.params.outputs.version }}
-      - name: build app docker image
-        uses: docker/build-push-action@v3
-        if: steps.changes.outputs.app == 'true'
-        with:
-          context: stage
-          file: ./config/docker/app.Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: ${{ steps.params.outputs.release == 'true' }}
-          tags: ${{ steps.meta-app.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: update docker hub description
-        uses: peter-evans/dockerhub-description@v3
-        if: |
-          steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: touca/touca-app
           readme-filepath: ./README.md
