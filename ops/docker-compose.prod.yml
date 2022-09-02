@@ -25,8 +25,6 @@ services:
     image: redis:6-alpine
     volumes:
       - ./data/redis:/data
-    # ports:
-    #  - 6379:6379
     restart: always
 
   touca_minio:
@@ -36,13 +34,11 @@ services:
       MINIO_ROOT_PASSWORD: toucapass
     volumes:
       - ./data/minio:/data
-    # ports:
-    #   - 9000:9000
     command: server /data
     restart: always
 
   touca_mongo:
-    image: mongo:4-bionic
+    image: mongo:5
     environment:
       MONGO_INITDB_ROOT_USERNAME: toucauser
       MONGO_INITDB_ROOT_PASSWORD: toucapass
@@ -50,7 +46,5 @@ services:
       - ./data/mongo:/data/db
       - ./ops/mongo/mongod.conf:/etc/mongod.conf
       - ./ops/mongo/entrypoint/:/docker-entrypoint-initdb.d/
-    # ports:
-    #   - 27017:27017
     command: --config /etc/mongod.conf
     restart: always

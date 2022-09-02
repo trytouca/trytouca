@@ -991,7 +991,7 @@ jobs:
         if: steps.changes.outputs.api == 'true'
         with:
           context: stage
-          file: ./config/docker/api.Dockerfile
+          file: ./config/docker/ci.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ steps.params.outputs.release == 'true' }}
           tags: ${{ steps.meta-api.outputs.tags }}
