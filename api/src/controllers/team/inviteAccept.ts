@@ -1,11 +1,12 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * @summary
@@ -44,8 +45,12 @@ export async function teamInviteAccept(
 
   // remove invalidated cached responses.
 
-  await rclient.removeCached(`route_teamMemberList_${team.slug}`)
-  await rclient.removeCached(`route_teamList_${user.username}`)
+  await redis.removeCached(`route_teamMemberList_${team.slug}`)
+  await redis.removeCached(`route_teamList_${user.username}`)
+
+  analytics.add_activity(EActivity.TeamMemberAccepted, user._id, {
+    team_id: team._id
+  })
 
   logger.info('%s: joined team %s', user.username, team.slug)
   return res.status(204).send()

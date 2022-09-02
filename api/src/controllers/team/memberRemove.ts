@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { ETeamRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
@@ -8,7 +8,8 @@ import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * @summary
@@ -92,7 +93,7 @@ export async function teamMemberRemove(
 
   // remove list of team members from cache.
 
-  await rclient.removeCached(`route_teamMemberList_${team.slug}`)
+  await redis.removeCached(`route_teamMemberList_${team.slug}`)
 
   // send email to user
 
@@ -103,6 +104,11 @@ export async function teamMemberRemove(
     subject,
     teamName: team.name,
     userName: member.fullname || member.username
+  })
+
+  analytics.add_activity(EActivity.TeamMemberRemoved, user._id, {
+    member_id: member._id,
+    team_id: team._id
   })
 
   logger.info('%s: removed member %s from team %s', ...tuple)

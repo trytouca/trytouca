@@ -1,11 +1,12 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function teamJoinRescind(
   req: Request,
@@ -57,10 +58,14 @@ export async function teamJoinRescind(
 
   // remove list of team members from cache.
 
-  await rclient.removeCached(`route_teamMemberList_${team.slug}`)
-  await rclient.removeCached(`route_teamList_${user.username}`)
+  await redis.removeCached(`route_teamMemberList_${team.slug}`)
+  await redis.removeCached(`route_teamList_${user.username}`)
 
   // we choose not to send an email for this event.
+
+  analytics.add_activity(EActivity.TeamMemberWithdrawn, user._id, {
+    team_id: team._id
+  })
 
   logger.info('%s: request to join team %s rescinded', ...tuple)
   return res.status(204).send()

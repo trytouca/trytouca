@@ -1,11 +1,12 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
 import { TeamModel } from '@/schemas/team'
 import { UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * @summary
@@ -62,7 +63,7 @@ export async function teamInviteRescind(
 
   // remove list of team members from cache.
 
-  await rclient.removeCached(`route_teamMemberList_${team.slug}`)
+  await redis.removeCached(`route_teamMemberList_${team.slug}`)
 
   // if user was registered, refresh their team list
 
@@ -72,8 +73,13 @@ export async function teamInviteRescind(
   )
 
   if (isRegistered) {
-    await rclient.removeCached(`route_teamList_${isRegistered.username}`)
+    await redis.removeCached(`route_teamList_${isRegistered.username}`)
   }
+
+  analytics.add_activity(EActivity.TeamMemberRescinded, user._id, {
+    team_id: team._id,
+    member_email: askedEmail
+  })
 
   return res.status(204).send()
 }
