@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -7,7 +7,8 @@ import { IUser, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function teamJoinDecline(
   req: Request,
@@ -60,12 +61,12 @@ export async function teamJoinDecline(
 
   // remove invalidated cached responses.
 
-  await rclient.removeCached(`route_teamMemberList_${team.slug}`)
-  await rclient.removeCached(`route_teamList_${account.username}`)
+  await redis.removeCached(`route_teamMemberList_${team.slug}`)
+  await redis.removeCached(`route_teamList_${account.username}`)
 
   // send email to user.
 
-  const subject = `Your request to join team ${team.name} was declined`
+  const subject = `Your request to join team ${team.name} was rejected`
   mailer.mailUser(account, subject, 'team-join-decline', {
     subject,
     teamName: team.name,
@@ -73,6 +74,11 @@ export async function teamJoinDecline(
     userName: account?.fullname || account?.username
   })
 
-  logger.info('%s: declined %s request to join team %s', ...tuple)
+  analytics.add_activity(EActivity.TeamMemberRejected, user._id, {
+    team_id: team._id,
+    member_id: account._id
+  })
+
+  logger.info('%s: rejected %s request to join team %s', ...tuple)
   return res.status(204).send()
 }

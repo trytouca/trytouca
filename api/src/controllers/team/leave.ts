@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -10,7 +10,8 @@ import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * @summary
@@ -64,8 +65,8 @@ export async function teamLeave(
 
   // remove invalidated cached responses.
 
-  await rclient.removeCached(`route_teamMemberList_${team.slug}`)
-  await rclient.removeCached(`route_teamList_${user.username}`)
+  await redis.removeCached(`route_teamMemberList_${team.slug}`)
+  await redis.removeCached(`route_teamList_${user.username}`)
 
   // send email to admins and owner of this team
 
@@ -75,6 +76,10 @@ export async function teamLeave(
     userName: user.fullname,
     subject,
     teamName: team.name
+  })
+
+  analytics.add_activity(EActivity.TeamMemberLeft, user._id, {
+    team_id: team._id
   })
 
   logger.info('%s: left team %s', user.username, team.slug)

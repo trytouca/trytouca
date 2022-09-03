@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { ETeamRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
@@ -7,7 +7,8 @@ import { findTeamRoleOfUser } from '@/controllers/team/common'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * @summary
@@ -112,7 +113,7 @@ export async function teamMemberUpdate(
 
   // remove list of team members from cache.
 
-  await rclient.removeCached(`route_teamMemberList_${team.slug}`)
+  await redis.removeCached(`route_teamMemberList_${team.slug}`)
 
   logger.info(
     '%s: %s: updated role of member %s from %s to %s',
@@ -122,6 +123,12 @@ export async function teamMemberUpdate(
     roleCurrent,
     roleNew
   )
+
+  analytics.add_activity(EActivity.TeamMemberPromoted, user._id, {
+    member_id: member._id,
+    new_role: roleNew,
+    team_id: team._id
+  })
 
   return res.status(204).send()
 }

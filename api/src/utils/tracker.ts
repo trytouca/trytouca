@@ -32,8 +32,23 @@ export enum EActivity {
   ProfileUpdated = 'profile:updated',
   SelfHostedInstall = 'self_host:installed',
   SuiteCreated = 'suite:created',
+  SuiteDeleted = 'suite:deleted',
   SuiteSubscribed = 'suite:subscribed',
-  TeamCreated = 'team:created'
+  TeamCreated = 'team:created',
+  TeamDeleted = 'team:deleted',
+  TeamMemberAccepted = 'team_member:accepted',
+  TeamMemberAdded = 'team_member:added',
+  TeamMemberApproved = 'team_member:approved',
+  TeamMemberDeclined = 'team_member:declined',
+  TeamMemberLeft = 'team_member:left',
+  TeamMemberReceived = 'team_member:received',
+  TeamMemberRejected = 'team_member:rejected',
+  TeamMemberRemoved = 'team_member:removed',
+  TeamMemberRescinded = 'team_member:rescinded',
+  TeamMemberRequested = 'team_member:requested',
+  TeamMemberPromoted = 'team_member:promoted',
+  TeamMemberInvited = 'team_member:sent',
+  TeamMemberWithdrawn = 'team_member:withdrawn'
 }
 
 export async function getChatToken(user: IUser): Promise<string> {
