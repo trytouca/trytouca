@@ -12,18 +12,19 @@ from touca._options import find_home_path
 logger = logging.getLogger("touca.cli.zip")
 
 
-def _compress_batch(binary_files, compressed_file, update):
-    if compressed_file.exists():
-        logger.info(f"Compressed file {compressed_file} already exists")
+def _compress_batch(binary_files, zip_file, update):
+    if zip_file.exists():
+        logger.debug(f"Compressed file {zip_file} already exists")
+        update(len(binary_files))
         return True
-    logger.debug(f"Creating {compressed_file}")
+    logger.debug(f"Creating {zip_file}")
     try:
-        with py7zr.SevenZipFile(compressed_file, "w") as archive:
+        with py7zr.SevenZipFile(zip_file, "w") as archive:
             for binary_file in binary_files:
                 archive.write(binary_file, arcname=binary_file.name)
-                update()
+                update(1)
     except py7zr.ArchiveError:
-        logger.warning(f"Failed to archive {compressed_file}")
+        logger.warning(f"Failed to archive {zip_file}")
         return False
     return True
 
@@ -70,7 +71,7 @@ class Zip(Operation):
                     f"[magenta]{suite_name}/{batch_name}[/magenta]",
                     total=len(binary_files),
                 )
-                update = lambda: progress.update(task_batch, advance=1)
+                update = lambda x: progress.update(task_batch, advance=x)
                 if not _compress_batch(binary_files, zip_file, update=update):
                     logger.error(f"failed to compress {src_dir}")
                     return False
