@@ -57,7 +57,7 @@ class Zip(Operation):
         out_dir = Path(self.__options.get("out")).expanduser().resolve()
 
         results_tree = ResultsTree(src_dir)
-        if results_tree.is_empty():
+        if results_tree.is_empty:
             logger.error(f"Did not find any binary file in {src_dir}")
             return False
 
@@ -78,6 +78,7 @@ class Zip(Operation):
         return True
 
     def _iterate(self, result_tree: ResultsTree):
-        for suite_name, batches in result_tree.suites.items():
-            for batch_name, binary_files in batches.items():
-                yield suite_name, batch_name, binary_files
+        for suite_name, versions in result_tree.suites.items():
+            for version_name in versions.items():
+                for batch_name, binary_files in version_name[1].items():
+                    yield suite_name, batch_name, binary_files

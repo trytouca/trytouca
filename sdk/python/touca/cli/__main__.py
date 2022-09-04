@@ -15,6 +15,7 @@ from touca.cli._merge import Merge
 from touca.cli._plugin import Plugin, user_plugins
 from touca.cli._post import Post
 from touca.cli._profile import Profile
+from touca.cli._results import Results
 from touca.cli._run import Run
 from touca.cli._unzip import Unzip
 from touca.cli._update import Update
@@ -94,6 +95,7 @@ def main(args=None):
         Plugin,
         Post,
         Profile,
+        Results,
         Run,
         Server,
         Execute,
