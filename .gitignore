@@ -18,6 +18,7 @@ examples/python/.python-version
 local/logs/api/
 local/logs/cmp/
 node_modules/
+packages/**/coverage/
 packages/**/dist
 packages/**/node_modules
 sdk/cpp/local/

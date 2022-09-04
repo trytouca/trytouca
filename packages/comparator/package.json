@@ -1,17 +1,16 @@
 {
   "$schema": "https://json.schemastore.org/package.json",
-  "private": true,
   "name": "@touca/comparator",
   "version": "0.0.0",
-  "description": "Touca Type Comparator",
-  "license": "Apache-2.0",
-  "main": "./dist/testcase.js",
-  "types": "./dist/testcase.d.ts",
+  "description": "Touca Comparator",
+  "private": true,
+  "main": "dist/testcase.js",
+  "types": "dist/testcase.d.ts",
   "scripts": {
-    "build": "npm run clean && tsc",
+    "build": "tsc",
     "clean": "rm -rf coverage/ dist/ node_modules/.vitest/",
     "dev": "vitest watch --reporter verbose",
-    "format": "prettier ./ --ignore-unknown --write --loglevel silent",
+    "format": "prettier --write src/",
     "lint": "tsc --noEmit",
     "postinstall": "npm run build",
     "test": "vitest run --coverage --reporter verbose"
@@ -27,6 +26,9 @@
     "vitest": "0.22.1"
   },
   "prettier": {
-    "trailingComma": "es5"
+    "htmlWhitespaceSensitivity": "ignore",
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none"
   }
 }
