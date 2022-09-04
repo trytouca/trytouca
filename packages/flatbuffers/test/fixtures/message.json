@@ -1,0 +1,190 @@
+{
+  "metadata": {
+    "testsuite": "students",
+    "version": "v1.0",
+    "testcase": "alice",
+    "builtAt": "2021-11-14T23:19:24.804068",
+    "teamslug": "acme"
+  },
+  "results": {
+    "entries": [
+      {
+        "key": "birth_date",
+        "value": {
+          "value_type": "Object",
+          "value": {
+            "key": "dict",
+            "values": [
+              {
+                "name": "day",
+                "value": {
+                  "value_type": "Int",
+                  "value": {
+                    "value": 1
+                  }
+                }
+              },
+              {
+                "name": "month",
+                "value": {
+                  "value_type": "Int",
+                  "value": {
+                    "value": 3
+                  }
+                }
+              },
+              {
+                "name": "year",
+                "value": {
+                  "value_type": "Int",
+                  "value": {
+                    "value": 2006
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "courses",
+        "value": {
+          "value_type": "Array",
+          "value": {
+            "values": [
+              {
+                "value_type": "Object",
+                "value": {
+                  "key": "Course",
+                  "values": [
+                    {
+                      "name": "grade",
+                      "value": {
+                        "value_type": "Double",
+                        "value": {
+                          "value": 3.8
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "value_type": "String",
+                        "value": {
+                          "value": "computers"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "value_type": "Object",
+                "value": {
+                  "key": "Course",
+                  "values": [
+                    {
+                      "name": "grade",
+                      "value": {
+                        "value_type": "Double",
+                        "value": {
+                          "value": 4
+                        }
+                      }
+                    },
+                    {
+                      "name": "name",
+                      "value": {
+                        "value_type": "String",
+                        "value": {
+                          "value": "math"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "key": "fullname",
+        "value": {
+          "value_type": "String",
+          "value": {
+            "value": "Alice Anderson"
+          }
+        }
+      },
+      {
+        "key": "gpa",
+        "value": {
+          "value_type": "Double",
+          "value": {
+            "value": 3.9
+          }
+        }
+      },
+      {
+        "key": "number of courses",
+        "value": {
+          "value_type": "Int",
+          "value": {
+            "value": 2
+          }
+        }
+      },
+      {
+        "key": "pass",
+        "value": {
+          "value_type": "Bool",
+          "value": {
+            "value": true
+          }
+        }
+      },
+      {
+        "key": "username",
+        "value": {
+          "value_type": "String",
+          "value": {
+            "value": "alice"
+          }
+        },
+        "typ": "Assert"
+      }
+    ]
+  },
+  "metrics": {
+    "entries": [
+      {
+        "key": "calculate_gpa",
+        "value": {
+          "value_type": "Int",
+          "value": {
+            "value": 320
+          }
+        }
+      },
+      {
+        "key": "external_source",
+        "value": {
+          "value_type": "Int",
+          "value": {
+            "value": 500
+          }
+        }
+      },
+      {
+        "key": "find_student",
+        "value": {
+          "value_type": "Int",
+          "value": {
+            "value": 562
+          }
+        }
+      }
+    ]
+  }
+}

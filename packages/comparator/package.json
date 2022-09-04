@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "private": true,
+  "name": "@touca/comparator",
+  "version": "0.0.0",
+  "description": "Touca Type Comparator",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": "./dist/type.js",
+  "types": "./dist/type.d.ts",
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "rm -rf coverage/ dist/ node_modules/.vitest/",
+    "dev": "vitest watch --reporter verbose",
+    "format": "prettier ./ --ignore-unknown --write --loglevel silent",
+    "lint": "tsc --noEmit",
+    "postinstall": "npm run build",
+    "test": "vitest run --coverage --reporter verbose"
+  },
+  "dependencies": {
+    "decimal.js": "10.4.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-istanbul": "0.22.1",
+    "prettier": "2.7.1",
+    "typescript": "4.8.2",
+    "vitest": "0.22.1"
+  },
+  "prettier": {
+    "trailingComma": "es5"
+  }
+}

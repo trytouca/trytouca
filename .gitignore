@@ -17,6 +17,7 @@ examples/python/.env/
 examples/python/.python-version
 local/logs/api/
 local/logs/cmp/
+node_modules/
 packages/**/dist
 packages/**/node_modules
 sdk/cpp/local/

@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "private": true,
+  "name": "@touca/flatbuffers",
+  "version": "0.0.0",
+  "description": "Touca FlatBuffers Schema and Deserializer",
+  "license": "Apache-2.0",
+  "type": "module",
+  "exports": "./dist/message.js",
+  "types": "./dist/message.d.ts",
+  "scripts": {
+    "build": "npm run clean && tsc && npm run format",
+    "build:fbs": "rm -rf src/schema/generated/ && flatc --ts --gen-object-api --filename-suffix \"\" -o src/schema/generated/ src/schema/root.fbs && npm run format",
+    "clean": "rm -rf coverage/ dist/ node_modules/.vitest/",
+    "dev": "vitest watch --reporter verbose",
+    "format": "prettier ./ --ignore-unknown --write --loglevel silent",
+    "lint": "tsc --noEmit",
+    "postinstall": "npm run build",
+    "test": "vitest run --coverage --reporter verbose"
+  },
+  "dependencies": {
+    "flatbuffers": "2.0.7"
+  },
+  "devDependencies": {
+    "@types/node": "18.7.13",
+    "@vitest/coverage-istanbul": "0.22.1",
+    "prettier": "2.7.1",
+    "typescript": "4.8.2",
+    "vitest": "0.22.1"
+  },
+  "prettier": {
+    "trailingComma": "es5"
+  }
+}
