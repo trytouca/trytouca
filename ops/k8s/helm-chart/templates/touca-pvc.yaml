@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: touca-ebs
+  namespace: {{ .Release.Name }}-touca
+spec: 
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.volume.scName }}
+  resources: 
+    requests:
+      storage: 4Gi

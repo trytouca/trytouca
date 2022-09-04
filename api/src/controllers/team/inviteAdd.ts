@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -7,7 +7,8 @@ import { IUser, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * @summary
@@ -107,23 +108,20 @@ export async function teamInviteAdd(
     logger.info('%s: invited %s to team %s', ...tuple)
   }
 
-  // remove list of team members from cache.
-
-  await rclient.removeCached(`route_teamMemberList_${team.slug}`)
+  // remove list of team members from cache
+  await redis.removeCached(`route_teamMemberList_${team.slug}`)
 
   // if user was registered, refresh their team list
-
   const isRegistered = await UserModel.findOne(
     { email: askedEmail },
     { fullname: 1, username: 1 }
   )
 
   if (isRegistered) {
-    await rclient.removeCached(`route_teamList_${isRegistered.username}`)
+    await redis.removeCached(`route_teamList_${isRegistered.username}`)
   }
 
   // send invitation email to user
-
   const subject = `Join team "${team.name}" on Touca`
   const recipient: IUser = {
     _id: null,
@@ -140,6 +138,11 @@ export async function teamInviteAdd(
     ownerEmail: user.email,
     subject,
     teamName: team.name
+  })
+
+  analytics.add_activity(EActivity.TeamMemberInvited, user._id, {
+    team_id: team._id,
+    member_email: askedEmail
   })
 
   return res.status(204).send()

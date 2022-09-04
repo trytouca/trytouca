@@ -111,9 +111,9 @@ Touca Test Framework
 
 Suite: is_prime_test/1.0
 
- 1.  PASS   19    (0 ms)
- 2.  PASS   51    (0 ms)
- 3.  PASS   97    (0 ms)
+ 1.  SENT   19    (0 ms)
+ 2.  SENT   51    (0 ms)
+ 3.  SENT   97    (0 ms)
 
 Tests:      3 passed, 3 total
 Time:       0.39 s
@@ -139,7 +139,7 @@ root cause more easily.
   information about Touca and its various components. If you are new to Touca,
   our _[Getting Started](https://touca.io/docs/basics/quickstart/)_ guide is the
   best place to start.
-- [Python SDK API Reference](https://app.touca.io/docs/sdk/python/api.html):
+- [Python SDK API Reference](https://touca.io/docs/external/sdk/python/index.html):
   Auto-generated source code documentation for Touca Python SDK with explanation
   about individual API functions and examples for how to use them.
 - [Python Examples](https://github.com/trytouca/trytouca/tree/main/examples/python):

@@ -62,14 +62,38 @@ class Profile(Operation):
         with open(settings_path, "wt") as settings_file:
             config.write(settings_file)
 
-    def _command_list(self):
-        profiles_dir = Path(find_home_path(), "profiles")
+    def _list_profiles(self):
+        home_path = find_home_path()
+        settings_path = home_path.joinpath("settings")
+        if not settings_path.exists():
+            return ["default"], "default"
+
+        profiles_dir = home_path.joinpath("profiles")
         profile_names = [p.name for p in profiles_dir.glob("*") if p.is_file()]
-        if "default" not in profile_names:
-            self._make_profile(profiles_dir.joinpath("default"))
-            profile_names.append("default")
-        for name in profile_names:
-            print(name)
+        profile_names.sort()
+        config = ConfigParser()
+        config.read_string(settings_path.read_text())
+        profile_active = (
+            config.get("settings", "profile")
+            if config.has_section("settings")
+            else "default"
+        )
+        return profile_names, profile_active
+
+    def _command_list(self):
+        from touca._printer import print_table
+
+        profile_names, active_profile = self._list_profiles()
+        table_body = [
+            [
+                f"{idx + 1}",
+                f"{name} [magenta](active)[/magenta]"
+                if name == active_profile
+                else name,
+            ]
+            for idx, name in enumerate(profile_names)
+        ]
+        print_table(["", "Name"], table_body)
         return True
 
     def _command_set(self):

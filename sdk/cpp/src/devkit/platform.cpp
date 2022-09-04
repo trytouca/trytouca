@@ -305,6 +305,7 @@ bool Platform::seal() const {
   return true;
 }
 
+// to be removed as part of "Synchronized Comparison" project
 bool Platform::cmp_submit(const std::string& url,
                           const std::string& content) const {
   _error.clear();
@@ -321,6 +322,7 @@ bool Platform::cmp_submit(const std::string& url,
   return true;
 }
 
+// to be removed as part of "Synchronized Comparison" project
 bool Platform::cmp_jobs(std::string& content) const {
   _error.clear();
   const auto& response = _http->get(_api.route("/cmp"));
@@ -337,6 +339,7 @@ bool Platform::cmp_jobs(std::string& content) const {
   return true;
 }
 
+// to be removed as part of "Synchronized Comparison" project
 bool Platform::cmp_stats(const std::string& content) const {
   _error.clear();
   const auto& response = _http->post(_api.route("/cmp/stats"), content);

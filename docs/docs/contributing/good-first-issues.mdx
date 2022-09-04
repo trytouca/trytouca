@@ -9,25 +9,7 @@ contributing to Touca. If that's not the case, come say hi on
 
 ## Touca Server
 
-### 1. Improve UX in self-hosting install wizard
-
-When users self-host the Touca Server, the web app displays an install wizard
-that includes a form asking for the fullname and email of the user. When the
-user completes the install wizard, the web app automatically creates an account
-for the provided email and redirects the user to their profile page. But since
-the account does not have a password yet, we show another _account activation_
-form asking for the user to enter their fullname, username, and password. The
-user is left to wonder why we show yet another form after reassuring them that
-the install wizard is complete.
-
-We would like to simplify the onboarding workflow by adding a step to the
-install wizard that asks for the username and password of the master account,
-letting us skip the second form altogether and provide a more intuitive
-experience for the user.
-
-- [GitHub Issue](https://github.com/trytouca/trytouca/issues/196)
-
-### 2. Allow user to manually toggle dark mode
+### 1. Allow user to manually toggle dark mode
 
 Touca Web App, written in Angular, supports two light and dark modes. Currently,
 the web app follows the system preference to determine whether to use the dark
@@ -39,7 +21,7 @@ preference and adjust the display mode accordingly.
 
 ## JavaScript SDK
 
-### 3. Split the SDK into separate packages
+### 2. Split the SDK into separate packages
 
 Currently, our JavaScript SDK comes in one single package `@touca/node` with
 dependencies on `fs`, `path`, `http`, `https`, and `url` node modules. This
@@ -56,7 +38,7 @@ environments.
 
 - [GitHub Issue](https://github.com/trytouca/trytouca/issues/194)
 
-### 4. Migrate away from Lerna
+### 3. Migrate away from Lerna
 
 We use Lerna to manage packages in our JavaScript SDK
 ([see here](https://github.com/trytouca/trytouca/tree/main/sdk/js)). Lerna is
@@ -66,7 +48,7 @@ like to remove it in favor of Nx or npm workspaces.
 
 - [GitHub Issue](https://github.com/trytouca/trytouca/issues/193)
 
-### 5. Add support for configuration profiles
+### 4. Add support for configuration profiles
 
 We recently introduced configuration profiles to make it easy for users to store
 their configuration options (like API credentials) in a Touca home directory
@@ -96,7 +78,7 @@ node examples/01_node_minimal/dist/is_prime_test.js
 
 ## DevOps
 
-### 6. Create a Unified Docker image for Touca Server
+### 5. Create a Unified Docker image for Touca Server
 
 Touca server is currently split into three containers:
 
@@ -115,7 +97,7 @@ docker image that runs all the three processes.
 - [GitHub Issue](https://github.com/trytouca/trytouca/issues/191)
 - [Feature Branch](https://github.com/trytouca/trytouca/tree/feature/arm)
 
-### 7. Add Terraform configuration for AWS
+### 6. Add Terraform configuration for AWS
 
 Generally, we'd like to make it easier for people to self-host Touca wherever
 they like. Instead of giving free OSS users a half-broken experience and forcing
@@ -134,7 +116,7 @@ backend services.
 
 ## Python CLI
 
-### 8. Add new subcommand `result`
+### 7. Add new subcommand `result`
 
 We'd like to add a `result` subcommand to the Touca Python CLI to make it easier
 for users to manage local and remote test results. Initially, we'd only support
@@ -154,7 +136,7 @@ to other suggestions.
 
 ## C++ SDK
 
-### 9. Create package recipe for ConanCenter
+### 8. Create package recipe for ConanCenter
 
 Most engineering teams using Touca for serious C++ projects simply clone a
 stable version of our C++ SDK and repackage it internally. This is, in part,
@@ -178,7 +160,7 @@ and links to its third-party dependencies.
 - Relevant: [Github Issue](https://github.com/trytouca/trytouca/issues/32) for
   CMake improvements
 
-### 10. Improve CMake logic for packaging
+### 9. Improve CMake logic for packaging
 
 We are not using the standard CMake logic for packaging, exporting, installing,
 and finding the C++ library. This makes it difficult to package the library for
@@ -197,7 +179,7 @@ Relevant Links:
 
 ## Java SDK
 
-### 11. Better way to run example
+### 10. Better way to run example
 
 Our Java Examples in `examples/java` and `sdk/java` directories are defined as
 standalone applications. Unlike JUnit tests that are in often placed in the
@@ -242,3 +224,8 @@ now marked as done thanks to contributions from members of the Touca community.
   ([GitHub Issue](https://github.com/trytouca/trytouca/issues/195))
   ([PR](https://github.com/trytouca/trytouca/pull/198) by
   [@committomaster](https://github.com/committomaster))
+
+- Improve UX in self-hosting install wizard
+  ([GitHub Issue](https://github.com/trytouca/trytouca/issues/196))
+  ([PR](https://github.com/trytouca/trytouca/pull/283) by
+  [@ghorbanzade](https://github.com/ghorbanzade))

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: touca-redis
+  name: touca-redis
+  namespace: touca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: touca-redis
+  template:
+    metadata:
+      labels:
+        app: touca-redis
+    spec:
+      containers:
+      - image: redis:6-alpine
+        name: touca-redis
+        volumeMounts:
+        - mountPath: /data/redis
+          name: redis-volume
+      volumes:
+      - name: redis-volume
+        persistentVolumeClaim:
+          claimName: touca-ebs

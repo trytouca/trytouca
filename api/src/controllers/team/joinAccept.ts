@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -7,7 +7,8 @@ import { IUser, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function teamJoinAccept(
   req: Request,
@@ -62,8 +63,8 @@ export async function teamJoinAccept(
 
   // remove invalidated cached responses.
 
-  await rclient.removeCached(`route_teamMemberList_${team.slug}`)
-  await rclient.removeCached(`route_teamList_${account.username}`)
+  await redis.removeCached(`route_teamMemberList_${team.slug}`)
+  await redis.removeCached(`route_teamList_${account.username}`)
 
   // send email to user.
 
@@ -76,6 +77,11 @@ export async function teamJoinAccept(
     userName: account?.fullname || account?.username
   })
 
-  logger.info('%s: accepted %s request to join team %s', ...tuple)
+  analytics.add_activity(EActivity.TeamMemberApproved, user._id, {
+    member_id: account.email,
+    team_id: team._id
+  })
+
+  logger.info('%s: approved %s request to join team %s', ...tuple)
   return res.status(204).send()
 }

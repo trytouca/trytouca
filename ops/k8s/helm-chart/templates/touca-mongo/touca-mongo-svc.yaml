@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ .Release.Name }}-touca-mongo
+  name: {{ .Release.Name }}-touca-mongo
+  namespace: {{ .Release.Name }}-touca
+spec:
+  ports:
+  - port: 27017
+    protocol: TCP
+    targetPort: 27017
+  selector:
+    app: {{ .Release.Name }}-touca-mongo

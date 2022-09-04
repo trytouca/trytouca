@@ -26,7 +26,7 @@ const content: PageContent = {
       fee: {
         class: 'text-4xl md:text-5xl text-gray-200',
         suffix: [],
-        text: '$0'
+        text: 'Free'
       }
     },
     {

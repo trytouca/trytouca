@@ -255,7 +255,7 @@ def _initialize(options: dict):
     update_options(options, options)
 
     # Check that team and suite are provided.
-    missing = [k for k in ["team", "suite", "version"] if k not in options]
+    missing = [k for k in ["team", "suite"] if k not in options]
     if missing:
         raise _ToucaError(_ToucaErrorCode.MissingSlugs, ", ".join(missing))
 
@@ -268,6 +268,9 @@ def _initialize(options: dict):
     # Configure the lower-level Touca library
     if not Client.instance().configure(**options):
         raise RuntimeError(Client.instance().configuration_error())
+
+    if options.get("version") == "unknown":
+        options["version"] = Client.instance().get_next_batch()
 
     _update_testcase_list(options)
 

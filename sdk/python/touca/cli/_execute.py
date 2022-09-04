@@ -9,8 +9,6 @@ from touca._runner import Workflow, prepare_parser, run_workflows
 from touca.cli._common import Operation
 import logging
 
-logging.disable(logging.CRITICAL)
-
 
 def is_test_module(module: str):
     with open(module, "rt") as file:
@@ -70,6 +68,7 @@ class Execute(Operation):
         return args
 
     def run(self):
+        logging.disable(logging.CRITICAL)
         dir_test = Path(self.__options.get("testdir", [Path.cwd()])[0]).resolve()
         args = self._find_arguments()
         modules = find_test_modules(dir_test)

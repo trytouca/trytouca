@@ -9,6 +9,7 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * Remove a given suite and all data associated with it.
@@ -55,6 +56,10 @@ export async function ctrlSuiteRemove(
   if (!(await suiteRemove(suite))) {
     logger.info('%s: %s: scheduled for removal', user.username, tuple)
   }
+
+  analytics.add_activity(EActivity.SuiteDeleted, user._id, {
+    suite_id: suite._id
+  })
 
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.info('%s: handled request in %d ms', tuple, toc.toFixed(0))

@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: touca-ingress
+  namespace: touca
+  annotations:
+    # External DNS - For creating a Record Set in Route53
+    external-dns.alpha.kubernetes.io/hostname: k8s.trytouca.com
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - k8s.trytouca.com
+    secretName: touca-tls-cert
+  rules:
+  - host: "k8s.trytouca.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: touca-app
+            port:
+              number: 80

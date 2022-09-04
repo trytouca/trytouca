@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Release.Name }}-touca-app
+  name: {{ .Release.Name }}-touca-app
+  namespace: {{ .Release.Name }}-touca
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-touca-app
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-touca-app
+    spec:
+      containers:
+      - image: {{ .Values.toucaApp.dockerRepoName | default "touca" | lower }}/touca-app:{{ .Values.toucaApp.dockerImageTag }}
+        name: {{ .Release.Name }}-touca-app
+        volumeMounts:
+        - mountPath: /etc/nginx/conf.d/default.conf
+          subPath: default.conf
+          name: default-conf
+          readOnly: true
+        ports:
+        - containerPort: 80
+      volumes:
+      - name: default-conf
+        configMap:
+          name: nginx-conf

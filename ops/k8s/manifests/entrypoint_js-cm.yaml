@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  entrypoint.js: |
+    db.disableFreeMonitoring();
+
+    db = db.getSiblingDB("touca");
+    db.createUser({
+      user: "toucauser",
+      pwd: "toucapass",
+      roles: [{ role: "readWrite", db: "touca" }],
+    });
+kind: ConfigMap
+metadata:
+  name: mongo-entrypoint
+  namespace: touca

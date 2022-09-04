@@ -76,7 +76,7 @@ export class InstallNameComponent implements OnDestroy {
     this._subHints.unsubscribe();
   }
 
-  submitContactInfo(model: Partial<FormContent>) {
+  onSubmit(model: Partial<FormContent>) {
     if (!this.installForm.valid) {
       return;
     }
@@ -92,11 +92,13 @@ export class InstallNameComponent implements OnDestroy {
       next: () => {
         this.hints.reset();
         this.installForm.reset({}, { emitEvent: false });
-        this.switchTab.emit({ next: 'telemetry' });
+        this.apiService._status = undefined;
+        this.switchTab.emit({ next: 'userAccount' });
       },
       error: (err: HttpErrorResponse) => {
         const error = this.apiService.extractError(err, [
-          [401, 'invalid login credentials', 'Incorrect username or password.']
+          [401, 'invalid login credentials', 'Incorrect username or password.'],
+          [403, 'server is registered', 'Server is already registered.']
         ]);
         this.switchTab.emit({ error });
       }

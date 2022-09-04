@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -9,7 +9,8 @@ import { SuiteModel } from '@/schemas/suite'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 /**
  * Removes a given team and all data associated with it.
@@ -73,9 +74,11 @@ export async function ctrlTeamRemove(
     await TeamModel.findByIdAndRemove(team._id)
     logger.info('%s: removed team', team.slug)
 
-    rclient.removeCachedByPrefix(`route_teamLookup_${team.slug}_`)
-    rclient.removeCachedByPrefix(`route_teamList_`)
+    redis.removeCachedByPrefix(`route_teamLookup_${team.slug}_`)
+    redis.removeCachedByPrefix(`route_teamList_`)
   }
+
+  analytics.add_activity(EActivity.TeamDeleted, user._id, { team_id: team._id })
 
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.info('%s: handled request in %d ms', tuple, toc.toFixed(0))

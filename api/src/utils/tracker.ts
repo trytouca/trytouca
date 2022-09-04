@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Client as HubspotClient } from '@hubspot/api-client'
-import Mixpanel from 'mixpanel'
+import SegmentClient from 'analytics-node'
 
 import { relay } from '@/models/relay'
 import { IUser } from '@/schemas/user'
@@ -32,8 +32,23 @@ export enum EActivity {
   ProfileUpdated = 'profile:updated',
   SelfHostedInstall = 'self_host:installed',
   SuiteCreated = 'suite:created',
+  SuiteDeleted = 'suite:deleted',
   SuiteSubscribed = 'suite:subscribed',
-  TeamCreated = 'team:created'
+  TeamCreated = 'team:created',
+  TeamDeleted = 'team:deleted',
+  TeamMemberAccepted = 'team_member:accepted',
+  TeamMemberAdded = 'team_member:added',
+  TeamMemberApproved = 'team_member:approved',
+  TeamMemberDeclined = 'team_member:declined',
+  TeamMemberLeft = 'team_member:left',
+  TeamMemberReceived = 'team_member:received',
+  TeamMemberRejected = 'team_member:rejected',
+  TeamMemberRemoved = 'team_member:removed',
+  TeamMemberRescinded = 'team_member:rescinded',
+  TeamMemberRequested = 'team_member:requested',
+  TeamMemberPromoted = 'team_member:promoted',
+  TeamMemberInvited = 'team_member:sent',
+  TeamMemberWithdrawn = 'team_member:withdrawn'
 }
 
 export async function getChatToken(user: IUser): Promise<string> {
@@ -91,17 +106,16 @@ class OrbitTracker {
   }
 
   async add_activity(type: EActivity, user: IUser, data: Partial<TrackerInfo>) {
-    if (
-      ![
-        EActivity.AccountCreated,
-        EActivity.BatchPromoted,
-        EActivity.BatchSealed,
-        EActivity.SelfHostedInstall,
-        EActivity.SuiteCreated,
-        EActivity.ProfileUpdated,
-        EActivity.TeamCreated
-      ].includes(type)
-    ) {
+    const allowlist = [
+      EActivity.AccountCreated,
+      EActivity.BatchPromoted,
+      EActivity.BatchSealed,
+      EActivity.SelfHostedInstall,
+      EActivity.SuiteCreated,
+      EActivity.ProfileUpdated,
+      EActivity.TeamCreated
+    ]
+    if (!allowlist.includes(type)) {
       return
     }
     await relay({
@@ -125,40 +139,66 @@ class OrbitTracker {
   }
 }
 
+class SegmentTracker {
+  private segment: SegmentClient
+  constructor() {
+    if (config.tracking.segment_key) {
+      this.segment = new SegmentClient(config.tracking.segment_key)
+    }
+  }
+  async add_member(user: IUser, data: Partial<TrackerInfo>) {
+    this.segment?.identify({
+      userId: user._id.toString(),
+      traits: {
+        avatar: data.avatar,
+        createdAt: data.created_at?.toISOString(),
+        email: data.email,
+        firstName: data.first_name,
+        id: data.user_id?.toString(),
+        lastName: data.last_name,
+        name: data.name,
+        username: data.username
+      }
+    })
+  }
+  async add_activity(type: EActivity, user: IUser, data: Partial<TrackerInfo>) {
+    this.segment?.track({
+      userId: user._id.toString(),
+      event: type,
+      properties: data
+    })
+  }
+}
+
 class Analytics {
-  private mixpanel: Mixpanel.Mixpanel
-  private orbit_tracker: OrbitTracker
+  private orbit_tracker = new OrbitTracker()
+  private segment_tracker = new SegmentTracker()
 
   constructor() {
-    if (config.tracking.mixpanel) {
-      this.mixpanel = Mixpanel.init(config.tracking.mixpanel)
-    }
     if (config.tracking.orbit_key) {
       this.orbit_tracker = new OrbitTracker()
     }
+    if (config.tracking.segment_key) {
+      this.segment_tracker = new SegmentTracker()
+    }
   }
 
-  async add_member(user: IUser, data: Partial<TrackerInfo>) {
-    this.mixpanel?.people.set(user._id, {
-      $avatar: data.avatar,
-      $created: data.created_at?.toISOString(),
-      $email: data.email,
-      $name: data.name,
-      $first_name: data.first_name,
-      $last_name: data.last_name,
-      $ip: data.ip_address,
-      username: data.username
-    })
-    this.orbit_tracker?.add_member(user, data)
-    return Promise.resolve()
+  async add_member(user: IUser, data: Partial<TrackerInfo>): Promise<void> {
+    await Promise.allSettled([
+      this.orbit_tracker?.add_member(user, data),
+      this.segment_tracker?.add_member(user, data)
+    ])
   }
 
-  add_activity(type: EActivity, user: IUser, data?: Mixpanel.PropertyDict) {
-    this.mixpanel?.track(type, {
-      distinct_id: user._id,
-      ...data
-    })
-    this.orbit_tracker?.add_activity(type, user, data)
+  async add_activity(
+    type: EActivity,
+    user: IUser,
+    data?: Record<string, unknown>
+  ) {
+    await Promise.allSettled([
+      this.orbit_tracker?.add_activity(type, user, data),
+      this.segment_tracker?.add_activity(type, user, data)
+    ])
   }
 }
 

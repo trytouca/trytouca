@@ -120,10 +120,13 @@ class TOUCA_CLIENT_API Platform {
    */
   inline std::string get_error() const { return _error; }
 
+  // to be removed as part of "Synchronized Comparison" project
   bool cmp_submit(const std::string& url, const std::string& content) const;
 
+  // to be removed as part of "Synchronized Comparison" project
   bool cmp_jobs(std::string& content) const;
 
+  // to be removed as part of "Synchronized Comparison" project
   bool cmp_stats(const std::string& content) const;
 
  private:

@@ -125,7 +125,7 @@ test these workflows at any scale.
 - For information on how to use this SDK, see our
   [C++ SDK Documentation](https://touca.io/docs/sdk/cpp/quickstart).
 - If you cannot wait to start writing your first test with Touca, see our
-  [C++ API Reference](https://app.touca.io/docs/clients/cpp/api.html).
+  [C++ API Reference](https://touca.io/docs/external/sdk/cpp/index.html).
 
 ## Integration
 

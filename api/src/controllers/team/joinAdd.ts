@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
@@ -8,7 +8,8 @@ import { IUser, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
+import { analytics, EActivity } from '@/utils/tracker'
 
 export async function teamJoinAdd(
   req: Request,
@@ -60,8 +61,8 @@ export async function teamJoinAdd(
 
   // remove list of team members from cache.
 
-  await rclient.removeCached(`route_teamMemberList_${team.slug}`)
-  await rclient.removeCached(`route_teamList_${user.username}`)
+  await redis.removeCached(`route_teamMemberList_${team.slug}`)
+  await redis.removeCached(`route_teamList_${user.username}`)
 
   // send email to team admins.
 
@@ -72,6 +73,10 @@ export async function teamJoinAdd(
     teamName: team.name,
     teamLink: [config.webapp.root, '~', team.slug].join('/') + '?t=members',
     userName: user?.fullname || user?.username
+  })
+
+  analytics.add_activity(EActivity.TeamMemberRequested, user._id, {
+    team_id: team._id
   })
 
   logger.info('%s: request to join team %s submitted', ...tuple)

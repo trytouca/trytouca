@@ -30,9 +30,8 @@ at least 2GB of RAM, with Docker and Docker Compose installed.
 
 ### Option 2: Use Touca Cloud
 
-Or you can use https://app.touca.io, managed and maintained by Touca, Inc. with
-additional enterprise-ready features. We offer a free plan and leverage
-usage-based pricing to charge larger teams for storage and compute.
+Or you can use https://app.touca.io that we manage and maintain. We have a free
+plan and offer additional features suitable for larger teams.
 
 ## Sneak Peek
 
@@ -183,6 +182,7 @@ feedback, that's the best place to be.
 <a href="https://github.com/committomaster"><img src="https://avatars.githubusercontent.com/u/20593344?v=4" title="committomaster" width="50" height="50"></a>
 <a href="https://github.com/mmdbalkhi"><img src="https://avatars.githubusercontent.com/u/65954744?v=4" title="mmdbalkhi" width="50" height="50"></a>
 <a href="https://github.com/depthdeluxe"><img src="https://avatars.githubusercontent.com/u/4984331?v=4" title="depthdeluxe" width="50" height="50"></a>
+<a href="https://github.com/ehsan-touca"><img src="https://avatars.githubusercontent.com/u/112129743?v=4" title="ehsan-touca" width="50" height="50"></a>
 
 ## Sponsors
 

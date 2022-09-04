@@ -5,22 +5,26 @@ from argparse import ArgumentParser
 from pathlib import Path
 
 import py7zr
-from touca.cli._common import Operation
+from rich.progress import Progress
+from touca.cli._common import Operation, ResultsTree
+from touca._options import find_home_path
 
 logger = logging.getLogger("touca.cli.zip")
 
 
-def _compress(srcDir, outputDir):
-    dstFile = Path(outputDir, srcDir.name + ".7z")
-    if dstFile.exists():
-        logger.warning(f"compressed file {dstFile} already exists")
-        return False
-    logger.info(f"compressing {srcDir} into {dstFile}")
+def _compress_batch(binary_files, zip_file, update):
+    if zip_file.exists():
+        logger.debug(f"Compressed file {zip_file} already exists")
+        update(len(binary_files))
+        return True
+    logger.debug(f"Creating {zip_file}")
     try:
-        with py7zr.SevenZipFile(dstFile, "w") as archive:
-            archive.writeall(srcDir, arcname=srcDir.name)
+        with py7zr.SevenZipFile(zip_file, "w") as archive:
+            for binary_file in binary_files:
+                archive.write(binary_file, arcname=binary_file.name)
+                update(1)
     except py7zr.ArchiveError:
-        logger.warning(f"failed to compress {srcDir}")
+        logger.warning(f"Failed to archive {zip_file}")
         return False
     return True
 
@@ -34,25 +38,46 @@ class Zip(Operation):
 
     @classmethod
     def parser(self, parser: ArgumentParser):
-        parser.add_argument("src", help="directory with binary files")
-        parser.add_argument("out", help="directory to store compressed files")
+        home_dir = find_home_path()
+        parser.add_argument(
+            "src",
+            nargs="?",
+            default=home_dir.joinpath("results"),
+            help=f"Directory with binary files. Defaults to {home_dir.joinpath('results')}",
+        )
+        parser.add_argument(
+            "out",
+            nargs="?",
+            default=home_dir.joinpath("zip"),
+            help=f"Directory to store compressed files. Defaults to {home_dir.joinpath('zip')}",
+        )
 
     def run(self):
-        src = Path(self.__options.get("src")).expanduser().resolve()
-        out = Path(self.__options.get("out")).expanduser().resolve()
+        src_dir = Path(self.__options.get("src")).expanduser().resolve()
+        out_dir = Path(self.__options.get("out")).expanduser().resolve()
 
-        if not src.exists():
-            logger.error(f"directory {src} does not exist")
+        results_tree = ResultsTree(src_dir)
+        if results_tree.is_empty():
+            logger.error(f"Did not find any binary file in {src_dir}")
             return False
-        for src_dir in src.glob("*"):
-            if not src_dir.is_dir():
-                continue
-            logger.debug(f"compressing {src_dir}")
-            if not out.exists():
-                out.mkdir(parents=True, exist_ok=True)
-            if not _compress(src_dir, out):
-                logger.error(f"failed to compress {src_dir}")
-                return False
-            logger.info(f"compressed {src_dir}")
-        logger.info("compressed all sub-directories")
+
+        for suite_name, batch_name, binary_files in self._iterate(results_tree):
+            zip_dir = out_dir.joinpath(suite_name)
+            if not zip_dir.exists():
+                zip_dir.mkdir(parents=True, exist_ok=True)
+            zip_file = zip_dir.joinpath(batch_name + ".7z")
+            with Progress() as progress:
+                task_batch = progress.add_task(
+                    f"[magenta]{suite_name}/{batch_name}[/magenta]",
+                    total=len(binary_files),
+                )
+                update = lambda x: progress.update(task_batch, advance=x)
+                if not _compress_batch(binary_files, zip_file, update=update):
+                    logger.error(f"failed to compress {src_dir}")
+                    return False
         return True
+
+    def _iterate(self, result_tree: ResultsTree):
+        for suite_name, batches in result_tree.suites.items():
+            for batch_name, binary_files in batches.items():
+                yield suite_name, batch_name, binary_files

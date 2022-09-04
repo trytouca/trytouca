@@ -76,6 +76,10 @@ interface IConfig {
       checkInterval: number
       defaultDuration: number
     }
+    comparison: {
+      checkInterval: number
+      enabled: boolean
+    }
     reporting: {
       checkInterval: number
     }
@@ -92,8 +96,8 @@ interface IConfig {
   tracking: {
     hubspot_key: string
     hubspot_token: string
-    mixpanel: string
     orbit_key: string
+    segment_key: string
   }
   webapp: {
     root: string
@@ -180,6 +184,12 @@ export const config: IConfig = {
       checkInterval: Number(env.SERVICE_AUTOSEAL_CHECK_INTERVAL) || 60,
       defaultDuration: Number(env.SERVICE_AUTOSEAL_DEFAULT_DURATION) || 10 * 60
     },
+    // comparison service
+    comparison: {
+      checkInterval: Number(env.SERVICE_COMPARISON_CHECK_INTERVAL) || 10,
+      // to be removed as part of "Synchronized Comparison" project
+      enabled: env.SERVICE_COMPARISON_ENABLED === 'true'
+    },
     // reporting service
     reporting: {
       checkInterval: Number(env.SERVICE_REPORTING_CHECK_INTERVAL) || 5 * 60
@@ -201,8 +211,8 @@ export const config: IConfig = {
   tracking: {
     hubspot_key: env.HUBSPOT_API_KEY,
     hubspot_token: env.HUBSPOT_ACCESS_TOKEN,
-    mixpanel: env.MIXPANEL_PROJECT_TOKEN,
-    orbit_key: env.ORBIT_API_KEY
+    orbit_key: env.ORBIT_API_KEY,
+    segment_key: env.SEGMENT_API_KEY
   },
   webapp: {
     root: env.WEBAPP_ROOT

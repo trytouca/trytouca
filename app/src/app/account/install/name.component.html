@@ -1,7 +1,7 @@
 <form
   class="wsl-form p-4"
   [formGroup]="installForm"
-  (ngSubmit)="submitContactInfo(installForm.value)"
+  (ngSubmit)="onSubmit(installForm.value)"
   novalidate>
   <div>
     <label class="wsl-input-label" for="wsl-fname">Full Name</label>

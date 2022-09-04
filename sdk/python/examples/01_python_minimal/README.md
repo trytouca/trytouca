@@ -79,9 +79,9 @@ captured data to the Touca server and associates them with version `v1.0`.
 Touca Test Framework
 Suite: is_prime/v1.0
 
- 1.  PASS   13    (109 ms)
- 2.  PASS   17    (152 ms)
- 3.  PASS   51    (127 ms)
+ 1.  SENT   13    (109 ms)
+ 2.  SENT   17    (152 ms)
+ 3.  SENT   51    (127 ms)
 
 Tests:      3 passed, 3 total
 Time:       0.91 s

@@ -3,8 +3,8 @@
 import argparse
 import logging
 import sys
+from typing import List
 
-from colorama import Fore
 from touca import __version__
 from touca._options import find_home_path
 from touca._printer import Printer
@@ -20,6 +20,7 @@ from touca.cli._unzip import Unzip
 from touca.cli._update import Update
 from touca.cli._zip import Zip
 from touca.cli.server import Server
+from rich.logging import RichHandler
 
 
 def _find_latest_pypi_version():
@@ -44,6 +45,35 @@ def _warn_outdated_version():
     Printer.print_warning(fmt, __version__, latest_version)
 
 
+class Help(Operation):
+    name = "help"
+    help = "Shows this help message"
+
+    def __init__(self, options):
+        self._options = options
+
+    @classmethod
+    def parser(self, parser: argparse.ArgumentParser):
+        parser.add_argument(
+            "subcommand", help="subcommand to get help about", nargs="?"
+        )
+
+    def run(self, parser: argparse.ArgumentParser, subcommands: List[Operation]):
+        subcommand_name = self._options.get("subcommand")
+        subcommand = next((x for x in subcommands if x.name == subcommand_name), None)
+        if not subcommand:
+            parser.print_help()
+            return False
+        subcommand_parser = argparse.ArgumentParser(
+            prog=f"touca {subcommand_name}",
+            add_help=False,
+            epilog="See https://touca.io/docs/cli for more information.",
+        )
+        subcommand.parser(subcommand_parser)
+        subcommand_parser.print_help()
+        return False
+
+
 class Version(Operation):
     name = "version"
     help = "Check your Touca CLI version"
@@ -51,13 +81,15 @@ class Version(Operation):
     def __init__(self, options):
         pass
 
-    def run(self) -> bool:
+    def run(self):
         print(f"v{__version__}")
+        return True
 
 
 def main(args=None):
     subcommands = [
         Config,
+        Help,
         Merge,
         Plugin,
         Post,
@@ -75,7 +107,7 @@ def main(args=None):
         prog="touca",
         add_help=False,
         description="Work seamlessly with Touca from the command line.",
-        epilog="See https://touca.io/docs for more information.",
+        epilog="See https://touca.io/docs/cli for more information.",
     )
     parser.add_argument(
         "-v",
@@ -99,18 +131,21 @@ def main(args=None):
     options = vars(parsed)
 
     command = next((x for x in subcommands if x.name == options.get("command")), None)
-    if not command or any(arg in remaining for arg in ["-h", "--help"]):
-        parser.print_help()
-        return False
+    if (
+        not command
+        or command is Help
+        or any(arg in remaining for arg in ["-h", "--help"])
+    ):
+        return Help(options).run(parser, subcommands)
     operation = command(options)
 
     home_dir = find_home_path()
     home_dir.mkdir(parents=True, exist_ok=True)
 
     logging.basicConfig(
-        format=f"{Fore.GREEN}%(asctime)s{Fore.RESET} | {Fore.CYAN}%(name)s{Fore.RESET} | {Fore.BLUE}%(levelname)s{Fore.RESET} | %(message)s",
-        datefmt="%I:%M:%S",
-        level=logging.DEBUG,
+        format="%(message)s",
+        handlers=[RichHandler(show_path=False, show_time=False)],
+        level=logging.INFO,
     )
 
     if not operation.run():

@@ -81,6 +81,7 @@ setup(
         "packaging>=21.3",
         "py7zr>=0.18.5",
         "requests>=2.27.1",
+        "rich>=12.5.1",
     ],
     extras_require={
         "dev": [

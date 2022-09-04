@@ -196,12 +196,12 @@ jobs:
         if: steps.changes.outputs.sdk_cpp == 'true'
         run: ./build.sh --docs
       - name: push docs to aws
-        if:
-          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push'
-          && github.ref == 'refs/heads/main'
+        if: |
+          steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           tar -zcf cpp-docs-reference.tar.gz local/docs/html
           aws s3 cp cpp-docs-reference.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 sync local/docs/html/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/cpp/ --include "*" --cache-control no-cache
 
   build-sdk-cpp-coverage:
     name: build-sdk-cpp-coverage
@@ -322,6 +322,7 @@ jobs:
         run: |
           tar -zcf java-docs-external.tar.gz touca/build/docs/javadoc
           aws s3 cp java-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 sync touca/build/docs/javadoc/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/java/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -404,6 +405,7 @@ jobs:
         run: |
           tar -zcf js-node-docs-external.tar.gz local/docs
           aws s3 cp js-node-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 sync local/docs/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/js/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -486,13 +488,12 @@ jobs:
         run: |
           make docs
       - name: push docs to aws
-        if:
-          steps.changes.outputs.sdk_python == 'true' && github.ref ==
-          'refs/heads/main' && matrix.python-version == 3.9 && github.event_name
-          == 'push'
+        if: |
+          steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
         run: |
           tar -zcf python-docs-external.tar.gz local/docs
           aws s3 cp python-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
+          aws s3 sync local/docs/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/sdk/python/ --include "*" --cache-control no-cache
       - name: push coverage to aws
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
@@ -787,7 +788,7 @@ jobs:
           aws s3 cp api-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp api-docs-internal.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp api-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 sync ./api/local/docs/external/ ${{ secrets.AWS_BUCKET_APP }}/docs/api/ --include "*" --cache-control no-cache
+          aws s3 sync ./api/local/docs/external/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/api/ --include "*" --cache-control no-cache
 
       - name: pull api from aws
         if: steps.changes.outputs.api == 'false'
@@ -911,6 +912,47 @@ jobs:
           path: ${{ github.workspace }}/cmp.tar.gz
           retention-days: 1
 
+  build-ops:
+    name: build-ops
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - name: get version number
+        id: params
+        run: |
+          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && steps.changes.outputs.ops == 'true' }}"
+      - name: authenticate to aws
+        uses: aws-actions/configure-aws-credentials@v1
+        if: steps.params.outputs.release == 'true'
+        with:
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+      - name: install helm
+        if: steps.changes.outputs.ops == 'true'
+        uses: azure/setup-helm@v3
+        with:
+          version: v3.9.0
+      - name: lint helm chart
+        if: steps.changes.outputs.ops == 'true'
+        run: helm lint ops/k8s/helm-chart
+      - name: generate helm chart template
+        if: steps.changes.outputs.ops == 'true'
+        run: helm template ops/k8s/helm-chart > ops/k8s/touca.yaml
+      - name: push ops to aws
+        if: steps.params.outputs.release == 'true'
+        run: |
+          aws s3 cp ops/install.sh ${{ secrets.AWS_BUCKET_WEB }}/install.sh
+          aws s3 cp ops/install.dev.sh ${{ secrets.AWS_BUCKET_WEB }}/install.dev.sh
+          aws s3 cp ops/k8s/touca.yaml ${{ secrets.AWS_BUCKET_WEB }}/install/touca.yaml
+
   build-server:
     name: build-server
     runs-on: ubuntu-20.04
@@ -982,14 +1024,6 @@ jobs:
         if: steps.params.outputs.release == 'true'
         with:
           registry: ${{ secrets.AWS_ECR }}
-      - name: push ops to aws
-        if: |
-          steps.changes.outputs.ops == 'true' && steps.params.outputs.release == 'true'
-        run: |
-          tar -zcf deployment-scripts.tar.gz ops
-          aws s3 cp deployment-scripts.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 cp ops/install.sh ${{ secrets.AWS_BUCKET_WEB }}/install.sh
-          aws s3 cp ops/install.dev.sh ${{ secrets.AWS_BUCKET_WEB }}/install.dev.sh
 
       - name: prepare resources for building api docker image
         if: steps.changes.outputs.api == 'true'

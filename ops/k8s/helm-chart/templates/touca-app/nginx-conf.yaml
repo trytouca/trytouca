@@ -1,0 +1,27 @@
+apiVersion: v1
+data:
+  default.conf: |-
+    server {
+      listen 80;
+      root /www/data;
+
+      proxy_set_header Host $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Request-Id $request_id;
+
+      location /api {
+        client_max_body_size 50M;
+        rewrite ^/api/(.*) /$1 break;
+        proxy_pass http://{{ .Release.Name }}-touca-api:8081;
+      }
+
+      location / {
+        try_files $uri /app/$uri /app/index.html;
+      }
+    }
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+  namespace: {{ .Release.Name }}-touca

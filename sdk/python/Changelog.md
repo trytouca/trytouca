@@ -1,5 +1,19 @@
 # Changelog
 
+## v1.5.8
+
+Feature:
+
+- Add new CLI sub-command `help` (#279)
+- CLI sub-command `test` should auto-increments revision if not specified (#274)
+
+Improvements:
+
+- Refactor CLI sub-command `zip` (#288, #291)
+- Refactor CLI sub-command `post` (#286, #287)
+- Remove references to `__init__` from API reference docs (#278)
+- Use rich formatting of the output of CLI sub-commands (#277)
+
 ## v1.5.7
 
 Improvements:
@@ -107,9 +121,7 @@ Other Changes:
 ## v1.5.0
 
 Change of versioning strategy to use same major and minor version numbers across
-all compatible SDKs. See our
-[November product updates](https://blog.touca.io/product-updates-november-2021/)
-for details.
+all compatible SDKs.
 
 Features:
 
