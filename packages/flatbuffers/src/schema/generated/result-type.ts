@@ -2,5 +2,5 @@
 
 export enum ResultType {
   Check = 1,
-  Assert = 2,
+  Assert = 2
 }

@@ -1,133 +1,133 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { expect, test } from "vitest";
-import { compare } from "./type";
+import { expect, test } from 'vitest'
+import { compare } from './type'
 
-test("boolean", () => {
+test('boolean', () => {
   expect(compare(false, false)).toEqual({
-    type: "boolean",
+    type: 'boolean',
     match: true,
-    score: 1,
-  });
+    score: 1
+  })
 
   expect(compare(false, true)).toEqual({
-    type: "boolean",
+    type: 'boolean',
     match: false,
-    score: 0,
-  });
-});
+    score: 0
+  })
+})
 
-test("bigint", () => {
+test('bigint', () => {
   expect(compare(0n, 0n)).toEqual({
-    type: "bigint",
+    type: 'bigint',
     match: true,
-    score: 1,
-  });
+    score: 1
+  })
 
   expect(compare(1n, 2n)).toEqual({
-    type: "bigint",
+    type: 'bigint',
     match: false,
-    score: 1 / 2,
-  });
-});
+    score: 1 / 2
+  })
+})
 
-test("number", () => {
+test('number', () => {
   expect(compare(0, 0)).toEqual({
-    type: "number",
+    type: 'number',
     match: true,
-    score: 1,
-  });
+    score: 1
+  })
 
   expect(compare(1, 2)).toEqual({
-    type: "number",
+    type: 'number',
     match: false,
-    score: 1 / 2,
-  });
-});
+    score: 1 / 2
+  })
+})
 
-test("string", () => {
-  expect(compare("", "")).toEqual({
-    type: "string",
+test('string', () => {
+  expect(compare('', '')).toEqual({
+    type: 'string',
     match: true,
-    score: 1,
-  });
+    score: 1
+  })
 
-  expect(compare("bar", "baz")).toEqual({
-    type: "string",
+  expect(compare('bar', 'baz')).toEqual({
+    type: 'string',
     match: false,
-    score: 0,
-  });
-});
+    score: 0
+  })
+})
 
-test("object", () => {
+test('object', () => {
   expect(
     compare(
       {
-        foo: "bar",
+        foo: 'bar'
       },
       {
-        foo: "bar",
+        foo: 'bar'
       }
     )
   ).toEqual({
-    type: "object",
+    type: 'object',
     match: true,
-    score: 1,
-  });
+    score: 1
+  })
 
   expect(
     compare(
       {
-        foo: "bar",
-        baz: [42, "qux"],
+        foo: 'bar',
+        baz: [42, 'qux']
       },
       {
-        foo: "bar",
-        baz: [42, "quux"],
+        foo: 'bar',
+        baz: [42, 'quux']
       }
     )
   ).toEqual({
-    type: "object",
+    type: 'object',
     match: false,
-    score: 2 / 3,
-  });
-});
+    score: 2 / 3
+  })
+})
 
-test("array", () => {
-  expect(compare(["foo", "bar"], ["foo", "bar"])).toEqual({
-    type: "array",
+test('array', () => {
+  expect(compare(['foo', 'bar'], ['foo', 'bar'])).toEqual({
+    type: 'array',
     match: true,
-    score: 1,
-  });
+    score: 1
+  })
 
   expect(
     compare(
       [
         42,
-        ["foo", "bar"],
+        ['foo', 'bar'],
         {
-          qux: ["qux"],
-        },
+          qux: ['qux']
+        }
       ],
       [
         42,
-        ["foo", "baz"],
+        ['foo', 'baz'],
         {
-          qux: ["quux"],
-        },
+          qux: ['quux']
+        }
       ]
     )
   ).toEqual({
-    type: "array",
+    type: 'array',
     match: false,
-    score: 2 / 4,
-  });
-});
+    score: 2 / 4
+  })
+})
 
-test("incompatible", () => {
+test('incompatible', () => {
   expect(compare({}, [])).toEqual({
-    type: "incompatible",
+    type: 'incompatible',
     match: false,
-    score: 0,
-  });
-});
+    score: 0
+  })
+})
