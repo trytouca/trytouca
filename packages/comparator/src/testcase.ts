@@ -42,13 +42,21 @@ function initResultsCellar(
   dstResults: Message['results'],
   resultType: ResultType
 ): Cellar {
+  const toMap = (m: Message['results']) =>
+    new Map(m.map((v) => [v.name, { type: v.type, value: v.value }]))
+
   const cellar: Cellar = { commonKeys: [], newKeys: [], missingKeys: [] }
-  for (const [key, result] of Object.entries(dstResults)) {
+  const srcResultsMap = toMap(srcResults)
+  const dstResultsMap = toMap(dstResults)
+  for (const [key, result] of dstResultsMap) {
     if (result.type != resultType) {
       continue
     }
-    if (key in srcResults) {
-      const cmp = compareTypes(srcResults[key]!.value, dstResults[key]!.value)
+    if (srcResultsMap.has(key)) {
+      const cmp = compareTypes(
+        srcResultsMap.get(key)!.value,
+        dstResultsMap.get(key)!.value
+      )
       cellar.commonKeys.push({ name: key, ...cmp })
       continue
     }
@@ -58,11 +66,11 @@ function initResultsCellar(
       dstType: getTypeName(result.value)
     })
   }
-  for (const [key, result] of Object.entries(srcResults)) {
+  for (const [key, result] of srcResultsMap) {
     if (result.type != ResultType.Check) {
       continue
     }
-    if (!(key in dstResults)) {
+    if (!dstResultsMap.has(key)) {
       cellar.newKeys.push({
         name: key,
         srcValue: stringifyValue(result.value),
@@ -77,10 +85,18 @@ function initMetricsCellar(
   srcResults: Message['metrics'],
   dstResults: Message['metrics']
 ) {
+  const toMap = (m: Message['metrics']) =>
+    new Map(m.map((v) => [v.name, { value: v.value }]))
+
   const cellar: Cellar = { commonKeys: [], newKeys: [], missingKeys: [] }
-  for (const [key, result] of Object.entries(dstResults)) {
-    if (key in srcResults) {
-      const cmp = compareTypes(srcResults[key]!.value, dstResults[key]!.value)
+  const srcResultsMap = toMap(srcResults)
+  const dstResultsMap = toMap(dstResults)
+  for (const [key, result] of dstResultsMap) {
+    if (srcResultsMap.has(key)) {
+      const cmp = compareTypes(
+        srcResultsMap.get(key)!.value,
+        dstResultsMap.get(key)!.value
+      )
       cellar.commonKeys.push({ name: key, ...cmp })
       continue
     }
@@ -90,8 +106,8 @@ function initMetricsCellar(
       dstType: getTypeName(result.value)
     })
   }
-  for (const [key, result] of Object.entries(srcResults)) {
-    if (!(key in dstResults)) {
+  for (const [key, result] of srcResultsMap) {
+    if (!dstResultsMap.has(key)) {
       cellar.newKeys.push({
         name: key,
         srcValue: stringifyValue(result.value),
@@ -103,32 +119,47 @@ function initMetricsCellar(
 }
 
 function compare(srcMessage: Message, dstMessage: Message): TestcaseComparison {
+  const assertions = initResultsCellar(
+    srcMessage.results,
+    dstMessage.results,
+    ResultType.Assert
+  )
+  const results = initResultsCellar(
+    srcMessage.results,
+    dstMessage.results,
+    ResultType.Check
+  )
+  const metrics = initMetricsCellar(srcMessage.metrics, dstMessage.metrics)
   return {
     overview: {
-      keysCountCommon: 0,
-      keysCountFresh: 0,
-      keysCountMissing: 0,
-      keysScore: 0,
-      metricsCountCommon: 0,
-      metricsCountFresh: 0,
-      metricsCountMissing: 0,
-      metricsDurationCommonDst: 0,
-      metricsDurationCommonSrc: 0
+      keysCountCommon: assertions.commonKeys.length + results.commonKeys.length,
+      keysCountFresh: assertions.newKeys.length + results.newKeys.length,
+      keysCountMissing:
+        assertions.missingKeys.length + results.missingKeys.length,
+      keysScore:
+        assertions.commonKeys.reduce(
+          (acc, current) => acc + current.score!,
+          0
+        ) +
+        results.commonKeys.reduce((acc, current) => acc + current.score!, 0),
+      metricsCountCommon: metrics.commonKeys.length,
+      metricsCountFresh: metrics.newKeys.length,
+      metricsCountMissing: metrics.missingKeys.length,
+      metricsDurationCommonDst: metrics.commonKeys.reduce(
+        (acc, current) => acc + Number(current.dstValue!),
+        0
+      ),
+      metricsDurationCommonSrc: metrics.commonKeys.reduce(
+        (acc, current) => acc + Number(current.srcValue!),
+        0
+      )
     },
     body: {
       src: srcMessage.metadata,
       dst: dstMessage.metadata,
-      assertions: initResultsCellar(
-        srcMessage.results,
-        dstMessage.results,
-        ResultType.Assert
-      ),
-      results: initResultsCellar(
-        srcMessage.results,
-        dstMessage.results,
-        ResultType.Check
-      ),
-      metrics: initMetricsCellar(srcMessage.metrics, dstMessage.metrics)
+      assertions,
+      results,
+      metrics
     }
   }
 }

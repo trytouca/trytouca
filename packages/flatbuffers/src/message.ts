@@ -28,18 +28,20 @@ enum ResultType {
 }
 
 type Result = {
+  name: string
   type: Schema.ResultType
   value: Type
 }
 
 type Metric = {
+  name: string
   value: Type
 }
 
 type Message = {
   metadata: Metadata
-  results: Record<string, Result>
-  metrics: Record<string, Metric>
+  metrics: Metric[]
+  results: Result[]
 }
 
 function deserialize(bytes: Uint8Array): Message {
@@ -56,28 +58,24 @@ function deserialize(bytes: Uint8Array): Message {
       testcase: metadata.testcase()!,
       builtAt: metadata.builtAt()!
     },
-    results: Object.fromEntries(
-      Array.from({ length: results.entriesLength() }, (_, i) => {
-        let result = results.entries(i)!
-        let key = result.key()!
-        let wrapper = result.value()!
-        let value = unwrap(wrapper)
-        let type =
-          result.typ() === Schema.ResultType.Assert
-            ? Schema.ResultType.Assert
-            : Schema.ResultType.Check
-        return [key, { type, value }]
-      })
-    ),
-    metrics: Object.fromEntries(
-      Array.from({ length: metrics.entriesLength() }, (_, i) => {
-        let entry = metrics.entries(i)!
-        let key = entry.key()!
-        let wrapper = entry.value()!
-        let value = unwrap(wrapper)
-        return [key, { value }]
-      })
-    )
+    results: Array.from({ length: results.entriesLength() }, (_, i) => {
+      let result = results.entries(i)!
+      let key = result.key()!
+      let wrapper = result.value()!
+      let value = unwrap(wrapper)
+      let type =
+        result.typ() === Schema.ResultType.Assert
+          ? Schema.ResultType.Assert
+          : Schema.ResultType.Check
+      return { name: key, type, value }
+    }),
+    metrics: Array.from({ length: metrics.entriesLength() }, (_, i) => {
+      let entry = metrics.entries(i)!
+      let key = entry.key()!
+      let wrapper = entry.value()!
+      let value = unwrap(wrapper)
+      return { name: key, value }
+    })
   }
 }
 
