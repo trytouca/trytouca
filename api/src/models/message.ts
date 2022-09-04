@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { MessageProcessInput } from '@touca/fbs-schema'
+import { Message } from '@touca/flatbuffers'
+import { MessageOverview } from 'services/comparison'
 
 import { comparisonRemove } from '@/models/comparison'
 import { MessageInfo } from '@/models/messageInfo'
@@ -100,7 +101,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
 
 export async function messageProcess(
   messageId: string,
-  input: MessageProcessInput
+  input: { overview: MessageOverview; body: Message }
 ): Promise<{ status: number; error?: string }> {
   const message = await MessageModel.findById(messageId)
   // we expect that message job exists

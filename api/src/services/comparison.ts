@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { parseComparison, parseMessage } from '@touca/fbs-schema'
+import { compare } from '@touca/comparator'
+import { deserialize, Message } from '@touca/flatbuffers'
 
 import {
   ComparisonJob,
@@ -13,12 +14,29 @@ import { messageProcess } from '@/models/message'
 import logger from '@/utils/logger'
 import { objectStore } from '@/utils/store'
 
+export type MessageOverview = {
+  keysCount: number
+  metricsCount: number
+  metricsDuration: number
+}
+
+function buildMessageOverview(message: Message) {
+  return {
+    keysCount: 0,
+    metricsCount: 0,
+    metricsDuration: 0
+  }
+}
+
 async function processMessageJob(job: MessageJob) {
   logger.debug('m:%s: processing', job.messageId)
   const tic = Date.now()
-  const message = await objectStore.getMessage(job.messageId.toString())
-  const output = await parseMessage(message)
-  const { error } = await messageProcess(job.messageId.toString(), output)
+  const buffer = await objectStore.getMessage(job.messageId.toString())
+  const message = deserialize(buffer)
+  const { error } = await messageProcess(job.messageId.toString(), {
+    overview: buildMessageOverview(message),
+    body: message
+  })
   if (error) {
     logger.warn('m:%s: failed to process job: %s', job.messageId, error)
     return Promise.reject(error)
@@ -31,9 +49,11 @@ async function processMessageJob(job: MessageJob) {
 async function processComparisonJob(job: ComparisonJob) {
   logger.debug('c:%s: processing', job.jobId)
   const tic = Date.now()
-  const dstMessage = await objectStore.getMessage(job.dstMessageId.toString())
-  const srcMessage = await objectStore.getMessage(job.srcMessageId.toString())
-  const output = await parseComparison(srcMessage, dstMessage)
+  const dstBuffer = await objectStore.getMessage(job.dstMessageId.toString())
+  const srcBuffer = await objectStore.getMessage(job.srcMessageId.toString())
+  const dstMessage = deserialize(dstBuffer)
+  const srcMessage = deserialize(srcBuffer)
+  const output = compare(dstMessage, srcMessage)
   const { error } = await comparisonProcess(job.jobId.toString(), output)
   if (error) {
     logger.warn('c:%s: failed to process job: %s', job.jobId, error)

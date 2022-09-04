@@ -5,9 +5,8 @@
   "version": "0.0.0",
   "description": "Touca Type Comparator",
   "license": "Apache-2.0",
-  "type": "module",
-  "exports": "./dist/type.js",
-  "types": "./dist/type.d.ts",
+  "main": "./dist/testcase.js",
+  "types": "./dist/testcase.d.ts",
   "scripts": {
     "build": "npm run clean && tsc",
     "clean": "rm -rf coverage/ dist/ node_modules/.vitest/",
@@ -18,7 +17,8 @@
     "test": "vitest run --coverage --reporter verbose"
   },
   "dependencies": {
-    "decimal.js": "10.4.0"
+    "decimal.js": "10.4.0",
+    "@touca/flatbuffers": "workspace:*"
   },
   "devDependencies": {
     "@vitest/coverage-istanbul": "0.22.1",

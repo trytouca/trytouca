@@ -10,7 +10,7 @@
     "target": "es2021",
     "lib": ["es2021"],
     "moduleResolution": "node",
-    "module": "es2022",
+    "module": "CommonJS",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "importsNotUsedAsValues": "preserve",
