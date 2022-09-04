@@ -1,10 +1,17 @@
 import { Message, ResultType } from '@touca/flatbuffers'
-import { Type, TypeComparison, compare as compareTypes } from './type'
+import {
+  getTypeName,
+  stringifyValue,
+  CppTypeComparison,
+  compare as compareTypes
+} from './type'
+
+type Cell = { name: string } & Partial<CppTypeComparison>
 
 type Cellar = {
-  commonKeys: Array<Record<string, TypeComparison>>
-  missingKeys: Array<Record<string, Type>>
-  newKeys: Array<Record<string, Type>>
+  commonKeys: Array<Cell>
+  missingKeys: Array<Cell>
+  newKeys: Array<Cell>
 }
 
 type TestcaseComparisonOverview = {
@@ -30,7 +37,7 @@ type TestcaseComparison = {
   }
 }
 
-function initCellar(
+function initResultsCellar(
   srcResults: Message['results'],
   dstResults: Message['results'],
   resultType: ResultType
@@ -41,21 +48,26 @@ function initCellar(
       continue
     }
     if (key in srcResults) {
-      let comparison = compareTypes(
-        srcResults[key]!.value,
-        dstResults[key]!.value
-      )
-      cellar.commonKeys.push({ [key]: comparison })
+      const cmp = compareTypes(srcResults[key]!.value, dstResults[key]!.value)
+      cellar.commonKeys.push({ name: key, ...cmp })
       continue
     }
-    cellar.missingKeys.push({ [key]: result.value })
+    cellar.missingKeys.push({
+      name: key,
+      dstValue: stringifyValue(result.value),
+      dstType: getTypeName(result.value)
+    })
   }
   for (const [key, result] of Object.entries(srcResults)) {
     if (result.type != ResultType.Check) {
       continue
     }
     if (!(key in dstResults)) {
-      cellar.newKeys.push({ [key]: result.value })
+      cellar.newKeys.push({
+        name: key,
+        srcValue: stringifyValue(result.value),
+        srcType: getTypeName(result.value)
+      })
     }
   }
   return cellar
@@ -68,18 +80,23 @@ function initMetricsCellar(
   const cellar: Cellar = { commonKeys: [], newKeys: [], missingKeys: [] }
   for (const [key, result] of Object.entries(dstResults)) {
     if (key in srcResults) {
-      let comparison = compareTypes(
-        srcResults[key]!.value,
-        dstResults[key]!.value
-      )
-      cellar.commonKeys.push({ [key]: comparison })
+      const cmp = compareTypes(srcResults[key]!.value, dstResults[key]!.value)
+      cellar.commonKeys.push({ name: key, ...cmp })
       continue
     }
-    cellar.missingKeys.push({ [key]: result.value })
+    cellar.missingKeys.push({
+      name: key,
+      dstValue: stringifyValue(result.value),
+      dstType: getTypeName(result.value)
+    })
   }
   for (const [key, result] of Object.entries(srcResults)) {
     if (!(key in dstResults)) {
-      cellar.newKeys.push({ [key]: result.value })
+      cellar.newKeys.push({
+        name: key,
+        srcValue: stringifyValue(result.value),
+        srcType: getTypeName(result.value)
+      })
     }
   }
   return cellar
@@ -101,12 +118,12 @@ function compare(srcMessage: Message, dstMessage: Message): TestcaseComparison {
     body: {
       src: srcMessage.metadata,
       dst: dstMessage.metadata,
-      assertions: initCellar(
+      assertions: initResultsCellar(
         srcMessage.results,
         dstMessage.results,
         ResultType.Assert
       ),
-      results: initCellar(
+      results: initResultsCellar(
         srcMessage.results,
         dstMessage.results,
         ResultType.Check
