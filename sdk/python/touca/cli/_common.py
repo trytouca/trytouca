@@ -23,16 +23,25 @@ class ResultsTree:
             self._process(binary_file)
 
     def _process(self, binary_file: Path):
-        batch_dir = binary_file.parent
-        suite_dir = batch_dir.parent
-        batch_name = batch_dir.name
+        test_case_dir = binary_file.parent
+        version_dir = test_case_dir.parent
+        suite_dir = version_dir.parent
+        test_case_name = test_case_dir.name
+        version_name = version_dir.name
         suite_name = suite_dir.name
+
         if suite_name not in self.suites:
             self.suites[suite_name] = {}
-        if batch_name not in self.suites[suite_name]:
-            self.suites[suite_name][batch_name] = []
-        self.suites[suite_name][batch_name].append(binary_file)
 
+        if version_name not in self.suites[suite_name]:
+            self.suites[suite_name][version_name] = {}
+
+        if test_case_name not in self.suites[suite_name][version_name]:
+            self.suites[suite_name][version_name][test_case_name] = []
+
+        self.suites[suite_name][version_name][test_case_name].append(binary_file)
+
+    @property
     def is_empty(self):
         return len(self) == 0
 
