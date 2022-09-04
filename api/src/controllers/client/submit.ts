@@ -1,8 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Message, Messages } from '@touca/fbs-schema'
+import { parseMessageHeaders } from '@touca/flatbuffers'
 import { NextFunction, Request, Response } from 'express'
-import { ByteBuffer } from 'flatbuffers'
 import { minBy } from 'lodash'
 import mongoose from 'mongoose'
 
@@ -61,38 +60,6 @@ const extractJobErrors = <T>(jobs: Job<T>[]): JobError[] => {
 
 const makeError = (slug: string, error: string) => {
   return { slug, errors: [error] }
-}
-
-/**
- * Parses binary data in flatbuffers format into a list of submission items.
- * Note that we only parse metadata of each submission.
- *
- * @param content binary data in flatbuffers format
- * @returns list of submission items
- */
-async function parseSubmissionMessages(
-  content: Uint8Array
-): Promise<SubmissionItem[]> {
-  const buf = new ByteBuffer(content)
-  const msgs = Messages.getRootAsMessages(buf)
-  const messages: SubmissionItem[] = []
-  for (let i = 0; i < msgs.messagesLength(); i++) {
-    const msgBuffer = msgs.messages(i)
-    const msgData = msgBuffer.bufArray()
-    const msgByteBuffer = new ByteBuffer(msgData)
-    const msg = Message.getRootAsMessage(msgByteBuffer)
-    const meta = msg.metadata()
-
-    messages.push({
-      builtAt: new Date(meta.builtAt()),
-      teamName: meta.teamslug() || 'vital',
-      suiteName: meta.testsuite(),
-      batchName: meta.version(),
-      elementName: meta.testcase(),
-      raw: Buffer.from(msgByteBuffer.bytes())
-    })
-  }
-  return messages
 }
 
 /**
@@ -716,7 +683,14 @@ export async function processBinaryContent(
 ) {
   // attempt to parse binary content into a list of messages
 
-  const messages = await parseSubmissionMessages(content)
+  const messages = parseMessageHeaders(content).map((parsed) => ({
+    builtAt: new Date(parsed.metadata.builtAt),
+    teamName: parsed.metadata.teamslug || 'vital',
+    suiteName: parsed.metadata.testsuite,
+    batchName: parsed.metadata.version,
+    elementName: parsed.metadata.testcase,
+    raw: parsed.raw
+  }))
 
   // in a special case when platform is auto-populating a suite with sample
   // test results, we want to submit the same binary data to different suites.

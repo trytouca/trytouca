@@ -39,7 +39,6 @@
     "@sindresorhus/df": "^3.1.1",
     "@touca/api-schema": "workspace:*",
     "@touca/comparator": "workspace:*",
-    "@touca/fbs-schema": "workspace:*",
     "@touca/flatbuffers": "workspace:*",
     "analytics-node": "^6.2.0",
     "archiver": "^5.3.1",

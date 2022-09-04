@@ -1,26 +1,16 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
-  "include": ["src/**/*.ts"],
-  "exclude": ["src/**/*.test.ts"],
   "compilerOptions": {
-    "outDir": "dist/",
+    "alwaysStrict": true,
     "declaration": true,
-    "checkJs": true,
-    "skipLibCheck": true,
+    "declarationMap": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "strict": true,
     "target": "es2022",
     "lib": ["es2022"],
-    "moduleResolution": "node",
-    "module": "CommonJS",
-    "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true,
-    "strict": true,
-    "allowUnusedLabels": false,
-    "allowUnreachableCode": false,
-    "exactOptionalPropertyTypes": true,
-    "forceConsistentCasingInFileNames": true,
-    "noImplicitOverride": true,
-    "noImplicitReturns": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true
-  }
+    "outDir": "dist"
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["src/**/*.test.ts"]
 }

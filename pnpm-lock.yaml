@@ -11,7 +11,6 @@ importers:
       '@sindresorhus/df': ^3.1.1
       '@touca/api-schema': workspace:*
       '@touca/comparator': workspace:*
-      '@touca/fbs-schema': workspace:*
       '@touca/flatbuffers': workspace:*
       '@types/analytics-node': ^3.1.9
       '@types/archiver': ^5.3.1
@@ -83,7 +82,6 @@ importers:
       '@sindresorhus/df': 3.1.1
       '@touca/api-schema': link:../packages/api-schema
       '@touca/comparator': link:../packages/comparator
-      '@touca/fbs-schema': link:../packages/fbs-schema
       '@touca/flatbuffers': link:../packages/flatbuffers
       analytics-node: 6.2.0
       archiver: 5.3.1
@@ -343,21 +341,6 @@ importers:
       prettier: 2.7.1
       typescript: 4.8.2
       vitest: 0.22.1
-
-  packages/fbs-schema:
-    specifiers:
-      '@types/node': ^18.0.0
-      flatbuffers: ^2.0.6
-      prettier: ^2.7.1
-      ts-node: ^10.8.1
-      typescript: ^4.7.4
-    dependencies:
-      flatbuffers: 2.0.6
-    devDependencies:
-      '@types/node': 18.0.3
-      prettier: 2.7.1
-      ts-node: 10.8.2_fxk5i3xm3ivo7fjwhcizcinpla
-      typescript: 4.7.4
 
   packages/flatbuffers:
     specifiers:

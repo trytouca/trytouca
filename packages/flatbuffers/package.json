@@ -7,11 +7,11 @@
   "main": "dist/message.js",
   "types": "dist/message.d.ts",
   "scripts": {
-    "build": "npm run clean && tsc && npm run format",
+    "build": "tsc",
     "build:fbs": "rm -rf src/schema/generated/ && flatc --ts --gen-object-api --filename-suffix \"\" -o src/schema/generated/ src/schema/root.fbs && npm run format",
     "clean": "rm -rf coverage/ dist/ node_modules/.vitest/",
     "dev": "vitest watch --reporter verbose",
-    "format": "prettier ./ --ignore-unknown --write --loglevel silent",
+    "format": "prettier ./ --ignore-unknown --write",
     "lint": "tsc --noEmit",
     "postinstall": "npm run build",
     "test": "vitest run --coverage --reporter verbose"
