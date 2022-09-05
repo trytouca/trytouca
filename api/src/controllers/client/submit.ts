@@ -683,14 +683,7 @@ export async function processBinaryContent(
 ) {
   // attempt to parse binary content into a list of messages
 
-  const messages = parseMessageHeaders(content).map((parsed) => ({
-    builtAt: new Date(parsed.metadata.builtAt),
-    teamName: parsed.metadata.teamslug || 'vital',
-    suiteName: parsed.metadata.testsuite,
-    batchName: parsed.metadata.version,
-    elementName: parsed.metadata.testcase,
-    raw: parsed.raw
-  }))
+  const messages = parseMessageHeaders(content)
 
   // in a special case when platform is auto-populating a suite with sample
   // test results, we want to submit the same binary data to different suites.

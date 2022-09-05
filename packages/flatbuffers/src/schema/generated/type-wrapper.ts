@@ -87,7 +87,7 @@ export class TypeWrapper {
     return new TypeWrapperT(
       this.valueType(),
       (() => {
-        let temp = unionToType(this.valueType(), this.value.bind(this))
+        const temp = unionToType(this.valueType(), this.value.bind(this))
         if (temp === null) {
           return null
         }
@@ -99,7 +99,7 @@ export class TypeWrapper {
   unpackTo(_o: TypeWrapperT): void {
     _o.valueType = this.valueType()
     _o.value = (() => {
-      let temp = unionToType(this.valueType(), this.value.bind(this))
+      const temp = unionToType(this.valueType(), this.value.bind(this))
       if (temp === null) {
         return null
       }

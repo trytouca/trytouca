@@ -4,8 +4,6 @@ import { Builder, ByteBuffer } from 'flatbuffers'
 import * as Schema from './schema/generated/root'
 import { unwrap } from './type-wrapper'
 
-type Nullable<T> = { [K in keyof T]: T[K] | null }
-
 type Type =
   | boolean
   | bigint
@@ -45,11 +43,11 @@ type Message = {
 }
 
 function deserialize(bytes: Uint8Array): Message {
-  let buffer = new ByteBuffer(bytes)
-  let message = Schema.Message.getRootAsMessage(buffer)
-  let metadata = message.metadata()!
-  let results = message.results()!
-  let metrics = message.metrics()!
+  const buffer = new ByteBuffer(bytes)
+  const message = Schema.Message.getRootAsMessage(buffer)
+  const metadata = message.metadata()!
+  const results = message.results()!
+  const metrics = message.metrics()!
   return {
     metadata: {
       teamslug: metadata.teamslug()!,
@@ -59,21 +57,21 @@ function deserialize(bytes: Uint8Array): Message {
       builtAt: metadata.builtAt()!
     },
     results: Array.from({ length: results.entriesLength() }, (_, i) => {
-      let result = results.entries(i)!
-      let key = result.key()!
-      let wrapper = result.value()!
-      let value = unwrap(wrapper)
-      let type =
+      const result = results.entries(i)!
+      const key = result.key()!
+      const wrapper = result.value()!
+      const value = unwrap(wrapper)
+      const type =
         result.typ() === Schema.ResultType.Assert
           ? Schema.ResultType.Assert
           : Schema.ResultType.Check
       return { name: key, type, value }
     }),
     metrics: Array.from({ length: metrics.entriesLength() }, (_, i) => {
-      let entry = metrics.entries(i)!
-      let key = entry.key()!
-      let wrapper = entry.value()!
-      let value = unwrap(wrapper)
+      const entry = metrics.entries(i)!
+      const key = entry.key()!
+      const wrapper = entry.value()!
+      const value = unwrap(wrapper)
       return { name: key, value }
     })
   }
@@ -103,10 +101,8 @@ function serializeMessages(messages: Buffer[]) {
  * @param content binary data in flatbuffers format
  * @returns list of submission items
  */
-function parseMessageHeaders(
-  content: Uint8Array
-): { metadata: Nullable<Metadata>; raw: Buffer }[] {
-  const messages: { metadata: Nullable<Metadata>; raw: Buffer }[] = []
+function parseMessageHeaders(content: Uint8Array) {
+  const messages = []
   const buf = new ByteBuffer(content)
   const msgs = Schema.Messages.getRootAsMessages(buf)
   for (let i = 0; i < msgs.messagesLength(); i++) {
@@ -118,14 +114,14 @@ function parseMessageHeaders(
     const msg = Schema.Message.getRootAsMessage(msgByteBuffer)
     const metadata = msg.metadata()
     if (!metadata) continue
+    const builtAt = metadata.builtAt()
+    if (!builtAt) continue
     messages.push({
-      metadata: {
-        builtAt: metadata.builtAt(),
-        teamslug: metadata.teamslug(),
-        testsuite: metadata.testsuite(),
-        version: metadata.version(),
-        testcase: metadata.testcase()
-      },
+      builtAt: new Date(builtAt),
+      teamName: metadata.teamslug() || 'vital',
+      suiteName: metadata.testsuite(),
+      batchName: metadata.version(),
+      elementName: metadata.testcase(),
       raw: Buffer.from(msgByteBuffer.bytes())
     })
   }

@@ -20,17 +20,6 @@ export type MessageOverview = {
   metricsDuration: number
 }
 
-function buildMessageOverview(message: Message) {
-  return {
-    keysCount: message.results.length,
-    metricsCount: message.metrics.length,
-    metricsDuration: message.metrics.reduce(
-      (sum, v) => sum + Number(v.value),
-      0
-    )
-  }
-}
-
 export type MessageTransformed = {
   metadata: Message['metadata']
   metrics: {
@@ -41,6 +30,17 @@ export type MessageTransformed = {
     name: string
     value: string
   }[]
+}
+
+function buildMessageOverview(message: Message): MessageOverview {
+  return {
+    keysCount: message.results.length,
+    metricsCount: message.metrics.length,
+    metricsDuration: message.metrics.reduce(
+      (sum, v) => sum + Number(v.value),
+      0
+    )
+  }
 }
 
 function transform(message: Message): MessageTransformed {

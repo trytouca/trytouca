@@ -5,7 +5,7 @@ import FIXTURE from '../test/fixtures/message'
 import { deserialize } from './message'
 
 test(deserialize.name, () => {
-  let { bytes, value } = FIXTURE
+  const { bytes, value } = FIXTURE
 
   expect(deserialize(bytes)).toStrictEqual(value)
 })
