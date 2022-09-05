@@ -1,7 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Message } from '@touca/flatbuffers'
-import { MessageOverview } from 'services/comparison'
+import { MessageOverview, MessageTransformed } from 'services/comparison'
 
 import { comparisonRemove } from '@/models/comparison'
 import { MessageInfo } from '@/models/messageInfo'
@@ -101,7 +100,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
 
 export async function messageProcess(
   messageId: string,
-  input: { overview: MessageOverview; body: Message }
+  input: { overview: MessageOverview; body: MessageTransformed }
 ): Promise<{ status: number; error?: string }> {
   const message = await MessageModel.findById(messageId)
   // we expect that message job exists

@@ -137,20 +137,17 @@ function compare(srcMessage: Message, dstMessage: Message): TestcaseComparison {
       keysCountMissing:
         assertions.missingKeys.length + results.missingKeys.length,
       keysScore:
-        assertions.commonKeys.reduce(
-          (acc, current) => acc + current.score!,
-          0
-        ) +
-        results.commonKeys.reduce((acc, current) => acc + current.score!, 0),
+        assertions.commonKeys.reduce((acc, v) => acc + v.score!, 0) +
+        results.commonKeys.reduce((acc, v) => acc + v.score!, 0),
       metricsCountCommon: metrics.commonKeys.length,
       metricsCountFresh: metrics.newKeys.length,
       metricsCountMissing: metrics.missingKeys.length,
       metricsDurationCommonDst: metrics.commonKeys.reduce(
-        (acc, current) => acc + Number(current.dstValue!),
+        (acc, v) => (v.dstValue ? acc + Number(v.dstValue) : acc),
         0
       ),
       metricsDurationCommonSrc: metrics.commonKeys.reduce(
-        (acc, current) => acc + Number(current.srcValue!),
+        (acc, v) => (v.srcValue ? acc + Number(v.srcValue) : acc),
         0
       )
     },
@@ -164,4 +161,4 @@ function compare(srcMessage: Message, dstMessage: Message): TestcaseComparison {
   }
 }
 
-export { TestcaseComparison, compare }
+export { TestcaseComparison, compare, stringifyValue }

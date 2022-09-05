@@ -49,6 +49,20 @@ export function getTypeName(value: Type) {
   }
 }
 
+export function stringifyValue(value: Type): string {
+  if (isArray(value)) {
+    return `[${value.map(stringifyValue).join(',')}]`
+  }
+  if (isObject(value)) {
+    return JSON.stringify(
+      Object.fromEntries(
+        Object.entries(value).map(([k, v]) => [k, stringifyValue(v)])
+      )
+    )
+  }
+  return value.toString()
+}
+
 function isBoolean(value: Type): value is boolean {
   return typeof value === 'boolean'
 }
@@ -101,10 +115,6 @@ function flatten(input: Type): Map<string, Type> {
     }
   }
   return output
-}
-
-export function stringifyValue(value: Type) {
-  return value.toString()
 }
 
 function compare(left: Type, right: Type): CppTypeComparison {

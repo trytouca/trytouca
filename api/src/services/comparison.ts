@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { compare } from '@touca/comparator'
+import { compare, stringifyValue } from '@touca/comparator'
 import { deserialize, Message } from '@touca/flatbuffers'
 
 import {
@@ -22,9 +22,38 @@ export type MessageOverview = {
 
 function buildMessageOverview(message: Message) {
   return {
-    keysCount: 0,
-    metricsCount: 0,
-    metricsDuration: 0
+    keysCount: message.results.length,
+    metricsCount: message.metrics.length,
+    metricsDuration: message.metrics.reduce(
+      (sum, v) => sum + Number(v.value),
+      0
+    )
+  }
+}
+
+export type MessageTransformed = {
+  metadata: Message['metadata']
+  metrics: {
+    name: string
+    value: string
+  }[]
+  results: {
+    name: string
+    value: string
+  }[]
+}
+
+function transform(message: Message): MessageTransformed {
+  return {
+    metadata: message.metadata,
+    metrics: message.metrics.map((v) => ({
+      name: v.name,
+      value: stringifyValue(v.value)
+    })),
+    results: message.results.map((v) => ({
+      name: v.name,
+      value: stringifyValue(v.value)
+    }))
   }
 }
 
@@ -35,7 +64,7 @@ async function processMessageJob(job: MessageJob) {
   const message = deserialize(buffer)
   const { error } = await messageProcess(job.messageId.toString(), {
     overview: buildMessageOverview(message),
-    body: message
+    body: transform(message)
   })
   if (error) {
     logger.warn('m:%s: failed to process job: %s', job.messageId, error)
@@ -80,6 +109,15 @@ export async function comparisonService(): Promise<void> {
   const numCollectionJobs = tasks.length
   const avgCollectionTime = (Date.now() - tic) / tasks.length
   const output = await Promise.allSettled(tasks.map(async (v) => await v()))
+  output
+    .filter((v) => v.status === 'rejected')
+    .forEach((v: PromiseRejectedResult) => {
+      logger.warn(
+        '%s: failed to process comparison job: %s',
+        serviceName,
+        v.reason
+      )
+    })
   const resolved = output
     .filter((v) => v.status === 'fulfilled')
     .map((v: any) => v.value)
