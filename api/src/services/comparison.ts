@@ -1,7 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { compare, stringifyValue } from '@touca/comparator'
+import { compare, stringify } from '@touca/comparator'
 import { deserialize, Message } from '@touca/flatbuffers'
+import { hrtime } from 'process'
 
 import {
   ComparisonJob,
@@ -23,11 +24,11 @@ export type MessageOverview = {
 export type MessageTransformed = {
   metadata: Message['metadata']
   metrics: {
-    name: string
+    key: string
     value: string
   }[]
   results: {
-    name: string
+    key: string
     value: string
   }[]
 }
@@ -47,19 +48,19 @@ function transform(message: Message): MessageTransformed {
   return {
     metadata: message.metadata,
     metrics: message.metrics.map((v) => ({
-      name: v.name,
-      value: stringifyValue(v.value)
+      key: v.key,
+      value: stringify(v.value)
     })),
     results: message.results.map((v) => ({
-      name: v.name,
-      value: stringifyValue(v.value)
+      key: v.key,
+      value: stringify(v.value)
     }))
   }
 }
 
 async function processMessageJob(job: MessageJob) {
   logger.debug('m:%s: processing', job.messageId)
-  const tic = Date.now()
+  const tic = hrtime()
   const buffer = await objectStore.getMessage(job.messageId.toString())
   const message = deserialize(buffer)
   const { error } = await messageProcess(job.messageId.toString(), {
@@ -70,26 +71,26 @@ async function processMessageJob(job: MessageJob) {
     logger.warn('m:%s: failed to process job: %s', job.messageId, error)
     return Promise.reject(error)
   }
-  const duration = Date.now() - tic
-  logger.info('m:%s: processed (%d ms)', job.messageId, duration)
+  const duration = hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  logger.info('m:%s: processed (%d ms)', job.messageId, duration.toFixed(0))
   return duration
 }
 
 async function processComparisonJob(job: ComparisonJob) {
   logger.debug('c:%s: processing', job.jobId)
-  const tic = Date.now()
-  const dstBuffer = await objectStore.getMessage(job.dstMessageId.toString())
+  const tic = hrtime()
   const srcBuffer = await objectStore.getMessage(job.srcMessageId.toString())
-  const dstMessage = deserialize(dstBuffer)
+  const dstBuffer = await objectStore.getMessage(job.dstMessageId.toString())
   const srcMessage = deserialize(srcBuffer)
-  const output = compare(dstMessage, srcMessage)
+  const dstMessage = deserialize(dstBuffer)
+  const output = compare(srcMessage, dstMessage)
   const { error } = await comparisonProcess(job.jobId.toString(), output)
   if (error) {
     logger.warn('c:%s: failed to process job: %s', job.jobId, error)
     return Promise.reject(error)
   }
-  const duration = Date.now() - tic
-  logger.info('c:%s: processed (%d ms)', job.jobId, duration)
+  const duration = hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
+  logger.info('c:%s: processed (%s ms)', job.jobId, duration.toFixed(0))
   return duration
 }
 
@@ -99,8 +100,8 @@ export async function comparisonService(): Promise<void> {
   const tic = Date.now()
   const jobs = await getComparisonJobs()
   const tasks = [
-    ...jobs.messages.map((v) => () => processMessageJob(v)),
-    ...jobs.comparisons.map((v) => () => processComparisonJob(v))
+    ...jobs.messages.map((v) => processMessageJob(v)),
+    ...jobs.comparisons.map((v) => processComparisonJob(v))
   ]
   if (!tasks.length) {
     return
@@ -108,7 +109,7 @@ export async function comparisonService(): Promise<void> {
   logger.info('%s: received %d comparison jobs', serviceName, tasks.length)
   const numCollectionJobs = tasks.length
   const avgCollectionTime = (Date.now() - tic) / tasks.length
-  const output = await Promise.allSettled(tasks.map(async (v) => await v()))
+  const output = await Promise.allSettled(tasks)
   output
     .filter((v) => v.status === 'rejected')
     .forEach((v: PromiseRejectedResult) => {

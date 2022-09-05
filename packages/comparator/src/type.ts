@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Decimal } from 'decimal.js'
+import { stringify } from 'safe-stable-stringify'
 
 type Type =
   | boolean
@@ -11,19 +12,6 @@ type Type =
   | { [key: string]: Type }
 
 type TypeComparison = {
-  type:
-    | 'boolean'
-    | 'bigint'
-    | 'number'
-    | 'string'
-    | 'array'
-    | 'object'
-    | 'incompatible'
-  match: boolean
-  score: number
-}
-
-export type CppTypeComparison = {
   desc: Array<string>
   dstType?: string
   dstValue?: string
@@ -32,7 +20,7 @@ export type CppTypeComparison = {
   srcValue: string
 }
 
-export function getTypeName(value: Type) {
+function getTypeName(value: Type) {
   switch (typeof value) {
     case 'boolean':
       return 'bool'
@@ -47,20 +35,6 @@ export function getTypeName(value: Type) {
     default:
       return 'unknown'
   }
-}
-
-export function stringifyValue(value: Type): string {
-  if (isArray(value)) {
-    return `[${value.map(stringifyValue).join(',')}]`
-  }
-  if (isObject(value)) {
-    return JSON.stringify(
-      Object.fromEntries(
-        Object.entries(value).map(([k, v]) => [k, stringifyValue(v)])
-      )
-    )
-  }
-  return value.toString()
 }
 
 function isBoolean(value: Type): value is boolean {
@@ -117,117 +91,115 @@ function flatten(input: Type): Map<string, Type> {
   return output
 }
 
-function compare(left: Type, right: Type): CppTypeComparison {
-  const cmp: CppTypeComparison = {
-    srcType: getTypeName(left),
-    srcValue: stringifyValue(left),
+function compare(src: Type, dst: Type): TypeComparison {
+  const cmp: TypeComparison = {
+    srcType: getTypeName(src),
+    srcValue: stringify(src),
     desc: [],
     score: 0
   }
 
-  if (isBoolean(left) && isBoolean(right)) {
-    const match = left == right
-    return match
-      ? { ...cmp, score: 1 }
-      : { ...cmp, dstValue: stringifyValue(right) }
+  if (isBoolean(src) && isBoolean(dst)) {
+    const match = src == dst
+    return match ? { ...cmp, score: 1 } : { ...cmp, dstValue: stringify(dst) }
   }
 
-  if (isBigInt(left) && isBigInt(right)) {
+  if (isBigInt(src) && isBigInt(dst)) {
     const RATIO_THRESHOLD = 0.2
-    const x = new Decimal(left.toString())
-    const y = new Decimal(right.toString())
+    const x = new Decimal(src.toString())
+    const y = new Decimal(dst.toString())
     const difference = x.minus(y)
-    const match = difference.isZero()
+    if (difference.isZero()) {
+      return { ...cmp, score: 1 }
+    }
     const ratio = y.equals(0) ? 0 : difference.div(y).abs().toNumber()
-    const score =
-      !match || (ratio > 0 && ratio < RATIO_THRESHOLD) ? 1 - ratio : 1
-    return match
-      ? { ...cmp, score }
-      : { ...cmp, score, dstValue: stringifyValue(right) }
+    if (0 < ratio && ratio < RATIO_THRESHOLD) {
+      return { ...cmp, score: 1 - ratio, dstValue: stringify(dst) }
+    }
+    return { ...cmp, dstValue: stringify(dst) }
   }
 
-  if (isNumber(left) && isNumber(right)) {
+  if (isNumber(src) && isNumber(dst)) {
     const RATIO_THRESHOLD = 0.2
-    const difference = left - right
-    const match = difference === 0
-    const ratio = right === 0 ? 0 : Math.abs(difference / right)
-    const score =
-      !match || (ratio > 0 && ratio < RATIO_THRESHOLD) ? 1 - ratio : 1
-    return match
-      ? { ...cmp, score }
-      : { ...cmp, score, dstValue: stringifyValue(right) }
+    const difference = src - dst
+    if (difference === 0) {
+      return { ...cmp, score: 1 }
+    }
+    const ratio = dst === 0 ? 0 : Math.abs(difference / dst)
+    if (0 < ratio && ratio < RATIO_THRESHOLD) {
+      return { ...cmp, score: 1 - ratio, dstValue: stringify(dst) }
+    }
+    return { ...cmp, dstValue: stringify(dst) }
   }
 
-  if (isString(left) && isString(right)) {
-    const match = left === right
-    return match
-      ? { ...cmp, score: 1 }
-      : { ...cmp, dstValue: stringifyValue(right) }
+  if (isString(src) && isString(dst)) {
+    const match = src === dst
+    return match ? { ...cmp, score: 1 } : { ...cmp, dstValue: stringify(dst) }
   }
 
-  if (isObject(left) && isObject(right)) {
-    const flatLeft = flatten(left)
-    const flatRight = flatten(right)
+  if (isObject(src) && isObject(dst)) {
+    const flatSrc = flatten(src)
+    const flatDst = flatten(dst)
     let common = 0
     let total = 0
-    for (const [key, value] of flatLeft) {
+    for (const [key, value] of flatSrc) {
       total += 1
-      if (flatRight.has(key)) {
-        const result = compare(value, flatRight.get(key)!)
+      if (flatDst.has(key)) {
+        const result = compare(value, flatDst.get(key)!)
         common += result.score
       }
     }
-    for (const key of flatRight.keys()) {
-      if (!flatLeft.has(key)) {
+    for (const key of flatDst.keys()) {
+      if (!flatSrc.has(key)) {
         total += 1
       }
     }
     const match = common === total
-    const score = common / total
+    const score = total !== 0 ? common / total : 0
     return match
       ? { ...cmp, score }
-      : { ...cmp, dstValue: stringifyValue(right) }
+      : { ...cmp, score, dstValue: stringify(dst) }
   }
 
-  if (isArray(left) && isArray(right)) {
+  if (isArray(src) && isArray(dst)) {
     const RATIO_THRESHOLD = 0.2
     const COUNT_THRESHOLD = 10
-    const flatLeft = Array.from(flatten(left).values())
-    const flatRight = Array.from(flatten(right).values())
-    const minLength = Math.min(flatLeft.length, flatRight.length)
-    const maxLength = Math.max(flatLeft.length, flatRight.length)
+    const flatSrc = Array.from(flatten(src).values())
+    const flatDst = Array.from(flatten(dst).values())
+    const minLength = Math.min(flatSrc.length, flatDst.length)
+    const maxLength = Math.max(flatSrc.length, flatDst.length)
     if (maxLength === 0) {
       return { ...cmp, score: 1 }
     }
     const ratio = (maxLength - minLength) / maxLength
-    if (ratio > RATIO_THRESHOLD || flatLeft.length === 0) {
-      return { ...cmp }
+    if (ratio > RATIO_THRESHOLD || flatSrc.length === 0) {
+      return { ...cmp, dstValue: stringify(dst) }
     }
     let commonCount = 0
     let diffCount = 0
     let score = 0
     for (let i = 0; i < minLength; i++) {
-      const result = compare(flatLeft[i]!, flatRight[i]!)
+      const result = compare(flatSrc[i]!, flatDst[i]!)
       commonCount += result.score
       if (result.score !== 1) {
         diffCount += 1
       }
     }
-    const diffRatio = diffCount / flatLeft.length
+    const diffRatio = flatSrc.length !== 0 ? diffCount / flatSrc.length : 0
     if (diffRatio < RATIO_THRESHOLD || diffCount < COUNT_THRESHOLD) {
       score = commonCount / maxLength
     }
     const match = score === 1
     return match
       ? { ...cmp, score }
-      : { ...cmp, dstValue: stringifyValue(right) }
+      : { ...cmp, score, dstValue: stringify(dst) }
   }
 
   return {
     ...cmp,
-    dstType: getTypeName(right),
-    dstValue: stringifyValue(right)
+    dstType: getTypeName(dst),
+    dstValue: stringify(dst)
   }
 }
 
-export { Type, TypeComparison, compare }
+export { Type, TypeComparison, compare, getTypeName, stringify }

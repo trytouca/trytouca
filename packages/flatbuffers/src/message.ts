@@ -26,13 +26,13 @@ enum ResultType {
 }
 
 type Result = {
-  name: string
+  key: string
   type: Schema.ResultType
   value: Type
 }
 
 type Metric = {
-  name: string
+  key: string
   value: Type
 }
 
@@ -65,14 +65,14 @@ function deserialize(bytes: Uint8Array): Message {
         result.typ() === Schema.ResultType.Assert
           ? Schema.ResultType.Assert
           : Schema.ResultType.Check
-      return { name: key, type, value }
+      return { key, type, value }
     }),
     metrics: Array.from({ length: metrics.entriesLength() }, (_, i) => {
       const entry = metrics.entries(i)!
       const key = entry.key()!
       const wrapper = entry.value()!
       const value = unwrap(wrapper)
-      return { name: key, value }
+      return { key, value }
     })
   }
 }

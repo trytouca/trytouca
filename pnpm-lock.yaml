@@ -331,11 +331,13 @@ importers:
       '@vitest/coverage-istanbul': 0.22.1
       decimal.js: 10.4.0
       prettier: 2.7.1
+      safe-stable-stringify: ^2.3.1
       typescript: 4.8.2
       vitest: 0.22.1
     dependencies:
       '@touca/flatbuffers': link:../flatbuffers
       decimal.js: 10.4.0
+      safe-stable-stringify: 2.3.1
     devDependencies:
       '@vitest/coverage-istanbul': 0.22.1
       prettier: 2.7.1
@@ -7824,7 +7826,6 @@ packages:
 
   /@types/node/18.7.13:
     resolution: {integrity: sha512-46yIhxSe5xEaJZXWdIBP7GU4HDTG8/eo0qd9atdiL+lFpA03y8KS+lkTN834TWJj5767GbWv4n/P6efyTFt1Dw==}
-    dev: true
 
   /@types/nodemailer/6.4.4:
     resolution: {integrity: sha512-Ksw4t7iliXeYGvIQcSIgWQ5BLuC/mljIEbjf615svhZL10PE9t+ei8O9gDaD3FPCasUJn9KTLwz2JFJyiiyuqw==}
@@ -15030,7 +15031,7 @@ packages:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
     dependencies:
-      '@types/node': 18.6.4
+      '@types/node': 18.7.13
       merge-stream: 2.0.0
       supports-color: 8.1.1
 

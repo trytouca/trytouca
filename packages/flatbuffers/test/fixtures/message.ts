@@ -1,72 +1,49 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { readFile } from "node:fs/promises";
-import { Message } from "../../src/message";
+import { readFile } from 'node:fs/promises'
+import { Message } from '../../src/message'
+import { ResultType } from '../../src/schema/generated/root'
 
 export default {
-  bytes: await readFile(new URL("./message.bin", import.meta.url)),
-  json: (await import("./message.json")).default,
+  bytes: await readFile(new URL('./message.bin', import.meta.url)),
   value: {
     metadata: {
-      testsuite: "students",
-      version: "v1.0",
-      testcase: "alice",
-      builtAt: "2021-11-14T23:19:24.804068",
-      teamslug: "acme",
+      teamslug: 'acme',
+      testsuite: 'students',
+      version: 'v1.0',
+      testcase: 'charli',
+      builtAt: '2021-11-14T23:19:26.042504'
     },
-    results: {
-      birth_date: {
-        type: 1,
+    results: [
+      {
+        key: 'birth_date',
         value: {
-          day: 1n,
-          month: 3n,
-          year: 2006n,
+          dict: { day: 19n, month: 9n, year: 2003n }
         },
+        type: ResultType.Check
       },
-      courses: {
-        type: 1,
+      {
+        key: 'courses',
         value: [
           {
-            grade: 3.8,
-            name: "computers",
+            Course: { grade: 3.7, name: 'computers' }
           },
           {
-            grade: 4,
-            name: "math",
-          },
+            Course: { grade: 2.9, name: 'math' }
+          }
         ],
+        type: ResultType.Check
       },
-      fullname: {
-        type: 1,
-        value: "Alice Anderson",
-      },
-      gpa: {
-        type: 1,
-        value: 3.9,
-      },
-      "number of courses": {
-        type: 1,
-        value: 2n,
-      },
-      pass: {
-        type: 1,
-        value: true,
-      },
-      username: {
-        type: 2,
-        value: "alice",
-      },
-    },
-    metrics: {
-      calculate_gpa: {
-        value: 320n,
-      },
-      external_source: {
-        value: 500n,
-      },
-      find_student: {
-        value: 562n,
-      },
-    },
-  } as Message,
-};
+      { key: 'fullname', value: 'Charlie Clark', type: ResultType.Check },
+      { key: 'gpa', value: 3.3, type: ResultType.Check },
+      { key: 'number of courses', value: 2n, type: ResultType.Check },
+      { key: 'pass', value: true, type: ResultType.Check },
+      { key: 'username', value: 'charli', type: ResultType.Assert }
+    ],
+    metrics: [
+      { key: 'calculate_gpa', value: 329n },
+      { key: 'external_source', value: 500n },
+      { key: 'find_student', value: 564n }
+    ]
+  } as Message
+}

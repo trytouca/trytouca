@@ -167,7 +167,7 @@ export async function batchCompare(
     const toc = process
       .hrtime(tic)
       .reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
-    logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
+    logger.debug('%s: handled request in %s ms', cacheKey, toc.toFixed(0))
     return res.status(200).json(output)
   } catch (err) {
     return next({ errors: [err], status: 503 })

@@ -97,8 +97,8 @@ function unwrap<T extends WrappedType>(wrapper: TypeWrapper): UnwrappedType<T> {
         const value = unwrap(valueWrapper)
         return [key, value]
       })
-      const object = Object.fromEntries(entries) as UnwrappedType<T>
-      return object
+      const key = unwrappedObject.key()!
+      return { [key]: Object.fromEntries(entries) } as UnwrappedType<T>
     }
 
     case Type.Array: {

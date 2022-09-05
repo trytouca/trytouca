@@ -1,133 +1,168 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { expect, test } from 'vitest'
-import { compare } from './type'
+import { describe, expect, test } from 'vitest'
+import { TypeComparison, compare } from './type'
 
-test('boolean', () => {
-  expect(compare(false, false)).toEqual({
-    type: 'boolean',
-    match: true,
-    score: 1
+describe('boolean', () => {
+  test('equal', () => {
+    expect(compare(false, false)).toEqual<TypeComparison>({
+      srcType: 'bool',
+      srcValue: 'false',
+      score: 1,
+      desc: []
+    })
   })
 
-  expect(compare(false, true)).toEqual({
-    type: 'boolean',
-    match: false,
-    score: 0
-  })
-})
-
-test('bigint', () => {
-  expect(compare(0n, 0n)).toEqual({
-    type: 'bigint',
-    match: true,
-    score: 1
-  })
-
-  expect(compare(1n, 2n)).toEqual({
-    type: 'bigint',
-    match: false,
-    score: 1 / 2
+  test('nonequal', () => {
+    expect(compare(false, true)).toEqual<TypeComparison>({
+      srcType: 'bool',
+      srcValue: 'false',
+      dstValue: 'true',
+      score: 0,
+      desc: []
+    })
   })
 })
 
-test('number', () => {
-  expect(compare(0, 0)).toEqual({
-    type: 'number',
-    match: true,
-    score: 1
+describe('bigint', () => {
+  test('equal', () => {
+    expect(compare(0n, 0n)).toEqual<TypeComparison>({
+      srcType: 'number',
+      srcValue: '0',
+      score: 1,
+      desc: []
+    })
   })
 
-  expect(compare(1, 2)).toEqual({
-    type: 'number',
-    match: false,
-    score: 1 / 2
-  })
-})
-
-test('string', () => {
-  expect(compare('', '')).toEqual({
-    type: 'string',
-    match: true,
-    score: 1
-  })
-
-  expect(compare('bar', 'baz')).toEqual({
-    type: 'string',
-    match: false,
-    score: 0
+  test('nonequal', () => {
+    expect(compare(1n, 2n)).toEqual<TypeComparison>({
+      srcType: 'number',
+      srcValue: '1',
+      dstValue: '2',
+      score: 0,
+      desc: []
+    })
   })
 })
 
-test('object', () => {
-  expect(
-    compare(
-      {
-        foo: 'bar'
-      },
-      {
-        foo: 'bar'
+describe('number', () => {
+  test('equal', () => {
+    expect(compare(0, 0)).toEqual<TypeComparison>({
+      srcType: 'number',
+      srcValue: '0',
+      score: 1,
+      desc: []
+    })
+  })
+
+  test('nonequal', () => {
+    expect(compare(1, 2)).toEqual<TypeComparison>({
+      srcType: 'number',
+      srcValue: '1',
+      dstValue: '2',
+      score: 0,
+      desc: []
+    })
+  })
+})
+
+describe('string', () => {
+  test('equal', () => {
+    expect(compare('bar', 'bar')).toEqual<TypeComparison>({
+      srcType: 'string',
+      srcValue: '"bar"',
+      score: 1,
+      desc: []
+    })
+  })
+
+  test('nonequal', () => {
+    expect(compare('bar', 'baz')).toEqual<TypeComparison>({
+      srcType: 'string',
+      dstValue: '"baz"',
+      srcValue: '"bar"',
+      score: 0,
+      desc: []
+    })
+  })
+})
+
+describe('object', () => {
+  test('equal', () => {
+    expect(compare({ foo: 'bar' }, { foo: 'bar' })).toEqual<TypeComparison>({
+      desc: [],
+      score: 1,
+      srcType: 'object',
+      srcValue: '{"foo":"bar"}'
+    })
+  })
+  test('nonequal', () => {
+    const src = {
+      dict: {
+        day: 30,
+        month: 6,
+        year: 1996
       }
-    )
-  ).toEqual({
-    type: 'object',
-    match: true,
-    score: 1
-  })
-
-  expect(
-    compare(
-      {
-        foo: 'bar',
-        baz: [42, 'qux']
-      },
-      {
-        foo: 'bar',
-        baz: [42, 'quux']
+    }
+    const dst = {
+      dict: {
+        day: 30,
+        month: 12,
+        year: 1996
       }
-    )
-  ).toEqual({
-    type: 'object',
-    match: false,
-    score: 2 / 3
+    }
+    expect(compare(src, dst)).toEqual<TypeComparison>({
+      desc: [],
+      dstValue: '{"dict":{"day":30,"month":12,"year":1996}}',
+      score: 2 / 3,
+      srcType: 'object',
+      srcValue: '{"dict":{"day":30,"month":6,"year":1996}}'
+    })
   })
 })
 
-test('array', () => {
-  expect(compare(['foo', 'bar'], ['foo', 'bar'])).toEqual({
-    type: 'array',
-    match: true,
-    score: 1
+describe('array', () => {
+  test('flat', () => {
+    expect(compare(['foo', 'bar'], ['foo', 'bar'])).toEqual<TypeComparison>({
+      srcType: 'array',
+      srcValue: '["foo","bar"]',
+      score: 1,
+      desc: []
+    })
   })
 
-  expect(
-    compare(
-      [
-        42,
-        ['foo', 'bar'],
-        {
-          qux: ['qux']
-        }
-      ],
-      [
-        42,
-        ['foo', 'baz'],
-        {
-          qux: ['quux']
-        }
-      ]
-    )
-  ).toEqual({
-    type: 'array',
-    match: false,
-    score: 2 / 4
+  test('nested', () => {
+    const src = [
+      42,
+      ['foo', 'bar'],
+      {
+        qux: ['qux']
+      }
+    ]
+    const dst = [
+      42,
+      ['foo', 'baz'],
+      {
+        qux: ['quux']
+      }
+    ]
+    expect(compare(src, dst)).toEqual<TypeComparison>({
+      srcType: 'array',
+      srcValue: '[42,["foo","bar"],{"qux":["qux"]}]',
+      dstValue: '[42,["foo","baz"],{"qux":["quux"]}]',
+      score: 2 / 4,
+      desc: []
+    })
   })
 })
 
 test('incompatible', () => {
-  expect(compare({}, [])).toEqual({
-    type: 'incompatible',
-    match: false,
-    score: 0
+  expect(compare({}, [])).toEqual<TypeComparison>({
+    srcType: 'object',
+    srcValue: '{}',
+    dstType: 'array',
+    dstValue: '[]',
+    score: 0,
+    desc: []
   })
 })

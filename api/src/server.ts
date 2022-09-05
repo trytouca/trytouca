@@ -128,11 +128,13 @@ async function launch(application) {
 
   // setup service to process and compare submitted results
   if (config.services.comparison.enabled) {
-    logger.warn('registering experimental comparison service')
+    logger.warn('experimental comparison service enabled')
     setInterval(
       comparisonService,
       config.services.comparison.checkInterval * 1000
     )
+  } else {
+    logger.debug('experimental comparison server disabled ')
   }
 
   // create a superuser if this platform was just setup

@@ -1,12 +1,10 @@
-import { Message, ResultType } from '@touca/flatbuffers'
-import {
-  getTypeName,
-  stringifyValue,
-  CppTypeComparison,
-  compare as compareTypes
-} from './type'
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-type Cell = { name: string } & Partial<CppTypeComparison>
+import { Message, ResultType } from '@touca/flatbuffers'
+import { stringify } from 'safe-stable-stringify'
+import { getTypeName, TypeComparison, compare as compareTypes } from './type'
+
+type Cell = { name: string } & Partial<TypeComparison>
 
 type Cellar = {
   commonKeys: Array<Cell>
@@ -43,7 +41,7 @@ function initResultsCellar(
   resultType: ResultType
 ): Cellar {
   const toMap = (m: Message['results']) =>
-    new Map(m.map((v) => [v.name, { type: v.type, value: v.value }]))
+    new Map(m.map((v) => [v.key, { type: v.type, value: v.value }]))
 
   const cellar: Cellar = { commonKeys: [], newKeys: [], missingKeys: [] }
   const srcResultsMap = toMap(srcResults)
@@ -62,7 +60,7 @@ function initResultsCellar(
     }
     cellar.missingKeys.push({
       name: key,
-      dstValue: stringifyValue(result.value),
+      dstValue: stringify(result.value),
       dstType: getTypeName(result.value)
     })
   }
@@ -73,7 +71,7 @@ function initResultsCellar(
     if (!dstResultsMap.has(key)) {
       cellar.newKeys.push({
         name: key,
-        srcValue: stringifyValue(result.value),
+        srcValue: stringify(result.value),
         srcType: getTypeName(result.value)
       })
     }
@@ -86,7 +84,7 @@ function initMetricsCellar(
   dstResults: Message['metrics']
 ) {
   const toMap = (m: Message['metrics']) =>
-    new Map(m.map((v) => [v.name, { value: v.value }]))
+    new Map(m.map((v) => [v.key, { value: v.value }]))
 
   const cellar: Cellar = { commonKeys: [], newKeys: [], missingKeys: [] }
   const srcResultsMap = toMap(srcResults)
@@ -102,7 +100,7 @@ function initMetricsCellar(
     }
     cellar.missingKeys.push({
       name: key,
-      dstValue: stringifyValue(result.value),
+      dstValue: stringify(result.value),
       dstType: getTypeName(result.value)
     })
   }
@@ -110,7 +108,7 @@ function initMetricsCellar(
     if (!dstResultsMap.has(key)) {
       cellar.newKeys.push({
         name: key,
-        srcValue: stringifyValue(result.value),
+        srcValue: stringify(result.value),
         srcType: getTypeName(result.value)
       })
     }
@@ -130,15 +128,19 @@ function compare(srcMessage: Message, dstMessage: Message): TestcaseComparison {
     ResultType.Check
   )
   const metrics = initMetricsCellar(srcMessage.metrics, dstMessage.metrics)
+  const keysCountCommon =
+    assertions.commonKeys.length + results.commonKeys.length
   return {
     overview: {
-      keysCountCommon: assertions.commonKeys.length + results.commonKeys.length,
+      keysCountCommon,
       keysCountFresh: assertions.newKeys.length + results.newKeys.length,
       keysCountMissing:
         assertions.missingKeys.length + results.missingKeys.length,
-      keysScore:
-        assertions.commonKeys.reduce((acc, v) => acc + v.score!, 0) +
-        results.commonKeys.reduce((acc, v) => acc + v.score!, 0),
+      keysScore: keysCountCommon
+        ? (assertions.commonKeys.reduce((acc, v) => acc + v.score!, 0) +
+            results.commonKeys.reduce((acc, v) => acc + v.score!, 0)) /
+          keysCountCommon
+        : 0,
       metricsCountCommon: metrics.commonKeys.length,
       metricsCountFresh: metrics.newKeys.length,
       metricsCountMissing: metrics.missingKeys.length,
@@ -161,4 +163,4 @@ function compare(srcMessage: Message, dstMessage: Message): TestcaseComparison {
   }
 }
 
-export { TestcaseComparison, compare, stringifyValue }
+export { TestcaseComparison, compare, stringify }
