@@ -16,7 +16,6 @@ moduleAlias.addAliases({
   '@/queues': `${__dirname}/queues`,
   '@/routes': `${__dirname}/routes`,
   '@/schemas': `${__dirname}/schemas`,
-  '@/services': `${__dirname}/services`,
   '@/types': `${__dirname}/types`,
   '@/utils': `${__dirname}/utils`
 })
