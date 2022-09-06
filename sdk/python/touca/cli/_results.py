@@ -25,7 +25,7 @@ class Results(Operation):
         parser_ls = parsers.add_parser("ls", help="list local touca archive files")
         parser_rm = parsers.add_parser("rm", help="remove local touca archive files")
         results_dir = find_home_path().joinpath("results")
-        for parser in [parser_ls, parser_rm]:
+        for pars in [parser_ls, parser_rm]:
             src = pars.add_argument(
                 "src",
                 help=f"path to directory with results files. defaults to {results_dir}",
@@ -35,7 +35,7 @@ class Results(Operation):
             suite = pars.add_argument("suite", help="name of suite")
             version = pars.add_argument("version", help="version of suite")
 
-    def _command_list(self):
+    def _command_ls(self):
         suite = self.__options.get("suite")
         version = self.__options.get("version")
         src = (
@@ -60,7 +60,7 @@ class Results(Operation):
         print_table(table_header, table_body)
         return True
 
-    def _command_remove(self):
+    def _command_rm(self):
         suite = self.__options.get("suite")
         version = self.__options.get("version")
         src = (
