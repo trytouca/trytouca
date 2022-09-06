@@ -15,6 +15,7 @@ import type {
   BackendBatchComparisonResponse
 } from '@/types/backendtypes'
 import logger from '@/utils/logger'
+import { rclient } from '@/utils/redis'
 
 type ObjectId = mongoose.Types.ObjectId
 
@@ -45,6 +46,13 @@ async function findComparisonResult(
       srcMessageId
     })
     await doc.save()
+    rclient.comparisonQueue.add(doc.id, {
+      jobId: doc._id,
+      dstBatchId,
+      dstMessageId,
+      srcBatchId,
+      srcMessageId
+    })
     logger.silly('comparison result not available. created job.')
   }
 

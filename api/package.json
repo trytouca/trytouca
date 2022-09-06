@@ -43,6 +43,7 @@
     "analytics-node": "^6.2.0",
     "archiver": "^5.3.1",
     "bcryptjs": "^2.4.3",
+    "bullmq": "^1.90.1",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

@@ -353,10 +353,19 @@ async function insertComparisonJob(
       ].join('/')
     }
 
-    // now that we know the parameters, create a comparison job for the
-    // comparator to process.
+    // insert document in the comparisons collection
 
-    await ComparisonModel.create({
+    const cmp = await ComparisonModel.create({
+      dstBatchId,
+      dstMessageId,
+      srcBatchId,
+      srcMessageId
+    })
+
+    // insert job in the comparison queue
+
+    rclient.comparisonQueue.add(cmp.id, {
+      jobId: cmp._id,
       dstBatchId,
       dstMessageId,
       srcBatchId,
@@ -609,11 +618,18 @@ async function ensureMessage(
     submittedBy: user._id
   }
 
-  // if message is new, insert it into the database
-
   if (!message) {
     logger.debug('%s: registered message', tuple)
-    return await MessageModel.create(doc)
+
+    // insert doc in the messages collection
+    const job = await MessageModel.create(doc)
+
+    // insert job in the message queue
+    rclient.messageQueue.add(job.id, {
+      batchId: batch._id,
+      messageId: job._id
+    })
+    return job
   }
 
   // If message is already known, overwrite it and extend its expiration time.

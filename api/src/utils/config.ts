@@ -77,7 +77,6 @@ interface IConfig {
       defaultDuration: number
     }
     comparison: {
-      checkInterval: number
       enabled: boolean
     }
     reporting: {
@@ -186,7 +185,6 @@ export const config: IConfig = {
     },
     // comparison service
     comparison: {
-      checkInterval: Number(env.SERVICE_COMPARISON_CHECK_INTERVAL) || 10,
       // to be removed as part of "Synchronized Comparison" project
       enabled: env.SERVICE_COMPARISON_ENABLED === 'true'
     },

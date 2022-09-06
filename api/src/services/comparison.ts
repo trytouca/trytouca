@@ -58,7 +58,7 @@ function transform(message: Message): MessageTransformed {
   }
 }
 
-async function processMessageJob(job: MessageJob) {
+export async function processMessageJob(job: MessageJob) {
   logger.debug('m:%s: processing', job.messageId)
   const tic = hrtime()
   const buffer = await objectStore.getMessage(job.messageId.toString())
@@ -76,7 +76,7 @@ async function processMessageJob(job: MessageJob) {
   return duration
 }
 
-async function processComparisonJob(job: ComparisonJob) {
+export async function processComparisonJob(job: ComparisonJob) {
   logger.debug('c:%s: processing', job.jobId)
   const tic = hrtime()
   const srcBuffer = await objectStore.getMessage(job.srcMessageId.toString())
