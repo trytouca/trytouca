@@ -363,13 +363,19 @@ async function insertComparisonJob(
     })
 
     if (config.services.comparison.enabled) {
-      await Queues.comparison.queue.add(cmp.id, {
-        jobId: cmp._id,
-        dstBatchId,
-        dstMessageId,
-        srcBatchId,
-        srcMessageId
-      })
+      await Queues.comparison.queue.add(
+        cmp.id,
+        {
+          jobId: cmp._id,
+          dstBatchId,
+          dstMessageId,
+          srcBatchId,
+          srcMessageId
+        },
+        {
+          jobId: cmp.id
+        }
+      )
     }
 
     logger.debug('%s: scheduled comparison with %s', srcTuple, dstTuple)
@@ -624,10 +630,16 @@ async function ensureMessage(
     logger.debug('%s: registered message', tuple)
 
     if (config.services.comparison.enabled) {
-      await Queues.message.queue.add(job.id, {
-        batchId: batch._id,
-        messageId: job._id
-      })
+      await Queues.message.queue.add(
+        job.id,
+        {
+          batchId: batch._id,
+          messageId: job._id
+        },
+        {
+          jobId: job.id
+        }
+      )
     }
     return job
   }

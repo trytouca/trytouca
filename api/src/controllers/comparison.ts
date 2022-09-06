@@ -49,13 +49,19 @@ async function findComparisonResult(
     await doc.save()
 
     if (config.services.comparison.enabled) {
-      await Queues.comparison.queue.add(doc.id, {
-        jobId: doc._id,
-        dstBatchId,
-        dstMessageId,
-        srcBatchId,
-        srcMessageId
-      })
+      await Queues.comparison.queue.add(
+        doc.id,
+        {
+          jobId: doc._id,
+          dstBatchId,
+          dstMessageId,
+          srcBatchId,
+          srcMessageId
+        },
+        {
+          jobId: doc.id
+        }
+      )
     }
 
     logger.silly('comparison result not available. created job.')
