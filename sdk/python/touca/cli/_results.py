@@ -80,16 +80,11 @@ class Results(Operation):
             return False
 
     def run(self):
-        src = Path(self.__options.get("src")).expanduser().resolve()
-        results_tree = ResultsTree(src)
-
-        if results_tree.is_empty:
-            logger.error(f"{src} is not exists.")
-            return False
-
-        commands = {"list": self._command_list, "remove": self._command_remove}
+        commands = {
+            "ls": self._command_ls,
+            "rm": self._command_rm,
+        }
         command = self.__options.get("subcommand")
-
         if not command:
             return invalid_subcommand(Results)
         if command in commands:
