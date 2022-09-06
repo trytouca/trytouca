@@ -1,5 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import fs from 'fs'
 import { pick } from 'lodash'
 
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
@@ -79,5 +80,24 @@ export async function upgradeDatabase() {
   logger.info('database migration: performing checks')
   await applyMailTransportEnvironmentVariables()
   logger.info('database migration: checks completed')
+  return true
+}
+
+export async function statusReport() {
+  if (config.isCloudHosted) {
+    logger.info('running in cloud-hosted mode')
+  }
+  if (!config.samples.enabled) {
+    logger.warn('sample data submission is disabled')
+  }
+  if (!config.services.comparison.enabled) {
+    logger.warn('new comparison service is disabled')
+  }
+  if (!configMgr.hasMailTransport()) {
+    logger.warn('mail server not configured')
+  }
+  if (!fs.existsSync(config.samples.directory)) {
+    logger.warn('samples directory not found at %s', config.samples.directory)
+  }
   return true
 }

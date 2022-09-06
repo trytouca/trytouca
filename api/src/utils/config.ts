@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import dotenv from 'dotenv'
+import { RedisOptions } from 'ioredis'
 import { pick } from 'lodash'
 import mongoose from 'mongoose'
 import path from 'path'
@@ -77,7 +78,6 @@ interface IConfig {
       defaultDuration: number
     }
     comparison: {
-      checkInterval: number
       enabled: boolean
     }
     reporting: {
@@ -186,7 +186,6 @@ export const config: IConfig = {
     },
     // comparison service
     comparison: {
-      checkInterval: Number(env.SERVICE_COMPARISON_CHECK_INTERVAL) || 10,
       // to be removed as part of "Synchronized Comparison" project
       enabled: env.SERVICE_COMPARISON_ENABLED === 'true'
     },
@@ -216,6 +215,24 @@ export const config: IConfig = {
   },
   webapp: {
     root: env.WEBAPP_ROOT
+  }
+}
+
+export function getRedisConnectionOptions(): RedisOptions {
+  const cloudOptions = config.redis.tlsCertificateFile
+    ? {
+        tls: {
+          checkServerIdentity: () => undefined
+        }
+      }
+    : {}
+
+  return {
+    host: config.redis.host,
+    lazyConnect: true,
+    port: config.redis.port,
+    showFriendlyErrorStack: config.env !== 'production',
+    ...cloudOptions
   }
 }
 

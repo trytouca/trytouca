@@ -3,7 +3,10 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { getComparisonJobs } from '@/models/comparison'
+import {
+  getComparisonProcessingJobs,
+  getMessageProcessingJobs
+} from '@/models/comparison'
 import { config } from '@/utils/config'
 
 export async function comparisonList(
@@ -13,6 +16,9 @@ export async function comparisonList(
 ) {
   const jobs = config.services.comparison.enabled
     ? { messages: [], comparisons: [] }
-    : await getComparisonJobs()
+    : {
+        messages: await getMessageProcessingJobs(),
+        comparisons: await getComparisonProcessingJobs()
+      }
   return res.status(200).json(jobs)
 }

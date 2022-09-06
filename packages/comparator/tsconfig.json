@@ -1,19 +1,16 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "baseUrl": "src",
     "alwaysStrict": true,
     "declaration": true,
     "declarationMap": true,
-    "downlevelIteration": true,
-    "module": "commonjs",
+    "module": "CommonJS",
     "moduleResolution": "node",
-    "sourceMap": true,
     "strict": true,
-    "target": "es2020",
-    "lib": ["es2020"],
-    "types": ["node"],
+    "target": "ES2022",
+    "lib": ["ES2022"],
     "outDir": "dist"
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["src/**/*.test.ts"]
 }

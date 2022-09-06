@@ -2,9 +2,11 @@
 
 import mongoose from 'mongoose'
 
+import * as Queues from '@/queues'
 import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import { MessageModel } from '@/schemas/message'
 import { MetaModel } from '@/schemas/meta'
+import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { objectStore } from '@/utils/store'
 
@@ -25,7 +27,8 @@ export type MessageJob = {
   batchId: ObjectId
 }
 
-async function getMessageProcessingJobs() {
+// to be removed as part of "Synchronized Comparison" project
+export async function getMessageProcessingJobs(): Promise<MessageJob[]> {
   const reservedAt = new Date()
   reservedAt.setSeconds(reservedAt.getSeconds() - 60)
   const result: MessageJob[] = await MessageModel.aggregate([
@@ -48,7 +51,8 @@ async function getMessageProcessingJobs() {
   return result
 }
 
-async function getComparisonProcessingJobs() {
+// to be removed as part of "Synchronized Comparison" project
+export async function getComparisonProcessingJobs(): Promise<ComparisonJob[]> {
   const reservedAt = new Date()
   reservedAt.setSeconds(reservedAt.getSeconds() - 60)
   const queryOutput: ComparisonQueryOutputItem[] =
@@ -99,7 +103,7 @@ async function getComparisonProcessingJobs() {
         }
       }
     ])
-  const result = queryOutput
+  const result: ComparisonJob[] = queryOutput
     .filter((v) => v.dstContentId && v.srcContentId)
     .map((v) => {
       const { dstContentId, srcContentId, ...job } = v
@@ -112,30 +116,25 @@ async function getComparisonProcessingJobs() {
   return result
 }
 
-export async function getComparisonJobs() {
-  return {
-    messages: await getMessageProcessingJobs(),
-    comparisons: await getComparisonProcessingJobs()
-  }
-}
-
 export async function comparisonRemove(
   jobs: IComparisonDocument[]
 ): Promise<void> {
   try {
-    // remove comparison results from object storage
-
-    const removal = jobs.map((job) =>
-      objectStore.removeComparison(job.contentId)
+    // remove comparison processing jobs from the queue
+    if (config.services.comparison.enabled) {
+      await Promise.allSettled(
+        jobs.map((job) => Queues.comparison.queue.remove(job.id))
+      )
+    }
+    // remove JSON representation of comparison results from object storage
+    await Promise.allSettled(
+      jobs.map((job) => objectStore.removeComparison(job.contentId))
     )
-    await Promise.all(removal)
-    logger.debug('removed %d comparison results', jobs.length)
-
-    // remove processed comparison jobs
-
-    const jobIds = jobs.map((elem) => elem._id)
-    await ComparisonModel.deleteMany({ _id: { $in: jobIds } })
-    logger.debug('removed %d processed comparison jobs', jobs.length)
+    // remove documents from database
+    await ComparisonModel.deleteMany({
+      _id: { $in: jobs.map((elem) => elem._id) }
+    })
+    logger.silly('removed %d comparison jobs', jobs.length)
   } catch (err) {
     logger.warn('failed to remove comparison jobs: %s', err)
   }

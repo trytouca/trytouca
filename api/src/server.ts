@@ -4,7 +4,6 @@ import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
-import fs from 'fs'
 import hidePoweredBy from 'hide-powered-by'
 import moduleAlias from 'module-alias'
 import nocache from 'nocache'
@@ -13,6 +12,7 @@ moduleAlias.addAliases({
   '@/controllers': `${__dirname}/controllers`,
   '@/middlewares': `${__dirname}/middlewares`,
   '@/models': `${__dirname}/models`,
+  '@/queues': `${__dirname}/queues`,
   '@/routes': `${__dirname}/routes`,
   '@/schemas': `${__dirname}/schemas`,
   '@/types': `${__dirname}/types`,
@@ -20,23 +20,23 @@ moduleAlias.addAliases({
 })
 
 import { MetaModel } from '@/schemas/meta'
-import { config, configMgr } from '@/utils/config'
+import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { makeConnectionMongo, shutdownMongo } from '@/utils/mongo'
 import { makeConnectionRedis, shutdownRedis } from '@/utils/redis'
 import { connectToServer } from '@/utils/routing'
 import { objectStore } from '@/utils/store'
 
+import * as Queues from './queues'
 import router from './routes'
 import {
   analyticsService,
   autosealService,
-  comparisonService,
   reportingService,
   retentionService,
   telemetryService
 } from './services'
-import { setupSuperuser, upgradeDatabase } from './startup'
+import { setupSuperuser, statusReport, upgradeDatabase } from './startup'
 
 const app = express()
 
@@ -87,21 +87,7 @@ async function launch(application) {
     logger.warn('failed to perform database migration')
   }
 
-  if (config.isCloudHosted) {
-    logger.info('running in cloud-hosted mode')
-  }
-
-  if (!configMgr.hasMailTransport()) {
-    logger.warn('mail server not configured')
-  }
-
-  if (!fs.existsSync(config.samples.directory)) {
-    logger.warn('samples directory not found at %s', config.samples.directory)
-  }
-
-  if (!config.samples.enabled) {
-    logger.warn('feature to submit sample data is disabled')
-  }
+  await statusReport()
 
   // setup analytics service that performs background data processing
   // and populates batches and elements with information to be provided
@@ -126,16 +112,13 @@ async function launch(application) {
   // setup service to collect privacy-friendly aggregate usage data
   setInterval(telemetryService, config.services.telemetry.checkInterval * 1000)
 
-  // setup service to process and compare submitted results
   if (config.services.comparison.enabled) {
-    logger.warn('registering experimental comparison service')
-    setInterval(
-      comparisonService,
-      config.services.comparison.checkInterval * 1000
-    )
+    await Queues.message.start()
+    await Queues.comparison.start()
+    Queues.message.worker.run()
+    Queues.comparison.worker.run()
   }
 
-  // create a superuser if this platform was just setup
   await setupSuperuser()
 
   server = application.listen(config.express.port, () => {
@@ -146,6 +129,12 @@ async function launch(application) {
 async function shutdown(): Promise<void> {
   await shutdownMongo()
   await shutdownRedis()
+  if (config.services.comparison.enabled) {
+    await Queues.comparison.queue.close()
+    await Queues.comparison.scheduler.close()
+    await Queues.message.queue.close()
+    await Queues.message.scheduler.close()
+  }
 }
 
 process.once('SIGUSR2', () => {

@@ -1,9 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { MessageBuffer, Messages } from '@touca/fbs-schema'
+import { serializeMessages } from '@touca/flatbuffers'
 import archiver from 'archiver'
 import { NextFunction, Request, Response } from 'express'
-import { Builder } from 'flatbuffers'
 
 import { IBatchDocument } from '@/schemas/batch'
 import { MessageModel } from '@/schemas/message'
@@ -28,24 +27,7 @@ function toChunkFiles(messages: Buffer[]): ArrayBuffer[] {
     chunks.push(messages.slice(j, i))
   }
 
-  const out = []
-  for (const chunk of chunks) {
-    const builder = new Builder(1024)
-    const msg_buf = []
-    for (const message of chunk) {
-      const buf = MessageBuffer.createBufVector(builder, message)
-      MessageBuffer.startMessageBuffer(builder)
-      MessageBuffer.addBuf(builder, buf)
-      msg_buf.push(MessageBuffer.endMessageBuffer(builder))
-    }
-    const fbs_msg_buf = Messages.createMessagesVector(builder, msg_buf)
-    Messages.startMessages(builder)
-    Messages.addMessages(builder, fbs_msg_buf)
-    const fbs_messages = Messages.endMessages(builder)
-    builder.finish(fbs_messages)
-    out.push(builder.asUint8Array())
-  }
-  return out
+  return chunks.map(serializeMessages)
 }
 
 /**

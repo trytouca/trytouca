@@ -1,13 +1,14 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { MessageProcessInput } from '@touca/fbs-schema'
-
 import { comparisonRemove } from '@/models/comparison'
 import { MessageInfo } from '@/models/messageInfo'
+import * as Queues from '@/queues'
 import { BatchModel } from '@/schemas/batch'
 import { ComparisonModel } from '@/schemas/comparison'
 import { ElementModel } from '@/schemas/element'
 import { MessageModel } from '@/schemas/message'
+import { MessageOverview, MessageTransformed } from '@/types/backendtypes'
+import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { objectStore } from '@/utils/store'
 
@@ -58,12 +59,13 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
       return true
     }
 
+    // remove message processing jobs from the queue
+    if (config.services.comparison.enabled) {
+      await Queues.message.queue.remove(msgInfo.messageId.toHexString())
+    }
     // remove JSON representation of message from object storage
-
     await objectStore.removeResult(msgInfo.messageId.toHexString())
-
     // remove message from database
-
     await MessageModel.findByIdAndRemove(msgInfo.messageId)
 
     // remove element from this batch
@@ -100,7 +102,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
 
 export async function messageProcess(
   messageId: string,
-  input: MessageProcessInput
+  input: { overview: MessageOverview; body: MessageTransformed }
 ): Promise<{ status: number; error?: string }> {
   const message = await MessageModel.findById(messageId)
   // we expect that message job exists
