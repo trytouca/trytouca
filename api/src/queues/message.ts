@@ -5,7 +5,9 @@ import { deserialize, Message } from '@touca/flatbuffers'
 
 import { MessageJob } from '@/models/comparison'
 import { messageProcess } from '@/models/message'
+import { MessageModel } from '@/schemas/message'
 import { MessageOverview, MessageTransformed } from '@/types/backendtypes'
+import logger from '@/utils/logger'
 import {
   createQueue,
   createQueueScheduler,
@@ -51,6 +53,23 @@ async function processor(job: MessageJob): Promise<PerformanceMarks> {
   })
   perf.mark('message:process')
   return error ? Promise.reject(error) : perf
+}
+
+export async function start() {
+  const jobs = await MessageModel.aggregate([
+    { $match: { contentId: { $exists: false } } },
+    { $project: { _id: 0, messageId: '$_id', batchId: 1 } }
+  ])
+  logger.info('inserting %d jobs into message queue', jobs.length)
+  await queue.addBulk(
+    jobs.map((job) => ({
+      name: job.messageId.toHexString(),
+      data: job,
+      opts: {
+        jobId: job.messageId.toHexString()
+      }
+    }))
+  )
 }
 
 export const queue = createQueue('messages')

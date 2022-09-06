@@ -4,7 +4,6 @@ import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
-import fs from 'fs'
 import hidePoweredBy from 'hide-powered-by'
 import moduleAlias from 'module-alias'
 import nocache from 'nocache'
@@ -21,7 +20,7 @@ moduleAlias.addAliases({
 })
 
 import { MetaModel } from '@/schemas/meta'
-import { config, configMgr } from '@/utils/config'
+import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { makeConnectionMongo, shutdownMongo } from '@/utils/mongo'
 import { makeConnectionRedis, shutdownRedis } from '@/utils/redis'
@@ -37,7 +36,7 @@ import {
   retentionService,
   telemetryService
 } from './services'
-import { setupSuperuser, upgradeDatabase } from './startup'
+import { setupSuperuser, statusReport, upgradeDatabase } from './startup'
 
 const app = express()
 
@@ -88,21 +87,7 @@ async function launch(application) {
     logger.warn('failed to perform database migration')
   }
 
-  if (config.isCloudHosted) {
-    logger.info('running in cloud-hosted mode')
-  }
-
-  if (!configMgr.hasMailTransport()) {
-    logger.warn('mail server not configured')
-  }
-
-  if (!fs.existsSync(config.samples.directory)) {
-    logger.warn('samples directory not found at %s', config.samples.directory)
-  }
-
-  if (!config.samples.enabled) {
-    logger.warn('feature to submit sample data is disabled')
-  }
+  await statusReport()
 
   // setup analytics service that performs background data processing
   // and populates batches and elements with information to be provided
@@ -128,8 +113,10 @@ async function launch(application) {
   setInterval(telemetryService, config.services.telemetry.checkInterval * 1000)
 
   if (config.services.comparison.enabled) {
-    await Queues.message.worker.run()
-    await Queues.comparison.worker.run()
+    await Queues.message.start()
+    await Queues.comparison.start()
+    Queues.message.worker.run()
+    Queues.comparison.worker.run()
   }
 
   await setupSuperuser()
