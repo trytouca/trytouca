@@ -27,7 +27,8 @@ export class PerformanceMarks {
 
 export function createQueue(name: string) {
   return new Queue(name, {
-    connection: getRedisConnectionOptions()
+    connection: getRedisConnectionOptions(),
+    defaultJobOptions: { removeOnComplete: true, removeOnFail: 1000 }
   })
 }
 

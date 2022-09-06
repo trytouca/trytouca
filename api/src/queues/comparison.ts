@@ -28,7 +28,5 @@ async function processor(job: ComparisonJob): Promise<PerformanceMarks> {
 }
 
 export const queue = createQueue('comparisons')
-
 export const worker = createWorker('comparisons', processor)
-
 export const scheduler = createQueueScheduler('comparisons')

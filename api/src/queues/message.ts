@@ -66,11 +66,10 @@ async function processor(job: MessageJob): Promise<PerformanceMarks> {
     overview: buildMessageOverview(message),
     body: transform(message)
   })
+  perf.mark('message:process')
   return error ? Promise.reject(error) : perf
 }
 
 export const queue = createQueue('messages')
-
 export const scheduler = createQueueScheduler('messages')
-
 export const worker = createWorker('messages', processor)
