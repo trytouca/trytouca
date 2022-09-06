@@ -14,6 +14,7 @@ import { MessageModel } from '@/schemas/message'
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
+import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 import { objectStore } from '@/utils/store'
@@ -361,13 +362,15 @@ async function insertComparisonJob(
       srcMessageId
     })
 
-    await Queues.comparison.queue.add(cmp.id, {
-      jobId: cmp._id,
-      dstBatchId,
-      dstMessageId,
-      srcBatchId,
-      srcMessageId
-    })
+    if (config.services.comparison.enabled) {
+      await Queues.comparison.queue.add(cmp.id, {
+        jobId: cmp._id,
+        dstBatchId,
+        dstMessageId,
+        srcBatchId,
+        srcMessageId
+      })
+    }
 
     logger.debug('%s: scheduled comparison with %s', srcTuple, dstTuple)
   } catch (err) {
@@ -620,10 +623,12 @@ async function ensureMessage(
     const job = await MessageModel.create(doc)
     logger.debug('%s: registered message', tuple)
 
-    await Queues.message.queue.add(job.id, {
-      batchId: batch._id,
-      messageId: job._id
-    })
+    if (config.services.comparison.enabled) {
+      await Queues.message.queue.add(job.id, {
+        batchId: batch._id,
+        messageId: job._id
+      })
+    }
     return job
   }
 

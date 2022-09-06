@@ -15,6 +15,7 @@ import type {
   BackendBatchComparisonItemSolo,
   BackendBatchComparisonResponse
 } from '@/types/backendtypes'
+import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 
 type ObjectId = mongoose.Types.ObjectId
@@ -47,13 +48,15 @@ async function findComparisonResult(
     })
     await doc.save()
 
-    await Queues.comparison.queue.add(doc.id, {
-      jobId: doc._id,
-      dstBatchId,
-      dstMessageId,
-      srcBatchId,
-      srcMessageId
-    })
+    if (config.services.comparison.enabled) {
+      await Queues.comparison.queue.add(doc.id, {
+        jobId: doc._id,
+        dstBatchId,
+        dstMessageId,
+        srcBatchId,
+        srcMessageId
+      })
+    }
 
     logger.silly('comparison result not available. created job.')
   }
