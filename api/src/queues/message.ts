@@ -5,6 +5,7 @@ import { deserialize, Message } from '@touca/flatbuffers'
 
 import { MessageJob } from '@/models/comparison'
 import { messageProcess } from '@/models/message'
+import { MessageOverview, MessageTransformed } from '@/types/backendtypes'
 import {
   createQueue,
   createQueueScheduler,
@@ -12,24 +13,6 @@ import {
   PerformanceMarks
 } from '@/utils/queue'
 import { objectStore } from '@/utils/store'
-
-export type MessageOverview = {
-  keysCount: number
-  metricsCount: number
-  metricsDuration: number
-}
-
-export type MessageTransformed = {
-  metadata: Message['metadata']
-  metrics: {
-    key: string
-    value: string
-  }[]
-  results: {
-    key: string
-    value: string
-  }[]
-}
 
 function buildMessageOverview(message: Message): MessageOverview {
   return {

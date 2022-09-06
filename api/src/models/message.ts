@@ -6,6 +6,7 @@ import { BatchModel } from '@/schemas/batch'
 import { ComparisonModel } from '@/schemas/comparison'
 import { ElementModel } from '@/schemas/element'
 import { MessageModel } from '@/schemas/message'
+import { MessageOverview, MessageTransformed } from '@/types/backendtypes'
 import logger from '@/utils/logger'
 import { objectStore } from '@/utils/store'
 
@@ -98,7 +99,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
 
 export async function messageProcess(
   messageId: string,
-  input: { overview: unknown; body: unknown }
+  input: { overview: MessageOverview; body: MessageTransformed }
 ): Promise<{ status: number; error?: string }> {
   const message = await MessageModel.findById(messageId)
   // we expect that message job exists

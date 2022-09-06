@@ -10,6 +10,7 @@ import type {
   SuiteItem,
   Userinfo
 } from '@touca/api-schema'
+import { Message } from '@touca/flatbuffers'
 import type { Types } from 'mongoose'
 
 export type PromotionQueryOutput = {
@@ -75,4 +76,22 @@ export type CommentListQueryOutput = {
   editedAt: Date
   parentId: Types.ObjectId
   text: string
+}
+
+export type MessageOverview = {
+  keysCount: number
+  metricsCount: number
+  metricsDuration: number
+}
+
+export type MessageTransformed = {
+  metadata: Message['metadata']
+  metrics: {
+    key: string
+    value: string
+  }[]
+  results: {
+    key: string
+    value: string
+  }[]
 }
