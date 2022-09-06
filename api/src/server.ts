@@ -1,6 +1,5 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Worker } from 'bullmq'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -14,6 +13,7 @@ moduleAlias.addAliases({
   '@/controllers': `${__dirname}/controllers`,
   '@/middlewares': `${__dirname}/middlewares`,
   '@/models': `${__dirname}/models`,
+  '@/queues': `${__dirname}/queues`,
   '@/routes': `${__dirname}/routes`,
   '@/schemas': `${__dirname}/schemas`,
   '@/services': `${__dirname}/services`,
@@ -21,17 +21,15 @@ moduleAlias.addAliases({
   '@/utils': `${__dirname}/utils`
 })
 
-import { processComparisonJob, processMessageJob } from 'services/comparison'
-
 import { MetaModel } from '@/schemas/meta'
 import { config, configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
 import { makeConnectionMongo, shutdownMongo } from '@/utils/mongo'
-import { makeConnectionRedis, rclient, shutdownRedis } from '@/utils/redis'
+import { makeConnectionRedis, shutdownRedis } from '@/utils/redis'
 import { connectToServer } from '@/utils/routing'
 import { objectStore } from '@/utils/store'
 
-import { ComparisonJob, MessageJob } from './models/comparison'
+import * as Queues from './queues'
 import router from './routes'
 import {
   analyticsService,
@@ -130,36 +128,9 @@ async function launch(application) {
   // setup service to collect privacy-friendly aggregate usage data
   setInterval(telemetryService, config.services.telemetry.checkInterval * 1000)
 
-  new Worker<MessageJob>(
-    'MessageJobQueue',
-    async (job) => {
-      await processMessageJob(job.data)
-    },
-    {
-      connection: rclient.connectionOptions,
-      concurrency: 4
-    }
-  )
+  Queues.message.worker.run()
+  Queues.comparison.worker.run()
 
-  const workerCmp = new Worker<ComparisonJob>(
-    'ComparisonJobQueue',
-    async (job) => {
-      await processComparisonJob(job.data)
-    },
-    {
-      connection: rclient.connectionOptions,
-      concurrency: 4
-    }
-  )
-  workerCmp.on('failed', (doc) => {
-    logger.error(
-      'c:%s: worker failed to process: %s',
-      doc.name,
-      doc.failedReason
-    )
-  })
-
-  // create a superuser if this platform was just setup
   await setupSuperuser()
 
   server = application.listen(config.express.port, () => {
@@ -170,6 +141,10 @@ async function launch(application) {
 async function shutdown(): Promise<void> {
   await shutdownMongo()
   await shutdownRedis()
+  await Queues.comparison.queue.close()
+  await Queues.comparison.scheduler.close()
+  await Queues.message.queue.close()
+  await Queues.message.scheduler.close()
 }
 
 process.once('SIGUSR2', () => {

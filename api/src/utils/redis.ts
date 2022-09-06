@@ -1,28 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Queue } from 'bullmq'
-import IORedis, { RedisOptions } from 'ioredis'
+import IORedis from 'ioredis'
 
-import { config } from '@/utils/config'
+import { config, getRedisConnectionOptions } from '@/utils/config'
 import logger from '@/utils/logger'
 
-const cloudOptions = config.redis.tlsCertificateFile
-  ? {
-      tls: {
-        checkServerIdentity: () => undefined
-      }
-    }
-  : {}
-
-const connectionOptions: RedisOptions = {
-  host: config.redis.host,
-  lazyConnect: true,
-  port: config.redis.port,
-  showFriendlyErrorStack: config.env !== 'production',
-  ...cloudOptions
-}
-
-export const client = new IORedis(connectionOptions)
+export const client = new IORedis(getRedisConnectionOptions())
 
 client.on('error', (err) => {
   // we suppress error emission here to prevent duplicate error messages
@@ -116,21 +99,10 @@ function removeCachedByPrefix(prefix: string, suffix = ''): void {
     .on('end', () => true)
 }
 
-export const comparisonQueue = new Queue('ComparisonJobQueue', {
-  connection: connectionOptions
-})
-
-export const messageQueue = new Queue('MessageJobQueue', {
-  connection: connectionOptions
-})
-
 export const rclient = {
   cache,
   getCached,
   isCached,
   removeCached,
-  removeCachedByPrefix,
-  connectionOptions,
-  comparisonQueue,
-  messageQueue
+  removeCachedByPrefix
 }

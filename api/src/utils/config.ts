@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import dotenv from 'dotenv'
+import { RedisOptions } from 'ioredis'
 import { pick } from 'lodash'
 import mongoose from 'mongoose'
 import path from 'path'
@@ -214,6 +215,24 @@ export const config: IConfig = {
   },
   webapp: {
     root: env.WEBAPP_ROOT
+  }
+}
+
+export function getRedisConnectionOptions(): RedisOptions {
+  const cloudOptions = config.redis.tlsCertificateFile
+    ? {
+        tls: {
+          checkServerIdentity: () => undefined
+        }
+      }
+    : {}
+
+  return {
+    host: config.redis.host,
+    lazyConnect: true,
+    port: config.redis.port,
+    showFriendlyErrorStack: config.env !== 'production',
+    ...cloudOptions
   }
 }
 

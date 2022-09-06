@@ -5,6 +5,7 @@
       "@/controllers/*": ["controllers/*"],
       "@/middlewares": ["middlewares"],
       "@/models/*": ["models/*"],
+      "@/queues": ["queues"],
       "@/routes/*": ["routes/*"],
       "@/schemas/*": ["schemas/*"],
       "@/services/*": ["services/*"],

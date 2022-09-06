@@ -6,6 +6,7 @@ import { minBy } from 'lodash'
 import mongoose from 'mongoose'
 
 import { suiteCreate } from '@/models/suite'
+import * as Queues from '@/queues'
 import { BatchModel, IBatchDocument } from '@/schemas/batch'
 import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import { ElementModel, IElementDocument } from '@/schemas/element'
@@ -353,8 +354,6 @@ async function insertComparisonJob(
       ].join('/')
     }
 
-    // insert document in the comparisons collection
-
     const cmp = await ComparisonModel.create({
       dstBatchId,
       dstMessageId,
@@ -362,15 +361,14 @@ async function insertComparisonJob(
       srcMessageId
     })
 
-    // insert job in the comparison queue
-
-    rclient.comparisonQueue.add(cmp.id, {
+    await Queues.comparison.queue.add(cmp.id, {
       jobId: cmp._id,
       dstBatchId,
       dstMessageId,
       srcBatchId,
       srcMessageId
     })
+
     logger.debug('%s: scheduled comparison with %s', srcTuple, dstTuple)
   } catch (err) {
     logger.error('%s: failed to create comparison job: %O', srcTuple, err)
@@ -619,13 +617,10 @@ async function ensureMessage(
   }
 
   if (!message) {
+    const job = await MessageModel.create(doc)
     logger.debug('%s: registered message', tuple)
 
-    // insert doc in the messages collection
-    const job = await MessageModel.create(doc)
-
-    // insert job in the message queue
-    rclient.messageQueue.add(job.id, {
+    await Queues.message.queue.add(job.id, {
       batchId: batch._id,
       messageId: job._id
     })
