@@ -1006,7 +1006,7 @@ jobs:
       - name: install api dependencies
         if: steps.changes.outputs.api == 'true'
         run: |
-          pnpm --dir=api --filter=@touca/api  --filter=@touca/api-schema --filter=@touca/flatbuffers --frozen-lockfile install
+          pnpm --dir=api --filter=@touca/api  --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers --frozen-lockfile install
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         if: steps.params.outputs.release == 'true'
