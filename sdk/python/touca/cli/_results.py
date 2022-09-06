@@ -1,3 +1,5 @@
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+
 import logging
 from argparse import ArgumentParser
 from pathlib import Path
