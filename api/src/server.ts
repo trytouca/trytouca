@@ -15,6 +15,7 @@ moduleAlias.addAliases({
   '@/models': `${__dirname}/models`,
   '@/routes': `${__dirname}/routes`,
   '@/schemas': `${__dirname}/schemas`,
+  '@/services': `${__dirname}/services`,
   '@/types': `${__dirname}/types`,
   '@/utils': `${__dirname}/utils`
 })

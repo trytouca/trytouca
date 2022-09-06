@@ -1,13 +1,12 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { MessageOverview, MessageTransformed } from 'services/comparison'
-
 import { comparisonRemove } from '@/models/comparison'
 import { MessageInfo } from '@/models/messageInfo'
 import { BatchModel } from '@/schemas/batch'
 import { ComparisonModel } from '@/schemas/comparison'
 import { ElementModel } from '@/schemas/element'
 import { MessageModel } from '@/schemas/message'
+import { MessageOverview, MessageTransformed } from '@/services/comparison'
 import logger from '@/utils/logger'
 import { objectStore } from '@/utils/store'
 

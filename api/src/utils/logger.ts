@@ -42,4 +42,4 @@ logger.configure({
   ]
 })
 
-export = logger
+export { logger as default }

@@ -63,6 +63,7 @@ async function processMessageJob(job: MessageJob) {
   const tic = hrtime()
   const buffer = await objectStore.getMessage(job.messageId.toString())
   const message = deserialize(buffer)
+  const duration = hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   const { error } = await messageProcess(job.messageId.toString(), {
     overview: buildMessageOverview(message),
     body: transform(message)
@@ -71,7 +72,6 @@ async function processMessageJob(job: MessageJob) {
     logger.warn('m:%s: failed to process job: %s', job.messageId, error)
     return Promise.reject(error)
   }
-  const duration = hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.info('m:%s: processed (%d ms)', job.messageId, duration.toFixed(0))
   return duration
 }
@@ -84,12 +84,12 @@ async function processComparisonJob(job: ComparisonJob) {
   const srcMessage = deserialize(srcBuffer)
   const dstMessage = deserialize(dstBuffer)
   const output = compare(srcMessage, dstMessage)
+  const duration = hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   const { error } = await comparisonProcess(job.jobId.toString(), output)
   if (error) {
     logger.warn('c:%s: failed to process job: %s', job.jobId, error)
     return Promise.reject(error)
   }
-  const duration = hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.info('c:%s: processed (%s ms)', job.jobId, duration.toFixed(0))
   return duration
 }
@@ -100,8 +100,8 @@ export async function comparisonService(): Promise<void> {
   const tic = Date.now()
   const jobs = await getComparisonJobs()
   const tasks = [
-    ...jobs.messages.map((v) => processMessageJob(v)),
-    ...jobs.comparisons.map((v) => processComparisonJob(v))
+    ...jobs.messages.map((v) => () => processMessageJob(v)),
+    ...jobs.comparisons.map((v) => () => processComparisonJob(v))
   ]
   if (!tasks.length) {
     return
@@ -109,7 +109,7 @@ export async function comparisonService(): Promise<void> {
   logger.info('%s: received %d comparison jobs', serviceName, tasks.length)
   const numCollectionJobs = tasks.length
   const avgCollectionTime = (Date.now() - tic) / tasks.length
-  const output = await Promise.allSettled(tasks)
+  const output = await Promise.allSettled(tasks.map((v) => v()))
   output
     .filter((v) => v.status === 'rejected')
     .forEach((v: PromiseRejectedResult) => {

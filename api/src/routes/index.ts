@@ -91,4 +91,4 @@ router.post(
   promisable(feedback, 'handle user feedback')
 )
 
-export = router
+export { router as default }
