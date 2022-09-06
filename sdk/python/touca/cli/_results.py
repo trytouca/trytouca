@@ -22,16 +22,10 @@ class Results(Operation):
     @classmethod
     def parser(self, parser: ArgumentParser):
         parsers = parser.add_subparsers(dest="subcommand")
+        parser_ls = parsers.add_parser("ls", help="list local touca archive files")
+        parser_rm = parsers.add_parser("rm", help="remove local touca archive files")
         results_dir = find_home_path().joinpath("results")
-
-        parsers_list = parsers.add_parser(
-            "list", help="show a summary of test results"
-        )  # noqa: E501
-        parsers_remove = parsers.add_parser(
-            "remove", help="remove test results"
-        )  # noqa: E501
-
-        for pars in (parsers_list, parsers_remove):
+        for parser in [parser_ls, parser_rm]:
             src = pars.add_argument(
                 "src",
                 help=f"path to directory with results files. defaults to {results_dir}",
