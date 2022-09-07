@@ -24,7 +24,7 @@ spec:
         - name: MINIO_PASS
           value: toucapass
         - name: API_URL
-          value: "http://{{ .Release.Name }}-touca-api:8081"
+          value: "http://{{ .Release.Name }}-touca-api:8080"
         - name: MINIO_HOST
           value: "http://{{ .Release.Name }}-touca-minio:9000"
         - name: MINIO_PROXY_HOST

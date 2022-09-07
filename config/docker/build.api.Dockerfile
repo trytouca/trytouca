@@ -30,6 +30,6 @@ COPY --from=builder /opt/touca/api/node_modules  /opt/touca/api/node_modules
 COPY --from=builder /opt/touca/node_modules      /opt/touca/node_modules
 COPY --from=builder /opt/touca/packages          /opt/touca/packages
 
-EXPOSE 8081
+EXPOSE 8080
 
 CMD ["node", "/opt/touca/api/dist/server.js"]

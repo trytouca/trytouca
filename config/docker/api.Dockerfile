@@ -16,6 +16,6 @@ COPY api/node_modules               /opt/touca/api/node_modules
 COPY node_modules                   /opt/touca/node_modules
 COPY packages                       /opt/touca/packages
 
-EXPOSE 8081
+EXPOSE 8080
 
 CMD ["node", "/opt/touca/api/dist/server.js"]

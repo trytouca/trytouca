@@ -1,6 +1,6 @@
 version: "3"
 services:
-  touca_api:
+  touca_touca:
     image: touca/touca:1.6.0
     environment:
       ENV_FILE: prod
@@ -18,7 +18,7 @@ services:
       - touca_mongo
       - touca_redis
     ports:
-      - 80:80
+      - 8080:8080
     restart: always
 
   touca_redis:

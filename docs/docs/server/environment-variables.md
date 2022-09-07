@@ -73,7 +73,7 @@ that you'd need to set them to a value different than their default value.
 
 | Variable                                    | Default                       |                                                                                                            |
 | ------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `EXPRESS_PORT`                              | 8081                          | Port that Touca server should be running on                                                                |
+| `EXPRESS_PORT`                              | 8080                          | Port that Touca server should be running on                                                                |
 | `EXPRESS_ROOT`                              | /api                          | URL prefix of Touca server API                                                                             |
 | `SAMPLES_DIR`                               | samples                       | Directory where sample test results are stored                                                             |
 | `SAMPLES_ENABLED`                           | "true"                        | Whether to create a sample Tutorial team for each user account                                             |

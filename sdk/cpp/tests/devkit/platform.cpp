@@ -49,27 +49,27 @@ TEST_CASE("api-url") {
   }
 
   SECTION("scheme-host-port-with-prefix-1") {
-    touca::ApiUrl api("http://api.example.com:8081/api");
-    check_api(api, {"http://api.example.com:8081", "api"});
+    touca::ApiUrl api("http://api.example.com:8080/api");
+    check_api(api, {"http://api.example.com:8080", "api"});
     CHECK(api.route("/one") == "/api/one");
     CHECK(api.route("/two/three") == "/api/two/three");
   }
 
   SECTION("scheme-host-port-with-prefix-2") {
-    touca::ApiUrl api("http://api.example.com:8081/api/v1");
-    check_api(api, {"http://api.example.com:8081", "api/v1"});
+    touca::ApiUrl api("http://api.example.com:8080/api/v1");
+    check_api(api, {"http://api.example.com:8080", "api/v1"});
     CHECK(api.route("/one") == "/api/v1/one");
     CHECK(api.route("/two/three") == "/api/v1/two/three");
   }
 
   SECTION("scheme-host-port-with-prefix-and-team") {
-    check_api("https://api.example.com:8081/api/@/team",
-              {"https://api.example.com:8081", "api", "team"});
+    check_api("https://api.example.com:8080/api/@/team",
+              {"https://api.example.com:8080", "api", "team"});
   }
 
   SECTION("scheme-host-port-with-prefix-and-suite") {
-    check_api("https://api.example.com:8081/api/@/team/suite",
-              {"https://api.example.com:8081", "api", "team", "suite"});
+    check_api("https://api.example.com:8080/api/@/team/suite",
+              {"https://api.example.com:8080", "api", "team", "suite"});
   }
 
   SECTION("scheme-host-port-with-prefix-and-revision") {

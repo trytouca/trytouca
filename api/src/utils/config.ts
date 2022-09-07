@@ -130,7 +130,7 @@ export const config: IConfig = {
   isCloudHosted: env.DEPLOY_MODE === 'cloud_hosted',
   env: env.NODE_ENV,
   express: {
-    port: Number(env.EXPRESS_PORT) || 8081,
+    port: Number(env.EXPRESS_PORT) || 8080,
     root: env.EXPRESS_ROOT
   },
   logging: {

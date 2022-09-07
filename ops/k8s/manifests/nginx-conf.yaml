@@ -14,7 +14,7 @@ data:
       location /api {
         client_max_body_size 50M;
         rewrite ^/api/(.*) /$1 break;
-        proxy_pass http://touca-api:8081;
+        proxy_pass http://touca-api:8080;
       }
 
       location / {

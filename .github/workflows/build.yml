@@ -920,7 +920,7 @@ jobs:
         id: params
         run: |
           echo "::set-output name=version::$(npm --prefix=api pkg get version | sed 's/"//g')"
-          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && steps.changes.outputs.api == 'true' }}"
+          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true') }}"
           echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
       - uses: actions/download-artifact@v2
         if: steps.changes.outputs.api == 'true'
