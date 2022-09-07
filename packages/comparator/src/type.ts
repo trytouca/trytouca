@@ -154,11 +154,13 @@ function compare(src: Type, dst: Type): TypeComparison {
         total += 1
       }
     }
-    const match = common === total
-    const score = total !== 0 ? common / total : 0
-    return match
-      ? { ...cmp, score }
-      : { ...cmp, score, dstValue: stringify(dst) }
+    return common === total
+      ? { ...cmp, score: 1 }
+      : {
+          ...cmp,
+          score: total !== 0 ? common / total : 0,
+          dstValue: stringify(dst)
+        }
   }
 
   if (isArray(src) && isArray(dst)) {
