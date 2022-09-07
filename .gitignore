@@ -5,7 +5,6 @@ api/local/tests/
 api/node_modules/
 app/.angular/
 app/dist/
-cmp/local/
 data/minio/
 data/mongo/
 data/redis/

@@ -60,9 +60,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
     }
 
     // remove message processing jobs from the queue
-    if (config.services.comparison.enabled) {
-      await Queues.message.queue.remove(msgInfo.messageId.toHexString())
-    }
+    await Queues.message.queue.remove(msgInfo.messageId.toHexString())
     // remove JSON representation of message from object storage
     await objectStore.removeResult(msgInfo.messageId.toHexString())
     // remove message from database
@@ -129,8 +127,7 @@ export async function messageProcess(
       processedAt: new Date(),
       contentId: message._id,
       meta: input.overview
-    },
-    $unset: { reservedAt: true }
+    }
   })
   return { status: 204 }
 }

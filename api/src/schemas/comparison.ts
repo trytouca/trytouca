@@ -64,10 +64,6 @@ const comparisonSchema = new mongoose.Schema(
       required: false,
       type: Date
     },
-    reservedAt: {
-      required: false,
-      type: Date
-    },
     srcBatchId: {
       ref: 'Batch',
       required: true,
@@ -110,7 +106,6 @@ export interface IComparisonDocument extends mongoose.Document {
     metricsDurationCommonSrc: number
   }
   processedAt: Date
-  reservedAt: Date
   score: number
   srcBatchId: mongoose.Types.ObjectId
   srcMessageId: mongoose.Types.ObjectId

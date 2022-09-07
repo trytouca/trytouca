@@ -95,7 +95,6 @@ that you'd need to set them to a value different than their default value.
 | `SERVICE_RETENTION_DEFAULT_RESULT_LIFETIME` | 30 days                       | Duration in seconds to wait before removing a given comparison results                                     |
 | `SERVICE_TELEMETRY_CHECK_INTERVAL`          | 30 minutes                    | Duration in seconds after which the telemetry service should re-run                                        |
 | `SERVICE_TELEMETRY_DEFAULT_DURATION`        | 1 day                         | Duration in seconds to wait after a submitted telemetry report until another report is submitted           |
-| `SERVICE_COMPARISON_ENABLED`                | false                         | Use built-in comparison service instead of Touca Comparator                                                |
 
 ## Deprecated variables
 
@@ -110,18 +109,3 @@ server.
 | `MAIL_TRANSPORT_PORT` | Port that SMTP/POP3 server is running on | 587     |
 | `MAIL_TRANSPORT_USER` | Username to SMTP/POP3 instance           |         |
 | `MAIL_TRANSPORT_PASS` | Password to SMTP/POP3 instance           |         |
-
-## Touca Comparator variables
-
-The above environment variables are for configuring the Touca Server API
-(`touca-api`). We also have a separate Touca Comparator (`touca-cmp`) service
-that supports the following environment variables.
-
-| Variable           | Purpose                                            | Default               |
-| ------------------ | -------------------------------------------------- | --------------------- |
-| `API_URL`          | Address to Touca Server API (`touca_api`) instance | http://touca_api:8081 |
-| `MINIO_PROXY_HOST` | Address to MinIO instance                          | touca_minio           |
-| `MINIO_PROXY_PORT` | Port that MinIO instance is running on             | 9000                  |
-| `MINIO_HOST`       | URL to the web interface of the MinIO instance     | http://127.0.0.1:9000 |
-| `MINIO_PASS`       | MinIO Password or AWS Secret Key if using S3       | toucapass             |
-| `MINIO_USER`       | MinIO Username or AWS Access Key ID if using S3    | toucauser             |

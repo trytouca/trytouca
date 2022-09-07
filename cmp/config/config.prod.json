@@ -1,8 +1,0 @@
-{
-  "api-url": "http://touca_api:8081",
-  "log-dir": "/var/log/cmp",
-  "minio-url": "http://127.0.0.1:9000",
-  "minio-proxy-host": "touca_minio",
-  "minio-pass": "toucapass",
-  "minio-user": "toucauser"
-}
