@@ -112,12 +112,10 @@ async function launch(application) {
   // setup service to collect privacy-friendly aggregate usage data
   setInterval(telemetryService, config.services.telemetry.checkInterval * 1000)
 
-  if (config.services.comparison.enabled) {
-    await Queues.message.start()
-    await Queues.comparison.start()
-    Queues.message.worker.run()
-    Queues.comparison.worker.run()
-  }
+  await Queues.message.start()
+  await Queues.comparison.start()
+  Queues.message.worker.run()
+  Queues.comparison.worker.run()
 
   await setupSuperuser()
 
@@ -129,12 +127,10 @@ async function launch(application) {
 async function shutdown(): Promise<void> {
   await shutdownMongo()
   await shutdownRedis()
-  if (config.services.comparison.enabled) {
-    await Queues.comparison.queue.close()
-    await Queues.comparison.scheduler.close()
-    await Queues.message.queue.close()
-    await Queues.message.scheduler.close()
-  }
+  await Queues.comparison.queue.close()
+  await Queues.comparison.scheduler.close()
+  await Queues.message.queue.close()
+  await Queues.message.scheduler.close()
 }
 
 process.once('SIGUSR2', () => {

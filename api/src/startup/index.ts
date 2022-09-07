@@ -90,9 +90,6 @@ export async function statusReport() {
   if (!config.samples.enabled) {
     logger.warn('sample data submission is disabled')
   }
-  if (!config.services.comparison.enabled) {
-    logger.warn('new comparison service is disabled')
-  }
   if (!configMgr.hasMailTransport()) {
     logger.warn('mail server not configured')
   }

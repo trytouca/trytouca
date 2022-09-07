@@ -95,7 +95,6 @@ that you'd need to set them to a value different than their default value.
 | `SERVICE_RETENTION_DEFAULT_RESULT_LIFETIME` | 30 days                       | Duration in seconds to wait before removing a given comparison results                                     |
 | `SERVICE_TELEMETRY_CHECK_INTERVAL`          | 30 minutes                    | Duration in seconds after which the telemetry service should re-run                                        |
 | `SERVICE_TELEMETRY_DEFAULT_DURATION`        | 1 day                         | Duration in seconds to wait after a submitted telemetry report until another report is submitted           |
-| `SERVICE_COMPARISON_ENABLED`                | false                         | Use built-in comparison service instead of Touca Comparator                                                |
 
 ## Deprecated variables
 
