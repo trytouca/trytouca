@@ -2,7 +2,7 @@
 
 cmake_minimum_required(VERSION 3.5.1 FATAL_ERROR)
 
-project(touca_cmp VERSION 1.6.0 LANGUAGES CXX)
+project(touca_cmp VERSION 1.7.0 LANGUAGES CXX)
 
 set(TOUCA_COMPARATOR_ROOT_DIR ${CMAKE_CURRENT_LIST_DIR})
 
