@@ -76,7 +76,7 @@ async function applyMailTransportEnvironmentVariables() {
   logger.info('updated mail server based on environment variables')
 }
 
-// TODO: in v1.8.0, we should remove reservedAt from collections
+// TODO: in v1.8.0, we should remove "reservedAt" from collections
 // "messages" and "comparisons"
 export async function upgradeDatabase() {
   logger.info('database migration: performing checks')
