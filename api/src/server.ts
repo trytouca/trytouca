@@ -6,7 +6,6 @@ import cors from 'cors'
 import express from 'express'
 import hidePoweredBy from 'hide-powered-by'
 import moduleAlias from 'module-alias'
-import nocache from 'nocache'
 
 moduleAlias.addAliases({
   '@/controllers': `${__dirname}/controllers`,
@@ -42,7 +41,6 @@ const app = express()
 
 app.use(cors({ origin: true, credentials: true }))
 app.use(cookieParser(config.auth.cookieSecret))
-app.use(nocache())
 app.use(hidePoweredBy())
 app.use(compression())
 
@@ -54,20 +52,19 @@ if (config.isCloudHosted) {
 
 app.use('/api', router)
 
-app.use((req, res, next) => {
-  if (req.url.startsWith('/api')) {
-    logger.warn('invalid route %s', req.originalUrl)
-    return res.status(404).json({ errors: ['invalid route'] })
-  }
-  const pattern = new RegExp(
-    '(.css|.js|.json|.ico|.jpg|.jpeg|.png|.svg|.txt|.webmanifest|.xml)+$',
-    'gi'
-  )
-  return pattern.test(req.url)
-    ? res
-        .setHeader('Cache-Control', 'public, max-age=31536000, immutable')
-        .sendFile(`${config.webapp.distDirectory}${req.url}`)
-    : res.sendFile(`${config.webapp.distDirectory}/index.html`)
+app.use(
+  express.static(config.webapp.distDirectory, {
+    maxAge: '1d',
+    setHeaders: (res, path) => {
+      if (express.static.mime.lookup(path) === 'text/html') {
+        res.setHeader('Cache-Control', 'public, max-age=0')
+      }
+    }
+  })
+)
+
+app.get('*', (_req, res) => {
+  res.sendFile(`${config.webapp.distDirectory}/index.html`)
 })
 
 app.use((err, req, res, next) => {
