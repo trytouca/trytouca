@@ -28,7 +28,6 @@ jobs:
         if: steps.changes.outputs.docs == 'true'
         id: params
         run: |
-          git fetch --prune --unshallow --tags
           echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
       - name: authenticate to aws
         if: |
@@ -975,7 +974,6 @@ jobs:
       - name: get version number
         id: params
         run: |
-          git fetch --prune --unshallow --tags
           echo "::set-output name=version::$(npm --prefix=api pkg get version | sed 's/"//g')"
           echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' || steps.changes.outputs.cmp == 'true') }}"
           echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
