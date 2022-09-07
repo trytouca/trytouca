@@ -944,7 +944,7 @@ jobs:
       - name: install api dependencies
         if: steps.changes.outputs.api == 'true'
         run: |
-          pnpm --dir=api --filter=@touca/api  --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers --frozen-lockfile install
+          pnpm --dir=api --filter=@touca/api --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers --frozen-lockfile install
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         if: steps.params.outputs.release == 'true'
@@ -962,12 +962,12 @@ jobs:
         if: steps.params.outputs.release == 'true'
         with:
           registry: ${{ secrets.AWS_ECR }}
-
       - name: prepare resources for building api docker image
         if: steps.changes.outputs.api == 'true'
         run: |
           mkdir -p ./stage/api/certs
           tar -xf api.tar.gz -C ./stage
+          tar -xf app.tar.gz -C ./stage
           cp -r ./api/env ./stage/api/env
           cp -r ./api/samples ./stage/api/samples
           cp -r ./api/node_modules ./stage/api/node_modules
@@ -980,8 +980,8 @@ jobs:
         id: meta-api
         with:
           images: |
-            touca/touca-api
-            ${{ secrets.AWS_ECR }}/touca-api
+            touca/touca
+            ${{ secrets.AWS_ECR }}/touca
           tags: |
             type=semver,pattern={{version}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
@@ -991,7 +991,7 @@ jobs:
         if: steps.changes.outputs.api == 'true'
         with:
           context: stage
-          file: ./config/docker/api.Dockerfile
+          file: ./config/docker/ci.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ steps.params.outputs.release == 'true' }}
           tags: ${{ steps.meta-api.outputs.tags }}
@@ -1004,44 +1004,5 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: touca/touca-api
-          readme-filepath: ./README.md
-
-      - name: prepare resources for building app docker image
-        if: steps.changes.outputs.app == 'true'
-        run: |
-          mkdir -p ./stage
-          tar -xf app.tar.gz -C ./stage
-          mkdir -p ./stage/app && cp ./app/nginx.conf ./stage/app/
-      - name: extract metadata for app docker image
-        uses: docker/metadata-action@v4
-        if: steps.changes.outputs.app == 'true'
-        id: meta-app
-        with:
-          images: |
-            touca/touca-app
-            ${{ secrets.AWS_ECR }}/touca-app
-          tags: |
-            type=semver,pattern={{version}},value=${{ steps.params.outputs.version }}
-            type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
-            type=semver,pattern={{major}},value=${{ steps.params.outputs.version }}
-      - name: build app docker image
-        uses: docker/build-push-action@v3
-        if: steps.changes.outputs.app == 'true'
-        with:
-          context: stage
-          file: ./config/docker/app.Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: ${{ steps.params.outputs.release == 'true' }}
-          tags: ${{ steps.meta-app.outputs.tags }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-      - name: update docker hub description
-        uses: peter-evans/dockerhub-description@v3
-        if: |
-          steps.changes.outputs.app == 'true' && steps.params.outputs.release == 'true'
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: touca/touca-app
+          repository: touca/touca
           readme-filepath: ./README.md

@@ -2,6 +2,7 @@
 
 import express from 'express'
 import * as ev from 'express-validator'
+import nocache from 'nocache'
 
 import { feedback } from '@/controllers/misc/feedback'
 import * as middleware from '@/middlewares'
@@ -19,11 +20,13 @@ import { promisable } from '@/utils/routing'
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-  res.redirect(302, '/platform')
+router.use(nocache())
+
+router.get('/', (_req, res) => {
+  res.redirect(302, '/api/platform')
 })
 
-router.get('/@/:team/:suite', (req, res) => {
+router.get('/@/:team/:suite', (_req, res) => {
   res.redirect(308, 'https://touca.io/docs')
 })
 
@@ -88,5 +91,9 @@ router.post(
   ]),
   promisable(feedback, 'handle user feedback')
 )
+
+router.use((_req, _res, next) => {
+  return next({ status: 404, errors: ['invalid route'] })
+})
 
 export { router as default }

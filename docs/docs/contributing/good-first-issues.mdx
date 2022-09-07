@@ -78,23 +78,7 @@ node examples/01_node_minimal/dist/is_prime_test.js
 
 ## DevOps
 
-### 5. Create a Unified Docker image for Touca Server
-
-Touca server is currently split into two containers:
-
-- [touca-api](https://hub.docker.com/r/touca/touca-api): A Node-based conatiner
-  that runs Touca Backend ExpressJS service.
-- [touca-app](https://hub.docker.com/r/touca/touca-app): An Nginx-based
-  conatiner that serves Touca Frontend static files and reverse proxies requests
-  to `/api` to the Backend service.
-
-We like to combine these services and create a single Alpine-based `touca`
-docker image that runs both `nginx` and `node` processes.
-
-- [GitHub Issue](https://github.com/trytouca/trytouca/issues/191)
-- [Feature Branch](https://github.com/trytouca/trytouca/tree/feature/arm)
-
-### 6. Add Terraform configuration for AWS
+### 5. Add Terraform configuration for AWS
 
 Generally, we'd like to make it easier for people to self-host Touca wherever
 they like. Instead of giving free OSS users a half-broken experience and forcing
@@ -113,7 +97,7 @@ backend services.
 
 ## Python CLI
 
-### 7. Add new subcommand `result`
+### 6. Add new subcommand `result`
 
 We'd like to add a `result` subcommand to the Touca Python CLI to make it easier
 for users to manage local and remote test results. Initially, we'd only support
@@ -133,7 +117,7 @@ to other suggestions.
 
 ## C++ SDK
 
-### 8. Create package recipe for ConanCenter
+### 7. Create package recipe for ConanCenter
 
 Most engineering teams using Touca for serious C++ projects simply clone a
 stable version of our C++ SDK and repackage it internally. This is, in part,
@@ -157,7 +141,7 @@ and links to its third-party dependencies.
 - Relevant: [Github Issue](https://github.com/trytouca/trytouca/issues/32) for
   CMake improvements
 
-### 9. Improve CMake logic for packaging
+### 8. Improve CMake logic for packaging
 
 We are not using the standard CMake logic for packaging, exporting, installing,
 and finding the C++ library. This makes it difficult to package the library for
@@ -176,7 +160,7 @@ Relevant Links:
 
 ## Java SDK
 
-### 10. Better way to run example
+### 9. Better way to run example
 
 Our Java Examples in `examples/java` and `sdk/java` directories are defined as
 standalone applications. Unlike JUnit tests that are in often placed in the
@@ -225,4 +209,9 @@ now marked as done thanks to contributions from members of the Touca community.
 - Improve UX in self-hosting install wizard
   ([GitHub Issue](https://github.com/trytouca/trytouca/issues/196))
   ([PR](https://github.com/trytouca/trytouca/pull/283) by
+  [@ghorbanzade](https://github.com/ghorbanzade))
+
+- Create a Unified Docker image for Touca Server
+  ([GitHub Issue](https://github.com/trytouca/trytouca/issues/191))
+  ([PR](https://github.com/trytouca/trytouca/pull/289) by
   [@ghorbanzade](https://github.com/ghorbanzade))

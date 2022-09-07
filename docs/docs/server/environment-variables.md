@@ -33,7 +33,7 @@ to `touca_api`:
 version: "3"
 services:
   touca_api:
-    image: touca/touca-api:1.6.0
+    image: touca/touca:1.7.0
     environment:
       ENV_FILE: prod
       AUTH_JWT_SECRET: <SET YOUR SECRET HERE>
@@ -73,7 +73,7 @@ that you'd need to set them to a value different than their default value.
 
 | Variable                                    | Default                       |                                                                                                            |
 | ------------------------------------------- | ----------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `EXPRESS_PORT`                              | 8081                          | Port that Touca server should be running on                                                                |
+| `EXPRESS_PORT`                              | 8080                          | Port that Touca server should be running on                                                                |
 | `EXPRESS_ROOT`                              | /api                          | URL prefix of Touca server API                                                                             |
 | `SAMPLES_DIR`                               | samples                       | Directory where sample test results are stored                                                             |
 | `SAMPLES_ENABLED`                           | "true"                        | Whether to create a sample Tutorial team for each user account                                             |
@@ -95,6 +95,7 @@ that you'd need to set them to a value different than their default value.
 | `SERVICE_RETENTION_DEFAULT_RESULT_LIFETIME` | 30 days                       | Duration in seconds to wait before removing a given comparison results                                     |
 | `SERVICE_TELEMETRY_CHECK_INTERVAL`          | 30 minutes                    | Duration in seconds after which the telemetry service should re-run                                        |
 | `SERVICE_TELEMETRY_DEFAULT_DURATION`        | 1 day                         | Duration in seconds to wait after a submitted telemetry report until another report is submitted           |
+| `WEBAPP_DIST_DIRECTORY`                     | `/opt/touca/app/dist`         | Path to Touca Web App static files                                                                         |
 
 ## Deprecated variables
 
