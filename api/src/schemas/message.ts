@@ -52,10 +52,6 @@ const messageSchema = new mongoose.Schema(
       required: false,
       type: Date
     },
-    reservedAt: {
-      required: false,
-      type: Date
-    },
     submittedAt: {
       required: true,
       type: Date
@@ -86,7 +82,6 @@ export interface IMessageDocument extends mongoose.Document {
   }
   processedAt: Date
   prunedAt: Date
-  reservedAt: Date
   submittedAt: Date
   submittedBy: mongoose.Types.ObjectId
 }

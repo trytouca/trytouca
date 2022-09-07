@@ -127,8 +127,7 @@ export async function messageProcess(
       processedAt: new Date(),
       contentId: message._id,
       meta: input.overview
-    },
-    $unset: { reservedAt: true }
+    }
   })
   return { status: 204 }
 }

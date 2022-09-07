@@ -76,8 +76,7 @@ export async function comparisonProcess(
       processedAt: new Date(),
       contentId: comparison._id,
       meta: input.overview
-    },
-    $unset: { reservedAt: true }
+    }
   })
   return { status: 204 }
 }
