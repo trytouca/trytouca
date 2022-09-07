@@ -944,7 +944,7 @@ jobs:
       - name: install api dependencies
         if: steps.changes.outputs.api == 'true'
         run: |
-          pnpm --dir=api --filter=@touca/api  --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers --frozen-lockfile install
+          pnpm --dir=api --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers --frozen-lockfile install
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         if: steps.params.outputs.release == 'true'
@@ -980,8 +980,8 @@ jobs:
         id: meta-api
         with:
           images: |
-            touca/touca-api
-            ${{ secrets.AWS_ECR }}/touca-api
+            touca/touca
+            ${{ secrets.AWS_ECR }}/touca
           tags: |
             type=semver,pattern={{version}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
@@ -1004,5 +1004,5 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
-          repository: touca/touca-api
+          repository: touca/touca
           readme-filepath: ./README.md

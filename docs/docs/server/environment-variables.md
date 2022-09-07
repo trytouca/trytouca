@@ -33,7 +33,7 @@ to `touca_api`:
 version: "3"
 services:
   touca_api:
-    image: touca/touca-api:1.6.0
+    image: touca/touca:1.7.0
     environment:
       ENV_FILE: prod
       AUTH_JWT_SECRET: <SET YOUR SECRET HERE>
