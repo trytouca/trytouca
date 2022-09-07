@@ -1,6 +1,9 @@
 api:
   - ".github/workflows/build.yml"
   - "config/docker/api.Dockerfile"
+  - "packages/api-schema/**"
+  - "packages/comparator/**"
+  - "packages/flatbuffers/**"
   - "config/flatbuffers/**"
   - "api/**"
 
