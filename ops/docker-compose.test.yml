@@ -14,8 +14,6 @@ services:
       EXPRESS_ROOT: ""
       SAMPLES_ENABLED: "false"
       WEBAPP_ROOT: http://localhost
-    volumes:
-      - ./logs/api:/opt/local/logs/api
     depends_on:
       - touca_minio
       - touca_mongo

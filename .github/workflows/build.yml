@@ -850,7 +850,6 @@ jobs:
       - name: pull app from aws
         if: steps.changes.outputs.app == 'false'
         run: aws s3 cp ${{ steps.params.outputs.buckets }}/app.tar.gz .
-
       - uses: actions/upload-artifact@v2
         with:
           name: app-bundle
@@ -920,15 +919,16 @@ jobs:
         id: params
         run: |
           echo "::set-output name=version::$(npm --prefix=api pkg get version | sed 's/"//g')"
+          echo "::set-output name=changed::${{ steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' }}"
           echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true') }}"
           echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
       - uses: actions/download-artifact@v2
-        if: steps.changes.outputs.api == 'true'
+        if: steps.params.outputs.changed == 'true'
         with:
           name: api-bundle
           path: ${{ github.workspace }}
       - uses: actions/download-artifact@v2
-        if: steps.changes.outputs.app == 'true'
+        if: steps.params.outputs.changed == 'true'
         with:
           name: app-bundle
           path: ${{ github.workspace }}
@@ -936,13 +936,13 @@ jobs:
         with:
           version: 7
       - uses: actions/setup-node@v3
-        if: steps.changes.outputs.api == 'true'
+        if: steps.params.outputs.changed == 'true'
         with:
           node-version: 16
           cache: "pnpm"
           cache-dependency-path: ${{ github.workspace }}/pnpm-lock.yaml
       - name: install api dependencies
-        if: steps.changes.outputs.api == 'true'
+        if: steps.params.outputs.changed == 'true'
         run: |
           pnpm --dir=api --filter=@touca/api --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers --frozen-lockfile install
       - name: authenticate to aws
@@ -963,7 +963,7 @@ jobs:
         with:
           registry: ${{ secrets.AWS_ECR }}
       - name: prepare resources for building api docker image
-        if: steps.changes.outputs.api == 'true'
+        if: steps.params.outputs.changed == 'true'
         run: |
           mkdir -p ./stage/api/certs
           tar -xf api.tar.gz -C ./stage
@@ -976,7 +976,7 @@ jobs:
           curl -o ./stage/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
       - name: extract metadata for api docker image
         uses: docker/metadata-action@v4
-        if: steps.changes.outputs.api == 'true'
+        if: steps.params.outputs.changed == 'true'
         id: meta-api
         with:
           images: |
@@ -988,7 +988,7 @@ jobs:
             type=semver,pattern={{major}},value=${{ steps.params.outputs.version }}
       - name: build api docker image
         uses: docker/build-push-action@v3
-        if: steps.changes.outputs.api == 'true'
+        if: steps.params.outputs.changed == 'true'
         with:
           context: stage
           file: ./config/docker/ci.Dockerfile
@@ -999,8 +999,7 @@ jobs:
           cache-to: type=gha,mode=max
       - name: update docker hub description
         uses: peter-evans/dockerhub-description@v3
-        if: |
-          steps.changes.outputs.api == 'true' && steps.params.outputs.release == 'true'
+        if: steps.params.outputs.release == 'true'
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}

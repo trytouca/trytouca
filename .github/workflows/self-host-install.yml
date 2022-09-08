@@ -25,7 +25,7 @@ jobs:
           cache: "pip"
       - name: setup containers
         run: |
-          mkdir -p logs/api data/{minio,mongo,redis}
+          mkdir -p data/{minio,mongo,redis}
           docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca up -d
       - name: run integration tests
         run: |

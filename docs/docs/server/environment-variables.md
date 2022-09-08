@@ -37,8 +37,6 @@ services:
     environment:
       ENV_FILE: prod
       AUTH_JWT_SECRET: <SET YOUR SECRET HERE>
-    volumes:
-      - ./logs/api:/opt/local/logs/api
     depends_on:
       - touca_minio
       - touca_mongo
@@ -82,8 +80,7 @@ that you'd need to set them to a value different than their default value.
 | `REDIS_TLS_CERT_FILE`                       |                               | Path to TLS Certificate file to use when connecting to the Redis instance                                  |
 | `MONGO_TLS_CERT_FILE`                       |                               | Path to TLS Certificate file to use when connecting to the Mongo instance                                  |
 | `MAIL_TEMPLATE_DIR`                         | /opt/touca/api/dist/templates | Directory where email template files are stored                                                            |
-| `LOG_DIR`                                   | ./local/logs/api              | Directory where log files should be stored                                                                 |
-| `LOG_FILENAME`                              | touca.log                     | Basename of the rotated log files that the server generates                                                |
+| `LOG_DIR`                                   |                               | Directory where log files should be stored                                                                 |
 | `NODE_ENV`                                  | production                    | Node runtime mode                                                                                          |
 | `LOG_LEVEL`                                 | info                          | Level of detail to use when logging server events                                                          |
 | `SERVICE_ANALYTICS_CHECK_INTERVAL`          | 30 seconds                    | Duration in seconds after which the analytics service should re-run                                        |
