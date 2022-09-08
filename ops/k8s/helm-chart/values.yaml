@@ -1,14 +1,7 @@
 toucaApp:
   dockerRepoName: "touca"
-  dockerImageTag: "1.6"
-
-toucaApi:
-  dockerRepoName: "touca"
-  dockerImageTag: "1.6"
-
-toucaCmp:
-  dockerRepoName: "touca"
-  dockerImageTag: "1.6"
+  dockerImageName: "touca"
+  dockerImageTag: "1.7"
 
 volume:
   scName: "ebs-sc"

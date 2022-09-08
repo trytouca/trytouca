@@ -9,17 +9,17 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-  - hosts:
-    - k8s.trytouca.com
-    secretName: touca-tls-cert
+    - hosts:
+        - k8s.trytouca.com
+      secretName: touca-tls-cert
   rules:
-  - host: "k8s.trytouca.com"
-    http:
-      paths:
-      - pathType: Prefix
-        path: "/"
-        backend:
-          service:
-            name: touca-app
-            port:
-              number: 80
+    - host: "k8s.trytouca.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: touca-app
+                port:
+                  number: 8080
