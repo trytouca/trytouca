@@ -11,8 +11,6 @@ services:
       MONGO_USER: toucauser
       MONGO_PASS: toucapass
       WEBAPP_ROOT: http://localhost
-    volumes:
-      - ./logs/api:/opt/local/logs/api
     depends_on:
       - touca_minio
       - touca_mongo

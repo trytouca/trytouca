@@ -32,7 +32,6 @@ interface IConfig {
   }
   logging: {
     directory: string
-    filename: string
     level: string
   }
   mail: {
@@ -134,8 +133,7 @@ export const config: IConfig = {
     root: env.EXPRESS_ROOT
   },
   logging: {
-    directory: path.normalize(`${__dirname}/../../` + env.LOG_DIR),
-    filename: env.LOG_FILENAME,
+    directory: env.LOG_DIR,
     level: env.LOG_LEVEL || 'info'
   },
   mail: {

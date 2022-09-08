@@ -14,8 +14,7 @@ examples/cpp/local/
 examples/java/.gradle/
 examples/python/.env/
 examples/python/.python-version
-local/logs/api/
-local/logs/cmp/
+local/logs/
 node_modules/
 packages/**/coverage/
 packages/**/dist
