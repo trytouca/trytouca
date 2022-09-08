@@ -974,19 +974,19 @@ jobs:
           cp -r ./node_modules ./stage/node_modules
           cp -r ./packages ./stage/packages
           curl -o ./stage/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
-      - name: extract metadata for api docker image
+      - name: extract metadata for docker image
         uses: docker/metadata-action@v4
         if: steps.params.outputs.changed == 'true'
-        id: meta-api
+        id: meta-app
         with:
           images: |
             touca/touca
-            ${{ secrets.AWS_ECR }}/touca
+            ${{ secrets.AWS_ECR }}/touca/touca
           tags: |
             type=semver,pattern={{version}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}},value=${{ steps.params.outputs.version }}
-      - name: build api docker image
+      - name: build docker image
         uses: docker/build-push-action@v3
         if: steps.params.outputs.changed == 'true'
         with:
@@ -994,7 +994,7 @@ jobs:
           file: ./config/docker/ci.Dockerfile
           platforms: linux/amd64,linux/arm64
           push: ${{ steps.params.outputs.release == 'true' }}
-          tags: ${{ steps.meta-api.outputs.tags }}
+          tags: ${{ steps.meta-app.outputs.tags }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
       - name: update docker hub description
