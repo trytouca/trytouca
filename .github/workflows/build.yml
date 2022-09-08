@@ -957,11 +957,6 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-      - name: login to aws container registry
-        uses: docker/login-action@v2
-        if: steps.params.outputs.release == 'true'
-        with:
-          registry: ${{ secrets.AWS_ECR }}
       - name: prepare resources for building api docker image
         if: steps.params.outputs.changed == 'true'
         run: |
@@ -981,7 +976,6 @@ jobs:
         with:
           images: |
             touca/touca
-            ${{ secrets.AWS_ECR }}/touca
           tags: |
             type=semver,pattern={{version}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
