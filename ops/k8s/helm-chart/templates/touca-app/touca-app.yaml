@@ -16,16 +16,35 @@ spec:
         app: {{ .Release.Name }}-touca-app
     spec:
       containers:
-      - image: {{ .Values.toucaApp.dockerRepoName | default "touca" | lower }}/touca-app:{{ .Values.toucaApp.dockerImageTag }}
+      - image: {{ .Values.toucaApp.dockerRepoName | default "touca" | lower }}/{{ .Values.toucaApp.dockerImageName }}:{{ .Values.toucaApp.dockerImageTag }}
         name: {{ .Release.Name }}-touca-app
-        volumeMounts:
-        - mountPath: /etc/nginx/conf.d/default.conf
-          subPath: default.conf
-          name: default-conf
-          readOnly: true
         ports:
-        - containerPort: 80
+        - containerPort: 8080
+        env:
+        - name: ENV_FILE
+          value: prod
+        - name: WEBAPP_ROOT
+          value: "http://{{ .Release.Name }}-touca-app"
+        - name: MINIO_HOST
+          value: {{ .Release.Name }}-touca-minio
+        - name: MONGO_HOST
+          value: {{ .Release.Name }}-touca-mongo
+        - name: REDIS_HOST
+          value: {{ .Release.Name }}-touca-redis
+        - name: MINIO_USER
+          value: toucauser
+        - name: MINIO_PASS
+          value: toucapass
+        - name: MONGO_USER
+          value: toucauser
+        - name: MONGO_PASS
+          value: toucapass
+        - name: LOG_LEVEL
+          value: silly
+        volumeMounts:
+        - mountPath: /opt/local/logs/api
+          name: api-volume
       volumes:
-      - name: default-conf
-        configMap:
-          name: nginx-conf
+      - name: api-volume
+        persistentVolumeClaim:
+          claimName: touca-ebs
