@@ -79,7 +79,7 @@ export async function start() {
     srcBatchId: v.srcBatchId,
     srcMessageId: v.srcMessageId
   }))
-  logger.info('inserting %d jobs into comparisons queue', jobs.length)
+  logger.debug('inserting %d jobs into comparisons queue', jobs.length)
   await queue.addBulk(
     jobs.map((job) => ({
       name: job.jobId.toHexString(),

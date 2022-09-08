@@ -208,21 +208,21 @@ export class BatchItemElementComponent extends PillContainerComponent {
 
     const score = this._item.asCommon().meta.keysScore;
 
-    // if test case has no missing keys and has perfect match score.
-    if (1 === score && 0 === this._meta.keysCountMissing) {
-      return {
-        color: IconColor.Green,
-        type: IconType.CheckCircle,
-        tooltip: 'No Difference'
-      };
-    }
-
     // if test case has no keys
     if (0 === this._meta.keysCount + this._meta.keysCountMissing) {
       return {
         color: IconColor.Orange,
         type: IconType.Circle,
         tooltip: 'Empty Testcase'
+      };
+    }
+
+    // if test case has no missing keys and has perfect match score.
+    if (1 === score && 0 === this._meta.keysCountMissing) {
+      return {
+        color: IconColor.Green,
+        type: IconType.CheckCircle,
+        tooltip: 'No Difference'
       };
     }
 

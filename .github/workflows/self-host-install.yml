@@ -34,7 +34,7 @@ jobs:
       - name: show container logs
         if: failure()
         run: |
-          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca logs touca_api
+          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca logs touca_touca
       - name: shutdown containers
         if: always()
         run: |

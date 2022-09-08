@@ -116,6 +116,37 @@ function initMetricsCellar(
   return cellar
 }
 
+function createTestcaseComparisonOverview(
+  assertions: Cellar,
+  results: Cellar,
+  metrics: Cellar
+): TestcaseComparisonOverview {
+  const keysCountCommon =
+    assertions.commonKeys.length + results.commonKeys.length
+  return {
+    keysCountCommon,
+    keysCountFresh: assertions.newKeys.length + results.newKeys.length,
+    keysCountMissing:
+      assertions.missingKeys.length + results.missingKeys.length,
+    keysScore: keysCountCommon
+      ? (assertions.commonKeys.reduce((acc, v) => acc + v.score!, 0) +
+          results.commonKeys.reduce((acc, v) => acc + v.score!, 0)) /
+        keysCountCommon
+      : 1,
+    metricsCountCommon: metrics.commonKeys.length,
+    metricsCountFresh: metrics.newKeys.length,
+    metricsCountMissing: metrics.missingKeys.length,
+    metricsDurationCommonDst: metrics.commonKeys.reduce(
+      (acc, v) => (v.dstValue ? acc + Number(v.dstValue) : acc),
+      0
+    ),
+    metricsDurationCommonSrc: metrics.commonKeys.reduce(
+      (acc, v) => (v.srcValue ? acc + Number(v.srcValue) : acc),
+      0
+    )
+  }
+}
+
 function compare(srcMessage: Message, dstMessage: Message): TestcaseComparison {
   const assertions = initResultsCellar(
     srcMessage.results,
@@ -128,31 +159,8 @@ function compare(srcMessage: Message, dstMessage: Message): TestcaseComparison {
     ResultType.Check
   )
   const metrics = initMetricsCellar(srcMessage.metrics, dstMessage.metrics)
-  const keysCountCommon =
-    assertions.commonKeys.length + results.commonKeys.length
   return {
-    overview: {
-      keysCountCommon,
-      keysCountFresh: assertions.newKeys.length + results.newKeys.length,
-      keysCountMissing:
-        assertions.missingKeys.length + results.missingKeys.length,
-      keysScore: keysCountCommon
-        ? (assertions.commonKeys.reduce((acc, v) => acc + v.score!, 0) +
-            results.commonKeys.reduce((acc, v) => acc + v.score!, 0)) /
-          keysCountCommon
-        : 0,
-      metricsCountCommon: metrics.commonKeys.length,
-      metricsCountFresh: metrics.newKeys.length,
-      metricsCountMissing: metrics.missingKeys.length,
-      metricsDurationCommonDst: metrics.commonKeys.reduce(
-        (acc, v) => (v.dstValue ? acc + Number(v.dstValue) : acc),
-        0
-      ),
-      metricsDurationCommonSrc: metrics.commonKeys.reduce(
-        (acc, v) => (v.srcValue ? acc + Number(v.srcValue) : acc),
-        0
-      )
-    },
+    overview: createTestcaseComparisonOverview(assertions, results, metrics),
     body: {
       src: srcMessage.metadata,
       dst: dstMessage.metadata,
