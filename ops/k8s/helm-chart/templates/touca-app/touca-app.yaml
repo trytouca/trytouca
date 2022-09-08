@@ -43,8 +43,8 @@ spec:
           value: silly
         volumeMounts:
         - mountPath: /opt/local/logs/api
-          name: api-volume
+          name: app-volume
       volumes:
-      - name: api-volume
+      - name: app-volume
         persistentVolumeClaim:
           claimName: touca-ebs

@@ -10,7 +10,7 @@ spec:
   ports:
   - port: 8080
     protocol: TCP
-    targetPort: 80
+    targetPort: 8080
 {{- include "svcIngress" . | indent 4 }}
   selector:
     app: {{ .Release.Name }}-touca-app
