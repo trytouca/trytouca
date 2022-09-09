@@ -44,28 +44,24 @@ app.use(cookieParser(config.auth.cookieSecret))
 app.use(hidePoweredBy())
 app.use(compression())
 
-// in cloud-hosted deployments where backend runs behind a reverse proxy,
-// configure nginx to trust the proxy and infer ip address from upstream.
 if (config.isCloudHosted) {
-  app.set('trust proxy', ['loopback', 'uniquelocal'])
-}
-
-app.use('/api', router)
-
-app.use(
-  express.static(config.webapp.distDirectory, {
-    maxAge: '1d',
-    setHeaders: (res, path) => {
-      if (express.static.mime.lookup(path) === 'text/html') {
-        res.setHeader('Cache-Control', 'public, max-age=0')
+  app.use('/', router)
+} else {
+  app.use('/api', router)
+  app.use(
+    express.static(config.webapp.distDirectory, {
+      maxAge: '1d',
+      setHeaders: (res, path) => {
+        if (express.static.mime.lookup(path) === 'text/html') {
+          res.setHeader('Cache-Control', 'public, max-age=0')
+        }
       }
-    }
+    })
+  )
+  app.get('*', (_req, res) => {
+    res.sendFile(`${config.webapp.distDirectory}/index.html`)
   })
-)
-
-app.get('*', (_req, res) => {
-  res.sendFile(`${config.webapp.distDirectory}/index.html`)
-})
+}
 
 app.use((err, req, res, next) => {
   const level = (err.status || 500) === 500 ? 'error' : 'warn'

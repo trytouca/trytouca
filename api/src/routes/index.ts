@@ -16,6 +16,7 @@ import { platformRouter } from '@/routes/platform'
 import { suiteRouter } from '@/routes/suite'
 import { teamRouter } from '@/routes/team'
 import { userRouter } from '@/routes/user'
+import { config } from '@/utils/config'
 import { promisable } from '@/utils/routing'
 
 const router = express.Router()
@@ -23,7 +24,7 @@ const router = express.Router()
 router.use(nocache())
 
 router.get('/', (_req, res) => {
-  res.redirect(302, '/api/platform')
+  res.redirect(302, config.isCloudHosted ? '/platform' : '/api/platform')
 })
 
 router.get('/@/:team/:suite', (_req, res) => {
