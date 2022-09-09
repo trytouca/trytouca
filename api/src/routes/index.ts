@@ -5,6 +5,7 @@ import * as ev from 'express-validator'
 import nocache from 'nocache'
 
 import { feedback } from '@/controllers/misc/feedback'
+import { platformHealth } from '@/controllers/platform'
 import * as middleware from '@/middlewares'
 import { authRouter } from '@/routes/auth'
 import { batchRouter } from '@/routes/batch'
@@ -23,9 +24,12 @@ const router = express.Router()
 
 router.use(nocache())
 
-router.get('/', (_req, res) => {
-  res.redirect(302, config.isCloudHosted ? '/platform' : '/api/platform')
-})
+router.get(
+  '/',
+  config.isCloudHosted
+    ? promisable(platformHealth, 'check platform health')
+    : (_req, res) => res.redirect(302, '/api/platform')
+)
 
 router.get('/@/:team/:suite', (_req, res) => {
   res.redirect(308, 'https://touca.io/docs')
