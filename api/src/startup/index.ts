@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import fs from 'fs'
+import { pick } from 'lodash'
 
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
 import { ComparisonModel } from '@/schemas/comparison'
@@ -64,8 +65,22 @@ export async function setupAnonymousUser() {
   return anonymousUser._id
 }
 
+// In August 2022, we added support for setting up a mail server through the
+// web app. We plan to phase out support for the environment variables. Until
+// then, for an intuitive user experience, we apply the environment variables
+// to the database so that they always take precedence.
+async function applyMailTransportEnvironmentVariables() {
+  if (!configMgr.hasMailTransportEnvironmentVariables()) {
+    return
+  }
+  const mail = pick(config.mail, ['host', 'pass', 'port', 'user'])
+  await MetaModel.findOneAndUpdate({}, { $set: { mail } })
+  logger.info('updated mail server based on environment variables')
+}
+
 export async function upgradeDatabase() {
   logger.info('database migration: performing checks')
+  await applyMailTransportEnvironmentVariables()
   await MetaModel.findOneAndUpdate(
     {},
     {
