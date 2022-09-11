@@ -5,9 +5,10 @@ import { pick } from 'lodash'
 
 import { NodeModel } from '@/schemas/node'
 import { IUser } from '@/schemas/user'
+import logger from '@/utils/logger'
 import { analytics, EActivity } from '@/utils/tracker'
 
-export async function telemetry(
+export async function telemetryHandle(
   req: Request,
   res: Response,
   next: NextFunction
@@ -22,6 +23,7 @@ export async function telemetry(
     'users_active',
     'versions_new'
   ])
+  logger.info('received usage report from %s', data.node_id)
   const node = await NodeModel.findOne({ uuid: data.node_id })
   if (!node) {
     return next({ status: 404, errors: ['usage report has unknown source'] })

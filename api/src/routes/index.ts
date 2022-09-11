@@ -1,12 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import express from 'express'
-import * as ev from 'express-validator'
 import nocache from 'nocache'
 
-import { feedback } from '@/controllers/misc/feedback'
 import { platformHealth } from '@/controllers/platform'
-import * as middleware from '@/middlewares'
+import { feedbackSubmit } from '@/controllers/relay/feedback'
 import { authRouter } from '@/routes/auth'
 import { batchRouter } from '@/routes/batch'
 import { clientRouter } from '@/routes/client'
@@ -51,52 +49,7 @@ router.use('/user', userRouter)
 router.post(
   '/feedback',
   express.json(),
-  middleware.inputs([
-    ev
-      .body('body')
-      .exists()
-      .withMessage('required')
-      .isString()
-      .withMessage('must be a string')
-      .isLength({ max: 1000 })
-      .withMessage('too long')
-      .isLength({ min: 20 })
-      .withMessage('too short'),
-    ev
-      .body('name')
-      .optional()
-      .isString()
-      .withMessage('must be a string')
-      .isLength({ max: 100 })
-      .withMessage('too long'),
-    ev
-      .body('page')
-      .exists()
-      .withMessage('required')
-      .isString()
-      .withMessage('must be a string')
-      .isLength({ max: 16 })
-      .withMessage('too long')
-      .isSlug()
-      .withMessage('invalid'),
-    ev
-      .body('email')
-      .optional()
-      .isString()
-      .withMessage('must be a string')
-      .isEmail()
-      .withMessage('must be an email')
-      .isLength({ max: 100 })
-      .withMessage('too long'),
-    ev
-      .body('cname')
-      .optional()
-      .isString()
-      .withMessage('must be a string')
-      .isLength({ max: 100 })
-      .withMessage('too long')
-  ]),
-  promisable(feedback, 'handle user feedback')
+  promisable(feedbackSubmit, 'handle user feedback')
 )
 
 router.use((_req, _res, next) => {
