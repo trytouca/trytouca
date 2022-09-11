@@ -5,7 +5,7 @@ import * as https from 'https'
 export async function relay(opts: {
   path: string
   host?: string
-  data?: unknown
+  data?: string
   authorization?: string
 }): Promise<{ status: number }> {
   const url = new URL(opts.host ?? 'https://api.touca.io')
