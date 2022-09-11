@@ -4,11 +4,19 @@ import express from 'express'
 import * as ev from 'express-validator'
 
 import { feedbackHandle } from '@/controllers/relay/feedback'
+import { installHandle } from '@/controllers/relay/install'
 import { telemetryHandle } from '@/controllers/relay/telemetry'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
 const router = express.Router()
+
+router.post(
+  '/install',
+  middleware.isCloudInstance,
+  express.json(),
+  promisable(installHandle, 'process submitted self-hosted install form')
+)
 
 router.post(
   '/telemetry',
