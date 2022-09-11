@@ -39,5 +39,6 @@ export async function telemetryHandle(
     company: node.company,
     ...data
   })
+  logger.info('processed usage report from %s', data.node_id)
   return res.status(204).send()
 }
