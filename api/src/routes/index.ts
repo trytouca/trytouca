@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import express from 'express'
 import * as ev from 'express-validator'
@@ -14,6 +14,7 @@ import { commentRouter } from '@/routes/comment'
 import { elementRouter } from '@/routes/element'
 import { inboxRouter } from '@/routes/inbox'
 import { platformRouter } from '@/routes/platform'
+import { relayRouter } from '@/routes/relay'
 import { suiteRouter } from '@/routes/suite'
 import { teamRouter } from '@/routes/team'
 import { userRouter } from '@/routes/user'
@@ -42,6 +43,7 @@ router.use('/comment', commentRouter)
 router.use('/element', elementRouter)
 router.use('/inbox', inboxRouter)
 router.use('/platform', platformRouter)
+router.use('/relay', relayRouter)
 router.use('/suite', suiteRouter)
 router.use('/team', teamRouter)
 router.use('/user', userRouter)

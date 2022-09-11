@@ -31,6 +31,7 @@ export enum EActivity {
   FeatureFlagUpdated = 'feature_flag:updated',
   ProfileUpdated = 'profile:updated',
   SelfHostedInstall = 'self_host:installed',
+  SelfHostedUsage = 'self_host:usage_reported',
   SuiteCreated = 'suite:created',
   SuiteDeleted = 'suite:deleted',
   SuiteSubscribed = 'suite:subscribed',
