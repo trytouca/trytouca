@@ -3,9 +3,11 @@
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash'
 
+import { wslFindByRole } from '@/models/user'
 import { NodeModel } from '@/schemas/node'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
+import { mailUser } from '@/utils/mailer'
 import { analytics, EActivity } from '@/utils/tracker'
 
 export async function telemetryHandle(
@@ -39,6 +41,16 @@ export async function telemetryHandle(
     company: node.company,
     ...data
   })
+
+  const owners = await wslFindByRole('owner')
+  await mailUser(owners[0], 'New Usage Report', 'user-feedback', {
+    body: JSON.stringify(data),
+    cname: node.company || 'N/A',
+    email: node.email || 'noreply@touca.io',
+    name: node.name || 'N/A',
+    page: 'usage-data'
+  })
+
   logger.info('processed usage report from %s', data.node_id)
   return res.status(204).send()
 }

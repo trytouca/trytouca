@@ -34,7 +34,7 @@ export async function installHandle(
     company: contact.company
   })
   const owners = await wslFindByRole('owner')
-  await mailUser(owners[0], 'New Self-Hosted Instance', 'user-install', contact)
+  mailUser(owners[0], 'New Self-Hosted Instance', 'user-install', contact)
   logger.info('processed self-hosted install report')
   return res.status(204).send()
 }
