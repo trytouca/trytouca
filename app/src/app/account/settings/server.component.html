@@ -61,29 +61,11 @@
         size="1.1rem"
         name="feather-cpu"></ng-icon>
       <h4 class="font-medium">Comparator</h4>
-      <div
-        class="text-muted rounded-md bg-purple-100 px-2 py-1 text-xs font-medium text-gray-600 dark:bg-purple-900 dark:text-gray-300">
-        Deprecated
-      </div>
     </div>
     <ul class="py-2 text-sm leading-6">
       <li class="flex justify-between">
         <span>Comparisons:</span>
         <span>{{ stats.countComparisons }}</span>
-      </li>
-      <li class="flex justify-between">
-        <span>Average Process Time:</span>
-        <span>
-          {{ stats.cmpAvgProcessingTime | number: '1.0-0' }}
-          ms/job
-        </span>
-      </li>
-      <li class="flex justify-between">
-        <span>Average Collection Time:</span>
-        <span>
-          {{ stats.cmpAvgCollectionTime | number: '1.0-0' }}
-          ms/job
-        </span>
       </li>
     </ul>
   </div>

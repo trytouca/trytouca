@@ -617,8 +617,6 @@ components:
       additionalProperties: false
       type: object
       required:
-        - cmpAvgCollectionTime
-        - cmpAvgProcessingTime
         - countBatches
         - countComparisons
         - countElements
@@ -628,12 +626,6 @@ components:
         - spaceUsed
         - users
       properties:
-        cmpAvgCollectionTime:
-          type: number
-          format: float
-        cmpAvgProcessingTime:
-          type: number
-          format: float
         countBatches:
           type: number
           format: int32

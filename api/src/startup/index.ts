@@ -1,9 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import fs from 'fs'
-import { pick } from 'lodash'
 
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
+import { ComparisonModel } from '@/schemas/comparison'
+import { MessageModel } from '@/schemas/message'
 import { MetaModel } from '@/schemas/meta'
 import { UserModel } from '@/schemas/user'
 import { config, configMgr } from '@/utils/config'
@@ -63,24 +64,22 @@ export async function setupAnonymousUser() {
   return anonymousUser._id
 }
 
-// In August 2022, we added support for setting up a mail server through the
-// web app. We plan to phase out support for the environment variables. Until
-// then, for an intuitive user experience, we apply the environment variables
-// to the database so that they always take precedence.
-async function applyMailTransportEnvironmentVariables() {
-  if (!configMgr.hasMailTransportEnvironmentVariables()) {
-    return
-  }
-  const mail = pick(config.mail, ['host', 'pass', 'port', 'user'])
-  await MetaModel.findOneAndUpdate({}, { $set: { mail } })
-  logger.info('updated mail server based on environment variables')
-}
-
-// TODO: in v1.8.0, we should remove "reservedAt" from collections
-// "messages" and "comparisons"
 export async function upgradeDatabase() {
   logger.info('database migration: performing checks')
-  await applyMailTransportEnvironmentVariables()
+  await MetaModel.findOneAndUpdate(
+    {},
+    {
+      $unset: {
+        cmpAvgCollectionTime: true,
+        cmpAvgProcessingTime: true,
+        cmpNumCollectionJobs: true,
+        cmpNumProcessingJobs: true
+      }
+    }
+  )
+  const update = { $unset: { reservedAt: true } }
+  await ComparisonModel.findOneAndUpdate({}, update)
+  await MessageModel.findOneAndUpdate({}, update)
   logger.info('database migration: checks completed')
   return true
 }
