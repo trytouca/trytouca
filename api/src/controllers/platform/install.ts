@@ -1,7 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
-import { v4 as uuidv4 } from 'uuid'
 
 import { relay } from '@/models/relay'
 import { MetaModel } from '@/schemas/meta'
@@ -16,8 +15,7 @@ export async function platformInstall(
   const contact = {
     company: req.body.company,
     email: req.body.email,
-    name: req.body.name,
-    uuid: uuidv4()
+    name: req.body.name
   }
   if (['company', 'email', 'name'].every((key) => !(key in contact))) {
     return next({
@@ -26,7 +24,8 @@ export async function platformInstall(
     })
   }
 
-  if (await MetaModel.countDocuments({ contact: { $exists: true } })) {
+  const meta = await MetaModel.findOne()
+  if (meta.contact) {
     return next({
       status: 403,
       errors: ['server is registered']
@@ -39,7 +38,7 @@ export async function platformInstall(
   await MetaModel.updateOne({}, { $set: { contact } }, { upsert: true })
   const response = await relay({
     path: '/relay/install',
-    data: JSON.stringify(contact)
+    data: JSON.stringify({ ...contact, uuid: meta.uuid })
   })
   logger.info('server registered')
   rclient.removeCached('platform-config')

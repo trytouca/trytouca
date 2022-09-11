@@ -59,16 +59,6 @@ async function reportTelemetry(meta: IMetaDocument) {
     users_active: sessionsCount.length,
     versions_new: batchesCount.length
   }
-  await relay({
-    path: '/relay/feedback',
-    data: JSON.stringify({
-      body: JSON.stringify(report),
-      cname: meta.contact.company,
-      email: meta.contact.email,
-      name: meta.contact.name,
-      page: 'usage-data'
-    })
-  })
   await relay({ path: '/relay/telemetry', data: JSON.stringify(report) })
   logger.info('%s: reported aggregate usage data', serviceName)
 }
