@@ -91,8 +91,6 @@ export async function platformStats(
   const meta = await MetaModel.findOne({}, { _id: 0 })
 
   const response: PlatformStatsResponse = {
-    cmpAvgCollectionTime: meta.cmpAvgCollectionTime,
-    cmpAvgProcessingTime: meta.cmpAvgProcessingTime,
     countBatches: await BatchModel.countDocuments(),
     countComparisons: await ComparisonModel.countDocuments(),
     countElements: await ElementModel.countDocuments(),

@@ -5,26 +5,6 @@ import { v4 as uuidv4 } from 'uuid'
 
 const metaSchema = new mongoose.Schema(
   {
-    cmpAvgCollectionTime: {
-      default: 0,
-      required: false,
-      type: Number
-    },
-    cmpAvgProcessingTime: {
-      default: 0,
-      required: false,
-      type: Number
-    },
-    cmpNumCollectionJobs: {
-      default: 0,
-      required: false,
-      type: Number
-    },
-    cmpNumProcessingJobs: {
-      default: 0,
-      required: false,
-      type: Number
-    },
     contact: {
       _id: false,
       required: false,
@@ -86,10 +66,6 @@ const metaSchema = new mongoose.Schema(
 )
 
 export interface IMetaDocument extends mongoose.Document {
-  cmpAvgCollectionTime: number
-  cmpAvgProcessingTime: number
-  cmpNumCollectionJobs: number
-  cmpNumProcessingJobs: number
   contact: {
     company: string
     email: string
