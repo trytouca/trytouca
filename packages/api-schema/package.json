@@ -6,11 +6,17 @@
   "types": "dist/index.ts",
   "scripts": {
     "build": "openapi -i src/schema.yaml -o dist/ --useUnionTypes true --exportCore false --exportServices false",
-    "lint": "prettier --write src/",
+    "format": "prettier --write src/",
     "postinstall": "npm run build && prettier --write dist/ --loglevel silent"
   },
   "devDependencies": {
     "openapi-typescript-codegen": "^0.23.0",
     "prettier": "^2.7.1"
+  },
+  "prettier": {
+    "htmlWhitespaceSensitivity": "ignore",
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none"
   }
 }

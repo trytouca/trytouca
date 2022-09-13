@@ -4,8 +4,10 @@ from time import sleep
 import requests
 import tempfile
 from client_mongo import MongoClient
-from loguru import logger
+import logging
 from utilities import User, config, build_path
+
+logger = logging.getLogger("touca.api.e2e.client_api")
 
 
 class HttpClient:
@@ -93,7 +95,9 @@ class ApiClient:
             if self._is_up_check():
                 return True
             logger.warning(
-                f"failed to perform handshake with server (attempt {attempt}/{max_attempts})"
+                "failed to perform handshake with server (attempt %d of %d)",
+                attempt,
+                max_attempts,
             )
             sleep(1)
         return False
@@ -283,10 +287,10 @@ class ApiClient:
         self.expect_status(response, 200, "get auth token")
         slugs = [team_slug, suite_slug, batch_slug]
         with tempfile.TemporaryDirectory() as tmpdir:
-            logger.debug("created tmp directory: {}", tmpdir)
+            logger.debug("created tmp directory: %s", tmpdir)
         binary = build_path(config.get("TOUCA_RESULTS_ARCHIVE")).joinpath(
             f"{batch_slug}.bin"
         )
         response = self.client.post_binary(binary)
         self.expect_status(response, 204, f"submit {binary}")
-        logger.success("{} submitted {}", self.user, "/".join(slugs[0:3]))
+        logger.info('%s submitted "%s"', self.user, "/".join(slugs[0:3]))

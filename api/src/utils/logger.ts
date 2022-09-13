@@ -6,40 +6,44 @@ import logger from 'winston'
 
 import { config } from '@/utils/config'
 
-// Create the log directory if it does not exist
-const logDir = path.normalize(config.logging.directory)
-const logFile = path.join(logDir, config.logging.filename)
+const transports: logger.transport[] = [
+  new logger.transports.Console({
+    format: logger.format.combine(
+      logger.format.colorize(),
+      logger.format.simple()
+    ),
+    handleExceptions: true,
+    level: config.logging.level
+  })
+]
 
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir, { recursive: true })
+if (config.logging.directory) {
+  const logDir = path.normalize(
+    `${__dirname}/../../../${config.logging.directory}`
+  )
+  if (!fs.existsSync(logDir)) {
+    fs.mkdirSync(logDir, { recursive: true })
+  }
+  const fileTransport = new logger.transports.File({
+    filename: path.join(logDir, 'touca.log'),
+    format: logger.format.combine(
+      logger.format.timestamp({
+        format: 'YYYY-MM-DD HH:mm:ss'
+      }),
+      logger.format.logstash()
+    ),
+    handleExceptions: true,
+    level: config.logging.level,
+    maxFiles: 10,
+    maxsize: 1000000
+  })
+  transports.push(fileTransport)
 }
 
 logger.configure({
   exitOnError: false,
   format: logger.format.splat(),
-  transports: [
-    new logger.transports.File({
-      filename: logFile,
-      format: logger.format.combine(
-        logger.format.timestamp({
-          format: 'YYYY-MM-DD HH:mm:ss'
-        }),
-        logger.format.logstash()
-      ),
-      handleExceptions: true,
-      level: config.logging.level,
-      maxFiles: 10,
-      maxsize: 1000000
-    }),
-    new logger.transports.Console({
-      format: logger.format.combine(
-        logger.format.colorize(),
-        logger.format.simple()
-      ),
-      handleExceptions: true,
-      level: config.logging.level
-    })
-  ]
+  transports
 })
 
-export = logger
+export { logger as default }

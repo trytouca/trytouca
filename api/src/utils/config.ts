@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import dotenv from 'dotenv'
+import { RedisOptions } from 'ioredis'
 import { pick } from 'lodash'
 import mongoose from 'mongoose'
 import path from 'path'
@@ -31,7 +32,6 @@ interface IConfig {
   }
   logging: {
     directory: string
-    filename: string
     level: string
   }
   mail: {
@@ -76,10 +76,6 @@ interface IConfig {
       checkInterval: number
       defaultDuration: number
     }
-    comparison: {
-      checkInterval: number
-      enabled: boolean
-    }
     reporting: {
       checkInterval: number
     }
@@ -100,6 +96,7 @@ interface IConfig {
     segment_key: string
   }
   webapp: {
+    distDirectory: string
     root: string
   }
 }
@@ -132,12 +129,11 @@ export const config: IConfig = {
   isCloudHosted: env.DEPLOY_MODE === 'cloud_hosted',
   env: env.NODE_ENV,
   express: {
-    port: Number(env.EXPRESS_PORT) || 8081,
+    port: Number(env.EXPRESS_PORT) || 8080,
     root: env.EXPRESS_ROOT
   },
   logging: {
-    directory: path.normalize(`${__dirname}/../../` + env.LOG_DIR),
-    filename: env.LOG_FILENAME,
+    directory: env.LOG_DIR,
     level: env.LOG_LEVEL || 'info'
   },
   mail: {
@@ -184,12 +180,6 @@ export const config: IConfig = {
       checkInterval: Number(env.SERVICE_AUTOSEAL_CHECK_INTERVAL) || 60,
       defaultDuration: Number(env.SERVICE_AUTOSEAL_DEFAULT_DURATION) || 10 * 60
     },
-    // comparison service
-    comparison: {
-      checkInterval: Number(env.SERVICE_COMPARISON_CHECK_INTERVAL) || 10,
-      // to be removed as part of "Synchronized Comparison" project
-      enabled: env.SERVICE_COMPARISON_ENABLED === 'true'
-    },
     // reporting service
     reporting: {
       checkInterval: Number(env.SERVICE_REPORTING_CHECK_INTERVAL) || 5 * 60
@@ -215,7 +205,26 @@ export const config: IConfig = {
     segment_key: env.SEGMENT_API_KEY
   },
   webapp: {
+    distDirectory: path.resolve(`${__dirname}/../`, env.WEBAPP_DIST_DIRECTORY),
     root: env.WEBAPP_ROOT
+  }
+}
+
+export function getRedisConnectionOptions(): RedisOptions {
+  const cloudOptions = config.redis.tlsCertificateFile
+    ? {
+        tls: {
+          checkServerIdentity: () => undefined
+        }
+      }
+    : {}
+
+  return {
+    host: config.redis.host,
+    lazyConnect: true,
+    port: config.redis.port,
+    showFriendlyErrorStack: config.env !== 'production',
+    ...cloudOptions
   }
 }
 

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@touca/comparator",
+  "version": "0.0.0",
+  "description": "Touca Comparator",
+  "private": true,
+  "main": "dist/testcase.js",
+  "types": "dist/testcase.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf coverage/ dist/ node_modules/.vitest/",
+    "dev": "vitest watch --reporter verbose",
+    "format": "prettier --write src/",
+    "lint": "tsc --noEmit",
+    "postinstall": "npm run build",
+    "test": "vitest run --coverage --reporter verbose"
+  },
+  "dependencies": {
+    "@touca/flatbuffers": "workspace:*",
+    "decimal.js": "10.4.0",
+    "safe-stable-stringify": "^2.3.1"
+  },
+  "devDependencies": {
+    "@vitest/coverage-istanbul": "0.22.1",
+    "prettier": "2.7.1",
+    "typescript": "4.8.2",
+    "vitest": "0.22.1"
+  },
+  "prettier": {
+    "htmlWhitespaceSensitivity": "ignore",
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none"
+  }
+}

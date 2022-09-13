@@ -1,11 +1,13 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import csv
+import logging
 from dataclasses import dataclass
 from functools import partial
-from loguru import logger
 from client_api import ApiClient
 from utilities import User
+
+logger = logging.getLogger("touca.api.e2e.playbook")
 
 
 @dataclass
@@ -24,7 +26,7 @@ class Playbook:
                 method_name = "_".join(row[1].split("-"))
                 method = getattr(instance, method_name, None)
                 if not method:
-                    logger.warning("action {} has no class", row[1])
+                    logger.warning("action %s has no class", row[1])
                     continue
                 yield partial(method, user, row[2:])
 
@@ -124,14 +126,14 @@ class Playbook:
         batch_path = "/".join(args[0:3])
         with ApiClient(user) as api_client:
             api_client.batch_seal(batch_path)
-        logger.success("{} sealed {}", user, "/".join(args[0:3]))
+        logger.info('%s sealed "%s"', user, "/".join(args[0:3]))
 
     def batch_promote(self, user: User, args):
         batch_path = "/".join(args[0:3])
         promotion_reason = args[3]
         with ApiClient(user) as api_client:
             api_client.batch_promote(batch_path, promotion_reason)
-        logger.success("{} promoted {}", user, "/".join(args[0:3]))
+        logger.info('%s promoted "%s"', user, "/".join(args[0:3]))
 
     def client_submit(self, user: User, args):
         team_slug, suite_slug, batch_slug = args

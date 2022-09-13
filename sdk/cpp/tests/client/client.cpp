@@ -27,7 +27,7 @@ TEST_CASE("empty client") {
   REQUIRE(client.is_configured() == false);
   CHECK(client.configuration_error().empty() == true);
   REQUIRE_NOTHROW(client.configure({{"api-key", "some-secret-key"},
-                                    {"api-url", "http://localhost:8081"},
+                                    {"api-url", "http://localhost:8080"},
                                     {"team", "myteam"},
                                     {"suite", "mysuite"},
                                     {"version", "myversion"},

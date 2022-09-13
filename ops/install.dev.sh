@@ -19,7 +19,7 @@ install_docker
 install_docker_compose
 
 rm -rf "$DIR_INSTALL"/{data,logs,ops}
-mkdir -p "$DIR_INSTALL"/logs/{api,cmp} "$DIR_INSTALL"/data/{minio,mongo,redis} "$DIR_INSTALL"/ops
+mkdir -p "$DIR_INSTALL"/data/{minio,mongo,redis} "$DIR_INSTALL"/ops
 cp -r "$(dirname "${DIR_SCRIPT}")"/ops/mongo "$DIR_INSTALL"/ops
 
 redeploy

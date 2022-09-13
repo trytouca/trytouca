@@ -1,12 +1,12 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Message, Messages } from '@touca/fbs-schema'
+import { parseMessageHeaders } from '@touca/flatbuffers'
 import { NextFunction, Request, Response } from 'express'
-import { ByteBuffer } from 'flatbuffers'
 import { minBy } from 'lodash'
 import mongoose from 'mongoose'
 
 import { suiteCreate } from '@/models/suite'
+import * as Queues from '@/queues'
 import { BatchModel, IBatchDocument } from '@/schemas/batch'
 import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import { ElementModel, IElementDocument } from '@/schemas/element'
@@ -14,6 +14,7 @@ import { MessageModel } from '@/schemas/message'
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
+import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 import { objectStore } from '@/utils/store'
@@ -61,38 +62,6 @@ const extractJobErrors = <T>(jobs: Job<T>[]): JobError[] => {
 
 const makeError = (slug: string, error: string) => {
   return { slug, errors: [error] }
-}
-
-/**
- * Parses binary data in flatbuffers format into a list of submission items.
- * Note that we only parse metadata of each submission.
- *
- * @param content binary data in flatbuffers format
- * @returns list of submission items
- */
-async function parseSubmissionMessages(
-  content: Uint8Array
-): Promise<SubmissionItem[]> {
-  const buf = new ByteBuffer(content)
-  const msgs = Messages.getRootAsMessages(buf)
-  const messages: SubmissionItem[] = []
-  for (let i = 0; i < msgs.messagesLength(); i++) {
-    const msgBuffer = msgs.messages(i)
-    const msgData = msgBuffer.bufArray()
-    const msgByteBuffer = new ByteBuffer(msgData)
-    const msg = Message.getRootAsMessage(msgByteBuffer)
-    const meta = msg.metadata()
-
-    messages.push({
-      builtAt: new Date(meta.builtAt()),
-      teamName: meta.teamslug() || 'vital',
-      suiteName: meta.testsuite(),
-      batchName: meta.version(),
-      elementName: meta.testcase(),
-      raw: Buffer.from(msgByteBuffer.bytes())
-    })
-  }
-  return messages
 }
 
 /**
@@ -386,15 +355,27 @@ async function insertComparisonJob(
       ].join('/')
     }
 
-    // now that we know the parameters, create a comparison job for the
-    // comparator to process.
-
-    await ComparisonModel.create({
+    const cmp = await ComparisonModel.create({
       dstBatchId,
       dstMessageId,
       srcBatchId,
       srcMessageId
     })
+
+    await Queues.comparison.queue.add(
+      cmp.id,
+      {
+        jobId: cmp._id,
+        dstBatchId,
+        dstMessageId,
+        srcBatchId,
+        srcMessageId
+      },
+      {
+        jobId: cmp.id
+      }
+    )
+
     logger.debug('%s: scheduled comparison with %s', srcTuple, dstTuple)
   } catch (err) {
     logger.error('%s: failed to create comparison job: %O', srcTuple, err)
@@ -642,11 +623,21 @@ async function ensureMessage(
     submittedBy: user._id
   }
 
-  // if message is new, insert it into the database
-
   if (!message) {
+    const job = await MessageModel.create(doc)
     logger.debug('%s: registered message', tuple)
-    return await MessageModel.create(doc)
+
+    await Queues.message.queue.add(
+      job.id,
+      {
+        batchId: batch._id,
+        messageId: job._id
+      },
+      {
+        jobId: job.id
+      }
+    )
+    return job
   }
 
   // If message is already known, overwrite it and extend its expiration time.
@@ -716,7 +707,7 @@ export async function processBinaryContent(
 ) {
   // attempt to parse binary content into a list of messages
 
-  const messages = await parseSubmissionMessages(content)
+  const messages = parseMessageHeaders(content)
 
   // in a special case when platform is auto-populating a suite with sample
   // test results, we want to submit the same binary data to different suites.

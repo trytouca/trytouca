@@ -1,7 +1,7 @@
 version: "3"
 services:
-  touca_api:
-    image: touca/touca-api:1.6.0
+  touca_touca:
+    image: touca/touca:1.7.0
     environment:
       ENV_FILE: prod
       AUTH_JWT_SECRET: <SECRET>
@@ -14,26 +14,12 @@ services:
       EXPRESS_ROOT: ""
       SAMPLES_ENABLED: "false"
       WEBAPP_ROOT: http://localhost
-    volumes:
-      - ./logs/api:/opt/local/logs/api
     depends_on:
       - touca_minio
       - touca_mongo
       - touca_redis
     ports:
-      - 8081:8081
-    restart: always
-
-  touca_cmp:
-    image: touca/touca-cmp:1.6.0
-    environment:
-      MINIO_USER: toucauser
-      MINIO_PASS: toucapass
-    volumes:
-      - ./logs/cmp:/var/log/cmp
-    depends_on:
-      - touca_api
-      - touca_minio
+      - 8080:8080
     restart: always
 
   touca_redis:

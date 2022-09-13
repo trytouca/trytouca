@@ -8,9 +8,9 @@ metadata:
 spec:
   type: {{ if not .Values.ingress.enabled }}NodePort{{ end }}
   ports:
-  - port: 80
+  - port: 8080
     protocol: TCP
-    targetPort: 80
+    targetPort: 8080
 {{- include "svcIngress" . | indent 4 }}
   selector:
     app: {{ .Release.Name }}-touca-app

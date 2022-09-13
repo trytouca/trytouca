@@ -1,11 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-export { inputs, validationRules } from './utils'
-export { hasSuite } from './suite'
 export { hasBatch } from './batch'
-export { hasElement } from './element'
 export { hasComment } from './comment'
-
+export { hasElement } from './element'
+export { isCloudInstance } from './relay'
+export { hasSuite } from './suite'
 export {
   hasTeam,
   isTeamInvitee,
@@ -14,7 +13,6 @@ export {
   isTeamOwner,
   hasMember
 } from './team'
-
 export {
   isAuthenticated,
   isClientAuthenticated,
@@ -23,3 +21,4 @@ export {
   hasAccount,
   hasSuspendedAccount
 } from './user'
+export { inputs, validationRules } from './utils'

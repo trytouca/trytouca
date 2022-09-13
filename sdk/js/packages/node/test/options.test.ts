@@ -96,10 +96,10 @@ describe('when api url is given', () => {
     const existing: NodeOptions = {};
     const incoming: NodeOptions = {
       api_key: 'some-key',
-      api_url: 'http://localhost:8081//v2//@/team//suite/version/'
+      api_url: 'http://localhost:8080//v2//@/team//suite/version/'
     };
     expect(() => update_options(existing, incoming)).not.toThrow();
-    expect(existing.api_url).toEqual('http://localhost:8081/v2');
+    expect(existing.api_url).toEqual('http://localhost:8080/v2');
     expect(existing.team).toEqual('team');
     expect(existing.suite).toEqual('suite');
     expect(existing.version).toEqual('version');
@@ -121,13 +121,13 @@ describe('when api url is given', () => {
     const existing: NodeOptions = {};
     const incoming: NodeOptions = {
       api_key: 'some-key',
-      api_url: 'http://localhost:8081/@/team/suite/version',
+      api_url: 'http://localhost:8080/@/team/suite/version',
       suite: 'some-other-version'
     };
     expect(() => update_options(existing, incoming)).toThrowError(
       'option "suite" is in conflict with provided api_url'
     );
-    expect(existing.api_url).toEqual('http://localhost:8081/');
+    expect(existing.api_url).toEqual('http://localhost:8080/');
   });
 });
 

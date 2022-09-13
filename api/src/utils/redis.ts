@@ -1,25 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import Redis from 'ioredis'
+import IORedis from 'ioredis'
 
-import { config } from '@/utils/config'
+import { config, getRedisConnectionOptions } from '@/utils/config'
 import logger from '@/utils/logger'
 
-const cloudOptions = config.redis.tlsCertificateFile
-  ? {
-      tls: {
-        checkServerIdentity: () => undefined
-      }
-    }
-  : {}
-
-export const client = new Redis({
-  host: config.redis.host,
-  lazyConnect: true,
-  port: config.redis.port,
-  showFriendlyErrorStack: config.env !== 'production',
-  ...cloudOptions
-})
+export const client = new IORedis(getRedisConnectionOptions())
 
 client.on('error', (err) => {
   // we suppress error emission here to prevent duplicate error messages

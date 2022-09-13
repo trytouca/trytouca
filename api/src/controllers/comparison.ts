@@ -7,6 +7,7 @@ import type {
 import { floor } from 'lodash'
 import mongoose from 'mongoose'
 
+import * as Queues from '@/queues'
 import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import { IMessageDocument, MessageModel } from '@/schemas/message'
 import type {
@@ -14,6 +15,7 @@ import type {
   BackendBatchComparisonItemSolo,
   BackendBatchComparisonResponse
 } from '@/types/backendtypes'
+import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 
 type ObjectId = mongoose.Types.ObjectId
@@ -45,6 +47,21 @@ async function findComparisonResult(
       srcMessageId
     })
     await doc.save()
+
+    await Queues.comparison.queue.add(
+      doc.id,
+      {
+        jobId: doc._id,
+        dstBatchId,
+        dstMessageId,
+        srcBatchId,
+        srcMessageId
+      },
+      {
+        jobId: doc.id
+      }
+    )
+
     logger.silly('comparison result not available. created job.')
   }
 

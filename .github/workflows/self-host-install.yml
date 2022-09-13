@@ -25,7 +25,7 @@ jobs:
           cache: "pip"
       - name: setup containers
         run: |
-          mkdir -p logs/{backend,cmp} data/{minio,mongo,redis}
+          mkdir -p data/{minio,mongo,redis}
           docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca up -d
       - name: run integration tests
         run: |
@@ -34,7 +34,7 @@ jobs:
       - name: show container logs
         if: failure()
         run: |
-          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca logs touca_api
+          docker-compose -f ops/docker-compose.test.yml --project-directory . -p touca logs touca_touca
       - name: shutdown containers
         if: always()
         run: |

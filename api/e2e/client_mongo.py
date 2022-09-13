@@ -2,27 +2,16 @@
 
 import bson
 import pymongo
-from loguru import logger
+import logging
 from utilities import User, config
+
+logger = logging.getLogger("touca.api.e2e.client_mongo")
 
 
 class MongoClient:
     def __init__(self):
         url = config.get("TOUCA_MONGO_URL")
         self.client = pymongo.MongoClient(url).get_database("touca")
-
-    def count_docs(self) -> dict:
-        counter = {}
-        for name in self.client.list_collection_names():
-            col = self.client.get_collection(name)
-            counter[name] = col.count_documents({})
-        return counter
-
-    def is_empty(self):
-        """
-        check if database has any document in its collections
-        """
-        return sum(self.count_docs().values()) == 0
 
     def clear_collections(self, collections=None) -> None:
         """
@@ -38,7 +27,7 @@ class MongoClient:
                 continue
             self.client.get_collection(col_name).delete_many({})
             self.client.drop_collection(col_name)
-            logger.debug("removed collection {}", col_name)
+            logger.debug("removed collection %s", col_name)
 
     def disable_mail_server(self):
         col_meta = self.client.get_collection("meta")
@@ -60,7 +49,7 @@ class MongoClient:
     def remove_result(self, message_id):
         col_messages = self.client.get_collection("messages")
         col_messages.delete_one({"_id": bson.ObjectId(message_id)})
-        logger.debug("removed message {} from mongo", message_id)
+        logger.debug("removed message %s from mongo", message_id)
         col_comparisons = self.client.get_collection("comparisons")
         col_comparisons.delete_many(
             {
@@ -72,7 +61,7 @@ class MongoClient:
                 ],
             }
         )
-        logger.debug("removed comparisons for message {} from mongo", message_id)
+        logger.debug("removed comparisons for message %s from mongo", message_id)
 
     def get_user_activation_key(self, user: User) -> str:
         result = self.client.get_collection("users").find_one(

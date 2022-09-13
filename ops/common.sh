@@ -184,7 +184,7 @@ server_status_check() {
     local connected=false
     for num in {1..10}; do
         sleep 5
-        if [[ $(curl -s -X GET "http://localhost/api/platform") == *"\"ready\":true"* ]]; then
+        if [[ $(curl -s -X GET "http://localhost:8080/api/platform") == *"\"ready\":true"* ]]; then
             connected=true
             break
         fi
@@ -196,5 +196,5 @@ server_status_check() {
         error "Have a good day, $HUMAN_NAME!"
     fi
     info "Touca server is up and running."
-    info "Browse to http://localhost/ to complete the installation."
+    info "Browse to http://localhost:8080/ to complete the installation."
 }

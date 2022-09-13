@@ -194,12 +194,12 @@ public final class OptionsTest {
     Options existing = new Options();
     Options incoming = new Options(opts -> {
       opts.apiKey = "some-key";
-      opts.apiUrl = "http://localhost:8081//v2//@/team//suite/version/";
+      opts.apiUrl = "http://localhost:8080//v2//@/team//suite/version/";
     });
     assertDoesNotThrow(() -> {
       existing.apply(incoming);
     });
-    assertEquals("http://localhost:8081/v2", existing.apiUrl);
+    assertEquals("http://localhost:8080/v2", existing.apiUrl);
     assertEquals("team", existing.team);
     assertEquals("suite", existing.suite);
     assertEquals("version", existing.version);
@@ -226,7 +226,7 @@ public final class OptionsTest {
     Options existing = new Options();
     Options incoming = new Options(opts -> {
       opts.apiKey = "some-key";
-      opts.apiUrl = "http://localhost:8081/@/team/suite/version";
+      opts.apiUrl = "http://localhost:8080/@/team/suite/version";
       opts.suite = "some-other-version";
     });
     Exception ex = assertThrowsExactly(ConfigException.class, () -> {
@@ -234,6 +234,6 @@ public final class OptionsTest {
     });
     assertEquals("option \"suite\" is in conflict with provided api url",
         ex.getMessage());
-    assertEquals("http://localhost:8081", existing.apiUrl);
+    assertEquals("http://localhost:8080", existing.apiUrl);
   }
 }

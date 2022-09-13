@@ -17,7 +17,7 @@ previous trusted version and visualizes differences in near real-time.
 
 ## Start for free
 
-[![Server](https://img.shields.io/docker/v/touca/touca-api)](https://hub.docker.com/r/touca/touca-api)
+[![Server](https://img.shields.io/docker/v/touca/touca)](https://hub.docker.com/r/touca/touca)
 
 ### Option 1: Self-host locally
 

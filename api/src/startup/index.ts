@@ -1,8 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import fs from 'fs'
 import { pick } from 'lodash'
 
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
+import { ComparisonModel } from '@/schemas/comparison'
+import { MessageModel } from '@/schemas/message'
 import { MetaModel } from '@/schemas/meta'
 import { UserModel } from '@/schemas/user'
 import { config, configMgr } from '@/utils/config'
@@ -78,6 +81,36 @@ async function applyMailTransportEnvironmentVariables() {
 export async function upgradeDatabase() {
   logger.info('database migration: performing checks')
   await applyMailTransportEnvironmentVariables()
+  await MetaModel.findOneAndUpdate(
+    {},
+    {
+      $unset: {
+        cmpAvgCollectionTime: true,
+        cmpAvgProcessingTime: true,
+        cmpNumCollectionJobs: true,
+        cmpNumProcessingJobs: true
+      }
+    }
+  )
+  const update = { $unset: { reservedAt: true } }
+  await ComparisonModel.findOneAndUpdate({}, update)
+  await MessageModel.findOneAndUpdate({}, update)
   logger.info('database migration: checks completed')
+  return true
+}
+
+export async function statusReport() {
+  if (config.isCloudHosted) {
+    logger.info('running in cloud-hosted mode')
+  }
+  if (!config.samples.enabled) {
+    logger.warn('sample data submission is disabled')
+  }
+  if (!configMgr.hasMailTransport()) {
+    logger.warn('mail server not configured')
+  }
+  if (!fs.existsSync(config.samples.directory)) {
+    logger.warn('samples directory not found at %s', config.samples.directory)
+  }
   return true
 }
