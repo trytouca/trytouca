@@ -6,7 +6,7 @@ from pathlib import Path
 from shutil import rmtree
 
 from touca._options import find_home_path
-from touca._printer import print_table
+from touca._printer import print_tree
 from touca.cli._common import Operation, ResultsTree, invalid_subcommand
 
 logger = logging.Logger("touca.cli.results")
@@ -25,39 +25,36 @@ class Results(Operation):
         parser_ls = parsers.add_parser("ls", help="list local touca archive files")
         parser_rm = parsers.add_parser("rm", help="remove local touca archive files")
         results_dir = find_home_path().joinpath("results")
-        for pars in [parser_ls, parser_rm]:
+
+        for pars in (parser_ls, parser_rm):
             src = pars.add_argument(
                 "src",
                 help=f"path to directory with results files. defaults to {results_dir}",
                 nargs="?",
                 default=results_dir,
             )
-            suite = pars.add_argument("suite", help="name of suite")
-            version = pars.add_argument("version", help="version of suite")
+
+        suite = parser_rm.add_argument("suite", help="name of suite")
+        version = parser_rm.add_argument("version", help="version of suite")
+
+        filter = parser_ls.add_argument(
+            "--filter", "-f", help="list filter by suite or/and version", default=None
+        )
 
     def _command_ls(self):
-        suite = self.__options.get("suite")
-        version = self.__options.get("version")
-        src = (
-            Path(self.__options.get("src"))
-            .joinpath(suite)
-            .joinpath(version)
-            .expanduser()
-            .resolve()
-        )
-        if not src.exists():
-            logger.error(f"{src} is not exists.")
-            return False
+        filter_arg = self.__options.get("filter")
+        src = self.__options.get("src")
+        tree_body = []
+        if filter_arg is None:
+            for suite in src.iterdir():
+                suites = ResultsTree(suite).suites
+                tree_body.append(suites)
+                print_tree(label="Touca", body=tree_body)
+            return True
 
-        suites = ResultsTree(src).suites
-        test_cases = suites[suite][version]
-
-        table_header = ["#", "Test Case", "Path"]
-        table_body = []
-        for num, (test_case, path) in enumerate(test_cases.items()):
-            table_body.append([str(num), test_case, path[0].as_posix()])
-
-        print_table(table_header, table_body)
+        filter_path = src.joinpath(filter_arg)
+        suite = ResultsTree(filter_path).suites
+        print_tree(label=filter_arg, body=suite)
         return True
 
     def _command_rm(self):

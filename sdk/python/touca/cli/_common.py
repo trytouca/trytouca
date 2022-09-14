@@ -22,7 +22,7 @@ class ResultsTree:
         for binary_file in src.rglob("*.bin"):
             self._process(binary_file)
 
-    def _process(self, binary_file: Path):
+    def _process(self, binary_file: Path):  # BUG: duplicate suite
         test_case_dir = binary_file.parent
         version_dir = test_case_dir.parent
         suite_dir = version_dir.parent
@@ -39,7 +39,7 @@ class ResultsTree:
         if test_case_name not in self.suites[suite_name][version_name]:
             self.suites[suite_name][version_name][test_case_name] = []
 
-        self.suites[suite_name][version_name][test_case_name].append(binary_file)
+        self.suites[suite_name][version_name][test_case_name].append(binary_file.name)
 
     @property
     def is_empty(self):
