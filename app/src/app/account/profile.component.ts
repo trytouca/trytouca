@@ -272,7 +272,8 @@ export class ProfileComponent implements OnDestroy {
           }
         });
         return user;
-      });
+      })
+      .sort((a, b) => +a.createdAt - +b.createdAt);
   }
 
   confirmAccountDelete() {
