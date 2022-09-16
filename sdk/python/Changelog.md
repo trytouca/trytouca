@@ -4,7 +4,7 @@
 
 Feature:
 
-- Add new CLI sub-commnad `result` for offline usage (#293)
+- Add new CLI sub-commnad `result` for offline usage (#324)
 
 ## v1.5.8
 
