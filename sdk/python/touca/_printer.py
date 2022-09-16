@@ -2,10 +2,9 @@
 
 import math
 from pathlib import Path
-from typing import Dict, List, Optional, Union
+from typing import Dict
 
 from colorama import Back, Fore, Style, init
-from rich.tree import Tree
 
 init()
 
@@ -122,49 +121,17 @@ def print_table(table_header, table_body):
     console.print(table)
 
 
-def _create_tree(
-    body: Union[Dict, List, str],
-    head_tree: Optional[Tree] = None,
-    label: Union[str, None] = None,
-) -> Tree:
-    """This is a helper function for create trees by
-    a body(include a dict/list/str) and label(str/None).
+def print_results_tree(suites: Dict) -> None:
+    from rich import print
+    from rich.style import Style
+    from rich.tree import Tree
 
-    if _create_tree called, then this func will be checking the
-    body has a dict or list, then creates a child_tree and calls
-    again _create_tree, this procces repeats until body is a str.
-    """
-
-    if head_tree is None:
-        head_tree = Tree(label)
-
-    if isinstance(body, list):
-        for obj in body:
-            if isinstance(obj, str):
-                head_tree.add(obj)
-            elif isinstance(obj, dict):
-                _create_tree(body=obj, head_tree=head_tree)
-            else:
-                raise TypeError  # we are sure list only has dict or str
-        return head_tree
-    elif isinstance(body, dict):
-        for k, v in body.items():
-            child_tree = head_tree.add(k)
-            if isinstance(v, str):
-                child_tree.add(str)
-            elif isinstance(v, list) or isinstance(v, dict):
-                _create_tree(body=v, head_tree=child_tree)
-            else:
-                raise TypeError
-        return child_tree
-    elif isinstance(body, str):
-        head_tree.add(body)
-
-    return head_tree
-
-
-def print_tree(body: Dict, label: str) -> None:
-    from rich import print as rich_print
-
-    tree = _create_tree(body=body, label=label)
-    rich_print(tree)
+    tree = Tree("🗃")
+    for suite, versions in suites.items():
+        suite_tree = tree.add(suite, style=Style(color="magenta", bold=True))
+        for version, files in versions.items():
+            versions_tree = suite_tree.add(
+                version, style=Style(color="blue", bold=False)
+            )
+            versions_tree.add(f"{len(files)} binary files", style="white")
+    print(tree)

@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Dict, List
 
 
 class Operation(ABC):
@@ -11,9 +12,11 @@ class Operation(ABC):
 
 
 class ResultsTree:
-    suites = {}
+    suites: Dict[str, Dict[str, List[Path]]] = {}
 
-    def __init__(self, src: Path):
+    def __init__(self, src: Path, filter: str = None):
+        self._filters = filter.split("/") if filter else []
+        self._filters.extend([None, None])
         if not src.exists():
             return
         if src.is_file():
@@ -22,26 +25,24 @@ class ResultsTree:
         for binary_file in src.rglob("*.bin"):
             self._process(binary_file)
 
-    def _process(self, binary_file: Path):  # BUG: duplicate suite
-        test_case_dir = binary_file.parent
-        version_dir = test_case_dir.parent
-        suite_dir = version_dir.parent
-        test_case_name = test_case_dir.name
+    def _process(self, binary_file: Path):
+        testcase_dir = binary_file.parent
+        version_dir = testcase_dir.parent
         version_name = version_dir.name
+        suite_dir = version_dir.parent
         suite_name = suite_dir.name
+
+        if self._filters[0] is not None and self._filters[0] != suite_name:
+            return
+        if self._filters[1] is not None and self._filters[1] != version_name:
+            return
 
         if suite_name not in self.suites:
             self.suites[suite_name] = {}
-
         if version_name not in self.suites[suite_name]:
-            self.suites[suite_name][version_name] = {}
+            self.suites[suite_name][version_name] = []
+        self.suites[suite_name][version_name].append(binary_file)
 
-        if test_case_name not in self.suites[suite_name][version_name]:
-            self.suites[suite_name][version_name][test_case_name] = []
-
-        self.suites[suite_name][version_name][test_case_name].append(binary_file.name)
-
-    @property
     def is_empty(self):
         return len(self) == 0
 

@@ -58,7 +58,7 @@ class Post(Operation):
 
         src = Path(self.__options.get("src")).expanduser().resolve()
         results_tree = ResultsTree(src)
-        if results_tree.is_empty:
+        if results_tree.is_empty():
             logger.error(f"Did not find any binary file in {src}")
             return False
 

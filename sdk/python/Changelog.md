@@ -2,7 +2,7 @@
 
 ## v1.5.9
 
-Feautre:
+Feature:
 
 - Add new CLI sub-commnad `result` for offline usage (#293)
 
