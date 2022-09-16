@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.5.9
+
+Feature:
+
+- Add new CLI sub-commnad `result` for offline usage (#324)
+
 ## v1.5.8
 
 Feature:

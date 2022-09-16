@@ -2,6 +2,7 @@
 
 from abc import ABC, abstractmethod
 from pathlib import Path
+from typing import Dict, List
 
 
 class Operation(ABC):
@@ -11,9 +12,11 @@ class Operation(ABC):
 
 
 class ResultsTree:
-    suites = {}
+    suites: Dict[str, Dict[str, List[Path]]] = {}
 
-    def __init__(self, src: Path):
+    def __init__(self, src: Path, filter: str = None):
+        self._filters = filter.split("/") if filter else []
+        self._filters.extend([None, None])
         if not src.exists():
             return
         if src.is_file():
@@ -23,15 +26,22 @@ class ResultsTree:
             self._process(binary_file)
 
     def _process(self, binary_file: Path):
-        batch_dir = binary_file.parent
-        suite_dir = batch_dir.parent
-        batch_name = batch_dir.name
+        testcase_dir = binary_file.parent
+        version_dir = testcase_dir.parent
+        version_name = version_dir.name
+        suite_dir = version_dir.parent
         suite_name = suite_dir.name
+
+        if self._filters[0] is not None and self._filters[0] != suite_name:
+            return
+        if self._filters[1] is not None and self._filters[1] != version_name:
+            return
+
         if suite_name not in self.suites:
             self.suites[suite_name] = {}
-        if batch_name not in self.suites[suite_name]:
-            self.suites[suite_name][batch_name] = []
-        self.suites[suite_name][batch_name].append(binary_file)
+        if version_name not in self.suites[suite_name]:
+            self.suites[suite_name][version_name] = []
+        self.suites[suite_name][version_name].append(binary_file)
 
     def is_empty(self):
         return len(self) == 0

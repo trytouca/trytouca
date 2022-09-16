@@ -2,6 +2,7 @@
 
 import math
 from pathlib import Path
+from typing import Dict
 
 from colorama import Back, Fore, Style, init
 
@@ -118,3 +119,19 @@ def print_table(table_header, table_body):
     for k in table_body:
         table.add_row(*k)
     console.print(table)
+
+
+def print_results_tree(suites: Dict) -> None:
+    from rich import print
+    from rich.style import Style
+    from rich.tree import Tree
+
+    tree = Tree("🗃")
+    for suite, versions in suites.items():
+        suite_tree = tree.add(suite, style=Style(color="magenta", bold=True))
+        for version, files in versions.items():
+            versions_tree = suite_tree.add(
+                version, style=Style(color="blue", bold=False)
+            )
+            versions_tree.add(f"{len(files)} binary files", style="white")
+    print(tree)
