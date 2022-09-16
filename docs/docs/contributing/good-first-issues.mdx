@@ -95,29 +95,9 @@ backend services.
 - Relevant:
   [Self-Hosting Install Script](https://github.com/trytouca/trytouca/blob/main/ops/install.sh)
 
-## Python CLI
-
-### 6. Add new subcommand `result`
-
-We'd like to add a `result` subcommand to the Touca Python CLI to make it easier
-for users to manage local and remote test results. Initially, we'd only support
-local files (reading content of `~/.touca` directory. But we'd like to let users
-control the data on the server too at some point.
-
-- `touca result list [<suite>[/<version>]]` should show a summary of test
-  results in a given version of a given suite or the list of versions in a suite
-  if a specific version is not provided.
-- `touca result remove <suite>[/<version>]` should remove test results.
-
-These are the only two supported operations we have good user feedback on. But
-we may add more in the future. The keyword `result` is not perfect. We are open
-to other suggestions.
-
-- [GitHub Issue](https://github.com/trytouca/trytouca/issues/112)
-
 ## C++ SDK
 
-### 7. Create package recipe for ConanCenter
+### 6. Create package recipe for ConanCenter
 
 Most engineering teams using Touca for serious C++ projects simply clone a
 stable version of our C++ SDK and repackage it internally. This is, in part,
@@ -141,7 +121,7 @@ and links to its third-party dependencies.
 - Relevant: [Github Issue](https://github.com/trytouca/trytouca/issues/32) for
   CMake improvements
 
-### 8. Improve CMake logic for packaging
+### 7. Improve CMake logic for packaging
 
 We are not using the standard CMake logic for packaging, exporting, installing,
 and finding the C++ library. This makes it difficult to package the library for
@@ -160,7 +140,7 @@ Relevant Links:
 
 ## Java SDK
 
-### 9. Better way to run example
+### 8. Better way to run example
 
 Our Java Examples in `examples/java` and `sdk/java` directories are defined as
 standalone applications. Unlike JUnit tests that are in often placed in the
@@ -215,3 +195,8 @@ now marked as done thanks to contributions from members of the Touca community.
   ([GitHub Issue](https://github.com/trytouca/trytouca/issues/191))
   ([PR](https://github.com/trytouca/trytouca/pull/289) by
   [@ghorbanzade](https://github.com/ghorbanzade))
+
+- Add new CLI subcommand `results`
+  ([GitHub Issue](https://github.com/trytouca/trytouca/issues/112))
+  ([PR](https://github.com/trytouca/trytouca/pull/324) by
+  [@mmdbalkhi](https://github.com/mmdbalkhi))

@@ -23,6 +23,7 @@ We support the following operations:
 | [`touca profile`](#configuration-profiles) | Create and manage configuration profiles |
 | [`touca merge`](#merging-archives)         | Merge binary archives                    |
 | [`touca post`](#posting-archives)          | Submit binary archives to a Touca server |
+| [`touca results`](#managing-archives)      | Manage local binary archives             |
 | [`touca zip`](#compressing-archives)       | Compress binary archives                 |
 | [`touca unzip`](#extracting-archives)      | Extract compressed binary archives       |
 | [`touca update`](#updating-archives)       | Update metadata of binary archives       |
@@ -234,7 +235,7 @@ And if you no longer need a profile, you can simply remove it:
 $ touca profile rm personal
 ```
 
-## Managing archives
+## Local binary archives
 
 ### Posting archives
 
@@ -267,6 +268,53 @@ $ touca post ./touca/results/acme/suite
 
 This operation is useful when back-filling a new instance of Touca server with
 binary test results from previous versions of your workflows.
+
+### Managing archives
+
+<details>
+<summary>`touca results --help`</summary>
+
+```plaintext
+usage: touca results [-h] {ls,rm} ...
+
+Show suite results
+
+positional arguments:
+  {ls,rm}
+    ls        list local touca archive files
+    rm        remove local touca archive files
+```
+
+</details>
+
+You can use `touca results ls` to list all local archives in the default Touca
+results directory `~/.tocua/results`.
+
+You can use `--src-dir` to change the results directory and
+`--filter=example[/v1.0]` to limit the results to a given suite or version.
+
+```plaintext
+$ touca results ls
+
+🗃
+└── students_test
+    ├── 6.1
+    │   └── 3 binary files
+    └── 6.0
+        └── 3 binary files
+```
+
+You can also use `touca results rm` to remove local archives from the default
+Touca results directory. In addition to `--src-dir` and `--filter`,
+`touca results rm` supports `--dry-run` to help you double check which binary
+archives will be removed, without removing them.
+
+```plaintext
+$ touca results rm
+
+students_test/6.1 ━━━━━━━━━━━━━━━━ 100% 0:00:00
+students_test/6.0 ━━━━━━━━━━━━━━━━ 100% 0:00:00
+```
 
 ### Merging archives
 
