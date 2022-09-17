@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 /**
  * @file runner
@@ -184,7 +184,7 @@ class Printer {
     errors: string[] = []
   ) {
     const badge = {
-      [Status.Pass]: { color: chalk.bgGreen, text: ' PASS ' },
+      [Status.Pass]: { color: chalk.bgGreen, text: ' SENT ' },
       [Status.Skip]: { color: chalk.bgYellow, text: ' SKIP ' },
       [Status.Fail]: { color: chalk.bgRed, text: ' FAIL ' }
     }[status];

@@ -1,5 +1,17 @@
 # Changelog
 
+## v1.5.5
+
+Breaking Changes:
+
+- Drop support for Node v12 (#329)
+
+## v1.5.4
+
+Improvements:
+
+- Update Readme file (#199)
+
 ## v1.5.3
 
 Other Changes:
