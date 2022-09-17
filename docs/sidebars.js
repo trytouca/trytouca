@@ -74,11 +74,6 @@ const sidebars = {
               items: [
                 {
                   type: "doc",
-                  id: "sdk/python/quickstart",
-                  label: "Quick Start"
-                },
-                {
-                  type: "doc",
                   id: "sdk/python/main-api",
                   label: "Main API"
                 },
@@ -110,11 +105,6 @@ const sidebars = {
                 },
                 {
                   type: "doc",
-                  id: "sdk/cpp/quickstart",
-                  label: "Getting Started"
-                },
-                {
-                  type: "doc",
                   id: "sdk/cpp/main-api",
                   label: "Main API"
                 },
@@ -141,11 +131,6 @@ const sidebars = {
               items: [
                 {
                   type: "doc",
-                  id: "sdk/js/quickstart",
-                  label: "Getting Started"
-                },
-                {
-                  type: "doc",
                   id: "sdk/js/main-api",
                   label: "Main API"
                 },
@@ -167,8 +152,8 @@ const sidebars = {
               items: [
                 {
                   type: "doc",
-                  id: "sdk/java/quickstart",
-                  label: "Getting Started"
+                  id: "sdk/java/installing",
+                  label: "Installing"
                 },
                 {
                   type: "doc",

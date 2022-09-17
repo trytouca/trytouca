@@ -288,10 +288,9 @@ positional arguments:
 </details>
 
 You can use `touca results ls` to list all local archives in the default Touca
-results directory `~/.tocua/results`.
-
-You can use `--src-dir` to change the results directory and
-`--filter=example[/v1.0]` to limit the results to a given suite or version.
+results directory `~/.tocua/results`. You can use `--src-dir` to change the
+results directory and `--filter=example[/v1.0]` to limit the results to a given
+suite or version.
 
 ```plaintext
 $ touca results ls
