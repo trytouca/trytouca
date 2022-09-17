@@ -3,7 +3,7 @@
 :::info New To Touca?
 
 Looking for documentation to get started with Touca? Follow our quicks start
-tutorial [here](../../../basics/).
+tutorial [here](https://touca.io/docs/basics/).
 
 :::
 
