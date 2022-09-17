@@ -5,13 +5,12 @@ import ToucaImage from "@site/src/components/ToucaImage";
 # Quick Start
 
 Welcome! If you are new to Touca, this is the right place to be! Our main
-objective here is to introduce Touca without taking too much of your time. We
-hope to make you excited enough to check out our hands-on tutorials next.
+objective here is to introduce Touca without taking too much of your time.
 
 ## Revisiting Unit Testing
 
-Let us imagine that we want to test a software workflow that reports whether a
-given number is prime.
+Let's assume that we want to test a software that checks whether a given number
+is prime.
 
 <Tabs
   groupId="sdks"
@@ -25,29 +24,58 @@ given number is prime.
 >
   <TabItem value="python">
 
-```python
+```python title="01_python_minimal/is_prime.py"
 def is_prime(number: int):
+    for i in range(2, number):
+        if number % i == 0:
+            return False
+    return 1 < number
 ```
 
   </TabItem>
   <TabItem value="cpp">
 
-```cpp
-bool is_prime(const int number);
+```cpp title="01_cpp_minimal/is_prime.hpp"
+#include <cmath>
+
+bool is_prime(const unsigned long number) {
+  for (auto i = 2u; i < number; i++) {
+    if (number % i == 0) {
+      return false;
+    }
+  }
+  return 1 < number;
+}
 ```
 
   </TabItem>
   <TabItem value="js">
 
-```typescript
-function is_prime(number: number): boolean;
+```typescript title="01_node_minimal/is_prime.ts"
+export function is_prime(input: number): boolean {
+  for (let i = 2; i < input; i++) {
+    if (input % i === 0) {
+      return false;
+    }
+  }
+  return 1 < input;
+}
 ```
 
   </TabItem>
   <TabItem value="java">
 
-```java
-public static boolean isPrime(final int number);
+```java title="01_java_minimal/Prime.java"
+public final class Prime {
+  public static boolean isPrime(final int number) {
+    for (int i = 2; i < number; i++) {
+      if (number % i == 0) {
+        return false;
+      }
+    }
+    return 1 < number;
+  }
+}
 ```
 
   </TabItem>
@@ -130,10 +158,7 @@ public final class PrimeTest {
   </TabItem>
 </Tabs>
 
-Unit testing is an effective method to gain confidence in the behavior of
-functions we are going to implement or have already implemented. But let us, for
-a moment, review some of the fundamentals of building and maintaining unit
-tests:
+With unit testing:
 
 - For each input, we need to specify the corresponding expected output, as part
   of our test logic.
@@ -169,8 +194,9 @@ any number of test cases.
 >
   <TabItem value="python">
 
-```python
+```python title="01_python_minimal/is_prime_test.py"
 import touca
+from is_prime import is_prime
 
 @touca.Workflow
 def is_prime_test(testcase: str):
@@ -181,11 +207,11 @@ def is_prime_test(testcase: str):
   <TabItem value="cpp">
 
 ```cpp
+#include "is_prime.hpp"
 #include "touca/touca.hpp"
-#include "code_under_test.hpp"
 
 int main(int argc, char* argv[]) {
-  touca::workflow("is_prime", [](const std::string& testcase) {
+  touca::workflow("is_prime_test", [](const std::string& testcase) {
     const auto number = std::stoul(testcase);
     touca::check("output", is_prime(number));
   });
@@ -196,12 +222,13 @@ int main(int argc, char* argv[]) {
   </TabItem>
   <TabItem value="js">
 
-```typescript
+```typescript title="01_node_minimal/is_prime_test.ts"
 import { touca } from "@touca/node";
-import { is_prime } from "./code_under_test";
+import { is_prime } from "./is_prime";
 
 touca.workflow("is_prime_test", (testcase: string) => {
-  touca.check("output", is_prime(Number.parseInt(testcase)));
+  const number = Number.parseInt(testcase);
+  touca.check("output", is_prime(number));
 });
 
 touca.run();
@@ -230,18 +257,17 @@ public final class PrimeTest {
   </TabItem>
 </Tabs>
 
-This code needs some explanation. Let us start by reviewing what is missing:
+This is slightly different from a typical unit test:
 
-- We have fully decoupled our test inputs from our test logic. We refer to these
-  inputs as "test cases". Our open-source SDKs retrieve the test cases from the
-  command line, or a file, or a remote Touca server and feed them one by one to
-  our code under test.
-- We have removed the concept of expected values. With Touca, we only describe
-  the actual behavior and performance of our code under test by capturing values
-  of interesting variables and runtime of important functions, from anywhere
-  within our code. Touca SDKs submit this description to a remote Touca server
-  which compares it against the description for a trusted version of our code.
-  The server visualizes any differences and reports them in near real-time.
+- Touca tests do not use expected values.
+- Touca tests do not hard-code input values.
+
+With Touca, we can define how to run our code under test for any given test
+case. We can capture values of interesting variables and runtime of important
+functions to describe the behavior and performance of our workflow for that test
+case. Touca SDKs submit this description to a remote Touca server which compares
+it against the description for a trusted version of our code. The server
+visualizes any differences and reports them in near real-time.
 
 We can run Touca tests with any number of inputs from the command line:
 
@@ -258,6 +284,15 @@ We can run Touca tests with any number of inputs from the command line:
   <TabItem value="python">
 
 ```bash
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/examples/python
+python -m venv .env
+source .env/bin/activate
+pip install touca
+cd 01_python_minimal
+```
+
+```bash
 touca config set api-key=<TOUCA_API_KEY>
 touca config set api-url=<TOUCA_API_URL>
 touca test --revision v1.0 --testcase 13 17 51
@@ -267,22 +302,41 @@ touca test --revision v1.0 --testcase 13 17 51
   <TabItem value="cpp">
 
 ```bash
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/examples/cpp
+./build.sh
+```
+
+```bash
 export TOUCA_API_KEY=<TOUCA_API_KEY>
 export TOUCA_API_URL=<TOUCA_API_URL>
-./prime_app_test --revision v1.0 --testcase 13,17,51
+./local/dist/bin/example_cpp_minimal --revision v1.0 --testcase 13,17,51
 ```
 
   </TabItem>
   <TabItem value="js">
 
 ```bash
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/examples/js
+npm install
+npm run build
+```
+
+```bash
 export TOUCA_API_KEY=<TOUCA_API_KEY>
 export TOUCA_API_URL=<TOUCA_API_URL>
-node dist/is_prime_test.js --revision v1.0 --testcase 13 17 51
+node 01_node_minimal/dist/is_prime_test.js --revision v1.0 --testcase 13 17 51
 ```
 
   </TabItem>
   <TabItem value="java">
+
+```bash
+git clone git@github.com:trytouca/trytouca.git
+cd trytouca/examples/java
+./gradlew build
+```
 
 ```bash
 export TOUCA_API_KEY=<TOUCA_API_KEY>
@@ -294,8 +348,9 @@ gradle runExampleMinimal --args='--revision v1.0 --testcase 13 17 51'
 </Tabs>
 
 Where API Key and URL can be obtained from the Touca server at
-[app.touca.io](https://app.touca.io) or your own self-hosted instance. This
-command produces the following output:
+[app.touca.io](https://app.touca.io) or your own self-hosted instance.
+
+This command produces the following output:
 
 ```text
 
@@ -313,21 +368,86 @@ Time:       0.57 s
 
 ```
 
-If and when we change the implementation of `is_prime`, we can rerun the test
-\(passing a different version number\) and submit the results for the new
-version to the Touca server. The server takes care of storing and comparing the
-results submitted between the two versions and reports the differences in near
-real-time.
+<ToucaImage
+  src="touca-sdk-quickstart-1.png"
+  dark="touca-sdk-quickstart-1-dark.png"
+  alt="Touca server after submitting results for v1.0"
+/>
 
-The Touca server considers the test results submitted for the first version of
-our test, as our baseline: all subsequent versions submitted to the server would
-be compared against it. If, for any reason, requirements of our software change
-and we decide to change this baseline, we can do so by clicking a button right
-from the Touca server UI.
+Now if we make changes to our workflow under test, we can rerun this test and
+rely on Touca to check if our changes affected the behavior or performance of
+our software.
 
-<ToucaImage src="touca-suite-page.png" dark="touca-suite-page-dark.png" />
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "C++", value: "cpp" },
+    { label: "TypeScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+  <TabItem value="python">
 
-## Value Proposition
+```bash
+touca test
+```
+
+  </TabItem>
+  <TabItem value="cpp">
+
+```bash
+./local/dist/bin/example_cpp_minimal --revision v1.1
+```
+
+  </TabItem>
+  <TabItem value="js">
+
+```bash
+node 01_node_minimal/dist/is_prime_test.js --revision v1.1
+```
+
+  </TabItem>
+  <TabItem value="java">
+
+```bash
+gradle runExampleMinimal --args='--revision v1.1'
+```
+
+  </TabItem>
+</Tabs>
+
+```text
+
+Touca Test Framework
+Suite: is_prime_test/v1.1
+
+ 1.  SENT   13    (109 ms)
+ 2.  SENT   17    (152 ms)
+ 3.  SENT   51    (127 ms)
+
+Tests:      3 passed, 3 total
+Time:       0.55 s
+
+✨   Ran all test suites.
+
+```
+
+<ToucaImage
+  src="touca-sdk-quickstart-2.png"
+  dark="touca-sdk-quickstart-2-dark.png"
+  alt="Touca server after submitting results for v1.1"
+/>
+
+Unlike integration tests, we are not bound to the output of our workflow. We can
+capture any number of data points and from anywhere within our code. This is
+specially useful if our workflow has multiple stages. We can capture the output
+of each stage without publicly exposing its API. When any stage changes behavior
+in a future version of our software, our captured data points will help find the
+root cause more easily.
+
+## Summary
 
 Touca is very effective in addressing common problems in the following
 situations:
@@ -353,3 +473,5 @@ scale.
   types and reports discovered differences in real-time to all interested
   members of our team. It allows us to audit how our software evolves over time
   and provides high-level information about our tests.
+
+<ToucaImage src="touca-suite-page.png" dark="touca-suite-page-dark.png" />

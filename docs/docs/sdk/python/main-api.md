@@ -1,10 +1,15 @@
 # Main API
 
-Our previous `is_prime` example was too minimal to show how Touca can help us
-track regressions in the behavior and performance of real-world software
-workflows. Let's use a Profile Lookup software that takes the username of a
-student and returns basic information about them including their name, date of
-birth, and GPA.
+:::info New To Touca?
+
+Looking for documentation to get started with Touca? Follow our quicks start
+tutorial [here](https://touca.io/docs/basics/).
+
+:::
+
+Let's assume we'd like to test a software that takes the username of a student
+and returns basic information about them including their name, date of birth,
+and GPA.
 
 ```py title="02_python_main_api/students.py"
 @dataclass

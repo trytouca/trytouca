@@ -1,11 +1,15 @@
 # Main API
 
-[So far](/sdk/java/quickstart), we learned how to write and run a simple Touca
-test using the Touca SDK for Java. But our previous `isPrime` example was too
-minimal to show how Touca can help us describe the behavior and performance of
-real-world software workflows. Let us use a Profile Lookup software as another
-example that takes the username of a student and returns basic information about
-them, such as their name, date of birth, and GPA.
+:::info New To Touca?
+
+Looking for documentation to get started with Touca? Follow our quicks start
+tutorial [here](https://touca.io/docs/basics/).
+
+:::
+
+Let's assume we'd like to test a software that takes the username of a student
+and returns basic information about them including their name, date of birth,
+and GPA.
 
 ```java
 public static Student findStudent(final String username);
