@@ -223,9 +223,9 @@ class Printer {
   }
 }
 
-function _parse_cli_options(args: string[]): RunnerOptions {
+async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
   const y = yargs(hideBin(args));
-  const argv = y
+  const argv = await y
     .help('help')
     .version(VERSION)
     .showHelpOnFail(false, 'Specify --help for available options')
@@ -358,7 +358,7 @@ export class Runner {
     if (Object.keys(this._workflows).length === 0) {
       throw new ToucaError(ToucaErrorCode.MissingWorkflow);
     }
-    const options = _parse_cli_options(args);
+    const options = await _parse_cli_options(args);
     await this._initialize(options);
     const printer = new Printer(options);
     printer.print_header(options.suite as string, options.version as string);
