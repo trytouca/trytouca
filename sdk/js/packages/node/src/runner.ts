@@ -355,7 +355,7 @@ export class Runner {
   }
 
   private async _run_workflows(args: string[]): Promise<void> {
-    if (this._workflows === {}) {
+    if (Object.keys(this._workflows).length === 0) {
       throw new ToucaError(ToucaErrorCode.MissingWorkflow);
     }
     const options = _parse_cli_options(args);
