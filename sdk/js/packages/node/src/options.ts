@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as fs from 'fs';
 
@@ -64,13 +64,7 @@ function _apply_config_file(incoming: NodeOptions): void {
   if (!incoming.file) {
     return;
   }
-  // starting Node v14, statSync accepts { throwIfNoEntry: false } as a second
-  // parameter. We are intentionally not using this option to support Node v12.
-  try {
-    if (!fs.statSync(incoming.file).isFile()) {
-      throw new Error('config file not found');
-    }
-  } catch (err) {
+  if (!fs.statSync(incoming.file, { throwIfNoEntry: false })?.isFile()) {
     throw new Error('config file not found');
   }
   const content = fs.readFileSync(incoming.file, { encoding: 'utf8' });

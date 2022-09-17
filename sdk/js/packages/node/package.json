@@ -1,6 +1,6 @@
 {
   "name": "@touca/node",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Touca SDK for JavaScript",
   "license": "Apache-2.0",
   "homepage": "https://touca.io",
@@ -31,9 +31,9 @@
   },
   "dependencies": {
     "chalk": "4.1.2",
-    "flatbuffers": "2.0.6",
-    "semver": "7.3.5",
-    "yargs": "17.4.0"
+    "flatbuffers": "^2.0.7",
+    "semver": "^7.3.7",
+    "yargs": "^17.5.1"
   },
   "funding": {
     "type": "github",

@@ -11,7 +11,12 @@ data/redis/
 docs/.docusaurus/
 docs/build/
 examples/cpp/local/
+examples/cpp/results/
 examples/java/.gradle/
+examples/java/**/build/
+examples/java/**/results/
+examples/js/**/dist/
+examples/js/**/results/
 examples/python/.env/
 examples/python/.python-version
 local/logs/

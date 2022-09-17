@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 /**
  * @file runner
@@ -184,7 +184,7 @@ class Printer {
     errors: string[] = []
   ) {
     const badge = {
-      [Status.Pass]: { color: chalk.bgGreen, text: ' PASS ' },
+      [Status.Pass]: { color: chalk.bgGreen, text: ' SENT ' },
       [Status.Skip]: { color: chalk.bgYellow, text: ' SKIP ' },
       [Status.Fail]: { color: chalk.bgRed, text: ' FAIL ' }
     }[status];
@@ -223,9 +223,9 @@ class Printer {
   }
 }
 
-function _parse_cli_options(args: string[]): RunnerOptions {
+async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
   const y = yargs(hideBin(args));
-  const argv = y
+  const argv = await y
     .help('help')
     .version(VERSION)
     .showHelpOnFail(false, 'Specify --help for available options')
@@ -355,10 +355,10 @@ export class Runner {
   }
 
   private async _run_workflows(args: string[]): Promise<void> {
-    if (this._workflows === {}) {
+    if (Object.keys(this._workflows).length === 0) {
       throw new ToucaError(ToucaErrorCode.MissingWorkflow);
     }
-    const options = _parse_cli_options(args);
+    const options = await _parse_cli_options(args);
     await this._initialize(options);
     const printer = new Printer(options);
     printer.print_header(options.suite as string, options.version as string);
