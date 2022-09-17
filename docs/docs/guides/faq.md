@@ -4,9 +4,7 @@
 
 The Touca server is language agnostic. But you would need to use one of our SDKs
 to capture test results and submit them to the server. We currently provide SDKs
-for [C++](/sdk/cpp/quickstart), [Python](/sdk/python/quickstart),
-[JavaScript](/sdk/js/quickstart), and [Java](/sdk/java/quickstart) programming
-languages.
+for C++, Python, Java, and JavaScript.
 
 ## What types of software can benefit from Touca the most?
 
