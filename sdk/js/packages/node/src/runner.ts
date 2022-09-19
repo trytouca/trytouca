@@ -154,11 +154,11 @@ class Printer {
   private _testcase_count: number;
   private _colored_output: boolean;
 
-  static printWarning(fmt: string, ...args: unknown[]) {
-    process.stdout.write(chalk.yellow(util.format(fmt, ...args)));
+  static printError(fmt: string, ...args: unknown[]) {
+    process.stderr.write(util.format(fmt, ...args));
   }
   static printAppHeader() {
-    process.stdout.write('\nTouca Test Framework');
+    process.stdout.write('\nTouca Test Framework\n');
   }
   static printAppFooter() {
     process.stdout.write('\n✨   Ran all test suites.\n');
@@ -354,7 +354,8 @@ export class Runner {
     }
     try {
       const options = await _parse_cli_options(process.argv);
-      await this._run_workflows(options);
+      const status = await this._run_workflows(options);
+      process.exit(status ? 0 : 1);
     } catch (err) {
       const error = err instanceof Error ? err.message : 'Unknown Error';
       process.stderr.write(util.format('Test failed: %s', error));
@@ -362,18 +363,22 @@ export class Runner {
     }
   }
 
-  private async _run_workflows(opts: RunnerOptions): Promise<void> {
+  private async _run_workflows(opts: RunnerOptions): Promise<boolean> {
     Printer.printAppHeader();
-    for (const [name, workflow] of Object.entries(this._workflows)) {
+    for (const [suite, workflow] of Object.entries(this._workflows)) {
       try {
-        const options = { ...opts, suite: name };
+        const options = { ...opts, suite };
         await this._initialize(options);
         await this._runWorkflow(options, workflow);
       } catch (error) {
-        Printer.printWarning('Error when running workflow %s: %s', name, error);
+        const prefix = `Error when running suite "${suite}"`;
+        const message = (error as ToucaError).message;
+        Printer.printError('\n%s:\n%s\n', prefix, message);
+        return false;
       }
     }
     Printer.printAppFooter();
+    return true;
   }
 
   private async _initialize(options: RunnerOptions): Promise<void> {
