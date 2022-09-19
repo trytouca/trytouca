@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@touca/example-node-minimal",
-  "version": "1.5.4",
+  "version": "1.5.5",
   "description": "Touca Example Introducing Node.js SDK",
   "main": "dist/is_prime_test.js",
   "types": "dist/is_prime_test.js.d",
@@ -9,7 +9,7 @@
     "dist"
   ],
   "dependencies": {
-    "@touca/node": "^1.5.4",
+    "@touca/node": "^1.5.5",
     "@types/node": "^18.7.18"
   },
   "scripts": {
