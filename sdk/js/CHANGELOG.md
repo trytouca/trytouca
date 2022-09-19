@@ -4,6 +4,7 @@
 
 Features:
 
+- Support automatic version increments (#336)
 - Allow user to omit version (#334)
 - Allow user to limit test to a specific workflow (#332)
 - Support running multiple workflows (#332)
