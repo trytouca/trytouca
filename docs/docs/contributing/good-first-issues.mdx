@@ -48,37 +48,9 @@ like to remove it in favor of Nx or npm workspaces.
 
 - [GitHub Issue](https://github.com/trytouca/trytouca/issues/193)
 
-### 4. Add support for configuration profiles
-
-We recently introduced configuration profiles to make it easy for users to store
-their configuration options (like API credentials) in a Touca home directory
-(which is in `~/.touca` by default). Currently, only our Python SDK is capable
-of reading these configuration profiles and loading them at configure time.
-
-We like to extend this support to our JavaScript SDK. When the test framework
-starts to run, it should check if a configuration profile exists. If so, it
-should load and parse its content and treat its configuration parameters as if
-they were provided via the command line. Now if a user sets configuration
-parameters in their profile, they won't need to specify them on the command
-line:
-
-```bash
-node examples/01_node_minimal/dist/is_prime_test.js --api-key="<your-api-key>" --api-url="<your-api-url>" --revision=1.0 --testcase alice bob charlie
-pip install touca
-touca config set api-key="<your-api-key>"
-touca config set api-url="<your-api-url>"
-cd ~/trytouca/sdk/js
-npm i && npm run build
-node examples/01_node_minimal/dist/is_prime_test.js --revision=2.0
-touca config set revision=3.0
-node examples/01_node_minimal/dist/is_prime_test.js
-```
-
-- [GitHub Issue](https://github.com/trytouca/trytouca/issues/192)
-
 ## DevOps
 
-### 5. Add Terraform configuration for AWS
+### 4. Add Terraform configuration for AWS
 
 Generally, we'd like to make it easier for people to self-host Touca wherever
 they like. Instead of giving free OSS users a half-broken experience and forcing
@@ -97,7 +69,7 @@ backend services.
 
 ## C++ SDK
 
-### 6. Create package recipe for ConanCenter
+### 5. Create package recipe for ConanCenter
 
 Most engineering teams using Touca for serious C++ projects simply clone a
 stable version of our C++ SDK and repackage it internally. This is, in part,
@@ -121,7 +93,7 @@ and links to its third-party dependencies.
 - Relevant: [Github Issue](https://github.com/trytouca/trytouca/issues/32) for
   CMake improvements
 
-### 7. Improve CMake logic for packaging
+### 6. Improve CMake logic for packaging
 
 We are not using the standard CMake logic for packaging, exporting, installing,
 and finding the C++ library. This makes it difficult to package the library for
@@ -140,7 +112,7 @@ Relevant Links:
 
 ## Java SDK
 
-### 8. Better way to run example
+### 7. Better way to run example
 
 Our Java Examples in `examples/java` and `sdk/java` directories are defined as
 standalone applications. Unlike JUnit tests that are in often placed in the
@@ -200,3 +172,8 @@ now marked as done thanks to contributions from members of the Touca community.
   ([GitHub Issue](https://github.com/trytouca/trytouca/issues/112))
   ([PR](https://github.com/trytouca/trytouca/pull/324) by
   [@mmdbalkhi](https://github.com/mmdbalkhi))
+
+- JavaScript SDK should support configuration profiles
+  ([GitHub Issue](https://github.com/trytouca/trytouca/issues/192))
+  ([PR](https://github.com/trytouca/trytouca/pull/338) by
+  [@ghorbanzade](https://github.com/ghorbanzade))

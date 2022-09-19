@@ -112,7 +112,9 @@ function _apply_config_file(incoming: NodeOptions) {
   const config = config_file_parse();
   Object.assign(incoming, config);
   const apply = (from: string, to: keyof NodeOptions) => {
-    incoming[to] = config[from] as undefined;
+    if (config[from]) {
+      incoming[to] = config[from] as undefined;
+    }
   };
   apply('api-key', 'api_key');
   apply('api-url', 'api_url');
