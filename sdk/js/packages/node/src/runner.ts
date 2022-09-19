@@ -49,11 +49,13 @@ interface RunnerOptions extends NodeOptions {
   testcase_file: string;
   output_directory: string;
   colored_output: boolean;
+  workflow?: string;
   // log_level: 'debug' | 'info' | 'warn';
 }
 
 enum ToucaErrorCode {
   MissingWorkflow = 1,
+  InvalidWorkflow,
   MissingSlugs,
   NoCaseMissingFile,
   NoCaseMissingRemote,
@@ -66,6 +68,12 @@ class ToucaError extends Error {
       ToucaErrorCode.MissingWorkflow,
       `
       No workflow is registered.
+      `
+    ],
+    [
+      ToucaErrorCode.InvalidWorkflow,
+      `
+      Workflow '%s' does not exist.
       `
     ],
     [
@@ -161,7 +169,7 @@ class Printer {
     process.stdout.write('\nTouca Test Framework\n');
   }
   static printAppFooter() {
-    process.stdout.write('\n✨   Ran all test suites.\n');
+    process.stdout.write('\n✨   Ran all test suites.\n\n');
   }
 
   constructor(options: RunnerOptions) {
@@ -261,6 +269,10 @@ async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
         type: 'string',
         desc: 'Slug of team to which test results belong'
       },
+      workflow: {
+        type: 'string',
+        desc: 'Name of the workflow to run'
+      },
       'config-file': {
         type: 'string',
         desc: 'Path to a configuration file'
@@ -323,6 +335,7 @@ async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
     version: argv['revision'],
     team: argv['team'],
     suite: argv['suite'],
+    workflow: argv['workflow'],
     file: argv['config-file'],
     offline: [undefined, true].includes(argv['offline']),
     save_json: argv['save-as-json'],
@@ -348,24 +361,38 @@ export class Runner {
     this._workflows[name] = workflow;
   }
 
-  public async run_workflows(): Promise<void> {
+  public async run(): Promise<void> {
     if (Object.keys(this._workflows).length === 0) {
       throw new ToucaError(ToucaErrorCode.MissingWorkflow);
     }
     try {
       const options = await _parse_cli_options(process.argv);
-      const status = await this._run_workflows(options);
+      const workflows = this.filterWorkflows(options.workflow);
+      const status = await this._run_workflows(options, workflows);
       process.exit(status ? 0 : 1);
     } catch (err) {
       const error = err instanceof Error ? err.message : 'Unknown Error';
-      process.stderr.write(util.format('Test failed: %s', error));
+      process.stderr.write(util.format('\nTest failed:\n%s\n', error));
       process.exit(1);
     }
   }
 
-  private async _run_workflows(opts: RunnerOptions): Promise<boolean> {
+  private filterWorkflows(name: string | undefined) {
+    if (!name) {
+      return this._workflows;
+    }
+    if (name in this._workflows) {
+      return { [name]: this._workflows[name] };
+    }
+    throw new ToucaError(ToucaErrorCode.InvalidWorkflow, [name]);
+  }
+
+  private async _run_workflows(
+    opts: RunnerOptions,
+    workflows: Record<string, (testcase: string) => void>
+  ): Promise<boolean> {
     Printer.printAppHeader();
-    for (const [suite, workflow] of Object.entries(this._workflows)) {
+    for (const [suite, workflow] of Object.entries(workflows)) {
       try {
         const options = { ...opts, suite };
         await this._initialize(options);
