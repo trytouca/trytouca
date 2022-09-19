@@ -38,7 +38,7 @@ import yargs = require('yargs/yargs'); // cannot be partially imported
 import { hideBin } from 'yargs/helpers';
 
 import { NodeClient } from './client';
-import { NodeOptions, update_options, find_home_path } from './options';
+import { find_home_path, NodeOptions, update_options } from './options';
 import { VERSION } from './version';
 
 interface RunnerOptions extends NodeOptions {
