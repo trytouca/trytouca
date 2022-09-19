@@ -31,7 +31,6 @@
 
 import * as chalk from 'chalk';
 import * as fs from 'fs';
-import { homedir } from 'os';
 import * as path from 'path';
 import { gte } from 'semver';
 import * as util from 'util';
@@ -39,7 +38,7 @@ import yargs = require('yargs/yargs'); // cannot be partially imported
 import { hideBin } from 'yargs/helpers';
 
 import { NodeClient } from './client';
-import { NodeOptions, update_options } from './options';
+import { NodeOptions, update_options, find_home_path } from './options';
 import { VERSION } from './version';
 
 interface RunnerOptions extends NodeOptions {
@@ -241,11 +240,6 @@ class Printer {
   }
 }
 
-function findHomePath() {
-  const cwd = path.join(process.cwd(), '.touca');
-  return fs.existsSync(cwd) ? cwd : path.join(homedir(), '.touca');
-}
-
 async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
   const y = yargs(hideBin(args));
   const argv = await y
@@ -314,7 +308,7 @@ async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
       'output-directory': {
         type: 'string',
         desc: 'Path to a local directory to store result files',
-        default: path.join(findHomePath(), 'results')
+        default: path.join(find_home_path(), 'results')
       },
       // 'log-level': {
       //   type: 'string',

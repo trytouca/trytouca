@@ -110,11 +110,11 @@ Touca Test Framework
 
 Suite: students_test/1.0
 
- 1.  PASS   alice    (0 ms)
- 2.  PASS   bob      (0 ms)
- 3.  PASS   charlie  (0 ms)
+ 1.  SENT   alice    (0 ms)
+ 2.  SENT   bob      (0 ms)
+ 3.  SENT   charlie  (0 ms)
 
-Tests:      3 passed, 3 total
+Tests:      3 submitted, 3 total
 Time:       0.39 s
 
 ✨   Ran all test suites.

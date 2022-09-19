@@ -1,6 +1,9 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as fs from 'fs';
+import * as ini from 'ini';
+import { homedir } from 'os';
+import * as path from 'path';
 
 export interface NodeOptions {
   /**
@@ -60,7 +63,7 @@ export interface NodeOptions {
   file?: string;
 }
 
-function _apply_config_file(incoming: NodeOptions): void {
+function _apply_legacy_config_file(incoming: NodeOptions): void {
   if (!incoming.file) {
     return;
   }
@@ -78,6 +81,41 @@ function _apply_config_file(incoming: NodeOptions): void {
       incoming[key] = parsed['touca'][key];
     }
   }
+}
+
+export function find_home_path() {
+  const cwd = path.join(process.cwd(), '.touca');
+  return fs.existsSync(cwd) ? cwd : path.join(homedir(), '.touca');
+}
+
+function find_profile_path() {
+  const homePath = find_home_path();
+  const settingsPath = path.join(homePath, 'settings');
+  let name = 'default';
+  if (fs.existsSync(settingsPath)) {
+    const config = ini.parse(fs.readFileSync(settingsPath, 'utf-8'));
+    name = config.settings?.profile ?? 'default';
+  }
+  return path.join(homePath, 'profiles', name);
+}
+
+function config_file_parse(): Record<string, unknown> {
+  const profilePath = find_profile_path();
+  if (!fs.existsSync(profilePath)) {
+    return {};
+  }
+  const config = ini.parse(fs.readFileSync(profilePath, 'utf-8'));
+  return config.settings ?? {};
+}
+
+function _apply_config_file(incoming: NodeOptions) {
+  const config = config_file_parse();
+  Object.assign(incoming, config);
+  const apply = (from: string, to: keyof NodeOptions) => {
+    incoming[to] = config[from] as undefined;
+  };
+  apply('api-key', 'api_key');
+  apply('api-url', 'api_url');
 }
 
 function _apply_arguments(existing: NodeOptions, incoming: NodeOptions): void {
@@ -184,6 +222,7 @@ export function update_options(
   existing: NodeOptions,
   incoming: NodeOptions
 ): void {
+  _apply_legacy_config_file(incoming);
   _apply_config_file(incoming);
   _apply_arguments(existing, incoming);
   _apply_environment_variables(existing);
