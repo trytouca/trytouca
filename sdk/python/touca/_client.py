@@ -265,6 +265,15 @@ class Client:
         return self._transport.get_testcases()
 
     def get_next_batch(self) -> str:
+        """
+        Queries the Touca server for the next version increment of this suite.
+
+        :raises RuntimeError:
+            when called on the client that is not configured to communicate
+            with the Touca server.
+
+        :return: next version increment of this suite
+        """
         if not self._transport:
             raise RuntimeError("client not configured to perform this operation")
         self._options["version"] = self._transport.get_next_batch()

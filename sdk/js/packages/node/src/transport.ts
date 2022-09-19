@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as http from 'http';
 import * as https from 'https';
@@ -150,6 +150,20 @@ export class Transport {
     }
     const body = JSON.parse(response.body) as ElementListResponseItem[];
     return body.map((k) => k.name);
+  }
+
+  public async getNextBatch(): Promise<string> {
+    const team = this._options.team;
+    const suite = this._options.suite;
+    const response = await this._send_request({
+      method: 'GET',
+      path: `/client/batch/${team}/${suite}/next`
+    });
+    if (response.status !== 200) {
+      throw new Error('Failed to find next version');
+    }
+    const body = JSON.parse(response.body) as { batch: string };
+    return body.batch;
   }
 
   public async post(content: Uint8Array): Promise<void> {

@@ -121,7 +121,7 @@ class ToucaError extends Error {
 }
 
 enum Status {
-  Pass = 'Pass',
+  Sent = 'Sent',
   Skip = 'Skip',
   Fail = 'Fail'
 }
@@ -203,7 +203,7 @@ class Printer {
     errors: string[] = []
   ) {
     const badge = {
-      [Status.Pass]: { color: chalk.bgGreen, text: ' SENT ' },
+      [Status.Sent]: { color: chalk.bgGreen, text: ' SENT ' },
       [Status.Skip]: { color: chalk.bgYellow, text: ' SKIP ' },
       [Status.Fail]: { color: chalk.bgRed, text: ' FAIL ' }
     }[status];
@@ -233,7 +233,7 @@ class Printer {
     };
 
     this.print('\nTests:     ');
-    report(Status.Pass, 'passed', chalk.green);
+    report(Status.Sent, 'submitted', chalk.green);
     report(Status.Skip, 'skipped', chalk.yellow);
     report(Status.Fail, 'failed', chalk.red);
     this.print('%d total\n', suiteSize);
@@ -447,6 +447,10 @@ export class Runner {
       throw new Error(this._client.configuration_error());
     }
 
+    if (options.version === 'unknown') {
+      options.version = await this._client.getNextBatch();
+    }
+
     // Update list of test cases
     await this._update_testcase_list(options);
   }
@@ -524,7 +528,7 @@ export class Runner {
       }
 
       timer.toc(testcase);
-      stats.inc(errors.length ? Status.Fail : Status.Pass);
+      stats.inc(errors.length ? Status.Fail : Status.Sent);
 
       if (errors.length === 0 && options.save_binary) {
         const filepath = path.join(testcase_directory, 'touca.bin');
@@ -538,7 +542,7 @@ export class Runner {
         await this._client.post();
       }
 
-      const status = errors.length ? Status.Fail : Status.Pass;
+      const status = errors.length ? Status.Fail : Status.Sent;
       printer.print_progress(index, status, testcase, timer, errors);
 
       this._client.forget_testcase(testcase);

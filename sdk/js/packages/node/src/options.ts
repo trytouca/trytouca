@@ -132,6 +132,10 @@ function _reformat_parameters(existing: NodeOptions): void {
   if (!existing.concurrency) {
     existing.concurrency = true;
   }
+  if (!existing.version) {
+    existing.version = 'unknown';
+  }
+
   const input_url = existing.api_url;
   if (!input_url) {
     return;
