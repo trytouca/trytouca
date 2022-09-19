@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Builder } from 'flatbuffers';
 import { mkdirSync, writeFileSync } from 'fs';
@@ -40,13 +40,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
   private _runner = new Runner(this);
 
   private _make_transport(): boolean {
-    const keys: (keyof NodeOptions)[] = [
-      'api_key',
-      'api_url',
-      'team',
-      'suite',
-      'version'
-    ];
+    const keys: (keyof NodeOptions)[] = ['api_key', 'api_url', 'team', 'suite'];
     if (this._options.offline === true) {
       return false;
     }
@@ -203,6 +197,24 @@ export class NodeClient implements BaseClient<NodeOptions> {
       throw new Error('client not configured to perform this operation');
     }
     return this._transport.get_testcases();
+  }
+
+  /**
+   * Queries the Touca server for the next version increment of this suite.
+   *
+   * @throws when called on the client that is not configured to communicate
+   *         with the Touca server.
+   *
+   * @returns next version increment of this suite
+   */
+  public async getNextBatch(): Promise<string> {
+    if (!this._transport) {
+      throw new Error('client not configured to perform this operation');
+    }
+    const version = await this._transport.getNextBatch();
+    this._transport.update_options({ version });
+    this._options.version = version;
+    return version;
   }
 
   /**

@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as fs from 'fs';
 
@@ -7,7 +7,7 @@ import { NodeOptions, update_options } from '../src/options';
 test('pass when empty options are passed', () => {
   const existing: NodeOptions = {};
   update_options(existing, {});
-  expect(existing).toEqual({ concurrency: true });
+  expect(existing).toEqual({ concurrency: true, version: 'unknown' });
 });
 
 test('fail when file is missing', () => {
@@ -112,7 +112,7 @@ describe('when api url is given', () => {
       api_url: 'http://127.0.0.1/api'
     };
     expect(() => update_options(existing, incoming)).toThrowError(
-      'missing required option(s) "team", "suite", "version"'
+      'missing required option(s) "team", "suite"'
     );
     expect(existing.api_url).toEqual('http://127.0.0.1/api');
   });

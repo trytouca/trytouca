@@ -2,15 +2,21 @@
 
 ## v1.5.5
 
-Improvements:
+Features:
 
-- Allow user to filter workflow to run (#332)
+- Support automatic version increments (#336)
+- Allow user to limit test to a specific workflow (#332)
 - Support running multiple workflows (#332)
 
 Breaking Changes:
 
-- Drop support for Node v12 (#329)
+- Update default output directory (#333)
 - Do not generate binary files by default (#332)
+- Drop support for Node v12 (#329)
+
+Improvements:
+
+- Update dependencies (#329)
 
 ## v1.5.4
 

@@ -132,6 +132,10 @@ function _reformat_parameters(existing: NodeOptions): void {
   if (!existing.concurrency) {
     existing.concurrency = true;
   }
+  if (!existing.version) {
+    existing.version = 'unknown';
+  }
+
   const input_url = existing.api_url;
   if (!input_url) {
     return;
@@ -159,7 +163,11 @@ function _reformat_parameters(existing: NodeOptions): void {
     if (!slugs[key]) {
       continue;
     }
-    if (existing[key] !== undefined && existing[key] !== slugs[key]) {
+    if (
+      key !== 'version' &&
+      existing[key] !== undefined &&
+      existing[key] !== slugs[key]
+    ) {
       throw new Error(`option "${key}" is in conflict with provided api_url`);
     }
     existing[key] = slugs[key];
@@ -167,7 +175,7 @@ function _reformat_parameters(existing: NodeOptions): void {
 }
 
 function _validate_options(existing: NodeOptions): void {
-  const expected_keys: (keyof NodeOptions)[] = ['team', 'suite', 'version'];
+  const expected_keys: (keyof NodeOptions)[] = ['team', 'suite'];
   const has_handshake = existing.offline !== true;
   if (has_handshake && ['api_key', 'api_url'].some((k) => k in existing)) {
     expected_keys.push('api_key', 'api_url');
