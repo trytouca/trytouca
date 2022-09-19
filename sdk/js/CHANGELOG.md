@@ -2,9 +2,15 @@
 
 ## v1.5.5
 
+Improvements:
+
+- Allow user to filter workflow to run (#332)
+- Support running multiple workflows (#332)
+
 Breaking Changes:
 
 - Drop support for Node v12 (#329)
+- Do not generate binary files by default (#332)
 
 ## v1.5.4
 
