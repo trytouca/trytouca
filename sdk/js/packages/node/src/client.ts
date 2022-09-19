@@ -552,7 +552,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
   }
 
   public async run(): Promise<void> {
-    return await this._runner.run_workflows();
+    return await this._runner.run();
   }
 
   public async workflow(

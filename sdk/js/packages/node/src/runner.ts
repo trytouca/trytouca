@@ -49,11 +49,13 @@ interface RunnerOptions extends NodeOptions {
   testcase_file: string;
   output_directory: string;
   colored_output: boolean;
+  workflow?: string;
   // log_level: 'debug' | 'info' | 'warn';
 }
 
 enum ToucaErrorCode {
   MissingWorkflow = 1,
+  InvalidWorkflow,
   MissingSlugs,
   NoCaseMissingFile,
   NoCaseMissingRemote,
@@ -66,6 +68,12 @@ class ToucaError extends Error {
       ToucaErrorCode.MissingWorkflow,
       `
       No workflow is registered.
+      `
+    ],
+    [
+      ToucaErrorCode.InvalidWorkflow,
+      `
+      Workflow '%s' does not exist.
       `
     ],
     [
@@ -154,6 +162,16 @@ class Printer {
   private _testcase_count: number;
   private _colored_output: boolean;
 
+  static printError(fmt: string, ...args: unknown[]) {
+    process.stderr.write(util.format(fmt, ...args));
+  }
+  static printAppHeader() {
+    process.stdout.write('\nTouca Test Framework\n');
+  }
+  static printAppFooter() {
+    process.stdout.write('\n✨   Ran all test suites.\n\n');
+  }
+
   constructor(options: RunnerOptions) {
     this._testcase_width = options.testcases.reduce(
       (sum: number, testcase: string) => Math.max(testcase.length, sum),
@@ -173,7 +191,7 @@ class Printer {
   }
 
   public print_header(suite: string, version: string) {
-    this.print('\nTouca Test Framework\nSuite: %s/%s\n\n', suite, version);
+    this.print('\nSuite: %s/%s\n\n', suite, version);
   }
 
   public print_progress(
@@ -219,7 +237,6 @@ class Printer {
     report(Status.Fail, 'failed', chalk.red);
     this.print('%d total\n', suiteSize);
     this.print('Time:      %f s\n', duration);
-    this.print('\n✨   Ran all test suites.\n\n');
   }
 }
 
@@ -252,6 +269,10 @@ async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
         type: 'string',
         desc: 'Slug of team to which test results belong'
       },
+      workflow: {
+        type: 'string',
+        desc: 'Name of the workflow to run'
+      },
       'config-file': {
         type: 'string',
         desc: 'Path to a configuration file'
@@ -270,7 +291,7 @@ async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
         type: 'boolean',
         desc: 'Save a copy of test results on local filesystem in binary format',
         boolean: true,
-        default: true
+        default: false
       },
       'save-as-json': {
         type: 'boolean',
@@ -314,6 +335,7 @@ async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
     version: argv['revision'],
     team: argv['team'],
     suite: argv['suite'],
+    workflow: argv['workflow'],
     file: argv['config-file'],
     offline: [undefined, true].includes(argv['offline']),
     save_json: argv['save-as-json'],
@@ -339,95 +361,51 @@ export class Runner {
     this._workflows[name] = workflow;
   }
 
-  public async run_workflows(): Promise<void> {
+  public async run(): Promise<void> {
+    if (Object.keys(this._workflows).length === 0) {
+      throw new ToucaError(ToucaErrorCode.MissingWorkflow);
+    }
     try {
-      await this._run_workflows(process.argv);
+      const options = await _parse_cli_options(process.argv);
+      const workflows = this.filterWorkflows(options.workflow);
+      const status = await this._run_workflows(options, workflows);
+      process.exit(status ? 0 : 1);
     } catch (err) {
-      const error = err instanceof Error ? err.message : 'Unknown Eror';
-      process.stderr.write(
-        util.format(
-          'Touca encountered an error when executing this test:\n%s\n',
-          error
-        )
-      );
+      const error = err instanceof Error ? err.message : 'Unknown Error';
+      process.stderr.write(util.format('\nTest failed:\n%s\n', error));
       process.exit(1);
     }
   }
 
-  private async _run_workflows(args: string[]): Promise<void> {
-    if (Object.keys(this._workflows).length === 0) {
-      throw new ToucaError(ToucaErrorCode.MissingWorkflow);
+  private filterWorkflows(name: string | undefined) {
+    if (!name) {
+      return this._workflows;
     }
-    const options = await _parse_cli_options(args);
-    await this._initialize(options);
-    const printer = new Printer(options);
-    printer.print_header(options.suite as string, options.version as string);
+    if (name in this._workflows) {
+      return { [name]: this._workflows[name] };
+    }
+    throw new ToucaError(ToucaErrorCode.InvalidWorkflow, [name]);
+  }
 
-    const offline = options.offline || !options.api_key || !options.api_url;
-    const timer = new Timer();
-    const stats = new Statistics();
-    timer.tic('__workflow__');
-
-    for (const [index, testcase] of options.testcases.entries()) {
-      const testcase_directory = path.join(
-        options.output_directory,
-        options.suite as string,
-        options.version as string,
-        testcase
-      );
-
-      if (!options.overwrite && this._skip(options, testcase)) {
-        printer.print_progress(index, Status.Skip, testcase, timer);
-        stats.inc(Status.Skip);
-        continue;
-      }
-
-      if (fs.existsSync(testcase_directory)) {
-        const func = gte(process.version, '15.0.0') ? fs.rmSync : fs.rmdirSync;
-        func(testcase_directory, { recursive: true });
-        fs.mkdirSync(testcase_directory);
-      }
-
-      this._client.declare_testcase(testcase);
-      timer.tic(testcase);
-
-      const errors = [];
+  private async _run_workflows(
+    opts: RunnerOptions,
+    workflows: Record<string, (testcase: string) => void>
+  ): Promise<boolean> {
+    Printer.printAppHeader();
+    for (const [suite, workflow] of Object.entries(workflows)) {
       try {
-        for (const workflow_name in this._workflows) {
-          await this._workflows[workflow_name](testcase);
-        }
-      } catch (err) {
-        const error = err instanceof Error ? err.message : 'Unknown Error';
-        errors.push(error);
+        const options = { ...opts, suite };
+        await this._initialize(options);
+        await this._runWorkflow(options, workflow);
+      } catch (error) {
+        const prefix = `Error when running suite "${suite}"`;
+        const message = (error as ToucaError).message;
+        Printer.printError('\n%s:\n%s\n', prefix, message);
+        return false;
       }
-
-      timer.toc(testcase);
-      stats.inc(errors.length ? Status.Fail : Status.Pass);
-
-      if (errors.length === 0 && options.save_binary) {
-        const filepath = path.join(testcase_directory, 'touca.bin');
-        await this._client.save_binary(filepath, [testcase]);
-      }
-      if (errors.length === 0 && options.save_json) {
-        const filepath = path.join(testcase_directory, 'touca.json');
-        await this._client.save_json(filepath, [testcase]);
-      }
-      if (errors.length === 0 && !offline) {
-        await this._client.post();
-      }
-
-      const status = errors.length ? Status.Fail : Status.Pass;
-      printer.print_progress(index, status, testcase, timer, errors);
-
-      this._client.forget_testcase(testcase);
     }
-
-    timer.toc('__workflow__');
-    printer.print_footer(stats, options.testcases.length, timer);
-
-    if (!offline) {
-      await this._client.seal();
-    }
+    Printer.printAppFooter();
+    return true;
   }
 
   private async _initialize(options: RunnerOptions): Promise<void> {
@@ -499,6 +477,77 @@ export class Runner {
     options.testcases = await this._client.get_testcases();
     if (options.testcases.length === 0) {
       throw new ToucaError(ToucaErrorCode.NoCaseEmptyRemote);
+    }
+  }
+
+  private async _runWorkflow(
+    options: RunnerOptions,
+    workflow: (testcase: string) => void
+  ) {
+    const printer = new Printer(options);
+    printer.print_header(options.suite as string, options.version as string);
+    const offline = options.offline || !options.api_key || !options.api_url;
+    const timer = new Timer();
+    const stats = new Statistics();
+    timer.tic('__workflow__');
+
+    for (const [index, testcase] of options.testcases.entries()) {
+      const testcase_directory = path.join(
+        options.output_directory,
+        options.suite as string,
+        options.version as string,
+        testcase
+      );
+
+      if (!options.overwrite && this._skip(options, testcase)) {
+        printer.print_progress(index, Status.Skip, testcase, timer);
+        stats.inc(Status.Skip);
+        continue;
+      }
+
+      if (fs.existsSync(testcase_directory)) {
+        const func = gte(process.version, '15.0.0') ? fs.rmSync : fs.rmdirSync;
+        func(testcase_directory, { recursive: true });
+        fs.mkdirSync(testcase_directory);
+      }
+
+      this._client.declare_testcase(testcase);
+      timer.tic(testcase);
+
+      const errors = [];
+      try {
+        await workflow(testcase);
+      } catch (err) {
+        const error = err instanceof Error ? err.message : 'Unknown Error';
+        errors.push(error);
+      }
+
+      timer.toc(testcase);
+      stats.inc(errors.length ? Status.Fail : Status.Pass);
+
+      if (errors.length === 0 && options.save_binary) {
+        const filepath = path.join(testcase_directory, 'touca.bin');
+        await this._client.save_binary(filepath, [testcase]);
+      }
+      if (errors.length === 0 && options.save_json) {
+        const filepath = path.join(testcase_directory, 'touca.json');
+        await this._client.save_json(filepath, [testcase]);
+      }
+      if (errors.length === 0 && !offline) {
+        await this._client.post();
+      }
+
+      const status = errors.length ? Status.Fail : Status.Pass;
+      printer.print_progress(index, status, testcase, timer, errors);
+
+      this._client.forget_testcase(testcase);
+    }
+
+    timer.toc('__workflow__');
+    printer.print_footer(stats, options.testcases.length, timer);
+
+    if (!offline) {
+      await this._client.seal();
     }
   }
 

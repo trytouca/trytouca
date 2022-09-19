@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as process from 'process';
 
@@ -10,7 +10,7 @@ describe('basic operations', () => {
   });
 
   test('add workflow and run', async () => {
-    const mock_stdout = jest
+    const mock_stderr = jest
       .spyOn(process.stderr, 'write')
       .mockImplementation();
     const client = new NodeClient();
@@ -18,10 +18,11 @@ describe('basic operations', () => {
       client.check('some-key', 'some-value');
     });
     await client.run();
-    const prefix = 'Touca encountered an error when executing this test';
-    const message = `
-      Options "team", "suite", "version" are required when using this test framework.
-      `;
-    expect(mock_stdout).toHaveBeenCalledWith(`${prefix}:\n${message}\n`);
+    expect(mock_stderr).toHaveBeenLastCalledWith(`
+Error when running suite "some-workflow":
+
+      Options "team", "version" are required when using this test framework.
+      
+`);
   });
 });
