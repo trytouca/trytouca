@@ -21,7 +21,7 @@ describe('basic operations', () => {
     expect(mock_stderr).toHaveBeenLastCalledWith(`
 Error when running suite "some-workflow":
 
-      Options "team", "version" are required when using this test framework.
+      Options "team" are required when using this test framework.
       
 `);
   });

@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as fs from 'fs';
 import * as os from 'os';
@@ -45,7 +45,7 @@ test('check basic configure', () => {
   expect(() => {
     client.configure({
       concurrency: true,
-      api_url: 'https://api.touca.io/@/team/suite/v1',
+      api_url: 'https://api.touca.io/@/team/suite',
       api_key: 'some-key',
       offline: true
     });
@@ -61,13 +61,13 @@ test('check missing options', () => {
   expect(() => {
     client.configure({
       concurrency: true,
-      api_url: 'https://api.touca.io/@/team/suite',
+      api_url: 'https://api.touca.io/@/team',
       api_key: 'some-key',
       offline: true
     });
   }).not.toThrow();
   expect(client.configuration_error()).toEqual(
-    'Configuration failed: missing required option(s) "version"'
+    'Configuration failed: missing required option(s) "suite"'
   );
   expect(client.is_configured()).toEqual(false);
 });
@@ -126,6 +126,7 @@ describe('check saving file', () => {
     const client = new NodeClient();
     client.configure();
     expect(client.is_configured()).toEqual(true);
+    expect(client.configuration_error()).toEqual('');
     client.declare_testcase('some-case');
     client.check('some-key', 'some-result');
     client.declare_testcase('some-other-case');

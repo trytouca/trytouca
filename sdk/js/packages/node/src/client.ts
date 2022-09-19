@@ -40,13 +40,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
   private _runner = new Runner(this);
 
   private _make_transport(): boolean {
-    const keys: (keyof NodeOptions)[] = [
-      'api_key',
-      'api_url',
-      'team',
-      'suite',
-      'version'
-    ];
+    const keys: (keyof NodeOptions)[] = ['api_key', 'api_url', 'team', 'suite'];
     if (this._options.offline === true) {
       return false;
     }
