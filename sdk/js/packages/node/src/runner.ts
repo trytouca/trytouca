@@ -31,6 +31,7 @@
 
 import * as chalk from 'chalk';
 import * as fs from 'fs';
+import { homedir } from 'os';
 import * as path from 'path';
 import { gte } from 'semver';
 import * as util from 'util';
@@ -240,6 +241,11 @@ class Printer {
   }
 }
 
+function findHomePath() {
+  const cwd = path.join(process.cwd(), '.touca');
+  return fs.existsSync(cwd) ? cwd : path.join(homedir(), '.touca');
+}
+
 async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
   const y = yargs(hideBin(args));
   const argv = await y
@@ -308,7 +314,7 @@ async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
       'output-directory': {
         type: 'string',
         desc: 'Path to a local directory to store result files',
-        default: './results'
+        default: path.join(findHomePath(), 'results')
       },
       // 'log-level': {
       //   type: 'string',
@@ -432,13 +438,8 @@ export class Runner {
     }
 
     // Create directory to write logs and test results into
-    const output_dir = path.join(
-      options.output_directory,
-      options.suite as string,
-      options.version as string
-    );
-    if (!fs.existsSync(output_dir)) {
-      fs.mkdirSync(output_dir, { recursive: true });
+    if (!fs.existsSync(options.output_directory)) {
+      fs.mkdirSync(options.output_directory, { recursive: true });
     }
 
     // Configure the lower-level Touca library
@@ -558,12 +559,10 @@ export class Runner {
       options.version as string,
       testcase
     );
-    if (options.save_binary) {
-      return fs.existsSync(path.join(testcase_directory, 'touca.bin'));
-    }
-    if (options.save_json) {
-      return fs.existsSync(path.join(testcase_directory, 'touca.json'));
-    }
-    return false;
+    return options.save_binary
+      ? fs.existsSync(path.join(testcase_directory, 'touca.bin'))
+      : options.save_json
+      ? fs.existsSync(path.join(testcase_directory, 'touca.json'))
+      : false;
   }
 }
