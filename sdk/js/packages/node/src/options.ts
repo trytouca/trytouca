@@ -152,26 +152,13 @@ function _reformat_parameters(existing: NodeOptions): void {
     return;
   }
 
-  type Slugs = Pick<NodeOptions, 'team' | 'suite' | 'version'>;
-  const slugs: Slugs = {
-    team: pathname[1][0],
-    suite: pathname[1][1],
-    version: pathname[1][2]
-  };
-  for (const slug in slugs) {
-    const key = slug as keyof Slugs;
-    if (!slugs[key]) {
-      continue;
-    }
-    if (
-      key !== 'version' &&
-      existing[key] !== undefined &&
-      existing[key] !== slugs[key]
-    ) {
-      throw new Error(`option "${key}" is in conflict with provided api_url`);
-    }
-    existing[key] = slugs[key];
-  }
+  const slugs = pathname[1];
+  const keys: (keyof Pick<NodeOptions, 'team' | 'suite' | 'version'>)[] = [
+    'team',
+    'suite',
+    'version'
+  ];
+  slugs.forEach((slug, i) => (existing[keys[i]] = slug));
 }
 
 function _validate_options(existing: NodeOptions): void {
