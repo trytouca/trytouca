@@ -3,12 +3,16 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { BatchModel } from '@/schemas/batch'
-import { ISuiteDocument } from '@/schemas/suite'
+import { SuiteModel } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 
-async function clientBatchNextImpl(suite: ISuiteDocument): Promise<string> {
+async function clientBatchNextImpl(suiteSlug: string): Promise<string> {
+  const suite = await SuiteModel.findOne({ slug: suiteSlug }, { _id: 1 })
+  if (!suite) {
+    return 'v1.0'
+  }
   const batches = await BatchModel.aggregate([
     { $match: { suite: suite._id } },
     { $sort: { submittedAt: -1 } },
@@ -39,7 +43,6 @@ async function clientBatchNextImpl(suite: ISuiteDocument): Promise<string> {
  *  - `isClientAuthenticated` to yield `user`
  *  - `hasTeam` to yield `team`
  *  - `isTeamMember`
- *  - `hasSuite` to yield `suite`
  */
 export async function clientBatchNext(
   req: Request,
@@ -48,8 +51,8 @@ export async function clientBatchNext(
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
-  const suite = res.locals.suite as ISuiteDocument
+  const suite = { slug: req.params.suite }
   const tuple = [team.slug, suite.slug].join('_')
   logger.debug('%s: %s: showing next version', user.username, tuple)
-  return res.status(200).json({ batch: await clientBatchNextImpl(suite) })
+  return res.status(200).json({ batch: await clientBatchNextImpl(suite.slug) })
 }

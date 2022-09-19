@@ -2,6 +2,10 @@
 
 ## v1.5.6
 
+Features:
+
+- Support configuration profiles (#338)
+
 ## v1.5.5
 
 Features:

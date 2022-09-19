@@ -115,7 +115,7 @@ Suite: is_prime_test/1.0
  2.  SENT   51    (0 ms)
  3.  SENT   97    (0 ms)
 
-Tests:      3 passed, 3 total
+Tests:      3 submitted, 3 total
 Time:       0.39 s
 
 ✨   Ran all test suites.

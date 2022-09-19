@@ -85,7 +85,7 @@ class Printer:
 
     def print_footer(self, stats, timer, options):
         states = [
-            ("pass", "passed", Fore.GREEN),
+            ("pass", "submitted", Fore.GREEN),
             ("skip", "skipped", Fore.YELLOW),
             ("fail", "failed", Fore.RED),
         ]

@@ -83,7 +83,7 @@ Suite: is_prime/v1.0
  2.  SENT   17    (152 ms)
  3.  SENT   51    (127 ms)
 
-Tests:      3 passed, 3 total
+Tests:      3 submitted, 3 total
 Time:       0.91 s
 
 ✨   Ran all test suites.

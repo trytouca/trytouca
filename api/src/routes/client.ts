@@ -40,7 +40,6 @@ router.get(
   middleware.isClientAuthenticated,
   middleware.hasTeam,
   middleware.isTeamMember,
-  middleware.hasSuite,
   promisable(clientBatchNext, 'show next batch')
 )
 
