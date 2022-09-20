@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import fs from 'fs'
 import path from 'path'
@@ -8,10 +8,9 @@ import { config } from '@/utils/config'
 
 const transports: logger.transport[] = [
   new logger.transports.Console({
-    format: logger.format.combine(
-      logger.format.colorize(),
-      logger.format.simple()
-    ),
+    format: config.isCloudHosted
+      ? logger.format.json()
+      : logger.format.combine(logger.format.colorize(), logger.format.simple()),
     handleExceptions: true,
     level: config.logging.level
   })
