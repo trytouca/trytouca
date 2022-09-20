@@ -4,6 +4,7 @@ import sys
 import logging
 from rich.logging import RichHandler
 from minio import Minio
+from minio.deleteobjects import DeleteObject
 from playbook import Playbook
 from client_api import ApiClient
 from client_mongo import MongoClient
@@ -23,7 +24,14 @@ class MinioClient:
 
     def clear_buckets(self) -> None:
         for bucket in self.client.list_buckets():
-            self.client.remove_objects(bucket, self.client.list_objects(bucket.name))
+            logger.info(f"clearing bucket {bucket.name}")
+            delete_object_list = map(
+                lambda x: DeleteObject(x.object_name),
+                self.client.list_objects(bucket.name),
+            )
+            errors = self.client.remove_objects(bucket.name, delete_object_list)
+            for error in errors:
+                print("error when deleting object", error)
 
 
 def setup_databases():
