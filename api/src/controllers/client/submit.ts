@@ -14,7 +14,6 @@ import { MessageModel } from '@/schemas/message'
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
-import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 import { objectStore } from '@/utils/store'
@@ -153,10 +152,19 @@ async function processElement(
       element,
       submission
     )
-
     // store message in binary format in object storage
-
     await objectStore.addMessage(message._id.toHexString(), submission.raw)
+    // create a job on the queue to process message
+    await Queues.message.queue.add(
+      message.id,
+      {
+        batchId: batch._id,
+        messageId: message._id
+      },
+      {
+        jobId: message.id
+      }
+    )
 
     // update submission metadata with id of its parent nodes.
     // this is not an ideal design pattern but it removes the need
@@ -624,20 +632,8 @@ async function ensureMessage(
   }
 
   if (!message) {
-    const job = await MessageModel.create(doc)
     logger.debug('%s: registered message', tuple)
-
-    await Queues.message.queue.add(
-      job.id,
-      {
-        batchId: batch._id,
-        messageId: job._id
-      },
-      {
-        jobId: job.id
-      }
-    )
-    return job
+    return await MessageModel.create(doc)
   }
 
   // If message is already known, overwrite it and extend its expiration time.
