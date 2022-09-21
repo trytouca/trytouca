@@ -2,9 +2,12 @@
 
 import {
   CreateBucketCommand,
+  DeleteBucketCommand,
   DeleteObjectCommand,
   GetObjectCommand,
   HeadBucketCommand,
+  ListObjectsV2Command,
+  ListObjectsV2CommandOutput,
   PutObjectCommand,
   S3Client,
   S3ClientConfig
@@ -89,7 +92,12 @@ class S3ObjectStore extends ObjectStore {
     this.client = new S3Client(options)
   }
   private async missingBuckets(): Promise<string[]> {
-    const buckets = ['touca-comparisons', 'touca-messages', 'touca-results']
+    const buckets = [
+      'touca-comparisons',
+      'touca-messages',
+      'touca-results',
+      'touca'
+    ]
     const missing = []
     for (const bucket of buckets) {
       try {
@@ -119,8 +127,8 @@ class S3ObjectStore extends ObjectStore {
       await this.client.send(
         new PutObjectCommand({
           Body: content,
-          Bucket: `touca-${type}`,
-          Key: id
+          Bucket: 'touca',
+          Key: `${type}/${id}`
         })
       )
       return true
@@ -135,7 +143,7 @@ class S3ObjectStore extends ObjectStore {
   ): Promise<boolean> {
     try {
       await this.client.send(
-        new DeleteObjectCommand({ Bucket: `touca-${type}`, Key: id })
+        new DeleteObjectCommand({ Bucket: 'touca', Key: `${type}/${id}` })
       )
       return true
     } catch (err) {
@@ -145,15 +153,61 @@ class S3ObjectStore extends ObjectStore {
   }
   async getComparison(key: string): Promise<string> {
     const data = await this.client.send(
-      new GetObjectCommand({ Bucket: `touca-comparisons`, Key: key })
+      new GetObjectCommand({ Bucket: 'touca', Key: `comparisons/${key}` })
     )
     return this.streamToString(data.Body)
   }
   async getMessage(key: string): Promise<Buffer> {
     const data = await this.client.send(
-      new GetObjectCommand({ Bucket: `touca-messages`, Key: key })
+      new GetObjectCommand({ Bucket: 'touca', Key: `messages/${key}` })
     )
     return this.streamToBuffer(data.Body)
+  }
+  async upgradeBuckets() {
+    const suffixes: ('comparisons' | 'messages' | 'results')[] = [
+      'comparisons',
+      'messages',
+      'results'
+    ]
+    for (const bucketSuffix of suffixes) {
+      let comparisons: ListObjectsV2CommandOutput
+      do {
+        comparisons = await this.client.send(
+          new ListObjectsV2Command({ Bucket: `touca-${bucketSuffix}` })
+        )
+        if (!comparisons.Contents) {
+          break
+        }
+        for (const obj of comparisons.Contents) {
+          const data = await this.client.send(
+            new GetObjectCommand({
+              Bucket: `touca-${bucketSuffix}`,
+              Key: obj.Key
+            })
+          )
+          const transform =
+            bucketSuffix === 'messages'
+              ? this.streamToBuffer
+              : this.streamToString
+          await this.putDocument(
+            bucketSuffix,
+            obj.Key,
+            await transform(data.Body)
+          )
+          await this.client.send(
+            new DeleteObjectCommand({
+              Bucket: `touca-${bucketSuffix}`,
+              Key: obj.Key
+            })
+          )
+        }
+      } while (comparisons.KeyCount !== 0)
+      if (!config.isCloudHosted) {
+        await this.client.send(
+          new DeleteBucketCommand({ Bucket: `touca-${bucketSuffix}` })
+        )
+      }
+    }
   }
 }
 

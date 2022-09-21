@@ -10,6 +10,7 @@ import { MetaModel } from '@/schemas/meta'
 import { UserModel } from '@/schemas/user'
 import { config, configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
+import { objectStore } from '@/utils/store'
 
 /**
  * Registers primary user during server startup.
@@ -95,6 +96,7 @@ export async function upgradeDatabase() {
   const update = { $unset: { reservedAt: true } }
   await ComparisonModel.findOneAndUpdate({}, update)
   await MessageModel.findOneAndUpdate({}, update)
+  await objectStore.upgradeBuckets()
   logger.info('database migration: checks completed')
   return true
 }
