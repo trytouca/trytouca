@@ -22,16 +22,27 @@ class MinioClient:
             secure=False,
         )
 
+    def remove_objects(self, bucket_name: str, list_objects):
+        delete_object_list = map(lambda x: DeleteObject(x.object_name), list_objects)
+        errors = self.client.remove_objects(bucket_name, delete_object_list)
+        for error in errors:
+            print("error when deleting object", error)
+
     def clear_buckets(self) -> None:
-        for bucket in self.client.list_buckets():
-            logger.info(f"clearing bucket {bucket.name}")
-            delete_object_list = map(
-                lambda x: DeleteObject(x.object_name),
-                self.client.list_objects(bucket.name),
-            )
-            errors = self.client.remove_objects(bucket.name, delete_object_list)
-            for error in errors:
-                print("error when deleting object", error)
+        logger.info("clearing bucket touca")
+        self.remove_objects(
+            "touca", self.client.list_objects("touca", "comparisons/", True)
+        )
+        self.remove_objects(
+            "touca", self.client.list_objects("touca", "messages/", True)
+        )
+        self.remove_objects(
+            "touca", self.client.list_objects("touca", "results/", True)
+        )
+        for bucket in ["touca-comparisons", "touca-messages", "touca-results"]:
+            if self.client.bucket_exists(bucket):
+                logger.info(f"clearing bucket {bucket.name}")
+                self.remove_objects(bucket.name, self.client.list_objects(bucket.name))
 
 
 def setup_databases():

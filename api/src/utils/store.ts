@@ -91,32 +91,22 @@ class S3ObjectStore extends ObjectStore {
     super()
     this.client = new S3Client(options)
   }
-  private async missingBuckets(): Promise<string[]> {
-    const buckets = [
-      'touca-comparisons',
-      'touca-messages',
-      'touca-results',
-      'touca'
-    ]
-    const missing = []
-    for (const bucket of buckets) {
-      try {
-        await this.client.send(new HeadBucketCommand({ Bucket: bucket }))
-      } catch (err) {
-        missing.push(bucket)
-      }
+  private async bucketExists(name: string): Promise<boolean> {
+    try {
+      await this.client.send(new HeadBucketCommand({ Bucket: name }))
+      return true
+    } catch (err) {
+      return false
     }
-    return missing
   }
   async makeConnection(): Promise<boolean> {
-    for (const name of await this.missingBuckets()) {
-      await this.client.send(new CreateBucketCommand({ Bucket: name }))
+    if (!(await this.bucketExists('touca'))) {
+      await this.client.send(new CreateBucketCommand({ Bucket: 'touca' }))
     }
     return true
   }
   async status(): Promise<boolean> {
-    const missing = await this.missingBuckets()
-    return missing.length == 0
+    return this.bucketExists('touca')
   }
   protected async putDocument(
     type: 'comparisons' | 'messages' | 'results',
@@ -164,16 +154,14 @@ class S3ObjectStore extends ObjectStore {
     return this.streamToBuffer(data.Body)
   }
   async upgradeBuckets() {
-    const suffixes: ('comparisons' | 'messages' | 'results')[] = [
-      'comparisons',
-      'messages',
-      'results'
-    ]
-    for (const bucketSuffix of suffixes) {
+    for (const suffix of ['comparisons', 'messages', 'results']) {
+      if (!(await this.bucketExists(`touca-${suffix}`))) {
+        continue
+      }
       let comparisons: ListObjectsV2CommandOutput
       do {
         comparisons = await this.client.send(
-          new ListObjectsV2Command({ Bucket: `touca-${bucketSuffix}` })
+          new ListObjectsV2Command({ Bucket: `touca-${suffix}` })
         )
         if (!comparisons.Contents) {
           break
@@ -181,22 +169,20 @@ class S3ObjectStore extends ObjectStore {
         for (const obj of comparisons.Contents) {
           const data = await this.client.send(
             new GetObjectCommand({
-              Bucket: `touca-${bucketSuffix}`,
+              Bucket: `touca-${suffix}`,
               Key: obj.Key
             })
           )
           const transform =
-            bucketSuffix === 'messages'
-              ? this.streamToBuffer
-              : this.streamToString
+            suffix === 'messages' ? this.streamToBuffer : this.streamToString
           await this.putDocument(
-            bucketSuffix,
+            suffix as 'comparisons' | 'messages' | 'results',
             obj.Key,
             await transform(data.Body)
           )
           await this.client.send(
             new DeleteObjectCommand({
-              Bucket: `touca-${bucketSuffix}`,
+              Bucket: `touca-${suffix}`,
               Key: obj.Key
             })
           )
@@ -204,7 +190,7 @@ class S3ObjectStore extends ObjectStore {
       } while (comparisons.KeyCount !== 0)
       if (!config.isCloudHosted) {
         await this.client.send(
-          new DeleteBucketCommand({ Bucket: `touca-${bucketSuffix}` })
+          new DeleteBucketCommand({ Bucket: `touca-${suffix}` })
         )
       }
     }
