@@ -52,8 +52,8 @@ router.post(
   promisable(feedbackSubmit, 'handle user feedback')
 )
 
-router.use((_req, _res, next) => {
-  return next({ status: 404, errors: ['invalid route'] })
+router.use((req, _res, next) => {
+  return next({ status: 404, errors: ['invalid route'], url: req.originalUrl })
 })
 
 export { router as default }
