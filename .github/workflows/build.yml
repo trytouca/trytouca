@@ -683,7 +683,7 @@ jobs:
         run: |
           cd 02_python_main_api
           pip install touca
-          touca
+          touca test
 
   build-web:
     name: build-web
