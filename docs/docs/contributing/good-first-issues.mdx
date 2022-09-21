@@ -48,28 +48,9 @@ like to remove it in favor of Nx or npm workspaces.
 
 - [GitHub Issue](https://github.com/trytouca/trytouca/issues/193)
 
-## DevOps
-
-### 4. Add Terraform configuration for AWS
-
-Generally, we'd like to make it easier for people to self-host Touca wherever
-they like. Instead of giving free OSS users a half-broken experience and forcing
-them to upgrade to our paid enterprise edition as a fix, we like to make their
-self-hosting experience as pleasant as possible.
-
-We'd like to add a Terraform configuration that enables deploying Touca OSS to
-AWS, hosting the Touca server on EKS and using DocumentDB, ElastiCache and S3 as
-backend services.
-
-- [GitHub Issue](https://github.com/trytouca/trytouca/issues/190)
-- Relevant:
-  [Docker compose file](https://github.com/trytouca/trytouca/blob/main/ops/docker-compose.prod.yml)
-- Relevant:
-  [Self-Hosting Install Script](https://github.com/trytouca/trytouca/blob/main/ops/install.sh)
-
 ## C++ SDK
 
-### 5. Create package recipe for ConanCenter
+### 4. Create package recipe for ConanCenter
 
 Most engineering teams using Touca for serious C++ projects simply clone a
 stable version of our C++ SDK and repackage it internally. This is, in part,
@@ -93,7 +74,7 @@ and links to its third-party dependencies.
 - Relevant: [Github Issue](https://github.com/trytouca/trytouca/issues/32) for
   CMake improvements
 
-### 6. Improve CMake logic for packaging
+### 5. Improve CMake logic for packaging
 
 We are not using the standard CMake logic for packaging, exporting, installing,
 and finding the C++ library. This makes it difficult to package the library for
@@ -112,7 +93,7 @@ Relevant Links:
 
 ## Java SDK
 
-### 7. Better way to run example
+### 6. Better way to run example
 
 Our Java Examples in `examples/java` and `sdk/java` directories are defined as
 standalone applications. Unlike JUnit tests that are in often placed in the
