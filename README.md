@@ -183,6 +183,7 @@ feedback, that's the best place to be.
 <a href="https://github.com/mmdbalkhi"><img src="https://avatars.githubusercontent.com/u/65954744?v=4" title="mmdbalkhi" width="50" height="50"></a>
 <a href="https://github.com/depthdeluxe"><img src="https://avatars.githubusercontent.com/u/4984331?v=4" title="depthdeluxe" width="50" height="50"></a>
 <a href="https://github.com/ehsan-touca"><img src="https://avatars.githubusercontent.com/u/112129743?v=4" title="ehsan-touca" width="50" height="50"></a>
+<a href="https://github.com/rossh87"><img src="https://avatars.githubusercontent.com/u/36278238?v=4" title="rossh87" width="50" height="50"></a>
 
 ## Sponsors
 

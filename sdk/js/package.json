@@ -12,10 +12,8 @@
     "test:watch": "npm run test:watch --workspaces --if-present"
   },
   "workspaces": [
-    "packages/node",
-    "examples/01_node_minimal",
-    "examples/02_node_main_api",
-    "examples/03_node_core_api"
+    "packages/*",
+    "examples/*"
   ],
   "devDependencies": {
     "@types/jest": "^29.0.3",
@@ -38,5 +36,8 @@
     "flatbuffers": "^2.0.7",
     "semver": "^7.3.7",
     "yargs": "^17.5.1"
+  },
+  "engines": {
+    "npm": ">=7.7.0"
   }
 }
