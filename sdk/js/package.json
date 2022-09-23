@@ -3,13 +3,13 @@
   "name": "@touca/sdk",
   "version": "0.0.0",
   "scripts": {
-    "build": "lerna run --stream --concurrency 1 --sort build",
-    "build:prod": "lerna run --stream --concurrency 1 --sort build:prod",
-    "clean": "lerna run --parallel clean && lerna clean --yes",
+    "build": "npm run build --workspaces --if-present",
+    "build:prod": "npm run build:prod --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present",
     "docs": "typedoc",
-    "lint": "lerna run --parallel lint",
-    "test": "lerna run --stream --concurrency 1 --sort test",
-    "test:watch": "lerna run --stream --concurrency 1 --sort test:watch"
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:watch": "npm run test:watch --workspaces --if-present"
   },
   "workspaces": [
     "packages/node",
@@ -26,7 +26,6 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-simple-import-sort": "^8.0.0",
     "jest": "^29.0.3",
-    "lerna": "^5.5.1",
     "nock": "^13.2.9",
     "prettier": "^2.6.0",
     "rimraf": "^3.0.2",
