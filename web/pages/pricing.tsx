@@ -31,10 +31,6 @@ const content: PageContent = {
         class: 'text-6xl md:text-7xl text-sky-200',
         suffix: ['per seat', 'per month'],
         text: '$25'
-      },
-      cta: {
-        text: 'Start 14-day free trial',
-        href: ''
       }
     },
     {
@@ -49,10 +45,6 @@ const content: PageContent = {
         class: 'text-4xl md:text-5xl text-white',
         suffix: ['per month'],
         text: '$1000'
-      },
-      cta: {
-        text: 'Learn more',
-        href: ''
       }
     }
   ],
