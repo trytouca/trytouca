@@ -21,25 +21,30 @@ interface PageContent {
 const content: PageContent = {
   plans: [
     {
-      title: 'Self-Hosted',
-      features: ['Apache-2.0 License', 'Community Support', 'No Usage Limits'],
+      title: 'Teams',
+      features: [
+        'Collaborative features',
+        'High-level insights',
+        'White glove onboarding'
+      ],
       fee: {
-        class: 'text-4xl md:text-5xl text-gray-200',
-        suffix: [],
-        text: 'Free'
+        class: 'text-6xl md:text-7xl text-sky-200',
+        suffix: ['per seat', 'per month'],
+        text: '$25'
       }
     },
     {
-      title: 'Cloud-Hosted',
+      title: 'Enterprises',
       features: [
-        'Enterprise-Ready',
-        'Dedicated Support',
-        'Professional Services'
+        'Custom contracts',
+        'Dedicated support',
+        'Reduced per-seat pricing'
       ],
       fee: {
-        class: 'text-7xl text-sky-200',
-        suffix: ['per user', 'per month'],
-        text: '$25'
+        prefix: 'Starting at',
+        class: 'text-4xl md:text-5xl text-white',
+        suffix: ['per month'],
+        text: '$1000'
       }
     }
   ],
@@ -62,10 +67,9 @@ const content: PageContent = {
         answer: [
           `Touca Server is language agnostic. You can submit test results
           using our CLI.`,
-          `For more complex workflows, you can integrate one of our SDks to
+          `For more complex workflows, you can integrate one of our SDKs to
           allow capturing more information about the behavior and performance
-          of your code. We provide SDKs for C++, Python, Java, and JavaScript
-          programming languages.`
+          of your code. We have SDKs for C++, Python, Java, and JavaScript.`
         ]
       },
       {
@@ -170,24 +174,28 @@ function FreePlan() {
             for individual use.
           </p>
         </div>
-        <PlanButton></PlanButton>
+        <SpecialButton
+          input={{
+            href: 'https://app.touca.io',
+            text: 'Get Started for Free'
+          }}></SpecialButton>
       </div>
     </div>
   );
 }
 
-function PlanButton() {
+function SpecialButton(props: { input: { href: string; text: string } }) {
   return (
     <a
       className="block text-lg"
-      href="https://app.touca.io"
+      href={props.input.href}
       target="_blank"
       rel="noopener noreferrer">
       <button
         className="box-shadow group space-x-2 rounded-xl bg-dark-blue-700 bg-opacity-25 p-3 font-medium text-white shadow-[0_0_5px_#7dd3fc] duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
         type="button"
         role="button">
-        <span>Get Started for Free</span>
+        <span>{props.input.text}</span>
         <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100"></HiArrowNarrowRight>
       </button>
     </a>
@@ -218,19 +226,19 @@ export default function PricingPage() {
         <div className="wsl-min-h-screen-1 container mx-auto flex w-full max-w-screen-lg flex-col justify-center py-16">
           <div className="flex min-h-[25vh] items-center space-y-2 p-8 text-center">
             <p className="mx-auto max-w-2xl text-3xl font-extrabold leading-tight text-white sm:text-4xl lg:text-5xl">
-              Use Touca for <span className="text-yellow-500">Free</span>.
-              <br />
-              Pay when it makes sense to.
+              <span className="bg-gradient-to-r from-yellow-500 to-yellow-300 bg-clip-text font-extrabold text-transparent">
+                Pays for itself
+              </span>{' '}
+              in confident, more productive engineers
             </p>
           </div>
           <div className="auto-cols-fr p-8">
             <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-              <div className="col-span-1 py-2">
-                <PricingPlan plan={content.plans[0]}></PricingPlan>
-              </div>
-              <div className="col-span-1">
-                <PricingPlan plan={content.plans[1]}></PricingPlan>
-              </div>
+              {content.plans.map((plan, index) => (
+                <div key={index} className="col-span-1">
+                  <PricingPlan plan={plan}></PricingPlan>
+                </div>
+              ))}
             </div>
           </div>
           <FreePlan></FreePlan>

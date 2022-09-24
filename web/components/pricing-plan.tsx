@@ -7,9 +7,14 @@ export type Input = {
   title: string;
   features: string[];
   fee: {
+    prefix?: string;
     class: string;
     suffix: string[];
     text: string;
+  };
+  cta?: {
+    text: string;
+    href: string;
   };
 };
 
@@ -19,27 +24,34 @@ export default class PricingPlan extends React.Component<
 > {
   render() {
     return (
-      <div className="h-full space-y-8 rounded-xl border border-dark-blue-700 bg-dark-blue-800 bg-opacity-90 p-8 shadow-xl">
+      <div className="h-full space-y-12 rounded-xl border border-dark-blue-700 bg-dark-blue-800 bg-opacity-90 px-4 py-8 shadow-xl">
         <h4 className="text-center text-xl font-medium text-white">
           {this.props.plan.title}
         </h4>
-        <div className="flex items-center justify-center space-x-4 border-b border-dark-blue-700 px-4 pb-8 md:px-8">
-          <p className={`px-1 font-bold ${this.props.plan.fee.class}`}>
-            {this.props.plan.fee.text}
-          </p>
-          {this.props.plan.fee.suffix && (
-            <div>
-              {this.props.plan.fee.suffix.map((suffix, index) => {
-                return (
-                  <p key={index} className="text-lg font-medium text-white">
-                    {suffix}
-                  </p>
-                );
-              })}
-            </div>
+        <div className="space-y-2 border-b border-dark-blue-700 px-4 pb-8">
+          {this.props.plan.fee.prefix && (
+            <p className="text-center text-gray-300">
+              {this.props.plan.fee.prefix}
+            </p>
           )}
+          <div className="flex items-center justify-center space-x-4">
+            <p className={`px-1 font-bold ${this.props.plan.fee.class}`}>
+              {this.props.plan.fee.text}
+            </p>
+            {this.props.plan.fee.suffix && (
+              <div>
+                {this.props.plan.fee.suffix.map((suffix, index) => {
+                  return (
+                    <p key={index} className="text-lg font-medium text-white">
+                      {suffix}
+                    </p>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
-        <div className="flex flex-grow flex-col justify-between rounded-b-lg px-4 md:px-8">
+        <div className="flex flex-col justify-between rounded-b-lg px-4 md:px-8">
           <div className="space-y-2">
             {this.props.plan.features.map((feature, index) => {
               return (
@@ -55,7 +67,29 @@ export default class PricingPlan extends React.Component<
             })}
           </div>
         </div>
+        <div className="flex flex-grow flex-col justify-end">
+          {this.props.plan.cta && (
+            <PlanButton input={this.props.plan.cta}></PlanButton>
+          )}
+        </div>
       </div>
     );
   }
+}
+
+function PlanButton(props: { input: { href: string; text: string } }) {
+  return (
+    <a
+      className="block text-lg"
+      href={props.input.href}
+      target="_blank"
+      rel="noopener noreferrer">
+      <button
+        className="w-full rounded-xl border border-sky-800 bg-dark-blue-700 bg-opacity-25 p-3 font-medium text-white duration-150 ease-in-out hover:bg-opacity-50 focus:outline-none"
+        type="button"
+        role="button">
+        {props.input.text}
+      </button>
+    </a>
+  );
 }
