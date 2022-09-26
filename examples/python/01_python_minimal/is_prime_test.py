@@ -4,6 +4,6 @@ import touca
 from is_prime import is_prime
 
 
-@touca.Workflow
+@touca.workflow
 def is_prime_test(testcase: str):
     touca.check("is_prime_output", is_prime(int(testcase)))

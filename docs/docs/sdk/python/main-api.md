@@ -29,7 +29,7 @@ Here's a Touca test we can write for our code under test:
 import touca
 from students import find_student
 
-@touca.Workflow
+@touca.workflow
 def students_test(username: str):
     with touca.scoped_timer("find_student"):
         student = find_student(username)
@@ -91,7 +91,7 @@ def calculate_gpa(courses: List[Course]):
 ```
 
 Touca data capturing functions remain no-op in production environments. They are
-only activated when running in the context of a `@touca.Workflow` test function.
+only activated when running in the context of a `@touca.workflow` test function.
 
 ## Describing the Performance
 

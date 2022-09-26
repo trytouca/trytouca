@@ -13,7 +13,7 @@ Write regression tests, the easy way.
 import touca
 from code_under_test import important_workflow
 
-@touca.Workflow
+@touca.workflow
 def test_important_workflow(testcase: str):
     touca.check("output", important_workflow(testcase))
 ```
@@ -71,7 +71,7 @@ Touca is different from unit testing:
 import touca
 from is_prime import is_prime
 
-@touca.Workflow
+@touca.workflow
 def is_prime_test(testcase: str):
     touca.check("output", is_prime(int(testcase)))
 ```
@@ -168,7 +168,7 @@ documentation and sharing feedback.
   Yes, unless you like to capture data-points that are not accessible through
   your software's public API. Touca data capturing functions (e.g. `touca.check`
   and `touca.scoped_timer`) are no-op in production environments. They only work
-  when called from a `@touca.Workflow` context.
+  when called from a `@touca.workflow` context.
 
 - How is Touca making money?
 

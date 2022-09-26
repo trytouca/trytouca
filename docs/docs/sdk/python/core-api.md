@@ -8,7 +8,7 @@ framework:
 import touca
 from students import find_student
 
-@touca.Workflow
+@touca.workflow
 def students_test(username: str):
     student = find_student(username)
     # insert code here to describe the behavior
@@ -18,12 +18,12 @@ if __name__ == "__main__":
     touca.run()
 ```
 
-Functions `touca.Workflow` and `touca.run` are the entry-points to the Touca
-test framework. In addition to running our workflow under test with different
-test cases, the test framework provides facilities that include reporting
-progress, handling errors, parsing command line arguments, and many more. We
-intentionally designed this API to abstract away these common features to let
-developers focus on their workflow under test.
+`touca.workflow` and `touca.run` are the entry-points to the Touca test
+framework. In addition to running our workflow under test with different test
+cases, the test framework provides facilities that include reporting progress,
+handling errors, parsing command line arguments, and many more. We intentionally
+designed this API to abstract away these common features to let developers focus
+on their workflow under test.
 
 Touca SDK for Python provides a separate lower-level Client API that offers more
 flexibility and control over how tests are executed and how their results are

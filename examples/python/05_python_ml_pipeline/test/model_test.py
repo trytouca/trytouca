@@ -7,7 +7,7 @@ import numpy as np
 pipeline = joblib.load("data/pipeline.bin")
 
 
-@touca.Workflow
+@touca.workflow
 def pipeline_test(testcase: str):
     testcase_input = np.fromfile(f"data/testcases/{testcase}.bin", dtype=float)
     outcome = pipeline.predict([testcase_input])[0]

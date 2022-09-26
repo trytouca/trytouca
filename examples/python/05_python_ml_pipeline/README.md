@@ -166,7 +166,7 @@ import numpy as np
 # Load machine learning model from file
 pipeline = joblib.load("data/pipeline.bin")
 
-@touca.Workflow
+@touca.workflow
 def pipeline_test(testcase: str):
     # for each test case, load input data from a corresponding binary file
     testcase_input = np.fromfile(f"data/testcases/{testcase}.bin", dtype=float)
