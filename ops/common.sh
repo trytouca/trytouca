@@ -97,7 +97,7 @@ run_compose () {
         return 1
     fi
     for arg in "$@"; do
-        local cmd="docker-compose -f \"${FILE_COMPOSE}\" -p touca --project-directory \"${DIR_PROJECT_ROOT}\" $arg"
+        local cmd="UID_GID="$(id -u):$(id -g)" docker-compose -f \"${FILE_COMPOSE}\" -p touca --project-directory \"${DIR_PROJECT_ROOT}\" $arg"
         if ! eval "$cmd"; then
             log_warning "failed to run $cmd"
             return 1
