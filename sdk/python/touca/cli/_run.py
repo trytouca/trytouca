@@ -6,7 +6,7 @@ import os
 import shutil
 import subprocess
 import tempfile
-from argparse import ArgumentParser, ArgumentTypeError
+from argparse import ArgumentParser
 
 import requests
 from jsonschema import Draft3Validator
