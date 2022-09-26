@@ -11,7 +11,7 @@ The following example demonstrates how to use this framework::
     import touca
     from code_under_test import find_student, calculate_gpa
 
-    @touca.Workflow
+    @touca.workflow
     def test_students(testcase: str):
         student = find_student(testcase)
         touca.assume("username", student.username)
@@ -24,7 +24,7 @@ The following example demonstrates how to use this framework::
 
 It is uncommon to run multiple regression test workflows as part of a single
 suite. However, the pattern above allows introducing multiple workflows by
-defining functions with ``@touca.Workflow`` decorators.
+defining functions with ``@touca.workflow`` decorators.
 """
 
 import shutil
@@ -313,16 +313,31 @@ class _Timer:
         return int(self._times.get(name).microseconds / 1e3)
 
 
-class Workflow:
-    """
-    Base class meant to be used as a decorator.
+class _Workflow:
+    def __init__(self, func, name: str = None, testcases: List[str] = None):
+        self.name = name if name else func.__name__
+        self.func = func
+        self.testcases = testcases
 
+
+class Workflow:
+    _workflows = []
+
+    def __init__(self, func):
+        from functools import update_wrapper
+
+        update_wrapper(self, func)
+        Workflow._workflows.append(_Workflow(func))
+
+
+def workflow(method=None, testcases=None):
+    """
     Registers the decorated function as a regression test workflow to be
     executed, once, for each test case.
 
-    The following example demonstrates how this class should be used::
+    The following example demonstrates how to use this decorator::
 
-        @touca.Workflow
+        @touca.workflow
         def test_students(testcase: str):
             student = find_student(testcase)
             touca.assume("username", student.username)
@@ -330,18 +345,14 @@ class Workflow:
             touca.check("birth_date", student.dob)
             touca.check("gpa", calculate_gpa(student.courses))
     """
+    from functools import wraps
 
-    def __init__(self, func):
-        from functools import update_wrapper
+    @wraps(method)
+    def wrapper(wrapped_method):
+        testcases = None if not testcases else list(testcases())
+        Workflow._workflows.append(_Workflow(wrapped_method, testcases=testcases))
 
-        update_wrapper(self, func)
-        self.__func = func
-        if not hasattr(Workflow, "_workflows"):
-            Workflow._workflows = []
-        Workflow._workflows.append((func.__name__, self))
-
-    def __call__(self, testcase: str):
-        return self.__func(testcase)
+    return wrapper(method) if method else wrapper
 
 
 def _filter_selected_workflow(options, workflows):
@@ -353,7 +364,7 @@ def _filter_selected_workflow(options, workflows):
     return filtered
 
 
-def _run_workflow(options, workflow):
+def _run_workflow(options, workflow: _Workflow):
     offline = options.get("offline") or any(
         k not in options for k in ["api-key", "api-url"]
     )
@@ -381,7 +392,7 @@ def _run_workflow(options, workflow):
 
         errors = []
         try:
-            workflow.__call__(testcase)
+            workflow.func(testcase)
 
         except BaseException as err:
             errors.append(": ".join([err.__class__.__name__, str(err)]))
@@ -412,19 +423,23 @@ def _run_workflow(options, workflow):
         Client.instance().seal()
 
 
-def run_workflows(args, workflows):
+def run_workflows(args, workflows: List[_Workflow]):
     from copy import deepcopy
 
     workflows = _filter_selected_workflow(args, workflows)
     Printer.print_app_header()
-    for name, workflow in workflows:
+    for workflow in workflows:
         options = deepcopy(args)
-        options["suite"] = name
+        options["suite"] = workflow.name
+        if workflow.testcases:
+            options["testcases"] = workflow.testcases
         try:
             _initialize(options)
             _run_workflow(options, workflow)
         except RuntimeError as error:
-            Printer.print_warning("Error when running workflow {}: {}", name, error)
+            Printer.print_warning(
+                "Error when running workflow {}: {}", workflow.name, error
+            )
     Printer.print_app_footer()
 
 
@@ -444,7 +459,7 @@ def run(**kwargs):
         values or are in conflict with each other. Capturing this exception
         is not required.
     """
-    if not hasattr(Workflow, "_workflows") or not Workflow._workflows:
+    if not Workflow._workflows:
         raise _ToucaError(_ToucaErrorCode.MissingWorkflow)
     try:
         kwargs = {k.replace("_", "-"): v for k, v in kwargs.items()}

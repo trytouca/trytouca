@@ -4,7 +4,7 @@ from students import find_student
 import touca
 
 
-@touca.Workflow
+@touca.workflow
 def students_test(username: str):
     with touca.scoped_timer("find_student"):
         student = find_student(username)

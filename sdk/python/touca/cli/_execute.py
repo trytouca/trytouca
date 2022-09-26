@@ -12,26 +12,23 @@ import logging
 
 def is_test_module(module: str):
     with open(module, "rt") as file:
-        return "@touca.Workflow" in file.read()
+        content = file.read()
+        return any(x in content for x in ["@touca.workflow", "@touca.Workflow"])
 
 
 def find_test_modules(testdir: str):
     return [p for p in Path(testdir).glob("**/*.py") if is_test_module(p)]
 
 
-def extract_workflows(modules: list):
+def load_workflows(modules: list):
     import importlib
-    import inspect
     import sys
 
     for module in modules:
         relpath = Path(module).relative_to(Path.cwd())
         syspath = Path(relpath.parent).absolute()
         sys.path.append(f"{syspath}/")
-        mod = importlib.import_module(relpath.stem)
-        for (name, member) in inspect.getmembers(mod):
-            if isinstance(member, Workflow):
-                yield name, member
+        importlib.import_module(relpath.stem)
         sys.path.remove(f"{syspath}/")
 
 
@@ -72,9 +69,9 @@ class Execute(Operation):
         dir_test = Path(self.__options.get("testdir", [Path.cwd()])[0]).resolve()
         args = self._find_arguments()
         modules = find_test_modules(dir_test)
-        workflows = list(extract_workflows(modules))
+        load_workflows(modules)
         try:
-            run_workflows(args, workflows)
+            run_workflows(args, Workflow._workflows)
         except Exception as err:
             print(f"test failed: {err}", file=sys.stderr)
             return False

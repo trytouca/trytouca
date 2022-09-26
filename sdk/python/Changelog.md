@@ -217,7 +217,7 @@ Features:
   import touca
   from code_under_test import find_student, calculate_gpa
 
-  @touca.Workflow
+  @touca.workflow
   def test_students(testcase: str):
       student = find_student(testcase)
       touca.add_assertion("username", student.username)

@@ -10,6 +10,7 @@ from touca._runner import (
     _update_testcase_list,
     _ToucaError,
     _ToucaErrorCode,
+    _Workflow,
 )
 
 
@@ -33,7 +34,7 @@ def test_no_case_missing_remote():
     with pytest.raises(_ToucaError) as err:
         run_workflows(
             {"team": "acme", "suite": "students", "version": "1.0"},
-            [("sample", lambda x: None)],
+            [_Workflow(lambda x: None, name="sample")],
         )
     assert err.value._code == _ToucaErrorCode.NoCaseMissingRemote
 
@@ -50,12 +51,12 @@ def test_run_twice(capsys: pytest.CaptureFixture):
     }
     with TemporaryDirectory(prefix="touca-python-test") as tempdir:
         args.update({"output-directory": tempdir})
-        run_workflows(args, [("sample", lambda x: None)])
+        run_workflows(args, [_Workflow(lambda x: None, name="sample")])
         captured = capsys.readouterr()
         checks = {"alice": ["1.", "SENT"], "bob": ["2.", "SENT"]}
         check_stats(checks, captured)
         assert captured.err == ""
-        run_workflows(args, [("sample", lambda x: None)])  # rerun test
+        run_workflows(args, [_Workflow(lambda x: None, name="sample")])  # rerun test
         captured = capsys.readouterr()
         checks = {"alice": ["1.", "SKIP"], "bob": ["2.", "SKIP"]}
         assert captured.err == ""
