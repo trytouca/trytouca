@@ -7,7 +7,7 @@ from typing import List
 import sys
 import touca
 from touca.cli._common import Operation
-from touca._runner import run, _Workflow, Workflow
+from touca._runner import run_workflows, _parse_cli_options, _Workflow
 
 logger = logging.getLogger("touca.cli.check")
 
@@ -19,41 +19,85 @@ class Check(Operation):
     @classmethod
     def parser(self, parser: ArgumentParser):
         parser.add_argument(
-            "src",
-            help=f"path to file or directory to submit",
-            nargs=1 if sys.stdin.isatty() else "?",
+            "--suite",
+            help="name of the suite to associate with this output",
+            required=True,
         )
+        parser.add_argument(
+            "--testcase",
+            help="name of the testcase to associate with this output",
+            required=False,
+        )
+        if sys.stdin.isatty():
+            parser.add_argument(
+                "src",
+                help="path to file or directory to submit",
+            )
 
     def __init__(self, options: dict):
         self.__options = options
+
+    def _slugify(self, file: Path):
+        return (
+            str(file.absolute().relative_to(Path.cwd()))
+            .replace(".", "_")
+            .replace("/", "_")
+            .replace("-", "_")
+        )
 
     def _submit_stdin(self):
         content = sys.stdin.read()
 
         def _submit(testcase: str):
             touca.check("output", content)
-            return
 
-        testcase = "some-testcase"
-        Workflow._workflows = [_Workflow(_submit, "example-suite", [testcase])]
-        run(team="tutorial-232782")
-
-        return False
+        workflow = _Workflow(_submit, self.__options.get("suite"))
+        testcase = self.__options.get("testcase")
+        if testcase:
+            workflow.testcases = [testcase]
+        run_workflows(_parse_cli_options([]), [workflow])
+        return True
 
     def _submit_file(self, file: Path):
-        return False
+        content = file.read_text()
 
-    def _submit_files(self, files: List[Path]):
+        def _submit(testcase: str):
+            touca.check("output", content)
+
+        testcase = self.__options.get("testcase")
+        workflow = _Workflow(_submit, self.__options.get("suite"))
+        workflow.testcases = [testcase] if testcase else [self._slugify(file)]
+        run_workflows(_parse_cli_options([]), [workflow])
+        return True
+
+    def _get_file_content(self, file: Path):
+        try:
+            return file.read_text()
+        except:
+            from hashlib import sha256
+
+            return sha256(file.read_bytes()).hexdigest()
+
+    def _submit_directory(self, directory: Path):
+        def _submit(testcase: str):
+            files = [file for file in directory.glob("*") if file.is_file()]
+            for file in files:
+                content = self._get_file_content(file)
+                touca.check(self._slugify(file), content)
+
+        testcase = self.__options.get("testcase")
+        workflow = _Workflow(_submit, self.__options.get("suite"))
+        workflow.testcases = [testcase] if testcase else [self._slugify(directory)]
+        run_workflows(_parse_cli_options([]), [workflow])
         return False
 
     def run(self) -> bool:
         if not sys.stdin.isatty():
             return self._submit_stdin()
-        src = Path(self.__options.get("src")[0])
+        src = Path(self.__options.get("src"))
         if src.is_file():
             return self._submit_file(src)
         if src.is_dir():
-            files = [file for file in src.glob("*") if file.is_file()]
-            return self._submit_files(files)
+            return self._submit_directory(src)
         logger.error("specified path is neither a directory nor a file")
         return False

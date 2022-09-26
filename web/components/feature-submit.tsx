@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
     repository: 'https://github.com/trytouca/trytouca/tree/main/sdk/python',
     snippet: `import touca
 
-@touca.Workflow
+@touca.workflow
 def is_prime(testcase: str):
   touca.check("output", is_prime(int(testcase)))
 `
