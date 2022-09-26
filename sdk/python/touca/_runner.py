@@ -314,8 +314,8 @@ class _Timer:
 
 
 class _Workflow:
-    def __init__(self, func, testcases: List[str] = None):
-        self.name = func.__name__
+    def __init__(self, func, name: str = None, testcases: List[str] = None):
+        self.name = name if name else func.__name__
         self.func = func
         self.testcases = testcases
 
@@ -349,8 +349,8 @@ def workflow(method=None, testcases=None):
 
     @wraps(method)
     def wrapper(wrapped_method):
-        tcs = None if not testcases else list(testcases())
-        Workflow._workflows.append(_Workflow(wrapped_method, tcs))
+        testcases = None if not testcases else list(testcases())
+        Workflow._workflows.append(_Workflow(wrapped_method, testcases=testcases))
 
     return wrapper(method) if method else wrapper
 
