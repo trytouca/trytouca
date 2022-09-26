@@ -8,6 +8,7 @@ from typing import List
 from touca import __version__
 from touca._options import find_home_path
 from touca._printer import Printer
+from touca.cli.check import Check
 from touca.cli._common import Operation
 from touca.cli._config import Config
 from touca.cli._execute import Execute
@@ -89,6 +90,7 @@ class Version(Operation):
 
 def main(args=None):
     subcommands = [
+        Check,
         Config,
         Help,
         Merge,

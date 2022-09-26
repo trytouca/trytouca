@@ -1,0 +1,5 @@
+{
+  "roboflow_api_key": "<your_roboflow_api_key>",
+  "roboflow_project": "<your_roboflow_project>",
+  "roboflow_version": 1
+}

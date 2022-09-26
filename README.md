@@ -75,7 +75,7 @@ any number of test cases.
 import touca
 from students import find_student
 
-@touca.Workflow
+@touca.workflow
 def students_test(username: str):
     student = find_student(username)
     touca.check("username", student.username)
