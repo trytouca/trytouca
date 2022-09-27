@@ -17,7 +17,7 @@ def find_testcases():
 def hard_hats(filename: str):
     with touca.scoped_timer("predict"):
         outcome = model.predict(f"images/{filename}.jpg")
-    touca.check("image_dims", outcome.image_dims)
-    touca.check("predictions", outcome.predictions)
-    for item in outcome.predictions:
-        touca.add_array_element(item["class"], item)
+    output_file = Path("out").joinpath(filename).with_suffix(".jpg")
+    output_file.parent.mkdir(exist_ok=True)
+    outcome.save(str(output_file))
+    touca.check("outcome", outcome)

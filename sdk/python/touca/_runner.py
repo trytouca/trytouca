@@ -349,8 +349,8 @@ def workflow(method=None, testcases=None):
 
     @wraps(method)
     def wrapper(wrapped_method):
-        testcases = None if not testcases else list(testcases())
-        Workflow._workflows.append(_Workflow(wrapped_method, testcases=testcases))
+        tcs = None if not testcases else list(testcases())
+        Workflow._workflows.append(_Workflow(wrapped_method, testcases=tcs))
 
     return wrapper(method) if method else wrapper
 
