@@ -5,6 +5,9 @@
 Feature:
 
 - Add new CLI sub-commnad `result` for offline usage (#324)
+- Add new experimental API for collecting output files (#358)
+- Add new CLI sub-command `check` (#355, #356)
+- Add new computer vision example (#354)
 
 ## v1.5.8
 
