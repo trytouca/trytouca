@@ -10,6 +10,7 @@ type Type =
   | number
   | string
   | Array<Type>
+  | Buffer
   | { [key: string]: Type }
 
 type Metadata = {

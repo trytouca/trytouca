@@ -19,6 +19,8 @@ examples/js/**/dist/
 examples/js/**/results/
 examples/python/.env/
 examples/python/.python-version
+examples/python/04_python_external_files/out
+examples/python/06_python_roboflow/out
 local/logs/
 node_modules/
 packages/**/coverage/

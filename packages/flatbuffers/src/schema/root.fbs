@@ -9,6 +9,7 @@ union Type {
   String,
   Object,
   Array,
+  Blob
 }
 
 table TypeWrapper {
@@ -51,6 +52,10 @@ table Object {
 
 table Array {
   values:[TypeWrapper];
+}
+
+table Blob {
+  value:string;
 }
 
 enum ResultType:ubyte { Check = 1, Assert }

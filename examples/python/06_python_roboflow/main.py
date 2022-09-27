@@ -21,3 +21,4 @@ def hard_hats(filename: str):
     output_file.parent.mkdir(exist_ok=True)
     outcome.save(str(output_file))
     touca.check("outcome", outcome)
+    touca.check_file("output_file", output_file)

@@ -4,6 +4,7 @@ import express from 'express'
 import * as ev from 'express-validator'
 
 import { elementCompare } from '@/controllers/element/compare'
+import { elementFile } from '@/controllers/element/file'
 import { elementList } from '@/controllers/element/list'
 import { elementLookup } from '@/controllers/element/lookup'
 import { elementUpdate } from '@/controllers/element/update'
@@ -78,6 +79,18 @@ router.get(
   middleware.hasElement,
   middleware.hasBatch,
   promisable(elementCompare, 'compare an element')
+)
+
+router.get(
+  '/:team/:suite/:element/artifact/:batch/:artifact',
+  middleware.isAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  middleware.hasSuite,
+  middleware.hasElement,
+  middleware.hasBatch,
+  middleware.hasArtifact,
+  promisable(elementFile, 'fetch an artifact')
 )
 
 export { router as elementRouter }

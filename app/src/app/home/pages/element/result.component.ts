@@ -19,6 +19,7 @@ import { Result } from '@/home/models/result.model';
 import { AlertType } from '@/shared/components/alert.component';
 
 import { ElementPageItemType, ElementPageResult } from './element.model';
+import { ElementPageService } from './element.service';
 
 enum MatchType {
   Irrelevant = 1,
@@ -38,7 +39,9 @@ enum RowType {
   Missing_Simple,
   Missing_Complex,
   Fresh_Simple,
-  Fresh_Complex
+  Fresh_Complex,
+  Common_Perfect_Image,
+  Common_Imperfect_Image
 }
 
 interface IMetadata {
@@ -72,8 +75,9 @@ export class ElementItemResultComponent {
   }
 
   constructor(
+    private elementService: ElementPageService,
     private notificationService: NotificationService,
-    private faIconLibrary: FaIconLibrary
+    faIconLibrary: FaIconLibrary
   ) {
     faIconLibrary.addIcons(
       faCircle,
@@ -93,15 +97,20 @@ export class ElementItemResultComponent {
   private initRowType() {
     const matchType = this.findMatchType();
     const isComplex = this.isComplex();
+    const isBuffer = this.result.srcType === 'buffer';
     switch (this.category) {
       case ElementPageItemType.Common:
         switch (matchType) {
           case MatchType.Perfect:
-            return isComplex
+            return isBuffer
+              ? RowType.Common_Perfect_Image
+              : isComplex
               ? RowType.Common_Perfect_Complex
               : RowType.Common_Perfect_Simple;
           case MatchType.Imperfect:
-            return isComplex
+            return isBuffer
+              ? RowType.Common_Imperfect_Image
+              : isComplex
               ? RowType.Common_Imperfect_Complex
               : RowType.Common_Imperfect_Simple;
           case MatchType.Different:
@@ -172,7 +181,7 @@ export class ElementItemResultComponent {
   private isComplex(): boolean {
     const result = this.result;
     const isTypeComplex = (type: string, value: string) => {
-      if (type === 'array' || type === 'object') {
+      if (type === 'array' || type === 'object' || type === 'buffer') {
         return true;
       }
       return type === 'string' && 20 < value.length;
@@ -203,5 +212,9 @@ export class ElementItemResultComponent {
       AlertType.Success,
       'Copied value to clipboard.'
     );
+  }
+
+  public getImagePath(side: 'src' | 'dst', name: string) {
+    return this.elementService.getImagePath(side, name);
   }
 }

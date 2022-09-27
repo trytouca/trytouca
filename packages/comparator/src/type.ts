@@ -9,6 +9,7 @@ type Type =
   | number
   | string
   | Array<Type>
+  | Buffer
   | { [key: string]: Type }
 
 type TypeComparison = {
@@ -31,7 +32,11 @@ function getTypeName(value: Type) {
     case 'string':
       return 'string'
     case 'object':
-      return Array.isArray(value) ? 'array' : 'object'
+      return Array.isArray(value)
+        ? 'array'
+        : Buffer.isBuffer(value)
+        ? 'buffer'
+        : 'object'
     default:
       return 'unknown'
   }
@@ -94,9 +99,14 @@ function flatten(input: Type): Map<string, Type> {
 function compare(src: Type, dst: Type): TypeComparison {
   const cmp: TypeComparison = {
     srcType: getTypeName(src),
-    srcValue: stringify(src),
+    srcValue: Buffer.isBuffer(src) ? src.toString() : stringify(src),
     desc: [],
     score: 0
+  }
+
+  if (Buffer.isBuffer(src) && Buffer.isBuffer(dst)) {
+    const match = !src.compare(dst)
+    return match ? { ...cmp, score: 1 } : { ...cmp, dstValue: dst.toString() }
   }
 
   if (isBoolean(src) && isBoolean(dst)) {

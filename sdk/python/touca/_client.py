@@ -336,6 +336,10 @@ class Client:
         return self._type_handler.transform(value)
 
     @casemethod
+    def check_file(self, key: str, file):
+        return
+
+    @casemethod
     def assume(self, key: str, value: Any):
         return self._type_handler.transform(value)
 
@@ -441,6 +445,12 @@ class Client:
         if not self._transport._token:
             raise RuntimeError("client not authenticated")
         self._transport.post(content=self._serialize(self._cases.values()))
+        for case in self._cases.values():
+            testcase_name = case._metadata().get("testcase")
+            for artifact_name, artifact_file in case._artifacts.items():
+                self._transport.post_artifacts(
+                    testcase_name, artifact_name, artifact_file
+                )
 
     def seal(self):
         """

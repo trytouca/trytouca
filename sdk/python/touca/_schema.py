@@ -19,6 +19,20 @@ def ArrayEnd(builder):
     return builder.EndObject()
 
 
+def BlobStart(builder):
+    builder.StartObject(1)
+
+
+def BlobAddValue(builder, value):
+    builder.PrependUOffsetTRelativeSlot(
+        0, flatbuffers.number_types.UOffsetTFlags.py_type(value), 0
+    )
+
+
+def BlobEnd(builder):
+    return builder.EndObject()
+
+
 def BoolStart(builder):
     builder.StartObject(1)
 
@@ -308,6 +322,7 @@ class Type(object):
     String = 6
     Object = 7
     Array = 8
+    Blob = 9
 
 
 def TypeWrapperStart(builder):

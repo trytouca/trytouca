@@ -2,6 +2,7 @@
 
 import {
   Array as Array_,
+  Blob,
   Bool,
   Double,
   Float,
@@ -19,6 +20,7 @@ type DataType =
   | number
   | string
   | Array<Type>
+  | Buffer
   | { [key: string]: Type }
 
 type WrappedType =
@@ -30,6 +32,7 @@ type WrappedType =
   | 'String'
   | 'Object'
   | 'Array'
+  | 'Blob'
 
 type UnwrappedType<T extends WrappedType> = T extends 'Bool'
   ? boolean
@@ -47,6 +50,8 @@ type UnwrappedType<T extends WrappedType> = T extends 'Bool'
   ? { [key: string]: DataType }
   : T extends 'Array'
   ? Array<DataType>
+  : T extends 'Blob'
+  ? Buffer
   : never
 
 function unwrap<T extends WrappedType>(wrapper: TypeWrapper): UnwrappedType<T> {
@@ -110,6 +115,12 @@ function unwrap<T extends WrappedType>(wrapper: TypeWrapper): UnwrappedType<T> {
         return value
       })
       return array as UnwrappedType<T>
+    }
+
+    case Type.Blob: {
+      const unwrappedValue = wrapper.value(new Blob()) as Blob
+      const value = Buffer.from(unwrappedValue.value()!, 'utf-8')
+      return value as UnwrappedType<T>
     }
 
     default:

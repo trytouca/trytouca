@@ -2,7 +2,7 @@
 
 export { hasBatch } from './batch'
 export { hasComment } from './comment'
-export { hasElement } from './element'
+export { hasArtifact, hasElement } from './element'
 export { isCloudInstance } from './relay'
 export { hasSuite } from './suite'
 export {

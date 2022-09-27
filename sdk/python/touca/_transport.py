@@ -2,6 +2,7 @@
 
 import json
 from typing import List
+from pathlib import Path
 
 import certifi
 from touca.__init__ import __version__ as client_version
@@ -99,6 +100,24 @@ class Transport:
             method="POST",
             path=f"/client/submit",
             body=content,
+            content_type="application/octet-stream",
+        )
+        if response.status == 204:
+            return
+        if response.status == 400:
+            error = response.data.decode("utf-8")
+            if "batch is sealed" in error:
+                reason = " This version is already submitted and sealed."
+            if "team not found" in error:
+                reason = " This team does not exist."
+        raise RuntimeError(f"Failed to submit test results.{reason}")
+
+    def post_artifacts(self, testcase: str, artifact_name: str, artifact_file: Path):
+        slugs = "/".join(self._options.get(k) for k in ["team", "suite", "version"])
+        response = self._send_request(
+            method="POST",
+            path=f"/client/submit/artifact/{slugs}/{testcase}/{artifact_name}",
+            body=artifact_file.read_bytes(),
             content_type="application/octet-stream",
         )
         if response.status == 204:

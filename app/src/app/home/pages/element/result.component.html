@@ -37,6 +37,19 @@
         </span>
       </div>
     </div>
+    <div class="wsl-item-topics" *ngSwitchCase="rowType.Common_Perfect_Image">
+      <div class="wsl-item-topic">
+        <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
+          <span>{{ result.srcType }}</span>
+          <ng-icon
+            [name]="
+              hideComplexValue
+                ? 'feather-chevron-right'
+                : 'feather-chevron-down'
+            "></ng-icon>
+        </span>
+      </div>
+    </div>
     <div
       class="wsl-item-topics"
       *ngSwitchCase="rowType.Common_Imperfect_Simple">
@@ -92,6 +105,19 @@
           value in version {{ params.dstBatchName }}:
           <b>{{ result.dstValue }}</b>
           ({{ result.dstType }})
+        </span>
+      </div>
+    </div>
+    <div class="wsl-item-topics" *ngSwitchCase="rowType.Common_Imperfect_Image">
+      <div class="wsl-item-topic">
+        <span class="wsl-item-topic-type-complex" (click)="toggleComplexView()">
+          <span>{{ result.srcType }}</span>
+          <ng-icon
+            [name]="
+              hideComplexValue
+                ? 'feather-chevron-right'
+                : 'feather-chevron-down'
+            "></ng-icon>
         </span>
       </div>
     </div>
@@ -168,6 +194,46 @@
   <div [ngSwitch]="meta.rowType">
     <div
       class="wsl-complex-double"
+      *ngSwitchCase="rowType.Common_Imperfect_Image">
+      <div class="wsl-complex-block">
+        <div class="wsl-complex-block-head">
+          <div></div>
+          <div class="wsl-complex-block-desc">
+            <span>value in version {{ params.dstBatchName }}</span>
+          </div>
+          <div class="wsl-complex-block-icons">
+            <ng-icon
+              class="wsl-complex-block-icon"
+              name="hero-clipboard-copy"
+              title="Copy value to clipboard"
+              ngxClipboard
+              [cbContent]="result.dstValue"
+              (cbOnSuccess)="onCopy($event)"></ng-icon>
+          </div>
+        </div>
+        <img [src]="getImagePath('dst', result.name)" [alt]="result.dstValue" />
+      </div>
+      <div class="wsl-complex-block">
+        <div class="wsl-complex-block-head">
+          <div></div>
+          <div class="wsl-complex-block-desc">
+            <span>value in version {{ params.srcBatchName }}</span>
+          </div>
+          <div class="wsl-complex-block-icons">
+            <ng-icon
+              class="wsl-complex-block-icon"
+              name="hero-clipboard-copy"
+              title="Copy value to clipboard"
+              ngxClipboard
+              [cbContent]="result.srcValue"
+              (cbOnSuccess)="onCopy($event)"></ng-icon>
+          </div>
+        </div>
+        <img [src]="getImagePath('src', result.name)" [alt]="result.srcValue" />
+      </div>
+    </div>
+    <div
+      class="wsl-complex-double"
       *ngSwitchCase="rowType.Common_Imperfect_Complex">
       <div class="wsl-complex-block">
         <div class="wsl-complex-block-head">
@@ -208,6 +274,29 @@
         <pre *ngIf="result.srcValue">{{
           parseComplexValue(result.srcValue) | json
         }}</pre>
+      </div>
+    </div>
+    <div
+      class="wsl-complex-single"
+      *ngSwitchCase="rowType.Common_Perfect_Image">
+      <div class="wsl-complex-block">
+        <div class="wsl-complex-block-head">
+          <div></div>
+          <div class="wsl-complex-block-desc">
+            <span>value in both versions</span>
+          </div>
+          <div class="wsl-complex-block-icons">
+            <ng-icon
+              class="wsl-complex-block-icon"
+              title="Copy value to clipboard"
+              ngxClipboard
+              [cbContent]="result.srcValue"
+              (cbOnSuccess)="onCopy($event)"
+              name="hero-clipboard-copy"
+              size="1.25rem"></ng-icon>
+          </div>
+        </div>
+        <img [src]="getImagePath('src', result.name)" [alt]="result.srcValue" />
       </div>
     </div>
     <div

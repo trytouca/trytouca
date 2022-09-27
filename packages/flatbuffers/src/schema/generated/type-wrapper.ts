@@ -3,6 +3,7 @@
 import * as flatbuffers from 'flatbuffers'
 
 import { Array, ArrayT } from './array'
+import { Blob, BlobT } from './blob'
 import { Bool, BoolT } from './bool'
 import { Double, DoubleT } from './double'
 import { Float, FloatT } from './float'
@@ -113,6 +114,7 @@ export class TypeWrapperT {
     public valueType: Type = Type.NONE,
     public value:
       | ArrayT
+      | BlobT
       | BoolT
       | DoubleT
       | FloatT

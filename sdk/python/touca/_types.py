@@ -3,6 +3,7 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from json import dumps
+from pathlib import Path
 from typing import Any, Callable, Dict, Type
 
 import touca._schema as schema
@@ -17,6 +18,31 @@ class ToucaType(ABC):
     @abstractmethod
     def serialize(self, builder: Builder):
         pass
+
+
+class BlobType(ToucaType):
+    def __init__(self, value: Path):
+        """
+        Converts a given value of type ``Path`` to a BlobType with
+        known serialization into JSON and Binary.
+        """
+        self._value = value
+
+    def json(self):
+        return str(self._value)
+
+    def serialize(self, builder: Builder):
+        from hashlib import sha256
+
+        hash = sha256(self._value.read_bytes()).hexdigest()
+        content = Builder.CreateString(builder, hash)
+        schema.BlobStart(builder)
+        schema.BlobAddValue(builder, content)
+        value = schema.BlobEnd(builder)
+        schema.TypeWrapperStart(builder)
+        schema.TypeWrapperAddValue(builder, value)
+        schema.TypeWrapperAddValueType(builder, schema.Type.Blob)
+        return schema.TypeWrapperEnd(builder)
 
 
 class BoolType(ToucaType):

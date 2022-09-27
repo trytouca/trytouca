@@ -95,3 +95,10 @@ export type MessageTransformed = {
     value: string
   }[]
 }
+
+export type Artifact = {
+  filename_external: string
+  filename_internal: string
+  message_id: string
+  content: Buffer
+}
