@@ -2,6 +2,7 @@ version: "3"
 
 services:
   touca_redis:
+    user: "${UID_GID}"
     image: redis:6-alpine
     volumes:
       - ./data/redis:/data
@@ -10,6 +11,7 @@ services:
     restart: always
 
   touca_minio:
+    user: "${UID_GID}"
     image: minio/minio:RELEASE.2021-03-17T02-33-02Z
     environment:
       MINIO_ROOT_USER: toucauser
@@ -22,6 +24,7 @@ services:
     restart: always
 
   touca_mongo:
+    user: "${UID_GID}"
     image: mongo:4-bionic
     environment:
       MONGO_INITDB_ROOT_USERNAME: toucauser
