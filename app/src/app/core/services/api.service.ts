@@ -18,7 +18,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  private makeUrl(path: string): string {
+  makeUrl(path: string): string {
     if (!path.startsWith('/')) {
       path = '/' + path;
     }

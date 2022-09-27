@@ -15,10 +15,6 @@ export type ComparisonJob = {
   srcBatchId: ObjectId
   srcMessageId: ObjectId
 }
-interface ComparisonQueryOutputItem extends ComparisonJob {
-  dstContentId?: ObjectId
-  srcContentId?: ObjectId
-}
 export type MessageJob = {
   messageId: ObjectId
   batchId: ObjectId

@@ -4,6 +4,16 @@ import mongoose from 'mongoose'
 
 const messageSchema = new mongoose.Schema(
   {
+    artifacts: [
+      {
+        _id: false,
+        required: false,
+        key: {
+          required: true,
+          type: String
+        }
+      }
+    ],
     batchId: {
       ref: 'Batch',
       required: true,
@@ -75,6 +85,7 @@ export interface IMessageDocument extends mongoose.Document {
   contentId: string
   elementId: mongoose.Types.ObjectId
   expiresAt: Date
+  artifacts: { key: string }[]
   meta: {
     keysCount: number
     metricsCount: number

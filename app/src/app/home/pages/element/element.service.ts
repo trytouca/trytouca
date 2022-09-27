@@ -334,4 +334,29 @@ export class ElementPageService extends IPageService<ElementPageResult> {
     this._elementCompareCache = undefined;
     this._items = undefined;
   }
+
+  public getImagePath(side: 'src' | 'dst', name: string) {
+    console.log(side, name, this._params);
+    const path =
+      side === 'src'
+        ? [
+            'element',
+            this._params.teamSlug,
+            this._params.srcSuiteSlug,
+            this._params.srcElementSlug,
+            'artifact',
+            this._params.srcBatchSlug,
+            name
+          ].join('/')
+        : [
+            'element',
+            this._params.teamSlug,
+            this._params.dstSuiteSlug,
+            this._params.dstElementSlug,
+            'artifact',
+            this._params.dstBatchSlug,
+            name
+          ].join('/');
+    return this.apiService.makeUrl(path);
+  }
 }

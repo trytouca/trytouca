@@ -2,7 +2,7 @@
 
 import touca
 from pathlib import Path
-from _model import model
+import computer_vision as code_under_test
 from roboflow.util.prediction import Prediction
 
 touca.add_serializer(Prediction, lambda x: x.json())
@@ -15,9 +15,14 @@ def find_testcases():
 
 @touca.workflow(testcases=find_testcases)
 def hard_hats(filename: str):
-    with touca.scoped_timer("predict"):
-        outcome = model.predict(f"images/{filename}.jpg")
+    input_file = Path("images").joinpath(filename).with_suffix(".jpg")
     output_file = Path("out").joinpath(filename).with_suffix(".jpg")
+
+    with touca.scoped_timer("predict"):
+        outcome = code_under_test.model.predict(str(input_file))
     output_file.parent.mkdir(exist_ok=True)
     outcome.save(str(output_file))
+
     touca.check("outcome", outcome)
+    touca.check_file("input_file", input_file)
+    touca.check_file("output_file", output_file)

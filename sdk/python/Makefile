@@ -13,6 +13,7 @@ docs:
 
 schema:
 	@rm -rf $(FBS_OUTPUT_DIR)
+	# @flatc --python -o $(FBS_OUTPUT_DIR) $(FBS_FILE)
 	@docker run --rm -v $(FBS_FILE):/opt/touca.fbs -v $(FBS_OUTPUT_DIR):/opt/dst ghorbanzade/flatc /opt/flatc --python -o /opt/dst /opt/touca.fbs
 	@find $(FBS_OUTPUT_DIR) -name "__init__.py" -exec rm -rf {} \;
 	@find $(FBS_OUTPUT_DIR) -name "*.py" -print | sort | xargs cat > $(FBS_OUTPUT_FILE)
@@ -22,4 +23,5 @@ schema:
 	@sed -i .bak '/import flatbuffers/d' $(FBS_OUTPUT_FILE)
 	@sed -i .bak '/from .* import /d' $(FBS_OUTPUT_FILE)
 	@sed -i .bak '1s/^/import flatbuffers\'$$'\n/' $(FBS_OUTPUT_FILE)
+	@sed -i .bak '/np = import_numpy()/d' $(FBS_OUTPUT_FILE)
 	@black -q $(FBS_OUTPUT_FILE)

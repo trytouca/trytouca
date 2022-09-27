@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 namespace touca.fbs;
 
@@ -10,7 +10,8 @@ union Type {
     Double,
     String,
     Object,
-    Array
+    Array,
+    Blob
 }
 
 table TypeWrapper {
@@ -53,6 +54,10 @@ table Object {
 
 table Array {
     values:[TypeWrapper];
+}
+
+table Blob {
+    value:string;
 }
 
 enum ResultType:ubyte { Check = 1, Assert }

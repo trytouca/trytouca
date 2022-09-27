@@ -34,7 +34,7 @@ abstract class ObjectStore {
    * @param content JSON representation of the comparison result to be stored
    */
   protected abstract putDocument(
-    type: 'comparisons' | 'messages' | 'results',
+    type: 'artifacts' | 'comparisons' | 'messages' | 'results',
     id: string,
     content: string | Buffer
   ): Promise<boolean>
@@ -44,6 +44,9 @@ abstract class ObjectStore {
     id: string
   ): Promise<boolean>
 
+  addArtifact(id: string, content: Buffer): Promise<boolean> {
+    return this.putDocument('artifacts', id, content)
+  }
   addComparison(id: string, content: string): Promise<boolean> {
     return this.putDocument('comparisons', id, content)
   }
@@ -150,6 +153,12 @@ class S3ObjectStore extends ObjectStore {
   async getMessage(key: string): Promise<Buffer> {
     const data = await this.client.send(
       new GetObjectCommand({ Bucket: 'touca', Key: `messages/${key}` })
+    )
+    return this.streamToBuffer(data.Body)
+  }
+  async getArtifact(key: string, name: string): Promise<Buffer> {
+    const data = await this.client.send(
+      new GetObjectCommand({ Bucket: 'touca', Key: `artifacts/${key}/${name}` })
     )
     return this.streamToBuffer(data.Body)
   }

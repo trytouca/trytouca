@@ -7,6 +7,7 @@ import { clientBatchNext } from '@/controllers/client/batchNext'
 import { clientElementList } from '@/controllers/client/elementList'
 import { clientSessionCreate } from '@/controllers/client/sessionCreate'
 import { clientSubmit } from '@/controllers/client/submit'
+import { clientSubmitArtifact } from '@/controllers/client/submitArtifact'
 import * as middleware from '@/middlewares'
 import { promisable } from '@/utils/routing'
 
@@ -48,6 +49,13 @@ router.post(
   middleware.isClientAuthenticated,
   express.raw({ limit: '50mb' }),
   promisable(clientSubmit, 'handle submitted result')
+)
+
+router.post(
+  '/submit/artifact/:team/:suite/:batch/:element/:key',
+  middleware.isClientAuthenticated,
+  express.raw({ limit: '50mb' }),
+  promisable(clientSubmitArtifact, 'handle submitted artifact')
 )
 
 export { router as clientRouter }

@@ -68,6 +68,11 @@ def check(key: str, value: Any):
 
 
 @clientmethod
+def check_file(key: str, value: Any):
+    Client.instance().check_file(key, value)
+
+
+@clientmethod
 def assume(key: str, value: Any):
     Client.instance().assume(key, value)
 

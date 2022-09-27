@@ -7,4 +7,4 @@ import json
 config = json.loads(Path("config.json").read_text())
 rf = Roboflow(config["roboflow_api_key"])
 project = rf.workspace().project(config["roboflow_project"])
-model = project.version(2).model
+model = project.version(config["roboflow_version"]).model

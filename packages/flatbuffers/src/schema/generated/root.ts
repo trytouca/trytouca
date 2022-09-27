@@ -3,6 +3,7 @@
 export { Array, ArrayT } from './array'
 export { Assertion, AssertionT } from './assertion'
 export { Assertions, AssertionsT } from './assertions'
+export { Blob, BlobT } from './blob'
 export { Bool, BoolT } from './bool'
 export { Double, DoubleT } from './double'
 export { Float, FloatT } from './float'
