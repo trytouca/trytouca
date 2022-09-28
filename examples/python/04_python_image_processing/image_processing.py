@@ -11,7 +11,7 @@ def process_image(src_file: Path) -> Image:
     height, width = image.size
     for row in range(height):
         for col in range(width):
-            _, g, b = image_data[row, col]
+            r, g, b = image_data[row, col]
             image_data[row, col] = 0, g, b
     return image
 

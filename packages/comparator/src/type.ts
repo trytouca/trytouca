@@ -69,7 +69,9 @@ function isObject(value: Type): value is Record<string, Type> {
 function flatten(input: Type): Map<string, Type> {
   const output = new Map<string, Type>()
   if (isObject(input)) {
-    for (const [key, value] of Object.entries(input)) {
+    for (const [key, value] of Object.entries(input).sort((a, b) =>
+      a[0].localeCompare(b[0])
+    )) {
       const children = flatten(value)
       if (children.size > 0) {
         for (const [childKey, childValue] of children) {

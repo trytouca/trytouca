@@ -5,7 +5,7 @@ import touca
 
 
 @touca.workflow
-def students_test(username: str):
+def students(username: str):
     with touca.scoped_timer("find_student"):
         student = find_student(username)
     touca.assume("username", student.username)
