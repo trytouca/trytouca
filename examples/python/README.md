@@ -1,11 +1,11 @@
 # Examples using Touca SDK for Python
 
 This directory includes sample projects that use Touca SDK for Python. All
-examples are documented to serve as hands-on tutorials to help you get stated
+examples are documented to serve as hands-on tutorials to help you get started
 with Touca.
 
 If this is your first time submitting test results to Touca, we recommend
-reading our [Getting Started](https://touca.io/docs) guide, first.
+reading our [Getting Started](https://touca.io/docs/basics/) guide, first.
 
 ## Outline
 

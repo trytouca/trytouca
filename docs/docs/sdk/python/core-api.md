@@ -1,40 +1,39 @@
 # Core API
 
-[Previously](/sdk/python/main-api), we covered the high-level API of our Python
-SDK and learned how to test a `find_student` software using the Touca test
-framework:
+Previously, we covered the high-level API of our Python SDK and learned how to
+test a `find_student` software using the Touca test framework:
 
 ```py
 import touca
-from students import find_student
+import students as code_under_test
 
 @touca.workflow
-def students_test(username: str):
-    student = find_student(username)
+def students(username: str):
+    student = code_under_test.find_student(username)
     # insert code here to describe the behavior
-    # and performance of the workflow under test
+    # and performance of the code under test
 
 if __name__ == "__main__":
     touca.run()
 ```
 
-`touca.workflow` and `touca.run` are the entry-points to the Touca test
-framework. In addition to running our workflow under test with different test
-cases, the test framework provides facilities that include reporting progress,
-handling errors, parsing command line arguments, and many more. We intentionally
-designed this API to abstract away these common features to let developers focus
-on their workflow under test.
+`touca.workflow` and `touca.run` are the high-level API of the Touca test
+framework. In addition to running our code under test with different test cases,
+the test framework provides facilities that include reporting progress, handling
+errors, parsing command line arguments, and many more. We intentionally designed
+this API to abstract away these common features to let developers focus on their
+code under test.
 
-Touca SDK for Python provides a separate lower-level Client API that offers more
+Touca Python SDK provides a separate low-level Core API that offers more
 flexibility and control over how tests are executed and how their results are
-handled. This API is most useful when integrating Touca with other existing test
+handled. This API is most useful when integrating Touca with other test
 frameworks.
 
 ```py
 import touca
 from students import find_student
 
-def main():
+if __name__ == "__main__":
     touca.configure()
     for username in touca.get_testcases():
         touca.declare_testcase(username)
@@ -49,13 +48,10 @@ def main():
         touca.forget_testcase(username)
 
     touca.seal()
-
-if __name__ == "__main__":
-    main()
 ```
 
-The above code uses the low-level Touca Client API to perform the same
-operations as the Touca test framework, without handling errors, reporting
+The above code uses the low-level Touca API to perform the same operations as
+the Touca test framework, while missing support for handling errors, reporting
 progress, and handling command line arguments. In this section, we will review
 the functions used in this code and explain what they do.
 
@@ -136,11 +132,11 @@ our test tool, and not from our code under test.
 
 ## Capturing Test Results
 
-In the [previous document](./main-api.md), we reviewed the main Touca functions
-for describing behavior and performance of our code under test, by capturing
-values of important variables and runtime of interesting functions. In this
-section, we dive a little deeper to explain how Touca tracks values of variables
-and performance benchmarks.
+In the previous tutorial, we reviewed the main Touca functions for describing
+behavior and performance of our code under test, by capturing values of
+important variables and runtime of interesting functions. In this section, we
+dive a little deeper to explain how Touca tracks values of variables and
+performance benchmarks.
 
 ### Preserving Data Types
 
@@ -214,8 +210,8 @@ in real-time.
 
 It is possible to call `touca.post` multiple times during the runtime of our
 test tool. Test cases already submitted to the Touca server whose results have
-not changed, will not be resubmitted. It is also possible to add new results for
-an already submitted test case. Any subsequent call to `touca::post` will
+not changed, will not be resubmitted. It is also possible to add new results to
+an already submitted test case. Any subsequent call to `touca.post` will
 resubmit the modified test cases.
 
 We generally recommend that `touca.post` be called every time the code under
@@ -224,9 +220,9 @@ about the test results, as they are being executed.
 
 ## Storing Test Results
 
-We can choose to store captured test results and performance benchmarks for one
-or more of our declared test cases on the local filesystem for further
-processing or later submission to the Touca server.
+If we like to do so, we can store our captured data for one or more declared
+test cases on the local filesystem for further processing or later submission to
+the Touca server.
 
 ```py
 touca.save_binary(f"touca_${username}.bin")
