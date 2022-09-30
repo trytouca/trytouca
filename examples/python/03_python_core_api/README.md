@@ -1,1 +1,1 @@
-../../../sdk/python/examples/03_python_core_api/README.md
+../../../docs/docs/sdk/python/core-api.md

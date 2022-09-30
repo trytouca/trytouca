@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.8.0
+
+Improvements:
+
+- Allow passing list of testcases to workflow function (#362)
+
 ## v1.5.9
 
 Feature:
