@@ -346,10 +346,17 @@ def workflow(method=None, testcases=None):
             touca.check("gpa", calculate_gpa(student.courses))
     """
     from functools import wraps
+    from inspect import isgenerator, isgeneratorfunction
 
     @wraps(method)
     def wrapper(wrapped_method):
-        tcs = None if not testcases else list(testcases())
+        tcs = None
+        if type(testcases) is list:
+            tcs = testcases
+        elif isgenerator(testcases):
+            tcs = list(testcases)
+        elif isgeneratorfunction(testcases):
+            tcs = list(testcases())
         Workflow._workflows.append(_Workflow(wrapped_method, testcases=tcs))
 
     return wrapper(method) if method else wrapper
