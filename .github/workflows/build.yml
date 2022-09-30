@@ -672,7 +672,7 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          echo "::set-output name=version::$(git describe --tags --abbrev=4 | tail -c 6 | sed "s/^/$(python sdk/python/setup.py --version)-/")"
+          echo "::set-output name=version::$(git describe --tags --abbrev=4 | tail -c 6 | sed "s/^/$(python ../../sdk/python/setup.py --version)-/")"
       - name: run example python application
         if: |
           steps.changes.outputs.examples_python == 'true' && github.ref == 'refs/heads/main'
