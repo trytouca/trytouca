@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
+import mongoose from 'mongoose'
 
 import { BatchModel } from '@/schemas/batch'
 import { SuiteModel } from '@/schemas/suite'
@@ -8,8 +9,11 @@ import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 
-async function clientBatchNextImpl(suiteSlug: string): Promise<string> {
-  const suite = await SuiteModel.findOne({ slug: suiteSlug }, { _id: 1 })
+async function clientBatchNextImpl(suiteQuery: {
+  slug: string
+  team: mongoose.Types.ObjectId
+}): Promise<string> {
+  const suite = await SuiteModel.findOne(suiteQuery, { _id: 1 })
   if (!suite) {
     return 'v1.0'
   }
@@ -51,8 +55,8 @@ export async function clientBatchNext(
 ) {
   const user = res.locals.user as IUser
   const team = res.locals.team as ITeam
-  const suite = { slug: req.params.suite }
+  const suite = { team: team._id, slug: req.params.suite }
   const tuple = [team.slug, suite.slug].join('_')
   logger.debug('%s: %s: showing next version', user.username, tuple)
-  return res.status(200).json({ batch: await clientBatchNextImpl(suite.slug) })
+  return res.status(200).json({ batch: await clientBatchNextImpl(suite) })
 }
