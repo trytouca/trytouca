@@ -1,13 +1,13 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-from students import find_student
+import students as code_under_test
 import touca
 
 
-@touca.workflow
-def students_test(username: str):
+@touca.workflow(testcases=["alice", "bob", "charlie"])
+def students(username: str):
     with touca.scoped_timer("find_student"):
-        student = find_student(username)
+        student = code_under_test.find_student(username)
     touca.assume("username", student.username)
     touca.check("fullname", student.fullname)
     touca.check("birth_date", student.dob)

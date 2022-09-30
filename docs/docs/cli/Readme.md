@@ -21,6 +21,7 @@ We support the following operations:
 | [`touca test`](#running-your-tests)        | Run your Touca tests                     |
 | [`touca config`](#configuration-options)   | Manage your active configuration profile |
 | [`touca profile`](#configuration-profiles) | Create and manage configuration profiles |
+| [`touca check`](#submit-external-files)    | Submit external files                    |
 | [`touca merge`](#merging-archives)         | Merge binary archives                    |
 | [`touca post`](#posting-archives)          | Submit binary archives to a Touca server |
 | [`touca results`](#managing-archives)      | Manage local binary archives             |
@@ -162,21 +163,16 @@ options:
 
 </details>
 
-Touca CLI provides the simplest developer-friendly way of running your tests.
+Touca CLI provides the most developer-friendly means for running your tests.
 Simply navigate to any directory and run `touca test` with your preferred
-options to execute all the workflows in that directory. The minimum information
-required for a successful execution of your tests includes:
-
-- Version of your code under test
-- List of test cases for your test workflow
-- Your Touca server credentials
+options to execute all the workflows in that directory.
 
 ```plaintext
 $ git clone git@github.com:trytouca/trytouca.git
 $ cd trytouca/sdk/python/examples/02_python_main_api/
 $ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
-$ touca config set api-url=https://api.touca.io/@/tutorial-509512
-$ touca test --revision 1.0 --testcase alice bob charlie
+$ touca config set team=tutorial-509512
+$ touca test
 ```
 
 ### Configuration profiles
@@ -234,6 +230,59 @@ And if you no longer need a profile, you can simply remove it:
 ```plaintext
 $ touca profile rm personal
 ```
+
+## Submit external files
+
+:::note New
+
+Added in v1.8.0
+
+:::
+
+<details>
+<summary>`touca check --help`</summary>
+
+```plaintext
+usage: touca check --suite SUITE [--testcase TESTCASE] src
+
+positional arguments:
+  src                  path to file or directory to submit
+
+options:
+  --suite SUITE        name of the suite to associate with this output
+  --testcase TESTCASE  name of the testcase to associate with this output
+```
+
+</details>
+
+You can use `touca check` to submit any external file(s) that may have been
+generated as part of the test run.
+
+```plaintext
+$ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
+$ touca config set team=tutorial-509512
+$ touca check ./output.file --suite=my-suite
+```
+
+Since we did not specify the testcase, `touca check` will infer it from
+`./output.file` as `output-file`.
+
+You can also submit an entire directory, in which case, every file would be
+treated as a separate testcase.
+
+```plaintext
+$ touca check ./output/ --suite=my-suite
+```
+
+Another use-case of `touca check` is submitting the standard output of any given
+process to treat as a test result.
+
+```plaintext
+$ echo "hello" | touca check --suite=my-suite --testcase=my-testcase
+```
+
+Note that in the above case, setting `--testcase` was mandatory since there is
+no filename to infer it from.
 
 ## Local binary archives
 
