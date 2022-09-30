@@ -1,1 +1,1 @@
-../../docs/docs/sdk/python/core-api.md
+../../../docs/docs/sdk/python/core-api.md
