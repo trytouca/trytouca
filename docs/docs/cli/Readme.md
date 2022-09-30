@@ -169,7 +169,7 @@ options to execute all the workflows in that directory.
 
 ```plaintext
 $ git clone git@github.com:trytouca/trytouca.git
-$ cd trytouca/sdk/python/examples/02_python_main_api/
+$ cd trytouca/examples/python/02_python_main_api/
 $ touca config set api-key=a66fe9d2-00b7-4f7c-95d9-e1b950d0c906
 $ touca config set team=tutorial-509512
 $ touca test

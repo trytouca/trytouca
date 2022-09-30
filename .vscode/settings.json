@@ -8,8 +8,9 @@
   "java.format.settings.url": "${workspaceFolder}/sdk/java/config/eclipse-java-google-style.xml",
   "python.analysis.extraPaths": [
     "${workspaceFolder}/api/e2e",
-    "${workspaceFolder}/sdk/python/examples/01_python_minimal",
-    "${workspaceFolder}/sdk/python/examples/02_python_main_api",
+    "${workspaceFolder}/examples/python/01_python_minimal",
+    "${workspaceFolder}/examples/python/02_python_main_api",
+    "${workspaceFolder}/examples/python/03_python_core_api",
     "${workspaceFolder}/examples/python/04_python_external_files",
     "${workspaceFolder}/examples/python/05_python_ml_pipeline",
     "${workspaceFolder}/examples/python/06_python_roboflow",
