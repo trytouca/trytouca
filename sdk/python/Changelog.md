@@ -5,6 +5,7 @@
 Improvements:
 
 - Allow passing list of testcases to workflow function (#362)
+- Allow `touca check` to use filenames as testcases (#364)
 
 ## v1.5.9
 

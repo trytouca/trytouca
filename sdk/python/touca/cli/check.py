@@ -46,15 +46,12 @@ class Check(Operation):
         )
 
     def _submit_stdin(self):
-        content = sys.stdin.read()
-
         def _submit(testcase: str):
-            touca.check("output", content)
+            touca.check("output", sys.stdin.read())
 
         workflow = _Workflow(_submit, self.__options.get("suite"))
         testcase = self.__options.get("testcase")
-        if testcase:
-            workflow.testcases = [testcase]
+        workflow.testcases = [testcase] if testcase else ["stdout"]
         run_workflows(_parse_cli_options([]), [workflow])
         return True
 
@@ -79,15 +76,21 @@ class Check(Operation):
             return sha256(file.read_bytes()).hexdigest()
 
     def _submit_directory(self, directory: Path):
+        files = {
+            self._slugify(file): file for file in directory.glob("*") if file.is_file()
+        }
+
         def _submit(testcase: str):
-            files = [file for file in directory.glob("*") if file.is_file()]
-            for file in files:
-                content = self._get_file_content(file)
-                touca.check(self._slugify(file), content)
+            if not self.__options.get("testcase"):
+                content = self._get_file_content(files.get(testcase))
+                touca.check("output", content)
+                return
+            for slug, file in files.items():
+                touca.check(slug, self._get_file_content(file))
 
         testcase = self.__options.get("testcase")
         workflow = _Workflow(_submit, self.__options.get("suite"))
-        workflow.testcases = [testcase] if testcase else [self._slugify(directory)]
+        workflow.testcases = [testcase] if testcase else files.keys()
         run_workflows(_parse_cli_options([]), [workflow])
         return False
 
