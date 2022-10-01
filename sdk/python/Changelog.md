@@ -1,5 +1,7 @@
 # Changelog
 
+## v1.8.1
+
 ## v1.8.0
 
 Improvements:
