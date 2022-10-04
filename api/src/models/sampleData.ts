@@ -9,7 +9,7 @@ import { suiteCreate } from '@/models/suite'
 import { teamCreate } from '@/models/team'
 import { BatchModel } from '@/schemas/batch'
 import { SuiteModel } from '@/schemas/suite'
-import { TeamModel } from '@/schemas/team'
+import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
@@ -31,20 +31,21 @@ async function findTeamSlug() {
 /**
  * Add sample test results to an empty suite.
  *
- * we acknowledge that most newly registered users may not find incentive
- * to take the time to integrate our libraries with their regression test
- * tools to submit test results. they may like to learn how the platform
- * may help their development process prior to learning how to use it.
- * To help these users, we create a random team and suite for the new user
- * and auto-populate the suite with sample data. This allows users to play
- * around and tinker with the platform capabilities prior to submitting
+ * Most newly registered users may not be willing to take the time to
+ * integrate our SDKs with their regression test tools to submit test results.
+ * They want to see how Touca could help their development process prior to
+ * learning how to use it. To help these users, we create a team and suite for
+ * the new user and auto-populate the suite with sample data. This allows users
+ * to play around and tinker with the platform capabilities prior to submitting
  * results on their own.
  */
-export async function addSampleData(user: IUser): Promise<void> {
-  const team = await teamCreate(user, {
-    slug: await findTeamSlug(),
-    name: 'Tutorial'
-  })
+export async function addSampleData(user: IUser, team?: ITeam): Promise<void> {
+  if (!team) {
+    team = await teamCreate(user, {
+      slug: await findTeamSlug(),
+      name: 'Tutorial'
+    })
+  }
   let suite = await suiteCreate(user, team, {
     slug: 'students',
     name: 'Students'

@@ -2231,18 +2231,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  /platform/account/:account/populate:
+  /platform/account/:account/populate/:team:
     post:
       tags:
         - Platform
-      summary: Populate account with sample data
+      summary: Populate a given team with sample data on behalf of a user account
       operationId: platform_accountPopulate
       description: >-
-        Populates an existing account with sample test results. User initiating
-        the request must be authenticated. User initiating the request must be a
-        platform admin.
+        Populates an existing team with sample test results on behalf of a user.
+        User initiating the request must be authenticated. User initiating the
+        request must be a server admin.
       parameters:
         - $ref: '#/components/parameters/account'
+        - $ref: '#/components/parameters/team'
       responses:
         '204':
           description: Sample data added
@@ -2251,7 +2252,7 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
-          description: User Not Found
+          description: Team Not Found or User Not Found
           content:
             application/json:
               schema:
