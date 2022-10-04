@@ -30,15 +30,10 @@ class MinioClient:
 
     def clear_buckets(self) -> None:
         logger.info("clearing bucket touca")
-        self.remove_objects(
-            "touca", self.client.list_objects("touca", "comparisons/", True)
-        )
-        self.remove_objects(
-            "touca", self.client.list_objects("touca", "messages/", True)
-        )
-        self.remove_objects(
-            "touca", self.client.list_objects("touca", "results/", True)
-        )
+        for dir in ["artifacts", "comparisons", "messages", "results"]:
+            self.remove_objects(
+                "touca", self.client.list_objects("touca", f"{dir}/", True)
+            )
         for bucket in ["touca-comparisons", "touca-messages", "touca-results"]:
             if self.client.bucket_exists(bucket):
                 logger.info(f"clearing bucket {bucket.name}")

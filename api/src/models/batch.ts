@@ -206,6 +206,7 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
           contentId: 1,
           elementId: 1,
           elementName: { $arrayElemAt: ['$elementDoc.name', 0] },
+          messageArtifacts: '$artifacts.key',
           messageId: '$_id',
           suiteId: { $arrayElemAt: ['$suiteDoc._id', 0] },
           suiteName: { $arrayElemAt: ['$suiteDoc.slug', 0] },

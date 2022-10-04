@@ -61,7 +61,13 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
 
     // remove message processing jobs from the queue
     await Queues.message.queue.remove(msgInfo.messageId.toHexString())
-    // remove JSON representation of message from object storage
+    // remove message artifacts from object store
+    await Promise.allSettled(
+      msgInfo.messageArtifacts.map((name) =>
+        objectStore.removeArtifact(msgInfo.messageId.toHexString(), name)
+      )
+    )
+    // remove JSON representation of message from object store
     await objectStore.removeResult(msgInfo.messageId.toHexString())
     // remove message from database
     await MessageModel.findByIdAndRemove(msgInfo.messageId)

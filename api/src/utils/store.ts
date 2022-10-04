@@ -35,17 +35,14 @@ abstract class ObjectStore {
    */
   protected abstract putDocument(
     type: 'artifacts' | 'comparisons' | 'messages' | 'results',
-    id: string,
+    path: string,
     content: string | Buffer
   ): Promise<boolean>
 
-  protected abstract deleteDocument(
-    type: 'comparisons' | 'messages' | 'results',
-    id: string
-  ): Promise<boolean>
+  protected abstract deleteDocument(Key: string): Promise<boolean>
 
-  addArtifact(id: string, content: Buffer): Promise<boolean> {
-    return this.putDocument('artifacts', id, content)
+  addArtifact(path: string, content: Buffer): Promise<boolean> {
+    return this.putDocument('artifacts', path, content)
   }
   addComparison(id: string, content: string): Promise<boolean> {
     return this.putDocument('comparisons', id, content)
@@ -57,14 +54,17 @@ abstract class ObjectStore {
     return this.putDocument('results', id, content)
   }
 
+  removeArtifact(id: string, name: string) {
+    return this.deleteDocument(`artifacts/${id}/${name}`)
+  }
   removeComparison(id: string): Promise<boolean> {
-    return this.deleteDocument('comparisons', id)
+    return this.deleteDocument(`comparisons/${id}`)
   }
   removeMessage(id: string): Promise<boolean> {
-    return this.deleteDocument('messages', id)
+    return this.deleteDocument(`messages/${id}`)
   }
   removeResult(id: string): Promise<boolean> {
-    return this.deleteDocument('results', id)
+    return this.deleteDocument(`results/${id}`)
   }
 
   /**
@@ -112,8 +112,8 @@ class S3ObjectStore extends ObjectStore {
     return this.bucketExists('touca')
   }
   protected async putDocument(
-    type: 'comparisons' | 'messages' | 'results',
-    id: string,
+    type: 'artifacts' | 'comparisons' | 'messages' | 'results',
+    path: string,
     content: string | Buffer
   ): Promise<boolean> {
     try {
@@ -121,7 +121,7 @@ class S3ObjectStore extends ObjectStore {
         new PutObjectCommand({
           Body: content,
           Bucket: 'touca',
-          Key: `${type}/${id}`
+          Key: `${type}/${path}`
         })
       )
       return true
@@ -130,14 +130,9 @@ class S3ObjectStore extends ObjectStore {
       return false
     }
   }
-  protected async deleteDocument(
-    type: 'comparisons' | 'messages' | 'results',
-    id: string
-  ): Promise<boolean> {
+  protected async deleteDocument(Key: string): Promise<boolean> {
     try {
-      await this.client.send(
-        new DeleteObjectCommand({ Bucket: 'touca', Key: `${type}/${id}` })
-      )
+      await this.client.send(new DeleteObjectCommand({ Bucket: 'touca', Key }))
       return true
     } catch (err) {
       logger.warn('failed to remove document: %o', err)
