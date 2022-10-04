@@ -30,14 +30,16 @@ class MinioClient:
 
     def clear_buckets(self) -> None:
         logger.info("clearing bucket touca")
-        for dir in ["artifacts", "comparisons", "messages", "results"]:
+        for name in ["artifacts", "comparisons", "messages", "results"]:
             self.remove_objects(
-                "touca", self.client.list_objects("touca", f"{dir}/", True)
+                "touca", self.client.list_objects("touca", f"{name}/", True)
             )
-        for bucket in ["touca-comparisons", "touca-messages", "touca-results"]:
-            if self.client.bucket_exists(bucket):
-                logger.info(f"clearing bucket {bucket.name}")
-                self.remove_objects(bucket.name, self.client.list_objects(bucket.name))
+            old_bucket = f"touca-{name}"
+            if self.client.bucket_exists(old_bucket):
+                logger.info(f"clearing bucket {old_bucket.name}")
+                self.remove_objects(
+                    old_bucket.name, self.client.list_objects(old_bucket.name)
+                )
 
 
 def setup_databases():

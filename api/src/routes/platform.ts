@@ -59,11 +59,12 @@ router.patch(
 )
 
 router.post(
-  '/account/:account/populate',
+  '/account/:account/populate/:team',
   middleware.isAuthenticated,
   middleware.isPlatformAdmin,
   middleware.hasAccount,
-  promisable(platformAccountPopulate, 'populate account with sample data')
+  middleware.hasTeam,
+  promisable(platformAccountPopulate, 'populate team with sample data')
 )
 
 router.post(
