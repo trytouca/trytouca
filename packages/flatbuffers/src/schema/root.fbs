@@ -55,7 +55,10 @@ table Array {
 }
 
 table Blob {
-  value:string;
+  content:[ubyte];
+  digest:string;
+  mimetype:string;
+  reference:string;
 }
 
 enum ResultType:ubyte { Check = 1, Assert }

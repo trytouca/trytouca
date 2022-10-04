@@ -119,7 +119,7 @@ function unwrap<T extends WrappedType>(wrapper: TypeWrapper): UnwrappedType<T> {
 
     case Type.Blob: {
       const unwrappedValue = wrapper.value(new Blob()) as Blob
-      const value = Buffer.from(unwrappedValue.value()!, 'utf-8')
+      const value = Buffer.from(unwrappedValue.digest()!, 'utf-8')
       return value as UnwrappedType<T>
     }
 

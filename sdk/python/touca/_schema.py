@@ -150,12 +150,34 @@ def ArrayEnd(builder):
 
 
 def BlobStart(builder):
-    builder.StartObject(1)
+    builder.StartObject(4)
 
 
-def BlobAddValue(builder, value):
+def BlobAddContent(builder, content):
     builder.PrependUOffsetTRelativeSlot(
-        0, flatbuffers.number_types.UOffsetTFlags.py_type(value), 0
+        0, flatbuffers.number_types.UOffsetTFlags.py_type(content), 0
+    )
+
+
+def BlobStartContentVector(builder, numElems):
+    return builder.StartVector(1, numElems, 1)
+
+
+def BlobAddDigest(builder, digest):
+    builder.PrependUOffsetTRelativeSlot(
+        1, flatbuffers.number_types.UOffsetTFlags.py_type(digest), 0
+    )
+
+
+def BlobAddMimetype(builder, mimetype):
+    builder.PrependUOffsetTRelativeSlot(
+        2, flatbuffers.number_types.UOffsetTFlags.py_type(mimetype), 0
+    )
+
+
+def BlobAddReference(builder, reference):
+    builder.PrependUOffsetTRelativeSlot(
+        3, flatbuffers.number_types.UOffsetTFlags.py_type(reference), 0
     )
 
 

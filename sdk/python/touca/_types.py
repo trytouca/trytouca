@@ -2,12 +2,41 @@
 
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
+from dataclasses import dataclass, field
 from json import dumps
-from pathlib import Path
-from typing import Any, Callable, Dict, Type
+from hashlib import sha256
+from mimetypes import guess_type
+from pathlib import Path, PosixPath
+from typing import Any, Callable, Dict, Type, Union
 
 import touca._schema as schema
 from flatbuffers import Builder
+
+
+@dataclass
+class Artifact:
+    content: bytes = field(default=None, repr=False)
+    digest: str = None
+    mimetype: str = None
+    reference: str = None
+
+    @classmethod
+    def from_file(cls, reference: Path):
+        content = reference.read_bytes()
+        digest = sha256(content).hexdigest()
+        mimetype = guess_type(str(reference))[0]
+        return cls(None, digest, mimetype, str(reference))
+
+    @classmethod
+    def from_bytes(cls, content: bytes):
+        digest = sha256(content).hexdigest()
+        return cls(content, digest, None, None)
+
+    def binary(self):
+        return self.content if self.content else Path(self.reference).read_bytes()
+
+    def json(self):
+        return self.reference if self.reference else str("BINARY")
 
 
 class ToucaType(ABC):
@@ -21,23 +50,31 @@ class ToucaType(ABC):
 
 
 class BlobType(ToucaType):
-    def __init__(self, value: Path):
-        """
-        Converts a given value of type ``Path`` to a BlobType with
-        known serialization into JSON and Binary.
-        """
-        self._value = value
+    def __init__(self, value: Union[bytes, Artifact]):
+        self._value = Artifact.from_bytes(value) if isinstance(value, bytes) else value
 
     def json(self):
-        return str(self._value)
+        return self._value.json()
 
     def serialize(self, builder: Builder):
-        from hashlib import sha256
-
-        hash = sha256(self._value.read_bytes()).hexdigest()
-        content = Builder.CreateString(builder, hash)
+        blob = Artifact()
+        if self._value.content:
+            blob.content = Builder.CreateByteVector(builder, self._value.content)
+        if self._value.digest:
+            blob.digest = Builder.CreateString(builder, self._value.digest)
+        if self._value.reference:
+            blob.reference = Builder.CreateString(builder, self._value.reference)
+        if self._value.mimetype:
+            blob.mimetype = Builder.CreateString(builder, self._value.mimetype)
         schema.BlobStart(builder)
-        schema.BlobAddValue(builder, content)
+        if blob.content:
+            schema.BlobAddContent(builder, blob.content)
+        if blob.digest:
+            schema.BlobAddDigest(builder, blob.digest)
+        if blob.mimetype:
+            schema.BlobAddMimetype(builder, blob.mimetype)
+        if blob.reference:
+            schema.BlobAddReference(builder, blob.reference)
         value = schema.BlobEnd(builder)
         schema.TypeWrapperStart(builder)
         schema.TypeWrapperAddValue(builder, value)
@@ -160,11 +197,11 @@ class ObjectType(ToucaType):
         key = builder.CreateString(self._name)
         members = []
         for k, v in self._values.items():
-            memberkey = builder.CreateString(k)
-            membervalue = v.serialize(builder)
+            member_key = builder.CreateString(k)
+            member_value = v.serialize(builder)
             schema.ObjectMemberStart(builder)
-            schema.ObjectMemberAddName(builder, memberkey)
-            schema.ObjectMemberAddValue(builder, membervalue)
+            schema.ObjectMemberAddName(builder, member_key)
+            schema.ObjectMemberAddValue(builder, member_value)
             members.append(schema.ObjectMemberEnd(builder))
         schema.ObjectStartValuesVector(builder, len(members))
         for item in reversed(members):
@@ -189,8 +226,12 @@ class TypeHandler:
             float: DecimalType,
             int: IntegerType,
             str: StringType,
+            bytes: BlobType,
         }
-        self._types = {date: (lambda x: dict(year=x.year, month=x.month, day=x.day))}
+        self._types = {
+            date: (lambda x: dict(year=x.year, month=x.month, day=x.day)),
+            PosixPath: (lambda x: str(x)),
+        }
 
     def transform(self, value: Any):
         if type(value) in self._primitives:

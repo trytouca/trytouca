@@ -29,24 +29,101 @@ export class Blob {
     )
   }
 
-  value(): string | null
-  value(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null
-  value(optionalEncoding?: any): string | Uint8Array | null {
+  content(index: number): number | null {
     const offset = this.bb!.__offset(this.bb_pos, 4)
+    return offset
+      ? this.bb!.readUint8(this.bb!.__vector(this.bb_pos + offset) + index)
+      : 0
+  }
+
+  contentLength(): number {
+    const offset = this.bb!.__offset(this.bb_pos, 4)
+    return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0
+  }
+
+  contentArray(): Uint8Array | null {
+    const offset = this.bb!.__offset(this.bb_pos, 4)
+    return offset
+      ? new Uint8Array(
+          this.bb!.bytes().buffer,
+          this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset),
+          this.bb!.__vector_len(this.bb_pos + offset)
+        )
+      : null
+  }
+
+  digest(): string | null
+  digest(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null
+  digest(optionalEncoding?: any): string | Uint8Array | null {
+    const offset = this.bb!.__offset(this.bb_pos, 6)
+    return offset
+      ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
+      : null
+  }
+
+  mimetype(): string | null
+  mimetype(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null
+  mimetype(optionalEncoding?: any): string | Uint8Array | null {
+    const offset = this.bb!.__offset(this.bb_pos, 8)
+    return offset
+      ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
+      : null
+  }
+
+  reference(): string | null
+  reference(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null
+  reference(optionalEncoding?: any): string | Uint8Array | null {
+    const offset = this.bb!.__offset(this.bb_pos, 10)
     return offset
       ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
       : null
   }
 
   static startBlob(builder: flatbuffers.Builder) {
-    builder.startObject(1)
+    builder.startObject(4)
   }
 
-  static addValue(
+  static addContent(
     builder: flatbuffers.Builder,
-    valueOffset: flatbuffers.Offset
+    contentOffset: flatbuffers.Offset
   ) {
-    builder.addFieldOffset(0, valueOffset, 0)
+    builder.addFieldOffset(0, contentOffset, 0)
+  }
+
+  static createContentVector(
+    builder: flatbuffers.Builder,
+    data: number[] | Uint8Array
+  ): flatbuffers.Offset {
+    builder.startVector(1, data.length, 1)
+    for (let i = data.length - 1; i >= 0; i--) {
+      builder.addInt8(data[i]!)
+    }
+    return builder.endVector()
+  }
+
+  static startContentVector(builder: flatbuffers.Builder, numElems: number) {
+    builder.startVector(1, numElems, 1)
+  }
+
+  static addDigest(
+    builder: flatbuffers.Builder,
+    digestOffset: flatbuffers.Offset
+  ) {
+    builder.addFieldOffset(1, digestOffset, 0)
+  }
+
+  static addMimetype(
+    builder: flatbuffers.Builder,
+    mimetypeOffset: flatbuffers.Offset
+  ) {
+    builder.addFieldOffset(2, mimetypeOffset, 0)
+  }
+
+  static addReference(
+    builder: flatbuffers.Builder,
+    referenceOffset: flatbuffers.Offset
+  ) {
+    builder.addFieldOffset(3, referenceOffset, 0)
   }
 
   static endBlob(builder: flatbuffers.Builder): flatbuffers.Offset {
@@ -56,28 +133,55 @@ export class Blob {
 
   static createBlob(
     builder: flatbuffers.Builder,
-    valueOffset: flatbuffers.Offset
+    contentOffset: flatbuffers.Offset,
+    digestOffset: flatbuffers.Offset,
+    mimetypeOffset: flatbuffers.Offset,
+    referenceOffset: flatbuffers.Offset
   ): flatbuffers.Offset {
     Blob.startBlob(builder)
-    Blob.addValue(builder, valueOffset)
+    Blob.addContent(builder, contentOffset)
+    Blob.addDigest(builder, digestOffset)
+    Blob.addMimetype(builder, mimetypeOffset)
+    Blob.addReference(builder, referenceOffset)
     return Blob.endBlob(builder)
   }
 
   unpack(): BlobT {
-    return new BlobT(this.value())
+    return new BlobT(
+      this.bb!.createScalarList(this.content.bind(this), this.contentLength()),
+      this.digest(),
+      this.mimetype(),
+      this.reference()
+    )
   }
 
   unpackTo(_o: BlobT): void {
-    _o.value = this.value()
+    _o.content = this.bb!.createScalarList(
+      this.content.bind(this),
+      this.contentLength()
+    )
+    _o.digest = this.digest()
+    _o.mimetype = this.mimetype()
+    _o.reference = this.reference()
   }
 }
 
 export class BlobT {
-  constructor(public value: string | Uint8Array | null = null) {}
+  constructor(
+    public content: number[] = [],
+    public digest: string | Uint8Array | null = null,
+    public mimetype: string | Uint8Array | null = null,
+    public reference: string | Uint8Array | null = null
+  ) {}
 
   pack(builder: flatbuffers.Builder): flatbuffers.Offset {
-    const value = this.value !== null ? builder.createString(this.value!) : 0
+    const content = Blob.createContentVector(builder, this.content)
+    const digest = this.digest !== null ? builder.createString(this.digest!) : 0
+    const mimetype =
+      this.mimetype !== null ? builder.createString(this.mimetype!) : 0
+    const reference =
+      this.reference !== null ? builder.createString(this.reference!) : 0
 
-    return Blob.createBlob(builder, value)
+    return Blob.createBlob(builder, content, digest, mimetype, reference)
   }
 }

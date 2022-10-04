@@ -42,8 +42,6 @@ export function unionToType(
   switch (Type[type]) {
     case 'NONE':
       return null
-    case 'Blob':
-      return accessor(new Blob())! as Blob
     case 'Bool':
       return accessor(new Bool())! as Bool
     case 'Int':
@@ -60,6 +58,8 @@ export function unionToType(
       return accessor(new Object_())! as Object_
     case 'Array':
       return accessor(new Array())! as Array
+    case 'Blob':
+      return accessor(new Blob())! as Blob
     default:
       return null
   }
@@ -86,8 +86,6 @@ export function unionListToType(
   switch (Type[type]) {
     case 'NONE':
       return null
-    case 'Blob':
-      return accessor(index, new Blob())! as Blob
     case 'Bool':
       return accessor(index, new Bool())! as Bool
     case 'Int':
@@ -104,6 +102,8 @@ export function unionListToType(
       return accessor(index, new Object_())! as Object_
     case 'Array':
       return accessor(index, new Array())! as Array
+    case 'Blob':
+      return accessor(index, new Blob())! as Blob
     default:
       return null
   }
