@@ -9,6 +9,7 @@ export class MessageInfo {
   public contentId: string
   public elementId: mongoose.Types.ObjectId
   public elementName: string
+  public messageArtifacts: string[]
   public messageId: mongoose.Types.ObjectId
   public suiteId: mongoose.Types.ObjectId
   public suiteName: string
