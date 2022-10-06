@@ -2231,32 +2231,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Errors'
-  /platform/account/:account/populate/:team:
-    post:
-      tags:
-        - Platform
-      summary: Populate a given team with sample data on behalf of a user account
-      operationId: platform_accountPopulate
-      description: >-
-        Populates an existing team with sample test results on behalf of a user.
-        User initiating the request must be authenticated. User initiating the
-        request must be a server admin.
-      parameters:
-        - $ref: '#/components/parameters/account'
-        - $ref: '#/components/parameters/team'
-      responses:
-        '204':
-          description: Sample data added
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          description: Team Not Found or User Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Errors'
   /platform/account/:account/suspend:
     post:
       tags:
@@ -3123,6 +3097,37 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           description: Team or Member Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+  /team/:team/populate:
+    post:
+      tags:
+        - Team
+      summary: Populate team with sample data on behalf of the team owner
+      operationId: team_populate
+      description: >-
+        Populates an existing team with sample test results on behalf of the
+        team owner. User initiating the request must be authenticated. User
+        initiating the request must be a team member.
+      parameters:
+        - $ref: '#/components/parameters/team'
+      responses:
+        '204':
+          description: Sample data added
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Team Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '409':
+          description: Suite data already exists
           content:
             application/json:
               schema:

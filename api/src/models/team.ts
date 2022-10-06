@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
@@ -29,4 +29,17 @@ export async function teamCreate(
     $push: { teams: newTeam._id }
   })
   return newTeam
+}
+
+/**
+ * Find a team slug that is not already registered.
+ */
+export async function generateTeamSlug() {
+  const random = () => Math.floor(100000 + Math.random() * 900000)
+  let slug = `tutorial-${random()}`
+  while (await TeamModel.countDocuments({ slug })) {
+    logger.warn('findTeamSlug() implementation may be inefficient')
+    slug = `tutorial-${random()}`
+  }
+  return slug
 }

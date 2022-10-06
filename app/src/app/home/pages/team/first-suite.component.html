@@ -1,13 +1,40 @@
-<div class="wsl-min-h-screen-2 wsl-page-banner">
-  <div>
-    <h2>Create Your First Suite</h2>
-  </div>
-  <img class="dark:hidden" src="./assets/undraw/undraw_empty_xct9.svg" />
-  <p>
-    Each suite corresponds to a specific software workflow that you like to test
-    for regressions.
-  </p>
-  <div>
-    <button type="button" (click)="openCreateModal()">New Suite</button>
+<div class="wsl-min-h-screen-2">
+  <div class="wsl-min-h-screen-2 grid grid-cols-2 place-content-start gap-8">
+    <div
+      class="flex flex-col justify-center space-y-4 rounded-lg border border-gray-200 bg-white p-8 shadow-sm hover:bg-opacity-100 dark:border-gray-600 dark:bg-gray-800 dark:bg-opacity-20 dark:hover:bg-opacity-10">
+      <h4 class="text-xl font-medium text-black dark:text-white">
+        Create a new Suite
+      </h4>
+      <h5 class="text-md wsl-text-muted">
+        Start with a clean slate. Use our CLI or one of our SDKs to submit test
+        results to Touca.
+      </h5>
+      <div>
+        <button
+          type="button"
+          (click)="openCreateModal()"
+          class="wsl-btn-primary wsl-btn-lg min-w-[25%]">
+          New Suite
+        </button>
+      </div>
+    </div>
+    <div
+      class="flex flex-col justify-center space-y-4 rounded-lg border border-gray-200 bg-white p-8 shadow-sm hover:bg-opacity-100 dark:border-gray-600 dark:bg-gray-800 dark:bg-opacity-20 dark:hover:bg-opacity-10">
+      <h4 class="text-xl font-medium text-black dark:text-white">
+        Explore Sample Data
+      </h4>
+      <h5 class="text-md wsl-text-muted">
+        Use our sample test results to explore Touca and understand how it
+        works.
+      </h5>
+      <div>
+        <button
+          type="button"
+          class="wsl-btn-primary wsl-btn-lg min-w-[25%]"
+          (click)="submitSampleData()">
+          Sample Data
+        </button>
+      </div>
+    </div>
   </div>
 </div>

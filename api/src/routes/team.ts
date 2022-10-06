@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { ETeamRole } from '@touca/api-schema'
 import express from 'express'
@@ -20,6 +20,7 @@ import { teamMemberAdd } from '@/controllers/team/memberAdd'
 import { teamMemberList } from '@/controllers/team/memberList'
 import { teamMemberRemove } from '@/controllers/team/memberRemove'
 import { teamMemberUpdate } from '@/controllers/team/memberUpdate'
+import { teamPopulate } from '@/controllers/team/populate'
 import { ctrlTeamRemove } from '@/controllers/team/remove'
 import { teamUpdate } from '@/controllers/team/update'
 import * as middleware from '@/middlewares'
@@ -77,6 +78,14 @@ router.delete(
   middleware.hasTeam,
   middleware.isTeamOwner,
   promisable(ctrlTeamRemove, 'remove team')
+)
+
+router.post(
+  '/:team/populate',
+  middleware.isAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  promisable(teamPopulate, 'populate team with sample data')
 )
 
 router.post(

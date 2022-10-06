@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -327,5 +327,10 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     });
     this._cache.members.splice(index, 1);
     this._subjects.members.next(this._cache.members);
+  }
+
+  public submitSampleData() {
+    const team = this._cache.team?.slug;
+    return this.apiService.post(`/team/${team}/populate`);
   }
 }

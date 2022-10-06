@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 export { ctrlTeamCreate } from './create'
 export { teamInviteAccept } from './inviteAccept'
@@ -18,3 +18,4 @@ export { teamMemberAdd } from './memberAdd'
 export { teamMemberList } from './memberList'
 export { teamMemberRemove } from './memberRemove'
 export { teamMemberUpdate } from './memberUpdate'
+export { teamPopulate } from './populate'
