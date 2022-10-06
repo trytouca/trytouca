@@ -16,8 +16,8 @@ export async function teamPopulate(
   const team = res.locals.team as ITeam
   const user = res.locals.user as IUser
 
-  if (await SuiteModel.countDocuments({ team: team._id, slug: 'students' })) {
-    return next({ errors: ['sample data already exists'], status: 409 })
+  if (await SuiteModel.countDocuments({ team: team._id })) {
+    return next({ errors: ['team is not empty'], status: 409 })
   }
 
   logger.debug(
