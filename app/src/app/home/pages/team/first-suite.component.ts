@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -42,5 +42,11 @@ export class TeamFirstSuiteComponent implements OnDestroy {
         }
       }
     );
+  }
+
+  submitSampleData() {
+    return this.teamPageService.submitSampleData().subscribe({
+      next: () => this.teamPageService.refreshSuites()
+    });
   }
 }

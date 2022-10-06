@@ -5,7 +5,6 @@ import express from 'express'
 import * as ev from 'express-validator'
 
 import { platformAccountDelete } from '@/controllers/platform/accountDelete'
-import { platformAccountPopulate } from '@/controllers/platform/accountPopulate'
 import { platformAccountSuspend } from '@/controllers/platform/accountSuspend'
 import { platformAccountUpdate } from '@/controllers/platform/accountUpdate'
 import { platformConfig } from '@/controllers/platform/config'
@@ -56,15 +55,6 @@ router.patch(
       .withMessage('invalid')
   ]),
   promisable(platformAccountUpdate, 'update account profile on platform')
-)
-
-router.post(
-  '/account/:account/populate/:team',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
-  middleware.hasAccount,
-  middleware.hasTeam,
-  promisable(platformAccountPopulate, 'populate team with sample data')
 )
 
 router.post(

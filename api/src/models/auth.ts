@@ -5,6 +5,7 @@ import * as bcrypt from 'bcryptjs'
 import { once } from 'lodash'
 
 import { addSampleData } from '@/models/sampleData'
+import { generateTeamSlug, teamCreate } from '@/models/team'
 import { SessionModel } from '@/schemas/session'
 import { IUserDocument, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
@@ -110,7 +111,12 @@ export async function createUserAccount(
   // sample test results.
 
   if (config.samples.enabled) {
-    addSampleData(newUser)
+    addSampleData(
+      await teamCreate(newUser, {
+        slug: await generateTeamSlug(),
+        name: 'Tutorial'
+      })
+    )
   } else {
     logger.debug(
       '%s: skipped submission of sample data. feature is disabled.',

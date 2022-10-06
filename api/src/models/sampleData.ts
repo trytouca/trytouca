@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import fs from 'fs'
 import path from 'path'
@@ -6,27 +6,13 @@ import path from 'path'
 import { processBinaryContent } from '@/controllers/client/submit'
 import { batchPromote, batchSeal } from '@/models/batch'
 import { suiteCreate } from '@/models/suite'
-import { teamCreate } from '@/models/team'
 import { BatchModel } from '@/schemas/batch'
 import { SuiteModel } from '@/schemas/suite'
 import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
+import { UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
-
-/**
- * Find a team slug that is not already registered.
- */
-async function findTeamSlug() {
-  const random = () => Math.floor(100000 + Math.random() * 900000)
-  let slug = `tutorial-${random()}`
-  while (await TeamModel.countDocuments({ slug })) {
-    logger.warn('findTeamSlug() implementation may be inefficient')
-    slug = `tutorial-${random()}`
-  }
-  return slug
-}
 
 /**
  * Add sample test results to an empty suite.
@@ -39,13 +25,10 @@ async function findTeamSlug() {
  * to play around and tinker with the platform capabilities prior to submitting
  * results on their own.
  */
-export async function addSampleData(user: IUser, team?: ITeam): Promise<void> {
-  if (!team) {
-    team = await teamCreate(user, {
-      slug: await findTeamSlug(),
-      name: 'Tutorial'
-    })
-  }
+export async function addSampleData(team: ITeam): Promise<void> {
+  const owner = await TeamModel.findById(team._id, { owner: 1 })
+  const user = await UserModel.findById(owner.owner)
+
   let suite = await suiteCreate(user, team, {
     slug: 'students',
     name: 'Students'
