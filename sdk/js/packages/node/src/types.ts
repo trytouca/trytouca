@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Builder } from 'flatbuffers';
 
@@ -168,7 +168,10 @@ class ObjectType implements ToucaType {
 export class TypeHandler {
   private readonly _primitives: Record<string, (x: unknown) => ToucaType> = {
     boolean: (x) => new BoolType(x as boolean),
-    number: (x) => new DecimalType(x as number),
+    number: (x) =>
+      Number.isInteger(x) && !(x as number).toString().includes('.')
+        ? new IntegerType(x as number)
+        : new DecimalType(x as number),
     string: (x) => new StringType(x as string),
     undefined: (x) => new StringType('undefined')
   };
