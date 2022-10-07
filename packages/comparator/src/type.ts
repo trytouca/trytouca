@@ -150,8 +150,8 @@ function compare(src: Type, dst: Type): TypeComparison {
   }
 
   if (isObject(src) && isObject(dst)) {
-    const flatSrc = flatten(src)
-    const flatDst = flatten(dst)
+    const flatSrc = flatten(Object.values(src))
+    const flatDst = flatten(Object.values(dst))
     let common = 0
     let total = 0
     for (const [key, value] of flatSrc) {

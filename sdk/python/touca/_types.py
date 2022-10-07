@@ -166,7 +166,7 @@ class VectorType(ToucaType):
     def serialize(self, builder: Builder):
         items = [v.serialize(builder) for v in self._values]
         schema.ArrayStartValuesVector(builder, len(items))
-        for item in items:
+        for item in reversed(items):
             builder.PrependUOffsetTRelative(item)
         values = builder.EndVector()
         schema.ArrayStart(builder)
