@@ -4,6 +4,7 @@ from threading import get_ident
 from typing import Any, Callable, Dict, List, Type, ValuesView
 
 from touca._case import Case
+from touca._types import BlobType
 
 
 def casemethod(func):
@@ -447,10 +448,9 @@ class Client:
         self._transport.post(content=self._serialize(self._cases.values()))
         for case in self._cases.values():
             testcase_name = case._metadata().get("testcase")
-            for artifact_name, artifact_file in case._artifacts.items():
-                self._transport.post_artifacts(
-                    testcase_name, artifact_name, artifact_file
-                )
+            for key, value in case._results.items():
+                if isinstance(value.val, BlobType):
+                    self._transport.post_blobs(testcase_name, key, value.val._value)
 
     def seal(self):
         """

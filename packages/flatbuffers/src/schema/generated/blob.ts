@@ -29,24 +29,56 @@ export class Blob {
     )
   }
 
-  value(): string | null
-  value(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null
-  value(optionalEncoding?: any): string | Uint8Array | null {
+  digest(): string | null
+  digest(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null
+  digest(optionalEncoding?: any): string | Uint8Array | null {
     const offset = this.bb!.__offset(this.bb_pos, 4)
     return offset
       ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
       : null
   }
 
-  static startBlob(builder: flatbuffers.Builder) {
-    builder.startObject(1)
+  mimetype(): string | null
+  mimetype(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null
+  mimetype(optionalEncoding?: any): string | Uint8Array | null {
+    const offset = this.bb!.__offset(this.bb_pos, 6)
+    return offset
+      ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
+      : null
   }
 
-  static addValue(
+  reference(): string | null
+  reference(optionalEncoding: flatbuffers.Encoding): string | Uint8Array | null
+  reference(optionalEncoding?: any): string | Uint8Array | null {
+    const offset = this.bb!.__offset(this.bb_pos, 8)
+    return offset
+      ? this.bb!.__string(this.bb_pos + offset, optionalEncoding)
+      : null
+  }
+
+  static startBlob(builder: flatbuffers.Builder) {
+    builder.startObject(3)
+  }
+
+  static addDigest(
     builder: flatbuffers.Builder,
-    valueOffset: flatbuffers.Offset
+    digestOffset: flatbuffers.Offset
   ) {
-    builder.addFieldOffset(0, valueOffset, 0)
+    builder.addFieldOffset(0, digestOffset, 0)
+  }
+
+  static addMimetype(
+    builder: flatbuffers.Builder,
+    mimetypeOffset: flatbuffers.Offset
+  ) {
+    builder.addFieldOffset(1, mimetypeOffset, 0)
+  }
+
+  static addReference(
+    builder: flatbuffers.Builder,
+    referenceOffset: flatbuffers.Offset
+  ) {
+    builder.addFieldOffset(2, referenceOffset, 0)
   }
 
   static endBlob(builder: flatbuffers.Builder): flatbuffers.Offset {
@@ -56,28 +88,42 @@ export class Blob {
 
   static createBlob(
     builder: flatbuffers.Builder,
-    valueOffset: flatbuffers.Offset
+    digestOffset: flatbuffers.Offset,
+    mimetypeOffset: flatbuffers.Offset,
+    referenceOffset: flatbuffers.Offset
   ): flatbuffers.Offset {
     Blob.startBlob(builder)
-    Blob.addValue(builder, valueOffset)
+    Blob.addDigest(builder, digestOffset)
+    Blob.addMimetype(builder, mimetypeOffset)
+    Blob.addReference(builder, referenceOffset)
     return Blob.endBlob(builder)
   }
 
   unpack(): BlobT {
-    return new BlobT(this.value())
+    return new BlobT(this.digest(), this.mimetype(), this.reference())
   }
 
   unpackTo(_o: BlobT): void {
-    _o.value = this.value()
+    _o.digest = this.digest()
+    _o.mimetype = this.mimetype()
+    _o.reference = this.reference()
   }
 }
 
 export class BlobT {
-  constructor(public value: string | Uint8Array | null = null) {}
+  constructor(
+    public digest: string | Uint8Array | null = null,
+    public mimetype: string | Uint8Array | null = null,
+    public reference: string | Uint8Array | null = null
+  ) {}
 
   pack(builder: flatbuffers.Builder): flatbuffers.Offset {
-    const value = this.value !== null ? builder.createString(this.value!) : 0
+    const digest = this.digest !== null ? builder.createString(this.digest!) : 0
+    const mimetype =
+      this.mimetype !== null ? builder.createString(this.mimetype!) : 0
+    const reference =
+      this.reference !== null ? builder.createString(this.reference!) : 0
 
-    return Blob.createBlob(builder, value)
+    return Blob.createBlob(builder, digest, mimetype, reference)
   }
 }

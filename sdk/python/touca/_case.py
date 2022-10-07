@@ -5,7 +5,7 @@ from enum import Enum
 from typing import Dict, Tuple
 from pathlib import Path
 
-from touca._types import IntegerType, ToucaType, VectorType, BlobType
+from touca._types import IntegerType, ToucaType, VectorType, BlobType, Artifact
 
 
 class ResultCategory(Enum):
@@ -41,7 +41,6 @@ class Case:
     def __init__(self, **kwargs):
 
         self._meta = kwargs
-        self._artifacts: Dict[str, Path] = dict()
         self._results: Dict[str, ResultEntry] = dict()
         self._tics: Dict[str, datetime] = dict()
         self._tocs: Dict[str, datetime] = dict()
@@ -56,8 +55,10 @@ class Case:
         """
         self._results[key] = ResultEntry(typ=ResultCategory.Check, val=value)
 
-    def check_file(self, key: str, file):
-        self._artifacts[key] = file
+    def check_file(self, key: str, file: Path):
+        self._results[key] = ResultEntry(
+            typ=ResultCategory.Check, val=BlobType(Artifact.from_file(file))
+        )
 
     def assume(self, key: str, value: ToucaType):
         """
@@ -228,7 +229,6 @@ class Case:
             for k, v in self._results.items()
             if v.typ is ResultCategory.Check
         ]
-        results.extend({"key": k, "value": str(v)} for k, v in self._artifacts.items())
         return {
             "metadata": self._metadata(),
             "results": results,
@@ -267,14 +267,6 @@ class Case:
             schema.ResultAddKey(builder, fbs_key)
             schema.ResultAddValue(builder, fbs_value)
             schema.ResultAddTyp(builder, dicts.get(v.typ))
-            result_entries.append(schema.ResultEnd(builder))
-        for k, v in self._artifacts.items():
-            fbs_key = Builder.CreateString(builder, k)
-            fbs_value = BlobType(v).serialize(builder)
-            schema.ResultStart(builder)
-            schema.ResultAddKey(builder, fbs_key)
-            schema.ResultAddValue(builder, fbs_value)
-            schema.ResultAddTyp(builder, schema.ResultType.Check)
             result_entries.append(schema.ResultEnd(builder))
 
         schema.ResultsStartEntriesVector(builder, len(result_entries))

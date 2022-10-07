@@ -1,11 +1,12 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import json
-from typing import List
 from pathlib import Path
+from typing import List
 
 import certifi
 from touca.__init__ import __version__ as client_version
+from touca._case import Artifact
 from urllib3.poolmanager import PoolManager
 from urllib3.response import HTTPResponse
 
@@ -112,12 +113,12 @@ class Transport:
                 reason = " This team does not exist."
         raise RuntimeError(f"Failed to submit test results.{reason}")
 
-    def post_artifacts(self, testcase: str, artifact_name: str, artifact_file: Path):
+    def post_blobs(self, testcase: str, key: str, artifact: Artifact):
         slugs = "/".join(self._options.get(k) for k in ["team", "suite", "version"])
         response = self._send_request(
             method="POST",
-            path=f"/client/submit/artifact/{slugs}/{testcase}/{artifact_name}",
-            body=artifact_file.read_bytes(),
+            path=f"/client/submit/artifact/{slugs}/{testcase}/{key}",
+            body=artifact.binary(),
             content_type="application/octet-stream",
         )
         if response.status == 204:
