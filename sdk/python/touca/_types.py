@@ -58,8 +58,6 @@ class BlobType(ToucaType):
 
     def serialize(self, builder: Builder):
         blob = Artifact()
-        if self._value.content:
-            blob.content = Builder.CreateByteVector(builder, self._value.content)
         if self._value.digest:
             blob.digest = Builder.CreateString(builder, self._value.digest)
         if self._value.reference:
@@ -67,8 +65,6 @@ class BlobType(ToucaType):
         if self._value.mimetype:
             blob.mimetype = Builder.CreateString(builder, self._value.mimetype)
         schema.BlobStart(builder)
-        if blob.content:
-            schema.BlobAddContent(builder, blob.content)
         if blob.digest:
             schema.BlobAddDigest(builder, blob.digest)
         if blob.mimetype:

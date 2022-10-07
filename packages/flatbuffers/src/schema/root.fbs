@@ -55,7 +55,6 @@ table Array {
 }
 
 table Blob {
-  content:[ubyte];
   digest:string;
   mimetype:string;
   reference:string;
