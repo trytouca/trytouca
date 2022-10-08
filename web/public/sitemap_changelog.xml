@@ -5,6 +5,14 @@
     xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
     xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     <url>
+        <loc>https://touca.io/changelog/221007/</loc>
+        <lastmod>2022-10-07T18:00:00+00:00</lastmod>
+        <image:image>
+            <image:loc>https://blog.touca.io/content/images/2022/10/touca-changelog-221007.png</image:loc>
+            <image:caption>touca-changelog-221007.png</image:caption>
+        </image:image>
+    </url>
+    <url>
         <loc>https://touca.io/changelog/220930/</loc>
         <lastmod>2022-09-30T18:00:00+00:00</lastmod>
         <image:image>
