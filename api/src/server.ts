@@ -45,6 +45,7 @@ app.use(hidePoweredBy())
 app.use(compression())
 
 if (config.isCloudHosted) {
+  app.enable('trust proxy')
   app.use('/', router)
 } else {
   app.use('/api', router)
