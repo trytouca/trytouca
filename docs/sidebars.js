@@ -267,6 +267,19 @@ const sidebars = {
           label: "Privacy Policy"
         }
       ]
+    },
+    {
+      type: "category",
+      label: "Touca Cloud",
+      collapsed: false,
+      collapsible: true,
+      items: [
+        {
+          type: "doc",
+          id: "cloud/pricing",
+          label: "Pricing"
+        }
+      ]
     }
   ]
 };
