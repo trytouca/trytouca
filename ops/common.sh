@@ -106,6 +106,20 @@ run_compose () {
     return 0
 }
 
+generate_keyfile () {
+    info "Generating mongo replica set keyfile"
+
+    # mongo will spit this file out with *any* permissions other than 400
+    local cmd="openssl rand -base64 756 > ${FILE_KEYFILE} && chmod 400 ${FILE_KEYFILE}" 
+
+    if ! eval "$cmd"; then
+        log_warning "failed to run $cmd"
+        return 1
+    fi
+
+    return 0
+}
+
 redeploy () {
     info "Stopping running containers"
     run_compose stop
