@@ -13,6 +13,9 @@ DIR_INSTALL=$OUTPUT
 FILE_COMPOSE="$DIR_SCRIPT/docker-compose.dev.yml"
 DIR_PROJECT_ROOT="$DIR_INSTALL"
 
+# mongo requires a keyfile to run in replica mode.
+FILE_KEYFILE="$DIR_SCRIPT/mongo/keyFile.txt"
+
 confirm_data_removal
 
 install_docker
@@ -20,7 +23,15 @@ install_docker_compose
 
 rm -rf "$DIR_INSTALL"/{data,logs,ops}
 mkdir -p "$DIR_INSTALL"/data/{minio,mongo,redis} "$DIR_INSTALL"/ops
+
+generate_keyfile
+
 cp -r "$(dirname "${DIR_SCRIPT}")"/ops/mongo "$DIR_INSTALL"/ops
 
 redeploy
+
+# force removal since keyfile has write-protected status
+rm -f "$FILE_KEYFILE" "$DIR_INSTALL/ops/mongo/keyFile.txt"
+
 info "Have a good day, $HUMAN_NAME!"
+ 

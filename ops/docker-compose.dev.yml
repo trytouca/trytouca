@@ -25,15 +25,29 @@ services:
 
   touca_mongo:
     user: "${UID_GID}"
-    image: mongo:4-bionic
+    image: mongo:5
     environment:
       MONGO_INITDB_ROOT_USERNAME: toucauser
       MONGO_INITDB_ROOT_PASSWORD: toucapass
     volumes:
       - ./data/mongo:/data/db
       - ./ops/mongo/mongod.conf:/etc/mongod.conf
+      - ./ops/mongo/keyFile.txt:/keyFile.txt
       - ./ops/mongo/entrypoint/:/docker-entrypoint-initdb.d/
     ports:
       - 27017:27017
     command: --config /etc/mongod.conf
     restart: always
+
+# container waits for mongo to be initialized, runs a short script, then exits
+  touca_mongo_repl_setup:
+    image: mongo:5
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: toucauser
+      MONGO_INITDB_ROOT_PASSWORD: toucapass
+    volumes:
+      - ./ops/mongo/setupRepl.sh:/scripts/setupRepl.sh
+    entrypoint: ["bash", "./scripts/setupRepl.sh"]
+    restart: "no"
+    depends_on:
+      - touca_mongo
