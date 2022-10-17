@@ -18,13 +18,14 @@ import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 import { objectStore } from '@/utils/store'
 import { analytics, EActivity } from '@/utils/tracker'
+import { createAutoCopy } from '@/utils/autoCopy'
 
 type TeamSlug = string
 type SuiteSlug = string
 type BatchSlug = string
 type ElementName = string
 
-type SubmissionItem = {
+export type SubmissionItem = {
   builtAt: Date
   teamName: TeamSlug
   suiteName: SuiteSlug
@@ -39,7 +40,7 @@ type SubmissionItem = {
   messageId?: string
 }
 
-type ElementMap = Map<ElementName, SubmissionItem>
+export type ElementMap = Map<ElementName, SubmissionItem>
 type BatchMap = Map<BatchSlug, ElementMap>
 type SuiteMap = Map<SuiteSlug, BatchMap>
 type TeamMap = Map<TeamSlug, SuiteMap>
@@ -272,6 +273,8 @@ async function processTeam(
   // concurrently process submitted messages that belong to suites of this team
 
   const jobs = Array.from(suiteMap).map(([suiteSlug, batchMap]) => {
+    console.log('for suite: ', suiteSlug)
+    console.log(batchMap)
     return processSuite(user, team, suiteSlug, batchMap)
   })
 
@@ -416,6 +419,63 @@ async function insertComparisonJobs(
   return failed
 }
 
+interface IBatchCopyParams {
+  user: IUser
+  team: ITeamDocument
+  suite: ISuiteDocument
+  batchSlug: string
+  elements: ElementMap
+}
+
+const pseudoRandName = () => {
+  const names = [
+    'tim',
+    'jim',
+    'sara',
+    'ash',
+    'wendy',
+    'kim',
+    'robert',
+    'kyle',
+    'dev',
+    'amir',
+    'kendra'
+  ]
+
+  const idx = Math.floor(Math.random() * names.length)
+
+  return names[idx]
+}
+
+const copyElements = (elMap: ElementMap): ElementMap => {
+  const builtTimeStamp = new Date(Date.now())
+
+  return Array.from(elMap.entries()).reduce((copy, next) => {
+    const [_, submissionItem] = next
+    const newElementName = pseudoRandName()
+
+    const submissionCopy = {
+      ...submissionItem,
+      builtAt: builtTimeStamp,
+      elementName: newElementName
+    }
+
+    delete submissionCopy.elementId
+    delete submissionCopy.messageId
+
+    copy.set(newElementName, submissionCopy)
+
+    return copy
+  }, new Map<string, SubmissionItem>())
+}
+
+const copyBatchParams = (params: IBatchCopyParams): IBatchCopyParams => ({
+  ...params,
+  elements: copyElements(params.elements)
+})
+
+const startBatchCopies = createAutoCopy(10, 10, 3, 15)
+
 /**
  * Check if a suite with given name is registered on the Platform.
  */
@@ -454,6 +514,44 @@ async function processSuite(
     if (errors.length !== 0) {
       return { slug: suiteSlug, errors }
     }
+
+    // wait until we're sure the batch didn't trigger any errors, since we're about to
+    // re-emit it a bunch of times...
+    const copyBatchFunc = async () => {
+      const [batchSlugToCopy, batchElementsToCopy] = Array.from(
+        batchMap.entries()
+      )[0]
+
+      const copyParams = copyBatchParams({
+        user,
+        team,
+        suite,
+        batchSlug: batchSlugToCopy,
+        elements: batchElementsToCopy
+      })
+
+      //   adding an element to existing batch will fail if batch is sealed
+      const unsealed = await BatchModel.findOneAndUpdate(
+        {
+          slug: copyParams.batchSlug,
+          suite: copyParams.suite._id
+        },
+        {
+          $unset: { sealedAt: '' }
+        },
+        { new: true }
+      )
+
+      processBatch(
+        copyParams.user,
+        copyParams.team,
+        copyParams.suite,
+        copyParams.batchSlug,
+        copyParams.elements
+      )
+    }
+
+    startBatchCopies(copyBatchFunc)
 
     // at this point, we are sure that all batches have been processed
     // successfully.
