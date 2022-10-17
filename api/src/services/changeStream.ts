@@ -10,6 +10,6 @@ export const initChangeStream = () => {
   logger.debug('watching streams')
 
   stream.on('change', (doc) => {
-    console.log(doc)
+    logger.info('change detected from stream')
   })
 }
