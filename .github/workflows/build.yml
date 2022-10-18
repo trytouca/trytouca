@@ -889,7 +889,7 @@ jobs:
         run: helm lint ops/k8s/helm-chart
       - name: generate helm chart template
         if: steps.changes.outputs.ops == 'true'
-        run: helm template ops/k8s/helm-chart > ops/k8s/touca.yaml
+        run: helm template oss ops/k8s/helm-chart > ops/k8s/touca.yaml
       - name: push ops to aws
         if: steps.params.outputs.release == 'true'
         run: |
