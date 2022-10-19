@@ -1,11 +1,13 @@
 import { IUser } from '@/schemas/user'
 import mongoose from 'mongoose'
+import { Z_NO_FLUSH } from 'zlib'
 import {
   ServerEvents,
   IEventWriter,
   TEventWriterRequest,
   TEventWriterResponse,
-  EventWriter
+  EventWriter,
+  formatEvent
 } from './serverEvents'
 
 const makeTestReqFn = () => {
@@ -43,7 +45,8 @@ const getTestRes = (): TEventWriterResponse => {
   return {
     locals: getTestUser(),
     write: jest.fn(),
-    writeHead: jest.fn()
+    writeHead: jest.fn(),
+    flush: jest.fn()
   }
 }
 
@@ -76,11 +79,11 @@ describe('ServerEvents', () => {
     events.handle(req1, res1)
     events.handle(req2, res2)
 
-    events.broadcast({ value: 1 }, 'testEvent')
+    const mockData = { value: 1 }
 
-    const expected = `event: testEvent\nid: 0\ndata: ${JSON.stringify({
-      value: 1
-    })}\n\n`
+    events.broadcast(mockData, 'testEvent')
+
+    const expected = formatEvent(JSON.stringify(mockData), 1, 'testEvent')
 
     // ignore the callback function 'write' gets called with
     expect(res1.write).toHaveBeenCalledWith(expected, expect.anything())

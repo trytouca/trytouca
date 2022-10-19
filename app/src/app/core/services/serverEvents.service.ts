@@ -6,24 +6,25 @@ import { share, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
 
 @Injectable({ providedIn: 'root' })
-export class ServerEventService implements OnDestroy {
-  private eventSource: EventSource;
+export class ServerEventService {
   private source$: Observable<Partial<MessageEvent<any>>>;
 
   constructor(private api: ApiService) {
-    this.eventSource = this.makeEventSource();
-
     this.source$ = new Observable((observer) => {
-      this.eventSource.onmessage = (msg) => observer.next(msg);
-      this.eventSource.onerror = (e) => observer.error(e);
-    }).pipe(
-      tap(() => console.info('initializing shared event source')),
-      share()
-    );
-  }
+      const eventSource = this.makeEventSource();
 
-  ngOnDestroy(): void {
-    this.eventSource.close();
+      eventSource.addEventListener('init', () => {
+        console.log('event source initialized');
+      });
+
+      eventSource.onmessage = (msg) => {
+        observer.next(msg);
+      };
+
+      eventSource.onerror = (e) => observer.error(e);
+
+      return () => eventSource.close();
+    }).pipe(share());
   }
 
   events() {
@@ -31,6 +32,8 @@ export class ServerEventService implements OnDestroy {
   }
 
   private makeEventSource() {
-    return new EventSource(this.api.makeUrl('events'));
+    return new EventSource(this.api.makeUrl('events'), {
+      withCredentials: true
+    });
   }
 }

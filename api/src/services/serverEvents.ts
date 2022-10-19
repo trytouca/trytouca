@@ -6,10 +6,15 @@ export type TEventWriterRequest = Pick<Request, 'ip' | 'on'>
 export type TEventWriterResponse = Pick<
   Response,
   'write' | 'locals' | 'writeHead'
->
+> & { flush: () => void }
+
+export const formatEvent = (data: string, id: number, eventType?: string) =>
+  `data: ${data}\nid${id}\n` + eventType === undefined
+    ? '\n'
+    : `event: ${eventType}\n\n`
 
 export interface IEventWriter {
-  write(data: {}, eventType?: string): void
+  write(data: {}, msgId: number, eventType?: string): void
   getUser(): IUser
   onClose(cb: (clientIP: string, writerID: number) => void): void
   error(): Error | null
@@ -18,7 +23,6 @@ export interface IEventWriter {
 export class EventWriter {
   private hasCloseHandler = false
   private err: Error | null = null
-  private msgId: number = 0
 
   constructor(
     private req: TEventWriterRequest,
@@ -38,7 +42,7 @@ export class EventWriter {
     }
   }
 
-  write(data: {}, eventType?: string) {
+  write(data: {}, msgId: number, eventType?: string) {
     let JSONData = ''
 
     try {
@@ -53,16 +57,16 @@ export class EventWriter {
       return
     }
 
+    const msg = formatEvent(JSONData, msgId, eventType)
+
     // @todo: should handle stream states better here
-    this.res.write(`id:${this.msgId}\n`, this.handleErr)
+    this.res.write(msg, this.handleErr)
 
-    if (eventType !== undefined) {
-      this.res.write(`event:${eventType}\n`, this.handleErr)
+    if (this.error() === null) {
+      // need this b/c of compression middleware, c.f.
+      // https://www.npmjs.com/package/compression#server-sent-events
+      this.res.flush()
     }
-
-    this.res.write(JSONData, this.handleErr)
-
-    this.msgId++
   }
 
   onClose(cb: (clientIP: string, writerId?: number) => void) {
@@ -80,6 +84,7 @@ export class EventWriter {
 
 export class ServerEvents {
   private currWriterId: number = 0
+  private currMsgId: number = 0
   private clients: Map<string, IEventWriter> = new Map()
 
   constructor() {
@@ -105,9 +110,11 @@ export class ServerEvents {
   broadcast(data: {}, eventType?: string) {
     for (let writer of this.clients.values()) {
       if (writer.error() === null) {
-        writer.write(data, eventType)
+        writer.write(data, this.currMsgId, eventType)
       }
     }
+
+    this.currMsgId++
   }
 
   private removeClient(ip: string) {

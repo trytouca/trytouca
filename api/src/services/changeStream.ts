@@ -13,13 +13,9 @@ export const initChangeStream = () => {
 
   const db = client.db('touca')
 
-  const stream = db.watch()
-
-  logger.debug('watching streams')
+  const stream = db.watch([], { fullDocument: 'updateLookup' })
 
   stream.on('change', (doc) => {
-    if (doc.operationType === 'insert') {
-      ServerEvents.broadcast(doc)
-    }
+    ServerEvents.broadcast(doc)
   })
 }
