@@ -24,17 +24,25 @@ export class EventWriter {
     private req: TEventWriterRequest,
     private res: TEventWriterResponse,
     private _id: number
-  ) {}
+  ) {
+    this.handleErr = this.handleErr.bind(this)
+  }
 
   getUser() {
     return { ...(this.res.locals as IUser) }
+  }
+
+  private handleErr(e?: Error) {
+    if (e !== undefined || e !== undefined) {
+      this.err = e
+    }
   }
 
   write(data: {}, eventType?: string) {
     let JSONData = ''
 
     try {
-      JSONData += JSON.stringify({ ...data })
+      JSONData = JSON.stringify({ ...data })
     } catch (e) {
       logger.error(
         'EventWriter unable to serialize data for writer %d:\n%v\nno event will be transmitted to clients',
@@ -45,18 +53,14 @@ export class EventWriter {
       return
     }
 
-    let msg = `id: ${this.msgId}\ndata: ${JSONData}\n\n`
+    // @todo: should handle stream states better here
+    this.res.write(`id:${this.msgId}\n`, this.handleErr)
 
     if (eventType !== undefined) {
-      msg = `event: ${eventType}\n` + msg
+      this.res.write(`event:${eventType}\n`, this.handleErr)
     }
 
-    // @todo: should handle stream states better here
-    this.res.write(msg, (e) => {
-      if (e !== null || e !== undefined) {
-        this.err = e
-      }
-    })
+    this.res.write(JSONData, this.handleErr)
 
     this.msgId++
   }
@@ -77,6 +81,10 @@ export class EventWriter {
 export class ServerEvents {
   private currWriterId: number = 0
   private clients: Map<string, IEventWriter> = new Map()
+
+  constructor() {
+    this.handle = this.handle.bind(this)
+  }
 
   handle(req: TEventWriterRequest, res: TEventWriterResponse) {
     res.writeHead(200, {
