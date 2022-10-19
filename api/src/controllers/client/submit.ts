@@ -273,8 +273,6 @@ async function processTeam(
   // concurrently process submitted messages that belong to suites of this team
 
   const jobs = Array.from(suiteMap).map(([suiteSlug, batchMap]) => {
-    console.log('for suite: ', suiteSlug)
-    console.log(batchMap)
     return processSuite(user, team, suiteSlug, batchMap)
   })
 

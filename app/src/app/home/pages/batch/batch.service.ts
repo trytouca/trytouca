@@ -76,7 +76,9 @@ export class BatchPageService extends IPageService<BatchPageItem> {
    * Listen for server events
    */
   private listenForEvents() {
-    this.eventService.events().subscribe((ev) => console.log(ev));
+    this.eventService
+      .events()
+      .subscribe((ev) => console.log(JSON.parse(ev.data)));
   }
 
   /**
