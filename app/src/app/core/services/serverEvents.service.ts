@@ -13,9 +13,7 @@ export class ServerEventService {
     this.source$ = new Observable((observer) => {
       const eventSource = this.makeEventSource();
 
-      eventSource.addEventListener('init', () => {
-        console.log('event source initialized');
-      });
+      eventSource.onopen = () => console.log('event source initialized');
 
       eventSource.onmessage = (msg) => {
         observer.next(msg);

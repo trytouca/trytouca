@@ -6,12 +6,11 @@ export type TEventWriterRequest = Pick<Request, 'ip' | 'on'>
 export type TEventWriterResponse = Pick<
   Response,
   'write' | 'locals' | 'writeHead'
-> & { flush: () => void }
+>
 
 export const formatEvent = (data: string, id: number, eventType?: string) =>
-  `data: ${data}\nid${id}\n` + eventType === undefined
-    ? '\n'
-    : `event: ${eventType}\n\n`
+  `data: ${data}\nid${id}\n` +
+  (eventType === undefined ? '\n' : `event: ${eventType}\n\n`)
 
 export interface IEventWriter {
   write(data: {}, msgId: number, eventType?: string): void
@@ -63,9 +62,15 @@ export class EventWriter {
     this.res.write(msg, this.handleErr)
 
     if (this.error() === null) {
-      // need this b/c of compression middleware, c.f.
+      // need flush() call b/c of compression middleware, c.f.
       // https://www.npmjs.com/package/compression#server-sent-events
-      this.res.flush()
+      //   need 'any' type because the appropriate intersection type is apparently
+      // a type bomb--process crashes when trying to compile
+      // Pick<
+      //   Response,
+      //   'write' | 'locals' | 'writeHead'
+      // > & {flush: () => void}
+      ;(this.res as any).flush()
     }
   }
 
