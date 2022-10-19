@@ -106,3 +106,5 @@ export class ServerEvents {
     this.clients.delete(ip)
   }
 }
+
+export default new ServerEvents()
