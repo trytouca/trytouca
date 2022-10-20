@@ -16,9 +16,6 @@ describe('config-manager', () => {
       'mongodb://toucauser:toucapass@localhost:27017/test'
     )
   })
-  test('get-redis-uri', () => {
-    expect(configMgr.getRedisUri()).toEqual('redis://localhost:6379/test')
-  })
   test('has-mail-transport', () => {
     expect(configMgr.hasMailTransportEnvironmentVariables()).toEqual(false)
   })
