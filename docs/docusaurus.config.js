@@ -103,8 +103,7 @@ const config = {
         },
         {
           name: "og:image:alt",
-          content:
-            "Open Source Continuous Regression Testing for Engineering Teams"
+          content: "Continuous Regression Testing for Engineering Teams"
         },
         { name: "og:image:type", content: "image/png" },
         { name: "og:image:width", content: "906" },
