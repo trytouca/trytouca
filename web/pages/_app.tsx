@@ -44,7 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
               url: 'https://touca.io/images/touca_open_graph_image.png',
               width: 906,
               height: 453,
-              alt: 'Developer-friendly Continuous Regression Testing',
+              alt: 'Continuous Regression Testing for Engineering Teams',
               type: 'image/png'
             }
           ]
