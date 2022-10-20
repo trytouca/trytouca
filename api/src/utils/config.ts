@@ -246,10 +246,6 @@ class ConfigManager {
         }
       : { autoIndex: false }
   }
-  public getRedisUri(): string {
-    const redis = this.data.redis
-    return `redis://${redis.host}:${redis.port}/${redis.database}`
-  }
   public async hasMailTransport(): Promise<boolean> {
     return !!(await MetaModel.countDocuments({
       'mail.host': { $exists: true, $ne: '' }

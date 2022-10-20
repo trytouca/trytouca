@@ -79,6 +79,9 @@ export async function start() {
     srcBatchId: v.srcBatchId,
     srcMessageId: v.srcMessageId
   }))
+  if (jobs.length === 0) {
+    return
+  }
   logger.debug('inserting %d jobs into comparisons queue', jobs.length)
   await queue.addBulk(
     jobs.map((job) => ({

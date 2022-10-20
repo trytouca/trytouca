@@ -60,6 +60,9 @@ export async function start() {
     { $match: { contentId: { $exists: false } } },
     { $project: { _id: 0, messageId: '$_id', batchId: 1 } }
   ])
+  if (jobs.length === 0) {
+    return
+  }
   logger.debug('inserting %d jobs into message queue', jobs.length)
   await queue.addBulk(
     jobs.map((job) => ({
