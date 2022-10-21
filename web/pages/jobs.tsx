@@ -12,7 +12,28 @@ export default function JobsPage() {
       <BreadcrumbJsonLd
         itemListElements={[{ position: 1, name: 'Working at Touca' }]}
       />
-      <NextSeo title="Working at Touca" canonical="https://touca.io/jobs" />
+      <NextSeo
+        title="Working at Touca"
+        canonical="https://touca.io/jobs"
+        openGraph={{
+          type: 'website',
+          locale: 'en_US',
+          site_name: 'Touca',
+          url: 'https://touca.io/',
+          title: 'Working at Touca',
+          description:
+            'We are looking for a Samurai: Someone who is resilient, ambitious, and hungry for growth. Know anyone?',
+          images: [
+            {
+              url: 'https://touca.io/images/touca_jobs_marketing.png',
+              width: 906,
+              height: 453,
+              alt: 'Working at Touca',
+              type: 'image/png'
+            }
+          ]
+        }}
+      />
       <Script id="redirect" strategy="afterInteractive">
         {`window.location.replace("https://touca.notion.site/Working-at-Touca-5881cf379db44551a805720269258137");`}
       </Script>
