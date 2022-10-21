@@ -55,6 +55,8 @@ export async function addSampleData(team: ITeam): Promise<void> {
   logger.info('%s: submitting sample data to %s', tuple, user.username)
   const batchBaseline = 'v2.0' // batch to be baseline of the suite
   for (const sample of samples) {
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+    await delay(3000)
     const content = fs.readFileSync(sample)
     const errors = await processBinaryContent(user, content, {
       override: {

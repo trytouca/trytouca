@@ -25,7 +25,6 @@ import {
   BatchPageItemType,
   BatchPageOverviewMetadata
 } from './batch.model';
-import { ServerEventService } from '@/core/services/serverEvents.service';
 
 export enum BatchPageTabType {
   Elements = 'elements'
@@ -65,20 +64,9 @@ export class BatchPageService extends IPageService<BatchPageItem> {
 
   constructor(
     private alertService: AlertService,
-    private apiService: ApiService,
-    private eventService: ServerEventService
+    private apiService: ApiService
   ) {
     super();
-    this.listenForEvents();
-  }
-
-  /**
-   * Listen for server events
-   */
-  private listenForEvents() {
-    this.eventService
-      .events()
-      .subscribe((ev) => console.log(JSON.parse(ev.data)));
   }
 
   /**

@@ -16,7 +16,7 @@ export async function suiteCreate(
 ): Promise<ISuiteDocument> {
   // check that suite slug is available
   if (await SuiteModel.countDocuments({ team: team._id, slug: suite.slug })) {
-    return
+    return await SuiteModel.findOne({ team: team._id, slug: suite.slug })
   }
 
   // register suite in database
