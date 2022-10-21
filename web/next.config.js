@@ -1,12 +1,11 @@
-const withPWA = require('next-pwa');
 const runtimeCaching = require('next-pwa/cache');
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  runtimeCaching,
+  buildExcludes: [/middleware-manifest.json$/]
+});
 
 module.exports = withPWA({
-  pwa: {
-    dest: 'public',
-    runtimeCaching,
-    buildExcludes: [/middleware-manifest.json$/]
-  },
   poweredByHeader: false,
   reactStrictMode: true,
   trailingSlash: true,
