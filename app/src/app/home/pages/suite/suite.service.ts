@@ -23,6 +23,7 @@ import {
 import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
+import { ServerEventService } from '@/core/services/serverEvents.service';
 
 import {
   SuitePageElement,
@@ -113,9 +114,20 @@ export class SuitePageService extends IPageService<SuitePageItem> {
   constructor(
     private alertService: AlertService,
     private apiService: ApiService,
+    private eventService: ServerEventService,
     private userService: UserService
   ) {
     super();
+    this.listenForEvents();
+  }
+
+  /**
+   * Listen for server events
+   */
+  private listenForEvents() {
+    this.eventService
+      .events()
+      .subscribe((ev) => console.log(JSON.parse(ev.data)));
   }
 
   private update = (key: string, response: unknown) => {
