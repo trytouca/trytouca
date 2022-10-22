@@ -8,7 +8,7 @@ LABEL org.opencontainers.image.documentation="https://touca.io/docs"
 LABEL org.opencontainers.image.vendor="Touca, Inc."
 LABEL org.opencontainers.image.authors="hello@touca.io"
 LABEL com.docker.extension.publisher-url="https://touca.io"
-LABEL com.docker.desktop.extension.icon="https://touca.io/logo/touca-logo-w-text-bg.png"
+LABEL com.docker.desktop.extension.icon="https://touca.io/logo/touca-logo-v1.5-bg-w-text.png"
 
 COPY api/certs                      /opt/touca/api/certs
 COPY api/dist                       /opt/touca/api/dist

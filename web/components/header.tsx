@@ -145,7 +145,7 @@ function LogoKit() {
         <a className="flex h-20 items-center focus:outline-none" id="hello">
           <img
             className="h-10"
-            src="/logo/touca-logo-transparent.svg"
+            src="/logo/touca-logo-v1.5-transparent.svg"
             alt="Touca Logo"
             loading="lazy"
             width="40px"
