@@ -3,7 +3,7 @@ appVersion: 1.8.0
 name: touca
 description: Continuous regression testing for critical software workflows
 home: https://github.com/trytouca/trytouca
-icon: https://touca.io/logo/touca-logo-bg-w-text.png
+icon: https://touca.io/images/touca_logo_bgwt.png
 keywords:
   - regression testing
   - test automation
