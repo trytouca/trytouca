@@ -156,7 +156,7 @@ function LogoKit() {
           </h1>
           <img
             className="no-sr-only"
-            src="/images/touca_logo_io_text_white.svg"
+            src="/logo/touca-logo-v1.5-transparent-text.svg"
             alt="Touca.io"
             loading="lazy"
             width="100px"

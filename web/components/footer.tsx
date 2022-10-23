@@ -214,7 +214,7 @@ const FooterRow = () => {
       <div className="mx-auto flex max-w-screen-lg flex-col items-center justify-between py-8 md:flex-row">
         <div className="order-last flex items-center space-x-4 pt-8 md:order-first md:pt-0">
           <img
-            src="/images/touca_logo_io_text_white.svg"
+            src="/logo/touca-logo-v1.5-transparent-text.svg"
             alt="Touca.io"
             loading="lazy"
             width="100px"

@@ -121,7 +121,7 @@ const config = {
         title: "Touca Docs",
         logo: {
           alt: "Touca Logo",
-          src: "img/logo.png",
+          src: "img/touca-logo-v1.5-bg.png",
           href: "https://touca.io"
         },
         items: [
