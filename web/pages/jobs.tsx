@@ -25,7 +25,7 @@ export default function JobsPage() {
             'We are looking for a Samurai: Someone who is resilient, ambitious, and hungry for growth. Know anyone?',
           images: [
             {
-              url: 'https://touca.io/images/touca_jobs_marketing.png',
+              url: 'https://touca.io/images/touca_banner_jobs.png',
               width: 906,
               height: 453,
               alt: 'Working at Touca',
