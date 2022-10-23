@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://touca.io"><img src="https://touca.io/logo/touca-logo-v1.5-bg-w-text.png" alt="touca.io" width="300px" /></a>
+<a href="https://touca.io"><img src="https://touca.io/logo/touca-logo-bg-w-text.png" alt="touca.io" width="300px" /></a>
 </p>
 <p align="center">
 <a href="https://github.com/trytouca/trytouca/blob/main/LICENSE"><img src="https://img.shields.io/github/license/trytouca/trytouca?color=blue" /></a>

@@ -10,18 +10,18 @@ function copy() {
     done
 }
 
-copy "web/public/favicon.ico"                           "app/src" \
-                                                        "docs/static/img" \
-                                                        "sdk/python/docs/_static" \
-                                                        "sdk/cpp/docs/sphinx/_static"
-copy "web/public/logo/touca-logo-v1.5-bg.png"           "docs/static/img"
-copy "web/public/icons/apple-touch-icon.png"            "app/src/assets/icons"
-copy "web/public/icons/favicon-16x16.png"               "app/src/assets/icons"
-copy "web/public/icons/favicon-32x32.png"               "app/src/assets/icons"
-copy "web/public/icons/icon-192x192.png"                "app/src/assets/icons"
-copy "web/public/icons/icon-512x512.png"                "app/src/assets/icons"
-copy "web/public/logo/touca-logo-v1.5-bg.svg"               "app/src/assets/logo"
-copy "web/public/logo/touca-logo-v1.5-transparent-text.svg" "app/src/assets/logo"
-copy "web/public/logo/touca-logo-v1.5-transparent.svg"      "app/src/assets/logo"
-copy "web/public/logo/touca-logo-v1.5-white-w-text.svg"     "sdk/python/docs/_static" \
-                                                            "sdk/cpp/docs/sphinx/_static"
+copy "web/public/favicon.ico"                   "app/src" \
+                                                "docs/static/img" \
+                                                "sdk/python/docs/_static" \
+                                                "sdk/cpp/docs/sphinx/_static"
+copy "web/public/icons/apple-touch-icon.png"    "app/src/assets/icons"
+copy "web/public/icons/favicon-16x16.png"       "app/src/assets/icons"
+copy "web/public/icons/favicon-32x32.png"       "app/src/assets/icons"
+copy "web/public/icons/icon-192x192.png"        "app/src/assets/icons"
+copy "web/public/icons/icon-512x512.png"        "app/src/assets/icons"
+copy "web/public/logo/touca-logo-bg.png"        "docs/static/img"
+copy "web/public/logo/touca-logo-bg.svg"        "app/src/assets/logo"
+copy "web/public/logo/touca-logo-fg-text.svg"   "app/src/assets/logo"
+copy "web/public/logo/touca-logo-fg.svg"        "app/src/assets/logo"
+copy "web/public/logo/touca-logo-fg-w-text.svg" "sdk/python/docs/_static" \
+                                                "sdk/cpp/docs/sphinx/_static"
