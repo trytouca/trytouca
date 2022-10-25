@@ -2,12 +2,27 @@
 
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { share, tap } from 'rxjs/operators';
+import { map, share, tap } from 'rxjs/operators';
 import { ApiService } from './api.service';
+import { SuiteServiceEvents } from '../../home/pages/suite/suite.service';
+
+type JSONString = 'string';
+
+type ServerEventType = SuiteServiceEvents;
+
+export interface ServerEvent {
+  eventType: ServerEventType;
+  record: unknown;
+}
+
+interface RawServerEvent {
+  //   event data arrives still-serialized
+  data: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class ServerEventService {
-  private source$: Observable<Partial<MessageEvent<any>>>;
+  private source$: Observable<ServerEvent>;
 
   constructor(private api: ApiService) {
     this.source$ = new Observable((observer) => {
@@ -22,7 +37,11 @@ export class ServerEventService {
       eventSource.onerror = (e) => observer.error(e);
 
       return () => eventSource.close();
-    }).pipe(share());
+    }).pipe(
+      // @todo: handle errors
+      map<RawServerEvent, ServerEvent>((e) => JSON.parse(e.data)),
+      share()
+    );
   }
 
   events() {

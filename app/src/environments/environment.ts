@@ -4,7 +4,7 @@ export const environment = {
   apiUrl: 'http://localhost:8080/api',
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   appVersion: `${require('../../package.json').version as string}-dev`,
-  dataRefreshInterval: 3600_000,
+  dataRefreshInterval: 5000,
   google_api_client_id: '',
   self_hosted: true,
   production: false

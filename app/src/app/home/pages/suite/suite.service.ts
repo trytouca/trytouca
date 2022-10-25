@@ -3,6 +3,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import type {
+  BatchItem,
   BatchListResponse,
   ElementListResponse,
   ENotificationType,
@@ -11,7 +12,7 @@ import type {
   TeamLookupResponse
 } from '@touca/api-schema';
 import { isEqual } from 'lodash-es';
-import { forkJoin, Observable, of, Subject } from 'rxjs';
+import { filter, forkJoin, Observable, of, pipe, Subject, take } from 'rxjs';
 
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
 import {
@@ -23,7 +24,10 @@ import {
 import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
-import { ServerEventService } from '@/core/services/serverEvents.service';
+import {
+  ServerEvent,
+  ServerEventService
+} from '@/core/services/serverEvents.service';
 
 import {
   SuitePageElement,
@@ -72,8 +76,27 @@ const availableTabs: Record<SuitePageTabType, PageTab<SuitePageTabType>> = {
   }
 };
 
+// @todo: this could be moved to an external package that app and api
+// can share to ensure types remain consistent
+export enum SuiteServiceEvents {
+  BatchInsert = 'batchInsert'
+}
+
+export interface BatchInsertEvent extends ServerEvent {
+  eventType: SuiteServiceEvents.BatchInsert;
+  record: BatchItem;
+}
+
+const isBatchInsertEvent = (
+  eventData: ServerEvent
+): eventData is BatchInsertEvent =>
+  eventData.eventType === SuiteServiceEvents.BatchInsert;
+
 @Injectable()
 export class SuitePageService extends IPageService<SuitePageItem> {
+  private relevantServerEvents: SuiteServiceEvents[] = [
+    SuiteServiceEvents.BatchInsert
+  ];
   private _bannerSubject = new Subject<SuiteBannerType>();
   banner$ = this._bannerSubject.asObservable();
 
@@ -127,7 +150,26 @@ export class SuitePageService extends IPageService<SuitePageItem> {
   private listenForEvents() {
     this.eventService
       .events()
-      .subscribe((ev) => console.log(JSON.parse(ev.data)));
+      .pipe(filter((e) => this.relevantServerEvents.includes(e.eventType)))
+      .subscribe((e) => this.routeServerEvent(e));
+  }
+
+  private handleBatchInsert(batchItem: BatchItem) {
+    const nextItems = [
+      ...this._items,
+      this.prepareOneBatchItem(batchItem)
+    ].sort(SuitePageItem.compareByDate);
+
+    this._items = nextItems;
+    this._itemsSubject.next(this._items);
+  }
+
+  private routeServerEvent(e: ServerEvent) {
+    if (isBatchInsertEvent(e)) {
+      return this.handleBatchInsert(e.record);
+    }
+
+    console.warn('suite service took an unrecognized server event:\n', e);
   }
 
   private update = (key: string, response: unknown) => {
@@ -158,17 +200,23 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     }
     this.update('batches', doc);
     const items = doc
-      .map((v) => {
-        const batch = v as FrontendBatchItem;
-        batch.isBaseline =
-          batch.batchSlug === this._cache.suite.baseline?.batchSlug;
-        return new SuitePageItem(batch, SuitePageItemType.Batch);
-      })
+      //   have to use map function this way to preserve type transmission, since `.bind()`
+      // coerces to any/unknown
+      .map((v) => this.prepareOneBatchItem(v))
       .sort(SuitePageItem.compareByDate);
     if (items && !isEqual(items, this._items)) {
       this._items = items;
       this._itemsSubject.next(this._items);
     }
+  }
+
+  private prepareOneBatchItem(batchItem: BatchItem) {
+    const batch = { ...(batchItem as FrontendBatchItem) };
+
+    batch.isBaseline =
+      batch.batchSlug === this._cache.suite.baseline?.batchSlug;
+
+    return new SuitePageItem(batch, SuitePageItemType.Batch);
   }
 
   private prepareElements(doc: ElementListResponse) {
