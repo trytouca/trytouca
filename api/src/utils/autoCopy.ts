@@ -5,14 +5,14 @@ const envAllowsAutoCopy = () =>
 
 /**
  *  run a callback a given number of times, waiting a random interval between specified min and max after each call.
- * Returned function begins calling callback the first time it is called, and ignore any subsequent calls.
+ * Returned function begins calling callback the first time it is called, and ignores any subsequent calls.
  * @param maxCopies number of times to run callback
  * @param initDelaySeconds how long to wait before calling callback for the first time. Defaults to 5 seconds.
  * @param minDelaySeconds  shortest amount of time that can elapse between all calls AFTER the first. Defaults to 3 seconds.
  * @param maxDelaySeconds greatest amount of time that can elapse between all calls AFTER the first. Defaults to 10 seconds.
  * @returns "start" function
  */
-export const createAutoCopy = (
+export const createAutoCopier = (
   maxCopies: number,
   initDelaySeconds?: number,
   minDelaySeconds?: number,

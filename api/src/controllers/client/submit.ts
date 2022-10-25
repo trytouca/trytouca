@@ -18,7 +18,7 @@ import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 import { objectStore } from '@/utils/store'
 import { analytics, EActivity } from '@/utils/tracker'
-import { createAutoCopy } from '@/utils/autoCopy'
+import { createAutoCopier } from '@/utils/autoCopy'
 
 type TeamSlug = string
 type SuiteSlug = string
@@ -472,7 +472,8 @@ const copyBatchParams = (params: IBatchCopyParams): IBatchCopyParams => ({
   elements: copyElements(params.elements)
 })
 
-const startBatchCopies = createAutoCopy(10, 10, 3, 15)
+// @remove
+// const startBatchCopies = createAutoCopier(10, 10, 3, 15)
 
 /**
  * Check if a suite with given name is registered on the Platform.
@@ -513,43 +514,44 @@ async function processSuite(
       return { slug: suiteSlug, errors }
     }
 
+    // @remove
     // wait until we're sure the batch didn't trigger any errors, since we're about to
     // re-emit it a bunch of times...
-    const copyBatchFunc = async () => {
-      const [batchSlugToCopy, batchElementsToCopy] = Array.from(
-        batchMap.entries()
-      )[0]
+    // const copyBatchFunc = async () => {
+    //   const [batchSlugToCopy, batchElementsToCopy] = Array.from(
+    //     batchMap.entries()
+    //   )[0]
 
-      const copyParams = copyBatchParams({
-        user,
-        team,
-        suite,
-        batchSlug: batchSlugToCopy,
-        elements: batchElementsToCopy
-      })
+    //   const copyParams = copyBatchParams({
+    //     user,
+    //     team,
+    //     suite,
+    //     batchSlug: batchSlugToCopy,
+    //     elements: batchElementsToCopy
+    //   })
 
-      //   adding an element to existing batch will fail if batch is sealed
-      const unsealed = await BatchModel.findOneAndUpdate(
-        {
-          slug: copyParams.batchSlug,
-          suite: copyParams.suite._id
-        },
-        {
-          $unset: { sealedAt: '' }
-        },
-        { new: true }
-      )
+    //   //   adding an element to existing batch will fail if batch is sealed
+    //   const unsealed = await BatchModel.findOneAndUpdate(
+    //     {
+    //       slug: copyParams.batchSlug,
+    //       suite: copyParams.suite._id
+    //     },
+    //     {
+    //       $unset: { sealedAt: '' }
+    //     },
+    //     { new: true }
+    //   )
 
-      processBatch(
-        copyParams.user,
-        copyParams.team,
-        copyParams.suite,
-        copyParams.batchSlug,
-        copyParams.elements
-      )
-    }
+    //   processBatch(
+    //     copyParams.user,
+    //     copyParams.team,
+    //     copyParams.suite,
+    //     copyParams.batchSlug,
+    //     copyParams.elements
+    //   )
+    // }
 
-    startBatchCopies(copyBatchFunc)
+    // startBatchCopies(copyBatchFunc)
 
     // at this point, we are sure that all batches have been processed
     // successfully.
@@ -794,6 +796,9 @@ export async function processBinaryContent(
     override?: {
       teamSlug: string
       suiteSlug: string
+      //   @remove: this field is only needed for development/testing logic--can
+      // be stripped out before merging to main
+      batchSlug?: string
     }
   }
 ) {
@@ -810,6 +815,11 @@ export async function processBinaryContent(
     for (const message of messages) {
       message.teamName = options.override.teamSlug
       message.suiteName = options.override.suiteSlug
+
+      //   @remove (see above)
+      if (options.override.batchSlug !== undefined) {
+        message.batchName = options.override.batchSlug
+      }
     }
   }
 
