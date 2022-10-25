@@ -16,6 +16,8 @@ export const initChangeStream = () => {
   const stream = db.watch([], { fullDocument: 'updateLookup' })
 
   stream.on('change', (doc) => {
-    ServerEvents.broadcast(doc)
+    if (doc.operationType === 'insert' && doc.ns.coll === 'batches') {
+      ServerEvents.broadcast(doc)
+    }
   })
 }
