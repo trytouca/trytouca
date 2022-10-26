@@ -3,6 +3,7 @@ import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 
 export type TEventWriterRequest = Pick<Request, 'ip' | 'on'>
+
 export type TEventWriterResponse = Pick<
   Response,
   'write' | 'locals' | 'writeHead'
@@ -94,6 +95,7 @@ export class ServerEvents {
 
   constructor() {
     this.handle = this.handle.bind(this)
+    this.broadcast = this.broadcast.bind(this)
   }
 
   handle(req: TEventWriterRequest, res: TEventWriterResponse) {

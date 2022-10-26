@@ -4,18 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 import { ApiService } from './api.service';
-import { SuiteServiceEvents } from '../../home/pages/suite/suite.service';
-
-type ServerEventType = SuiteServiceEvents;
-
-export interface ServerEvent {
-  eventType: ServerEventType;
-  record: unknown;
-}
-
-interface RawServerEvent {
-  data: string;
-}
+import { ServerEvent, RawServerEvent } from '@touca/server-events';
 
 @Injectable({ providedIn: 'root' })
 export class ServerEventService {
@@ -24,8 +13,6 @@ export class ServerEventService {
   constructor(private api: ApiService) {
     this.source$ = new Observable((observer) => {
       const eventSource = this.makeEventSource();
-
-      eventSource.onopen = () => console.log('event source initialized');
 
       eventSource.onmessage = (msg) => {
         observer.next(msg);

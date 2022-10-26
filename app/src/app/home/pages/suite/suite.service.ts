@@ -12,16 +12,7 @@ import type {
   TeamLookupResponse
 } from '@touca/api-schema';
 import { isEqual } from 'lodash-es';
-import {
-  filter,
-  forkJoin,
-  Observable,
-  of,
-  pipe,
-  Subject,
-  take,
-  takeUntil
-} from 'rxjs';
+import { filter, forkJoin, Observable, of, Subject, takeUntil } from 'rxjs';
 
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
 import {
@@ -33,10 +24,12 @@ import {
 import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
+import { ServerEventService } from '@/core/services/serverEvents.service';
 import {
   ServerEvent,
-  ServerEventService
-} from '@/core/services/serverEvents.service';
+  BatchEventType,
+  isBatchInsertEvent
+} from '@touca/server-events';
 
 import {
   SuitePageElement,
@@ -85,31 +78,13 @@ const availableTabs: Record<SuitePageTabType, PageTab<SuitePageTabType>> = {
   }
 };
 
-// @todo: this could be moved to an external package that app and api
-// can share to ensure types remain consistent
-export enum SuiteServiceEvents {
-  BatchInsert = 'batchInsert'
-}
-
-export interface BatchInsertEvent extends ServerEvent {
-  eventType: SuiteServiceEvents.BatchInsert;
-  record: BatchItem;
-}
-
-const isBatchInsertEvent = (
-  eventData: ServerEvent
-): eventData is BatchInsertEvent =>
-  eventData.eventType === SuiteServiceEvents.BatchInsert;
-
 @Injectable()
 export class SuitePageService
   extends IPageService<SuitePageItem>
   implements OnDestroy
 {
   private onDestroy$ = new Subject<boolean>();
-  private relevantServerEvents: SuiteServiceEvents[] = [
-    SuiteServiceEvents.BatchInsert
-  ];
+  private relevantServerEvents: BatchEventType[] = [BatchEventType.BatchInsert];
   private _bannerSubject = new Subject<SuiteBannerType>();
   banner$ = this._bannerSubject.asObservable();
 
@@ -155,8 +130,8 @@ export class SuitePageService
   ) {
     super();
     this.listenForEvents();
-    this.routeServerEvent.bind(this);
-    this.prepareOneBatchItem.bind(this);
+    // this.routeServerEvent.bind(this);
+    // this.prepareOneBatchItem.bind(this);
   }
 
   ngOnDestroy(): void {
@@ -174,7 +149,9 @@ export class SuitePageService
         filter((e) => this.relevantServerEvents.includes(e.eventType)),
         takeUntil(this.onDestroy$)
       )
-      .subscribe(this.routeServerEvent);
+      .subscribe((e) => {
+        this.routeServerEvent(e);
+      });
   }
 
   /**
@@ -185,6 +162,9 @@ export class SuitePageService
       ...this._items,
       this.prepareOneBatchItem(batchItem)
     ].sort(SuitePageItem.compareByDate);
+
+    const nextBatches = [...this._cache.batches, batchItem];
+    this.update('batches', nextBatches);
 
     this._items = nextItems;
     this._itemsSubject.next(this._items);
@@ -229,7 +209,7 @@ export class SuitePageService
     }
     this.update('batches', doc);
     const items = doc
-      .map(this.prepareOneBatchItem)
+      .map((v) => this.prepareOneBatchItem(v))
       .sort(SuitePageItem.compareByDate);
     if (items && !isEqual(items, this._items)) {
       this._items = items;

@@ -1,0 +1,16 @@
+{
+  "name": "@touca/server-events",
+  "version": "0.0.0",
+  "description": "types and utilities for communication between web application and Touca API server",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "dependencies": {
+    "typescript": "^4.8.4",
+    "@touca/api-schema": "workspace:*"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch"
+  }
+}
