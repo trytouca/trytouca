@@ -58,7 +58,8 @@ const addBatchFromSamplePath = async (
     suite: suite._id,
     slug: batchSlug
   })
-  await batchSeal(team, suite, batch, { reportJob: false })
+  // @remove
+  //   await batchSeal(team, suite, batch, { reportJob: false })
 
   // promote this batch if it should be the eventual baseline
 
@@ -139,13 +140,13 @@ export async function addSampleData(team: ITeam): Promise<void> {
     const sampleToCopy = samples[samples.length - 1]
     const sampleName = nextCopyName
     nextCopyName = incrementCopyName(nextCopyName)
-    logger.debug('now copying %s', nextCopyName)
+    logger.debug('NOW COPYING %s', nextCopyName)
     addBatchFromSamplePath(user, suite, team, batchBaseline, sampleToCopy, {
       batchSlug: sampleName
     })
   }
 
-  logger.debug('beginning to copy batch %s', samples[samples.length - 1])
+  logger.debug('BEGINNING TO COPY BATCH %s', samples[samples.length - 1])
   copyBatch(copyFunc)
 
   //   @todo: it seems like this could be handled by the processor function for

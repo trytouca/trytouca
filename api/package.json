@@ -40,6 +40,7 @@
     "@touca/api-schema": "workspace:*",
     "@touca/comparator": "workspace:*",
     "@touca/flatbuffers": "workspace:*",
+    "@touca/server-events": "workspace:*",
     "analytics-node": "^6.2.0",
     "archiver": "^5.3.1",
     "bcryptjs": "^2.4.3",
