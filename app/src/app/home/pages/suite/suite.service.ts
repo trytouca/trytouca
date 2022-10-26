@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import type {
   BatchItem,
   BatchListResponse,
@@ -12,7 +12,16 @@ import type {
   TeamLookupResponse
 } from '@touca/api-schema';
 import { isEqual } from 'lodash-es';
-import { filter, forkJoin, Observable, of, pipe, Subject, take } from 'rxjs';
+import {
+  filter,
+  forkJoin,
+  Observable,
+  of,
+  pipe,
+  Subject,
+  take,
+  takeUntil
+} from 'rxjs';
 
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
 import {
@@ -93,7 +102,11 @@ const isBatchInsertEvent = (
   eventData.eventType === SuiteServiceEvents.BatchInsert;
 
 @Injectable()
-export class SuitePageService extends IPageService<SuitePageItem> {
+export class SuitePageService
+  extends IPageService<SuitePageItem>
+  implements OnDestroy
+{
+  private onDestroy$ = new Subject<boolean>();
   private relevantServerEvents: SuiteServiceEvents[] = [
     SuiteServiceEvents.BatchInsert
   ];
@@ -142,6 +155,13 @@ export class SuitePageService extends IPageService<SuitePageItem> {
   ) {
     super();
     this.listenForEvents();
+    this.routeServerEvent.bind(this);
+    this.prepareOneBatchItem.bind(this);
+  }
+
+  ngOnDestroy(): void {
+    this.onDestroy$.next(true);
+    this.onDestroy$.complete();
   }
 
   /**
@@ -150,10 +170,16 @@ export class SuitePageService extends IPageService<SuitePageItem> {
   private listenForEvents() {
     this.eventService
       .events()
-      .pipe(filter((e) => this.relevantServerEvents.includes(e.eventType)))
-      .subscribe((e) => this.routeServerEvent(e));
+      .pipe(
+        filter((e) => this.relevantServerEvents.includes(e.eventType)),
+        takeUntil(this.onDestroy$)
+      )
+      .subscribe(this.routeServerEvent);
   }
 
+  /**
+   * Add single batch to current list of batches in response to server event
+   */
   private handleBatchInsert(batchItem: BatchItem) {
     const nextItems = [
       ...this._items,
@@ -164,6 +190,9 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     this._itemsSubject.next(this._items);
   }
 
+  /**
+   * Direct incoming server-side events to appropriate handler
+   */
   private routeServerEvent(e: ServerEvent) {
     if (isBatchInsertEvent(e)) {
       return this.handleBatchInsert(e.record);
@@ -200,9 +229,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     }
     this.update('batches', doc);
     const items = doc
-      //   have to use map function this way to preserve type transmission, since `.bind()`
-      // coerces to any/unknown
-      .map((v) => this.prepareOneBatchItem(v))
+      .map(this.prepareOneBatchItem)
       .sort(SuitePageItem.compareByDate);
     if (items && !isEqual(items, this._items)) {
       this._items = items;

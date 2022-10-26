@@ -1,12 +1,10 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map, share, tap } from 'rxjs/operators';
+import { map, share } from 'rxjs/operators';
 import { ApiService } from './api.service';
 import { SuiteServiceEvents } from '../../home/pages/suite/suite.service';
-
-type JSONString = 'string';
 
 type ServerEventType = SuiteServiceEvents;
 
@@ -16,7 +14,6 @@ export interface ServerEvent {
 }
 
 interface RawServerEvent {
-  //   event data arrives still-serialized
   data: string;
 }
 
