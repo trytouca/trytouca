@@ -1,6 +1,6 @@
 // Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 import { ApiService } from './api.service';
@@ -10,15 +10,17 @@ import { ServerEvent, RawServerEvent } from '@touca/server-events';
 export class ServerEventService {
   private source$: Observable<ServerEvent>;
 
-  constructor(private api: ApiService) {
+  constructor(private api: ApiService, private ngZone: NgZone) {
     this.source$ = new Observable((observer) => {
       const eventSource = this.makeEventSource();
 
       eventSource.onmessage = (msg) => {
-        observer.next(msg);
+        this.ngZone.run(() => observer.next(msg));
       };
 
-      eventSource.onerror = (e) => observer.error(e);
+      eventSource.onerror = (e) => {
+        this.ngZone.run(() => observer.error(e));
+      };
 
       return () => eventSource.close();
     }).pipe(
