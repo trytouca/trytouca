@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { initChangeStream } from 'services/changeStream'
+import { initChangeStream } from '@/utils/changeStream'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'

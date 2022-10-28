@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import * as middleware from '@/middlewares'
-import ServerEvents from 'services/serverEvents'
+import ServerEvents from '@/utils/serverEvents'
 
 const router = Router()
 
