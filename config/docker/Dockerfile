@@ -11,8 +11,10 @@ RUN apk add --no-cache curl \
     && npm i -g pnpm \
     && mkdir -p /opt/touca/api/certs \
     && curl -o /opt/touca/api/certs/cert.pem https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem \
-    && pnpm --dir=/opt/touca/api install --filter=@touca/api --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers --no-strict-peer-dependencies \
-    && pnpm --dir=/opt/touca/api run build
+    && pnpm --dir=/opt/touca/api --filter=@touca/api --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers install --no-strict-peer-dependencies --ignore-scripts \
+    && pnpm --dir=/opt/touca/api -r --filter=@touca/api --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers run build \
+    && find /opt/touca -maxdepth 3 -name 'node_modules' -type d | xargs rm -rf \
+    && pnpm --dir=/opt/touca/api  --filter=@touca/api --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers install --prod --no-strict-peer-dependencies --ignore-scripts
 
 # ---- builder stage (app) ----
 
