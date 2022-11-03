@@ -3,11 +3,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 
 import type { UserLookupResponse } from '@touca/api-schema';
-import { environment } from 'src/environments/environment';
 
 class IntercomClient {
   public get enabled() {
-    return environment.production;
+    return false;
   }
   public load() {
     if (!this.enabled) {
