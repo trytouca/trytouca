@@ -2,3 +2,4 @@
 
 export * as comparison from './comparison'
 export * as message from './message'
+export * as serverEvents from './serverEvents'

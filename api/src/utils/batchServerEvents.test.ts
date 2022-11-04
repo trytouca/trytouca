@@ -1,7 +1,8 @@
 import { IUser } from '@/schemas/user'
 import { BatchItem } from '@touca/api-schema'
+import { BatchEventType } from '@touca/server-events'
 import mongoose from 'mongoose'
-import BatchServerEvents from './batchServerEvents'
+import { BatchServerEvents } from './batchServerEvents'
 import {
   IConnIdentifier,
   TEventConnSuite,
@@ -85,7 +86,7 @@ describe('BatchServerEvents', () => {
 
     const bse = new BatchServerEvents({ broadcast, handle: jest.fn() })
 
-    bse.batchInserted({
+    bse.insertOneBatch({
       batchItem,
       teamSlug: 'someTeam',
       suiteSlug: 'someSuite'
@@ -93,6 +94,11 @@ describe('BatchServerEvents', () => {
 
     // asserts that we're filtering correctly
     expect(matched).toEqual([mockClients[0].id])
-    expect(broadcastData).toEqual(batchItem)
+
+    // asserts event is correctly-formatted
+    expect(broadcastData).toEqual({
+      eventType: BatchEventType.BatchInsert,
+      record: batchItem
+    })
   })
 })

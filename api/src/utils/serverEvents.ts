@@ -6,16 +6,6 @@ import { ObjectId } from 'mongoose'
 import { ISuiteDocument } from '@/schemas/suite'
 import { IBatchDocument } from '@/schemas/batch'
 
-export enum OpType {
-  InsertOne = 'insertOne',
-  UpdateOne = 'updateOne',
-  DeleteOne = 'deleteOne'
-}
-
-export enum ToucaEntity {
-  Batch = 'batch'
-}
-
 export type TEventWriterRequest = Pick<Request, 'ip' | 'on'>
 
 export type TEventWriterResponse = Pick<
@@ -34,7 +24,8 @@ export type TEventConnTeam = Pick<ITeamDocument, '_id' | 'name' | 'slug'>
 export type TEventConnSuite = Pick<ISuiteDocument, '_id' | 'name' | 'slug'>
 // truncate Team and Suite types for convenience in testing, since we won't use
 // the other properties on the I*Document types.
-interface IConnIdentifier {
+export interface IConnIdentifier {
+  id: number
   user: IUser | null
   team: TEventConnTeam | null
   suite: TEventConnSuite | null
@@ -70,7 +61,7 @@ class EventWriter {
       const suite = res?.locals?.suite ?? null
       const batch = res?.locals?.batch ?? null
 
-      this.connIdentifier = { user, team, suite, batch }
+      this.connIdentifier = { user, team, suite, batch, id: this._id }
     } catch (e) {
       this.handleErr(e)
     }
