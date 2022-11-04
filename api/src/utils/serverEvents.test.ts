@@ -4,7 +4,9 @@ import {
   ServerEvents,
   TEventWriterRequest,
   TEventWriterResponse,
-  formatEvent
+  formatEvent,
+  TEventConnTeam,
+  TEventConnSuite
 } from './serverEvents'
 
 const makeTestReqFn = () => {
@@ -38,9 +40,29 @@ const getTestUser = (): IUser => {
   }
 }
 
+const getTestTeam = (): TEventConnTeam => {
+  const _id = new mongoose.Types.ObjectId()
+
+  return {
+    _id,
+    name: 'Some Team',
+    slug: 'someTeam'
+  }
+}
+
+const getTestSuite = (): TEventConnSuite => {
+  const _id = new mongoose.Types.ObjectId()
+
+  return {
+    _id,
+    name: 'Some Suite',
+    slug: 'someSuite'
+  }
+}
+
 const getTestRes = (): TEventWriterResponse => {
   return {
-    locals: getTestUser(),
+    locals: { user: getTestUser() },
     write: jest.fn(),
     writeHead: jest.fn(),
     // @ts-ignore
@@ -79,9 +101,9 @@ describe('ServerEvents', () => {
 
     const mockData = { value: 1 }
 
-    events.broadcast(mockData, 'testEvent')
+    events.broadcast(mockData)
 
-    const expected = formatEvent(JSON.stringify(mockData), 0, 'testEvent')
+    const expected = formatEvent(JSON.stringify(mockData), 0)
 
     // ignore the callback function 'write' gets called with
     expect(res1.write).toHaveBeenCalledWith(expected, expect.anything())
@@ -106,7 +128,7 @@ describe('ServerEvents', () => {
 
     req2.close()
 
-    events.broadcast({ value: 1 }, 'testEvent')
+    events.broadcast({ value: 1 })
 
     expect(res1.write).toHaveBeenCalledTimes(1)
     expect(res2.write).not.toHaveBeenCalled()
@@ -134,12 +156,12 @@ describe('ServerEvents', () => {
 
     events.handle(req, res)
 
-    events.broadcast({ value: 1 }, 'testEvent')
+    events.broadcast({ value: 1 })
 
     // first broadcast causes error
     expect(res.write).toHaveBeenCalledTimes(1)
 
-    events.broadcast({ value: 2 }, 'testEvent')
+    events.broadcast({ value: 2 })
 
     // second broadcast doesn't write to errored client--still only called 1 time
     expect(res.write).toHaveBeenCalledTimes(1)
@@ -147,9 +169,40 @@ describe('ServerEvents', () => {
     // simulate client retry
     events.handle(req, res)
 
-    events.broadcast({ value: 2 }, 'testEvent')
+    events.broadcast({ value: 2 })
 
     // write succeeds this time, so call count increments
     expect(res.write).toHaveBeenCalledTimes(2)
+  })
+
+  it('filters clients on broadcast', () => {
+    const events = new ServerEvents()
+
+    const reqOne = getTestReq()
+    const resOne = getTestRes()
+
+    resOne.locals.team = getTestTeam()
+    resOne.locals.suite = getTestSuite()
+
+    const reqTwo = getTestReq()
+    const resTwo = getTestRes()
+
+    resTwo.locals.team = getTestTeam()
+    resTwo.locals.suite = getTestSuite()
+
+    // monkey-patch resTwo so it does not match the filter function
+    // passed to 'broadcast'
+    resTwo.locals.team.slug = 'someOtherTeam'
+
+    events.handle(reqOne, resOne)
+    events.handle(reqTwo, resTwo)
+
+    events.broadcast(
+      { value: 42 },
+      (connId) => connId.team.slug === resOne.locals.team.slug
+    )
+
+    expect(resOne.write).toHaveBeenCalledTimes(1)
+    expect(resTwo.write).not.toHaveBeenCalled()
   })
 })

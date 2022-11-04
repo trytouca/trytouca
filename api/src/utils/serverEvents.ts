@@ -1,6 +1,20 @@
-import { Request, Handler, Response, NextFunction } from 'express'
+import { Request, Response } from 'express'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
+import { ITeamDocument } from '@/schemas/team'
+import { ObjectId } from 'mongoose'
+import { ISuiteDocument } from '@/schemas/suite'
+import { IBatchDocument } from '@/schemas/batch'
+
+export enum OpType {
+  InsertOne = 'insertOne',
+  UpdateOne = 'updateOne',
+  DeleteOne = 'deleteOne'
+}
+
+export enum ToucaEntity {
+  Batch = 'batch'
+}
 
 export type TEventWriterRequest = Pick<Request, 'ip' | 'on'>
 
@@ -9,20 +23,31 @@ export type TEventWriterResponse = Pick<
   'write' | 'locals' | 'writeHead'
 >
 
-export const formatEvent = (data: string, id: number, eventType?: string) =>
-  `data: ${data}\nid${id}\n` +
-  (eventType === undefined ? '\n' : `event: ${eventType}\n\n`)
-
-export interface IEventWriter {
+interface IEventWriter {
   write(data: {}, msgId: number, eventType?: string): void
-  getUser(): IUser
+  identity(): IConnIdentifier
   onClose(cb: (clientIP: string, writerID: number) => void): void
   error(): Error | null
 }
 
-export class EventWriter {
+export type TEventConnTeam = Pick<ITeamDocument, '_id' | 'name' | 'slug'>
+export type TEventConnSuite = Pick<ISuiteDocument, '_id' | 'name' | 'slug'>
+// truncate Team and Suite types for convenience in testing, since we won't use
+// the other properties on the I*Document types.
+interface IConnIdentifier {
+  user: IUser | null
+  team: TEventConnTeam | null
+  suite: TEventConnSuite | null
+  batch: (IBatchDocument & { _id: ObjectId }) | null
+}
+
+export const formatEvent = (data: string, id: number) =>
+  `data: ${data}\nid${id}\n\n`
+
+class EventWriter {
   private hasCloseHandler = false
   private err: Error | null = null
+  private connIdentifier: IConnIdentifier
 
   constructor(
     private req: TEventWriterRequest,
@@ -30,10 +55,25 @@ export class EventWriter {
     private _id: number
   ) {
     this.handleErr = this.handleErr.bind(this)
+
+    this.setupIdentifier(res)
   }
 
-  getUser() {
-    return { ...(this.res.locals as IUser) }
+  identity() {
+    return this.connIdentifier
+  }
+
+  private setupIdentifier(res: TEventWriterResponse) {
+    try {
+      const user = res?.locals?.user as IUser
+      const team = res?.locals?.team ?? null
+      const suite = res?.locals?.suite ?? null
+      const batch = res?.locals?.batch ?? null
+
+      this.connIdentifier = { user, team, suite, batch }
+    } catch (e) {
+      this.handleErr(e)
+    }
   }
 
   private handleErr(e?: Error) {
@@ -42,7 +82,7 @@ export class EventWriter {
     }
   }
 
-  write(data: {}, msgId: number, eventType?: string) {
+  write(data: {}, msgId: number) {
     let JSONData = ''
 
     try {
@@ -57,7 +97,7 @@ export class EventWriter {
       return
     }
 
-    const msg = formatEvent(JSONData, msgId, eventType)
+    const msg = formatEvent(JSONData, msgId)
 
     // @todo: should handle stream states better here
     this.res.write(msg, this.handleErr)
@@ -114,10 +154,15 @@ export class ServerEvents {
     this.currWriterId++
   }
 
-  broadcast(data: {}, eventType?: string) {
+  broadcast(
+    data: {},
+    matchClient: (connId: IConnIdentifier) => boolean = () => true
+  ) {
     for (let writer of this.clients.values()) {
-      if (writer.error() === null) {
-        writer.write(data, this.currMsgId, eventType)
+      if (writer.error() !== null) return
+
+      if (matchClient(writer.identity())) {
+        writer.write(data, this.currMsgId)
       }
     }
 
