@@ -238,6 +238,11 @@ async function processBatch(
     )
     rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
 
+    // @todo: batch._id type should NOT be 'any'
+    const batchId = (batch._id as mongoose.Types.ObjectId).toHexString()
+
+    Queues.serverEvents.insertOneBatch(team.slug, suite.slug, batch._id)
+
     return { slug: batchSlug, doc: batch }
   } catch (err) {
     return makeError(batchSlug, err)
