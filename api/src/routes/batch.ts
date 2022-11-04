@@ -2,6 +2,7 @@
 
 import express from 'express'
 
+import BatchServerEvents from '@/utils/batchServerEvents'
 import { batchCompare } from '@/controllers/batch/compare'
 import { ctrlBatchExportPDF } from '@/controllers/batch/export_pdf'
 import { ctrlBatchExportZIP } from '@/controllers/batch/export_zip'
@@ -22,6 +23,15 @@ router.get(
   middleware.isTeamMember,
   middleware.hasSuite,
   promisable(ctrlBatchList, 'list batches')
+)
+
+router.get(
+  '/:team/:suite/events',
+  middleware.isAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  middleware.hasSuite,
+  BatchServerEvents.handle
 )
 
 router.get(
