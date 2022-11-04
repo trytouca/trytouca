@@ -1,6 +1,5 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { initChangeStream } from '@/utils/changeStream'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -124,8 +123,6 @@ async function launch(application) {
   Queues.comparison.worker.run()
 
   await setupSuperuser()
-
-  initChangeStream()
 
   server = application.listen(config.express.port, () => {
     logger.info('listening on port %d', server.address().port)
