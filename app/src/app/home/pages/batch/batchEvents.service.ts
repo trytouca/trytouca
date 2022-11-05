@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { map, share } from 'rxjs/operators';
 import { ServerEvent, RawServerEvent } from '@touca/server-events';
 import { EventSourceService } from '@/core/services/eventSource.service';
+import { ApiService } from '@/core/services';
 
 // @todo: this pattern is not very robust.  In particular, it doesn't allow for any
 // future possibility of subscribing to more than one batch events URL at once, e.g.
@@ -16,12 +17,18 @@ export class BatchEventService {
   private eventSource: EventSource;
   private source$: Observable<ServerEvent>;
 
-  constructor(private es: EventSourceService, private ngZone: NgZone) {}
+  constructor(
+    private es: EventSourceService,
+    private ngZone: NgZone,
+    private apiService: ApiService
+  ) {}
 
-  init(url: string) {
+  init(teamSlug: string, suiteSlug: string) {
+    const path = ['batch', teamSlug, suiteSlug, 'events'].join('/');
+
     if (this.source$ !== undefined) return;
 
-    const eventSource = this.es.create(url);
+    const eventSource = this.es.create(path);
 
     this.eventSource = eventSource;
 

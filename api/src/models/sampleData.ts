@@ -32,7 +32,7 @@ const addBatchFromSamplePath = async (
     override: {
       teamSlug: team.slug,
       suiteSlug: suite.slug,
-      batchSlug: overrides.batchSlug
+      batchSlug: overrides?.batchSlug
     }
   })
 

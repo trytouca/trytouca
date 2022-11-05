@@ -121,6 +121,7 @@ async function launch(application) {
   await Queues.comparison.start()
   Queues.message.worker.run()
   Queues.comparison.worker.run()
+  Queues.serverEvents.worker.run()
 
   await setupSuperuser()
 
@@ -136,6 +137,8 @@ async function shutdown(): Promise<void> {
   await Queues.comparison.scheduler.close()
   await Queues.message.queue.close()
   await Queues.message.scheduler.close()
+  await Queues.serverEvents.queue.close()
+  await Queues.serverEvents.scheduler.close()
 }
 
 process.once('SIGUSR2', () => {

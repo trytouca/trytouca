@@ -19,7 +19,9 @@ export interface IInsertOneBatchParams {
 }
 
 export class BatchServerEvents {
-  constructor(private bc: BroadCaster) {}
+  constructor(private bc: BroadCaster) {
+    this.handle = this.handle.bind(this)
+  }
 
   handle(req: TEventWriterRequest, res: TEventWriterResponse) {
     this.bc.handle(req, res)

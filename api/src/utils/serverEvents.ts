@@ -10,7 +10,7 @@ export type TEventWriterRequest = Pick<Request, 'ip' | 'on'>
 
 export type TEventWriterResponse = Pick<
   Response,
-  'write' | 'locals' | 'writeHead'
+  'write' | 'locals' | 'writeHead' | 'flushHeaders'
 >
 
 interface IEventWriter {
@@ -135,6 +135,8 @@ export class ServerEvents {
       Connection: 'keep-alive',
       'Cache-Control': 'no-cache'
     })
+
+    res.flushHeaders()
 
     const writer = new EventWriter(req, res, this.currWriterId)
 

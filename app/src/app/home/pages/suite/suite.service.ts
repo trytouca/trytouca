@@ -141,15 +141,17 @@ export class SuitePageService
    * only needs to pass appropriate team and suite
    */
   listenForEvents(teamSlug: string, suiteSlug: string) {
-    const url = ['batch', teamSlug, suiteSlug].join('/');
+    // console.log('listen to url: ', url);
 
     this.batchEventService
-      .init(url)
+      .init(teamSlug, suiteSlug)
       .pipe(
         filter((e) => this.relevantServerEvents.includes(e.eventType)),
         takeUntil(this.onDestroy$)
       )
       .subscribe((e) => {
+        console.log('event received!');
+        console.log(e);
         this.routeServerEvent(e);
       });
   }

@@ -66,7 +66,8 @@ const getTestRes = (): TEventWriterResponse => {
     write: jest.fn(),
     writeHead: jest.fn(),
     // @ts-ignore
-    flush: jest.fn()
+    flush: jest.fn(),
+    flushHeaders: jest.fn()
   }
 }
 

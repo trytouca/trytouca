@@ -10,6 +10,7 @@ import { BatchItem } from '@touca/api-schema'
 import BatchServerEvents from '@/utils/batchServerEvents'
 import { BatchModel } from '@/schemas/batch'
 import { ComparisonFunctions } from '@/controllers/comparison'
+import mongoose from 'mongoose'
 
 export enum OpType {
   InsertOne = 'insertOne',
@@ -34,12 +35,14 @@ interface InsertOneBatchJob extends ServerEventJob {
   batchId: string
 }
 
+type Wrapped<T> = { data: T }
+
 const isInsertOneBatchJob = (ev: ServerEventJob): ev is InsertOneBatchJob =>
   ev.affectedEntity === ToucaEntity.Batch && ev.operation === OpType.InsertOne
 
 const getBatchItem = async (batchId: string): Promise<BatchItem> => {
   const batchItems = await BatchModel.aggregate([
-    { $match: { _id: batchId } },
+    { $match: { _id: new mongoose.Types.ObjectId(batchId) } },
     {
       $lookup: {
         from: 'users',
@@ -105,18 +108,18 @@ const routeJob = async (job: ServerEventJob) => {
 }
 
 // @todo: fix performance mark tags
-async function processor(job: ServerEventJob) {
+async function processor(job: Wrapped<ServerEventJob>) {
   const perf = new PerformanceMarks()
-  await routeJob(job)
+  await routeJob(job.data)
   perf.mark('server_event_queue:emit_event')
   return Promise.resolve(perf)
 }
 
-const queue = createQueue('serverEvents')
-createWorker('serverEvents', processor)
-createQueueScheduler('serverEvents')
+export const queue = createQueue('serverEvents')
+export const worker = createWorker('serverEvents', processor)
+export const scheduler = createQueueScheduler('serverEvents')
 
-export const insertOneBatch = (
+export const insertOneBatch = async (
   teamSlug: string,
   suiteSlug: string,
   batchId: string
@@ -132,5 +135,7 @@ export const insertOneBatch = (
     batchId
   }
 
-  queue.add(`${entity}_${op}`, job)
+  //   createWorker function creates a worker that expects the relevant info
+  // to be wrapped in a {data: <data>} object, so we do that wrapping here.
+  queue.add(`${entity}_${op}`, { data: job })
 }

@@ -7,7 +7,8 @@ import { ApiService } from './api.service';
 export class EventSourceService {
   constructor(private api: ApiService) {}
 
-  create(url: string) {
-    return new EventSource(this.api.makeUrl(url), { withCredentials: true });
+  //   create only requires the path, not protocol or domain.
+  create(path: string) {
+    return new EventSource(this.api.makeUrl(path), { withCredentials: true });
   }
 }

@@ -148,7 +148,7 @@ export class SuitePageComponent
     super.ngOnInit();
     this.suitePageService.listenForEvents(
       this.route.snapshot.paramMap.get('team'),
-      this.route.snapshot.paramMap.get('team')
+      this.route.snapshot.paramMap.get('suite')
     );
   }
 
