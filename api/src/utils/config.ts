@@ -233,7 +233,6 @@ class ConfigManager {
   public getMongoConnectionOptions(): mongoose.ConnectOptions {
     const file = this.data.mongo.tlsCertificateFile
     const baseOpts: mongoose.ConnectOptions = {
-      replicaSet: 'touca_mongo_repl',
       autoIndex: false
     }
     return file
