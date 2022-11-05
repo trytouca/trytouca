@@ -146,6 +146,10 @@ export class SuitePageComponent
 
   ngOnInit(): void {
     super.ngOnInit();
+    this.suitePageService.listenForEvents(
+      this.route.snapshot.paramMap.get('team'),
+      this.route.snapshot.paramMap.get('team')
+    );
   }
 
   ngOnDestroy() {

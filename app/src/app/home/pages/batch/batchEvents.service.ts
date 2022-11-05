@@ -12,7 +12,7 @@ import { EventSourceService } from '@/core/services/eventSource.service';
 // this Service is basically coupled to the 'one page, one list subscription'
 // model of the current UI.
 @Injectable({ providedIn: 'root' })
-export class BatchEventsService {
+export class BatchEventService {
   private eventSource: EventSource;
   private source$: Observable<ServerEvent>;
 
@@ -44,9 +44,12 @@ export class BatchEventsService {
     return this.source$;
   }
 
-  destroy() {
+  close() {
     if (this.source$ === undefined) return;
 
     this.eventSource.close();
+
+    this.eventSource = undefined;
+    this.source$ = undefined;
   }
 }

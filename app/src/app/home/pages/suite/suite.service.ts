@@ -24,7 +24,6 @@ import {
 import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
-import { ServerEventService } from '@/core/services/serverEvents.service';
 import {
   ServerEvent,
   BatchEventType,
@@ -37,6 +36,7 @@ import {
   SuitePageItem,
   SuitePageItemType
 } from './suite.model';
+import { BatchEventService } from '@/home/pages/batch/batchEvents.service';
 
 export enum SuitePageTabType {
   Versions = 'versions',
@@ -125,26 +125,26 @@ export class SuitePageService
   constructor(
     private alertService: AlertService,
     private apiService: ApiService,
-    private eventService: ServerEventService,
-    private userService: UserService
+    private batchEventService: BatchEventService
   ) {
     super();
-    this.listenForEvents();
-    // this.routeServerEvent.bind(this);
-    // this.prepareOneBatchItem.bind(this);
   }
 
   ngOnDestroy(): void {
     this.onDestroy$.next(true);
     this.onDestroy$.complete();
+    this.batchEventService.close();
   }
 
   /**
-   * Listen for server events
+   * Listen for server events.  SuitePageService handles data updates, page component
+   * only needs to pass appropriate team and suite
    */
-  private listenForEvents() {
-    this.eventService
-      .events()
+  listenForEvents(teamSlug: string, suiteSlug: string) {
+    const url = ['batch', teamSlug, suiteSlug].join('/');
+
+    this.batchEventService
+      .init(url)
       .pipe(
         filter((e) => this.relevantServerEvents.includes(e.eventType)),
         takeUntil(this.onDestroy$)
