@@ -35,7 +35,6 @@
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.127.0",
     "@aws-sdk/client-s3": "^3.127.0",
-    "@hubspot/api-client": "^7.0.1",
     "@sindresorhus/df": "^3.1.1",
     "@touca/api-schema": "workspace:*",
     "@touca/comparator": "workspace:*",

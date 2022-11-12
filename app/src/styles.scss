@@ -284,9 +284,6 @@ ngneat-dialog {
 
 #chat-box {
   @apply fixed bottom-16 z-40 h-[530px] w-[376px] md:right-4;
-  #hubspot-conversations-inline-parent {
-    @apply h-full;
-  }
   iframe {
     @apply h-full w-full rounded-lg border border-gray-200 shadow-lg;
   }
