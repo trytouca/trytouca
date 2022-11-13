@@ -1,13 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Client as HubspotClient } from '@hubspot/api-client'
 import SegmentClient from 'analytics-node'
 
 import { relay } from '@/models/relay'
 import { IUser } from '@/schemas/user'
 import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
 
 export enum EActivity {
   AccountActivated = 'account:activated',
@@ -50,24 +47,6 @@ export enum EActivity {
   TeamMemberPromoted = 'team_member:promoted',
   TeamMemberInvited = 'team_member:sent',
   TeamMemberWithdrawn = 'team_member:withdrawn'
-}
-
-export async function getChatToken(user: IUser): Promise<string> {
-  if (!config.tracking.hubspot_key || !user._id) {
-    return
-  }
-  const cacheKey = `chat_token_${user._id}`
-  if (await redis.isCached(cacheKey)) {
-    logger.silly('returning chat token from cache')
-    return await redis.getCached(cacheKey)
-  }
-  logger.debug('asking hubspot for chat token')
-  const hub = new HubspotClient({ apiKey: config.tracking.hubspot_key })
-  const api = hub.conversations.visitorIdentification.generateApi
-  const response = await api.generateToken({ email: user.email })
-  const token = response.token
-  redis.cache(cacheKey, token, 36000) // store this key for 10 hours
-  return token
 }
 
 export type TrackerInfo = {

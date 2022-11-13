@@ -90,8 +90,6 @@ interface IConfig {
     }
   }
   tracking: {
-    hubspot_key: string
-    hubspot_token: string
     orbit_key: string
     segment_key: string
   }
@@ -199,8 +197,6 @@ export const config: IConfig = {
     }
   },
   tracking: {
-    hubspot_key: env.HUBSPOT_API_KEY,
-    hubspot_token: env.HUBSPOT_ACCESS_TOKEN,
     orbit_key: env.ORBIT_API_KEY,
     segment_key: env.SEGMENT_API_KEY
   },

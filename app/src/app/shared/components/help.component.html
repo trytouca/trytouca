@@ -14,17 +14,6 @@
     aria-labelledby="wsl-help-dropdown">
     <li
       class="wsl-dropdown-item flex items-center space-x-2 px-2 duration-300 ease-in-out"
-      *ngIf="hasIntercom()"
-      (click)="openChatWidget()"
-      title="We use HubSpot for messaging.&#013;Make sure it's not blocked by your browser.">
-      <ng-icon
-        class="text-gray-500 dark:text-gray-400"
-        name="hero-chat-alt2"
-        size="1rem"></ng-icon>
-      <span class="text-gray-600 dark:text-gray-300">Send us a message</span>
-    </li>
-    <li
-      class="wsl-dropdown-item flex items-center space-x-2 px-2 duration-300 ease-in-out"
       [routerLink]="['/feedback']"
       [queryParams]="{ page: 'team' }"
       title="Let us know how we can improve your experience.">
