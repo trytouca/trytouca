@@ -32,11 +32,11 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2.2.4
         with:
           version: 7
       - uses: actions/setup-node@v3
@@ -177,7 +177,7 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -229,7 +229,7 @@ jobs:
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: steps.changes.outputs.sdk_cpp == 'true'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -279,13 +279,13 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
       - uses: gradle/wrapper-validation-action@v1
         if: steps.changes.outputs.sdk_java == 'true'
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         if: steps.changes.outputs.sdk_java == 'true'
         with:
           distribution: "adopt"
@@ -372,7 +372,7 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -451,7 +451,7 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -571,7 +571,7 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         if: steps.changes.outputs.examples_java == 'true'
         with:
           distribution: "adopt"
@@ -705,11 +705,11 @@ jobs:
       - name: authenticate to aws
         if: |
           steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2.2.4
         with:
           version: 7
       - uses: actions/setup-node@v3
@@ -744,7 +744,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -757,7 +757,7 @@ jobs:
         run: |
           echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2.2.4
         with:
           version: 7
       - uses: actions/setup-node@v3
@@ -794,7 +794,7 @@ jobs:
         run: |
           aws s3 cp ${{ steps.params.outputs.buckets }}/api.tar.gz .
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: api-bundle
           path: ${{ github.workspace }}/api.tar.gz
@@ -810,7 +810,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
@@ -823,7 +823,7 @@ jobs:
         run: |
           echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2.2.4
         with:
           version: 7
       - uses: actions/setup-node@v3
@@ -850,7 +850,7 @@ jobs:
       - name: pull app from aws
         if: steps.changes.outputs.app == 'false'
         run: aws s3 cp ${{ steps.params.outputs.buckets }}/app.tar.gz .
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: app-bundle
           path: ${{ github.workspace }}/app.tar.gz
@@ -874,7 +874,7 @@ jobs:
         run: |
           echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && steps.changes.outputs.ops == 'true' }}" >> $GITHUB_OUTPUT
       - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         if: steps.params.outputs.release == 'true'
         with:
           aws-region: ${{ secrets.AWS_REGION }}
@@ -922,17 +922,17 @@ jobs:
           echo "changed=${{ steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' }}" >> $GITHUB_OUTPUT
           echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true') }}" >> $GITHUB_OUTPUT
           echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         if: steps.params.outputs.changed == 'true'
         with:
           name: api-bundle
           path: ${{ github.workspace }}
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         if: steps.params.outputs.changed == 'true'
         with:
           name: app-bundle
           path: ${{ github.workspace }}
-      - uses: pnpm/action-setup@v2.2.2
+      - uses: pnpm/action-setup@v2.2.4
         with:
           version: 7
       - uses: actions/setup-node@v3
@@ -946,7 +946,7 @@ jobs:
         run: |
           pnpm --dir=api --filter=@touca/api --filter=@touca/api-schema --filter=@touca/comparator --filter=@touca/flatbuffers --frozen-lockfile install
       - name: authenticate to aws
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v1-node16
         if: steps.params.outputs.release == 'true'
         with:
           aws-region: ${{ secrets.AWS_REGION }}
