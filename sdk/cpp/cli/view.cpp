@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "cxxopts.hpp"
 #include "touca/cli/operations.hpp"
@@ -28,9 +28,9 @@ bool ViewOperation::parse_impl(int argc, char* argv[]) {
 }
 
 bool ViewOperation::run_impl() const {
-  touca::ResultFile file(_src);
   try {
-    fmt::print(stdout, "{}\n", file.read_file_in_json());
+    const auto& elements_map = touca::ResultFile(_src).parse();
+    fmt::print(stdout, "{}\n", elements_map_to_json(elements_map));
     return true;
   } catch (const std::exception& ex) {
     touca::print_error("failed to read file {}: {}\n", _src, ex.what());

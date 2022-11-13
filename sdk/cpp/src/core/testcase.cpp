@@ -4,6 +4,9 @@
 
 #include "flatbuffers/flatbuffers.h"
 #include "rapidjson/document.h"
+#include "rapidjson/rapidjson.h"
+#include "rapidjson/stringbuffer.h"
+#include "rapidjson/writer.h"
 #include "touca/core/filesystem.hpp"
 #include "touca/core/types.hpp"
 #include "touca/impl/schema.hpp"
@@ -310,6 +313,19 @@ std::vector<uint8_t> Testcase::serialize(
 
   const auto& ptr = fbb.GetBufferPointer();
   return {ptr, ptr + fbb.GetSize()};
+}
+
+std::string elements_map_to_json(const ElementsMap& elements_map) {
+  rapidjson::Document doc(rapidjson::kArrayType);
+  rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+  for (const auto& item : elements_map) {
+    doc.PushBack(item.second->json(allocator), allocator);
+  }
+  rapidjson::StringBuffer strbuf;
+  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+  writer.SetMaxDecimalPlaces(3);
+  doc.Accept(writer);
+  return strbuf.GetString();
 }
 
 }  // namespace touca

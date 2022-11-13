@@ -112,4 +112,7 @@ class TOUCA_CLIENT_API Testcase {
 
 using ElementsMap = std::unordered_map<std::string, std::shared_ptr<Testcase>>;
 
+TOUCA_CLIENT_API std::string elements_map_to_json(
+    const ElementsMap& elements_map);
+
 }  // namespace touca

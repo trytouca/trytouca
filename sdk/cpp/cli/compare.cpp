@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include <unordered_map>
 
@@ -42,10 +42,9 @@ bool CompareOperation::parse_impl(int argc, char* argv[]) {
 }
 
 bool CompareOperation::run_impl() const {
-  touca::ResultFile src(_src);
-  touca::ResultFile dst(_dst);
   try {
-    const auto& res = src.compare(dst);
+    const auto& res = touca::compare(touca::ResultFile(_src).parse(),
+                                     touca::ResultFile(_dst).parse());
     fmt::print(stdout, "{}\n", res.json());
     return true;
   } catch (const std::exception& ex) {
