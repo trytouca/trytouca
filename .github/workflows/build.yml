@@ -151,6 +151,17 @@ jobs:
           conan user -p ${{ secrets.JFROG_API_KEY }} -r touca-cpp ${{ secrets.JFROG_USERNAME }}
           conan upload "touca/1.5.2" --confirm --parallel -r touca-cpp --all
 
+  build-sdk-cpp-windows:
+    name: build-sdk-cpp-windows
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ./sdk/cpp
+    steps:
+      - uses: actions/checkout@v3
+      - run: ./build.bat
+
   build-sdk-cpp-docs:
     name: build-sdk-cpp-docs
     runs-on: ubuntu-20.04

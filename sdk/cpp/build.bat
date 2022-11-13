@@ -1,4 +1,4 @@
-@REM Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+@REM Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 @ECHO OFF
 SETLOCAL ENABLEEXTENSIONS
@@ -8,7 +8,8 @@ SET dir_build="%dir_script%local\build"
 SET dir_dist="%dir_script%local\dist"
 SET dir_export="local\build\conan-export-pkg"
 
-WHERE /q cmake || (
+WHERE /q cmake >nul 2>nul
+IF %ERRORLEVEL% NEQ 0 (
     echo "cmake is required to build this library"
     exit /B !ERRORLEVEL!
 )
@@ -18,7 +19,8 @@ FOR %%D IN (%dir_bin%, %dir_build%, %dir_dist%, %dir_script%\%dir_export%) DO (
     mkdir %%D
 )
 
-WHERE /q conan && (
+WHERE /q conan >nul 2>nul
+IF %ERRORLEVEL% EQU 0 (
     conan install -o shared=True ^
         -o with_tests=True ^
         -o with_cli=True ^
@@ -44,13 +46,17 @@ cmake --build "%dir_build%" --config Release --parallel ^
 cmake --install "%dir_build%" --prefix "%dir_dist%" ^
     || (echo "failed to install build artifacts" && exit /b !ERRORLEVEL!)
 
-WHERE /q ctest && (
+WHERE /q ctest >nul 2>nul
+IF %ERRORLEVEL% EQU 0 (
     SET CTEST_OUTPUT_ON_FAILURE=1
     cd "%dir_build%" && ctest . -C Release
 )
 
-WHERE /q conan && (
+WHERE /q conan >nul 2>nul
+IF %ERRORLEVEL% EQU 0 (
     conan export-pkg ^
         -if "%dir_build%" -bf "%dir_script%\%dir_export%" -f "%dir_script%conanfile.py" ^
         || (echo "failed to create conan package" && exit /b !ERRORLEVEL!)
 )
+
+EXIT /b 0
