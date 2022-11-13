@@ -15,9 +15,8 @@ jobs:
       - run: ./examples/scripts/sync.sh
       - name: check for local changes
         id: changes
-        run:
-          echo ::set-output name=changed::$([[ -z $(git status --porcelain) ]]
-          && echo "0" || echo "1")
+        run: |
+          echo "changed=$([[ -z $(git status --porcelain) ]] && echo "0" || echo "1")" >> $GITHUB_OUTPUT
       - name: push changes
         if: steps.changes.outputs.changed == 1
         run: |

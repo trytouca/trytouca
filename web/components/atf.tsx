@@ -8,10 +8,10 @@ import { ATFBackedBy, ATFTrustedBy } from './social-proof';
 
 function ATFButtonDemo() {
   return (
-    <Link href="/demo">
-      <a className="text-md box-shadow group flex items-center space-x-2 p-3 font-medium text-gray-300 duration-150 ease-in-out hover:text-white focus:outline-none">
-        <span>or Schedule a Demo</span>
-      </a>
+    <Link
+      href="/demo"
+      className="text-md box-shadow group flex items-center space-x-2 p-3 font-medium text-gray-300 duration-150 ease-in-out hover:text-white focus:outline-none">
+      <span>or Schedule a Demo</span>
     </Link>
   );
 }

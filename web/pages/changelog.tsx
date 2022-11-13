@@ -89,12 +89,13 @@ class ChangelogPost extends React.Component<
             <h5 className="text-sm font-medium text-yellow-500">
               {this.props.article.tags[0].name}
             </h5>
-            <Link href={articleLink}>
-              <a className="block" title="Read this article">
-                <h4 className="text-3xl font-medium text-white">
-                  {this.props.article.title}
-                </h4>
-              </a>
+            <Link
+              href={articleLink}
+              className="block"
+              title="Read this article">
+              <h4 className="text-3xl font-medium text-white">
+                {this.props.article.title}
+              </h4>
             </Link>
           </div>
           {this.props.article.excerpt && (
@@ -110,18 +111,16 @@ class ChangelogPost extends React.Component<
               </div>
             </div>
             <div className="flex items-center">
-              <Link href={articleLink}>
-                <a title="Read this article">
-                  <button
-                    className="group space-x-1 rounded-full bg-dark-blue-700 bg-opacity-25 px-4 py-2 text-gray-300 hover:text-white focus:underline focus:outline-none"
-                    type="button"
-                    role="button">
-                    <span className="text-sm font-medium leading-6">
-                      Read Article
-                    </span>
-                    <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100" />
-                  </button>
-                </a>
+              <Link href={articleLink} title="Read this article">
+                <button
+                  className="group space-x-1 rounded-full bg-dark-blue-700 bg-opacity-25 px-4 py-2 text-gray-300 hover:text-white focus:underline focus:outline-none"
+                  type="button"
+                  role="button">
+                  <span className="text-sm font-medium leading-6">
+                    Read Article
+                  </span>
+                  <HiArrowNarrowRight className="inline h-6 opacity-50 group-hover:opacity-100" />
+                </button>
               </Link>
             </div>
           </div>
