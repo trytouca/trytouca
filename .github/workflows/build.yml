@@ -28,7 +28,7 @@ jobs:
         if: steps.changes.outputs.docs == 'true'
         id: params
         run: |
-          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+          echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.docs == 'true' && steps.params.outputs.release == 'true'
@@ -173,7 +173,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0"
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_cpp == 'true' && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -226,7 +226,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0"
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: steps.changes.outputs.sdk_cpp == 'true'
         uses: aws-actions/configure-aws-credentials@v1
@@ -275,7 +275,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0"
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -368,7 +368,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0"
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -447,7 +447,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0"
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v1.8.0" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
@@ -543,7 +543,7 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+          echo "version=$(git describe --tags --abbrev=4)" >> $GITHUB_OUTPUT
       - name: build cpp examples
         if: steps.changes.outputs.examples_cpp == 'true'
         run: ./build.sh
@@ -581,7 +581,7 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+          echo "version=$(git describe --tags --abbrev=4)" >> $GITHUB_OUTPUT
       - uses: actions/cache@v2
         if: steps.changes.outputs.examples_java == 'true'
         with:
@@ -634,7 +634,7 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+          echo "version=$(git describe --tags --abbrev=4)" >> $GITHUB_OUTPUT
       - name: build js examples
         if: steps.changes.outputs.examples_js == 'true'
         run: |
@@ -672,7 +672,7 @@ jobs:
         id: params
         run: |
           git fetch --prune --unshallow --tags
-          echo "::set-output name=version::$(git describe --tags --abbrev=4 | tail -c 6 | sed "s/^/$(python ../../sdk/python/setup.py --version)-/")"
+          echo "version=$(git describe --tags --abbrev=4 | tail -c 6 | sed "s/^/$(python ../../sdk/python/setup.py --version)-/")" >> $GITHUB_OUTPUT
       - name: run example python application
         if: |
           steps.changes.outputs.examples_python == 'true' && github.ref == 'refs/heads/main'
@@ -701,7 +701,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
+          echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         if: |
           steps.changes.outputs.web == 'true' && steps.params.outputs.release == 'true'
@@ -755,8 +755,8 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
+          echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: 7
@@ -821,8 +821,8 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "::set-output name=release::${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
+          echo "release=${{ github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) }}" >> $GITHUB_OUTPUT
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
       - uses: pnpm/action-setup@v2.2.2
         with:
           version: 7
@@ -872,7 +872,7 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && steps.changes.outputs.ops == 'true' }}"
+          echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && steps.changes.outputs.ops == 'true' }}" >> $GITHUB_OUTPUT
       - name: authenticate to aws
         uses: aws-actions/configure-aws-credentials@v1
         if: steps.params.outputs.release == 'true'
@@ -918,10 +918,10 @@ jobs:
       - name: get version number
         id: params
         run: |
-          echo "::set-output name=version::$(npm --prefix=api pkg get version | sed 's/"//g')"
-          echo "::set-output name=changed::${{ steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' }}"
-          echo "::set-output name=release::${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true') }}"
-          echo "::set-output name=buckets::${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')"
+          echo "version=$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
+          echo "changed=${{ steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true' }}" >> $GITHUB_OUTPUT
+          echo "release=${{ github.repository_owner == 'trytouca' && github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/v')) && (steps.changes.outputs.api == 'true' || steps.changes.outputs.app == 'true') }}" >> $GITHUB_OUTPUT
+          echo "buckets=${{ secrets.AWS_BUCKET_BUILD }}/v$(npm --prefix=api pkg get version | sed 's/"//g')" >> $GITHUB_OUTPUT
       - uses: actions/download-artifact@v2
         if: steps.params.outputs.changed == 'true'
         with:

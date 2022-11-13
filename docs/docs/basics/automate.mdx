@@ -49,7 +49,7 @@ Add the following steps to your GitHub Actions workflow:
   id: params
   run: |
     git fetch --prune --unshallow --tags
-    echo "::set-output name=version::$(git describe --tags --abbrev=4)"
+    echo "version=$(git describe --tags --abbrev=4)" >> $GITHUB_OUTPUT
 - name: Run sample Touca test
   if: github.ref == 'refs/heads/main'
   env:
