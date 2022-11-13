@@ -112,11 +112,11 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
-      - uses: actions/setup-python@v1
+      - uses: actions/setup-python@v4
         if: steps.changes.outputs.sdk_cpp == 'true'
       - name: cache conan
         if: steps.changes.outputs.sdk_cpp == 'true'
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-conan-packages
         with:
@@ -181,7 +181,7 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         if: steps.changes.outputs.sdk_cpp == 'true'
         with:
           python-version: 3.9
@@ -292,7 +292,7 @@ jobs:
           java-version: "8"
       - name: cache gradle dependencies
         if: steps.changes.outputs.sdk_java == 'true'
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -455,13 +455,13 @@ jobs:
         with:
           aws-region: ${{ secrets.AWS_REGION }}
           role-to-assume: ${{ secrets.AWS_ROLE }}
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         if: steps.changes.outputs.sdk_python == 'true'
         with:
           python-version: ${{ matrix.python-version }}
       - name: cache pip dependencies
         if: steps.changes.outputs.sdk_python == 'true'
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-pip-dependencies
         with:
@@ -582,7 +582,7 @@ jobs:
         run: |
           git fetch --prune --unshallow --tags
           echo "version=$(git describe --tags --abbrev=4)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         if: steps.changes.outputs.examples_java == 'true'
         with:
           path: |
@@ -663,7 +663,7 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         if: steps.changes.outputs.examples_python == 'true'
         with:
           python-version: 3.9
