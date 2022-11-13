@@ -32,18 +32,16 @@ export function Announcement(props: { input: AnnouncementInput }) {
 export function BreakingNews(props: {
   input: { text: string; link?: string };
 }) {
-  return (
-    props.input && (
-      <div className="bg-[#6CB7DF] py-2">
-        <div className="mx-auto container text-center font-medium">
-          {props.input.text}{' '}
-          {props.input.link && (
-            <Link href={props.input.link}>
-              <a className="underline text-sky-800">Learn more</a>
-            </Link>
-          )}
-        </div>
+  return props.input && (
+    <div className="bg-[#6CB7DF] py-2">
+      <div className="mx-auto container text-center font-medium">
+        {props.input.text}{' '}
+        {props.input.link && (
+          <Link href={props.input.link} className="underline text-sky-800">
+            Learn more
+          </Link>
+        )}
       </div>
-    )
+    </div>
   );
 }

@@ -40,10 +40,10 @@ export default function NotFoundPage() {
               </p>
             </div>
             <div className="text-center">
-              <Link href="/">
-                <a className="rounded-xl border border-transparent bg-sky-900 bg-opacity-50 p-4 text-sm leading-6 text-gray-300 hover:border-sky-900 hover:text-white">
-                  Back to Main Page
-                </a>
+              <Link
+                href="/"
+                className="rounded-xl border border-transparent bg-sky-900 bg-opacity-50 p-4 text-sm leading-6 text-gray-300 hover:border-sky-900 hover:text-white">
+                Back to Main Page
               </Link>
             </div>
           </div>

@@ -36,19 +36,15 @@ export default function Header() {
                 </a>
               );
             })}
-          <Link href="/discord">
-            <a title="Join our Discord Community">
-              <div className="text-gray-400 hover:text-gray-300 md:px-3">
-                <FaDiscord size="2rem" />
-              </div>
-            </a>
+          <Link href="/discord" title="Join our Discord Community">
+            <div className="text-gray-400 hover:text-gray-300 md:px-3">
+              <FaDiscord size="2rem" />
+            </div>
           </Link>
-          <Link href="/github">
-            <a title="Give us a star on GitHub">
-              <div className="text-gray-400 hover:text-gray-300 md:px-3">
-                <FaGithub size="2rem" />
-              </div>
-            </a>
+          <Link href="/github" title="Give us a star on GitHub">
+            <div className="text-gray-400 hover:text-gray-300 md:px-3">
+              <FaGithub size="2rem" />
+            </div>
           </Link>
         </nav>
         <div className="flex items-center md:hidden">
@@ -141,27 +137,28 @@ function LogoKit() {
 
   return (
     <>
-      <Link href="/">
-        <a className="flex h-20 items-center focus:outline-none" id="hello">
-          <img
-            className="h-10"
-            src="/images/touca_logo_fg.svg"
-            alt="Touca Logo"
-            loading="lazy"
-            width="40px"
-            height="40px"
-          />
-          <h1 className="sr-only text-2xl font-bold leading-10 tracking-tight text-white">
-            touca<span className="text-sky-300">.io</span>
-          </h1>
-          <img
-            className="no-sr-only"
-            src="/images/touca_logo_fgt.svg"
-            alt="Touca.io"
-            loading="lazy"
-            width="100px"
-          />
-        </a>
+      <Link
+        href="/"
+        className="flex h-20 items-center focus:outline-none"
+        id="hello">
+        <img
+          className="h-10"
+          src="/images/touca_logo_fg.svg"
+          alt="Touca Logo"
+          loading="lazy"
+          width="40px"
+          height="40px"
+        />
+        <h1 className="sr-only text-2xl font-bold leading-10 tracking-tight text-white">
+          touca<span className="text-sky-300">.io</span>
+        </h1>
+        <img
+          className="no-sr-only"
+          src="/images/touca_logo_fgt.svg"
+          alt="Touca.io"
+          loading="lazy"
+          width="100px"
+        />
       </Link>
       {show && (
         <div
