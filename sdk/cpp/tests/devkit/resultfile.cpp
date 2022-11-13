@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/devkit/resultfile.hpp"
 
@@ -59,16 +59,8 @@ TEST_CASE("Result File Operations") {
     /**
      * Parse the result file into string in json format
      */
-    SECTION("calling read_file_in_json on loaded file will not re-parse file") {
-      const auto tmpJson = resultFile.read_file_in_json();
-      const auto expected =
-          R"~("results":[{"key":"firstname","value":"alice"},{"key":"lastname","value":"anderson"}],"assertion":[],"metrics":[])~";
-      REQUIRE_THAT(tmpJson, Catch::Contains(expected));
-    }
-
-    SECTION("calling read_file_in_json without load should implicitly parse") {
-      touca::ResultFile newResultFile(tmpFile.path);
-      const auto tmpJson = newResultFile.read_file_in_json();
+    SECTION("read result file in json") {
+      const auto tmpJson = touca::elements_map_to_json(resultFile.parse());
       const auto expected =
           R"~("results":[{"key":"firstname","value":"alice"},{"key":"lastname","value":"anderson"}],"assertion":[],"metrics":[])~";
       REQUIRE_THAT(tmpJson, Catch::Contains(expected));
@@ -102,8 +94,8 @@ TEST_CASE("Result File Operations") {
       touca::ResultFile newResultFile(tmpFile.path);
       REQUIRE_NOTHROW(newResultFile.load());
 
-      REQUIRE_NOTHROW(newResultFile.compare(resultFile));
-      const auto cmp = newResultFile.compare(resultFile);
+      REQUIRE_NOTHROW(compare(newResultFile.parse(), resultFile.parse()));
+      const auto cmp = compare(newResultFile.parse(), resultFile.parse());
 
       SECTION("basic-metadata") {
         CHECK(cmp.fresh.empty());
@@ -138,8 +130,8 @@ TEST_CASE("Result File Operations") {
       REQUIRE_NOTHROW(newResultFile.save({tc_dst}));
 
       touca::ResultFile newResultFile2(newTmpFile.path);
-      REQUIRE_NOTHROW(newResultFile2.compare(resultFile));
-      const auto cmp = newResultFile2.compare(resultFile);
+      REQUIRE_NOTHROW(compare(newResultFile2.parse(), resultFile.parse()));
+      const auto cmp = compare(newResultFile2.parse(), resultFile.parse());
 
       SECTION("basic-metadata") {
         CHECK(cmp.fresh.size() == 1u);

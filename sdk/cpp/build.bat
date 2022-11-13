@@ -29,7 +29,7 @@ WHERE /q conan && (
         || (echo "failed to install dependencies using conan" && exit /b !ERRORLEVEL!)
 )
 
-cmake -B".\local\build" -H"." -G"Visual Studio 16 2019" -A"x64" ^
+cmake -B".\local\build" -H"." -G"Visual Studio 17 2022" -A"x64" ^
     -DCMAKE_BUILD_TYPE=Release ^
     -DBUILD_SHARED_LIBS=ON ^
     -DTOUCA_BUILD_TESTS=ON ^

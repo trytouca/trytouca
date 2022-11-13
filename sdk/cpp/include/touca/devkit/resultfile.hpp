@@ -21,28 +21,6 @@ namespace touca {
 class TOUCA_CLIENT_API ResultFile {
  public:
   /**
-   * @brief represents value returned by function `Resultfile::compare`.
-   *
-   * @param fresh testcases missing from object compared with
-   * @param missing testcases missing from object compared against
-   * @param common comparison results of all testcases shared between
-   *             the two `ResultFile` objects.
-   */
-  struct TOUCA_CLIENT_API ComparisonResult {
-    ElementsMap fresh;
-    ElementsMap missing;
-    std::map<std::string, TestcaseComparison> common;
-
-    /**
-     * @brief provides description of this object in json format.
-     *
-     * @return string representation of the comparison result
-     *         between two result files in json format
-     */
-    std::string json() const;
-  };
-
-  /**
    * @param path to result file to be read or created
    *
    * @note this constructor is intentionally crafted to perform no
@@ -67,7 +45,7 @@ class TOUCA_CLIENT_API ResultFile {
    * file on disk associated with this object.
    *
    * Calling other member functions such as `validate`, `parse`,
-   * `read_file_in_json` or `compare` does **not** require loading
+   * does not require loading
    * the file first. This operation is only helpful to speed-up
    * other operations if they are to be called several times.
    *
@@ -117,38 +95,12 @@ class TOUCA_CLIENT_API ResultFile {
   ElementsMap parse() const;
 
   /**
-   * Provides a string representation of test results stored in
-   * the specified file on disk that is associated with this object,
-   * in json format.
-   *
-   * @note name of this function is chosen to expressly note
-   *       that the function provides json view of the file already
-   *       stored on disk and not the stored state of the object.
-   *
-   * @return string representation of test results stored in the
-   *         specified file in json format
-   */
-  std::string read_file_in_json() const;
-
-  /**
    * Parses and includes all testcases stored in a given binary
    * file in the list of testcases for this file.
    *
    * @param other result file to be merged
    */
   void merge(const ResultFile& other);
-
-  /**
-   * Compares the result file on disk that this object is associated
-   * with, with the result file on disk associated with another given
-   * object of this class.
-   *
-   * @param other result file to compare against
-   *
-   * @return an object describing comparison results between the
-   *         two given files
-   */
-  ResultFile::ComparisonResult compare(const ResultFile& other) const;
 
  private:
   /**

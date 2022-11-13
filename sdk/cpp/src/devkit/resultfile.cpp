@@ -86,78 +86,9 @@ void ResultFile::save(const std::vector<Testcase>& testcases) {
   load();
 }
 
-std::string ResultFile::read_file_in_json() const {
-  const auto testcases = _testcases.empty() ? parse() : _testcases;
-  rapidjson::Document doc(rapidjson::kArrayType);
-  rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-  for (const auto& item : testcases) {
-    doc.PushBack(item.second->json(allocator), allocator);
-  }
-  rapidjson::StringBuffer strbuf;
-  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-  writer.SetMaxDecimalPlaces(3);
-  doc.Accept(writer);
-  return strbuf.GetString();
-}
-
 void ResultFile::merge(const ResultFile& other) {
   const auto tcs = other.parse();
   _testcases.insert(tcs.begin(), tcs.end());
-}
-
-ResultFile::ComparisonResult ResultFile::compare(
-    const ResultFile& other) const {
-  const auto srcCases = _testcases.empty() ? parse() : _testcases;
-  const auto dstCases = other.parse();
-  ComparisonResult cmp;
-  for (const auto& tc : srcCases) {
-    const auto& key = tc.first;
-    if (dstCases.count(key)) {
-      cmp.common.emplace(key,
-                         TestcaseComparison(*tc.second, *dstCases.at(key)));
-      continue;
-    }
-    cmp.fresh.emplace(tc);
-  }
-  for (const auto& tc : dstCases) {
-    const auto& key = tc.first;
-    if (!srcCases.count(key)) {
-      cmp.missing.emplace(tc);
-    }
-  }
-  return cmp;
-}
-
-std::string ResultFile::ComparisonResult::json() const {
-  rapidjson::Document doc(rapidjson::kObjectType);
-  auto& allocator = doc.GetAllocator();
-
-  rapidjson::Value rjFresh(rapidjson::kArrayType);
-  for (const auto& item : fresh) {
-    auto val = item.second->metadata().json(allocator);
-    rjFresh.PushBack(val, allocator);
-  }
-
-  rapidjson::Value rjMissing(rapidjson::kArrayType);
-  for (const auto& item : missing) {
-    auto val = item.second->metadata().json(allocator);
-    rjMissing.PushBack(val, allocator);
-  }
-
-  rapidjson::Value rjCommon(rapidjson::kArrayType);
-  for (const auto& item : common) {
-    rjCommon.PushBack(item.second.json(allocator), allocator);
-  }
-
-  doc.AddMember("newCases", rjFresh, allocator);
-  doc.AddMember("missingCases", rjMissing, allocator);
-  doc.AddMember("commonCases", rjCommon, allocator);
-
-  rapidjson::StringBuffer strbuf;
-  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-  writer.SetMaxDecimalPlaces(3);
-  doc.Accept(writer);
-  return strbuf.GetString();
 }
 
 }  // namespace touca

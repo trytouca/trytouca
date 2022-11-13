@@ -529,4 +529,55 @@ void TestcaseComparison::init_cellar(const MetricsMap& src,
   }
 }
 
+ElementsMapComparison compare(const ElementsMap& src, const ElementsMap& dst) {
+  ElementsMapComparison cmp;
+  for (const auto& tc : src) {
+    const auto& key = tc.first;
+    if (dst.count(key)) {
+      cmp.common.emplace(key, TestcaseComparison(*tc.second, *dst.at(key)));
+      continue;
+    }
+    cmp.fresh.emplace(tc);
+  }
+  for (const auto& tc : dst) {
+    const auto& key = tc.first;
+    if (!src.count(key)) {
+      cmp.missing.emplace(tc);
+    }
+  }
+  return cmp;
+}
+
+std::string ElementsMapComparison::json() const {
+  rapidjson::Document doc(rapidjson::kObjectType);
+  auto& allocator = doc.GetAllocator();
+
+  rapidjson::Value rjFresh(rapidjson::kArrayType);
+  for (const auto& item : fresh) {
+    auto val = item.second->metadata().json(allocator);
+    rjFresh.PushBack(val, allocator);
+  }
+
+  rapidjson::Value rjMissing(rapidjson::kArrayType);
+  for (const auto& item : missing) {
+    auto val = item.second->metadata().json(allocator);
+    rjMissing.PushBack(val, allocator);
+  }
+
+  rapidjson::Value rjCommon(rapidjson::kArrayType);
+  for (const auto& item : common) {
+    rjCommon.PushBack(item.second.json(allocator), allocator);
+  }
+
+  doc.AddMember("newCases", rjFresh, allocator);
+  doc.AddMember("missingCases", rjMissing, allocator);
+  doc.AddMember("commonCases", rjCommon, allocator);
+
+  rapidjson::StringBuffer strbuf;
+  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+  writer.SetMaxDecimalPlaces(3);
+  doc.Accept(writer);
+  return strbuf.GetString();
+}
+
 }  // namespace touca

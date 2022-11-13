@@ -99,11 +99,36 @@ class TOUCA_CLIENT_API TestcaseComparison {
   const Testcase& _dst;
 };
 
+/**
+ * @brief represents output of comparing two elements maps.
+ *
+ * @param fresh testcases missing from object compared with
+ * @param missing testcases missing from object compared against
+ * @param common comparison results of all testcases shared between
+ *             the two `ResultFile` objects.
+ */
+struct TOUCA_CLIENT_API ElementsMapComparison {
+  ElementsMap fresh;
+  ElementsMap missing;
+  std::map<std::string, TestcaseComparison> common;
+
+  /**
+   * @brief provides description of this object in json format.
+   *
+   * @return string representation of the comparison result
+   *         between two result files in json format
+   */
+  std::string json() const;
+};
+
 TOUCA_CLIENT_API TypeComparison compare(const data_point& src,
                                         const data_point& dst);
 
 TOUCA_CLIENT_API TestcaseComparison compare(const Testcase& src,
                                             const Testcase& dst);
+
+TOUCA_CLIENT_API ElementsMapComparison compare(const ElementsMap& src,
+                                               const ElementsMap& dst);
 
 TOUCA_CLIENT_API std::map<std::string, data_point> flatten(
     const data_point& input);
