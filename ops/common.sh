@@ -50,7 +50,7 @@ is_port_open () {
 is_command_installed () {
     if [ $# -eq 0 ]; then return 1; fi
     for cmd in "$@"; do
-        if ! command -v "$cmd" 2>/dev/null; then
+        if ! command -v "$cmd" >/dev/null 2>&1; then
             log_warning "command $cmd is not installed"
             return 1
         fi
@@ -123,16 +123,6 @@ redeploy () {
 
     info "Starting new docker containers"
     run_compose "up -d"
-}
-
-ask_name() {
-    local default="stranger"
-    info "Hi, Thank you for trying Touca!"
-    question "What is your first name?"
-    answer
-    read -r OUTPUT
-    OUTPUT=${OUTPUT:=$default}
-    info "Nice to meet you, $OUTPUT!"
 }
 
 ask_install_dir() {

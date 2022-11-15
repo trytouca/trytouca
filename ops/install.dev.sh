@@ -4,8 +4,6 @@ set -e
 DIR_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$DIR_SCRIPT/common.sh"
 
-ask_name
-HUMAN_NAME=$OUTPUT
 ask_install_dir
 DIR_INSTALL=$OUTPUT
 
@@ -23,4 +21,4 @@ mkdir -p "$DIR_INSTALL"/data/{minio,mongo,redis} "$DIR_INSTALL"/ops
 cp -r "$(dirname "${DIR_SCRIPT}")"/ops/mongo "$DIR_INSTALL"/ops
 
 redeploy
-info "Have a good day, $HUMAN_NAME!"
+info "Have a good day, stranger!"
