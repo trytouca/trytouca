@@ -80,7 +80,14 @@ export class SuitePageComponent
   BannerType = SuiteBannerType;
 
   private _sub: Record<
-    'alert' | 'banner' | 'tabs' | 'team' | 'suites' | 'suite' | 'user',
+    | 'alert'
+    | 'banner'
+    | 'events'
+    | 'tabs'
+    | 'team'
+    | 'suites'
+    | 'suite'
+    | 'user',
     Subscription
   >;
 
@@ -110,6 +117,7 @@ export class SuitePageComponent
           this._notFound.suiteSlug = route.snapshot.paramMap.get('suite');
         }
       }),
+      events: suitePageService.events$.subscribe(),
       tabs: suitePageService.data.tabs$.subscribe((v) => {
         this.tabs = v;
         const queryMap = this.route.snapshot.queryParamMap;
@@ -146,7 +154,7 @@ export class SuitePageComponent
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.suitePageService.listenForEvents(
+    this.suitePageService.eventSourceSubscribe(
       this.route.snapshot.paramMap.get('team'),
       this.route.snapshot.paramMap.get('suite')
     );
@@ -156,6 +164,7 @@ export class SuitePageComponent
     Object.values(this._sub)
       .filter(Boolean)
       .forEach((v) => v.unsubscribe());
+    this.suitePageService.eventSourceUnsubscribe();
     super.ngOnDestroy();
   }
 

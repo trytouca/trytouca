@@ -15,17 +15,16 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
 import { objectStore } from '@/utils/store'
 import { analytics, EActivity } from '@/utils/tracker'
-import { createAutoCopier } from '@/utils/autoCopy'
 
 type TeamSlug = string
 type SuiteSlug = string
 type BatchSlug = string
 type ElementName = string
 
-export type SubmissionItem = {
+type SubmissionItem = {
   builtAt: Date
   teamName: TeamSlug
   suiteName: SuiteSlug
@@ -40,7 +39,7 @@ export type SubmissionItem = {
   messageId?: string
 }
 
-export type ElementMap = Map<ElementName, SubmissionItem>
+type ElementMap = Map<ElementName, SubmissionItem>
 type BatchMap = Map<BatchSlug, ElementMap>
 type SuiteMap = Map<SuiteSlug, BatchMap>
 type TeamMap = Map<TeamSlug, SuiteMap>
@@ -181,10 +180,10 @@ async function processElement(
 
     logger.info('%s: processed element', tuple)
 
-    rclient.removeCached(
+    redis.removeCached(
       `route_elementLookup_${team.slug}_${suite.slug}_${elementName}`
     )
-    rclient.removeCached(`route_elementList_${team.slug}_${suite.slug}`)
+    redis.removeCached(`route_elementList_${team.slug}_${suite.slug}`)
 
     return { slug: tuple, doc: element }
   } catch (err) {
@@ -233,15 +232,17 @@ async function processBatch(
 
     logger.debug('%s: processed batch', tuple)
 
-    rclient.removeCached(
+    redis.removeCached(
       `route_batchLookup_${team.slug}_${suite.slug}_${batchSlug}`
     )
-    rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
+    redis.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
 
-    // @todo: batch._id type should NOT be 'any'
-    const batchId = (batch._id as mongoose.Types.ObjectId).toHexString()
-
-    Queues.serverEvents.insertOneBatch(team.slug, suite.slug, batch._id)
+    await Queues.events.insertJob({
+      type: 'batch:processed',
+      teamSlug: team.slug,
+      suiteSlug: suite.slug,
+      batchId: batch._id
+    })
 
     return { slug: batchSlug, doc: batch }
   } catch (err) {
@@ -290,8 +291,8 @@ async function processTeam(
 
   logger.debug('%s: processed team', teamSlug)
 
-  rclient.removeCachedByPrefix(`route_teamLookup_${teamSlug}_`)
-  rclient.removeCachedByPrefix(`route_teamList_`)
+  redis.removeCachedByPrefix(`route_teamLookup_${teamSlug}_`)
+  redis.removeCachedByPrefix(`route_teamList_`)
 
   return { slug: teamSlug, doc: team }
 }
@@ -422,66 +423,8 @@ async function insertComparisonJobs(
   return failed
 }
 
-interface IBatchCopyParams {
-  user: IUser
-  team: ITeamDocument
-  suite: ISuiteDocument
-  batchSlug: string
-  elements: ElementMap
-}
-
-const pseudoRandName = () => {
-  const names = [
-    'tim',
-    'jim',
-    'sara',
-    'ash',
-    'wendy',
-    'kim',
-    'robert',
-    'kyle',
-    'dev',
-    'amir',
-    'kendra'
-  ]
-
-  const idx = Math.floor(Math.random() * names.length)
-
-  return names[idx]
-}
-
-const copyElements = (elMap: ElementMap): ElementMap => {
-  const builtTimeStamp = new Date(Date.now())
-
-  return Array.from(elMap.entries()).reduce((copy, next) => {
-    const [_, submissionItem] = next
-    const newElementName = pseudoRandName()
-
-    const submissionCopy = {
-      ...submissionItem,
-      builtAt: builtTimeStamp,
-      elementName: newElementName
-    }
-
-    delete submissionCopy.elementId
-    delete submissionCopy.messageId
-
-    copy.set(newElementName, submissionCopy)
-
-    return copy
-  }, new Map<string, SubmissionItem>())
-}
-
-const copyBatchParams = (params: IBatchCopyParams): IBatchCopyParams => ({
-  ...params,
-  elements: copyElements(params.elements)
-})
-
-// @remove
-// const startBatchCopies = createAutoCopier(10, 10, 3, 15)
-
 /**
- * Check if a suite with given name is registered on the Platform.
+ * Check if a suite with given name is registered.
  */
 async function processSuite(
   user: IUser,
@@ -518,45 +461,6 @@ async function processSuite(
     if (errors.length !== 0) {
       return { slug: suiteSlug, errors }
     }
-
-    // @remove
-    // wait until we're sure the batch didn't trigger any errors, since we're about to
-    // re-emit it a bunch of times...
-    // const copyBatchFunc = async () => {
-    //   const [batchSlugToCopy, batchElementsToCopy] = Array.from(
-    //     batchMap.entries()
-    //   )[0]
-
-    //   const copyParams = copyBatchParams({
-    //     user,
-    //     team,
-    //     suite,
-    //     batchSlug: batchSlugToCopy,
-    //     elements: batchElementsToCopy
-    //   })
-
-    //   //   adding an element to existing batch will fail if batch is sealed
-    //   const unsealed = await BatchModel.findOneAndUpdate(
-    //     {
-    //       slug: copyParams.batchSlug,
-    //       suite: copyParams.suite._id
-    //     },
-    //     {
-    //       $unset: { sealedAt: '' }
-    //     },
-    //     { new: true }
-    //   )
-
-    //   processBatch(
-    //     copyParams.user,
-    //     copyParams.team,
-    //     copyParams.suite,
-    //     copyParams.batchSlug,
-    //     copyParams.elements
-    //   )
-    // }
-
-    // startBatchCopies(copyBatchFunc)
 
     // at this point, we are sure that all batches have been processed
     // successfully.
@@ -606,8 +510,8 @@ async function processSuite(
 
     logger.debug('%s: processed suite', tuple)
 
-    rclient.removeCached(`route_suiteLookup_${team.slug}_${suiteSlug}`)
-    rclient.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
+    redis.removeCached(`route_suiteLookup_${team.slug}_${suiteSlug}`)
+    redis.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
 
     return { slug: suiteSlug, doc: suite }
   } catch (err) {
@@ -801,9 +705,6 @@ export async function processBinaryContent(
     override?: {
       teamSlug: string
       suiteSlug: string
-      //   @remove: this field is only needed for development/testing logic--can
-      // be stripped out before merging to main
-      batchSlug?: string
     }
   }
 ) {
@@ -820,11 +721,6 @@ export async function processBinaryContent(
     for (const message of messages) {
       message.teamName = options.override.teamSlug
       message.suiteName = options.override.suiteSlug
-
-      //   @remove (see above)
-      if (options.override.batchSlug !== undefined) {
-        message.batchName = options.override.batchSlug
-      }
     }
   }
 

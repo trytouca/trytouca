@@ -722,6 +722,25 @@ components:
           type: string
         to:
           type: string
+    ServerEventJob:
+      type: object
+      required:
+        - teamSlug
+        - suiteSlug
+        - batchId
+        - type
+      properties:
+        teamSlug:
+          type: string
+        suiteSlug:
+          type: string
+        batchId:
+          type: string
+        type:
+          type: string
+          enum:
+            - batch:processed
+            - batch:sealed
     SuiteItem:
       type: object
       additionalProperties: false

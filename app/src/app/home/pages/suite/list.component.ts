@@ -1,11 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import {
-  ChangeDetectionStrategy,
-  Component,
-  HostListener,
-  OnDestroy
-} from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PageListComponent } from '@/home/components/page-list.component';

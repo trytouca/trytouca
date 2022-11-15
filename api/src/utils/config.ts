@@ -232,18 +232,15 @@ class ConfigManager {
   }
   public getMongoConnectionOptions(): mongoose.ConnectOptions {
     const file = this.data.mongo.tlsCertificateFile
-    const baseOpts: mongoose.ConnectOptions = {
-      autoIndex: false
-    }
     return file
       ? {
-          ...baseOpts,
+          autoIndex: false,
           retryWrites: false,
           sslValidate: false,
           tls: true,
           tlsCAFile: file
         }
-      : baseOpts
+      : { autoIndex: false }
   }
   public async hasMailTransport(): Promise<boolean> {
     return !!(await MetaModel.countDocuments({

@@ -16,7 +16,6 @@ import { relayRouter } from '@/routes/relay'
 import { suiteRouter } from '@/routes/suite'
 import { teamRouter } from '@/routes/team'
 import { userRouter } from '@/routes/user'
-import { eventsRouter } from '@/routes/events'
 import { config } from '@/utils/config'
 import { promisable } from '@/utils/routing'
 
@@ -46,7 +45,6 @@ router.use('/relay', relayRouter)
 router.use('/suite', suiteRouter)
 router.use('/team', teamRouter)
 router.use('/user', userRouter)
-router.use('/events', eventsRouter)
 
 router.post(
   '/feedback',

@@ -9,6 +9,11 @@ import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
 import { rclient } from '@/utils/redis'
 
+/**
+ * Create a suite with the specified slug.
+ *
+ * Returns undefined if suite is already registered.
+ */
 export async function suiteCreate(
   user: IUser,
   team: ITeam,
@@ -16,7 +21,7 @@ export async function suiteCreate(
 ): Promise<ISuiteDocument> {
   // check that suite slug is available
   if (await SuiteModel.countDocuments({ team: team._id, slug: suite.slug })) {
-    return await SuiteModel.findOne({ team: team._id, slug: suite.slug })
+    return
   }
 
   // register suite in database

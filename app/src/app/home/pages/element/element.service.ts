@@ -336,7 +336,6 @@ export class ElementPageService extends IPageService<ElementPageResult> {
   }
 
   public getImagePath(side: 'src' | 'dst', name: string) {
-    console.log(side, name, this._params);
     const path =
       side === 'src'
         ? [

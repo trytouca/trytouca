@@ -47,7 +47,6 @@
     "@ngneat/helipopper": "^5.1.4",
     "@ngneat/overview": "^3.0.4",
     "@touca/api-schema": "workspace:*",
-    "@touca/server-events": "workspace:*",
     "chart.js": "^3.8.0",
     "date-fns": "^2.28.0",
     "duration-fns": "^3.0.1",

@@ -10,6 +10,7 @@ import { ctrlSuiteRemove } from '@/controllers/suite/remove'
 import { suiteSubscribe } from '@/controllers/suite/subscribe'
 import { suiteUpdate } from '@/controllers/suite/update'
 import * as middleware from '@/middlewares'
+import { handleEvents } from '@/utils/events'
 import { promisable } from '@/utils/routing'
 
 const router = express.Router()
@@ -81,6 +82,15 @@ router.delete(
   middleware.isTeamAdmin,
   middleware.hasSuite,
   promisable(ctrlSuiteRemove, 'remove suite')
+)
+
+router.get(
+  '/:team/:suite/events',
+  middleware.isAuthenticated,
+  middleware.hasTeam,
+  middleware.isTeamMember,
+  middleware.hasSuite,
+  handleEvents
 )
 
 router.patch(

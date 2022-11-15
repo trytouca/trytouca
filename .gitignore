@@ -42,4 +42,3 @@ sdk/python/**/__pycache__/
 web/.next/
 web/public/sw.js*
 web/public/workbox-*.js*
-**/*keyFile.txt
