@@ -160,7 +160,13 @@ jobs:
         working-directory: ./sdk/cpp
     steps:
       - uses: actions/checkout@v3
-      - run: ./build.bat
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: .github/path-filters.yml
+      - name: build components
+        if: steps.changes.outputs.sdk_cpp == 'true'
+        run: ./build.bat
 
   build-sdk-cpp-docs:
     name: build-sdk-cpp-docs
