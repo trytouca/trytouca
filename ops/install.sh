@@ -3,8 +3,6 @@ set -e
 
 source /dev/stdin <<<"$( curl -fsSL https://raw.githubusercontent.com/trytouca/trytouca/main/ops/common.sh )"
 
-ask_name
-HUMAN_NAME=$OUTPUT
 ask_install_dir
 DIR_INSTALL=$OUTPUT
 
@@ -28,4 +26,4 @@ cp -r "$DIR_INSTALL"/repo/ops/mongo "$DIR_INSTALL"/ops
 redeploy
 server_status_check
 rm -rf "$DIR_INSTALL/repo"
-info "Have a good day, $HUMAN_NAME!"
+info "Have a good day, stranger!"
