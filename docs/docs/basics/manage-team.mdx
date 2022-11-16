@@ -1,4 +1,5 @@
-import ToucaImage from "@site/src/components/ToucaImage";
+import ThemedImage from "@theme/ThemedImage";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Manage Your Team
 
@@ -8,10 +9,12 @@ submitted test results, and collaborate with each other to interpret them.
 In this document, we review how you can add new members to your team, invite
 colleagues to join your team and handle pending join requests initiated by them.
 
-<ToucaImage
-  src="touca-team-members-page.png"
+<ThemedImage
   alt="Team Members page"
   caption="You can manage your team members from the Members tab"
+  sources={{
+    light: useBaseUrl("img/assets/touca-team-members-page.png")
+  }}
 />
 
 ## Inviting Members to Your Team
@@ -21,9 +24,11 @@ the "Members" tab of your team. When you invite someone to your team, Touca
 sends them an email and asks if they want to join your team. This is regardless
 of whether they already have an account or not.
 
-<ToucaImage
-  src="touca-team-invitation-form.png"
+<ThemedImage
   caption="Once you invite new members to your team, they will get notified via an email."
+  sources={{
+    light: useBaseUrl("img/assets/touca-team-invitation-form.png")
+  }}
 />
 
 Because it may take some time for invited users to accept your invitations,
@@ -31,9 +36,11 @@ users that you invite show up in a special "Invited Members" section so you can
 track which invitations are still pending. Team Admins and the Team Owner always
 have the option to rescind an invitation while it is still pending.
 
-<ToucaImage
-  src="touca-team-pending-invitations.png"
+<ThemedImage
   caption="Invited members to your team show up in a separate section in the Members tab."
+  sources={{
+    light: useBaseUrl("img/assets/touca-team-pending-invitations.png")
+  }}
 />
 
 Similarly, users who are invited to your team will see a separate "Your
@@ -44,9 +51,11 @@ If your colleagues do not have an account yet, they can use their invitation
 email to create an account first. Touca reminds these users of their open
 invitations as soon as their account is created.
 
-<ToucaImage
-  src="touca-team-my-invitations.png"
+<ThemedImage
   caption="You can respond to your team invitations from the Teams Page."
+  sources={{
+    light: useBaseUrl("img/assets/touca-team-my-invitations.png")
+  }}
 />
 
 ## Joining An Existing Team
@@ -55,9 +64,11 @@ As a separate workflow, you can choose to share your "Team Slug" with your
 colleagues and ask that they initiate the process to join your team. They can do
 so via the "New Team" button in the "Teams" page.
 
-<ToucaImage
-  src="touca-team-request-form.png"
+<ThemedImage
   caption="Click on New Team button and select Join an Existing Team to get to this form."
+  sources={{
+    light: useBaseUrl("img/assets/touca-team-request-form.png")
+  }}
 />
 
 When you requests to join a team, you need to wait until a Team Admin or the
@@ -66,18 +77,22 @@ time, Touca lists your pending join requests in a separate section in the
 "Teams" page. You can use this section to cancel pending requests, if you
 changed your mind.
 
-<ToucaImage
-  src="touca-team-my-requests.png"
+<ThemedImage
   caption="You can always cancel your pending Join requests if you changed your mind."
+  sources={{
+    light: useBaseUrl("img/assets/touca-team-my-requests.png")
+  }}
 />
 
 Pending join requests show up in the "Pending Members" section in the "Members"
 tab. As a Team Admin or Team Owner, you can use this section to accept or
 decline these requests.
 
-<ToucaImage
-  src="touca-team-pending-requests.png"
+<ThemedImage
   caption="Pending Join requests are listed in the Pending Members section of the Members tab."
+  sources={{
+    light: useBaseUrl("img/assets/touca-team-pending-requests.png")
+  }}
 />
 
 ## Membership Roles

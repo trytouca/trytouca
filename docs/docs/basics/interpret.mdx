@@ -1,31 +1,38 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
-import ToucaImage from "@site/src/components/ToucaImage";
+import ThemedImage from "@theme/ThemedImage";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Interpret Results
 
 In the previous document, we learned how to write a simple Touca test and run it
 to submit data for the _current_ version of our software workflow.
 
-<ToucaImage
-  src="touca-suite-page-single-version.png"
-  dark="touca-suite-page-single-version-dark.png"
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-suite-page-single-version.png"),
+    dark: useBaseUrl("img/assets/touca-suite-page-single-version-dark.png")
+  }}
 />
 
 This page provides an overview of how our workflow changes over time in behavior
 and performance. We can click on each version to inspect the test results
 submitted for each test case in that version.
 
-<ToucaImage
-  src="touca-version-page-first.png"
-  dark="touca-version-page-first-dark.png"
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-version-page-first.png"),
+    dark: useBaseUrl("img/assets/touca-version-page-first-dark.png")
+  }}
 />
 
 We can also review the captured data for any one of the test cases.
 
-<ToucaImage
-  src="touca-case-page-first.png"
-  dark="touca-case-page-first-dark.png"
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-case-page-first.png"),
+    dark: useBaseUrl("img/assets/touca-case-page-first-dark.png")
+  }}
 />
 
 But submitting results to a remote Touca server makes more sense when we have
@@ -138,17 +145,21 @@ As test cases are executed, the server compares their captured test results and
 performance benchmarks against the previous "baseline" version `v1.0` and
 visualizes the differences.
 
-<ToucaImage
-  src="touca-version-page-second.png"
-  dark="touca-version-page-second-dark.png"
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-version-page-second.png"),
+    dark: useBaseUrl("img/assets/touca-version-page-second-dark.png")
+  }}
 />
 
 We can inspect the differences reported for test case `alice` to understand the
 impact of our recent code change.
 
-<ToucaImage
-  src="touca-case-page-second.png"
-  dark="touca-case-page-second-dark.png"
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-case-page-second.png"),
+    dark: useBaseUrl("img/assets/touca-case-page-second-dark.png")
+  }}
 />
 
 ## Promoting Baseline
@@ -165,9 +176,11 @@ our workflow. We can use the Touca server to promote any given version of our
 workflow as the new _baseline_, using the "Promote Version" button in the
 version overview page.
 
-<ToucaImage
-  src="touca-version-page-promote.png"
-  dark="touca-version-page-promote-dark.png"
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-version-page-promote.png"),
+    dark: useBaseUrl("img/assets/touca-version-page-promote-dark.png")
+  }}
 />
 
 Promoting a version as "Baseline" makes the Touca server automatically compare

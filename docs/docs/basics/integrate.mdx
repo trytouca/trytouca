@@ -1,4 +1,5 @@
-import ToucaImage from "@site/src/components/ToucaImage";
+import ThemedImage from "@theme/ThemedImage";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Manage Notifications
 
@@ -12,34 +13,42 @@ These events include:
 You can also configure your subscription to include notifications about new
 versions that match the behavior and performance of baseline version.
 
-<ToucaImage
-  src="touca-suite-subscribe.png"
-  dark="touca-suite-subscribe-dark.png"
+<ThemedImage
   alt="Touca Test Case Overview page"
+  sources={{
+    light: useBaseUrl("img/assets/touca-suite-subscribe.png"),
+    dark: useBaseUrl("img/assets/touca-suite-subscribe-dark.png")
+  }}
 />
 
 When a new version has differences compared to the baseline, the notification
 will include a summary of those differences. You can always click on "View
 Results" to inspect the differences on the Touca server.
 
-<ToucaImage
-  src="touca-email-difference.png"
+<ThemedImage
   alt="Sample email when version has differences"
+  sources={{
+    light: useBaseUrl("img/assets/touca-email-difference.png")
+  }}
 />
 
 When someone on your team promotes a new version to baseline, the notification
 will include any note they may have written as justification.
 
-<ToucaImage
-  src="touca-email-promotion.png"
-  title="Sample email when new version is promoted"
+<ThemedImage
+  alt="Sample email when new version is promoted"
+  sources={{
+    light: useBaseUrl("img/assets/touca-email-promotion.png")
+  }}
 />
 
 Lastly, if you choose to receive notifications about all new versions, you may
 rely on emails from Touca as confirmation that a new version matches the
 baseline.
 
-<ToucaImage
-  src="touca-email-match.png"
-  title="Sample email when version matches baseline"
+<ThemedImage
+  alt="Sample email when version matches baseline"
+  sources={{
+    light: useBaseUrl("img/assets/touca-email-match.png")
+  }}
 />

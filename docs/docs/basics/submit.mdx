@@ -1,6 +1,7 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
-import ToucaImage from "@site/src/components/ToucaImage";
+import ThemedImage from "@theme/ThemedImage";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Your First Touca Test
 
@@ -11,9 +12,11 @@ tutorial to create an account on Touca. In this document, we will show you how
 to write and run a simple regression test to submit your first test results to
 the Touca server.
 
-<ToucaImage
-  src="touca-submit-first-version.png"
-  dark="touca-submit-first-version-dark.png"
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-submit-first-version.png"),
+    dark: useBaseUrl("img/assets/touca-submit-first-version-dark.png")
+  }}
 />
 
 This is a hands-on tutorial. It's only fun if you follow along. 👨🏻‍💻
@@ -686,9 +689,11 @@ Time:       0.57 s
 At this point, we should see the results of our test on the Touca server. This
 is a big milestone. Congratulations! 🎉
 
-<ToucaImage
-  src="touca-suite-page-single-version.png"
-  dark="touca-suite-page-single-version-dark.png"
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-suite-page-single-version.png"),
+    dark: useBaseUrl("img/assets/touca-suite-page-single-version-dark.png")
+  }}
 />
 
 Notice that this version is shown with a star icon to indicate that it is the
