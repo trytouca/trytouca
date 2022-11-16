@@ -80,6 +80,11 @@ const config = {
         apiKey: "c52beaf0ac5121aa8460e53430098f12",
         indexName: "touca"
       },
+      colorMode: {
+        defaultMode: "light",
+        disableSwitch: false,
+        respectPrefersColorScheme: true
+      },
       metadata: [
         {
           name: "description",
