@@ -1,6 +1,7 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
-import ToucaImage from "@site/src/components/ToucaImage";
+import ThemedImage from "@theme/ThemedImage";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Automate Your Tests
 
@@ -40,7 +41,11 @@ tests with the appropriate API Key and API URL.
 If you are using **GitHub Actions**, create a new repository secret called
 `TOUCA_API_KEY` in the "Settings" tab of your GitHub repository.
 
-<ToucaImage src="touca-automate-secret.png" />
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-automate-secret.png")
+  }}
+/>
 
 Add the following steps to your GitHub Actions workflow:
 

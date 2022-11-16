@@ -1,4 +1,5 @@
-import ToucaImage from "@site/src/components/ToucaImage";
+import ThemedImage from "@theme/ThemedImage";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Setting Up Your Account
 
@@ -7,20 +8,24 @@ new results or view results submitted by your team. While you can self-host the
 Touca server, we will use a cloud-hosted version that is available at
 [app.touca.io](https://app.touca.io).
 
-<ToucaImage
-  src="touca-signup-page.png"
-  dark="touca-signup-page-dark.png"
+<ThemedImage
   alt="Touca server signup page"
+  sources={{
+    light: useBaseUrl("img/assets/touca-signup-page.png"),
+    dark: useBaseUrl("img/assets/touca-signup-page-dark.png")
+  }}
 />
 
 To create an account using the "Sign up with Password" button, you only need
 providing your email address. We will send an email address with a link that you
 can use to set your fullname, username, and password.
 
-<ToucaImage
-  src="touca-account-welcome.png"
-  dark="touca-account-welcome-dark.png"
+<ThemedImage
   alt="Touca onboarding page"
+  sources={{
+    light: useBaseUrl("img/assets/touca-account-welcome.png"),
+    dark: useBaseUrl("img/assets/touca-account-welcome-dark.png")
+  }}
 />
 
 In addition to using a password, Touca Cloud allows you to create an account
@@ -39,10 +44,12 @@ you can create your own team, as well. Each user account on Touca can be a
 member or the owner of multiple teams. To create a team, simply click on the
 "New Team" button on the top right corner of the screen.
 
-<ToucaImage
-  src="touca-create-team.png"
-  dark="touca-create-team-dark.png"
-  title="Important buttons on Touca are always on the top-right corner."
+<ThemedImage
+  alt="Important buttons on Touca are always on the top-right corner."
+  sources={{
+    light: useBaseUrl("img/assets/touca-create-team.png"),
+    dark: useBaseUrl("img/assets/touca-create-team-dark.png")
+  }}
 />
 
 Creating a team requires choosing a "slug" and a "name". We recommend that you
@@ -62,10 +69,12 @@ clicking the "Join an Existing Team" button and entering the slug for the team
 you want to join. This will send a Join Request that the team admins or the team
 owner can approve or decline.
 
-<ToucaImage
-  src="touca-team-request-join.png"
-  dark="touca-team-request-join-dark.png"
-  title="You will need approval from a Team Admin to join that team."
+<ThemedImage
+  alt="You will need approval from a Team Admin to join that team."
+  sources={{
+    light: useBaseUrl("img/assets/touca-team-request-join.png"),
+    dark: useBaseUrl("img/assets/touca-team-request-join-dark.png")
+  }}
 />
 
 ## Create a Suite
@@ -76,10 +85,12 @@ versions of that workflow. Similar to creating a team, creating a suite requires
 a slug and a name. Suites created within a team can be accessed by all members
 of that team.
 
-<ToucaImage
-  src="touca-create-suite.png"
-  dark="touca-create-suite-dark.png"
-  title="You can always change the name and the slug of your suite from the Settings tab."
+<ThemedImage
+  alt="You can always change the name and the slug of your suite from the Settings tab."
+  sources={{
+    light: useBaseUrl("img/assets/touca-create-suite.png"),
+    dark: useBaseUrl("img/assets/touca-create-suite-dark.png")
+  }}
 />
 
 Upon creation of a new suite, the Touca Server provides you with an API Key and
@@ -87,8 +98,10 @@ an API URL. You can use this information to submit your test results for any
 given version of your software workflow. We will show you how to do so in the
 next document.
 
-<ToucaImage
-  src="touca-submit-first-version.png"
-  dark="touca-submit-first-version-dark.png"
-  title="You will need API Key and API URL to submit test results."
+<ThemedImage
+  alt="You will need API Key and API URL to submit test results."
+  sources={{
+    light: useBaseUrl("img/assets/touca-submit-first-version.png"),
+    dark: useBaseUrl("img/assets/touca-submit-first-version-dark.png")
+  }}
 />

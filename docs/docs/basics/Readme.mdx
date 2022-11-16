@@ -1,6 +1,7 @@
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
-import ToucaImage from "@site/src/components/ToucaImage";
+import ThemedImage from "@theme/ThemedImage";
+import useBaseUrl from "@docusaurus/useBaseUrl";
 
 # Quick Start
 
@@ -368,10 +369,12 @@ Time:       0.57 s
 
 ```
 
-<ToucaImage
-  src="touca-sdk-quickstart-1.png"
-  dark="touca-sdk-quickstart-1-dark.png"
+<ThemedImage
   alt="Touca server after submitting results for v1.0"
+  sources={{
+    light: useBaseUrl("img/assets/touca-sdk-quickstart-1.png"),
+    dark: useBaseUrl("img/assets/touca-sdk-quickstart-1-dark.png")
+  }}
 />
 
 Now if we make changes to our workflow under test, we can rerun this test and
@@ -434,10 +437,12 @@ Time:       0.55 s
 
 ```
 
-<ToucaImage
-  src="touca-sdk-quickstart-2.png"
-  dark="touca-sdk-quickstart-2-dark.png"
+<ThemedImage
   alt="Touca server after submitting results for v1.1"
+  sources={{
+    light: useBaseUrl("img/assets/touca-sdk-quickstart-2.png"),
+    dark: useBaseUrl("img/assets/touca-sdk-quickstart-2-dark.png")
+  }}
 />
 
 Unlike integration tests, we are not bound to the output of our workflow. We can
@@ -474,4 +479,9 @@ scale.
   members of our team. It allows us to audit how our software evolves over time
   and provides high-level information about our tests.
 
-<ToucaImage src="touca-suite-page.png" dark="touca-suite-page-dark.png" />
+<ThemedImage
+  sources={{
+    light: useBaseUrl("img/assets/touca-suite-page.png"),
+    dark: useBaseUrl("img/assets/touca-suite-page-dark.png")
+  }}
+/>
