@@ -7,13 +7,8 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
 
-/**
- * Create a suite with the specified slug.
- *
- * Returns undefined if suite is already registered.
- */
 export async function suiteCreate(
   user: IUser,
   team: ITeam,
@@ -38,7 +33,7 @@ export async function suiteCreate(
 
   // remove information about the list of known suites from cache.
   // we intentionally wait for this operation to avoid race conditions
-  await rclient.removeCached(`route_suiteList_${team.slug}_${user.username}`)
+  await redis.removeCached(`route_suiteList_${team.slug}_${user.username}`)
 
   return newSuite
 }
@@ -57,8 +52,8 @@ export async function suiteRemove(suite: ISuiteDocument): Promise<boolean> {
     await SuiteModel.findByIdAndRemove(suite._id)
     logger.info('%s: removed', tuple)
 
-    rclient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
-    rclient.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
+    redis.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
+    redis.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
     return true
   }
 

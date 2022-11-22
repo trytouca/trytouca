@@ -18,7 +18,6 @@ interface Fingerprint {
 }
 
 class EventWriter {
-  private hasCloseHandler = false
   private error: Error | null = null
   private fingerPrint: Fingerprint
 
@@ -55,11 +54,9 @@ class EventWriter {
   }
 
   onClose(cb: (clientIP: string, writerId?: number) => void) {
-    if (this.hasCloseHandler) {
-      return
+    if (this.req.listeners('close').length === 0) {
+      this.req.on('close', () => cb(this.req.ip, this.writerId))
     }
-    this.hasCloseHandler = true
-    this.req.on('close', () => cb(this.req.ip, this.writerId))
   }
 }
 

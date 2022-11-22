@@ -120,6 +120,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     const path = ['suite', teamSlug, suiteSlug, 'events'].join('/');
     const url = this.apiService.makeUrl(path);
     this._eventSource = new EventSource(url, { withCredentials: true });
+    this._eventSource.addEventListener('error', (e) => console.error(e));
     this._eventSource.addEventListener('message', (msg) => {
       const job: ServerEventJob = JSON.parse(msg.data as string);
       if (job.type === 'batch:processed') {
@@ -140,7 +141,6 @@ export class SuitePageService extends IPageService<SuitePageItem> {
       }
       this._eventSubject.next(job);
     });
-    this._eventSource.addEventListener('error', (e) => console.error(e));
   }
 
   eventSourceUnsubscribe() {
