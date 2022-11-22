@@ -119,8 +119,9 @@ async function launch(application) {
 
   await Queues.message.start()
   await Queues.comparison.start()
-  Queues.message.worker.run()
   Queues.comparison.worker.run()
+  Queues.events.worker.run()
+  Queues.message.worker.run()
 
   await setupSuperuser()
 
@@ -134,6 +135,8 @@ async function shutdown(): Promise<void> {
   await shutdownRedis()
   await Queues.comparison.queue.close()
   await Queues.comparison.scheduler.close()
+  await Queues.events.queue.close()
+  await Queues.events.scheduler.close()
   await Queues.message.queue.close()
   await Queues.message.scheduler.close()
 }

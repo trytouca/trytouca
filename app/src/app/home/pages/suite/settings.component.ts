@@ -265,10 +265,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
           text: 'Suite name was updated.'
         };
         timer(5000).subscribe(() => (this.alert.changeSuiteName = undefined));
-        this.suitePageService.updateSuiteSlug(
-          SuitePageTabType.Settings,
-          this.suite.suiteSlug
-        );
+        this.suitePageService.updateSuiteSlug(this.suite.suiteSlug);
       },
       error: (err: HttpErrorResponse) => {
         this.alert.changeSuiteName = {
@@ -288,7 +285,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
           text: 'Suite slug was updated.'
         };
         timer(5000).subscribe(() => (this.alert.changeSuiteSlug = undefined));
-        this.suitePageService.updateSuiteSlug(SuitePageTabType.Settings, slug);
+        this.suitePageService.updateSuiteSlug(slug);
         this.router.navigate(['~', this.suite.teamSlug, slug]);
       },
       error: (err: HttpErrorResponse) => {
@@ -311,10 +308,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
         timer(5000).subscribe(
           () => (this.alert.changeSuiteRetainFor = undefined)
         );
-        this.suitePageService.updateSuiteSlug(
-          SuitePageTabType.Settings,
-          this.suite.suiteSlug
-        );
+        this.suitePageService.updateSuiteSlug(this.suite.suiteSlug);
       },
       error: (err: HttpErrorResponse) => {
         this.alert.changeSuiteRetainFor = {
@@ -336,10 +330,7 @@ export class SuiteTabSettingsComponent implements OnDestroy {
         timer(5000).subscribe(
           () => (this.alert.changeSuiteSealAfter = undefined)
         );
-        this.suitePageService.updateSuiteSlug(
-          SuitePageTabType.Settings,
-          this.suite.suiteSlug
-        );
+        this.suitePageService.updateSuiteSlug(this.suite.suiteSlug);
       },
       error: (err: HttpErrorResponse) => {
         this.alert.changeSuiteSealAfter = {

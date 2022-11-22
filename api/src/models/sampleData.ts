@@ -12,7 +12,7 @@ import { ITeam, TeamModel } from '@/schemas/team'
 import { UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
 
 /**
  * Add sample test results to an empty suite.
@@ -22,8 +22,8 @@ import { rclient } from '@/utils/redis'
  * They want to see how Touca could help their development process prior to
  * learning how to use it. To help these users, we create a team and suite for
  * the new user and auto-populate the suite with sample data. This allows users
- * to play around and tinker with the platform capabilities prior to submitting
- * results on their own.
+ * to play around and tinker with the server prior to submitting results on
+ * their own.
  */
 export async function addSampleData(team: ITeam): Promise<void> {
   const owner = await TeamModel.findById(team._id, { owner: 1 })
@@ -114,7 +114,7 @@ export async function addSampleData(team: ITeam): Promise<void> {
       `route_batchList_${team.slug}_${suite.slug}_${user.username}`,
       `route_suiteLookup_${team.slug}_${suite.slug}`
     ]
-    setTimeout(() => keys.forEach((key) => rclient.removeCached(key)), i * 5000)
+    setTimeout(() => keys.forEach((key) => redis.removeCached(key)), i * 5000)
   }
 
   logger.info('%s: submitted sample data to %s', user.username, tuple)

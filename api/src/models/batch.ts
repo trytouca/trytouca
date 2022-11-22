@@ -3,6 +3,7 @@
 import { ComparisonFunctions } from '@/controllers/comparison'
 import { messageRemove } from '@/models/message'
 import { MessageInfo } from '@/models/messageInfo'
+import * as Queues from '@/queues'
 import { BatchModel, IBatchDocument } from '@/schemas/batch'
 import { CommentModel } from '@/schemas/comment'
 import { MessageModel } from '@/schemas/message'
@@ -11,7 +12,7 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
 
 export async function batchPromote(
   team: ITeam,
@@ -73,8 +74,8 @@ export async function batchPromote(
   // remove information about list of known suites from cache.
   // we wait for this operation to avoid race condition.
 
-  rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
-  await rclient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
+  redis.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
+  await redis.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
 
   if (!options.reportJob) {
     logger.debug('%s: skipped creation of reporting job', tuple)
@@ -122,11 +123,18 @@ export async function batchSeal(
   // remove information about list of known suites from cache.
   // we wait for this operation to avoid race condition.
 
-  await rclient.removeCached(
+  await redis.removeCached(
     `route_batchLookup_${team.slug}_${suite.slug}_${batch.slug}`
   )
-  rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
-  await rclient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
+  redis.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
+  await redis.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
+
+  await Queues.events.insertJob({
+    type: 'batch:sealed',
+    teamSlug: team.slug,
+    suiteSlug: suite.slug,
+    batchId: batch._id
+  })
 
   if (!options.reportJob) {
     logger.debug('%s: skipped creation of reporting job', tuple)
@@ -267,7 +275,7 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
     `route_batchLookup_${team.slug}_${suite.slug}_${batch.slug}`,
     `route_commentList_${team.slug}_${suite.slug}_${batch.slug}`
   ]) {
-    rclient.removeCached(key)
+    redis.removeCached(key)
   }
   for (const key of [
     `route_suiteList_${team.slug}_`,
@@ -276,13 +284,13 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
     `route_elementCompare_${team.slug}_${suite.slug}_${batch.slug}_`,
     `route_elementLookup_${team.slug}_${suite.slug}_`
   ]) {
-    rclient.removeCachedByPrefix(key)
+    redis.removeCachedByPrefix(key)
   }
   for (const [prefix, suffix] of [
     [`route_batchCompare_${team.slug}_${suite.slug}_`, `_${batch.slug}`],
     [`route_elementCompare_${team.slug}_${suite.slug}_`, `_${batch.slug}`]
   ]) {
-    rclient.removeCachedByPrefix(prefix, suffix)
+    redis.removeCachedByPrefix(prefix, suffix)
   }
 
   return true

@@ -6,6 +6,7 @@ import type {
   BatchListResponse,
   ElementListResponse,
   ENotificationType,
+  ServerEventJob,
   SuiteItem,
   SuiteLookupResponse,
   TeamLookupResponse
@@ -14,12 +15,7 @@ import { isEqual } from 'lodash-es';
 import { forkJoin, Observable, of, Subject } from 'rxjs';
 
 import { FrontendBatchItem } from '@/core/models/frontendtypes';
-import {
-  AlertKind,
-  AlertService,
-  ApiService,
-  UserService
-} from '@/core/services';
+import { AlertKind, AlertService, ApiService } from '@/core/services';
 import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
@@ -42,7 +38,6 @@ export enum SuiteBannerType {
 }
 
 type FetchInput = {
-  currentTab: string;
   teamSlug: string;
   suiteSlug: string;
 };
@@ -75,8 +70,12 @@ const availableTabs: Record<SuitePageTabType, PageTab<SuitePageTabType>> = {
 export class SuitePageService extends IPageService<SuitePageItem> {
   private _bannerSubject = new Subject<SuiteBannerType>();
   banner$ = this._bannerSubject.asObservable();
+  private _eventSource: EventSource;
+  private _eventSubject = new Subject<ServerEventJob>();
+  events$ = this._eventSubject.asObservable();
 
   private _cache: {
+    tab: SuitePageTabType;
     tabs: PageTab<SuitePageTabType>[];
     team: TeamLookupResponse;
     suites: SuiteItem[];
@@ -84,6 +83,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     batches: BatchListResponse;
     elements: ElementListResponse;
   } = {
+    tab: SuitePageTabType.Versions,
     tabs: undefined,
     team: undefined,
     suites: undefined,
@@ -93,6 +93,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
   };
 
   private _subjects = {
+    tab: new Subject<SuitePageTabType>(),
     tabs: new Subject<PageTab<SuitePageTabType>[]>(),
     team: new Subject<TeamLookupResponse>(),
     suites: new Subject<SuiteItem[]>(),
@@ -102,6 +103,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
   };
 
   data = {
+    tab$: this._subjects.tab.asObservable(),
     tabs$: this._subjects.tabs.asObservable(),
     team$: this._subjects.team.asObservable(),
     suites$: this._subjects.suites.asObservable(),
@@ -112,10 +114,42 @@ export class SuitePageService extends IPageService<SuitePageItem> {
 
   constructor(
     private alertService: AlertService,
-    private apiService: ApiService,
-    private userService: UserService
+    private apiService: ApiService
   ) {
     super();
+  }
+
+  eventSourceSubscribe(teamSlug: string, suiteSlug: string) {
+    const path = ['suite', teamSlug, suiteSlug, 'events'].join('/');
+    const url = this.apiService.makeUrl(path);
+    this._eventSource = new EventSource(url, { withCredentials: true });
+    this._eventSource.addEventListener('error', (e) => console.error(e));
+    this._eventSource.addEventListener('message', (msg) => {
+      const job: ServerEventJob = JSON.parse(msg.data as string);
+      if (this._cache.tab !== SuitePageTabType.Versions) {
+        return;
+      }
+      if (job.type === 'batch:processed') {
+        this._cache.batches = null;
+        this.fetchItems({
+          teamSlug: job.teamSlug,
+          suiteSlug: job.suiteSlug
+        });
+      } else if (job.type === 'batch:sealed') {
+        this._cache.batches = null;
+        this._cache.suite = null;
+        this.fetchItems({
+          teamSlug: job.teamSlug,
+          suiteSlug: job.suiteSlug
+        });
+      }
+      this._eventSubject.next(job);
+    });
+  }
+
+  eventSourceUnsubscribe() {
+    this._eventSource.removeAllListeners();
+    this._eventSource.close();
   }
 
   private update = (key: string, response: unknown) => {
@@ -149,7 +183,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
       .map((v) => {
         const batch = v as FrontendBatchItem;
         batch.isBaseline =
-          batch.batchSlug === this._cache.suite.baseline?.batchSlug;
+          batch.batchSlug === this._cache.suite?.baseline?.batchSlug;
         return new SuitePageItem(batch, SuitePageItemType.Batch);
       })
       .sort(SuitePageItem.compareByDate);
@@ -184,7 +218,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         : this.apiService.get<unknown>(url[index].join('/'));
     });
     // ensure that we always periodically poll list of versions
-    if (args.currentTab == SuitePageTabType.Versions) {
+    if (this._cache.tab == SuitePageTabType.Versions) {
       requests[3] = this.apiService.get<unknown>(url[3].join('/'));
     }
     forkJoin(requests).subscribe({
@@ -220,6 +254,11 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     });
   }
 
+  public updateCurrentTab(tab: SuitePageTabType) {
+    this._cache.tab = tab;
+    this._subjects.tab.next(tab);
+  }
+
   /**
    * Updates new information to all components of the suite page in the event
    * that the suite slug changes during the lifetime of this page.
@@ -228,16 +267,15 @@ export class SuitePageService extends IPageService<SuitePageItem> {
    *  - User switches to another suite
    *  - User updates slug of this suite
    */
-  public updateSuiteSlug(
-    currentTab: SuitePageTabType,
-    suiteSlug: string
-  ): void {
+  public updateSuiteSlug(suiteSlug: string): void {
     const teamSlug = this._cache.suite.teamSlug;
     this._cache.suites = null;
     this._cache.suite = null;
     this._cache.batches = null;
     this._cache.elements = null;
-    this.fetchItems({ currentTab, teamSlug, suiteSlug });
+    this.fetchItems({ teamSlug, suiteSlug });
+    this.eventSourceUnsubscribe();
+    this.eventSourceSubscribe(teamSlug, suiteSlug);
   }
 
   public updateSubscription(level: ENotificationType): Observable<void> {

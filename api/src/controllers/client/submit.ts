@@ -15,7 +15,7 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { rclient as redis } from '@/utils/redis'
 import { objectStore } from '@/utils/store'
 import { analytics, EActivity } from '@/utils/tracker'
 
@@ -180,10 +180,10 @@ async function processElement(
 
     logger.info('%s: processed element', tuple)
 
-    rclient.removeCached(
+    redis.removeCached(
       `route_elementLookup_${team.slug}_${suite.slug}_${elementName}`
     )
-    rclient.removeCached(`route_elementList_${team.slug}_${suite.slug}`)
+    redis.removeCached(`route_elementList_${team.slug}_${suite.slug}`)
 
     return { slug: tuple, doc: element }
   } catch (err) {
@@ -232,10 +232,17 @@ async function processBatch(
 
     logger.debug('%s: processed batch', tuple)
 
-    rclient.removeCached(
+    redis.removeCached(
       `route_batchLookup_${team.slug}_${suite.slug}_${batchSlug}`
     )
-    rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
+    redis.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
+
+    await Queues.events.insertJob({
+      type: 'batch:processed',
+      teamSlug: team.slug,
+      suiteSlug: suite.slug,
+      batchId: batch._id
+    })
 
     return { slug: batchSlug, doc: batch }
   } catch (err) {
@@ -284,8 +291,8 @@ async function processTeam(
 
   logger.debug('%s: processed team', teamSlug)
 
-  rclient.removeCachedByPrefix(`route_teamLookup_${teamSlug}_`)
-  rclient.removeCachedByPrefix(`route_teamList_`)
+  redis.removeCachedByPrefix(`route_teamLookup_${teamSlug}_`)
+  redis.removeCachedByPrefix(`route_teamList_`)
 
   return { slug: teamSlug, doc: team }
 }
@@ -417,7 +424,7 @@ async function insertComparisonJobs(
 }
 
 /**
- * Check if a suite with given name is registered on the Platform.
+ * Check if a suite with given name is registered.
  */
 async function processSuite(
   user: IUser,
@@ -503,8 +510,8 @@ async function processSuite(
 
     logger.debug('%s: processed suite', tuple)
 
-    rclient.removeCached(`route_suiteLookup_${team.slug}_${suiteSlug}`)
-    rclient.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
+    redis.removeCached(`route_suiteLookup_${team.slug}_${suiteSlug}`)
+    redis.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
 
     return { slug: suiteSlug, doc: suite }
   } catch (err) {
