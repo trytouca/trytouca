@@ -130,18 +130,20 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         return;
       }
       if (job.type === 'batch:processed') {
+        const args = {
+          teamSlug: this._cache.team.slug,
+          suiteSlug: this._cache.suite.suiteSlug
+        };
         this._cache.batches = null;
-        this.fetchItems({
-          teamSlug: job.teamSlug,
-          suiteSlug: job.suiteSlug
-        });
+        this.fetchItems(args);
       } else if (job.type === 'batch:sealed') {
+        const args = {
+          teamSlug: this._cache.team.slug,
+          suiteSlug: this._cache.suite.suiteSlug
+        };
         this._cache.batches = null;
         this._cache.suite = null;
-        this.fetchItems({
-          teamSlug: job.teamSlug,
-          suiteSlug: job.suiteSlug
-        });
+        this.fetchItems(args);
       }
       this._eventSubject.next(job);
     });

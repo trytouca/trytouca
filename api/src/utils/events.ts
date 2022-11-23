@@ -2,36 +2,27 @@
 
 import { ServerEventJob } from '@touca/api-schema'
 import { Request, Response } from 'express'
-import { ObjectId } from 'mongoose'
-
-import { IBatchDocument } from '@/schemas/batch'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeamDocument } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
 
 interface Fingerprint {
-  id: number
-  user: IUser | null
-  team: Pick<ITeamDocument, '_id' | 'name' | 'slug'> | null
-  suite: Pick<ISuiteDocument, '_id' | 'name' | 'slug'> | null
-  batch: (IBatchDocument & { _id: ObjectId }) | null
+  user: string
+  teamId?: string
+  suiteId?: string
+  batchId?: string
 }
 
 class EventWriter {
   private error: Error | null = null
   private fingerPrint: Fingerprint
 
-  constructor(
-    private req: Request,
-    private res: Response,
-    private writerId: number
-  ) {
+  constructor(private req: Request, private res: Response) {
     this.fingerPrint = {
-      user: res?.locals?.user as IUser,
-      team: res?.locals?.team ?? null,
-      suite: res?.locals?.suite ?? null,
-      batch: res?.locals?.batch ?? null,
-      id: this.writerId
+      user: (res.locals.user as any).username,
+      teamId: (res.locals.team as any)?.id,
+      suiteId: (res.locals.suite as any)?.id,
+      batchId: (res.locals.batch as any)?.id
+    }
+    if (this.req.listeners('close').length === 0) {
+      this.req.on('close', () => delete clients[this.req.ip])
     }
   }
 
@@ -39,29 +30,21 @@ class EventWriter {
     return this.fingerPrint
   }
 
-  has_error() {
+  hasError() {
     return !!this.error
   }
 
-  write(data: unknown, msgId: number) {
+  write(data: unknown) {
     this.res.write(
-      `data: ${JSON.stringify(data)}\nid${msgId}\n\n`,
+      `data: ${JSON.stringify(data)}\n\n`,
       (e: Error) => (this.error = e)
     )
     // compression middleware requires calling flush; see:
     // https://www.npmjs.com/package/compression#server-sent-events
     if (!this.error) (this.res as any).flush()
   }
-
-  onClose(cb: (clientIP: string, writerId?: number) => void) {
-    if (this.req.listeners('close').length === 0) {
-      this.req.on('close', () => cb(this.req.ip, this.writerId))
-    }
-  }
 }
 
-let currWriterId = 0
-let currMsgId = 0
 const clients: Record<string, EventWriter> = {}
 
 export function handleEvents(req: Request, res: Response) {
@@ -71,26 +54,21 @@ export function handleEvents(req: Request, res: Response) {
     'Cache-Control': 'no-cache'
   })
   res.flushHeaders()
-  const writer = new EventWriter(req, res, currWriterId)
-  writer.onClose((ip) => delete clients[ip])
-  clients[req.ip] = writer
-  currWriterId++
+  clients[req.ip] = new EventWriter(req, res)
 }
 
 function shouldRelayEvent(cid: Fingerprint, job: ServerEventJob) {
   if (job.type === 'batch:processed') {
-    return cid.suite.slug === job.suiteSlug && cid.team.slug === job.teamSlug
+    return cid.suiteId === job.suiteId && cid.teamId === job.teamId
   }
   if (job.type === 'batch:sealed') {
-    return cid.suite.slug === job.suiteSlug && cid.team.slug === job.teamSlug
+    return cid.suiteId === job.suiteId && cid.teamId === job.teamId
   }
   return false
 }
 
 export function broadcastEvent(job: ServerEventJob) {
   Object.values(clients)
-    .filter((v) => !v.has_error())
-    .filter((v) => shouldRelayEvent(v.fingerprint, job))
-    .forEach((v) => v.write(job, currMsgId))
-  currMsgId++
+    .filter((v) => !v.hasError() && shouldRelayEvent(v.fingerprint, job))
+    .forEach((v) => v.write(job))
 }

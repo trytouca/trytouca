@@ -725,14 +725,14 @@ components:
     ServerEventJob:
       type: object
       required:
-        - teamSlug
-        - suiteSlug
+        - teamId
+        - suiteId
         - batchId
         - type
       properties:
-        teamSlug:
+        teamId:
           type: string
-        suiteSlug:
+        suiteId:
           type: string
         batchId:
           type: string

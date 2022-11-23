@@ -239,8 +239,8 @@ async function processBatch(
 
     await Queues.events.insertJob({
       type: 'batch:processed',
-      teamSlug: team.slug,
-      suiteSlug: suite.slug,
+      teamId: team._id,
+      suiteId: suite._id,
       batchId: batch._id
     })
 

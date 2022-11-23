@@ -131,8 +131,8 @@ export async function batchSeal(
 
   await Queues.events.insertJob({
     type: 'batch:sealed',
-    teamSlug: team.slug,
-    suiteSlug: suite.slug,
+    teamId: team._id,
+    suiteId: suite._id,
     batchId: batch._id
   })
 
