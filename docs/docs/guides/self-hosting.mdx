@@ -195,7 +195,21 @@ things. Once it runs to complition, it will redirect you to the locally
 installed server to perform basic server configurations and create your first
 user account.
 
-:::note
+:::note Uninstall Instructions
+
+We have a separate script to help you uninstall your self-hosted instance:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://touca.io/uninstall.sh)"
+```
+
+This script stops all running containers and removes all server data from the
+filesystem. Run `rm -r $HOME/.touca` if you like to remove Touca CLI
+configurations and any locally stored test results.
+
+:::
+
+:::info
 
 Did we miss out a required step? We'd love to hear about your experience. Share
 your thoughts with [support@touca.io](mailto:support@touca.io).
