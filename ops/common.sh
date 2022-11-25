@@ -188,3 +188,16 @@ server_status_check() {
     info "Touca server is up and running."
     info "Browse to http://localhost:8080/ to complete the installation."
 }
+
+has_cli_option() {
+    local has_arg=0
+    local option="$1"
+    for arg in "${@:2}"; do
+        case $arg in
+            "$option")
+                has_arg=1
+            ;;
+        esac
+    done
+    [ $has_arg == 1 ]
+}
