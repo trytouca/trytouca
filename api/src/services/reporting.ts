@@ -304,8 +304,8 @@ async function reportSealed(
   const suiteInfo = await getSuiteInfo(srcInfo.suite._id)
 
   const subject = compareInputs.hasComparisonTable
-    ? `Differences Found in Version "${srcInfo.batch.slug}" of Suite "${srcInfo.suite.slug}"`
-    : `New Version "${srcInfo.batch.slug}" For Suite "${srcInfo.suite.slug}"`
+    ? `Differences found in version "${srcInfo.batch.slug}" of suite "${srcInfo.suite.slug}"`
+    : `New version "${srcInfo.batch.slug}" for suite "${srcInfo.suite.slug}"`
 
   const batchLink =
     `${config.webapp.root}/~/${srcInfo.team.slug}/` +

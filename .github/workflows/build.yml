@@ -911,8 +911,6 @@ jobs:
         if: steps.params.outputs.release == 'true'
         run: |
           aws s3 cp ops/install.sh ${{ secrets.AWS_BUCKET_WEB }}/install.sh
-          aws s3 cp ops/uninstall.sh ${{ secrets.AWS_BUCKET_WEB }}/uninstall.sh
-          aws s3 cp ops/install.dev.sh ${{ secrets.AWS_BUCKET_WEB }}/install.dev.sh
           aws s3 cp ops/k8s/touca.yaml ${{ secrets.AWS_BUCKET_WEB }}/install/touca.yaml
 
   build-server:
