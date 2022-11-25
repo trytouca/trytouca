@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -e
 
-source /dev/stdin <<<"$( curl -fsSL https://raw.githubusercontent.com/trytouca/trytouca/main/ops/common.sh )"
+DIR_SCRIPT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$DIR_SCRIPT/common.sh"
 
 ask_install_dir
 DIR_INSTALL=$OUTPUT
-export FILE_COMPOSE="$DIR_INSTALL/ops/docker-compose.prod.yml"
+export FILE_COMPOSE="$DIR_INSTALL/ops/docker-compose.dev.yml"
 export DIR_PROJECT_ROOT="$DIR_INSTALL"
 
 if [ ! -d "$DIR_INSTALL" ]; then
