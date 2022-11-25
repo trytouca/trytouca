@@ -22,6 +22,7 @@ install_docker_compose
 rm -rf "$DIR_INSTALL"/{data,logs,ops}
 mkdir -p "$DIR_INSTALL"/data/{minio,mongo,redis} "$DIR_INSTALL"/ops
 cp -r "$DIR_INSTALL"/repo/ops/mongo "$DIR_INSTALL"/ops
+cp "$DIR_INSTALL/repo/ops/docker-compose.prod.yml" "$DIR_INSTALL/ops"
 
 redeploy
 server_status_check
