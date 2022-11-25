@@ -263,7 +263,7 @@ jobs:
           aws s3 cp cpp-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: upload coverage to codecov
         if: steps.changes.outputs.sdk_cpp == 'true'
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         env:
           OS: ${{ runner.os }}
         with:
@@ -353,7 +353,7 @@ jobs:
       - name: upload coverage to codecov
         if: |
           steps.changes.outputs.sdk_java == 'true' && github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         env:
           OS: ${{ runner.os }}
         with:
@@ -431,7 +431,7 @@ jobs:
       - name: upload coverage to codecov
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         env:
           OS: ${{ runner.os }}
           NODE: ${{ matrix.node-version }}
@@ -528,7 +528,7 @@ jobs:
       - name: upload coverage to codecov
         if: |
           steps.changes.outputs.sdk_python == 'true' && github.ref == 'refs/heads/main' && matrix.python-version == 3.9 && github.event_name == 'push'
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v3
         env:
           OS: ${{ runner.os }}
           PYTHON: ${{ matrix.python-version }}
