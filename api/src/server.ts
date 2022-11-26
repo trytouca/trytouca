@@ -117,11 +117,11 @@ async function launch(application) {
   // setup service to collect privacy-friendly aggregate usage data
   setInterval(telemetryService, config.services.telemetry.checkInterval * 1000)
 
-  await Queues.message.start()
+  await Queues.comparison.queue.start()
+  await Queues.events.queue.start()
+  await Queues.message.queue.start()
   await Queues.comparison.start()
-  Queues.comparison.worker.run()
-  Queues.events.worker.run()
-  Queues.message.worker.run()
+  await Queues.message.start()
 
   await setupSuperuser()
 

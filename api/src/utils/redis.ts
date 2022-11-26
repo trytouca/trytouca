@@ -1,26 +1,37 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import IORedis from 'ioredis'
+import IORedis, { RedisOptions } from 'ioredis'
 
-import { config, getRedisConnectionOptions } from '@/utils/config'
+import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 
-export function createRedisConnection(): IORedis {
-  const client = new IORedis(getRedisConnectionOptions())
-  client.on('error', (err) => {
-    // we suppress error emission here to prevent duplicate error messages
-    // during application startup.
-  })
-  client.on('connect', () => {
-    logger.debug('redis connections established')
-  })
-  client.on('ready', () => {
-    logger.debug('redis client is ready')
-  })
-  return client
+export function getRedisOptions(): RedisOptions {
+  const cloudOptions = config.redis.tlsCertificateFile
+    ? {
+        tls: {
+          checkServerIdentity: () => undefined
+        }
+      }
+    : {}
+  return {
+    host: config.redis.host,
+    port: config.redis.port,
+    showFriendlyErrorStack: config.env !== 'production',
+    maxRetriesPerRequest: null,
+    ...cloudOptions
+  }
 }
 
-const client = createRedisConnection()
+const client = new IORedis(getRedisOptions())
+client.on('error', (err) => {
+  logger.warn('redis connection error: %s', err.message)
+})
+client.on('connect', () => {
+  logger.debug('redis connections established')
+})
+client.on('ready', () => {
+  logger.debug('redis client is ready')
+})
 
 /**
  * attempt to connect to the redis cache server.
@@ -28,12 +39,7 @@ const client = createRedisConnection()
  * @returns {Promise<boolean>} true if connection is successful
  */
 export async function makeConnectionRedis(): Promise<boolean> {
-  client.disconnect()
-  await client.connect()
-  client.on('error', (err) => {
-    logger.warn('redis connection error: %s', err.message)
-  })
-  return true
+  return client.status === 'ready'
 }
 
 export async function shutdownRedis() {

@@ -3,7 +3,7 @@
 import { ServerEventJob } from '@touca/api-schema'
 
 import { broadcastEvent } from '@/utils/events'
-import { createQueue, createWorker, PerformanceMarks } from '@/utils/queue'
+import { JobQueue, PerformanceMarks } from '@/utils/queue'
 
 async function processor(job: ServerEventJob): Promise<PerformanceMarks> {
   const perf = new PerformanceMarks()
@@ -15,5 +15,4 @@ export async function insertJob(job: ServerEventJob) {
   queue.add(job.type, job)
 }
 
-export const queue = createQueue('events')
-export const worker = createWorker('events', processor)
+export const queue = new JobQueue('events', processor)

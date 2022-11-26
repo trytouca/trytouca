@@ -3,7 +3,7 @@
 import { Queue, Worker } from 'bullmq'
 import { hrtime } from 'process'
 
-import { createRedisConnection } from '@/utils/redis'
+import { getRedisOptions } from '@/utils/redis'
 
 import logger from './logger'
 
@@ -26,14 +26,14 @@ export class PerformanceMarks {
   }
 }
 
-export function createQueue(name: string) {
+function createQueue(name: string) {
   return new Queue(name, {
-    connection: createRedisConnection(),
+    connection: getRedisOptions(),
     defaultJobOptions: { removeOnComplete: true, removeOnFail: 1000 }
   })
 }
 
-export function createWorker<D, R extends PerformanceMarks, N extends string>(
+function createWorker<D, R extends PerformanceMarks, N extends string>(
   name: N,
   processor: (data: D) => Promise<R>
 ) {
@@ -46,7 +46,7 @@ export function createWorker<D, R extends PerformanceMarks, N extends string>(
     },
     {
       autorun: false,
-      connection: createRedisConnection(),
+      connection: getRedisOptions(),
       concurrency: 4
     }
   )
@@ -61,4 +61,32 @@ export function createWorker<D, R extends PerformanceMarks, N extends string>(
       const ms = job.returnvalue.totalRuntime.toFixed(0)
       logger.info('%s:%s: processed (%s ms)', name[0], job.name, ms)
     })
+}
+
+export class JobQueue<D, R extends PerformanceMarks, N extends string> {
+  _queue: Queue
+  _worker: Worker
+
+  constructor(private name: N, private processor: (data: D) => Promise<R>) {}
+
+  get add() {
+    return this._queue.add
+  }
+  get addBulk() {
+    return this._queue.addBulk
+  }
+  get remove() {
+    return this._queue.remove
+  }
+
+  start() {
+    this._queue = createQueue(this.name)
+    this._worker = createWorker(this.name, this.processor)
+    this._worker.run()
+  }
+
+  async close() {
+    await this._worker.close()
+    await this._queue.close()
+  }
 }
