@@ -6,12 +6,7 @@ import { deserialize } from '@touca/flatbuffers'
 import { ComparisonJob, comparisonProcess } from '@/models/comparison'
 import { ComparisonModel } from '@/schemas/comparison'
 import logger from '@/utils/logger'
-import {
-  createQueue,
-  createQueueScheduler,
-  createWorker,
-  PerformanceMarks
-} from '@/utils/queue'
+import { createQueue, createWorker, PerformanceMarks } from '@/utils/queue'
 import { objectStore } from '@/utils/store'
 
 async function processor(job: ComparisonJob): Promise<PerformanceMarks> {
@@ -96,4 +91,3 @@ export async function start() {
 
 export const queue = createQueue('comparisons')
 export const worker = createWorker('comparisons', processor)
-export const scheduler = createQueueScheduler('comparisons')

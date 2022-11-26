@@ -200,12 +200,13 @@ user account.
 You can pass `--uninstall` to uninstall your self-hosted instance:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://touca.io/install.sh)" --uninstall
+/bin/bash -c "$(curl -fsSL https://touca.io/install.sh)" -- --uninstall
 ```
 
-This script stops all running containers and removes all server data from the
-filesystem. Run `rm -r $HOME/.touca` if you like to remove Touca CLI
-configurations and any locally stored test results.
+Note the extra `--` before `--uninstall`. This command stops all running
+containers and removes all server data from the filesystem. Run
+`rm -r $HOME/.touca` if you like to remove Touca CLI configurations and any
+locally stored test results.
 
 :::
 

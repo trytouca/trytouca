@@ -134,11 +134,8 @@ async function shutdown(): Promise<void> {
   await shutdownMongo()
   await shutdownRedis()
   await Queues.comparison.queue.close()
-  await Queues.comparison.scheduler.close()
   await Queues.events.queue.close()
-  await Queues.events.scheduler.close()
   await Queues.message.queue.close()
-  await Queues.message.scheduler.close()
 }
 
 process.once('SIGUSR2', () => {
