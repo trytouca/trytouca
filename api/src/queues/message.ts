@@ -8,12 +8,7 @@ import { messageProcess } from '@/models/message'
 import { MessageModel } from '@/schemas/message'
 import { MessageOverview, MessageTransformed } from '@/types/backendtypes'
 import logger from '@/utils/logger'
-import {
-  createQueue,
-  createQueueScheduler,
-  createWorker,
-  PerformanceMarks
-} from '@/utils/queue'
+import { createQueue, createWorker, PerformanceMarks } from '@/utils/queue'
 import { objectStore } from '@/utils/store'
 
 function buildMessageOverview(message: Message): MessageOverview {
@@ -76,5 +71,4 @@ export async function start() {
 }
 
 export const queue = createQueue('messages')
-export const scheduler = createQueueScheduler('messages')
 export const worker = createWorker('messages', processor)

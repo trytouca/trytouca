@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { Queue, QueueScheduler, Worker } from 'bullmq'
+import { Queue, Worker } from 'bullmq'
 import { hrtime } from 'process'
 
 import { getRedisConnectionOptions } from './config'
@@ -29,12 +29,6 @@ export function createQueue(name: string) {
   return new Queue(name, {
     connection: getRedisConnectionOptions(),
     defaultJobOptions: { removeOnComplete: true, removeOnFail: 1000 }
-  })
-}
-
-export function createQueueScheduler(name: string) {
-  return new QueueScheduler(name, {
-    connection: getRedisConnectionOptions()
   })
 }
 
