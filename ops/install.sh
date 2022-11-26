@@ -4,6 +4,7 @@ set -e
 source /dev/stdin <<<"$( curl -fsSL https://raw.githubusercontent.com/trytouca/trytouca/main/ops/common.sh )"
 
 ask_install_dir
+ARGS=("$@")
 DIR_INSTALL=$OUTPUT
 EXTENSION=$(has_cli_option "--dev" "$@" && echo "dev" || echo "prod")
 export FILE_COMPOSE="$DIR_INSTALL/ops/docker-compose.$EXTENSION.yml"
@@ -14,7 +15,7 @@ install_docker_compose
 
 install_file() {
     mkdir -p "$(dirname "$DIR_INSTALL/$1")"
-    if has_cli_option "--dev" "$@"; then
+    if has_cli_option "--dev" "$ARGS"; then
         local dir_script
         dir_script="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
         cp "$(dirname "$dir_script")/$1" "$DIR_INSTALL/$1"
