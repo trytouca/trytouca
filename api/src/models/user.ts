@@ -8,7 +8,7 @@ import { TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 export async function wslFindByRole(role: EPlatformRole): Promise<IUser[]> {
@@ -86,5 +86,5 @@ export async function userDelete(account: IUser) {
   })
 
   analytics.add_activity(EActivity.AccountDeleted, account)
-  rclient.removeCached('platform-stats')
+  redisClient.removeCached('platform-stats')
 }

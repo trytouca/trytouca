@@ -10,7 +10,7 @@ import { IUser } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 /**
  * @summary
@@ -60,8 +60,10 @@ export async function teamUpdate(
 
   // remove cached responses that are invalidated.
 
-  await rclient.removeCached(`route_teamList_${user.username}`)
-  await rclient.removeCached(`route_teamLookup_${team.slug}_${user.username}`)
+  await redisClient.removeCached(`route_teamList_${user.username}`)
+  await redisClient.removeCached(
+    `route_teamLookup_${team.slug}_${user.username}`
+  )
 
   // we are done if team slug has not changed.
 

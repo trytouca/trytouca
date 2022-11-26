@@ -12,7 +12,7 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 export async function batchPromote(
   team: ITeam,
@@ -74,8 +74,10 @@ export async function batchPromote(
   // remove information about list of known suites from cache.
   // we wait for this operation to avoid race condition.
 
-  redis.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
-  await redis.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
+  redisClient.removeCachedByPrefix(
+    `route_batchList_${team.slug}_${suite.slug}_`
+  )
+  await redisClient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
 
   if (!options.reportJob) {
     logger.debug('%s: skipped creation of reporting job', tuple)
@@ -123,11 +125,13 @@ export async function batchSeal(
   // remove information about list of known suites from cache.
   // we wait for this operation to avoid race condition.
 
-  await redis.removeCached(
+  await redisClient.removeCached(
     `route_batchLookup_${team.slug}_${suite.slug}_${batch.slug}`
   )
-  redis.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
-  await redis.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
+  redisClient.removeCachedByPrefix(
+    `route_batchList_${team.slug}_${suite.slug}_`
+  )
+  await redisClient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
 
   await Queues.events.insertJob({
     type: 'batch:sealed',
@@ -275,7 +279,7 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
     `route_batchLookup_${team.slug}_${suite.slug}_${batch.slug}`,
     `route_commentList_${team.slug}_${suite.slug}_${batch.slug}`
   ]) {
-    redis.removeCached(key)
+    redisClient.removeCached(key)
   }
   for (const key of [
     `route_suiteList_${team.slug}_`,
@@ -284,13 +288,13 @@ export async function batchRemove(batch: IBatchDocument): Promise<boolean> {
     `route_elementCompare_${team.slug}_${suite.slug}_${batch.slug}_`,
     `route_elementLookup_${team.slug}_${suite.slug}_`
   ]) {
-    redis.removeCachedByPrefix(key)
+    redisClient.removeCachedByPrefix(key)
   }
   for (const [prefix, suffix] of [
     [`route_batchCompare_${team.slug}_${suite.slug}_`, `_${batch.slug}`],
     [`route_elementCompare_${team.slug}_${suite.slug}_`, `_${batch.slug}`]
   ]) {
-    redis.removeCachedByPrefix(prefix, suffix)
+    redisClient.removeCachedByPrefix(prefix, suffix)
   }
 
   return true

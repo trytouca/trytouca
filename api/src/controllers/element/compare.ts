@@ -12,7 +12,7 @@ import { IUser } from '@/schemas/user'
 import type { BackendBatchComparisonItemCommon } from '@/types/backendtypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { objectStore } from '@/utils/store'
 
 type ICompareParamsElement = {
@@ -76,9 +76,9 @@ export async function elementCompare(
 
   // return comparison result from cache in case it is available
 
-  if (await rclient.isCached(cacheKey)) {
+  if (await redisClient.isCached(cacheKey)) {
     logger.debug('%s: from cache', cacheKey)
-    const cached = await rclient.getCached(cacheKey)
+    const cached = await redisClient.getCached(cacheKey)
     return res.status(200).json(cached)
   }
 
@@ -242,7 +242,7 @@ export async function elementCompare(
 
       if (isProcessed) {
         const duration = config.redis.durationLong
-        rclient.cache(cacheKey, output, duration)
+        redisClient.cache(cacheKey, output, duration)
       }
 
       const toc = process

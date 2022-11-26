@@ -14,7 +14,7 @@ import type {
   SuiteItemQueryOutput
 } from '@/types/backendtypes'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 async function suiteList(team: ITeam): Promise<SuiteListResponse> {
   // find list of suites that belong to this team, sorted in descending
@@ -157,9 +157,9 @@ export async function ctrlSuiteList(
 
   // return result from cache in case it is available
 
-  if (await rclient.isCached(cacheKey)) {
+  if (await redisClient.isCached(cacheKey)) {
     logger.debug('%s: from cache', cacheKey)
-    const cached = await rclient.getCached(cacheKey)
+    const cached = await redisClient.getCached(cacheKey)
     return res.status(200).json(cached)
   }
 
@@ -169,7 +169,7 @@ export async function ctrlSuiteList(
 
   // cache list result
 
-  rclient.cache(cacheKey, output)
+  redisClient.cache(cacheKey, output)
 
   // log runtime performance before returning
 

@@ -7,7 +7,7 @@ import { findTeamRoleOfUser } from '@/controllers/team/common'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 /**
@@ -113,7 +113,7 @@ export async function teamMemberUpdate(
 
   // remove list of team members from cache.
 
-  await redis.removeCached(`route_teamMemberList_${team.slug}`)
+  await redisClient.removeCached(`route_teamMemberList_${team.slug}`)
 
   logger.info(
     '%s: %s: updated role of member %s from %s to %s',

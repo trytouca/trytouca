@@ -6,7 +6,7 @@ import mongoose from 'mongoose'
 import { UserModel } from '@/schemas/user'
 import { configMgr } from '@/utils/config'
 import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { objectStore } from '@/utils/store'
 
 export async function platformHealth(
@@ -18,9 +18,9 @@ export async function platformHealth(
   logger.debug('received health check request')
 
   // check if we recently obtained platform health information
-  if (await redis.isCached(cacheKey)) {
+  if (await redisClient.isCached(cacheKey)) {
     logger.debug('returning health response from cache')
-    const cachedResponseStr = await redis.getCached<string>(cacheKey)
+    const cachedResponseStr = await redisClient.getCached<string>(cacheKey)
     const cachedResponse = JSON.parse(cachedResponseStr)
     return res.status(200).json(cachedResponse)
   }
@@ -36,7 +36,7 @@ export async function platformHealth(
 
   // cache platform health information in redis database
   logger.debug('caching health response')
-  redis.cache(cacheKey, JSON.stringify(response))
+  redisClient.cache(cacheKey, JSON.stringify(response))
 
   return res.status(200).json(response)
 }

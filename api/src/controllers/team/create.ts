@@ -7,7 +7,7 @@ import { IUser } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 /**
@@ -48,7 +48,7 @@ export async function ctrlTeamCreate(
   // remove information about the list of known teams from cache.
   // we intentionally wait for this operation to avoid race conditions
 
-  await rclient.removeCached(`route_teamList_${user.username}`)
+  await redisClient.removeCached(`route_teamList_${user.username}`)
 
   analytics.add_activity(EActivity.TeamCreated, user)
 

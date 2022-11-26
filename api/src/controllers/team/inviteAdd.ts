@@ -7,7 +7,7 @@ import { IUser, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 /**
@@ -109,7 +109,7 @@ export async function teamInviteAdd(
   }
 
   // remove list of team members from cache
-  await redis.removeCached(`route_teamMemberList_${team.slug}`)
+  await redisClient.removeCached(`route_teamMemberList_${team.slug}`)
 
   // if user was registered, refresh their team list
   const isRegistered = await UserModel.findOne(
@@ -118,7 +118,7 @@ export async function teamInviteAdd(
   )
 
   if (isRegistered) {
-    await redis.removeCached(`route_teamList_${isRegistered.username}`)
+    await redisClient.removeCached(`route_teamList_${isRegistered.username}`)
   }
 
   // send invitation email to user

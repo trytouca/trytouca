@@ -8,7 +8,7 @@ import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 /**
  * Update metadata of a given suite.
@@ -63,10 +63,14 @@ export async function suiteUpdate(
 
   // remove cached responses that are invalidated.
 
-  rclient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
-  rclient.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
-  rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
-  rclient.removeCachedByPrefix(`route_batchLookup_${team.slug}_${suite.slug}_`)
+  redisClient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
+  redisClient.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
+  redisClient.removeCachedByPrefix(
+    `route_batchList_${team.slug}_${suite.slug}_`
+  )
+  redisClient.removeCachedByPrefix(
+    `route_batchLookup_${team.slug}_${suite.slug}_`
+  )
 
   // we are done if suite slug has not changed.
 

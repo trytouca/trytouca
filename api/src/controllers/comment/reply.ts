@@ -13,7 +13,7 @@ import { IUser } from '@/schemas/user'
 import { ECommentType } from '@/types/backendtypes'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 export async function ctrlCommentReply(
@@ -51,7 +51,7 @@ export async function ctrlCommentReply(
   // remove information about list of comments from cache.
   // we wait for this operation to avoid race condition.
 
-  await rclient.removeCached(`route_commentList_${tuple}`)
+  await redisClient.removeCached(`route_commentList_${tuple}`)
 
   // notify all subscribers of this suite of the new comment.
 

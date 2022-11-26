@@ -9,7 +9,7 @@ import { SuiteModel } from '@/schemas/suite'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 /**
@@ -74,8 +74,8 @@ export async function ctrlTeamRemove(
     await TeamModel.findByIdAndRemove(team._id)
     logger.info('%s: removed team', team.slug)
 
-    redis.removeCachedByPrefix(`route_teamLookup_${team.slug}_`)
-    redis.removeCachedByPrefix(`route_teamList_`)
+    redisClient.removeCachedByPrefix(`route_teamLookup_${team.slug}_`)
+    redisClient.removeCachedByPrefix(`route_teamList_`)
   }
 
   analytics.add_activity(EActivity.TeamDeleted, user._id, { team_id: team._id })

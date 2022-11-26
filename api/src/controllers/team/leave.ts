@@ -10,7 +10,7 @@ import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 /**
@@ -65,8 +65,8 @@ export async function teamLeave(
 
   // remove invalidated cached responses.
 
-  await redis.removeCached(`route_teamMemberList_${team.slug}`)
-  await redis.removeCached(`route_teamList_${user.username}`)
+  await redisClient.removeCached(`route_teamMemberList_${team.slug}`)
+  await redisClient.removeCached(`route_teamList_${user.username}`)
 
   // send email to admins and owner of this team
 
