@@ -5,18 +5,22 @@ import IORedis from 'ioredis'
 import { config, getRedisConnectionOptions } from '@/utils/config'
 import logger from '@/utils/logger'
 
-export const client = new IORedis(getRedisConnectionOptions())
+export function createRedisConnection(): IORedis {
+  const client = new IORedis(getRedisConnectionOptions())
+  client.on('error', (err) => {
+    // we suppress error emission here to prevent duplicate error messages
+    // during application startup.
+  })
+  client.on('connect', () => {
+    logger.debug('redis connections established')
+  })
+  client.on('ready', () => {
+    logger.debug('redis client is ready')
+  })
+  return client
+}
 
-client.on('error', (err) => {
-  // we suppress error emission here to prevent duplicate error messages
-  // during application startup.
-})
-client.on('connect', () => {
-  logger.debug('redis connections established')
-})
-client.on('ready', () => {
-  logger.debug('redis client is ready')
-})
+const client = createRedisConnection()
 
 /**
  * attempt to connect to the redis cache server.
