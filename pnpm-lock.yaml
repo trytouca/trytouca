@@ -17,7 +17,6 @@ importers:
       '@types/cookie-parser': ^1.4.3
       '@types/express': ^4.17.13
       '@types/flatbuffers': ^1.9.0
-      '@types/ioredis': ^4.28.10
       '@types/jest': ^28.1.4
       '@types/jws': ^3.2.4
       '@types/lodash': ^4.14.182
@@ -50,7 +49,7 @@ importers:
       google-auth-library: ^8.1.0
       hide-powered-by: ^1.0.0
       html-to-text: ^8.2.0
-      ioredis: ^5.1.0
+      ioredis: ^5.2.4
       jest: ^28.1.2
       jws: ^4.0.0
       lodash: ^4.17.21
@@ -97,7 +96,7 @@ importers:
       google-auth-library: 8.1.0
       hide-powered-by: 1.1.0
       html-to-text: 8.2.0
-      ioredis: 5.2.0
+      ioredis: 5.2.4
       jws: 4.0.0
       lodash: 4.17.21
       marked: 4.0.18
@@ -116,7 +115,6 @@ importers:
       '@types/cookie-parser': 1.4.3
       '@types/express': 4.17.13
       '@types/flatbuffers': 1.10.0
-      '@types/ioredis': 4.28.10
       '@types/jest': 28.1.4
       '@types/jws': 3.2.4
       '@types/lodash': 4.14.182
@@ -8311,12 +8309,6 @@ packages:
     dependencies:
       '@types/node': 18.11.3
 
-  /@types/ioredis/4.28.10:
-    resolution: {integrity: sha512-69LyhUgrXdgcNDv7ogs1qXZomnfOEnSmrmMFqKgt1XMJxmoOSG/u3wYy13yACIfKuMJ8IhKgHafDO3sx19zVQQ==}
-    dependencies:
-      '@types/node': 18.0.3
-    dev: true
-
   /@types/istanbul-lib-coverage/2.0.4:
     resolution: {integrity: sha512-z/QT1XN4K4KYuslS23k62yDIDLwLFkzxOuMplDtObz0+y7VqJCaO2o+SPwHCvLFZh7xazvvoor2tA/hPz9ee7g==}
     dev: true
@@ -10147,7 +10139,7 @@ packages:
     dependencies:
       cron-parser: 4.6.0
       glob: 8.0.3
-      ioredis: 5.2.3
+      ioredis: 5.2.4
       lodash: 4.17.21
       msgpackr: 1.6.2
       semver: 7.3.8
@@ -15049,25 +15041,8 @@ packages:
     dependencies:
       loose-envify: 1.4.0
 
-  /ioredis/5.2.0:
-    resolution: {integrity: sha512-a1E7qDtuuI+We60TLIm3TMrH5auIhbfINXYag6ZdB+mGJnH8rbmDOpr1V7iUvQQ7pWnEDYI/KXmia5IemsNJEQ==}
-    engines: {node: '>=12.22.0'}
-    dependencies:
-      '@ioredis/commands': 1.2.0
-      cluster-key-slot: 1.1.0
-      debug: 4.3.4
-      denque: 2.0.1
-      lodash.defaults: 4.2.0
-      lodash.isarguments: 3.1.0
-      redis-errors: 1.2.0
-      redis-parser: 3.0.0
-      standard-as-callback: 2.1.0
-    transitivePeerDependencies:
-      - supports-color
-    dev: false
-
-  /ioredis/5.2.3:
-    resolution: {integrity: sha512-gQNcMF23/NpvjCaa1b5YycUyQJ9rBNH2xP94LWinNpodMWVUPP5Ai/xXANn/SM7gfIvI62B5CCvZxhg5pOgyMw==}
+  /ioredis/5.2.4:
+    resolution: {integrity: sha512-qIpuAEt32lZJQ0XyrloCRdlEdUUNGG9i0UOk6zgzK6igyudNWqEBxfH6OlbnOOoBBvr1WB02mm8fR55CnikRng==}
     engines: {node: '>=12.22.0'}
     dependencies:
       '@ioredis/commands': 1.2.0
