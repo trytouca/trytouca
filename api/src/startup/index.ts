@@ -5,7 +5,7 @@ import { pick } from 'lodash'
 
 import { ComparisonJob } from '@/models/comparison'
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
-import * as Queues from '@/queues'
+import { comparisonQueue, messageQueue } from '@/queues'
 import { ComparisonModel } from '@/schemas/comparison'
 import { MessageModel } from '@/schemas/message'
 import { MetaModel } from '@/schemas/meta'
@@ -173,7 +173,7 @@ export async function loadComparisonQueue() {
     return
   }
   logger.debug('inserting %d jobs into comparisons queue', jobs.length)
-  await Queues.comparison.queue.addBulk(
+  await comparisonQueue.queue.addBulk(
     jobs.map((job) => ({
       name: job.jobId.toHexString(),
       data: job,
@@ -193,7 +193,7 @@ export async function loadMessageQueue() {
     return
   }
   logger.debug('inserting %d jobs into message queue', jobs.length)
-  await Queues.message.queue.addBulk(
+  await messageQueue.queue.addBulk(
     jobs.map((job) => ({
       name: job.messageId.toHexString(),
       data: job,

@@ -22,4 +22,4 @@ async function processor(job: ComparisonJob): Promise<PerformanceMarks> {
   return error ? Promise.reject(error) : perf
 }
 
-export const queue = new JobQueue('comparisons', processor)
+export const comparisonQueue = new JobQueue('comparisons', processor)

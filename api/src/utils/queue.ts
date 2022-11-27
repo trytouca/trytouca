@@ -64,8 +64,8 @@ function createWorker<D, R extends PerformanceMarks, N extends string>(
 }
 
 export class JobQueue<D, R extends PerformanceMarks, N extends string> {
-  _queue: Queue
-  _worker: Worker
+  _queue: Queue<D, R>
+  _worker: Worker<D, R>
 
   constructor(private name: N, private processor: (data: D) => Promise<R>) {}
 

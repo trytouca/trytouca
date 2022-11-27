@@ -7,7 +7,7 @@ import type {
 import { floor } from 'lodash'
 import mongoose from 'mongoose'
 
-import * as Queues from '@/queues'
+import { comparisonQueue } from '@/queues'
 import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import { IMessageDocument, MessageModel } from '@/schemas/message'
 import type {
@@ -47,7 +47,7 @@ async function findComparisonResult(
     })
     await doc.save()
 
-    await Queues.comparison.queue.add(
+    await comparisonQueue.queue.add(
       doc.id,
       {
         jobId: doc._id,

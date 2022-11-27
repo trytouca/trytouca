@@ -26,7 +26,7 @@ import { redisClient } from '@/utils/redis'
 import { connectToServer } from '@/utils/routing'
 import { objectStore } from '@/utils/store'
 
-import * as Queues from './queues'
+import { comparisonQueue, eventsQueue, messageQueue } from './queues'
 import router from './routes'
 import {
   analyticsService,
@@ -94,9 +94,9 @@ async function launch(application) {
     logger.info('created meta document with default values')
   }
 
-  Queues.comparison.start()
-  Queues.events.start()
-  Queues.message.start()
+  comparisonQueue.start()
+  eventsQueue.start()
+  messageQueue.start()
 
   if (!(await upgradeDatabase())) {
     logger.warn('failed to perform database migration')
@@ -138,9 +138,9 @@ async function launch(application) {
 
 async function shutdown() {
   logger.debug('shutdown process started')
-  await Queues.comparison.close()
-  await Queues.events.close()
-  await Queues.message.close()
+  await comparisonQueue.close()
+  await eventsQueue.close()
+  await messageQueue.close()
   await redisClient.shutdown()
   await shutdownMongo()
   server.close()

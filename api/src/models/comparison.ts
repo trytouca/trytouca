@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose'
 
-import * as Queues from '@/queues'
+import { comparisonQueue } from '@/queues'
 import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import logger from '@/utils/logger'
 import { objectStore } from '@/utils/store'
@@ -26,7 +26,7 @@ export async function comparisonRemove(
   try {
     // remove comparison processing jobs from the queue
     await Promise.allSettled(
-      jobs.map((job) => Queues.comparison.queue.remove(job.id))
+      jobs.map((job) => comparisonQueue.queue.remove(job.id))
     )
     // remove JSON representation of comparison results from object storage
     await Promise.allSettled(
