@@ -15,7 +15,6 @@ import type {
   BackendBatchComparisonItemSolo,
   BackendBatchComparisonResponse
 } from '@/types/backendtypes'
-import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 
 type ObjectId = mongoose.Types.ObjectId

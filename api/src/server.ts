@@ -35,7 +35,13 @@ import {
   retentionService,
   telemetryService
 } from './services'
-import { setupSuperuser, statusReport, upgradeDatabase } from './startup'
+import {
+  loadComparisonQueue,
+  loadMessageQueue,
+  setupSuperuser,
+  statusReport,
+  upgradeDatabase
+} from './startup'
 
 const app = express()
 
@@ -88,9 +94,17 @@ async function launch(application) {
     logger.info('created meta document with default values')
   }
 
+  Queues.comparison.start()
+  Queues.events.start()
+  Queues.message.start()
+
   if (!(await upgradeDatabase())) {
     logger.warn('failed to perform database migration')
   }
+
+  await loadMessageQueue()
+  await loadComparisonQueue()
+  await setupSuperuser()
 
   await statusReport()
 
@@ -117,45 +131,31 @@ async function launch(application) {
   // setup service to collect privacy-friendly aggregate usage data
   setInterval(telemetryService, config.services.telemetry.checkInterval * 1000)
 
-  Queues.comparison.queue.start()
-  Queues.events.queue.start()
-  Queues.message.queue.start()
-  await Queues.comparison.start()
-  await Queues.message.start()
-
-  await setupSuperuser()
-
   server = application.listen(config.express.port, () => {
     logger.info('listening on port %d', server.address().port)
   })
 }
 
-async function shutdown(): Promise<void> {
-  await shutdownMongo()
+async function shutdown() {
+  logger.debug('shutdown process started')
+  await Queues.comparison.close()
+  await Queues.events.close()
+  await Queues.message.close()
   await redisClient.shutdown()
-  await Queues.comparison.queue.close()
-  await Queues.events.queue.close()
-  await Queues.message.queue.close()
+  await shutdownMongo()
+  server.close()
+  logger.info('shutdown process completed')
 }
 
-process.once('SIGUSR2', () => {
-  const kill = () => process.kill(process.pid, 'SIGUSR2')
-  shutdown()
-    .then(kill)
-    .catch((err) => {
-      logger.warn('backend failed to shutdown gracefully: %O', err)
-      kill()
-    })
-})
-
-process.on('SIGINT', () => {
-  const kill = () => process.exit(0)
-  shutdown()
-    .then(kill)
-    .catch((err) => {
-      logger.warn('backend failed to shutdown gracefully: %O', err)
-      kill()
-    })
+;['SIGUSR2', 'SIGINT'].forEach((sig) => {
+  process.once(sig, async () => {
+    logger.warn('received signal %s', sig)
+    shutdown()
+      .catch((err) => {
+        logger.warn('backend failed to shutdown gracefully: %O', err)
+      })
+      .finally(() => process.exit(1))
+  })
 })
 
 launch(app)

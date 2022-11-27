@@ -69,14 +69,8 @@ export class JobQueue<D, R extends PerformanceMarks, N extends string> {
 
   constructor(private name: N, private processor: (data: D) => Promise<R>) {}
 
-  get add() {
-    return this._queue.add
-  }
-  get addBulk() {
-    return this._queue.addBulk
-  }
-  get remove() {
-    return this._queue.remove
+  get queue() {
+    return this._queue
   }
 
   start() {

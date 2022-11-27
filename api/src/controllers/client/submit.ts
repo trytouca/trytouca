@@ -239,7 +239,7 @@ async function processBatch(
       `route_batchList_${team.slug}_${suite.slug}_`
     )
 
-    await Queues.events.insertJob({
+    await Queues.insertEvent({
       type: 'batch:processed',
       teamId: team._id,
       suiteId: suite._id,

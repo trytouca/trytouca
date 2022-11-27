@@ -133,7 +133,7 @@ export async function batchSeal(
   )
   await redisClient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
 
-  await Queues.events.insertJob({
+  await Queues.insertEvent({
     type: 'batch:sealed',
     teamId: team._id,
     suiteId: suite._id,
