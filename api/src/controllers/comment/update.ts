@@ -6,7 +6,7 @@ import { extractCommentTuple } from '@/models/comment'
 import { CommentModel, ICommentDocument } from '@/schemas/comment'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 export async function ctrlCommentUpdate(
@@ -35,7 +35,7 @@ export async function ctrlCommentUpdate(
   // remove information about list of comments from cache.
   // we wait for this operation to avoid race condition.
 
-  await rclient.removeCached(`route_commentList_${tuple}`)
+  await redisClient.removeCached(`route_commentList_${tuple}`)
 
   logger.info('%s: %s: edited comment', user.username, tuple)
   analytics.add_activity(EActivity.CommentEdited, user)

@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 import { SessionModel } from '@/schemas/session'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 export async function platformAccountSuspend(
   req: Request,
@@ -31,6 +31,6 @@ export async function platformAccountSuspend(
   )
 
   logger.info('%s: suspended account %s', user.username, account.username)
-  rclient.removeCached('platform-stats')
+  redisClient.removeCached('platform-stats')
   return res.status(204).send()
 }

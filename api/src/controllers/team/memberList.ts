@@ -10,7 +10,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 /**
  * Lookup list of members of a given team from database
@@ -198,9 +198,9 @@ export async function teamMemberList(
 
   const cacheKey = `route_teamMemberList_${team.slug}`
 
-  if (await rclient.isCached(cacheKey)) {
+  if (await redisClient.isCached(cacheKey)) {
     logger.debug('%s: from cache', cacheKey)
-    const cached = await rclient.getCached(cacheKey)
+    const cached = await redisClient.getCached(cacheKey)
     return res.status(200).json(cached)
   }
 
@@ -210,6 +210,6 @@ export async function teamMemberList(
 
   // cache the result and return as output
 
-  rclient.cache(cacheKey, output)
+  redisClient.cache(cacheKey, output)
   return res.status(200).json(output)
 }

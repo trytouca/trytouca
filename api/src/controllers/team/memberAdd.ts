@@ -6,7 +6,7 @@ import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 /**
@@ -66,7 +66,7 @@ export async function teamMemberAdd(
 
   // remove list of team members from cache.
 
-  await redis.removeCached(`route_teamMemberList_${team.slug}`)
+  await redisClient.removeCached(`route_teamMemberList_${team.slug}`)
 
   // send email to user
 

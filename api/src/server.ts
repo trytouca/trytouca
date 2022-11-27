@@ -22,7 +22,7 @@ import { MetaModel } from '@/schemas/meta'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { makeConnectionMongo, shutdownMongo } from '@/utils/mongo'
-import { makeConnectionRedis, shutdownRedis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { connectToServer } from '@/utils/routing'
 import { objectStore } from '@/utils/store'
 
@@ -76,7 +76,7 @@ async function launch(application) {
   for (const { service, name } of [
     { service: makeConnectionStore, name: 'object store' },
     { service: makeConnectionMongo, name: 'database' },
-    { service: makeConnectionRedis, name: 'cache server' }
+    { service: redisClient.isReady, name: 'cache server' }
   ]) {
     if (!(await connectToServer(service, name))) {
       process.exit(1)
@@ -132,7 +132,7 @@ async function launch(application) {
 
 async function shutdown(): Promise<void> {
   await shutdownMongo()
-  await shutdownRedis()
+  await redisClient.shutdown()
   await Queues.comparison.queue.close()
   await Queues.events.queue.close()
   await Queues.message.queue.close()

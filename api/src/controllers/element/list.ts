@@ -8,7 +8,7 @@ import { ISuiteDocument } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 /**
  * Find list of elements submitted to the baseline version of a given suite.
@@ -81,15 +81,15 @@ export async function elementList(
   const cacheKey = `route_elementList_${tuple}`
   const tic = process.hrtime()
 
-  if (await redis.isCached(cacheKey)) {
+  if (await redisClient.isCached(cacheKey)) {
     logger.debug('%s: from cache', cacheKey)
-    const cached = await redis.getCached(cacheKey)
+    const cached = await redisClient.getCached(cacheKey)
     return res.status(200).json(cached)
   }
 
   const output = await elementListImpl(team, suite)
 
-  redis.cache(cacheKey, output)
+  redisClient.cache(cacheKey, output)
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
   return res.status(200).json(output)

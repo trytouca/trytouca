@@ -8,7 +8,7 @@ import { IUser, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 export async function teamJoinAdd(
@@ -61,8 +61,8 @@ export async function teamJoinAdd(
 
   // remove list of team members from cache.
 
-  await redis.removeCached(`route_teamMemberList_${team.slug}`)
-  await redis.removeCached(`route_teamList_${user.username}`)
+  await redisClient.removeCached(`route_teamMemberList_${team.slug}`)
+  await redisClient.removeCached(`route_teamList_${user.username}`)
 
   // send email to team admins.
 

@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 import { relay } from '@/models/relay'
 import { MetaModel } from '@/schemas/meta'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 export async function platformInstall(
   req: Request,
@@ -41,8 +41,8 @@ export async function platformInstall(
     data: JSON.stringify({ ...contact, uuid: meta.uuid })
   })
   logger.info('server registered')
-  rclient.removeCached('platform-config')
-  rclient.removeCached('platform-health')
+  redisClient.removeCached('platform-config')
+  redisClient.removeCached('platform-health')
 
   return res.status(response.status).send()
 }

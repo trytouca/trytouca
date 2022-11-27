@@ -12,7 +12,7 @@ import { ITeam, TeamModel } from '@/schemas/team'
 import { UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 /**
  * Add sample test results to an empty suite.
@@ -114,7 +114,10 @@ export async function addSampleData(team: ITeam): Promise<void> {
       `route_batchList_${team.slug}_${suite.slug}_${user.username}`,
       `route_suiteLookup_${team.slug}_${suite.slug}`
     ]
-    setTimeout(() => keys.forEach((key) => redis.removeCached(key)), i * 5000)
+    setTimeout(
+      () => keys.forEach((key) => redisClient.removeCached(key)),
+      i * 5000
+    )
   }
 
   logger.info('%s: submitted sample data to %s', user.username, tuple)

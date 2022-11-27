@@ -7,7 +7,7 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 /**
@@ -41,6 +41,6 @@ export async function suiteSubscribe(
   })
   logger.info('%s: subscribed to %s (%s)', user.username, tuple, level)
 
-  await redis.removeCached(`route_suiteLookup_${tuple}`)
+  await redisClient.removeCached(`route_suiteLookup_${tuple}`)
   return res.status(204).send()
 }

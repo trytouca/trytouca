@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 import { TeamModel } from '@/schemas/team'
 import { UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 /**
@@ -63,7 +63,7 @@ export async function teamInviteRescind(
 
   // remove list of team members from cache.
 
-  await redis.removeCached(`route_teamMemberList_${team.slug}`)
+  await redisClient.removeCached(`route_teamMemberList_${team.slug}`)
 
   // if user was registered, refresh their team list
 
@@ -73,7 +73,7 @@ export async function teamInviteRescind(
   )
 
   if (isRegistered) {
-    await redis.removeCached(`route_teamList_${isRegistered.username}`)
+    await redisClient.removeCached(`route_teamList_${isRegistered.username}`)
   }
 
   analytics.add_activity(EActivity.TeamMemberRescinded, user._id, {

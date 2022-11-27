@@ -9,7 +9,7 @@ import { createUserAccount } from '@/models/auth'
 import { MetaModel } from '@/schemas/meta'
 import { UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 /**
  * Update settings of this server instance.
@@ -55,7 +55,7 @@ export async function platformUpdate(
     })
   }
 
-  redis.removeCached('platform-config')
-  redis.removeCached('platform-health')
+  redisClient.removeCached('platform-config')
+  redisClient.removeCached('platform-health')
   return res.status(204).send()
 }

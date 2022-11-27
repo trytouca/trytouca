@@ -7,7 +7,7 @@ import { CommentModel, ICommentDocument } from '@/schemas/comment'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 export async function ctrlCommentRemove(
@@ -39,7 +39,7 @@ export async function ctrlCommentRemove(
 
   await CommentModel.findByIdAndDelete(comment._id)
 
-  await rclient.removeCached(`route_commentList_${tuple}`)
+  await redisClient.removeCached(`route_commentList_${tuple}`)
 
   logger.info('%s: %s: removed comment', user.username, tuple)
   analytics.add_activity(EActivity.CommentDeleted, user)

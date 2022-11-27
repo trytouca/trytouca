@@ -16,7 +16,7 @@ import { MetaModel } from '@/schemas/meta'
 import { UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 export async function platformStats(
   req: Request,
@@ -27,9 +27,9 @@ export async function platformStats(
   logger.debug('received health check request')
 
   // check if we recently obtained platform health information
-  if (await rclient.isCached(cacheKey)) {
+  if (await redisClient.isCached(cacheKey)) {
     logger.debug('returning statistics from cache')
-    const cachedResponseStr = await rclient.getCached<string>(cacheKey)
+    const cachedResponseStr = await redisClient.getCached<string>(cacheKey)
     const cachedResponse = JSON.parse(cachedResponseStr)
     return res.status(200).json(cachedResponse)
   }
@@ -115,7 +115,11 @@ export async function platformStats(
 
   // cache platform statistics information in redis database
   logger.debug('caching statistics')
-  rclient.cache(cacheKey, JSON.stringify(response), config.redis.durationLong)
+  redisClient.cache(
+    cacheKey,
+    JSON.stringify(response),
+    config.redis.durationLong
+  )
 
   return res.status(200).json(response)
 }

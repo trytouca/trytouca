@@ -8,7 +8,7 @@ import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 /**
  * Provides list of teams for a given user.
@@ -150,9 +150,9 @@ export async function ctrlTeamList(
 
   // return result from cache in case it is available
 
-  if (await rclient.isCached(cacheKey)) {
+  if (await redisClient.isCached(cacheKey)) {
     logger.debug('%s: from cache', cacheKey)
-    const cached = await rclient.getCached(cacheKey)
+    const cached = await redisClient.getCached(cacheKey)
     return res.status(200).json(cached)
   }
 
@@ -172,7 +172,7 @@ export async function ctrlTeamList(
 
   // cache list result
 
-  rclient.cache(cacheKey, output, config.redis.durationLong)
+  redisClient.cache(cacheKey, output, config.redis.durationLong)
 
   // log runtime performance before returning
 

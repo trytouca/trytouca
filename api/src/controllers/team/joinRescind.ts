@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser, UserModel } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 export async function teamJoinRescind(
@@ -58,8 +58,8 @@ export async function teamJoinRescind(
 
   // remove list of team members from cache.
 
-  await redis.removeCached(`route_teamMemberList_${team.slug}`)
-  await redis.removeCached(`route_teamList_${user.username}`)
+  await redisClient.removeCached(`route_teamMemberList_${team.slug}`)
+  await redisClient.removeCached(`route_teamList_${user.username}`)
 
   // we choose not to send an email for this event.
 

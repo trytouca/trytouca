@@ -5,7 +5,7 @@ import { BatchModel, IBatchDocument } from '@/schemas/batch'
 import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeamDocument, TeamModel } from '@/schemas/team'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 async function populateBatchMeta(
   team: ITeamDocument,
@@ -29,7 +29,7 @@ async function populateBatchMeta(
   await BatchModel.findByIdAndUpdate(batch._id, { meta: overview })
   logger.info('%s: %s: updated comparison metadata', serviceName, tuple)
 
-  rclient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}`)
+  redisClient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}`)
 }
 
 async function processSuite(team: ITeamDocument, suite: ISuiteDocument) {

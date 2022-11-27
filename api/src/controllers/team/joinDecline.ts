@@ -7,7 +7,7 @@ import { IUser, UserModel } from '@/schemas/user'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import * as mailer from '@/utils/mailer'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { analytics, EActivity } from '@/utils/tracker'
 
 export async function teamJoinDecline(
@@ -61,8 +61,8 @@ export async function teamJoinDecline(
 
   // remove invalidated cached responses.
 
-  await redis.removeCached(`route_teamMemberList_${team.slug}`)
-  await redis.removeCached(`route_teamList_${account.username}`)
+  await redisClient.removeCached(`route_teamMemberList_${team.slug}`)
+  await redisClient.removeCached(`route_teamList_${account.username}`)
 
   // send email to user.
 

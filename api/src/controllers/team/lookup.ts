@@ -7,7 +7,7 @@ import { findTeamRoleOfUser } from '@/controllers/team/common'
 import { ITeam, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 /**
  * Lookup detailed information about a team.
@@ -72,9 +72,9 @@ export async function ctrlTeamLookup(
 
   // return result from cache in case it is available
 
-  if (await rclient.isCached(cacheKey)) {
+  if (await redisClient.isCached(cacheKey)) {
     logger.debug('%s: from cache', cacheKey)
-    const cached = await rclient.getCached(cacheKey)
+    const cached = await redisClient.getCached(cacheKey)
     return res.status(200).json(cached)
   }
 
@@ -84,7 +84,7 @@ export async function ctrlTeamLookup(
 
   // cache list result
 
-  rclient.cache(cacheKey, output)
+  redisClient.cache(cacheKey, output)
 
   // log runtime performance before returning
 

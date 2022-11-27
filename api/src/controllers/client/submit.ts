@@ -15,7 +15,7 @@ import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
 import { ITeamDocument, TeamModel } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import logger from '@/utils/logger'
-import { rclient as redis } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 import { objectStore } from '@/utils/store'
 import { analytics, EActivity } from '@/utils/tracker'
 
@@ -180,10 +180,10 @@ async function processElement(
 
     logger.info('%s: processed element', tuple)
 
-    redis.removeCached(
+    redisClient.removeCached(
       `route_elementLookup_${team.slug}_${suite.slug}_${elementName}`
     )
-    redis.removeCached(`route_elementList_${team.slug}_${suite.slug}`)
+    redisClient.removeCached(`route_elementList_${team.slug}_${suite.slug}`)
 
     return { slug: tuple, doc: element }
   } catch (err) {
@@ -232,10 +232,12 @@ async function processBatch(
 
     logger.debug('%s: processed batch', tuple)
 
-    redis.removeCached(
+    redisClient.removeCached(
       `route_batchLookup_${team.slug}_${suite.slug}_${batchSlug}`
     )
-    redis.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}_`)
+    redisClient.removeCachedByPrefix(
+      `route_batchList_${team.slug}_${suite.slug}_`
+    )
 
     await Queues.events.insertJob({
       type: 'batch:processed',
@@ -291,8 +293,8 @@ async function processTeam(
 
   logger.debug('%s: processed team', teamSlug)
 
-  redis.removeCachedByPrefix(`route_teamLookup_${teamSlug}_`)
-  redis.removeCachedByPrefix(`route_teamList_`)
+  redisClient.removeCachedByPrefix(`route_teamLookup_${teamSlug}_`)
+  redisClient.removeCachedByPrefix(`route_teamList_`)
 
   return { slug: teamSlug, doc: team }
 }
@@ -510,8 +512,8 @@ async function processSuite(
 
     logger.debug('%s: processed suite', tuple)
 
-    redis.removeCached(`route_suiteLookup_${team.slug}_${suiteSlug}`)
-    redis.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
+    redisClient.removeCached(`route_suiteLookup_${team.slug}_${suiteSlug}`)
+    redisClient.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
 
     return { slug: suiteSlug, doc: suite }
   } catch (err) {

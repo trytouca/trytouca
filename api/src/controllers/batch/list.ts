@@ -10,7 +10,7 @@ import { ITeam } from '@/schemas/team'
 import { IUser } from '@/schemas/user'
 import type { BatchItemQueryOutput } from '@/types/backendtypes'
 import logger from '@/utils/logger'
-import { rclient } from '@/utils/redis'
+import { redisClient } from '@/utils/redis'
 
 async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
   const queryOutput: BatchItemQueryOutput[] = await BatchModel.aggregate([
@@ -95,9 +95,9 @@ export async function ctrlBatchList(
 
   // return result from cache in case it is available
 
-  if (await rclient.isCached(cacheKey)) {
+  if (await redisClient.isCached(cacheKey)) {
     logger.debug('%s: from cache', cacheKey)
-    const cached = await rclient.getCached(cacheKey)
+    const cached = await redisClient.getCached(cacheKey)
     return res.status(200).json(cached)
   }
 
@@ -107,7 +107,7 @@ export async function ctrlBatchList(
 
   // cache list result
 
-  rclient.cache(cacheKey, output)
+  redisClient.cache(cacheKey, output)
 
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', cacheKey, toc.toFixed(0))
