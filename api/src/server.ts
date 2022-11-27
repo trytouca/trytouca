@@ -76,7 +76,7 @@ async function launch(application) {
   for (const { service, name } of [
     { service: makeConnectionStore, name: 'object store' },
     { service: makeConnectionMongo, name: 'database' },
-    { service: redisClient.isReady, name: 'cache server' }
+    { service: () => redisClient.isReady(), name: 'cache server' }
   ]) {
     if (!(await connectToServer(service, name))) {
       process.exit(1)
@@ -117,9 +117,9 @@ async function launch(application) {
   // setup service to collect privacy-friendly aggregate usage data
   setInterval(telemetryService, config.services.telemetry.checkInterval * 1000)
 
-  await Queues.comparison.queue.start()
-  await Queues.events.queue.start()
-  await Queues.message.queue.start()
+  Queues.comparison.queue.start()
+  Queues.events.queue.start()
+  Queues.message.queue.start()
   await Queues.comparison.start()
   await Queues.message.start()
 

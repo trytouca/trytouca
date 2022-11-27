@@ -5,7 +5,7 @@ import IORedis, { RedisOptions } from 'ioredis'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 
-function getRedisOptions(): RedisOptions {
+export function getRedisOptions(): RedisOptions {
   const cloudOptions = config.redis.tlsCertificateFile
     ? {
         tls: {
@@ -23,7 +23,7 @@ function getRedisOptions(): RedisOptions {
   }
 }
 
-export function createRedisConnection() {
+function createRedisConnection() {
   const client = new IORedis(getRedisOptions())
   client.on('error', (err) => {
     logger.warn('redis connection error: %s', err.message)

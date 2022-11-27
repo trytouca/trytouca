@@ -3,7 +3,7 @@
 import { Queue, Worker } from 'bullmq'
 import { hrtime } from 'process'
 
-import { createRedisConnection } from '@/utils/redis'
+import { getRedisOptions } from '@/utils/redis'
 
 import logger from './logger'
 
@@ -28,7 +28,7 @@ export class PerformanceMarks {
 
 function createQueue(name: string) {
   return new Queue(name, {
-    connection: createRedisConnection(),
+    connection: getRedisOptions(),
     defaultJobOptions: { removeOnComplete: true, removeOnFail: 1000 }
   })
 }
@@ -46,7 +46,7 @@ function createWorker<D, R extends PerformanceMarks, N extends string>(
     },
     {
       autorun: false,
-      connection: createRedisConnection(),
+      connection: getRedisOptions(),
       concurrency: 4
     }
   )
