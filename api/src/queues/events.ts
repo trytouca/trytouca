@@ -11,8 +11,8 @@ async function processor(job: ServerEventJob): Promise<PerformanceMarks> {
   return Promise.resolve(perf)
 }
 
-export async function insertJob(job: ServerEventJob) {
-  queue.add(job.type, job)
+export async function insertEvent(job: ServerEventJob) {
+  eventsQueue.queue.add(job.type, job)
 }
 
-export const queue = new JobQueue('events', processor)
+export const eventsQueue = new JobQueue('events', processor)

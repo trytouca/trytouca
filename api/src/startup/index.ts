@@ -3,7 +3,9 @@
 import fs from 'fs'
 import { pick } from 'lodash'
 
+import { ComparisonJob } from '@/models/comparison'
 import { wslFindByUname, wslGetSuperUser } from '@/models/user'
+import { comparisonQueue, messageQueue } from '@/queues'
 import { ComparisonModel } from '@/schemas/comparison'
 import { MessageModel } from '@/schemas/message'
 import { MetaModel } from '@/schemas/meta'
@@ -115,4 +117,89 @@ export async function statusReport() {
     logger.warn('samples directory not found at %s', config.samples.directory)
   }
   return true
+}
+
+export async function loadComparisonQueue() {
+  const queryOutput = await ComparisonModel.aggregate([
+    {
+      $match: {
+        processedAt: { $exists: false },
+        contentId: { $exists: false }
+      }
+    },
+    {
+      $lookup: {
+        from: 'messages',
+        localField: 'dstMessageId',
+        foreignField: '_id',
+        as: 'dstMessage'
+      }
+    },
+    {
+      $lookup: {
+        from: 'messages',
+        localField: 'srcMessageId',
+        foreignField: '_id',
+        as: 'srcMessage'
+      }
+    },
+    {
+      $project: {
+        dstId: { $arrayElemAt: ['$dstMessage', 0] },
+        srcId: { $arrayElemAt: ['$srcMessage', 0] }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        jobId: '$_id',
+        dstBatchId: '$dstId.batchId',
+        dstContentId: '$dstId.contentId',
+        dstMessageId: '$dstId._id',
+        srcContentId: '$srcId.contentId',
+        srcBatchId: '$srcId.batchId',
+        srcMessageId: '$srcId._id'
+      }
+    }
+  ])
+  const jobs: ComparisonJob[] = queryOutput.map((v) => ({
+    jobId: v.jobId,
+    dstBatchId: v.dstBatchId,
+    dstMessageId: v.dstMessageId,
+    srcBatchId: v.srcBatchId,
+    srcMessageId: v.srcMessageId
+  }))
+  if (jobs.length === 0) {
+    return
+  }
+  logger.debug('inserting %d jobs into comparisons queue', jobs.length)
+  await comparisonQueue.queue.addBulk(
+    jobs.map((job) => ({
+      name: job.jobId.toHexString(),
+      data: job,
+      opts: {
+        jobId: job.jobId.toHexString()
+      }
+    }))
+  )
+}
+
+export async function loadMessageQueue() {
+  const jobs = await MessageModel.aggregate([
+    { $match: { contentId: { $exists: false } } },
+    { $project: { _id: 0, messageId: '$_id', batchId: 1 } }
+  ])
+  if (jobs.length === 0) {
+    return
+  }
+  logger.debug('inserting %d jobs into message queue', jobs.length)
+  await messageQueue.queue.addBulk(
+    jobs.map((job) => ({
+      name: job.messageId.toHexString(),
+      data: job,
+      opts: {
+        jobId: job.messageId.toHexString()
+      }
+    }))
+  )
 }

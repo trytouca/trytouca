@@ -2,13 +2,12 @@
 
 import { comparisonRemove } from '@/models/comparison'
 import { MessageInfo } from '@/models/messageInfo'
-import * as Queues from '@/queues'
+import { messageQueue } from '@/queues'
 import { BatchModel } from '@/schemas/batch'
 import { ComparisonModel } from '@/schemas/comparison'
 import { ElementModel } from '@/schemas/element'
 import { MessageModel } from '@/schemas/message'
 import { MessageOverview, MessageTransformed } from '@/types/backendtypes'
-import { config } from '@/utils/config'
 import logger from '@/utils/logger'
 import { objectStore } from '@/utils/store'
 
@@ -60,7 +59,7 @@ export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
     }
 
     // remove message processing jobs from the queue
-    await Queues.message.queue.remove(msgInfo.messageId.toHexString())
+    await messageQueue.queue.remove(msgInfo.messageId.toHexString())
     // remove message artifacts from object store
     await Promise.allSettled(
       msgInfo.messageArtifacts.map((name) =>

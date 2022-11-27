@@ -3,7 +3,7 @@
 import { ComparisonFunctions } from '@/controllers/comparison'
 import { messageRemove } from '@/models/message'
 import { MessageInfo } from '@/models/messageInfo'
-import * as Queues from '@/queues'
+import { insertEvent } from '@/queues'
 import { BatchModel, IBatchDocument } from '@/schemas/batch'
 import { CommentModel } from '@/schemas/comment'
 import { MessageModel } from '@/schemas/message'
@@ -133,7 +133,7 @@ export async function batchSeal(
   )
   await redisClient.removeCached(`route_suiteLookup_${team.slug}_${suite.slug}`)
 
-  await Queues.events.insertJob({
+  await insertEvent({
     type: 'batch:sealed',
     teamId: team._id,
     suiteId: suite._id,

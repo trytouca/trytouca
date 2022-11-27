@@ -3,10 +3,10 @@
 import { parseMessageHeaders } from '@touca/flatbuffers'
 import { NextFunction, Request, Response } from 'express'
 import { minBy } from 'lodash'
-import mongoose from 'mongoose'
+import mongoose, { Types } from 'mongoose'
 
 import { suiteCreate } from '@/models/suite'
-import * as Queues from '@/queues'
+import { comparisonQueue, insertEvent, messageQueue } from '@/queues'
 import { BatchModel, IBatchDocument } from '@/schemas/batch'
 import { ComparisonModel, IComparisonDocument } from '@/schemas/comparison'
 import { ElementModel, IElementDocument } from '@/schemas/element'
@@ -155,7 +155,7 @@ async function processElement(
     // store message in binary format in object storage
     await objectStore.addMessage(message._id.toHexString(), submission.raw)
     // create a job on the queue to process message
-    await Queues.message.queue.add(
+    await messageQueue.queue.add(
       message.id,
       {
         batchId: batch._id,
@@ -239,7 +239,7 @@ async function processBatch(
       `route_batchList_${team.slug}_${suite.slug}_`
     )
 
-    await Queues.events.insertJob({
+    await insertEvent({
       type: 'batch:processed',
       teamId: team._id,
       suiteId: suite._id,
@@ -379,14 +379,14 @@ async function insertComparisonJob(
       srcMessageId
     })
 
-    await Queues.comparison.queue.add(
+    await comparisonQueue.queue.add(
       cmp.id,
       {
         jobId: cmp._id,
-        dstBatchId,
-        dstMessageId,
-        srcBatchId,
-        srcMessageId
+        dstBatchId: dstBatchId as unknown as Types.ObjectId,
+        dstMessageId: dstMessageId as unknown as Types.ObjectId,
+        srcBatchId: srcBatchId as unknown as Types.ObjectId,
+        srcMessageId: srcMessageId as unknown as Types.ObjectId
       },
       {
         jobId: cmp.id
@@ -402,7 +402,7 @@ async function insertComparisonJob(
 
 async function insertComparisonJobs(
   batchMap: BatchMap,
-  baseline: mongoose.Types.ObjectId
+  baseline: Types.ObjectId
 ): Promise<string[]> {
   // now that we have made sure suite has a baseline, we proceed with
   // concurrently creating comparison jobs for every submitted result
