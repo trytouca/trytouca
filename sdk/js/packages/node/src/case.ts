@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Builder } from 'flatbuffers';
 
@@ -15,7 +15,7 @@ type ResultEntry = {
   val: ToucaType;
 };
 
-type CppTestcaseMetadata = {
+type TestcaseMetadata = {
   builtAt: string;
   testcase: string;
   testsuite: string;
@@ -24,7 +24,7 @@ type CppTestcaseMetadata = {
 };
 
 type CaseJson = {
-  metadata: CppTestcaseMetadata;
+  metadata: TestcaseMetadata;
   results: { key: string; value: ResultJson }[];
   assertions: { key: string; value: ResultJson }[];
   metrics: { key: string; value: ResultJson }[];
@@ -163,7 +163,7 @@ export class Case {
     return metrics;
   }
 
-  private _metadata(): CppTestcaseMetadata {
+  private _metadata(): TestcaseMetadata {
     return {
       teamslug: this.meta.team ?? 'unknown',
       testsuite: this.meta.suite ?? 'unknown',
@@ -206,7 +206,7 @@ export class Case {
     const builder = new Builder(1024);
 
     const meta = this._metadata();
-    const keys = Object.keys(meta) as (keyof CppTestcaseMetadata)[];
+    const keys = Object.keys(meta) as (keyof TestcaseMetadata)[];
     const metadata = new Map<string, number>(
       keys.map((k) => [k, builder.createString(meta[k])])
     );

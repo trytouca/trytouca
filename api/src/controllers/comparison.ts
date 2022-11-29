@@ -2,7 +2,7 @@
 
 import type {
   BatchCompareOverview,
-  CppTestcaseComparisonOverview
+  TestcaseComparisonOverview
 } from '@touca/api-schema'
 import { floor } from 'lodash'
 import mongoose from 'mongoose'
@@ -150,7 +150,7 @@ async function categorize(
 
 function doFindBatchComparisonOverview(
   output: BackendBatchComparisonResponse,
-  metaList: CppTestcaseComparisonOverview[]
+  metaList: TestcaseComparisonOverview[]
 ): BatchCompareOverview {
   const elementsCompared = metaList
   const countDstCompared = output.missing.length + elementsCompared.length
@@ -253,7 +253,7 @@ async function compareBatchOverview(
   // @todo: combine this operation with aggregate operation above
   const metaList = metaObjects.map(
     (el) => el.meta
-  ) as CppTestcaseComparisonOverview[]
+  ) as TestcaseComparisonOverview[]
 
   // add overview metadata to the comparison outputs
 

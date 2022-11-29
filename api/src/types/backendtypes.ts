@@ -4,10 +4,10 @@ import type {
   BatchCompareOverview,
   BatchComparisonItem,
   BatchItem,
-  CppTestcaseComparisonOverview,
-  CppTestcaseOverview,
   ENotificationType,
   SuiteItem,
+  TestcaseComparisonOverview,
+  TestcaseOverview,
   Userinfo
 } from '@touca/api-schema'
 import { Message } from '@touca/flatbuffers'
@@ -44,7 +44,7 @@ export type BackendBatchComparisonItem = BatchComparisonItem & {
 
 export type BackendBatchComparisonItemCommon = {
   dst: BackendBatchComparisonItem
-  meta?: CppTestcaseComparisonOverview
+  meta?: TestcaseComparisonOverview
   src: BackendBatchComparisonItem
 
   cmp?: unknown
@@ -52,7 +52,7 @@ export type BackendBatchComparisonItemCommon = {
 }
 
 export type BackendBatchComparisonItemSolo = BackendBatchComparisonItem & {
-  meta?: CppTestcaseOverview
+  meta?: TestcaseOverview
 }
 
 export type BackendBatchComparisonResponse = {
