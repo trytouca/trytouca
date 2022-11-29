@@ -4,7 +4,7 @@ info:
   version: 1.8.0
   title: Touca Server API
   contact:
-    email: support@touca.io
+    email: hello@touca.io
 servers:
   - url: https://api.touca.io
 components:
@@ -177,7 +177,7 @@ components:
         dst:
           $ref: '#/components/schemas/BatchComparisonItem'
         meta:
-          $ref: '#/components/schemas/CppTestcaseComparisonOverview'
+          $ref: '#/components/schemas/TestcaseComparisonOverview'
         src:
           $ref: '#/components/schemas/BatchComparisonItem'
     BatchComparisonItemSolo:
@@ -186,7 +186,7 @@ components:
         - type: object
           properties:
             meta:
-              $ref: '#/components/schemas/CppTestcaseOverview'
+              $ref: '#/components/schemas/TestcaseOverview'
     BatchComparisonResponse:
       additionalProperties: false
       type: object
@@ -278,6 +278,26 @@ components:
               type: string
             teamSlug:
               type: string
+    Cellar:
+      additionalProperties: false
+      type: object
+      required:
+        - commonKeys
+        - missingKeys
+        - newKeys
+      properties:
+        commonKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/TypeComparison'
+        missingKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/TypeComparison'
+        newKeys:
+          type: array
+          items:
+            $ref: '#/components/schemas/TypeComparison'
     CommentItem:
       type: object
       additionalProperties: false
@@ -308,131 +328,6 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/CommentItem'
-    CppCellar:
-      additionalProperties: false
-      type: object
-      required:
-        - commonKeys
-        - missingKeys
-        - newKeys
-      properties:
-        commonKeys:
-          type: array
-          items:
-            $ref: '#/components/schemas/CppTypeComparison'
-        missingKeys:
-          type: array
-          items:
-            $ref: '#/components/schemas/CppTypeComparison'
-        newKeys:
-          type: array
-          items:
-            $ref: '#/components/schemas/CppTypeComparison'
-    CppTestcaseComparison:
-      additionalProperties: false
-      type: object
-      required:
-        - assertions
-        - dst
-        - metrics
-        - results
-        - src
-      properties:
-        assertions:
-          $ref: '#/components/schemas/CppCellar'
-        dst:
-          $ref: '#/components/schemas/CppTestcaseMetadata'
-        metrics:
-          $ref: '#/components/schemas/CppCellar'
-        results:
-          $ref: '#/components/schemas/CppCellar'
-        src:
-          $ref: '#/components/schemas/CppTestcaseMetadata'
-    CppTestcaseComparisonOverview:
-      additionalProperties: false
-      type: object
-      properties:
-        keysCountCommon:
-          type: number
-          format: int32
-        keysCountFresh:
-          type: number
-          format: int32
-        keysCountMissing:
-          type: number
-          format: int32
-        keysScore:
-          type: number
-          format: float
-        metricsCountCommon:
-          type: number
-          format: int32
-        metricsCountFresh:
-          type: number
-          format: int32
-        metricsCountMissing:
-          type: number
-          format: int32
-        metricsDurationCommonDst:
-          type: number
-          format: int32
-        metricsDurationCommonSrc:
-          type: number
-          format: int32
-    CppTestcaseMetadata:
-      additionalProperties: false
-      type: object
-      required:
-        - builtAt
-        - teamSlug
-        - testcase
-        - testsuite
-        - version
-      properties:
-        builtAt:
-          type: string
-          format: date-time
-        teamSlug:
-          type: string
-        testcase:
-          type: string
-        testsuite:
-          type: string
-        version:
-          type: string
-    CppTestcaseOverview:
-      additionalProperties: false
-      type: object
-      properties:
-        keysCount:
-          type: number
-        metricsCount:
-          type: number
-        metricsDuration:
-          type: number
-    CppTypeComparison:
-      additionalProperties: false
-      type: object
-      required:
-        - name
-      properties:
-        desc:
-          type: array
-          items:
-            type: string
-        dstType:
-          type: string
-        dstValue:
-          type: string
-        name:
-          type: string
-        score:
-          type: number
-          format: float
-        srcType:
-          type: string
-        srcValue:
-          type: string
     EFeatureFlag:
       type: string
       enum:
@@ -482,11 +377,11 @@ components:
         - src
       properties:
         cmp:
-          $ref: '#/components/schemas/CppTestcaseComparison'
+          $ref: '#/components/schemas/TestcaseComparison'
         dst:
           $ref: '#/components/schemas/ElementComparisonItem'
         meta:
-          $ref: '#/components/schemas/CppTestcaseComparisonOverview'
+          $ref: '#/components/schemas/TestcaseComparisonOverview'
         src:
           $ref: '#/components/schemas/ElementComparisonItem'
     ElementListResponse:
@@ -899,6 +794,111 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TeamMember'
+    TestcaseComparison:
+      additionalProperties: false
+      type: object
+      required:
+        - assertions
+        - dst
+        - metrics
+        - results
+        - src
+      properties:
+        assertions:
+          $ref: '#/components/schemas/Cellar'
+        dst:
+          $ref: '#/components/schemas/TestcaseMetadata'
+        metrics:
+          $ref: '#/components/schemas/Cellar'
+        results:
+          $ref: '#/components/schemas/Cellar'
+        src:
+          $ref: '#/components/schemas/TestcaseMetadata'
+    TestcaseComparisonOverview:
+      additionalProperties: false
+      type: object
+      properties:
+        keysCountCommon:
+          type: number
+          format: int32
+        keysCountFresh:
+          type: number
+          format: int32
+        keysCountMissing:
+          type: number
+          format: int32
+        keysScore:
+          type: number
+          format: float
+        metricsCountCommon:
+          type: number
+          format: int32
+        metricsCountFresh:
+          type: number
+          format: int32
+        metricsCountMissing:
+          type: number
+          format: int32
+        metricsDurationCommonDst:
+          type: number
+          format: int32
+        metricsDurationCommonSrc:
+          type: number
+          format: int32
+    TestcaseMetadata:
+      additionalProperties: false
+      type: object
+      required:
+        - builtAt
+        - teamSlug
+        - testcase
+        - testsuite
+        - version
+      properties:
+        builtAt:
+          type: string
+          format: date-time
+        teamSlug:
+          type: string
+        testcase:
+          type: string
+        testsuite:
+          type: string
+        version:
+          type: string
+    TestcaseOverview:
+      additionalProperties: false
+      type: object
+      properties:
+        keysCount:
+          type: number
+        metricsCount:
+          type: number
+        metricsDuration:
+          type: number
+    TypeComparison:
+      additionalProperties: false
+      type: object
+      required:
+        - name
+      properties:
+        desc:
+          type: array
+          items:
+            type: string
+        dstType:
+          type: string
+        dstValue:
+          type: string
+        name:
+          type: string
+        score:
+          type: number
+          format: float
+        srcType:
+          type: string
+        srcValue:
+          type: string
     UserLookupResponse:
       type: object
       additionalProperties: false

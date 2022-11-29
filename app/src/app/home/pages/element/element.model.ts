@@ -1,6 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import type { CppTypeComparison, Userinfo } from '@touca/api-schema';
+import type { TypeComparison, Userinfo } from '@touca/api-schema';
 
 import { Metric } from '@/home/models/metric.model';
 import { PageListItem } from '@/home/models/page-list-item.model';
@@ -44,7 +44,7 @@ export class ElementPageMetric extends PageListItem<
   Metric,
   ElementPageItemType
 > {
-  public constructor(k: CppTypeComparison, type: ElementPageItemType) {
+  public constructor(k: TypeComparison, type: ElementPageItemType) {
     if (k.score && k.score === 1) {
       k.dstValue = k.srcValue;
     }
