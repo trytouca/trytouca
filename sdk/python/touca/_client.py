@@ -4,6 +4,7 @@ from threading import get_ident
 from typing import Any, Callable, Dict, List, Type, ValuesView
 
 from touca._case import Case
+from touca._rules import ComparisonRule
 from touca._types import BlobType
 
 
@@ -15,17 +16,17 @@ def casemethod(func):
     func.__doc__ = inspect.getdoc(getattr(Case, func.__name__))
 
     @wraps(func)
-    def wrapper(self, *args):
+    def wrapper(self, *args, **kwargs):
         element = self._active_testcase_name()
         if not element:
             return
         testcase = self._cases.get(element)
         method = getattr(testcase, func.__name__)
-        retval = func(self, *args)
+        retval = func(self, *args, **kwargs)
         if not retval:
-            method(*args)
+            method(*args, **kwargs)
         else:
-            method(args[0], retval)
+            method(args[0], retval, **kwargs)
 
     return wrapper
 
@@ -333,7 +334,7 @@ class Client:
         del self._cases[name]
 
     @casemethod
-    def check(self, key: str, value: Any):
+    def check(self, key: str, value: Any, *, rule: ComparisonRule = None):
         return self._type_handler.transform(value)
 
     @casemethod

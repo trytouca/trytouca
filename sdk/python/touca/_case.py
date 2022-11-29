@@ -1,43 +1,33 @@
 # Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Dict, Tuple
 from pathlib import Path
 
+from touca._rules import ComparisonRule
 from touca._types import IntegerType, ToucaType, VectorType, BlobType, Artifact
 
 
 class ResultCategory(Enum):
-    """ """
-
     Check = 1
     Assert = 2
 
 
+@dataclass
 class ResultEntry:
     """
     Wrapper around a given ``ToucaType`` value that includes the category
     it should belong to.
-
-    We are intentionally not using ``@dataclass`` to ensure the core library
-    has no dependency on ``dataclasses`` module. This may change in the future.
     """
 
-    def __init__(self, typ: ResultCategory, val: ToucaType):
-        """
-        Creates an entry given its value and the category it should belong to.
-
-        :param typ: type of the entry
-        :param val: value of the entry
-        """
-        self.typ = typ
-        self.val = val
+    typ: ResultCategory
+    val: ToucaType
+    rule: ComparisonRule = None
 
 
 class Case:
-    """ """
-
     def __init__(self, **kwargs):
 
         self._meta = kwargs
@@ -45,15 +35,16 @@ class Case:
         self._tics: Dict[str, datetime] = dict()
         self._tocs: Dict[str, datetime] = dict()
 
-    def check(self, key: str, value: ToucaType):
+    def check(self, key: str, value: ToucaType, rule: ComparisonRule = None):
         """
         Logs a given value as a test result for the declared test case
         and associates it with the specified key.
 
         :param key: name to be associated with the logged test result
         :param value: value to be logged as a test result
+        :param rule: comparison rule for this test result
         """
-        self._results[key] = ResultEntry(typ=ResultCategory.Check, val=value)
+        self._results[key] = ResultEntry(ResultCategory.Check, value, rule)
 
     def check_file(self, key: str, file: Path):
         self._results[key] = ResultEntry(
@@ -224,14 +215,15 @@ class Case:
         }
 
     def json(self):
-        results = [
-            {"key": k, "value": v.val.json()}
-            for k, v in self._results.items()
-            if v.typ is ResultCategory.Check
-        ]
         return {
             "metadata": self._metadata(),
-            "results": results,
+            "results": [
+                {"key": k, "value": v.val.json(), "rule": v.rule.json()}
+                if v.rule
+                else {"key": k, "value": v.val.json()}
+                for k, v in self._results.items()
+                if v.typ is ResultCategory.Check
+            ],
             "assertions": [
                 {"key": k, "value": v.val.json()}
                 for k, v in self._results.items()
@@ -262,7 +254,7 @@ class Case:
         result_entries = []
         for k, v in self._results.items():
             fbs_key = Builder.CreateString(builder, k)
-            fbs_value = v.val.serialize(builder)
+            fbs_value = v.val.serialize(builder, v.rule)
             schema.ResultStart(builder)
             schema.ResultAddKey(builder, fbs_key)
             schema.ResultAddValue(builder, fbs_value)

@@ -8,7 +8,7 @@ from hashlib import sha256
 from mimetypes import guess_type
 from pathlib import Path, PosixPath
 from typing import Any, Callable, Dict, Type, Union
-
+from touca._rules import ComparisonRule
 import touca._schema as schema
 from flatbuffers import Builder
 
@@ -45,7 +45,7 @@ class ToucaType(ABC):
         pass
 
     @abstractmethod
-    def serialize(self, builder: Builder):
+    def serialize(self, builder: Builder, rule: ComparisonRule = None):
         pass
 
 
@@ -56,7 +56,7 @@ class BlobType(ToucaType):
     def json(self):
         return self._value.json()
 
-    def serialize(self, builder: Builder):
+    def serialize(self, builder: Builder, rule: ComparisonRule = None):
         blob = Artifact()
         if self._value.digest:
             blob.digest = Builder.CreateString(builder, self._value.digest)
@@ -89,7 +89,7 @@ class BoolType(ToucaType):
     def json(self):
         return self._value
 
-    def serialize(self, builder: Builder):
+    def serialize(self, builder: Builder, rule: ComparisonRule = None):
         schema.BoolStart(builder)
         schema.BoolAddValue(builder, value=self._value)
         value = schema.BoolEnd(builder)
@@ -101,15 +101,18 @@ class BoolType(ToucaType):
 
 class DecimalType(ToucaType):
     def __init__(self, value: float):
-
         self._value = value
 
     def json(self):
         return self._value
 
-    def serialize(self, builder: Builder):
+    def serialize(self, builder: Builder, rule: ComparisonRule = None):
+        if rule:
+            fbs_rule = rule.serialize(builder)
         schema.DoubleStart(builder)
         schema.DoubleAddValue(builder, self._value)
+        if rule:
+            schema.DoubleAddRule(builder, fbs_rule)
         value = schema.DoubleEnd(builder)
         schema.TypeWrapperStart(builder)
         schema.TypeWrapperAddValue(builder, value)
@@ -125,7 +128,7 @@ class IntegerType(ToucaType):
     def json(self):
         return self._value
 
-    def serialize(self, builder: Builder):
+    def serialize(self, builder: Builder, rule: ComparisonRule = None):
         schema.IntStart(builder)
         schema.IntAddValue(builder, self._value)
         value = schema.IntEnd(builder)
@@ -142,7 +145,7 @@ class StringType(ToucaType):
     def json(self):
         return self._value
 
-    def serialize(self, builder: Builder):
+    def serialize(self, builder: Builder, rule: ComparisonRule = None):
         content = Builder.CreateString(builder, self._value)
         schema.StringStart(builder)
         schema.StringAddValue(builder, content)
@@ -163,7 +166,7 @@ class VectorType(ToucaType):
     def json(self):
         return dumps([v.json() for v in self._values])
 
-    def serialize(self, builder: Builder):
+    def serialize(self, builder: Builder, rule: ComparisonRule = None):
         items = [v.serialize(builder) for v in self._values]
         schema.ArrayStartValuesVector(builder, len(items))
         for item in reversed(items):
@@ -189,7 +192,7 @@ class ObjectType(ToucaType):
     def json(self):
         return dumps({k: v.json() for k, v in self._values.items()})
 
-    def serialize(self, builder: Builder):
+    def serialize(self, builder: Builder, rule: ComparisonRule = None):
         key = builder.CreateString(self._name)
         members = []
         for k, v in self._values.items():

@@ -14,9 +14,34 @@ class Type(object):
     Blob = 9
 
 
+class NumberComparisonRuleType(object):
+    Absolute = 0
+    Relative = 1
+
+
 class ResultType(object):
     Check = 1
     Assert = 2
+
+
+def DoubleRuleStart(builder):
+    builder.StartObject(3)
+
+
+def DoubleRuleAddType(builder, type):
+    builder.PrependUint8Slot(0, type, 0)
+
+
+def DoubleRuleAddMin(builder, min):
+    builder.PrependFloat64Slot(1, min, 0.0)
+
+
+def DoubleRuleAddMax(builder, max):
+    builder.PrependFloat64Slot(2, max, 0.0)
+
+
+def DoubleRuleEnd(builder):
+    return builder.EndObject()
 
 
 def TypeWrapperStart(builder):
@@ -62,11 +87,17 @@ def IntEnd(builder):
 
 
 def DoubleStart(builder):
-    builder.StartObject(1)
+    builder.StartObject(2)
 
 
 def DoubleAddValue(builder, value):
     builder.PrependFloat64Slot(0, value, 0.0)
+
+
+def DoubleAddRule(builder, rule):
+    builder.PrependUOffsetTRelativeSlot(
+        1, flatbuffers.number_types.UOffsetTFlags.py_type(rule), 0
+    )
 
 
 def DoubleEnd(builder):

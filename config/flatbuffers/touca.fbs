@@ -14,6 +14,14 @@ union Type {
     Blob
 }
 
+enum NumberComparisonRuleType:ubyte { Absolute, Relative }
+
+table DoubleRule {
+    type:NumberComparisonRuleType;
+    min:double;
+    max:double;
+}
+
 table TypeWrapper {
     value:Type;
 }
@@ -36,6 +44,7 @@ table Float {
 
 table Double {
     value:double;
+    rule:DoubleRule; // v1.8.1-
 }
 
 table String {
