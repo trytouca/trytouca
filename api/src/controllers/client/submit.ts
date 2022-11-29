@@ -32,11 +32,11 @@ type SubmissionItem = {
   elementName: ElementName
   raw: Buffer
 
-  teamId?: string
-  suiteId?: string
-  batchId?: string
-  elementId?: string
-  messageId?: string
+  teamId?: Types.ObjectId
+  suiteId?: Types.ObjectId
+  batchId?: Types.ObjectId
+  elementId?: Types.ObjectId
+  messageId?: Types.ObjectId
 }
 
 type ElementMap = Map<ElementName, SubmissionItem>
@@ -172,11 +172,11 @@ async function processElement(
     // creation of comparison jobs that are safer to happen after all
     // submitted elements are processed.
 
-    submission.teamId = team.id
-    submission.suiteId = suite.id
-    submission.batchId = batch.id
-    submission.elementId = element.id
-    submission.messageId = message.id
+    submission.teamId = team._id
+    submission.suiteId = suite._id
+    submission.batchId = batch._id
+    submission.elementId = element._id
+    submission.messageId = message._id
 
     logger.info('%s: processed element', tuple)
 
@@ -383,10 +383,10 @@ async function insertComparisonJob(
       cmp.id,
       {
         jobId: cmp._id,
-        dstBatchId: dstBatchId as unknown as Types.ObjectId,
-        dstMessageId: dstMessageId as unknown as Types.ObjectId,
-        srcBatchId: srcBatchId as unknown as Types.ObjectId,
-        srcMessageId: srcMessageId as unknown as Types.ObjectId
+        dstBatchId: dstBatchId,
+        dstMessageId: dstMessageId,
+        srcBatchId: srcBatchId,
+        srcMessageId: srcMessageId
       },
       {
         jobId: cmp.id

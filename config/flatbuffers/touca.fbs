@@ -14,10 +14,10 @@ union Type {
     Blob
 }
 
-enum NumberComparisonRuleType:ubyte { Absolute, Relative }
+enum ComparisonMode:ubyte { Absolute, Relative }
 
 table DoubleRule {
-    type:NumberComparisonRuleType;
+    mode:ComparisonMode;
     min:double;
     max:double;
 }

@@ -14,7 +14,7 @@ class Type(object):
     Blob = 9
 
 
-class NumberComparisonRuleType(object):
+class ComparisonRuleMode(object):
     Absolute = 0
     Relative = 1
 
@@ -28,8 +28,8 @@ def DoubleRuleStart(builder):
     builder.StartObject(3)
 
 
-def DoubleRuleAddType(builder, type):
-    builder.PrependUint8Slot(0, type, 0)
+def DoubleRuleAddMode(builder, mode):
+    builder.PrependUint8Slot(0, mode, 0)
 
 
 def DoubleRuleAddMin(builder, min):

@@ -2,7 +2,7 @@
 
 import { Builder, ByteBuffer } from 'flatbuffers'
 import * as Schema from './schema/generated/root'
-import { unwrap } from './type-wrapper'
+import { unwrap_value, unwrap_rule } from './type-wrapper'
 
 type Type =
   | boolean
@@ -30,6 +30,7 @@ type Result = {
   key: string
   type: Schema.ResultType
   value: Type
+  rule: unknown
 }
 
 type Metric = {
@@ -61,18 +62,19 @@ function deserialize(bytes: Uint8Array): Message {
       const result = results.entries(i)!
       const key = result.key()!
       const wrapper = result.value()!
-      const value = unwrap(wrapper)
+      const value = unwrap_value(wrapper)
+      const rule = unwrap_rule(wrapper)
       const type =
         result.typ() === Schema.ResultType.Assert
           ? Schema.ResultType.Assert
           : Schema.ResultType.Check
-      return { key, type, value }
+      return { key, type, value, rule }
     }),
     metrics: Array.from({ length: metrics.entriesLength() }, (_, i) => {
       const entry = metrics.entries(i)!
       const key = entry.key()!
       const wrapper = entry.value()!
-      const value = unwrap(wrapper)
+      const value = unwrap_value(wrapper)
       return { key, value }
     })
   }

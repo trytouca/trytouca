@@ -11,5 +11,5 @@ def students(username: str):
     touca.assume("username", student.username)
     touca.check("fullname", student.fullname)
     touca.check("birth_date", student.dob)
-    touca.check("gpa", student.gpa)
+    touca.check("gpa", student.gpa, rule=touca.number_rule().absolute(min=3))
     touca.add_metric("external_source", 1500)

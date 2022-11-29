@@ -33,7 +33,7 @@ class NumberRule(ComparisonRule):
 
     def serialize(self, builder: Builder):
         schema.DoubleRuleStart(builder)
-        schema.DoubleRuleAddType(builder, schema.NumberComparisonRuleType.Absolute)
+        schema.DoubleRuleAddMode(builder, schema.ComparisonRuleMode.Absolute)
         if self._min:
             schema.DoubleRuleAddMin(builder, self._min)
         if self._max:

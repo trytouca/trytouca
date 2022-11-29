@@ -54,7 +54,24 @@ type UnwrappedType<T extends WrappedType> = T extends 'Bool'
   ? Buffer
   : never
 
-function unwrap<T extends WrappedType>(wrapper: TypeWrapper): UnwrappedType<T> {
+export function unwrap_rule<T extends WrappedType>(wrapper: TypeWrapper) {
+  switch (wrapper.valueType()) {
+    case Type.Double: {
+      const unwrappedValue = wrapper.value(new Double()) as Double
+      const rule = unwrappedValue.rule()!
+      return {
+        type: 'number',
+        mode: rule.mode(),
+        max: rule.max(),
+        min: rule.min()
+      }
+    }
+  }
+}
+
+export function unwrap_value<T extends WrappedType>(
+  wrapper: TypeWrapper
+): UnwrappedType<T> {
   switch (wrapper.valueType()) {
     case Type.Bool: {
       const unwrappedValue = wrapper.value(new Bool()) as Bool
@@ -99,7 +116,7 @@ function unwrap<T extends WrappedType>(wrapper: TypeWrapper): UnwrappedType<T> {
         const unwrappedMember = unwrappedObject.values(i)!
         const key = unwrappedMember.name()!
         const valueWrapper = unwrappedMember.value()!
-        const value = unwrap(valueWrapper)
+        const value = unwrap_value(valueWrapper)
         return [key, value]
       })
       const key = unwrappedObject.key()!
@@ -111,7 +128,7 @@ function unwrap<T extends WrappedType>(wrapper: TypeWrapper): UnwrappedType<T> {
       const length = unwrappedArray.valuesLength()
       const array = Array.from({ length }, (_, i) => {
         const valueWrapper = unwrappedArray.values(i)!
-        const value = unwrap(valueWrapper)
+        const value = unwrap_value(valueWrapper)
         return value
       })
       return array as UnwrappedType<T>
@@ -127,5 +144,3 @@ function unwrap<T extends WrappedType>(wrapper: TypeWrapper): UnwrappedType<T> {
       throw new TypeError('unknown type')
   }
 }
-
-export { unwrap }

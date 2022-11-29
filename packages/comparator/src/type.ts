@@ -2,15 +2,7 @@
 
 import { Decimal } from 'decimal.js'
 import { stringify } from 'safe-stable-stringify'
-
-type Type =
-  | boolean
-  | bigint
-  | number
-  | string
-  | Array<Type>
-  | Buffer
-  | { [key: string]: Type }
+import { Type, ComparisonRule, NumericComparisonRule } from './rules'
 
 type TypeComparison = {
   desc: Array<string>
@@ -99,6 +91,9 @@ function flatten(input: Type): Map<string, Type> {
 }
 
 function compare(src: Type, dst: Type): TypeComparison {
+  const rules: ComparisonRule[] = [
+    new NumericComparisonRule({ difference: { max: 0.2, percent: true } })
+  ]
   const cmp: TypeComparison = {
     srcType: getTypeName(src),
     srcValue: Buffer.isBuffer(src) ? src.toString() : stringify(src),
@@ -132,16 +127,21 @@ function compare(src: Type, dst: Type): TypeComparison {
   }
 
   if (isNumber(src) && isNumber(dst)) {
-    const RATIO_THRESHOLD = 0.2
     const difference = src - dst
     if (difference === 0) {
       return { ...cmp, score: 1 }
     }
     const ratio = dst === 0 ? 0 : Math.abs(difference / dst)
-    if (0 < ratio && ratio < RATIO_THRESHOLD) {
-      return { ...cmp, score: 1 - ratio, dstValue: stringify(dst) }
+    const dstValue = stringify(dst)
+    if (rules.length === 0) {
+      return 0 < ratio && ratio < 0.2
+        ? { ...cmp, score: 1 - ratio, dstValue }
+        : { ...cmp, dstValue }
     }
-    return { ...cmp, dstValue: stringify(dst) }
+    rules.forEach((v) => v.check(src, dst))
+    const score = +rules.every((v) => v.score)
+    const desc = rules.map((v) => v.desc).flat()
+    return { ...cmp, score, dstValue, desc }
   }
 
   if (isString(src) && isString(dst)) {
