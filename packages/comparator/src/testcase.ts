@@ -3,7 +3,6 @@
 import { Message, ResultType } from '@touca/flatbuffers'
 import { stringify } from 'safe-stable-stringify'
 import { getTypeName, TypeComparison, compare as compareTypes } from './type'
-import { createRule } from './rules'
 
 type Cell = { name: string } & Partial<TypeComparison>
 
@@ -56,7 +55,7 @@ function initResultsCellar(
       const cmp = compareTypes(
         srcResultsMap.get(key)!.value,
         dstResultsMap.get(key)!.value,
-        createRule(srcResultsMap.get(key)!.rule)
+        srcResultsMap.get(key)!.rule
       )
       cellar.commonKeys.push({ name: key, ...cmp })
       continue
