@@ -254,7 +254,7 @@ class Case:
         result_entries = []
         for k, v in self._results.items():
             fbs_key = Builder.CreateString(builder, k)
-            fbs_value = v.val.serialize(builder, v.rule)
+            fbs_value = v.val.add_rule(v.rule).serialize(builder)
             schema.ResultStart(builder)
             schema.ResultAddKey(builder, fbs_key)
             schema.ResultAddValue(builder, fbs_value)
