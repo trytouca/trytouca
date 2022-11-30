@@ -12,12 +12,12 @@ union Type {
   Blob
 }
 
-enum ComparisonMode:ubyte { Absolute, Relative }
+enum ComparisonRuleMode:ubyte { Absolute, Relative }
 
-table DoubleRule {
-  mode:ComparisonMode;
-  min:double = null;
+table ComparisonRuleDouble {
+  mode:ComparisonRuleMode;
   max:double = null;
+  min:double = null;
   percent:bool = null;
 }
 
@@ -43,7 +43,7 @@ table Float {
 
 table Double {
   value:double;
-  rule:DoubleRule; // v1.8.1-
+  rule:ComparisonRuleDouble; // v1.8.1-
 }
 
 table String {

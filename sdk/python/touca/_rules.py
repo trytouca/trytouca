@@ -16,29 +16,40 @@ class ComparisonRule(ABC):
 
 
 class NumberRule(ComparisonRule):
-    def absolute(self, *, min=None, max=None):
+    _percent: bool = None
+
+    def absolute(self, *, max=None, min=None):
         self._mode = "absolute"
-        self._min = min
         self._max = max
+        self._min = min
         return self
 
-    def relative(self, *, max=None):
+    def relative(self, *, max=None, percent=None):
         self._mode = "relative"
         self._max = max
+        self._percent = percent
         return self
 
     def json(self):
-        out = {"type": "number", "mode": self._mode, "max": self._max, "min": self._min}
+        out = {
+            "type": "number",
+            "mode": self._mode,
+            "max": self._max,
+            "min": self._min,
+            "percent": self._percent,
+        }
         return {k: v for k, v in out.items() if v is not None}
 
     def serialize(self, builder: Builder):
-        schema.DoubleRuleStart(builder)
-        schema.DoubleRuleAddMode(builder, schema.ComparisonRuleMode.Absolute)
-        if self._min:
-            schema.DoubleRuleAddMin(builder, self._min)
+        schema.ComparisonRuleDoubleStart(builder)
+        schema.ComparisonRuleDoubleAddMode(builder, schema.ComparisonRuleMode.Absolute)
         if self._max:
-            schema.DoubleRuleAddMax(builder, self._max)
-        return schema.DoubleRuleEnd(builder)
+            schema.ComparisonRuleDoubleAddMax(builder, self._max)
+        if self._min:
+            schema.ComparisonRuleDoubleAddMin(builder, self._min)
+        if self._percent:
+            schema.ComparisonRuleDoubleAddPercent(builder, self._percent)
+        return schema.ComparisonRuleDoubleEnd(builder)
 
 
 def number_rule():

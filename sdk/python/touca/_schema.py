@@ -24,23 +24,27 @@ class ResultType(object):
     Assert = 2
 
 
-def DoubleRuleStart(builder):
-    builder.StartObject(3)
+def ComparisonRuleDoubleStart(builder):
+    builder.StartObject(4)
 
 
-def DoubleRuleAddMode(builder, mode):
+def ComparisonRuleDoubleAddMode(builder, mode):
     builder.PrependUint8Slot(0, mode, 0)
 
 
-def DoubleRuleAddMin(builder, min):
-    builder.PrependFloat64Slot(1, min, 0.0)
+def ComparisonRuleDoubleAddMax(builder, max):
+    builder.PrependFloat64Slot(1, max, None)
 
 
-def DoubleRuleAddMax(builder, max):
-    builder.PrependFloat64Slot(2, max, 0.0)
+def ComparisonRuleDoubleAddMin(builder, min):
+    builder.PrependFloat64Slot(2, min, None)
 
 
-def DoubleRuleEnd(builder):
+def ComparisonRuleDoubleAddPercent(builder, percent):
+    builder.PrependBoolSlot(3, percent, None)
+
+
+def ComparisonRuleDoubleEnd(builder):
     return builder.EndObject()
 
 

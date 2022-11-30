@@ -2,7 +2,10 @@
 
 import * as flatbuffers from 'flatbuffers'
 
-import { DoubleRule, DoubleRuleT } from './double-rule'
+import {
+  ComparisonRuleDouble,
+  ComparisonRuleDoubleT
+} from './comparison-rule-double'
 
 export class Double {
   bb: flatbuffers.ByteBuffer | null = null
@@ -36,10 +39,10 @@ export class Double {
     return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0
   }
 
-  rule(obj?: DoubleRule): DoubleRule | null {
+  rule(obj?: ComparisonRuleDouble): ComparisonRuleDouble | null {
     const offset = this.bb!.__offset(this.bb_pos, 6)
     return offset
-      ? (obj || new DoubleRule()).__init(
+      ? (obj || new ComparisonRuleDouble()).__init(
           this.bb!.__indirect(this.bb_pos + offset),
           this.bb!
         )
@@ -79,7 +82,7 @@ export class Double {
 export class DoubleT {
   constructor(
     public value: number = 0.0,
-    public rule: DoubleRuleT | null = null
+    public rule: ComparisonRuleDoubleT | null = null
   ) {}
 
   pack(builder: flatbuffers.Builder): flatbuffers.Offset {

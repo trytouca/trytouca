@@ -4,9 +4,9 @@ import {
   Array as Array_,
   Blob,
   Bool,
-  ComparisonMode,
+  ComparisonRuleDouble,
+  ComparisonRuleMode,
   Double,
-  DoubleRule,
   Float,
   Int,
   Object_,
@@ -66,11 +66,11 @@ type UnwrappedRule<T extends WrappedType> = T extends 'Double'
   ? RuleDouble | undefined
   : never
 
-function makeRuleDouble(rule: DoubleRule): RuleDouble {
+function makeRuleDouble(rule: ComparisonRuleDouble): RuleDouble {
   const mode = rule.mode()
   const max = rule.max() === null ? undefined : rule.max()!
   const min = rule.min() === null ? undefined : rule.min()!
-  if (mode === ComparisonMode.Absolute) {
+  if (mode === ComparisonRuleMode.Absolute) {
     return { type: 'number', mode: 'absolute', min, max }
   }
   const percent = rule.percent() === null ? undefined : rule.percent()!
