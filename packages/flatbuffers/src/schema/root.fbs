@@ -16,8 +16,9 @@ enum ComparisonMode:ubyte { Absolute, Relative }
 
 table DoubleRule {
   mode:ComparisonMode;
-  min:double;
-  max:double;
+  min:double = null;
+  max:double = null;
+  percent:bool = null;
 }
 
 table TypeWrapper {

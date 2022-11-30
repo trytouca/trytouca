@@ -2,7 +2,7 @@
 
 import { Builder, ByteBuffer } from 'flatbuffers'
 import * as Schema from './schema/generated/root'
-import { unwrap_value, unwrap_rule } from './type-wrapper'
+import { unwrap_value, unwrap_rule, Rule } from './type-wrapper'
 
 type Type =
   | boolean
@@ -30,7 +30,7 @@ type Result = {
   key: string
   type: Schema.ResultType
   value: Type
-  rule: unknown
+  rule?: Rule
 }
 
 type Metric = {

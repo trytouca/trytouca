@@ -41,18 +41,23 @@ export class DoubleRule {
       : ComparisonMode.Absolute
   }
 
-  min(): number {
+  min(): number | null {
     const offset = this.bb!.__offset(this.bb_pos, 6)
-    return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0
+    return offset ? this.bb!.readFloat64(this.bb_pos + offset) : null
   }
 
-  max(): number {
+  max(): number | null {
     const offset = this.bb!.__offset(this.bb_pos, 8)
-    return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0
+    return offset ? this.bb!.readFloat64(this.bb_pos + offset) : null
+  }
+
+  percent(): boolean | null {
+    const offset = this.bb!.__offset(this.bb_pos, 10)
+    return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : null
   }
 
   static startDoubleRule(builder: flatbuffers.Builder) {
-    builder.startObject(3)
+    builder.startObject(4)
   }
 
   static addMode(builder: flatbuffers.Builder, mode: ComparisonMode) {
@@ -60,11 +65,15 @@ export class DoubleRule {
   }
 
   static addMin(builder: flatbuffers.Builder, min: number) {
-    builder.addFieldFloat64(1, min, 0.0)
+    builder.addFieldFloat64(1, min, 0)
   }
 
   static addMax(builder: flatbuffers.Builder, max: number) {
-    builder.addFieldFloat64(2, max, 0.0)
+    builder.addFieldFloat64(2, max, 0)
+  }
+
+  static addPercent(builder: flatbuffers.Builder, percent: boolean) {
+    builder.addFieldInt8(3, +percent, 0)
   }
 
   static endDoubleRule(builder: flatbuffers.Builder): flatbuffers.Offset {
@@ -75,35 +84,45 @@ export class DoubleRule {
   static createDoubleRule(
     builder: flatbuffers.Builder,
     mode: ComparisonMode,
-    min: number,
-    max: number
+    min: number | null,
+    max: number | null,
+    percent: boolean | null
   ): flatbuffers.Offset {
     DoubleRule.startDoubleRule(builder)
     DoubleRule.addMode(builder, mode)
-    DoubleRule.addMin(builder, min)
-    DoubleRule.addMax(builder, max)
+    if (min !== null) DoubleRule.addMin(builder, min)
+    if (max !== null) DoubleRule.addMax(builder, max)
+    if (percent !== null) DoubleRule.addPercent(builder, percent)
     return DoubleRule.endDoubleRule(builder)
   }
 
   unpack(): DoubleRuleT {
-    return new DoubleRuleT(this.mode(), this.min(), this.max())
+    return new DoubleRuleT(this.mode(), this.min(), this.max(), this.percent())
   }
 
   unpackTo(_o: DoubleRuleT): void {
     _o.mode = this.mode()
     _o.min = this.min()
     _o.max = this.max()
+    _o.percent = this.percent()
   }
 }
 
 export class DoubleRuleT {
   constructor(
     public mode: ComparisonMode = ComparisonMode.Absolute,
-    public min: number = 0.0,
-    public max: number = 0.0
+    public min: number | null = null,
+    public max: number | null = null,
+    public percent: boolean | null = null
   ) {}
 
   pack(builder: flatbuffers.Builder): flatbuffers.Offset {
-    return DoubleRule.createDoubleRule(builder, this.mode, this.min, this.max)
+    return DoubleRule.createDoubleRule(
+      builder,
+      this.mode,
+      this.min,
+      this.max,
+      this.percent
+    )
   }
 }
