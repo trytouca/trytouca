@@ -77,7 +77,7 @@ function makeRuleDouble(rule: ComparisonRuleDouble): RuleDouble {
   return { type: 'number', mode: 'relative', max, percent }
 }
 
-export function unwrap_rule<T extends WrappedType>(
+export function unwrapRule<T extends WrappedType>(
   wrapper: TypeWrapper
 ): UnwrappedRule<T> | undefined {
   switch (wrapper.valueType()) {
@@ -90,7 +90,7 @@ export function unwrap_rule<T extends WrappedType>(
   }
 }
 
-export function unwrap_value<T extends WrappedType>(
+export function unwrapValue<T extends WrappedType>(
   wrapper: TypeWrapper
 ): UnwrappedType<T> {
   switch (wrapper.valueType()) {
@@ -137,7 +137,7 @@ export function unwrap_value<T extends WrappedType>(
         const unwrappedMember = unwrappedObject.values(i)!
         const key = unwrappedMember.name()!
         const valueWrapper = unwrappedMember.value()!
-        const value = unwrap_value(valueWrapper)
+        const value = unwrapValue(valueWrapper)
         return [key, value]
       })
       const key = unwrappedObject.key()!
@@ -149,7 +149,7 @@ export function unwrap_value<T extends WrappedType>(
       const length = unwrappedArray.valuesLength()
       const array = Array.from({ length }, (_, i) => {
         const valueWrapper = unwrappedArray.values(i)!
-        const value = unwrap_value(valueWrapper)
+        const value = unwrapValue(valueWrapper)
         return value
       })
       return array as UnwrappedType<T>

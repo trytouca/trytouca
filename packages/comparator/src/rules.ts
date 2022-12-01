@@ -11,41 +11,43 @@ export function checkRuleNumber(
 ) {
   const diff = src - dst
   const ratio = dst === 0 ? 0 : Math.abs(diff / dst)
-  const update = (failCondition: boolean, fail: string, pass: string) => {
-    return failCondition
-      ? { score: 0, desc: [fail] }
-      : { score: 1, desc: [pass] }
+  let score = 1
+  const desc: string[] = []
+  const update = (condition: boolean, pass: string, fail: string) => {
+    score = condition ? 1 : 0
+    desc.push(condition ? pass : fail)
   }
   if (rule.mode === 'absolute' && rule.min) {
     const min = rule.min
-    return update(
-      src < min,
-      `value ${src} is smaller than minimum threshold of ${min}`,
-      `value ${src} passes minimum threshold of ${min}`
+    update(
+      min <= src,
+      `value ${src} passes minimum threshold of ${min}`,
+      `value ${src} is smaller than minimum threshold of ${min}`
     )
   }
   if (rule.mode === 'absolute' && rule.max) {
     const max = rule.max
-    return update(
-      max < src,
-      `value ${src} is larger than maximum threshold of ${max}`,
-      `value ${src} passes maximum threshold of ${max}`
+    update(
+      src <= max,
+      `value ${src} passes maximum threshold of ${max}`,
+      `value ${src} is larger than maximum threshold of ${max}`
     )
   }
   if (rule.mode === 'relative' && rule.percent !== undefined) {
     const max = rule.max!
-    return update(
-      max < ratio,
-      `difference ${diff} is larger than the ${max * 100}% maximum threshold`,
-      `difference ${diff} passes the ${max * 100}% maximum threshold`
+    update(
+      ratio <= max,
+      `difference ${diff} passes the ${max * 100}% maximum threshold`,
+      `difference ${diff} is larger than the ${max * 100}% maximum threshold`
     )
   }
   if (rule.mode === 'relative' && rule.percent === undefined) {
     const max = rule.max!
-    return update(
-      max < diff,
-      `difference ${diff} is larger than maximum threshold of ${max}`,
-      `difference ${diff} is within maximum threshold of ${max}`
+    update(
+      diff <= max,
+      `difference ${diff} passes maximum threshold of ${max}`,
+      `difference ${diff} is larger than maximum threshold of ${max}`
     )
   }
+  return { score, desc }
 }
