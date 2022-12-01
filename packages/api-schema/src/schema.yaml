@@ -328,6 +328,27 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/CommentItem'
+    ComparisonRule:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum: [number]
+        mode:
+          type: string
+          enum: [absolute, relative]
+        max:
+          type: number
+        min:
+          type: number
+        percent:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
     EFeatureFlag:
       type: string
       enum:
@@ -892,9 +913,13 @@ components:
           type: string
         name:
           type: string
+        rule:
+          $ref: '#/components/schemas/ComparisonRule'
         score:
           type: number
           format: float
+          minimum: 0
+          maximum: 1
         srcType:
           type: string
         srcValue:

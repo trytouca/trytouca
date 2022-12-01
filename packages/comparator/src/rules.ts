@@ -3,9 +3,12 @@
 import type { Message } from '@touca/flatbuffers'
 
 type Rule = Message['results'][0]['rule']
-type Type = Message['results'][0]['value']
 
-function checkRuleNumber(src: number, dst: number, rule: NonNullable<Rule>) {
+export function checkRuleNumber(
+  src: number,
+  dst: number,
+  rule: NonNullable<Rule>
+) {
   const diff = src - dst
   const ratio = dst === 0 ? 0 : Math.abs(diff / dst)
   const update = (failCondition: boolean, fail: string, pass: string) => {
@@ -44,11 +47,5 @@ function checkRuleNumber(src: number, dst: number, rule: NonNullable<Rule>) {
       `difference ${diff} is larger than maximum threshold of ${max}`,
       `difference ${diff} is within maximum threshold of ${max}`
     )
-  }
-}
-
-export function checkRule(src: Type, dst: Type, rule: NonNullable<Rule>) {
-  if (rule.type === 'number') {
-    return checkRuleNumber(src as number, dst as number, rule)
   }
 }

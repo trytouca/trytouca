@@ -3,7 +3,7 @@
 import { Decimal } from 'decimal.js'
 import { stringify } from 'safe-stable-stringify'
 import type { Message } from '@touca/flatbuffers'
-import { checkRule } from './rules'
+import { checkRuleNumber } from './rules'
 
 type Type = Message['results'][0]['value']
 type Rule = Message['results'][0]['rule']
@@ -12,6 +12,7 @@ type TypeComparison = {
   desc: Array<string>
   dstType?: string
   dstValue?: string
+  rule?: Rule
   score: number
   srcType: string
   srcValue: string
@@ -135,7 +136,7 @@ function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
     const ratio = dst === 0 ? 0 : Math.abs(difference / dst)
     const dstValue = stringify(dst)
     return rule
-      ? { ...cmp, dstValue, ...checkRule(src, dst, rule) }
+      ? { ...cmp, dstValue, rule, ...checkRuleNumber(src, dst, rule) }
       : 0 < ratio && ratio < 0.2
       ? { ...cmp, score: 1 - ratio, dstValue }
       : { ...cmp, dstValue }

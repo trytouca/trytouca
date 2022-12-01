@@ -63,7 +63,7 @@ type RuleDouble =
 export type Rule = RuleDouble
 
 type UnwrappedRule<T extends WrappedType> = T extends 'Double'
-  ? RuleDouble | undefined
+  ? RuleDouble
   : never
 
 function makeRuleDouble(rule: ComparisonRuleDouble): RuleDouble {
