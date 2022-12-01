@@ -21,32 +21,32 @@ export function checkRuleNumber(
     const min = rule.min
     update(
       min <= src,
-      `value ${src} passes minimum threshold of ${min}`,
-      `value ${src} is smaller than minimum threshold of ${min}`
+      `Value passes minimum threshold of ${min}.`,
+      `Value is smaller than minimum threshold of ${min}.`
     )
   }
   if (rule.mode === 'absolute' && rule.max) {
     const max = rule.max
     update(
       src <= max,
-      `value ${src} passes maximum threshold of ${max}`,
-      `value ${src} is larger than maximum threshold of ${max}`
+      `Value passes maximum threshold of ${max}.`,
+      `Value is larger than maximum threshold of ${max}.`
     )
   }
   if (rule.mode === 'relative' && rule.percent !== undefined) {
     const max = rule.max!
     update(
       ratio <= max,
-      `difference ${diff} passes the ${max * 100}% maximum threshold`,
-      `difference ${diff} is larger than the ${max * 100}% maximum threshold`
+      `Difference "${diff}" passes the ${max * 100}% maximum threshold.`,
+      `Difference "${diff}" is larger than the ${max * 100}% maximum threshold.`
     )
   }
   if (rule.mode === 'relative' && rule.percent === undefined) {
     const max = rule.max!
     update(
       diff <= max,
-      `difference ${diff} passes maximum threshold of ${max}`,
-      `difference ${diff} is larger than maximum threshold of ${max}`
+      `Difference "${diff}" passes maximum threshold of ${max}.`,
+      `Difference "${diff}" is larger than maximum threshold of ${max}.`
     )
   }
   return { score, desc }

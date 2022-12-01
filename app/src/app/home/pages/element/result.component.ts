@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -10,12 +10,12 @@ import {
   faPlusCircle,
   faTimesCircle
 } from '@fortawesome/free-solid-svg-icons';
+import { TypeComparison } from '@touca/api-schema';
 import { IClipboardResponse } from 'ngx-clipboard';
 
 import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { NotificationService } from '@/core/services';
 import { Icon, IconColor, IconType } from '@/home/models/page-item.model';
-import { Result } from '@/home/models/result.model';
 import { AlertType } from '@/shared/components/alert.component';
 
 import { ElementPageItemType, ElementPageResult } from './element.model';
@@ -41,7 +41,8 @@ enum RowType {
   Fresh_Simple,
   Fresh_Complex,
   Common_Perfect_Image,
-  Common_Imperfect_Image
+  Common_Imperfect_Image,
+  Common_Accepted_Complex
 }
 
 interface IMetadata {
@@ -55,7 +56,7 @@ interface IMetadata {
   templateUrl: './result.component.html'
 })
 export class ElementItemResultComponent {
-  result: Result;
+  result: TypeComparison;
   category: ElementPageItemType;
   rowType = RowType;
   hideComplexValue = true;
@@ -69,7 +70,7 @@ export class ElementItemResultComponent {
 
   @Input()
   set key(result: ElementPageResult) {
-    this.result = new Result(result.data);
+    this.result = result.data;
     this.category = result.type;
     this.initMetadata();
   }
@@ -98,6 +99,7 @@ export class ElementItemResultComponent {
     const matchType = this.findMatchType();
     const isComplex = this.isComplex();
     const isBuffer = this.result.srcType === 'buffer';
+    const hasRule = !!this.result.rule;
     switch (this.category) {
       case ElementPageItemType.Common:
         switch (matchType) {
@@ -106,6 +108,8 @@ export class ElementItemResultComponent {
               ? RowType.Common_Perfect_Image
               : isComplex
               ? RowType.Common_Perfect_Complex
+              : hasRule
+              ? RowType.Common_Accepted_Complex
               : RowType.Common_Perfect_Simple;
           case MatchType.Imperfect:
             return isBuffer
