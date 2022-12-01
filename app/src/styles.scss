@@ -262,7 +262,7 @@
       }
     }
     pre {
-      @apply bg-white p-4 text-xs text-black dark:bg-gray-800 dark:text-gray-300;
+      @apply rounded-md bg-gray-50 p-4 text-sm text-black dark:bg-gray-800 dark:text-gray-300;
     }
     &:hover .wsl-complex-block-icons {
       @apply visible;
