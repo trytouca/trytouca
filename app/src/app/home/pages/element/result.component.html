@@ -344,12 +344,12 @@
       *ngSwitchCase="rowType.Common_Accepted_Complex">
       <div class="flex justify-center">
         <div class="flex space-x-16">
-          <div class="flex justify-center space-x-2">
+          <div class="sm:flex sm:justify-center sm:space-x-2">
             <div
-              class="flex min-w-[8rem] items-center justify-center rounded-md p-2 text-lg font-black dark:bg-gray-700 dark:text-gray-300">
+              class="flex min-w-[8rem] items-center justify-center rounded-md bg-gray-100 p-2 text-lg font-bold text-gray-700 dark:bg-gray-700 dark:text-gray-300">
               {{ result.srcValue }}
             </div>
-            <div class="p-2 text-sm dark:text-gray-300">
+            <div class="wsl-text-muted p-2 text-sm">
               <div>Actual value</div>
               <div>
                 Version
@@ -359,14 +359,16 @@
           </div>
           <div class="flex justify-center space-x-2">
             <div
-              class="flex min-w-[8rem] items-center justify-center rounded-md p-2 text-lg font-black dark:bg-gray-700 dark:text-gray-300">
+              class="flex min-w-[8rem] items-center justify-center rounded-md bg-gray-100 p-2 text-lg font-bold text-gray-700 dark:bg-gray-700 dark:text-gray-300">
               {{ result.dstValue }}
             </div>
-            <div class="p-2 text-sm dark:text-gray-300">
+            <div class="wsl-text-muted p-2 text-sm">
               <div>Previous value</div>
               <div>
                 Version
-                <span class="font-medium">{{ params.dstBatchName }}</span>
+                <span class="font-medium">
+                  {{ params.dstBatchName }}
+                </span>
               </div>
             </div>
           </div>
@@ -374,7 +376,7 @@
       </div>
       <div class="flex justify-center pb-8">
         <div
-          class="p-2 text-sm dark:text-gray-300"
+          class="wsl-text-muted p-2 text-sm"
           *ngFor="let desc of result.desc">
           {{ desc }}
         </div>
