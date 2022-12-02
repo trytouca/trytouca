@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Builder, Offset } from 'flatbuffers';
 
@@ -11,7 +11,13 @@ export enum Type {
   Double = 5,
   String = 6,
   Object = 7,
-  Array = 8
+  Array = 8,
+  Blob = 9
+}
+
+export enum ComparisonRuleMode {
+  Absolute = 0,
+  Relative = 1
 }
 
 export enum ResultType {
@@ -19,16 +25,43 @@ export enum ResultType {
   Assert = 2
 }
 
+export class ComparisonRuleDouble {
+  static startComparisonRuleDouble(builder: Builder) {
+    builder.startObject(4);
+  }
+
+  static addMode(builder: Builder, mode: ComparisonRuleMode) {
+    builder.addFieldInt8(0, mode, ComparisonRuleMode.Absolute);
+  }
+
+  static addMax(builder: Builder, max: number) {
+    builder.addFieldFloat64(1, max, 0);
+  }
+
+  static addMin(builder: Builder, min: number) {
+    builder.addFieldFloat64(2, min, 0);
+  }
+
+  static addPercent(builder: Builder, percent: boolean) {
+    builder.addFieldInt8(3, +percent, 0);
+  }
+
+  static endComparisonRuleDouble(builder: Builder): Offset {
+    const offset = builder.endObject();
+    return offset;
+  }
+}
+
 export class TypeWrapper {
-  static startTypeWrapper(builder: Builder): void {
+  static startTypeWrapper(builder: Builder) {
     builder.startObject(2);
   }
 
-  static addValueType(builder: Builder, valueType: Type): void {
+  static addValueType(builder: Builder, valueType: Type) {
     builder.addFieldInt8(0, valueType, Type.NONE);
   }
 
-  static addValue(builder: Builder, valueOffset: Offset): void {
+  static addValue(builder: Builder, valueOffset: Offset) {
     builder.addFieldOffset(1, valueOffset, 0);
   }
 
@@ -39,11 +72,11 @@ export class TypeWrapper {
 }
 
 export class Bool {
-  static startBool(builder: Builder): void {
+  static startBool(builder: Builder) {
     builder.startObject(1);
   }
 
-  static addValue(builder: Builder, value: boolean): void {
+  static addValue(builder: Builder, value: boolean) {
     builder.addFieldInt8(0, +value, +false);
   }
 
@@ -54,12 +87,12 @@ export class Bool {
 }
 
 export class Int {
-  static startInt(builder: Builder): void {
+  static startInt(builder: Builder) {
     builder.startObject(1);
   }
 
-  static addValue(builder: Builder, value: bigint): void {
-    builder.addFieldInt64(0, value, BigInt(0));
+  static addValue(builder: Builder, value: bigint) {
+    builder.addFieldInt64(0, value, BigInt('0'));
   }
 
   static endInt(builder: Builder): Offset {
@@ -69,12 +102,16 @@ export class Int {
 }
 
 export class Double {
-  static startDouble(builder: Builder): void {
-    builder.startObject(1);
+  static startDouble(builder: Builder) {
+    builder.startObject(2);
   }
 
-  static addValue(builder: Builder, value: number): void {
+  static addValue(builder: Builder, value: number) {
     builder.addFieldFloat64(0, value, 0.0);
+  }
+
+  static addRule(builder: Builder, ruleOffset: Offset) {
+    builder.addFieldOffset(1, ruleOffset, 0);
   }
 
   static endDouble(builder: Builder): Offset {
@@ -84,11 +121,11 @@ export class Double {
 }
 
 export class T_String {
-  static startString(builder: Builder): void {
+  static startString(builder: Builder) {
     builder.startObject(1);
   }
 
-  static addValue(builder: Builder, valueOffset: Offset): void {
+  static addValue(builder: Builder, valueOffset: Offset) {
     builder.addFieldOffset(0, valueOffset, 0);
   }
 
@@ -99,15 +136,15 @@ export class T_String {
 }
 
 export class ObjectMember {
-  static startObjectMember(builder: Builder): void {
+  static startObjectMember(builder: Builder) {
     builder.startObject(2);
   }
 
-  static addName(builder: Builder, nameOffset: Offset): void {
+  static addName(builder: Builder, nameOffset: Offset) {
     builder.addFieldOffset(0, nameOffset, 0);
   }
 
-  static addValue(builder: Builder, valueOffset: Offset): void {
+  static addValue(builder: Builder, valueOffset: Offset) {
     builder.addFieldOffset(1, valueOffset, 0);
   }
 
@@ -118,22 +155,22 @@ export class ObjectMember {
 }
 
 export class T_Object {
-  static startObject(builder: Builder): void {
+  static startObject(builder: Builder) {
     builder.startObject(2);
   }
 
-  static addKey(builder: Builder, keyOffset: Offset): void {
+  static addKey(builder: Builder, keyOffset: Offset) {
     builder.addFieldOffset(0, keyOffset, 0);
   }
 
-  static addValues(builder: Builder, valuesOffset: Offset): void {
+  static addValues(builder: Builder, valuesOffset: Offset) {
     builder.addFieldOffset(1, valuesOffset, 0);
   }
 
   static createValuesVector(builder: Builder, data: Offset[]): Offset {
     builder.startVector(4, data.length, 4);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addOffset(data[i]);
+      builder.addOffset(data[i]!);
     }
     return builder.endVector();
   }
@@ -145,18 +182,18 @@ export class T_Object {
 }
 
 export class Array {
-  static startArray(builder: Builder): void {
+  static startArray(builder: Builder) {
     builder.startObject(1);
   }
 
-  static addValues(builder: Builder, valuesOffset: Offset): void {
+  static addValues(builder: Builder, valuesOffset: Offset) {
     builder.addFieldOffset(0, valuesOffset, 0);
   }
 
   static createValuesVector(builder: Builder, data: Offset[]): Offset {
     builder.startVector(4, data.length, 4);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addOffset(data[i]);
+      builder.addOffset(data[i]!);
     }
     return builder.endVector();
   }
@@ -167,20 +204,43 @@ export class Array {
   }
 }
 
-export class Result {
-  static startResult(builder: Builder): void {
+export class Blob {
+  static startBlob(builder: Builder) {
     builder.startObject(3);
   }
 
-  static addKey(builder: Builder, keyOffset: Offset): void {
+  static addDigest(builder: Builder, digestOffset: Offset) {
+    builder.addFieldOffset(0, digestOffset, 0);
+  }
+
+  static addMimetype(builder: Builder, mimetypeOffset: Offset) {
+    builder.addFieldOffset(1, mimetypeOffset, 0);
+  }
+
+  static addReference(builder: Builder, referenceOffset: Offset) {
+    builder.addFieldOffset(2, referenceOffset, 0);
+  }
+
+  static endBlob(builder: Builder): Offset {
+    const offset = builder.endObject();
+    return offset;
+  }
+}
+
+export class Result {
+  static startResult(builder: Builder) {
+    builder.startObject(3);
+  }
+
+  static addKey(builder: Builder, keyOffset: Offset) {
     builder.addFieldOffset(0, keyOffset, 0);
   }
 
-  static addValue(builder: Builder, valueOffset: Offset): void {
+  static addValue(builder: Builder, valueOffset: Offset) {
     builder.addFieldOffset(1, valueOffset, 0);
   }
 
-  static addTyp(builder: Builder, typ: ResultType): void {
+  static addTyp(builder: Builder, typ: ResultType) {
     builder.addFieldInt8(2, typ, ResultType.Check);
   }
 
@@ -191,15 +251,15 @@ export class Result {
 }
 
 export class Metric {
-  static startMetric(builder: Builder): void {
+  static startMetric(builder: Builder) {
     builder.startObject(2);
   }
 
-  static addKey(builder: Builder, keyOffset: Offset): void {
+  static addKey(builder: Builder, keyOffset: Offset) {
     builder.addFieldOffset(0, keyOffset, 0);
   }
 
-  static addValue(builder: Builder, valueOffset: Offset): void {
+  static addValue(builder: Builder, valueOffset: Offset) {
     builder.addFieldOffset(1, valueOffset, 0);
   }
 
@@ -208,19 +268,20 @@ export class Metric {
     return offset;
   }
 }
+
 export class Results {
-  static startResults(builder: Builder): void {
+  static startResults(builder: Builder) {
     builder.startObject(1);
   }
 
-  static addEntries(builder: Builder, entriesOffset: Offset): void {
+  static addEntries(builder: Builder, entriesOffset: Offset) {
     builder.addFieldOffset(0, entriesOffset, 0);
   }
 
   static createEntriesVector(builder: Builder, data: Offset[]): Offset {
     builder.startVector(4, data.length, 4);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addOffset(data[i]);
+      builder.addOffset(data[i]!);
     }
     return builder.endVector();
   }
@@ -232,18 +293,18 @@ export class Results {
 }
 
 export class Metrics {
-  static startMetrics(builder: Builder): void {
+  static startMetrics(builder: Builder) {
     builder.startObject(1);
   }
 
-  static addEntries(builder: Builder, entriesOffset: Offset): void {
+  static addEntries(builder: Builder, entriesOffset: Offset) {
     builder.addFieldOffset(0, entriesOffset, 0);
   }
 
   static createEntriesVector(builder: Builder, data: Offset[]): Offset {
     builder.startVector(4, data.length, 4);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addOffset(data[i]);
+      builder.addOffset(data[i]!);
     }
     return builder.endVector();
   }
@@ -255,27 +316,27 @@ export class Metrics {
 }
 
 export class Metadata {
-  static startMetadata(builder: Builder): void {
+  static startMetadata(builder: Builder) {
     builder.startObject(6);
   }
 
-  static addTestsuite(builder: Builder, testsuiteOffset: Offset): void {
+  static addTestsuite(builder: Builder, testsuiteOffset: Offset) {
     builder.addFieldOffset(0, testsuiteOffset, 0);
   }
 
-  static addVersion(builder: Builder, versionOffset: Offset): void {
+  static addVersion(builder: Builder, versionOffset: Offset) {
     builder.addFieldOffset(1, versionOffset, 0);
   }
 
-  static addTestcase(builder: Builder, testcaseOffset: Offset): void {
+  static addTestcase(builder: Builder, testcaseOffset: Offset) {
     builder.addFieldOffset(3, testcaseOffset, 0);
   }
 
-  static addBuiltAt(builder: Builder, builtAtOffset: Offset): void {
+  static addBuiltAt(builder: Builder, builtAtOffset: Offset) {
     builder.addFieldOffset(4, builtAtOffset, 0);
   }
 
-  static addTeamslug(builder: Builder, teamslugOffset: Offset): void {
+  static addTeamslug(builder: Builder, teamslugOffset: Offset) {
     builder.addFieldOffset(5, teamslugOffset, 0);
   }
 
@@ -286,19 +347,19 @@ export class Metadata {
 }
 
 export class Message {
-  static startMessage(builder: Builder): void {
+  static startMessage(builder: Builder) {
     builder.startObject(4);
   }
 
-  static addMetadata(builder: Builder, metadataOffset: Offset): void {
+  static addMetadata(builder: Builder, metadataOffset: Offset) {
     builder.addFieldOffset(0, metadataOffset, 0);
   }
 
-  static addResults(builder: Builder, resultsOffset: Offset): void {
+  static addResults(builder: Builder, resultsOffset: Offset) {
     builder.addFieldOffset(1, resultsOffset, 0);
   }
 
-  static addMetrics(builder: Builder, metricsOffset: Offset): void {
+  static addMetrics(builder: Builder, metricsOffset: Offset) {
     builder.addFieldOffset(3, metricsOffset, 0);
   }
 
@@ -309,11 +370,11 @@ export class Message {
 }
 
 export class MessageBuffer {
-  static startMessageBuffer(builder: Builder): void {
+  static startMessageBuffer(builder: Builder) {
     builder.startObject(1);
   }
 
-  static addBuf(builder: Builder, bufOffset: Offset): void {
+  static addBuf(builder: Builder, bufOffset: Offset) {
     builder.addFieldOffset(0, bufOffset, 0);
   }
 
@@ -323,7 +384,7 @@ export class MessageBuffer {
   ): Offset {
     builder.startVector(1, data.length, 1);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addInt8(data[i]);
+      builder.addInt8(data[i]!);
     }
     return builder.endVector();
   }
@@ -335,18 +396,18 @@ export class MessageBuffer {
 }
 
 export class Messages {
-  static startMessages(builder: Builder): void {
+  static startMessages(builder: Builder) {
     builder.startObject(1);
   }
 
-  static addMessages(builder: Builder, messagesOffset: Offset): void {
+  static addMessages(builder: Builder, messagesOffset: Offset) {
     builder.addFieldOffset(0, messagesOffset, 0);
   }
 
   static createMessagesVector(builder: Builder, data: Offset[]): Offset {
     builder.startVector(4, data.length, 4);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addOffset(data[i]);
+      builder.addOffset(data[i]!);
     }
     return builder.endVector();
   }
