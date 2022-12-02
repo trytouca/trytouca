@@ -3,117 +3,127 @@
 namespace touca.fbs;
 
 union Type {
-    Bool,
-    Int,
-    UInt,
-    Float,
-    Double,
-    String,
-    Object,
-    Array,
-    Blob
+  Bool,
+  Int,
+  UInt,
+  Float,
+  Double,
+  String,
+  Object,
+  Array,
+  Blob
+}
+
+enum ComparisonRuleMode:ubyte { Absolute, Relative }
+
+table ComparisonRuleDouble {
+  mode:ComparisonRuleMode;
+  max:double = null;
+  min:double = null;
+  percent:bool = null;
 }
 
 table TypeWrapper {
-    value:Type;
+  value:Type;
 }
 
 table Bool {
-    value:bool;
+  value:bool;
 }
 
 table Int {
-    value:long;
+  value:long;
 }
 
 table UInt {
-    value:ulong;
+  value:ulong;
 }
 
 table Float {
-    value:float;
+  value:float;
 }
 
 table Double {
-    value:double;
+  value:double;
+  rule:ComparisonRuleDouble; // v1.8.1-
 }
 
 table String {
-    value:string;
+  value:string;
 }
 
 table ObjectMember {
-    name:string;
-    value:TypeWrapper;
+  name:string;
+  value:TypeWrapper;
 }
 
 table Object {
-    key:string;
-    values:[ObjectMember];
+  key:string;
+  values:[ObjectMember];
 }
 
 table Array {
-    values:[TypeWrapper];
+  values:[TypeWrapper];
 }
 
 table Blob {
-    digest:string;
-    mimetype:string;
-    reference:string;
+  digest:string;
+  mimetype:string;
+  reference:string;
 }
 
 enum ResultType:ubyte { Check = 1, Assert }
 
 table Result {
-    key:string;
-    value:TypeWrapper;
-    typ:ResultType = Check; // v1.4.0-
+  key:string;
+  value:TypeWrapper;
+  typ:ResultType = Check; // v1.4.0-
 }
 
 table Assertion {
-    key:string (deprecated); // -v1.4.0
-    value:TypeWrapper (deprecated); // -v1.4.0
+  key:string (deprecated); // -v1.4.0
+  value:TypeWrapper (deprecated); // -v1.4.0
 }
 
 table Metric {
-    key:string;
-    value:TypeWrapper;
+  key:string;
+  value:TypeWrapper;
 }
 
 table Results {
-    entries:[Result];
+  entries:[Result];
 }
 
 table Assertions {
-    entries:[Assertion] (deprecated); // -v1.4.0
+  entries:[Assertion] (deprecated); // -v1.4.0
 }
 
 table Metrics {
-    entries:[Metric];
+  entries:[Metric];
 }
 
 table Metadata {
-    testsuite:string;
-    version:string;
-    hostname:string (deprecated); // -v1.2.0
-    testcase:string;
-    builtAt:string;
-    teamslug:string; // v1.2.0-
+  testsuite:string;
+  version:string;
+  hostname:string (deprecated); // -v1.2.0
+  testcase:string;
+  builtAt:string;
+  teamslug:string; // v1.2.0-
 }
 
 table Message {
-    metadata:Metadata;
-    results:Results;
-    assertions:Assertions (deprecated); // -v1.4.0
-    metrics:Metrics;
+  metadata:Metadata;
+  results:Results;
+  assertions:Assertions (deprecated); // -v1.4.0
+  metrics:Metrics;
 }
 
 table MessageBuffer {
-    buf:[ubyte] (nested_flatbuffer: "Message");
+  buf:[ubyte] (nested_flatbuffer: "Message");
 }
 
 table Messages {
-    messages:[MessageBuffer];
+  messages:[MessageBuffer];
 }
 
 root_type Messages;

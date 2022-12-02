@@ -4,7 +4,6 @@ import type { TypeComparison, Userinfo } from '@touca/api-schema';
 
 import { Metric } from '@/home/models/metric.model';
 import { PageListItem } from '@/home/models/page-list-item.model';
-import { Result } from '@/home/models/result.model';
 
 export type ElementPageOverviewMetadata = {
   resultsCountHead: number;
@@ -32,10 +31,10 @@ export enum ElementPageItemType {
 }
 
 export class ElementPageResult extends PageListItem<
-  Result,
+  TypeComparison,
   ElementPageItemType
 > {
-  public constructor(data: Result, type: ElementPageItemType) {
+  public constructor(data: TypeComparison, type: ElementPageItemType) {
     super(data, type);
   }
 }

@@ -5,6 +5,11 @@ export { Assertion, AssertionT } from './assertion'
 export { Assertions, AssertionsT } from './assertions'
 export { Blob, BlobT } from './blob'
 export { Bool, BoolT } from './bool'
+export {
+  ComparisonRuleDouble,
+  ComparisonRuleDoubleT
+} from './comparison-rule-double'
+export { ComparisonRuleMode } from './comparison-rule-mode'
 export { Double, DoubleT } from './double'
 export { Float, FloatT } from './float'
 export { Int, IntT } from './int'

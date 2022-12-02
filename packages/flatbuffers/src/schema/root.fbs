@@ -12,6 +12,15 @@ union Type {
   Blob
 }
 
+enum ComparisonRuleMode:ubyte { Absolute, Relative }
+
+table ComparisonRuleDouble {
+  mode:ComparisonRuleMode;
+  max:double = null;
+  min:double = null;
+  percent:bool = null;
+}
+
 table TypeWrapper {
   value:Type;
 }
@@ -34,6 +43,7 @@ table Float {
 
 table Double {
   value:double;
+  rule:ComparisonRuleDouble; // v1.8.1-
 }
 
 table String {

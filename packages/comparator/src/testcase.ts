@@ -41,8 +41,9 @@ function initResultsCellar(
   resultType: ResultType
 ): Cellar {
   const toMap = (m: Message['results']) =>
-    new Map(m.map((v) => [v.key, { type: v.type, value: v.value }]))
-
+    new Map(
+      m.map((v) => [v.key, { type: v.type, value: v.value, rule: v.rule }])
+    )
   const cellar: Cellar = { commonKeys: [], newKeys: [], missingKeys: [] }
   const srcResultsMap = toMap(srcResults)
   const dstResultsMap = toMap(dstResults)
@@ -53,7 +54,8 @@ function initResultsCellar(
     if (srcResultsMap.has(key)) {
       const cmp = compareTypes(
         srcResultsMap.get(key)!.value,
-        dstResultsMap.get(key)!.value
+        dstResultsMap.get(key)!.value,
+        srcResultsMap.get(key)!.rule
       )
       cellar.commonKeys.push({ name: key, ...cmp })
       continue

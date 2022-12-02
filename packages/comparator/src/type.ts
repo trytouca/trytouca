@@ -2,20 +2,17 @@
 
 import { Decimal } from 'decimal.js'
 import { stringify } from 'safe-stable-stringify'
+import type { Message } from '@touca/flatbuffers'
+import { checkRuleNumber } from './rules'
 
-type Type =
-  | boolean
-  | bigint
-  | number
-  | string
-  | Array<Type>
-  | Buffer
-  | { [key: string]: Type }
+type Type = Message['results'][0]['value']
+type Rule = Message['results'][0]['rule']
 
 type TypeComparison = {
   desc: Array<string>
   dstType?: string
   dstValue?: string
+  rule?: Rule
   score: number
   srcType: string
   srcValue: string
@@ -98,7 +95,7 @@ function flatten(input: Type): Map<string, Type> {
   return output
 }
 
-function compare(src: Type, dst: Type): TypeComparison {
+function compare(src: Type, dst: Type, rule?: Rule): TypeComparison {
   const cmp: TypeComparison = {
     srcType: getTypeName(src),
     srcValue: Buffer.isBuffer(src) ? src.toString() : stringify(src),
@@ -132,16 +129,17 @@ function compare(src: Type, dst: Type): TypeComparison {
   }
 
   if (isNumber(src) && isNumber(dst)) {
-    const RATIO_THRESHOLD = 0.2
     const difference = src - dst
     if (difference === 0) {
       return { ...cmp, score: 1 }
     }
     const ratio = dst === 0 ? 0 : Math.abs(difference / dst)
-    if (0 < ratio && ratio < RATIO_THRESHOLD) {
-      return { ...cmp, score: 1 - ratio, dstValue: stringify(dst) }
-    }
-    return { ...cmp, dstValue: stringify(dst) }
+    const dstValue = stringify(dst)
+    return rule
+      ? { ...cmp, dstValue, rule, ...checkRuleNumber(src, dst, rule) }
+      : 0 < ratio && ratio < 0.2
+      ? { ...cmp, score: 1 - ratio, dstValue }
+      : { ...cmp, dstValue }
   }
 
   if (isString(src) && isString(dst)) {

@@ -8,7 +8,7 @@ from hashlib import sha256
 from mimetypes import guess_type
 from pathlib import Path, PosixPath
 from typing import Any, Callable, Dict, Type, Union
-
+from touca._rules import ComparisonRule
 import touca._schema as schema
 from flatbuffers import Builder
 
@@ -47,6 +47,9 @@ class ToucaType(ABC):
     @abstractmethod
     def serialize(self, builder: Builder):
         pass
+
+    def add_rule(self, rule: ComparisonRule = None):
+        return self
 
 
 class BlobType(ToucaType):
@@ -101,20 +104,28 @@ class BoolType(ToucaType):
 
 class DecimalType(ToucaType):
     def __init__(self, value: float):
-
         self._value = value
+        self._rule: ComparisonRule = None
 
     def json(self):
         return self._value
 
     def serialize(self, builder: Builder):
+        if self._rule:
+            fbs_rule = self._rule.serialize(builder)
         schema.DoubleStart(builder)
         schema.DoubleAddValue(builder, self._value)
+        if self._rule:
+            schema.DoubleAddRule(builder, fbs_rule)
         value = schema.DoubleEnd(builder)
         schema.TypeWrapperStart(builder)
         schema.TypeWrapperAddValue(builder, value)
         schema.TypeWrapperAddValueType(builder, schema.Type.Double)
         return schema.TypeWrapperEnd(builder)
+
+    def add_rule(self, rule: ComparisonRule = None):
+        self._rule = rule
+        return self
 
 
 class IntegerType(ToucaType):
