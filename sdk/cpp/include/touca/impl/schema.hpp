@@ -7,6 +7,9 @@
 namespace touca {
 namespace fbs {
 
+struct ComparisonRuleDouble;
+struct ComparisonRuleDoubleBuilder;
+
 struct TypeWrapper;
 struct TypeWrapperBuilder;
 
@@ -36,6 +39,9 @@ struct ObjectBuilder;
 
 struct Array;
 struct ArrayBuilder;
+
+struct Blob;
+struct BlobBuilder;
 
 struct Result;
 struct ResultBuilder;
@@ -77,21 +83,89 @@ enum class Type : uint8_t {
   String = 6,
   Object = 7,
   Array = 8,
+  Blob = 9,
   MIN = NONE,
-  MAX = Array
+  MAX = Blob
 };
 
 bool VerifyType(flatbuffers::Verifier& verifier, const void* obj, Type type);
 bool VerifyTypeVector(
     flatbuffers::Verifier& verifier,
     const flatbuffers::Vector<flatbuffers::Offset<void>>* values,
-    const flatbuffers::Vector<uint8_t>* types);
+    const flatbuffers::Vector<Type>* types);
+
+enum class ComparisonRuleMode : uint8_t {
+  Absolute = 0,
+  Relative = 1,
+  MIN = Absolute,
+  MAX = Relative
+};
 
 enum class ResultType : uint8_t {
   Check = 1,
   Assert = 2,
   MIN = Check,
   MAX = Assert
+};
+
+struct ComparisonRuleDouble FLATBUFFERS_FINAL_CLASS
+    : private flatbuffers::Table {
+  typedef ComparisonRuleDoubleBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_MODE = 4,
+    VT_MAX = 6,
+    VT_MIN = 8,
+    VT_PERCENT = 10
+  };
+  touca::fbs::ComparisonRuleMode mode() const {
+    return static_cast<touca::fbs::ComparisonRuleMode>(
+        GetField<uint8_t>(VT_MODE, 0));
+  }
+  flatbuffers::Optional<double> max() const {
+    return GetOptional<double, double>(VT_MAX);
+  }
+  flatbuffers::Optional<double> min() const {
+    return GetOptional<double, double>(VT_MIN);
+  }
+  flatbuffers::Optional<bool> percent() const {
+    return GetOptional<uint8_t, bool>(VT_PERCENT);
+  }
+  bool Verify(flatbuffers::Verifier& verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<uint8_t>(verifier, VT_MODE) &&
+           VerifyField<double>(verifier, VT_MAX) &&
+           VerifyField<double>(verifier, VT_MIN) &&
+           VerifyField<uint8_t>(verifier, VT_PERCENT) && verifier.EndTable();
+  }
+};
+
+struct ComparisonRuleDoubleBuilder {
+  typedef ComparisonRuleDouble Table;
+  flatbuffers::FlatBufferBuilder& fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_mode(touca::fbs::ComparisonRuleMode mode) {
+    fbb_.AddElement<uint8_t>(ComparisonRuleDouble::VT_MODE,
+                             static_cast<uint8_t>(mode), 0);
+  }
+  void add_max(double max) {
+    fbb_.AddElement<double>(ComparisonRuleDouble::VT_MAX, max);
+  }
+  void add_min(double min) {
+    fbb_.AddElement<double>(ComparisonRuleDouble::VT_MIN, min);
+  }
+  void add_percent(bool percent) {
+    fbb_.AddElement<uint8_t>(ComparisonRuleDouble::VT_PERCENT,
+                             static_cast<uint8_t>(percent));
+  }
+  explicit ComparisonRuleDoubleBuilder(flatbuffers::FlatBufferBuilder& _fbb)
+      : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<ComparisonRuleDouble> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<ComparisonRuleDouble>(end);
+    return o;
+  }
 };
 
 struct TypeWrapper FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -281,12 +355,18 @@ inline flatbuffers::Offset<Float> CreateFloat(
 struct Double FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef DoubleBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
-    VT_VALUE = 4
+    VT_VALUE = 4,
+    VT_RULE = 6
   };
   double value() const { return GetField<double>(VT_VALUE, 0.0); }
+  const touca::fbs::ComparisonRuleDouble* rule() const {
+    return GetPointer<const touca::fbs::ComparisonRuleDouble*>(VT_RULE);
+  }
   bool Verify(flatbuffers::Verifier& verifier) const {
     return VerifyTableStart(verifier) &&
-           VerifyField<double>(verifier, VT_VALUE) && verifier.EndTable();
+           VerifyField<double>(verifier, VT_VALUE) &&
+           VerifyOffset(verifier, VT_RULE) && verifier.VerifyTable(rule()) &&
+           verifier.EndTable();
   }
 };
 
@@ -296,6 +376,9 @@ struct DoubleBuilder {
   flatbuffers::uoffset_t start_;
   void add_value(double value) {
     fbb_.AddElement<double>(Double::VT_VALUE, value, 0.0);
+  }
+  void add_rule(flatbuffers::Offset<touca::fbs::ComparisonRuleDouble> rule) {
+    fbb_.AddOffset(Double::VT_RULE, rule);
   }
   explicit DoubleBuilder(flatbuffers::FlatBufferBuilder& _fbb) : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -308,9 +391,11 @@ struct DoubleBuilder {
 };
 
 inline flatbuffers::Offset<Double> CreateDouble(
-    flatbuffers::FlatBufferBuilder& _fbb, double value = 0.0) {
+    flatbuffers::FlatBufferBuilder& _fbb, double value = 0.0,
+    flatbuffers::Offset<touca::fbs::ComparisonRuleDouble> rule = 0) {
   DoubleBuilder builder_(_fbb);
   builder_.add_value(value);
+  builder_.add_rule(rule);
   return builder_.Finish();
 }
 
@@ -471,6 +556,55 @@ struct ArrayBuilder {
   flatbuffers::Offset<Array> Finish() {
     const auto end = fbb_.EndTable(start_);
     auto o = flatbuffers::Offset<Array>(end);
+    return o;
+  }
+};
+
+struct Blob FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
+  typedef BlobBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_DIGEST = 4,
+    VT_MIMETYPE = 6,
+    VT_REFERENCE = 8
+  };
+  const flatbuffers::String* digest() const {
+    return GetPointer<const flatbuffers::String*>(VT_DIGEST);
+  }
+  const flatbuffers::String* mimetype() const {
+    return GetPointer<const flatbuffers::String*>(VT_MIMETYPE);
+  }
+  const flatbuffers::String* reference() const {
+    return GetPointer<const flatbuffers::String*>(VT_REFERENCE);
+  }
+  bool Verify(flatbuffers::Verifier& verifier) const {
+    return VerifyTableStart(verifier) && VerifyOffset(verifier, VT_DIGEST) &&
+           verifier.VerifyString(digest()) &&
+           VerifyOffset(verifier, VT_MIMETYPE) &&
+           verifier.VerifyString(mimetype()) &&
+           VerifyOffset(verifier, VT_REFERENCE) &&
+           verifier.VerifyString(reference()) && verifier.EndTable();
+  }
+};
+
+struct BlobBuilder {
+  typedef Blob Table;
+  flatbuffers::FlatBufferBuilder& fbb_;
+  flatbuffers::uoffset_t start_;
+  void add_digest(flatbuffers::Offset<flatbuffers::String> digest) {
+    fbb_.AddOffset(Blob::VT_DIGEST, digest);
+  }
+  void add_mimetype(flatbuffers::Offset<flatbuffers::String> mimetype) {
+    fbb_.AddOffset(Blob::VT_MIMETYPE, mimetype);
+  }
+  void add_reference(flatbuffers::Offset<flatbuffers::String> reference) {
+    fbb_.AddOffset(Blob::VT_REFERENCE, reference);
+  }
+  explicit BlobBuilder(flatbuffers::FlatBufferBuilder& _fbb) : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  flatbuffers::Offset<Blob> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = flatbuffers::Offset<Blob>(end);
     return o;
   }
 };
@@ -771,7 +905,7 @@ struct MessageBuilder {
   void add_metadata(flatbuffers::Offset<touca::fbs::Metadata> metadata) {
     fbb_.AddOffset(Message::VT_METADATA, metadata);
   }
-  void checks(flatbuffers::Offset<touca::fbs::Results> results) {
+  void add_results(flatbuffers::Offset<touca::fbs::Results> results) {
     fbb_.AddOffset(Message::VT_RESULTS, results);
   }
   void add_metrics(flatbuffers::Offset<touca::fbs::Metrics> metrics) {
@@ -794,7 +928,7 @@ inline flatbuffers::Offset<Message> CreateMessage(
     flatbuffers::Offset<touca::fbs::Metrics> metrics = 0) {
   MessageBuilder builder_(_fbb);
   builder_.add_metrics(metrics);
-  builder_.checks(results);
+  builder_.add_results(results);
   builder_.add_metadata(metadata);
   return builder_.Finish();
 }
@@ -927,6 +1061,10 @@ inline bool VerifyType(flatbuffers::Verifier& verifier, const void* obj,
       auto ptr = reinterpret_cast<const touca::fbs::Array*>(obj);
       return verifier.VerifyTable(ptr);
     }
+    case Type::Blob: {
+      auto ptr = reinterpret_cast<const touca::fbs::Blob*>(obj);
+      return verifier.VerifyTable(ptr);
+    }
     default:
       return true;
   }
@@ -935,7 +1073,7 @@ inline bool VerifyType(flatbuffers::Verifier& verifier, const void* obj,
 inline bool VerifyTypeVector(
     flatbuffers::Verifier& verifier,
     const flatbuffers::Vector<flatbuffers::Offset<void>>* values,
-    const flatbuffers::Vector<uint8_t>* types) {
+    const flatbuffers::Vector<Type>* types) {
   if (!values || !types) return !values && !types;
   if (values->size() != types->size()) return false;
   for (flatbuffers::uoffset_t i = 0; i < values->size(); ++i) {

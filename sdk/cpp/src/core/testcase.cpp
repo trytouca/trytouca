@@ -259,7 +259,7 @@ std::vector<uint8_t> Testcase::flatbuffers() const {
 
   fbs::MessageBuilder fbsMessage_builder(builder);
   fbsMessage_builder.add_metadata(fbsMetadata);
-  fbsMessage_builder.checks(fbsResults);
+  fbsMessage_builder.add_results(fbsResults);
   fbsMessage_builder.add_metrics(fbsMetrics);
   const auto& message = fbsMessage_builder.Finish();
 

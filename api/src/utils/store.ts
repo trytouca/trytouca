@@ -209,12 +209,7 @@ export const objectStore =
           accessKeyId: config.minio.user,
           secretAccessKey: config.minio.pass
         },
-        endpoint: {
-          protocol: 'http',
-          hostname: config.minio.host,
-          port: config.minio.port,
-          path: '/'
-        },
+        endpoint: `http://${config.minio.host}:${config.minio.port}/`,
         forcePathStyle: true,
         region: config.minio.region
       })
