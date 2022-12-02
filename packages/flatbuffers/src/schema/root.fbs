@@ -12,12 +12,12 @@ union Type {
   Blob
 }
 
-enum ComparisonRuleMode:ubyte { Absolute, Relative }
+enum ComparisonRuleMode:uint8 { Absolute, Relative }
 
 table ComparisonRuleDouble {
   mode:ComparisonRuleMode;
-  max:double = null;
-  min:double = null;
+  max:float64 = null;
+  min:float64 = null;
   percent:bool = null;
 }
 
@@ -30,19 +30,19 @@ table Bool {
 }
 
 table Int {
-  value:long;
+  value:int64;
 }
 
 table UInt {
-  value:ulong;
+  value:uint64;
 }
 
 table Float {
-  value:float;
+  value:float32;
 }
 
 table Double {
-  value:double;
+  value:float64;
   rule:ComparisonRuleDouble; // v1.8.1-
 }
 
@@ -70,7 +70,7 @@ table Blob {
   reference:string;
 }
 
-enum ResultType:ubyte { Check = 1, Assert }
+enum ResultType:uint8 { Check = 1, Assert }
 
 table Result {
   key:string;
@@ -117,7 +117,7 @@ table Message {
 }
 
 table MessageBuffer {
-  buf:[ubyte] (nested_flatbuffer: "Message");
+  buf:[uint8] (nested_flatbuffer: "Message");
 }
 
 table Messages {

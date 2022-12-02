@@ -16,6 +16,7 @@ usage: $(basename "$0") [ -h | --long-options]
   --docs                    build client library documentation
   --lint                    lint client library source code
   --clear                   remove build artifacts
+  --schema                  regenerate flatbuffers schema code
   --test                    test client library components
   --coverage                generate code-coverage report
 EOF
@@ -322,6 +323,23 @@ build_docs () {
     log_error "failed to build client library documentation"
 }
 
+build_schema () {
+    if [ $# -ne 1 ]; then return 1; fi
+    check_prerequisite_commands "flatc"
+    local dir_root
+    dir_root="$(dirname "$(dirname "${TOUCA_CLIENT_ROOT_DIR}")")"
+    local file_schema="${dir_root}/config/flatbuffers/touca.fbs"
+    local dir_out="${TOUCA_CLIENT_ROOT_DIR}/include/touca/impl/"
+    if [ ! -f "$file_schema" ]; then
+        log_error "schema file does not exit: ${file_schema}"
+    fi
+    flatc --cpp --scoped-enums -o "$dir_out" "$file_schema"
+    mv "$dir_out/touca_generated.h" "$dir_out/schema.hpp"
+    log_info "regenerated flatbuffers code based on schema file"
+    clang-format -i "$dir_out/schema.hpp" \
+        --style="{Language: Cpp, BasedOnStyle: Google, DerivePointerAlignment: false, PointerAlignment: Left}"
+}
+
 build_test () {
     if [ $# -ne 1 ]; then return 1; fi
     local dir_source="${TOUCA_CLIENT_ROOT_DIR}"
@@ -340,6 +358,7 @@ declare -A BUILD_MODES=(
     ["coverage"]=0
     ["lint"]=0
     ["package"]=0
+    ["schema"]=0
     ["test"]=0
 )
 declare -A BUILD_OPTIONS=(
@@ -385,6 +404,10 @@ for arg in "$@"; do
         "--package")
             BUILD_MODES["build"]=0
             BUILD_MODES["package"]=1
+            ;;
+        "--schema")
+            BUILD_MODES["build"]=0
+            BUILD_MODES["schema"]=1
             ;;
         "--test")
             BUILD_MODES["build"]=0
