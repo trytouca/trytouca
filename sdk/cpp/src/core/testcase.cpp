@@ -201,59 +201,35 @@ rapidjson::Value Testcase::json(
 
 std::vector<uint8_t> Testcase::flatbuffers() const {
   flatbuffers::FlatBufferBuilder builder;
-
-  const auto& fbsTeamslug = builder.CreateString(_metadata.teamslug);
-  const auto& fbsTestsuite = builder.CreateString(_metadata.testsuite);
-  const auto& fbsVersion = builder.CreateString(_metadata.version);
-  const auto& fbsTestcase = builder.CreateString(_metadata.testcase);
-  const auto& fbsBuiltAt = builder.CreateString(_metadata.builtAt);
-
-  fbs::MetadataBuilder fbsMetadata_builder(builder);
-  fbsMetadata_builder.add_teamslug(fbsTeamslug);
-  fbsMetadata_builder.add_testsuite(fbsTestsuite);
-  fbsMetadata_builder.add_version(fbsVersion);
-  fbsMetadata_builder.add_testcase(fbsTestcase);
-  fbsMetadata_builder.add_builtAt(fbsBuiltAt);
-  const auto& fbsMetadata = fbsMetadata_builder.Finish();
+  const auto& fbsMetadata = fbs::CreateMetadataDirect(
+      builder, _metadata.testsuite.c_str(), _metadata.version.c_str(),
+      _metadata.testcase.c_str(), _metadata.builtAt.c_str(),
+      _metadata.teamslug.c_str());
 
   // serialize results map
 
-  std::vector<flatbuffers::Offset<fbs::Result>> fbsResultEntries_vector;
+  std::vector<flatbuffers::Offset<fbs::Result>> fbsResultEntries;
   for (const auto& result : _resultsMap) {
-    const auto& fbsKey = builder.CreateString(result.first);
-    const auto& fbsValue = result.second.val.serialize(builder);
-    fbs::ResultBuilder fbsResult_builder(builder);
-    fbsResult_builder.add_key(fbsKey);
-    fbsResult_builder.add_value(fbsValue);
-    fbsResult_builder.add_typ(result.second.typ == ResultCategory::Assert
-                                  ? fbs::ResultType::Assert
-                                  : fbs::ResultType::Check);
-    const auto& fbsEntry = fbsResult_builder.Finish();
-    fbsResultEntries_vector.push_back(fbsEntry);
+    const auto& key = result.first.c_str();
+    const auto& value = result.second.val.serialize(builder);
+    const auto& type = result.second.typ == ResultCategory::Assert
+                           ? fbs::ResultType::Assert
+                           : fbs::ResultType::Check;
+    const auto& entry = fbs::CreateResultDirect(builder, key, value, type);
+    fbsResultEntries.push_back(entry);
   }
-  const auto& fbsResultEntries = builder.CreateVector(fbsResultEntries_vector);
-
-  fbs::ResultsBuilder fbsResults_builder(builder);
-  fbsResults_builder.add_entries(fbsResultEntries);
-  const auto& fbsResults = fbsResults_builder.Finish();
+  const auto& fbsResults = fbs::CreateResultsDirect(builder, &fbsResultEntries);
 
   // serialize metrics
 
-  std::vector<flatbuffers::Offset<fbs::Metric>> fbsMetricEntries_vector;
+  std::vector<flatbuffers::Offset<fbs::Metric>> fbsMetricEntries;
   for (const auto& metric : metrics()) {
-    const auto& fbsKey = builder.CreateString(metric.first);
-    const auto& fbsValue = metric.second.value.serialize(builder);
-    fbs::MetricBuilder fbsMetric_builder(builder);
-    fbsMetric_builder.add_key(fbsKey);
-    fbsMetric_builder.add_value(fbsValue);
-    const auto& fbsEntry = fbsMetric_builder.Finish();
-    fbsMetricEntries_vector.push_back(fbsEntry);
+    const auto& key = metric.first.c_str();
+    const auto& value = metric.second.value.serialize(builder);
+    const auto& entry = fbs::CreateMetricDirect(builder, key, value);
+    fbsMetricEntries.push_back(entry);
   }
-  const auto& fbsMetricEntries = builder.CreateVector(fbsMetricEntries_vector);
-
-  fbs::MetricsBuilder fbsMetrics_builder(builder);
-  fbsMetrics_builder.add_entries(fbsMetricEntries);
-  const auto& fbsMetrics = fbsMetrics_builder.Finish();
+  const auto& fbsMetrics = fbs::CreateMetricsDirect(builder, &fbsMetricEntries);
 
   // serialize message object representing this testcase
 
@@ -295,24 +271,16 @@ void Testcase::clear() {
 
 std::vector<uint8_t> Testcase::serialize(
     const std::vector<Testcase>& testcases) {
-  flatbuffers::FlatBufferBuilder fbb;
-
-  std::vector<flatbuffers::Offset<fbs::MessageBuffer>> fbsMessageBuffer_vector;
+  flatbuffers::FlatBufferBuilder builder;
+  std::vector<flatbuffers::Offset<fbs::MessageBuffer>> messageBuffers;
   for (const auto& tc : testcases) {
-    const auto& buffer = tc.flatbuffers();
-    const auto& bufferVec = fbb.CreateVector(buffer);
-    const auto& fbsMessageBuffer = fbs::CreateMessageBuffer(fbb, bufferVec);
-    fbsMessageBuffer_vector.push_back(fbsMessageBuffer);
+    const auto& out = tc.flatbuffers();
+    messageBuffers.push_back(fbs::CreateMessageBufferDirect(builder, &out));
   }
-  const auto& fbsMessageBuffers = fbb.CreateVector(fbsMessageBuffer_vector);
-
-  fbs::MessagesBuilder fbsMessages_builder(fbb);
-  fbsMessages_builder.add_messages(fbsMessageBuffers);
-  const auto& messages = fbsMessages_builder.Finish();
-  fbb.Finish(messages);
-
-  const auto& ptr = fbb.GetBufferPointer();
-  return {ptr, ptr + fbb.GetSize()};
+  const auto& messages = fbs::CreateMessagesDirect(builder, &messageBuffers);
+  builder.Finish(messages);
+  const auto& ptr = builder.GetBufferPointer();
+  return {ptr, ptr + builder.GetSize()};
 }
 
 std::string elements_map_to_json(const ElementsMap& elements_map) {

@@ -19,129 +19,64 @@ namespace detail {
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder, const detail::boolean_t value) {
-  fbs::BoolBuilder bool_builder(builder);
-  bool_builder.add_value(value);
-  const auto& fbsValue = bool_builder.Finish();
-  fbs::TypeWrapperBuilder typeWrapper_builder(builder);
-  typeWrapper_builder.add_value(fbsValue.Union());
-  typeWrapper_builder.add_value_type(fbs::Type::Bool);
-  return typeWrapper_builder.Finish();
+  const auto& fbsNumber = fbs::CreateBool(builder, value);
+  return fbs::CreateTypeWrapper(builder, fbs::Type::Bool, fbsNumber.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder,
     const detail::number_double_t& value) {
-  touca::fbs::DoubleBuilder fbsNumber_builder(builder);
-  fbsNumber_builder.add_value(value);
-  const auto& fbsNumber = fbsNumber_builder.Finish();
-
-  std::pair<flatbuffers::Offset<void>, touca::fbs::Type> buffer;
-  buffer.first = fbsNumber.Union();
-  buffer.second = touca::fbs::Type::Double;
-  fbs::TypeWrapperBuilder fbsTypeWrapper_builder(builder);
-  fbsTypeWrapper_builder.add_value(buffer.first);
-  fbsTypeWrapper_builder.add_value_type(buffer.second);
-  return fbsTypeWrapper_builder.Finish();
+  const auto& fbsNumber = fbs::CreateDouble(builder, value);
+  return fbs::CreateTypeWrapper(builder, fbs::Type::Double, fbsNumber.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder,
     const detail::number_float_t& value) {
-  touca::fbs::FloatBuilder fbsNumber_builder(builder);
-  fbsNumber_builder.add_value(value);
-  const auto& fbsNumber = fbsNumber_builder.Finish();
-
-  std::pair<flatbuffers::Offset<void>, touca::fbs::Type> buffer;
-  buffer.first = fbsNumber.Union();
-  buffer.second = touca::fbs::Type::Float;
-  fbs::TypeWrapperBuilder fbsTypeWrapper_builder(builder);
-  fbsTypeWrapper_builder.add_value(buffer.first);
-  fbsTypeWrapper_builder.add_value_type(buffer.second);
-  return fbsTypeWrapper_builder.Finish();
+  const auto& fbsNumber = fbs::CreateFloat(builder, value);
+  return fbs::CreateTypeWrapper(builder, fbs::Type::Float, fbsNumber.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder,
     const detail::number_signed_t& value) {
-  touca::fbs::IntBuilder fbsNumber_builder(builder);
-  fbsNumber_builder.add_value(value);
-  const auto& fbsNumber = fbsNumber_builder.Finish();
-
-  std::pair<flatbuffers::Offset<void>, touca::fbs::Type> buffer;
-  buffer.first = fbsNumber.Union();
-  buffer.second = touca::fbs::Type::Int;
-  fbs::TypeWrapperBuilder fbsTypeWrapper_builder(builder);
-  fbsTypeWrapper_builder.add_value(buffer.first);
-  fbsTypeWrapper_builder.add_value_type(buffer.second);
-  return fbsTypeWrapper_builder.Finish();
+  const auto& fbsNumber = fbs::CreateInt(builder, value);
+  return fbs::CreateTypeWrapper(builder, fbs::Type::Int, fbsNumber.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder,
     const detail::number_unsigned_t& value) {
-  touca::fbs::UIntBuilder fbsNumber_builder(builder);
-  fbsNumber_builder.add_value(value);
-  const auto& fbsNumber = fbsNumber_builder.Finish();
-
-  std::pair<flatbuffers::Offset<void>, touca::fbs::Type> buffer;
-  buffer.first = fbsNumber.Union();
-  buffer.second = touca::fbs::Type::UInt;
-  fbs::TypeWrapperBuilder fbsTypeWrapper_builder(builder);
-  fbsTypeWrapper_builder.add_value(buffer.first);
-  fbsTypeWrapper_builder.add_value_type(buffer.second);
-  return fbsTypeWrapper_builder.Finish();
+  const auto& fbsNumber = fbs::CreateUInt(builder, value);
+  return fbs::CreateTypeWrapper(builder, fbs::Type::UInt, fbsNumber.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder, const detail::string_t& value) {
-  const auto& fbsStringValue = builder.CreateString(value);
-  fbs::StringBuilder string_builder(builder);
-  string_builder.add_value(fbsStringValue);
-  const auto& fbsValue = string_builder.Finish();
-  fbs::TypeWrapperBuilder typeWrapper_builder(builder);
-  typeWrapper_builder.add_value(fbsValue.Union());
-  typeWrapper_builder.add_value_type(fbs::Type::String);
-  return typeWrapper_builder.Finish();
+  const auto& fbsValue = fbs::CreateStringDirect(builder, value.c_str());
+  return fbs::CreateTypeWrapper(builder, fbs::Type::String, fbsValue.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder, const array& elements) {
-  std::vector<flatbuffers::Offset<fbs::TypeWrapper>> fbsEntries_vector;
+  std::vector<flatbuffers::Offset<fbs::TypeWrapper>> entries;
   for (const auto& element : elements) {
-    fbsEntries_vector.push_back(element.serialize(builder));
+    entries.push_back(element.serialize(builder));
   }
-  const auto& fbsEntries = builder.CreateVector(fbsEntries_vector);
-  fbs::ArrayBuilder fbsArray_builder(builder);
-  fbsArray_builder.add_values(fbsEntries);
-  const auto& fbsValue = fbsArray_builder.Finish();
-  fbs::TypeWrapperBuilder typeWrapper_builder(builder);
-  typeWrapper_builder.add_value(fbsValue.Union());
-  typeWrapper_builder.add_value_type(fbs::Type::Array);
-  return typeWrapper_builder.Finish();
+  const auto& fbsValue = fbs::CreateArrayDirect(builder, &entries);
+  return fbs::CreateTypeWrapper(builder, fbs::Type::Array, fbsValue.Union());
 }
 
 flatbuffers::Offset<fbs::TypeWrapper> serialize(
     flatbuffers::FlatBufferBuilder& builder, const object& obj) {
-  std::vector<flatbuffers::Offset<fbs::ObjectMember>> fbsObjectMembers_vector;
+  std::vector<flatbuffers::Offset<fbs::ObjectMember>> members;
   for (const auto& value : obj) {
-    const auto& fbsMemberKey = builder.CreateString(value.first);
-    const auto& fbsMemberValue = value.second.serialize(builder);
-    fbs::ObjectMemberBuilder fbsObjectMember_builder(builder);
-    fbsObjectMember_builder.add_name(fbsMemberKey);
-    fbsObjectMember_builder.add_value(fbsMemberValue);
-    const auto& fbsObjectMember = fbsObjectMember_builder.Finish();
-    fbsObjectMembers_vector.push_back(fbsObjectMember);
+    members.push_back(fbs::CreateObjectMemberDirect(
+        builder, value.first.c_str(), value.second.serialize(builder)));
   }
-  const auto& fbsObjectMembers = builder.CreateVector(fbsObjectMembers_vector);
-  const auto& fbsKey = builder.CreateString(obj.get_name());
-  fbs::ObjectBuilder fbsObject_builder(builder);
-  fbsObject_builder.add_values(fbsObjectMembers);
-  fbsObject_builder.add_key(fbsKey);
-  const auto& fbsValue = fbsObject_builder.Finish();
-  fbs::TypeWrapperBuilder typeWrapper_builder(builder);
-  typeWrapper_builder.add_value(fbsValue.Union());
-  typeWrapper_builder.add_value_type(fbs::Type::Object);
-  return typeWrapper_builder.Finish();
+  const auto& fbsValue =
+      fbs::CreateObjectDirect(builder, obj.get_name().c_str(), &members);
+  return fbs::CreateTypeWrapper(builder, fbs::Type::Object, fbsValue.Union());
 }
 
 class data_point_serializer_visitor {

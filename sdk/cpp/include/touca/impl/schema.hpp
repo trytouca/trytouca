@@ -168,6 +168,27 @@ struct ComparisonRuleDoubleBuilder {
   }
 };
 
+inline flatbuffers::Offset<ComparisonRuleDouble> CreateComparisonRuleDouble(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    touca::fbs::ComparisonRuleMode mode =
+        touca::fbs::ComparisonRuleMode::Absolute,
+    flatbuffers::Optional<double> max = flatbuffers::nullopt,
+    flatbuffers::Optional<double> min = flatbuffers::nullopt,
+    flatbuffers::Optional<bool> percent = flatbuffers::nullopt) {
+  ComparisonRuleDoubleBuilder builder_(_fbb);
+  if (min) {
+    builder_.add_min(*min);
+  }
+  if (max) {
+    builder_.add_max(*max);
+  }
+  if (percent) {
+    builder_.add_percent(*percent);
+  }
+  builder_.add_mode(mode);
+  return builder_.Finish();
+}
+
 struct TypeWrapper FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef TypeWrapperBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -207,6 +228,16 @@ struct TypeWrapperBuilder {
     return o;
   }
 };
+
+inline flatbuffers::Offset<TypeWrapper> CreateTypeWrapper(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    touca::fbs::Type value_type = touca::fbs::Type::NONE,
+    flatbuffers::Offset<void> value = 0) {
+  TypeWrapperBuilder builder_(_fbb);
+  builder_.add_value(value);
+  builder_.add_value_type(value_type);
+  return builder_.Finish();
+}
 
 struct Bool FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef BoolBuilder Builder;
@@ -438,6 +469,12 @@ inline flatbuffers::Offset<String> CreateString(
   return builder_.Finish();
 }
 
+inline flatbuffers::Offset<String> CreateStringDirect(
+    flatbuffers::FlatBufferBuilder& _fbb, const char* value = nullptr) {
+  auto value__ = value ? _fbb.CreateString(value) : 0;
+  return touca::fbs::CreateString(_fbb, value__);
+}
+
 struct ObjectMember FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ObjectMemberBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -477,6 +514,23 @@ struct ObjectMemberBuilder {
     return o;
   }
 };
+
+inline flatbuffers::Offset<ObjectMember> CreateObjectMember(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    flatbuffers::Offset<flatbuffers::String> name = 0,
+    flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0) {
+  ObjectMemberBuilder builder_(_fbb);
+  builder_.add_value(value);
+  builder_.add_name(name);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<ObjectMember> CreateObjectMemberDirect(
+    flatbuffers::FlatBufferBuilder& _fbb, const char* name = nullptr,
+    flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0) {
+  auto name__ = name ? _fbb.CreateString(name) : 0;
+  return touca::fbs::CreateObjectMember(_fbb, name__, value);
+}
 
 struct Object FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ObjectBuilder Builder;
@@ -523,6 +577,30 @@ struct ObjectBuilder {
   }
 };
 
+inline flatbuffers::Offset<Object> CreateObject(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    flatbuffers::Offset<flatbuffers::String> key = 0,
+    flatbuffers::Offset<
+        flatbuffers::Vector<flatbuffers::Offset<touca::fbs::ObjectMember>>>
+        values = 0) {
+  ObjectBuilder builder_(_fbb);
+  builder_.add_values(values);
+  builder_.add_key(key);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Object> CreateObjectDirect(
+    flatbuffers::FlatBufferBuilder& _fbb, const char* key = nullptr,
+    const std::vector<flatbuffers::Offset<touca::fbs::ObjectMember>>* values =
+        nullptr) {
+  auto key__ = key ? _fbb.CreateString(key) : 0;
+  auto values__ =
+      values ? _fbb.CreateVector<flatbuffers::Offset<touca::fbs::ObjectMember>>(
+                   *values)
+             : 0;
+  return touca::fbs::CreateObject(_fbb, key__, values__);
+}
+
 struct Array FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ArrayBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -559,6 +637,27 @@ struct ArrayBuilder {
     return o;
   }
 };
+
+inline flatbuffers::Offset<Array> CreateArray(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    flatbuffers::Offset<
+        flatbuffers::Vector<flatbuffers::Offset<touca::fbs::TypeWrapper>>>
+        values = 0) {
+  ArrayBuilder builder_(_fbb);
+  builder_.add_values(values);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Array> CreateArrayDirect(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    const std::vector<flatbuffers::Offset<touca::fbs::TypeWrapper>>* values =
+        nullptr) {
+  auto values__ =
+      values ? _fbb.CreateVector<flatbuffers::Offset<touca::fbs::TypeWrapper>>(
+                   *values)
+             : 0;
+  return touca::fbs::CreateArray(_fbb, values__);
+}
 
 struct Blob FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef BlobBuilder Builder;
@@ -609,6 +708,27 @@ struct BlobBuilder {
   }
 };
 
+inline flatbuffers::Offset<Blob> CreateBlob(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    flatbuffers::Offset<flatbuffers::String> digest = 0,
+    flatbuffers::Offset<flatbuffers::String> mimetype = 0,
+    flatbuffers::Offset<flatbuffers::String> reference = 0) {
+  BlobBuilder builder_(_fbb);
+  builder_.add_reference(reference);
+  builder_.add_mimetype(mimetype);
+  builder_.add_digest(digest);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Blob> CreateBlobDirect(
+    flatbuffers::FlatBufferBuilder& _fbb, const char* digest = nullptr,
+    const char* mimetype = nullptr, const char* reference = nullptr) {
+  auto digest__ = digest ? _fbb.CreateString(digest) : 0;
+  auto mimetype__ = mimetype ? _fbb.CreateString(mimetype) : 0;
+  auto reference__ = reference ? _fbb.CreateString(reference) : 0;
+  return touca::fbs::CreateBlob(_fbb, digest__, mimetype__, reference__);
+}
+
 struct Result FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ResultBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -655,6 +775,26 @@ struct ResultBuilder {
     return o;
   }
 };
+
+inline flatbuffers::Offset<Result> CreateResult(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    flatbuffers::Offset<flatbuffers::String> key = 0,
+    flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0,
+    touca::fbs::ResultType typ = touca::fbs::ResultType::Check) {
+  ResultBuilder builder_(_fbb);
+  builder_.add_value(value);
+  builder_.add_key(key);
+  builder_.add_typ(typ);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Result> CreateResultDirect(
+    flatbuffers::FlatBufferBuilder& _fbb, const char* key = nullptr,
+    flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0,
+    touca::fbs::ResultType typ = touca::fbs::ResultType::Check) {
+  auto key__ = key ? _fbb.CreateString(key) : 0;
+  return touca::fbs::CreateResult(_fbb, key__, value, typ);
+}
 
 struct Assertion FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef AssertionBuilder Builder;
@@ -705,6 +845,23 @@ struct MetricBuilder {
   }
 };
 
+inline flatbuffers::Offset<Metric> CreateMetric(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    flatbuffers::Offset<flatbuffers::String> key = 0,
+    flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0) {
+  MetricBuilder builder_(_fbb);
+  builder_.add_value(value);
+  builder_.add_key(key);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Metric> CreateMetricDirect(
+    flatbuffers::FlatBufferBuilder& _fbb, const char* key = nullptr,
+    flatbuffers::Offset<touca::fbs::TypeWrapper> value = 0) {
+  auto key__ = key ? _fbb.CreateString(key) : 0;
+  return touca::fbs::CreateMetric(_fbb, key__, value);
+}
+
 struct Results FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef ResultsBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -741,6 +898,27 @@ struct ResultsBuilder {
     return o;
   }
 };
+
+inline flatbuffers::Offset<Results> CreateResults(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    flatbuffers::Offset<
+        flatbuffers::Vector<flatbuffers::Offset<touca::fbs::Result>>>
+        entries = 0) {
+  ResultsBuilder builder_(_fbb);
+  builder_.add_entries(entries);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Results> CreateResultsDirect(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    const std::vector<flatbuffers::Offset<touca::fbs::Result>>* entries =
+        nullptr) {
+  auto entries__ =
+      entries
+          ? _fbb.CreateVector<flatbuffers::Offset<touca::fbs::Result>>(*entries)
+          : 0;
+  return touca::fbs::CreateResults(_fbb, entries__);
+}
 
 struct Assertions FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef AssertionsBuilder Builder;
@@ -788,6 +966,27 @@ struct MetricsBuilder {
     return o;
   }
 };
+
+inline flatbuffers::Offset<Metrics> CreateMetrics(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    flatbuffers::Offset<
+        flatbuffers::Vector<flatbuffers::Offset<touca::fbs::Metric>>>
+        entries = 0) {
+  MetricsBuilder builder_(_fbb);
+  builder_.add_entries(entries);
+  return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Metrics> CreateMetricsDirect(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    const std::vector<flatbuffers::Offset<touca::fbs::Metric>>* entries =
+        nullptr) {
+  auto entries__ =
+      entries
+          ? _fbb.CreateVector<flatbuffers::Offset<touca::fbs::Metric>>(*entries)
+          : 0;
+  return touca::fbs::CreateMetrics(_fbb, entries__);
+}
 
 struct Metadata FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef MetadataBuilder Builder;
@@ -870,6 +1069,19 @@ inline flatbuffers::Offset<Metadata> CreateMetadata(
   builder_.add_version(version);
   builder_.add_testsuite(testsuite);
   return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Metadata> CreateMetadataDirect(
+    flatbuffers::FlatBufferBuilder& _fbb, const char* testsuite = nullptr,
+    const char* version = nullptr, const char* testcase = nullptr,
+    const char* builtAt = nullptr, const char* teamslug = nullptr) {
+  auto testsuite__ = testsuite ? _fbb.CreateString(testsuite) : 0;
+  auto version__ = version ? _fbb.CreateString(version) : 0;
+  auto testcase__ = testcase ? _fbb.CreateString(testcase) : 0;
+  auto builtAt__ = builtAt ? _fbb.CreateString(builtAt) : 0;
+  auto teamslug__ = teamslug ? _fbb.CreateString(teamslug) : 0;
+  return touca::fbs::CreateMetadata(_fbb, testsuite__, version__, testcase__,
+                                    builtAt__, teamslug__);
 }
 
 struct Message FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
@@ -976,6 +1188,13 @@ inline flatbuffers::Offset<MessageBuffer> CreateMessageBuffer(
   return builder_.Finish();
 }
 
+inline flatbuffers::Offset<MessageBuffer> CreateMessageBufferDirect(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    const std::vector<uint8_t>* buf = nullptr) {
+  auto buf__ = buf ? _fbb.CreateVector<uint8_t>(*buf) : 0;
+  return touca::fbs::CreateMessageBuffer(_fbb, buf__);
+}
+
 struct Messages FLATBUFFERS_FINAL_CLASS : private flatbuffers::Table {
   typedef MessagesBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -1021,6 +1240,18 @@ inline flatbuffers::Offset<Messages> CreateMessages(
   MessagesBuilder builder_(_fbb);
   builder_.add_messages(messages);
   return builder_.Finish();
+}
+
+inline flatbuffers::Offset<Messages> CreateMessagesDirect(
+    flatbuffers::FlatBufferBuilder& _fbb,
+    const std::vector<flatbuffers::Offset<touca::fbs::MessageBuffer>>*
+        messages = nullptr) {
+  auto messages__ =
+      messages
+          ? _fbb.CreateVector<flatbuffers::Offset<touca::fbs::MessageBuffer>>(
+                *messages)
+          : 0;
+  return touca::fbs::CreateMessages(_fbb, messages__);
 }
 
 inline bool VerifyType(flatbuffers::Verifier& verifier, const void* obj,
