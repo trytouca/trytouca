@@ -115,7 +115,7 @@ if (TOUCA_BUILD_CLI)
 endif()
 
 if (TOUCA_BUILD_EXAMPLES)
-    add_subdirectory(examples)
+    add_subdirectory(tests/example_minimal)
 endif()
 
 if (TOUCA_INSTALL)
