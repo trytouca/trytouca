@@ -158,46 +158,49 @@ class S3ObjectStore extends ObjectStore {
     return this.streamToBuffer(data.Body)
   }
   async upgradeBuckets() {
-    for (const suffix of ['comparisons', 'messages', 'results']) {
-      if (!(await this.bucketExists(`touca-${suffix}`))) {
-        continue
-      }
-      let comparisons: ListObjectsV2CommandOutput
-      do {
-        comparisons = await this.client.send(
-          new ListObjectsV2Command({ Bucket: `touca-${suffix}` })
-        )
-        if (!comparisons.Contents) {
-          break
-        }
-        for (const obj of comparisons.Contents) {
-          const data = await this.client.send(
-            new GetObjectCommand({
-              Bucket: `touca-${suffix}`,
-              Key: obj.Key
-            })
-          )
-          const transform =
-            suffix === 'messages' ? this.streamToBuffer : this.streamToString
-          await this.putDocument(
-            suffix as 'comparisons' | 'messages' | 'results',
-            obj.Key,
-            await transform(data.Body)
-          )
-          await this.client.send(
-            new DeleteObjectCommand({
-              Bucket: `touca-${suffix}`,
-              Key: obj.Key
-            })
-          )
-        }
-      } while (comparisons.KeyCount !== 0)
-      if (!config.isCloudHosted) {
-        await this.client.send(
-          new DeleteBucketCommand({ Bucket: `touca-${suffix}` })
-        )
-      }
+    if (!config.isCloudHosted) {
+      this.upgradeBucket('comparisons')
+      this.upgradeBucket('messages')
+      this.upgradeBucket('results')
     }
+  }
+  private async upgradeBucket(suffix: string) {
+    if (!(await this.bucketExists(`touca-${suffix}`))) {
+      return
+    }
+    let comparisons: ListObjectsV2CommandOutput
+    do {
+      comparisons = await this.client.send(
+        new ListObjectsV2Command({ Bucket: `touca-${suffix}` })
+      )
+      if (!comparisons.Contents) {
+        break
+      }
+      for (const obj of comparisons.Contents) {
+        const data = await this.client.send(
+          new GetObjectCommand({
+            Bucket: `touca-${suffix}`,
+            Key: obj.Key
+          })
+        )
+        const transform =
+          suffix === 'messages' ? this.streamToBuffer : this.streamToString
+        await this.putDocument(
+          suffix as 'comparisons' | 'messages' | 'results',
+          obj.Key,
+          await transform(data.Body)
+        )
+        await this.client.send(
+          new DeleteObjectCommand({
+            Bucket: `touca-${suffix}`,
+            Key: obj.Key
+          })
+        )
+      }
+    } while (comparisons.KeyCount !== 0)
+    await this.client.send(
+      new DeleteBucketCommand({ Bucket: `touca-${suffix}` })
+    )
   }
 }
 
