@@ -3,7 +3,15 @@
 import { Builder } from 'flatbuffers';
 
 import * as schema from './schema';
-import { IntegerType, ResultJson, ToucaType, VectorType } from './types';
+import {
+  ComparisonRule,
+  IntegerType,
+  ResultJson,
+  ToucaType,
+  VectorType
+} from './types';
+
+export type CheckOptions = { rule?: ComparisonRule };
 
 enum ResultCategory {
   Check = 1,
@@ -13,6 +21,7 @@ enum ResultCategory {
 type ResultEntry = {
   typ: ResultCategory;
   val: ToucaType;
+  rule?: ComparisonRule;
 };
 
 type TestcaseMetadata = {
@@ -25,9 +34,9 @@ type TestcaseMetadata = {
 
 type CaseJson = {
   metadata: TestcaseMetadata;
-  results: { key: string; value: ResultJson }[];
-  assertions: { key: string; value: ResultJson }[];
-  metrics: { key: string; value: ResultJson }[];
+  results: Array<{ key: string; value: ResultJson }>;
+  assertions: Array<{ key: string; value: ResultJson }>;
+  metrics: Array<{ key: string; value: ResultJson }>;
 };
 
 export class Case {
@@ -51,8 +60,9 @@ export class Case {
    * @param key name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
-  check(key: string, value: ToucaType): void {
-    this._results.set(key, { typ: ResultCategory.Check, val: value });
+  check(key: string, value: ToucaType, options?: CheckOptions): void {
+    const rule = options?.rule;
+    this._results.set(key, { typ: ResultCategory.Check, val: value, rule });
   }
 
   /**
@@ -177,7 +187,7 @@ export class Case {
     const results = [];
     const assertions = [];
     for (const [key, entry] of this._results.entries()) {
-      const item = { key, value: entry.val.json() };
+      const item = { key, value: entry.val.json(), rule: entry.rule };
       switch (entry.typ) {
         case ResultCategory.Assert:
           assertions.push(item);
@@ -221,7 +231,7 @@ export class Case {
     const result_entries = [];
     for (const [k, v] of this._results) {
       const fbs_key = builder.createString(k);
-      const fbs_value = v.val.serialize(builder);
+      const fbs_value = v.val.serialize(builder, { rule: v.rule });
       schema.Result.startResult(builder);
       schema.Result.addKey(builder, fbs_key);
       schema.Result.addValue(builder, fbs_value);

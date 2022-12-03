@@ -4,7 +4,7 @@ import { Builder } from 'flatbuffers';
 import { mkdirSync, writeFileSync } from 'fs';
 import { dirname } from 'path';
 
-import { Case } from './case';
+import { Case, CheckOptions } from './case';
 import { NodeOptions, update_options } from './options';
 import { Runner } from './runner';
 import * as schema from './schema';
@@ -277,10 +277,10 @@ export class NodeClient implements BaseClient<NodeOptions> {
    * @param key name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
-  public check(key: string, value: unknown): void {
+  public check(key: string, value: unknown, options?: CheckOptions): void {
     if (this._active_case) {
       const touca_value = this._type_handler.transform(value);
-      this._cases.get(this._active_case)?.check(key, touca_value);
+      this._cases.get(this._active_case)?.check(key, touca_value, options);
     }
   }
 

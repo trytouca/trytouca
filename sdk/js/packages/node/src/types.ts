@@ -4,16 +4,23 @@ import { Builder } from 'flatbuffers';
 
 import * as schema from './schema';
 
+type ComparisonRuleDouble =
+  | { type: 'number'; mode: 'absolute'; max?: number; min?: number }
+  | { type: 'number'; mode: 'relative'; max?: number; percent?: boolean };
+export type ComparisonRule = ComparisonRuleDouble;
+
 export type ResultJson =
   | boolean
   | number
   | string
   | Record<string, unknown>
-  | ResultJson[];
+  | Array<ResultJson>;
+
+type SerializeOptions = { rule?: ComparisonRule };
 
 export interface ToucaType {
   json(): ResultJson;
-  serialize(builder: Builder): number;
+  serialize(builder: Builder, options?: SerializeOptions): number;
 }
 
 class BoolType implements ToucaType {
@@ -45,14 +52,40 @@ export class DecimalType implements ToucaType {
     return this._value;
   }
 
-  public serialize(builder: Builder): number {
+  public serialize(builder: Builder, options?: SerializeOptions): number {
+    const ruleOffset = this.serializeRule(builder, options?.rule);
     schema.Double.startDouble(builder);
     schema.Double.addValue(builder, this._value);
+    if (ruleOffset) {
+      schema.Double.addRule(builder, ruleOffset);
+    }
     const value = schema.Double.endDouble(builder);
     schema.TypeWrapper.startTypeWrapper(builder);
     schema.TypeWrapper.addValue(builder, value);
     schema.TypeWrapper.addValueType(builder, schema.Type.Double);
     return schema.TypeWrapper.endTypeWrapper(builder);
+  }
+
+  private serializeRule(builder: Builder, rule?: SerializeOptions['rule']) {
+    if (!rule || rule.type !== 'number') {
+      return;
+    }
+    const mode =
+      rule.mode === 'absolute'
+        ? schema.ComparisonRuleMode.Absolute
+        : schema.ComparisonRuleMode.Relative;
+    schema.ComparisonRuleDouble.startComparisonRuleDouble(builder);
+    schema.ComparisonRuleDouble.addMode(builder, mode);
+    if (rule.max !== undefined) {
+      schema.ComparisonRuleDouble.addMax(builder, rule.max);
+    }
+    if (rule.mode === 'absolute' && rule.min !== undefined) {
+      schema.ComparisonRuleDouble.addMin(builder, rule.min);
+    }
+    if (rule.mode === 'relative' && rule.percent !== undefined) {
+      schema.ComparisonRuleDouble.addPercent(builder, rule.percent);
+    }
+    return schema.ComparisonRuleDouble.endComparisonRuleDouble(builder);
   }
 }
 

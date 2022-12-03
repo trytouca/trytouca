@@ -42,7 +42,12 @@ class NumberRule(ComparisonRule):
 
     def serialize(self, builder: Builder):
         schema.ComparisonRuleDoubleStart(builder)
-        schema.ComparisonRuleDoubleAddMode(builder, schema.ComparisonRuleMode.Absolute)
+        schema.ComparisonRuleDoubleAddMode(
+            builder,
+            schema.ComparisonRuleMode.Absolute
+            if self._mode == "absolute"
+            else schema.ComparisonRuleMode.Relative,
+        )
         if self._max:
             schema.ComparisonRuleDoubleAddMax(builder, self._max)
         if self._min:
