@@ -7,6 +7,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.touca.core.Schema.ResultType;
+import io.touca.rules.ComparisonRule;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.AbstractMap.SimpleEntry;
@@ -44,6 +45,7 @@ public class Case {
   private static final class ResultEntry {
     public ToucaType value;
     public ResultCategory type;
+    public ComparisonRule rule;
 
     /**
      * Wraps a given data point for easier organization.
@@ -54,6 +56,12 @@ public class Case {
     public ResultEntry(final ToucaType value, ResultCategory type) {
       this.value = value;
       this.type = type;
+    }
+
+    public ResultEntry(final ToucaType value, ResultCategory type, final ComparisonRule rule) {
+      this.value = value;
+      this.type = type;
+      this.rule = rule;
     }
   }
 
@@ -84,6 +92,10 @@ public class Case {
    */
   public void check(final String key, final ToucaType value) {
     this.results.put(key, new ResultEntry(value, ResultCategory.Check));
+  }
+
+  public void check(final String key, final ToucaType value, final ComparisonRule rule) {
+    this.results.put(key, new ResultEntry(value, ResultCategory.Check, rule));
   }
 
   /**
@@ -204,6 +216,9 @@ public class Case {
       final JsonObject obj = new JsonObject();
       obj.addProperty("key", result.getKey());
       obj.add("value", value.value.json());
+      if (value.rule != null) {
+        obj.add("rule", value.rule.json());
+      }
       if (value.type == ResultCategory.Assert) {
         jsonAssertions.add(obj);
       } else {
@@ -256,7 +271,7 @@ public class Case {
     final List<Integer> resultEntries = new ArrayList<>(results.size());
     for (final Map.Entry<String, ResultEntry> entry : results.entrySet()) {
       final int fbsKey = builder.createString(entry.getKey());
-      final int fbsValue = entry.getValue().value.serialize(builder);
+      final int fbsValue = entry.getValue().value.serialize(builder, entry.getValue().rule);
       Schema.Result.startResult(builder);
       Schema.Result.addKey(builder, fbsKey);
       Schema.Result.addValue(builder, fbsValue);

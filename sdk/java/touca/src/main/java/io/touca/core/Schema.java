@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca.core;
 
@@ -20,8 +20,17 @@ public final class Schema {
     public static final byte TString = 6;
     public static final byte TObject = 7;
     public static final byte TArray = 8;
+    public static final byte TBlob = 9;
 
     private TType() {
+    }
+  }
+
+  public static final class ComparisonRuleMode {
+    public static final int Absolute = 0;
+    public static final int Relative = 1;
+
+    private ComparisonRuleMode() {
     }
   }
 
@@ -30,6 +39,32 @@ public final class Schema {
     public static final int Assert = 2;
 
     private ResultType() {
+    }
+  }
+
+  public static final class ComparisonRuleDouble extends Table {
+    public static void startComparisonRuleDouble(final FlatBufferBuilder builder) {
+      builder.startTable(4);
+    }
+
+    public static void addMode(final FlatBufferBuilder builder, final int mode) {
+      builder.addByte(0, (byte) mode, (byte) 0);
+    }
+
+    public static void addMax(final FlatBufferBuilder builder, final double max) {
+      builder.addDouble(1, max, 0.0);
+    }
+
+    public static void addMin(final FlatBufferBuilder builder, final double min) {
+      builder.addDouble(2, min, 0.0);
+    }
+
+    public static void addPercent(final FlatBufferBuilder builder, final boolean percent) {
+      builder.addBoolean(3, percent, false);
+    }
+
+    public static int endComparisonRuleDouble(final FlatBufferBuilder builder) {
+      return builder.endTable();
     }
   }
 
@@ -89,12 +124,16 @@ public final class Schema {
   public static final class TDouble extends Table {
 
     public static void startTDouble(final FlatBufferBuilder builder) {
-      builder.startTable(1);
+      builder.startTable(2);
     }
 
     public static void addValue(final FlatBufferBuilder builder,
         final double value) {
       builder.addDouble(0, value, 0.0);
+    }
+
+    public static void addRule(final FlatBufferBuilder builder, final int ruleOffset) {
+      builder.addOffset(1, ruleOffset, 0);
     }
 
     public static int endTDouble(final FlatBufferBuilder builder) {
@@ -156,7 +195,7 @@ public final class Schema {
     }
 
     public static int createValuesVector(final FlatBufferBuilder builder,
-        int[] data) {
+        final int[] data) {
       builder.startVector(4, data.length, 4);
       for (int i = data.length - 1; i >= 0; i--)
         builder.addOffset(data[i]);
@@ -188,6 +227,31 @@ public final class Schema {
     }
 
     public static int endTArray(final FlatBufferBuilder builder) {
+      return builder.endTable();
+    }
+  }
+
+  public static final class TBlob extends Table {
+    public static void startTBlob(final FlatBufferBuilder builder) {
+      builder.startTable(3);
+    }
+
+    public static void addDigest(final FlatBufferBuilder builder,
+        final int digestOffset) {
+      builder.addOffset(0, digestOffset, 0);
+    }
+
+    public static void addMimetype(final FlatBufferBuilder builder,
+        final int mimetypeOffset) {
+      builder.addOffset(1, mimetypeOffset, 0);
+    }
+
+    public static void addReference(final FlatBufferBuilder builder,
+        final int referenceOffset) {
+      builder.addOffset(2, referenceOffset, 0);
+    }
+
+    public static int endTBlob(final FlatBufferBuilder builder) {
       return builder.endTable();
     }
   }
