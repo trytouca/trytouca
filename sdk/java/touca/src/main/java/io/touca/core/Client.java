@@ -158,7 +158,7 @@ public class Client {
           this.options.suite, this.options.version);
       this.cases.put(name, testcase);
     }
-    this.threadMap.put(Thread.currentThread().threadId(), name);
+    this.threadMap.put(Thread.currentThread().getId(), name);
     this.activeCase = name;
   }
 
@@ -343,7 +343,7 @@ public class Client {
     if (options.concurrency) {
       return activeCase;
     }
-    return threadMap.get(Thread.currentThread().threadId());
+    return threadMap.get(Thread.currentThread().getId());
   }
 
   private byte[] serialize(final Case[] testcases) {
