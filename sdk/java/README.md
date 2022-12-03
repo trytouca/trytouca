@@ -83,7 +83,7 @@ We can run Touca tests with any number of inputs from the command line:
 ```bash
 export TOUCA_API_KEY=<TOUCA_API_KEY>
 export TOUCA_API_URL=<TOUCA_API_URL>
-gradle runExampleMinimal --args='--revision v1.0 --testcase 13 17 51'
+gradle runSampleApp --args='--revision v1.0 --testcase 13 17 51'
 ```
 
 Where `TOUCA_API_KEY` and `TOUCA_API_URL` can be obtained from the Touca server
