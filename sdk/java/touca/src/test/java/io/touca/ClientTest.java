@@ -39,7 +39,7 @@ public final class ClientTest {
 
   private Client makeClient() {
     final Client client = new Client();
-    final String[] courses = {"math", "english"};
+    final String[] courses = { "math", "english" };
     final List<String> parents = new ArrayList<String>() {
       {
         add("Lily");
@@ -157,7 +157,7 @@ public final class ClientTest {
     Path outputFile = tempDir.resolve("some-file");
     Client client = makeClient();
     assertDoesNotThrow(() -> {
-      client.saveJson(outputFile, new String[] {"some-case"});
+      client.saveJson(outputFile, new String[] { "some-case" });
     });
     final byte[] encoded = Files.readAllBytes(outputFile);
     final String content = new String(encoded, StandardCharsets.UTF_8);

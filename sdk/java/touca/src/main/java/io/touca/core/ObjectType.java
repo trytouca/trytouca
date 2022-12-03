@@ -9,12 +9,8 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
 public final class ObjectType extends ToucaType {
-  private final List<SimpleEntry<String, ToucaType>> members =
-      new ArrayList<>();
+  private final List<SimpleEntry<String, ToucaType>> members = new ArrayList<>();
 
   public void add(final String key, final ToucaType value) {
     members.add(new SimpleEntry<String, ToucaType>(key, value));

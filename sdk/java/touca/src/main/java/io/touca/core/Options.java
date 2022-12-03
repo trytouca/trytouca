@@ -117,8 +117,8 @@ public class Options {
     final Map<String, String> output = new HashMap<>();
     final Map<String, String> base = this.entrySet();
     final Map<String, String> head = incoming.entrySet();
-    final String[] fields = {"apiUrl", "apiKey", "team", "suite", "version",
-        "file", "concurrency", "offline"};
+    final String[] fields = { "apiUrl", "apiKey", "team", "suite", "version",
+        "file", "concurrency", "offline" };
     for (final String field : fields) {
       if (!head.containsKey(field)) {
         continue;
@@ -270,10 +270,9 @@ public class Options {
   private static void reformatSlugs(final Options existing, final String path) {
     final String[] givenSlugs = Arrays.stream(path.split("/"))
         .filter(x -> !x.isEmpty()).toArray(String[]::new);
-    final SlugEntry[] slugs =
-        {new SlugEntry("team", o -> o.team, (o, k) -> o.team = k),
-            new SlugEntry("suite", o -> o.suite, (o, k) -> o.suite = k),
-            new SlugEntry("version", o -> o.version, (o, k) -> o.version = k)};
+    final SlugEntry[] slugs = { new SlugEntry("team", o -> o.team, (o, k) -> o.team = k),
+        new SlugEntry("suite", o -> o.suite, (o, k) -> o.suite = k),
+        new SlugEntry("version", o -> o.version, (o, k) -> o.version = k) };
     for (int i = 0; i < givenSlugs.length; i++) {
       final String actual = slugs[i].getter.apply(existing);
       if (actual != null && !actual.equals(givenSlugs[i])) {
@@ -335,8 +334,8 @@ public class Options {
     /**
      * Parses configuration options from a given string.
      *
-     * @param json json element to be deserialized
-     * @param type type of the json string
+     * @param json    json element to be deserialized
+     * @param type    type of the json string
      * @param context context for deserialization
      * @return a new options instance that represents content of json string
      * @throws JsonParseException if it fails to parse string to activity object

@@ -74,7 +74,6 @@ public final class Transport {
     }
   }
 
-
   private void handshake() {
     final Response response = getRequest("/platform");
     if (response.code != HttpURLConnection.HTTP_OK) {
@@ -86,7 +85,6 @@ public final class Transport {
       throw new ServerException("touca server is not ready");
     }
   }
-
 
   private String readResponse(final InputStream inputStream)
       throws IOException {
@@ -197,8 +195,7 @@ public final class Transport {
    * @param content serialized binary representation of one or more test cases.
    */
   public void post(final byte[] content) {
-    final Response response =
-        postRequest("/client/submit", "application/octet-stream", content);
+    final Response response = postRequest("/client/submit", "application/octet-stream", content);
     if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
       throw new ServerException("failed to submit test results");
     }
@@ -211,8 +208,7 @@ public final class Transport {
   public void seal() {
     final String path = String.format("/batch/%s/%s/%s/seal2", options.team,
         options.suite, options.version);
-    final Response response =
-        postRequest(path, "application/json", new byte[0]);
+    final Response response = postRequest(path, "application/json", new byte[0]);
     if (response.code != HttpURLConnection.HTTP_NO_CONTENT) {
       throw new ServerException("failed to seal this version");
     }

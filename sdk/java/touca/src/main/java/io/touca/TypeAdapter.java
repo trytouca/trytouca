@@ -11,7 +11,7 @@ public interface TypeAdapter<T> {
   /**
    * Called prior to serialization when the field of the specified type is
    * encountered.
-   * 
+   *
    * @param src the object to be converted
    * @return any converted object
    */

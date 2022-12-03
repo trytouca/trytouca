@@ -154,8 +154,7 @@ public final class OptionsTest {
   @Test
   void passWhenParamsAreExpected(@TempDir Path tempDir) throws IOException {
     Path configFile = tempDir.resolve("config.json");
-    String content =
-        "{\"touca\": {\"team\": \"some-team\", \"suite\": \"some-suite\", \"version\": \"some-version\", \"concurrency\": true}}";
+    String content = "{\"touca\": {\"team\": \"some-team\", \"suite\": \"some-suite\", \"version\": \"some-version\", \"concurrency\": true}}";
     Files.write(configFile, content.getBytes(StandardCharsets.UTF_8));
     Options existing = new Options();
     Options incoming = new Options(opts -> {

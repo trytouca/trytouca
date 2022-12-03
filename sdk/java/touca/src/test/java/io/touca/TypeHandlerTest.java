@@ -1,17 +1,17 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import java.lang.RuntimeException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
 import io.touca.core.IntegerType;
 import io.touca.core.ToucaType;
 import io.touca.core.TypeHandler;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 public class TypeHandlerTest {
@@ -19,17 +19,18 @@ public class TypeHandlerTest {
     public boolean a = true;
     public int b = 42;
   }
+
   public static final class Bar {
     @SuppressWarnings("unused")
     private int c = 42;
   }
+
   public static final class Baz {
     public Foo d = new Foo();
 
     @SuppressWarnings("unused")
     private Bar e = new Bar();
   }
-
 
   @Test
   public void checkPrimitiveLong() {
@@ -49,7 +50,7 @@ public class TypeHandlerTest {
 
   @Test
   public void checkSimpleFloatArray() {
-    float[] floats = new float[] {12.0f, 42.0f};
+    float[] floats = new float[] { 12.0f, 42.0f };
     TypeHandler handler = new TypeHandler();
     ToucaType transformed = handler.transform(floats);
     assertEquals(ToucaType.Types.Array, transformed.type());

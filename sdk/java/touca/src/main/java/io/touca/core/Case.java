@@ -30,13 +30,12 @@ public class Case {
   private final Map<String, Long> tics = new HashMap<>();
   private final Map<String, Long> tocs = new HashMap<>();
 
-  private static Map<ResultCategory, Integer> resultTypes =
-      new HashMap<ResultCategory, Integer>() {
-        {
-          put(ResultCategory.Check, ResultType.Check);
-          put(ResultCategory.Assert, ResultType.Assert);
-        }
-      };
+  private static Map<ResultCategory, Integer> resultTypes = new HashMap<ResultCategory, Integer>() {
+    {
+      put(ResultCategory.Check, ResultType.Check);
+      put(ResultCategory.Assert, ResultType.Assert);
+    }
+  };
 
   private enum ResultCategory {
     Check, Assert
@@ -50,7 +49,7 @@ public class Case {
      * Wraps a given data point for easier organization.
      *
      * @param value the object storing actual value of the captured variable
-     * @param type the category that this entry belongs to
+     * @param type  the category that this entry belongs to
      */
     public ResultEntry(final ToucaType value, ResultCategory type) {
       this.value = value;
@@ -63,9 +62,9 @@ public class Case {
    * performance benchmarks captured for a given test case.
    *
    * @param testCase unique name for this test case
-   * @param team unique slug for this team
-   * @param suite unique slug for this suite
-   * @param version version of code under test
+   * @param team     unique slug for this team
+   * @param suite    unique slug for this suite
+   * @param version  version of code under test
    */
   public Case(final String testCase, final String team, final String suite,
       final String version) {
@@ -80,7 +79,7 @@ public class Case {
    * Logs a given value as a test result for the declared test case and
    * associates it with the specified key.
    *
-   * @param key name to be associated with the logged test result
+   * @param key   name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
   public void check(final String key, final ToucaType value) {
@@ -91,7 +90,7 @@ public class Case {
    * Logs a given value as an assertion for the declared test case and
    * associates it with the specified key.
    *
-   * @param key name to be associated with the logged test result
+   * @param key   name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
   public void assume(final String key, final ToucaType value) {
@@ -102,7 +101,7 @@ public class Case {
    * Adds a given value to a list of results for the declared test case which is
    * associated with the specified key.
    *
-   * @param key name to be associated with the logged test result
+   * @param key     name to be associated with the logged test result
    * @param element element to be appended to the array
    */
   public void addArrayElement(final String key, final ToucaType element) {
@@ -149,7 +148,7 @@ public class Case {
    *
    * Useful for logging a metric that is measured without using this SDK.
    *
-   * @param key name to be associated with this performance benchmark
+   * @param key          name to be associated with this performance benchmark
    * @param milliseconds duration of this measurement in milliseconds
    */
   public void addMetric(final String key, final Long milliseconds) {

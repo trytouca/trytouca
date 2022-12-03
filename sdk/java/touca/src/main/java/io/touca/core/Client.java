@@ -63,8 +63,7 @@ public class Client {
       this.options.apply(options);
       configureTransport(this.options);
     } catch (ConfigException ex) {
-      this.configError =
-          String.format("Configuration failed: %s", ex.getMessage());
+      this.configError = String.format("Configuration failed: %s", ex.getMessage());
       return false;
     }
     if (this.options.noReflection) {
@@ -78,7 +77,7 @@ public class Client {
     if (options.offline != null && options.offline) {
       return;
     }
-    final String[] checks = {"team", "suite", "version", "apiKey", "apiUrl"};
+    final String[] checks = { "team", "suite", "version", "apiKey", "apiUrl" };
     final String[] missing = Arrays.stream(checks)
         .filter(x -> !options.entrySet().containsKey(x)).toArray(String[]::new);
     if (missing.length != 0) {
@@ -129,7 +128,7 @@ public class Client {
    *
    * @return list of test cases of the baseline version of this suite
    * @throws StateException when called on the client that is not configured to
-   *         communicate with the Touca server.
+   *                        communicate with the Touca server.
    */
   public List<String> getTestcases() {
     if (this.transport == null) {
@@ -159,7 +158,7 @@ public class Client {
           this.options.suite, this.options.version);
       this.cases.put(name, testcase);
     }
-    this.threadMap.put(Thread.currentThread().getId(), name);
+    this.threadMap.put(Thread.currentThread().threadId(), name);
     this.activeCase = name;
   }
 
@@ -208,7 +207,7 @@ public class Client {
    * Enables conversion of custom user-defined types using serialization logic
    * passed by the library consumer.
    *
-   * @param <T> type of the value to be converted
+   * @param <T>   type of the value to be converted
    * @param value value to be converted to a ToucaType
    * @return a ToucaType instance that the SDK knows how to handle
    */
@@ -225,8 +224,8 @@ public class Client {
    * type with a registered type adapter, it applies the type conversion before
    * performing the serialization.
    *
-   * @param <T> type of the value to be captured
-   * @param clazz type to be converted
+   * @param <T>     type of the value to be captured
+   * @param clazz   type to be converted
    * @param adapter logic to convert an instance of a given type to an object
    */
   public <T> void addTypeAdapter(final Class<T> clazz,
@@ -246,13 +245,14 @@ public class Client {
    * that have no access to the Touca server (e.g. running with no network
    * access).
    *
-   * @param path path to file in which test results and performance benchmarks
-   *        should be stored
+   * @param path  path to file in which test results and performance benchmarks
+   *              should be stored
    * @param cases names of test cases whose results should be stored. If a set
-   *        is not specified or is set as empty, all test cases will be stored
-   *        in the specified file.
+   *              is not specified or is set as empty, all test cases will be
+   *              stored
+   *              in the specified file.
    * @throws IOException if we encounter file system errors when writing content
-   *         to file
+   *                     to file
    */
   public void saveBinary(final Path path, final String[] cases)
       throws IOException {
@@ -269,13 +269,14 @@ public class Client {
    * for quick inspection of the test results and performance metrics being
    * captured.
    *
-   * @param path path to file in which test results and performance benchmarks
-   *        should be stored
+   * @param path  path to file in which test results and performance benchmarks
+   *              should be stored
    * @param cases names of test cases whose results should be stored. If a set
-   *        is not specified or is set as empty, all test cases will be stored
-   *        in the specified file.
+   *              is not specified or is set as empty, all test cases will be
+   *              stored
+   *              in the specified file.
    * @throws IOException if we encounter file system errors when writing content
-   *         to file
+   *                     to file
    */
   public void saveJson(final Path path, final String[] cases)
       throws IOException {
@@ -296,7 +297,7 @@ public class Client {
    * modified test case.
    *
    * @throws StateException when called on the client that is not configured to
-   *         communicate with the Touca server.
+   *                        communicate with the Touca server.
    */
   public void post() {
     if (this.transport == null) {
@@ -306,8 +307,7 @@ public class Client {
     if (!this.transport.hasToken()) {
       throw new StateException("client not authenticated");
     }
-    final byte[] content =
-        this.serialize(this.cases.values().toArray(new Case[] {}));
+    final byte[] content = this.serialize(this.cases.values().toArray(new Case[] {}));
     this.transport.post(content);
   }
 
@@ -323,7 +323,7 @@ public class Client {
    * in "Suite" Page.
    *
    * @throws StateException when called on the client that is not configured to
-   *         communicate with the Touca server.
+   *                        communicate with the Touca server.
    */
   public void seal() {
     if (this.transport == null) {
@@ -343,7 +343,7 @@ public class Client {
     if (options.concurrency) {
       return activeCase;
     }
-    return threadMap.get(Thread.currentThread().getId());
+    return threadMap.get(Thread.currentThread().threadId());
   }
 
   private byte[] serialize(final Case[] testcases) {

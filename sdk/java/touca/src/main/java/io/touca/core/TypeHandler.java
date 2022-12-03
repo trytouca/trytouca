@@ -19,10 +19,8 @@ import java.util.function.Function;
  */
 public final class TypeHandler {
   private boolean noReflection = false;
-  private final Map<Class<?>, Function<Object, ToucaType>> primitives =
-      new HashMap<>();
-  private final Map<Class<?>, TypeAdapter<? super Object>> adapters =
-      new HashMap<>();
+  private final Map<Class<?>, Function<Object, ToucaType>> primitives = new HashMap<>();
+  private final Map<Class<?>, TypeAdapter<? super Object>> adapters = new HashMap<>();
 
   /**
    * Creates a handler that already supports common primitive types.
@@ -54,8 +52,7 @@ public final class TypeHandler {
       return (ToucaType) value;
     }
     if (value instanceof TypeAdapterContext) {
-      final Iterator<SimpleEntry<String, Object>> iterator =
-          ((TypeAdapterContext) value).iterator();
+      final Iterator<SimpleEntry<String, Object>> iterator = ((TypeAdapterContext) value).iterator();
       final ObjectType obj = new ObjectType();
       while (iterator.hasNext()) {
         final SimpleEntry<String, Object> entry = iterator.next();

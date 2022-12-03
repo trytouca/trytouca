@@ -17,7 +17,7 @@ public final class TypeAdapterContext {
   /**
    * Adds a data point of arbitrary type as an object member.
    *
-   * @param name name of the variable passed as `member`.
+   * @param name   name of the variable passed as `member`.
    * @param member variable to be tracked as a member of this object.
    */
   public void add(final String name, final Object member) {

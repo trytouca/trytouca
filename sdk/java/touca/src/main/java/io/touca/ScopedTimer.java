@@ -9,9 +9,9 @@ package io.touca;
  *
  * <pre>
  * {@code
- *   try (ScopedTimer timer = new ScopedTimer("yourCode")) {
- *     yourCode();
- *   }
+ * try (ScopedTimer timer = new ScopedTimer("yourCode")) {
+ *   yourCode();
+ * }
  * }
  * </pre>
  */

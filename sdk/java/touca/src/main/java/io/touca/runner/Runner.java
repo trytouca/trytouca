@@ -77,14 +77,12 @@ public class Runner {
     private Set<String> errors = new HashSet<String>();
 
     public Printer(RunnerOptions options) {
-      this.testcaseWidth =
-          Arrays.stream(options.testcases).map(item -> item.length()).reduce(0,
-              (sum, item) -> Math.max(sum, item));
+      this.testcaseWidth = Arrays.stream(options.testcases).map(item -> item.length()).reduce(0,
+          (sum, item) -> Math.max(sum, item));
       this.testcaseCount = options.testcases.length;
       this.coloredOutput = options.coloredOutput;
-      this.consoleLogFile =
-          Paths.get(options.outputDirectory).resolve(options.suite)
-              .resolve(options.version).resolve("Console.log");
+      this.consoleLogFile = Paths.get(options.outputDirectory).resolve(options.suite)
+          .resolve(options.version).resolve("Console.log");
       try {
         Files.createDirectories(this.consoleLogFile.getParent());
         Files.write(this.consoleLogFile, new byte[0], StandardOpenOption.CREATE,
@@ -207,11 +205,10 @@ public class Runner {
     try {
       final CommandLine cmd = parser.parse(buildOptions(), mainArgs);
 
-      final BiFunction<String, Boolean, Boolean> parseBoolean =
-          (String a, Boolean b) -> {
-            return (cmd.hasOption(a) && cmd.getOptionValue(a) == null)
-                || Boolean.parseBoolean(cmd.getOptionValue(a, b.toString()));
-          };
+      final BiFunction<String, Boolean, Boolean> parseBoolean = (String a, Boolean b) -> {
+        return (cmd.hasOption(a) && cmd.getOptionValue(a) == null)
+            || Boolean.parseBoolean(cmd.getOptionValue(a, b.toString()));
+      };
 
       options.apply(new RunnerOptions(x -> {
         x.printHelp = cmd.hasOption("help");
@@ -261,8 +258,7 @@ public class Runner {
       return this;
     }
     final String className = mainClass.getCanonicalName();
-    final String packageName =
-        className.substring(0, className.lastIndexOf('.'));
+    final String packageName = className.substring(0, className.lastIndexOf('.'));
     final Iterable<Class<?>> classes = findClasses(packageName);
     for (final Class<?> clazz : classes) {
       for (final Method method : clazz.getMethods()) {
@@ -365,7 +361,7 @@ public class Runner {
   /**
    * Runs a given workflow with multiple test cases.
    *
-   * @param client Touca client instance to use when running workflows.
+   * @param client   Touca client instance to use when running workflows.
    * @param workflow workflow to be executed
    */
   private void runWorkflow(final Client client, final ClassMethod workflow) {
@@ -420,7 +416,7 @@ public class Runner {
       if (errors.isEmpty() && options.saveAsBinary) {
         final Path path = testcaseDirectory.resolve("touca.bin");
         try {
-          client.saveBinary(path, new String[] {testcase});
+          client.saveBinary(path, new String[] { testcase });
         } catch (final IOException ex) {
           errors.add(String.format("failed to create file %s: %s%n",
               path.toString(), ex.getMessage()));
@@ -429,7 +425,7 @@ public class Runner {
       if (errors.isEmpty() && options.saveAsJson) {
         final Path path = testcaseDirectory.resolve("touca.json");
         try {
-          client.saveJson(path, new String[] {testcase});
+          client.saveJson(path, new String[] { testcase });
         } catch (final IOException ex) {
           errors.add(String.format("failed to create file %s: %s%n",
               path.toString(), ex.getMessage()));
@@ -530,8 +526,7 @@ public class Runner {
    */
   private static List<Class<?>> findClasses(final String packageName) {
     final List<Class<?>> classes = new ArrayList<>();
-    final ClassLoader classLoader =
-        Thread.currentThread().getContextClassLoader();
+    final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     final String path = packageName.replace('.', '/');
     try {
       final Enumeration<URL> resources = classLoader.getResources(path);
@@ -553,7 +548,7 @@ public class Runner {
   /**
    * Finds all classes in a given directory and its subdirectories.
    *
-   * @param directory The base directory
+   * @param directory   The base directory
    * @param packageName The package name for classes found in the base directory
    * @return list of classes found in the given directory
    */
