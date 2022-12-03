@@ -1,6 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { touca } from '@touca/node';
+import { touca } from '../src';
 
 interface Course {
   name: string;
