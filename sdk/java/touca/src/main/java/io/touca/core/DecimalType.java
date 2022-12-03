@@ -5,6 +5,7 @@ package io.touca.core;
 import com.google.flatbuffers.FlatBufferBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import io.touca.rules.ComparisonRule;
 
 public final class DecimalType extends ToucaType {
 
@@ -32,8 +33,20 @@ public final class DecimalType extends ToucaType {
 
   @Override
   public int serialize(final FlatBufferBuilder builder) {
+    return serialize(builder, null);
+  }
+
+  @Override
+  public int serialize(final FlatBufferBuilder builder, final ComparisonRule rule) {
+    int fbsRule = 0;
+    if (rule != null) {
+      fbsRule = rule.serialize(builder);
+    }
     Schema.TDouble.startTDouble(builder);
     Schema.TDouble.addValue(builder, value);
+    if (rule != null) {
+      Schema.TDouble.addRule(builder, fbsRule);
+    }
     final int fbsValue = Schema.TDouble.endTDouble(builder);
     Schema.TypeWrapper.startTypeWrapper(builder);
     Schema.TypeWrapper.addValue(builder, fbsValue);

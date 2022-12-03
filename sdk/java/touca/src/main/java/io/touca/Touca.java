@@ -5,6 +5,7 @@ package io.touca;
 import io.touca.core.Client;
 import io.touca.core.Options;
 import io.touca.exceptions.StateException;
+import io.touca.rules.ComparisonRule;
 import io.touca.runner.Runner;
 import java.io.IOException;
 import java.lang.annotation.ElementType;
@@ -176,6 +177,21 @@ public final class Touca {
   public static <T> void check(final String key, final T value) {
     instance.perform(element -> {
       element.check(key, instance.transform(value));
+    });
+  }
+
+  /**
+   * Logs a given value as a test result for the declared test case and
+   * associates it with the specified key.
+   *
+   * @param <T>   type of the value to be captured.
+   * @param key   name to be associated with the logged test result
+   * @param value value to be logged as a test result
+   * @param rule  comparison rule to consider when comparing this data point
+   */
+  public static <T> void check(final String key, final T value, final ComparisonRule rule) {
+    instance.perform(element -> {
+      element.check(key, instance.transform(value), rule);
     });
   }
 
