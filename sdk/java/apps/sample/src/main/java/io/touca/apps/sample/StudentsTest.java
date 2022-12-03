@@ -2,8 +2,8 @@
 
 package io.touca.apps.sample;
 
-import java.time.LocalDate;
 import io.touca.Touca;
+import java.time.LocalDate;
 
 public final class StudentsTest {
 

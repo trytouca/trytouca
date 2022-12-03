@@ -7,7 +7,7 @@ plugins {
     jacoco
     pmd
     signing
-    id("com.github.spotbugs") version "5.0.0-beta.1"
+    id("com.github.spotbugs") version "5.0.13"
 }
 
 dependencies {

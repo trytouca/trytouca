@@ -7,7 +7,8 @@ import com.google.flatbuffers.Table;
 
 public final class Schema {
 
-  private Schema() {}
+  private Schema() {
+  }
 
   public static final class TType {
     public static final byte NONE = 0;
@@ -20,14 +21,16 @@ public final class Schema {
     public static final byte TObject = 7;
     public static final byte TArray = 8;
 
-    private TType() {}
+    private TType() {
+    }
   }
 
   public static final class ResultType {
     public static final int Check = 1;
     public static final int Assert = 2;
 
-    private ResultType() {}
+    private ResultType() {
+    }
   }
 
   public static final class TypeWrapper extends Table {

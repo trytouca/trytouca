@@ -25,7 +25,8 @@ public final class Touca {
   /**
    * This class is designed to be used as utility and cannot be instantiated.
    */
-  private Touca() {}
+  private Touca() {
+  }
 
   /**
    * Activates Touca data capturing functions.
@@ -82,10 +83,10 @@ public final class Touca {
    *
    * <pre>
    * {@code
-   *   if (!touca.isConfigured()) {
-   *       System.out.println(touca.configurationError());
-   *       System.exit(1);
-   *   }
+   * if (!touca.isConfigured()) {
+   *   System.out.println(touca.configurationError());
+   *   System.exit(1);
+   * }
    * }
    * </pre>
    *
@@ -122,7 +123,7 @@ public final class Touca {
    *
    * @return list of test cases of the baseline version of this suite
    * @throws StateException when called on the client that is not configured to
-   *         communicate with the Touca server.
+   *                        communicate with the Touca server.
    */
   public static Iterable<String> getTestcases() {
     return instance.getTestcases();
@@ -168,8 +169,8 @@ public final class Touca {
    * Logs a given value as a test result for the declared test case and
    * associates it with the specified key.
    *
-   * @param <T> type of the value to be captured.
-   * @param key name to be associated with the logged test result
+   * @param <T>   type of the value to be captured.
+   * @param key   name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
   public static <T> void check(final String key, final T value) {
@@ -182,8 +183,8 @@ public final class Touca {
    * Logs a given value as an assertion for the declared test case and
    * associates it with the specified key.
    *
-   * @param <T> type of the value to be captured.
-   * @param key name to be associated with the logged test result
+   * @param <T>   type of the value to be captured.
+   * @param key   name to be associated with the logged test result
    * @param value value to be logged as a test result
    */
   public static <T> void assume(final String key, final T value) {
@@ -237,11 +238,11 @@ public final class Touca {
    * </code>
    * </pre>
    *
-   * @param <T> type of the value to be captured.
-   * @param key name to be associated with the logged test result
+   * @param <T>   type of the value to be captured.
+   * @param key   name to be associated with the logged test result
    * @param value element to be appended to the array
    * @throws IllegalArgumentException if specified key is already associated
-   *         with a test result which was not iterable
+   *                                  with a test result which was not iterable
    */
   public static <T> void addArrayElement(final String key, final T value) {
     instance.perform(element -> {
@@ -287,7 +288,7 @@ public final class Touca {
    *
    * @param key name to be associated with the logged test result
    * @throws IllegalArgumentException if specified key is already associated
-   *         with a test result which was not an integer
+   *                                  with a test result which was not an integer
    */
   public static void addHitCount(final String key) {
     instance.perform(element -> {
@@ -301,7 +302,7 @@ public final class Touca {
    *
    * Useful for logging a metric that is measured without using this SDK.
    *
-   * @param key name to be associated with this performance benchmark
+   * @param key          name to be associated with this performance benchmark
    * @param milliseconds duration of this measurement in milliseconds
    */
   public static void addMetric(final String key, final long milliseconds) {
@@ -341,7 +342,7 @@ public final class Touca {
   /**
    * Measures runtime of a given callback function.
    *
-   * @param key name to be associated with the performance metric
+   * @param key      name to be associated with the performance metric
    * @param callback function whose runtime should be measured
    */
   public static void scopedTimer(final String key, final Runnable callback) {
@@ -362,10 +363,11 @@ public final class Touca {
    * that have no access to the Touca server (e.g. running with no network
    * access).
    *
-   * @param path path to file in which test results and performance benchmarks
-   *        should be stored
+   * @param path  path to file in which test results and performance benchmarks
+   *              should be stored
    * @param cases names of test cases whose results should be stored. If set to
-   *        null or empty, all test cases will be stored in the specified file.
+   *              null or empty, all test cases will be stored in the specified
+   *              file.
    * @throws IOException if we encounter any filesystem error
    */
   public static void saveBinary(final String path, final String[] cases)
@@ -381,10 +383,11 @@ public final class Touca {
    * for quick inspection of the test results and performance metrics being
    * captured.
    *
-   * @param path path to file in which test results and performance benchmarks
-   *        should be stored
+   * @param path  path to file in which test results and performance benchmarks
+   *              should be stored
    * @param cases names of test cases whose results should be stored. If set to
-   *        null or empty, all test cases will be stored in the specified file.
+   *              null or empty, all test cases will be stored in the specified
+   *              file.
    * @throws IOException if we encounter any filesystem error
    */
   public static void saveJson(final String path, final String[] cases)
@@ -401,8 +404,8 @@ public final class Touca {
    * with a registered type adapter, it applies the type conversion before
    * performing the serialization.
    *
-   * @param <T> type of the value to be captured
-   * @param type type to be converted
+   * @param <T>     type of the value to be captured
+   * @param type    type to be converted
    * @param adapter logic to convert an instance of a given type to an object
    */
   public static <T> void addTypeAdapter(final Class<T> type,
@@ -422,7 +425,7 @@ public final class Touca {
    * modified test case.
    *
    * @throws StateException when called on the client that is not configured to
-   *         communicate with the Touca server.
+   *                        communicate with the Touca server.
    */
   public static void post() {
     instance.post();
@@ -440,7 +443,7 @@ public final class Touca {
    * in "Suite" Page.
    *
    * @throws StateException when called on the client that is not configured to
-   *         communicate with the Touca server.
+   *                        communicate with the Touca server.
    */
   public static void seal() {
     instance.seal();
@@ -457,7 +460,7 @@ public final class Touca {
    * unexpected values or are in conflict with each other.
    *
    * @param mainClass class that includes the main method of test application
-   * @param mainArgs command-line arguments provided to the application
+   * @param mainArgs  command-line arguments provided to the application
    */
   public static void run(final Class<?> mainClass, final String[] mainArgs) {
     new Runner().parse(mainArgs).findWorkflows(mainClass).run(instance);
