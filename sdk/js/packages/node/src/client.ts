@@ -6,7 +6,7 @@ import { dirname } from 'path';
 
 import { Case, CheckOptions } from './case';
 import { NodeOptions, update_options } from './options';
-import { Runner } from './runner';
+import { Runner, Workflow } from './runner';
 import * as schema from './schema';
 import { Transport } from './transport';
 import { TypeHandler } from './types';
@@ -569,8 +569,9 @@ export class NodeClient implements BaseClient<NodeOptions> {
 
   public async workflow(
     name: string,
-    callback: (testcase: string) => void
+    callback: Workflow['callback'],
+    options?: Omit<Workflow, 'callback'>
   ): Promise<void> {
-    this._runner.add_workflow(name, callback);
+    this._runner.add_workflow(name, { callback, ...options });
   }
 }

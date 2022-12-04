@@ -41,6 +41,12 @@ import { NodeClient } from './client';
 import { find_home_path, NodeOptions, update_options } from './options';
 import { VERSION } from './version';
 
+export type Workflow = {
+  callback: (testcase: string) => void | Promise<void>;
+} & Partial<{
+  testcases: Array<string> | (() => Promise<Array<string>>);
+}>;
+
 interface RunnerOptions extends NodeOptions {
   overwrite: boolean;
   save_json: boolean;
@@ -350,14 +356,11 @@ async function _parse_cli_options(args: string[]): Promise<RunnerOptions> {
 }
 
 export class Runner {
-  private _workflows: Record<string, (testcase: string) => void> = {};
+  private _workflows: Record<string, Workflow> = {};
 
   constructor(private readonly _client: NodeClient) {}
 
-  public async add_workflow(
-    name: string,
-    workflow: (testcase: string) => void
-  ): Promise<void> {
+  public async add_workflow(name: string, workflow: Workflow): Promise<void> {
     this._workflows[name] = workflow;
   }
 
@@ -387,14 +390,24 @@ export class Runner {
     throw new ToucaError(ToucaErrorCode.InvalidWorkflow, [name]);
   }
 
+  private async findWorkflowOptions(workflow: Workflow) {
+    const options: Partial<RunnerOptions> = {};
+    if (workflow.testcases) {
+      const tc = workflow.testcases;
+      options.testcases = Array.isArray(tc) ? tc : await tc();
+    }
+    return options;
+  }
+
   private async _run_workflows(
     opts: RunnerOptions,
-    workflows: Record<string, (testcase: string) => void>
+    workflows: Record<string, Workflow>
   ): Promise<boolean> {
     Printer.printAppHeader();
     for (const [suite, workflow] of Object.entries(workflows)) {
       try {
-        const options = { ...opts, suite };
+        const workflowOptions = await this.findWorkflowOptions(workflow);
+        const options: RunnerOptions = { ...opts, ...workflowOptions, suite };
         await this._initialize(options);
         await this._runWorkflow(options, workflow);
       } catch (error) {
@@ -479,10 +492,7 @@ export class Runner {
     }
   }
 
-  private async _runWorkflow(
-    options: RunnerOptions,
-    workflow: (testcase: string) => void
-  ) {
+  private async _runWorkflow(options: RunnerOptions, workflow: Workflow) {
     const printer = new Printer(options);
     printer.print_header(options.suite as string, options.version as string);
     const offline = options.offline || !options.api_key || !options.api_url;
@@ -515,7 +525,7 @@ export class Runner {
 
       const errors = [];
       try {
-        await workflow(testcase);
+        await workflow.callback(testcase);
       } catch (err) {
         const error = err instanceof Error ? err.message : 'Unknown Error';
         errors.push(error);
