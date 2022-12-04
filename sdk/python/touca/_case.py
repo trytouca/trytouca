@@ -37,16 +37,23 @@ class Case:
 
     def check(self, key: str, value: ToucaType, rule: ComparisonRule = None):
         """
-        Logs a given value as a test result for the declared test case
-        and associates it with the specified key.
+        Captures the value of a given variable as a data point for the declared
+        test case and associates it with the specified key.
 
-        :param key: name to be associated with the logged test result
-        :param value: value to be logged as a test result
+        :param key: name to be associated with the captured data point
+        :param value: value to be captured as a test result
         :param rule: comparison rule for this test result
         """
         self._results[key] = ResultEntry(ResultCategory.Check, value, rule)
 
     def check_file(self, key: str, file: Path):
+        """
+        Captures an external file as a data point for the declared test case
+        and associates it with the specified key.
+
+        :param key: name to be associated with captured file
+        :param path: path to the external file to be captured
+        """
         self._results[key] = ResultEntry(
             typ=ResultCategory.Check, val=BlobType(Artifact.from_file(file))
         )

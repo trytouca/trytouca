@@ -167,14 +167,33 @@ export class Transport {
   }
 
   public async post(content: Uint8Array): Promise<void> {
+    return this.postBinary(content);
+  }
+
+  public async postArtifact(testcase: string, key: string, content: Buffer) {
+    const path = `/client/submit/artifact/${this._options.team}/${this._options.suite}/${this._options.version}/${testcase}/${key}`;
+    return this.postBinary(content, path);
+  }
+
+  private async postBinary(content: Uint8Array, path = '/client/submit') {
     const response = await this._send_request({
       method: 'POST',
-      path: '/client/submit',
+      path,
       body: content,
       content_type: 'application/octet-stream'
     });
-    if (response.status !== 204) {
-      throw new Error('Failed to submit test results');
+    if (response.status === 204) {
+      return;
+    }
+    let reason = '';
+    if (response.status === 400) {
+      if (response.body.includes('batch is sealed')) {
+        reason = ' This version is already submitted and sealed';
+      }
+      if (response.body.includes('team not found')) {
+        reason = ' This team does not exist';
+      }
+      throw new Error(`Failed to submit test results.${reason}`);
     }
   }
 

@@ -4,6 +4,7 @@ import { Builder } from 'flatbuffers';
 
 import * as schema from './schema';
 import {
+  BlobType,
   ComparisonRule,
   IntegerType,
   ResultJson,
@@ -54,15 +55,30 @@ export class Case {
   ) {}
 
   /**
-   * Logs a given value as a test result for the declared test case
-   * and associates it with the specified key.
+   * Captures the value of a given variable as a data point for the declared
+   * test case and associates it with the specified key.
    *
-   * @param key name to be associated with the logged test result
-   * @param value value to be logged as a test result
+   * @param key name to be associated with the captured data point
+   * @param value value to be captured as a test result
+   * @param options comparison rule for this test result
    */
   check(key: string, value: ToucaType, options?: CheckOptions): void {
     const rule = options?.rule;
     this._results.set(key, { typ: ResultCategory.Check, val: value, rule });
+  }
+
+  /**
+   * Captures an external file as a data point for the declared
+   * test case and associates it with the specified key.
+   *
+   * @param key name to be associated with the captured file
+   * @param path path to the external file to be captured
+   */
+  checkFile(key: string, path: string): void {
+    this._results.set(key, {
+      typ: ResultCategory.Check,
+      val: BlobType.fromFile(path)
+    });
   }
 
   /**
@@ -181,6 +197,12 @@ export class Case {
       testcase: this.meta.name,
       builtAt: new Date().toUTCString()
     };
+  }
+
+  blobs(): Array<[string, BlobType]> {
+    return Array.from(this._results.entries())
+      .filter((v) => v[1].val instanceof BlobType)
+      .map((v) => [v[0], v[1].val] as [string, BlobType]);
   }
 
   json(): CaseJson {

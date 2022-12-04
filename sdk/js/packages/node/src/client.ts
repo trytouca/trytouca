@@ -271,16 +271,30 @@ export class NodeClient implements BaseClient<NodeOptions> {
   }
 
   /**
-   * Logs a given value as a test result for the declared test case and
-   * associates it with the specified key.
+   * Captures the value of a given variable as a data point for the declared
+   * test case and associates it with the specified key.
    *
-   * @param key name to be associated with the logged test result
-   * @param value value to be logged as a test result
+   * @param key name to be associated with the captured data point
+   * @param value value to be captured as a test result
+   * @param options comparison rule for this test result
    */
   public check(key: string, value: unknown, options?: CheckOptions): void {
     if (this._active_case) {
       const touca_value = this._type_handler.transform(value);
       this._cases.get(this._active_case)?.check(key, touca_value, options);
+    }
+  }
+
+  /**
+   * Captures an external file as a data point for the declared
+   * test case and associates it with the specified key.
+   *
+   * @param key name to be associated with the captured file
+   * @param path path to the external file to be captured
+   */
+  public checkFile(key: string, path: string) {
+    if (this._active_case) {
+      this._cases.get(this._active_case)?.checkFile(key, path);
     }
   }
 
@@ -534,7 +548,12 @@ export class NodeClient implements BaseClient<NodeOptions> {
       throw new Error('client not authenticated');
     }
     const content = this._serialize(Array.from(this._cases.values()));
-    return this._transport.post(content);
+    await this._transport.post(content);
+    for (const [name, testcase] of this._cases.entries()) {
+      for (const [key, value] of testcase.blobs()) {
+        await this._transport.postArtifact(name, key, value.binary());
+      }
+    }
   }
 
   /**

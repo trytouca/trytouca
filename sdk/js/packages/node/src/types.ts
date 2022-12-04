@@ -1,6 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { createHash } from 'crypto';
 import { Builder } from 'flatbuffers';
+import { readFileSync } from 'fs';
 
 import * as schema from './schema';
 
@@ -21,6 +23,64 @@ type SerializeOptions = { rule?: ComparisonRule };
 export interface ToucaType {
   json(): ResultJson;
   serialize(builder: Builder, options?: SerializeOptions): number;
+}
+
+export class BlobType implements ToucaType {
+  private constructor(
+    private readonly value:
+      | { content: Buffer; digest: string; mimetype: string }
+      | { reference: string; digest: string }
+  ) {}
+
+  public static fromFile(reference: string) {
+    const content = readFileSync(reference);
+    const digest = createHash('sha256').update(content).digest('hex');
+    return new BlobType({ reference, digest });
+  }
+
+  public static fromBytes(content: Buffer) {
+    const digest = createHash('sha256').update(content).digest('hex');
+    return new BlobType({ content, digest, mimetype: 'image/jpg' });
+  }
+
+  public binary(): Buffer {
+    return 'content' in this.value
+      ? this.value.content
+      : readFileSync(this.value.reference);
+  }
+
+  public json(): string {
+    return 'reference' in this.value ? this.value.reference : 'binary';
+  }
+
+  public serialize(builder: Builder): number {
+    const fbs = {
+      digest: builder.createString(this.value.digest),
+      mimetype:
+        'reference' in this.value
+          ? undefined
+          : builder.createString(this.value.mimetype),
+      reference:
+        'reference' in this.value
+          ? builder.createString(this.value.reference)
+          : undefined
+    };
+    schema.Blob.startBlob(builder);
+    if (fbs.digest) {
+      schema.Blob.addDigest(builder, fbs.digest);
+    }
+    if (fbs.mimetype) {
+      schema.Blob.addMimetype(builder, fbs.mimetype);
+    }
+    if (fbs.reference) {
+      schema.Blob.addReference(builder, fbs.reference);
+    }
+    const value = schema.Blob.endBlob(builder);
+    schema.TypeWrapper.startTypeWrapper(builder);
+    schema.TypeWrapper.addValue(builder, value);
+    schema.TypeWrapper.addValueType(builder, schema.Type.Blob);
+    return schema.TypeWrapper.endTypeWrapper(builder);
+  }
 }
 
 class BoolType implements ToucaType {
@@ -218,6 +278,9 @@ export class TypeHandler {
     }
     if (value === null) {
       return new StringType('null');
+    }
+    if (Buffer.isBuffer(value)) {
+      return BlobType.fromBytes(value);
     }
     // eslint-disable-next-line @typescript-eslint/ban-types
     const name = (value as object).constructor.name;
