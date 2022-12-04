@@ -1,8 +1,9 @@
 {
+  "$schema": "https://typedoc.org/schema.json",
   "name": "Touca Server API",
   "entryPoints": ["./src"],
   "entryPointStrategy": "expand",
-  "out": "./local/docs/internal",
+  "out": "../local/api/docs/internal",
   "readme": "./README.md",
   "includes": "./",
   "exclude": ["**/dist/**/*", "**/test/**/*"],
