@@ -2,33 +2,35 @@
 
 include(GNUInstallDirs)
 
-add_executable(example_minimal "")
+add_executable(sample_app "")
 
 target_sources(
-        example_minimal
+        sample_app
     PRIVATE
-        is_prime.hpp
-        is_prime_test.cpp
+        students.cpp
+        students.hpp
+        students_test.cpp
+        students_types.hpp
 )
 
 target_link_libraries(
-        example_minimal
+        sample_app
     PRIVATE
         ${TOUCA_TARGET_MAIN}
 )
 
 target_include_directories(
-        example_minimal
+        sample_app
     PRIVATE
         ${TOUCA_CLIENT_ROOT_DIR}
 )
 
 source_group(
     TREE ${CMAKE_CURRENT_LIST_DIR}
-    FILES $<TARGET_PROPERTY:example_minimal,SOURCES>
+    FILES $<TARGET_PROPERTY:sample_app,SOURCES>
 )
 
 install(
-    TARGETS example_minimal
+    TARGETS sample_app
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
