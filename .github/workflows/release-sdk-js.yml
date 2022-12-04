@@ -25,7 +25,7 @@ jobs:
         run: |
           rm packages/node/README.md
           cp LICENSE packages/node/LICENSE
-          cp CHANGELOG.md packages/node/CHANGELOG.md
+          cp Changelog.md packages/node/Changelog.md
           cp README.md packages/node/README.md
           sed -i 's/\("main":\).*/\1 "dist\/index.js",/g' packages/node/package.json
           sed -i 's/\("types":\).*/\1 "dist\/index.d.ts",/g' packages/node/package.json
