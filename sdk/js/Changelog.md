@@ -4,6 +4,7 @@
 
 Features:
 
+- Add support for capturing binary blobs and external files (#423)
 - Add support for programmatic testcase declaration (#422)
 - Add support for custom comparison rules (#417)
 
