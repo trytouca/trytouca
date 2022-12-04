@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { readFileSync } from 'node:fs'
-import path from 'node:path'
+import { join } from 'node:path'
 
 import { InvokeCommand, Lambda } from '@aws-sdk/client-lambda'
 import mustache from 'mustache'
@@ -176,7 +176,7 @@ export async function buildPdfReport(
   batch: IBatchDocument
 ): Promise<PdfReport> {
   const content = await buildPdfContent(suite, batch)
-  const template_file = path.join(
+  const template_file = join(
     config.mail.templatesDirectory,
     'reports',
     'report.html'

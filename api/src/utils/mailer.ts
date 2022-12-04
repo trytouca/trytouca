@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import fs from 'node:fs'
-import path from 'node:path'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 import type { EPlatformRole } from '@touca/api-schema'
 import htmlToText from 'html-to-text'
@@ -57,11 +57,11 @@ class EMail {
     }
     logger.silly('%s: %s: sending mail', this.filename, recipient.username)
 
-    const filePath = path.join(
+    const filePath = join(
       config.mail.templatesDirectory,
       this.filename + '.html'
     )
-    const fileContent = fs.readFileSync(filePath, 'utf8')
+    const fileContent = readFileSync(filePath, 'utf8')
     const bodyHtml = mustache.render(fileContent, this.params)
     const bodyPlain = htmlToText.fromString(bodyHtml, { wordwrap: 80 })
     const superuser = await wslGetSuperUser()

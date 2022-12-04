@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import path from 'node:path'
+import { normalize, resolve } from 'node:path'
 
 import dotenv from 'dotenv'
 import { pick } from 'lodash'
@@ -101,7 +101,7 @@ interface IConfig {
 
 function findPath(environment = '') {
   const name = environment === '' ? '.env' : `.env.${environment}`
-  return path.normalize(`${__dirname}/../../env/${name}`)
+  return normalize(`${__dirname}/../../env/${name}`)
 }
 
 dotenv.config({ path: findPath() })
@@ -165,7 +165,7 @@ export const config: IConfig = {
     tlsCertificateFile: env.REDIS_TLS_CERT_FILE
   },
   samples: {
-    directory: path.normalize(`${__dirname}/../../` + env.SAMPLES_DIR),
+    directory: normalize(`${__dirname}/../../` + env.SAMPLES_DIR),
     enabled: env.SAMPLES_ENABLED === 'true'
   },
   services: {
@@ -201,7 +201,7 @@ export const config: IConfig = {
     segment_key: env.SEGMENT_API_KEY
   },
   webapp: {
-    distDirectory: path.resolve(`${__dirname}/../`, env.WEBAPP_DIST_DIRECTORY),
+    distDirectory: resolve(`${__dirname}/../`, env.WEBAPP_DIST_DIRECTORY),
     root: env.WEBAPP_ROOT
   }
 }

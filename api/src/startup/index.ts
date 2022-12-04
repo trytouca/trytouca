@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import fs from 'node:fs'
+import { existsSync } from 'node:fs'
 
 import { pick } from 'lodash'
 
@@ -114,7 +114,7 @@ export async function statusReport() {
   if (!configMgr.hasMailTransport()) {
     logger.warn('mail server not configured')
   }
-  if (!fs.existsSync(config.samples.directory)) {
+  if (!existsSync(config.samples.directory)) {
     logger.warn('samples directory not found at %s', config.samples.directory)
   }
   return true

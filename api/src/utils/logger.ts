@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import fs from 'node:fs'
-import path from 'node:path'
+import { existsSync, mkdirSync } from 'node:fs'
+import { join, normalize } from 'node:path'
 
 import logger from 'winston'
 
@@ -18,14 +18,12 @@ const transports: logger.transport[] = [
 ]
 
 if (config.logging.directory) {
-  const logDir = path.normalize(
-    `${__dirname}/../../../${config.logging.directory}`
-  )
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true })
+  const logDir = normalize(`${__dirname}/../../../${config.logging.directory}`)
+  if (!existsSync(logDir)) {
+    mkdirSync(logDir, { recursive: true })
   }
   const fileTransport = new logger.transports.File({
-    filename: path.join(logDir, 'touca.log'),
+    filename: join(logDir, 'touca.log'),
     format: logger.format.combine(
       logger.format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss'
