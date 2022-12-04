@@ -1,9 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { readFileSync } from 'node:fs'
+import path from 'node:path'
+
 import { InvokeCommand, Lambda } from '@aws-sdk/client-lambda'
-import { readFileSync } from 'fs'
 import mustache from 'mustache'
-import path from 'path'
 
 import { ComparisonFunctions } from '@/controllers/comparison'
 import { UserMap } from '@/models/usermap'

@@ -1,7 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
+
 import logger from 'winston'
 
 import { config } from '@/utils/config'

@@ -3,7 +3,7 @@
 import express from 'express'
 import nocache from 'nocache'
 
-import { platformHealth } from '@/controllers/platform'
+import { platformHealth } from '@/controllers/platform/index'
 import { feedbackSubmit } from '@/controllers/relay/feedback'
 import { authRouter } from '@/routes/auth'
 import { batchRouter } from '@/routes/batch'

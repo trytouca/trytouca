@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 
 import { processBinaryContent } from '@/controllers/client/submit'
 import { batchPromote, batchSeal } from '@/models/batch'

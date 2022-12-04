@@ -5,19 +5,8 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import express from 'express'
 import hidePoweredBy from 'hide-powered-by'
-import moduleAlias from 'module-alias'
 
-moduleAlias.addAliases({
-  '@/controllers': `${__dirname}/controllers`,
-  '@/middlewares': `${__dirname}/middlewares`,
-  '@/models': `${__dirname}/models`,
-  '@/queues': `${__dirname}/queues`,
-  '@/routes': `${__dirname}/routes`,
-  '@/schemas': `${__dirname}/schemas`,
-  '@/types': `${__dirname}/types`,
-  '@/utils': `${__dirname}/utils`
-})
-
+import { comparisonQueue, eventsQueue, messageQueue } from '@/queues'
 import { MetaModel } from '@/schemas/meta'
 import { config } from '@/utils/config'
 import logger from '@/utils/logger'
@@ -26,22 +15,21 @@ import { redisClient } from '@/utils/redis'
 import { connectToServer } from '@/utils/routing'
 import { objectStore } from '@/utils/store'
 
-import { comparisonQueue, eventsQueue, messageQueue } from './queues'
-import router from './routes'
+import router from './routes/index.js'
 import {
   analyticsService,
   autosealService,
   reportingService,
   retentionService,
   telemetryService
-} from './services'
+} from './services/index.js'
 import {
   loadComparisonQueue,
   loadMessageQueue,
   setupSuperuser,
   statusReport,
   upgradeDatabase
-} from './startup'
+} from './startup/index.js'
 
 const app = express()
 

@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import fs from 'fs'
+import fs from 'node:fs'
+
 import { pick } from 'lodash'
 
 import { ComparisonJob } from '@/models/comparison'

@@ -1,10 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-export { hasBatch } from './batch'
-export { hasComment } from './comment'
-export { hasArtifact, hasElement } from './element'
-export { isCloudInstance } from './relay'
-export { hasSuite } from './suite'
+export { hasBatch } from './batch.js'
+export { hasComment } from './comment.js'
+export { hasArtifact, hasElement } from './element.js'
+export { isCloudInstance } from './relay.js'
+export { hasSuite } from './suite.js'
 export {
   hasTeam,
   isTeamInvitee,
@@ -12,7 +12,7 @@ export {
   isTeamAdmin,
   isTeamOwner,
   hasMember
-} from './team'
+} from './team.js'
 export {
   isAuthenticated,
   isClientAuthenticated,
@@ -20,5 +20,5 @@ export {
   findPlatformRole,
   hasAccount,
   hasSuspendedAccount
-} from './user'
-export { inputs, validationRules } from './utils'
+} from './user.js'
+export { inputs, validationRules } from './utils.js'

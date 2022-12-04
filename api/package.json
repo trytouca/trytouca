@@ -7,6 +7,7 @@
   "repository": "https://github.com/trytouca/touca.git",
   "bugs": "https://github.com/trytouca/touca/issues",
   "homepage": "https://touca.io",
+  "type": "module",
   "keywords": [
     "snapshot-testing",
     "test-automation",
@@ -17,7 +18,10 @@
     "name": "Pejman Ghorbanzade",
     "email": "pejman@touca.io"
   },
-  "main": "dist/server.js",
+  "exports": "./dist/server.js",
+  "engines": {
+    "node": ">=14.16"
+  },
   "scripts": {
     "build": "run-p build:mails build:ts",
     "build:mails": "shx mkdir -p dist/templates && mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/ && shx cp -r templates/reports dist/templates",
@@ -30,12 +34,12 @@
     "docs:internal": "typedoc",
     "lint": "eslint src test --ext .ts",
     "start": "node .",
-    "test": "cross-env ENV_FILE=test jest"
+    "test": "cross-env ENV_FILE=test vitest run --coverage --reporter verbose"
   },
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.222.0",
     "@aws-sdk/client-s3": "^3.222.0",
-    "@sindresorhus/df": "^3.1.1",
+    "@sindresorhus/df": "^4.0.0",
     "@touca/api-schema": "workspace:*",
     "@touca/comparator": "workspace:*",
     "@touca/flatbuffers": "workspace:*",
@@ -50,15 +54,15 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-validator": "^6.14.2",
+    "file-type": "^18.0.0",
     "flatbuffers": "^22.11.23",
     "google-auth-library": "^8.7.0",
     "hide-powered-by": "^1.0.0",
-    "html-to-text": "^8.2.1",
+    "html-to-text": "^9.0.0",
     "ioredis": "^5.2.4",
     "jws": "^4.0.0",
     "lodash": "^4.17.21",
     "marked": "^4.2.3",
-    "module-alias": "^2.2.2",
     "mongoose": "^6.7.5",
     "mustache": "^4.2.0",
     "nocache": "^3.0.4",
@@ -67,14 +71,12 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
-    "@jest/globals": "^29.3.1",
     "@types/analytics-node": "^3.1.9",
     "@types/archiver": "^5.3.1",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.14",
     "@types/flatbuffers": "^1.9.0",
-    "@types/jest": "^29.2.3",
     "@types/jws": "^3.2.4",
     "@types/lodash": "^4.14.191",
     "@types/marked": "^4.0.7",
@@ -82,28 +84,26 @@
     "@types/mustache": "^4.2.2",
     "@types/node": "^18.11.10",
     "@types/nodemailer": "^6.4.6",
-    "@types/sinon": "^10.0.13",
     "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
+    "@vitest/coverage-istanbul": "^0.25.3",
     "cross-env": "^7.0.3",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^8.0.0",
-    "jest": "^29.3.1",
     "mjml": "^4.12.0",
     "nodemon": "^2.0.20",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.8.0",
     "redoc-cli": "^0.13.20",
     "shx": "^0.3.4",
-    "sinon": "^15.0.0",
     "source-map-support": "^0.5.21",
-    "ts-jest": "^29.0.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.1.1",
     "typedoc": "^0.23.21",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "vitest": "^0.25.3"
   }
 }

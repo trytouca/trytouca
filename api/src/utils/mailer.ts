@@ -1,13 +1,14 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+
+import fs from 'node:fs'
+import path from 'node:path'
 
 import type { EPlatformRole } from '@touca/api-schema'
-import fs from 'fs'
 import htmlToText from 'html-to-text'
 import { has as lodashHas } from 'lodash'
 import mustache from 'mustache'
 import nodemailer, { Transporter } from 'nodemailer'
 import { Attachment } from 'nodemailer/lib/mailer'
-import path from 'path'
 
 import { wslGetSuperUser } from '@/models/user'
 import { MailModel } from '@/schemas/mail'

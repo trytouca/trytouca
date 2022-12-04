@@ -1,9 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import path from 'node:path'
+
 import dotenv from 'dotenv'
 import { pick } from 'lodash'
 import mongoose from 'mongoose'
-import path from 'path'
 
 import { MetaModel } from '@/schemas/meta'
 

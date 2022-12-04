@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { describe, expect, test } from '@jest/globals'
 import mongoose from 'mongoose'
+import { describe, expect, test } from 'vitest'
 
 import { BatchModel } from '../../src/schemas/batch'
 import { CommentModel } from '../../src/schemas/comment'
@@ -17,13 +17,13 @@ import { UserModel } from '../../src/schemas/user'
 import { ECommentType } from '../../src/types/backendtypes'
 import { config } from '../../src/utils/config'
 
-describe('model-user', () => {
+describe('model/user', () => {
   test('reject making user doc if required keys are missing', () => {
     const userModel = new UserModel({})
     const err = userModel.validateSync()
-    expect(err.name).toEqual('ValidationError')
-    expect(err.errors.email.kind).toEqual('required')
-    expect(err.errors.username.kind).toEqual('required')
+    expect(err?.name).toEqual('ValidationError')
+    expect(err?.errors.email.kind).toEqual('required')
+    expect(err?.errors.username.kind).toEqual('required')
   })
   test('allow making user doc if required keys exist', () => {
     const userModel = new UserModel({
@@ -37,7 +37,7 @@ describe('model-user', () => {
   })
 })
 
-describe('model-suite', () => {
+describe('model/suite', () => {
   const createdBy = new mongoose.Types.ObjectId()
   const team = new mongoose.Types.ObjectId()
 
@@ -45,10 +45,10 @@ describe('model-suite', () => {
     test('reject making suite doc if required keys are missing', () => {
       const suiteModel = new SuiteModel({})
       const err = suiteModel.validateSync()
-      expect(err.errors.name.kind).toEqual('required')
-      expect(err.errors.createdBy.kind).toEqual('required')
-      expect(err.errors.slug.kind).toEqual('required')
-      expect(err.errors.team.kind).toEqual('required')
+      expect(err?.errors.name.kind).toEqual('required')
+      expect(err?.errors.createdBy.kind).toEqual('required')
+      expect(err?.errors.slug.kind).toEqual('required')
+      expect(err?.errors.team.kind).toEqual('required')
     })
     test('allow making suite doc if required keys exist', () => {
       const suiteModel = new SuiteModel({
@@ -87,16 +87,16 @@ describe('model-suite', () => {
   })
 })
 
-describe('model-message', () => {
+describe('model/message', () => {
   test('reject making message doc with missing required keys', () => {
     const messageModel = new MessageModel({})
     const err = messageModel.validateSync()
-    expect(err.name).toEqual('ValidationError')
-    expect(err.errors.batchId.kind).toEqual('required')
-    expect(err.errors.builtAt.kind).toEqual('required')
-    expect(err.errors.elementId.kind).toEqual('required')
-    expect(err.errors.expiresAt.kind).toEqual('required')
-    expect(err.errors.submittedAt.kind).toEqual('required')
+    expect(err?.name).toEqual('ValidationError')
+    expect(err?.errors.batchId.kind).toEqual('required')
+    expect(err?.errors.builtAt.kind).toEqual('required')
+    expect(err?.errors.elementId.kind).toEqual('required')
+    expect(err?.errors.expiresAt.kind).toEqual('required')
+    expect(err?.errors.submittedAt.kind).toEqual('required')
   })
   test('allow making message doc if required keys exist', () => {
     const messageModel = new MessageModel({
@@ -110,14 +110,14 @@ describe('model-message', () => {
   })
 })
 
-describe('model-batch', () => {
+describe('model/batch', () => {
   test('reject making batch doc with missing required keys', () => {
     const batchModel = new BatchModel({})
     const err = batchModel.validateSync()
-    expect(err.name).toEqual('ValidationError')
-    expect(err.errors.slug.kind).toEqual('required')
-    expect(err.errors.suite.kind).toEqual('required')
-    expect(err.errors.superior.kind).toEqual('required')
+    expect(err?.name).toEqual('ValidationError')
+    expect(err?.errors.slug.kind).toEqual('required')
+    expect(err?.errors.suite.kind).toEqual('required')
+    expect(err?.errors.superior.kind).toEqual('required')
   })
   test('allow making result doc if required keys exist', () => {
     const batchModel = new BatchModel({
@@ -129,13 +129,13 @@ describe('model-batch', () => {
   })
 })
 
-describe('model-comparison', () => {
+describe('model/comparison', () => {
   test('reject making comparison doc with missing required keys', () => {
     const cmpModel = new ComparisonModel({})
     const err = cmpModel.validateSync()
-    expect(err.name).toEqual('ValidationError')
-    expect(err.errors.dstMessageId.kind).toEqual('required')
-    expect(err.errors.srcMessageId.kind).toEqual('required')
+    expect(err?.name).toEqual('ValidationError')
+    expect(err?.errors.dstMessageId.kind).toEqual('required')
+    expect(err?.errors.srcMessageId.kind).toEqual('required')
   })
   test('allow making comparison doc if required keys exist', () => {
     const cmpModel = new ComparisonModel({
@@ -148,14 +148,14 @@ describe('model-comparison', () => {
   })
 })
 
-describe('model-element', () => {
+describe('model/element', () => {
   test('reject making element doc with missing required keys', () => {
     const elementModel = new ElementModel({})
     const err = elementModel.validateSync()
-    expect(err.name).toEqual('ValidationError')
-    expect(err.errors.name.kind).toEqual('required')
-    expect(err.errors.slug.kind).toEqual('required')
-    expect(err.errors.suiteId.kind).toEqual('required')
+    expect(err?.name).toEqual('ValidationError')
+    expect(err?.errors.name.kind).toEqual('required')
+    expect(err?.errors.slug.kind).toEqual('required')
+    expect(err?.errors.suiteId.kind).toEqual('required')
   })
   test('allow making result doc if required keys exist', () => {
     const elementModel = new ElementModel({
@@ -167,14 +167,14 @@ describe('model-element', () => {
   })
 })
 
-describe('model-mail', () => {
+describe('model/mail', () => {
   test('reject making mail doc with missing required keys', () => {
     const mailModel = new MailModel({})
     const err = mailModel.validateSync()
-    expect(err.name).toEqual('ValidationError')
-    expect(err.errors.recipient.kind).toEqual('required')
-    expect(err.errors.sender.kind).toEqual('required')
-    expect(err.errors.subject.kind).toEqual('required')
+    expect(err?.name).toEqual('ValidationError')
+    expect(err?.errors.recipient.kind).toEqual('required')
+    expect(err?.errors.sender.kind).toEqual('required')
+    expect(err?.errors.subject.kind).toEqual('required')
   })
   test('allow making mail doc if required keys exist', () => {
     const mailModel = new MailModel({
@@ -186,12 +186,12 @@ describe('model-mail', () => {
   })
 })
 
-describe('model-team', () => {
+describe('model/team', () => {
   test('reject making doc with missing required keys', () => {
     const teamModel = new TeamModel({})
     const err = teamModel.validateSync()
-    expect(err.name).toEqual('ValidationError')
-    expect(err.errors.name.kind).toEqual('required')
+    expect(err?.name).toEqual('ValidationError')
+    expect(err?.errors.name.kind).toEqual('required')
   })
   test('allow making result doc if required keys exist', () => {
     const teamModel = new TeamModel({
@@ -203,17 +203,17 @@ describe('model-team', () => {
   })
 })
 
-describe('model-comment', () => {
+describe('model/comment', () => {
   const createdAt = new Date()
   const createdBy = new mongoose.Types.ObjectId()
 
   test('reject making comment doc with missing required keys', () => {
     const commentModel = new CommentModel({})
     const err = commentModel.validateSync()
-    expect(err.name).toEqual('ValidationError')
-    expect(err.errors.at.kind).toEqual('required')
-    expect(err.errors.by.kind).toEqual('required')
-    expect(err.errors.text.kind).toEqual('required')
+    expect(err?.name).toEqual('ValidationError')
+    expect(err?.errors.at.kind).toEqual('required')
+    expect(err?.errors.by.kind).toEqual('required')
+    expect(err?.errors.text.kind).toEqual('required')
   })
   test('allow making comment doc if required keys exist', () => {
     const commentModel = new CommentModel({
@@ -226,17 +226,17 @@ describe('model-comment', () => {
   })
 })
 
-describe('model-report', () => {
+describe('model/report', () => {
   const dstBatchId = new mongoose.Types.ObjectId()
   const srcBatchId = new mongoose.Types.ObjectId()
 
   test('reject making report doc with missing required keys', () => {
     const reportModel = new ReportModel({})
     const err = reportModel.validateSync()
-    expect(err.name).toEqual('ValidationError')
-    expect(err.errors.dstBatchId.kind).toEqual('required')
-    expect(err.errors.srcBatchId.kind).toEqual('required')
-    expect(err.errors.reportType.kind).toEqual('required')
+    expect(err?.name).toEqual('ValidationError')
+    expect(err?.errors.dstBatchId.kind).toEqual('required')
+    expect(err?.errors.srcBatchId.kind).toEqual('required')
+    expect(err?.errors.reportType.kind).toEqual('required')
   })
   test('allow making report doc if required keys exist', () => {
     const reportModel = new ReportModel({
@@ -248,14 +248,14 @@ describe('model-report', () => {
   })
 })
 
-describe('model-notification', () => {
+describe('model/notification', () => {
   test('reject making notification doc with missing required keys', () => {
     const notificationModel = new NotificationModel({})
     const err = notificationModel.validateSync()
-    expect(err.name).toEqual('ValidationError')
-    expect(err.errors.createdAt.kind).toEqual('required')
-    expect(err.errors.text.kind).toEqual('required')
-    expect(err.errors.userId.kind).toEqual('required')
+    expect(err?.name).toEqual('ValidationError')
+    expect(err?.errors.createdAt.kind).toEqual('required')
+    expect(err?.errors.text.kind).toEqual('required')
+    expect(err?.errors.userId.kind).toEqual('required')
   })
   test('allow making notification doc if required keys exist', () => {
     const userId = new mongoose.Types.ObjectId()

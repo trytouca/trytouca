@@ -1,6 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import df from '@sindresorhus/df'
+import { diskSpace } from '@sindresorhus/df'
 import type {
   EPlatformRole,
   ETeamRole,
@@ -34,7 +34,7 @@ export async function platformStats(
     return res.status(200).json(cachedResponse)
   }
 
-  const space = (await df())
+  const space = (await diskSpace())
     .filter(
       (v) =>
         v.mountpoint === '/' ||

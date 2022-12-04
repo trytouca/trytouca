@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { describe, expect, test } from '@jest/globals'
 import mongoose from 'mongoose'
+import { describe, expect, test } from 'vitest'
 
 import { SessionModel } from '../../src/schemas/session'
 import * as jwt from '../../src/utils/jwt'

@@ -5,7 +5,7 @@ import { hrtime } from 'process'
 
 import { getRedisOptions } from '@/utils/redis'
 
-import logger from './logger'
+import logger from './logger.js'
 
 export class PerformanceMarks {
   private marks: Record<string, number> = {}
