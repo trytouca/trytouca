@@ -2,6 +2,5 @@
 
 import { NodeClient } from './client';
 
-const client = new NodeClient();
-export { client as touca };
-export { VERSION } from './version';
+export const touca = new NodeClient();
+export default touca;

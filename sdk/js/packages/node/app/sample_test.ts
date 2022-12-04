@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { touca } from '../src';
-import { find_student } from './students';
+import { find_student } from './sample';
 
 touca.workflow('students_test', async (username: string) => {
   touca.start_timer('find_student');

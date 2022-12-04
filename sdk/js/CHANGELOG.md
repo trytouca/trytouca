@@ -2,6 +2,17 @@
 
 ## v1.5.7
 
+Features:
+
+- Add support for custom comparison rules (#417)
+
+Improvements:
+
+- Remove duplicate examples (#416)
+- Update generated schema file (#414)
+- Treat integer numbers as integers (#372)
+- Switch from lerna to using npm workspaces (#349)
+
 ## v1.5.6
 
 Features:

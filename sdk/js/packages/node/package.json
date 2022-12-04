@@ -42,7 +42,7 @@
     "format": "prettier --write src/",
     "lint": "eslint . --ext .ts",
     "test": "jest",
-    "test:touca": "node dist/app/students_test.js --testcase alice bob charlie",
+    "test:touca": "node dist/app/sample_test.js --testcase alice bob charlie",
     "test:watch": "jest --watch"
   },
   "dependencies": {
