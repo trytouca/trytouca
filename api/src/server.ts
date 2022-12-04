@@ -131,7 +131,7 @@ async function shutdown() {
   await messageQueue.close()
   await redisClient.shutdown()
   await shutdownMongo()
-  server.close()
+  server?.close()
   logger.info('shutdown process completed')
 }
 
