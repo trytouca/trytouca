@@ -4,6 +4,7 @@
 
 Features:
 
+- Add support for programmatic testcase declaration (#422)
 - Add support for custom comparison rules (#417)
 
 Improvements:
