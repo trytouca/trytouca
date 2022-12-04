@@ -14,7 +14,7 @@ export default defineConfig({
       all: true,
       include: ['src/**/*.ts'],
       provider: 'istanbul',
-      reportsDirectory: 'local/tests/coverage'
+      reportsDirectory: '../local/api/tests/coverage'
     }
   }
 })
