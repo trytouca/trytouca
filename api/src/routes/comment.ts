@@ -2,11 +2,13 @@
 
 import express from 'express'
 
-import { ctrlCommentCreate } from '../controllers/comment/create.js'
-import { ctrlCommentList } from '../controllers/comment/list.js'
-import { ctrlCommentRemove } from '../controllers/comment/remove.js'
-import { ctrlCommentReply } from '../controllers/comment/reply.js'
-import { ctrlCommentUpdate } from '../controllers/comment/update.js'
+import {
+  ctrlCommentCreate,
+  ctrlCommentList,
+  ctrlCommentRemove,
+  ctrlCommentReply,
+  ctrlCommentUpdate
+} from '../controllers/comment/index.js'
 import * as middleware from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 

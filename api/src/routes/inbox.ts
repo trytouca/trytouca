@@ -2,8 +2,7 @@
 
 import e from 'express'
 
-import { inboxList } from '../controllers/inbox/list.js'
-import { inboxSeen } from '../controllers/inbox/seen.js'
+import { inboxList, inboxSeen } from '../controllers/inbox/index.js'
 import * as middleware from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 

@@ -4,25 +4,27 @@ import type { ETeamRole } from '@touca/api-schema'
 import express from 'express'
 import * as ev from 'express-validator'
 
-import { ctrlTeamCreate } from '../controllers/team/create.js'
-import { teamInviteAccept } from '../controllers/team/inviteAccept.js'
-import { teamInviteAdd } from '../controllers/team/inviteAdd.js'
-import { teamInviteDecline } from '../controllers/team/inviteDecline.js'
-import { teamInviteRescind } from '../controllers/team/inviteRescind.js'
-import { teamJoinAccept } from '../controllers/team/joinAccept.js'
-import { teamJoinAdd } from '../controllers/team/joinAdd.js'
-import { teamJoinDecline } from '../controllers/team/joinDecline.js'
-import { teamJoinRescind } from '../controllers/team/joinRescind.js'
-import { teamLeave } from '../controllers/team/leave.js'
-import { ctrlTeamList } from '../controllers/team/list.js'
-import { ctrlTeamLookup } from '../controllers/team/lookup.js'
-import { teamMemberAdd } from '../controllers/team/memberAdd.js'
-import { teamMemberList } from '../controllers/team/memberList.js'
-import { teamMemberRemove } from '../controllers/team/memberRemove.js'
-import { teamMemberUpdate } from '../controllers/team/memberUpdate.js'
-import { teamPopulate } from '../controllers/team/populate.js'
-import { ctrlTeamRemove } from '../controllers/team/remove.js'
-import { teamUpdate } from '../controllers/team/update.js'
+import {
+  ctrlTeamCreate,
+  ctrlTeamList,
+  ctrlTeamLookup,
+  ctrlTeamRemove,
+  teamInviteAccept,
+  teamInviteAdd,
+  teamInviteDecline,
+  teamInviteRescind,
+  teamJoinAccept,
+  teamJoinAdd,
+  teamJoinDecline,
+  teamJoinRescind,
+  teamLeave,
+  teamMemberAdd,
+  teamMemberList,
+  teamMemberRemove,
+  teamMemberUpdate,
+  teamPopulate,
+  teamUpdate
+} from '../controllers/team/index.js'
 import * as middleware from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 

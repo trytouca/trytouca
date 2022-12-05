@@ -3,11 +3,13 @@
 import express from 'express'
 import * as ev from 'express-validator'
 
-import { elementCompare } from '../controllers/element/compare.js'
-import { elementFile } from '../controllers/element/file.js'
-import { elementList } from '../controllers/element/list.js'
-import { elementLookup } from '../controllers/element/lookup.js'
-import { elementUpdate } from '../controllers/element/update.js'
+import {
+  elementCompare,
+  elementFile,
+  elementList,
+  elementLookup,
+  elementUpdate
+} from '../controllers/element/index.js'
 import * as middleware from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 

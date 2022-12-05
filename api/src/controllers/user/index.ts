@@ -2,5 +2,6 @@
 
 export { ctrlUserDelete } from './delete.js'
 export { userLookup } from './lookup.js'
+export { userSessionDelete } from './sessionDelete.js'
 export { userSessions } from './sessions.js'
 export { userUpdate } from './update.js'

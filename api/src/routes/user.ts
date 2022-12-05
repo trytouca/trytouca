@@ -2,11 +2,13 @@
 
 import express from 'express'
 
-import { ctrlUserDelete } from '../controllers/user/delete.js'
-import { userLookup } from '../controllers/user/lookup.js'
-import { userSessionDelete } from '../controllers/user/sessionDelete.js'
-import { userSessions } from '../controllers/user/sessions.js'
-import { userUpdate } from '../controllers/user/update.js'
+import {
+  ctrlUserDelete,
+  userLookup,
+  userSessionDelete,
+  userSessions,
+  userUpdate
+} from '../controllers/user/index.js'
 import * as middleware from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 

@@ -3,11 +3,13 @@
 import express from 'express'
 import * as ev from 'express-validator'
 
-import { clientBatchNext } from '../controllers/client/batchNext.js'
-import { clientElementList } from '../controllers/client/elementList.js'
-import { clientSessionCreate } from '../controllers/client/sessionCreate.js'
-import { clientSubmit } from '../controllers/client/submit.js'
-import { clientSubmitArtifact } from '../controllers/client/submitArtifact.js'
+import {
+  clientBatchNext,
+  clientElementList,
+  clientSessionCreate,
+  clientSubmit,
+  clientSubmitArtifact
+} from '../controllers/client/index.js'
 import * as middleware from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 

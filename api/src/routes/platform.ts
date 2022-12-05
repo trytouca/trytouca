@@ -4,14 +4,16 @@ import type { EPlatformRole } from '@touca/api-schema'
 import express from 'express'
 import * as ev from 'express-validator'
 
-import { platformAccountDelete } from '../controllers/platform/accountDelete.js'
-import { platformAccountSuspend } from '../controllers/platform/accountSuspend.js'
-import { platformAccountUpdate } from '../controllers/platform/accountUpdate.js'
-import { platformConfig } from '../controllers/platform/config.js'
-import { platformHealth } from '../controllers/platform/health.js'
-import { platformInstall } from '../controllers/platform/install.js'
-import { platformStats } from '../controllers/platform/stats.js'
-import { platformUpdate } from '../controllers/platform/update.js'
+import {
+  platformAccountDelete,
+  platformAccountSuspend,
+  platformAccountUpdate,
+  platformConfig,
+  platformHealth,
+  platformInstall,
+  platformStats,
+  platformUpdate
+} from '../controllers/platform/index.js'
 import * as middleware from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 

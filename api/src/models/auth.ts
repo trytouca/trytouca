@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { EPlatformRole } from '@touca/api-schema'
-import * as bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import { once } from 'lodash-es'
 
 import { SessionModel } from '../schemas/session.js'

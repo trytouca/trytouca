@@ -1,5 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+export { authGoogleSignin } from './googleSignin.js'
 export { authResetKeyApply } from './resetKeyApply.js'
 export { authResetKeyCheck } from './resetKeyCheck.js'
 export { authResetKeyCreate } from './resetKeyCreate.js'

@@ -3,13 +3,15 @@
 import express from 'express'
 
 import { batchCompare } from '../controllers/batch/compare.js'
-import { ctrlBatchExportPDF } from '../controllers/batch/export_pdf.js'
-import { ctrlBatchExportZIP } from '../controllers/batch/export_zip.js'
-import { ctrlBatchList } from '../controllers/batch/list.js'
-import { ctrlBatchLookup } from '../controllers/batch/lookup.js'
-import { ctrlBatchPromote } from '../controllers/batch/promote.js'
-import { ctrlBatchRemove } from '../controllers/batch/remove.js'
-import { ctrlBatchSeal } from '../controllers/batch/seal.js'
+import {
+  ctrlBatchExportPDF,
+  ctrlBatchExportZIP,
+  ctrlBatchList,
+  ctrlBatchLookup,
+  ctrlBatchPromote,
+  ctrlBatchRemove,
+  ctrlBatchSeal
+} from '../controllers/batch/index.js'
 import * as middleware from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 

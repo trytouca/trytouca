@@ -3,9 +3,11 @@
 import express from 'express'
 import * as ev from 'express-validator'
 
-import { feedbackHandle } from '../controllers/relay/feedback.js'
-import { installHandle } from '../controllers/relay/install.js'
-import { telemetryHandle } from '../controllers/relay/telemetry.js'
+import {
+  feedbackHandle,
+  installHandle,
+  telemetryHandle
+} from '../controllers/relay/index.js'
 import * as middleware from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 

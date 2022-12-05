@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import * as bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
 
 import { UserModel } from '../../schemas/user.js'
