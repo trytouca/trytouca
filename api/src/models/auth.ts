@@ -2,17 +2,17 @@
 
 import type { EPlatformRole } from '@touca/api-schema'
 import * as bcrypt from 'bcryptjs'
-import { once } from 'lodash'
+import { once } from 'lodash-es'
 
-import { addSampleData } from '@/models/sampleData'
-import { generateTeamSlug, teamCreate } from '@/models/team'
-import { SessionModel } from '@/schemas/session'
-import { IUserDocument, UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import * as jwt from '@/utils/jwt'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { analytics, EActivity, TrackerInfo } from '@/utils/tracker'
+import { SessionModel } from '../schemas/session.js'
+import { IUserDocument, UserModel } from '../schemas/user.js'
+import { config } from '../utils/config.js'
+import * as jwt from '../utils/jwt.js'
+import logger from '../utils/logger.js'
+import * as mailer from '../utils/mailer.js'
+import { analytics, EActivity, TrackerInfo } from '../utils/tracker.js'
+import { addSampleData } from './sampleData.js'
+import { generateTeamSlug, teamCreate } from './team.js'
 
 /**
  * Find a username that is not already registered.

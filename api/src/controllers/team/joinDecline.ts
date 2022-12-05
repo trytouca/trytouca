@@ -2,13 +2,13 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { ITeam, TeamModel } from '../../schemas/team.js'
+import { IUser, UserModel } from '../../schemas/user.js'
+import { config } from '../../utils/config.js'
+import logger from '../../utils/logger.js'
+import * as mailer from '../../utils/mailer.js'
+import { redisClient } from '../../utils/redis.js'
+import { analytics, EActivity } from '../../utils/tracker.js'
 
 export async function teamJoinDecline(
   req: Request,

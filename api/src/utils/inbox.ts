@@ -1,10 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { format as utilFormat } from 'util'
 
-import { wslFindByRole } from '@/models/user'
-import { NotificationModel } from '@/schemas/notification'
-import { IUser } from '@/schemas/user'
+import { wslFindByRole } from '../models/user.js'
+import { NotificationModel } from '../schemas/notification.js'
+import { IUser } from '../schemas/user.js'
 
 async function notifyUser(recipient: IUser, message: string) {
   await NotificationModel.create({

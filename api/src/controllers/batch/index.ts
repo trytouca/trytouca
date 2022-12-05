@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 export { ctrlBatchExportPDF } from './export_pdf.js'
 export { ctrlBatchExportZIP } from './export_zip.js'

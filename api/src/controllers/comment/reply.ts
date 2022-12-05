@@ -7,14 +7,14 @@ import {
   extractCommentTuple,
   extractCommentType,
   notifySubscribers
-} from '@/models/comment'
-import { CommentModel, ICommentDocument } from '@/schemas/comment'
-import { IUser } from '@/schemas/user'
-import { ECommentType } from '@/types/backendtypes'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+} from '../../models/comment.js'
+import { CommentModel, ICommentDocument } from '../../schemas/comment.js'
+import { IUser } from '../../schemas/user.js'
+import { ECommentType } from '../../types/backendtypes.js'
+import { config } from '../../utils/config.js'
+import logger from '../../utils/logger.js'
+import { redisClient } from '../../utils/redis.js'
+import { analytics, EActivity } from '../../utils/tracker.js'
 
 export async function ctrlCommentReply(
   req: Request,

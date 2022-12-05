@@ -1,10 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
-import { NotificationModel } from '@/schemas/notification'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
+import { NotificationModel } from '../../schemas/notification.js'
+import { IUser } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
 
 export async function inboxSeen(
   req: Request,

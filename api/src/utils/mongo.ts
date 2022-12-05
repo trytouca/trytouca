@@ -1,9 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import mongoose from 'mongoose'
 
-import { configMgr } from '@/utils/config'
-import logger from '@/utils/logger'
+import { configMgr } from '../utils/config.js'
+import logger from '../utils/logger.js'
 
 export async function makeConnectionMongo(): Promise<boolean> {
   mongoose.Promise = Promise

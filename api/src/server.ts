@@ -6,16 +6,9 @@ import cors from 'cors'
 import express from 'express'
 import hidePoweredBy from 'hide-powered-by'
 
-import { comparisonQueue, eventsQueue, messageQueue } from '@/queues'
-import { MetaModel } from '@/schemas/meta'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { makeConnectionMongo, shutdownMongo } from '@/utils/mongo'
-import { redisClient } from '@/utils/redis'
-import { connectToServer } from '@/utils/routing'
-import { objectStore } from '@/utils/store'
-
+import { comparisonQueue, eventsQueue, messageQueue } from './queues/index.js'
 import router from './routes/index.js'
+import { MetaModel } from './schemas/meta.js'
 import {
   analyticsService,
   autosealService,
@@ -30,6 +23,12 @@ import {
   statusReport,
   upgradeDatabase
 } from './startup/index.js'
+import { config } from './utils/config.js'
+import logger from './utils/logger.js'
+import { makeConnectionMongo, shutdownMongo } from './utils/mongo.js'
+import { redisClient } from './utils/redis.js'
+import { connectToServer } from './utils/routing.js'
+import { objectStore } from './utils/store.js'
 
 const app = express()
 

@@ -2,14 +2,14 @@
 
 import * as bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 
-import { findPlatformRole } from '@/middlewares'
-import { createUserAccount } from '@/models/auth'
-import { MetaModel } from '@/schemas/meta'
-import { UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import { redisClient } from '@/utils/redis'
+import { findPlatformRole } from '../../middlewares/index.js'
+import { createUserAccount } from '../../models/auth.js'
+import { MetaModel } from '../../schemas/meta.js'
+import { UserModel } from '../../schemas/user.js'
+import { config } from '../../utils/config.js'
+import { redisClient } from '../../utils/redis.js'
 
 /**
  * Update settings of this server instance.

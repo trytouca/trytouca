@@ -1,9 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { ETeamRole } from '@touca/api-schema'
 
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
+import { ITeam, TeamModel } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
 
 /**
  * @summary provides a list of members and admins of a given team.

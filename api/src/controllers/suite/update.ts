@@ -1,14 +1,14 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 
-import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { ISuiteDocument, SuiteModel } from '../../schemas/suite.js'
+import { ITeam } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
+import { config } from '../../utils/config.js'
+import logger from '../../utils/logger.js'
+import { redisClient } from '../../utils/redis.js'
 
 /**
  * Update metadata of a given suite.

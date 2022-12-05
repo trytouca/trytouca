@@ -3,16 +3,16 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { basename, join, parse } from 'node:path'
 
-import { processBinaryContent } from '@/controllers/client/submit'
-import { batchPromote, batchSeal } from '@/models/batch'
-import { suiteCreate } from '@/models/suite'
-import { BatchModel } from '@/schemas/batch'
-import { SuiteModel } from '@/schemas/suite'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { BatchModel } from '../schemas/batch.js'
+import { SuiteModel } from '../schemas/suite.js'
+import { ITeam, TeamModel } from '../schemas/team.js'
+import { UserModel } from '../schemas/user.js'
+import { config } from '../utils/config.js'
+import logger from '../utils/logger.js'
+import { redisClient } from '../utils/redis.js'
+import { batchPromote, batchSeal } from './batch.js'
+import { processBinaryContent } from './submit.js'
+import { suiteCreate } from './suite.js'
 
 /**
  * Add sample test results to an empty suite.

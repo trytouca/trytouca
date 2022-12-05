@@ -1,14 +1,14 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 
-import { wslFindByRole } from '@/models/user'
-import { NodeModel } from '@/schemas/node'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { mailUser } from '@/utils/mailer'
-import { analytics, EActivity } from '@/utils/tracker'
+import { wslFindByRole } from '../../models/user.js'
+import { NodeModel } from '../../schemas/node.js'
+import { IUser } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
+import { mailUser } from '../../utils/mailer.js'
+import { analytics, EActivity } from '../../utils/tracker.js'
 
 export async function telemetryHandle(
   req: Request,

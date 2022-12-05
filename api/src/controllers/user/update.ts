@@ -3,14 +3,14 @@
 import type { EFeatureFlag } from '@touca/api-schema'
 import * as bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
-import { identity, omit, pick, pickBy } from 'lodash'
+import { identity, omit, pick, pickBy } from 'lodash-es'
 import { v4 as uuidv4 } from 'uuid'
 
-import { IUser, UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { analytics, EActivity } from '@/utils/tracker'
+import { IUser, UserModel } from '../../schemas/user.js'
+import { config } from '../../utils/config.js'
+import logger from '../../utils/logger.js'
+import * as mailer from '../../utils/mailer.js'
+import { analytics, EActivity } from '../../utils/tracker.js'
 
 async function updateFeatureFlags(user: IUser, flags: Record<string, boolean>) {
   logger.debug('%s: updating feature flag: %j', user.username, flags)

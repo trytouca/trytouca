@@ -1,11 +1,11 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import e from 'express'
 
-import { inboxList } from '@/controllers/inbox/list'
-import { inboxSeen } from '@/controllers/inbox/seen'
-import * as middleware from '@/middlewares'
-import { promisable } from '@/utils/routing'
+import { inboxList } from '../controllers/inbox/list.js'
+import { inboxSeen } from '../controllers/inbox/seen.js'
+import * as middleware from '../middlewares/index.js'
+import { promisable } from '../utils/routing.js'
 
 const router = e.Router()
 

@@ -3,13 +3,13 @@
 import type { EPlatformRole } from '@touca/api-schema'
 import cuid from 'cuid'
 
-import { SessionModel } from '@/schemas/session'
-import { TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { SessionModel } from '../schemas/session.js'
+import { TeamModel } from '../schemas/team.js'
+import { IUser, UserModel } from '../schemas/user.js'
+import logger from '../utils/logger.js'
+import * as mailer from '../utils/mailer.js'
+import { redisClient } from '../utils/redis.js'
+import { analytics, EActivity } from '../utils/tracker.js'
 
 export async function wslFindByRole(role: EPlatformRole): Promise<IUser[]> {
   return await UserModel.find(

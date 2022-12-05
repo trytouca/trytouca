@@ -2,18 +2,18 @@
 
 import { existsSync } from 'node:fs'
 
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 
-import { ComparisonJob } from '@/models/comparison'
-import { wslFindByUname, wslGetSuperUser } from '@/models/user'
-import { comparisonQueue, messageQueue } from '@/queues'
-import { ComparisonModel } from '@/schemas/comparison'
-import { MessageModel } from '@/schemas/message'
-import { MetaModel } from '@/schemas/meta'
-import { UserModel } from '@/schemas/user'
-import { config, configMgr } from '@/utils/config'
-import logger from '@/utils/logger'
-import { objectStore } from '@/utils/store'
+import { ComparisonJob } from '../models/comparison.js'
+import { wslFindByUname, wslGetSuperUser } from '../models/user.js'
+import { comparisonQueue, messageQueue } from '../queues/index.js'
+import { ComparisonModel } from '../schemas/comparison.js'
+import { MessageModel } from '../schemas/message.js'
+import { MetaModel } from '../schemas/meta.js'
+import { UserModel } from '../schemas/user.js'
+import { config, configMgr } from '../utils/config.js'
+import logger from '../utils/logger.js'
+import { objectStore } from '../utils/store.js'
 
 /**
  * Registers primary user during server startup.

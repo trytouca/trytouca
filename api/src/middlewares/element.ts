@@ -1,14 +1,14 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
-import { IBatchDocument } from '@/schemas/batch'
-import { ElementModel, IElementDocument } from '@/schemas/element'
-import { MessageModel } from '@/schemas/message'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeamDocument } from '@/schemas/team'
-import { Artifact } from '@/types/backendtypes'
-import logger from '@/utils/logger'
+import { IBatchDocument } from '../schemas/batch.js'
+import { ElementModel, IElementDocument } from '../schemas/element.js'
+import { MessageModel } from '../schemas/message.js'
+import { ISuiteDocument } from '../schemas/suite.js'
+import { ITeamDocument } from '../schemas/team.js'
+import { Artifact } from '../types/backendtypes.js'
+import logger from '../utils/logger.js'
 
 /**
  * @summary

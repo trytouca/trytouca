@@ -3,12 +3,12 @@
 import type { ElementListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { MessageModel } from '@/schemas/message'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { MessageModel } from '../../schemas/message.js'
+import { ISuiteDocument } from '../../schemas/suite.js'
+import { ITeam } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
+import { redisClient } from '../../utils/redis.js'
 
 /**
  * Find list of elements submitted to the baseline version of a given suite.

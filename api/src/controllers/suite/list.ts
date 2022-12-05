@@ -1,20 +1,20 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { SuiteListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { Types } from 'mongoose'
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { BatchModel } from '@/schemas/batch'
-import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
+import { compareBatchOverview } from '../../models/comparison.js'
+import { BatchModel } from '../../schemas/batch.js'
+import { ISuiteDocument, SuiteModel } from '../../schemas/suite.js'
+import { ITeam } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
 import type {
   BatchItemQueryOutput,
   SuiteItemQueryOutput
-} from '@/types/backendtypes'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+} from '../../types/backendtypes.js'
+import logger from '../../utils/logger.js'
+import { redisClient } from '../../utils/redis.js'
 
 async function suiteList(team: ITeam): Promise<SuiteListResponse> {
   // find list of suites that belong to this team, sorted in descending
@@ -112,10 +112,7 @@ async function suiteList(team: ITeam): Promise<SuiteListResponse> {
       const batchBaseline = batches.find((v) => v._id.equals(baselineInfo.to))
       const overview =
         batchLatest.meta ??
-        (await ComparisonFunctions.compareBatchOverview(
-          batchBaseline._id,
-          batchLatest._id
-        ))
+        (await compareBatchOverview(batchBaseline._id, batchLatest._id))
       delete batchLatest._id
       delete batchLatest.meta
       delete batchBaseline._id

@@ -2,9 +2,9 @@
 
 import SegmentClient from 'analytics-node'
 
-import { relay } from '@/models/relay'
-import { IUser } from '@/schemas/user'
-import { config } from '@/utils/config'
+import { relay } from '../models/relay.js'
+import { IUser } from '../schemas/user.js'
+import { config } from '../utils/config.js'
 
 export enum EActivity {
   AccountActivated = 'account:activated',

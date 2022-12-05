@@ -3,8 +3,8 @@
 import type { UserLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { IUser, UserModel } from '@/schemas/user'
-import logger from '@/utils/logger'
+import { IUser, UserModel } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
 
 export async function userLookup(
   req: Request,

@@ -3,11 +3,11 @@
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
-import { UserModel } from '@/schemas/user'
-import { configMgr } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
-import { objectStore } from '@/utils/store'
+import { UserModel } from '../../schemas/user.js'
+import { configMgr } from '../../utils/config.js'
+import logger from '../../utils/logger.js'
+import { redisClient } from '../../utils/redis.js'
+import { objectStore } from '../../utils/store.js'
 
 export async function platformHealth(
   req: Request,

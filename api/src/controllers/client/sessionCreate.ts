@@ -1,12 +1,12 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
-import { SessionModel } from '@/schemas/session'
-import { UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import * as jwt from '@/utils/jwt'
-import logger from '@/utils/logger'
+import { SessionModel } from '../../schemas/session.js'
+import { UserModel } from '../../schemas/user.js'
+import { config } from '../../utils/config.js'
+import * as jwt from '../../utils/jwt.js'
+import logger from '../../utils/logger.js'
 
 export async function clientSessionCreate(
   req: Request,

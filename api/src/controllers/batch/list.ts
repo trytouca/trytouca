@@ -1,16 +1,16 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { BatchListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { BatchModel } from '@/schemas/batch'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import type { BatchItemQueryOutput } from '@/types/backendtypes'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { compareBatchOverview } from '../../models/comparison.js'
+import { BatchModel } from '../../schemas/batch.js'
+import { ISuiteDocument } from '../../schemas/suite.js'
+import { ITeam } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
+import type { BatchItemQueryOutput } from '../../types/backendtypes.js'
+import logger from '../../utils/logger.js'
+import { redisClient } from '../../utils/redis.js'
 
 async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
   const queryOutput: BatchItemQueryOutput[] = await BatchModel.aggregate([
@@ -56,10 +56,7 @@ async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
 
   for (const item of queryOutput) {
     if (!item.meta) {
-      item.meta = await ComparisonFunctions.compareBatchOverview(
-        item.superior,
-        item._id
-      )
+      item.meta = await compareBatchOverview(item.superior, item._id)
     }
     delete item._id
     delete item.superior

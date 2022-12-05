@@ -1,14 +1,14 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { ETeamRole, TeamItem, TeamListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { Types } from 'mongoose'
 
-import { ITeamDocument, TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { ITeamDocument, TeamModel } from '../../schemas/team.js'
+import { IUser, UserModel } from '../../schemas/user.js'
+import { config } from '../../utils/config.js'
+import logger from '../../utils/logger.js'
+import { redisClient } from '../../utils/redis.js'
 
 /**
  * Provides list of teams for a given user.

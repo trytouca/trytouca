@@ -2,13 +2,13 @@
 
 import express from 'express'
 
-import { ctrlUserDelete } from '@/controllers/user/delete'
-import { userLookup } from '@/controllers/user/lookup'
-import { userSessionDelete } from '@/controllers/user/sessionDelete'
-import { userSessions } from '@/controllers/user/sessions'
-import { userUpdate } from '@/controllers/user/update'
-import * as middleware from '@/middlewares'
-import { promisable } from '@/utils/routing'
+import { ctrlUserDelete } from '../controllers/user/delete.js'
+import { userLookup } from '../controllers/user/lookup.js'
+import { userSessionDelete } from '../controllers/user/sessionDelete.js'
+import { userSessions } from '../controllers/user/sessions.js'
+import { userUpdate } from '../controllers/user/update.js'
+import * as middleware from '../middlewares/index.js'
+import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
 

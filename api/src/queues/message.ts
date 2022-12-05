@@ -3,11 +3,11 @@
 import { stringify } from '@touca/comparator'
 import { deserialize, Message } from '@touca/flatbuffers'
 
-import { MessageJob } from '@/models/comparison'
-import { messageProcess } from '@/models/message'
-import { MessageOverview, MessageTransformed } from '@/types/backendtypes'
-import { JobQueue, PerformanceMarks } from '@/utils/queue'
-import { objectStore } from '@/utils/store'
+import { MessageJob } from '../models/comparison.js'
+import { messageProcess } from '../models/message.js'
+import { MessageOverview, MessageTransformed } from '../types/backendtypes.js'
+import { JobQueue, PerformanceMarks } from '../utils/queue.js'
+import { objectStore } from '../utils/store.js'
 
 function buildMessageOverview(message: Message): MessageOverview {
   return {

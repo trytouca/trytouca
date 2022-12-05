@@ -2,14 +2,14 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { findTeamUsersByRole } from '@/controllers/team/common'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { findTeamUsersByRole } from '../../controllers/team/common.js'
+import { ITeam, TeamModel } from '../../schemas/team.js'
+import { IUser, UserModel } from '../../schemas/user.js'
+import { config } from '../../utils/config.js'
+import logger from '../../utils/logger.js'
+import * as mailer from '../../utils/mailer.js'
+import { redisClient } from '../../utils/redis.js'
+import { analytics, EActivity } from '../../utils/tracker.js'
 
 export async function teamJoinAdd(
   req: Request,

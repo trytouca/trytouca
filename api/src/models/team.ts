@@ -1,8 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ITeamDocument, TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import logger from '@/utils/logger'
+import { ITeamDocument, TeamModel } from '../schemas/team.js'
+import { IUser, UserModel } from '../schemas/user.js'
+import logger from '../utils/logger.js'
 
 export async function teamCreate(
   user: IUser,

@@ -1,12 +1,15 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { normalize, resolve } from 'node:path'
+import { dirname, normalize, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import dotenv from 'dotenv'
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 import mongoose from 'mongoose'
 
-import { MetaModel } from '@/schemas/meta'
+import { MetaModel } from '../schemas/meta.js'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 interface IConfig {
   auth: {

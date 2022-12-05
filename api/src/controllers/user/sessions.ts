@@ -2,9 +2,9 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { SessionModel } from '@/schemas/session'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
+import { SessionModel } from '../../schemas/session.js'
+import { IUser } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
 
 export async function userSessions(
   req: Request,

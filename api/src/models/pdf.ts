@@ -6,11 +6,11 @@ import { join } from 'node:path'
 import { InvokeCommand, Lambda } from '@aws-sdk/client-lambda'
 import mustache from 'mustache'
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { UserMap } from '@/models/usermap'
-import { BatchModel, IBatchDocument } from '@/schemas/batch'
-import { ISuiteDocument } from '@/schemas/suite'
-import { config } from '@/utils/config'
+import { BatchModel, IBatchDocument } from '../schemas/batch.js'
+import { ISuiteDocument } from '../schemas/suite.js'
+import { config } from '../utils/config.js'
+import { compareBatch } from './comparison.js'
+import { UserMap } from './usermap.js'
 
 interface PdfContent {
   suite: {
@@ -99,10 +99,7 @@ async function buildPdfContent(
     { _id: suite.promotions[suite.promotions.length - 1].to },
     { _id: 1, slug: 1 }
   )
-  const cmpOutput = await ComparisonFunctions.compareBatch(
-    dstBatch._id,
-    srcBatch._id
-  )
+  const cmpOutput = await compareBatch(dstBatch._id, srcBatch._id)
   const differentCases = cmpOutput.common.filter((v) => v.meta.keysScore !== 1)
   const toSeconds = (duration: number) => (duration / 1000).toFixed(1) + ' s'
   const toDurationChange = (change: number) => {

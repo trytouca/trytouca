@@ -1,20 +1,20 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import express from 'express'
 
-import { authGoogleSignin } from '@/controllers/auth/googleSignin'
-import { authResetKeyApply } from '@/controllers/auth/resetKeyApply'
-import { authResetKeyCheck } from '@/controllers/auth/resetKeyCheck'
-import { authResetKeyCreate } from '@/controllers/auth/resetKeyCreate'
-import { authResetKeyResend } from '@/controllers/auth/resetKeyResend'
-import { authSessionCreate } from '@/controllers/auth/sessionCreate'
-import { authSessionExtend } from '@/controllers/auth/sessionExtend'
-import { authSessionRemove } from '@/controllers/auth/sessionRemove'
-import { authVerifyActivate } from '@/controllers/auth/verifyActivate'
-import { authVerifyCreate } from '@/controllers/auth/verifyCreate'
-import { authVerifyResend } from '@/controllers/auth/verifyResend'
-import * as middleware from '@/middlewares'
-import { promisable } from '@/utils/routing'
+import { authGoogleSignin } from '../controllers/auth/googleSignin.js'
+import { authResetKeyApply } from '../controllers/auth/resetKeyApply.js'
+import { authResetKeyCheck } from '../controllers/auth/resetKeyCheck.js'
+import { authResetKeyCreate } from '../controllers/auth/resetKeyCreate.js'
+import { authResetKeyResend } from '../controllers/auth/resetKeyResend.js'
+import { authSessionCreate } from '../controllers/auth/sessionCreate.js'
+import { authSessionExtend } from '../controllers/auth/sessionExtend.js'
+import { authSessionRemove } from '../controllers/auth/sessionRemove.js'
+import { authVerifyActivate } from '../controllers/auth/verifyActivate.js'
+import { authVerifyCreate } from '../controllers/auth/verifyCreate.js'
+import { authVerifyResend } from '../controllers/auth/verifyResend.js'
+import * as middleware from '../middlewares/index.js'
+import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
 

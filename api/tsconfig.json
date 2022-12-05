@@ -1,16 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "paths": {
-      "@/controllers/*": ["controllers/*.js"],
-      "@/middlewares": ["middlewares/index.js"],
-      "@/models/*": ["models/*.js"],
-      "@/queues": ["queues/index.js"],
-      "@/routes/*": ["routes/*.js"],
-      "@/schemas/*": ["schemas/*.js"],
-      "@/types/*": ["types/*.js"],
-      "@/utils/*": ["utils/*.js"]
-    },
     "alwaysStrict": true,
     "outDir": "dist",
     "sourceMap": true,

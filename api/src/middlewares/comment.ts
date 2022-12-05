@@ -1,10 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
-import { IBatchDocument } from '@/schemas/batch'
-import { CommentModel } from '@/schemas/comment'
-import { ECommentType } from '@/types/backendtypes'
+import { IBatchDocument } from '../schemas/batch.js'
+import { CommentModel } from '../schemas/comment.js'
+import { ECommentType } from '../types/backendtypes.js'
 
 /**
  * @summary

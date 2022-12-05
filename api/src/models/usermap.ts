@@ -1,9 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { Userinfo } from '@touca/api-schema'
 import { Types } from 'mongoose'
 
-import { UserModel } from '@/schemas/user'
+import { UserModel } from '../schemas/user.js'
 
 export class UserMap {
   private data: (Userinfo & { _id: Types.ObjectId })[] = []

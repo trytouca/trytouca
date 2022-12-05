@@ -1,10 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import jws from 'jws'
 
-import { ISessionDocument } from '@/schemas/session'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
+import { ISessionDocument } from '../schemas/session.js'
+import { config } from '../utils/config.js'
+import logger from '../utils/logger.js'
 
 type TokenPayload = {
   exp: number

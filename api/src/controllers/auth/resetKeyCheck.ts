@@ -1,9 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
-import { UserModel } from '@/schemas/user'
-import logger from '@/utils/logger'
+import { UserModel } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
 
 export async function authResetKeyCheck(
   req: Request,

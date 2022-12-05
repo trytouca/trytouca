@@ -1,16 +1,16 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 
-import { findTeamUsersByRole } from '@/controllers/team/common'
-import { ITeam } from '@/schemas/team'
-import { TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
+import { findTeamUsersByRole } from '../../controllers/team/common.js'
+import { ITeam } from '../../schemas/team.js'
+import { TeamModel } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
+import { config } from '../../utils/config.js'
+import logger from '../../utils/logger.js'
+import * as mailer from '../../utils/mailer.js'
+import { redisClient } from '../../utils/redis.js'
 
 /**
  * @summary

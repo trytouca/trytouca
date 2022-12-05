@@ -3,15 +3,15 @@
 import express from 'express'
 import * as ev from 'express-validator'
 
-import { ctrlSuiteCreate } from '@/controllers/suite/create'
-import { ctrlSuiteList } from '@/controllers/suite/list'
-import { ctrlSuiteLookup } from '@/controllers/suite/lookup'
-import { ctrlSuiteRemove } from '@/controllers/suite/remove'
-import { suiteSubscribe } from '@/controllers/suite/subscribe'
-import { suiteUpdate } from '@/controllers/suite/update'
-import * as middleware from '@/middlewares'
-import { handleEvents } from '@/utils/events'
-import { promisable } from '@/utils/routing'
+import { ctrlSuiteCreate } from '../controllers/suite/create.js'
+import { ctrlSuiteList } from '../controllers/suite/list.js'
+import { ctrlSuiteLookup } from '../controllers/suite/lookup.js'
+import { ctrlSuiteRemove } from '../controllers/suite/remove.js'
+import { suiteSubscribe } from '../controllers/suite/subscribe.js'
+import { suiteUpdate } from '../controllers/suite/update.js'
+import * as middleware from '../middlewares/index.js'
+import { handleEvents } from '../utils/events.js'
+import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
 

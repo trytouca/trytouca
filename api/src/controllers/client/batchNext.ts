@@ -3,11 +3,11 @@
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
-import { BatchModel } from '@/schemas/batch'
-import { SuiteModel } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
+import { BatchModel } from '../../schemas/batch.js'
+import { SuiteModel } from '../../schemas/suite.js'
+import { ITeam } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
 
 async function clientBatchNextImpl(suiteQuery: {
   slug: string

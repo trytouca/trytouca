@@ -1,13 +1,13 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 
-import { ElementModel, IElementDocument } from '@/schemas/element'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
+import { ElementModel, IElementDocument } from '../../schemas/element.js'
+import { ISuiteDocument } from '../../schemas/suite.js'
+import { ITeam } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
 
 /**
  * Update metadata of a given element.

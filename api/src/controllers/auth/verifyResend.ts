@@ -2,11 +2,11 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { analytics, EActivity } from '@/utils/tracker'
+import { UserModel } from '../../schemas/user.js'
+import { config } from '../../utils/config.js'
+import logger from '../../utils/logger.js'
+import * as mailer from '../../utils/mailer.js'
+import { analytics, EActivity } from '../../utils/tracker.js'
 
 export async function authVerifyResend(
   req: Request,

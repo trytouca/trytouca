@@ -2,10 +2,10 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { relay } from '@/models/relay'
-import { wslFindByRole } from '@/models/user'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
+import { relay } from '../../models/relay.js'
+import { wslFindByRole } from '../../models/user.js'
+import logger from '../../utils/logger.js'
+import * as mailer from '../../utils/mailer.js'
 
 export async function feedbackSubmit(
   req: Request,

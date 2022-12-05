@@ -2,18 +2,18 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { BatchModel, IBatchDocument } from '@/schemas/batch'
-import { ElementModel, IElementDocument } from '@/schemas/element'
-import { MessageModel } from '@/schemas/message'
-import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import type { BackendBatchComparisonItemCommon } from '@/types/backendtypes'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
-import { objectStore } from '@/utils/store'
+import { compareCommonElement } from '../../models/comparison.js'
+import { BatchModel, IBatchDocument } from '../../schemas/batch.js'
+import { ElementModel, IElementDocument } from '../../schemas/element.js'
+import { MessageModel } from '../../schemas/message.js'
+import { ISuiteDocument, SuiteModel } from '../../schemas/suite.js'
+import { ITeam } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
+import type { BackendBatchComparisonItemCommon } from '../../types/backendtypes.js'
+import { config } from '../../utils/config.js'
+import logger from '../../utils/logger.js'
+import { redisClient } from '../../utils/redis.js'
+import { objectStore } from '../../utils/store.js'
 
 type ICompareParamsElement = {
   dstSuite?: ISuiteDocument
@@ -214,11 +214,7 @@ export async function elementCompare(
   // with its comparison result, and cache comparison result to avoid
   // reprocessing this request in the near future.
 
-  return ComparisonFunctions.compareCommonElement(
-    params.dstBatch._id,
-    params.srcBatch._id,
-    output
-  )
+  return compareCommonElement(params.dstBatch._id, params.srcBatch._id, output)
     .then(async () => {
       const isProcessed = output.contentId
       if (isProcessed) {

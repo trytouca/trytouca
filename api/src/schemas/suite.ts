@@ -5,8 +5,8 @@ import mongoose from 'mongoose'
 import type {
   PromotionQueryOutput,
   SubscriptionQueryOutput
-} from '@/types/backendtypes'
-import { config } from '@/utils/config'
+} from '../types/backendtypes.js'
+import { config } from '../utils/config.js'
 
 const suiteSchema = new mongoose.Schema(
   {

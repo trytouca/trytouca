@@ -4,11 +4,11 @@ import type { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
-import { wslFindByUname } from '@/models/user'
-import { SessionModel } from '@/schemas/session'
-import { IUser, UserModel } from '@/schemas/user'
-import * as jwt from '@/utils/jwt'
-import logger from '@/utils/logger'
+import { wslFindByUname } from '../models/user.js'
+import { SessionModel } from '../schemas/session.js'
+import { IUser, UserModel } from '../schemas/user.js'
+import * as jwt from '../utils/jwt.js'
+import logger from '../utils/logger.js'
 
 type AuthInput = {
   agent: string

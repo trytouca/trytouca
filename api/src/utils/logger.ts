@@ -1,11 +1,14 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { existsSync, mkdirSync } from 'node:fs'
-import { join, normalize } from 'node:path'
+import { dirname, join, normalize } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import logger from 'winston'
 
-import { config } from '@/utils/config'
+import { config } from '../utils/config.js'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const transports: logger.transport[] = [
   new logger.transports.Console({

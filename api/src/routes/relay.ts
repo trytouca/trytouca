@@ -3,11 +3,11 @@
 import express from 'express'
 import * as ev from 'express-validator'
 
-import { feedbackHandle } from '@/controllers/relay/feedback'
-import { installHandle } from '@/controllers/relay/install'
-import { telemetryHandle } from '@/controllers/relay/telemetry'
-import * as middleware from '@/middlewares'
-import { promisable } from '@/utils/routing'
+import { feedbackHandle } from '../controllers/relay/feedback.js'
+import { installHandle } from '../controllers/relay/install.js'
+import { telemetryHandle } from '../controllers/relay/telemetry.js'
+import * as middleware from '../middlewares/index.js'
+import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
 

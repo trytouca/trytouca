@@ -20,7 +20,8 @@
   },
   "exports": "./dist/server.js",
   "engines": {
-    "node": ">=14.16"
+    "node": ">=14.16",
+    "pnpm": ">=7.0.0"
   },
   "scripts": {
     "build": "run-p build:mails build:ts",
@@ -37,8 +38,8 @@
     "test": "cross-env ENV_FILE=test vitest run --coverage --reporter verbose"
   },
   "dependencies": {
-    "@aws-sdk/client-lambda": "^3.222.0",
-    "@aws-sdk/client-s3": "^3.222.0",
+    "@aws-sdk/client-lambda": "^3.223.0",
+    "@aws-sdk/client-s3": "^3.223.0",
     "@sindresorhus/df": "^4.0.0",
     "@touca/api-schema": "workspace:*",
     "@touca/comparator": "workspace:*",
@@ -46,7 +47,7 @@
     "analytics-node": "^6.2.0",
     "archiver": "^5.3.1",
     "bcryptjs": "^2.4.3",
-    "bullmq": "^3.2.4",
+    "bullmq": "^3.3.0",
     "compression": "^1.7.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -61,7 +62,7 @@
     "html-to-text": "^9.0.0",
     "ioredis": "^5.2.4",
     "jws": "^4.0.0",
-    "lodash": "^4.17.21",
+    "lodash-es": "^4.17.21",
     "marked": "^4.2.3",
     "mongoose": "^6.7.5",
     "mustache": "^4.2.0",
@@ -78,7 +79,7 @@
     "@types/express": "^4.17.14",
     "@types/flatbuffers": "^1.9.0",
     "@types/jws": "^3.2.4",
-    "@types/lodash": "^4.14.191",
+    "@types/lodash-es": "^4.17.6",
     "@types/marked": "^4.0.7",
     "@types/minio": "^7.0.15",
     "@types/mustache": "^4.2.2",
@@ -89,7 +90,7 @@
     "@typescript-eslint/parser": "^5.45.0",
     "@vitest/coverage-istanbul": "^0.25.3",
     "cross-env": "^7.0.3",
-    "eslint": "^8.28.0",
+    "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-simple-import-sort": "^8.0.0",
@@ -101,7 +102,6 @@
     "shx": "^0.3.4",
     "source-map-support": "^0.5.21",
     "ts-node": "^10.9.1",
-    "tsconfig-paths": "^4.1.1",
     "typedoc": "^0.23.21",
     "typescript": "^4.9.3",
     "vitest": "^0.25.3"

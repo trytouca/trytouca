@@ -2,10 +2,10 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { SessionModel } from '@/schemas/session'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { analytics, EActivity } from '@/utils/tracker'
+import { SessionModel } from '../../schemas/session.js'
+import { IUser } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
+import { analytics, EActivity } from '../../utils/tracker.js'
 
 export async function authSessionRemove(
   req: Request,

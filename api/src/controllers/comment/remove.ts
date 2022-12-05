@@ -2,13 +2,13 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { extractCommentTuple } from '@/models/comment'
-import { CommentModel, ICommentDocument } from '@/schemas/comment'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { extractCommentTuple } from '../../models/comment.js'
+import { CommentModel, ICommentDocument } from '../../schemas/comment.js'
+import { ITeam, TeamModel } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
+import { redisClient } from '../../utils/redis.js'
+import { analytics, EActivity } from '../../utils/tracker.js'
 
 export async function ctrlCommentRemove(
   req: Request,

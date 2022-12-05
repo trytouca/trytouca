@@ -2,16 +2,16 @@
 
 import type { SuiteLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { BatchModel } from '@/schemas/batch'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import type { BatchItemQueryOutput } from '@/types/backendtypes'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { compareBatchOverview } from '../../models/comparison.js'
+import { BatchModel } from '../../schemas/batch.js'
+import { ISuiteDocument } from '../../schemas/suite.js'
+import { ITeam } from '../../schemas/team.js'
+import { IUser, UserModel } from '../../schemas/user.js'
+import type { BatchItemQueryOutput } from '../../types/backendtypes.js'
+import logger from '../../utils/logger.js'
+import { redisClient } from '../../utils/redis.js'
 
 /**
  * Provides information about a given suite.
@@ -106,10 +106,7 @@ async function suiteLookup(
   const batchBaseline = queryOutput.find((v) => v._id.equals(baselineInfo.to))
   const overview =
     batchLatest.meta ??
-    (await ComparisonFunctions.compareBatchOverview(
-      batchBaseline._id,
-      batchLatest._id
-    ))
+    (await compareBatchOverview(batchBaseline._id, batchLatest._id))
 
   const promoterIds = [...new Set(suite.promotions.map((raw) => raw.by))]
   const promoters = await UserModel.find(

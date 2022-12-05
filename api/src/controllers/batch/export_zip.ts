@@ -4,14 +4,14 @@ import { serializeMessages } from '@touca/flatbuffers'
 import archiver from 'archiver'
 import { NextFunction, Request, Response } from 'express'
 
-import { IBatchDocument } from '@/schemas/batch'
-import { MessageModel } from '@/schemas/message'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { objectStore } from '@/utils/store'
-import { analytics, EActivity } from '@/utils/tracker'
+import { IBatchDocument } from '../../schemas/batch.js'
+import { MessageModel } from '../../schemas/message.js'
+import { ISuiteDocument } from '../../schemas/suite.js'
+import { ITeam } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
+import { objectStore } from '../../utils/store.js'
+import { analytics, EActivity } from '../../utils/tracker.js'
 
 function toChunkFiles(messages: Buffer[]): ArrayBuffer[] {
   const chunks = []

@@ -4,18 +4,18 @@ import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 import type { EPlatformRole } from '@touca/api-schema'
-import htmlToText from 'html-to-text'
-import { has as lodashHas } from 'lodash'
+// import { fromString } from 'html-to-text'
+import { has as lodashHas } from 'lodash-es'
 import mustache from 'mustache'
 import nodemailer, { Transporter } from 'nodemailer'
 import { Attachment } from 'nodemailer/lib/mailer'
 
-import { wslGetSuperUser } from '@/models/user'
-import { MailModel } from '@/schemas/mail'
-import { MetaModel } from '@/schemas/meta'
-import { IUser, UserModel } from '@/schemas/user'
-import { config, configMgr } from '@/utils/config'
-import logger from '@/utils/logger'
+import { wslGetSuperUser } from '../models/user.js'
+import { MailModel } from '../schemas/mail.js'
+import { MetaModel } from '../schemas/meta.js'
+import { IUser, UserModel } from '../schemas/user.js'
+import { config } from '../utils/config.js'
+import logger from '../utils/logger.js'
 
 class EMail {
   private static transport: Transporter
@@ -63,7 +63,7 @@ class EMail {
     )
     const fileContent = readFileSync(filePath, 'utf8')
     const bodyHtml = mustache.render(fileContent, this.params)
-    const bodyPlain = htmlToText.fromString(bodyHtml, { wordwrap: 80 })
+    // const bodyPlain = fromString(bodyHtml, { wordwrap: 80 })
     const superuser = await wslGetSuperUser()
 
     await MailModel.create({
@@ -75,7 +75,7 @@ class EMail {
       from: `"${superuser.fullname}" <${superuser.email}>`,
       html: bodyHtml,
       subject,
-      text: bodyPlain,
+      // text: bodyPlain,
       to: recipient.email,
       attachments
     })

@@ -1,14 +1,14 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import express from 'express'
 
-import { ctrlCommentCreate } from '@/controllers/comment/create'
-import { ctrlCommentList } from '@/controllers/comment/list'
-import { ctrlCommentRemove } from '@/controllers/comment/remove'
-import { ctrlCommentReply } from '@/controllers/comment/reply'
-import { ctrlCommentUpdate } from '@/controllers/comment/update'
-import * as middleware from '@/middlewares'
-import { promisable } from '@/utils/routing'
+import { ctrlCommentCreate } from '../controllers/comment/create.js'
+import { ctrlCommentList } from '../controllers/comment/list.js'
+import { ctrlCommentRemove } from '../controllers/comment/remove.js'
+import { ctrlCommentReply } from '../controllers/comment/reply.js'
+import { ctrlCommentUpdate } from '../controllers/comment/update.js'
+import * as middleware from '../middlewares/index.js'
+import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
 

@@ -1,16 +1,16 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
-import { pick } from 'lodash'
+import { pick } from 'lodash-es'
 
-import { BatchModel } from '@/schemas/batch'
-import { ElementModel } from '@/schemas/element'
-import { MessageModel } from '@/schemas/message'
-import { SuiteModel } from '@/schemas/suite'
-import { TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { objectStore } from '@/utils/store'
+import { BatchModel } from '../../schemas/batch.js'
+import { ElementModel } from '../../schemas/element.js'
+import { MessageModel } from '../../schemas/message.js'
+import { SuiteModel } from '../../schemas/suite.js'
+import { TeamModel } from '../../schemas/team.js'
+import { IUser } from '../../schemas/user.js'
+import logger from '../../utils/logger.js'
+import { objectStore } from '../../utils/store.js'
 
 type Meta = Record<'team' | 'suite' | 'batch' | 'element' | 'key', string>
 
