@@ -4,7 +4,7 @@ set -e
 source /dev/stdin <<<"$( curl -fsSL https://raw.githubusercontent.com/trytouca/trytouca/main/ops/common.sh )"
 
 ask_install_dir
-ARGS=("$@")
+ARGS="$*"
 DIR_INSTALL=$OUTPUT
 EXTENSION=$(has_cli_option "--dev" "$@" && echo "dev" || echo "prod")
 export FILE_COMPOSE="$DIR_INSTALL/ops/docker-compose.$EXTENSION.yml"

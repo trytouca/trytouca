@@ -804,7 +804,7 @@ jobs:
           aws s3 cp api-docs-external.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp api-docs-internal.tar.gz ${{ steps.params.outputs.buckets }}/
           aws s3 cp api-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
-          aws s3 sync ./api/local/docs/external/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/api/ --include "*" --cache-control no-cache
+          aws s3 sync ./local/api/docs/external/ ${{ secrets.AWS_BUCKET_WEB }}/docs/external/api/ --include "*" --cache-control no-cache
 
       - name: pull api from aws
         if: steps.changes.outputs.api == 'false'
