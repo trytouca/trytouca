@@ -4,9 +4,8 @@ import { dirname, normalize, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import dotenv from 'dotenv'
-import mongoose from 'mongoose'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+const thisDirectory = dirname(fileURLToPath(import.meta.url))
 
 interface IConfig {
   auth: {
@@ -101,7 +100,7 @@ interface IConfig {
 
 function findPath(environment = '') {
   const name = environment === '' ? '.env' : `.env.${environment}`
-  return normalize(`${__dirname}/../../env/${name}`)
+  return normalize(`${thisDirectory}/../../env/${name}`)
 }
 
 dotenv.config({ path: findPath() })
@@ -131,7 +130,9 @@ export const config: IConfig = {
     root: env.EXPRESS_ROOT
   },
   logging: {
-    directory: env.LOG_DIR,
+    directory: env.LOG_DIR
+      ? normalize(`${thisDirectory}/../../../${env.LOG_DIR}`)
+      : undefined,
     level: env.LOG_LEVEL || 'info'
   },
   mail: {
@@ -165,7 +166,7 @@ export const config: IConfig = {
     tlsCertificateFile: env.REDIS_TLS_CERT_FILE
   },
   samples: {
-    directory: normalize(`${__dirname}/../../` + env.SAMPLES_DIR),
+    directory: normalize(`${thisDirectory}/../../` + env.SAMPLES_DIR),
     enabled: env.SAMPLES_ENABLED === 'true'
   },
   services: {
@@ -201,7 +202,7 @@ export const config: IConfig = {
     segment_key: env.SEGMENT_API_KEY
   },
   webapp: {
-    distDirectory: resolve(`${__dirname}/../`, env.WEBAPP_DIST_DIRECTORY),
+    distDirectory: resolve(`${thisDirectory}/../`, env.WEBAPP_DIST_DIRECTORY),
     root: env.WEBAPP_ROOT
   }
 }
