@@ -9,7 +9,7 @@ import {
   messageProcess,
   MessageTransformed
 } from '../models/index.js'
-import { objectStore } from '../utils/store.js'
+import { objectStore } from '../utils/index.js'
 import { JobQueue, PerformanceMarks } from './common.js'
 
 function buildMessageOverview(message: Message): MessageOverview {
