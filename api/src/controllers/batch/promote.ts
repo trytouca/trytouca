@@ -2,13 +2,15 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { batchPromote } from '@/models/batch'
-import { IBatchDocument } from '@/schemas/batch'
-import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { analytics, EActivity } from '@/utils/tracker'
+import { batchPromote } from '../../models/index.js'
+import {
+  IBatchDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  SuiteModel
+} from '../../schemas/index.js'
+import { analytics, EActivity, logger } from '../../utils/index.js'
 
 /**
  * @summary

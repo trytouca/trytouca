@@ -1,18 +1,19 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { BatchLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { UserMap } from '@/models/usermap'
-import { BatchModel, IBatchDocument } from '@/schemas/batch'
-import { CommentModel } from '@/schemas/comment'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import { ECommentType } from '@/types/backendtypes'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { compareBatchOverview, UserMap } from '../../models/index.js'
+import {
+  BatchModel,
+  CommentModel,
+  IBatchDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser
+} from '../../schemas/index.js'
+import { ECommentType } from '../../types/index.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 /**
  * Provides information about a given batch.
@@ -32,8 +33,7 @@ async function batchLookup(
     .populate()
 
   const overview =
-    batch.meta ??
-    (await ComparisonFunctions.compareBatchOverview(batch.superior, batch._id))
+    batch.meta ?? (await compareBatchOverview(batch.superior, batch._id))
 
   const commentCount = await CommentModel.countDocuments({
     type: ECommentType.Batch,

@@ -2,18 +2,20 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { BatchModel, IBatchDocument } from '@/schemas/batch'
-import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
+import { compareBatch } from '../../models/index.js'
+import {
+  BatchModel,
+  IBatchDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  SuiteModel
+} from '../../schemas/index.js'
 import {
   BackendBatchComparisonItem,
   BackendBatchComparisonResponse
-} from '@/types/backendtypes'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+} from '../../types/index.js'
+import { config, logger, redisClient } from '../../utils/index.js'
 
 type ICompareParamsBatch = {
   dstSuite?: ISuiteDocument
@@ -137,10 +139,7 @@ export async function batchCompare(
     const headName = [params.srcSuite.slug, params.srcBatch.slug].join('/')
     const baseName = [params.dstSuite.slug, params.dstBatch.slug].join('/')
 
-    const output = await ComparisonFunctions.compareBatch(
-      params.dstBatch._id,
-      params.srcBatch._id
-    )
+    const output = await compareBatch(params.dstBatch._id, params.srcBatch._id)
     logger.info('compared %s with %s', headName, baseName)
 
     // check if all elements are processed. Since we rely on field `contentId`,

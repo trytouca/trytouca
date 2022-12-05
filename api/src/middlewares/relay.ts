@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { config } from '@/utils/config'
+import { config } from '../utils/index.js'
 
 export function isCloudInstance(
   _req: Request,

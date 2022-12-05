@@ -1,18 +1,23 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { messageRemove } from '@/models/message'
-import { MessageInfo } from '@/models/messageInfo'
-import { insertEvent } from '@/queues'
-import { BatchModel, IBatchDocument } from '@/schemas/batch'
-import { CommentModel } from '@/schemas/comment'
-import { MessageModel } from '@/schemas/message'
-import { EReportType, ReportModel } from '@/schemas/report'
-import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { insertEvent } from '../queues/index.js'
+import {
+  BatchModel,
+  CommentModel,
+  EReportType,
+  IBatchDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  MessageModel,
+  ReportModel,
+  SuiteModel,
+  TeamModel
+} from '../schemas/index.js'
+import { logger, redisClient } from '../utils/index.js'
+import { compareBatch } from './comparison.js'
+import { messageRemove } from './message.js'
+import { MessageInfo } from './messageInfo.js'
 
 export async function batchPromote(
   team: ITeam,
@@ -63,7 +68,7 @@ export async function batchPromote(
   if (batches.length) {
     logger.info('%s: refreshing metadata of %d batches', tuple, batches.length)
 
-    batches.forEach((v) => ComparisonFunctions.compareBatch(batch._id, v._id))
+    batches.forEach((v) => compareBatch(batch._id, v._id))
 
     await BatchModel.updateMany(
       { _id: { $in: batches.map((raw) => raw._id) } },

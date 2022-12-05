@@ -2,15 +2,17 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { suiteRemove } from '@/models/suite'
-import { BatchModel } from '@/schemas/batch'
-import { MessageModel } from '@/schemas/message'
-import { SuiteModel } from '@/schemas/suite'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { suiteRemove } from '../../models/index.js'
+import {
+  BatchModel,
+  ITeam,
+  IUser,
+  MessageModel,
+  SuiteModel,
+  TeamModel,
+  UserModel
+} from '../../schemas/index.js'
+import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
 
 /**
  * Removes a given team and all data associated with it.

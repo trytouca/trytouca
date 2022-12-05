@@ -1,20 +1,19 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
+
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
 import type { EPlatformRole } from '@touca/api-schema'
-import fs from 'fs'
-import htmlToText from 'html-to-text'
-import { has as lodashHas } from 'lodash'
+// import { fromString } from 'html-to-text'
+import { has as lodashHas, pick } from 'lodash-es'
 import mustache from 'mustache'
 import nodemailer, { Transporter } from 'nodemailer'
 import { Attachment } from 'nodemailer/lib/mailer'
-import path from 'path'
 
-import { wslGetSuperUser } from '@/models/user'
-import { MailModel } from '@/schemas/mail'
-import { MetaModel } from '@/schemas/meta'
-import { IUser, UserModel } from '@/schemas/user'
-import { config, configMgr } from '@/utils/config'
-import logger from '@/utils/logger'
+import { wslGetSuperUser } from '../models/index.js'
+import { IUser, MailModel, MetaModel, UserModel } from '../schemas/index.js'
+import { config } from './config.js'
+import { logger } from './logger.js'
 
 class EMail {
   private static transport: Transporter
@@ -56,13 +55,13 @@ class EMail {
     }
     logger.silly('%s: %s: sending mail', this.filename, recipient.username)
 
-    const filePath = path.join(
+    const filePath = join(
       config.mail.templatesDirectory,
       this.filename + '.html'
     )
-    const fileContent = fs.readFileSync(filePath, 'utf8')
+    const fileContent = readFileSync(filePath, 'utf8')
     const bodyHtml = mustache.render(fileContent, this.params)
-    const bodyPlain = htmlToText.fromString(bodyHtml, { wordwrap: 80 })
+    // const bodyPlain = fromString(bodyHtml, { wordwrap: 80 })
     const superuser = await wslGetSuperUser()
 
     await MailModel.create({
@@ -74,7 +73,7 @@ class EMail {
       from: `"${superuser.fullname}" <${superuser.email}>`,
       html: bodyHtml,
       subject,
-      text: bodyPlain,
+      // text: bodyPlain,
       to: recipient.email,
       attachments
     })
@@ -122,4 +121,16 @@ export async function mailAdmins(params: { title: string; body: string }) {
     })
     return mailUsers(users, 'Admin Alert', 'mail-admin-notify', params)
   }
+}
+
+export async function hasMailTransport(): Promise<boolean> {
+  return !!(await MetaModel.countDocuments({
+    'mail.host': { $exists: true, $ne: '' }
+  }))
+}
+
+export function hasMailTransportEnvironmentVariables() {
+  return Object.values(
+    pick(config.mail, ['host', 'pass', 'port', 'user'])
+  ).every((v) => v)
 }

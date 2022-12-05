@@ -7,10 +7,8 @@ import type {
 } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { ITeam, IUser, TeamModel } from '../../schemas/index.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 /**
  * Lookup list of members of a given team from database

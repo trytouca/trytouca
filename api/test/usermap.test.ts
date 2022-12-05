@@ -1,14 +1,12 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { afterEach, beforeEach, describe, expect } from '@jest/globals'
 import { Types } from 'mongoose'
-import sinon from 'sinon'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 
-import { UserMap } from '../../src/models/usermap'
-import { UserModel } from '../../src/schemas/user'
+import { UserMap } from '../src/models'
+import { UserModel } from '../src/schemas'
 
-describe('model-usermap', () => {
-  let mockObj = null
+describe('usermap', () => {
   const idA = new Types.ObjectId()
   const idB = new Types.ObjectId()
   const idC = new Types.ObjectId()
@@ -17,21 +15,15 @@ describe('model-usermap', () => {
     { _id: idB, fullname: 'User B', username: 'userB' },
     { _id: idC, fullname: 'User C', username: 'userC' }
   ]
-  beforeEach(() => {
-    mockObj = sinon.stub(UserModel, 'aggregate')
-    mockObj.returns(Promise.resolve(expectedOut as any))
-  })
   afterEach(() => {
-    mockObj.restore()
+    vi.restoreAllMocks()
   })
-  const groupA = [idA]
-  const groupB = [idB, idC]
-  const groupC = [idA, idB, idC]
   test('basic usage', async () => {
+    vi.spyOn(UserModel, 'aggregate').mockResolvedValue(expectedOut as any)
     const userMap = await new UserMap()
-      .addGroup('group-A', groupA)
-      .addGroup('group-B', groupB)
-      .addGroup('group-C', groupC)
+      .addGroup('group-A', [idA])
+      .addGroup('group-B', [idB, idC])
+      .addGroup('group-C', [idA, idB, idC])
       .populate()
     expect(userMap.getGroup('group-B')).toEqual([
       { fullname: 'User B', username: 'userB' },

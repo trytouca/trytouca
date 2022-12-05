@@ -1,13 +1,15 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { batchRemove } from '@/models/batch'
-import { comparisonRemove } from '@/models/comparison'
-import { BatchModel, IBatchDocument } from '@/schemas/batch'
-import { ComparisonModel } from '@/schemas/comparison'
-import { MessageModel } from '@/schemas/message'
-import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
+import { batchRemove, comparisonRemove } from '../models/index.js'
+import {
+  BatchModel,
+  ComparisonModel,
+  IBatchDocument,
+  ISuiteDocument,
+  MessageModel,
+  SuiteModel
+} from '../schemas/index.js'
+import { config, logger } from '../utils/index.js'
 
 async function isBatchDueForRemoval(batch: IBatchDocument): Promise<boolean> {
   const suite = await SuiteModel.findById(batch.suite)

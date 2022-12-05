@@ -2,16 +2,15 @@
 
 import { NextFunction, Request, Response } from 'express'
 
+import { findTeamRoleOfUser, findTeamUsersByRole } from '../../models/index.js'
+import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
 import {
-  findTeamRoleOfUser,
-  findTeamUsersByRole
-} from '@/controllers/team/common'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+  analytics,
+  EActivity,
+  logger,
+  mailUsers,
+  redisClient
+} from '../../utils/index.js'
 
 /**
  * @summary
@@ -72,7 +71,7 @@ export async function teamLeave(
 
   const users = await findTeamUsersByRole(team, ['owner', 'admin'])
   const subject = 'A Member Left Your Team'
-  mailer.mailUsers(users, subject, 'team-leave-admin', {
+  mailUsers(users, subject, 'team-leave-admin', {
     userName: user.fullname,
     subject,
     teamName: team.name

@@ -1,11 +1,15 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { BatchModel, IBatchDocument } from '@/schemas/batch'
-import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
-import { ITeamDocument, TeamModel } from '@/schemas/team'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { compareBatchOverview } from '../models/index.js'
+import {
+  BatchModel,
+  IBatchDocument,
+  ISuiteDocument,
+  ITeamDocument,
+  SuiteModel,
+  TeamModel
+} from '../schemas/index.js'
+import { logger, redisClient } from '../utils/index.js'
 
 async function populateBatchMeta(
   team: ITeamDocument,
@@ -16,10 +20,7 @@ async function populateBatchMeta(
   const tuple = [team.slug, suite.slug, batch.slug].join('/')
   logger.info('%s: %s: comparing to baseline', serviceName, tuple)
 
-  const overview = await ComparisonFunctions.compareBatchOverview(
-    batch.superior,
-    batch._id
-  )
+  const overview = await compareBatchOverview(batch.superior, batch._id)
 
   if (overview.elementsCountPending) {
     logger.info('%s: %s: skipped: has pending elements', serviceName, tuple)

@@ -1,13 +1,16 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { batchRemove } from '@/models/batch'
-import { BatchModel } from '@/schemas/batch'
-import { CommentModel } from '@/schemas/comment'
-import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import {
+  BatchModel,
+  CommentModel,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  SuiteModel,
+  TeamModel
+} from '../schemas/index.js'
+import { logger, redisClient } from '../utils/index.js'
+import { batchRemove } from './batch.js'
 
 export async function suiteCreate(
   user: IUser,

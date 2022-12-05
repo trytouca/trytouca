@@ -792,9 +792,9 @@ jobs:
           pnpm --dir=api run test
           pnpm --dir=api run docs
           tar -zcf api.tar.gz api/dist
-          tar -zcf api-docs-external.tar.gz api/local/docs/external
-          tar -zcf api-docs-internal.tar.gz api/local/docs/internal
-          tar -zcf api-test-coverage.tar.gz api/local/tests
+          tar -zcf api-docs-external.tar.gz local/api/docs/external
+          tar -zcf api-docs-internal.tar.gz local/api/docs/internal
+          tar -zcf api-test-coverage.tar.gz local/api/tests/coverage
 
       - name: push api to aws
         if: |

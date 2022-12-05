@@ -2,11 +2,9 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { suiteCreate } from '@/models/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { analytics, EActivity } from '@/utils/tracker'
+import { suiteCreate } from '../../models/index.js'
+import { ITeam, IUser } from '../../schemas/index.js'
+import { analytics, EActivity, logger } from '../../utils/index.js'
 
 /**
  * Register a new suite.

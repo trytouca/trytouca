@@ -2,8 +2,8 @@
 
 import { ServerEventJob } from '@touca/api-schema'
 
-import { broadcastEvent } from '@/utils/events'
-import { JobQueue, PerformanceMarks } from '@/utils/queue'
+import { broadcastEvent } from '../utils/index.js'
+import { JobQueue, PerformanceMarks } from './common.js'
 
 async function processor(job: ServerEventJob): Promise<PerformanceMarks> {
   const perf = new PerformanceMarks()

@@ -1,18 +1,19 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import fs from 'fs'
-import path from 'path'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { basename, join, parse } from 'node:path'
 
-import { processBinaryContent } from '@/controllers/client/submit'
-import { batchPromote, batchSeal } from '@/models/batch'
-import { suiteCreate } from '@/models/suite'
-import { BatchModel } from '@/schemas/batch'
-import { SuiteModel } from '@/schemas/suite'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import {
+  BatchModel,
+  ITeam,
+  SuiteModel,
+  TeamModel,
+  UserModel
+} from '../schemas/index.js'
+import { config, logger, redisClient } from '../utils/index.js'
+import { batchPromote, batchSeal } from './batch.js'
+import { processBinaryContent } from './submit.js'
+import { suiteCreate } from './suite.js'
 
 /**
  * Add sample test results to an empty suite.
@@ -39,23 +40,22 @@ export async function addSampleData(team: ITeam): Promise<void> {
 
   // reject request if samples directory not found
 
-  if (!fs.existsSync(config.samples.directory)) {
+  if (!existsSync(config.samples.directory)) {
     logger.error('samples directory not found')
     return
   }
 
-  const samples = fs
-    .readdirSync(config.samples.directory)
-    .map((filename) => path.join(config.samples.directory, filename))
-    .filter((file) => fs.statSync(file).isFile())
-    .sort((a, b) => path.basename(a).localeCompare(path.basename(b)))
+  const samples = readdirSync(config.samples.directory)
+    .map((filename) => join(config.samples.directory, filename))
+    .filter((file) => statSync(file).isFile())
+    .sort((a, b) => basename(a).localeCompare(basename(b)))
 
   // proceed with submission of sample test results to this suite.
 
   logger.info('%s: submitting sample data to %s', tuple, user.username)
   const batchBaseline = 'v2.0' // batch to be baseline of the suite
   for (const sample of samples) {
-    const content = fs.readFileSync(sample)
+    const content = readFileSync(sample)
     const errors = await processBinaryContent(user, content, {
       override: {
         teamSlug: team.slug,
@@ -76,7 +76,7 @@ export async function addSampleData(team: ITeam): Promise<void> {
     // function.
 
     suite = await SuiteModel.findById(suite._id)
-    const batchSlug = path.parse(sample).name
+    const batchSlug = parse(sample).name
     const batch = await BatchModel.findOne({
       suite: suite._id,
       slug: batchSlug

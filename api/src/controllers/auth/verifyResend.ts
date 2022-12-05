@@ -2,11 +2,14 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { analytics, EActivity } from '@/utils/tracker'
+import { UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailUser
+} from '../../utils/index.js'
 
 export async function authVerifyResend(
   req: Request,
@@ -36,7 +39,7 @@ export async function authVerifyResend(
   logger.info('%s: resending verification email', user.username)
 
   const link = `${config.webapp.root}/account/activate?key=${user.activationKey}`
-  mailer.mailUser(user, 'Welcome to Touca 👋🏼', 'auth-signup-user', {
+  mailUser(user, 'Welcome to Touca 👋🏼', 'auth-signup-user', {
     firstName: user.fullname ? `, ${user.fullname}` : '',
     hasVerificationLink: true,
     previewMessage: 'Here is your email verification link.',

@@ -1,11 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import dotenv from 'dotenv'
-import { pick } from 'lodash'
-import mongoose from 'mongoose'
-import path from 'path'
+import { dirname, normalize, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-import { MetaModel } from '@/schemas/meta'
+import dotenv from 'dotenv'
+
+const thisDirectory = dirname(fileURLToPath(import.meta.url))
 
 interface IConfig {
   auth: {
@@ -100,7 +100,7 @@ interface IConfig {
 
 function findPath(environment = '') {
   const name = environment === '' ? '.env' : `.env.${environment}`
-  return path.normalize(`${__dirname}/../../env/${name}`)
+  return normalize(`${thisDirectory}/../../env/${name}`)
 }
 
 dotenv.config({ path: findPath() })
@@ -130,7 +130,9 @@ export const config: IConfig = {
     root: env.EXPRESS_ROOT
   },
   logging: {
-    directory: env.LOG_DIR,
+    directory: env.LOG_DIR
+      ? normalize(`${thisDirectory}/../../../${env.LOG_DIR}`)
+      : undefined,
     level: env.LOG_LEVEL || 'info'
   },
   mail: {
@@ -164,7 +166,7 @@ export const config: IConfig = {
     tlsCertificateFile: env.REDIS_TLS_CERT_FILE
   },
   samples: {
-    directory: path.normalize(`${__dirname}/../../` + env.SAMPLES_DIR),
+    directory: normalize(`${thisDirectory}/../../` + env.SAMPLES_DIR),
     enabled: env.SAMPLES_ENABLED === 'true'
   },
   services: {
@@ -200,39 +202,7 @@ export const config: IConfig = {
     segment_key: env.SEGMENT_API_KEY
   },
   webapp: {
-    distDirectory: path.resolve(`${__dirname}/../`, env.WEBAPP_DIST_DIRECTORY),
+    distDirectory: resolve(`${thisDirectory}/../`, env.WEBAPP_DIST_DIRECTORY),
     root: env.WEBAPP_ROOT
   }
 }
-
-class ConfigManager {
-  constructor(private data: IConfig) {}
-  public getMongoUri(): string {
-    const m = this.data.mongo
-    return `mongodb://${m.user}:${m.pass}@${m.host}:${m.port}/${m.database}`
-  }
-  public getMongoConnectionOptions(): mongoose.ConnectOptions {
-    const file = this.data.mongo.tlsCertificateFile
-    return file
-      ? {
-          autoIndex: false,
-          retryWrites: false,
-          sslValidate: false,
-          tls: true,
-          tlsCAFile: file
-        }
-      : { autoIndex: false }
-  }
-  public async hasMailTransport(): Promise<boolean> {
-    return !!(await MetaModel.countDocuments({
-      'mail.host': { $exists: true, $ne: '' }
-    }))
-  }
-  public hasMailTransportEnvironmentVariables() {
-    return Object.values(
-      pick(config.mail, ['host', 'pass', 'port', 'user'])
-    ).every((v) => v)
-  }
-}
-
-export const configMgr = new ConfigManager(config)

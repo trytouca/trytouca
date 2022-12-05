@@ -3,16 +3,18 @@
 import type { ENotificationType } from '@touca/api-schema'
 import mongoose from 'mongoose'
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { BatchModel } from '@/schemas/batch'
-import { ComparisonModel } from '@/schemas/comparison'
-import { EReportType, IReportDocument, ReportModel } from '@/schemas/report'
-import { SuiteModel } from '@/schemas/suite'
-import { IUser } from '@/schemas/user'
-import type { BackendBatchComparisonResponse } from '@/types/backendtypes'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { mailUser } from '@/utils/mailer'
+import { compareBatch } from '../models/index.js'
+import {
+  BatchModel,
+  ComparisonModel,
+  EReportType,
+  IReportDocument,
+  IUser,
+  ReportModel,
+  SuiteModel
+} from '../schemas/index.js'
+import type { BackendBatchComparisonResponse } from '../types/index.js'
+import { config, logger, mailUser } from '../utils/index.js'
 
 type ReportInputsCommon = {
   dstBatchSlug: string
@@ -371,10 +373,7 @@ async function processReportJob(job: IReportDocument) {
   // comparison jobs are processed, we obtain the comparison output
   // for later extraction of information to be used in the report.
 
-  const cmp = await ComparisonFunctions.compareBatch(
-    dstInfo.batch._id,
-    srcInfo.batch._id
-  )
+  const cmp = await compareBatch(dstInfo.batch._id, srcInfo.batch._id)
 
   // postpone reporting if there is any pending comparison job
 

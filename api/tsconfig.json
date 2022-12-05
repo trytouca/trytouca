@@ -1,25 +1,13 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "paths": {
-      "@/controllers/*": ["controllers/*"],
-      "@/middlewares": ["middlewares"],
-      "@/models/*": ["models/*"],
-      "@/queues": ["queues"],
-      "@/routes/*": ["routes/*"],
-      "@/schemas/*": ["schemas/*"],
-      "@/types/*": ["types/*"],
-      "@/utils/*": ["utils/*"]
-    },
     "alwaysStrict": true,
     "outDir": "dist",
     "sourceMap": true,
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "module": "ES2022",
+    "moduleResolution": "Node16",
     "target": "ES2022",
-    "lib": ["ES2022", "DOM"],
-    "esModuleInterop": true,
-    "noImplicitAny": false
+    "lib": ["ES2022"]
   },
   "include": ["src/**/*"]
 }

@@ -4,16 +4,24 @@ import type { EPlatformRole } from '@touca/api-schema'
 import express from 'express'
 import * as ev from 'express-validator'
 
-import { platformAccountDelete } from '@/controllers/platform/accountDelete'
-import { platformAccountSuspend } from '@/controllers/platform/accountSuspend'
-import { platformAccountUpdate } from '@/controllers/platform/accountUpdate'
-import { platformConfig } from '@/controllers/platform/config'
-import { platformHealth } from '@/controllers/platform/health'
-import { platformInstall } from '@/controllers/platform/install'
-import { platformStats } from '@/controllers/platform/stats'
-import { platformUpdate } from '@/controllers/platform/update'
-import * as middleware from '@/middlewares'
-import { promisable } from '@/utils/routing'
+import {
+  platformAccountDelete,
+  platformAccountSuspend,
+  platformAccountUpdate,
+  platformConfig,
+  platformHealth,
+  platformInstall,
+  platformStats,
+  platformUpdate
+} from '../controllers/platform/index.js'
+import {
+  hasAccount,
+  hasSuspendedAccount,
+  isAuthenticated,
+  isPlatformAdmin,
+  validationRules
+} from '../middlewares/index.js'
+import { promisable } from '../utils/index.js'
 
 const router = express.Router()
 
@@ -35,18 +43,18 @@ router.patch(
 
 router.get(
   '/stats',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
+  isAuthenticated,
+  isPlatformAdmin,
   promisable(platformStats, 'get platform statistics')
 )
 
 router.patch(
   '/account/:account',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
-  middleware.hasAccount,
+  isAuthenticated,
+  isPlatformAdmin,
+  hasAccount,
   express.json(),
-  middleware.inputs([
+  validationRules([
     ev
       .body('role')
       .custom(
@@ -59,17 +67,17 @@ router.patch(
 
 router.post(
   '/account/:account/suspend',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
-  middleware.hasAccount,
+  isAuthenticated,
+  isPlatformAdmin,
+  hasAccount,
   promisable(platformAccountSuspend, 'suspend account')
 )
 
 router.post(
   '/account/:account/delete',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
-  middleware.hasSuspendedAccount,
+  isAuthenticated,
+  isPlatformAdmin,
+  hasSuspendedAccount,
   promisable(platformAccountDelete, 'delete account')
 )
 

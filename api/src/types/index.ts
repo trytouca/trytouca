@@ -4,37 +4,15 @@ import type {
   BatchCompareOverview,
   BatchComparisonItem,
   BatchItem,
-  ENotificationType,
-  SuiteItem,
   TestcaseComparisonOverview,
-  TestcaseOverview,
-  Userinfo
+  TestcaseOverview
 } from '@touca/api-schema'
-import { Message } from '@touca/flatbuffers'
-import type { Types } from 'mongoose'
-
-export type PromotionQueryOutput = {
-  at: Date
-  by: Types.ObjectId
-  for: string
-  from: Types.ObjectId
-  to: Types.ObjectId
-}
-
-export type SubscriptionQueryOutput = {
-  user: Types.ObjectId
-  level: ENotificationType
-}
+import { Types } from 'mongoose'
 
 export type BatchItemQueryOutput = Exclude<BatchItem, 'submittedBy'> & {
   _id: Types.ObjectId
   submittedBy: Types.ObjectId[]
   superior: Types.ObjectId
-}
-
-export type SuiteItemQueryOutput = Exclude<SuiteItem, 'baseline' | 'latest'> & {
-  baseline: BatchItemQueryOutput
-  latest: BatchItemQueryOutput
 }
 
 export type BackendBatchComparisonItem = BatchComparisonItem & {
@@ -67,33 +45,6 @@ export enum ECommentType {
   Element = 'element',
   Suite = 'suite',
   Team = 'team'
-}
-
-export type CommentListQueryOutput = {
-  _id: Types.ObjectId
-  at: Date
-  by: Userinfo
-  editedAt: Date
-  parentId: Types.ObjectId
-  text: string
-}
-
-export type MessageOverview = {
-  keysCount: number
-  metricsCount: number
-  metricsDuration: number
-}
-
-export type MessageTransformed = {
-  metadata: Message['metadata']
-  metrics: {
-    key: string
-    value: string
-  }[]
-  results: {
-    key: string
-    value: string
-  }[]
 }
 
 export type Artifact = {

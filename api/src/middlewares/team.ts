@@ -1,11 +1,10 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
-import { wslFindByUname } from '@/models/user'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
+import { wslFindByUname } from '../models/index.js'
+import { ITeam, IUser, TeamModel } from '../schemas/index.js'
+import { logger } from '../utils/index.js'
 
 /**
  * @summary

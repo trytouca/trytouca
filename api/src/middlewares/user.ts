@@ -4,11 +4,9 @@ import type { EPlatformRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
-import { wslFindByUname } from '@/models/user'
-import { SessionModel } from '@/schemas/session'
-import { IUser, UserModel } from '@/schemas/user'
-import * as jwt from '@/utils/jwt'
-import logger from '@/utils/logger'
+import { wslFindByUname } from '../models/index.js'
+import { IUser, SessionModel, UserModel } from '../schemas/index.js'
+import { jwtExtract, logger } from '../utils/index.js'
 
 type AuthInput = {
   agent: string
@@ -20,7 +18,7 @@ async function isAuthenticatedImpl(input: AuthInput): Promise<IUser> {
   // request should have an http-only cookie with a signed JWT bearer token
   // and a payload format according to our expectations.
 
-  const payload = jwt.extractPayload(input.token)
+  const payload = jwtExtract(input.token)
   if (!payload) {
     return
   }

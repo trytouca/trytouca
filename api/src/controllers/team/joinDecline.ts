@@ -2,13 +2,15 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailUser,
+  redisClient
+} from '../../utils/index.js'
 
 export async function teamJoinDecline(
   req: Request,
@@ -67,7 +69,7 @@ export async function teamJoinDecline(
   // send email to user.
 
   const subject = `Your request to join team ${team.name} was rejected`
-  mailer.mailUser(account, subject, 'team-join-decline', {
+  mailUser(account, subject, 'team-join-decline', {
     subject,
     teamName: team.name,
     teamLink: [config.webapp.root, '~', team.slug].join('/'),

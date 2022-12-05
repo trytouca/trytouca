@@ -3,33 +3,35 @@
 import express from 'express'
 import * as ev from 'express-validator'
 
-import { feedbackHandle } from '@/controllers/relay/feedback'
-import { installHandle } from '@/controllers/relay/install'
-import { telemetryHandle } from '@/controllers/relay/telemetry'
-import * as middleware from '@/middlewares'
-import { promisable } from '@/utils/routing'
+import {
+  feedbackHandle,
+  installHandle,
+  telemetryHandle
+} from '../controllers/relay/index.js'
+import { isCloudInstance, validationRules } from '../middlewares/index.js'
+import { promisable } from '../utils/index.js'
 
 const router = express.Router()
 
 router.post(
   '/install',
-  middleware.isCloudInstance,
+  isCloudInstance,
   express.json(),
   promisable(installHandle, 'process submitted self-hosted install form')
 )
 
 router.post(
   '/telemetry',
-  middleware.isCloudInstance,
+  isCloudInstance,
   express.json(),
   promisable(telemetryHandle, 'process submitted usage report')
 )
 
 router.post(
   '/feedback',
-  middleware.isCloudInstance,
+  isCloudInstance,
   express.json(),
-  middleware.inputs([
+  validationRules([
     ev
       .body('body')
       .exists()

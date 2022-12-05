@@ -1,8 +1,8 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import mongoose from 'mongoose'
 
-import { ECommentType } from '@/types/backendtypes'
+import { ECommentType } from '../types/index.js'
 
 const commentSchema = new mongoose.Schema(
   {

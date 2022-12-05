@@ -2,13 +2,16 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { teamCreate } from '@/models/team'
-import { IUser } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { teamCreate } from '../../models/index.js'
+import { IUser } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailAdmins,
+  redisClient
+} from '../../utils/index.js'
 
 /**
  * @summary
@@ -40,7 +43,7 @@ export async function ctrlTeamCreate(
 
   // notify platform admins that a new team was created
 
-  mailer.mailAdmins({
+  mailAdmins({
     title: 'New Team Registered',
     body: `User <b>${user.username}</b> created team <b>${proposed.slug}</b>.`
   })

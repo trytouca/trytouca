@@ -1,9 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
+import { fileTypeFromBuffer } from 'file-type'
 
-import { Artifact } from '@/types/backendtypes'
-import { objectStore } from '@/utils/store'
+import { Artifact } from '../../types/index.js'
+import { objectStore } from '../../utils/index.js'
 
 /**
  * @summary
@@ -36,12 +37,13 @@ export async function elementFile(
       status: 500
     })
   }
+  const contentType = await fileTypeFromBuffer(artifact.content)
 
   res.setHeader(
     'Content-Disposition',
     `attachment; filename=${artifact.filename_external}`
   )
-  res.setHeader('Content-Type', 'image/jpeg')
+  res.setHeader('Content-Type', contentType.mime)
   res.writeHead(200)
   res.end(artifact.content)
 }

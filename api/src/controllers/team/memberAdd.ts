@@ -2,12 +2,14 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  EActivity,
+  logger,
+  mailUser,
+  redisClient
+} from '../../utils/index.js'
 
 /**
  * @summary
@@ -71,7 +73,7 @@ export async function teamMemberAdd(
   // send email to user
 
   const subject = `Welcome to team "${team.name}"`
-  mailer.mailUser(account, subject, 'team-member-add', {
+  mailUser(account, subject, 'team-member-add', {
     ownerName: user.fullname,
     ownerEmail: user.email,
     subject,

@@ -3,11 +3,13 @@
 import type { PlatformConfig } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { findPlatformRole } from '@/middlewares'
-import { MetaModel } from '@/schemas/meta'
-import { configMgr } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { findPlatformRole } from '../../middlewares/index.js'
+import { MetaModel } from '../../schemas/index.js'
+import {
+  hasMailTransportEnvironmentVariables,
+  logger,
+  redisClient
+} from '../../utils/index.js'
 
 export async function platformConfig(
   req: Request,
@@ -49,7 +51,7 @@ export async function platformConfig(
   }
   if (meta?.mail) {
     response.mail = {
-      configurable: !configMgr.hasMailTransportEnvironmentVariables(),
+      configurable: !hasMailTransportEnvironmentVariables(),
       host: meta.mail.host,
       pass: meta.mail.pass,
       port: meta.mail.port,

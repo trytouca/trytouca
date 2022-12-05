@@ -2,11 +2,9 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { addSampleData } from '@/models/sampleData'
-import { SuiteModel } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
+import { addSampleData } from '../../models/index.js'
+import { ITeam, IUser, SuiteModel } from '../../schemas/index.js'
+import { logger } from '../../utils/index.js'
 
 export async function teamPopulate(
   req: Request,

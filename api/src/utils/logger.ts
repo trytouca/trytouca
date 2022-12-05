@@ -1,35 +1,38 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import fs from 'fs'
-import path from 'path'
-import logger from 'winston'
+import { existsSync, mkdirSync } from 'node:fs'
+import { join } from 'node:path'
 
-import { config } from '@/utils/config'
+import {
+  createLogger,
+  format,
+  transport as winstonTransport,
+  transports as winstonTransports
+} from 'winston'
 
-const transports: logger.transport[] = [
-  new logger.transports.Console({
+import { config } from './config.js'
+
+const transports: winstonTransport[] = [
+  new winstonTransports.Console({
     format: config.isCloudHosted
-      ? logger.format.json()
-      : logger.format.combine(logger.format.colorize(), logger.format.simple()),
+      ? format.json()
+      : format.combine(format.colorize(), format.simple()),
     handleExceptions: true,
     level: config.logging.level
   })
 ]
 
 if (config.logging.directory) {
-  const logDir = path.normalize(
-    `${__dirname}/../../../${config.logging.directory}`
-  )
-  if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir, { recursive: true })
+  if (!existsSync(config.logging.directory)) {
+    mkdirSync(config.logging.directory, { recursive: true })
   }
-  const fileTransport = new logger.transports.File({
-    filename: path.join(logDir, 'touca.log'),
-    format: logger.format.combine(
-      logger.format.timestamp({
+  const fileTransport = new winstonTransports.File({
+    filename: join(config.logging.directory, 'touca.log'),
+    format: format.combine(
+      format.timestamp({
         format: 'YYYY-MM-DD HH:mm:ss'
       }),
-      logger.format.logstash()
+      format.logstash()
     ),
     handleExceptions: true,
     level: config.logging.level,
@@ -39,10 +42,8 @@ if (config.logging.directory) {
   transports.push(fileTransport)
 }
 
-logger.configure({
+export const logger = createLogger({
   exitOnError: false,
-  format: logger.format.splat(),
+  format: format.splat(),
   transports
 })
-
-export { logger as default }

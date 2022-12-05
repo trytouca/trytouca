@@ -1,15 +1,16 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
-import { suiteRemove } from '@/models/suite'
-import { BatchModel } from '@/schemas/batch'
-import { MessageModel } from '@/schemas/message'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { analytics, EActivity } from '@/utils/tracker'
+import { suiteRemove } from '../../models/index.js'
+import {
+  BatchModel,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  MessageModel
+} from '../../schemas/index.js'
+import { analytics, EActivity, logger } from '../../utils/index.js'
 
 /**
  * Remove a given suite and all data associated with it.

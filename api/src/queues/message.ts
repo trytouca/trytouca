@@ -3,11 +3,14 @@
 import { stringify } from '@touca/comparator'
 import { deserialize, Message } from '@touca/flatbuffers'
 
-import { MessageJob } from '@/models/comparison'
-import { messageProcess } from '@/models/message'
-import { MessageOverview, MessageTransformed } from '@/types/backendtypes'
-import { JobQueue, PerformanceMarks } from '@/utils/queue'
-import { objectStore } from '@/utils/store'
+import {
+  MessageJob,
+  MessageOverview,
+  messageProcess,
+  MessageTransformed
+} from '../models/index.js'
+import { objectStore } from '../utils/index.js'
+import { JobQueue, PerformanceMarks } from './common.js'
 
 function buildMessageOverview(message: Message): MessageOverview {
   return {

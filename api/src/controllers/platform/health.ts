@@ -3,11 +3,13 @@
 import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
-import { UserModel } from '@/schemas/user'
-import { configMgr } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
-import { objectStore } from '@/utils/store'
+import { UserModel } from '../../schemas/index.js'
+import {
+  hasMailTransport,
+  logger,
+  objectStore,
+  redisClient
+} from '../../utils/index.js'
 
 export async function platformHealth(
   req: Request,
@@ -29,7 +31,7 @@ export async function platformHealth(
   const minioConnection = await objectStore.status()
   const mongodbConnection = mongoose.connection.readyState === 1
   const response = {
-    mail: await configMgr.hasMailTransport(),
+    mail: await hasMailTransport(),
     ready: minioConnection && mongodbConnection,
     configured: !!(await UserModel.countDocuments({ platformRole: 'owner' }))
   }

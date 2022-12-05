@@ -2,12 +2,9 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { extractCommentTuple } from '@/models/comment'
-import { CommentModel, ICommentDocument } from '@/schemas/comment'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { extractCommentTuple } from '../../models/index.js'
+import { CommentModel, ICommentDocument, IUser } from '../../schemas/index.js'
+import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
 
 export async function ctrlCommentUpdate(
   req: Request,

@@ -1,13 +1,11 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { TeamLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { findTeamRoleOfUser } from '@/controllers/team/common'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { findTeamRoleOfUser } from '../../models/index.js'
+import { ITeam, IUser, TeamModel } from '../../schemas/index.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 /**
  * Lookup detailed information about a team.

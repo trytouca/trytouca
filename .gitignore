@@ -1,7 +1,6 @@
 api/dist/
 api/e2e/.env/
 api/e2e/logs/
-api/local/tests/
 api/node_modules/
 app/.angular/
 app/dist/
@@ -22,6 +21,7 @@ examples/python/.python-version
 examples/python/04_python_image_processing/out
 examples/python/06_python_computer_vision/out
 local/logs/
+local/api/
 node_modules/
 packages/**/coverage/
 packages/**/dist

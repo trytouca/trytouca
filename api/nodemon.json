@@ -3,7 +3,7 @@
   "ignore": [".git", "node_modules/**/node_modules"],
   "verbose": true,
   "execMap": {
-    "ts": "node --require tsconfig-paths/register --require ts-node/register"
+    "ts": "node --no-warnings --loader ts-node/esm"
   },
   "watch": ["src", "templates", "test"],
   "env": {

@@ -1,9 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
-import { createUserAccount } from '@/models/auth'
-import { UserModel } from '@/schemas/user'
+import { createUserAccount } from '../../models/index.js'
+import { UserModel } from '../../schemas/index.js'
 
 export async function authVerifyCreate(
   req: Request,

@@ -1,16 +1,19 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { EFeatureFlag } from '@touca/api-schema'
-import * as bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
-import { identity, omit, pick, pickBy } from 'lodash'
+import { identity, omit, pick, pickBy } from 'lodash-es'
 import { v4 as uuidv4 } from 'uuid'
 
-import { IUser, UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { analytics, EActivity } from '@/utils/tracker'
+import { IUser, UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailAdmins
+} from '../../utils/index.js'
 
 async function updateFeatureFlags(user: IUser, flags: Record<string, boolean>) {
   logger.debug('%s: updating feature flag: %j', user.username, flags)
@@ -103,7 +106,7 @@ export async function userUpdate(
   // notify platform admins that a new user account was verified.
 
   if (user.fullname === '' && proposed.fullname) {
-    mailer.mailAdmins({
+    mailAdmins({
       title: 'New Account Verified',
       body: `New account created for <b>${proposed.fullname}</b> (<a href="mailto:${user.email}">${proposed.username}</a>).`
     })

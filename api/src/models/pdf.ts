@@ -1,15 +1,15 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { InvokeCommand, Lambda } from '@aws-sdk/client-lambda'
-import { readFileSync } from 'fs'
-import mustache from 'mustache'
-import path from 'path'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 
-import { ComparisonFunctions } from '@/controllers/comparison'
-import { UserMap } from '@/models/usermap'
-import { BatchModel, IBatchDocument } from '@/schemas/batch'
-import { ISuiteDocument } from '@/schemas/suite'
-import { config } from '@/utils/config'
+import { InvokeCommand, Lambda } from '@aws-sdk/client-lambda'
+import mustache from 'mustache'
+
+import { BatchModel, IBatchDocument, ISuiteDocument } from '../schemas/index.js'
+import { config } from '../utils/index.js'
+import { compareBatch } from './comparison.js'
+import { UserMap } from './usermap.js'
 
 interface PdfContent {
   suite: {
@@ -98,10 +98,7 @@ async function buildPdfContent(
     { _id: suite.promotions[suite.promotions.length - 1].to },
     { _id: 1, slug: 1 }
   )
-  const cmpOutput = await ComparisonFunctions.compareBatch(
-    dstBatch._id,
-    srcBatch._id
-  )
+  const cmpOutput = await compareBatch(dstBatch._id, srcBatch._id)
   const differentCases = cmpOutput.common.filter((v) => v.meta.keysScore !== 1)
   const toSeconds = (duration: number) => (duration / 1000).toFixed(1) + ' s'
   const toDurationChange = (change: number) => {
@@ -175,7 +172,7 @@ export async function buildPdfReport(
   batch: IBatchDocument
 ): Promise<PdfReport> {
   const content = await buildPdfContent(suite, batch)
-  const template_file = path.join(
+  const template_file = join(
     config.mail.templatesDirectory,
     'reports',
     'report.html'

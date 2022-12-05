@@ -7,14 +7,16 @@ import {
   extractCommentTuple,
   extractCommentType,
   notifySubscribers
-} from '@/models/comment'
-import { CommentModel } from '@/schemas/comment'
-import { IUser } from '@/schemas/user'
-import { ECommentType } from '@/types/backendtypes'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+} from '../../models/index.js'
+import { CommentModel, IUser } from '../../schemas/index.js'
+import { ECommentType } from '../../types/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  redisClient
+} from '../../utils/index.js'
 
 export async function ctrlCommentCreate(
   req: Request,

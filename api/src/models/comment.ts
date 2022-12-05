@@ -1,14 +1,17 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Response } from 'express'
 
-import { IBatchDocument } from '@/schemas/batch'
-import { IElementDocument } from '@/schemas/element'
-import { ISuiteDocument, SuiteModel } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import { ECommentType } from '@/types/backendtypes'
-import { mailUser } from '@/utils/mailer'
+import {
+  IBatchDocument,
+  IElementDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  SuiteModel
+} from '../schemas/index.js'
+import { ECommentType } from '../types/index.js'
+import { mailUser } from '../utils/index.js'
 
 export type CommentInputs = {
   user: IUser

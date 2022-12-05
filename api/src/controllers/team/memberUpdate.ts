@@ -3,12 +3,9 @@
 import type { ETeamRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { findTeamRoleOfUser } from '@/controllers/team/common'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { findTeamRoleOfUser } from '../../models/index.js'
+import { ITeam, IUser, TeamModel } from '../../schemas/index.js'
+import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
 
 /**
  * @summary

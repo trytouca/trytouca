@@ -3,11 +3,9 @@
 import { NextFunction, Request, Response } from 'express'
 import { OAuth2Client } from 'google-auth-library'
 
-import { createUserAccount, createUserSession } from '@/models/auth'
-import { IUserDocument, UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { analytics, EActivity } from '@/utils/tracker'
+import { createUserAccount, createUserSession } from '../../models/index.js'
+import { IUserDocument, UserModel } from '../../schemas/index.js'
+import { analytics, config, EActivity, logger } from '../../utils/index.js'
 
 export async function authGoogleSignin(
   req: Request,

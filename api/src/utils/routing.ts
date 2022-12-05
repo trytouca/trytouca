@@ -1,8 +1,8 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 
-import logger from './logger'
+import { logger } from './logger.js'
 
 /**
  * helper function that allows the controller function to be async

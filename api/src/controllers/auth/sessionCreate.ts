@@ -1,14 +1,17 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import * as bcrypt from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
 
-import { createUserSession } from '@/models/auth'
-import { UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { analytics, EActivity } from '@/utils/tracker'
+import { createUserSession } from '../../models/index.js'
+import { UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailUser
+} from '../../utils/index.js'
 
 export async function authSessionCreate(
   req: Request,
@@ -75,12 +78,9 @@ export async function authSessionCreate(
       })
 
       // notify user that their account was temporarily locked
-      mailer.mailUser(
-        user,
-        'Account Temporarily Locked',
-        'auth-signin-user-locked',
-        { greetings: user.fullname ? `Hi ${user.fullname}` : `Hello` }
-      )
+      mailUser(user, 'Account Temporarily Locked', 'auth-signin-user-locked', {
+        greetings: user.fullname ? `Hi ${user.fullname}` : `Hello`
+      })
     }
 
     // otherwise increment number of failed login attempts

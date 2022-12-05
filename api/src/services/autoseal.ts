@@ -1,10 +1,8 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { batchSeal } from '@/models/batch'
-import { BatchModel } from '@/schemas/batch'
-import { SuiteModel } from '@/schemas/suite'
-import { TeamModel } from '@/schemas/team'
-import logger from '@/utils/logger'
+import { batchSeal } from '../models/index.js'
+import { BatchModel, SuiteModel, TeamModel } from '../schemas/index.js'
+import { logger } from '../utils/index.js'
 
 export async function autosealService(): Promise<void> {
   logger.silly('auto-seal service: running')

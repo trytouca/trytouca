@@ -1,15 +1,16 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { ElementLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { IElementDocument } from '@/schemas/element'
-import { MessageModel } from '@/schemas/message'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import {
+  IElementDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  MessageModel
+} from '../../schemas/index.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 /**
  * Lookup detailed information about an element.

@@ -1,13 +1,15 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { relay } from '@/models/relay'
-import { BatchModel } from '@/schemas/batch'
-import { MessageModel } from '@/schemas/message'
-import { IMetaDocument, MetaModel } from '@/schemas/meta'
-import { ReportModel } from '@/schemas/report'
-import { SessionModel } from '@/schemas/session'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
+import { relay } from '../models/index.js'
+import {
+  BatchModel,
+  IMetaDocument,
+  MessageModel,
+  MetaModel,
+  ReportModel,
+  SessionModel
+} from '../schemas/index.js'
+import { config, logger } from '../utils/index.js'
 
 type TelemetryPayload = {
   created_at: Date

@@ -2,14 +2,14 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { buildPdfReport } from '@/models/pdf'
-import { IBatchDocument } from '@/schemas/batch'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { analytics, EActivity } from '@/utils/tracker'
+import { buildPdfReport } from '../../models/index.js'
+import {
+  IBatchDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser
+} from '../../schemas/index.js'
+import { analytics, config, EActivity, logger } from '../../utils/index.js'
 
 export async function ctrlBatchExportPDF(
   req: Request,

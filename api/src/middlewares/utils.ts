@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 import {
@@ -8,9 +8,9 @@ import {
   validationResult
 } from 'express-validator'
 
-import logger from '@/utils/logger'
+import { logger } from '../utils/index.js'
 
-export const validationRules = new Map<string, ValidationChain>([
+export const validationMap = new Map<string, ValidationChain>([
   [
     'body',
     vbody('body')
@@ -125,7 +125,7 @@ async function validateOperation(
   return res.status(400).json({ errors })
 }
 
-export function inputs(rules: ValidationChain[]) {
+export function validationRules(rules: ValidationChain[]) {
   return (req: Request, res: Response, next: NextFunction) =>
     validateOperation(req, res, next, rules)
 }

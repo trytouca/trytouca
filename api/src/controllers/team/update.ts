@@ -1,16 +1,11 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
-import { isEqual } from 'lodash'
+import { isEqual } from 'lodash-es'
 
-import { findTeamUsersByRole } from '@/controllers/team/common'
-import { ITeam } from '@/schemas/team'
-import { TeamModel } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
+import { findTeamUsersByRole } from '../../models/index.js'
+import { ITeam, IUser, TeamModel } from '../../schemas/index.js'
+import { config, logger, mailUser, redisClient } from '../../utils/index.js'
 
 /**
  * @summary
@@ -82,7 +77,7 @@ export async function teamUpdate(
     // exclude the user who initiated the request
     .filter((member) => !member._id.equals(user._id))
     .map((member) => {
-      mailer.mailUser(member, 'Team ID Changed', 'team-slug-changed', {
+      mailUser(member, 'Team ID Changed', 'team-slug-changed', {
         subject: 'Team ID Changed',
         username: member.fullname || member.username,
         actorName: user.fullname,

@@ -1,15 +1,35 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { comparisonRemove } from '@/models/comparison'
-import { MessageInfo } from '@/models/messageInfo'
-import { messageQueue } from '@/queues'
-import { BatchModel } from '@/schemas/batch'
-import { ComparisonModel } from '@/schemas/comparison'
-import { ElementModel } from '@/schemas/element'
-import { MessageModel } from '@/schemas/message'
-import { MessageOverview, MessageTransformed } from '@/types/backendtypes'
-import logger from '@/utils/logger'
-import { objectStore } from '@/utils/store'
+import { Message } from '@touca/flatbuffers'
+
+import { messageQueue } from '../queues/index.js'
+import {
+  BatchModel,
+  ComparisonModel,
+  ElementModel,
+  MessageModel
+} from '../schemas/index.js'
+import { logger, objectStore } from '../utils/index.js'
+import { comparisonRemove } from './comparison.js'
+import { MessageInfo } from './messageInfo.js'
+
+export type MessageTransformed = {
+  metadata: Message['metadata']
+  metrics: {
+    key: string
+    value: string
+  }[]
+  results: {
+    key: string
+    value: string
+  }[]
+}
+
+export type MessageOverview = {
+  keysCount: number
+  metricsCount: number
+  metricsDuration: number
+}
 
 export async function messageRemove(msgInfo: MessageInfo): Promise<boolean> {
   const tuple = msgInfo.name()

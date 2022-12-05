@@ -1,11 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
-import { SessionModel } from '@/schemas/session'
-import { IUser, UserModel } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import { IUser, SessionModel, UserModel } from '../../schemas/index.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 export async function platformAccountSuspend(
   req: Request,

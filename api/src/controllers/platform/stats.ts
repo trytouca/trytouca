@@ -1,6 +1,6 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import df from '@sindresorhus/df'
+import { diskSpace } from '@sindresorhus/df'
 import type {
   EPlatformRole,
   ETeamRole,
@@ -8,15 +8,15 @@ import type {
 } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { BatchModel } from '@/schemas/batch'
-import { ComparisonModel } from '@/schemas/comparison'
-import { ElementModel } from '@/schemas/element'
-import { MessageModel } from '@/schemas/message'
-import { MetaModel } from '@/schemas/meta'
-import { UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import { redisClient } from '@/utils/redis'
+import {
+  BatchModel,
+  ComparisonModel,
+  ElementModel,
+  MessageModel,
+  MetaModel,
+  UserModel
+} from '../../schemas/index.js'
+import { config, logger, redisClient } from '../../utils/index.js'
 
 export async function platformStats(
   req: Request,
@@ -34,7 +34,7 @@ export async function platformStats(
     return res.status(200).json(cachedResponse)
   }
 
-  const space = (await df())
+  const space = (await diskSpace())
     .filter(
       (v) =>
         v.mountpoint === '/' ||

@@ -3,13 +3,15 @@
 import type { ETeamRole } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { findTeamRoleOfUser } from '@/controllers/team/common'
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { findTeamRoleOfUser } from '../../models/index.js'
+import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  EActivity,
+  logger,
+  mailUser,
+  redisClient
+} from '../../utils/index.js'
 
 /**
  * @summary
@@ -98,7 +100,7 @@ export async function teamMemberRemove(
   // send email to user
 
   const subject = `You were removed from team ${team.name}`
-  mailer.mailUser(member, subject, 'team-member-remove', {
+  mailUser(member, subject, 'team-member-remove', {
     adminEmail: user.email,
     adminName: user.fullname,
     subject,

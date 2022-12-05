@@ -1,11 +1,9 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { NextFunction, Request, Response } from 'express'
 
-import { BatchModel } from '@/schemas/batch'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import logger from '@/utils/logger'
+import { BatchModel, ISuiteDocument, ITeam } from '../schemas/index.js'
+import { logger } from '../utils/index.js'
 
 /**
  * @summary

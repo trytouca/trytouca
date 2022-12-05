@@ -2,14 +2,15 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { batchRemove } from '@/models/batch'
-import { IBatchDocument } from '@/schemas/batch'
-import { MessageModel } from '@/schemas/message'
-import { ISuiteDocument } from '@/schemas/suite'
-import { ITeam } from '@/schemas/team'
-import { IUser } from '@/schemas/user'
-import logger from '@/utils/logger'
-import { analytics, EActivity } from '@/utils/tracker'
+import { batchRemove } from '../../models/index.js'
+import {
+  IBatchDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  MessageModel
+} from '../../schemas/index.js'
+import { analytics, EActivity, logger } from '../../utils/index.js'
 
 /**
  * @summary

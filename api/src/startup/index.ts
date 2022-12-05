@@ -1,18 +1,28 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import fs from 'fs'
-import { pick } from 'lodash'
+import { existsSync } from 'node:fs'
 
-import { ComparisonJob } from '@/models/comparison'
-import { wslFindByUname, wslGetSuperUser } from '@/models/user'
-import { comparisonQueue, messageQueue } from '@/queues'
-import { ComparisonModel } from '@/schemas/comparison'
-import { MessageModel } from '@/schemas/message'
-import { MetaModel } from '@/schemas/meta'
-import { UserModel } from '@/schemas/user'
-import { config, configMgr } from '@/utils/config'
-import logger from '@/utils/logger'
-import { objectStore } from '@/utils/store'
+import { pick } from 'lodash-es'
+
+import {
+  ComparisonJob,
+  wslFindByUname,
+  wslGetSuperUser
+} from '../models/index.js'
+import { comparisonQueue, messageQueue } from '../queues/index.js'
+import {
+  ComparisonModel,
+  MessageModel,
+  MetaModel,
+  UserModel
+} from '../schemas/index.js'
+import {
+  config,
+  hasMailTransport,
+  hasMailTransportEnvironmentVariables,
+  logger,
+  objectStore
+} from '../utils/index.js'
 
 /**
  * Registers primary user during server startup.
@@ -73,7 +83,7 @@ export async function setupAnonymousUser() {
 // then, for an intuitive user experience, we apply the environment variables
 // to the database so that they always take precedence.
 async function applyMailTransportEnvironmentVariables() {
-  if (!configMgr.hasMailTransportEnvironmentVariables()) {
+  if (!hasMailTransportEnvironmentVariables()) {
     return
   }
   const mail = pick(config.mail, ['host', 'pass', 'port', 'user'])
@@ -110,10 +120,10 @@ export async function statusReport() {
   if (!config.samples.enabled) {
     logger.warn('sample data submission is disabled')
   }
-  if (!configMgr.hasMailTransport()) {
+  if (!hasMailTransport()) {
     logger.warn('mail server not configured')
   }
-  if (!fs.existsSync(config.samples.directory)) {
+  if (!existsSync(config.samples.directory)) {
     logger.warn('samples directory not found at %s', config.samples.directory)
   }
   return true

@@ -2,13 +2,15 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ITeam, TeamModel } from '@/schemas/team'
-import { IUser, UserModel } from '@/schemas/user'
-import { config } from '@/utils/config'
-import logger from '@/utils/logger'
-import * as mailer from '@/utils/mailer'
-import { redisClient } from '@/utils/redis'
-import { analytics, EActivity } from '@/utils/tracker'
+import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailUser,
+  redisClient
+} from '../../utils/index.js'
 
 export async function teamJoinAccept(
   req: Request,
@@ -69,7 +71,7 @@ export async function teamJoinAccept(
   // send email to user.
 
   const subject = `Welcome to Team ${team.name}!`
-  mailer.mailUser(account, subject, 'team-join-accept', {
+  mailUser(account, subject, 'team-join-accept', {
     subject,
     adminName: user?.fullname || user?.username,
     teamName: team.name,
