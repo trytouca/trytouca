@@ -50,6 +50,7 @@ COPY --from=builder_api /opt/touca/api/dist             /opt/touca/api/dist
 COPY --from=builder_api /opt/touca/api/env              /opt/touca/api/env
 COPY --from=builder_api /opt/touca/api/samples          /opt/touca/api/samples
 COPY --from=builder_api /opt/touca/api/node_modules     /opt/touca/api/node_modules
+COPY --from=builder_api /opt/touca/api/package.json     /opt/touca/api/package.json
 COPY --from=builder_app /opt/touca/app/dist             /opt/touca/app/dist
 
 CMD ["node", "/opt/touca/api/dist/server.js"]

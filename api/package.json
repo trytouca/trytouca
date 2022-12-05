@@ -7,7 +7,6 @@
   "repository": "https://github.com/trytouca/touca.git",
   "bugs": "https://github.com/trytouca/touca/issues",
   "homepage": "https://touca.io",
-  "type": "module",
   "keywords": [
     "snapshot-testing",
     "test-automation",
@@ -18,6 +17,7 @@
     "name": "Pejman Ghorbanzade",
     "email": "pejman@touca.io"
   },
+  "type": "module",
   "exports": "./dist/server.js",
   "engines": {
     "node": ">=14.16",
@@ -27,14 +27,14 @@
     "build": "run-p build:mails build:ts",
     "build:mails": "shx mkdir -p dist/templates && mjml templates/*.mjml --config.beautify false --config.minify true --output ./dist/templates/ && shx cp -r templates/reports dist/templates",
     "build:ts": "tsc",
-    "clean": "shx rm -rf dist local",
+    "clean": "shx rm -rf dist",
     "dev": "nodemon ./src/server.ts",
     "dev:debug": "nodemon --inspect ./src/server.ts",
     "docs": "run-p docs:external docs:internal",
     "docs:external": "shx mkdir -p ../local/api/docs/external && redoc-cli build ../packages/api-schema/src/schema.yaml --options.hideDownloadButton=true --output=../local/api/docs/external/index.html --title=\"Touca Server API Reference\"",
     "docs:internal": "typedoc",
     "lint": "eslint src test --ext .ts",
-    "start": "node .",
+    "start": "node dist/server.js",
     "test": "cross-env ENV_FILE=test vitest run --coverage --reporter verbose"
   },
   "dependencies": {
