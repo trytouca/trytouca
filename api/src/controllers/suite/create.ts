@@ -3,10 +3,8 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { suiteCreate } from '../../models/suite.js'
-import { ITeam } from '../../schemas/team.js'
-import { IUser } from '../../schemas/user.js'
-import logger from '../../utils/logger.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import { ITeam, IUser } from '../../schemas/index.js'
+import { analytics, EActivity, logger } from '../../utils/index.js'
 
 /**
  * Register a new suite.

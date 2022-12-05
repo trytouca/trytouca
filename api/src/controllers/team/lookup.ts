@@ -4,10 +4,8 @@ import type { TeamLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { findTeamRoleOfUser } from '../../controllers/team/common.js'
-import { ITeam, TeamModel } from '../../schemas/team.js'
-import { IUser } from '../../schemas/user.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
+import { ITeam, IUser, TeamModel } from '../../schemas/index.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 /**
  * Lookup detailed information about a team.

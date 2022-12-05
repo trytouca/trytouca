@@ -3,8 +3,8 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { processBinaryContent } from '../../models/submit.js'
-import { IUser } from '../../schemas/user.js'
-import logger from '../../utils/logger.js'
+import { IUser } from '../../schemas/index.js'
+import { logger } from '../../utils/index.js'
 
 /**
  * Handles test results submitted by endpoints. We are only supporting

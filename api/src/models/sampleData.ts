@@ -3,13 +3,14 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { basename, join, parse } from 'node:path'
 
-import { BatchModel } from '../schemas/batch.js'
-import { SuiteModel } from '../schemas/suite.js'
-import { ITeam, TeamModel } from '../schemas/team.js'
-import { UserModel } from '../schemas/user.js'
-import { config } from '../utils/config.js'
-import logger from '../utils/logger.js'
-import { redisClient } from '../utils/redis.js'
+import {
+  BatchModel,
+  ITeam,
+  SuiteModel,
+  TeamModel,
+  UserModel
+} from '../schemas/index.js'
+import { config, logger, redisClient } from '../utils/index.js'
 import { batchPromote, batchSeal } from './batch.js'
 import { processBinaryContent } from './submit.js'
 import { suiteCreate } from './suite.js'

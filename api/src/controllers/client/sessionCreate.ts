@@ -2,11 +2,8 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { SessionModel } from '../../schemas/session.js'
-import { UserModel } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import * as jwt from '../../utils/jwt.js'
-import logger from '../../utils/logger.js'
+import { SessionModel, UserModel } from '../../schemas/index.js'
+import { config, issue, logger } from '../../utils/index.js'
 
 export async function clientSessionCreate(
   req: Request,
@@ -70,7 +67,7 @@ export async function clientSessionCreate(
   })
   if (prevSession) {
     logger.debug('%s: reusing previously issued token', user.username)
-    return res.status(200).json({ token: jwt.issue(prevSession) })
+    return res.status(200).json({ token: issue(prevSession) })
   }
 
   // in the more likely case, when the user had no prior active session
@@ -94,7 +91,7 @@ export async function clientSessionCreate(
 
   // generate a JSON web token
 
-  const token = jwt.issue(session)
+  const token = issue(session)
   logger.info('%s: issued auth token', user.username)
 
   // return session token to the user

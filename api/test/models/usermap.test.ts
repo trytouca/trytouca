@@ -4,7 +4,7 @@ import { Types } from 'mongoose'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 
 import { UserMap } from '../../src/models/usermap'
-import { UserModel } from '../../src/schemas/user'
+import { UserModel } from '../../src/schemas/index'
 
 describe('model/usermap', () => {
   const idA = new Types.ObjectId()

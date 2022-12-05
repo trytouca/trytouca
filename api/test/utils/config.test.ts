@@ -2,7 +2,7 @@
 
 import { describe, expect, test } from 'vitest'
 
-import { config, configMgr } from '../../src/utils/config'
+import { config, configMgr } from '../../src/utils/index'
 
 describe('utils/config', () => {
   test('NODE_ENV is test for unit tests', () => {

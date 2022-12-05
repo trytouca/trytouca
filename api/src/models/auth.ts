@@ -4,13 +4,17 @@ import type { EPlatformRole } from '@touca/api-schema'
 import bcrypt from 'bcryptjs'
 import { once } from 'lodash-es'
 
-import { SessionModel } from '../schemas/session.js'
-import { IUserDocument, UserModel } from '../schemas/user.js'
-import { config } from '../utils/config.js'
-import * as jwt from '../utils/jwt.js'
-import logger from '../utils/logger.js'
-import * as mailer from '../utils/mailer.js'
-import { analytics, EActivity, TrackerInfo } from '../utils/tracker.js'
+import { IUserDocument, SessionModel, UserModel } from '../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  issue,
+  logger,
+  mailAdmins,
+  mailUser,
+  TrackerInfo
+} from '../utils/index.js'
 import { addSampleData } from './sampleData.js'
 import { generateTeamSlug, teamCreate } from './team.js'
 
@@ -98,11 +102,11 @@ export async function createUserAccount(
         previewMessage: 'Here is your email verification link.',
         verificationLink: `${config.webapp.root}/account/activate?key=${activationKey}`
       }
-  mailer.mailUser(newUser, 'Welcome to Touca 👋🏼', 'auth-signup-user', mailData)
+  mailUser(newUser, 'Welcome to Touca 👋🏼', 'auth-signup-user', mailData)
 
   // notify platform admins that a new user account was verified.
 
-  mailer.mailAdmins({
+  mailAdmins({
     title: 'New Account Created',
     body: `New account created for <b>${username}</b> (<a href="mailto:${payload.email}">${payload.email}</a>).`
   })
@@ -163,7 +167,7 @@ export async function createUserSession(
 
   if (prevSession) {
     logger.debug('%s: reusing previously issued token', user.username)
-    return { token: jwt.issue(prevSession), expiresAt: prevSession.expiresAt }
+    return { token: issue(prevSession), expiresAt: prevSession.expiresAt }
   }
 
   // in the more likely case, when the user had no prior active session
@@ -191,7 +195,7 @@ export async function createUserSession(
 
   // generate a JSON web token
 
-  const token = jwt.issue(session)
+  const token = issue(session)
   logger.info('%s: issued auth token', user.username)
 
   return { token, expiresAt }

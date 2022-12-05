@@ -2,9 +2,8 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { SuiteModel } from '../schemas/suite.js'
-import { ITeam } from '../schemas/team.js'
-import logger from '../utils/logger.js'
+import { ITeam, SuiteModel } from '../schemas/index.js'
+import { logger } from '../utils/index.js'
 
 /**
  * @summary

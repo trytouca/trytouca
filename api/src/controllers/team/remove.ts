@@ -3,14 +3,16 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { suiteRemove } from '../../models/suite.js'
-import { BatchModel } from '../../schemas/batch.js'
-import { MessageModel } from '../../schemas/message.js'
-import { SuiteModel } from '../../schemas/suite.js'
-import { ITeam, TeamModel } from '../../schemas/team.js'
-import { IUser, UserModel } from '../../schemas/user.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import {
+  BatchModel,
+  ITeam,
+  IUser,
+  MessageModel,
+  SuiteModel,
+  TeamModel,
+  UserModel
+} from '../../schemas/index.js'
+import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
 
 /**
  * Removes a given team and all data associated with it.

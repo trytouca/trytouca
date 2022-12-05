@@ -4,11 +4,8 @@ import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash-es'
 
 import { wslFindByRole } from '../../models/user.js'
-import { NodeModel } from '../../schemas/node.js'
-import { IUser } from '../../schemas/user.js'
-import logger from '../../utils/logger.js'
-import { mailUser } from '../../utils/mailer.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import { IUser, NodeModel } from '../../schemas/index.js'
+import { analytics, EActivity, logger, mailUser } from '../../utils/index.js'
 
 export async function installHandle(
   req: Request,

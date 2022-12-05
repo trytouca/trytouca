@@ -7,7 +7,7 @@ import dotenv from 'dotenv'
 import { pick } from 'lodash-es'
 import mongoose from 'mongoose'
 
-import { MetaModel } from '../schemas/meta.js'
+import { MetaModel } from '../schemas/index.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 

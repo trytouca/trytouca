@@ -4,13 +4,14 @@ import type { BatchListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { compareBatchOverview } from '../../models/comparison.js'
-import { BatchModel } from '../../schemas/batch.js'
-import { ISuiteDocument } from '../../schemas/suite.js'
-import { ITeam } from '../../schemas/team.js'
-import { IUser } from '../../schemas/user.js'
+import {
+  BatchModel,
+  ISuiteDocument,
+  ITeam,
+  IUser
+} from '../../schemas/index.js'
 import type { BatchItemQueryOutput } from '../../types/backendtypes.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {
   const queryOutput: BatchItemQueryOutput[] = await BatchModel.aggregate([

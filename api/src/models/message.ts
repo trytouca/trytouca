@@ -1,13 +1,14 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { messageQueue } from '../queues/index.js'
-import { BatchModel } from '../schemas/batch.js'
-import { ComparisonModel } from '../schemas/comparison.js'
-import { ElementModel } from '../schemas/element.js'
-import { MessageModel } from '../schemas/message.js'
+import {
+  BatchModel,
+  ComparisonModel,
+  ElementModel,
+  MessageModel
+} from '../schemas/index.js'
 import { MessageOverview, MessageTransformed } from '../types/backendtypes.js'
-import logger from '../utils/logger.js'
-import { objectStore } from '../utils/store.js'
+import { logger, objectStore } from '../utils/index.js'
 import { comparisonRemove } from './comparison.js'
 import { MessageInfo } from './messageInfo.js'
 

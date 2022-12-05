@@ -3,13 +3,13 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { buildPdfReport } from '../../models/pdf.js'
-import { IBatchDocument } from '../../schemas/batch.js'
-import { ISuiteDocument } from '../../schemas/suite.js'
-import { ITeam } from '../../schemas/team.js'
-import { IUser } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import {
+  IBatchDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser
+} from '../../schemas/index.js'
+import { analytics, config, EActivity, logger } from '../../utils/index.js'
 
 export async function ctrlBatchExportPDF(
   req: Request,

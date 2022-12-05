@@ -6,8 +6,7 @@ import { deserialize, Message } from '@touca/flatbuffers'
 import { MessageJob } from '../models/comparison.js'
 import { messageProcess } from '../models/message.js'
 import { MessageOverview, MessageTransformed } from '../types/backendtypes.js'
-import { JobQueue, PerformanceMarks } from '../utils/queue.js'
-import { objectStore } from '../utils/store.js'
+import { JobQueue, objectStore, PerformanceMarks } from '../utils/index.js'
 
 function buildMessageOverview(message: Message): MessageOverview {
   return {

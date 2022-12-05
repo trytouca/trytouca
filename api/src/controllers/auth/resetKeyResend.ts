@@ -2,11 +2,14 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { UserModel } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import * as mailer from '../../utils/mailer.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import { UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailUser
+} from '../../utils/index.js'
 
 export async function authResetKeyResend(
   req: Request,
@@ -53,7 +56,7 @@ export async function authResetKeyResend(
 
   // send email to user with their reset key
 
-  mailer.mailUser(user, 'Password Reset', 'auth-password-start', {
+  mailUser(user, 'Password Reset', 'auth-password-start', {
     greetings: user.fullname ? `Hi ${user.fullname}` : `Hello`,
     expiresIn: config.auth.maxResetKeyLifetime.toString(),
     resetLink: `${config.webapp.root}/account/reset?key=${user.resetKey}`

@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 import { fileTypeFromBuffer } from 'file-type'
 
 import { Artifact } from '../../types/backendtypes.js'
-import { objectStore } from '../../utils/store.js'
+import { objectStore } from '../../utils/index.js'
 
 /**
  * @summary

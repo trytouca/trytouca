@@ -3,17 +3,19 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { compareCommonElement } from '../../models/comparison.js'
-import { BatchModel, IBatchDocument } from '../../schemas/batch.js'
-import { ElementModel, IElementDocument } from '../../schemas/element.js'
-import { MessageModel } from '../../schemas/message.js'
-import { ISuiteDocument, SuiteModel } from '../../schemas/suite.js'
-import { ITeam } from '../../schemas/team.js'
-import { IUser } from '../../schemas/user.js'
+import {
+  BatchModel,
+  ElementModel,
+  IBatchDocument,
+  IElementDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  MessageModel,
+  SuiteModel
+} from '../../schemas/index.js'
 import type { BackendBatchComparisonItemCommon } from '../../types/backendtypes.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
-import { objectStore } from '../../utils/store.js'
+import { config, logger, objectStore, redisClient } from '../../utils/index.js'
 
 type ICompareParamsElement = {
   dstSuite?: ISuiteDocument

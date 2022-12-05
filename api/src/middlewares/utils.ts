@@ -8,7 +8,7 @@ import {
   validationResult
 } from 'express-validator'
 
-import logger from '../utils/logger.js'
+import { logger } from '../utils/index.js'
 
 export const validationMap = new Map<string, ValidationChain>([
   [

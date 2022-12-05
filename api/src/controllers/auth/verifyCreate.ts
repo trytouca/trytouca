@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { createUserAccount } from '../../models/auth.js'
-import { UserModel } from '../../schemas/user.js'
+import { UserModel } from '../../schemas/index.js'
 
 export async function authVerifyCreate(
   req: Request,

@@ -6,9 +6,8 @@ import { join } from 'node:path'
 import { InvokeCommand, Lambda } from '@aws-sdk/client-lambda'
 import mustache from 'mustache'
 
-import { BatchModel, IBatchDocument } from '../schemas/batch.js'
-import { ISuiteDocument } from '../schemas/suite.js'
-import { config } from '../utils/config.js'
+import { BatchModel, IBatchDocument, ISuiteDocument } from '../schemas/index.js'
+import { config } from '../utils/index.js'
 import { compareBatch } from './comparison.js'
 import { UserMap } from './usermap.js'
 

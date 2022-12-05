@@ -5,13 +5,15 @@ import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash-es'
 
 import { compareBatchOverview } from '../../models/comparison.js'
-import { BatchModel } from '../../schemas/batch.js'
-import { ISuiteDocument } from '../../schemas/suite.js'
-import { ITeam } from '../../schemas/team.js'
-import { IUser, UserModel } from '../../schemas/user.js'
+import {
+  BatchModel,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  UserModel
+} from '../../schemas/index.js'
 import type { BatchItemQueryOutput } from '../../types/backendtypes.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 /**
  * Provides information about a given suite.

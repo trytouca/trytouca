@@ -3,12 +3,15 @@
 import bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
 
-import { UserModel } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import { notifyPlatformAdmins } from '../../utils/inbox.js'
-import logger from '../../utils/logger.js'
-import * as mailer from '../../utils/mailer.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import { UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailUser,
+  notifyPlatformAdmins
+} from '../../utils/index.js'
 
 export async function authResetKeyApply(
   req: Request,
@@ -53,15 +56,10 @@ export async function authResetKeyApply(
 
   // notify user that their account password was reset
 
-  mailer.mailUser(
-    user,
-    'Password Reset Confirmation',
-    'auth-password-confirm',
-    {
-      greetings: user.fullname ? `Hi ${user.fullname}` : `Hi there`,
-      loginLink: `${config.webapp.root}/account/signin`
-    }
-  )
+  mailUser(user, 'Password Reset Confirmation', 'auth-password-confirm', {
+    greetings: user.fullname ? `Hi ${user.fullname}` : `Hi there`,
+    loginLink: `${config.webapp.root}/account/signin`
+  })
 
   notifyPlatformAdmins('%s reset their password.', user.username)
   analytics.add_activity(EActivity.AccountPasswordReset, user)

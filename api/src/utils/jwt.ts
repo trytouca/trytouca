@@ -2,9 +2,8 @@
 
 import jws from 'jws'
 
-import { ISessionDocument } from '../schemas/session.js'
-import { config } from '../utils/config.js'
-import logger from '../utils/logger.js'
+import { ISessionDocument } from '../schemas/index.js'
+import { config, logger } from '../utils/index.js'
 
 type TokenPayload = {
   exp: number

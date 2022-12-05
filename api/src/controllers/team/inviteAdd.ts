@@ -2,13 +2,15 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ITeam, TeamModel } from '../../schemas/team.js'
-import { IUser, UserModel } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import * as mailer from '../../utils/mailer.js'
-import { redisClient } from '../../utils/redis.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailUser,
+  redisClient
+} from '../../utils/index.js'
 
 /**
  * @summary
@@ -130,7 +132,7 @@ export async function teamInviteAdd(
     platformRole: null,
     username: askedEmail
   }
-  mailer.mailUser(recipient, subject, 'team-invite-new', {
+  mailUser(recipient, subject, 'team-invite-new', {
     greetings: isRegistered?.fullname ? `Hi ${isRegistered.fullname}` : `Hello`,
     hasIntro: !isRegistered,
     joinLink: `${config.webapp.root}?redirect=join`,

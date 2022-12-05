@@ -4,7 +4,7 @@ import { Router } from 'express'
 
 import { inboxList, inboxSeen } from '../controllers/inbox/index.js'
 import { isAuthenticated } from '../middlewares/index.js'
-import { promisable } from '../utils/routing.js'
+import { promisable } from '../utils/index.js'
 
 const router = Router()
 

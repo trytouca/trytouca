@@ -2,11 +2,8 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { ITeam, TeamModel } from '../../schemas/team.js'
-import { IUser, UserModel } from '../../schemas/user.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
+import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
 
 /**
  * @summary

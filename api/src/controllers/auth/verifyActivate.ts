@@ -3,10 +3,8 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { createUserSession } from '../../models/auth.js'
-import { UserModel } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import { UserModel } from '../../schemas/index.js'
+import { analytics, config, EActivity, logger } from '../../utils/index.js'
 
 export async function authVerifyActivate(
   req: Request,

@@ -20,8 +20,7 @@ import {
   validationMap,
   validationRules
 } from '../middlewares/index.js'
-import { handleEvents } from '../utils/events.js'
-import { promisable } from '../utils/routing.js'
+import { handleEvents, promisable } from '../utils/index.js'
 
 const router = express.Router()
 

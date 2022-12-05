@@ -2,13 +2,16 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { IBatchDocument } from '../schemas/batch.js'
-import { ElementModel, IElementDocument } from '../schemas/element.js'
-import { MessageModel } from '../schemas/message.js'
-import { ISuiteDocument } from '../schemas/suite.js'
-import { ITeamDocument } from '../schemas/team.js'
+import {
+  ElementModel,
+  IBatchDocument,
+  IElementDocument,
+  ISuiteDocument,
+  ITeamDocument,
+  MessageModel
+} from '../schemas/index.js'
 import { Artifact } from '../types/backendtypes.js'
-import logger from '../utils/logger.js'
+import { logger } from '../utils/index.js'
 
 /**
  * @summary

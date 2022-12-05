@@ -8,13 +8,15 @@ import {
   extractCommentType,
   notifySubscribers
 } from '../../models/comment.js'
-import { CommentModel } from '../../schemas/comment.js'
-import { IUser } from '../../schemas/user.js'
+import { CommentModel, IUser } from '../../schemas/index.js'
 import { ECommentType } from '../../types/backendtypes.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  redisClient
+} from '../../utils/index.js'
 
 export async function ctrlCommentCreate(
   req: Request,

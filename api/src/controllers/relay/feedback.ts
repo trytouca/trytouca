@@ -4,8 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { relay } from '../../models/relay.js'
 import { wslFindByRole } from '../../models/user.js'
-import logger from '../../utils/logger.js'
-import * as mailer from '../../utils/mailer.js'
+import { logger, mailUser } from '../../utils/index.js'
 
 export async function feedbackSubmit(
   req: Request,
@@ -33,7 +32,7 @@ export async function feedbackHandle(
     cname: string
   }
   const owners = await wslFindByRole('owner')
-  await mailer.mailUser(owners[0], 'New User Feedback', 'user-feedback', {
+  await mailUser(owners[0], 'New User Feedback', 'user-feedback', {
     body: content.body,
     name: content.name,
     page: content.page,

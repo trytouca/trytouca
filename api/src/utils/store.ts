@@ -14,7 +14,7 @@ import {
 } from '@aws-sdk/client-s3'
 
 import { config } from './config.js'
-import logger from './logger.js'
+import { logger } from './logger.js'
 
 abstract class ObjectStore {
   abstract makeConnection(): Promise<boolean>

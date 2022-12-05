@@ -2,13 +2,16 @@
 
 import { Response } from 'express'
 
-import { IBatchDocument } from '../schemas/batch.js'
-import { IElementDocument } from '../schemas/element.js'
-import { ISuiteDocument, SuiteModel } from '../schemas/suite.js'
-import { ITeam } from '../schemas/team.js'
-import { IUser } from '../schemas/user.js'
+import {
+  IBatchDocument,
+  IElementDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  SuiteModel
+} from '../schemas/index.js'
 import { ECommentType } from '../types/backendtypes.js'
-import { mailUser } from '../utils/mailer.js'
+import { mailUser } from '../utils/index.js'
 
 export type CommentInputs = {
   user: IUser

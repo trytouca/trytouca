@@ -2,12 +2,15 @@
 
 import { batchRemove } from '../models/batch.js'
 import { comparisonRemove } from '../models/comparison.js'
-import { BatchModel, IBatchDocument } from '../schemas/batch.js'
-import { ComparisonModel } from '../schemas/comparison.js'
-import { MessageModel } from '../schemas/message.js'
-import { ISuiteDocument, SuiteModel } from '../schemas/suite.js'
-import { config } from '../utils/config.js'
-import logger from '../utils/logger.js'
+import {
+  BatchModel,
+  ComparisonModel,
+  IBatchDocument,
+  ISuiteDocument,
+  MessageModel,
+  SuiteModel
+} from '../schemas/index.js'
+import { config, logger } from '../utils/index.js'
 
 async function isBatchDueForRemoval(batch: IBatchDocument): Promise<boolean> {
   const suite = await SuiteModel.findById(batch.suite)

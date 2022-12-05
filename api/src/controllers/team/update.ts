@@ -4,13 +4,8 @@ import { NextFunction, Request, Response } from 'express'
 import { isEqual } from 'lodash-es'
 
 import { findTeamUsersByRole } from '../../controllers/team/common.js'
-import { ITeam } from '../../schemas/team.js'
-import { TeamModel } from '../../schemas/team.js'
-import { IUser } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import * as mailer from '../../utils/mailer.js'
-import { redisClient } from '../../utils/redis.js'
+import { ITeam, IUser, TeamModel } from '../../schemas/index.js'
+import { config, logger, mailUser, redisClient } from '../../utils/index.js'
 
 /**
  * @summary
@@ -82,7 +77,7 @@ export async function teamUpdate(
     // exclude the user who initiated the request
     .filter((member) => !member._id.equals(user._id))
     .map((member) => {
-      mailer.mailUser(member, 'Team ID Changed', 'team-slug-changed', {
+      mailUser(member, 'Team ID Changed', 'team-slug-changed', {
         subject: 'Team ID Changed',
         username: member.fullname || member.username,
         actorName: user.fullname,

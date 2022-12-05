@@ -5,16 +5,18 @@ import { NextFunction, Request, Response } from 'express'
 import { Types } from 'mongoose'
 
 import { compareBatchOverview } from '../../models/comparison.js'
-import { BatchModel } from '../../schemas/batch.js'
-import { ISuiteDocument, SuiteModel } from '../../schemas/suite.js'
-import { ITeam } from '../../schemas/team.js'
-import { IUser } from '../../schemas/user.js'
+import {
+  BatchModel,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  SuiteModel
+} from '../../schemas/index.js'
 import type {
   BatchItemQueryOutput,
   SuiteItemQueryOutput
 } from '../../types/backendtypes.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 async function suiteList(team: ITeam): Promise<SuiteListResponse> {
   // find list of suites that belong to this team, sorted in descending

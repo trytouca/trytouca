@@ -21,7 +21,7 @@ import {
   isPlatformAdmin,
   validationRules
 } from '../middlewares/index.js'
-import { promisable } from '../utils/routing.js'
+import { promisable } from '../utils/index.js'
 
 const router = express.Router()
 

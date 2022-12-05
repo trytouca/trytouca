@@ -3,8 +3,7 @@
 import { format as utilFormat } from 'util'
 
 import { wslFindByRole } from '../models/user.js'
-import { NotificationModel } from '../schemas/notification.js'
-import { IUser } from '../schemas/user.js'
+import { IUser, NotificationModel } from '../schemas/index.js'
 
 async function notifyUser(recipient: IUser, message: string) {
   await NotificationModel.create({

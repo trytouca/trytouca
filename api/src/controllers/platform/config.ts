@@ -4,10 +4,8 @@ import type { PlatformConfig } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
 import { findPlatformRole } from '../../middlewares/index.js'
-import { MetaModel } from '../../schemas/meta.js'
-import { configMgr } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
+import { MetaModel } from '../../schemas/index.js'
+import { configMgr, logger, redisClient } from '../../utils/index.js'
 
 export async function platformConfig(
   req: Request,

@@ -8,15 +8,15 @@ import type {
 } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { BatchModel } from '../../schemas/batch.js'
-import { ComparisonModel } from '../../schemas/comparison.js'
-import { ElementModel } from '../../schemas/element.js'
-import { MessageModel } from '../../schemas/message.js'
-import { MetaModel } from '../../schemas/meta.js'
-import { UserModel } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
+import {
+  BatchModel,
+  ComparisonModel,
+  ElementModel,
+  MessageModel,
+  MetaModel,
+  UserModel
+} from '../../schemas/index.js'
+import { config, logger, redisClient } from '../../utils/index.js'
 
 export async function platformStats(
   req: Request,

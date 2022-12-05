@@ -2,10 +2,8 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { BatchModel } from '../schemas/batch.js'
-import { ISuiteDocument } from '../schemas/suite.js'
-import { ITeam } from '../schemas/team.js'
-import logger from '../utils/logger.js'
+import { BatchModel, ISuiteDocument, ITeam } from '../schemas/index.js'
+import { logger } from '../utils/index.js'
 
 /**
  * @summary

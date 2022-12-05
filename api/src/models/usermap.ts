@@ -3,7 +3,7 @@
 import type { Userinfo } from '@touca/api-schema'
 import { Types } from 'mongoose'
 
-import { UserModel } from '../schemas/user.js'
+import { UserModel } from '../schemas/index.js'
 
 export class UserMap {
   private data: (Userinfo & { _id: Types.ObjectId })[] = []

@@ -3,9 +3,8 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { relay } from '../../models/relay.js'
-import { MetaModel } from '../../schemas/meta.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
+import { MetaModel } from '../../schemas/index.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 export async function platformInstall(
   req: Request,

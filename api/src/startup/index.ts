@@ -7,13 +7,13 @@ import { pick } from 'lodash-es'
 import { ComparisonJob } from '../models/comparison.js'
 import { wslFindByUname, wslGetSuperUser } from '../models/user.js'
 import { comparisonQueue, messageQueue } from '../queues/index.js'
-import { ComparisonModel } from '../schemas/comparison.js'
-import { MessageModel } from '../schemas/message.js'
-import { MetaModel } from '../schemas/meta.js'
-import { UserModel } from '../schemas/user.js'
-import { config, configMgr } from '../utils/config.js'
-import logger from '../utils/logger.js'
-import { objectStore } from '../utils/store.js'
+import {
+  ComparisonModel,
+  MessageModel,
+  MetaModel,
+  UserModel
+} from '../schemas/index.js'
+import { config, configMgr, logger, objectStore } from '../utils/index.js'
 
 /**
  * Registers primary user during server startup.

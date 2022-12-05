@@ -7,14 +7,12 @@ import {
   extractCommentTuple,
   extractCommentType
 } from '../../models/comment.js'
-import { CommentModel } from '../../schemas/comment.js'
-import { IUser } from '../../schemas/user.js'
+import { CommentModel, IUser } from '../../schemas/index.js'
 import {
   CommentListQueryOutput,
   ECommentType
 } from '../../types/backendtypes.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 async function commentList(res: Response): Promise<CommentListResponse> {
   const type = extractCommentType(res)

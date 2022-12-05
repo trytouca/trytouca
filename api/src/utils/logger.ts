@@ -1,50 +1,42 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { existsSync, mkdirSync } from 'node:fs'
-import { dirname, join, normalize } from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { join, normalize } from 'node:path'
 
-import logger from 'winston'
+import { createLogger, format, transports } from 'winston'
 
-import { config } from '../utils/config.js'
+import { config } from '../utils/index.js'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+// if (config.logging.directory) {
+//   const logDir = normalize(`${__dirname}/../../../${config.logging.directory}`)
+//   if (!existsSync(logDir)) {
+//     mkdirSync(logDir, { recursive: true })
+//   }
+//   const fileTransport = new transports.File({
+//     filename: join(logDir, 'touca.log'),
+//     format: format.combine(
+//       format.timestamp({
+//         format: 'YYYY-MM-DD HH:mm:ss'
+//       }),
+//       format.logstash()
+//     ),
+//     handleExceptions: true,
+//     level: config.logging.level,
+//     maxFiles: 10,
+//     maxsize: 1000000
+//   })
+// }
 
-const transports: logger.transport[] = [
-  new logger.transports.Console({
-    format: config.isCloudHosted
-      ? logger.format.json()
-      : logger.format.combine(logger.format.colorize(), logger.format.simple()),
-    handleExceptions: true,
-    level: config.logging.level
-  })
-]
-
-if (config.logging.directory) {
-  const logDir = normalize(`${__dirname}/../../../${config.logging.directory}`)
-  if (!existsSync(logDir)) {
-    mkdirSync(logDir, { recursive: true })
-  }
-  const fileTransport = new logger.transports.File({
-    filename: join(logDir, 'touca.log'),
-    format: logger.format.combine(
-      logger.format.timestamp({
-        format: 'YYYY-MM-DD HH:mm:ss'
-      }),
-      logger.format.logstash()
-    ),
-    handleExceptions: true,
-    level: config.logging.level,
-    maxFiles: 10,
-    maxsize: 1000000
-  })
-  transports.push(fileTransport)
-}
-
-logger.configure({
+export const logger = createLogger({
   exitOnError: false,
-  format: logger.format.splat(),
-  transports
+  format: format.splat(),
+  transports: [
+    new transports.Console({
+      format: config.isCloudHosted
+        ? format.json()
+        : format.combine(format.colorize(), format.simple()),
+      handleExceptions: true,
+      level: config.logging.level
+    })
+  ]
 })
-
-export { logger as default }

@@ -3,13 +3,14 @@
 import type { EPlatformRole } from '@touca/api-schema'
 import cuid from 'cuid'
 
-import { SessionModel } from '../schemas/session.js'
-import { TeamModel } from '../schemas/team.js'
-import { IUser, UserModel } from '../schemas/user.js'
-import logger from '../utils/logger.js'
-import * as mailer from '../utils/mailer.js'
-import { redisClient } from '../utils/redis.js'
-import { analytics, EActivity } from '../utils/tracker.js'
+import { IUser, SessionModel, TeamModel, UserModel } from '../schemas/index.js'
+import {
+  analytics,
+  EActivity,
+  logger,
+  mailAdmins,
+  redisClient
+} from '../utils/index.js'
 
 export async function wslFindByRole(role: EPlatformRole): Promise<IUser[]> {
   return await UserModel.find(
@@ -80,7 +81,7 @@ export async function userDelete(account: IUser) {
   await SessionModel.deleteMany({ userId: account._id })
 
   // notify platform admins that user deleted their account
-  mailer.mailAdmins({
+  mailAdmins({
     title: 'Account Deleted',
     body: `User <b>${account.fullname}</b> (<a href="mailto:${account.email}">${account.username}</a>) removed their account.`
   })

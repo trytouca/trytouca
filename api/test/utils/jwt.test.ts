@@ -3,7 +3,7 @@
 import mongoose from 'mongoose'
 import { describe, expect, test } from 'vitest'
 
-import { SessionModel } from '../../src/schemas/session'
+import { SessionModel } from '../../src/schemas/index'
 import * as jwt from '../../src/utils/jwt'
 
 describe('utils/jwt', () => {

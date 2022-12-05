@@ -11,11 +11,8 @@ import nodemailer, { Transporter } from 'nodemailer'
 import { Attachment } from 'nodemailer/lib/mailer'
 
 import { wslGetSuperUser } from '../models/user.js'
-import { MailModel } from '../schemas/mail.js'
-import { MetaModel } from '../schemas/meta.js'
-import { IUser, UserModel } from '../schemas/user.js'
-import { config } from '../utils/config.js'
-import logger from '../utils/logger.js'
+import { IUser, MailModel, MetaModel, UserModel } from '../schemas/index.js'
+import { config, logger } from '../utils/index.js'
 
 class EMail {
   private static transport: Transporter

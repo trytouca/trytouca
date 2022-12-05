@@ -6,17 +6,27 @@ import mongoose, { Types } from 'mongoose'
 
 import { suiteCreate } from '../models/suite.js'
 import { comparisonQueue, insertEvent, messageQueue } from '../queues/index.js'
-import { BatchModel, IBatchDocument } from '../schemas/batch.js'
-import { ComparisonModel, IComparisonDocument } from '../schemas/comparison.js'
-import { ElementModel, IElementDocument } from '../schemas/element.js'
-import { MessageModel } from '../schemas/message.js'
-import { ISuiteDocument, SuiteModel } from '../schemas/suite.js'
-import { ITeamDocument, TeamModel } from '../schemas/team.js'
-import { IUser } from '../schemas/user.js'
-import logger from '../utils/logger.js'
-import { redisClient } from '../utils/redis.js'
-import { objectStore } from '../utils/store.js'
-import { analytics, EActivity } from '../utils/tracker.js'
+import {
+  BatchModel,
+  ComparisonModel,
+  ElementModel,
+  IBatchDocument,
+  IComparisonDocument,
+  IElementDocument,
+  ISuiteDocument,
+  ITeamDocument,
+  IUser,
+  MessageModel,
+  SuiteModel,
+  TeamModel
+} from '../schemas/index.js'
+import {
+  analytics,
+  EActivity,
+  logger,
+  objectStore,
+  redisClient
+} from '../utils/index.js'
 
 type TeamSlug = string
 type SuiteSlug = string

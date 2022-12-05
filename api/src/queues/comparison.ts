@@ -4,8 +4,7 @@ import { compare } from '@touca/comparator'
 import { deserialize } from '@touca/flatbuffers'
 
 import { ComparisonJob, comparisonProcess } from '../models/comparison.js'
-import { JobQueue, PerformanceMarks } from '../utils/queue.js'
-import { objectStore } from '../utils/store.js'
+import { JobQueue, objectStore, PerformanceMarks } from '../utils/index.js'
 
 async function processor(job: ComparisonJob): Promise<PerformanceMarks> {
   const perf = new PerformanceMarks()

@@ -3,9 +3,8 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { wslFindByUname } from '../models/user.js'
-import { ITeam, TeamModel } from '../schemas/team.js'
-import { IUser } from '../schemas/user.js'
-import logger from '../utils/logger.js'
+import { ITeam, IUser, TeamModel } from '../schemas/index.js'
+import { logger } from '../utils/index.js'
 
 /**
  * @summary

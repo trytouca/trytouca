@@ -2,10 +2,8 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { SessionModel } from '../../schemas/session.js'
-import { IUser, UserModel } from '../../schemas/user.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
+import { IUser, SessionModel, UserModel } from '../../schemas/index.js'
+import { logger, redisClient } from '../../utils/index.js'
 
 export async function platformAccountSuspend(
   req: Request,

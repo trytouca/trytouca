@@ -2,8 +2,7 @@
 
 import type { ETeamRole } from '@touca/api-schema'
 
-import { ITeam, TeamModel } from '../../schemas/team.js'
-import { IUser } from '../../schemas/user.js'
+import { ITeam, IUser, TeamModel } from '../../schemas/index.js'
 
 /**
  * @summary provides a list of members and admins of a given team.

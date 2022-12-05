@@ -3,13 +3,15 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { findTeamUsersByRole } from '../../controllers/team/common.js'
-import { ITeam, TeamModel } from '../../schemas/team.js'
-import { IUser, UserModel } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import * as mailer from '../../utils/mailer.js'
-import { redisClient } from '../../utils/redis.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailUsers,
+  redisClient
+} from '../../utils/index.js'
 
 export async function teamJoinAdd(
   req: Request,
@@ -68,7 +70,7 @@ export async function teamJoinAdd(
 
   const subject = `${user.fullname} asks to join team ${team.name}`
   const users = await findTeamUsersByRole(team, ['owner', 'admin'])
-  mailer.mailUsers(users, subject, 'team-join-add', {
+  mailUsers(users, subject, 'team-join-add', {
     subject,
     teamName: team.name,
     teamLink: [config.webapp.root, '~', team.slug].join('/') + '?t=members',

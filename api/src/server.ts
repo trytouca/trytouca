@@ -8,7 +8,7 @@ import hidePoweredBy from 'hide-powered-by'
 
 import { comparisonQueue, eventsQueue, messageQueue } from './queues/index.js'
 import router from './routes/index.js'
-import { MetaModel } from './schemas/meta.js'
+import { MetaModel } from './schemas/index.js'
 import {
   analyticsService,
   autosealService,
@@ -23,12 +23,15 @@ import {
   statusReport,
   upgradeDatabase
 } from './startup/index.js'
-import { config } from './utils/config.js'
-import logger from './utils/logger.js'
-import { makeConnectionMongo, shutdownMongo } from './utils/mongo.js'
-import { redisClient } from './utils/redis.js'
-import { connectToServer } from './utils/routing.js'
-import { objectStore } from './utils/store.js'
+import {
+  config,
+  connectToServer,
+  logger,
+  makeConnectionMongo,
+  objectStore,
+  redisClient,
+  shutdownMongo
+} from './utils/index.js'
 
 const app = express()
 

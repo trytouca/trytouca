@@ -3,13 +3,14 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { batchRemove } from '../../models/batch.js'
-import { IBatchDocument } from '../../schemas/batch.js'
-import { MessageModel } from '../../schemas/message.js'
-import { ISuiteDocument } from '../../schemas/suite.js'
-import { ITeam } from '../../schemas/team.js'
-import { IUser } from '../../schemas/user.js'
-import logger from '../../utils/logger.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import {
+  IBatchDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  MessageModel
+} from '../../schemas/index.js'
+import { analytics, EActivity, logger } from '../../utils/index.js'
 
 /**
  * @summary

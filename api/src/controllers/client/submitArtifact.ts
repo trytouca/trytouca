@@ -3,13 +3,15 @@
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash-es'
 
-import { BatchModel } from '../../schemas/batch.js'
-import { ElementModel } from '../../schemas/element.js'
-import { MessageModel } from '../../schemas/message.js'
-import { SuiteModel } from '../../schemas/suite.js'
-import { TeamModel } from '../../schemas/team.js'
-import { IUser } from '../../schemas/user.js'
-import logger from '../../utils/logger.js'
+import {
+  BatchModel,
+  ElementModel,
+  IUser,
+  MessageModel,
+  SuiteModel,
+  TeamModel
+} from '../../schemas/index.js'
+import { logger } from '../../utils/index.js'
 import { objectStore } from '../../utils/store.js'
 
 type Meta = Record<'team' | 'suite' | 'batch' | 'element' | 'key', string>

@@ -2,9 +2,8 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { NotificationModel } from '../../schemas/notification.js'
-import { IUser } from '../../schemas/user.js'
-import logger from '../../utils/logger.js'
+import { IUser, NotificationModel } from '../../schemas/index.js'
+import { logger } from '../../utils/index.js'
 
 export async function inboxList(
   req: Request,

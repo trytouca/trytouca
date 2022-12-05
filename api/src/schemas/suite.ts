@@ -6,7 +6,7 @@ import type {
   PromotionQueryOutput,
   SubscriptionQueryOutput
 } from '../types/backendtypes.js'
-import { config } from '../utils/config.js'
+import { config } from '../utils/index.js'
 
 const suiteSchema = new mongoose.Schema(
   {

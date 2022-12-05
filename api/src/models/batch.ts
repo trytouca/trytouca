@@ -2,15 +2,20 @@
 
 import { compareBatch } from '../models/comparison.js'
 import { insertEvent } from '../queues/index.js'
-import { BatchModel, IBatchDocument } from '../schemas/batch.js'
-import { CommentModel } from '../schemas/comment.js'
-import { MessageModel } from '../schemas/message.js'
-import { EReportType, ReportModel } from '../schemas/report.js'
-import { ISuiteDocument, SuiteModel } from '../schemas/suite.js'
-import { ITeam, TeamModel } from '../schemas/team.js'
-import { IUser } from '../schemas/user.js'
-import logger from '../utils/logger.js'
-import { redisClient } from '../utils/redis.js'
+import {
+  BatchModel,
+  CommentModel,
+  EReportType,
+  IBatchDocument,
+  ISuiteDocument,
+  ITeam,
+  IUser,
+  MessageModel,
+  ReportModel,
+  SuiteModel,
+  TeamModel
+} from '../schemas/index.js'
+import { logger, redisClient } from '../utils/index.js'
 import { messageRemove } from './message.js'
 import { MessageInfo } from './messageInfo.js'
 

@@ -3,19 +3,22 @@
 import mongoose from 'mongoose'
 import { describe, expect, test } from 'vitest'
 
-import { BatchModel } from '../../src/schemas/batch'
-import { CommentModel } from '../../src/schemas/comment'
-import { ComparisonModel } from '../../src/schemas/comparison'
-import { ElementModel } from '../../src/schemas/element'
-import { MailModel } from '../../src/schemas/mail'
-import { MessageModel } from '../../src/schemas/message'
-import { NotificationModel } from '../../src/schemas/notification'
-import { EReportType, ReportModel } from '../../src/schemas/report'
-import { SuiteModel } from '../../src/schemas/suite'
-import { TeamModel } from '../../src/schemas/team'
-import { UserModel } from '../../src/schemas/user'
+import {
+  BatchModel,
+  CommentModel,
+  ComparisonModel,
+  ElementModel,
+  EReportType,
+  MailModel,
+  MessageModel,
+  NotificationModel,
+  ReportModel,
+  SuiteModel,
+  TeamModel,
+  UserModel
+} from '../../src/schemas/index'
 import { ECommentType } from '../../src/types/backendtypes'
-import { config } from '../../src/utils/config'
+import { config } from '../../src/utils/index'
 
 describe('model/user', () => {
   test('reject making user doc if required keys are missing', () => {

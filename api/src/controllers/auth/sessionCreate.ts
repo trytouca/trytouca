@@ -4,11 +4,14 @@ import bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
 
 import { createUserSession } from '../../models/auth.js'
-import { UserModel } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import * as mailer from '../../utils/mailer.js'
-import { analytics, EActivity } from '../../utils/tracker.js'
+import { UserModel } from '../../schemas/index.js'
+import {
+  analytics,
+  config,
+  EActivity,
+  logger,
+  mailUser
+} from '../../utils/index.js'
 
 export async function authSessionCreate(
   req: Request,
@@ -75,12 +78,9 @@ export async function authSessionCreate(
       })
 
       // notify user that their account was temporarily locked
-      mailer.mailUser(
-        user,
-        'Account Temporarily Locked',
-        'auth-signin-user-locked',
-        { greetings: user.fullname ? `Hi ${user.fullname}` : `Hello` }
-      )
+      mailUser(user, 'Account Temporarily Locked', 'auth-signin-user-locked', {
+        greetings: user.fullname ? `Hi ${user.fullname}` : `Hello`
+      })
     }
 
     // otherwise increment number of failed login attempts

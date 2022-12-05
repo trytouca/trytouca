@@ -8,15 +8,18 @@ import { floor } from 'lodash-es'
 import mongoose from 'mongoose'
 
 import { comparisonQueue } from '../queues/index.js'
-import { ComparisonModel, IComparisonDocument } from '../schemas/comparison.js'
-import { IMessageDocument, MessageModel } from '../schemas/message.js'
+import {
+  ComparisonModel,
+  IComparisonDocument,
+  IMessageDocument,
+  MessageModel
+} from '../schemas/index.js'
 import type {
   BackendBatchComparisonItemCommon,
   BackendBatchComparisonItemSolo,
   BackendBatchComparisonResponse
 } from '../types/backendtypes.js'
-import logger from '../utils/logger.js'
-import { objectStore } from '../utils/store.js'
+import { logger, objectStore } from '../utils/index.js'
 
 type ObjectId = mongoose.Types.ObjectId
 

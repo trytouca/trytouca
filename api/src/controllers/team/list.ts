@@ -4,11 +4,13 @@ import type { ETeamRole, TeamItem, TeamListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { Types } from 'mongoose'
 
-import { ITeamDocument, TeamModel } from '../../schemas/team.js'
-import { IUser, UserModel } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import logger from '../../utils/logger.js'
-import { redisClient } from '../../utils/redis.js'
+import {
+  ITeamDocument,
+  IUser,
+  TeamModel,
+  UserModel
+} from '../../schemas/index.js'
+import { config, logger, redisClient } from '../../utils/index.js'
 
 /**
  * Provides list of teams for a given user.

@@ -4,15 +4,17 @@ import type { ENotificationType } from '@touca/api-schema'
 import mongoose from 'mongoose'
 
 import { compareBatch } from '../models/comparison.js'
-import { BatchModel } from '../schemas/batch.js'
-import { ComparisonModel } from '../schemas/comparison.js'
-import { EReportType, IReportDocument, ReportModel } from '../schemas/report.js'
-import { SuiteModel } from '../schemas/suite.js'
-import { IUser } from '../schemas/user.js'
+import {
+  BatchModel,
+  ComparisonModel,
+  EReportType,
+  IReportDocument,
+  IUser,
+  ReportModel,
+  SuiteModel
+} from '../schemas/index.js'
 import type { BackendBatchComparisonResponse } from '../types/backendtypes.js'
-import { config } from '../utils/config.js'
-import logger from '../utils/logger.js'
-import { mailUser } from '../utils/mailer.js'
+import { config, logger, mailUser } from '../utils/index.js'
 
 type ReportInputsCommon = {
   dstBatchSlug: string

@@ -5,10 +5,8 @@ import { NextFunction, Request, Response } from 'express'
 import mongoose from 'mongoose'
 
 import { wslFindByUname } from '../models/user.js'
-import { SessionModel } from '../schemas/session.js'
-import { IUser, UserModel } from '../schemas/user.js'
-import * as jwt from '../utils/jwt.js'
-import logger from '../utils/logger.js'
+import { IUser, SessionModel, UserModel } from '../schemas/index.js'
+import { extractPayload, logger } from '../utils/index.js'
 
 type AuthInput = {
   agent: string
@@ -20,7 +18,7 @@ async function isAuthenticatedImpl(input: AuthInput): Promise<IUser> {
   // request should have an http-only cookie with a signed JWT bearer token
   // and a payload format according to our expectations.
 
-  const payload = jwt.extractPayload(input.token)
+  const payload = extractPayload(input.token)
   if (!payload) {
     return
   }

@@ -6,10 +6,8 @@ import { pick } from 'lodash-es'
 
 import { findPlatformRole } from '../../middlewares/index.js'
 import { createUserAccount } from '../../models/auth.js'
-import { MetaModel } from '../../schemas/meta.js'
-import { UserModel } from '../../schemas/user.js'
-import { config } from '../../utils/config.js'
-import { redisClient } from '../../utils/redis.js'
+import { MetaModel, UserModel } from '../../schemas/index.js'
+import { config, redisClient } from '../../utils/index.js'
 
 /**
  * Update settings of this server instance.
