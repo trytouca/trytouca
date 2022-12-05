@@ -3,7 +3,7 @@
 import type { ENotificationType } from '@touca/api-schema'
 import mongoose from 'mongoose'
 
-import { compareBatch } from '../models/comparison.js'
+import { compareBatch } from '../models/index.js'
 import {
   BatchModel,
   ComparisonModel,
@@ -13,7 +13,7 @@ import {
   ReportModel,
   SuiteModel
 } from '../schemas/index.js'
-import type { BackendBatchComparisonResponse } from '../types/backendtypes.js'
+import type { BackendBatchComparisonResponse } from '../types/index.js'
 import { config, logger, mailUser } from '../utils/index.js'
 
 type ReportInputsCommon = {

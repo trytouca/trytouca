@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { compareBatch } from '../../models/comparison.js'
+import { compareBatch } from '../../models/index.js'
 import {
   BatchModel,
   IBatchDocument,
@@ -14,7 +14,7 @@ import {
 import {
   BackendBatchComparisonItem,
   BackendBatchComparisonResponse
-} from '../../types/backendtypes.js'
+} from '../../types/index.js'
 import { config, logger, redisClient } from '../../utils/index.js'
 
 type ICompareParamsBatch = {

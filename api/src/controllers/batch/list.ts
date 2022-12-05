@@ -3,14 +3,14 @@
 import type { BatchListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { compareBatchOverview } from '../../models/comparison.js'
+import { compareBatchOverview } from '../../models/index.js'
 import {
   BatchModel,
   ISuiteDocument,
   ITeam,
   IUser
 } from '../../schemas/index.js'
-import type { BatchItemQueryOutput } from '../../types/backendtypes.js'
+import type { BatchItemQueryOutput } from '../../types/index.js'
 import { logger, redisClient } from '../../utils/index.js'
 
 async function batchList(suite: ISuiteDocument): Promise<BatchListResponse> {

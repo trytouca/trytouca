@@ -18,7 +18,7 @@ import type {
   BackendBatchComparisonItemCommon,
   BackendBatchComparisonItemSolo,
   BackendBatchComparisonResponse
-} from '../types/backendtypes.js'
+} from '../types/index.js'
 import { logger, objectStore } from '../utils/index.js'
 
 type ObjectId = mongoose.Types.ObjectId

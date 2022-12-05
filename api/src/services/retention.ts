@@ -1,7 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { batchRemove } from '../models/batch.js'
-import { comparisonRemove } from '../models/comparison.js'
+import { batchRemove, comparisonRemove } from '../models/index.js'
 import {
   BatchModel,
   ComparisonModel,

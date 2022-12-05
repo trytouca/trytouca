@@ -4,7 +4,6 @@ import { parseMessageHeaders } from '@touca/flatbuffers'
 import { minBy } from 'lodash-es'
 import mongoose, { Types } from 'mongoose'
 
-import { suiteCreate } from '../models/suite.js'
 import { comparisonQueue, insertEvent, messageQueue } from '../queues/index.js'
 import {
   BatchModel,
@@ -27,6 +26,7 @@ import {
   objectStore,
   redisClient
 } from '../utils/index.js'
+import { suiteCreate } from './suite.js'
 
 type TeamSlug = string
 type SuiteSlug = string

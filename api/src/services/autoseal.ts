@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { batchSeal } from '../models/batch.js'
+import { batchSeal } from '../models/index.js'
 import { BatchModel, SuiteModel, TeamModel } from '../schemas/index.js'
 import { logger } from '../utils/index.js'
 

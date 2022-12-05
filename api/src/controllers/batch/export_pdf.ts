@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { buildPdfReport } from '../../models/pdf.js'
+import { buildPdfReport } from '../../models/index.js'
 import {
   IBatchDocument,
   ISuiteDocument,

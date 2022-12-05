@@ -1,18 +1,26 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import type { CommentItem, CommentListResponse } from '@touca/api-schema'
+import type {
+  CommentItem,
+  CommentListResponse,
+  Userinfo
+} from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
+import { Types } from 'mongoose'
 
-import {
-  extractCommentTuple,
-  extractCommentType
-} from '../../models/comment.js'
+import { extractCommentTuple, extractCommentType } from '../../models/index.js'
 import { CommentModel, IUser } from '../../schemas/index.js'
-import {
-  CommentListQueryOutput,
-  ECommentType
-} from '../../types/backendtypes.js'
+import { ECommentType } from '../../types/index.js'
 import { logger, redisClient } from '../../utils/index.js'
+
+type CommentListQueryOutput = {
+  _id: Types.ObjectId
+  at: Date
+  by: Userinfo
+  editedAt: Date
+  parentId: Types.ObjectId
+  text: string
+}
 
 async function commentList(res: Response): Promise<CommentListResponse> {
   const type = extractCommentType(res)

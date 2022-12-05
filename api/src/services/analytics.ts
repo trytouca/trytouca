@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { compareBatchOverview } from '../models/comparison.js'
+import { compareBatchOverview } from '../models/index.js'
 import {
   BatchModel,
   IBatchDocument,

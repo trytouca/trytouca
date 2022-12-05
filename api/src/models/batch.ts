@@ -1,6 +1,5 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { compareBatch } from '../models/comparison.js'
 import { insertEvent } from '../queues/index.js'
 import {
   BatchModel,
@@ -16,6 +15,7 @@ import {
   TeamModel
 } from '../schemas/index.js'
 import { logger, redisClient } from '../utils/index.js'
+import { compareBatch } from './comparison.js'
 import { messageRemove } from './message.js'
 import { MessageInfo } from './messageInfo.js'
 

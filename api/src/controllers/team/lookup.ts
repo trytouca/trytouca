@@ -3,7 +3,7 @@
 import type { TeamLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { findTeamRoleOfUser } from '../../controllers/team/common.js'
+import { findTeamRoleOfUser } from '../../models/index.js'
 import { ITeam, IUser, TeamModel } from '../../schemas/index.js'
 import { logger, redisClient } from '../../utils/index.js'
 

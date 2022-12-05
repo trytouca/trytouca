@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { isEqual } from 'lodash-es'
 
-import { findTeamUsersByRole } from '../../controllers/team/common.js'
+import { findTeamUsersByRole } from '../../models/index.js'
 import { ITeam, IUser, TeamModel } from '../../schemas/index.js'
 import { config, logger, mailUser, redisClient } from '../../utils/index.js'
 

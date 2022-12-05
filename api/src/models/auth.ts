@@ -9,7 +9,7 @@ import {
   analytics,
   config,
   EActivity,
-  issue,
+  jwtIssue,
   logger,
   mailAdmins,
   mailUser,
@@ -167,7 +167,7 @@ export async function createUserSession(
 
   if (prevSession) {
     logger.debug('%s: reusing previously issued token', user.username)
-    return { token: issue(prevSession), expiresAt: prevSession.expiresAt }
+    return { token: jwtIssue(prevSession), expiresAt: prevSession.expiresAt }
   }
 
   // in the more likely case, when the user had no prior active session
@@ -195,7 +195,7 @@ export async function createUserSession(
 
   // generate a JSON web token
 
-  const token = issue(session)
+  const token = jwtIssue(session)
   logger.info('%s: issued auth token', user.username)
 
   return { token, expiresAt }

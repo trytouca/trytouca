@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { CommentModel, IBatchDocument } from '../schemas/index.js'
-import { ECommentType } from '../types/backendtypes.js'
+import { ECommentType } from '../types/index.js'
 
 /**
  * @summary

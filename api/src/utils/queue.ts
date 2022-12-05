@@ -3,7 +3,8 @@
 import { Queue, Worker } from 'bullmq'
 import { hrtime } from 'process'
 
-import { getRedisOptions, logger } from './index.js'
+import { logger } from './logger.js'
+import { getRedisOptions } from './redis.js'
 
 export class PerformanceMarks {
   private marks: Record<string, number> = {}

@@ -2,7 +2,8 @@
 
 import mongoose from 'mongoose'
 
-import { configMgr, logger } from '../utils/index.js'
+import { configMgr } from './config.js'
+import { logger } from './logger.js'
 
 export async function makeConnectionMongo(): Promise<boolean> {
   mongoose.Promise = Promise

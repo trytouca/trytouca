@@ -2,8 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { relay } from '../../models/relay.js'
-import { wslFindByRole } from '../../models/user.js'
+import { relay, wslFindByRole } from '../../models/index.js'
 import { logger, mailUser } from '../../utils/index.js'
 
 export async function feedbackSubmit(

@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { fileTypeFromBuffer } from 'file-type'
 
-import { Artifact } from '../../types/backendtypes.js'
+import { Artifact } from '../../types/index.js'
 import { objectStore } from '../../utils/index.js'
 
 /**

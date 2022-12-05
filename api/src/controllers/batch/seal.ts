@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { batchSeal } from '../../models/batch.js'
+import { batchSeal } from '../../models/index.js'
 import {
   IBatchDocument,
   ISuiteDocument,

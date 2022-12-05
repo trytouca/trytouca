@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash-es'
 
-import { wslFindByRole } from '../../models/user.js'
+import { wslFindByRole } from '../../models/index.js'
 import { IUser, NodeModel } from '../../schemas/index.js'
 import { analytics, EActivity, logger, mailUser } from '../../utils/index.js'
 

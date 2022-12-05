@@ -7,9 +7,9 @@ import {
   extractCommentTuple,
   extractCommentType,
   notifySubscribers
-} from '../../models/comment.js'
+} from '../../models/index.js'
 import { CommentModel, IUser } from '../../schemas/index.js'
-import { ECommentType } from '../../types/backendtypes.js'
+import { ECommentType } from '../../types/index.js'
 import {
   analytics,
   config,

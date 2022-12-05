@@ -10,7 +10,7 @@ import {
   IUser,
   SuiteModel
 } from '../schemas/index.js'
-import { ECommentType } from '../types/backendtypes.js'
+import { ECommentType } from '../types/index.js'
 import { mailUser } from '../utils/index.js'
 
 export type CommentInputs = {

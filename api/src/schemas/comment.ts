@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose'
 
-import { ECommentType } from '../types/backendtypes.js'
+import { ECommentType } from '../types/index.js'
 
 const commentSchema = new mongoose.Schema(
   {

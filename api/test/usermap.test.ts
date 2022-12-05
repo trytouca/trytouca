@@ -3,10 +3,10 @@
 import { Types } from 'mongoose'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 
-import { UserMap } from '../../src/models/usermap'
-import { UserModel } from '../../src/schemas/index'
+import { UserMap } from '../src/models'
+import { UserModel } from '../src/schemas'
 
-describe('model/usermap', () => {
+describe('usermap', () => {
   const idA = new Types.ObjectId()
   const idB = new Types.ObjectId()
   const idC = new Types.ObjectId()

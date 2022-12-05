@@ -2,9 +2,9 @@
 
 import { describe, expect, test } from 'vitest'
 
-import { MessageInfo } from '../../src/models/messageInfo'
+import { MessageInfo } from '../src/models'
 
-describe('models/messageInfo', () => {
+describe('messageInfo', () => {
   test('allow making message info using partial object', () => {
     const messageInfo = new MessageInfo({
       teamSlug: 'some_teamSlug',

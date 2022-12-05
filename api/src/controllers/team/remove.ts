@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { suiteRemove } from '../../models/suite.js'
+import { suiteRemove } from '../../models/index.js'
 import {
   BatchModel,
   ITeam,

@@ -2,7 +2,7 @@
 
 import { json, Router } from 'express'
 
-import { batchCompare } from '../controllers/batch/compare.js'
+import { batchCompare } from '../controllers/batch/index.js'
 import {
   ctrlBatchExportPDF,
   ctrlBatchExportZIP,

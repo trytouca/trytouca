@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { findTeamUsersByRole } from '../../controllers/team/common.js'
+import { findTeamUsersByRole } from '../../models/index.js'
 import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
 import {
   analytics,

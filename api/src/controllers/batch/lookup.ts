@@ -3,8 +3,7 @@
 import type { BatchLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 
-import { compareBatchOverview } from '../../models/comparison.js'
-import { UserMap } from '../../models/usermap.js'
+import { compareBatchOverview, UserMap } from '../../models/index.js'
 import {
   BatchModel,
   CommentModel,
@@ -13,7 +12,7 @@ import {
   ITeam,
   IUser
 } from '../../schemas/index.js'
-import { ECommentType } from '../../types/backendtypes.js'
+import { ECommentType } from '../../types/index.js'
 import { logger, redisClient } from '../../utils/index.js'
 
 /**

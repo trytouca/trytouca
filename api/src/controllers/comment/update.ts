@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { extractCommentTuple } from '../../models/comment.js'
+import { extractCommentTuple } from '../../models/index.js'
 import { CommentModel, ICommentDocument, IUser } from '../../schemas/index.js'
 import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
 

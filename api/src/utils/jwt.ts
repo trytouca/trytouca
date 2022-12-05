@@ -3,7 +3,8 @@
 import jws from 'jws'
 
 import { ISessionDocument } from '../schemas/index.js'
-import { config, logger } from '../utils/index.js'
+import { config } from './config.js'
+import { logger } from './logger.js'
 
 type TokenPayload = {
   exp: number
@@ -17,7 +18,7 @@ type TokenPayload = {
  * information other than the session id which should be adequate
  * to identify the user.
  */
-export function issue(session: ISessionDocument): string {
+export function jwtIssue(session: ISessionDocument): string {
   return jws.sign({
     header: { alg: 'HS256', typ: 'JWT' },
     payload: {
@@ -28,7 +29,7 @@ export function issue(session: ISessionDocument): string {
   })
 }
 
-export function extractPayload(token: string | undefined): TokenPayload {
+export function jwtExtract(token: string | undefined): TokenPayload {
   if (!token) {
     logger.silly('authentication cookie missing')
     return

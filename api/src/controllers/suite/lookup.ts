@@ -4,7 +4,7 @@ import type { SuiteLookupResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { pick } from 'lodash-es'
 
-import { compareBatchOverview } from '../../models/comparison.js'
+import { compareBatchOverview } from '../../models/index.js'
 import {
   BatchModel,
   ISuiteDocument,
@@ -12,7 +12,7 @@ import {
   IUser,
   UserModel
 } from '../../schemas/index.js'
-import type { BatchItemQueryOutput } from '../../types/backendtypes.js'
+import type { BatchItemQueryOutput } from '../../types/index.js'
 import { logger, redisClient } from '../../utils/index.js'
 
 /**

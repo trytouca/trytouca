@@ -4,8 +4,11 @@ import { existsSync } from 'node:fs'
 
 import { pick } from 'lodash-es'
 
-import { ComparisonJob } from '../models/comparison.js'
-import { wslFindByUname, wslGetSuperUser } from '../models/user.js'
+import {
+  ComparisonJob,
+  wslFindByUname,
+  wslGetSuperUser
+} from '../models/index.js'
 import { comparisonQueue, messageQueue } from '../queues/index.js'
 import {
   ComparisonModel,

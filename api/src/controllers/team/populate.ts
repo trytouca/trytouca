@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { addSampleData } from '../../models/sampleData.js'
+import { addSampleData } from '../../models/index.js'
 import { ITeam, IUser, SuiteModel } from '../../schemas/index.js'
 import { logger } from '../../utils/index.js'
 

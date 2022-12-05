@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 import { OAuth2Client } from 'google-auth-library'
 
-import { createUserAccount, createUserSession } from '../../models/auth.js'
+import { createUserAccount, createUserSession } from '../../models/index.js'
 import { IUserDocument, UserModel } from '../../schemas/index.js'
 import { analytics, config, EActivity, logger } from '../../utils/index.js'
 

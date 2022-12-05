@@ -1,12 +1,22 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { ENotificationType } from '@touca/api-schema'
 import mongoose from 'mongoose'
 
-import type {
-  PromotionQueryOutput,
-  SubscriptionQueryOutput
-} from '../types/backendtypes.js'
 import { config } from '../utils/index.js'
+
+type PromotionQueryOutput = {
+  at: Date
+  by: mongoose.Types.ObjectId
+  for: string
+  from: mongoose.Types.ObjectId
+  to: mongoose.Types.ObjectId
+}
+
+type SubscriptionQueryOutput = {
+  user: mongoose.Types.ObjectId
+  level: ENotificationType
+}
 
 const suiteSchema = new mongoose.Schema(
   {

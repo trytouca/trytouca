@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import mongoose from 'mongoose'
+import { Types } from 'mongoose'
 import { describe, expect, test } from 'vitest'
 
 import {
@@ -16,11 +16,11 @@ import {
   SuiteModel,
   TeamModel,
   UserModel
-} from '../../src/schemas/index'
-import { ECommentType } from '../../src/types/backendtypes'
-import { config } from '../../src/utils/index'
+} from '../src/schemas'
+import { ECommentType } from '../src/types'
+import { config } from '../src/utils'
 
-describe('model/user', () => {
+describe('model_user', () => {
   test('reject making user doc if required keys are missing', () => {
     const userModel = new UserModel({})
     const err = userModel.validateSync()
@@ -40,9 +40,9 @@ describe('model/user', () => {
   })
 })
 
-describe('model/suite', () => {
-  const createdBy = new mongoose.Types.ObjectId()
-  const team = new mongoose.Types.ObjectId()
+describe('model_suite', () => {
+  const createdBy = new Types.ObjectId()
+  const team = new Types.ObjectId()
 
   describe('schema', () => {
     test('reject making suite doc if required keys are missing', () => {
@@ -90,7 +90,7 @@ describe('model/suite', () => {
   })
 })
 
-describe('model/message', () => {
+describe('model_message', () => {
   test('reject making message doc with missing required keys', () => {
     const messageModel = new MessageModel({})
     const err = messageModel.validateSync()
@@ -103,9 +103,9 @@ describe('model/message', () => {
   })
   test('allow making message doc if required keys exist', () => {
     const messageModel = new MessageModel({
-      batchId: new mongoose.Types.ObjectId(),
+      batchId: new Types.ObjectId(),
       builtAt: new Date(),
-      elementId: new mongoose.Types.ObjectId(),
+      elementId: new Types.ObjectId(),
       expiresAt: new Date(),
       submittedAt: new Date()
     })
@@ -113,7 +113,7 @@ describe('model/message', () => {
   })
 })
 
-describe('model/batch', () => {
+describe('model_batch', () => {
   test('reject making batch doc with missing required keys', () => {
     const batchModel = new BatchModel({})
     const err = batchModel.validateSync()
@@ -125,14 +125,14 @@ describe('model/batch', () => {
   test('allow making result doc if required keys exist', () => {
     const batchModel = new BatchModel({
       slug: 'some_batch',
-      suite: new mongoose.Types.ObjectId()
+      suite: new Types.ObjectId()
     })
     batchModel.superior = batchModel._id
     expect(batchModel.validateSync()).toBeUndefined()
   })
 })
 
-describe('model/comparison', () => {
+describe('model_comparison', () => {
   test('reject making comparison doc with missing required keys', () => {
     const cmpModel = new ComparisonModel({})
     const err = cmpModel.validateSync()
@@ -142,16 +142,16 @@ describe('model/comparison', () => {
   })
   test('allow making comparison doc if required keys exist', () => {
     const cmpModel = new ComparisonModel({
-      dstBatchId: new mongoose.Types.ObjectId(),
-      dstMessageId: new mongoose.Types.ObjectId(),
-      srcBatchId: new mongoose.Types.ObjectId(),
-      srcMessageId: new mongoose.Types.ObjectId()
+      dstBatchId: new Types.ObjectId(),
+      dstMessageId: new Types.ObjectId(),
+      srcBatchId: new Types.ObjectId(),
+      srcMessageId: new Types.ObjectId()
     })
     expect(cmpModel.validateSync()).toBeUndefined()
   })
 })
 
-describe('model/element', () => {
+describe('model_element', () => {
   test('reject making element doc with missing required keys', () => {
     const elementModel = new ElementModel({})
     const err = elementModel.validateSync()
@@ -164,13 +164,13 @@ describe('model/element', () => {
     const elementModel = new ElementModel({
       name: 'Some Element',
       slug: 'some_element',
-      suiteId: new mongoose.Types.ObjectId()
+      suiteId: new Types.ObjectId()
     })
     expect(elementModel.validateSync()).toBeUndefined()
   })
 })
 
-describe('model/mail', () => {
+describe('model_mail', () => {
   test('reject making mail doc with missing required keys', () => {
     const mailModel = new MailModel({})
     const err = mailModel.validateSync()
@@ -189,7 +189,7 @@ describe('model/mail', () => {
   })
 })
 
-describe('model/team', () => {
+describe('model_team', () => {
   test('reject making doc with missing required keys', () => {
     const teamModel = new TeamModel({})
     const err = teamModel.validateSync()
@@ -200,15 +200,15 @@ describe('model/team', () => {
     const teamModel = new TeamModel({
       name: 'Some Team',
       slug: 'some_team',
-      owner: new mongoose.Types.ObjectId()
+      owner: new Types.ObjectId()
     })
     expect(teamModel.validateSync()).toBeUndefined()
   })
 })
 
-describe('model/comment', () => {
+describe('model_comment', () => {
   const createdAt = new Date()
-  const createdBy = new mongoose.Types.ObjectId()
+  const createdBy = new Types.ObjectId()
 
   test('reject making comment doc with missing required keys', () => {
     const commentModel = new CommentModel({})
@@ -229,9 +229,9 @@ describe('model/comment', () => {
   })
 })
 
-describe('model/report', () => {
-  const dstBatchId = new mongoose.Types.ObjectId()
-  const srcBatchId = new mongoose.Types.ObjectId()
+describe('model_report', () => {
+  const dstBatchId = new Types.ObjectId()
+  const srcBatchId = new Types.ObjectId()
 
   test('reject making report doc with missing required keys', () => {
     const reportModel = new ReportModel({})
@@ -251,7 +251,7 @@ describe('model/report', () => {
   })
 })
 
-describe('model/notification', () => {
+describe('model_notification', () => {
   test('reject making notification doc with missing required keys', () => {
     const notificationModel = new NotificationModel({})
     const err = notificationModel.validateSync()
@@ -261,7 +261,7 @@ describe('model/notification', () => {
     expect(err?.errors.userId.kind).toEqual('required')
   })
   test('allow making notification doc if required keys exist', () => {
-    const userId = new mongoose.Types.ObjectId()
+    const userId = new Types.ObjectId()
     const notificationModel = new NotificationModel({
       createdAt: new Date(),
       text: 'some_text',

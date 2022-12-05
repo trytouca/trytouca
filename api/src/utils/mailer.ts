@@ -10,9 +10,10 @@ import mustache from 'mustache'
 import nodemailer, { Transporter } from 'nodemailer'
 import { Attachment } from 'nodemailer/lib/mailer'
 
-import { wslGetSuperUser } from '../models/user.js'
+import { wslGetSuperUser } from '../models/index.js'
 import { IUser, MailModel, MetaModel, UserModel } from '../schemas/index.js'
-import { config, logger } from '../utils/index.js'
+import { config } from './config.js'
+import { logger } from './logger.js'
 
 class EMail {
   private static transport: Transporter

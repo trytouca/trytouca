@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { SessionModel } from '../../schemas/index.js'
-import { config, extractPayload, issue, logger } from '../../utils/index.js'
+import { config, jwtExtract, jwtIssue, logger } from '../../utils/index.js'
 
 export async function authSessionExtend(
   req: Request,
@@ -14,7 +14,7 @@ export async function authSessionExtend(
   // is, at this point, validated by previous middleware.
   // find session id from signed http-only cookie named authToken
 
-  const sessionId = extractPayload(req.signedCookies.authToken).sub
+  const sessionId = jwtExtract(req.signedCookies.authToken).sub
 
   // find new expiration date
 
@@ -32,7 +32,7 @@ export async function authSessionExtend(
   // issue a new token for the same session but with new expiration date
 
   logger.info('%s: refreshed user token', sessionId)
-  res.cookie('authToken', issue(session), {
+  res.cookie('authToken', jwtIssue(session), {
     expires: session.expiresAt,
     httpOnly: true,
     path: '/',

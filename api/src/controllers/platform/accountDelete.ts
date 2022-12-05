@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { userDelete } from '../../models/user.js'
+import { userDelete } from '../../models/index.js'
 import { IUser, TeamModel } from '../../schemas/index.js'
 import { logger } from '../../utils/index.js'
 

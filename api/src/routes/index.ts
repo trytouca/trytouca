@@ -4,7 +4,7 @@ import express from 'express'
 import nocache from 'nocache'
 
 import { platformHealth } from '../controllers/platform/index.js'
-import { feedbackSubmit } from '../controllers/relay/feedback.js'
+import { feedbackSubmit } from '../controllers/relay/index.js'
 import { config, promisable } from '../utils/index.js'
 import { authRouter } from './auth.js'
 import { batchRouter } from './batch.js'

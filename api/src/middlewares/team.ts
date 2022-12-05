@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { wslFindByUname } from '../models/user.js'
+import { wslFindByUname } from '../models/index.js'
 import { ITeam, IUser, TeamModel } from '../schemas/index.js'
 import { logger } from '../utils/index.js'
 

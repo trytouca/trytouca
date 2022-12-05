@@ -1,10 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import type { SuiteListResponse } from '@touca/api-schema'
+import type { SuiteItem, SuiteListResponse } from '@touca/api-schema'
 import { NextFunction, Request, Response } from 'express'
 import { Types } from 'mongoose'
 
-import { compareBatchOverview } from '../../models/comparison.js'
+import { compareBatchOverview } from '../../models/index.js'
 import {
   BatchModel,
   ISuiteDocument,
@@ -12,11 +12,13 @@ import {
   IUser,
   SuiteModel
 } from '../../schemas/index.js'
-import type {
-  BatchItemQueryOutput,
-  SuiteItemQueryOutput
-} from '../../types/backendtypes.js'
+import type { BatchItemQueryOutput } from '../../types/index.js'
 import { logger, redisClient } from '../../utils/index.js'
+
+type SuiteItemQueryOutput = Exclude<SuiteItem, 'baseline' | 'latest'> & {
+  baseline: BatchItemQueryOutput
+  latest: BatchItemQueryOutput
+}
 
 async function suiteList(team: ITeam): Promise<SuiteListResponse> {
   // find list of suites that belong to this team, sorted in descending

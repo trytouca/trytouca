@@ -1,8 +1,8 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { format as utilFormat } from 'util'
+import { format } from 'util'
 
-import { wslFindByRole } from '../models/user.js'
+import { wslFindByRole } from '../models/index.js'
 import { IUser, NotificationModel } from '../schemas/index.js'
 
 async function notifyUser(recipient: IUser, message: string) {
@@ -20,7 +20,7 @@ async function notifyUsers(users: IUser[], message: string) {
 }
 
 export async function notifyPlatformAdmins(fmtstr: string, ...args) {
-  const message = utilFormat(fmtstr, ...args)
+  const message = format(fmtstr, ...args)
   const platformAdmins = await wslFindByRole('admin')
   const platformOwner = await wslFindByRole('owner')
   const users = [...platformAdmins, ...platformOwner]

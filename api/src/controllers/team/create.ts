@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { teamCreate } from '../../models/team.js'
+import { teamCreate } from '../../models/index.js'
 import { IUser } from '../../schemas/index.js'
 import {
   analytics,

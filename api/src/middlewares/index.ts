@@ -6,19 +6,19 @@ export { hasArtifact, hasElement } from './element.js'
 export { isCloudInstance } from './relay.js'
 export { hasSuite } from './suite.js'
 export {
+  hasMember,
   hasTeam,
+  isTeamAdmin,
   isTeamInvitee,
   isTeamMember,
-  isTeamAdmin,
-  isTeamOwner,
-  hasMember
+  isTeamOwner
 } from './team.js'
 export {
-  isAuthenticated,
-  isClientAuthenticated,
-  isPlatformAdmin,
   findPlatformRole,
   hasAccount,
-  hasSuspendedAccount
+  hasSuspendedAccount,
+  isAuthenticated,
+  isClientAuthenticated,
+  isPlatformAdmin
 } from './user.js'
-export { validationRules, validationMap } from './utils.js'
+export { validationMap, validationRules } from './utils.js'

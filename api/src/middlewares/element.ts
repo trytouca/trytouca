@@ -10,7 +10,7 @@ import {
   ITeamDocument,
   MessageModel
 } from '../schemas/index.js'
-import { Artifact } from '../types/backendtypes.js'
+import { Artifact } from '../types/index.js'
 import { logger } from '../utils/index.js'
 
 /**

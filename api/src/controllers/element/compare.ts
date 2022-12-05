@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { compareCommonElement } from '../../models/comparison.js'
+import { compareCommonElement } from '../../models/index.js'
 import {
   BatchModel,
   ElementModel,
@@ -14,7 +14,7 @@ import {
   MessageModel,
   SuiteModel
 } from '../../schemas/index.js'
-import type { BackendBatchComparisonItemCommon } from '../../types/backendtypes.js'
+import type { BackendBatchComparisonItemCommon } from '../../types/index.js'
 import { config, logger, objectStore, redisClient } from '../../utils/index.js'
 
 type ICompareParamsElement = {

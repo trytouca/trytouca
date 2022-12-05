@@ -2,7 +2,8 @@
 
 import IORedis from 'ioredis'
 
-import { config, logger } from '../utils/index.js'
+import { config } from './config.js'
+import { logger } from './logger.js'
 
 export function getRedisOptions(): IORedis.RedisOptions {
   const cloudOptions = config.redis.tlsCertificateFile

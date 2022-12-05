@@ -3,7 +3,7 @@
 import bcrypt from 'bcryptjs'
 import { NextFunction, Request, Response } from 'express'
 
-import { createUserSession } from '../../models/auth.js'
+import { createUserSession } from '../../models/index.js'
 import { UserModel } from '../../schemas/index.js'
 import {
   analytics,

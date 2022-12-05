@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { relay } from '../models/relay.js'
+import { relay } from '../models/index.js'
 import {
   BatchModel,
   IMetaDocument,

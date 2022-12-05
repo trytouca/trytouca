@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { processBinaryContent } from '../../models/submit.js'
+import { processBinaryContent } from '../../models/index.js'
 import { IUser } from '../../schemas/index.js'
 import { logger } from '../../utils/index.js'
 

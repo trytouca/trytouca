@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { batchRemove } from '../../models/batch.js'
+import { batchRemove } from '../../models/index.js'
 import {
   IBatchDocument,
   ISuiteDocument,

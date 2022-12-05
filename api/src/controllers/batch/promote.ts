@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { batchPromote } from '../../models/batch.js'
+import { batchPromote } from '../../models/index.js'
 import {
   IBatchDocument,
   ISuiteDocument,

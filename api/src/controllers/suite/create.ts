@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { suiteCreate } from '../../models/suite.js'
+import { suiteCreate } from '../../models/index.js'
 import { ITeam, IUser } from '../../schemas/index.js'
 import { analytics, EActivity, logger } from '../../utils/index.js'
 

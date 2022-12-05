@@ -2,7 +2,7 @@
 
 import { NextFunction, Request, Response } from 'express'
 
-import { relay } from '../../models/relay.js'
+import { relay } from '../../models/index.js'
 import { MetaModel } from '../../schemas/index.js'
 import { logger, redisClient } from '../../utils/index.js'
 
