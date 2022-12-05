@@ -979,6 +979,7 @@ jobs:
           mkdir -p ./stage/api/certs
           tar -xf api.tar.gz -C ./stage
           tar -xf app.tar.gz -C ./stage
+          cp ./api/package.json ./stage/api/package.json
           cp -r ./api/env ./stage/api/env
           cp -r ./api/samples ./stage/api/samples
           cp -r ./api/node_modules ./stage/api/node_modules
