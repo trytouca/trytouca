@@ -16,7 +16,13 @@ import {
   MetaModel,
   UserModel
 } from '../schemas/index.js'
-import { config, configMgr, logger, objectStore } from '../utils/index.js'
+import {
+  config,
+  hasMailTransport,
+  hasMailTransportEnvironmentVariables,
+  logger,
+  objectStore
+} from '../utils/index.js'
 
 /**
  * Registers primary user during server startup.
@@ -77,7 +83,7 @@ export async function setupAnonymousUser() {
 // then, for an intuitive user experience, we apply the environment variables
 // to the database so that they always take precedence.
 async function applyMailTransportEnvironmentVariables() {
-  if (!configMgr.hasMailTransportEnvironmentVariables()) {
+  if (!hasMailTransportEnvironmentVariables()) {
     return
   }
   const mail = pick(config.mail, ['host', 'pass', 'port', 'user'])
@@ -114,7 +120,7 @@ export async function statusReport() {
   if (!config.samples.enabled) {
     logger.warn('sample data submission is disabled')
   }
-  if (!configMgr.hasMailTransport()) {
+  if (!hasMailTransport()) {
     logger.warn('mail server not configured')
   }
   if (!existsSync(config.samples.directory)) {

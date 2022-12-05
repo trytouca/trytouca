@@ -4,10 +4,7 @@ import { dirname, normalize, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import dotenv from 'dotenv'
-import { pick } from 'lodash-es'
 import mongoose from 'mongoose'
-
-import { MetaModel } from '../schemas/index.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -208,35 +205,3 @@ export const config: IConfig = {
     root: env.WEBAPP_ROOT
   }
 }
-
-class ConfigManager {
-  constructor(private data: IConfig) {}
-  public getMongoUri(): string {
-    const m = this.data.mongo
-    return `mongodb://${m.user}:${m.pass}@${m.host}:${m.port}/${m.database}`
-  }
-  public getMongoConnectionOptions(): mongoose.ConnectOptions {
-    const file = this.data.mongo.tlsCertificateFile
-    return file
-      ? {
-          autoIndex: false,
-          retryWrites: false,
-          sslValidate: false,
-          tls: true,
-          tlsCAFile: file
-        }
-      : { autoIndex: false }
-  }
-  public async hasMailTransport(): Promise<boolean> {
-    return !!(await MetaModel.countDocuments({
-      'mail.host': { $exists: true, $ne: '' }
-    }))
-  }
-  public hasMailTransportEnvironmentVariables() {
-    return Object.values(
-      pick(config.mail, ['host', 'pass', 'port', 'user'])
-    ).every((v) => v)
-  }
-}
-
-export const configMgr = new ConfigManager(config)

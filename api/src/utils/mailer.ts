@@ -5,7 +5,7 @@ import { join } from 'node:path'
 
 import type { EPlatformRole } from '@touca/api-schema'
 // import { fromString } from 'html-to-text'
-import { has as lodashHas } from 'lodash-es'
+import { has as lodashHas, pick } from 'lodash-es'
 import mustache from 'mustache'
 import nodemailer, { Transporter } from 'nodemailer'
 import { Attachment } from 'nodemailer/lib/mailer'
@@ -121,4 +121,16 @@ export async function mailAdmins(params: { title: string; body: string }) {
     })
     return mailUsers(users, 'Admin Alert', 'mail-admin-notify', params)
   }
+}
+
+export async function hasMailTransport(): Promise<boolean> {
+  return !!(await MetaModel.countDocuments({
+    'mail.host': { $exists: true, $ne: '' }
+  }))
+}
+
+export function hasMailTransportEnvironmentVariables() {
+  return Object.values(
+    pick(config.mail, ['host', 'pass', 'port', 'user'])
+  ).every((v) => v)
 }

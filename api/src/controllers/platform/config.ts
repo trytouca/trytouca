@@ -5,7 +5,11 @@ import { NextFunction, Request, Response } from 'express'
 
 import { findPlatformRole } from '../../middlewares/index.js'
 import { MetaModel } from '../../schemas/index.js'
-import { configMgr, logger, redisClient } from '../../utils/index.js'
+import {
+  hasMailTransportEnvironmentVariables,
+  logger,
+  redisClient
+} from '../../utils/index.js'
 
 export async function platformConfig(
   req: Request,
@@ -47,7 +51,7 @@ export async function platformConfig(
   }
   if (meta?.mail) {
     response.mail = {
-      configurable: !configMgr.hasMailTransportEnvironmentVariables(),
+      configurable: !hasMailTransportEnvironmentVariables(),
       host: meta.mail.host,
       pass: meta.mail.pass,
       port: meta.mail.port,
