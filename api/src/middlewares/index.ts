@@ -21,4 +21,4 @@ export {
   hasAccount,
   hasSuspendedAccount
 } from './user.js'
-export { inputs, validationRules } from './utils.js'
+export { validationRules, validationMap } from './utils.js'

@@ -8,30 +8,30 @@ import {
   installHandle,
   telemetryHandle
 } from '../controllers/relay/index.js'
-import * as middleware from '../middlewares/index.js'
+import { isCloudInstance, validationRules } from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
 
 router.post(
   '/install',
-  middleware.isCloudInstance,
+  isCloudInstance,
   express.json(),
   promisable(installHandle, 'process submitted self-hosted install form')
 )
 
 router.post(
   '/telemetry',
-  middleware.isCloudInstance,
+  isCloudInstance,
   express.json(),
   promisable(telemetryHandle, 'process submitted usage report')
 )
 
 router.post(
   '/feedback',
-  middleware.isCloudInstance,
+  isCloudInstance,
   express.json(),
-  middleware.inputs([
+  validationRules([
     ev
       .body('body')
       .exists()

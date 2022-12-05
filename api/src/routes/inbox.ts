@@ -1,22 +1,22 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import e from 'express'
+import { Router } from 'express'
 
 import { inboxList, inboxSeen } from '../controllers/inbox/index.js'
-import * as middleware from '../middlewares/index.js'
+import { isAuthenticated } from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 
-const router = e.Router()
+const router = Router()
 
 router.get(
   '/',
-  middleware.isAuthenticated,
+  isAuthenticated,
   promisable(inboxList, 'list user notifications')
 )
 
 router.post(
   '/seen',
-  middleware.isAuthenticated,
+  isAuthenticated,
   promisable(inboxSeen, 'mark user notifications as seen')
 )
 

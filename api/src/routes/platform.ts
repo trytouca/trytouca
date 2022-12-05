@@ -14,7 +14,13 @@ import {
   platformStats,
   platformUpdate
 } from '../controllers/platform/index.js'
-import * as middleware from '../middlewares/index.js'
+import {
+  hasAccount,
+  hasSuspendedAccount,
+  isAuthenticated,
+  isPlatformAdmin,
+  validationRules
+} from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
@@ -37,18 +43,18 @@ router.patch(
 
 router.get(
   '/stats',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
+  isAuthenticated,
+  isPlatformAdmin,
   promisable(platformStats, 'get platform statistics')
 )
 
 router.patch(
   '/account/:account',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
-  middleware.hasAccount,
+  isAuthenticated,
+  isPlatformAdmin,
+  hasAccount,
   express.json(),
-  middleware.inputs([
+  validationRules([
     ev
       .body('role')
       .custom(
@@ -61,17 +67,17 @@ router.patch(
 
 router.post(
   '/account/:account/suspend',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
-  middleware.hasAccount,
+  isAuthenticated,
+  isPlatformAdmin,
+  hasAccount,
   promisable(platformAccountSuspend, 'suspend account')
 )
 
 router.post(
   '/account/:account/delete',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
-  middleware.hasSuspendedAccount,
+  isAuthenticated,
+  isPlatformAdmin,
+  hasSuspendedAccount,
   promisable(platformAccountDelete, 'delete account')
 )
 

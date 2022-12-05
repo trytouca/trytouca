@@ -10,7 +10,17 @@ import {
   elementLookup,
   elementUpdate
 } from '../controllers/element/index.js'
-import * as middleware from '../middlewares/index.js'
+import {
+  hasArtifact,
+  hasBatch,
+  hasElement,
+  hasSuite,
+  hasTeam,
+  isAuthenticated,
+  isClientAuthenticated,
+  isTeamMember,
+  validationRules
+} from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
@@ -21,41 +31,41 @@ const router = express.Router()
  */
 router.get(
   '/:team/:suite',
-  middleware.isClientAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
+  isClientAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
   promisable(elementList, 'list suite elements')
 )
 
 router.get(
   '/v2/:team/:suite',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
   promisable(elementList, 'list suite elements')
 )
 
 router.get(
   '/:team/:suite/:element',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasElement,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasElement,
   promisable(elementLookup, 'lookup an element')
 )
 
 router.patch(
   '/:team/:suite/:element',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasElement,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasElement,
   express.json(),
-  middleware.inputs([
+  validationRules([
     ev
       .body('note')
       .isString()
@@ -74,24 +84,24 @@ router.patch(
 
 router.get(
   '/:team/:suite/:element/compare/:batch/:dstBatch/:dstElement/:dstSuite',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasElement,
-  middleware.hasBatch,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasElement,
+  hasBatch,
   promisable(elementCompare, 'compare an element')
 )
 
 router.get(
   '/:team/:suite/:element/artifact/:batch/:artifact',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasElement,
-  middleware.hasBatch,
-  middleware.hasArtifact,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasElement,
+  hasBatch,
+  hasArtifact,
   promisable(elementFile, 'fetch an artifact')
 )
 

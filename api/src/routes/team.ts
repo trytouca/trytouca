@@ -25,143 +25,142 @@ import {
   teamPopulate,
   teamUpdate
 } from '../controllers/team/index.js'
-import * as middleware from '../middlewares/index.js'
+import {
+  hasAccount,
+  hasMember,
+  hasTeam,
+  isAuthenticated,
+  isPlatformAdmin,
+  isTeamAdmin,
+  isTeamInvitee,
+  isTeamMember,
+  isTeamOwner,
+  validationMap,
+  validationRules
+} from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
 
-router.get(
-  '/',
-  middleware.isAuthenticated,
-  promisable(ctrlTeamList, 'list teams')
-)
+router.get('/', isAuthenticated, promisable(ctrlTeamList, 'list teams'))
 
 router.post(
   '/',
-  middleware.isAuthenticated,
+  isAuthenticated,
   express.json(),
-  middleware.inputs([
-    middleware.validationRules
-      .get('entity-name')
-      .exists()
-      .withMessage('required'),
-    middleware.validationRules
-      .get('entity-slug')
-      .exists()
-      .withMessage('required')
+  validationRules([
+    validationMap.get('entity-name').exists().withMessage('required'),
+    validationMap.get('entity-slug').exists().withMessage('required')
   ]),
   promisable(ctrlTeamCreate, 'create team')
 )
 
 router.get(
   '/:team',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
   promisable(ctrlTeamLookup, 'lookup team')
 )
 
 router.patch(
   '/:team',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamOwner,
+  isAuthenticated,
+  hasTeam,
+  isTeamOwner,
   express.json(),
-  middleware.inputs([
-    middleware.validationRules.get('entity-name').optional(),
-    middleware.validationRules.get('entity-slug').optional()
+  validationRules([
+    validationMap.get('entity-name').optional(),
+    validationMap.get('entity-slug').optional()
   ]),
   promisable(teamUpdate, 'update team')
 )
 
 router.delete(
   '/:team',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamOwner,
+  isAuthenticated,
+  hasTeam,
+  isTeamOwner,
   promisable(ctrlTeamRemove, 'remove team')
 )
 
 router.post(
   '/:team/populate',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
   promisable(teamPopulate, 'populate team with sample data')
 )
 
 router.post(
   '/:team/invite',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamAdmin,
+  isAuthenticated,
+  hasTeam,
+  isTeamAdmin,
   express.json(),
-  middleware.inputs([
-    middleware.validationRules.get('email'),
-    middleware.validationRules.get('fullname')
-  ]),
+  validationRules([validationMap.get('email'), validationMap.get('fullname')]),
   promisable(teamInviteAdd, 'invite user to team')
 )
 
 router.post(
   '/:team/invite/rescind',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamAdmin,
+  isAuthenticated,
+  hasTeam,
+  isTeamAdmin,
   express.json(),
-  middleware.inputs([middleware.validationRules.get('email')]),
+  validationRules([validationMap.get('email')]),
   promisable(teamInviteRescind, 'rescind team invitation')
 )
 
 router.post(
   '/:team/invite/accept',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamInvitee,
+  isAuthenticated,
+  hasTeam,
+  isTeamInvitee,
   promisable(teamInviteAccept, 'join team')
 )
 
 router.post(
   '/:team/invite/decline',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamInvitee,
+  isAuthenticated,
+  hasTeam,
+  isTeamInvitee,
   promisable(teamInviteDecline, 'decline team invitation')
 )
 
 router.post(
   '/:team/leave',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
   promisable(teamLeave, 'leave from team')
 )
 
 router.get(
   '/:team/member',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
   promisable(teamMemberList, 'list team members')
 )
 
 router.post(
   '/:team/member/:account',
-  middleware.isAuthenticated,
-  middleware.isPlatformAdmin,
-  middleware.hasTeam,
-  middleware.hasAccount,
+  isAuthenticated,
+  isPlatformAdmin,
+  hasTeam,
+  hasAccount,
   promisable(teamMemberAdd, 'add member to team')
 )
 
 router.patch(
   '/:team/member/:member',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamAdmin,
-  middleware.hasMember,
+  isAuthenticated,
+  hasTeam,
+  isTeamAdmin,
+  hasMember,
   express.json(),
-  middleware.inputs([
+  validationRules([
     ev
       .body('role')
       .custom(
@@ -178,42 +177,42 @@ router.patch(
 
 router.delete(
   '/:team/member/:member',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamAdmin,
-  middleware.hasMember,
+  isAuthenticated,
+  hasTeam,
+  isTeamAdmin,
+  hasMember,
   promisable(teamMemberRemove, 'remove team member')
 )
 
 router.post(
   '/:team/join',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
+  isAuthenticated,
+  hasTeam,
   promisable(teamJoinAdd, 'request to join')
 )
 
 router.delete(
   '/:team/join',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
+  isAuthenticated,
+  hasTeam,
   promisable(teamJoinRescind, 'rescind join request')
 )
 
 router.post(
   '/:team/join/:account',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamAdmin,
-  middleware.hasAccount,
+  isAuthenticated,
+  hasTeam,
+  isTeamAdmin,
+  hasAccount,
   promisable(teamJoinAccept, 'accept join request')
 )
 
 router.delete(
   '/:team/join/:account',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamAdmin,
-  middleware.hasAccount,
+  isAuthenticated,
+  hasTeam,
+  isTeamAdmin,
+  hasAccount,
   promisable(teamJoinDecline, 'decline join request')
 )
 

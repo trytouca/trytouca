@@ -15,7 +15,11 @@ import {
   authVerifyCreate,
   authVerifyResend
 } from '../controllers/auth/index.js'
-import * as middleware from '../middlewares/index.js'
+import {
+  isAuthenticated,
+  validationMap,
+  validationRules
+} from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
@@ -23,14 +27,14 @@ const router = express.Router()
 router.post(
   '/signup',
   express.json(),
-  middleware.inputs([middleware.validationRules.get('email')]),
+  validationRules([validationMap.get('email')]),
   promisable(authVerifyCreate, 'create user account')
 )
 
 router.post(
   '/signup/resend',
   express.json(),
-  middleware.inputs([middleware.validationRules.get('email')]),
+  validationRules([validationMap.get('email')]),
   promisable(authVerifyResend, 'resend verification email')
 )
 
@@ -42,9 +46,9 @@ router.post(
 router.post(
   '/signin',
   express.json(),
-  middleware.inputs([
-    middleware.validationRules.get('username'),
-    middleware.validationRules.get('password')
+  validationRules([
+    validationMap.get('username'),
+    validationMap.get('password')
   ]),
   promisable(authSessionCreate, 'create session')
 )
@@ -52,49 +56,49 @@ router.post(
 router.post(
   '/signin/google',
   express.json(),
-  middleware.inputs([middleware.validationRules.get('google_token')]),
+  validationRules([validationMap.get('google_token')]),
   promisable(authGoogleSignin, 'create google session')
 )
 
 router.post(
   '/signout',
-  middleware.isAuthenticated,
+  isAuthenticated,
   promisable(authSessionRemove, 'remove session')
 )
 
 router.post(
   '/extend',
-  middleware.isAuthenticated,
+  isAuthenticated,
   promisable(authSessionExtend, 'extend session')
 )
 
 router.post(
   '/reset',
   express.json(),
-  middleware.inputs([middleware.validationRules.get('email')]),
+  validationRules([validationMap.get('email')]),
   promisable(authResetKeyCreate, 'create password reset key')
 )
 
 router.post(
   '/reset/resend',
   express.json(),
-  middleware.inputs([middleware.validationRules.get('email')]),
+  validationRules([validationMap.get('email')]),
   promisable(authResetKeyResend, 'resend password reset key')
 )
 
 router.get(
   '/reset/:key',
-  middleware.inputs([middleware.validationRules.get('resetKey')]),
+  validationRules([validationMap.get('resetKey')]),
   promisable(authResetKeyCheck, 'evaluate password reset key')
 )
 
 router.post(
   '/reset/:key',
   express.json(),
-  middleware.inputs([
-    middleware.validationRules.get('resetKey'),
-    middleware.validationRules.get('username'),
-    middleware.validationRules.get('password')
+  validationRules([
+    validationMap.get('resetKey'),
+    validationMap.get('username'),
+    validationMap.get('password')
   ]),
   promisable(authResetKeyApply, 'reset account password')
 )

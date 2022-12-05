@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import express from 'express'
+import { json, Router } from 'express'
 
 import { batchCompare } from '../controllers/batch/compare.js'
 import {
@@ -12,99 +12,109 @@ import {
   ctrlBatchRemove,
   ctrlBatchSeal
 } from '../controllers/batch/index.js'
-import * as middleware from '../middlewares/index.js'
+import {
+  hasBatch,
+  hasSuite,
+  hasTeam,
+  isAuthenticated,
+  isClientAuthenticated,
+  isTeamAdmin,
+  isTeamMember,
+  validationMap,
+  validationRules
+} from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 
-const router = express.Router()
+const router = Router()
 
 router.get(
   '/:team/:suite',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
   promisable(ctrlBatchList, 'list batches')
 )
 
 router.get(
   '/:team/:suite/:batch',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasBatch,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasBatch,
   promisable(ctrlBatchLookup, 'lookup a batch')
 )
 
 router.delete(
   '/:team/:suite/:batch',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamAdmin,
-  middleware.hasSuite,
-  middleware.hasBatch,
+  isAuthenticated,
+  hasTeam,
+  isTeamAdmin,
+  hasSuite,
+  hasBatch,
   promisable(ctrlBatchRemove, 'remove a batch')
 )
 
 router.post(
   '/:team/:suite/:batch/seal',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasBatch,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasBatch,
   promisable(ctrlBatchSeal, 'seal a batch')
 )
 
 router.post(
   '/:team/:suite/:batch/seal2',
-  middleware.isClientAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasBatch,
+  isClientAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasBatch,
   promisable(ctrlBatchSeal, 'seal a batch')
 )
 
 router.post(
   '/:team/:suite/:batch/promote',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasBatch,
-  express.json(),
-  middleware.inputs([middleware.validationRules.get('reason')]),
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasBatch,
+  json(),
+  validationRules([validationMap.get('reason')]),
   promisable(ctrlBatchPromote, 'promote a batch')
 )
 
 router.get(
   '/:team/:suite/:batch/compare/:dstBatch/:dstSuite',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasBatch,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasBatch,
   promisable(batchCompare, 'compare a batch')
 )
 
 router.get(
   '/:team/:suite/:batch/export/pdf',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasBatch,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasBatch,
   promisable(ctrlBatchExportPDF, 'export batch results')
 )
 
 router.get(
   '/:team/:suite/:batch/export/zip',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
-  middleware.hasBatch,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasBatch,
   promisable(ctrlBatchExportZIP, 'export batch results')
 )
 

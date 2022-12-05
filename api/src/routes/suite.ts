@@ -11,7 +11,15 @@ import {
   suiteSubscribe,
   suiteUpdate
 } from '../controllers/suite/index.js'
-import * as middleware from '../middlewares/index.js'
+import {
+  hasSuite,
+  hasTeam,
+  isAuthenticated,
+  isTeamAdmin,
+  isTeamMember,
+  validationMap,
+  validationRules
+} from '../middlewares/index.js'
 import { handleEvents } from '../utils/events.js'
 import { promisable } from '../utils/routing.js'
 
@@ -19,22 +27,22 @@ const router = express.Router()
 
 router.get(
   '/:team',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
   promisable(ctrlSuiteList, 'list suites')
 )
 
 router.post(
   '/:team',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
   express.json(),
-  middleware.inputs([
-    middleware.validationRules.get('entity-name'),
+  validationRules([
+    validationMap.get('entity-name'),
     ev.body('name').exists().withMessage('required'),
-    middleware.validationRules.get('entity-slug'),
+    validationMap.get('entity-slug'),
     ev.body('slug').exists().withMessage('required')
   ]),
   promisable(ctrlSuiteCreate, 'create suite')
@@ -42,23 +50,23 @@ router.post(
 
 router.get(
   '/:team/:suite',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
   promisable(ctrlSuiteLookup, 'lookup suite')
 )
 
 router.patch(
   '/:team/:suite',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
   express.json(),
-  middleware.inputs([
-    middleware.validationRules.get('entity-name').optional(),
-    middleware.validationRules.get('entity-slug').optional(),
+  validationRules([
+    validationMap.get('entity-name').optional(),
+    validationMap.get('entity-slug').optional(),
     ev
       .body('retainFor')
       .isInt({ min: 86400, max: 157680000 })
@@ -79,28 +87,28 @@ router.patch(
 
 router.delete(
   '/:team/:suite',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamAdmin,
-  middleware.hasSuite,
+  isAuthenticated,
+  hasTeam,
+  isTeamAdmin,
+  hasSuite,
   promisable(ctrlSuiteRemove, 'remove suite')
 )
 
 router.get(
   '/:team/:suite/events',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
   handleEvents
 )
 
 router.patch(
   '/:team/:suite/subscribe',
-  middleware.isAuthenticated,
-  middleware.hasTeam,
-  middleware.isTeamMember,
-  middleware.hasSuite,
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
   express.json(),
   promisable(suiteSubscribe, 'subscribe suite')
 )

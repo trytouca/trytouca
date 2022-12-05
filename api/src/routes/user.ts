@@ -9,44 +9,48 @@ import {
   userSessions,
   userUpdate
 } from '../controllers/user/index.js'
-import * as middleware from '../middlewares/index.js'
+import {
+  isAuthenticated,
+  validationMap,
+  validationRules
+} from '../middlewares/index.js'
 import { promisable } from '../utils/routing.js'
 
 const router = express.Router()
 
 router.get(
   '/',
-  middleware.isAuthenticated,
+  isAuthenticated,
   promisable(userLookup, 'lookup user information')
 )
 
 router.patch(
   '/',
-  middleware.isAuthenticated,
+  isAuthenticated,
   express.json(),
-  middleware.inputs([
-    middleware.validationRules.get('fullname').optional(),
-    middleware.validationRules.get('username').optional(),
-    middleware.validationRules.get('password').optional()
+  validationRules([
+    validationMap.get('fullname').optional(),
+    validationMap.get('username').optional(),
+    validationMap.get('password').optional()
   ]),
   promisable(userUpdate, 'update user')
 )
 
 router.delete(
   '/',
-  middleware.isAuthenticated,
+  isAuthenticated,
   promisable(ctrlUserDelete, 'delete own account')
 )
 
 router.get(
   '/sessions',
-  middleware.isAuthenticated,
+  isAuthenticated,
   promisable(userSessions, 'list active sessions')
 )
 
 router.delete(
   '/sessions/:id',
-  middleware.isAuthenticated,
+  isAuthenticated,
   promisable(userSessionDelete, 'expire active session')
 )
 
