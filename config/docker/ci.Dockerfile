@@ -10,14 +10,15 @@ LABEL org.opencontainers.image.authors="hello@touca.io"
 LABEL com.docker.extension.publisher-url="https://touca.io"
 LABEL com.docker.desktop.extension.icon="https://touca.io/images/touca_logo_bgwt.png"
 
+COPY node_modules                   /opt/touca/node_modules
+COPY packages                       /opt/touca/packages
 COPY api/certs                      /opt/touca/api/certs
 COPY api/dist                       /opt/touca/api/dist
 COPY api/env                        /opt/touca/api/env
-COPY api/samples                    /opt/touca/api/samples
+COPY api/package.json               /opt/touca/api/package.json
 COPY api/node_modules               /opt/touca/api/node_modules
+COPY api/samples                    /opt/touca/api/samples
 COPY app/dist                       /opt/touca/app/dist
-COPY node_modules                   /opt/touca/node_modules
-COPY packages                       /opt/touca/packages
 
 EXPOSE 8080
 

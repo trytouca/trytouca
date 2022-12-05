@@ -997,7 +997,7 @@ jobs:
             type=semver,pattern={{version}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}}.{{minor}},value=${{ steps.params.outputs.version }}
             type=semver,pattern={{major}},value=${{ steps.params.outputs.version }}
-      - name: build api docker image
+      - name: build server docker image
         uses: docker/build-push-action@v3
         if: steps.params.outputs.changed == 'true'
         with:
