@@ -2,7 +2,7 @@
 
 import { describe, expect, test } from 'vitest';
 
-import * as types from '../src/types';
+import { TypeHandler } from '../src/types';
 
 class DateOfBirth {
   constructor(
@@ -13,7 +13,7 @@ class DateOfBirth {
 }
 
 describe('basic operations', () => {
-  const handler = new types.TypeHandler();
+  const handler = new TypeHandler();
   test('check undefined', () => {
     const val = handler.transform(undefined);
     expect(val.json()).toEqual('undefined');
@@ -41,6 +41,10 @@ describe('basic operations', () => {
   test('check number type', () => {
     const val = handler.transform(1.5);
     expect(val.json()).toEqual(1.5);
+  });
+  test('check blob type', () => {
+    const val = handler.transform(Buffer.from('hello'));
+    expect(val.json()).toEqual('binary');
   });
   test('when empty', () => {
     const val = handler.transform([]);
@@ -89,7 +93,7 @@ describe('basic operations', () => {
 
 describe('custom serializer', () => {
   test('override default serialization', () => {
-    const handler = new types.TypeHandler();
+    const handler = new TypeHandler();
     handler.add_serializer(DateOfBirth.name, (x) => ({
       y: x.year,
       m: x.month,
