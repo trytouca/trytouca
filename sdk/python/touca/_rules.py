@@ -15,47 +15,58 @@ class ComparisonRule(ABC):
         pass
 
 
-class NumberRule(ComparisonRule):
-    _percent: bool = None
+class decimal_rule(ComparisonRule):
+    @classmethod
+    def absolute(cls, *, min=None, max=None):
+        return cls(
+            mode=schema.ComparisonRuleMode.Absolute,
+            min=min,
+            max=max,
+        )
 
-    def absolute(self, *, max=None, min=None):
-        self._mode = "absolute"
-        self._max = max
+    @classmethod
+    def relative(cls, *, max=None, percent=False):
+        return cls(
+            mode=schema.ComparisonRuleMode.Relative,
+            max=max,
+            percent=percent,
+        )
+
+    def __init__(
+        self,
+        *,
+        mode: schema.ComparisonRuleMode = None,
+        min=None,
+        max=None,
+        percent=None
+    ):
+        self._mode = mode
         self._min = min
-        return self
-
-    def relative(self, *, max=None, percent=None):
-        self._mode = "relative"
         self._max = max
         self._percent = percent
-        return self
 
     def json(self):
+        mode = (
+            "absolute"
+            if self._mode == schema.ComparisonRuleMode.Absolute
+            else "relative"
+        )
         out = {
             "type": "number",
-            "mode": self._mode,
-            "max": self._max,
+            "mode": mode,
             "min": self._min,
+            "max": self._max,
             "percent": self._percent,
         }
         return {k: v for k, v in out.items() if v is not None}
 
     def serialize(self, builder: Builder):
         schema.ComparisonRuleDoubleStart(builder)
-        schema.ComparisonRuleDoubleAddMode(
-            builder,
-            schema.ComparisonRuleMode.Absolute
-            if self._mode == "absolute"
-            else schema.ComparisonRuleMode.Relative,
-        )
-        if self._max:
-            schema.ComparisonRuleDoubleAddMax(builder, self._max)
-        if self._min:
+        schema.ComparisonRuleDoubleAddMode(builder, self._mode)
+        if self._min is not None:
             schema.ComparisonRuleDoubleAddMin(builder, self._min)
-        if self._percent:
+        if self._max is not None:
+            schema.ComparisonRuleDoubleAddMax(builder, self._max)
+        if self._percent is not None:
             schema.ComparisonRuleDoubleAddPercent(builder, self._percent)
         return schema.ComparisonRuleDoubleEnd(builder)
-
-
-def number_rule():
-    return NumberRule()
