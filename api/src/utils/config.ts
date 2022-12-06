@@ -48,12 +48,8 @@ interface IConfig {
     region: string
   }
   mongo: {
-    database: string
-    host: string
-    pass: string
-    port: number
     tlsCertificateFile?: string
-    user: string
+    uri: string
   }
   redis: {
     database: string
@@ -103,6 +99,15 @@ function findPath(environment = '') {
   return normalize(`${thisDirectory}/../../env/${name}`)
 }
 
+function getMongoConnectionUri() {
+  const database = env.MONGO_BASE || 'touca'
+  const host = env.MONGO_HOST
+  const pass = env.MONGO_PASS || 'toucapass'
+  const port = Number(env.MONGO_PORT) || 27017
+  const user = env.MONGO_USER || 'toucauser'
+  return `mongodb://${user}:${pass}@${host}:${port}/${database}`
+}
+
 dotenv.config({ path: findPath() })
 dotenv.config({ path: findPath(process.env.ENV_FILE) })
 
@@ -150,12 +155,8 @@ export const config: IConfig = {
     region: env.MINIO_REGION || 'us-east-2'
   },
   mongo: {
-    database: env.MONGO_BASE || 'touca',
-    host: env.MONGO_HOST,
-    pass: env.MONGO_PASS || 'toucapass',
-    port: Number(env.MONGO_PORT) || 27017,
     tlsCertificateFile: env.MONGO_TLS_CERT_FILE,
-    user: env.MONGO_USER || 'toucauser'
+    uri: env.MONGO_URI ?? getMongoConnectionUri()
   },
   redis: {
     database: env.REDIS_BASE || 'touca',

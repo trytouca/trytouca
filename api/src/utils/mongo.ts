@@ -7,8 +7,7 @@ import { logger } from './logger.js'
 
 export async function makeConnectionMongo(): Promise<boolean> {
   mongoose.Promise = Promise
-  const mongo_uri = `mongodb://${config.mongo.user}:${config.mongo.pass}@${config.mongo.host}:${config.mongo.port}/${config.mongo.database}`
-  const mongo_options = config.mongo.tlsCertificateFile
+  const options = config.mongo.tlsCertificateFile
     ? {
         autoIndex: false,
         retryWrites: false,
@@ -17,8 +16,8 @@ export async function makeConnectionMongo(): Promise<boolean> {
         tlsCAFile: config.mongo.tlsCertificateFile
       }
     : { autoIndex: false }
-  logger.silly('connecting to %s with options %j', mongo_uri, mongo_options)
-  await mongoose.connect(mongo_uri, mongo_options)
+  logger.silly('connecting to %s with options %j', config.mongo.uri, options)
+  await mongoose.connect(config.mongo.uri, options)
   mongoose.connection.on('disconnected', () => {
     logger.debug('closed database connection')
   })
