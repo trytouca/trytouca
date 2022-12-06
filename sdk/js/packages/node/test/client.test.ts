@@ -9,9 +9,7 @@ import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 import { NodeClient } from '../src/client';
 
-async function make_client(): Promise<NodeClient> {
-  const delay = (ms: number) => new Promise((v) => setTimeout(v, ms));
-  const courses = ['math', 'english'];
+async function makeEmptyClient() {
   const client = new NodeClient();
   client.configure({
     team: 'some-team',
@@ -19,6 +17,13 @@ async function make_client(): Promise<NodeClient> {
     version: 'some-version'
   });
   client.declare_testcase('some-case');
+  return client;
+}
+
+async function makeClient(): Promise<NodeClient> {
+  const delay = (ms: number) => new Promise((v) => setTimeout(v, ms));
+  const courses = ['math', 'english'];
+  const client = await makeEmptyClient();
   client.assume('username', 'potter');
   client.check('is_famous', true);
   client.check('tall', 6.1);
@@ -115,8 +120,105 @@ describe('check saving file', () => {
     expect(content).toEqual('[]');
   });
 
+  test('capture decimal with absolute rule and save as json', async () => {
+    const client = await makeEmptyClient();
+    client.check('decimal_rule_absolute', 0.76, {
+      rule: { type: 'number', mode: 'absolute', min: 0.7 }
+    });
+    const filepath = path.join(dir, 'some-file');
+    await client.save_json(filepath);
+    const content = fs.readFileSync(filepath, { encoding: 'utf-8' });
+    expect(content).toContain(
+      JSON.stringify([
+        {
+          key: 'decimal_rule_absolute',
+          value: 0.76,
+          rule: { type: 'number', mode: 'absolute', min: 0.7 }
+        }
+      ])
+    );
+  });
+
+  test('capture decimal with relative rule and save as json', async () => {
+    const client = await makeEmptyClient();
+    client.check('decimal_rule_relative', 0.76, {
+      rule: { type: 'number', mode: 'relative', max: 0.1, percent: true }
+    });
+    const filepath = path.join(dir, 'some-file');
+    await client.save_json(filepath);
+    const content = fs.readFileSync(filepath, { encoding: 'utf-8' });
+    expect(content).toContain(
+      JSON.stringify([
+        {
+          key: 'decimal_rule_relative',
+          value: 0.76,
+          rule: { type: 'number', mode: 'relative', max: 0.1, percent: true }
+        }
+      ])
+    );
+  });
+
+  test('capture decimal with rule and save as binary', async () => {
+    const client = await makeEmptyClient();
+    client.check('decimal_rule_absolute', 0.76, {
+      rule: { type: 'number', mode: 'absolute', min: 0.7 }
+    });
+    client.check('decimal_rule_relative', 0.76, {
+      rule: { type: 'number', mode: 'relative', max: 0.1, percent: true }
+    });
+    const filepath = path.join(dir, 'some-file');
+    await client.save_binary(filepath);
+    const content = fs.readFileSync(filepath, { encoding: 'binary' });
+    expect(content.length).not.toEqual(0);
+  });
+
+  test('capture external file and save as json', async () => {
+    const client = await makeEmptyClient();
+    const externalFile = path.join(dir, 'some_external_file');
+    fs.writeFileSync(externalFile, 'hello');
+    client.checkFile('some_external_file', externalFile);
+    const filepath = path.join(dir, 'some-file');
+    await client.save_json(filepath);
+    const content = fs.readFileSync(filepath, { encoding: 'utf-8' });
+    expect(content).toContain(
+      JSON.stringify([{ key: 'some_external_file', value: externalFile }])
+    );
+  });
+
+  test('capture external file and save as binary', async () => {
+    const client = await makeEmptyClient();
+    const externalFile = path.join(dir, 'some_external_file');
+    fs.writeFileSync(externalFile, 'hello');
+    client.checkFile('some_external_file', externalFile);
+    const filepath = path.join(dir, 'some-file');
+    await client.save_binary(filepath);
+    const content = fs.readFileSync(filepath, { encoding: 'binary' });
+    expect(content.length).not.toEqual(0);
+  });
+
+  test('capture blob and save as json', async () => {
+    const client = await makeEmptyClient();
+    client.check('some_blob', Buffer.from('hello'));
+    const filepath = path.join(dir, 'some-file');
+    await client.save_json(filepath);
+    const content = fs.readFileSync(filepath, { encoding: 'utf-8' });
+    expect(content).toContain(
+      JSON.stringify([{ key: 'some_blob', value: 'binary' }])
+    );
+  });
+
+  test('capture blob and save as binary', async () => {
+    const client = await makeEmptyClient();
+    client.check('some_blob', Buffer.from('hello'));
+    const filepath = path.join(dir, 'some-file');
+    await client.save_binary(filepath);
+    const content = fs.readFileSync(filepath, { encoding: 'binary' });
+    expect(content.length).not.toEqual(0);
+  });
+
   test('after calling forget', async () => {
-    const client = await make_client();
+    const client = await makeEmptyClient();
+    client.check('some-key', 'some-value');
     client.forget_testcase('some-case');
     const filepath = path.join(dir, 'some-file');
     await client.save_json(filepath);
@@ -146,7 +248,7 @@ describe('check saving file', () => {
   });
 
   test('results in json format', async () => {
-    const client = await make_client();
+    const client = await makeClient();
     const filepath = path.join(dir, 'some-json-file');
     await client.save_json(filepath, ['some-case']);
     const content = fs.readFileSync(filepath, { encoding: 'utf-8' });
@@ -186,7 +288,7 @@ describe('check saving file', () => {
   });
 
   test('all cases in binary format', async () => {
-    const client = await make_client();
+    const client = await makeClient();
     const filepath = path.join(dir, 'some-file');
     await client.save_binary(filepath);
     const content = fs.readFileSync(filepath, { encoding: 'binary' });

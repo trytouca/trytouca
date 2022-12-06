@@ -427,7 +427,7 @@ jobs:
         if: |
           steps.changes.outputs.sdk_js == 'true' && matrix.node-version == 16 && github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          tar -zcf js-node-test-coverage.tar.gz packages/node/coverage/lcov-report
+          tar -zcf js-node-test-coverage.tar.gz packages/node/local/coverage
           aws s3 cp js-node-test-coverage.tar.gz ${{ steps.params.outputs.buckets }}/
       - name: upload coverage to codecov
         if: |
@@ -438,7 +438,7 @@ jobs:
           NODE: ${{ matrix.node-version }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./sdk/js/packages/node/coverage/clover.xml
+          files: ./sdk/js/packages/node/local/coverage/clover.xml
           flags: sdk-js
           env_vars: OS,NODE
           fail_ci_if_error: true
