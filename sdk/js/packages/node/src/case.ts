@@ -2,7 +2,7 @@
 
 import { Builder } from 'flatbuffers';
 
-import * as schema from './schema';
+import * as schema from './schema.js';
 import {
   BlobType,
   ComparisonRule,
@@ -10,7 +10,7 @@ import {
   ResultJson,
   ToucaType,
   VectorType
-} from './types';
+} from './types.js';
 
 export type CheckOptions = { rule?: ComparisonRule };
 

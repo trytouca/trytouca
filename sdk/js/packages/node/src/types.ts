@@ -5,7 +5,7 @@ import { readFileSync } from 'node:fs';
 import { createHash } from 'crypto';
 import { Builder } from 'flatbuffers';
 
-import * as schema from './schema';
+import * as schema from './schema.js';
 
 type ComparisonRuleDouble =
   | { type: 'number'; mode: 'absolute'; max?: number; min?: number }

@@ -170,7 +170,7 @@ export class T_Object {
   static createValuesVector(builder: Builder, data: Offset[]): Offset {
     builder.startVector(4, data.length, 4);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addOffset(data[i]!);
+      builder.addOffset(data[i]);
     }
     return builder.endVector();
   }
@@ -193,7 +193,7 @@ export class Array {
   static createValuesVector(builder: Builder, data: Offset[]): Offset {
     builder.startVector(4, data.length, 4);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addOffset(data[i]!);
+      builder.addOffset(data[i]);
     }
     return builder.endVector();
   }
@@ -281,7 +281,7 @@ export class Results {
   static createEntriesVector(builder: Builder, data: Offset[]): Offset {
     builder.startVector(4, data.length, 4);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addOffset(data[i]!);
+      builder.addOffset(data[i]);
     }
     return builder.endVector();
   }
@@ -304,7 +304,7 @@ export class Metrics {
   static createEntriesVector(builder: Builder, data: Offset[]): Offset {
     builder.startVector(4, data.length, 4);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addOffset(data[i]!);
+      builder.addOffset(data[i]);
     }
     return builder.endVector();
   }
@@ -384,7 +384,7 @@ export class MessageBuffer {
   ): Offset {
     builder.startVector(1, data.length, 1);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addInt8(data[i]!);
+      builder.addInt8(data[i]);
     }
     return builder.endVector();
   }
@@ -407,7 +407,7 @@ export class Messages {
   static createMessagesVector(builder: Builder, data: Offset[]): Offset {
     builder.startVector(4, data.length, 4);
     for (let i = data.length - 1; i >= 0; i--) {
-      builder.addOffset(data[i]!);
+      builder.addOffset(data[i]);
     }
     return builder.endVector();
   }
