@@ -34,7 +34,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { gte } from 'semver';
 import * as util from 'util';
-import yargs = require('yargs/yargs'); // cannot be partially imported
+import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import { NodeClient } from './client';

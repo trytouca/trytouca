@@ -1,5 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { beforeEach, describe, expect, test } from 'vitest';
+
 import { Case } from '../src/case';
 import { ToucaType, TypeHandler } from '../src/types';
 

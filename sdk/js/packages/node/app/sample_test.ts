@@ -12,7 +12,9 @@ touca.workflow(
     touca.assume('username', student.username);
     touca.check('fullname', student.fullname);
     touca.check('birth_date', student.dob);
-    touca.check('gpa', student.gpa);
+    touca.check('gpa', student.gpa, {
+      rule: { type: 'number', mode: 'absolute', min: 3 }
+    });
     touca.add_metric('external_source', 1500);
   },
   { testcases: async () => ['alice', 'bob', 'charlie'] }

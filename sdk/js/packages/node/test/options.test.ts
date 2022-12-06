@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import * as fs from 'fs';
+import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { NodeOptions, update_options } from '../src/options';
 
@@ -19,9 +20,9 @@ test('fail when file is missing', () => {
 
 test('fail when directory is passed as file', () => {
   const incoming = { file: 'some/path/' };
-  jest
-    .spyOn(fs, 'statSync')
-    .mockReturnValueOnce({ isFile: () => false } as fs.Stats);
+  vi.spyOn(fs, 'statSync').mockReturnValueOnce({
+    isFile: () => false
+  } as fs.Stats);
   expect(() => {
     update_options({}, incoming);
   }).toThrowError('config file not found');
@@ -29,15 +30,15 @@ test('fail when directory is passed as file', () => {
 
 describe('when valid config file is given', () => {
   beforeEach(() => {
-    jest
-      .spyOn(fs, 'statSync')
-      .mockReturnValueOnce({ isFile: () => true } as fs.Stats);
+    vi.spyOn(fs, 'statSync').mockReturnValueOnce({
+      isFile: () => true
+    } as fs.Stats);
   });
 
   test('fail if params are missing', () => {
     const incoming = { file: 'some/path' };
     const content = { key: 'value' };
-    jest.spyOn(fs, 'readFileSync').mockReturnValueOnce(JSON.stringify(content));
+    vi.spyOn(fs, 'readFileSync').mockReturnValueOnce(JSON.stringify(content));
     expect(() => {
       update_options({}, incoming);
     }).toThrowError('file is missing JSON field: "touca"');
@@ -46,7 +47,7 @@ describe('when valid config file is given', () => {
   test('fail if params have unexpected types', () => {
     const incoming = { file: 'some/path' };
     const content = { touca: { offline: 'some-string' } };
-    jest.spyOn(fs, 'readFileSync').mockReturnValueOnce(JSON.stringify(content));
+    vi.spyOn(fs, 'readFileSync').mockReturnValueOnce(JSON.stringify(content));
     expect(() => {
       update_options({}, incoming);
     }).toThrowError('parameter "offline" has unexpected type');
@@ -63,7 +64,7 @@ describe('when valid config file is given', () => {
         offline: true
       }
     };
-    jest.spyOn(fs, 'readFileSync').mockReturnValueOnce(JSON.stringify(content));
+    vi.spyOn(fs, 'readFileSync').mockReturnValueOnce(JSON.stringify(content));
     const existing: NodeOptions = {};
     expect(() => {
       update_options(existing, incoming);
@@ -136,7 +137,7 @@ describe('when environment variables are present', () => {
   const OLD_ENV = process.env;
 
   beforeEach(() => {
-    jest.resetModules();
+    vi.resetModules();
     process.env = { ...OLD_ENV };
   });
 
