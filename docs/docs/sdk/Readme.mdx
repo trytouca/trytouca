@@ -17,16 +17,192 @@ export class Check extends React.Component {
 
 This section lists notable differences between SDKs in different languages.
 
-| Syntax                            | Python    | JavaScript | C++       | Java      |
-| --------------------------------- | --------- | ---------- | --------- | --------- |
-| Custom comparison rules           | <Check /> | <Check />  |           | <Check /> |
-| Configuration profiles            | <Check /> | <Check />  |           |           |
-| Version auto-increment            | <Check /> | <Check />  |           |           |
-| Results Store                     | <Check /> | <Check />  |           |           |
-| Multiple workflows                | <Check /> | <Check />  |           |           |
-| Programmatic testcase declaration | <Check /> | <Check />  |           |           |
-| Capturing binary blobs            | <Check /> | <Check />  |           |           |
-| Capturing external files          | <Check /> | <Check />  |           |           |
-| Run tests via the CLI             | <Check /> |            |           |           |
-| Stream redirection                |           |            | <Check /> |           |
-| External logging                  |           |            | <Check /> |           |
+| Syntax                                                                  | Python    | JavaScript | C++       | Java      |
+| ----------------------------------------------------------------------- | --------- | ---------- | --------- | --------- |
+| [Custom comparison rules](#custom-comparison-rules)                     | <Check /> | <Check />  |           | <Check /> |
+| [Configuration profiles](#configuration-profiles)                       | <Check /> | <Check />  |           |           |
+| [Version auto-increment](#version-auto-increment)                       | <Check /> | <Check />  |           |           |
+| [Programmatic testcase declaration](#programmatic-testcase-declaration) | <Check /> | <Check />  |           |           |
+| Results Store                                                           | <Check /> | <Check />  |           |           |
+| Multiple workflows                                                      | <Check /> | <Check />  |           |           |
+| Capturing binary blobs                                                  | <Check /> | <Check />  |           |           |
+| Capturing external files                                                | <Check /> | <Check />  |           |           |
+| Run tests via the CLI                                                   | <Check /> |            |           |           |
+| Stream redirection                                                      |           |            | <Check /> |           |
+| External logging                                                        |           |            | <Check /> |           |
+
+## Features
+
+### Custom comparison rules
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "JavaScript", value: "js" },
+    { label: "Java", value: "java" }
+  ]}
+>
+<TabItem value="python">
+
+```python
+touca.check("gpa", student.gpa, rule=touca.decimal_rule.absolute(min=3))
+```
+
+</TabItem>
+<TabItem value="js">
+
+```typescript
+touca.check("gpa", student.gpa, {
+  rule: { type: "number", mode: "absolute", min: 3 }
+});
+```
+
+</TabItem>
+<TabItem value="java">
+
+```java
+Touca.check("gpa", student.gpa, DecimalRule.absolute(x -> {
+  x.setMin(3);
+}));
+```
+
+With the Java SDK, you need to explicitly import the comparison rule that you
+are using.
+
+```java
+import io.touca.rules.DecimalRule;
+```
+
+</TabItem>
+</Tabs>
+
+### Configuration profiles
+
+When running Touca tests, you typically need to pass certain options such as
+your API Key. Using command-line arguments to pass this information may not be
+very convenient. Since the values of these options rarely change, it's easier to
+set them in a configuration profile to be looked up and applied automatically as
+you run your tests.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "JavaScript", value: "js" }
+  ]}
+>
+<TabItem value="python">
+
+Python SDK fully supports this feature. You can use the Touca CLI sub-commands
+to manage configuration profiles (via
+[`touca profile`](../cli#configuration-profiles)) and set and remove options
+from the active configuration profile (via
+[`touca config`](../cli#configuration-options)).
+
+</TabItem>
+<TabItem value="js">
+
+JavaScript SDK supports this feature. You still need to use the
+[Touca CLI](../cli), written in Python, to write into configuration profiles
+from the command-line.
+
+</TabItem>
+</Tabs>
+
+### Version auto-increment
+
+You can set most test configuration parameters in a configuration profile
+because they rarely change from one version to another, except the version
+itself. In CI pipelines, it may make sense to set the version as an environment
+variable that corresponds to your build version. But if you are running tests
+locally, passing the version as a command-line argument and incrementing it
+every time may be inconvenient. To fix this, when you do not specify the
+version, the SDKs query Touca server for the latest submitted version and
+automatically increment it by minor version.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "JavaScript", value: "js" }
+  ]}
+>
+<TabItem value="python">
+
+This feature allows you to simply run `touca test` from the command-line without
+worrying about command-line arguments.
+
+</TabItem>
+<TabItem value="js">
+
+This feature allows you to simply run your test module from the command-line
+without worrying about command-line arguments.
+
+</TabItem>
+</Tabs>
+
+### Programmatic testcase declaration
+
+In addition to passing testcases as command-line arguments or letting the SDK
+fetch and reuse the set of test cases already submitted to the baseline version,
+sometimes you may want to specify your test cases as code or infer them during
+the test runtime, based on the set of local files or datasets in a given
+directory, or rows of a given column in a CSV file, or a nested array of JSON
+response of a particular API endpoint, etc.
+
+<Tabs
+  groupId="sdks"
+  defaultValue="python"
+  values={[
+    { label: "Python", value: "python" },
+    { label: "JavaScript", value: "js" }
+  ]}
+>
+<TabItem value="python">
+
+In Python, you could use the `testcases` parameter of the `@touca.workflow`
+decorator which accepts either a list, a generator, or a generator function.
+
+```python
+@touca.workflow(testcases=["alice", "bob", "charlie"])
+def students_test(username: str):
+    student = code_under_test.find_student(username)
+    touca.check("gpa", student.gpa)
+```
+
+Here's the same snippet if we were to use a generator function.
+
+```python
+def find_testcases():
+    for username in ['alice', 'bob', 'charlie']:
+        yield username
+
+@touca.workflow(testcases=find_testcases)
+def students_test(username: str):
+    student = code_under_test.find_student(username)
+    touca.check("gpa", student.gpa)
+```
+
+</TabItem>
+<TabItem value="js">
+
+In TypeScript, you could pass a third parameter to the `@touca.workflow`
+function and pass a list or a callback function to the `testcases` field.
+
+```typescript
+touca.workflow(
+  "students_test",
+  async (username: string) => {
+    const student = await find_student(username);
+    touca.check("gpa", student.gpa);
+  },
+  { testcases: ["alice", "bob", "charlie"] }
+);
+```
+
+</TabItem>
+</Tabs>
