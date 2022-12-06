@@ -29,9 +29,10 @@
  * workflows using the {@link touca.workflow} function.
  */
 
+import fs from 'node:fs';
+import path from 'node:path';
+
 import * as chalk from 'chalk';
-import * as fs from 'fs';
-import * as path from 'path';
 import { gte } from 'semver';
 import * as util from 'util';
 import yargs from 'yargs';

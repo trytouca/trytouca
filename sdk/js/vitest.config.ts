@@ -7,7 +7,8 @@ export default defineConfig({
     coverage: {
       all: true,
       include: ['src/**/*.ts'],
-      provider: 'istanbul'
+      provider: 'istanbul',
+      reportsDirectory: './local/coverage'
     }
   }
 });

@@ -1,8 +1,9 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { readFileSync } from 'node:fs';
+
 import { createHash } from 'crypto';
 import { Builder } from 'flatbuffers';
-import { readFileSync } from 'fs';
 
 import * as schema from './schema';
 

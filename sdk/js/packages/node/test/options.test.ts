@@ -39,19 +39,17 @@ describe('when valid config file is given', () => {
   test('fail if params are missing', () => {
     const incoming = { file: 'some/path' };
     const content = { key: 'value' };
+    const error = 'file is missing JSON field: "touca"';
     vi.spyOn(fs, 'readFileSync').mockReturnValueOnce(JSON.stringify(content));
-    expect(() => {
-      update_options({}, incoming);
-    }).toThrowError('file is missing JSON field: "touca"');
+    expect(() => update_options({}, incoming)).toThrowError(error);
   });
 
   test('fail if params have unexpected types', () => {
     const incoming = { file: 'some/path' };
     const content = { touca: { offline: 'some-string' } };
+    const error = 'parameter "offline" has unexpected type';
     vi.spyOn(fs, 'readFileSync').mockReturnValueOnce(JSON.stringify(content));
-    expect(() => {
-      update_options({}, incoming);
-    }).toThrowError('parameter "offline" has unexpected type');
+    expect(() => update_options({}, incoming)).toThrowError(error);
   });
 
   test('pass if params make sense', () => {
@@ -67,9 +65,7 @@ describe('when valid config file is given', () => {
     };
     vi.spyOn(fs, 'readFileSync').mockReturnValueOnce(JSON.stringify(content));
     const existing: NodeOptions = {};
-    expect(() => {
-      update_options(existing, incoming);
-    }).not.toThrow();
+    expect(() => update_options(existing, incoming)).not.toThrow();
     expect(existing).toEqual({
       concurrency: true,
       ...content.touca
