@@ -164,9 +164,8 @@ jobs:
         id: changes
         with:
           filters: .github/path-filters.yml
-      - name: build components
+      - run: ./build.bat
         if: steps.changes.outputs.sdk_cpp == 'true'
-        run: ./build.bat
 
   build-sdk-cpp-docs:
     name: build-sdk-cpp-docs
