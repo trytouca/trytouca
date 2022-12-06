@@ -15,14 +15,13 @@ The following environment variables are secrets used by the Touca server to
 connect to its services. While they all have a default value, we recommend that
 you set them to a different value when setting up a production instance.
 
-| Variable             | Default      | Purpose                                         |
-| -------------------- | ------------ | ----------------------------------------------- |
-| `AUTH_COOKIE_SECRET` | cookiesecret | Secret to use when issuing web cookies          |
-| `AUTH_JWT_SECRET`    | jwtsecret    | Secret to use when generating JWT tokens        |
-| `MINIO_PASS`         | toucapass    | MinIO Password or AWS Secret Key if using S3    |
-| `MINIO_USER`         | toucauser    | MinIO Username or AWS Access Key ID if using S3 |
-| `MONGO_PASS`         | toucapass    | Password to connect to MongoDB instance         |
-| `MONGO_USER`         | toucauser    | Username to connect to MongoDB instance         |
+| Variable             | Purpose                                         | Default      |
+| -------------------- | ----------------------------------------------- | ------------ |
+| `AUTH_COOKIE_SECRET` | Secret to use when issuing web cookies          | cookiesecret |
+| `AUTH_JWT_SECRET`    | Secret to use when generating JWT tokens        | jwtsecret    |
+| `MINIO_PASS`         | MinIO Password or AWS Secret Key if using S3    | toucapass    |
+| `MINIO_USER`         | MinIO Username or AWS Access Key ID if using S3 | toucauser    |
+| `MONGO_URI`          | Mongo Connection String URI                     |              |
 
 To reconfigure the Touca server with different values for these environment
 variables, you can stop any running containers, modify the docker-compose file,
@@ -56,9 +55,6 @@ on your deployment setup.
 | `MINIO_HOST`   | touca_minio        | Address to MinIO server. Connects to S3 when set to `s3.amazonaws.com`   |
 | `MINIO_PORT`   | 9000               | Port that MinIO instance is running on                                   |
 | `MINIO_REGION` | us-east-2          | Region for S3 Bucket when using AWS                                      |
-| `MONGO_BASE`   | touca              | MongoDB database name to use for Touca                                   |
-| `MONGO_HOST`   | touca_mongo        | Address to MongoDB instance                                              |
-| `MONGO_PORT`   | 27017              | Port that MongoDB instance is running on                                 |
 | `REDIS_BASE`   | touca              | Name of the base to use when connecting to the Redis instance            |
 | `REDIS_HOST`   | touca_redis        | Address to Redis instance                                                |
 | `REDIS_PORT`   | 6379               | Port that Redis instance is running on                                   |
@@ -95,6 +91,17 @@ that you'd need to set them to a value different than their default value.
 | `WEBAPP_DIST_DIRECTORY`                     | `/opt/touca/app/dist`         | Path to Touca Web App static files                                                                         |
 
 ## Deprecated variables
+
+These environment variables have been deprecated in favor of `MONGO_URI`. They
+are ignored if `MONGO_URI` is set.
+
+| Variable     | Purpose                                  | Default     |
+| ------------ | ---------------------------------------- | ----------- |
+| `MONGO_BASE` | MongoDB database name to use for Touca   | touca       |
+| `MONGO_HOST` | Address to MongoDB instance              | touca_mongo |
+| `MONGO_PORT` | Port that MongoDB instance is running on | 27017       |
+| `MONGO_PASS` | Password to connect to MongoDB instance  | toucapass   |
+| `MONGO_USER` | Username to connect to MongoDB instance  | toucauser   |
 
 These environment variables for SMPT/POP3 server have been deprecated and may be
 removed in future versions of the Touca server. We recommend that you switch to
