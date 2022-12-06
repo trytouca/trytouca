@@ -1,8 +1,11 @@
 {
+  "$schema": "https://typedoc.org/schema.json",
   "name": "Touca SDK for JavaScript",
+  "entryPoints": ["./packages/node/src"],
+  "entryPointStrategy": "expand",
   "out": "./local/docs",
-  "entryPoints": ["packages/node/src"],
-  "includes": ["packages/node"],
+  "readme": "README.md",
+  "includes": "./",
   "exclude": [
     "**/*.js",
     "**/coverage/**/*",
@@ -10,12 +13,11 @@
     "**/node_modules/**/*",
     "**/test/**/*"
   ],
-  "disableSources": true,
   "excludeExternals": true,
+  "disableSources": true,
   "excludePrivate": true,
   "hideGenerator": true,
   "includeVersion": true,
-  "readme": "README.md",
   "sort": ["visibility", "static-first", "source-order"],
   "theme": "default"
 }

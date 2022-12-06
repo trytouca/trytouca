@@ -12,12 +12,11 @@
     "test:watch": "npm run test:watch --workspaces --if-present"
   },
   "workspaces": [
-    "packages/*",
-    "examples/*"
+    "packages/*"
   ],
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^5.45.0",
-    "@typescript-eslint/parser": "^5.45.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
+    "@typescript-eslint/parser": "^5.45.1",
     "@vitest/coverage-istanbul": "^0.25.4",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",

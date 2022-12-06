@@ -2,8 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "outDir": "dist",
-    "allowSyntheticDefaultImports": true
+    "outDir": "dist"
   },
   "include": ["src/**/*.ts", "test/**/*.ts", "app/**/*.ts"],
   "exclude": ["dist"]
