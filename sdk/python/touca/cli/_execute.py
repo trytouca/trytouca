@@ -71,8 +71,7 @@ class Execute(Operation):
         modules = find_test_modules(dir_test)
         load_workflows(modules)
         try:
-            run_workflows(args, Workflow._workflows)
+            return run_workflows(args, Workflow._workflows)
         except Exception as err:
             print(f"test failed: {err}", file=sys.stderr)
             return False
-        return True

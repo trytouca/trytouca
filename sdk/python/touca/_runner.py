@@ -435,6 +435,7 @@ def run_workflows(args, workflows: List[_Workflow]):
 
     workflows = _filter_selected_workflow(args, workflows)
     Printer.print_app_header()
+    has_error = False
     for workflow in workflows:
         options = deepcopy(args)
         options["suite"] = workflow.name
@@ -447,7 +448,11 @@ def run_workflows(args, workflows: List[_Workflow]):
             Printer.print_warning(
                 "Error when running workflow {}: {}", workflow.name, error
             )
+            has_error = True
+    if has_error:
+        return False
     Printer.print_app_footer()
+    return True
 
 
 def run(**kwargs):
@@ -474,7 +479,8 @@ def run(**kwargs):
             kwargs["version"] = kwargs.pop("revision")
         cli_options = _parse_cli_options(sys.argv[1:])
         options = {**cli_options, **kwargs}
-        run_workflows(options, Workflow._workflows)
+        if not run_workflows(options, Workflow._workflows):
+            sys.exit(1)
     except _ToucaError as err:
         sys.exit(err)
     except Exception as err:

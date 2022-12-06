@@ -114,6 +114,8 @@ jobs:
           filters: .github/path-filters.yml
       - uses: actions/setup-python@v4
         if: steps.changes.outputs.sdk_cpp == 'true'
+        with:
+          python-version: 3.9
       - name: cache conan
         if: steps.changes.outputs.sdk_cpp == 'true'
         uses: actions/cache@v3
