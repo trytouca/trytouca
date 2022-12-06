@@ -1,6 +1,6 @@
 # Changelog
 
-## v1.5.7
+## v1.6.0
 
 Features:
 
@@ -8,8 +8,13 @@ Features:
 - Add support for programmatic testcase declaration (#422)
 - Add support for custom comparison rules (#417)
 
+Breaking Changes:
+
+- Switch to building package as pure ESM (#429).
+
 Improvements:
 
+- Improve test coverage (#430)
 - Remove duplicate examples (#416)
 - Update generated schema file (#414)
 - Treat integer numbers as integers (#372)
