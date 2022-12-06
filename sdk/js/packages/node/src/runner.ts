@@ -29,12 +29,13 @@
  * workflows using the {@link touca.workflow} function.
  */
 
-import * as chalk from 'chalk';
-import * as fs from 'fs';
-import * as path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
+
+import chalk, { ChalkInstance } from 'chalk';
 import { gte } from 'semver';
 import * as util from 'util';
-import yargs = require('yargs/yargs'); // cannot be partially imported
+import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
 import { NodeClient } from './client';
@@ -191,7 +192,7 @@ class Printer {
     process.stdout.write(util.format(fmt, ...args));
   }
 
-  private print_color(color: chalk.Chalk, fmt: string, ...args: unknown[]) {
+  private print_color(color: ChalkInstance, fmt: string, ...args: unknown[]) {
     const msg = util.format(fmt, ...args);
     process.stdout.write(this._colored_output ? color(msg) : msg);
   }
@@ -230,7 +231,7 @@ class Printer {
 
   public print_footer(stats: Statistics, suiteSize: number, timer: Timer) {
     const duration = (timer.count('__workflow__') / 1000.0).toFixed(2);
-    const report = (status: Status, text: string, color: chalk.Chalk) => {
+    const report = (status: Status, text: string, color: ChalkInstance) => {
       if (stats.count(status)) {
         this.print_color(color, '%d %s', stats.count(status), text);
         this.print(', ');

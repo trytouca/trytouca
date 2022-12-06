@@ -34,6 +34,8 @@
   "publishConfig": {
     "access": "public"
   },
+  "type": "module",
+  "exports": "./dist/index.js",
   "scripts": {
     "build": "tsc",
     "build:prod": "tsc -p tsconfig.prod.json",
@@ -41,12 +43,11 @@
     "clean": "rimraf dist",
     "format": "prettier --write src/",
     "lint": "eslint . --ext .ts",
-    "test": "jest",
-    "test:touca": "node dist/app/sample_test.js",
-    "test:watch": "jest --watch"
+    "test": "vitest run --coverage --reporter verbose",
+    "test:touca": "node dist/app/sample_test.js"
   },
   "dependencies": {
-    "chalk": "4.1.2",
+    "chalk": "^5.1.2",
     "flatbuffers": "^22.11.23",
     "ini": "^3.0.1",
     "semver": "^7.3.8",
@@ -54,8 +55,9 @@
   },
   "devDependencies": {
     "@types/ini": "^1.3.31",
-    "@types/node": "^18.11.10",
-    "@types/semver": "^7.3.13"
+    "@types/node": "^18.11.11",
+    "@types/semver": "^7.3.13",
+    "@types/yargs": "^17.0.16"
   },
   "engines": {
     "node": ">=12.22.12"

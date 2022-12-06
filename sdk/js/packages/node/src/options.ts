@@ -1,9 +1,10 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import * as fs from 'fs';
+import fs from 'node:fs';
+import { homedir } from 'node:os';
+import path from 'node:path';
+
 import * as ini from 'ini';
-import { homedir } from 'os';
-import * as path from 'path';
 
 export interface NodeOptions {
   /**

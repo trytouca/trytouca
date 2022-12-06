@@ -1,8 +1,9 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
+
 import { Builder } from 'flatbuffers';
-import { mkdirSync, writeFileSync } from 'fs';
-import { dirname } from 'path';
 
 import { Case, CheckOptions } from './case';
 import { NodeOptions, update_options } from './options';

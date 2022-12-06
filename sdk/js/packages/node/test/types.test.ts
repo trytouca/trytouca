@@ -1,5 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { describe, expect, test } from 'vitest';
+
 import * as types from '../src/types';
 
 class DateOfBirth {

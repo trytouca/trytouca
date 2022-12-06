@@ -1,9 +1,11 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
 import { gte } from 'semver';
+import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 import { NodeClient } from '../src/client';
 

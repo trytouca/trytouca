@@ -109,7 +109,7 @@ We can run Touca tests with any number of inputs from the command line:
 ```bash
 export TOUCA_API_KEY=<TOUCA_API_KEY>
 export TOUCA_API_URL=<TOUCA_API_URL>
-node dist/is_prime_test.js --revision v1.0 --testcase 19 51 97
+node dist/is_prime_test.js --testcase 19 51 97
 ```
 
 Where API Key and URL can be obtained from [app.touca.io](https://app.touca.io)
