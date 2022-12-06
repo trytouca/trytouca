@@ -5,12 +5,12 @@ import { dirname } from 'node:path';
 
 import { Builder } from 'flatbuffers';
 
-import { Case, CheckOptions } from './case';
-import { NodeOptions, update_options } from './options';
-import { Runner, Workflow } from './runner';
-import * as schema from './schema';
-import { Transport } from './transport';
-import { TypeHandler } from './types';
+import { Case, CheckOptions } from './case.js';
+import { NodeOptions, update_options } from './options.js';
+import { Runner, Workflow } from './runner.js';
+import * as schema from './schema.js';
+import { Transport } from './transport.js';
+import { TypeHandler } from './types.js';
 
 interface BaseClient<Options> {
   configure(options: Options): Promise<boolean>;

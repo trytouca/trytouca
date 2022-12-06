@@ -4,8 +4,8 @@ import * as http from 'http';
 import * as https from 'https';
 import { URL } from 'url';
 
-import { NodeOptions } from './options';
-import { VERSION } from './version';
+import { NodeOptions } from './options.js';
+import { VERSION } from './version.js';
 
 interface Response {
   body: string;

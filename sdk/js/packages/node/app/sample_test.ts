@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { touca } from '../src';
-import { find_student } from './sample';
+import { touca } from '../src/index.js';
+import { find_student } from './sample.js';
 
 touca.workflow(
   'students_test',

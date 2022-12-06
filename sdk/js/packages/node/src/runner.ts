@@ -38,9 +38,9 @@ import * as util from 'util';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
-import { NodeClient } from './client';
-import { find_home_path, NodeOptions, update_options } from './options';
-import { VERSION } from './version';
+import { NodeClient } from './client.js';
+import { find_home_path, NodeOptions, update_options } from './options.js';
+import { VERSION } from './version.js';
 
 export type Workflow = {
   callback: (testcase: string) => void | Promise<void>;
