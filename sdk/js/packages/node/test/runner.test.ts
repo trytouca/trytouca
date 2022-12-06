@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import * as process from 'process';
+import process from 'node:process';
+
 import { beforeAll, describe, expect, test, vi } from 'vitest';
 
 import { NodeClient } from '../src/client';

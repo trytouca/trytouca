@@ -1,6 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import * as nock from 'nock';
+import nock from 'nock';
 import { beforeEach, describe, expect, test } from 'vitest';
 
 import { NodeClient } from '../src/client';

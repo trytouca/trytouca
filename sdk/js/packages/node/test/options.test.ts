@@ -1,6 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import * as fs from 'fs';
+import fs from 'node:fs';
+
 import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import { NodeOptions, update_options } from '../src/options';
