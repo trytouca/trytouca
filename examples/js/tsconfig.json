@@ -6,8 +6,8 @@
     "declarationMap": true,
     "downlevelIteration": true,
     "lib": ["es6"],
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "ES2022",
+    "moduleResolution": "Node",
     "paths": {
       "@touca/*": ["*/src"]
     },

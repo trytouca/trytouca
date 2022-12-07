@@ -15,5 +15,12 @@
     "@types/node": "^18.7.18",
     "rimraf": "^3.0.2",
     "typescript": "^4.8.3"
+  },
+  "prettier": {
+    "proseWrap": "always",
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "none",
+    "htmlWhitespaceSensitivity": "ignore"
   }
 }
