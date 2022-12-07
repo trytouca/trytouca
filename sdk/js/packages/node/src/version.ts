@@ -1,3 +1,3 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-export const VERSION = '1.6.1';
+export const VERSION = '1.6.2';

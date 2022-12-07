@@ -70,7 +70,7 @@ class Config(Operation):
         from touca._printer import print_table
 
         config = config_file_parse()
-        if not config.has_section("settings"):
+        if not config or not config.has_section("settings"):
             return False
         table_header = ["", "Option", "Value"]
         table_body = [
