@@ -1,7 +1,7 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
-import { touca } from '@touca/node';
-import { find_student } from './students';
+import touca from '@touca/node';
+import { find_student } from './students.js';
 
 touca.workflow('students_test', async (username: string) => {
   touca.start_timer('find_student');

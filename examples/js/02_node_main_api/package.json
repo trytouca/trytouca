@@ -1,15 +1,16 @@
 {
   "private": true,
-  "name": "@touca/example-node-main-api",
-  "version": "1.5.6",
+  "name": "@touca/example-node-main",
+  "version": "1.6.2",
   "description": "Touca example introducing main API of Node.js SDK",
+  "type": "module",
   "main": "dist/students_test.js",
   "types": "dist/students_test.js.d",
   "files": [
     "dist"
   ],
   "dependencies": {
-    "@touca/node": "^1.5.6"
+    "@touca/node": "^1.6.2"
   },
   "scripts": {
     "build": "tsc",

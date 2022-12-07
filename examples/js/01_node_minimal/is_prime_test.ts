@@ -1,7 +1,7 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { touca } from '@touca/node';
-import { is_prime } from './is_prime';
+import { is_prime } from './is_prime.js';
 
 touca.workflow('is_prime_test', (testcase: string) => {
   const number = Number.parseInt(testcase);
