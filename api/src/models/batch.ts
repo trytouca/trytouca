@@ -19,6 +19,30 @@ import { compareBatch } from './comparison.js'
 import { messageRemove } from './message.js'
 import { MessageInfo } from './messageInfo.js'
 
+export async function batchNext(
+  suiteId: ISuiteDocument['_id']
+): Promise<string> {
+  const batches = await BatchModel.aggregate([
+    { $match: { suite: suiteId } },
+    { $sort: { submittedAt: -1 } },
+    { $project: { _id: 0, slug: 1 } },
+    { $limit: 1 }
+  ])
+  const isNumeric = (s: string) => !isNaN(parseInt(s))
+  const increment = (slug: string, delimiter: string) => {
+    const t = slug.split(delimiter)
+    if (t.length > 1 && isNumeric(t[t.length - 1])) {
+      t[t.length - 1] = (parseInt(t[t.length - 1]) + 1).toString()
+      return t.join(delimiter)
+    }
+  }
+  if (batches.length) {
+    const slug = batches[0].slug
+    return increment(slug, '-') ?? increment(slug, '.') ?? 'v1.0'
+  }
+  return 'v1.0'
+}
+
 export async function batchPromote(
   team: ITeam,
   suite: ISuiteDocument,
