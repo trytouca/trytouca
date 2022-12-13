@@ -5,6 +5,7 @@ import { beforeEach, describe, expect, test } from 'vitest';
 
 import { NodeClient } from '../src/client';
 import { ToucaError } from '../src/options';
+import { Transport } from '../src/transport';
 
 const config = {
   api_url: 'https://api.example.com/v1/@/some-team/some-suite',
@@ -14,6 +15,41 @@ const config = {
 
 describe('check authentication', () => {
   beforeEach(() => nock.cleanAll());
+
+  test('http', async () => {
+    const api_url = 'http://api.example.com';
+    nock(api_url).post('/client/signin').times(1).reply(200, {
+      expiresAt: new Date(),
+      token: 'some-token'
+    });
+    const transport = new Transport();
+    await transport.authenticate(api_url, 'some-key');
+  });
+
+  test('invalid key', async () => {
+    const api_url = 'https://api.example.com';
+    nock(api_url)
+      .post('/client/signin')
+      .times(1)
+      .reply(423, {
+        errors: ['account suspended']
+      });
+    const transport = new Transport();
+    expect(transport.authenticate(api_url, 'some-key')).rejects.toThrowError(
+      new ToucaError('auth_invalid_response', 423)
+    );
+  });
+
+  test('multiple auth', async () => {
+    const api_url = 'https://api.example.com';
+    nock(api_url).post('/client/signin').times(1).reply(200, {
+      expiresAt: new Date(),
+      token: 'some-token'
+    });
+    const transport = new Transport();
+    await transport.authenticate(api_url, 'some-key');
+    expect(transport.authenticate(api_url, 'some-key')).resolves;
+  });
 
   test('check basic authentication', async () => {
     nock('https://api.example.com')
