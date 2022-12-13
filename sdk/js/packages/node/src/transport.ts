@@ -42,7 +42,7 @@ export class Transport {
       | 'application/json'
       | 'application/octet-stream' = 'application/json'
   ) {
-    const url = new URL(this._node?.url + path);
+    const url = new URL((this._node?.url + path).replace(/\/\//g, '/'));
     const options: RequestOptions = {
       protocol: url.protocol,
       host: url.host,

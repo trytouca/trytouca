@@ -2,6 +2,7 @@
 
 import fs from 'node:fs';
 
+import nock from 'nock';
 import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 
 import {
@@ -11,6 +12,12 @@ import {
   updateNodeOptions,
   updateRunnerOptions
 } from '../src/options';
+
+test('ToucaError', () => {
+  const err = new ToucaError('config_option_missing', 'version');
+  expect(err).instanceOf(Error);
+  expect(err.message).contains('Configuration option "version" is missing.');
+});
 
 test('pass when empty options are passed', async () => {
   const existing: NodeOptions = {};
@@ -77,6 +84,68 @@ describe('when valid config file is given', () => {
     expect(options.team).equals('some-team');
     expect(options.workflows).toHaveLength(1);
     expect(options.workflows![0].version).toEqual('some-version');
+  });
+});
+
+describe('remote options', () => {
+  const api_url = 'https://api.example.com';
+  beforeEach(() => {
+    nock(api_url).post('/client/signin').times(1).reply(200, {
+      expiresAt: new Date(),
+      token: 'some-token'
+    });
+  });
+  test('working', async () => {
+    nock(api_url)
+      .post('/client/options')
+      .times(1)
+      .reply(200, [
+        {
+          team: 'some-team',
+          suite: 'some-suite',
+          version: 'some-version',
+          testcases: ['alice', 'bob', 'charlie']
+        }
+      ]);
+    const options: RunnerOptions = {
+      api_key: 'some-key',
+      api_url,
+      team: 'some-team',
+      workflows: [
+        {
+          callback: () => {},
+          suite: 'some-suite'
+        }
+      ]
+    };
+    await updateRunnerOptions(options);
+    expect(options).not.toHaveProperty('suite');
+    expect(options).not.toHaveProperty('version');
+    if (options.workflows) {
+      expect(options.workflows[0].version).toEqual('some-version');
+    }
+  });
+  test('invalid response', async () => {
+    nock(api_url)
+      .post('/client/options')
+      .times(1)
+      .reply(404, [{ errors: ['team not found'] }]);
+    const options: RunnerOptions = {
+      api_key: 'some-key',
+      api_url,
+      team: 'some-team',
+      workflows: [
+        {
+          callback: () => {},
+          suite: 'some-suite'
+        }
+      ]
+    };
+    try {
+      await updateRunnerOptions(options);
+    } catch (err) {
+      expect(err).toEqual(new ToucaError('transport_options'));
+    }
   });
 });
 
