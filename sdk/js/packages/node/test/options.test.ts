@@ -82,8 +82,11 @@ describe('when valid config file is given', () => {
     };
     await updateRunnerOptions(options);
     expect(options.team).equals('some-team');
+    expect(options.workflows).toBeDefined();
     expect(options.workflows).toHaveLength(1);
-    expect(options.workflows![0].version).toEqual('some-version');
+    if (options.workflows) {
+      expect(options.workflows[0].version).toEqual('some-version');
+    }
   });
 });
 
