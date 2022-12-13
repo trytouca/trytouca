@@ -280,7 +280,7 @@ async function applyCliArguments(options: RunnerOptions): Promise<void> {
   config.testcases = (argv['testcases'] || []).map(String);
   const initial: RunnerOptions = {};
   assignOptions(initial, config);
-  options = { ...initial, ...options };
+  assignOptions(options, { ...initial, ...options });
 }
 
 function applyConfigFile(options: RunnerOptions) {

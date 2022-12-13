@@ -158,6 +158,7 @@ describe('main api', () => {
       });
       const capture = new Capture();
       await runSampleWorkflow({
+        colored_output: false,
         output_directory,
         save_binary: true,
         team: 'some-team',
@@ -179,6 +180,7 @@ describe('main api', () => {
       });
       const capture = new Capture();
       await runSampleWorkflow({
+        colored_output: false,
         output_directory,
         save_json: true,
         team: 'some-team',
