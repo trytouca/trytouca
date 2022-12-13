@@ -49,7 +49,14 @@ export class TeamPageComponent
 
   private _dialogRef: DialogRef;
   private _sub: Record<
-    'alert' | 'banner' | 'dialog' | 'tabs' | 'teams' | 'team',
+    | 'alert'
+    | 'banner'
+    | 'dialog'
+    | 'events'
+    | 'tab'
+    | 'tabs'
+    | 'teams'
+    | 'team',
     Subscription
   >;
 
@@ -77,13 +84,15 @@ export class TeamPageComponent
         }
       }),
       dialog: undefined,
+      events: teamPageService.events$.subscribe(),
+      tab: teamPageService.data.tab$.subscribe((v) => (this.currentTab = v)),
       tabs: teamPageService.data.tabs$.subscribe((v) => {
         this.tabs = v;
         const queryMap = this.route.snapshot.queryParamMap;
         const getQuery = (key: string) =>
           queryMap.has(key) ? queryMap.get(key) : null;
         const tab = this.tabs.find((v) => v.link === getQuery('t')) || v[0];
-        this.currentTab = tab;
+        this.teamPageService.updateCurrentTab(tab);
       }),
       teams: teamPageService.data.teams$.subscribe((v) => {
         if (v.active.length && !this.route.snapshot.params.team) {
@@ -102,12 +111,16 @@ export class TeamPageComponent
 
   ngOnInit() {
     super.ngOnInit();
+    this.teamPageService.eventSourceSubscribe(
+      this.route.snapshot.paramMap.get('team')
+    );
   }
 
   ngOnDestroy() {
     Object.values(this._sub)
       .filter(Boolean)
       .forEach((v) => v.unsubscribe());
+    this.teamPageService.eventSourceUnsubscribe();
     super.ngOnDestroy();
   }
 
@@ -117,8 +130,8 @@ export class TeamPageComponent
     });
   }
 
-  switchTab(type: PageTab<TeamPageTabType>) {
-    this.currentTab = type;
+  switchTab(tab: PageTab<TeamPageTabType>) {
+    this.teamPageService.updateCurrentTab(tab);
   }
 
   public switchPage(teamSlug: string) {

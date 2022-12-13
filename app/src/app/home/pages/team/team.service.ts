@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import type {
   ETeamRole,
+  ServerEventJob,
   SuiteLookupResponse,
   TeamInvitee,
   TeamItem,
@@ -99,13 +100,18 @@ const availableTabs: Record<TeamPageTabType, PageTab<TeamPageTabType>> = {
 export class TeamPageService extends IPageService<TeamPageSuite> {
   private _bannerSubject = new Subject<TeamBannerType>();
   banner$ = this._bannerSubject.asObservable();
+  private _eventSource: EventSource;
+  private _eventSubject = new Subject<ServerEventJob>();
+  events$ = this._eventSubject.asObservable();
 
   private _cache: {
+    tab: TeamPageTabType;
     tabs: PageTab<TeamPageTabType>[];
     teams: RefinedTeamList;
     team: TeamLookupResponse;
     members: TeamPageMember[];
   } = {
+    tab: TeamPageTabType.Suites,
     tabs: undefined,
     teams: undefined,
     team: undefined,
@@ -113,6 +119,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   };
 
   private _subjects = {
+    tab: new Subject<PageTab<TeamPageTabType>>(),
     tabs: new Subject<PageTab<TeamPageTabType>[]>(),
     teams: new Subject<RefinedTeamList>(),
     team: new Subject<TeamLookupResponse>(),
@@ -120,6 +127,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   };
 
   data = {
+    tab$: this._subjects.tab.asObservable(),
     tabs$: this._subjects.tabs.asObservable(),
     teams$: this._subjects.teams.asObservable(),
     team$: this._subjects.team.asObservable(),
@@ -131,6 +139,34 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     private apiService: ApiService
   ) {
     super();
+  }
+
+  eventSourceSubscribe(teamSlug: string) {
+    const path = ['team', teamSlug, 'events'].join('/');
+    const url = this.apiService.makeUrl(path);
+    this._eventSource = new EventSource(url, { withCredentials: true });
+    this._eventSource.addEventListener('error', (e) => console.error(e));
+    this._eventSource.addEventListener('message', (msg) => {
+      const job: ServerEventJob = JSON.parse(msg.data as string);
+      if (this._cache.tab !== TeamPageTabType.Suites) {
+        return;
+      }
+      if (job.type === 'batch:processed') {
+        const args = { teamSlug: this._cache.team.slug };
+        this._cache.team = null;
+        this.fetchItems(args);
+      } else if (job.type === 'batch:sealed') {
+        const args = { teamSlug: this._cache.team.slug };
+        this._cache.team = null;
+        this.fetchItems(args);
+      }
+      this._eventSubject.next(job);
+    });
+  }
+
+  eventSourceUnsubscribe() {
+    this._eventSource.removeAllListeners();
+    this._eventSource.close();
   }
 
   private update(key: string, response: unknown) {
@@ -268,6 +304,11 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
         }
       }
     });
+  }
+
+  public updateCurrentTab(tab: PageTab<TeamPageTabType>) {
+    this._cache.tab = tab.type;
+    this._subjects.tab.next(tab);
   }
 
   /**

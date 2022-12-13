@@ -58,10 +58,10 @@ export function handleEvents(req: Request, res: Response) {
 }
 
 function shouldRelayEvent(cid: Fingerprint, job: ServerEventJob) {
-  if (job.type === 'batch:processed') {
+  if (job.type === 'batch:processed' && cid.suiteId !== undefined) {
     return cid.suiteId === job.suiteId && cid.teamId === job.teamId
   }
-  if (job.type === 'batch:sealed') {
+  if (job.type === 'batch:sealed' && cid.suiteId === undefined) {
     return cid.suiteId === job.suiteId && cid.teamId === job.teamId
   }
   return false

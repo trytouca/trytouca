@@ -11,7 +11,7 @@ import type {
   TeamItem
 } from '@touca/api-schema';
 import { IClipboardResponse } from 'ngx-clipboard';
-import { Subscription, timer } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { ApiKey } from '@/core/models/api-key';
 import { getBackendUrl } from '@/core/models/environment';

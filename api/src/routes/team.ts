@@ -38,7 +38,7 @@ import {
   validationMap,
   validationRules
 } from '../middlewares/index.js'
-import { promisable } from '../utils/index.js'
+import { handleEvents, promisable } from '../utils/index.js'
 
 const router = express.Router()
 
@@ -82,6 +82,14 @@ router.delete(
   hasTeam,
   isTeamOwner,
   promisable(ctrlTeamRemove, 'remove team')
+)
+
+router.get(
+  '/:team/events',
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  handleEvents
 )
 
 router.post(
