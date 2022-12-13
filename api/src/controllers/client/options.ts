@@ -49,7 +49,7 @@ async function findOptions(
     return {
       suite: workflow.suite,
       team: workflow.team,
-      testcases: [],
+      testcases: workflow.testcases,
       version: workflow.version ?? 'v1.0'
     }
   }
@@ -64,7 +64,6 @@ async function findOptions(
     return {
       suite: workflow.suite,
       team: workflow.team,
-      testcases: [],
       error: 'batch sealed'
     }
   }
@@ -72,9 +71,10 @@ async function findOptions(
     suite: workflow.suite,
     team: workflow.team,
     version: workflow.version ?? (await batchNext(suite._id)),
-    testcases: workflow.testcases
-      ? undefined
-      : (await elementListBaseline(suite)).map((v) => v.slug)
+    testcases:
+      workflow.testcases?.length !== 0
+        ? workflow.testcases
+        : (await elementListBaseline(suite)).map((v) => v.slug)
   }
 }
 

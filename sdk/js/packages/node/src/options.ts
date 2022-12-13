@@ -275,11 +275,8 @@ async function applyCliArguments(options: RunnerOptions): Promise<void> {
         group: 'Other Options'
       }
     }).argv;
-  const config = argv;
-  config.offline = [undefined, true].includes(argv['offline']);
-  config.testcases = (argv['testcases'] || []).map(String);
   const initial: RunnerOptions = {};
-  assignOptions(initial, config);
+  assignOptions(initial, argv);
   assignOptions(options, { ...initial, ...options });
 }
 
@@ -420,7 +417,7 @@ async function applyRemoteOptions(
       team: options.team,
       suite: v.suite,
       version: v.version,
-      testcases: v.testcases as string[] | undefined
+      testcases: v.testcases?.length ? undefined : []
     })),
     transport
   );
