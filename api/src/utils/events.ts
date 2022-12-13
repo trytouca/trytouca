@@ -58,11 +58,13 @@ export function handleEvents(req: Request, res: Response) {
 }
 
 function shouldRelayEvent(cid: Fingerprint, job: ServerEventJob) {
-  if (job.type === 'batch:processed' && cid.suiteId !== undefined) {
-    return cid.suiteId === job.suiteId && cid.teamId === job.teamId
+  const suiteEvents = ['batch:processed', 'batch:sealed']
+  const teamEvents = ['suite:created', ...suiteEvents]
+  if (!cid.suiteId && teamEvents.includes(job.type)) {
+    return cid.teamId === job.teamId
   }
-  if (job.type === 'batch:sealed' && cid.suiteId === undefined) {
-    return cid.suiteId === job.suiteId && cid.teamId === job.teamId
+  if (!cid.batchId && suiteEvents.includes(job.type)) {
+    return cid.teamId === job.teamId && cid.suiteId === job.suiteId
   }
   return false
 }

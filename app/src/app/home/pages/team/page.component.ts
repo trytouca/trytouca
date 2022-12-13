@@ -4,7 +4,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogRef, DialogService } from '@ngneat/dialog';
 import type { TeamItem } from '@touca/api-schema';
-import { Subscription } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
 import { AlertKind, AlertService, ApiService } from '@/core/services';
@@ -84,7 +84,9 @@ export class TeamPageComponent
         }
       }),
       dialog: undefined,
-      events: teamPageService.events$.subscribe(),
+      events: teamPageService.events$.pipe(debounceTime(250)).subscribe(() => {
+        this.teamPageService.refreshSuites();
+      }),
       tab: teamPageService.data.tab$.subscribe((v) => (this.currentTab = v)),
       tabs: teamPageService.data.tabs$.subscribe((v) => {
         this.tabs = v;

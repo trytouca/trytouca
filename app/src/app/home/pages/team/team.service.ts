@@ -151,16 +151,14 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
       if (this._cache.tab !== TeamPageTabType.Suites) {
         return;
       }
-      if (job.type === 'batch:processed') {
-        const args = { teamSlug: this._cache.team.slug };
-        this._cache.team = null;
-        this.fetchItems(args);
-      } else if (job.type === 'batch:sealed') {
-        const args = { teamSlug: this._cache.team.slug };
-        this._cache.team = null;
-        this.fetchItems(args);
+      const events: Array<ServerEventJob['type']> = [
+        'suite:created',
+        'batch:processed',
+        'batch:sealed'
+      ];
+      if (events.includes(job.type)) {
+        this._eventSubject.next(job);
       }
-      this._eventSubject.next(job);
     });
   }
 
