@@ -16,11 +16,6 @@ describe('check authentication', () => {
 
   test('check basic authentication', async () => {
     nock('https://api.example.com')
-      .get('/v1/platform')
-      .times(2)
-      .reply(200, {
-        ready: true
-      })
       .post('/v1/client/signin')
       .times(2)
       .reply(200, {
@@ -29,35 +24,29 @@ describe('check authentication', () => {
       });
 
     const client = new NodeClient();
-    await client.configure(config);
-    expect(client.configuration_error()).toEqual('');
-    expect(client.is_configured()).toEqual(true);
+    expect(client.configure(config)).resolves;
     // calling configure after handshake should not trigger re-authentication
-    client.configure({ concurrency: false });
+    expect(client.configure({ concurrency: false })).resolves;
     // unless it api_key or api_url are changed
-    client.configure({ api_key: 'd1805f97-c594-43fd-a530-97f5fc38da6e' });
+    expect(
+      client.configure({ api_key: 'd1805f97-c594-43fd-a530-97f5fc38da6e' })
+    ).resolves;
   });
 
   test('check wrong api key', async () => {
     nock('https://api.example.com')
-      .get('/v1/platform')
-      .reply(200, {
-        ready: true
-      })
       .post('/v1/client/signin')
       .reply(401, {
         errors: ['invalid api key']
       });
 
     const client = new NodeClient();
-    await client.configure(config);
-    expect(client.configuration_error()).toContain('API Key Invalid');
-    expect(client.is_configured()).toEqual(false);
+    expect(client.configure(config)).rejects.toThrowError('API Key Invalid');
     // at this point client has a transport object but no token.
-    // calling get test cases, post and seal should fail.
-    const error = 'client not authenticated';
-    await expect(client.seal()).rejects.toThrowError(error);
-    await expect(client.post()).rejects.toThrowError(error);
+    // calling post and seal should fail.
+    const error = 'client not configured to perform this operation';
+    expect(client.post()).rejects.toThrowError(error);
+    expect(client.seal()).rejects.toThrowError(error);
   });
 });
 
@@ -77,29 +66,6 @@ describe('check failure errors', () => {
       });
   });
 
-  test('get testcases', async () => {
-    scope.get('/v1/client/element/some-team/some-suite').reply(200, [
-      {
-        metricsDuration: 10,
-        name: 'Some Case',
-        slug: 'some-case'
-      },
-      {
-        metricsDuration: 10,
-        name: 'Some Other Case',
-        slug: 'some-other-case'
-      }
-    ]);
-    const client = new NodeClient();
-    await client.configure(config);
-    expect(client.configuration_error()).toEqual('');
-    expect(client.is_configured()).toEqual(true);
-    await expect(client.get_testcases()).resolves.toEqual([
-      'Some Case',
-      'Some Other Case'
-    ]);
-  });
-
   test('when post fails', async () => {
     scope.post('/v1/client/submit').reply(400, {
       status: 400,
@@ -107,11 +73,7 @@ describe('check failure errors', () => {
     });
     const client = new NodeClient();
     await client.configure(config);
-    expect(client.configuration_error()).toEqual('');
-    expect(client.is_configured()).toEqual(true);
-    await expect(client.post()).rejects.toThrowError(
-      'Failed to submit test results'
-    );
+    expect(client.post()).rejects.toThrowError('Failed to submit test results');
   });
 
   test('when seal fails', async () => {
@@ -121,24 +83,6 @@ describe('check failure errors', () => {
     });
     const client = new NodeClient();
     await client.configure(config);
-    expect(client.configuration_error()).toEqual('');
-    expect(client.is_configured()).toEqual(true);
-    await expect(client.seal()).rejects.toThrowError(
-      'Failed to seal this version'
-    );
-  });
-
-  test('when get_testcases fails', async () => {
-    scope.get('/v1/client/element/some-team/some-suite').reply(404, {
-      errors: ['suite not found'],
-      status: 404
-    });
-    const client = new NodeClient();
-    await client.configure(config);
-    expect(client.configuration_error()).toEqual('');
-    expect(client.is_configured()).toEqual(true);
-    await expect(client.get_testcases()).rejects.toThrowError(
-      'Failed to obtain list of test cases'
-    );
+    expect(client.seal()).rejects.toThrowError('failed to seal this version');
   });
 });
