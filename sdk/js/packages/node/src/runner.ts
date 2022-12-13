@@ -103,21 +103,35 @@ class Printer {
     }
   }
 
-  public print_footer(stats: Statistics, suiteSize: number, timer: Timer) {
+  public print_footer(
+    stats: Statistics,
+    timer: Timer,
+    options: WorkflowOptions
+  ) {
     const duration = (timer.count('__workflow__') / 1000.0).toFixed(2);
     const report = (status: Status, text: string, color: ChalkInstance) => {
-      if (stats.count(status)) {
-        this.print_color(color, '%d %s', stats.count(status), text);
-        this.print(', ');
+      if (!stats.count(status)) {
+        return '';
       }
+      const msg = util.format('%d %s', stats.count(status), text);
+      return options.colored_output ? color(msg) : msg;
     };
-
-    this.print('\nTests:     ');
-    report('Sent', 'submitted', chalk.green);
-    report('Skip', 'skipped', chalk.yellow);
-    report('Fail', 'failed', chalk.red);
-    this.print('%d total\n', suiteSize);
-    this.print('Time:      %f s\n', duration);
+    const pad = Math.floor(Math.log10(options.testcases.length)) + 11;
+    const counts = [
+      report('Sent', 'submitted', chalk.green),
+      report('Skip', 'skipped', chalk.yellow),
+      report('Fail', 'failed', chalk.red),
+      util.format('%d total', options.testcases.length)
+    ].filter((v) => v.length);
+    this.print('\n%s %s\n', 'Tests:'.padEnd(pad), counts.join(', '));
+    this.print('%s %f s\n', 'Time:'.padEnd(pad), duration);
+    if (options.save_binary || options.save_json) {
+      this.print(
+        '%s %s\n',
+        'Results:'.padEnd(pad),
+        path.join(options.output_directory, options.suite, options.version)
+      );
+    }
   }
 }
 
@@ -198,7 +212,7 @@ async function runWorkflow(client: NodeClient, options: WorkflowOptions) {
   }
 
   timer.toc('__workflow__');
-  printer.print_footer(stats, options.testcases.length, timer);
+  printer.print_footer(stats, timer, options);
   if (!options.offline) {
     await client.seal();
   }
