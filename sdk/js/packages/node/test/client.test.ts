@@ -5,10 +5,10 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { gte } from 'semver';
-import { ToucaError } from 'src/options';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 import { NodeClient } from '../src/client';
+import { ToucaError } from '../src/options';
 
 async function makeEmptyClient() {
   const client = new NodeClient();
