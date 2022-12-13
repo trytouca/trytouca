@@ -148,18 +148,17 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     this._eventSource.addEventListener('error', (e) => console.error(e));
     this._eventSource.addEventListener('message', (msg) => {
       const job: ServerEventJob = JSON.parse(msg.data as string);
-      if (this._cache.tab !== TeamPageTabType.Suites) {
-        return;
-      }
-      const events: Array<ServerEventJob['type']> = [
-        'suite:created',
-        'batch:processed',
-        'batch:sealed'
-      ];
-      if (events.includes(job.type)) {
-        this._eventSubject.next(job);
-      }
+      this._eventSubject.next(job);
     });
+  }
+
+  consumeEvent(job: ServerEventJob) {
+    if (
+      this._cache.tab === TeamPageTabType.Suites &&
+      ['suite:created', 'batch:processed', 'batch:sealed'].includes(job.type)
+    ) {
+      this.fetchItems({ teamSlug: this._cache.team.slug });
+    }
   }
 
   eventSourceUnsubscribe() {

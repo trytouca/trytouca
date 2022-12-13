@@ -84,9 +84,9 @@ export class TeamPageComponent
         }
       }),
       dialog: undefined,
-      events: teamPageService.events$.pipe(debounceTime(250)).subscribe(() => {
-        this.teamPageService.refreshSuites();
-      }),
+      events: teamPageService.events$
+        .pipe(debounceTime(250))
+        .subscribe((v) => this.teamPageService.consumeEvent(v)),
       tab: teamPageService.data.tab$.subscribe((v) => (this.currentTab = v)),
       tabs: teamPageService.data.tabs$.subscribe((v) => {
         this.tabs = v;

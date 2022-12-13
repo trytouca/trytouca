@@ -126,27 +126,27 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     this._eventSource.addEventListener('error', (e) => console.error(e));
     this._eventSource.addEventListener('message', (msg) => {
       const job: ServerEventJob = JSON.parse(msg.data as string);
-      if (this._cache.tab !== SuitePageTabType.Versions) {
-        return;
-      }
-      if (job.type === 'batch:processed') {
-        const args = {
-          teamSlug: this._cache.team.slug,
-          suiteSlug: this._cache.suite.suiteSlug
-        };
-        this._cache.batches = null;
-        this.fetchItems(args);
-      } else if (job.type === 'batch:sealed') {
-        const args = {
-          teamSlug: this._cache.team.slug,
-          suiteSlug: this._cache.suite.suiteSlug
-        };
-        this._cache.batches = null;
-        this._cache.suite = null;
-        this.fetchItems(args);
-      }
       this._eventSubject.next(job);
     });
+  }
+
+  consumeEvent(job: ServerEventJob) {
+    if (this._cache.tab !== SuitePageTabType.Versions) {
+      return;
+    }
+    const args = {
+      teamSlug: this._cache.team.slug,
+      suiteSlug: this._cache.suite.suiteSlug
+    };
+    if (job.type === 'batch:processed') {
+      this._cache.batches = null;
+      this.fetchItems(args);
+    }
+    if (job.type === 'batch:sealed') {
+      this._cache.batches = null;
+      this._cache.suite = null;
+      this.fetchItems(args);
+    }
   }
 
   eventSourceUnsubscribe() {
