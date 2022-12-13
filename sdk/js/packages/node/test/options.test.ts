@@ -7,6 +7,7 @@ import { afterAll, beforeEach, describe, expect, test, vi } from 'vitest';
 import {
   NodeOptions,
   RunnerOptions,
+  ToucaError,
   updateNodeOptions,
   updateRunnerOptions
 } from '../src/options';
@@ -21,7 +22,7 @@ test('pass when empty options are passed', async () => {
 test('fail when file is missing', () => {
   expect(
     updateRunnerOptions({ config_file: 'some/path' })
-  ).rejects.toThrowError('config file not found');
+  ).rejects.toThrowError(new ToucaError('config_file_missing', 'some/path'));
 });
 
 test('fail when directory is passed as file', () => {
@@ -30,7 +31,7 @@ test('fail when directory is passed as file', () => {
   } as fs.Stats);
   expect(
     updateRunnerOptions({ config_file: 'some/path/' })
-  ).rejects.toThrowError('config file not found');
+  ).rejects.toThrowError(new ToucaError('config_file_missing', 'some/path/'));
 });
 
 describe('when valid config file is given', () => {
@@ -45,7 +46,7 @@ describe('when valid config file is given', () => {
     vi.spyOn(fs, 'readFileSync').mockReturnValueOnce(content);
     expect(
       updateRunnerOptions({ config_file: 'some/path' })
-    ).rejects.toThrowError('config file empty');
+    ).rejects.toThrowError(new ToucaError('config_file_invalid', 'some/path'));
   });
 
   test('fail if params have unexpected types', () => {
@@ -54,7 +55,7 @@ describe('when valid config file is given', () => {
     );
     expect(
       updateRunnerOptions({ config_file: 'some/path' })
-    ).rejects.toThrowError('parameter "offline" has unexpected type');
+    ).rejects.toThrowError(new ToucaError('config_option_invalid', 'offline'));
   });
 
   test('pass if params make sense', async () => {

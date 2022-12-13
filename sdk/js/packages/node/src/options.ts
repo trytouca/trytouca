@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import util from 'node:util';
 
 import ini from 'ini';
 import yargs from 'yargs';
@@ -20,6 +21,42 @@ type Workflow = {
   callback?: WorkflowCallback;
   testcases?: Array<string> | TestcaseGenerator;
 };
+
+type ErrorCode =
+  | 'auth_invalid_key'
+  | 'auth_invalid_response'
+  | 'client_not_configured'
+  | 'config_file_invalid'
+  | 'config_file_missing'
+  | 'config_option_invalid'
+  | 'config_option_missing'
+  | 'post_failed'
+  | 'seal_failed'
+  | 'testcase_forget'
+  | 'transport_http'
+  | 'transport_options'
+  | 'type_mismatch';
+
+export class ToucaError extends Error {
+  private static codes: Record<ErrorCode, string> = {
+    auth_invalid_key: 'Authentication failed: API Key Invalid.',
+    auth_invalid_response: 'Authentication failed: Invalid Response.',
+    config_file_invalid: 'Configuration file "%s" has an unexpected format.',
+    config_file_missing: 'Configuration file "%s" does not exist',
+    config_option_invalid: 'Configuration option "%s" has unexpected type.',
+    config_option_missing: 'Configuration option "%s" is missing.',
+    client_not_configured: 'Client not configured to perform this operation.',
+    post_failed: 'Failed to submit test results.%s',
+    seal_failed: 'Failed to seal this version.',
+    testcase_forget: 'Test case "%s" was never declared.',
+    transport_http: 'HTTP request failed: %s',
+    transport_options: 'Failed to fetch options from the remote server.',
+    type_mismatch: 'Specified key "%s" has a different type.'
+  };
+  constructor(code: ErrorCode, ...args: unknown[]) {
+    super(util.format(ToucaError.codes[code], ...args));
+  }
+}
 
 export type NodeOptions = Partial<{
   /**
@@ -123,7 +160,7 @@ export function findHomeDirectory() {
 function throwIfMissing(options: NodeOptions, keys: Array<keyof NodeOptions>) {
   for (const key of keys) {
     if (options[key] === undefined) {
-      throw new Error(`missing required option(s) "${key}"`);
+      throw new ToucaError('config_option_missing', key);
     }
   }
 }
@@ -135,7 +172,7 @@ function validateOptionsType<T extends NodeOptions | RunnerOptions>(
 ) {
   for (const key of keys) {
     if (key in options && typeof options[key] !== type) {
-      throw new Error(`parameter "${String(key)}" has unexpected type`);
+      throw new ToucaError('config_option_invalid', key);
     }
   }
 }
@@ -252,12 +289,12 @@ function applyConfigFile(options: RunnerOptions) {
     return;
   }
   if (!fs.statSync(file, { throwIfNoEntry: false })?.isFile()) {
-    throw new Error('config file not found');
+    throw new ToucaError('config_file_missing', file);
   }
   const content = fs.readFileSync(file, 'utf-8');
   const parsed = JSON.parse(content)['touca'];
   if (!parsed) {
-    throw new Error('config file empty');
+    throw new ToucaError('config_file_invalid', file);
   }
   assignOptions(options, parsed);
 }
@@ -366,7 +403,7 @@ async function fetchRemoteOptions(
     JSON.stringify(input)
   );
   if (response.status !== 200) {
-    throw new Error('client options');
+    throw new ToucaError('transport_options');
   }
   return JSON.parse(response.body);
 }
@@ -444,10 +481,10 @@ function validateRunnerOptions(options: RunnerOptions) {
     throwIfMissing(options, ['api_key', 'api_url']);
   }
   if (!options.workflows?.every((v) => v.version)) {
-    throw new Error('required option "version" is missing');
+    throw new ToucaError('config_option_missing', 'version');
   }
   if (!options.workflows?.every((v) => v.testcases?.length)) {
-    throw new Error('required option "testcases" is missing');
+    throw new ToucaError('config_option_missing', 'testcases');
   }
 }
 

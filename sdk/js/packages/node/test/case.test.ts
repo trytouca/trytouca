@@ -3,6 +3,7 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 
 import { Case } from '../src/case';
+import { ToucaError } from '../src/options';
 import { ToucaType, TypeHandler } from '../src/types';
 
 describe('basic operations', () => {
@@ -30,12 +31,12 @@ describe('basic operations', () => {
   test('fail on attempt to add element to hit count', () => {
     expect(() =>
       testcase.add_array_element('some-hit-count', transform('bang'))
-    ).toThrowError('specified key has a different type');
+    ).toThrowError(new ToucaError('type_mismatch', 'some-hit-count'));
   });
 
   test('fail on attempt to increment hit count of array', () => {
     expect(() => testcase.add_hit_count('some-array')).toThrowError(
-      'specified key has a different type'
+      new ToucaError('type_mismatch', 'some-array')
     );
   });
 

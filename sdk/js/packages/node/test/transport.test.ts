@@ -4,6 +4,7 @@ import nock from 'nock';
 import { beforeEach, describe, expect, test } from 'vitest';
 
 import { NodeClient } from '../src/client';
+import { ToucaError } from '../src/options';
 
 const config = {
   api_url: 'https://api.example.com/v1/@/some-team/some-suite',
@@ -44,7 +45,7 @@ describe('check authentication', () => {
     expect(client.configure(config)).rejects.toThrowError('API Key Invalid');
     // at this point client has a transport object but no token.
     // calling post and seal should fail.
-    const error = 'client not configured to perform this operation';
+    const error = new ToucaError('client_not_configured');
     expect(client.post()).rejects.toThrowError(error);
     expect(client.seal()).rejects.toThrowError(error);
   });
@@ -83,6 +84,6 @@ describe('check failure errors', () => {
     });
     const client = new NodeClient();
     await client.configure(config);
-    expect(client.seal()).rejects.toThrowError('failed to seal this version');
+    expect(client.seal()).rejects.toThrowError(new ToucaError('seal_failed'));
   });
 });

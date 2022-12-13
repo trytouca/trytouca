@@ -11,6 +11,7 @@ import {
   assignOptions,
   NodeOptions,
   RunnerOptions,
+  ToucaError,
   updateNodeOptions
 } from './options.js';
 import { run } from './runner.js';
@@ -81,7 +82,7 @@ export class NodeClient {
       if (response.body.includes('team not found')) {
         reason = ' This team does not exist';
       }
-      throw new Error(`Failed to submit test results.${reason}`);
+      throw new ToucaError('post_failed', reason);
     }
   }
 
@@ -168,7 +169,7 @@ export class NodeClient {
    */
   public forget_testcase(name: string): void {
     if (!this._cases.has(name)) {
-      throw new Error(`test case "${name}" was never declared`);
+      throw new ToucaError('testcase_forget', name);
     }
     this._cases.delete(name);
   }
@@ -446,7 +447,7 @@ export class NodeClient {
    */
   public async post(): Promise<void> {
     if (!this.isConfigured(this._options) || this._options.offline) {
-      throw new Error('client not configured to perform this operation');
+      throw new ToucaError('client_not_configured');
     }
     const content = this._serialize(Array.from(this._cases.values()));
     await this._post('/client/submit', content);
@@ -479,14 +480,14 @@ export class NodeClient {
    */
   public async seal(): Promise<void> {
     if (!this.isConfigured(this._options) || this._options.offline) {
-      throw new Error('client not configured to perform this operation');
+      throw new ToucaError('client_not_configured');
     }
     const response = await this._transport.request(
       'POST',
       `/batch/${this._options.team}/${this._options.suite}/${this._options.version}/seal2`
     );
     if (response.status !== 204) {
-      throw new Error('failed to seal this version');
+      throw new ToucaError('seal_failed');
     }
   }
 

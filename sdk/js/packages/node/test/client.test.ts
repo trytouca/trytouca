@@ -5,6 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { gte } from 'semver';
+import { ToucaError } from 'src/options';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 import { NodeClient } from '../src/client';
@@ -67,7 +68,7 @@ test('check missing options', async () => {
       api_key: 'some-key',
       offline: true
     })
-  ).rejects.toThrowError('missing required option(s) "suite"');
+  ).rejects.toThrowError(new ToucaError('config_option_missing', 'suite'));
 });
 
 describe('check no-op state', () => {
@@ -75,12 +76,12 @@ describe('check no-op state', () => {
     const client = new NodeClient();
     client.declare_testcase('some-case');
     expect(() => client.forget_testcase('some-case')).toThrowError(
-      'test case "some-case" was never declared'
+      new ToucaError('testcase_forget', 'some-case')
     );
   });
   test('transport functions should throw', async () => {
     const client = new NodeClient();
-    const error = 'client not configured to perform this operation';
+    const error = new ToucaError('client_not_configured');
     await expect(client.post()).rejects.toThrowError(error);
     await expect(client.seal()).rejects.toThrowError(error);
   });

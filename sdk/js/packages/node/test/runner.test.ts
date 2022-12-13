@@ -12,6 +12,7 @@ import {
   beforeEach,
   describe,
   expect,
+  SpyInstance,
   test,
   vi
 } from 'vitest';
@@ -19,6 +20,36 @@ import {
 import { NodeClient } from '../src/client.js';
 import touca from '../src/index.js';
 import { RunnerOptions } from '../src/options.js';
+
+class Capture {
+  private stdout = '';
+  private stderr = '';
+  private _stdout?: SpyInstance;
+  private _stderr?: SpyInstance;
+  constructor(start = true) {
+    if (start) {
+      this.start();
+    }
+  }
+  start() {
+    this._stderr = vi.spyOn(process.stderr, 'write').mockImplementation((v) => {
+      this.stderr += v;
+      return true;
+    });
+    this._stdout = vi.spyOn(process.stdout, 'write').mockImplementation((v) => {
+      this.stdout += v;
+      return true;
+    });
+  }
+  stop() {
+    const std = { err: this.stderr, out: this.stdout };
+    this.stderr = '';
+    this.stdout = '';
+    this._stderr?.mockRestore();
+    this._stdout?.mockRestore();
+    return std;
+  }
+}
 
 async function runSampleWorkflow(options: RunnerOptions) {
   const client = new NodeClient();
@@ -38,12 +69,7 @@ describe('index', () => {
   });
 
   test('basic', async () => {
-    const stderr = vi
-      .spyOn(process.stderr, 'write')
-      .mockImplementation(() => true);
-    const stdout = vi
-      .spyOn(process.stdout, 'write')
-      .mockImplementation(() => true);
+    const capture = new Capture();
     touca.workflow(
       'some-workflow',
       () => {
@@ -52,53 +78,64 @@ describe('index', () => {
       { testcases: ['alice'] }
     );
     await touca.run({ team: 'some-team', version: 'v1.0' });
-    expect(stderr).not.toHaveBeenCalled();
-    expect(stdout).toHaveBeenCalled();
+    const std = capture.stop();
+    expect(std.out).toContain('');
+    expect(std.err).toContain('');
   });
 });
 
 describe('main api', () => {
-  test('missing options', async () => {
-    let stderr = '';
-    vi.spyOn(process.stderr, 'write').mockImplementation((v) => {
-      stderr += v;
-      return true;
+  test('filter workflow', async () => {
+    const capture = new Capture();
+    const client = new NodeClient();
+    client.workflow('some-workflow', () => {
+      client.check('some-key', 'some-value');
     });
+    client.workflow('some-other-workflow', () => {
+      client.check('some-key', 'some-value');
+    });
+    await client.run({
+      team: 'some-team',
+      testcases: ['alice'],
+      version: 'v1.0',
+      workflow_filter: 'some-workflow'
+    });
+    const std = capture.stop();
+    expect(std.out).toContain('Suite: some-workflow/v1.0');
+    expect(std.out).not.toContain('Suite: some-other-workflow/v1.0');
+    expect(std.err).toEqual('');
+  });
+
+  test('missing options', async () => {
+    const capture = new Capture();
     const client = new NodeClient();
     client.workflow('some-workflow', () => {
       client.check('some-key', 'some-value');
     });
     await client.run();
-    expect(stderr).toContain(
-      '\nTest failed:\nrequired option "version" is missing\n'
+    const std = capture.stop();
+    expect(std.err).toContain(
+      '\nTest failed:\nConfiguration option "version" is missing.\n'
     );
   });
 
   test('failing test', async () => {
-    let stderr = '';
-    let stdout = '';
-    vi.spyOn(process.stderr, 'write').mockImplementation((v) => {
-      stderr += v;
-      return true;
-    });
-    vi.spyOn(process.stdout, 'write').mockImplementation((v) => {
-      stdout += v;
-      return true;
-    });
+    const capture = new Capture();
     const client = new NodeClient();
     client.workflow(
       'some-workflow',
       () => {
         client.check('some-key', 'some-value');
-        throw new Error('sample failure reason');
+        throw new Error('sample error');
       },
       { testcases: ['alice'] }
     );
     await client.run({ team: 'some-team', version: 'v1.0' });
-    expect(stdout).toContain('Suite: some-workflow/v1.0');
-    expect(stdout).toContain('- sample failure reason');
-    expect(stdout).toContain('Ran all test suites.');
-    expect(stderr).toEqual('');
+    const std = capture.stop();
+    expect(std.out).toContain('Suite: some-workflow/v1.0');
+    expect(std.out).toContain('- sample error');
+    expect(std.out).toContain('Ran all test suites.');
+    expect(std.err).toEqual('');
   });
 
   describe('skipped test', async () => {
@@ -113,61 +150,45 @@ describe('main api', () => {
     });
 
     test('save binary', async () => {
-      let stderr = '';
-      let stdout = '';
       await runSampleWorkflow({
         output_directory,
         save_binary: true,
         team: 'some-team',
         version: 'v1.0'
       });
-      vi.spyOn(process.stderr, 'write').mockImplementation((v) => {
-        stderr += v;
-        return true;
-      });
-      vi.spyOn(process.stdout, 'write').mockImplementation((v) => {
-        stdout += v;
-        return true;
-      });
+      const capture = new Capture();
       await runSampleWorkflow({
         output_directory,
         save_binary: true,
         team: 'some-team',
         version: 'v1.0'
       });
-      expect(stdout).toContain('Suite: some-workflow/v1.0');
-      expect(stdout).toContain('1.  SKIP  alice');
-      expect(stdout).toContain('1 skipped, 1 total');
-      expect(stderr).toEqual('');
+      const std = capture.stop();
+      expect(std.out).toContain('Suite: some-workflow/v1.0');
+      expect(std.out).toContain('1.  SKIP  alice');
+      expect(std.out).toContain('1 skipped, 1 total');
+      expect(std.err).toEqual('');
     });
 
     test('save json', async () => {
-      let stderr = '';
-      let stdout = '';
       await runSampleWorkflow({
         output_directory,
         save_json: true,
         team: 'some-team',
         version: 'v1.0'
       });
-      vi.spyOn(process.stderr, 'write').mockImplementation((v) => {
-        stderr += v;
-        return true;
-      });
-      vi.spyOn(process.stdout, 'write').mockImplementation((v) => {
-        stdout += v;
-        return true;
-      });
+      const capture = new Capture();
       await runSampleWorkflow({
         output_directory,
         save_json: true,
         team: 'some-team',
         version: 'v1.0'
       });
-      expect(stdout).toContain('Suite: some-workflow/v1.0');
-      expect(stdout).toContain('1.  SKIP  alice');
-      expect(stdout).toContain('1 skipped, 1 total');
-      expect(stderr).toEqual('');
+      const std = capture.stop();
+      expect(std.out).toContain('Suite: some-workflow/v1.0');
+      expect(std.out).toContain('1.  SKIP  alice');
+      expect(std.out).toContain('1 skipped, 1 total');
+      expect(std.err).toEqual('');
     });
   });
 });

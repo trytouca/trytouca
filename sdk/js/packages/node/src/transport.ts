@@ -4,6 +4,7 @@ import http, { IncomingMessage, RequestOptions } from 'node:http';
 import https from 'node:https';
 import { URL } from 'node:url';
 
+import { ToucaError } from './options.js';
 import { VERSION } from './version.js';
 
 export class Transport {
@@ -24,10 +25,10 @@ export class Transport {
       JSON.stringify({ key: api_key })
     );
     if (response.status === 401) {
-      throw new Error('Authentication failed: API Key Invalid');
+      throw new ToucaError('auth_invalid_key');
     }
     if (response.status !== 200) {
-      throw new Error('Authentication failed: Invalid Response');
+      throw new ToucaError('auth_invalid_response', response.status);
     }
     const body: { token: string; expiresAt: Date } = JSON.parse(response.body);
     this._node.token = body.token;
@@ -71,7 +72,7 @@ export class Transport {
         res.on('end', () =>
           res.statusCode
             ? resolve({ status: res.statusCode, body })
-            : reject(new Error(`HTTP request failed: ${options.path}`))
+            : reject(new ToucaError('transport_http', options.path))
         );
       });
       req.on('error', reject);

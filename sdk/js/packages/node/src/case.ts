@@ -2,6 +2,7 @@
 
 import { Builder } from 'flatbuffers';
 
+import { ToucaError } from './options.js';
 import * as schema from './schema.js';
 import {
   BlobType,
@@ -108,7 +109,7 @@ export class Case {
     }
     const val = this._results.get(key) as ResultEntry;
     if (val.typ !== ResultCategory.Check || !(val.val instanceof VectorType)) {
-      throw new Error('specified key has a different type');
+      throw new ToucaError('type_mismatch', key);
     }
     val.val.add(value);
   }
@@ -129,7 +130,7 @@ export class Case {
     }
     const val = this._results.get(key) as ResultEntry;
     if (val.typ !== ResultCategory.Check || !(val.val instanceof IntegerType)) {
-      throw new Error('specified key has a different type');
+      throw new ToucaError('type_mismatch', key);
     }
     val.val.increment();
   }
