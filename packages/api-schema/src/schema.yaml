@@ -657,6 +657,7 @@ components:
           enum:
             - batch:processed
             - batch:sealed
+            - suite:created
     SuiteItem:
       type: object
       additionalProperties: false

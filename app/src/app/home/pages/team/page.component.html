@@ -82,11 +82,11 @@
             </li>
           </ul>
         </div>
-        <div class="lg:hidden" wslDropdown>
+        <div class="lg:hidden" wslDropdown *ngIf="team?.name">
           <button
-            class="wsl-btn-sm wsl-dropdown-toggle group flex h-full items-center space-x-1 rounded-md bg-white p-2 shadow-sm dark:bg-gray-800 dark:text-gray-300"
+            class="wsl-btn-sm wsl-dropdown-toggle group flex cursor-pointer items-center space-x-1 rounded-md bg-white p-2 shadow-sm dark:bg-gray-800 dark:text-gray-300 lg:w-full"
             type="button"
-            id="dropdown-button-tabs"
+            id="wsl-team-menu-dropdown"
             aria-haspopup="true"
             aria-expanded="false"
             *ngIf="currentTab">
@@ -98,8 +98,8 @@
             <ng-icon class="opacity-50" name="hero-chevron-down"></ng-icon>
           </button>
           <ul
-            class="wsl-dropdown-menu hidden w-48"
-            aria-labelledby="dropdown-button-tabs">
+            class="wsl-dropdown-menu left-0 hidden w-48"
+            aria-labelledby="wsl-team-menu-dropdown">
             <ng-container *ngFor="let tab of tabs">
               <li
                 *ngIf="tab.shown"

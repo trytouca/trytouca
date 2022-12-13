@@ -1,5 +1,6 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
+import { insertEvent } from '../queues/events.js'
 import {
   BatchModel,
   CommentModel,
@@ -39,6 +40,13 @@ export async function suiteCreate(
   await redisClient.removeCached(
     `route_suiteList_${team.slug}_${user.username}`
   )
+
+  await insertEvent({
+    type: 'suite:created',
+    teamId: team._id,
+    suiteId: newSuite._id,
+    batchId: undefined
+  })
 
   return newSuite
 }

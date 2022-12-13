@@ -11,7 +11,7 @@ import type {
   TeamItem
 } from '@touca/api-schema';
 import { IClipboardResponse } from 'ngx-clipboard';
-import { Subscription, timer } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 
 import { ApiKey } from '@/core/models/api-key';
 import { getBackendUrl } from '@/core/models/environment';
@@ -118,7 +118,9 @@ export class SuitePageComponent
           this._notFound.suiteSlug = route.snapshot.paramMap.get('suite');
         }
       }),
-      events: suitePageService.events$.subscribe(),
+      events: suitePageService.events$
+        .pipe(debounceTime(250))
+        .subscribe((v) => this.suitePageService.consumeEvent(v)),
       tab: suitePageService.data.tab$.subscribe((v) => (this.currentTab = v)),
       tabs: suitePageService.data.tabs$.subscribe((v) => {
         this.tabs = v;

@@ -85,7 +85,7 @@ async function suiteList(team: ITeam): Promise<SuiteListResponse> {
       const batchQueryOutput = allBatches.find((v) => v._id.equals(suite._id))
 
       // in the special case when suite has no batch, return output without
-      // fields that depend on existance of batches.
+      // fields that depend on existence of batches.
 
       if (!batchQueryOutput) {
         return output
@@ -93,7 +93,7 @@ async function suiteList(team: ITeam): Promise<SuiteListResponse> {
 
       // in another special case when suite has no baseline, assume that suite
       // is in the process of being removed and return output without fields
-      // that depend on existance of batches. when we are asked to remove a
+      // that depend on existence of batches. when we are asked to remove a
       // suite, we clear its `promotions` field to enable removal of all of
       // its batches.
 
