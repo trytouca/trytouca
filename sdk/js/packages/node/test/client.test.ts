@@ -8,10 +8,11 @@ import { gte } from 'semver';
 import { afterAll, beforeAll, describe, expect, test } from 'vitest';
 
 import { NodeClient } from '../src/client';
+import { ToucaError } from '../src/options';
 
 async function makeEmptyClient() {
   const client = new NodeClient();
-  client.configure({
+  await client.configure({
     team: 'some-team',
     suite: 'some-suite',
     version: 'some-version'
@@ -45,52 +46,42 @@ async function makeClient(): Promise<NodeClient> {
   return client;
 }
 
-test('check basic configure', () => {
+test('check basic configure', async () => {
   const client = new NodeClient();
-  expect(client.configuration_error()).toEqual('');
-  expect(client.is_configured()).toEqual(false);
-  expect(() => {
+  expect(
     client.configure({
       concurrency: true,
       api_url: 'https://api.touca.io/@/team/suite',
       api_key: 'some-key',
+      version: 'v1.0',
       offline: true
-    });
-  }).not.toThrow();
-  expect(client.is_configured()).toEqual(true);
-  expect(client.configuration_error()).toEqual('');
+    })
+  ).resolves;
 });
 
-test('check missing options', () => {
+test('check missing options', async () => {
   const client = new NodeClient();
-  expect(client.configuration_error()).toEqual('');
-  expect(client.is_configured()).toEqual(false);
-  expect(() => {
+  expect(() =>
     client.configure({
       concurrency: true,
       api_url: 'https://api.touca.io/@/team',
       api_key: 'some-key',
       offline: true
-    });
-  }).not.toThrow();
-  expect(client.configuration_error()).toEqual(
-    'Configuration failed: missing required option(s) "suite"'
-  );
-  expect(client.is_configured()).toEqual(false);
+    })
+  ).rejects.toThrowError(new ToucaError('config_option_missing', 'suite'));
 });
 
 describe('check no-op state', () => {
   test('forget should throw without configure', () => {
     const client = new NodeClient();
     client.declare_testcase('some-case');
-    expect(() => {
-      client.forget_testcase('some-case');
-    }).toThrowError('test case "some-case" was never declared');
+    expect(() => client.forget_testcase('some-case')).toThrowError(
+      new ToucaError('testcase_forget', 'some-case')
+    );
   });
   test('transport functions should throw', async () => {
     const client = new NodeClient();
-    const error = 'client not configured to perform this operation';
-    await expect(client.get_testcases()).rejects.toThrowError(error);
+    const error = new ToucaError('client_not_configured');
     await expect(client.post()).rejects.toThrowError(error);
     await expect(client.seal()).rejects.toThrowError(error);
   });
@@ -228,9 +219,7 @@ describe('check saving file', () => {
 
   test('all cases in json format', async () => {
     const client = new NodeClient();
-    client.configure();
-    expect(client.is_configured()).toEqual(true);
-    expect(client.configuration_error()).toEqual('');
+    await client.configure();
     client.declare_testcase('some-case');
     client.check('some-key', 'some-result');
     client.declare_testcase('some-other-case');
@@ -269,8 +258,7 @@ describe('check saving file', () => {
 
   test('some cases in json format', async () => {
     const client = new NodeClient();
-    client.configure();
-    expect(client.is_configured()).toEqual(true);
+    await client.configure();
     client.declare_testcase('some-case');
     client.check('some-key', 'some-result');
     client.declare_testcase('some-other-case');

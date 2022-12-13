@@ -2,64 +2,36 @@
 
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
+import { format } from 'node:util';
 
 import { Builder } from 'flatbuffers';
 
 import { Case, CheckOptions } from './case.js';
-import { NodeOptions, update_options } from './options.js';
-import { Runner, Workflow } from './runner.js';
+import {
+  assignOptions,
+  NodeOptions,
+  RunnerOptions,
+  ToucaError,
+  updateNodeOptions
+} from './options.js';
+import { run } from './runner.js';
 import * as schema from './schema.js';
 import { Transport } from './transport.js';
 import { TypeHandler } from './types.js';
 
-interface BaseClient<Options> {
-  configure(options: Options): Promise<boolean>;
-  is_configured(): boolean;
-  configuration_error(): string;
-  get_testcases(): PromiseLike<string[]>;
-  declare_testcase(slug: string): void;
-  forget_testcase(slug: string): void;
-  check(key: string, value: unknown): void;
-  assume(key: string, value: unknown): void;
-  add_array_element(key: string, value: unknown): void;
-  add_hit_count(key: string): void;
-  add_metric(key: string, milliseconds: number): void;
-  start_timer(key: string): void;
-  stop_timer(key: string): void;
-  post(): PromiseLike<void>;
-  seal(): PromiseLike<void>;
-}
+type Workflow = Exclude<RunnerOptions['workflows'], undefined>[0];
 
-export class NodeClient implements BaseClient<NodeOptions> {
+export class NodeClient {
   private _cases = new Map<string, Case>();
   private _configured = false;
-  private _configuration_error = '';
   private _options: NodeOptions = {};
-  private _active_case: string | null = null;
-  private _transport?: Transport;
+  private _active_case?: string;
+  private _transport = new Transport();
   private _type_handler = new TypeHandler();
-  private _runner = new Runner(this);
+  private _workflows: Array<Workflow> = [];
 
-  private _make_transport(): boolean {
-    const keys: (keyof NodeOptions)[] = ['api_key', 'api_url', 'team', 'suite'];
-    if (this._options.offline === true) {
-      return false;
-    }
-    if (!keys.every((key) => key in this._options)) {
-      return false;
-    }
-    if (!this._transport) {
-      this._transport = new Transport(this._options);
-      return true;
-    }
-    const diff = keys.filter(
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      (k) => this._transport!.options[k] !== this._options[k]
-    );
-    if (diff.length !== 0) {
-      this._transport.update_options(this._options);
-    }
-    return true;
+  private isConfigured(v: NodeOptions): v is Required<NodeOptions> {
+    return this._configured;
   }
 
   private _serialize(cases: Case[]): Uint8Array {
@@ -80,7 +52,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
     return builder.asUint8Array();
   }
 
-  private _prepare_save(path: string, cases: string[]): Case[] {
+  private _save(path: string, cases: string[]): Case[] {
     if (dirname(path).length !== 0) {
       mkdirSync(dirname(path), { recursive: true });
     }
@@ -92,16 +64,37 @@ export class NodeClient implements BaseClient<NodeOptions> {
     return Array.from(this._cases.values());
   }
 
+  private async _post(path: string, content: Uint8Array) {
+    const response = await this._transport.request(
+      'POST',
+      path,
+      content,
+      'application/octet-stream'
+    );
+    if (response.status === 204) {
+      return;
+    }
+    let reason = '';
+    if (response.status === 400) {
+      if (response.body.includes('batch is sealed')) {
+        reason = ' This version is already submitted and sealed';
+      }
+      if (response.body.includes('team not found')) {
+        reason = ' This team does not exist';
+      }
+      throw new ToucaError('post_failed', reason);
+    }
+  }
+
   /**
    * Configures the Touca client. Must be called before declaring test cases
    * and adding results to the client. Should be regarded as a potentially
    * expensive operation. Should be called only from your test environment.
    *
-   * {@link configure} takes a variety of configuration parameters
-   * documented below. All of these parameters are optional. Calling this
-   * function without any parameters is possible: the client can capture
-   * behavior and performance data and store them on a local filesystem
-   * but it will not be able to post them to the Touca server.
+   * {@link configure} takes a variety of optional configuration parameters.
+   * Calling this function without any parameters is possible: the client can
+   * capture the behavior and performance data and store them on a local
+   * filesystem but it will not be able to post them to the Touca server.
    *
    * In most cases, You will need to pass API Key and API URL during the
    * configuration. The code below shows the common pattern in which API URL
@@ -115,107 +108,17 @@ export class NodeClient implements BaseClient<NodeOptions> {
    * ```
    *
    * As long as the API Key and API URL to the Touca server are known to
-   * the client, it attempts to perform a handshake with the Touca Server to
-   * authenticate with the server and obtain the list of known test cases
-   * for the baseline version of the specified suite. You can explicitly
-   * disable this handshake in rare cases where you want to prevent ever
-   * communicating with the Touca server.
+   * the client, it attempts to authenticate with the Touca server. You
+   * can explicitly disable this communication in rare cases by setting
+   * configuration option `offline` to `false`.
    *
    * You can call {@link configure} any number of times. The client
    * preserves the configuration parameters specified in previous calls to
    * this function.
-   *
-   * @return `True` if client is ready to capture data.
    */
-  public async configure(options: NodeOptions = {}): Promise<boolean> {
-    this._configuration_error = '';
-    try {
-      update_options(this._options, options);
-      if (this._make_transport()) {
-        await this._transport?.authenticate();
-      }
-    } catch (err) {
-      const error = err instanceof Error ? err.message : 'Unknown Error';
-      this._configuration_error = `Configuration failed: ${error}`;
-      return false;
-    }
-    this._configured = true;
-    return true;
-  }
-
-  /**
-   * Checks if previous call(s) to {@link configure} have set the right
-   * combination of configuration parameters to enable the client to perform
-   * expected tasks.
-   *
-   * We recommend that you perform this check after client configuration and
-   * before calling other functions of the library:
-   *
-   * ```js
-   * if (!touca.is_configured()) {
-   *   console.log(touca.configuration_error());
-   * }
-   * ```
-   *
-   * At a minimum, the client is considered configured if it can capture
-   * test results and store them locally on the filesystem. A single call
-   * to {@link configure} without any configuration parameters can help
-   * us get to this state. However, if a subsequent call to {@link configure}
-   * sets the parameter `api_url` in short form without specifying
-   * parameters such as `team`, `suite` and `version`, the client
-   * configuration is incomplete: We infer that the user intends to submit
-   * results but the provided configuration parameters are not sufficient
-   * to perform this operation.
-   *
-   * @return `True` if the client is properly configured
-   * @see {@link configure}
-   */
-  public is_configured(): boolean {
-    return this._configured;
-  }
-
-  /**
-   * Provides the most recent error, if any, that is encountered during client
-   * configuration.
-   *
-   * @returns short description of the most recent configuration error
-   */
-  public configuration_error(): string {
-    return this._configuration_error;
-  }
-
-  /**
-   * Queries the Touca server for the list of testcases that are submitted
-   * to the baseline version of this suite.
-   *
-   * @throws when called on the client that is not configured to communicate
-   *         with the Touca server.
-   *
-   * @returns list of test cases of the baseline version of this suite
-   */
-  public async get_testcases(): Promise<string[]> {
-    if (!this._transport) {
-      throw new Error('client not configured to perform this operation');
-    }
-    return this._transport.get_testcases();
-  }
-
-  /**
-   * Queries the Touca server for the next version increment of this suite.
-   *
-   * @throws when called on the client that is not configured to communicate
-   *         with the Touca server.
-   *
-   * @returns next version increment of this suite
-   */
-  public async getNextBatch(): Promise<string> {
-    if (!this._transport) {
-      throw new Error('client not configured to perform this operation');
-    }
-    const version = await this._transport.getNextBatch();
-    this._transport.update_options({ version });
-    this._options.version = version;
-    return version;
+  public async configure(options: NodeOptions = {}): Promise<void> {
+    assignOptions(this._options, options);
+    this._configured = await updateNodeOptions(this._options, this._transport);
   }
 
   /**
@@ -230,7 +133,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
    * @param name name of the testcase to be declared
    */
   public declare_testcase(name: string): void {
-    if (!this._configured) {
+    if (!this.isConfigured(this._options)) {
       return;
     }
     if (!this._cases.has(name)) {
@@ -266,7 +169,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
    */
   public forget_testcase(name: string): void {
     if (!this._cases.has(name)) {
-      throw new Error(`test case "${name}" was never declared`);
+      throw new ToucaError('testcase_forget', name);
     }
     this._cases.delete(name);
   }
@@ -501,7 +404,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
    *              test cases will be stored in the specified file.
    */
   public async save_binary(path: string, cases: string[] = []): Promise<void> {
-    const items = this._prepare_save(path, cases);
+    const items = this._save(path, cases);
     const content = this._serialize(items);
     writeFileSync(path, content, { flag: 'w+' });
   }
@@ -521,7 +424,7 @@ export class NodeClient implements BaseClient<NodeOptions> {
    *              test cases will be stored in the specified file.
    */
   public async save_json(path: string, cases: string[] = []): Promise<void> {
-    const items = this._prepare_save(path, cases);
+    const items = this._save(path, cases);
     const content = JSON.stringify(items.map((item) => item.json()));
     writeFileSync(path, content, { flag: 'w+' });
   }
@@ -536,23 +439,24 @@ export class NodeClient implements BaseClient<NodeOptions> {
    * submitted to the server. Any subsequent call to {@link post} will
    * resubmit the modified test case.
    *
-   * @throws when called on the client that is not configured to communicate
-   *         with the Touca server.
+   * @throws if called before calling `configure` or when called on a client
+   *         that is configured not to communicate with the Touca server or
+   *         if operation fails for any reason.
    *
    * @returns a promise that is resolved when all test results are submitted.
    */
   public async post(): Promise<void> {
-    if (!this._transport) {
-      throw new Error('client not configured to perform this operation');
-    }
-    if (!this._transport.has_token()) {
-      throw new Error('client not authenticated');
+    if (!this.isConfigured(this._options) || this._options.offline) {
+      throw new ToucaError('client_not_configured');
     }
     const content = this._serialize(Array.from(this._cases.values()));
-    await this._transport.post(content);
+    await this._post('/client/submit', content);
     for (const [name, testcase] of this._cases.entries()) {
       for (const [key, value] of testcase.blobs()) {
-        await this._transport.postArtifact(name, key, value.binary());
+        await this._post(
+          `/client/submit/artifact/${this._options.team}/${this._options.suite}/${this._options.version}/${name}/${key}`,
+          value.binary()
+        );
       }
     }
   }
@@ -568,30 +472,70 @@ export class NodeClient implements BaseClient<NodeOptions> {
    * the last test case was submitted. This duration is configurable from
    * the "Settings" tab in "Suite" Page.
    *
-   * @throws when called on the client that is not configured to communicate
-   *         with the Touca server.
+   * @throws if called before calling `configure` or when called on a client
+   *         that is configured not to communicate with the Touca server or
+   *         if operation fails for any reason.
    *
-   * @returns a promise that is resolved when the version is sealed.
+   * @returns a promise that is resolved when all test results are submitted.
    */
   public async seal(): Promise<void> {
-    if (!this._transport) {
-      throw new Error('client not configured to perform this operation');
+    if (!this.isConfigured(this._options) || this._options.offline) {
+      throw new ToucaError('client_not_configured');
     }
-    if (!this._transport.has_token()) {
-      throw new Error('client not authenticated');
+    const response = await this._transport.request(
+      'POST',
+      `/batch/${this._options.team}/${this._options.suite}/${this._options.version}/seal2`
+    );
+    if (response.status !== 204) {
+      throw new ToucaError('seal_failed');
     }
-    return this._transport.seal();
   }
 
-  public async run(): Promise<void> {
-    return await this._runner.run();
+  public async run(options: RunnerOptions = {}): Promise<void> {
+    if (!options.workflows) {
+      options.workflows = [];
+    }
+    options.workflows.push(...this._workflows);
+    try {
+      await run(options, this._transport, this);
+      process.exit(0);
+    } catch (err) {
+      const error = err instanceof Error ? err.message : 'Unknown Error';
+      process.stderr.write(format('\nTest failed:\n%s\n', error));
+      process.exit(1);
+    }
   }
 
+  /**
+   * High-level API designed to make writing regression test workflows easy
+   * and straightforward. It abstracts away many of the common expected
+   * features such as logging, error handling and progress reporting.
+   * The following example demonstrates how to use this API.
+   *
+   * ```js
+   *  import { touca } from '@touca/node';
+   *  import { find_student, calculate_gpa } from  './code_under_test';
+   *
+   *  touca.workflow('test_students', (testcase: string) => {
+   *    const student = find_student(testcase);
+   *    touca.assume('username', student.username);
+   *    touca.check('fullname', student.fullname);
+   *    touca.check('birth_date', student.dob);
+   *    touca.check('gpa', calculate_gpa(student.courses));
+   *  });
+   *
+   *  touca.run();
+   * ```
+   *
+   * @param suite name of the workflow
+   * @param callback test code to run for each test case
+   * @param options options to pass to the test runner for this workflow
+   */
   public async workflow(
-    name: string,
+    suite: Workflow['suite'],
     callback: Workflow['callback'],
-    options?: Omit<Workflow, 'callback'>
+    options?: Pick<Workflow, 'testcases'>
   ): Promise<void> {
-    this._runner.add_workflow(name, { callback, ...options });
+    this._workflows.push({ suite, callback, ...options });
   }
 }

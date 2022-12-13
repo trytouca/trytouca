@@ -1,7 +1,7 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 export { createUserAccount, createUserSession } from './auth.js'
-export { batchPromote, batchRemove, batchSeal } from './batch.js'
+export { batchNext, batchPromote, batchRemove, batchSeal } from './batch.js'
 export {
   CommentInputs,
   extractCommentTuple,
@@ -17,6 +17,7 @@ export {
   comparisonRemove,
   MessageJob
 } from './comparison.js'
+export { elementListBaseline } from './element.js'
 export {
   MessageOverview,
   messageProcess,

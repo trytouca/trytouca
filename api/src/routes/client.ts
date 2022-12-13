@@ -6,6 +6,7 @@ import * as ev from 'express-validator'
 import {
   clientBatchNext,
   clientElementList,
+  clientOptions,
   clientSessionCreate,
   clientSubmit,
   clientSubmitArtifact
@@ -50,6 +51,13 @@ router.get(
   hasTeam,
   isTeamMember,
   promisable(clientBatchNext, 'show next batch')
+)
+
+router.post(
+  '/options',
+  isClientAuthenticated,
+  json(),
+  promisable(clientOptions, 'fetch workflow options')
 )
 
 router.post(

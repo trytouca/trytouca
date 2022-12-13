@@ -1,46 +1,78 @@
 // Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import fs from 'node:fs';
-import { homedir } from 'node:os';
+import os from 'node:os';
 import path from 'node:path';
+import util from 'node:util';
 
-import * as ini from 'ini';
+import ini from 'ini';
+import yargs from 'yargs';
+import { hideBin } from 'yargs/helpers';
 
-export interface NodeOptions {
-  /**
-   * API Key issued by the Touca server that
-   * identifies who is submitting the data. Since the value should be
-   * treated as a secret, we recommend that you pass it as an environment
-   * variable `TOUCA_API_KEY` instead.
-   */
-  api_key?: string;
+import { Transport } from './transport.js';
+import { VERSION } from './version.js';
 
-  /**
-   * URL to the Touca server API. Can be provided either in long
-   * format like `https://api.touca.io/@/myteam/mysuite/version` or in short
-   * format like `https://api.touca.io`. If the team, suite, or version are
-   * specified, you do not need to specify them separately.
-   */
-  api_url?: string;
+type TestcaseGenerator = () => Array<string> | Promise<Array<string>>;
+type WorkflowCallback = (testcase: string) => void | Promise<void>;
 
-  /**
-   * determines whether client should connect with the Touca server during
-   * the configuration. Defaults to `false` when `api_url` or `api_key` are
-   * provided.
-   */
-  offline?: boolean;
-
-  /**
-   * slug of the suite on the Touca server that corresponds to your
-   * workflow under test.
-   */
+type Workflow = {
   suite?: string;
-
-  /** slug of your team on the Touca server. */
-  team?: string;
-
-  /** version of your workflow under test. */
   version?: string;
+  callback?: WorkflowCallback;
+  testcases?: Array<string> | TestcaseGenerator;
+};
+
+type ErrorCode =
+  | 'auth_invalid_key'
+  | 'auth_invalid_response'
+  | 'client_not_configured'
+  | 'config_file_invalid'
+  | 'config_file_missing'
+  | 'config_option_invalid'
+  | 'config_option_missing'
+  | 'post_failed'
+  | 'seal_failed'
+  | 'testcase_forget'
+  | 'transport_http'
+  | 'transport_options'
+  | 'type_mismatch';
+
+export class ToucaError extends Error {
+  private static codes: Record<ErrorCode, string> = {
+    auth_invalid_key: 'Authentication failed: API Key Invalid.',
+    auth_invalid_response: 'Authentication failed: Invalid Response.',
+    config_file_invalid: 'Configuration file "%s" has an unexpected format.',
+    config_file_missing: 'Configuration file "%s" does not exist',
+    config_option_invalid: 'Configuration option "%s" has unexpected type.',
+    config_option_missing: 'Configuration option "%s" is missing.',
+    client_not_configured: 'Client not configured to perform this operation.',
+    post_failed: 'Failed to submit test results.%s',
+    seal_failed: 'Failed to seal this version.',
+    testcase_forget: 'Test case "%s" was never declared.',
+    transport_http: 'HTTP request failed: %s',
+    transport_options: 'Failed to fetch options from the remote server.',
+    type_mismatch: 'Specified key "%s" has a different type.'
+  };
+  constructor(code: ErrorCode, ...args: unknown[]) {
+    super(util.format(ToucaError.codes[code], ...args));
+  }
+}
+
+export type NodeOptions = Partial<{
+  /**
+   * API Key issued by the Touca server that identifies who is submitting
+   * the data. Since the value should be treated as a secret, we recommend
+   * that you pass it as an environment variable `TOUCA_API_KEY` instead.
+   */
+  api_key: string;
+
+  /**
+   * URL to the Touca server API. Can be provided either in long format
+   * like `https://api.touca.io/@/myteam/mysuite/version` or in short
+   * format like `https://api.touca.io`. If the team, suite, or version
+   * are specified, you do not need to specify them separately.
+   */
+  api_url: string;
 
   /**
    * determines whether the scope of test case declaration is bound to
@@ -53,182 +85,435 @@ export interface NodeOptions {
    * functions such as {@link check} will affect the newly declared
    * test case.
    */
-  concurrency?: boolean;
+  concurrency: boolean;
 
   /**
-   * Path to a configuration file in JSON format with a
-   * top-level "touca" field that may list any number of configuration
-   * parameters for this function. When used alongside other parameters,
-   * those parameters would override values specified in the file.
+   * determines whether client should connect with the Touca server during
+   * the configuration. Defaults to `false` when `api_url` or `api_key` are
+   * provided.
    */
-  file?: string;
+  offline: boolean;
+
+  /** slug of the suite on the Touca server */
+  suite: string;
+
+  /** slug of your team on the Touca server. */
+  team: string;
+
+  /** version of your workflow under test. */
+  version: string;
+}>;
+
+export type RunnerOptions = NodeOptions &
+  Partial<{
+    colored_output: boolean;
+    config_file: string;
+    output_directory: string;
+    overwrite_results: boolean;
+    save_json: boolean;
+    save_binary: boolean;
+    testcases: Array<string>;
+    workflow_filter: string;
+    workflows: Array<Workflow>;
+  }>;
+
+export function assignOptions(
+  target: Record<string, unknown>,
+  source: Record<string, unknown>
+) {
+  const targetKeys: Record<string, string> = {
+    api_key: 'api_key',
+    api_url: 'api_url',
+    offline: 'offline',
+    suite: 'suite',
+    team: 'team',
+    version: 'version',
+    save_binary: 'save_binary',
+    save_json: 'save_json',
+    output_directory: 'output_directory',
+    overwrite_results: 'overwrite_results',
+    testcases: 'testcases',
+    workflow_filter: 'workflow_filter',
+    colored_output: 'colored_output',
+    config_file: 'config_file',
+    ['api-key']: 'api_key',
+    ['api-url']: 'api_url',
+    ['revision']: 'version',
+    ['save-as-binary']: 'save_binary',
+    ['save-as-json']: 'save_json',
+    ['output-directory']: 'output_directory',
+    ['overwrite']: 'overwrite_results',
+    ['filter']: 'workflow_filter',
+    ['colored-output']: 'colored_output',
+    ['config-file']: 'config_file'
+  };
+  Object.entries(source)
+    .filter(([k, v]) => v !== undefined && k in targetKeys)
+    .forEach(([k, v]) => (target[targetKeys[k]] = v));
 }
 
-function _apply_legacy_config_file(incoming: NodeOptions): void {
-  if (!incoming.file) {
-    return;
-  }
-  if (!fs.statSync(incoming.file, { throwIfNoEntry: false })?.isFile()) {
-    throw new Error('config file not found');
-  }
-  const content = fs.readFileSync(incoming.file, { encoding: 'utf8' });
-  const parsed = JSON.parse(content);
-  if (!parsed.touca) {
-    throw new Error('file is missing JSON field: "touca"');
-  }
-  const config: NodeOptions = parsed.touca;
-  for (const key of Object.keys(config) as (keyof NodeOptions)[]) {
-    if (!(key in incoming)) {
-      incoming[key] = parsed['touca'][key];
-    }
-  }
-}
-
-export function find_home_path() {
+export function findHomeDirectory() {
   const cwd = path.join(process.cwd(), '.touca');
-  return fs.existsSync(cwd) ? cwd : path.join(homedir(), '.touca');
+  return fs.existsSync(cwd) ? cwd : path.join(os.homedir(), '.touca');
 }
 
-function find_profile_path() {
-  const homePath = find_home_path();
-  const settingsPath = path.join(homePath, 'settings');
-  let name = 'default';
-  if (fs.existsSync(settingsPath)) {
-    const config = ini.parse(fs.readFileSync(settingsPath, 'utf-8'));
-    name = config.settings?.profile ?? 'default';
-  }
-  return path.join(homePath, 'profiles', name);
-}
-
-function config_file_parse(): Record<string, unknown> {
-  const profilePath = find_profile_path();
-  if (!fs.existsSync(profilePath)) {
-    return {};
-  }
-  const config = ini.parse(fs.readFileSync(profilePath, 'utf-8'));
-  return config.settings ?? {};
-}
-
-function _apply_config_file(incoming: NodeOptions) {
-  const config = config_file_parse();
-  Object.assign(incoming, config);
-  const apply = (from: string, to: keyof NodeOptions) => {
-    if (config[from]) {
-      incoming[to] = config[from] as undefined;
+function throwIfMissing(options: NodeOptions, keys: Array<keyof NodeOptions>) {
+  for (const key of keys) {
+    if (options[key] === undefined) {
+      throw new ToucaError('config_option_missing', key);
     }
-  };
-  apply('api-key', 'api_key');
-  apply('api-url', 'api_url');
+  }
 }
 
-function _apply_arguments(existing: NodeOptions, incoming: NodeOptions): void {
-  type Param = NodeOptions[keyof NodeOptions];
-  const inputs: {
-    params: (keyof NodeOptions)[];
-    validate: (x: Param) => boolean;
-  }[] = [
-    {
-      params: ['team', 'suite', 'version', 'api_key', 'api_url'],
-      validate: (x) => typeof x === 'string'
-    },
-    {
-      params: ['offline', 'concurrency'],
-      validate: (x) => typeof x === 'boolean'
+function validateOptionsType<T extends NodeOptions | RunnerOptions>(
+  options: T,
+  type: 'boolean' | 'string',
+  keys: Array<keyof T>
+) {
+  for (const key of keys) {
+    if (key in options && typeof options[key] !== type) {
+      throw new ToucaError('config_option_invalid', key);
     }
-  ];
-  for (const input of inputs) {
-    for (const param of input.params) {
-      if (!(param in incoming)) {
-        continue;
+  }
+}
+
+async function applyCliArguments(options: RunnerOptions): Promise<void> {
+  const y = yargs(hideBin(process.argv));
+  const argv = await y
+    .help('help')
+    .version(VERSION)
+    .showHelpOnFail(false, 'Specify --help for available options')
+    .epilog('Visit https://touca.io/docs for more information.')
+    .wrap(y.terminalWidth())
+    .options({
+      'api-key': {
+        type: 'string',
+        desc: 'API Key issued by the Touca Server',
+        group: 'Common Options'
+      },
+      'api-url': {
+        type: 'string',
+        desc: 'API URL issued by the Touca Server',
+        group: 'Common Options'
+      },
+      offline: {
+        type: 'boolean',
+        desc: 'Disables all communications with the Touca server',
+        boolean: true,
+        default: false,
+        group: 'Common Options'
+      },
+      suite: {
+        type: 'string',
+        desc: 'Slug of suite to which test results belong',
+        group: 'Common Options'
+      },
+      team: {
+        type: 'string',
+        desc: 'Slug of team to which test results belong',
+        group: 'Common Options'
+      },
+      revision: {
+        type: 'string',
+        desc: 'Version of the code under test',
+        group: 'Common Options'
+      },
+      'save-as-binary': {
+        type: 'boolean',
+        desc: 'Save a copy of test results on local filesystem in binary format',
+        boolean: true,
+        default: false,
+        group: 'Runner Options'
+      },
+      'save-as-json': {
+        type: 'boolean',
+        desc: 'Save a copy of test results on local filesystem in JSON format',
+        boolean: true,
+        default: false,
+        group: 'Runner Options'
+      },
+      'output-directory': {
+        type: 'string',
+        desc: 'Path to a local directory to store result files',
+        group: 'Runner Options'
+      },
+      overwrite: {
+        type: 'boolean',
+        desc: 'Overwrite result directory for testcase if it already exists',
+        group: 'Runner Options',
+        boolean: true,
+        default: false
+      },
+      testcases: {
+        type: 'array',
+        desc: 'One or more testcases to feed to the workflow',
+        group: 'Runner Options'
+      },
+      filter: {
+        type: 'string',
+        desc: 'Name of the workflow to run',
+        group: 'Runner Options'
+      },
+      'log-level': {
+        type: 'string',
+        desc: 'Level of detail with which events are logged',
+        choices: ['debug', 'info', 'warn'],
+        default: 'info',
+        hidden: true,
+        group: 'Runner Options'
+      },
+      'colored-output': {
+        type: 'boolean',
+        desc: 'Use color in standard output',
+        boolean: true,
+        default: true,
+        group: 'Runner Options'
+      },
+      'config-file': {
+        type: 'string',
+        desc: 'Path to a configuration file',
+        group: 'Other Options'
       }
-      const value = incoming[param];
-      if (value === undefined) {
-        continue;
-      }
-      if (!input.validate(value)) {
-        throw new Error(`parameter "${param}" has unexpected type`);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      existing[param] = value as any;
-    }
-  }
+    }).argv;
+  const initial: RunnerOptions = {};
+  assignOptions(initial, argv);
+  assignOptions(options, { ...initial, ...options });
 }
 
-function _apply_environment_variables(existing: NodeOptions): void {
-  const options: Record<string, 'api_key' | 'api_url' | 'version'> = {
-    TOUCA_API_KEY: 'api_key',
-    TOUCA_API_URL: 'api_url',
-    TOUCA_TEST_VERSION: 'version'
-  };
-  for (const env in options) {
-    const value = process.env[env];
-    if (value) {
-      const key = options[env];
-      existing[key] = value;
-    }
-  }
-}
-
-function _reformat_parameters(existing: NodeOptions): void {
-  if (!existing.concurrency) {
-    existing.concurrency = true;
-  }
-  if (!existing.version) {
-    existing.version = 'unknown';
-  }
-
-  const input_url = existing.api_url;
-  if (!input_url) {
+function applyConfigFile(options: RunnerOptions) {
+  const file = options.config_file;
+  if (!file) {
     return;
   }
-  const has_protocol = ['http', 'https'].some((v) => input_url.startsWith(v));
-  const url = new URL(has_protocol ? input_url : 'https://' + input_url);
+  if (!fs.statSync(file, { throwIfNoEntry: false })?.isFile()) {
+    throw new ToucaError('config_file_missing', file);
+  }
+  const content = fs.readFileSync(file, 'utf-8');
+  const parsed = JSON.parse(content)['touca'];
+  if (!parsed) {
+    throw new ToucaError('config_file_invalid', file);
+  }
+  assignOptions(options, parsed);
+}
+
+function applyConfigProfile(options: RunnerOptions) {
+  let name = 'default';
+  const home = findHomeDirectory();
+  const settings = path.join(home, 'settings');
+  if (fs.existsSync(settings)) {
+    const config = ini.parse(fs.readFileSync(settings, 'utf-8'));
+    name = config.settings?.profile ?? name;
+  }
+  const profile = path.join(home, 'profiles', name);
+  if (fs.existsSync(profile)) {
+    const config = ini.parse(fs.readFileSync(profile, 'utf-8'));
+    assignOptions(options, config.settings);
+  }
+}
+
+function applyEnvironmentVariables(options: NodeOptions): void {
+  assignOptions(options, {
+    api_key: process.env['TOUCA_API_KEY'],
+    api_url: process.env['TOUCA_API_URL'],
+    version: process.env['TOUCA_TEST_VERSION']
+  });
+}
+
+function applyApiUrl(options: NodeOptions): void {
+  if (!options.api_url) {
+    return;
+  }
+  const api_url = options.api_url;
+  const has_protocol = ['http', 'https'].some((v) => api_url.startsWith(v));
+  const url = new URL(has_protocol ? api_url : 'https://' + api_url);
   const pathname = url.pathname
     .split('/@/')
     .map((v) => v.split('/').filter((v) => v.length !== 0));
   url.pathname = pathname[0].join('/');
-  existing.api_url = url.toString();
+  options.api_url = url.toString();
+  if (pathname.length > 1) {
+    const slugs = pathname[1];
+    const keys: Array<keyof Pick<RunnerOptions, 'team' | 'suite' | 'version'>> =
+      ['team', 'suite', 'version'];
+    slugs.forEach((slug, i) => (options[keys[i]] = slug));
+  }
+}
 
-  if (pathname.length === 1) {
+function applyNodeOptions(options: NodeOptions): void {
+  if (!options.concurrency) {
+    options.concurrency = true;
+  }
+  if (!options.offline) {
+    options.offline = !options.api_key && !options.api_url;
+  }
+}
+
+async function applyRunnerOptions(options: RunnerOptions): Promise<void> {
+  //
+  if (!options.output_directory) {
+    options.output_directory = path.join(findHomeDirectory(), 'results');
+  }
+  //
+  if (!options.workflows) {
+    options.workflows = [];
+  }
+  //
+  if (options.workflow_filter) {
+    options.workflows = options.workflows.filter(
+      (v) => v.suite === options.workflow_filter
+    );
+    delete options.workflow_filter;
+  }
+  //
+  for (const v of options.workflows) {
+    if (options.testcases?.length) {
+      v.testcases = options.testcases;
+    } else if (v.testcases && !Array.isArray(v.testcases)) {
+      v.testcases = await v.testcases();
+    }
+    if (options.suite) {
+      v.suite = options.suite;
+    }
+    if (options.version) {
+      v.version = options.version;
+    }
+  }
+  delete options.suite;
+  delete options.version;
+  delete options.testcases;
+}
+
+type RemoteOptionsInput = {
+  team: string;
+  suite: string;
+  version?: string;
+  testcases?: string[];
+};
+
+async function fetchRemoteOptions(
+  input: Array<Partial<RemoteOptionsInput>>,
+  transport: Transport
+): Promise<Array<RemoteOptionsInput>> {
+  const response = await transport.request(
+    'POST',
+    '/client/options',
+    JSON.stringify(input)
+  );
+  if (response.status !== 200) {
+    throw new ToucaError('transport_options');
+  }
+  return JSON.parse(response.body);
+}
+
+async function applyRemoteOptions(
+  options: RunnerOptions,
+  transport: Transport
+): Promise<void> {
+  if (!options.workflows) {
     return;
   }
+  const res = await fetchRemoteOptions(
+    options.workflows.map((v) => ({
+      team: options.team,
+      suite: v.suite,
+      version: v.version,
+      testcases: v.testcases?.length ? undefined : []
+    })),
+    transport
+  );
+  for (const v of res) {
+    const w = options.workflows.find((w) => w.suite === v.suite);
+    if (w && v?.version) {
+      w.version = v.version;
+    }
+    if (w && v?.testcases) {
+      w.testcases = v?.testcases;
+    }
+  }
+}
 
-  const slugs = pathname[1];
-  const keys: (keyof Pick<NodeOptions, 'team' | 'suite' | 'version'>)[] = [
-    'team',
+function validateNodeOptions(options: NodeOptions) {
+  validateOptionsType(options, 'boolean', ['concurrency', 'offline']);
+  validateOptionsType(options, 'string', [
+    'api_key',
+    'api_url',
     'suite',
+    'team',
     'version'
-  ];
-  slugs.forEach((slug, i) => (existing[keys[i]] = slug));
-}
-
-function _validate_options(existing: NodeOptions): void {
-  const expected_keys: (keyof NodeOptions)[] = ['team', 'suite'];
-  const has_handshake = existing.offline !== true;
-  if (has_handshake && ['api_key', 'api_url'].some((k) => k in existing)) {
-    expected_keys.push('api_key', 'api_url');
-  }
-  const key_status: [keyof NodeOptions, boolean][] = expected_keys.map((k) => [
-    k,
-    k in existing
   ]);
-  const values = key_status.map((v) => v[1]);
-  if (values.some(Boolean) && !values.every(Boolean)) {
-    const keys = key_status.filter((v) => v[1] === false).map((v) => v[0]);
-    throw new Error(
-      `missing required option(s) ${keys.map((k) => `"${k}"`).join(', ')}`
-    );
+  const slugs = [options.team, options.suite, options.version];
+  if (slugs.some(Boolean)) {
+    throwIfMissing(options, ['team', 'suite', 'version']);
+  }
+  if (!options.offline) {
+    throwIfMissing(options, ['api_key', 'api_url']);
+  }
+  return slugs.some(Boolean) && !slugs.every(Boolean)
+    ? false
+    : options.offline
+    ? true
+    : [options.api_key, options.api_url].every(Boolean);
+}
+
+function validateRunnerOptions(options: RunnerOptions) {
+  validateOptionsType(options, 'boolean', [
+    'colored_output',
+    'concurrency',
+    'offline',
+    'overwrite_results',
+    'save_binary',
+    'save_json'
+  ]);
+  validateOptionsType(options, 'string', [
+    'api_key',
+    'api_url',
+    'config_file',
+    'output_directory',
+    'suite',
+    'team',
+    'version',
+    'workflow_filter'
+  ]);
+  if (!options.offline) {
+    throwIfMissing(options, ['api_key', 'api_url']);
+  }
+  if (!options.workflows?.every((v) => v.version)) {
+    throw new ToucaError('config_option_missing', 'version');
+  }
+  if (!options.workflows?.every((v) => v.testcases?.length)) {
+    throw new ToucaError('config_option_missing', 'testcases');
   }
 }
 
-export function update_options(
-  existing: NodeOptions,
-  incoming: NodeOptions
-): void {
-  _apply_legacy_config_file(incoming);
-  _apply_config_file(incoming);
-  _apply_arguments(existing, incoming);
-  _apply_environment_variables(existing);
-  _reformat_parameters(existing);
-  _validate_options(existing);
+export async function updateNodeOptions(
+  options: NodeOptions,
+  transport = new Transport()
+): Promise<boolean> {
+  applyEnvironmentVariables(options);
+  applyApiUrl(options);
+  applyNodeOptions(options);
+  if (!options.offline && options.api_key && options.api_url) {
+    await transport.authenticate(options.api_url, options.api_key);
+  }
+  return validateNodeOptions(options);
+}
+
+export async function updateRunnerOptions(
+  options: RunnerOptions,
+  transport = new Transport()
+): Promise<void> {
+  await applyCliArguments(options);
+  applyConfigFile(options);
+  applyConfigProfile(options);
+  applyEnvironmentVariables(options);
+  applyApiUrl(options);
+  applyNodeOptions(options);
+  if (!options.offline && options.api_key && options.api_url) {
+    await transport.authenticate(options.api_url, options.api_key);
+  }
+  await applyRunnerOptions(options);
+  if (!options.offline && options.api_key && options.api_url) {
+    await applyRemoteOptions(options, transport);
+  }
+  validateRunnerOptions(options);
 }

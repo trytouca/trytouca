@@ -4,218 +4,80 @@ import http, { IncomingMessage, RequestOptions } from 'node:http';
 import https from 'node:https';
 import { URL } from 'node:url';
 
-import { NodeOptions } from './options.js';
+import { ToucaError } from './options.js';
 import { VERSION } from './version.js';
 
-interface Response {
-  body: string;
-  status: number;
-}
-
-interface Request {
-  method: 'POST' | 'GET';
-  path: string;
-  body?: string | Uint8Array;
-  content_type?: 'application/octet-stream' | 'application/json';
-}
-
-interface ElementListResponseItem {
-  metricsDuration: number;
-  name: string;
-  slug: string;
-}
-
-interface AuthResponse {
-  token: string;
-  expiresAt: Date;
-}
-
-interface PlatformStatus {
-  mail: boolean;
-  ready: boolean;
-  self_hosted: boolean;
-}
-
 export class Transport {
-  private _token?: string;
-  private _options: NodeOptions;
+  private _node?: { key: string; url: string; token?: string };
 
-  constructor(options: NodeOptions) {
-    this._options = { ...options };
-    this._handshake();
-  }
-
-  private async _handshake(): Promise<void> {
-    const response = await this._send_request({
-      method: 'GET',
-      path: '/platform'
-    });
+  async authenticate(api_url: string, api_key: string) {
+    if (
+      this._node?.token &&
+      this._node?.key === api_key &&
+      this._node?.url === api_url
+    ) {
+      return;
+    }
+    this._node = { url: api_url, key: api_key };
+    const response = await this.request(
+      'POST',
+      `/client/signin`,
+      JSON.stringify({ key: api_key })
+    );
+    if (response.status === 401) {
+      throw new ToucaError('auth_invalid_key');
+    }
     if (response.status !== 200) {
-      throw new Error('could not communicate with touca server');
+      throw new ToucaError('auth_invalid_response', response.status);
     }
-    const content = JSON.parse(response.body) as PlatformStatus;
-    if (!content.ready) {
-      throw new Error('touca server is not ready');
-    }
+    const body: { token: string; expiresAt: Date } = JSON.parse(response.body);
+    this._node.token = body.token;
   }
 
-  private async _request(
-    options: RequestOptions,
-    data: string | Uint8Array = ''
-  ): Promise<Response> {
-    const _req = options.protocol === 'https:' ? https.request : http.request;
-    return new Promise((resolve, reject) => {
-      const req = _req(options, (res: IncomingMessage) => {
-        let body = '';
-        res.on('data', (chunk) => (body += chunk.toString()));
-        res.on('error', reject);
-        res.on('end', () => {
-          if (!res.statusCode) {
-            return reject(new Error(`HTTP request failed: ${options.path}`));
-          }
-          return resolve({ status: res.statusCode, body });
-        });
-      });
-      req.on('error', reject);
-      req.write(data, 'binary');
-      req.end();
-    });
-  }
-
-  /**
-   * @todo find a better way to set path without using regex
-   */
-  private async _send_request(args: Request): Promise<Response> {
-    if (!args.content_type) {
-      args.content_type = 'application/json';
-    }
-    const url = new URL(this._options.api_url as string);
+  async request(
+    method: 'POST' | 'GET',
+    path: string,
+    content: string | Uint8Array = '',
+    contentType:
+      | 'application/json'
+      | 'application/octet-stream' = 'application/json'
+  ) {
+    const url = new URL((this._node?.url + path).replace(/\/\//g, '/'));
     const options: RequestOptions = {
       protocol: url.protocol,
       host: url.host,
       port: url.port,
       hostname: url.hostname,
-      path: url.pathname.concat(args.path).replace(/\/\//g, '/'),
-      method: args.method,
+      path: url.pathname,
+      method,
       headers: {
         Accept: 'application/json',
         'Accept-Charset': 'utf-8',
-        'Content-Type': args.content_type,
+        'Content-Type': contentType,
         'User-Agent': `touca-client-js/${VERSION}`
       }
     };
-    if (this._token && options.headers) {
-      options.headers['Authorization'] = `Bearer ${this._token}`;
+    if (this._node?.token && options.headers) {
+      options.headers['Authorization'] = `Bearer ${this._node.token}`;
     }
-    return this._request(options, args.body);
-  }
-
-  public update_options(options: NodeOptions): void {
-    if (['api_key', 'api_url'].filter((k) => k in options).length !== 0) {
-      this._token = undefined;
-      this._handshake();
-    }
-    this._options = { ...this._options, ...options };
-  }
-
-  public async authenticate(): Promise<void> {
-    if (this._token) {
-      return;
-    }
-    const response = await this._send_request({
-      method: 'POST',
-      path: '/client/signin',
-      body: JSON.stringify({ key: this._options.api_key })
+    const protocol = url.protocol === 'https:' ? https.request : http.request;
+    return new Promise<{
+      body: string;
+      status: number;
+    }>((resolve, reject) => {
+      const req = protocol(options, (res: IncomingMessage) => {
+        let body = '';
+        res.on('data', (chunk) => (body += chunk.toString()));
+        res.on('error', reject);
+        res.on('end', () =>
+          res.statusCode
+            ? resolve({ status: res.statusCode, body })
+            : reject(new ToucaError('transport_http', options.path))
+        );
+      });
+      req.on('error', reject);
+      req.write(content, 'binary');
+      req.end();
     });
-    if (response.status === 401) {
-      throw new Error('Authentication failed: API Key Invalid');
-    }
-    if (response.status !== 200) {
-      throw new Error('Authentication failed: Invalid Response');
-    }
-    const body = JSON.parse(response.body) as AuthResponse;
-    this._token = body.token;
-  }
-
-  public async get_testcases(): Promise<string[]> {
-    const team = this._options.team;
-    const suite = this._options.suite;
-    const response = await this._send_request({
-      method: 'GET',
-      path: `/client/element/${team}/${suite}`
-    });
-    if (response.status !== 200) {
-      throw new Error('Failed to obtain list of test cases');
-    }
-    const body = JSON.parse(response.body) as ElementListResponseItem[];
-    return body.map((k) => k.name);
-  }
-
-  public async getNextBatch(): Promise<string> {
-    const team = this._options.team;
-    const suite = this._options.suite;
-    const response = await this._send_request({
-      method: 'GET',
-      path: `/client/batch/${team}/${suite}/next`
-    });
-    if (response.status !== 200) {
-      throw new Error('Failed to find next version');
-    }
-    const body = JSON.parse(response.body) as { batch: string };
-    return body.batch;
-  }
-
-  public async post(content: Uint8Array): Promise<void> {
-    return this.postBinary(content);
-  }
-
-  public async postArtifact(testcase: string, key: string, content: Buffer) {
-    const path = `/client/submit/artifact/${this._options.team}/${this._options.suite}/${this._options.version}/${testcase}/${key}`;
-    return this.postBinary(content, path);
-  }
-
-  private async postBinary(content: Uint8Array, path = '/client/submit') {
-    const response = await this._send_request({
-      method: 'POST',
-      path,
-      body: content,
-      content_type: 'application/octet-stream'
-    });
-    if (response.status === 204) {
-      return;
-    }
-    let reason = '';
-    if (response.status === 400) {
-      if (response.body.includes('batch is sealed')) {
-        reason = ' This version is already submitted and sealed';
-      }
-      if (response.body.includes('team not found')) {
-        reason = ' This team does not exist';
-      }
-      throw new Error(`Failed to submit test results.${reason}`);
-    }
-  }
-
-  public async seal(): Promise<void> {
-    const slugs = [
-      this._options.team,
-      this._options.suite,
-      this._options.version
-    ].join('/');
-    const response = await this._send_request({
-      method: 'POST',
-      path: `/batch/${slugs}/seal2`
-    });
-    if (response.status !== 204) {
-      throw new Error('Failed to seal this version');
-    }
-  }
-
-  public has_token(): boolean {
-    return this._token !== undefined;
-  }
-
-  public get options(): NodeOptions {
-    return this._options;
   }
 }

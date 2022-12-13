@@ -2,6 +2,7 @@
 
 export { clientBatchNext } from './batchNext.js'
 export { clientElementList } from './elementList.js'
+export { clientOptions } from './options.js'
 export { clientSessionCreate } from './sessionCreate.js'
 export { clientSubmit } from './submit.js'
 export { clientSubmitArtifact } from './submitArtifact.js'
