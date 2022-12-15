@@ -45,11 +45,10 @@ export class BatchCommentsComponent implements OnDestroy {
   fields: PageViewFields;
   isCommentFormShown: boolean;
 
+  private _sub: Record<'batch' | 'comments' | 'team', Subscription>;
+
   private _team: TeamLookupResponse;
   private _batch: BatchLookupResponse;
-  private _subTeam: Subscription;
-  private _subBatch: Subscription;
-  private _subComments: Subscription;
   private _commentAction: FrontendCommentAction = {
     actionType: FrontendCommentActionType.Post
   };
@@ -61,15 +60,17 @@ export class BatchCommentsComponent implements OnDestroy {
     private userService: UserService
   ) {
     this.resetFields();
-    this._subTeam = this.batchPageService.team$.subscribe((v) => {
-      this._team = v;
-    });
-    this._subBatch = this.batchPageService.batch$.subscribe((v) => {
-      this._batch = v;
-    });
-    this._subComments = this.batchPageService.comments$.subscribe((v) => {
-      this.comments = this.processComments(v);
-    });
+    this._sub = {
+      batch: batchPageService.data.batch$.subscribe((v) => {
+        this._batch = v;
+      }),
+      comments: batchPageService.data.comments$.subscribe((v) => {
+        this.comments = this.processComments(v);
+      }),
+      team: batchPageService.data.team$.subscribe((v) => {
+        this._team = v;
+      })
+    };
     this.form = new FormGroup({
       body: new FormControl('', {
         validators: [
@@ -83,9 +84,9 @@ export class BatchCommentsComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._subTeam.unsubscribe();
-    this._subBatch.unsubscribe();
-    this._subComments.unsubscribe();
+    Object.values(this._sub)
+      .filter(Boolean)
+      .forEach((v) => v.unsubscribe());
   }
 
   private resetFields() {

@@ -17,11 +17,10 @@ import { DialogRef, DialogService } from '@ngneat/dialog';
 import type {
   BatchItem,
   BatchLookupResponse,
-  PlatformStatus,
   SuiteLookupResponse
 } from '@touca/api-schema';
 import { isEqual } from 'lodash-es';
-import { Subscription } from 'rxjs';
+import { debounceTime, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import type {
@@ -32,6 +31,7 @@ import {
   AlertKind,
   AlertService,
   ApiService,
+  EventService,
   UserService
 } from '@/core/services';
 import { ConfirmComponent, ConfirmElements } from '@/home/components';
@@ -42,16 +42,6 @@ import { BatchPageItem, BatchPageOverviewMetadata } from './batch.model';
 import { BatchPageService, BatchPageTabType } from './batch.service';
 import { BatchPromoteComponent } from './promote.component';
 import { BatchSealComponent } from './seal.component';
-
-const pageTabs: PageTab<BatchPageTabType>[] = [
-  {
-    type: BatchPageTabType.Elements,
-    name: 'Testcases',
-    link: 'testcases',
-    icon: 'feather-list',
-    shown: true
-  }
-];
 
 type NotFound = Partial<{
   teamSlug: string;
@@ -66,129 +56,136 @@ type PageButton = {
   icon?: string;
 };
 
-enum ExportFormat {
-  PDF = 'pdf',
-  ZIP = 'zip'
-}
-
 @Component({
   selector: 'app-batch-page',
   templateUrl: './page.component.html',
-  providers: [BatchPageService, { provide: 'PAGE_TABS', useValue: pageTabs }]
+  providers: [BatchPageService, EventService]
 })
 export class BatchPageComponent
   extends PageComponent<BatchPageItem, NotFound>
   implements OnInit, OnDestroy
 {
-  currentTab: BatchPageTabType;
-  suite: SuiteLookupResponse;
-  batches: BatchItem[];
-  batch: BatchLookupResponse;
-  buttons: PageButton[] = [];
-  subButtons: PageButton[] = [];
-  overview: FrontendOverviewSection;
-  params: FrontendBatchCompareParams;
-  TabType = BatchPageTabType;
-  tabs = pageTabs;
+  data: Partial<{
+    batch: BatchLookupResponse;
+    batches: Array<BatchItem>;
+    buttons: Array<PageButton>;
+    dialogPromote: DialogRef;
+    dialogSeal: DialogRef;
+    overview: FrontendOverviewSection;
+    params: FrontendBatchCompareParams;
+    subButtons: Array<PageButton>;
+    suite: SuiteLookupResponse;
+    tab: BatchPageTabType;
+    tabs: Array<PageTab<BatchPageTabType>>;
+  }> = {
+    buttons: [],
+    subButtons: []
+  };
   private _isTeamAdmin = false;
-  private _platformStatus: PlatformStatus;
 
-  private _subTeam: Subscription;
-  private _subSuite: Subscription;
-  private _subBatches: Subscription;
-  private _subBatch: Subscription;
-  private _subOverview: Subscription;
-
-  // the following subscriptions should be moved to parent component
-
-  private _subAlert: Subscription;
-  private _subParams: Subscription;
-  private _subParamMap: Subscription;
-  private _subQueryParamMap: Subscription;
-
-  private _dialogRefPromote: DialogRef;
-  private _dialogSubPromote: Subscription;
-  private _dialogRefSeal: DialogRef;
-  private _dialogSubSeal: Subscription;
+  private _sub: Record<
+    | 'alert'
+    | 'batch'
+    | 'batches'
+    | 'dialogPromote'
+    | 'dialogSeal'
+    | 'event'
+    | 'mapParams'
+    | 'mapQueryParams'
+    | 'overview'
+    | 'params'
+    | 'suite'
+    | 'tab'
+    | 'tabs'
+    | 'team',
+    Subscription
+  >;
 
   constructor(
     private apiService: ApiService,
-    private alertService: AlertService,
     private batchPageService: BatchPageService,
-    private userService: UserService,
     private dialogService: DialogService,
+    private route: ActivatedRoute,
     private router: Router,
     private titleService: Title,
-    private route: ActivatedRoute,
+    alertService: AlertService,
+    eventService: EventService,
     faIconLibrary: FaIconLibrary,
+    userService: UserService,
     @Inject(LOCALE_ID) private locale: string
   ) {
     super(batchPageService);
-    const queryMap = route.snapshot.queryParamMap;
-    const getQuery = (key: string) =>
-      queryMap.has(key) ? queryMap.get(key) : null;
-    const tab = this.tabs.find((v) => v.link === getQuery('t')) || this.tabs[0];
-    this.currentTab = tab.type;
     faIconLibrary.addIcons(faSpinner, faTasks);
-    this._subAlert = this.alertService.alerts$.subscribe((v) => {
-      if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
-        this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
-      }
-      if (v.some((k) => k.kind === AlertKind.SuiteNotFound)) {
-        this._notFound.suiteSlug = this.route.snapshot.paramMap.get('suite');
-      }
-      if (v.some((k) => k.kind === AlertKind.BatchNotFound)) {
-        this._notFound.batchSlug = this.route.snapshot.paramMap.get('batch');
-      }
-    });
-    this._subTeam = this.batchPageService.team$.subscribe((v) => {
-      this._isTeamAdmin = this.userService.isTeamAdmin(v.role);
-    });
-    this._subSuite = this.batchPageService.suite$.subscribe((v) => {
-      this.suite = v;
-    });
-    this._subBatches = this.batchPageService.batches$.subscribe((v) => {
-      this.batches = v.slice(0, 10);
-    });
-    this._subBatch = this.batchPageService.batch$.subscribe((v) => {
-      this.batch = v;
-      this.tabs.find((t) => t.type === BatchPageTabType.Elements).counter =
-        v.messageCount;
-      this.updateTitle(v);
-    });
-    this._subOverview = this.batchPageService.overview$.subscribe((v) => {
-      this.overview = this.findOverviewInputs(v);
-      const buttons = this.findPageButtons();
-      const subButtons = this.findPageSubButtons();
-      if (!isEqual(buttons, this.buttons)) {
-        this.buttons = buttons;
-      }
-      if (!isEqual(subButtons, this.subButtons)) {
-        this.subButtons = subButtons;
-      }
-    });
-    this._subParams = this.batchPageService.params$.subscribe((v) => {
-      this.params = v;
-    });
-    this._subParamMap = this.route.paramMap.subscribe((v) => {
-      // by ensuring that params is set, we avoid calling this function during
-      // initial page load.
-      if (this.params) {
-        this.batchPageService.updateBatchSlug(v.get('batch'));
-      }
-    });
-    this._subQueryParamMap = this.route.queryParamMap.subscribe((v) => {
-      if (this.params) {
-        const params = this.params;
-        const getQuery = (key: string) => (v.has(key) ? v.get(key) : null);
-        params.dstSuiteSlug = getQuery('cn');
-        params.dstBatchSlug = getQuery('cv');
-        this.batchPageService.updateRequestParams(params);
-      }
-    });
-    this.apiService.status().subscribe((response) => {
-      this._platformStatus = response;
-    });
+    this._sub = {
+      alert: alertService.alerts$.subscribe((v) => {
+        if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
+          this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
+        }
+        if (v.some((k) => k.kind === AlertKind.SuiteNotFound)) {
+          this._notFound.suiteSlug = this.route.snapshot.paramMap.get('suite');
+        }
+        if (v.some((k) => k.kind === AlertKind.BatchNotFound)) {
+          this._notFound.batchSlug = this.route.snapshot.paramMap.get('batch');
+        }
+      }),
+      batch: batchPageService.data.batch$.subscribe((v) => {
+        this.data.batch = v;
+        this.updateTitle(v);
+      }),
+      batches: batchPageService.data.batches$.subscribe((v) => {
+        this.data.batches = v.slice(0, 10);
+      }),
+      dialogPromote: undefined,
+      dialogSeal: undefined,
+      event: eventService.event$
+        .pipe(debounceTime(250))
+        .subscribe((v) => this.batchPageService.consumeEvent(v)),
+      mapParams: route.paramMap.subscribe((v) => {
+        // by ensuring that params is set, we avoid calling this function during
+        // initial page load.
+        if (this.data.params) {
+          this.batchPageService.updateBatchSlug(v.get('batch'));
+        }
+      }),
+      mapQueryParams: route.queryParamMap.subscribe((v) => {
+        if (this.data.params) {
+          const params = this.data.params;
+          const getQuery = (key: string) => (v.has(key) ? v.get(key) : null);
+          params.dstSuiteSlug = getQuery('cn');
+          params.dstBatchSlug = getQuery('cv');
+          this.batchPageService.updateRequestParams(params);
+        }
+      }),
+      overview: batchPageService.data.overview$.subscribe((v) => {
+        this.data.overview = this.findOverviewInputs(v);
+        const buttons = this.findPageButtons();
+        const subButtons = this.findPageSubButtons();
+        if (!isEqual(buttons, this.data.buttons)) {
+          this.data.buttons = buttons;
+        }
+        if (!isEqual(subButtons, this.data.subButtons)) {
+          this.data.subButtons = subButtons;
+        }
+      }),
+      params: batchPageService.data.params$.subscribe((v) => {
+        this.data.params = v;
+      }),
+      suite: batchPageService.data.suite$.subscribe((v) => {
+        this.data.suite = v;
+      }),
+      tab: batchPageService.data.tab$.subscribe((v) => (this.data.tab = v)),
+      tabs: batchPageService.data.tabs$.subscribe((v) => {
+        this.data.tabs = v;
+        const queryMap = this.route.snapshot.queryParamMap;
+        const getQuery = (key: string) =>
+          queryMap.has(key) ? queryMap.get(key) : null;
+        const tab = v.find((t) => t.link === getQuery('t')) || v[0];
+        this.batchPageService.updateCurrentTab(tab.type);
+      }),
+      team: batchPageService.data.team$.subscribe((v) => {
+        this._isTeamAdmin = userService.isTeamAdmin(v.role);
+      })
+    };
   }
 
   ngOnInit() {
@@ -196,33 +193,21 @@ export class BatchPageComponent
   }
 
   ngOnDestroy() {
-    this._subTeam.unsubscribe();
-    this._subSuite.unsubscribe();
-    this._subBatches.unsubscribe();
-    this._subBatch.unsubscribe();
-    this._subOverview.unsubscribe();
-    this._subParams.unsubscribe();
-    this._subAlert.unsubscribe();
-    this._subParamMap.unsubscribe();
-    this._subQueryParamMap.unsubscribe();
-    if (this._dialogSubPromote) {
-      this._dialogSubPromote.unsubscribe();
-    }
-    if (this._dialogSubSeal) {
-      this._dialogSubSeal.unsubscribe();
-    }
+    Object.values(this._sub)
+      .filter(Boolean)
+      .forEach((v) => v.unsubscribe());
     super.ngOnDestroy();
   }
 
   fetchItems(): void {
-    if (!this.params) {
+    if (!this.data.params) {
       const paramMap = this.route.snapshot.paramMap;
       const queryMap = this.route.snapshot.queryParamMap;
       const getQuery = (key: string) =>
         queryMap.has(key) ? queryMap.get(key) : null;
       const dstBatchSlug = getQuery('cv');
-      this.params = {
-        currentTab: this.currentTab,
+      this.data.params = {
+        currentTab: this.data.tab,
         teamSlug: paramMap.get('team'),
         srcSuiteSlug: paramMap.get('suite'),
         srcBatchSlug: paramMap.get('batch'),
@@ -232,18 +217,18 @@ export class BatchPageComponent
         dstBatchName: dstBatchSlug?.split('@')[0]
       };
     }
-    this.batchPageService.updateRequestParams(this.params);
+    this.batchPageService.updateRequestParams(this.data.params);
   }
 
   @HostListener('document:keydown', ['$event'])
   onKeydown(event: KeyboardEvent) {
     // pressing key 'Escape' should hide seal or promote dialogs
     if ('Escape' === event.key) {
-      if (this._dialogRefPromote && !this._dialogSubPromote.closed) {
-        this._dialogRefPromote.close();
+      if (!this._sub.dialogPromote.closed) {
+        this.data.dialogPromote?.close();
       }
-      if (this._dialogRefSeal && !this._dialogSubSeal.closed) {
-        this._dialogRefSeal.close();
+      if (!this._sub.dialogSeal.closed) {
+        this.data.dialogSeal?.close();
       }
     }
     // pressing key 'Backspace' should return user to "Suite" page
@@ -264,19 +249,19 @@ export class BatchPageComponent
   }
 
   private findPageButtons(): PageButton[] {
-    if (this.currentTab !== this.TabType.Elements) {
+    if (this.data.tab !== 'elements') {
       return [];
     }
     const buttons: PageButton[] = [];
 
     if (
-      this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug &&
-      this.suite?.baseline?.batchSlug !== this.params?.dstBatchSlug
+      this.data.suite?.baseline?.batchSlug !== this.data.params?.srcBatchSlug &&
+      this.data.suite?.baseline?.batchSlug !== this.data.params?.dstBatchSlug
     ) {
       buttons.push({
         click: () => {
           this.router.navigate([], {
-            queryParams: { cv: this.suite.baseline.batchSlug },
+            queryParams: { cv: this.data.suite.baseline.batchSlug },
             queryParamsHandling: 'merge'
           });
         },
@@ -285,7 +270,7 @@ export class BatchPageComponent
       });
     }
 
-    if (!this.batch?.isSealed) {
+    if (!this.data.batch?.isSealed) {
       buttons.push({
         click: () => this.openSealModal(),
         text: 'Seal Version',
@@ -294,12 +279,12 @@ export class BatchPageComponent
     }
 
     if (
-      this.batch?.isSealed &&
-      this.suite?.baseline?.batchSlug === this.params?.dstBatchSlug &&
-      this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug
+      this.data.batch?.isSealed &&
+      this.data.suite?.baseline?.batchSlug === this.data.params?.dstBatchSlug &&
+      this.data.suite?.baseline?.batchSlug !== this.data.params?.srcBatchSlug
     ) {
-      const src = new Date(this.batch?.submittedAt);
-      const dst = new Date(this.suite?.baseline?.submittedAt);
+      const src = new Date(this.data.batch?.submittedAt);
+      const dst = new Date(this.data.suite?.baseline?.submittedAt);
       buttons.push({
         click: () => this.openPromoteModal(),
         text: src < dst ? 'Demote Version' : 'Promote Version',
@@ -311,21 +296,21 @@ export class BatchPageComponent
   }
 
   private findPageSubButtons(): PageButton[] {
-    if (this.currentTab !== this.TabType.Elements) {
+    if (this.data.tab !== 'elements') {
       return [];
     }
     const buttons: PageButton[] = [];
-    if (this.batch?.isSealed) {
+    if (this.data.batch?.isSealed) {
       buttons.push({
-        click: () => this.export(ExportFormat.ZIP),
+        click: () => this.export('zip'),
         icon: 'feather-archive',
         text: 'Export Test Results',
         title: 'Export test results archive for this version.'
       });
     }
-    if (!environment.self_hosted && this.batch?.isSealed) {
+    if (!environment.self_hosted && this.data.batch?.isSealed) {
       buttons.push({
-        click: () => this.export(ExportFormat.PDF),
+        click: () => this.export('pdf'),
         icon: 'feather-download-cloud',
         text: 'Download PDF Report',
         title: 'Create a PDF report for this version.'
@@ -333,8 +318,8 @@ export class BatchPageComponent
     }
     if (
       this._isTeamAdmin &&
-      this.batch?.isSealed &&
-      this.suite?.baseline?.batchSlug !== this.params?.srcBatchSlug
+      this.data.batch?.isSealed &&
+      this.data.suite?.baseline?.batchSlug !== this.data.params?.srcBatchSlug
     ) {
       buttons.push({
         click: () => this.removeVersion(),
@@ -347,12 +332,12 @@ export class BatchPageComponent
   }
 
   private openSealModal() {
-    this._dialogRefSeal = this.dialogService.open(BatchSealComponent, {
+    this.data.dialogSeal = this.dialogService.open(BatchSealComponent, {
       closeButton: false,
-      data: { batch: this.batch },
+      data: { batch: this.data.batch },
       minHeight: '10vh'
     });
-    this._dialogSubSeal = this._dialogRefSeal.afterClosed$.subscribe(
+    this._sub.dialogSeal = this.data.dialogSeal.afterClosed$.subscribe(
       (state: boolean) => {
         if (state) {
           this.batchPageService.removeCacheBatch();
@@ -363,17 +348,17 @@ export class BatchPageComponent
   }
 
   private openPromoteModal() {
-    this._dialogRefPromote = this.dialogService.open(BatchPromoteComponent, {
+    this.data.dialogPromote = this.dialogService.open(BatchPromoteComponent, {
       closeButton: false,
-      data: { batch: this.batch },
+      data: { batch: this.data.batch },
       minHeight: '10vh'
     });
-    this._dialogSubPromote = this._dialogRefPromote.afterClosed$.subscribe(
+    this._sub.dialogPromote = this.data.dialogPromote.afterClosed$.subscribe(
       (state: boolean) => {
         if (state) {
           this.batchPageService.removeCacheBatch();
           this.router.navigate([], {
-            queryParams: { cv: this.batch.batchSlug },
+            queryParams: { cv: this.data.batch.batchSlug },
             queryParamsHandling: 'merge'
           });
         }
@@ -383,20 +368,20 @@ export class BatchPageComponent
 
   private removeVersion() {
     const data: ConfirmElements = {
-      title: `Remove Version ${this.batch.batchSlug}`,
+      title: `Remove Version ${this.data.batch.batchSlug}`,
       message:
         '<p>Are you sure you want to remove this version? This action' +
         ' permanently removes all submitted test results and comments' +
         ' associated with this version.</p>',
       button: 'Remove',
       severity: AlertType.Danger,
-      confirmText: `${this.batch.batchSlug}`,
+      confirmText: `${this.data.batch.batchSlug}`,
       confirmAction: () => {
         const url = [
           'batch',
-          this.batch.teamSlug,
-          this.batch.suiteSlug,
-          this.batch.batchSlug
+          this.data.batch.teamSlug,
+          this.data.batch.suiteSlug,
+          this.data.batch.batchSlug
         ].join('/');
         return this.apiService.delete(url);
       },
@@ -412,17 +397,17 @@ export class BatchPageComponent
     });
   }
 
-  private export(format: ExportFormat) {
+  private export(format: 'pdf' | 'zip') {
     const url = [
       'batch',
-      this.batch.teamSlug,
-      this.batch.suiteSlug,
-      this.batch.batchSlug,
+      this.data.batch.teamSlug,
+      this.data.batch.suiteSlug,
+      this.data.batch.batchSlug,
       'export',
       format
     ].join('/');
     this.apiService.getBinary(url).subscribe((blob) => {
-      const name = `${this.batch.suiteSlug}_${this.batch.batchSlug}.${format}`;
+      const name = `${this.data.batch.suiteSlug}_${this.data.batch.batchSlug}.${format}`;
       const link = document.createElement('a');
       const objectUrl = URL.createObjectURL(blob);
       link.download = name;
@@ -504,7 +489,7 @@ export class BatchPageComponent
   }
 
   public switchTab(type: BatchPageTabType) {
-    this.currentTab = type;
+    this.data.tab = type;
     if (!this.hasData()) {
       this.fetchItems();
     }

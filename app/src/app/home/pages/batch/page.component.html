@@ -5,32 +5,32 @@
 <div
   class="mx-auto max-w-screen-xl py-8 2xl:max-w-screen-2xl"
   *ngIf="!notFound()"
-  [hidden]="!batch">
+  [hidden]="!data.batch">
   <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-4 xl:px-8">
     <div class="wsl-page-head wsl-box">
       <nav aria-label="breadcrumb">
         <ol>
           <li>
-            <a routerLink="../..">{{ batch?.teamName }}</a>
+            <a routerLink="../..">{{ data.batch?.teamName }}</a>
           </li>
           <li>
-            <a routerLink="..">{{ batch?.suiteName }}</a>
+            <a routerLink="..">{{ data.batch?.suiteName }}</a>
           </li>
           <li class="active" aria-current="page">
-            <span>{{ batch?.batchSlug.split('@')[0] }}</span>
+            <span>{{ data.batch?.batchSlug.split('@')[0] }}</span>
           </li>
         </ol>
       </nav>
       <div class="flex space-x-2 whitespace-nowrap print:hidden">
         <button
           class="wsl-btn-sm wsl-btn-primary"
-          *ngFor="let button of buttons"
+          *ngFor="let button of data.buttons"
           type="button"
           (click)="button.click()"
           [title]="button.title">
           {{ button.text }}
         </button>
-        <div *ngIf="subButtons.length !== 0" wslDropdown>
+        <div *ngIf="data.subButtons.length !== 0" wslDropdown>
           <button
             class="wsl-dropdown-toggle wsl-btn-sm wsl-btn-muted wsl-text-muted flex h-full items-center"
             id="wsl-batch-settings"
@@ -42,7 +42,7 @@
             class="wsl-dropdown-menu hidden w-48"
             aria-labelledby="wsl-batch-settings">
             <li
-              *ngFor="let button of subButtons"
+              *ngFor="let button of data.subButtons"
               class="wsl-dropdown-item flex items-center space-x-2"
               (click)="button.click()"
               [title]="button.title">
@@ -55,12 +55,12 @@
     </div>
     <nav>
       <ul class="flex space-x-4">
-        <ng-container *ngFor="let tab of tabs">
+        <ng-container *ngFor="let tab of data.tabs">
           <li
             class="wsl-page-nav-item"
             *ngIf="tab.shown"
             (click)="switchTab(tab.type)"
-            [ngClass]="{ 'wsl-tab-active': tab.type === currentTab }">
+            [ngClass]="{ 'wsl-tab-active': tab.type === data.tab }">
             <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
             <p>{{ tab.name }}</p>
             <span *ngIf="tab.counter">{{ tab.counter }}</span>
@@ -69,29 +69,27 @@
       </ul>
     </nav>
     <div
-      *ngIf="overview"
-      [hidden]="currentTab !== TabType.Elements || !hasData() || !hasItems()">
-      <app-home-page-overview [inputs]="overview"></app-home-page-overview>
+      *ngIf="data.overview"
+      [hidden]="data.tab !== 'elements' || !hasData() || !hasItems()">
+      <app-home-page-overview [inputs]="data.overview"></app-home-page-overview>
     </div>
     <div
       class="wsl-box sticky top-16 z-10"
-      *ngIf="suite && params"
-      [hidden]="currentTab !== TabType.Elements">
+      *ngIf="data.suite && data.params"
+      [hidden]="data.tab !== 'elements'">
       <app-home-version-navigator
-        [suite]="suite"
-        [params]="params"></app-home-version-navigator>
+        [suite]="data.suite"
+        [params]="data.params"></app-home-version-navigator>
     </div>
     <div
       class="wsl-min-h-screen-4 grid place-content-center"
-      *ngIf="currentTab === TabType.Elements && (!hasData() || !hasItems())">
+      *ngIf="data.tab === 'elements' && (!hasData() || !hasItems())">
       <app-spinner></app-spinner>
     </div>
-    <div
-      [hidden]="currentTab !== TabType.Elements || !hasData() || !hasItems()">
+    <div [hidden]="data.tab !== 'elements' || !hasData() || !hasItems()">
       <app-batch-list-elements></app-batch-list-elements>
     </div>
-    <div
-      [hidden]="currentTab !== TabType.Elements || !hasData() || !hasItems()">
+    <div [hidden]="data.tab !== 'elements' || !hasData() || !hasItems()">
       <app-batch-tab-comments></app-batch-tab-comments>
     </div>
   </main>
