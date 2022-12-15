@@ -138,7 +138,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
       teamSlug: this._cache.team.slug,
       suiteSlug: this._cache.suite.suiteSlug
     };
-    if (job.type === 'batch:processed') {
+    if (job.type === 'batch:updated') {
       this._cache.batches = null;
       this.fetchItems(args);
     }

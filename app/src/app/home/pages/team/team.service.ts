@@ -155,7 +155,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   consumeEvent(job: ServerEventJob) {
     if (
       this._cache.tab === TeamPageTabType.Suites &&
-      ['suite:created', 'batch:processed', 'batch:sealed'].includes(job.type)
+      ['suite:created', 'batch:updated', 'batch:sealed'].includes(job.type)
     ) {
       this.fetchItems({ teamSlug: this._cache.team.slug });
     }

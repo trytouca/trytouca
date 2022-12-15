@@ -655,9 +655,13 @@ components:
         type:
           type: string
           enum:
-            - batch:processed
+            - batch:created
             - batch:sealed
+            - batch:updated
+            - message:created
+            - message:compared
             - suite:created
+            - suite:updated
     SuiteItem:
       type: object
       additionalProperties: false

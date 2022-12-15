@@ -187,6 +187,12 @@ async function processElement(
       `route_elementLookup_${team.slug}_${suite.slug}_${elementName}`
     )
     redisClient.removeCached(`route_elementList_${team.slug}_${suite.slug}`)
+    insertEvent({
+      type: 'message:created',
+      teamId: team._id,
+      suiteId: suite._id,
+      batchId: batch._id
+    })
 
     return { slug: tuple, doc: element }
   } catch (err) {
@@ -241,9 +247,8 @@ async function processBatch(
     redisClient.removeCachedByPrefix(
       `route_batchList_${team.slug}_${suite.slug}_`
     )
-
-    await insertEvent({
-      type: 'batch:processed',
+    insertEvent({
+      type: 'batch:updated',
       teamId: team._id,
       suiteId: suite._id,
       batchId: batch._id
@@ -517,6 +522,12 @@ async function processSuite(
 
     redisClient.removeCached(`route_suiteLookup_${team.slug}_${suiteSlug}`)
     redisClient.removeCachedByPrefix(`route_suiteList_${team.slug}_`)
+    insertEvent({
+      type: 'suite:updated',
+      teamId: team._id,
+      suiteId: suite._id,
+      batchId: undefined
+    })
 
     return { slug: suiteSlug, doc: suite }
   } catch (err) {
@@ -573,6 +584,12 @@ async function ensureBatch(
 
   await newBatch.save()
 
+  insertEvent({
+    type: 'batch:created',
+    teamId: team._id,
+    suiteId: suite._id,
+    batchId: newBatch._id
+  })
   logger.info('%s: registered batch', tuple)
   return { slug: batchSlug, doc: newBatch }
 }
