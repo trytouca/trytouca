@@ -4,13 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 import { v4 as uuidv4 } from 'uuid'
 
 import { UserModel } from '../../schemas/index.js'
-import {
-  analytics,
-  config,
-  EActivity,
-  logger,
-  mailUser
-} from '../../utils/index.js'
+import { analytics, config, logger, mailUser } from '../../utils/index.js'
 
 export async function authResetKeyCreate(
   req: Request,
@@ -93,7 +87,7 @@ export async function authResetKeyCreate(
     resetLink: `${config.webapp.root}/account/reset?key=${resetKey}`
   })
 
-  analytics.add_activity(EActivity.AccountPasswordRemind, user)
+  analytics.add_activity('account:password_remind', user)
 
   return res.status(204).send()
 }

@@ -11,7 +11,7 @@ import {
   IUser,
   MessageModel
 } from '../../schemas/index.js'
-import { analytics, EActivity, logger, objectStore } from '../../utils/index.js'
+import { analytics, logger, objectStore } from '../../utils/index.js'
 
 function toChunkFiles(messages: Buffer[]): ArrayBuffer[] {
   const chunks = []
@@ -83,5 +83,5 @@ export async function ctrlBatchExportZIP(
 
   await archive.finalize()
   logger.info('%s: exported %s', user.username, filename)
-  analytics.add_activity(EActivity.BatchZipExported, user, { filename })
+  analytics.add_activity('batch:zip_exported', user, { filename })
 }

@@ -10,7 +10,7 @@ import {
   IUser,
   MessageModel
 } from '../../schemas/index.js'
-import { analytics, EActivity, logger } from '../../utils/index.js'
+import { analytics, logger } from '../../utils/index.js'
 
 /**
  * @summary
@@ -89,7 +89,7 @@ export async function ctrlBatchRemove(
   if (!(await batchRemove(batch))) {
     logger.info('%s: %s: scheduled for removal', user.username, tuple)
   }
-  analytics.add_activity(EActivity.BatchDeleted, user, { batch: tuple })
+  analytics.add_activity('batch:deleted', user, { batch: tuple })
 
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.debug('%s: handled request in %d ms', tuple, toc.toFixed(0))

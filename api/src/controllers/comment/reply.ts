@@ -10,13 +10,7 @@ import {
 } from '../../models/index.js'
 import { CommentModel, ICommentDocument, IUser } from '../../schemas/index.js'
 import { ECommentType } from '../../types/index.js'
-import {
-  analytics,
-  config,
-  EActivity,
-  logger,
-  redisClient
-} from '../../utils/index.js'
+import { analytics, config, logger, redisClient } from '../../utils/index.js'
 
 export async function ctrlCommentReply(
   req: Request,
@@ -87,6 +81,6 @@ export async function ctrlCommentReply(
   }
 
   notifySubscribers(inputs, locals)
-  analytics.add_activity(EActivity.CommentReplied, user)
+  analytics.add_activity('comment:replied', user)
   return res.status(204).send()
 }

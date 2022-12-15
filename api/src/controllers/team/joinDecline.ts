@@ -6,7 +6,6 @@ import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
 import {
   analytics,
   config,
-  EActivity,
   logger,
   mailUser,
   redisClient
@@ -76,7 +75,7 @@ export async function teamJoinDecline(
     userName: account?.fullname || account?.username
   })
 
-  analytics.add_activity(EActivity.TeamMemberRejected, user._id, {
+  analytics.add_activity('team_member:rejected', user._id, {
     team_id: team._id,
     member_id: account._id
   })

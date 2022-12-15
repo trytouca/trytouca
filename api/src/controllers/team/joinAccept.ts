@@ -6,7 +6,6 @@ import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
 import {
   analytics,
   config,
-  EActivity,
   logger,
   mailUser,
   redisClient
@@ -79,7 +78,7 @@ export async function teamJoinAccept(
     userName: account?.fullname || account?.username
   })
 
-  analytics.add_activity(EActivity.TeamMemberApproved, user._id, {
+  analytics.add_activity('team_member:approved', user._id, {
     member_id: account.email,
     team_id: team._id
   })

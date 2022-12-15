@@ -5,7 +5,7 @@ import { pick } from 'lodash-es'
 
 import { wslFindByRole } from '../../models/index.js'
 import { IUser, NodeModel } from '../../schemas/index.js'
-import { analytics, EActivity, logger, mailUser } from '../../utils/index.js'
+import { analytics, logger, mailUser } from '../../utils/index.js'
 
 export async function installHandle(
   req: Request,
@@ -27,7 +27,7 @@ export async function installHandle(
     username: contact.uuid
   }
   await analytics.add_member(user, { name: user.fullname, email: user.email })
-  await analytics.add_activity(EActivity.SelfHostedInstall, user, {
+  await analytics.add_activity('self_host:installed', user, {
     company: contact.company
   })
   const owners = await wslFindByRole('owner')

@@ -9,7 +9,7 @@ import {
   IUser,
   SuiteModel
 } from '../../schemas/index.js'
-import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
+import { analytics, logger, redisClient } from '../../utils/index.js'
 
 /**
  * subscribe user to a given suite.
@@ -36,7 +36,7 @@ export async function suiteSubscribe(
     })
   }
 
-  analytics.add_activity(EActivity.SuiteSubscribed, user, {
+  analytics.add_activity('suite:subscribed', user, {
     suite: tuple,
     level: level
   })

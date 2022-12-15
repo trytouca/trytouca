@@ -3,13 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
-import {
-  analytics,
-  EActivity,
-  logger,
-  mailUser,
-  redisClient
-} from '../../utils/index.js'
+import { analytics, logger, mailUser, redisClient } from '../../utils/index.js'
 
 /**
  * @summary
@@ -81,7 +75,7 @@ export async function teamMemberAdd(
     userName: account?.fullname || account?.username
   })
 
-  analytics.add_activity(EActivity.TeamMemberAdded, user._id, {
+  analytics.add_activity('team_member:added', user._id, {
     member_id: account._id,
     team_id: team._id
   })

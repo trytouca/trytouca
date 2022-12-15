@@ -9,7 +9,7 @@ import {
   ITeam,
   IUser
 } from '../../schemas/index.js'
-import { analytics, EActivity, logger } from '../../utils/index.js'
+import { analytics, logger } from '../../utils/index.js'
 
 /**
  * @summary
@@ -45,7 +45,7 @@ export async function ctrlBatchSeal(
   }
 
   await batchSeal(team, suite, batch)
-  analytics.add_activity(EActivity.BatchSealed, user)
+  analytics.add_activity('batch:sealed', user)
   logger.info('%s: %s: sealed', user.username, tuple)
 
   return res.status(204).send()

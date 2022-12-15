@@ -12,7 +12,7 @@ import {
   TeamModel,
   UserModel
 } from '../../schemas/index.js'
-import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
+import { analytics, logger, redisClient } from '../../utils/index.js'
 
 /**
  * Removes a given team and all data associated with it.
@@ -80,7 +80,7 @@ export async function ctrlTeamRemove(
     redisClient.removeCachedByPrefix(`route_teamList_`)
   }
 
-  analytics.add_activity(EActivity.TeamDeleted, user._id, { team_id: team._id })
+  analytics.add_activity('team:deleted', user._id, { team_id: team._id })
 
   const toc = process.hrtime(tic).reduce((sec, nano) => sec * 1e3 + nano * 1e-6)
   logger.info('%s: handled request in %d ms', tuple, toc.toFixed(0))

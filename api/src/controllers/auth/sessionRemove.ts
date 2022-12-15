@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { IUser, SessionModel } from '../../schemas/index.js'
-import { analytics, EActivity, logger } from '../../utils/index.js'
+import { analytics, logger } from '../../utils/index.js'
 
 export async function authSessionRemove(
   req: Request,
@@ -45,7 +45,7 @@ export async function authSessionRemove(
 
   logger.info('%s: closed user session %s', user.username, session._id)
 
-  analytics.add_activity(EActivity.AccountLoggedOut, user)
+  analytics.add_activity('account:logged_out', user)
 
   return res.clearCookie('authToken').status(204).send()
 }

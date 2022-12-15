@@ -10,7 +10,7 @@ import {
   IUser,
   SuiteModel
 } from '../../schemas/index.js'
-import { analytics, EActivity, logger } from '../../utils/index.js'
+import { analytics, logger } from '../../utils/index.js'
 
 /**
  * @summary
@@ -94,7 +94,7 @@ export async function ctrlBatchPromote(
   await batchPromote(team, suite, batch, user, reason)
   logger.info('%s: %s: promoted', user.username, tuple)
 
-  analytics.add_activity(EActivity.BatchPromoted, user)
+  analytics.add_activity('batch:promoted', user)
 
   return res.status(204).send()
 }

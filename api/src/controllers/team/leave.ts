@@ -4,13 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { findTeamRoleOfUser, findTeamUsersByRole } from '../../models/index.js'
 import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
-import {
-  analytics,
-  EActivity,
-  logger,
-  mailUsers,
-  redisClient
-} from '../../utils/index.js'
+import { analytics, logger, mailUsers, redisClient } from '../../utils/index.js'
 
 /**
  * @summary
@@ -77,7 +71,7 @@ export async function teamLeave(
     teamName: team.name
   })
 
-  analytics.add_activity(EActivity.TeamMemberLeft, user._id, {
+  analytics.add_activity('team_member:left', user._id, {
     team_id: team._id
   })
 

@@ -5,7 +5,7 @@ import { pick } from 'lodash-es'
 
 import { wslFindByRole } from '../../models/index.js'
 import { IUser, NodeModel } from '../../schemas/index.js'
-import { analytics, EActivity, logger, mailUser } from '../../utils/index.js'
+import { analytics, logger, mailUser } from '../../utils/index.js'
 
 export async function telemetryHandle(
   req: Request,
@@ -34,7 +34,7 @@ export async function telemetryHandle(
     platformRole: 'guest',
     username: undefined
   }
-  await analytics.add_activity(EActivity.SelfHostedUsage, user, {
+  await analytics.add_activity('self_host:usage_reported', user, {
     company: node.company,
     ...data
   })

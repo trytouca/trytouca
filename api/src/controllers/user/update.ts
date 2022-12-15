@@ -7,13 +7,7 @@ import { identity, omit, pick, pickBy } from 'lodash-es'
 import { v4 as uuidv4 } from 'uuid'
 
 import { IUser, UserModel } from '../../schemas/index.js'
-import {
-  analytics,
-  config,
-  EActivity,
-  logger,
-  mailAdmins
-} from '../../utils/index.js'
+import { analytics, config, logger, mailAdmins } from '../../utils/index.js'
 
 async function updateFeatureFlags(user: IUser, flags: Record<string, boolean>) {
   logger.debug('%s: updating feature flag: %j', user.username, flags)
@@ -30,7 +24,7 @@ async function updateFeatureFlags(user: IUser, flags: Record<string, boolean>) {
     })
   }
   logger.info('%s: updated feature flag: %j', user.username, flags)
-  analytics.add_activity(EActivity.FeatureFlagUpdated, user, flags)
+  analytics.add_activity('feature_flag:updated', user, flags)
 }
 
 /**
@@ -119,7 +113,7 @@ export async function userUpdate(
     name: proposed.fullname,
     username: proposed.username
   })
-  analytics.add_activity(EActivity.ProfileUpdated, user)
+  analytics.add_activity('profile:updated', user)
 
   return res.status(204).send()
 }

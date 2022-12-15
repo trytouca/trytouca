@@ -4,13 +4,7 @@ import type { EPlatformRole } from '@touca/api-schema'
 import cuid from 'cuid'
 
 import { IUser, SessionModel, TeamModel, UserModel } from '../schemas/index.js'
-import {
-  analytics,
-  EActivity,
-  logger,
-  mailAdmins,
-  redisClient
-} from '../utils/index.js'
+import { analytics, logger, mailAdmins, redisClient } from '../utils/index.js'
 
 export async function wslFindByRole(role: EPlatformRole): Promise<IUser[]> {
   return await UserModel.find(
@@ -86,6 +80,6 @@ export async function userDelete(account: IUser) {
     body: `User <b>${account.fullname}</b> (<a href="mailto:${account.email}">${account.username}</a>) removed their account.`
   })
 
-  analytics.add_activity(EActivity.AccountDeleted, account)
+  analytics.add_activity('account:deleted', account)
   redisClient.removeCached('platform-stats')
 }

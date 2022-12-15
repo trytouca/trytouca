@@ -6,48 +6,47 @@ import { relay } from '../models/index.js'
 import { IUser } from '../schemas/index.js'
 import { config } from './config.js'
 
-export enum EActivity {
-  AccountActivated = 'account:activated',
-  AccountActivationResent = 'account:activation_link_resent',
-  AccountCreated = 'account:created',
-  AccountDeleted = 'account:deleted',
-  AccountLoggedIn = 'account:logged_in',
-  AccountLoggedOut = 'account:logged_out',
-  AccountPasswordRemind = 'account:password_remind',
-  AccountPasswordResent = 'account:password_resent',
-  AccountPasswordReset = 'account:password_reset',
-  BatchDeleted = 'batch:deleted',
-  BatchPDFExported = 'batch:pdf_exported',
-  BatchPromoted = 'batch:promoted',
-  BatchZipExported = 'batch:zip_exported',
-  BatchSealed = 'batch:sealed',
-  CommentCreated = 'comment:created',
-  CommentDeleted = 'comment:deleted',
-  CommentEdited = 'comment:edited',
-  CommentReplied = 'comment:replied',
-  FeatureFlagUpdated = 'feature_flag:updated',
-  ProfileUpdated = 'profile:updated',
-  SelfHostedInstall = 'self_host:installed',
-  SelfHostedUsage = 'self_host:usage_reported',
-  SuiteCreated = 'suite:created',
-  SuiteDeleted = 'suite:deleted',
-  SuiteSubscribed = 'suite:subscribed',
-  TeamCreated = 'team:created',
-  TeamDeleted = 'team:deleted',
-  TeamMemberAccepted = 'team_member:accepted',
-  TeamMemberAdded = 'team_member:added',
-  TeamMemberApproved = 'team_member:approved',
-  TeamMemberDeclined = 'team_member:declined',
-  TeamMemberLeft = 'team_member:left',
-  TeamMemberReceived = 'team_member:received',
-  TeamMemberRejected = 'team_member:rejected',
-  TeamMemberRemoved = 'team_member:removed',
-  TeamMemberRescinded = 'team_member:rescinded',
-  TeamMemberRequested = 'team_member:requested',
-  TeamMemberPromoted = 'team_member:promoted',
-  TeamMemberInvited = 'team_member:sent',
-  TeamMemberWithdrawn = 'team_member:withdrawn'
-}
+type ActivityType =
+  | 'account:activated'
+  | 'account:activation_link_resent'
+  | 'account:created'
+  | 'account:deleted'
+  | 'account:logged_in'
+  | 'account:logged_out'
+  | 'account:password_remind'
+  | 'account:password_resent'
+  | 'account:password_reset'
+  | 'batch:deleted'
+  | 'batch:pdf_exported'
+  | 'batch:promoted'
+  | 'batch:zip_exported'
+  | 'batch:sealed'
+  | 'comment:created'
+  | 'comment:deleted'
+  | 'comment:edited'
+  | 'comment:replied'
+  | 'feature_flag:updated'
+  | 'profile:updated'
+  | 'self_host:installed'
+  | 'self_host:usage_reported'
+  | 'suite:created'
+  | 'suite:deleted'
+  | 'suite:subscribed'
+  | 'team:created'
+  | 'team:deleted'
+  | 'team_member:accepted'
+  | 'team_member:added'
+  | 'team_member:approved'
+  | 'team_member:declined'
+  | 'team_member:left'
+  | 'team_member:received'
+  | 'team_member:rejected'
+  | 'team_member:removed'
+  | 'team_member:rescinded'
+  | 'team_member:requested'
+  | 'team_member:promoted'
+  | 'team_member:invited'
+  | 'team_member:withdrawn'
 
 export type TrackerInfo = {
   avatar: string
@@ -85,15 +84,19 @@ class OrbitTracker {
     })
   }
 
-  async add_activity(type: EActivity, user: IUser, data: Partial<TrackerInfo>) {
-    const allowlist = [
-      EActivity.AccountCreated,
-      EActivity.BatchPromoted,
-      EActivity.BatchSealed,
-      EActivity.SelfHostedInstall,
-      EActivity.SuiteCreated,
-      EActivity.ProfileUpdated,
-      EActivity.TeamCreated
+  async add_activity(
+    type: ActivityType,
+    user: IUser,
+    data: Partial<TrackerInfo>
+  ) {
+    const allowlist: Array<ActivityType> = [
+      'account:created',
+      'batch:promoted',
+      'batch:sealed',
+      'profile:updated',
+      'self_host:installed',
+      'suite:created',
+      'team:created'
     ]
     if (!allowlist.includes(type)) {
       return
@@ -141,7 +144,11 @@ class SegmentTracker {
       }
     })
   }
-  async add_activity(type: EActivity, user: IUser, data: Partial<TrackerInfo>) {
+  async add_activity(
+    type: ActivityType,
+    user: IUser,
+    data: Partial<TrackerInfo>
+  ) {
     this.segment?.track({
       userId: user._id.toString(),
       event: type,
@@ -171,7 +178,7 @@ class Analytics {
   }
 
   async add_activity(
-    type: EActivity,
+    type: ActivityType,
     user: IUser,
     data?: Record<string, unknown>
   ) {

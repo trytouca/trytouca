@@ -6,7 +6,6 @@ import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
 import {
   analytics,
   config,
-  EActivity,
   logger,
   mailUser,
   redisClient
@@ -142,7 +141,7 @@ export async function teamInviteAdd(
     teamName: team.name
   })
 
-  analytics.add_activity(EActivity.TeamMemberInvited, user._id, {
+  analytics.add_activity('team_member:invited', user._id, {
     team_id: team._id,
     member_email: askedEmail
   })
