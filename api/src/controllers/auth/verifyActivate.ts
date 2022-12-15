@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { createUserSession } from '../../models/index.js'
 import { UserModel } from '../../schemas/index.js'
-import { analytics, config, EActivity, logger } from '../../utils/index.js'
+import { analytics, config, logger } from '../../utils/index.js'
 
 export async function authVerifyActivate(
   req: Request,
@@ -47,7 +47,7 @@ export async function authVerifyActivate(
   logger.info('%s: verified account', user.username)
   const session = await createUserSession(user, { askedAgent, askedIpAddress })
 
-  analytics.add_activity(EActivity.AccountActivated, user)
+  analytics.add_activity('account:activated', user)
 
   // return session token to the user
   // @todo consider setting path and secure attributes

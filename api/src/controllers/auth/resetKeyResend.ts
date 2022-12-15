@@ -3,13 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { UserModel } from '../../schemas/index.js'
-import {
-  analytics,
-  config,
-  EActivity,
-  logger,
-  mailUser
-} from '../../utils/index.js'
+import { analytics, config, logger, mailUser } from '../../utils/index.js'
 
 export async function authResetKeyResend(
   req: Request,
@@ -62,7 +56,7 @@ export async function authResetKeyResend(
     resetLink: `${config.webapp.root}/account/reset?key=${user.resetKey}`
   })
 
-  analytics.add_activity(EActivity.AccountPasswordResent, user)
+  analytics.add_activity('account:password_resent', user)
 
   return res.status(204).send()
 }

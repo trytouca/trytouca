@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { suiteCreate } from '../../models/index.js'
 import { ITeam, IUser } from '../../schemas/index.js'
-import { analytics, EActivity, logger } from '../../utils/index.js'
+import { analytics, logger } from '../../utils/index.js'
 
 /**
  * Register a new suite.
@@ -34,7 +34,7 @@ export async function ctrlSuiteCreate(
     })
   }
 
-  analytics.add_activity(EActivity.SuiteCreated, user)
+  analytics.add_activity('suite:created', user)
 
   return res.status(201).send()
 }

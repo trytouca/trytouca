@@ -5,7 +5,7 @@ import { OAuth2Client } from 'google-auth-library'
 
 import { createUserAccount, createUserSession } from '../../models/index.js'
 import { IUserDocument, UserModel } from '../../schemas/index.js'
-import { analytics, config, EActivity, logger } from '../../utils/index.js'
+import { analytics, config, logger } from '../../utils/index.js'
 
 export async function authGoogleSignin(
   req: Request,
@@ -102,7 +102,7 @@ export async function authGoogleSignin(
       last_name: payload.family_name,
       ip_address: askedIpAddress
     })
-    .then(() => analytics.add_activity(EActivity.AccountLoggedIn, user))
+    .then(() => analytics.add_activity('account:logged_in', user))
 
   // return session token to the user
   // @todo consider setting path and secure attributes

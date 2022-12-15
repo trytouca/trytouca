@@ -7,7 +7,6 @@ import { UserModel } from '../../schemas/index.js'
 import {
   analytics,
   config,
-  EActivity,
   logger,
   mailUser,
   notifyPlatformAdmins
@@ -62,7 +61,7 @@ export async function authResetKeyApply(
   })
 
   notifyPlatformAdmins('%s reset their password.', user.username)
-  analytics.add_activity(EActivity.AccountPasswordReset, user)
+  analytics.add_activity('account:password_reset', user)
 
   return res.status(204).send()
 }

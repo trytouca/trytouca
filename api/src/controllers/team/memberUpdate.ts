@@ -5,7 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { findTeamRoleOfUser } from '../../models/index.js'
 import { ITeam, IUser, TeamModel } from '../../schemas/index.js'
-import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
+import { analytics, logger, redisClient } from '../../utils/index.js'
 
 /**
  * @summary
@@ -121,7 +121,7 @@ export async function teamMemberUpdate(
     roleNew
   )
 
-  analytics.add_activity(EActivity.TeamMemberPromoted, user._id, {
+  analytics.add_activity('team_member:promoted', user._id, {
     member_id: member._id,
     new_role: roleNew,
     team_id: team._id

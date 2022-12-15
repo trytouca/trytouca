@@ -3,13 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { UserModel } from '../../schemas/index.js'
-import {
-  analytics,
-  config,
-  EActivity,
-  logger,
-  mailUser
-} from '../../utils/index.js'
+import { analytics, config, logger, mailUser } from '../../utils/index.js'
 
 export async function authVerifyResend(
   req: Request,
@@ -46,7 +40,7 @@ export async function authVerifyResend(
     verificationLink: link
   })
 
-  analytics.add_activity(EActivity.AccountActivationResent, user)
+  analytics.add_activity('account:activation_link_resent', user)
 
   return res.status(204).send()
 }

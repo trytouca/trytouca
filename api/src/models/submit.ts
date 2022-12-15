@@ -19,13 +19,7 @@ import {
   SuiteModel,
   TeamModel
 } from '../schemas/index.js'
-import {
-  analytics,
-  EActivity,
-  logger,
-  objectStore,
-  redisClient
-} from '../utils/index.js'
+import { analytics, logger, objectStore, redisClient } from '../utils/index.js'
 import { suiteCreate } from './suite.js'
 
 type TeamSlug = string
@@ -454,7 +448,7 @@ async function processSuite(
         slug: suiteSlug,
         name: suiteSlug
       })
-      analytics.add_activity(EActivity.SuiteCreated, user)
+      analytics.add_activity('suite:created', user)
     }
 
     // concurrently process submitted messages that belong to batches of this suite

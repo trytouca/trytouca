@@ -7,7 +7,6 @@ import { IUser } from '../../schemas/index.js'
 import {
   analytics,
   config,
-  EActivity,
   logger,
   mailAdmins,
   redisClient
@@ -53,7 +52,7 @@ export async function ctrlTeamCreate(
 
   await redisClient.removeCached(`route_teamList_${user.username}`)
 
-  analytics.add_activity(EActivity.TeamCreated, user)
+  analytics.add_activity('team:created', user)
 
   // redirect to lookup route for this newly created team
   const redirectPath = [config.express.root, 'team', proposed.slug].join('/')

@@ -8,7 +8,6 @@ import { IUserDocument, SessionModel, UserModel } from '../schemas/index.js'
 import {
   analytics,
   config,
-  EActivity,
   jwtIssue,
   logger,
   mailAdmins,
@@ -142,7 +141,7 @@ export async function createUserAccount(
       user_id: payload.user_id,
       username: payload.username
     })
-    .then(() => analytics.add_activity(EActivity.AccountCreated, newUser))
+    .then(() => analytics.add_activity('account:created', newUser))
 
   return newUser
 }

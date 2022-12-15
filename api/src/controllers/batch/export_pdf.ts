@@ -9,7 +9,7 @@ import {
   ITeam,
   IUser
 } from '../../schemas/index.js'
-import { analytics, config, EActivity, logger } from '../../utils/index.js'
+import { analytics, config, logger } from '../../utils/index.js'
 
 export async function ctrlBatchExportPDF(
   req: Request,
@@ -47,5 +47,5 @@ export async function ctrlBatchExportPDF(
   res.writeHead(200)
   res.end(pdfReport.content)
   logger.info('%s: exported %s', user.username, filename)
-  analytics.add_activity(EActivity.BatchPDFExported, user, { filename })
+  analytics.add_activity('batch:pdf_exported', user, { filename })
 }

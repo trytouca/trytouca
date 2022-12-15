@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { TeamModel, UserModel } from '../../schemas/index.js'
-import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
+import { analytics, logger, redisClient } from '../../utils/index.js'
 
 /**
  * @summary
@@ -73,7 +73,7 @@ export async function teamInviteRescind(
     await redisClient.removeCached(`route_teamList_${isRegistered.username}`)
   }
 
-  analytics.add_activity(EActivity.TeamMemberRescinded, user._id, {
+  analytics.add_activity('team_member:rescinded', user._id, {
     team_id: team._id,
     member_email: askedEmail
   })

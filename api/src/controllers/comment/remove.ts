@@ -10,7 +10,7 @@ import {
   IUser,
   TeamModel
 } from '../../schemas/index.js'
-import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
+import { analytics, logger, redisClient } from '../../utils/index.js'
 
 export async function ctrlCommentRemove(
   req: Request,
@@ -44,6 +44,6 @@ export async function ctrlCommentRemove(
   await redisClient.removeCached(`route_commentList_${tuple}`)
 
   logger.info('%s: %s: removed comment', user.username, tuple)
-  analytics.add_activity(EActivity.CommentDeleted, user)
+  analytics.add_activity('comment:deleted', user)
   return res.status(204).send()
 }

@@ -4,7 +4,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { extractCommentTuple } from '../../models/index.js'
 import { CommentModel, ICommentDocument, IUser } from '../../schemas/index.js'
-import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
+import { analytics, logger, redisClient } from '../../utils/index.js'
 
 export async function ctrlCommentUpdate(
   req: Request,
@@ -35,6 +35,6 @@ export async function ctrlCommentUpdate(
   await redisClient.removeCached(`route_commentList_${tuple}`)
 
   logger.info('%s: %s: edited comment', user.username, tuple)
-  analytics.add_activity(EActivity.CommentEdited, user)
+  analytics.add_activity('comment:edited', user)
   return res.status(204).send()
 }

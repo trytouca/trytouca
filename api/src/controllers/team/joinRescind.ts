@@ -3,7 +3,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { ITeam, IUser, TeamModel, UserModel } from '../../schemas/index.js'
-import { analytics, EActivity, logger, redisClient } from '../../utils/index.js'
+import { analytics, logger, redisClient } from '../../utils/index.js'
 
 export async function teamJoinRescind(
   req: Request,
@@ -60,7 +60,7 @@ export async function teamJoinRescind(
 
   // we choose not to send an email for this event.
 
-  analytics.add_activity(EActivity.TeamMemberWithdrawn, user._id, {
+  analytics.add_activity('team_member:withdrawn', user._id, {
     team_id: team._id
   })
 

@@ -5,13 +5,7 @@ import { NextFunction, Request, Response } from 'express'
 
 import { createUserSession } from '../../models/index.js'
 import { UserModel } from '../../schemas/index.js'
-import {
-  analytics,
-  config,
-  EActivity,
-  logger,
-  mailUser
-} from '../../utils/index.js'
+import { analytics, config, logger, mailUser } from '../../utils/index.js'
 
 export async function authSessionCreate(
   req: Request,
@@ -104,7 +98,7 @@ export async function authSessionCreate(
   })
 
   analytics.add_member(user, { ip_address: asked.ipAddress }).then(() => {
-    analytics.add_activity(EActivity.AccountLoggedIn, user)
+    analytics.add_activity('account:logged_in', user)
   })
 
   // return session token to the user
