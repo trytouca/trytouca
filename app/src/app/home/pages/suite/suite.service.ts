@@ -70,9 +70,6 @@ const availableTabs: Record<SuitePageTabType, PageTab<SuitePageTabType>> = {
 export class SuitePageService extends IPageService<SuitePageItem> {
   private _bannerSubject = new Subject<SuiteBannerType>();
   banner$ = this._bannerSubject.asObservable();
-  private _eventSource: EventSource;
-  private _eventSubject = new Subject<ServerEventJob>();
-  events$ = this._eventSubject.asObservable();
 
   private _cache: {
     tab: SuitePageTabType;
@@ -119,39 +116,21 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     super();
   }
 
-  eventSourceSubscribe(teamSlug: string, suiteSlug: string) {
-    const path = ['suite', teamSlug, suiteSlug, 'events'].join('/');
-    const url = this.apiService.makeUrl(path);
-    this._eventSource = new EventSource(url, { withCredentials: true });
-    this._eventSource.addEventListener('error', (e) => console.error(e));
-    this._eventSource.addEventListener('message', (msg) => {
-      const job: ServerEventJob = JSON.parse(msg.data as string);
-      this._eventSubject.next(job);
-    });
-  }
-
   consumeEvent(job: ServerEventJob) {
-    if (this._cache.tab !== SuitePageTabType.Versions) {
-      return;
-    }
-    const args = {
-      teamSlug: this._cache.team.slug,
-      suiteSlug: this._cache.suite.suiteSlug
-    };
-    if (job.type === 'batch:updated') {
+    if (
+      this._cache.tab === 'versions' &&
+      ['batch:created', 'batch:updated', 'batch:sealed'].includes(job.type)
+    ) {
+      const args = {
+        teamSlug: this._cache.team.slug,
+        suiteSlug: this._cache.suite.suiteSlug
+      };
+      if (['batch:created', 'batch:sealed'].includes(job.type)) {
+        this._cache.suite = null;
+      }
       this._cache.batches = null;
       this.fetchItems(args);
     }
-    if (job.type === 'batch:sealed') {
-      this._cache.batches = null;
-      this._cache.suite = null;
-      this.fetchItems(args);
-    }
-  }
-
-  eventSourceUnsubscribe() {
-    this._eventSource.removeAllListeners();
-    this._eventSource.close();
   }
 
   private update = (key: string, response: unknown) => {
@@ -276,8 +255,6 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     this._cache.batches = null;
     this._cache.elements = null;
     this.fetchItems({ teamSlug, suiteSlug });
-    this.eventSourceUnsubscribe();
-    this.eventSourceSubscribe(teamSlug, suiteSlug);
   }
 
   public updateSubscription(level: ENotificationType): Observable<void> {
