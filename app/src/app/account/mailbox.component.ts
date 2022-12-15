@@ -31,14 +31,14 @@ export class MailboxComponent implements OnDestroy {
 
   isBackButtonShown = false;
   isRetry = false;
-  private _sub: Subscription;
+  private subscription: Subscription;
 
   constructor() {
     this.reset();
   }
 
   ngOnDestroy() {
-    this._sub.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
   back() {
@@ -53,7 +53,7 @@ export class MailboxComponent implements OnDestroy {
 
   private reset() {
     this.isBackButtonShown = false;
-    this._sub = timer(30000).subscribe(() => {
+    this.subscription = timer(30000).subscribe(() => {
       this.isBackButtonShown = true;
     });
   }

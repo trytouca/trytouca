@@ -10,7 +10,6 @@ import { Types } from 'mongoose'
 
 import { extractCommentTuple, extractCommentType } from '../../models/index.js'
 import { CommentModel, IUser } from '../../schemas/index.js'
-import { ECommentType } from '../../types/index.js'
 import { logger, redisClient } from '../../utils/index.js'
 
 type CommentListQueryOutput = {
@@ -25,10 +24,9 @@ type CommentListQueryOutput = {
 async function commentList(res: Response): Promise<CommentListResponse> {
   const type = extractCommentType(res)
   const matchQuery = {
-    elementId:
-      type === ECommentType.Element ? res.locals.element._id : undefined,
-    batchId: type === ECommentType.Batch ? res.locals.batch._id : undefined,
-    suiteId: type === ECommentType.Suite ? res.locals.suite._id : undefined
+    elementId: type === 'element' ? res.locals.element._id : undefined,
+    batchId: type === 'batch' ? res.locals.batch._id : undefined,
+    suiteId: type === 'suite' ? res.locals.suite._id : undefined
   }
 
   const queryOutput: CommentListQueryOutput[] = await CommentModel.aggregate([

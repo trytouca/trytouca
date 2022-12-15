@@ -19,17 +19,13 @@ async function populateBatchMeta(
   const serviceName = 'service analytics'
   const tuple = [team.slug, suite.slug, batch.slug].join('/')
   logger.info('%s: %s: comparing to baseline', serviceName, tuple)
-
   const overview = await compareBatchOverview(batch.superior, batch._id)
-
   if (overview.elementsCountPending) {
     logger.info('%s: %s: skipped: has pending elements', serviceName, tuple)
     return
   }
-
   await BatchModel.findByIdAndUpdate(batch._id, { meta: overview })
   logger.info('%s: %s: updated comparison metadata', serviceName, tuple)
-
   redisClient.removeCachedByPrefix(`route_batchList_${team.slug}_${suite.slug}`)
 }
 
@@ -49,7 +45,6 @@ async function processSuite(team: ITeamDocument, suite: ISuiteDocument) {
 
 export async function analyticsService(): Promise<void> {
   logger.silly('analytics service: running')
-
   const teams = await TeamModel.find()
   for (const team of teams) {
     await SuiteModel.find({ team: team._id })

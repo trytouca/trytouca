@@ -110,14 +110,14 @@
       </nav>
     </aside>
     <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-2 xl:px-4">
-      <div *ngIf="user && currentTab.type === TabType.Profile">
+      <div *ngIf="user && currentTab.type === 'profile'">
         <app-settings-tab-profile
           [userInfo]="user"
           (confirmAccountDelete)="
             confirmAccountDelete()
           "></app-settings-tab-profile>
       </div>
-      <div class="space-y-4" *ngIf="currentTab.type === TabType.ApiKeys">
+      <div class="space-y-4" *ngIf="currentTab.type === 'apiKeys'">
         <div class="wsl-box space-y-2 p-4" *ngIf="apiKeys">
           <h2
             class="border-b border-gray-200 pb-1 text-xl font-medium text-black dark:border-gray-700 dark:text-gray-300">
@@ -172,7 +172,7 @@
             (remove)="removeSessions($event)"></app-settings-tab-sessions>
         </div>
       </div>
-      <div *ngIf="currentTab.type === TabType.Preferences">
+      <div *ngIf="currentTab.type === 'preferences'">
         <div
           class="wsl-box space-y-4 p-4"
           *ngIf="getPreferences(false).length !== 0">
@@ -200,28 +200,26 @@
           </div>
         </div>
       </div>
-      <div *ngIf="serverSettings?.stats && currentTab.type === TabType.Metrics">
+      <div *ngIf="serverSettings?.stats && currentTab.type === 'metrics'">
         <app-settings-tab-server
           [stats]="serverSettings.stats"></app-settings-tab-server>
       </div>
-      <div *ngIf="serverSettings?.events && currentTab.type === TabType.Audit">
+      <div *ngIf="serverSettings?.events && currentTab.type === 'audit'">
         <app-settings-tab-audit
           [events]="serverSettings.events"
           (copyToClipboard)="onCopy($event)"></app-settings-tab-audit>
       </div>
-      <div *ngIf="currentTab.type === TabType.Mail">
+      <div *ngIf="currentTab.type === 'mail'">
         <app-settings-tab-mail></app-settings-tab-mail>
       </div>
-      <div
-        *ngIf="serverSettings?.accounts && currentTab.type === TabType.Users">
+      <div *ngIf="serverSettings?.accounts && currentTab.type === 'users'">
         <app-settings-tab-users
           [accounts]="serverSettings.accounts"
           [user]="user"
           (copyToClipboard)="onCopy($event)"
           (updateAccount)="updateAccount($event)"></app-settings-tab-users>
       </div>
-      <div
-        *ngIf="serverSettings?.stats && currentTab.type === TabType.Telemetry">
+      <div *ngIf="serverSettings?.stats && currentTab.type === 'telemetry'">
         <app-settings-tab-telemetry></app-settings-tab-telemetry>
       </div>
     </main>

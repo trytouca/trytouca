@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { formatDate } from '@angular/common';
 import {
@@ -36,18 +36,20 @@ import {
   ElementPageOverviewMetadata,
   ElementPageResult
 } from './element.model';
-import { ElementPageService, ElementPageTabType } from './element.service';
+import { ElementPageService } from './element.service';
+
+type ElementPageTabType = 'results' | 'metrics';
 
 const pageTabs: PageTab<ElementPageTabType>[] = [
   {
-    type: ElementPageTabType.Results,
+    type: 'results',
     name: 'Results',
     link: 'results',
     icon: 'feather-list',
     shown: true
   },
   {
-    type: ElementPageTabType.Metrics,
+    type: 'metrics',
     name: 'Metrics',
     link: 'metrics',
     icon: 'hero-clock',
@@ -78,7 +80,6 @@ export class ElementPageComponent
   element: ElementLookupResponse;
   overview: FrontendOverviewSection;
   params: FrontendElementCompareParams;
-  TabType = ElementPageTabType;
   tabs = pageTabs;
 
   private _subSuite: Subscription;
@@ -132,10 +133,8 @@ export class ElementPageComponent
       this.updateTitle(v);
     });
     this._subOverview = this.elementPageService.overview$.subscribe((v) => {
-      this.tabs.find((t) => t.type === ElementPageTabType.Results).counter =
-        v.resultsCountHead;
-      this.tabs.find((t) => t.type === ElementPageTabType.Metrics).counter =
-        v.metricsCountHead;
+      this.tabs.find((t) => t.type === 'results').counter = v.resultsCountHead;
+      this.tabs.find((t) => t.type === 'metrics').counter = v.metricsCountHead;
       this.overview = this.findOverviewInputs(v);
     });
     this._subParams = this.elementPageService.params$.subscribe((v) => {

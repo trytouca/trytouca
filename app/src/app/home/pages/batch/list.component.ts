@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,11 +10,7 @@ import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
 import { TopicType } from '@/home/models/page-item.model';
 
-import {
-  BatchPageItem,
-  BatchPageItemType,
-  nextPageQueryParams
-} from './batch.model';
+import { BatchPageItem, nextPageQueryParams } from './batch.model';
 import { BatchPageService } from './batch.service';
 
 const filterInput: FilterInput<BatchPageItem> = {
@@ -28,7 +24,7 @@ const filterInput: FilterInput<BatchPageItem> = {
       key: 'different',
       name: 'Different',
       func: (a) => {
-        if (a.type !== BatchPageItemType.Common) {
+        if (a.type !== 'common') {
           return true;
         }
         const meta = a.asCommon().meta;
@@ -42,7 +38,7 @@ const filterInput: FilterInput<BatchPageItem> = {
       key: 'faster',
       name: 'Faster',
       func: (a) => {
-        if (a.type !== BatchPageItemType.Common) {
+        if (a.type !== 'common') {
           return false;
         }
         const meta = a.asCommon().meta;
@@ -53,7 +49,7 @@ const filterInput: FilterInput<BatchPageItem> = {
       key: 'slower',
       name: 'Slower',
       func: (a) => {
-        if (a.type !== BatchPageItemType.Common) {
+        if (a.type !== 'common') {
           return false;
         }
         const meta = a.asCommon().meta;
@@ -90,7 +86,7 @@ const filterInput: FilterInput<BatchPageItem> = {
           return b.type < a.type ? 1 : -1;
         }
         const getDuration = (v: BatchPageItem) => {
-          if (v.type === BatchPageItemType.Common) {
+          if (v.type === 'common') {
             const metaCommon = v.asCommon().meta;
             return metaCommon ? metaCommon.metricsDurationCommonSrc : 0;
           }
@@ -108,7 +104,7 @@ const filterInput: FilterInput<BatchPageItem> = {
           return b.type < a.type ? 1 : -1;
         }
         const getDurationChange = (v: BatchPageItem) => {
-          if (v.type === BatchPageItemType.Common) {
+          if (v.type === 'common') {
             const metaCommon = v.asCommon().meta;
             return metaCommon
               ? metaCommon.metricsDurationCommonSrc -
@@ -129,7 +125,7 @@ const filterInput: FilterInput<BatchPageItem> = {
           return b.type < a.type ? 1 : -1;
         }
         const getKeysCount = (v: BatchPageItem) => {
-          if (v.type === BatchPageItemType.Common) {
+          if (v.type === 'common') {
             const metaCommon = v.asCommon().meta;
             return metaCommon
               ? metaCommon.keysCountCommon + metaCommon.keysCountFresh
@@ -149,7 +145,7 @@ const filterInput: FilterInput<BatchPageItem> = {
           return b.type < a.type ? 1 : -1;
         }
         const getKeysScore = (v: BatchPageItem) => {
-          if (v.type === BatchPageItemType.Common) {
+          if (v.type === 'common') {
             const meta = v.asCommon().meta;
             return meta ? meta.keysScore : 0;
           }
@@ -199,32 +195,33 @@ export class BatchListElementsComponent
 {
   suite: SuiteLookupResponse;
   params: FrontendBatchCompareParams;
-  ItemType = BatchPageItemType;
   chosenTopic: TopicType;
 
-  private _subSuite: Subscription;
-  private _subParams: Subscription;
+  private _sub: Record<'params' | 'suite', Subscription>;
 
   constructor(
     batchPageService: BatchPageService,
     route: ActivatedRoute,
     router: Router
   ) {
-    super(filterInput, Object.values(BatchPageItemType), route, router);
+    super(filterInput, ['common', 'fresh', 'missing'], route, router);
     this._subAllItems = batchPageService.items$.subscribe((v) => {
       this.initCollections(v);
     });
-    this._subSuite = batchPageService.suite$.subscribe((v) => {
-      this.suite = v;
-    });
-    this._subParams = batchPageService.params$.subscribe((v) => {
-      this.params = v;
-    });
+    this._sub = {
+      suite: batchPageService.data.suite$.subscribe((v) => {
+        this.suite = v;
+      }),
+      params: batchPageService.data.params$.subscribe((v) => {
+        this.params = v;
+      })
+    };
   }
 
   ngOnDestroy() {
-    this._subSuite.unsubscribe();
-    this._subParams.unsubscribe();
+    Object.values(this._sub)
+      .filter(Boolean)
+      .forEach((v) => v.unsubscribe());
     super.ngOnDestroy();
   }
 

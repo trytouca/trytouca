@@ -2,11 +2,6 @@
 
 import mongoose from 'mongoose'
 
-export enum EReportType {
-  Seal = 'seal',
-  Promote = 'promote'
-}
-
 const reportSchema = new mongoose.Schema(
   {
     dstBatchId: {
@@ -24,7 +19,7 @@ const reportSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId
     },
     reportType: {
-      enum: Object.values(EReportType),
+      enum: ['promote', 'seal'],
       required: true,
       type: String
     }
@@ -39,7 +34,7 @@ reportSchema.index({ srcBatchId: 1, dstBatchId: 1 })
 export interface IReportDocument extends mongoose.Document {
   dstBatchId: mongoose.Types.ObjectId
   reportedAt: Date
-  reportType: EReportType
+  reportType: 'seal' | 'promote'
   srcBatchId: mongoose.Types.ObjectId
 }
 

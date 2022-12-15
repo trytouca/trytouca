@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, OnDestroy } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -6,7 +6,6 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { isEqual } from 'lodash-es';
 import { Subscription } from 'rxjs';
 
-import { SuitePageItemType } from './suite.model';
 import { SuitePageService } from './suite.service';
 
 type Fields = Partial<{
@@ -36,7 +35,7 @@ export class SuiteTrendsRuntimeComponent implements OnDestroy {
     faIconLibrary.addIcons(faInfoCircle);
     this._subItems = this.suitePageService.items$.subscribe((allItems) => {
       const perfs = allItems
-        .filter((v) => v.type === SuitePageItemType.Batch)
+        .filter((v) => v.type === 'batch')
         .map((v) => v.asBatch())
         .filter((v) => v.meta.metricsDurationHead)
         .slice(0, 50)

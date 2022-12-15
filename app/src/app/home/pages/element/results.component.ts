@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import {
   Component,
@@ -15,8 +15,8 @@ import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
 
-import { ElementPageItemType, ElementPageResult } from './element.model';
-import { ElementPageService, ElementPageTabType } from './element.service';
+import { ElementPageResult } from './element.model';
+import { ElementPageService } from './element.service';
 import { ElementItemResultComponent } from './result.component';
 
 const filterInput: FilterInput<ElementPageResult> = {
@@ -82,8 +82,6 @@ export class ElementListResultsComponent
 {
   suite: SuiteLookupResponse;
   params: FrontendElementCompareParams;
-  ItemType = ElementPageItemType;
-  TabType = ElementPageTabType;
 
   private _subSuite: Subscription;
   private _subParams: Subscription;
@@ -96,7 +94,7 @@ export class ElementListResultsComponent
     route: ActivatedRoute,
     router: Router
   ) {
-    super(filterInput, Object.values(ElementPageItemType), route, router);
+    super(filterInput, ['common', 'fresh', 'missing'], route, router);
     this._subAllItems = elementPageService.items$.subscribe((v) => {
       this.initCollections(v);
     });

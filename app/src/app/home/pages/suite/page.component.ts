@@ -26,20 +26,11 @@ import { PageComponent, PageTab } from '@/home/components';
 import { AlertType } from '@/shared/components/alert.component';
 
 import { SuitePageItem } from './suite.model';
-import {
-  SuiteBannerType,
-  SuitePageService,
-  SuitePageTabType
-} from './suite.service';
+import { SuitePageService, SuitePageTabType } from './suite.service';
 
 type NotFound = Partial<{
   teamSlug: string;
   suiteSlug: string;
-}>;
-
-type Fields = Partial<{
-  apiKey: ApiKey;
-  apiUrl: string;
 }>;
 
 @Component({
@@ -51,36 +42,36 @@ export class SuitePageComponent
   extends PageComponent<SuitePageItem, NotFound>
   implements OnInit, OnDestroy
 {
-  team: TeamItem;
-  suites: SuiteItem[];
-  suite: SuiteLookupResponse;
-  fields: Fields = {};
-  levels: { icon: string; type: ENotificationType; text: string }[] = [
-    {
-      icon: 'feather-rss',
-      type: 'all',
-      text: 'Get notified of all new versions.'
-    },
-    {
-      icon: 'feather-alert-circle',
-      type: 'different',
-      text: 'Get notified of versions with differences.'
-    },
-    {
-      icon: 'feather-bell-off',
-      type: 'none',
-      text: 'Stop all notifications about this suite.'
-    }
-  ];
+  data: Partial<{
+    apiKey: ApiKey;
+    apiUrl: string;
+    levels: Array<{ icon: string; type: ENotificationType; text: string }>;
+    suite: SuiteLookupResponse;
+    suites: Array<SuiteItem>;
+    tab: SuitePageTabType;
+    tabs: Array<PageTab<SuitePageTabType>>;
+    team: TeamItem;
+  }> = {
+    levels: [
+      {
+        icon: 'feather-rss',
+        type: 'all',
+        text: 'Get notified of all new versions.'
+      },
+      {
+        icon: 'feather-alert-circle',
+        type: 'different',
+        text: 'Get notified of versions with differences.'
+      },
+      {
+        icon: 'feather-bell-off',
+        type: 'none',
+        text: 'Stop all notifications about this suite.'
+      }
+    ]
+  };
 
-  tabs: PageTab<SuitePageTabType>[];
-  currentTab: SuitePageTabType;
-  TabType = SuitePageTabType;
-
-  banner: SuiteBannerType;
-  BannerType = SuiteBannerType;
-
-  private _sub: Record<
+  private subscriptions: Record<
     | 'alert'
     | 'banner'
     | 'event'
@@ -104,7 +95,7 @@ export class SuitePageComponent
     userService: UserService
   ) {
     super(suitePageService);
-    this._sub = {
+    this.subscriptions = {
       alert: alertService.alerts$.subscribe((v) => {
         if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
           this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
@@ -113,9 +104,8 @@ export class SuitePageComponent
           this._notFound.suiteSlug = this.route.snapshot.paramMap.get('suite');
         }
       }),
-      banner: suitePageService.banner$.subscribe((v) => {
-        this.banner = v;
-        if (this.banner === this.BannerType.SuiteNotFound) {
+      banner: suitePageService.data.banner$.subscribe((v) => {
+        if (v === 'suite-not-found') {
           this._notFound.teamSlug = route.snapshot.paramMap.get('team');
           this._notFound.suiteSlug = route.snapshot.paramMap.get('suite');
         }
@@ -123,38 +113,36 @@ export class SuitePageComponent
       event: eventService.event$
         .pipe(debounceTime(250))
         .subscribe((v) => this.suitePageService.consumeEvent(v)),
-      tab: suitePageService.data.tab$.subscribe((v) => (this.currentTab = v)),
+      suite: suitePageService.data.suite$.subscribe((v) => {
+        this.data.suite = v;
+        this.data.apiUrl = [getBackendUrl(), '@', v.teamSlug, v.suiteSlug].join(
+          '/'
+        );
+        this.updateTitle(v);
+      }),
+      suites: suitePageService.data.suites$.subscribe((v) => {
+        this.data.suites = v;
+      }),
+      tab: suitePageService.data.tab$.subscribe((v) => (this.data.tab = v)),
       tabs: suitePageService.data.tabs$.subscribe((v) => {
-        this.tabs = v;
+        this.data.tabs = v;
         const queryMap = this.route.snapshot.queryParamMap;
         const getQuery = (key: string) =>
           queryMap.has(key) ? queryMap.get(key) : null;
-        const tab = this.tabs.find((v) => v.link === getQuery('t')) || v[0];
+        const tab =
+          this.data.tabs.find((v) => v.link === getQuery('t')) || v[0];
         this.suitePageService.updateCurrentTab(tab.type);
       }),
       team: suitePageService.data.team$.subscribe((v) => {
-        this.team = v;
-      }),
-      suites: suitePageService.data.suites$.subscribe((v) => {
-        this.suites = v;
-      }),
-      suite: suitePageService.data.suite$.subscribe((v) => {
-        this.suite = v;
-        this.fields.apiUrl = [
-          getBackendUrl(),
-          '@',
-          v.teamSlug,
-          v.suiteSlug
-        ].join('/');
-        this.updateTitle(v);
+        this.data.team = v;
       }),
       user: userService.currentUser$.subscribe((v) => {
-        this.fields.apiKey = new ApiKey(v.apiKeys[0]);
+        this.data.apiKey = new ApiKey(v.apiKeys[0]);
       })
     };
     const keys = userService.currentUser?.apiKeys;
     if (keys?.length) {
-      this.fields.apiKey = new ApiKey(keys[0]);
+      this.data.apiKey = new ApiKey(keys[0]);
     }
   }
 
@@ -163,7 +151,7 @@ export class SuitePageComponent
   }
 
   ngOnDestroy() {
-    Object.values(this._sub)
+    Object.values(this.subscriptions)
       .filter(Boolean)
       .forEach((v) => v.unsubscribe());
     super.ngOnDestroy();
@@ -197,8 +185,8 @@ export class SuitePageComponent
   }
 
   public switchPage(suiteSlug: string) {
-    if (this.suite.suiteSlug !== suiteSlug) {
-      this.router.navigate(['~', this.suite.teamSlug, suiteSlug]);
+    if (this.data.suite.suiteSlug !== suiteSlug) {
+      this.router.navigate(['~', this.data.suite.teamSlug, suiteSlug]);
       this.suitePageService.updateSuiteSlug(suiteSlug);
     }
   }
@@ -211,7 +199,7 @@ export class SuitePageComponent
   set subscription(type: ENotificationType) {
     this.suitePageService.updateSubscription(type).subscribe({
       next: () => {
-        this.suite.subscription = type;
+        this.data.suite.subscription = type;
       },
       error: (err: HttpErrorResponse) => {
         this.notificationService.notify(

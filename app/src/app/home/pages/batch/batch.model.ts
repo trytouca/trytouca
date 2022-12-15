@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { ParamMap } from '@angular/router';
 import type {
@@ -18,11 +18,7 @@ export type BatchPageOverviewMetadata = BatchCompareOverview & {
   batchSubmittedBy: Userinfo[];
 };
 
-export enum BatchPageItemType {
-  Common = 'common',
-  Missing = 'missing',
-  Fresh = 'fresh'
-}
+type BatchPageItemType = 'common' | 'missing' | 'fresh';
 
 type BatchNextPageQueryParams = {
   cv: string;
@@ -43,11 +39,11 @@ export function nextPageQueryParams(
     v: tryGet('v')
   } as BatchNextPageQueryParams;
   switch (type) {
-    case BatchPageItemType.Fresh:
+    case 'fresh':
       queries.cv = params.srcBatchSlug;
       queries.bcv = qmap.has('cv') ? qmap.get('cv') : params.dstBatchSlug;
       break;
-    case BatchPageItemType.Missing:
+    case 'missing':
       queries.v = params.dstBatchSlug;
       queries.bv = qmap.has('v') ? qmap.get('v') : params.srcBatchSlug;
       break;
@@ -64,14 +60,11 @@ export class BatchPageItem {
 
   public constructor(data: DataType, type: BatchPageItemType) {
     this._type = type;
-    if (type === BatchPageItemType.Common) {
+    if (type === 'common') {
       this._common = data as BatchComparisonItemCommon;
       this.elementName = this._common.src.elementName;
       this.builtAt = new Date(this._common.src.builtAt);
-    } else if (
-      type === BatchPageItemType.Fresh ||
-      type === BatchPageItemType.Missing
-    ) {
+    } else if (type === 'fresh' || type === 'missing') {
       this._solo = data as BatchComparisonItemSolo;
       this.elementName = this._solo.elementName;
       this.builtAt = new Date(this._solo.builtAt);
@@ -91,6 +84,6 @@ export class BatchPageItem {
   }
 
   public isPendingComparison(): boolean {
-    return this._type === BatchPageItemType.Common && !this._common.meta;
+    return this._type === 'common' && !this._common.meta;
   }
 }

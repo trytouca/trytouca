@@ -1,8 +1,7 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, Input } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
   faCheckCircle,
   faChevronCircleDown,
@@ -17,7 +16,7 @@ import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { Metric, MetricChangeType } from '@/home/models/metric.model';
 import { Icon, IconColor, IconType } from '@/home/models/page-item.model';
 
-import { ElementPageItemType, ElementPageMetric } from './element.model';
+import { ElementPageMetric } from './element.model';
 
 interface IMetadata {
   changeType: MetricChangeType;
@@ -31,7 +30,7 @@ interface IMetadata {
 })
 export class ElementItemMetricComponent {
   metric: Metric;
-  category: ElementPageItemType;
+  category: ElementPageMetric['type'];
   MetricChangeType = MetricChangeType;
 
   meta: IMetadata = {

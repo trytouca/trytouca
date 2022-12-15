@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -9,8 +9,8 @@ import type { FrontendElementCompareParams } from '@/core/models/frontendtypes';
 import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
 
-import { ElementPageItemType, ElementPageMetric } from './element.model';
-import { ElementPageService, ElementPageTabType } from './element.service';
+import { ElementPageMetric } from './element.model';
+import { ElementPageService } from './element.service';
 
 const filterInput: FilterInput<ElementPageMetric> = {
   filters: [
@@ -79,8 +79,6 @@ export class ElementListMetricsComponent
 {
   suite: SuiteLookupResponse;
   params: FrontendElementCompareParams;
-  ItemType = ElementPageItemType;
-  TabType = ElementPageTabType;
 
   private _subSuite: Subscription;
   private _subParams: Subscription;
@@ -90,7 +88,7 @@ export class ElementListMetricsComponent
     route: ActivatedRoute,
     router: Router
   ) {
-    super(filterInput, Object.values(ElementPageItemType), route, router);
+    super(filterInput, ['common', 'fresh', 'missing'], route, router);
     this._subAllItems = elementPageService.allMetricKeys$.subscribe((v) => {
       this.initCollections(v);
     });

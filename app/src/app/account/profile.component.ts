@@ -28,24 +28,21 @@ import {
 import { AlertType } from '@/shared/components/alert.component';
 import { Checkbox } from '@/shared/components/checkbox.component';
 
-enum SettingsPageTabType {
-  Profile = 'profile',
-  ApiKeys = 'apiKeys',
-  Preferences = 'preferences',
-  Mail = 'mail',
-  Metrics = 'metrics',
-  Users = 'users',
-  Audit = 'audit',
-  Billing = 'billing',
-  Telemetry = 'telemetry'
-}
-
-interface SettingsPageTab {
-  type: SettingsPageTabType;
+type SettingsPageTab = {
+  type:
+    | 'profile'
+    | 'apiKeys'
+    | 'preferences'
+    | 'mail'
+    | 'metrics'
+    | 'users'
+    | 'audit'
+    | 'billing'
+    | 'telemetry';
   name: string;
   icon: string;
   hidden?: boolean;
-}
+};
 
 @Component({
   selector: 'app-account-profile',
@@ -61,56 +58,55 @@ export class ProfileComponent implements OnDestroy {
 
   tabs: SettingsPageTab[] = [
     {
-      type: SettingsPageTabType.Profile,
+      type: 'profile',
       name: 'Profile',
       icon: 'feather-user'
     },
     {
-      type: SettingsPageTabType.ApiKeys,
+      type: 'apiKeys',
       name: 'Api Keys',
       icon: 'feather-key'
     },
     {
-      type: SettingsPageTabType.Preferences,
+      type: 'preferences',
       name: 'Preferences',
       icon: 'feather-sliders'
     }
   ];
   adminTabs: SettingsPageTab[] = [
     {
-      type: SettingsPageTabType.Metrics,
+      type: 'metrics',
       name: 'Health Metrics',
       icon: 'feather-activity'
     },
     {
-      type: SettingsPageTabType.Users,
+      type: 'users',
       name: 'User Accounts',
       icon: 'feather-users'
     },
     {
-      type: SettingsPageTabType.Audit,
+      type: 'audit',
       name: 'Audit Logs',
       icon: 'feather-file-text'
     },
     {
-      type: SettingsPageTabType.Mail,
+      type: 'mail',
       name: 'Mail Transport',
       icon: 'feather-mail'
     },
     {
-      type: SettingsPageTabType.Billing,
+      type: 'billing',
       name: 'Billing',
       icon: 'feather-credit-card',
       hidden: true
     },
     {
-      type: SettingsPageTabType.Telemetry,
+      type: 'telemetry',
       name: 'Telemetry',
       icon: 'feather-upload-cloud'
     }
   ];
   currentTab = this.tabs[0];
-  TabType = SettingsPageTabType;
 
   _preferences: Record<EFeatureFlag, Checkbox & { slug: EFeatureFlag }> = {
     newsletter_product: {

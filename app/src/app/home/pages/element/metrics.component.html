@@ -5,7 +5,7 @@
       [params]="filterParams()"
       [stats]="filterStats()"
       (updateList)="updateList($event)"></app-home-list-filter>
-    <div *ngIf="countShownRows(ItemType.Common)">
+    <div *ngIf="countShownRows('common')">
       <div class="wsl-list-head">
         <h3>Common Metrics</h3>
         <p>
@@ -16,24 +16,20 @@
             suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : ''
           }}
         </p>
-        <p
-          *ngIf="
-            countShownRows(ItemType.Common) !== countRows(ItemType.Common)
-          ">
+        <p *ngIf="countShownRows('common') !== countRows('common')">
           You are viewing
           <b>
             {{
-              countShownRows(ItemType.Common)
-                | i18nPlural: { '=1': 'one', other: '#' }
+              countShownRows('common') | i18nPlural: { '=1': 'one', other: '#' }
             }}
           </b>
-          of {{ countRows(ItemType.Common) }} common metrics.
+          of {{ countRows('common') }} common metrics.
         </p>
       </div>
       <ul class="wsl-list-body">
         <li
           class="wsl-list-item-outer"
-          *ngFor="let item of getShownRows(ItemType.Common); let i = index"
+          *ngFor="let item of getShownRows('common'); let i = index"
           (click)="selectedRow = i"
           [ngClass]="
             selectedRow === i
@@ -46,7 +42,7 @@
         </li>
       </ul>
     </div>
-    <div *ngIf="countShownRows(ItemType.Fresh)">
+    <div *ngIf="countShownRows('fresh')">
       <div class="wsl-list-head">
         <h3>New Metrics</h3>
         <p>
@@ -57,24 +53,23 @@
             suite.baseline.batchSlug === params.dstBatchSlug ? '(baseline)' : ''
           }}
         </p>
-        <p *ngIf="countShownRows(ItemType.Fresh) !== countRows(ItemType.Fresh)">
+        <p *ngIf="countShownRows('fresh') !== countRows('fresh')">
           You are viewing
           <b>
             {{
-              countShownRows(ItemType.Fresh)
-                | i18nPlural: { '=1': 'one', other: '#' }
+              countShownRows('fresh') | i18nPlural: { '=1': 'one', other: '#' }
             }}
           </b>
-          of {{ countRows(ItemType.Fresh) }} new metrics.
+          of {{ countRows('fresh') }} new metrics.
         </p>
       </div>
       <ul class="wsl-list-body">
         <li
           class="wsl-list-item-outer"
-          *ngFor="let item of getShownRows(ItemType.Fresh); let i = index"
-          (click)="selectedRow = i + countShownRows(ItemType.Common)"
+          *ngFor="let item of getShownRows('fresh'); let i = index"
+          (click)="selectedRow = i + countShownRows('common')"
           [ngClass]="
-            selectedRow === i + countShownRows(ItemType.Common)
+            selectedRow === i + countShownRows('common')
               ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">
@@ -84,7 +79,7 @@
         </li>
       </ul>
     </div>
-    <div *ngIf="countShownRows(ItemType.Missing)">
+    <div *ngIf="countShownRows('missing')">
       <div class="wsl-list-head">
         <h3>Missing Metrics</h3>
         <p>
@@ -96,33 +91,27 @@
           but are not submitted in version {{ params.srcBatchName }}
           {{ suite.latest.batchSlug === params.srcBatchSlug ? '(latest)' : '' }}
         </p>
-        <p
-          *ngIf="
-            countShownRows(ItemType.Missing) !== countRows(ItemType.Missing)
-          ">
+        <p *ngIf="countShownRows('missing') !== countRows('missing')">
           You are viewing
           <b>
             {{
-              countShownRows(ItemType.Missing)
+              countShownRows('missing')
                 | i18nPlural: { '=1': 'one', other: '#' }
             }}
           </b>
-          of {{ countRows(ItemType.Missing) }} missing metrics.
+          of {{ countRows('missing') }} missing metrics.
         </p>
       </div>
       <ul class="wsl-list-body">
         <li
           class="wsl-list-item-outer"
-          *ngFor="let item of getShownRows(ItemType.Missing); let i = index"
+          *ngFor="let item of getShownRows('missing'); let i = index"
           (click)="
-            selectedRow =
-              i +
-              countShownRows(ItemType.Common) +
-              countShownRows(ItemType.Fresh)
+            selectedRow = i + countShownRows('common') + countShownRows('fresh')
           "
           [ngClass]="
             selectedRow ===
-            i + countShownRows(ItemType.Common) + countShownRows(ItemType.Fresh)
+            i + countShownRows('common') + countShownRows('fresh')
               ? 'border-l-sky-200 dark:border-l-sky-700'
               : 'border-l-transparent'
           ">

@@ -22,25 +22,17 @@ import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
 
-import {
-  TeamPageMember,
-  TeamPageMemberType,
-  TeamPageSuite,
-  TeamPageSuiteType
-} from './team.model';
+import { TeamPageMember, TeamPageSuite } from './team.model';
 
-export enum TeamPageTabType {
-  Suites = 'suites',
-  Members = 'members',
-  Settings = 'settings',
-  Invitations = 'invitations',
-  Requests = 'requests',
-  FirstTeam = 'firstTeam'
-}
+export type TeamPageTabType =
+  | 'suites'
+  | 'members'
+  | 'settings'
+  | 'invitations'
+  | 'requests'
+  | 'firstTeam';
 
-export enum TeamBannerType {
-  TeamNotFound = 'not-found'
-}
+export type TeamBannerType = 'team-not-found';
 
 type FetchInput = {
   teamSlug: string;
@@ -51,84 +43,32 @@ export type RefinedTeamList = Record<
   TeamItem[]
 >;
 
-const availableTabs: Record<TeamPageTabType, PageTab<TeamPageTabType>> = {
-  [TeamPageTabType.Suites]: {
-    type: TeamPageTabType.Suites,
-    name: 'Suites',
-    link: 'suites',
-    icon: 'feather-list',
-    shown: true
-  },
-  [TeamPageTabType.Members]: {
-    type: TeamPageTabType.Members,
-    name: 'Members',
-    link: 'members',
-    icon: 'feather-users',
-    shown: true
-  },
-  [TeamPageTabType.Settings]: {
-    type: TeamPageTabType.Settings,
-    name: 'Settings',
-    link: 'settings',
-    icon: 'feather-settings',
-    shown: true
-  },
-  [TeamPageTabType.FirstTeam]: {
-    type: TeamPageTabType.FirstTeam,
-    name: 'New Team',
-    link: 'first-team',
-    icon: 'feather-plus-circle',
-    shown: true
-  },
-  [TeamPageTabType.Invitations]: {
-    type: TeamPageTabType.Invitations,
-    name: 'Invitations',
-    link: 'invitations',
-    icon: 'feather-gift',
-    shown: true
-  },
-  [TeamPageTabType.Requests]: {
-    type: TeamPageTabType.Requests,
-    name: 'Requests',
-    link: 'requests',
-    icon: 'feather-send',
-    shown: true
-  }
-};
-
 @Injectable()
 export class TeamPageService extends IPageService<TeamPageSuite> {
-  private _bannerSubject = new Subject<TeamBannerType>();
-  banner$ = this._bannerSubject.asObservable();
-
-  private _cache: {
+  private cache: Partial<{
+    members: Array<TeamPageMember>;
     tab: TeamPageTabType;
-    tabs: PageTab<TeamPageTabType>[];
-    teams: RefinedTeamList;
+    tabs: Array<TeamPageTabType>;
     team: TeamLookupResponse;
-    members: TeamPageMember[];
-  } = {
-    tab: TeamPageTabType.Suites,
-    tabs: undefined,
-    teams: undefined,
-    team: undefined,
-    members: undefined
-  };
+    teams: RefinedTeamList;
+  }> = { tab: 'suites' };
 
-  private _subjects = {
-    tab: new Subject<PageTab<TeamPageTabType>>(),
-    tabs: new Subject<PageTab<TeamPageTabType>[]>(),
-    teams: new Subject<RefinedTeamList>(),
+  private subjects = {
+    banner: new Subject<TeamBannerType>(),
+    members: new Subject<Array<TeamPageMember>>(),
+    tab: new Subject<TeamPageTabType>(),
+    tabs: new Subject<Array<TeamPageTabType>>(),
     team: new Subject<TeamLookupResponse>(),
-    members: new Subject<TeamPageMember[]>()
+    teams: new Subject<RefinedTeamList>()
   };
 
   data = {
-    tab$: this._subjects.tab.asObservable(),
-    tabs$: this._subjects.tabs.asObservable(),
-    teams$: this._subjects.teams.asObservable(),
-    team$: this._subjects.team.asObservable(),
-    members$: this._subjects.members.asObservable()
+    banner$: this.subjects.banner.asObservable(),
+    members$: this.subjects.members.asObservable(),
+    tab$: this.subjects.tab.asObservable(),
+    tabs$: this.subjects.tabs.asObservable(),
+    team$: this.subjects.team.asObservable(),
+    teams$: this.subjects.teams.asObservable()
   };
 
   constructor(
@@ -140,17 +80,17 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
 
   consumeEvent(job: ServerEventJob) {
     if (
-      this._cache.tab === 'suites' &&
+      this.cache.tab === 'suites' &&
       ['suite:created', 'suite:updated'].includes(job.type)
     ) {
-      this.fetchItems({ teamSlug: this._cache.team.slug });
+      this.fetchItems({ teamSlug: this.cache.team.slug });
     }
   }
 
   private update(key: string, response: unknown) {
-    if (response && !isEqual(response, this._cache[key])) {
-      this._cache[key] = response;
-      (this._subjects[key] as Subject<unknown>).next(response);
+    if (response && !isEqual(response, this.cache[key])) {
+      this.cache[key] = response;
+      (this.subjects[key] as Subject<unknown>).next(response);
     }
   }
 
@@ -169,31 +109,27 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   }
 
   private prepareTabs() {
-    const activeTabs: PageTab<TeamPageTabType>[] = [];
-    if (this._cache.teams.active.length) {
-      activeTabs.push(
-        availableTabs.suites,
-        availableTabs.members,
-        availableTabs.settings
-      );
+    const tabs: Array<TeamPageTabType> = [];
+    if (this.cache.teams.active.length) {
+      tabs.push('suites', 'members', 'settings');
     } else {
-      activeTabs.push(availableTabs.firstTeam);
+      tabs.push('firstTeam');
     }
-    if (this._cache.teams.invitations.length) {
-      activeTabs.push(availableTabs.invitations);
+    if (this.cache.teams.invitations.length) {
+      tabs.push('invitations');
     }
-    if (this._cache.teams.requests.length) {
-      activeTabs.push(availableTabs.requests);
+    if (this.cache.teams.requests.length) {
+      tabs.push('requests');
     }
-    this.update('tabs', activeTabs);
+    this.update('tabs', tabs);
   }
 
   private prepareTeam(doc: TeamLookupResponse) {
-    if (!doc || isEqual(doc, this._cache.team)) {
+    if (!doc || isEqual(doc, this.cache.team)) {
       return;
     }
-    this._cache.team = doc;
-    this._subjects.team.next(doc);
+    this.cache.team = doc;
+    this.subjects.team.next(doc);
     try {
       localStorage.setItem(ELocalStorageKey.LastVisitedTeam, doc.slug);
     } catch (err) {
@@ -215,7 +151,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
         batches.push(suite.latest.batchSlug);
       }
       suite.batches = batches;
-      return new TeamPageSuite(suite, TeamPageSuiteType.Suite);
+      return new TeamPageSuite(suite, 'suite');
     });
     if (suites && !isEqual(suites, this._items)) {
       this._items = suites;
@@ -227,17 +163,11 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     if (!doc) {
       return;
     }
-    const applicants = doc.applicants.map(
-      (v) => new TeamPageMember(v, TeamPageMemberType.Applicant)
-    );
-    const invitees = doc.invitees.map(
-      (v) => new TeamPageMember(v, TeamPageMemberType.Invitee)
-    );
-    const members = doc.members.map(
-      (v) => new TeamPageMember(v, TeamPageMemberType.Member)
-    );
-    const items = [...applicants, ...invitees, ...members];
-    this.update('members', items);
+    this.update('members', [
+      ...doc.applicants.map((v) => new TeamPageMember(v, 'applicant')),
+      ...doc.invitees.map((v) => new TeamPageMember(v, 'invitee')),
+      ...doc.members.map((v) => new TeamPageMember(v, 'member'))
+    ]);
   }
 
   public fetchItems(args: FetchInput): void {
@@ -249,7 +179,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     };
     const elements = Object.keys(url).filter((v) => Boolean(url[v]));
     const requests = elements.map((key) => {
-      return this._cache[key]
+      return this.cache[key]
         ? of(0)
         : this.apiService.get<unknown>((url[key] as string[]).join('/'));
     });
@@ -284,9 +214,9 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     });
   }
 
-  public updateCurrentTab(tab: PageTab<TeamPageTabType>) {
-    this._cache.tab = tab.type;
-    this._subjects.tab.next(tab);
+  public updateCurrentTab(tab: TeamPageTabType) {
+    this.cache.tab = tab;
+    this.subjects.tab.next(tab);
   }
 
   /**
@@ -298,8 +228,8 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
    *  - User updates slug of this team
    */
   public updateTeamSlug(teamSlug: string): void {
-    this._cache.team = null;
-    this._cache.members = null;
+    this.cache.team = null;
+    this.cache.members = null;
     this._items = null;
     this.fetchItems({ teamSlug });
   }
@@ -309,47 +239,41 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
    */
   public refreshSuites() {
     this._items = null;
-    this.fetchItems({ teamSlug: this._cache.team.slug });
+    this.fetchItems({ teamSlug: this.cache.team.slug });
   }
 
   public refreshMembers(): void {
-    this._cache.members = null;
-    this.fetchItems({ teamSlug: this._cache.team.slug });
+    this.cache.members = null;
+    this.fetchItems({ teamSlug: this.cache.team.slug });
   }
 
   public refreshTeams(nextTeam?: string) {
-    const teamSlug = nextTeam ?? this._cache.team?.slug;
-    this._cache.teams = null;
-    this._cache.team = null;
-    this._cache.members = null;
+    const teamSlug = nextTeam ?? this.cache.team?.slug;
+    this.cache.teams = null;
+    this.cache.team = null;
+    this.cache.members = null;
     this._items = null;
     this.fetchItems({ teamSlug });
   }
 
   public removeInvitee(invitee: TeamInvitee): void {
-    const index = this._cache.members.findIndex((v) => {
-      return (
-        v.type === TeamPageMemberType.Invitee &&
-        v.asInvitee().email === invitee.email
-      );
+    const index = this.cache.members.findIndex((v) => {
+      return v.type === 'invitee' && v.asInvitee().email === invitee.email;
     });
-    this._cache.members.splice(index, 1);
-    this._subjects.members.next(this._cache.members);
+    this.cache.members.splice(index, 1);
+    this.subjects.members.next(this.cache.members);
   }
 
   public removeMember(member: TeamMember): void {
-    const index = this._cache.members.findIndex((v) => {
-      return (
-        v.type === TeamPageMemberType.Member &&
-        v.asMember().username === member.username
-      );
+    const index = this.cache.members.findIndex((v) => {
+      return v.type === 'member' && v.asMember().username === member.username;
     });
-    this._cache.members.splice(index, 1);
-    this._subjects.members.next(this._cache.members);
+    this.cache.members.splice(index, 1);
+    this.subjects.members.next(this.cache.members);
   }
 
   public submitSampleData() {
-    const team = this._cache.team?.slug;
+    const team = this.cache.team?.slug;
     return this.apiService.post(`/team/${team}/populate`);
   }
 }

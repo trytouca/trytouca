@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { I18nPluralPipe, PercentPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
@@ -27,11 +27,7 @@ import {
 } from '@/home/models/page-item.model';
 import { DateAgoPipe, DateTimePipe } from '@/shared/pipes';
 
-import {
-  BatchPageItem,
-  BatchPageItemType,
-  nextPageQueryParams
-} from './batch.model';
+import { BatchPageItem, nextPageQueryParams } from './batch.model';
 
 type Metadata = Partial<{
   // Time since results for this test case were submitted
@@ -82,7 +78,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
     private dateAgoPipe: DateAgoPipe,
     private dateTimePipe: DateTimePipe,
     private percentPipe: PercentPipe,
-    private faIconLibrary: FaIconLibrary
+    faIconLibrary: FaIconLibrary
   ) {
     super();
     faIconLibrary.addIcons(
@@ -99,7 +95,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
     this._meta.builtAt = this._item.builtAt;
     let metric: Metric;
     switch (this._item.type) {
-      case BatchPageItemType.Fresh: {
+      case 'fresh': {
         const fresh = this._item.asSolo();
         if (fresh.meta) {
           this._meta.keysCount = fresh.meta.keysCount;
@@ -107,7 +103,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
         }
         break;
       }
-      case BatchPageItemType.Missing: {
+      case 'missing': {
         const missing = this._item.asSolo();
         if (missing.meta) {
           this._meta.keysCount = missing.meta.keysCount;
@@ -115,7 +111,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
         }
         break;
       }
-      case BatchPageItemType.Common: {
+      case 'common': {
         const common = this._item.asCommon();
         if (common.meta) {
           this._meta.keysCount =
@@ -137,8 +133,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
     }
     this._meta.isCreatedRecently = this.isCreatedRecently();
     this._meta.isPendingComparison =
-      this._item.type === BatchPageItemType.Common &&
-      this._item.isPendingComparison();
+      this._item.type === 'common' && this._item.isPendingComparison();
     this.data = this.initData();
     this.icon = this.initIcon();
     this.topics = this.initTopics();
@@ -179,7 +174,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
    */
   private initIcon(): Icon {
     // if test case is fresh (did not exist in baseline)
-    if (this._item.type === BatchPageItemType.Fresh) {
+    if (this._item.type === 'fresh') {
       return {
         color: IconColor.Green,
         type: IconType.PlusCircle,
@@ -188,7 +183,7 @@ export class BatchItemElementComponent extends PillContainerComponent {
     }
 
     // if test case is missing (did not exist in this batch)
-    if (this._item.type === BatchPageItemType.Missing) {
+    if (this._item.type === 'missing') {
       return {
         color: IconColor.Red,
         type: IconType.MinusCircle,

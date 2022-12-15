@@ -9,7 +9,6 @@ import {
   notifySubscribers
 } from '../../models/index.js'
 import { CommentModel, ICommentDocument, IUser } from '../../schemas/index.js'
-import { ECommentType } from '../../types/index.js'
 import { analytics, config, logger, redisClient } from '../../utils/index.js'
 
 export async function ctrlCommentReply(
@@ -34,11 +33,11 @@ export async function ctrlCommentReply(
 
   const newComment = await CommentModel.create({
     at: new Date(),
-    batchId: type === ECommentType.Batch ? locals.batch._id : undefined,
+    batchId: type === 'batch' ? locals.batch._id : undefined,
     by: user._id,
-    elementId: type === ECommentType.Element ? locals.element._id : undefined,
+    elementId: type === 'element' ? locals.element._id : undefined,
     parentId: comment._id,
-    suiteId: type === ECommentType.Suite ? locals.suite._id : undefined,
+    suiteId: type === 'suite' ? locals.suite._id : undefined,
     text,
     type
   })
@@ -52,7 +51,7 @@ export async function ctrlCommentReply(
   // notify all subscribers of this suite of the new comment.
 
   // @todo remove this branch when expanding support to suites and elements.
-  if (newComment.type !== ECommentType.Batch) {
+  if (newComment.type !== 'batch') {
     return res.status(204).send()
   }
 

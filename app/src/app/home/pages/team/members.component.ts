@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,7 +19,7 @@ import { FilterInput } from '@/home/models/filter.model';
 import { AlertType } from '@/shared/components/alert.component';
 
 import { TeamInviteComponent } from './invite.component';
-import { TeamPageMember, TeamPageMemberType } from './team.model';
+import { TeamPageMember } from './team.model';
 import { TeamPageService } from './team.service';
 
 const filterInput: FilterInput<TeamPageMember> = {
@@ -65,7 +65,6 @@ export class TeamTabMembersComponent
   extends PageListComponent<TeamPageMember>
   implements OnDestroy
 {
-  ItemType = TeamPageMemberType;
   isTeamAdmin = false;
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
@@ -81,7 +80,7 @@ export class TeamTabMembersComponent
     route: ActivatedRoute,
     router: Router
   ) {
-    super(filterInput, Object.values(TeamPageMemberType), route, router);
+    super(filterInput, ['applicant', 'invitee', 'member'], route, router);
     this._subTeam = teamPageService.data.team$.subscribe((v) => {
       this._team = v;
       this.isTeamAdmin = this.userService.isTeamAdmin(v.role);

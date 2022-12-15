@@ -7,7 +7,7 @@ import { PageListComponent } from '@/home/components/page-list.component';
 import { FilterInput } from '@/home/models/filter.model';
 import { TopicType } from '@/home/models/page-item.model';
 
-import { SuitePageItem, SuitePageItemType } from './suite.model';
+import { SuitePageItem } from './suite.model';
 import { SuitePageService } from './suite.service';
 
 const filterInput: FilterInput<SuitePageItem> = {
@@ -22,8 +22,7 @@ const filterInput: FilterInput<SuitePageItem> = {
       name: 'Different',
       func: (a) => {
         return (
-          a.type === SuitePageItemType.Batch &&
-          a.asBatch().meta.elementsScoreAggregate !== 1
+          a.type === 'batch' && a.asBatch().meta.elementsScoreAggregate !== 1
         );
       }
     }
@@ -63,7 +62,6 @@ export class SuiteListBatchesComponent
   extends PageListComponent<SuitePageItem>
   implements OnDestroy
 {
-  ItemType = SuitePageItemType;
   chosenTopic: TopicType;
 
   constructor(
@@ -71,7 +69,7 @@ export class SuiteListBatchesComponent
     route: ActivatedRoute,
     router: Router
   ) {
-    super(filterInput, Object.values(SuitePageItemType), route, router);
+    super(filterInput, ['batch'], route, router);
     this._subAllItems = suitePageService.items$.subscribe((v) => {
       this.initCollections(v);
     });
@@ -96,7 +94,7 @@ export class SuiteListBatchesComponent
     // pressing 'enter' when an item is selected should route to the next page
     if ('Enter' === event.key && row !== -1) {
       const item = this._items[row];
-      if (item.type === SuitePageItemType.Batch) {
+      if (item.type === 'batch') {
         const batch = item.asBatch();
         this.router.navigate([batch.batchSlug], {
           relativeTo: this.route,

@@ -4,7 +4,6 @@ import { insertEvent } from '../queues/index.js'
 import {
   BatchModel,
   CommentModel,
-  EReportType,
   IBatchDocument,
   ISuiteDocument,
   ITeam,
@@ -133,7 +132,7 @@ export async function batchPromote(
   await ReportModel.create({
     srcBatchId,
     dstBatchId,
-    reportType: EReportType.Promote
+    reportType: 'promote'
   })
   logger.info('%s: created reporting job against latest', tuple)
 }
@@ -192,7 +191,7 @@ export async function batchSeal(
   await ReportModel.create({
     srcBatchId,
     dstBatchId,
-    reportType: EReportType.Seal
+    reportType: 'seal'
   })
   logger.debug('%s: created reporting job against baseline', tuple)
 }

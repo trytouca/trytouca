@@ -13,7 +13,7 @@ import { PageListComponent } from '@/home/components';
 import { FilterInput } from '@/home/models/filter.model';
 import { AlertType } from '@/shared/components/alert.component';
 
-import { SuitePageElement, SuitePageElementType } from './suite.model';
+import { SuitePageElement } from './suite.model';
 import { SuitePageService } from './suite.service';
 
 const filterInput: FilterInput<SuitePageElement> = {
@@ -65,7 +65,6 @@ export class SuiteTabCasesComponent
   implements OnDestroy
 {
   suite: SuiteLookupResponse;
-  ItemType = SuitePageElementType;
 
   private _subSuite: Subscription;
 
@@ -76,7 +75,7 @@ export class SuiteTabCasesComponent
     route: ActivatedRoute,
     router: Router
   ) {
-    super(filterInput, Object.values(SuitePageElementType), route, router);
+    super(filterInput, ['element'], route, router);
     this._subAllItems = suitePageService.data.elements$.subscribe((v) => {
       this.initCollections(v);
     });

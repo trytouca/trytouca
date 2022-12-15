@@ -3,7 +3,6 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { CommentModel, IBatchDocument } from '../schemas/index.js'
-import { ECommentType } from '../types/index.js'
 
 /**
  * @summary
@@ -41,8 +40,7 @@ export async function hasComment(
   // to comments on all pages.
 
   const batch = res.locals.batch as IBatchDocument
-  const isOwned =
-    comment.type === ECommentType.Batch && comment.batchId.equals(batch._id)
+  const isOwned = comment.type === 'batch' && comment.batchId.equals(batch._id)
   if (!isOwned) {
     return next({
       errors: ['comment not found'],

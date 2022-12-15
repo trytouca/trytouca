@@ -7,7 +7,6 @@ import { compareBatch } from '../models/index.js'
 import {
   BatchModel,
   ComparisonModel,
-  EReportType,
   IReportDocument,
   IUser,
   ReportModel,
@@ -395,10 +394,10 @@ async function processReportJob(job: IReportDocument) {
   // send report to all subscribers of this suite
 
   switch (job.reportType) {
-    case EReportType.Promote:
+    case 'promote':
       await reportPromotion(dstInfo, srcInfo, compareInputs)
       break
-    case EReportType.Seal:
+    case 'seal':
       await reportSealed(dstInfo, srcInfo, compareInputs)
       break
     default:
