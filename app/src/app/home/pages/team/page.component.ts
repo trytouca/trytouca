@@ -33,6 +33,51 @@ type NotFound = Partial<{
   teamSlug: string;
 }>;
 
+const allTabs: Array<PageTab<TeamPageTabType>> = [
+  {
+    type: 'suites',
+    name: 'Suites',
+    link: 'suites',
+    icon: 'feather-list',
+    shown: true
+  },
+  {
+    type: 'members',
+    name: 'Members',
+    link: 'members',
+    icon: 'feather-users',
+    shown: true
+  },
+  {
+    type: 'settings',
+    name: 'Settings',
+    link: 'settings',
+    icon: 'feather-settings',
+    shown: true
+  },
+  {
+    type: 'firstTeam',
+    name: 'New Team',
+    link: 'first-team',
+    icon: 'feather-plus-circle',
+    shown: true
+  },
+  {
+    type: 'invitations',
+    name: 'Invitations',
+    link: 'invitations',
+    icon: 'feather-gift',
+    shown: true
+  },
+  {
+    type: 'requests',
+    name: 'Requests',
+    link: 'requests',
+    icon: 'feather-send',
+    shown: true
+  }
+];
+
 @Component({
   selector: 'app-team-page',
   templateUrl: './page.component.html',
@@ -44,13 +89,15 @@ export class TeamPageComponent
 {
   data: Partial<{
     banner: TeamBannerType;
-    tab: TeamPageTabType;
+    tab: PageTab<TeamPageTabType>;
     tabs: Array<PageTab<TeamPageTabType>>;
     team: TeamItem;
     teams: RefinedTeamList;
-  }> = {};
+  }> = {
+    tabs: []
+  };
 
-  private subjects: Record<
+  private subscriptions: Record<
     'alert' | 'banner' | 'dialog' | 'event' | 'tab' | 'tabs' | 'teams' | 'team',
     Subscription
   >;
@@ -65,7 +112,7 @@ export class TeamPageComponent
     eventService: EventService
   ) {
     super(teamPageService);
-    this.subjects = {
+    this.subscriptions = {
       alert: alertService.alerts$.subscribe((v) => {
         if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
           this.data.banner = 'team-not-found';
@@ -83,13 +130,17 @@ export class TeamPageComponent
       event: eventService.event$
         .pipe(debounceTime(250))
         .subscribe((v) => this.teamPageService.consumeEvent(v)),
-      tab: teamPageService.data.tab$.subscribe((v) => (this.data.tab = v)),
-      tabs: teamPageService.data.tabs$.subscribe((v) => {
-        this.data.tabs = v;
+      tab: teamPageService.data.tab$.subscribe(
+        (v) => (this.data.tab = allTabs.find((t) => t.shown && t.type === v))
+      ),
+      tabs: teamPageService.data.tabs$.subscribe((tabs) => {
+        this.data.tabs = allTabs.filter((v) => tabs.includes(v.type));
         const queryMap = this.route.snapshot.queryParamMap;
         const getQuery = (key: string) =>
           queryMap.has(key) ? queryMap.get(key) : null;
-        const tab = v.find((t) => t.link === getQuery('t')) || v[0];
+        const tab =
+          this.data.tabs.find((t) => t.link === getQuery('t')) ||
+          this.data.tabs[0];
         this.teamPageService.updateCurrentTab(tab.type);
       }),
       teams: teamPageService.data.teams$.subscribe((v) => {
@@ -112,7 +163,7 @@ export class TeamPageComponent
   }
 
   ngOnDestroy() {
-    Object.values(this.subjects)
+    Object.values(this.subscriptions)
       .filter(Boolean)
       .forEach((v) => v.unsubscribe());
     super.ngOnDestroy();
@@ -136,7 +187,7 @@ export class TeamPageComponent
   }
 
   openCreateTeamModel() {
-    this.subjects.dialog = this.dialogService
+    this.subscriptions.dialog = this.dialogService
       .open(TeamCreateTeamComponent, {
         closeButton: false,
         minHeight: '10vh'
@@ -172,7 +223,7 @@ export class TeamPageComponent
   }
 
   private showConfirmation(elements: ConfirmElements, func: () => void) {
-    this.subjects.dialog = this.dialogService
+    this.subscriptions.dialog = this.dialogService
       .open(ConfirmComponent, {
         closeButton: false,
         data: elements,

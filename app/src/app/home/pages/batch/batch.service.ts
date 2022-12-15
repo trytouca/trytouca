@@ -38,7 +38,7 @@ const availableTabs: Record<BatchPageTabType, PageTab<BatchPageTabType>> = {
 
 @Injectable()
 export class BatchPageService extends IPageService<BatchPageItem> {
-  private _cache: Partial<{
+  private cache: Partial<{
     batch: BatchLookupResponse;
     batchCompare: BatchComparisonResponse;
     batches: BatchListResponse;
@@ -51,7 +51,7 @@ export class BatchPageService extends IPageService<BatchPageItem> {
     team: TeamLookupResponse;
   }> = {};
 
-  private _subjects = {
+  private subjects = {
     batch: new Subject<BatchLookupResponse>(),
     batches: new Subject<BatchListResponse>(),
     comments: new Subject<Array<CommentItem>>(),
@@ -64,15 +64,15 @@ export class BatchPageService extends IPageService<BatchPageItem> {
   };
 
   data = {
-    batch$: this._subjects.batch.asObservable(),
-    batches$: this._subjects.batches.asObservable(),
-    comments$: this._subjects.comments.asObservable(),
-    overview$: this._subjects.overview.asObservable(),
-    params$: this._subjects.params.asObservable(),
-    suite$: this._subjects.suite.asObservable(),
-    tab$: this._subjects.tab.asObservable(),
-    tabs$: this._subjects.tabs.asObservable(),
-    team$: this._subjects.team.asObservable()
+    batch$: this.subjects.batch.asObservable(),
+    batches$: this.subjects.batches.asObservable(),
+    comments$: this.subjects.comments.asObservable(),
+    overview$: this.subjects.overview.asObservable(),
+    params$: this.subjects.params.asObservable(),
+    suite$: this.subjects.suite.asObservable(),
+    tab$: this.subjects.tab.asObservable(),
+    tabs$: this.subjects.tabs.asObservable(),
+    team$: this.subjects.team.asObservable()
   };
 
   constructor(
@@ -84,18 +84,18 @@ export class BatchPageService extends IPageService<BatchPageItem> {
 
   consumeEvent(job: ServerEventJob) {
     if (
-      this._cache.tab === 'elements' &&
+      this.cache.tab === 'elements' &&
       ['message:created', 'message:compared', 'batch:sealed'].includes(job.type)
     ) {
-      this._cache.batchCompare = null;
-      this.fetchItems(this._cache.params);
+      this.cache.batchCompare = null;
+      this.fetchItems(this.cache.params);
     }
   }
 
   private update = (key: string, response: unknown) => {
-    if (response && !isEqual(response, this._cache[key])) {
-      this._cache[key] = response;
-      (this._subjects[key] as Subject<unknown>).next(response);
+    if (response && !isEqual(response, this.cache[key])) {
+      this.cache[key] = response;
+      (this.subjects[key] as Subject<unknown>).next(response);
     }
   };
 
@@ -114,11 +114,11 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._cache.team)) {
+        if (isEqual(doc, this.cache.team)) {
           return doc;
         }
-        this._cache.team = doc;
-        this._subjects.team.next(this._cache.team);
+        this.cache.team = doc;
+        this.subjects.team.next(this.cache.team);
         return doc;
       })
     );
@@ -134,11 +134,11 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._cache.suite)) {
+        if (isEqual(doc, this.cache.suite)) {
           return doc;
         }
-        this._cache.suite = doc;
-        this._subjects.suite.next(this._cache.suite);
+        this.cache.suite = doc;
+        this.subjects.suite.next(this.cache.suite);
         return doc;
       })
     );
@@ -154,11 +154,11 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._cache.batches)) {
+        if (isEqual(doc, this.cache.batches)) {
           return doc;
         }
-        this._cache.batches = doc;
-        this._subjects.batches.next(this._cache.batches);
+        this.cache.batches = doc;
+        this.subjects.batches.next(this.cache.batches);
         return doc;
       })
     );
@@ -179,11 +179,11 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._cache.batch)) {
+        if (isEqual(doc, this.cache.batch)) {
           return doc;
         }
-        this._cache.batch = doc;
-        this._subjects.batch.next(this._cache.batch);
+        this.cache.batch = doc;
+        this.subjects.batch.next(this.cache.batch);
         return doc;
       })
     );
@@ -207,10 +207,10 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._cache.batchCompare)) {
+        if (isEqual(doc, this.cache.batchCompare)) {
           return doc;
         }
-        this._cache.batchCompare = doc;
+        this.cache.batchCompare = doc;
         return doc;
       })
     );
@@ -231,11 +231,11 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         if (!doc) {
           return;
         }
-        if (isEqual(doc, this._cache.comments)) {
+        if (isEqual(doc, this.cache.comments)) {
           return doc;
         }
-        this._cache.comments = doc;
-        this._subjects.comments.next(this._cache.comments);
+        this.cache.comments = doc;
+        this.subjects.comments.next(this.cache.comments);
       })
     );
   }
@@ -243,7 +243,7 @@ export class BatchPageService extends IPageService<BatchPageItem> {
   public fetchItems(args: FrontendBatchCompareParams): void {
     this.fetchBatchCompare(args).subscribe({
       next: (doc: BatchComparisonResponse) => {
-        if (!doc || !this._cache.batch) {
+        if (!doc || !this.cache.batch) {
           return;
         }
         const items = [
@@ -254,13 +254,13 @@ export class BatchPageService extends IPageService<BatchPageItem> {
         this._items = items;
         this._itemsSubject.next(items);
 
-        this._cache.overview = {
+        this.cache.overview = {
           ...doc.overview,
-          batchIsSealed: this._cache.batch.isSealed,
-          batchSubmittedAt: this._cache.batch.submittedAt as unknown as Date,
-          batchSubmittedBy: this._cache.batch.submittedBy
+          batchIsSealed: this.cache.batch.isSealed,
+          batchSubmittedAt: this.cache.batch.submittedAt as unknown as Date,
+          batchSubmittedBy: this.cache.batch.submittedBy
         };
-        this._subjects.overview.next(this._cache.overview);
+        this.subjects.overview.next(this.cache.overview);
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 0) {
@@ -281,26 +281,26 @@ export class BatchPageService extends IPageService<BatchPageItem> {
   }
 
   public updateCurrentTab(tab: BatchPageTabType) {
-    this._cache.tab = tab;
-    this._subjects.tab.next(tab);
+    this.cache.tab = tab;
+    this.subjects.tab.next(tab);
   }
 
   public updateRequestParams(params: FrontendBatchCompareParams) {
     const onetime: Observable<unknown>[] = [of(0)];
 
-    if (!this._cache.team) {
+    if (!this.cache.team) {
       onetime.push(this.fetchTeam(params));
     }
-    if (!this._cache.suite) {
+    if (!this.cache.suite) {
       onetime.push(this.fetchSuite(params));
     }
-    if (!this._cache.batches) {
+    if (!this.cache.batches) {
       onetime.push(this.fetchBatches(params));
     }
-    if (!this._cache.batch) {
+    if (!this.cache.batch) {
       onetime.push(this.fetchBatch(params));
     }
-    if (!this._cache.comments) {
+    if (!this.cache.comments) {
       onetime.push(this.fetchComments(params));
     }
 
@@ -318,11 +318,11 @@ export class BatchPageService extends IPageService<BatchPageItem> {
           params.dstSuiteSlug = params.srcSuiteSlug;
         }
         if (!params.dstBatchSlug) {
-          params.dstBatchSlug = this._cache.batch.comparedAgainst;
+          params.dstBatchSlug = this.cache.batch.comparedAgainst;
         }
-        if (!isEqual(params, this._cache.params)) {
-          this._cache.params = params;
-          this._subjects.params.next(this._cache.params);
+        if (!isEqual(params, this.cache.params)) {
+          this.cache.params = params;
+          this.subjects.params.next(this.cache.params);
         }
         if (!this._items || params.currentTab === 'elements') {
           this.fetchItems(params);
@@ -354,29 +354,29 @@ export class BatchPageService extends IPageService<BatchPageItem> {
    *  - User switches to another batch
    */
   public updateBatchSlug(batchSlug: string): void {
-    const params = this._cache.params;
-    this._cache.batch = null;
-    this._cache.comments = null;
-    this._cache.params = null;
+    const params = this.cache.params;
+    this.cache.batch = null;
+    this.cache.comments = null;
+    this.cache.params = null;
     params.srcBatchSlug = batchSlug;
     this.updateRequestParams(params);
   }
 
   public removeCacheBatch() {
-    this._cache.batch = null;
+    this.cache.batch = null;
   }
 
   public removeCacheSuiteAndBatches() {
-    this._cache.suite = null;
-    this._cache.batches = null;
-    this._cache.batch = null;
+    this.cache.suite = null;
+    this.cache.batches = null;
+    this.cache.batch = null;
   }
 
   public refetchBatch() {
-    this.fetchBatch(this._cache.params).subscribe();
+    this.fetchBatch(this.cache.params).subscribe();
   }
 
   public refetchComments() {
-    this.fetchComments(this._cache.params).subscribe();
+    this.fetchComments(this.cache.params).subscribe();
   }
 }

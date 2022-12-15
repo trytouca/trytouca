@@ -15,7 +15,7 @@
             <ng-container *ngFor="let tab of data.tabs">
               <li
                 class="wsl-page-nav-item"
-                [ngClass]="{ 'wsl-tab-active': tab.type === data.tab }"
+                [ngClass]="{ 'wsl-tab-active': tab.type === data.tab?.type }"
                 *ngIf="tab.shown"
                 (click)="switchTab(tab.type)">
                 <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
@@ -90,11 +90,11 @@
             aria-haspopup="true"
             aria-expanded="false"
             *ngIf="data.tab">
-            <!-- <ng-icon
+            <ng-icon
               class="opacity-25"
               [name]="data.tab.icon"
-              size="1.25rem"></ng-icon> -->
-            <b class="font-medium">{{ data.tab }}</b>
+              size="1.25rem"></ng-icon>
+            <b class="font-medium">{{ data.tab.name }}</b>
             <ng-icon class="opacity-50" name="hero-chevron-down"></ng-icon>
           </button>
           <ul
@@ -104,7 +104,7 @@
               <li
                 *ngIf="tab.shown"
                 [ngClass]="{
-                  'bg-gray-200 dark:bg-gray-700': tab.type === data.tab
+                  'bg-gray-200 dark:bg-gray-700': tab.type === data.tab?.type
                 }"
                 (click)="switchTab(tab.type)"
                 class="wsl-dropdown-item flex items-center space-x-2">
@@ -120,23 +120,23 @@
       </div>
     </aside>
     <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-4 xl:px-8">
-      <div [hidden]="data.tab !== 'suites' || !hasData() || hasItems()">
+      <div [hidden]="data.tab?.type !== 'suites' || !hasData() || hasItems()">
         <app-team-first-suite></app-team-first-suite>
       </div>
-      <div [hidden]="data.tab !== 'suites' || !hasData() || !hasItems()">
+      <div [hidden]="data.tab?.type !== 'suites' || !hasData() || !hasItems()">
         <app-team-tab-suites></app-team-tab-suites>
       </div>
-      <div [hidden]="data.tab !== 'members'">
+      <div [hidden]="data.tab?.type !== 'members'">
         <app-team-tab-members></app-team-tab-members>
       </div>
-      <div [hidden]="data.tab !== 'settings'">
+      <div [hidden]="data.tab?.type !== 'settings'">
         <app-team-tab-settings></app-team-tab-settings>
       </div>
-      <div [hidden]="data.tab !== 'firstTeam'">
+      <div [hidden]="data.tab?.type !== 'firstTeam'">
         <app-team-first-team></app-team-first-team>
       </div>
       <div
-        [hidden]="data.tab !== 'invitations'"
+        [hidden]="data.tab?.type !== 'invitations'"
         *ngIf="data.teams?.invitations">
         <h2 class="pb-1 text-2xl font-semibold text-black dark:text-gray-300">
           Your Invitations
@@ -167,7 +167,9 @@
           </ul>
         </div>
       </div>
-      <div [hidden]="data.tab !== 'requests'" *ngIf="data.teams?.requests">
+      <div
+        [hidden]="data.tab?.type !== 'requests'"
+        *ngIf="data.teams?.requests">
         <h2 class="pb-1 text-2xl font-semibold text-black dark:text-gray-300">
           Your Requests
         </h2>

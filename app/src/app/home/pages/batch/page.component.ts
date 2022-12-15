@@ -83,7 +83,7 @@ export class BatchPageComponent
   };
   private _isTeamAdmin = false;
 
-  private _sub: Record<
+  private subscriptions: Record<
     | 'alert'
     | 'batch'
     | 'batches'
@@ -116,7 +116,7 @@ export class BatchPageComponent
   ) {
     super(batchPageService);
     faIconLibrary.addIcons(faSpinner, faTasks);
-    this._sub = {
+    this.subscriptions = {
       alert: alertService.alerts$.subscribe((v) => {
         if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
           this._notFound.teamSlug = this.route.snapshot.paramMap.get('team');
@@ -193,7 +193,7 @@ export class BatchPageComponent
   }
 
   ngOnDestroy() {
-    Object.values(this._sub)
+    Object.values(this.subscriptions)
       .filter(Boolean)
       .forEach((v) => v.unsubscribe());
     super.ngOnDestroy();
@@ -224,10 +224,10 @@ export class BatchPageComponent
   onKeydown(event: KeyboardEvent) {
     // pressing key 'Escape' should hide seal or promote dialogs
     if ('Escape' === event.key) {
-      if (!this._sub.dialogPromote.closed) {
+      if (!this.subscriptions.dialogPromote.closed) {
         this.data.dialogPromote?.close();
       }
-      if (!this._sub.dialogSeal.closed) {
+      if (!this.subscriptions.dialogSeal.closed) {
         this.data.dialogSeal?.close();
       }
     }
@@ -337,7 +337,7 @@ export class BatchPageComponent
       data: { batch: this.data.batch },
       minHeight: '10vh'
     });
-    this._sub.dialogSeal = this.data.dialogSeal.afterClosed$.subscribe(
+    this.subscriptions.dialogSeal = this.data.dialogSeal.afterClosed$.subscribe(
       (state: boolean) => {
         if (state) {
           this.batchPageService.removeCacheBatch();
@@ -353,8 +353,8 @@ export class BatchPageComponent
       data: { batch: this.data.batch },
       minHeight: '10vh'
     });
-    this._sub.dialogPromote = this.data.dialogPromote.afterClosed$.subscribe(
-      (state: boolean) => {
+    this.subscriptions.dialogPromote =
+      this.data.dialogPromote.afterClosed$.subscribe((state: boolean) => {
         if (state) {
           this.batchPageService.removeCacheBatch();
           this.router.navigate([], {
@@ -362,8 +362,7 @@ export class BatchPageComponent
             queryParamsHandling: 'merge'
           });
         }
-      }
-    );
+      });
   }
 
   private removeVersion() {

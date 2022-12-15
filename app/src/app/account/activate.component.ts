@@ -17,7 +17,8 @@ import { Alert, AlertType } from '@/shared/components/alert.component';
 })
 export class ActivateComponent implements OnDestroy {
   alert: Alert;
-  private _sub: Partial<Record<'activate' | 'timer', Subscription>> = {};
+  private subscriptions: Partial<Record<'activate' | 'timer', Subscription>> =
+    {};
 
   constructor(
     route: ActivatedRoute,
@@ -32,28 +33,34 @@ export class ActivateComponent implements OnDestroy {
       return;
     }
     const key = route.snapshot.queryParamMap.get('key');
-    this._sub.activate = apiService.post(`/auth/activate/${key}`).subscribe({
-      next: (doc) => {
-        localStorage.setItem(
-          ELocalStorageKey.TokenExpiresAt,
-          doc.expiresAt as string
-        );
-        router.navigate(['/account/welcome']);
-      },
-      error: (err: HttpErrorResponse) => {
-        const error = apiService.extractError(err, [
-          [400, 'invalid activation key', 'This activation key is invalid.'],
-          [404, 'activation key not found', 'This activation key has expired.']
-        ]);
-        this.alert = { type: AlertType.Danger, text: error };
-        this._sub.timer = timer(3000).subscribe(() => {
-          router.navigate(['/account']);
-        });
-      }
-    });
+    this.subscriptions.activate = apiService
+      .post(`/auth/activate/${key}`)
+      .subscribe({
+        next: (doc) => {
+          localStorage.setItem(
+            ELocalStorageKey.TokenExpiresAt,
+            doc.expiresAt as string
+          );
+          router.navigate(['/account/welcome']);
+        },
+        error: (err: HttpErrorResponse) => {
+          const error = apiService.extractError(err, [
+            [400, 'invalid activation key', 'This activation key is invalid.'],
+            [
+              404,
+              'activation key not found',
+              'This activation key has expired.'
+            ]
+          ]);
+          this.alert = { type: AlertType.Danger, text: error };
+          this.subscriptions.timer = timer(3000).subscribe(() => {
+            router.navigate(['/account']);
+          });
+        }
+      });
   }
 
   ngOnDestroy() {
-    Object.values(this._sub).forEach((s) => s.unsubscribe());
+    Object.values(this.subscriptions).forEach((s) => s.unsubscribe());
   }
 }

@@ -43,77 +43,32 @@ export type RefinedTeamList = Record<
   TeamItem[]
 >;
 
-const availableTabs: Record<TeamPageTabType, PageTab<TeamPageTabType>> = {
-  suites: {
-    type: 'suites',
-    name: 'Suites',
-    link: 'suites',
-    icon: 'feather-list',
-    shown: true
-  },
-  members: {
-    type: 'members',
-    name: 'Members',
-    link: 'members',
-    icon: 'feather-users',
-    shown: true
-  },
-  settings: {
-    type: 'settings',
-    name: 'Settings',
-    link: 'settings',
-    icon: 'feather-settings',
-    shown: true
-  },
-  firstTeam: {
-    type: 'firstTeam',
-    name: 'New Team',
-    link: 'first-team',
-    icon: 'feather-plus-circle',
-    shown: true
-  },
-  invitations: {
-    type: 'invitations',
-    name: 'Invitations',
-    link: 'invitations',
-    icon: 'feather-gift',
-    shown: true
-  },
-  requests: {
-    type: 'requests',
-    name: 'Requests',
-    link: 'requests',
-    icon: 'feather-send',
-    shown: true
-  }
-};
-
 @Injectable()
 export class TeamPageService extends IPageService<TeamPageSuite> {
-  private _cache: Partial<{
+  private cache: Partial<{
     members: Array<TeamPageMember>;
     tab: TeamPageTabType;
-    tabs: Array<PageTab<TeamPageTabType>>;
+    tabs: Array<TeamPageTabType>;
     team: TeamLookupResponse;
     teams: RefinedTeamList;
   }> = { tab: 'suites' };
 
-  private _subjects = {
+  private subjects = {
     banner: new Subject<TeamBannerType>(),
     members: new Subject<Array<TeamPageMember>>(),
     tab: new Subject<TeamPageTabType>(),
-    tabs: new Subject<Array<PageTab<TeamPageTabType>>>(),
+    tabs: new Subject<Array<TeamPageTabType>>(),
     team: new Subject<TeamLookupResponse>(),
     teams: new Subject<RefinedTeamList>()
   };
 
   data = {
-    banner$: this._subjects.banner.asObservable(),
-    members$: this._subjects.members.asObservable(),
-    tab$: this._subjects.tab.asObservable(),
-    tabs$: this._subjects.tabs.asObservable(),
-    team$: this._subjects.team.asObservable(),
-    teams$: this._subjects.teams.asObservable()
+    banner$: this.subjects.banner.asObservable(),
+    members$: this.subjects.members.asObservable(),
+    tab$: this.subjects.tab.asObservable(),
+    tabs$: this.subjects.tabs.asObservable(),
+    team$: this.subjects.team.asObservable(),
+    teams$: this.subjects.teams.asObservable()
   };
 
   constructor(
@@ -125,17 +80,17 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
 
   consumeEvent(job: ServerEventJob) {
     if (
-      this._cache.tab === 'suites' &&
+      this.cache.tab === 'suites' &&
       ['suite:created', 'suite:updated'].includes(job.type)
     ) {
-      this.fetchItems({ teamSlug: this._cache.team.slug });
+      this.fetchItems({ teamSlug: this.cache.team.slug });
     }
   }
 
   private update(key: string, response: unknown) {
-    if (response && !isEqual(response, this._cache[key])) {
-      this._cache[key] = response;
-      (this._subjects[key] as Subject<unknown>).next(response);
+    if (response && !isEqual(response, this.cache[key])) {
+      this.cache[key] = response;
+      (this.subjects[key] as Subject<unknown>).next(response);
     }
   }
 
@@ -154,31 +109,27 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   }
 
   private prepareTabs() {
-    const activeTabs: PageTab<TeamPageTabType>[] = [];
-    if (this._cache.teams.active.length) {
-      activeTabs.push(
-        availableTabs.suites,
-        availableTabs.members,
-        availableTabs.settings
-      );
+    const tabs: Array<TeamPageTabType> = [];
+    if (this.cache.teams.active.length) {
+      tabs.push('suites', 'members', 'settings');
     } else {
-      activeTabs.push(availableTabs.firstTeam);
+      tabs.push('firstTeam');
     }
-    if (this._cache.teams.invitations.length) {
-      activeTabs.push(availableTabs.invitations);
+    if (this.cache.teams.invitations.length) {
+      tabs.push('invitations');
     }
-    if (this._cache.teams.requests.length) {
-      activeTabs.push(availableTabs.requests);
+    if (this.cache.teams.requests.length) {
+      tabs.push('requests');
     }
-    this.update('tabs', activeTabs);
+    this.update('tabs', tabs);
   }
 
   private prepareTeam(doc: TeamLookupResponse) {
-    if (!doc || isEqual(doc, this._cache.team)) {
+    if (!doc || isEqual(doc, this.cache.team)) {
       return;
     }
-    this._cache.team = doc;
-    this._subjects.team.next(doc);
+    this.cache.team = doc;
+    this.subjects.team.next(doc);
     try {
       localStorage.setItem(ELocalStorageKey.LastVisitedTeam, doc.slug);
     } catch (err) {
@@ -228,7 +179,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     };
     const elements = Object.keys(url).filter((v) => Boolean(url[v]));
     const requests = elements.map((key) => {
-      return this._cache[key]
+      return this.cache[key]
         ? of(0)
         : this.apiService.get<unknown>((url[key] as string[]).join('/'));
     });
@@ -264,8 +215,8 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
   }
 
   public updateCurrentTab(tab: TeamPageTabType) {
-    this._cache.tab = tab;
-    this._subjects.tab.next(tab);
+    this.cache.tab = tab;
+    this.subjects.tab.next(tab);
   }
 
   /**
@@ -277,8 +228,8 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
    *  - User updates slug of this team
    */
   public updateTeamSlug(teamSlug: string): void {
-    this._cache.team = null;
-    this._cache.members = null;
+    this.cache.team = null;
+    this.cache.members = null;
     this._items = null;
     this.fetchItems({ teamSlug });
   }
@@ -288,41 +239,41 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
    */
   public refreshSuites() {
     this._items = null;
-    this.fetchItems({ teamSlug: this._cache.team.slug });
+    this.fetchItems({ teamSlug: this.cache.team.slug });
   }
 
   public refreshMembers(): void {
-    this._cache.members = null;
-    this.fetchItems({ teamSlug: this._cache.team.slug });
+    this.cache.members = null;
+    this.fetchItems({ teamSlug: this.cache.team.slug });
   }
 
   public refreshTeams(nextTeam?: string) {
-    const teamSlug = nextTeam ?? this._cache.team?.slug;
-    this._cache.teams = null;
-    this._cache.team = null;
-    this._cache.members = null;
+    const teamSlug = nextTeam ?? this.cache.team?.slug;
+    this.cache.teams = null;
+    this.cache.team = null;
+    this.cache.members = null;
     this._items = null;
     this.fetchItems({ teamSlug });
   }
 
   public removeInvitee(invitee: TeamInvitee): void {
-    const index = this._cache.members.findIndex((v) => {
+    const index = this.cache.members.findIndex((v) => {
       return v.type === 'invitee' && v.asInvitee().email === invitee.email;
     });
-    this._cache.members.splice(index, 1);
-    this._subjects.members.next(this._cache.members);
+    this.cache.members.splice(index, 1);
+    this.subjects.members.next(this.cache.members);
   }
 
   public removeMember(member: TeamMember): void {
-    const index = this._cache.members.findIndex((v) => {
+    const index = this.cache.members.findIndex((v) => {
       return v.type === 'member' && v.asMember().username === member.username;
     });
-    this._cache.members.splice(index, 1);
-    this._subjects.members.next(this._cache.members);
+    this.cache.members.splice(index, 1);
+    this.subjects.members.next(this.cache.members);
   }
 
   public submitSampleData() {
-    const team = this._cache.team?.slug;
+    const team = this.cache.team?.slug;
     return this.apiService.post(`/team/${team}/populate`);
   }
 }
