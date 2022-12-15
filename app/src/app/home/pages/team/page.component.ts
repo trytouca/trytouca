@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -7,7 +7,12 @@ import type { TeamItem } from '@touca/api-schema';
 import { debounceTime, Subscription } from 'rxjs';
 
 import { ELocalStorageKey } from '@/core/models/frontendtypes';
-import { AlertKind, AlertService, ApiService } from '@/core/services';
+import {
+  AlertKind,
+  AlertService,
+  ApiService,
+  EventService
+} from '@/core/services';
 import {
   ConfirmComponent,
   ConfirmElements,
@@ -31,7 +36,7 @@ type NotFound = Partial<{
 @Component({
   selector: 'app-team-page',
   templateUrl: './page.component.html',
-  providers: [TeamPageService]
+  providers: [TeamPageService, EventService]
 })
 export class TeamPageComponent
   extends PageComponent<TeamPageSuite, NotFound>
@@ -49,24 +54,18 @@ export class TeamPageComponent
 
   private _dialogRef: DialogRef;
   private _sub: Record<
-    | 'alert'
-    | 'banner'
-    | 'dialog'
-    | 'events'
-    | 'tab'
-    | 'tabs'
-    | 'teams'
-    | 'team',
+    'alert' | 'banner' | 'dialog' | 'event' | 'tab' | 'tabs' | 'teams' | 'team',
     Subscription
   >;
 
   constructor(
-    alertService: AlertService,
     private apiService: ApiService,
     private dialogService: DialogService,
     private route: ActivatedRoute,
     private router: Router,
-    private teamPageService: TeamPageService
+    private teamPageService: TeamPageService,
+    alertService: AlertService,
+    eventService: EventService
   ) {
     super(teamPageService);
     this._sub = {
@@ -84,7 +83,7 @@ export class TeamPageComponent
         }
       }),
       dialog: undefined,
-      events: teamPageService.events$
+      event: eventService.event$
         .pipe(debounceTime(250))
         .subscribe((v) => this.teamPageService.consumeEvent(v)),
       tab: teamPageService.data.tab$.subscribe((v) => (this.currentTab = v)),
@@ -113,16 +112,12 @@ export class TeamPageComponent
 
   ngOnInit() {
     super.ngOnInit();
-    this.teamPageService.eventSourceSubscribe(
-      this.route.snapshot.paramMap.get('team')
-    );
   }
 
   ngOnDestroy() {
     Object.values(this._sub)
       .filter(Boolean)
       .forEach((v) => v.unsubscribe());
-    this.teamPageService.eventSourceUnsubscribe();
     super.ngOnDestroy();
   }
 

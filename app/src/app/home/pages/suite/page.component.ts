@@ -18,6 +18,7 @@ import { getBackendUrl } from '@/core/models/environment';
 import {
   AlertKind,
   AlertService,
+  EventService,
   NotificationService,
   UserService
 } from '@/core/services';
@@ -44,7 +45,7 @@ type Fields = Partial<{
 @Component({
   selector: 'app-suite-page',
   templateUrl: './page.component.html',
-  providers: [SuitePageService]
+  providers: [SuitePageService, EventService]
 })
 export class SuitePageComponent
   extends PageComponent<SuitePageItem, NotFound>
@@ -82,23 +83,24 @@ export class SuitePageComponent
   private _sub: Record<
     | 'alert'
     | 'banner'
-    | 'events'
+    | 'event'
+    | 'suite'
+    | 'suites'
     | 'tab'
     | 'tabs'
     | 'team'
-    | 'suites'
-    | 'suite'
     | 'user',
     Subscription
   >;
 
   constructor(
+    private notificationService: NotificationService,
     private route: ActivatedRoute,
     private router: Router,
     private suitePageService: SuitePageService,
     private titleService: Title,
-    private notificationService: NotificationService,
     alertService: AlertService,
+    eventService: EventService,
     userService: UserService
   ) {
     super(suitePageService);
@@ -118,7 +120,7 @@ export class SuitePageComponent
           this._notFound.suiteSlug = route.snapshot.paramMap.get('suite');
         }
       }),
-      events: suitePageService.events$
+      event: eventService.event$
         .pipe(debounceTime(250))
         .subscribe((v) => this.suitePageService.consumeEvent(v)),
       tab: suitePageService.data.tab$.subscribe((v) => (this.currentTab = v)),
@@ -158,17 +160,12 @@ export class SuitePageComponent
 
   ngOnInit(): void {
     super.ngOnInit();
-    this.suitePageService.eventSourceSubscribe(
-      this.route.snapshot.paramMap.get('team'),
-      this.route.snapshot.paramMap.get('suite')
-    );
   }
 
   ngOnDestroy() {
     Object.values(this._sub)
       .filter(Boolean)
       .forEach((v) => v.unsubscribe());
-    this.suitePageService.eventSourceUnsubscribe();
     super.ngOnDestroy();
   }
 

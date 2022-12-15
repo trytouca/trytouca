@@ -41,7 +41,7 @@ export async function suiteCreate(
     `route_suiteList_${team.slug}_${user.username}`
   )
 
-  await insertEvent({
+  insertEvent({
     type: 'suite:created',
     teamId: team._id,
     suiteId: newSuite._id,

@@ -9,3 +9,4 @@ export * from './guest.guard';
 export * from './install.guard';
 export * from './notification.service';
 export * from './user.service';
+export { EventService } from './event.service';

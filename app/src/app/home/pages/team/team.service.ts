@@ -100,9 +100,6 @@ const availableTabs: Record<TeamPageTabType, PageTab<TeamPageTabType>> = {
 export class TeamPageService extends IPageService<TeamPageSuite> {
   private _bannerSubject = new Subject<TeamBannerType>();
   banner$ = this._bannerSubject.asObservable();
-  private _eventSource: EventSource;
-  private _eventSubject = new Subject<ServerEventJob>();
-  events$ = this._eventSubject.asObservable();
 
   private _cache: {
     tab: TeamPageTabType;
@@ -141,29 +138,13 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     super();
   }
 
-  eventSourceSubscribe(teamSlug: string) {
-    const path = ['team', teamSlug, 'events'].join('/');
-    const url = this.apiService.makeUrl(path);
-    this._eventSource = new EventSource(url, { withCredentials: true });
-    this._eventSource.addEventListener('error', (e) => console.error(e));
-    this._eventSource.addEventListener('message', (msg) => {
-      const job: ServerEventJob = JSON.parse(msg.data as string);
-      this._eventSubject.next(job);
-    });
-  }
-
   consumeEvent(job: ServerEventJob) {
     if (
-      this._cache.tab === TeamPageTabType.Suites &&
-      ['suite:created', 'batch:processed', 'batch:sealed'].includes(job.type)
+      this._cache.tab === 'suites' &&
+      ['suite:created', 'suite:updated'].includes(job.type)
     ) {
       this.fetchItems({ teamSlug: this._cache.team.slug });
     }
-  }
-
-  eventSourceUnsubscribe() {
-    this._eventSource.removeAllListeners();
-    this._eventSource.close();
   }
 
   private update(key: string, response: unknown) {

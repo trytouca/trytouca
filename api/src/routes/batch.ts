@@ -23,7 +23,7 @@ import {
   validationMap,
   validationRules
 } from '../middlewares/index.js'
-import { promisable } from '../utils/index.js'
+import { handleEvents, promisable } from '../utils/index.js'
 
 const router = Router()
 
@@ -54,6 +54,16 @@ router.delete(
   hasSuite,
   hasBatch,
   promisable(ctrlBatchRemove, 'remove a batch')
+)
+
+router.get(
+  '/:team/:suite/:batch/events',
+  isAuthenticated,
+  hasTeam,
+  isTeamMember,
+  hasSuite,
+  hasBatch,
+  handleEvents
 )
 
 router.post(

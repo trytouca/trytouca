@@ -58,15 +58,24 @@ export function handleEvents(req: Request, res: Response) {
 }
 
 function shouldRelayEvent(cid: Fingerprint, job: ServerEventJob) {
-  const suiteEvents = ['batch:processed', 'batch:sealed']
-  const teamEvents = ['suite:created', ...suiteEvents]
-  if (!cid.suiteId && teamEvents.includes(job.type)) {
-    return cid.teamId === job.teamId
+  const events: Record<
+    'team' | 'suite' | 'batch',
+    Array<ServerEventJob['type']>
+  > = {
+    team: ['suite:created', 'suite:updated'],
+    suite: ['batch:created', 'batch:updated', 'batch:sealed'],
+    batch: ['message:created', 'message:compared', 'batch:sealed']
   }
-  if (!cid.batchId && suiteEvents.includes(job.type)) {
-    return cid.teamId === job.teamId && cid.suiteId === job.suiteId
-  }
-  return false
+  return !cid.suiteId
+    ? events.team.includes(job.type) && cid.teamId === job.teamId
+    : !cid.batchId
+    ? events.suite.includes(job.type) &&
+      cid.teamId === job.teamId &&
+      cid.suiteId === job.suiteId
+    : events.batch.includes(job.type) &&
+      cid.teamId === job.teamId &&
+      cid.suiteId === job.suiteId &&
+      cid.batchId === job.batchId
 }
 
 export function broadcastEvent(job: ServerEventJob) {
