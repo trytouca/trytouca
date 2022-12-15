@@ -7,26 +7,23 @@
         [params]="filterParams()"
         [stats]="filterStats()"
         (updateList)="updateList($event)"></app-home-list-filter>
-      <div *ngIf="countShownRows(ItemType.Batch)">
+      <div *ngIf="countShownRows('batch')">
         <div class="wsl-list-head">
-          <p
-            *ngIf="
-              countShownRows(ItemType.Batch) !== countRows(ItemType.Batch)
-            ">
+          <p *ngIf="countShownRows('batch') !== countRows('batch')">
             You are viewing
             <b>
               {{
-                countShownRows(ItemType.Batch)
+                countShownRows('batch')
                   | i18nPlural: { '=0': 'none', '=1': 'one', other: '#' }
               }}
             </b>
-            of {{ countRows(ItemType.Batch) }} versions.
+            of {{ countRows('batch') }} versions.
           </p>
         </div>
         <ul class="wsl-list-body">
           <li
             class="wsl-list-item-outer"
-            *ngFor="let item of getShownRows(ItemType.Batch); let i = index"
+            *ngFor="let item of getShownRows('batch'); let i = index"
             (click)="selectedRow = i"
             [ngClass]="
               selectedRow === i
@@ -34,7 +31,7 @@
                 : 'border-l-transparent'
             ">
             <app-suite-item-batch
-              *ngIf="item.type === ItemType.Batch"
+              *ngIf="item.type === 'batch'"
               [item]="item.asBatch()"
               [chosenTopics]="chosenTopic"
               (updateChosenTopics)="

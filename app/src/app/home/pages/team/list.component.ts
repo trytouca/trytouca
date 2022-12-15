@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, HostListener, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,7 +11,7 @@ import { FilterInput } from '@/home/models/filter.model';
 import { TopicType } from '@/home/models/page-item.model';
 
 import { TeamCreateSuiteComponent } from './create-suite.component';
-import { TeamPageSuite, TeamPageSuiteType } from './team.model';
+import { TeamPageSuite } from './team.model';
 import { TeamPageService } from './team.service';
 
 const filterInput: FilterInput<TeamPageSuite> = {
@@ -148,7 +148,6 @@ export class TeamTabSuitesComponent
   extends PageListComponent<TeamPageSuite>
   implements OnDestroy
 {
-  ItemType = TeamPageSuiteType;
   chosenTopic: TopicType;
   private _dialogRef: DialogRef;
   private _dialogSub: Subscription;
@@ -161,7 +160,7 @@ export class TeamTabSuitesComponent
     route: ActivatedRoute,
     router: Router
   ) {
-    super(filterInput, Object.values(TeamPageSuiteType), route, router);
+    super(filterInput, ['suite'], route, router);
     this._subTeam = teamPageService.data.team$.subscribe((v) => {
       this._team = v;
     });

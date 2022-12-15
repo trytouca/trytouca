@@ -1,10 +1,10 @@
 <app-notification></app-notification>
-<ng-container *ngIf="banner === BannerType.TeamNotFound">
+<ng-container *ngIf="data.banner === 'team-not-found'">
   <app-missing [args]="notFound()"></app-missing>
 </ng-container>
 <div
   class="mx-auto max-w-screen-xl pb-8 lg:pt-8 2xl:max-w-screen-2xl"
-  *ngIf="!banner">
+  *ngIf="!data.banner">
   <div
     class="space-y-4 lg:flex lg:space-y-0 lg:divide-x-2 lg:divide-gray-200 dark:lg:divide-gray-700">
     <aside>
@@ -12,12 +12,12 @@
         class="container mx-auto flex items-center justify-between px-4 pt-4 lg:sticky lg:top-24 lg:h-[calc(100vh-8rem)] lg:w-64 lg:flex-col lg:items-stretch lg:py-0">
         <nav class="hidden lg:block">
           <ul class="flex space-x-1 lg:flex-col lg:space-y-1 lg:space-x-0">
-            <ng-container *ngFor="let tab of tabs">
+            <ng-container *ngFor="let tab of data.tabs">
               <li
                 class="wsl-page-nav-item"
-                [ngClass]="{ 'wsl-tab-active': tab === currentTab }"
+                [ngClass]="{ 'wsl-tab-active': tab.type === data.tab }"
                 *ngIf="tab.shown"
-                (click)="switchTab(tab)">
+                (click)="switchTab(tab.type)">
                 <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
                 <p>{{ tab.name }}</p>
                 <span *ngIf="tab.counter">{{ tab.counter }}</span>
@@ -29,7 +29,7 @@
           class="order-1 text-sm lg:order-2"
           aria-current="page"
           wslDropdown
-          *ngIf="team?.name">
+          *ngIf="data.team?.name">
           <button
             class="wsl-dropdown-toggle cursor-pointer dark:text-gray-300 lg:w-full"
             type="button"
@@ -40,7 +40,7 @@
               class="flex items-center rounded-md border-gray-100 bg-white p-2 shadow-sm dark:bg-gray-800 lg:hidden">
               <span>
                 Team:
-                <b class="font-medium">{{ team?.name }}</b>
+                <b class="font-medium">{{ data.team?.name }}</b>
               </span>
               <ng-icon name="hero-chevron-down" class="opacity-50"></ng-icon>
             </div>
@@ -49,11 +49,11 @@
               <div class="flex flex-grow items-center space-x-2">
                 <div
                   class="h-10 w-10 items-center justify-center rounded-full bg-gray-200 text-center text-2xl text-white dark:bg-gray-700 dark:text-gray-400">
-                  {{ team.name[0].toLocaleUpperCase() }}
+                  {{ data.team.name[0].toLocaleUpperCase() }}
                 </div>
                 <div class="text-black dark:text-gray-300 lg:text-left">
                   <p class="font-light">Team</p>
-                  <p class="font-medium">{{ team.name }}</p>
+                  <p class="font-medium">{{ data.team.name }}</p>
                 </div>
               </div>
               <div>
@@ -67,11 +67,11 @@
             class="wsl-dropdown-menu hidden w-full lg:bottom-16"
             aria-labelledby="wsl-teams-dropdown">
             <li
-              *ngFor="let teamItem of teams.active"
+              *ngFor="let teamItem of data.teams.active"
               (click)="switchPage(teamItem.slug)"
               class="wsl-dropdown-item"
               [ngClass]="{
-                'bg-sky-100 dark:bg-gray-800': team?.slug === teamItem.slug
+                'bg-sky-100 dark:bg-gray-800': data.team?.slug === teamItem.slug
               }">
               {{ teamItem.name }}
             </li>
@@ -82,31 +82,31 @@
             </li>
           </ul>
         </div>
-        <div class="lg:hidden" wslDropdown *ngIf="team?.name">
+        <div class="lg:hidden" wslDropdown *ngIf="data.team?.name">
           <button
             class="wsl-btn-sm wsl-dropdown-toggle group flex cursor-pointer items-center space-x-1 rounded-md bg-white p-2 shadow-sm dark:bg-gray-800 dark:text-gray-300 lg:w-full"
             type="button"
             id="wsl-team-menu-dropdown"
             aria-haspopup="true"
             aria-expanded="false"
-            *ngIf="currentTab">
-            <ng-icon
+            *ngIf="data.tab">
+            <!-- <ng-icon
               class="opacity-25"
-              [name]="currentTab.icon"
-              size="1.25rem"></ng-icon>
-            <b class="font-medium">{{ currentTab?.name }}</b>
+              [name]="data.tab.icon"
+              size="1.25rem"></ng-icon> -->
+            <b class="font-medium">{{ data.tab }}</b>
             <ng-icon class="opacity-50" name="hero-chevron-down"></ng-icon>
           </button>
           <ul
             class="wsl-dropdown-menu left-0 hidden w-48"
             aria-labelledby="wsl-team-menu-dropdown">
-            <ng-container *ngFor="let tab of tabs">
+            <ng-container *ngFor="let tab of data.tabs">
               <li
                 *ngIf="tab.shown"
                 [ngClass]="{
-                  'bg-gray-200 dark:bg-gray-700': currentTab === tab
+                  'bg-gray-200 dark:bg-gray-700': tab.type === data.tab
                 }"
-                (click)="switchTab(tab)"
+                (click)="switchTab(tab.type)"
                 class="wsl-dropdown-item flex items-center space-x-2">
                 <ng-icon
                   class="wsl-text-muted"
@@ -120,30 +120,24 @@
       </div>
     </aside>
     <main class="wsl-min-h-screen-2 container mx-auto space-y-4 px-4 xl:px-8">
-      <div
-        [hidden]="
-          currentTab?.type !== TabType.Suites || !hasData() || hasItems()
-        ">
+      <div [hidden]="data.tab !== 'suites' || !hasData() || hasItems()">
         <app-team-first-suite></app-team-first-suite>
       </div>
-      <div
-        [hidden]="
-          currentTab?.type !== TabType.Suites || !hasData() || !hasItems()
-        ">
+      <div [hidden]="data.tab !== 'suites' || !hasData() || !hasItems()">
         <app-team-tab-suites></app-team-tab-suites>
       </div>
-      <div [hidden]="currentTab?.type !== TabType.Members">
+      <div [hidden]="data.tab !== 'members'">
         <app-team-tab-members></app-team-tab-members>
       </div>
-      <div [hidden]="currentTab?.type !== TabType.Settings">
+      <div [hidden]="data.tab !== 'settings'">
         <app-team-tab-settings></app-team-tab-settings>
       </div>
-      <div [hidden]="currentTab?.type !== TabType.FirstTeam">
+      <div [hidden]="data.tab !== 'firstTeam'">
         <app-team-first-team></app-team-first-team>
       </div>
       <div
-        [hidden]="currentTab?.type !== TabType.Invitations"
-        *ngIf="teams?.invitations">
+        [hidden]="data.tab !== 'invitations'"
+        *ngIf="data.teams?.invitations">
         <h2 class="pb-1 text-2xl font-semibold text-black dark:text-gray-300">
           Your Invitations
         </h2>
@@ -151,7 +145,7 @@
           <ul class="space-y-4">
             <li
               class="wsl-box flex items-center justify-between p-4"
-              *ngFor="let item of teams.invitations">
+              *ngFor="let item of data.teams.invitations">
               <p class="text-sm text-black dark:text-gray-300">
                 Team
                 <b>{{ item.name }}</b>
@@ -173,9 +167,7 @@
           </ul>
         </div>
       </div>
-      <div
-        [hidden]="currentTab?.type !== TabType.Requests"
-        *ngIf="teams?.requests">
+      <div [hidden]="data.tab !== 'requests'" *ngIf="data.teams?.requests">
         <h2 class="pb-1 text-2xl font-semibold text-black dark:text-gray-300">
           Your Requests
         </h2>
@@ -183,7 +175,7 @@
           <ul class="space-y-4">
             <li
               class="wsl-box flex items-center justify-between p-4"
-              *ngFor="let item of teams.requests">
+              *ngFor="let item of data.teams.requests">
               <p class="text-sm text-black dark:text-gray-300">
                 You have asked to join team
                 <b>{{ item.name }}</b>

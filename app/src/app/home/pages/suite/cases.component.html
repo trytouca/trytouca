@@ -7,26 +7,23 @@
         [params]="filterParams()"
         [stats]="filterStats()"
         (updateList)="updateList($event)"></app-home-list-filter>
-      <div *ngIf="countShownRows(ItemType.Element)">
+      <div *ngIf="countShownRows('element')">
         <div class="wsl-list-head">
-          <p
-            *ngIf="
-              countShownRows(ItemType.Element) !== countRows(ItemType.Element)
-            ">
+          <p *ngIf="countShownRows('element') !== countRows('element')">
             You are viewing
             <b>
               {{
-                countShownRows(ItemType.Element)
+                countShownRows('element')
                   | i18nPlural: { '=0': 'none', '=1': 'one', other: '#' }
               }}
             </b>
-            of {{ countRows(ItemType.Element) }} test cases.
+            of {{ countRows('element') }} test cases.
           </p>
         </div>
         <ul class="wsl-list-body">
           <li
             class="wsl-list-item-outer"
-            *ngFor="let item of getShownRows(ItemType.Element); let i = index"
+            *ngFor="let item of getShownRows('element'); let i = index"
             (click)="selectedRow = i"
             [ngClass]="
               selectedRow === i

@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -18,16 +18,10 @@ import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
 
 import {
-  ElementPageItemType,
   ElementPageMetric,
   ElementPageOverviewMetadata,
   ElementPageResult
 } from './element.model';
-
-export enum ElementPageTabType {
-  Results = 'results',
-  Metrics = 'metrics'
-}
 
 type FetchInput = FrontendElementCompareParams;
 
@@ -176,13 +170,13 @@ export class ElementPageService extends IPageService<ElementPageResult> {
 
         const results = doc.cmp.results;
         const commonResults = results.commonKeys.map(
-          (el) => new ElementPageResult(el, ElementPageItemType.Common)
+          (el) => new ElementPageResult(el, 'common')
         );
         const freshResults = results.newKeys.map(
-          (el) => new ElementPageResult(el, ElementPageItemType.Fresh)
+          (el) => new ElementPageResult(el, 'fresh')
         );
         const missingResults = results.missingKeys.map(
-          (el) => new ElementPageResult(el, ElementPageItemType.Missing)
+          (el) => new ElementPageResult(el, 'missing')
         );
         const items = [...commonResults, ...freshResults, ...missingResults];
         this._items = items;
@@ -190,13 +184,13 @@ export class ElementPageService extends IPageService<ElementPageResult> {
 
         const metrics = doc.cmp.metrics;
         const commonMetrics = metrics.commonKeys.map(
-          (el) => new ElementPageMetric(el, ElementPageItemType.Common)
+          (el) => new ElementPageMetric(el, 'common')
         );
         const freshMetrics = metrics.newKeys.map(
-          (el) => new ElementPageMetric(el, ElementPageItemType.Fresh)
+          (el) => new ElementPageMetric(el, 'fresh')
         );
         const missingMetrics = metrics.missingKeys.map(
-          (el) => new ElementPageMetric(el, ElementPageItemType.Missing)
+          (el) => new ElementPageMetric(el, 'missing')
         );
         const itemsM = [...commonMetrics, ...freshMetrics, ...missingMetrics];
         this._allMetricsSubject.next(itemsM);

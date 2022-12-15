@@ -20,22 +20,10 @@ import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
 
-import {
-  SuitePageElement,
-  SuitePageElementType,
-  SuitePageItem,
-  SuitePageItemType
-} from './suite.model';
+import { SuitePageElement, SuitePageItem } from './suite.model';
 
-export enum SuitePageTabType {
-  Versions = 'versions',
-  Testcases = 'testcases',
-  Settings = 'settings'
-}
-
-export enum SuiteBannerType {
-  SuiteNotFound = 'not-found'
-}
+export type SuitePageTabType = 'versions' | 'testcases' | 'settings';
+export type SuiteBannerType = 'suite-not-found';
 
 type FetchInput = {
   teamSlug: string;
@@ -43,22 +31,22 @@ type FetchInput = {
 };
 
 const availableTabs: Record<SuitePageTabType, PageTab<SuitePageTabType>> = {
-  [SuitePageTabType.Versions]: {
-    type: SuitePageTabType.Versions,
+  versions: {
+    type: 'versions',
     name: 'Versions',
     link: 'versions',
     icon: 'feather-list',
     shown: true
   },
-  [SuitePageTabType.Testcases]: {
-    type: SuitePageTabType.Testcases,
+  testcases: {
+    type: 'testcases',
     name: 'Test Cases',
     link: 'testcases',
     icon: 'feather-file-text',
     shown: true
   },
-  [SuitePageTabType.Settings]: {
-    type: SuitePageTabType.Settings,
+  settings: {
+    type: 'settings',
     name: 'Settings',
     link: 'settings',
     icon: 'feather-settings',
@@ -68,10 +56,7 @@ const availableTabs: Record<SuitePageTabType, PageTab<SuitePageTabType>> = {
 
 @Injectable()
 export class SuitePageService extends IPageService<SuitePageItem> {
-  private _bannerSubject = new Subject<SuiteBannerType>();
-  banner$ = this._bannerSubject.asObservable();
-
-  private _cache: {
+  private _cache: Partial<{
     tab: SuitePageTabType;
     tabs: PageTab<SuitePageTabType>[];
     team: TeamLookupResponse;
@@ -79,17 +64,10 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     suite: SuiteLookupResponse;
     batches: BatchListResponse;
     elements: ElementListResponse;
-  } = {
-    tab: SuitePageTabType.Versions,
-    tabs: undefined,
-    team: undefined,
-    suites: undefined,
-    suite: undefined,
-    batches: undefined,
-    elements: undefined
-  };
+  }> = { tab: 'versions' };
 
   private _subjects = {
+    banner: new Subject<SuiteBannerType>(),
     tab: new Subject<SuitePageTabType>(),
     tabs: new Subject<PageTab<SuitePageTabType>[]>(),
     team: new Subject<TeamLookupResponse>(),
@@ -100,6 +78,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
   };
 
   data = {
+    banner$: this._subjects.banner.asObservable(),
     tab$: this._subjects.tab.asObservable(),
     tabs$: this._subjects.tabs.asObservable(),
     team$: this._subjects.team.asObservable(),
@@ -165,7 +144,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         const batch = v as FrontendBatchItem;
         batch.isBaseline =
           batch.batchSlug === this._cache.suite?.baseline?.batchSlug;
-        return new SuitePageItem(batch, SuitePageItemType.Batch);
+        return new SuitePageItem(batch, 'batch');
       })
       .sort(SuitePageItem.compareByDate);
     if (items && !isEqual(items, this._items)) {
@@ -178,9 +157,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
     if (!doc) {
       return;
     }
-    const items = doc.map(
-      (v) => new SuitePageElement(v, SuitePageElementType.Element)
-    );
+    const items = doc.map((v) => new SuitePageElement(v, 'element'));
     this.update('elements', items);
   }
 
@@ -199,7 +176,7 @@ export class SuitePageService extends IPageService<SuitePageItem> {
         : this.apiService.get<unknown>(url[index].join('/'));
     });
     // ensure that we always periodically poll list of versions
-    if (this._cache.tab == SuitePageTabType.Versions) {
+    if (this._cache.tab == 'versions') {
       requests[3] = this.apiService.get<unknown>(url[3].join('/'));
     }
     forkJoin(requests).subscribe({

@@ -26,11 +26,7 @@ import { PageComponent, PageTab } from '@/home/components';
 import { AlertType } from '@/shared/components/alert.component';
 
 import { SuitePageItem } from './suite.model';
-import {
-  SuiteBannerType,
-  SuitePageService,
-  SuitePageTabType
-} from './suite.service';
+import { SuitePageService, SuitePageTabType } from './suite.service';
 
 type NotFound = Partial<{
   teamSlug: string;
@@ -51,10 +47,12 @@ export class SuitePageComponent
   extends PageComponent<SuitePageItem, NotFound>
   implements OnInit, OnDestroy
 {
+  currentTab: SuitePageTabType;
   team: TeamItem;
-  suites: SuiteItem[];
+  suites: Array<SuiteItem>;
   suite: SuiteLookupResponse;
   fields: Fields = {};
+  tabs: Array<PageTab<SuitePageTabType>>;
   levels: { icon: string; type: ENotificationType; text: string }[] = [
     {
       icon: 'feather-rss',
@@ -72,13 +70,6 @@ export class SuitePageComponent
       text: 'Stop all notifications about this suite.'
     }
   ];
-
-  tabs: PageTab<SuitePageTabType>[];
-  currentTab: SuitePageTabType;
-  TabType = SuitePageTabType;
-
-  banner: SuiteBannerType;
-  BannerType = SuiteBannerType;
 
   private _sub: Record<
     | 'alert'
@@ -113,9 +104,8 @@ export class SuitePageComponent
           this._notFound.suiteSlug = this.route.snapshot.paramMap.get('suite');
         }
       }),
-      banner: suitePageService.banner$.subscribe((v) => {
-        this.banner = v;
-        if (this.banner === this.BannerType.SuiteNotFound) {
+      banner: suitePageService.data.banner$.subscribe((v) => {
+        if (v === 'suite-not-found') {
           this._notFound.teamSlug = route.snapshot.paramMap.get('team');
           this._notFound.suiteSlug = route.snapshot.paramMap.get('suite');
         }
@@ -123,6 +113,19 @@ export class SuitePageComponent
       event: eventService.event$
         .pipe(debounceTime(250))
         .subscribe((v) => this.suitePageService.consumeEvent(v)),
+      suite: suitePageService.data.suite$.subscribe((v) => {
+        this.suite = v;
+        this.fields.apiUrl = [
+          getBackendUrl(),
+          '@',
+          v.teamSlug,
+          v.suiteSlug
+        ].join('/');
+        this.updateTitle(v);
+      }),
+      suites: suitePageService.data.suites$.subscribe((v) => {
+        this.suites = v;
+      }),
       tab: suitePageService.data.tab$.subscribe((v) => (this.currentTab = v)),
       tabs: suitePageService.data.tabs$.subscribe((v) => {
         this.tabs = v;
@@ -134,19 +137,6 @@ export class SuitePageComponent
       }),
       team: suitePageService.data.team$.subscribe((v) => {
         this.team = v;
-      }),
-      suites: suitePageService.data.suites$.subscribe((v) => {
-        this.suites = v;
-      }),
-      suite: suitePageService.data.suite$.subscribe((v) => {
-        this.suite = v;
-        this.fields.apiUrl = [
-          getBackendUrl(),
-          '@',
-          v.teamSlug,
-          v.suiteSlug
-        ].join('/');
-        this.updateTitle(v);
       }),
       user: userService.currentUser$.subscribe((v) => {
         this.fields.apiKey = new ApiKey(v.apiKeys[0]);

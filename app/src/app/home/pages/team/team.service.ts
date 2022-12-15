@@ -22,25 +22,17 @@ import { PageTab } from '@/home/components';
 import { IPageService } from '@/home/models/pages.model';
 import { errorLogger } from '@/shared/utils/errorLogger';
 
-import {
-  TeamPageMember,
-  TeamPageMemberType,
-  TeamPageSuite,
-  TeamPageSuiteType
-} from './team.model';
+import { TeamPageMember, TeamPageSuite } from './team.model';
 
-export enum TeamPageTabType {
-  Suites = 'suites',
-  Members = 'members',
-  Settings = 'settings',
-  Invitations = 'invitations',
-  Requests = 'requests',
-  FirstTeam = 'firstTeam'
-}
+export type TeamPageTabType =
+  | 'suites'
+  | 'members'
+  | 'settings'
+  | 'invitations'
+  | 'requests'
+  | 'firstTeam';
 
-export enum TeamBannerType {
-  TeamNotFound = 'not-found'
-}
+export type TeamBannerType = 'team-not-found';
 
 type FetchInput = {
   teamSlug: string;
@@ -52,43 +44,43 @@ export type RefinedTeamList = Record<
 >;
 
 const availableTabs: Record<TeamPageTabType, PageTab<TeamPageTabType>> = {
-  [TeamPageTabType.Suites]: {
-    type: TeamPageTabType.Suites,
+  suites: {
+    type: 'suites',
     name: 'Suites',
     link: 'suites',
     icon: 'feather-list',
     shown: true
   },
-  [TeamPageTabType.Members]: {
-    type: TeamPageTabType.Members,
+  members: {
+    type: 'members',
     name: 'Members',
     link: 'members',
     icon: 'feather-users',
     shown: true
   },
-  [TeamPageTabType.Settings]: {
-    type: TeamPageTabType.Settings,
+  settings: {
+    type: 'settings',
     name: 'Settings',
     link: 'settings',
     icon: 'feather-settings',
     shown: true
   },
-  [TeamPageTabType.FirstTeam]: {
-    type: TeamPageTabType.FirstTeam,
+  firstTeam: {
+    type: 'firstTeam',
     name: 'New Team',
     link: 'first-team',
     icon: 'feather-plus-circle',
     shown: true
   },
-  [TeamPageTabType.Invitations]: {
-    type: TeamPageTabType.Invitations,
+  invitations: {
+    type: 'invitations',
     name: 'Invitations',
     link: 'invitations',
     icon: 'feather-gift',
     shown: true
   },
-  [TeamPageTabType.Requests]: {
-    type: TeamPageTabType.Requests,
+  requests: {
+    type: 'requests',
     name: 'Requests',
     link: 'requests',
     icon: 'feather-send',
@@ -98,37 +90,30 @@ const availableTabs: Record<TeamPageTabType, PageTab<TeamPageTabType>> = {
 
 @Injectable()
 export class TeamPageService extends IPageService<TeamPageSuite> {
-  private _bannerSubject = new Subject<TeamBannerType>();
-  banner$ = this._bannerSubject.asObservable();
-
-  private _cache: {
+  private _cache: Partial<{
+    members: Array<TeamPageMember>;
     tab: TeamPageTabType;
-    tabs: PageTab<TeamPageTabType>[];
-    teams: RefinedTeamList;
+    tabs: Array<PageTab<TeamPageTabType>>;
     team: TeamLookupResponse;
-    members: TeamPageMember[];
-  } = {
-    tab: TeamPageTabType.Suites,
-    tabs: undefined,
-    teams: undefined,
-    team: undefined,
-    members: undefined
-  };
+    teams: RefinedTeamList;
+  }> = { tab: 'suites' };
 
   private _subjects = {
-    tab: new Subject<PageTab<TeamPageTabType>>(),
-    tabs: new Subject<PageTab<TeamPageTabType>[]>(),
-    teams: new Subject<RefinedTeamList>(),
+    banner: new Subject<TeamBannerType>(),
+    members: new Subject<Array<TeamPageMember>>(),
+    tab: new Subject<TeamPageTabType>(),
+    tabs: new Subject<Array<PageTab<TeamPageTabType>>>(),
     team: new Subject<TeamLookupResponse>(),
-    members: new Subject<TeamPageMember[]>()
+    teams: new Subject<RefinedTeamList>()
   };
 
   data = {
+    banner$: this._subjects.banner.asObservable(),
+    members$: this._subjects.members.asObservable(),
     tab$: this._subjects.tab.asObservable(),
     tabs$: this._subjects.tabs.asObservable(),
-    teams$: this._subjects.teams.asObservable(),
     team$: this._subjects.team.asObservable(),
-    members$: this._subjects.members.asObservable()
+    teams$: this._subjects.teams.asObservable()
   };
 
   constructor(
@@ -215,7 +200,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
         batches.push(suite.latest.batchSlug);
       }
       suite.batches = batches;
-      return new TeamPageSuite(suite, TeamPageSuiteType.Suite);
+      return new TeamPageSuite(suite, 'suite');
     });
     if (suites && !isEqual(suites, this._items)) {
       this._items = suites;
@@ -227,17 +212,11 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     if (!doc) {
       return;
     }
-    const applicants = doc.applicants.map(
-      (v) => new TeamPageMember(v, TeamPageMemberType.Applicant)
-    );
-    const invitees = doc.invitees.map(
-      (v) => new TeamPageMember(v, TeamPageMemberType.Invitee)
-    );
-    const members = doc.members.map(
-      (v) => new TeamPageMember(v, TeamPageMemberType.Member)
-    );
-    const items = [...applicants, ...invitees, ...members];
-    this.update('members', items);
+    this.update('members', [
+      ...doc.applicants.map((v) => new TeamPageMember(v, 'applicant')),
+      ...doc.invitees.map((v) => new TeamPageMember(v, 'invitee')),
+      ...doc.members.map((v) => new TeamPageMember(v, 'member'))
+    ]);
   }
 
   public fetchItems(args: FetchInput): void {
@@ -284,8 +263,8 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
     });
   }
 
-  public updateCurrentTab(tab: PageTab<TeamPageTabType>) {
-    this._cache.tab = tab.type;
+  public updateCurrentTab(tab: TeamPageTabType) {
+    this._cache.tab = tab;
     this._subjects.tab.next(tab);
   }
 
@@ -328,10 +307,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
 
   public removeInvitee(invitee: TeamInvitee): void {
     const index = this._cache.members.findIndex((v) => {
-      return (
-        v.type === TeamPageMemberType.Invitee &&
-        v.asInvitee().email === invitee.email
-      );
+      return v.type === 'invitee' && v.asInvitee().email === invitee.email;
     });
     this._cache.members.splice(index, 1);
     this._subjects.members.next(this._cache.members);
@@ -339,10 +315,7 @@ export class TeamPageService extends IPageService<TeamPageSuite> {
 
   public removeMember(member: TeamMember): void {
     const index = this._cache.members.findIndex((v) => {
-      return (
-        v.type === TeamPageMemberType.Member &&
-        v.asMember().username === member.username
-      );
+      return v.type === 'member' && v.asMember().username === member.username;
     });
     this._cache.members.splice(index, 1);
     this._subjects.members.next(this._cache.members);

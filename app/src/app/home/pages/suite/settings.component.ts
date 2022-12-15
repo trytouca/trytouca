@@ -13,7 +13,6 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@ngneat/dialog';
 import type {
-  ETeamRole,
   SuiteLookupResponse,
   TeamLookupResponse
 } from '@touca/api-schema';

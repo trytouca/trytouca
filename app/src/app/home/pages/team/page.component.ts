@@ -42,18 +42,15 @@ export class TeamPageComponent
   extends PageComponent<TeamPageSuite, NotFound>
   implements OnInit, OnDestroy
 {
-  teams: RefinedTeamList;
-  team: TeamItem;
+  data: Partial<{
+    banner: TeamBannerType;
+    tab: TeamPageTabType;
+    tabs: Array<PageTab<TeamPageTabType>>;
+    team: TeamItem;
+    teams: RefinedTeamList;
+  }> = {};
 
-  tabs: PageTab<TeamPageTabType>[];
-  currentTab: PageTab<TeamPageTabType>;
-  TabType = TeamPageTabType;
-
-  banner: TeamBannerType;
-  BannerType = TeamBannerType;
-
-  private _dialogRef: DialogRef;
-  private _sub: Record<
+  private subjects: Record<
     'alert' | 'banner' | 'dialog' | 'event' | 'tab' | 'tabs' | 'teams' | 'team',
     Subscription
   >;
@@ -68,17 +65,17 @@ export class TeamPageComponent
     eventService: EventService
   ) {
     super(teamPageService);
-    this._sub = {
+    this.subjects = {
       alert: alertService.alerts$.subscribe((v) => {
         if (v.some((k) => k.kind === AlertKind.TeamNotFound)) {
-          this.banner = TeamBannerType.TeamNotFound;
+          this.data.banner = 'team-not-found';
           this._notFound.teamSlug = route.snapshot.paramMap.get('team');
           localStorage.removeItem(ELocalStorageKey.LastVisitedTeam);
         }
       }),
-      banner: teamPageService.banner$.subscribe((v) => {
-        this.banner = v;
-        if (this.banner === this.BannerType.TeamNotFound) {
+      banner: teamPageService.data.banner$.subscribe((v) => {
+        this.data.banner = v;
+        if (this.data.banner === 'team-not-found') {
           this._notFound.teamSlug = route.snapshot.paramMap.get('team');
         }
       }),
@@ -86,14 +83,14 @@ export class TeamPageComponent
       event: eventService.event$
         .pipe(debounceTime(250))
         .subscribe((v) => this.teamPageService.consumeEvent(v)),
-      tab: teamPageService.data.tab$.subscribe((v) => (this.currentTab = v)),
+      tab: teamPageService.data.tab$.subscribe((v) => (this.data.tab = v)),
       tabs: teamPageService.data.tabs$.subscribe((v) => {
-        this.tabs = v;
+        this.data.tabs = v;
         const queryMap = this.route.snapshot.queryParamMap;
         const getQuery = (key: string) =>
           queryMap.has(key) ? queryMap.get(key) : null;
-        const tab = this.tabs.find((v) => v.link === getQuery('t')) || v[0];
-        this.teamPageService.updateCurrentTab(tab);
+        const tab = v.find((t) => t.link === getQuery('t')) || v[0];
+        this.teamPageService.updateCurrentTab(tab.type);
       }),
       teams: teamPageService.data.teams$.subscribe((v) => {
         if (v.active.length && !this.route.snapshot.params.team) {
@@ -102,10 +99,10 @@ export class TeamPageComponent
             v.active[0].slug;
           this.router.navigate(['~', activeTeam]);
         }
-        this.teams = v;
+        this.data.teams = v;
       }),
       team: teamPageService.data.team$.subscribe((v) => {
-        this.team = v;
+        this.data.team = v;
       })
     };
   }
@@ -115,7 +112,7 @@ export class TeamPageComponent
   }
 
   ngOnDestroy() {
-    Object.values(this._sub)
+    Object.values(this.subjects)
       .filter(Boolean)
       .forEach((v) => v.unsubscribe());
     super.ngOnDestroy();
@@ -127,24 +124,24 @@ export class TeamPageComponent
     });
   }
 
-  switchTab(tab: PageTab<TeamPageTabType>) {
+  switchTab(tab: TeamPageTabType) {
     this.teamPageService.updateCurrentTab(tab);
   }
 
-  public switchPage(teamSlug: string) {
-    if (this.team.slug !== teamSlug) {
+  switchPage(teamSlug: string) {
+    if (this.data.team.slug !== teamSlug) {
       this.router.navigate(['~', teamSlug]);
       this.teamPageService.updateTeamSlug(teamSlug);
     }
   }
 
   openCreateTeamModel() {
-    this._dialogRef = this.dialogService.open(TeamCreateTeamComponent, {
-      closeButton: false,
-      minHeight: '10vh'
-    });
-    this._sub.dialog = this._dialogRef.afterClosed$.subscribe(
-      (state: { action: string; slug: string }) => {
+    this.subjects.dialog = this.dialogService
+      .open(TeamCreateTeamComponent, {
+        closeButton: false,
+        minHeight: '10vh'
+      })
+      .afterClosed$.subscribe((state: { action: string; slug: string }) => {
         if (state) {
           if (state.action === 'create') {
             this.router.navigate(['~', state.slug]);
@@ -153,8 +150,7 @@ export class TeamPageComponent
             this.teamPageService.refreshTeams();
           }
         }
-      }
-    );
+      });
   }
 
   confirmDecline(item: TeamItem): void {
@@ -176,26 +172,25 @@ export class TeamPageComponent
   }
 
   private showConfirmation(elements: ConfirmElements, func: () => void) {
-    this._dialogRef = this.dialogService.open(ConfirmComponent, {
-      closeButton: false,
-      data: elements,
-      minHeight: '10vh'
-    });
-    this._sub.dialog = this._dialogRef.afterClosed$.subscribe(
-      (state: boolean) => {
+    this.subjects.dialog = this.dialogService
+      .open(ConfirmComponent, {
+        closeButton: false,
+        data: elements,
+        minHeight: '10vh'
+      })
+      .afterClosed$.subscribe((state: boolean) => {
         if (!state) {
           return;
         }
         func();
-      }
-    );
+      });
   }
 
   accept(item: TeamItem) {
     const url = ['team', item.slug, 'invite', 'accept'].join('/');
     this.apiService.post(url).subscribe(() => {
-      const index = this.teams.invitations.findIndex((v) => v === item);
-      this.teams.invitations.splice(index, 1);
+      const index = this.data.teams.invitations.findIndex((v) => v === item);
+      this.data.teams.invitations.splice(index, 1);
       this.teamPageService.refreshTeams();
       this.teamPageService.fetchItems({
         teamSlug: this.route.snapshot.paramMap.get('team')
@@ -206,8 +201,8 @@ export class TeamPageComponent
   private decline(item: TeamItem) {
     const url = ['team', item.slug, 'invite', 'decline'].join('/');
     this.apiService.post(url).subscribe(() => {
-      const index = this.teams.invitations.findIndex((v) => v === item);
-      this.teams.invitations.splice(index, 1);
+      const index = this.data.teams.invitations.findIndex((v) => v === item);
+      this.data.teams.invitations.splice(index, 1);
       this.teamPageService.fetchItems({
         teamSlug: this.route.snapshot.paramMap.get('team')
       });
@@ -217,8 +212,8 @@ export class TeamPageComponent
   private rescind(item: TeamItem) {
     const url = ['team', item.slug, 'join'].join('/');
     this.apiService.delete(url).subscribe(() => {
-      const index = this.teams.requests.findIndex((v) => v === item);
-      this.teams.requests.splice(index, 1);
+      const index = this.data.teams.requests.findIndex((v) => v === item);
+      this.data.teams.requests.splice(index, 1);
       this.teamPageService.fetchItems({
         teamSlug: this.route.snapshot.paramMap.get('team')
       });

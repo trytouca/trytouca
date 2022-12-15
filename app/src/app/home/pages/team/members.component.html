@@ -15,13 +15,13 @@
       </button>
     </div>
   </div>
-  <div *ngIf="countRows(ItemType.Member)">
+  <div *ngIf="countRows('member')">
     <div class="wsl-list-head">
       <h3 class="text-black dark:text-gray-300">Active Members</h3>
       <p>
         You have
         {{
-          countShownRows(ItemType.Member)
+          countShownRows('member')
             | i18nPlural
               : { '=0': 'no members', '=1': 'one member', other: '# members' }
         }}
@@ -31,7 +31,7 @@
     <ul class="wsl-box divide-y divide-gray-200 dark:divide-gray-700">
       <li
         class="wsl-list-item-outer first-of-type:rounded-t-md last-of-type:rounded-b-md hover:bg-gray-50 dark:hover:bg-gray-800"
-        *ngFor="let item of getShownRows(ItemType.Member); let i = index"
+        *ngFor="let item of getShownRows('member'); let i = index"
         (click)="selectedRow = i"
         [ngClass]="{ 'bg-sky-50 dark:bg-gray-700': selectedRow === i }">
         <app-team-item-member
@@ -43,13 +43,13 @@
       </li>
     </ul>
   </div>
-  <div *ngIf="countRows(ItemType.Invitee)">
+  <div *ngIf="countRows('invitee')">
     <div class="wsl-list-head">
       <h3 class="text-black dark:text-gray-300">Invited Members</h3>
       <p>
         You have invited
         {{
-          countShownRows(ItemType.Invitee)
+          countShownRows('invitee')
             | i18nPlural: { '=1': 'one user', other: '# users' }
         }}
         to your team.
@@ -58,11 +58,11 @@
     <ul class="wsl-box divide-y divide-gray-200 dark:divide-gray-700">
       <li
         class="wsl-list-item-outer first-of-type:rounded-t-md last-of-type:rounded-b-md hover:bg-gray-50 dark:hover:bg-gray-800"
-        *ngFor="let item of getShownRows(ItemType.Invitee); let i = index"
-        (click)="selectedRow = i + countShownRows(ItemType.Member)"
+        *ngFor="let item of getShownRows('invitee'); let i = index"
+        (click)="selectedRow = i + countShownRows('member')"
         [ngClass]="{
           'bg-sky-50 dark:bg-gray-700':
-            selectedRow === i + countShownRows(ItemType.Member)
+            selectedRow === i + countShownRows('member')
         }">
         <app-team-item-invitee
           [item]="item.asInvitee()"
@@ -71,12 +71,12 @@
       </li>
     </ul>
   </div>
-  <div *ngIf="countRows(ItemType.Applicant)">
+  <div *ngIf="countRows('applicant')">
     <div class="wsl-list-head">
       <h3 class="text-black dark:text-gray-300">Pending Members</h3>
       <p>
         {{
-          countShownRows(ItemType.Applicant)
+          countShownRows('applicant')
             | i18nPlural: { '=1': 'One user wants', other: '# users want' }
         }}
         to join your team.
@@ -85,19 +85,14 @@
     <ul class="wsl-box divide-y divide-gray-200 dark:divide-gray-700">
       <li
         class="wsl-list-item-outer first-of-type:rounded-t-md last-of-type:rounded-b-md hover:bg-gray-50 dark:hover:bg-gray-800"
-        *ngFor="let item of getShownRows(ItemType.Applicant); let i = index"
+        *ngFor="let item of getShownRows('applicant'); let i = index"
         (click)="
-          selectedRow =
-            i +
-            countShownRows(ItemType.Member) +
-            countShownRows(ItemType.Invitee)
+          selectedRow = i + countShownRows('member') + countShownRows('invitee')
         "
         [ngClass]="{
           'bg-sky-50 dark:bg-gray-700':
             selectedRow ===
-            i +
-              countShownRows(ItemType.Member) +
-              countShownRows(ItemType.Invitee)
+            i + countShownRows('member') + countShownRows('invitee')
         }">
         <app-team-item-applicant
           [item]="item.asApplicant()"

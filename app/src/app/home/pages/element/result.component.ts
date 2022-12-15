@@ -18,7 +18,7 @@ import { NotificationService } from '@/core/services';
 import { Icon, IconColor, IconType } from '@/home/models/page-item.model';
 import { AlertType } from '@/shared/components/alert.component';
 
-import { ElementPageItemType, ElementPageResult } from './element.model';
+import { ElementPageResult } from './element.model';
 import { ElementPageService } from './element.service';
 
 enum MatchType {
@@ -57,7 +57,7 @@ interface IMetadata {
 })
 export class ElementItemResultComponent {
   result: TypeComparison;
-  category: ElementPageItemType;
+  category: ElementPageResult['type'];
   rowType = RowType;
   hideComplexValue = true;
   faClipboard = faClipboard;
@@ -101,7 +101,7 @@ export class ElementItemResultComponent {
     const isBuffer = this.result.srcType === 'buffer';
     const hasRule = !!this.result.rule;
     switch (this.category) {
-      case ElementPageItemType.Common:
+      case 'common':
         switch (matchType) {
           case MatchType.Perfect:
             return isBuffer
@@ -123,9 +123,9 @@ export class ElementItemResultComponent {
               : RowType.Common_Different_Simple;
         }
         return RowType.Unknown;
-      case ElementPageItemType.Fresh:
+      case 'fresh':
         return isComplex ? RowType.Fresh_Complex : RowType.Fresh_Simple;
-      case ElementPageItemType.Missing:
+      case 'missing':
         return isComplex ? RowType.Missing_Complex : RowType.Missing_Simple;
     }
     return RowType.Unknown;
@@ -154,14 +154,14 @@ export class ElementItemResultComponent {
         tooltip: 'Different'
       };
     }
-    if (this.category === ElementPageItemType.Fresh) {
+    if (this.category === 'fresh') {
       return {
         color: IconColor.Green,
         type: IconType.PlusCircle,
         tooltip: 'New Key'
       };
     }
-    if (this.category === ElementPageItemType.Missing) {
+    if (this.category === 'missing') {
       return {
         color: IconColor.Red,
         type: IconType.MinusCircle,

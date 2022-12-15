@@ -41,7 +41,7 @@
       </nav>
       <div
         class="flex space-x-2 print:hidden"
-        *ngIf="currentTab === TabType.Versions && hasData() && hasItems()">
+        *ngIf="currentTab === 'versions' && hasData() && hasItems()">
         <div wslDropdown>
           <button
             class="wsl-dropdown-toggle wsl-btn-sm wsl-btn-primary flex items-center space-x-1"
@@ -156,7 +156,7 @@
         <ng-container *ngFor="let tab of tabs">
           <li
             class="wsl-page-nav-item"
-            [ngClass]="{ 'wsl-tab-active': tab.type === currentTab }"
+            [ngClass]="{ 'wsl-tab-active': currentTab === tab.type }"
             *ngIf="tab.shown"
             (click)="switchTab(tab.type)">
             <ng-icon [name]="tab.icon" size="1.25rem"></ng-icon>
@@ -166,17 +166,16 @@
         </ng-container>
       </ul>
     </nav>
-    <div [hidden]="currentTab !== TabType.Versions || !hasData() || hasItems()">
+    <div [hidden]="currentTab !== 'versions' || !hasData() || hasItems()">
       <app-suite-first-batch></app-suite-first-batch>
     </div>
-    <div
-      [hidden]="currentTab !== TabType.Versions || !hasData() || !hasItems()">
+    <div [hidden]="currentTab !== 'versions' || !hasData() || !hasItems()">
       <app-suite-tab-batches></app-suite-tab-batches>
     </div>
-    <div [hidden]="currentTab !== TabType.Testcases">
+    <div [hidden]="currentTab !== 'testcases'">
       <app-suite-tab-cases></app-suite-tab-cases>
     </div>
-    <div [hidden]="currentTab !== TabType.Settings">
+    <div [hidden]="currentTab !== 'settings'">
       <app-suite-tab-settings></app-suite-tab-settings>
     </div>
   </main>

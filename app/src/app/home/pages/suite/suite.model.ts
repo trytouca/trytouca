@@ -1,25 +1,18 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import type { ElementListResponseItem } from '@touca/api-schema';
 
 import type { FrontendBatchItem } from '@/core/models/frontendtypes';
 import { PageListItem } from '@/home/models/page-list-item.model';
 
-export enum SuitePageItemType {
-  Batch = 'batch'
-}
-
-export enum SuitePageElementType {
-  Element = 'element'
-}
+type SuitePageItemType = 'batch';
+type SuitePageElementType = 'element';
 
 export class SuitePageItem extends PageListItem<
   FrontendBatchItem,
   SuitePageItemType
 > {
-  /**
-   * to be removed
-   */
+  /** to be removed */
   public static compareByDate(a: SuitePageItem, b: SuitePageItem): number {
     return +new Date(b.eventDate()) - +new Date(a.eventDate());
   }
@@ -34,14 +27,14 @@ export class SuitePageItem extends PageListItem<
 
   public eventDate(): Date {
     switch (this.type) {
-      case SuitePageItemType.Batch:
+      case 'batch':
         return this.asBatch().submittedAt as unknown as Date;
     }
   }
 
   public get searchKey(): string {
     switch (this.type) {
-      case SuitePageItemType.Batch:
+      case 'batch':
         return this.asBatch().batchSlug;
     }
   }

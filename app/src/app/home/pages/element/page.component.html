@@ -54,10 +54,10 @@
       *ngIf="!hasData()">
       <app-spinner></app-spinner>
     </div>
-    <div [hidden]="currentTab !== TabType.Results || !hasData()">
+    <div [hidden]="currentTab !== 'results' || !hasData()">
       <app-element-tab-results></app-element-tab-results>
     </div>
-    <div [hidden]="currentTab !== TabType.Metrics || !hasData()">
+    <div [hidden]="currentTab !== 'metrics' || !hasData()">
       <app-element-tab-metrics></app-element-tab-metrics>
     </div>
   </main>

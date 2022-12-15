@@ -24,11 +24,7 @@ export type ElementPageOverviewMetadata = {
   messageSubmittedBy: Userinfo;
 };
 
-export enum ElementPageItemType {
-  Common = 'common',
-  Missing = 'missing',
-  Fresh = 'fresh'
-}
+type ElementPageItemType = 'common' | 'missing' | 'fresh';
 
 export class ElementPageResult extends PageListItem<
   TypeComparison,
