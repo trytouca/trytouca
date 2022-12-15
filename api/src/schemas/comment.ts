@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose'
 
-import { ECommentType } from '../types/index.js'
+import { CommentType } from '../types/index.js'
 
 const commentSchema = new mongoose.Schema(
   {
@@ -44,7 +44,7 @@ const commentSchema = new mongoose.Schema(
       type: String
     },
     type: {
-      enum: Object.values(ECommentType),
+      enum: ['batch', 'element', 'suite', 'team'],
       default: 'batch',
       type: String
     }
@@ -65,7 +65,7 @@ export interface ICommentDocument extends mongoose.Document {
   parentId: mongoose.Types.ObjectId
   suiteId: mongoose.Types.ObjectId
   text: string
-  type: ECommentType
+  type: CommentType
 }
 
 export interface ICommentModel extends mongoose.Model<ICommentDocument> {}

@@ -12,7 +12,6 @@ import {
   ITeam,
   IUser
 } from '../../schemas/index.js'
-import { ECommentType } from '../../types/index.js'
 import { logger, redisClient } from '../../utils/index.js'
 
 /**
@@ -36,7 +35,7 @@ async function batchLookup(
     batch.meta ?? (await compareBatchOverview(batch.superior, batch._id))
 
   const commentCount = await CommentModel.countDocuments({
-    type: ECommentType.Batch,
+    type: 'batch',
     batchId: batch._id
   })
 

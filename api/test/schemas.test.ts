@@ -8,7 +8,6 @@ import {
   CommentModel,
   ComparisonModel,
   ElementModel,
-  EReportType,
   MailModel,
   MessageModel,
   NotificationModel,
@@ -17,7 +16,6 @@ import {
   TeamModel,
   UserModel
 } from '../src/schemas'
-import { ECommentType } from '../src/types'
 import { config } from '../src/utils'
 
 describe('model_user', () => {
@@ -223,7 +221,7 @@ describe('model_comment', () => {
       at: createdAt,
       by: createdBy,
       text: 'some_text',
-      type: ECommentType.Batch
+      type: 'batch'
     })
     expect(commentModel.validateSync()).toBeUndefined()
   })
@@ -245,7 +243,7 @@ describe('model_report', () => {
     const reportModel = new ReportModel({
       dstBatchId,
       srcBatchId,
-      reportType: EReportType.Promote
+      reportType: 'promote'
     })
     expect(reportModel.validateSync()).toBeUndefined()
   })

@@ -40,12 +40,7 @@ export type BackendBatchComparisonResponse = {
   overview?: BatchCompareOverview
 }
 
-export enum ECommentType {
-  Batch = 'batch',
-  Element = 'element',
-  Suite = 'suite',
-  Team = 'team'
-}
+export type CommentType = 'batch' | 'element' | 'suite' | 'team'
 
 export type Artifact = {
   filename_external: string

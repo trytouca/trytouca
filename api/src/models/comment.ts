@@ -10,7 +10,7 @@ import {
   IUser,
   SuiteModel
 } from '../schemas/index.js'
-import { ECommentType } from '../types/index.js'
+import { CommentType } from '../types/index.js'
 import { mailUser } from '../utils/index.js'
 
 export type CommentInputs = {
@@ -32,17 +32,14 @@ export function extractCommentTuple(res: Response) {
   return keys.join('_')
 }
 
-export function extractCommentType(res: Response): ECommentType {
-  if (res.locals.element) {
-    return ECommentType.Element
-  }
-  if (res.locals.batch) {
-    return ECommentType.Batch
-  }
-  if (res.locals.suite) {
-    return ECommentType.Suite
-  }
-  return ECommentType.Team
+export function extractCommentType(res: Response): CommentType {
+  return res.locals.element
+    ? 'element'
+    : res.locals.batch
+    ? 'batch'
+    : res.locals.suite
+    ? 'suite'
+    : 'team'
 }
 
 async function getSuiteSubscribers(
