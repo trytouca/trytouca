@@ -8,7 +8,7 @@
     [formGroup]="form"
     (ngSubmit)="content.onSubmit(form.value)"
     novalidate>
-    <div *ngIf="content.mode === Mode.Create">
+    <div *ngIf="content.mode === 'create'">
       <label class="wsl-input-label" for="wsl-name">Team Name</label>
       <input
         class="wsl-input-field"
