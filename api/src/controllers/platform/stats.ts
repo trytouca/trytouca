@@ -13,7 +13,6 @@ import {
   ComparisonModel,
   ElementModel,
   MessageModel,
-  MetaModel,
   UserModel
 } from '../../schemas/index.js'
 import { config, logger, redisClient } from '../../utils/index.js'
@@ -87,8 +86,6 @@ export async function platformStats(
       }
     }
   }
-
-  const meta = await MetaModel.findOne({}, { _id: 0 })
 
   const response: PlatformStatsResponse = {
     countBatches: await BatchModel.countDocuments(),

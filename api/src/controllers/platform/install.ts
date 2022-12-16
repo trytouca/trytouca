@@ -11,6 +11,7 @@ export async function platformInstall(
   res: Response,
   next: NextFunction
 ) {
+  logger.debug('received request to register this server instance')
   const contact = {
     company: req.body.company,
     email: req.body.email,
@@ -23,7 +24,8 @@ export async function platformInstall(
     })
   }
 
-  const meta = await MetaModel.findOne()
+  const updateOptions = { upsert: true, new: true, setDefaultsOnInsert: true }
+  const meta = await MetaModel.findOneAndUpdate({}, {}, updateOptions)
   if (meta.contact) {
     return next({
       status: 403,
