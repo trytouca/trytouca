@@ -7,19 +7,21 @@ import { pick } from 'lodash-es'
 import { findPlatformRole } from '../../middlewares/index.js'
 import { createUserAccount } from '../../models/index.js'
 import { MetaModel, UserModel } from '../../schemas/index.js'
-import { config, redisClient } from '../../utils/index.js'
+import { config, logger, redisClient } from '../../utils/index.js'
 
 /**
  * Update settings of this server instance.
+ *
+ * Prohibit non-admin users to change server settings unless they are in the
+ * process of setting up their self-hosted instance. To identify the latter
+ * case, we check whether there is a user account with role `owner`.
  */
 export async function platformUpdate(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  // Prohibit non-admin users to change server settings unless they are in the
-  // process of setting up their self-hosted instance. The identify the latter
-  // case, we check whether there is a user account with role `owner`.
+  logger.debug('received request to update server settings')
   const platformRole = await findPlatformRole(req)
   const isAdmin = platformRole === 'admin' || platformRole === 'owner'
   const isConfigured = !!(await UserModel.countDocuments({
@@ -51,6 +53,9 @@ export async function platformUpdate(
         )
       }
     })
+    if (before.telemetry === undefined) {
+      await MetaModel.findOneAndUpdate({}, { $set: { telemetry: true } })
+    }
   }
 
   redisClient.removeCached('platform-config')
