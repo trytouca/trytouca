@@ -346,6 +346,9 @@ function applyNodeOptions(options: NodeOptions): void {
   if (!options.offline) {
     options.offline = !options.api_key && !options.api_url;
   }
+  if (options.api_key && !options.api_url) {
+    options.api_url = 'https://api.touca.io';
+  }
 }
 
 async function applyRunnerOptions(options: RunnerOptions): Promise<void> {
