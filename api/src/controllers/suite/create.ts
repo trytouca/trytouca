@@ -6,15 +6,6 @@ import { suiteCreate } from '../../models/index.js'
 import { ITeam, IUser } from '../../schemas/index.js'
 import { analytics, logger } from '../../utils/index.js'
 
-/**
- * Register a new suite.
- *
- * we impose the following restrictions on suite slug:
- *  - should be lowercase
- *  - should be between 3 to 16 characters
- *  - may contain alphanumeric characters as well as hyphens
- *  - should start with an alphabetic character
- */
 export async function ctrlSuiteCreate(
   req: Request,
   res: Response,
@@ -35,6 +26,5 @@ export async function ctrlSuiteCreate(
   }
 
   analytics.add_activity('suite:created', user)
-
   return res.status(201).send()
 }

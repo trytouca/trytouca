@@ -6,22 +6,11 @@ import { teamCreate } from '../../models/index.js'
 import { IUser } from '../../schemas/index.js'
 import {
   analytics,
-  config,
   logger,
   mailAdmins,
   redisClient
 } from '../../utils/index.js'
 
-/**
- * @summary
- * Creates a new team for this user.
- *
- * @description
- * This function is designed to be called after the following middlewares:
- *  - `isAuthenticated` to yield `user`
- *
- * Performs up to three database queries.
- */
 export async function ctrlTeamCreate(
   req: Request,
   res: Response,
@@ -32,7 +21,6 @@ export async function ctrlTeamCreate(
   logger.debug('%s: creating team %s', user.username, proposed.slug)
 
   // return 409 if team slug is taken
-
   if (!(await teamCreate(user, proposed))) {
     return next({
       errors: ['team already registered'],
@@ -41,7 +29,6 @@ export async function ctrlTeamCreate(
   }
 
   // notify platform admins that a new team was created
-
   mailAdmins({
     title: 'New Team Registered',
     body: `User <b>${user.username}</b> created team <b>${proposed.slug}</b>.`
@@ -49,12 +36,8 @@ export async function ctrlTeamCreate(
 
   // remove information about the list of known teams from cache.
   // we intentionally wait for this operation to avoid race conditions
-
   await redisClient.removeCached(`route_teamList_${user.username}`)
 
   analytics.add_activity('team:created', user)
-
-  // redirect to lookup route for this newly created team
-  const redirectPath = [config.express.root, 'team', proposed.slug].join('/')
-  return res.status(201).redirect(redirectPath.replace(/\/+/g, '/'))
+  return res.status(201).send()
 }

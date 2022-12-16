@@ -15,18 +15,13 @@ interface FormContent {
   slug: string;
 }
 
-enum Mode {
-  Create = 'create',
-  Join = 'join'
-}
-
 type Content = {
-  mode: Mode;
+  mode: 'create' | 'join';
   title: string;
   linkText: string;
   buttonText: string;
   slugDesc: string;
-  onSubmit: (FormContent) => void;
+  onSubmit: (input: FormContent) => void;
 };
 
 @Component({
@@ -37,10 +32,9 @@ export class TeamCreateTeamComponent
   extends ModalComponent
   implements OnDestroy
 {
-  Mode = Mode;
-  contents: Content[] = [
+  contents: Array<Content> = [
     {
-      mode: Mode.Create,
+      mode: 'create',
       title: 'Create a New Team',
       linkText: 'Join an Existing Team',
       buttonText: 'Create',
@@ -49,7 +43,7 @@ export class TeamCreateTeamComponent
       onSubmit: (model: FormContent) => this.onCreate(model)
     },
     {
-      mode: Mode.Join,
+      mode: 'join',
       title: 'Join an Existing Team',
       linkText: 'Create a New Team',
       buttonText: 'Join',
@@ -57,7 +51,7 @@ export class TeamCreateTeamComponent
       onSubmit: (model: FormContent) => this.onJoin(model)
     }
   ];
-  content: Content = this.contents.find((v) => v.mode === Mode.Create);
+  content = this.contents.find((v) => v.mode === 'create');
 
   constructor(private apiService: ApiService, public dialogRef: DialogRef) {
     super();
@@ -89,9 +83,9 @@ export class TeamCreateTeamComponent
   }
 
   toggleMode() {
-    const newMode = this.content.mode === Mode.Create ? Mode.Join : Mode.Create;
+    const newMode = this.content.mode === 'create' ? 'join' : 'create';
     const nameValidators = [Validators.minLength(3), Validators.maxLength(32)];
-    if (newMode === Mode.Create) {
+    if (newMode === 'create') {
       nameValidators.push(Validators.required);
     }
     this.form.get('name').setValidators(nameValidators);
