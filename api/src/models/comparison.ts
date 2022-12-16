@@ -7,7 +7,7 @@ import type {
 import { floor } from 'lodash-es'
 import mongoose from 'mongoose'
 
-import { comparisonQueue } from '../queues/index.js'
+import { comparisonQueue, insertEvent } from '../queues/index.js'
 import {
   ComparisonModel,
   IComparisonDocument,
@@ -19,7 +19,7 @@ import type {
   BackendBatchComparisonItemSolo,
   BackendBatchComparisonResponse
 } from '../types/index.js'
-import { logger, objectStore } from '../utils/index.js'
+import { logger, objectStore, redisClient } from '../utils/index.js'
 
 type ObjectId = mongoose.Types.ObjectId
 
@@ -57,6 +57,71 @@ export async function comparisonRemove(
   }
 }
 
+async function comparisonProcessEvent(comparison: IComparisonDocument) {
+  const fields = await MessageModel.aggregate([
+    { $match: { _id: comparison.srcMessageId } },
+    {
+      $lookup: {
+        as: 'elementDoc',
+        foreignField: '_id',
+        from: 'elements',
+        localField: 'elementId'
+      }
+    },
+    { $unwind: '$elementDoc' },
+    {
+      $lookup: {
+        as: 'batchDoc',
+        foreignField: '_id',
+        from: 'batches',
+        localField: 'batchId'
+      }
+    },
+    { $unwind: '$batchDoc' },
+    {
+      $lookup: {
+        as: 'suiteDoc',
+        foreignField: '_id',
+        from: 'suites',
+        localField: 'elementDoc.suiteId'
+      }
+    },
+    { $unwind: '$suiteDoc' },
+    {
+      $lookup: {
+        as: 'teamDoc',
+        foreignField: '_id',
+        from: 'teams',
+        localField: 'suiteDoc.team'
+      }
+    },
+    { $unwind: '$teamDoc' },
+    {
+      $project: {
+        batchId: '$batchDoc._id',
+        suiteId: '$suiteDoc._id',
+        teamId: '$teamDoc._id',
+        batchSlug: '$batchDoc.slug',
+        suiteSlug: '$suiteDoc.slug',
+        teamSlug: '$teamDoc.slug'
+      }
+    }
+  ])
+  if (!fields) {
+    return
+  }
+  const f = fields[0]
+  const slugs = [f.teamSlug, f.suiteSlug, f.batchSlug].join('_')
+  redisClient.removeCachedByPrefix(`route_batchCompare_${slugs}_`)
+  await redisClient.removeCached(`route_batchLookup_${slugs}`)
+  await insertEvent({
+    type: 'message:compared',
+    teamId: f.teamId,
+    suiteId: f.suiteId,
+    batchId: f.batchId
+  })
+}
+
 export async function comparisonProcess(
   jobId,
   input
@@ -86,6 +151,7 @@ export async function comparisonProcess(
       meta: input.overview
     }
   })
+  comparisonProcessEvent(comparison)
   return { status: 204 }
 }
 
