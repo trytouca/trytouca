@@ -4,7 +4,7 @@ Write regression tests, the easy way.
 
 [![npm version](https://img.shields.io/npm/v/@touca/node?color=blue)](https://www.npmjs.com/package/@touca/node)
 [![License](https://img.shields.io/npm/l/@touca/node?color=blue)](https://github.com/trytouca/trytouca/blob/main/sdk/js/LICENSE)
-[![Build Status](https://img.shields.io/github/workflow/status/trytouca/trytouca/touca-build)](https://github.com/trytouca/trytouca/actions/workflows/build.yml?query=branch:main+event:push)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/trytouca/trytouca/build.yml?branch=main)](https://github.com/trytouca/trytouca/actions/workflows/build.yml)
 [![Code Coverage](https://img.shields.io/codecov/c/github/trytouca/trytouca)](https://app.codecov.io/gh/trytouca/trytouca)
 
 ```ts
@@ -21,14 +21,15 @@ touca.run();
 
 ## Table of Contents
 
-- [Requirements](#requirements)
-- [Install](#install)
-- [Usage](#usage)
-- [Documentation](#documentation)
-- [Community](#community)
-- [Contributing](#contributing)
-- [FAQ](#faq)
-- [License](#license)
+- [Touca JavaScript SDK](#touca-javascript-sdk)
+  - [Table of Contents](#table-of-contents)
+  - [Requirements](#requirements)
+  - [Install](#install)
+  - [Usage](#usage)
+  - [Documentation](#documentation)
+  - [Community](#community)
+  - [Contributing](#contributing)
+  - [License](#license)
 
 ## Requirements
 
@@ -170,23 +171,6 @@ documentation and sharing feedback.
 - [Code of Conduct](https://touca.io/docs/contributing/conduct/)
 - [Contributing Guide](https://touca.io/docs/contributing/)
 - [Good First Issues](https://touca.io/docs/contributing/good-first-issues/)
-
-## FAQ
-
-- Should I install Touca as a development dependency?
-
-  Yes, unless you like to capture data-points that are not accessible through
-  your software's public API. Touca data capturing functions (e.g. `touca.check`
-  and `touca.scoped_timer`) are no-op in production environments. They only work
-  when called from a `touca.workflow` context.
-
-- How is Touca making money?
-
-  Touca is open-source software that you can self-host for free. Touca, Inc.
-  operates [Touca Cloud](https://app.touca.io): a managed cloud instance of
-  Touca with additional enterprise-ready features. We have a free plan and
-  leverage usage-based pricing to charge for storage and service. Visit our
-  [pricing page](https://touca.io/pricing) to learn more.
 
 ## License
 

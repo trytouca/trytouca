@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.6.3
+
+Improvements:
+
+- Use cloud instance if API URL is not specified (#438)
+- Print the path to locally stored test results (#437)
+- Refactor logic for handling configuration options (#436)
+
 ## v1.6.2
 
 Features:
@@ -10,7 +18,7 @@ Features:
 
 Breaking Changes:
 
-- Switch to building package as pure ESM (#429).
+- Switch to building package as pure ESM (#429, #432, #433).
 
 Improvements:
 
