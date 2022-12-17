@@ -5,7 +5,7 @@ import { Course, calculate_gpa, find_student } from './students.js';
 
 (async () => {
   await touca.configure();
-  for (const username of await touca.get_testcases()) {
+  for (const username of ['alice', 'bob', 'charlie']) {
     touca.declare_testcase(username);
 
     touca.start_timer('find_student');
