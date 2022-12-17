@@ -163,7 +163,7 @@ class ApiClient:
 
     def team_create(self, team_slug: str, team_name: str) -> None:
         response = self.client.post_json("team", {"name": team_name, "slug": team_slug})
-        self.expect_status(response, 200, f"create team {team_slug}")
+        self.expect_status(response, 201, f"create team {team_slug}")
 
     def team_update(self, current_slug: str, team_slug: str, team_name: str) -> None:
         expected_status = 204

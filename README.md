@@ -92,27 +92,9 @@ case.
 ```bash
 touca config set api-key="<your_api_key>"
 touca config set team="tutorial"
-touca test
 ```
 
-This command produces the following output:
-
-```text
-
-Touca Test Framework
-
-Suite: students_test/1.0
-
- 1.  SENT   alice    (0 ms)
- 2.  SENT   bob      (0 ms)
- 3.  SENT   charlie  (0 ms)
-
-Tests:      3 submitted, 3 total
-Time:       0.39 s
-
-✨   Ran all test suites.
-
-```
+![Sample Test Output](https://touca.io/docs/img/assets/touca-cli-test.dark.gif)
 
 Now if we make changes to our workflow under test, we can rerun this test and
 let Touca automatically compare our captured data points against those of a
