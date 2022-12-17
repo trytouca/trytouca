@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@touca/example-node-core",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Touca example introducing core API of Node.js SDK",
   "type": "module",
   "main": "dist/students_test.js",
@@ -10,7 +10,7 @@
     "dist"
   ],
   "dependencies": {
-    "@touca/node": "^1.6.2"
+    "@touca/node": "^1.6.3"
   },
   "scripts": {
     "build": "tsc",
