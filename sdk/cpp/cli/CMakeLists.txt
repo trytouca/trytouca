@@ -14,10 +14,9 @@ target_sources(
         resultfile.cpp
 )
 
-
 target_link_libraries(
         touca_cli_lib
-    PUBLIC
+    PRIVATE
         ${TOUCA_TARGET_MAIN}
 )
 
@@ -52,6 +51,7 @@ target_link_libraries(
         touca_cli
     PRIVATE
         touca_cli_lib
+        ${TOUCA_TARGET_MAIN}
         cxxopts::cxxopts
 )
 
@@ -64,10 +64,8 @@ target_compile_definitions(
 )
 
 source_group(
-    TREE
-        ${CMAKE_CURRENT_LIST_DIR}
-    FILES
-        $<TARGET_PROPERTY:touca_cli,SOURCES>
+    TREE ${CMAKE_CURRENT_LIST_DIR}
+    FILES $<TARGET_PROPERTY:touca_cli,SOURCES>
 )
 
 install(
