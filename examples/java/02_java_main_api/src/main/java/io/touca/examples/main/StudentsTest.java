@@ -2,8 +2,9 @@
 
 package io.touca.examples.main;
 
-import java.time.LocalDate;
 import io.touca.Touca;
+import io.touca.TypeAdapterContext;
+import java.time.LocalDate;
 
 public final class StudentsTest {
 
@@ -16,11 +17,18 @@ public final class StudentsTest {
     Touca.check("fullname", student.fullname);
     Touca.check("birth_date", student.dob);
     Touca.check("gpa", student.gpa);
+    Touca.check("pass", student.gpa < 3.9);
     Touca.addMetric("external_source", 1500);
   }
 
   public static void main(String[] args) {
-    Touca.addTypeAdapter(LocalDate.class, x -> x.toString());
+    Touca.addTypeAdapter(LocalDate.class, (x) -> {
+      TypeAdapterContext object = new TypeAdapterContext();
+      object.add("day", x.getDayOfMonth());
+      object.add("month", x.getMonthValue());
+      object.add("year", x.getYear());
+      return object;
+    });
     Touca.run(StudentsTest.class, args);
   }
 

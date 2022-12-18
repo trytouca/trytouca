@@ -20,8 +20,8 @@ const students = [
     fullname: 'Alice Anderson',
     dob: new Date(2006, 3, 1),
     courses: [
-      { name: 'math', grade: 4.0 },
-      { name: 'computers', grade: 3.8 }
+      { name: 'computers', grade: 3.8 },
+      { name: 'math', grade: 4.0 }
     ]
   },
   {
@@ -29,8 +29,8 @@ const students = [
     fullname: 'Bob Brown',
     dob: new Date(1996, 6, 30),
     courses: [
-      { name: 'english', grade: 3.7 },
-      { name: 'history', grade: 3.9 }
+      { name: 'history', grade: 3.9 },
+      { name: 'english', grade: 3.7 }
     ]
   },
   {
@@ -38,14 +38,17 @@ const students = [
     fullname: 'Charlie Clark',
     dob: new Date(2003, 9, 19),
     courses: [
-      { name: 'math', grade: 2.9 },
-      { name: 'computers', grade: 3.7 }
+      { name: 'computers', grade: 3.7 },
+      { name: 'math', grade: 2.9 }
     ]
   }
 ];
 
 function calculate_gpa(courses: Course[]): number {
-  touca.check('courses', courses);
+  for (const course of courses) {
+    touca.add_array_element('courses', course);
+    touca.add_hit_count('number of courses');
+  }
   return courses.length
     ? courses.reduce((sum, v) => sum + v.grade, 0) / courses.length
     : 0.0;

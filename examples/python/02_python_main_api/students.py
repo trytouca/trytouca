@@ -27,25 +27,27 @@ students = [
         "alice",
         "Alice Anderson",
         date(2006, 3, 1),
-        [Course("math", 4.0), Course("computers", 3.8)],
+        [Course("computers", 3.8), Course("math", 4.0)],
     ),
     (
         "bob",
         "Bob Brown",
         date(1996, 6, 30),
-        [Course("english", 3.7), Course("history", 3.9)],
+        [Course("history", 3.9), Course("english", 3.7)],
     ),
     (
         "charlie",
         "Charlie Clark",
         date(2003, 9, 19),
-        [Course("math", 2.9), Course("computers", 3.7)],
+        [Course("computers", 3.7), Course("math", 2.9)],
     ),
 ]
 
 
 def calculate_gpa(courses: List[Course]):
-    touca.check("courses", courses)
+    for course in courses:
+        touca.add_array_element("courses", course)
+        touca.add_hit_count("number of courses")
     return sum(k.grade for k in courses) / len(courses) if courses else 0
 
 

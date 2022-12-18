@@ -1,7 +1,7 @@
 <div class="wsl-box wsl-min-h-screen-3 mx-auto flex items-center">
   <div class="md:grid md:grid-cols-7">
     <div class="p-8 md:col-span-4">
-      <div class="mb-4" *ngIf="fields?.apiKey">
+      <div class="mb-4" *ngIf="data?.apiKey">
         <h2 class="mb-2 text-3xl font-medium text-black dark:text-gray-300">
           Submit Your First Version
         </h2>
@@ -19,13 +19,13 @@
           </div>
           <div
             class="flex max-w-sm flex-grow cursor-pointer items-center overflow-x-auto whitespace-nowrap border border-gray-300 bg-white px-2 font-mono text-xs text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400"
-            (click)="fields.apiKey.toggle()">
-            {{ fields.apiKey.value }}
+            (click)="data.apiKey.toggle()">
+            {{ data.apiKey.value }}
           </div>
           <div
             class="flex cursor-pointer justify-center rounded-r border border-l-0 border-gray-300 bg-gray-100 p-2 text-xs font-medium text-sky-600 duration-300 ease-in-out hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-900"
             ngxClipboard
-            [cbContent]="fields.apiKey.plain"
+            [cbContent]="data.apiKey.plain"
             (cbOnSuccess)="onCopy($event, 'API Key')">
             <ng-icon
               title="Copy API Key to clipboard"
@@ -40,12 +40,12 @@
           </div>
           <div
             class="flex max-w-sm flex-grow items-center overflow-x-auto whitespace-nowrap border border-gray-300 bg-white px-2 font-mono text-xs text-gray-500 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-400">
-            {{ fields.apiUrl }}
+            {{ data.apiUrl }}
           </div>
           <div
             class="flex cursor-pointer justify-center rounded-r border border-l-0 border-gray-300 bg-gray-100 p-2 text-xs font-medium text-sky-600 duration-300 ease-in-out hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-900"
             ngxClipboard
-            [cbContent]="fields.apiUrl"
+            [cbContent]="data.apiUrl"
             (cbOnSuccess)="onCopy($event, 'API URL')">
             <ng-icon
               title="Copy API URL to clipboard"
@@ -78,9 +78,7 @@
                 alg="Logo of Python Language" />
             </div>
           </a>
-          <a
-            href="https://touca.io/docs/sdk/js/quickstart"
-            target="_blank">
+          <a href="https://touca.io/docs/sdk/js/quickstart" target="_blank">
             <div
               class="rounded-md border border-gray-200 bg-gray-50 p-4 duration-300 ease-in-out hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-900">
               <img
