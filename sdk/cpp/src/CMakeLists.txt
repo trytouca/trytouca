@@ -27,7 +27,6 @@ target_sources(
         devkit/comparison.cpp
         devkit/deserialize.cpp
         devkit/platform.cpp
-        devkit/resultfile.cpp
         devkit/utils.cpp
 )
 

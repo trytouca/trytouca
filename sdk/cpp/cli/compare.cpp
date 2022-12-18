@@ -5,7 +5,7 @@
 #include "cxxopts.hpp"
 #include "touca/cli/operations.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/devkit/resultfile.hpp"
+#include "touca/cli/resultfile.hpp"
 #include "touca/devkit/utils.hpp"
 
 bool CompareOperation::parse_impl(int argc, char* argv[]) {

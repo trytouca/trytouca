@@ -13,7 +13,6 @@ target_sources(
         core/types.cpp
         devkit/options.cpp
         devkit/platform.cpp
-        devkit/resultfile.cpp
         devkit/utils.cpp
 )
 

@@ -9,12 +9,13 @@ add_executable(touca_cli "")
 target_sources(
         touca_cli
     PRIVATE
-        main.cpp
-        filesystem.cpp
-        operations.cpp
         compare.cpp
+        filesystem.cpp
+        main.cpp
         merge.cpp
+        operations.cpp
         post.cpp
+        resultfile.cpp
         update.cpp
         view.cpp
 )
