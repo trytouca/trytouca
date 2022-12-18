@@ -8,8 +8,8 @@
 #include "rapidjson/rapidjson.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
+#include "touca/cli/deserialize.hpp"
 #include "touca/core/testcase.hpp"
-#include "touca/devkit/deserialize.hpp"
 #include "touca/devkit/utils.hpp"
 #include "touca/impl/schema.hpp"
 

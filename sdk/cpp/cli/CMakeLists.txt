@@ -11,6 +11,7 @@ target_sources(
     PRIVATE
         compare.cpp
         comparison.cpp
+        deserialize.cpp
         filesystem.cpp
         main.cpp
         merge.cpp
