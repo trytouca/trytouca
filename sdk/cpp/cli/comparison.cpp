@@ -67,7 +67,7 @@ void compare_number(const T& src_number, const T& dst_number,
   const auto percent = 0.0 == dst_value ? 0.0 : std::fabs(diff / dst_value);
   const auto& difference = 0.0 == percent || threshold < percent
                                ? std::to_string(std::fabs(diff))
-                               : std::to_string(percent * 100.0) + "percent ";
+                               : std::to_string(percent * 100.0) + " percent";
   if (0.0 < percent && percent < threshold) {
     cmp.score = 1.0 - percent;
   }

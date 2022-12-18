@@ -5,29 +5,11 @@
 #include <array>
 
 #include "catch2/catch.hpp"
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
+#include "tests/devkit/shared.hpp"
 #include "touca/devkit/comparison.hpp"
 
 using touca::data_point;
 using touca::detail::internal_type;
-
-/**
- * Helper function to provide `Testcase`, `TestcaseComparison`
- * and `TestcaseComparison::Overview` as json string.
- */
-std::string make_json(
-    const std::function<rapidjson::Value(touca::RJAllocator&)> func) {
-  rapidjson::Document doc(rapidjson::kObjectType);
-  rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
-  const auto& value = func(allocator);
-
-  rapidjson::StringBuffer strbuf;
-  rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-  writer.SetMaxDecimalPlaces(3);
-  value.Accept(writer);
-  return strbuf.GetString();
-}
 
 TEST_CASE("Testcase") {
   touca::Testcase testcase =
@@ -206,76 +188,5 @@ TEST_CASE("Testcase") {
       const auto metric = testcase.metrics().at("b");
       CHECK(internal_type::number_signed == metric.value.type());
     }
-  }
-
-  SECTION("compare: empty") {
-    const auto& dst =
-        std::make_shared<touca::Testcase>("team", "suite", "version", "case");
-    touca::TestcaseComparison cmp(testcase, *dst);
-    const auto& output = make_json(
-        [&cmp](touca::RJAllocator& allocator) { return cmp.json(allocator); });
-    const auto& check1 =
-        R"("assertions":{"commonKeys":[],"missingKeys":[],"newKeys":[]})";
-    const auto& check2 =
-        R"("results":{"commonKeys":[],"missingKeys":[],"newKeys":[]})";
-    const auto& check3 =
-        R"("metrics":{"commonKeys":[],"missingKeys":[],"newKeys":[]})";
-    CHECK_THAT(output, Catch::Contains(check1));
-    CHECK_THAT(output, Catch::Contains(check2));
-    CHECK_THAT(output, Catch::Contains(check3));
-  }
-
-  SECTION("compare: full") {
-    auto dst =
-        std::make_shared<touca::Testcase>("team", "suite", "version", "case");
-
-    const auto value1 = data_point::string("leo-ferre");
-    const auto value2 = data_point::string("jean-ferrat");
-    const auto value3 = data_point::boolean(true);
-    const auto value4 = data_point::boolean(true);
-
-    // common result
-    testcase.add_array_element("chanteur", value1);
-    dst->add_array_element("chanteur", value2);
-    // different result
-    testcase.add_hit_count("some-key");
-    dst->add_hit_count("some-other-key");
-
-    testcase.tic("a");
-    testcase.toc("a");
-    testcase.tic("b");
-    testcase.toc("b");
-    dst->tic("a");
-    dst->toc("a");
-    dst->tic("c");
-    dst->toc("c");
-
-    touca::TestcaseComparison cmp(testcase, *dst);
-    CHECK(cmp.overview().keysCountCommon == 1);
-    CHECK(cmp.overview().keysCountFresh == 1);
-    CHECK(cmp.overview().keysCountMissing == 1);
-    CHECK(cmp.overview().metricsCountCommon == 1);
-    CHECK(cmp.overview().keysCountCommon == 1);
-    CHECK(cmp.overview().keysCountFresh == 1);
-    CHECK(cmp.overview().keysCountMissing == 1);
-
-    const auto& comparison = make_json(
-        [&cmp](touca::RJAllocator& allocator) { return cmp.json(allocator); });
-    const auto& check1 =
-        R"("assertions":{"commonKeys":[],"missingKeys":[],"newKeys":[]})";
-    const auto& check2 =
-        R"("results":{"commonKeys":[{"name":"chanteur","score":0.0,"srcType":"array","srcValue":"[\"leo-ferre\"]","dstValue":"[\"jean-ferrat\"]"}],"missingKeys":[{"name":"some-other-key","dstType":"number","dstValue":"1"}],"newKeys":[{"name":"some-key","srcType":"number","srcValue":"1"}]})";
-    const auto& check3 =
-        R"("metrics":{"commonKeys":[{"name":"a","score":1.0,"srcType":"number","srcValue":"0"}],"missingKeys":[{"name":"c","dstType":"number","dstValue":"0"}],"newKeys":[{"name":"b","srcType":"number","srcValue":"0"}]})";
-    CHECK_THAT(comparison, Catch::Contains(check1));
-    CHECK_THAT(comparison, Catch::Contains(check2));
-    CHECK_THAT(comparison, Catch::Contains(check3));
-
-    const auto& overview = make_json([&cmp](touca::RJAllocator& allocator) {
-      return cmp.overview().json(allocator);
-    });
-    const auto& check4 =
-        R"({"keysCountCommon":1,"keysCountFresh":1,"keysCountMissing":1,"keysScore":0.0,"metricsCountCommon":1,"metricsCountFresh":1,"metricsCountMissing":1,"metricsDurationCommonDst":0,"metricsDurationCommonSrc":0})";
-    CHECK_THAT(overview, Catch::Contains(check4));
   }
 }

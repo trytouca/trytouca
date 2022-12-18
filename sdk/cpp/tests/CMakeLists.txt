@@ -13,6 +13,7 @@ target_sources(
         core/types.cpp
         devkit/options.cpp
         devkit/platform.cpp
+        devkit/shared.cpp
         devkit/utils.cpp
 )
 
@@ -21,6 +22,21 @@ if (TOUCA_BUILD_FRAMEWORK)
             ${TOUCA_TARGET_TEST}
         PRIVATE
             runner/runner.cpp
+    )
+endif()
+
+if (TOUCA_BUILD_CLI)
+    target_sources(
+            ${TOUCA_TARGET_TEST}
+        PRIVATE
+            cli/comparison.cpp
+            cli/deserialize.cpp
+            cli/resultfile.cpp
+    )
+    target_link_libraries(
+            ${TOUCA_TARGET_TEST}
+        PRIVATE
+            touca_cli_lib
     )
 endif()
 
