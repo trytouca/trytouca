@@ -12,6 +12,7 @@ int main(int argc, char* argv[]) {
     touca::check("fullname", student.fullname);
     touca::check("birth_date", student.dob);
     touca::check("gpa", student.gpa);
+    touca::check("pass", student.gpa < 3.9);
     touca::add_metric("external_source", 1500);
   });
   return touca::run(argc, argv);

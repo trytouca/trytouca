@@ -22,20 +22,23 @@ static std::unordered_map<std::string, StudentData> students = {
      {"alice",
       "Alice Anderson",
       Date{2006, 3, 1},
-      {Course{"math", 4.0}, Course{"computers", 3.8}}}},
+      {Course{"computers", 3.8}, Course{"math", 4.0}}}},
     {"bob",
      {"bob",
       "Bob Brown",
       Date{1996, 6, 31},
-      {Course{"english", 3.7}, Course{"history", 3.9}}}},
+      {Course{"history", 3.9}, Course{"english", 3.7}}}},
     {"charlie",
      {"charlie",
       "Charlie Clark",
       Date{2003, 9, 19},
-      {Course{"math", 2.9}, Course{"computers", 3.7}}}}};
+      {Course{"computers", 3.7}, Course{"math", 2.9}}}}};
 
 float calculate_gpa(const std::vector<Course>& courses) {
-  touca::check("courses", courses);
+  for (const auto& course : courses) {
+    touca::add_array_element("courses", course);
+    touca::add_hit_count("number of courses");
+  }
   const auto& sum = std::accumulate(
       courses.begin(), courses.end(), 0.0f,
       [](const float sum, const Course& course) { return sum + course.grade; });
