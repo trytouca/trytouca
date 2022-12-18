@@ -10,6 +10,7 @@ target_sources(
         touca_cli
     PRIVATE
         compare.cpp
+        comparison.cpp
         filesystem.cpp
         main.cpp
         merge.cpp
@@ -31,6 +32,12 @@ target_link_libraries(
     PRIVATE
         ${TOUCA_TARGET_MAIN}
         cxxopts::cxxopts
+)
+
+target_include_directories(
+        touca_cli
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}
 )
 
 target_compile_definitions(
