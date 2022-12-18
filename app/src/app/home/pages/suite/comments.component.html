@@ -2,9 +2,9 @@
   <div class="flex h-8 items-center space-x-2">
     <h3 class="font-semibold text-black dark:text-gray-300">Recent Events</h3>
   </div>
-  <div *ngIf="promotions.length; else noData">
+  <div *ngIf="data.promotions.length; else noData">
     <app-suite-item-promotion
-      *ngFor="let promotion of promotions"
+      *ngFor="let promotion of data.promotions"
       [item]="promotion"></app-suite-item-promotion>
   </div>
   <ng-template #noData>

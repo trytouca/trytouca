@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 import { Component, OnDestroy } from '@angular/core';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -13,20 +13,20 @@ import { AlertType } from '@/shared/components/alert.component';
 
 import { SuitePageService } from './suite.service';
 
-type Fields = Partial<{
-  apiKey: ApiKey;
-  apiUrl: string;
-}>;
-
 @Component({
   selector: 'app-suite-first-batch',
   templateUrl: './first.component.html'
 })
 export class SuiteFirstBatchComponent implements OnDestroy {
-  fields: Fields = {};
+  data: Partial<{
+    apiKey: ApiKey;
+    apiUrl: string;
+  }> = {};
 
-  private _subSuite: Subscription;
-  private _subUser: Subscription;
+  private subscriptions: {
+    suite: Subscription;
+    user: Subscription;
+  };
 
   constructor(
     private notificationService: NotificationService,
@@ -34,24 +34,27 @@ export class SuiteFirstBatchComponent implements OnDestroy {
     suitePageService: SuitePageService,
     userService: UserService
   ) {
+    faIconLibrary.addIcons(faClipboard);
     const keys = userService.currentUser?.apiKeys;
     if (keys?.length) {
-      this.fields.apiKey = new ApiKey(keys[0]);
+      this.data.apiKey = new ApiKey(keys[0]);
     }
-    this._subUser = userService.currentUser$.subscribe((v) => {
-      this.fields.apiKey = new ApiKey(v.apiKeys[0]);
-    });
-    this._subSuite = suitePageService.data.suite$.subscribe((v) => {
-      this.fields.apiUrl = [getBackendUrl(), '@', v.teamSlug, v.suiteSlug].join(
-        '/'
-      );
-    });
-    faIconLibrary.addIcons(faClipboard);
+    this.subscriptions = {
+      suite: suitePageService.data.suite$.subscribe((v) => {
+        this.data.apiUrl = [getBackendUrl(), '@', v.teamSlug, v.suiteSlug].join(
+          '/'
+        );
+      }),
+      user: userService.currentUser$.subscribe((v) => {
+        this.data.apiKey = new ApiKey(v.apiKeys[0]);
+      })
+    };
   }
 
   ngOnDestroy(): void {
-    this._subSuite.unsubscribe();
-    this._subUser.unsubscribe();
+    Object.values(this.subscriptions)
+      .filter(Boolean)
+      .forEach((v) => v.unsubscribe());
   }
 
   onCopy(event: IClipboardResponse, name: string) {
