@@ -1,4 +1,4 @@
-# Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+# Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 touca_find_package("Catch2")
 
@@ -10,7 +10,6 @@ target_sources(
         main.cpp
         client/client.cpp
         core/testcase.cpp
-        core/types.cpp
         devkit/options.cpp
         devkit/platform.cpp
         devkit/shared.cpp
@@ -32,6 +31,7 @@ if (TOUCA_BUILD_CLI)
             cli/comparison.cpp
             cli/deserialize.cpp
             cli/resultfile.cpp
+            cli/types.cpp
     )
     target_link_libraries(
             ${TOUCA_TARGET_TEST}
