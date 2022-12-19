@@ -1,11 +1,11 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
 #include <fstream>
 
 #include "touca/core/filesystem.hpp"
-#include "touca/devkit/utils.hpp"
+#include "touca/core/utils.hpp"
 
 struct TmpFile {
   TmpFile() : path(make_temp_path()) {}

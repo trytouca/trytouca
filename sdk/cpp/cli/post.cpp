@@ -1,11 +1,11 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "cxxopts.hpp"
 #include "touca/cli/filesystem.hpp"
 #include "touca/cli/operations.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/devkit/platform.hpp"
-#include "touca/devkit/utils.hpp"
+#include "touca/core/platform.hpp"
+#include "touca/core/utils.hpp"
 
 /**
  * we used to validate that the given directory has at least one

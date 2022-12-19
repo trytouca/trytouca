@@ -7,7 +7,7 @@
 
 #include "rapidjson/document.h"
 #include "touca/core/filesystem.hpp"
-#include "touca/devkit/platform.hpp"
+#include "touca/core/platform.hpp"
 
 namespace touca {
 namespace detail {

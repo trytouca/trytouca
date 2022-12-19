@@ -9,11 +9,11 @@ target_sources(
     PRIVATE
         main.cpp
         client/client.cpp
+        core/options.cpp
+        core/platform.cpp
+        core/shared.cpp
         core/testcase.cpp
-        devkit/options.cpp
-        devkit/platform.cpp
-        devkit/shared.cpp
-        devkit/utils.cpp
+        core/utils.cpp
 )
 
 if (TOUCA_BUILD_FRAMEWORK)

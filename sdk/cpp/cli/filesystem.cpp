@@ -3,7 +3,7 @@
 #include "touca/cli/filesystem.hpp"
 
 #include "touca/cli/resultfile.hpp"
-#include "touca/devkit/utils.hpp"
+#include "touca/core/utils.hpp"
 
 std::vector<touca::filesystem::path> discover(
     const touca::filesystem::path& path) {

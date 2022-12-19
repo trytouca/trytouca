@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/cli/operations.hpp"
 
@@ -6,7 +6,7 @@
 
 #include "cxxopts.hpp"
 #include "touca/core/config.hpp"
-#include "touca/devkit/utils.hpp"
+#include "touca/core/utils.hpp"
 
 Operation::Command Operation::find_mode(const std::string& name) {
   const std::unordered_map<std::string, Operation::Command> modes{
@@ -75,12 +75,10 @@ bool CliOptions::parse(int argc, char* argv[]) {
 
 bool CliOptions::parse_impl(int argc, char* argv[]) {
   // parse command line arguments
-
   auto options = config_options_main();
   const auto& result = options.parse(argc, argv);
 
   // if user asks for help, print help message and exit
-
   if (result.count("help")) {
     fmt::print(stdout, "{}\n", options.show_positional_help().help());
     show_help = true;
@@ -88,8 +86,6 @@ bool CliOptions::parse_impl(int argc, char* argv[]) {
   }
 
   // if user asks for version, print application version and exit
-  // @todo add a config.hpp to touca/devkit and use major/minor/patch below
-
   if (result.count("version")) {
     fmt::print(stdout, "Touca Utility Command Line Tool v{}.{}.{}\n",
                TOUCA_VERSION_MAJOR, TOUCA_VERSION_MINOR, TOUCA_VERSION_PATCH);
@@ -98,7 +94,6 @@ bool CliOptions::parse_impl(int argc, char* argv[]) {
   }
 
   // validate and set option `mode`
-
   if (!result.count("mode")) {
     touca::print_error("no command was specified\n");
     fmt::print(stderr, "{}\n", options.show_positional_help().help());

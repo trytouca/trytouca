@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #pragma once
 
@@ -7,8 +7,8 @@
 
 #include "touca/client/detail/options.hpp"
 #include "touca/core/filesystem.hpp"
+#include "touca/core/platform.hpp"
 #include "touca/core/testcase.hpp"
-#include "touca/devkit/platform.hpp"
 #include "touca/extra/logger.hpp"
 
 namespace touca {

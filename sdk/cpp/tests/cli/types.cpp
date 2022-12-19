@@ -3,8 +3,8 @@
 #include "touca/core/types.hpp"
 
 #include "catch2/catch.hpp"
-#include "tests/devkit/shared.hpp"
-#include "touca/devkit/comparison.hpp"
+#include "tests/core/shared.hpp"
+#include "touca/core/comparison.hpp"
 #include "touca/impl/schema.hpp"
 
 using touca::detail::internal_type;

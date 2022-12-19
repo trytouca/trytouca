@@ -5,7 +5,7 @@
 #include <numeric>
 
 #include "touca/core/testcase.hpp"
-#include "touca/devkit/comparison.hpp"
+#include "touca/core/comparison.hpp"
 
 namespace touca {
 

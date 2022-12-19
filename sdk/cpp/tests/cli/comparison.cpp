@@ -3,7 +3,7 @@
 #include "touca/cli/comparison.hpp"
 
 #include "catch2/catch.hpp"
-#include "tests/devkit/shared.hpp"
+#include "tests/core/shared.hpp"
 
 using touca::data_point;
 using touca::detail::internal_type;

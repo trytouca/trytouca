@@ -3,8 +3,8 @@
 #include "touca/cli/resultfile.hpp"
 
 #include "catch2/catch.hpp"
-#include "tests/devkit/tmpfile.hpp"
-#include "touca/devkit/utils.hpp"
+#include "tests/core/tmpfile.hpp"
+#include "touca/core/utils.hpp"
 
 void compare_cases(const std::vector<touca::Testcase>& tmpCases,
                    const touca::ElementsMap& parsedCases) {

@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 #include "touca/runner/runner.hpp"
 
@@ -16,8 +16,8 @@
 #include "fmt/printf.h"
 #include "touca/core/config.hpp"
 #include "touca/core/filesystem.hpp"
-#include "touca/devkit/platform.hpp"
-#include "touca/devkit/utils.hpp"
+#include "touca/core/platform.hpp"
+#include "touca/core/utils.hpp"
 #include "touca/runner/detail/helpers.hpp"
 #include "touca/runner/detail/options.hpp"
 #include "touca/touca.hpp"
