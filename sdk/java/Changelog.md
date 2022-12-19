@@ -1,5 +1,18 @@
 # Changelog
 
+## v1.5.2
+
+Features:
+
+- Add support for custom comparison rules (#420)
+
+Other Changes:
+
+- Update sample app files (#419)
+- Remove duplicate examples (#418)
+- Change default port in unit tests (#289)
+- Fix broken links caused by repo consolidation (#15)
+
 ## v1.5.1
 
 Features:
