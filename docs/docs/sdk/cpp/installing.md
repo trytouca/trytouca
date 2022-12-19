@@ -16,7 +16,7 @@ module.
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/trytouca
-    GIT_TAG        v1.5.2
+    GIT_TAG        v1.6.0
     SOURCE_SUBDIR  sdk/cpp
 )
 FetchContent_MakeAvailable(touca)
@@ -35,7 +35,7 @@ application and example projects or to exclude building the test framework:
 FetchContent_Declare(
     touca
     GIT_REPOSITORY https://github.com/trytouca/trytouca
-    GIT_TAG        v1.5.2
+    GIT_TAG        v1.6.0
     SOURCE_SUBDIR  sdk/cpp
 )
 
@@ -98,7 +98,7 @@ We can now ask Conan to install Touca as a dependency and generate a CMake find
 module that we can integrate with our build system.
 
 ```bash
-conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.5.2@_/_"
+conan install -if "${dir_build}" -g cmake_find_package -b missing "touca/1.6.0@_/_"
 ```
 
 Where `${dir_build}` is the path to the CMake build directory.

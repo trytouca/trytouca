@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.6.0
+
+Improvements:
+
+- Move deserialization code to CLI (#450)
+
 ## v1.5.2
 
 Breaking Changes:
