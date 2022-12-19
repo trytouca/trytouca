@@ -1,4 +1,4 @@
-// Copyright 2021 Touca, Inc. Subject to Apache-2.0 License.
+// Copyright 2022 Touca, Inc. Subject to Apache-2.0 License.
 
 package io.touca.core;
 
@@ -105,7 +105,7 @@ public final class Transport {
     con.setRequestProperty("Accept", "application/json");
     con.setRequestProperty("Accept-Charset", "utf-8");
     con.setRequestProperty("User-Agent",
-        String.format("touca-client-java/%s", "1.5.2"));
+        String.format("touca-client-java/%s", "1.5.3"));
     if (token != null) {
       con.setRequestProperty("Authorization",
           String.format("Bearer %s", token));
